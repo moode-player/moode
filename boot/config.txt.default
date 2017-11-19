@@ -1,0 +1,7 @@
+disable_splash=1
+hdmi_drive=2
+dtparam=i2c_arm=on
+dtparam=i2s=on
+dtparam=audio=on
+#dtoverlay=pi3-disable-wifi
+#dtoverlay=pi3-disable-bt

@@ -1,0 +1,284 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2017-11-11 TC moOde 4.0
+ *
+ */
+-->	
+<div class="container">
+	<h1>Network Config</h1>
+	
+	<p>
+		<a data-toggle="modal" href="#net-config-defaults">RESET</a> to eth0 and DHCP<br>
+    	<a data-toggle="modal" href="#restart-modal">RESTART</a> to make setting changes effective
+	</p>
+
+	<form class="form-horizontal" data-validate="parsley" method="post">
+    	<legend>
+			Settings &nbsp;<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button>
+		</legend>
+		
+		<!-- ETH0 -->
+		<fieldset>
+			<div class="control-group" >
+				<label class="control-label" for="eth0-method" style="">Ethernet (eth0)</label>
+				<div class="controls">
+					<select id="eth0-method" name="eth0method" class="input-large" style="width: 100px">
+						$_eth0method
+					</select>
+					<a class="info-toggle" data-cmd="info-eth0method" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span><br>$_eth0currentip</span>
+					<span id="info-eth0method" class="help-block help-block-margin hide">
+                    	IP address assignment method.<br>
+                    </span>
+				</div>
+			</div>
+			
+			<div id="eth0-static" class="hide">
+				<div class="control-group">
+					<label class="control-label" for="eth0ip">IP address</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="eth0ip" name="eth0ipaddr" value="$_eth0ipaddr">
+					</div>
+				</div>
+				
+				<div class="control-group" >
+					<label class="control-label" for="eth0-netmask" style="">Netmask</label>
+					<div class="controls">
+						<select id="eth0-netmask" name="eth0netmask" class="input-large" style="width: 100px">
+							$_eth0netmask
+						</select>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="eth0gateway">Gateway</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="eth0gateway" name="eth0gateway" value="$_eth0gateway">
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="eth0pridns">Primary DNS</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="eth0pridns" name="eth0pridns" value="$_eth0pridns">
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="eth0secdns">Secondary DNS</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="eth0secdns" name="eth0secdns" value="$_eth0secdns">
+					</div>
+				</div>
+			</div>
+
+		</fieldset>
+
+		<legend></legend>
+
+		<!-- WLAN0 -->
+		<fieldset>
+			<div class="control-group" >
+				<label class="control-label" for="wlan0-method">WiFi (wlan0)</label>
+				<div class="controls">
+					<select id="wlan0-method" name="wlan0method" class="input-large">
+						$_wlan0method
+					</select>
+					<a class="info-toggle" data-cmd="info-wlan0method" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span><br>$_wlan0currentip</span>
+					<span id="info-wlan0method" class="help-block help-block-margin hide">
+                    	IP address assignment method.<br>
+                    	Link quality (quality) and signal level (level).<br>
+                    </span>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="wlan0ssid">SSID</label>
+				<div class="controls">
+					<select id="wlan0ssid" name="wlan0ssid" class="input-large">
+						$_wlan0ssid
+					</select>
+					<button class="btn btn-primary btn-small set-button" type="submit" name="scan" value="1">Scan</button>
+					<a class="info-toggle" data-cmd="info-wlan0ssid" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-wlan0ssid" class="help-block help-block-margin hide">
+						Press the SCAN button to generate a list of available SSID's.<br>
+						Select 'blank' to clear the SSID and activate AP mode after restart.<br>
+						Click 'Enter SSID manually' to enter an SSID that does not appear after scanning.
+                    </span>
+					<span class="help-block help-block-margin">
+						<a data-toggle="modal" href="#manual-ssid">ENTER</a> SSID manually<br>
+						<!--a data-toggle="modal" href="#manage-network-list">Manage</a> Network list<br-->
+					</span>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="wlan0sec">Security</label>
+				<div class="controls">
+					<select id="wlan0sec" name="wlan0sec" class="input-large">
+						$_wlan0sec
+					</select>
+					<a class="info-toggle" data-cmd="info-wlan0sec" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-wlan0sec" class="help-block help-block-margin hide">
+                    	Security protocol.
+                    </span>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="wlan0pwd">Password</label>
+				<div class="controls">
+					<input class="input-large" type="password" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
+					<a class="info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-wlan0pwd" class="help-block help-block-margin hide">
+                    	Length 8-63 chars.
+                    </span>
+				</div>
+			</div>
+	
+			<div id="wlan0-static" class="hide">
+				<div class="control-group">
+					<label class="control-label" for="wlan0ip">IP address</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="wlan0ip" name="wlan0ipaddr" value="$_wlan0ipaddr">
+					</div>
+				</div>
+				
+				<div class="control-group" >
+					<label class="control-label" for="wlan0-netmask" style="">Netmask</label>
+					<div class="controls">
+						<select id="wlan0-netmask" name="wlan0netmask" class="input-large" style="width: 100px">
+							$_wlan0netmask
+						</select>
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="wlan0gateway">Gateway</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="wlan0gateway" name="wlan0gateway" value="$_wlan0gateway">
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="wlan0pridns">Primary DNS</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="wlan0pridns" name="wlan0pridns" value="$_wlan0pridns">
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="wlan0secdns">Secondary DNS</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="wlan0secdns" name="wlan0secdns" value="$_wlan0secdns">
+					</div>
+				</div>
+			</div>
+
+		</fieldset>
+
+		<legend></legend>
+
+		<fieldset>
+			<div class="control-group" >
+                <label class="control-label" for="apdssid">Access Point (AP) SSID</label>
+                <div class="controls">
+                    <input class="input-large" type="text" pattern="[A-Za-z0-9\-]{3,32}" id="apdssid" name="wlan0apdssid" value="$_wlan0apdssid" required>
+					<a class="info-toggle" data-cmd="info-apdssid" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-apdssid" class="help-block help-block-margin hide">
+						Length 3-32 chars, A-Z, a-z, 0-9, and hyphen (-) are allowed.
+					</span>
+                </div>
+            </div>	
+			
+			<div class="control-group" >
+                <label class="control-label" for="apdchan">AP channel</label>
+                <div class="controls">
+                    <input class="input-mini" type="number" maxlength="2" min="1" max="14" id="apdchan" name="wlan0apdchan" value="$_wlan0apdchan" required>
+					<a class="info-toggle" data-cmd="info-apdchan" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-apdchan" class="help-block help-block-margin hide">
+						2.4 GHz band supports channels 1-14.
+					</span>
+                </div>
+            </div>	
+			
+			<div class="control-group" >
+                <label class="control-label" for="apdpwd">AP password</label>
+                <div class="controls">
+                    <input class="input-large" type="text" pattern="[A-Za-z0-9]{8,63}" id="apdpwd" name="wlan0apdpwd" value="$_wlan0apdpwd" required>
+					<a class="info-toggle" data-cmd="info-apdpwd" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-apdpwd" class="help-block help-block-margin hide">
+						Length 8-63 chars, A-Z, a-z, 0-9, are allowed.
+					</span>
+                </div>
+            </div>	
+
+		</fieldset>
+
+	</form>
+</div>
+
+<form class="form-horizontal" method="post">
+	<div id="net-config-defaults" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="net-config-defaults-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Reset Network Configuration</h3>
+		</div>
+		
+		<div class="modal-body">
+			<h4>
+				Reset network configuration to eth0 and DHCP<br><br>
+			</h4>
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit" name="reset" value="1">Confirm</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="manual-ssid" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="manual-ssid-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Enter SSID manually</h3>
+		</div>
+		
+		<div class="modal-body">
+			<div class="control-group">
+				<label class="control-label" for="wlan0otherssid">SSID</label>
+				<div class="controls">
+					<input class="input-large" type="text" id="wlan0otherssid" name="wlan0otherssid" value="">
+					<a class="info-toggle" data-cmd="info-manualssid" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-manualssid" class="help-block help-block-margin hide">
+                    	Length 2-32 chars.
+                    </span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit" name="manualssid" value="1">Ok</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		</div>
+	</div>
+</form>
+

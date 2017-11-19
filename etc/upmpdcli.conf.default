@@ -1,0 +1,623 @@
+#
+# 2017-11-11 TC moOde 4.0
+#
+
+# The XML tags in the comments are used to help produce the documentation
+# from the sample/reference file, and not at all at run time, where
+# comments are just comments. Edit at will.
+
+# The command line options have higher priorities than the values in
+# this file.
+
+# <grouptitle>Upmpdcli general parameters</grouptitle>
+
+# <var name="friendlyname" type="string"><brief>"Friendly Name" for the
+# UPnP Media Renderer.</brief><descr>This will be displayed by most Control
+# Points to identify the Renderer. Some OpenHome Control Points may display
+# the 'ohproductroom' value instead.</descr></var>
+friendlyname = Moode UPNP
+
+# <var name="upnpav" type="bool" values="1"><brief>Enable UPnP AV services
+# (0/1).</brief><descr>This is set by default, but it may useful to switch
+# it off with some OpenHome Control Points which are too easily confused by
+# the presence of UPnP AV services.</descr></var>
+#upnpav = 1
+
+# <var name="openhome" type="bool" values="1"><brief>Enable OpenHome services
+# (0/1).</brief><descr>This defaults to 1, as OpenHome queuing is superior
+# for most usages. There should be little reason to turn it
+# off.</descr></var>
+#openhome = 1
+
+# <var name="logfilename" type="fn"><brief>Log file
+# name.</brief><descr>Defaults to stderr. This can also be specified as -d
+# logfilename.</descr></var>
+#logfilename = 
+
+# <var name="loglevel" type="int" values="0 5 2"><brief>Log
+# level.</brief><descr>Can also be specified as -l loglevel.</descr></var>
+loglevel = 0
+
+# <var name="checkcontentformat" type="bool" values="1"><brief>Check that
+# input format is supported.</brief><descr>Extract the protocolinfo
+# information from the input metadata and check it against our supported
+# formats. Set this option to 0 if a control point or media server sends
+# good audio data with bad metadata.</descr></var>
+#checkcontentformat = 1
+
+# <var name="iconpath" type="fn"><brief>Path to the Renderer icon.</brief>
+# <descr>The image will be displayed by Control Points which support
+# it. The UPnP protocol has provisions for a renderer to send the URL to a
+# descriptive icon as part of the device description. Due to current (and
+# probably permanent) *upmpdcli* limitations, the image file *must* be a
+# 64x64 32 bits-per-pixel png file. Default: '$pkgdatadir/icon.png'.
+# The icon will only be read once, when upmpdcli starts
+# up.</descr></var>
+#iconpath = /usr/share/upmpdcli/icon.png
+
+# <var name="pkgdatadir" type="dfn"><brief>XML and other constant data storage
+# directory.</brief><descr>Default: '$prefix/share/upmpcli' (e.g.:
+# '/usr/share/upmpdcli').</descr></var>
+#pkgdatadir=/usr/share/upmpdcli
+
+# <var name="cachedir" type="dfn"><brief>Directory used to store cached
+# data</brief><descr>Only used for the OpenHome queue metadata for now.
+# The default value is ~/.cache/upmpdcli for normal users or
+# /var/cache/upmpdcli when upmpdcli is started as root.</descr></var>
+#cachedir = /var/cache/upmpdcli
+
+# <var name="presentationhtml" type="fn"><brief>Path to the presentation HTML
+# document</brief><descr>You can change it to replace the default
+# presentation page. The page will only be read once, when upmpdcli starts
+# up. It can't presently be used for status updates (but I guess that you
+# could put a redirect in there, to something more dynamic served by a real
+# HTTP server). Default: '$pkgdatadir/presentation.html'.</descr></var>
+#presentationhtml = /usr/share/upmpdcli/presentation.html
+
+# <var name="pidfile" type="fn"><brief>Name of lock file used to store the
+# current process pid.</brief><descr>Only used if the process is launched
+# by user root. Used by the init system, and to avoid multiple
+# instances. The only reason to change the value is if you actually want to
+# have several instances running (also change cachedir in this
+# case).</descr></var>
+#pidfile = /var/run/upmpdcli.pid
+
+# <grouptitle>Tidal streaming service parameters</grouptitle>
+
+# <var name="tidaluser" type="string"><brief>Tidal user name.</brief>
+# <descr>Your Tidal login name.</descr></var>
+#tidaluser = your tidal user name
+# <var name="tidalpass" type="string"><brief>Tidal password.</brief>
+# <descr>The password for your Tidal account.</descr></var>
+#tidalpass = your Tidal password
+# <var name="tidalquality" type="cstr" "values="low high lossless">
+# <brief>Tidal stream quality.</brief> <descr>'low' and 'high' are aac
+# streams. 'lossless' is FLAC and will only work if your subscription
+# allows it.</descr></var>
+#tidalquality = low/high/lossless
+
+# <grouptitle>Qobuz streaming service parameters</grouptitle>
+
+# <var name="qobuzuser" type="string"><brief>Qobuz user name.</brief>
+# <descr>Your Qobuz login name.</descr></var>
+#qobuzuser = me@some.place
+# <var name="qobuzpass" type="string"><brief>Qobuz password.</brief>
+# <descr>The password for your Qobuz account.</descr></var>
+#qobuzpass = agoodpassword
+# <var name="qobuzformatid" type="cstr" "values="5 7">
+# <brief>Qobuz stream quality.</brief> <descr>5 for mp3/320, 7 for FLAC if
+# your subscription allows it.</descr></var>
+#qobuzformatid = 5
+
+# <grouptitle>Google Music streaming service parameters</grouptitle>
+
+# <var name="gmusicuser" type="string"><brief>Google Music user name.</brief>
+# <descr>Your Google Music login name (probably a gmail address).</descr></var>
+#gmusicuser = me@gmail.com
+# <var name="gmusicpass" type="string"><brief>Google Music password.</brief>
+# <descr>The password for your Google Music account.</descr></var>
+#gmusicpass = agoodpassword
+# <var name="gmusicquality" type="cstr" "values="hi med low">
+# <brief>Google Music stream quality.</brief> <descr>'hi' for mp3/320, 'med'
+# for mp3/160, 'low' for mp3/128.</descr></var>
+#gmusicquality = med
+# <var name="gmusicdeviceid" type="string"> <brief>Google Music device
+# id.</brief> <descr>Your system MAC address will be used by default, but
+# this will count against the maximum count of registered devices for this
+# account.  You can set the gmusicdeviceid value to the device ID from a
+# phone or tablet on which you also use Google Play Music.</descr></var>
+#gmusicdeviceid =
+
+# <grouptitle>Local Media Server parameters</grouptitle>
+
+# <var name="uprcluser" type="string"><brief>Bogus user name variable.</brief>
+# <descr>Used for consistency with other Media Server plugins to decide if
+# the service should be started (so, do set it if you want a Media Server).
+# </descr></var>
+#uprcluser = bugsbunny
+
+# <var name="uprclmediadirs" type="string"> <brief>Media
+# directories</brief><descr>This is a space-separated list of directories
+# to explore for music files. This is used directly as the recoll "topdirs"
+# value, so you can use double-quote quoting for paths with embedded
+# spaces.</descr></var>
+#uprclmediadirs = /tmp
+
+# <var name="uprclhostport" type="string"><brief>HTTP host and ports for
+# serving media files</brief><descr>The Media Server HTTP server will run
+# on this address and port, which will also be inserted on the URLs we
+# produce. If the variable is not set, we will use port 9090 and the first
+# non-loopback ipv4 address in "ip addr" output, which may be right or
+# not. Example: 192.168.1.1:9090</descr></var>
+#uprclhostport = 192.168.4.4:9090
+
+# <var name="uprclpaths" type="string"><brief></brief><descr>This is used
+# to translate real path to ones relative to the HTTP server doc tree. It
+# also performs a form of access control. If this is not set, uprcl will
+# use a null translation for each of the uprclmediadirs
+# entries.</descr></var> 
+#uprclpaths =
+
+# <var name="uprclconfdir" type="dfn"><brief>Recoll index
+# directory</brief><descr>This is usually not defined and defaults to
+# /var/cache/upmpdcli/uprcl</descr></var>
+#uprclconfdir = /var/cache/upmpdcli/uprcl
+
+# <var name="uprclautostart" type="bool"><brief>Initialize uprcl as soon as
+# upmpdcli starts</brief><descr>This is useful because uprcl initialization
+# can take quite some time so it is better not to wait for the first
+# access. The general default is false for the autostart variables, so this
+# is normally explicitely set to true.</descr></var>
+uprclautostart = 1
+
+
+# <grouptitle>MPD parameters</grouptitle>
+
+# <var name="mpdhost" type="string"><brief>Host MPD runs on.</brief>
+# <descr>Defaults to localhost. This can also be specified as -h
+# host</descr></var>
+#mpdhost = localhost
+
+# <var name="mpdport" type="int" values="0 65635 6600"><brief>IP port used by
+# MPD</brief>. <descr>Can also be specified as -p port. Defaults to the
+# normal MPD port, 6600</descr></var>
+#mpdport = 6600
+
+# <var name="mpdpassword" type="string"><brief>MPD
+# password.</brief><descr>Password for connecting to MPD (only necessary
+# if password access is enabled in the MPD configuration
+# file).</descr></var>
+#mpdpassword =
+
+# <var name="ownqueue" type="bool" values="1"><brief>Set if we own the MPD
+# queue.</brief>.<descr>If this is set (on by default), we own the MPD
+# queue and will fearlessly clear it. Can also be specified as -q
+# 0|1.</descr></var>
+#ownqueue = 1
+
+# <grouptitle>UPnP network parameters</grouptitle>
+
+# <var name="upnpiface" type="cstr" values="dynamic"><brief>Network interface to
+# use for UPnP.</brief><descr>libupnp/pupnp only supports communicating on
+# a single interface and will use the first found, this allows forcing the
+# use of another interface.</descr></var>
+#upnpiface = 
+
+# <var name="upnpip" type="string"><brief>IP address to use for UPnP, 
+# alternative to using an interface name.</brief></var>
+#upnpip = 
+
+# <var name="upnpport" type="int" values="0 65635 49152"><brief>Port number
+# used for UPnP.</brief><descr>libupnp/pupnp defaults to using the first
+# free port after 49152. Note that clients do not need to know about the
+# value, which is automatically discovered.</descr></var>
+#upnpport = 
+
+# <grouptitle>Audio control hooks</grouptitle>
+
+# <var name="onstart" type="fn"><brief>Command to run when playback is
+# about to begin.</brief><descr>Specify the full path to the program,
+# e.g. /usr/bin/logger.</descr></var>
+#onstart =
+
+# <var name="onplay" type="fn"><brief>Command to run when MPD state
+# switches to "PLAY".  </brief><descr>Specify the full path to the program,
+# e.g. /usr/bin/logger.</descr></var>
+#onplay =
+
+# <var name="onpause" type="fn"><brief>Command to run when MPD state
+# switches to "PAUSE".  </brief><descr>Specify the full path to the program,
+# e.g. /usr/bin/logger.</descr></var>
+#onpause =
+
+# <var name="onstop" type="fn"><brief>Command to run when MPD state switches to
+# "STOP".</brief><descr>Specify the full path to the program,
+# e.g. /usr/bin/logger.</descr></var>
+#onstop =
+
+# <var name="externalvolumecontrol" type="fn"><brief>Use external command
+# to manage the the sound volume (0/1).</brief><descr>This is used in the
+# case where MPD is unable to control the volume, but some other command
+# can, for example if you have an external amp on which it is possible to
+# set and read the volume through scripts. If set, the calls to MPD to set
+# and read the volume will be replaced by executions of 'onvolumechange'
+# and 'getexternalvolume'</descr></var>
+#externalvolumecontrol = 
+
+# <var name="getexternalvolume" type="fn"><brief>Command to run for reading
+# the sound volume.</brief><descr>The command should write a 0-100 numeric
+# value to stdout.</descr></var>
+#getexternalvolume =
+
+# <var name="onvolumechange" type="fn"><brief>Command to run to set the
+# volume.</brief><descr>Used when 'externalvolumecontrol' is set.
+# Specify the full path to the program, which is called with the volume as
+# the first argument, e.g. /some/script 85.</descr></var>
+#onvolumechange =
+
+# <grouptitle>OpenHome parameters</grouptitle>
+
+# <var name="ohproductroom" type="string"><brief>The name of the room where
+# the Product is located.</brief><descr>Set to “Main Room” by default,
+# displayed in place of the "friendly name" by some control points.
+# ProductRoom is used to group the Product with other related Products in
+# the same physical room (e.g. a source with a pre-amp). Products which are
+# physically linked must always share the same ProductRoom
+# name.</descr></var>
+ohproductroom = Moode UPNP
+
+# <var name="radiolist" type="fn"><brief>Path to an external file with radio
+# definitions.</brief><descr>Radio stations can be defined at the end of
+# the the main file, or in an external file (or both). Using an external file
+# can ease distribution to multiple machines. Either way, each radio
+# station is defined as a section with a name beginning with 'radio',
+# containing a mandatory URL parameter, and optional values. The part of
+# the name after 'radio' will be the displayed radio name (as album title).
+#
+# - artUrl: an optional static radio icon URL.
+# - artScript: an optional script to retrieve an image for the current title
+# - metaScript: an optional script to retrieve metadata for the current
+#   title.
+#
+# See the xref:radio-definitions[section about radio station definitions]
+# for details about the scripts.
+#
+# Example:
+#
+# ----
+#     [radio My Radio]
+#     url = http://some.host/some/path.pls
+#     artUrl = http://some.host/icon/path.png
+#     artScript = /path/to/script/dynamic-art-getter
+#     metaScript = /path/to/script/metadata-getter
+# ----
+# </descr></var>
+#radiolist = /path/to/my/radio/list
+
+# <var name="ohmanufacturername" type="string"><brief>Manufacturer
+# name. </brief></var>
+#ohmanufacturername = UpMPDCli heavy industries Co.
+# <var name="ohmanufacturerinfo" type="string"><brief>Manufacturer
+# information. </brief></var>
+#ohmanufacturerinfo = Such nice guys and gals
+# <var name="ohmanufacturerurl" type="string"><brief>URL for manufacturer
+# web site. </brief></var>
+#ohmanufacturerurl = http://www.lesbonscomptes.com/upmpdcli
+# <var name="ohmanufacturerimageuri" type="string"><brief>Uri for
+# manufacturer’s logo. </brief></var>
+#ohmanufacturerimageuri =
+# <var name="ohmodelname" type="string"><brief>Model name.</brief></var>
+#ohmodelname = UpMPDCli UPnP-MPD gateway
+# <var name="ohmodelinfo" type="string"><brief>Model information.</brief></var>
+#ohmodelinfo =
+# <var name="ohmodelurl" type="string"><brief>URL for model web
+# site.</brief></var>
+#ohmodelurl = http://www.lesbonscomptes.com/upmpdcli
+# <var name="ohmodelimageuri" type="string"><brief>Uri for model’s
+# icon. </brief></var>
+#ohmodelimageuri =
+# <var name="ohproductname" type="string"><brief>User-visible product
+# name. By default this is set to ModelName.</brief></var>
+#ohproductname = Upmpdcli
+# <var name="ohproductinfo" type="string"><brief>Product information.
+# </brief></var>
+#ohproductinfo =
+# <var name="ohproducturl" type="string"><brief>URL for product web
+# site. This may be the UPnP presentation page.</brief></var>
+#ohproducturl =
+# <var name="ohproductimageuri" type="string"><brief>Uri for product
+# image. </brief></var>
+#ohproductimageuri =
+# <var name="ohmetapersist" type="bool" values="1"><brief>Save queue
+# metadata to disk (0/1).</brief><descr>This allows persistence of the
+# metadata information across restarts, the default is 1, and there is no
+# reason to turn it off.</descr></var>
+#ohmetapersist = 1
+# <var name="ohmetasleep" type="int" values="0 120 0"><brief>Mimimum
+# interval (Seconds) between two cache saves.</brief><descr>Increasing this
+# may improve playlist load speed on a slow device. The default is to start
+# a new save as soon as the previous one is done (if the list changed again
+# inbetween).</descr></var>
+#ohmetasleep = 0
+
+# <grouptitle>Songcast Receiver parameters</grouptitle>
+
+# Parameters for the Songcast modes. These are read by either/both the
+# songcast and upmpdcli processes
+
+# <var name="sclogfilename" type="fn"><brief>Log file name for sc2mpd (default
+# stderr)</brief><descr>The value *must not* be the same as the one used
+# for upmpdcli (except if empty).</descr></var>
+#sclogfilename = 
+
+# <var name="scloglevel" type="int" values="0 5 2"><brief>Log verbosity for
+# sc2mpd.</brief></var>
+#scloglevel = 3
+
+# <var name="scplaymethod" type="cstr" values="mpd alsa"><brief>sc2mpd
+# play method (mpd/alsa).</brief><descr>With this set as 'alsa', sc2mpd
+# will send the audio directly to the sound driver, which is the only way
+# to really avoid skips and control the synchronization in multi-room
+# setups. *For 'alsa', make sure that user upmpdcli has permission to
+# access the audio devices !*</descr></var>
+#scplaymethod = mpd
+
+# <var name="schttpport" type="int" values="0 65635 8768"><brief>Port
+# used by sc2mpd for MPD to connect to.</brief><descr>Used only for
+# scplaymethod=mpd. sc2mpd only accepts connections from
+# localhost.</descr></var>
+#schttpport = 8768
+
+# <var name="scalsadevice" type="string"><brief>Alsa device used by sc2mpd
+# for playing audio.</brief><descr>Only used for scplaymethod=alsa. Use
+# 'aplay -L' to see the possible values.</descr></var>
+#scalsadevice = default
+
+# <var name="sccvttype" type="cstr" values="SRC_SINC_FASTEST
+# SRC_SINC_BEST_QUALITY SRC_SINC_MEDIUM_QUALITY SRC_ZERO_ORDER_HOLD
+# SRC_LINEAR"><brief>sc2mpd resampling method.</brief><descr> 
+# Only used for scplaymethod=alsa. sc2mpd uses libsamplerate. The default
+# method is SRC_SINC_FASTEST and a Rasberry Pi 1 is fast enough to use it.
+# Possible values: SRC_SINC_BEST_QUALITY, SRC_SINC_MEDIUM_QUALITY,
+# SRC_SINC_FASTEST, SRC_ZERO_ORDER_HOLD, SRC_LINEAR.  See the libsamplerate
+# documentation for descriptions. Anything above SRC_SINC_FASTEST needs a
+# serious CPU.  BEST_QUALITY uses approx 25% cpu on a core i7
+# 4770T. Obviously too much, actually might not be sustainable (it's almost
+# 100% of 1 cpu).  MEDIUM_QUALITY is around 10% on the same machine,
+# FASTEST is 4-5%. Given that this is measured for the full process, probably
+# a couple % for the conversion in fact.</descr></var>
+#sccvttype = SRC_SINC_FASTEST
+
+# <var name="sc2mpd" type="string"><brief>Path to
+# sc2mpd.</brief><descr>Only useful if it is not in /usr/bin and the
+# location is not in the $PATH for the init scripts.</descr></var>
+#sc2mpd = 
+
+# <grouptitle>Songcast Sender parameters</grouptitle>
+
+# Parameters tor the Sender/Receiver mode. Only does anything if
+# scplaymethod is alsa
+
+# <var name="scsenderpath" type="string"><brief>Path to the script
+# (scmakempdsender) which starts the auxiliary mpd and the sender
+# process. Empty and searched in PATH by default.</brief></var>
+#scsenderpath =
+
+# <var name="scstreamscaled" type="bool" values="1"><brief>Decide if we
+# scale the songcast stream.</brief><descr>If set, MPD software volume
+# control will be applied to the stream. True by default: using a Control
+# Point to set the volume on the upmpdcli instance which started the Sender
+# affects the volume for all Receivers.</descr></var>
+#scstreamscaled = 1
+
+# <var name="scsendermpdport" type="int" values="0 65635 6700">
+# <brief>localhost port to be used by the auxiliary mpd.</brief></var>
+#scsendermpdport = 6700
+
+# <var name="scripts_dir" type="dfn"><brief>Location for the scripts used
+# to set up additional external sources.</brief><descr>See the Songcast
+# Sender support documentation page.</descr></var>
+#scripts_dir = /usr/share/upmpdcli/src_scripts
+
+# Initial / default List of radios borrowed from misc sources. Edit to taste
+# See 'radiolist' above for a description of the entries.
+#
+# The section markers are the radio names. The definitions must be at the
+# end of the file because a section definition extends to the EOF and would
+# hide any parameters found inside which is not one of the radio
+# attributes.
+[radio FIP autour du rock]
+url = http://direct.fipradio.fr/live/fip-webradio1.mp3
+artUrl = http://www.fipradio.fr/sites/all/themes/custom/fip/img/logo_fip_header.png
+
+[radio Radio Eins]
+url = http://opml.radiotime.com/Tune.ashx?id=s25111
+artUrl = http://cdn-radiotime-logos.tunein.com/s25111q.png
+
+[radio InfoRadio]
+url = http://opml.radiotime.com/Tune.ashx?id=s9176
+artUrl = http://cdn-radiotime-logos.tunein.com/s9176q.png
+
+[radio Radio Teddy]
+url = http://opml.radiotime.com/Tune.ashx?id=s80044
+artUrl = http://cdn-radiotime-logos.tunein.com/s80044q.png
+
+[radio Deutschlandfunk]
+url = http://opml.radiotime.com/Tune.ashx?id=s55698
+artUrl = http://cdn-radiotime-logos.tunein.com/s42828q.png
+
+[radio Naim Radio]
+url =  http://37.130.228.60:8090/listen.pls
+
+[radio 96.2 | The Revolution (Rock)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s45508
+
+[radio 102.0 | Capital Manchester (Top 40/Pop)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s18587
+
+[radio 97.7 | XFM Manchester (Alternative Rock)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s81256
+
+[radio Linn Radio (Variety)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s122119
+artUrl = http://small.linncdn.com/website/responsive/images/logo-black-chunky.png
+[radio Linn Classical (Classical)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s122116
+artUrl = http://small.linncdn.com/website/responsive/images/logo-black-chunky.png
+
+[radio Linn Jazz (Jazz)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s122120
+artUrl = http://small.linncdn.com/website/responsive/images/logo-black-chunky.png
+
+[radio BBC Radio 1Xtra (Soul and R&B)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s20277
+
+[radio 98.2 | BBC Radio 1 (Top 40/Pop)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s83464
+
+[radio 88.6 | BBC Radio 2 (Adult Contemporary)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s83463
+
+[radio 91.3 | BBC Radio 3 (Classical)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s24941
+
+[radio 93.0 | BBC Radio 4 (National News)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s83461
+
+[radio 198 | BBC Radio 4 LW (Public Radio)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s50577
+
+[radio BBC Radio 4 Extra (Comedy)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s6839
+
+[radio 909 | BBC Radio 5 live (Sports Talk)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s24943
+
+[radio BBC Radio 5 live sports extra (Sports)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s50459
+
+[radio BBC Radio 6 Music (AAA)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s44491
+
+[radio BBC World Service (World News)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s50646
+
+[radio 95.1 | BBC Manchester (Community)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s18214
+
+[radio 1107 | talkSPORT (Sports Talk)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s46580
+
+[radio 100.9 | Classic FM (Classical)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s8439
+
+[radio 103.0 | Key 103 (Top 40/Pop)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s6910
+
+[radio 181.FM Beatles (60's)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s113658
+
+[radio Ministry of Sound Radio (Electronic and Dance)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s2262
+
+[radio 106.1 | Real Radio XS Manchester (Classic Rock)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s91723
+
+[radio 100.4 | Smooth North West (Soul and R&B)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s45501
+
+[radio Radio Caroline (Classic Rock)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s10517
+
+[radio Offshore Radio Sounds (Nostalgia)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s141022
+
+[radio Radio 10 Classic (Oldies)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s130799
+
+[radio 94.4 | Salford City Radio (Local Music)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s67827
+
+[radio 106.9 | Silk 106.9 (Top 40/Pop)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s45584
+
+[radio 97.2 | Wythenshawe FM (Local Music)]
+url =  http://opml.radiotime.com/Tune.ashx?id=s37352
+
+[radio Smooth Jazz]
+url = http://smoothjazz.com/streams/smoothjazz_128.pls
+
+[radio Sonic Universe]
+url = http://somafm.com/sonicuniverse.pls
+
+[radio Onda Tropical]
+url = http://yp.shoutcast.com/sbin/tunein-station.pls?id=506392
+
+[radio Top Latino Radio]
+url = http://online.radiodifusion.net:8020/listen.pls
+
+[radio .977 Classic Rock]
+url = http://www.977music.com/tunein/web/classicrock.asx
+
+[radio Covers]
+url = http://somafm.com/covers.pls
+
+[radio KDFC]
+url = http://provisioning.streamtheworld.com/pls/KDFCFM.pls
+
+[radio Classic FM]
+url = http://media-ice.musicradio.com/ClassicFMMP3.m3u
+
+[radio WCPE]
+url = http://www.ibiblio.org/wcpe/wcpe.pls
+
+[radio CINEMIX]
+url = http://cinemix.us/cine.asx
+
+[radio Radio Paradise]
+url = http://www.radioparadise.com/musiclinks/rp_128aac.m3u
+
+[radio Indie Pop Rocks!]
+url = http://somafm.com/indiepop.pls
+
+[radio PopTron]
+url = http://somafm.com/poptron.pls
+
+[radio AM 1710]
+url = http://lin2.ash.fast-serv.com:9022/listen.pls
+
+[radio WNAR]
+url = http://live.wnar-am.com:8500/listen.pls
+
+[radio Beat Blender]
+url = http://somafm.com/beatblender.pls
+
+[radio Secret Agent]
+url = http://somafm.com/secretagent.pls
+
+[radio Groove Salad]
+url = http://somafm.com/groovesalad.pls
+
+[radio Illinois Street Lounge]
+url = http://somafm.com/illstreet.pls
+
+[radio Boot Liquor]
+url = http://somafm.com/bootliquor.pls
+
+[radio Country 108]
+url = http://www.country108.com/listen.pls
+
+[radio Drone Zone]
+url = http://somafm.com/dronezone.pls
+
+[radio Space Station Soma]
+url = http://somafm.com/spacestation.pls
+
+[radio cliqhop idm]
+url = http://somafm.com/cliqhop.pls
+
+[radio Black Rock FM]
+url = http://somafm.com/brfm.pls
+
+[radio New Dance Radio]
+url = http://jbstream.net/tunein.php/blackoutworm/playlist.asx

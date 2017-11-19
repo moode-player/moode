@@ -1,0 +1,35 @@
+##########################################
+# Copy this file to /boot/moodecfg.txt
+# worker will process it at startup then
+# delete it and automatically reboot.
+# 
+# All param=value pairs must be present.
+# Set wlanssid=<nothing> to start AP mode.
+# Example: wlanssid=
+##########################################
+
+[names]
+hostname=moode
+browsertitle=moOde Player
+airplayname=Moode Airplay
+squeezelitename=Moode
+upnpname=Moode UPNP
+dlnaname=Moode DLNA
+mpdzeroconf=Moode MPD
+
+[services]
+airplaysvc=0
+upnpsvc=0
+dlnasvc=0
+
+[network]
+wlanssid=MySSID
+wlansec=wpa
+wlanpwd=MyPassword
+apdssid=Moode
+apdchan=6
+apdpwd=moodeaudio
+
+[other]
+timezone=America/Detroit
+themecolor=Emerald

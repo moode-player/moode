@@ -1,0 +1,92 @@
+<?php 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2017-11-11 TC moOde 4.0
+ *
+ */
+
+require_once dirname(__FILE__) . '/inc/playerlib.php';
+
+playerSession('open', '' ,''); 
+$dbh = cfgdb_connect();
+
+// apply setting changes
+if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+	foreach ($_POST['config'] as $key => $value) {
+		cfgdb_update('cfg_upnp', $dbh, $key, $value);
+
+		if (!empty($value)) {
+			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
+		}
+		else {
+			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . '#' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
+		}
+	}
+
+	// restart if indicated
+	submitJob('upnpsvc', '', 'Settings updated', ($_SESSION['upnpsvc'] == '1' ? 'UPnP renderer restarted' : ''));
+}
+	
+session_write_close();
+
+// load settings
+$result = cfgdb_read('cfg_upnp', $dbh);
+$cfg_upnp = array();
+
+foreach ($result as $row) {
+	$cfg_upnp[$row['param']] = $row['value'];
+}
+
+// TIDAL
+$_select['tidaluser'] = $cfg_upnp['tidaluser'];
+$_select['tidalpass'] = $cfg_upnp['tidalpass'];
+$_select['tidalquality'] .= "<option value=\"lossless\" " . (($cfg_upnp['tidalquality'] == 'lossless') ? "selected" : "") . ">lossless (FLAC)</option>\n";
+$_select['tidalquality'] .= "<option value=\"high\" " . (($cfg_upnp['tidalquality'] == 'high') ? "selected" : "") . ">high bitrate (AAC)</option>\n";
+$_select['tidalquality'] .= "<option value=\"low\" " . (($cfg_upnp['tidalquality'] == 'low') ? "selected" : "") . ">low bitrate (AAC)</option>\n";
+
+// QOBUZ
+$_select['qobuzuser'] = $cfg_upnp['qobuzuser'];
+$_select['qobuzpass'] = $cfg_upnp['qobuzpass'];
+$_select['qobuzformatid'] .= "<option value=\"7\" " . (($cfg_upnp['qobuzformatid'] == '7') ? "selected" : "") . ">lossless (FLAC)</option>\n";
+$_select['qobuzformatid'] .= "<option value=\"5\" " . (($cfg_upnp['qobuzformatid'] == '5') ? "selected" : "") . ">320K (MP3)</option>\n";
+
+// GOOGLE MUSIC
+$_gmusicapi_msg = 'hide';
+$result = sysCmd('/var/www/command/util.sh check-dir "/usr/local/lib/python2.7/dist-packages/gmusicapi"');
+if ($result[0] == 'exists' && ($_SESSION['feat_bitmask'] & FEAT_GMUSICAPI)) {
+	$_feat_gmusicapi = '';
+	$_select['gmusicuser'] = $cfg_upnp['gmusicuser'];
+	$_select['gmusicpass'] = $cfg_upnp['gmusicpass'];
+	$_select['gmusicquality'] .= "<option value=\"hi\" " . (($cfg_upnp['gmusicquality'] == 'hi') ? "selected" : "") . ">320K (MP3)</option>\n";
+	$_select['gmusicquality'] .= "<option value=\"med\" " . (($cfg_upnp['gmusicquality'] == 'med') ? "selected" : "") . ">160K (MP3)</option>\n";
+	$_select['gmusicquality'] .= "<option value=\"low\" " . (($cfg_upnp['gmusicquality'] == 'low') ? "selected" : "") . ">128K (MP3)</option>\n";
+	$_select['gmusicdeviceid'] = $cfg_upnp['gmusicdeviceid'];
+}
+else {
+	$_feat_gmusicapi = 'hide';
+	if ($_SESSION['feat_bitmask'] & FEAT_GMUSICAPI) {
+		$_gmusicapi_msg = '';
+	}
+}
+
+$section = basename(__FILE__, '.php');
+$tpl = "upp-config.html";
+include('/var/local/www/header.php'); 
+waitWorker(1);
+eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
+include('footer.php');

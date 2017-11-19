@@ -1,0 +1,211 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2017-11-11 TC moOde 4.0
+ *
+ */
+-->	
+<div class="container">
+	<h1>Parametric EQ</h1>
+
+    <p>
+    	<a href="snd-config.php">BACK</a> to Audio configuration page<br>
+    	<a data-toggle="modal" href="#rm-curve">REMOVE</a> EQ curve
+    </p>
+
+    <form class="form-horizontal" data-validate="parsley" action="" method="post">
+    	<legend>Settings &nbsp;
+			<button type="submit" class="btn btn-primary btn-small" name="apply" value="1">Apply</button>&nbsp;
+			<button type="submit" class="btn btn-primary btn-small" name="play" value="1" $_disable_play><i class="icon-play"></i></button>
+			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="icon-info-sign"></i></a>
+			<span id="info-buttons" class="help-block help-block-margin hide" style="line-height: 16px; padding-bottom: 10px;">
+				APPLY: updates the curve table only.<br>
+				PLAY: updates the active curve config. EQ must be turned on in Audio config to enable Play.<br>
+            </span>
+		</legend>
+    
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="curve-name">Curve name</label>
+				<div class="controls">
+					<select id="eqp-curve-name" class="input-large" name="curve_name">
+						$_select[curve_name]
+					</select>
+					<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-curve-name" class="help-block help-block-margin hide">
+						Friendly name for the EQ curve.<br>
+                    </span>
+					<span class="help-block help-block-margin">
+						<a data-toggle="modal" href="#new-curvename">ENTER</a> New curve name<br>
+					</span>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+	    	<legend>EQ Curve</legend>
+			<div class="control-group">
+				<label class="control-label" for="master-gain">Master gain (dB)</label>
+				<div class="controls">
+					<input class="input-mini" type="number" min="-24" max="24" step=".1" id="master-gain" name="master_gain" value="$_select[master_gain]">
+					<a class="info-toggle" data-cmd="info-master-gain" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-master-gain" class="help-block help-block-margin hide">
+						Master gain: -24 to 24 dB (applies to all 4 frequency bands).<br>
+						Individual bands:<br>
+						- Freq: 20 to 14000 Hz<br>
+						- Qfac: 0.12 to 8 (lower Q = wider bandwidth)<br>
+						- Gain: -24 to 24 dB<br>
+                    </span>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<div class="control-group">
+				<table>
+					<tr>
+						<td class="control-label"></td>
+						<td style="padding-left:20px;">Enabled</td>
+						<td style="padding-left:20px;">Freq (Hz)</td>
+						<td style="padding-left:20px;">Q-factor</td>
+						<td style="padding-left:20px;">Gain (dB)</td>
+					</tr>
+					<tr>
+						<td class="control-label">Band 1</td>
+						<td style="padding-left:20px;">
+							<!-- style="width: 74px; is simply to prevent the control from displaying its default 224px width before being resized to 74px in moode.css" -->
+							<select id="band1-enabled" class="select-mini" name="band1_enabled" style="width: 74px;">
+								$_select[band1_enabled]
+							</select>
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min="20" max="14000" id="band1-freq" name="band1_freq" value="$_select[band1_freq]">
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min=".12" max="8" step=".01" id="band1-q" name="band1_q" value="$_select[band1_q]">
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band1_gain" value="$_select[band1_gain]">
+						</td>
+					</tr>
+					<tr>
+						<td class="control-label">Band 2</td>
+						<td style="padding-left:20px;">
+							<select id="band2-enabled" class="select-mini" name="band2_enabled" style="width: 74px;">
+								$_select[band2_enabled]
+							</select>
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min="20" max="14000" id="band1-freq" name="band2_freq" value="$_select[band2_freq]">
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min=".12" max="8" step=".01" id="band1-q" name="band2_q" value="$_select[band2_q]">
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band2_gain" value="$_select[band2_gain]">
+						</td>
+					</tr>
+					<tr>
+						<td class="control-label">Band 3</td>
+						<td style="padding-left:20px;">
+							<select id="band3-enabled" class="select-mini" name="band3_enabled" style="width: 74px;">
+								$_select[band3_enabled]
+							</select>
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min="20" max="14000" id="band1-freq" name="band3_freq" value="$_select[band3_freq]">
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min=".12" max="8" step=".01" id="band1-q" name="band3_q" value="$_select[band3_q]">
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band3_gain" value="$_select[band3_gain]">
+						</td>
+					</tr>
+					<tr>
+						<td class="control-label">Band 4</td>
+						<td style="padding-left:20px;">
+							<select id="band4-enabled" class="select-mini" name="band4_enabled" style="width: 74px;">
+								$_select[band4_enabled]
+							</select>
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min="20" max="14000" id="band1-freq" name="band4_freq" value="$_select[band4_freq]">
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min=".12" max="8" step=".01" id="band1-q" name="band4_q" value="$_select[band4_q]">
+						</td>
+						<td style="padding-left:20px;">
+							<input class="input-mini" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band4_gain" value="$_select[band4_gain]">
+						</td>
+					</tr>
+				</table>				
+			</div>
+		</fieldset>
+
+	</form>
+</div>
+
+<form class="form-horizontal" method="post">
+	<div id="rm-curve" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove EQ curve</h3>
+		</div>
+		
+		<div class="modal-body">
+			<div class="control-group">
+				<label class="control-label" for="rmcurve">Selected curve</label>
+				<div class="controls">
+					<input class="input-large" type="text" id="rmcurve" name="rm-curve" value="$_selected_curve" readonly>
+					<span class="help-block help-block-margin">
+						$_disable_rm_msg
+                    </span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit" name="rmcurve" value="1" $_disable_rm>Confirm</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="new-curvename" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="new-curvename-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Enter new curve name</h3>
+		</div>
+		
+		<div class="modal-body">
+			<div class="control-group">
+				<label class="control-label" for="new-curvename">Curve name</label>
+				<div class="controls">
+					<input class="input-large" type="text" id="newcurvename" name="new-curvename" value="">
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="submit" name="newcurvename" value="1">Ok</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		</div>
+	</div>
+</form>

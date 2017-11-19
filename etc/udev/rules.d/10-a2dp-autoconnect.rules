@@ -1,0 +1,17 @@
+#
+# 2017-11-11 TC moOde 4.0
+#
+
+ACTION=="add", KERNEL=="input[0-9]*", SUBSYSTEM=="input", ATTR{name}=="*:*:*:*:*:*", GOTO="bt_add"
+ACTION=="remove", KERNEL=="input[0-9]*", SUBSYSTEM=="input", DEVPATH=="/devices/virtual/input/*" GOTO="bt_remove"
+GOTO="bt_end"
+
+LABEL="bt_add"
+RUN+="/usr/bin/mpc stop"
+RUN+="/usr/local/bin/a2dp-autoconnect"
+GOTO="bt_end"
+
+LABEL="bt_remove"
+RUN+="/usr/local/bin/a2dp-autoconnect"
+
+LABEL="bt_end"

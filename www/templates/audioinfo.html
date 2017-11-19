@@ -1,0 +1,120 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2017-11-11 TC moOde 4.0
+ *
+ */
+-->
+<div id="container-audioinfo">
+	<div>
+		<strong>Input Processing</strong>
+		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
+			<col span="1" style="width:100px;">
+			<tr>
+				<td style="text-align:right;">Source:&nbsp;</td>
+				<td style="text-align:left;">$file</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Encoded at:&nbsp;</td>
+				<td style="text-align:left;">$encoded_at</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Decoded to:&nbsp;</td>
+				<td style="text-align:left;">$decoded_to</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Rate:&nbsp;</td>
+				<td style="text-align:left;">$decode_rate</td>
+			</tr>
+		</table>
+		
+		<strong>DSP Operations</strong>
+		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
+			<col span="1" style="width:100px;">
+			<tr>
+				<td style="text-align:right;">Resampling:&nbsp;</td>
+				<td style="text-align:left;">$resampler_format$resampler</td>
+			</tr>
+	
+			<tr>
+				<td style="text-align:right;">Crossfeed:&nbsp;</td>
+				<td style="text-align:left;">$crossfeed</td>
+			</tr>
+	
+			<tr>
+				<td style="text-align:right;">Equalizer:&nbsp;</td>
+				<td style="text-align:left;">$equalizer</td>
+			</tr>
+	
+			<tr>
+				<td style="text-align:right;">Chip options:&nbsp;</td>
+				<td style="text-align:left;">$chip_options</td>
+			</tr>
+	
+			<tr>
+				<td style="text-align:right;">Volume:&nbsp;</td>
+				<td style="text-align:left;">$volume</td>
+			</tr>
+		</table>
+	
+		<strong>Output Stream</strong>
+		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
+			<col span="1" style="width:100px;">
+			<tr>
+				<td style="text-align:right;">Format:&nbsp;</td>
+				<td style="text-align:left;">$hwparams_format</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Rate:&nbsp;</td>
+				<td style="text-align:left;">$hwparams_calcrate</td>
+			</tr>
+		</table>
+	
+		<strong>Audio Device</strong>
+		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
+			<col span="1" style="width:100px;">
+			<tr>
+				<td style="text-align:right;">Device:&nbsp;</td>
+				<td style="text-align:left;">$devname</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Chip:&nbsp;</td>
+				<td style="text-align:left;">$dacchip</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Architecture:&nbsp;</td>
+				<td style="text-align:left;">$devarch</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Interface:&nbsp;</td>
+				<td style="text-align:left;">$iface</td>
+			</tr>
+		</table>
+		
+		<!-- Simulates modal-footer -->
+		<hr style="border-top:2px solid #ddd; width:560px; margin-left:-15px; margin-top:20px; margin-bottom:15px;">
+		
+		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
+			<col span="1" style="width:280px;">
+			<tr>
+				<td style="text-align:left;">SYSTEM: $sysarch, $cores, $cpufreq, $cpuload%, $cputemp&deg<br>KERNEL: $kerneltype</td>
+				<td style="text-align:right;"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button></td>
+			</tr>
+		</table>
+	</div>
+</div>

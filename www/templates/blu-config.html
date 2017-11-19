@@ -1,0 +1,68 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2017-11-11 TC moOde 4.0
+ *
+ */
+-->	
+<div class="container">
+	<h1>Bluetooth Config</h1>
+
+    <p>
+    	<a href="snd-config.php">BACK</a> to Audio configuration page
+    </p>
+
+    <form class="form-horizontal" data-validate="parsley" action="" method="post">
+    	<legend style="padding-bottom: 6px;">Command &nbsp;
+			<select id="btcmd" class="select-medium" name="btcmd" style="margin-bottom: 5px;">
+				$_cmd[btcmd]
+			</select>
+			<button class="btn btn-primary btn-small set-button" type="submit" name="run_btcmd" value="1" $_bt_disabled>Run</button>
+			<a class="info-toggle" data-cmd="info_btcmd" href="#notarget"><i class="icon-info-sign"></i></a>
+			<span id="info_btcmd" class="help-block help-block-margin hide">
+				Select a command to submit to the Bluetooth controller.<br>
+            </span>
+		</legend>
+
+		<div style="background-color: #11181F; font-size: 14px; line-height: 18px; font-family: Courier New">
+			$_cmd_output
+		</div>
+
+		<div class="$_hide_ctl[paired_device]">
+			<select id="paired-device" class="select-large" name="paired_device" style="margin-bottom: 5px;">
+				$_device[paired_device]
+			</select>
+			<button class="btn btn-primary btn-small set-button" type="submit" name="rm_paired_device" value="1">Remove</button>
+			<a class="info-toggle" data-cmd="info_rm_paired_device" href="#notarget"><i class="icon-info-sign"></i></a>
+			<span id="info_rm_paired_device" class="help-block help-block-margin hide">
+				Select a paired device to remove.<br>
+            </span>
+		</div>
+
+		<div class="$_hide_ctl[connected_device]">
+			<select id="connected-device" class="select-large" name="connected_device" style="margin-bottom: 5px;">
+				$_device[connected_device]
+			</select>
+			<button class="btn btn-primary btn-small set-button" type="submit" name="disconnect_device" value="1">Disconnect</button>
+			<a class="info-toggle" data-cmd="info_disconect_device" href="#notarget"><i class="icon-info-sign"></i></a>
+			<span id="info_disconnect_device" class="help-block help-block-margin hide">
+				Select a device to disconnect.<br>
+            </span>
+		</div>
+	</form>
+</div>

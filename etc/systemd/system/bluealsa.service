@@ -1,0 +1,17 @@
+#
+# 2017-11-11 TC moOde 4.0
+#
+
+[Unit]
+Description=BluezAlsa proxy
+Requires=bluetooth.service
+After=bluetooth.service
+
+[Service]
+Type=simple
+#User=pi
+#Group=audio
+ExecStart=/usr/bin/bluealsa
+
+[Install]
+WantedBy=multi-user.target

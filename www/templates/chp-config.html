@@ -1,0 +1,116 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2017-11-11 TC moOde 4.0
+ *
+ */
+-->	
+<div class="container">
+	<h1>Chip/Device Options</h1>
+
+    <p>
+    	<a href="snd-config.php">BACK</a> to Audio configuration page
+    </p>
+
+    <form class="form-horizontal" data-validate="parsley" action="" method="post">
+    	<legend>Settings &nbsp;<button type="submit" class="btn btn-primary btn-small" name="apply" value="1">Apply</button></legend>
+    
+		<h4>Burr Brown PCM and TAS chips</h4>
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="digfilter">Digital interpolation filter</label>
+				<div class="controls">
+					<select id="digfilter" class="input-large" name="config[digfilter]">
+						$_select[digfilter]
+					</select>
+					<span class="help-block help-block-margin">
+                    	Filter is applied to PCM samples at oversampling stage just prior to sigma-delta modulator.<br>
+						Playback is automatically restarted to make filter change effective.<br>
+						NOTE: Filter is bypassed if sample rate is 384 kHz.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="analoggain">Analog gain</label>
+				<div class="controls">
+					<select id="analoggain" class="input-large" name="config[analoggain]">
+						$_select[analoggain]
+					</select>
+					<span class="help-block help-block-margin">
+						 Analog gain can be set to 0 dB (2-Vrms) or –6 dB (1-Vrms).
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="analogboost">Analog gain boost</label>
+				<div class="controls">
+					<select id="analogboost" class="input-large" name="config[analogboost]">
+						$_select[analogboost]
+					</select>
+					<span class="help-block help-block-margin">
+						 Analog gain boost can be set to 0 dB (normal amplitude) or .8 dB (10% boosted amplitude).
+                   </span>
+				</div>
+			</div>
+		</fieldset>
+
+		<div class="$_allo_piano_hide">
+			<legend></legend>
+			<h4>Allo Piano 2.1 (Dual PCM5142)</h4>
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label" for="outputmode">Output mode</label>
+					<div class="controls">
+						<select id="outputmode" class="input-large" name="config[outputmode]">
+							$_select[outputmode]
+						</select>
+						<span class="help-block help-block-margin">
+							Dual-Mono: main DAC outputs L ch and Sub DAC outputs R ch (L/mute mute/R).<br>
+							Dual-Stereo: both DAC's output L/R channels (L/R L/R).<br>
+							Stereo: all freq to Main L/R, Sub L/R muted<br>
+							Subwoofer: 2.1/2.2 (high freq to Main L/R, low freq to Sub L / Sub L/R)<br>
+	                    </span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="lowpassfreq">Subwoofer x-over freq</label>
+					<div class="controls">
+						<select id="lowpass" class="input-large" name="config[lowpass]" $_allo_piano_submode_disabled>
+							$_select[lowpass]
+						</select>
+						&nbsp;Hz
+						<span class="help-block help-block-margin">
+							Frequency range: 60 - 200 Hz.<br>
+	                    </span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="subwvol">Subwoofer volume</label>
+					<div class="controls">
+	                    <input class="input-mini" type="number" maxlength="3" min="0" max="100" id="subwvol" name="config[subwvol]" value="$subwvol" $_allo_piano_submode_disabled> %
+						<span class="help-block help-block-margin">
+							Volume range: 0 - 100%.
+	                    </span>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+	</form>
+</div>

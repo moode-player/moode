@@ -1,0 +1,54 @@
+#
+# 2017-11-11 TC moOde 4.0
+#
+
+[Unit]
+Description=Moode Rotary Encoder Driver
+After=sound.target
+
+[Service]
+# Real-time / Low latency params
+# ps -e -o class,rtprio,pri,nice,cmd
+# for real-time scheduling policies the "nice" param is ignored and the pri column is not relevant
+
+# for rotenc process
+LimitRTPRIO=99
+LimitMEMLOCK=infinity
+
+# scheduling policy
+# real-time
+# - fifo, first in first out
+# - rr, round robin
+# static
+# - other, the standard round-robin time-sharing (ts) policy
+# - batch, for "batch" style execution of processes
+# - idle, for running very low priority background jobs
+CPUSchedulingPolicy=other
+
+# scheduling priority
+# 1 = lowest, 99 = highest)
+CPUSchedulingPriority=42
+
+# scheduling priority adjustment
+# applies only to static scheduling policies
+# 0 = default, -20 = highest, 19 = lowest
+Nice=-10
+
+# processor affinity bit mask
+# - empty string = reset bit mask
+# - cpu index list or dash seperated range
+#CPUAffinity=0,1
+
+# Launch params
+# rotenc <DELAY> <ACCEL> <STEP> <PIN_A> <PIN_B> <DEBUG 1|2>
+# rotenc 100 2 3 4 5 1 (with optional debug print)
+# rotenc 100 2 3 4 5
+# DELAY:	Number of ms delay for each iteration of the volume update loop. Default=100
+# ACCEL:	Threshold (difference between last and current position of encoder) to determine whether to use 1 step or STEP steps. Default=2.
+# STEP:		Number of steps to use when knob turns at fast rate. Default=3. 
+# PIN_A,B:	WiringPi GPIO pin numbers. Defaults=4,5 (23,24).
+# DEBUG:	Print debug information to console. 1=normal, 2=verbose. This is an optional param.
+ExecStart=/usr/local/bin/rotenc 100 2 3 4 5
+
+[Install]
+WantedBy=multi-user.target

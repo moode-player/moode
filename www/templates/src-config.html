@@ -1,0 +1,73 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * tsunamp player ui (C) 2013 Andrea Coiutti & Simone De Gregori
+ * http://www.tsunamp.com
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2017-11-11 TC moOde 4.0
+ *
+ */
+-->	
+<div class="container">
+	<h1>Music Source Config</h1>
+	<p>
+		<legend>NAS Sources</legend>
+
+		<p>
+			<a class="btn btn-small btn-primary" href="src-config.php?cmd=add">Create</a>&nbsp;&nbsp;NAS source
+		</p>
+
+		<p>List of configured NAS sources (click to edit)</p>
+
+		<form method="post">
+			$_mounts
+
+			<p>
+				<button class="btn btn-small btn-primary" type="submit" name="remount" value="novalue" $_remount_disable>Re-mount</button>&nbsp;&nbsp;All NAS sources
+				<span class="help-block help-block-margin">
+					Re-mounts all NAS sources and does not run MPD database update.<br>
+				</span>
+			</p>
+
+			<p></p>
+			<legend>USB and SD Card Sources</legend>
+			<p>
+				Use UPDATE to initially add USB and SD Card sources to the Browse panel. RESCAN can be used to rebuild the MPD database by scanning all content in all music sources.
+			</p>
+			<p>
+				<button class="btn btn-small btn-primary" type="submit" name="updatempd" value="novalue">Update</button>&nbsp;&nbsp;MPD database
+				<span class="help-block help-block-margin">
+					Updates the music database: find new files, remove deleted files, update modified files.<br>
+				</span>
+			</p>
+			<p>
+				<button class="btn btn-small btn-primary" type="submit" name="rescanmpd" value="novalue">Rescan</button>&nbsp;&nbsp;Music sources
+				<span class="help-block help-block-margin">
+					Same as update, but also rescans unmodified files.<br>
+				</span>
+			</p>
+			<legend>Music Library Cache</legend>
+			<p>
+				<button class="btn btn-small btn-primary" type="submit" name="resetcache" value="novalue">Reset</button>&nbsp;&nbsp;Library cache
+				<span class="help-block help-block-margin">
+					Resets the Library cache. It will be rebuilt next time the Library is opened.<br>
+				</span>
+			</p>
+		</form>
+	</p>	
+</div>
