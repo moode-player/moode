@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
 -->
@@ -67,12 +67,13 @@
 
 <div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
 	<div class="dropdown">
-		<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu" style="font-size: 18px; color: #dddddd;">Beta9</a>
+		<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu" style="font-size: 18px; color: #dddddd;">Beta10</a>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
 			<?php if ($section == 'index') { ?>
 				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="setforclockradio-m"><i id="clockradio-icon-m" class="icon-time sx clockradio-off-m"></i> Clock radio</a></li>
 				<li><a href="#configure-modal" data-toggle="modal"><i class="icon-cogs sx"></i> Configure</a></li>
 				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="customize"><i class="icon-edit sx"></i> Customize</a></li>
+				<li><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="icon-forward sx"></i> Players</a></li>
 				<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="icon-music sx"></i> Audio info</a></li>
 				<li><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="icon-laptop sx"></i> System info</a></li>
 				<li class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="icon-book sx"></i> Play history</a></li>

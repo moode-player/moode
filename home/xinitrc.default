@@ -19,12 +19,14 @@
 # 2017-11-26 TC moOde 4.0
 #
 
-if [[ -n "$1" ]]; then
-	eval "$1"
+# turn off display power management
+xset -dpms &
 
-	while inotifywait -e close_write /var/local/www/currentsong.txt; do
-		eval "$1"	
-	done > /dev/null 2>&1 &
-else
-	echo "lcdup, missing arg <path to Python script>"
-fi
+# turn on screensaver (default = 10 mins)
+xset s 600 &
+
+# launch chrome browser
+SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"
+chromium-browser --kiosk --touch-events --disable-touch-drag-drop --disable-overlay-scrollbar \
+--enable-touchview --enable-pinch --window-size=$SCREENSIZE --window-position=0,0 \
+--disable-session-crashed-bubble --disable-infobars --no-first-run --app=http://localhost/ 

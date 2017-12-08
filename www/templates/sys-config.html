@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
 -->	
@@ -52,6 +52,16 @@
 					</span>
                 </div>
             </div>	
+
+            <div class="control-group">
+                <label class="control-label" for="keyboard">Keyboard layout</label>
+                <div class="controls">
+                    <select id="keyboard" class="input-large" name="keyboard">
+                        $_keyboard[keyboard]
+                    </select>
+                    <button class="btn btn-primary btn-small" type="submit" name="update_keyboard" value="novalue" style="margin-left: 8px;">Set</button>
+                </div>
+            </div>   
 			
 			<div class="control-group" >
                 <label class="control-label" for="browsertitle">Browser title</label>
@@ -333,6 +343,60 @@
 			</div>	
 		</fieldset>
 			
+		<div class="$_feat_localui">
+			<legend>Local Display</legend>
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label">Local UI display</label>
+					<div class="controls">
+						<div class="toggle">
+							<label class="toggle-radio" for="togglelocalui2">ON</label>
+							$_select[localui1]
+							<label class="toggle-radio" for="togglelocalui1">OFF</label>
+							$_select[localui0]
+						</div>
+						<span style="display: inline-block; vertical-align: top">
+		                    <button class="btn btn-primary btn-small" type="submit" name="update_localui" value="novalue" style="margin-left: 8px;">Set</button>
+							<a class="info-toggle" data-cmd="info-localui" href="#notarget"><i class="icon-info-sign"></i></a>
+						</span>
+						<span id="info-localui" class="help-block help-block-margin hide">
+							Display moOde UI on locally attached display.<br>
+	                    </span>
+	                </div>
+	            </div>  
+	
+				<div class="control-group">
+					<label class="control-label">Touch screen</label>
+					<div class="controls">
+						<div class="toggle">
+							<label class="toggle-radio" for="toggletouchscn2">YES</label>
+							$_select[touchscn1]
+							<label class="toggle-radio" for="toggletouchscn1">NO</label>
+							$_select[touchscn0]
+						</div>
+						<span style="display: inline-block; vertical-align: top">
+		                    <button class="btn btn-primary btn-small" type="submit" name="update_touchscn" value="novalue" style="margin-left: 8px;">Set</button>
+							<a class="info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="icon-info-sign"></i></a>
+						</span>
+						<span id="info-touchscn" class="help-block help-block-margin hide">
+							Set to Yes if the display has Touch capability.<br>
+							This prevents the cursor from showing.<br>
+	                    </span>
+	                </div>
+	            </div>  
+		
+					<div class="control-group">
+						<label class="control-label" for="screenblank">Screen blank</label>
+						<div class="controls">
+							<select id="scnblank" class="input-large" name="scnblank">		
+								$_select[scnblank]
+							</select>
+							<button class="btn btn-primary btn-small" type="submit" name="update_scnblank" value="novalue" style="margin-left: 8px;">Set</button>
+						</div>
+		            </div>  
+			</fieldset>
+		</div>
+	
 		<legend>Local Services</legend>
 		<fieldset>
 			<div class="control-group">
@@ -504,10 +568,10 @@
 			</div>
 		</fieldset>
 
-		<legend>Peripherals</legend>
+		<!--legend>Peripherals</legend>
 		<fieldset>
             <div class="control-group">
-                <label class="control-label" for="keyboard">Keyboard</label>
+                <label class="control-label" for="keyboard">Keyboard layout</label>
                 <div class="controls">
                     <select id="keyboard" class="input-large" name="keyboard">
                         $_keyboard[keyboard]
@@ -515,17 +579,7 @@
                     <button class="btn btn-primary btn-small" type="submit" name="update_keyboard" value="novalue" style="margin-left: 8px;">Set</button>
                 </div>
             </div>   
-     
-            <div class="control-group">
-                <label class="control-label" for="kvariant">Layout</label>
-                <div class="controls">
-                    <select id="kvariant" class="input-large" name="kvariant">
-                        $_kvariant[kvariant]
-                    </select>
-                    <button class="btn btn-primary btn-small" type="submit" name="update_keyboard_variant" value="novalue" style="margin-left: 8px;">Set</button>
-                </div>
-            </div>  
-		</fieldset>
+		</fieldset-->
 
 		<div id="view-pkgcontent" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="view-pkgcontent-label" aria-hidden="true">
 			<div class="modal-header">

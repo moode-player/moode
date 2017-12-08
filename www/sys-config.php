@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
 
@@ -109,7 +109,7 @@ if (isset($_POST['update_host_name'])) {
 // browser title
 if (isset($_POST['update_browser_title'])) {
 	if (isset($_POST['browsertitle']) && $_POST['browsertitle'] != $_SESSION['browsertitle']) {
-		submitJob('browsertitle', '"' . $_SESSION['browsertitle'] . '" ' . '"' . $_POST['browsertitle'] . '"', 'Browser title changed', 'Reboot required');
+		submitJob('browsertitle', '"' . $_SESSION['browsertitle'] . '" ' . '"' . $_POST['browsertitle'] . '"', 'Browser title changed', 'Refresh Browser');
 		playerSession('write', 'browsertitle', $_POST['browsertitle']);
 	} 
 }
@@ -211,6 +211,41 @@ if (isset($_POST['update_mpdtimeout']) && $_POST['mpdtimeout'] != $_SESSION['eng
 	playerSession('write', 'engine_mpd_sock_timeout', $_POST['mpdtimeout']);
 }
 
+// LOCAL DISPLAY
+
+// local UI display 
+if (isset($_POST['update_localui'])) {
+    if (isset($_POST['localui']) && $_POST['localui'] != $_SESSION['localui']) {
+		$title = $_POST['localui'] == 1 ? 'Local UI display on' : 'Local UI display off';
+        submitJob('localui', $_POST['localui'], $title, 'Reboot may be required');
+        playerSession('write', 'localui', $_POST['localui']);
+    } 
+}
+
+// touch screen capability
+if (isset($_POST['update_touchscn'])) {
+    if (isset($_POST['touchscn']) && $_POST['touchscn'] != $_SESSION['touchscn']) {
+        submitJob('touchscn', $_POST['touchscn'], 'Setting updated', 'Local display restarted');
+        playerSession('write', 'touchscn', $_POST['touchscn']);
+    } 
+}
+
+// screen blank timeout
+if (isset($_POST['update_scnblank'])) {
+    if (isset($_POST['scnblank']) && $_POST['scnblank'] != $_SESSION['scnblank']) {
+        submitJob('scnblank', $_POST['scnblank'], 'Setting updated', 'Local display restarted');
+        playerSession('write', 'scnblank', $_POST['scnblank']);
+    } 
+}
+
+// keyboard layout
+if (isset($_POST['update_keyboard'])) {
+    if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
+        submitJob('keyboard', $_POST['keyboard'], 'Keyboard layout updated ', 'Reboot required');
+        playerSession('write', 'keyboard', $_POST['keyboard']);
+    } 
+}
+
 // LOCAL SERVICES
 
 // metadata for external apps
@@ -280,30 +315,13 @@ if (isset($_POST['debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
 	playerSession('write', 'debuglog', $_POST['debuglog']);
 }
 
-// PERIPHERALS
-
-// keyboard 
-if (isset($_POST['update_keyboard'])) {
-    if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
-        submitJob('keyboard', $_POST['keyboard'], 'Keyboard set to ' . $_POST['keyboard'], '');
-        playerSession('write', 'keyboard', $_POST['keyboard']);
-    } 
-}
-
-// keyboard variant
-if (isset($_POST['update_keyboard_variant'])) {
-    if (isset($_POST['kvariant']) && $_POST['kvariant'] != $_SESSION['kvariant']) {
-        submitJob('kvariant', $_POST['kvariant'], 'Layout set to ' . $_POST['kvariant'], '');
-        playerSession('write', 'kvariant', $_POST['kvariant']);
-    } 
-}
-
 session_write_close();
 
 // GEBERAL
 
 $_timezone['timezone'] = buildTimezoneSelect($_SESSION['timezone']);
 $_select['hostname'] = $_SESSION['hostname'];
+$_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
 $_select['browsertitle'] = $_SESSION['browsertitle'];
 
 // SYSTEM MODIFICATIONS
@@ -407,6 +425,31 @@ $_select['mpdtimeout'] .= "<option value=\"18000\" " . (($_SESSION['mpdtimeout']
 $_select['mpdtimeout'] .= "<option value=\"3600\" " . (($_SESSION['mpdtimeout'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
 $_select['mpdtimeout'] .= "<option value=\"1800\" " . (($_SESSION['mpdtimeout'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
 
+// LOCAL DISPLAY
+
+// local UI display
+if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
+	$_feat_localui = '';
+	$_select['localui1'] .= "<input type=\"radio\" name=\"localui\" id=\"togglelocalui1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['localui0'] .= "<input type=\"radio\" name=\"localui\" id=\"togglelocalui2\" value=\"0\" " . (($_SESSION['localui'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	
+	// touch capability
+	$_select['touchscn1'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggletouchscn1\" value=\"1\" " . (($_SESSION['touchscn'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['touchscn0'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggletouchscn2\" value=\"0\" " . (($_SESSION['touchscn'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	
+	// screen blank
+	$_select['scnblank'] .= "<option value=\"600\" " . (($_SESSION['scnblank'] == '600') ? "selected" : "") . ">10 Mins</option>\n";
+	$_select['scnblank'] .= "<option value=\"1800\" " . (($_SESSION['scnblank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
+	$_select['scnblank'] .= "<option value=\"3600\" " . (($_SESSION['scnblank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
+	$_select['scnblank'] .= "<option value=\"600000\" " . (($_SESSION['scnblank'] == '600000') ? "selected" : "") . ">Never</option>\n";
+}
+else {
+	$_feat_localui = 'hide';
+}
+
+//$_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
+//$_kvariant['kvariant'] = buildKvariantSelect($_SESSION['kvariant']);
+
 // LOCAL SERVICES
 
 // metadata file
@@ -447,8 +490,8 @@ $_select['debuglog0'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggledeb
 
 // PERIPHERALS
 
-$_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
-$_kvariant['kvariant'] = buildKvariantSelect($_SESSION['kvariant']);  
+//$_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
+//$_kvariant['kvariant'] = buildKvariantSelect($_SESSION['kvariant']);
 
 $section = basename(__FILE__, '.php');
 

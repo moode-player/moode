@@ -25,7 +25,7 @@
  * - make sure client is configured to hand cover requests to /coverart.php or setup an nginx catch-all rule:
  * - try_files $uri $uri/ /coverart.php;
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
 
@@ -61,7 +61,8 @@ function getImage($path) {
 		case 'jpg':
 		case 'jpeg':
 			// physical image file -> redirect
-			$path = '/mpdmusic' . substr($path, strlen('/var/lib/mpd/music'));
+			//$path = '/mpdmusic' . substr($path, strlen('/var/lib/mpd/music'));
+			$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
 			$path = str_replace('#', '%23', $path);
 			//workerlog('coverart: 1 - ' . $path);
 			header('Location: ' . $path);

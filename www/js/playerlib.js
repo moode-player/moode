@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
 
@@ -207,7 +207,12 @@ function engineSps() {
 
 			renderSpsUI();
 			engineSps();
+		},
+
+		error: function(data) {
+			debugLog('engineSps: error branch: data=(' + JSON.stringify(data) + ')');
 		}
+
     });
 }
 

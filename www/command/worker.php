@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
 
@@ -87,6 +87,11 @@ $result = cfgdb_read('cfg_radio', $dbh);
 foreach ($result as $row) {
 	$_SESSION[$row['station']] = array('name' => $row['name'], 'permalink' => $row['permalink'], 'logo' => $row['logo']);
 }
+// cache musicroot in session vars
+$_SESSION['musicroot'] = mt_rand();
+sysCmd('rm /var/www/mpdmusic');
+sysCmd('find /var/www -type l -delete');
+sysCmd('ln -s /var/lib/mpd/music /var/www/' . $_SESSION['musicroot']);
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
 
@@ -410,7 +415,7 @@ else {
 	workerLog('worker: Audio scrobbler (feat N/A)');
 }
 
-// FEATURES AVAILABILITY CONTROLLED BY FEAT_BITMASK
+// END FEATURES AVAILABILITY
 
 // start rotary encoder
 if (isset($_SESSION['rotaryenc']) && $_SESSION['rotaryenc'] == 1) {	
@@ -432,8 +437,8 @@ if (isset($_SESSION['shellinabox']) && $_SESSION['shellinabox'] == 1) {
 
 // start bluetooth controller
 if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
-	startBt();
 	workerLog('worker: Bluetooth controller started');
+	startBt();
 }
 
 //
@@ -1044,6 +1049,29 @@ function runQueuedJob() {
 				sysCmd('echo program_usb_boot_mode=1 >> ' . $_SESSION['res_boot_config_txt']);
 			}
 			break;
+		case 'localui':
+			$cmd = $_SESSION['w_queueargs'] == '1' ? 'enable' : 'disable';
+			//sysCmd('sudo systemctl ' . $cmd . ' localui');
+			sysCmd('sudo systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'enable' : 'disable') . ' localui');
+			sysCmd('sudo systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'start' : 'stop') . ' localui');
+			break;
+		case 'touchscn':
+			$param = $_SESSION['w_queueargs'] == '1' ? ' -- -nocursor' : '';
+			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' .$param . '" /lib/systemd/system/localui.service');
+			if ($_SESSION['localui'] == '1') {
+				sysCmd('systemctl daemon-reload');
+				sysCmd('systemctl restart localui');
+			}
+			break;
+		case 'scnblank':
+			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" /home/pi/.xinitrc');
+			if ($_SESSION['localui'] == '1') {
+				sysCmd('systemctl restart localui');
+			}
+			break;
+		case 'keyboard':
+			sysCmd('/var/www/command/util.sh set-keyboard ' . $_SESSION['w_queueargs']);
+			break;
 		case 'lcdup':
 			$_SESSION['w_queueargs'] == 1 ? startLcdUpdater() : sysCmd('killall inotifywait > /dev/null 2>&1 &');
 			break;
@@ -1067,12 +1095,6 @@ function runQueuedJob() {
 			sysCmd('ntpd -qgx > /dev/null 2>&1 &');
 			sysCmd('systemctl start ntp');
 			break;
-		case 'keyboard':
-			sysCmd('/var/www/command/util.sh set-keyboard ' . $_SESSION['w_queueargs']);
-			break;
-		case 'kvariant':
-			sysCmd('/var/www/command/util.sh set-keyboard-variant ' . $_SESSION['w_queueargs']);
-			break;  
 
 		// command/moode jobs
 		case 'reboot':

@@ -19,12 +19,18 @@
 # 2017-11-26 TC moOde 4.0
 #
 
-if [[ -n "$1" ]]; then
-	eval "$1"
+[Unit]
+Description=Start Chromium Browser
+After=nginx.service php7.0-fpm.service mpd.service
 
-	while inotifywait -e close_write /var/local/www/currentsong.txt; do
-		eval "$1"	
-	done > /dev/null 2>&1 &
-else
-	echo "lcdup, missing arg <path to Python script>"
-fi
+[Service]
+Type=simple
+
+# start xserver
+ExecStart=/usr/bin/xinit
+
+User=pi
+
+[Install]
+WantedBy=multi-user.target
+

@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2017-03-03 KS initial version (rev 4)
-# 2017-11-11 TC moOde 4.0
+# 2017-11-26 TC moOde 4.0
 #
 
 FREQ() { 

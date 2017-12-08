@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
  
@@ -159,6 +159,19 @@
 	text-decoration: none;
 }
 .moode-config-settings-link:hover {
+	color: #ecf0f1;
+	text-decoration: none; 
+	font-weight: bold;
+}
+
+.moode-config-settings-link2 {
+	color: #ecf0f1; /* Clouds */
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	padding-right: 8px;
+}
+.moode-config-settings-link2:hover {
 	color: #ecf0f1;
 	text-decoration: none; 
 	font-weight: bold;

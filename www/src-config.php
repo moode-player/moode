@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
 
@@ -66,8 +66,8 @@ if (isset($_POST['resetcache'])) {
 if(isset($_POST['mount']) && !empty($_POST['mount'])) {
 	$_POST['mount']['remotedir'] = str_replace('\\', '/', $_POST['mount']['remotedir']); // convert slashes
 	// defaults
-	if ($_POST['mount']['wsize'] == '') {$_POST['mount']['wsize'] = 1048576;}
 	if ($_POST['mount']['rsize'] == '') {$_POST['mount']['rsize'] = 61440;}
+	if ($_POST['mount']['wsize'] == '') {$_POST['mount']['wsize'] = 65536;}
 	// options
 	if ($_POST['mount']['options'] == '') {
 		if ($_POST['mount']['type'] == 'cifs') {
@@ -169,7 +169,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 		$_hide_error = 'hide';
 		$_source_select['type'] .= "<option value=\"cifs\">SMB/CIFS</option>\n";	
 		$_source_select['type'] .= "<option value=\"nfs\">NFS</option>\n";	
-		$_rsize = '1048576';
+		$_rsize = '61440';
 		$_wsize = '65536';
 		$_options = 'ro,dir_mode=0777,file_mode=0777';
 	}

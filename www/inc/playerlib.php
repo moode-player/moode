@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-14 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
  
@@ -30,14 +30,15 @@ define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
 error_reporting(E_ERROR);
 
 // features availability bitmask
-const FEAT_ADVKERNELS = 0b00000001;		// 1
-const FEAT_AIRPLAY = 0b00000010;		// 2
-const FEAT_MINIDLNA = 0b00000100;		// 4
-const FEAT_MPDAS = 0b00001000;			// 8
-const FEAT_SQUEEZELITE = 0b00010000;	// 16
-const FEAT_UPMPDCLI = 0b00100000;		// 32
-const FEAT_SQSHCHK = 0b01000000;		// 64 
-const FEAT_GMUSICAPI = 0b10000000;		// 128 
+const FEAT_ADVKERNELS =  0b0000000000000001;	// 1
+const FEAT_AIRPLAY =     0b0000000000000010;	// 2
+const FEAT_MINIDLNA =    0b0000000000000100;	// 4
+const FEAT_MPDAS =       0b0000000000001000;	// 8
+const FEAT_SQUEEZELITE = 0b0000000000010000;	// 16
+const FEAT_UPMPDCLI =    0b0000000000100000;	// 32
+const FEAT_SQSHCHK =     0b0000000001000000;	// 64 
+const FEAT_GMUSICAPI =   0b0000000010000000;	// 128 
+const FEAT_LOCALUI =     0b0000000100000000;	// 256 
 
 // mirror for footer.pho
 $FEAT_AIRPLAY = 0b00000010;
@@ -1520,6 +1521,16 @@ function startBt() {
 	sysCmd('systemctl start hciuart');
 	sysCmd('systemctl start bluetooth');
 	sysCmd('systemctl start bluealsa');
+
+	// initialize controller if not already done
+	$result = sysCmd('ls /var/lib/bluetooth');
+	if ($result[0] != '') {
+		$result = sysCmd('/var/www/command/bt.sh -i');
+		workerLog('worker: Bluetooth controller initialized');
+	}
+	else {
+		workerLog('worker: Bluetooth error, no MAC address');
+	}
 }
 
 // initialize shairport-sync metadata cache

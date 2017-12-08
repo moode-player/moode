@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-11 TC moOde 4.0
+ * 2017-11-26 TC moOde 4.0
  *
  */
 -->
@@ -32,10 +32,10 @@
 	<div class="modal-body">
 		<p>
 			<img src="images/player-logotype-v4-clear.png" style="height: 48px;">
-			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by efforts from the RaspyFi/Volumio projects.</p>
+			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>			
 			<ul>
-				<li>Release: 4 BETA 9, 2017-11-11 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">release notes</a></li>
+				<li>Release: 4 BETA10 2017-11-26 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">release notes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">setup guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">moodeaudio.org</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">twitter</a></li>
@@ -52,49 +52,6 @@
 				<li>MPD version: <span id="sys-mpd-ver"></span></li>
 			</ul>
 		</p>
-	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	</div>
-</div>
-
-<!-- RESTART -->	
-<div id="restart-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="restart-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="restart-modal-label"><i class="icon-power-off sx"></i></h3>
-	</div>
-	<div class="modal-body">
-		<button id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
-		<button id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Reboot</button>
-	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-	</div>
-</div>
-
-<!-- AUDIO INFO -->	
-<div id="audioinfo-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="audioinfo-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="audioinfo-modal-label">Audio information</h3>
-	</div>
-	<div class="modal-body" style="max-height: 450px;">
-	</div>
-	<!-- There is a custom footer for this modal
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	</div>
-	-->
-</div>
-
-<!-- SYSTEM INFO -->	
-<div id="sysinfo-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="sysinfo-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="sysinfo-modal-label">System information</h3>
-	</div>
-	<div class="modal-body" style="max-height: 400px;">
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -214,6 +171,54 @@
 	<div class="modal-footer">
 		<button class="btn btn-clockradio-update btn-primary" data-dismiss="modal">Update</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	</div>
+</div>
+
+<!-- CONFIG MENU -->	
+<div id="configure-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="configure-modal-label">Configuration settings</h3>
+	</div>
+	<div class="modal-body">
+		<div style="margin-top: 20px; margin-left: 20px;">
+			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="src-config.php"><i class="icon-folder-open sx"></i>Sources</a></div>
+			<span class="help-block">
+				Index sources containing music
+            </span>
+			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="snd-config.php"><i class="icon-music sx"></i>&nbsp;Audio</a></div>
+			<span class="help-block">
+				MPD, devices, DSP and renderers
+            </span>
+			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="net-config.php"><i class="icon-sitemap sx"></i>Network</a></div>
+			<span class="help-block">
+				LAN, WiFi and AP mode 
+            </span>
+			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="sys-config.php"><i class="icon-laptop sx"></i>System</a></div>
+			<span class="help-block">
+				OS settings and maintenence
+            </span>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<div style="float: left;">
+			<a href="mpd-config.php" class="moode-config-settings-link2">MPD</a>
+			<a href="eqp-config.php" class="moode-config-settings-link2">EQP</a>
+			<a href="eqg-config.php" class="moode-config-settings-link2">EQG</a>
+			<a href="blu-config.php" class="moode-config-settings-link2">BLU</a>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_AIRPLAY) { ?>
+				<a href="apl-config.php" class="moode-config-settings-link2">AIR</a>
+			<?php } ?>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SQUEEZELITE) { ?>				
+				<a href="sqe-config.php" class="moode-config-settings-link2">SQE</a>
+			<?php } ?>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_UPMPDCLI) { ?>
+				<a href="upp-config.php" class="moode-config-settings-link2">UPP</a>
+			<?php } ?>
+		</div>
+		<br>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
@@ -405,50 +410,59 @@
 	</div>
 </div>
 
-<!-- CONFIG MENU -->	
-<div id="configure-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
+<!-- PLAYERS -->	
+<div id="players-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="configure-modal-label">Configuration settings</h3>
+		<h3 id="players-modal-label">Players</h3>
+	</div>
+	<div class="modal-body" style="max-height: 450px;">
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
+<!-- AUDIO INFO -->	
+<div id="audioinfo-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="audioinfo-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="audioinfo-modal-label">Audio information</h3>
+	</div>
+	<div class="modal-body" style="max-height: 450px;">
+	</div>
+	<!-- There is a custom footer for this modal
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+	-->
+</div>
+
+<!-- SYSTEM INFO -->	
+<div id="sysinfo-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="sysinfo-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="sysinfo-modal-label">System information</h3>
+	</div>
+	<div class="modal-body" style="max-height: 400px;">
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
+<!-- RESTART -->	
+<div id="restart-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="restart-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="restart-modal-label"><i class="icon-power-off sx"></i></h3>
 	</div>
 	<div class="modal-body">
-		<div style="margin-top: 20px; margin-left: 20px;">
-			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="src-config.php"><i class="icon-folder-open sx"></i>Sources</a></div>
-			<span class="help-block">
-				Define the location of music files
-            </span>
-			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="snd-config.php"><i class="icon-music sx"></i>&nbsp;Audio</a></div>
-			<span class="help-block">
-				MPD, I2S devices, renderers and services
-            </span>
-			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="net-config.php"><i class="icon-sitemap sx"></i>Network</a></div>
-			<span class="help-block">
-				LAN, WiFi and AP mode settings
-            </span>
-			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="sys-config.php"><i class="icon-laptop sx"></i>System</a></div>
-			<span class="help-block">
-				System modifications, services and maintenence
-            </span>
-		</div>
+		<button id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
+		<button id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Reboot</button>
 	</div>
-
 	<div class="modal-footer">
-		<div style="float: left;">
-			<a href="mpd-config.php"><button class="btn btn-primary btn-small" style=" font-size: 10px;">MPD</button></a>
-			<a href="eqp-config.php"><button class="btn btn-primary btn-small" style=" font-size: 10px;">EQP</button></a>
-			<a href="eqg-config.php"><button class="btn btn-primary btn-small" style=" font-size: 10px;">EQG</button></a>
-			<a href="blu-config.php"><button class="btn btn-primary btn-small" style=" font-size: 10px;">BLU</button></a>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_AIRPLAY) { ?>
-				<a href="apl-config.php"><button class="btn btn-primary btn-small" style=" font-size: 10px;">AIR</button></a>
-			<?php } ?>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SQUEEZELITE) { ?>				
-				<a href="sqe-config.php"><button class="btn btn-primary btn-small" style=" font-size: 10px;">SQE</button></a>
-			<?php } ?>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_UPMPDCLI) { ?>
-				<a href="upp-config.php"><button class="btn btn-primary btn-small" style=" font-size: 10px;">UPP</button></a>
-			<?php } ?>
-		</div>
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
 </div>
 

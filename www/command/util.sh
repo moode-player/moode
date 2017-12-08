@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-11-11 TC moOde 4.0
+# 2017-11-26 TC moOde 4.0
 #
 
 if [[ $1 = "set-timezone" ]]; then
@@ -24,15 +24,9 @@ if [[ $1 = "set-timezone" ]]; then
 	exit
 fi
 
-# set keyboard and varient
+# set keyboard layout
 if [[ $1 = "set-keyboard" ]]; then
-    debconf-set-selections <<< "keyboard-configuration keyboard-configuration/layoutcode string $2"
-    debconf-set-selections <<< "keyboard-configuration keyboard-configuration/xkb-keymap select $2"
-    exit
-fi
-
-if [[ $1 = "set-keyboard-variant" ]]; then
-    debconf-set-selections <<< "keyboard-configuration keyboard-configuration/variant select $2"
+	sed -i "/XKBLAYOUT=/c\XKBLAYOUT=\"$2\"" /etc/default/keyboard
     exit
 fi
 

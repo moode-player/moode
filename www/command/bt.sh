@@ -32,13 +32,16 @@
 # It performs bluetooth controller initialization and provides management of bluetooth sources
 # All related data files will reside under /var/lib/bluetooth
 #
-# 2017-11-11 TC moOde 4.0
+# 2017-11-26 TC moOde 4.0
+# - REV 1.1
 # - adapted for output to PHP/HTML 
 # - simplified cmd api for BT config screen
 # - added BTREMOVE(), BTDISCONNECT()
+# - REV 1.2
+# - revise html help for auto-initialize (happens in playerlib.php: startBt()
 #
 
-REV=1.1
+REV=1.2
 
 # check environment
 [[ $EUID -ne 0 ]] && { echo "*** You must be root to run the script! ***" ; exit 1 ; } ;
@@ -191,7 +194,7 @@ HELP_TERM() {
 echo "*** BlueMoode version $REV"
 echo "***"
 echo "*** 1. INITIALIZE the controller."
-echo "***    This only needs to be done once!" 
+echo "***    This only needs to be done once." 
 echo "***"
 echo "*** 2. SCAN for Bluetooth devices."
 echo "***    First, put your device into discovery mode and verify that it"
@@ -220,13 +223,13 @@ echo "*** -h help"
 HELP_HTML() {
 echo "BlueMoode version $REV"
 echo
-echo "1) INITIALIZE controller."
-echo "This only needs to be done once!"
-echo
-echo "2) SCAN for devices."
+#echo "1) INITIALIZE controller."
+#echo "This only needs to be done once!"
+#echo
+echo "1) SCAN for devices."
 echo "First, put your device in discovery mode and verify that it discovers Moode Bluetooth. You may have to turn Bluetooth off/on on your device to accomplish this. The default duration of the scan is 20 seconds."
 echo
-echo "3) Connect your device to Moode Bluetooth. You may have to initiate the connection as soon as your device is discovered and appears in the SCAN results. The connection (pairing) is stored after a successful connection."
+echo "2) Connect your device to Moode Bluetooth. You may have to initiate the connection as soon as your device is discovered and appears in the SCAN results. After a successful connection the pairing is stored."
 echo
 echo "Other commands"
 echo "- LIST paired" 
@@ -234,6 +237,7 @@ echo "- LIST connected"
 echo "- LIST discovered" 
 echo "- REMOVE all pairings" 
 echo "- DISCONNECT all devices" 
+echo "- INITIALIZE controller" 
 }
 
 # main

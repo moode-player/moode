@@ -1,10 +1,7 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
- *
- * tsunamp player ui (C) 2013 Andrea Coiutti & Simone De Gregori
- * http://www.tsunamp.com
  *
  * This Program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,16 +19,15 @@
  * 2017-11-26 TC moOde 4.0
  *
  */
- 
-// common include
-include('inc/playerlib.php');
 
-playerSession('open', '', ''); 
-session_write_close();
+require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-$section = basename(__FILE__, '.php');
+$result = sysCmd("avahi-browse -a -t | awk '/IPv4/ && /Remote Disk Management/ {print $4}' | sort");
 
-$tpl = "indextpl.html";
-include('/var/local/www/header.php'); 
-eval("echoTemplate(\"".getTemplate("/var/local/www/templatesw/$tpl")."\");");
-include('footer.php');
+foreach ($result as $host) {
+	$ipaddr = sysCmd("getent hosts " . $host . " | awk '{print $1}'");
+	$_players .= sprintf('<a href="http://%s" class="btn btn-primary btn-large btn-block" style="margin-bottom: 5px;">%s</a>', $ipaddr[0], $host);
+}
+
+$tpl = 'players.html';
+eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
