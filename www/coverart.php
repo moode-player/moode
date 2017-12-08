@@ -32,12 +32,17 @@
 set_include_path('inc');
 require_once dirname(__FILE__) . '/inc/playerlib.php'; // for workerLog() if needed
 
+session_start();
+session_write_close();
+
 function outImage($mime, $data) {
 	switch ($mime) {
-		case "image/png":
 		case "image/gif":
 		case "image/jpg":
 		case "image/jpeg":
+		case "image/png":
+		case "image/tif":
+		case "image/tiff":
 			header("Content-Type: " . $mime);
 			echo $data;
 			exit(0);
@@ -57,11 +62,13 @@ function getImage($path) {
 	$ext = pathinfo($path, PATHINFO_EXTENSION);
 
 	switch (strtolower($ext)) {
-		case 'png':
+		case 'gif':
 		case 'jpg':
 		case 'jpeg':
+		case 'png':
+		case 'tif':
+		case 'tiff':
 			// physical image file -> redirect
-			//$path = '/mpdmusic' . substr($path, strlen('/var/lib/mpd/music'));
 			$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
 			$path = str_replace('#', '%23', $path);
 			//workerlog('coverart: 1 - ' . $path);
@@ -73,7 +80,7 @@ function getImage($path) {
 			$data = file_get_contents($path);
 
 			outImage($mime, $data);
-			//workerlog('coverart: 2 - ' . $path);
+			//workerLog('coverart: 2 - ' . $path);
 			break;
 
 		case 'mp3':
@@ -82,7 +89,7 @@ function getImage($path) {
 				$id3 = new Zend_Media_Id3v2($path);
 
 				if (isset($id3->apic)) {
-					//workerlog('coverart: 3 - ' . $path);
+					//workerLog('coverart: 3 - ' . $path);
 					outImage($id3->apic->mimeType, $id3->apic->imageData);
 				}
 			}
@@ -95,7 +102,7 @@ function getImage($path) {
 				$id3 = new Zend_Media_Id3v1($path);
 
 				if (isset($id3->apic)) {
-					//workerlog('coverart: 4 - ' . $path);
+					//workerLog('coverart: 4 - ' . $path);
 					outImage($id3->apic->mimeType, $id3->apic->imageData);
 				}
 			}
@@ -111,7 +118,7 @@ function getImage($path) {
 
 				if ($flac->hasMetadataBlock(Zend_Media_Flac::PICTURE)) {
 					$picture = $flac->getPicture();
-					//workerlog('coverart: 5 - ' . $path);
+					//workerLog('coverart: 5 - ' . $path);
 					outImage($picture->getMimeType(), $picture->getData());
 				}
 			}
@@ -133,7 +140,7 @@ function getImage($path) {
                         : null
                     );
                 if ($mime) {
-					//workerlog('coverart: 6 - ' . $path);
+					//workerLog('coverart: 6 - ' . $path);
                     outImage($mime, $picture->getValue());
                 }
             }
@@ -166,7 +173,7 @@ function parseFolder($path) {
 	// all (other) files
 	foreach (glob($path . '*') as $file) {
 		if (is_file($file)) {
-			//workerlog('coverart: d - ' . $file);
+			//workerLog('coverart: d - ' . $file);
 			getImage($file);
 		}
 	}
@@ -192,7 +199,7 @@ if (null === $path) {
 }
 
 // does file exist and contain image?
-//workerlog('coverart: a - ' . $path);
+//workerLog('coverart: a - ' . $path);
 getImage($path);
 
 // directory - try all files
@@ -202,14 +209,14 @@ if (is_dir($path)) {
 		$path .= '/';
 	}
 
-	//workerlog('coverart: b - ' . $path);
+	//workerLog('coverart: b - ' . $path);
 	parseFolder($path);
 }
 else {
 	// file - try all files in containing folder
 	$path = pathinfo($path, PATHINFO_DIRNAME) . '/';
 
-	//workerlog('coverart: c - ' . $path);
+	//workerLog('coverart: c - ' . $path);
 	parseFolder($path);
 }
 

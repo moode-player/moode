@@ -13,9 +13,9 @@
 
 ########################################################
 //
-// 4.0 Release 2017-11-26
+// 4.0 Release 2017-12-01
 //
-// BETA 10
+// BETA 11
 //
 ########################################################
 
@@ -85,7 +85,8 @@ Updates
 - UPD: Add PHP/MPD socket timeout setting to System config
 - UPD: Improved error reporting for failed NAS mount
 - UPD: Auto-init Bluetooth controller at first start
-- UPD: Change default rsize to 61440 from 1048576 
+- UPD: Change default rsize to 61440 from 1048576
+- UPD: Support tiff format for cover art
 
 Audio devices
 
@@ -158,6 +159,9 @@ Bug fixes (fixed during Beta cycle)
 - FIX: SSID Scan not returning anything in certain scenario
 - FIX: Typo in moode.css
 - FIX: Keyboard layout setting broken
+- FIX: Resizefs echo statement with embedded newline
+- FIX: Wrong I2S driver configured for Pi2Design 502DAC PRO
+- FIX: Bug preventing cover art files from being displayed
 
 ########################################################
 // 3.8.4 Release 2017-08-28
