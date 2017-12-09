@@ -16,14 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-11-26 TC moOde 4.0
+# 2017-12-07 TC moOde 4.0
 #
 
-# turn off display power management
-xset -dpms &
-
-# turn on screensaver (default = 10 mins)
-xset s 600 &
+# Turn off display power management
+xset -dpms
+# Screensaver timeout in secs or 'off' for no timeout
+xset s 600
 
 # launch chrome browser
 SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"

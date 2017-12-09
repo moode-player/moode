@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-26 TC moOde 4.0
+ * 2017-12-07 TC moOde 4.0
  *
  */
 
@@ -29,10 +29,10 @@ require_once dirname(__FILE__) . '/inc/keyboard.php';
 
 playerSession('open', '' ,'');
 
-// SOFTWARE UPDATE
+// SOFTWARE UPDATE AND IMAGE BUILDER DOWNLOAD
 
 // check for software update
-if (isset($_GET['cmd']) && $_GET['cmd'] == 'checkfor_update') {
+if (isset($_POST['checkfor_update'])) {
 	$available = checkForUpd('http://d3oddxvgenziko.cloudfront.net/');
 	$lastinstall = checkForUpd('/var/local/www/');
 
@@ -56,7 +56,15 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'checkfor_update') {
 		// last installed
 		$_lastinstall_upd .= '<u><em>Last installed</u></em><br>'; 
 		$_lastinstall_upd .= $lastinstall['pkgdate'] == 'None' ? $lastinstall['pkgdate'] : 'Package date: ' . $lastinstall['pkgdate'];
+		$_lastinstall_upd .= '<br>';
 	}
+}
+
+// download Moode OS Image Builder
+if (isset($_POST['dnld_mosbuild'])) {
+	sysCmd('wget -q http://moodeaudio.org/downloads/mos/mosbuild.sh -O /home/pi/mosbuild.sh');
+	sysCmd('chmod +x /home/pi/mosbuild.sh');
+	$_SESSION['notify']['title'] = 'Download complete';
 }
 
 // install software update
@@ -104,6 +112,14 @@ if (isset($_POST['update_host_name'])) {
 			playerSession('write', 'hostname', $_POST['hostname']);
 		}
 	}
+}
+
+// keyboard layout
+if (isset($_POST['update_keyboard'])) {
+    if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
+        submitJob('keyboard', $_POST['keyboard'], 'Keyboard layout updated ', 'Reboot required');
+        playerSession('write', 'keyboard', $_POST['keyboard']);
+    } 
 }
 
 // browser title
@@ -238,11 +254,11 @@ if (isset($_POST['update_scnblank'])) {
     } 
 }
 
-// keyboard layout
-if (isset($_POST['update_keyboard'])) {
-    if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
-        submitJob('keyboard', $_POST['keyboard'], 'Keyboard layout updated ', 'Reboot required');
-        playerSession('write', 'keyboard', $_POST['keyboard']);
+// screen rotation
+if (isset($_POST['update_scnrotate'])) {
+    if (isset($_POST['scnrotate']) && $_POST['scnrotate'] != $_SESSION['scnrotate']) {
+        submitJob('scnrotate', $_POST['scnrotate'], 'Setting updated', 'Reboot required');
+        playerSession('write', 'scnrotate', $_POST['scnrotate']);
     } 
 }
 
@@ -441,7 +457,11 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['scnblank'] .= "<option value=\"600\" " . (($_SESSION['scnblank'] == '600') ? "selected" : "") . ">10 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"1800\" " . (($_SESSION['scnblank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"3600\" " . (($_SESSION['scnblank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
-	$_select['scnblank'] .= "<option value=\"600000\" " . (($_SESSION['scnblank'] == '600000') ? "selected" : "") . ">Never</option>\n";
+	$_select['scnblank'] .= "<option value=\"off\" " . (($_SESSION['scnblank'] == 'off') ? "selected" : "") . ">Never</option>\n";
+
+	// screen rotate
+	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
+	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
 }
 else {
 	$_feat_localui = 'hide';

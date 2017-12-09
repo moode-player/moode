@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-26 TC moOde 4.0
+ * 2017-12-07 TC moOde 4.0
  *
  */
 
@@ -88,10 +88,7 @@ foreach ($result as $row) {
 	$_SESSION[$row['station']] = array('name' => $row['name'], 'permalink' => $row['permalink'], 'logo' => $row['logo']);
 }
 // cache musicroot in session vars
-$_SESSION['musicroot'] = mt_rand();
-sysCmd('rm /var/www/mpdmusic');
-sysCmd('find /var/www -type l -delete');
-sysCmd('ln -s /var/lib/mpd/music /var/www/' . $_SESSION['musicroot']);
+#$_SESSION['musicroot'] = 'vlmm90614385';
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
 
@@ -1067,6 +1064,11 @@ function runQueuedJob() {
 			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" /home/pi/.xinitrc');
 			if ($_SESSION['localui'] == '1') {
 				sysCmd('systemctl restart localui');
+			}
+		case 'scnrotate':
+			sysCmd('sed -i /lcd_rotate/d ' . $_SESSION['res_boot_config_txt']);
+			if ($_SESSION['w_queueargs'] == '180') {
+				sysCmd('echo lcd_rotate=2 >> ' . $_SESSION['res_boot_config_txt']);
 			}
 			break;
 		case 'keyboard':

@@ -25,15 +25,18 @@
  * - make sure client is configured to hand cover requests to /coverart.php or setup an nginx catch-all rule:
  * - try_files $uri $uri/ /coverart.php;
  *
- * 2017-11-26 TC moOde 4.0
+ * 2017-12-07 TC moOde 4.0
  *
  */
 
 set_include_path('inc');
-require_once dirname(__FILE__) . '/inc/playerlib.php'; // for workerLog() if needed
 
-session_start();
-session_write_close();
+// uncomment this to enable workerLog() output
+//require_once dirname(__FILE__) . '/inc/playerlib.php';
+
+// uncomment these if using randomized symlink in a session var
+//session_start();
+//session_write_close();
 
 function outImage($mime, $data) {
 	switch ($mime) {
@@ -69,7 +72,8 @@ function getImage($path) {
 		case 'tif':
 		case 'tiff':
 			// physical image file -> redirect
-			$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
+#			$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
+			$path = '/vlmm90614385' . substr($path, strlen('/var/lib/mpd/music'));
 			$path = str_replace('#', '%23', $path);
 			//workerlog('coverart: 1 - ' . $path);
 			header('Location: ' . $path);
@@ -220,5 +224,5 @@ else {
 	parseFolder($path);
 }
 
-// nothong found -> default cover
+// nothing found -> default cover
 header('Location: /images/default-cover-v5.jpg');

@@ -25,7 +25,7 @@
  * rotenc <DELAY> <ACCEL> <STEP> <PIN_A> <PIN_B> <DEBUG 1|2>
  * rotenc 100 2 3 4 5 1
  *
- * 2017-11-26 TC 4.0
+ * 2017-12-07 TC 4.0
  *
  */
 

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-26 TC moOde 4.0
+ * 2017-12-07 TC moOde 4.0
  *
  */
  
@@ -1156,10 +1156,10 @@ function wrk_sourcecfg($queueargs) {
 			cfgdb_update('cfg_source', $dbh, '', $queueargs['mount']);
 			
 			if ($mp[0]['type'] == 'cifs') {
-				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (-l for lazy umount)
+				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
 			}
 			else {
-				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount
+				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
 			}
 			
 			if ($mp[0]['name'] != $queueargs['mount']['name']) {
@@ -1181,10 +1181,10 @@ function wrk_sourcecfg($queueargs) {
 			$mp = cfgdb_read('cfg_source', $dbh, '', $queueargs['mount']['id']);
 			
 			if ($mp[0]['type'] == 'cifs') {
-				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (-l for lazy umount)
+				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
 			}
 			else {
-				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount
+				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
 			}
 
 			sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
@@ -1277,10 +1277,9 @@ function wrk_sourcemount($action, $id) {
 			foreach ($mounts as $mp) {
 				if (mountExists($mp['name'])) {
 					if ($mp[0]['type'] == 'cifs') {
-						//sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy unmount
-						sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount
+						sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy unmount
 					} else {
-						sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount
+						sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
 					}
 				}
 			}
@@ -1503,6 +1502,7 @@ function startSps() {
 
 	// format base cmd string
 	$cmd = '/usr/local/bin/shairport-sync -a "' . $_SESSION['airplayname'] . '" -S soxr -w -B /var/local/www/commandw/spspre.sh -E /var/local/www/commandw/spspost.sh ' . $metadata . '-- -d hw:' . $device;
+
 	// add volume config
 	if ($_SESSION['airplayvol'] == 'auto') {
 		$cmd .= $_SESSION['alsavolume'] == 'none' ? ' > /dev/null 2>&1 &' : ' -c ' . '"' . $mixername  . '"' . ' > /dev/null 2>&1 &';

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-26 TC moOde 4.0
+ * 2017-12-07 TC moOde 4.0
  *
  */
 -->
@@ -67,7 +67,7 @@
 
 <div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
 	<div class="dropdown">
-		<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu" style="font-size: 18px; color: #dddddd;">Beta11</a>
+		<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu" style="font-size: 18px; color: #dddddd;">Beta12</a>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
 			<?php if ($section == 'index') { ?>
 				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="setforclockradio-m"><i id="clockradio-icon-m" class="icon-time sx clockradio-off-m"></i> Clock radio</a></li>

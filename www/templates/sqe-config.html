@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-26 TC moOde 4.0
+ * 2017-12-07 TC moOde 4.0
  *
  */
 -->	
@@ -95,7 +95,11 @@
                     <input class="input-large" type="text" id="other-options" name="config[OTHEROPTIONS]" value="$_sl_select[other_options]">
 					<a class="info-toggle" data-cmd="info-other-options" href="#notarget"><i class="icon-info-sign"></i></a>
 					<span id="info-other-options" class="help-block help-block-margin hide">
-                    	Default other options: -W -D 500 -R E
+                    	Default other options: -W -D 500 -R E<br>
+						-V control Use ALSA control for volume adjustment, otherwise use software volume adjustment.<br>
+						-D [delay][:format]<br>
+						Output device supports DSD, delay = optional delay switching between PCM and DSD in ms<br>
+						format = dop (default if not specified), u8, u16le, u16be, u32le or u32be.<br>						
                     </span>
                 </div>
             </div>

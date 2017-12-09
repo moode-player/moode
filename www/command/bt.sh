@@ -32,7 +32,7 @@
 # It performs bluetooth controller initialization and provides management of bluetooth sources
 # All related data files will reside under /var/lib/bluetooth
 #
-# 2017-11-26 TC moOde 4.0
+# 2017-12-07 TC moOde 4.0
 # - REV 1.1
 # - adapted for output to PHP/HTML 
 # - simplified cmd api for BT config screen

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-26 TC moOde 4.0
+ * 2017-12-07 TC moOde 4.0
  *
  */
 -->	
@@ -25,9 +25,17 @@
 
 	<form class="form-horizontal" method="post">
 	    <p>
-	    	<a href="sys-config.php?cmd=checkfor_update">CHECK</a> for software update<br>
+			<button class="btn btn-primary btn-small" style="background: none; font-size: 13px; height: 22px; padding: 0px 0px; margin-right: 4px;" type="submit" name="checkfor_update" value="novalue">Check for</button>software update<br>
 			$_available_upd
 			$_lastinstall_upd
+
+			<button class="btn btn-primary btn-small" style="background: none; font-size: 13px; height: 22px; padding: 0px 0px; margin-right: 4px;" type="submit" name="dnld_mosbuild" value="novalue">Download</button>image builder
+			<a class="info-toggle" data-cmd="info-mosbuild" href="#notarget"><i class="icon-info-sign"></i></a>
+			<span id="info-mosbuild" class="help-block help-block-margin hide">
+				The image builder is an automated process for creating the wonderful custom Linux OS that runs moOde audio player.	
+				The builder script is downloaded to the directory /home/pi. The built in SSH terminal can be used to start the script 
+				by entering the command sudo ./mosbuild.sh. A spare USB or USB-SDCard drive is needed for the new OS.<br>
+			</span>
 	    </p>
 
 		<legend>General</legend>
@@ -386,12 +394,22 @@
 	            </div>  
 		
 				<div class="control-group">
-					<label class="control-label" for="screenblank">Screen blank</label>
+					<label class="control-label" for="scnblank">Screen blank</label>
 					<div class="controls">
 						<select id="scnblank" class="input-large" name="scnblank">		
 							$_select[scnblank]
 						</select>
 						<button class="btn btn-primary btn-small" type="submit" name="update_scnblank" value="novalue" style="margin-left: 8px;">Set</button>
+					</div>
+	            </div>  
+
+				<div class="control-group">
+					<label class="control-label" for="scnrotate">Rotate screen</label>
+					<div class="controls">
+						<select id="scnrotate" class="input-large" name="scnrotate">		
+							$_select[scnrotate]
+						</select>
+						<button class="btn btn-primary btn-small" type="submit" name="update_scnrotate" value="novalue" style="margin-left: 8px;">Set</button>
 					</div>
 	            </div>  
 			</fieldset>

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-11-26 TC moOde 4.0
+ * 2017-12-07 TC moOde 4.0
  *
  */
 -->
@@ -35,7 +35,7 @@
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>			
 			<ul>
-				<li>Release: 4 BETA11 2017-12-01 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">release notes</a></li>
+				<li>Release: 4 BETA12 2017-12-07 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">release notes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">setup guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">moodeaudio.org</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">twitter</a></li>
