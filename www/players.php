@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
@@ -26,7 +26,7 @@ $result = sysCmd("avahi-browse -a -t | awk '/IPv4/ && /Remote Disk Management/ {
 
 foreach ($result as $host) {
 	$ipaddr = sysCmd("getent hosts " . $host . " | awk '{print $1}'");
-	$_players .= sprintf('<a href="http://%s" class="btn btn-primary btn-large btn-block" style="margin-bottom: 5px;">%s</a>', $ipaddr[0], $host);
+	$_players .= sprintf('<li><a href="http://%s" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-sitemap" style="font-size: 24px;"></i><br>%s</a></li>', $ipaddr[0], $host);
 }
 
 $tpl = 'players.html';

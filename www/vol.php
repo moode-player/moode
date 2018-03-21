@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
  
@@ -53,8 +53,7 @@ $array = array();
 foreach ($result as $row) {
 	$array[$row['param']] = $row['value'];
 }
-
-//$device = empty(file_get_contents('/proc/asound/card1/id')) ? '0' : '1'; 
+// cardnum 0 = i2s or onboard, cardnum 1 = usb 
 
 // mute toggle
 if ($argv[1] == 'mute') {
@@ -114,15 +113,8 @@ if ($volmute == '1') {
 	exit();
 }
 
-// set volume level
-if ($array['mpdmixer'] == 'hardware') {
-	// hardware volume: update ALSA volume --> MPD volume --> MPD idle timeout --> UI updated
-	sysCmd('amixer -c ' . $array['cardnum'] . ' sset ' . '"' . $array['amixname']  . '"' . ' -M ' . $level . '%');
-}
-else {
-	// software volume: update MPD volume --> MPD idle timeout --> UI updated
-	sendMpdCmd($sock, 'setvol ' . $level);
-	$resp = readMpdResp();
-}
+// volume: update MPD volume --> MPD idle timeout --> UI updated
+sendMpdCmd($sock, 'setvol ' . $level);
+$resp = readMpdResp();
 
 closeMpdSock($sock);

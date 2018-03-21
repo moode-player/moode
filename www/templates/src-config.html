@@ -19,11 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+	<div class="container2">
 	<h1>Music Source Config</h1>
 	<p>
 		<legend>NAS Sources</legend>
@@ -39,7 +40,7 @@
 
 			<p>
 				<button class="btn btn-small btn-primary" type="submit" name="remount" value="novalue" $_remount_disable>Re-mount</button>&nbsp;&nbsp;All NAS sources
-				<span class="help-block help-block-margin">
+				<span class="help-block-configs help-block-margin">
 					Re-mounts all NAS sources and does not run MPD database update.<br>
 				</span>
 			</p>
@@ -51,23 +52,24 @@
 			</p>
 			<p>
 				<button class="btn btn-small btn-primary" type="submit" name="updatempd" value="novalue">Update</button>&nbsp;&nbsp;MPD database
-				<span class="help-block help-block-margin">
+				<span class="help-block-configs help-block-margin">
 					Updates the music database: find new files, remove deleted files, update modified files.<br>
 				</span>
 			</p>
 			<p>
 				<button class="btn btn-small btn-primary" type="submit" name="rescanmpd" value="novalue">Rescan</button>&nbsp;&nbsp;Music sources
-				<span class="help-block help-block-margin">
+				<span class="help-block-configs help-block-margin">
 					Same as update, but also rescans unmodified files.<br>
 				</span>
 			</p>
 			<legend>Music Library Cache</legend>
 			<p>
 				<button class="btn btn-small btn-primary" type="submit" name="resetcache" value="novalue">Reset</button>&nbsp;&nbsp;Library cache
-				<span class="help-block help-block-margin">
+				<span class="help-block-configs help-block-margin">
 					Resets the Library cache. It will be rebuilt next time the Library is opened.<br>
 				</span>
 			</p>
 		</form>
-	</p>	
+	</p>
+</div>	
 </div>

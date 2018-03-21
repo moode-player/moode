@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+<div class="container2">
 	<h1>Airplay Config</h1>
 
     <p>
@@ -38,7 +39,7 @@
 						$_select[airplaymeta]
 					</select>
 					<a class="info-toggle" data-cmd="info_airplaymeta" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_airplaymeta" class="help-block help-block-margin hide">
+					<span id="info_airplaymeta" class="help-block-configs help-block-margin hide">
 						Display metadata and cover art from Airplay sender on Playback panel.<br>
                     </span>
 				</div>
@@ -51,7 +52,7 @@
 						$_select[airplayvol]
 					</select>
 					<a class="info-toggle" data-cmd="info_airplayvol" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_airplayvol" class="help-block help-block-margin hide">
+					<span id="info_airplayvol" class="help-block-configs help-block-margin hide">
 						Auto: use hardware volume if available<br>
 						Software: always use software volume
                     </span>
@@ -65,7 +66,7 @@
 						$_select[rsmaftersps]
 					</select>
 					<a class="info-toggle" data-cmd="info_rsmaftersps" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_rsmaftersps" class="help-block help-block-margin hide">
+					<span id="info_rsmaftersps" class="help-block-configs help-block-margin hide">
 						Resume MPD playback after Airplay session ends.<br>
                     </span>
 				</div>
@@ -78,12 +79,13 @@
 						$_select[output_format]
 					</select>
 					<a class="info-toggle" data-cmd="info_output_format" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_output_format" class="help-block help-block-margin hide">
+					<span id="info_output_format" class="help-block-configs help-block-margin hide">
 						Bit depth output by Airplay receiver. Default is 16 bit.<br>
                     </span>
 				</div>
 			</div>
 
+			<!-- tpc2 add a missing span tag in the help block -->
 			<div class="control-group">
 				<label class="control-label" for="output_rate">Sample rate</label>
 				<div class="controls">
@@ -91,9 +93,10 @@
 						$_select[output_rate]
 					</select>
 					<a class="info-toggle" data-cmd="info_output_rate" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_output_rate" class="help-block help-block-margin hide">
+					<span id="info_output_rate" class="help-block-configs help-block-margin hide">
 						Sample rate output by Airplay receiver. Default is 44.1 kHz.<br>
 						Conversion is done using simple upsampling and should only be used if the audio device doesn't support 44,100 rate.<br>
+					</span>
 				</div>
 			</div>
 
@@ -104,7 +107,7 @@
 						$_select[allow_session_interruption]
 					</select>
 					<a class="info-toggle" data-cmd="info_allow_session_interruption" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_allow_session_interruption" class="help-block help-block-margin hide">
+					<span id="info_allow_session_interruption" class="help-block-configs help-block-margin hide">
 						Allow session to be interrupted by another Airplay sender. Default is No.<br>
                     </span>
 				</div>
@@ -115,7 +118,7 @@
 				<div class="controls">
 					<input class="input-large" type="text" id="session_timeout" name="config[session_timeout]" value="$_select[session_timeout]">
 					<a class="info-toggle" data-cmd="info_session_timeout" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_session_timeout" class="help-block help-block-margin hide">
+					<span id="info_session_timeout" class="help-block-configs help-block-margin hide">
 						Wait for this number of seconds after a source disappears before terminating the session and becoming available again. Default is 120.<br>
                     </span>
 				</div>
@@ -126,7 +129,7 @@
 				<div class="controls">
 					<input class="input-large" type="text" id="audio_backend_latency_offset_in_seconds" name="config[audio_backend_latency_offset_in_seconds]" value="$_select[audio_backend_latency_offset_in_seconds]">
 					<a class="info-toggle" data-cmd="info_audio_backend_latency_offset_in_seconds" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_audio_backend_latency_offset_in_seconds" class="help-block help-block-margin hide">
+					<span id="info_audio_backend_latency_offset_in_seconds" class="help-block-configs help-block-margin hide">
 						Set this offset to compensate for a fixed delay in the audio back end. E.g. if the output device delays by 100 ms, set this to -0.1.<br>
                     </span>
 				</div>
@@ -137,11 +140,12 @@
 				<div class="controls">
 					<input class="input-large" type="text" id="audio_backend_buffer_desired_length_in_seconds" name="config[audio_backend_buffer_desired_length_in_seconds]" value="$_select[audio_backend_buffer_desired_length_in_seconds]">
 					<a class="info-toggle" data-cmd="info_audio_backend_buffer_desired_length_in_seconds" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_audio_backend_buffer_desired_length_in_seconds" class="help-block help-block-margin hide">
+					<span id="info_audio_backend_buffer_desired_length_in_seconds" class="help-block-configs help-block-margin hide">
 						If set too small, buffer underflow occurs on low-powered machines. Too long and the response times with software mixer become annoying. Default is 0.15.<br>
-                    </span>
+	                </span>
 				</div>
 			</div>
 		</fieldset>
 	</form>
+</div>
 </div>

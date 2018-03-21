@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
  
@@ -70,6 +70,7 @@ if ($_GET['state'] == $current['state']) {
 	$current['idle_timeout_event'] = explode("\n", $resp)[0];
 	
 	debugLog('engine-mpd: Idle timeout event=(' . $current['idle_timeout_event'] . ')');
+	//workerLog('engine-mpd: Idle timeout event=(' . $current['idle_timeout_event'] . ')');
 }
 
 // create enhanced metadata

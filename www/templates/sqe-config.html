@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+	<div class="container2">
     <h1>Squeezelite Config</h1>
 
     <p>
@@ -36,7 +37,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" id="renderer-name" name="config[PLAYERNAME]" value="$_sl_select[renderer_name]">
 					<a class="info-toggle" data-cmd="info-renderer_name" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-renderer_name" class="help-block help-block-margin hide">
+					<span id="info-renderer_name" class="help-block-configs help-block-margin hide">
 						Friendly name that will appear in LMS
                     </span>
                 </div>
@@ -47,7 +48,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" id="alsa-params" name="config[ALSAPARAMS]" value="$_sl_select[alsa_params]">
 					<a class="info-toggle" data-cmd="info-alsa-params" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-alsa-params" class="help-block help-block-margin hide">
+					<span id="info-alsa-params" class="help-block-configs help-block-margin hide">
 						b = buffer time, p = period count, f sample format (16|24|24_3|32), m = use mmap (0|1)<br>
                     	b less than 500 treated as buffer time in ms, otherwise size in bytes<br>
 						p less than 50 treated as period count, otherwise size in bytes
@@ -60,7 +61,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" id="output-buffers" name="config[OUTPUTBUFFERS]" value="$_sl_select[output_buffers]">
 					<a class="info-toggle" data-cmd="info-output-buffers" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-output-buffers" class="help-block help-block-margin hide">
+					<span id="info-output-buffers" class="help-block-configs help-block-margin hide">
 						streamBuffer:dspBuffer must be less than available RAM
                     </span>
                 </div>
@@ -71,7 +72,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" id="task-priority" name="config[TASKPRIORITY]" value="$_sl_select[task_priority]" min="1" max="99">
 					<a class="info-toggle" data-cmd="info-task-priority" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-task-priority" class="help-block help-block-margin hide">
+					<span id="info-task-priority" class="help-block-configs help-block-margin hide">
                     	Default priority is 45, min/max priority is 1/99
                     </span>
                 </div>
@@ -82,7 +83,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" id="audio-codecs" name="config[CODECS]" value="$_sl_select[audio_codecs]">
 					<a class="info-toggle" data-cmd="info-audio-codecs" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-audio-codecs" class="help-block help-block-margin hide">
+					<span id="info-audio-codecs" class="help-block-configs help-block-margin hide">
                     	Default codecs: flac,pcm,mp3,ogg,aac,alac,dsd
 						Available codecs: flac,pcm,mp3,ogg,aac,wma,alac,dsd,mad,mpg
                     </span>
@@ -94,7 +95,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" id="other-options" name="config[OTHEROPTIONS]" value="$_sl_select[other_options]">
 					<a class="info-toggle" data-cmd="info-other-options" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-other-options" class="help-block help-block-margin hide">
+					<span id="info-other-options" class="help-block-configs help-block-margin hide">
                     	Default other options: -W -D 500 -R E<br>
 						-V control Use ALSA control for volume adjustment, otherwise use software volume adjustment.<br>
 						-D [delay][:format]<br>
@@ -106,4 +107,5 @@
 		</fieldset>
 		
     </form>
+</div>
 </div>

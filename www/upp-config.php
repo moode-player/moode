@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
@@ -30,7 +30,7 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_upnp', $dbh, $key, $value);
 
-		if (!empty($value)) {
+		if ($value != '') {
 			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
 		}
 		else {
@@ -51,6 +51,10 @@ $cfg_upnp = array();
 foreach ($result as $row) {
 	$cfg_upnp[$row['param']] = $row['value'];
 }
+
+// GENERAL
+$_select['checkcontentformat'] .= "<option value=\"1\" " . (($cfg_upnp['checkcontentformat'] == '1') ? "selected" : "") . ">Yes</option>\n";
+$_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfg_upnp['checkcontentformat'] == '0') ? "selected" : "") . ">No</option>\n";
 
 // TIDAL
 $_select['tidaluser'] = $cfg_upnp['tidaluser'];

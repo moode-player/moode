@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+	<div class="container2">
 	<h1>UPnP Config</h1>
 
     <p>
@@ -29,7 +30,24 @@
 
     <form class="form-horizontal" data-validate="parsley" action="" method="post">
     	<legend>Settings &nbsp;<button type="submit" class="btn btn-primary btn-small" name="apply" value="1">Apply</button></legend>
+
+		<h4>General</h4>
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="checkcontentformat">Check content format</label>
+				<div class="controls">
+					<select id="checkcontentformat" class="input-large" name="config[checkcontentformat]">
+						$_select[checkcontentformat]
+					</select>
+					<a class="info-toggle" data-cmd="info_checkcontentformat" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info_checkcontentformat" class="help-block-configs help-block-margin hide">
+						Check that the input format is supported. Set this option to No if a control point or media server sends good audio data with bad metadata.<br>
+                    </span>
+				</div>
+			</div>
+		</fieldset>
     
+		<legend></legend>
 		<h4>TIDAL Music Service</h4>
 		<fieldset>
 			<div class="control-group">
@@ -37,7 +55,7 @@
 				<div class="controls">
 					<input class="input-large" type="text" id="tidaluser" name="config[tidaluser]" value="$_select[tidaluser]">
 					<a class="info-toggle" data-cmd="info_tidaluser" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_tidaluser" class="help-block help-block-margin hide">
+					<span id="info_tidaluser" class="help-block-configs help-block-margin hide">
 						Your Tidal login name.<br>
                     </span>
 				</div>
@@ -46,10 +64,10 @@
 			<div class="control-group">
 				<label class="control-label" for="tidalpass">Password</label>
 				<div class="controls">
-					<input class="input-large" type="password" id="tidaluser" name="config[tidalpass]" value="$_select[tidalpass]">
+					<input class="input-large" type="password" pattern="[^'\u0022]+" id="tidaluser" name="config[tidalpass]" value="$_select[tidalpass]">
 					<a class="info-toggle" data-cmd="info_tidalpass" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_tidalpass" class="help-block help-block-margin hide">
-						The password for your Tidal account.<br>
+					<span id="info_tidalpass" class="help-block-configs help-block-margin hide">
+						The password for your Tidal account. NOTE: Single and double quotes are not allowed.<br>
                     </span>
 				</div>
 			</div>
@@ -61,7 +79,7 @@
 						$_select[tidalquality]
 					</select>
 					<a class="info-toggle" data-cmd="info_tidalquality" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_tidalquality" class="help-block help-block-margin hide">
+					<span id="info_tidalquality" class="help-block-configs help-block-margin hide">
 						Stream quality: 'low' and 'high' are AAC streams, 'lossless' is FLAC and will only work if your subscription allows it.<br>
                     </span>
 				</div>
@@ -76,7 +94,7 @@
 				<div class="controls">
 					<input class="input-large" type="text" id="qobuzuser" name="config[qobuzuser]" value="$_select[qobuzuser]">
 					<a class="info-toggle" data-cmd="info_qobuzuser" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_qobuzuser" class="help-block help-block-margin hide">
+					<span id="info_qobuzuser" class="help-block-configs help-block-margin hide">
 						Your Qobuz login name.<br>
                     </span>
 				</div>
@@ -85,10 +103,10 @@
 			<div class="control-group">
 				<label class="control-label" for="qobuzpass">Password</label>
 				<div class="controls">
-					<input class="input-large" type="password" id="tidaluser" name="config[qobuzpass]" value="$_select[qobuzpass]">
+					<input class="input-large" type="password" pattern="[^'\u0022]+" id="tidaluser" name="config[qobuzpass]" value="$_select[qobuzpass]">
 					<a class="info-toggle" data-cmd="info_qobuzpass" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_qobuzpass" class="help-block help-block-margin hide">
-						The password for your Qobuz account.<br>
+					<span id="info_qobuzpass" class="help-block-configs help-block-margin hide">
+						The password for your Qobuz account. NOTE: Single and double quotes are not allowed.<br>
                     </span>
 				</div>
 			</div>
@@ -100,7 +118,7 @@
 						$_select[qobuzformatid]
 					</select>
 					<a class="info-toggle" data-cmd="info_qobuzformatid" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_qobuzformatid" class="help-block help-block-margin hide">
+					<span id="info_qobuzformatid" class="help-block-configs help-block-margin hide">
 						Stream quality: 320K (MP3) or lossless (FLAC) if your subscription allows it.<br>
                     </span>
 				</div>
@@ -111,7 +129,7 @@
 			<legend></legend>
 			<h4>Google Play Music</h4>
 			<p>
-				The Google Music feature is enable but the API must be manually installed.<br>
+				The Google Music feature is enabled but the API must be manually installed.<br>
 				Run the command "sudo pip install gmusicapi" from an ssh session. 
 			</p>
 		</div>
@@ -125,7 +143,7 @@
 					<div class="controls">
 						<input class="input-large" type="text" id="gmusicuser" name="config[gmusicuser]" value="$_select[gmusicuser]">
 						<a class="info-toggle" data-cmd="info_gmusicuser" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info_gmusicuser" class="help-block help-block-margin hide">
+						<span id="info_gmusicuser" class="help-block-configs help-block-margin hide">
 							Your Google Music login name (Gmail address).<br>
 	                    </span>
 					</div>
@@ -134,10 +152,10 @@
 				<div class="control-group">
 					<label class="control-label" for="gmusicpass">Password</label>
 					<div class="controls">
-						<input class="input-large" type="password" id="gmusicpass" name="config[gmusicpass]" value="$_select[gmusicpass]">
+						<input class="input-large" type="password" pattern="[^'\u0022]+" id="gmusicpass" name="config[gmusicpass]" value="$_select[gmusicpass]">
 						<a class="info-toggle" data-cmd="info_gmusicpass" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info_gmusicpass" class="help-block help-block-margin hide">
-							The password for your Google Music account.<br>
+						<span id="info_gmusicpass" class="help-block-configs help-block-margin hide">
+							The password for your Google Music account. NOTE: Single and double quotes are not allowed.<br>
 	                    </span>
 					</div>
 				</div>
@@ -149,7 +167,7 @@
 							$_select[gmusicquality]
 						</select>
 						<a class="info-toggle" data-cmd="info_gmusicquality" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info_gmusicquality" class="help-block help-block-margin hide">
+						<span id="info_gmusicquality" class="help-block-configs help-block-margin hide">
 							Stream quality: 320K, 160K or 128K (MP3).<br>
 	                    </span>
 					</div>
@@ -160,7 +178,7 @@
 					<div class="controls">
 						<input class="input-large" type="text" id="gmusicdeviceid" name="config[gmusicdeviceid]" value="$_select[gmusicdeviceid]">
 						<a class="info-toggle" data-cmd="info_gmusicdeviceid" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info_gmusicdeviceid" class="help-block help-block-margin hide">
+						<span id="info_gmusicdeviceid" class="help-block-configs help-block-margin hide">
 							Music device id. Your system MAC address will be used by default, but this will count against the maximum count of registered devices for this account. You can optionally set this value to the device ID from a phone or tablet on which you also use Google Play Music.<br>
 	                    </span>
 					</div>
@@ -168,4 +186,5 @@
 			</fieldset>
 		</div>
 	</form>
+</div>
 </div>

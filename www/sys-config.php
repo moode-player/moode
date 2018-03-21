@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
@@ -33,12 +33,12 @@ playerSession('open', '' ,'');
 
 // check for software update
 if (isset($_POST['checkfor_update'])) {
-	$available = checkForUpd('http://d3oddxvgenziko.cloudfront.net/');
+	$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
 	$lastinstall = checkForUpd('/var/local/www/');
 
 	// up to date
 	if ($available['pkgdate'] == $lastinstall['pkgdate']) {
-		$_available_upd = 'moOde software is up to date<br>';
+		$_available_upd = 'Software is up to date<br>';
 	}
 	else {
 		// available
@@ -62,7 +62,7 @@ if (isset($_POST['checkfor_update'])) {
 
 // download Moode OS Image Builder
 if (isset($_POST['dnld_mosbuild'])) {
-	sysCmd('wget -q http://moodeaudio.org/downloads/mos/mosbuild.sh -O /home/pi/mosbuild.sh');
+	sysCmd('wget -q ' . $_SESSION['res_software_upd_url'] . '/mos/mosbuild.sh -O /home/pi/mosbuild.sh');
 	sysCmd('chmod +x /home/pi/mosbuild.sh');
 	$_SESSION['notify']['title'] = 'Download complete';
 }
@@ -71,20 +71,26 @@ if (isset($_POST['dnld_mosbuild'])) {
 if (isset($_POST['install_update'])) {
 	if ($_POST['install_update'] == 1) {
 		$mount = sysCmd('mount | grep "moode.sqsh"');
-		$space = sysCmd("df | grep root | awk '{print $4}'");
+		$space = sysCmd("df | grep root | awk '{print $4}'");		
+		# check for invalid configs
 		if ($mount[0] != '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && ($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
 			$_SESSION['notify']['title'] = 'Invalid configuration';
-			$_SESSION['notify']['msg'] = "Update cannot proceed without valid moode.sqsh mount";
+			$_SESSION['notify']['msg'] = "Can't find compressed file system";
+			$_SESSION['notify']['duration'] = 20;
+		}
+		elseif ($mount[0] == '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && !($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
+			$_SESSION['notify']['title'] = 'Invalid configuration';
+			$_SESSION['notify']['msg'] = "File system is compressed and read-only";
 			$_SESSION['notify']['duration'] = 20;
 		}
 		elseif ($space[0] < 500000) {
 			$_SESSION['notify']['title'] = 'Insufficient space';
-			$_SESSION['notify']['msg'] = "Update cannot proceed without at least 500M available space";
+			$_SESSION['notify']['msg'] = "Update cannot proceed without at least 500M space";
 			$_SESSION['notify']['duration'] = 20;
 		}
 		else {
 			submitJob('installupd', '', 'Software update installed', 'Reboot required', 20);
-			$_available_upd = 'moOde software is up to date';
+			$_available_upd = 'Software is up to date';
 			$_lastinstall_upd = '';
 		}
 	}
@@ -132,30 +138,10 @@ if (isset($_POST['update_browser_title'])) {
 
 // SYSTEM MODIFICATIONS
 
-// linux kernel
-if (isset($_POST['update_kernel'])) {
-	// update sql table first so session var gets updated before job runs
-	playerSession('write', 'kernel', $_POST['kernel']);
-	submitJob('install-kernel', $_POST['kernel'], 'Kernel install complete', ($_SESSION['kernel'] == 'Advanced-LL' ? 'Optionally change Latency Level<br>' : '') . 'Reboot required', 20);
-} 
-
-// latency level (for Low Latency kernel)
-if (isset($_POST['update_ktimerfreq'])) {
-	// update sql table first so session var gets updated before job runs
-	playerSession('write', 'ktimerfreq', $_POST['ktimerfreq']);
-	submitJob('upd-ktimerfreq', $_POST['ktimerfreq'], 'Latency level updated', 'Reboot required', 20);
-} 
-
 // cpu governor
 if (isset($_POST['update_cpugov'])) {
 	submitJob('cpugov', $_POST['cpugov'], 'CPU governor updated', '');
 	playerSession('write', 'cpugov', $_POST['cpugov']);
-} 
-
-// mpd scheduler policy
-if (isset($_POST['update_mpdsched'])) {
-	submitJob('mpdsched', $_POST['mpdsched'], 'MPD scheduler policy updated', 'MPD restarted');
-	playerSession('write', 'mpdsched', $_POST['mpdsched']);
 } 
 
 // Integrated WiFi adapter 
@@ -204,19 +190,15 @@ if (isset($_POST['update_uac2fix'])) {
 
 // expand root file system
 if (isset($_POST['update_expand_rootfs'])) {
-	if ($_POST['expandrootfs'] == 1) {
-		submitJob('expandrootfs', '', '', '');
-		$_SESSION['notify']['title'] = 'FS expansion job submitted';
-		$_SESSION['notify']['msg'] = 'Reboot initiated';
-		$_SESSION['notify']['duration'] = 6;
-	}
+	submitJob('expandrootfs', '', '', '');
+	$_SESSION['notify']['title'] = 'FS expansion job submitted';
+	$_SESSION['notify']['msg'] = 'Reboot initiated';
+	$_SESSION['notify']['duration'] = 6;
 }
 
 // enable usb boot
 if (isset($_POST['update_usbboot'])) {
-	if ($_POST['usbboot'] == 1) {
-		submitJob('usbboot', $_POST['usbboot'], 'USB boot configured', 'Reboot required', 20);
-	}
+	submitJob('usbboot', '', 'USB boot enabled', 'Reboot required', 20);
 }
 
 // mpd engine timeout
@@ -252,6 +234,14 @@ if (isset($_POST['update_scnblank'])) {
         submitJob('scnblank', $_POST['scnblank'], 'Setting updated', 'Local display restarted');
         playerSession('write', 'scnblank', $_POST['scnblank']);
     } 
+}
+
+// screen blank timeout
+if (isset($_POST['update_scnbrightness'])) {
+    if (isset($_POST['scnbrightness']) && $_POST['scnbrightness'] != $_SESSION['scnbrightness']) {
+        submitJob('scnbrightness', $_POST['scnbrightness'], 'Setting updated');
+        playerSession('write', 'scnbrightness', $_POST['scnbrightness']);
+    }
 }
 
 // screen rotation
@@ -298,30 +288,17 @@ if (isset($_POST['shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellina
 
 // clear system logs
 if (isset($_POST['update_clear_syslogs'])) {
-	if ($_POST['clearsyslogs'] == 1) {
-		submitJob('clearsyslogs', '', 'System logs cleared', '');
-	}
+	submitJob('clearsyslogs', '', 'System logs cleared', '');
 }
 
 // clear play history log
 if (isset($_POST['update_clear_playhistory'])) {
-	if ($_POST['clearplayhistory'] == 1) {
-		submitJob('clearplayhistory', '', 'Play history log cleared', '');
-	}
+	submitJob('clearplayhistory', '', 'Play history log cleared', '');
 }
 
 // compact sqlite database
 if (isset($_POST['update_compactdb'])) {
-	if ($_POST['compactdb'] == 1) {
-		submitJob('compactdb', '', 'SQlite database has been compacted', '');
-	}
-}
-
-// network time...currently not working
-if (isset($_POST['update_nettime'])) {
-	if ($_POST['nettime'] == 1) {
-		submitJob('nettime', '', 'Fetching network time', '');
-	}
+	submitJob('compactdb', '', 'SQlite database has been compacted', '');
 }
 
 // debug logging
@@ -342,45 +319,9 @@ $_select['browsertitle'] = $_SESSION['browsertitle'];
 
 // SYSTEM MODIFICATIONS
 
-// linux kernel
-$_select['kernel'] .= "<option value=\"Standard\" " . (($_SESSION['kernel'] == 'Standard') ? "selected" : "") . ">Standard</option>\n";
-if ($_SESSION['feat_bitmask'] & FEAT_ADVKERNELS) {
-	$_install_kernel = '';
-	$_advkernel_help = '';
-	$_select['kernel'] .= "<option value=\"Advanced-LL\" " . (($_SESSION['kernel'] == 'Advanced-LL') ? "selected" : "") . ">Advanced-LL (Low Latency)</option>\n";
-	$_select['kernel'] .= "<option value=\"Advanced-RT\" " . (($_SESSION['kernel'] == 'Advanced-RT') ? "selected" : "") . ">Advanced-RT (Real-Time)</option>\n";
-}
-else {
-	$_install_kernel = 'disabled';
-	$_advkernel_help = 'hide';
-}
-// latency level
-if ($_SESSION['kernel'] == 'Advanced-LL') {
-	$_ktimerfreq_hide = '';
-	$_select['ktimerfreq'] .= "<option value=\"500\" " . (($_SESSION['ktimerfreq'] == '500') ? "selected" : "") . ">2 ms (lowest latency)</option>\n";
-	$_select['ktimerfreq'] .= "<option value=\"200\" " . (($_SESSION['ktimerfreq'] == '200') ? "selected" : "") . ">5 ms (medium latency)</option>\n";
-	$_select['ktimerfreq'] .= "<option value=\"100\" " . (($_SESSION['ktimerfreq'] == '100') ? "selected" : "") . ">10 ms (default latency)</option>\n";
-}
-else {
-	$_ktimerfreq_hide = 'hide';
-}
-
 // cpu governor
 $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
-
-// mpd scheduler policy
-if ($_SESSION['kernel'] == 'Advanced-RT') {
-	$_select['mpdsched'] .= "<option value=\"fifo\" " . (($_SESSION['mpdsched'] == 'fifo') ? "selected" : "") . ">FIFO</option>\n";
-	$_select['mpdsched'] .= "<option value=\"rr\" " . (($_SESSION['mpdsched'] == 'rr') ? "selected" : "") . ">RR</option>\n";
-}
-else {
-	$_select['mpdsched'] .= "<option value=\"other\" " . (($_SESSION['mpdsched'] == 'other') ? "selected" : "") . ">TS</option>\n";
-	if (decbin($_SESSION['feat_bitmask']) & FEAT_ADVKERNELS) {
-		$_select['mpdsched'] .= "<option value=\"fifo\" " . (($_SESSION['mpdsched'] == 'fifo') ? "selected" : "") . ">FIFO</option>\n";
-		$_select['mpdsched'] .= "<option value=\"rr\" " . (($_SESSION['mpdsched'] == 'rr') ? "selected" : "") . ">RR</option>\n";
-	}
-}
 
 // wifi bt 
 if (substr($_SESSION['hdwrrev'], 0, 5) == 'Pi-3B' || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') {
@@ -459,6 +400,9 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['scnblank'] .= "<option value=\"3600\" " . (($_SESSION['scnblank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
 	$_select['scnblank'] .= "<option value=\"off\" " . (($_SESSION['scnblank'] == 'off') ? "selected" : "") . ">Never</option>\n";
 
+	// backlight brightess
+	$_select['scnbrightness'] = $_SESSION['scnbrightness'];
+
 	// screen rotate
 	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
 	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
@@ -466,9 +410,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 else {
 	$_feat_localui = 'hide';
 }
-
-//$_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
-//$_kvariant['kvariant'] = buildKvariantSelect($_SESSION['kvariant']);
 
 // LOCAL SERVICES
 
@@ -488,35 +429,15 @@ $_select['hostip'] = getHostIp();
 
 // MAINTENANCE
 
-// clear syslogs
-$_select['clearsyslogs1'] .= "<input type=\"radio\" name=\"clearsyslogs\" id=\"toggleclearsyslogs1\" value=\"1\" " . ">\n";
-$_select['clearsyslogs0'] .= "<input type=\"radio\" name=\"clearsyslogs\" id=\"toggleclearsyslogs2\" value=\"0\" " . "checked=\"checked\"".">\n";
-
-// clear playback history
-$_select['clearplayhistory1'] .= "<input type=\"radio\" name=\"clearplayhistory\" id=\"toggleclearplayhistory1\" value=\"1\" " . ">\n";
-$_select['clearplayhistory0'] .= "<input type=\"radio\" name=\"clearplayhistory\" id=\"toggleclearplayhistory2\" value=\"0\" " . "checked=\"checked\"".">\n";
-
-// compact sqlite database
-$_select['compactdb1'] .= "<input type=\"radio\" name=\"compactdb\" id=\"togglecompactdb1\" value=\"1\" " . ">\n";
-$_select['compactdb0'] .= "<input type=\"radio\" name=\"compactdb\" id=\"togglecompactdb2\" value=\"0\" " . "checked=\"checked\"".">\n";
-
-// network time...currently not working
-//$_select['nettime1'] .= "<input type=\"radio\" name=\"nettime\" id=\"togglenettime1\" value=\"1\" " . ">\n";
-//$_select['nettime0'] .= "<input type=\"radio\" name=\"nettime\" id=\"togglenettime2\" value=\"0\" " . "checked=\"checked\"".">\n";
-
 // debug logging
 $_select['debuglog1'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggledebuglog1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['debuglog0'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggledebuglog2\" value=\"0\" " . (($_SESSION['debuglog'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-// PERIPHERALS
-
-//$_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
-//$_kvariant['kvariant'] = buildKvariantSelect($_SESSION['kvariant']);
-
 $section = basename(__FILE__, '.php');
 
 // don't wait if job is 'expandrootfs' 
-if ($_POST['expandrootfs'] != 1) {
+if (!isset($_POST['update_expand_rootfs'])) {
+//if ($_POST['expandrootfs'] != 1) {
 	waitWorker(1, 'sys-config');
 }
 

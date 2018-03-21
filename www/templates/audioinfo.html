@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->
@@ -62,12 +62,22 @@
 			</tr>
 	
 			<tr>
+				<td style="text-align:right;">Crossfade:&nbsp;</td>
+				<td style="text-align:left;">$crossfade</td>
+			</tr>
+	
+			<tr>
+				<td style="text-align:right;">Other:&nbsp;</td>
+				<td style="text-align:left;">$otherdsp</td>
+			</tr>
+	
+			<tr>
 				<td style="text-align:right;">Chip options:&nbsp;</td>
 				<td style="text-align:left;">$chip_options</td>
 			</tr>
 	
 			<tr>
-				<td style="text-align:right;">Volume:&nbsp;</td>
+				<td style="text-align:right;">Volume ctl:&nbsp;</td>
 				<td style="text-align:left;">$volume</td>
 			</tr>
 		</table>
@@ -105,16 +115,18 @@
 				<td style="text-align:left;">$iface</td>
 			</tr>
 		</table>
-		
-		<!-- Simulates modal-footer -->
-		<hr style="border-top:2px solid #ddd; width:560px; margin-left:-15px; margin-top:20px; margin-bottom:15px;">
-		
+
+		<!--strong>System</strong>
 		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:280px;">
+			<col span="1" style="width:100px;">
 			<tr>
-				<td style="text-align:left;">SYSTEM: $sysarch, $cores, $cpufreq, $cpuload%, $cputemp&deg<br>KERNEL: $kerneltype</td>
-				<td style="text-align:right;"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button></td>
+				<td style="text-align:right;">Processor:&nbsp;</td>
+				<td style="text-align:left;">$sysarch, $cores, $cpufreq, $cpuload%, $cputemp&deg</td>
 			</tr>
-		</table>
+			<tr>
+				<td style="text-align:right;">Kernel:&nbsp;</td>
+				<td style="text-align:left;">$kerneltype</td>
+			</tr>
+		</table-->
 	</div>
 </div>

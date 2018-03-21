@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-12-07 TC moOde 4.0
+# 2018-01-26 TC moOde 4.0
 #
 
 if [[ $1 = "set-timezone" ]]; then
@@ -125,26 +125,28 @@ if [[ $1 = "get-piano-dualmode" || $1 = "set-piano-dualmode" || $1 = "get-piano-
 	fi
 fi
 
-# TC $1 = new theme color name, $2 = hex color value (light), $3 = hex color value (dark)
+# $1=colorName, $2=hexColorLight, $3=hexColorDark, $4=rgbaColorDark
+
+# $1 = colorName
+# $2 = hexColor
+# $3 = rgbaColor
 if [[ $1 = "alizarin" || $1 = "amethyst" || $1 = "bluejeans" || $1 = "carrot" || $1 = "emerald" || $1 = "fallenleaf" || $1 = "grass" || $1 = "herb" || $1 = "lavender" || $1 = "river" || $1 = "rose" || $1 = "silver" || $1 = "turquoise" ]]; then
-	# copy alizarin files
+	# load the alizarin files
 	cp /var/www/themes/alizarin/bootstrap-select.css /var/local/www/cssw
 	cp /var/www/themes/alizarin/flat-ui.css /var/local/www/cssw
 	cp /var/www/themes/alizarin/panels.css /var/local/www/cssw
 	cp /var/www/themes/alizarin/indextpl.html /var/local/www/templatesw
 	cp /var/www/themes/alizarin/jquery.knob.js /var/local/www/jsw
 
-	# change to new theme color
 	if [[ $1 != "alizarin" ]]; then
-		# alizarin light color -> new color
-		sed -i "s/e74c3c/$2/g" /var/local/www/cssw/bootstrap-select.css
-		sed -i "s/e74c3c/$2/g" /var/local/www/cssw/flat-ui.css
-		# alizarin dark color -> new color
-		sed -i "s/c0392b/$3/g" /var/local/www/cssw/bootstrap-select.css
-		sed -i "s/c0392b/$3/g" /var/local/www/cssw/flat-ui.css
-		sed -i "s/c0392b/$3/g" /var/local/www/cssw/panels.css
-		sed -i "s/c0392b/$3/g" /var/local/www/templatesw/indextpl.html
-		sed -i "s/c0392b/$3/g" /var/local/www/jsw/jquery.knob.js
+		# alizarin color -> new color
+		sed -i "s/c0392b/$2/g" /var/local/www/cssw/bootstrap-select.css
+		sed -i "s/c0392b/$2/g" /var/local/www/cssw/flat-ui.css
+		sed -i "s/c0392b/$2/g" /var/local/www/cssw/panels.css
+		sed -i "s/rgba(192,57,43,0.71)/$3/g" /var/local/www/cssw/panels.css
+		sed -i "s/rgba(192,57,43,0.71)/$3/g" /var/local/www/cssw/bootstrap-select.css
+		sed -i "s/c0392b/$2/g" /var/local/www/templatesw/indextpl.html
+		sed -i "s/c0392b/$2/g" /var/local/www/jsw/jquery.knob.js
 	fi
 
 	# copy radio slider control image for the config pages
@@ -210,7 +212,7 @@ fi
 # $2 = %mount_point
 if [[ $1 = "smbadd" ]]; then
 	if [[ $(grep -w -c "$2" /etc/samba/smb.conf) = 0 ]]; then
-		sed -i "$ a[$(basename "$2")]\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
+		sed -i "$ a[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
 		systemctl restart smbd
 		systemctl restart nmbd
 	fi
@@ -230,48 +232,4 @@ if [[ $1 = "check-dir" ]]; then
 		echo "exists"
 	fi
     exit
-fi
-
-# install Linux kernel
-if [[ $1 = "install-kernel" ]]; then
-	# fetch resources
-	RES_BOOT_CONFIG_TXT=$(sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='res_boot_config_txt'")	
-
-    # check kernel name
-    if [[ $2 != "Standard" && $2 != "Advanced-LL" && $2 != "Advanced-RT" ]]; then
-        echo "valid kernels are: Standard, Advanced-LL, Advanced-RT"
-        exit
-    fi
-    
-    # check 2nd param
-    if [[ $2 = "Standard" && ! -z "$3" ]]; then
-        echo "extra param not needed"
-        exit
-    fi
-
-    if [[ $2 = "Advanced-LL" || $2 = "Advanced-RT" ]]; then
-        if [[ $3 != "-armv6l" && $3 != "-armv7l" ]]; then
-            echo "missing param: -armv6l | -armv7l"
-            exit
-        fi
-    fi      
-
-    # Install kernel
-    echo "installing $2 kernel"
-	cd /
-	cp $RES_BOOT_CONFIG_TXT /
-	cp /boot/cmdline.txt /
-	rm -rf /lib/modules /lib/firmware /boot/*
-	tar xfz /var/www/kernels/$2/modules$3.tar.gz
-	tar xfz /var/www/kernels/$2/firmware$3.tar.gz
-	tar xfz /var/www/kernels/$2/boot$3.tar.gz
-	mv /config.txt /boot
-	mv /cmdline.txt /boot
-	
-	# Flush cached disk writes
-	echo "flushing cached disk writes"
-	sync
-
-	echo "$2 kernel installed"
-	exit
 fi

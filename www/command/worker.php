@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
@@ -87,8 +87,12 @@ $result = cfgdb_read('cfg_radio', $dbh);
 foreach ($result as $row) {
 	$_SESSION[$row['station']] = array('name' => $row['name'], 'permalink' => $row['permalink'], 'logo' => $row['logo']);
 }
-// cache musicroot in session vars
-#$_SESSION['musicroot'] = 'vlmm90614385';
+/* enable this only if theme settings will be used by php
+// cache cfg_theme in session vars
+$result = cfgdb_read('cfg_theme', $dbh);
+foreach ($result as $row) {
+	$_SESSION[$row['theme_name']] = array('tx_color' => $row['tx_color'], 'bg_color' => $row['bg_color'], 'mbg_color' => $row['mbg_color']);
+}*/
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
 
@@ -101,13 +105,26 @@ playerSession('write', 'mpdver', $mpdver[3]);
 $lastinstall = checkForUpd('/var/local/www/');
 $_SESSION['pkgdate'] = $lastinstall['pkgdate'];
 
-/*
-// exit if running an unsupported hdwrrev
+/*// exit if running an unsupported hdwrrev
 if (substr($_SESSION['hdwrrev'], 0, 5) == '?????') {
 	workerLog('worker: Unsupported hardware platform (' . $_SESSION['hdwrrev'] . ')');
+	workerLog('worker: exited');
+	exit;
+}*/
+
+// exit if running an unsupported kernel config
+if (($_SESSION['feat_bitmask'] & FEAT_ADVKERNELS) ||
+	($_SESSION['procarch'] == 'armv6l' && false !== strpos($_SESSION['kernelver'], '-')) ||
+	($_SESSION['procarch'] == 'armv7l' && false === strpos($_SESSION['kernelver'], '-v7+'))) {
+	if ($_SESSION['feat_bitmask'] & FEAT_ADVKERNELS) {
+		workerLog('worker: Unsupported configuration (' . $_SESSION['feat_bitmask'] . ')');
+	}
+	else {
+		workerLog('worker: Unsupported Linux kernel (' . $_SESSION['kernelver'] . ')');
+	}	
+	workerLog('worker: exited');
 	exit;
 }
-*/
 
 // log platform data 
 workerLog('worker: Host (' . $_SESSION['hostname'] . ')');
@@ -474,13 +491,17 @@ if ($_SESSION['ashuffle'] == '1') {
 	workerLog('worker: Auto-shuffle started');
 }
 
-// start watchdog monitor
-sysCmd('/var/www/command/watchdog.sh > /dev/null 2>&1 &');
-workerLog('worker: Watchdog started');
-
 // clock radio globals
 $ckstart = $_SESSION['ckradstart'];
 $ckstop = $_SESSION['ckradstop'];
+
+// maintenance interval global
+$maint_interval = $_SESSION['maint_interval'];
+workerLog('worker: Maintenance interval (' . $_SESSION['maint_interval'] . ')');
+
+// start watchdog monitor
+sysCmd('/var/www/command/watchdog.sh > /dev/null 2>&1 &');
+workerLog('worker: Watchdog started');
 
 // inizialize worker job queue
 $_SESSION['w_queue'] = '';
@@ -507,7 +528,11 @@ while (1) {
 		
 	session_start();
 
-	// TEST for usb hot-plug
+	if ($_SESSION['maint_interval'] != 0) {
+		chkMaintenance($maint_interval);
+	}
+
+	// Experimental: for usb hot-plug
 	if ($_SESSION['cardnum'] == '1') {
 		sysCmd('alsactl store');
 	}
@@ -536,6 +561,18 @@ while (1) {
 }
 
 // worker functions
+
+function chkMaintenance($maint_interval) {
+	$maint_interval = $maint_interval - 3;
+	if ($maint_interval <= 0) {
+		sysCmd('/var/local/www/commandw/maint.sh');		
+		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
+		workerLog('worker: Maintenance completed');
+	}
+	else {
+		$GLOBALS['maint_interval'] = $maint_interval;
+	}
+}
 
 function updExtMetaFile() {
 	// current metadata
@@ -770,6 +807,7 @@ function runQueuedJob() {
 		
 		// mpd-config jobs
 		case 'mpdrestart':
+			sysCmd('mpc stop');
 			sysCmd('systemctl restart mpd');
 			break;
 		case 'mpdcfg':
@@ -819,7 +857,7 @@ function runQueuedJob() {
 				startSqueezeLite();
 			}
 			else {
-				sysCmd('killall -s 9 squeezelite-' . $_SESSION['procarch']);
+				sysCmd('killall -s 9 squeezelite');
 				sysCmd('/var/www/vol.sh restore');
 			}
 			break;
@@ -983,35 +1021,8 @@ function runQueuedJob() {
 		case 'browsertitle':
 			sysCmd('/var/www/command/util.sh chg-name browsertitle ' . $_SESSION['w_queueargs']);
 			break;
-		case 'install-kernel':
-			$cmd = '/var/www/command/util.sh install-kernel ' . (strpos($_SESSION['w_queueargs'], 'Advanced') !== false ? $_SESSION['w_queueargs'] . ' -' . $_SESSION['procarch'] : $_SESSION['w_queueargs']);
-			$result = sysCmd($cmd);
-			workerLog('worker: install-kernel: util.sh output (' .  $result[0] . ')');
-			workerLog('worker: install-kernel: util.sh output (' .  $result[1] . ')');
-			workerLog('worker: install-kernel: util.sh output (' .  $result[2] . ')');
-			// config systemd service files
-			cfgSystemdSvcFiles($_SESSION['w_queueargs']);
-			// config I2S overlay
-			cfgI2sOverlay($_SESSION['i2sdevice']);
-
-			if ($_SESSION['w_queueargs'] == 'Advanced-LL') {
-				sysCmd('cp /var/www/kernels/Advanced-LL/kernelimg-' . $_SESSION['procarch'] . '-' . $_SESSION['ktimerfreq'] . ($_SESSION['procarch'] == 'armv6l' ? ' /boot/kernel.img' : ' /boot/kernel7.img'));
-				workerLog('worker: install-kernel: copied (' .  'kernelimg-' . $_SESSION['procarch'] . '-' . $_SESSION['ktimerfreq'] . ')');
-			} 		
-			break;
-		case 'upd-ktimerfreq':
-			if ($_SESSION['kernel'] == 'Advanced-LL') {
-				sysCmd('cp /var/www/kernels/Advanced-LL/kernelimg-' . $_SESSION['procarch'] . '-' . $_SESSION['ktimerfreq'] . ($_SESSION['procarch'] == 'armv6l' ? ' /boot/kernel.img' : ' /boot/kernel7.img'));
-				workerLog('worker: install-kernel: copied (' .  'kernelimg-' . $_SESSION['procarch'] . '-' . $_SESSION['ktimerfreq'] . ')');
-			} 		
-			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
-			break;
-		case 'mpdsched':
-			sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=' . $_SESSION['w_queueargs'] . '"' . ' /lib/systemd/system/mpd.service');
-			sysCmd('systemctl daemon-reload');
-			sysCmd('systemctl restart mpd');
 			break;
 		case 'p3wifi':
 			ctlWifi($_SESSION['w_queueargs']);
@@ -1041,14 +1052,10 @@ function runQueuedJob() {
 			sysCmd('mpc stop && reboot');
 			break;
 		case 'usbboot':
-			if ($_SESSION['w_queueargs'] == 1) {
-				sysCmd('sed -i /program_usb_boot_mode/d ' . $_SESSION['res_boot_config_txt']); // remove first to prevent duplicate adds
-				sysCmd('echo program_usb_boot_mode=1 >> ' . $_SESSION['res_boot_config_txt']);
-			}
+			sysCmd('sed -i /program_usb_boot_mode/d ' . $_SESSION['res_boot_config_txt']); // remove first to prevent duplicate adds
+			sysCmd('echo program_usb_boot_mode=1 >> ' . $_SESSION['res_boot_config_txt']);
 			break;
 		case 'localui':
-			$cmd = $_SESSION['w_queueargs'] == '1' ? 'enable' : 'disable';
-			//sysCmd('sudo systemctl ' . $cmd . ' localui');
 			sysCmd('sudo systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'enable' : 'disable') . ' localui');
 			sysCmd('sudo systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'start' : 'stop') . ' localui');
 			break;
@@ -1065,6 +1072,8 @@ function runQueuedJob() {
 			if ($_SESSION['localui'] == '1') {
 				sysCmd('systemctl restart localui');
 			}
+		case 'scnbrightness':
+			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 		case 'scnrotate':
 			sysCmd('sed -i /lcd_rotate/d ' . $_SESSION['res_boot_config_txt']);
 			if ($_SESSION['w_queueargs'] == '180') {
@@ -1098,7 +1107,45 @@ function runQueuedJob() {
 			sysCmd('systemctl start ntp');
 			break;
 
+		// audio input output config jobs
+		case 'audioout':
+			if ($_SESSION['w_queueargs'] == 'Local') {
+				sysCmd('mpc stop');
+				sysCmd('mpc enable only 1');
+			}
+			else if ($_SESSION['w_queueargs'] == 'Bluetooth') {
+				sysCmd('mpc stop');
+				sysCmd('mpc enable only 5');
+			}
+			sysCmd('systemctl restart mpd');
+			break; 
+
+		case 'audioin':
+			if ($_SESSION['w_queueargs'] == 'Local') {
+				sysCmd('mpc stop');
+			}
+			else if ($_SESSION['w_queueargs'] == 'Analog') {
+				sysCmd('mpc stop');
+				// send cmd to switch input
+			}
+			else if ($_SESSION['w_queueargs'] == 'S/PDIF') {
+				sysCmd('mpc stop');
+				// send cmd to switch input
+			}
+			break; 
+
 		// command/moode jobs
+		case 'setbgimage':
+			$imgdata = base64_decode($_SESSION['w_queueargs'], true);
+			if ($imgdata === false) {
+				workerLog('worker: setbgimage: base64_decode failed');
+			}
+			else {
+				$fh = fopen('/var/local/www/imagesw/bgimage.jpg', 'w');
+				fwrite($fh, $imgdata);
+				fclose($fh);
+			}
+			break;
 		case 'reboot':
 		case 'poweroff':
 			resetApMode();
@@ -1108,44 +1155,44 @@ function runQueuedJob() {
 			$GLOBALS['ckstart'] = $_SESSION['ckradstart'];
 			$GLOBALS['ckstop'] = $_SESSION['ckradstop'];
 			break;
-		case 'alizarin':
-			sysCmd('/var/www/command/util.sh alizarin'); // don't specify colors
+		case 'alizarin': // hex color: #c0392b, rgba 192,57,43,0.71
+			sysCmd('/var/www/command/util.sh alizarin'); // don't specify colors, this is the default
 			break;
 		case 'amethyst':
-			sysCmd('/var/www/command/util.sh amethyst 9b59b6 8e44ad'); // #hexlight #hexdark
+			sysCmd('/var/www/command/util.sh amethyst 8e44ad "rgba(142,68,173,0.71)"');
 			break;
 		case 'bluejeans':
-			sysCmd('/var/www/command/util.sh bluejeans 335db6 1a439c');
+			sysCmd('/var/www/command/util.sh bluejeans 1a439c "rgba(26,67,156,0.71)"');
 			break;
 		case 'carrot':
-			sysCmd('/var/www/command/util.sh carrot e67e22 d35400');
+			sysCmd('/var/www/command/util.sh carrot d35400 "rgba(211,84,0,0.71)"');
 			break;
 		case 'emerald':
-			sysCmd('/var/www/command/util.sh emerald 2ecc71 27ae60');
+			sysCmd('/var/www/command/util.sh emerald 27ae60 "rgba(39,174,96,0.71)"');
 			break;
 		case 'fallenleaf':
-			sysCmd('/var/www/command/util.sh fallenleaf e5a646 cb8c3e');
+			sysCmd('/var/www/command/util.sh fallenleaf cb8c3e "rgba(203,140,62,0.71)"');
 			break;
 		case 'grass':
-			sysCmd('/var/www/command/util.sh grass 90be5d 7ead49');
+			sysCmd('/var/www/command/util.sh grass 7ead49 "rgba(126,173,73,0.71)"');
 			break;
 		case 'herb':
-			sysCmd('/var/www/command/util.sh herb 48929b 317589');
+			sysCmd('/var/www/command/util.sh herb 317589 "rgba(49,117,137,0.71)"');
 			break;
 		case 'lavender':
-			sysCmd('/var/www/command/util.sh lavender 9a83d4 876dc6');
+			sysCmd('/var/www/command/util.sh lavender 876dc6 "rgba(135,109,198,0.71)"');
 			break;
 		case 'river':
-			sysCmd('/var/www/command/util.sh river 3498db 2980b9');
+			sysCmd('/var/www/command/util.sh river 2980b9 "rgba(41,128,185,0.71)"');
 			break;
 		case 'rose':
-			sysCmd('/var/www/command/util.sh rose d479ac c1649b');
+			sysCmd('/var/www/command/util.sh rose c1649b "rgba(193,100,155,0.71)"');
 			break;
 		case 'silver':
-			sysCmd('/var/www/command/util.sh silver cccccc 999999');
+			sysCmd('/var/www/command/util.sh silver 999999 "rgba(153,153,153,0.71)"');
 			break;
 		case 'turquoise':
-			sysCmd('/var/www/command/util.sh turquoise 1abc9c 16a085');
+			sysCmd('/var/www/command/util.sh turquoise 16a085 "rgba(22,160,133,0.71)"');
 			break;
 	}
 	

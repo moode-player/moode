@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-12-07 TC moOde 4.0
+# 2018-01-26 TC moOde 4.0
 #
 
 if [[ -n "$1" ]]; then

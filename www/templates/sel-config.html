@@ -1,0 +1,67 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2018-01-26 TC moOde 4.0
+ *
+ */
+-->	
+<div class="container">
+<div class="container2">
+	<h1>Select Input/Output</h1>
+
+    <p>
+    	<a href="snd-config.php">BACK</a> to Audio configuration page
+    </p>
+
+    <form class="form-horizontal" data-validate="parsley" action="" method="post">
+    	<legend>&nbsp;</legend>
+			<div class="control-group">
+				<label class="control-label" for="audioout">MPD audio output</label>
+				<div class="controls">
+					<select id="audioout" class="select-medium" name="audioout" style="margin-bottom: 5px;">
+						$_select[audioout]
+					</select>
+					<button class="btn btn-primary btn-small set-button" type="submit" name="update_audioout" value="novalue">Set</button>
+					<a class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info_audioout" class="help-block-configs hide" style="font-size: 14px; line-height: 20px; font-weight: 500;">
+						MPD can output its audio stream to the locally attached audio device (default) or over a Bluetooth connection to another audio device.<br>
+		            </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="audioout">Audio input source</label>
+				<div class="controls">
+					<select id="audioin" class="select-medium" name="audioin" style="margin-bottom: 5px;">
+						$_select[audioin]
+					</select>
+					<button class="btn btn-primary btn-small set-button" type="submit" name="update_audioin" value="novalue">Set</button>
+					<a class="info-toggle" data-cmd="info_audioin" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info_audioin" class="help-block-configs hide" style="font-size: 14px; line-height: 20px; font-weight: 500;">
+						Select which input provides audio. MPD is the local (default) source. If an audio device offers other input sources they will be listed here.<br>
+		            </span>
+				</div>
+			</div>
+	</form>
+
+	<div style="background-color: #333; font-size: 14px; line-height: 18px; padding: 10px; margin-right: 40px; font-family: Courier New">
+		Configure audio input and output routing. MPD can output its audio stream to the locally attached audio device or over a Bluetooth connection to another audio device.
+		If the locally attached audio device offers multiple inputs then they can be selected here.
+	</div>
+</div>	
+</div>

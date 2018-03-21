@@ -19,75 +19,78 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->
 
-<div class="tab-content">
-	
-	<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
+<div class="tab-content">	
+
+	<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST //newui -->
 	<div id="playback-panel" class="tab-pane active">
 		<div class="container-playback txtmid">
-			<div class="row-fluid">
-				
-				<!-- playlist -->
+			<div class="no-fluid">
+				<!-- playlist //newui -->
 				<div class="span5">					
-					<div class="btnlist btnlist-top btnlist-top-pl hidden">
+					<div class="btnlist btnlist-top btnlist-top-pl">
 						<form id="pl-search" method="post" onSubmit="return false;">
 							<div class="input-append">
+								<button class="btn" id="play-search" title="Typedown search"><i class="icon-search"></i></button>
 								<input id="pl-filter" class="ttip" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
-								<button class="btn" title="Typedown search"><i class="icon-search"></i></button>
 							</div>
 						</form>
-						<div id="pl-controls">
-							<button class="btn pl-firstPage"><i class="icon-double-angle-up"></i></button>
-							<button class="btn pl-lastPage"><i class="icon-double-angle-down"></i></button>
-							<!--div id="pl-filter-results"></div-->
-						</div>
 					</div>
 				
 					<div id="container-playlist">
 						<div id="playlist">
 							<ul class="playlist"></ul>
+							<button id="playlistSave" class="btn pl-btnSave"><i class="icon-save"></i>  Save This Playlist</button>
 						</div>				
-					</div>
-
-					<div class="btnlist btnlist-bottom btnlist-bottom-pl hidden">
-						<div id="pl-controls">
-							<form id="pl-save" method="post" onSubmit="return false;">
-								<div class="input-append">
-									<input id="pl-saveName" class="ttip" type="text" value="" placeholder="save playlist" data-placement="bottom" data-toggle="tooltip">
-									<button id="pl-btnSave" class="btn" title="Save playlist"><i class="icon-save"></i></button>
-								</div>
-							</form>
-						</div>
 					</div>
 				</div>
 
-				<!-- knobs and playback controls -->
+				<!-- knobs and playback controls //newui -->
 				<div class="span3">					
 					<div id="timeknob">
 						<div id="countdown">
-							<input class="playbackknob" id="time" data-width="100%" data-thickness="0.28" data-bgColor="#2c3e50" data-fgcolor="#c0392b" value="0" data-readonly="false" data-min="0" data-max="1000">
+							<input class="playbackknob" id="time" data-width="100%" data-thickness="0.28" data-bgColor="rgba(96,96,96,0.2)" data-fgcolor="#c0392b" value="0" data-readonly="false" data-min="0" data-max="1000">
 						</div>
 						<span id="countdown-display" href="#notarget"></span>
 						<span id="total"></span>
 					</div>
 					
+					<div id="mobile-toolbar">
+						<div id="mt1">
+							<button id="mrepeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="icon-repeat"></i></button>
+							<button id="mrandom" class="btn btn-cmd btn-toggle" title="Random"><i class="icon-random"></i></button>
+						</div>
+						<div id="mt2" class="btn-group">
+							<button id="mprev" class="btn btn-cmd" title="Previous"><i class="icon-backward"></i></button>
+							<button id="mplay" class="btn btn-cmd btn-play" title="Play/Pause"><i class="icon-play"></i></button>
+							<button id="mnext" class="btn btn-cmd" title="Next"><i class="icon-forward"></i></button>
+						</div>
+						<div id="mt3">
+							<button id="msingle" class="btn btn-cmd btn-toggle" title="Single"><i class="icon-refresh"></i></button>
+							<button id="mconsume" class="btn btn-cmd btn-toggle" title="Consume mode"><i class="icon-arrow-down"></i></button>
+						</div>
+					</div>
+
 					<div class="btn-toolbar">
 						<div class="btn-group">
 							<button id="prev" class="btn btn-cmd" title="Previous"><i class="icon-backward"></i></button>
-							<button id="play" class="btn btn-cmd" title="Play/Pause"><i class="icon-play"></i></button>
+							<button id="play" class="btn btn-cmd btn-play" title="Play/Pause"><i class="icon-play"></i></button>
 							<button id="next" class="btn btn-cmd" title="Next"><i class="icon-forward"></i></button>
 						</div>
 					</div>
 					<div id="volknob">
 						<div id="volcontrol"> <!--  data-thickness="0.15" original -->
-							<input class="volumeknob" id="volume" data-readOnly="false" data-width="100%" data-thickness="0.20" data-bgColor="#2c3e50" data-fgColor="#c0392b" value="0" data-cursor="true" data-angleArc="250" data-angleOffset="-125" data-skin="tron">	
+							<input class="volumeknob" id="volume" data-readOnly="false" data-width="100%" data-thickness="0.20" data-bgColor="#2c3e50" data-fgColor="#c0392b" value="0" data-cursor="true" data-angleArc="240" data-angleOffset="-120" data-skin="tron">	
 						</div>
+					</div>					
+					<div id="volumeslider">
+						<input id="mobilevolume" type="range" min=0 max=100 value=0 step=1 onchange="setVolume(this.value)">
 					</div>
-					<div style="margin-top: 10px;">
+					<div id="playbackbtns">
 						<div class="btn-group">
 							<button id="repeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="icon-repeat"></i></button>
 							<button id="random" class="btn btn-cmd btn-toggle" title="Random"><i class="icon-random"></i></button>
@@ -96,38 +99,35 @@
 							<button id="volumemute" class="btn btn-cmd btn-volume"><i class="icon-volume-off"></i></button>
 						</div>
 					</div>
-
+					
 					<!-- TC volume up/down buttons -->
 					<div id="volbtns" style="margin-top: 10px;">
-						<button id="volumedn" class="btn btn-cmd btn-volume" style="background-color: black;"><i class="icon-volume-down"></i></button>
-						<button id="volumeup" class="btn btn-cmd btn-volume" style="background-color: black;"><i class="icon-volume-up"></i></button>
+						<button id="volumedn" class="btn btn-cmd btn-volume"><i class="icon-volume-down"></i></button>
+						<button id="volumeup" class="btn btn-cmd btn-volume"><i class="icon-volume-up"></i></button>
 					</div>
 
-					<!-- TC debug logarithmic volume control -->
-					<!--div style="margin-top: 10px;">
-						<span id="output-level"></span>
-					</div-->
-					
 				</div>
 
-				<!-- cover art and song metadata -->
+				<!-- cover art and song metadata //newui -->
 				<div class="span4">
 					<div class="covers">
-						<span id="coverart-url" title="Google search"></span>
-						<span id="extratags"></span>
-						<span id="currentartist" style="padding-top: 10px;"></span>
+						<div id="coverart-url" title="Google search"></div>
+						<div id="timeline">
+							<span id="m-countdown" href="#notarget"></span>
+							<input id="timetrack" type="range" min="0" max="100" value="0" step="1"><span id="m-total"></span></div>
+						<div id="extratags"></div>
+						<span id="currentartist"></span>
 						<span id="currentsong"></span>
-						<span id="currentalbum" style="padding-top: 5px;"></span>
+						<span id="currentalbum"></span>
 					</div>
 				</div>
-
 			</div> 
 		</div>
-	</div>
-	
-	<!-- LIBRARY PANEL -->
+	</div>	
+
+	<!-- LIBRARY PANEL //newui -->
 	<div id="library-panel" class="tab-pane">
-		<div class="container">
+		<div class="container-library">
 			<div id="lib-loader">
 				<div id="loaderbg"></div>
 				<div id="loadercontent">
@@ -135,81 +135,87 @@
 				</div>
 			</div>
 
-			<div class="btnlist btnlist-top btnlist-top-lib hidden">
+			<div class="btnlist btnlist-top btnlist-top-lib">
 				<form id="lib-album-search" method="post" onSubmit="return false;">
 					<div class="input-append">
-						<input id="lib-album-filter" class="ttip" type="text" value="" placeholder="search albums" data-placement="bottom" data-toggle="tooltip">
-						<button class="btn" title="Typedown search"><i class="icon-search"></i></button>
+						<button class="btn" id="lib-search" title="Typedown search"><i class="icon-search"></i></button>
+						<input id="lib-album-filter" class="ttip" type="text" value="" placeholder="search albums" data-placement="bottom" data-toggle="tooltip">	
 					</div>
 				</form>
 				<div id="lib-album-filter-results"></div>
 			</div>
 
 			<div id="lib-content">
-				<div id="lib-genre-header" class="lib-genre-header-sm">
-					<li id="genreheader">
-						<div class="lib-heading">Genres</div>
-					</li>
-				</div>
-				<div id="lib-genre" class="lib-genre-sm">
-					<ul id="genresList"></ul>
-				</div>
-				
-				<div id="lib-artist-header" class="lib-artist-header-sm">
-					<li id="artistheader">
-						<div class="lib-heading">Artists</div>
-					</li>
-				</div>
-				<div id="lib-artist" class="lib-artist-sm">
-					<ul id="artistsList" class="artistslist"></ul>
-				</div>
-				
-				<div id="lib-album-header">
-					<li id="albumheader">
-						<div class="lib-heading">Albums</div>
-					</li>
-				</div>
-				<div id="lib-album">
-					<ul id="albumsList" class="albumslist"></ul>
-				</div>
-
-				<div id="lib-file-header">
-					<li id="fileheader">
-						<div class="lib-heading">Tracks</div>
-					</li>
-				</div>
-				<div id="lib-file">
-					<ul id="songsList"></ul>
-				</div>
-
- 				<div id="lib-coverart-meta-area">
-					<div id="lib-coverart-img" class="lib-coverart" title="Actions"></div>
-					<div id="lib-meta-summary">
-	 					<div id="lib-albumname" class="lib-albumname-meta"></div>
-	 					<div id="lib-artistname" class="lib-artistname-meta"></div>
-	 					<div id="lib-numtracks" class="lib-numtracks-meta"></div>
+				<div id="content-position">
+					<div id="top-columns">
+							<div id="lib-genre-header" class="lib-genre-header-sm">
+								<li id="genreheader">
+									<div class="lib-heading">Genres</div>
+								</li>
+							</div>
+							<div id="lib-genre" class="lib-genre-sm">
+								<ul id="genresList"></ul>
+							</div>
+							<div id="lib-artist-header" class="lib-artist-header-sm">
+								<li id="artistheader">
+									<div class="lib-heading">Artists</div>
+								</li>
+							</div>
+							<div id="lib-artist" class="lib-artist-sm">
+								<ul id="artistsList" class="artistslist"></ul>
+							</div>
+							<div id="lib-album-header">
+								<li id="albumheader">
+									<div class="lib-heading">Albums</div>
+								</li>
+							</div>
+							<div id="lib-album">
+								<ul id="albumsList" class="albumslist"></ul>
+							</div>
+					</div>
+					<div id="bottom-row">
+							<div id="lib-file-header">
+								<li id="fileheader">
+									<div class="lib-heading">Tracks</div>
+								</li>
+							</div>
+						<div id="lib-file">
+			 				<div id="lib-coverart-meta-area">
+								<div id="lib-coverart-img" class="lib-coverart" title="Actions"></div>
+								<div id="lib-meta-summary">
+				 					<div id="lib-albumname" class="lib-albumname-meta"></div>
+				 					<div id="lib-artistname" class="lib-artistname-meta"></div>
+				 					<div id="lib-albumyear" class="lib-albumyear-meta"></div>
+				 					<div id="lib-numtracks" class="lib-numtracks-meta"></div>
+								</div>
+							</div>
+							<div id="trackscontainer">
+								<ul id="songsList"></ul>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- BROWSE PANEL -->
+	<!-- BROWSE PANEL //newui -->
 	<div id="browse-panel" class="tab-pane">
 		<div id="container-browse">
-			<div class="btnlist btnlist-top btnlist-top-db hidden">
+			<div class="btnlist btnlist-top btnlist-top-db">
 				<button id="db-back" class="btn"><i class="icon-arrow-left"></i></button>
+				<button id="db-home" class="btn"><i class="icon-home"></i></button>
 				<form id="db-search" class="" action="javascript:MpdDbCmd('search', '', 'file');">
 					<div id="db-search-input" class="input-append">
 						<input class="span2" id="db-search-keyword" type="text" value="" placeholder="search">
-						<button class="btn" type="submit"><i class="icon-search"></i></button>
+						<button class="btn" type="submit" style="display:none"><i class="icon-search"></i></button>
 					</div>
 				</form>
 	
 				<form id="rs-search" class="" method="post" onSubmit="return false;">
 					<div id="rs-search-input" class="input-append hidden">
 						<input id="rs-filter" class="ttip" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
-						<button class="btn" title="Typedown search"><i class="icon-search"></i></button>
+						<button class="btn" style="display:none" title="Typedown search"><i class="icon-search"></i></button>
 					</div>
 				</form>
 				<div id="db-filter-results"></div>
@@ -229,13 +235,11 @@
 				</div>
 			</div>		
 		</div>
-	</div>
-
+	</div>	
 </div>
 
 <!-- ACTION MENUS -->
 <div id="context-menus">
-	
 	<div id="context-menu" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="add"><i class="icon-plus-sign sx"></i> Add</a></li>
@@ -309,31 +313,6 @@
 			<li><a href="#notarget" data-cmd="moveplitem"><i class="icon-arrow-up sx"></i> Move item(s)</a></li>
 			<li><a href="#notarget" data-cmd="setforclockradio"><i class="icon-time sx"></i> Set for clock radio</a></li>
 		</ul>
-	</div>
-</div>
-
-<!-- VOLUME CONTROL 2 -->
-<div id="volume-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="volume-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="volume-modal-label">Volume control</h3>
-	</div>
-	
-	<div class="modal-body">
-		<div class="volume2" style="text-align:center">
-			<input class="volumeknob" id="volume-2" data-width="200" data-thickness="0.15" data-bgColor="#2c3e50" data-fgColor="#c0392b" value="0" data-cursor="true" data-angleArc="250" data-angleOffset="-125" data-skin="tron">	
-			<div id="volbtns-2" class="btn-toolbar">
-				<div class="btn-group">
-					<button id="volumedn-2" class="btn btn-cmd btn-volume"><i class="icon-volume-down"></i></button>
-					<button id="volumemute-2" class="btn btn-cmd btn-volume"><i class="icon-volume-off"></i></button>
-					<button id="volumeup-2" class="btn btn-cmd btn-volume"><i class="icon-volume-up"></i></button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 

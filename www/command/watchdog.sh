@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-12-07 TC moOde 4.0
+# 2018-01-26 TC moOde 4.0
 #
 
 FPMLIMIT=40
@@ -30,7 +30,7 @@ while true; do
 	# PHP
 	if (( FPMCNT > FPMLIMIT )); then
 		TIMESTAMP=$(date +'%Y%m%d %H%M%S')
-		LOGMSG=" watchdog: PHP restarted (fpm child limit "$FPMLIMIT" exceeded)"
+		LOGMSG=" watchdog: PHP restart (fpm child limit > "$FPMLIMIT")"
 		echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
 		systemctl restart php7.0-fpm
 	fi
@@ -38,7 +38,7 @@ while true; do
 	# MPD
 	if [[ $MPDACTIVE = 0 ]]; then
 		TIMESTAMP=$(date +'%Y%m%d %H%M%S')
-		LOGMSG=" watchdog: MPD restarted (check syslog for MPD errors)"
+		LOGMSG=" watchdog: MPD restart (check syslog for MPD errors)"
 		echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
 		systemctl start mpd
 	fi

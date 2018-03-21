@@ -3,9 +3,7 @@
 # RELEASE NOTES
 #
 # These release notes reflect the content contained in
-# a full moOde release from moodeaudio.org. Releases of 
-# moOde from other sources may or may not contain all
-# the features, or may contain additional features.
+# the official moOde release from moodeaudio.org.
 #
 # (C) Tim Curtis 2014 http://moodeaudio.org
 #
@@ -13,36 +11,36 @@
 
 ########################################################
 //
-// 4.0 Release 2017-12-07
-//
-// BETA 12
+// 4.0 Release 2018-01-26
 //
 ########################################################
 
 New features
 
-- NEW: Bluetooth Speaker with support for Speaker Sharing
+- NEW: Modern Adaptive User Interface
+- NEW: Bluetooth audio with speaker sharing and connect
 - NEW: Parametric EQ with curve editor and preview play
 - NEW: Graphic equalizer curve editor and preview play
+- NEW: Audio input and output routing
+- NEW: Local display with screen blank, rotate and brightness
 - NEW: Tidal, Qobuz and Google Play via UPnP
+- NEW: Discover and connect to other moOde players
+- NEW: Automatic scheduled maintenance
 - NEW: Web SSH terminal server
 - NEW: Automatic Samba USB disk label shares
 - NEW: Automatic AP mode failover if SSID fails
-- NEW: Local moOde UI display with screen blank and rotate
-- NEW: Discover and connect to other moOde players
-- NEW: Features availability bitmask
-- NEW: Resource definitions
-- NEW: Moode OS Image Builder
+- NEW: OEM integration resources
+- NEW: Moode OS Image Builder with resume capability
 
-Platform (refer to Build Recipe)
+Platform (for details refer to Build Recipe)
 
 - NEW: Raspbian Stretch Lite 2017-11-29
 - NEW: PHP 7.0.19
 - NEW: NGINX 1.10.3
 - NEW: SQLite3 3.16.2
 - NEW: MPD 0.20.12
+- NEW: Shairport-sync 3.1.7
 - NEW: Upmpdcli 1.2.15
-- NEW: Shairport-sync 3.1.4
 - NEW: Squeezelite 1.8.7-1020
 - NEW: miniDLNA 1.1.6
 - NEW: ALSA 1.1.3
@@ -50,19 +48,20 @@ Platform (refer to Build Recipe)
 
 Updates
 
-- UPD: Add squeezelite name to auto-config
 - UPD: Add latency offset setting to Airplay config
+- UPD: Add squeezelite name to auto-config
 - UPD  Add configurable params to Rotary Encoder
 - UPD: Change MPD default to Zeroconf off
-- UPD: Improve network scan (run twice)
-- UPD: Improve robustness of Sleep Timer / Clock Radio
-- UPD: Use restart.sh for Sleep Timer / Clock Radio
+- UPD: Improve network scan 2x run
+- UPD: Improve robustness of SleepTimer / ClockRadio
+- UPD: Use restart.sh for SleepTimer / ClockRadio
 - UPD: Improve UI auto-reconnect to handle non-existing domain landing service (BHN DNS error)
 - UPD: Add DSD bitstream information to Audio info
 - UPD: Move several scripts to writable dir /var/local/www/commandw
 - UPD: Convert to wpa_supplicant for wlan0 config
-- UPD: Use -f force unmount for smb/cifs
+- UPD: Use -l lazy unmount for smb/cifs
 - UPD: Set wide_links=yes in minidlna.conf
+- UPD: Add checkcontentformat to upmpdcli.conf and to upnop config
 - UPD: Remove example static ip address sections from /etc/dhcpcd.conf
 - UPD: Remove tuning params section from smb.conf
 - UPD: Correct a param in memcached.conf
@@ -79,7 +78,6 @@ Updates
 - UPD: Library loader will use Artist if Album Artist tag is missing
 - UPD: Separate on/off controls for integrated Wifi/Bluetooth adapter
 - UPD: Add some padding to Playhistory line
-- UPD: Reduce brightness of playlist and database li border
 - UPD: Improved volume mgt for USB audio device hot-plug
 - UPD: Improved startup sequencing
 - UPD: Cleanup bit depth display on Playback panel and Audio info
@@ -89,7 +87,15 @@ Updates
 - UPD: Auto-init Bluetooth controller at first start
 - UPD: Change default rsize to 61440 from 1048576
 - UPD: Support tiff format for cover art
+- UPD: Configurable priority for cover art search
 - UPD: Chg default music service qual settings to low
+- UPD: Improve eficiency of auto font sizing in JQuery countdown
+- UPD: Improve System config screen ease of use
+- UPD: Add comment param to samba USB share block
+- UPD: Remove amixer code from vol routines
+- UPD: Add bounds checking to jquery knob
+- UPD: Use a single binary for squeezelite
+- UPD: Use volume slider and readonly knob for Pi Touch
 
 Audio devices
 
@@ -117,9 +123,12 @@ Radio stations
 - NEW: VRT - Studio Brussel
 - UPD: Ambient Sleeping Pill 256K stream
 - UPD: Converted to Soma FM AAC-LC 128K streams
-- UPD: WDR-1LIVE stream link
 - UPD: Correct sp error in VRT - Sporza file name
 - UPD: JB Radio2 stream links
+- UPD: Radio Pardise to 320K AAC stream link
+- UPD: WDR-1LIVE stream link
+- DEL: Soma FM - Earwaves
+- DEL: Soma FM - The Silent Channel
 
 Developer tools
 
@@ -127,9 +136,9 @@ Developer tools
 - NEW: python-pip package
 - NEW: Upmpdcli utilities
 
-Bug fixes (fixed during Beta cycle)
+Bug fixes
 
-- FIX: Boot fail on armv6 due to PHP5/Stretch incompatibility (migration to PHP7 reqd)
+- FIX: PHP5/Stretch boot fail on armv6, migration to PHP7 reqd
 - FIX: Wlan0 not starting on armv6 due to not using wpa_supplicant config
 - FIX: Bad logic in readMpdResponse socket handling routine
 - FIX: Mount flags showing as default flags even after being altered
@@ -167,7 +176,14 @@ Bug fixes (fixed during Beta cycle)
 - FIX: Cover art files not being displayed
 - FIX: Cover art symlink broken when squashfs
 - FIX: CIFS umount not using -l arg
-- FIX: Sys-config $_get should be $_post 
+- FIX: Sys-config $_get should be $_post
+- FIX: Typo in some text on UPnP config screen
+- FIX: Bad var index for crossfeed in System info script
+- FIX: Bluetooth pairings not persisting after poweroff
+- FIX: Logic in coverart search priority 
+- FIX: Duration not working for notification messages from modals
+- FIX: Input in knob canvas region not being blocked
+- FIX: Single/double quotes in passwords causing sql hang
 
 ########################################################
 // 3.8.4 Release 2017-08-28

@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2017-03-03 KS initial version (rev 4)
-# 2017-12-07 TC moOde 4.0
+# 2018-01-26 TC moOde 4.0
 #
 
 FREQ() { 
@@ -77,7 +77,16 @@ AUDIO() {
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
 	
 	echo -e "\t  U I  C U S T O M I Z A T I O N S  \n"
-	echo -e "\tTheme color\t\t= $themecolor\c"
+	echo -e "\tTheme\t\t\t= $themename\c"
+	echo -e "\n\tAccent color\t\t= $themecolor\c"
+	echo -e "\n\tAlpha blend\t\t= $alphablend\c"
+	echo -e "\n\tAdaptive background\t= $adaptive\c"
+	if [ -f //var/local/www/imagesw/bgimage.jpg ] ; then
+		bgimage="Yes"
+	else
+		bgimage="No"
+	fi
+	echo -e "\n\tBackground image\t= $bgimage\c"
 	echo -e "\n\tPlayback history\t= $playhist\c"
 	echo -e "\n\tExtra metadata\t\t= $xtagdisp\c"
 	echo -e "\n\tLibrary\t\t\t= $libartistcol\n"
@@ -151,8 +160,8 @@ AUDIO() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
-		SL=`squeezelite-armv7l -? | grep "Squeezelite" | cut -f 2 -d "v" | cut -f 1 -d ","`
-		squeezelite-armv7l -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
+		SL=`squeezelite -? | grep "Squeezelite" | cut -f 2 -d "v" | cut -f 1 -d ","`
+		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
 		echo -e "\t  S Q U E E Z E L I T E    S E T T I N G S  \n"
 		echo -e "\tVersion\t\t\t= $SL $SLT\c"
 		echo -e "\n\tFriendly name\t\t= $PLAYERNAME\c"
@@ -222,7 +231,7 @@ ROOTSIZE="$(df -h | grep root | awk '{print $2}')"
 ROOTUSED="$(df | grep root | awk '{print $5}')"
 ROOTAVAIL="$(df -h | grep root | awk '{print $4}')"
 
-/opt/vc/bin/tvservice -s | grep -q "off" && HDMI="off" || HDMI="on"
+/opt/vc/bin/tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
 
 NOW=$(date +"%Y-%m-%d %T")
 UPTIME="$(uptime -p)" 
@@ -336,9 +345,9 @@ rsmaftersps=${arr[38]}
 lcdup=${arr[39]}
 lcdupscript=${arr[40]}
 extmeta=${arr[41]}
-moodeosver=${arr[42]}
+maint_interval=${arr[42]}
 hdwrrev=${arr[43]}
-[[ "${arr[44]}" = "disabled" ]] && crossfeed="Off" || crossfeed=${arr[72]}
+[[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
 apdssid=${arr[45]}
 apdchan=${arr[46]}
 apdpwd=${arr[47]}
@@ -380,6 +389,18 @@ cardnum=${arr[76]}
 btname=${arr[78]}
 btmulti=${arr[79]}
 feat_bitmask=${arr[80]}
+engine_mpd_sock_timeout=${arr[81]}
+res_boot_config_txt=${arr[82]}
+touchscn=${arr[83]}
+scnblank=${arr[84]}
+scnrotate=${arr[85]}
+scnbrightness=${arr[86]}
+themename=${arr[87]}
+res_software_upd_url=${arr[88]}
+alphablend=${arr[89]}
+adaptive=${arr[90]}
+audioout=${arr[91]}
+audioin=${arr[92]}
 
 MODEL=${hdwrrev:0:5}
 if [ $MODEL = Pi-3B ]; then

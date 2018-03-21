@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
@@ -29,7 +29,7 @@ const SPS_METADATA_PIPE = '/tmp/shairport-sync-metadata';
 const MODE_ANY = 0;
 const MODE_DATA = 1;
 
-const DEF_COVER = 'images/default-cover-v5.jpg';
+const DEF_COVER = 'images/default-cover-v6.svg';
 const SPS_COVER = 'imagesw/spscover.';
 const SPS_CACHE = '/var/local/www/spscache.json';
 

@@ -12,6 +12,7 @@
 hostname=moode
 browsertitle=moOde Player
 airplayname=Moode Airplay
+bluetoothname=Moode Bluetooth
 squeezelitename=Moode
 upnpname=Moode UPNP
 dlnaname=Moode DLNA

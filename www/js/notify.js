@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
-function notify(cmd, msg, wait) {
-    msg = msg || ''; // msg optional
+function notify(cmd, msg, duration) {
+    msg = msg || '';
 
     var map = {
 		add: 'Added to playlist',
@@ -42,7 +42,10 @@ function notify(cmd, msg, wait) {
 		updstation: 'Radio station updated',
 		updclockradio: 'Clock radio updated',
 		updcustomize: 'Settings updated',
-		themechange: 'Theme color changed',
+		themechange: 'Theme changed',
+		accentchange: 'Accent color changed',
+		setbgimage: 'Background image set',
+		rmbgimage:  'Background image removed',
 		liboptionchange: 'Library option changed',
 		usbaudioready: 'USB audio ready',
 		reboot: 'Rebooting...',
@@ -50,11 +53,11 @@ function notify(cmd, msg, wait) {
     };
 
     if (typeof map[cmd] === undefined) {
-        console.error('[notify] Unknown cmd ' + cmd);
+        console.log('notify(): Unknown cmd (' + cmd + ')');
     }
 
-    if (typeof wait === undefined) {
-        wait = 2000;
+    if (typeof duration == 'undefined') {
+        duration = 2000;
     }
 
     var icon = cmd == 'needplname' || cmd == 'needssid' ? 'icon-info-sign' : 'icon-ok';
@@ -62,8 +65,8 @@ function notify(cmd, msg, wait) {
         title: map[cmd],
         text: msg,
         icon: icon,
-        delay: wait,
-        opacity: 0.9,
+        delay: duration,
+        opacity: 1.0,
         history: false
     });
 }

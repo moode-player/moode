@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
@@ -144,28 +144,45 @@ else {
 	}
 }
 
-// dsp
-if ($mpdconf['audio_output_format'] == 'disabled' || $_SESSION['airplayactv'] == '1' || $_SESSION['slsvc'] == '1') {
-	$resampler = 'off';
+// DSP
+
+$btactive = sysCmd('pgrep bluealsa-aplay');
+$current['btactive'] = $result[0] == '' ? '0' : '1';
+// dsp only applies to mpd
+if ($_SESSION['airplayactv'] == '1' || $btactive[0] != '' || $_SESSION['slsvc'] == '1') {
+	$resampler = 'n/a';
 	$resampler_format = '';
+	$crossfeed = 'n/a';
+	$equalizer = 'n/a';
+	$crossfade = 'n/a';
+	$otherdsp = 'n/a';
 }
 else {
-	$resampler_format = $mpdconf['audio_output_depth'] . ' bit, ' . $mpdconf['audio_output_rate'] . ' kHz, ' . $mpdconf['audio_output_chan'];
-	$resampler = ' (SoX ' . $mpdconf['samplerate_converter'] . ' quality)';
+	// resampling
+	if ($mpdconf['audio_output_format'] == 'disabled') {
+		$resampler = 'off';
+		$resampler_format = '';
+	}
+	else {
+		$resampler_format = $mpdconf['audio_output_depth'] . ' bit, ' . $mpdconf['audio_output_rate'] . ' kHz, ' . $mpdconf['audio_output_chan'];
+		$resampler = ' (SoX ' . $mpdconf['samplerate_converter'] . ' quality)';
+	}
+	// crossfeed
+	if ($_SESSION['crossfeed'] != 'Off') {
+		$array = explode(' ', $_SESSION['crossfeed']);
+		$crossfeed = $array[0] . ' Hz ' . $array[1] . ' dB';
+	}
+	else {
+		$crossfeed = 'off';
+	}
+	// equalizers
+	$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
+	$peq = $_SESSION['eqfa4p'] == 'Off' ? 'off' : $_SESSION['eqfa4p'];
+	$equalizer = 'Graphic EQ: (' . $geq . '), Parametric EQ: (' . $peq . '}';
+	// crossfade and other dsp
+	$crossfade = $_SESSION['mpdcrossfade'] . ' seconds';
+	$otherdsp = 'Volume normalize (' . $mpdconf['volume_normalization'] . '}, ' . 'Replaygain (' . $mpdconf['replaygain'] . ')';
 }
-
-if ($_SESSION['crossfeed'] != 'Off') {
-	$array = explode(' ', $_SESSION['crossfeed']);
-	$crossfeed = $array[0] . ' Hz ' . $array[1] . ' dB';
-}
-else {
-	$crossfeed = 'off';
-}
-
-$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
-$peq = $_SESSION['eqfa4p'] == 'Off' ? 'off' : $_SESSION['eqfa4p'];
-$equalizer = 'Graphic EQ: (' . $geq . '), Parametric EQ: (' . $peq . '}';
-
 // chip options
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 $chips = array('Burr Brown PCM5242','Burr Brown PCM5142','Burr Brown PCM5122','Burr Brown PCM5121','Burr Brown PCM5122 (PCM5121)','Burr Brown TAS5756');
@@ -181,10 +198,9 @@ if (in_array($result[0]['dacchip'], $chips) && $result[0]['chipoptions'] != '') 
 else {
 	$chip_options = 'none';
 }
-
-// volume
+// volume control
 if ($_SESSION['mpdmixer'] == 'hardware') {
-	$volume = 'Hardware (On-chip volume controller)';
+	$volume = 'Hardware (on-chip volume controller)';
 }
 else if ($_SESSION['mpdmixer'] == 'software') {
 	$volume = 'Software (MPD 32-bit float with dither)';
@@ -209,36 +225,6 @@ $devname = $_SESSION['adevname'] == 'none' ? '' : $_SESSION['adevname'];
 $dacchip = $result[0]['dacchip'];
 $devarch = $result[0]['arch'];
 $iface = $result[0]['iface'];
-
-// system info (displayed in modal footer)
-$cpuload = shell_exec("top -bn 2 -d 0.5 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2 + $4 + $6}'");
-$cpuload = number_format($cpuload,0,'.','');
-$cputemp = substr(shell_exec('cat /sys/class/thermal/thermal_zone0/temp'), 0, 2);
-$cpufreq = (float)shell_exec('cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');
-
-if ($cpufreq < 1000000) {
-	$cpufreq = number_format($cpufreq / 1000, 0, '.', '');
-	$cpufreq .= ' MHz';
-}
-else {
-	$cpufreq = number_format($cpufreq / 1000000, 1, '.', '');
-	$cpufreq .= ' GHz';
-}
-
-$result = shell_exec('grep -c ^processor /proc/cpuinfo');
-$cores = $result > 1 ? $result . ' cores' : $result . ' core';
-$sysarch = trim(shell_exec('uname -m'));
-
-if ($_SESSION['kernel'] == 'Advanced-RT') {
-	$kerneltype = 'Real-Time';
-}
-else if ($_SESSION['kernel'] == 'Advanced-LL') {
-	$kerneltype = 'Low Latency';
-}
-else if ($_SESSION['kernel'] == 'Standard') {
-	$kerneltype = 'Standard';
-}
-$kerneltype = $kerneltype . ' ' . $_SESSION['kernelver'];
 
 $tpl = 'audioinfo.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');

@@ -19,28 +19,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->
-<!-- ABOUT -->	
+<!-- ABOUT //newui -->	
 <div id="about-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="about-modal-label">About Moode</h3>
-	</div>
 	<div class="modal-body">
-		<p>
-			<img src="images/player-logotype-v4-clear.png" style="height: 48px;">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<!--tpc2 added 8px top margin -->
+		<p style="text-align:center;font-size:40px;font-weight:600;letter-spacing:-2px;margin-top:2px">m<span style="color:#d35400;line-height:12px">oO</span>de<span style="font-size:12px;position:relative;top:-15px;left:-3px;">™</span></p>
+		<p style="text-align:center;font-size:14px;font-weight:600;letter-spacing:-1px;line-height: 0px;margin-top: -12px; margin-bottom: 22px;">audio player</p>
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>			
 			<ul>
-				<li>Release: 4 BETA12 2017-12-07 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">release notes</a></li>
+				<li>Release: 4.0 2018-01-26 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
-				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">setup guide</a></li>
-				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">moodeaudio.org</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">twitter</a></li>
-				<li>Contributors: <a class="moode-about-link1" href="./COMTRIBS.html" target="_blank">list of contributors</a></li>
-				<li>License: <a class="moode-about-link1" href="./COPYING.html" target="_blank">GPLv3</a></li>
+				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
+				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
+				<li>Contributors: <a class="moode-about-link1" href="./CONTRIBS.html" target="_blank">View contributors</a></li>
+				<li>License: <a class="moode-about-link1" href="./COPYING.html" target="_blank">View GPLv3</a></li>
 			</ul>
 		</p>
 		<p>
@@ -55,6 +53,27 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
+<!-- SAVE PLAYLIST //newui -->
+<div id="savepl-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="savepl-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="moveplitems-modal-label">Save playlist</h3>
+	</div>
+	<div class="modal-body">
+		<form id="pl-save" method="post" onsubmit="return false;">
+	    	<fieldset>
+				<div class="controls">
+	                    <input id="pl-saveName" class="ttip" type="text" value="" placeholder="save playlist" data-placement="bottom" data-toggle="tooltip">
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button id="pl-btnSave" class="btn btn-savepl btn-primary" title="Save playlist" data-dismiss="modal">Save</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
 </div>
 
@@ -79,9 +98,9 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">No</span></a></li>
-									<li><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">Clock Radio</span></a></li>
-									<li><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">Sleep Timer</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">Clock Radio</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">Sleep Timer</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -111,8 +130,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">AM</span></a></li>
-									<li><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">PM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">AM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">PM</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -133,8 +152,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">AM</span></a></li>
-									<li><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">PM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">AM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">PM</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -157,8 +176,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li><a href="#notarget" data-cmd="clockradio-shutdown-yn"><span class="text">Yes</span></a></li>
-									<li><a href="#notarget" data-cmd="clockradio-shutdown-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-shutdown-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-shutdown-yn"><span class="text">No</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -181,28 +200,19 @@
 		<h3 id="configure-modal-label">Configuration settings</h3>
 	</div>
 	<div class="modal-body">
-		<div style="margin-top: 20px; margin-left: 20px;">
-			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="src-config.php"><i class="icon-folder-open sx"></i>Sources</a></div>
-			<span class="help-block">
-				Index sources containing music
-            </span>
-			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="snd-config.php"><i class="icon-music sx"></i>&nbsp;Audio</a></div>
-			<span class="help-block">
-				MPD, devices, DSP and renderers
-            </span>
-			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="net-config.php"><i class="icon-sitemap sx"></i>Network</a></div>
-			<span class="help-block">
-				LAN, WiFi and AP mode 
-            </span>
-			<div class="moode-config-settings-header"><a class="moode-config-settings-link" href="sys-config.php"><i class="icon-laptop sx"></i>System</a></div>
-			<span class="help-block">
-				OS settings and maintenence
-            </span>
+		<!--div style="margin-top: 20px; margin-left: 20px;"-->
+		<div id="players">
+			<ul style="margin:0">
+				<li><a href="src-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-music" style="font-size: 24px;"></i><br>Sources</a></li>
+				<li><a href="snd-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-volume-up" style="font-size: 24px;"></i><br>Audio</a></li>
+				<li><a href="net-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-sitemap" style="font-size: 24px;"></i><br>Network</a></li>
+				<li><a href="sys-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-laptop" style="font-size: 24px;"></i><br>System</a></li>
+			</ul>
 		</div>
 	</div>
 
 	<div class="modal-footer">
-		<div style="float: left;">
+		<div class="moode-config-settings-div context-menu">
 			<a href="mpd-config.php" class="moode-config-settings-link2">MPD</a>
 			<a href="eqp-config.php" class="moode-config-settings-link2">EQP</a>
 			<a href="eqg-config.php" class="moode-config-settings-link2">EQG</a>
@@ -216,6 +226,8 @@
 			<?php if ($_SESSION['feat_bitmask'] & $FEAT_UPMPDCLI) { ?>
 				<a href="upp-config.php" class="moode-config-settings-link2">UPP</a>
 			<?php } ?>
+			<a href="#notarget" class="moode-config-settings-link2" data-cmd="setforclockradio-m">CLK</a>
+			<a href="sel-config.php" class="moode-config-settings-link2">SEL</a>
 		</div>
 		<br>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -239,14 +251,8 @@
 						<span id="volume-warning-limit-aftertext" class="control-aftertext2"></span> <!-- text set in player-scripts.js -->
 						<a class="info-toggle" data-cmd="info-volume-warning-limit" href="#notarget"><i class="icon-info-sign"></i></a>
 						<span id="info-volume-warning-limit" class="help-block hide">
-	                    	When the Knob volume exceeds the warning limit, a popup<br>
-							appears and volume level remains unchanged. Setting the<br>
-							limit to 100 disables the warning popup.<br>
-							NOTE: the limit only applies to Knob changes and has no<br>
-							effect on volume changes made by other applications for<br>
-							example Airplay receiver, UPnP renderer or Squeezelite<br>
-							renderer. These applications manage volume separately<br>
-							from Moode Knob and MPD.
+							The limit only applies to moOde volume knob changes and not to volume changes made by other audio applications for example Bluetooth or Airplpay.<br>
+	                    	NOTE: Set the limit to 100 to disables it.<br>
 	                    </span>
 	                </div>
 	                
@@ -261,31 +267,15 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li><a href="#notarget" data-cmd="search-autofocus-enabled-yn"><span class="text">Yes</span></a></li>
-									<li><a href="#notarget" data-cmd="search-autofocus-enabled-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search-autofocus-enabled-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search-autofocus-enabled-yn"><span class="text">No</span></a></li>
 								</ul>
 							</div>
 						</div>
 						<a class="info-toggle" data-cmd="info-search-audofocus" href="#notarget"><i class="icon-info-sign"></i></a>
 						<span id="info-search-audofocus" class="help-block hide">
-	                    	Controls whether search fields automatically receive focus when the toolbar shows.<br>
-	                    	- On Smartphone/Tablet, autofocus will cause the popup keyboard to appear.
+	                    	Controls whether search fields automatically receive focus when first shown.<br>
 	                    </span>
-	                </div>
-
-   	                <label class="control-label" for="theme-color">Theme color</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select" style="width: 110px;"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="theme-color" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
-								<ul id="theme-color-list" class="dropdown-menu custom-select inner" role="menu"></ul>
-							</div>
-						</div>
 	                </div>
 	                
    	                <label class="control-label" for="play-history-enabled">Playback history</label>
@@ -299,8 +289,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">Yes</span></a></li>
-									<li><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">No</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -308,7 +298,7 @@
 						<span id="info-play-history" class="help-block hide">
 	                    	Select Yes to log each song played to the playback history log.<br>
 	                    	- Songs in the log can be clicked to launch a Google search.<br>
-	                    	- The log can be cleared from the System configuration page.
+	                    	- The log can be cleared from System config.
 	                    </span>
 	                </div>					
 
@@ -323,19 +313,18 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">Yes</span></a></li>
-									<li><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">No</span></a></li>
 								</ul>
 							</div>
 						</div>
 						<a class="info-toggle" data-cmd="info-extratag-display" href="#notarget"><i class="icon-info-sign"></i></a>
 						<span id="info-extratag-display" class="help-block hide">
-	                    	Select Yes to display additional metadata<br>
-	                    	- Menu, refresh after changing this setting
+	                    	Select Yes to display additional metadata under the cover art on the Playback panel.<br>
 	                    </span>
 	                </div>
 
-   	                <label class="control-label" for="library-artist">Library artist column</label>
+   	                <label class="control-label" for="library-artist">Library artist list</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select" style="width: 150px;"> <!-- handler in playerlib.js -->
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -346,18 +335,115 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Use Artist</span></a></li>
-									<li><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Use AlbumArtist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Use Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Use AlbumArtist</span></a></li>
 								</ul>
 							</div>
 						</div>
 						<a class="info-toggle" data-cmd="info-library-artist" href="#notarget"><i class="icon-info-sign"></i></a>
 						<span id="info-library-artist" class="help-block hide">
-	                    	Choose whether to use Artist or AlbumArtist tag for the Library artists column<br>
+	                    	Choose whether to use the Artist or AlbumArtist tag for the Library Artists list.<br>
 	                    </span>
 	                </div>
-										
 	            </div>
+	    	</fieldset>
+
+			<!-- tpc2 updated help text and minor layout change -->
+			<h4>Theme settings</h4>
+	    	<fieldset>
+				<div class="control-group">
+   	                <label class="control-label" for="theme-name">Theme</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select" style="width: 150px;"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="theme-name" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="theme-name-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="icon-info-sign"></i></a>
+						<span id="info-themecolor" class="help-block hide">
+	                    	Sets the text and background color of the Browse, Library and Playback panels.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="theme-color">Accent color</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select" style="width: 110px;"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="theme-color" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="theme-color-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-accentcolor" href="#notarget"><i class="icon-info-sign"></i></a>
+						<span id="info-accentcolor" class="help-block hide">
+	                    	Sets the color of the the knobs and other active elements.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="alpha-blend">Alpha blend</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="alpha-blend" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="alpha-blend-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-alphablend" href="#notarget"><i class="icon-info-sign"></i></a>
+						<span id="info-alphablend" class="help-block hide">
+	                    	Sets the opacity of the background color from 0.00 (fully transparent) to 1.00 (fully opaque).<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="adaptive-enabled">Adaptive background</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="adaptive-enabled" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="icon-info-sign"></i></a>
+						<span id="info-adaptive" class="help-block hide">
+	                    	Sets the Playback panel color based on the dominant color in the album artwork.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="choose-file">Background image</label>
+	                <div class="controls">
+						<input type="file" id="import-bgimage" accept="image/jpeg" style="display:none" onchange="importBgImage(this.files)">
+						<button id="choose-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</button> 
+						<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Remove</button> 
+						<a class="info-toggle" data-cmd="info-bgimage" href="#notarget"><i class="icon-info-sign"></i></a>
+						<div id="info-bgimage" class="help-block hide">
+	                    	Sets the background to a JPEG image<br>
+	                    </div>
+						<div id="current-bgimage" style="width: 90px;">
+						</div>
+	                </div>
+				</div>
 	    	</fieldset>
 
 			<h4>Audio device description</h4>
@@ -378,7 +464,7 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-device-name" href="#notarget"><i class="icon-info-sign"></i></a>
 						<span id="info-device-name" class="help-block hide">
-	                    	Select a device to have its description show on Audio Info.<br>
+	                    	Select a device to have its description show on Audio info.<br>
 							I2S devices are automatically populated from System config.<br>
 							If device is not listed select "USB audio device".
 	                    </span>
@@ -402,9 +488,6 @@
 	</div>
 
 	<div class="modal-footer">
-		<button class="btn cs-lastPage" style="float: right;"><i class="icon-double-angle-down"></i></button>
-		<button class="btn cs-firstPage" style="float: right;"><i class="icon-double-angle-up"></i></button>
-
 		<button class="btn btn-customize-update btn-primary" data-dismiss="modal">Update</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
@@ -416,7 +499,7 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="players-modal-label">Players</h3>
 	</div>
-	<div class="modal-body" style="max-height: 450px;">
+	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -429,13 +512,11 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="audioinfo-modal-label">Audio information</h3>
 	</div>
-	<div class="modal-body" style="max-height: 450px;">
+	<div class="modal-body">
 	</div>
-	<!-- There is a custom footer for this modal
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
-	-->
 </div>
 
 <!-- SYSTEM INFO -->	
@@ -444,7 +525,7 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="sysinfo-modal-label">System information</h3>
 	</div>
-	<div class="modal-body" style="max-height: 400px;">
+	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -458,8 +539,11 @@
 		<h3 id="restart-modal-label"><i class="icon-power-off sx"></i></h3>
 	</div>
 	<div class="modal-body">
-		<button id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
-		<button id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Reboot</button>
+		<!-- tpc2 chg to 40% width from 25% so text not truncated on mobile -->
+		<div style="width: 40%; margin:0 auto;">
+			<button id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
+			<button id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Reboot</button>
+		</div>
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -499,6 +583,8 @@
 <script src="js/jquery.countdown.js"></script>
 <script src="js/jquery.countdown-it.js"></script>
 <script src="js/jquery.scrollTo.min.js"></script>
+<!-- newui adaptive background function added -->
+<script src="js/jquery.adaptive-backgrounds.js"></script>
 <!-- MOODE JS -->
 <script src="js/notify.js"></script>
 <script src="js/playerlib.js"></script>

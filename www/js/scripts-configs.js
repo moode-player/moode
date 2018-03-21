@@ -18,13 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
 jQuery(document).ready(function($){ 'use strict';
 
-    // setup pines notify
+	SESSION.json = sendMoodeCmd('GET', 'readcfgengine'); // load session vars
+	THEME.json = sendMoodeCmd('GET', 'readcfgtheme'); // load themes    // setup pines notify
+	
+	// newui
+	var tempOp = themeOp;
+	if (themeOp == 0.74902) {tempOp = 0.1};
+	$('.container2 .dropdown-menu.open').css({backgroundColor: 'rgba(50,50,50,' + themeOp + ')'});
+	
     $.pnotify.defaults.history = false;
 
 	// connect to mpd engine
@@ -33,7 +40,6 @@ jQuery(document).ready(function($){ 'use strict';
 	// hide some controls	
 	$('.playback-controls').removeClass('playback-controls-sm');
 	$('.playback-controls').addClass('hidden');
-	$('#playback-page-cycle').css({"display":"none"});
 
 	// network config page load/reload
 	if ($('#eth0-method').length && $('#eth0-method').val() == 'static') {

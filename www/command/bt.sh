@@ -22,26 +22,29 @@
 # Written by Klaus Schulz
 # Rev 1.0-beta1: 06-Oct-2017
 # Rev 1.0-beta2: 19-Oct-2017
-#        * some terminology changes and cleanup
-#        * kill bluealsa-aplay (go offline!)to avoid playback during config
-#        * show and kill active connections - "online"
-#        * kill active connections before scanning 
-#        * TODO: How to avoid double source connection?? 
+# - some terminology changes and cleanup
+# - kill bluealsa-aplay (go offline!)to avoid playback during config
+# - show and kill active connections - "online"
+# - kill active connections before scanning 
+# - TODO: How to avoid double source connection?? 
 #
 # This script is designed to work with bluez and bluez-alsa
 # It performs bluetooth controller initialization and provides management of bluetooth sources
 # All related data files will reside under /var/lib/bluetooth
 #
-# 2017-12-07 TC moOde 4.0
+# 2018-01-26 TC moOde 4.0
 # - REV 1.1
 # - adapted for output to PHP/HTML 
 # - simplified cmd api for BT config screen
 # - added BTREMOVE(), BTDISCONNECT()
 # - REV 1.2
-# - revise html help for auto-initialize (happens in playerlib.php: startBt()
+# - revise html help for auto-initialize: happens in playerlib.php: startBt()
+# - REV 1.3
+# - don't rm /var/lib/bluetooth/* in INIT(), this can cause pairings to be lost after pwroff
+# - add PAIRWITH and CONNECTTO
 #
 
-REV=1.2
+REV=1.3
 
 # check environment
 [[ $EUID -ne 0 ]] && { echo "*** You must be root to run the script! ***" ; exit 1 ; } ;
@@ -54,7 +57,7 @@ SCANPERIOD=20
 INIT() {
 echo "*** Initializing Bluetooth controller"
 echo "***"
-rm -rf /var/lib/bluetooth/*
+#rm -rf /var/lib/bluetooth/*
 sleep 1
 bluetoothctl -a << EOF
 power on
@@ -188,6 +191,44 @@ echo -e "disconnect $DEVICE\nquit"  | bluetoothctl >/dev/null
 sleep 1
 echo "*** Device $DEVICE disconnected"
 }
+# pair with device
+PAIRWITH_DEVICE() {
+echo "*** Pairing with device $DEVICE"
+expect <(cat <<EOF
+log_user 0
+set timeout -1 
+match_max 100000
+spawn bluetoothctl
+expect "*# " 
+send "pair $DEVICE\r"
+expect -exact "Attempting to pair with $DEVICE\r"
+expect "*# " 
+sleep 5
+send "quit\r"
+expect eof
+EOF
+)
+echo "*** Device $DEVICE paired"
+}
+# connect to device
+CONNECTTO_DEVICE() {
+echo "*** Connecting to device $DEVICE"
+expect <(cat <<EOF
+log_user 0
+set timeout -1 
+match_max 100000
+spawn bluetoothctl
+expect "*# " 
+send "connect $DEVICE\r"
+expect -exact "Attempting to connect to $DEVICE\r"
+expect "*# " 
+sleep 5
+send "quit\r"
+expect eof
+EOF
+)
+echo "*** Device $DEVICE connected"
+}
 
 # print help to terminal
 HELP_TERM() {
@@ -206,6 +247,10 @@ echo "***    initiate the connection (pairing) as soon as your device is"
 echo "***    discovered and appears in the SCAN results. The pairing is stored"
 echo "***    after a successful conection."
 echo "***"
+echo "*** 4. PAIR and CONNECT Moode Bluetooth to your device. Place your device"
+echo "***    in discovery mode and Moode Bluetooth in scan mode. After your"
+echo "***    device appears in the scan results PAIR it then CONNECT it."
+echo "***"
 echo "*** Usage"
 echo "*** -i initialize/reset controller"
 echo "*** -s scan and trust devices"
@@ -216,6 +261,8 @@ echo "*** -R remove all pairings"
 echo "*** -r remove paired device <MAC addr>"
 echo "*** -D disconnect all devices"
 echo "*** -d disconnect device <MAC addr>"
+echo "*** -P pair with device <MAC addr>"
+echo "*** -C connect to device <MAC addr>"
 echo "*** -h help"
 }
 
@@ -230,6 +277,8 @@ echo "1) SCAN for devices."
 echo "First, put your device in discovery mode and verify that it discovers Moode Bluetooth. You may have to turn Bluetooth off/on on your device to accomplish this. The default duration of the scan is 20 seconds."
 echo
 echo "2) Connect your device to Moode Bluetooth. You may have to initiate the connection as soon as your device is discovered and appears in the SCAN results. After a successful connection the pairing is stored."
+echo
+echo "3) PAIR and CONNECT Moode Bluetooth to your device. First, put your device in discovery mode and Moode Bluetooth in SCAN mode. After your device appears in the SCAN results PAIR it then CONNECT it."
 echo
 echo "Other commands"
 echo "- LIST paired" 
@@ -277,6 +326,14 @@ echo "- INITIALIZE controller"
          ;;
 	 -d) DEVICE=$2
 	 	 DISCONNECT_DEVICE
+	     exit 0
+	     ;;
+	 -P) DEVICE=$2
+	 	 PAIRWITH_DEVICE
+	     exit 0
+	     ;;
+	 -C) DEVICE=$2
+	 	 CONNECTTO_DEVICE
 	     exit 0
 	     ;;
 	 -h) HELP_TERM

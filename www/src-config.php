@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
@@ -50,6 +50,7 @@ if (isset($_POST['rescanmpd'])) {
 if (isset($_POST['remount'])) {
 	$result_unmount = wrk_sourcemount('unmountall');
 	$result_mount = wrk_sourcemount('mountall');
+	workerLog('src-config: remount: (' . $result_unmount . ', ' . $result_mount . ')');
 	$_SESSION['notify']['title'] = 'Re-mount initiated...';
 	$_SESSION['notify']['duration'] = 6;
 }
@@ -114,16 +115,16 @@ foreach ($mounts as $mp) {
 		$icon = "<i class='icon-remove red sx'></i>";
 	}
 
-	$_mounts .= "<p><a href=\"src-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width: 240px;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
+	$_mounts .= "<p><a href=\"src-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width: 240px; background-color: #333;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
 }
 
 // messages
 if ($mounts === true) {
-	$_mounts .= '<p class="btn btn-large" style="width: 240px;">None configured</p><p></p>';
+	$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">None configured</p><p></p>';
 	$_remount_disable = 'disabled';
 }
 elseif ($mounts === false) {
-	$_mounts .= '<p class="btn btn-large" style="width: 240px;">Query failed</p>';
+	$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">Query failed</p>';
 	$_remount_disable = '';
 }
 

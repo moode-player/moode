@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+<div class="container2">
 	<h1>Bluetooth Config</h1>
 
     <p>
@@ -34,12 +35,12 @@
 			</select>
 			<button class="btn btn-primary btn-small set-button" type="submit" name="run_btcmd" value="1" $_bt_disabled>Run</button>
 			<a class="info-toggle" data-cmd="info_btcmd" href="#notarget"><i class="icon-info-sign"></i></a>
-			<span id="info_btcmd" class="help-block help-block-margin hide">
+			<span id="info_btcmd" class="help-block-configs hide" style="font-size: 14px; line-height: 20px; font-weight: 500;">
 				Select a command to submit to the Bluetooth controller.<br>
             </span>
 		</legend>
 
-		<div style="background-color: #11181F; font-size: 14px; line-height: 18px; font-family: Courier New">
+		<div style="background-color: #333; font-size: 14px; line-height: 18px; padding: 10px; margin-right: 40px; font-family: Courier New">
 			$_cmd_output
 		</div>
 
@@ -47,10 +48,11 @@
 			<select id="paired-device" class="select-large" name="paired_device" style="margin-bottom: 5px;">
 				$_device[paired_device]
 			</select>
+			<button class="btn btn-primary btn-small set-button" type="submit" name="connectto_device" value="1">Connect</button>
 			<button class="btn btn-primary btn-small set-button" type="submit" name="rm_paired_device" value="1">Remove</button>
 			<a class="info-toggle" data-cmd="info_rm_paired_device" href="#notarget"><i class="icon-info-sign"></i></a>
-			<span id="info_rm_paired_device" class="help-block help-block-margin hide">
-				Select a paired device to remove.<br>
+			<span id="info_rm_paired_device" class="help-block-configs help-block-margin hide">
+				Connect to or remove a paired device.<br>
             </span>
 		</div>
 
@@ -60,9 +62,21 @@
 			</select>
 			<button class="btn btn-primary btn-small set-button" type="submit" name="disconnect_device" value="1">Disconnect</button>
 			<a class="info-toggle" data-cmd="info_disconect_device" href="#notarget"><i class="icon-info-sign"></i></a>
-			<span id="info_disconnect_device" class="help-block help-block-margin hide">
+			<span id="info_disconnect_device" class="help-block-configs help-block-margin hide">
 				Select a device to disconnect.<br>
             </span>
 		</div>
+
+		<div class="$_hide_ctl[scanned_device]">
+			<select id="scanned-device" class="select-large" name="scanned_device" style="margin-bottom: 5px;">
+				$_device[scanned_device]
+			</select>
+			<button class="btn btn-primary btn-small set-button" type="submit" name="pairwith_device" value="1">Pair with</button>
+			<a class="info-toggle" data-cmd="info_pairwith_device" href="#notarget"><i class="icon-info-sign"></i></a>
+			<span id="info_pairwith_device" class="help-block-configs help-block-margin hide">
+				Select a device to pair with.<br>
+            </span>
+		</div>
 	</form>
+</div>	
 </div>

@@ -6,13 +6,6 @@
  * Licensed under the MIT license
  *
  * 2014-08-23 1.0 TC initial rewrite
- * - theme colors
- * - class def for mini width
- * - theme specific border color for bootstrat-select btn focus
- * - change padding for btn
- * - custom background color for dropdown menu
- * - theme color for dropdown menu li
- * - increase width of .bootstrap-select:not([class*="span"] so same width as input fields
  *
  */
  
@@ -43,14 +36,11 @@ d
     margin-right: -1px;
 }
 
-/* TC (Tim Curtis) 2015-04-29: increase width so same width as input fields */
 .bootstrap-select:not([class*="span"]) {
-    /*width: 220px;*/ 
     width: 224px;
 }
 
 .bootstrap-select {
-    /*width: 220px\9; IE8 and below*/
     width: 220px \0/; /*IE9 and below*/
 }
 
@@ -66,20 +56,13 @@ d
     z-index: 1001;
 }
 
-/*
- * TC (Tim Curtis) 2014-12-23
- *	- theme specific color for border
- */
 .bootstrap-select .btn {
-	border: 2px solid #2c3e50; /* Midnight Blue */
+	border: 2px solid #2c3e50;
 	background: #11181F;
 }
 .bootstrap-select .btn:focus {
 	outline: none;
-    border: 2px solid #c0392b; /* Pomegranate */
-/*    outline: thin dotted #333333 !important;
-    outline: 5px auto -webkit-focus-ring-color !important;
-    outline-offset: -2px;*/
+    border: 1px solid #c0392b; /* pomegranate */
 }
 
 .bootstrap-select.btn-group .btn .filter-option {
@@ -247,13 +230,6 @@ d
     opacity: 0;
 }
 
-/*
- * TC (Tim Curtis) 2014-12-23
- * - add class def for mini width 65px
- * - change padding to match <input element
- * - change background colors
- * - theme color for dropdown menu li
- */
 .btn-group.bootstrap-select.bootstrap-select-mini {
     width: 65px;
 }
@@ -278,6 +254,7 @@ d
 }
 .bootstrap-select .dropdown-menu > li > a:hover,
 .bootstrap-select .dropdown-menu > li > a:focus {
-    background: #e74c3c; /* Alizarin */
+    /* background: #e74c3c; /* Alizarin */
+	background: rgba(192,57,43,0.71);
 	text-decoration: none;
 }

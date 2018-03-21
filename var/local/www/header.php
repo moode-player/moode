@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->
@@ -46,39 +46,30 @@
 	<!-- favicons for desktop and mobile -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<link rel="apple-touch-icon" sizes="57x57" href="/v2-apple-touch-icon-57x57.png">
-	<link rel="apple-touch-icon" sizes="60x60" href="/v2-apple-touch-icon-60x60.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="/v2-apple-touch-icon-72x72.png">
-	<link rel="apple-touch-icon" sizes="76x76" href="/v2-apple-touch-icon-76x76.png">
-	<link rel="apple-touch-icon" sizes="114x114" href="/v2-apple-touch-icon-114x114.png">
-	<link rel="apple-touch-icon" sizes="120x120" href="/v2-apple-touch-icon-120x120.png">
-	<link rel="apple-touch-icon" sizes="144x144" href="/v2-apple-touch-icon-144x144.png">
-	<link rel="apple-touch-icon" sizes="152x152" href="/v2-apple-touch-icon-152x152.png">
-	<link rel="apple-touch-icon" sizes="152x152" href="/v2-apple-touch-icon-180x180.png">
-	<link rel="icon" type="image/png" href="/v2-favicon-16x16.png" sizes="16x16">
-	<link rel="icon" type="image/png" href="/v2-favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="/v2-favicon-96x96.png" sizes="96x96">
-	<meta name="msapplication-TileColor" content="#da532c">
-	<meta name="msapplication-TileImage" content="/v2-mstile-144x144.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="/v4-apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/v4-favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/v4-favicon-16x16.png">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="mask-icon" href="/v4-safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="theme-color" content="#ffffff">
 </head>
-
-<!--body class="<?php echo $section ?>"-->
 <body>
 
 <div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
 	<div class="dropdown">
-		<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu" style="font-size: 18px; color: #dddddd;">Beta12</a>
+		<!-- //newui moOde logo -->
+		<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu" style="letter-spacing:-.5px;">m<span style="color:#e74c3c;">oO</span>de</a>
+		<!--a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu" style="font-size: 18px; color: #dddddd;">Beta12</a-->
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
 			<?php if ($section == 'index') { ?>
-				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="setforclockradio-m"><i id="clockradio-icon-m" class="icon-time sx clockradio-off-m"></i> Clock radio</a></li>
+				<!--li class="context-menu menu-separator"><a href="#notarget" data-cmd="aboutmoode"><i class="icon-info sx"></i> About</a></li-->
+				<!--li class="context-menu menu-separator"><a href="#notarget" data-cmd="setforclockradio-m"><i id="clockradio-icon-m" class="icon-time sx"></i> Clock radio</a></li-->
 				<li><a href="#configure-modal" data-toggle="modal"><i class="icon-cogs sx"></i> Configure</a></li>
 				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="customize"><i class="icon-edit sx"></i> Customize</a></li>
 				<li><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="icon-forward sx"></i> Players</a></li>
 				<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="icon-music sx"></i> Audio info</a></li>
-				<li><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="icon-laptop sx"></i> System info</a></li>
 				<li class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="icon-book sx"></i> Play history</a></li>
-				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="aboutmoode"><i class="icon-info sx"></i> About</a></li>
-				<li><a href="javascript:location.reload(true); void 0"><i class="icon-repeat sx"></i> Refresh</a></li>
+				<li class="context-menu menu-separator"><a href="javascript:location.reload(true); void 0"><i class="icon-repeat sx"></i> Refresh</a></li>
 				<li><a href="#restart-modal" data-toggle="modal"><i class="icon-power-off sx"></i> Restart</a></li>
 			<?php } else { ?>
 				<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="icon-cogs sx"></i> Configure</a></li>
@@ -86,29 +77,20 @@
 				<li><a href="snd-config.php"><i class="icon-music sx"></i> Audio</a></li>
 				<li><a href="net-config.php"><i class="icon-sitemap sx"></i> Network</a></li>
 				<li class="context-menu menu-separator"><a href="sys-config.php"><i class="icon-laptop sx"></i> System</a></li>
-				<li class="context-menu"><a href="#notarget" data-cmd="customize"><i class="icon-edit sx"></i> Customize</a></li>
 				<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="icon-music sx"></i> Audio info</a></li>
-				<li class="context-menu menu-separator"><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="icon-laptop sx"></i> System info</a></li>
+				<li><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="icon-laptop sx"></i> System info</a></li>
+				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="aboutmoode"><i class="icon-info sx"></i> About</a></li>
 				<li><a href="javascript:location.reload(true); void 0"><i class="icon-repeat sx"></i> Refresh</a></li>
 				<li><a href="#restart-modal" data-toggle="modal"><i class="icon-power-off sx"></i> Restart</a></li>
 			<?php } ?>
 		</ul>
 	</div>
 	
-	<!--div class="dropdown">
-		<button id="volume-ctl" class="btn btn-volume-control hidden" style="padding-right: 2px;" title="Volume control"><i class="icon-volume-up"></i></button>
-	</div-->
-
-	<!--div class="dropdown">
-		<button class="btn btn-small" style="width: 35px;"><a style="color: #dddddd;" title="Refresh page" href="javascript:location.reload(true); void 0"><i class="icon-repeat sx"></i></a></button>
-		<button class="btn btn-small" style="width: 35px;"><a style="color: #dddddd;" title="Ausio info" href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="icon-music sx"></i></a></button>
-	</div-->
-
-	<div class="home playback-controls playback-controls-sm hidden">
+	<!-- //newui remove hidden -->
+	<div class="home playback-controls playback-controls-sm">
 		<button id="prev" class="btn btn-cmd" title="Previous"><i class="icon-backward"></i></button>
 		<button id="play" class="btn btn-cmd" title="Play/Pause"><i class="icon-play"></i></button>
 		<button id="next" class="btn btn-cmd" title="Next"><i class="icon-forward"></i></button>
-		<button id="playback-page-cycle" class="btn btn-cmd" title="Playback page cycle"><i class="icon-circle-blank"></i></button>
 	</div>
 	
 	<div class="menu-top home">

@@ -1,4 +1,20 @@
 /**
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moode Audio Player; see the file COPYING.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ * Moode Audio Player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
  *
  * 2014-08-23 1.0 TC initial rewrite
  * - theme colors
@@ -41,7 +57,7 @@ body {
   font: 14px/1.231 "Lato", sans-serif; }
 
 a {
-  color: #c0392b;
+  color: #c0392b; /* theme: highlight color */
   /* text-decoration: underline; TC (Tim Curtis) 2015-05-30: comment out */
   text-decoration: none;
   -webkit-transition: 0.25s;
@@ -50,7 +66,7 @@ a {
   transition: 0.25s;
   -webkit-backface-visibility: hidden; }
   a:hover {
-    color: #e74c3c;
+    color: #c0392b;
     text-decoration: none; }
 
 h1 {
@@ -85,8 +101,9 @@ h6 {
 
 .btn {
   border: none;
-  background: #273B4F;
-  color: #dddddd;
+  background: none; /* theme #273B4F; */
+  /* theme color: #dddddd;*/
+  color:inherit;
   font-size: 16.5px;
   text-decoration: none;
   text-shadow: none;
@@ -103,45 +120,48 @@ h6 {
 	- disable hover highlight by setting hover background same as btn background
 	background-color: #4e6d8d;
   */
-    background-color: #273B4F;
-    color: white;
+    background: none; /* theme was 273B4F */
+    color: inherit;
     -webkit-transition: 0.25s;
     -moz-transition: 0.25s;
     -o-transition: 0.25s;
     transition: 0.25s;
     -webkit-backface-visibility: hidden; }
   .btn:active, .btn.active {
-    background-color: #2c3e50;
+    background: none; /* theme: was -color: 2c3e50 */
     color: rgba(255, 255, 255, 0.75);
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none; }
   .btn.disabled, .btn[disabled] {
-    background-color: #95a5a6;
-    color: white; }
+    background: none; /* theme was #95a5a6;*/
+    color: #777; }
   .btn.btn-large {
     padding-bottom: 12px;
     padding-top: 13px; }
   .btn.btn-primary {
-    background-color: #c0392b; }
+    background: none;
+	 color: #c0392b;}
     .btn.btn-primary:hover, .btn.btn-primary:focus {
-      background-color: #e74c3c; }
+      color: #c0392b; }
     .btn.btn-primary:active, .btn.btn-primary.active {
-      background-color: #c0392b; }
+      background: none;
+  	  color: #c0392b; }
   .btn.btn-info {
-    background-color: #c0392b; }
+    background: none;
+	 color:#c0392b;}
     .btn.btn-info:hover, .btn.btn-info:focus {
       background-color: #5dade2; }
     .btn.btn-info:active, .btn.btn-info.active {
       background-color: #2383c4; }
   .btn.btn-danger {
-    background-color: #e74c3c; }
+    background-color: #c0392b; }
     .btn.btn-danger:hover, .btn.btn-danger:focus {
       background-color: #ec7063; }
     .btn.btn-danger:active, .btn.btn-danger.active {
       background-color: #dc2d1b; }
   .btn.btn-success {
-    background-color: #e74c3c; }
+    background-color: #c0392b; }
     .btn.btn-success:hover, .btn.btn-success:focus {
       background-color: #55d98d; }
     .btn.btn-success:active, .btn.btn-success.active {
@@ -485,7 +505,7 @@ h6 {
   box-shadow: none; }
 
 .navbar-unread {
-  background-color: #e74c3c;
+  background-color: #c0392b;
   border-radius: 30px;
   color: white;
   display: none;
@@ -523,7 +543,7 @@ h6 {
   transition: 0.25s;
   -webkit-backface-visibility: hidden; }
   .dk_toggle:hover, .dk_toggle:focus, .dk_focus .dk_toggle {
-    background-color: #e74c3c;
+    background-color: #c0392b;
     color: white;
     outline: none; }
   .dk_toggle:active {
@@ -658,6 +678,7 @@ h6 {
 
 textarea,
 input[type="text"],
+input[type="range"],
 input[type="password"],
 input[type="datetime"],
 input[type="datetime-local"],
@@ -771,8 +792,8 @@ input[type="color"],
   input[type="tel"], .control-group.error
   input[type="color"], .control-group.error
   .uneditable-input {
-    border-color: #e74c3c;
-    color: #e74c3c;
+    border-color: #c0392b;
+    color: #c0392b;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none; }
@@ -811,8 +832,8 @@ input[type="color"],
   input[type="tel"], .control-group.success
   input[type="color"], .control-group.success
   .uneditable-input {
-    border-color: #e74c3c;
-    color: #e74c3c;
+    border-color: #c0392b;
+    color: #c0392b;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none; }
@@ -1042,7 +1063,7 @@ textarea,
     .toggle.toggle-off .toggle-radio {
       background-image: url("../images/toggle/icon-off.png");
       background-position: 0 0;
-      color: white;
+      color: #bbb; /* tpc darker, was white */
       left: 0;
       margin-left: 0.5px;
       margin-right: -13px;
@@ -1051,7 +1072,7 @@ textarea,
         left: -120%; }
   .toggle .toggle-radio {
     background: url("../imagesw/toggle/icon-on.png") right top no-repeat;
-    color: #e74c3c;
+    color: #c0392b;
     display: block;
     font-weight: 700;
     height: 21px;
@@ -1214,13 +1235,13 @@ textarea,
     box-shadow: none !important;
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
   .progress .bar-success, .ui-slider .bar-success {
-    background-color: #e74c3c;
+    background-color: #c0392b;
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
   .progress .bar-warning, .ui-slider .bar-warning {
     background-color: #f1c40f;
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
   .progress .bar-danger, .ui-slider .bar-danger {
-    background-color: #e74c3c;
+    background-color: #c0392b;
     /*filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); TC 2015-12-22*/}
   .progress .bar-info, .ui-slider .bar-info {
     background-color: #c0392b;
@@ -1248,7 +1269,7 @@ textarea,
   .ui-slider-handle[style*='100'] {
     margin-left: -15px; }
   .ui-slider-handle:hover, .ui-slider-handle:focus {
-    background-color: #e74c3c;
+    background-color: #c0392b;
     outline: none; }
   .ui-slider-handle:active {
     background-color: #16a085; }
@@ -1502,7 +1523,7 @@ textarea,
   background-color: #16a085; }
 
 .palette-success {
-  background-color: #e74c3c; }
+  background-color: #c0392b; }
 
 .palette-success-dark {
   background-color: #27ad60; }
@@ -1520,7 +1541,7 @@ textarea,
   background-color: #cea70c; }
 
 .palette-danger {
-  background-color: #e74c3c; }
+  background-color: #c0392b; }
 
 .palette-danger-dark {
   background-color: #dc2d1b; }
@@ -1559,10 +1580,10 @@ textarea,
   background-color: #d35400; }
 
 .palette-alizarin {
-  background-color: #e74c3c; }
+  background-color: #c0392b; }
 
 .palette-pomegranate {
-  background-color: #c0392b; }
+  background-color: #2980b9; }
 
 .palette-clouds {
   background-color: #ecf0f1;
@@ -2070,7 +2091,7 @@ body.vjs-full-window {
 
 @-webkit-keyframes sharp {
   0% {
-    background: #e74c3c;
+    background: #c0392b;
     border-radius: 10px;
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -2088,7 +2109,7 @@ body.vjs-full-window {
     transform: rotate(180deg); }
 
   100% {
-    background: #e74c3c;
+    background: #c0392b;
     border-radius: 10px;
     -webkit-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
@@ -2098,7 +2119,7 @@ body.vjs-full-window {
 
 @-moz-keyframes sharp {
   0% {
-    background: #e74c3c;
+    background: #c0392b;
     border-radius: 10px;
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -2116,7 +2137,7 @@ body.vjs-full-window {
     transform: rotate(180deg); }
 
   100% {
-    background: #e74c3c;
+    background: #c0392b;
     border-radius: 10px;
     -webkit-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
@@ -2126,7 +2147,7 @@ body.vjs-full-window {
 
 @-o-keyframes sharp {
   0% {
-    background: #e74c3c;
+    background: #c0392b;
     border-radius: 10px;
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -2144,7 +2165,7 @@ body.vjs-full-window {
     transform: rotate(180deg); }
 
   100% {
-    background: #e74c3c;
+    background: #c0392b;
     border-radius: 10px;
     -webkit-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
@@ -2154,7 +2175,7 @@ body.vjs-full-window {
 
 @keyframes sharp {
   0% {
-    background: #e74c3c;
+    background: #c0392b;
     border-radius: 10px;
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -2172,7 +2193,7 @@ body.vjs-full-window {
     transform: rotate(180deg); }
 
   100% {
-    background: #e74c3c;
+    background: #c0392b;
     border-radius: 10px;
     -webkit-transform: rotate(360deg);
     -moz-transform: rotate(360deg);
@@ -2397,3 +2418,4 @@ body.vjs-full-window {
 
 .mll, .mhl, .mal {
   margin-left: 20px; }
+

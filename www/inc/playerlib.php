@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
  
@@ -30,15 +30,16 @@ define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
 error_reporting(E_ERROR);
 
 // features availability bitmask
-const FEAT_ADVKERNELS =  0b0000000000000001;	// 1
-const FEAT_AIRPLAY =     0b0000000000000010;	// 2
-const FEAT_MINIDLNA =    0b0000000000000100;	// 4
-const FEAT_MPDAS =       0b0000000000001000;	// 8
-const FEAT_SQUEEZELITE = 0b0000000000010000;	// 16
-const FEAT_UPMPDCLI =    0b0000000000100000;	// 32
-const FEAT_SQSHCHK =     0b0000000001000000;	// 64 
-const FEAT_GMUSICAPI =   0b0000000010000000;	// 128 
-const FEAT_LOCALUI =     0b0000000100000000;	// 256 
+const FEAT_ADVKERNELS =  0b0000000000000001;	//    1
+const FEAT_AIRPLAY =     0b0000000000000010;	//    2
+const FEAT_MINIDLNA =    0b0000000000000100;	//    4
+const FEAT_MPDAS =       0b0000000000001000;	//    8 
+const FEAT_SQUEEZELITE = 0b0000000000010000;	//   16
+const FEAT_UPMPDCLI =    0b0000000000100000;	//   32
+const FEAT_SQSHCHK =     0b0000000001000000;	//   64
+const FEAT_GMUSICAPI =   0b0000000010000000;	//  128
+const FEAT_LOCALUI =     0b0000000100000000;	//  256
+const FEAT_INPUTSEL =    0b0000001000000000;	//  512
 
 // mirror for footer.pho
 $FEAT_AIRPLAY = 0b00000010;
@@ -236,19 +237,29 @@ function genFlatList($sock) {
 // generate library {Genre1: {Artist1: {Album1: [{song1}, {song2}], Album2:...}, Artist2:...}, Genre2:...}
 function genLibrary($flat) {
 	$lib = array();
-	$libartistcol = $_SESSION['libartistcol'] == 'Use AlbumArtist' ? 'AlbumArtist' : 'Artist';
+	$libartist = $_SESSION['libartistcol'] == 'Use AlbumArtist' ? 'AlbumArtist' : 'Artist';
 
 	foreach ($flat as $flatData) {
 		$genre = $flatData['Genre'] ? $flatData['Genre'] : 'Unknown';
-		$artist = $flatData[$libartistcol] ? $flatData[$libartistcol] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown');
+		$artist = $flatData[$libartist] ? $flatData[$libartist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown');
 		$album = $flatData['Album'] ? $flatData['Album'] : 'Unknown';
 
 		if (!$lib[$genre]) {$lib[$genre] = array();}
 		if (!$lib[$genre][$artist]) {$lib[$genre][$artist] = array();}
         if (!$lib[$genre][$artist][$album]) {$lib[$genre][$artist][$album] = array();}
 
-		$songData = array('file' => $flatData['file'], 'display' => ($flatData['Track'] ? $flatData['Track'] . ' - ' : '') . 
-			$flatData['Title'], 'time' => $flatData['Time'], 'time2' => songTime($flatData['Time']));
+//		$songData = array('file' => $flatData['file'], 'display' => ($flatData['Track'] ? $flatData['Track'] . ' - ' : '') . 
+//			$flatData['Title'], 'time' => $flatData['Time'], 'time2' => songTime($flatData['Time']));
+		// newui
+		$songData = array(
+			'file' => $flatData['file'],
+			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
+			'title' => $flatData['Title'],
+			'actual_artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown'),
+			'year' => $flatData['Date'],
+			'time' => $flatData['Time'],
+			'time_mmss' => songTime($flatData['Time'])
+		);
 			
 		array_push($lib[$genre][$artist][$album], $songData);
 	}
@@ -796,23 +807,26 @@ function cfgdb_connect() {
 function cfgdb_read($table, $dbh, $param, $id) {
 	if(!isset($param)) {
 		$querystr = 'SELECT * FROM ' . $table;
-
-	} else if (isset($id)) {
+	}
+	else if (isset($id)) {
 		$querystr = "SELECT * FROM " . $table . " WHERE id='" . $id . "'";
-
-	} else if ($param == 'mpdconf') {
+	}
+	else if ($param == 'mpdconf') {
 		$querystr = "SELECT param, value_player FROM cfg_mpd WHERE value_player!=''";
-
-	} else if ($param == 'mpdconfdefault') {
+	}
+	else if ($param == 'mpdconfdefault') {
 		$querystr = "SELECT param, value_default FROM cfg_mpd WHERE value_default!=''";
-
-	} else if ($table == 'cfg_audiodev') {
+	}
+	else if ($table == 'cfg_audiodev') {
 		$querystr = 'SELECT name, dacchip, chipoptions, arch, iface, kernel, driver, advdriver, advoptions FROM ' . $table . ' WHERE name="' . $param . '"';
-
-	} else if ($table == 'cfg_radio') {
+	}
+	else if ($table == 'cfg_theme') {
+		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
+	}
+	else if ($table == 'cfg_radio') {
 		$querystr = 'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
-
-	} else {
+	}
+	else {
 		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
 	}
 
@@ -1051,6 +1065,13 @@ function wrk_mpdconf($i2sdevice) {
 		$output .= "mixer_index \"0\"\n";
 	}
 	$output .= "dop \"" . $dop . "\"\n";
+	$output .= "}\n\n";
+
+	// bluetooth stream
+	$output .= "audio_output {\n";
+	$output .= "type \"alsa\"\n";
+	$output .= "name \"ALSA bluetooth\"\n";
+	$output .= "device \"btstream\"\n";
 	$output .= "}\n";
 
 	$fh = fopen('/etc/mpd.conf', 'w');
@@ -1314,7 +1335,7 @@ function ui_notify($notify) {
 	} else {
 		$output .= "delay: '2000',";
 	}
-	$output .= "opacity: .9});";
+	$output .= "opacity: 1.0});";
 	$output .= "});";
 	$output .= "</script>";
 	echo $output;
@@ -1522,14 +1543,15 @@ function startBt() {
 	sysCmd('systemctl start bluetooth');
 	sysCmd('systemctl start bluealsa');
 
-	// initialize controller if not already done
+	// we should have a MAC address 
 	$result = sysCmd('ls /var/lib/bluetooth');
-	if ($result[0] != '') {
+	if ($result[0] == '') {
+		workerLog('worker: Bluetooth error, no MAC address');
+	}
+	// initialize controller
+	else {
 		$result = sysCmd('/var/www/command/bt.sh -i');
 		workerLog('worker: Bluetooth controller initialized');
-	}
-	else {
-		workerLog('worker: Bluetooth error, no MAC address');
 	}
 }
 
@@ -2071,49 +2093,15 @@ function cfgSqueezelite() {
 
 // start squeezelite
 function startSqueezeLite () {
-	sysCmd('killall -s 9 squeezelite-' . $_SESSION['procarch']);
-	$result = sysCmd('pgrep -l squeezelite-' . $_SESSION['procarch']);
+	sysCmd('killall -s 9 squeezelite');
+	$result = sysCmd('pgrep -l squeezelite');
 	$count = 10;
 	while ($result[0] && $count > 0) {				
 		sleep(1);
-		$result = sysCmd('pgrep -l squeezelite-' . $_SESSION['procarch']);
+		$result = sysCmd('pgrep -l squeezelite');
 		--$count;
 	}			
-	sysCmd('systemctl start squeezelite-' . $_SESSION['procarch']);
-}
-
-function cfgSystemdSvcFiles($kernel) {
-	if ($kernel == 'Advanced-RT') {
-		sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=rr" /lib/systemd/system/mpd.service');
-		sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=rr" /lib/systemd/system/squeezelite-armv7l.service');
-		sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=rr" /lib/systemd/system/squeezelite-armv6l.service');
-		sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=rr" /lib/systemd/system/rotenc.service');
-		playerSession('write', 'mpdsched', 'rr');
-		workerLog('worker: install-kernel: MPD scheduler (rr)');
-		workerLog('worker: install-kernel: Squeezelite scheduler (rr)');
-		workerLog('worker: install-kernel: Rotenc scheduler (rr)');
-	
-		$numcpus = sysCmd('grep -c ^processor /proc/cpuinfo');
-		if ($numcpus[0] != '1') {
-			sysCmd('sed -i "/CPUAffinity=/c\CPUAffinity=1" /lib/systemd/system/mpd.service');
-			sysCmd('sed -i "s/ isolcpus=1//" /boot/cmdline.txt');
-			sysCmd('sed -i "s/$/ isolcpus=1/" /boot/cmdline.txt');
-			workerLog('worker: install-kernel: MPD cpu affinity (cpu1)');
-		}
-	}
-	else {
-		sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=other" /lib/systemd/system/mpd.service');
-		sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=other" /lib/systemd/system/squeezelite-armv7l.service');
-		sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=other" /lib/systemd/system/squeezelite-armv6l.service');
-		sysCmd('sed -i "/CPUSchedulingPolicy/c\CPUSchedulingPolicy=other" /lib/systemd/system/rotenc.service');
-		sysCmd('sed -i "/CPUAffinity=/c\#CPUAffinity=1" /lib/systemd/system/mpd.service');				
-		sysCmd('sed -i "s/ isolcpus=1//" /boot/cmdline.txt');
-		playerSession('write', 'mpdsched', 'other');
-		workerLog('worker: install-kernel: MPD scheduler (ts)');
-		workerLog('worker: install-kernel: Squeezelite scheduler (ts)');
-		workerLog('worker: install-kernel: Rotenc scheduler (ts)');
-		workerLog('worker: install-kernel: MPD cpu affinity (none)');
-	}
+	sysCmd('systemctl start squeezelite');
 }
 
 function cfgI2sOverlay($i2sDevice) {
@@ -2192,8 +2180,8 @@ function ctlBt($ctl) {
 // create enhanced metadata
 function enhanceMetadata($current, $sock, $flags) {
 	define(LOGO_ROOT_DIR, 'images/radio-logos/');
-	define(DEF_RADIO_COVER, 'images/radio-cover-v5.jpg');
-	define(DEF_COVER, 'images/default-cover-v5.jpg');
+	define(DEF_RADIO_COVER, 'images/default-cover-v6.svg');
+	define(DEF_COVER, 'images/default-cover-v6.svg');
 
 	$song = parseCurrentSong($sock);
 	$current['file'] = $song['file'];

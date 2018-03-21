@@ -16,14 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-12-07 TC moOde 4.0
+# 2018-01-26 TC moOde 4.0
 #
 
 # $1 = rXY ex: r26
 
+SQLDB=/var/local/www/db/moode-sqlite3.db
+URL=$(sqlite3 $SQLDB "select value from cfg_system where param='res_software_upd_url'")
+
 cd /var/local/www
 
-wget -q http://d3oddxvgenziko.cloudfront.net/update-$1.zip -O update-$1.zip
+wget -q $URL/update-$1.zip -O update-$1.zip
 unzip -q -o update-$1.zip
 rm update-$1.zip
 
@@ -31,7 +34,7 @@ chmod -R 0755 update
 update/install.sh
 rm -rf update
 
-wget -q http://d3oddxvgenziko.cloudfront.net/update-$1.txt -O update-$1.txt
+wget -q $URL/update-$1.txt -O update-$1.txt
 echo "Update installed, REBOOT required"
 
 cd ~/

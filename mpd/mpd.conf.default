@@ -74,3 +74,9 @@ name "ALSA graphic eq"
 device "alsaequal"
 dop "no"
 }
+
+audio_output {
+type "alsa"
+name "ALSA bluetooth"
+device "btstream"
+}

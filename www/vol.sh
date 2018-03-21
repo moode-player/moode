@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-12-07 TC moOde 4.0
+# 2018-01-26 TC moOde 4.0
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -44,10 +44,7 @@ VOLWARNING=${arr[2]}
 AMIXNAME=${arr[3]}
 MPDMIXER=${arr[4]}
 CARDNUM=${arr[5]}
-
-# card 0 = i2s or onboard, card 1 = usb 
-#TMP=$(cat /proc/asound/card1/id 2>/dev/null)
-#if [[ $TMP = "" ]]; then CARDNUM=0; else CARDNUM=1; fi
+# cardnum 0 = i2s or onboard, cardnum 1 = usb 
 
 REGEX='^[+-]?[0-9]+$'
 
@@ -99,11 +96,5 @@ if [[ $VOLMUTE = "1" ]]; then
 	exit 1
 fi
 
-# set volume level
-if [[ $MPDMIXER = "hardware" ]]; then
-	# hardware volume: update ALSA volume --> MPD volume --> MPD idle timeout --> UI updated
-	amixer -c $CARDNUM sset "$AMIXNAME" -M $LEVEL% > /dev/null
-else
-	# software volume: update MPD volume --> MPD idle timeout --> UI updated
-	mpc volume $LEVEL >/dev/null
-fi
+# volume: update MPD volume --> MPD idle timeout --> UI updated
+mpc volume $LEVEL >/dev/null

@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+	<div class="container2">
 	<h1>Parametric EQ</h1>
 
     <p>
@@ -33,7 +34,7 @@
 			<button type="submit" class="btn btn-primary btn-small" name="apply" value="1">Apply</button>&nbsp;
 			<button type="submit" class="btn btn-primary btn-small" name="play" value="1" $_disable_play><i class="icon-play"></i></button>
 			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="icon-info-sign"></i></a>
-			<span id="info-buttons" class="help-block help-block-margin hide" style="line-height: 16px; padding-bottom: 10px;">
+			<span id="info-buttons" class="help-block-configs help-block-margin hide" style="line-height: 16px; padding-bottom: 10px;">
 				APPLY: updates the curve table only.<br>
 				PLAY: updates the active curve config. EQ must be turned on in Audio config to enable Play.<br>
             </span>
@@ -47,10 +48,10 @@
 						$_select[curve_name]
 					</select>
 					<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-curve-name" class="help-block help-block-margin hide">
+					<span id="info-curve-name" class="help-block-configs help-block-margin hide">
 						Friendly name for the EQ curve.<br>
                     </span>
-					<span class="help-block help-block-margin">
+					<span class="help-block-configs help-block-margin">
 						<a data-toggle="modal" href="#new-curvename">ENTER</a> New curve name<br>
 					</span>
 				</div>
@@ -64,7 +65,7 @@
 				<div class="controls">
 					<input class="input-mini" type="number" min="-24" max="24" step=".1" id="master-gain" name="master_gain" value="$_select[master_gain]">
 					<a class="info-toggle" data-cmd="info-master-gain" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-master-gain" class="help-block help-block-margin hide">
+					<span id="info-master-gain" class="help-block-configs help-block-margin hide">
 						Master gain: -24 to 24 dB (applies to all 4 frequency bands).<br>
 						Individual bands:<br>
 						- Freq: 20 to 14000 Hz<br>
@@ -160,6 +161,7 @@
 
 	</form>
 </div>
+</div>
 
 <form class="form-horizontal" method="post">
 	<div id="rm-curve" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
@@ -173,7 +175,7 @@
 				<label class="control-label" for="rmcurve">Selected curve</label>
 				<div class="controls">
 					<input class="input-large" type="text" id="rmcurve" name="rm-curve" value="$_selected_curve" readonly>
-					<span class="help-block help-block-margin">
+					<span class="help-block-configs help-block-margin">
 						$_disable_rm_msg
                     </span>
 				</div>

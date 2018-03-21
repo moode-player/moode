@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+	<div class="container2">
 	<h1>Chip/Device Options</h1>
 
     <p>
@@ -38,7 +39,7 @@
 					<select id="digfilter" class="input-large" name="config[digfilter]">
 						$_select[digfilter]
 					</select>
-					<span class="help-block help-block-margin">
+					<span class="help-block-configs help-block-margin">
                     	Filter is applied to PCM samples at oversampling stage just prior to sigma-delta modulator.<br>
 						Playback is automatically restarted to make filter change effective.<br>
 						NOTE: Filter is bypassed if sample rate is 384 kHz.
@@ -52,7 +53,7 @@
 					<select id="analoggain" class="input-large" name="config[analoggain]">
 						$_select[analoggain]
 					</select>
-					<span class="help-block help-block-margin">
+					<span class="help-block-configs help-block-margin">
 						 Analog gain can be set to 0 dB (2-Vrms) or –6 dB (1-Vrms).
                     </span>
 				</div>
@@ -64,7 +65,7 @@
 					<select id="analogboost" class="input-large" name="config[analogboost]">
 						$_select[analogboost]
 					</select>
-					<span class="help-block help-block-margin">
+					<span class="help-block-configs help-block-margin">
 						 Analog gain boost can be set to 0 dB (normal amplitude) or .8 dB (10% boosted amplitude).
                    </span>
 				</div>
@@ -81,7 +82,7 @@
 						<select id="outputmode" class="input-large" name="config[outputmode]">
 							$_select[outputmode]
 						</select>
-						<span class="help-block help-block-margin">
+						<span class="help-block-configs help-block-margin">
 							Dual-Mono: main DAC outputs L ch and Sub DAC outputs R ch (L/mute mute/R).<br>
 							Dual-Stereo: both DAC's output L/R channels (L/R L/R).<br>
 							Stereo: all freq to Main L/R, Sub L/R muted<br>
@@ -96,7 +97,7 @@
 							$_select[lowpass]
 						</select>
 						&nbsp;Hz
-						<span class="help-block help-block-margin">
+						<span class="help-block-configs help-block-margin">
 							Frequency range: 60 - 200 Hz.<br>
 	                    </span>
 					</div>
@@ -105,7 +106,7 @@
 					<label class="control-label" for="subwvol">Subwoofer volume</label>
 					<div class="controls">
 	                    <input class="input-mini" type="number" maxlength="3" min="0" max="100" id="subwvol" name="config[subwvol]" value="$subwvol" $_allo_piano_submode_disabled> %
-						<span class="help-block help-block-margin">
+						<span class="help-block-configs help-block-margin">
 							Volume range: 0 - 100%.
 	                    </span>
 					</div>
@@ -113,4 +114,5 @@
 			</fieldset>
 		</div>
 	</form>
+</div>
 </div>

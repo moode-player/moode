@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+	<div class="container2">
 	<h1>Network Config</h1>
 	
 	<p>
@@ -43,7 +44,7 @@
 					</select>
 					<a class="info-toggle" data-cmd="info-eth0method" href="#notarget"><i class="icon-info-sign"></i></a>
 					<span><br>$_eth0currentip</span>
-					<span id="info-eth0method" class="help-block help-block-margin hide">
+					<span id="info-eth0method" class="help-block-configs help-block-margin hide">
                     	IP address assignment method.<br>
                     </span>
 				</div>
@@ -102,7 +103,7 @@
 					</select>
 					<a class="info-toggle" data-cmd="info-wlan0method" href="#notarget"><i class="icon-info-sign"></i></a>
 					<span><br>$_wlan0currentip</span>
-					<span id="info-wlan0method" class="help-block help-block-margin hide">
+					<span id="info-wlan0method" class="help-block-configs help-block-margin hide">
                     	IP address assignment method.<br>
                     	Link quality (quality) and signal level (level).<br>
                     </span>
@@ -117,12 +118,12 @@
 					</select>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="scan" value="1">Scan</button>
 					<a class="info-toggle" data-cmd="info-wlan0ssid" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-wlan0ssid" class="help-block help-block-margin hide">
+					<span id="info-wlan0ssid" class="help-block-configs help-block-margin hide">
 						Press the SCAN button to generate a list of available SSID's.<br>
 						Select 'blank' to clear the SSID and activate AP mode after restart.<br>
 						Click 'Enter SSID manually' to enter an SSID that does not appear after scanning.
                     </span>
-					<span class="help-block help-block-margin">
+					<span class="help-block-configs help-block-margin">
 						<a data-toggle="modal" href="#manual-ssid">ENTER</a> SSID manually<br>
 						<!--a data-toggle="modal" href="#manage-network-list">Manage</a> Network list<br-->
 					</span>
@@ -136,7 +137,7 @@
 						$_wlan0sec
 					</select>
 					<a class="info-toggle" data-cmd="info-wlan0sec" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-wlan0sec" class="help-block help-block-margin hide">
+					<span id="info-wlan0sec" class="help-block-configs help-block-margin hide">
                     	Security protocol.
                     </span>
 				</div>
@@ -145,10 +146,10 @@
 			<div class="control-group">
 				<label class="control-label" for="wlan0pwd">Password</label>
 				<div class="controls">
-					<input class="input-large" type="password" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
+					<input class="input-large" type="password" pattern="[^'\u0022]+" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
 					<a class="info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-wlan0pwd" class="help-block help-block-margin hide">
-                    	Length 8-63 chars.
+					<span id="info-wlan0pwd" class="help-block-configs help-block-margin hide">
+                    	Length 8-63 chars. NOTE: Single and double quotes are not allowed.
                     </span>
 				</div>
 			</div>
@@ -202,7 +203,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" pattern="[A-Za-z0-9\-]{3,32}" id="apdssid" name="wlan0apdssid" value="$_wlan0apdssid" required>
 					<a class="info-toggle" data-cmd="info-apdssid" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-apdssid" class="help-block help-block-margin hide">
+					<span id="info-apdssid" class="help-block-configs help-block-margin hide">
 						Length 3-32 chars, A-Z, a-z, 0-9, and hyphen (-) are allowed.
 					</span>
                 </div>
@@ -213,7 +214,7 @@
                 <div class="controls">
                     <input class="input-mini" type="number" maxlength="2" min="1" max="14" id="apdchan" name="wlan0apdchan" value="$_wlan0apdchan" required>
 					<a class="info-toggle" data-cmd="info-apdchan" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-apdchan" class="help-block help-block-margin hide">
+					<span id="info-apdchan" class="help-block-configs help-block-margin hide">
 						2.4 GHz band supports channels 1-14.
 					</span>
                 </div>
@@ -224,7 +225,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" pattern="[A-Za-z0-9]{8,63}" id="apdpwd" name="wlan0apdpwd" value="$_wlan0apdpwd" required>
 					<a class="info-toggle" data-cmd="info-apdpwd" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-apdpwd" class="help-block help-block-margin hide">
+					<span id="info-apdpwd" class="help-block-configs help-block-margin hide">
 						Length 8-63 chars, A-Z, a-z, 0-9, are allowed.
 					</span>
                 </div>
@@ -234,7 +235,7 @@
 
 	</form>
 </div>
-
+</div>
 <form class="form-horizontal" method="post">
 	<div id="net-config-defaults" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="net-config-defaults-label" aria-hidden="true">
 		<div class="modal-header">
@@ -268,7 +269,7 @@
 				<div class="controls">
 					<input class="input-large" type="text" id="wlan0otherssid" name="wlan0otherssid" value="">
 					<a class="info-toggle" data-cmd="info-manualssid" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-manualssid" class="help-block help-block-margin hide">
+					<span id="info-manualssid" class="help-block-configs help-block-margin hide">
                     	Length 2-32 chars.
                     </span>
 				</div>

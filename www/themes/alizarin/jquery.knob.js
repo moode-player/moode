@@ -12,8 +12,11 @@
  *
  * Thanks to vor, eskimoblood, spiffistan, FabrizioC
  *
- * 2014-08-23 1.0 TC initial rewrite
- * - theme colors
+ * Moode Audio Player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * 2014-08-23 1.0 TC initial rewrite, theme colors
+ * 2018-01-26 4.0 TC added bounds and propagate patches
  *
  */
  
@@ -109,7 +112,7 @@
                     height : this.$.data('height') || 200,
                     displayInput : this.$.data('displayinput') == null || this.$.data('displayinput'),
                     displayPrevious : this.$.data('displayprevious'),
-                    fgColor : this.$.data('fgcolor') || '#c0392b',
+                    fgColor : this.$.data('fgcolor') || '#27ae60',
                     inputColor: this.$.data('inputcolor') || this.$.data('fgcolor') || '#4BBE87',
                     font: this.$.data('font') || 'Arial',
                     fontWeight: this.$.data('font-weight') || 'bold',
@@ -196,7 +199,7 @@
 
             // wraps all elements in a div
             this.$div = $('<div style="'
-                        + (this.o.inline ? 'display:inline;' : '')
+                        + (this.o.inline ? 'display:inline-block;' : '') // newui
                         + '"></div>');
 
             this.$.wrap(this.$div).before(this.$c);
@@ -311,6 +314,13 @@
                 s._draw();
             };
 
+			// tpc
+			if(!s.bounds(e))
+        	{
+        		//s._propagate(e);
+        		return;
+        	}
+
             // get touches index
             this.t = k.c.t(e);
 
@@ -351,6 +361,13 @@
                 s.change(s._validate(v));
                 s._draw();
             };
+
+			// tpc
+			if(!s.bounds(e))
+        	{
+        		//s._propagate(e);
+        		return;
+        	}
 
             // First click
             mouseMove(e);
@@ -459,6 +476,32 @@
             return (~~ (((v < 0) ? -0.5 : 0.5) + (v/this.o.step))) * this.o.step;
         };
 
+		// tpc
+		// propagate event to element underneath
+        this._propagate = function(e)
+		{
+			s.$div.css("pointer-events", "none");
+			if(e.type == "mousedown")
+			{
+				var ne = jQuery.Event( e.type, { which:1, pageX: e.pageX, pageY: e.pageY } );
+				var nt = document.elementFromPoint(e.pageX, e.pageY);
+			}
+			else
+			{
+				var point =
+				{
+					x:e.originalEvent.touches[0].pageX,
+					y:e.originalEvent.touches[0].pageY
+				}
+				
+				var ne = jQuery.Event( e.type, { originalEvent:e.originalEvent, which:1, pageX: point.x, pageY: point.y } );
+				var nt = document.elementFromPoint(point.x, point.y);
+			}
+			
+			$(nt).trigger(ne);
+			s.$div.css("pointer-events", "auto");
+		}
+
         // Abstract methods
         this.listen = function () {}; // on start, one time
         this.extend = function () {}; // each time configure triggered
@@ -483,7 +526,6 @@
             for (var i in f) { t[i] = f[i]; }
         };
     };
-
 
     /**
      * k.Dial
@@ -736,6 +778,54 @@
                 c.arc(this.xy, this.xy, this.radius, sat, eat, false);
             c.stroke();
         };
+
+		// tpc
+		// checks if the event was within the bounds of the knob
+		this.bounds = function(e)
+		{
+
+			if(e.type == "mousedown")
+			{
+				var x = e.pageX;
+				var y = e.pageY;
+				
+				var r = this.xy;
+				// tpc sometimes on touchscreen we get a mousedown event instead of touchstart which causes the radius (r) to be way off
+				if (r > 89.5) {r = 89.5}
+				
+				var ox = x - this.x - r;
+				var oy = y - this.y - r;
+			}
+			if(e.type == "touchstart")
+			{
+				if(e.originalEvent)
+				{
+					var touch = e.originalEvent.touches[0];
+				}
+				else
+				{
+					var touch = e;
+				}
+				
+				var x = touch.pageX;
+				var y = touch.pageY;
+				
+				var r = this.xy / 2;
+				
+				var ox = x - this.x - r;
+				var oy = y - this.y - r;
+			}
+			// tpc check offset y (oy) to help avoid the lower part of knob between 0 and 100 marks
+			//console.log(oy + "," + ox);			
+			if(Math.sqrt((ox*ox) + (oy*oy)) < r  && (oy < 33))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
         this.cancel = function () {
             this.val(this.v);

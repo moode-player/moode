@@ -25,14 +25,19 @@
  * - make sure client is configured to hand cover requests to /coverart.php or setup an nginx catch-all rule:
  * - try_files $uri $uri/ /coverart.php;
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
 set_include_path('inc');
 
-// uncomment this to enable workerLog() output
+// NOTE: uncomment this to enable workerLog() output
 //require_once dirname(__FILE__) . '/inc/playerlib.php';
+
+// image search priority
+// 0: search for embedded image first (default)
+// 1: search for image file first
+define('SEARCH_PRI', 1);
 
 // uncomment these if using randomized symlink in a session var
 //session_start();
@@ -48,9 +53,11 @@ function outImage($mime, $data) {
 		case "image/tiff":
 			header("Content-Type: " . $mime);
 			echo $data;
+			//workerLog('coverart: x - outImage()');
 			exit(0);
 			break;
 		default :
+			//workerLog('coverart: y - outImage()');
 			break;
 	}
 }
@@ -72,10 +79,10 @@ function getImage($path) {
 		case 'tif':
 		case 'tiff':
 			// physical image file -> redirect
-#			$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
+			//$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
 			$path = '/vlmm90614385' . substr($path, strlen('/var/lib/mpd/music'));
 			$path = str_replace('#', '%23', $path);
-			//workerlog('coverart: 1 - ' . $path);
+			//workerLog('coverart: 1 - ' . $path);
 			header('Location: ' . $path);
 			die;
 
@@ -158,23 +165,14 @@ function getImage($path) {
 }
 
 function parseFolder($path) {
-	$covers = array(
-		'Folder.jpg',
-		'folder.jpg',
-		'Folder.png',
-		'folder.png',
-		'Cover.jpg',
-		'cover.jpg',
-		'Cover.png',
-		'cover.png'
-	);
-
 	// default cover files
+	$covers = array('Folder.jpg', 'folder.jpg', 'Folder.jpeg', 'folder.jpeg', 'Folder.png', 'folder.png', 'Folder.tif', 'folder.tif', 'Folder.tiff', 'folder.tiff',
+		'Cover.jpg', 'cover.jpg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff');
 	foreach ($covers as $file) {
 		getImage($path . $file);
 	}
 
-	// all (other) files
+	// all other files
 	foreach (glob($path . '*') as $file) {
 		if (is_file($file)) {
 			//workerLog('coverart: d - ' . $file);
@@ -202,9 +200,11 @@ if (null === $path) {
 	$path = '/var/lib/mpd/music/' . $path;
 }
 
-// does file exist and contain image?
-//workerLog('coverart: a - ' . $path);
-getImage($path);
+if (SEARCH_PRI == 0) {
+	// does file exist and contain image?
+	//workerLog('coverart: a - ' . $path);
+	getImage($path);
+}
 
 // directory - try all files
 if (is_dir($path)) {
@@ -218,11 +218,17 @@ if (is_dir($path)) {
 }
 else {
 	// file - try all files in containing folder
-	$path = pathinfo($path, PATHINFO_DIRNAME) . '/';
+	$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
 
-	//workerLog('coverart: c - ' . $path);
-	parseFolder($path);
+	//workerLog('coverart: c - ' . $dirpath);
+	parseFolder($dirpath);
+
+	if (SEARCH_PRI == 1) {
+		// does file exist and contain image?
+		//workerLog('coverart: a - ' . $path);
+		getImage($path);
+	}
 }
 
 // nothing found -> default cover
-header('Location: /images/default-cover-v5.jpg');
+header('Location: /images/default-cover-v6.svg');

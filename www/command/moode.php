@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 
@@ -56,6 +56,20 @@ else {
 	// jobs handled here
 	else {
 		switch ($_GET['cmd']) {		
+			case 'setbgimage':
+				if (submitJob('setbgimage', $_POST['blob'], '', '')) {
+					echo json_encode('job submitted');
+				}
+				else {
+					echo json_encode('worker busy');
+				}
+				break;
+
+			case 'rmbgimage':
+				sysCmd('rm /var/local/www/imagesw/bgimage.jpg');
+				echo json_encode('OK');
+				break;
+
 			case 'readstationfile':
 				echo json_encode(parseStationFile(shell_exec('cat "/var/lib/mpd/music/' . $_POST['path'] . '"')));
 				break;
@@ -123,6 +137,16 @@ else {
 				}
 				break;
 	
+			case 'readthemename':
+				if (isset($_POST['theme_name'])) {
+					$result = cfgdb_read('cfg_theme', $dbh, $_POST['theme_name']);				
+					echo json_encode($result[0]); // return specific row
+				} else {
+					$result = cfgdb_read('cfg_theme', $dbh);				
+					echo json_encode($result); // return all rows
+				}
+				break;
+
 			case 'readcfgradio':
 				$result = cfgdb_read('cfg_radio', $dbh);
 				$array = array();
@@ -134,6 +158,17 @@ else {
 				echo json_encode($array);
 				break;
 	
+			case 'readcfgtheme':
+				$result = cfgdb_read('cfg_theme', $dbh);
+				$array = array();
+				
+				foreach ($result as $row) {
+					$array[$row['theme_name']] = array('tx_color' => $row['tx_color'], 'bg_color' => $row['bg_color'], 'mbg_color' => $row['mbg_color']);
+				}
+				
+				echo json_encode($array);
+				break;
+
 			case 'readcfgengine':
 				$result = cfgdb_read('cfg_system', $dbh);
 				$array = array();

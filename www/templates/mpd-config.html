@@ -19,11 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2017-12-07 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.0
  *
  */
 -->	
 <div class="container">
+	<div class="container2">
     <h1>MPD Config</h1>
 
     <p>
@@ -50,12 +51,12 @@
 						$_mpd_select[mixer_type]
                     </select>
 					<a class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-mixer-type" class="help-block help-block-margin hide">
+					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
 	                    <strong>- disabled:&nbsp;</strong>Assumes external analog or digital volume controller is used.<br>
 						<strong>- Hardware:&nbsp;</strong>Use audio device onboard volume controller.<br>
 	                    <strong>- Software:&nbsp;</strong>Use MPD volume controller (32 bit float with dither).
 					</span>
-					<span class="help-block help-block-margin">
+					<span class="help-block-configs help-block-margin">
 	                    The "disabled" setting will result in 100% (0dB) volume output, otherwise<br>
 	                    volume will automatically be reset to 0 after changing this setting.<br>
 					</span>
@@ -78,7 +79,7 @@
 						$_mpd_select[samplerate_converter]
                     </select>
 					<a class="info-toggle" data-cmd="info-samplerate-converter" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-samplerate-converter" class="help-block help-block-margin hide">
+					<span id="info-samplerate-converter" class="help-block-configs help-block-margin hide">
 						<strong>Very High Quality:&nbsp;</strong>95% bandwidth, 175dB noise rejection, linear phase<br>
 						<strong>High Quality:&nbsp;</strong>95% bandwidth, 120dB noise rejection, linear phase<br>
 						<strong>Medium Quality:&nbsp;</strong>95% bandwidth, 100dB noise rejection, linear phase<br>
@@ -93,7 +94,7 @@
 						$_mpd_select[sox_multithreading]
                     </select>
 					<a class="info-toggle" data-cmd="info-sox-multithreading" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-sox-multithreading" class="help-block help-block-margin hide">
+					<span id="info-sox-multithreading" class="help-block-configs help-block-margin hide">
 	                    MPD can run SoX in multiple threads for improved efficiency.<br>
 					</span>
                 </div>
@@ -106,7 +107,7 @@
 						$_mpd_select[gapless_mp3_playback]
 					</select>
 					<a class="info-toggle" data-cmd="info-gapless-mp3-playback" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-gapless-mp3-playback" class="help-block help-block-margin hide">
+					<span id="info-gapless-mp3-playback" class="help-block-configs help-block-margin hide">
                     	Select "no" if mp3 playback ends abruptly.
                     </span>
                 </div>
@@ -119,7 +120,7 @@
 						$_mpd_select[dop]
 					</select>
 					<a class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-dsd-audio" class="help-block help-block-margin hide">
+					<span id="info-dsd-audio" class="help-block-configs help-block-margin hide">
 						<strong>Native DSD is used automatically if supported in Linux/ALSA and DAC.</strong><br>
 						- Yes = DoP is used if native DSD support is not available.<br>
 						- No = DSD to PCM on-the-fly conversion is used if native DSD support is not available.
@@ -134,7 +135,7 @@
 						$_mpd_select[volume_normalization]
 					</select>
 					<a class="info-toggle" data-cmd="info-volume-normalization" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-volume-normalization" class="help-block help-block-margin hide">
+					<span id="info-volume-normalization" class="help-block-configs help-block-margin hide">
 						Adjusts the volume of all songs played so that they sound as though they are of equal loudness.<br>
 						- <strong>NOTE:&nbsp;</strong>output bit depth will be converted to 16 bit.
 					</span>
@@ -148,7 +149,7 @@
 						$_mpd_select[replaygain]
 					</select>
 					<a class="info-toggle" data-cmd="info-replaygain" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-replaygain" class="help-block help-block-margin hide">
+					<span id="info-replaygain" class="help-block-configs help-block-margin hide">
 						MPD will adjust the volume of songs played using ReplayGain tags.<br>
 						- Album uses the album ReplayGain tag<br>
 						- Track uses the track ReplayGain tag<br>
@@ -162,7 +163,7 @@
                 <div class="controls">
                     <input class="input-large" type="text" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4096" max="65535">
 					<a class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-audio-buffer-size" class="help-block help-block-margin hide">
+					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
                     	Default size is 4096 KB, min/max size is 4096/65535.
                     </span>
                 </div>
@@ -175,7 +176,7 @@
 						$_mpd_select[buffer_before_play]
 					</select>
 					<a class="info-toggle" data-cmd="info-buffer-before-play" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-buffer-before-play" class="help-block help-block-margin hide">
+					<span id="info-buffer-before-play" class="help-block-configs help-block-margin hide">
                     	Default fill is 10%, min/max fill is 10%/30%.
                     </span>
                 </div>
@@ -188,7 +189,7 @@
 						$_mpd_select[zeroconf_enabled] 
                     </select>
 					<a class="info-toggle" data-cmd="info-zeroconf-enabled" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-zeroconf-enabled" class="help-block help-block-margin hide">
+					<span id="info-zeroconf-enabled" class="help-block-configs help-block-margin hide">
                     	Publish MPD Zeroconf service name with Zeroconf / Avahi.
                     </span>
                 </div>
@@ -202,4 +203,5 @@
 		</fieldset>
 		
     </form>
+</div>
 </div>
