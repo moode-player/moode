@@ -8,7 +8,7 @@ Release Notes https://github.com/moode-player/moode/blob/master/www/relnotes.txt
 Player Setup https://github.com/moode-player/moode/blob/master/www/setup.txt<br>
 Moode OS Builder https://github.com/moode-player/mosbuild
 
-Other Resources\
+## Other Resources
 [moodeaudio.org](http://moodeaudio.org)\
 [moOde Twitter feed](http://twitter.com/MoodeAudio)\
 [Contributors](https://github.com/moode-player/moode/blob/master/www/CONTRIBS.html)
