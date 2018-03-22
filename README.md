@@ -5,13 +5,11 @@ Moode Audio Player is a derivative of the wonderful WebUI audio player client fo
 Tim Curtis © 2014
 
 Release notes\
-https://github.com/moode-player/moode/blob/master/www/relnotes.txt
+https://github.com/moode-player/moode/blob/master/www/relnotes.txt\
 Player setup\
 https://github.com/moode-player/moode/blob/master/www/setup.txt
 
-[GitHub](http://github.com)
-
 Other resources\
-<a href="http://moodeaudio.org" target="_blank">moodeaudio.org</a><br>
-<a href="http://twitter.com/MoodeAudio" target="_blank">moOde Twitter feed</a><br>
-<a href="http://moodeaudio.org/docs/CONTRIBS.html" target="_blank">Contributors</a><br>
+[moodeaudio.org](http://moodeaudio.org)
+[moOde Twitter feed](http://twitter.com/MoodeAudio)
+[Contributors](https://github.com/moode-player/moode/blob/master/www/CONTRIBS.html)
