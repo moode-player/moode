@@ -6,7 +6,6 @@ Tim Curtis © 2014
 
 Release notes:
 https://github.com/moode-player/moode/blob/master/www/relnotes.txt
-
 Setup guide:
 https://github.com/moode-player/moode/blob/master/www/setup.txt
 
