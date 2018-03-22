@@ -6,8 +6,6 @@ Tim Curtis © 2014
 
 Release notes:
 https://github.com/moode-player/moode/blob/master/www/relnotes.txt
-Setup guide:
-https://github.com/moode-player/moode/blob/master/www/setup.txt
 
 <a href="http://moodeaudio.org" target="_blank">moodeaudio.org</a><br>
 <a href="https://twitter.com/MoodeAudio" target="_blank">moOde Twitter feed</a><br>
