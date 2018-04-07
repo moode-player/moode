@@ -11,6 +11,73 @@
 
 ########################################################
 //
+// 4.1 Release 2018-04-02
+//
+########################################################
+
+New features
+
+- NEW: NAS config with Samba scanner 
+- NEW: Pi Touch UI layout
+- NEW: Volume control with step limiter
+- NEW: Renderer active indicators
+- NEW: Resume MPD after Bluetooth
+
+Platform
+
+- NEW: Support for Pi-3B+
+- NEW: Stretch Lite 2018-03-13
+- NEW: Linux Kernel branch 4.14.y
+- NEW: BlueZ stack 5.49
+
+Updates
+
+- UPD: Bump to MPD 0.20.18
+- UPD: Bump to PHP 7.0.27
+- UPD: Bump to Upmpdcli 1.2.16
+- UPD: Bump to Squeezelite 1.8.7-1052 
+- UPD: Use mpd index order for Library track sort
+- UPD: Radio station supports playlist as url
+- UPD: Reset coverart search pri to 0
+- UPD: Custom service descriptor for Players >>
+- UPD: Auto-refresh page after Customize update
+- UPD: Add file size validation to bgimage chooser
+- UPD: Add mpd output check and config to startup
+- UPD: Add raspbian ver to moodelog, sysinfo and about
+- UPD: Add some margin to Browse action menu icon
+- UPD: Add vers= and sec= to SMB mount flags
+- UPD: Add wifi country code, default to US
+- UPD: Deprecate Airplay metadata
+- UPD: Deprecate Djmount for miniDLNA
+- UPD: Improved library Loader
+- UPD: Improved updater error checking
+- UPD: Improved renderer connect management
+- UPD: Improved WiFi scanner
+- UPD: Improved UI responsivness
+- UPD: Remove accumulated code
+
+Radio stations
+
+- DEL: Soma FM - Doomed
+
+Bug fixes
+
+- FIX: Host AP mode not starting in some scenarios
+- FIX: LocalUI starts too early in some scenarios
+- FIX: Horiz scrollbar appears on pi touch lib panel
+- FIX: Minor padding issues in panels.css
+- FIX: Invalid param in .xinitrc
+- FIX: Timeknob bounds check excluding lower portion
+- FIX: Bluetooth mpd output not reported in moode log
+- FIX: Wrong theme switch/case in autoConfig
+- FIX: Players >> screen displaying self host
+- FIX: USB drive listing in moode log
+- FIX: Autofocus for ssid and server fields
+- FIX: Show/hide certain fields on NAS config
+- FIX: Minor timeknob issues
+
+########################################################
+//
 // 4.0 Release 2018-01-26
 //
 ########################################################

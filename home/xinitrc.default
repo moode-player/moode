@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2018-01-26 TC moOde 4.0
+# 2018-04-02 TC moOde 4.1 remove --disable-overlay-scrollbar because it has no effect either disable or enable
 #
 
 # Turn off display power management
@@ -26,6 +27,6 @@ xset s 600
 
 # launch chrome browser
 SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"
-chromium-browser --kiosk --touch-events --disable-touch-drag-drop --disable-overlay-scrollbar \
+chromium-browser --kiosk --touch-events --disable-touch-drag-drop \
 --enable-touchview --enable-pinch --window-size=$SCREENSIZE --window-position=0,0 \
 --disable-session-crashed-bubble --disable-infobars --no-first-run --app=http://localhost/ 

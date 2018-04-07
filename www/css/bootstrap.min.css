@@ -248,7 +248,7 @@ textarea,input[type="text"],input[type="password"],input[type="datetime"],input[
 input[type="radio"],input[type="checkbox"]{margin:4px 0 0;/**margin-top:0; TC 2015-12-22*/margin-top:1px \9;line-height:normal;}
 input[type="file"],input[type="image"],input[type="submit"],input[type="reset"],input[type="button"],input[type="radio"],input[type="checkbox"]{width:auto;}
 select,input[type="file"]{height:30px;/**margin-top:4px; TC 2015-12-22*/line-height:30px;}
-/* TC (Tim Curtis) 2015-04-29: change colors to prevent white showing on config page refresh */
+/* TC 2015-04-29: change colors to prevent white showing on config page refresh */
 select{width:220px;border:1px solid #2c3e50;background-color:#11181F;}
 /*select{width:220px;border:1px solid #cccccc;background-color:#ffffff;}*/
 select[multiple],select[size]{height:auto;}

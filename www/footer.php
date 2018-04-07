@@ -20,6 +20,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1
+ * - bump release and date
+ * - add error-bgimage div to customize
+ * - add raspbian version to About
+ * - clean up some help text
+ * - remove data-validate="parsley"
  *
  */
 -->
@@ -27,13 +33,12 @@
 <div id="about-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
 	<div class="modal-body">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<!--tpc2 added 8px top margin -->
 		<p style="text-align:center;font-size:40px;font-weight:600;letter-spacing:-2px;margin-top:2px">m<span style="color:#d35400;line-height:12px">oO</span>de<span style="font-size:12px;position:relative;top:-15px;left:-3px;">™</span></p>
 		<p style="text-align:center;font-size:14px;font-weight:600;letter-spacing:-1px;line-height: 0px;margin-top: -12px; margin-bottom: 22px;">audio player</p>
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>			
 			<ul>
-				<li>Release: 4.0 2018-01-26 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
+				<li>Release: 4.1 2018-04-02 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
@@ -44,8 +49,8 @@
 		<p>
 			<h4>Platform Information</h4>			
 			<ul>
-				<li>Linux kernel: <span id="sys-kernel-ver"></span></li>
-				<li>Architecture: <span id="sys-processor-arch"></span></li>
+				<li>Raspbian ver: <span id="sys-raspbian-ver"></span></li>
+				<li>Linux kernel: <span id="sys-kernel-ver"></span>, <span id="sys-processor-arch"></span></li>
 				<li>Hdwr revision: <span id="sys-hardware-rev"></span></li>
 				<li>MPD version: <span id="sys-mpd-ver"></span></li>
 			</ul>
@@ -84,7 +89,7 @@
 		<h3 id="clockradio-modal-label">Clock radio settings</h3>
 	</div>
 	<div class="modal-body" id="container-clockradio">
-		<form class="form-horizontal" data-validate="parsley" action="" method="">
+		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group">
 	                <label class="control-label" for="clockradio-enabled">Enabled</label>
@@ -161,8 +166,7 @@
 	                
 	                <label class="control-label" for="clockradio-volume">Volume</label>
 	                <div class="controls">
-	                    <input id="clockradio-volume" class="input-mini" style="height: 20px;" type="number" min="1" max="" name="clockradio_volume" value="">
-						<span id="clockradio-volume-aftertext" class="control-aftertext"></span> <!-- text set in player-scripts.js -->
+	                    <input id="clockradio-volume" class="input-mini" style="height: 20px;" type="number" min="1" max="100" name="clockradio_volume" value="">
 	                </div>
 	                
 	                <label class="control-label" for="clockradio-shutdown">Shutdown</label>
@@ -241,21 +245,10 @@
 		<h3 id="customize-modal-label">Customization settings</h3>
 	</div>
 	<div class="modal-body" id="container-customize">
-		<form class="form-horizontal" data-validate="parsley" action="" method="">
+		<form class="form-horizontal" action="" method="">
 			<h4>General settings</h4>
 	    	<fieldset>
 				<div class="control-group">
-	                <label class="control-label" for="volume-warning-limit">Volume warning limit</label>
-	                <div class="controls">
-	                    <input id="volume-warning-limit" class="input-mini" style="height: 20px;" type="number" maxlength="3" min="1" max="100" name="volume_warning_limit" value="">
-						<span id="volume-warning-limit-aftertext" class="control-aftertext2"></span> <!-- text set in player-scripts.js -->
-						<a class="info-toggle" data-cmd="info-volume-warning-limit" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-volume-warning-limit" class="help-block hide">
-							The limit only applies to moOde volume knob changes and not to volume changes made by other audio applications for example Bluetooth or Airplpay.<br>
-	                    	NOTE: Set the limit to 100 to disables it.<br>
-	                    </span>
-	                </div>
-	                
    	                <label class="control-label" for="search-autofocus-enabled">Search auto-focus</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
@@ -296,9 +289,7 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="icon-info-sign"></i></a>
 						<span id="info-play-history" class="help-block hide">
-	                    	Select Yes to log each song played to the playback history log.<br>
-	                    	- Songs in the log can be clicked to launch a Google search.<br>
-	                    	- The log can be cleared from System config.
+	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
 	                    </span>
 	                </div>					
 
@@ -320,7 +311,7 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-extratag-display" href="#notarget"><i class="icon-info-sign"></i></a>
 						<span id="info-extratag-display" class="help-block hide">
-	                    	Select Yes to display additional metadata under the cover art on the Playback panel.<br>
+	                    	Display additional metadata under the cover art on the Playback panel.<br>
 	                    </span>
 	                </div>
 
@@ -437,6 +428,7 @@
 						<button id="choose-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</button> 
 						<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Remove</button> 
 						<a class="info-toggle" data-cmd="info-bgimage" href="#notarget"><i class="icon-info-sign"></i></a>
+						<div id="error-bgimage"></div>
 						<div id="info-bgimage" class="help-block hide">
 	                    	Sets the background to a JPEG image<br>
 	                    </div>
@@ -464,9 +456,7 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-device-name" href="#notarget"><i class="icon-info-sign"></i></a>
 						<span id="info-device-name" class="help-block hide">
-	                    	Select a device to have its description show on Audio info.<br>
-							I2S devices are automatically populated from System config.<br>
-							If device is not listed select "USB audio device".
+	                    	Select a device to have its description show on Audio info. I2S devices are automatically populated from System config. If device is not listed select "USB audio device".
 	                    </span>
 	                </div>
 					

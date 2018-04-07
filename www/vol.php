@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 remove vol warning
  *
  */
  
@@ -48,7 +49,7 @@ if ($argv[1] == '-help') {
 
 // process volume cmds
 
-$result = sdbquery("select param, value from cfg_system where id in ('32', '33', '34', '36', '37', '77')", $dbh);
+$result = sdbquery("select param, value from cfg_system where id in ('32', '33', '36', '37', '77')", $dbh);
 $array = array();
 foreach ($result as $row) {
 	$array[$row['param']] = $row['value'];
@@ -94,22 +95,19 @@ else {
 	if ($level < 0) {
 		$level = 0;
 	}
-	elseif ($level > $array['volwarning']) {
-		workerLog('vol: fail limit check)');
-		exit('Volume exceeds warning limit ' . $array['volwarning'] . "\n");
+	elseif ($level > 100) {
+		$level = 100;
 	}
-	else {
-		// update knob
-		$result = sdbquery("update cfg_system set value='" . $level . "' where id='32'", $dbh);
-		//workerLog('vol: result=(' . $result . ')');
-	}
+
+	// update knob
+	$result = sdbquery("update cfg_system set value='" . $level . "' where id='32'", $dbh);
+	//workerLog('vol: result=(' . $result . ')');
 }
 
 // mute if indicated
 if ($volmute == '1') {
 	sendMpdCmd($sock, 'setvol 0');
 	$resp = readMpdResp();
-
 	exit();
 }
 

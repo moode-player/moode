@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 streamline the layout
  *
  */
 -->
@@ -35,11 +36,7 @@
 			</tr>
 			<tr>
 				<td style="text-align:right;">Decoded to:&nbsp;</td>
-				<td style="text-align:left;">$decoded_to</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Rate:&nbsp;</td>
-				<td style="text-align:left;">$decode_rate</td>
+				<td style="text-align:left;">$decoded_to$decode_rate</td>
 			</tr>
 		</table>
 		
@@ -50,32 +47,26 @@
 				<td style="text-align:right;">Resampling:&nbsp;</td>
 				<td style="text-align:left;">$resampler_format$resampler</td>
 			</tr>
-	
 			<tr>
 				<td style="text-align:right;">Crossfeed:&nbsp;</td>
 				<td style="text-align:left;">$crossfeed</td>
 			</tr>
-	
 			<tr>
 				<td style="text-align:right;">Equalizer:&nbsp;</td>
 				<td style="text-align:left;">$equalizer</td>
 			</tr>
-	
 			<tr>
 				<td style="text-align:right;">Crossfade:&nbsp;</td>
 				<td style="text-align:left;">$crossfade</td>
 			</tr>
-	
 			<tr>
 				<td style="text-align:right;">Other:&nbsp;</td>
 				<td style="text-align:left;">$otherdsp</td>
 			</tr>
-	
 			<tr>
 				<td style="text-align:right;">Chip options:&nbsp;</td>
 				<td style="text-align:left;">$chip_options</td>
 			</tr>
-	
 			<tr>
 				<td style="text-align:right;">Volume ctl:&nbsp;</td>
 				<td style="text-align:left;">$volume</td>
@@ -87,11 +78,7 @@
 			<col span="1" style="width:100px;">
 			<tr>
 				<td style="text-align:right;">Format:&nbsp;</td>
-				<td style="text-align:left;">$hwparams_format</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Rate:&nbsp;</td>
-				<td style="text-align:left;">$hwparams_calcrate</td>
+				<td style="text-align:left;">$hwparams_format$hwparams_calcrate</td>
 			</tr>
 		</table>
 	
@@ -115,18 +102,5 @@
 				<td style="text-align:left;">$iface</td>
 			</tr>
 		</table>
-
-		<!--strong>System</strong>
-		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:100px;">
-			<tr>
-				<td style="text-align:right;">Processor:&nbsp;</td>
-				<td style="text-align:left;">$sysarch, $cores, $cpufreq, $cpuload%, $cputemp&deg</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Kernel:&nbsp;</td>
-				<td style="text-align:left;">$kerneltype</td>
-			</tr>
-		</table-->
 	</div>
 </div>

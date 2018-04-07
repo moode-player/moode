@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 add setting for resume mpd after bt
  *
  */
 -->	
@@ -260,6 +261,19 @@
 					</span>
 					<span id="info-btmulti" class="help-block-configs help-block-margin hide">
 						Allow the Bluetooth speaker to be shared by multiple clients.<br>
+                    </span>
+				</div>
+				<label class="control-label" for="rsmafterbt">Resume MPD playback</label>
+				<div class="controls">
+					<select id="rsmafterbt" class="select-mini2" style="width: 74px;" name="rsmafterbt">
+						$_select[rsmafterbt]
+					</select>
+					<span style="display: inline-block; vertical-align: top">
+ 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_rsmafterbt" value="novalue">Set</button>
+ 						<a class="info-toggle" data-cmd="info_rsmafterbt" href="#notarget"><i class="icon-info-sign"></i></a>
+					</span>
+					<span id="info_rsmafterbt" class="help-block-configs help-block-margin hide">
+						Resume MPD playback after Bluetooth client disconnects.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
 						<a href="blu-config.php">CONFIGURE</a> Bluetooth<br>

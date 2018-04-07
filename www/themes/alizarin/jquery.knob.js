@@ -16,7 +16,8 @@
  * http://moodeaudio.org
  *
  * 2014-08-23 1.0 TC initial rewrite, theme colors
- * 2018-01-26 4.0 TC added bounds and propagate patches
+ * 2018-01-26 4.0 TC add bounds and propagate patches
+ * 2018-04-02 4.1 TC add test for selector in bounds check routine
  *
  */
  
@@ -783,6 +784,10 @@
 		// checks if the event was within the bounds of the knob
 		this.bounds = function(e)
 		{
+			// tpc r41 capture the selector
+			var id = e.target.offsetParent.id;
+			//console.log('selector: ' + id);
+			//console.log('event: ' + e.type);
 
 			if(e.type == "mousedown")
 			{
@@ -791,8 +796,9 @@
 				
 				var r = this.xy;
 				// tpc sometimes on touchscreen we get a mousedown event instead of touchstart which causes the radius (r) to be way off
+				//console.log('radius: ' + r);
 				if (r > 89.5) {r = 89.5}
-				
+
 				var ox = x - this.x - r;
 				var oy = y - this.y - r;
 			}
@@ -812,17 +818,22 @@
 				
 				var r = this.xy / 2;
 				
+				//console.log('radius: ' + r);
+
 				var ox = x - this.x - r;
 				var oy = y - this.y - r;
 			}
 			// tpc check offset y (oy) to help avoid the lower part of knob between 0 and 100 marks
-			//console.log(oy + "," + ox);			
-			if(Math.sqrt((ox*ox) + (oy*oy)) < r  && (oy < 33))
+			// tpc r41 add check for selector and dont do additional oy check for timeknob
+			//console.log('oy,ox: ' + oy + ',' + ox);
+			if(Math.sqrt((ox*ox) + (oy*oy)) < r  && (id == 'countdown' ? true : (oy < 38))) // tpc r41 was 33
 			{
+				//console.log('in bounds: true');
 				return true;
 			}
 			else
 			{
+				//console.log('in bounds: false');
 				return false;
 			}
 		}

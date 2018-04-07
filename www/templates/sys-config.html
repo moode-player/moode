@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 minor cleanup
  *
  */
 -->	
@@ -57,7 +58,7 @@
                     <input class="input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="update_host_name" value="novalue">Set</button>
 					<span class="help-block-configs help-block-margin">
-						Length 3-63 chars, A-Z, a-z, 0-9, and hyphen (-) are allowed.
+						Length 3-63 chars, alphanumeric and hyphen allowed.
 					</span>
                 </div>
             </div>	
@@ -224,7 +225,7 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label">Root file system</label>
+				<label class="control-label">File system</label>
 				<div class="controls">
 					<span style="display: inline-block; vertical-align: top">
 						<button class="btn btn-primary btn-small"><a href="#expand-rootfs" data-toggle="modal">Expand</a></button>

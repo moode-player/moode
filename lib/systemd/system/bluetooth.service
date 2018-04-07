@@ -1,5 +1,9 @@
 #
 # 2018-01-26 TC moOde 4.0
+# 2018-04-02 TC moOde 4.1
+# - change ExecStart to use the symlink in /usr/sbin
+# - allows 5.43 and 5.49 bluez to work with this file
+# - note: --noplugin=sap may not be needed with 5.49
 #
 
 [Unit]
@@ -10,7 +14,7 @@ ConditionPathIsDirectory=/sys/class/bluetooth
 [Service]
 Type=dbus
 BusName=org.bluez
-ExecStart=/usr/lib/bluetooth/bluetoothd --noplugin=sap
+ExecStart=/usr/sbin/bluetoothd --noplugin=sap
 NotifyAccess=main
 #WatchdogSec=10
 #Restart=on-failure

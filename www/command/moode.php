@@ -17,6 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 
+ * - add raspbianver to vars returned by readcfgengine
+ * - add chown to addstation
+ * - minor cleanup
  *
  */
 
@@ -37,9 +41,9 @@ if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 	echo 'command missing';
 }
 else {
+	// send these to worker.php
 	$jobs = array('reboot', 'poweroff', 'reloadclockradio', 'alizarin', 'amethyst', 'bluejeans', 'carrot', 'emerald', 'fallenleaf', 'grass', 'herb', 'lavender', 'river', 'rose', 'silver', 'turquoise');
 	if (in_array($_GET['cmd'], $jobs)) {
-		// jobs sent to worker.php
 		if (submitJob($_GET['cmd'], '', '', '')) {
 			echo json_encode('job submitted');
 		}
@@ -47,22 +51,22 @@ else {
 			echo json_encode('worker busy');
 		}
 	}
-	// auto shuffle
-	else if ($_GET['cmd'] == 'ashuffle') {
-		playerSession('write', 'ashuffle', $_GET['ashuffle']);
-		$_GET['ashuffle'] == '1' ? sysCmd('/usr/local/bin/ashuffle > /dev/null 2>&1 &') : sysCmd('killall -s 9 ashuffle > /dev/null');
-		echo json_encode('toggle ashuffle ' . $_GET['ashuffle']);
+	// send this to worker.php
+	elseif ($_GET['cmd'] == 'setbgimage') {
+		if (submitJob('setbgimage', $_POST['blob'], '', '')) {
+			echo json_encode('job submitted');
+		}
+		else {
+			echo json_encode('worker busy');
+		}
 	}
-	// jobs handled here
+	// handle these here in moode.php
 	else {
-		switch ($_GET['cmd']) {		
-			case 'setbgimage':
-				if (submitJob('setbgimage', $_POST['blob'], '', '')) {
-					echo json_encode('job submitted');
-				}
-				else {
-					echo json_encode('worker busy');
-				}
+		switch ($_GET['cmd']) {
+			case 'ashuffle':
+				playerSession('write', 'ashuffle', $_GET['ashuffle']);
+				$_GET['ashuffle'] == '1' ? sysCmd('/usr/local/bin/ashuffle > /dev/null 2>&1 &') : sysCmd('killall -s 9 ashuffle > /dev/null');
+				echo json_encode('toggle ashuffle ' . $_GET['ashuffle']);
 				break;
 
 			case 'rmbgimage':
@@ -90,6 +94,7 @@ else {
 					fclose($fh);
 	
 					sysCmd('chmod 777 "' . $file . '"');
+					sysCmd('chown root:root "' . $file . '"'); // tpc r41
 	
 					// update time stamp on files so mpd picks up the change and commits the update
 					sysCmd('find /var/lib/mpd/music/RADIO -name *.pls -exec touch {} \+');
@@ -178,8 +183,9 @@ else {
 				}
 
 				// add extra session vars set by worker so they can be available to client
-				$array['mooderel'] = $_SESSION['mooderel']; 				
-				$array['pkgdate'] = $_SESSION['pkgdate']; 				
+				$array['mooderel'] = $_SESSION['mooderel'];
+				$array['pkgdate'] = $_SESSION['pkgdate'];
+				$array['raspbianver'] = $_SESSION['raspbianver']; // tpc r41
 
 				echo json_encode($array);
 				break;			

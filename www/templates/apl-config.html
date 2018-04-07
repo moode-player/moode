@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1
+ * - remove sps metadata
+ * - remove data-validate="parsley"
  *
  */
 -->	
@@ -28,23 +31,10 @@
     	<a href="snd-config.php">BACK</a> to Audio configuration page
     </p>
 
-    <form class="form-horizontal" data-validate="parsley" action="" method="post">
+    <form class="form-horizontal" action="" method="post">
     	<legend>Settings &nbsp;<button type="submit" class="btn btn-primary btn-small" name="apply" value="1">Apply</button></legend>
     
 		<fieldset>
-			<div class="control-group">
-				<label class="control-label" for="airplaymeta">Metadata engine</label>
-				<div class="controls">
-					<select id="airplaymeta" class="input-large" name="config[airplaymeta]">
-						$_select[airplaymeta]
-					</select>
-					<a class="info-toggle" data-cmd="info_airplaymeta" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info_airplaymeta" class="help-block-configs help-block-margin hide">
-						Display metadata and cover art from Airplay sender on Playback panel.<br>
-                    </span>
-				</div>
-			</div>
-
 			<div class="control-group">
 				<label class="control-label" for="airplayvol">Volume control</label>
 				<div class="controls">
@@ -116,7 +106,7 @@
 			<div class="control-group">
 				<label class="control-label" for="session_timeout">Session timeout (secs)</label>
 				<div class="controls">
-					<input class="input-large" type="text" id="session_timeout" name="config[session_timeout]" value="$_select[session_timeout]">
+					<input class="input-large" type="number" id="session_timeout" name="config[session_timeout]" value="$_select[session_timeout]">
 					<a class="info-toggle" data-cmd="info_session_timeout" href="#notarget"><i class="icon-info-sign"></i></a>
 					<span id="info_session_timeout" class="help-block-configs help-block-margin hide">
 						Wait for this number of seconds after a source disappears before terminating the session and becoming available again. Default is 120.<br>

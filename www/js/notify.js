@@ -19,6 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.1
+ * - remove unneeded msgs
+ * - remove icon
  *
  */
 
@@ -42,11 +45,6 @@ function notify(cmd, msg, duration) {
 		updstation: 'Radio station updated',
 		updclockradio: 'Clock radio updated',
 		updcustomize: 'Settings updated',
-		themechange: 'Theme changed',
-		accentchange: 'Accent color changed',
-		setbgimage: 'Background image set',
-		rmbgimage:  'Background image removed',
-		liboptionchange: 'Library option changed',
 		usbaudioready: 'USB audio ready',
 		reboot: 'Rebooting...',
 		shutdown: 'Shutting down...'
@@ -60,7 +58,8 @@ function notify(cmd, msg, duration) {
         duration = 2000;
     }
 
-    var icon = cmd == 'needplname' || cmd == 'needssid' ? 'icon-info-sign' : 'icon-ok';
+    //var icon = cmd == 'needplname' || cmd == 'needssid' ? 'icon-info-sign' : 'icon-ok';
+	var icon = '';
     $.pnotify({
         title: map[cmd],
         text: msg,

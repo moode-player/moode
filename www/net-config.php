@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1
+ * - add  additional filtering to wifi scanner
+ * - add wificountry
  *
  */
  
@@ -51,6 +54,7 @@ if (isset($_POST['apply']) && $_POST['apply'] == 1) {
 	playerSession('write', 'apdssid', $_POST['wlan0apdssid']);
 	playerSession('write', 'apdchan', $_POST['wlan0apdchan']);
 	playerSession('write', 'apdpwd', $_POST['wlan0apdpwd']);
+	playerSession('write', 'wificountry', $_POST['wlan0country']);
 
 	// submit job
 	submitJob('netcfg', 'apply', 'Network config changed', 'Reboot required');
@@ -103,7 +107,7 @@ else {
 	$_wlan0currentip = empty($ipaddr[0]) ? 'Not in use' : $ipaddr[0] . ' - quality ' . $quality . '%, level ' . $level;
 }
 
-// ssid, security, password, scanner
+// ssid, scanner, security protocol, password
 if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'"); // do twice to improve results
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'");
@@ -112,9 +116,12 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	$ssidList = array_merge($array, $result);
 
 	foreach ($ssidList as $ssid) {
-		$ssid = ltrim($ssid);
-		$selected = ($netcfg[1]['wlanssid'] == $ssid) ? 'selected' : '';
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);
+		$ssid = trim($ssid);
+		// additional filtering
+		if (!empty($ssid) && false === strpos($ssid, '\x')) {
+			$selected = ($netcfg[1]['wlanssid'] == $ssid) ? 'selected' : '';
+			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);
+		}
 	}
 }
 else {
@@ -133,6 +140,20 @@ else {
 $_wlan0sec .= "<option value=\"wpa\"" . ($netcfg[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
 $_wlan0sec .= "<option value=\"none\"" . ($netcfg[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
 $_wlan0pwd = $netcfg[1]['wlanpwd'];
+
+// wifi country code
+$zonelist = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
+$zonelist_sorted = array();
+for ($i = 0; $i < count($zonelist); $i++) {
+	$country = explode(',', $zonelist[$i]);
+	$zonelist_sorted[$i] = $country[1] . ',' . $country[0];
+}
+sort($zonelist_sorted);
+foreach ($zonelist_sorted as $zone) {
+	$country = explode(',', $zone);
+	$selected = ($country[1] == $_SESSION['wificountry']) ? 'selected' : '';
+	$_wlan0country .= sprintf('<option value="%s" %s>%s</option>\n', $country[1], $selected, $country[0]);
+}
 
 // static ip
 $_wlan0ipaddr = $netcfg[1]['ipaddr'];

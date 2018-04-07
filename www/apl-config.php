@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 remove sps metadata
  *
  */
 
@@ -30,7 +31,7 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_airplay', $dbh, $key, $value);
 
-		if ($key == 'airplaymeta' || $key == 'airplayvol' || $key == 'rsmaftersps') {
+		if ($key == 'airplayvol' || $key == 'rsmaftersps') {
 			playerSession('write', $key, $value);
 		}
 		else {
@@ -53,9 +54,6 @@ foreach ($result as $row) {
 	$cfg_airplay[$row['param']] = $row['value'];
 }
 
-// metadata engine
-$_select['airplaymeta'] .= "<option value=\"1\" " . (($_SESSION['airplaymeta'] == '1') ? "selected" : "") . ">On</option>\n";
-$_select['airplaymeta'] .= "<option value=\"0\" " . (($_SESSION['airplaymeta'] == '0') ? "selected" : "") . ">Off</option>\n";
 // volume mixer
 $_select['airplayvol'] .= "<option value=\"auto\" " . (($_SESSION['airplayvol'] == 'auto') ? "selected" : "") . ">Auto</option>\n";
 $_select['airplayvol'] .= "<option value=\"software\" " . (($_SESSION['airplayvol'] == 'software') ? "selected" : "") . ">Software</option>\n";

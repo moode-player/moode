@@ -20,6 +20,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1
+ * - thinner 0.26 time knob, was 0.28
+ * - add title text to mute, vol up/dn
+ * - live timeline fpr mobile
+ * - new volume controls
+ * - remove data-validate="parsley"
  *
  */
 -->
@@ -53,10 +59,10 @@
 				<div class="span3">					
 					<div id="timeknob">
 						<div id="countdown">
-							<input class="playbackknob" id="time" data-width="100%" data-thickness="0.28" data-bgColor="rgba(96,96,96,0.2)" data-fgcolor="#c0392b" value="0" data-readonly="false" data-min="0" data-max="1000">
+							<input class="playbackknob" id="time" data-min="0" data-max="1000" data-width="100%" data-thickness="0.26" data-bgColor="rgba(96,96,96,0.2)" data-fgcolor="#c0392b" data-readonly="false">
 						</div>
-						<span id="countdown-display" href="#notarget"></span>
-						<span id="total"></span>
+						<div id="countdown-display" href="#notarget"></div>
+						<div id="total"></div>
 					</div>
 					
 					<div id="mobile-toolbar">
@@ -70,12 +76,15 @@
 							<button id="mnext" class="btn btn-cmd" title="Next"><i class="icon-forward"></i></button>
 						</div>
 						<div id="mt3">
-							<button id="msingle" class="btn btn-cmd btn-toggle" title="Single"><i class="icon-refresh"></i></button>
 							<button id="mconsume" class="btn btn-cmd btn-toggle" title="Consume mode"><i class="icon-arrow-down"></i></button>
+							<button id="btn-mvol-popup" class="btn" data-toggle="modal" title="Volume"><i class="icon-volume-up"></i>
+								<div id="mvol-bg"></div> 
+								<div id="mvol-progress"></div>
+							</button>
 						</div>
 					</div>
 
-					<div class="btn-toolbar">
+					<div id="playbtns" class="btn-toolbar">
 						<div class="btn-group">
 							<button id="prev" class="btn btn-cmd" title="Previous"><i class="icon-backward"></i></button>
 							<button id="play" class="btn btn-cmd btn-play" title="Play/Pause"><i class="icon-play"></i></button>
@@ -83,29 +92,23 @@
 						</div>
 					</div>
 					<div id="volknob">
-						<div id="volcontrol"> <!--  data-thickness="0.15" original -->
-							<input class="volumeknob" id="volume" data-readOnly="false" data-width="100%" data-thickness="0.20" data-bgColor="#2c3e50" data-fgColor="#c0392b" value="0" data-cursor="true" data-angleArc="240" data-angleOffset="-120" data-skin="tron">	
+						<div id="volcontrol">
+							<input readonly class="volumeknob" id="volume" data-min="0" data-max="100" data-width="100%" data-thickness="0.15" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#c0392b" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
 						</div>
+						<div class="volume-display" href="#notarget"></div>
 					</div>					
-					<div id="volumeslider">
-						<input id="mobilevolume" type="range" min=0 max=100 value=0 step=1 onchange="setVolume(this.value)">
+					<div id="volbtns">
+						<button id="volumedn" class="btn btn-cmd btn-volume btn-primary" title="Vol down">&#8722;</button>
+						<button id="volumeup" class="btn btn-cmd btn-volume btn-primary" title="Vol up">+</button>
 					</div>
-					<div id="playbackbtns">
+					<div id="togglebtns">
 						<div class="btn-group">
-							<button id="repeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="icon-repeat"></i></button>
 							<button id="random" class="btn btn-cmd btn-toggle" title="Random"><i class="icon-random"></i></button>
+							<button id="repeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="icon-repeat"></i></button>
 							<button id="single" class="btn btn-cmd btn-toggle" title="Single"><i class="icon-refresh"></i></button>
-							<button id="consume" class="btn btn-cmd btn-toggle" title="Consume mode"><i class="icon-arrow-down"></i></button>
-							<button id="volumemute" class="btn btn-cmd btn-volume"><i class="icon-volume-off"></i></button>
+							<button id="consume" class="btn btn-cmd btn-toggle" title="Consume"><i class="icon-arrow-down"></i></button>
 						</div>
 					</div>
-					
-					<!-- TC volume up/down buttons -->
-					<div id="volbtns" style="margin-top: 10px;">
-						<button id="volumedn" class="btn btn-cmd btn-volume"><i class="icon-volume-down"></i></button>
-						<button id="volumeup" class="btn btn-cmd btn-volume"><i class="icon-volume-up"></i></button>
-					</div>
-
 				</div>
 
 				<!-- cover art and song metadata //newui -->
@@ -114,7 +117,9 @@
 						<div id="coverart-url" title="Google search"></div>
 						<div id="timeline">
 							<span id="m-countdown" href="#notarget"></span>
-							<input id="timetrack" type="range" min="0" max="100" value="0" step="1"><span id="m-total"></span></div>
+							<input id="timetrack" type="range" min="0" max="100" value="0" step="1" ontouchend="sliderTime(this.value)" ontouchstart="stopTimer()">
+							<span id="m-total"></span>
+						</div>
 						<div id="extratags"></div>
 						<span id="currentartist"></span>
 						<span id="currentsong"></span>
@@ -139,7 +144,7 @@
 				<form id="lib-album-search" method="post" onSubmit="return false;">
 					<div class="input-append">
 						<button class="btn" id="lib-search" title="Typedown search"><i class="icon-search"></i></button>
-						<input id="lib-album-filter" class="ttip" type="text" value="" placeholder="search albums" data-placement="bottom" data-toggle="tooltip">	
+						<input id="lib-album-filter" class="ttip" type="text" value="" placeholder="enter artist or album" data-placement="bottom" data-toggle="tooltip">	
 					</div>
 				</form>
 				<div id="lib-album-filter-results"></div>
@@ -323,7 +328,7 @@
 		<h3 id="addstation-modal-label">Create radio station</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" data-validate="parsley" action="" method="">
+		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group">
 	                <label class="control-label" for="add-station-name">Station name</label>
@@ -350,7 +355,7 @@
 		<h3 id="editstation-modal-label">Edit radio station</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" data-validate="parsley" action="" method="">
+		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group">
 	                <label class="control-label" for="edit-station-name">Station name</label>
@@ -392,7 +397,7 @@
 		<h3 id="deleteplitems-modal-label">Remove playlist items</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" data-validate="parsley" action="" method="">
+		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group">
 	                <label class="control-label" for="delete-plitem-begpos">Beginning item</label>
@@ -421,7 +426,7 @@
 		<h3 id="moveplitems-modal-label">Move playlist items</h3>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" data-validate="parsley" action="" method="">
+		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group">
 	                <label class="control-label" for="move-plitem-begpos">Beginning item</label>
@@ -491,20 +496,19 @@
 	</div>
 </div>
 
-<!-- VOLUME LIMIT WARNING -->	
-<div id="volumewarning-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="volumewarning-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="volumewarning-modal-label">Volume warning</h3>
-	</div>
-	<div class="modal-body">
-		<h4 id="volume-warning-text"></h4>
-		<div class="context-menu">
-			<a href="#notarget" data-cmd="customize" class="btn btn-primary btn-large btn-block" data-dismiss="modal">Change Warning Limit</a>
+<!-- VOLUME CONTROL POPUP -->
+<div id="volume-popup" class="modal modal-xs hide fade" tabindex="-1" role="dialog" aria-labelledby="volume-popup-label" aria-hidden="true">
+    <div class="modal-body">
+		<div id="volknob-2">
+			<!--div id="volcontrol-2" style="width:179px; height:179px; margin:auto;"-->
+			<div id="volcontrol-2">
+				<input readonly class="volumeknob" id="volume-2" data-min="0" data-max="100" data-width="100%" data-thickness="0.15" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#c0392b" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
+			</div>
+			<div class="volume-display" href="#notarget"></div>
+		</div>					
+		<div id="volbtns-2">
+			<button id="volumedn-2" class="btn btn-cmd btn-volume btn-primary" title="Vol down">&#8722;</button>
+			<button id="volumeup-2" class="btn btn-cmd btn-volume btn-primary" title="Vol up">+</button>
 		</div>
-	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	</div>
+    </div>
 </div>
-

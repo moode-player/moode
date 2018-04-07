@@ -21,6 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1
+ * - add configMpdOutputs()
+ * - add alsa bluetooth mpd output to moode.log
+ * - add raspbianver to moode.log and session
+ * - fix usbdrive listing in moode log
+ * - initialize playhistory log if not exist
+ * - start localui in worker rather than systemd
+ * - add btactive and aplactive socket handlers
+ * - revert from $_SESSION['res_boot_config_txt'] to '/boot/config.txt'
+ * - remove sps metadata routines
+ * - remove djmount
+ * - remove stop hciuart from btsvc
+ * - add wifi country to log
  *
  */
 
@@ -104,13 +117,15 @@ $mpdver = explode(" ", strtok(shell_exec('mpd -V | grep "Music Player Daemon"'),
 playerSession('write', 'mpdver', $mpdver[3]);
 $lastinstall = checkForUpd('/var/local/www/');
 $_SESSION['pkgdate'] = $lastinstall['pkgdate'];
+$result = sysCmd('cat /etc/debian_version'); // tpc r41
+$_SESSION['raspbianver'] = $result[0];
 
-/*// exit if running an unsupported hdwrrev
-if (substr($_SESSION['hdwrrev'], 0, 5) == '?????') {
+// exit if running an unsupported hdwrrev
+if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-CM3') {
 	workerLog('worker: Unsupported hardware platform (' . $_SESSION['hdwrrev'] . ')');
 	workerLog('worker: exited');
 	exit;
-}*/
+}
 
 // exit if running an unsupported kernel config
 if (($_SESSION['feat_bitmask'] & FEAT_ADVKERNELS) ||
@@ -130,6 +145,7 @@ if (($_SESSION['feat_bitmask'] & FEAT_ADVKERNELS) ||
 workerLog('worker: Host (' . $_SESSION['hostname'] . ')');
 workerLog('worker: Hdwr (' . $_SESSION['hdwrrev'] . ')');
 workerLog('worker: Arch (' . $_SESSION['procarch'] . ')');
+workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')'); // tpc r41
 workerLog('worker: Kver (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Ktyp (' . $_SESSION['kernel'] . ')');
 workerLog('worker: Gov  (' . $_SESSION['cpugov'] . ')');
@@ -149,7 +165,7 @@ if (file_exists('/boot/moodecfg.txt')) {
 $result = sysCmd('vcgencmd otp_dump | grep 17:');
 if ($result[0] == '17:3020000a') {
 	$msg = 'USB boot enabled';
-	sysCmd('sed -i /program_usb_boot_mode/d ' . $_SESSION['res_boot_config_txt']);
+	sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
 }
 else {
 	$msg = 'USB boot not enabled yet';
@@ -168,14 +184,12 @@ workerLog('worker: HDMI port ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
 // ensure certain files exist
 if (!file_exists('/var/local/www/currentsong.txt')) {sysCmd('touch /var/local/www/currentsong.txt');}
 if (!file_exists('/var/local/www/libcache.json')) {sysCmd('touch /var/local/www/libcache.json');}
-if (!file_exists('/var/local/www/playhistory.log')) {sysCmd('touch /var/local/www/playhistory.log');}
 if (!file_exists('/var/local/www/sysinfo.txt')) {sysCmd('touch /var/local/www/sysinfo.txt');}
 if (!file_exists('/var/log/moode.log')) {sysCmd('touch /var/log/moode.log');}
-// sps metadata
-if (!file_exists('/var/local/www/imagesw/spscover.jpg')) {sysCmd('touch /var/local/www/imagesw/spscover.jpg');}
-if (!file_exists('/var/local/www/imagesw/spscover.png')) {sysCmd('touch /var/local/www/imagesw/spscover.png');}
-if (!file_exists('/var/local/www/spscache.json')) {sysCmd('touch /var/local/www/spscache.json');}
-
+if (!file_exists('/var/local/www/playhistory.log')) {
+	sysCmd('touch /var/local/www/playhistory.log');
+	sysCmd('/var/www/command/util.sh clear-playhistory'); // tpc r41 initialize the file
+}
 // permissions
 sysCmd('chmod 0777 /var/lib/mpd/music/RADIO/*.*');
 sysCmd('chmod 0777 /var/local/www/currentsong.txt');
@@ -183,10 +197,6 @@ sysCmd('chmod 0777 /var/local/www/libcache.json');
 sysCmd('chmod 0777 /var/local/www/playhistory.log');
 sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 /var/log/moode.log');
-// sps metadata
-sysCmd('chmod 0777 /var/local/www/imagesw/spscover.jpg');
-sysCmd('chmod 0777 /var/local/www/imagesw/spscover.png');
-sysCmd('chmod 0777 /var/local/www/spscache.json');
 workerLog('worker: File check ok');
 
 //
@@ -217,6 +227,7 @@ $wlan0ip = '';
 $wlan0 = sysCmd('ip addr list | grep wlan0');
 if (!empty($wlan0[0])) {
 	workerLog('worker: wlan0 exists');
+	workerLog('worker: wifi country (' . $_SESSION['wificountry'] . ')');
 	$result = sdbquery('select * from cfg_network', $dbh);
 
 	 // CASE: no ssid
@@ -359,14 +370,19 @@ sysCmd("systemctl start mpd");
 sleep(2);
 workerLog('worker: MPD started');
 workerLog('worker: MPD scheduler policy ' . '(' . ($_SESSION['mpdsched'] == 'other' ? 'time-share' : $_SESSION['mpdsched']) . ')');
-// list mpd outputs, this covers the eq's
+// ensure valid mpd output config, tpc r41
+workerLog('worker: Configure MPD outputs');
+$mpdoutput = configMpdOutputs();
+sysCmd('mpc enable only ' . $mpdoutput);
+// report mpd outputs
 $sock = openMpdSock('localhost', 6600);
 sendMpdCmd($sock, 'outputs');
 $result = parseMpdOutputs(readMpdResp($sock));
-workerLog('worker: ' . $result[0]);
-workerLog('worker: ' . $result[1]);
-workerLog('worker: ' . $result[2]);
-workerLog('worker: ' . $result[3]);
+workerLog('worker: ' . $result[0]); // ALSA default
+workerLog('worker: ' . $result[1]); // ALSA crossfeed
+workerLog('worker: ' . $result[2]); // ALSA parametric eq
+workerLog('worker: ' . $result[3]); // ALSA graphic eq
+workerLog('worker: ' . $result[4]); // ALSA bluetooth, tpc r41
 // mpd crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
 
@@ -460,13 +476,25 @@ workerLog('worker: - Last');
 //
 
 // list usb sources
-$result = sysCmd('ls /media');
-$logmsg = $result[0] == '' ? 'none attached' : $result[0];
-workerLog('worker: USB sources ' . '(' . $logmsg . ')');
+$usbdrives = sysCmd('ls /media');
+if ($usbdrives[0] == '') {
+	workerLog('worker: USB sources (none attached)');
+}
+else {
+	foreach ($usbdrives as $usbdrive) {
+		workerLog('worker: USB source ' . '(' . $usbdrive . ')');	
+	}
+}
 
 // mount nas sources
-workerLog('worker: NAS sources (mountall initiated)');
 $result = wrk_sourcemount('mountall');
+workerLog('worker: NAS sources (' . $result . ')');
+
+// start localui
+if ($_SESSION['localui'] == '1') {
+	sysCmd('systemctl start localui');
+	workerLog('worker: LocalUI started');
+}
 
 // restore volume level
 sysCmd('/var/www/vol.sh ' . $_SESSION['volknob']);
@@ -491,9 +519,10 @@ if ($_SESSION['ashuffle'] == '1') {
 	workerLog('worker: Auto-shuffle started');
 }
 
-// clock radio globals
+// globals
 $ckstart = $_SESSION['ckradstart'];
 $ckstop = $_SESSION['ckradstop'];
+$aplactive = '0';
 
 // maintenance interval global
 $maint_interval = $_SESSION['maint_interval'];
@@ -530,29 +559,28 @@ while (1) {
 
 	if ($_SESSION['maint_interval'] != 0) {
 		chkMaintenance($maint_interval);
-	}
-
-	// Experimental: for usb hot-plug
-	if ($_SESSION['cardnum'] == '1') {
+	}	
+	if ($_SESSION['cardnum'] == '1') { // TEST experimental usb audio hot-plug mgt
 		sysCmd('alsactl store');
 	}
-
+	if ($_SESSION['btsvc'] == '1') {
+		chkBtActive();
+	}
+	if ($_SESSION['airplaysvc'] == '1') {
+		chkAplActive();
+	}
 	if ($_SESSION['extmeta'] == '1') {
 		updExtMetaFile();
 	}
-
  	if ($_SESSION['ckrad'] == 'Clock Radio') {
 		chkClockRadio();		
 	}
-
  	if ($_SESSION['ckrad'] == 'Sleep Timer') {
 		chkSleepTimer();		
 	}
-
 	if ($_SESSION['playhist'] == 'Yes') {
 		updPlayHistory();		
 	}
-
 	if ($_SESSION['w_active'] == 1 && $_SESSION['w_lock'] == 0) {
 		runQueuedJob();
 	}
@@ -560,8 +588,9 @@ while (1) {
 	session_write_close();	
 }
 
-// worker functions
-
+//
+// WORKER FUNCTIONS
+//
 function chkMaintenance($maint_interval) {
 	$maint_interval = $maint_interval - 3;
 	if ($maint_interval <= 0) {
@@ -572,6 +601,67 @@ function chkMaintenance($maint_interval) {
 	else {
 		$GLOBALS['maint_interval'] = $maint_interval;
 	}
+}
+
+ // tpc r41
+function chkBtActive() {
+	//workerLog('chkBtActive(): check for bluealsa-aplay task');
+	$result = sysCmd('pgrep -l bluealsa-aplay');
+	//workerLog('chkBtActive(): Session=(' . $_SESSION['btactive'] . ')');
+	if (strpos($result[0], 'bluealsa-aplay') !== false) {
+		// do this section only once 	
+		if ($_SESSION['btactive'] == '0') {
+			playerSession('write', 'btactive', '1');
+			//workerLog('chkBtActive(): send btactive1');
+			sendEngCmd('btactive1');
+			// set alsa vol to 100 if indicated
+			if ($_SESSION['alsavolume'] != 'none') {
+				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
+			}
+		}
+	}
+	else {
+		// do this section only once 	
+		if ($_SESSION['btactive'] == '1') {
+			playerSession('write', 'btactive', '0');
+			//workerLog('chkBtActive(): send btactive0');
+			sendEngCmd('btactive0');
+			// restore moOde vol
+			sysCmd('/var/www/vol.sh restore');
+			// resume mpd playback if indicated
+			if ($_SESSION['rsmafterbt'] == '1') {
+				sysCmd('mpc play');
+			}
+		}
+	}	
+}
+ // tpc r41
+function chkAplActive() {
+	//workerLog('chkAplActive(): check for Airplay active');
+	// get directly from sql since external spspre and spspost.sh scripts don't update the session
+	$result = sdbquery("SELECT value FROM cfg_system where PARAM='airplayactv'", cfgdb_connect());
+	//workerLog('chkAplActive(): SQL=(' . $result[0]['value'] . ')');
+
+	if ($result[0]['value'] == '1') {
+		//workerLog('chkAplActive(): Airplay active');
+		//workerLog('chkAplActive(): Global=(' . $GLOBALS['aplactive'] . ')');
+		// do this section only once 	
+		if ($GLOBALS['aplactive'] == '0') {
+			$GLOBALS['aplactive'] = '1';
+			//workerLog('chkAplActive(): send aplactive1');
+			sendEngCmd('aplactive1');
+		}
+	}
+	else {
+		//workerLog('chkAplActive(): Airplay not active');
+		//workerLog('chkAplActive(): Global=(' . $GLOBALS['aplactive'] . ')');
+		// do this section only once 	
+		if ($GLOBALS['aplactive'] == '1') {
+			$GLOBALS['aplactive'] = '0';
+			//workerLog('chkAplActive(): send aplactive0');
+			sendEngCmd('aplactive0');
+		}
+	}	
 }
 
 function updExtMetaFile() {
@@ -781,6 +871,9 @@ function updPlayHistory() {
 	}
 }
 
+//
+// PROCESS JOBS SUBMITTED
+//
 function runQueuedJob() {
 	$_SESSION['w_lock'] = 1;
 	workerLog('worker: Job ' . $_SESSION['w_queue']);
@@ -817,7 +910,7 @@ function runQueuedJob() {
 			// update config file
 			wrk_mpdconf($_SESSION['i2sdevice']);
 
-			// set hardware volume to 0dB (100) if mpd software or disabled and hdwr vol controller exists
+			// reset hardware volume to 0dB (100) if indicated
 			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') && $_SESSION['alsavolume'] != 'none') {
 				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
 			}
@@ -832,7 +925,7 @@ function runQueuedJob() {
 			// set knob and mpd/hardware volume to 0
 			sysCmd('/var/www/vol.sh 0');
 
-			// TEST for usb hot-plug
+			// TEST for usb audio hot-plug
 			if ($_SESSION['cardnum'] == '1') {
 				sysCmd('alsactl store');
 			}
@@ -840,7 +933,6 @@ function runQueuedJob() {
 			// restart renderers if device num changed
 			if ($_SESSION['w_queueargs'] == 'devicechg' && $_SESSION['airplaysvc'] == 1) {
 				sysCmd('killall shairport-sync');
-				sysCmd('rm /tmp/shairport-sync-metadata');
 				startSps();
 			}
 			break;
@@ -965,7 +1057,6 @@ function runQueuedJob() {
 			break;
 		case 'airplaysvc':
 			sysCmd('killall shairport-sync');
-			sysCmd('rm /tmp/shairport-sync-metadata');
 			playerSession('write', 'airplayactv', '0');
 			if ($_SESSION['airplaysvc'] == 1) {startSps();}
 			break;
@@ -973,7 +1064,6 @@ function runQueuedJob() {
 			sysCmd('/var/www/command/util.sh chg-name bluetooth ' . $_SESSION['w_queueargs']);
 			sysCmd('systemctl stop bluealsa');
 			sysCmd('systemctl stop bluetooth');
-			sysCmd('systemctl stop hciuart');
 			sysCmd('killall bluealsa-aplay');
 			if ($_SESSION['btsvc'] == 1) {startBt();}
 			break;
@@ -995,15 +1085,14 @@ function runQueuedJob() {
 			sysCmd('systemctl stop minidlna');
 			if ($_SESSION['dlnasvc'] == 1) {
 				startMiniDlna();
-			} else {
+			}
+			else {
 				syscmd('rm -rf /var/cache/minidlna/* > /dev/null');
-				sysCmd('umount /mnt/UPNP > /dev/null 2>&1 &');
 			}
 			break;
 		case 'dlnarebuild':
 			sysCmd('systemctl stop minidlna');
 			syscmd('rm -rf /var/cache/minidlna/* > /dev/null');
-			sysCmd('umount /mnt/UPNP > /dev/null');
 			sleep(2);
 			startMiniDlna();
 			break;
@@ -1035,7 +1124,7 @@ function runQueuedJob() {
 			sysCmd($cmd . ' > /dev/null');
 			break;
 		case 'maxusbcurrent':
-			$cmd = $_SESSION['w_queueargs'] == 1 ? 'echo max_usb_current=1 >> ' . $_SESSION['res_boot_config_txt'] : 'sed -i /max_usb_current/d ' . $_SESSION['res_boot_config_txt'];
+			$cmd = $_SESSION['w_queueargs'] == 1 ? 'echo max_usb_current=1 >> ' . '/boot/config.txt' : 'sed -i /max_usb_current/d ' . '/boot/config.txt';
 			sysCmd($cmd);
 			break;
 		case 'uac2fix':
@@ -1052,11 +1141,10 @@ function runQueuedJob() {
 			sysCmd('mpc stop && reboot');
 			break;
 		case 'usbboot':
-			sysCmd('sed -i /program_usb_boot_mode/d ' . $_SESSION['res_boot_config_txt']); // remove first to prevent duplicate adds
-			sysCmd('echo program_usb_boot_mode=1 >> ' . $_SESSION['res_boot_config_txt']);
+			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // remove first to prevent duplicate adds
+			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
 			break;
 		case 'localui':
-			sysCmd('sudo systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'enable' : 'disable') . ' localui');
 			sysCmd('sudo systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'start' : 'stop') . ' localui');
 			break;
 		case 'touchscn':
@@ -1075,9 +1163,9 @@ function runQueuedJob() {
 		case 'scnbrightness':
 			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
 		case 'scnrotate':
-			sysCmd('sed -i /lcd_rotate/d ' . $_SESSION['res_boot_config_txt']);
+			sysCmd('sed -i /lcd_rotate/d ' . '/boot/config.txt');
 			if ($_SESSION['w_queueargs'] == '180') {
-				sysCmd('echo lcd_rotate=2 >> ' . $_SESSION['res_boot_config_txt']);
+				sysCmd('echo lcd_rotate=2 >> ' . '/boot/config.txt');
 			}
 			break;
 		case 'keyboard':

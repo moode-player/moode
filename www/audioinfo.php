@@ -39,17 +39,21 @@ $hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnu
 // mpd.conf
 $mpdconf = parseCfgMpd($dbh);
 
-// bluetooth session
-$btAplay = sysCmd('pgrep bluealsa-aplay');
+// bluetooth
+$result = sysCmd('pgrep -l bluealsa-aplay');
+$btactive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 
-// input
+//
+// IMPUT PROCESSING
+//
+
 if ($_SESSION['airplayactv'] == '1') {
 	$file = 'Airplay stream';
 	$encoded_at = 'Unknown';
 	$decoded_to = '16 bit, 44.1 kHz, Stereo';
 	$decode_rate = 'VBR';
 }
-elseif ($btAplay[0] != '') {
+elseif ($btactive === true) {
 	$file = 'Bluetooth stream';
 	$encoded_at = 'Unknown';
 	$decoded_to = '16 bit, 44.1 kHz, Stereo';
@@ -137,6 +141,8 @@ else {
 			$decoded_to .= empty($status['audio_sample_rate']) ? '' : ' kHz, ' . $status['audio_channels'];
 			$decode_rate = $status['bitrate'];
 		}
+
+		$decode_rate = ', ' . $decode_rate;
 	}
 	else {
 		$decoded_to = '';
@@ -144,12 +150,12 @@ else {
 	}
 }
 
-// DSP
+//
+// DSP OPERATIONS
+//
 
-$btactive = sysCmd('pgrep bluealsa-aplay');
-$current['btactive'] = $result[0] == '' ? '0' : '1';
 // dsp only applies to mpd
-if ($_SESSION['airplayactv'] == '1' || $btactive[0] != '' || $_SESSION['slsvc'] == '1') {
+if ($_SESSION['airplayactv'] == '1' || $_SESSION['slsvc'] == '1' || $btactive[0] === true) {
 	$resampler = 'n/a';
 	$resampler_format = '';
 	$crossfeed = 'n/a';
@@ -209,10 +215,13 @@ else {
 	$volume = 'Disabled (100% volume level is output by MPD)';
 }
 
-// output
+//
+// OUTPUT PROCESSING
+//
+
 if ($hwparams['status'] == 'active') {
 	$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
-	$hwparams_calcrate = $hwparams['calcrate'] . ' mbps';
+	$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' mbps';
 }
 else {
 	$hwparams_format = '';

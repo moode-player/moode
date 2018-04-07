@@ -26,6 +26,7 @@
  * - try_files $uri $uri/ /coverart.php;
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 set search priority to 0
  *
  */
 
@@ -37,7 +38,7 @@ set_include_path('inc');
 // image search priority
 // 0: search for embedded image first (default)
 // 1: search for image file first
-define('SEARCH_PRI', 1);
+define('SEARCH_PRI', 0);
 
 // uncomment these if using randomized symlink in a session var
 //session_start();

@@ -17,6 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1
+ * - streamline modals
+ * - add wificountry
+ * - add input pattern to SSID popup
+ * - remove data-validate="parsley"
  *
  */
 -->	
@@ -29,7 +34,7 @@
     	<a data-toggle="modal" href="#restart-modal">RESTART</a> to make setting changes effective
 	</p>
 
-	<form class="form-horizontal" data-validate="parsley" method="post">
+	<form class="form-horizontal" method="post">
     	<legend>
 			Settings &nbsp;<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button>
 		</legend>
@@ -119,12 +124,10 @@
 					<button class="btn btn-primary btn-small set-button" type="submit" name="scan" value="1">Scan</button>
 					<a class="info-toggle" data-cmd="info-wlan0ssid" href="#notarget"><i class="icon-info-sign"></i></a>
 					<span id="info-wlan0ssid" class="help-block-configs help-block-margin hide">
-						Press the SCAN button to generate a list of available SSID's.<br>
-						Select 'blank' to clear the SSID and activate AP mode after restart.<br>
-						Click 'Enter SSID manually' to enter an SSID that does not appear after scanning.
+						SCAN generates a list of available SSID's.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
-						<a data-toggle="modal" href="#manual-ssid">ENTER</a> SSID manually<br>
+						<a id="editssid" data-toggle="modal" href="#manual-ssid">EDIT</a> SSID manually<br>
 						<!--a data-toggle="modal" href="#manage-network-list">Manage</a> Network list<br-->
 					</span>
 				</div>
@@ -150,6 +153,19 @@
 					<a class="info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="icon-info-sign"></i></a>
 					<span id="info-wlan0pwd" class="help-block-configs help-block-margin hide">
                     	Length 8-63 chars. NOTE: Single and double quotes are not allowed.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="wlan0country">Country</label>
+				<div class="controls">
+					<select id="wlan0country" name="wlan0country" class="input-large">
+						$_wlan0country
+					</select>
+					<a class="info-toggle" data-cmd="info-wlan0country" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span id="info-wlan0country" class="help-block-configs help-block-margin hide">
+						The country code determines what frequency bands the WiFi adapter supports.<br>
                     </span>
 				</div>
 			</div>
@@ -240,7 +256,6 @@
 	<div id="net-config-defaults" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="net-config-defaults-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Reset Network Configuration</h3>
 		</div>
 		
 		<div class="modal-body">
@@ -260,16 +275,15 @@
 	<div id="manual-ssid" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="manual-ssid-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Enter SSID manually</h3>
 		</div>
 		
 		<div class="modal-body">
 			<div class="control-group">
 				<label class="control-label" for="wlan0otherssid">SSID</label>
 				<div class="controls">
-					<input class="input-large" type="text" id="wlan0otherssid" name="wlan0otherssid" value="">
+					<input class="input-large" type="text" pattern="[A-Za-z0-9\-]{3,32}" id="wlan0otherssid" name="wlan0otherssid" value="">
 					<a class="info-toggle" data-cmd="info-manualssid" href="#notarget"><i class="icon-info-sign"></i></a>
-					<span id="info-manualssid" class="help-block-configs help-block-margin hide">
+					<span id="info-manualssid" class="help-block hide">
                     	Length 2-32 chars.
                     </span>
 				</div>

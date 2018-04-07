@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 remove data-validate="parsley"
  *
  */
 -->	
@@ -28,7 +29,7 @@
     	<a href="snd-config.php">BACK</a> to Audio configuration page
     </p>
 
-    <form class="form-horizontal" data-validate="parsley" action="" method="post">
+    <form class="form-horizontal" action="" method="post">
     	<legend>Settings &nbsp;<button type="submit" class="btn btn-primary btn-small" name="apply" value="1">Apply</button></legend>
     
         <fieldset>
@@ -70,7 +71,7 @@
             <div class="control-group">
                 <label class="control-label" for="task-priority">Task priority</label>
                 <div class="controls">
-                    <input class="input-large" type="text" id="task-priority" name="config[TASKPRIORITY]" value="$_sl_select[task_priority]" min="1" max="99">
+                    <input class="input-large" type="number" id="task-priority" name="config[TASKPRIORITY]" value="$_sl_select[task_priority]" min="1" max="99">
 					<a class="info-toggle" data-cmd="info-task-priority" href="#notarget"><i class="icon-info-sign"></i></a>
 					<span id="info-task-priority" class="help-block-configs help-block-margin hide">
                     	Default priority is 45, min/max priority is 1/99

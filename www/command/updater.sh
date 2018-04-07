@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2018-01-26 TC moOde 4.0
+# 2018-04-02 TC moOde 4.1 add error checking
 #
 
 # $1 = rXY ex: r26
@@ -32,9 +33,14 @@ rm update-$1.zip
 
 chmod -R 0755 update
 update/install.sh
-rm -rf update
 
-wget -q $URL/update-$1.txt -O update-$1.txt
-echo "Update installed, REBOOT required"
+if [ $? -ne 0 ] ; then
+	echo "Update cancelled"
+else
+	wget -q $URL/update-$1.txt -O update-$1.txt
+	echo "Update installed, REBOOT required"
+fi
+
+rm -rf update
 
 cd ~/

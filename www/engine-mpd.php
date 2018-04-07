@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 access-control-origin not needed
  *
  */
  
@@ -84,7 +85,10 @@ debugLog('engine-mpd: Metadata returned to client: Size=(' . sizeof($current) . 
 //}
 
 //debugLog('engine-mpd: Metadata returned to client: Json=(' . json_encode($current) . ')');
-header('Access-Control-Allow-Origin: *');
+
+// TEST I don't think this is needed
+//header('Access-Control-Allow-Origin: *');
+
 echo json_encode($current);
 
 closeMpdSock($sock);

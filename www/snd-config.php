@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 add setting for resume mpd after bt
  *
  */
 
@@ -165,6 +166,11 @@ if (isset($_POST['update_bt_settings'])) {
 if (isset($_POST['update_bt_multi'])) {
 	playerSession('write', 'btmulti', $_POST['btmulti']);
 	submitJob('btmulti', '', ($_POST['btmulti'] == 1 ? 'Speaker sharing on' : 'Speaker sharing off'), '');
+}
+// resume mpd after bt
+if (isset($_POST['update_rsmafterbt'])) {
+	playerSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
+	$_SESSION['notify']['title'] = $_POST['rsmafterbt'] == 1 ? 'Resume MPD on' : 'Resume MPD off';
 }
 // restart bluetooth
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
@@ -394,6 +400,8 @@ $_select['btsvc0'] .= "<input type=\"radio\" name=\"btsvc\" id=\"togglebtsvc2\" 
 $_select['btname'] = $_SESSION['btname'];
 $_select['btmulti1'] .= "<input type=\"radio\" name=\"btmulti\" id=\"togglebtmulti1\" value=\"1\" " . (($_SESSION['btmulti'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['btmulti0'] .= "<input type=\"radio\" name=\"btmulti\" id=\"togglebtmulti2\" value=\"0\" " . (($_SESSION['btmulti'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$_select['rsmafterbt'] .= "<option value=\"1\" " . (($_SESSION['rsmafterbt'] == '1') ? "selected" : "") . ">Yes</option>\n";
+$_select['rsmafterbt'] .= "<option value=\"0\" " . (($_SESSION['rsmafterbt'] == '0') ? "selected" : "") . ">No</option>\n";
 $_bt_restart = $_SESSION['btsvc'] == '1' ? '#bt-restart' : '#notarget';
 
 // airplay

@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1 remove data-validate="parsley"
  *
  */
 -->	
@@ -29,12 +30,12 @@
     	<a data-toggle="modal" href="#rm-curve">REMOVE</a> EQ curve
     </p>
 
-    <form class="form-horizontal" data-validate="parsley" action="" method="post">
+    <form class="form-horizontal" action="" method="post">
     	<legend>Settings &nbsp;
 			<button type="submit" class="btn btn-primary btn-small" name="apply" value="1">Apply</button>&nbsp;
 			<button type="submit" class="btn btn-primary btn-small" name="play" value="1" $_disable_play><i class="icon-play"></i></button>
 			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="icon-info-sign"></i></a>
-			<span id="info-buttons" class="help-block-configs help-block-margin hide" style="line-height: 16px; padding-bottom: 10px;">
+			<span id="info-buttons" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
 				APPLY: updates the curve table only.<br>
 				PLAY: updates the active curve config. EQ must be turned on in Audio config to enable Play.<br>
             </span>

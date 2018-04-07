@@ -58,7 +58,7 @@ body {
 
 a {
   color: #c0392b; /* theme: highlight color */
-  /* text-decoration: underline; TC (Tim Curtis) 2015-05-30: comment out */
+  /* text-decoration: underline; TC 2015-05-30: comment out */
   text-decoration: none;
   -webkit-transition: 0.25s;
   -moz-transition: 0.25s;
@@ -116,7 +116,7 @@ h6 {
   transition: 0.25s;
   -webkit-backface-visibility: hidden; }
   .btn:hover, .btn:focus {
-  /* TC (Tim Curtis) 2014-11-30
+  /* TC 2014-11-30
 	- disable hover highlight by setting hover background same as btn background
 	background-color: #4e6d8d;
   */

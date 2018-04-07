@@ -96,7 +96,7 @@ SETUP INSTRUCTIONS
     - AP mode
     a) http://moode.local
     b) Browse, SDCARD, Stereo Test
-	c) [...] Menu for "LR Channel And Phase" track
+	c) Menu for "LR Channel And Phase" track
 	d) Play
 
  At this point a FULLY OPERATIONAL PLAYER exists.
@@ -140,8 +140,7 @@ SETUP INSTRUCTIONS
     a) change values in the file below
     b) paste contents into /boot/moodecfg.txt
     c) sudo reboot
-    d) join SSID if AP mode
-    e) http://hostname.local
+    d) join APDSSID if using AP mode, then http://hostname.local
  
 ##########################################
 # Copy this file to /boot/moodecfg.txt
@@ -172,6 +171,7 @@ dlnasvc=0
 wlanssid=MySSID
 wlansec=wpa
 wlanpwd=MyPassword
+wlancountry=US
 apdssid=Moode
 apdchan=6
 apdpwd=moodeaudio

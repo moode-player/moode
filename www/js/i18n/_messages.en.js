@@ -55,7 +55,7 @@ window.ParsleyConfig = window.ParsleyConfig || {};
       , equalto:        "This value should be the same."
 
       // parsley.extend ///////////////////////////////
-      // TC (Tim Curtis) 2014-08-23, r1.0
+      // TC 2014-08-23, r1.0
       // this line was throwing an error...
       //, minwords:       "Aquest valor ha de tenir %s paraules com a mínim."
       ,  minwords:       "This value should have %s words at least."

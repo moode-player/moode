@@ -19,6 +19,14 @@
  * http://www.gnu.org/licenses/
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-04-02 TC moOde 4.1
+ * - add overflow:hidden to #content-position to prevent horiz scrollbar from appearing on pi touch
+ * - add padding: 0 to html, body {}
+ * - reduce help-block-margin
+ * - add some margin to .database .db-action
+ * - reduce size of font for #volume (input#volume.volumeknob)
+ * - thumb.svg for #timeline
+ * - center the thumb for #timeline
  *
  */
 
@@ -30,6 +38,7 @@ html, body {
 	height:100%;
 	color: #eee;
 	font-family: "Avenir Next", "Lato";
+	padding:0; /* tpc r41 */
 }
 html {
 	background-color:inherit;
@@ -116,7 +125,7 @@ html {
 	color: inherit;
 	opacity:.55;*/
 }
- /* playback panel with integrated playlist */
+
 .container-playback {
 	padding: 0px;
 	color:inherit;
@@ -150,14 +159,31 @@ html {
 	position: relative;
 	padding: 30px 0 13px;
 	margin-top: 10px;
-	height: 180px;
+	/*height: 180px;*/ /* tpc r41 move this to #countdown div */
 }
 #volknob {
 	position: relative;
-	padding: 13px 0 0;
+	padding: 10px 0 0; /* tpc r41 was 13px */
 }
-#volumeslider, #mobile-toolbar, #timeline { /*newui*/
+
+#volknob-2 {padding-top:20px;}
+#volbtns {margin-top: -40px;position:absolute;left:50%;width:110px;margin-left:-55px;}
+#volbtns-2 {margin-top: -40px;margin-bottom:20px;} /* was 30px */
+#volumedn, #volumeup {font-size:24px;padding: 15px 12px;}
+#volumedn, #volumedn-2 {margin-right:15px;}
+#volumeup, #volumeup-2 {margin-left:15px;}
+#volumedn-2, #volumeup-2 {font-size:26px;padding: 15px 12px;}
+
+/* tpc r41 remove #volumeslider */
+#mobile-toolbar, #timeline { /*newui*/
 	display:none;
+}
+/* tpc r41 add */
+#mvol-progress {
+	background-color:#c0392b;
+	height:2px;
+	width:0%; 
+	margin-top:-2px;
 }
 
 /* http://jsbin.com/zequpafato/edit?html,css,js,output */
@@ -169,9 +195,21 @@ input[type='range'] {
   height: 1em;
   border-radius: .25em;
   background: transparent;
-  font-size: 1.5em;
+  font-size: 1em; /* tpc r41 live timeline thumb size */
   cursor: pointer;
 }
+#timeline input[type='range']::-webkit-slider-thumb {
+  /*background: rgba(96,96,96,0.9);*/ /* tpc r41 live timeline thumb bg */
+  background: transparent;
+  height:15px;
+  width:13px;
+  border-radius:0px;
+  box-shadow:none;
+  background-image:url(../imagesw/thumb.svg);
+  background-position: center;
+  margin-top:-6px;
+}
+
 input[type='range'], 
 input[type='range']::-webkit-slider-runnable-track, 
 input[type='range']::-webkit-slider-thumb {
@@ -235,20 +273,6 @@ input[type='range']::-ms-thumb {
   box-shadow: 0 0 0.125em #333;
   background: #fff;
 }
-#timeline input[type='range']::-webkit-slider-thumb {
-  margin-top: -1px;
-  border: none;
-  width: 4px;
-  border-radius:50%;
-  height: 4px;
-  box-shadow: none;
-  background: rgba(96,96,96,0.9);
-}
-#timeline input[type='range']::-webkit-slider-thumb :active {
-  width: 0.75em;
-  height: 0.75em;
-}
-
 input[type='range']::-ms-tooltip {
   display: none;
 }
@@ -263,16 +287,40 @@ input[type='range']:focus {
 #time {
 	visibility: hidden;
 }
-#countdown, #volcontrol {
-	color: #cc7700;
-}
-#volcontrol {
+
+/* tpc r41 if this is #volcontrol div {} then the knob grows and shrinks with window size, very odd :-0 */
+#volcontrol, #volcontrol-2 {
+	margin: auto;
 	height: 179px;
-	/*width:179px;*/
+	width: 179px;
+}
+/* tpc r41 add #volume-display */
+.volume-display {
+	position: absolute;
+	width: 80px;
+	height: 60px;
+	top: 50%;
+	left: 50%;
+	font-size: 32px;
+	font-weight: bold;
+	margin-top: -35px;
+	margin-left: -39px;
+	padding-top:20px;
+	cursor: pointer;
+	color: #c0392b;
+}
+
+#volknob-2 .volume-display {
+	margin-top:-40px !important;
+}
+ /* tpc r41 using .volume-display to overlay this element so it can be used as a mute toggle */
+#volume, #volume-2 {
+	display:none;
 }
 
 #countdown div {
 	margin: 0 auto;
+	height: 176px;
 }
 .countdown-caret {
 	margin-left: 8px;
@@ -284,10 +332,11 @@ input[type='range']:focus {
 	top: 50%;
 	left: 50%;
 	width: 120px;
-	margin-top: -19px;
+	margin-top: -15px;
 	margin-right: 0px;
 	margin-bottom: 0px;
 	margin-left: -59px;
+	font-size: 28px;
 	font-weight: bold;
 	cursor: pointer;
 }
@@ -298,6 +347,7 @@ input[type='range']:focus {
 	width: 60px;
 	margin: -10px 0 0 -20px;
 }
+
 #days-sub {
     left: 80px;
 }
@@ -309,19 +359,6 @@ input[type='range']:focus {
 }
 #secs-sub {
     left: 555px;
-}
-.volumeknob {
-	width: 200px;
-	height: 200px;
-	background: none;
-	border: none;
-}
-#volume {
-	font-family: inherit !important;
-	font-weight: bold;
-}
-.volume2 {
-	padding-top: 30px;
 }
 
 #menu-top, #menu-bottom {
@@ -733,7 +770,7 @@ pl-filter ::placeholder {
 	width:35px;
 	padding:0px;
 	height:29px;
-	margin-right:10px;
+	margin-right:20px; /* tpc r41, was 10px */
 	vertical-align:middle;
 }
 .playlist .pl-action a, .playlist .db-action a {
@@ -927,9 +964,6 @@ pl-filter ::placeholder {
 	width: 200px;
 }
 
-#toolbar-btn {
-	display:none;
-}
 #db-controls {
 	float: left;
 }
@@ -1175,7 +1209,7 @@ i.dx {
 	font-size: 13px;
 }
 .help-block-margin {
-	margin-top:10px;
+	margin-top:5px; /* tpc r41 was 10px */
 }
 .help-block-configs {
     color: #888;
@@ -1307,6 +1341,7 @@ ul.parsley-error-list li {
 	width:100%;
 	display:flex;
 	position:absolute;
+	overflow: hidden; /* tpc r41 prevents horiz scrollbar from apprearing on pi touch lib panel */
 }
 #top-columns {
 	height: 50%;

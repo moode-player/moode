@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2018-01-26 TC moOde 4.0
+# 2018-04-02 TC moOde 4.1 remove vol warning
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -34,13 +35,12 @@ if [[ $1 = "-help" ]]; then
 fi
 
 # get config settings
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where id in ('32', '33', '34', '36', '37', '77')")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where id in ('32', '33', '36', '37', '77')")
 
 # friendly names
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
 VOLMUTE=${arr[1]}
-VOLWARNING=${arr[2]}
 AMIXNAME=${arr[3]}
 MPDMIXER=${arr[4]}
 CARDNUM=${arr[5]}
@@ -81,13 +81,12 @@ else
 	# range check
 	if (( $LEVEL < 0 )); then
 		LEVEL=0
-	elif (( LEVEL > VOLWARNING )); then
-		echo "Volume exceeds warning limit $VOLWARNING"
-		exit 1
-	else
-		# update knob level
-		sqlite3 $SQLDB "update cfg_system set value=$LEVEL where id='32'"
+	elif (( $LEVEL > 100 )); then
+		LEVEL=100
 	fi
+
+	# update knob level
+	sqlite3 $SQLDB "update cfg_system set value=$LEVEL where id='32'"
 fi
 
 # mute if indicated

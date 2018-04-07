@@ -21,6 +21,13 @@
 #
 # 2017-03-03 KS initial version (rev 4)
 # 2018-01-26 TC moOde 4.0
+# 2018-04-02 TC moOde 4.1
+# - add raspbian version info
+# - add 2>&1 and FNR to awk command for PHPVER
+# - fix audiodevname not being set correctly
+# - change cfg_system id 70 from ktimerfreq to rsmafterbt
+# - change cfg_system id 83 from res_boot_config_txt to btactive
+# - replace volwarning with wificountry 
 #
 
 FREQ() { 
@@ -61,7 +68,7 @@ AUDIO() {
 	ALSAVER="$(dpkg -l | awk '/libasound2:armhf/ { print  $3 }')"
 	SOXVER="$(dpkg -l | awk '/libsoxr0:armhf/ { print  $3 }')"
 
-	if [[ $adevname = "none" ]]; then
+	if [[ $i2sdevice = "none" ]]; then
 		[[ $device = "0" ]] && audiodevname="On-board audio device" || audiodevname="USB audio device"
 	else
 		audiodevname=$adevname
@@ -102,7 +109,6 @@ AUDIO() {
 	echo -e "\n\c"
 	echo -e "\n\tVolume knob\t\t= $volknob\c"
 	echo -e "\n\tVolume mute\t\t= $volmute\c"
-	echo -e "\n\tVolume limit\t\t= $volwarning\c"
 	echo -e "\n\c"
 	echo -e "\n\tBluetooth controller\t= $btsvc\c"
 
@@ -148,7 +154,6 @@ AUDIO() {
 		echo -e "\t  A I R P L A Y    S E T T I N G S  \n"
 		echo -e "\tVersion\t\t\t= $SPSVER\c"
 		echo -e "\n\tFriendly name\t\t= $airplayname\c"
-		echo -e "\n\tMetadata display\t= $airplaymeta2\c"
 		echo -e "\n\tALSA device\t\t= hw:$device\c"
 		echo -e "\n\tVolume mixer\t\t= $airplayvol\c"
 		echo -e "\n\tResume MPD after\t= $rsmaftersps\c"
@@ -190,6 +195,7 @@ FEAT_SQUEEZELITE=2#00010000
 FEAT_UPMPDCLI=2#00100000
 
 HOSTNAME=`uname -n`
+RASPBIANVER=`cat /etc/debian_version`
 KERNEL=`uname -r`
 CPU=`cat /proc/cpuinfo | grep "Hardware" | cut -f 2 -d ":" | tr -d " "`
 CORES=`grep -c ^processor /proc/cpuinfo`
@@ -248,10 +254,10 @@ fi
 
 TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
 
-PHPVER=$(php -v | awk 'NR==1{ print $2 }' | cut -c-6)
+PHPVER=$(php -v 2>&1 | awk 'FNR==1{ print $2 }' | cut -c-6)
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
-BTVER=$(bluetoothctl -v)
+BTVER=$(bluetoothd -v)
 
 # Moode release
 mooderel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
@@ -331,12 +337,9 @@ pldisp=${arr[27]}
 autofocus=${arr[28]}
 timecountup=${arr[29]}
 themecolor=${arr[30]}
-#volcurve=${arr[31]}
-#volcurvefac=${arr[32]}
-#volmaxpct=${arr[33]}
 volknob=${arr[31]}
-[[ "${arr[32]}" = "1" ]] && volmute="On" || volmute="Off"
-volwarning=${arr[33]}
+[[ "${arr[32]}" = "1" ]] && volmute="Muted" || volmute="Unmuted"
+wificountry=${arr[33]}
 alsavolume=${arr[34]}
 amixname=${arr[35]}
 mpdmixer=${arr[36]}
@@ -372,7 +375,7 @@ airplayvol=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
 [[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
 libartistcol=${arr[68]}
-ktimerfreq=${arr[69]}
+rsmafterbt=${arr[69]}
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
 alsaequal=${arr[72]}
@@ -390,7 +393,7 @@ btname=${arr[78]}
 btmulti=${arr[79]}
 feat_bitmask=${arr[80]}
 engine_mpd_sock_timeout=${arr[81]}
-res_boot_config_txt=${arr[82]}
+btactive=${arr[82]}
 touchscn=${arr[83]}
 scnblank=${arr[84]}
 scnrotate=${arr[85]}
@@ -414,17 +417,13 @@ else
 	USBBOOT="not available"
 fi
 
-if [[ $ktimerfreq = 100 ]]; then
-	modprobe configs 
-	test -f /proc/config.gz && {
-		HZ=$(zcat /proc/config.gz | grep "^CONFIG_HZ=" | cut -f 2 -d "=")
-	} || {
-		HZ="No /proc/config.gz - default 1000"
-	}
-	rmmod configs
-else
+modprobe configs 
+test -f /proc/config.gz && {
 	HZ=$(zcat /proc/config.gz | grep "^CONFIG_HZ=" | cut -f 2 -d "=")
-fi
+} || {
+	HZ="No /proc/config.gz"
+}
+rmmod configs
 
 ########################################################
 # Output
@@ -445,11 +444,13 @@ echo "
 	ETH0  MAC	= $ETH0MAC
 	WLAN0 IP	= $WLAN0IP
 	WLAN0 MAC	= $WLAN0MAC
+	WiFi country	= $wificountry
 
 	HDWR REV	= $hdwrrev
 	SoC 		= $CPU
 	CORES		= $CORES
 	ARCH		= $ARCH
+	RASPBIAN	= $RASPBIANVER
 	KERNEL		= $KERNEL
 	KTIMER FREQ	= $HZ Hz
 	USB BOOT	= $USBBOOT

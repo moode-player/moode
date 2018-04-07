@@ -20,6 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-01-26 TC moOde 4.1
+ * - chg audio buffer input from text to numeric
+ * - remove data-validate="parsley"
  *
  */
 -->	
@@ -31,7 +34,7 @@
     	<a href="snd-config.php">BACK</a> to Audio configuration page
     </p>
 
-    <form class="form-horizontal" data-validate="parsley" action="" method="post">
+    <form class="form-horizontal" action="" method="post">
     	<legend>Settings &nbsp;<button type="submit" class="btn btn-primary btn-small" name="save" value="save">Apply</button></legend>
     
         <fieldset>
@@ -161,7 +164,7 @@
             <div class="control-group">
                 <label class="control-label" for="audio-buffer-size">Audio buffer size (KB)</label>
                 <div class="controls">
-                    <input class="input-large" type="text" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4096" max="65535">
+                    <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4096" max="65535">
 					<a class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="icon-info-sign"></i></a>
 					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
                     	Default size is 4096 KB, min/max size is 4096/65535.
