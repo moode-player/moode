@@ -20,6 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-07-11 TC moOde 4.2
+ * - add clear chrome browser cache to LocalUI settings
+ * - add additional timeouts to screen blank
+ * - minor format cleanup
  *
  */
 
@@ -239,17 +243,22 @@ if (isset($_POST['update_scnblank'])) {
 // screen blank timeout
 if (isset($_POST['update_scnbrightness'])) {
     if (isset($_POST['scnbrightness']) && $_POST['scnbrightness'] != $_SESSION['scnbrightness']) {
-        submitJob('scnbrightness', $_POST['scnbrightness'], 'Setting updated');
-        playerSession('write', 'scnbrightness', $_POST['scnbrightness']);
+		submitJob('scnbrightness', $_POST['scnbrightness'], 'Setting updated');
+		playerSession('write', 'scnbrightness', $_POST['scnbrightness']);
     }
 }
 
 // screen rotation
 if (isset($_POST['update_scnrotate'])) {
     if (isset($_POST['scnrotate']) && $_POST['scnrotate'] != $_SESSION['scnrotate']) {
-        submitJob('scnrotate', $_POST['scnrotate'], 'Setting updated', 'Reboot required');
-        playerSession('write', 'scnrotate', $_POST['scnrotate']);
+		submitJob('scnrotate', $_POST['scnrotate'], 'Setting updated', 'Reboot required');
+		playerSession('write', 'scnrotate', $_POST['scnrotate']);
     } 
+}
+
+// browser cache
+if (isset($_POST['update_clear_browser_cache'])) {
+	submitJob('clearbrcache', '', 'Cache cleared', 'Refresh Browser on LocalUI');
 }
 
 // LOCAL SERVICES
@@ -293,12 +302,12 @@ if (isset($_POST['update_clear_syslogs'])) {
 
 // clear play history log
 if (isset($_POST['update_clear_playhistory'])) {
-	submitJob('clearplayhistory', '', 'Play history log cleared', '');
+	submitJob('clearplayhistory', '', 'Playback history cleared', '');
 }
 
 // compact sqlite database
 if (isset($_POST['update_compactdb'])) {
-	submitJob('compactdb', '', 'SQlite database has been compacted', '');
+	submitJob('compactdb', '', 'SQlite DB compacted', '');
 }
 
 // debug logging
@@ -395,10 +404,12 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['touchscn0'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggletouchscn2\" value=\"0\" " . (($_SESSION['touchscn'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 	
 	// screen blank
+	$_select['scnblank'] .= "<option value=\"off\" " . (($_SESSION['scnblank'] == 'off') ? "selected" : "") . ">Never</option>\n";
+	$_select['scnblank'] .= "<option value=\"300\" " . (($_SESSION['scnblank'] == '300') ? "selected" : "") . ">5 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"600\" " . (($_SESSION['scnblank'] == '600') ? "selected" : "") . ">10 Mins</option>\n";
+	$_select['scnblank'] .= "<option value=\"1200\" " . (($_SESSION['scnblank'] == '1200') ? "selected" : "") . ">20 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"1800\" " . (($_SESSION['scnblank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"3600\" " . (($_SESSION['scnblank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
-	$_select['scnblank'] .= "<option value=\"off\" " . (($_SESSION['scnblank'] == 'off') ? "selected" : "") . ">Never</option>\n";
 
 	// backlight brightess
 	$_select['scnbrightness'] = $_SESSION['scnbrightness'];

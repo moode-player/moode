@@ -28,6 +28,13 @@
 # - change cfg_system id 70 from ktimerfreq to rsmafterbt
 # - change cfg_system id 83 from res_boot_config_txt to btactive
 # - replace volwarning with wificountry 
+# 2018-07-11 TC moOde 4.2
+# - deprecate rsmaftersps in cfg_airplay, replace with rsmafterapl from cfg_system
+# - add slactive, rsmaftersl from cfg_system
+# - add section for Bluetooth settings
+# - use "Controller detected" instead of value for HWVOL
+# - add Pi-3B+ 1GB v1.3 to hdwrrev
+# - change df cmd to use /dev/root instead of root
 #
 
 FREQ() { 
@@ -80,7 +87,7 @@ AUDIO() {
 		iface="I2S"
 	fi
 
-	[[ $alsavolume = "none" ]] && hwvol="None" || hwvol=$alsavolume
+	[[ $alsavolume = "none" ]] && hwvol="None" || hwvol="Controller detected"
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
 	
 	echo -e "\t  U I  C U S T O M I Z A T I O N S  \n"
@@ -119,7 +126,7 @@ AUDIO() {
 		echo -e "\n\tSqueezelite\t\t= $slsvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_UPMPDCLI)) -ne 0 ]; then
-		echo -e "\n\tUPnP renderer\t\t= $upnpsvc\c"
+		echo -e "\n\tUPnP client\t\t= $upnpsvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_MINIDLNA)) -ne 0 ]; then
 		echo -e "\n\tDLNA server\t\t= $dlnasvc\c"
@@ -149,6 +156,12 @@ AUDIO() {
 	echo -e "\n\tDSD over PCM (DoP)\t= $dop\c"
 	echo -e "\n\tReplay gain\t\t= $replaygain\n"
 
+	echo -e "\t  B L U E T O O T H    S E T T I N G S  \n"
+	echo -e "\tBluetooth ver\t\t= $BTVER\c"
+	echo -e "\n\tBluealsa ver\t\t= $BAVER\c"
+	echo -e "\n\tSpeaker sharing\t\t= $btmulti\c"
+	echo -e "\n\tResume MPD\t\t= $rsmafterbt\n"
+
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		SPSVER="$(shairport-sync -V | cut -f 1 -d '-')"
 		echo -e "\t  A I R P L A Y    S E T T I N G S  \n"
@@ -156,7 +169,7 @@ AUDIO() {
 		echo -e "\n\tFriendly name\t\t= $airplayname\c"
 		echo -e "\n\tALSA device\t\t= hw:$device\c"
 		echo -e "\n\tVolume mixer\t\t= $airplayvol\c"
-		echo -e "\n\tResume MPD after\t= $rsmaftersps\c"
+		echo -e "\n\tResume MPD\t\t= $rsmafterapl\c"
 		echo -e "\n\tOutput bit depth\t= $output_format\c"
 		echo -e "\n\tOutput sample rate\t= $output_rate\c"
 		echo -e "\n\tSession interruption\t= $allow_session_interruption\c"
@@ -175,7 +188,8 @@ AUDIO() {
 		echo -e "\n\tOutput buffers\t\t= $OUTPUTBUFFERS\c"
 		echo -e "\n\tTask priority\t\t= $TASKPRIORITY\c"
 		echo -e "\n\tCodec list\t\t= $CODECS\c"
-		echo -e "\n\tOther options\t\t= $OTHEROPTIONS\n"
+		echo -e "\n\tResume MPD\t\t= $rsmaftersl\c"
+		echo -e "\n\tOther options\t\t= $OTHEROPTIONS\n" | cut -c 1-45
 	fi
 
 	echo -e "\t  M O O D E    L O G  \n"
@@ -227,15 +241,15 @@ if [ "$WLAN0MAC" = "" ]; then
 	WLAN0MAC="no adapter"
 fi
 
-TMP="$(df | grep root | awk '{print $2}')"
+TMP="$(df | grep /dev/root | awk '{print $2}')"
 if [[ $TMP -gt 3000000 ]]; then
 	FSEXPAND="expanded"
 else
 	FSEXPAND="not expanded"
 fi
-ROOTSIZE="$(df -h | grep root | awk '{print $2}')"
-ROOTUSED="$(df | grep root | awk '{print $5}')"
-ROOTAVAIL="$(df -h | grep root | awk '{print $4}')"
+ROOTSIZE="$(df -h | grep /dev/root | awk '{print $2}')"
+ROOTUSED="$(df | grep /dev/root | awk '{print $5}')"
+ROOTAVAIL="$(df -h | grep /dev/root | awk '{print $4}')"
 
 /opt/vc/bin/tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
 
@@ -258,6 +272,10 @@ PHPVER=$(php -v 2>&1 | awk 'FNR==1{ print $2 }' | cut -c-6)
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
 BTVER=$(bluetoothd -v)
+BAVER=$(bluealsa -V 2> /dev/null)
+if [ "$BAVER" = "" ]; then 
+	BAVER="Turn BT on for version info"
+fi
 
 # Moode release
 mooderel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
@@ -268,9 +286,9 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 # Airplay settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_airplay")
 readarray -t arr <<<"$RESULT"
-[[ "${arr[0]}" = "1" ]] && airplaymeta2="On" || airplaymeta2="Off"
+#[[ "${arr[0]}" = "1" ]] && airplaymeta2="On" || airplaymeta2="Off"
 airplayvol=${arr[1]}
-rsmaftersps=${arr[2]}
+#rsmaftersps=${arr[2]}
 output_format=${arr[3]}
 output_rate=${arr[4]}
 allow_session_interruption=${arr[5]}
@@ -344,7 +362,7 @@ alsavolume=${arr[34]}
 amixname=${arr[35]}
 mpdmixer=${arr[36]}
 xtagdisp=${arr[37]}
-rsmaftersps=${arr[38]}
+rsmafterapl=${arr[38]}
 lcdup=${arr[39]}
 lcdupscript=${arr[40]}
 extmeta=${arr[41]}
@@ -375,12 +393,12 @@ airplayvol=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
 [[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
 libartistcol=${arr[68]}
-rsmafterbt=${arr[69]}
+[[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
 alsaequal=${arr[72]}
 eqfa4p=${arr[73]}
-if [[ $hdwrrev = "Pi-3B 1GB v1.2" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
+if [[ $hdwrrev = "Pi-3B+ 1GB v1.3" || $hdwrrev = "Pi-3B 1GB v1.2" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
 	[[ "${arr[74]}" = "1" ]] && p3wifi="On" || p3wifi="Off"
 	[[ "${arr[75]}" = "1" ]] && p3bt="On" || p3bt="Off"
 else
@@ -390,7 +408,7 @@ fi
 cardnum=${arr[76]}
 [[ "${arr[77]}" = "1" ]] && btsvc="On" || btsvc="Off"
 btname=${arr[78]}
-btmulti=${arr[79]}
+[[ "${arr[79]}" = "1" ]] && btmulti="Yes" || btmulti="No"
 feat_bitmask=${arr[80]}
 engine_mpd_sock_timeout=${arr[81]}
 btactive=${arr[82]}
@@ -404,6 +422,8 @@ alphablend=${arr[89]}
 adaptive=${arr[90]}
 audioout=${arr[91]}
 audioin=${arr[92]}
+slactive=${arr[93]}
+rsmaftersl=${arr[94]}
 
 MODEL=${hdwrrev:0:5}
 if [ $MODEL = Pi-3B ]; then
@@ -484,7 +504,6 @@ echo "
 	PHP-FPM		= $PHPVER
 	NGINX		= $NGINXVER
 	SQLite		= $SQLITEVER
-	Bluetooth	= $BTVER
 "
 
 #LINE

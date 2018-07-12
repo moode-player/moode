@@ -17,32 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1 remove data-validate="parsley"
- *
+ * 2018-04-02 TC moOde 4.1
+ * - remove data-validate="parsley"
+ * 2018-07-11 TC moOde 4.2
+ * - add audio output
+ * - minor format cleanup
+ * - change to font-size small (was 14px)
+ * - font-awesome 5
  *
  */
 -->	
 <div class="container">
 <div class="container2">
-	<h1>Bluetooth Config</h1>
+	<h1>BlueZ Config</h1>
 
     <p>
-    	<a href="snd-config.php">BACK</a> to Audio configuration page
+    	<a href="snd-config.php">BACK</a> to Audio config
     </p>
 
     <form class="form-horizontal" action="" method="post">
-    	<legend style="padding-bottom: 6px;">Command &nbsp;
-			<select id="btcmd" class="select-medium" name="btcmd" style="margin-bottom: 5px;">
+    	<legend style="padding-bottom: 6px;">
+			<select id="btcmd" class="select-large" name="btcmd" style="margin-bottom: 5px;">
 				$_cmd[btcmd]
 			</select>
-			<button class="btn btn-primary btn-small set-button" type="submit" name="run_btcmd" value="1" $_bt_disabled>Run</button>
-			<a class="info-toggle" data-cmd="info_btcmd" href="#notarget"><i class="icon-info-sign"></i></a>
-			<span id="info_btcmd" class="help-block-configs hide" style="font-size: 14px; line-height: 20px; font-weight: 500;">
+			<button class="btn btn-primary btn-small set-button" type="submit" name="run_btcmd" value="1" $_bt_disabled>Submit</button>
+			<a class="info-toggle" data-cmd="info_btcmd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info_btcmd" class="help-block-configs hide" style="font-size: small; line-height: 20px; font-weight: 500;">
 				Select a command to submit to the Bluetooth controller.<br>
+            </span>
+			<span class="help-block-configs $_bt_msg_hide" style="font-size: small; line-height: 20px; font-weight: 500;">
+				Turn on Bluetooth in Audio config then select a command to submit to the Bluetooth controller.<br>
             </span>
 		</legend>
 
-		<div style="background-color: #333; font-size: 14px; line-height: 18px; padding: 10px; margin-right: 40px; font-family: Courier New">
+		<div style="background-color: #333; font-size: small; line-height: 18px; padding: 10px; margin-right: 40px; margin-bottom: 4px; font-family: Courier New">
 			$_cmd_output
 		</div>
 
@@ -52,9 +60,9 @@
 			</select>
 			<button class="btn btn-primary btn-small set-button" type="submit" name="connectto_device" value="1">Connect</button>
 			<button class="btn btn-primary btn-small set-button" type="submit" name="rm_paired_device" value="1">Remove</button>
-			<a class="info-toggle" data-cmd="info_rm_paired_device" href="#notarget"><i class="icon-info-sign"></i></a>
+			<a class="info-toggle" data-cmd="info_rm_paired_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info_rm_paired_device" class="help-block-configs help-block-margin hide">
-				Connect to or remove a paired device.<br>
+				Connect or remove a paired device.<br>
             </span>
 		</div>
 
@@ -63,9 +71,9 @@
 				$_device[connected_device]
 			</select>
 			<button class="btn btn-primary btn-small set-button" type="submit" name="disconnect_device" value="1">Disconnect</button>
-			<a class="info-toggle" data-cmd="info_disconect_device" href="#notarget"><i class="icon-info-sign"></i></a>
+			<a class="info-toggle" data-cmd="info_disconnect_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info_disconnect_device" class="help-block-configs help-block-margin hide">
-				Select a device to disconnect.<br>
+				Disconnect the currently connected device.<br>
             </span>
 		</div>
 
@@ -73,10 +81,24 @@
 			<select id="scanned-device" class="select-large" name="scanned_device" style="margin-bottom: 5px;">
 				$_device[scanned_device]
 			</select>
-			<button class="btn btn-primary btn-small set-button" type="submit" name="pairwith_device" value="1">Pair with</button>
-			<a class="info-toggle" data-cmd="info_pairwith_device" href="#notarget"><i class="icon-info-sign"></i></a>
+			<button class="btn btn-primary btn-small set-button" type="submit" name="pairwith_device" value="1">Pair</button>
+			<a class="info-toggle" data-cmd="info_pairwith_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info_pairwith_device" class="help-block-configs help-block-margin hide">
 				Select a device to pair with.<br>
+            </span>
+		</div>
+
+		<div class="$_hide_ctl[chg_audioout]">
+			<select id="audioout" class="select-large" name="audioout">
+				$_select[audioout]
+			</select>
+			<button class="btn btn-primary btn-small set-button" type="submit" name="chg_audioout" value="1">Change</button>
+			<a class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info_audioout" class="help-block-configs hide" style="font-size: 14px; line-height: 20px; font-weight: 500;">
+				Send MPD audio output to the Local audio device or over a Bluetooth connection to another audio device.<br>
+            </span>
+			<span class="help-block-configs help-block-margin $_ao_msg_hide">
+				Connect, Remove and Disconnect will also automatically change to the selected MPD audio output.<br>
             </span>
 		</div>
 	</form>

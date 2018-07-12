@@ -20,14 +20,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1 access-control-origin not needed
+ * 2018-04-02 TC moOde 4.1
+ * - access-control-origin not needed
  *
  */
  
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-// load session vars (cfg_system + cfg_radio)
-// NOTE cfg_radio vars are loaded into $_SESSION by worker so might not be present here until worker startup completes
+// load session vars
+// NOTE cfg_radio vars are loaded into session by worker so might not be present here until worker startup completes
 playerSession('open', '', '');
 session_write_close();
 

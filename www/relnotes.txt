@@ -11,6 +11,86 @@
 
 ########################################################
 //
+// 4.2 Release 2018-07-11
+//
+########################################################
+
+New features
+
+- NEW: Adaptive UI version 2
+- NEW: CoverView full screen UI
+- NEW: Bluetooth stack with Pi-to-Pi streaming
+- NEW: Advanced search for Browse panel
+- NEW: Random album selector for Library
+- NEW: LMS-Squeezelite / MPD integration
+- NEW: Clear LocalUI Browser cache
+- NEW: Sysmon.php utility for CPU/RAM usage
+- NEW: Samba share point for Playlists 
+
+Audio devices
+
+- NEW: Allo Katana DAC
+- NEW: Dion Audio LOCO V2
+
+Bug fixes
+
+- FIX: Incompatibility with recent bluez-alsa commit
+- FIX: Cardnum in bluealsa-dmix, bluealsa-aplay 
+- FIX: Volume button position on HDMI panel
+- FIX: UPnP volume sync not working correctly
+- FIX: Players avahi file missing from r40a update
+- FIX: Pi Touch last items obscured in Browse list
+- FIX: Unhandled error in engineMPD success branch
+- FIX: Minor formatting issues on config screens
+- FIX: Centering issue on Library loading overlay
+- FIX: Renderer off not resetting active state
+- FIX: Search (pl,lib,radio) not formatting correctly
+- FIX: Auto-scroll fail for initial Playback btn click
+- FIX: Improve detection of MPD update complete
+- FIX: Customize bgimage various issues
+- FIX: Outline on certain ctrls after modal close
+
+Updates
+
+- UPD: Bump to Raspbian Stretch Lite 2018-06-27
+- UPD: Bump to Linux kernel 4.14.54
+- UPD: Bump to MPD 0.20.20
+- UPD: Recompile Squeezelite 1.8.7-1052 with GPIO
+- UPD: Bump to wiringPi 2.46
+- UPD: Complie specific commit of BlueZ 5.49
+- UPD: Complie specific commit of Bluez-alsa 1.2.0
+- UPD: Use per-output mixertype in MPD config
+- UPD: Use dynamic A2DP profiles in bluealsa
+- UPD: Use bredr ControllerMode in /etc/bluetooth/main.conf
+- UPD: Add [GATT] to /etc/bluetooth/main.conf
+- UPD: Use plughw in bluealsaaplay.conf
+- UPD: Add Bluetooth outbound case to Audioinfo
+- UPD: Deprecate /etc/bluetooth/audio.conf
+- UPD: Remove AutoConnectTimeout from main.conf
+- UPD: Improve ip address fetch in >> Players
+- UPD: SEL config requires feat_bitmask
+- UPD: Change mute indicator to 'mute'
+- UPD: Add new params to System info
+- UPD: Intelligent refresh after Customize update
+- UPD: Move google search from cover to title
+- UPD: Deprecate Search auto-focus
+- UPD: Re-tool to font-awesome 5
+- UPD: Convert radio logos to JPG with thumbnails
+- UPD: Add logfile option to shairport-sync
+- UPD: Samba share names
+- UPD: Improve click zone and highlight on panels
+- UPD: Improve hover help
+- UPD: Minor updates to Setup Guide
+- UPD: Add HW Rev code 0000 for Orange Pi
+- UPD: Remove accumulated code
+
+Radio stations
+
+- UPD: CDNX 1 & 2 changed to NME 1 & 2
+
+
+########################################################
+//
 // 4.1 Release 2018-04-02
 //
 ########################################################
@@ -54,6 +134,7 @@ Updates
 - UPD: Improved renderer connect management
 - UPD: Improved WiFi scanner
 - UPD: Improved UI responsivness
+- UPD: Improved UPnP / MPD volume sync
 - UPD: Remove accumulated code
 
 Radio stations
@@ -74,6 +155,7 @@ Bug fixes
 - FIX: USB drive listing in moode log
 - FIX: Autofocus for ssid and server fields
 - FIX: Show/hide certain fields on NAS config
+- FIX: DB update not initiating after mount
 - FIX: Minor timeknob issues
 
 ########################################################

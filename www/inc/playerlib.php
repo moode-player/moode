@@ -36,6 +36,18 @@
  * - add socket routines for engine-cmd ipc
  * - add revision code a020d3 for Pi-3B+
  * - add wificountry to cfgNetIfaces(), autoConfig()
+ * - add FEAT_UPNPSYNC and $FEAT_UPNPSYNC
+ * 2018-07-11 TC moOde 4.2
+ * - convert to per-ouput mixer_type in mpd.conf since global mixer_type deprecated
+ * - add setAudioOut() for Bluetooth configuration
+ * - add $FEAT_INPUTSEL
+ * - change from hw: to AUDIODEV=plughw: for /etc/bluealsaaplay.conf
+ * - wrk_mpdconf(): fix cardnum not being updated in 20-bluealsa-dmix.conf, bluealsa-aplay.conf
+ * - use jpg instead of png for radio logos
+ * - move db update from waitworker() to src-config.php
+ * - add logfile option to startSps()
+ * - searchDB() adv browse search
+ * - add hwrev code 0000 for OrangePi
  *
  */
  
@@ -60,9 +72,10 @@ const FEAT_INPUTSEL =    0b0000001000000000;	//  512
 const FEAT_UPNPSYNC =    0b0000010000000000;	//  1024 
 
 // mirror for footer.php
-$FEAT_AIRPLAY = 0b00000010;
-$FEAT_SQUEEZELITE = 0b00010000;
-$FEAT_UPMPDCLI = 0b00100000;
+$FEAT_AIRPLAY = 	0b0000000000000010;
+$FEAT_SQUEEZELITE = 0b0000000000010000;
+$FEAT_UPMPDCLI = 	0b0000000000100000;
+$FEAT_INPUTSEL = 	0b0000001000000000;
 
 // worker message logger
 function workerLog($msg, $mode) {
@@ -270,7 +283,7 @@ function loadLibrary($sock) {
 				
 		if ($flat != '') {
 			debugLog('loadLibrary(): Flat list generated');
-			debugLog('loadLibrary(): Generating tag cache...');
+			debugLog('loadLibrary(): Generating library...');
 			$tagcache = json_encode(genLibrary($flat));
 			debugLog('loadLibrary(): Cache data returned to client');
 			return $tagcache;
@@ -285,6 +298,7 @@ function loadLibrary($sock) {
 // generate flat list from mpd tag database
 function genFlatList($sock) {
 	sendMpdCmd($sock, 'listallinfo'); // tpc r41, fastest
+	//sendMpdCmd($sock, 'find modified-since 2000-01-01T00:00:00Z'); // original, full time stamp
 	$resp = readMpdResp($sock);
 	
 	if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
@@ -318,13 +332,15 @@ function genFlatList($sock) {
 // generate library {Genre1: {Artist1: {Album1: [{song1}, {song2}], Album2:...}, Artist2:...}, Genre2:...}
 function genLibrary($flat) {
 	$lib = array();
-	$libartist = $_SESSION['libartistcol'] == 'Use AlbumArtist' ? 'AlbumArtist' : 'Artist';
+
+	// Artist list sort
+	$libartist = $_SESSION['libartistcol']; // r42x rm Use from the setting
 
 	foreach ($flat as $flatData) {
 		$genre = $flatData['Genre'] ? $flatData['Genre'] : 'Unknown';
 		$artist = $flatData[$libartist] ? $flatData[$libartist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown');
 		$album = $flatData['Album'] ? $flatData['Album'] : 'Unknown';
-		// for using albumsort tag if present
+		// albumsort tag if present
 		//$album = $flatData['AlbumSort'] ? $flatData['AlbumSort'] : ($flatData['Album'] ? $flatData['Album'] :'Unknown');
 
 		if (!$lib[$genre]) {$lib[$genre] = array();}
@@ -475,8 +491,10 @@ function delPLFile($sock, $plname) {
 
 // search mpd database
 function searchDB($sock, $querytype, $query) {
+	//workerLog($querytype . ', ' . $query);
 	switch ($querytype) {
-		case 'filepath':
+		// list a database path
+		case 'lsinfo':
 			if (isset($query) && !empty($query)){
 				sendMpdCmd($sock, 'lsinfo "' . html_entity_decode($query) . '"');
 				break;
@@ -484,12 +502,14 @@ function searchDB($sock, $querytype, $query) {
 				sendMpdCmd($sock, 'lsinfo');
 				break;
 			}
-		case 'album':
-		case 'artist':
-		case 'title':
-		case 'file':
-			sendMpdCmd($sock, 'search ' . $querytype . ' "' . html_entity_decode($query) . '"');
-			break;	
+		// search all tags
+		case 'any':
+			sendMpdCmd($sock, 'search any "' . html_entity_decode($query) . '"');
+			break;
+		// search specified tags
+		case 'specific':
+			sendMpdCmd($sock, 'search ' . html_entity_decode($query));
+			break;
 	}	
 
 	$resp = readMpdResp($sock);
@@ -1041,9 +1061,7 @@ function sdbquery($querystr, $dbh) {
 
 function wrk_mpdconf($i2sdevice) {
 	// load settings
-	$dbh = cfgdb_connect();
-	$query_cfg = "SELECT param,value_player FROM cfg_mpd WHERE value_player!=''";
-	$mpdcfg = sdbquery($query_cfg, $dbh);
+	$mpdcfg = sdbquery("SELECT param,value_player FROM cfg_mpd WHERE value_player!=''", cfgdb_connect());
 	
 	// header
 	$output =  "#########################################\n";
@@ -1076,9 +1094,11 @@ function wrk_mpdconf($i2sdevice) {
 			playerSession('write', 'mpdmixer', $cfg['value_player']);
 			if ($cfg['value_player'] == 'hardware') { 
 				$hwmixer = getMixerName($i2sdevice);
+				$mixertype = 'hardware';
 			}
 			else {
-				$output .= $cfg['param'] . " \"" . $cfg['value_player'] . "\"\n";
+				// software or disabled (disabled = 'none' in conf file)
+				$mixertype = $cfg['value_player'] == 'disabled' ? 'none' : 'software';
 			}
 		}
 		else {
@@ -1114,7 +1134,8 @@ function wrk_mpdconf($i2sdevice) {
 	$output .= "type \"alsa\"\n";
 	$output .= "name \"ALSA default\"\n";
 	$output .= "device \"hw:" . $device . ",0\"\n";
-	if (isset($hwmixer)) {
+	$output .= "mixer_type \"" . $mixertype . "\"\n";
+	if ($mixertype == 'hardware') {
 		$output .= "mixer_control \"" . $hwmixer . "\"\n";
 		$output .= "mixer_device \"hw:" . $device . "\"\n";
 		$output .= "mixer_index \"0\"\n";
@@ -1127,7 +1148,8 @@ function wrk_mpdconf($i2sdevice) {
 	$output .= "type \"alsa\"\n";
 	$output .= "name \"ALSA crossfeed\"\n";
 	$output .= "device \"crossfeed\"\n";
-	if (isset($hwmixer)) {
+	$output .= "mixer_type \"" . $mixertype . "\"\n";
+	if ($mixertype == 'hardware') {
 		$output .= "mixer_control \"" . $hwmixer . "\"\n";
 		$output .= "mixer_device \"hw:" . $device . "\"\n";
 		$output .= "mixer_index \"0\"\n";
@@ -1140,7 +1162,8 @@ function wrk_mpdconf($i2sdevice) {
 	$output .= "type \"alsa\"\n";
 	$output .= "name \"ALSA parametric eq\"\n";
 	$output .= "device \"eqfa4p\"\n";
-	if (isset($hwmixer)) {
+	$output .= "mixer_type \"" . $mixertype . "\"\n";
+	if ($mixertype == 'hardware') {
 		$output .= "mixer_control \"" . $hwmixer . "\"\n";
 		$output .= "mixer_device \"hw:" . $device . "\"\n";
 		$output .= "mixer_index \"0\"\n";
@@ -1153,7 +1176,8 @@ function wrk_mpdconf($i2sdevice) {
 	$output .= "type \"alsa\"\n";
 	$output .= "name \"ALSA graphic eq\"\n";
 	$output .= "device \"alsaequal\"\n";
-	if (isset($hwmixer)) {
+	$output .= "mixer_type \"" . $mixertype . "\"\n";
+	if ($mixertype == 'hardware') {
 		$output .= "mixer_control \"" . $hwmixer . "\"\n";
 		$output .= "mixer_device \"hw:" . $device . "\"\n";
 		$output .= "mixer_index \"0\"\n";
@@ -1166,6 +1190,7 @@ function wrk_mpdconf($i2sdevice) {
 	$output .= "type \"alsa\"\n";
 	$output .= "name \"ALSA bluetooth\"\n";
 	$output .= "device \"btstream\"\n";
+	$output .= "mixer_type \"software\"\n";
 	$output .= "}\n";
 
 	$fh = fopen('/etc/mpd.conf', 'w');
@@ -1176,15 +1201,8 @@ function wrk_mpdconf($i2sdevice) {
 	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' /usr/share/alsa/alsa.conf.d/crossfeed.conf");
 	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' /usr/share/alsa/alsa.conf.d/eqfa4p.conf");
 	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' /usr/share/alsa/alsa.conf.d/alsaequal.conf");
-
-	// bt shared ALSA output
-	if ($_SESSION['btmulti'] == '1') {
-		sysCmd("sed -i '/card/c\ \tcard " . $device . "' /usr/share/alsa/alsa.conf.d/20-bluealsa-dmix.conf");
-	}
-	// bt non-shared ALSA output
-	else {
-		sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=hw:" . $device . ",0' /etc/bluealsaaplay.conf");
-	}
+	sysCmd("sed -i '/card/c\ \t    card " . $device . "' /usr/share/alsa/alsa.conf.d/20-bluealsa-dmix.conf");
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $device . ",0' /etc/bluealsaaplay.conf");
 }
 
 // return amixer name
@@ -1449,14 +1467,6 @@ function waitWorker($sleeptime, $caller) {
 			debugLog('waitWorker(): Wait  (' . ++$loopcnt . ')');
 
 		} while ($_SESSION['w_active'] != 0);
-
-		// initiate mpd db update 
-		if ($caller == 'src-config') {
-			$sock = openMpdSock('localhost', 6600);
-			sendMpdCmd($sock, 'update');
-			closeMpdSock($sock);
-		}
-
 	}
 
 	debugLog('waitWorker(): End   (' . $caller . ', w_active=' . $_SESSION['w_active'] . ')');
@@ -1493,7 +1503,8 @@ function submitJob($jobName, $jobArgs, $title, $msg, $duration) {
 		
 		session_write_close();
 		return true;
-	} else {
+	}
+	else {
 		echo json_encode('worker busy');
 		return false;
 	}
@@ -1602,20 +1613,33 @@ function getEncodedAt($song, $outformat) {
 
 // start shairport-sync
 function startSps() {
+	// r42x verbose logging
+	if ($_SESSION['debuglog'] == '1') {
+		$logging = '-vv';
+		$logfile = '/var/log/shairport-sync.log';
+	}
+	else {
+		$logging = '';
+		$logfile = '/dev/null';
+	}
+
 	// get device num and hardware mixer name
 	$array = sdbquery('select value_player from cfg_mpd where param="device"', cfgdb_connect());
 	$device = $array[0]['value_player'];
 	$mixername = $_SESSION['amixname'];
 
 	// format base cmd string
-	$cmd = '/usr/local/bin/shairport-sync -a "' . $_SESSION['airplayname'] . '" -S soxr -w -B /var/local/www/commandw/spspre.sh -E /var/local/www/commandw/spspost.sh ' . '-- -d hw:' . $device;
+	//$cmd = '/usr/local/bin/shairport-sync -a "' . $_SESSION['airplayname'] . '" -S soxr -w -B /var/local/www/commandw/spspre.sh -E /var/local/www/commandw/spspost.sh ' . '-- -d hw:' . $device;
+	$cmd = '/usr/local/bin/shairport-sync ' . $logging . ' -a "' . $_SESSION['airplayname'] . '" -S soxr -w -B /var/local/www/commandw/spspre.sh -E /var/local/www/commandw/spspost.sh ' . '-- -d hw:' . $device;
 
 	// add volume config
 	if ($_SESSION['airplayvol'] == 'auto') {
-		$cmd .= $_SESSION['alsavolume'] == 'none' ? ' > /dev/null 2>&1 &' : ' -c ' . '"' . $mixername  . '"' . ' > /dev/null 2>&1 &';
+		//$cmd .= $_SESSION['alsavolume'] == 'none' ? ' > /dev/null 2>&1 &' : ' -c ' . '"' . $mixername  . '"' . ' > /dev/null 2>&1 &';
+		$cmd .= $_SESSION['alsavolume'] == 'none' ? ' > ' . $logfile . ' 2>&1 &' : ' -c ' . '"' . $mixername  . '"' . ' > ' . $logfile . ' 2>&1 &';
 	}
 	else {
-		$cmd .= ' > /dev/null 2>&1 &';
+		//$cmd .= ' > /dev/null 2>&1 &';
+		$cmd .= ' > ' . $logfile . ' 2>&1 &';
 	}
 	
 	// start shairport-sync
@@ -1859,6 +1883,7 @@ function getHostIp() {
 // return hardware revision
 function getHdwrRev() {
 	$revname = array(
+		'0000' => 'OrangePiPC', //r42z	
 		'0002' => 'Pi-1B 256MB',	
 		'0003' => 'Pi-1B 256MB',
 		'0004' => 'Pi-1B 256MB',
@@ -2288,6 +2313,44 @@ function ctlBt($ctl) {
 	}
 }
 
+// set MPD audio output
+function setAudioOut($audioout) {
+	if ($audioout == 'Local') {
+		// reconfigure MPD volume for Local
+		reconfMpdVolume($_SESSION['mpdmixer_local']);
+		sysCmd('/var/www/vol.sh restore');
+		sysCmd('mpc stop');
+		sysCmd('mpc enable only 1'); // MPD ALSA default output
+	}
+	else if ($audioout == 'Bluetooth') {
+		// reconfigure MPD volume to 'software' if 'disabled'
+		if ($_SESSION['mpdmixer'] == 'disabled') {
+			reconfMpdVolume('software');
+			playerSession('write', 'mpdmixer_local', 'disabled');
+		}
+		// un-dim the UI
+		playerSession('write', 'btactive', '0');
+		sendEngCmd('btactive0');
+		sysCmd('/var/www/vol.sh restore');
+		sysCmd('mpc stop');
+		sysCmd('mpc enable only 5'); // MPD ALSA bluetooth output
+	}
+
+	sysCmd('systemctl restart mpd');
+}
+
+// reconfigure MPD volume
+function reconfMpdVolume($mixertype) {
+	cfgdb_update('cfg_mpd', cfgdb_connect(), 'mixer_type', $mixertype);
+	playerSession('write', 'mpdmixer', $mixertype);
+	// reset hardware volume to 0dB (100) if indicated
+	if (($mixertype == 'software' || $mixertype == 'disabled') && $_SESSION['alsavolume'] != 'none') {
+		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
+	}
+	// update /etc/mpd.conf
+	wrk_mpdconf($_SESSION['i2sdevice']);
+}
+
 // create enhanced metadata
 function enhanceMetadata($current, $sock, $flags) {
 	define(LOGO_ROOT_DIR, 'images/radio-logos/');
@@ -2354,10 +2417,11 @@ function enhanceMetadata($current, $sock, $flags) {
 				// use xmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
-					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".png"; // local logo image
+					// r42g change to jpg
+					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg"; // local logo image
 				}
 				else {
-					$current['coverurl'] = $_SESSION[$song['file']]['logo']; // Soma logo url
+					$current['coverurl'] = $_SESSION[$song['file']]['logo']; // url logo image
 				}
 
 				# hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10

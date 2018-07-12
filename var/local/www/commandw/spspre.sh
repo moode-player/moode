@@ -17,15 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2018-01-26 TC moOde 4.0
+# 2018-07-11 TC moOde 4.2
+# - minor format cleanup
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-# stop playback
 /usr/bin/mpc stop > /dev/null
 
 # allow time for ui update
 sleep 1
 
-# set airplay active flag to true
+# set active flag true
 $(sqlite3 $SQLDB "update cfg_system set value='1' where param='airplayactv'")

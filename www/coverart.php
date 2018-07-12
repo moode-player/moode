@@ -81,7 +81,7 @@ function getImage($path) {
 		case 'tiff':
 			// physical image file -> redirect
 			//$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
-			$path = '/vlmm90614385' . substr($path, strlen('/var/lib/mpd/music'));
+			$path = '/vlmm03846271' . substr($path, strlen('/var/lib/mpd/music'));
 			$path = str_replace('#', '%23', $path);
 			//workerLog('coverart: 1 - ' . $path);
 			header('Location: ' . $path);

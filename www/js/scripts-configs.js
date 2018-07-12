@@ -24,19 +24,27 @@
  * - set focus to manual ssid and server input fields
  * - update help text for nas mounts
  * - remove accumulated  code
+ * 2018-07-11 TC moOde 4.2
+ * - minor cleanup
+ * - chg readcfgengine to readcfgsystem
+ * - css vars for newui v2
  *
  */
 
 jQuery(document).ready(function($){ 'use strict';
 
-	SESSION.json = sendMoodeCmd('GET', 'readcfgengine'); // load session vars
-	THEME.json = sendMoodeCmd('GET', 'readcfgtheme'); // load themes    // setup pines notify
+	// load session vars
+	SESSION.json = sendMoodeCmd('GET', 'readcfgsystem');
+	THEME.json = sendMoodeCmd('GET', 'readcfgtheme');
 	
-	// newui
+	// r42k
 	var tempOp = themeOp;
 	if (themeOp == 0.74902) {tempOp = 0.1};
-	$('.container2 .dropdown-menu.open').css({backgroundColor: 'rgba(50,50,50,' + themeOp + ')'});
-	
+	$('#menu-bottom').css({backgroundColor: 'rgba(50,50,50,0.75)'});
+	//document.body.style.setProperty('--adaptfa', 'rgba(0,0,0,0)'); // r42p
+	//document.body.style.setProperty('--adaptfb', 'rgba(0,0,0,0.9)');
+
+    // setup pines notify
     $.pnotify.defaults.history = false;
 
 	// connect to mpd engine

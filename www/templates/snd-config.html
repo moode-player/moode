@@ -17,7 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1 add setting for resume mpd after bt
+ * 2018-04-02 TC moOde 4.1
+ * - add Resume MPD for Bluetooth
+ * 2018-07-11 TC moOde 4.2
+ * - add 'Resume MPD' for Airplay and Squeezelite
+ * - minor format cleanup
+ * - change to modal-sm2 for confirm modals
+ * - font-awesome 5
  *
  */
 -->	
@@ -35,9 +41,10 @@
 					<select id="i2sdevice" class="input-large" name="i2sdevice">		
 						$_i2s[i2sdevice]
 					</select>
-					<button class="btn btn-primary btn-small" type="submit" name="update_i2s_device" value="novalue" style="margin-left: 8px;">Set</button>
+					<button class="btn btn-primary btn-small set-button" type="submit" name="update_i2s_device" value="novalue">Set</button>
 					<span class="help-block-configs help-block-margin">
 						Set this to None if using a USB audio device.<br>
+						Auto-play will be turned off as part of updating this setting.<br>
                     </span>
 				</div>
 			</div>
@@ -49,7 +56,7 @@
 						$_select[advoptions]
 					</select>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="update_advoptions" value="novalue">Set</button>
-					<a class="info-toggle" data-cmd="info-advoptions" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-advoptions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-advoptions" class="help-block-configs help-block-margin hide">
 						<b>glb_mclk:</b> If enabled, Kali MCLK is used and PLL for Piano 2.1 is disabled for best SQ.<br>
 						<b>slave:</b> If enabled, Boss and MiniBOSS DAC operate in slave mode required by Kali.<br>
@@ -61,7 +68,7 @@
 			<div class="control-group">
 				<label class="control-label">Chip/Device options</label>
 				<div class="controls">
-					<a href="chp-config.php" class="btn btn-primary btn-medium">Edit settings</a><br><br>
+					<a href="chp-config.php" class="btn btn-primary btn-medium" style="margin-top:0px;">Edit settings</a><br>
 				</div>
 			</div>
 
@@ -69,8 +76,8 @@
 				<label class="control-label" for="alsavolume">ALSA volume (%)</label>
 				<div class="controls">
                     <input class="input-mini" $_alsa_volume_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume" name="alsavolume" value="$_alsa_volume">
-					<button class="btn btn-primary btn-small set-button $_alsa_volume_hide" type="submit" name="update_alsa_volume" value="novalue">Set</button>
-					<a class="info-toggle" data-cmd="info-alsavol" href="#notarget"><i class="icon-info-sign"></i></a>
+					<button class="btn btn-primary btn-small set-button status-msg $_alsa_volume_hide" data-msg="Processing" type="submit" name="update_alsa_volume" value="novalue">Set</button>
+					<a class="info-toggle" data-cmd="info-alsavol" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-alsavol" class="help-block-configs help-block-margin hide">
 						The value displayed in this field is the current ALSA setting.
                     </span>
@@ -84,7 +91,7 @@
 			<div class="control-group">
 				<label class="control-label">MPD options</label>
 				<div class="controls">
-					<a href="mpd-config.php" class="btn btn-primary btn-medium">Edit settings</a><br><br>
+					<a href="mpd-config.php" class="btn btn-primary btn-medium" style="margin-top:0px;">Edit settings</a><br><br>
 					<a data-toggle="modal" href="#mpd-restart">RESTART</a> MPD service<br>
 				</div>
 			</div>
@@ -98,11 +105,11 @@
 						<label class="toggle-radio" for="togglerotaryenc1">OFF</label>
 						$_select[rotaryenc0]				
 					</div>
-					<span style="display: inline-block; vertical-align: top">
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<input class="input-large" type="text" id="rotenc_params" name="rotenc_params" value="$_select[rotenc_params]" style="width:117px;" required>
 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_rotenc" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-rotary-enc" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+						<a class="info-toggle" data-cmd="info-rotary-enc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-rotary-enc" class="help-block-configs help-block-margin hide">
 						Enable a rotary encoder device to control volume.<br>
 						Driver uses WiringPi library and defaults to using GPIO 23,24,GND.<br>
@@ -124,15 +131,14 @@
 						<label class="toggle-radio" for="toggleashufflesvc1">OFF</label>
 						$_select[ashufflesvc0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
-						<button class="btn btn-primary btn-small set-button" type="submit" name="update_ashufflesvc" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-ashufflesvc" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small" type="submit" name="update_ashufflesvc" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-ashufflesvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-ashufflesvc" class="help-block-configs help-block-margin hide">						
 						When the last song in the Playlist has finished playing Auto-shuffle adds a random song from the music library
 						to the end of the Playlist, then removes it when it finishes playing. This creates a continuous stream of music 
-						without growing the Playlist.<br>
-						NOTE: Auto-shuffle replaces MPD random play as the default method for the 'Random' button on the Playback panel.<br>
+						without growing the Playlist. NOTE: Auto-shuffle replaces MPD random play as the method for the 'Random' button.<br>
                     </span>
 				</div>
 			</div>
@@ -146,10 +152,10 @@
 						<label class="toggle-radio" for="toggleautoplay1">OFF</label>
 						$_select[autoplay0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
-						<button class="btn btn-primary btn-small set-button" type="submit" name="update_autoplay" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-autoplay" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small" type="submit" name="update_autoplay" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-autoplay" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-autoplay" class="help-block-configs help-block-margin hide">
 						Play the last played item after system boots up.<br>
                     </span>
@@ -161,7 +167,7 @@
 				<div class="controls">
                     <input class="input-mini" type="number" maxlength="2" min="0" max="15" id="mpdcrossfade" name="mpdcrossfade" value="$_mpdcrossfade" required>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="update_mpdcrossfade" value="novalue">Set</button>
-					<a class="info-toggle" data-cmd="info-mpdcrossfade" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-mpdcrossfade" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-mpdcrossfade" class="help-block-configs help-block-margin hide">
 						MPD uses its audio buffer for crossfading thus there must be enough buffer space available to perform the requested
 						number of seconds of crossfade for a given audio format.<br>
@@ -177,7 +183,7 @@
 						$_select[crossfeed]
 					</select>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="update_crossfeed" value="novalue" $_crossfeed_set_disabled>Set</button>
-					<a class="info-toggle" data-cmd="info-crossfeed" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-crossfeed" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-crossfeed" class="help-block-configs help-block-margin hide">
 						- 700 Hz, 4.5 dB - Default<br>
 						This setting is closest to the virtual speaker placement with azimuth 30 degrees and the removal of about 3 meters, while listening by headphones.<br>
@@ -196,7 +202,7 @@
 						$_select[eqfa4p]
 					</select>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="update_eqfa4p" value="novalue" $_eqfa4p_set_disabled>Set</button>
-					<a class="info-toggle" data-cmd="info-eqfa4p" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-eqfa4p" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-eqfa4p" class="help-block-configs help-block-margin hide">
 						Four Mitra-Regalia peaking equaliser filters in series; a vector arithmetic re-implementation of Fons Adriaensens "Parametric1" equaliser[fafil] with minor differences. Parallelisation of the serial filter organisation causes the output to lag by three samples. This EQ uses the EqFA4p component of the CAPS suite of DSP programs written by Tim Goetze<br>
                     </span>
@@ -213,7 +219,7 @@
 						$_select[alsaequal]
 					</select>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="update_alsaequal" value="novalue" $_alsaequal_set_disabled>Set</button>
-					<a class="info-toggle" data-cmd="info-alsaequal" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-alsaequal" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-alsaequal" class="help-block-configs help-block-margin hide">
 						A classic octave-band, constant-Q, second-order filter design. Frequency bands centered above Nyquist are automatically disabled. This EQ uses the Eq10X2 component of the CAPS suite of DSP programs written by Tim Goetze.<br>
                     </span>
@@ -229,7 +235,7 @@
 		<legend>Renderers</legend>
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="btname">Bluetooth speaker</label>
+				<label class="control-label" for="btname">Bluetooth</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="togglebtsvc2">ON</label>
@@ -237,40 +243,40 @@
 						<label class="toggle-radio" for="togglebtsvc1">OFF</label>
 						$_select[btsvc0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<input class="input-large" type="text" id="btname" name="btname" value="$_select[btname]" style="width:117px;" required>
- 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_bt_settings" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-btsvc" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+						<button class="btn btn-primary btn-small set-button" type="submit" name="update_bt_settings" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-btsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-btsvc" class="help-block-configs help-block-margin hide">
 						Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (ALSA backend)<br>
                     </span>
 				</div>
 
 				<label class="control-label">Speaker sharing</label>
-				<div class="controls" style="margin-top: 5px;">
+				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="togglebtmulti2">ON</label>
 						$_select[btmulti1]
 						<label class="toggle-radio" for="togglebtmulti1">OFF</label>
 						$_select[btmulti0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
- 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_bt_multi" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-btmulti" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+ 						<button class="btn btn-primary btn-small" type="submit" name="update_bt_multi" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-btmulti" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-btmulti" class="help-block-configs help-block-margin hide">
 						Allow the Bluetooth speaker to be shared by multiple clients.<br>
                     </span>
 				</div>
-				<label class="control-label" for="rsmafterbt">Resume MPD playback</label>
+				<label class="control-label" for="rsmafterbt">Resume MPD</label>
 				<div class="controls">
 					<select id="rsmafterbt" class="select-mini2" style="width: 74px;" name="rsmafterbt">
 						$_select[rsmafterbt]
 					</select>
-					<span style="display: inline-block; vertical-align: top">
- 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_rsmafterbt" value="novalue">Set</button>
- 						<a class="info-toggle" data-cmd="info_rsmafterbt" href="#notarget"><i class="icon-info-sign"></i></a>
+					<span style="display: inline-block;">
+ 						<button class="btn btn-primary btn-small" type="submit" name="update_rsmafterbt" value="novalue">Set</button>
+ 						<a class="info-toggle" data-cmd="info_rsmafterbt" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</span>
 					<span id="info_rsmafterbt" class="help-block-configs help-block-margin hide">
 						Resume MPD playback after Bluetooth client disconnects.<br>
@@ -283,7 +289,7 @@
 			</div>
 
 			<div class="control-group $_feat_airplay">
-				<label class="control-label" for="airplayname">Airplay receiver</label>
+				<label class="control-label" for="airplayname">Airplay</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggleairplaysvc2">ON</label>
@@ -291,14 +297,27 @@
 						<label class="toggle-radio" for="toggleairplaysvc1">OFF</label>
 						$_select[airplaysvc0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<input class="input-large" type="text" id="airplayname" name="airplayname" value="$_select[airplayname]" style="width:117px;" required>
- 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_airplay_settings" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-airplaysvc" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+						<button class="btn btn-primary btn-small set-button" type="submit" name="update_airplay_settings" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-airplaysvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-airplaysvc" class="help-block-configs help-block-margin hide">
 						Shairport-sync by Mike Brady, the wonderful fork of<br>
 						the original Shairport by James "Abrasive" Laird.
+                    </span>
+				</div>
+				<label class="control-label" for="rsmafterbt">Resume MPD</label>
+				<div class="controls">
+					<select id="rsmafterapl" class="select-mini2" style="width: 74px;" name="rsmafterapl">
+						$_select[rsmafterapl]
+					</select>
+					<span style="display: inline-block;">
+ 						<button class="btn btn-primary btn-small" type="submit" name="update_rsmafterapl" value="novalue">Set</button>
+ 						<a class="info-toggle" data-cmd="info_rsmafterapl" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</span>
+					<span id="info_rsmafterapl" class="help-block-configs help-block-margin hide">
+						Resume MPD playback after Airplay client stops playing.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
 						<a href="apl-config.php">CONFIGURE</a> Airplay<br>
@@ -308,7 +327,7 @@
 			</div>
 
 			<div class="control-group $_feat_squeezelite">
-				<label class="control-label">Squeezelite renderer</label>
+				<label class="control-label">Squeezelite</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggleslsvc2">ON</label>
@@ -316,12 +335,25 @@
 						<label class="toggle-radio" for="toggleslsvc1">OFF</label>
 						$_select[slsvc0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
-						<button class="btn btn-primary btn-small set-button" type="submit" name="update_sl_settings" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-slsvc" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small" type="submit" name="update_sl_settings" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-slsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-slsvc" class="help-block-configs help-block-margin hide">
 						Squeezelite renderer by Adrian Smith and Ralph Irving (triode).<br>
+                    </span>
+				</div>
+				<label class="control-label" for="rsmaftersl">Resume MPD</label>
+				<div class="controls">
+					<select id="rsmaftersl" class="select-mini2" style="width: 74px;" name="rsmaftersl">
+						$_select[rsmaftersl]
+					</select>
+					<span style="display: inline-block;">
+ 						<button class="btn btn-primary btn-small" type="submit" name="update_rsmaftersl" value="novalue">Set</button>
+ 						<a class="info-toggle" data-cmd="info_rsmaftersl" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</span>
+					<span id="info_rsmaftersl" class="help-block-configs help-block-margin hide">
+						Resume MPD playback after LMS power off.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
 						<a href="sqe-config.php">CONFIGURE</a> Squeezelite<br>
@@ -329,9 +361,10 @@
 					</span>
 				</div>
 			</div>
-			
+
 			<div class="control-group $_feat_upmpdcli">
-				<label class="control-label" for="upnpname">UPnP renderer</label>
+				<legend>UPnP</legend>
+				<label class="control-label" for="upnpname">UPnP Client</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggleupnpsvc2">ON</label>
@@ -339,17 +372,17 @@
 						<label class="toggle-radio" for="toggleupnpsvc1">OFF</label>
 						$_select[upnpsvc0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 	                    <input class="input-large" type="text" id="upnpname" name="upnpname" value="$_select[upnpname]" style="width:117px;" required>
 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_upnp_settings" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-upnpsvc" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+						<a class="info-toggle" data-cmd="info-upnpsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-upnpsvc" class="help-block-configs help-block-margin hide">
 						upmpdcli (UPnP Client for MPD) by Jean-Francois Dockes.<br>
 						- Supports Open Home Media (ohMedia).<br>
 						- Provides album art via upexplorer.<br>
 						- Supports Tidal, Qobuz and Google music services.<br>
-						- Supports radio stations via /etc/upmpdcli-radio.conf (requires Linn Kazoo, Bubbleds or Luminous (iOS) to see the stations.<br>
+						- Supports radio stations via /etc/upmpdcli-radio.conf.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
 						<a href="upp-config.php">CONFIGURE</a> UPnP<br>
@@ -367,11 +400,11 @@
 						<label class="toggle-radio" for="toggledlnasvc1">OFF</label>
 						$_select[dlnasvc0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 	                    <input class="input-large" type="text" id="dlnaname" name="dlnaname" value="$_select[dlnaname]" style="width:117px;" required>
 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_dlna_settings" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-dlnasvc" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+						<a class="info-toggle" data-cmd="info-dlnasvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-dlnasvc" class="help-block-configs help-block-margin hide">
 						DLNA server (miniDLNA) by Justin Maggard.<br>
                     </span>
@@ -394,13 +427,13 @@
 						<label class="toggle-radio" for="togglempdassvc1">OFF</label>
 						$_select[mpdassvc0]
 					</div>
-					<span style="display: inline-block; vertical-align: top">
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<input class="input-large" type="text" id="mpdasuser" name="mpdasuser" value="$_select[mpdasuser]" style="width:117px;" placeholder="userid">
  						<button class="btn btn-primary btn-small set-button" type="submit" name="update_mpdas" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-mpdas" href="#notarget"><i class="icon-info-sign"></i></a><br><br>
+						<a class="info-toggle" data-cmd="info-mpdas" href="#notarget"><i class="fas fa-info-circle"></i></a><br>
 						<input class="input-large" type="password"  pattern="[^'\u0022]+" id="mpdaspwd" name="mpdaspwd" value="$_select[mpdaspwd]" style="width:117px;" placeholder="password">
-						<a class="info-toggle" data-cmd="info-mpdas-pwd" href="#notarget"><i class="icon-info-sign"></i></a>
-					</span>
+						<a class="info-toggle" data-cmd="info-mpdas-pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
 					<span id="info-mpdas-pwd" class="help-block-configs help-block-margin hide">
 						Password cannot contain single or double quotes.<br>
                     </span>
@@ -418,103 +451,103 @@
 </div>
 
 <form class="form-horizontal" method="post">
-	<div id="rebuild-dlnadb" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="rebuild-dlnadb-label" aria-hidden="true">
+	<div id="rebuild-dlnadb" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="rebuild-dlnadb-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
 
 		<div class="modal-body">
-			<h4>Rebuild DLNA database</h4>
+			<h6>Rebuild DLNA database?</h6>
 		</div>
 
 		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary" type="submit" name="rebuild_dlnadb" value="1">Confirm</button>
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		</div>
 	</div>
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="mpd-restart" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="mpd-restart-label" aria-hidden="true">
+	<div id="mpd-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="mpd-restart-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
 		
 		<div class="modal-body">
-			<h4>Restart MPD service</h4>
+			<h6>Restart MPD service?</h6>
 		</div>
 		
 		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary" type="submit" name="mpdrestart" value="1">Confirm</button>
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		</div>
 	</div>
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="airplay-restart" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="airplay-restart-label" aria-hidden="true">
+	<div id="airplay-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="airplay-restart-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
 		
 		<div class="modal-body">
-			<h4>Restart Airplay receiver</h4>
+			<h6>Restart Airplay receiver?</h6>
 		</div>
 		
 		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary" type="submit" name="airplayrestart" value="1">Confirm</button>
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		</div>
 	</div>
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="bt-restart" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="bt-restart-label" aria-hidden="true">
+	<div id="bt-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="bt-restart-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
 		
 		<div class="modal-body">
-			<h4>Restart Bluetooth controller</h4>
+			<h6>Restart Bluetooth controller?</h6>
 		</div>
 		
 		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary" type="submit" name="btrestart" value="1">Confirm</button>
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		</div>
 	</div>
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="sl-restart" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="sl-restart-label" aria-hidden="true">
+	<div id="sl-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="sl-restart-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
 		
 		<div class="modal-body">
-			<h4>Restart Squeezelite renderer</h4>
+			<h6>Restart Squeezelite renderer?</h6>
 		</div>
 		
 		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary" type="submit" name="slrestart" value="1">Confirm</button>
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		</div>
 	</div>
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="upnp-restart" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="upnp-restart-label" aria-hidden="true">
+	<div id="upnp-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="upnp-restart-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
 		
 		<div class="modal-body">
-			<h4>Restart UPnP renderer</h4>
+			<h6>Restart UPnP renderer?</h6>
 		</div>
 		
 		<div class="modal-footer">
-			<button class="btn btn-primary" type="submit" name="upnprestart" value="1">Confirm</button>
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary" type="submit" name="upnprestart" value="1">Confirm</button>
 		</div>
 	</div>
 </form>

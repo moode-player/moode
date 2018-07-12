@@ -26,6 +26,17 @@
  * - add raspbian version to About
  * - clean up some help text
  * - remove data-validate="parsley"
+ * 2018-07-11 TC moOde 4.2
+ * - font-awesome 5
+ * - bump release and date
+ * - remove blu from config since its on main menu
+ * - replace some inline styles with classes
+ * - deprecate search auto-focus
+ * - rm unused libs parsley.min.js, bootstrap-fileupload.js, jquery.countdown-it.js
+ * - fix reconnect/reboot/poweroff overlays
+ * - add screen saver timeout to Customize
+ * - rm Use from the Artist/AlbumArtist setting
+ * - fix various bgimage issues
  *
  */
 -->
@@ -38,7 +49,7 @@
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>			
 			<ul>
-				<li>Release: 4.1 2018-04-02 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
+				<li>Release: 4.2 2018-07-11 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
@@ -57,28 +68,292 @@
 		</p>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
-<!-- SAVE PLAYLIST //newui -->
-<div id="savepl-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="savepl-modal-label" aria-hidden="true">
+<!-- CONFIG MENU -->	
+<div id="configure-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="moveplitems-modal-label">Save playlist</h3>
+		<h3 id="configure-modal-label">Configuration settings</h3>
 	</div>
 	<div class="modal-body">
-		<form id="pl-save" method="post" onsubmit="return false;">
+		<div id="players">
+			<ul style="margin:0">
+				<li><a href="src-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-database" style="font-size: 24px;"></i><br>Sources</a></li>
+				<li><a href="snd-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-volume-up" style="font-size: 24px;"></i><br>Audio</a></li>
+				<li><a href="net-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-sitemap" style="font-size: 24px;"></i><br>Network</a></li>
+				<li><a href="sys-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-desktop-alt" style="font-size: 24px;"></i><br>System</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<div class="moode-config-settings-div context-menu">
+			<a href="mpd-config.php" class="moode-config-settings-link2">MPD</a>
+			<a href="eqp-config.php" class="moode-config-settings-link2">EQP</a>
+			<a href="eqg-config.php" class="moode-config-settings-link2">EQG</a>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_AIRPLAY) { ?>
+				<a href="apl-config.php" class="moode-config-settings-link2">AIR</a>
+			<?php } ?>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SQUEEZELITE) { ?>				
+				<a href="sqe-config.php" class="moode-config-settings-link2">SQE</a>
+			<?php } ?>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_UPMPDCLI) { ?>
+				<a href="upp-config.php" class="moode-config-settings-link2">UPP</a>
+			<?php } ?>
+			<a href="#notarget" class="moode-config-settings-link2" data-cmd="setforclockradio-m">CLK</a>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_INPUTSEL) { ?>
+				<a href="sel-config.php" class="moode-config-settings-link2">SEL</a>
+			<?php } ?>
+		</div>
+		<br>
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
+<!-- CUSTOMIZE -->	
+<div id="customize-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="customize-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="customize-modal-label">Customization settings</h3>
+	</div>
+	<div class="modal-body" id="container-customize">
+		<form class="form-horizontal" action="" method="">
+			<h5>General settings</h5>
 	    	<fieldset>
-				<div class="controls">
-	                    <input id="pl-saveName" class="ttip" type="text" value="" placeholder="save playlist" data-placement="bottom" data-toggle="tooltip">
+				<div class="control-group">
+   	                <label class="control-label" for="play-history-enabled">Playback history</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="play-history-enabled" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-play-history" class="help-block hide">
+	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
+	                    </span>
+	                </div>					
+
+   	                <label class="control-label" for="extratag-display">Display extra metadata</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="extratag-display" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-extratag-display" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-extratag-display" class="help-block hide">
+	                    	Display additional metadata under the cover art on the Playback panel.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="library-artist">Library artist list</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-artist" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Artist</span></a></li><!-- r42x rm Use -->
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">AlbumArtist</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-library-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-artist" class="help-block hide">
+	                    	Use the Artist or AlbumArtist tag for the Library Artists list.<br>
+	                    </span>
+	                </div>
+
+					<!-- r42q -->
+   	                <label class="control-label" for="scnsaver-timeout">CoverView</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="scnsaver-timeout" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul id="scnsaver-timeout-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-scnsaver-timeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-scnsaver-timeout" class="help-block hide">
+	                    	Automatically display a fullscreen view of cover art and song data after the specified number of minutes.<br>
+	                    </span>
+	                </div>
+	            </div>
+	    	</fieldset>
+
+			<h5>Theme settings</h5>
+	    	<fieldset>
+				<div class="control-group">
+   	                <label class="control-label" for="theme-name">Theme</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="theme-name" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="theme-name-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-themecolor" class="help-block hide">
+	                    	Sets the text and background color of the Browse, Library and Playback panels.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="theme-color">Accent color</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="theme-color" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="theme-color-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-accentcolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-accentcolor" class="help-block hide">
+	                    	Sets the color of the the knobs and other active elements.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="alpha-blend">Alpha blend</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="alpha-blend" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="alpha-blend-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-alphablend" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-alphablend" class="help-block hide">
+	                    	Sets the opacity of the background color from 0.00 (fully transparent) to 1.00 (fully opaque).<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="adaptive-enabled">Adaptive background</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="adaptive-enabled" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-adaptive" class="help-block hide">
+	                    	Sets the Playback panel color based on the dominant color in the album artwork.<br>
+	                    </span>
+	                </div>
+
+					<label class="control-label" for="choose-file">Background image</label>
+					<div class="controls">
+						<div style="display:inline-block;">
+							<label for="import-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</label> <!-- r42x -->
+							<input type="file" id="import-bgimage" accept="image/jpeg" style="display:none" onchange="importBgImage(this.files)">
+							<br>
+							<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Remove</button> 
+						</div>
+						<div id="current-bgimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+						<a class="info-toggle" id="info-toggle-bgimage" data-cmd="info-bgimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<div id="error-bgimage"></div>
+						<div id="info-bgimage" class="help-block hide">
+							Sets the background to a JPEG image<br>
+						</div>
+					</div>
+				</div>
+	    	</fieldset>
+
+			<h5>Audio device description</h5>
+	    	<fieldset>
+				<div class="control-group">
+   	                <label class="control-label" for="audio-device-name">Device</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-large2"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="audio-device-name" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="audio-device-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-device-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-device-name" class="help-block hide">
+	                    	Select a device to have its description show on Audio info. I2S devices are automatically populated from System config. If device is not listed select "USB audio device".
+	                    </span>
+	                </div>
+					
+	                <label class="control-label" for="audio-device-dac">Chip</label>
+	                <div class="controls">
+	                    <input id="audio-device-dac" class="input-xlarge" type="text" name="audio_device_dac" value="" readonly>
+	                </div>
+	                <label class="control-label" for="audio-device-arch">Architecture</label>
+	                <div class="controls">
+	                    <input id="audio-device-arch" class="input-xlarge" type="text" name="audio_device_arch" value="" readonly>
+	                </div>
+	                <label class="control-label" for="audio-device-iface">Interface</label>
+	                <div class="controls">
+	                    <input id="audio-device-iface" class="input-xlarge" type="text" name="audio_device_iface" value="" readonly>
+	                </div>
 	            </div>
 	    	</fieldset>
 		</form>
 	</div>
+
 	<div class="modal-footer">
-		<button id="pl-btnSave" class="btn btn-savepl btn-primary" title="Save playlist" data-dismiss="modal">Save</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-customize-update btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -114,7 +389,7 @@
 	                <label class="control-label" for="clockradio-playname">Play</label>
 	                <div class="controls">
 	                    <input id="clockradio-playname" class="input-xlarge" type="text" name="clockradio_playname" value="" readonly>
-						<a class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="icon-info-sign"></i></a>
+						<a class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-playname" class="help-block hide">
 	                    	Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
 	                    </span>
@@ -192,294 +467,8 @@
 		</form>
 	</div>
 	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button class="btn btn-clockradio-update btn-primary" data-dismiss="modal">Update</button>
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-	</div>
-</div>
-
-<!-- CONFIG MENU -->	
-<div id="configure-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="configure-modal-label">Configuration settings</h3>
-	</div>
-	<div class="modal-body">
-		<!--div style="margin-top: 20px; margin-left: 20px;"-->
-		<div id="players">
-			<ul style="margin:0">
-				<li><a href="src-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-music" style="font-size: 24px;"></i><br>Sources</a></li>
-				<li><a href="snd-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-volume-up" style="font-size: 24px;"></i><br>Audio</a></li>
-				<li><a href="net-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-sitemap" style="font-size: 24px;"></i><br>Network</a></li>
-				<li><a href="sys-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="icon-laptop" style="font-size: 24px;"></i><br>System</a></li>
-			</ul>
-		</div>
-	</div>
-
-	<div class="modal-footer">
-		<div class="moode-config-settings-div context-menu">
-			<a href="mpd-config.php" class="moode-config-settings-link2">MPD</a>
-			<a href="eqp-config.php" class="moode-config-settings-link2">EQP</a>
-			<a href="eqg-config.php" class="moode-config-settings-link2">EQG</a>
-			<a href="blu-config.php" class="moode-config-settings-link2">BLU</a>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_AIRPLAY) { ?>
-				<a href="apl-config.php" class="moode-config-settings-link2">AIR</a>
-			<?php } ?>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SQUEEZELITE) { ?>				
-				<a href="sqe-config.php" class="moode-config-settings-link2">SQE</a>
-			<?php } ?>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_UPMPDCLI) { ?>
-				<a href="upp-config.php" class="moode-config-settings-link2">UPP</a>
-			<?php } ?>
-			<a href="#notarget" class="moode-config-settings-link2" data-cmd="setforclockradio-m">CLK</a>
-			<a href="sel-config.php" class="moode-config-settings-link2">SEL</a>
-		</div>
-		<br>
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	</div>
-</div>
-
-<!-- CUSTOMIZE -->	
-<div id="customize-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="customize-modal-label" aria-hidden="true">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="customize-modal-label">Customization settings</h3>
-	</div>
-	<div class="modal-body" id="container-customize">
-		<form class="form-horizontal" action="" method="">
-			<h4>General settings</h4>
-	    	<fieldset>
-				<div class="control-group">
-   	                <label class="control-label" for="search-autofocus-enabled">Search auto-focus</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="search-autofocus-enabled" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search-autofocus-enabled-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search-autofocus-enabled-yn"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-search-audofocus" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-search-audofocus" class="help-block hide">
-	                    	Controls whether search fields automatically receive focus when first shown.<br>
-	                    </span>
-	                </div>
-	                
-   	                <label class="control-label" for="play-history-enabled">Playback history</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="play-history-enabled" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-play-history" class="help-block hide">
-	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
-	                    </span>
-	                </div>					
-
-   	                <label class="control-label" for="extratag-display">Display extra metadata</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="extratag-display" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-extratag-display" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-extratag-display" class="help-block hide">
-	                    	Display additional metadata under the cover art on the Playback panel.<br>
-	                    </span>
-	                </div>
-
-   	                <label class="control-label" for="library-artist">Library artist list</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select" style="width: 150px;"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-artist" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Use Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Use AlbumArtist</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-library-artist" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-library-artist" class="help-block hide">
-	                    	Choose whether to use the Artist or AlbumArtist tag for the Library Artists list.<br>
-	                    </span>
-	                </div>
-	            </div>
-	    	</fieldset>
-
-			<!-- tpc2 updated help text and minor layout change -->
-			<h4>Theme settings</h4>
-	    	<fieldset>
-				<div class="control-group">
-   	                <label class="control-label" for="theme-name">Theme</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select" style="width: 150px;"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="theme-name" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
-								<ul id="theme-name-list" class="dropdown-menu custom-select inner" role="menu"></ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-themecolor" class="help-block hide">
-	                    	Sets the text and background color of the Browse, Library and Playback panels.<br>
-	                    </span>
-	                </div>
-
-   	                <label class="control-label" for="theme-color">Accent color</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select" style="width: 110px;"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="theme-color" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
-								<ul id="theme-color-list" class="dropdown-menu custom-select inner" role="menu"></ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-accentcolor" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-accentcolor" class="help-block hide">
-	                    	Sets the color of the the knobs and other active elements.<br>
-	                    </span>
-	                </div>
-
-   	                <label class="control-label" for="alpha-blend">Alpha blend</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="alpha-blend" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
-								<ul id="alpha-blend-list" class="dropdown-menu custom-select inner" role="menu"></ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-alphablend" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-alphablend" class="help-block hide">
-	                    	Sets the opacity of the background color from 0.00 (fully transparent) to 1.00 (fully opaque).<br>
-	                    </span>
-	                </div>
-
-   	                <label class="control-label" for="adaptive-enabled">Adaptive background</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="adaptive-enabled" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-yn"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-adaptive" class="help-block hide">
-	                    	Sets the Playback panel color based on the dominant color in the album artwork.<br>
-	                    </span>
-	                </div>
-
-   	                <label class="control-label" for="choose-file">Background image</label>
-	                <div class="controls">
-						<input type="file" id="import-bgimage" accept="image/jpeg" style="display:none" onchange="importBgImage(this.files)">
-						<button id="choose-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</button> 
-						<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Remove</button> 
-						<a class="info-toggle" data-cmd="info-bgimage" href="#notarget"><i class="icon-info-sign"></i></a>
-						<div id="error-bgimage"></div>
-						<div id="info-bgimage" class="help-block hide">
-	                    	Sets the background to a JPEG image<br>
-	                    </div>
-						<div id="current-bgimage" style="width: 90px;">
-						</div>
-	                </div>
-				</div>
-	    	</fieldset>
-
-			<h4>Audio device description</h4>
-	    	<fieldset>
-				<div class="control-group">
-   	                <label class="control-label" for="audio-device-name">Device</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select" style="width: 265px;"> <!-- handler in playerlib.js -->
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="audio-device-name" class="filter-option pull-left">
-									<span></span> <!-- selection from dropdown gets placed here -->
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
-								<ul id="audio-device-list" class="dropdown-menu custom-select inner" role="menu"></ul>
-							</div>
-						</div>
-						<a class="info-toggle" data-cmd="info-device-name" href="#notarget"><i class="icon-info-sign"></i></a>
-						<span id="info-device-name" class="help-block hide">
-	                    	Select a device to have its description show on Audio info. I2S devices are automatically populated from System config. If device is not listed select "USB audio device".
-	                    </span>
-	                </div>
-					
-	                <label class="control-label" for="audio-device-dac">Chip</label>
-	                <div class="controls">
-	                    <input id="audio-device-dac" class="input-xlarge" type="text" name="audio_device_dac" value="" readonly>
-	                </div>
-	                <label class="control-label" for="audio-device-arch">Architecture</label>
-	                <div class="controls">
-	                    <input id="audio-device-arch" class="input-xlarge" type="text" name="audio_device_arch" value="" readonly>
-	                </div>
-	                <label class="control-label" for="audio-device-iface">Interface</label>
-	                <div class="controls">
-	                    <input id="audio-device-iface" class="input-xlarge" type="text" name="audio_device_iface" value="" readonly>
-	                </div>
-	            </div>
-	    	</fieldset>
-		</form>
-	</div>
-
-	<div class="modal-footer">
-		<button class="btn btn-customize-update btn-primary" data-dismiss="modal">Update</button>
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
 </div>
 
@@ -492,7 +481,7 @@
 	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
@@ -505,7 +494,7 @@
 	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
@@ -518,98 +507,107 @@
 	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <!-- RESTART -->	
-<div id="restart-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="restart-modal-label" aria-hidden="true">
+<div id="restart-modal" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="restart-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="restart-modal-label"><i class="icon-power-off sx"></i></h3>
+		<h3 id="restart-modal-label"><i class="fas fa-power-off sx"></i></h3>
 	</div>
 	<div class="modal-body">
-		<!-- tpc2 chg to 40% width from 25% so text not truncated on mobile -->
-		<div style="width: 40%; margin:0 auto;">
-			<button id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
-			<button id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Reboot</button>
-		</div>
+		<button id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
+		<button id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;"></i>Reboot</button>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
 </div>
 
 <!-- RECONNECT/REBOOT/POWEROFF -->
 <div id="reconnect" class="hide">
-	<div id="rebootbg"></div>
-	<div id="smartreboot">
+	<div class="reconnectbg"></div>
+	<div class="reconnectbtn">
 		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>
 	</div>
 </div>
 
 <div id="reboot" class="hide">
-	<div id="rebootbg"></div>
-	<div id="smartreboot">
+	<div class="reconnectbg"></div>
+	<div class="reconnectbtn">
 		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>
-		System rebooting
-		<div id="bootready"></div>			
+		<br>System rebooting
 	</div>
 </div>
 
 <div id="poweroff" class="hide">
-	<div id="poweroffbg"></div>
-	<div id="smartpoweroff">
+	<div class="reconnectbg"></div>
+	<div class="reconnectbtn">
 		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>
-		System has been powered off
+		<br>System powered off
 	</div>
 </div>
 
-<!-- STANDARD JS -->
+<!-- SAVE PLAYLIST //newui -->
+<div id="savepl-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="savepl-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="moveplitems-modal-label">Save playlist</h3>
+	</div>
+	<div class="modal-body">
+		<form id="pl-save" method="post" onsubmit="return false;">
+	    	<fieldset>
+				<div class="controls">
+	                    <input id="pl-saveName" class="ttip" type="text" value="" placeholder="save playlist" data-placement="bottom" data-toggle="tooltip">
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button id="pl-btnSave" class="btn btn-savepl btn-primary" title="Save playlist" data-dismiss="modal">Save</button>
+	</div>
+</div>
+
+<!-- FRAMEWORK LIBS -->
 <script src="js/jquery-1.8.2.min.js"></script>
 <script src="js/jquery-ui-1.10.0.custom.min.js"></script>
+<script src="js/jquery.countdown.js"></script>
+<script src="js/jquery.scrollTo.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-select.min.js"></script>
-<script src="js/jquery.countdown.js"></script>
-<script src="js/jquery.countdown-it.js"></script>
-<script src="js/jquery.scrollTo.min.js"></script>
-<!-- newui adaptive background function added -->
+<!-- MOODE LIBS -->
 <script src="js/jquery.adaptive-backgrounds.js"></script>
-<!-- MOODE JS -->
 <script src="js/notify.js"></script>
 <script src="js/playerlib.js"></script>
 <script src="js/links.js"></script>
 
-<!-- DIFFERENT SCRIPTS FOR PANELS VS CONFIGS -->
+<!-- LIBS FOR PANELS OR CONFIGS -->
 <?php if ($section == 'index') { ?>
 	<script src="jsw/jquery.knob.js"></script>
 	<script src="js/bootstrap-contextmenu.js"></script>
 	<script src="js/jquery.pnotify.min.js"></script>
-	<!-- MOODE JS -->
-	<script src="js/scripts-panels.js"></script>
+	<script src="js/scripts-panels.js"></script> <!-- Moode Panels lib-->
 <?php } else { ?>
 	<script src="js/custom_checkbox_and_radio.js"></script>
 	<script src="js/custom_radio.js"></script>
 	<script src="js/jquery.tagsinput.js"></script>
 	<script src="js/jquery.placeholder.js"></script>
-	<script src="js/parsley.min.js"></script>
 	<script src="js/i18n/_messages.en.js" type="text/javascript"></script>
 	<script src="js/application.js"></script>
 	<script src="js/jquery.pnotify.min.js"></script>
-	<script src="js/bootstrap-fileupload.js"></script>
-	<!-- MOODE JS -->
-	<script src="js/scripts-configs.js"></script>
+	<script src="js/scripts-configs.js"></script> <!-- Moode Configs lib-->
 <?php } ?>
 
 <!-- DISPLAY MESSAGES -->
-<?php
-if (isset($_SESSION['notify']) && $_SESSION['notify'] != '') {
+<?php if (isset($_SESSION['notify']) && $_SESSION['notify'] != '') {
 	ui_notify($_SESSION['notify']);
 	session_start();
 	$_SESSION['notify'] = '';
 	session_write_close();
-}
-?>
+} ?>
 
 </body>
 </html>

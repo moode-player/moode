@@ -17,7 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1 remove data-validate="parsley"
+ * 2018-04-02 TC moOde 4.1
+ * - remove data-validate="parsley"
+ * 2018-07-11 TC moOde 4.2
+ * - minor cleanup
+ * - change to modal-sm2 for confirm modals
+ * - font-awesome 5
  *
  */
 -->	
@@ -26,15 +31,15 @@
 	<h1>Graphic EQ</h1>
 
     <p>
-    	<a href="snd-config.php">BACK</a> to Audio configuration page<br>
+    	<a href="snd-config.php">BACK</a> to Audio config<br>
     	<a data-toggle="modal" href="#rm-curve">REMOVE</a> EQ curve
     </p>
 
     <form class="form-horizontal" action="" method="post">
     	<legend>Settings &nbsp;
-			<button type="submit" class="btn btn-primary btn-small" name="apply" value="1">Apply</button>&nbsp;
-			<button type="submit" class="btn btn-primary btn-small" name="play" value="1" $_disable_play><i class="icon-play"></i></button>
-			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="icon-info-sign"></i></a>
+			<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button>&nbsp;
+			<button class="btn btn-primary btn-small" type="submit" name="play" value="1" $_disable_play><i class="icon-play"></i></button>
+			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
 				APPLY: updates the curve table only.<br>
 				PLAY: updates the active curve config. EQ must be turned on in Audio config to enable Play.<br>
@@ -48,7 +53,7 @@
 					<select id="eqg-curve-name" class="input-large" name="curve_name">
 						$_select[curve_name]
 					</select>
-					<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-curve-name" class="help-block-configs help-block-margin hide">
 						Friendly name for the EQ curve.<br>
                     </span>
@@ -125,27 +130,22 @@
 </div>
 
 <form class="form-horizontal" method="post">
-	<div id="rm-curve" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
+	<div id="rm-curve" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="rm-curve-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Remove EQ curve</h3>
 		</div>
 		
 		<div class="modal-body">
-			<div class="control-group">
-				<label class="control-label" for="rmcurve">Selected curve</label>
-				<div class="controls">
-					<input class="input-large" type="text" id="rmcurve" name="rm-curve" value="$_selected_curve" readonly>
-					<span class="help-block-configs help-block-margin">
-						$_disable_rm_msg
-                    </span>
-				</div>
-			</div>
+			<h4 id='rmcurve'>$_selected_curve</h4>
+			<span class="help-block" style="margin-bottom:5px;">
+				$_disable_rm_msg
+			</span>
 		</div>
-		
+
 		<div class="modal-footer">
-			<button class="btn btn-primary" type="submit" name="rmcurve" value="1" $_disable_rm>Confirm</button>
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary" type="submit" name="rmcurve" value="1" $_disable_rm>Confirm</button>
 		</div>
 	</div>
 </form>
@@ -167,8 +167,8 @@
 		</div>
 		
 		<div class="modal-footer">
-			<button class="btn btn-primary" type="submit" name="newcurvename" value="1">Ok</button>
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary" type="submit" name="newcurvename" value="1">Ok</button>
 		</div>
 	</div>
 </form>

@@ -23,6 +23,9 @@
  * 2018-01-26 TC moOde 4.1
  * - chg audio buffer input from text to numeric
  * - remove data-validate="parsley"
+ * 2018-07-11 TC moOde 4.2
+ * - minor format cleanup
+ * - font-awesome 5
  *
  */
 -->	
@@ -31,15 +34,20 @@
     <h1>MPD Config</h1>
 
     <p>
-    	<a href="snd-config.php">BACK</a> to Audio configuration page
+    	<a href="snd-config.php">BACK</a> to Audio config
     </p>
 
     <form class="form-horizontal" action="" method="post">
-    	<legend>Settings &nbsp;<button type="submit" class="btn btn-primary btn-small" name="save" value="save">Apply</button></legend>
-    
+    	<legend>Settings &nbsp;
+			<button class="btn btn-primary btn-small" type="submit" name="save" value="save" $_apply_disabled>Apply</button>
+			<span class="help-block-configs $_apply_hide_msg" style="padding-bottom: 6px; font-size: 14px; line-height: 20px; font-weight: 500;">
+				MPD settings cannot be changed when Audio output is set to Bluetooth.<br>
+			</span>
+		</legend>
+
         <fieldset>
             <div class="control-group">
-				<label class="control-label" for="device">Audio output</label>
+				<label class="control-label" for="device">Audio device</label>
 				<div class="controls">	
 	                <select id="device" name="conf[device]" class="input-large">					
 						$_mpd_select[device]					
@@ -53,14 +61,14 @@
                     <select id="mixer-type" name="conf[mixer_type]" class="input-large">
 						$_mpd_select[mixer_type]
                     </select>
-					<a class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
-	                    <strong>- disabled:&nbsp;</strong>Assumes external analog or digital volume controller is used.<br>
+	                    <strong>- Disbled (0dB output):&nbsp;</strong>Assumes external analog or digital volume controller is used.<br>
 						<strong>- Hardware:&nbsp;</strong>Use audio device onboard volume controller.<br>
 	                    <strong>- Software:&nbsp;</strong>Use MPD volume controller (32 bit float with dither).
 					</span>
 					<span class="help-block-configs help-block-margin">
-	                    The "disabled" setting will result in 100% (0dB) volume output, otherwise<br>
+	                    The "Disabled" setting will result in 100% (0dB) volume output, otherwise<br>
 	                    volume will automatically be reset to 0 after changing this setting.<br>
 					</span>
                 </div>
@@ -81,7 +89,7 @@
                     <select id="samplerate-converter" name="conf[samplerate_converter]" class="input-large">
 						$_mpd_select[samplerate_converter]
                     </select>
-					<a class="info-toggle" data-cmd="info-samplerate-converter" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-samplerate-converter" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-samplerate-converter" class="help-block-configs help-block-margin hide">
 						<strong>Very High Quality:&nbsp;</strong>95% bandwidth, 175dB noise rejection, linear phase<br>
 						<strong>High Quality:&nbsp;</strong>95% bandwidth, 120dB noise rejection, linear phase<br>
@@ -96,7 +104,7 @@
                     <select id="sox-multithreading" name="conf[sox_multithreading]" class="input-large">
 						$_mpd_select[sox_multithreading]
                     </select>
-					<a class="info-toggle" data-cmd="info-sox-multithreading" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-sox-multithreading" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-sox-multithreading" class="help-block-configs help-block-margin hide">
 	                    MPD can run SoX in multiple threads for improved efficiency.<br>
 					</span>
@@ -109,7 +117,7 @@
 					<select id="gapless-mp3-playback" name="conf[gapless_mp3_playback]" class="input-large">
 						$_mpd_select[gapless_mp3_playback]
 					</select>
-					<a class="info-toggle" data-cmd="info-gapless-mp3-playback" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-gapless-mp3-playback" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-gapless-mp3-playback" class="help-block-configs help-block-margin hide">
                     	Select "no" if mp3 playback ends abruptly.
                     </span>
@@ -122,7 +130,7 @@
 					<select id="dsd-usb" name="conf[dop]" class="input-large">
 						$_mpd_select[dop]
 					</select>
-					<a class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-dsd-audio" class="help-block-configs help-block-margin hide">
 						<strong>Native DSD is used automatically if supported in Linux/ALSA and DAC.</strong><br>
 						- Yes = DoP is used if native DSD support is not available.<br>
@@ -137,7 +145,7 @@
 					<select id="volume-normalization" name="conf[volume_normalization]" class="input-large">
 						$_mpd_select[volume_normalization]
 					</select>
-					<a class="info-toggle" data-cmd="info-volume-normalization" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-volume-normalization" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-volume-normalization" class="help-block-configs help-block-margin hide">
 						Adjusts the volume of all songs played so that they sound as though they are of equal loudness.<br>
 						- <strong>NOTE:&nbsp;</strong>output bit depth will be converted to 16 bit.
@@ -151,7 +159,7 @@
 					<select id="replay-gain" name="conf[replaygain]" class="input-large">
 						$_mpd_select[replaygain]
 					</select>
-					<a class="info-toggle" data-cmd="info-replaygain" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-replaygain" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-replaygain" class="help-block-configs help-block-margin hide">
 						MPD will adjust the volume of songs played using ReplayGain tags.<br>
 						- Album uses the album ReplayGain tag<br>
@@ -165,7 +173,7 @@
                 <label class="control-label" for="audio-buffer-size">Audio buffer size (KB)</label>
                 <div class="controls">
                     <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4096" max="65535">
-					<a class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
                     	Default size is 4096 KB, min/max size is 4096/65535.
                     </span>
@@ -178,7 +186,7 @@
 					<select id="buffer-before-play" name="conf[buffer_before_play]" class="input-large">
 						$_mpd_select[buffer_before_play]
 					</select>
-					<a class="info-toggle" data-cmd="info-buffer-before-play" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-buffer-before-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-buffer-before-play" class="help-block-configs help-block-margin hide">
                     	Default fill is 10%, min/max fill is 10%/30%.
                     </span>
@@ -191,7 +199,7 @@
                     <select id="zeroconf-enabled" name="conf[zeroconf_enabled]" class="input-large">
 						$_mpd_select[zeroconf_enabled] 
                     </select>
-					<a class="info-toggle" data-cmd="info-zeroconf-enabled" href="#notarget"><i class="icon-info-sign"></i></a>
+					<a class="info-toggle" data-cmd="info-zeroconf-enabled" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-zeroconf-enabled" class="help-block-configs help-block-margin hide">
                     	Publish MPD Zeroconf service name with Zeroconf / Avahi.
                     </span>

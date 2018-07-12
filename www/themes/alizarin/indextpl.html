@@ -26,31 +26,62 @@
  * - live timeline fpr mobile
  * - new volume controls
  * - remove data-validate="parsley"
+ * 2018-07-11 TC moOde 4.2
+ * - add 'Mute toggle' title to volume-display
+ * - new tabs, other code for newui v2
+ * - move google search from cover to song title
+ * - add updradio context menu cmd
+ * - inpsrc-indicator
+ * - screen saver
+ * - adv browse search
+ * - font-awesome 5
  *
  */
 -->
 
-<div class="tab-content">	
+<div class="tab-content">
+	<!-- SCREEN SAVER r42x -->
+	<div id="screen-saver" class="hide" href="#notarget">
+		<div id="ss-coverart" class="ss-coverart">
+			<div id="ss-split">
+				<div id="ss-coverart-url"></div>
+				<div id="ss-timeline" class="timeline">
+					<span id="ss-countdown" href="#notarget"></span>
+					<input id="ss-timetrack" class="timetrack" type="range" min="0" max="100" value="0" step="1">
+					<span id="ss-total"></span>
+				</div>
+				<div id="ss-extratags"></div>
+			</div>
+			<div id="ss-info" class="ss-fsize ss-info">
+				<div id="ss-currentsong"></div>
+				<div id="ss-currentalbum"></div>
+			</div>
+		</div>
+	</div>
+	<!-- IMPUTSRC INDICATOR -->
+	<div id="inpsrc-indicator"></div>
 
 	<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST //newui -->
 	<div id="playback-panel" class="tab-pane active">
 		<div class="container-playback txtmid">
+			<!--div id="inpsrc-indicator"></div-->
 			<div class="no-fluid">
 				<!-- playlist //newui -->
 				<div class="span5">					
 					<div class="btnlist btnlist-top btnlist-top-pl">
 						<form id="pl-search" method="post" onSubmit="return false;">
 							<div class="input-append">
-								<button class="btn" id="play-search" title="Typedown search"><i class="icon-search"></i></button>
-								<input id="pl-filter" class="ttip" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
+								<button class="btn" id="pl-search-btn" title="Typedown search"><i class="fal fa-search"></i></button>
+								<input id="pl-filter" type="text" value="" placeholder="search">
 							</div>
 						</form>
+						<div id="pl-filter-results"></div>
 					</div>
 				
 					<div id="container-playlist">
 						<div id="playlist">
 							<ul class="playlist"></ul>
-							<button id="playlistSave" class="btn pl-btnSave"><i class="icon-save"></i>  Save This Playlist</button>
+							<button id="playlistSave" class="btn pl-btnSave">Save Playlist</button>
 						</div>				
 					</div>
 				</div>
@@ -59,7 +90,7 @@
 				<div class="span3">					
 					<div id="timeknob">
 						<div id="countdown">
-							<input class="playbackknob" id="time" data-min="0" data-max="1000" data-width="100%" data-thickness="0.26" data-bgColor="rgba(96,96,96,0.2)" data-fgcolor="#c0392b" data-readonly="false">
+							<input class="playbackknob" id="time" data-min="0" data-max="1000" data-width="100%" data-thickness="0.20" data-bgColor="rgba(96,96,96,0.2)" data-fgcolor="#c0392b" data-readonly="false">
 						</div>
 						<div id="countdown-display" href="#notarget"></div>
 						<div id="total"></div>
@@ -67,17 +98,18 @@
 					
 					<div id="mobile-toolbar">
 						<div id="mt1">
-							<button id="mrepeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="icon-repeat"></i></button>
-							<button id="mrandom" class="btn btn-cmd btn-toggle" title="Random"><i class="icon-random"></i></button>
+							<button id="mrepeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="fal fa-repeat"></i></button>
+							<button id="mrandom" class="btn btn-cmd btn-toggle" title="Random"><i class="fal fa-random"></i></button>
 						</div>
 						<div id="mt2" class="btn-group">
-							<button id="mprev" class="btn btn-cmd" title="Previous"><i class="icon-backward"></i></button>
-							<button id="mplay" class="btn btn-cmd btn-play" title="Play/Pause"><i class="icon-play"></i></button>
-							<button id="mnext" class="btn btn-cmd" title="Next"><i class="icon-forward"></i></button>
+							<button id="mprev" class="btn btn-cmd" title="Previous"><i class="fas fa-backward"></i></button>
+							<button id="mplay" class="btn btn-cmd btn-play" title="Play/Pause"><i class="fas fa-play"></i></button>
+							<button id="mnext" class="btn btn-cmd" title="Next"><i class="fas fa-forward"></i></button>
 						</div>
 						<div id="mt3">
-							<button id="mconsume" class="btn btn-cmd btn-toggle" title="Consume mode"><i class="icon-arrow-down"></i></button>
-							<button id="btn-mvol-popup" class="btn" data-toggle="modal" title="Volume"><i class="icon-volume-up"></i>
+							<button id="mconsume" class="btn btn-cmd btn-toggle" title="Consume mode"><i class="fal fa-arrow-down"></i></button>
+							<button id="btn-mvol-popup" class="btn" data-toggle="modal" title="Volume"><i class="fal fa-volume-up"></i>
+							<button id="msingle" class="btn btn-cmd btn-toggle" title="Single"><i class="fal fa-redo"></i></button>
 								<div id="mvol-bg"></div> 
 								<div id="mvol-progress"></div>
 							</button>
@@ -86,27 +118,27 @@
 
 					<div id="playbtns" class="btn-toolbar">
 						<div class="btn-group">
-							<button id="prev" class="btn btn-cmd" title="Previous"><i class="icon-backward"></i></button>
-							<button id="play" class="btn btn-cmd btn-play" title="Play/Pause"><i class="icon-play"></i></button>
-							<button id="next" class="btn btn-cmd" title="Next"><i class="icon-forward"></i></button>
+							<button id="prev" class="btn btn-cmd" title="Previous"><i class="fas fa-backward"></i></button>
+							<button id="play" class="btn btn-cmd btn-play" title="Play/Pause"><i class="fas fa-play"></i></button>
+							<button id="next" class="btn btn-cmd" title="Next"><i class="fas fa-forward"></i></button>
 						</div>
 					</div>
 					<div id="volknob">
 						<div id="volcontrol">
-							<input readonly class="volumeknob" id="volume" data-min="0" data-max="100" data-width="100%" data-thickness="0.15" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#c0392b" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
+							<input readonly class="volumeknob" id="volume" data-min="0" data-max="100" data-width="100%" data-thickness="0.17" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#c0392b" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
 						</div>
-						<div class="volume-display" href="#notarget"></div>
+						<div class="volume-display" title="Mute toggle" href="#notarget"></div>
 					</div>					
 					<div id="volbtns">
-						<button id="volumedn" class="btn btn-cmd btn-volume btn-primary" title="Vol down">&#8722;</button>
-						<button id="volumeup" class="btn btn-cmd btn-volume btn-primary" title="Vol up">+</button>
+						<button id="volumedn" class="btn btn-cmd btn-volume btn-primary" title="Vol down"><i class="far fa-minus fa-xs"></i></button>
+						<button id="volumeup" class="btn btn-cmd btn-volume btn-primary" title="Vol up"><i class="far fa-plus fa-xs"></i></button>
 					</div>
 					<div id="togglebtns">
 						<div class="btn-group">
-							<button id="random" class="btn btn-cmd btn-toggle" title="Random"><i class="icon-random"></i></button>
-							<button id="repeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="icon-repeat"></i></button>
-							<button id="single" class="btn btn-cmd btn-toggle" title="Single"><i class="icon-refresh"></i></button>
-							<button id="consume" class="btn btn-cmd btn-toggle" title="Consume"><i class="icon-arrow-down"></i></button>
+							<button id="random" class="btn btn-cmd btn-toggle" title="Random"><i class="fal fa-random"></i></button>
+							<button id="repeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="fal fa-repeat"></i></button>
+							<button id="single" class="btn btn-cmd btn-toggle" title="Single"><i class="fal fa-redo"></i></button>
+							<button id="consume" class="btn btn-cmd btn-toggle" title="Consume"><i class="fal fa-arrow-down"></i></button>
 						</div>
 					</div>
 				</div>
@@ -114,15 +146,14 @@
 				<!-- cover art and song metadata //newui -->
 				<div class="span4">
 					<div class="covers">
-						<div id="coverart-url" title="Google search"></div>
+						<div id="coverart-url"></div>
 						<div id="timeline">
 							<span id="m-countdown" href="#notarget"></span>
 							<input id="timetrack" type="range" min="0" max="100" value="0" step="1" ontouchend="sliderTime(this.value)" ontouchstart="stopTimer()">
 							<span id="m-total"></span>
 						</div>
 						<div id="extratags"></div>
-						<span id="currentartist"></span>
-						<span id="currentsong"></span>
+						<span id="currentsong" title="Google search"></span>
 						<span id="currentalbum"></span>
 					</div>
 				</div>
@@ -133,6 +164,11 @@
 	<!-- LIBRARY PANEL //newui -->
 	<div id="library-panel" class="tab-pane">
 		<div class="container-library">
+			<div class="viewswitch btn-group">
+				<button class="btn browse-panel-btn" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
+				<button class="btn library-panel-btn active" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
+			</div>
+
 			<div id="lib-loader">
 				<div id="loaderbg"></div>
 				<div id="loadercontent">
@@ -143,8 +179,8 @@
 			<div class="btnlist btnlist-top btnlist-top-lib">
 				<form id="lib-album-search" method="post" onSubmit="return false;">
 					<div class="input-append">
-						<button class="btn" id="lib-search" title="Typedown search"><i class="icon-search"></i></button>
-						<input id="lib-album-filter" class="ttip" type="text" value="" placeholder="enter artist or album" data-placement="bottom" data-toggle="tooltip">	
+						<button class="btn" id="lib-search-btn" title="Typedown search"><i class="fal fa-search"></i></button>
+						<input id="lib-album-filter" type="text" value="" placeholder="artist or album">	
 					</div>
 				</form>
 				<div id="lib-album-filter-results"></div>
@@ -172,6 +208,7 @@
 							<div id="lib-album-header">
 								<li id="albumheader">
 									<div class="lib-heading">Albums</div>
+									<div id="random-album" title="Click for random album"><i class="far fa-dot-circle"></i></div>
 								</li>
 							</div>
 							<div id="lib-album">
@@ -186,7 +223,7 @@
 							</div>
 						<div id="lib-file">
 			 				<div id="lib-coverart-meta-area">
-								<div id="lib-coverart-img" class="lib-coverart" title="Actions"></div>
+								<div id="lib-coverart-img" class="lib-coverart" title="Click for menu"></div>
 								<div id="lib-meta-summary">
 				 					<div id="lib-albumname" class="lib-albumname-meta"></div>
 				 					<div id="lib-artistname" class="lib-artistname-meta"></div>
@@ -206,117 +243,217 @@
 
 	<!-- BROWSE PANEL //newui -->
 	<div id="browse-panel" class="tab-pane">
+			<div class="viewswitch btn-group">
+				<button class="btn browse-panel-btn" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
+				<button class="btn library-panel-btn" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
+			</div>
+
 		<div id="container-browse">
 			<div class="btnlist btnlist-top btnlist-top-db">
-				<button id="db-back" class="btn"><i class="icon-arrow-left"></i></button>
-				<button id="db-home" class="btn"><i class="icon-home"></i></button>
-				<form id="db-search" class="" action="javascript:MpdDbCmd('search', '', 'file');">
-					<div id="db-search-input" class="input-append">
-						<input class="span2" id="db-search-keyword" type="text" value="" placeholder="search">
-						<button class="btn" type="submit" style="display:none"><i class="icon-search"></i></button>
-					</div>
-				</form>
-	
-				<form id="rs-search" class="" method="post" onSubmit="return false;">
-					<div id="rs-search-input" class="input-append hidden">
-						<input id="rs-filter" class="ttip" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
-						<button class="btn" style="display:none" title="Typedown search"><i class="icon-search"></i></button>
-					</div>
-				</form>
-				<div id="db-filter-results"></div>
+				<button id="db-back" class="btn"><i class="fas fa-arrow-left"></i></button>
+				<button id="db-home" class="btn"><i class="fas fa-home"></i></button>
+				<button id="db-advsearch" class="btn" title="Advanced search" href="#dbsearch-modal" data-toggle="modal"><i class="fal fa-search"></i></button>
+				<div id="db-search-results"></div>
 			</div>
 	
 			<div id="database">
 				<ul class="database"></ul>
 			</div>
-	
-			<div class="btnlist btnlist-bottom btnlist-bottom-db hidden">
-				<div id="db-controls">
-					<button class="btn db-firstPage"><i class="icon-double-angle-up"></i></button>
-					<button class="btn db-lastPage"><i class="icon-double-angle-down"></i></button>
+		</div>
+	</div>	
+
+	<!-- r42m -->
+	<!-- RADIO PANEL -->
+	<div id="radio-panel" class="tab-pane">
+		<div class="btnlist btnlist-top btnlist-top-ra">
+			<form id="ra-search" class="" method="post" onSubmit="return false;">
+				<div class="input-append">
+					<button class="btn" id="ra-search-btn" title="Typedown search"><i class="fal fa-search"></i></button>
+					<input id="ra-filter" type="text" value="" placeholder="search">
 				</div>
-				<div id="db-currentpath">
-					<i class="icon-folder-open"></i> <span>NAS/</span>
-				</div>
-			</div>		
+			</form>
+			<div id="ra-filter-results"></div>
+		</div>
+		<div id="container-radio">
+			<div id="database-radio">
+				<ul class="database-radio"></ul>
+			</div>
 		</div>
 	</div>	
 </div>
 
-<!-- ACTION MENUS -->
+<!-- BROWSE ADV SEARCH r42y -->	
+<div id="dbsearch-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="dbsearch-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Advanced search</h3>
+		<a href="#notarget" id="db-search-reset">RESET</a>&nbsp;search fields
+	</div>
+	<div class="modal-body" id="container-dbsearch">
+		<form class="form-horizontal" action="" method="">
+	    	<fieldset>
+				<h5>Search all tags</h5>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-alltags">Search string</label>
+	                <div class="controls">
+	                    <input id="dbsearch-alltags" class="input-xlarge" type="text">
+						<a class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-alltags" class="help-block hide">
+	                    	All tags are searched using an OR relationship.
+	                    </span>
+	                </div>
+	            </div>
+				<h5>Search specific tags</h5>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-genre">Genre</label>
+	                <div class="controls">
+	                    <input id="dbsearch-genre" class="input-xlarge" type="text" name="dbsearch_genre" value="">
+						<a class="info-toggle" data-cmd="info-specifictags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-specifictags" class="help-block hide">
+		                	Non-empty tags are searched using an AND relationship.
+		                </span>
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-artist">Artist</label>
+	                <div class="controls">
+	                    <input id="dbsearch-artist" class="input-xlarge" type="text" name="dbsearch_artist" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-album">Album</label>
+	                <div class="controls">
+	                    <input id="dbsearch-album" class="input-xlarge" type="text" name="dbsearch_album" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-title">Title</label>
+	                <div class="controls">
+	                    <input id="dbsearch-title" class="input-xlarge" type="text" name="dbsearch_title" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-albumartist">Album artist</label>
+	                <div class="controls">
+	                    <input id="dbsearch-albumartist" class="input-xlarge" type="text" name="dbsearch_albumartist" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-date">Release date</label>
+	                <div class="controls">
+	                    <input id="dbsearch-date" class="input-xlarge" type="text" name="dbsearch_date" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-composer">Composer</label>
+	                <div class="controls">
+	                    <input id="dbsearch-composer" class="input-xlarge" type="text" name="dbsearch_composer" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-performer">Performer</label>
+	                <div class="controls">
+	                    <input id="dbsearch-performer" class="input-xlarge" type="text" name="dbsearch_performer" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-file">File name</label>
+	                <div class="controls">
+	                    <input id="dbsearch-file" class="input-xlarge" type="text" name="dbsearch_file" value="">
+	                </div>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-primary" id="db-search-submit" data-dismiss="modal">Search</button>
+	</div>
+</div>
+
+<!-- CONTEXT MENUS -->
 <div id="context-menus">
 	<div id="context-menu" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="icon-plus-sign sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="icon-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="icon-share sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="update"><i class="icon-refresh sx"></i> Update this folder</a></li>
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="update"><i class="fal fa-sync sx"></i> Update this folder</a></li>
 		</ul>
 	</div>
 	
 	<div id="context-menu-root" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="update"><i class="icon-refresh sx"></i> Update this folder</a></li>
+			<li><a href="#notarget" data-cmd="update"><i class="fal fa-sync sx"></i> Update this folder</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-savedpl-root" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="icon-plus-sign sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="icon-play sx"></i> Play</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="icon-share sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="delsavedpl"><i class="icon-remove sx"></i> Delete playlist</a></li>
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="delsavedpl"><i class="fal fa-trash sx"></i> Delete playlist</a></li>
 		</ul>
 	</div>
 	
 	<div id="context-menu-savedpl-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="icon-plus-sign sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="icon-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="icon-share sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-folder-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="icon-plus-sign sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="icon-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="icon-share sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-db-search-results" class="context-menu-lib"> <!-- r42y -->
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-lib-item" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="icon-plus-sign sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="icon-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="icon-share sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-lib-all" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="addall"><i class="icon-plus-sign sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="playall"><i class="icon-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplayall"><i class="icon-share sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-radio-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="icon-plus-sign sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="icon-play sx"></i> Play</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="icon-share sx"></i> Clear/Play</a></li>
-			<li><a href="#notarget" data-cmd="addstation"><i class="icon-microphone sx"></i> Create new station</a></li>
-			<li><a href="#notarget" data-cmd="editradiostn"><i class="icon-edit sx"></i> Edit station</a></li>
-			<li><a href="#notarget" data-cmd="delstation"><i class="icon-remove sx"></i> Delete station</a></li>
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="addstation"><i class="fal fa-microphone sx"></i> Create new station</a></li>
+			<li><a href="#notarget" data-cmd="editradiostn"><i class="fal fa-edit sx"></i> Edit station</a></li>
+			<li><a href="#notarget" data-cmd="delstation"><i class="fal fa-trash sx"></i> Delete station</a></li>
+			<li><a href="#notarget" data-cmd="updradio"><i class="fal fa-sync sx"></i> Update database</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-playlist-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="deleteplitem"><i class="icon-remove sx"></i> Remove item(s)</a></li>
-			<li><a href="#notarget" data-cmd="moveplitem"><i class="icon-arrow-up sx"></i> Move item(s)</a></li>
-			<li><a href="#notarget" data-cmd="setforclockradio"><i class="icon-time sx"></i> Set for clock radio</a></li>
+			<li><a href="#notarget" data-cmd="deleteplitem"><i class="fal fa-trash sx"></i> Remove item(s)</a></li>
+			<li><a href="#notarget" data-cmd="moveplitem"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
+			<li><a href="#notarget" data-cmd="setforclockradio"><i class="fal fa-alarm-clock sx"></i> Set for clock radio</a></li>
 		</ul>
 	</div>
 </div>
@@ -344,8 +481,8 @@
 		</form>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-add-radiostn btn-primary" data-dismiss="modal">Add Station</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-add-radiostn btn-primary" data-dismiss="modal">Add Station</button>
 	</div>
 </div>
 
@@ -371,8 +508,8 @@
 		</form>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-update-radiostn btn-primary" data-dismiss="modal">Update Station</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-update-radiostn btn-primary" data-dismiss="modal">Update Station</button>
 	</div>
 </div>
 
@@ -385,8 +522,8 @@
 		<h4 id='station-path'></h4>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-del-radiostn btn-primary" data-dismiss="modal">Delete Station</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-del-radiostn btn-primary" data-dismiss="modal">Delete Station</button>
 	</div>
 </div>
 
@@ -403,20 +540,20 @@
 	                <label class="control-label" for="delete-plitem-begpos">Beginning item</label>
 	                <div class="controls">
 	                    <input id="delete-plitem-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="delete_plitem_begpos" value="">
-						<button id="btn-delete-setpos-top" class="btn btn-mini btn-default"><i class="icon-double-angle-up"></i></button>
+						<button id="btn-delete-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
 	                </div>
 	                <label class="control-label" for="delete-plitem-endpos">Ending item</label>
 	                <div class="controls">
-	                    <input id="delete-plitem-endpos" class="input-small" style="height: 20px;" type="number"  min="1" max="" name="delete_plitem_endpos" value="">
-						<button id="btn-delete-setpos-bot" class="btn btn-mini btn-default"><i class="icon-double-angle-down"></i></button>
+	                    <input id="delete-plitem-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="delete_plitem_endpos" value="">
+						<button id="btn-delete-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
 	                </div>
 	            </div>
 	    	</fieldset>
 		</form>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-delete-plitem btn-primary" data-dismiss="modal">Remove items</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-delete-plitem btn-primary" data-dismiss="modal">Remove items</button>
 	</div>
 </div>
 
@@ -431,27 +568,27 @@
 				<div class="control-group">
 	                <label class="control-label" for="move-plitem-begpos">Beginning item</label>
 	                <div class="controls">
-	                    <input id="move-plitem-begpos" class="input-small" style="height: 20px;" type="number"  min="1" max="" name="move_plitem_begpos" value="">
-						<button id="btn-move-setpos-top" class="btn btn-mini btn-default"><i class="icon-double-angle-up"></i></button>
+	                    <input id="move-plitem-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_begpos" value="">
+						<button id="btn-move-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
 	                </div>
 	                <label class="control-label" for="move-plitem-endpos">Ending item</label>
 	                <div class="controls">
-	                    <input id="move-plitem-endpos" class="input-small" style="height: 20px;" type="number"  min="1"  max="" name="move_plitem_endpos" value="">
-						<button id="btn-move-setpos-bot" class="btn btn-mini btn-default"><i class="icon-double-angle-down"></i></button>
+	                    <input id="move-plitem-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_endpos" value="">
+						<button id="btn-move-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
 	                </div>
 	                <label class="control-label" for="move-plitem-newpos">New position</label>
 	                <div class="controls">
-	                    <input id="move-plitem-newpos" class="input-small" style="height: 20px;" type="number"  min="1"  max="" name="move_plitem_newpos" value="">
-						<button id="btn-move-setnewpos-top" class="btn btn-mini btn-default"><i class="icon-double-angle-up"></i></button>
-						<button id="btn-move-setnewpos-bot" class="btn btn-mini btn-default"><i class="icon-double-angle-down"></i></button>
+	                    <input id="move-plitem-newpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_newpos" value="">
+						<button id="btn-move-setnewpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+						<button id="btn-move-setnewpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
 	                </div>
 	            </div>
 	    	</fieldset>
 		</form>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-move-plitem btn-primary" data-dismiss="modal">Move Items</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-move-plitem btn-primary" data-dismiss="modal">Move Items</button>
 	</div>
 </div>
 
@@ -465,8 +602,8 @@
 		<h4 id='savedpl-path'></h4>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-del-savedpl btn-primary" data-dismiss="modal">Delete Playlist</button>
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-del-savedpl btn-primary" data-dismiss="modal">Delete Playlist</button>
 	</div>
 </div>
 
@@ -481,8 +618,8 @@
 			<div class="input-append" style="margin-bottom: 0;">
 				<input id="ph-filter" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
 				<span id="ph-filter-results"></span>
-				<button class="btn ph-firstPage"><i class="icon-double-angle-up"></i></button>
-				<button class="btn ph-lastPage"><i class="icon-double-angle-down"></i></button>
+				<button class="btn ph-firstPage"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+				<button class="btn ph-lastPage"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
 			</div>
 		</form>
 	</div>
@@ -492,7 +629,7 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
@@ -500,15 +637,14 @@
 <div id="volume-popup" class="modal modal-xs hide fade" tabindex="-1" role="dialog" aria-labelledby="volume-popup-label" aria-hidden="true">
     <div class="modal-body">
 		<div id="volknob-2">
-			<!--div id="volcontrol-2" style="width:179px; height:179px; margin:auto;"-->
 			<div id="volcontrol-2">
-				<input readonly class="volumeknob" id="volume-2" data-min="0" data-max="100" data-width="100%" data-thickness="0.15" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#c0392b" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
+				<input readonly class="volumeknob" id="volume-2" data-min="0" data-max="100" data-width="100%" data-thickness="0.16" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#c0392b" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
 			</div>
 			<div class="volume-display" href="#notarget"></div>
 		</div>					
 		<div id="volbtns-2">
-			<button id="volumedn-2" class="btn btn-cmd btn-volume btn-primary" title="Vol down">&#8722;</button>
-			<button id="volumeup-2" class="btn btn-cmd btn-volume btn-primary" title="Vol up">+</button>
+			<button id="volumedn-2" class="btn btn-cmd btn-volume btn-primary" title="Vol down"><i class="far fa-minus fa-xs"></i></button>
+			<button id="volumeup-2" class="btn btn-cmd btn-volume btn-primary" title="Vol up"><i class="far fa-plus fa-xs"></i></button>
 		</div>
     </div>
 </div>

@@ -17,7 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2018-01-26 TC moOde 4.0
-# 2018-04-02 TC moOde 4.1 add /etc/bluetooth/main.conf to bluetooth name change
+# 2018-04-02 TC moOde 4.1
+# - add /etc/bluetooth/main.conf to bluetooth name change
+# 2018-07-11 TC moOde 4.2
+# - add clearbrcache
 #
 
 if [[ $1 = "set-timezone" ]]; then
@@ -159,6 +162,7 @@ if [[ $1 = "alizarin" || $1 = "amethyst" || $1 = "bluejeans" || $1 = "carrot" ||
 	exit
 fi
 
+# r42x add shairport-sync.log
 if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/alternatives.log --size 0
 	truncate /var/log/apt/history.log --size 0
@@ -184,6 +188,7 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/syslog --size 0
 	truncate /var/log/user.log --size 0
 	truncate /var/log/wtmp --size 0
+	truncate /var/log/shairport-sync.log --size 0
 	#truncate /var/log/moode.log --size 0
 	exit
 fi
@@ -235,5 +240,13 @@ if [[ $1 = "check-dir" ]]; then
 	if [ -d "$2" ]; then 
 		echo "exists"
 	fi
+    exit
+fi
+
+# clear chrome browser cache
+if [[ $1 = "clearbrcache" ]]; then
+	rm -rf /home/pi/.cache/chromium
+	# this will delete installed extensions like xontab kbdchr
+	#rm -rf /home/pi/.config/chromium/Default
     exit
 fi

@@ -6,6 +6,11 @@ Version    : 1.2.0
 Link       : http://pinesframework.org/pnotify/
 Description:
 	Default styling for Pines Notify jQuery plugin.
+
+*
+* 2018-07-11 TC moOde 4.2
+* - commaent out margin in ui-notify-icon since we are not using icons
+*
 */
 /* -- Notice */
 .ui-pnotify {
@@ -50,7 +55,7 @@ display: block;
 .ui-pnotify-icon, .ui-pnotify-icon span {
 display: block;
 float: left;
-margin-right: .2em;
+/*margin-right: .2em; r42p we are not using icons */
 }
 /* -- History Pulldown */
 .ui-pnotify-history-container {

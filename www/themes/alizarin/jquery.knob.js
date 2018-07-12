@@ -18,6 +18,7 @@
  * 2014-08-23 1.0 TC initial rewrite, theme colors
  * 2018-01-26 4.0 TC add bounds and propagate patches
  * 2018-04-02 4.1 TC add test for selector in bounds check routine
+ * 2018-04-02 4.2 TC deprecate bounds check, remove this.bounds, this.propagate
  *
  */
  
@@ -315,13 +316,6 @@
                 s._draw();
             };
 
-			// tpc
-			if(!s.bounds(e))
-        	{
-        		//s._propagate(e);
-        		return;
-        	}
-
             // get touches index
             this.t = k.c.t(e);
 
@@ -362,13 +356,6 @@
                 s.change(s._validate(v));
                 s._draw();
             };
-
-			// tpc
-			if(!s.bounds(e))
-        	{
-        		//s._propagate(e);
-        		return;
-        	}
 
             // First click
             mouseMove(e);
@@ -476,32 +463,6 @@
         this._validate = function(v) {
             return (~~ (((v < 0) ? -0.5 : 0.5) + (v/this.o.step))) * this.o.step;
         };
-
-		// tpc
-		// propagate event to element underneath
-        this._propagate = function(e)
-		{
-			s.$div.css("pointer-events", "none");
-			if(e.type == "mousedown")
-			{
-				var ne = jQuery.Event( e.type, { which:1, pageX: e.pageX, pageY: e.pageY } );
-				var nt = document.elementFromPoint(e.pageX, e.pageY);
-			}
-			else
-			{
-				var point =
-				{
-					x:e.originalEvent.touches[0].pageX,
-					y:e.originalEvent.touches[0].pageY
-				}
-				
-				var ne = jQuery.Event( e.type, { originalEvent:e.originalEvent, which:1, pageX: point.x, pageY: point.y } );
-				var nt = document.elementFromPoint(point.x, point.y);
-			}
-			
-			$(nt).trigger(ne);
-			s.$div.css("pointer-events", "auto");
-		}
 
         // Abstract methods
         this.listen = function () {}; // on start, one time
@@ -741,7 +702,7 @@
         this.draw = function () {
 
             var c = this.g,                 // context
-                a = this.angle(this.cv)    // Angle
+                a = this.angle(this.cv)     // Angle
                 , sat = this.startAngle     // Start angle
                 , eat = sat + a             // End angle
                 , sa, ea                    // Previous angles
@@ -779,64 +740,6 @@
                 c.arc(this.xy, this.xy, this.radius, sat, eat, false);
             c.stroke();
         };
-
-		// tpc
-		// checks if the event was within the bounds of the knob
-		this.bounds = function(e)
-		{
-			// tpc r41 capture the selector
-			var id = e.target.offsetParent.id;
-			//console.log('selector: ' + id);
-			//console.log('event: ' + e.type);
-
-			if(e.type == "mousedown")
-			{
-				var x = e.pageX;
-				var y = e.pageY;
-				
-				var r = this.xy;
-				// tpc sometimes on touchscreen we get a mousedown event instead of touchstart which causes the radius (r) to be way off
-				//console.log('radius: ' + r);
-				if (r > 89.5) {r = 89.5}
-
-				var ox = x - this.x - r;
-				var oy = y - this.y - r;
-			}
-			if(e.type == "touchstart")
-			{
-				if(e.originalEvent)
-				{
-					var touch = e.originalEvent.touches[0];
-				}
-				else
-				{
-					var touch = e;
-				}
-				
-				var x = touch.pageX;
-				var y = touch.pageY;
-				
-				var r = this.xy / 2;
-				
-				//console.log('radius: ' + r);
-
-				var ox = x - this.x - r;
-				var oy = y - this.y - r;
-			}
-			// tpc check offset y (oy) to help avoid the lower part of knob between 0 and 100 marks
-			// tpc r41 add check for selector and dont do additional oy check for timeknob
-			//console.log('oy,ox: ' + oy + ',' + ox);
-			if(Math.sqrt((ox*ox) + (oy*oy)) < r  && (id == 'countdown' ? true : (oy < 38))) // tpc r41 was 33
-			{
-				//console.log('in bounds: true');
-				return true;
-			}
-			else
-			{
-				//console.log('in bounds: false');
-				return false;
-			}
-		}
 
         this.cancel = function () {
             this.val(this.v);

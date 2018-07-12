@@ -21,7 +21,9 @@
  * 2018-01-26 TC moOde 4.0
  * 2018-01-26 TC moOde 4.1
  * - remove unneeded msgs
- * - remove icon
+ * - blank out icon
+ * 2018-07-11 TC moOde 4.2
+ * - reformat msg for 'update'
  *
  */
 
@@ -31,7 +33,7 @@ function notify(cmd, msg, duration) {
     var map = {
 		add: 'Added to playlist',
 		clrplay: 'Added after clearing playlist',
-		update: 'Update path: ',
+		update: 'Updating...',
 		remove: 'Removed from playlist',
 		move: 'Playlist items moved',
 		savepl: 'Playlist saved',
@@ -46,6 +48,7 @@ function notify(cmd, msg, duration) {
 		updclockradio: 'Clock radio updated',
 		updcustomize: 'Settings updated',
 		usbaudioready: 'USB audio ready',
+		scnsaverexit: 'Leaving CoverView',
 		reboot: 'Rebooting...',
 		shutdown: 'Shutting down...'
     };
@@ -57,8 +60,12 @@ function notify(cmd, msg, duration) {
     if (typeof duration == 'undefined') {
         duration = 2000;
     }
+	// override and combine title and message on one line
+	if (cmd == 'update') {
+		msg = 'Path: ' + msg;
+	}
 
-    //var icon = cmd == 'needplname' || cmd == 'needssid' ? 'icon-info-sign' : 'icon-ok';
+    //var icon = cmd == 'needplname' || cmd == 'needssid' ? 'fas fa-info-circle' : 'fas fa-check';
 	var icon = '';
     $.pnotify({
         title: map[cmd],

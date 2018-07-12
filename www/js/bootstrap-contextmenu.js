@@ -12,6 +12,8 @@
  *
  *	TC Moode Audio Player, http://moodeaudio.org
  *	- UI.dbEntry[] from original player code
+ * 2018-07-11 TC moOde 4.2
+ * - enhance positioning
  */
 
 /* =========================================================
@@ -124,12 +126,48 @@
 		}
 
 		,getPosition: function(e, $menu) {
-			var menuWidth = $menu.find('.dropdown-menu').outerWidth(),
-				tp = {"position":"fixed"},
-				X, Y;
-			X = {"left": UI.dbEntry[1] - menuWidth + 15};
-			Y = {"top": UI.dbEntry[2] - $(window).scrollTop()};
+			var mouseX = e.clientX
+				, mouseY = e.clientY
+				, boundsX = $(window).width()
+				, boundsY = $(window).height()
+				, menuWidth = $menu.find('.dropdown-menu').outerWidth()
+				, menuHeight = $menu.find('.dropdown-menu').outerHeight()
+				, tp = {"position":"absolute","z-index":9999}
+				, Y, X, parentOffset;
 
+				//console.log(mouseX + ', ' + mouseY);
+				if ($('body').css('zoom') == '0.75') {
+					boundsX = Math.round(boundsX * 1.25);
+					boundsY = Math.round(boundsY * 1.25);
+					mouseX = Math.round(mouseX * 1.25);
+					mouseY = Math.round(mouseY * 1.25);
+					menuHeight = Math.round(menuHeight * .75);
+					menuWidth = Math.round(menuWidth * .75);
+				}
+			if (mouseY + menuHeight > boundsY) {
+				Y = {"top": mouseY - menuHeight + $(window).scrollTop()}; // was mouseY - menuHeight
+				//console.log('cuty ' + (mouseY - menuHeight + $(window).scrollTop()));
+			} else {
+				Y = {"top": mouseY + $(window).scrollTop()};
+				//console.log((mouseY + $(window).scrollTop()));
+			}
+
+			if ((mouseX + menuWidth > boundsX) && ((mouseX - menuWidth) > 0)) {
+				X = {"left": mouseX - menuWidth + $(window).scrollLeft()};  // was mouseX - menuWidth
+				//console.log('cutx ' + (mouseX - menuWidth + $(window).scrollLeft()));
+			} else {
+				X = {"left": mouseX + $(window).scrollLeft()};
+				//console.log((mouseX + $(window).scrollLeft()));
+			}
+			//console.log(mouseX + ', ' + mouseY + ', ' + boundsX + ', ' + boundsY);
+
+			// If context-menu's parent is positioned using absolute or relative positioning,
+			// the calculated mouse position will be incorrect.
+			// Adjust the position of the menu by its offset parent position.
+			parentOffset = $menu.offsetParent().offset();
+			X.left = X.left - parentOffset.left;
+			Y.top = Y.top - parentOffset.top;
+ 
 			return $.extend(tp, Y, X);
 		}
 

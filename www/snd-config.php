@@ -17,7 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1 add setting for resume mpd after bt
+ * 2018-04-02 TC moOde 4.1
+ * - add Resume MPD for Bluetooth
+ * 2018-07-11 TC moOde 4.2
+ * - add 'Resume MPD' for Airplay and Squeezelite
  *
  */
 
@@ -89,7 +92,7 @@ if (isset($_POST['update_rotenc'])) {
 
 // auto-shuffle
 if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashufflesvc']) {
-	$_SESSION['notify']['title'] = $_POST['ashufflesvc'] == 1 ? 'Auto-shuffle enabled' : 'Auto-shuffle disabled';
+	$_SESSION['notify']['title'] = $_POST['ashufflesvc'] == 1 ? 'Auto-shuffle on' : 'Auto-shuffle off';
 	$_SESSION['notify']['duration'] = 3;
 	playerSession('write', 'ashufflesvc', $_POST['ashufflesvc']);
 
@@ -144,7 +147,7 @@ if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal'])
 
 // RENDERERS
 
-// bluetooth controller
+// BLUETOOTH RENDERER
 if (isset($_POST['update_bt_settings'])) {
 	$currentBtName = $_SESSION['btname'];
 
@@ -170,14 +173,14 @@ if (isset($_POST['update_bt_multi'])) {
 // resume mpd after bt
 if (isset($_POST['update_rsmafterbt'])) {
 	playerSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
-	$_SESSION['notify']['title'] = $_POST['rsmafterbt'] == 1 ? 'Resume MPD on' : 'Resume MPD off';
+	$_SESSION['notify']['title'] = 'Setting updated';
 }
 // restart bluetooth
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('btsvc', '', 'Bluetooth controller restarted', '');
 }
 
-// airplay receiver
+// AIRPLAY RENDERER
 if (isset($_POST['update_airplay_settings'])) {
 	if (isset($_POST['airplayname']) && $_POST['airplayname'] != $_SESSION['airplayname']) {
 		$title = 'Airplay name updated';
@@ -193,12 +196,17 @@ if (isset($_POST['update_airplay_settings'])) {
 		submitJob('airplaysvc', '', $title, '');
 	}
 }
+// resume mpd after airplay
+if (isset($_POST['update_rsmafterapl'])) {
+	playerSession('write', 'rsmafterapl', $_POST['rsmafterapl']);
+	$_SESSION['notify']['title'] = 'Setting updated';
+}
 // restart airplay
 if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSION['airplaysvc'] == '1') {
 	submitJob('airplaysvc', '', 'Airplay receiver restarted', '');
 }
 
-// squeezelite
+// SQUEEZELITE RENDERER
 if (isset($_POST['update_sl_settings'])) {
 	if (isset($_POST['slsvc']) && $_POST['slsvc'] != $_SESSION['slsvc']) {
 		$title = $_POST['slsvc'] == 1 ? 'Squeezelite renderer on' : 'Squeezelite renderer off';
@@ -209,12 +217,17 @@ if (isset($_POST['update_sl_settings'])) {
 		submitJob('slsvc', '', $title, '');
 	}
 }
+// resume mpd after squeezelite
+if (isset($_POST['update_rsmaftersl'])) {
+	playerSession('write', 'rsmaftersl', $_POST['rsmaftersl']);
+	$_SESSION['notify']['title'] = 'Setting updated';
+}
 // restart squeezelite
 if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
 	submitJob('slrestart', '', 'Squeezelite restarted', '');
 }
 
-// upnp renderer
+// upnp mpd proxy
 if (isset($_POST['update_upnp_settings'])) {
 	$currentUpnpName = $_SESSION['upnpname'];
 
@@ -410,6 +423,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
 	$_select['airplaysvc1'] .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggleairplaysvc1\" value=\"1\" " . (($_SESSION['airplaysvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['airplaysvc0'] .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggleairplaysvc2\" value=\"0\" " . (($_SESSION['airplaysvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['airplayname'] = $_SESSION['airplayname'];
+	$_select['rsmafterapl'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterapl'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+	$_select['rsmafterapl'] .= "<option value=\"No\" " . (($_SESSION['rsmafterapl'] == 'No') ? "selected" : "") . ">No</option>\n";
 	$_airplay_restart = $_SESSION['airplaysvc'] == '1' ? '#airplay-restart' : '#notarget';
 }
 else {
@@ -421,13 +436,17 @@ if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
 	$_feat_squeezelite = '';
 	$_select['slsvc1'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggleslsvc1\" value=\"1\" " . (($_SESSION['slsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['slsvc0'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggleslsvc2\" value=\"0\" " . (($_SESSION['slsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['rsmaftersl'] .= "<option value=\"Yes\" " . (($_SESSION['rsmaftersl'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+	$_select['rsmaftersl'] .= "<option value=\"No\" " . (($_SESSION['rsmaftersl'] == 'No') ? "selected" : "") . ">No</option>\n";
 	$_sl_restart = $_SESSION['slsvc'] == '1' ? '#sl-restart' : '#notarget';
 }
 else {
 	$_feat_squeezelite = 'hide';
 }
 
-// upnp renderer
+// UPNP
+
+// upnp mpd proxy
 if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
 	$_feat_upmpdcli = '';
 	$_select['upnpsvc1'] .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggleupnpsvc1\" value=\"1\" " . (($_SESSION['upnpsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";

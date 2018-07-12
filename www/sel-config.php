@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-07-11 TC moOde 4.2
+ * - minor wording updates
+ * - remove FEAT_INPUTSEL
  *
  */
 
@@ -25,24 +28,23 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 playerSession('open', '' ,'');
 
 if (isset($_POST['update_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
-	submitJob('audioout', $_POST['audioout'], 'Output set to ' . $_POST['audioout'], '');
 	playerSession('write', 'audioout', $_POST['audioout']);
+	submitJob('audioout', $_POST['audioout'], 'Output set to ' . $_POST['audioout'], '');
 }
 if (isset($_POST['update_audioin']) && $_POST['audioin'] != $_SESSION['audioin']) {
-	submitJob('audioin', $_POST['audioin'], 'Input set to ' . $_POST['audioin'], '');
 	playerSession('write', 'audioin', $_POST['audioin']);
+	submitJob('audioin', $_POST['audioin'], 'Input set to ' . $_POST['audioin'], '');
 }
 
-// output select
-$_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Local (default)</option>\n";
-$_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth</option>\n";
-// input select
-$_select['audioin'] .= "<option value=\"Local\" " . (($_SESSION['audioin'] == 'Local') ? "selected" : "") . ">Local (default)</option>\n";
-if ($_SESSION['feat_bitmask'] & FEAT_INPUTSEL) {
-	$_select['audioin'] .= "<option value=\"Analog\" " . (($_SESSION['audioin'] == 'Analog') ? "selected" : "") . ">Analog input</option>\n";
-	$_select['audioin'] .= "<option value=\"S/PDIF\" " . (($_SESSION['audioin'] == 'S/PDIF') ? "selected" : "") . ">S/PDIF input</option>\n";
-}
 session_write_close();
+
+// output select
+$_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Audio output -> Local</option>\n";
+$_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Audio output -> Bluetooth</option>\n";
+// input select examples
+$_select['audioin'] .= "<option value=\"None\" " . (($_SESSION['audioin'] == 'None') ? "selected" : "") . ">None</option>\n";
+$_select['audioin'] .= "<option value=\"Analog\" " . (($_SESSION['audioin'] == 'Analog') ? "selected" : "") . ">Analog input</option>\n";
+$_select['audioin'] .= "<option value=\"S/PDIF\" " . (($_SESSION['audioin'] == 'S/PDIF') ? "selected" : "") . ">S/PDIF input</option>\n";
 
 $section = basename(__FILE__, '.php');
 $tpl = "sel-config.html";

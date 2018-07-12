@@ -6,6 +6,8 @@
 # moOde audio player. Additional help is provided within
 # the player via the (i) information buttons. 
 #
+# Updated: 2018-07-11
+#
 # (C) Tim Curtis 2017 http://moodeaudio.org
 #
 #########################################################
@@ -17,7 +19,7 @@ NOTE: Use http://moode, moode.local or IP address, whichever works on your netwo
 - SSH login user: pi, pwd: moodeaudio
 - Preface all commands with sudo
 - AP mode IP address: 172.24.1.1, SSID: Moode, pwd: moodeaudio, channel: 6
-- AP mode starts automatically when wlan0 SSID is 'blank' in Network config and there is no Ethernet connection
+- AP mode starts automatically when wlan0 SSID is 'blank' in Network config and there is no Ethernet connection, or WiFi SSID is defined but no IP address is assigned
 - Default Samba shares are NAS, RADIO, SDCARD, USB
 - Each USB disk will also have a Samba share named after its Disk Label
 
@@ -58,9 +60,10 @@ SETUP INSTRUCTIONS
 
  2. AUDIO DEVICE SETUP
     - USB DEVICE
-    a) Menu, Configure, Audio, MPD options: EDIT SETTINGS
-    b) leave Volume control set to "Software"
-    c) set Audio output to "USB audio device" then APPLY
+	a) Menu, Configure, Audio, I2S audio device: None
+    b) MPD options: EDIT SETTINGS
+    c) leave Volume control set to "Software"
+    d) set Audio device to "USB audio device" then APPLY
     - I2S DEVICE
     a) Menu, Configure, Audio
     b) select an I2S audio device then SET
@@ -198,7 +201,7 @@ themecolor=Emerald
     f) select appropriate I2S audio device then SET
     g) Menu, Restart, Reboot
     h) Menu, Configure, Audio, MPD options: EDIT SETTINGS
-    i) Verify Audio output set to "I2S audio device"
+    i) Verify Audio device set to "I2S audio device"
     j) APPLY
 
  2. Switching from I2S to USB audio device
@@ -209,7 +212,7 @@ themecolor=Emerald
     e) plug in USB audio device
     f) power on
     g) Menu, Configure, Audio, MPD options: EDIT SETTINGS
-    h) Select "USB audio device" for Audio output
+    h) Select "USB audio device" for Audio device
     i) APPLY
 
  3. Switching from WiFi back to Ethernet

@@ -17,7 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1 remove sps metadata
+ * 2018-04-02 TC moOde 4.1
+ * - remove sps metadata
+ * 2018-07-11 TC moOde 4.2
+ * - move 'Resume MPD' to Audio config
  *
  */
 
@@ -31,7 +34,7 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_airplay', $dbh, $key, $value);
 
-		if ($key == 'airplayvol' || $key == 'rsmaftersps') {
+		if ($key == 'airplayvol') {
 			playerSession('write', $key, $value);
 		}
 		else {
@@ -57,9 +60,6 @@ foreach ($result as $row) {
 // volume mixer
 $_select['airplayvol'] .= "<option value=\"auto\" " . (($_SESSION['airplayvol'] == 'auto') ? "selected" : "") . ">Auto</option>\n";
 $_select['airplayvol'] .= "<option value=\"software\" " . (($_SESSION['airplayvol'] == 'software') ? "selected" : "") . ">Software</option>\n";
-// resume MPD after sps ends
-$_select['rsmaftersps'] .= "<option value=\"Yes\" " . (($_SESSION['rsmaftersps'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['rsmaftersps'] .= "<option value=\"No\" " . (($_SESSION['rsmaftersps'] == 'No') ? "selected" : "") . ">No</option>\n";
 // output bit depth
 $_select['output_format'] .= "<option value=\"S16\" " . (($cfg_airplay['output_format'] == 'S16') ? "selected" : "") . ">16 bit</option>\n";
 $_select['output_format'] .= "<option value=\"S24\" " . (($cfg_airplay['output_format'] == 'S24') ? "selected" : "") . ">24 bit</option>\n";

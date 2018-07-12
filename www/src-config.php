@@ -20,7 +20,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1 substantial rewrite
+ * 2018-04-02 TC moOde 4.1
+ * - substantial rewrite
+ * 2018-07-11 TC moOde 4.2
+ * - add trim() to Name validation
+ * - remove sec=ntlm from default mount flags
+ * - handle auto db update here iunstead of in waitWirker();
+ * - font-awesome 5
  *
  */
 
@@ -36,6 +42,9 @@ else {
 	$dbh = cfgdb_connect();
 	session_write_close();
 }
+
+// for save/remove actions
+$initiateDBUpd = false;
 
 // SOURCE CONFIG POSTS
 
@@ -53,20 +62,19 @@ if (isset($_POST['remount'])) {
 	$result_mount = wrk_sourcemount('mountall');
 	workerLog('src-config: remount: (' . $result_unmount . ', ' . $result_mount . ')');
 	$_SESSION['notify']['title'] = 'Re-mount initiated...';
-	$_SESSION['notify']['duration'] = 6;
 }
 // reset library cache
 if (isset($_POST['resetcache'])) {
 	sysCmd('truncate /var/local/www/libcache.json --size 0');
 	$_SESSION['notify']['title'] = 'Cache has been reset';
 	$_SESSION['notify']['msg'] = 'Open the Library to reload the cache';
-	$_SESSION['notify']['duration'] = 6;
 }
 
 // NAS CONFIG POSTS
 
 // remove nas source
 if (isset($_POST['delete']) && $_POST['delete'] == 1) {
+	$initiateDBUpd = true;
 	$_POST['mount']['action'] = 'delete';
 	submitJob('sourcecfg', $_POST, 'NAS source removed', 'DB update initiated...');
 }
@@ -99,7 +107,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$_SESSION['notify']['title'] = 'Name already exists';
 		$_SESSION['notify']['duration'] = 20;
 	}
-	elseif (empty($_POST['mount']['name'])) {
+	elseif (trim(empty($_POST['mount']['name']))) {
 		$_SESSION['notify']['title'] = 'Name cannot be blank';
 		$_SESSION['notify']['duration'] = 20;
 	}
@@ -109,12 +117,13 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	}
 	// ok so save
 	else {
+		$initiateDBUpd = true;
 		// defaults
 		if (empty(trim($_POST['mount']['rsize']))) {$_POST['mount']['rsize'] = 61440;}
 		if (empty(trim($_POST['mount']['wsize']))) {$_POST['mount']['wsize'] = 65536;}
 		if (empty(trim($_POST['mount']['options']))) {
 			if ($_POST['mount']['type'] == 'cifs') {
-				$_POST['mount']['options'] = "vers=1.0,sec=ntlm,ro,dir_mode=0777,file_mode=0777";
+				$_POST['mount']['options'] = "vers=1.0,ro,dir_mode=0777,file_mode=0777";
 			}
 			else {
 				$_POST['mount']['options'] = "ro,nolock";
@@ -175,8 +184,12 @@ if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
 	$_GET['id'] = $_SESSION['nas_mpid'];
 }
 
-// also does db update after sourcecfg job completes
+// initiate db update if indicated after sourcecfg job completes
 waitWorker(1, 'src-config');
+if ($initiateDBUpd == true) {
+	workerLog('src-config(): Job: updmpddb');
+	submitJob('updmpddb', '', '', '');
+}
 
 // SOURCE CONFIG FORM
 if (!isset($_GET['cmd'])) {
@@ -185,7 +198,7 @@ if (!isset($_GET['cmd'])) {
 	// display list of nas sources if any
 	$mounts = cfgdb_read('cfg_source',$dbh);
 	foreach ($mounts as $mp) {
-		$icon = mountExists($mp['name']) ? "<i class='icon-ok green sx'></i>" : "<i class='icon-remove red sx'></i>";
+		$icon = mountExists($mp['name']) ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
 		$_mounts .= "<p><a href=\"src-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width: 240px; background-color: #333;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
 	}
 	
@@ -251,7 +264,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_protocol .= "<option value=\"nfs\">NFS</option>\n";
 				$_scan_btn_hide = '';
 				$_userid_pwd_hide = '';
-				$_options = 'vers=1.0,sec=ntlm,ro,dir_mode=0777,file_mode=0777';
+				$_options = 'vers=1.0,ro,dir_mode=0777,file_mode=0777';
 			}
 			else {
 				$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
@@ -264,7 +277,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 		else {
 			$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
 			$_protocol .= "<option value=\"nfs\">NFS</option>\n";
-			$_options = 'vers=1.0,sec=ntlm,ro,dir_mode=0777,file_mode=0777';
+			$_options = 'vers=1.0,ro,dir_mode=0777,file_mode=0777';
 		}
 		$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : ' '; // space for select		
 		$_address .= sprintf('<option value="%s" %s>%s</option>\n', $server, 'selected', $server);

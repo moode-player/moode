@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-07-11 TC moOde 4.2
+ * - handle bluetooth audio out
+ * - add slactive for Squeezelite
  *
  */
 
@@ -50,13 +53,19 @@ $btactive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 if ($_SESSION['airplayactv'] == '1') {
 	$file = 'Airplay stream';
 	$encoded_at = 'Unknown';
-	$decoded_to = '16 bit, 44.1 kHz, Stereo';
+	$decoded_to = '16 bit, 44.1 kHz, Stereo, ';
 	$decode_rate = 'VBR';
 }
-elseif ($btactive === true) {
+elseif ($_SESSION['slactive'] == '1') {
+	$file = 'Squeezelite stream';
+	$encoded_at = 'Unknown';
+	$decoded_to = 'Unknown, ';
+	$decode_rate = 'VBR';
+}
+elseif ($btactive === true && $_SESSION['audioout'] == 'Local') {
 	$file = 'Bluetooth stream';
 	$encoded_at = 'Unknown';
-	$decoded_to = '16 bit, 44.1 kHz, Stereo';
+	$decoded_to = '16 bit, 44.1 kHz, Stereo, ';
 	$decode_rate = 'VBR';
 }
 else {
@@ -72,7 +81,7 @@ else {
 	$encoded_at = getEncodedAt($song, 'verbose');
 	$status = parseStatus(getMpdStatus($sock));
 	
-	if ($hwparams['status'] == 'active') { 		
+	if ($hwparams['status'] == 'active' || $_SESSION['audioout'] == 'Bluetooth') { 		
 		// dsd
 		if ($status['audio_sample_depth'] == 'dsd64') {
 			$encoded_at = 'DSD64, 1 bit, 2.822 mbps Stereo';
@@ -155,7 +164,7 @@ else {
 //
 
 // dsp only applies to mpd
-if ($_SESSION['airplayactv'] == '1' || $_SESSION['slsvc'] == '1' || $btactive[0] === true) {
+if ($_SESSION['airplayactv'] == '1' || $_SESSION['slactive'] == '1' || $btactive === true) {
 	$resampler = 'n/a';
 	$resampler_format = '';
 	$crossfeed = 'n/a';
@@ -219,7 +228,12 @@ else {
 // OUTPUT PROCESSING
 //
 
-if ($hwparams['status'] == 'active') {
+$output_destination = $_SESSION['audioout'];
+if($_SESSION['audioout'] == 'Bluetooth') {
+	$hwparams_format = '16 bit, 44.1 kHz, Stereo, ';
+	$hwparams_calcrate = '1.411 mbps';
+}
+elseif ($hwparams['status'] == 'active') {
 	$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
 	$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' mbps';
 }

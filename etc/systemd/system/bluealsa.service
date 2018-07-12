@@ -1,5 +1,8 @@
 #
 # 2018-01-26 TC moOde 4.0
+# 2018-07-11 TC moOde 4.2
+# - add profiles required by latest bluez-alsa build
+# - remove User=bluealsa, Group=Audio since they don't appear to be needed
 #
 
 [Unit]
@@ -9,9 +12,7 @@ After=bluetooth.service
 
 [Service]
 Type=simple
-#User=pi
-#Group=audio
-ExecStart=/usr/bin/bluealsa
+ExecStart=/usr/bin/bluealsa -p a2dp-source -p a2dp-sink
 
 [Install]
 WantedBy=multi-user.target
