@@ -300,7 +300,7 @@ function genFlatList($sock) {
 	sendMpdCmd($sock, 'listallinfo'); // tpc r41, fastest
 	//sendMpdCmd($sock, 'find modified-since 2000-01-01T00:00:00Z'); // original, full time stamp
 	$resp = readMpdResp($sock);
-	#var_dump($resp);	
+	
 	if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
 		$lines = explode("\n", $resp);
 		$item = 0;
@@ -323,7 +323,7 @@ function genFlatList($sock) {
 				$flat[$item][$element] = $value;
 			}
 		} 
-		//var_dump($flat);
+		
 		
 		return $flat;
 	}
@@ -362,10 +362,7 @@ function genLibrary($flat) {
 			
 		array_push($lib[$genre][$artist][$album], $songData);
 	}
-	//echo "<pre>";
-	//var_dump($lib);
-	//$libutf8 = utf8ize($lib);
-	//var_dump($libutf8);
+
 	if (file_put_contents('/var/local/www/libcache.json', json_encode($lib)) === false) {
 		debugLog('genLibrary: create libcache.json failed');		
 	}
@@ -1264,7 +1261,7 @@ function getDeviceNames () {
 
 
 	exec('cat /proc/asound/cards',$cardsstr);
-	#var_dump($cardsstr);
+	
 	
 	foreach($cardsstr as $key=>$value){
 		if($key%2==0){
@@ -1275,7 +1272,6 @@ function getDeviceNames () {
 
 	}
 
-#var_dump($dev);
 
 	if(!empty($dev))
 		return $dev;
