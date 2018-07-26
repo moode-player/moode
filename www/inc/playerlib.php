@@ -362,7 +362,7 @@ function genLibrary($flat) {
 			
 		array_push($lib[$genre][$artist][$album], $songData);
 	}
-	echo "<pre>";
+	//echo "<pre>";
 	//var_dump($lib);
 	//$libutf8 = utf8ize($lib);
 	//var_dump($libutf8);
