@@ -72,8 +72,8 @@ AUDIO() {
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
 	[[ "$BITS" = "" ]] && OUTSTREAM="Closed" || OUTSTREAM="$BITS / $RATE"
 
-	ALSAVER="$(dpkg -l | awk '/libasound2:armhf/ { print  $3 }')"
-	SOXVER="$(dpkg -l | awk '/libsoxr0:armhf/ { print  $3 }')"
+	ALSAVER="$(dpkg -l | awk '/libasound2:/ { print  $3 }')"
+	SOXVER="$(dpkg -l | awk '/libsoxr0:/ { print  $3 }')"
 
 	if [[ $i2sdevice = "none" ]]; then
 		[[ $device = "0" ]] && audiodevname="On-board audio device" || audiodevname="USB audio device"
@@ -211,7 +211,11 @@ FEAT_UPMPDCLI=2#00100000
 HOSTNAME=`uname -n`
 RASPBIANVER=`cat /etc/debian_version`
 KERNEL=`uname -r`
-CPU=`cat /proc/cpuinfo | grep "Hardware" | cut -f 2 -d ":" | tr -d " "`
+if [[ $(uname -m) == "aarch64" ]];then
+  CPU=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
+else
+  CPU=`cat /proc/cpuinfo | grep "Hardware" | cut -f 2 -d ":" | tr -d " "`
+fi
 CORES=`grep -c ^processor /proc/cpuinfo`
 ARCH=`uname -m`
 MEMUSED=`free -m | grep "Mem" | awk {'print $3'}`
