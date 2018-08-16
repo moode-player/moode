@@ -81,7 +81,7 @@ function getImage($path) {
 		case 'tiff':
 			// physical image file -> redirect
 			//$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
-			$path = '/vlmm90614385' . substr($path, strlen('/var/lib/mpd/music'));
+			$path = '/vlmm03846271' . substr($path, strlen('/var/lib/mpd/music'));
 			$path = str_replace('#', '%23', $path);
 			//workerLog('coverart: 1 - ' . $path);
 			header('Location: ' . $path);
@@ -168,9 +168,23 @@ function getImage($path) {
 function parseFolder($path) {
 	// default cover files
 	$covers = array('Folder.jpg', 'folder.jpg', 'Folder.jpeg', 'folder.jpeg', 'Folder.png', 'folder.png', 'Folder.tif', 'folder.tif', 'Folder.tiff', 'folder.tiff',
-		'Cover.jpg', 'cover.jpg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff');
+		'Cover.jpg', 'cover.jpg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff','thumb.jpg');
 	foreach ($covers as $file) {
-		getImage($path . $file);
+		if(!file_exists($path.$file)){
+			$dirarr = explode("/",$path);
+			$dircount = count($dirarr);	
+			for($i = 1;$i<=$dircount-1;$i++){
+				unset($patharr);
+				$patharr = explode("/",$path);
+				array_splice($patharr,$dircount-$i,$i);
+				$temppath = implode("/",$patharr);
+				if(file_exists($temppath."/".$file)){
+					$path = $temppath;
+					getImage($path."/".$file);
+					break;
+				}
+			}
+		}
 	}
 
 	// all other files
@@ -220,7 +234,14 @@ if (is_dir($path)) {
 else {
 	// file - try all files in containing folder
 	$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
+	$dirpath_suffix = substr($dirpath, -4) ;
 
+	if ($dirpath_suffix == ".iso" || $dirpath_suffix == ".ISO"){
+          // go uppper dir
+	  $dirpath = pathinfo($dirpath, PATHINFO_DIRNAME) ;
+	}
+
+	$dirpath .= '/';
 	//workerLog('coverart: c - ' . $dirpath);
 	parseFolder($dirpath);
 
