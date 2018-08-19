@@ -493,24 +493,6 @@
 			</div>
 		</fieldset>
 
-		<legend>Mod</legend>
-		<fieldset>
-			<div class="control-group">
-				<label class="control-label">Update Mod</label>
-				<div class="controls">
-					<button class="btn btn-primary btn-small" style="margin-top:0px;"><a href="#mod-update" data-toggle="modal">Update</a></button>
-					<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-mod-update" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span class="help-block-configs">
-						$modvers
-					</span>
-					<span id="info-mod-update" class="help-block-configs help-block-margin hide">
-						Mod for moode,new feature and bug fixed<br>
-                    </span>
-				</div>
-			</div> 
-			
-		</fieldset>
-
 		<div id="view-pkgcontent" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="view-pkgcontent-label" aria-hidden="true">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -629,23 +611,6 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary" type="submit" name="update_usbboot" value="novalue">Confirm</button>
-		</div>
-	</div>
-</form>
-
-<form class="form-horizontal" method="post" action="mod-update.php">
-	<div id="mod-update" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="mod-update-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		</div>
-		
-		<div class="modal-body">
-			<h6>Update mod ?</h6>
-		</div>
-		
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="mod_update" value="novalue">Confirm</button>
 		</div>
 	</div>
 </form>
