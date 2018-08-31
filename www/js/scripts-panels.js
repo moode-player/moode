@@ -509,6 +509,44 @@ jQuery(document).ready(function($) { 'use strict';
 		UI.path = '';
 		mpdDbCmd('lsinfo', ''); // r42q repl UI.browsemode with ''
 	});
+
+	$('#db-listview').click(function() {
+		storage.setItem("viewmodel","view");
+		//change current display 
+		if($("#database ul").hasClass("browser-thumb")) {
+			$("#database ul.browser-thumb").addClass("database")
+			$("#database ul.database").removeClass("browser-thumb")
+		}
+
+		$("#database ul li").each(function(index,e){
+						
+			$(this).find("i").removeClass("fa-6x");
+			$(this).find("i").attr("style","");
+			//$("#img_"+e.id).attr("src","");
+			$("#img_"+e.id).remove();
+			
+
+
+
+		});
+
+
+
+	});
+
+	$('#db-gridview').click(function() {
+		storage.setItem("viewmodel","grid");
+		//change current display 
+		if($("#database ul").hasClass("database")) {
+			$("#database ul.database").addClass("browser-thumb")
+			$("#database ul.browser-thumb").removeClass("database")
+		}
+
+		formatBrowserGrid();
+			
+	});
+
+
 	$('#db-search-submit').click(function() {
 		var searchStr = '';
 		if ($('#dbsearch-alltags').val() != '') {
@@ -588,12 +626,12 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// browse, radio, thumb action menus
-	$('.database, .database-radio, .database-thumb').on('click', '.db-action', function() {
+	$('.database, .database-radio, .database-thumb, .browser-thumb').on('click', '.db-action', function() {
 		//console.log('click db-action');
 		UI.dbEntry[0] = $(this).parent().attr('data-path');
 		UI.dbEntry[3] = $(this).parent().attr('id'); // used in .context-menu a click handler to remove highlight
 		$('#db-search-results').css('font-weight', 'normal'); // r42y
-		$('.database li, .database-radio li, .database-thumb li').removeClass('active');
+		$('.database li, .database-radio li, .database-thumb li, .browser-thumb li').removeClass('active');
 		$(this).parent().addClass('active');
 	});
     

@@ -20,6 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-07-11 TC moOde 4.2
+ * - update the mixertype for audioout -> local
+ * - minor format cleanup
  *
  */
  
@@ -39,9 +42,6 @@ else {
 // apply setting changes to /etc/mpd.conf
 if(isset($_POST['conf']) && !empty($_POST['conf'])) {
 	// restart shairport-sync if device num has changed
-	//$array = sdbquery('select value_player from cfg_mpd where param="device"', $dbh);
-	//$device = $array[0]['value_player'];
-	//$queueargs = $_POST['conf']['device'] == $device ? '' : 'devicechg';
 	$queueargs = $_POST['conf']['device'] == $_SESSION['cardnum'] ? '' : 'devicechg';
 	
 	// update sql table
@@ -55,6 +55,9 @@ if(isset($_POST['conf']) && !empty($_POST['conf'])) {
 		$resp = readMpdResp($sock);
 		closeMpdSock($sock);
 	}
+
+	# update the mixertype for audioout -> local
+	playerSession('write', 'mpdmixer_local', $_POST['conf']['mixer_type']);
 	
 	// update /etc/mpd.conf
 	submitJob('mpdcfg', $queueargs, 'Settings updated', 'MPD restarted');
@@ -68,21 +71,35 @@ foreach ($result as $row) {
 	$mpdconf[$row['param']] = $row['value_player'];
 }
 
+if ($_SESSION['audioout'] == 'Bluetooth') {
+	$_apply_disabled = 'disabled';
+	$_apply_hide_msg = '';
+}
+else {
+	$_apply_disabled = '';
+	$_apply_hide_msg = 'hide';
+}
+
 // get device names
 $dev = getDeviceNames();
 
 // audio output device
-if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
-if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
+foreach($dev as $key=>$value){
+ 
+      if ($value != '') {$_mpd_select['device'] .= "<option value=\"{$key}\" " . (($mpdconf['device'] == $key) ? "selected" : "") . " >$value</option>\n";}
 
+}
+//if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
+//if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
+//if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($mpdconf['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}
+//if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($mpdconf['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
 // volume control
-// NOTE "hardware" selection only valid if hardware volume controller exists
-$_mpd_select['mixer_type'] .= "<option value=\"disabled\" " . (($mpdconf['mixer_type'] == 'disabled') ? "selected" : "") . ">disabled</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"disabled\" " . (($mpdconf['mixer_type'] == 'disabled') ? "selected" : "") . ">Disabled (0dB output)</option>\n";
 if ($_SESSION['alsavolume'] != 'none') {$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($mpdconf['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";}
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
 
 // resampling rate
-$_mpd_select['audio_output_format'] .= "<option value=\"disabled\" " . (($mpdconf['audio_output_format'] == 'disabled' OR $mpdconf['audio_output_format'] == '') ? "selected" : "") . ">disabled</option>\n";
+$_mpd_select['audio_output_format'] .= "<option value=\"disabled\" " . (($mpdconf['audio_output_format'] == 'disabled' OR $mpdconf['audio_output_format'] == '') ? "selected" : "") . ">Disabled</option>\n";
 $_mpd_select['audio_output_format'] .= "<option value=\"*:*:1\" " . (($mpdconf['audio_output_format'] == '*:*:1') ? "selected" : "") . ">Mono output</option>\n";
 $_mpd_select['audio_output_format'] .= "<option value=\"*:16:*\" " . (($mpdconf['audio_output_format'] == '*:16:*') ? "selected" : "") . ">16 bit / * kHz</option>\n";
 $_mpd_select['audio_output_format'] .= "<option value=\"44100:16:2\" " . (($mpdconf['audio_output_format'] == '44100:16:2') ? "selected" : "") . ">16 bit / 44.1 kHz</option>\n";

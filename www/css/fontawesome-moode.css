@@ -341,6 +341,9 @@ readers do not read off random characters that represent icons */
 .fa-sync:before {
   content: "\f021"; }
 
+.fa-th-list:before {
+  content: "\f00b"; }
+
 .fa-times:before {
   content: "\f00d"; }
 
@@ -349,6 +352,9 @@ readers do not read off random characters that represent icons */
 
 .fa-th:before {
   content: "\f00a"; }
+
+.fa-th-large:before {
+  content: "\f009"; }
 
 .fa-tv:before {
   content: "\f26c"; }

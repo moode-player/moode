@@ -219,8 +219,10 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#database-radio ul {padding-bottom:30px;} /* r42q */
 	.database-radio li {width:100px;height:auto;margin:8px 8px;} /* r42p */
 	#database-thumb ul {padding-bottom:30px;} /* r42q */
-	.database-thumb li {width:100px;height:auto;margin:8px 8px;} /* r42p */
+	.database-thumb li {width:100px;height:15em;margin:8px 8px;} /* r42p */
+	.browser-thumb li {width:100px;height:15em;margin:8px 8px;} /* r42p */
 	#radio-panel {background-color:inherit;}
+	
 }
 /* smaller landscape for small screens */
 @media (max-height:479px) and (orientation:landscape) { /* r42k */
@@ -286,6 +288,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#database .btn {font-size:small;}
 	.database-radio li {height:100px;} /* r42p */
 	.database-thumb li {height:100px;} /* r42p */
+	.browser-thumb li {height:100px;} /* r42p */
 	.ss-coverart {position:fixed;top:unset;left:unset;width:unset;max-width:unset;transform: none;}
 	#ss-split {position:fixed;left:6%;top:50%;width:70vh;max-width:50%;transform:translate(0%, -50%);} /* r42x was left:5% */
 	.ss-info {width:48%;text-align:left;position:fixed;top:calc(50% - 1em);left:52%;transform:translate(0, -50%);} /* r42x was left:50% */
@@ -299,11 +302,14 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#menu-bottom {width:85%;}
 	.database-radio li {width:75px;height:auto;margin:10px 10px;} /* r42p added height, margin */
 	.database-thumb li {width:75px;height:auto;margin:10px 10px;} /* r42p added height, margin */
+	.browser-thumb li {width:75px;height:auto;margin:10px 10px;} /* r42p added height, margin */
+
 }
 /* iPhone5 landscape r42z */
 @media (max-height: 320px) and (max-width: 568px) {
 	.database-radio li {width:75px;height:auto;margin:10px 10px;} /* r42p added height, margin */
 	.database-thumb li {width:75px;height:auto;margin:10px 10px;} /* r42p added height, margin */
+	.browser-thumb li {width:75px;height:auto;margin:10px 10px;} /* r42p added height, margin */
 	.lib-coverart {min-width:unset;}
 }
 
@@ -325,6 +331,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.database-radio li {width:75px;margin:15px 15px;} /* r42p was width 100, added margin */
 	#database-thumb ul {padding-bottom:60px;} /* r42q */
 	.database-thumb li {width:75px;margin:15px 15px;} /* r42p was width 100, added margin */
+	.browser-thumb li {width:75px;margin:15px 15px;} /* r42p was width 100, added margin */
 	#lib-coverart-meta-area {width:150px;}
 	#trackscontainer {width:calc(100% - 155px);}
 	#play, #next, #prev {font-size: large;} /* r42k */

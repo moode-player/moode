@@ -90,7 +90,7 @@
 				<div class="span3">					
 					<div id="timeknob">
 						<div id="countdown">
-							<input class="playbackknob" id="time" data-min="0" data-max="1000" data-width="100%" data-thickness="0.20" data-bgColor="rgba(96,96,96,0.2)" data-fgcolor="#c0392b" data-readonly="false">
+							<input class="playbackknob" id="time" data-min="0" data-max="1000" data-width="100%" data-thickness="0.20" data-bgColor="rgba(96,96,96,0.2)" data-fgcolor="#27ae60" data-readonly="false">
 						</div>
 						<div id="countdown-display" href="#notarget"></div>
 						<div id="total"></div>
@@ -125,7 +125,7 @@
 					</div>
 					<div id="volknob">
 						<div id="volcontrol">
-							<input readonly class="volumeknob" id="volume" data-min="0" data-max="100" data-width="100%" data-thickness="0.17" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#c0392b" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
+							<input readonly class="volumeknob" id="volume" data-min="0" data-max="100" data-width="100%" data-thickness="0.17" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#27ae60" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
 						</div>
 						<div class="volume-display" title="Mute toggle" href="#notarget"></div>
 					</div>					
@@ -165,7 +165,7 @@
 	<div id="library-panel" class="tab-pane">
 		<div class="container-library">
 			<div class="viewswitch btn-group">
-				<button class="btn browse-panel-btn" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
+				<button class="btn browse-panel-btn " href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
 				<button class="btn library-panel-btn active" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
 				<button class="btn thumb-panel-btn" href="#thumb-panel" data-toggle="tab"><i class="far fa-th"></i></button>
 			</div>
@@ -245,7 +245,7 @@
 	<!-- BROWSE PANEL //newui -->
 	<div id="browse-panel" class="tab-pane">
 			<div class="viewswitch btn-group">
-				<button class="btn browse-panel-btn" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
+				<button class="btn browse-panel-btn active" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
 				<button class="btn library-panel-btn" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
 				<button class="btn thumb-panel-btn" href="#thumb-panel" data-toggle="tab"><i class="far fa-th"></i></button>
 			</div>
@@ -256,7 +256,7 @@
 				<button id="db-home" class="btn"><i class="fas fa-home"></i></button>
 				<button id="db-advsearch" class="btn" title="Advanced search" href="#dbsearch-modal" data-toggle="modal"><i class="fal fa-search"></i></button>
 				<button id="db-listview" class="btn" ><i class="fas fa-th-list"></i></button>
-				<button id="db-gridview" class="btn" ><i class="fas fa-th-large"></i></button>
+				<button id="db-gridview" class="btn" ><i class="fas fas fa-th-large"></i></button>
 				<div id="db-search-results"></div>
 			</div>
 	
@@ -285,13 +285,13 @@
 		</div>
 	</div>	
 
-	<!-- r42m -->
+<!-- r42m -->
 	<!-- THUMB PANEL -->
 	<div id="thumb-panel" class="tab-pane">
 			<div class="viewswitch btn-group">
 					<button class="btn browse-panel-btn" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
 					<button class="btn library-panel-btn" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
-					<button class="btn thumb-panel-btn" href="#thumb-panel" data-toggle="tab"><i class="far fa-th"></i></button>
+					<button class="btn thumb-panel-btn active" href="#thumb-panel" data-toggle="tab"><i class="far fa-th"></i></button>
 			</div>
 
 			<div class="btnlist btnlist-top btnlist-top-lib">
@@ -309,7 +309,9 @@
 				<ul class="database-thumb"></ul>
 			</div>
 		</div>
-	</div>	
+	</div>
+
+
 </div>
 
 <!-- BROWSE ADV SEARCH r42y -->	
@@ -469,9 +471,9 @@
 
 	<div id="context-menu-lib-thumb" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
@@ -676,7 +678,7 @@
     <div class="modal-body">
 		<div id="volknob-2">
 			<div id="volcontrol-2">
-				<input readonly class="volumeknob" id="volume-2" data-min="0" data-max="100" data-width="100%" data-thickness="0.16" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#c0392b" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
+				<input readonly class="volumeknob" id="volume-2" data-min="0" data-max="100" data-width="100%" data-thickness="0.16" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#27ae60" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
 			</div>
 			<div class="volume-display" href="#notarget"></div>
 		</div>					

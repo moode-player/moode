@@ -933,8 +933,16 @@ function renderBrowse(data, path, uplevel, keyword) {
 		UI.path = path;
 	}
 
+	ulid = "database";
+	if(storage.getItem("viewmodel")=="grid" && $("#database ul").hasClass("browser-thumb")){
+		ulid = "browser-thumb";
+	}else{
+		storage.getItem("viewmodel")=="view";
+	}
+
+
 	// format search tally, clear results and search field when back btn
-	var dbList = $('ul.database');
+	var dbList = $('ul.'+ulid);
 	dbList.html('');
 	$('#db-search-results').html('');
 	$('#db-search-results').css('font-weight', 'normal');
@@ -959,6 +967,10 @@ function renderBrowse(data, path, uplevel, keyword) {
 		}
 	}
 
+	if(ulid == "browser-thumb"){
+		formatBrowserGrid();
+	}
+
 	// scroll
 	customScroll('db', UI.dbPos[UI.dbPos[10]], 100);
 	// r42y remove highlight if at root
@@ -966,6 +978,37 @@ function renderBrowse(data, path, uplevel, keyword) {
 		$('#db-' + UI.dbPos[UI.dbPos[10]].toString()).addClass('active');
 	}
 	//$('#db-currentpath span').html(path); r42y 
+}
+
+
+function formatBrowserGrid(){
+	$("#database ul li").each(function(index,e){		
+		var li = $(this);
+		li.find("i").addClass("fa-6x");
+
+		
+		var url = "/coverart.php/"+encodeURIComponent($(this).data("path"));
+		
+
+		$.get( url, function( data ) {
+			if(data){
+				if(!data.URL)
+				{
+						$("#img_"+e.id).remove();
+						li.find("i").attr("style","display:none");
+						var html = '<img id="img_'+e.id+'" src="'+url+'" alt="Cover art not found">';
+						li.find("a").append(html);
+					
+					//}else{
+					//	$("#"+e.id+" a i").addClass("hidden");
+					//	$("#img_"+e.id).removeClass("hidden");
+					//	$("#img_"+e.id).attr("src",url);
+					//}
+				}
+				
+			}
+		  });
+	});
 }
 
 // r42e render radio tab
@@ -1027,7 +1070,7 @@ function formatBrowseData(data, path, i) {
 			output = '<li id="db-' + (i + 1) + '" class="clearfix" data-path="' + data[i].file + '">'
 			// r42x click on item line for menu
 			output += '<div class="db-icon db-song db-action">';
-			output += '<a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-folder-item" style="width:100vw;height:2em;">';
+			output += '<a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-folder-item" >'; //style="width:100vw;height:2em;"
 			output += '<i class="fas fa-music sx db-browse" style="float:left;"></i></a></div>';				
 			output += '<div class="db-entry db-song">' + data[i].Title + ' <em class="songtime">' + formatSongTime(data[i].Time) + '</em>';
 			output += ' <span>' + data[i].Artist + ' - ' + data[i].Album + '</span></div></li>';
@@ -1064,10 +1107,10 @@ function formatBrowseData(data, path, i) {
 			// r42x click on item line for menu
 			else {
 				if (data[i].file.substr(0,4) == 'http') {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-microphone sx db-browse" style="float:left;"></i></a></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-savedpl-item" ><i class="fas fa-microphone sx db-browse" style="float:left;"></i></a></div><div class="db-entry db-song db-browse">';
 					itemType = 'Radio station';
 				} else {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-music sx db-browse" style="float:left;"></i></a></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-savedpl-item" ><i class="fas fa-music sx db-browse" style="float:left;"></i></a></div><div class="db-entry db-song db-browse">';
 					itemType = 'Song file';
 				}
 			}
@@ -1757,7 +1800,7 @@ var renderAlbumsThumb = function(data,pageindex) {
     
     for (var i = pageindex; i < pagecount ; i++) {
 		if($('#dbthumb-'+ i).length<=0){
-			var imgurl = '/coverart.php/' + allAlbums[i].onefile;
+			var imgurl = '/coverart.php/' + encodeURIComponent(allAlbums[i].onefile);
 			dbList.append('<li id="dbthumb-' + i + '" class="clearfix" data-index="'+i+'" data-path="' + allAlbums[i].onefile + '"><div class="lib-entry'
 			+ '"><div class="db-icon db-song db-browse db-action"><a class="sx" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-lib-thumb"><img class="lazy" data-original="' + imgurl  + '"></a></div><div class="db-entry db-song db-browse">'
 			+ allAlbums[i].album + ' <span> ' + allAlbums[i].artist + '</span></div></li>')	;  
