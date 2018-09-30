@@ -55,7 +55,7 @@ display: block;
 .ui-pnotify-icon, .ui-pnotify-icon span {
 display: block;
 float: left;
-/*margin-right: .2em; r42p we are not using icons */
+/*margin-right: .2em;*/
 }
 /* -- History Pulldown */
 .ui-pnotify-history-container {

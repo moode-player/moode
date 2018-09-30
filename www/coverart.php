@@ -26,25 +26,22 @@
  * - try_files $uri $uri/ /coverart.php;
  *
  * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1 set search priority to 0
+ * 2018-04-02 TC moOde 4.1
+ * - set search priority to 0
+ * 2018-07-18 TC moOde 4.2
+ * - bump coverlink
+ * 2018-09-27 TC moOde 4.3
+ * - change glob to search only for image files
+ * - use session vars for search pri and musicroot
+ * - rep l/r bracket with backslash l/r bracket in path for glob
  *
  */
 
 set_include_path('inc');
-
-// NOTE: uncomment this to enable workerLog() output
-//require_once dirname(__FILE__) . '/inc/playerlib.php';
-
-// image search priority
-// 0: search for embedded image first (default)
-// 1: search for image file first
-define('SEARCH_PRI', 0);
-
-// uncomment these if using randomized symlink in a session var
-//session_start();
-//session_write_close();
+require_once 'playerlib.php';
 
 function outImage($mime, $data) {
+	//workerLog('coverart: outImage(): ' . $mime . ', ' . strlen($data) . ' bytes');
 	switch ($mime) {
 		case "image/gif":
 		case "image/jpg":
@@ -54,59 +51,48 @@ function outImage($mime, $data) {
 		case "image/tiff":
 			header("Content-Type: " . $mime);
 			echo $data;
-			//workerLog('coverart: x - outImage()');
 			exit(0);
-			break;
 		default :
-			//workerLog('coverart: y - outImage()');
 			break;
 	}
+
+	return false;
 }
 
 function getImage($path) {
-	global $getid3;
-
+	//workerLog('coverart: getImage(): ' . $path);
 	if (!file_exists($path)) {
+		//workerLog('coverart: getImage(): ' . $path . ' (does not exist)');
 		return false;
 	}
 
 	$ext = pathinfo($path, PATHINFO_EXTENSION);
 
 	switch (strtolower($ext)) {
+		// image file -> redirect
 		case 'gif':
 		case 'jpg':
 		case 'jpeg':
 		case 'png':
 		case 'tif':
 		case 'tiff':
-			// physical image file -> redirect
-			//$path = '/' . $_SESSION['musicroot'] . substr($path, strlen('/var/lib/mpd/music'));
-			$path = '/vlmm03846271' . substr($path, strlen('/var/lib/mpd/music'));
+			$path = '/' . $GLOBALS['musicroot_ext'] . substr($path, strlen(MPD_MUSICROOT)-1);
 			$path = str_replace('#', '%23', $path);
-			//workerLog('coverart: 1 - ' . $path);
 			header('Location: ' . $path);
-			die;
+			exit(0);
 
-			// alternative -> return image file contents
-			$mime = 'image/' . $ext;
-			$data = file_get_contents($path);
-
-			outImage($mime, $data);
-			//workerLog('coverart: 2 - ' . $path);
-			break;
-
+		// embedded images
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
 			try {
 				$id3 = new Zend_Media_Id3v2($path);
 
 				if (isset($id3->apic)) {
-					//workerLog('coverart: 3 - ' . $path);
 					outImage($id3->apic->mimeType, $id3->apic->imageData);
 				}
 			}
 			catch (Zend_Media_Id3_Exception $e) {
-				// catch any parse errors
+				//workerLog('coverart: Zend media exception: ' . $e->getMessage()); 
 			}
 
 			require_once 'Zend/Media/Id3v1.php';
@@ -114,12 +100,11 @@ function getImage($path) {
 				$id3 = new Zend_Media_Id3v1($path);
 
 				if (isset($id3->apic)) {
-					//workerLog('coverart: 4 - ' . $path);
 					outImage($id3->apic->mimeType, $id3->apic->imageData);
 				}
 			}
 			catch (Zend_Media_Id3_Exception $e) {
-				// catch any parse errors
+				//workerLog('coverart: Zend media exception: ' . $e->getMessage()); 
 			}
 			break;
 
@@ -130,12 +115,11 @@ function getImage($path) {
 
 				if ($flac->hasMetadataBlock(Zend_Media_Flac::PICTURE)) {
 					$picture = $flac->getPicture();
-					//workerLog('coverart: 5 - ' . $path);
 					outImage($picture->getMimeType(), $picture->getData());
 				}
 			}
 			catch (Zend_Media_Flac_Exception $e) {
-				// catch any parse errors
+				//workerLog('coverart: Zend media exception: ' . $e->getMessage()); 
 			}
 			break;
 
@@ -152,12 +136,11 @@ function getImage($path) {
                         : null
                     );
                 if ($mime) {
-					//workerLog('coverart: 6 - ' . $path);
                     outImage($mime, $picture->getValue());
                 }
             }
             catch (Zend_Media_Iso14496_Exception $e) {
-                // catch any parse errors
+				//workerLog('coverart: Zend media exception: ' . $e->getMessage()); 
             }
             break;
 	}
@@ -166,25 +149,47 @@ function getImage($path) {
 }
 
 function parseFolder($path) {
+	//workerLog('coverart: parseFolder(): ' . $path);
 	// default cover files
-	$covers = array('Folder.jpg', 'folder.jpg', 'Folder.jpeg', 'folder.jpeg', 'Folder.png', 'folder.png', 'Folder.tif', 'folder.tif', 'Folder.tiff', 'folder.tiff',
-		'Cover.jpg', 'cover.jpg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff');
+	$covers = array(
+		'Cover.jpg', 'cover.jpg', 'Cover.jpeg', 'cover.jpeg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff',
+		'Folder.jpg', 'folder.jpg', 'Folder.jpeg', 'folder.jpeg', 'Folder.png', 'folder.png', 'Folder.tif', 'folder.tif', 'Folder.tiff', 'folder.tiff'
+	);
 	foreach ($covers as $file) {
 		getImage($path . $file);
 	}
-
-	// all other files
+	// all other image files
+	$extensions = array('jpg', 'jpeg', 'png', 'tif', 'tiff');
+	$path = str_replace('[', '\[', $path);
+	$path = str_replace(']', '\]', $path);
 	foreach (glob($path . '*') as $file) {
-		if (is_file($file)) {
-			//workerLog('coverart: d - ' . $file);
+		//workerLog('coverart: parseFolder(): glob: ' . $file);
+		if (is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $extensions)) {
 			getImage($file);
 		}
 	}
+	/*// all other files
+	foreach (glob($path . '*') as $file) {
+		//workerLog('coverart: parseFolder(): glob' . $file);
+		if (is_file($file)) {
+			getImage($file);
+		}
+	}*/
+
+	return false;
 }
 
 /*
  * MAIN
  */
+
+session_id(playerSession('getsessionid'));
+session_start();
+$search_pri = $_SESSION['library_covsearchpri'];
+$musicroot_ext = $_SESSION['musicroot_ext'];
+session_write_close();
+//workerLog('coverart: $search_pri=' . $search_pri);
+//workerLog('coverart: $musicroot_ext=' . $musicroot_ext);
 
 // Get options- cmd line or GET
 $options = getopt('p:', array('path:'));
@@ -197,39 +202,29 @@ if (null === $path) {
 		// strip script name if called as /coverart.php/path/to/file
 		$path = substr($path, strlen($self)+1);
 	}
-	#$path = '/mnt/' . $path;
-	$path = '/var/lib/mpd/music/' . $path;
+	$path = MPD_MUSICROOT . $path;
 }
 
-if (SEARCH_PRI == 0) {
-	// does file exist and contain image?
-	//workerLog('coverart: a - ' . $path);
+// file: embedded cover
+if ($search_pri == 'Embedded cover') { // embedded first
 	getImage($path);
 }
 
-// directory - try all files
+// dir: cover image file
 if (is_dir($path)) {
-	// make sure path ends in /
-	if (substr($path, -1) !== '/') {
-		$path .= '/';
-	}
-
-	//workerLog('coverart: b - ' . $path);
+	if (substr($path, -1) !== '/') {$path .= '/';}
 	parseFolder($path);
 }
 else {
-	// file - try all files in containing folder
+	// file: cover image file in containing dir
 	$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
-
-	//workerLog('coverart: c - ' . $dirpath);
 	parseFolder($dirpath);
 
-	if (SEARCH_PRI == 1) {
-		// does file exist and contain image?
-		//workerLog('coverart: a - ' . $path);
+	if ($search_pri == 'Cover image file') { // embedded last
 		getImage($path);
 	}
 }
 
-// nothing found -> default cover
+// nothing found: default cover
+//workerLog('coverart: default cover');
 header('Location: /images/default-cover-v6.svg');

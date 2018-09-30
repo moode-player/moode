@@ -24,6 +24,12 @@
  * - add clear chrome browser cache to LocalUI settings
  * - add additional timeouts to screen blank
  * - minor format cleanup
+ * 2018-07-18 TC moOde 4.2 update
+ * - add <br> to 2nd "Software is up to date" msg
+ * - chg mpdtimeout to engine_mpd_sock_timeout in $_SESSION
+ * - chg Can't to Cannot in notify msg
+ * 2018-09-27 TC moOde 4.3
+ * - change df command to use /dev/root instead of just root
  *
  */
 
@@ -75,11 +81,11 @@ if (isset($_POST['dnld_mosbuild'])) {
 if (isset($_POST['install_update'])) {
 	if ($_POST['install_update'] == 1) {
 		$mount = sysCmd('mount | grep "moode.sqsh"');
-		$space = sysCmd("df | grep root | awk '{print $4}'");		
+		$space = sysCmd("df | grep /dev/root | awk '{print $4}'");		
 		# check for invalid configs
 		if ($mount[0] != '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && ($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
 			$_SESSION['notify']['title'] = 'Invalid configuration';
-			$_SESSION['notify']['msg'] = "Can't find compressed file system";
+			$_SESSION['notify']['msg'] = "Cannot find compressed file system";
 			$_SESSION['notify']['duration'] = 20;
 		}
 		elseif ($mount[0] == '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && !($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
@@ -94,7 +100,7 @@ if (isset($_POST['install_update'])) {
 		}
 		else {
 			submitJob('installupd', '', 'Software update installed', 'Reboot required', 20);
-			$_available_upd = 'Software is up to date';
+			$_available_upd = 'Software is up to date<br>';
 			$_lastinstall_upd = '';
 		}
 	}
@@ -366,6 +372,11 @@ else {
 $_select['uac2fix1'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix1\" value=\"1\" " . (($_SESSION['uac2fix'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix2\" value=\"0\" " . (($_SESSION['uac2fix'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
+// android 'add to home'
+$result = sysCmd('grep "add2home_off" /var/local/www/header.php');
+$_select['add2home1'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd2home1\" value=\"1\" " . ((empty($result[0])) ? "checked=\"checked\"" : "") . ">\n";
+$_select['add2home0'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd2home2\" value=\"0\" " . ((!empty($result[0])) ? "checked=\"checked\"" : "") . ">\n";
+
 // expand root file system
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
 $_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs2\" value=\"0\" " . "checked=\"checked\"".">\n";
@@ -386,10 +397,11 @@ else {
 }
 
 // mpd engine timeout
-$_select['mpdtimeout'] .= "<option value=\"600000\" " . (($_SESSION['mpdtimeout'] == '600000') ? "selected" : "") . ">Never</option>\n";
-$_select['mpdtimeout'] .= "<option value=\"18000\" " . (($_SESSION['mpdtimeout'] == '18000') ? "selected" : "") . ">5 Hours</option>\n";
-$_select['mpdtimeout'] .= "<option value=\"3600\" " . (($_SESSION['mpdtimeout'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
-$_select['mpdtimeout'] .= "<option value=\"1800\" " . (($_SESSION['mpdtimeout'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
+// chg mpdtimeout to engine_mpd_sock_timeout in $_SESSION
+$_select['mpdtimeout'] .= "<option value=\"600000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '600000') ? "selected" : "") . ">Never</option>\n";
+$_select['mpdtimeout'] .= "<option value=\"18000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '18000') ? "selected" : "") . ">5 Hours</option>\n";
+$_select['mpdtimeout'] .= "<option value=\"3600\" " . (($_SESSION['engine_mpd_sock_timeout'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
+$_select['mpdtimeout'] .= "<option value=\"1800\" " . (($_SESSION['engine_mpd_sock_timeout'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
 
 // LOCAL DISPLAY
 

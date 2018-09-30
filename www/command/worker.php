@@ -43,14 +43,21 @@
  * - reset renderer state to inactive during services section of startup
  * - reset renderer state to inactive, restore MPD volume after turning off renderer
  * - screen saver
- * - allow sunxi kernel suffix
+ * - detect sunxi kernel suffix
+ * 2018-07-18 TC moOde 4.2 update
+ * - minor cleanup
+ * 2018-09-27 TC moOde 4.3
+ * - katana dac initialization
+ * - use session for ext musicroot
+ * - add renderer data to currentsong.txt
+ * - thumbnail cache
  *
  */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
 // 
-sysCmd('truncate /var/log/moode.log --size 0');
+sysCmd('truncate ' . MOODELOG . ' --size 0');
 workerLog('worker: - Start');
 //
 
@@ -96,9 +103,8 @@ pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
 
-// sqlite db 
-sysCmd('chmod -R 0777 /var/local/www/db');
 // cache cfg_system in session vars
+sysCmd('chmod -R 0777 /var/local/www/db');
 playerSession('open', '', '');
 // cache cfg_radio in session vars
 $dbh = cfgdb_connect();
@@ -106,13 +112,12 @@ $result = cfgdb_read('cfg_radio', $dbh);
 foreach ($result as $row) {
 	$_SESSION[$row['station']] = array('name' => $row['name'], 'permalink' => $row['permalink'], 'logo' => $row['logo']);
 }
+// establish music root for external
+$_SESSION['musicroot_ext'] = rand(1000000, 9999999);
+sysCmd('find /var/www -type l -delete');
+sysCmd('ln -s ' . MPD_MUSICROOT . ' /var/www/' . $_SESSION['musicroot_ext']);
+// set worker ready flag to false 
 playerSession('write', 'wrkready', '0');
-/* enable this only if theme settings will be used by php
-// cache cfg_theme in session vars
-$result = cfgdb_read('cfg_theme', $dbh);
-foreach ($result as $row) {
-	$_SESSION[$row['theme_name']] = array('tx_color' => $row['tx_color'], 'bg_color' => $row['bg_color'], 'mbg_color' => $row['mbg_color']);
-}*/
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
 
@@ -128,7 +133,7 @@ $mpdver = explode(" ", strtok(shell_exec('mpd -V | grep "Music Player Daemon"'),
 playerSession('write', 'mpdver', $mpdver[3]);
 $lastinstall = checkForUpd('/var/local/www/');
 $_SESSION['pkgdate'] = $lastinstall['pkgdate'];
-$result = sysCmd('cat /etc/debian_version'); // tpc r41
+$result = sysCmd('cat /etc/debian_version');
 $_SESSION['raspbianver'] = $result[0];
 
 // exit if running an unsupported hdwrrev
@@ -141,7 +146,7 @@ if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-CM3') {
 // exit if running an unsupported kernel config
 if (($_SESSION['feat_bitmask'] & FEAT_ADVKERNELS) ||
 	($_SESSION['procarch'] == 'armv6l' && false !== strpos($_SESSION['kernelver'], '-')) ||
-	($_SESSION['procarch'] == 'armv7l' && false === strpos($_SESSION['kernelver'], '-v7+') && false === strpos($_SESSION['kernelver'], '-sunxi'))) { // r42z sunxi
+	($_SESSION['procarch'] == 'armv7l' && false === strpos($_SESSION['kernelver'], '-v7+') && false === strpos($_SESSION['kernelver'], '-sunxi'))) { // sunxi
 	if ($_SESSION['feat_bitmask'] & FEAT_ADVKERNELS) {
 		workerLog('worker: Unsupported configuration (' . $_SESSION['feat_bitmask'] . ')');
 	}
@@ -156,7 +161,7 @@ if (($_SESSION['feat_bitmask'] & FEAT_ADVKERNELS) ||
 workerLog('worker: Host (' . $_SESSION['hostname'] . ')');
 workerLog('worker: Hdwr (' . $_SESSION['hdwrrev'] . ')');
 workerLog('worker: Arch (' . $_SESSION['procarch'] . ')');
-workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')'); // tpc r41
+workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Kver (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Ktyp (' . $_SESSION['kernel'] . ')');
 workerLog('worker: Gov  (' . $_SESSION['cpugov'] . ')');
@@ -194,20 +199,21 @@ workerLog('worker: HDMI port ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
 
 // ensure certain files exist
 if (!file_exists('/var/local/www/currentsong.txt')) {sysCmd('touch /var/local/www/currentsong.txt');}
-if (!file_exists('/var/local/www/libcache.json')) {sysCmd('touch /var/local/www/libcache.json');}
+if (!file_exists(LIBCACHE_JSON)) {sysCmd('touch ' . LIBCACHE_JSON);}
 if (!file_exists('/var/local/www/sysinfo.txt')) {sysCmd('touch /var/local/www/sysinfo.txt');}
-if (!file_exists('/var/log/moode.log')) {sysCmd('touch /var/log/moode.log');}
+if (!file_exists(MOODELOG)) {sysCmd('touch ' . MOODELOG);}
+if (!file_exists(THMCACHE_DIR)) {sysCmd('mkdir ' . THMCACHE_DIR);}
 if (!file_exists('/var/local/www/playhistory.log')) {
 	sysCmd('touch /var/local/www/playhistory.log');
-	sysCmd('/var/www/command/util.sh clear-playhistory'); // tpc r41 initialize the file
+	sysCmd('/var/www/command/util.sh clear-playhistory');
 }
 // permissions
-sysCmd('chmod 0777 /var/lib/mpd/music/RADIO/*.*');
+sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
 sysCmd('chmod 0777 /var/local/www/currentsong.txt');
-sysCmd('chmod 0777 /var/local/www/libcache.json');
+sysCmd('chmod 0777 ' . LIBCACHE_JSON);
 sysCmd('chmod 0777 /var/local/www/playhistory.log');
 sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
-sysCmd('chmod 0666 /var/log/moode.log');
+sysCmd('chmod 0666 ' . MOODELOG);
 workerLog('worker: File check ok');
 
 //
@@ -315,7 +321,7 @@ if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 
 // log device info
 $logmsg = 'worker: ';
-workerLog($logmsg . 'ALSA card number (' . $_SESSION['cardnum'] . ')'); // r42s
+workerLog($logmsg . 'ALSA card number (' . $_SESSION['cardnum'] . ')');
 if ($_SESSION['i2sdevice'] == 'none') {
 	$logmsg .= $_SESSION['cardnum'] == '1' ? 'Audio output (USB audio device)' : 'Audio output (On-board audio device)';
 	workerLog($logmsg);
@@ -334,7 +340,8 @@ $result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amix
 if (substr($result[0], 0, 6 ) == 'amixer') {
 	playerSession('write', 'alsavolume', 'none'); // hardware volume controller not detected
 	workerLog('worker: Hdwr volume controller not detected');
-} else {
+}
+else {
 	$result[0] = str_replace('%', '', $result[0]);
 	playerSession('write', 'alsavolume', $result[0]); // volume level
 	workerLog('worker: Hdwr volume controller exists');
@@ -348,7 +355,7 @@ if (in_array($result[0]['dacchip'], $chips) && $result[0]['chipoptions'] != '') 
 	workerLog('worker: Chip options (' . $result[0]['dacchip'] . ')');
 }
 
-// configure Piano 2.1
+// configure Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$dualmode = sysCmd('/var/www/command/util.sh get-piano-dualmode');
 	$submode = sysCmd('/var/www/command/util.sh get-piano-submode');
@@ -363,7 +370,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$_SESSION['piano_dualmode'] = $dualmode[0];
 	workerLog('worker: Piano output mode (' . $outputmode . ')');
 
-	// WORKAROUND: bump one of the channels to init volume
+	// WORKAROUND: bump one of the channels to initialize volume
 	sysCmd('amixer -c0 sset "Digital" 0');
 	sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
 	// reset Main vol back to 100% (0dB) if indicated
@@ -371,6 +378,18 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 		sysCmd('amixer -c0 sset "Digital" 100%');
 	}
 	workerLog('worker: Piano 2.1 initialized');
+}
+// configure Allo Katana DAC
+if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
+	// WORKAROUND: bump one of the channels with S16_LE and S32_LE to avoid audio corruption
+	sysCmd('amixer -c0 sset "Master" 0');
+	sysCmd('speaker-test -c 2 -s 2 -r 44100 -F S16_LE -X -f 24000 -t sine -l 1');
+	sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S32_LE -X -f 24000 -t sine -l 1');
+	// reset vol back to 100% (0dB) if indicated
+	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') {
+		sysCmd('amixer -c0 sset "Master" 100%');
+	}
+	workerLog('worker: Katana DAC initialized');
 }
 
 //
@@ -386,7 +405,7 @@ sysCmd("systemctl start mpd");
 sleep(2);
 workerLog('worker: MPD started');
 workerLog('worker: MPD scheduler policy ' . '(' . ($_SESSION['mpdsched'] == 'other' ? 'time-share' : $_SESSION['mpdsched']) . ')');
-// ensure valid mpd output config, tpc r41
+// ensure valid mpd output config
 workerLog('worker: Configure MPD outputs');
 $mpdoutput = configMpdOutputs();
 sysCmd('mpc enable only ' . $mpdoutput);
@@ -398,7 +417,7 @@ workerLog('worker: ' . $result[0]); // ALSA default
 workerLog('worker: ' . $result[1]); // ALSA crossfeed
 workerLog('worker: ' . $result[2]); // ALSA parametric eq
 workerLog('worker: ' . $result[3]); // ALSA graphic eq
-workerLog('worker: ' . $result[4]); // ALSA bluetooth, tpc r41
+workerLog('worker: ' . $result[4]); // ALSA bluetooth
 // mpd crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
 
@@ -414,6 +433,17 @@ if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
 }
 else {
 	workerLog('worker: Airplay receiver (feat N/A)');
+}
+
+// start spotify receiver
+if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
+	if (isset($_SESSION['spotifysvc']) && $_SESSION['spotifysvc'] == 1) {
+		startSpotify();
+		workerLog('worker: Spotify receiver started');
+	}
+}
+else {
+	workerLog('worker: Spotify receiver (feat N/A)');
 }
 
 // start squeezelite renderer
@@ -545,12 +575,13 @@ if ($_SESSION['ashuffle'] == '1') {
 $ckstart = $_SESSION['ckradstart'];
 $ckstop = $_SESSION['ckradstop'];
 $aplactive = '0';
+$spotactive = '0';
 $slactive = '0';
 $maint_interval = $_SESSION['maint_interval'];
 workerLog('worker: Maintenance interval (' . $_SESSION['maint_interval'] . ')');
-$scnactive = '0'; // r42q screen saver
+$scnactive = '0'; // screen saver
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
-workerLog('worker: Screen saver timeout (' . $_SESSION['scnsaver_timeout'] . ')');
+workerLog('worker: Screen saver activation (' . $_SESSION['scnsaver_timeout'] . ')');
 
 // start watchdog monitor
 sysCmd('/var/www/command/watchdog.sh > /dev/null 2>&1 &');
@@ -582,7 +613,7 @@ while (1) {
 		
 	session_start();
 
-	if ($_SESSION['scnsaver_timeout'] != 'Never') { //r42q
+	if ($_SESSION['scnsaver_timeout'] != 'Never') {
 		chkScnSaver();
 	}
 	if ($_SESSION['maint_interval'] != 0) {
@@ -596,6 +627,9 @@ while (1) {
 	}
 	if ($_SESSION['airplaysvc'] == '1') {
 		chkAplActive();
+	}
+	if ($_SESSION['spotifysvc'] == '1') {
+		chkSpotActive();
 	}
 	if ($_SESSION['slsvc'] == '1') {
 		chkSlActive();
@@ -623,11 +657,10 @@ while (1) {
 // WORKER FUNCTIONS
 //
 
-// r42w improve logic
 function chkScnSaver() {
 	//workerLog('worker: Scnactive in (' . $GLOBALS['scnsaver_timeout'] . ') secs');
 	// activate if other overlay not active and timeout not 'Never'
-	if ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['scnsaver_timeout'] != 'Never') {
+	if ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['scnsaver_timeout'] != 'Never') {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - 3;
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
@@ -638,7 +671,7 @@ function chkScnSaver() {
 			}
 		}
 	}
-	// deactivate screen saver overlay to allow other overlays to be displayed 
+	// deactivate
 	else {
 		if ($GLOBALS['scnactive'] == '1') {
 			$GLOBALS['scnactive'] = '0';
@@ -649,7 +682,6 @@ function chkScnSaver() {
 	}
 }
 
-// r42q improve logic
 function chkMaintenance() {
 	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - 3;
 	if ($GLOBALS['maint_interval'] <= 0) {
@@ -659,7 +691,6 @@ function chkMaintenance() {
 	}
 }
 
- // tpc r41
 function chkBtActive() {
 	//workerLog('chkBtActive(): check for bluealsa-aplay task');
 	$result = sysCmd('pgrep -l bluealsa-aplay');
@@ -668,7 +699,7 @@ function chkBtActive() {
 		// do this section only once 	
 		if ($_SESSION['btactive'] == '0') {
 			playerSession('write', 'btactive', '1');
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // r42w reset timeout
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 			//workerLog('chkBtActive(): send btactive1');
 			//sendEngCmd('btactive1');
 			// set alsa vol to 100 if indicated
@@ -694,7 +725,7 @@ function chkBtActive() {
 		}
 	}	
 }
- // tpc r41
+
 function chkAplActive() {
 	//workerLog('chkAplActive(): check for Airplay active');
 	// get directly from sql since external spspre and spspost.sh scripts don't update the session
@@ -707,7 +738,7 @@ function chkAplActive() {
 		// do this section only once 	
 		if ($GLOBALS['aplactive'] == '0') {
 			$GLOBALS['aplactive'] = '1';
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // r42w reset timeout
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 			//workerLog('chkAplActive(): send aplactive1');
 			sendEngCmd('aplactive1');
 		}
@@ -724,7 +755,35 @@ function chkAplActive() {
 	}	
 }
 
- // r42d
+function chkSpotActive() {
+	//workerLog('chkSpotActive(): check for Spotify active');
+	// get directly from sql since external spotevent.sh script does not update the session
+	$result = sdbquery("SELECT value FROM cfg_system WHERE param='spotactive'", cfgdb_connect());
+	//workerLog('chkSpotActive(): SQL=(' . $result[0]['value'] . ')');
+
+	if ($result[0]['value'] == '1') {
+		//workerLog('chkSpotActive(): Spotify active');
+		//workerLog('chkSpotActive(): Global=(' . $GLOBALS['spotactive'] . ')');
+		// do this section only once 	
+		if ($GLOBALS['spotactive'] == '0') {
+			$GLOBALS['spotactive'] = '1';
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+			//workerLog('chkSpotActive(): send spotactive1');
+			sendEngCmd('spotactive1');
+		}
+	}
+	else {
+		//workerLog('chkSpotActive(): Spotify not active');
+		//workerLog('chkSpotActive(): Global=(' . $GLOBALS['spotactive'] . ')');
+		// do this section only once 	
+		if ($GLOBALS['spotactive'] == '1') {
+			$GLOBALS['spotactive'] = '0';
+			//workerLog('chkSpotActive(): send spotactive0');
+			sendEngCmd('spotactive0');
+		}
+	}	
+}
+
 function chkSlActive() {
 	//workerLog('chkSlActive(): check for Squeezelite active');
 	// get directly from sql since external slpower.sh script does not update the session
@@ -737,7 +796,7 @@ function chkSlActive() {
 		// do this section only once 	
 		if ($GLOBALS['slactive'] == '0') {
 			$GLOBALS['slactive'] = '1';
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // r42w reset timeout
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 			//workerLog('chkSlActive(): send slactive1');
 			sendEngCmd('slactive1');
 		}
@@ -755,39 +814,76 @@ function chkSlActive() {
 }
 
 function updExtMetaFile() {
-	// current metadata
-	$sock = openMpdSock('localhost', 6600);
-	$current = parseStatus(getMpdStatus($sock));
-	$current = enhanceMetadata($current, $sock, 'nomediainfo');
-	closeMpdSock($sock);
-
-	// file  metadata
+	// bluetooth
+	$result = sysCmd('pgrep -l bluealsa-aplay');
+	$btactive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
+	// output rate
+	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
+	if ($hwparams['status'] == 'active') {
+		$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
+		$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' mbps';
+	}
+	else {
+		$hwparams_format = '';
+		$hwparams_calcrate = '0 bps';
+	}			
+	// currentsong.txt
 	$filemeta = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
 
-	// write metadata to file for external applications
-	if ($current['title'] != $filemeta['title'] || $current['album'] != $filemeta['album'] || $_SESSION['volknob'] != $filemeta['volume'] || 
-		$_SESSION['volmute'] != $filemeta['mute'] || $current['state'] != $filemeta['state']) {	
+	if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || ($btactive === true && $_SESSION['audioout'] == 'Local')) {
+			// renderer status
+			if ($_SESSION['airplayactv'] == '1') {
+				$renderer = 'Airplay Active';
+			}
+			elseif ($_SESSION['spotactive'] == '1') {
+				$renderer = 'Spotify Active';
+			} 
+			elseif ($_SESSION['slactive'] == '1') {
+				$renderer = 'Squeezelite Active';
+			} 
+			else {
+				$renderer = 'Bluetooth Active';
+			} 
+			// write file only if something has changed
+			if ($filemeta['file'] != $renderer && $hwparams_calcrate != '0 bps') {
+				$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');			
+				$data = 'file=' . $renderer . "\n"; 
+				$data .= 'outrate=' . $hwparams_format . $hwparams_calcrate . "\n"; ;
+				fwrite($fh, $data);
+				fclose($fh);
+			}
+	}
+	else {
+		// MPD metadata
+		$sock = openMpdSock('localhost', 6600);
+		$current = parseStatus(getMpdStatus($sock));
+		$current = enhanceMetadata($current, $sock, 'nomediainfo');
+		closeMpdSock($sock);	
 
-		$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');
-		// default 
-		$data = 'file=' . $current['file'] . "\n"; 
-		$data .= 'artist=' . $current['artist'] . "\n";
-		$data .= 'album=' . $current['album'] . "\n";
-		$data .= 'title=' . $current['title'] . "\n";
-		$data .= 'coverurl=' . $current['coverurl'] . "\n";
-		// xtra tags
-		$data .= 'track=' . $current['track'] . "\n";
-		$data .= 'date=' . $current['date'] . "\n";
-		$data .= 'composer=' . $current['composer'] . "\n";
-		// other
-		$data .= 'encoded=' . getEncodedAt($current, 'default') . "\n";
-		$data .= 'bitrate=' . $current['bitrate'] . "\n";
-		$data .= 'volume=' . $_SESSION['volknob'] . "\n";
-		$data .= 'mute=' . $_SESSION['volmute'] . "\n";
-		$data .= 'state=' . $current['state'] . "\n";
-		
-		fwrite($fh, $data);
-		fclose($fh);
+		// write file only if something has changed
+		if ($current['title'] != $filemeta['title'] || $current['album'] != $filemeta['album'] || $_SESSION['volknob'] != $filemeta['volume'] || 
+			$_SESSION['volmute'] != $filemeta['mute'] || $current['state'] != $filemeta['state']) {		
+			$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');
+			// default 
+			$data = 'file=' . $current['file'] . "\n"; 
+			$data .= 'artist=' . $current['artist'] . "\n";
+			$data .= 'album=' . $current['album'] . "\n";
+			$data .= 'title=' . $current['title'] . "\n";
+			$data .= 'coverurl=' . $current['coverurl'] . "\n";
+			// xtra tags
+			$data .= 'track=' . $current['track'] . "\n";
+			$data .= 'date=' . $current['date'] . "\n";
+			$data .= 'composer=' . $current['composer'] . "\n";
+			// other
+			$data .= 'encoded=' . getEncodedAt($current, 'default') . "\n";
+			$data .= 'bitrate=' . $current['bitrate'] . "\n";
+			$data .= 'outrate=' . $hwparams_format . $hwparams_calcrate . "\n"; ;
+			$data .= 'volume=' . $_SESSION['volknob'] . "\n";
+			$data .= 'mute=' . $_SESSION['volmute'] . "\n";
+			$data .= 'state=' . $current['state'] . "\n";			
+			fwrite($fh, $data);
+			fclose($fh);
+		}
 	}
 }
 
@@ -970,7 +1066,7 @@ function updPlayHistory() {
 function runQueuedJob() {
 	$_SESSION['w_lock'] = 1;
 
-	// r42u no need to log screen saver resets
+	// no need to log screen saver resets
 	if ($_SESSION['w_queue'] != 'resetscnsaver') {
 		workerLog('worker: Job ' . $_SESSION['w_queue']);
 	}
@@ -992,7 +1088,7 @@ function runQueuedJob() {
 		case 'updmpddb':
 		case 'rescanmpddb':
 			// clear libcache
-			sysCmd('truncate /var/local/www/libcache.json --size 0');
+			sysCmd('truncate ' . LIBCACHE_JSON . ' --size 0');
 			// db update / rescan
 			$sock = openMpdSock('localhost', 6600);
 			$cmd = $_SESSION['w_queue'] == 'updmpddb' ? 'update' : 'rescan';
@@ -1002,9 +1098,16 @@ function runQueuedJob() {
 			break;
 		case 'sourcecfg':
 			// clear libcache
-			sysCmd('truncate /var/local/www/libcache.json --size 0');
+			sysCmd('truncate ' . LIBCACHE_JSON . ' --size 0');
 			// update cfg_source and do the mounts
 			wrk_sourcecfg($_SESSION['w_queueargs']);
+			break;
+		case 'updthmcache':
+			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
+			break;
+		case 'regenthmcache':
+			sysCmd('rm -f ' . THMCACHE_DIR . '/*');
+			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
 			break;
 		
 		// mpd-config jobs
@@ -1040,9 +1143,15 @@ function runQueuedJob() {
 			}
 
 			// restart renderers if device num changed
-			if ($_SESSION['w_queueargs'] == 'devicechg' && $_SESSION['airplaysvc'] == 1) {
-				sysCmd('killall shairport-sync');
-				startSps();
+			if ($_SESSION['w_queueargs'] == 'devicechg') {
+				if ($_SESSION['airplaysvc'] == 1) {
+					sysCmd('killall shairport-sync');
+					startSps();
+				}
+				if ($_SESSION['spotifysvc'] == 1) {
+					sysCmd('killall librespot');
+					startSpotify();
+				}
 			}
 			break;
 
@@ -1161,6 +1270,17 @@ function runQueuedJob() {
 			sendEngCmd('aplactive0');
 			//
 			if ($_SESSION['airplaysvc'] == 1) {startSps();}
+			break;			
+		// spotify
+		case 'spotifysvc':
+			sysCmd('killall librespot');
+			sysCmd('/var/www/vol.sh restore');
+			// reset to inactive
+			playerSession('write', 'spotactive', '0');
+			$GLOBALS['spotactive'] = '0';
+			sendEngCmd('spotactive0');
+			//
+			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
 			break;
 		// squeezelite
 		case 'slsvc':

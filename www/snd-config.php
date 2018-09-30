@@ -21,6 +21,10 @@
  * - add Resume MPD for Bluetooth
  * 2018-07-11 TC moOde 4.2
  * - add 'Resume MPD' for Airplay and Squeezelite
+ * 2018-09-27 TC moOde 4.3
+ * - improve logic for chp/device options button
+ * - use help-block-configs for $_alsa_volume_msg
+ * - spotify
  *
  */
 
@@ -206,6 +210,32 @@ if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSIO
 	submitJob('airplaysvc', '', 'Airplay receiver restarted', '');
 }
 
+// SPOTIFY RENDERER
+if (isset($_POST['update_spotify_settings'])) {
+	if (isset($_POST['spotifyname']) && $_POST['spotifyname'] != $_SESSION['spotifyname']) {
+		$title = 'Spotify name updated';
+		playerSession('write', 'spotifyname', $_POST['spotifyname']);
+	} 
+
+	if (isset($_POST['spotifysvc']) && $_POST['spotifysvc'] != $_SESSION['spotifysvc']) {
+		$title = $_POST['spotifysvc'] == 1 ? 'Spotify receiver on' : 'Spotify receiver off';
+		playerSession('write', 'spotifysvc', $_POST['spotifysvc']);
+	}
+
+	if (isset($title)) {
+		submitJob('spotifysvc', '', $title, '');
+	}
+}
+// resume mpd after spotify
+if (isset($_POST['update_rsmafterspot'])) {
+	playerSession('write', 'rsmafterspot', $_POST['rsmafterspot']);
+	$_SESSION['notify']['title'] = 'Setting updated';
+}
+// restart spotify
+if (isset($_POST['spotifyrestart']) && $_POST['spotifyrestart'] == 1 && $_SESSION['spotifysvc'] == '1') {
+	submitJob('spotifysvc', '', 'Spotify receiver restarted', '');
+}
+
 // SQUEEZELITE RENDERER
 if (isset($_POST['update_sl_settings'])) {
 	if (isset($_POST['slsvc']) && $_POST['slsvc'] != $_SESSION['slsvc']) {
@@ -329,14 +359,21 @@ else {
 }
 
 // chip/device options
-$result[0]['chipoptions'] == '' ? $disabled = 'disabled' : $disabled = '';
+if (empty($result[0]['chipoptions'])) {
+	$_chpoptions_disabled = 'disabled';
+	$_chpoptions_href = 'Edit settings';
+}
+else {
+	$_chpoptions_disabled = '';
+	$_chpoptions_href = '<a href="chp-config.php">Edit settings</a>';
+}
 
 // alsa volume
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsa_volume = '';
 	$_alsa_volume_readonly = 'readonly';
 	$_alsa_volume_hide = 'hide';
-	$_alsa_volume_msg = "<span class=\"help-block help-block-margin\">Hardware volume controller not detected</span>";
+	$_alsa_volume_msg = "<span class=\"help-block-configs help-block-margin\">Hardware volume controller not detected</span>";
 } else {
 	$mixername = getMixerName($_SESSION['i2sdevice']);
 	// TC there is a visudo config that allows this cmd to be run by www-data, the user context for this page
@@ -429,6 +466,20 @@ if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
 }
 else {
 	$_feat_airplay = 'hide';
+}
+
+// spotify
+if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
+	$_feat_spotify = '';
+	$_select['spotifysvc1'] .= "<input type=\"radio\" name=\"spotifysvc\" id=\"togglespotifysvc1\" value=\"1\" " . (($_SESSION['spotifysvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['spotifysvc0'] .= "<input type=\"radio\" name=\"spotifysvc\" id=\"togglespotifysvc2\" value=\"0\" " . (($_SESSION['spotifysvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['spotifyname'] = $_SESSION['spotifyname'];
+	$_select['rsmafterspot'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterspot'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+	$_select['rsmafterspot'] .= "<option value=\"No\" " . (($_SESSION['rsmafterspot'] == 'No') ? "selected" : "") . ">No</option>\n";
+	$_spotify_restart = $_SESSION['spotifysvc'] == '1' ? '#spotify-restart' : '#notarget';
+}
+else {
+	$_feat_spotify = 'hide';
 }
 
 // squeezelite renderer

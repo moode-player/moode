@@ -35,6 +35,10 @@
 # - use "Controller detected" instead of value for HWVOL
 # - add Pi-3B+ 1GB v1.3 to hdwrrev
 # - change df cmd to use /dev/root instead of root
+# 2018-09-27 TC moOde 4.3
+# - cfg_system column adds
+# - support arm64 (@jesset)
+# - spotify
 #
 
 FREQ() { 
@@ -72,8 +76,11 @@ AUDIO() {
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
 	[[ "$BITS" = "" ]] && OUTSTREAM="Closed" || OUTSTREAM="$BITS / $RATE"
 
-	ALSAVER="$(dpkg -l | awk '/libasound2:armhf/ { print  $3 }')"
-	SOXVER="$(dpkg -l | awk '/libsoxr0:armhf/ { print  $3 }')"
+	#ALSAVER="$(dpkg -l | awk '/libasound2:armhf/ { print  $3 }')"
+	#SOXVER="$(dpkg -l | awk '/libsoxr0:armhf/ { print  $3 }')"
+	# support arm64
+	ALSAVER="$(dpkg -l | awk '/libasound2:/ { print  $3 }')"
+ 	SOXVER="$(dpkg -l | awk '/libsoxr0:/ { print  $3 }')"
 
 	if [[ $i2sdevice = "none" ]]; then
 		[[ $device = "0" ]] && audiodevname="On-board audio device" || audiodevname="USB audio device"
@@ -95,15 +102,14 @@ AUDIO() {
 	echo -e "\n\tAccent color\t\t= $themecolor\c"
 	echo -e "\n\tAlpha blend\t\t= $alphablend\c"
 	echo -e "\n\tAdaptive background\t= $adaptive\c"
-	if [ -f //var/local/www/imagesw/bgimage.jpg ] ; then
-		bgimage="Yes"
-	else
-		bgimage="No"
-	fi
+	if [ -f //var/local/www/imagesw/bgimage.jpg ]; then bgimage="Yes"; else bgimage="No"; fi
 	echo -e "\n\tBackground image\t= $bgimage\c"
 	echo -e "\n\tPlayback history\t= $playhist\c"
 	echo -e "\n\tExtra metadata\t\t= $xtagdisp\c"
-	echo -e "\n\tLibrary\t\t\t= $libartistcol\n"
+	echo -e "\n\tArtist list order\t= $libartistcol\c"
+	echo -e "\n\tCover search pri\t= $library_covsearchpri\c"
+	echo -e "\n\tHi-res covers\t\t= $library_hiresthm\c"
+	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\n"
 
 	echo -e "\t  A U D I O    P A R A M E T E R S  \n"
 	echo -e "\tAudio device\t\t= $audiodevname\c"
@@ -121,6 +127,9 @@ AUDIO() {
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		echo -e "\n\tAirplay receiver\t= $airplaysvc\c"
+	fi
+	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
+		echo -e "\n\tSpotify receiver\t= $spotifysvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		echo -e "\n\tSqueezelite\t\t= $slsvc\c"
@@ -177,6 +186,19 @@ AUDIO() {
 		echo -e "\n\tAudio buffer (secs)\t= $audio_backend_buffer_desired_length_in_seconds\n"
 	fi
 
+	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
+		SPOTDEV="$(aplay -L | grep -w default)"
+		echo -e "\t  S P O T I F Y    S E T T I N G S  \n"
+		echo -e "\tFriendly name\t\t= $spotifyname\c"
+		echo -e "\n\tALSA device\t\t= $SPOTDEV\c"
+		echo -e "\n\tResume MPD\t\t= $rsmafterspot\c"
+		echo -e "\n\tBit rate\t\t= $bitrate\c"
+		echo -e "\n\tInitial volume\t\t= $initial_volume\c"
+		echo -e "\n\tVolume curve\t\t= $volume_curve\c"
+		echo -e "\n\tVolume normalization\t= $volume_normalization\c"
+		echo -e "\n\tNormalization pregain\t= $normalization_pregain\n"
+	fi
+
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		SL=`squeezelite -? | grep "Squeezelite" | cut -f 2 -d "v" | cut -f 1 -d ","`
 		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
@@ -203,15 +225,22 @@ LINE() {
 	echo "____________________________________________________________________________"
 }
 # feature availability bitmasks
-FEAT_AIRPLAY=2#00000010
-FEAT_MINIDLNA=2#00000100
-FEAT_SQUEEZELITE=2#00010000
-FEAT_UPMPDCLI=2#00100000
+FEAT_AIRPLAY=2#0000000000000010
+FEAT_MINIDLNA=2#0000000000000100
+FEAT_SQUEEZELITE=2#0000000000010000
+FEAT_UPMPDCLI=2#0000000000100000
+FEAT_SPOTIFY=2#0000100000000000
 
 HOSTNAME=`uname -n`
 RASPBIANVER=`cat /etc/debian_version`
 KERNEL=`uname -r`
-CPU=`cat /proc/cpuinfo | grep "Hardware" | cut -f 2 -d ":" | tr -d " "`
+#CPU=`cat /proc/cpuinfo | grep "Hardware" | cut -f 2 -d ":" | tr -d " "`
+# support arm64
+if [[ $(uname -m) == "aarch64" ]];then
+	CPU=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
+else
+	CPU=`cat /proc/cpuinfo | grep "Hardware" | cut -f 2 -d ":" | tr -d " "`
+fi
 CORES=`grep -c ^processor /proc/cpuinfo`
 ARCH=`uname -m`
 MEMUSED=`free -m | grep "Mem" | awk {'print $3'}`
@@ -310,6 +339,15 @@ audio_buffer_size=${arr[8]}
 buffer_before_play=${arr[9]}
 max_output_buffer_size=${arr[10]}
 
+# Spotify settings
+RESULT=$(sqlite3 $SQLDB "select value from cfg_spotify")
+readarray -t arr <<<"$RESULT"
+bitrate=${arr[0]}
+initial_volume=${arr[1]}
+volume_curve=${arr[2]}
+volume_normalization=${arr[3]}
+normalization_pregain=${arr[4]}
+
 # Squeezelite settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_sl")
 readarray -t arr <<<"$RESULT"
@@ -351,8 +389,8 @@ ckradvol=${arr[23]}
 ckradshutdn=${arr[24]}
 playhist=${arr[25]}
 phistsong=${arr[26]}
-pldisp=${arr[27]}
-autofocus=${arr[28]}
+reserved28=${arr[27]}
+musictab_default=${arr[28]}
 timecountup=${arr[29]}
 themecolor=${arr[30]}
 volknob=${arr[31]}
@@ -424,6 +462,18 @@ audioout=${arr[91]}
 audioin=${arr[92]}
 slactive=${arr[93]}
 rsmaftersl=${arr[94]}
+mpdmixer_local=${arr[95]}
+wrkready=${arr[96]}
+scnsaver_timeout=${arr[97]}
+compilation_excludes=${arr[98]}
+favorites_name=${arr[99]}
+spotifysvc=${arr[100]}
+spotifyname=${arr[101]}
+spotactive=${arr[102]}
+rsmafterspot=${arr[103]}
+library_covsearchpri=${arr[104]}
+library_hiresthm=${arr[105]}
+library_pixelratio=${arr[106]}
 
 MODEL=${hdwrrev:0:5}
 if [ $MODEL = Pi-3B ]; then

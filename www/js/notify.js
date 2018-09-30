@@ -24,6 +24,11 @@
  * - blank out icon
  * 2018-07-11 TC moOde 4.2
  * - reformat msg for 'update'
+ * 2018-09-27 TC moOde 4.3
+ * - update text for plnameerror
+ * - favorites feature
+ * - clear/add
+ * - mpd errors
  *
  */
 
@@ -32,13 +37,14 @@ function notify(cmd, msg, duration) {
 
     var map = {
 		add: 'Added to playlist',
-		clrplay: 'Added after clearing playlist',
+		clrplay: 'Added after playlist cleared',
+		clradd: 'Added after playlist cleared',
 		update: 'Updating...',
 		remove: 'Removed from playlist',
 		move: 'Playlist items moved',
 		savepl: 'Playlist saved',
 		needplname: 'Enter a name',
-		plnameerror: 'NAS, RADIO and SDCARD cannot be used in playlist name',
+		plnameerror: 'NAS, RADIO and SDCARD cannot be used in the name',
 		needssid: 'Static IP requres an SSID',
 		needdhcp: 'Blank SSID requires DHCP',
 		delsavedpl: 'Playlist deleted',
@@ -49,6 +55,10 @@ function notify(cmd, msg, duration) {
 		updcustomize: 'Settings updated',
 		usbaudioready: 'USB audio ready',
 		scnsaverexit: 'Leaving CoverView',
+		favset: 'Name has been set',
+		favadded: 'Favorite has been added',
+		nofavtoadd: 'Nothing to add',
+		mpderror: 'MPD error',
 		reboot: 'Rebooting...',
 		shutdown: 'Shutting down...'
     };

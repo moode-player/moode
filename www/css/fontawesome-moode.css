@@ -4,6 +4,8 @@
  * 
  * 2018-07-11 TC moOde 4.2
  * - just the icons used
+ * 2018-09-27 TC moOde 4.3
+ * - add heart, circle-plus
  * 
  */
 .fa,
@@ -232,7 +234,10 @@ readers do not read off random characters that represent icons */
 
 .fa-chevron-down:before {
   content: "\f078";}
-  
+
+.fa-chevron-up:before {
+  content: "\f077"; }
+
 .fa-cog:before {
   content: "\f013"; }
 
@@ -275,6 +280,9 @@ readers do not read off random characters that represent icons */
 .fa-hdd:before {
   content: "\f0a0"; }
 
+.fa-heart:before {
+  content: "\f004"; }
+
 .fa-home:before {
   content: "\f015"; }
 
@@ -308,6 +316,9 @@ readers do not read off random characters that represent icons */
 .fa-plus:before {
   content: "\f067"; }
 
+.fa-plus-circle:before {
+  content: "\f055"; }
+	
 .fa-power-off:before {
   content: "\f011"; }
 
@@ -341,8 +352,14 @@ readers do not read off random characters that represent icons */
 .fa-sync:before {
   content: "\f021"; }
 
+.fa-th:before {
+  content: "\f00a"; }
+
 .fa-times:before {
   content: "\f00d"; }
+
+.fa-times-circle:before {
+  content: "\f057"; }
 
 .fa-trash:before {
   content: "\f1f8"; }

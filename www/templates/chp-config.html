@@ -21,6 +21,8 @@
  * - remove data-validate="parsley"
  * 2018-07-11 TC moOde 4.2
  * - minor cleanup
+ * 2018-09-27 TC moOde 4.3
+ * - improve logic and add support for ess sabre chips (Allo Katana DAC)
  *
  */
 -->	
@@ -35,46 +37,48 @@
     <form class="form-horizontal" action="" method="post">
     	<legend>Settings &nbsp;<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button></legend>
     
-		<h4>Burr Brown PCM and TAS chips</h4>
-		<fieldset>
-			<div class="control-group">
-				<label class="control-label" for="digfilter">Digital interpolation filter</label>
-				<div class="controls">
-					<select id="digfilter" class="input-large" name="config[digfilter]">
-						$_select[digfilter]
-					</select>
-					<span class="help-block-configs help-block-margin">
-                    	Filter is applied to PCM samples at oversampling stage just prior to sigma-delta modulator.<br>
-						Playback is automatically restarted to make filter change effective.<br>
-						NOTE: Filter is bypassed if sample rate is 384 kHz.
-                    </span>
+		<div class="$_burrbrown_hide">
+			<h4>Burr Brown PCM and TAS chips</h4>
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label" for="digfilter">Digital interpolation filter</label>
+					<div class="controls">
+						<select id="digfilter" class="input-large" name="config[digfilter]">
+							$_select[digfilter]
+						</select>
+						<span class="help-block-configs help-block-margin">
+	                    	Filter is applied to PCM samples at oversampling stage just prior to sigma-delta modulator.<br>
+							Playback is automatically restarted to make filter change effective.<br>
+							NOTE: Filter is bypassed if sample rate is 384 kHz.
+	                    </span>
+					</div>
 				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="analoggain">Analog gain</label>
-				<div class="controls">
-					<select id="analoggain" class="input-large" name="config[analoggain]">
-						$_select[analoggain]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						 Analog gain can be set to 0 dB (2-Vrms) or –6 dB (1-Vrms).
-                    </span>
+	
+				<div class="control-group">
+					<label class="control-label" for="analoggain">Analog gain</label>
+					<div class="controls">
+						<select id="analoggain" class="input-large" name="config[analoggain]">
+							$_select[analoggain]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							 Analog gain can be set to 0 dB (2-Vrms) or –6 dB (1-Vrms).
+	                    </span>
+					</div>
 				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="analogboost">Analog gain boost</label>
-				<div class="controls">
-					<select id="analogboost" class="input-large" name="config[analogboost]">
-						$_select[analogboost]
-					</select>
-					<span class="help-block-configs help-block-margin">
-						 Analog gain boost can be set to 0 dB (normal amplitude) or .8 dB (10% boosted amplitude).
-                   </span>
+	
+				<div class="control-group">
+					<label class="control-label" for="analogboost">Analog gain boost</label>
+					<div class="controls">
+						<select id="analogboost" class="input-large" name="config[analogboost]">
+							$_select[analogboost]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							 Analog gain boost can be set to 0 dB (normal amplitude) or .8 dB (10% boosted amplitude).
+	                   </span>
+					</div>
 				</div>
-			</div>
-		</fieldset>
+			</fieldset>
+		</div>
 
 		<div class="$_allo_piano_hide">
 			<legend></legend>
@@ -113,6 +117,51 @@
 						<span class="help-block-configs help-block-margin">
 							Volume range: 0 - 100%.
 	                    </span>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+
+		<div class="$_allo_katana_hide">
+			<h4>Allo Katana DAC (ESS Sabre ES9038Q2M)</h4>
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label" for="osf">Oversampling filter</label>
+					<div class="controls">
+						<select id="osf" class="input-large" name="config[osf]">
+							$_select[osf]
+						</select>
+						<span class="help-block-configs help-block-margin">
+	                    	Filter is applied to PCM samples at oversampling stage.<br>							
+							Playback is automatically restarted to make filter change effective.<br>
+							Default: Apodizing Fast Roll-off Filter
+	                    </span>
+					</div>
+				</div>
+	
+				<div class="control-group">
+					<label class="control-label" for="deemphasis">De-emphasis</label>
+					<div class="controls">
+						<select id="deemphasis" class="input-large" name="config[deemphasis]">
+							$_select[deemphasis]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							 De-emphasis can be set to Bypass, 32 44.1 eor 48 kHz.<br>
+							 Default: Bypass
+	                    </span>
+					</div>
+				</div>
+	
+				<div class="control-group">
+					<label class="control-label" for="dop">DSD over PCM (DoP)</label>
+					<div class="controls">
+						<select id="dop" class="input-large" name="config[dop]">
+							$_select[dop]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							 Enable or disable support for DSD over PCM (DoP) protocol.<br>
+							 Default: On
+	                   </span>
 					</div>
 				</div>
 			</fieldset>

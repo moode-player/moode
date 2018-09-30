@@ -4,6 +4,8 @@
  * - css vars, other css for newui v2
  * - adj method for dominance
  * - clean up tabbing
+ * 2018-09-27 TC moOde 4.3
+ * - minor fixes
  *
  */
 
@@ -56,7 +58,7 @@
 				$('#menu-top').css({color: themeColor});
 				$('#menu-top').css({backgroundColor: themeMback});
 				$('#menu-bottom').css({color: themeColor});
-				$('#menu-bottom').css({backgroundColor: themeMback});
+				$('#menu-bottom li').css({backgroundColor: themeMback});
 				$('#playback-panel').css('background-color', 'rgba(0,0,0,0)');
 				$('#playback-panel').css({color: themeColor});
 			},
@@ -121,7 +123,7 @@
 					if (aa[2] > bb[2]) {a1 = 0; a2 = 1;}
 					else {a1 = 1; a2 = 0;}
 					if ((cc[2] + .20) > aa[2] && (cc[2] < '.98')) {p[0] = a(f.dominant.name);a1=0;a2=1;}
-					if (a(f.dominant.name) == 'rgb(255,255,255)' && (p[1] == 'rgb(0,0,0)')) {p[0] = a(f.dominant.name);a1=0;a2=1;} //r42z
+					if (a(f.dominant.name) == 'rgb(255,255,255)' && (p[1] == 'rgb(0,0,0)')) {p[0] = a(f.dominant.name);a1=0;a2=1;}
 					//console.log(a1, a2, p[a1] + ', ' + p[a2]);
 					if (cc[2] > .98) {a1=0;a2=1;}
 					//console.log(a(f.dominant.name) + p);
@@ -267,8 +269,6 @@
 					var newshade = hslToRgb(shade);
 					var newbg = 'rgba(';
 					var newmb = 'rgba(';
-					newfa = newmb.concat(newshade[0],',',newshade[1],',',newshade[2],',0)');
-					newfb = newmb.concat(newshade[0],',',newshade[1],',',newshade[2],',0.9)');
 					newbg = newbg.concat(newshade[0],',',newshade[1],',',newshade[2],',' + SESSION.json['alphablend'] +')');
 					newmb = newmb.concat(newshade[0],',',newshade[1],',',newshade[2],',' + themeOp +')');
 				    $parent.css({backgroundColor: newbg});
@@ -290,7 +290,7 @@
 						return getYIQ(color) <= 128 ? opts.lumaClasses.dark : opts.lumaClasses.light;
 					};
 					// Normalize the text color based on luminance.
-						if (opts.normalizeTextColor) {
+					if (opts.normalizeTextColor) {
 						$parent.css({color: getNormalizedTextColor(data.color)});
 						// fix menu colors
 						adaptMcolor = getNormalizedTextColor(data.color);
@@ -308,25 +308,24 @@
 							$('#playback-panel').css({color: adaptColor});
 							$('.tab-content').css({backgroundColor: 'unset'});
 							$('#menu-top').css({backgroundColor: adaptMback});
-							themeOp < .74 ? $('#menu-bottom').css({backgroundColor: adaptMhalf}) : $('#menu-bottom').css({backgroundColor: adaptMback});
+							themeOp < .74 ? tempback = adaptMhalf : tempback = adaptMback;
+							document.body.style.setProperty('--btnbarback', tempback);
 							$('#menu-top .dropdown-menu').css({backgroundColor: adaptMback});
 							$('#context-menu-playlist-item .dropdown-menu').css({backgroundColor: adaptMback});
-							SESSION.json['alphablend'] != '1.00' ? $('#menu-top').css('background-color', 'rgba(0,0,0,0)') : $('#menu-top').css('background-color', themeMback); // r42p
+							SESSION.json['alphablend'] != '1.00' ? $('#menu-top').css('background-color', 'rgba(0,0,0,0)') : $('#menu-top').css('background-color', themeMback);
 							document.body.style.setProperty('--adaptbg', newmb);
 							document.body.style.setProperty('--adapttext', adaptMcolor);
-							//document.body.style.setProperty('--adaptfa', newfa); // r42p
-							//document.body.style.setProperty('--adaptfb', newfb);
+							document.body.style.setProperty('--btnbarcolor', 'rgba(96,96,96,0.5)'); 
+							btnbarfix(adaptMback, adaptMback);
 						}
 						if (getLumaClass(data.color) == 'ab-light') {
 							document.body.style.setProperty('--timethumb', 'url(../imagesw/thumb.svg)');
 							document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
 							document.body.style.setProperty('--trackfill', 'rgba(48,48,48,1.0)');
-							document.body.style.setProperty('--btnbarcolor', 'rgba(96,96,96,0.5)'); // r42k was .25
 						} else {
 							document.body.style.setProperty('--timethumb', 'url(../imagesw/thumb-w.svg)');
 							document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
 							document.body.style.setProperty('--trackfill', 'rgba(240,240,240,1.0)');
-							document.body.style.setProperty('--btnbarcolor', 'rgba(224,224,224,0.5)'); // r42k was .25
 						}
 					}
 					// Add a class based on luminance.

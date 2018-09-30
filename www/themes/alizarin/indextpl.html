@@ -26,7 +26,7 @@
  * - live timeline fpr mobile
  * - new volume controls
  * - remove data-validate="parsley"
- * 2018-07-11 TC moOde 4.2
+ * 2018-07-08 TC moOde 4.2
  * - add 'Mute toggle' title to volume-display
  * - new tabs, other code for newui v2
  * - move google search from cover to song title
@@ -35,13 +35,44 @@
  * - screen saver
  * - adv browse search
  * - font-awesome 5
+ * 2018-09-27 TC moOde 4.3
+ * - new mobile layout
+ * - favorites feature
+ * - clear/add for saved playlists
+ * - refresh btn for browse and radio panels
+ * - playback ctrls HUD for screen saver
+ * - album cover view
+ * - HUD playlist
  *
  */
 -->
 
 <div class="tab-content">
-	<!-- SCREEN SAVER r42x -->
+	<!-- SCREEN SAVER -->
 	<div id="screen-saver" class="hide" href="#notarget">
+		<div id="ss-backdrop"></div>
+		<div id="ss-gradient"></div>
+		<div id="ss-hud" class="hudui">
+			<div class="btn-group">
+				<button id="ssprev" class="btn btn-cmd" title="Previous"><i class="fas fa-backward"></i></button>
+				<button id="ssplay" class="btn btn-cmd btn-play" title="Play/Pause"><i class="fas fa-play"></i></button>
+				<button id="ssnext" class="btn btn-cmd" title="Next"><i class="fas fa-forward"></i></button>
+			</div>
+			<div id="ss-volume">
+				<button id="ssvoldn" class="btn btn-cmd" title="Volume Down"><i class="far fa-minus"></i></button>
+				<span id="ssvolume"></span>
+				<button id="ssvolup" class="btn btn-cmd" title="Volume Up"><i class="far fa-plus"></i></button>
+			</div>
+			<div id="ss-openpl">
+				<button id="ssplbtn" class="btn btn-cmd" title="Playlist"><i class="fal fa-chevron-down"></i></button>
+			</div>
+			<div id="ss-container-playlist">
+				<div id="ss-playlist">
+					<ul class="ss-playlist"></ul>
+				</div>
+			</div>
+		</div>
+
 		<div id="ss-coverart" class="ss-coverart">
 			<div id="ss-split">
 				<div id="ss-coverart-url"></div>
@@ -54,25 +85,26 @@
 			</div>
 			<div id="ss-info" class="ss-fsize ss-info">
 				<div id="ss-currentsong"></div>
+				<!--div id="ss-currentartist"></div-->
 				<div id="ss-currentalbum"></div>
 			</div>
 		</div>
 	</div>
-	<!-- IMPUTSRC INDICATOR -->
-	<div id="inpsrc-indicator"></div>
 
-	<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST //newui -->
+	<!-- IMPUT SOURCE INDICATOR -->
+	<div id="inpsrc-indicator" class="hudui"></div>
+
+	<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
 	<div id="playback-panel" class="tab-pane active">
 		<div class="container-playback txtmid">
-			<!--div id="inpsrc-indicator"></div-->
 			<div class="no-fluid">
-				<!-- playlist //newui -->
+				<!-- playlist -->
 				<div class="span5">					
 					<div class="btnlist btnlist-top btnlist-top-pl">
 						<form id="pl-search" method="post" onSubmit="return false;">
 							<div class="input-append">
-								<button class="btn" id="pl-search-btn" title="Typedown search"><i class="fal fa-search"></i></button>
 								<input id="pl-filter" type="text" value="" placeholder="search">
+								<button id="searchResetPl" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
 							</div>
 						</form>
 						<div id="pl-filter-results"></div>
@@ -81,12 +113,15 @@
 					<div id="container-playlist">
 						<div id="playlist">
 							<ul class="playlist"></ul>
-							<button id="playlistSave" class="btn pl-btnSave">Save Playlist</button>
+							<div id="playlistSave">
+								<button id="plSave" class="btn pl-btnSave">Save Playlist</button>
+								<button id="setFav" class="btn pl-btnSave">Set Favorites</button>
+							</div>
 						</div>				
 					</div>
 				</div>
 
-				<!-- knobs and playback controls //newui -->
+				<!-- knobs and playback controls -->
 				<div class="span3">					
 					<div id="timeknob">
 						<div id="countdown">
@@ -94,26 +129,6 @@
 						</div>
 						<div id="countdown-display" href="#notarget"></div>
 						<div id="total"></div>
-					</div>
-					
-					<div id="mobile-toolbar">
-						<div id="mt1">
-							<button id="mrepeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="fal fa-repeat"></i></button>
-							<button id="mrandom" class="btn btn-cmd btn-toggle" title="Random"><i class="fal fa-random"></i></button>
-						</div>
-						<div id="mt2" class="btn-group">
-							<button id="mprev" class="btn btn-cmd" title="Previous"><i class="fas fa-backward"></i></button>
-							<button id="mplay" class="btn btn-cmd btn-play" title="Play/Pause"><i class="fas fa-play"></i></button>
-							<button id="mnext" class="btn btn-cmd" title="Next"><i class="fas fa-forward"></i></button>
-						</div>
-						<div id="mt3">
-							<button id="mconsume" class="btn btn-cmd btn-toggle" title="Consume mode"><i class="fal fa-arrow-down"></i></button>
-							<button id="btn-mvol-popup" class="btn" data-toggle="modal" title="Volume"><i class="fal fa-volume-up"></i>
-							<button id="msingle" class="btn btn-cmd btn-toggle" title="Single"><i class="fal fa-redo"></i></button>
-								<div id="mvol-bg"></div> 
-								<div id="mvol-progress"></div>
-							</button>
-						</div>
 					</div>
 
 					<div id="playbtns" class="btn-toolbar">
@@ -139,11 +154,12 @@
 							<button id="repeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="fal fa-repeat"></i></button>
 							<button id="single" class="btn btn-cmd btn-toggle" title="Single"><i class="fal fa-redo"></i></button>
 							<button id="consume" class="btn btn-cmd btn-toggle" title="Consume"><i class="fal fa-arrow-down"></i></button>
+							<button id="addfav" class="btn btn-cmd" title="Add to favorites">  <i class="fal fa-heart"></i></button>
 						</div>
 					</div>
 				</div>
 
-				<!-- cover art and song metadata //newui -->
+				<!-- cover art and song metadata -->
 				<div class="span4">
 					<div class="covers">
 						<div id="coverart-url"></div>
@@ -156,17 +172,38 @@
 						<span id="currentsong" title="Google search"></span>
 						<span id="currentalbum"></span>
 					</div>
+					
+					<div id="mobile-toolbar">
+						<div id="mt2" class="btn-group">
+							<button id="mprev" class="btn btn-cmd" title="Previous"><i class="fas fa-backward"></i></button>
+							<button id="mplay" class="btn btn-cmd btn-play" title="Play/Pause"><i class="fas fa-play"></i></button>
+							<button id="mnext" class="btn btn-cmd" title="Next"><i class="fas fa-forward"></i></button>
+						</div>
+						<div id="mt1">
+							<button id="mrandom" class="btn btn-cmd btn-toggle" title="Random"><i class="fal fa-random"></i></button>
+							<button id="mrepeat" class="btn btn-cmd btn-toggle" title="Repeat"><i class="fal fa-repeat"></i></button>
+							<button id="mconsume" class="btn btn-cmd btn-toggle" title="Consume mode"><i class="fal fa-arrow-down"></i></button>
+							<button id="msingle" class="btn btn-cmd btn-toggle" title="Single"><i class="fal fa-redo"></i></button>
+							<button id="btn-mvol-popup" class="btn" data-toggle="modal" title="Volume"><i class="fal fa-volume-up"></i>							
+								<div id="mvol-bg"></div> 
+								<div id="mvol-progress"></div>
+							</button>
+							<button id="maddfav" class="btn btn-cmd" title="Add to favorites">  <i class="fal fa-heart"></i></button>
+						</div>
+					</div>
+					
 				</div>
 			</div> 
 		</div>
 	</div>	
 
-	<!-- LIBRARY PANEL //newui -->
+	<!-- LIBRARY PANEL -->
 	<div id="library-panel" class="tab-pane">
 		<div class="container-library">
-			<div class="viewswitch btn-group">
-				<button class="btn browse-panel-btn" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
-				<button class="btn library-panel-btn active" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
+			<div class="viewswitch">
+				<button class="btn browse-panel-btn active" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
+				<button class="btn library-panel-btn" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
+				<button class="btn album-panel-btn" href="#library-panel" data-toggle="tab"><i class="far fa-th"></i></button>
 			</div>
 
 			<div id="lib-loader">
@@ -179,8 +216,8 @@
 			<div class="btnlist btnlist-top btnlist-top-lib">
 				<form id="lib-album-search" method="post" onSubmit="return false;">
 					<div class="input-append">
-						<button class="btn" id="lib-search-btn" title="Typedown search"><i class="fal fa-search"></i></button>
-						<input id="lib-album-filter" type="text" value="" placeholder="artist or album">	
+						<input id="lib-album-filter" type="text" value="" placeholder="search">
+						<button id="searchResetLib" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
 					</div>
 				</form>
 				<div id="lib-album-filter-results"></div>
@@ -189,44 +226,48 @@
 			<div id="lib-content">
 				<div id="content-position">
 					<div id="top-columns">
-							<div id="lib-genre-header" class="lib-genre-header-sm">
-								<li id="genreheader">
-									<div class="lib-heading">Genres</div>
-								</li>
-							</div>
-							<div id="lib-genre" class="lib-genre-sm">
-								<ul id="genresList"></ul>
-							</div>
-							<div id="lib-artist-header" class="lib-artist-header-sm">
-								<li id="artistheader">
-									<div class="lib-heading">Artists</div>
-								</li>
-							</div>
-							<div id="lib-artist" class="lib-artist-sm">
-								<ul id="artistsList" class="artistslist"></ul>
-							</div>
-							<div id="lib-album-header">
-								<li id="albumheader">
-									<div class="lib-heading">Albums</div>
-									<div id="random-album" title="Click for random album"><i class="far fa-dot-circle"></i></div>
-								</li>
-							</div>
-							<div id="lib-album">
-								<ul id="albumsList" class="albumslist"></ul>
-							</div>
+						<div id="lib-genre-header" class="lib-genre-header-sm">
+							<li id="genreheader">
+								<div class="lib-heading">Genres</div>
+							</li>
+						</div>
+						<div id="lib-genre" class="lib-genre-sm">
+							<ul id="genresList"></ul>
+						</div>
+						<div id="lib-artist-header" class="lib-artist-header-sm">
+							<li id="artistheader">
+								<div class="lib-heading">Artists</div>
+							</li>
+						</div>
+						<div id="lib-artist" class="lib-artist-sm">
+							<ul id="artistsList" class="artistslist"></ul>
+						</div>
+						<div id="lib-album-header">
+							<li id="albumheader">
+								<div class="lib-heading">Albums</div>
+								<div id="random-album" title="Click for random album"><i class="far fa-dot-circle"></i></div>
+							</li>
+						</div>
+						<div id="lib-album">
+							<ul id="albumsList" class="albumslist"></ul>
+						</div>
+					</div>
+					<div id="lib-albumcover-header">
+						<li id="albumcoverheader">
+							<div class="lib-heading">Albums by Artist</div>
+							<div id="random-albumcover" title="Click for random album"><i class="far fa-dot-circle"></i></div>
+						</li>
+					</div>
+					<div id="lib-albumcover">
+						<ul id="albumcovers" class="albumcovers"></ul>
 					</div>
 					<div id="bottom-row">
-							<div id="lib-file-header">
-								<li id="fileheader">
-									<div class="lib-heading">Tracks</div>
-								</li>
-							</div>
-						<div id="lib-file">
+						<div id="lib-file"> <!-- r43m -->
 			 				<div id="lib-coverart-meta-area">
 								<div id="lib-coverart-img" class="lib-coverart" title="Click for menu"></div>
 								<div id="lib-meta-summary">
 				 					<div id="lib-albumname" class="lib-albumname-meta"></div>
-				 					<div id="lib-artistname" class="lib-artistname-meta"></div>
+				 					<div id="lib-artistname" class="lib-artistname-meta" title="Click for artist zoom"></div>
 				 					<div id="lib-albumyear" class="lib-albumyear-meta"></div>
 				 					<div id="lib-numtracks" class="lib-numtracks-meta"></div>
 								</div>
@@ -241,18 +282,25 @@
 		</div>
 	</div>
 
-	<!-- BROWSE PANEL //newui -->
+	<!-- BROWSE PANEL -->
 	<div id="browse-panel" class="tab-pane">
-			<div class="viewswitch btn-group">
+			<div class="viewswitch">
 				<button class="btn browse-panel-btn" href="#browse-panel" data-toggle="tab"><i class="far fa-list"></i></button>
 				<button class="btn library-panel-btn" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
+				<button class="btn album-panel-btn" href="#library-panel" data-toggle="tab"><i class="far fa-th"></i></button>
 			</div>
 
 		<div id="container-browse">
 			<div class="btnlist btnlist-top btnlist-top-db">
-				<button id="db-back" class="btn"><i class="fas fa-arrow-left"></i></button>
+				<button id="db-back" class="btn"><i class="far fa-arrow-left"></i></button>
 				<button id="db-home" class="btn"><i class="fas fa-home"></i></button>
-				<button id="db-advsearch" class="btn" title="Advanced search" href="#dbsearch-modal" data-toggle="modal"><i class="fal fa-search"></i></button>
+				<button id="db-refresh" class="btn" title="Refresh"><i class="far fa-redo"></i></button>
+				<button id="db-advsearch" class="btn" title="Advanced search" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i></button>
+				<form id="db-fastsearch" onsubmit="return dbfastsearch();">
+					<div class="input-append">
+						<input id="dbfs" type="text" value="" placeholder="search">
+					</div>
+				</form>
 				<div id="db-search-results"></div>
 			</div>
 	
@@ -262,14 +310,15 @@
 		</div>
 	</div>	
 
-	<!-- r42m -->
 	<!-- RADIO PANEL -->
 	<div id="radio-panel" class="tab-pane">
 		<div class="btnlist btnlist-top btnlist-top-ra">
+			<button id="ra-home" class="btn"><i class="fas fa-home"></i></button>
+			<button id="ra-refresh" class="btn" title="Refresh"><i class="far fa-redo"></i></button>
 			<form id="ra-search" class="" method="post" onSubmit="return false;">
 				<div class="input-append">
-					<button class="btn" id="ra-search-btn" title="Typedown search"><i class="fal fa-search"></i></button>
 					<input id="ra-filter" type="text" value="" placeholder="search">
+					<button id="searchResetRa" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
 				</div>
 			</form>
 			<div id="ra-filter-results"></div>
@@ -282,7 +331,7 @@
 	</div>	
 </div>
 
-<!-- BROWSE ADV SEARCH r42y -->	
+<!-- ADVANCED SEARCH (BROWSE PANEL) -->	
 <div id="dbsearch-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="dbsearch-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -392,6 +441,7 @@
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clradd"><i class="fal fa-share-square sx"></i> Clear/Add</a></li>
 			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="delsavedpl"><i class="fal fa-trash sx"></i> Delete playlist</a></li>
 		</ul>
@@ -413,7 +463,7 @@
 		</ul>
 	</div>
 
-	<div id="context-menu-db-search-results" class="context-menu-lib"> <!-- r42y -->
+	<div id="context-menu-db-search-results" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
@@ -482,7 +532,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-add-radiostn btn-primary" data-dismiss="modal">Add Station</button>
+		<button class="btn btn-add-radiostn btn-primary" data-dismiss="modal">Create</button>
 	</div>
 </div>
 
@@ -509,7 +559,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-update-radiostn btn-primary" data-dismiss="modal">Update Station</button>
+		<button class="btn btn-update-radiostn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -523,7 +573,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-del-radiostn btn-primary" data-dismiss="modal">Delete Station</button>
+		<button class="btn btn-del-radiostn btn-primary" data-dismiss="modal">Delete</button>
 	</div>
 </div>
 
@@ -553,7 +603,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-delete-plitem btn-primary" data-dismiss="modal">Remove items</button>
+		<button class="btn btn-delete-plitem btn-primary" data-dismiss="modal">Remove</button>
 	</div>
 </div>
 
@@ -588,7 +638,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-move-plitem btn-primary" data-dismiss="modal">Move Items</button>
+		<button class="btn btn-move-plitem btn-primary" data-dismiss="modal">Move</button>
 	</div>
 </div>
 
@@ -603,7 +653,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-del-savedpl btn-primary" data-dismiss="modal">Delete Playlist</button>
+		<button class="btn btn-del-savedpl btn-primary" data-dismiss="modal">Delete</button>
 	</div>
 </div>
 
@@ -617,6 +667,7 @@
 		<form id="ph-search" method="post" onSubmit="return false;">
 			<div class="input-append" style="margin-bottom: 0;">
 				<input id="ph-filter" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
+				<button id="searchResetPh" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
 				<span id="ph-filter-results"></span>
 				<button class="btn ph-firstPage"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
 				<button class="btn ph-lastPage"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>

@@ -1,0 +1,99 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2018-09-27 TC moOde 4.3
+ * - initial version
+ *
+ */
+-->	
+<div class="container">
+<div class="container2">
+	<h1>Spotify Config</h1>
+
+    <p>
+    	<a href="snd-config.php">BACK</a> to Audio config
+    </p>
+
+    <form class="form-horizontal" action="" method="post">
+    	<legend>Settings &nbsp;<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button></legend>
+    
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label" for="bitrate">Bit rate</label>
+				<div class="controls">
+					<select id="bitrate" class="input-large" name="config[bitrate]">
+						$_select[bitrate]
+					</select>
+					<a class="info-toggle" data-cmd="info_bitrate" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_bitrate" class="help-block-configs help-block-margin hide">
+						Default is 160 kHz.<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="initial_volume">Initial volume</label>
+				<div class="controls">
+					<input class="input-large" type="number" min="0" max="100" id="initial_volume" name="config[initial_volume]" value="$_select[initial_volume]"> (%)
+					<a class="info-toggle" data-cmd="info_initial_volume" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_initial_volume" class="help-block-configs help-block-margin hide">
+						Initial volume once connected [0-100].<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="volume_curve">Volume curve</label>
+				<div class="controls">
+					<select id="volume_curve" class="input-large" name="config[volume_curve]">
+						$_select[volume_curve]
+					</select>
+					<a class="info-toggle" data-cmd="info_volume_curve" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_volume_curve" class="help-block-configs help-block-margin hide">
+						Logarithmic or linear volume curve. Default is Logarithmic.<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="volume_normalization">Volume normalization</label>
+				<div class="controls">
+					<select id="volume_normalization" class="input-large" name="config[volume_normalization]">
+						$_select[volume_normalization]
+					</select>
+					<a class="info-toggle" data-cmd="info_volume_normalization" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_volume_normalization" class="help-block-configs help-block-margin hide">
+						Adjusts the volume of all songs played so that they sound as though they are of equal loudness.<br>
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="normalization_pregain">Normalization pre-gain</label>
+				<div class="controls">
+					<input class="input-large" type="number" min="0" max="10" id="normalization_pregain" name="config[normalization_pregain]" value="$_select[normalization_pregain]"> (dB)
+					<a class="info-toggle" data-cmd="info_normalization_pregain" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_normalization_pregain" class="help-block-configs help-block-margin hide">
+						Volume boost in dB [0-10].<br>
+                    </span>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+</div>

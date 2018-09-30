@@ -28,6 +28,10 @@
  * - new tabs, other code for newui v2
  * - CoverView
  * - font-awesome 5
+ * 2018-09-27 TC moOde 4.3
+ * - rm <meta name="apple-mobile-web-app-status-bar-style" content="black">
+ * - fix external link for Music tab
+ * - comment out manifest link cuz it breaks IOS Add to Home
  *
  */
 -->
@@ -51,62 +55,67 @@
 	<link href="cssw/panels.css" rel="stylesheet">
 	<link href="css/moode.css" rel="stylesheet">
 	
-	<!-- favicons for desktop and mobile -->
+	<!-- Apple -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<link rel="apple-touch-icon" sizes="180x180" href="/v4-apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/v4-favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/v4-favicon-16x16.png">
-	<link rel="manifest" href="/manifest.json">
-	<link rel="mask-icon" href="/v4-safari-pinned-tab.svg" color="#5bbad5">
-	<meta name="theme-color" content="#ffffff">
+	<link rel="apple-touch-icon" sizes="180x180" href="/v5-apple-touch-icon.png">
+	<link rel="mask-icon" href="/v5-safari-pinned-tab.svg" color="#5bbad5">
+	<!-- Android/Chrome -->
+	<link rel="icon" type="image/png" sizes="32x32" href="/v5-favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/v5-favicon-16x16.png">
+	<!--link rel="manifest" href="/site.webmanifest"-->
+	<meta name="theme-color" content="#ffffff"-->
+	<!-- Microsoft -->
+	<meta name="msapplication-TileColor" content="#da532c">
 </head>
-<body>
 
-<div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
-	<div class="dropdown">
-		<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu">m<i class="fas fa-chevron-down"></i></a>
-		<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
+<body onorientationchange="javascript:location.reload(true); void 0;">
+	<div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
+		<div class="dropdown">
+			<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu">m<i class="fas fa-chevron-down"></i></a>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
+				<?php if ($section == 'index') { ?>
+					<li><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
+					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="customize"><i class="fas fa-edit sx"></i> Customize</a></li>
+					<li><a href="blu-config.php"><i class="fas fa-wifi sx"></i> BlueZ</a></li-->
+					<li class="context-menu"><a href="#notarget" data-cmd="scnsaver"><i class="fas fa-tv sx"></i> CoverView</a></li>
+					<li><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fas fa-forward sx"></i> Players</a></li>
+					<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="fas fa-music sx"></i> Audio info</a></li>
+					<li class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fas fa-book sx"></i> Play history</a></li>
+					<li class="context-menu menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
+					<li><a href="#restart-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Restart</a></li>
+				<?php } else { ?>
+					<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
+					<li><a href="src-config.php"><i class="fas fa-database sx"></i> Sources</a></li>
+					<li><a href="snd-config.php"><i class="fas fa-volume-up sx"></i> Audio</a></li>
+					<li><a href="net-config.php"><i class="fas fa-sitemap sx"></i> Network</a></li>
+					<li class="context-menu menu-separator"><a href="sys-config.php"><i class="fas fa-desktop-alt sx"></i> System</a></li>
+					<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="fas fa-music sx"></i> Audio info</a></li>
+					<li><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="fas fa-file-alt sx"></i> System info</a></li>
+					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="aboutmoode"><i class="fas fa-info sx"></i> About</a></li>
+					<li><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
+					<li><a href="#restart-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Restart</a></li>
+				<?php } ?>
+			</ul>
+		</div>
+		<div class="menu-top">
+			<span id="clockradio-icon" class="clockradio-off" title="Clock radio indicator">•</span>
+		</div>
+	</div>
+	
+	<div id="menu-bottom" class="btn-group btn-list ui-footer ui-bar-f ui-footer-fixed slidedown" data-position="fixed" data-role="footer" role="banner">
+		<ul>
 			<?php if ($section == 'index') { ?>
-				<li><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
-				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="customize"><i class="fas fa-edit sx"></i> Customize</a></li>
-				<li><a href="blu-config.php"><i class="fas fa-wifi sx"></i> BlueZ</a></li-->
-				<li class="context-menu"><a href="#notarget" data-cmd="scnsaver"><i class="fas fa-tv sx"></i> CoverView</a></li>
-				<li><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fas fa-forward sx"></i> Players</a></li>
-				<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="fas fa-music sx"></i> Audio info</a></li>
-				<li class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fas fa-book sx"></i> Play history</a></li>
-				<li class="context-menu menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
-				<li><a href="#restart-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Restart</a></li>
+				<li id="open-browse-panel" class="btn"><a href="#radio-panel" class="open-browse-panel" data-toggle="tab">Radio</a></li>
+				<li id="open-library-panel" class="btn"><a href="#library-panel" class="open-library-panel" data-toggle="tab">Music</a></li>
+				<li id="open-playback-panel" class="btn active"><a href="#playback-panel" class="close-panels" data-toggle="tab">Playback</a></li>
+			<?php } elseif ($_SESSION['musictab_default'] == 'Browse') { ?>
+				<li id="open-browse-panel" class="btn"><a href="index.php#radio-panel" class="open-browse-panel">Radio</a></li>
+				<li id="open-library-panel" class="btn"><a href="index.php#browse-panel" class="open-library-panel">Music</a></li>
+				<li id="open-playback-panel" class="btn"><a href="index.php#playback-panel" class="close-panels">Playback</a></li>
 			<?php } else { ?>
-				<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
-				<li><a href="src-config.php"><i class="fas fa-database sx"></i> Sources</a></li>
-				<li><a href="snd-config.php"><i class="fas fa-volume-up sx"></i> Audio</a></li>
-				<li><a href="net-config.php"><i class="fas fa-sitemap sx"></i> Network</a></li>
-				<li class="context-menu menu-separator"><a href="sys-config.php"><i class="fas fa-desktop-alt sx"></i> System</a></li>
-				<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="fas fa-music sx"></i> Audio info</a></li>
-				<li><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="fas fa-file-alt sx"></i> System info</a></li>
-				<li class="context-menu menu-separator"><a href="#notarget" data-cmd="aboutmoode"><i class="fas fa-info sx"></i> About</a></li>
-				<li><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
-				<li><a href="#restart-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Restart</a></li>
+				<li id="open-browse-panel" class="btn"><a href="index.php#radio-panel" class="open-browse-panel">Radio</a></li>
+				<li id="open-library-panel" class="btn"><a href="index.php#library-panel" class="open-library-panel">Music</a></li>
+				<li id="open-playback-panel" class="btn"><a href="index.php#playback-panel" class="close-panels">Playback</a></li>
 			<?php } ?>
 		</ul>
 	</div>
-	<div class="menu-top">
-		<span id="clockradio-icon" class="clockradio-off" title="Clock radio indicator">•</span>
-	</div>
-</div>
-<!--div id="mbfade"></div--><!-- r42p -->
-<div id="menu-bottom" class="btn-group btn-list ui-footer ui-bar-f ui-footer-fixed slidedown" data-position="fixed" data-role="footer" role="banner">
-	<ul>
-		<!-- r42e -->
-		<?php if ($section == 'index') { ?>
-			<li id="open-browse-panel" class="btn"><a href="#radio-panel" class="open-browse-panel" data-toggle="tab">Radio</a></li>
-			<li id="open-library-panel" class="btn"><a href="#library-panel" class="open-library-panel" data-toggle="tab">Music</a></li>
-			<li id="open-playback-panel" class="btn active"><a href="#playback-panel" class="close-panels" data-toggle="tab">Playback</a></li>
-		<?php } else { ?>
-			<li id="open-browse-panel" class="btn"><a href="index.php#radio-panel" class="open-browse-panel">Radio</a></li>
-			<li id="open-library-panel" class="btn"><a href="index.php#library-panel" class="open-library-panel">Music</a></li>
-			<li id="open-playback-panel" class="btn"><a href="index.php#playback-panel" class="close-panels">Playback</a></li>
-		<?php } ?>
-	</ul>
-</div>

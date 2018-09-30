@@ -10,4 +10,5 @@ CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
 CREATE TABLE cfg_eqfa4p (id INTEGER PRIMARY KEY, curve_name CHAR (32), master_gain CHAR (32), band1_params CHAR (32), band2_params CHAR (32), band3_params CHAR (32), band4_params CHAR (32));
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CAR (32), mbg_color CHAR (32));
+CREATE TABLE cfg_spotify (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 CREATE UNIQUE INDEX IndexName ON cfg_source (name);

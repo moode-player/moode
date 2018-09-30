@@ -6,13 +6,17 @@
 # moOde audio player. Additional help is provided within
 # the player via the (i) information buttons. 
 #
-# Updated: 2018-07-11
+# Updated: 2018-09-27
 #
 # (C) Tim Curtis 2017 http://moodeaudio.org
 #
 #########################################################
 
-GENERAL INFORMATION
+////////////////////////////////////////////////////////
+//
+// GENERAL INFORMATION
+//
+////////////////////////////////////////////////////////
 
 NOTE: Use http://moode, moode.local or IP address, whichever works on your network. Typically Android OS will only work with IP address.
 
@@ -42,55 +46,64 @@ IMAGE WRITING UTILITIES
 
 https://www.raspberrypi.org/documentation/installation/installing-images/
 
-SETUP INSTRUCTIONS
+////////////////////////////////////////////////////////
+//
+// PLAYER SETUP AND CONFIGURATON
+//
+////////////////////////////////////////////////////////
 
  1. INITIAL SETUP
-    a) insert boot SD card or USB drive
-    b) connect USB or I2S audio device
-    c) connect USB storage devices
+    a) Insert boot SD card or USB drive
+    b) Connect USB or I2S audio device
+    c) Connect USB storage devices
     - Ethernet mode
-    a) insert ethernet cable
-    b) power on
+    a) Insert ethernet cable
+    b) Power on
     c) http://moode
     - Access Point (AP) mode
-    a) insert WiFi adapter that supports AP mode
-    b) power on
-    c) join network SSID=Moode, pwd=moodeaudio
+    a) Insert WiFi adapter that supports AP mode
+    b) Power on
+    c) Join network SSID=Moode, pwd=moodeaudio
     d) http://moode.local (or http://172.24.1.1)
 
  2. AUDIO DEVICE SETUP
     - USB DEVICE
 	a) Menu, Configure, Audio, I2S audio device: None
     b) MPD options: EDIT SETTINGS
-    c) leave Volume control set to "Software"
-    d) set Audio device to "USB audio device" then APPLY
+    c) Leave Volume control set to "Software"
+    d) Set Audio device to "USB audio device" then APPLY
     - I2S DEVICE
     a) Menu, Configure, Audio
-    b) select an I2S audio device then SET
-    c) reboot
+    b) Select an I2S audio device then SET
+    c) Reboot
     d) Menu, Configure, Audio, MPD options: EDIT SETTINGS
-    e) leave Volume control set to "Software"
-    f) verify Audio device is set to "I2S audio device" then APPLY
+    e) Leave Volume control set to "Software"
+    f) Verify Audio device is set to "I2S audio device" then APPLY
 
  3. TIME ZONE AND AUDIO DEVICE DESCRIPTION 
     a) Menu, Configure, System
-    b) select appropriate timezone then SET
+    b) Select appropriate timezone then SET
     c) Menu, Customize
-    d) scroll down to Audio device description and select a device. The entry is for display on the 
+    d) Scroll down to Audio device description and select a device. The entry is for display on the 
        Audio info screen. If a particular device is not listed then select "USB audio device". Note
        that I2S devices are automatically populated.
 
  4. ADD SOURCE(S) CONTAINING MUSIC FILES
-    - USB AND SDCARD STORAGE DEVICES
+    - USB STORAGE DEVICES
+	a) Inserting or removing a USB storage device automatically initiates MPD database update
+    b) Wait for completion (no spinner on the Music tab)
+    c) Browse panel. Click the refresh button to update the folder list.
+	d) To manually update or regenerate the MPD database follow the steps below
+    - SDCARD STORAGE DEVICES
     a) Menu, Configure, Sources
-    b) UPDATE MPD database 
-    c) WAIT for completion (no spinner on the Browse tab)
-    d) Browse tab. If more folders appear than those containing music then restart MPD
+    b) UPDATE or RE-GEN MPD database 
+    c) Wait for completion (no spinner on the Music tab)
+    d) Browse panel. Click the refresh button to update the folder list.
     - NAS DEVICE
     a) Menu, Configure, Sources
     b) CREATE NAS source (MPD database update initiates automatically after SAVE)
-    c) WAIT for completion (no spinner on the Browse tab)
-    d) Browse tab. If more folders appear than those containing music, restart MPD
+    c) Wait for completion (no spinner on the Music tab)
+    d) Browse panel. Click the refresh button to update the folder list.
 
  5. VERIFY AUDIO PLAYBACK
     - Ethernet mode
@@ -115,35 +128,35 @@ SETUP INSTRUCTIONS
 
  1. CONFIGURE FOR WIFI CONNECTION
     - Ethernet mode
-    a) leave eth cable connected
-    b) insert wifi adapter (while Pi running)
+    a) Leave eth cable connected
+    b) Insert wifi adapter (while Pi running)
     c) http://moode
     d) Menu, Configure, Network
-    e) configure a wifi connection
+    e) Configure a wifi connection
     f) Menu, Restart, Shutdown
-    g) unplug eth cable
-    h) power on
+    g) Unplug eth cable
+    h) Power on
     - Access Point (AP) mode
-    a) join network SSID=Moode, pwd=moodeaudio
+    a) Join network SSID=Moode, pwd=moodeaudio
     b) http://moode.local
     c) Menu, Configure, Network
-    d) configure a wifi connection
+    d) Configure a wifi connection
     e) Menu, Restart, Reboot
 
  2. CHANGE HOST AND SERVICE NAMES
     a) Menu, Configure, System (and Audio)
     b) SET after entering appropriate value in each name field
-    c) reboot is required if changing Host name and/or Browser title
+    c) Reboot is required if changing Host name and/or Browser title
 
  3. AUTO-CONFIGURE AT BOOT
 
     NOTE: This works only on a fresh image that has never been booted!
     NOTE: To start AP mode at boot set wlanssid to blank e.g., wlanssid=
 
-    a) change values in the file below
-    b) paste contents into /boot/moodecfg.txt
+    a) Change values in the file below
+    b) Paste contents into /boot/moodecfg.txt
     c) sudo reboot
-    d) join APDSSID if using AP mode, then http://hostname.local
+    d) Join AP SSID if using AP mode, then http://hostname.local (or http://172.24.1.1)
  
 ##########################################
 # Copy this file to /boot/moodecfg.txt
@@ -159,6 +172,7 @@ SETUP INSTRUCTIONS
 hostname=moode
 browsertitle=moOde Player
 airplayname=Moode Airplay
+spotifyname=Moode Spotify
 bluetoothname=Moode Bluetooth
 squeezelitename=Moode
 upnpname=Moode UPNP
@@ -193,12 +207,12 @@ themecolor=Emerald
 ////////////////////////////////////////////////////////
 
  1. Switching from USB to I2S audio device
-    a) unplug USB audio device
+    a) Unplug USB audio device
     b) Menu, Restart, Shutdown 
-    c) install I2S audio device
-    d) power on
+    c) Install I2S audio device
+    d) Power on
     e) Menu, Configure, Audio
-    f) select appropriate I2S audio device then SET
+    f) Select appropriate I2S audio device then SET
     g) Menu, Restart, Reboot
     h) Menu, Configure, Audio, MPD options: EDIT SETTINGS
     i) Verify Audio device set to "I2S audio device"
@@ -206,19 +220,25 @@ themecolor=Emerald
 
  2. Switching from I2S to USB audio device
     a) Menu, Configure, Audio
-    b) select "None" for I2S audio device then SET
+    b) Select "None" for I2S audio device then SET
     c) Menu, Restart, Shutdown
-    d) optionally unplug I2S audio device
-    e) plug in USB audio device
-    f) power on
+    d) Optionally unplug I2S audio device
+    e) Plug in USB audio device
+    f) Power on
     g) Menu, Configure, Audio, MPD options: EDIT SETTINGS
     h) Select "USB audio device" for Audio device
     i) APPLY
 
  3. Switching from WiFi back to Ethernet
-    a) plug in Ethernet cable 
+    a) Plug in Ethernet cable 
     b) Menu, Configure, Network 
     c) RESET network configuration to defaults
     d) Menu, Restart, Shutdown
     e) Remove WiFi adapter 
-    f) power on
+    f) Power on
+
+////////////////////////////////////////////////////////
+//
+// END
+//
+////////////////////////////////////////////////////////

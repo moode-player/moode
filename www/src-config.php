@@ -27,6 +27,8 @@
  * - remove sec=ntlm from default mount flags
  * - handle auto db update here iunstead of in waitWirker();
  * - font-awesome 5
+ * 2018-09-27 TC moOde 4.3
+ * - thumbnail cache
  *
  */
 
@@ -64,10 +66,32 @@ if (isset($_POST['remount'])) {
 	$_SESSION['notify']['title'] = 'Re-mount initiated...';
 }
 // reset library cache
-if (isset($_POST['resetcache'])) {
-	sysCmd('truncate /var/local/www/libcache.json --size 0');
-	$_SESSION['notify']['title'] = 'Cache has been reset';
-	$_SESSION['notify']['msg'] = 'Open the Library to reload the cache';
+if (isset($_POST['clrtagcache'])) {
+	sysCmd('truncate ' . LIBCACHE_JSON . ' --size 0');
+	$_SESSION['notify']['title'] = 'Tag cache cleared';
+	$_SESSION['notify']['msg'] = 'Open the Library to regenerate it';
+}
+// update thumbnail cache
+if (isset($_POST['updthmcache'])) {
+	$result = sysCmd('pgrep -l thmcache.php');
+	if (strpos($result[0], 'thmcache.php') !== false) {
+		$_SESSION['notify']['title'] = 'Process is currently running';
+	}
+	else {
+		$_SESSION['thmcache_status'] = 'Updating thumbnail cache...';
+		submitJob('updthmcache', '', 'Updating thumbnail cache...', '');
+	}
+}
+// regenerate thumbnail cache
+if (isset($_POST['regenthmcache'])) {
+	$result = sysCmd('pgrep -l thmcache.php');
+	if (strpos($result[0], 'thmcache.php') !== false) {
+		$_SESSION['notify']['title'] = 'Process is currently running';
+	}
+	else {
+		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';
+		submitJob('regenthmcache', '', 'Regenerating thumbnail cache...', '');
+	}
 }
 
 // NAS CONFIG POSTS
@@ -211,6 +235,8 @@ if (!isset($_GET['cmd'])) {
 		$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">Query failed</p>';
 		$_remount_disable = '';
 	}
+
+	$_thmcache_status = $_SESSION['thmcache_status']; // r43h
 }
 
 // NAS CONFIG FORM
@@ -224,7 +250,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 
 		foreach ($mounts as $mp) {
 			if ($mp['id'] == $_id) {
-				$_protocol = "<option value=\"" . ($mp['type'] == 'cifs' ? "cifs\">SMB (Samba)</option>" : "nfs\">NFS</option>");	// tpc r41 NFS -> nfs
+				$_protocol = "<option value=\"" . ($mp['type'] == 'cifs' ? "cifs\">SMB (Samba)</option>" : "nfs\">NFS</option>");
 				$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : $mp['address'] . '/' . $mp['remotedir'];
 				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $server, 'selected', $server);
 				$_scan_btn_hide = $mp['type'] == 'nfs' ? 'hide' : '';
@@ -241,7 +267,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 					$_hide_error = 'hide';
 				}
 				else {
-					$_moode_log = "\n" . file_get_contents('/var/log/moode.log');
+					$_moode_log = "\n" . file_get_contents(MOODELOG);
 				}
 			}
 		}

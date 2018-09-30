@@ -27,6 +27,9 @@
  * - chg readcfgengine to readcfgsystem
  * - screen saver
  * - minor code cleanup
+ * 2018-09-27 TC moOde 4.3
+ * - favorites feature
+ * - clear/add for saved playlists
  *
  */
 
@@ -57,7 +60,7 @@ else {
 			echo json_encode('worker busy');
 		}
 	}
-	// r42w send client ip to worker
+	// send client ip to worker
 	elseif ($_GET['cmd'] == 'resetscnsaver') {
 		if (submitJob($_GET['cmd'], $_SERVER['REMOTE_ADDR'], '', '')) {
 			echo json_encode('job submitted');
@@ -79,7 +82,7 @@ else {
 	else {
 		switch ($_GET['cmd']) {
 			// MISC
-			// r42w return client ip
+			// return client ip
 			case 'clientip':
 				echo json_encode($_SERVER['REMOTE_ADDR']);
 				break;
@@ -100,7 +103,7 @@ else {
 				playerSession('write', 'volknob', $_POST['volknob']);
 				sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
 				$resp = readMpdResp($sock);
-				// r42k, intentionally omit the echo to cause ajax abort with JSON parse error.
+				// intentionally omit the echo to cause ajax abort with JSON parse error.
 				// This causes $('.volumeknob').knob change action to also abort which prevents
 				// knob update and subsequent bounce back to +10 level. Knob will get updated
 				// to +10 level in renderUIVol() routine as a result of MPD idle timeout.
@@ -115,7 +118,7 @@ else {
 			case 'update':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					// clear lib cache
-					sysCmd('truncate /var/local/www/libcache.json --size 0');
+					sysCmd('truncate ' . LIBCACHE_JSON . ' --size 0');
 					// initiate db update					
 					sendMpdCmd($sock, 'update "' . html_entity_decode($_POST['path']) . '"');
 					echo json_encode(readMpdResp($sock));
@@ -134,7 +137,7 @@ else {
 				// add extra session vars set by worker so they can be available to client
 				$array['mooderel'] = $_SESSION['mooderel'];
 				$array['pkgdate'] = $_SESSION['pkgdate'];
-				$array['raspbianver'] = $_SESSION['raspbianver']; // tpc r41
+				$array['raspbianver'] = $_SESSION['raspbianver'];
 
 				echo json_encode($array);
 				break;			
@@ -191,7 +194,7 @@ else {
 				echo json_encode(parsePlayHist(shell_exec('cat /var/local/www/playhistory.log')));
 				break;
 
-			// MAIN PLAYLIST
+			// PLAYBACK PANEL
 			case 'delplitem':
 				if (isset($_GET['range']) && $_GET['range'] != '') {
 					sendMpdCmd($sock, 'delete ' . $_GET['range']);
@@ -231,6 +234,49 @@ else {
 	                echo json_encode(readMpdResp($sock));
 	            }
 				break;
+			case 'getfavname':
+				$result = cfgdb_read('cfg_system', $dbh, 'favorites_name');
+				echo json_encode($result[0]['value']);
+				break;			
+			case 'setfav':
+	            if (isset($_GET['favname']) && $_GET['favname'] != '') {
+					$file = '/var/lib/mpd/playlists/' . $_GET['favname'] . '.m3u';
+					if (!file_exists($file)) {
+						sysCmd('touch "' . $file . '"');
+						sysCmd('chmod 777 "' . $file . '"');
+						sysCmd('chown root:root "' . $file . '"');
+						sendMpdCmd($sock, 'update /var/lib/mpd/playlists');
+						readMpdResp($sock);
+					}
+					else { // ensure permissions
+						sysCmd('chmod 777 "' . $file . '"');
+						sysCmd('chown root:root "' . $file . '"');
+					}
+					playerSession('write', 'favorites_name', $_GET['favname']);
+					echo json_encode('OK');
+				}
+				break;
+			case 'addfav':
+	            if (isset($_GET['favitem']) && $_GET['favitem'] != '' && $_GET['favitem'] != 'null') {
+					$file = '/var/lib/mpd/playlists/' . $_SESSION['favorites_name'] . '.m3u';
+					if (!file_exists($file)) {
+						sysCmd('touch "' . $file . '"');
+						sysCmd('chmod 777 "' . $file . '"');
+						sysCmd('chown root:root "' . $file . '"');
+						sendMpdCmd($sock, 'update /var/lib/mpd/playlists');
+						readMpdResp($sock);
+					}
+					else { // ensure permissions
+						sysCmd('chmod 777 "' . $file . '"');
+						sysCmd('chown root:root "' . $file . '"');
+					}
+					$result = sysCmd('fgrep "' . $_GET['favitem'] . '" "' . $file . '"');
+					if (empty($result[0])) {
+						sysCmd('echo "' . $_GET['favitem'] . '" >> "' . $file . '"');
+					}
+					echo json_encode('OK');
+				}
+				break;
 
 			// BROWSE, RADIO PANELS
 			case 'add':
@@ -249,6 +295,16 @@ else {
 					echo json_encode(readMpdResp($sock));
 				}
 				break;
+			case 'clradd':
+				if (isset($_POST['path']) && $_POST['path'] != '') {
+					sendMpdCmd($sock,'clear');
+					$resp = readMpdResp($sock);
+					
+					addToPL($sock,$_POST['path']);
+					
+					echo json_encode($resp);
+				}
+				break;				
 			case 'clrplay':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					sendMpdCmd($sock,'clear');
@@ -283,11 +339,11 @@ else {
 				}
 				break;
 			case 'readstationfile':
-				echo json_encode(parseStationFile(shell_exec('cat "/var/lib/mpd/music/' . $_POST['path'] . '"')));
+				echo json_encode(parseStationFile(shell_exec('cat "' . MPD_MUSICROOT . $_POST['path'] . '"')));
 				break;
 			case 'addstation':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
-					$file = '/var/lib/mpd/music/RADIO/' . $_POST['path'] . '.pls';
+					$file =  MPD_MUSICROOT . 'RADIO/' . $_POST['path'] . '.pls';
 					$fh = fopen($file, 'w') or exit('moode.php: file create failed on ' . $file);
 	
 					$data = '[playlist]' . "\n";
@@ -301,10 +357,10 @@ else {
 					fclose($fh);
 	
 					sysCmd('chmod 777 "' . $file . '"');
-					sysCmd('chown root:root "' . $file . '"'); // tpc r41
+					sysCmd('chown root:root "' . $file . '"');
 	
 					// update time stamp on files so mpd picks up the change and commits the update
-					sysCmd('find /var/lib/mpd/music/RADIO -name *.pls -exec touch {} \+');
+					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 	
 					sendMpdCmd($sock, 'update');
 					readMpdResp($sock);
@@ -314,10 +370,10 @@ else {
 				break;
 			case 'delstation':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
-					sysCmd('rm "/var/lib/mpd/music/' . $_POST['path'] . '"');
+					sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
 					
 					// update time stamp on files so mpd picks up the change and commits the update
-					sysCmd('find /var/lib/mpd/music/RADIO -name *.pls -exec touch {} \+');
+					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 					
 					sendMpdCmd($sock, 'update');
 					readMpdResp($sock);
@@ -362,8 +418,29 @@ else {
 				echo loadLibrary($sock);
 	        	break;
 			case 'truncatelibcache':
-				sysCmd('truncate /var/local/www/libcache.json --size 0');
+				sysCmd('truncate ' . LIBCACHE_JSON . ' --size 0');
 				echo json_encode('OK');
+				break;
+
+			// SOURCES CONFIG
+			case 'thmcachestatus':
+				if (isset($_SESSION['thmcache_status']) && !empty($_SESSION['thmcache_status'])) {
+					$status = $_SESSION['thmcache_status'];
+				}
+				else {
+					$result = sysCmd('ls ' . THMCACHE_DIR);
+				    if ($result[0] == '') {
+						$status = 'Cache is empty';
+					}
+					elseif (strpos($result[0], 'ls: cannot access') !== false) {
+						$status = 'Cache directory missing. It will be recreated automatically.';
+					}
+					else {
+						$stat = stat(THMCACHE_DIR);
+						$status = 'Cache was last updated on ' . date("Y-m-d H:i:s", $stat['mtime']);
+					}
+				}
+				echo json_encode($status);
 				break;
 		}
 	}		

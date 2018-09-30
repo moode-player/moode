@@ -21,6 +21,8 @@
 # - add /etc/bluetooth/main.conf to bluetooth name change
 # 2018-07-11 TC moOde 4.2
 # - add clearbrcache
+# 2018-09-27 TC moOde 4.3
+# - add mpd db update and lib cache reset to samba add/remove share blocks
 #
 
 if [[ $1 = "set-timezone" ]]; then
@@ -162,7 +164,6 @@ if [[ $1 = "alizarin" || $1 = "amethyst" || $1 = "bluejeans" || $1 = "carrot" ||
 	exit
 fi
 
-# r42x add shairport-sync.log
 if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/alternatives.log --size 0
 	truncate /var/log/apt/history.log --size 0
@@ -218,12 +219,15 @@ if [[ $1 = "unmute-pi-ampplus" || $1 = "unmute-pi-digiampplus" ]]; then
 fi
 
 # add remove samba share blocks
+# auto update MPD db
 # $2 = %mount_point
 if [[ $1 = "smbadd" ]]; then
 	if [[ $(grep -w -c "$2" /etc/samba/smb.conf) = 0 ]]; then
 		sed -i "$ a[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
 		systemctl restart smbd
 		systemctl restart nmbd
+		mpc update USB
+		truncate /var/local/www/libcache.json --size 0
 	fi
 	exit
 fi
@@ -232,6 +236,8 @@ if [[ $1 = "smbrem" ]]; then
 	sed -i "/$(basename "$2")]/,/guest/ d" /etc/samba/smb.conf
 	systemctl restart smbd
 	systemctl restart nmbd
+	mpc update USB
+	truncate /var/local/www/libcache.json --size 0
     exit
 fi
 

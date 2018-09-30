@@ -11,6 +11,83 @@
 
 ########################################################
 //
+// 4.3 2018-09-27
+//
+########################################################
+
+New features
+
+- NEW: Spotify Connect renderer
+- NEW: Library Album Cover panel
+- NEW: Album cover batch thumbnail generator
+- NEW: High Res thumbs option for high DPI (Retina) screens
+- NEW: Cover art search priority (Embedded or Image File first)
+- NEW: CoverView UI controls HUD with next/prev, vol +/- and playlist
+- NEW: CoverView backdrop based on cover art 
+- NEW: Favorites (Add currently playing item to Favorites playlist)
+- NEW: Quick search in Browse panel
+- NEW: Swipe gesture for Library column headers
+- NEW: Auto-update MPD database on USB add/remove
+- NEW: Auto-refresh on screen orientation change
+- NEW: Support arm64 architecture detection
+- NEW: Library UTF8 character filter for Chinese charset
+- NEW: Artist zoom in Library panel
+- NEW: Allo Katana DAC chip options
+
+Updates
+
+- UPD: Bump to Linux kernel 4.14.72
+- UPD: Bump to shairport-sync 3.2.1
+- UPD: Add audiofile decoder to MPD compile
+- UPD: Improved mobile portrait layout
+- UPD: RADIO folder added back to Browse panel
+- UPD: Folders supported in Radio panel
+- UPD: Natural sort ordering for panels
+- UPD: Display Composer on Library tracks
+- UPD: Replace URL with 'Streaming source' on Playback panel
+- UPD: Typedown search replaced by lazy search
+- UPD: Add message logging to updater
+- UPD: Handle "Failed to open ALSA bluetooth" in engineMpd
+- UPD: Patch for upmpdcli gmusic plugin
+- UPD: Renderer active status added to currentsong.txt
+- UPD: Performance and stability improvements
+
+Bug fixes
+
+- FIX: External link coming back from configs
+- FIX: Incorrect mixer name for Allo Katana DAC
+- FIX: Webmanifest ref breaks Add to Home on IOS
+- FIX: String parsing for "Set for clock radio"
+- FIX: Android soft kbd altering viewport
+- FIX: Coverart.php path issue when brackets in path
+- FIX: Free space check in sys-config
+
+########################################################
+//
+// 4.2 Update 2018-07-18
+//
+########################################################
+
+Updates
+
+- UPD: Add setting for Music tab default (Browse/Library)
+- UPD: Bump text size and reduce spacing on Radio panel
+- UPD: Various CSS improvements
+
+Bug fixes
+
+- FIX: Close btn not centered on View Package modal
+- FIX: Add <br> to 2nd "Software is up to date" msg
+- FIX: Embedded quote in sys-config notify message
+- FIX: Wrong session var name in sys-config
+
+Radio stations
+
+- Amys FM (320K)
+- Amys FM Spirit of Soul (320K)
+
+########################################################
+//
 // 4.2 Release 2018-07-11
 //
 ########################################################

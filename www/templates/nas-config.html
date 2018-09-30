@@ -25,6 +25,8 @@
  * - change to modal-sm2 for confirm modals except for the remove modal since it needs to be wider
  * - change mount flags help to indicate sec=ntlm is optional
  * - font-awesome 5
+ * 2018-09-27 TC moOde 4.3
+ * - addition (i) info text for userid/password
  *
  */
 -->	
@@ -95,6 +97,7 @@
 						<input  id="nas-pasw" class="input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
 						<a class="info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-nas-uidpwd" class="help-block-configs help-block-margin hide">
+							Try userid = Guest and a blank password unless your NAS requires a specific userid/password.<br>
 							NOTE: Single and double quotes are not allowed.
 	                    </span>
 					</div>
@@ -176,7 +179,7 @@
 			</div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-				<button class="btn btn-primary" type="submit" name="delete" value="1">Confirm</button>
+				<button class="btn btn-primary" type="submit" name="delete" value="1">Yes</button>
 			</div>
 		</div>
 	</form>

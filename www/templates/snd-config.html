@@ -24,6 +24,9 @@
  * - minor format cleanup
  * - change to modal-sm2 for confirm modals
  * - font-awesome 5
+ * 2018-09-27 TC moOde 4.3
+ * - improve logic for chp/device options button
+ * - spotify
  *
  */
 -->	
@@ -60,7 +63,6 @@
 					<span id="info-advoptions" class="help-block-configs help-block-margin hide">
 						<b>glb_mclk:</b> If enabled, Kali MCLK is used and PLL for Piano 2.1 is disabled for best SQ.<br>
 						<b>slave:</b> If enabled, Boss and MiniBOSS DAC operate in slave mode required by Kali.<br>
-						<!--tpc2 option deprecated, b>simple-bclk-64fs:</b> Fixed 64fs BCLK ratio for Buffalo and DDDAC. (Adv kernel only)<br-->
                     </span>
 				</div>
 			</div>
@@ -68,7 +70,7 @@
 			<div class="control-group">
 				<label class="control-label">Chip/Device options</label>
 				<div class="controls">
-					<a href="chp-config.php" class="btn btn-primary btn-medium" style="margin-top:0px;">Edit settings</a><br>
+					<button class="btn btn-primary btn-medium" style="margin-top:0px;" $_chpoptions_disabled>$_chpoptions_href</button><br>
 				</div>
 			</div>
 
@@ -110,7 +112,7 @@
 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_rotenc" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-rotary-enc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-rotary-enc" class="help-block-configs help-block-margin hide">
+					<span id="info-rotary-enc" class="help-block-configs help-block-margin2 hide">
 						Enable a rotary encoder device to control volume.<br>
 						Driver uses WiringPi library and defaults to using GPIO 23,24,GND.<br>
 						Params: DELAY ACCEL STEP PIN-A PIN-B<br>
@@ -135,7 +137,7 @@
 						<button class="btn btn-primary btn-small" type="submit" name="update_ashufflesvc" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-ashufflesvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-ashufflesvc" class="help-block-configs help-block-margin hide">						
+					<span id="info-ashufflesvc" class="help-block-configs help-block-margin2 hide">						
 						When the last song in the Playlist has finished playing Auto-shuffle adds a random song from the music library
 						to the end of the Playlist, then removes it when it finishes playing. This creates a continuous stream of music 
 						without growing the Playlist. NOTE: Auto-shuffle replaces MPD random play as the method for the 'Random' button.<br>
@@ -156,7 +158,7 @@
 						<button class="btn btn-primary btn-small" type="submit" name="update_autoplay" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-autoplay" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-autoplay" class="help-block-configs help-block-margin hide">
+					<span id="info-autoplay" class="help-block-configs help-block-margin2 hide">
 						Play the last played item after system boots up.<br>
                     </span>
 				</div>
@@ -230,7 +232,7 @@
 			</div>
 		</fieldset>
 
-		<!-- RENDERERS AND SERVICES AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
+		<!-- RENDERERS, AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
 
 		<legend>Renderers</legend>
 		<fieldset>
@@ -248,11 +250,10 @@
 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_bt_settings" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-btsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-btsvc" class="help-block-configs help-block-margin hide">
-						Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (ALSA backend)<br>
+					<span id="info-btsvc" class="help-block-configs help-block-margin2 hide">
+						Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (Bluez-alsa)<br>
                     </span>
 				</div>
-
 				<label class="control-label">Speaker sharing</label>
 				<div class="controls">
 					<div class="toggle">
@@ -265,7 +266,7 @@
  						<button class="btn btn-primary btn-small" type="submit" name="update_bt_multi" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-btmulti" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-btmulti" class="help-block-configs help-block-margin hide">
+					<span id="info-btmulti" class="help-block-configs help-block-margin2 hide">
 						Allow the Bluetooth speaker to be shared by multiple clients.<br>
                     </span>
 				</div>
@@ -287,7 +288,6 @@
 					</span>
 				</div>
 			</div>
-
 			<div class="control-group $_feat_airplay">
 				<label class="control-label" for="airplayname">Airplay</label>
 				<div class="controls">
@@ -302,12 +302,11 @@
 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_airplay_settings" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-airplaysvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-airplaysvc" class="help-block-configs help-block-margin hide">
-						Shairport-sync by Mike Brady, the wonderful fork of<br>
-						the original Shairport by James "Abrasive" Laird.
+					<span id="info-airplaysvc" class="help-block-configs help-block-margin2 hide">
+						Shairport-sync by Mike Brady, the wonderful fork of	the original Shairport by James "Abrasive" Laird.<br>
                     </span>
 				</div>
-				<label class="control-label" for="rsmafterbt">Resume MPD</label>
+				<label class="control-label" for="rsmafterapl">Resume MPD</label>
 				<div class="controls">
 					<select id="rsmafterapl" class="select-mini2" style="width: 74px;" name="rsmafterapl">
 						$_select[rsmafterapl]
@@ -325,7 +324,42 @@
 					</span>
 				</div>
 			</div>
-
+			<div class="control-group $_feat_spotify">
+				<label class="control-label" for="spotifyname">Spotify</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="togglespotifysvc2">ON</label>
+						$_select[spotifysvc1]
+						<label class="toggle-radio" for="togglespotifysvc1">OFF</label>
+						$_select[spotifysvc0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+						<input class="input-large" type="text" id="spotifyname" name="spotifyname" value="$_select[spotifyname]" style="width:117px;" required>
+						<button class="btn btn-primary btn-small set-button" type="submit" name="update_spotify_settings" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-spotifysvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-spotifysvc" class="help-block-configs help-block-margin2 hide">
+						librespot-org by Sasha Hilton, the wonderful fork of the original librespot by Paul Lietar<br>
+                    </span>
+				</div>
+				<label class="control-label" for="rsmafterspot">Resume MPD</label>
+				<div class="controls">
+					<select id="rsmafterspot" class="select-mini2" style="width: 74px;" name="rsmafterspot">
+						$_select[rsmafterspot]
+					</select>
+					<span style="display: inline-block;">
+ 						<button class="btn btn-primary btn-small" type="submit" name="update_rsmafterspot" value="novalue">Set</button>
+ 						<a class="info-toggle" data-cmd="info_rsmafterspot" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</span>
+					<span id="info_rsmafterspot" class="help-block-configs help-block-margin hide">
+						Resume MPD playback after Spotify Connect client stops playing.<br>
+                    </span>
+					<span class="help-block-configs help-block-margin">
+						<a href="spo-config.php">CONFIGURE</a> Spotify<br>
+						<a data-toggle="modal" href="$_spotify_restart">RESTART</a> Spotify<br>
+					</span>
+				</div>
+			</div>
 			<div class="control-group $_feat_squeezelite">
 				<label class="control-label">Squeezelite</label>
 				<div class="controls">
@@ -339,7 +373,7 @@
 						<button class="btn btn-primary btn-small" type="submit" name="update_sl_settings" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-slsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-slsvc" class="help-block-configs help-block-margin hide">
+					<span id="info-slsvc" class="help-block-configs help-block-margin2 hide">
 						Squeezelite renderer by Adrian Smith and Ralph Irving (triode).<br>
                     </span>
 				</div>
@@ -361,10 +395,14 @@
 					</span>
 				</div>
 			</div>
+		</fieldset>
 
+		<!-- UPNP/DLNA, AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
+
+		<legend>UPnP/DLNA</legend>
+		<fieldset>
 			<div class="control-group $_feat_upmpdcli">
-				<legend>UPnP</legend>
-				<label class="control-label" for="upnpname">UPnP Client</label>
+				<label class="control-label" for="upnpname">UPnP Client for MPD</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggleupnpsvc2">ON</label>
@@ -377,7 +415,7 @@
 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_upnp_settings" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-upnpsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-upnpsvc" class="help-block-configs help-block-margin hide">
+					<span id="info-upnpsvc" class="help-block-configs help-block-margin2 hide">
 						upmpdcli (UPnP Client for MPD) by Jean-Francois Dockes.<br>
 						- Supports Open Home Media (ohMedia).<br>
 						- Provides album art via upexplorer.<br>
@@ -405,7 +443,7 @@
 						<button class="btn btn-primary btn-small set-button" type="submit" name="update_dlna_settings" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-dlnasvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-dlnasvc" class="help-block-configs help-block-margin hide">
+					<span id="info-dlnasvc" class="help-block-configs help-block-margin2 hide">
 						DLNA server (miniDLNA) by Justin Maggard.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
@@ -462,7 +500,7 @@
 
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="rebuild_dlnadb" value="1">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="rebuild_dlnadb" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -479,7 +517,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="mpdrestart" value="1">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="mpdrestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -496,7 +534,24 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="airplayrestart" value="1">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="airplayrestart" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="spotify-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="spotify-restart-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		</div>
+		
+		<div class="modal-body">
+			<h6>Restart Spotify receiver?</h6>
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary" type="submit" name="spotifyrestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -513,7 +568,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="btrestart" value="1">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="btrestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -530,7 +585,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="slrestart" value="1">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="slrestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -547,7 +602,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="upnprestart" value="1">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="upnprestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>

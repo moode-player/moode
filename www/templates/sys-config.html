@@ -24,6 +24,8 @@
  * - minor format cleanup
  * - change to modal-sm2 for confirm modals
  * - font-awesome 5
+ * 2018-07-18 TC moOde 4.2 update
+ * - add singleton to #view-pkgcontent footer btn
  *
  */
 -->	
@@ -505,7 +507,7 @@
 				</ol>
 			</div>
 			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 			</div>
 		</div>
 
@@ -525,7 +527,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_clear_browser_cache" value="novalue">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="update_clear_browser_cache" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -542,7 +544,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_clear_playhistory" value="novalue">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="update_clear_playhistory" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -559,7 +561,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_clear_syslogs" value="novalue">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="update_clear_syslogs" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -576,7 +578,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_compactdb" value="novalue">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="update_compactdb" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -593,7 +595,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_expand_rootfs" value="novalue">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="update_expand_rootfs" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -610,7 +612,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_usbboot" value="novalue">Confirm</button>
+			<button class="btn btn-primary" type="submit" name="update_usbboot" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>

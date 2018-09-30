@@ -22,6 +22,8 @@
  * 2018-01-26 TC moOde 4.0
  * 2018-04-02 TC moOde 4.1
  * - access-control-origin not needed
+ * 2018-09-27 TC moOde 4.3
+ * - handle worker.php not ready
  *
  */
  
@@ -32,6 +34,12 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 playerSession('open', '', '');
 session_write_close();
 
+// wait till worker.php is ready
+if (!isset($_SESSION['wrkready']) || $_SESSION['wrkready'] == '0') {
+	debugLog('engine-mpd: Worker not ready yet');
+	exit(0);
+}
+
 debugLog('engine-mpd: Connect');
 debugLog('engine-mpd: Session loaded');
 
@@ -41,7 +49,7 @@ $sock = openMpdSock('localhost', 6600);
 if (!$sock) {
 	debugLog('engine-mpd: Connection to MPD failed');
 	echo json_encode(array('error' => 'openMpdSock() failed', 'module' => 'engine-mpd'));
-	exit();	
+	exit(0);	
 }
 
  // get initial mpd status data

@@ -22,6 +22,8 @@
  * 2018-01-26 TC moOde 4.0
  * 2018-07-11 TC moOde 4.2
  * - minor cleanup
+ * 2018-09-27 TC moOde 4.3
+ * - thumbnail cache
  *
  */
 -->	
@@ -37,39 +39,43 @@
 
 		<p>List of configured NAS sources (click to edit)</p>
 
-		<form method="post">
+		<form class="form-horizontal" method="post">
 			$_mounts
 
 			<p>
 				<button class="btn btn-small btn-primary" type="submit" name="remount" value="novalue" $_remount_disable>Re-mount</button>&nbsp;&nbsp;All NAS sources
-				<span class="help-block-configs help-block-margin">
-					Re-mounts all NAS sources. Does not run MPD database update.<br>
-				</span>
+				<span id="info-remount" class="help-block-configs help-block-margin">
+					Re-mount all NAS sources.
+                </span>
 			</p>
 
 			<p></p>
-			<legend>USB and SD Card Sources</legend>
-			<p>
-				Use UPDATE to initially add USB and SD Card sources to the Browse panel. RESCAN can be used to rebuild the MPD database by scanning all content in all music sources.
-			</p>
+			<legend>MPD Database</legend>
 			<p>
 				<button class="btn btn-small btn-primary" type="submit" name="updatempd" value="novalue">Update</button>&nbsp;&nbsp;MPD database
-				<span class="help-block-configs help-block-margin">
-					Updates the music database: find new files, remove deleted files, update modified files.<br>
-				</span>
 			</p>
 			<p>
-				<button class="btn btn-small btn-primary" type="submit" name="rescanmpd" value="novalue">Rescan</button>&nbsp;&nbsp;Music sources
-				<span class="help-block-configs help-block-margin">
-					Same as update, but also rescans unmodified files.<br>
-				</span>
+				<button class="btn btn-small btn-primary" type="submit" name="rescanmpd" value="novalue">Re-gen</button>&nbsp;&nbsp;MPD database
+				<span id="info-rescanmpd" class="help-block-configs help-block-margin">
+					Update or regenerate the MPD database.
+                </span>
 			</p>
-			<legend>Music Library Cache</legend>
+			<legend>Music Library</legend>
 			<p>
-				<button class="btn btn-small btn-primary" type="submit" name="resetcache" value="novalue">Reset</button>&nbsp;&nbsp;Library cache
-				<span class="help-block-configs help-block-margin">
-					Resets the Library cache. It will be rebuilt next time the Library is opened.<br>
-				</span>
+				<button class="btn btn-small btn-primary" type="submit" name="clrtagcache" value="novalue">Clear</button>&nbsp;&nbsp;Library tag cache
+				<span id="info-clrtagcache" class="help-block-configs help-block-margin">
+					Clear the Library tag cache. It will be regenerated next time the Library is opened.
+                </span>
+			</p>
+			<p>
+				<button class="btn btn-small btn-primary" type="submit" name="updthmcache" value="novalue">Update</button>&nbsp;&nbsp;Album cover thumbnail cache
+			</p>
+			<p>
+				<button class="btn btn-small btn-primary" type="submit" name="regenthmcache" value="novalue">Re-gen</button>&nbsp;&nbsp;Album cover thumbnail cache
+				<span id="info-regenthmcache" class="help-block-configs help-block-margin">
+					Update or regenerate the album cover thumbnail cache.<br>
+					<a id="view-thmcache-status" href="#notarget">VIEW</a> cache status:&nbsp;&nbsp;<span id="thmcache-status">$_thmcache_status</span><!-- r43h -->					
+                </span>
 			</p>
 		</form>
 	</p>

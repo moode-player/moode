@@ -28,27 +28,55 @@
  * - minor cleanup
  * - chg readcfgengine to readcfgsystem
  * - css vars for newui v2
+ * 2018-09-27 TC moOde 4.3
+ * - minor code cleanup and refactoring
+ * - Android soft kbd fix
  *
  */
 
 jQuery(document).ready(function($){ 'use strict';
 
+	// r43g to compensate for Android popup kbd changing the viewport
+	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0");
+	// store device pixel ratio
+	var result = sendMoodeCmd('POST', 'updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
+
 	// load session vars
 	SESSION.json = sendMoodeCmd('GET', 'readcfgsystem');
 	THEME.json = sendMoodeCmd('GET', 'readcfgtheme');
 	
-	// r42k
 	var tempOp = themeOp;
 	if (themeOp == 0.74902) {tempOp = 0.1};
-	$('#menu-bottom').css({backgroundColor: 'rgba(50,50,50,0.75)'});
-	//document.body.style.setProperty('--adaptfa', 'rgba(0,0,0,0)'); // r42p
-	//document.body.style.setProperty('--adaptfb', 'rgba(0,0,0,0.9)');
+
+	// set theme
+	themeColor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
+	themeBack = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + SESSION.json['alphablend'] +')';
+	themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
+	tempcolor = splitColor($('.dropdown-menu').css('background-color'));
+	themeOp = tempcolor[3];
+	themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
+	document.body.style.setProperty('--btnbarback', themeMback);
+	document.body.style.setProperty('--themetext', themeMcolor);
+	adaptColor = themeColor;
+	adaptBack = themeBack;
+	adaptMhalf = themeMback;
+	adaptMcolor = themeMcolor;
+	adaptMback = themeMback;
+	tempback = themeMback;
+	abFound = false; // add boolean for whether a adaptive background has been found
+	showMenuTopW = false
+	showMenuTopR = false	
+	setColors();
+
+	//btnbarfix('rgba(50,50,50,0.75)', adaptBack);
+	//document.body.style.setProperty('--btnbarback', 'rgba(50,50,50,0.75)');
+	$('#menu-bottom .btn').css('background', 'rgba(50,50,50,0.75)');
 
     // setup pines notify
     $.pnotify.defaults.history = false;
 
-	// connect to mpd engine
-    engineMpd();
+	// connect to mpd engine, lite version that just looks for db update initiated or complete
+	engineMpdLite();
 
 	// eq configs
 	$('#eqp-curve-name').change(function() {
@@ -90,7 +118,7 @@ jQuery(document).ready(function($){ 'use strict';
 	});
 	// network config ssid
 	$('#manual-ssid').on('shown.bs.modal', function () {
-		$('#wlan0otherssid').focus(); // tpc r41
+		$('#wlan0otherssid').focus();
 	});  
 	$('#wlan0ssid').change(function() {
 		if ($('#wlan0-method').val() == 'static') {
@@ -101,7 +129,6 @@ jQuery(document).ready(function($){ 'use strict';
 	});	                        
 
 	// nas config protocol type flags
-	// tpc r41 enhance for new nas-config
 	if ($('#type').length) {
 		$('#mounttype').val($('#type').val()); // hidden input on manual server entry
 	}
@@ -124,12 +151,18 @@ jQuery(document).ready(function($){ 'use strict';
 
 	// nas config pre-load manual server entry
 	$('#manual-server').on('shown.bs.modal', function () {
-		$('#manualserver').focus(); // tpc r41
+		$('#manualserver').focus();
 	});  
 	$('#editserver').click(function() {
 		$('#manualserver').val($('#address').val().trim());
 	});
-	
+
+	// view thmcache status
+    $('#view-thmcache-status').click(function() {
+		var resp = sendMoodeCmd('GET', 'thmcachestatus'); // sync
+		$('#thmcache-status').html(resp);
+	});
+
     // info button (i) show/hide toggle
     $('.info-toggle').click(function() {
 		var spanId = '#' + $(this).data('cmd');

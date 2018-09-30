@@ -18,15 +18,23 @@
 #
 # 2018-01-26 TC moOde 4.0
 # 2018-04-02 TC moOde 4.1 add error checking
+# 2018-09-27 TC moOde 4.3 add message logging
 #
 
 # $1 = rXY ex: r26
+
+messageLog () {
+	echo "$1"
+	TIME=$(date +'%Y%m%d %H%M%S')
+	echo "$TIME updater: $1" >> /var/log/moode.log
+}
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 URL=$(sqlite3 $SQLDB "select value from cfg_system where param='res_software_upd_url'")
 
 cd /var/local/www
 
+messageLog "Downloading update package $1"
 wget -q $URL/update-$1.zip -O update-$1.zip
 unzip -q -o update-$1.zip
 rm update-$1.zip
@@ -35,10 +43,10 @@ chmod -R 0755 update
 update/install.sh
 
 if [ $? -ne 0 ] ; then
-	echo "Update cancelled"
+	messageLog "Update cancelled"
 else
 	wget -q $URL/update-$1.txt -O update-$1.txt
-	echo "Update installed, REBOOT required"
+	messageLog "Update installed, REBOOT required"
 fi
 
 rm -rf update

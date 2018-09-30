@@ -17,6 +17,8 @@
  * http://www.gnu.org/licenses/
  *
  * 2018-01-26 TC moOde 4.0
+ * 2018-09-27 TC moOde 4.3
+ * - improve logic and add support for ess sabre chips (Allo Katana DAC)
  *
  */
 
@@ -29,38 +31,70 @@ $sock = openMpdSock('localhost', 6600);
 // apply setting changes
 if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 	$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
-	$chipoptions = $_POST['config']['analoggain'] . ',' . $_POST['config']['analogboost'] . ',' . $_POST['config']['digfilter'];
 
-	// amixer cmds
-	cfgChipOptions($chipoptions);
+	// update Burr Brown PCM/5 and TAS chip options
+	if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchip'], 'TAS') !== false) {
+		$chipoptions = $_POST['config']['analoggain'] . ',' . $_POST['config']['analogboost'] . ',' . $_POST['config']['digfilter'];
+		$chiptype = 'burrbrown';
+workerLog('chipoptions: ' . $chipoptions);
+		// amixer cmds
+		cfgChipOptions($chipoptions, $chiptype);
+	
+		// see if filter change submitted
+		if (explode(',', $result[0]['chipoptions'])[2] != $_POST['config']['digfilter']) {
+workerLog('digfilter changed');
+			$status = parseStatus(getMpdStatus($sock));	
+			// restart playback to make filter change effective
+			if ($status['state'] === 'play') {
+				$cmds = array('pause', 'play');
+				chainMpdCmdsDelay($sock, $cmds, 1000000);
+			}						
+		}
+	
+		// update chip options
+		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$_SESSION['notify']['title'] = 'Chip options updated';
 
-	// see if digital filter change submitted
-	if (explode(',', $result[0]['chipoptions'])[2] != $_POST['config']['digfilter']) {
-		$status = parseStatus(getMpdStatus($sock));
-
-		// restart playback to make filter change effective
-		if ($status['state'] === 'play') {
-			$cmds = array('pause', 'play');
-			chainMpdCmdsDelay($sock, $cmds, 1000000);
-		}						
+		// update Allo Piano 2.1 Hi-Fi DAC device settings
+		if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
+			if ($_POST['config']['outputmode'] == 'Dual-Mono' || $_POST['config']['outputmode'] == 'Dual-Stereo') {
+workerLog('dual mode selected');
+				sysCmd('/var/www/command/util.sh set-piano-dualmode ' . '"' . $_POST['config']['outputmode'] . '"');
+			}
+			else {
+workerLog('other mode selected');
+				sysCmd('/var/www/command/util.sh set-piano-submode ' . '"' . $_POST['config']['outputmode'] . '"');
+				sysCmd('/var/www/command/util.sh set-piano-lowpass ' . '"' . $_POST['config']['lowpass'] . '"');
+				sysCmd('/var/www/command/util.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
+			}
+			$_SESSION['notify']['title'] = 'Chip and Device options updated';
+			$_SESSION['notify']['msg'] = 'REBOOT then APPLY MPD settings';
+			$_SESSION['notify']['duration'] = 10;			
+		}
 	}
 
-	// update chip options
-	$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-
-	// update Allo Piano 2.1 Hi-Fi DAC settings
-	if ($_POST['config']['outputmode'] == 'Dual-Mono' || $_POST['config']['outputmode'] == 'Dual-Stereo') {
-		sysCmd('/var/www/command/util.sh set-piano-dualmode ' . '"' . $_POST['config']['outputmode'] . '"');
+	// update Allo Katana DAC ES9038 chip options
+	if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
+		$chipoptions = $_POST['config']['osf'] . ',' . $_POST['config']['deemphasis'] . ',' . $_POST['config']['dop'];
+		$chiptype = 'esssabre';
+	
+		// amixer cmds
+		cfgChipOptions($chipoptions, $chiptype);
+	
+		// see if filter change submitted
+		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['osf']) {
+			$status = parseStatus(getMpdStatus($sock));
+			// restart playback to make filter change effective
+			if ($status['state'] === 'play') {
+				$cmds = array('pause', 'play');
+				chainMpdCmdsDelay($sock, $cmds, 1000000);
+			}						
+		}
+	
+		// update chipoptions
+		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$_SESSION['notify']['title'] = 'Chip options updated';
 	}
-	else {
-		sysCmd('/var/www/command/util.sh set-piano-submode ' . '"' . $_POST['config']['outputmode'] . '"');
-		sysCmd('/var/www/command/util.sh set-piano-lowpass ' . '"' . $_POST['config']['lowpass'] . '"');
-		sysCmd('/var/www/command/util.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
-	}
-
-	$_SESSION['notify']['title'] = 'Chip/Device options updated';
-	$_SESSION['notify']['msg'] = 'REBOOT then APPLY MPD settings';
-	$_SESSION['notify']['duration'] = 20;
 }
 	
 session_write_close();
@@ -69,23 +103,32 @@ session_write_close();
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 $array = explode(',', $result[0]['chipoptions']);
 
-$analoggain = $array[0]; // Analog gain
-$analogboost = $array[1]; // Analog gain boost
-$digfilter = $array[2]; // Digital interpolation filter
+// Burr Brown PCM/5 and TAS chips
+if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchip'], 'TAS') !== false) {
+	$_burrbrown_hide = '';	
 
-// digital interpolation filter
-$_select['digfilter'] .= "<option value=\"FIR interpolation with de-emphasis\" " . (($digfilter == 'FIR interpolation with de-emphasis') ? "selected" : "") . ">FIR interpolation with de-emphasis</option>\n";
-$_select['digfilter'] .= "<option value=\"High attenuation with de-emphasis\" " . (($digfilter == 'High attenuation with de-emphasis') ? "selected" : "") . ">High attenuation with de-emphasis</option>\n";
-$_select['digfilter'] .= "<option value=\"Low latency IIR with de-emphasis\" " . (($digfilter == 'Low latency IIR with de-emphasis') ? "selected" : "") . ">Low latency IIR with de-emphasis</option>\n";
-$_select['digfilter'] .= "<option value=\"Ringing-less low latency FIR\" " . (($digfilter == 'Ringing-less low latency FIR') ? "selected" : "") . ">Ringing-less low latency FIR</option>\n";
-// analog volume
-$_select['analoggain'] .= "<option value=\"100\" " . (($analoggain == '100') ? "selected" : "") . ">0 dB (2-Vrms)</option>\n";
-$_select['analoggain'] .= "<option value=\"0\" " . (($analoggain == '0') ? "selected" : "") . ">-6 dB (1-Vrms)</option>\n";
-// analog playback boost
-$_select['analogboost'] .= "<option value=\"0\" " . (($analogboost == '0') ? "selected" : "") . ">0 dB (normal amplitude)</option>\n";
-$_select['analogboost'] .= "<option value=\"100\" " . (($analogboost == '100') ? "selected" : "") . ">.8 dB (10% boosted amplitude)</option>\n";
+	// Analog volume, analog volume boost, digital interpolation filter
+	$analoggain = $array[0];
+	$analogboost = $array[1];
+	$digfilter = $array[2];
+	
+	// analog volume
+	$_select['analoggain'] .= "<option value=\"100\" " . (($analoggain == '100') ? "selected" : "") . ">0 dB (2-Vrms)</option>\n";
+	$_select['analoggain'] .= "<option value=\"0\" " . (($analoggain == '0') ? "selected" : "") . ">-6 dB (1-Vrms)</option>\n";
+	// analog volume boost
+	$_select['analogboost'] .= "<option value=\"0\" " . (($analogboost == '0') ? "selected" : "") . ">0 dB (normal amplitude)</option>\n";
+	$_select['analogboost'] .= "<option value=\"100\" " . (($analogboost == '100') ? "selected" : "") . ">.8 dB (10% boosted amplitude)</option>\n";
+	// digital interpolation filter
+	$_select['digfilter'] .= "<option value=\"FIR interpolation with de-emphasis\" " . (($digfilter == 'FIR interpolation with de-emphasis') ? "selected" : "") . ">FIR interpolation with de-emphasis</option>\n";
+	$_select['digfilter'] .= "<option value=\"High attenuation with de-emphasis\" " . (($digfilter == 'High attenuation with de-emphasis') ? "selected" : "") . ">High attenuation with de-emphasis</option>\n";
+	$_select['digfilter'] .= "<option value=\"Low latency IIR with de-emphasis\" " . (($digfilter == 'Low latency IIR with de-emphasis') ? "selected" : "") . ">Low latency IIR with de-emphasis</option>\n";
+	$_select['digfilter'] .= "<option value=\"Ringing-less low latency FIR\" " . (($digfilter == 'Ringing-less low latency FIR') ? "selected" : "") . ">Ringing-less low latency FIR</option>\n";
+}
+else {
+	$_burrbrown_hide = 'hide';	
+}
 
-// allo piano 2.1 Hi-Fi DAC
+// Allo Piano 2.1 Hi-Fi DAC
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$_allo_piano_hide = '';
 
@@ -98,12 +141,10 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	// determine output mode
 	if ($dualmode[0] != 'None') {
 		$outputmode = $dualmode[0];
-		//$_allo_piano_submode_disabled = 'disabled';
 		$_allo_piano_submode_disabled = '';
 	}
 	elseif ($submode[0] == '2.0') {
 		$outputmode = $submode[0];
-		//$_allo_piano_submode_disabled = 'disabled';
 		$_allo_piano_submode_disabled = '';
 	}
 	else {
@@ -111,12 +152,13 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 		$_allo_piano_submode_disabled = '';
 	}
 
+	// output mode
 	$_select['outputmode'] .= "<option value=\"Dual-Mono\" " . (($outputmode == 'Dual-Mono') ? "selected" : "") . ">Dual-Mono</option>\n";
 	$_select['outputmode'] .= "<option value=\"Dual-Stereo\" " . (($outputmode == 'Dual-Stereo') ? "selected" : "") . ">Dual-Stereo</option>\n";
 	$_select['outputmode'] .= "<option value=\"2.0\" " . (($outputmode == '2.0') ? "selected" : "") . ">Stereo</option>\n";
 	$_select['outputmode'] .= "<option value=\"2.1\" " . (($outputmode == '2.1') ? "selected" : "") . ">Subwoofer 2.1</option>\n";
 	$_select['outputmode'] .= "<option value=\"2.2\" " . (($outputmode == '2.2') ? "selected" : "") . ">Subwoofer 2.2</option>\n";
-
+	// subwoofer low pass frequency
 	$_select['lowpass'] .= "<option value=\"60\" " . (($lowpass[0] == '60') ? "selected" : "") . ">60</option>\n";
 	$_select['lowpass'] .= "<option value=\"70\" " . (($lowpass[0] == '70') ? "selected" : "") . ">70</option>\n";
 	$_select['lowpass'] .= "<option value=\"80\" " . (($lowpass[0] == '80') ? "selected" : "") . ">80</option>\n";
@@ -132,11 +174,41 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$_select['lowpass'] .= "<option value=\"180\" " . (($lowpass[0] == '180') ? "selected" : "") . ">180</option>\n";
 	$_select['lowpass'] .= "<option value=\"190\" " . (($lowpass[0] == '190') ? "selected" : "") . ">190</option>\n";
 	$_select['lowpass'] .= "<option value=\"200\" " . (($lowpass[0] == '200') ? "selected" : "") . ">200</option>\n";
-
+	// subwoofer volume
 	$subwvol = str_replace('%', '', $subvol[0]);
 }
 else{
 	$_allo_piano_hide = 'hide';
+}
+
+// Allo Katana DAC
+if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
+	$_allo_katana_hide = '';
+
+	// Oversampling filter, de-emphasis, dop
+	$osf = $array[0];
+	$deemphasis = $array[1];
+	$dop = $array[2];
+	
+	// oversampling filter
+	$_select['osf'] .= "<option value=\"Apodizing Fast Roll-off Filter\" " . (($osf == 'Apodizing Fast Roll-off Filter') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
+	$_select['osf'] .= "<option value=\"Brick Wall Filter\" " . (($osf == 'Brick Wall Filter') ? "selected" : "") . ">Brick Wall Filter</option>\n";
+	$_select['osf'] .= "<option value=\"Corrected Minimum Phase Fast Roll-off Filter\" " . (($osf == 'Corrected Minimum Phase Fast Roll-off Filter') ? "selected" : "") . ">Corrected Minimum Phase Fast Roll-off Filter</option>\n";
+	$_select['osf'] .= "<option value=\"Linear Phase Fast Roll-off Filter\" " . (($osf == 'Linear Phase Fast Roll-off Filter') ? "selected" : "") . ">Linear Phase Fast Roll-off Filter</option>\n";
+	$_select['osf'] .= "<option value=\"Linear Phase Slow Roll-off Filter\" " . (($osf == 'Linear Phase Slow Roll-off Filter') ? "selected" : "") . ">Linear Phase Slow Roll-off Filter</option>\n";
+	$_select['osf'] .= "<option value=\"Minimum Phase Fast Roll-off Filter\" " . (($osf == 'Minimum Phase Fast Roll-off Filter') ? "selected" : "") . ">Minimum Phase Fast Roll-off Filter</option>\n";
+	$_select['osf'] .= "<option value=\"Minimum Phase Slow Roll-off Filter\" " . (($osf == 'Minimum Phase Slow Roll-off Filter') ? "selected" : "") . ">Minimum Phase Slow Roll-off Filter</option>\n";
+	// de-emphasis
+	$_select['deemphasis'] .= "<option value=\"Bypass\" " . (($deemphasis == 'Bypass') ? "selected" : "") . ">Bypass</option>\n";
+	$_select['deemphasis'] .= "<option value=\"32kHz\" " . (($deemphasis == '32kHz') ? "selected" : "") . ">32 kHz</option>\n";
+	$_select['deemphasis'] .= "<option value=\"44.1kHz\" " . (($deemphasis == '44.1kHz') ? "selected" : "") . ">44.1 kHz</option>\n";
+	$_select['deemphasis'] .= "<option value=\"48kHz\" " . (($deemphasis == '48kHz') ? "selected" : "") . ">48 kHz</option>\n";
+	// dop
+	$_select['dop'] .= "<option value=\"on\" " . (($dop == 'on') ? "selected" : "") . ">On</option>\n";
+	$_select['dop'] .= "<option value=\"off\" " . (($dop == 'off') ? "selected" : "") . ">Off</option>\n";
+}
+else{
+	$_allo_katana_hide = 'hide';
 }
 
 $section = basename(__FILE__, '.php');

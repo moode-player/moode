@@ -20,6 +20,8 @@
  * 2018-07-11 TC moOde 4.2
  * - handle bluetooth audio out
  * - add slactive for Squeezelite
+ * 2018-09-27 TC moOde 4.3
+ * - add spotify renderer
  *
  */
 
@@ -52,6 +54,12 @@ $btactive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 
 if ($_SESSION['airplayactv'] == '1') {
 	$file = 'Airplay stream';
+	$encoded_at = 'Unknown';
+	$decoded_to = '16 bit, 44.1 kHz, Stereo, ';
+	$decode_rate = 'VBR';
+}
+elseif ($_SESSION['spotactive'] == '1') {
+	$file = 'Spotify stream';
 	$encoded_at = 'Unknown';
 	$decoded_to = '16 bit, 44.1 kHz, Stereo, ';
 	$decode_rate = 'VBR';
@@ -164,7 +172,7 @@ else {
 //
 
 // dsp only applies to mpd
-if ($_SESSION['airplayactv'] == '1' || $_SESSION['slactive'] == '1' || $btactive === true) {
+if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $btactive === true) {
 	$resampler = 'n/a';
 	$resampler_format = '';
 	$crossfeed = 'n/a';
@@ -229,7 +237,7 @@ else {
 //
 
 $output_destination = $_SESSION['audioout'];
-if($_SESSION['audioout'] == 'Bluetooth') {
+if ($_SESSION['audioout'] == 'Bluetooth') {
 	$hwparams_format = '16 bit, 44.1 kHz, Stereo, ';
 	$hwparams_calcrate = '1.411 mbps';
 }

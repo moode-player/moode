@@ -27,8 +27,8 @@
  * - clean up some help text
  * - remove data-validate="parsley"
  * 2018-07-11 TC moOde 4.2
- * - font-awesome 5
  * - bump release and date
+ * - font-awesome 5
  * - remove blu from config since its on main menu
  * - replace some inline styles with classes
  * - deprecate search auto-focus
@@ -37,10 +37,20 @@
  * - add screen saver timeout to Customize
  * - rm Use from the Artist/AlbumArtist setting
  * - fix various bgimage issues
+ * 2018-07-18 TC moOde 4.2 update
+ * - add Customize setting for Music tab default
+ * 2018-09-27 TC moOde 4.3
+ * - bump release and date
+ * - uniform button size for config and players
+ * - TouchSwipe js for Library panel
+ * - library utf8 character filter
+ * - favorites feature
+ * - album cover view
+ * - spotify
  *
  */
 -->
-<!-- ABOUT //newui -->	
+<!-- ABOUT -->	
 <div id="about-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
 	<div class="modal-body">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -49,7 +59,7 @@
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>			
 			<ul>
-				<li>Release: 4.2 2018-07-11 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
+				<li>Release: 4.3 2018-09-27 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
@@ -72,7 +82,7 @@
 	</div>
 </div>
 
-<!-- CONFIG MENU -->	
+<!-- CONFIGURE -->	
 <div id="configure-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -80,11 +90,11 @@
 	</div>
 	<div class="modal-body">
 		<div id="players">
-			<ul style="margin:0">
-				<li><a href="src-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-database" style="font-size: 24px;"></i><br>Sources</a></li>
-				<li><a href="snd-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-volume-up" style="font-size: 24px;"></i><br>Audio</a></li>
-				<li><a href="net-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-sitemap" style="font-size: 24px;"></i><br>Network</a></li>
-				<li><a href="sys-config.php" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-desktop-alt" style="font-size: 24px;"></i><br>System</a></li>
+			<ul>
+				<li><a href="src-config.php" class="btn btn-large"><i class="fas fa-database"></i><br>Sources</a></li>
+				<li><a href="snd-config.php" class="btn btn-large"><i class="fas fa-volume-up"></i><br>Audio</a></li>
+				<li><a href="net-config.php" class="btn btn-large"><i class="fas fa-sitemap"></i><br>Network</a></li>
+				<li><a href="sys-config.php" class="btn btn-large"><i class="fas fa-desktop-alt"></i><br>System</a></li>
 			</ul>
 		</div>
 	</div>
@@ -96,6 +106,9 @@
 			<a href="eqg-config.php" class="moode-config-settings-link2">EQG</a>
 			<?php if ($_SESSION['feat_bitmask'] & $FEAT_AIRPLAY) { ?>
 				<a href="apl-config.php" class="moode-config-settings-link2">AIR</a>
+			<?php } ?>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SPOTIFY) { ?>
+				<a href="spo-config.php" class="moode-config-settings-link2">SPO</a>
 			<?php } ?>
 			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SQUEEZELITE) { ?>				
 				<a href="sqe-config.php" class="moode-config-settings-link2">SQE</a>
@@ -168,30 +181,30 @@
 	                    </span>
 	                </div>
 
-   	                <label class="control-label" for="library-artist">Library artist list</label>
+   	                <label class="control-label" for="musictab-default">Music tab default</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium"> <!-- handler in playerlib.js -->
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-artist" class="filter-option pull-left">
+								<div id="musictab-default" class="filter-option pull-left">
 									<span></span> <!-- selection from dropdown gets placed here -->
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Artist</span></a></li><!-- r42x rm Use -->
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">AlbumArtist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="musictab-default-sel"><span class="text">Browse</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="musictab-default-sel"><span class="text">Library</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="musictab-default-sel"><span class="text">Albums</span></a></li>
 								</ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-library-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-library-artist" class="help-block hide">
-	                    	Use the Artist or AlbumArtist tag for the Library Artists list.<br>
+						<a class="info-toggle" data-cmd="info-musictab-default" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-musictab-default" class="help-block hide">
+	                    	Display Browse, Library or Album panel as the default when clicking the Music tab.<br>
 	                    </span>
 	                </div>
 
-					<!-- r42q -->
-   	                <label class="control-label" for="scnsaver-timeout">CoverView</label>
+   	                <label class="control-label" for="scnsaver-timeout">CoverView display</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium"> <!-- handler in playerlib.js -->
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -209,10 +222,106 @@
 	                    	Automatically display a fullscreen view of cover art and song data after the specified number of minutes.<br>
 	                    </span>
 	                </div>
+
+				</div>
+	    	</fieldset>
+
+			<h5>Music library</h5>
+	    	<fieldset>
+				<div class="control-group">
+  	                <label class="control-label" for="library-artist">Artist list ordering</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-artist" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-artist-sel"><span class="text">AlbumArtist</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-library-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-artist" class="help-block hide">
+	                    	Use the Artist or AlbumArtist tag for ordering the Library Artists list.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="library-utf8rep">UTF8 character filter</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-utf8rep" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-utf8rep-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-utf8rep-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-library-utf8rep" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-utf8rep" class="help-block hide">
+							Many Chinese songs and song directories have characters that are not UTF8 encoded causing the Library loader to fail. Replacing the non-UTF8 characters with a UTF8 compliant character solves this problem.<br>
+							NOTE: setting this to Yes may impact the performance of the Library loader.
+						</span>
+	                </div>
+
+   	                <label class="control-label" for="library-hiresthm">Hi-res thumbnails</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-hiresthm" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-hiresthm-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-hiresthm-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-library-hiresthm" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-hiresthm" class="help-block hide">
+							Tell the thumbnail generator to output high-resolution images suitable for high DPI (Retina) screens.<br>
+							NOTE: this may result in slower loading of thumbnail images into the Album Cover panel.
+						</span>
+	                </div>
+
+   	                <label class="control-label" for="library-covsearchpri">Cover search priority</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-covsearchpri" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-covsearchpri-sel"><span class="text">Embedded cover</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-covsearchpri-sel"><span class="text">Cover image file</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-library-covsearchpri" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-covsearchpri" class="help-block hide">
+							This setting determines whether the Cover Art extractor looks first for Embedded cover art or a Cover image file.<br>
+						</span>
+	                </div>
 	            </div>
 	    	</fieldset>
 
-			<h5>Theme settings</h5>
+			<h5>Theme and background</h5>
 	    	<fieldset>
 				<div class="control-group">
    	                <label class="control-label" for="theme-name">Theme</label>
@@ -297,7 +406,7 @@
 					<label class="control-label" for="choose-file">Background image</label>
 					<div class="controls">
 						<div style="display:inline-block;">
-							<label for="import-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</label> <!-- r42x -->
+							<label for="import-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</label>
 							<input type="file" id="import-bgimage" accept="image/jpeg" style="display:none" onchange="importBgImage(this.files)">
 							<br>
 							<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Remove</button> 
@@ -550,8 +659,8 @@
 	</div>
 </div>
 
-<!-- SAVE PLAYLIST //newui -->
-<div id="savepl-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="savepl-modal-label" aria-hidden="true">
+<!-- SAVE PLAYLIST -->
+<div id="savepl-modal" class="modal modal-xs hide fade" tabindex="-1" role="dialog" aria-labelledby="savepl-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="moveplitems-modal-label">Save playlist</h3>
@@ -560,7 +669,11 @@
 		<form id="pl-save" method="post" onsubmit="return false;">
 	    	<fieldset>
 				<div class="controls">
-	                    <input id="pl-saveName" class="ttip" type="text" value="" placeholder="save playlist" data-placement="bottom" data-toggle="tooltip">
+					<input id="pl-saveName" type="text" value="">
+					<a class="info-toggle" data-cmd="info-savepl" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-savepl" class="help-block help-block2 hide">
+	                	Saved playlists are maintained on the Browse panel.
+	                </span>
 	            </div>
 	    	</fieldset>
 		</form>
@@ -568,6 +681,31 @@
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button id="pl-btnSave" class="btn btn-savepl btn-primary" title="Save playlist" data-dismiss="modal">Save</button>
+	</div>
+</div>
+
+<!-- SET FAVORITES -->
+<div id="setfav-modal" class="modal modal-xs hide fade" tabindex="-1" role="dialog" aria-labelledby="newpl-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="setfav-modal-label">Set Favorites Name</h3>
+	</div>
+	<div class="modal-body">
+		<form id="set-fav" method="post" onsubmit="return false;">
+	    	<fieldset>
+				<div class="controls">
+					<input id="pl-favName" type="text" value="">
+					<a class="info-toggle" data-cmd="info-favname" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-favname" class="help-block help-block2 hide">
+		            	Sets the playlist that will be used to store favorited items. If the playlist does not already exist it will be created. Playlists are maintained on the Browse panel.
+		            </span>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button id="pl-btnSetFav" class="btn btn-savepl btn-primary" title="Set favorites name" data-dismiss="modal">Set</button>
 	</div>
 </div>
 
@@ -583,13 +721,16 @@
 <script src="js/notify.js"></script>
 <script src="js/playerlib.js"></script>
 <script src="js/links.js"></script>
+<script src="js/jquery.touchSwipe.min.js"></script>
+<script src="js/jquery.lazyload.js"></script>
+<script src="js/jquery.md5.js"></script>
 
 <!-- LIBS FOR PANELS OR CONFIGS -->
 <?php if ($section == 'index') { ?>
 	<script src="jsw/jquery.knob.js"></script>
 	<script src="js/bootstrap-contextmenu.js"></script>
 	<script src="js/jquery.pnotify.min.js"></script>
-	<script src="js/scripts-panels.js"></script> <!-- Moode Panels lib-->
+	<script src="js/scripts-panels.js"></script>
 <?php } else { ?>
 	<script src="js/custom_checkbox_and_radio.js"></script>
 	<script src="js/custom_radio.js"></script>
@@ -598,7 +739,7 @@
 	<script src="js/i18n/_messages.en.js" type="text/javascript"></script>
 	<script src="js/application.js"></script>
 	<script src="js/jquery.pnotify.min.js"></script>
-	<script src="js/scripts-configs.js"></script> <!-- Moode Configs lib-->
+	<script src="js/scripts-configs.js"></script>
 <?php } ?>
 
 <!-- DISPLAY MESSAGES -->
