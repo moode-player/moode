@@ -24,6 +24,8 @@
  * - minor cleanup
  * 2018-09-27 TC moOde 4.3
  * - thumbnail cache
+ * 2018-10-19 TC moOde 4.3 update
+ * - setting for auto-update DB on USB insert/remove
  *
  */
 -->	
@@ -57,9 +59,23 @@
 			<p>
 				<button class="btn btn-small btn-primary" type="submit" name="rescanmpd" value="novalue">Re-gen</button>&nbsp;&nbsp;MPD database
 				<span id="info-rescanmpd" class="help-block-configs help-block-margin">
-					Update or regenerate the MPD database.
+					Update or regenerate the MPD database.<br>
                 </span>
 			</p>
+
+			<div class="toggle">
+				<label class="toggle-radio" for="toggle_usb_auto_updatedb1">YES</label>
+				$_select[usb_auto_updatedb1]
+				<label class="toggle-radio" for="toggle_usb_auto_updatedb0">NO</label>
+				$_select[usb_auto_updatedb0]
+			</div>
+			<div style="display: inline-block; vertical-align: top; margin-top: 5px;">
+				<button class="btn btn-primary btn-small" type="submit" name="update_usb_auto_updatedb" value="novalue">Set</button>
+			</div>
+			<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em">
+				Automatically update MPD database on USB insert/remove.<br>
+            </span>
+
 			<legend>Music Library</legend>
 			<p>
 				<button class="btn btn-small btn-primary" type="submit" name="clrtagcache" value="novalue">Clear</button>&nbsp;&nbsp;Library tag cache

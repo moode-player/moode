@@ -29,6 +29,8 @@
  * - font-awesome 5
  * 2018-09-27 TC moOde 4.3
  * - thumbnail cache
+ * 2018-10-19 TC moOde 4.3 update
+ * - setting for auto-update DB on USB insert/remove
  *
  */
 
@@ -58,11 +60,19 @@ if (isset($_POST['updatempd'])) {
 if (isset($_POST['rescanmpd'])) {
 	submitJob('rescanmpddb', '', 'DB rescan initiated...', '');
 }
+// r44a auto-update mpd db on usb insert/remove
+if (isset($_POST['update_usb_auto_updatedb'])) {
+	if (isset($_POST['usb_auto_updatedb']) && $_POST['usb_auto_updatedb'] != $_SESSION['usb_auto_updatedb']) {
+		$_SESSION['notify']['title'] = $_POST['usb_auto_updatedb'] == '1' ? 'MPD auto-update on' : 'MPD auto-update off';
+		$_SESSION['notify']['duration'] = 3;
+		playerSession('write', 'usb_auto_updatedb', $_POST['usb_auto_updatedb']);
+	}
+}
 // re-mount nas sources
 if (isset($_POST['remount'])) {
 	$result_unmount = wrk_sourcemount('unmountall');
 	$result_mount = wrk_sourcemount('mountall');
-	workerLog('src-config: remount: (' . $result_unmount . ', ' . $result_mount . ')');
+	//workerLog('src-config: remount: (' . $result_unmount . ', ' . $result_mount . ')');
 	$_SESSION['notify']['title'] = 'Re-mount initiated...';
 }
 // reset library cache
@@ -211,7 +221,7 @@ if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
 // initiate db update if indicated after sourcecfg job completes
 waitWorker(1, 'src-config');
 if ($initiateDBUpd == true) {
-	workerLog('src-config(): Job: updmpddb');
+	//workerLog('src-config(): Job: updmpddb');
 	submitJob('updmpddb', '', '', '');
 }
 
@@ -236,6 +246,11 @@ if (!isset($_GET['cmd'])) {
 		$_remount_disable = '';
 	}
 
+	// r44a auto-updatedb on usb insert/remove
+	$_select['usb_auto_updatedb1'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb0\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+	$_select['usb_auto_updatedb0'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb1\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+
+	// thumbcache status
 	$_thmcache_status = $_SESSION['thmcache_status']; // r43h
 }
 

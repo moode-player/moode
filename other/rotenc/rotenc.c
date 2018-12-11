@@ -26,6 +26,8 @@
  * rotenc 100 2 3 4 5 1
  *
  * 2018-01-26 TC 4.0
+ * 2018-12-09 TC 4.4
+ * - use GNU command syntax for rotvol.sh
  *
  */
 
@@ -90,8 +92,8 @@ int main(int argc, char * argv[])
 	char cmdUpMore[33];
 	char cmdDnMore[33];
 	char volStep[1];
-	strcpy(cmdUpMore, "/var/www/command/rotvol.sh up ");
-	strcpy(cmdDnMore, "/var/www/command/rotvol.sh dn ");
+	strcpy(cmdUpMore, "/var/www/command/rotvol.sh -up ");
+	strcpy(cmdDnMore, "/var/www/command/rotvol.sh -dn ");
 	sprintf(volStep, "%d", STEP);
 	strcat(cmdUpMore, volStep);
 	strcat(cmdDnMore, volStep);
@@ -112,7 +114,7 @@ int main(int argc, char * argv[])
 	while(1) {
 		if (currentPos > lastPos) {
 			if ((currentPos - lastPos) < ACCEL) {
-				system("/var/www/command/rotvol.sh up 1");
+				system("/var/www/command/rotvol.sh -up 1");
 			}
 			else {
 				system(cmdUpMore);
@@ -122,7 +124,7 @@ int main(int argc, char * argv[])
 		}
 	  	else if (currentPos < lastPos) {
 			if ((lastPos - currentPos) < ACCEL) {
-				system("/var/www/command/rotvol.sh dn 1");
+				system("/var/www/command/rotvol.sh -dn 1");
 			}
 			else {
 				system(cmdDnMore);

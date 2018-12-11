@@ -41,6 +41,14 @@ require_once 'Zend/Media/Flac/MetadataBlock.php';
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Picture.php 241 2011-06-11 16:46:52Z svollbehr $
  */
+
+/**
+ * 2018-10-19 TC moOde 4.3 update
+ * - add hash_only option
+ * 2018-12-09 TC moOde 4.3 update
+ * - add _dataSize to hash
+ */
+
 final class Zend_Media_Flac_MetadataBlock_Picture extends Zend_Media_Flac_MetadataBlock
 {
     /**
@@ -85,6 +93,9 @@ final class Zend_Media_Flac_MetadataBlock_Picture extends Zend_Media_Flac_Metada
     /** @var string */
     private $_data;
 
+    /** @var string */
+    private $_data_1k;
+
     /**
      * Constructs the class with given parameters and parses object related data.
      *
@@ -93,7 +104,7 @@ final class Zend_Media_Flac_MetadataBlock_Picture extends Zend_Media_Flac_Metada
      *  data. Support for such needs design considerations.
      * @param Zend_Io_Reader $reader The reader object.
      */
-    public function __construct($reader)
+    public function __construct($reader, $hash_only) // r44a
     {
         parent::__construct($reader);
 
@@ -104,7 +115,8 @@ final class Zend_Media_Flac_MetadataBlock_Picture extends Zend_Media_Flac_Metada
         $this->_height = $this->_reader->readUInt32BE();
         $this->_colorDepth = $this->_reader->readUInt32BE();
         $this->_numberOfColors = $this->_reader->readUInt32BE();
-        $this->_data = $this->_reader->read($this->_dataSize = $this->_reader->readUInt32BE());
+		$this->_dataSize = $this->_reader->readUInt32BE(); // r44a
+		$this->_data = $hash_only === true ? md5($this->_reader->read(1024) + $this->_dataSize) : $this->_reader->read($this->_dataSize); // r44a, r44d add _dataSize to hash
     }
 
     /**

@@ -18,6 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * 2018-07-11 TC moOde 4.2
+ * 2018-12-09 TC moOde 4.4
+ * - add disk used
  *
  */
 
@@ -45,11 +47,14 @@ while(true) {
 	$memavail = exec("grep MemAvailable /proc/meminfo | awk '{print $2}'");
 	$memutil = number_format(100 * (1 - ($memavail / $memtotal)), 0, '.', '');
 
+	// disk utilization
+	$diskutil = exec("df -h | awk 'FNR==2 {print $5}'");
+
 	// number of cores	
 	$cores = trim(exec('grep -c ^processor /proc/cpuinfo'));
 	
 	// cpu architecture
 	$sysarch = trim(shell_exec('uname -m'));
 	
-	echo 'CPU: ' . $cpufreq . ' | LOAD: ' . $cpuload . '%' . ' | TEMP: ' . $cputemp . "\xB0" . 'C | RAM_USED: ' . $memutil . '%' . ' | CORES: ' . $cores . ' | ARCH: ' . $sysarch . "\r";
+	echo 'CPU: ' . $cpufreq . ' | LOAD: ' . $cpuload . '%' . ' | TEMP: ' . $cputemp . "\xB0" . 'C | RAM_USED: ' . $memutil . '% | DISK_USED: ' . $diskutil . ' | CORES: ' . $cores . ' | ARCH: ' . $sysarch . "\r";
 }

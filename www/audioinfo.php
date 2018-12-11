@@ -22,6 +22,9 @@
  * - add slactive for Squeezelite
  * 2018-09-27 TC moOde 4.3
  * - add spotify renderer
+ * 2018-12-09 TC moOde 4.4
+ * - rm 'none' adevname since default is now 'On-board audio device'
+ * - improve comments
  *
  */
 
@@ -90,7 +93,7 @@ else {
 	$status = parseStatus(getMpdStatus($sock));
 	
 	if ($hwparams['status'] == 'active' || $_SESSION['audioout'] == 'Bluetooth') { 		
-		// dsd
+		// dsd: DoP, Native bitstream, DSD-to-PCM
 		if ($status['audio_sample_depth'] == 'dsd64') {
 			$encoded_at = 'DSD64, 1 bit, 2.822 mbps Stereo';
 			if ($mpdconf['dop'] == 'yes') {
@@ -252,7 +255,7 @@ else {
 
 // audio device
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['adevname']);
-$devname = $_SESSION['adevname'] == 'none' ? '' : $_SESSION['adevname'];
+$devname = $_SESSION['adevname']; // r44d
 $dacchip = $result[0]['dacchip'];
 $devarch = $result[0]['arch'];
 $iface = $result[0]['iface'];

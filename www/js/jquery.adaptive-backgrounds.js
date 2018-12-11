@@ -6,6 +6,8 @@
  * - clean up tabbing
  * 2018-09-27 TC moOde 4.3
  * - minor fixes
+ * 2018-12-09 TC moOde 4.4
+ * - improvements for btnBarFix()
  *
  */
 
@@ -275,8 +277,6 @@
 					data.color = newbg;
 					adaptBack = newbg;
 					//console.log(adaptBack);
-					/*if (shade[2] < .97) {shade[2] = (shade[2] + .03);}
-					else {shade[2] = 1.0;}*/
 					var newshade = hslToRgb(shade);
 					var newcolor = 'rgba(';
 					newcolor = newcolor.concat(newshade[0],',',newshade[1],',',newshade[2],',',themeOp,')');
@@ -314,9 +314,8 @@
 							$('#context-menu-playlist-item .dropdown-menu').css({backgroundColor: adaptMback});
 							SESSION.json['alphablend'] != '1.00' ? $('#menu-top').css('background-color', 'rgba(0,0,0,0)') : $('#menu-top').css('background-color', themeMback);
 							document.body.style.setProperty('--adaptbg', newmb);
-							document.body.style.setProperty('--adapttext', adaptMcolor);
-							document.body.style.setProperty('--btnbarcolor', 'rgba(96,96,96,0.5)'); 
-							btnbarfix(adaptMback, adaptMback);
+							document.body.style.setProperty('--adapttext', adaptMcolor); // r44d1
+							btnbarfix(adaptMback, adaptMcolor); // r44d1
 						}
 						if (getLumaClass(data.color) == 'ab-light') {
 							document.body.style.setProperty('--timethumb', 'url(../imagesw/thumb.svg)');

@@ -9,7 +9,9 @@ Description:
 
 *
 * 2018-07-11 TC moOde 4.2
-* - commaent out margin in ui-notify-icon since we are not using icons
+* - comment out margin in ui-notify-icon since we are not using icons
+* 2018-10-19 TC moOde 4.3 update
+* - add break-word to .ui-pnotify-text
 *
 */
 /* -- Notice */
@@ -51,6 +53,7 @@ margin-bottom: .4em;
 }
 .ui-pnotify-text {
 display: block;
+word-wrap: break-word; /* r44a */
 }
 .ui-pnotify-icon, .ui-pnotify-icon span {
 display: block;

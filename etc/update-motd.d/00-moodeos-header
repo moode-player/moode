@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-MM-DD TC moOde 4.0
+# 2018-01-26 TC moOde 4.0
+# - initial version
+# 2018-12-09 TC moOde 4.4
+# - add moOde release
 #
-echo Linux kernel $(uname -r) running on $(uname -m) architecture
+
+echo Linux kernel $(uname -r) $(uname -m), moOde $(awk '/Release: /{print $2 " " $3;}' /var/www/footer.php | sed 's/,//')

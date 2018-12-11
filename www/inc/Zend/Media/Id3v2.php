@@ -51,6 +51,12 @@ require_once 'Zend/Media/Id3/Header.php';
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Id3v2.php 273 2012-08-21 17:22:52Z svollbehr $
  */
+
+/**
+ * 2018-10-19 TC moOde 4.3 update
+ * - add debug code for hash_only option
+ */
+
 final class Zend_Media_Id3v2 extends Zend_Media_Id3_Object
 {
     /** @var Zend_Media_Id3_Header */
@@ -128,6 +134,12 @@ final class Zend_Media_Id3v2 extends Zend_Media_Id3_Object
                 $this->_filename = $filename;
             }
         }
+
+		/*// r44a DEBUG
+		$msg = 'Id3v2: filename= ' . substr($this->_filename, 0, 16) . ', options[hash_only]= ' . $options['hash_only'];
+		$fh = fopen('/var/log/moode.log', 'a');
+		fwrite($fh, date('Ymd His ') . $msg . "\n");
+		fclose($fh);*/
 
         $startOffset = $this->_reader->getOffset();
 

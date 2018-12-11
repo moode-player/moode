@@ -19,6 +19,8 @@
  * 2018-01-26 TC moOde 4.0
  * 2018-09-27 TC moOde 4.3
  * - improve logic and add support for ess sabre chips (Allo Katana DAC)
+ * 2018-12-09 TC moOde 4.4
+ * - comment out workerLog statements
  *
  */
 
@@ -36,13 +38,13 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 	if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchip'], 'TAS') !== false) {
 		$chipoptions = $_POST['config']['analoggain'] . ',' . $_POST['config']['analogboost'] . ',' . $_POST['config']['digfilter'];
 		$chiptype = 'burrbrown';
-workerLog('chipoptions: ' . $chipoptions);
+		//workerLog('chipoptions: ' . $chipoptions);
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
 	
 		// see if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[2] != $_POST['config']['digfilter']) {
-workerLog('digfilter changed');
+			//workerLog('digfilter changed');
 			$status = parseStatus(getMpdStatus($sock));	
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
@@ -58,11 +60,11 @@ workerLog('digfilter changed');
 		// update Allo Piano 2.1 Hi-Fi DAC device settings
 		if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 			if ($_POST['config']['outputmode'] == 'Dual-Mono' || $_POST['config']['outputmode'] == 'Dual-Stereo') {
-workerLog('dual mode selected');
+				//workerLog('dual mode selected');
 				sysCmd('/var/www/command/util.sh set-piano-dualmode ' . '"' . $_POST['config']['outputmode'] . '"');
 			}
 			else {
-workerLog('other mode selected');
+				//workerLog('other mode selected');
 				sysCmd('/var/www/command/util.sh set-piano-submode ' . '"' . $_POST['config']['outputmode'] . '"');
 				sysCmd('/var/www/command/util.sh set-piano-lowpass ' . '"' . $_POST['config']['lowpass'] . '"');
 				sysCmd('/var/www/command/util.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');

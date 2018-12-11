@@ -31,6 +31,10 @@
  * 2018-09-27 TC moOde 4.3
  * - minor code cleanup and refactoring
  * - Android soft kbd fix
+ * 2018-10-19 TC moOde 4.3 update
+ * - add 'e' var to all JQuery function()
+ * 2018-12-09 TC moOde 4.4
+ * - improvements for btnBarFix()
  *
  */
 
@@ -55,7 +59,6 @@ jQuery(document).ready(function($){ 'use strict';
 	tempcolor = splitColor($('.dropdown-menu').css('background-color'));
 	themeOp = tempcolor[3];
 	themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
-	document.body.style.setProperty('--btnbarback', themeMback);
 	document.body.style.setProperty('--themetext', themeMcolor);
 	adaptColor = themeColor;
 	adaptBack = themeBack;
@@ -71,6 +74,7 @@ jQuery(document).ready(function($){ 'use strict';
 	//btnbarfix('rgba(50,50,50,0.75)', adaptBack);
 	//document.body.style.setProperty('--btnbarback', 'rgba(50,50,50,0.75)');
 	$('#menu-bottom .btn').css('background', 'rgba(50,50,50,0.75)');
+	$('#cover-gradient').css('display', 'none'); // r44h
 
     // setup pines notify
     $.pnotify.defaults.history = false;
@@ -117,7 +121,7 @@ jQuery(document).ready(function($){ 'use strict';
 		}
 	});
 	// network config ssid
-	$('#manual-ssid').on('shown.bs.modal', function () {
+	$('#manual-ssid').on('shown.bs.modal', function() {
 		$('#wlan0otherssid').focus();
 	});  
 	$('#wlan0ssid').change(function() {
@@ -150,21 +154,21 @@ jQuery(document).ready(function($){ 'use strict';
 	});
 
 	// nas config pre-load manual server entry
-	$('#manual-server').on('shown.bs.modal', function () {
+	$('#manual-server').on('shown.bs.modal', function() {
 		$('#manualserver').focus();
 	});  
-	$('#editserver').click(function() {
+	$('#editserver').click(function(e) {
 		$('#manualserver').val($('#address').val().trim());
 	});
 
 	// view thmcache status
-    $('#view-thmcache-status').click(function() {
+    $('#view-thmcache-status').click(function(e) {
 		var resp = sendMoodeCmd('GET', 'thmcachestatus'); // sync
 		$('#thmcache-status').html(resp);
 	});
 
     // info button (i) show/hide toggle
-    $('.info-toggle').click(function() {
+    $('.info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');
 		if ($(spanId).hasClass('hide')) {
 			$(spanId).removeClass('hide');

@@ -32,6 +32,13 @@
  * @version    $Id: Ilst.php 177 2010-03-09 13:13:34Z svollbehr $
  */
 
+/**
+ * 2018-10-19 TC moOde 4.3 update
+ * - add hash_only option
+ * 2018-12-09 TC moOde 4.3 update
+ * - add _dataSize to hash
+ */
+
 /**#@+ @ignore */
 require_once 'Zend/Media/Iso14496/Box.php';
 /**#@-*/
@@ -216,10 +223,32 @@ final class Zend_Media_Iso14496_Box_Data extends Zend_Media_Iso14496_FullBox
             return;
         }
 
+		// r44a DEBUG
+		/*if ($this->getFlags() == self::JPEG || $this->getFlags() == self::PNG) {
+			$msg = 'Ilst: $this->_value= ' . substr($this->_value, 0, 8) . ', flags= ' . $this->getFlags() . ', $options[hash_only]= ' . $options['hash_only'] . ', $this->getSize()= ' . $this->getSize();
+			$fh = fopen('/var/log/moode.log', 'a');
+			fwrite($fh, date('Ymd His ') . $msg . "\n");
+			fclose($fh);
+		}*/
+
         $this->_reader->skip(4);
-        $data = $this->_reader->read
+        /*$data = $this->_reader->read
             ($this->getOffset() + $this->getSize() -
-             $this->_reader->getOffset());
+             $this->_reader->getOffset());*/
+
+		// r44a
+		if (($this->getFlags() == self::JPEG || $this->getFlags() == self::PNG) && $options['hash_only'] === true) {
+	        $data = md5($this->_reader->read(($this->getOffset() + 1024 - $this->_reader->getOffset()) + $this->getSize())); // r44d
+			/*// r44a DEBUG
+			$msg = 'Ilst: strlen($data)= ' . strlen($data);
+			$fh = fopen('/var/log/moode.log', 'a');
+			fwrite($fh, date('Ymd His ') . $msg . "\n");
+			fclose($fh);*/
+		}
+		else {
+	        $data = $this->_reader->read($this->getOffset() + $this->getSize() - $this->_reader->getOffset());
+		}
+
         switch ($this->getFlags()) {
             case self::INTEGER:
                 // break intentionally omitted

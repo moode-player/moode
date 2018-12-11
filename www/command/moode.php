@@ -30,6 +30,8 @@
  * 2018-09-27 TC moOde 4.3
  * - favorites feature
  * - clear/add for saved playlists
+ * 2018-12-09 TC moOde 4.4
+ * - add ipaddress to readcfgsystem
  *
  */
 
@@ -89,7 +91,7 @@ else {
 			// remove background image
 			case 'rmbgimage':
 				sysCmd('rm /var/local/www/imagesw/bgimage.jpg');
-				echo json_encode('OK');
+				echo json_encode('OK'); //r44c
 				break;
 			// toggle auto-shuffle on/off
 			case 'ashuffle':
@@ -138,6 +140,7 @@ else {
 				$array['mooderel'] = $_SESSION['mooderel'];
 				$array['pkgdate'] = $_SESSION['pkgdate'];
 				$array['raspbianver'] = $_SESSION['raspbianver'];
+				$array['ipaddress'] = $_SESSION['ipaddress']; // r44d
 
 				echo json_encode($array);
 				break;			

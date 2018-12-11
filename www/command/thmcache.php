@@ -4,7 +4,10 @@
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
-\ * This Program is free software; you can redistribute it and/or modify
+ * Cover art extraction routines (C) 2015 Andreas Goetz
+ * cpuidle@gmx.de
+ *
+ * This Program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
@@ -19,6 +22,15 @@
  *
  * 2018-09-27 TC moOde 4.3
  * - initial version
+ * 2018-10-19 TC moOde 4.3 update
+ * - add attribution for coverart.php author
+ * - add logic to parseFolder() to prevent fall-thru to all files search
+ * - add hash_only arg to be consistent w/coverart.php and getCoverHash()
+ * 2018-12-09 TC moOde 4.4
+ * - add logging to Zend exception blocks
+ * - chg $id3->apic->mimeType to $id3v2->apic->mimeType
+ * - auto vs manual for hires thumbnails
+ * - rm escaping # in getImage() which causes a fail
  *
  */
 
@@ -39,16 +51,24 @@ $hires_thm = $_SESSION['library_hiresthm'];
 $pixel_ratio = floor($_SESSION['library_pixelratio']);
 session_write_close();
 
-if ($pixel_ratio == 2 && $hires_thm == 'Yes') {
-	$thm_w = 200;
-	$thm_q = 75;
-}
-elseif ($pixel_ratio >= 3 && $hires_thm == 'Yes') {
-	$thm_w = 400;
-	$thm_q = 50;
+// r44d auto vs manual 
+if ($hires_thm == 'Auto') {
+	if ($pixel_ratio == 2) {
+		$thm_w = 200;
+		$thm_q = 75;
+	}
+	elseif ($pixel_ratio >= 3) {
+		$thm_w = 400;
+		$thm_q = 50;
+	}
+	else {
+		$thm_w = 100;
+		$thm_q = 75;
+	}
 }
 else {
-	$thm_w = 100;
+	// manual
+	$thm_w = substr($hires_thm, 0, 3); // only the numeric part ex: 100px
 	$thm_q = 75;
 }
 
@@ -181,6 +201,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 }
 
 // modified versions of coverart.php functions 
+// (C) 2015 Andreas Goetz
 function outImage($mime, $data) {
 	//workerLog('thmcache: outImage(): ' . $mime . ', ' . strlen($data) . ' bytes');
 	switch ($mime) {
@@ -216,7 +237,6 @@ function getImage($path) {
 		case 'png':
 		case 'tif':
 		case 'tiff':
-			$path = str_replace('#', '%23', $path);
 			header('Location: ' . $path);
 			$image = $path;
 			break;
@@ -225,33 +245,23 @@ function getImage($path) {
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
 			try {
-				$id3 = new Zend_Media_Id3v2($path);
+				$id3v2 = new Zend_Media_Id3v2($path, array('hash_only' => false)); // r44a
 
-				if (isset($id3->apic)) {
-					$image = outImage($id3->apic->mimeType, $id3->apic->imageData);
+				if (isset($id3v2->apic)) {
+					//workerLog('thmcache; mp3: id3v2: apic->imageData: length: ' . strlen($id3v2->apic->imageData));
+					$image = outImage($id3v2->apic->mimeType, $id3v2->apic->imageData); // r44d chg id3 to id3v2 for mimeType
 				}
 			}
 			catch (Zend_Media_Id3_Exception $e) {
-				//workerLog('thmcache: Zend media exception: ' . $e->getMessage()); 
-			}
-
-			require_once 'Zend/Media/Id3v1.php';
-			try {
-				$id3 = new Zend_Media_Id3v1($path);
-
-				if (isset($id3->apic)) {
-					$image = outImage($id3->apic->mimeType, $id3->apic->imageData);
-				}
-			}
-			catch (Zend_Media_Id3_Exception $e) {
-				//workerLog('thmcache: Zend media exception: ' . $e->getMessage()); 
+				workerLog('thmcache: mp3: ' . $path); 
+				workerLog('thmcache: mp3: Zend media exception: ' . $e->getMessage()); 
 			}
 			break;
 
 		case 'flac':
 			require_once 'Zend/Media/Flac.php';
 			try {
-				$flac = new Zend_Media_Flac($path);
+				$flac = new Zend_Media_Flac($path, $hash_only = false); // r44a
 
 				if ($flac->hasMetadataBlock(Zend_Media_Flac::PICTURE)) {
 					$picture = $flac->getPicture();
@@ -259,15 +269,16 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Flac_Exception $e) {
-				//workerLog('thmcache: Zend media exception: ' . $e->getMessage()); 
+				workerLog('thmcache: flac: ' . $path); 
+				workerLog('thmcache: flac: Zend media exception: ' . $e->getMessage()); 
 			}
 			break;
 
         case 'm4a':
             require_once 'Zend/Media/Iso14496.php';
             try {
-                $id3 = new Zend_Media_Iso14496($path);
-                $picture = $id3->moov->udta->meta->ilst->covr;
+                $iso14496 = new Zend_Media_Iso14496($path, array('hash_only' => false)); // r44a
+                $picture = $iso14496->moov->udta->meta->ilst->covr;
                 $mime = ($picture->getFlags() & Zend_Media_Iso14496_Box_Data::JPEG) == Zend_Media_Iso14496_Box_Data::JPEG
                     ? 'image/jpeg'
                     : (
@@ -280,7 +291,8 @@ function getImage($path) {
                 }
             }
             catch (Zend_Media_Iso14496_Exception $e) {
-				//workerLog('thmcache: Zend media exception: ' . $e->getMessage()); 
+				workerLog('thmcache: m4a: ' . $path); 
+				workerLog('thmcache: m4a: Zend media exception: ' . $e->getMessage()); 
             }
             break;
 	}
@@ -300,16 +312,19 @@ function parseFolder($path) {
 			break;
 		}
 	}
-	// all other image files
-	$extensions = array('jpg', 'jpeg', 'png', 'tif', 'tiff');
-	$path = str_replace('[', '\[', $path);
-	$path = str_replace(']', '\]', $path);
-	foreach (glob($path . '*') as $file) {
-		//workerLog('thmcache: parseFolder(): glob' . $file);
-		if (is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $extensions)) {
-			$result = getImage($file);
-			if ($result !== false) {
-				break;
+
+	if ($result === false) { // r44a
+		// all other image files
+		$extensions = array('jpg', 'jpeg', 'png', 'tif', 'tiff');
+		$path = str_replace('[', '\[', $path);
+		$path = str_replace(']', '\]', $path);
+		foreach (glob($path . '*') as $file) {
+			//workerLog('thmcache: parseFolder(): glob' . $file);
+			if (is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $extensions)) {
+				$result = getImage($file);
+				if ($result !== false) {
+					break;
+				}
 			}
 		}
 	}

@@ -51,6 +51,17 @@
  * - use session for ext musicroot
  * - add renderer data to currentsong.txt
  * - thumbnail cache
+ * 2018-10-19 TC moOde 4.3 update
+ * - fix bugs in updExtMetaFile()
+ * - file integrity check
+ * - replace if/else block in uac2fix with ternary operator
+ * - eth port fix setting
+ * 2018-12-09 TC moOde 4.4
+ * - add ipaddress to session (picked up in moode.php readcfgsystem)
+ * - new clock radio sql cols
+ * - change method used to delete files in the thumcache directory
+ * - use GNU command syntax for vol.sh
+ * - deprecate workaround for obsolete Katana 1.0 (audio glitch at reboot)
  *
  */
 
@@ -102,6 +113,23 @@ pcntl_signal(SIGTTOU, SIG_IGN);
 pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
+
+// exit if critical files are not factory default
+$critFiles = array('/etc/nginx/nginx.conf' => '7e56f9e40c523b58918564181d8d9165',
+'/etc/nginx/fastcgi_params' => '098049377f44266b682f7bd353356e00',
+'/etc/php/7.0/cli/php.ini' => '6dcfc250ae7d3a789b18b46a588c3c4f',
+'/etc/php/7.0/fpm/php.ini' => 'af8e38822925af808d30ebf616401c6b',
+'/etc/php/7.0/fpm/pool.d/www.conf' => '979c766ae5ae4edd8c06144c84845d64',
+'/etc/php/7.0/mods-available/opcache.ini' => '6d16a01beb94cc2e03e0702a637d4411',
+'/etc/memcached.conf' => '01f2be00de4c14650704401a86f0bbb0');
+foreach ($critFiles as $file => $hash) {
+	if (md5(file_get_contents($file)) !== $hash) {
+		workerLog('worker: Integrity check failed');
+		workerLog('worker: Exited');
+		exit;
+	}
+}
+workerLog('worker: Integrity check ok');
 
 // cache cfg_system in session vars
 sysCmd('chmod -R 0777 /var/local/www/db');
@@ -302,6 +330,17 @@ else {
 	workerLog('worker: wlan0 does not exist' . ($_SESSION['wifibt'] == '0' ? ' (off)' : ''));
 	$_SESSION['apactivated'] = false;
 }
+// r44d store ipaddress, prefer wlan0 address
+if (!empty($wlan0ip[0])) {
+	$_SESSION['ipaddress'] = $wlan0ip[0];
+}
+elseif (!empty($eth0ip[0])) {
+	$_SESSION['ipaddress'] = $eth0ip[0];
+}
+else {
+	$_SESSION['ipaddress'] = '0.0.0.0';
+	workerLog('worker: no active network interface');	
+}
 
 //
 workerLog('worker: - Audio');
@@ -379,8 +418,9 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	}
 	workerLog('worker: Piano 2.1 initialized');
 }
-// configure Allo Katana DAC
-if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
+// deprecate
+// configure Allo Katana 1.0 DAC
+/*if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 	// WORKAROUND: bump one of the channels with S16_LE and S32_LE to avoid audio corruption
 	sysCmd('amixer -c0 sset "Master" 0');
 	sysCmd('speaker-test -c 2 -s 2 -r 44100 -F S16_LE -X -f 24000 -t sine -l 1');
@@ -390,7 +430,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 		sysCmd('amixer -c0 sset "Master" 100%');
 	}
 	workerLog('worker: Katana DAC initialized');
-}
+}*/
 
 //
 workerLog('worker: - Services');
@@ -571,9 +611,20 @@ if ($_SESSION['ashuffle'] == '1') {
 	workerLog('worker: Auto-shuffle started');
 }
 
+// reducing 3B+ eth port speed fixes audio glitches when using certain usb dacs
+if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+' && $_SESSION['eth_port_fix'] == '1' && !empty($eth0ip[0])) {
+	sysCmd('ethtool -s eth0 speed 100 duplex full');
+	workerLog('worker: eth0 port fix applied');
+	workerLog('worker: eth0 (100 Mb/s full duplex)');
+}
+
 // globals
-$ckstart = $_SESSION['ckradstart'];
-$ckstop = $_SESSION['ckradstop'];
+$clkradio_start_time = substr($_SESSION['clkradio_start'], 0, 8); // r44d parse out the time (HH,MM,AP)
+$clkradio_stop_time = substr($_SESSION['clkradio_stop'], 0, 8);
+//workerLog('$clkradio_start_time=(' . $clkradio_start_time . '), $clkradio_stop_time=(' . $clkradio_stop_time . ')');
+$clkradio_start_days = explode(',', substr($_SESSION['clkradio_start'], 9)); // parse out the days (M,T,W,T,F,S,S)
+$clkradio_stop_days = explode(',', substr($_SESSION['clkradio_stop'], 9));
+//workerLog('$clkradio_start_days=(' . substr($_SESSION['clkradio_start'], 9) . '), $clkradio_stop_days=(' . substr($_SESSION['clkradio_stop'], 9) . ')');
 $aplactive = '0';
 $spotactive = '0';
 $slactive = '0';
@@ -637,10 +688,10 @@ while (1) {
 	if ($_SESSION['extmeta'] == '1') {
 		updExtMetaFile();
 	}
- 	if ($_SESSION['ckrad'] == 'Clock Radio') {
+ 	if ($_SESSION['clkradio_mode'] == 'Clock Radio') {
 		chkClockRadio();		
 	}
- 	if ($_SESSION['ckrad'] == 'Sleep Timer') {
+ 	if ($_SESSION['clkradio_mode'] == 'Sleep Timer') {
 		chkSleepTimer();		
 	}
 	if ($_SESSION['playhist'] == 'Yes') {
@@ -717,7 +768,7 @@ function chkBtActive() {
 			//workerLog('chkBtActive(): send btactive0');
 			sendEngCmd('btactive0');
 			// restore moOde vol
-			sysCmd('/var/www/vol.sh restore');
+			sysCmd('/var/www/vol.sh -restore'); // r44d
 			// resume mpd playback if indicated
 			if ($_SESSION['rsmafterbt'] == '1') {
 				sysCmd('mpc play');
@@ -814,9 +865,6 @@ function chkSlActive() {
 }
 
 function updExtMetaFile() {
-	// bluetooth
-	$result = sysCmd('pgrep -l bluealsa-aplay');
-	$btactive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 	// output rate
 	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
 	if ($hwparams['status'] == 'active') {
@@ -829,16 +877,18 @@ function updExtMetaFile() {
 	}			
 	// currentsong.txt
 	$filemeta = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
+	//workerLog($filemeta['file'] . ' | ' . $hwparams_calcrate);
 
-	if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || ($btactive === true && $_SESSION['audioout'] == 'Local')) {
-			// renderer status
-			if ($_SESSION['airplayactv'] == '1') {
+	if ($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1' || $GLOBALS['slactive'] == '1' || ($_SESSION['btactive'] && $_SESSION['audioout'] == 'Local')) {
+			//workerLog('renderer active');
+			// renderer active
+			if ($GLOBALS['aplactive'] == '1') {
 				$renderer = 'Airplay Active';
 			}
-			elseif ($_SESSION['spotactive'] == '1') {
+			elseif ($GLOBALS['spotactive'] == '1') {
 				$renderer = 'Spotify Active';
 			} 
-			elseif ($_SESSION['slactive'] == '1') {
+			elseif ($GLOBALS['slactive'] == '1') {
 				$renderer = 'Squeezelite Active';
 			} 
 			else {
@@ -846,6 +896,7 @@ function updExtMetaFile() {
 			} 
 			// write file only if something has changed
 			if ($filemeta['file'] != $renderer && $hwparams_calcrate != '0 bps') {
+				//workerLog('writing file');
 				$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');			
 				$data = 'file=' . $renderer . "\n"; 
 				$data .= 'outrate=' . $hwparams_format . $hwparams_calcrate . "\n"; ;
@@ -854,15 +905,19 @@ function updExtMetaFile() {
 			}
 	}
 	else {
-		// MPD metadata
+		//workerLog('mpd active');
+		// MPD active
 		$sock = openMpdSock('localhost', 6600);
 		$current = parseStatus(getMpdStatus($sock));
-		$current = enhanceMetadata($current, $sock, 'nomediainfo');
+		$current = enhanceMetadata($current, $sock, 'worker_php');  // r44a chg nomediainfo flag -> caller = worker
 		closeMpdSock($sock);	
+
+		//workerLog('updExtMetaFile(): currentencoded=' . $_SESSION['currentencoded']);
 
 		// write file only if something has changed
 		if ($current['title'] != $filemeta['title'] || $current['album'] != $filemeta['album'] || $_SESSION['volknob'] != $filemeta['volume'] || 
-			$_SESSION['volmute'] != $filemeta['mute'] || $current['state'] != $filemeta['state']) {		
+			$_SESSION['volmute'] != $filemeta['mute'] || $current['state'] != $filemeta['state'] || $filemeta['outrate'] != $hwparams_format . $hwparams_calcrate) {		
+			//workerLog('writing file');
 			$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');
 			// default 
 			$data = 'file=' . $current['file'] . "\n"; 
@@ -888,15 +943,16 @@ function updExtMetaFile() {
 }
 
 function chkClockRadio() {
-	$curtime = date("hi A");
+	$curtime = date('h,i,A'); // r44d HH,MM,AP
+	$curday = date('N') - 1; // r44d 0-6 where 0 = Monday
 	$retrystop = 2;
 	
-	if ($curtime == $GLOBALS['ckstart']) {
-		$GLOBALS['ckstart'] = ''; // reset so this section is only done once
+	if ($curtime == $GLOBALS['clkradio_start_time'] && $GLOBALS['clkradio_start_days'][$curday] == '1') {
+		$GLOBALS['clkradio_start_time'] = ''; // reset so this section is only done once
 		$sock = openMpdSock('localhost', 6600);
 
 		// find playlist item
-		sendMpdCmd($sock, 'playlistfind file ' . '"' . $_SESSION['ckraditem'] . '"');
+		sendMpdCmd($sock, 'playlistfind file ' . '"' . $_SESSION['clkradio_item'] . '"');
 		$resp = readMpdResp($sock);
 		$array = array();
 		$line = strtok($resp, "\n");
@@ -912,12 +968,12 @@ function chkClockRadio() {
 		closeMpdSock($sock);
 		
 		// set volume
-		sysCmd('/var/www/vol.sh ' . $_SESSION['ckradvol']);
+		sysCmd('/var/www/vol.sh ' . $_SESSION['clkradio_volume']);
 		
 	}
-	else if ($curtime == $GLOBALS['ckstop']) {
-		debugLog('chkClockRadio(): stoptime=(' . $GLOBALS['ckstop'] . ')');
-		$GLOBALS['ckstop'] = '';  // reset so this section is only done once
+	else if ($curtime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$curday] == '1') {
+		//workerLog('chkClockRadio(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
+		$GLOBALS['clkradio_stop_time'] = '';  // reset so this section is only done once
 		$sock = openMpdSock('localhost', 6600);
 
 		// send several stop commands for robustness
@@ -928,34 +984,35 @@ function chkClockRadio() {
 			--$retrystop;
 		}
 		closeMpdSock($sock);
-		debugLog('chkClockRadio(): $curtime=(' . $curtime . ')');
-		debugLog('chkClockRadio(): stop command sent');
+		//workerLog('chkClockRadio(): $curtime=(' . $curtime . '), $curday=(' . $curday . ')');
+		//workerLog('chkClockRadio(): stop command sent');
 
 		// shutdown if requested
-		if ($_SESSION['ckradshutdn'] == "Yes") {
+		if ($_SESSION['clkradio_shutdown'] == "Yes") {
 			sysCmd('/var/local/www/commandw/restart.sh poweroff');
 		}
 	}
 
-	// reload globals
-	if ($curtime != $_SESSION['ckradstart'] && $GLOBALS['ckstart'] == '') {
-		$GLOBALS['ckstart'] = $_SESSION['ckradstart'];
-		debugLog('chkClockRadio(): starttime global reloaded');
+	// reload start/stop time globals
+	if ($curtime != substr($_SESSION['clkradio_start'], 0, 8) && $GLOBALS['clkradio_start_time'] == '') {
+		$GLOBALS['clkradio_start_time'] = substr($_SESSION['clkradio_start'], 0, 8);
+		//workerLog('chkClockRadio(): starttime global reloaded');
 	}
 
-	if ($curtime != $_SESSION['ckradstop'] && $GLOBALS['ckstop'] == '') {
-		$GLOBALS['ckstop'] = $_SESSION['ckradstop'];
-		debugLog('chkClockRadio(): stoptime global reloaded');
+	if ($curtime != substr($_SESSION['clkradio_stop'], 0, 8) && $GLOBALS['clkradio_stop_time'] == '') {
+		$GLOBALS['clkradio_stop_time'] = substr($_SESSION['clkradio_stop'], 0, 8);
+		//workerLog('chkClockRadio(): stoptime global reloaded');
 	}
 }
 
 function chkSleepTimer() {
-	$curtime = date("hi A");
+	$curtime = date('h,i,A'); // r44d HH,MM,AP 
+	$curday = date('N') - 1; // r44d 0-6 where 0 = Monday
 	$retrystop = 2;
 	
-	if ($curtime == $GLOBALS['ckstop']) {
-		debugLog('chkSleepTimer(): stoptime=(' . $GLOBALS['ckstop'] . ')');
-		$GLOBALS['ckstop'] = '';  // reset so this section is only done once
+	if ($curtime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$curday] == '1') {
+		//workerLog('chkSleepTimer(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
+		$GLOBALS['clkradio_stop_time'] = '';  // reset so this section is only done once
 		$sock = openMpdSock('localhost', 6600);
 
 		// send several stop commands for robustness
@@ -969,19 +1026,19 @@ function chkSleepTimer() {
 		sendMpdCmd($sock, 'stop');
 		$resp = readMpdResp($sock);
 		closeMpdSock($sock);
-		debugLog('chkSleepTimer(): $curtime=(' . $curtime . ')');
-		debugLog('chkSleepTimer(): stop command sent');
+		//workerLog('chkSleepTimer(): $curtime=(' . $curtime . '), $curday=(' . $curday . ')');
+		//workerLog('chkSleepTimer(): stop command sent');
 
 		// shutdown if requested
-		if ($_SESSION['ckradshutdn'] == "Yes") {
+		if ($_SESSION['clkradio_shutdown'] == "Yes") {
 			sysCmd('/var/local/www/commandw/restart.sh poweroff');
 		}
 	}
 
-	// reload global
-	if ($curtime != $_SESSION['ckradstop'] && $GLOBALS['ckstop'] == '') {
-		$GLOBALS['ckstop'] = $_SESSION['ckradstop'];
-		debugLog('chkSleepTimer(): stoptime global reloaded');
+	// reload stop time global
+	if ($curtime != substr($_SESSION['clkradio_stop'], 0, 8) && $GLOBALS['clkradio_stop_time'] == '') {
+		$GLOBALS['clkradio_stop_time'] = substr($_SESSION['clkradio_stop'], 0, 8);
+		//workerLog('chkSleepTimer(): stoptime global reloaded');
 	}
 }
 
@@ -1106,7 +1163,8 @@ function runQueuedJob() {
 			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
 			break;
 		case 'regenthmcache':
-			sysCmd('rm -f ' . THMCACHE_DIR . '/*');
+			sysCmd('rm -rf ' . THMCACHE_DIR); // r44d
+			sysCmd('mkdir ' . THMCACHE_DIR); // r44d
 			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
 			break;
 		
@@ -1245,7 +1303,7 @@ function runQueuedJob() {
 			sysCmd('systemctl stop bluealsa');
 			sysCmd('systemctl stop bluetooth');
 			sysCmd('killall bluealsa-aplay');
-			sysCmd('/var/www/vol.sh restore');
+			sysCmd('/var/www/vol.sh -restore'); // r44d
 			// reset to inactive
 			playerSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
@@ -1263,7 +1321,7 @@ function runQueuedJob() {
 		// airplay
 		case 'airplaysvc':
 			sysCmd('killall shairport-sync');
-			sysCmd('/var/www/vol.sh restore');
+			sysCmd('/var/www/vol.sh -restore'); // r44d
 			// reset to inactive
 			playerSession('write', 'airplayactv', '0');
 			$GLOBALS['aplactive'] = '0';
@@ -1274,7 +1332,7 @@ function runQueuedJob() {
 		// spotify
 		case 'spotifysvc':
 			sysCmd('killall librespot');
-			sysCmd('/var/www/vol.sh restore');
+			sysCmd('/var/www/vol.sh -restore'); // r44d
 			// reset to inactive
 			playerSession('write', 'spotactive', '0');
 			$GLOBALS['spotactive'] = '0';
@@ -1294,7 +1352,7 @@ function runQueuedJob() {
 			}
 			else {
 				sysCmd('killall -s 9 squeezelite');
-				sysCmd('/var/www/vol.sh restore');
+				sysCmd('/var/www/vol.sh -restore'); // r44d
 				// reset to inactive
 				playerSession('write', 'slactive', '0');
 				$GLOBALS['slactive'] = '0';
@@ -1375,12 +1433,8 @@ function runQueuedJob() {
 			sysCmd($cmd);
 			break;
 		case 'uac2fix':
-			if ($_SESSION['w_queueargs'] == 1) {
-				sysCmd('sed -i "s/dwc_otg.lpm_enable=0/dwc_otg.lpm_enable=0 dwc_otg.fiq_fsm_mask=0x3/" /boot/cmdline.txt');
-			}
-			else {
-				sysCmd('sed -i "s/ dwc_otg.fiq_fsm_mask=0x3//" /boot/cmdline.txt');
-			}
+			$cmd = $_SESSION['w_queueargs'] == 1 ? 'sed -i "s/dwc_otg.lpm_enable=0/dwc_otg.lpm_enable=0 dwc_otg.fiq_fsm_mask=0x3/" /boot/cmdline.txt' : 'sed -i "s/ dwc_otg.fiq_fsm_mask=0x3//" /boot/cmdline.txt';
+			sysCmd($cmd);
 			break;
 		case 'expandrootfs':
 			sysCmd('/var/www/command/resizefs.sh start');
@@ -1481,8 +1535,10 @@ function runQueuedJob() {
 			sysCmd('/var/local/www/commandw/restart.sh ' . $_SESSION['w_queue']);
 			break;
 		case 'updclockradio':
-			$GLOBALS['ckstart'] = $_SESSION['ckradstart'];
-			$GLOBALS['ckstop'] = $_SESSION['ckradstop'];
+			$GLOBALS['clkradio_start_time'] = substr($_SESSION['clkradio_start'], 0, 8);
+			$GLOBALS['clkradio_stop_time'] = substr($_SESSION['clkradio_stop'], 0, 8);
+			$GLOBALS['clkradio_start_days'] = explode(',', substr($_SESSION['clkradio_start'], 9));
+			$GLOBALS['clkradio_stop_days'] = explode(',', substr($_SESSION['clkradio_stop'], 9));
 			break;
 		case 'alizarin': // hex color: #c0392b, rgba 192,57,43,0.71
 			sysCmd('/var/www/command/util.sh alizarin'); // don't specify colors, this is the default

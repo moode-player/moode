@@ -11,6 +11,97 @@
 
 ########################################################
 //
+// 4.4 2018-12-09
+//
+########################################################
+
+New features
+
+- NEW: Raspbian Stretch Lite 2018-11-13
+- NEW: Support for Raspberry Pi 3A+
+- NEW: Clock radio days-of-the-week setting
+- NEW: Customize settings for compilation rollup and excludes
+- NEW: Auto and manual settings for Hi-res thumbnails
+- NEW: Library multi-disc breakout for tracks
+- NEW: CoverView dynamic background effect
+
+Radio stations
+
+- NEW: CBC Radio 2
+
+Updates
+
+- UPD: Bump to Linux kernel 4.14.84
+- UPD: Bump to shairport-sync 3.2.2
+- UPD: Add entry for "On-board audio device" to cfg_audiodev
+- UPD: Add exception logging to coverart and thumbcache.php
+- UPD: Add failsafe loop exit to Zend Flac.php
+- UPD: Add RT params to mpd.service and rotenc.service units
+- UPD: Disable Spotify audio file cache
+- UPD: Use plughw in startSpotify()
+- UPD: Change method used to empty the thmcache dir
+- UPD: Optimize CSS for large Playlists
+- UPD: Only load swipe JS when mobile
+- UPD: Use GNU cmd syntax in rotenc and volume scripts
+- UPD: Add disk utilization to sysmon.php
+- UPD: Add revision code 9020e0 for Pi-3A+
+- UPD: Add Close to all context menus
+- UPD: Improve spacing on Radio and Album cover panels
+- UPD: Add 30px blur to list of Cover blur settings
+- UPD: Improve performance of Library loader/filter
+- UPD: Include moOde version in SSH motd header
+- UPD: Deprecate workaround for obsolete Katana 1.0
+- UPD: Full screen input source indicator
+- UPD: Deprecate vol.php
+
+Bug fixes
+
+- FIX: Blank image thumb on Customize in certain scenarios
+- FIX: Modal control spacing when full screen
+- FIX: Librespot fail on armv6l (Pi 1B, Zero, Zero W)
+- FIX: Thumbnails not generated for mp3 embedded covers
+- FIX: Title sometimes out of sync (radio station)
+- FIX: Fallback sort for Albums by Artist
+- FIX: Extra metadata not showing encodedAt rate
+- FIX: Thumbcache fail on paths containing #
+- FIX: Library track sort not using disc number
+- FIX: Regression bug in Sources Re-mount
+- FIX: Bad icon reference in the eq templates
+
+########################################################
+//
+// 4.3 Update 2018-10-19
+//
+########################################################
+
+New features
+
+- NEW: Cover art backdrop for Playback, Music, Radio panels
+- NEW: Setting for auto-update DB on USB insert/remove
+- NEW: Print moode.log via moodelog [--help, -t, -u]
+
+Updates
+
+- UPD: Bump to Linux kernel 4.14.76
+- UPD: Revert to ffmpeg-only compile of MPD
+- UPD: Add radio station name to saved playlists
+- UPD: Add integrity check for critical files
+- UPD: Eliminate unnecessary cover image reloads
+- UPD: Revised patch for upmpdcli gmusic plugin
+- UPD: Add Ethernet port fix setting for Pi-3B+
+
+Bug fixes
+
+- FIX: BBC 320K station logos not appearing
+- FIX: HUD events not working on Firefox
+- FIX: Long pnotify messages not word-breaking
+- FIX: Wrong vars used in updExtMetaFile()
+- FIX: Search reset (x) on Play history
+- FIX: Fall-thru bug in thmcache
+- FIX: Remove image closes Customize modal
+
+########################################################
+//
 // 4.3 2018-09-27
 //
 ########################################################

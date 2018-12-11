@@ -32,6 +32,8 @@
  * - rm <meta name="apple-mobile-web-app-status-bar-style" content="black">
  * - fix external link for Music tab
  * - comment out manifest link cuz it breaks IOS Add to Home
+ * 2018-10-19 TC moOde 4.3 update
+ * - album cover backdrop
  *
  */
 -->
@@ -69,6 +71,9 @@
 </head>
 
 <body onorientationchange="javascript:location.reload(true); void 0;">
+	<!-- ALBUM COVER BACKDROP -->
+	<div id="cover-backdrop"></div>
+
 	<div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
 		<div class="dropdown">
 			<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget" title="System menu">m<i class="fas fa-chevron-down"></i></a>

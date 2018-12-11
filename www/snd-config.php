@@ -25,6 +25,8 @@
  * - improve logic for chp/device options button
  * - use help-block-configs for $_alsa_volume_msg
  * - spotify
+ * 2018-12-09 TC moOde 4.4
+ * - improve I2S update message
  *
  */
 
@@ -37,7 +39,7 @@ playerSession('open', '' ,'');
 // i2s device
 if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice'])) {
-		submitJob('i2sdevice', $_POST['i2sdevice'], 'I2S audio device updated', '- Optionally change Driver options<br>- REBOOT then APPLY MPD settings<br><br>- Edit Chip/Device options AFTER reboot', 20);
+		submitJob('i2sdevice', $_POST['i2sdevice'], 'I2S audio device updated', '- Edit Driver options if needed<br>- REBOOT then APPLY MPD settings<br>- Edit Chip options AFTER reboot', 20); // r44h
 		playerSession('write', 'i2sdevice', $_POST['i2sdevice']);
 	} 
 }

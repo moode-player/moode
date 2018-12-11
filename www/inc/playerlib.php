@@ -34,7 +34,7 @@
  * - remove sps metadata routines
  * - remove djmount
  * - add socket routines for engine-cmd ipc
- * - add revision code a020d3 for Pi-3B+
+ * - add hwrev code a020d3 for Pi-3B+
  * - add wificountry to cfgNetIfaces(), autoConfig()
  * - add FEAT_UPNPSYNC and $FEAT_UPNPSYNC
  * 2018-07-11 TC moOde 4.2
@@ -57,6 +57,23 @@
  * - library utf8 character filter (@lazybat)
  * - bump mpd max_connections from 20 to 128 
  * - spotify
+ * 2018-10-19 TC moOde 4.3 update
+ * - cover image hash
+ * 2018-12-09 TC moOde 4.4
+ * - disable librespot audio file cache
+ * - use GNU command syntax for vol.sh
+ * - enhanceMetadata() no need to check $caller when getting encodedAt
+ * - rm escaping # in getImage which causes a fail
+ * - getHash() add size to value thats hashed for an image file
+ * - add hwrev code 9020e0 for Pi-3A+
+ * - add disc to genLibrary() and enhanceMetadata()
+ * - add inner brackets to certain statements in genLibraryUTF8Rep()
+ * - use -f instead of -l for cifs unmountall
+ * - fix unmountall using $mp[0][...] instead of $mp[...]
+ * - improve efficiency of lib loader, rm redundant json_encode()
+ * - use $song instead of $song['file'] in addallToPL() due to upstream changes in playerlib.js
+ * - use plughw in startSpotify()
+ *
  */
  
 define('MPD_RESPONSE_ERR', 'ACK');
@@ -298,13 +315,13 @@ function loadLibrary($sock) {
 			debugLog('loadLibrary(): Generating library...');
 			// normal or UTF8 replace
 			if ($_SESSION['library_utf8rep'] == 'No') {
-				$tagcache = json_encode(genLibrary($flat));
+				$tagarray = genLibrary($flat); // r44f
 			}
 			else {
-				$tagcache = json_encode(genLibraryUTF8Rep($flat));
+				$tagarray = genLibraryUTF8Rep($flat); // r44f
 			}
 			debugLog('loadLibrary(): Cache data returned to client');
-			return $tagcache;
+			return $tagarray;
 		}
 		else {
 			debugLog('loadLibrary(): Flat list empty');
@@ -339,7 +356,7 @@ function genFlatList($sock) {
 				$flat[$item][$element] = $value;
 			}
 		} 
-
+		//workerLog(print_r($flat, true));
 		return $flat;
 	}
 	else {
@@ -358,6 +375,7 @@ function genLibrary($flat) {
 		$genre = $flatData['Genre'] ? $flatData['Genre'] : 'Unknown';
 		$artist = $flatData[$libartist] ? $flatData[$libartist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown');
 		$album = $flatData['Album'] ? $flatData['Album'] : 'Unknown';
+		//$album = $flatData['Album'] ? $flatData['Date'] . ' - ' . $flatData['Album'] : 'Unknown'; // r44g add year
 		//$album = $flatData['AlbumSort'] ? $flatData['AlbumSort'] : ($flatData['Album'] ? $flatData['Album'] :'Unknown'); // albumsort tag if present
 
 		if (!$lib[$genre]) {$lib[$genre] = array();}
@@ -368,6 +386,7 @@ function genLibrary($flat) {
 			'file' => $flatData['file'],
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
 			'title' => $flatData['Title'],
+			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : 'Disc tag missing'), // r44h
 			'actual_artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing'),
 			'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
 			'year' => $flatData['Date'],
@@ -377,16 +396,17 @@ function genLibrary($flat) {
 			
 		array_push($lib[$genre][$artist][$album], $songData);
 	}
-	
-	if (file_put_contents(LIBCACHE_JSON, json_encode($lib)) === false) {
+
+	$json_lib = json_encode($lib); // r44f	
+	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
 		debugLog('genLibrary: create libcache.json failed');		
 	}
-
-	return $lib;
+	//workerLog(print_r($lib, true));
+	return $json_lib;
 }
 // Many Chinese songs and song directories have characters that are not UTF8 causing json_encode to fail which leaves the
 // libcache.json file empty. Replacing the non-UTF8 chars in the array before json_encode solves this problem (@lazybat).
-function genLibraryUTF8Rep ($flat) {
+function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	// use Artist or AlbumAetist for the Artist column
@@ -404,9 +424,10 @@ function genLibraryUTF8Rep ($flat) {
 
 		$songData = array(
  			'file' => utf8rep($flatData['file']),
- 			'tracknum' => utf8rep($flatData['Track'] ? $flatData['Track'] : ''),
+ 			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')), //r44f add inner brackets
  			'title' => utf8rep($flatData['Title']),
- 			'actual_artist' => utf8rep($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing'),
+			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'), // r44f
+ 			'actual_artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing')), //r44f add inner brackets
 			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
  			'year' => utf8rep($flatData['Date']),
  			'time' => utf8rep($flatData['Time']),
@@ -415,12 +436,12 @@ function genLibraryUTF8Rep ($flat) {
 			
 		array_push($lib[$genre][$artist][$album], $songData);
 	}
-	
-	if (file_put_contents(LIBCACHE_JSON, json_encode($lib)) === false) {
+
+	$json_lib = json_encode($lib); // r44f	
+	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
 		debugLog('genLibrary: create libcache.json failed');		
-	}
-	
-	return $lib;
+	}	
+	return $json_lib;
 }
 // UTF8 replace (@lazybat)
 function utf8rep($some_string) {
@@ -444,7 +465,8 @@ function addallToPL($sock, $songs) {
 	$cmds = array();
 
 	foreach ($songs as $song) {
-		$path = $song['file'];
+		//$path = $song['file'];
+		$path = $song; // r44g
 		array_push($cmds, 'add "' . html_entity_decode($path) . '"');
 	}
 	
@@ -1487,11 +1509,13 @@ function wrk_sourcemount($action, $id) {
 			//workerLog('wrk_sourcemount(): $mounts= <' . $mounts . '>');
 
 			foreach ($mounts as $mp) {
+				//workerLog('unmountall: name=' . $mp['name'] . ', type=' . $mp['type']);
 				if (mountExists($mp['name'])) {
-					if ($mp[0]['type'] == 'cifs') {
-						sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy unmount
-					} else {
-						sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
+					if ($mp['type'] == 'cifs') {
+						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // r44f change from -l (lazy) to force unmount
+					}
+					else {
+						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // force unmount (for unreachable NFS)
 					}
 				}
 			}
@@ -1595,7 +1619,7 @@ function getEncodedAt($song, $outformat) {
 	// outformat 'default' = 16/44.1k
 	// bit depth is omitted if the format is lossy
 
-	$encoded = '';
+	$encoded = 'NULL';
 
 	// radio station
 	if (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && !isset($song['Artist']))) {
@@ -1733,7 +1757,11 @@ function startSpotify() {
 		$cfg_spotify[$row['param']] = $row['value'];
 	}
 
-	$result = sysCmd('aplay -L | grep -v ALSA | grep -w default');
+	// r44h switch to plughw
+	$device = 'plughw:' . $_SESSION['cardnum'];
+
+	// r44h deprecate
+	/*$result = sysCmd('aplay -L | grep -v ALSA | grep -w default');
 	if ($_SESSION['cardnum'] == '0') {
 		if ($_SESSION['i2sdevice'] == 'none') { // On-board audio
 			$device = 'default:CARD=ALSA';
@@ -1744,7 +1772,7 @@ function startSpotify() {
 	}
 	else { // USB audio (cardnum = 1)
 		$device = $result[0];
-	}
+	}*/
 
 	$linear_volume = $cfg_spotify['volume_curve'] == 'Linear' ? ' --linear-volume' : '';
 	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ? ' --enable-volume-normalisation --normalisation-pregain ' .  $cfg_spotify['normalization_pregain'] : '';
@@ -1755,7 +1783,7 @@ function startSpotify() {
 		' --initial-volume ' . $cfg_spotify['initial_volume'] . 
 		$linear_volume . 
 		$volume_normalization .
-		' --cache /var/local/www/spotify_cache --backend alsa --device "' . $device . '"' .
+		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' . // r44d audio file cache eats disk space
 		' --onevent /var/local/www/commandw/spotevent.sh' . 
 		' > /dev/null 2>&1 &';
 
@@ -2009,7 +2037,7 @@ function getHostIp() {
 function getHdwrRev() {
 	$revname = array(
 		'0000' => 'OrangePiPC',
-		'0002' => 'Pi-1B 256MB',	
+		'0002' => 'Pi-1B 256MB',
 		'0003' => 'Pi-1B 256MB',
 		'0004' => 'Pi-1B 256MB',
 		'0005' => 'Pi-1B 256MB',
@@ -2035,6 +2063,7 @@ function getHdwrRev() {
 		'2082' => 'Pi-3B 1GB v1.2',
 		'20d3' => 'Pi-3B+ 1GB v1.3',
 		'20a0' => 'Pi-CM3 1GB v1.0',
+		'20e0' => 'Pi-3A+ 512 MB v1.0',
 		'00c1' => 'Pi-Zero W 512MB v1.1',
 		'0092' => 'Pi-Zero 512MB v1.2',
 		'0093' => 'Pi-Zero 512MB v1.3'
@@ -2044,12 +2073,12 @@ function getHdwrRev() {
 	// support arm64
 	$uname=posix_uname();
 	if ($uname['machine'] === 'aarch64') {
-		$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" .'/^30:/{print substr($2,5)}' . "'");
+		$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
 	}
 	else {
 		$uname=posix_uname();
 		if ($uname['machine'] === 'aarch64') {
-			$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" .'/^30:/{print substr($2,5)}' . "'");
+			$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
 		}
 		else {
 			$revnum = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,length($3)-3)}' . "'" . ' /proc/cpuinfo');
@@ -2060,21 +2089,43 @@ function getHdwrRev() {
 }
 
 /*
-900021	A+		1.1	512 MB	Sony UK
-900032	B+		1.2	512 MB	Sony UK
-900092	Zero	1.2	512 MB	Sony UK
-900093	Zero	1.3	512 MB	Sony UK
-9000c1	Zero W	1.1	512 MB	Sony UK
-920093	Zero	1.3	512 MB	Embest
-a01040	2B		1.0	1 GB	Sony UK
-a01041	2B		1.1	1 GB	Sony UK
-a02082	3B		1.2	1 GB	Sony UK
-a020d3	3B+		1.3	1 GB	Sony UK
-a020a0	CM3		1.0	1 GB	Sony UK
-a21041	2B		1.1	1 GB	Embest
-a22042	2B		1.2	1 GB	Embest (with BCM2837)
-a22082	3B		1.2	1 GB	Embest
-a32082	3B		1.2	1 GB	Sony Japan
+old style revision codes
+0002	B		1.0	256 MB	Egoman
+0003	B		1.0	256 MB	Egoman
+0004	B		2.0	256 MB	Sony UK
+0005	B		2.0	256 MB	Qisda
+0006	B		2.0	256 MB	Egoman
+0007	A		2.0	256 MB	Egoman
+0008	A		2.0	256 MB	Sony UK
+0009	A		2.0	256 MB	Qisda
+000d	B		2.0	512 MB	Egoman
+000e	B		2.0	512 MB	Sony UK
+000f	B		2.0	512 MB	Egoman
+0010	B+		1.0	512 MB	Sony UK
+0011	CM1		1.0	512 MB	Sony UK
+0012	A+		1.1	256 MB	Sony UK
+0013	B+		1.2	512 MB	Embest
+0014	CM1		1.0	512 MB	Embest
+0015	A+		1.1	256 MB / 512 MB	Embest 
+new style revision codes
+90 0021	A+		1.1	512 MB	Sony UK
+90 0032	B+		1.2	512 MB	Sony UK
+90 0092	Zero	1.2	512 MB	Sony UK
+90 0093	Zero	1.3	512 MB	Sony UK
+90 00c1	Zero W	1.1	512 MB	Sony UK
+92 0093	Zero	1.3	512 MB	Embest
+a0 1040	2B		1.0	1 GB	Sony UK
+a0 1041	2B		1.1	1 GB	Sony UK
+a0 2082	3B		1.2	1 GB	Sony UK
+a0 20d3	3B+		1.3	1 GB	Sony UK
+a0 20a0	CM3		1.0	1 GB	Sony UK
+a2 1041	2B		1.1	1 GB	Embest
+a2 2042	2B		1.2	1 GB	Embest (with BCM2837)
+a2 2082	3B		1.2	1 GB	Embest
+a3 2082	3B		1.2	1 GB	Sony Japan
+a5 2082	3B		1.2	1 GB	Stadium
+a0 20d3	3B+		1.3	1 GB	Sony UK
+90 20e0	3A+		1.0	512 MB	Sony UK // r44e add 3A+
 */
 
 // config audio scrobbler
@@ -2462,7 +2513,7 @@ function setAudioOut($audioout) {
 	if ($audioout == 'Local') {
 		// reconfigure MPD volume for Local
 		reconfMpdVolume($_SESSION['mpdmixer_local']);
-		sysCmd('/var/www/vol.sh restore');
+		sysCmd('/var/www/vol.sh -restore'); // r44d
 		sysCmd('mpc stop');
 		sysCmd('mpc enable only 1'); // MPD ALSA default output
 	}
@@ -2475,7 +2526,7 @@ function setAudioOut($audioout) {
 		// un-dim the UI
 		playerSession('write', 'btactive', '0');
 		sendEngCmd('btactive0');
-		sysCmd('/var/www/vol.sh restore');
+		sysCmd('/var/www/vol.sh -restore'); // r44d
 		sysCmd('mpc stop');
 		sysCmd('mpc enable only 5'); // MPD ALSA bluetooth output
 	}
@@ -2496,7 +2547,7 @@ function reconfMpdVolume($mixertype) {
 }
 
 // create enhanced metadata
-function enhanceMetadata($current, $sock, $flags) {
+function enhanceMetadata($current, $sock, $caller) {
 	define(LOGO_ROOT_DIR, 'images/radio-logos/');
 	define(DEF_RADIO_COVER, 'images/default-cover-v6.svg');
 	define(DEF_COVER, 'images/default-cover-v6.svg');
@@ -2508,6 +2559,11 @@ function enhanceMetadata($current, $sock, $flags) {
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
 	$current['composer'] = $song['Composer'];
+	// cover hash
+	if ($caller == 'engine_mpd_php') {
+		$current['cover_art_hash'] = getCoverHash($current['file']); // r44a cover image hash
+		//workerLog('$current: cover hash: ' . $current['cover_art_hash']);
+	}
 	
 	if ($current['file'] == null) {
 		$current['artist'] = '';
@@ -2517,12 +2573,12 @@ function enhanceMetadata($current, $sock, $flags) {
 		debugLog('enhanceMetadata(): File is NULL');
 	}
 	else {
-		// get encoded bit depth and sample rate
-		// only getencodedAt() once for a given file
-		//workerLog('current=(' . $current['file'] . ')');
-		//workerLog('session=(' . $_SESSION['currentfile'] . ')');
+		//workerLog('enhanceMetadata(): Caller=' . $caller);
+		//workerLog('enhanceMetadata(): current= ' . $current['file']);
+		//workerLog('enhanceMetadata(): session= ' . $_SESSION['currentfile']);
+		// only do this code block once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
-			$current['encoded'] = $flags == 'mediainfo' ? getEncodedAt($song, 'default') : '';
+			$current['encoded'] = getEncodedAt($song, 'default'); // encoded bit depth and sample rate, r44d1 rm conditional logic
 			session_start();
 			$_SESSION['currentfile'] = $current['file'];
 			$_SESSION['currentencoded'] = $current['encoded'];
@@ -2533,14 +2589,14 @@ function enhanceMetadata($current, $sock, $flags) {
 		}
 		//debugLog('enhanceMetadata(): File=' . $current['file']);
 		//debugLog('enhanceMetadata(): Encoded=' . $current['encoded']);
-	
+
 		// itunes aac or aiff file
 		$ext = getFileExt($song['file']);
 		if (isset($song['Name']) && ($ext == 'm4a' || $ext == 'aif' || $ext == 'aiff')) {
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name']; 
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
-			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']); 
+			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
 			//debugLog('enhanceMetadata(): iTunes AAC or AIFF file');
 		}
 		// radio station
@@ -2577,14 +2633,14 @@ function enhanceMetadata($current, $sock, $flags) {
 				// not in radio station table, use xmitted name or 'unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
 				$current['coverurl'] = DEF_RADIO_COVER;
-			}
-			
-		// song file or upnp url	
+			}			
 		}
+		// song file or upnp url	
 		else {
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = isset($song['Title']) ? $song['Title'] : pathinfo(basename($song['file']), PATHINFO_FILENAME);
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
+			$current['disc'] = isset($song['Disc']) ? $song['Disc'] : 'Disc tag missing'; // r44h add disc
 			$current['coverurl'] = substr($song['file'], 0, 4) == 'http' ? getUpnpCoverUrl() : '/coverart.php/' . rawurlencode($song['file']);
 			// in case 2 url's are returned
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
@@ -2600,4 +2656,181 @@ function enhanceMetadata($current, $sock, $flags) {
 	}
 	
 	return $current;
+}
+
+function getCoverHash($file, $ext) {
+	set_include_path('/var/www/inc');
+	$ext = getFileExt($file);
+
+	// PCM song files only
+	if (substr($file, 0, 4) != 'http' &&  $ext != 'dsf' && $ext != 'dff') {
+		session_start();
+		$search_pri = $_SESSION['library_covsearchpri'];
+		session_write_close();
+
+		$path = MPD_MUSICROOT . $file;
+		$hash = false;
+		//workerlog('getCoverHash(): path: ' . $path);
+	
+		// file: embedded cover
+		if ($search_pri == 'Embedded cover') { // embedded first
+			$hash = getHash($path);
+		}
+
+		if ($hash === false) {
+			if (is_dir($path)) {
+				// dir: cover image file
+				if (substr($path, -1) !== '/') {$path .= '/';}
+				$hash = parseDir($path);
+			}
+			else { 
+				// file: cover image file in containing dir
+				$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
+				$hash = parseDir($dirpath);
+			}
+			
+			if ($hash === false) {
+				if ($search_pri == 'Cover image file') { // embedded last
+					$hash = getHash($path);
+				}
+			}
+	
+			if ($hash === false) {
+				// nothing found
+				$hash = 'getCoverHash(): no cover found';
+			}
+		}
+	}
+	else {
+		//$hash = 'getCoverHash(): not a PCM file';
+		$hash = rand();
+	}
+
+	return $hash;
+}
+
+// modified versions of coverart.php functions 
+// (C) 2015 Andreas Goetz
+function rtnHash($mime, $hash) {
+	//workerLog('getCoverHash(): rtnHash(): ' . $mime . ', ' . strlen($hash) . ' bytes');
+	switch ($mime) {
+		case "image/gif":
+		case "image/jpg":
+		case "image/jpeg":
+		case "image/png":
+		case "image/tif":
+		case "image/tiff":
+			return $hash;
+		default :
+			break;
+	}
+
+	return false;
+}
+function getHash($path) {
+	//workerLog('getCoverHash(): getHash(): ' . $path);
+	if (!file_exists($path)) {
+		//workerLog('getCoverHash(): getHash(): ' . $path . ' (does not exist)');
+		return false;
+	}
+
+	$hash = false;
+	$ext = pathinfo($path, PATHINFO_EXTENSION);
+
+	switch (strtolower($ext)) {
+		// image file
+		case 'gif':
+		case 'jpg':
+		case 'jpeg':
+		case 'png':
+		case 'tif':
+		case 'tiff':
+			$stat = stat($path); // r44d
+			$hash = md5(file_get_contents($path, 1024) + $stat['size']); // r44a, r44d add size
+			break;
+
+		// embedded images			
+		case 'mp3':
+			require_once 'Zend/Media/Id3v2.php';
+			try {
+				$id3v2 = new Zend_Media_Id3v2($path, array('hash_only' => true));
+			
+				if (isset($id3v2->apic)) {
+					$hash = rtnHash($id3v2->apic->mimeType, $id3v2->apic->imageData);
+					//workerLog('getCoverHash(): Id3v2: apic->imageData: length: ' . strlen($id3->apic->imageData));
+				}
+			}
+			catch (Zend_Media_Id3_Exception $e) {
+				//workerLog('getCoverHash(): Zend media exception: ' . $e->getMessage()); 
+			}
+			break;
+
+		case 'flac':
+			require_once 'Zend/Media/Flac.php';
+			try {
+				$flac = new Zend_Media_Flac($path, $hash_only = true); // r44a
+
+				if ($flac->hasMetadataBlock(Zend_Media_Flac::PICTURE)) {
+					$picture = $flac->getPicture();
+					//workerLog('getCoverHash(): flac: getData(): length: ' . strlen($picture->getData()));
+					$hash = rtnHash($picture->getMimeType(), $picture->getData());
+				}
+			}
+			catch (Zend_Media_Flac_Exception $e) {
+				//workerLog('getCoverHash(): Zend media exception: ' . $e->getMessage()); 
+			}
+			break;
+
+        case 'm4a':
+            require_once 'Zend/Media/Iso14496.php';
+            try {
+                $iso14496 = new Zend_Media_Iso14496($path, array('hash_only' => true)); // r44a
+                $picture = $iso14496->moov->udta->meta->ilst->covr;
+                $mime = ($picture->getFlags() & Zend_Media_Iso14496_Box_Data::JPEG) == Zend_Media_Iso14496_Box_Data::JPEG
+                    ? 'image/jpeg'
+                    : (
+                        ($picture->getFlags() & Zend_Media_Iso14496_Box_Data::PNG) == Zend_Media_Iso14496_Box_Data::PNG
+                        ? 'image/png'
+                        : null
+                    );
+                if ($mime) {
+                    $hash = rtnHash($mime, md5($picture->getValue()));
+                }
+            }
+            catch (Zend_Media_Iso14496_Exception $e) {
+				//workerLog('getCoverHash(): Zend media exception: ' . $e->getMessage()); 
+            }
+            break;
+	}
+
+	return $hash;
+}
+function parseDir($path) {
+	//workerLog('getCoverHash(): parseDir(): ' . $path);
+	// default cover files
+	$covers = array(
+		'Cover.jpg', 'cover.jpg', 'Cover.jpeg', 'cover.jpeg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff',
+		'Folder.jpg', 'folder.jpg', 'Folder.jpeg', 'folder.jpeg', 'Folder.png', 'folder.png', 'Folder.tif', 'folder.tif', 'Folder.tiff', 'folder.tiff'
+	);
+	foreach ($covers as $file) {
+		$result = getHash($path . $file);
+		if ($result !== false) {
+			break;
+		}
+	}
+	// all other image files
+	$extensions = array('jpg', 'jpeg', 'png', 'tif', 'tiff');
+	$path = str_replace('[', '\[', $path);
+	$path = str_replace(']', '\]', $path);
+	foreach (glob($path . '*') as $file) {
+		//workerLog('getCoverHash(): parseDir(): glob' . $file);
+		if (is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $extensions)) {
+			$result = getHash($file);
+			if ($result !== false) {
+				break;
+			}
+		}
+	}
+
+	return $result;
 }
