@@ -24,7 +24,8 @@
  * - access-control-origin not needed
  * 2018-09-27 TC moOde 4.3
  * - handle worker.php not ready
- *
+ * 2018-10-19 TC moOde 4.3 update
+ * - chg mediainfo flag to engine_mpd
  */
  
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -85,7 +86,7 @@ if ($_GET['state'] == $current['state']) {
 
 // create enhanced metadata
 debugLog('engine-mpd: Generating enhanced metadata');
-$current = enhanceMetadata($current, $sock, 'mediainfo');
+$current = enhanceMetadata($current, $sock, 'engine_mpd_php'); // r44a
 
 debugLog('engine-mpd: Metadata returned to client: Size=(' . sizeof($current) . ')');
 

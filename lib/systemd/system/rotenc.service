@@ -1,5 +1,9 @@
 #
 # 2018-01-26 TC moOde 4.0
+# 2018-12-09 TC moOde 4.4
+# - rm LimitMEMLOCK
+# - use MPD defaults for RT: LimitRTPRIO, LimitRTTIME 
+# - improve some comments
 #
 
 [Unit]
@@ -7,13 +11,14 @@ Description=Moode Rotary Encoder Driver
 After=sound.target
 
 [Service]
-# Real-time / Low latency params
+# Useful commands
 # ps -e -o class,rtprio,pri,nice,cmd
-# for real-time scheduling policies the "nice" param is ignored and the pri column is not relevant
+# ps H -q `pidof -s rotenc` -o 'pid,tid,cls,rtprio,comm'
+# NOTE: the RTPRIO col applies to real-time scheduler policies, the NI (nice) and PRI columns are for non real-time policies
 
 # for rotenc process
-LimitRTPRIO=99
-LimitMEMLOCK=infinity
+LimitRTPRIO=50
+LimitRTTIME=infinity
 
 # scheduling policy
 # real-time

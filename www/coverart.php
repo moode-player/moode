@@ -34,6 +34,12 @@
  * - change glob to search only for image files
  * - use session vars for search pri and musicroot
  * - rep l/r bracket with backslash l/r bracket in path for glob
+ * 2018-10-19 TC moOde 4.3 update
+ * - add hash_only flag for Zend classes
+ * - deprecate Id3v1 since it does not support embedded images
+ * 2018-12-09 TC moOde 4.4
+ * - add logging to Zend exception blocks
+ * - deprecate code block that checked '?from=makeCoverUrl'
  *
  */
 
@@ -85,49 +91,41 @@ function getImage($path) {
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
 			try {
-				$id3 = new Zend_Media_Id3v2($path);
+				$id3v2 = new Zend_Media_Id3v2($path, array('hash_only' => false));
 
-				if (isset($id3->apic)) {
-					outImage($id3->apic->mimeType, $id3->apic->imageData);
+				if (isset($id3v2->apic)) {
+					//workerLog('coverart; mp3: id3v2: apic->imageData: length: ' . strlen($id3v2->apic->imageData));
+					outImage($id3v2->apic->mimeType, $id3v2->apic->imageData);
 				}
 			}
 			catch (Zend_Media_Id3_Exception $e) {
-				//workerLog('coverart: Zend media exception: ' . $e->getMessage()); 
-			}
-
-			require_once 'Zend/Media/Id3v1.php';
-			try {
-				$id3 = new Zend_Media_Id3v1($path);
-
-				if (isset($id3->apic)) {
-					outImage($id3->apic->mimeType, $id3->apic->imageData);
-				}
-			}
-			catch (Zend_Media_Id3_Exception $e) {
-				//workerLog('coverart: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: mp3: ' . $path); 
+				workerLog('coverart: mp3: Zend media exception: ' . $e->getMessage()); 
 			}
 			break;
 
 		case 'flac':
 			require_once 'Zend/Media/Flac.php';
 			try {
-				$flac = new Zend_Media_Flac($path);
+				$flac = new Zend_Media_Flac($path, $hash_only = false); // r44a
 
 				if ($flac->hasMetadataBlock(Zend_Media_Flac::PICTURE)) {
 					$picture = $flac->getPicture();
+					//workerLog('coverart; flac: getData(): length: ' . strlen($picture->getData()));
 					outImage($picture->getMimeType(), $picture->getData());
 				}
 			}
 			catch (Zend_Media_Flac_Exception $e) {
-				//workerLog('coverart: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: flac: ' . $path); 
+				workerLog('coverart: flac: Zend media exception: ' . $e->getMessage()); 
 			}
 			break;
 
         case 'm4a':
             require_once 'Zend/Media/Iso14496.php';
             try {
-                $id3 = new Zend_Media_Iso14496($path);
-                $picture = $id3->moov->udta->meta->ilst->covr;
+                $iso14496 = new Zend_Media_Iso14496($path, array('hash_only' => false)); // r44a
+                $picture = $iso14496->moov->udta->meta->ilst->covr;
                 $mime = ($picture->getFlags() & Zend_Media_Iso14496_Box_Data::JPEG) == Zend_Media_Iso14496_Box_Data::JPEG
                     ? 'image/jpeg'
                     : (
@@ -140,7 +138,8 @@ function getImage($path) {
                 }
             }
             catch (Zend_Media_Iso14496_Exception $e) {
-				//workerLog('coverart: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: m4a: ' . $path); 
+				workerLog('coverart: m4a: Zend media exception: ' . $e->getMessage()); 
             }
             break;
 	}
@@ -186,7 +185,7 @@ function parseFolder($path) {
 session_id(playerSession('getsessionid'));
 session_start();
 $search_pri = $_SESSION['library_covsearchpri'];
-$musicroot_ext = $_SESSION['musicroot_ext'];
+$musicroot_ext = $_SESSION['musicroot_ext']; // $GLOBALS['musicroot_ext']
 session_write_close();
 //workerLog('coverart: $search_pri=' . $search_pri);
 //workerLog('coverart: $musicroot_ext=' . $musicroot_ext);
@@ -198,12 +197,19 @@ $path = isset($options['p']) ? $options['p'] : (isset($options['path']) ? $optio
 if (null === $path) {
 	$self = $_SERVER['SCRIPT_NAME'];
 	$path = urldecode($_SERVER['REQUEST_URI']);
+	// strip script name if called as /coverart.php/path/to/file
 	if (substr($path, 0, strlen($self)) === $self) {
-		// strip script name if called as /coverart.php/path/to/file
 		$path = substr($path, strlen($self)+1);
 	}
 	$path = MPD_MUSICROOT . $path;
 }
+
+/* r44h deprecate
+// r44a strip argument if called from Lib panel makeCoverUrl()
+$pos = strpos($path, '?from=makeCoverUrl');
+$path = $pos === false ? $path : substr($path, 0, $pos);
+//workerLog('coverart: $path=' . $path);
+*/
 
 // file: embedded cover
 if ($search_pri == 'Embedded cover') { // embedded first

@@ -43,6 +43,14 @@ require_once 'Zend/Io/Reader.php';
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Flac.php 251 2011-06-13 15:41:51Z svollbehr $
  */
+
+/**
+ * 2018-10-19 TC moOde 4.3 update
+ * - add hash_only option
+ * 2018-12-09 TC moOde 4.4
+ * - add failsafe to prevent corrupt header from causing endless loop
+ */
+
 final class Zend_Media_Flac
 {
     /** The streaminfo metadata block */
@@ -83,7 +91,7 @@ final class Zend_Media_Flac
      * @throws Zend_Io_Exception if an error occur in stream handling.
      * @throws Zend_Media_Flac_Exception if an error occurs in vorbis bitstream reading.
      */
-    public function __construct($filename)
+    public function __construct($filename, $hash_only) // r44a
     {
         if ($filename instanceof Zend_Io_Reader) {
             $this->_reader = &$filename;
@@ -100,16 +108,32 @@ final class Zend_Media_Flac
         }
 
         $capturePattern = $this->_reader->read(4);
+
+		/*// r44d DEBUG
+		$msg = 'flac header: first 4 bytes are (' . $capturePattern . ')';
+		$fh = fopen('/var/log/moode.log', 'a');
+		fwrite($fh, date('Ymd His ') . $msg . "\n");
+		fclose($fh);*/
+
         if ($capturePattern != 'fLaC') {
             require_once 'Zend/Media/Flac/Exception.php';
             throw new Zend_Media_Flac_Exception('Not a valid FLAC bitstream');
         }
+
+		// r44d failsafe to prevent corrupt header from causing endless loop
+		$count = 1;
 
         while (true) {
             $offset = $this->_reader->getOffset();
             $last = ($tmp = $this->_reader->readUInt8()) >> 7 & 0x1;
             $type = $tmp & 0x7f;
             $size = $this->_reader->readUInt24BE();
+
+			/*// r44d DEBUG
+			$msg = 'flac header: metadata block (' . $type . ')';
+			$fh = fopen('/var/log/moode.log', 'a');
+			fwrite($fh, date('Ymd His ') . $msg . "\n");
+			fclose($fh);*/
 
             $this->_reader->setOffset($offset);
             switch ($type) {
@@ -139,7 +163,7 @@ final class Zend_Media_Flac
                 break;
             case self::PICTURE:        // 6
                 require_once 'Zend/Media/Flac/MetadataBlock/Picture.php';
-                $this->_metadataBlocks[] = new Zend_Media_Flac_MetadataBlock_Picture($this->_reader);
+                $this->_metadataBlocks[] = new Zend_Media_Flac_MetadataBlock_Picture($this->_reader, $hash_only); // r44a
                 break;
             default:
                 // break intentionally omitted
@@ -150,6 +174,12 @@ final class Zend_Media_Flac
             if ($last === 1) {
                 break;
             }
+
+			// r44d exit loop if > 7 iterations
+			$count++;
+			if ($count > 7) {
+                break;
+			}
         }
     }
 

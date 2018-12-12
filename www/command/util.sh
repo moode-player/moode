@@ -23,7 +23,11 @@
 # - add clearbrcache
 # 2018-09-27 TC moOde 4.3
 # - add mpd db update and lib cache reset to samba add/remove share blocks
+# 2018-10-19 TC moOde 4.3 update
+# - add usb_auto_updatedb setting check to smb add/remove
 #
+
+SQLDB=/var/local/www/db/moode-sqlite3.db
 
 if [[ $1 = "set-timezone" ]]; then
 	timedatectl set-timezone "$2"
@@ -226,8 +230,12 @@ if [[ $1 = "smbadd" ]]; then
 		sed -i "$ a[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
 		systemctl restart smbd
 		systemctl restart nmbd
-		mpc update USB
-		truncate /var/local/www/libcache.json --size 0
+		# r44a
+		RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
+		if [[ $RESULT = "1" ]]; then
+			mpc update USB
+			truncate /var/local/www/libcache.json --size 0
+		fi
 	fi
 	exit
 fi
@@ -236,8 +244,12 @@ if [[ $1 = "smbrem" ]]; then
 	sed -i "/$(basename "$2")]/,/guest/ d" /etc/samba/smb.conf
 	systemctl restart smbd
 	systemctl restart nmbd
-	mpc update USB
-	truncate /var/local/www/libcache.json --size 0
+	# r44a
+	RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
+	if [[ $RESULT = "1" ]]; then
+		mpc update USB
+		truncate /var/local/www/libcache.json --size 0
+	fi
     exit
 fi
 

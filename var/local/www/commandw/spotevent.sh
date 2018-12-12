@@ -18,6 +18,8 @@
 #
 # 2018-09-27 TC moOde 4.3
 # - initial version
+# 2018-12-09 TC moOde 4.4
+# - use GNU command syntax for vol.sh
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -53,7 +55,7 @@ if [[ $PLAYER_EVENT == "stop" ]]; then
 	fi
 	
 	# restore volume
-	/var/www/vol.sh restore
+	/var/www/vol.sh -restore
 	
 	# resume playback if indicated
 	if [[ $RSMAFTERSPOT == "Yes" ]]; then

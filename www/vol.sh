@@ -17,8 +17,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2018-01-26 TC moOde 4.0
-# 2018-04-02 TC moOde 4.1 remove vol warning
+# 2018-04-02 TC moOde 4.1 
+# - remove vol warning
+# 2018-12-09 TC moOde 4.4
+# - convert to GNU command syntax but still support the original options
+# - make REGEX more restrictive
+# - improve argument error checking
 #
+
+VER="4.4"
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
@@ -27,10 +34,25 @@ if [[ -z $1 ]]; then
 	exit 0
 fi
 
-if [[ $1 = "-help" ]]; then
-	echo "vol.sh with no arguments will print the current volume level"
-	echo "vol.sh restore will set alsa/mpd volume based on current knob setting"
-	echo "vol.sh <level between 0-100>, mute (toggle), up <step> or dn <step>, -help"
+if [[ $1 = "--help" ]]; then
+echo -e "Usage: vol.sh [OPTION] [VOLUME]
+Change the volume and update the knob.
+
+With no OPTION or VOLUME, print the current volume.
+With just VOLUME, set current volume to VOLUME.
+
+ -up\t\tVOLUME	value between 1 and 100
+ -dn\t\tVOLUME	value between 1 and 100
+ -mute\t\tmute or unmute the volume
+ -restore\tset volume to current knob volume
+ --version\tprint the program version
+ --help\t\tprint this help text"
+
+	exit 1
+fi
+
+if [[ $1 = "--version" ]]; then
+	echo "Version: "$VER
 	exit 1
 fi
 
@@ -46,10 +68,10 @@ MPDMIXER=${arr[4]}
 CARDNUM=${arr[5]}
 # cardnum 0 = i2s or onboard, cardnum 1 = usb 
 
-REGEX='^[+-]?[0-9]+$'
+REGEX='^[0-9]+$'
 
-# mute toggle
-if [[ $1 = "mute" ]]; then
+# parse OPTIONS
+if [[ $1 = "-mute" || $1 = "mute" ]]; then
 	if [[ $VOLMUTE = "1" ]]; then
 		sqlite3 $SQLDB "update cfg_system set value='0' where id='33'"
 		VOLMUTE=0
@@ -59,22 +81,30 @@ if [[ $1 = "mute" ]]; then
 		VOLMUTE=1
 	fi
 else
-	# restore alsa/mpd volume
-	if [[ $1 = "restore" ]]; then
+	if [[ $1 = "-restore" || $1 = "restore" ]]; then
 		LEVEL=$VOLKNOB
-	# volume step
-	elif [[ $1 = "up" ]]; then
-		LEVEL=$(($VOLKNOB + $2))
-	elif [[ $1 = "dn" ]]; then
-		LEVEL=$(($VOLKNOB - $2))
-	# volume level
+	elif [[ $1 = "-up" || $1 = "up" ]]; then
+		if ! [[ $2 =~ $REGEX ]]; then
+			echo "VOLUME must only contain digits 0-9"
+			exit 1
+		else
+			LEVEL=$(($VOLKNOB + $2))
+		fi
+	elif [[ $1 = "-dn" || $1 = "dn" ]]; then
+		# volume down step
+		if ! [[ $2 =~ $REGEX ]]; then
+			echo "VOLUME must only contain digits 0-9"
+			exit 1
+		else
+			LEVEL=$(($VOLKNOB - $2))
+		fi
 	else
 		LEVEL=$1
 	fi
 
 	# numeric check
 	if ! [[ $LEVEL =~ $REGEX ]]; then
-		echo "Level must only contain digits 0-9"
+		echo "Invalid OPTION or VOLUME not numeric"
 		exit 1
 	fi
 	

@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # 2018-07-11 TC moOde 4.2
+# 2018-12-09 TC moOde 4.4
+# - use GNU command syntax for vol.sh
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -34,7 +36,7 @@ if [[ $WRKREADY == "1" ]]; then
 	if [[ $1 = "0" ]] ; then
 		echo Power off
 		$(sqlite3 $SQLDB "update cfg_system set value='0' where param='slactive'")
-		/var/www/vol.sh restore
+		/var/www/vol.sh -restore
 		if [[ $RSMAFTERSL == "Yes" ]]; then
 			/usr/bin/mpc play > /dev/null
 		fi

@@ -30,6 +30,13 @@
  * - chg Can't to Cannot in notify msg
  * 2018-09-27 TC moOde 4.3
  * - change df command to use /dev/root instead of just root
+ * 2018-10-19 TC moOde 4.3 update
+ * - rm download image builder
+ * - add help text under install/view update
+ * - eth port fix setting
+ * 2018-12-09 TC moOde 4.4
+ * - bump duration to 60 for update completion msg 
+ * - change from Pi-3B to Pi-3 when checking 'hdwrrev' to cover 3B, 3B+ and 3A+
  *
  */
 
@@ -48,14 +55,17 @@ if (isset($_POST['checkfor_update'])) {
 
 	// up to date
 	if ($available['pkgdate'] == $lastinstall['pkgdate']) {
+	//if ($available['pkgdate'] != $lastinstall['pkgdate']) { // set to != for testing
 		$_available_upd = 'Software is up to date<br>';
 	}
 	else {
-		// available
+		// update available 
 		$_available_upd .= '<u><em>Available</u></em><br>';
 		$_available_upd .= $available['pkgdate'] == 'None' ? $available['pkgdate'] . '<br>' : 'Package date: ' . $available['pkgdate'] . 
-			'<button class="btn btn-primary btn-small set-button" type="submit" name="install_update" value="1">Install</button>' .
-			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>';
+		//$_available_upd .= $available['pkgdate'] != 'None' ? $available['pkgdate'] . '<br>' : 'Package date: ' . $available['pkgdate'] .  // set to != for testing
+			'<button class="btn btn-primary btn-small set-button" id="install-update" type="submit" name="install_update" value="1">Install</button>' .
+			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>' . 
+			'<span class="help-block-configs help-block-margin">Installation progress can be monitored via the SSH cmd: moodelog -u</span>'; //r44a
 
 		$_pkg_description = $available['pkgdesc'];
 		$cnt = $available['linecnt'];
@@ -68,13 +78,6 @@ if (isset($_POST['checkfor_update'])) {
 		$_lastinstall_upd .= $lastinstall['pkgdate'] == 'None' ? $lastinstall['pkgdate'] : 'Package date: ' . $lastinstall['pkgdate'];
 		$_lastinstall_upd .= '<br>';
 	}
-}
-
-// download Moode OS Image Builder
-if (isset($_POST['dnld_mosbuild'])) {
-	sysCmd('wget -q ' . $_SESSION['res_software_upd_url'] . '/mos/mosbuild.sh -O /home/pi/mosbuild.sh');
-	sysCmd('chmod +x /home/pi/mosbuild.sh');
-	$_SESSION['notify']['title'] = 'Download complete';
 }
 
 // install software update
@@ -99,7 +102,7 @@ if (isset($_POST['install_update'])) {
 			$_SESSION['notify']['duration'] = 20;
 		}
 		else {
-			submitJob('installupd', '', 'Software update installed', 'Reboot required', 20);
+			submitJob('installupd', '', 'Software update installed', 'Reboot required', 60);
 			$_available_upd = 'Software is up to date<br>';
 			$_lastinstall_upd = '';
 		}
@@ -192,9 +195,18 @@ if (isset($_POST['maxusbcurrent']) && $_POST['maxusbcurrent'] != $_SESSION['maxu
 // uac2 fix
 if (isset($_POST['update_uac2fix'])) {
 	if (isset($_POST['uac2fix']) && $_POST['uac2fix'] != $_SESSION['uac2fix']) {
-		$title = $_POST['uac2fix'] == 1 ? 'USB(UAC2) fix enabled' : 'USB(UAC2) fix disabled';
+		$title = $_POST['uac2fix'] == 1 ? 'USB(UAC2) fix on' : 'USB(UAC2) fix off';
 		submitJob('uac2fix', $_POST['uac2fix'], $title, 'Reboot required');
 		playerSession('write', 'uac2fix', $_POST['uac2fix']);
+	} 
+}
+
+// eth port fix
+if (isset($_POST['update_eth_port_fix'])) {
+	if (isset($_POST['eth_port_fix']) && $_POST['eth_port_fix'] != $_SESSION['eth_port_fix']) {
+		$_SESSION['notify']['title'] = $_POST['eth_port_fix'] == 1 ? 'Ethernet port fix on' : 'Ethernet port fix off';
+		$_SESSION['notify']['msg'] = 'Reboot required';
+		playerSession('write', 'eth_port_fix', $_POST['eth_port_fix']);
 	} 
 }
 
@@ -325,7 +337,7 @@ if (isset($_POST['debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
 
 session_write_close();
 
-// GEBERAL
+// GENERAL
 
 $_timezone['timezone'] = buildTimezoneSelect($_SESSION['timezone']);
 $_select['hostname'] = $_SESSION['hostname'];
@@ -339,7 +351,7 @@ $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == '
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
 
 // wifi bt 
-if (substr($_SESSION['hdwrrev'], 0, 5) == 'Pi-3B' || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') {
+if (substr($_SESSION['hdwrrev'], 0, 4) == 'Pi-3' || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') { // r44f change from Pi-3B to Pi-3 to cover 3B, 3B+ and 3A+
 	$_wifibt_hide = '';
 	$_select['p3wifi1'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['p3wifi0'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi2\" value=\"0\" " . (($_SESSION['p3wifi'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -359,7 +371,7 @@ $_select['eth0chk1'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0c
 $_select['eth0chk0'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
 // max usb current 2x
-if (substr($_SESSION['hdwrrev'], 0, 5) != 'Pi-3B' && substr($_SESSION['hdwrrev'], 0, 7) != 'Pi-Zero') {
+if (substr($_SESSION['hdwrrev'], 0, 4) != 'Pi-3' && substr($_SESSION['hdwrrev'], 0, 7) != 'Pi-Zero') { // r44f change from Pi-3B to Pi-3 to cover 3B, 3B+ and 3A+
 	$_maxcurrent_hide = '';
 	$_select['maxusbcurrent1'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent1\" value=\"1\" " . (($_SESSION['maxusbcurrent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['maxusbcurrent0'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent2\" value=\"0\" " . (($_SESSION['maxusbcurrent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -368,9 +380,19 @@ else {
 	$_maxcurrent_hide = 'hide';
 }
 
-// uac2 fix
+// usb (uac2) fix
 $_select['uac2fix1'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix1\" value=\"1\" " . (($_SESSION['uac2fix'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix2\" value=\"0\" " . (($_SESSION['uac2fix'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+
+// eth port fix
+if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+') {
+	$_eth_port_fix_hide = '';
+	$_select['eth_port_fix1'] = "<input type=\"radio\" name=\"eth_port_fix\" id=\"toggle_eth_port_fix0\" value=\"1\" " . (($_SESSION['eth_port_fix'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+	$_select['eth_port_fix0'] = "<input type=\"radio\" name=\"eth_port_fix\" id=\"toggle_eth_port_fix1\" value=\"0\" " . (($_SESSION['eth_port_fix'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+}
+else {
+	$_eth_port_fix_hide = 'hide';
+}
 
 // android 'add to home'
 $result = sysCmd('grep "add2home_off" /var/local/www/header.php');
@@ -384,7 +406,7 @@ $result = sysCmd("df | grep root | awk '{print $2}'");
 $_expandrootfs_msg = $result[0] > 3000000 ? 'File system has been expanded' : 'File system has not been expanded yet'; 
 
 // usb boot
-if (substr($_SESSION['hdwrrev'], 0, 5) == 'Pi-3B') {
+if (substr($_SESSION['hdwrrev'], 0, 4) == 'Pi-3') { // r44f change from Pi-3B to Pi-3 to cover 3B, 3B+ and 3A+
 	$_usbboot_hide = '';
 	$_select['usbboot1'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot1\" value=\"1\" " . ">\n";
 	$_select['usbboot0'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot2\" value=\"0\" " . "checked=\"checked\"".">\n";
@@ -397,7 +419,6 @@ else {
 }
 
 // mpd engine timeout
-// chg mpdtimeout to engine_mpd_sock_timeout in $_SESSION
 $_select['mpdtimeout'] .= "<option value=\"600000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '600000') ? "selected" : "") . ">Never</option>\n";
 $_select['mpdtimeout'] .= "<option value=\"18000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '18000') ? "selected" : "") . ">5 Hours</option>\n";
 $_select['mpdtimeout'] .= "<option value=\"3600\" " . (($_SESSION['engine_mpd_sock_timeout'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";

@@ -39,6 +39,15 @@
 # - cfg_system column adds
 # - support arm64 (@jesset)
 # - spotify
+# 2018-10-19 TC moOde 4.3 update
+# - add on/off for spotifysvc
+# - add cover backdrop, blur and scale settings
+# - add eth port fix setting and speed
+# 2018-12-09 TC moOde 4.4
+# - new clock radio sql cols
+# - add compilation rollup and compilation_excludes
+# - chg iface from on-board to SoC
+# - add Pi-3A+ to wifi bt 
 #
 
 FREQ() { 
@@ -76,8 +85,6 @@ AUDIO() {
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
 	[[ "$BITS" = "" ]] && OUTSTREAM="Closed" || OUTSTREAM="$BITS / $RATE"
 
-	#ALSAVER="$(dpkg -l | awk '/libasound2:armhf/ { print  $3 }')"
-	#SOXVER="$(dpkg -l | awk '/libsoxr0:armhf/ { print  $3 }')"
 	# support arm64
 	ALSAVER="$(dpkg -l | awk '/libasound2:/ { print  $3 }')"
  	SOXVER="$(dpkg -l | awk '/libsoxr0:/ { print  $3 }')"
@@ -89,7 +96,7 @@ AUDIO() {
 	fi
 
 	if [[ $i2sdevice = "none" ]]; then
-		[[ $device = "1" ]] && iface="USB" || iface="On-board"
+		[[ $device = "1" ]] && iface="USB" || iface="SoC"
 	else
 		iface="I2S"
 	fi
@@ -107,9 +114,14 @@ AUDIO() {
 	echo -e "\n\tPlayback history\t= $playhist\c"
 	echo -e "\n\tExtra metadata\t\t= $xtagdisp\c"
 	echo -e "\n\tArtist list order\t= $libartistcol\c"
+	echo -e "\n\tCompilation rollup\t= $compilation_rollup\c"
+	echo -e "\n\tCompilation excludes\t= $compilation_excludes\c"
 	echo -e "\n\tCover search pri\t= $library_covsearchpri\c"
 	echo -e "\n\tHi-res covers\t\t= $library_hiresthm\c"
-	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\n"
+	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\c"
+	echo -e "\n\tCover backdrop\t\t= $cover_backdrop\c"
+	echo -e "\n\tCover blur\t\t= $cover_blur\c"
+	echo -e "\n\tCover scale\t\t= $cover_scale\n"
 
 	echo -e "\t  A U D I O    P A R A M E T E R S  \n"
 	echo -e "\tAudio device\t\t= $audiodevname\c"
@@ -380,13 +392,13 @@ kernelver=${arr[14]}
 mpdver=${arr[15]}
 procarch=${arr[16]}
 adevname=${arr[17]}
-ckrad=${arr[18]}
-ckraditem=${arr[19]}
-ckradname=${arr[20]}
-ckradstart=${arr[21]}
-ckradstop=${arr[22]}
-ckradvol=${arr[23]}
-ckradshutdn=${arr[24]}
+clkradio_mode=${arr[18]}
+clkradio_item=${arr[19]}
+clkradio_name=${arr[20]}
+clkradio_start=${arr[21]}
+clkradio_stop=${arr[22]}
+clkradio_volume=${arr[23]}
+clkradio_shutdown=${arr[24]}
 playhist=${arr[25]}
 phistsong=${arr[26]}
 reserved28=${arr[27]}
@@ -436,7 +448,7 @@ rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
 alsaequal=${arr[72]}
 eqfa4p=${arr[73]}
-if [[ $hdwrrev = "Pi-3B+ 1GB v1.3" || $hdwrrev = "Pi-3B 1GB v1.2" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
+if [[ $hdwrrev = "Pi-3B+ 1GB v1.3" || $hdwrrev = "Pi-3B 1GB v1.2" || $hdwrrev = "Pi-3A+ 512 MB v1.0" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
 	[[ "${arr[74]}" = "1" ]] && p3wifi="On" || p3wifi="Off"
 	[[ "${arr[75]}" = "1" ]] && p3bt="On" || p3bt="Off"
 else
@@ -467,13 +479,19 @@ wrkready=${arr[96]}
 scnsaver_timeout=${arr[97]}
 compilation_excludes=${arr[98]}
 favorites_name=${arr[99]}
-spotifysvc=${arr[100]}
+[[ "${arr[100]}" = "1" ]] && spotifysvc="On" || spotifysvc="Off"
 spotifyname=${arr[101]}
 spotactive=${arr[102]}
 rsmafterspot=${arr[103]}
 library_covsearchpri=${arr[104]}
 library_hiresthm=${arr[105]}
 library_pixelratio=${arr[106]}
+[[ "${arr[107]}" = "1" ]] && usb_auto_updatedb="On" || usb_auto_updatedb="Off"
+cover_backdrop=${arr[108]}
+cover_blur=${arr[109]}
+cover_scale=${arr[110]}
+[[ "${arr[111]}" = "1" ]] && eth_port_fix="On" || eth_port_fix="Off"
+compilation_rollup=${arr[112]}
 
 MODEL=${hdwrrev:0:5}
 if [ $MODEL = Pi-3B ]; then
@@ -542,6 +560,7 @@ echo "
 	ETH0 CHECK	= $eth0chk
 	MAX USB CUR	= $maxusbcurrent
 	UAC2 FIX	= $uac2fix
+	ETHPORT FIX	= $eth_port_fix
 	SSH server	= $shellinabox
 
 	LED0		= $LED0

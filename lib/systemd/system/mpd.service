@@ -1,5 +1,9 @@
 #
 # 2018-01-26 TC moOde 4.0
+# 2018-12-09 TC moOde 4.4
+# - rm LimitMEMLOCK
+# - use MPD defaults for RT: LimitRTPRIO, LimitRTTIME 
+# - improve some comments
 #
 
 [Unit]
@@ -7,26 +11,27 @@ Description=Music Player Daemon
 After=network.target sound.target
 
 [Service]
-# Real-time / Low latency params
+# Useful commands
 # ps -e -o class,rtprio,pri,nice,cmd
-# for real-time scheduling policies the "nice" param is ignored and the pri column is not relevant
+# ps H -q `pidof -s mpd` -o 'pid,tid,cls,rtprio,comm'
+# NOTE: the RTPRIO col applies to real-time scheduler policies, the NI (nice) and PRI columns are for non real-time policies
 
-# for mpd output thread
-LimitRTPRIO=99
-LimitMEMLOCK=infinity
+# r44d allow MPD to use real-time priority 50
+LimitRTPRIO=50
+LimitRTTIME=infinity
 
-# scheduling policy
+# Scheduling policy
 # real-time
-# - fifo, first in first out
-# - rr, round robin
+# - fifo, first in first out (FF in ps)
+# - rr, round robin (RR in ps)
 # static
-# - other, the standard round-robin time-sharing (ts) policy
+# - other, the standard round-robin time-sharing policy (TS in ps)
 # - batch, for "batch" style execution of processes
-# - idle, for running very low priority background jobs
+# - idle, for running very low priority background jobs (IDL in ps)
 CPUSchedulingPolicy=other
 
-# scheduling priority
-# 1 = lowest, 99 = highest)
+# scheduling priority (only applies if using rr or fifo policies)
+# 1 = lowest, 99 = highest, limited by LimitRTPRIO
 CPUSchedulingPriority=43
 
 # scheduling priority adjustment

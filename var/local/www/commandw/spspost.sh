@@ -20,6 +20,8 @@
 # 2018-07-11 TC moOde 4.2
 # - minor format cleanup
 # - update to vol.sh restore
+# 2018-12-09 TC moOde 4.4
+# - use GNU command syntax for vol.sh
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -43,7 +45,7 @@ if [[ $MPDMIXER == "software" || $MPDMIXER == "disabled" ]]; then
 fi
 
 # restore volume
-/var/www/vol.sh restore
+/var/www/vol.sh -restore
 
 # resume playback if indicated
 if [[ $RSMAFTERAPL == "Yes" ]]; then

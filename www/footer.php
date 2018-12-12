@@ -47,6 +47,13 @@
  * - favorites feature
  * - album cover view
  * - spotify
+ * 2018-10-19 TC moOde 4.3 update
+ * - album cover backdrop
+ * 2018-12-09 TC moOde 4.4
+ * - add days to Clock radio
+ * - add compilation rollup and compilation excludes to Customize
+ * - auto and manual hires thumbnail settings
+ * - bump release and date
  *
  */
 -->
@@ -59,7 +66,7 @@
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>			
 			<ul>
-				<li>Release: 4.3 2018-09-27 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
+				<li>Release: 4.4 2018-12-09 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
@@ -155,11 +162,11 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-play-history" class="help-block hide">
-	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
+	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.<br>
 	                    </span>
 	                </div>					
 
-   	                <label class="control-label" for="extratag-display">Display extra metadata</label>
+   	                <label class="control-label" for="extratag-display">Show extra metadata</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -247,8 +254,39 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-library-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-library-artist" class="help-block hide">
-	                    	Use the Artist or AlbumArtist tag for ordering the Library Artists list.<br>
+	                    	Use Artist or AlbumArtist tag for populating the Library Artists list.<br>
 	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="library-comp-rollup">Compilation rollup</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-comp-rollup" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-comp-rollup-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-comp-rollup-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-library-comp-rollup" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-comp-rollup" class="help-block hide">
+							Automatically rollup albums with same album name but different artists into a single compilation album.<br>
+						</span>
+	                </div>
+
+	                <label class="control-label" for="library-comp-excludes">Compilation excludes</label>
+	                <div class="controls">
+	                    <input id="library-comp-excludes" class="input-xlarge input-height-x" type="text">
+						<a class="info-toggle" data-cmd="info-library-comp-excludes" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-comp-excludes" class="help-block hide">
+							Comma separated list of album names that are excluded from Compilation rollup.<br>
+						</span>
 	                </div>
 
    	                <label class="control-label" for="library-utf8rep">UTF8 character filter</label>
@@ -270,7 +308,7 @@
 						<a class="info-toggle" data-cmd="info-library-utf8rep" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-library-utf8rep" class="help-block hide">
 							Many Chinese songs and song directories have characters that are not UTF8 encoded causing the Library loader to fail. Replacing the non-UTF8 characters with a UTF8 compliant character solves this problem.<br>
-							NOTE: setting this to Yes may impact the performance of the Library loader.
+							NOTE: setting this to Yes may impact the performance of the Library loader.<br>
 						</span>
 	                </div>
 
@@ -283,17 +321,14 @@
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-hiresthm-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-hiresthm-yn"><span class="text">No</span></a></li>
-								</ul>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="library-hiresthm-list" class="dropdown-menu custom-select inner" role="menu"></ul> <!-- r44d -->
 							</div>
 						</div>
 						<a class="info-toggle" data-cmd="info-library-hiresthm" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-library-hiresthm" class="help-block hide">
-							Tell the thumbnail generator to output high-resolution images suitable for high DPI (Retina) screens.<br>
-							NOTE: this may result in slower loading of thumbnail images into the Album Cover panel.
+							Tell the thumbnail generator to output high-resolution images suitable for large displays or high DPI (Retina) screens. The Auto setting will use the device's pixel ratio to determine an optimum image size and quality while maintaining the smallest file size. Manual settings will result in images of the specified size using a quality factor of 75.<br>
+							NOTE: larger images may result in slower loading of thumbnail images into the Album Cover panel.<br>
 						</span>
 	                </div>
 
@@ -321,7 +356,7 @@
 	            </div>
 	    	</fieldset>
 
-			<h5>Theme and background</h5>
+			<h5>Theme and backrounds</h5>
 	    	<fieldset>
 				<div class="control-group">
    	                <label class="control-label" for="theme-name">Theme</label>
@@ -381,7 +416,7 @@
 	                    </span>
 	                </div>
 
-   	                <label class="control-label" for="adaptive-enabled">Adaptive background</label>
+   	                <label class="control-label" for="adaptive-enabled">Adaptive coloring</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -399,25 +434,86 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-adaptive" class="help-block hide">
-	                    	Sets the Playback panel color based on the dominant color in the album artwork.<br>
+	                    	Sets the Playback panel color scheme based on the dominant color in the album artwork.<br>
 	                    </span>
 	                </div>
 
-					<label class="control-label" for="choose-file">Background image</label>
+					<label class="control-label" for="choose-file">Image backdrop</label>
 					<div class="controls">
 						<div style="display:inline-block;">
 							<label for="import-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</label>
 							<input type="file" id="import-bgimage" accept="image/jpeg" style="display:none" onchange="importBgImage(this.files)">
 							<br>
-							<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Remove</button> 
+							<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; margin-bottom:.5em;color: #333;">Remove</button> 
 						</div>
 						<div id="current-bgimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
 						<a class="info-toggle" id="info-toggle-bgimage" data-cmd="info-bgimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<div id="error-bgimage"></div>
 						<div id="info-bgimage" class="help-block hide">
-							Sets the background to a JPEG image<br>
+							Sets the backdrop to the choosen JPEG image<br>
 						</div>
 					</div>
+
+   	                <label class="control-label" for="cover-backdrop-enabled">Cover backdrop</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="cover-backdrop-enabled" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-backdrop-enabled-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-backdrop-enabled-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-cover-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-cover-backdrop" class="help-block hide">
+	                    	Sets the backdrop to the currently displayed album cover.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="cover-blur">Cover blur</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="cover-blur" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="cover-blur-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-cover-blur" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-cover-blur" class="help-block hide">
+	                    	Sets the amount of blur to apply to the cover backdrop.<br>
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="cover-scale">Cover scale</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="cover-scale" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open"> <!-- list generated in playerlib.js -->
+								<ul id="cover-scale-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+							</div>
+						</div>
+						<a class="info-toggle" data-cmd="info-cover-scale" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-cover-scale" class="help-block hide">
+	                    	Increases the size of the cover backdrop.<br>
+	                    </span>
+	                </div>
+
 				</div>
 	    	</fieldset>
 
@@ -439,21 +535,21 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-device-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-device-name" class="help-block hide">
-	                    	Select a device to have its description show on Audio info. I2S devices are automatically populated from System config. If device is not listed select "USB audio device".
+	                    	Select a device to have its description show on Audio info. I2S devices are automatically populated from System config. If device is not listed select "USB audio device".<br>
 	                    </span>
 	                </div>
 					
 	                <label class="control-label" for="audio-device-dac">Chip</label>
 	                <div class="controls">
-	                    <input id="audio-device-dac" class="input-xlarge" type="text" name="audio_device_dac" value="" readonly>
+	                    <input id="audio-device-dac" class="input-xlarge input-height-x" type="text" name="audio_device_dac" value="" readonly>
 	                </div>
 	                <label class="control-label" for="audio-device-arch">Architecture</label>
 	                <div class="controls">
-	                    <input id="audio-device-arch" class="input-xlarge" type="text" name="audio_device_arch" value="" readonly>
+	                    <input id="audio-device-arch" class="input-xlarge input-height-x" type="text" name="audio_device_arch" value="" readonly>
 	                </div>
 	                <label class="control-label" for="audio-device-iface">Interface</label>
 	                <div class="controls">
-	                    <input id="audio-device-iface" class="input-xlarge" type="text" name="audio_device_iface" value="" readonly>
+	                    <input id="audio-device-iface" class="input-xlarge input-height-x" type="text" name="audio_device_iface" value="" readonly>
 	                </div>
 	            </div>
 	    	</fieldset>
@@ -476,28 +572,32 @@
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group">
-	                <label class="control-label" for="clockradio-enabled">Enabled</label>
+	                <label class="control-label" for="clockradio-mode">Mode</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select" style="width: 120px;"> <!-- handler in playerlib.js -->
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="clockradio-enabled" class="filter-option pull-left">
+								<div id="clockradio-mode" class="filter-option pull-left">
 									<span></span> <!-- selection from dropdown gets placed here -->
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">No</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">Clock Radio</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-enabled-yn"><span class="text">Sleep Timer</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Disabled</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Clock Radio</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Sleep Timer</span></a></li>
 								</ul>
 							</div>
 						</div>
 	                </div>
+
+
+					<div id="clockradio-ctl-grp1">
+
 	                
 	                <label class="control-label" for="clockradio-playname">Play</label>
 	                <div class="controls">
-	                    <input id="clockradio-playname" class="input-xlarge" type="text" name="clockradio_playname" value="" readonly>
+	                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
 						<a class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-playname" class="help-block hide">
 	                    	Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
@@ -506,9 +606,9 @@
 	                
 	                <label class="control-label" for="clockradio-starttime-hh">Start time</label>
 	                <div class="controls">
-	                    <input id="clockradio-starttime-hh" class="input-mini" style="height: 20px;" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
+	                    <input id="clockradio-starttime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
 	                    <span>:</span>
-	                    <input id="clockradio-starttime-mm" class="input-mini" style="height: 20px;" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
+	                    <input id="clockradio-starttime-mm" class="input-mini input-height-x" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
 						
 						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -525,12 +625,32 @@
 							</div>
 						</div>
 	                </div>
-	                
+
+					<!-- r44d -->
+	                <label class="control-label" for="clockradio-start-mon"></label>
+	                <div class="controls">
+						<div class="checkbox-grp">
+							<input id="clockradio-start-mon" class="checkbox-ctl" type="checkbox" name="clockradio-start-mon">Mon
+							<input id="clockradio-start-tue" class="checkbox-ctl" type="checkbox" name="clockradio-start-tue">Tue
+							<input id="clockradio-start-wed" class="checkbox-ctl" type="checkbox" name="clockradio-start-wed">Wed
+							<input id="clockradio-start-thu" class="checkbox-ctl" type="checkbox" name="clockradio-start-thu">Thu
+							<input id="clockradio-start-fri" class="checkbox-ctl" type="checkbox" name="clockradio-start-fri">Fri
+							<span>&nbsp;&nbsp;&nbsp;</span>
+							<input id="clockradio-start-sat" class="checkbox-ctl" type="checkbox" name="clockradio-start-sat">Sat
+							<input id="clockradio-start-sun" class="checkbox-ctl" type="checkbox" name="clockradio-start-sun">Sun
+						</div>
+	                </div>
+
+
+					</div>
+					<div id="clockradio-ctl-grp2">
+
+
 	                <label class="control-label" for="clockradio-stoptime-hh">Stop time</label>
 	                <div class="controls">
-	                    <input id="clockradio-stoptime-hh" class="input-mini" style="height: 20px;" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
+	                    <input id="clockradio-stoptime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
 	                    <span>:</span>
-	                    <input id="clockradio-stoptime-mm" class="input-mini" style="height: 20px;" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
+	                    <input id="clockradio-stoptime-mm" class="input-mini input-height-x" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
 						
 						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -548,11 +668,21 @@
 						</div>
 	                </div>
 	                
-	                <label class="control-label" for="clockradio-volume">Volume</label>
+					<!-- r44d -->
+	                <label class="control-label" for="clockradio-stop-mon"></label>
 	                <div class="controls">
-	                    <input id="clockradio-volume" class="input-mini" style="height: 20px;" type="number" min="1" max="100" name="clockradio_volume" value="">
+						<div class="checkbox-grp">
+							<input id="clockradio-stop-mon" class="checkbox-ctl" type="checkbox" name="clockradio-stop-mon">Mon
+							<input id="clockradio-stop-tue" class="checkbox-ctl" type="checkbox" name="clockradio-stop-tue">Tue
+							<input id="clockradio-stop-wed" class="checkbox-ctl" type="checkbox" name="clockradio-stop-wed">Wed
+							<input id="clockradio-stop-thu" class="checkbox-ctl" type="checkbox" name="clockradio-stop-thu">Thu
+							<input id="clockradio-stop-fri" class="checkbox-ctl" type="checkbox" name="clockradio-stop-fri">Fri
+							<span>&nbsp;&nbsp;&nbsp;</span>
+							<input id="clockradio-stop-sat" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sat">Sat
+							<input id="clockradio-stop-sun" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sun">Sun
+						</div>
 	                </div>
-	                
+
 	                <label class="control-label" for="clockradio-shutdown">Shutdown</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select bootstrap-select-mini"> <!-- handler in playerlib.js -->
@@ -571,6 +701,21 @@
 						</div>
 						<span class="control-aftertext">after stop</span>
 	                </div>
+
+
+					</div>
+					<div id="clockradio-ctl-grp3">
+
+
+	                <label class="control-label" for="clockradio-volume">Volume</label>
+	                <div class="controls">
+	                    <input id="clockradio-volume" class="input-mini input-height-x" type="number" min="1" max="100" name="clockradio_volume" value="">
+	                </div>
+	                
+
+					</div>
+
+
 	            </div>
 	    	</fieldset>
 		</form>

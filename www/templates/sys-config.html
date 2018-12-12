@@ -26,6 +26,9 @@
  * - font-awesome 5
  * 2018-07-18 TC moOde 4.2 update
  * - add singleton to #view-pkgcontent footer btn
+ * 2018-10-19 TC moOde 4.3 update
+ * - rm download image builder
+ * - eth port fix setting
  *
  */
 -->	
@@ -38,14 +41,6 @@
 			<button class="btn btn-primary btn-small" style="background: none; font-size: 13px; height: 22px; padding: 2px 4px 2px 0px;" type="submit" name="checkfor_update" value="novalue">Check for</button>software update<br>
 			$_available_upd
 			$_lastinstall_upd
-
-			<button class="btn btn-primary btn-small" style="background: none; font-size: 13px; height: 22px; padding: 2px 4px 2px 0px;" type="submit" name="dnld_mosbuild" value="novalue">Download</button>image builder
-			<a class="info-toggle" data-cmd="info-mosbuild" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-mosbuild" class="help-block-configs help-block-margin hide">
-				The image builder is an automated process for creating the wonderful custom Linux OS that runs moOde audio player.	
-				The builder script is downloaded to the directory /home/pi. The built in SSH terminal can be used to start the script 
-				by entering the command sudo ./mosbuild.sh. A spare USB or USB-SDCard drive is needed for the new OS.<br>
-			</span>
 	    </p>
 
 		<legend>General</legend>
@@ -229,6 +224,27 @@
 					<span id="info-uac2fix" class="help-block-configs help-block-margin hide">
 						Try this fix if experiencing audio glitches with USB High Speed (UAC2) audio devices. 
                     </span>
+				</div>
+			</div>
+
+			<div class="$_eth_port_fix_hide">
+				<div class="control-group">
+					<label class="control-label">Ethernet port fix</label>
+					<div class="controls">
+						<div class="toggle">
+							<label class="toggle-radio" for="toggle_eth_port_fix1">ON</label>
+							$_select[eth_port_fix1]
+							<label class="toggle-radio" for="toggle_eth_port_fix0">OFF</label>
+							$_select[eth_port_fix0]
+						</div>
+						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+							<button class="btn btn-primary btn-small" type="submit" name="update_eth_port_fix" value="novalue">Set</button>
+							<a class="info-toggle" data-cmd="info_eth_port_fix" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						</div>
+						<span id="info_eth_port_fix" class="help-block-configs help-block-margin hide">
+							Try this fix if experiencing audio glitches when using a USB DAC and Pi-3B+ Ethernet port.<br>
+	                    </span>
+					</div>
 				</div>
 			</div>
 
@@ -512,8 +528,13 @@
 		</div>
 
 	</form>
+
+
+
 </div>
 </div>
+
+<!-- MODALS -->
 
 <form class="form-horizontal" method="post">
 	<div id="clear-browser-cache" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="clear-browser-cache-label" aria-hidden="true">

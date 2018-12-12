@@ -43,11 +43,19 @@
  * - playback ctrls HUD for screen saver
  * - album cover view
  * - HUD playlist
+ * 2018-12-09 TC moOde 4.4
+ * - add close to all context menus
+ * - add lib-disc context menu
+ * - camelcase dbfastsearch
+ * - move inpsrc-indicator above screen-saver
  *
  */
 -->
 
 <div class="tab-content">
+	<!-- IMPUT SOURCE INDICATOR -->
+	<div id="inpsrc-indicator" class="inpsrc"></div>
+
 	<!-- SCREEN SAVER -->
 	<div id="screen-saver" class="hide" href="#notarget">
 		<div id="ss-backdrop"></div>
@@ -90,9 +98,6 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- IMPUT SOURCE INDICATOR -->
-	<div id="inpsrc-indicator" class="hudui"></div>
 
 	<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
 	<div id="playback-panel" class="tab-pane active">
@@ -296,7 +301,7 @@
 				<button id="db-home" class="btn"><i class="fas fa-home"></i></button>
 				<button id="db-refresh" class="btn" title="Refresh"><i class="far fa-redo"></i></button>
 				<button id="db-advsearch" class="btn" title="Advanced search" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i></button>
-				<form id="db-fastsearch" onsubmit="return dbfastsearch();">
+				<form id="db-fastsearch" onsubmit="return dbFastSearch();"> <!-- r44g camelcase -->
 					<div class="input-append">
 						<input id="dbfs" type="text" value="" placeholder="search">
 					</div>
@@ -428,12 +433,14 @@
 			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="update"><i class="fal fa-sync sx"></i> Update this folder</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 	
 	<div id="context-menu-root" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="update"><i class="fal fa-sync sx"></i> Update this folder</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 
@@ -444,6 +451,7 @@
 			<li><a href="#notarget" data-cmd="clradd"><i class="fal fa-share-square sx"></i> Clear/Add</a></li>
 			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="delsavedpl"><i class="fal fa-trash sx"></i> Delete playlist</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 	
@@ -452,6 +460,7 @@
 			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 
@@ -460,6 +469,7 @@
 			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 
@@ -468,6 +478,7 @@
 			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 
@@ -476,6 +487,7 @@
 			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 
@@ -484,6 +496,16 @@
 			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-lib-disc" class="context-menu-lib"> <!-- r44f -->
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 
@@ -496,6 +518,7 @@
 			<li><a href="#notarget" data-cmd="editradiostn"><i class="fal fa-edit sx"></i> Edit station</a></li>
 			<li><a href="#notarget" data-cmd="delstation"><i class="fal fa-trash sx"></i> Delete station</a></li>
 			<li><a href="#notarget" data-cmd="updradio"><i class="fal fa-sync sx"></i> Update database</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 
@@ -504,6 +527,7 @@
 			<li><a href="#notarget" data-cmd="deleteplitem"><i class="fal fa-trash sx"></i> Remove item(s)</a></li>
 			<li><a href="#notarget" data-cmd="moveplitem"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
 			<li><a href="#notarget" data-cmd="setforclockradio"><i class="fal fa-alarm-clock sx"></i> Set for clock radio</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times sx"></i> Close</a></li>
 		</ul>
 	</div>
 </div>
