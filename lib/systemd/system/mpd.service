@@ -41,6 +41,7 @@ Nice=-10
 
 # Launch params
 EnvironmentFile=/etc/default/mpd
+ExecStartPre=-/bin/bash -c '/usr/local/bin/mpd -V | grep -q sacdiso && { grep -q sacdiso /etc/mpd.conf || cat /etc/mpd.conf.d/sacdiso.conf >> /etc/mpd.conf ; }'
 ExecStart=/usr/local/bin/mpd --no-daemon $MPDCONF
 
 [Install]

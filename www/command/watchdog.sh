@@ -42,7 +42,27 @@ while true; do
 		echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
 		systemctl start mpd
 	fi
-		
+
+	# for SACD ISO - (2CH-DST)
+	export master_pid=$(pidof mpd||pgrep mpd||cat /var/run/mpd/pid)
+	export lastsong_cksum
+	decoder_threads=( $(ps -q $master_pid -eL -o etimes,lwp,psr,comm,args | awk '($5~"mpd" && $4~"decoder:sacdiso" ){print $1,$2}' | sort -nr | cut -d' ' -f 2) )
+	# if echo currentsong | socat  TCP4:127.0.0.1:6600 stdio | grep '^Album' | grep -q 2CH-DST ; then
+	if [[ ${#decoder_threads[@]} -gt 1 ]]; then
+	  currentsong_cksum=$(echo currentsong | socat  TCP4:127.0.0.1:6600 stdio | md5sum)
+	  currentsong_cksum=${currentsong_cksum%  -}
+	  if [[ "${currentsong_cksum}" != "${lastsong_cksum}" ]]; then
+	    ccc=0
+	    for tid in ${decoder_threads[@]:1}
+	    do
+	      # sudo taskset -p --cpu-list $(( ccc%2 + 2 ))  $tid && ((ccc++))  # cpu 2-3 ; dstdec_threads "2"
+	      sudo taskset -p --cpu-list $(( ccc%4 ))  $tid && ((ccc++))  # cpu 0-3 ; dstdec_threads "4"
+	      sudo chrt --other -p 0  $tid
+	    done
+	    export lastsong_cksum=${currentsong_cksum}
+	  fi
+	fi
+
 	sleep 6
 	FPMCNT=$(pgrep -c -f "php-fpm: pool www")
 	MPDACTIVE=$(pgrep -c -x mpd)

@@ -125,6 +125,12 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 			if (substr($path, -1) !== '/') {$path .= '/';}
 			$imgstr = parseFolder($path);
 		}
+		elseif (strtolower(substr($path, -4)) === '.iso') {
+			// sacd iso file
+			$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
+			$dirpath = dirname($dirpath) . '/'; // upper level
+			$imgstr = parseFolder($dirpath);
+		}
 		else { 
 			// file: cover image file in containing dir
 			$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
@@ -297,7 +303,7 @@ function parseFolder($path) {
 	foreach ($covers as $file) {
 		$result = getImage($path . $file);
 		if ($result !== false) {
-			break;
+			return $result;
 		}
 	}
 	// all other image files

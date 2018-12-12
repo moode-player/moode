@@ -216,8 +216,18 @@ if (is_dir($path)) {
 	parseFolder($path);
 }
 else {
+	// file - try all files in containing folder
+	$dirpath = pathinfo($path, PATHINFO_DIRNAME);
+	$dirpath_suffix = substr($dirpath, -4) ;
+
+	if (strtolower($dirpath_suffix) === ".iso"){
+	  $dirpath = pathinfo($dirpath, PATHINFO_DIRNAME) ; // go uppper dir
+	}
+
+	$dirpath .= '/';
+
+	//workerLog('coverart: c - ' . $dirpath);
 	// file: cover image file in containing dir
-	$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
 	parseFolder($dirpath);
 
 	if ($search_pri == 'Cover image file') { // embedded last
