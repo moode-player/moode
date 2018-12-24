@@ -707,7 +707,7 @@ function parseStatus($resp) {
 			$array['time'] = '0';
 		}
 		// radio, upnp
-		elseif (!isset($array['duration'])) {
+		elseif (!isset($array['duration']) || $array['duration'] == 0) {
 			$percent = '0';
 			$array['elapsed'] = $time[0];
 			$array['time'] = $time[1];
