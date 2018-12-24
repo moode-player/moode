@@ -343,8 +343,12 @@ function engineMpd() {
 			else {
 				debugLog('engineMpd: success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
 
+				// JSON encoding errors
+				if (typeof(MPD.json['error']) == 'object') {
+					notify('mpderror', 'JSON encode error: ' + MPD.json['error']['message'] + ' (' + MPD.json['error']['code'] + ')');
+				}
 				// mpd bug may have been fixed in 0.20.20 ?
-				if (MPD.json['error'] == 'Not seekable') {					
+				else if (MPD.json['error'] == 'Not seekable') {
 					// nop
 				}
 				// MPD output --> Bluetooth but no actual BT connection

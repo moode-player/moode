@@ -99,6 +99,11 @@ debugLog('engine-mpd: Metadata returned to client: Size=(' . sizeof($current) . 
 // TEST I don't think this is needed
 //header('Access-Control-Allow-Origin: *');
 
-echo json_encode($current);
+$current_json = json_encode($current);
+if ($current_json === FALSE) {
+  echo json_encode(array('error' => array('code' => json_last_error(), 'message' => json_last_error_msg())));
+} else {
+  echo $current_json;
+}
 
 closeMpdSock($sock);
