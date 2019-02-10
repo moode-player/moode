@@ -1781,9 +1781,6 @@ function renderLibrary(data) {
 
   // Render
   renderGenres();
-  renderArtists();
-  renderAlbums();
-  renderSongs();
 }
 
 // generate library array
@@ -1996,6 +1993,8 @@ var renderGenres = function() {
 	if (UI.libPos[0] == -2) {
 		$('#lib-genre').scrollTo(0, 200);
 	}
+
+	renderArtists();
 }
 
 var renderArtists = function() {
@@ -2013,6 +2012,8 @@ var renderArtists = function() {
 	if (UI.libPos[0] == -2) {
 		$('#lib-artist').scrollTo(0, 200);
 	}
+
+	 renderAlbums();
 }
 
 var renderAlbums = function() {
@@ -2064,6 +2065,8 @@ var renderAlbums = function() {
 	    container: $('#lib-albumcover')
 		});		
 	}
+
+  renderSongs();
 }
 
 // render songs
@@ -2145,7 +2148,7 @@ var renderSongs = function(albumPos) {
 			'<img class="lib-coverart" src="' + makeCoverUrl(allSongs[0].file) + '" ' + 'alt="Cover art not found"' + '></a>');
 		$('#lib-albumname').html(allSongs[0].album);
 
-		if (albumPos) {
+		if (albumPos && !UI.libPos[0]) {
 			artist = allAlbums[UI.libPos[0]].album_artist || allAlbums[UI.libPos[0]].artist;
 		}
 		else {
