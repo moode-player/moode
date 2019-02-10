@@ -376,7 +376,7 @@ function genLibrary($flat) {
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : 'Disc tag missing'), // r44h
 			'artist' => $flatData['Artist'] ? $flatData['Artist'] : 'Unknown',
 			'album_artist' = $flatData['AlbumArtist'],
-			'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
+			'composer' => $flatData['Composer'],
 			'year' => $flatData['Date'],
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown'),
@@ -408,7 +408,7 @@ function genLibraryUTF8Rep($flat) {
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'), // r44f
 			'artist' => utf8rep($flatData['Artist'] ? $flatData['Artist'] : 'Unknown'),
 			'album_artist' = utf8rep($flatData['AlbumArtist']),
-			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
+			'composer' => utf8rep($flatData['Composer']),
  			'year' => utf8rep($flatData['Date']),
  			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep($flatData['Album'] ? $flatData['Album'] : 'Unknown'),

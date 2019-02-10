@@ -1770,8 +1770,8 @@ function loadLibrary() {
 
 // render library
 function renderLibrary(data) {
-  allSongs = data;
-	//debugLog(allSongs);
+  fullLib = data;
+	//debugLog(fullLib);
 
 	// generate library array
   filterLib();
@@ -1788,6 +1788,7 @@ function renderLibrary(data) {
 
 // generate library array
 function filterLib() {
+  allSongs = fullLib;
 	allSongsDisc = []; // r44g
 
   var needReload = false;
@@ -1808,28 +1809,26 @@ function filterLib() {
   	return acc;
   };
 
-  var filteredTracks = allSongs;
-
   if (LIB.filters.genres.length) {
-  	filteredTracks = filteredTracks.filter(function(track) {
+  	allSongs = allSongs.filter(function(track) {
   		return LIB.filters.genres.includes(track.genre);
   	});
   }
 
   if (LIB.filters.artists.length) {
-  	filteredTracks = filteredTracks.filter(function(track) {
+  	allSongs = allSongs.filter(function(track) {
   		return LIB.filters.artists.includes(track.album_artist || track.artist);
   	});
   }
 
-  if (LIB.filters.albums) {
-  	filteredTracks = filteredTracks.filter(function(track) {
+  if (LIB.filters.albums.length) {
+  	allSongs = allSongs.filter(function(track) {
   		return LIB.filters.albums.includes(keyAlbum(track));
   	});
   }
 
-  var reducedGenres = allSongs.reduce(reduceGenres, {});
-  var reducedArtists = filteredTracks.reduce(reduceArtists, {});
+  var reducedGenres = fullLib.reduce(reduceGenres, {});
+  var reducedArtists = allSongs.reduce(reduceArtists, {});
 
 	allGenres = Object.keys(reducedGenres);
 	allArtists = Object.keys(reducedArtists);
@@ -2096,11 +2095,7 @@ var renderSongs = function(albumPos) {
 		}
 
 	  for (i = 0; i < allSongs.length; i++) {
-			if (allSongs[i].year) {
-				var songyear = (allSongs[i].year).slice(0,4);
-			} else {
-				var songyear = ' ';
-			}
+	  	var songyear = allSongs[i].year ? allSongs[i].year.slice(0,4) : ' ';
 
 			// r44f add disc num and context menu
 			if (allSongs[i].disc != discNum) {
@@ -2110,17 +2105,18 @@ var renderSongs = function(albumPos) {
 			else {
 				discDiv = '';
 			}
-
-			var composer = allSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + allSongs[i].composer + '</span></span>';
 			
       output += discDiv // r44g move outside of <li>
 				+ '<li id="lib-song-' + (i + 1) + '" class="clearfix">'
-				+ '<div class="lib-entry-song"><span class="songtrack">' + allSongs[i].tracknum + '</span>'
-				+ '<span class="songname">' + allSongs[i].title+'</span>'
-      	+ '<span class="songtime"> ' + allSongs[i].time_mmss + '</span>'
-        + '<span class="songartist"> ' + allSongs[i].actual_artist + composer
-				+ '<span class="songyear"> ' + songyear + '</span></div>'
-        + '<div class="lib-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
+					+ '<div class="lib-entry-song">'
+						+ '<span class="songtrack">' + allSongs[i].tracknum + '</span>'
+						+ '<span class="songname">' + allSongs[i].title + '</span>'
+		      	+ '<span class="songtime"> ' + allSongs[i].time_mmss + '</span>'
+		        + '<span class="songartist"> ' + allSongs[i].artist + '</span>'
+		        + (allSongs[i].composer ? '<br><span class="songcomposer">' + allSongs[i].composer + '</span>' : '')
+						+ '<span class="songyear"> ' + songyear + '</span>'
+					+ '</div>'
+	        + '<div class="lib-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
         + '</li>';
 
 				LIB.totalTime += parseSongTime(allSongs[i].time);
@@ -2143,26 +2139,20 @@ var renderSongs = function(albumPos) {
 	//console.log('LIB.filters.albums=(' + LIB.filters.albums + ')');
 	//console.log('pos=(' + albumPos + ')')
     
-  	// Library panel cover art and metadata
+  // Library panel cover art and metadata
 	if (allAlbums.length == 1 || LIB.filters.albums != '' || typeof(albumPos) !== 'undefined') {
 		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' + 
 			'<img class="lib-coverart" src="' + makeCoverUrl(allSongs[0].file) + '" ' + 'alt="Cover art not found"' + '></a>');
 		$('#lib-albumname').html(allSongs[0].album);
 
-		// r44d for compilation album when using Artist instead of AlbumArtist list ordering
-		if (typeof(albumPos) !== 'undefined') {
-			if (albumPos = UI.libPos[0]) {
-				artist = allSongs[0].artist;
-			}
-			else {
-				artist = allAlbums[albumPos].artist;
-			}
+		if (albumPos) {
+			artist = allAlbums[UI.libPos[0]].album_artist || allAlbums[UI.libPos[0]].artist;
 		}
 		else {
-			artist = allSongs[0].artist;
+			artist = allSongs[0].album_artist || allSongs[0].artist;
 		}
-		$('#lib-artistname').html(artist);
 
+		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html(allSongs[0].year);
 		$('#lib-numtracks').html(allSongs.length + ((allSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
 	}
