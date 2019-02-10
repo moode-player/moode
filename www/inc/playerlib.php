@@ -364,37 +364,27 @@ function genFlatList($sock) {
 	}
 }
 
-// generate library {Genre1: {Artist1: {Album1: [{song1}, {song2}], Album2:...}, Artist2:...}, Genre2:...}
 function genLibrary($flat) {
 	$lib = array();
 
-	// use Artist or AlbumAetist for the Artist column
-	$libartist = $_SESSION['libartistcol'];
-
 	foreach ($flat as $flatData) {
-		$genre = $flatData['Genre'] ? $flatData['Genre'] : 'Unknown';
-		$artist = $flatData[$libartist] ? $flatData[$libartist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown');
-		$album = $flatData['Album'] ? $flatData['Album'] : 'Unknown';
-		//$album = $flatData['Album'] ? $flatData['Date'] . ' - ' . $flatData['Album'] : 'Unknown'; // r44g add year
-		//$album = $flatData['AlbumSort'] ? $flatData['AlbumSort'] : ($flatData['Album'] ? $flatData['Album'] :'Unknown'); // albumsort tag if present
-
-		if (!$lib[$genre]) {$lib[$genre] = array();}
-		if (!$lib[$genre][$artist]) {$lib[$genre][$artist] = array();}
-        if (!$lib[$genre][$artist][$album]) {$lib[$genre][$artist][$album] = array();}
 
 		$songData = array(
 			'file' => $flatData['file'],
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
 			'title' => $flatData['Title'],
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : 'Disc tag missing'), // r44h
-			'actual_artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing'),
+			'artist' => $flatData['Artist'] ? $flatData['Artist'] : 'Unknown',
+			'album_artist' = $flatData['AlbumArtist'],
 			'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
 			'year' => $flatData['Date'],
 			'time' => $flatData['Time'],
+			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown'),
+			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
 			'time_mmss' => songTime($flatData['Time'])
 		);
 			
-		array_push($lib[$genre][$artist][$album], $songData);
+		array_push($lib, $songData);
 	}
 
 	$json_lib = json_encode($lib); // r44f	
@@ -409,32 +399,24 @@ function genLibrary($flat) {
 function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
-	// use Artist or AlbumAetist for the Artist column
-	$libartist = $_SESSION['libartistcol'];
-
 	foreach ($flat as $flatData) {
-		$genre = utf8rep($flatData['Genre'] ? $flatData['Genre'] : 'Unknown');
- 		$artist = utf8rep($flatData[$libartist] ? $flatData[$libartist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown'));
- 		$album = utf8rep($flatData['Album'] ? $flatData['Album'] : 'Unknown');
-		//$album = $flatData['AlbumSort'] ? $flatData['AlbumSort'] : ($flatData['Album'] ? $flatData['Album'] :'Unknown'); // albumsort tag if present
-
-		if (!$lib[$genre]) {$lib[$genre] = array();}
-		if (!$lib[$genre][$artist]) {$lib[$genre][$artist] = array();}
-        if (!$lib[$genre][$artist][$album]) {$lib[$genre][$artist][$album] = array();}
 
 		$songData = array(
  			'file' => utf8rep($flatData['file']),
  			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')), //r44f add inner brackets
  			'title' => utf8rep($flatData['Title']),
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'), // r44f
- 			'actual_artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing')), //r44f add inner brackets
+			'artist' => utf8rep($flatData['Artist'] ? $flatData['Artist'] : 'Unknown'),
+			'album_artist' = utf8rep($flatData['AlbumArtist']),
 			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
  			'year' => utf8rep($flatData['Date']),
  			'time' => utf8rep($flatData['Time']),
+			'album' => utf8rep($flatData['Album'] ? $flatData['Album'] : 'Unknown'),
+			'genre' => utf8rep($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
  			'time_mmss' => utf8rep(songTime($flatData['Time']))
 		);
 			
-		array_push($lib[$genre][$artist][$album], $songData);
+		array_push($lib, $songData);
 	}
 
 	$json_lib = json_encode($lib); // r44f	
