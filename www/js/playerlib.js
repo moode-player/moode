@@ -2006,14 +2006,14 @@ var renderArtists = function() {
 			+ ((LIB.filters.artists.indexOf(allArtists[i]) >= 0 || allArtists.length == 1) ? ' active' : '')
 			+ '">' + allArtists[i] + '</div></li>';
   }
-    
+
   $('#artistsList').html(output);
 
 	if (UI.libPos[0] == -2) {
 		$('#lib-artist').scrollTo(0, 200);
 	}
 
-	 renderAlbums();
+	renderAlbums();
 }
 
 var renderAlbums = function() {
