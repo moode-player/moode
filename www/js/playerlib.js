@@ -1806,21 +1806,24 @@ function filterLib() {
   	return acc;
   };
 
-  if (LIB.filters.genres.length) {
+  var genreFilter = LIB.filters.genres;
+  if (genreFilter.length) {
   	allSongs = allSongs.filter(function(track) {
-  		return LIB.filters.genres.includes(track.genre);
+  		return genreFilter.includes(track.genre);
   	});
   }
 
-  if (LIB.filters.artists.length) {
+  var artistFilter = LIB.filters.artists;
+  if (artistFilter.length) {
   	allSongs = allSongs.filter(function(track) {
-  		return LIB.filters.artists.includes(track.album_artist || track.artist);
+  		return artistFilter.includes(track.album_artist) || artistFilter.includes(track.artist);
   	});
   }
 
-  if (LIB.filters.albums.length) {
+  var albumFilter = LIB.filters.albums;
+  if (albumFilter.length) {
   	allSongs = allSongs.filter(function(track) {
-  		return LIB.filters.albums.includes(keyAlbum(track));
+  		return albumFilter.includes(keyAlbum(track));
   	});
   }
 
@@ -1847,16 +1850,16 @@ function filterLib() {
   });
 
   // check filters validity
-  var newFilters = checkFilters(LIB.filters.albums, allAlbums, function(o) { return keyAlbum(o); });
+  var newFilters = checkFilters(albumFilter, allAlbums, function(o) { return keyAlbum(o); });
 
-  if (newFilters.length != LIB.filters.albums.length) {
+  if (newFilters.length != albumFilter.length) {
     needReload = true;
     LIB.filters.albums = newFilters;
   }
 
-  newFilters = checkFilters(LIB.filters.artists, allArtists, function(o) { return o; });
+  newFilters = checkFilters(artistFilter, allArtists, function(o) { return o; });
 
-  if (newFilters.length != LIB.filters.artists.length) {
+  if (newFilters.length != artistFilter.length) {
     needReload = true;
     LIB.filters.artists = newFilters;
   }
@@ -2626,10 +2629,7 @@ $('.context-menu a').click(function(e) {
 		$('#play-history-enabled span').text(SESSION.json['playhist']);
 		$('#extratag-display span').text(SESSION.json['xtagdisp']);
 		$('#musictab-default span').text(SESSION.json['musictab_default']);
-		$('#library-comp-rollup span').text(SESSION.json['compilation_rollup']); // r44d
-		$('#library-comp-excludes').val(SESSION.json['compilation_excludes']); // r44d
 		$('#scnsaver-timeout span').text(screenSaverTimeout(SESSION.json['scnsaver_timeout'], 'param'));
-		$('#library-artist span').text(SESSION.json['libartistcol']);
 		$('#library-utf8rep span').text(SESSION.json['library_utf8rep']);
 		$('#library-covsearchpri span').text(SESSION.json['library_covsearchpri']);
 		$('#library-hiresthm span').text(SESSION.json['library_hiresthm']);
@@ -2879,9 +2879,6 @@ $('.btn-customize-update').click(function(e){
 	if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
 	if (SESSION.json['musictab_default'] != $('#musictab-default span').text()) {musictabChange = true;}
 	if (SESSION.json['scnsaver_timeout'] != screenSaverTimeout($('#scnsaver-timeout span').text(), 'value')) {scnSaverTimeoutChange = true;}
-	if (SESSION.json['libartistcol'] != $('#library-artist span').text()) {libChange = true;}
-	if (SESSION.json['compilation_rollup'] != $('#library-comp-rollup span').text()) {libChange = true;} // r44d
-	if (SESSION.json['compilation_excludes'] != $('#library-comp-excludes').val()) {libChange = true;} // r44d
 	if (SESSION.json['library_utf8rep'] != $('#library-utf8rep span').text()) {libChange = true;}
 	if (SESSION.json['themecolor'] != $('#theme-color span').text()) {accentColorChange = true;}
 	if (SESSION.json['themename'] != $('#theme-name span').text()) {themeSettingsChange = true;}
@@ -2898,9 +2895,6 @@ $('.btn-customize-update').click(function(e){
 	SESSION.json['musictab_default'] = $('#musictab-default span').text();
 	SESSION.json['scnsaver_timeout'] = screenSaverTimeout($('#scnsaver-timeout span').text(), 'value');
 	// library settings
-	SESSION.json['libartistcol'] = $('#library-artist span').text();
-	SESSION.json['compilation_rollup'] = $('#library-comp-rollup span').text(); // r44d
-	SESSION.json['compilation_excludes'] = $('#library-comp-excludes').val(); // r44d
 	SESSION.json['library_utf8rep'] = $('#library-utf8rep span').text();
 	SESSION.json['library_covsearchpri'] = $('#library-covsearchpri span').text();
 	SESSION.json['library_hiresthm'] = $('#library-hiresthm span').text();
@@ -2922,9 +2916,6 @@ $('.btn-customize-update').click(function(e){
 		 'xtagdisp': SESSION.json['xtagdisp'],
 		 'musictab_default': SESSION.json['musictab_default'],
 		 'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
-		 'libartistcol': SESSION.json['libartistcol'],
-		 'compilation_rollup': SESSION.json['compilation_rollup'], // r44d
-		 'compilation_excludes': SESSION.json['compilation_excludes'], // r44d
 		 'library_utf8rep': SESSION.json['library_utf8rep'],
 		 'library_covsearchpri': SESSION.json['library_covsearchpri'],
 		 'library_hiresthm': SESSION.json['library_hiresthm'],
@@ -3043,10 +3034,6 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
 		$('#library-hiresthm span').text($(this).text());
 	} else if ($(this).data('cmd') == 'scnsaver-timeout-sel') {
 		$('#scnsaver-timeout span').text($(this).text());
-	} else if ($(this).data('cmd') == 'library-artist-sel') {
-		$('#library-artist span').text($(this).text());
-	} else if ($(this).data('cmd') == 'library-comp-rollup-yn') { // r44d
-		$('#library-comp-rollup span').text($(this).text());
 	} else if ($(this).data('cmd') == 'library-utf8rep-yn') {
 		$('#library-utf8rep span').text($(this).text());
 	} else if ($(this).data('cmd') == 'library-covsearchpri-sel') {
