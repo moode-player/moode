@@ -1842,7 +1842,6 @@ function filterLib() {
 			album: albumTracks.find(function(track) { return track.album; }).album,
 			artist: albumTracks.find(function(track) { return track.artist; }).artist,
 			album_artist: albumTracks.find(function(track) { return track.album_artist; }).album_artist,
-			compilation: '0',
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg'
 		};
   });
@@ -2274,7 +2273,6 @@ $('#albumsList, #albumcovers').on('click', '.lib-entry', function(e) {
 	if (itemSelector == '#albumsList .lib-entry') {
 		UI.libPos[0] = pos;
 		UI.libPos[1] = allAlbumCovers.map(function(e) {return e.album;}).indexOf(allAlbums[pos].album);
-		var compilation = allAlbums[pos].compilation;
 		var albumobj = allAlbums[pos];
 		var album = allAlbums[pos].album;
 		var artist = allAlbums[pos].artist;
@@ -2282,7 +2280,6 @@ $('#albumsList, #albumcovers').on('click', '.lib-entry', function(e) {
 	else {
 		UI.libPos[0] = allAlbums.map(function(e) {return e.album;}).indexOf(allAlbumCovers[pos].album);
 		UI.libPos[1] = pos;
-		var compilation = allAlbumCovers[pos].compilation;
 		var albumobj = allAlbumCovers[pos];
 		var album = allAlbumCovers[pos].album;
 		var artist = allAlbumCovers[pos].artist;
@@ -2298,33 +2295,11 @@ $('#albumsList, #albumcovers').on('click', '.lib-entry', function(e) {
 	}
 
 	LIB.albumClicked = true; // for renderSongs()
-    $(itemSelector).removeClass('active');
+  $(itemSelector).removeClass('active');
 	$(itemSelector).eq(pos).addClass('active');
 
-	// song list for regular album		
-    if (compilation != '1') {
-		//console.log('regular album');
-	    clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
-	}
-	// song list for compilation album		
-	else {
-		//console.log('compilation album');
-		allCompilationSongs = [];
-		LIB.filters.albums = [];
-		renderFunc = renderSongs;
-		filterLib();
-		LIB.totalTime = 0;
-		
-		for (i = 0; i < allSongs.length; i++) {
-			if (allSongs[i].album == album) {
-				allCompilationSongs.push(allSongs[i]);
-				LIB.totalTime += parseSongTime(allSongs[i].time);
-			}
-		}
-
-		allSongs = allCompilationSongs;
-		renderFunc(pos);
-	}
+	// song list for album		
+	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 
 	if (itemSelector == '#albumcovers .lib-entry') {
 		if (album != UI.libAlbum) {
@@ -2361,7 +2336,6 @@ $('#random-album, #random-albumcover').click(function(e) {
 		var scrollSelector = 'albums';
 		UI.libPos[0] = pos;
 		UI.libPos[1] = allAlbumCovers.map(function(e) {return e.album;}).indexOf(allAlbums[pos].album);
-		var compilation = allAlbums[pos].compilation;
 		var albumobj = allAlbums[pos];
 		var album = allAlbums[pos].album;
 		var artist = allAlbums[pos].artist;
@@ -2371,48 +2345,18 @@ $('#random-album, #random-albumcover').click(function(e) {
 		var scrollSelector = 'albumcovers';
 		UI.libPos[0] = allAlbums.map(function(e) {return e.album;}).indexOf(allAlbumCovers[pos].album);
 		UI.libPos[1] = pos;
-		var compilation = allAlbumCovers[pos].compilation;
 		var albumobj = allAlbumCovers[pos];
 		var album = allAlbumCovers[pos].album;
 		var artist = allAlbumCovers[pos].artist;
 	}
 
-    LIB.albumClicked = true; // for renderSongs()
-    $(itemSelector).removeClass('active');
+  LIB.albumClicked = true; // for renderSongs()
+  $(itemSelector).removeClass('active');
 	$(itemSelector).eq(pos).addClass('active');
 	customScroll(scrollSelector, pos, 200);	
 
-	// song list for regular album		
-    if (compilation != '1') { 
-	    clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
-	}
-	// song list for compilation album
-	else {
-		allCompilationSongs = [];
-		LIB.filters.albums = [];
-		renderFunc = renderSongs;
-		filterLib();		
-		LIB.totalTime = 0;
-		
-		for (i = 0; i < allSongs.length; i++) {
-			if (allSongs[i].album == album) {
-				allCompilationSongs.push(allSongs[i]);
-				LIB.totalTime += parseSongTime(allSongs[i].time);
-			}
-		}
-
-		allSongs = allCompilationSongs;
-		renderFunc(pos);
-
-		// cover art and metadata
-		$('#lib-albumname').html(album);
-		$('#lib-artistname').html(artist);			
-		$('#lib-numtracks').html(allSongs.length + ((allSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
-		$('#lib-coverart-img').html(
-			'<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' +
-			'<img class="lib-coverart" src="' + makeCoverUrl(allSongs[0].file) + '" ' + 'alt="Cover art not found"' + '></a>'
-		);
-    }
+	// song list for album		
+  clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 });
 
 // click lib coverart
@@ -2920,7 +2864,7 @@ $('.btn-clockradio-update').click(function(e){
 	// update globals within worker loop
 	sendMoodeCmd('GET', 'updclockradio');
 
-    notify('updclockradio', '');
+  notify('updclockradio', '');
 });
 
 // update customize settings
