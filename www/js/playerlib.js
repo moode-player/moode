@@ -1791,15 +1791,16 @@ function filterLib() {
     allAlbumsTmp = [];
     allAlbumCovers = [];
     allSongs = [];
-	allSongsDisc = []; // r44g
+		allSongsDisc = []; // r44g
     
     var needReload = false;
 
+		var genres = fullLib.reduce(function (acc, item, index) {
+		  (acc[item.genre] = acc[item.genre] || []).push(item);
+		  return acc;
+    },{});
+
     for (var genre in fullLib) {
-	    // AG fix dup artist appearing when Artist assigned to multiple Genres (don't push if already exist)
-        if (allGenres.indexOf(genre) < 0) {
-            allGenres.push(genre);
-        }
 
         if (LIB.filters.genres.length == 0 || LIB.filters.genres.indexOf(genre) >= 0) {
             for (var artist in fullLib[genre]) {
