@@ -381,7 +381,8 @@ function genLibrary($flat) {
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown'),
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
-			'time_mmss' => songTime($flatData['Time'])
+			'time_mmss' => songTime($flatData['Time']),
+			'last_modified' => $flatData['Last-Modified']
 		);
 			
 		array_push($lib, $songData);
@@ -413,7 +414,8 @@ function genLibraryUTF8Rep($flat) {
  			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep($flatData['Album'] ? $flatData['Album'] : 'Unknown'),
 			'genre' => utf8rep($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
- 			'time_mmss' => utf8rep(songTime($flatData['Time']))
+ 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
+			'last_modified' => $flatData['Last-Modified']
 		);
 			
 		array_push($lib, $songData);
