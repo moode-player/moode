@@ -104,6 +104,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 #players .btn {background:rgba(64,64,64,0.08);}
 .modal-xs{min-width:230px;text-align:center;}
 .dbupdate-spinner {line-height:10px; margin-right:5px; margin-left:-6px;}
+a.btn i.sx { float:left;}
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
 #info-toggle-bgimage {position:absolute;margin-left:5px;}
 /* r44d clock radio */
