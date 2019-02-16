@@ -1357,7 +1357,7 @@ function formatBrowseData(data, path, i, panel) {
 			}
 			// cue sheet, use song file action menu
 			else if (fileExt == 'cue') {
-				output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-folder-item"><i class="fas fa-list-ul icon-root sx"></i></a></div><div class="db-entry db-song db-browse">';
+				output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-folder-item"><i class="fas fa-list-ul icon-root sx" style="float:left;"></i></a></div><div class="db-entry db-song db-browse">';
 				itemType = 'Cue sheet';
 			}
 			// different icon for song file vs radio station in saved playlist
