@@ -467,19 +467,64 @@ function addallToPL($sock, $songs) {
 	foreach ($songs as $song) {
 		//$path = $song['file'];
 		$path = $song; // r44g
-		array_push($cmds, 'add "' . html_entity_decode($path) . '"');
+		// do this inside the loop to take advantage of the add/load logic
+		addToPL($sock, $path);
+		// below approach, with accompanying chainMpdCmds couldn't handle playlists (specifically embedded ones...)
+		// array_push($cmds, 'add "' . html_entity_decode($path) . '"');
 	}
-	
-	chainMpdCmds($sock, $cmds);
+
+	//chainMpdCmds($sock, $cmds);
 }
 
 // add to playlist (browse panel)
 // allow playlist url as File1=
-function addToPL($sock, $path) {
+// is_playlist parameter isn't used in calling this function yet... but maybe
+function addToPL($sock, $path, $is_playlist=false) {
+	set_include_path('/var/www/inc');
 	$ext = getFileExt($path);
 
+	// this could become a case statement with approaches to handle .wv / wavepack
+	if ($ext == 'flac') {
+		debugLog('trying: ' . $path);
+		require_once 'Zend/Media/Flac.php';
+		debugLog('addToPL(): Checking for cuesheet in: ' . $path);
+		try {
+			$flac = new Zend_Media_Flac(MPD_MUSICROOT . $path);
+
+			// this is the standard / modern case
+			if ($flac->hasMetadataBlock(Zend_Media_Flac::VORBIS_COMMENT)) {
+				$vorbis = $flac->getVorbisComment();
+				$cuesheet = $vorbis->CUESHEET();
+				// with minimal verification that the cuesheet is valid
+				if ($cuesheet && (strpos($cuesheet, 'TITLE') !== false)) {
+					debugLog('addToPL(): Cuesheet found in VorbisComment');
+					$is_playlist = true;
+				}
+			}
+			// The flac format allows for this, but is it used?
+			elseif ($flac->hasMetadataBlock(Zend_Media_Flac::CUESHEET)) {
+				debugLog('addToPL(): Cuesheet found in MetaDataBlock.');
+				$cuesheet = 'FIXME'; // don't have a sample to test extraction
+				$is_playlist = true;
+			}
+			else {
+				debugLog('addToPL(): No Cuesheet found');
+			}
+
+			if ($is_playlist) {
+				// debugLog("Cuesheet:\n" . $cuesheet);
+			}
+		}
+		catch (Zend_Media_Flac_Exception $e) {
+			// where does workerLog go??
+			// workerLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
+			debugLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
+		}
+		debugLog('addToPL(): fell through: :' . $is_playlist);
+	}
+
 	// playlist 
-	if ($ext == 'm3u' || $ext == 'pls' || $ext == 'cue' || strpos($path, '/') === false) {
+	if ($is_playlist || $ext == 'm3u' || $ext == 'pls' || $ext == 'cue' || strpos($path, '/') === false) {
 		// radio stations
 		if (strpos($path, 'RADIO') !== false) {
 			if (strpos($path, 'Soma FM') !== false) {
@@ -493,7 +538,7 @@ function addToPL($sock, $path) {
 				if ($end == '.pls' || $end == '.m3u') {
 					$path = $url;
 				}
-			}	
+			}
 		}
 
 		sendMpdCmd($sock, 'load "' . html_entity_decode($path) . '"');
