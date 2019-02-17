@@ -317,10 +317,9 @@ function loadLibrary($sock) {
 function genFlatList($sock) {
 	sendMpdCmd($sock, 'listallinfo');
 	$resp = readMpdResp($sock);
-
+	
 	if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
 		$lines = explode("\n", $resp);
-
 		$item = 0;
 		$flat = array();
 		$linecount = count($lines);
