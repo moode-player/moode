@@ -485,7 +485,6 @@ function addToPL($sock, $path, $is_playlist=false) {
 
 	// this could become a case statement with approaches to handle .wv / wavepack
 	if ($ext == 'flac') {
-		debugLog('trying: ' . $path);
 		require_once 'Zend/Media/Flac.php';
 		debugLog('addToPL(): Checking for cuesheet in: ' . $path);
 		try {
@@ -520,7 +519,6 @@ function addToPL($sock, $path, $is_playlist=false) {
 			// workerLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
 			debugLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
 		}
-		debugLog('addToPL(): fell through: :' . $is_playlist);
 	}
 
 	// playlist 
