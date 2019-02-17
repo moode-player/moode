@@ -1380,8 +1380,10 @@ function formatBrowseData(data, path, i, panel) {
 	// saved playlists 
 	else if (typeof data[i].playlist != 'undefined') {
 		// skip .wv (WavPack) files, apparently they can contain embedded playlist
-		if (data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase() == 'wv') {
-			output= '';
+		// flac files can also contain embedded playlists - and now they are handled as such, automatically
+		fileext = data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase();
+		if (['wv', 'flac'].indexOf(fileext) >= 0 ) {
+			output = '';
 		}
 		else {
 			output = '<li id="db-' + (i + 1) + '" class="clearfix" data-path="' + data[i].playlist + '">';
