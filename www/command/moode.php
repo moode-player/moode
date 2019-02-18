@@ -386,6 +386,12 @@ else {
 				break;
 				
 			// LIBRARY PANEL
+		case 'listall':
+			// could allow for the no-path case, but only if needed..
+			if (isset($_POST['path']) && $_POST['path'] != '') {
+				echo json_encode(listAll($sock, $_POST['path']));
+			}
+			break;
 	        case 'addall':
 	            if (isset($_POST['path']) && $_POST['path'] != '') {
 	                echo json_encode(addallToPL($sock, $_POST['path']));

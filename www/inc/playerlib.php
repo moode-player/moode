@@ -601,6 +601,34 @@ function parseDelimFile($data, $delim) {
 	return $array;
 }
 
+// list songfiles under path
+function listAll($sock, $path) {
+	sendMpdCmd($sock, 'listall "' . $path . '"');
+	$resp = readMpdResp($sock);
+	$pl = parseListAll($resp);
+	return $pl;
+}
+
+function parseListAll($resp) {
+        if (is_null($resp)) {
+                return NULL;
+        }
+        $array = array();
+        $line = strtok($resp,"\n");
+        $file = '';
+        $idx = 0;
+
+        while ($line) {
+                list ($element, $value) = explode(': ', $line, 2);
+                if ($element == 'file') {
+                        $file = $value;
+                        $array[$idx++] = $value;
+                }
+		$line = strtok("\n");
+       }
+       return $array;
+}
+
 // get playist
 function getPLInfo($sock) {
 	sendMpdCmd($sock, 'playlistinfo');
