@@ -247,6 +247,27 @@ if (phpVer() == '5.3') {
 	}
 }
 
+// Helper functions for html generation
+
+function versioned_resource ($file, $type='stylesheet') {
+	// could get this from master config, or by hashing each file. Hard coded as proof of concept.
+	$resourcetag = '4.4.x';
+	$version_indicator = '?v=';
+	$tagged_link = '<link href="' . $file . $version_indicator . $resourcetag . '"  rel="' . $type .'">';
+	echo $tagged_link . "\n";
+}
+function versioned_script ($file, $type='') {
+	// could get this from master config, or by hashing each file. Hard coded as proof of concept.
+	$resourcetag = '4.4.x';
+	$version_indicator = '?v=';
+	$tagged_src = '<script src="' . $file . $version_indicator . $resourcetag . '"';
+	if ($type != '' ) {
+		$tagged_src .= ' type="' . $type . '"';
+	}
+	$tagged_src .= '></script>';
+	echo $tagged_src . "\n";
+}
+
 // socket routines for engine-cmd.php
 function sendEngCmd ($cmd) {
 	//workerLog('sendCmd(): Reading in portfile');

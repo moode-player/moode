@@ -855,37 +855,43 @@
 </div>
 
 <!-- FRAMEWORK LIBS -->
-<script src="js/jquery-1.8.2.min.js"></script>
-<script src="js/jquery-ui-1.10.0.custom.min.js"></script>
-<script src="js/jquery.countdown.js"></script>
-<script src="js/jquery.scrollTo.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-select.min.js"></script>
+<?php
+versioned_script('js/jquery-1.8.2.min.js');
+versioned_script('js/jquery-ui-1.10.0.custom.min.js');
+versioned_script('js/jquery.countdown.js');
+versioned_script('js/jquery.scrollTo.min.js');
+versioned_script('js/bootstrap.min.js');
+versioned_script('js/bootstrap-select.min.js');
+?>
 <!-- MOODE LIBS -->
-<script src="js/jquery.adaptive-backgrounds.js"></script>
-<script src="js/notify.js"></script>
-<script src="js/playerlib.js"></script>
-<script src="js/links.js"></script>
-<script src="js/jquery.touchSwipe.min.js"></script>
-<script src="js/jquery.lazyload.js"></script>
-<script src="js/jquery.md5.js"></script>
+<?php
+versioned_script('js/jquery.adaptive-backgrounds.js');
+versioned_script('js/notify.js');
+versioned_script('js/playerlib.js');
+versioned_script('js/links.js');
+versioned_script('js/jquery.touchSwipe.min.js');
+versioned_script('js/jquery.lazyload.js');
+versioned_script('js/jquery.md5.js');
+?>
 
 <!-- LIBS FOR PANELS OR CONFIGS -->
-<?php if ($section == 'index') { ?>
-	<script src="jsw/jquery.knob.js"></script>
-	<script src="js/bootstrap-contextmenu.js"></script>
-	<script src="js/jquery.pnotify.min.js"></script>
-	<script src="js/scripts-panels.js"></script>
-<?php } else { ?>
-	<script src="js/custom_checkbox_and_radio.js"></script>
-	<script src="js/custom_radio.js"></script>
-	<script src="js/jquery.tagsinput.js"></script>
-	<script src="js/jquery.placeholder.js"></script>
-	<script src="js/i18n/_messages.en.js" type="text/javascript"></script>
-	<script src="js/application.js"></script>
-	<script src="js/jquery.pnotify.min.js"></script>
-	<script src="js/scripts-configs.js"></script>
-<?php } ?>
+<?php if ($section == 'index') {
+	versioned_script('jsw/jquery.knob.js');
+	versioned_script('js/bootstrap-contextmenu.js');
+	versioned_script('js/jquery.pnotify.min.js');
+	versioned_script('js/scripts-panels.js');
+} else {
+	versioned_script('js/custom_checkbox_and_radio.js');
+	versioned_script('js/custom_radio.js');
+	versioned_script('js/jquery.tagsinput.js');
+	versioned_script('js/jquery.placeholder.js');
+	versioned_script('js/i18n/_messages.en.js', 'text/javascript');
+	versioned_script('js/application.js');
+	versioned_script('js/jquery.pnotify.min.js');
+	versioned_script('js/scripts-configs.js');
+}
+
+?>
 
 <!-- DISPLAY MESSAGES -->
 <?php if (isset($_SESSION['notify']) && $_SESSION['notify'] != '') {
