@@ -231,7 +231,6 @@ function sendMpdCmd(cmd, async) {
     });
 }
 
-
 // moode.php commands
 function sendMoodeCmd(type, cmd, data, async) {	
 	if (typeof(data) === 'undefined') {data = '';}
@@ -1089,11 +1088,11 @@ function mpdDbCmd(cmd, path) {
 		$.post('command/moode.php?cmd=lsinfo', {'path': 'RADIO'}, function(data) {renderBrowse(data, 'RADIO');}, 'json');
 	}
 	else if (['folderadd', 'folderplay', 'folderplayall', 'folderaddall', 'folderclradd', 'folderclrplay'].indexOf(cmd) != -1) {
-	    var realcmd = cmd.substr(6);
-	    // since path is passed as array, need to force use the 'all' variants
-	    realcmd += realcmd.substr(length-3) == 'all' ? '' : 'all';
-	    // TODO? break sort function out of renderBrowse, so that lists from this approach are consistent.
-	    //TODO - need to add a clraddall handler, for consistency (does not seem to be called yet, though)
+		var realcmd = cmd.substr(6);
+		// since path is passed as array, need to force use the 'all' variants
+		realcmd += realcmd.substr(length-3) == 'all' ? '' : 'all';
+		// TODO? break sort function out of renderBrowse, so that lists from this approach are consistent.
+		//TODO - need to add a clraddall handler, for consistency (does not seem to be called yet, though)
 		$.post('command/moode.php?cmd=listall', {'path': path}, function(data) {mpdDbCmd(realcmd, data);}, 'json')
 	}
 }
@@ -2614,7 +2613,7 @@ function screenSaverTimeout (key, returnType) {
 // main menu and context menus
 $('.context-menu a').click(function(e) {
     var path = UI.dbEntry[0]; // file path or item num
-    var in_browse = $('.browse-panel-btn.active').length > 0 ? 'folder' : '';
+	var in_browse = $('.browse-panel-btn.active').length > 0 ? 'folder' : '';
 
 	// CONTEXT MENUS
 

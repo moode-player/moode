@@ -472,7 +472,7 @@ function addallToPL($sock, $songs) {
 		// below approach, with accompanying chainMpdCmds couldn't handle playlists (specifically embedded ones...)
 		// array_push($cmds, 'add "' . html_entity_decode($path) . '"');
 	}
-
+	
 	//chainMpdCmds($sock, $cmds);
 }
 
@@ -515,7 +515,6 @@ function addToPL($sock, $path, $is_playlist=false) {
 			}
 		}
 		catch (Zend_Media_Flac_Exception $e) {
-			// where does workerLog go??
 			// workerLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
 			debugLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
 		}
@@ -610,23 +609,23 @@ function listAll($sock, $path) {
 }
 
 function parseListAll($resp) {
-        if (is_null($resp)) {
-                return NULL;
-        }
-        $array = array();
-        $line = strtok($resp,"\n");
-        $file = '';
-        $idx = 0;
+	if (is_null($resp)) {
+		return NULL;
+	}
+	$array = array();
+	$line = strtok($resp,"\n");
+	$file = '';
+	$idx = 0;
 
-        while ($line) {
-                list ($element, $value) = explode(': ', $line, 2);
-                if ($element == 'file') {
-                        $file = $value;
-                        $array[$idx++] = $value;
-                }
+	while ($line) {
+		list ($element, $value) = explode(': ', $line, 2);
+		if ($element == 'file') {
+			$file = $value;
+			$array[$idx++] = $value;
+		}
 		$line = strtok("\n");
-       }
-       return $array;
+	}
+	return $array;
 }
 
 // get playist
