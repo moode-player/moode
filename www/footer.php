@@ -889,9 +889,7 @@ versioned_script('js/jquery.md5.js');
 	versioned_script('js/application.js');
 	versioned_script('js/jquery.pnotify.min.js');
 	versioned_script('js/scripts-configs.js');
-}
-
-?>
+} ?>
 
 <!-- DISPLAY MESSAGES -->
 <?php if (isset($_SESSION['notify']) && $_SESSION['notify'] != '') {
