@@ -219,6 +219,7 @@ var allGenres = [];
 var allArtists = [];
 var allAlbums = [];
 var allSongs = [];
+var allAlbumCovers = [];
 
 function debugLog(msg)  {
 	if (SESSION.json['debuglog'] == '1') {
@@ -1784,8 +1785,7 @@ function renderLibrary(data) {
 
 	// generate library array
 	filterLib();
-	sortTracks();
-	sortAlbumCovers();
+	sortLib();
 	
 	// store song count
 	LIB.totalSongs = allSongs.length;
@@ -1794,7 +1794,7 @@ function renderLibrary(data) {
 	renderGenres();
 }
 
-function sortTracks() {
+function sortLib() {
 	allGenres.sort();
 	try {
 		// natural ordering 
@@ -1807,6 +1807,11 @@ function sortTracks() {
 		});
 		allSongs.sort(function(a, b) {
 			return (collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
+		});
+		allAlbumCovers.sort(function(a, b) {
+			var artistA = a.album_artist || a.artist;
+			var artistB = b.album_artist || b.artist;
+			return (collator.compare(removeArticles(artistA), removeArticles(artistB)) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
 		});
 	}			
 	catch (e) {
@@ -1826,22 +1831,10 @@ function sortTracks() {
 			var x1 = a['tracknum'], x2 = b['tracknum'];
 			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
 		});
-	}
-}
-
-function sortAlbumCovers() {
-	// sort album covers by artist 
-	allAlbumCovers = allAlbums.slice();
-	try {
-		// natural ordering
 		allAlbumCovers.sort(function(a, b) {
-			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
-		});
-	}
-	catch (e) {
-		// fallback to default ordering
-		allAlbumCovers.sort(function(a, b) {
-			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase(); // r44d
+			var artistA = a.album_artist || a.artist;
+			var artistB = b.album_artist || b.artist;
+			var x1 = removeArticles(artistA).toLowerCase(), x2 = removeArticles(artistB).toLowerCase(); // r44d
 			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
 			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
 		});
@@ -1911,6 +1904,8 @@ function filterLib() {
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg'
 		};
 	});
+
+	allAlbumCovers = allAlbums.slice();
 	//console.log(allGenres);
 	//console.log(allArtists);
 	//console.log(allAlbums);
@@ -1963,8 +1958,7 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 	}
 
 	filterLib();
-	sortTracks();
-	sortAlbumCovers();
+	sortLib();
 	renderFunc();
 }
 
