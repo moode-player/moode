@@ -1981,8 +1981,8 @@ var renderGenres = function() {
 
 	for (var i = 0; i < allGenres.length; i++) {
 	output += '<li class="clearfix"><div class="lib-entry'
-			+ (LIB.filters.genres.indexOf(allGenres[i]) >= 0 ? ' active' : '')
-			+ '">' + allGenres[i] + '</div></li>';
+		+ (LIB.filters.genres.indexOf(allGenres[i]) >= 0 ? ' active' : '')
+		+ '">' + allGenres[i] + '</div></li>';
 	}
 	
 	$('#genresList').html(output);
