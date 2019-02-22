@@ -2163,9 +2163,9 @@ if ($('#mt2').css('display') == 'block') { // r44d
 
 // click on genres header
 $('#genreheader').on('click', '.lib-heading', function(e) {
-	LIB.filters.genres = [];
-	LIB.filters.artists = [];
-	LIB.filters.albums = [];
+	LIB.filters.genres.length = 0;
+	LIB.filters.artists.length = 0;
+	LIB.filters.albums.length = 0;
 	UI.libPos.fill(-2);
 	clickedLibItem(e, undefined, LIB.filters.genres, renderGenres);
 	$("#searchResetLib").hide();
@@ -2173,8 +2173,8 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 });
 // click on artists header
 $('#artistheader').on('click', '.lib-heading', function(e) {
-	LIB.filters.artists = [];
-	LIB.filters.albums = [];
+	LIB.filters.artists.length = 0;
+	LIB.filters.albums.length = 0;
 	UI.libPos.fill(-2);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);    
 	$("#searchResetLib").hide();
@@ -2288,6 +2288,7 @@ $('#albumsList, #albumcovers').on('click', '.lib-entry', function(e) {
 	$('#lib-file').scrollTo(0, 200);
 	UI.libAlbum = album;
 });
+
 // click random album button
 $('#random-album, #random-albumcover').click(function(e) {
 	var array = new Uint16Array(1); // r43h
