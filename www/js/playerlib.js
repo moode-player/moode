@@ -211,6 +211,15 @@ var showSearchResetLib = false;
 var showSearchResetRa = false;
 var showSearchResetPh = false;
 
+// global for library
+var fullLib = [];
+
+// Variable name misdirection as these will contain filtered, sorted elements
+var allGenres = [];
+var allArtists = [];
+var allAlbums = [];
+var allSongs = [];
+
 function debugLog(msg)  {
 	if (SESSION.json['debuglog'] == '1') {
 		console.log(Date.now() + ': ' + msg);
@@ -1774,7 +1783,6 @@ function renderLibrary(data) {
 	//debugLog(fullLib);
 
 	// generate library array
-	setFilters();
 	filterLib();
 	sortTracks();
 	sortAlbumCovers();
@@ -1784,19 +1792,6 @@ function renderLibrary(data) {
 
 	// Render
 	renderGenres();
-}
-
-function setFilters() {
-	// check filters validity
-	var newAlbumFilters = checkFilters(albumFilter, allAlbums, keyAlbum);
-	if (newAlbumFilters.length != albumFilter.length) {
-		LIB.filters.albums = newAlbumFilters;
-	}
-
-	var newArtistFilters = checkFilters(artistFilter, allArtists, function(o) { return o; });
-	if (newArtistFilters.length != artistFilter.length) {
-		LIB.filters.artists = newArtistFilters;
-	}
 }
 
 function sortTracks() {
@@ -1810,6 +1805,9 @@ function sortTracks() {
 		allAlbums.sort(function(a, b) {
 			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
 		});
+		allSongs.sort(function(a, b) {
+			return (collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
+		});
 	}			
 	catch (e) {
 		// fallback to default ordering
@@ -1822,6 +1820,11 @@ function sortTracks() {
 			a = removeArticles(a['album'].toLowerCase());
 			b = removeArticles(b['album'].toLowerCase());
 			return a > b ? 1 : (a < b ? -1 : 0);
+		});
+		allSongs.sort(function(a, b) {
+			var x1 = a['disc'], x2 = b['disc'];
+			var x1 = a['tracknum'], x2 = b['tracknum'];
+			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
 		});
 	}
 }
@@ -1920,15 +1923,6 @@ function removeArticles(string) {
 	return string.replace(/^(a|an|the) (.*)/gi, '$2');
 }
 
-// check for invalid filters
-function checkFilters(filters, collection, func) {
-	return filters.reduce(function(acc, filter){
-		acc.push(collection.find(function(element){
-			return filter == func(element);
-		}));
-	}, []);
-}
-
 // generate album/artist key
 function keyAlbum(objAlbum) {
 	return objAlbum.album + '@' + (objAlbum.album_artist || objAlbum.artist);
@@ -1953,7 +1947,7 @@ function makeCoverUrl(filepath) {
 function clickedLibItem(event, item, currentFilter, renderFunc) {
 	if (item == undefined) {
 		// all
-		currentFilter.length = 0;
+		currentFilter = [];
 	}
 	else if (event.ctrlKey) {
 		currentIndex = currentFilter.indexOf(item);
@@ -1965,11 +1959,9 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 		}
 	}
 	else {
-		currentFilter.length = 0;
-		currentFilter.push(item);
+		currentFilter = [item];
 	}
-	
-	setFilters();		
+
 	filterLib();
 	sortTracks();
 	sortAlbumCovers();
@@ -2076,24 +2068,6 @@ var renderSongs = function(albumPos) {
 
 	if (LIB.albumClicked == true) { // only display tracks if album selected
 		LIB.albumClicked = false;
-
-		// r43p sort tracks and files
-		// r44f add disc number to sort
-		try {
-			// natural ordering
-			var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-			allSongs.sort(function(a, b) {
-				return (collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
-			});
-		}
-		catch (e) {
-			// fallback to default ordering
-			allSongs.sort(function(a, b) {
-				var x1 = a['disc'], x2 = b['disc'];
-				var x1 = a['tracknum'], x2 = b['tracknum'];
-				return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-			});
-		}
 
 		for (i = 0; i < allSongs.length; i++) {
 			var songyear = allSongs[i].year ? allSongs[i].year.slice(0,4) : ' ';
@@ -2294,7 +2268,7 @@ $('#albumsList, #albumcovers').on('click', '.lib-entry', function(e) {
 	}
 
 	LIB.albumClicked = true; // for renderSongs()
-  $(itemSelector).removeClass('active');
+	$(itemSelector).removeClass('active');
 	$(itemSelector).eq(pos).addClass('active');
 
 	// song list for album		
@@ -2349,13 +2323,13 @@ $('#random-album, #random-albumcover').click(function(e) {
 		var artist = allAlbumCovers[pos].artist;
 	}
 
-  LIB.albumClicked = true; // for renderSongs()
-  $(itemSelector).removeClass('active');
+	LIB.albumClicked = true; // for renderSongs()
+	$(itemSelector).removeClass('active');
 	$(itemSelector).eq(pos).addClass('active');
 	customScroll(scrollSelector, pos, 200);	
 
 	// song list for album		
-  clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
+	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 });
 
 // click lib coverart
