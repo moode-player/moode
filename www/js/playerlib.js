@@ -2115,7 +2115,7 @@ var renderSongs = function(albumPos) {
 	//console.log('pos=(' + albumPos + ')')
 	
 	// Library panel cover art and metadata
-	if (allAlbums.length == 1 || LIB.filters.albums != '' || typeof(albumPos) !== 'undefined') {
+	if (allAlbums.length == 1 || LIB.filters.albums.length || typeof(albumPos) !== 'undefined') {
 		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' + 
 			'<img class="lib-coverart" src="' + makeCoverUrl(allSongs[0].file) + '" ' + 'alt="Cover art not found"' + '></a>');
 		$('#lib-albumname').html(allSongs[0].album);
