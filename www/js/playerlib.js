@@ -219,6 +219,7 @@ var allGenres = [];
 var allArtists = [];
 var allAlbums = [];
 var allSongs = [];
+var allSongsDisc = [];
 var allAlbumCovers = [];
 
 function debugLog(msg)  {
@@ -1844,7 +1845,7 @@ function sortLib() {
 // generate library array
 function filterLib() {
 	allSongs = fullLib;
-	allSongsDisc = []; // r44g
+	allSongsDisc.length = 0; // r44g
 
 	var reduceGenres = function(acc, track) {
 		(acc[track.genre] = acc[track.genre] || []).push(track);
@@ -1966,9 +1967,9 @@ var renderGenres = function() {
 	var output = '';
 
 	for (var i = 0; i < allGenres.length; i++) {
-	output += '<li class="clearfix"><div class="lib-entry'
-		+ (LIB.filters.genres.indexOf(allGenres[i]) >= 0 ? ' active' : '')
-		+ '">' + allGenres[i] + '</div></li>';
+		output += '<li class="clearfix"><div class="lib-entry'
+			+ (LIB.filters.genres.indexOf(allGenres[i]) >= 0 ? ' active' : '')
+			+ '">' + allGenres[i] + '</div></li>';
 	}
 	
 	$('#genresList').html(output);
