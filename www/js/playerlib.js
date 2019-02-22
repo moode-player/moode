@@ -1774,7 +1774,10 @@ function renderLibrary(data) {
 	//debugLog(fullLib);
 
 	// generate library array
+	setFilters();
 	filterLib();
+	sortTracks();
+	sortAlbumCovers();
 	
 	// store song count
 	LIB.totalSongs = allSongs.length;
@@ -1783,12 +1786,69 @@ function renderLibrary(data) {
 	renderGenres();
 }
 
+function setFilters() {
+	// check filters validity
+	var newAlbumFilters = checkFilters(albumFilter, allAlbums, keyAlbum);
+	if (newAlbumFilters.length != albumFilter.length) {
+		LIB.filters.albums = newAlbumFilters;
+	}
+
+	var newArtistFilters = checkFilters(artistFilter, allArtists, function(o) { return o; });
+	if (newArtistFilters.length != artistFilter.length) {
+		LIB.filters.artists = newArtistFilters;
+	}
+}
+
+function sortTracks() {
+	allGenres.sort();
+	try {
+		// natural ordering 
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+		allArtists.sort(function(a, b) {
+			return collator.compare(removeArticles(a), removeArticles(b));
+		});
+		allAlbums.sort(function(a, b) {
+			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
+		});
+	}			
+	catch (e) {
+		// fallback to default ordering
+		allArtists.sort(function(a, b) {
+			a = removeArticles(a.toLowerCase());
+			b = removeArticles(b.toLowerCase());
+			return a > b ? 1 : (a < b ? -1 : 0);
+		});
+		allAlbums.sort(function(a, b) {
+			a = removeArticles(a['album'].toLowerCase());
+			b = removeArticles(b['album'].toLowerCase());
+			return a > b ? 1 : (a < b ? -1 : 0);
+		});
+	}
+}
+
+function sortAlbumCovers() {
+	// sort album covers by artist 
+	allAlbumCovers = allAlbums.slice();
+	try {
+		// natural ordering
+		allAlbumCovers.sort(function(a, b) {
+			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+		});
+	}
+	catch (e) {
+		// fallback to default ordering
+		allAlbumCovers.sort(function(a, b) {
+			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase(); // r44d
+			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
+			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
+		});
+	}
+}
+
 // generate library array
 function filterLib() {
 	allSongs = fullLib;
 	allSongsDisc = []; // r44g
-
-	var needReload = false;
 
 	var reduceGenres = function(acc, track) {
 		(acc[track.genre] = acc[track.genre] || []).push(track);
@@ -1848,69 +1908,6 @@ function filterLib() {
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg'
 		};
 	});
-
-	// check filters validity
-	var newFilters = checkFilters(albumFilter, allAlbums, function(o) { return keyAlbum(o); });
-
-	if (newFilters.length != albumFilter.length) {
-		needReload = true;
-		LIB.filters.albums = newFilters;
-	}
-
-	newFilters = checkFilters(artistFilter, allArtists, function(o) { return o; });
-
-	if (newFilters.length != artistFilter.length) {
-		needReload = true;
-		LIB.filters.artists = newFilters;
-	}
-
-	if (needReload) {
-		filterLib();
-	}
-	else {
-		// sort Genres, Artists, Albums
-		allGenres.sort();	
-		try {
-			// natural ordering 
-			var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-			allArtists.sort(function(a, b) {
-				return collator.compare(removeArticles(a), removeArticles(b));
-			});
-			allAlbums.sort(function(a, b) {
-				return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
-			});
-		}			
-		catch (e) {
-			// fallback to default ordering
-			allArtists.sort(function(a, b) {
-				a = removeArticles(a.toLowerCase());
-				b = removeArticles(b.toLowerCase());
-				return a > b ? 1 : (a < b ? -1 : 0);
-			});
-			allAlbums.sort(function(a, b) {
-				a = removeArticles(a['album'].toLowerCase());
-				b = removeArticles(b['album'].toLowerCase());
-				return a > b ? 1 : (a < b ? -1 : 0);
-			});
-		}
-
-		// sort album covers by artist 
-		allAlbumCovers = allAlbums.slice();
-		try {
-			// natural ordering
-			allAlbumCovers.sort(function(a, b) {
-				return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
-			});
-		}
-		catch (e) {
-			// fallback to default ordering
-			allAlbumCovers.sort(function(a, b) {
-				var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase(); // r44d
-				var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
-				return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-			});
-		}
-	}
 	//console.log(allGenres);
 	//console.log(allArtists);
 	//console.log(allAlbums);
@@ -1925,17 +1922,11 @@ function removeArticles(string) {
 
 // check for invalid filters
 function checkFilters(filters, collection, func) {
-	var newFilters = [];
-	
-	for (var filter in filters) {
-		for (var obj in collection) {
-			if (filters[filter] == func(collection[obj])) {
-				newFilters.push(filters[filter]);
-				break;
-			}
-		}
-	}
-	return newFilters;
+	return filters.reduce(function(acc, filter){
+		acc.push(collection.find(function(element){
+			return filter == func(element);
+		}));
+	}, []);
 }
 
 // generate album/artist key
@@ -1977,8 +1968,11 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 		currentFilter.length = 0;
 		currentFilter.push(item);
 	}
-			
+	
+	setFilters();		
 	filterLib();
+	sortTracks();
+	sortAlbumCovers();
 	renderFunc();
 }
 
@@ -2030,20 +2024,22 @@ var renderAlbums = function() {
 
 	for (var i = 0; i < allAlbums.length; i++) {
 		// add || allAlbums.length = 1 to automatically highlight if only 1 album in list
-	if (LIB.filters.albums.indexOf(keyAlbum(allAlbums[i])) >= 0 || allAlbums.length == 1) {
-		tmp = ' active';
-		LIB.albumClicked = true; // for renderSongs() so it can decide whether to display tracks	    
-	}
+		if (LIB.filters.albums.indexOf(keyAlbum(allAlbums[i])) >= 0 || allAlbums.length == 1) {
+			tmp = ' active';
+			LIB.albumClicked = true; // for renderSongs() so it can decide whether to display tracks	    
+		}
 		else {
-		tmp = '';
-	}
+			tmp = '';
+		}
 
-	output += '<li class="clearfix"><div class="lib-entry'
-		+ tmp
-			+ '">' + allAlbums[i].album + ' <span> ' + allAlbums[i].artist + '</span></div></li>';
-	output2 += '<li class="clearfix"><div class="lib-entry'
-		+ tmp
-			+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl  + '" width="100" height="100"><div class="albumcover">' + allAlbumCovers[i].album + '</div><span> ' + allAlbumCovers[i].artist + '</span></div></li>';
+		output += '<li class="clearfix"><div class="lib-entry' + tmp + '">'
+			+ allAlbums[i].album + ' <span> ' + allAlbums[i].artist + '</span>'
+			+ '</div></li>';
+		output2 += '<li class="clearfix"><div class="lib-entry' + tmp + '">'
+			+ '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl  + '" width="100" height="100">'
+			+ '<div class="albumcover">' + allAlbumCovers[i].album + '</div>'
+			+ '<span> ' + allAlbumCovers[i].artist + '</span>'
+			+ '</div></li>';
 	}
 
 	$('#albumsList').html(output);
@@ -2064,7 +2060,7 @@ var renderAlbums = function() {
 	if ($('.album-panel-btn').hasClass('active')) {
 		//console.log('lazyload started');
 		$('img.lazy').lazyload({
-		container: $('#lib-albumcover')
+			container: $('#lib-albumcover')
 		});		
 	}
 
@@ -2100,29 +2096,29 @@ var renderSongs = function(albumPos) {
 		}
 
 		for (i = 0; i < allSongs.length; i++) {
-		var songyear = allSongs[i].year ? allSongs[i].year.slice(0,4) : ' ';
+			var songyear = allSongs[i].year ? allSongs[i].year.slice(0,4) : ' ';
 
-		// r44f add disc num and context menu
-		if (allSongs[i].disc != discNum) {
-			discDiv = '<div id="lib-disc-' + allSongs[i].disc + '" class="lib-disc"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + allSongs[i].disc + '</a></div>'
-			discNum = allSongs[i].disc;
-		}
-		else {
-			discDiv = '';
-		}
-		
-		output += discDiv // r44g move outside of <li>
-			+ '<li id="lib-song-' + (i + 1) + '" class="clearfix">'
-				+ '<div class="lib-entry-song">'
-					+ '<span class="songtrack">' + allSongs[i].tracknum + '</span>'
-					+ '<span class="songname">' + allSongs[i].title + '</span>'
-					+ '<span class="songtime"> ' + allSongs[i].time_mmss + '</span>'
-					+ '<span class="songartist"> ' + allSongs[i].artist + '</span>'
-					+ (allSongs[i].composer ? '<br><span class="songcomposer">' + allSongs[i].composer + '</span>' : '')
-					+ '<span class="songyear"> ' + songyear + '</span>'
-				+ '</div>'
-				+ '<div class="lib-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
-			+ '</li>';
+			// r44f add disc num and context menu
+			if (allSongs[i].disc != discNum) {
+				discDiv = '<div id="lib-disc-' + allSongs[i].disc + '" class="lib-disc"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + allSongs[i].disc + '</a></div>'
+				discNum = allSongs[i].disc;
+			}
+			else {
+				discDiv = '';
+			}
+			
+			output += discDiv // r44g move outside of <li>
+				+ '<li id="lib-song-' + (i + 1) + '" class="clearfix">'
+					+ '<div class="lib-entry-song">'
+						+ '<span class="songtrack">' + allSongs[i].tracknum + '</span>'
+						+ '<span class="songname">' + allSongs[i].title + '</span>'
+						+ '<span class="songtime"> ' + allSongs[i].time_mmss + '</span>'
+						+ '<span class="songartist"> ' + allSongs[i].artist + '</span>'
+						+ (allSongs[i].composer ? '<br><span class="songcomposer">' + allSongs[i].composer + '</span>' : '')
+						+ '<span class="songyear"> ' + songyear + '</span>'
+					+ '</div>'
+					+ '<div class="lib-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
+				+ '</li>';
 
 			LIB.totalTime += parseSongTime(allSongs[i].time);
 		}
