@@ -2132,20 +2132,10 @@ var renderSongs = function(albumPos) {
 		$('#lib-numtracks').html(allSongs.length + ((allSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
 	}
 	else {
-		if (LIB.filters.genres == '') {
-			if (LIB.filters.artists == '') {
-				var album = 'Music Library';
-				var artist = '';
-			}
-			else {
-				var album = LIB.filters.artists; 
-				var artist = '';
-			}
-		}
-		else {
-			var album = LIB.filters.genres;
-			var artist = LIB.filters.artists;
-		}
+
+		var album = LIB.filters.genres.length ? LIB.filters.genres : (LIB.filters.artists.length ? LIB.filters.artists : 'Music Library');
+		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
+
 		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
 		$('#lib-albumname').html(album);
 		$('#lib-artistname').html(artist);
@@ -2173,9 +2163,9 @@ if ($('#mt2').css('display') == 'block') { // r44d
 
 // click on genres header
 $('#genreheader').on('click', '.lib-heading', function(e) {
-	LIB.filters.genres.length = 0;
-	LIB.filters.artists.length = 0;
-	LIB.filters.albums.length = 0;
+	LIB.filters.genres = [];
+	LIB.filters.artists = [];
+	LIB.filters.albums = [];
 	UI.libPos.fill(-2);
 	clickedLibItem(e, undefined, LIB.filters.genres, renderGenres);
 	$("#searchResetLib").hide();
@@ -2183,8 +2173,8 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 });
 // click on artists header
 $('#artistheader').on('click', '.lib-heading', function(e) {
-	LIB.filters.artists.length = 0;
-	LIB.filters.albums.length = 0;
+	LIB.filters.artists = [];
+	LIB.filters.albums = [];
 	UI.libPos.fill(-2);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);    
 	$("#searchResetLib").hide();
