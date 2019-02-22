@@ -1813,7 +1813,7 @@ function sortLib() {
 			var artistB = b.album_artist || b.artist;
 			return (collator.compare(removeArticles(artistA), removeArticles(artistB)) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
 		});
-	}			
+	}
 	catch (e) {
 		// fallback to default ordering
 		allArtists.sort(function(a, b) {
@@ -2126,7 +2126,6 @@ var renderSongs = function(albumPos) {
 		$('#lib-numtracks').html(allSongs.length + ((allSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
 	}
 	else {
-
 		var album = LIB.filters.genres.length ? LIB.filters.genres : (LIB.filters.artists.length ? LIB.filters.artists : 'Music Library');
 		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
 
@@ -2165,6 +2164,7 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 	$("#searchResetLib").hide();
 	showSearchResetLib = false;
 });
+
 // click on artists header
 $('#artistheader').on('click', '.lib-heading', function(e) {
 	LIB.filters.artists.length = 0;
@@ -2174,6 +2174,7 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 	$("#searchResetLib").hide();
 	showSearchResetLib = false;
 });
+
 // click on albums or album covers header
 $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
 	//console.log($(this).parent().attr('id'));
@@ -2196,6 +2197,7 @@ $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
 	$("#searchResetLib").hide();
 	showSearchResetLib = false;
 });
+
 $('#searchResetLib').click(function(e) {
 	LIB.filters.albums.length = 0;
 	UI.libPos.fill(-2);
@@ -2866,24 +2868,23 @@ $('.btn-customize-update').click(function(e){
 	SESSION.json['adevname'] = $('#audio-device-name span').text() == '' ? 'none' : $('#audio-device-name span').text();
 	
 	// update cfg_system / $_SESSION vars
-	var result = sendMoodeCmd('POST', 'updcfgsystem',
-		{'playhist': SESSION.json['playhist'],
-		 'xtagdisp': SESSION.json['xtagdisp'],
-		 'musictab_default': SESSION.json['musictab_default'],
-		 'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
-		 'library_utf8rep': SESSION.json['library_utf8rep'],
-		 'library_covsearchpri': SESSION.json['library_covsearchpri'],
-		 'library_hiresthm': SESSION.json['library_hiresthm'],
-		 'themename': SESSION.json['themename'],
-		 'themecolor': SESSION.json['themecolor'],
-		 'alphablend': SESSION.json['alphablend'],
-		 'adaptive': SESSION.json['adaptive'],
-		 'cover_backdrop': SESSION.json['cover_backdrop'],
-		 'cover_blur': SESSION.json['cover_blur'],
-		 'cover_scale': SESSION.json['cover_scale'],
-		 'adevname': SESSION.json['adevname']
-		}
-	);
+	var result = sendMoodeCmd('POST', 'updcfgsystem',{
+		'playhist': SESSION.json['playhist'],
+		'xtagdisp': SESSION.json['xtagdisp'],
+		'musictab_default': SESSION.json['musictab_default'],
+		'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
+		'library_utf8rep': SESSION.json['library_utf8rep'],
+		'library_covsearchpri': SESSION.json['library_covsearchpri'],
+		'library_hiresthm': SESSION.json['library_hiresthm'],
+		'themename': SESSION.json['themename'],
+		'themecolor': SESSION.json['themecolor'],
+		'alphablend': SESSION.json['alphablend'],
+		'adaptive': SESSION.json['adaptive'],
+		'cover_backdrop': SESSION.json['cover_backdrop'],
+		'cover_blur': SESSION.json['cover_blur'],
+		'cover_scale': SESSION.json['cover_scale'],
+		'adevname': SESSION.json['adevname']
+	});
 
 	if (scnSaverTimeoutChange == true) {
 		var resp = sendMoodeCmd('GET', 'resetscnsaver');
