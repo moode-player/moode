@@ -1943,7 +1943,7 @@ function makeCoverUrl(filepath) {
 function clickedLibItem(event, item, currentFilter, renderFunc) {
 	if (item == undefined) {
 		// all
-		currentFilter = [];
+		currentFilter.length = 0;
 	}
 	else if (event.ctrlKey) {
 		currentIndex = currentFilter.indexOf(item);
@@ -1951,11 +1951,13 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 			currentFilter.splice(currentIndex, 1);
 		}
 		else {
+
 			currentFilter.push(item);
 		}
 	}
 	else {
-		currentFilter = [item];
+		currentFilter.length = 0;
+		currentFilter.push(item);
 	}
 
 	filterLib();
