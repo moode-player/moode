@@ -2085,8 +2085,10 @@ var renderSongs = function(albumPos) {
 						+ '<span class="songtrack">' + allSongs[i].tracknum + '</span>'
 						+ '<span class="songname">' + allSongs[i].title + '</span>'
 						+ '<span class="songtime"> ' + allSongs[i].time_mmss + '</span>'
-						+ '<span class="songartist"> ' + allSongs[i].artist + '</span>'
-						+ (allSongs[i].composer ? '<br><span class="songcomposer">' + allSongs[i].composer + '</span>' : '')
+						+ '<span class="songartist"> '
+							+ allSongs[i].artist
+							+ (allSongs[i].composer ? '<br><span class="songcomposer">' + allSongs[i].composer + '</span>' : '')
+						+ '</span>'
 						+ '<span class="songyear"> ' + songyear + '</span>'
 					+ '</div>'
 					+ '<div class="lib-action"><a class="btn" href="#notarget" title="Click for menu" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
