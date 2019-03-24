@@ -1877,13 +1877,6 @@ function filterLib() {
 		});
 	}
 
-	var albumFilter = LIB.filters.albums;
-	if (albumFilter.length) {
-		allSongs = allSongs.filter(function(track) {
-			return albumFilter.includes(keyAlbum(track));
-		});
-	}
-
 	var reducedGenres = fullLib.reduce(reduceGenres, {});
 	var reducedArtists = allSongs.reduce(reduceArtists, {});
 
@@ -1907,6 +1900,14 @@ function filterLib() {
 	});
 
 	allAlbumCovers = allAlbums.slice();
+
+	// Filter all songs after generating albums
+	var albumFilter = LIB.filters.albums;
+	if (albumFilter.length) {
+		allSongs = allSongs.filter(function(track) {
+			return albumFilter.includes(keyAlbum(track));
+		});
+	}
 	//console.log(allGenres);
 	//console.log(allArtists);
 	//console.log(allAlbums);
