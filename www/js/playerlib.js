@@ -1890,9 +1890,9 @@ function filterLib() {
 	allGenres = Object.keys(reducedGenres);
 	allArtists = Object.keys(reducedArtists);
 
-	var allArtistAlbums = Object.values(allArtists).reduce(function(acc, artistTracks) {
+	var allArtistAlbums = Object.values(reducedArtists).reduce(function(acc, artistTracks) {
 		var artistAlbums = artistTracks.reduce(reduceAlbums, {});
-		return [...acc, Object.values(artistAlbums)];
+		return acc.concat(Object.values(artistAlbums));
 	}, []);
 
 	allAlbums = allArtistAlbums.map(function(albumTracks){
@@ -1901,7 +1901,7 @@ function filterLib() {
 		return {
 			album: albumTracks.find(function(track) { return track.album; }).album,
 			artist: albumTracks.find(function(track) { return track.artist; }).artist,
-			album_artist: albumTracks.find(function(track) { return track.album_artist; }).album_artist,
+			album_artist: (albumTracks.find(function(track) { return track.album_artist; }) || {}).album_artist,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg'
 		};
 	});
