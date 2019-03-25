@@ -1797,6 +1797,9 @@ function renderLibrary(data) {
 
 function sortLib() {
 	allGenres.sort();
+	allAlbumCovers.sort(function(a, b) {
+		return b.last_modified - a.last_modified;
+	});
 	try {
 		// natural ordering 
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
@@ -1807,12 +1810,7 @@ function sortLib() {
 			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
 		});
 		allSongs.sort(function(a, b) {
-			return (collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
-		});
-		allAlbumCovers.sort(function(a, b) {
-			var artistA = a.album_artist || a.artist;
-			var artistB = b.album_artist || b.artist;
-			return (collator.compare(removeArticles(artistA), removeArticles(artistB)) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+			return collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']);
 		});
 	}
 	catch (e) {
@@ -1830,13 +1828,6 @@ function sortLib() {
 		allSongs.sort(function(a, b) {
 			var x1 = a['disc'], x2 = b['disc'];
 			var x1 = a['tracknum'], x2 = b['tracknum'];
-			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-		});
-		allAlbumCovers.sort(function(a, b) {
-			var artistA = a.album_artist || a.artist;
-			var artistB = b.album_artist || b.artist;
-			var x1 = removeArticles(artistA).toLowerCase(), x2 = removeArticles(artistB).toLowerCase(); // r44d
-			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
 			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
 		});
 	}
@@ -1890,6 +1881,7 @@ function filterLib() {
 		var file = albumTracks.find(function(track) { return track.file; }).file;
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		return {
+			last_modified: new Date(Math.max.apply(null, albumTracks.map(function(track){ return new Date(track.last_modified); }))),
 			album: albumTracks.find(function(track) { return track.album; }).album,
 			artist: albumTracks.find(function(track) { return track.artist; }).artist,
 			album_artist: (albumTracks.find(function(track) { return track.album_artist; }) || {}).album_artist,
