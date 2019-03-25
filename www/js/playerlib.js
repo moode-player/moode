@@ -1863,12 +1863,16 @@ function filterLib() {
 		return acc;
 	};
 
+	allGenres = Object.keys(fullLib.reduce(reduceGenres, {}));
+
 	var genreFilter = LIB.filters.genres;
 	if (genreFilter.length) {
 		allSongs = allSongs.filter(function(track) {
 			return genreFilter.includes(track.genre);
 		});
 	}
+
+	allArtists = Object.keys(allSongs.reduce(reduceArtists, {}));
 
 	var artistFilter = LIB.filters.artists;
 	if (artistFilter.length) {
@@ -1877,13 +1881,7 @@ function filterLib() {
 		});
 	}
 
-	var reducedGenres = fullLib.reduce(reduceGenres, {});
-	var reducedArtists = allSongs.reduce(reduceArtists, {});
-
-	allGenres = Object.keys(reducedGenres);
-	allArtists = Object.keys(reducedArtists);
-
-	var allArtistAlbums = Object.values(reducedArtists).reduce(function(acc, artistTracks) {
+	var allArtistAlbums = Object.values(allSongs.reduce(reduceArtists, {})).reduce(function(acc, artistTracks) {
 		var artistAlbums = artistTracks.reduce(reduceAlbums, {});
 		return acc.concat(Object.values(artistAlbums));
 	}, []);
@@ -1901,7 +1899,7 @@ function filterLib() {
 
 	allAlbumCovers = allAlbums.slice();
 
-	// Filter all songs after generating albums
+	// Filter album from songs after generating allAlbums && allAlbumCovers
 	var albumFilter = LIB.filters.albums;
 	if (albumFilter.length) {
 		allSongs = allSongs.filter(function(track) {
@@ -1952,7 +1950,6 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 			currentFilter.splice(currentIndex, 1);
 		}
 		else {
-
 			currentFilter.push(item);
 		}
 	}
@@ -2216,6 +2213,8 @@ $('#searchResetLib').click(function(e) {
 $('#genresList').on('click', '.lib-entry', function(e) {
 	var pos = $('#genresList .lib-entry').index(this);
 	UI.libPos[0] = -1 // r43q
+	LIB.filters.albums.length = 0;
+	LIB.filters.artists.length = 0;
 	clickedLibItem(e, allGenres[pos], LIB.filters.genres, renderGenres);
 });
 // click on artist
@@ -2223,6 +2222,7 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	var pos = $('#artistsList .lib-entry').index(this);
 	UI.libPos[0] = -1 // r43q
 	UI.libPos[2] = pos; // r43p
+	LIB.filters.albums.length = 0;
 	clickedLibItem(e, allArtists[pos], LIB.filters.artists, renderArtists);    
 	if ($('#mt2').css('display') == 'block') {
 		$('#top-columns').animate({left: '-50%'}, 200);
