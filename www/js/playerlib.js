@@ -2012,12 +2012,12 @@ var renderAlbums = function() {
 		}
 
 		output += '<li class="clearfix"><div class="lib-entry' + tmp + '">'
-			+ allAlbums[i].album + ' <span> ' + allAlbums[i].artist + '</span>'
+			+ allAlbums[i].album + ' <span> ' + (allAlbums[i].album_artist || allAlbums[i].artist) + '</span>'
 			+ '</div></li>';
 		output2 += '<li class="clearfix"><div class="lib-entry' + tmp + '">'
 			+ '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl  + '" width="100" height="100">'
 			+ '<div class="albumcover">' + allAlbumCovers[i].album + '</div>'
-			+ '<span> ' + allAlbumCovers[i].artist + '</span>'
+			+ '<span> ' + (allAlbumCovers[i].album_artist || allAlbumCovers[i].artist) + '</span>'
 			+ '</div></li>';
 	}
 
