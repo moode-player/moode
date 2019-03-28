@@ -135,7 +135,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
 	#ss-container-playlist {width:65vw;}
 	#ss-coverart-url img {width:80vw;}
-	/* r44h 
+	/* r44h
 	#ss-currentsong {margin:1em 0 0 0;}
 	#ss-currentalbum, #ss-currentartist {margin:1em 0 0 0;}*/
 	/*#ss-gradient {background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.40) 20%,rgba(0,0,0,0.6) 40%, rgba(0,0,0,.75) 60%, rgba(0,0,0,.85) 100%);}*/
@@ -171,12 +171,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.lib-entry-song {font-size:.95em;}
 	#lib-file {left:0%;width:100%;padding-left:0px;} /* r43m */
 	#lib-coverart-img {float:left;min-width:68px;width:68px;margin:0;}
-	#lib-coverart-meta-area img {height:68px;width:68px;min-width:68px;max-width:68px;margin:.25em;}	
+	#lib-coverart-meta-area img {height:68px;width:68px;min-width:68px;max-width:68px;margin:.25em;}
 	#lib-coverart-meta-area {float:left;width:100%;line-height:14px;}
 	#lib-meta-summary {width:calc(100% - 68px - .75em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
 	#songsList {margin:.25em !important;}
 	#lib-file .songname {overflow:hidden;float:left;width:calc(50% - 15px);height:auto;margin-left:5px;}
-	#lib-file .songtime {float:left;width:10%;left:50%;margin-left:5px;}	
+	#lib-file .songtime {float:left;width:10%;left:50%;margin-left:5px;}
 	#lib-file .songartist {float:left;width:calc(40% - 25px);overflow:hidden;left:60%;margin-left:5px;}
 	#lib-file .songyear {display:none;}
 	.lib-albumname-meta {font-weight:600;text-align:left;overflow:hidden;width:100%;word-wrap: break-word;}
@@ -359,7 +359,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 
 /* Pi 7" Touch */
-@media (height: 479px) and (width: 799px) {	
+@media (height: 479px) and (width: 799px) {
 	.playlist .pll1 {font-size:unset;}
 	#timeknob {padding: 8px 0 8px;}
 	#total {top:65%;}
@@ -431,3 +431,14 @@ ol.playhistory {margin-left:55px;}
 .bootstrap-select.select-medium2:not([class*="span"]) {width:180px;}
 .bootstrap-select.select-large:not([class*="span"]) {width:250px;}
 .bootstrap-select.select-large2:not([class*="span"]) {width: 282px;}
+
+/* Custom CSS */
+
+#players .switch-to-phoenix {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+  color: white;
+  background-color: black;
+}

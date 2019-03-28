@@ -1,12 +1,12 @@
 /*!
  * Font Awesome Pro 5.0.10 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license (Commercial License)
- * 
+ *
  * 2018-07-11 TC moOde 4.2
  * - just the icons used
  * 2018-09-27 TC moOde 4.3
  * - add heart, circle-plus
- * 
+ *
  */
 .fa,
 .fas,
@@ -256,6 +256,10 @@ readers do not read off random characters that represent icons */
 .fa-desktop-alt:before {
   content: "\f390"; }
 
+.fa-phoenix-framework:before {
+  content: "\f3dc";
+  color: #E06142; }
+
 .fa-dot-circle:before {
   content: "\f192"; }
 
@@ -318,7 +322,7 @@ readers do not read off random characters that represent icons */
 
 .fa-plus-circle:before {
   content: "\f055"; }
-	
+
 .fa-power-off:before {
   content: "\f011"; }
 
