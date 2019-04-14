@@ -16,15 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-07-11 TC moOde 4.2
- * - handle bluetooth audio out
- * - add slactive for Squeezelite
- * 2018-09-27 TC moOde 4.3
- * - add spotify renderer
- * 2018-12-09 TC moOde 4.4
- * - rm 'none' adevname since default is now 'On-board audio device'
- * - improve comments
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
@@ -44,8 +36,8 @@ else {
 // hardware params
 $hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
 
-// mpd.conf
-$mpdconf = parseCfgMpd($dbh);
+// cfg_mpd settings
+$cfg_mpd = parseCfgMpd($dbh);
 
 // bluetooth
 $result = sysCmd('pgrep -l bluealsa-aplay');
@@ -96,7 +88,7 @@ else {
 		// dsd: DoP, Native bitstream, DSD-to-PCM
 		if ($status['audio_sample_depth'] == 'dsd64') {
 			$encoded_at = 'DSD64, 1 bit, 2.822 mbps Stereo';
-			if ($mpdconf['dop'] == 'yes') {
+			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 176.4 kHz, Stereo';
 				$decode_rate = '8,467 mbps';
 			}
@@ -111,7 +103,7 @@ else {
 		}
 		else if ($status['audio_sample_depth'] == 'dsd128') {
 			$encoded_at = 'DSD128, 1 bit, 5.644 msps Stereo';
-			if ($mpdconf['dop'] == 'yes') {
+			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 352.8 kHz, Stereo';
 				$decode_rate = '16.934 mbps';
 			}
@@ -126,7 +118,7 @@ else {
 		}
 		else if ($status['audio_sample_depth'] == 'dsd256') {
 			$encoded_at = 'DSD256, 1 bit, 11.288 msps Stereo';
-			if ($mpdconf['dop'] == 'yes') {
+			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 705.6 kHz, Stereo';
 				$decode_rate = '33.868 mbps';
 			}
@@ -141,7 +133,7 @@ else {
 		}
 		else if ($status['audio_sample_depth'] == 'dsd512') {
 			$encoded_at = 'DSD512, 1 bit, 22.576 msps Stereo';
-			if ($mpdconf['dop'] == 'yes') {
+			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 1.411 MHz, Stereo';
 				$decode_rate = '67.736 mbps';
 			}
@@ -185,13 +177,13 @@ if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSI
 }
 else {
 	// resampling
-	if ($mpdconf['audio_output_format'] == 'disabled') {
+	if ($cfg_mpd['audio_output_format'] == 'disabled') {
 		$resampler = 'off';
 		$resampler_format = '';
 	}
 	else {
-		$resampler_format = $mpdconf['audio_output_depth'] . ' bit, ' . $mpdconf['audio_output_rate'] . ' kHz, ' . $mpdconf['audio_output_chan'];
-		$resampler = ' (SoX ' . $mpdconf['samplerate_converter'] . ' quality)';
+		$resampler_format = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
+		$resampler = ' (SoX ' . $cfg_mpd['samplerate_converter'] . ' quality)';
 	}
 	// crossfeed
 	if ($_SESSION['crossfeed'] != 'Off') {
@@ -207,7 +199,7 @@ else {
 	$equalizer = 'Graphic EQ: (' . $geq . '), Parametric EQ: (' . $peq . '}';
 	// crossfade and other dsp
 	$crossfade = $_SESSION['mpdcrossfade'] . ' seconds';
-	$otherdsp = 'Volume normalize (' . $mpdconf['volume_normalization'] . '}, ' . 'Replaygain (' . $mpdconf['replaygain'] . ')';
+	$otherdsp = 'Volume normalize (' . $cfg_mpd['volume_normalization'] . '}, ' . 'Replaygain (' . $cfg_mpd['replaygain'] . ')';
 }
 // chip options
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
@@ -255,9 +247,8 @@ else {
 
 // audio device
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['adevname']);
-$devname = $_SESSION['adevname']; // r44d
+$devname = $_SESSION['adevname'];
 $dacchip = $result[0]['dacchip'];
-$devarch = $result[0]['arch'];
 $iface = $result[0]['iface'];
 
 $tpl = 'audioinfo.html';

@@ -16,17 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - add Resume MPD for Bluetooth
- * 2018-07-11 TC moOde 4.2
- * - add 'Resume MPD' for Airplay and Squeezelite
- * 2018-09-27 TC moOde 4.3
- * - improve logic for chp/device options button
- * - use help-block-configs for $_alsa_volume_msg
- * - spotify
- * 2018-12-09 TC moOde 4.4
- * - improve I2S update message
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
@@ -39,28 +29,20 @@ playerSession('open', '' ,'');
 // i2s device
 if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice'])) {
-		submitJob('i2sdevice', $_POST['i2sdevice'], 'I2S audio device updated', '- Edit Driver options if needed<br>- REBOOT then APPLY MPD settings<br>- Edit Chip options AFTER reboot', 20); // r44h
 		playerSession('write', 'i2sdevice', $_POST['i2sdevice']);
+		submitJob('i2sdevice', $_POST['i2sdevice'], 'I2S audio device updated', '- Edit Driver options<br>- Reboot then edit Chip options', 20);
 	} 
 }
 
 // advanced driver options
-if (isset($_POST['update_advoptions'])) {
-	if (isset($_POST['advoptions']) && $_POST['advoptions'] != 'none') {
-		$result = sdbquery("SELECT advdriver, advoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
-		$advdriver = explode(',', $result[0]['advdriver']);
+if (isset($_POST['update_drvoptions'])) {
+	if (isset($_POST['drvoptions']) && $_POST['drvoptions'] != 'none') {
+		$result = sdbquery("SELECT driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
+		$driver = explode(',', $result[0]['driver']);
+		$driverupd = $_POST['drvoptions'] == 'Enabled' ? $driver[0] . ',' . $result[0]['drvoptions'] : $driver[0];
 
-		// driver,<param>,<param>
-		if (sizeof($advdriver) >= 2 && $advdriver[1] != 'slave' && $advdriver[1] != 'glb_mclk') {
-			$advdriver_new = $_POST['advoptions'] == 'Enabled' ? $advdriver[0] . ',' . $advdriver[1] . ',' . $result[0]['advoptions'] : $advdriver[0] . ',' . $advdriver[1];
-		}
-		// driver,<param>
-		else {
-			$advdriver_new = $_POST['advoptions'] == 'Enabled' ? $advdriver[0] . ',' . $result[0]['advoptions'] : $advdriver[0];
-		}
-
-		$result = sdbquery("UPDATE cfg_audiodev SET advdriver='" . $advdriver_new . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
-		submitJob('i2sdevice', $_SESSION['i2sdevice'], 'Driver options updated', 'Reboot then APPLY mpd config');
+		$result = sdbquery("UPDATE cfg_audiodev SET driver='" . $driverupd . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
+		submitJob('i2sdevice', $_SESSION['i2sdevice'], 'Driver options updated', 'Reboot required');
 	} 
 }
 
@@ -74,27 +56,16 @@ if (isset($_POST['update_alsa_volume'])) {
 
 // MPD
 
+// mpd version
+if (isset($_POST['update_mpdver'])) {
+	playerSession('write', 'mpdver', $_POST['mpdver']);
+	submitJob('mpdver', $_POST['mpdver'], 'MPD ' . $_POST['mpdver'] . ' installed', 'Database rebuild started...');
+} 
+
 // restart mpd
 if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
 	submitJob('mpdrestart', '', 'MPD restarted', '');
 }
-
-// rotary encoder
-if (isset($_POST['update_rotenc'])) {
-	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
-		$title = 'Rotenc params updated';
-		playerSession('write', 'rotenc_params', $_POST['rotenc_params']);
-	} 
-
-	if (isset($_POST['rotaryenc']) && $_POST['rotaryenc'] != $_SESSION['rotaryenc']) {
-		$title = $_POST['rotaryenc'] == 1 ? 'Rotary encoder on' : 'Rotary encoder off';
-		playerSession('write', 'rotaryenc', $_POST['rotaryenc']);
-	}
-
-	if (isset($title)) {
-		submitJob('rotaryenc', $_POST['rotaryenc'], $title, '');
-	}
-} 
 
 // auto-shuffle
 if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashufflesvc']) {
@@ -123,10 +94,51 @@ if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 	playerSession('write', 'autoplay', $_POST['autoplay']);
 }
 
+// rotary encoder
+if (isset($_POST['update_rotenc'])) {
+	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
+		$title = 'Rotenc params updated';
+		playerSession('write', 'rotenc_params', $_POST['rotenc_params']);
+	} 
+
+	if (isset($_POST['rotaryenc']) && $_POST['rotaryenc'] != $_SESSION['rotaryenc']) {
+		$title = $_POST['rotaryenc'] == 1 ? 'Rotary encoder on' : 'Rotary encoder off';
+		playerSession('write', 'rotaryenc', $_POST['rotaryenc']);
+	}
+
+	if (isset($title)) {
+		submitJob('rotaryenc', $_POST['rotaryenc'], $title, '');
+	}
+} 
+
+// polarity inversion
+if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SESSION['invert_polarity']) {
+	$title = $_POST['invert_polarity'] == 1 ? 'Polarity inversion on' : 'Polarity inversion off';
+	submitJob('invert_polarity', $_POST['invert_polarity'], $title, '');
+	playerSession('write', 'invert_polarity', $_POST['invert_polarity']);
+}
+
 // mpd crossfade
 if (isset($_POST['mpdcrossfade']) && $_POST['mpdcrossfade'] != $_SESSION['mpdcrossfade']) {
 	submitJob('mpdcrossfade', $_POST['mpdcrossfade'], 'Crossfade settings updated', '');
 	playerSession('write', 'mpdcrossfade', $_POST['mpdcrossfade']);
+}
+
+// http streaming server
+if (isset($_POST['mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd']) {
+	$title = $_POST['mpd_httpd'] == 1 ? 'HTTP server on' : 'HTTP server off';
+	submitJob('mpd_httpd', $_POST['mpd_httpd'], $title, '');
+	playerSession('write', 'mpd_httpd', $_POST['mpd_httpd']);
+}
+// port
+if (isset($_POST['mpd_httpd_port']) && $_POST['mpd_httpd_port'] != $_SESSION['mpd_httpd_port']) {
+	playerSession('write', 'mpd_httpd_port', $_POST['mpd_httpd_port']);
+	submitJob('mpd_httpd_port', $_POST['mpd_httpd_port'], 'HTTP port updated', 'MPD restarted');
+}
+// encoder
+if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSION['mpd_httpd_encoder']) {
+	playerSession('write', 'mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
+	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder'], 'HTTP encoder updated', 'MPD restarted');
 }
 
 // DSP
@@ -170,6 +182,11 @@ if (isset($_POST['update_bt_settings'])) {
 	if (isset($title)) {
 		submitJob('btsvc', '"' . $currentBtName . '" ' . '"' . $_POST['btname'] . '"', $title, '');
 	}
+}
+// pairing agent
+if (isset($_POST['update_pairing_agent'])) {
+	playerSession('write', 'pairing_agent', $_POST['pairing_agent']);
+	submitJob('pairing_agent', $_POST['pairing_agent'], ($_POST['pairing_agent'] == 1 ? 'Pairing agent on' : 'Pairing agent off'), '');
 }
 // speaker sharing
 if (isset($_POST['update_bt_multi'])) {
@@ -340,7 +357,7 @@ session_write_close();
 // DEVICE
 
 // i2s audio device
-$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND (kernel is null OR kernel='' OR kernel='" . substr($_SESSION['kernel'], 0, 8) . "')", cfgdb_connect());
+$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", cfgdb_connect());
 $array = array();
 $array[0]['name'] = 'none';
 $dacList = array_merge($array, $result);
@@ -351,23 +368,22 @@ foreach ($dacList as $dac) {
 }
 
 // driver options
-$result = sdbquery("SELECT chipoptions, advdriver, advoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
-if ((strpos($_SESSION['kernel'], 'Advanced') !== false && $result[0]['advoptions'] != '') || $result[0]['advoptions'] == 'slave' || $result[0]['advoptions'] == 'glb_mclk') {
-	$_select['advoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['advdriver'], $result[0]['advoptions']) !== false) ? "selected" : "") . ">" . $result[0]['advoptions'] . " Enabled</option>\n";
-	$_select['advoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['advdriver'], $result[0]['advoptions']) === false) ? "selected" : "") . ">" . $result[0]['advoptions'] . " Disabled</option>\n";
+$result = sdbquery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
+if (!empty($result[0]['drvoptions'])) {
+	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
+	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
 }
 else {
-	$_select['advoptions'] .= "<option value=\"none\" selected>None available</option>\n";
+	$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
 }
 
 // chip/device options
 if (empty($result[0]['chipoptions'])) {
-	$_chpoptions_disabled = 'disabled';
-	$_chpoptions_href = 'Edit settings';
+	$_chipoptions_btn = '<button class="btn btn-primary btn-medium" style="margin-top:0px;" disabled>Edit options</button><br>';
 }
 else {
-	$_chpoptions_disabled = '';
-	$_chpoptions_href = '<a href="chp-config.php">Edit settings</a>';
+	//$_chipoptions_btn = '<a class="btn btn-primary btn-medium" style="margin-top:0px;" href="chp-config.php">Edit options</a><br>';
+	$_chipoptions_btn = '<a href="chp-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit options</button></a><br>';
 }
 
 // alsa volume
@@ -376,7 +392,8 @@ if ($_SESSION['alsavolume'] == 'none') {
 	$_alsa_volume_readonly = 'readonly';
 	$_alsa_volume_hide = 'hide';
 	$_alsa_volume_msg = "<span class=\"help-block-configs help-block-margin\">Hardware volume controller not detected</span>";
-} else {
+}
+else {
 	$mixername = getMixerName($_SESSION['i2sdevice']);
 	// TC there is a visudo config that allows this cmd to be run by www-data, the user context for this page
 	$result = sysCmd("/var/www/command/util.sh get-alsavol " . '"' . $mixername . '"');
@@ -391,10 +408,9 @@ if ($_SESSION['alsavolume'] == 'none') {
 
 // MPD
 
-// rotary encoder
-$_select['rotaryenc1'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"togglerotaryenc1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['rotaryenc0'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"togglerotaryenc2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['rotenc_params'] = $_SESSION['rotenc_params'];
+// mpd version
+$_select['mpdver'] .= "<option value=\"0.20.20\" " . (($_SESSION['mpdver'] == '0.20.20') ? "selected" : "") . ">0.20.20 (Default)</option>\n";
+$_select['mpdver'] .= "<option value=\"0.21.6\" " . (($_SESSION['mpdver'] == '0.21.6') ? "selected" : "") . ">0.21.6 (Testing)</option>\n";
 
 // auto-shuffle
 $_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
@@ -404,15 +420,34 @@ $_select['ashufflesvc0'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"tog
 $_select['autoplay1'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['autoplay0'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay2\" value=\"0\" " . (($_SESSION['autoplay'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
+// rotary encoder
+$_select['rotaryenc1'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"togglerotaryenc1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+$_select['rotaryenc0'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"togglerotaryenc2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$_select['rotenc_params'] = $_SESSION['rotenc_params'];
+
+// polarity invrsion
+$_select['invert_polarity1'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+$_select['invert_polarity0'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+
 // mpd crossfade
 $_mpdcrossfade = $_SESSION['mpdcrossfade'];
 
+// http streaming server
+$_select['mpd_httpd1'] .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd1\" value=\"1\" " . (($_SESSION['mpd_httpd'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+$_select['mpd_httpd0'] .= "<input type=\"radio\" name=\"mpd_httpd\" id=\"toggle-mpd-httpd2\" value=\"0\" " . (($_SESSION['mpd_httpd'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+// port
+$_mpd_httpd_port = $_SESSION['mpd_httpd_port'];
+// encoder
+$_select['mpd_httpd_encoder'] .= "<option value=\"flac\" " . (($_SESSION['mpd_httpd_encoder'] == 'flac') ? "selected" : "") . ">FLAC</option>\n";
+$_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_httpd_encoder'] == 'lame') ? "selected" : "") . ">LAME (MP3)</option>\n";
+
 // DSP
 
-// only one of crossfeed, alsaequal or eqfa4p can be on
-$_crossfeed_set_disabled = ($_SESSION['eqfa4p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-$_eqfa4p_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-$_alsaequal_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa4p'] != 'Off') ? 'disabled' : '';
+// only one of polarity inversion, crossfeed, alsaequal or eqfa4p can be on
+$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa4p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa4p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+$_eqfa4p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+$_alsaequal_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa4p'] != 'Off') ? 'disabled' : '';
 
 // crossfeed
 $_select['crossfeed'] .= "<option value=\"Off\" " . (($_SESSION['crossfeed'] == 'Off' OR $_SESSION['crossfeed'] == '') ? "selected" : "") . ">Off</option>\n";
@@ -450,6 +485,8 @@ foreach ($curveList as $curve) {
 $_select['btsvc1'] .= "<input type=\"radio\" name=\"btsvc\" id=\"togglebtsvc1\" value=\"1\" " . (($_SESSION['btsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['btsvc0'] .= "<input type=\"radio\" name=\"btsvc\" id=\"togglebtsvc2\" value=\"0\" " . (($_SESSION['btsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['btname'] = $_SESSION['btname'];
+$_select['pairing_agent1'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent1\" value=\"1\" " . (($_SESSION['pairing_agent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+$_select['pairing_agent0'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent2\" value=\"0\" " . (($_SESSION['pairing_agent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['btmulti1'] .= "<input type=\"radio\" name=\"btmulti\" id=\"togglebtmulti1\" value=\"1\" " . (($_SESSION['btmulti'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['btmulti0'] .= "<input type=\"radio\" name=\"btmulti\" id=\"togglebtmulti2\" value=\"0\" " . (($_SESSION['btmulti'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['rsmafterbt'] .= "<option value=\"1\" " . (($_SESSION['rsmafterbt'] == '1') ? "selected" : "") . ">Yes</option>\n";
@@ -537,11 +574,12 @@ else {
 	$_feat_mpdas = 'hide';
 }
 
-$section = basename(__FILE__, '.php');
-
 waitWorker(1, 'snd-config');
 
 $tpl = "snd-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php'); 
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

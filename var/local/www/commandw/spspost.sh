@@ -16,26 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2018-01-26 TC moOde 4.0
-# 2018-07-11 TC moOde 4.2
-# - minor format cleanup
-# - update to vol.sh restore
-# 2018-12-09 TC moOde 4.4
-# - use GNU command syntax for vol.sh
+# 2019-04-12 TC moOde 5.0
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-# set airplay active flag false
 $(sqlite3 $SQLDB "update cfg_system set value='0' where param='airplayactv'")
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterapl'")
-# friendly names
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterapl' or param='inpactive'")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME=${arr[0]}
 AMIXNAME=${arr[1]}
 MPDMIXER=${arr[2]}
 RSMAFTERAPL=${arr[3]}
+INPACTIVE=${arr[4]}
+
+if [[ $INPACTIVE == '1' ]]; then
+	exit 1
+fi
 
 # restore 0dB (100%) hardware volume when mpd configured as below
 if [[ $MPDMIXER == "software" || $MPDMIXER == "disabled" ]]; then
@@ -44,10 +42,8 @@ if [[ $MPDMIXER == "software" || $MPDMIXER == "disabled" ]]; then
 	fi
 fi
 
-# restore volume
 /var/www/vol.sh -restore
 
-# resume playback if indicated
 if [[ $RSMAFTERAPL == "Yes" ]]; then
 	/usr/bin/mpc play > /dev/null
 fi

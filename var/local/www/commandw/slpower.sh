@@ -16,20 +16,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2018-07-11 TC moOde 4.2
-# 2018-12-09 TC moOde 4.4
-# - use GNU command syntax for vol.sh
+# 2019-04-12 TC moOde 5.0
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume' or param='amixname' or param='rsmaftersl' or param='wrkready'")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume' or param='amixname' or param='rsmaftersl' or param='wrkready' or param='inpactive'")
 # friendly names
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME=${arr[0]}
 AMIXNAME=${arr[1]}
 RSMAFTERSL=${arr[2]}
 WRKREADY=${arr[3]}
+INPACTIVE=${arr[4]}
+
+if [[ $INPACTIVE == '1' ]]; then
+	exit 1
+fi
 
 if [[ $WRKREADY == "1" ]]; then
 	echo Worker ready

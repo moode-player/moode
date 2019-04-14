@@ -16,117 +16,62 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - remove data-validate="parsley"
- * 2018-07-11 TC moOde 4.2
- * - minor cleanup
- * - change to modal-sm2 for confirm modals
- * - font-awesome 5
- * 2018-12-09 TC moOde 4.4
- * - chg icon-play to fas fa-play
+ * 2019-04-12 TC moOde 5.0
  *
  */
 -->	
 <div class="container">
+	<!--div class="container2" style="position:fixed"-->
 	<div class="container2">
-	<h1>Graphic EQ</h1>
-
-    <p>
-    	<a href="snd-config.php">BACK</a> to Audio config<br>
-    	<a data-toggle="modal" href="#rm-curve">REMOVE</a> EQ curve
-    </p>
+	<h1 class="snd-config">Graphic EQ</h1>
 
     <form class="form-horizontal" action="" method="post">
-    	<legend>Settings &nbsp;
-			<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button>&nbsp;
-			<button class="btn btn-primary btn-small" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
+    	<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
 			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-buttons" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
-				APPLY: updates the curve table only.<br>
-				PLAY: updates the active curve config. EQ must be turned on in Audio config to enable Play.<br>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				SAVE: Add new curve or update existing curve with new parameters.<br>
+				REMOVE: Delete the selected curve.<br>
             </span>
 		</legend>
     
 		<fieldset>
-			<div class="control-group">
-				<label class="control-label" for="curve-name">Curve name</label>
-				<div class="controls">
-					<select id="eqg-curve-name" class="input-large" name="curve_name">
-						$_select[curve_name]
-					</select>
-					<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-curve-name" class="help-block-configs help-block-margin hide">
-						Friendly name for the EQ curve.<br>
-                    </span>
-					<span class="help-block-configs help-block-margin">
-						<a data-toggle="modal" href="#new-curvename">ENTER</a> New curve name<br>
-					</span>
-				</div>
-			</div>
+	    	<legend>Test &nbsp;
+				<button class="btn btn-primary btn-small" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
+				<a class="info-toggle" data-cmd="info-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-play" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
+					Start playback using the currently selected Curve. The EQ must be turned on in Audio config to enable Play.<br>
+	            </span>
+			</legend>
+			<select id="eqg-curve-name" class="input-large" name="curve_name">
+				$_select[curve_name]
+			</select>
+			<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-curve-name" class="help-block-configs help-block-margin hide">
+				Friendly name for the curve.<br>
+            </span>
+			<span class="help-block-configs help-block-margin">
+				<a data-toggle="modal" href="#new-curvename">ENTER</a> New curve name<br>
+			</span>
 		</fieldset>
 
 		<fieldset>
-	    	<legend>EQ Curve</legend>
-
-			<div class="control-group">
-				<table>
-					<tr>
-						<td class="control-label"></td>
-						<td style="padding-left:20px;">31</td>
-						<td style="padding-left:20px;">63</td>
-						<td style="padding-left:20px;">125</td>
-						<td style="padding-left:20px;">250</td>
-						<td style="padding-left:20px;">500</td>
-					</tr>
-					<tr>
-						<td class="control-label"></td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq1" name="freq1" value="$_select[freq1]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq2" name="freq2" value="$_select[freq2]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq3" name="freq3" value="$_select[freq3]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq4" name="freq4" value="$_select[freq4]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq5" name="freq5" value="$_select[freq5]">
-						</td>
-					</tr>
-					<tr>
-						<td class="control-label"></td>
-						<td style="padding-left:20px;">1K</td>
-						<td style="padding-left:20px;">2K</td>
-						<td style="padding-left:20px;">4K</td>
-						<td style="padding-left:20px;">8K</td>
-						<td style="padding-left:20px;">16K</td>
-					</tr>
-					<tr>
-						<td class="control-label"></td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq6" name="freq6" value="$_select[freq6]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq7" name="freq7" value="$_select[freq7]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq8" name="freq8" value="$_select[freq8]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq9" name="freq9" value="$_select[freq9]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="0" max="100" id="freq10" name="freq10" value="$_select[freq10]">
-						</td>
-					</tr>
-				</table>				
+			<div id="equalizer" class="sliderbank">					
+				<div class="eqg-label">Alsaequal values</div>
+				<div class="vslide3"><div id="freq1">$_select[freq1]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq1" value="$_select[freq1]" oninput="updEqgFreq('#freq1', this.value)"><div>31</div></div>
+				<div class="vslide3"><div id="freq2">$_select[freq2]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq2" value="$_select[freq2]" oninput="updEqgFreq('#freq2', this.value)"><div>63</div></div>
+				<div class="vslide3"><div id="freq3">$_select[freq3]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq3" value="$_select[freq3]" oninput="updEqgFreq('#freq3', this.value)"><div>125</div></div>
+				<div class="vslide3"><div id="freq4">$_select[freq4]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq4" value="$_select[freq4]" oninput="updEqgFreq('#freq4', this.value)"><div>250</div></div>
+				<div class="vslide3"><div id="freq5">$_select[freq5]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq5" value="$_select[freq5]" oninput="updEqgFreq('#freq5', this.value)"><div>500</div></div>
+				<div class="vslide3"><div id="freq6">$_select[freq6]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq6" value="$_select[freq6]" oninput="updEqgFreq('#freq6', this.value)"><div>1K</div></div>
+				<div class="vslide3"><div id="freq7">$_select[freq7]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq7" value="$_select[freq7]" oninput="updEqgFreq('#freq7', this.value)"><div>2K</div></div>
+				<div class="vslide3"><div id="freq8">$_select[freq8]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq8" value="$_select[freq8]" oninput="updEqgFreq('#freq8', this.value)"><div>4K</div></div>
+				<div class="vslide3"><div id="freq9">$_select[freq9]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq9" value="$_select[freq9]" oninput="updEqgFreq('#freq9', this.value)"><div>8K</div></div>
+				<div class="vslide3"><div id="freq10">$_select[freq10]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq10" value="$_select[freq10]" oninput="updEqgFreq('#freq10', this.value)"><div>16K</div></div>
+				<div class="eqg-label">Frequency Bands (Hz)</div>
 			</div>
 		</fieldset>
-
 	</form>
 </div>
 </div>

@@ -16,37 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - streamline modals
- * - add wificountry
- * - add input pattern to SSID popup
- * - remove data-validate="parsley"
- * 2018-07-11 TC moOde 4.2
- * - add \_ to pattern for wlan0otherssid input
- * - minor cleanup
- * - font-awesome 5
+ * 2019-04-12 TC moOde 5.0
  *
  */
 -->	
 <div class="container">
 	<div class="container2">
-	<h1>Network Config</h1>
-	
-	<p>
-		<a data-toggle="modal" href="#net-config-defaults">RESET</a> to eth0 and DHCP<br>
-    	<a data-toggle="modal" href="#restart-modal">RESTART</a> to make setting changes effective
-	</p>
+	<h1 class="net-config">Network Config</h1>
 
 	<form class="form-horizontal" method="post">
-    	<legend>
-			Settings &nbsp;<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button>
+		<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<a href="#net-config-defaults" data-toggle="modal"><button class="btn btn-medium btn-primary">Reset</button></button>
+			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				<!--BACK: Return to Playbar view.<br-->
+				SAVE: Update network configuration, reboot to make changes effective.<br>
+				RESET: Revert to Ethernet and DHCP.
+            </span>
 		</legend>
 		
-		<!-- ETH0 -->
 		<fieldset>
+			<legend>Ethernet</legend>
 			<div class="control-group" >
-				<label class="control-label" for="eth0-method" style="">Ethernet (eth0)</label>
+				<label class="control-label" for="eth0-method" style="">Address assignment</label>
 				<div class="controls">
 					<select id="eth0-method" name="eth0method" class="input-large" style="width: 100px">
 						$_eth0method
@@ -97,15 +90,12 @@
 					</div>
 				</div>
 			</div>
-
 		</fieldset>
 
-		<legend></legend>
-
-		<!-- WLAN0 -->
 		<fieldset>
+			<legend>Wireless (WiFi)</legend>
 			<div class="control-group" >
-				<label class="control-label" for="wlan0-method">WiFi (wlan0)</label>
+				<label class="control-label" for="wlan0-method">Address assignment</label>
 				<div class="controls">
 					<select id="wlan0-method" name="wlan0method" class="input-large">
 						$_wlan0method
@@ -212,14 +202,12 @@
 					</div>
 				</div>
 			</div>
-
 		</fieldset>
 
-		<legend></legend>
-
 		<fieldset>
+			<legend>Access Point (AP)</legend>
 			<div class="control-group" >
-                <label class="control-label" for="apdssid">Access Point (AP) SSID</label>
+                <label class="control-label" for="apdssid">SSID</label>
                 <div class="controls">
                     <input class="input-large" type="text" pattern="[A-Za-z0-9\-]{3,32}" id="apdssid" name="wlan0apdssid" value="$_wlan0apdssid" required>
 					<a class="info-toggle" data-cmd="info-apdssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -230,9 +218,9 @@
             </div>	
 			
 			<div class="control-group" >
-                <label class="control-label" for="apdchan">AP channel</label>
+                <label class="control-label" for="apdchan">Channel</label>
                 <div class="controls">
-                    <input class="input-mini" type="number" maxlength="2" min="1" max="14" id="apdchan" name="wlan0apdchan" value="$_wlan0apdchan" required>
+                    <input class="input-large" type="number" maxlength="2" min="1" max="14" id="apdchan" name="wlan0apdchan" value="$_wlan0apdchan" required>
 					<a class="info-toggle" data-cmd="info-apdchan" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-apdchan" class="help-block-configs help-block-margin hide">
 						2.4 GHz band supports channels 1-14.
@@ -241,7 +229,7 @@
             </div>	
 			
 			<div class="control-group" >
-                <label class="control-label" for="apdpwd">AP password</label>
+                <label class="control-label" for="apdpwd">Password</label>
                 <div class="controls">
                     <input class="input-large" type="text" pattern="[A-Za-z0-9]{8,63}" id="apdpwd" name="wlan0apdpwd" value="$_wlan0apdpwd" required>
 					<a class="info-toggle" data-cmd="info-apdpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -250,12 +238,11 @@
 					</span>
                 </div>
             </div>	
-
 		</fieldset>
-
 	</form>
 </div>
 </div>
+
 <form class="form-horizontal" method="post">
 	<div id="net-config-defaults" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="net-config-defaults-label" aria-hidden="true">
 		<div class="modal-header">
@@ -263,7 +250,7 @@
 		</div>
 		
 		<div class="modal-body">
-			<h6>Reset network configuration to eth0 and DHCP?</h6>
+			<h6>Reset network configuration to Ethernet and DHCP?</h6>
 		</div>
 		
 		<div class="modal-footer">

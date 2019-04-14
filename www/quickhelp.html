@@ -1,0 +1,97 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2019-04-12 TC moOde 5.0
+ *
+ */
+-->	
+
+<div>
+	<h4>Navigation</h4>
+	<p>
+		The UI has two main parts: Library and Configuration. The Library has four views for selecting content including Radio, Folder, Tag and Album and a Playbar for controlling playback.  
+		Toggling between the Playbar and full screen Playback is accomplished by tapping on the cover or the bar icon. The Configuration screens are accessed via the Main Menu.
+	</p>
+
+	<h4>Special Buttons</h4>
+	<p>
+		Most buttons are self explanatory but several perform unique functions.
+	</p>
+
+	<ul style="list-style:none;">
+		<li><i class="far fa-tv sx"></i>
+			<span class="quickhelp"> CoverView</span>
+			<span class="help-block">Display full screen CoverView screen saver. Tapping the cover in CoverView displays play controls. Tapping anywhere else dismisses CoverView.</span>
+		</li>
+		<li><i class="far fa-random sx"></i>
+			<span class="quickhelp"> Random</span>
+			<span class="help-block">Play random tracks from the Playlist (default) or the entire Music Library if Auto-shuffle is ON (see Audio Config).</span>
+		</li>
+		<li><i class="far fa-arrow-down sx"></i>
+			<span class="quickhelp"> Consume</span>
+			<span class="help-block">Remove the track from the Playlist after it finishes playing. Consume mode is automatically enabled when Auto-shuffle is ON.</span>
+		</li>
+		<li><i class="far fa-repeat sx"></i> 
+			<span class="quickhelp"> Repeat</span>
+			<span class="help-block">Repeat the Playlist or if Single is enabled then repeat the track.</span>
+		</li>
+		<li><i class="far fa-redo sx"></i>
+			<span class="quickhelp"> Single</span>
+			<span class="help-block">Used in conjunction with Repeat to repeat a single track.</span>
+		</li>
+		<li><i class="far fa-exchange-alt sx"></i>
+			<span class="quickhelp"> Last track</span>
+			<span class="help-block">Toggle between the currently playing track and the previously played track.</span>
+		</li>
+		<li><i class="far fa-dot-circle sx"></i>
+			<span class="quickhelp"> Random album</span>
+			<span class="help-block">Instantly play a randomly selected album when in full screen Playback or if in the Library Tag or Album view select a random Album for review.</span>
+		</li>
+		<li><i class="far fa-heart sx"></i>
+			<span class="quickhelp"> Favorite</span>
+			<span class="help-block">Add the currently selected track in the Playlist to the Favorites playlist. Playlists are listed in the Library Folder view.</span>
+		</li>
+	</ul>
+
+	<h4>Active Elements</h4>
+	<p>
+		There are several non-button elements in the UI that perform an action when tapped.
+	</p>
+	<div style="margin-left:25px;">
+		<ul>
+			<li><span class="quickhelp"> Instant Play</span>
+				<span class="help-block">Tapping on the cover in Library Radio or Album views instantly plays the item by performing a Clear/Play.</span>
+			</li>
+			<li><span class="quickhelp"> Renderer Active screens</span>
+				<span class="help-block">Tapping on the title in the center of Bluetooth, Analog Input or S/PDIF Input Active will launch their respective Config screens which allow the input/output settings to be changed.</span>
+			</li>
+			<li><span class="quickhelp"> Time knob</span>
+				<span class="help-block">Tapping on the time while a song file is playing will toggle between counting the time up or down. Tapping or dragging the time ring moves forward or backward in the song.</span>
+			</li>
+			<li><span class="quickhelp"> Volume knob</span>
+				<span class="help-block">Tapping on the numeric volume level toggles the mute state. Tapping ahead on the volume ring advances the volume by 10. Tapping the (- +) buttons adjusts volume by 1 step.</span>
+			</li>
+			<li><span class="quickhelp"> Song title</span>
+				<span class="help-block">Tapping the song title in full screen Playback launches a Google search in a separate Browser tab. On Smartphones it scrolls the Playlist to that item.</span>
+			</li>
+			<li><span class="quickhelp"> Swipe gestures</span>
+				<span class="help-block">On Smartphones swiping up scrolls the Playlist into view and tapping on the Playbar cover returns to Playback. In the Library tag view swiping sideways shows/hides the Genres column.</span>
+			</li>
+		</ul>
+	</div>
+</div>

@@ -1,0 +1,104 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * tsunamp player ui (C) 2013 Andrea Coiutti & Simone De Gregori
+ * http://www.tsunamp.com
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2019-04-12 TC moOde 5.0
+ *
+ */
+-->	
+<div class="container">
+	<div class="container2">
+	<h1 class="lib-config">Library Config</h1>
+	<p>
+		<legend>NAS Sources</legend>
+
+		<p>
+			<a href="lib-config.php?cmd=add"><button class="btn btn-medium btn-primary">Create</button></a>&nbsp;NAS source
+		</p>
+
+		<p>List of configured NAS sources (click to edit)</p>
+
+		<form class="form-horizontal" method="post">
+			$_mounts
+
+			<p>
+				<button class="btn btn-medium btn-primary" type="submit" name="remount" value="novalue" $_remount_disable>Re-mount</button>&nbsp;All NAS sources
+				<span id="info-remount" class="help-block-configs help-block-margin">
+					Un-mount then re-mount all NAS sources.
+                </span>
+			</p>
+
+			<p></p>
+			<legend>MPD Database</legend>
+			<p>
+				<button class="btn btn-medium btn-primary" type="submit" name="updatempd" value="novalue">Update</button>&nbsp;MPD database
+			</p>
+			<p>
+				<button class="btn btn-medium btn-primary" type="submit" name="rescanmpd" value="novalue">Re-gen</button>&nbsp;MPD database
+				<a class="info-toggle" data-cmd="info-regen-mpddb" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-regen-mpddb" class="help-block-configs help-block-margin hide">
+					Re-gen scans all files. Update only scans for files that have changed.
+                </span>
+				<span id="info-rescanmpd" class="help-block-configs help-block-margin">
+					Update or regenerate the MPD database.<br>
+                </span>
+			</p>
+
+			<div class="toggle">
+				<label class="toggle-radio" for="toggle_usb_auto_updatedb1">YES</label>
+				$_select[usb_auto_updatedb1]
+				<label class="toggle-radio" for="toggle_usb_auto_updatedb0">NO</label>
+				$_select[usb_auto_updatedb0]
+			</div>
+			<div style="display: inline-block; vertical-align: top; margin-top: 5px;">
+				<button class="btn btn-primary btn-small" type="submit" name="update_usb_auto_updatedb" value="novalue">Set</button>
+			</div>
+			<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em">
+				Automatically update MPD database on USB insert/remove.<br>
+            </span>
+
+			<legend>Album and Tag Views</legend>
+			<p>
+				<a href="lop-config.php"><button class="btn btn-medium btn-primary">Modify</button></a>&nbsp;Library display options
+			</p>
+			<p>
+				<button class="btn btn-medium btn-primary" type="submit" name="clrlibcache" value="novalue">Delete</button>&nbsp;Library tag cache
+				<span id="info-clrlibcache" class="help-block-configs help-block-margin">
+					The cache will be regenerated the next time the Library is opened.
+                </span>
+			</p>
+			<p>
+				<button class="btn btn-medium btn-primary" type="submit" name="updthmcache" value="novalue">Update</button>&nbsp;Album cover thumbnail cache
+			</p>
+			<p>
+				<button class="btn btn-medium btn-primary" type="submit" name="regenthmcache" value="novalue">Re-gen</button>&nbsp;Album cover thumbnail cache
+				<a class="info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-regen-thmcache" class="help-block-configs help-block-margin hide">
+					Re-gen deletes the cache and adds all covers afresh. Update only adds covers that are new or have changed.
+                </span>
+				<span id="info-regenthmcache" class="help-block-configs help-block-margin">
+					Update or regenerate the album cover thumbnail cache.<br>
+					<a id="view-thmcache-status" href="#notarget">VIEW</a> cache status:&nbsp;<span id="thmcache-status">$_thmcache_status</span><!-- r43h -->					
+                </span>
+			</p>
+		</form>
+	</p>
+</div>	
+</div>

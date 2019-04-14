@@ -16,16 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - add  additional filtering to wifi scanner
- * - add wificountry
+ * 2019-04-12 TC moOde 5.0
  *
  */
  
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // reset eth0 and wlan0 to defaults
@@ -39,7 +36,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 }
 
 // update eth0 and wlan0
-if (isset($_POST['apply']) && $_POST['apply'] == 1) {
+if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// eth0
 	$value = array('method' => $_POST['eth0method'], 'ipaddr' => $_POST['eth0ipaddr'], 'netmask' => $_POST['eth0netmask'], 'gateway' => $_POST['eth0gateway'], 'pridns' => $_POST['eth0pridns'], 'secdns' => $_POST['eth0secdns'], 'wlanssid' => '', 'wlansec' => '', 'wlanpwd' => '');
 	cfgdb_update('cfg_network', $dbh, 'eth0', $value);
@@ -57,7 +54,7 @@ if (isset($_POST['apply']) && $_POST['apply'] == 1) {
 	playerSession('write', 'wificountry', $_POST['wlan0country']);
 
 	// submit job
-	submitJob('netcfg', 'apply', 'Network config changed', 'Reboot required');
+	submitJob('netcfg', 'apply', 'Changes saved', 'Reboot required');
 }
 
 // get current settings: [0] = eth0, [1] = wlan0
@@ -146,6 +143,7 @@ $zonelist = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' 
 $zonelist_sorted = array();
 for ($i = 0; $i < count($zonelist); $i++) {
 	$country = explode(',', $zonelist[$i]);
+	if ($country[1] == 'Britain (UK)') {$country[1] = 'United Kingdom (UK)';}
 	$zonelist_sorted[$i] = $country[1] . ',' . $country[0];
 }
 sort($zonelist_sorted);
@@ -171,12 +169,12 @@ $_wlan0apdpwd = $_SESSION['apdpwd'];
 
 session_write_close();
 
-// render page
-$section = basename(__FILE__, '.php');
-
 waitWorker(1, 'net-config');	
 
 $tpl = "net-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

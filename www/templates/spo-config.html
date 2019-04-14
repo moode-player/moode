@@ -16,23 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-09-27 TC moOde 4.3
- * - initial version
+ * 2019-04-12 TC moOde 5.0
  *
  */
 -->	
 <div class="container">
 <div class="container2">
-	<h1>Spotify Config</h1>
-
-    <p>
-    	<a href="snd-config.php">BACK</a> to Audio config
-    </p>
+	<h1 class="snd-config">Spotify Config</h1>
 
     <form class="form-horizontal" action="" method="post">
-    	<legend>Settings &nbsp;<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button></legend>
+    	<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				SAVE: Update Spotify configuration and restart Spotify renderer.<br>
+            </span>
+		</legend>
     
 		<fieldset>
+	    	<legend>Settings</legend>
 			<div class="control-group">
 				<label class="control-label" for="bitrate">Bit rate</label>
 				<div class="controls">

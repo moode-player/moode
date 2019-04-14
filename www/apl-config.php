@@ -16,35 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - remove sps metadata
- * 2018-07-11 TC moOde 4.2
- * - move 'Resume MPD' to Audio config
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_airplay', $dbh, $key, $value);
 
-		if ($key == 'airplayvol') {
-			playerSession('write', $key, $value);
-		}
-		else {
+		if ($value != 'deprecated') {
 			$value = is_numeric($value) ? $value : '"' . $value . '"';
-			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . ";' /usr/local/etc/shairport-sync.conf");
+			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . ";' /etc/shairport-sync.conf"); // 3.3.y
+			//sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . ";' /usr/local/etc/shairport-sync.conf"); // 3.2.y
 		}
 	}
 
 	// restart if indicated
-	submitJob('airplaysvc', '', 'Settings updated', ($_SESSION['airplaysvc'] == '1' ? 'Airplay receiver restarted' : ''));
+	submitJob('airplaysvc', '', 'Changes saved', ($_SESSION['airplaysvc'] == '1' ? 'Airplay receiver restarted' : ''));
 }
 	
 session_write_close();
@@ -57,9 +51,9 @@ foreach ($result as $row) {
 	$cfg_airplay[$row['param']] = $row['value'];
 }
 
-// volume mixer
-$_select['airplayvol'] .= "<option value=\"auto\" " . (($_SESSION['airplayvol'] == 'auto') ? "selected" : "") . ">Auto</option>\n";
-$_select['airplayvol'] .= "<option value=\"software\" " . (($_SESSION['airplayvol'] == 'software') ? "selected" : "") . ">Software</option>\n";
+// interpolation
+$_select['interpolation'] .= "<option value=\"basic\" " . (($cfg_airplay['interpolation'] == 'basic') ? "selected" : "") . ">Basic</option>\n";
+$_select['interpolation'] .= "<option value=\"soxr\" " . (($cfg_airplay['interpolation'] == 'soxr') ? "selected" : "") . ">SoX</option>\n";
 // output bit depth
 $_select['output_format'] .= "<option value=\"S16\" " . (($cfg_airplay['output_format'] == 'S16') ? "selected" : "") . ">16 bit</option>\n";
 $_select['output_format'] .= "<option value=\"S24\" " . (($cfg_airplay['output_format'] == 'S24') ? "selected" : "") . ">24 bit</option>\n";
@@ -81,8 +75,10 @@ $_select['audio_backend_latency_offset_in_seconds'] = $cfg_airplay['audio_backen
 // audio buffer length (secs)
 $_select['audio_backend_buffer_desired_length_in_seconds'] = $cfg_airplay['audio_backend_buffer_desired_length_in_seconds'];
 
-$section = basename(__FILE__, '.php');
 $tpl = "apl-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php'); 
 waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");

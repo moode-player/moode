@@ -22,13 +22,13 @@
 
 	var DEFAULTS = {
 		selector: '[data-adaptive-background]',
-		parent: '.container-playback',
+		parent: '#playback-panel',
 		exclude: ['rgb(0,0,0)', 'rgb(255,255,255)'],
 		shadeVariation: 'blend',
-		shadePercentage: .25,
-		shadeColors: {light: 'rgb(64,64,64)', dark: 'rgb(208,208,208)'},
+		shadePercentage: .15,
+		shadeColors: {light: 'rgb(128,128,128)', dark: 'rgb(224,224,224)'},
 		normalizeTextColor: true,
-		normalizedTextColors: {light: "#ddd", dark: "#333"},
+		normalizedTextColors: {light: "#eee", dark: "#333"},
 		lumaClasses: {light: "ab-light", dark: "ab-dark"},
 		transparent: null
 	};
@@ -51,18 +51,6 @@
 				adaptMback = themeMback;
 				adaptColor = themeColor;
 				adaptBack = themeBack; 
-				$('.tab-content').css({color: themeColor});
-				$('.tab-content').css({backgroundColor: themeBack});
-				$('#context-menu-playlist-item .dropdown-menu').css({color: themeMcolor});
-				$('#context-menu-playlist-item .dropdown-menu').css({backgroundColor: themeMback});
-				$('#menu-top .dropdown-menu').css({color: themeMcolor});
-				$('#menu-top .dropdown-menu').css({backgroundColor: themeMback});
-				$('#menu-top').css({color: themeColor});
-				$('#menu-top').css({backgroundColor: themeMback});
-				$('#menu-bottom').css({color: themeColor});
-				$('#menu-bottom li').css({backgroundColor: themeMback});
-				$('#playback-panel').css('background-color', 'rgba(0,0,0,0)');
-				$('#playback-panel').css({color: themeColor});
 			},
 			a.onload = function () {
 				var n = t("2d");
@@ -157,6 +145,7 @@
 	$.adaptiveBackground = {
 		run: function (options) {
 			var opts = $.extend({}, DEFAULTS, options);
+			abfound = 'false';
 			
 			/* Loop over each element, waiting for it to load
 			then finding its color, and triggering the
@@ -250,11 +239,11 @@
 						$parent.css({
 							backgroundColor: transparentColor
 						});
-					} else {
-						$parent.css({
-							backgroundColor: data.color
-						});			
-					}
+					} //else {
+						//$parent.css({
+							//backgroundColor: data.color
+							//});			
+					//}
 				
 					// stash adaptive bg color
 					//console.log(data.color);
@@ -271,9 +260,10 @@
 					var newshade = hslToRgb(shade);
 					var newbg = 'rgba(';
 					var newmb = 'rgba(';
+					abFound = 'true';
 					newbg = newbg.concat(newshade[0],',',newshade[1],',',newshade[2],',' + SESSION.json['alphablend'] +')');
 					newmb = newmb.concat(newshade[0],',',newshade[1],',',newshade[2],',' + themeOp +')');
-				    $parent.css({backgroundColor: newbg});
+				    //$parent.css({backgroundColor: newbg});
 					data.color = newbg;
 					adaptBack = newbg;
 					//console.log(adaptBack);
@@ -291,45 +281,18 @@
 					};
 					// Normalize the text color based on luminance.
 					if (opts.normalizeTextColor) {
-						$parent.css({color: getNormalizedTextColor(data.color)});
+						//$parent.css({color: getNormalizedTextColor(data.color)});
 						// fix menu colors
 						adaptMcolor = getNormalizedTextColor(data.color);
-						adaptColor = getNormalizedTextColor(data.color);
-						abFound = 'true';
-						// display generated colors to console for poaching as themes
-						//console.log("atb " + adaptBack);
-						//console.log("atc " + adaptColor);
-						//console.log("amb " + adaptMback);
-						if ($('#playback-panel').hasClass('active')) {
-							$('#menu-top').css({color: adaptMcolor});
-							$('#menu-bottom').css({color: adaptMcolor});
-							$('#context-menu-playlist-item .dropdown-menu').css({color: adaptMcolor});
-							$('#menu-top .dropdown-menu').css({color: adaptMcolor});
-							$('#playback-panel').css({color: adaptColor});
-							$('.tab-content').css({backgroundColor: 'unset'});
-							$('#menu-top').css({backgroundColor: adaptMback});
-							themeOp < .74 ? tempback = adaptMhalf : tempback = adaptMback;
-							document.body.style.setProperty('--btnbarback', tempback);
-							$('#menu-top .dropdown-menu').css({backgroundColor: adaptMback});
-							$('#context-menu-playlist-item .dropdown-menu').css({backgroundColor: adaptMback});
-							SESSION.json['alphablend'] != '1.00' ? $('#menu-top').css('background-color', 'rgba(0,0,0,0)') : $('#menu-top').css('background-color', themeMback);
-							document.body.style.setProperty('--adaptbg', newmb);
-							document.body.style.setProperty('--adapttext', adaptMcolor); // r44d1
-							btnbarfix(adaptMback, adaptMcolor); // r44d1
-						}
-						if (getLumaClass(data.color) == 'ab-light') {
-							document.body.style.setProperty('--timethumb', 'url(../imagesw/thumb.svg)');
-							document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
-							document.body.style.setProperty('--trackfill', 'rgba(48,48,48,1.0)');
-						} else {
-							document.body.style.setProperty('--timethumb', 'url(../imagesw/thumb-w.svg)');
-							document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
-							document.body.style.setProperty('--trackfill', 'rgba(240,240,240,1.0)');
+						adaptColor = adaptMcolor;
+						if (SESSION.json['adaptive'] == 'Yes') {
+							//document.body.style.setProperty('--adaptbg', newbg);
+							setColors();
 						}
 					}
 					// Add a class based on luminance.
-					$parent.addClass(getLumaClass(data.color))
-					.attr('data-ab-yaq', getYIQ(data.color));
+					//$parent.addClass(getLumaClass(data.color))
+					//.attr('data-ab-yaq', getYIQ(data.color));
 					opts.success && opts.success($this, data);
 				});
 					

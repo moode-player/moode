@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2018-01-26 TC moOde 4.0
+# 2019-04-12 TC moOde 5.0
 #
 
 if [[ -n "$1" ]]; then
@@ -26,5 +26,5 @@ if [[ -n "$1" ]]; then
 		eval "$1"	
 	done > /dev/null 2>&1 &
 else
-	echo "lcdup, missing arg <path to Python script>"
+	echo "Path to script is missing"
 fi

@@ -16,44 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - substantial rewrite
- * - remove data-validate="parsley"
- * 2018-07-11 TC moOde 4.2
- * - minor cleanup
- * - change to modal-sm2 for confirm modals except for the remove modal since it needs to be wider
- * - change mount flags help to indicate sec=ntlm is optional
- * - font-awesome 5
- * 2018-09-27 TC moOde 4.3
- * - addition (i) info text for userid/password
+ * 2019-04-12 TC moOde 5.0
  *
  */
 -->	
 <div class="container">
 	<div class="container2">
-	<h1>NAS Source</h1>
+	<h1 class="lib-config">NAS Source</h1>
 
-    <p class="$_hide_remove">
-    	<a data-toggle="modal" href="#remove-nas-source">REMOVE</a> this NAS source
-    </p>
-
-	<p>
-		MPD database update starts automatically after saving.
-	</p>
-
-	<form class="form-horizontal" action="src-config.php" method="post">
-		<legend>
-			Settings&nbsp;
-			<button type="submit" class="btn btn-primary btn-small" name="save" value="1">Save</button>
-			<a href="src-config.php" class="btn btn-small" data-ajax="false">Cancel</a>
+	<form class="form-horizontal" action="lib-config.php" method="post">
+		<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<a href="#remove-nas-source" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
+			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				SAVE: Add new NAS config or update existing NAS config.<br>
+				REMOVE: Delete this NAS config.
+            </span>
 		</legend>
-	
 		<a data-toggle="modal" href="#moode-log" class="btn btn-small $_hide_error" style="margin-bottom: 15px; background-color: #333;">
 			<i class='fas fa-times red sx'></i>Mount error: Click to view moode.log for error msg
 		</a>
 
 		<fieldset>
+			<legend>Server</legend>
 			<div class="control-group">
 				<label class="control-label" for="type">Type</label>
 				<div class="controls">
@@ -68,7 +54,7 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="address">Server</label>
+				<label class="control-label" for="address">Host/Share</label>
 				<div class="controls">
 					<select id="address" name="mount[address]" class="input-large">
 						$_address
@@ -80,7 +66,7 @@
 						SCAN generates a list of SMB (Samba) shares.
                     </span>
 					<span class="help-block-configs help-block-margin">
-						<a id="editserver" data-toggle="modal" href="#manual-server">EDIT</a> server manually<br>
+						<a id="editserver" data-toggle="modal" href="#manual-server">EDIT</a> Host/Share manually<br>
 					</span>
 				</div>
 			</div>

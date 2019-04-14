@@ -16,29 +16,25 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-09-27 TC moOde 4.3
- * - improve logic and add support for ess sabre chips (Allo Katana DAC)
- * 2018-12-09 TC moOde 4.4
- * - comment out workerLog statements
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 $sock = openMpdSock('localhost', 6600);
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 
-	// update Burr Brown PCM/5 and TAS chip options
+	// Burr Brown PCM/5 and TAS chips
 	if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchip'], 'TAS') !== false) {
 		$chipoptions = $_POST['config']['analoggain'] . ',' . $_POST['config']['analogboost'] . ',' . $_POST['config']['digfilter'];
-		$chiptype = 'burrbrown';
-		//workerLog('chipoptions: ' . $chipoptions);
+		$chiptype = 'burr_brown_pcm5';
+
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
 	
@@ -55,7 +51,7 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 	
 		// update chip options
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Chip options updated';
+		$_SESSION['notify']['title'] = 'Changes saved';
 
 		// update Allo Piano 2.1 Hi-Fi DAC device settings
 		if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
@@ -75,16 +71,16 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 		}
 	}
 
-	// update Allo Katana DAC ES9038 chip options
+	// Allo Katana ES9038 Q2M chip
 	if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
-		$chipoptions = $_POST['config']['osf'] . ',' . $_POST['config']['deemphasis'] . ',' . $_POST['config']['dop'];
-		$chiptype = 'esssabre';
+		$chipoptions = $_POST['config']['katana_osf'] . ',' . $_POST['config']['katana_deemphasis'] . ',' . $_POST['config']['katana_dop'];
+		$chiptype = 'ess_sabre_katana';
 	
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
 	
 		// see if filter change submitted
-		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['osf']) {
+		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['katana_osf']) {
 			$status = parseStatus(getMpdStatus($sock));
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
@@ -93,7 +89,30 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 			}						
 		}
 	
-		// update chipoptions
+		// update chip options
+		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$_SESSION['notify']['title'] = 'Changes saved';
+	}
+
+	// Audiophonics ES9028/38 Q2M chip
+	if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+		$chipoptions = $_POST['config']['audiophonics_q2m_osf'] . ',' . $_POST['config']['audiophonics_q2m_input'];
+		$chiptype = 'ess_sabre_audiophonics_q2m';
+	
+		// amixer cmds
+		cfgChipOptions($chipoptions, $chiptype);
+	
+		// see if filter change submitted
+		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['audiophonics_q2m_osf']) {
+			$status = parseStatus(getMpdStatus($sock));
+			// restart playback to make filter change effective
+			if ($status['state'] === 'play') {
+				$cmds = array('pause', 'play');
+				chainMpdCmdsDelay($sock, $cmds, 1000000);
+			}						
+		}
+
+		// update chip options
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Chip options updated';
 	}
@@ -188,33 +207,69 @@ if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 	$_allo_katana_hide = '';
 
 	// Oversampling filter, de-emphasis, dop
-	$osf = $array[0];
-	$deemphasis = $array[1];
-	$dop = $array[2];
+	$katana_osf = $array[0];
+	$katana_deemphasis = $array[1];
+	$katana_dop = $array[2];
 	
 	// oversampling filter
-	$_select['osf'] .= "<option value=\"Apodizing Fast Roll-off Filter\" " . (($osf == 'Apodizing Fast Roll-off Filter') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
-	$_select['osf'] .= "<option value=\"Brick Wall Filter\" " . (($osf == 'Brick Wall Filter') ? "selected" : "") . ">Brick Wall Filter</option>\n";
-	$_select['osf'] .= "<option value=\"Corrected Minimum Phase Fast Roll-off Filter\" " . (($osf == 'Corrected Minimum Phase Fast Roll-off Filter') ? "selected" : "") . ">Corrected Minimum Phase Fast Roll-off Filter</option>\n";
-	$_select['osf'] .= "<option value=\"Linear Phase Fast Roll-off Filter\" " . (($osf == 'Linear Phase Fast Roll-off Filter') ? "selected" : "") . ">Linear Phase Fast Roll-off Filter</option>\n";
-	$_select['osf'] .= "<option value=\"Linear Phase Slow Roll-off Filter\" " . (($osf == 'Linear Phase Slow Roll-off Filter') ? "selected" : "") . ">Linear Phase Slow Roll-off Filter</option>\n";
-	$_select['osf'] .= "<option value=\"Minimum Phase Fast Roll-off Filter\" " . (($osf == 'Minimum Phase Fast Roll-off Filter') ? "selected" : "") . ">Minimum Phase Fast Roll-off Filter</option>\n";
-	$_select['osf'] .= "<option value=\"Minimum Phase Slow Roll-off Filter\" " . (($osf == 'Minimum Phase Slow Roll-off Filter') ? "selected" : "") . ">Minimum Phase Slow Roll-off Filter</option>\n";
+	$_select['katana_osf'] .= "<option value=\"Apodizing Fast Roll-off Filter\" " . (($katana_osf == 'Apodizing Fast Roll-off Filter') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
+	$_select['katana_osf'] .= "<option value=\"Brick Wall Filter\" " . (($katana_osf == 'Brick Wall Filter') ? "selected" : "") . ">Brick Wall Filter</option>\n";
+	$_select['katana_osf'] .= "<option value=\"Corrected Minimum Phase Fast Roll-off Filter\" " . (($katana_osf == 'Corrected Minimum Phase Fast Roll-off Filter') ? "selected" : "") . ">Corrected Minimum Phase Fast Roll-off Filter</option>\n";
+	$_select['katana_osf'] .= "<option value=\"Linear Phase Fast Roll-off Filter\" " . (($katana_osf == 'Linear Phase Fast Roll-off Filter') ? "selected" : "") . ">Linear Phase Fast Roll-off Filter</option>\n";
+	$_select['katana_osf'] .= "<option value=\"Linear Phase Slow Roll-off Filter\" " . (($katana_osf == 'Linear Phase Slow Roll-off Filter') ? "selected" : "") . ">Linear Phase Slow Roll-off Filter</option>\n";
+	$_select['katana_osf'] .= "<option value=\"Minimum Phase Fast Roll-off Filter\" " . (($katana_osf == 'Minimum Phase Fast Roll-off Filter') ? "selected" : "") . ">Minimum Phase Fast Roll-off Filter</option>\n";
+	$_select['katana_osf'] .= "<option value=\"Minimum Phase Slow Roll-off Filter\" " . (($katana_osf == 'Minimum Phase Slow Roll-off Filter') ? "selected" : "") . ">Minimum Phase Slow Roll-off Filter</option>\n";
 	// de-emphasis
-	$_select['deemphasis'] .= "<option value=\"Bypass\" " . (($deemphasis == 'Bypass') ? "selected" : "") . ">Bypass</option>\n";
-	$_select['deemphasis'] .= "<option value=\"32kHz\" " . (($deemphasis == '32kHz') ? "selected" : "") . ">32 kHz</option>\n";
-	$_select['deemphasis'] .= "<option value=\"44.1kHz\" " . (($deemphasis == '44.1kHz') ? "selected" : "") . ">44.1 kHz</option>\n";
-	$_select['deemphasis'] .= "<option value=\"48kHz\" " . (($deemphasis == '48kHz') ? "selected" : "") . ">48 kHz</option>\n";
+	$_select['katana_deemphasis'] .= "<option value=\"Bypass\" " . (($katana_deemphasis == 'Bypass') ? "selected" : "") . ">Bypass</option>\n";
+	$_select['katana_deemphasis'] .= "<option value=\"32kHz\" " . (($katana_deemphasis == '32kHz') ? "selected" : "") . ">32 kHz</option>\n";
+	$_select['katana_deemphasis'] .= "<option value=\"44.1kHz\" " . (($katana_deemphasis == '44.1kHz') ? "selected" : "") . ">44.1 kHz</option>\n";
+	$_select['katana_deemphasis'] .= "<option value=\"48kHz\" " . (($katana_deemphasis == '48kHz') ? "selected" : "") . ">48 kHz</option>\n";
 	// dop
-	$_select['dop'] .= "<option value=\"on\" " . (($dop == 'on') ? "selected" : "") . ">On</option>\n";
-	$_select['dop'] .= "<option value=\"off\" " . (($dop == 'off') ? "selected" : "") . ">Off</option>\n";
+	$_select['katana_dop'] .= "<option value=\"on\" " . (($katana_dop == 'on') ? "selected" : "") . ">On</option>\n";
+	$_select['katana_dop'] .= "<option value=\"off\" " . (($katana_dop == 'off') ? "selected" : "") . ">Off</option>\n";
 }
 else{
 	$_allo_katana_hide = 'hide';
 }
 
-$section = basename(__FILE__, '.php');
+// Audiophonics ES9028/38 Q2M DAC
+if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+	$_audiophonics_q2m_hide = '';
+	$_audiophonics_q2m_device_name = $_SESSION['i2sdevice'];
+
+	// Oversampling filter, input select
+	$audiophonics_q2m_osf = $array[0];
+	$audiophonics_q2m_input = $array[1];
+	
+	// oversampling filter
+	if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"apodizing fast\" " . (($audiophonics_q2m_osf == 'apodizing fast') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"brick wall\" " . (($audiophonics_q2m_osf == 'brick wall') ? "selected" : "") . ">Brick Wall Filter</option>\n";
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"corrected minimum phase fast\" " . (($audiophonics_q2m_osf == 'corrected minimum phase fast') ? "selected" : "") . ">Corrected Minimum Phase Fast Roll-off Filter</option>\n";
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"linear phase fast\" " . (($audiophonics_q2m_osf == 'linear phase fast') ? "selected" : "") . ">Linear Phase Fast Roll-off Filter</option>\n";
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"linear phase slow\" " . (($audiophonics_q2m_osf == 'linear phase slow') ? "selected" : "") . ">Linear Phase Slow Roll-off Filter</option>\n";
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"minimum phase fast\" " . (($audiophonics_q2m_osf == 'minimum phase fast') ? "selected" : "") . ">Minimum Phase Fast Roll-off Filter</option>\n";
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"minimum phase slow\" " . (($audiophonics_q2m_osf == 'minimum phase slow') ? "selected" : "") . ">Minimum Phase slow Roll-off Filter</option>\n";
+	}
+	// pre 2019
+	else {
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"brick wall\" " . (($audiophonics_q2m_osf == 'brick wall') ? "selected" : "") . ">PCM Filter sharp</option>\n";
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"corrected minimum phase fast\" " . (($audiophonics_q2m_osf == 'corrected minimum phase fast') ? "selected" : "") . ">PCM Filter fast</option>\n";
+		$_select['audiophonics_q2m_osf'] .= "<option value=\"minimum phase slow\" " . (($audiophonics_q2m_osf == 'minimum phase slow') ? "selected" : "") . ">PCM Filter slow</option>\n";
+	}
+	
+	// NOTE: this option s handled in the Source Select screen
+	$_select['audiophonics_q2m_input'] .= "<option value=\"I2S\" " . (($audiophonics_q2m_input == 'I2S') ? "selected" : "") . ">I2S</option>\n";
+	$_select['audiophonics_q2m_input'] .= "<option value=\"SPDIF\" " . (($audiophonics_q2m_input == 'SPDIF') ? "selected" : "") . ">S/PDIF</option>\n";
+}
+else{
+	$_audiophonics_q2m_hide = 'hide';
+}
+
 $tpl = "chp-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php'); 
 waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
