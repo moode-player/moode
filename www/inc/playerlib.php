@@ -400,16 +400,10 @@ function genLibraryUTF8Rep($flat) {
  			'file' => utf8rep($flatData['file']),
  			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')), //r44f add inner brackets
  			'title' => utf8rep($flatData['Title']),
-<<<<<<< HEAD
-			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'), // r44f
-			'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown')),
-			'album_artist' => utf8rep($flatData['AlbumArtist']),
-			'composer' => utf8rep($flatData['Composer']),
-=======
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
- 			'actual_artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing')), //r44f add inner brackets
+			'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing')), //r44f add inner brackets
+			'album_artist' => utf8rep($flatData['AlbumArtist']),
 			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
->>>>>>> master
  			'year' => utf8rep($flatData['Date']),
  			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown')),
