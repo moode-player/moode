@@ -378,7 +378,7 @@ function genLibrary($flat) {
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified']
 		);
-			
+
 		array_push($lib, $songData);
 	}
 
@@ -411,7 +411,7 @@ function genLibraryUTF8Rep($flat) {
  			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified']
 		);
-			
+
 		array_push($lib, $songData);
 	}
 

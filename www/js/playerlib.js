@@ -1739,11 +1739,11 @@ function filterLib() {
 	allAlbums = allArtistAlbums.map(function(albumTracks){
 		var file = albumTracks.find(function(track) { return track.file; }).file;
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
+		var albumArtist = (albumTracks.find(function(track) { return track.album_artist; }) || {}).album_artist;
 		return {
 			last_modified: new Date(Math.max.apply(null, albumTracks.map(function(track){ return new Date(track.last_modified); }))),
 			album: albumTracks.find(function(track) { return track.album; }).album,
-			artist: albumTracks.find(function(track) { return track.artist; }).artist,
-			album_artist: (albumTracks.find(function(track) { return track.album_artist; }) || {}).album_artist,
+			artist: albumArtist || albumTracks.find(function(track) { return track.artist; }).artist,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg'
 		};
 	});
@@ -1803,7 +1803,7 @@ function removeArticles(string) {
 
 // generate album/artist key
 function keyAlbum(objAlbum) {
-	return objAlbum.album + '@' + (objAlbum.album_artist || objAlbum.artist);
+	return objAlbum.album + '@' + objAlbum.artist;
 }
 
 // return numeric song time
@@ -1900,18 +1900,18 @@ var renderAlbums = function() {
 		if (UI.tagViewCovers) {
 			output += '<li class="clearfix"><div class="lib-entry'
 			+ tmp
-			+ '">' + '<img class="lazy" data-original="' + allAlbums[i].imgurl  + '">' + '<div class="albumsList-album-name">' + allAlbums[i].album + '</div>' + '<span>' + (allAlbums[i].album_artist || allAlbums[i].artist) + '</span></div></li>';
+			+ '">' + '<img class="lazy" data-original="' + allAlbums[i].imgurl  + '">' + '<div class="albumsList-album-name">' + allAlbums[i].album + '</div>' + '<span>' + allAlbums[i].artist + '</span></div></li>';
 			output2 += '<li class="clearfix"><div class="lib-entry'
 			+ tmp
-			+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + (allAlbumCovers[i].album_artist || allAlbumCovers[i].artist)  + '</span></div></li>';
+			+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + allAlbumCovers[i].artist + '</span></div></li>';
 		}
 		else {
 			output += '<li class="clearfix"><div class="lib-entry'
 			+ tmp
-			+ '">' + allAlbums[i].album + '<span>' + (allAlbums[i].album_artist || allAlbums[i].artist) + '</span></div></li>';
+			+ '">' + allAlbums[i].album + '<span>' + allAlbums[i].artist '</span></div></li>';
 			output2 += '<li class="clearfix"><div class="lib-entry'
 			+ tmp
-			+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + (allAlbumCovers[i].album_artist || allAlbumCovers[i].artist)  + '</span></div></li>';
+			+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + allAlbumCovers[i].artist + '</span></div></li>';
 		}
 	}
 
@@ -2021,7 +2021,7 @@ var renderSongs = function(albumPos) {
 		$('#lib-albumname').html(allSongs[0].album);
 
 		if (albumPos && !UI.libPos[0]) {
-			artist = allAlbums[UI.libPos[0]].album_artist || allAlbums[UI.libPos[0]].artist;
+			artist = allAlbums[UI.libPos[0]].artist;
 		}
 		else {
 			artist = allSongs[0].album_artist || allSongs[0].artist;
