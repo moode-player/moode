@@ -7,13 +7,11 @@ Link       : http://pinesframework.org/pnotify/
 Description:
 	Default styling for Pines Notify jQuery plugin.
 
-*
-* 2018-07-11 TC moOde 4.2
-* - comment out margin in ui-notify-icon since we are not using icons
-* 2018-10-19 TC moOde 4.3 update
-* - add break-word to .ui-pnotify-text
-*
-*/
+ *
+ * 2019-04-12 TC moOde 5.0
+ *
+ */
+
 /* -- Notice */
 .ui-pnotify {
 top: 25px;

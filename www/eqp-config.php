@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// format individual band params
 	for($i = 1; $i <= 4; $i++) {
 		$_POST['band' . $i . '_params'] = $_POST['band' . $i . '_enabled'] . ' ' . $_POST['band' . $i . '_freq'] . ' ' . (float)$_POST['band' . $i . '_q'] . ' ' . (float)$_POST['band' . $i . '_gain'];
@@ -45,7 +45,7 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 		// update
 		$value = array('master_gain' => (float)$_POST['master_gain'], 'band1_params' => $_POST['band1_params'], 'band2_params' => $_POST['band2_params'], 'band3_params' => $_POST['band3_params'], 'band4_params' => $_POST['band4_params']);
 		cfgdb_update('cfg_eqfa4p', $dbh, $_POST['curve_name'], $value);	
-		$_SESSION['notify']['title'] = 'Curve database updated';
+		$_SESSION['notify']['title'] = 'Curve updated';
 	}
 }
 
@@ -129,9 +129,10 @@ for($i = 1; $i <= 4; $i++) {
 	$_select['band' . $i . '_gain'] = $params[3];
 }
 
-
-$section = basename(__FILE__, '.php');
 $tpl = "eqp-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php'); 
 waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");

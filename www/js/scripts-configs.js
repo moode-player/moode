@@ -18,36 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - #type, #editserver for new nas-config
- * - set focus to manual ssid and server input fields
- * - update help text for nas mounts
- * - remove accumulated  code
- * 2018-07-11 TC moOde 4.2
- * - minor cleanup
- * - chg readcfgengine to readcfgsystem
- * - css vars for newui v2
- * 2018-09-27 TC moOde 4.3
- * - minor code cleanup and refactoring
- * - Android soft kbd fix
- * 2018-10-19 TC moOde 4.3 update
- * - add 'e' var to all JQuery function()
- * 2018-12-09 TC moOde 4.4
- * - improvements for btnBarFix()
+ * 2019-04-12 TC moOde 5.0
  *
  */
-
 jQuery(document).ready(function($){ 'use strict';
+	$('#config-back').show();
+	$('#config-tabs').css('display', 'flex');
+	$('#menu-bottom').css('display', 'none');
+	$('.moode-config-settings-div').hide();
 
-	// r43g to compensate for Android popup kbd changing the viewport
-	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0");
+	// compensate for Android popup kbd changing the viewport, also for notch phones
+	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
 	// store device pixel ratio
-	var result = sendMoodeCmd('POST', 'updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
+	sendMoodeCmd('POST', 'updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
 
-	// load session vars
-	SESSION.json = sendMoodeCmd('GET', 'readcfgsystem');
-	THEME.json = sendMoodeCmd('GET', 'readcfgtheme');
+	// load current cfg
+	var result = sendMoodeCmd('GET', 'read_cfg_all');
+	SESSION.json = result['cfg_system'];
+	THEME.json = result['cfg_theme'];
 	
 	var tempOp = themeOp;
 	if (themeOp == 0.74902) {tempOp = 0.1};
@@ -59,28 +47,41 @@ jQuery(document).ready(function($){ 'use strict';
 	tempcolor = splitColor($('.dropdown-menu').css('background-color'));
 	themeOp = tempcolor[3];
 	themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
+	accentColor = themeToColors(SESSION.json['accent_color']);
 	document.body.style.setProperty('--themetext', themeMcolor);
-	adaptColor = themeColor;
-	adaptBack = themeBack;
-	adaptMhalf = themeMback;
-	adaptMcolor = themeMcolor;
-	adaptMback = themeMback;
-	tempback = themeMback;
-	abFound = false; // add boolean for whether a adaptive background has been found
-	showMenuTopW = false
-	showMenuTopR = false	
-	setColors();
+	var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
+	var test = getCSSRule('.toggle .toggle-radio');
+	test.style.backgroundImage='url("' + radio1 + '")';
 
-	//btnbarfix('rgba(50,50,50,0.75)', adaptBack);
-	//document.body.style.setProperty('--btnbarback', 'rgba(50,50,50,0.75)');
-	$('#menu-bottom .btn').css('background', 'rgba(50,50,50,0.75)');
-	$('#cover-gradient').css('display', 'none'); // r44h
+	if ($('.lib-config').length) {
+		$('#lib-config-btn').addClass('active');
+	}
+	else if ($('.snd-config').length) {
+		$('#snd-config-btn').addClass('active');
+	}
+	else if ($('.net-config').length) {
+		$('#net-config-btn').addClass('active');
+	}
+	else if ($('.sys-config').length) {
+		$('#sys-config-btn').addClass('active');
+	}
 
     // setup pines notify
     $.pnotify.defaults.history = false;
 
-	// connect to mpd engine, lite version that just looks for db update initiated or complete
+	// connect to server engine (lite version that just looks for db update running / complete)
 	engineMpdLite();
+
+	//
+	// EVENT HANDLERS
+	//
+
+	// back button on header
+	$('#config-back a').click(function() {
+		if ($(this).attr('href') == '/index.php') {
+			$('#config-tabs').hide();
+		}
+	});
 
 	// eq configs
 	$('#eqp-curve-name').change(function() {
@@ -163,7 +164,7 @@ jQuery(document).ready(function($){ 'use strict';
 
 	// view thmcache status
     $('#view-thmcache-status').click(function(e) {
-		var resp = sendMoodeCmd('GET', 'thmcachestatus'); // sync
+		var resp = sendMoodeCmd('GET', 'thmcachestatus');
 		$('#thmcache-status').html(resp);
 	});
 

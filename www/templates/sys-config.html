@@ -16,29 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - minor cleanup
- * 2018-07-11 TC moOde 4.2
- * - add clear chrome browser cache to LocakUI settings
- * - minor format cleanup
- * - change to modal-sm2 for confirm modals
- * - font-awesome 5
- * 2018-07-18 TC moOde 4.2 update
- * - add singleton to #view-pkgcontent footer btn
- * 2018-10-19 TC moOde 4.3 update
- * - rm download image builder
- * - eth port fix setting
+ * 2019-04-12 TC moOde 5.0
  *
  */
 -->	
 <div class="container">
 	<div class="container2">
-	<h1>System Config</h1>
+	<h1 class="sys-config">System Config</h1>
 
 	<form class="form-horizontal" method="post">
-	    <p>
-			<button class="btn btn-primary btn-small" style="background: none; font-size: 13px; height: 22px; padding: 2px 4px 2px 0px;" type="submit" name="checkfor_update" value="novalue">Check for</button>software update<br>
+	    <p style="margin-top:1.5em";>
+			<button class="btn btn-medium btn-primary" type="submit" name="checkfor_update" value="novalue">Check</button>&nbsp;for software update<br>
 			$_available_upd
 			$_lastinstall_upd
 	    </p>
@@ -251,7 +239,7 @@
 			<div class="control-group">
 				<label class="control-label">File system</label>
 				<div class="controls">
-					<button class="btn btn-primary btn-small" style="margin-top:0px;"><a href="#expand-rootfs" data-toggle="modal">Expand</a></button>
+					<a href="#expand-rootfs" data-toggle="modal"><button class="btn btn-primary btn-small" style="margin-top:0px;">Expand</button></a>
 					<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-expand-rootfs" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span class="help-block-configs help-block-margin" style="margin-top: 0px; padding-top: 0px;">
 						$_expandrootfs_msg
@@ -268,7 +256,7 @@
 				<div class="control-group">
 					<label class="control-label">USB boot</label>
 					<div class="controls">
-						<button class="btn btn-primary btn-small" style="margin-top:0px;"><a href="#enable-usbboot" data-toggle="modal">ENABLE</a></button>
+						<a href="#enable-usbboot" data-toggle="modal"><button class="btn btn-primary btn-small" style="margin-top:0px;">Enable</button></a>
 						<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-usb-boot" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span class="help-block-configs help-block-margin" style="margin-top: 0px; padding-top: 0px;">
 							$_usbboot_msg
@@ -282,7 +270,7 @@
 				</div> 
 			</div>
 
-			<div class="control-group">
+			<!--div class="control-group">
 				<label class="control-label" for="mpdtimeout">MPD engine timeout</label>
 				<div class="controls">
 					<select id="mpdtimeout" class="input-large" name="mpdtimeout">
@@ -296,7 +284,7 @@
 						The default value is (Never).<br>
 					</span>
 				</div>
-			</div>	
+			</div r45b deprecate-->	
 		</fieldset>
 			
 		<div class="$_feat_localui">
@@ -322,12 +310,12 @@
 	            </div>  
 	
 				<div class="control-group">
-					<label class="control-label">Touch screen</label>
+					<label class="control-label">Mouse cursor</label>
 					<div class="controls">
 						<div class="toggle">
-							<label class="toggle-radio" for="toggletouchscn2">YES</label>
+							<label class="toggle-radio" for="toggletouchscn2">ON</label>
 							$_select[touchscn1]
-							<label class="toggle-radio" for="toggletouchscn1">NO</label>
+							<label class="toggle-radio" for="toggletouchscn1">OFF</label>
 							$_select[touchscn0]
 						</div>
 						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
@@ -335,8 +323,7 @@
 							<a class="info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info-touchscn" class="help-block-configs help-block-margin hide">
-							Set to Yes if the display has Touch capability.<br>
-							This prevents the cursor from showing.<br>
+							This prevents the cursor from showing on the display or Touch screen<br>
 	                    </span>
 	                </div>
 	            </div>  
@@ -376,7 +363,7 @@
 				<div class="control-group">
 					<label class="control-label">Browser cache</label>
 					<div class="controls">
-						<button class="btn btn-primary btn-small" style="margin-top:0px;"><a href="#clear-browser-cache" data-toggle="modal">Clear</a></button>
+						<a href="#clear-browser-cache" data-toggle="modal"><button class="btn btn-primary btn-small" style="margin-top:0px;">Clear</button></a>
 						<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-clear-browser-cache" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-clear-browser-cache" class="help-block-configs help-block-margin hide">
 							Clear Chrome Browser cache for Local UI.<br> 
@@ -433,6 +420,30 @@
 				</div>
 			</div>
 
+			<div class="$_feat_gpio">
+				<div class="control-group">
+					<label class="control-label">GPIO button handler</label>
+					<div class="controls">
+						<div class="toggle">
+							<label class="toggle-radio" for="toggle_gpio_svc2">ON</label>
+							$_select[gpio_svc1]
+							<label class="toggle-radio" for="toggle_gpio_svc1">OFF</label>
+							$_select[gpio_svc0]
+						</div>
+						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+							<button class="btn btn-primary btn-small" type="submit" name="update_gpio_svc" value="novalue">Set</button>
+							<a class="info-toggle" data-cmd="info_gpio_svc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						</div>
+						<span id="info_gpio_svc" class="help-block-configs help-block-margin hide">
+							GPIO pin handler that maps attached buttons to MPD playback commands. By @Cyanoazimin.<br>
+	                    </span>
+						<span class="help-block-configs help-block-margin">
+							<a href="gpio-config.php">CONFIGURE</a> GPIO pins<br>
+						</span>
+					</div>
+				</div>
+			</div>
+
 			<div class="control-group">
 				<label class="control-label">SSH term server</label>
 				<div class="controls">
@@ -461,7 +472,7 @@
 			<div class="control-group">
 				<label class="control-label">Playback history</label>
 				<div class="controls">
-					<button class="btn btn-primary btn-small" style="margin-top:0px;"><a href="#clear-playbackhist" data-toggle="modal">Clear</a></button>
+					<a href="#clear-playbackhist" data-toggle="modal"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Clear</button></a>
 					<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-clear-playhistory" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-clear-playhistory" class="help-block-configs help-block-margin hide">
 						Clear the playback history log. Perform this task periodically since the log grows over time.<br>
@@ -472,7 +483,7 @@
 			<div class="control-group">
 				<label class="control-label">System logs</label>
 				<div class="controls">
-					<button class="btn btn-primary btn-small" style="margin-top:0px;"><a href="#clear-syslogs" data-toggle="modal">Clear</a></button>
+					<a href="#clear-syslogs" data-toggle="modal"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Clear</button></a>
 					<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-clear-syslogs" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-clear-syslogs" class="help-block-configs help-block-margin hide">
 						Clear various system log files. NOTE: The logs are cleared periodically by the automatic Maintenance task.<br> 
@@ -483,7 +494,7 @@
 			<div class="control-group">
 				<label class="control-label">Sqlite database</label>
 				<div class="controls">
-					<button class="btn btn-primary btn-small" style="margin-top:0px;"><a href="#compact-sqlitedb" data-toggle="modal">Compact</a></button>
+					<a href="#compact-sqlitedb" data-toggle="modal"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Compact</button></a>
 					<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-compactdb" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-compactdb" class="help-block-configs help-block-margin hide">
 						Compact the Sqlite database for best performance. NOTE: The database is compacted periodically by the automatic Maintenance task.<br> 
@@ -535,6 +546,40 @@
 </div>
 
 <!-- MODALS -->
+
+<form class="form-horizontal" method="post">
+	<div id="expand-rootfs" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="expand-rootfs-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		</div>
+		
+		<div class="modal-body">
+			<h6>Expand root file system?</h6>
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary" type="submit" name="update_expand_rootfs" value="novalue">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="enable-usbboot" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="enable-usbboot-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		</div>
+		
+		<div class="modal-body">
+			<h6>Enable USB boot?</h6>
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary" type="submit" name="update_usbboot" value="novalue">Yes</button>
+		</div>
+	</div>
+</form>
 
 <form class="form-horizontal" method="post">
 	<div id="clear-browser-cache" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="clear-browser-cache-label" aria-hidden="true">
@@ -600,40 +645,6 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary" type="submit" name="update_compactdb" value="novalue">Yes</button>
-		</div>
-	</div>
-</form>
-
-<form class="form-horizontal" method="post">
-	<div id="expand-rootfs" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="expand-rootfs-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		</div>
-		
-		<div class="modal-body">
-			<h6>Expand root file system?</h6>
-		</div>
-		
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_expand_rootfs" value="novalue">Yes</button>
-		</div>
-	</div>
-</form>
-
-<form class="form-horizontal" method="post">
-	<div id="enable-usbboot" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="enable-usbboot-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		</div>
-		
-		<div class="modal-body">
-			<h6>Enable USB boot?</h6>
-		</div>
-		
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_usbboot" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>

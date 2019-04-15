@@ -16,157 +16,93 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - remove data-validate="parsley"
- * 2018-07-11 TC moOde 4.2
- * - minor cleanup
- * - change to modal-sm2 for confirm modals
- * - font-awesome 5
- * 2018-12-09 TC moOde 4.4
- * - chg icon-play to fas fa-play
+ * 2019-04-12 TC moOde 5.0
  *
  */
 -->	
 <div class="container">
 	<div class="container2">
-	<h1>Parametric EQ</h1>
-
-    <p>
-    	<a href="snd-config.php">BACK</a> to Audio config<br>
-    	<a data-toggle="modal" href="#rm-curve">REMOVE</a> EQ curve
-    </p>
+	<h1 class="snd-config">Parametric EQ</h1>
 
     <form class="form-horizontal" action="" method="post">
-    	<legend>Settings &nbsp;
-			<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button>&nbsp;
-			<button class="btn btn-primary btn-small" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
+    	<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
 			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-buttons" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
-				APPLY: updates the curve table only.<br>
-				PLAY: updates the active curve config. EQ must be turned on in Audio config to enable Play.<br>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				SAVE: Add new curve or update existing curve with new parameters.<br>
+				REMOVE: Delete the selected curve.<br>
             </span>
 		</legend>
     
 		<fieldset>
-			<div class="control-group">
-				<label class="control-label" for="curve-name">Curve name</label>
-				<div class="controls">
-					<select id="eqp-curve-name" class="input-large" name="curve_name">
-						$_select[curve_name]
-					</select>
-					<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-curve-name" class="help-block-configs help-block-margin hide">
-						Friendly name for the EQ curve.<br>
-                    </span>
-					<span class="help-block-configs help-block-margin">
-						<a data-toggle="modal" href="#new-curvename">ENTER</a> New curve name<br>
-					</span>
-				</div>
-			</div>
+	    	<legend>Test &nbsp;
+				<button class="btn btn-primary btn-small" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
+				<a class="info-toggle" data-cmd="info-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-play" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
+					Start playback using the currently selected Curve. The EQ must be turned on in Audio config to enable Play.<br>
+	            </span>
+			</legend>
+			<select id="eqp-curve-name" class="input-large" name="curve_name">
+				$_select[curve_name]
+			</select>
+			<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-curve-name" class="help-block-configs help-block-margin hide">
+				Master gain: -24 to 24 dB (applies to all 4 frequency bands).<br>
+				Individual bands:<br>
+				- Frequency: 20 to 14000 Hz<br>
+				- Bandwidth: 0.12 to 8 (lower values correspond to increasing resonance)<br>
+				- Gain: -24 to 24 dB<br>
+            </span>
+			<span class="help-block-configs help-block-margin">
+				<a data-toggle="modal" href="#new-curvename">ENTER</a> New curve name<br>
+			</span>
 		</fieldset>
 
 		<fieldset>
-	    	<legend>EQ Curve</legend>
-			<div class="control-group">
-				<label class="control-label" for="master-gain">Master gain (dB)</label>
-				<div class="controls">
-					<input class="input-mini" type="number" min="-24" max="24" step=".1" id="master-gain" name="master_gain" value="$_select[master_gain]">
-					<a class="info-toggle" data-cmd="info-master-gain" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-master-gain" class="help-block-configs help-block-margin hide">
-						Master gain: -24 to 24 dB (applies to all 4 frequency bands).<br>
-						Individual bands:<br>
-						- Freq: 20 to 14000 Hz<br>
-						- Qfac: 0.12 to 8 (lower Q = wider bandwidth)<br>
-						- Gain: -24 to 24 dB<br>
-                    </span>
+			<div id="equalizer" class="sliderbank">					
+				<div class="eqp-label">Frequency Bands</div>
+				<div class="vslide1">
+					<div id="master-gain">$_select[master_gain] dB</div>
+					<input id="master-gain-slider" class="vslide2" type="range" orient="vertical" min="-24" max="24" step=".1" name="master_gain" value="$_select[master_gain]" oninput="updEqpMasterGain('#master-gain', this.value)">
+					<div><a id="master-gain-up" class="btn" href="#notarget">+</a></div>
+					<div>Master Gain</div>
+					<div><a id="master-gain-dn" class="btn" href="#notarget">-</a></div>
+				</div>
+				<div class="vslide1"><div id="band1-freq">$_select[band1_freq] Hz</div><input id="band1-freq-slider" class="vslide2" type="range" orient="vertical" min="20" max="14000" step="1" name="band1_freq" value="$_select[band1_freq]" oninput="updEqpFreq('#band1-freq', '#band1-freq-input', this.value)"><div>Band 1</div></div>
+				<div class="vslide1"><div id="band2-freq">$_select[band2_freq] Hz</div><input id="band2-freq-slider" class="vslide2" type="range" orient="vertical" min="20" max="14000" step="1" name="band2_freq" value="$_select[band2_freq]" oninput="updEqpFreq('#band2-freq', '#band2-freq-input', this.value)"><div>Band 2</div></div>
+				<div class="vslide1"><div id="band3-freq">$_select[band3_freq] Hz</div><input id="band3-freq-slider" class="vslide2" type="range" orient="vertical" min="20" max="14000" step="1" name="band3_freq" value="$_select[band3_freq]" oninput="updEqpFreq('#band3-freq', '#band3-freq-input', this.value)"><div>Band 3</div></div>
+				<div class="vslide1"><div id="band4-freq">$_select[band4_freq] Hz</div><input id="band4-freq-slider" class="vslide2" type="range" orient="vertical" min="20" max="14000" step="1" name="band4_freq" value="$_select[band4_freq]" oninput="updEqpFreq('#band4-freq', '#band4-freq-input', this.value)"><div>Band 4</div></div>
+
+				<div id="eqp-input-ctls">
+					<div class="eqp-col1">Freq (Hz)</div>
+					<div class="eqp-col1"><input id="band1-freq-input" class="input-mini eqp-input" type="number" min="20" max="14000" step="1" name="band1_freq" value="$_select[band1_freq]" oninput="updEqpFreq('#band1-freq', '#band1-freq-slider', this.value)"></div>
+					<div class="eqp-col1"><input id="band2-freq-input" class="input-mini eqp-input" type="number" min="20" max="14000" step="1" name="band2_freq" value="$_select[band2_freq]" oninput="updEqpFreq('#band2-freq', '#band2-freq-slider', this.value)"></div>
+					<div class="eqp-col1"><input id="band3-freq-input" class="input-mini eqp-input" type="number" min="20" max="14000" step="1" name="band3_freq" value="$_select[band3_freq]" oninput="updEqpFreq('#band3-freq', '#band3-freq-slider', this.value)"></div>
+					<div class="eqp-col1"><input id="band4-freq-input" class="input-mini eqp-input" type="number" min="20" max="14000" step="1" name="band4_freq" value="$_select[band4_freq]" oninput="updEqpFreq('#band4-freq', '#band4-freq-slider', this.value)"></div>
+
+					<div class="eqp-col1">Bandwidth</div>
+					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".12" max="8" step=".01" id="band1-q" name="band1_q" value="$_select[band1_q]"></div>
+					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".12" max="8" step=".01" id="band2-q" name="band2_q" value="$_select[band2_q]"></div>
+					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".12" max="8" step=".01" id="band3-q" name="band3_q" value="$_select[band3_q]"></div>
+					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min=".12" max="8" step=".01" id="band4-q" name="band4_q" value="$_select[band4_q]"></div>
+
+					<div class="eqp-col1">Gain (dB)</div>
+					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band1_gain" value="$_select[band1_gain]"></div>
+					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band2-gain" name="band2_gain" value="$_select[band2_gain]"></div>
+					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band3-gain" name="band3_gain" value="$_select[band3_gain]"></div>
+					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band4-gain" name="band4_gain" value="$_select[band4_gain]"></div>
+	
+					<div id="eq-enabled-select">
+						<div class="eqp-col1">Enabled</div>
+						<div class="eqp-col1"><select id="band1-enabled" class="select-mini eqp-select" name="band1_enabled" style="width:71.5px;">$_select[band1_enabled]</select></div>
+						<div class="eqp-col1"><select id="band2-enabled" class="select-mini eqp-select" name="band2_enabled" style="width:71.5px;">$_select[band2_enabled]</select></div>
+						<div class="eqp-col1"><select id="band3-enabled" class="select-mini eqp-select" name="band3_enabled" style="width:71.5px;">$_select[band3_enabled]</select></div>
+						<div class="eqp-col1"><select id="band4-enabled" class="select-mini eqp-select" name="band4_enabled" style="width:71.5px;">$_select[band4_enabled]</select></div>
+					</div>
 				</div>
 			</div>
 		</fieldset>
-
-		<fieldset>
-			<div class="control-group">
-				<table>
-					<tr>
-						<td class="control-label"></td>
-						<td style="padding-left:20px;">Enabled</td>
-						<td style="padding-left:20px;">Freq (Hz)</td>
-						<td style="padding-left:20px;">Q-factor</td>
-						<td style="padding-left:20px;">Gain (dB)</td>
-					</tr>
-					<tr>
-						<td class="control-label">Band 1</td>
-						<td style="padding-left:20px;">
-							<!-- style="width: 74px; is simply to prevent the control from displaying its default 224px width before being resized to 74px in moode.css" -->
-							<select id="band1-enabled" class="select-mini" name="band1_enabled" style="width: 74px;">
-								$_select[band1_enabled]
-							</select>
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="20" max="14000" id="band1-freq" name="band1_freq" value="$_select[band1_freq]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min=".12" max="8" step=".01" id="band1-q" name="band1_q" value="$_select[band1_q]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band1_gain" value="$_select[band1_gain]">
-						</td>
-					</tr>
-					<tr>
-						<td class="control-label">Band 2</td>
-						<td style="padding-left:20px;">
-							<select id="band2-enabled" class="select-mini" name="band2_enabled" style="width: 74px;">
-								$_select[band2_enabled]
-							</select>
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="20" max="14000" id="band1-freq" name="band2_freq" value="$_select[band2_freq]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min=".12" max="8" step=".01" id="band1-q" name="band2_q" value="$_select[band2_q]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band2_gain" value="$_select[band2_gain]">
-						</td>
-					</tr>
-					<tr>
-						<td class="control-label">Band 3</td>
-						<td style="padding-left:20px;">
-							<select id="band3-enabled" class="select-mini" name="band3_enabled" style="width: 74px;">
-								$_select[band3_enabled]
-							</select>
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="20" max="14000" id="band1-freq" name="band3_freq" value="$_select[band3_freq]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min=".12" max="8" step=".01" id="band1-q" name="band3_q" value="$_select[band3_q]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band3_gain" value="$_select[band3_gain]">
-						</td>
-					</tr>
-					<tr>
-						<td class="control-label">Band 4</td>
-						<td style="padding-left:20px;">
-							<select id="band4-enabled" class="select-mini" name="band4_enabled" style="width: 74px;">
-								$_select[band4_enabled]
-							</select>
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="20" max="14000" id="band1-freq" name="band4_freq" value="$_select[band4_freq]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min=".12" max="8" step=".01" id="band1-q" name="band4_q" value="$_select[band4_q]">
-						</td>
-						<td style="padding-left:20px;">
-							<input class="input-mini" type="number" min="-24" max="24" step=".1" id="band1-gain" name="band4_gain" value="$_select[band4_gain]">
-						</td>
-					</tr>
-				</table>				
-			</div>
-		</fieldset>
-
 	</form>
 </div>
 </div>

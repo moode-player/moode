@@ -1,9 +1,3 @@
-#
-# 2017-MM-DD TC moOde 4.0
-# 2018-MM-DD TC moOde 4.3
-# - revised fastcgi_params
-#
-
 fastcgi_param  QUERY_STRING       $query_string;
 fastcgi_param  REQUEST_METHOD     $request_method;
 fastcgi_param  CONTENT_TYPE       $content_type;

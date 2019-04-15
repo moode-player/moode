@@ -16,26 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - add Resume MPD for Bluetooth
- * 2018-07-11 TC moOde 4.2
- * - add 'Resume MPD' for Airplay and Squeezelite
- * - minor format cleanup
- * - change to modal-sm2 for confirm modals
- * - font-awesome 5
- * 2018-09-27 TC moOde 4.3
- * - improve logic for chp/device options button
- * - spotify
+ * 2019-04-12 TC moOde 5.0
  *
  */
 -->	
 <div class="container">
 <div class="container2">
-	<h1>Audio Config</h1>
+	<h1 class="snd-config">Audio Config</h1>
 
 	<form class="form-horizontal" method="post">
-
 		<legend>Devices</legend>
 		<fieldset>
 			<div class="control-group">
@@ -46,23 +35,23 @@
 					</select>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="update_i2s_device" value="novalue">Set</button>
 					<span class="help-block-configs help-block-margin">
-						Set this to None if using a USB audio device.<br>
+						NOTE: Set this to None if using a USB audio device.<br>
 						Auto-play will be turned off as part of updating this setting.<br>
                     </span>
 				</div>
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="advoptions">Driver options</label>
+				<label class="control-label" for="drvoptions">Driver options</label>
 				<div class="controls">
-					<select id="advoptions" class="input-large" name="advoptions">
-						$_select[advoptions]
+					<select id="drvoptions" class="input-large" name="drvoptions">
+						$_select[drvoptions]
 					</select>
-					<button class="btn btn-primary btn-small set-button" type="submit" name="update_advoptions" value="novalue">Set</button>
-					<a class="info-toggle" data-cmd="info-advoptions" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-advoptions" class="help-block-configs help-block-margin hide">
-						<b>glb_mclk:</b> If enabled, Kali MCLK is used and PLL for Piano 2.1 is disabled for best SQ.<br>
+					<button class="btn btn-primary btn-small set-button" type="submit" name="update_drvoptions" value="novalue">Set</button>
+					<a class="info-toggle" data-cmd="info-drvoptions" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-drvoptions" class="help-block-configs help-block-margin hide">
 						<b>slave:</b> If enabled, Boss and MiniBOSS DAC operate in slave mode required by Kali.<br>
+						<b>glb_mclk:</b> If enabled, Kali MCLK is used and PLL for Piano 2.1 is disabled for best SQ.<br>
                     </span>
 				</div>
 			</div>
@@ -70,14 +59,14 @@
 			<div class="control-group">
 				<label class="control-label">Chip/Device options</label>
 				<div class="controls">
-					<button class="btn btn-primary btn-medium" style="margin-top:0px;" $_chpoptions_disabled>$_chpoptions_href</button><br>
+					$_chipoptions_btn
 				</div>
 			</div>
 
 			<div class="control-group">
 				<label class="control-label" for="alsavolume">ALSA volume (%)</label>
 				<div class="controls">
-                    <input class="input-mini" $_alsa_volume_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume" name="alsavolume" value="$_alsa_volume">
+                    <input class="input-large" $_alsa_volume_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume" name="alsavolume" value="$_alsa_volume">
 					<button class="btn btn-primary btn-small set-button status-msg $_alsa_volume_hide" data-msg="Processing" type="submit" name="update_alsa_volume" value="novalue">Set</button>
 					<a class="info-toggle" data-cmd="info-alsavol" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-alsavol" class="help-block-configs help-block-margin hide">
@@ -91,38 +80,30 @@
 		<legend>MPD</legend>
 		<fieldset>
 			<div class="control-group">
+				<label class="control-label" for="mpdver">MPD version</label>
+				<div class="controls">
+					<select id="cpugov" class="input-large" name="mpdver">
+						$_select[mpdver]
+					</select>
+					<button class="btn btn-primary btn-small set-button" type="submit" name="update_mpdver" value="novalue">Set</button>
+					<span class="help-block-configs help-block-margin">
+						NOTE: MPD 0.21.6 is offered as an option for enthusiasts that want to test the newer 0.21.y series. Known issues in the context of moOde include (1) Failure to output to Bluetooth speaker and (2) Distortion on DSD playback in certain scenarios.<br>
+						The MPD database will be regenerated after switching versions.
+					</span>
+				</div>
+			</div>	
+
+			<div class="control-group">
 				<label class="control-label">MPD options</label>
 				<div class="controls">
-					<a href="mpd-config.php" class="btn btn-primary btn-medium" style="margin-top:0px;">Edit settings</a><br><br>
-					<a data-toggle="modal" href="#mpd-restart">RESTART</a> MPD service<br>
+					<a href="mpd-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit options</button></a>
+					<span class="help-block-configs help-block-margin">
+						<a data-toggle="modal" href="#mpd-restart">RESTART</a> MPD service<br>
+					</span>
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label">Rotary encoder</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="togglerotaryenc2">ON</label>
-						$_select[rotaryenc1]
-						<label class="toggle-radio" for="togglerotaryenc1">OFF</label>
-						$_select[rotaryenc0]				
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<input class="input-large" type="text" id="rotenc_params" name="rotenc_params" value="$_select[rotenc_params]" style="width:117px;" required>
-						<button class="btn btn-primary btn-small set-button" type="submit" name="update_rotenc" value="novalue">Set</button>
-						<a class="info-toggle" data-cmd="info-rotary-enc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-rotary-enc" class="help-block-configs help-block-margin2 hide">
-						Enable a rotary encoder device to control volume.<br>
-						Driver uses WiringPi library and defaults to using GPIO 23,24,GND.<br>
-						Params: DELAY ACCEL STEP PIN-A PIN-B<br>
-						- DELAY = Number of ms delay for each iteration of the volume update loop (default=100).<br>
-						- ACCEL = Threshold (diff betw last/current enc pos) to determine whether to use 1 step or STEP steps (default=2).<br>
-						- STEP = Number of steps to use when knob turns at fast rate (default=3).<br>
-						- PIN-A/B = WiringPi pin numbers (default=pin 4,5 [GPIO 23,24]).<br>
-                    </span>
-				</div>
-			</div>
+			<div class="horiz-rule-light"></div>
 
 			<div class="control-group">
 				<label class="control-label">Auto-shuffle</label>
@@ -138,9 +119,9 @@
 						<a class="info-toggle" data-cmd="info-ashufflesvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-ashufflesvc" class="help-block-configs help-block-margin2 hide">						
-						When the last song in the Playlist has finished playing Auto-shuffle adds a random song from the music library
-						to the end of the Playlist, then removes it when it finishes playing. This creates a continuous stream of music 
-						without growing the Playlist. NOTE: Auto-shuffle replaces MPD random play as the method for the 'Random' button.<br>
+						When the last song in the Playlist has finished playing Auto-shuffle adds two randomly selected songs from the music library
+						to the end of the Playlist then repeats the process. This creates a continuous stream of music without growing the Playlist and 
+						having two tracks enables MPD Crossfade to be used. NOTE: Auto-shuffle replaces MPD random play as the method for the 'Random' button.<br>
                     </span>
 				</div>
 			</div>
@@ -165,9 +146,56 @@
 			</div>
 
 			<div class="control-group">
+				<label class="control-label">Rotary encoder</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="togglerotaryenc2">ON</label>
+						$_select[rotaryenc1]
+						<label class="toggle-radio" for="togglerotaryenc1">OFF</label>
+						$_select[rotaryenc0]				
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+						<input class="input-large" type="text" id="rotenc_params" name="rotenc_params" value="$_select[rotenc_params]" style="width:117px;" required>
+						<button class="btn btn-primary btn-small set-button" type="submit" name="update_rotenc" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-rotary-enc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-rotary-enc" class="help-block-configs help-block-margin2 hide">
+						Enable a rotary encoder device to control MPD volume.<br>
+						Driver uses WiringPi library and defaults to using GPIO 23,24,GND.<br>
+						Params: DELAY ACCEL STEP PIN-A PIN-B<br>
+						- DELAY = Number of ms delay for each iteration of the volume update loop (default=100).<br>
+						- ACCEL = Threshold (diff betw last/current enc pos) to determine whether to use 1 step or STEP steps (default=2).<br>
+						- STEP = Number of steps to use when knob turns at fast rate (default=3).<br>
+						- PIN-A/B = WiringPi pin numbers (default=pin 4,5 [GPIO 23,24]).<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Polarity inversion</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_invert_polarity2">ON</label>
+						$_select[invert_polarity1]
+						<label class="toggle-radio" for="toggle_invert_polarity1">OFF</label>
+						$_select[invert_polarity0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small" type="submit" name="update_invert_polarity" value="novalue" $_invpolarity_set_disabled>Set</button>
+						<a class="info-toggle" data-cmd="info_invert_polarity" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info_invert_polarity" class="help-block-configs help-block-margin2 hide">
+						Change the waveform on each channel from +/- to -/+.<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="horiz-rule-light"></div>
+
+			<div class="control-group">
 				<label class="control-label" for="mpdcrossfade">Crossfade (secs)</label>
 				<div class="controls">
-                    <input class="input-mini" type="number" maxlength="2" min="0" max="15" id="mpdcrossfade" name="mpdcrossfade" value="$_mpdcrossfade" required>
+                    <input class="input-large" type="number" maxlength="2" min="0" max="15" id="mpdcrossfade" name="mpdcrossfade" value="$_mpdcrossfade" required>
 					<button class="btn btn-primary btn-small set-button" type="submit" name="update_mpdcrossfade" value="novalue">Set</button>
 					<a class="info-toggle" data-cmd="info-mpdcrossfade" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-mpdcrossfade" class="help-block-configs help-block-margin hide">
@@ -197,6 +225,57 @@
 				</div>
 			</div>
 
+			<div class="horiz-rule-light"></div>
+
+			<div class="control-group">
+				<label class="control-label">HTTP streaming</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-mpd-httpd2">ON</label>
+						$_select[mpd_httpd1]
+						<label class="toggle-radio" for="toggle-mpd-httpd1">OFF</label>
+						$_select[mpd_httpd0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small" type="submit" name="update_mpd_httpd" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-mpd-httpd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-mpd-httpd" class="help-block-configs help-block-margin2 hide">
+						Provide MPD output as an HTTP stream on the designated port.<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="mpd-httpd-port">Port</label>
+				<div class="controls">
+                    <input class="input-large" type="number" maxlength="4" min="8000" max="9000" id="mpd-httpd-port" name="mpd_httpd_port" value="$_mpd_httpd_port" required>
+					<button class="btn btn-primary btn-small set-button" type="submit" name="update_mpd-httpd_port" value="novalue">Set</button>
+					<a class="info-toggle" data-cmd="info-mpd-httpd-port" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-mpd-httpd-port" class="help-block-configs help-block-margin hide">
+						Default port is 8000. Port number range is 8000 - 9000.
+                    </span>
+				</div>
+			</div>	
+
+			<div class="control-group">
+				<label class="control-label" for="mpd-httpd-encoder">Encoder</label>
+				<div class="controls">
+					<select id="mpd-httpd-encoder" class="input-large" name="mpd_httpd_encoder">
+						$_select[mpd_httpd_encoder]
+					</select>
+					<button class="btn btn-primary btn-small set-button" type="submit" name="update_mpd_httpd_encoder" value="novalue">Set</button>
+					<a class="info-toggle" data-cmd="info-mpd-httpd-encoder" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-mpd-httpd-encoder" class="help-block-configs help-block-margin2 hide">
+						Encode the stream using either FLAC at compression level 0 (fastest, least compression) or LAME (MP3) at 320 kbps.
+					</span>
+				</div>
+			</div>
+
+		</fieldset>
+
+		<legend>Equalisers</legend>
+		<fieldset>
 			<div class="control-group">
 				<label class="control-label" for="eqfa4p">Parametric EQ</label>
 				<div class="controls">
@@ -207,6 +286,7 @@
 					<a class="info-toggle" data-cmd="info-eqfa4p" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-eqfa4p" class="help-block-configs help-block-margin hide">
 						Four Mitra-Regalia peaking equaliser filters in series; a vector arithmetic re-implementation of Fons Adriaensens "Parametric1" equaliser[fafil] with minor differences. Parallelisation of the serial filter organisation causes the output to lag by three samples. This EQ uses the EqFA4p component of the CAPS suite of DSP programs written by Tim Goetze<br>
+						<b>Note:</b> Equalizer processing applies to MPD, Airplay and Spotify output.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
 						<a href="eqp-config.php">CONFIGURE</a> EQ curve<br>
@@ -224,6 +304,7 @@
 					<a class="info-toggle" data-cmd="info-alsaequal" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-alsaequal" class="help-block-configs help-block-margin hide">
 						A classic octave-band, constant-Q, second-order filter design. Frequency bands centered above Nyquist are automatically disabled. This EQ uses the Eq10X2 component of the CAPS suite of DSP programs written by Tim Goetze.<br>
+						<b>Note:</b> Equalizer processing applies to MPD, Airplay and Spotify output.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
 						<a href="eqg-config.php">CONFIGURE</a> EQ curve<br>
@@ -251,7 +332,26 @@
 						<a class="info-toggle" data-cmd="info-btsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-btsvc" class="help-block-configs help-block-margin2 hide">
-						Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (Bluez-alsa)<br>
+						Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (Bluez-alsa).<br>
+                    </span>
+					<span class="help-block-configs help-block-margin2">
+						<b>WARNING: </b>Make sure a Bluetooth adapter is physically attached and enabled otherwise the system will hang.<br>
+                    </span>
+				</div>
+				<label class="control-label">Pairing agent</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-pairing-agent2">ON</label>
+						$_select[pairing_agent1]
+						<label class="toggle-radio" for="toggle-pairing-agent1">OFF</label>
+						$_select[pairing_agent0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small" type="submit" name="update_pairing_agent" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info_pairing_agent" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info_pairing_agent" class="help-block-configs help-block-margin2 hide">
+						The pairing agent automatically accepts incoming pairing/connect requests from clients and eliminates the need to perform a manual SCAN from the BlueZ screen.<br>
                     </span>
 				</div>
 				<label class="control-label">Speaker sharing</label>
@@ -288,6 +388,9 @@
 					</span>
 				</div>
 			</div>
+
+			<div class="horiz-rule-light"></div>
+
 			<div class="control-group $_feat_airplay">
 				<label class="control-label" for="airplayname">Airplay</label>
 				<div class="controls">
@@ -324,6 +427,9 @@
 					</span>
 				</div>
 			</div>
+
+			<div class="horiz-rule-light"></div>
+
 			<div class="control-group $_feat_spotify">
 				<label class="control-label" for="spotifyname">Spotify</label>
 				<div class="controls">
@@ -340,7 +446,10 @@
 					</div>
 					<span id="info-spotifysvc" class="help-block-configs help-block-margin2 hide">
 						librespot-org by Sasha Hilton, the wonderful fork of the original librespot by Paul Lietar<br>
-                    </span>
+					</span>
+					<span class="help-block-configs help-block-margin2">
+						NOTE: This service requires a Spotify Premium account.
+					</span>
 				</div>
 				<label class="control-label" for="rsmafterspot">Resume MPD</label>
 				<div class="controls">
@@ -360,6 +469,9 @@
 					</span>
 				</div>
 			</div>
+
+			<div class="horiz-rule-light"></div>
+
 			<div class="control-group $_feat_squeezelite">
 				<label class="control-label">Squeezelite</label>
 				<div class="controls">

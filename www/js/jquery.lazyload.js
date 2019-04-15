@@ -11,9 +11,7 @@
  *
  * Version:  1.9.7
  *
- * 2018-09-27 TC moOde 4.3
- * - comment out video, background-image if/else block
- * - use moOde default cover as error src in image load routine
+ * 2019-04-12 TC moOde 5.0
  *
  */
 

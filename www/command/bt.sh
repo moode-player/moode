@@ -32,29 +32,13 @@
 # It performs bluetooth controller initialization and provides management of bluetooth sources
 # All related data files will reside under /var/lib/bluetooth
 #
-# 2018-01-26 TC moOde 4.0
-# - REV 1.1
-# - adapted for output to PHP/HTML 
-# - simplified cmd api for BT config screen
-# - added BTREMOVE(), BTDISCONNECT()
-# - REV 1.2
-# - revise html help for auto-initialize: happens in playerlib.php: startBt()
-# - REV 1.3
-# - don't rm /var/lib/bluetooth/* in INIT(), this can cause pairings to be lost after pwroff
-# - add PAIRWITH and CONNECTTO
-# 2018-04-02 TC moOde 4.1
-# - REV 1.4 add additional help text
-# - remove -a in INIT(), not needed
-# - revise the help text
-# 2018-07-11 TC moOde 4.2
-# - REV 1.5 revise html help text to reflect new capabilities
-# - comment out sleep in TRUST(), LIST_DISCOVERED(), LIST_PAIRED(), REMOVE_DEVICE(), DISCONNECT_DEVICE()
+# 2019-04-12 TC moOde 5.0
 #
 
 REV=1.5
 
-# check environment
-[[ $EUID -ne 0 ]] && { echo "** You must be root to run the script!" ; exit 1 ; } ;
+# check for sudo
+[[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
 #which expect >/dev/null || { echo "** expect must be installed to run the script!" ; exit 1 ; } ;
 
 # duration of scan in secs
@@ -260,11 +244,11 @@ HELP_TERM() {
 
 # format help for html presentation
 HELP_HTML() {
-	echo "1) Put your device in discovery mode and verify that it discovers Moode Bluetooth. You may have to turn Bluetooth off/on on your device to accomplish this. Next submit 'SCAN for devices' Action and verify that your device appears in the scan results. The scan runs for 20 seconds."
+	echo "1) Put your device in discovery mode and wait until it discovers Moode Bluetooth. You may have to turn Bluetooth off/on on your device to accomplish this."
 	echo
-	echo "2) To send audio from your device to moOde:<br>Initiate the connection on your device. You may have to initiate the connection as soon as your device is discovered and appears in the scan results. After a successful connection the pairing is stored."
+	echo -e "2) To send audio from your device to moOde:<br>First turn on the Pairing agent in Audio Config and then initiate the connection on your device. Your device should automatically pair and connect. You can verify that your device has been successfully paired and connected by submitting \"LIST paired\" or \"LIST connected\" commands."
 	echo
-	echo "3) To send audio from moOde to your device:<br>Initiate the connection on moOde. Select your device from the scan results, PAIR it then select 'Bluetooth device' for MPD audio output, then CONNECT."
+	echo -e "3) To send audio from moOde to your device:<br>First submit a \"SCAN for devices\" command and verify that your device appears in the scan results. The scan runs for 20 seconds. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetuuth\" from the dropdown then CONNECT."
 }
 
 # main

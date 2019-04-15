@@ -1,9 +1,6 @@
-#
-# 2018-01-26 TC moOde 4.0
-# 2018-07-11 TC moOde 4.2
+# NOTE:
 # - add profiles required by latest bluez-alsa build
 # - remove User=bluealsa, Group=Audio since they don't appear to be needed
-#
 
 [Unit]
 Description=BluezAlsa proxy

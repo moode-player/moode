@@ -1,0 +1,133 @@
+#!/usr/bin/php
+<?php
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2019-04-12 TC moOde 5.0
+ *
+ */
+
+define('VERSION', '1.0');
+
+$option = isset($argv[1]) ? $argv[1] : '';
+
+switch ($option) {
+	case '-i':
+		echo "Generating system info...\n";
+		echo shell_exec('sudo /var/www/command/sysinfo.sh');
+		break;
+	case '-l':
+		echo shell_exec('cat /var/log/moode.log');
+		break;
+	case '-m':
+		systemMonitor();
+		break;
+	case '-r':
+		restartServers();
+		break;
+	case '-t':
+		tailLog('/var/log/moode.log');
+		break;
+	case '--version':
+		echo VERSION . "\n";
+		break;
+	case '--help':
+	default:
+		echo
+"Usage: moodeutl [OPTION]
+Moode utility programs
+
+With no OPTION print the help text and exit.
+
+ -i\t\tprint system info
+ -l\t\tprint the moode log
+ -m\t\trun the system monitor
+ -r\t\trestart the servers
+ -t\t\tprint last 10 lines of moode log and wait
+ --version\tprint the program version
+ --help\t\tprint this help text\n";
+		break;
+}
+
+function systemMonitor() {
+	echo "Gathering data...\r";
+	while(true) {
+		// cpu frequency
+		$cpufreq = file_get_contents('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');	
+		if ($cpufreq < 1000000) {
+	        $cpufreq = number_format($cpufreq / 1000, 0, '.', '');
+	        $cpufreq .= ' MHz';
+		}
+		else {
+	        $cpufreq = number_format($cpufreq / 1000000, 1, '.', '');
+	        $cpufreq .= ' GHz';
+		}
+	
+		// cpu temp
+		$cputemp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
+	
+		// cpu utilization
+		$cpuload = exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2 + $4 + $6}'");
+		$cpuload = number_format($cpuload,0,'.','');
+	
+		// memory utilization
+		$memtotal = exec("grep MemTotal /proc/meminfo | awk '{print $2}'");
+		$memavail = exec("grep MemAvailable /proc/meminfo | awk '{print $2}'");
+		$memutil = number_format(100 * (1 - ($memavail / $memtotal)), 0, '.', '');
+	
+		// disk utilization
+		$diskutil = exec("df -h | awk 'FNR==2 {print $5}'");
+	
+		// php fpm pool count
+		$fpmpool = exec('pgrep -c -f "php-fpm: pool www"');
+		
+		echo 'CPU: ' . $cpufreq . ' | LOAD: ' . $cpuload . '%' . ' | TEMP: ' . $cputemp . "\xB0" . 'C | RAM_USED: ' . $memutil . '% | DISK_USED: ' . $diskutil . ' | FPM_POOL: ' . $fpmpool . ' workers ' . "\r";
+	}
+}
+
+function restartServers() {	
+	exec('sudo killall worker.php');
+	exec('sudo killall watchdog.sh');
+	exec('sudo rm /run/worker.pid');
+	exec('sudo systemctl restart php7.0-fpm');
+	exec('sudo systemctl restart memcached');
+	exec('sudo systemctl restart nginx');
+	exec('sudo systemctl stop mpd');
+	exec('sudo /var/www/command/worker.php');
+	echo "Servers restarted\n";
+}
+
+function tailLog($file) {
+	$size = filesize($file) - 1024;
+	while (true) {
+		clearstatcache();
+		$current_size = filesize($file);
+		if ($size == $current_size) {
+			sleep(1);
+		    continue;
+		}
+		
+		$fh = fopen($file, "r");
+		fseek($fh, $size);
+		
+		while ($d = fgets($fh)) {
+			echo $d;
+		}
+		fclose($fh);
+		$size = $current_size;
+	}
+}

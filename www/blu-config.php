@@ -16,17 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-07-11 TC moOde 4.2
- * - check btactive to determine default action
- * - add mpd audio output
- * - improve output formatting
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '' ,'');
+$section = basename(__FILE__, '.php');
+storeBackLink($section);
 
 // submitted actions
 if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
@@ -75,11 +73,12 @@ if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 	}
 	// update MPD output
 	playerSession('write', 'audioout', $_POST['audioout']);
-	setAudioOut($_POST['audioout']);	
+	//setAudioOut($_POST['audioout']);	
 	// connect device
 	sysCmd('/var/www/command/bt.sh -C ' . '"' . $_POST['paired_device'] . '"');
 	$cmd = '-c';
 	sleep(1);
+	setAudioOut($_POST['audioout']);	
 }
 
 // change MPD audio output
@@ -176,7 +175,6 @@ if ($cmd == '-p' || $cmd == '-c' || $cmd == '-l' || $cmd == '-s') {
 	$_hide_ctl[$type] = empty($_device[$type]) ? 'hide' : '';
 }
 
-$section = basename(__FILE__, '.php');
 $tpl = "blu-config.html";
 include('/var/local/www/header.php'); 
 waitWorker(1);

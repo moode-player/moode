@@ -1,7 +1,3 @@
-#
-# 2018-01-26 TC moOde 4.0
-#
-
 [Unit]
 Description=BlueAlsa-Aplay
 Requires=bluetooth.service bluealsa.service

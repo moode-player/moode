@@ -19,12 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
+ * 2019-04-12 TC moOde 5.0
  *
  */
  
-// common include
-include('inc/playerlib.php');
+//include('inc/playerlib.php');
+require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '', ''); 
 session_write_close();
@@ -33,5 +33,5 @@ $section = basename(__FILE__, '.php');
 
 $tpl = "indextpl.html";
 include('/var/local/www/header.php'); 
-eval("echoTemplate(\"".getTemplate("/var/local/www/templatesw/$tpl")."\");");
+eval("echoTemplate(\"".getTemplate("/var/www/templates/$tpl")."\");");
 include('footer.php');

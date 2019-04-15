@@ -19,24 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-07-11 TC moOde 4.2
- * - add clear chrome browser cache to LocalUI settings
- * - add additional timeouts to screen blank
- * - minor format cleanup
- * 2018-07-18 TC moOde 4.2 update
- * - add <br> to 2nd "Software is up to date" msg
- * - chg mpdtimeout to engine_mpd_sock_timeout in $_SESSION
- * - chg Can't to Cannot in notify msg
- * 2018-09-27 TC moOde 4.3
- * - change df command to use /dev/root instead of just root
- * 2018-10-19 TC moOde 4.3 update
- * - rm download image builder
- * - add help text under install/view update
- * - eth port fix setting
- * 2018-12-09 TC moOde 4.4
- * - bump duration to 60 for update completion msg 
- * - change from Pi-3B to Pi-3 when checking 'hdwrrev' to cover 3B, 3B+ and 3A+
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
@@ -65,7 +48,7 @@ if (isset($_POST['checkfor_update'])) {
 		//$_available_upd .= $available['pkgdate'] != 'None' ? $available['pkgdate'] . '<br>' : 'Package date: ' . $available['pkgdate'] .  // set to != for testing
 			'<button class="btn btn-primary btn-small set-button" id="install-update" type="submit" name="install_update" value="1">Install</button>' .
 			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>' . 
-			'<span class="help-block-configs help-block-margin">Installation progress can be monitored via the SSH cmd: moodelog -u</span>'; //r44a
+			'<span class="help-block-configs help-block-margin" style="margin-bottom:5px">Progress can be monitored via SSH cmd: moodeutl -t</span>'; //r45a
 
 		$_pkg_description = $available['pkgdesc'];
 		$cnt = $available['linecnt'];
@@ -157,14 +140,14 @@ if (isset($_POST['update_cpugov'])) {
 	playerSession('write', 'cpugov', $_POST['cpugov']);
 } 
 
-// Integrated WiFi adapter 
+// integrated WiFi adapter 
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
 	$title = $_POST['p3wifi'] == 1 ? 'WiFi adapter on' : 'WiFi adapter off';
 	submitJob('p3wifi', $_POST['p3wifi'], $title, 'Reboot required');
 	playerSession('write', 'p3wifi', $_POST['p3wifi']);
 }
 
-// Integrated Bluetooth adapter 
+// integrated Bluetooth adapter 
 if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
 	$title = $_POST['p3bt'] == 1 ? 'Bluetooth adapter on' : 'Bluetooth adapter off';
 	submitJob('p3bt', $_POST['p3bt'], $title, 'Reboot required');
@@ -212,24 +195,21 @@ if (isset($_POST['update_eth_port_fix'])) {
 
 // expand root file system
 if (isset($_POST['update_expand_rootfs'])) {
-	submitJob('expandrootfs', '', '', '');
-	$_SESSION['notify']['title'] = 'FS expansion job submitted';
-	$_SESSION['notify']['msg'] = 'Reboot initiated';
-	$_SESSION['notify']['duration'] = 6;
+	submitJob('expandrootfs', '', 'File system expanded', 'Reboot required', 30);
 }
 
 // enable usb boot
 if (isset($_POST['update_usbboot'])) {
-	submitJob('usbboot', '', 'USB boot enabled', 'Reboot required', 20);
+	submitJob('usbboot', '', 'USB boot enabled', 'Reboot required', 30);
 }
 
 // mpd engine timeout
-if (isset($_POST['update_mpdtimeout']) && $_POST['mpdtimeout'] != $_SESSION['engine_mpd_sock_timeout']) {
+/*if (isset($_POST['update_mpdtimeout']) && $_POST['mpdtimeout'] != $_SESSION['engine_mpd_sock_timeout']) {
 	$_SESSION['notify']['title'] = 'MPD engine timeout updated';
 	$_SESSION['notify']['msg'] = 'Refresh Browse to activate';
 	$_SESSION['notify']['duration'] = 6;
 	playerSession('write', 'engine_mpd_sock_timeout', $_POST['mpdtimeout']);
-}
+} r45b deprecate */
 
 // LOCAL DISPLAY
 
@@ -304,7 +284,14 @@ if (isset($_POST['update_lcdup'])) {
 	} 
 }
 
-// Shellinabox
+// gpio
+if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_svc']) {
+	$title = $_POST['gpio_svc'] == 1 ? 'GPIO button handler on' : 'GPIO button handler off';
+	playerSession('write', 'gpio_svc', $_POST['gpio_svc']);
+	submitJob('gpio_svc', $_POST['gpio_svc'], $title, '');
+}
+
+// shellinabox
 if (isset($_POST['shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
 	$title = $_POST['shellinabox'] == 1 ? 'SSH server on' : 'SSH server off';
 	playerSession('write', 'shellinabox', $_POST['shellinabox']);
@@ -418,11 +405,11 @@ else {
 	$_usbboot_hide = 'hide';
 }
 
-// mpd engine timeout
-$_select['mpdtimeout'] .= "<option value=\"600000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '600000') ? "selected" : "") . ">Never</option>\n";
+// mpd engine timeout, r45b deprecate
+/*$_select['mpdtimeout'] .= "<option value=\"600000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '600000') ? "selected" : "") . ">Never</option>\n";
 $_select['mpdtimeout'] .= "<option value=\"18000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '18000') ? "selected" : "") . ">5 Hours</option>\n";
 $_select['mpdtimeout'] .= "<option value=\"3600\" " . (($_SESSION['engine_mpd_sock_timeout'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
-$_select['mpdtimeout'] .= "<option value=\"1800\" " . (($_SESSION['engine_mpd_sock_timeout'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
+$_select['mpdtimeout'] .= "<option value=\"1800\" " . (($_SESSION['engine_mpd_sock_timeout'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";*/
 
 // LOCAL DISPLAY
 
@@ -438,6 +425,11 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	
 	// screen blank
 	$_select['scnblank'] .= "<option value=\"off\" " . (($_SESSION['scnblank'] == 'off') ? "selected" : "") . ">Never</option>\n";
+	$_select['scnblank'] .= "<option value=\"10\" " . (($_SESSION['scnblank'] == '10') ? "selected" : "") . ">10 Secs</option>\n";
+	$_select['scnblank'] .= "<option value=\"20\" " . (($_SESSION['scnblank'] == '20') ? "selected" : "") . ">20 Secs</option>\n";
+	$_select['scnblank'] .= "<option value=\"30\" " . (($_SESSION['scnblank'] == '30') ? "selected" : "") . ">30 Secs</option>\n";
+	$_select['scnblank'] .= "<option value=\"60\" " . (($_SESSION['scnblank'] == '60') ? "selected" : "") . ">1 Min</option>\n";
+	$_select['scnblank'] .= "<option value=\"120\" " . (($_SESSION['scnblank'] == '120') ? "selected" : "") . ">2 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"300\" " . (($_SESSION['scnblank'] == '300') ? "selected" : "") . ">5 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"600\" " . (($_SESSION['scnblank'] == '600') ? "selected" : "") . ">10 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"1200\" " . (($_SESSION['scnblank'] == '1200') ? "selected" : "") . ">20 Mins</option>\n";
@@ -466,6 +458,15 @@ $_select['lcdup1'] .= "<input type=\"radio\" name=\"lcdup\" id=\"togglelcdup1\" 
 $_select['lcdup0'] .= "<input type=\"radio\" name=\"lcdup\" id=\"togglelcdup2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['lcdupscript'] = $_SESSION['lcdupscript'];
 
+// gpio
+if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
+	$_feat_gpio = '';
+	$_select['gpio_svc1'] .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle_gpio_svc1\" value=\"1\" " . (($_SESSION['gpio_svc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['gpio_svc0'] .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle_gpio_svc2\" value=\"0\" " . (($_SESSION['gpio_svc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+}
+else {
+	$_feat_gpio = 'hide';
+}
 // shellinabox
 $_select['shellinabox1'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggleshellinabox1\" value=\"1\" " . (($_SESSION['shellinabox'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['shellinabox0'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggleshellinabox2\" value=\"0\" " . (($_SESSION['shellinabox'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -477,15 +478,12 @@ $_select['hostip'] = getHostIp();
 $_select['debuglog1'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggledebuglog1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['debuglog0'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggledebuglog2\" value=\"0\" " . (($_SESSION['debuglog'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-$section = basename(__FILE__, '.php');
-
-// don't wait if job is 'expandrootfs' 
-if (!isset($_POST['update_expand_rootfs'])) {
-//if ($_POST['expandrootfs'] != 1) {
-	waitWorker(1, 'sys-config');
-}
+waitWorker(1, 'sys-config');
 
 $tpl = "sys-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php'); 
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

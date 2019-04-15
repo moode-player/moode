@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2018-12-09 TC moOde 4.4
+# 2019-04-12 TC moOde 5.0
 #
 
 echo $(sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='sessionid'")

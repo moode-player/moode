@@ -6,7 +6,7 @@
 # moOde audio player. Additional help is provided within
 # the player via the (i) information buttons. 
 #
-# Updated: 2018-09-27
+# Updated: 2019-04-12
 #
 # (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -27,9 +27,9 @@ NOTE: Use http://moode, moode.local or IP address, whichever works on your netwo
 - Default Samba shares are NAS, RADIO, SDCARD, USB
 - Each USB disk will also have a Samba share named after its Disk Label
 
-WIFI ADAPTERS THAT SUPPORT ACCESS POINT MODE
+WIFI ADAPTERS THAT SUPPORT ACCESS POINT MODE (not a complete list)
 
-- Raspberry Pi 3 integrated WiFi adapter
+- Raspberry Pi 3 series and Zero W integrated WiFi adapters
 - Canakit WiFi Adapter
 - Raspberry Pi USB WiFi Dongle
 - WiFi adapters based on RTL RT5370 chipset
@@ -68,17 +68,21 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
 
  2. AUDIO DEVICE SETUP
     - USB DEVICE
-	a) Menu, Configure, Audio, I2S audio device: None
-    b) MPD options: EDIT SETTINGS
-    c) Leave Volume control set to "Software"
-    d) Set Audio device to "USB audio device" then APPLY
+	a) Menu, Configure, Audio
+    b) Select "None" for I2S audio device then SET
+    c) Reboot
+    d) Menu, Configure, Audio
+    e) MPD options: EDIT OPTIONS
+    f) Leave Volume control set to "Software"
+    g) Set Device type to "USB audio device" then SAVE
     - I2S DEVICE
     a) Menu, Configure, Audio
     b) Select an I2S audio device then SET
     c) Reboot
-    d) Menu, Configure, Audio, MPD options: EDIT SETTINGS
-    e) Leave Volume control set to "Software"
-    f) Verify Audio device is set to "I2S audio device" then APPLY
+    d) Menu, Configure, Audio
+    e) MPD options: EDIT OPTIONS
+    f) Leave Volume control set to "Software"
+    g) Verify Audio device is set to "I2S audio device" then SAVE
 
  3. TIME ZONE AND AUDIO DEVICE DESCRIPTION 
     a) Menu, Configure, System
@@ -90,20 +94,22 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
 
  4. ADD SOURCE(S) CONTAINING MUSIC FILES
     - USB STORAGE DEVICES
-	a) Inserting or removing a USB storage device automatically initiates MPD database update
-    b) Wait for completion (no spinner on the Music tab)
-    c) Browse panel. Click the refresh button to update the folder list.
-	d) To manually update or regenerate the MPD database follow the steps below
+    a) Insert USB storage device
+    b) Menu, Configure, Sources
+    c) UPDATE or RE-GEN MPD database 
+    d) Optionally select Yes to automatically update MPD database on USB insert/remove
+    e) Wait for completion (no spinner on the Library tab)
+    f) Library tab, Folder view. Click the refresh button to update the folder list.
     - SDCARD STORAGE DEVICES
     a) Menu, Configure, Sources
     b) UPDATE or RE-GEN MPD database 
-    c) Wait for completion (no spinner on the Music tab)
-    d) Browse panel. Click the refresh button to update the folder list.
+    c) Wait for completion (no spinner on the Library tab)
+    d) Library tab, Folder view. Click the refresh button to update the folder list.
     - NAS DEVICE
     a) Menu, Configure, Sources
     b) CREATE NAS source (MPD database update initiates automatically after SAVE)
-    c) Wait for completion (no spinner on the Music tab)
-    d) Browse panel. Click the refresh button to update the folder list.
+    c) Wait for completion (no spinner on the Library tab)
+    d) Library tab, Folder view. Click the refresh button to update the folder list.
 
  5. VERIFY AUDIO PLAYBACK
     - Ethernet mode
@@ -112,8 +118,8 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     - AP mode
     a) http://moode.local
     b) Browse, SDCARD, Stereo Test
-	c) Menu for "LR Channel And Phase" track
-	d) Play
+    c) Menu for "LR Channel And Phase" track
+    d) Play
 
  At this point a FULLY OPERATIONAL PLAYER exists.
 
@@ -146,7 +152,7 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
  2. CHANGE HOST AND SERVICE NAMES
     a) Menu, Configure, System (and Audio)
     b) SET after entering appropriate value in each name field
-    c) Reboot is required if changing Host name and/or Browser title
+    c) Reboot is required if changing Host name
 
  3. AUTO-CONFIGURE AT BOOT
 
@@ -195,7 +201,8 @@ apdpwd=moodeaudio
 
 [other]
 timezone=America/Detroit
-themecolor=Emerald
+themename=Standard
+accentcolor=Emerald
 
 ////////////////////////////////////////////////////////
 //
@@ -214,9 +221,9 @@ themecolor=Emerald
     e) Menu, Configure, Audio
     f) Select appropriate I2S audio device then SET
     g) Menu, Restart, Reboot
-    h) Menu, Configure, Audio, MPD options: EDIT SETTINGS
+    h) Menu, Configure, Audio, MPD options: EDIT OPTIONS
     i) Verify Audio device set to "I2S audio device"
-    j) APPLY
+    j) SAVE
 
  2. Switching from I2S to USB audio device
     a) Menu, Configure, Audio
@@ -225,9 +232,9 @@ themecolor=Emerald
     d) Optionally unplug I2S audio device
     e) Plug in USB audio device
     f) Power on
-    g) Menu, Configure, Audio, MPD options: EDIT SETTINGS
+    g) Menu, Configure, Audio, MPD options: EDIT OPTIONS
     h) Select "USB audio device" for Audio device
-    i) APPLY
+    i) SAVE
 
  3. Switching from WiFi back to Ethernet
     a) Plug in Ethernet cable 
