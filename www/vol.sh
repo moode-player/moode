@@ -16,16 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2018-01-26 TC moOde 4.0
-# 2018-04-02 TC moOde 4.1 
-# - remove vol warning
-# 2018-12-09 TC moOde 4.4
-# - convert to GNU command syntax but still support the original options
-# - make REGEX more restrictive
-# - improve argument error checking
+# 2019-04-12 TC moOde 5.0
 #
 
-VER="4.4"
+VER="5.0"
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
@@ -44,7 +38,7 @@ With just VOLUME, set current volume to VOLUME.
  -up\t\tVOLUME	value between 1 and 100
  -dn\t\tVOLUME	value between 1 and 100
  -mute\t\tmute or unmute the volume
- -restore\tset volume to current knob volume
+ -restore\tset volume to current knob level
  --version\tprint the program version
  --help\t\tprint this help text"
 

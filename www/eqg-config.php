@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// format curve values
 	for($i = 0; $i < 9; $i++) {
 		$curve_values .= $_POST['freq' . ($i + 1)] . ',';
 	}
 	$curve_values .= $_POST['freq10'];
-workerLog($curve_values);
+	//workerLog($curve_values);
 
 	// add or update
 	$result = sdbquery("SELECT id FROM cfg_eqalsa WHERE curve_name='" . $_POST['curve_name'] . "'", $dbh);
@@ -118,8 +118,10 @@ for ($i = 0; $i < 10; $i++) {
 	$_select['freq' . ($i + 1)] = $values[$i];
 }
 
-$section = basename(__FILE__, '.php');
 $tpl = "eqg-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php'); 
 waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");

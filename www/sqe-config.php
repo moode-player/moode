@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
+ * 2019-04-12 TC moOde 5.0
  *
  */
  
@@ -27,20 +27,16 @@ $dbh = cfgdb_connect();
 session_write_close();
 
 // apply setting changes to /etc/squeezelite.conf
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
-	// update sql table with current MPD device num
-	//$array = sdbquery('select value_player from cfg_mpd where param="device"', $dbh);
-	//$device = $array[0]['value_player'];
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		if ($key == 'AUDIODEVICE') {
-			//$value = $device;
 			$value = $_SESSION['cardnum'];
 		}	
 		cfgdb_update('cfg_sl', $dbh, $key, $value);
 	}
 	
 	// update conf file
-	submitJob('slcfgupdate', '', 'Settings updated', ($_SESSION['slsvc'] == '1' ? 'Squeezelite restarted' : ''));
+	submitJob('slcfgupdate', '', 'Changes saved', ($_SESSION['slsvc'] == '1' ? 'Squeezelite restarted' : ''));
 }
 	
 // load settings
@@ -72,9 +68,10 @@ $_sl_select['audio_codecs'] = $cfg_sl['CODECS'];
 // other options
 $_sl_select['other_options'] = $cfg_sl['OTHEROPTIONS'];
 
-$section = basename(__FILE__, '.php');
-
 $tpl = "sqe-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php'); 
 waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");

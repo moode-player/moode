@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-09-27 TC moOde 4.3
- * - initial version
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
@@ -27,13 +26,13 @@ playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_spotify', $dbh, $key, $value);
 	}
 
 	// restart if indicated
-	submitJob('spotifysvc', '', 'Settings updated', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
+	submitJob('spotifysvc', '', 'Changes saved', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
 }
 	
 session_write_close();
@@ -61,8 +60,10 @@ $_select['volume_normalization'] .= "<option value=\"No\" " . (($cfg_spotify['vo
 // ormalization pregain
 $_select['normalization_pregain'] = $cfg_spotify['normalization_pregain'];
 
-$section = basename(__FILE__, '.php');
 $tpl = "spo-config.html";
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
 include('/var/local/www/header.php'); 
 waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");

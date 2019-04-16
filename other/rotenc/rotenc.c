@@ -15,19 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Compilation.
- *
+ * Compilation:
  * sudo gcc -std=c99 rotenc.c -orotenc -lwiringPi
  * NOTE: std=c99 required if using ‘for’ loop initial declarations
  *
- * Usage.
- *
+ * Usage:
  * rotenc <DELAY> <ACCEL> <STEP> <PIN_A> <PIN_B> <DEBUG 1|2>
  * rotenc 100 2 3 4 5 1
  *
- * 2018-01-26 TC 4.0
- * 2018-12-09 TC 4.4
- * - use GNU command syntax for rotvol.sh
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
@@ -62,6 +58,12 @@ int main(int argc, char * argv[])
 	int STEP = 3;
 	//int PRIORITY = 42;
 	int DEBUG = 0;
+
+	// Print program version and exit
+	if (argc == 2 && strcmp(argv[1], "-v") == 0) {
+		printf("rotenc version: 1.1 \n");
+		exit(0);
+	}
 
 	// Override defaults with values from input args if they are present
 	if (argc > 1) {

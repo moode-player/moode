@@ -16,26 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - remove data-validate="parsley"
- * 2018-07-11 TC moOde 4.2
- * - minor cleanup
- * 2018-09-27 TC moOde 4.3
- * - improve logic and add support for ess sabre chips (Allo Katana DAC)
+ * 2019-04-12 TC moOde 5.0
  *
  */
 -->	
 <div class="container">
 	<div class="container2">
-	<h1>Chip/Device Options</h1>
-
-    <p>
-    	<a href="snd-config.php">BACK</a> to Audio config
-    </p>
+	<h1 class="snd-config">Chip/Device Options</h1>
 
     <form class="form-horizontal" action="" method="post">
-    	<legend>Settings &nbsp;<button class="btn btn-primary btn-small" type="submit" name="apply" value="1">Apply</button></legend>
+    	<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				SAVE: Update chip options.<br>
+            </span>
+		</legend>
+
+    	<legend>Options</legend>
     
 		<div class="$_burrbrown_hide">
 			<h4>Burr Brown PCM and TAS chips</h4>
@@ -126,13 +124,13 @@
 			<h4>Allo Katana DAC (ESS Sabre ES9038Q2M)</h4>
 			<fieldset>
 				<div class="control-group">
-					<label class="control-label" for="osf">Oversampling filter</label>
+					<label class="control-label" for="katana_osf">Oversampling filter</label>
 					<div class="controls">
-						<select id="osf" class="input-large" name="config[osf]">
-							$_select[osf]
+						<select id="katana_osf" class="input-large" name="config[katana_osf]">
+							$_select[katana_osf]
 						</select>
 						<span class="help-block-configs help-block-margin">
-	                    	Filter is applied to PCM samples at oversampling stage.<br>							
+	                    		Filter is applied to PCM samples at oversampling stage.<br>							
 							Playback is automatically restarted to make filter change effective.<br>
 							Default: Apodizing Fast Roll-off Filter
 	                    </span>
@@ -140,10 +138,10 @@
 				</div>
 	
 				<div class="control-group">
-					<label class="control-label" for="deemphasis">De-emphasis</label>
+					<label class="control-label" for="katana_deemphasis">De-emphasis</label>
 					<div class="controls">
-						<select id="deemphasis" class="input-large" name="config[deemphasis]">
-							$_select[deemphasis]
+						<select id="katana_deemphasis" class="input-large" name="config[katana_deemphasis]">
+							$_select[katana_deemphasis]
 						</select>
 						<span class="help-block-configs help-block-margin">
 							 De-emphasis can be set to Bypass, 32 44.1 eor 48 kHz.<br>
@@ -153,15 +151,46 @@
 				</div>
 	
 				<div class="control-group">
-					<label class="control-label" for="dop">DSD over PCM (DoP)</label>
+					<label class="control-label" for="katana_dop">DSD over PCM (DoP)</label>
 					<div class="controls">
-						<select id="dop" class="input-large" name="config[dop]">
-							$_select[dop]
+						<select id="katana_dop" class="input-large" name="config[katana_dop]">
+							$_select[katana_dop]
 						</select>
 						<span class="help-block-configs help-block-margin">
 							 Enable or disable support for DSD over PCM (DoP) protocol.<br>
 							 Default: On
 	                   </span>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+
+		<div class="$_audiophonics_q2m_hide">
+			<h4>$_audiophonics_q2m_device_name</h4>
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label" for="audiophonics_q2m_osf">Oversampling filter</label>
+					<div class="controls">
+						<select id="audiophonics_q2m_osf" class="input-large" name="config[audiophonics_q2m_osf]">
+							$_select[audiophonics_q2m_osf]
+						</select>
+						<span class="help-block-configs help-block-margin">
+	                    		Filter is applied to PCM samples at oversampling stage.<br>							
+							Playback is automatically restarted to make filter change effective.<br>
+	                    </span>
+					</div>
+				</div>
+
+				<!-- NOTE: This option is handled in the Source Select screen -->
+				<div class="control-group hide">
+					<label class="control-label" for="audiophonics_q2m_input">DAC input</label>
+					<div class="controls">
+						<select id="audiophonics_q2m_input" class="input-large" name="config[audiophonics_q2m_input]">
+							$_select[audiophonics_q2m_input]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							Default: I2S
+	                    </span>
 					</div>
 				</div>
 			</fieldset>

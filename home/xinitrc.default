@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2018-01-26 TC moOde 4.0
-# 2018-04-02 TC moOde 4.1 remove --disable-overlay-scrollbar because it has no effect either disable or enable
+# 2019-04-12 TC moOde 5.0
+#
 #
 
 # Turn off display power management

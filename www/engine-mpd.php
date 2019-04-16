@@ -19,19 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - access-control-origin not needed
- * 2018-09-27 TC moOde 4.3
- * - handle worker.php not ready
- * 2018-10-19 TC moOde 4.3 update
- * - chg mediainfo flag to engine_mpd
+ * 2019-04-12 TC moOde 5.0
+ *
  */
  
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 // load session vars
-// NOTE cfg_radio vars are loaded into session by worker so might not be present here until worker startup completes
+// note: radio station vars are not loaded into session until worker.php starts
 playerSession('open', '', '');
 session_write_close();
 
@@ -41,64 +36,44 @@ if (!isset($_SESSION['wrkready']) || $_SESSION['wrkready'] == '0') {
 	exit(0);
 }
 
-debugLog('engine-mpd: Connect');
-debugLog('engine-mpd: Session loaded');
-
-debugLog('engine-mpd: Open socket');
 $sock = openMpdSock('localhost', 6600);
-
 if (!$sock) {
 	debugLog('engine-mpd: Connection to MPD failed');
 	echo json_encode(array('error' => 'openMpdSock() failed', 'module' => 'engine-mpd'));
 	exit(0);	
 }
 
- // get initial mpd status data
 debugLog('engine-mpd: Get initial status');
 $current = parseStatus(getMpdStatus($sock));
 
-// mpd idle
+// initiate mpd idle
 debugLog('engine-mpd: UI state=(' . $_GET['state'] . '), MPD state=(' . $current['state'] .')');
 if ($_GET['state'] == $current['state']) {
-
-	debugLog('engine-mpd: Idle');
-	
-	// idle mpd and wait for change in state
-	sendMpdCmd($sock, 'idle');
-	stream_set_timeout($sock, $_SESSION['engine_mpd_sock_timeout']); // value determines how often PHP times out the socket
-	//workerLog('engine-mpd: socket timeout');
-	
 	debugLog('engine-mpd: Wait for idle timeout');
-	$resp = readMpdResp($sock);
+	sendMpdCmd($sock, 'idle');
+	stream_set_timeout($sock, $_SESSION['engine_mpd_sock_timeout']); // value determines how often PHP times out the socket	
+	$resp = readMpdResp($sock); 
 
-	debugLog('engine-mpd: resp[0]=(' . explode("\n", $resp)[0] . ')');
-
-	// get new status
+	$event = explode("\n", $resp)[0];
+	debugLog('engine-mpd: Idle timeout event=(' . $event . ')');
 	debugLog('engine-mpd: Get new status');
 	$current = parseStatus(getMpdStatus($sock));
-	
-	// add idle timeout event
-	$current['idle_timeout_event'] = explode("\n", $resp)[0];
-	
-	debugLog('engine-mpd: Idle timeout event=(' . $current['idle_timeout_event'] . ')');
-	//workerLog('engine-mpd: Idle timeout event=(' . $current['idle_timeout_event'] . ')');
+	$current['idle_timeout_event'] = $event;	
 }
 
 // create enhanced metadata
 debugLog('engine-mpd: Generating enhanced metadata');
 $current = enhanceMetadata($current, $sock, 'engine_mpd_php'); // r44a
-
+closeMpdSock($sock);
 debugLog('engine-mpd: Metadata returned to client: Size=(' . sizeof($current) . ')');
-
-//foreach ($current as $key => $value) {
-//	debugLog('engine-mpd: Metadata returned to client: Raw=(' . $key . ' ' . $value . ')');
-//}
-
+//foreach ($current as $key => $value) {debugLog('engine-mpd: Metadata returned to client: Raw=(' . $key . ' ' . $value . ')');}
 //debugLog('engine-mpd: Metadata returned to client: Json=(' . json_encode($current) . ')');
 
-// TEST I don't think this is needed
-//header('Access-Control-Allow-Origin: *');
-
-echo json_encode($current);
-
-closeMpdSock($sock);
+// r45b @ohinckel https: //github.com/moode-player/moode/pull/14/files
+$current_json = json_encode($current);
+if ($current_json === FALSE) {
+	echo json_encode(array('error' => array('code' => json_last_error(), 'message' => json_last_error_msg())));
+}
+else {
+	echo $current_json;
+}

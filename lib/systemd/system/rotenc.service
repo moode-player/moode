@@ -1,9 +1,6 @@
 #
-# 2018-01-26 TC moOde 4.0
-# 2018-12-09 TC moOde 4.4
-# - rm LimitMEMLOCK
-# - use MPD defaults for RT: LimitRTPRIO, LimitRTTIME 
-# - improve some comments
+# 2019-04-12 TC moOde 5.0
+#
 #
 
 [Unit]

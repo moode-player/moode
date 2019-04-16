@@ -11,12 +11,155 @@
 
 ########################################################
 //
+// 5.0 2019-04-12
+//
+########################################################
+
+New features
+
+- NEW: Adaptive UI version 5 with Playbar
+- NEW: User added radio station logos
+- NEW: Redesigned Graphic and Parametric EQ's
+- NEW: EQ support in Airplay and Spotify
+- NEW: Bluetooth auto-pairing agent
+- NEW: HTTP streaming server for MPD
+- NEW: Polarity inversion for MPD output
+- NEW: GPIO button handler
+- NEW: Alpha index scroll for Library
+- NEW: ESS driver for Audiophonics ES9028/9038 DAC
+- NEW: Source select for HiFiBerry DAC+ ADC
+- NEW: User defined articles for Library sorts
+- NEW: Quick help for buttons and active elements
+- NEW: Moode utility command (moodeutl)
+
+Audio Devices
+
+- NEW: Audiophonics ES9028/9038 DAC
+- NEW: Audiophonics ES9028/9038 DAC (Pre 2019)
+- NEW: HiFiBerry Amp2
+- NEW: HiFiBerry Beocreate
+- NEW: HiFiBerry MiniAmp
+- NEW: HiFiBerry DAC Zero
+- NEW: HiFiBerry DAC+ ADC
+- NEW: HiFiBerry DAC+ DSP
+
+Radio station updates
+
+- NEW: JB Radio 2 USA (320K)
+- UPD: Audiophile Baroque
+- UPD: Audiophile Classical
+- UPD: Audiophile Jaxx
+- UPD: Audiophile Lounge
+- UPD: Audiophile Rock-Blues
+- UPD: Czech Radio Classical 256K
+- UPD: Folk Radio UK changed to Radionomy
+- UPD: KUVO 89.3 FM Denver
+- UPD: KUVO HD2 - Jazz with Bob Parlocha
+- UPD: Radio Caroline
+- UPD: SUB.FM - Where Bass Matters
+- DEL: EuropaRadioJazz - 88.3 Smooth Jazz HD
+- DEL: EuropaRadioJazz - The Sound of Jazz
+- DEL: The Finest Amsterdam
+- DEL: Radio X Brussels
+- DEL: Rock Radio 1
+- DEL: Somehow Jazz
+
+Updates
+
+- UPD: Include MPD 0.21.6 as a testing option
+- UPD: Bump to kernel 4.19.34
+- UPD: Bump to shairport-sync 3.3.0 RC2
+- UPD: Bump to librespot 2019-02-22 commit: daeeeaa
+- UPD: Bump to bluez 5.50
+- UPD: Bump to bluez-alsa 1.31 commit: d73282b
+- UPD: Bump to hostapd 2.7
+- UPD: Bump to wiringPi 2.50
+- UPD: Bump to rotenc 1.1
+- UPD: Freshen the Config pages
+- UPD: Streamline bgimage processing
+- UPD: Catch json data errors from engineMpd
+- UPD: Reduce debug log clutter
+- UPD: Add id3 "comment" tag to adv search
+- UPD: Deprecate Airplay auto-volume
+- UPD: Add "interpolation" to Airplay config
+- UPD: Replace avprobe with mediainfo
+- UPD: Remove restriction on NAS config Name
+- UPD: Move Save PL and Set Favs to context menu
+- UPD: Wrap to first PL item when skip from last
+- UPD: Chg wifi country Britain (UK) to United Kingdom (UK)
+- UPD: Revert to manual reboot for FS expand
+- UPD: Add quotes to cifs userid in mount
+- UPD: Add addl timeouts to screen blank for local ui
+- UPD: Add librespot to watchdog
+- UPD: Manual add/play/clrplay superceeds auto-shuffle 
+- UPD: Implement versioned css and scripts
+- UPD: Deprecate manual "Tab default" setting
+- UPD: Deprecate /var/local/www/cssw,jsw,templatesw
+- UPD: Deprecate /var/www/themes
+
+Bug fixes
+
+- FIX: Mobile timeline unnecessary updates
+- FIX: Corner case for 0 handling in duration
+- FIX: Default cover width in Lib (Chrome only)
+- FIX: Time knob sometimes not resizing
+- FIX: Search reset icons not hiding when empty filter
+- FIX: String "Disc tag missing" appears in Library
+- FIX: Clock radio shutdown param name
+
+########################################################
+//
+// 4.4 2018-12-19 update
+//
+########################################################
+
+Bug fixes
+
+- FIX: ALSA vol for MPD software/disabled case
+
+########################################################
+//
+// 4.4 2018-12-18 update
+//
+########################################################
+
+New features
+
+- NEW: CoverView backdrop styles
+- NEW: Pure Black theme
+- NEW: Auto-shuffle Crossfade support
+- NEW: Auto-shuffle tag filter
+
+Radio stations
+
+- UPD: Amys FM Spirit of Soul (320K)
+- UPD: Buddha Radio
+
+Updates
+
+- UPD: Add Raspbian version to ssh header
+- UPD: Add icon for upmpdcli
+- UPD: Zero out ALSA volume at top of worker
+- UPD: Improve help text on System config
+- UPD: Bump auto-shuffle to v1.1.0
+
+Bug fixes
+
+- FIX: Duplicate symlink for Zend opcache
+- FIX: Cover not changing for mp3 format files
+- FIX: Extra metadata somtimes not updating
+- FIX: Adv search results add whole collection
+- FIX: Saved pl display incomplete
+
+########################################################
+//
 // 4.4 2018-12-09
 //
 ########################################################
 
 New features
 
+- NEW: Adaptive UI version 4
 - NEW: Raspbian Stretch Lite 2018-11-13
 - NEW: Support for Raspberry Pi 3A+
 - NEW: Clock radio days-of-the-week setting
@@ -45,7 +188,7 @@ Updates
 - UPD: Use GNU cmd syntax in rotenc and volume scripts
 - UPD: Add disk utilization to sysmon.php
 - UPD: Add revision code 9020e0 for Pi-3A+
-- UPD: Add Close to all context menus
+- UPD: Add Close to all rs
 - UPD: Improve spacing on Radio and Album cover panels
 - UPD: Add 30px blur to list of Cover blur settings
 - UPD: Improve performance of Library loader/filter

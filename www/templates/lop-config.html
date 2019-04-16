@@ -1,0 +1,131 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2019-04-12 TC moOde 5.0
+ *
+ */
+-->	
+<div class="container">
+<div class="container2">
+	<h1 class="lib-config">Library Options</h1>
+
+    <form class="form-horizontal" action="" method="post">
+    	<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				SAVE: Update Library options.<br>
+            </span>
+		</legend>
+
+		<fieldset>
+	    	<legend>Options</legend>
+			<div class="control-group">
+				<label class="control-label" for="libartistcol">Artist list ordering</label>
+				<div class="controls">
+					<select id="libartistcol" class="input-large" name="config[libartistcol]">
+						$_select[libartistcol]
+					</select>
+					<a class="info-toggle" data-cmd="info_libartistcol" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_libartistcol" class="help-block-configs help-block-margin hide">
+						Use Artist or AlbumArtist tag for populating the Artists list in Tag and Album views.<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="ignore_articles">Ignore Articles</label>
+				<div class="controls">
+					<input class="input-large" type="text" pattern="^\S*$" id="ignore_articles" name="config[ignore_articles]" value="$_select[ignore_articles]">
+					<a class="info-toggle" data-cmd="info_ignore_articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_ignore_articles" class="help-block-configs help-block-margin hide">
+						Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed.<br>
+						NOTE: A blank list will result in "None" and will effectively disable the option.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="compilation_rollup">Compilation rollup</label>
+				<div class="controls">
+					<select id="compilation_rollup" class="input-large" name="config[compilation_rollup]">
+						$_select[compilation_rollup]
+					</select>
+					<a class="info-toggle" data-cmd="info_compilation_rollup" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_compilation_rollup" class="help-block-configs help-block-margin hide">
+						Automatically rollup albums with same album name but different artists into a single compilation album.<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="compilation_excludes">Compilation excludes</label>
+				<div class="controls">
+					<input class="input-large" type="text" id="compilation_excludes" name="config[compilation_excludes]" value="$_select[compilation_excludes]">
+					<a class="info-toggle" data-cmd="info_compilation_excludes" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_compilation_excludes" class="help-block-configs help-block-margin hide">
+						Comma separated list of album names that are excluded from Compilation rollup.<br>
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="library_utf8rep">UTF8 character filter</label>
+				<div class="controls">
+					<select id="library_utf8rep" class="input-large" name="config[library_utf8rep]">
+						$_select[library_utf8rep]
+					</select>
+					<a class="info-toggle" data-cmd="info_library_utf8rep" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_utf8rep" class="help-block-configs help-block-margin hide">
+						Many Chinese songs and song directories have characters that are not UTF8 encoded causing the Library loader to fail. Replacing the non-UTF8 characters with a UTF8 compliant character solves this problem.<br>
+						NOTE: setting this to Yes may impact the performance of the Library loader.<br>
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="library_hiresthm">Hi-res thumbnails</label>
+				<div class="controls">
+					<select id="library_hiresthm" class="input-large" name="config[library_hiresthm]">
+						$_select[library_hiresthm]
+					</select>
+					<a class="info-toggle" data-cmd="info_library_hiresthm" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_hiresthm" class="help-block-configs help-block-margin hide">
+						Tell the thumbnail generator to output high-resolution images suitable for large displays or high DPI (Retina) screens. The Auto setting will use the device's pixel ratio to determine an optimum image size and quality while maintaining the smallest file size. Manual settings will result in images of the specified size using a quality factor of 75.<br>
+						NOTE: larger images may result in slower loading of thumbnail images into the Album Cover panel.<br>
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="library_covsearchpri">Cover search priority</label>
+				<div class="controls">
+					<select id="library_covsearchpri" class="input-large" name="config[library_covsearchpri]">
+						$_select[library_covsearchpri]
+					</select>
+					<a class="info-toggle" data-cmd="info_library_covsearchpri" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_covsearchpri" class="help-block-configs help-block-margin hide">
+						This option determines whether the Cover Art extractor looks first for Embedded cover art or a Cover image file.<br>
+                    </span>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+</div>
+</div>

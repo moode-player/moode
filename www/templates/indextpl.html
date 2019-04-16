@@ -1,0 +1,823 @@
+<!-- 
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * tsunamp player ui (C) 2013 Andrea Coiutti & Simone De Gregori
+ * http://www.tsunamp.com
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2019-04-12 TC moOde 5.0
+ *
+ */
+-->
+
+<div class="tab-content">
+	<!-- INPUT SOURCE INDICATOR -->
+	<div id="inpsrc-indicator" class="inpsrc">		
+		<div id="inpsrc-msg"></div>
+	</div>
+
+	<!-- SCREEN SAVER -->
+	<div id="screen-saver" class="hide" href="#notarget">
+		<div id="ss-backdrop"></div>
+		<div id="ss-style"></div>
+		<div id="ss-hud" class="hudui">
+			<div class="btn-group">
+				<button class="btn btn-cmd prev"><i class="fas fa-backward"></i></button>
+				<button class="btn btn-cmd play"><i class="fas fa-play"></i></button>
+				<button class="btn btn-cmd next"><i class="fas fa-forward"></i></button>
+			</div>
+			<div id="ss-volume">
+				<button id="ssvoldn" class="btn btn-cmd"><i class="far fa-minus"></i></button>
+				<span id="ssvolume"></span>
+				<button id="ssvolup" class="btn btn-cmd"><i class="far fa-plus"></i></button>
+			</div>
+			<div id="ss-toolbar">
+				<button id="ss-toggle-pl" class="btn btn-cmd"><i class="fal fa-chevron-down"></i></button>
+				<button class="btn btn-cmd toggle-song"><i class="fal fa-exchange-alt"></i></button>
+			</div>
+			<div id="ss-container-playlist">
+				<div id="ss-playlist">
+					<ul class="ss-playlist"></ul>
+				</div>
+			</div>
+		</div>
+
+		<div id="ss-coverart" class="ss-coverart">
+			<div id="ss-split">
+				<div id="ss-coverart-url"></div>
+				<div id="ss-extratags"></div>
+			</div>
+			<div id="ss-info" class="ss-fsize ss-info">
+				<div id="ss-currentsong"></div>
+				<!--div id="ss-currentartist"></div-->
+				<div id="ss-currentalbum"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- VIEWSWITCH -->
+	<div class="viewswitch hide">
+		<div>
+			<button class="btn radio-view-btn" href="#radio-panel" data-toggle="tab"><i class="far fa-microphone"></i></button>
+			<button class="btn folder-view-btn" href="#folder-panel" data-toggle="tab"><i class="far fa-list"></i></button>
+			<button class="btn tag-view-btn" href="#library-panel" data-toggle="tab"><i class="far fa-columns"></i></button>
+			<button class="btn album-view-btn" href="#library-panel" data-toggle="tab"><i class="far fa-th"></i></button>
+		</div>
+	</div>
+
+	<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
+	<div id="playback-panel" class="tab-pane">
+		<div class="container-playback txtmid">
+			<div class="no-fluid">
+				<!-- playlist -->
+				<div class="span5">					
+					<div class="btnlist btnlist-top btnlist-top-pl">
+						<form id="pl-search" method="post" onSubmit="return false;">
+							<div class="input-append">
+								<input id="pl-filter" type="text" value="" placeholder="search">
+								<button id="searchResetPl" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+							</div>
+						</form>
+						<div id="pl-filter-results"></div>
+					</div>
+				
+					<div id="container-playlist">
+						<div id="playlist">
+							<ul class="playlist"></ul>
+						</div>				
+					</div>
+				</div>
+
+				<!-- knobs and playback controls -->
+				<div class="span3">					
+					<div id="timeknob">
+						<div id="countdown">
+							<input class="playbackknob" id="time" data-min="0" data-max="1000" data-width="100%" data-thickness="0.20" data-bgColor="rgba(50,50,50,0.5)" data-fgcolor="transparent" data-readonly="false">
+						</div>
+						<div id="countdown-display" href="#notarget"></div>
+						<div id="total"></div>
+					</div>
+
+					<div id="playbtns" class="btn-toolbar hide">
+						<div class="btn-group">
+							<button class="btn btn-cmd prev"><i class="fas fa-backward"></i></button>
+							<button class="btn btn-cmd play"><i class="fas fa-play"></i></button>
+							<button class="btn btn-cmd next"><i class="fas fa-forward"></i></button>
+						</div>
+					</div>
+					<div id="volknob">
+						<div id="volcontrol">
+							<input readonly class="volumeknob" id="volume" data-min="0" data-max="100" data-width="100%" data-thickness="0.18" data-bgColor="rgba(50,50,50,0.5)" data-fgColor="transparent" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
+						</div>
+						<div class="volume-display" href="#notarget"></div>
+					</div>					
+					<div id="volbtns">
+						<button id="volumedn" class="btn btn-cmd btn-volume btn-primary"><i class="far fa-minus fa-xs"></i></button>
+						<button id="volumeup" class="btn btn-cmd btn-volume btn-primary"><i class="far fa-plus fa-xs"></i></button>
+					</div>
+					<div id="togglebtns" class="hide">
+						<div class="btn-group">
+							<button class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
+							<button class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
+							<button class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
+							<button class="btn btn-cmd btn-toggle consume hide" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
+							<button class="btn btn-cmd btn-toggle repeat hide" data-cmd="repeat"><i class="fal fa-repeat"></i></button>
+							<button class="btn btn-cmd btn-toggle single hide" data-cmd="single"><i class="fal fa-redo"></i></button>
+							<button class="btn btn-cmd ralbum"><i class="fal fa-dot-circle"></i></button>
+							<button class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
+						</div>
+					</div>
+				</div>
+
+				<!-- cover art and song metadata -->
+				<div class="span4">
+					<div class="covers">
+						<div id="coverart-url"></div>
+						
+						<div id="timeline">
+							<div class="timeline-bg"></div>
+							<div class="timeline-progress"><div class="inner-progress"></div></div>
+							<div class="timeline-thm">
+								<input id="timetrack" type="range" min="0" max="1000" value="0" step="1">
+							</div>
+							<div id="mobile-time">
+								<div id="m-countdown"></div>
+								<div id="m-total"></div>
+							</div>
+						</div>
+						<div id="m-radio"></div>
+						
+						<div id="extratags"></div>
+						<span id="currentsong"></span>
+						<span id="currentalbum"></span>
+					</div>
+					
+					<div id="mobile-toolbar">
+						<div id="mt2" class="btn-group">
+							<button class="btn btn-cmd prev"><i class="fas fa-backward"></i></button>
+							<button class="btn btn-cmd play"><i class="fas fa-play"></i></button>
+							<button class="btn btn-cmd next"><i class="fas fa-forward"></i></button>
+						</div>
+						<div id="mt1">
+							<button class="playback-context-menu btn" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
+							<button class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
+							<button class="btn btn-cmd btn-toggle repeat hide" data-cmd="repeat"><i class="fal fa-repeat"></i></button>
+							<button class="btn btn-cmd btn-toggle single hide" data-cmd="single"><i class="fal fa-redo"></i></button>
+							<button class="btn btn-cmd ralbum"><i class="fal fa-dot-circle"></i></button>
+							<button class="btn btn-cmd btn-to ggle consume hide" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
+							<button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i>
+								<div id="mvol-bg"></div> 
+								<div id="mvol-progress"></div>
+							</button>
+							<button class="btn btn-cmd addfav">  <i class="fal fa-heart"></i></button>
+						</div>
+					</div>
+					
+				</div>
+			</div> 
+		</div>
+	</div>	
+
+	<!-- LIBRARY PANEL -->
+	<div id="library-panel" class="tab-pane">
+		<div class="container-library">
+
+			<div id="lib-loader">
+				<div id="loaderbg"></div>
+				<div id="loadercontent">
+					library loading
+				</div>
+			</div>
+
+			<div class="btnlist btnlist-top btnlist-top-lib">
+				<form id="lib-album-search" method="post" onSubmit="return false;">
+					<div class="input-append">
+						<input id="lib-album-filter" type="text" value="" placeholder="search">
+						<button id="searchResetLib" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+					</div>
+				</form>
+				<div id="lib-album-filter-results"></div>
+			</div>
+
+			<div id="lib-content">
+				<div id="content-position">
+					<!-- TAG VIEW -->
+					<div id="top-columns">
+						<div id="lib-genre-header" class="lib-genre-header-sm">
+							<li id="genreheader">
+								<div class="lib-heading">Genres</div>
+							</li>
+						</div>
+						<div id="index-genres" class="alphabits">
+							<ul>
+								<li>a</li><li>c</li><li>e</li><li>g</li><li>i</li><li>k</li><li>m</li><li>o</li><li>p</li><li>r</li><li>s</li><li>t</li><li>v</li><li>w</li><li>z</li>
+							</ul>
+						</div>
+						<div id="lib-genre" class="lib-genre-sm">
+							<ul id="genresList"></ul>
+						</div>
+						<div id="lib-artist-header" class="lib-artist-header-sm">
+							<li id="artistheader">
+								<div class="lib-heading">Artists</div>
+							</li>
+						</div>
+						<div id="index-artists" class="alphabits">
+							<ul>
+								<li>#</li><li>a</li><li>c</li><li>e</li><li>g</li><li>i</li><li>k</li><li>m</li><li>o</li><li>p</li><li>r</li><li>s</li><li>t</li><li>v</li><li>w</li><li>z</li>
+							</ul>
+						</div>
+						<div id="lib-artist" class="lib-artist-sm">
+							<ul id="artistsList" class="artistslist"></ul>
+						</div>
+						<div id="lib-album-header">
+							<li id="albumheader">
+								<div class="lib-heading">Albums</div>
+								<div id="random-album"><i class="far fa-dot-circle"></i></div>
+							</li>
+						</div>
+						<div id="index-albums" class="alphabits">
+							<ul>
+								<li>#</li><li>a</li><li>c</li><li>e</li><li>g</li><li>i</li><li>k</li><li>m</li><li>o</li><li>p</li><li>r</li><li>s</li><li>t</li><li>v</li><li>w</li><li>z</li>
+							</ul>
+						</div>
+						<div id="lib-album">
+							<ul id="albumsList" class="albumslist"></ul>
+						</div>
+					</div>
+					<!-- ALBUM VIEW -->
+					<div id="lib-albumcover-header">
+						<li id="albumcoverheader">
+							<div class="lib-heading">Albums by Artist</div>
+							<div id="random-albumcover"><i class="far fa-dot-circle"></i></div>
+						</li>
+					</div>
+					<div id="index-albumcovers" class="alphabits">
+						<ul>
+							<li>#</li><li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li><li>i</li><li>j</li><li>k</li><li>l</li><li>m</li><li>n</li><li>o</li><li>p</li><li>q</li><li>r</li><li>s</li><li>t</li><li>u</li><li>v</li><li>w</li><li>x</li><li>y</li><li>z</li>
+						</ul>
+					</div>
+					<div id="lib-albumcover">
+						<ul id="albumcovers" class="albumcovers"></ul>
+					</div>
+					<!-- TRACKS -->
+					<div id="bottom-row">
+						<div id="lib-file"> <!-- r43m -->
+			 				<div id="lib-coverart-meta-area">
+								<div id="lib-coverart-img" class="lib-coverart"></div>
+								<div id="lib-meta-summary">
+				 					<div id="lib-albumname" class="lib-albumname-meta"></div>
+				 					<div id="lib-artistname" class="lib-artistname-meta"></div>
+				 					<div id="lib-albumyear" class="lib-albumyear-meta"></div>
+				 					<div id="lib-numtracks" class="lib-numtracks-meta"></div>
+								</div>
+							</div>
+							<div id="trackscontainer">
+								<ul id="songsList"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- FOLDER PANEL -->
+	<div id="folder-panel" class="tab-pane">
+		<div id="container-browse">
+			<div class="btnlist btnlist-top btnlist-top-db">
+				<button id="db-back" class="btn"><i class="far fa-arrow-left"></i></button>
+				<button id="db-home" class="btn"><i class="fas fa-home"></i></button>
+				<button id="db-refresh" class="btn"><i class="far fa-redo"></i></button>
+				<button id="db-advsearch" class="btn" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i></button>
+				<form id="db-fastsearch" onsubmit="return dbFastSearch();">
+					<div class="input-append">
+						<input id="dbfs" type="text" value="" placeholder="search">
+					</div>
+				</form>
+				<div id="db-search-results"></div>
+			</div>
+	
+			<div id="database">
+				<ul class="database"></ul>
+			</div>
+			<div id ="index-browse" class="alphabits">
+				<ul>
+					<li>#</li><li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li><li>i</li><li>j</li><li>k</li><li>l</li><li>m</li><li>n</li><li>o</li><li>p</li><li>q</li><li>r</li><li>s</li><li>t</li><li>u</li><li>v</li><li>w</li><li>x</li><li>y</li><li>z</li>
+				</ul>
+			</div>
+		</div>
+	</div>	
+
+	<!-- RADIO PANEL -->
+	<div id="radio-panel" class="tab-pane">
+		<div id="container-radio">
+		<div class="btnlist btnlist-top btnlist-top-ra">
+			<button id="ra-home" class="btn"><i class="fas fa-home"></i></button>
+			<button id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
+			<button id="ra-toggle-view" class="btn"><i class="far fa-bars"></i></button>
+			<button id="ra-new" class="btn"><i class="far fa-plus"></i></button>
+			<form id="ra-search" class="" method="post" onSubmit="return false;">
+				<div class="input-append">
+					<input id="ra-filter" type="text" value="" placeholder="search">
+					<button id="searchResetRa" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+				</div>
+			</form>
+			<div id="ra-filter-results"></div>
+		</div>
+			<div id="database-radio">
+				<ul id="radiocovers" class="database-radio"></ul>
+			</div>
+			<div id ="index-radio" class="alphabits">
+				<ul>
+					<li>#</li><li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li><li>i</li><li>j</li><li>k</li><li>l</li><li>m</li><li>n</li><li>o</li><li>p</li><li>q</li><li>r</li><li>s</li><li>t</li><li>u</li><li>v</li><li>w</li><li>x</li><li>y</li><li>z</li>
+				</ul>
+			</div>
+		</div>
+	</div>	
+</div>
+
+<!-- ADVANCED SEARCH (BROWSE PANEL) -->	
+<div id="dbsearch-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="dbsearch-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Advanced search</h3>
+		<a href="#notarget" id="db-search-reset">RESET</a>&nbsp;search fields
+	</div>
+	<div class="modal-body" id="container-dbsearch">
+		<form class="form-horizontal" action="" method="">
+	    	<fieldset>
+				<h5>Search all tags</h5>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-alltags">Search string</label>
+	                <div class="controls">
+	                    <input id="dbsearch-alltags" class="input-xlarge" type="text">
+						<a class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-alltags" class="help-block hide">
+	                    	All tags are searched using an OR relationship.
+	                    </span>
+	                </div>
+	            </div>
+				<h5>Search specific tags</h5>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-genre">Genre</label>
+	                <div class="controls">
+	                    <input id="dbsearch-genre" class="input-xlarge" type="text" name="dbsearch_genre" value="">
+						<a class="info-toggle" data-cmd="info-specifictags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-specifictags" class="help-block hide">
+		                	Non-empty tags are searched using an AND relationship.
+		                </span>
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-artist">Artist</label>
+	                <div class="controls">
+	                    <input id="dbsearch-artist" class="input-xlarge" type="text" name="dbsearch_artist" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-album">Album</label>
+	                <div class="controls">
+	                    <input id="dbsearch-album" class="input-xlarge" type="text" name="dbsearch_album" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-title">Title</label>
+	                <div class="controls">
+	                    <input id="dbsearch-title" class="input-xlarge" type="text" name="dbsearch_title" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-albumartist">Album artist</label>
+	                <div class="controls">
+	                    <input id="dbsearch-albumartist" class="input-xlarge" type="text" name="dbsearch_albumartist" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-date">Release date</label>
+	                <div class="controls">
+	                    <input id="dbsearch-date" class="input-xlarge" type="text" name="dbsearch_date" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-composer">Composer</label>
+	                <div class="controls">
+	                    <input id="dbsearch-composer" class="input-xlarge" type="text" name="dbsearch_composer" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-performer">Performer</label>
+	                <div class="controls">
+	                    <input id="dbsearch-performer" class="input-xlarge" type="text" name="dbsearch_performer" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-comment">Comment</label>
+	                <div class="controls">
+	                    <input id="dbsearch-comment" class="input-xlarge" type="text" name="dbsearch_comment" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-file">File name</label>
+	                <div class="controls">
+	                    <input id="dbsearch-file" class="input-xlarge" type="text" name="dbsearch_file" value="">
+	                </div>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-primary" id="db-search-submit" data-dismiss="modal">Search</button>
+	</div>
+</div>
+
+<!-- CONTEXT MENUS -->
+<div id="context-menus">
+	<div id="context-menu-folder" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clradd"><i class="fal fa-share-square sx"></i> Clear/Add</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-folder-item" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-savedpl-root" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clradd"><i class="fal fa-share-square sx"></i> Clear/Add</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="delsavedpl"><i class="fal fa-trash sx"></i> Delete playlist</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+	
+	<div id="context-menu-savedpl-item" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-db-search-results" class="context-menu-lib">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-lib-item" class="context-menu-lib">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-lib-all" class="context-menu-lib">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="tracklist"><i class="fal fa-list sx"></i> Track list</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-lib-disc" class="context-menu-lib"> <!-- r44f -->
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-radio-folder" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clradd"><i class="fal fa-share-square sx"></i> Clear/Add</a></li>
+			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-radio-item" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="editradiostn"><i class="fal fa-edit sx"></i> Edit station</a></li>
+			<li><a href="#notarget" data-cmd="delstation"><i class="fal fa-trash sx"></i> Delete station</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-playlist-item" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="deleteplitem"><i class="fal fa-trash sx"></i> Remove item(s)</a></li>
+			<li><a href="#notarget" data-cmd="moveplitem"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
+			<li><a href="#notarget" data-cmd="setforclockradio"><i class="fal fa-alarm-clock sx"></i> Set for clock radio</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>
+
+	<div id="context-menu-playback" class="context-menu">
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="#notarget" data-cmd="save-playlist"><i class="fal fa-save sx"></i> Save playlist</a></li>
+			<li><a href="#notarget" data-cmd="set-favorites"><i class="fal fa-heart-circle sx"></i> Set favorites</a></li>
+			<li id="context-menu-consume"><a href="#notarget" data-cmd="consume"><i class="fal fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fal fa-check"></i></span></a></li>
+			<li id="context-menu-repeat"><a href="#notarget" data-cmd="repeat"><i class="fal fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fal fa-check"></i></span></a></li>
+			<li id="context-menu-single"><a href="#notarget" data-cmd="single"><i class="fal fa-redo sx"></i> Single<span id="menu-check-single"><i class="fal fa-check"></i></span></a></li>
+			<li><a href="#notarget" data-cmd="toggle-song"><i class="fal fa-exchange-alt sx"></i> Last track</a></li>
+			<li><a href="#notarget" data-cmd="closemenu"><i class="fal fa-times-circle sx"></i> Close</a></li>
+		</ul>
+	</div>		
+</div>
+
+<!-- SAVE PLAYLIST -->
+<div id="savepl-modal" class="modal modal-xs hide fade" tabindex="-1" role="dialog" aria-labelledby="savepl-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="moveplitems-modal-label">Save playlist</h3>
+	</div>
+	<div class="modal-body">
+		<form id="pl-save" method="post" onsubmit="return false;">
+	    	<fieldset>
+				<div class="controls">
+					<input id="pl-saveName" type="text" value="">
+					<a class="info-toggle" data-cmd="info-savepl" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-savepl" class="help-block help-block2 hide">
+	                	Saved playlists are maintained in the Browse view.
+	                </span>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button id="pl-btnSave" class="btn btn-savepl btn-primary" data-dismiss="modal">Save</button>
+	</div>
+</div>
+
+<!-- SET FAVORITES -->
+<div id="setfav-modal" class="modal modal-xs hide fade" tabindex="-1" role="dialog" aria-labelledby="newpl-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="setfav-modal-label">Set Favorites Playlist Name</h3>
+	</div>
+	<div class="modal-body">
+		<form id="set-fav" method="post" onsubmit="return false;">
+	    	<fieldset>
+				<div class="controls">
+					<input id="pl-favName" type="text" value="">
+					<a class="info-toggle" data-cmd="info-favname" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-favname" class="help-block help-block2 hide">
+		            	Sets the playlist that will be used to store favorited items. If the playlist does not already exist it will be created. Playlists are maintained in the Browse view.
+		            </span>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button id="pl-btnSetFav" class="btn btn-savepl btn-primary" data-dismiss="modal">Set</button>
+	</div>
+</div>
+
+<!-- RADIO STATION NEW/EDIT/DELETE -->	
+<div id="newstation-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="newstation-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="newstation-modal-label">New station</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" action="" method="">
+	    	<fieldset>
+				<div class="control-group">
+	                <label class="control-label" for="new-station-name">Name</label>
+	                <div class="controls">
+	                    <input id="new-station-name" class="input-xlarge" type="text" name="add_station_name" size="200" value="">
+	                </div>
+	                <label class="control-label" for="new-station-url">URL</label>
+	                <div class="controls">
+	                    <input id="new-station-url" class="input-xlarge" type="text" name="add_station_url" size="200" value="">
+	                </div>
+
+					<label class="control-label" for="choose-file">Logo</label>
+					<div class="controls">
+						<div style="display:inline-block;">
+							<label for="import-logoimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</label>
+							<input type="file" id="import-logoimage" accept="image/jpeg" style="display:none" onchange="importLogoImage(this.files)">
+						</div>
+						<div id="current-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+						<a class="info-toggle" id="info-toggle-logoimage" data-cmd="info-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<div id="error-logoimage"></div>
+						<div id="info-logoimage" class="help-block hide">
+							Add a JPEG logo image for the station. Max image size is 1MB.<br>
+						</div>
+					</div>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-new-station btn-primary" data-dismiss="modal">Create</button>
+	</div>
+</div>
+
+<div id="editstation-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="editstation-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="editstation-modal-label">Edit station</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" action="" method="">
+	    	<fieldset>
+				<div class="control-group">
+	                <label class="control-label" for="edit-station-name">Name</label>
+	                <div class="controls">
+	                    <input id="edit-station-name" class="input-xlarge" type="text" name="edit_station_name" size="200" value="" readonly>
+	                </div>
+	                <label class="control-label" for="edit-station-url">URL</label>
+	                <div class="controls">
+	                    <input id="edit-station-url" class="input-xlarge" type="text" name="edit_station_url" size="200" value="">
+	                </div>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-upd-station btn-primary" data-dismiss="modal">Update</button>
+	</div>
+</div>
+
+<div id="deletestation-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="deletestation-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="deletestation-modal-label">Delete station</h3>
+	</div>
+	<div class="modal-body">
+		<h4 id='station-path'></h4>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-del-station btn-primary" data-dismiss="modal">Delete</button>
+	</div>
+</div>
+
+<!-- PLAYLIST ITEM DELETE/MOVE -->	
+<div id="deleteplitems-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="deleteplitems-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="deleteplitems-modal-label">Remove playlist items</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" action="" method="">
+	    	<fieldset>
+				<div class="control-group">
+	                <label class="control-label" for="delete-plitem-begpos">Beginning item</label>
+	                <div class="controls">
+	                    <input id="delete-plitem-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="delete_plitem_begpos" value="">
+						<button id="btn-delete-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+	                </div>
+	                <label class="control-label" for="delete-plitem-endpos">Ending item</label>
+	                <div class="controls">
+	                    <input id="delete-plitem-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="delete_plitem_endpos" value="">
+						<button id="btn-delete-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+	                </div>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-delete-plitem btn-primary" data-dismiss="modal">Remove</button>
+	</div>
+</div>
+
+<div id="moveplitems-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="moveplitems-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="moveplitems-modal-label">Move playlist items</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" action="" method="">
+	    	<fieldset>
+				<div class="control-group">
+	                <label class="control-label" for="move-plitem-begpos">Beginning item</label>
+	                <div class="controls">
+	                    <input id="move-plitem-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_begpos" value="">
+						<button id="btn-move-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+	                </div>
+	                <label class="control-label" for="move-plitem-endpos">Ending item</label>
+	                <div class="controls">
+	                    <input id="move-plitem-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_endpos" value="">
+						<button id="btn-move-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+	                </div>
+	                <label class="control-label" for="move-plitem-newpos">New position</label>
+	                <div class="controls">
+	                    <input id="move-plitem-newpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_newpos" value="">
+						<button id="btn-move-setnewpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+						<button id="btn-move-setnewpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+	                </div>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-move-plitem btn-primary" data-dismiss="modal">Move</button>
+	</div>
+</div>
+
+<!-- DELETE SAVED PLAYLIST -->	
+<div id="deletesavedpl-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="deletesavedpl-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="deletesavedpl-modal-label">Delete saved playlist</h3>
+	</div>
+	<div class="modal-body">
+		<h4 id='savedpl-path'></h4>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button class="btn btn-del-savedpl btn-primary" data-dismiss="modal">Delete</button>
+	</div>
+</div>
+
+<!-- PLAYBACK HISTORY LOG -->	
+<div id="playhistory-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="playhistory-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="playhistory-modal-label">Playback history</h3>
+	</div>
+	<div class="playhistory-search">
+		<form id="ph-search" method="post" onSubmit="return false;">
+			<div class="input-append" style="margin-bottom: 0;">
+				<input id="ph-filter" type="text" value="" placeholder="search" data-placement="bottom" data-toggle="tooltip">
+				<button id="searchResetPh" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+				<span id="ph-filter-results"></span>
+				<button class="btn ph-firstPage"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
+				<button class="btn ph-lastPage"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
+			</div>
+		</form>
+	</div>
+	<div class="modal-body" id="container-playhistory">
+		<div id="playhistory">
+			<ol class="playhistory"></ol>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
+<!-- VOLUME CONTROL POPUP -->
+<div id="volume-popup" class="modal modal-xs hide fade" tabindex="-1" role="dialog" aria-labelledby="volume-popup-label" aria-hidden="true">
+    <div class="modal-body">
+		<div id="volknob-2">
+			<div id="volcontrol-2">
+				<input readonly class="volumeknob" id="volume-2" data-min="0" data-max="100" data-width="100%" data-thickness="0.16" data-bgColor="rgba(96,96,96,0.2)" data-fgColor="#27ae60" data-readOnly="false" data-cursor="false" data-angleArc="240" data-angleOffset="-120">
+			</div>
+			<div class="volume-display" href="#notarget"></div>
+		</div>					
+		<div id="volbtns-2">
+			<button id="volumedn-2" class="btn btn-cmd btn-volume btn-primary"><i class="far fa-minus fa-xs"></i></button>
+			<button id="volumeup-2" class="btn btn-cmd btn-volume btn-primary"><i class="far fa-plus fa-xs"></i></button>
+		</div>
+    </div>
+</div>

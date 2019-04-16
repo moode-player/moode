@@ -20,17 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-09-27 TC moOde 4.3
- * - initial version
- * 2018-10-19 TC moOde 4.3 update
- * - add attribution for coverart.php author
- * - add logic to parseFolder() to prevent fall-thru to all files search
- * - add hash_only arg to be consistent w/coverart.php and getCoverHash()
- * 2018-12-09 TC moOde 4.4
- * - add logging to Zend exception blocks
- * - chg $id3->apic->mimeType to $id3v2->apic->mimeType
- * - auto vs manual for hires thumbnails
- * - rm escaping # in getImage() which causes a fail
+ * 2019-04-12 TC moOde 5.0
  *
  */
 

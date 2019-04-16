@@ -19,9 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-12-09 TC moOde 4.4
- * - only echo cmd output
+ * 2019-04-12 TC moOde 5.0
  *
  */
  
@@ -36,7 +34,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 // BASH or PHP
 elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') !== false) {							
 	$result = sysCmd('/var/www/' . $_GET['cmd']);
-	echo $result[0]; // r44h
+	echo $result[0];
 }
 // MPD
 else {
@@ -46,18 +44,10 @@ else {
 		exit($msg . "\n");	
 	} 
 	else {
-		if (strpos($_GET['cmd'], ',') !== false) {
-			$cmds = explode(',', $_GET['cmd']);
-			chainMpdCmdsDelay($sock, $cmds, 250000);
-			//echo 'OK'; // r44h
-			closeMpdSock($sock);
-		}
-		else {
-			sendMpdCmd($sock, $_GET['cmd']);
-			//echo readMpdResp($sock); // r44h
-			$result = readMpdResp($sock);
-			closeMpdSock($sock);
-		}
+		sendMpdCmd($sock, $_GET['cmd']);
+		$result = readMpdResp($sock);
+		closeMpdSock($sock);
+		//echo $result;
 	}
 }
 
