@@ -1692,27 +1692,26 @@ function renderLibrary(data) {
 	renderGenres();
 }
 
+function reduceGenres(acc, track) {
+	(acc[track.genre] = acc[track.genre] || []).push(track);
+	return acc;
+};
+
+function reduceArtists(acc, track) {
+	var artist = track.album_artist || track.artist;
+	(acc[artist] = acc[artist] || []).push(track);
+	return acc;
+};
+
+function reduceAlbums(acc, track) {
+	(acc[track.album] = acc[track.album] || []).push(track);
+	return acc;
+};
+
 // generate library array
 function filterLib() {
 	allSongs = fullLib;
 	allSongsDisc.length = 0; // r44g
-
-	var reduceGenres = function(acc, track) {
-		(acc[track.genre] = acc[track.genre] || []).push(track);
-		return acc;
-	};
-
-	var reduceArtists = function(acc, track) {
-		var artist = track.album_artist || track.artist;
-		(acc[artist] = acc[artist] || []).push(track);
-		return acc;
-	};
-
-	var reduceAlbums = function(acc, track) {
-		(acc[track.album] = acc[track.album] || []).push(track);
-		return acc;
-	};
-
 	allGenres = Object.keys(fullLib.reduce(reduceGenres, {}));
 
 	var genreFilter = LIB.filters.genres;
@@ -1802,8 +1801,8 @@ function removeArticles(string) {
 }
 
 // generate album/artist key
-function keyAlbum(objAlbum) {
-	return objAlbum.album + '@' + objAlbum.artist;
+function keyAlbum(obj) {
+	return obj.album + '@' + (obj.album_artist || obj.artist);
 }
 
 // return numeric song time
@@ -2092,6 +2091,8 @@ $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
 // click on genre
 $('#genresList').on('click', '.lib-entry', function(e) {
 	var pos = $('#genresList .lib-entry').index(this);
+	LIB.filters.artists.length = 0;
+	LIB.filters.albums.length = 0;
 	UI.libPos[0] = -1;
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, allGenres[pos], LIB.filters.genres, renderGenres);
@@ -2102,6 +2103,7 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	var pos = $('#artistsList .lib-entry').index(this);
 	UI.libPos[0] = -1;
 	UI.libPos[2] = pos;
+	LIB.filters.albums.length = 0;
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, allArtists[pos], LIB.filters.artists, renderArtists);    
 	if (UI.mobile) {
