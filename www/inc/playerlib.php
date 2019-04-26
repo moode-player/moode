@@ -368,7 +368,7 @@ function genLibrary($flat) {
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
 			'title' => $flatData['Title'],
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
-			'artist' => $flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing'),
+			'artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing'),
 			'album_artist' => $flatData['AlbumArtist'],
 			'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
 			'year' => $flatData['Date'],
@@ -397,18 +397,18 @@ function genLibraryUTF8Rep($flat) {
 	foreach ($flat as $flatData) {
 
 		$songData = array(
- 			'file' => utf8rep($flatData['file']),
- 			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')), //r44f add inner brackets
- 			'title' => utf8rep($flatData['Title']),
+			'file' => utf8rep($flatData['file']),
+			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')), //r44f add inner brackets
+			'title' => utf8rep($flatData['Title']),
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
 			'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing')), //r44f add inner brackets
 			'album_artist' => utf8rep($flatData['AlbumArtist']),
 			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
- 			'year' => utf8rep($flatData['Date']),
- 			'time' => utf8rep($flatData['Time']),
+			'year' => utf8rep($flatData['Date']),
+			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown')),
 			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
- 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
+			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified']
 		);
 

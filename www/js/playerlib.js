@@ -1908,7 +1908,7 @@ var renderAlbums = function() {
 		else {
 			output += '<li class="clearfix"><div class="lib-entry'
 			+ tmp
-			+ '">' + allAlbums[i].album + '<span>' + allAlbums[i].artist '</span></div></li>';
+			+ '">' + allAlbums[i].album + '<span>' + allAlbums[i].artist + '</span></div></li>';
 			output2 += '<li class="clearfix"><div class="lib-entry'
 			+ tmp
 			+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + allAlbumCovers[i].artist + '</span></div></li>';
