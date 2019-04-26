@@ -370,6 +370,9 @@ readers do not read off random characters that represent icons */
 .fa-stop:before {
   content: "\f04d"; }
 
+.fa-sync:before {
+  content: "\f021"; }
+
 .fa-th:before {
   content: "\f00a"; }
 

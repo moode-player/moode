@@ -68,11 +68,12 @@ $_select['library_hiresthm'] .= "<option value=\"400px\" " . (($_SESSION['librar
 $_select['library_covsearchpri'] .= "<option value=\"Embedded cover\" " . (($_SESSION['library_covsearchpri'] == 'Embedded cover') ? "selected" : "") . ">Embedded cover</option>\n";
 $_select['library_covsearchpri'] .= "<option value=\"Cover image file\" " . (($_SESSION['library_covsearchpri'] == 'Cover image file') ? "selected" : "") . ">Cover image file</option>\n";
 
+waitWorker(1);
+
 $tpl = "lop-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

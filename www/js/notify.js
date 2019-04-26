@@ -29,7 +29,7 @@ function notify(cmd, msg, duration) {
 		add: 'Added to playlist',
 		clrplay: 'Added after playlist cleared',
 		clradd: 'Added after playlist cleared',
-		update: 'Updating...',
+		updmpddb: 'Updating...',
 		remove: 'Removed from playlist',
 		move: 'Playlist items moved',
 		savepl: 'Playlist saved',

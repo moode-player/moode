@@ -132,6 +132,7 @@ $lastinstall = checkForUpd('/var/local/www/');
 $_SESSION['pkgdate'] = $lastinstall['pkgdate'];
 $result = sysCmd('cat /etc/debian_version');
 $_SESSION['raspbianver'] = $result[0];
+$_SESSION['moode_release'] = getMoodeRel();
 
 // exit if running an unsupported hdwrrev
 if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-CM3') {
@@ -627,11 +628,11 @@ $clkradio_start_time = substr($_SESSION['clkradio_start'], 0, 8); // parse out t
 $clkradio_stop_time = substr($_SESSION['clkradio_stop'], 0, 8);
 $clkradio_start_days = explode(',', substr($_SESSION['clkradio_start'], 9)); // parse out the days (M,T,W,T,F,S,S)
 $clkradio_stop_days = explode(',', substr($_SESSION['clkradio_stop'], 9));
-
 $aplactive = '0';
 $spotactive = '0';
 $slactive = '0';
 $inpactive = '0';
+$mpd_dbupd_initiated = '0';
 
 $maint_interval = $_SESSION['maint_interval'];
 workerLog('worker: Maintenance interval (' . $_SESSION['maint_interval'] . ')');
@@ -657,9 +658,8 @@ session_write_close();
 workerLog('worker: Ready');
 //
 
-// update ready flag, run the ready script
+// update ready flag
 playerSession('write', 'wrkready', '1');
-sysCmd('/var/local/www/commandw/wrkready.sh > /dev/null 2>&1 &');
 
 //
 // BEGIN WORKER JOB LOOP
@@ -705,6 +705,9 @@ while (1) {
 	}
 	if ($_SESSION['playhist'] == 'Yes') {
 		updPlayHistory();		
+	}
+	if ($GLOBALS['mpd_dbupd_initiated'] == '1') {
+		chkMpdDbUpdate();		
 	}
 	if ($_SESSION['w_active'] == 1 && $_SESSION['w_lock'] == 0) {
 		runQueuedJob();
@@ -1105,6 +1108,18 @@ function updPlayHistory() {
 	}
 }
 
+// check for mpd db update complete
+function chkMpdDbUpdate() {
+	$sock = openMpdSock('localhost', 6600);
+	$status = parseStatus(getMpdStatus($sock));
+	closeMpdSock($sock);	
+
+	if (!isset($status['updating_db'])) {
+		sendEngCmd('dbupd_done');
+		$GLOBALS['mpd_dbupd_initiated'] = '0';
+	}
+}
+
 //
 // PROCESS SUBMITTED JOBS
 //
@@ -1127,13 +1142,21 @@ function runQueuedJob() {
 
 		// lib-config jobs
 		case 'updmpddb':
-		case 'rescanmpddb':
 			clearLibCache();
 			$sock = openMpdSock('localhost', 6600);
-			$cmd = $_SESSION['w_queue'] == 'updmpddb' ? 'update' : 'rescan';
+			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . html_entity_decode($_SESSION['w_queueargs']) . '"';
 			sendMpdCmd($sock, $cmd);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
+			$GLOBALS['mpd_dbupd_initiated'] = '1';
+			break;
+		case 'rescanmpddb':
+			clearLibCache();
+			$sock = openMpdSock('localhost', 6600);
+			sendMpdCmd($sock, 'rescan');
+			$resp = readMpdResp($sock);
+			closeMpdSock($sock);
+			$GLOBALS['mpd_dbupd_initiated'] = '1';
 			break;
 		case 'sourcecfg':
 			clearLibCache();

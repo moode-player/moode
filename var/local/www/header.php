@@ -32,20 +32,51 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 	
-	<!-- versioned resources -->
+	<!-- VERSIONED RESOURCES -->
 	<?php
-	versioned_resource('css/bootstrap.min.css');
-	versioned_resource('css/bootstrap-select.css');
-	versioned_resource('css/flat-ui.css');
-	versioned_resource('css/fontawesome-moode.css');
-	if ($section == 'index') {
-		versioned_resource('css/jquery.countdown.css');
-	}
-	versioned_resource('css/jquery.pnotify.default.css');
-	versioned_resource('css/panels.css');
-	versioned_resource('css/moode.css');
+		// common css
+		versioned_resource('css/bootstrap.min.css');
+		versioned_resource('css/bootstrap-select.css');
+		versioned_resource('css/flat-ui.css');
+		versioned_resource('css/jquery.pnotify.default.css');
+		versioned_resource('css/fontawesome-moode.css');
+		versioned_resource('css/panels.css');
+		versioned_resource('css/moode.css');
+
+		// common js
+		versioned_script('js/bootstrap.min.js');
+		versioned_script('js/bootstrap-select.min.js');
+		versioned_script('js/jquery.pnotify.min.js');
+		versioned_script('js/playerlib.js');
+		versioned_script('js/links.js');
+
+		// playback/library
+		if ($section == 'index') {
+			versioned_resource('css/jquery.countdown.css');
+			versioned_script('js/jquery.countdown.js');
+			versioned_script('js/jquery.scrollTo.min.js');
+			versioned_script('js/jquery.touchSwipe.min.js');
+			versioned_script('js/jquery.lazyload.js');
+			versioned_script('js/jquery.md5.js');	
+			versioned_script('js/jquery.adaptive-backgrounds.js');
+			versioned_script('js/notify.js');
+			versioned_script('js/jquery.knob.js');
+			versioned_script('js/bootstrap-contextmenu.js');
+			versioned_script('js/scripts-panels.js');
+		}
+		// configs
+		else {
+			versioned_script('js/custom_checkbox_and_radio.js');
+			versioned_script('js/custom_radio.js');
+			versioned_script('js/jquery.tagsinput.js');
+			versioned_script('js/jquery.placeholder.js');
+			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
+			versioned_script('js/application.js');
+			versioned_script('js/scripts-configs.js');
+		}
 	?>
-	
+
+	<!-- MOBILE APP ICONS -->
 	<!-- Apple -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="apple-touch-icon" sizes="180x180" href="/v5-apple-touch-icon.png">
@@ -78,7 +109,7 @@
 			<a id="sys-config-btn" class="btn" href="sys-config.php">System</a>
 		</div>
 
-		<div class="db-spinner"></div>
+		<div class="busy-spinner"></div>
 
 		<!-- MAIN MENU -->	
 		<div class="dropdown">

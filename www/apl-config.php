@@ -75,11 +75,12 @@ $_select['audio_backend_latency_offset_in_seconds'] = $cfg_airplay['audio_backen
 // audio buffer length (secs)
 $_select['audio_backend_buffer_desired_length_in_seconds'] = $cfg_airplay['audio_backend_buffer_desired_length_in_seconds'];
 
+waitWorker(1);
+
 $tpl = "apl-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

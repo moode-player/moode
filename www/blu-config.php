@@ -175,8 +175,9 @@ if ($cmd == '-p' || $cmd == '-c' || $cmd == '-l' || $cmd == '-s') {
 	$_hide_ctl[$type] = empty($_device[$type]) ? 'hide' : '';
 }
 
+waitWorker(1);
+
 $tpl = "blu-config.html";
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

@@ -34,8 +34,11 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .viewswitch-cfgs .btn.active {background:rgba(128,128,128,.35);border:1px solid transparent;color:inherit;}
 .viewswitch-cfgs a {color:var(--btnbarcolor);box-sizing:border-box;}
 .viewswitch-cfgs .active a {color:inherit;}
-#config-back {position:absolute;float:left;left:1em;top:0;top:calc(env(safe-area-inset-top) + 0);display:none;}
+#config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
+.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;}
+.legend-configs {border:none;margin-bottom:.35em;}
+.legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* general */
 .modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#444;}
 .modal-backdrop.fade{opacity:0;}
@@ -99,10 +102,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* forms */
 .form-horizontal .controls {margin-left:12em;}
 .form-horizontal .control-label {width:11em;}
-/* config screens */
-.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;}
-.legend-configs {border:none;margin-bottom:.35em;}
-.legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 
 @supports ((backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px))) {
 	.modal-dropdown-text {color:#333;}
@@ -228,7 +227,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#index-genres {right:calc(50% + var(--sbw));}
 	#index-artists {right:calc(0% + var(--sbw));}
 	#index-albums {right:calc(-50% + var(--sbw));}
-	.db-spinner {top:1rem;top:calc(env(safe-area-inset-top) + 1em);}
+	.busy-spinner {top:1rem;top:calc(env(safe-area-inset-top) + 1em);}
 	#playbar-timeline {display:none;}
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;font-size:.9em;}
@@ -257,7 +256,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#context-menus .dropdown-menu a {font-size:.9em;}
 	.modal {max-height:calc(100vh - 20%);overflow:auto;}
 	.modal-body {max-height:55vh;overflow:auto;}
-	/* playback tab */
+	/* playback */
 	#pl-search, #lib-album-search, #ra-search {margin:0;}
 	#pl-filter-results, #lib-album-filter-results, #ra-filter-results {line-height:30px;margin-top:2px;}
 	#playback-panel {padding:1.875em 0;min-height: calc(100vh - 3.75em);}
@@ -282,11 +281,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#extratags {font-size:.8em;padding-top:5px;}
 	#currentsong, #currentalbum {font-size:1em;}
 	#volumedn, #volumeup {padding: .5em .75em;}
-	/* library tab */
+	/* tag view */
 	.lib-entry {margin-right:0;}
 	.lib-entry-song {font-size:unset;}
 	.songyear {display:none;}
-	/* browse tab */
+	/* folder view */
 	#folder-panel {padding-top:1.875em;height:calc(100vh - 1.875em);}
 	#database .btn {font-size:.9em;}
 	/* coverview */
@@ -392,7 +391,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#mt1 {margin:6rem 1.5rem 0rem 1.5rem;}
 	.timeline-bg {margin-top:1px;}
 	#currentsong, #currentalbum, #currentartist {padding-top:1.75rem;}
-	.db-spinner {top:calc(env(safe-area-inset-top) + .57rem);}
+	.busy-spinner {top:calc(env(safe-area-inset-top) + .57rem);}
 	.db-spinsync {top:calc(env(safe-area-inset-top) + -.2rem);}
 	.config-exit {top:calc(env(safe-area-inset-top) - .5rem);}
 	#radio-panel .viewswitch {top:calc(env(safe-area-inset-top) - .5em);}

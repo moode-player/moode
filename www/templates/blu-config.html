@@ -30,7 +30,7 @@
 			<select id="btcmd" class="select-large" name="btcmd">
 				$_cmd[btcmd]
 			</select>
-			<button class="btn btn-primary btn-small set-button" type="submit" name="run_btcmd" value="1" $_bt_disabled>Submit</button>
+			<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="run_btcmd" value="1" $_bt_disabled>Submit</button>
 			<a class="info-toggle" data-cmd="info_btcmd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info_btcmd" class="help-block-configs hide">
 				Select a command to submit to the Bluetooth controller.<br>
@@ -49,8 +49,8 @@
 				<select id="paired-device" class="select-large" name="paired_device" style="margin-bottom: 5px;">
 					$_device[paired_device]
 				</select>
-				<button class="btn btn-primary btn-small set-button" type="submit" name="connectto_device" value="1">Connect</button>
-				<button class="btn btn-primary btn-small set-button" type="submit" name="rm_paired_device" value="1">Remove</button>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="connectto_device" value="1">Connect</button>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="rm_paired_device" value="1">Remove</button>
 				<a class="info-toggle" data-cmd="info_rm_paired_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_rm_paired_device" class="help-block-configs hide">
 					Connect or remove a paired device.<br>
@@ -61,7 +61,7 @@
 				<select id="connected-device" class="select-large" name="connected_device" style="margin-bottom: 5px;">
 					$_device[connected_device]
 				</select>
-				<button class="btn btn-primary btn-small set-button" type="submit" name="disconnect_device" value="1">Disconnect</button>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="disconnect_device" value="1">Disconnect</button>
 				<a class="info-toggle" data-cmd="info_disconnect_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_disconnect_device" class="help-block-configs hide">
 					Disconnect the currently connected device.<br>
@@ -72,7 +72,7 @@
 				<select id="scanned-device" class="select-large" name="scanned_device" style="margin-bottom: 5px;">
 					$_device[scanned_device]
 				</select>
-				<button class="btn btn-primary btn-small set-button" type="submit" name="pairwith_device" value="1">Pair</button>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="pairwith_device" value="1">Pair</button>
 				<a class="info-toggle" data-cmd="info_pairwith_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_pairwith_device" class="help-block-configs hide">
 					Select a device to pair with.<br>
@@ -83,7 +83,7 @@
 				<select id="audioout" class="select-large" name="audioout">
 					$_select[audioout]
 				</select>
-				<button class="btn btn-primary btn-small set-button" type="submit" name="chg_audioout" value="1">Change</button>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="chg_audioout" value="1">Change</button>
 				<a class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_audioout" class="help-block-configs hide">
 					Send MPD audio output to the Local audio device or over a Bluetooth connection to another audio device.<br>

@@ -118,11 +118,12 @@ for ($i = 0; $i < 10; $i++) {
 	$_select['freq' . ($i + 1)] = $values[$i];
 }
 
+waitWorker(1);
+
 $tpl = "eqg-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

@@ -31,7 +31,7 @@
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>			
 			<ul>
-				<li>Release: 5.0 2019-04-12 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
+				<li>Release: 5.1 2019-04-22 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
@@ -109,7 +109,7 @@
 	<div class="modal-body" id="container-customize">
 		<form class="form-horizontal" action="" method="">
 			<h5>Theme and backgrounds</h5>
-	    	<fieldset>
+		    	<fieldset>
 				<div class="control-group">
    	                <label class="control-label" for="theme-name">Theme</label>
 	                <div class="controls">
@@ -266,10 +266,10 @@
 	                    </span>
 	                </div>
 				</div>
-	    	</fieldset>
+		    	</fieldset>
 
 			<h5>CoverView Options</h5>
-	    	<fieldset>
+		    	<fieldset>
 				<div class="control-group">
    	                <label class="control-label" for="scnsaver-timeout">Automatic display</label>
 	                <div class="controls">
@@ -313,10 +313,10 @@
 	                    </span>
 	                </div>
 				</div>
-	    	</fieldset>
-
+		    	</fieldset>
+	
 			<h5>Other options</h5>
-	    	<fieldset>
+		    	<fieldset>
 				<div class="control-group">
 	                <label class="control-label" for="ashuffle-filter">Auto-shuffle filter</label>
 	                <div class="controls">
@@ -346,7 +346,7 @@
 						</div>
 						<a class="info-toggle" data-cmd="info-extratag-display" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-extratag-display" class="help-block hide">
-	                    	Display additional metadata under the cover art on the Playback panel.<br>
+		                    	Display additional metadata under the cover art on the Playback panel.<br>
 	                    </span>
 	                </div>
 
@@ -371,9 +371,8 @@
 	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.<br>
 	                    </span>
 	                </div>					
-
 				</div>
-	    	</fieldset>
+		    	</fieldset>
 		</form>
 	</div>
 
@@ -391,11 +390,11 @@
 	</div>
 	<div class="modal-body" id="container-clockradio">
 		<form class="form-horizontal" action="" method="">
-	    	<fieldset>
+		    	<fieldset>
 				<div class="control-group">
 	                <label class="control-label" for="clockradio-mode">Mode</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select" style="width: 120px;">
+						<div class="btn-group bootstrap-select" style="width: 120px;">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="clockradio-mode" class="filter-option pull-left">
 									<span></span> <!-- selection from dropdown gets placed here -->
@@ -411,14 +410,14 @@
 							</div>
 						</div>
 	                </div>
-
+	
 					<div id="clockradio-ctl-grp1">
 		                <label class="control-label" for="clockradio-playname">Play</label>
 		                <div class="controls">
 		                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
 							<a class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-playname" class="help-block hide">
-		                    	Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
+			                    	Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
 		                    </span>
 		                </div>
 		                
@@ -459,7 +458,7 @@
 							</div>
 		                </div>	
 					</div>
-
+	
 					<div id="clockradio-ctl-grp2">
 		                <label class="control-label" for="clockradio-stoptime-hh">Stop time</label>
 		                <div class="controls">
@@ -517,16 +516,16 @@
 							<span class="control-aftertext">after stop</span>
 		                </div>
 					</div>
-
+	
 					<div id="clockradio-ctl-grp3">
 		                <label class="control-label" for="clockradio-volume">Volume</label>
 		                <div class="controls">
 		                    <input id="clockradio-volume" class="input-mini input-height-x" type="number" min="1" max="100" name="clockradio_volume" value="">
 		                </div>
 					</div>
-
+	
 	            </div>
-	    	</fieldset>
+		    	</fieldset>
 		</form>
 	</div>
 	<div class="modal-footer">
@@ -627,52 +626,16 @@
 	</div>
 </div>
 
-<!-- FRAMEWORK AND MOODE LIBS -->
-<?php
-versioned_script('js/jquery-1.8.2.min.js');
-versioned_script('js/jquery-ui-1.10.0.custom.min.js');
-versioned_script('js/jquery.countdown.js');
-versioned_script('js/jquery.scrollTo.min.js');
-versioned_script('js/bootstrap.min.js');
-versioned_script('js/bootstrap-select.min.js');
-
-versioned_script('js/jquery.adaptive-backgrounds.js');
-versioned_script('js/notify.js');
-versioned_script('js/playerlib.js');
-versioned_script('js/links.js');
-versioned_script('js/jquery.touchSwipe.min.js');
-versioned_script('js/jquery.lazyload.js');
-versioned_script('js/jquery.md5.js');
-?>
-
-<!-- LIBS FOR PANELS OR CONFIGS -->
-<?php
-if ($section == 'index') {
-	versioned_script('js/jquery.knob.js');
-	versioned_script('js/bootstrap-contextmenu.js');
-	versioned_script('js/jquery.pnotify.min.js');
-	versioned_script('js/scripts-panels.js');
-}
-else {
-	versioned_script('js/custom_checkbox_and_radio.js');
-	versioned_script('js/custom_radio.js');
-	versioned_script('js/jquery.tagsinput.js');
-	versioned_script('js/jquery.placeholder.js');
-	versioned_script('js/i18n/_messages.en.js', 'text/javascript');
-	versioned_script('js/application.js');
-	versioned_script('js/jquery.pnotify.min.js');
-	versioned_script('js/scripts-configs.js');
-}
-?>
-
 <!-- DISPLAY MESSAGES -->
+<script src="js/jquery-1.8.2.min.js"></script>
+<script src="js/jquery-ui-1.10.0.custom.min.js"></script>
 <?php 
-if (isset($_SESSION['notify']) && $_SESSION['notify'] != '') {
-	ui_notify($_SESSION['notify']);
-	session_start();
-	$_SESSION['notify'] = '';
-	session_write_close();
-}
+	if (isset($_SESSION['notify']) && $_SESSION['notify'] != '') {
+		ui_notify($_SESSION['notify']);
+		session_start();
+		$_SESSION['notify'] = '';
+		session_write_close();
+	}
 ?>
 
 </body>

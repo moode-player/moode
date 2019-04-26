@@ -258,12 +258,12 @@ function engineMpd() {
 					// nop
 				}
 				// database update
-				else if (MPD.json['idle_timeout_event'] == 'changed: update') {
+				if (MPD.json['idle_timeout_event'] == 'changed: update') {
 					if (typeof(MPD.json['updating_db']) != 'undefined') {
-						$('.db-spinner').show();
+						$('.busy-spinner').show();
 					}
 					else {
-						$('.db-spinner').hide();
+						$('.busy-spinner').hide();
 					}
 				}
 				// render volume
@@ -357,10 +357,10 @@ function engineMpdLite() {
 				}
 				// database update
 				if (typeof(MPD.json['updating_db']) != 'undefined') {
-					$('.db-spinner').show();
+					$('.busy-spinner').show();
 				}
 				else {
-					$('.db-spinner').hide();
+					$('.busy-spinner').hide();
 				}
 
 				engineMpdLite();
@@ -420,6 +420,9 @@ function engineCmd() {
 			}
 			if (cmd[0] == 'scnactive1') {
 				screenSaver(cmd[0]);
+			}
+			if (cmd[0] == 'dbupd_done') {
+				$('.busy-spinner').hide();
 			}
 
 			engineCmd();
@@ -822,10 +825,10 @@ function renderUI() {
 
 	// database update
 	if (typeof(MPD.json['updating_db']) != 'undefined') {
-		$('.db-spinner').show();
+		$('.busy-spinner').show();
 	}
 	else {
-		$('.db-spinner').hide();
+		$('.busy-spinner').hide();
 	}
 }
 
@@ -971,7 +974,7 @@ function renderPlaylist() {
 // MPD commands for database, playlist, radio stations, saved playlists
 function mpdDbCmd(cmd, path) {
 	//console.log(cmd, path);
-	var cmds = ['add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'update'];
+	var cmds = ['add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'updmpddb'];
 	UI.dbCmd = cmd;
 
 	if (cmds.indexOf(cmd) != -1 ) {
@@ -1179,7 +1182,7 @@ function renderRadio(data, path) {
 	// start lazy load if on the radio panel
 	if ($('.radio-view-btn').hasClass('active')) {
 		$('img.lazy').lazyload({
-		    container: $('#database-radio')
+		    container: $('#radiocovers')
 		});		
 	}
 
@@ -1410,11 +1413,13 @@ function refreshTimeKnob() {
     delta = parseInt(MPD.json['time']) / 1000;
 
 	if (UI.mobile) {
-		$('#timetrack').val(initTime).trigger('change');
+		//$('#timetrack').val(initTime).trigger('change'); // ORIG
+		$('#timetrack').val(initTime * 10).trigger('change');
 	}
 	else {
-	    $('#time').val(initTime * 10).trigger('change');
-	    $('#playbar-timetrack').val(initTime).trigger('change');
+		$('#time').val(initTime * 10).trigger('change');
+		//$('#playbar-timetrack').val(initTime).trigger('change'); // ORIG
+		$('#playbar-timetrack').val(initTime * 10).trigger('change');
 	}
 
 	// radio station
@@ -2557,7 +2562,7 @@ $('#ra-toggle-view').click(function(e) {
 
 		setTimeout(function() {
 			$('img.lazy').lazyload({
-			    container: $('#database-radio')
+			    container: $('#radiocovers')
 			});
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);
@@ -2792,15 +2797,16 @@ $('.context-menu a').click(function(e) {
 			$('#pl-saveName').val('');
 		}
 	}        
-	else if ($(this).data('cmd') == 'update') {
-		mpdDbCmd('update', path);
-		notify('update', path);
+	else if ($(this).data('cmd') == 'updmpddb') {
+		mpdDbCmd('updmpddb', path);
+		notify('updmpddb', path);
 		libRendered = false;
 	}
+	/* DEPRECATE
 	else if ($(this).data('cmd') == 'updradio') {
-		mpdDbCmd('update', 'RADIO');
-		notify('update', 'RADIO');
-	}
+		mpdDbCmd('updmpddb', 'RADIO');
+		notify('updmpddb', 'RADIO');
+	}*/
 	else if ($(this).data('cmd') == 'delsavedpl') {
 		$('#savedpl-path').html(path);        	        
 		$('#deletesavedpl-modal').modal();
@@ -3589,9 +3595,9 @@ function btnbarfix(temp1,temp2) {
 		if (tempx > .4) {tempx = .4}
 	}
 	var colors = rgbaToRgb(.7 - tempx, temprgba, temprgb2);
-	var color2 = rgbaToRgb(.75 - tempx, temprgba, temprgb2);
+	var color2 = rgbaToRgb(.73 - tempx, temprgba, temprgb2);
 	var color3 = rgbaToRgb(.8 - tempx, temprgba, temprgb2);
-	blurrr == true ? tempback = '0.65' : tempback = themeOp;
+	blurrr == true ? tempback = '0.75' : tempback = themeOp; // was 0.65
 
 	if (getYIQ(temp1) > 127) {
 		var tempa = 'rgba(128,128,128,0.15)';
@@ -3902,6 +3908,8 @@ $("#coverart-url, #playback-switch").click(function(e){
 	$('#library-panel').addClass('active');
 	$('#playback-panel').removeClass('active');
 	$('#playback-switch').hide();
+$('html, body').animate({ scrollTop: 0 }, 100);
+
 
 	if (currentView == 'tag') {
 		$('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
@@ -3955,7 +3963,7 @@ $("#coverart-url, #playback-switch").click(function(e){
 
 		setTimeout(function() {
 			$('img.lazy').lazyload({
-			    container: $('#database-radio')
+			    container: $('#radiocovers')
 			});
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);

@@ -266,11 +266,12 @@ else{
 	$_audiophonics_q2m_hide = 'hide';
 }
 
+waitWorker(1);
+
 $tpl = "chp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

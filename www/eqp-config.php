@@ -129,11 +129,12 @@ for($i = 1; $i <= 4; $i++) {
 	$_select['band' . $i . '_gain'] = $params[3];
 }
 
+waitWorker(1);
+
 $tpl = "eqp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

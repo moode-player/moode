@@ -90,12 +90,12 @@ $_select['sw_8_cmd'] = $cfg_gpio['8']['command'];
 //$_select['debounce_value'] = $debounce_value;
 $_select['bounce_time'] = $cfg_gpio['99']['value'];
 
+waitWorker(1);
 
 $tpl = "gpio-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

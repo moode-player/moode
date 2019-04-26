@@ -83,6 +83,11 @@ jQuery(document).ready(function($){ 'use strict';
 		}
 	});
 
+	// display spinner when form submitted
+	$('.btn-submit').click(function() {
+		$('.busy-spinner').show();
+	});
+
 	// eq configs
 	$('#eqp-curve-name').change(function() {
 		//console.log('http://' + location.host + 'eqp-config.php?curve=' + $(this).val());

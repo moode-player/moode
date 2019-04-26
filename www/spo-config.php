@@ -60,11 +60,12 @@ $_select['volume_normalization'] .= "<option value=\"No\" " . (($cfg_spotify['vo
 // ormalization pregain
 $_select['normalization_pregain'] = $cfg_spotify['normalization_pregain'];
 
+waitWorker(1);
+
 $tpl = "spo-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
