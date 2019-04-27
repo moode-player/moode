@@ -1764,9 +1764,6 @@ function filterLib() {
 
 	// sort Genres, Artists, Albums
 	allGenres.sort();
-	allAlbumCovers.sort(function(a, b) {
-		return b.last_modified - a.last_modified;
-	});
 
 	try {
 		// natural ordering 
@@ -1777,6 +1774,10 @@ function filterLib() {
 
 		allAlbums.sort(function(a, b) {
 			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
+		});
+
+		allAlbumCovers.sort(function(a, b) {	
+			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));	
 		});
 	}
 	catch (e) {
@@ -1791,6 +1792,12 @@ function filterLib() {
 			a = removeArticles(a['album'].toLowerCase());
 			b = removeArticles(b['album'].toLowerCase());
 			return a > b ? 1 : (a < b ? -1 : 0);
+		});
+
+		allAlbumCovers.sort(function(a, b) {	
+			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();	
+			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();	
+			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));	
 		});
 	}
 	//console.log(allGenres);
