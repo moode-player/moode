@@ -33,7 +33,7 @@ else {
 	session_write_close();
 }
 
-$jobs = array('reboot', 'poweroff', 'updclockradio');
+$jobs = array('reboot', 'poweroff', 'updclockradio', 'updmpddb');
 $playqueue_cmds = array('add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall');
 
 if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
@@ -42,7 +42,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 else {
 	// these get sent to worker.php 
 	if (in_array($_GET['cmd'], $jobs)) {
-		if (submitJob($_GET['cmd'], '', '', '')) {
+		$queue_args = ($_GET['cmd'] == 'updmpddb' && isset($_POST['path']) && $_POST['path'] != '') ? $_POST['path'] : '';
+		if (submitJob($_GET['cmd'], $queue_args, '', '')) {
 			echo json_encode('job submitted');
 		}
 		else {
@@ -80,10 +81,10 @@ else {
 		// turn off auto-shuffle or random play when playqueue cmds submitted
 		if (in_array($_GET['cmd'], $playqueue_cmds)) {
 			if ($_SESSION['ashuffle'] == '1') {
+				playerSession('write', 'ashuffle', '0');
 				sysCmd('killall -s 9 ashuffle > /dev/null');
 				sendMpdCmd($sock, 'consume 0');
 				$resp = readMpdResp($sock);
-				playerSession('write', 'ashuffle', '0');
 			}
 			else {
 				sendMpdCmd($sock, 'random 0');
@@ -137,13 +138,15 @@ else {
 			case 'playlist':
 				echo json_encode(getPLInfo($sock));
 				break;
+
+			/* DEPRECATE
 			case 'update':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					clearLibCache();
 					sendMpdCmd($sock, 'update "' . html_entity_decode($_POST['path']) . '"');
 					echo json_encode(readMpdResp($sock));
 				}
-				break;
+				break;*/
 
 			// SQL DATA
 

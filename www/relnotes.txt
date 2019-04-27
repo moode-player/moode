@@ -11,6 +11,31 @@
 
 ########################################################
 //
+// 5.1 2019-04-22
+//
+########################################################
+
+Radio station updates
+
+- UPD: Roots Legacy Radio Dub UK & Reggae
+
+Updates
+
+- UPD: Performance improvement for page loading
+- UPD: Add "Update this folder" to Folder view context menu
+- UPD: Increase size of hit target on cover ellipsis
+- UPD: Increase opacity of certain UI elements
+- UPD: Display spinner icon when config is processing
+- UPD: Revert use of ArtistSort and AlbumSort tags
+- UPD: Adjust logic for Instant Play w/Auto-shuffle on
+- UPD: Setup guide (setup.txt)
+
+Bug fixes
+
+- FIX: Minor CSS/HTML bugs
+
+########################################################
+//
 // 5.0 2019-04-12
 //
 ########################################################

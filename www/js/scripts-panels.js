@@ -214,7 +214,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		setTimeout(function() {
 			$('img.lazy').lazyload({
-			    container: $('#database-radio')
+			    container: $('#radiocovers')
 			});
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);
@@ -275,7 +275,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		setTimeout(function() {
 			$('img.lazy').lazyload({
-			    container: $('#database-radio')
+			    container: $('#radiocovers')
 			});
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);
@@ -837,7 +837,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('#database-radio').scrollTo(0, 200);
 
 			$('img.lazy').lazyload({
-			    container: $('#database-radio')
+			    container: $('#radiocovers')
 			});		
 		}, 750);
 	});

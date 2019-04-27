@@ -78,24 +78,12 @@ function debugLog($msg, $mode) {
 	fclose($fh);
 }
 
-// Helper functions for html generation	(pcasto)
+// Helper functions for html generation (pcasto)
 function versioned_resource($file, $type='stylesheet') {
-	$resourcetag = getMoodeRel();
-	$version_indicator = '?v=';
-	$tagged_link = '<link href="' . $file . $version_indicator . $resourcetag . '" rel="' . $type .'">';
-	//workerLog($tagged_link);
-	echo $tagged_link . "\n";
+	echo '<link href="' . $file . '?v=' . $_SESSION['moode_release'] . '" rel="' . $type .'">' . "\n";
 }
 function versioned_script($file, $type='') {
-	$resourcetag = getMoodeRel();
-	$version_indicator = '?v=';
-	$tagged_src = '<script src="' . $file . $version_indicator . $resourcetag . '"';
-	if ($type != '' ) {
-		$tagged_src .= ' type="' . $type . '"';
-	}
-	$tagged_src .= '></script>';
-	//workerLog($tagged_src);
-	echo $tagged_src . "\n";
+	echo '<script src="' . $file . '?v=' . $_SESSION['moode_release'] . '"' . ($type != '' ? ' type="' . $type . '"' . ' defer></script>' : ' defer></script>') . "\n";
 }	
 
 // core mpd functions
@@ -363,6 +351,7 @@ function genLibrary($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
+
 		$songData = array(
 			'file' => $flatData['file'],
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
@@ -1543,12 +1532,14 @@ function ui_notify($notify) {
 	$script .= "icon: '',";
 	if (isset($notify['duration'])) {	
 		$script .= "delay: " . strval($notify['duration'] * 1000) . ",";
-	} else {
+	}
+	else {
 		$script .= "delay: '2000',";
 	}
 	$script .= "opacity: 1.0});";
 	$script .= "});";
 	$script .= "</script>";
+
 	echo $script;
 }
 

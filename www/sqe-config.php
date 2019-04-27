@@ -68,11 +68,12 @@ $_sl_select['audio_codecs'] = $cfg_sl['CODECS'];
 // other options
 $_sl_select['other_options'] = $cfg_sl['OTHEROPTIONS'];
 
+waitWorker(1);
+
 $tpl = "sqe-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1);
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

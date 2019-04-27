@@ -194,11 +194,12 @@ $_mpd_select['auto_channels'] .= "<option value=\"no\" " . (($mpdconf['auto_chan
 $_mpd_select['auto_format'] .= "<option value=\"yes\" " . (($mpdconf['auto_format'] == 'yes') ? "selected" : "") . " >Yes</option>\n";	
 $_mpd_select['auto_format'] .= "<option value=\"no\" " . (($mpdconf['auto_format'] == 'no') ? "selected" : "") . " >No</option>\n";	
 
+waitWorker(1, 'mpd-config');
+
 $tpl = "mpd-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php'); 
-waitWorker(1, 'mpd-config');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

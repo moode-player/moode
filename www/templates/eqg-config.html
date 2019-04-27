@@ -27,7 +27,7 @@
 
     <form class="form-horizontal" action="" method="post">
     	<legend class="legend-configs">
-			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
 			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
@@ -38,7 +38,7 @@
     
 		<fieldset>
 	    	<legend>Test &nbsp;
-				<button class="btn btn-primary btn-small" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
+				<button class="btn btn-primary btn-small btn-submit" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
 				<a class="info-toggle" data-cmd="info-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-play" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
 					Start playback using the currently selected Curve. The EQ must be turned on in Audio config to enable Play.<br>
@@ -92,7 +92,7 @@
 
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="rmcurve" value="1" $_disable_rm>Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="rmcurve" value="1" $_disable_rm>Yes</button>
 		</div>
 	</div>
 </form>
@@ -115,7 +115,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="newcurvename" value="1">Ok</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="newcurvename" value="1">Ok</button>
 		</div>
 	</div>
 </form>

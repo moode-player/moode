@@ -26,7 +26,7 @@
 
 	<form class="form-horizontal" method="post">
 	    <p style="margin-top:1.5em";>
-			<button class="btn btn-medium btn-primary" type="submit" name="checkfor_update" value="novalue">Check</button>&nbsp;for software update<br>
+			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="checkfor_update" value="novalue">Check</button>&nbsp;for software update<br>
 			$_available_upd
 			$_lastinstall_upd
 	    </p>
@@ -39,7 +39,7 @@
 					<select id="timezone" class="input-large" name="timezone">		
 						$_timezone[timezone]
 					</select>
-					<button class="btn btn-primary btn-small set-button" type="submit" name="update_time_zone" value="novalue" style="margin-left: 8px;">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_time_zone" value="novalue" style="margin-left: 8px;">Set</button>
 				</div>
 			</div>
 
@@ -47,7 +47,7 @@
                 <label class="control-label" for="hostname">Host name</label>
                 <div class="controls">
                     <input class="input-large" type="text" pattern="[A-Za-z0-9\-]{3,63}" id="hostname" name="hostname" value="$_select[hostname]" required>
-					<button class="btn btn-primary btn-small set-button" type="submit" name="update_host_name" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_host_name" value="novalue">Set</button>
 					<span class="help-block-configs help-block-margin">
 						Length 3-63 chars, alphanumeric and hyphen allowed.
 					</span>
@@ -60,7 +60,7 @@
                     <select id="keyboard" class="input-large" name="keyboard">
                         $_keyboard[keyboard]
                     </select>
-                    <button class="btn btn-primary btn-small set-button" type="submit" name="update_keyboard" value="novalue" style="margin-left: 8px;">Set</button>
+                    <button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_keyboard" value="novalue" style="margin-left: 8px;">Set</button>
                 </div>
             </div>   
 			
@@ -68,7 +68,7 @@
                 <label class="control-label" for="browsertitle">Browser title</label>
                 <div class="controls">
                     <input class="input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
-					<button class="btn btn-primary btn-small set-button" type="submit" name="update_browser_title" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_browser_title" value="novalue">Set</button>
                 </div>
             </div>				
 		</fieldset>
@@ -81,7 +81,7 @@
 					<select id="cpugov" class="input-large" name="cpugov">
 						$_select[cpugov]
 					</select>
-					<button class="btn btn-primary btn-small set-button" type="submit" name="update_cpugov" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_cpugov" value="novalue">Set</button>
 					<a class="info-toggle" data-cmd="info-cpugov" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-cpugov" class="help-block-configs help-block-margin hide">
 						<b>On-demand:</b> Dynamically scales cpu frequency based on demand.<br>
@@ -101,7 +101,7 @@
 							$_select[p3wifi0]
 						</div>
 						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-							<button class="btn btn-primary btn-small" type="submit" name="update_p3wifi" value="novalue">Set</button>
+							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_p3wifi" value="novalue">Set</button>
 							<a class="info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info-p3wifi" class="help-block-configs help-block-margin hide">
@@ -121,7 +121,7 @@
 							$_select[p3bt0]
 						</div>
 						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-							<button class="btn btn-primary btn-small" type="submit" name="update_p3bt" value="novalue">Set</button>
+							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_p3bt" value="novalue">Set</button>
 							<a class="info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info-p3bt" class="help-block-configs help-block-margin hide">
@@ -142,7 +142,7 @@
 						$_select[hdmiport0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small" type="submit" name="update_hdmiport" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_hdmiport" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-hdmiport" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-hdmiport" class="help-block-configs help-block-margin hide">
@@ -161,7 +161,7 @@
 						$_select[eth0chk0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small" type="submit" name="update_eth0chk" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span class="help-block-configs help-block-margin" style="margin-top: 0px; padding-top: 0px;">
@@ -185,7 +185,7 @@
 							$_select[maxusbcurrent0]
 						</div>
 						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-							<button class="btn btn-primary btn-small" type="submit" name="update_max_usb_current" value="novalue">Set</button>
+							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_max_usb_current" value="novalue">Set</button>
 							<a class="info-toggle" data-cmd="info-max-usb-current" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info-max-usb-current" class="help-block-configs help-block-margin hide">
@@ -206,7 +206,7 @@
 						$_select[uac2fix0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small" type="submit" name="update_uac2fix" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_uac2fix" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-uac2fix" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-uac2fix" class="help-block-configs help-block-margin hide">
@@ -226,7 +226,7 @@
 							$_select[eth_port_fix0]
 						</div>
 						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-							<button class="btn btn-primary btn-small" type="submit" name="update_eth_port_fix" value="novalue">Set</button>
+							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_eth_port_fix" value="novalue">Set</button>
 							<a class="info-toggle" data-cmd="info_eth_port_fix" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info_eth_port_fix" class="help-block-configs help-block-margin hide">
@@ -276,7 +276,7 @@
 					<select id="mpdtimeout" class="input-large" name="mpdtimeout">
 						$_select[mpdtimeout]
 					</select>
-					<button class="btn btn-primary btn-small set-button" type="submit" name="update_mpdtimeout" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdtimeout" value="novalue">Set</button>
 					<a class="info-toggle" data-cmd="info-mpdtimeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-mpdtimeout" class="help-block-configs help-block-margin hide">
 						This setting controls how often PHP times out its connection to MPD.<br>
@@ -300,7 +300,7 @@
 							$_select[localui0]
 						</div>
 						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-		                    <button class="btn btn-primary btn-small" type="submit" name="update_localui" value="novalue">Set</button>
+		                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
 							<a class="info-toggle" data-cmd="info-localui" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info-localui" class="help-block-configs help-block-margin hide">
@@ -319,7 +319,7 @@
 							$_select[touchscn0]
 						</div>
 						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-		                    <button class="btn btn-primary btn-small" type="submit" name="update_touchscn" value="novalue">Set</button>
+		                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_touchscn" value="novalue">Set</button>
 							<a class="info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info-touchscn" class="help-block-configs help-block-margin hide">
@@ -334,7 +334,7 @@
 						<select id="scnblank" class="input-large" name="scnblank">		
 							$_select[scnblank]
 						</select>
-						<button class="btn btn-primary btn-small" type="submit" name="update_scnblank" value="novalue" style="margin-left: 8px;">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_scnblank" value="novalue" style="margin-left: 8px;">Set</button>
 					</div>
 	            </div>  
 
@@ -342,7 +342,7 @@
 					<label class="control-label" for="scnbrightness">Brightness</label>
 					<div class="controls">
                     	<input class="input-mini" style="margin-right: 14px;"type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]">
-						<button class="btn btn-primary btn-small set-button" type="submit" name="update_scnbrightness" value="novalue" style="margin-left: 8px;">Set</button>
+						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_scnbrightness" value="novalue" style="margin-left: 8px;">Set</button>
 						<a class="info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-brightness" class="help-block-configs help-block-margin hide">
 							Backlight brightness for 7" Pi Touch. Values are 0 - 255.<br>
@@ -356,7 +356,7 @@
 						<select id="scnrotate" class="input-large" name="scnrotate">		
 							$_select[scnrotate]
 						</select>
-						<button class="btn btn-primary btn-small set-button" type="submit" name="update_scnrotate" value="novalue" style="margin-left: 8px;">Set</button>
+						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_scnrotate" value="novalue" style="margin-left: 8px;">Set</button>
 					</div>
 	            </div>
 
@@ -385,7 +385,7 @@
 						$_select[extmeta0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small" type="submit" name="update_extmeta" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_extmeta" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-extmeta" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-extmeta" class="help-block-configs help-block-margin hide">
@@ -406,7 +406,7 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<input class="input-large" type="text" id="lcdupscript" name="lcdupscript" value="$_select[lcdupscript]" style="width:117px;" placeholder="Python script">
-						<button class="btn btn-primary btn-small set-button" type="submit" name="update_lcdup" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span class="help-block-configs">
@@ -431,7 +431,7 @@
 							$_select[gpio_svc0]
 						</div>
 						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-							<button class="btn btn-primary btn-small" type="submit" name="update_gpio_svc" value="novalue">Set</button>
+							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_gpio_svc" value="novalue">Set</button>
 							<a class="info-toggle" data-cmd="info_gpio_svc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info_gpio_svc" class="help-block-configs help-block-margin hide">
@@ -454,7 +454,7 @@
 						$_select[shellinabox0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small" type="submit" name="update_shellinabox" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_shellinabox" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-shellinabox" class="help-block-configs help-block-margin hide">
@@ -512,7 +512,7 @@
 						$_select[debuglog0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small" type="submit" name="update_debuglog" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-debuglog" class="help-block-configs help-block-margin hide">
@@ -559,7 +559,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_expand_rootfs" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_expand_rootfs" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -576,7 +576,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_usbboot" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_usbboot" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -593,7 +593,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_clear_browser_cache" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_browser_cache" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -610,7 +610,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_clear_playhistory" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_playhistory" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -627,7 +627,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_clear_syslogs" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_syslogs" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -644,7 +644,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="update_compactdb" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="update_compactdb" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>

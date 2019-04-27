@@ -39,7 +39,7 @@
 			$_mounts
 
 			<p>
-				<button class="btn btn-medium btn-primary" type="submit" name="remount" value="novalue" $_remount_disable>Re-mount</button>&nbsp;All NAS sources
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="remount" value="novalue" $_remount_disable>Re-mount</button>&nbsp;All NAS sources
 				<span id="info-remount" class="help-block-configs help-block-margin">
 					Un-mount then re-mount all NAS sources.
                 </span>
@@ -48,10 +48,10 @@
 			<p></p>
 			<legend>MPD Database</legend>
 			<p>
-				<button class="btn btn-medium btn-primary" type="submit" name="updatempd" value="novalue">Update</button>&nbsp;MPD database
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="updatempd" value="novalue">Update</button>&nbsp;MPD database
 			</p>
 			<p>
-				<button class="btn btn-medium btn-primary" type="submit" name="rescanmpd" value="novalue">Re-gen</button>&nbsp;MPD database
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="rescanmpd" value="novalue">Re-gen</button>&nbsp;MPD database
 				<a class="info-toggle" data-cmd="info-regen-mpddb" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-regen-mpddb" class="help-block-configs help-block-margin hide">
 					Re-gen scans all files. Update only scans for files that have changed.
@@ -68,9 +68,9 @@
 				$_select[usb_auto_updatedb0]
 			</div>
 			<div style="display: inline-block; vertical-align: top; margin-top: 5px;">
-				<button class="btn btn-primary btn-small" type="submit" name="update_usb_auto_updatedb" value="novalue">Set</button>
+				<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_usb_auto_updatedb" value="novalue">Set</button>
 			</div>
-			<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em">
+			<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em;">
 				Automatically update MPD database on USB insert/remove.<br>
             </span>
 
@@ -79,16 +79,16 @@
 				<a href="lop-config.php"><button class="btn btn-medium btn-primary">Modify</button></a>&nbsp;Library display options
 			</p>
 			<p>
-				<button class="btn btn-medium btn-primary" type="submit" name="clrlibcache" value="novalue">Delete</button>&nbsp;Library tag cache
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="clrlibcache" value="novalue">Delete</button>&nbsp;Library tag cache
 				<span id="info-clrlibcache" class="help-block-configs help-block-margin">
 					The cache will be regenerated the next time the Library is opened.
                 </span>
 			</p>
 			<p>
-				<button class="btn btn-medium btn-primary" type="submit" name="updthmcache" value="novalue">Update</button>&nbsp;Album cover thumbnail cache
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="updthmcache" value="novalue">Update</button>&nbsp;Album cover thumbnail cache
 			</p>
 			<p>
-				<button class="btn btn-medium btn-primary" type="submit" name="regenthmcache" value="novalue">Re-gen</button>&nbsp;Album cover thumbnail cache
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="regenthmcache" value="novalue">Re-gen</button>&nbsp;Album cover thumbnail cache
 				<a class="info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-regen-thmcache" class="help-block-configs help-block-margin hide">
 					Re-gen deletes the cache and adds all covers afresh. Update only adds covers that are new or have changed.

@@ -26,7 +26,7 @@
 
 	<form class="form-horizontal" method="post">
 		<legend class="legend-configs">
-			<button class="btn btn-medium btn-primary" type="submit" name="save" value="1">Save</button>
+			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 			<a href="#net-config-defaults" data-toggle="modal"><button class="btn btn-medium btn-primary">Reset</button></button>
 			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
@@ -115,7 +115,7 @@
 					<select id="wlan0ssid" name="wlan0ssid" class="input-large">
 						$_wlan0ssid
 					</select>
-					<button class="btn btn-primary btn-small set-button" type="submit" name="scan" value="1">Scan</button>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="scan" value="1">Scan</button>
 					<a class="info-toggle" data-cmd="info-wlan0ssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0ssid" class="help-block-configs help-block-margin hide">
 						SCAN generates a list of available SSID's.<br>
@@ -255,7 +255,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="reset" value="1">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="reset" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -281,7 +281,7 @@
 		
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" type="submit" name="manualssid" value="1">Ok</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="manualssid" value="1">Ok</button>
 		</div>
 	</div>
 </form>

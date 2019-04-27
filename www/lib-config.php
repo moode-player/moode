@@ -32,7 +32,6 @@ if (false === ($sock = openMpdSock('localhost', 6600))) {
 }
 else {
 	playerSession('open', '' ,'');
-	//session_write_close();
 	$dbh = cfgdb_connect();
 }
 
@@ -212,6 +211,7 @@ session_write_close();
 
 // initiate db update if indicated after sourcecfg job completes
 waitWorker(1, 'lib-config');
+
 if ($initiateDBUpd == true) {
 	//workerLog('lib-config(): Job: updmpddb');
 	submitJob('updmpddb', '', '', '');

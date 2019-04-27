@@ -23,7 +23,6 @@
  *
  */
  
-//include('inc/playerlib.php');
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '', ''); 

@@ -6,7 +6,7 @@
 # moOde audio player. Additional help is provided within
 # the player via the (i) information buttons. 
 #
-# Updated: 2019-04-12
+# Updated: 2019-MM-DD
 #
 # (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -84,13 +84,9 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     f) Leave Volume control set to "Software"
     g) Verify Audio device is set to "I2S audio device" then SAVE
 
- 3. TIME ZONE AND AUDIO DEVICE DESCRIPTION 
+ 3. TIME ZONE
     a) Menu, Configure, System
     b) Select appropriate timezone then SET
-    c) Menu, Customize
-    d) Scroll down to Audio device description and select a device. The entry is for display on the 
-       Audio info screen. If a particular device is not listed then select "USB audio device". Note
-       that I2S devices are automatically populated.
 
  4. ADD SOURCE(S) CONTAINING MUSIC FILES
     - USB STORAGE DEVICES
@@ -201,7 +197,7 @@ apdpwd=moodeaudio
 
 [other]
 timezone=America/Detroit
-themename=Standard
+themename=Default
 accentcolor=Emerald
 
 ////////////////////////////////////////////////////////
