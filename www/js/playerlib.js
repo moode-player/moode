@@ -1350,21 +1350,17 @@ function updTimeSlider(mpdTime) {
 function refreshTimer(startFrom, stopTo, state) {	
 	var tick = 3; // call watchCountdown() every tick secs
 	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('destroy');
-    if (state == 'play' || state == 'pause') {
+	if (state == 'play' || state == 'pause') {
 		if (SESSION.json['timecountup'] == "1" || parseInt(MPD.json['time']) == 0) {
 			$('#countdown-display').countdown({since: -(startFrom), onTick: watchCountdown, tickInterval: tick, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({since: -(startFrom), compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-	    }
+		}
 		else {
 			$('#countdown-display').countdown({until: startFrom, onTick: watchCountdown, tickInterval: tick, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({until: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-	    }
-
-	    if (state == 'pause') {
-			$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('pause');
 		}
 		if (state == 'pause') {
-			$('#m-countdown').countdown('pause');
+			$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('pause');
 		}
 	}
 	else if (state == 'stop') {
@@ -1794,10 +1790,10 @@ function filterLib() {
 			return a > b ? 1 : (a < b ? -1 : 0);
 		});
 
-		allAlbumCovers.sort(function(a, b) {	
-			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();	
-			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();	
-			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));	
+		allAlbumCovers.sort(function(a, b) {
+			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
+			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
+			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
 		});
 	}
 	//console.log(allGenres);
@@ -1961,26 +1957,26 @@ var renderSongs = function(albumPos) {
 	var discNum = '';
 	var discDiv = '';
 	LIB.totalTime = 0;
-	
-	//  sort tracks and files
-	try {
-		// natural ordering
-		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-		allSongs.sort(function(a, b) {
-			return (collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
-		});
-	}			
-	catch (e) {
-		// fallback to default ordering
-		allSongs.sort(function(a, b) {
-			var x1 = a['disc'], x2 = b['disc'];
-			var x1 = a['tracknum'], x2 = b['tracknum'];
-			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-		});
-	}
 
 	if (LIB.albumClicked == true) { // only display tracks if album selected
 		LIB.albumClicked = false;
+
+		//  sort tracks and files
+		try {
+			// natural ordering
+			var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+			allSongs.sort(function(a, b) {
+				return (collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
+			});
+		}
+		catch (e) {
+			// fallback to default ordering
+			allSongs.sort(function(a, b) {
+				var x1 = a['disc'], x2 = b['disc'];
+				var x1 = a['tracknum'], x2 = b['tracknum'];
+				return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
+			});
+		}
 
 		for (i = 0; i < allSongs.length; i++) {
 			var songyear = allSongs[i].year ? allSongs[i].year.slice(0,4) : ' ';
