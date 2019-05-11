@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
@@ -669,6 +669,31 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#lib-artistname').click(function(e) {
 		$("#artistsList li .lib-entry:contains('" + $('#lib-artistname').text() + "')").click();
 		customScroll('artists', UI.libPos[2], 200);
+	});
+
+	// click on artist or station name in playback    
+	$('#currentalbum').click(function(e) {
+		// radio station
+		if (MPD.json['artist'] == 'Radio station') {
+			$('.database-radio li').each(function(index){ 
+				if ($(this).text().search(RADIO.json[MPD.json['file']]['name']) != -1) {
+					UI.radioPos = index + 1;
+				}
+			});
+			$('#playback-switch').click();
+			if (!$('.radio-view-btn').hasClass('active')) {
+				$('.radio-view-btn').click();
+			}
+		}
+		// song file
+		else {
+			$('#playback-switch').click();
+			$('.tag-view-btn').click();
+			setTimeout(function() {
+				$("#artistsList li .lib-entry:contains('" + MPD.json['artist'] + "')").click();
+				customScroll('artists', UI.libPos[2], 200);
+			}, 300);
+		}
 	});
 
 	// browse panel

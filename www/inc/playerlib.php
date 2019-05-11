@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
  
@@ -1150,7 +1150,7 @@ function sdbquery($querystr, $dbh) {
 }
 
 function updMpdConf($i2sdevice) {
-	$mpdcfg = sdbquery("SELECT param,value FROM cfg_mpd WHERE value!=''", cfgdb_connect());
+	$mpdcfg = sdbquery("SELECT param, value FROM cfg_mpd WHERE value!=''", cfgdb_connect());
 	$mpdver = substr($_SESSION['mpdver'], 0, 4);
 
 	$data .= "#########################################\n";
@@ -1185,8 +1185,9 @@ function updMpdConf($i2sdevice) {
 			case 'sox_multithreading':
 				$sox_multithreading = $cfg['value'];
 				break;
-			case 'replaygain_handler':
-				$replaygain_handler = $mpdver == '0.21' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+			case 'replay_gain_handler':
+				//$replay_gain_handler = $mpdver == '0.21' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+				$replay_gain_handler = $cfg['value'];
 				break;
 			case 'buffer_before_play':
 				$data .= $mpdver == '0.21' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
@@ -1205,10 +1206,11 @@ function updMpdConf($i2sdevice) {
 				break;
 			case 'period_time':
 				$period_time = $cfg['value'];
-				break;	
+				break;
 			// default param handling
 			default:
 				$data .= $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+				if ($cfg['param'] == 'replaygain') {$replaygain = $cfg['value'];}
 				break;
 		}
 	}
@@ -1232,12 +1234,13 @@ function updMpdConf($i2sdevice) {
 	$data .= "}\n\n";
 
 	// alsa local outputs
-	$names = array(
+	$names = array (
 		"name \"ALSA default\"\n" . "device \"hw:" . $device . ",0\"\n",
 		"name \"ALSA crossfeed\"\n" . "device \"crossfeed\"\n",
 		"name \"ALSA parametric eq\"\n" . "device \"eqfa4p\"\n",
 		"name \"ALSA graphic eq\"\n" . "device \"alsaequal\"\n",
-		"name \"ALSA polarity inversion\"\n" . "device \"invpolarity\"\n");
+		"name \"ALSA polarity inversion\"\n" . "device \"invpolarity\"\n"
+		);
 	foreach ($names as $name) {
 		$data .= "audio_output {\n";
 		$data .= "type \"alsa\"\n";
@@ -1245,12 +1248,14 @@ function updMpdConf($i2sdevice) {
 		$data .= "mixer_type \"" . $mixertype . "\"\n";
 		$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $device . "\"\n" . "mixer_index \"0\"\n" : '';
 		$data .= "dop \"" . $dop . "\"\n";
-		$data .= $replaygain_handler;
+		/* DEPRECATE because when hardware volume is present and replay_gain_handler = 'mixer', 0dB ALSA volume is output when track starts playing. Instead use MPD internal default (software).
+		$data .= $replaygain != 'off' ? "replay_gain_handler \"" . $replay_gain_handler . "\"\n" : '';*/
+		/* DEPRECATE because the explicit settings cause distortion on HDMI and On-board audio outputs. Instead use MPD internal defaults.
 		$data .= "auto_resample \"" . $auto_resample . "\"\n";
 		$data .= "auto_channels \"" . $auto_channels . "\"\n";
 		$data .= "auto_format \"" . $auto_format . "\"\n";
 		$data .= "buffer_time \"" . $buffer_time . "\"\n";
-		$data .= "period_time \"" . $period_time . "\"\n";
+		$data .= "period_time \"" . $period_time . "\"\n";*/
 		$data .= "}\n\n";
 	}
 
@@ -1260,12 +1265,14 @@ function updMpdConf($i2sdevice) {
 	$data .= "name \"ALSA bluetooth\"\n";
 	$data .= "device \"btstream\"\n";
 	$data .= "mixer_type \"software\"\n";
-	$data .= $replaygain_handler;
+	/* DEPRECATE
+	$data .= $replaygain != 'off' ? "replay_gain_handler \"software\"\n" : '';*/
+	/* DEPRECATE
 	$data .= "auto_resample \"" . $auto_resample . "\"\n";
 	$data .= "auto_channels \"" . $auto_channels . "\"\n";
 	$data .= "auto_format \"" . $auto_format . "\"\n";
 	$data .= "buffer_time \"" . $buffer_time . "\"\n";
-	$data .= "period_time \"" . $period_time . "\"\n";
+	$data .= "period_time \"" . $period_time . "\"\n";*/
 	$data .= "}\n\n";
 
 	// mpd httpd
@@ -2032,17 +2039,18 @@ function getHdwrRev() {
 		'0015' => 'Pi-1A+ 256/512MB',
 		'0021' => 'Pi-1A+ 512MB v1.1',
 		'0032' => 'Pi-1B+ 512MB v1.2',
+		'0092' => 'Pi-Zero 512MB v1.2',
+		'0093' => 'Pi-Zero 512MB v1.3',
+		'00c1' => 'Pi-Zero W 512MB v1.1',
 		'1040' => 'Pi-2B 1GB v1.0',
 		'1041' => 'Pi-2B 1GB v1.1',
 		'1041' => 'Pi-2B 1GB v1.1',
 		'2042' => 'Pi-2B 1GB v1.2',
 		'2082' => 'Pi-3B 1GB v1.2',
-		'20d3' => 'Pi-3B+ 1GB v1.3',
 		'20a0' => 'Pi-CM3 1GB v1.0',
+		'20d3' => 'Pi-3B+ 1GB v1.3',
 		'20e0' => 'Pi-3A+ 512 MB v1.0',
-		'00c1' => 'Pi-Zero W 512MB v1.1',
-		'0092' => 'Pi-Zero 512MB v1.2',
-		'0093' => 'Pi-Zero 512MB v1.3'
+		'2100' => 'Pi-CM3+ 1GB'
 	); 
 
 	//$revnum = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,length($3)-3)}' . "'" . ' /proc/cpuinfo');
@@ -2086,22 +2094,23 @@ old style revision codes
 new style revision codes
 90 0021	A+		1.1	512 MB	Sony UK
 90 0032	B+		1.2	512 MB	Sony UK
-90 0092	Zero	1.2	512 MB	Sony UK
-90 0093	Zero	1.3	512 MB	Sony UK
+90 0092	Zero	1.2	512 MB		Sony UK
+90 0093	Zero	1.3	512 MB		Sony UK
 90 00c1	Zero W	1.1	512 MB	Sony UK
-92 0093	Zero	1.3	512 MB	Embest
-a0 1040	2B		1.0	1 GB	Sony UK
-a0 1041	2B		1.1	1 GB	Sony UK
-a0 2082	3B		1.2	1 GB	Sony UK
-a0 20d3	3B+		1.3	1 GB	Sony UK
-a0 20a0	CM3		1.0	1 GB	Sony UK
-a2 1041	2B		1.1	1 GB	Embest
-a2 2042	2B		1.2	1 GB	Embest (with BCM2837)
-a2 2082	3B		1.2	1 GB	Embest
-a3 2082	3B		1.2	1 GB	Sony Japan
-a5 2082	3B		1.2	1 GB	Stadium
-a0 20d3	3B+		1.3	1 GB	Sony UK
 90 20e0	3A+		1.0	512 MB	Sony UK
+92 0093	Zero	1.3	512 MB		Embest
+a0 1040	2B		1.0	1 GB		Sony UK
+a0 1041	2B		1.1	1 GB		Sony UK
+a0 2082	3B		1.2	1 GB		Sony UK
+a0 20a0	CM3		1.0	1 GB		Sony UK
+a0 20d3	3B+		1.3	1 GB		Sony UK
+a0 2100 CM3+		1.0	1 GB		Sony UK
+a2 1041	2B		1.1	1 GB		Embest
+a2 2042	2B		1.2	1 GB		Embest (with BCM2837)
+a2 2082	3B		1.2	1 GB		Embest
+a2 20a0 CM3		1.0	1 GB		Embest
+a3 2082	3B		1.2	1 GB		Sony Japan
+a5 2082	3B		1.2	1 GB		Stadium
 */
 
 // config audio scrobbler

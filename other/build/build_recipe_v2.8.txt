@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.8, 2019-04-12
+# Build Recipe v2.8, 2019-05-07
 #
-# moOde 5.0 2019-04-12
+# moOde 5.2 2019-05-07
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
@@ -148,8 +148,8 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/rel-stretch-r50.zip
-sudo unzip ./rel-stretch-r50.zip
+wget http://moodeaudio.org/downloads/prod/rel-stretch-r52.zip
+sudo unzip ./rel-stretch-r52.zip
 
 5. Expand the root partition to 3GB.
 
@@ -198,13 +198,12 @@ samba smbclient udisks-glue ntfs-3g exfat-fuse git inotify-tools libav-tools ava
 python3-setuptools libmediainfo0v5 libmms0 libtinyxml2-4 libzen0v5 libmediainfo-dev libzen-dev
 
 # meson
-sudo cp ./rel-stretch/other/mpd/build-tools/meson-0.48.1.tar.gz ./
-sudo tar xfz meson-0.48.1.tar.gz
-cd meson-0.48.1
+sudo cp ./rel-stretch/other/mpd/build-tools/meson-0.50.1.tar.gz ./
+sudo tar xfz meson-0.50.1.tar.gz
+cd meson-0.50.1
 sudo python3 setup.py install
 cd ~
-sudo rm -rf meson-0.48.1
-sudo rm -f meson-0.48.1.tar.gz
+sudo rm -rf meson-0.50.1*
 
 # mediainfo
 sudo cp ./rel-stretch/other/mediainfo/mediainfo-18.12 /usr/local/bin/mediainfo
@@ -240,7 +239,7 @@ sudo autoreconf --install
 sudo ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --enable-library
 sudo make
 sudo make install
-cd ~
+cd ..
 sudo rm -rf ./bluez-5.50*
 	
 # Delete symlink and bin for old bluetoothd
@@ -261,7 +260,7 @@ cd build
 sudo ../configure --disable-hcitop --with-alsaplugindir=/usr/lib/arm-linux-gnueabihf/alsa-lib
 sudo make
 sudo make install
-cd ~
+cd ../..
 sudo rm -rf bluez-alsa-master*
 
 3. Services are started by moOde Worker so lets disable them here.
@@ -345,15 +344,15 @@ libboost-dev \
 libicu-dev \
 libglib2.0-dev
 
-3. Download MPD 0.20.20 sources and prep for compile.
+3. Download MPD 0.20.23 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./rel-stretch/other/mpd/mpd-0.20.20 /usr/local/bin/mpd
+sudo cp ./rel-stretch/other/mpd/mpd-0.20.23 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.20/mpd-0.20.20.tar.xz
-sudo tar xf mpd-0.20.20.tar.xz
-cd mpd-0.20.20
+sudo wget http://www.musicpd.org/download/mpd/0.20/mpd-0.20.23.tar.xz
+sudo tar xf mpd-0.20.23.tar.xz
+cd mpd-0.20.23
 sudo sh autogen.sh
 
 4. Configure compile options.
@@ -376,7 +375,7 @@ sudo make
 sudo make install
 sudo strip --strip-unneeded /usr/local/bin/mpd
 cd ~
-sudo rm -rf ./mpd-0.20.20*
+sudo rm -rf ./mpd-0.20.23*
 
 sudo apt-get clean
 sudo apt-get -y autoremove
@@ -426,15 +425,15 @@ libboost-dev \
 libicu-dev \
 libglib2.0-dev
 
-3. Download MPD 0.21.6 sources and prep for compile.
+3. Download MPD 0.21.8 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./rel-stretch/other/mpd/mpd-0.21.6 /usr/local/bin/mpd
+sudo cp ./rel-stretch/other/mpd/mpd-0.21.8 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.6.tar.xz
-sudo tar xf mpd-0.21.6.tar.xz
-cd mpd-0.21.6
+sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.8.tar.xz
+sudo tar xf mpd-0.21.8.tar.xz
+cd mpd-0.21.8
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
@@ -490,7 +489,7 @@ output/release
 sudo ninja -C output/release
 sudo ninja -C output/release install
 cd ~
-sudo rm -rf ./mpd-0.21.6*
+sudo rm -rf ./mpd-0.21.8*
 
 sudo apt-get clean
 sudo apt-get -y autoremove
@@ -582,6 +581,7 @@ sudo chmod 0755 /home/pi/*.sh
 sudo chmod 0755 /home/pi/*.php
 sudo chmod 0755 /var/www/command/*
 
+sudo sqlite3 /var/local/www/db/moode-sqlite3.db "CREATE TRIGGER ro_columns BEFORE UPDATE OF param, value, [action] ON cfg_hash FOR EACH ROW BEGIN SELECT RAISE(ABORT, 'read only'); END;"
 sudo sqlite3 /var/local/www/db/moode-sqlite3.db "update cfg_system set value='Emerald' where param='accent_color'"
 
 3. Permissions for service files
@@ -619,10 +619,11 @@ sudo systemctl disable squeezelite
 sudo chmod 0644 /lib/systemd/system/upmpdcli.service
 sudo systemctl disable upmpdcli.service
 
-5. Reset dir permissions for var local
+5. Reset permissions for var and usr local
 sudo chmod -R 0755 /var/local/www
 sudo chmod -R 0777 /var/local/www/db
 sudo chmod -R ug-s /var/local/www
+sudo chmod -R 0755 /usr/local/bin
 
 6. Initial permissions for certain files. These also get set during moOde Worker startup.
 
@@ -678,11 +679,15 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-
+# kernel ver 4.19.40
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 6cb1da772a8c56f44591bec904046b15f1126949
 # kernel ver 4.19.34
 echo "y" | sudo PRUNE_MODULES=1 rpi-update 99c274691c07480762dcda91a0ebfe3c4f519307
 # Fix for missing 4.19.y regulatory.db files
 sudo cp ./rel-stretch/other/firmware/regulatory.db* /lib/firmware
+
+# kernel ver 4.14.98
+echo "y" | sudo PRUNE_MODULES=1 rpi-update a08ece3d48c3c40bf1b501772af9933249c11c5b
 
 # cleanup
 sudo rm -rf /lib/modules.bak
@@ -818,9 +823,10 @@ sudo chmod 0755 /usr/local/etc/mpdasrc
 sudo apt-get -y install autoconf libtool libdaemon-dev libasound2-dev libpopt-dev libconfig-dev \
 avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
 
-sudo cp ./rel-stretch/other/shairport-sync/shairport-sync-3.3.0-rc2-ff9c613.zip ./
-sudo unzip ./shairport-sync-3.3.0-rc2-ff9c613.zip
-cd ./shairport-sync-3.3RC2
+sudo cp ./rel-stretch/other/shairport-sync/shairport-sync-3.3.0-rc6-0c65236.zip ./
+sudo unzip ./shairport-sync-3.3.0-rc6-0c65236.zip
+cd ./shairport-sync-0c6523636cd8cef950a33381621f2cbe9b7dd4de
+
 
 sudo autoreconf -i -f
 sudo ./configure --with-alsa --with-avahi --with-ssl=openssl --with-soxr --with-metadata --with-stdout --with-systemd --with-dbus-interface --sysconfdir=/etc
@@ -1003,7 +1009,7 @@ d. Optionally, enter url chrome://extensions and install the xontab virtual keyb
 
 cd ~
 wget https://github.com/allocom/piano-firmware/archive/master.zip
-sudo unzip master.zip 
+sudo unzip -q master.zip 
 sudo rm ./master.zip
 sudo cp -r ./piano-firmware-master/lib/firmware/allo /lib/firmware
 sudo rm -rf ./piano-firmware-master

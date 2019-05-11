@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
 -->	
@@ -159,18 +159,19 @@
                 </div>
             </div>
 
-			<div class="control-group $_hide_020_params">
+			<!-- DEPRECATE -->
+			<!--div class="control-group">
                 <label class="control-label" for="replaygain-handler">ReplayGain handler</label>
                 <div class="controls">
-					<select id="replaygain-handler" name="conf[replaygain_handler]" class="input-large">
-						$_mpd_select[replaygain_handler]
+					<select id="replay-gain-handler" name="conf[replay_gain_handler]" class="input-large">
+						$_mpd_select[replay_gain_handler]
 					</select>
-					<a class="info-toggle" data-cmd="info-replaygain-handler" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-replaygain-handler" class="help-block-configs help-block-margin hide">
+					<a class="info-toggle" data-cmd="info-replay-gain-handler" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-replay-gain-handler" class="help-block-configs help-block-margin hide">
 						Specifies how replay gain is applied. The default is "software" which uses an internal software volume control. The setting "mixer" uses the configured (hardware) volume control.
 					</span>
                 </div>
-            </div>
+            </div-->
 
 			<div class="control-group">
                 <label class="control-label" for="volume-normalization">Volume normalization</label>
@@ -181,7 +182,7 @@
 					<a class="info-toggle" data-cmd="info-volume-normalization" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-volume-normalization" class="help-block-configs help-block-margin hide">
 						Adjust the volume of songs as they play so that they sound as though they are of equal loudness.<br>
-						- <b>NOTE:&nbsp;</b>output bit depth will be converted to 16 bit.
+						NOTE: output bit depth will be converted to 16 bit.
 					</span>
                 </div>
             </div>
@@ -198,7 +199,7 @@
                 </div>
             </div>
 
-			<div class="control-group $_hide_020_params">
+			<div class="control-group $_hide_020_params">  <!--r45b for 0.20 only -->
                 <label class="control-label" for="buffer-before-play">Buffer fill before play</label>
                 <div class="controls">
 					<select id="buffer-before-play" name="conf[buffer_before_play]" class="input-large">
@@ -209,9 +210,10 @@
                     	Default fill is 10%, min/max fill is 10%/30%.
                     </span>
                 </div>
-            </div> <!--r45b for 0.20 only -->
+            </div>
 
-			<div class="control-group">
+			<!-- DEPRECATE -->
+			<!--div class="control-group">
                 <label class="control-label" for="buffer-time">Hardware buffer time</label>
                 <div class="controls">
 					<select id="buffer-time" name="conf[buffer_time]" class="input-large">
@@ -278,7 +280,7 @@
 	                    WARNING: Setting this to "No" is not compatible with Crossfeed, Parametric EQ or Graphic EQ.
 					</span>
                 </div>
-            </div>
+            </div-->
 		</fieldset>		
     </form>
 </div>

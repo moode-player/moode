@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-04-12 TC moOde 4.5
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
@@ -86,7 +86,7 @@ html {background-color:inherit;}
 #extratags {font-size:1rem;color:var(--textvariant);padding-top:0;text-align:center;display:block;}
 #currentsong {padding-top:1.3rem;font-size:1.35em;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
 .tab-content.visacc #currentsong, .tab-content.visacc #currentsong a {color:var(--adapttext);}
-#currentalbum {font-size:1.15em;padding-top:1.3rem;/*color:var(--textvariant);*/}
+#currentalbum {font-size:1.15em;padding-top:1.3rem;cursor:pointer;}
 .tab-content.visacc #currentalbum {color:var(--textvariant);}
 #playlist-position, #format-bitrate {color:inherit;opacity:.55;}
 .container-playback {padding:0px;color:inherit;margin-top:env(safe-area-inset-top);}
@@ -206,7 +206,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .icon-root {color:inherit;}
 .playlist .pl-action {float:right;padding:0px;text-align:center;}
 .database .db-action {float:left;width:1.875em;padding:0;position:relative;}
-.playlist .pl-action a, .playlist .db-action a {position:relative;font-weight:normal;text-decoration:none;z-index:3;font-size:inherit;line-height:.625em;padding:.318em 1em;width:2.2em;}
+.playlist .pl-action, .playlist .db-action a {position:relative;font-weight:normal;text-decoration:none;z-index:3;font-size:inherit;line-height:.625em;padding:.318em 1em;width:2.2em;}
 #db-search-results {font-style:italic;float:left;padding:1em .5em 0em .5em;font-size:1em;display:none;}
 #pl-filter-results, #lib-album-filter-results, #ra-filter-results {font-style:italic;float:left;font-size:1em;position:relative;top:50%;transform:translate(0, -50%);}
 #pl-filter-results i {color:#34495E;}
@@ -425,7 +425,6 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 .alphabits ul {display:table;height:100%;margin:0 !important;border-spacing:.2em;}
 .alphabits ul li {display:table-row !important;font-size:.7em;text-align:center !important;text-transform:uppercase;opacity:.75;line-height:normal;}
 /* playback ellipsis context menu */
-#context-menu-playback .dropdown-menu > li > a {/*float:left;*/}
 #context-menu-playback .dropdown-menu {min-width:12rem;}
 #menu-check-consume, #menu-check-repeat, #menu-check-single {display:none;float:right;color:var(--adapttext);line-height:2.75em;position:absolute;right:.5em;}
 /* playbar */

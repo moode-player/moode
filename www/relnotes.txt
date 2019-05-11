@@ -11,6 +11,40 @@
 
 ########################################################
 //
+// 5.2 2019-05-07
+//
+########################################################
+
+New features
+
+- NEW: Artist/Station filter (see Quick help)
+
+Radio stations
+
+- UPD: KUVO HD2
+
+Updates
+
+- UPD: Further performance improvements for page loading 
+- UPD: Performance improvement for Playlilst
+- UPD: Bump to MPD 0.20.23 (Default) and 0.21.8 (Testing)
+- UPD: Bump to shairport-sync-3.3.0-rc6-0c65236
+- UPD: Bump to Linux kernel 4.19.40
+- UPD: Revert MPD buffer time/period, ALSA auto-conv to internal defaults
+- UPD: Deprecate MPD replay gain handler setting, issue with 'mixer' option
+- UPD: Add hardware revision codes for CM3/3+
+
+Bug fixes
+
+- FIX: Remove curve not working in Graphic and Parameteric EQ
+- FIX: Input pattern missing from eq-p "Enter new curve name"
+- FIX: Playlist on certain mobile devices not scrolling when < 5 items
+- FIX: Firefox CORS error caused by getCSSRule() in playerlib
+- FIX: Missing member var declarations in Zend application.php
+- FIX: Radio station names with single quotes not being escaped
+
+########################################################
+//
 // 5.1 2019-04-22
 //
 ########################################################
