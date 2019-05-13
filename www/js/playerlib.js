@@ -875,6 +875,9 @@ function renderPlaylist() {
 	$.getJSON('command/moode.php?cmd=playlist', function(data) {
 		var output = '';
 
+		//console.log(MPD.json['playlist'], UI.plModified)
+		UI.plModified = MPD.json['playlist'];
+
 		// save for use in delete/move modals
 		UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
 
@@ -886,10 +889,10 @@ function renderPlaylist() {
 
 				// item active state
 				if (i == parseInt(MPD.json['song'])) {
-					output += '<li id="pl-' + (i + 1) + '" class="active clearfix">';
+					output += '<li id="pl-' + (i + 1) + '" class="active">';
 				}
 				else {
-					output += '<li id="pl-' + (i + 1) + '" class="clearfix">';
+					output += '<li id="pl-' + (i + 1) + '">';
 				}
 				// action menu
 				output += '<div class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '<em class="songtime"></em>' : ' <em class="songtime">' + formatSongTime(data[i].Time) + '</em>') + '<br><i class="fas fa-ellipsis-h"></i></div>';
@@ -1851,7 +1854,7 @@ var renderGenres = function() {
 	var output = '';
 
 	for (var i = 0; i < allGenres.length; i++) {
-		output += '<li class="clearfix"><div class="lib-entry'
+		output += '<li><div class="lib-entry'
 			+ (LIB.filters.genres.indexOf(allGenres[i]) >= 0 ? ' active' : '')
 			+ '">' + allGenres[i] + '</div></li>';
 	}
@@ -1869,7 +1872,7 @@ var renderArtists = function() {
 
 	for (var i = 0; i < allArtists.length; i++) {
 		// add || allArtists.length = 1 to automatically highlight if only 1 artist in list
-		output += '<li class="clearfix"><div class="lib-entry'
+		output += '<li><div class="lib-entry'
 			+ ((LIB.filters.artists.indexOf(allArtists[i]) >= 0 || allArtists.length == 1) ? ' active' : '')
 			+ '">' + allArtists[i] + '</div></li>';
 	}
@@ -1904,18 +1907,18 @@ var renderAlbums = function() {
 		}
 
 		if (UI.tagViewCovers) {
-			output += '<li class="clearfix"><div class="lib-entry'
+			output += '<li><div class="lib-entry'
 				+ tmp
 				+ '">' + '<img class="lazy" data-original="' + allAlbums[i].imgurl + '">' + '<div class="albumsList-album-name">' + allAlbums[i].album + '</div>' + '<span>' + allAlbums[i].artist + '</span></div></li>';
-			output2 += '<li class="clearfix"><div class="lib-entry'
+			output2 += '<li><div class="lib-entry'
 				+ tmp
 				+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + allAlbumCovers[i].artist + '</span></div></li>';
 		}
 		else {
-			output += '<li class="clearfix"><div class="lib-entry'
+			output += '<li><div class="lib-entry'
 				+ tmp
 				+ '">' + allAlbums[i].album + '<span>' + allAlbums[i].artist + '</span></div></li>';
-			output2 += '<li class="clearfix"><div class="lib-entry'
+			output2 += '<li><div class="lib-entry'
 				+ tmp
 				+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + allAlbumCovers[i].artist + '</span></div></li>';
 		}
