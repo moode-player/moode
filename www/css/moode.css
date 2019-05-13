@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-04-12 TC moOde 4.5
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
@@ -190,7 +190,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#timeline {display:block;}
 	#mobile-time {display:block;}
 	.btn btn-cmd btn-toggle {font-size:.75em;}
-	img.coverart {width:50vh;height:auto;max-width:83vw;border:none;}
+	img.coverart {width:50vh;height:auto;max-width:90vw;max-height:90vw;border:none;}
 	img.libart {width:90%;}
 	.modal-sm2 {min-width:80%;}
 	.form-horizontal .controls {margin-left:0;}
@@ -208,7 +208,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#menu-settings {font-size:1.65rem;padding:0 .5em;}
 	#menu-settings i {font-size:1rem;}
 	.playlist span {margin-left:calc(3.5rem + 1vmin);}
-	.playlist {padding:0 0 8rem 0;}
+	.playlist {padding:0 0 8rem 0;min-height:33vh;}
 	.playlist li, .playlist .active {padding-left:.5em;}
 	.playlist li:before {font-size:unset;}
 	#lib-albumcover {left:0;}
@@ -376,13 +376,16 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#index-radio ul li:nth-child(4n+0), #index-browse ul li:nth-child(4n+0), #index-albumcovers ul li:nth-child(4n+0) {display:block !important;}
 }
 
-/* app stuff for Max */
+/* iPhone X */
+@media (width: 375px) and (height:812px) {
+	.playlist {padding:0 0 8rem 0;min-height:35vh;}
+}
+
+/* iPhone X Max */
 @media (width: 414px) and (height:818px) {
 	#menu-top {padding-top:calc(env(safe-area-inset-top) - .5em);}
 	.viewswitch {top:calc(env(safe-area-inset-top) - .5em);}
 	.btnlist.btnlist-top.btnlist-top-pl, .btnlist.btnlist-top.btnlist-top-lib {top:calc(env(safe-area-inset-top) - .25em);}
-	img.coverart {max-width:90vw;max-height:90vw;}
-	.playlist {padding:0 0 11rem 0;}
 	#songsList {padding-bottom:calc(5.5em + env(safe-area-inset-bottom));}
 	.ui-pnotify {top: calc(env(safe-area-inset-top));right: calc(env(safe-area-inset-right) + 1em);}
 	#playbar-cover {margin-left:.5em;border-radius:.1em .1em .1em 50%;}
@@ -399,7 +402,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#config-tabs {top:calc(env(safe-area-inset-top) - .5rem);}
 	.database-radiolist .db-entry, .database-radiolist .cover-menu {font-size:1.2em;}
 }
-
 
 @media (width: 896px) and (height:414px) {
 	.span5 {margin-left:calc(env(safe-area-inset-left) - 2rem);}

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
@@ -409,8 +409,8 @@ else {
 // MPD
 
 // mpd version
-$_select['mpdver'] .= "<option value=\"0.20.20\" " . (($_SESSION['mpdver'] == '0.20.20') ? "selected" : "") . ">0.20.20 (Default)</option>\n";
-$_select['mpdver'] .= "<option value=\"0.21.6\" " . (($_SESSION['mpdver'] == '0.21.6') ? "selected" : "") . ">0.21.6 (Testing)</option>\n";
+$_select['mpdver'] .= "<option value=\"0.20.23\" " . (($_SESSION['mpdver'] == '0.20.23') ? "selected" : "") . ">0.20.23 (Default)</option>\n";
+$_select['mpdver'] .= "<option value=\"0.21.8\" " . (($_SESSION['mpdver'] == '0.21.8') ? "selected" : "") . ">0.21.8 (Testing)</option>\n";
 
 // auto-shuffle
 $_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";

@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
@@ -133,13 +133,6 @@ $_SESSION['pkgdate'] = $lastinstall['pkgdate'];
 $result = sysCmd('cat /etc/debian_version');
 $_SESSION['raspbianver'] = $result[0];
 $_SESSION['moode_release'] = getMoodeRel();
-
-// exit if running an unsupported hdwrrev
-if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-CM3') {
-	workerLog('worker: Unsupported hardware platform (' . $_SESSION['hdwrrev'] . ')');
-	workerLog('worker: Exited');
-	exit;
-}
 
 // log platform data 
 workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // X.Y yyyy-mm-dd ex: 2.6 2016-06-07

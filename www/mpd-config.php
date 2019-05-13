@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
  
@@ -150,11 +150,11 @@ $_mpd_select['replaygain'] .= "<option value=\"track\" " . (($mpdconf['replaygai
 // replaygain preamp, r45b
 $_mpd_select['replaygain_preamp'] = $mpdconf['replaygain_preamp'];
 
-// replaygain handler, r45d for 0.20 only
-if ($_hide_020_params == '') {
-	$_mpd_select['replaygain_handler'] .= "<option value=\"software\" " . (($mpdconf['replaygain_handler'] == 'software') ? "selected" : "") . " >Software</option>\n";	
-	$_mpd_select['replaygain_handler'] .= "<option value=\"mixer\" " . (($mpdconf['replaygain_handler'] == 'mixer') ? "selected" : "") . " >Mixer</option>\n";	
-}
+/* DEPRECATE
+// replaygain handler
+$_mpd_select['replay_gain_handler'] .= "<option value=\"software\" " . (($mpdconf['replay_gain_handler'] == 'software') ? "selected" : "") . " >Software</option>\n";	
+$_mpd_select['replay_gain_handler'] .= "<option value=\"mixer\" " . (($mpdconf['replay_gain_handler'] == 'mixer') ? "selected" : "") . " >Mixer</option>\n";	
+*/
 
 // volume normalization
 $_mpd_select['volume_normalization'] .= "<option value=\"yes\" " . (($mpdconf['volume_normalization'] == 'yes') ? "selected" : "") . " >Yes</option>\n";	
@@ -171,6 +171,7 @@ if ($_hide_020_params == '') {
 	$_mpd_select['buffer_before_play'] .= "<option value=\"30%\" " . (($mpdconf['buffer_before_play'] == '30%') ? "selected" : "") . " >30%</option>\n";	
 }
 
+/* DEPRECATE
 // hardware buffer time, r45b
 $_mpd_select['buffer_time'] .= "<option value=\"500000\" " . (($mpdconf['buffer_time'] == '500000') ? "selected" : "") . " >0.5 secs (Default)</option>\n";	
 $_mpd_select['buffer_time'] .= "<option value=\"750000\" " . (($mpdconf['buffer_time'] == '750000') ? "selected" : "") . " >0.75 secs</option>\n";	
@@ -181,7 +182,7 @@ $_mpd_select['period_time'] .= "<option value=\"256000000\" " . (($mpdconf['peri
 $_mpd_select['period_time'] .= "<option value=\"1024000000\" " . (($mpdconf['period_time'] == '1024000000') ? "selected" : "") . " >4X</option>\n";	
 $_mpd_select['period_time'] .= "<option value=\"512000000\" " . (($mpdconf['period_time'] == '512000000') ? "selected" : "") . " >2X</option>\n";	
 $_mpd_select['period_time'] .= "<option value=\"64000000\" " . (($mpdconf['period_time'] == '64000000') ? "selected" : "") . " >0.25X</option>\n";	
-$_mpd_select['period_time'] .= "<option value=\"640000\" " . (($mpdconf['period_time'] == '64000000') ? "selected" : "") . " >0.0025X</option>\n";	
+$_mpd_select['period_time'] .= "<option value=\"640000\" " . (($mpdconf['period_time'] == '640000') ? "selected" : "") . " >0.0025X</option>\n";	
 $_mpd_select['period_time'] .= "<option value=\"64000\" " . (($mpdconf['period_time'] == '64000') ? "selected" : "") . " >0.00025X</option>\n";	
 
 // ALSA auto-resample, r45b
@@ -193,6 +194,7 @@ $_mpd_select['auto_channels'] .= "<option value=\"no\" " . (($mpdconf['auto_chan
 /// ALSA auto-format, r45b
 $_mpd_select['auto_format'] .= "<option value=\"yes\" " . (($mpdconf['auto_format'] == 'yes') ? "selected" : "") . " >Yes</option>\n";	
 $_mpd_select['auto_format'] .= "<option value=\"no\" " . (($mpdconf['auto_format'] == 'no') ? "selected" : "") . " >No</option>\n";	
+*/
 
 waitWorker(1, 'mpd-config');
 

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
@@ -76,7 +76,7 @@ if (isset($_POST['newcurvename'])) {
 	$_search_curve = 'Flat';
 }
 elseif (isset($_POST['rmcurve'])) {
-	$result = sdbquery("DELETE FROM cfg_eqalsa WHERE curve_name='" . $_POST['rm-curve'] . "'", $dbh);
+	$result = sdbquery("DELETE FROM cfg_eqalsa WHERE curve_name='" . $_GET['curve'] . "'", $dbh);
 	$_search_curve = 'Flat';
 	$_SESSION['notify']['title'] = 'Curve removed';
 }

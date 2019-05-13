@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
@@ -403,19 +403,19 @@ else {
 
 					if ($_GET['cmd'] == 'newstation') {
 						// cant have same name as existing station
-						$result = sdbquery("SELECT id FROM cfg_radio WHERE name='" . $station_name . "'", $dbh);
+						$result = sdbquery("SELECT id FROM cfg_radio WHERE name='" . SQLite3::escapeString($station_name) . "'", $dbh);
 
 						// true = query successful but no results, array = results, false = query bombed (not likely)
 						if ($result === true) {
 							// add new row to sql table
-							$values = "'" . $_POST['url'] . "'," . "'" . $station_name . "','u','local'";
+							$values = "'" . $_POST['url'] . "'," . "'" . SQLite3::escapeString($station_name) . "','u','local'";
 							$result = sdbquery('INSERT INTO cfg_radio VALUES (NULL,' . $values . ')', $dbh); // NULL causes the Id column to be set to the next number
 						}
 					}
 					else {
 						// if name changed then its same as an add and we have to check the name doesnt already exist
 						// if only the url changed then we update
-						$result = cfgdb_update('cfg_radio', $dbh, $station_name, $_POST['url']);
+						$result = cfgdb_update('cfg_radio', $dbh, SQLite3::escapeString($station_name), $_POST['url']);
 					}
 
 					// add session var
@@ -454,7 +454,7 @@ else {
 					workerLog($_GET['cmd'] . ', ' . $station_name);
 
 					// remove row and delete file
-					$result = sdbquery("DELETE FROM cfg_radio WHERE name='" . $station_name . "'", $dbh);
+					$result = sdbquery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($station_name) . "'", $dbh);
 					sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
 					sysCmd('rm "' . '/var/www/images/radio-logos/' . $station_name . '.jpg' . '"');
 					sysCmd('rm "' . '/var/www/images/radio-logos/thumbs/' . $station_name . '.jpg' . '"');
