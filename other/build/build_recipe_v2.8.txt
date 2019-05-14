@@ -221,6 +221,7 @@ sudo systemctl disable shellinabox
 sudo apt-get -y install dnsmasq hostapd
 
 sudo systemctl daemon-reload
+sudo systemctl unmask hostapd
 sudo systemctl disable hostapd
 sudo systemctl disable dnsmasq
 
