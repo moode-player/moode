@@ -145,11 +145,8 @@ var alphabitsFilter;
 var lastYIQ = ''; // last yiq value from setColors
 //var lastBack = ''; // r50 deprecate
 
-// global for library
-var fullLib = [];
-
+// Globals for library
 var allGenres = [];
-var allArtists = [];
 var allAlbums = [];
 var allSongs = [];
 var allAlbumCovers = [];
@@ -1687,100 +1684,141 @@ function loadLibrary() {
 
 // render library
 function renderLibrary(data) {
-	fullLib = data;
-	//debugLog(fullLib);
-
-	// generate library array
+	groupLib(data);
 	filterLib();
-	
+
 	// store song count
-	LIB.totalSongs = filteredSongs.length;
+	LIB.totalSongs = allSongs.length;
 
 	// Render
 	renderGenres();
 }
 
 function reduceGenres(acc, track) {
-	(acc[track.genre] = acc[track.genre] || []).push(track);
+	var genre = track.genre.toLowerCase();
+	if (!acc[genre]) {
+		acc[genre] = [];
+		acc[genre].genre = track.genre;
+	}
+	acc[genre].push(track);
 	return acc;
-};
+}
 
 function reduceArtists(acc, track) {
-	var artist = track.album_artist || track.artist;
-	(acc[artist] = acc[artist] || []).push(track);
+	var artist = (track.album_artist || track.artist).toLowerCase();
+	if (!acc[artist]) {
+		acc[artist] = [];
+		acc[artist].artist = (track.album_artist || track.artist);
+	}
+	acc[artist].push(track);
 	return acc;
-};
+}
 
 function reduceAlbums(acc, track) {
-	(acc[track.album] = acc[track.album] || []).push(track);
+	var album = track.album.toLowerCase();
+	if (!acc[album]) {
+		acc[album] = [];
+		acc[album].album = track.album;
+	}
+	acc[album].push(track);
 	return acc;
-};
+}
 
-// generate library array
-function filterLib() {
-	filteredSongs = fullLib;
-	filteredSongsDisc.length = 0; // r44g
-	filteredGenres = Object.keys(fullLib.reduce(reduceGenres, {}));
+function findAlbumProp(albumTracks, prop) {
+	var firstTrackWithProp = albumTracks.find(function(track) { return track[prop]; });
+	return firstTrackWithProp && firstTrackWithProp[prop];
+}
 
-	var genreFilter = LIB.filters.genres;
-	if (genreFilter.length) {
-		filteredSongs = filteredSongs.filter(function(track) {
-			return genreFilter.includes(track.genre);
-		});
-	}
+function groupLib(fullLib) {
+	allSongs = fullLib.map(function(track){
+		var modifiedTrack = track;
+		modifiedTrack.key = keyAlbum(track);
+		return modifiedTrack;
+	});
 
-	filteredArtists = Object.keys(filteredSongs.reduce(reduceArtists, {}));
+	allGenres = Object.values(allSongs.reduce(reduceGenres, {})).map(function(group){ return group.genre; });
+	allGenres.sort();
 
-	var artistFilter = LIB.filters.artists;
-	if (artistFilter.length) {
-		filteredSongs = filteredSongs.filter(function(track) {
-			return artistFilter.includes(track.album_artist) || artistFilter.includes(track.artist);
-		});
-	}
-
-	var allArtistAlbums = Object.values(filteredSongs.reduce(reduceArtists, {})).reduce(function(acc, artistTracks) {
+	var allArtistAlbums = Object.values(allSongs.reduce(reduceArtists, {})).reduce(function(acc, artistTracks) {
 		var artistAlbums = artistTracks.reduce(reduceAlbums, {});
 		return acc.concat(Object.values(artistAlbums));
 	}, []);
 
-	filteredAlbums = allArtistAlbums.map(function(albumTracks){
-		var file = albumTracks.find(function(track) { return track.file; }).file;
+	allAlbums = allArtistAlbums.map(function(albumTracks){
+		var file = findAlbumProp(albumTracks, 'file');
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
-		var albumArtist = (albumTracks.find(function(track) { return track.album_artist; }) || {}).album_artist;
+		var artist = findAlbumProp(albumTracks, 'artist');
+		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
+		var lastModified = new Date(Math.max.apply(null, albumTracks.map(function(track){ 
+			return new Date(track.last_modified);
+		})));
 		return {
-			last_modified: new Date(Math.max.apply(null, albumTracks.map(function(track){ return new Date(track.last_modified); }))),
-			album: albumTracks.find(function(track) { return track.album; }).album,
-			artist: albumArtist || albumTracks.find(function(track) { return track.artist; }).artist,
+			last_modified: lastModified,
+			album: findAlbumProp(albumTracks, 'album'),
+			genre: findAlbumProp(albumTracks, 'genre'),
+			artist: albumArtist || artist,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg'
 		};
 	});
 
-	filteredAlbumCovers = filteredAlbums.slice();
+	allAlbumCovers = allAlbums.slice();
 
-	// Filter album from songs after generating filteredAlbums && filteredAlbumCovers
-	var albumFilter = LIB.filters.albums;
-	if (albumFilter.length) {
-		filteredSongs = filteredSongs.filter(function(track) {
-			return albumFilter.includes(keyAlbum(track));
+	try {
+		// natural ordering 
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+		allAlbums.sort(function(a, b) {
+			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
+		});
+
+		allAlbumCovers.sort(function(a, b) {	
+			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));	
 		});
 	}
+	catch (e) {
+		// fallback to default ordering
+		allAlbums.sort(function(a, b) {
+			a = removeArticles(a['album'].toLowerCase());
+			b = removeArticles(b['album'].toLowerCase());
+			return a > b ? 1 : (a < b ? -1 : 0);
+		});
 
-	// sort Genres, Artists, Albums
-	filteredGenres.sort();
+		allAlbumCovers.sort(function(a, b) {
+			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
+			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
+			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
+		});
+	}
+}
+
+function filterByGenre(item) {
+	return LIB.filters.genres.find(function(genreFilter){
+		return item.genre.toLowerCase() === genreFilter.toLowerCase();
+	});
+}
+
+function filterByArtist(item) {
+	return LIB.filters.artists.find(function(artistFilter){
+		return item.artist.toLowerCase() === artistFilter.toLowerCase();
+	});
+}
+
+function filterByAlbum(item) {
+	return LIB.filters.albums.includes(item.key);
+}
+
+function filterArtists() {
+	// Filter artists by genre
+	var songsfilteredByGenre = allSongs;
+	if (LIB.filters.genres.length) {
+		songsfilteredByGenre = songsfilteredByGenre.filter(filterByGenre);
+	}
+	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
 
 	try {
 		// natural ordering 
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 		filteredArtists.sort(function(a, b) {
 			return collator.compare(removeArticles(a), removeArticles(b));
-		});
-
-		filteredAlbums.sort(function(a, b) {
-			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
-		});
-
-		filteredAlbumCovers.sort(function(a, b) {	
-			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));	
 		});
 	}
 	catch (e) {
@@ -1790,23 +1828,39 @@ function filterLib() {
 			b = removeArticles(b.toLowerCase());
 			return a > b ? 1 : (a < b ? -1 : 0);
 		});
-
-		filteredAlbums.sort(function(a, b) {
-			a = removeArticles(a['album'].toLowerCase());
-			b = removeArticles(b['album'].toLowerCase());
-			return a > b ? 1 : (a < b ? -1 : 0);
-		});
-
-		filteredAlbumCovers.sort(function(a, b) {
-			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
-			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
-			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-		});
 	}
-	//console.log(filteredGenres);
-	//console.log(filteredArtists);
-	//console.log(filteredAlbums);
-	//console.log(filteredSongs);
+}
+
+function filterAlbums() {
+	filteredAlbums = allAlbums;
+	filteredAlbumCovers = allAlbumCovers;
+
+	// filter by album
+	if (LIB.filters.genres.length) {
+		filteredAlbums = filteredAlbums.filter(filterByGenre);
+		filteredAlbumCovers = filteredAlbumCovers.filter(filterByGenre);
+	}
+
+	// filter by artist
+	if (LIB.filters.artists.length) {
+		filteredAlbums = filteredAlbums.filter(filterByArtist);
+		filteredAlbumCovers = filteredAlbums.filter(filterByArtist);
+	}
+}
+
+function filterSongs() {
+	// Filter album from songs
+	filteredSongs = allSongs;
+	if (LIB.filters.albums.length) {
+		filteredSongs = filteredSongs.filter(filterByAlbum);
+	}
+}
+
+function filterLib() {
+	filteredSongsDisc.length = 0; // r44g
+	filterArtists();
+	filterAlbums();
+	filterSongs();
 }
 
 // remove artcles from beginning of string
@@ -1817,7 +1871,7 @@ function removeArticles(string) {
 
 // generate album/artist key
 function keyAlbum(obj) {
-	return obj.album + '@' + (obj.album_artist || obj.artist);
+	return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase();
 }
 
 // return numeric song time
@@ -1858,10 +1912,10 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 var renderGenres = function() {
 	var output = '';
 
-	for (var i = 0; i < filteredGenres.length; i++) {
+	for (var i = 0; i < allGenres.length; i++) {
 		output += '<li><div class="lib-entry'
-			+ (LIB.filters.genres.indexOf(filteredGenres[i]) >= 0 ? ' active' : '')
-			+ '">' + filteredGenres[i] + '</div></li>';
+			+ (LIB.filters.genres.indexOf(allGenres[i]) >= 0 ? ' active' : '')
+			+ '">' + allGenres[i] + '</div></li>';
 	}
 
 	$('#genresList').html(output);
@@ -2110,7 +2164,7 @@ $('#genresList').on('click', '.lib-entry', function(e) {
 	LIB.filters.albums.length = 0;
 	UI.libPos[0] = -1;
 	storeLibPos(UI.libPos);
-	clickedLibItem(e, filteredGenres[pos], LIB.filters.genres, renderGenres);
+	clickedLibItem(e, allGenres[pos], LIB.filters.genres, renderGenres);
 });
 
 // click on artist
