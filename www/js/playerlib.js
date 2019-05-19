@@ -148,13 +148,18 @@ var lastYIQ = ''; // last yiq value from setColors
 // global for library
 var fullLib = [];
 
-// Variable name misdirection as these will contain filtered, sorted elements
 var allGenres = [];
 var allArtists = [];
 var allAlbums = [];
 var allSongs = [];
-var allSongsDisc = [];
 var allAlbumCovers = [];
+
+var filteredGenres = [];
+var filteredArtists = [];
+var filteredAlbums = [];
+var filteredSongs = [];
+var filteredSongsDisc = [];
+var filteredAlbumCovers = [];
 
 function debugLog(msg)  {
 	if (SESSION.json['debuglog'] == '1') {
@@ -612,9 +617,9 @@ function renderUI() {
 	}
 
 	// highlight track in Library 
-	if (typeof(allSongs) != 'undefined') {
-		for (i = 0; i < allSongs.length; i++) {
-			if (allSongs[i].title == MPD.json['title']) {
+	if (typeof(filteredSongs) != 'undefined') {
+		for (i = 0; i < filteredSongs.length; i++) {
+			if (filteredSongs[i].title == MPD.json['title']) {
 				$('#songsList .lib-entry-song .songtrack').removeClass('songTrackHighlight');
 				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('songTrackHighlight');
 				break;
@@ -1689,7 +1694,7 @@ function renderLibrary(data) {
 	filterLib();
 	
 	// store song count
-	LIB.totalSongs = allSongs.length;
+	LIB.totalSongs = filteredSongs.length;
 
 	// Render
 	renderGenres();
@@ -1713,32 +1718,32 @@ function reduceAlbums(acc, track) {
 
 // generate library array
 function filterLib() {
-	allSongs = fullLib;
-	allSongsDisc.length = 0; // r44g
-	allGenres = Object.keys(fullLib.reduce(reduceGenres, {}));
+	filteredSongs = fullLib;
+	filteredSongsDisc.length = 0; // r44g
+	filteredGenres = Object.keys(fullLib.reduce(reduceGenres, {}));
 
 	var genreFilter = LIB.filters.genres;
 	if (genreFilter.length) {
-		allSongs = allSongs.filter(function(track) {
+		filteredSongs = filteredSongs.filter(function(track) {
 			return genreFilter.includes(track.genre);
 		});
 	}
 
-	allArtists = Object.keys(allSongs.reduce(reduceArtists, {}));
+	filteredArtists = Object.keys(filteredSongs.reduce(reduceArtists, {}));
 
 	var artistFilter = LIB.filters.artists;
 	if (artistFilter.length) {
-		allSongs = allSongs.filter(function(track) {
+		filteredSongs = filteredSongs.filter(function(track) {
 			return artistFilter.includes(track.album_artist) || artistFilter.includes(track.artist);
 		});
 	}
 
-	var allArtistAlbums = Object.values(allSongs.reduce(reduceArtists, {})).reduce(function(acc, artistTracks) {
+	var allArtistAlbums = Object.values(filteredSongs.reduce(reduceArtists, {})).reduce(function(acc, artistTracks) {
 		var artistAlbums = artistTracks.reduce(reduceAlbums, {});
 		return acc.concat(Object.values(artistAlbums));
 	}, []);
 
-	allAlbums = allArtistAlbums.map(function(albumTracks){
+	filteredAlbums = allArtistAlbums.map(function(albumTracks){
 		var file = albumTracks.find(function(track) { return track.file; }).file;
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var albumArtist = (albumTracks.find(function(track) { return track.album_artist; }) || {}).album_artist;
@@ -1750,58 +1755,58 @@ function filterLib() {
 		};
 	});
 
-	allAlbumCovers = allAlbums.slice();
+	filteredAlbumCovers = filteredAlbums.slice();
 
-	// Filter album from songs after generating allAlbums && allAlbumCovers
+	// Filter album from songs after generating filteredAlbums && filteredAlbumCovers
 	var albumFilter = LIB.filters.albums;
 	if (albumFilter.length) {
-		allSongs = allSongs.filter(function(track) {
+		filteredSongs = filteredSongs.filter(function(track) {
 			return albumFilter.includes(keyAlbum(track));
 		});
 	}
 
 	// sort Genres, Artists, Albums
-	allGenres.sort();
+	filteredGenres.sort();
 
 	try {
 		// natural ordering 
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-		allArtists.sort(function(a, b) {
+		filteredArtists.sort(function(a, b) {
 			return collator.compare(removeArticles(a), removeArticles(b));
 		});
 
-		allAlbums.sort(function(a, b) {
+		filteredAlbums.sort(function(a, b) {
 			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
 		});
 
-		allAlbumCovers.sort(function(a, b) {	
+		filteredAlbumCovers.sort(function(a, b) {	
 			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));	
 		});
 	}
 	catch (e) {
 		// fallback to default ordering
-		allArtists.sort(function(a, b) {
+		filteredArtists.sort(function(a, b) {
 			a = removeArticles(a.toLowerCase());
 			b = removeArticles(b.toLowerCase());
 			return a > b ? 1 : (a < b ? -1 : 0);
 		});
 
-		allAlbums.sort(function(a, b) {
+		filteredAlbums.sort(function(a, b) {
 			a = removeArticles(a['album'].toLowerCase());
 			b = removeArticles(b['album'].toLowerCase());
 			return a > b ? 1 : (a < b ? -1 : 0);
 		});
 
-		allAlbumCovers.sort(function(a, b) {
+		filteredAlbumCovers.sort(function(a, b) {
 			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
 			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
 			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
 		});
 	}
-	//console.log(allGenres);
-	//console.log(allArtists);
-	//console.log(allAlbums);
-	//console.log(allSongs);
+	//console.log(filteredGenres);
+	//console.log(filteredArtists);
+	//console.log(filteredAlbums);
+	//console.log(filteredSongs);
 }
 
 // remove artcles from beginning of string
@@ -1853,10 +1858,10 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 var renderGenres = function() {
 	var output = '';
 
-	for (var i = 0; i < allGenres.length; i++) {
+	for (var i = 0; i < filteredGenres.length; i++) {
 		output += '<li><div class="lib-entry'
-			+ (LIB.filters.genres.indexOf(allGenres[i]) >= 0 ? ' active' : '')
-			+ '">' + allGenres[i] + '</div></li>';
+			+ (LIB.filters.genres.indexOf(filteredGenres[i]) >= 0 ? ' active' : '')
+			+ '">' + filteredGenres[i] + '</div></li>';
 	}
 
 	$('#genresList').html(output);
@@ -1870,11 +1875,11 @@ var renderGenres = function() {
 var renderArtists = function() {
 	var output = '';
 
-	for (var i = 0; i < allArtists.length; i++) {
-		// add || allArtists.length = 1 to automatically highlight if only 1 artist in list
+	for (var i = 0; i < filteredArtists.length; i++) {
+		// add || filteredArtists.length = 1 to automatically highlight if only 1 artist in list
 		output += '<li><div class="lib-entry'
-			+ ((LIB.filters.artists.indexOf(allArtists[i]) >= 0 || allArtists.length == 1) ? ' active' : '')
-			+ '">' + allArtists[i] + '</div></li>';
+			+ ((LIB.filters.artists.indexOf(filteredArtists[i]) >= 0 || filteredArtists.length == 1) ? ' active' : '')
+			+ '">' + filteredArtists[i] + '</div></li>';
 	}
 
 	$('#artistsList').html(output);
@@ -1896,9 +1901,9 @@ var renderAlbums = function() {
 	var tmp = '';
 	var defCover = "this.src='images/default-cover-v6.svg'";
 
-	for (var i = 0; i < allAlbums.length; i++) {
-		// add || allAlbums.length = 1 to automatically highlight if only 1 album in list
-		if (LIB.filters.albums.indexOf(keyAlbum(allAlbums[i])) >= 0 || allAlbums.length == 1) {
+	for (var i = 0; i < filteredAlbums.length; i++) {
+		// add || filteredAlbums.length = 1 to automatically highlight if only 1 album in list
+		if (LIB.filters.albums.indexOf(keyAlbum(filteredAlbums[i])) >= 0 || filteredAlbums.length == 1) {
 			tmp = ' active';
 			LIB.albumClicked = true; // for renderSongs() so it can decide whether to display tracks	    
 		}
@@ -1909,18 +1914,18 @@ var renderAlbums = function() {
 		if (UI.tagViewCovers) {
 			output += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy" data-original="' + allAlbums[i].imgurl + '">' + '<div class="albumsList-album-name">' + allAlbums[i].album + '</div>' + '<span>' + allAlbums[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy" data-original="' + filteredAlbums[i].imgurl + '">' + '<div class="albumsList-album-name">' + filteredAlbums[i].album + '</div>' + '<span>' + filteredAlbums[i].artist + '</span></div></li>';
 			output2 += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + allAlbumCovers[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
 		}
 		else {
 			output += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + allAlbums[i].album + '<span>' + allAlbums[i].artist + '</span></div></li>';
+				+ '">' + filteredAlbums[i].album + '<span>' + filteredAlbums[i].artist + '</span></div></li>';
 			output2 += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy" data-original="' + allAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + allAlbumCovers[i].album + '</div><span>' + allAlbumCovers[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
 		}
 	}
 
@@ -1967,78 +1972,78 @@ var renderSongs = function(albumPos) {
 		try {
 			// natural ordering
 			var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-			allSongs.sort(function(a, b) {
+			filteredSongs.sort(function(a, b) {
 				return (collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
 			});
 		}
 		catch (e) {
 			// fallback to default ordering
-			allSongs.sort(function(a, b) {
+			filteredSongs.sort(function(a, b) {
 				var x1 = a['disc'], x2 = b['disc'];
 				var x1 = a['tracknum'], x2 = b['tracknum'];
 				return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
 			});
 		}
 
-		for (i = 0; i < allSongs.length; i++) {
-			var songyear = allSongs[i].year ? allSongs[i].year.slice(0,4) : ' ';
+		for (i = 0; i < filteredSongs.length; i++) {
+			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0,4) : ' ';
 
-			if (allSongs[i].disc != discNum) {
-				discDiv = '<div id="lib-disc-' + allSongs[i].disc + '" class="lib-disc"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + allSongs[i].disc + '</a></div>'
-				discNum = allSongs[i].disc;
+			if (filteredSongs[i].disc != discNum) {
+				discDiv = '<div id="lib-disc-' + filteredSongs[i].disc + '" class="lib-disc"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + filteredSongs[i].disc + '</a></div>'
+				discNum = filteredSongs[i].disc;
 			}
 			else {
 				discDiv = '';
 			}
 
-			var composer = allSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + allSongs[i].composer + '</span></span>';
-			var highlight = allSongs[i].title == MPD.json['title'] ? ' songTrackHighlight' : '';
+			var composer = filteredSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + filteredSongs[i].composer + '</span></span>';
+			var highlight = filteredSongs[i].title == MPD.json['title'] ? ' songTrackHighlight' : '';
 
 	    output += discDiv
 				+ '<li id="lib-song-' + (i + 1) + '" class="clearfix">'
-				+ '<div class="lib-entry-song"><span class="songtrack' + highlight + '">' + allSongs[i].tracknum + '</span>'
-				+ '<span class="songname">' + allSongs[i].title + '</span>'
-				+ '<span class="songtime"> ' + allSongs[i].time_mmss + '</span>'
-				+ '<span class="songartist"> ' + allSongs[i].artist + composer
+				+ '<div class="lib-entry-song"><span class="songtrack' + highlight + '">' + filteredSongs[i].tracknum + '</span>'
+				+ '<span class="songname">' + filteredSongs[i].title + '</span>'
+				+ '<span class="songtime"> ' + filteredSongs[i].time_mmss + '</span>'
+				+ '<span class="songartist"> ' + filteredSongs[i].artist + composer
 				+ '<span class="songyear"> ' + songyear + '</span></div>'
 				+ '<div class="lib-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
 				+ '</li>';
 
-			LIB.totalTime += parseSongTime(allSongs[i].time);
+			LIB.totalTime += parseSongTime(filteredSongs[i].time);
 		}
 	}
 	else {
-		for (i = 0; i < allSongs.length; i++) {
-			LIB.totalTime += parseSongTime(allSongs[i].time);
+		for (i = 0; i < filteredSongs.length; i++) {
+			LIB.totalTime += parseSongTime(filteredSongs[i].time);
 		}
 	}
 
 	$('#songsList').html(output);
 	// display disc num if more than 1 disc, exceot for case: Album name contains the string '[Disc' which indicates separate albums for each disc
-	if (discNum > 1 && !allSongs[0].album.toLowerCase().includes('[disc')) {
+	if (discNum > 1 && !filteredSongs[0].album.toLowerCase().includes('[disc')) {
 		$('.lib-disc').css('display', 'block');
 	}
 
-	//console.log('allSongs[0].file=' + allSongs[0].file);
+	//console.log('filteredSongs[0].file=' + filteredSongs[0].file);
 	//console.log('LIB.filters.albums=(' + LIB.filters.albums + ')');
 	//console.log('pos=(' + albumPos + ')')
 	
 	// Library panel cover art and metadata
-	if (allAlbums.length == 1 || LIB.filters.albums.length || typeof(albumPos) !== 'undefined') {
+	if (filteredAlbums.length == 1 || LIB.filters.albums.length || typeof(albumPos) !== 'undefined') {
 		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' + 
-			'<img class="lib-coverart" src="' + makeCoverUrl(allSongs[0].file) + '" ' + 'alt="Cover art not found"' + '></a>');
-		$('#lib-albumname').html(allSongs[0].album);
+			'<img class="lib-coverart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '></a>');
+		$('#lib-albumname').html(filteredSongs[0].album);
 
 		if (albumPos && !UI.libPos[0]) {
-			artist = allAlbums[UI.libPos[0]].artist;
+			artist = filteredAlbums[UI.libPos[0]].artist;
 		}
 		else {
-			artist = allSongs[0].album_artist || allSongs[0].artist;
+			artist = filteredSongs[0].album_artist || filteredSongs[0].artist;
 		}
 
 		$('#lib-artistname').html(artist);
-		$('#lib-albumyear').html(allSongs[0].year);
-		$('#lib-numtracks').html(allSongs.length + ((allSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
+		$('#lib-albumyear').html(filteredSongs[0].year);
+		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
 	}
 	else {
 		var album = LIB.filters.genres.length ? LIB.filters.genres : (LIB.filters.artists.length ? LIB.filters.artists : 'Music Library');
@@ -2048,7 +2053,7 @@ var renderSongs = function(albumPos) {
 		$('#lib-albumname').html(album);
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html('');		
-		$('#lib-numtracks').html(allSongs.length + ((allSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
+		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
 	}
 }
 
@@ -2105,7 +2110,7 @@ $('#genresList').on('click', '.lib-entry', function(e) {
 	LIB.filters.albums.length = 0;
 	UI.libPos[0] = -1;
 	storeLibPos(UI.libPos);
-	clickedLibItem(e, allGenres[pos], LIB.filters.genres, renderGenres);
+	clickedLibItem(e, filteredGenres[pos], LIB.filters.genres, renderGenres);
 });
 
 // click on artist
@@ -2115,7 +2120,7 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	UI.libPos[2] = pos;
 	LIB.filters.albums.length = 0;
 	storeLibPos(UI.libPos);
-	clickedLibItem(e, allArtists[pos], LIB.filters.artists, renderArtists);    
+	clickedLibItem(e, filteredArtists[pos], LIB.filters.artists, renderArtists);    
 	if (UI.mobile) {
 		$('#top-columns').animate({left: '-50%'}, 200);
 	}
@@ -2130,17 +2135,17 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	// store positions in array for use in scripts-panels
 	if (itemSelector == '#albumsList .lib-entry') {
 		UI.libPos[0] = pos;
-		UI.libPos[1] = allAlbumCovers.map(function(e) {return e.album;}).indexOf(allAlbums[pos].album);
-		var albumobj = allAlbums[pos];
-		var album = allAlbums[pos].album;
-		var artist = allAlbums[pos].artist;
+		UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+		var albumobj = filteredAlbums[pos];
+		var album = filteredAlbums[pos].album;
+		var artist = filteredAlbums[pos].artist;
 	}
 	else {
-		UI.libPos[0] = allAlbums.map(function(e) {return e.album;}).indexOf(allAlbumCovers[pos].album);
+		UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
 		UI.libPos[1] = pos;
-		var albumobj = allAlbumCovers[pos];
-		var album = allAlbumCovers[pos].album;
-		var artist = allAlbumCovers[pos].artist;
+		var albumobj = filteredAlbumCovers[pos];
+		var album = filteredAlbumCovers[pos].album;
+		var artist = filteredAlbumCovers[pos].artist;
 	}
 
 	storeLibPos(UI.libPos);
@@ -2190,25 +2195,25 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 $('#random-album, #random-albumcover').click(function(e) {
 	var array = new Uint16Array(1);
 	window.crypto.getRandomValues(array);
-	pos = Math.floor((array[0] / 65535) * allAlbums.length);
+	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
 
 	if ($(this).attr('id') == 'random-album') {
 		var itemSelector = '#albumsList .lib-entry';
 		var scrollSelector = 'albums';
 		UI.libPos[0] = pos;
-		UI.libPos[1] = allAlbumCovers.map(function(e) {return e.album;}).indexOf(allAlbums[pos].album);
-		var albumobj = allAlbums[pos];
-		var album = allAlbums[pos].album;
-		var artist = allAlbums[pos].artist;
+		UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+		var albumobj = filteredAlbums[pos];
+		var album = filteredAlbums[pos].album;
+		var artist = filteredAlbums[pos].artist;
 	}
 	else {
 		var itemSelector = '#albumcovers .lib-entry';
 		var scrollSelector = 'albumcovers';
-		UI.libPos[0] = allAlbums.map(function(e) {return e.album;}).indexOf(allAlbumCovers[pos].album);
+		UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
 		UI.libPos[1] = pos;
-		var albumobj = allAlbumCovers[pos];
-		var album = allAlbumCovers[pos].album;
-		var artist = allAlbumCovers[pos].artist;
+		var albumobj = filteredAlbumCovers[pos];
+		var album = filteredAlbumCovers[pos].album;
+		var artist = filteredAlbumCovers[pos].artist;
 	}
 
 	storeLibPos(UI.libPos);
@@ -2229,17 +2234,17 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 
 	// update lib pos
-	UI.libPos[0] = allAlbums.map(function(e) {return e.album;}).indexOf(allAlbumCovers[pos].album);
+	UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
 	UI.libPos[1] = pos;
 	storeLibPos(UI.libPos);
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
 	
 	// song list for regular album		
 	LIB.albumClicked = true; // for renderSongs()
-	var compilation = allAlbumCovers[pos].compilation;
-	var albumobj = allAlbumCovers[pos];
-	var album = allAlbumCovers[pos].album;
-	var artist = allAlbumCovers[pos].artist;
+	var compilation = filteredAlbumCovers[pos].compilation;
+	var albumobj = filteredAlbumCovers[pos];
+	var album = filteredAlbumCovers[pos].album;
+	var artist = filteredAlbumCovers[pos].artist;
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 });
 
@@ -2250,22 +2255,22 @@ $('#albumcovers').on('click', 'img', function(e) {
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 
 	// update lib pos
-	UI.libPos[0] = allAlbums.map(function(e) {return e.album;}).indexOf(allAlbumCovers[pos].album);
+	UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
 	UI.libPos[1] = pos;
 	storeLibPos(UI.libPos);
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
 
 	// song list for regular album		
 	LIB.albumClicked = true; // for renderSongs()
-	var compilation = allAlbumCovers[pos].compilation;
-	var albumobj = allAlbumCovers[pos];
-	var album = allAlbumCovers[pos].album;
-	var artist = allAlbumCovers[pos].artist;
+	var compilation = filteredAlbumCovers[pos].compilation;
+	var albumobj = filteredAlbumCovers[pos];
+	var album = filteredAlbumCovers[pos].album;
+	var artist = filteredAlbumCovers[pos].artist;
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 
 	var files = [];
-	for (var i in allSongs) {
-		files.push(allSongs[i].file); 
+	for (var i in filteredSongs) {
+		files.push(filteredSongs[i].file); 
 	}
 
 	//mpdDbCmd('playall', files);
@@ -2285,14 +2290,14 @@ $('.ralbum').click(function(e) {
 	}
 	var array = new Uint16Array(1);
 	window.crypto.getRandomValues(array);
-	pos = Math.floor((array[0] / 65535) * allAlbums.length);
+	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
 
 	UI.libPos[0] = pos;
-	UI.libPos[1] = allAlbumCovers.map(function(e) {return e.album;}).indexOf(allAlbums[pos].album);
-	var compilation = allAlbums[pos].compilation;
-	var albumobj = allAlbums[pos];
-	var album = allAlbums[pos].album;
-	var artist = allAlbums[pos].artist;
+	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+	var compilation = filteredAlbums[pos].compilation;
+	var albumobj = filteredAlbums[pos];
+	var album = filteredAlbums[pos].album;
+	var artist = filteredAlbums[pos].artist;
 
 	storeLibPos(UI.libPos);
 	LIB.albumClicked = true; // for renderSongs()
@@ -2300,8 +2305,8 @@ $('.ralbum').click(function(e) {
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 
 	var files = [];
-	for (var i in allSongs) {
-		files.push(allSongs[i].file); 
+	for (var i in filteredSongs) {
+		files.push(filteredSongs[i].file); 
 	}
 
 	// smooths display of newly added album
@@ -2399,13 +2404,13 @@ $('#songsList').on('click', '.lib-disc', function(e) {
 	var discNum = $(this).text().substr(5);
 	$('#lib-disc-' + discNum + ' a').addClass('active');
 
-	allSongsDisc.length = 0;
-	for (var i in allSongs) {
-		if (allSongs[i].disc == discNum) {
-			allSongsDisc.push(allSongs[i]);
+	filteredSongsDisc.length = 0;
+	for (var i in filteredSongs) {
+		if (filteredSongs[i].disc == discNum) {
+			filteredSongsDisc.push(filteredSongs[i]);
 		}
 	}
-	//console.log('allSongsDisc= ' + JSON.stringify(allSongsDisc));
+	//console.log('filteredSongsDisc= ' + JSON.stringify(filteredSongsDisc));
 });
 
 // click lib track
@@ -2461,16 +2466,16 @@ $('#context-menu-lib-item a').click(function(e) {
 	$('img.lib-coverart').removeClass('active');
 
 	if ($(this).data('cmd') == 'add') {
-		mpdDbCmd('add', allSongs[UI.dbEntry[0]].file);
+		mpdDbCmd('add', filteredSongs[UI.dbEntry[0]].file);
 		notify('add', '');
 	}
 	if ($(this).data('cmd') == 'play') {
 		// NOTE we could check to see if the file is already in the playlist and then just play it
-		mpdDbCmd('play', allSongs[UI.dbEntry[0]].file);
+		mpdDbCmd('play', filteredSongs[UI.dbEntry[0]].file);
 		notify('add', '');
 	}
 	if ($(this).data('cmd') == 'clrplay') {
-		mpdDbCmd('clrplay', allSongs[UI.dbEntry[0]].file);
+		mpdDbCmd('clrplay', filteredSongs[UI.dbEntry[0]].file);
 		notify('clrplay', '');        
 		$('#pl-saveName').val(''); // clear saved playlist name if any
 	}	
@@ -2487,8 +2492,8 @@ $('#context-menu-lib-all a').click(function(e) {
 	}
 
 	var files = [];
-	for (var i in allSongs) {
-		files.push(allSongs[i].file); 
+	for (var i in filteredSongs) {
+		files.push(filteredSongs[i].file); 
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
@@ -2527,8 +2532,8 @@ $('#context-menu-lib-disc a').click(function(e) {
 	$('#songsList .lib-disc a').removeClass('active');
 
 	var files = [];
-	for (var i in allSongsDisc) {
-		files.push(allSongsDisc[i].file); 
+	for (var i in filteredSongsDisc) {
+		files.push(filteredSongsDisc[i].file); 
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
