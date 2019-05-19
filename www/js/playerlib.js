@@ -1798,7 +1798,7 @@ function filterByGenre(item) {
 	});
 }
 
-function filterAlbumByGenres(album) {
+function filterByAllGenres(album) {
 	return LIB.filters.genres.find(function(genreFilter){
 		return album.all_genres.includes(genreFilter.toLowerCase());
 	});
@@ -1848,8 +1848,8 @@ function filterAlbums() {
 
 	// filter by genre
 	if (LIB.filters.genres.length) {
-		filteredAlbums = filteredAlbums.filter(filterAlbumByGenres);
-		filteredAlbumCovers = filteredAlbumCovers.filter(filterAlbumByGenres);
+		filteredAlbums = filteredAlbums.filter(filterByAllGenres);
+		filteredAlbumCovers = filteredAlbumCovers.filter(filterByAllGenres);
 	}
 
 	// filter by artist
