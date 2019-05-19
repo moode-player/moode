@@ -1756,6 +1756,7 @@ function groupLib(fullLib) {
 			last_modified: lastModified,
 			album: findAlbumProp(albumTracks, 'album'),
 			genre: findAlbumProp(albumTracks, 'genre'),
+			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
 			artist: albumArtist || artist,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg'
 		};
@@ -1791,14 +1792,24 @@ function groupLib(fullLib) {
 }
 
 function filterByGenre(item) {
+	var genre = item.genre.toLowerCase();
 	return LIB.filters.genres.find(function(genreFilter){
-		return item.genre.toLowerCase() === genreFilter.toLowerCase();
+		return genre === genreFilter.toLowerCase();
+	});
+}
+
+function filterAlbumByGenres(album) {
+	return LIB.filters.genres.find(function(genreFilter){
+		return album.all_genres.includes(genreFilter.toLowerCase());
 	});
 }
 
 function filterByArtist(item) {
+	var artist = item.artist.toLowerCase();
+	var album_artist = item.album_artist && item.album_artist.toLowerCase();
 	return LIB.filters.artists.find(function(artistFilter){
-		return item.artist.toLowerCase() === artistFilter.toLowerCase();
+		var artistFilterLower = artistFilter.toLowerCase();
+		return artist === artistFilterLower || album_artist === artistFilterLower;
 	});
 }
 
@@ -1835,10 +1846,10 @@ function filterAlbums() {
 	filteredAlbums = allAlbums;
 	filteredAlbumCovers = allAlbumCovers;
 
-	// filter by album
+	// filter by genre
 	if (LIB.filters.genres.length) {
-		filteredAlbums = filteredAlbums.filter(filterByGenre);
-		filteredAlbumCovers = filteredAlbumCovers.filter(filterByGenre);
+		filteredAlbums = filteredAlbums.filter(filterAlbumByGenres);
+		filteredAlbumCovers = filteredAlbumCovers.filter(filterAlbumByGenres);
 	}
 
 	// filter by artist
@@ -1849,8 +1860,13 @@ function filterAlbums() {
 }
 
 function filterSongs() {
-	// Filter album from songs
 	filteredSongs = allSongs;
+	if (LIB.filters.genres.length) {
+		filteredSongs = filteredSongs.filter(filterByGenre);
+	}
+	if (LIB.filters.artists.length) {
+		filteredSongs = filteredSongs.filter(filterByArtist);
+	}
 	if (LIB.filters.albums.length) {
 		filteredSongs = filteredSongs.filter(filterByAlbum);
 	}
