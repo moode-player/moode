@@ -614,13 +614,11 @@ function renderUI() {
 	}
 
 	// highlight track in Library 
-	if (typeof(filteredSongs) != 'undefined') {
-		for (i = 0; i < filteredSongs.length; i++) {
-			if (filteredSongs[i].title == MPD.json['title']) {
-				$('#songsList .lib-entry-song .songtrack').removeClass('songTrackHighlight');
-				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('songTrackHighlight');
-				break;
-			}
+	for (i = 0; i < filteredSongs.length; i++) {
+		if (filteredSongs[i].title == MPD.json['title']) {
+			$('#songsList .lib-entry-song .songtrack').removeClass('songTrackHighlight');
+			$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('songTrackHighlight');
+			break;
 		}
 	}
 
