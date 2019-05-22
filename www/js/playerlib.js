@@ -1708,25 +1708,31 @@ function reduceArtists(acc, track) {
 	var artist = (track.album_artist || track.artist).toLowerCase();
 	if (!acc[artist]) {
 		acc[artist] = [];
-		acc[artist].artist = (track.album_artist || track.artist);
+		acc[artist].artist = track.album_artist || track.artist;
 	}
 	acc[artist].push(track);
 	return acc;
 }
 
 function reduceAlbums(acc, track) {
-	var album = track.album.toLowerCase();
-	if (!acc[album]) {
-		acc[album] = [];
-		acc[album].album = track.album;
+	var key = track.key;
+	if (!acc[key]) {
+		acc[key] = [];
 	}
-	acc[album].push(track);
+	acc[key].push(track);
 	return acc;
 }
 
 function findAlbumProp(albumTracks, prop) {
 	var firstTrackWithProp = albumTracks.find(function(track) { return track[prop]; });
 	return firstTrackWithProp && firstTrackWithProp[prop];
+}
+
+function getLastModified(albumTracks){
+	var allLastModified = albumTracks.map(function(track){ 
+		return new Date(track.last_modified);
+	});
+	return new Date(Math.max.apply(null, allLastModified));
 }
 
 function groupLib(fullLib) {
@@ -1739,21 +1745,13 @@ function groupLib(fullLib) {
 	allGenres = Object.values(allSongs.reduce(reduceGenres, {})).map(function(group){ return group.genre; });
 	allGenres.sort();
 
-	var allArtistAlbums = Object.values(allSongs.reduce(reduceArtists, {})).reduce(function(acc, artistTracks) {
-		var artistAlbums = artistTracks.reduce(reduceAlbums, {});
-		return acc.concat(Object.values(artistAlbums));
-	}, []);
-
-	allAlbums = allArtistAlbums.map(function(albumTracks){
+	allAlbums = Object.values(allSongs.reduce(reduceAlbums, {})).map(function(albumTracks){
 		var file = findAlbumProp(albumTracks, 'file');
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var artist = findAlbumProp(albumTracks, 'artist');
 		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
-		var lastModified = new Date(Math.max.apply(null, albumTracks.map(function(track){ 
-			return new Date(track.last_modified);
-		})));
 		return {
-			last_modified: lastModified,
+			last_modified: getLastModified(albumTracks),
 			album: findAlbumProp(albumTracks, 'album'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
@@ -1767,6 +1765,10 @@ function groupLib(fullLib) {
 	try {
 		// natural ordering 
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+		allSongs.sort(function(a, b) {
+			return collator.compare(removeArticles(a['artist']), removeArticles(b['artist']));
+		});
+
 		allAlbums.sort(function(a, b) {
 			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
 		});
@@ -1777,6 +1779,12 @@ function groupLib(fullLib) {
 	}
 	catch (e) {
 		// fallback to default ordering
+		allSongs.sort(function(a, b) {
+			a = removeArticles(a['artist'].toLowerCase());
+			b = removeArticles(b['artist'].toLowerCase());
+			return a > b ? 1 : (a < b ? -1 : 0);
+		});
+
 		allAlbums.sort(function(a, b) {
 			a = removeArticles(a['album'].toLowerCase());
 			b = removeArticles(b['album'].toLowerCase());
@@ -1824,22 +1832,6 @@ function filterArtists() {
 		songsfilteredByGenre = songsfilteredByGenre.filter(filterByGenre);
 	}
 	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
-
-	try {
-		// natural ordering 
-		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-		filteredArtists.sort(function(a, b) {
-			return collator.compare(removeArticles(a), removeArticles(b));
-		});
-	}
-	catch (e) {
-		// fallback to default ordering
-		filteredArtists.sort(function(a, b) {
-			a = removeArticles(a.toLowerCase());
-			b = removeArticles(b.toLowerCase());
-			return a > b ? 1 : (a < b ? -1 : 0);
-		});
-	}
 }
 
 function filterAlbums() {
