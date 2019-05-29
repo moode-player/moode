@@ -614,13 +614,11 @@ function renderUI() {
 	}
 
 	// highlight track in Library 
-	if (typeof(filteredSongs) != 'undefined') {
-		for (i = 0; i < filteredSongs.length; i++) {
-			if (filteredSongs[i].title == MPD.json['title']) {
-				$('#songsList .lib-entry-song .songtrack').removeClass('songTrackHighlight');
-				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('songTrackHighlight');
-				break;
-			}
+	for (i = 0; i < filteredSongs.length; i++) {
+		if (filteredSongs[i].title == MPD.json['title']) {
+			$('#songsList .lib-entry-song .songtrack').removeClass('songTrackHighlight');
+			$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('songTrackHighlight');
+			break;
 		}
 	}
 
@@ -2200,14 +2198,12 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 		UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
 		var albumobj = filteredAlbums[pos];
 		var album = filteredAlbums[pos].album;
-		var artist = filteredAlbums[pos].artist;
 	}
 	else {
 		UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
 		UI.libPos[1] = pos;
 		var albumobj = filteredAlbumCovers[pos];
 		var album = filteredAlbumCovers[pos].album;
-		var artist = filteredAlbumCovers[pos].artist;
 	}
 
 	storeLibPos(UI.libPos);
@@ -2265,8 +2261,6 @@ $('#random-album, #random-albumcover').click(function(e) {
 		UI.libPos[0] = pos;
 		UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
 		var albumobj = filteredAlbums[pos];
-		var album = filteredAlbums[pos].album;
-		var artist = filteredAlbums[pos].artist;
 	}
 	else {
 		var itemSelector = '#albumcovers .lib-entry';
@@ -2274,8 +2268,6 @@ $('#random-album, #random-albumcover').click(function(e) {
 		UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
 		UI.libPos[1] = pos;
 		var albumobj = filteredAlbumCovers[pos];
-		var album = filteredAlbumCovers[pos].album;
-		var artist = filteredAlbumCovers[pos].artist;
 	}
 
 	storeLibPos(UI.libPos);
@@ -2303,10 +2295,7 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 	
 	// song list for regular album		
 	LIB.albumClicked = true; // for renderSongs()
-	var compilation = filteredAlbumCovers[pos].compilation;
 	var albumobj = filteredAlbumCovers[pos];
-	var album = filteredAlbumCovers[pos].album;
-	var artist = filteredAlbumCovers[pos].artist;
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 });
 
@@ -2324,10 +2313,7 @@ $('#albumcovers').on('click', 'img', function(e) {
 
 	// song list for regular album		
 	LIB.albumClicked = true; // for renderSongs()
-	var compilation = filteredAlbumCovers[pos].compilation;
 	var albumobj = filteredAlbumCovers[pos];
-	var album = filteredAlbumCovers[pos].album;
-	var artist = filteredAlbumCovers[pos].artist;
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 
 	var files = [];
@@ -2356,10 +2342,7 @@ $('.ralbum').click(function(e) {
 
 	UI.libPos[0] = pos;
 	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
-	var compilation = filteredAlbums[pos].compilation;
 	var albumobj = filteredAlbums[pos];
-	var album = filteredAlbums[pos].album;
-	var artist = filteredAlbums[pos].artist;
 
 	storeLibPos(UI.libPos);
 	LIB.albumClicked = true; // for renderSongs()
