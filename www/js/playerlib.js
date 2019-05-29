@@ -1766,7 +1766,7 @@ function groupLib(fullLib) {
 		// natural ordering 
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 		allSongs.sort(function(a, b) {
-			return collator.compare(removeArticles(a['artist']), removeArticles(b['artist']));
+			return collator.compare(removeArticles(a['album_artist'] || a['artist']), removeArticles(b['album_artist'] || b['artist']));
 		});
 
 		allAlbums.sort(function(a, b) {
@@ -1780,8 +1780,8 @@ function groupLib(fullLib) {
 	catch (e) {
 		// fallback to default ordering
 		allSongs.sort(function(a, b) {
-			a = removeArticles(a['artist'].toLowerCase());
-			b = removeArticles(b['artist'].toLowerCase());
+			a = removeArticles((a['album_artist'] || a['artist']).toLowerCase());
+			b = removeArticles((b['album_artist'] || b['artist']).toLowerCase());
 			return a > b ? 1 : (a < b ? -1 : 0);
 		});
 
