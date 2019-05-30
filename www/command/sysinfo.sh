@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-04-12 TC moOde 5.0
+# 2019-05-30 TC moOde 5.3
 #
 
 # check for sudo
@@ -123,6 +123,8 @@ AUDIO() {
 	echo -e "\n\tResume MPD aft src chg\t= $rsmafterinp\c"
 	echo -e "\n\tVolume knob\t\t= $volknob\c"
 	echo -e "\n\tVolume mute\t\t= $volmute\c"
+	echo -e "\n\tSaved MPD vol\t\t= $volknob_mpd\c"
+	echo -e "\n\tPreamp volume\t\t= $volknob_preamp\c"
 	#echo -e "\n\tOutput stream\t\t= $OUTSTREAM\c"
 	echo -e "\n\tALSA version\t\t= $ALSAVER\c"
 	echo -e "\n\tSoX version\t\t= $SOXVER\c"
@@ -172,12 +174,12 @@ AUDIO() {
 	echo -e "\n\tReplaygain preamp\t= $replaygain_preamp\c"
 	echo -e "\n\tVolume normalization\t= $volume_normalization\c"
 	echo -e "\n\tAudio buffer (kb)\t= $audio_buffer_size\c"
-	echo -e "\n\tOutput buffer size (kb)\t= $max_output_buffer_size\c"
-	echo -e "\n\tALSA auto-resample\t= $auto_resample\c"
-	echo -e "\n\tALSA auto-channels\t= $auto_channels\c"
-	echo -e "\n\tALSA auto-format\t= $auto_format\c"
-	echo -e "\n\tHardware buffer time\t= $buffer_time\c"
-	echo -e "\n\tHardware period time\t= $period_time\n"
+	echo -e "\n\tOutput buffer size (kb)\t= $max_output_buffer_size\n"
+	#echo -e "\n\tALSA auto-resample\t= $auto_resample\c"
+	#echo -e "\n\tALSA auto-channels\t= $auto_channels\c"
+	#echo -e "\n\tALSA auto-format\t= $auto_format\c"
+	#echo -e "\n\tHardware buffer time\t= $buffer_time\c"
+	#echo -e "\n\tHardware period time\t= $period_time\n"
 
 	echo -e "\t  B L U E T O O T H    S E T T I N G S  \n"
 	echo -e "\tBluetooth ver\t\t= $BTVER\c"
@@ -528,6 +530,8 @@ inpactive=${arr[119]}
 rsmafterinp=${arr[120]}
 [[ "${arr[121]}" = "1" ]] && gpio_svc="On" || gpio_svc="Off"
 ignore_articles=${arr[122]}
+volknob_mpd=${arr[123]}
+volknob_preamp=${arr[124]}
 
 # renderer devices
 if [[ $alsaequal != "Off" ]]; then

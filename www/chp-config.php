@@ -53,7 +53,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
 
-		// update Allo Piano 2.1 Hi-Fi DAC device settings
+		// Allo Piano 2.1 Hi-Fi DAC device settings
 		if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 			if ($_POST['config']['outputmode'] == 'Dual-Mono' || $_POST['config']['outputmode'] == 'Dual-Stereo') {
 				//workerLog('dual mode selected');

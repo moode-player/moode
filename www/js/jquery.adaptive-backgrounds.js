@@ -8,6 +8,8 @@
  * - minor fixes
  * 2018-12-09 TC moOde 4.4
  * - improvements for btnBarFix()
+ * 2019-05-30 TC moOde 5.3
+ * - Add parseInt to getYiq()
  *
  */
 
@@ -188,7 +190,7 @@
 				// Helper function to calculate yiq - http://en.wikipedia.org/wiki/YIQ
 				var getYIQ = function (color) {
 					var rgb = color.match(/\d+/g);
-					return ((rgb[0] * 299) + (rgb[1] * 587) + (rgb[2] * 114)) / 1000;
+					return parseInt(((rgb[0] * 299) + (rgb[1] * 587) + (rgb[2] * 114)) / 1000);
 				};
 				
 				var useCSSBackground = function () {

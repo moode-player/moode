@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-05-30 TC moOde 5.3
  *
  */
  
@@ -47,7 +47,7 @@ const FEAT_LOCALUI =     0b0000000100000000;	//   256
 const FEAT_SOURCESEL =   0b0000001000000000;	//   512
 const FEAT_UPNPSYNC =    0b0000010000000000;	//  1024
 const FEAT_SPOTIFY =     0b0000100000000000;	//  2048
-const FEAT_GPIO =	    0b0001000000000000;	//  4096
+const FEAT_GPIO =		 0b0001000000000000;	//  4096
 
 // mirror for footer.php
 $FEAT_AIRPLAY =		0b0000000000000010;
@@ -1084,7 +1084,7 @@ function cfgdb_update($table, $dbh, $key, $value) {
 			$querystr = "UPDATE " . $table . 
 				" SET enabled='" . $value['enabled'] . 
 				"', pin='" . $value['pin'] . 
-				"', command='" . $value['command'] . 
+				"', command='" . trim($value['command']) . 
 				"', param='" . $value['param'] . 
 				"', value='" . $value['value'] . 
 				"' WHERE id='" . $key . "'";
@@ -2432,16 +2432,24 @@ function setAudioIn($input_source) {
 			sysCmd('amixer -c 0 sset "I2S/SPDIF Select" I2S');
 		}
 
-		sysCmd('/var/www/vol.sh -restore');
+		if ($_SESSION['mpdmixer'] == 'hardware') {
+			playerSession('write', 'volknob_preamp', $_SESSION['volknob']);
+			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_mpd']);
+		}
+		
 		sendEngCmd('inpactive0');
 
 		if ($_SESSION['rsmafterinp'] == 'Yes') {
 			sysCmd('mpc play');
 		}
 	}
+	// NOTE: the Source Select form requires MPD Volume control is set to Hardware or Disabled (0dB)
 	elseif ($input_source == 'Analog' || $input_source == 'S/PDIF') {
-		if ($_SESSION['alsavolume'] != 'none') {
-			sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
+		if ($_SESSION['mpdmixer'] == 'hardware') {
+			if ($_SESSION['wrkready'] == '1') {
+				playerSession('write', 'volknob_mpd', $_SESSION['volknob']); // don't update this value during startup (wrkready = 0)
+			}
+			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_preamp']);
 		}
 
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {		

@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-05-30 TC moOde 5.3
  *
  */
 
@@ -562,14 +562,17 @@ workerLog('worker: - Miscellaneous');
 
 // since we initially set alsa volume to 0 at the beginning of startup it must be reset
 if ($_SESSION['alsavolume'] != 'none') {
-	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled' || $_SESSION['audioin'] != 'Local') {
+	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') {
 		$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
 	}
 }
 
 // restore MPD volume level
-sysCmd('/var/www/vol.sh ' . $_SESSION['volknob']);
-workerLog('worker: MPD volume level (' . $_SESSION['volknob'] . ') restored');
+workerLog('worker: Saved MPD vol level (' . $_SESSION['volknob_mpd'] . ')');
+workerLog('worker: Preamp volume level (' . $_SESSION['volknob_preamp'] . ')');
+$volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+sysCmd('/var/www/vol.sh ' . $volume);
+workerLog('worker: MPD volume level (' . $volume . ') restored');
 if ($_SESSION['alsavolume'] != 'none') {
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
 	workerLog('worker: ALSA volume level (' . $result[0] . ')');
