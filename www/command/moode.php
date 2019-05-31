@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-05-30 TC moOde 5.3
  *
  */
 
@@ -39,8 +39,8 @@ $playqueue_cmds = array('add', 'play', 'clradd', 'clrplay', 'addall', 'playall',
 if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 	echo 'command missing';
 }
+// these get sent to worker.php 
 else {
-	// these get sent to worker.php 
 	if (in_array($_GET['cmd'], $jobs)) {
 		$queue_args = ($_GET['cmd'] == 'updmpddb' && isset($_POST['path']) && $_POST['path'] != '') ? $_POST['path'] : '';
 		if (submitJob($_GET['cmd'], $queue_args, '', '')) {
@@ -75,10 +75,18 @@ else {
 			echo json_encode('worker busy');
 		}
 	}
+	elseif ($_GET['cmd'] == 'disconnect-renderer') {
+		if (submitJob($_POST['job'], '', '', '')) {
+			echo json_encode('job submitted');
+		}
+		else {
+			echo json_encode('worker busy');
+		}
+	}
 
 	// these are handled here in moode.php
 	else {
-		// turn off auto-shuffle or random play when playqueue cmds submitted
+		// turn off auto-shuffle when playqueue cmds submitted
 		if (in_array($_GET['cmd'], $playqueue_cmds)) {
 			if ($_SESSION['ashuffle'] == '1') {
 				playerSession('write', 'ashuffle', '0');
@@ -86,10 +94,10 @@ else {
 				sendMpdCmd($sock, 'consume 0');
 				$resp = readMpdResp($sock);
 			}
-			else {
+			/*else {
 				sendMpdCmd($sock, 'random 0');
 				$resp = readMpdResp($sock);
-			}			
+			}*/			
 		}
 
 		switch ($_GET['cmd']) {
@@ -451,7 +459,7 @@ else {
 			case 'delstation':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					$station_name = substr($_POST['path'], 6, -4); // trim 'RADIO/' and '.pls' from path
-					workerLog($_GET['cmd'] . ', ' . $station_name);
+					//workerLog($_GET['cmd'] . ', ' . $station_name);
 
 					// remove row and delete file
 					$result = sdbquery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($station_name) . "'", $dbh);

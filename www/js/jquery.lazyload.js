@@ -11,7 +11,7 @@
  *
  * Version:  1.9.7
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-05-30 TC moOde 5.3
  *
  */
 
@@ -22,7 +22,8 @@
         var elements = this;
         var $container;
         var settings = {
-            threshold       : 0,
+            //threshold       : 0,
+            threshold       : 200, // was 0
             failure_limit   : 0,
             event           : "scroll.lazyload",
             effect          : "show",

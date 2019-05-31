@@ -11,6 +11,43 @@
 
 ########################################################
 //
+// 5.3 2019-05-30
+//
+########################################################
+
+New features
+
+- NEW: Preamp mode for Audiophonics 9028/9038 DAC and HiFiberry DAC+ADC
+- NEW: Disconnect button added to "Renderer Active" screens
+
+Radio station updates
+
+- NEW: Soma FM - Groove Salad Classic
+- UPD: Audiophile Baroque
+- UPD: Audiophile Classical
+- UPD: Audiophile Jazz
+- UPD: Audiophile Lounge
+- UPD: Audiophile Rock-Blues
+
+Updates
+
+- UPD: Bump to Linux kernel 4.19.46
+- UPD: Bump to shairport-sync-3.3.0-3c4a878
+- UPD: Leave MPD random play alone for playqueue cmds
+- UPD: Add Name Service Switcher package
+- UPD: Improve performance of image lazyloader
+
+Bug fixes
+
+- FIX: Hostapd not starting due to service being masked
+- FIX: Show/hide track list between Tag and Album views
+- FIX: Artist - Album filter not using exact match
+- FIX: Lazyload not activated after search in Tag view
+- FIX: Function getYIQ return value not being parsed as int
+- FIX: High CPU util for CoverView animated backdrop
+
+########################################################
+//
 // 5.2 2019-05-07
 //
 ########################################################

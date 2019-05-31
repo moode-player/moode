@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-05-30 TC moOde 5.3
  *
  */
 -->
@@ -163,7 +163,7 @@
 				<button class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
 				<button class="btn btn-cmd ralbum hide"><i class="fal fa-dot-circle"></i></button>
 				<button class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
-				<button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i>											
+				<button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button>
 				<button class="btn btn-cmd btn-toggle consume hide" id="playbar-consume" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
 				<button class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
 			</div>

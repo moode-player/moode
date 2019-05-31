@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-04-12 TC moOde 5.0
+# 2019-05-30 TC moOde 5.3
 #
 
 FPMLIMIT=40
@@ -53,7 +53,7 @@ while true; do
 			TIMESTAMP=$(date +'%Y%m%d %H%M%S')
 			LOGMSG=" watchdog: LIBRESPOT restarted (check syslog for errors)"
 			echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
-			/var/www/command/restart-spot.php
+			/var/www/command/restart-renderer.php -spotify
 		fi
 	fi
 		

@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-05-30 TC moOde 5.3
  *
  */
 
@@ -44,8 +44,10 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--sbw: 0px;
 	--shiftybg:rgba(0,0,0,0.85);
 	--pbfont:calc(0.75em + 1vmin);
-	--radioimg:url('../images/radio-w.svg');
+	--radiobadge:url('../images/radio-l.svg');
+	--defcover:'images/default-cover-v6-l.svg'; /* TEST */
 }
+
 html {background-color:inherit;}
 #wrap {margin:0 auto -180px;height:100%;height:auto !important;height:100%;}
 #container {height:100%;}
@@ -80,6 +82,9 @@ html {background-color:inherit;}
 #inpsrc-indicator span {font-size:1.25em;}
 #inpsrc-msg {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;}
 #inpsrc-msg a {color:#eee;}
+#inpsrc-msg i {font-size:1.5em;}
+#inpsrc-preamp-volume {font-size:.7em !important;}
+.disconnect-renderer {font-size:.7em !important;cursor:pointer;}
 /* main ui */
 .playback-controls {display:none;position:absolute;top:0;left:50%;width:184px;margin:-1px 0 0 -92px;text-align:center;z-index:9;}
 #currentsong, #currentalbum, #format-bitrate, #elapsed, #countdown-display {display:block;}
@@ -118,7 +123,7 @@ html {background-color:inherit;}
 .countdown-caret {margin-left:2px;color:var(--accentxts);}
 #countdown-display {position:absolute;top:51%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%);font-size:28px;font-weight:bold;cursor:pointer;}
 #total {position:absolute;top:63%;left:50%;transform:translate(-50%);margin-left:.5em;}
-.total-radio {background-image:var(--radioimg);background-position:center center;background-repeat:no-repeat;width:20%;height:20px;margin-left:0 !important;}
+.total-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;width:20%;height:20px;margin-left:0 !important;}
 #playbtns, #playbtns .btn-group {font-size:1em;margin:.75em 0;}
 #togglebtns .btn-group {font-size:1em;white-space:normal;}
 .tab-content.visacc #togglebtns .btn-group {color:var(--textvariant);}
@@ -360,11 +365,12 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 /* coverview screen saver */
 #screen-saver {color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}
 #ss-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
-#ss-style {position:fixed;top:0;left:0;height:100vh;width:100vw;animation:colors2 60s infinite;}
+#ss-style {position:fixed;top:0;left:0;height:100vh;width:100vw;animation:colors2 60s infinite;transform:translateZ(0);}
 #ss-coverart-url img {width:70vh;cursor: context-menu;}
 #ss-currentsong {margin:1em 1em 0 1em;font-size:1.4em;font-weight:bold;color:var(--accentxts);word-wrap:break-word;}
 #ss-currentalbum, #ss-currentartist {margin:1em 1em 0 1em;font-size:1.15em;}
-.ss-backdrop {width:100vw;height:auto;transform:translate(-50%, -50%);position:relative;top:50vh;left:50vw;}
+/*.ss-backdrop {width:100vw;height:auto;transform:translate(-50%, -50%);position:relative;top:50vh;left:50vw;}*/
+.ss-backdrop {min-width:100vw;min-height:100vh;max-width:unset;transform:translate(-50%, -50%);background-position:center center;position:relative;top:50vh;left:50vw;}
 .ss-coverart {position:fixed;top:5%;width:100%;}
 #ss-hud {display:none;padding-top:.35em}
 #ss-volume {padding-bottom:.5em;margin-top:-.25em;}
@@ -469,7 +475,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-toggles .coverview i {font-size:.9rem;}
 #playbar.visacc #playbar-toggles .btn {color:var(--textvariant);}
 #playbar.visacc #playbar-toggles .btn-primary {color:var(--adapttext);background-color:var(--btnshade4);}
-#playbar-radio, #m-radio {background-image:var(--radioimg);background-position:center center;background-repeat:no-repeat;background-size:contain;width:20%;height:15px;left:50%;transform:translate(-50%, -50%);display:none;}
+#playbar-radio, #m-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;background-size:contain;width:20%;height:15px;left:50%;transform:translate(-50%, -50%);display:none;}
 #playbar-radio {position:absolute;top:90%;}
 #m-radio {position:relative;transform:translate(-50%, 0);}
 

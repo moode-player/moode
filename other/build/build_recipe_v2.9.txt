@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.8, 2019-05-07
+# Build Recipe v2.9, 2019-05-30
 #
-# moOde 5.2 2019-05-07
+# moOde 5.3 2019-05-30
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
@@ -195,7 +195,7 @@ sudo apt-get update
 sudo apt-get -y install rpi-update php-fpm nginx sqlite3 php-sqlite3 memcached php-memcache php7.0-gd mpc \
 bs2b-ladspa libbs2b0 libasound2-plugin-equal telnet automake sysstat squashfs-tools tcpdump shellinabox \
 samba smbclient udisks-glue ntfs-3g exfat-fuse git inotify-tools libav-tools avahi-utils ninja-build \
-python3-setuptools libmediainfo0v5 libmms0 libtinyxml2-4 libzen0v5 libmediainfo-dev libzen-dev
+python3-setuptools libmediainfo0v5 libmms0 libtinyxml2-4 libzen0v5 libmediainfo-dev libzen-dev winbind libnss-winbind
 
 # meson
 sudo cp ./rel-stretch/other/mpd/build-tools/meson-0.50.1.tar.gz ./
@@ -220,7 +220,12 @@ sudo systemctl disable shellinabox
 
 sudo apt-get -y install dnsmasq hostapd
 
+# Install precompiled hostapd 2.7 binaries
+sudo mv ./rel-stretch/other/hostapd/hostapd-2.7 /usr/sbin/hostapd
+sudo mv ./rel-stretch/other/hostapd/hostapd_cli-2.7 /usr/sbin/hostapd_cli
+
 sudo systemctl daemon-reload
+sudo systemctl unmask hostapd
 sudo systemctl disable hostapd
 sudo systemctl disable dnsmasq
 
@@ -619,14 +624,14 @@ sudo systemctl disable squeezelite
 sudo chmod 0644 /lib/systemd/system/upmpdcli.service
 sudo systemctl disable upmpdcli.service
 
-5. Reset permissions for var and usr local
+5. Reset permissions
+sudo chmod -R 0755 /var/www
 sudo chmod -R 0755 /var/local/www
 sudo chmod -R 0777 /var/local/www/db
 sudo chmod -R ug-s /var/local/www
 sudo chmod -R 0755 /usr/local/bin
 
 6. Initial permissions for certain files. These also get set during moOde Worker startup.
-
 sudo chmod 0777 /var/local/www/playhistory.log
 sudo chmod 0777 /var/local/www/currentsong.txt
 sudo touch /var/local/www/libcache.json
@@ -679,14 +684,16 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-# kernel ver 4.19.40
+# 4.19.46
+echo "y" | sudo PRUNE_MODULES=1 rpi-update f5e1ff99d6600fcc6d869a8c4fb63a5bb3a3e824
+# 4.19.40
 echo "y" | sudo PRUNE_MODULES=1 rpi-update 6cb1da772a8c56f44591bec904046b15f1126949
-# kernel ver 4.19.34
+# 4.19.34
 echo "y" | sudo PRUNE_MODULES=1 rpi-update 99c274691c07480762dcda91a0ebfe3c4f519307
 # Fix for missing 4.19.y regulatory.db files
 sudo cp ./rel-stretch/other/firmware/regulatory.db* /lib/firmware
 
-# kernel ver 4.14.98
+# 4.14.98
 echo "y" | sudo PRUNE_MODULES=1 rpi-update a08ece3d48c3c40bf1b501772af9933249c11c5b
 
 # cleanup
@@ -823,9 +830,9 @@ sudo chmod 0755 /usr/local/etc/mpdasrc
 sudo apt-get -y install autoconf libtool libdaemon-dev libasound2-dev libpopt-dev libconfig-dev \
 avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
 
-sudo cp ./rel-stretch/other/shairport-sync/shairport-sync-3.3.0-rc6-0c65236.zip ./
-sudo unzip ./shairport-sync-3.3.0-rc6-0c65236.zip
-cd ./shairport-sync-0c6523636cd8cef950a33381621f2cbe9b7dd4de
+sudo cp ./rel-stretch/other/shairport-sync/shairport-sync-3.3.0-3c4a878.zip ./
+sudo unzip ./shairport-sync-3.3.0-3c4a878.zip
+cd ./shairport-sync-3c4a878ad9e0b3097c8c93433d6bf2f62af19c81
 
 
 sudo autoreconf -i -f

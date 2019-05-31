@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-05-30 TC moOde 5.3
  *
  */
 
@@ -25,8 +25,14 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 playerSession('open', '' ,'');
 
 if (isset($_POST['update_audioin']) && $_POST['audioin'] != $_SESSION['audioin']) {
-	playerSession('write', 'audioin', $_POST['audioin']);
-	submitJob('audioin', $_POST['audioin'], 'Input set to ' . $_POST['audioin'], '');
+	if ($_POST['update_audioin'] != 'Local' && $_SESSION['mpdmixer'] == 'software') {
+		$_SESSION['notify']['title'] = 'MPD Volume control must first be set to Hardware or Disabled (0dB)';
+		$_SESSION['notify']['duration'] = 6;
+	}
+	else {
+		playerSession('write', 'audioin', $_POST['audioin']);
+		submitJob('audioin', $_POST['audioin'], 'Input set to ' . $_POST['audioin'], '');
+	}
 }
 if (isset($_POST['update_rsmafterinp']) && $_POST['rsmafterinp'] != $_SESSION['rsmafterinp']) {
 	playerSession('write', 'rsmafterinp', $_POST['rsmafterinp']);
