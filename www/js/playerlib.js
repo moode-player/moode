@@ -1783,7 +1783,7 @@ function groupLib(fullLib) {
 		});
 
 		allAlbumCovers.sort(function(a, b) {	
-			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));	
+			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
 		});
 	}
 	catch (e) {
@@ -2204,9 +2204,9 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 
 	// store positions in array for use in scripts-panels
 	UI.libPos[0] = pos;
-	UI.libPos[1] = allAlbumCovers.map(function(e) {return e.album;}).indexOf(allAlbums[pos].album);
-	var albumobj = allAlbums[pos];
-	var album = allAlbums[pos].album;
+	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+	var albumobj = filteredAlbums[pos];
+	var album = filteredAlbums[pos].album;
 
 	storeLibPos(UI.libPos);
 
