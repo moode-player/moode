@@ -6,9 +6,9 @@ moOde provides a beautifully designed and responsive user interface, an extensiv
 
 Tim Curtis © 2014
 
-Release notes https://github.com/moode-player/moode/blob/develop/www/relnotes.txt<br>
-Setup guide: https://github.com/moode-player/moode/blob/develop/www/setup.txt<br>
-Contributors: https://github.com/moode-player/moode/blob/develop/www/CONTRIBS.html<br>
+Release notes https://github.com/moode-player/moode/blob/master/www/relnotes.txt<br>
+Setup guide: https://github.com/moode-player/moode/blob/master/www/setup.txt<br>
+Contributors: https://github.com/moode-player/moode/blob/master/www/CONTRIBS.html<br>
 
 ## Other Resources
 Raspberry Pi: https://github.com/raspberrypi<br>
