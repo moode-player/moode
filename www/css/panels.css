@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-05-30 TC moOde 5.3
+ * 2019-06-12 TC moOde 5.3.1
  *
  */
 
@@ -133,7 +133,7 @@ html {background-color:inherit;}
 #togglebtns .btn-primary {color:var(--accentxts);border-radius:.25em;}
 .tab-content.visacc #togglebtns .btn-primary {color:var(--adapttext);background-color:var(--btnshade4);}
 #menu-top, #menu-bottom {position:fixed;left:0;right:0;color:inherit;}
-.btnlist.btnlist-top.btnlist-top-pl, .btnlist.btnlist-top.btnlist-top-lib {top:0px;top:env(safe-area-inset-top);width:40%;z-index:1004;height:2.5rem;margin-left:.4rem;}
+.btnlist.btnlist-top.btnlist-top-pl, .btnlist.btnlist-top.btnlist-top-lib {top:0px;top:env(safe-area-inset-top);width:35%;z-index:1004;height:2.5rem;margin-left:.4rem;}
 .btn.btn-primary.btn-small, .btn.btn-primary.btn-medium {background:rgba(128,128,128,0.2);margin-top:-4px;}
 #menu-top {height:2.75em;line-height:2.75em;padding-top:0;padding-top:env(safe-area-inset-top);height:0;z-index:1002;display:flex;}
 #menu-top .dropdown {display:flex;float:right;height:2.75em;top:0;top:calc(env(safe-area-inset-top) + 0);right:.5em;line-height:2.75em;margin:0;background:none;position:absolute;align-items:center;}
@@ -197,7 +197,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .playlist .pl-entry {margin-right:40px;padding:0px;}
 .database .db-entry {margin-left:2.5em;padding:.5em 0;max-width:calc(100vw - 10px);overflow:hidden;}
 .database .db-icon {display:block;float:left;height:19px;line-height:19px;width:1.875em;padding:0;color:inherit;}
-.database .db-icon .btn {font-size:1em;padding:.5em .4em 1em .4em;} 
+.database .db-icon .btn {font-size:1em;padding:.5em .4em 1em .4em;}
 .db-icon.db-song.db-browse.db-action img, .db-icon.db-radiofolder-icon.db-browse.db-action img {width:90%;}
 .db-song.db-action a {width:100vw;height:2em;padding-top:.75em !important;}
 #lib-file .songtrack {left:0px;text-align:right;width:2em;float:left;display:table-cell;}
@@ -499,8 +499,8 @@ input[type='range'] {
  padding:0;
  background-color:transparent;
 }
-input[type='range'], 
-input[type='range']::-webkit-slider-runnable-track, 
+input[type='range'],
+input[type='range']::-webkit-slider-runnable-track,
 input[type='range']::-webkit-slider-thumb {
  -webkit-appearance:none;
 }
@@ -555,7 +555,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 @keyframes fadeIn {
    0% {opacity: 0;}
    100% {opacity: 1;}
-} 
+}
 @keyframes spin {
     from {transform:rotate(0def);}
     to {transform:rotate(360deg);}
