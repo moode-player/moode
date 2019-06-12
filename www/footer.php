@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -19,19 +19,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-30 TC moOde 5.3
+ * 2019-06-12 TC moOde 5.3.1
  *
  */
 -->
-<!-- ABOUT -->	
+<!-- ABOUT -->
 <div id="about-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
 	<div class="modal-body">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<p style="text-align:center;font-size:40px;font-weight:500;letter-spacing:-2px;margin-top:2px">m<span style="color:#d35400;line-height:12px">oO</span>de<span style="font-size:12px;position:relative;top:-15px;left:-3px;">™</span></p>
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
-			<h4>Release Information</h4>			
+			<h4>Release Information</h4>
 			<ul>
-				<li>Release: 5.3 2019-05-30 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
+				<li>Release: 5.3.1 2019-06-12 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
@@ -40,7 +40,7 @@
 			</ul>
 		</p>
 		<p>
-			<h4>Platform Information</h4>			
+			<h4>Platform Information</h4>
 			<ul>
 				<li>Raspbian ver: <span id="sys-raspbian-ver"></span></li>
 				<li>Linux kernel: <span id="sys-kernel-ver"></span>, <span id="sys-processor-arch"></span></li>
@@ -54,7 +54,7 @@
 	</div>
 </div>
 
-<!-- CONFIGURE -->	
+<!-- CONFIGURE -->
 <div id="configure-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -83,7 +83,7 @@
 			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SPOTIFY) { ?>
 				<a href="spo-config.php" class="moode-config-settings-link2">SPO</a>
 			<?php } ?>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SQUEEZELITE) { ?>				
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SQUEEZELITE) { ?>
 				<a href="sqe-config.php" class="moode-config-settings-link2">SQE</a>
 			<?php } ?>
 			<?php if ($_SESSION['feat_bitmask'] & $FEAT_UPMPDCLI) { ?>
@@ -100,7 +100,7 @@
 	</div>
 </div>
 
-<!-- CUSTOMIZE -->	
+<!-- CUSTOMIZE -->
 <div id="customize-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="customize-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -196,7 +196,7 @@
 							<label for="import-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; color: #333;">Choose</label>
 							<input type="file" id="import-bgimage" accept="image/jpeg" style="display:none" onchange="importBgImage(this.files)">
 							<br>
-							<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; margin-bottom:.5em;color: #333;">Remove</button> 
+							<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; margin-bottom:.5em;color: #333;">Remove</button>
 						</div>
 						<div id="current-bgimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
 						<a class="info-toggle" id="info-toggle-bgimage" data-cmd="info-bgimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -314,7 +314,7 @@
 	                </div>
 				</div>
 		    	</fieldset>
-	
+
 			<h5>Other options</h5>
 		    	<fieldset>
 				<div class="control-group">
@@ -370,7 +370,7 @@
 						<span id="info-play-history" class="help-block hide">
 	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.<br>
 	                    </span>
-	                </div>					
+	                </div>
 				</div>
 		    	</fieldset>
 		</form>
@@ -382,7 +382,7 @@
 	</div>
 </div>
 
-<!-- CLOCK RADIO -->	
+<!-- CLOCK RADIO -->
 <div id="clockradio-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="clockradio-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -410,7 +410,7 @@
 							</div>
 						</div>
 	                </div>
-	
+
 					<div id="clockradio-ctl-grp1">
 		                <label class="control-label" for="clockradio-playname">Play</label>
 		                <div class="controls">
@@ -420,13 +420,13 @@
 			                    	Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
 		                    </span>
 		                </div>
-		                
+
 		                <label class="control-label" for="clockradio-starttime-hh">Start time</label>
 		                <div class="controls">
 		                    <input id="clockradio-starttime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
 		                    <span>:</span>
 		                    <input id="clockradio-starttime-mm" class="input-mini input-height-x" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
-							
+
 							<div class="btn-group bootstrap-select bootstrap-select-mini">
 								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 									<div id="clockradio-starttime-ampm" class="filter-option pull-left">
@@ -442,7 +442,7 @@
 								</div>
 							</div>
 		                </div>
-	
+
 						<!-- r44d -->
 		                <label class="control-label" for="clockradio-start-mon"></label>
 		                <div class="controls">
@@ -456,16 +456,16 @@
 								<input id="clockradio-start-sat" class="checkbox-ctl" type="checkbox" name="clockradio-start-sat">Sat
 								<input id="clockradio-start-sun" class="checkbox-ctl" type="checkbox" name="clockradio-start-sun">Sun
 							</div>
-		                </div>	
+		                </div>
 					</div>
-	
+
 					<div id="clockradio-ctl-grp2">
 		                <label class="control-label" for="clockradio-stoptime-hh">Stop time</label>
 		                <div class="controls">
 		                    <input id="clockradio-stoptime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
 		                    <span>:</span>
 		                    <input id="clockradio-stoptime-mm" class="input-mini input-height-x" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
-							
+
 							<div class="btn-group bootstrap-select bootstrap-select-mini">
 								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 									<div id="clockradio-stoptime-ampm" class="filter-option pull-left">
@@ -481,7 +481,7 @@
 								</div>
 							</div>
 		                </div>
-		                
+
 						<!-- r44d -->
 		                <label class="control-label" for="clockradio-stop-mon"></label>
 		                <div class="controls">
@@ -496,7 +496,7 @@
 								<input id="clockradio-stop-sun" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sun">Sun
 							</div>
 		                </div>
-	
+
 		                <label class="control-label" for="clockradio-shutdown">Shutdown</label>
 		                <div class="controls">
 	   						<div class="btn-group bootstrap-select bootstrap-select-mini">
@@ -516,14 +516,14 @@
 							<span class="control-aftertext">after stop</span>
 		                </div>
 					</div>
-	
+
 					<div id="clockradio-ctl-grp3">
 		                <label class="control-label" for="clockradio-volume">Volume</label>
 		                <div class="controls">
 		                    <input id="clockradio-volume" class="input-mini input-height-x" type="number" min="1" max="100" name="clockradio_volume" value="">
 		                </div>
 					</div>
-	
+
 	            </div>
 		    	</fieldset>
 		</form>
@@ -534,7 +534,7 @@
 	</div>
 </div>
 
-<!-- PLAYERS -->	
+<!-- PLAYERS -->
 <div id="players-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -547,7 +547,7 @@
 	</div>
 </div>
 
-<!-- AUDIO INFO -->	
+<!-- AUDIO INFO -->
 <div id="audioinfo-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="audioinfo-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -560,7 +560,7 @@
 	</div>
 </div>
 
-<!-- SYSTEM INFO -->	
+<!-- SYSTEM INFO -->
 <div id="sysinfo-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="sysinfo-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -573,7 +573,7 @@
 	</div>
 </div>
 
-<!-- QUICK HELP -->	
+<!-- QUICK HELP -->
 <div id="quickhelp-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="help-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -587,7 +587,7 @@
 	</div>
 </div>
 
-<!-- RESTART -->	
+<!-- RESTART -->
 <div id="restart-modal" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="restart-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -629,7 +629,7 @@
 <!-- DISPLAY MESSAGES -->
 <script src="js/jquery-1.8.2.min.js"></script>
 <script src="js/jquery-ui-1.10.0.custom.min.js"></script>
-<?php 
+<?php
 	if (isset($_SESSION['notify']) && $_SESSION['notify'] != '') {
 		ui_notify($_SESSION['notify']);
 		session_start();
