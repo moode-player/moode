@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-06-12 TC moOde 5.3.1
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 if (false === ($sock = openMpdSock('localhost', 6600))) {
-	$msg = 'audioinfo: Connection to MPD failed'; 
+	$msg = 'audioinfo: Connection to MPD failed';
 	workerLog($msg);
-	exit($msg . "\n");	
+	exit($msg . "\n");
 }
 else {
-	playerSession('open', '' ,''); 
+	playerSession('open', '' ,'');
 	$dbh = cfgdb_connect();
 	session_write_close();
 }
@@ -80,11 +80,11 @@ else {
 	if ( substr( $file, 0, 4) == 'http' ) {
 		$file = str_replace( '*20', ' ', $file );
 	}
-	
+
 	$encoded_at = getEncodedAt($song, 'verbose');
 	$status = parseStatus(getMpdStatus($sock));
-	
-	if ($hwparams['status'] == 'active' || $_SESSION['audioout'] == 'Bluetooth') { 		
+
+	if ($hwparams['status'] == 'active' || $_SESSION['audioout'] == 'Bluetooth') {
 		// dsd: DoP, Native bitstream, DSD-to-PCM
 		if ($status['audio_sample_depth'] == 'dsd64') {
 			$encoded_at = 'DSD64, 1 bit, 2.822 mbps Stereo';
@@ -196,10 +196,10 @@ else {
 	// equalizers
 	$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
 	$peq = $_SESSION['eqfa4p'] == 'Off' ? 'off' : $_SESSION['eqfa4p'];
-	$equalizer = 'Graphic EQ: (' . $geq . '), Parametric EQ: (' . $peq . '}';
+	$equalizer = 'Graphic EQ: (' . $geq . '), Parametric EQ: (' . $peq . ')';
 	// crossfade and other dsp
 	$crossfade = $_SESSION['mpdcrossfade'] . ' seconds';
-	$otherdsp = 'Volume normalize (' . $cfg_mpd['volume_normalization'] . '}, ' . 'Replaygain (' . $cfg_mpd['replaygain'] . ')';
+	$otherdsp = 'Volume normalize (' . $cfg_mpd['volume_normalization'] . '), ' . 'Replaygain (' . $cfg_mpd['replaygain'] . ')';
 }
 // chip options
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
