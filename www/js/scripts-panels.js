@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-30 TC moOde 5.3
+ * 2019-06-12 TC moOde 5.3.1
  *
  */
 
@@ -130,7 +130,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#ss-style, #ss-backdrop').css('display', '');
 	}
 	else if (SESSION.json['scnsaver_style'] == 'Theme') {
-		$('#ss-style, #ss-backdrop').css('display', 'none');		
+		$('#ss-style, #ss-backdrop').css('display', 'none');
 	}
 	else if (SESSION.json['scnsaver_style'] == 'Pure Black') {
 		$('#ss-style').css('animation', 'initial');
@@ -154,7 +154,7 @@ jQuery(document).ready(function($) { 'use strict';
 		SESSION.json['volknob'] = '0';
 		SESSION.json['volmute'] = '0';
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'volknob': '0', 'volmute': '0'});
-	} 
+	}
 	else {
 		$('#volume').val(SESSION.json['volknob']);
 		$('#volume-2').val(SESSION.json['volknob']);
@@ -213,7 +213,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 
 		setTimeout(function() {
-			$('img.lazy').lazyload({
+			$('img.lazy-radioview').lazyload({
 			    container: $('#radiocovers')
 			});
 			if (UI.radioPos >= 0) {
@@ -234,7 +234,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.tag-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
 		setTimeout(function() {
-			$('img.lazy').lazyload({
+			$('img.lazy-tagview').lazyload({
 			    container: $('#lib-album')
 			});
 			if (UI.libPos[0] >= 0) {
@@ -252,6 +252,9 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#lib-albumcover, #lib-albumcover-header').show();
 		$('#top-columns, #bottom-row').css('display', 'none');
 		setTimeout(function() {
+            $('img.lazy-albumview').lazyload({
+			    container: $('#lib-album')
+			});
 			if (UI.libPos[1] >= 0) { // lib entry clicked or random album
 			    $('#albumcovers .lib-entry').removeClass('active');
 				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
@@ -274,7 +277,7 @@ jQuery(document).ready(function($) { 'use strict';
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
 
 		setTimeout(function() {
-			$('img.lazy').lazyload({
+			$('img.lazy-radioview').lazyload({
 			    container: $('#radiocovers')
 			});
 			if (UI.radioPos >= 0) {
@@ -308,7 +311,7 @@ jQuery(document).ready(function($) { 'use strict';
 			loadLibrary();
 		}
 		setTimeout(function() {
-			$('img.lazy').lazyload({
+			$('img.lazy-tagview').lazyload({
 			    container: $('#lib-album')
 			});
 			if (UI.libPos[0] >= 0) { // lib entry clicked or random album
@@ -353,7 +356,7 @@ jQuery(document).ready(function($) { 'use strict';
 			loadLibrary();
 		}
 		setTimeout(function() {
-			$('img.lazy').lazyload({
+			$('img.lazy-albumview').lazyload({
 			    container: $('#lib-albumcover')
 			});
 			if (UI.libPos[1] >= 0) { // lib entry clicked or random album
@@ -386,7 +389,7 @@ jQuery(document).ready(function($) { 'use strict';
 			var newVol = SESSION.json['volknob'];
 			var volEvent = 'unmute';
         }
-		
+
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'volmute': SESSION.json['volmute']});
 		setVolume(newVol, volEvent);
 	});
@@ -397,7 +400,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('#volume-popup').modal('toggle');
 		}
 		else {
-			$('.volume-display').css('margin-top', '-16px');	
+			$('.volume-display').css('margin-top', '-16px');
 			if (SESSION.json['mpdmixer'] == 'disabled') {
 				$('.volume-display').css('opacity', '.3');
 			}
@@ -412,23 +415,23 @@ jQuery(document).ready(function($) { 'use strict';
 			if (UI.mobile) {
 				$('#m-countdown').countdown('pause');
 			}
-			else {				
+			else {
 				$('#countdown-display, #playbar-countdown').countdown('pause');
 			}
-			
+
 			if (MPD.json['file'].substr(0, 4).toLowerCase() == 'http') {
 				var cmd = MPD.json['artist'] == 'Radio station' ? 'stop' : 'pause'; // pause if for upnp url
 			}
 			else {
 			    var cmd = 'pause'; // song file
-			}			
+			}
 		}
 		else if (MPD.json['state'] == 'pause') {
 			$('#playbar-mcount').countdown('resume'); // new
 			if (UI.mobile) {
 				$('#m-countdown').countdown('resume');
 			}
-			else {				
+			else {
 				$('#countdown-display, #playbar-countdown, #playbar-mcount').countdown('resume'); // add #playbar-mcount, same for below
 				customScroll('pl', parseInt(MPD.json['song']), 200);
 			}
@@ -462,7 +465,7 @@ jQuery(document).ready(function($) { 'use strict';
 			//UI.mobile ? refreshTimer(0, 0, 'stop') : refreshTimer(0, 0, 'stop');
 			refreshTimer(0, 0, 'stop')
 	        sendMpdCmd('seek ' + MPD.json['song'] + ' 0');
-			if (MPD.json['state'] != 'pause') {			
+			if (MPD.json['state'] != 'pause') {
 				sendMpdCmd('pause');
 			}
         }
@@ -517,8 +520,8 @@ jQuery(document).ready(function($) { 'use strict';
 			else {
 				$('#time').val(0);
 			}
-			
-			// repaint not needed 
+
+			// repaint not needed
 			UI.knobPainted = false;
         },
         release : function(value) {
@@ -533,7 +536,7 @@ jQuery(document).ready(function($) { 'use strict';
 					$('#countdown-display').countdown({until: seekto, onTick: watchCountdown, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 				}
 			}
-			
+
 			UI.knobPainted = false;
         }
 		/*
@@ -570,7 +573,7 @@ jQuery(document).ready(function($) { 'use strict';
 			if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
 				refreshTimer(parseInt(sendMoodeCmd('GET', 'getmpdstatus')['elapsed']), parseInt(MPD.json['time']), MPD.json['state']); // count up
 				$('#total').html(formatSongTime(MPD.json['time']) + '<i class="fas fa-caret-up countdown-caret"></i>');
-			} 
+			}
 			else {
 				refreshTimer(parseInt(MPD.json['time'] - parseInt(sendMoodeCmd('GET', 'getmpdstatus')['elapsed'])), 0, MPD.json['state']); // count down
 				$('#total').html(formatSongTime(MPD.json['time']) + '<i class="fas fa-caret-down countdown-caret"></i>');
@@ -672,11 +675,11 @@ jQuery(document).ready(function($) { 'use strict';
 		customScroll('artists', UI.libPos[2], 200);
 	});
 
-	// click on artist or station name in playback    
+	// click on artist or station name in playback
 	$('#currentalbum').click(function(e) {
 		// radio station
 		if (MPD.json['artist'] == 'Radio station') {
-			$('.database-radio li').each(function(index){ 
+			$('.database-radio li').each(function(index){
 				if ($(this).text().search(RADIO.json[MPD.json['file']]['name']) != -1) {
 					UI.radioPos = index + 1;
 				}
@@ -703,8 +706,8 @@ jQuery(document).ready(function($) { 'use strict';
 			var cmd = $(this).hasClass('db-folder') ? 'lsinfo' : 'listsavedpl';
 			UI.dbPos[UI.dbPos[10]] = $(this).parent().attr('id').replace('db-','');
 			++UI.dbPos[10];
-			mpdDbCmd(cmd, $(this).parent().data('path'));				
-		} 
+			mpdDbCmd(cmd, $(this).parent().data('path'));
+		}
 	});
 	$('#db-back').click(function(e) {
 		$('#db-search-results').hide();
@@ -722,7 +725,7 @@ jQuery(document).ready(function($) { 'use strict';
 			mpdDbCmd('lsinfo', path);
 
 			if (UI.dbPos[10] == 0) {
-				UI.dbPos.fill(0); 
+				UI.dbPos.fill(0);
 			}
 		}
 	});
@@ -737,7 +740,7 @@ jQuery(document).ready(function($) { 'use strict';
 		UI.dbCmd = UI.dbCmd != 'lsinfo' && UI.dbCmd != 'listsavedpl' ? 'lsinfo' : UI.dbCmd;
 		if (UI.dbCmd == 'lsinfo' || UI.dbCmd == 'listsavedpl') {
 			mpdDbCmd(UI.dbCmd, UI.path);
-		}		
+		}
 	});
 	$('#db-search-submit').click(function(e) {
 		var searchStr = '';
@@ -764,7 +767,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#db-search-reset').click(function(e) {
 		$('#dbsearch-alltags, #dbsearch-genre, #dbsearch-artist, #dbsearch-album, #dbsearch-title, #dbsearch-albumartist, #dbsearch-date, #dbsearch-composer, #dbsearch-performer, #dbsearch-comment, #dbsearch-file').val('');
 		$('#dbsearch-alltags').focus();
-	});  
+	});
 	$('#dbsearch-modal').on('shown.bs.modal', function() {
 		$('#db-search-results').css('font-weight', 'normal');
 		$('.database li').removeClass('active');
@@ -841,7 +844,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 			if (filter == '') {
 				$("#searchResetRa").hide();
-				showSearchResetRa = false;			
+				showSearchResetRa = false;
 			}
 
 			$('.database-radio li').each(function(){
@@ -852,7 +855,7 @@ jQuery(document).ready(function($) { 'use strict';
 					$(this).show();
 					count++;
 				}
-			});	
+			});
 		    var s = (count == 1) ? '' : 's';
 		    if (filter != '') {
 				$('#ra-filter-results').html((+count) + '&nbsp;station' + s);
@@ -862,9 +865,9 @@ jQuery(document).ready(function($) { 'use strict';
 		    }
 			$('#database-radio').scrollTo(0, 200);
 
-			$('img.lazy').lazyload({
+			$('img.lazy-radioview').lazyload({
 			    container: $('#radiocovers')
-			});		
+			});
 		}, 750);
 	});
 	$('#searchResetRa').click(function(e) {
@@ -974,7 +977,7 @@ jQuery(document).ready(function($) { 'use strict';
 			UI.libPos.fill(-3);
 
 			var lazyContainer = $('.tag-view-btn').hasClass('active') ? '#lib-album' : '#lib-albumcover';
-			$('img.lazy').lazyload({
+			$('img.lazy-tagview').lazyload({
 			    container: $(lazyContainer)
 			});
 		}, 750);
@@ -1001,7 +1004,7 @@ jQuery(document).ready(function($) { 'use strict';
 		searchTimer = setTimeout(function(){
 			var filter = $(selector).val()
 			var count = 0;
-			
+
 			$('.playhistory li').each(function(){
 				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
 					$(this).hide();
@@ -1039,7 +1042,7 @@ jQuery(document).ready(function($) { 'use strict';
 		UI.radioPos = parseInt(UI.dbEntry[3].substr(3));
 		storeRadioPos(UI.radioPos)
 	});
-    
+
 	// remove highlight from station logo
 	$('.btnlist-top-ra').click(function(e) {
 		//console.log('click .btnlist-top-ra')
@@ -1099,7 +1102,7 @@ jQuery(document).ready(function($) { 'use strict';
 		var endpos = $('#move-plitem-endpos').val() - 1;
 		var newpos = $('#move-plitem-newpos').val() - 1;
 		// NOTE: format for single or multiple, endpos not inclusive so must be bumped for multiple
-		// move begpos newpos or move begpos:endpos newpos 
+		// move begpos newpos or move begpos:endpos newpos
 		begpos == endpos ? cmd = 'moveplitem&range=' + begpos + '&newpos=' + newpos : cmd = 'moveplitem&range=' + begpos + ':' + (endpos + 1) + '&newpos=' + newpos;
 		notify('move', '');
 		var result = sendMoodeCmd('GET', cmd, '', true);
@@ -1152,7 +1155,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.coverview').on('click', function(e) {
 		e.stopImmediatePropagation();
 		screenSaver('1');
-	});	
+	});
 
 	// disconnect active renderer
 	$('.disconnect-renderer').live('click', function(e) {
