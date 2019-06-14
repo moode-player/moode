@@ -1,15 +1,15 @@
 ################################################################
 #
-# Build Recipe v2.9, 2019-05-30
+# Build Recipe v2.10, 2019-06-12
 #
-# moOde 5.3 2019-05-30
+# moOde 5.3.1 2019-06-12
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
 # a custom OS for running moOde audio player.
 #
 # NOTE: This recipe is based on Stretch Lite 2018-11-13
-# 
+#
 # Unless otherwise noted or if a command requires user
 # interaction, groups of commands can be run in batch.
 #
@@ -75,7 +75,7 @@ sudo umount /mnt/p2
 sudo rmdir /mnt/p1
 sudo rmdir /mnt/p2
 
-7. Install the modified .img file to an SD Card 
+7. Install the modified .img file to an SD Card
 
 8. Power off
 
@@ -96,7 +96,7 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
 4. Open File Manager (Windows) or Finder (Mac)
 5. Click the device named "boot" to show its contents
 6. Create an empty file named "ssh" in the boot directory
-7. Optionally enable WiFi connection 
+7. Optionally enable WiFi connection
 a. Create a file named wpa_supplicant.conf in the boot directory
 b. Paste the lines below into the file making approproate substitutions for SSID and PASSWORD
 c. Save the file
@@ -113,7 +113,7 @@ psk="YourPASSWORD"
 
 8. Edit the file named cmdline.txt
 
-# Remove the text below 
+# Remove the text below
 quiet init=/usr/lib/raspi-config/init_resize.sh
 
 # Add this text to beginning of the line. Ensure there is a space between this text and the remaining text.
@@ -148,17 +148,17 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/rel-stretch-r52.zip
-sudo unzip ./rel-stretch-r52.zip
+wget http://moodeaudio.org/downloads/prod/moode-r531.zip
+sudo unzip ./moode-r531.zip
 
 5. Expand the root partition to 3GB.
 
-sudo cp ./rel-stretch/www/command/resizefs.sh ./
+sudo cp ./moode/www/command/resizefs.sh ./
 sudo chmod 0755 ./resizefs.sh
 sudo sed -i "/PART_END=/c\PART_END=+3000M" ./resizefs.sh
 sudo ./resizefs.sh start
 sudo rm ./resizefs.sh
-sudo cp ./rel-stretch/boot/config.txt.default /boot/config.txt
+sudo cp ./moode/boot/config.txt.default /boot/config.txt
 
 # SR1
 sudo reboot
@@ -198,7 +198,7 @@ samba smbclient udisks-glue ntfs-3g exfat-fuse git inotify-tools libav-tools ava
 python3-setuptools libmediainfo0v5 libmms0 libtinyxml2-4 libzen0v5 libmediainfo-dev libzen-dev winbind libnss-winbind
 
 # meson
-sudo cp ./rel-stretch/other/mpd/build-tools/meson-0.50.1.tar.gz ./
+sudo cp ./moode/other/mpd/build-tools/meson-0.50.1.tar.gz ./
 sudo tar xfz meson-0.50.1.tar.gz
 cd meson-0.50.1
 sudo python3 setup.py install
@@ -206,7 +206,7 @@ cd ~
 sudo rm -rf meson-0.50.1*
 
 # mediainfo
-sudo cp ./rel-stretch/other/mediainfo/mediainfo-18.12 /usr/local/bin/mediainfo
+sudo cp ./moode/other/mediainfo/mediainfo-18.12 /usr/local/bin/mediainfo
 
 sudo systemctl disable shellinabox
 
@@ -216,13 +216,13 @@ sudo systemctl disable shellinabox
 //
 ////////////////////////////////////////////////////////////////
 
-1. Install Host AP mode 
+1. Install Host AP mode
 
 sudo apt-get -y install dnsmasq hostapd
 
 # Install precompiled hostapd 2.7 binaries
-sudo mv ./rel-stretch/other/hostapd/hostapd-2.7 /usr/sbin/hostapd
-sudo mv ./rel-stretch/other/hostapd/hostapd_cli-2.7 /usr/sbin/hostapd_cli
+sudo mv ./moode/other/hostapd/hostapd-2.7 /usr/sbin/hostapd
+sudo mv ./moode/other/hostapd/hostapd_cli-2.7 /usr/sbin/hostapd_cli
 
 sudo systemctl daemon-reload
 sudo systemctl unmask hostapd
@@ -237,7 +237,7 @@ libusb-dev libglib2.0-dev libudev-dev libical-dev libreadline-dev libsbc1 libsbc
 
 # Compile bluez 5.50
 # 2018-06-01 commit 8994b7f2bf817a7fea677ebe18f690a426088367
-sudo cp ./rel-stretch/other/bluetooth/bluetooth/bluez-5.50.tar.xz ./
+sudo cp ./moode/other/bluetooth/bluetooth/bluez-5.50.tar.xz ./
 sudo tar xf bluez-5.50.tar.xz >/dev/null
 cd bluez-5.50
 sudo autoreconf --install
@@ -246,16 +246,16 @@ sudo make
 sudo make install
 cd ..
 sudo rm -rf ./bluez-5.50*
-	
+
 # Delete symlink and bin for old bluetoothd
 sudo rm /usr/sbin/bluetoothd
 sudo rm -rf /usr/lib/bluetooth
 # Create symlink for new bluetoothd
 sudo ln -s /usr/libexec/bluetooth/bluetoothd /usr/sbin/bluetoothd
 
-# Compile bluez-alsa 1.3.1 
+# Compile bluez-alsa 1.3.1
 # 2019-03-10 commit d73282b25c613fff445ad3818a963e958b23cc20
-sudo cp ./rel-stretch/other/bluetooth/bluez-alsa-master-d73282b.zip ./
+sudo cp ./moode/other/bluetooth/bluez-alsa-master-d73282b.zip ./
 sudo unzip -q bluez-alsa-master-d73282b.zip
 cd bluez-alsa-master
 # NOTE: Ignore warnings from autoreconf and configure
@@ -293,7 +293,7 @@ sudo reboot
 
 NOTE: Ignore warnings during build
 
-sudo cp ./rel-stretch/other/wiringpi/wiringPi-2.50-36fb7f1.tar.gz ./
+sudo cp ./moode/other/wiringpi/wiringPi-2.50-36fb7f1.tar.gz ./
 sudo tar xfz ./wiringPi-2.50-36fb7f1.tar.gz
 cd wiringPi-36fb7f1
 sudo ./build
@@ -302,7 +302,7 @@ sudo rm -rf ./wiringPi*
 
 2. Rotenc
 
-sudo cp ./rel-stretch/other/rotenc/rotenc.c ./
+sudo cp ./moode/other/rotenc/rotenc.c ./
 sudo gcc -std=c99 rotenc.c -orotenc -lwiringPi
 sudo cp ./rotenc /usr/local/bin
 sudo rm ./rotenc*
@@ -325,7 +325,7 @@ sudo mkdir /var/log/mpd
 sudo touch /var/log/mpd/log
 sudo chmod 644 /var/log/mpd/log
 sudo chown -R mpd:audio /var/log/mpd
-sudo cp ./rel-stretch/mpd/mpd.conf.default /etc/mpd.conf
+sudo cp ./moode/mpd/mpd.conf.default /etc/mpd.conf
 sudo chown mpd:audio /etc/mpd.conf
 sudo chmod 0666 /etc/mpd.conf
 
@@ -352,7 +352,7 @@ libglib2.0-dev
 3. Download MPD 0.20.23 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./rel-stretch/other/mpd/mpd-0.20.23 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.20.23 /usr/local/bin/mpd
 sudo reboot
 
 sudo wget http://www.musicpd.org/download/mpd/0.20/mpd-0.20.23.tar.xz
@@ -406,7 +406,7 @@ sudo mkdir /var/log/mpd
 sudo touch /var/log/mpd/log
 sudo chmod 644 /var/log/mpd/log
 sudo chown -R mpd:audio /var/log/mpd
-sudo cp ./rel-stretch/mpd/mpd.conf.default /etc/mpd.conf
+sudo cp ./moode/mpd/mpd.conf.default /etc/mpd.conf
 sudo chown mpd:audio /etc/mpd.conf
 sudo chmod 0666 /etc/mpd.conf
 
@@ -433,7 +433,7 @@ libglib2.0-dev
 3. Download MPD 0.21.8 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./rel-stretch/other/mpd/mpd-0.21.8 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.21.8 /usr/local/bin/mpd
 sudo reboot
 
 sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.8.tar.xz
@@ -538,20 +538,20 @@ sudo chmod 0666 /var/log/moode.log
 sudo touch /var/log/php_errors.log
 sudo chmod 0666 /var/log/php_errors.log
 # Files
-sudo cp ./rel-stretch/mpd/sticker.sql /var/lib/mpd
-sudo cp -r "./rel-stretch/other/sdcard/Stereo Test/" /var/lib/mpd/music/SDCARD/
-sudo cp ./rel-stretch/network/interfaces.default /etc/network/interfaces
+sudo cp ./moode/mpd/sticker.sql /var/lib/mpd
+sudo cp -r "./moode/other/sdcard/Stereo Test/" /var/lib/mpd/music/SDCARD/
+sudo cp ./moode/network/interfaces.default /etc/network/interfaces
 
 ## NOTE: if you created a wpa_supplicant.conf file back in STEP 1 to run the
-## build over a WiFi connection then don't copy the wpa_supplicant.conf file. 
+## build over a WiFi connection then don't copy the wpa_supplicant.conf file.
 ## When you reach STEP 12 open Network config and enter your SSID and Password then APPLY.
 ## This will create a new wpa_supplicant.conf file and also update the sql database.
 
-sudo cp ./rel-stretch/network/wpa_supplicant.conf.default /etc/wpa_supplicant/wpa_supplicant.conf
+sudo cp ./moode/network/wpa_supplicant.conf.default /etc/wpa_supplicant/wpa_supplicant.conf
 
-sudo cp ./rel-stretch/network/dhcpcd.conf.default /etc/dhcpcd.conf
-sudo cp ./rel-stretch/network/hostapd.conf.default /etc/hostapd/hostapd.conf
-sudo cp ./rel-stretch/var/local/www/db/moode-sqlite3.db.default /var/local/www/db/moode-sqlite3.db
+sudo cp ./moode/network/dhcpcd.conf.default /etc/dhcpcd.conf
+sudo cp ./moode/network/hostapd.conf.default /etc/hostapd/hostapd.conf
+sudo cp ./moode/var/local/www/db/moode-sqlite3.db.default /var/local/www/db/moode-sqlite3.db
 # Permissions
 sudo chmod 0777 /var/lib/mpd/music/RADIO
 sudo chmod -R 0777 /var/local/www/db
@@ -571,16 +571,16 @@ sudo rm /etc/update-motd.d/10-uname
 sudo rm /var/lib/mpd/music/RADIO/*
 sudo rm -rf /var/www/images/radio-logos/
 
-sudo cp ./rel-stretch/mpd/RADIO/* /var/lib/mpd/music/RADIO
-sudo cp ./rel-stretch/mpd/playlists/* /var/lib/mpd/playlists
-sudo cp -r ./rel-stretch/etc/* /etc
-sudo cp -r ./rel-stretch/home/* /home/pi
+sudo cp ./moode/mpd/RADIO/* /var/lib/mpd/music/RADIO
+sudo cp ./moode/mpd/playlists/* /var/lib/mpd/playlists
+sudo cp -r ./moode/etc/* /etc
+sudo cp -r ./moode/home/* /home/pi
 sudo mv /home/pi/dircolors /home/pi/.dircolors
 sudo mv /home/pi/xinitrc.default /home/pi/.xinitrc
-sudo cp -r ./rel-stretch/lib/* /lib
-sudo cp -r ./rel-stretch/usr/* /usr
-sudo cp -r ./rel-stretch/var/* /var
-sudo cp -r ./rel-stretch/www/* /var/www
+sudo cp -r ./moode/lib/* /lib
+sudo cp -r ./moode/usr/* /usr
+sudo cp -r ./moode/var/* /var
+sudo cp -r ./moode/www/* /var/www
 
 sudo chmod 0755 /home/pi/*.sh
 sudo chmod 0755 /home/pi/*.php
@@ -608,7 +608,7 @@ sudo chmod 0644 /etc/udev/rules.d/*
 # Localui
 sudo chmod 0644 /lib/systemd/system/localui.service
 # SSH term server
-sudo chmod 0644 /lib/systemd/system/shellinabox.service 
+sudo chmod 0644 /lib/systemd/system/shellinabox.service
 
 4. Services are started by moOde Worker so lets disable them here.
 
@@ -684,6 +684,8 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
+# 4.19.49
+echo "y" | sudo PRUNE_MODULES=1 rpi-update ce9a76ebe12cfa9cd76d15be7684af93632365f6
 # 4.19.46
 echo "y" | sudo PRUNE_MODULES=1 rpi-update f5e1ff99d6600fcc6d869a8c4fb63a5bb3a3e824
 # 4.19.40
@@ -691,7 +693,7 @@ echo "y" | sudo PRUNE_MODULES=1 rpi-update 6cb1da772a8c56f44591bec904046b15f1126
 # 4.19.34
 echo "y" | sudo PRUNE_MODULES=1 rpi-update 99c274691c07480762dcda91a0ebfe3c4f519307
 # Fix for missing 4.19.y regulatory.db files
-sudo cp ./rel-stretch/other/firmware/regulatory.db* /lib/firmware
+sudo cp ./moode/other/firmware/regulatory.db* /lib/firmware
 
 # 4.14.98
 echo "y" | sudo PRUNE_MODULES=1 rpi-update a08ece3d48c3c40bf1b501772af9933249c11c5b
@@ -757,14 +759,14 @@ Don't forget to do this!
 
 sudo rm /var/lib/dhcpcd5/*
 
-sudo cp ./rel-stretch/network/interfaces.default /etc/network/interfaces
+sudo cp ./moode/network/interfaces.default /etc/network/interfaces
 
 ## NOTE: if you created a wpa_supplicant.conf file back in STEP 1 to run the
-## build over a WiFi connection then don't copy the wpa_supplicant.conf file. 
-sudo cp ./rel-stretch/network/wpa_supplicant.conf.default /etc/wpa_supplicant/wpa_supplicant.conf
+## build over a WiFi connection then don't copy the wpa_supplicant.conf file.
+sudo cp ./moode/network/wpa_supplicant.conf.default /etc/wpa_supplicant/wpa_supplicant.conf
 
-sudo cp ./rel-stretch/network/dhcpcd.conf.default /etc/dhcpcd.conf
-sudo cp ./rel-stretch/network/hostapd.conf.default /etc/hostapd/hostapd.conf
+sudo cp ./moode/network/dhcpcd.conf.default /etc/dhcpcd.conf
+sudo cp ./moode/network/hostapd.conf.default /etc/hostapd/hostapd.conf
 
 5. Shut down
 
@@ -818,7 +820,7 @@ sudo make
 sudo cp ./mpdas /usr/local/bin
 cd ~
 sudo rm -rf ./mpdas
-sudo cp ./rel-stretch/usr/local/etc/mpdasrc.default /usr/local/etc/mpdasrc
+sudo cp ./moode/usr/local/etc/mpdasrc.default /usr/local/etc/mpdasrc
 sudo chmod 0755 /usr/local/etc/mpdasrc
 
 ////////////////////////////////////////////////////////////////
@@ -830,9 +832,9 @@ sudo chmod 0755 /usr/local/etc/mpdasrc
 sudo apt-get -y install autoconf libtool libdaemon-dev libasound2-dev libpopt-dev libconfig-dev \
 avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
 
-sudo cp ./rel-stretch/other/shairport-sync/shairport-sync-3.3.0-3c4a878.zip ./
-sudo unzip ./shairport-sync-3.3.0-3c4a878.zip
-cd ./shairport-sync-3c4a878ad9e0b3097c8c93433d6bf2f62af19c81
+sudo cp ./moode/other/shairport-sync/shairport-sync-3.3.1-3615b99.zip ./
+sudo unzip ./shairport-sync-3.3.1-3615b99.zip
+cd ./shairport-sync-3.3.1
 
 
 sudo autoreconf -i -f
@@ -841,8 +843,8 @@ sudo make
 sudo make install
 sudo rm -f /lib/systemd/system/shairport-sync.service
 sudo rm -f /usr/local/etc/shairport-sync.conf.sample
-sudo cp ./rel-stretch/etc/dbus-1/system.d/shairport-sync-dbus.conf /etc/dbus-1/system.d
-sudo cp ./rel-stretch/etc/shairport-sync.conf /etc
+sudo cp ./moode/etc/dbus-1/system.d/shairport-sync-dbus.conf /etc/dbus-1/system.d
+sudo cp ./moode/etc/shairport-sync.conf /etc
 cd ~
 sudo rm -rf ./shairport-sync-*
 
@@ -868,7 +870,7 @@ sudo reboot
 cd ~
 sudo apt-get -y install portaudio19-dev
 
-sudo cp ./rel-stretch/other/librespot/librespot-master-daeeeaa.zip ./
+sudo cp ./moode/other/librespot/librespot-master-daeeeaa.zip ./
 unzip ./librespot-master-daeeeaa.zip
 cd ./librespot-master
 
@@ -886,7 +888,7 @@ sudo rm -f ./librespot-daeeeaa.zip
 //
 ////////////////////////////////////////////////////////////////
 
-sudo cp ./rel-stretch/other/squeezelite/squeezelite-1.8.7-1052.zip ./
+sudo cp ./moode/other/squeezelite/squeezelite-1.8.7-1052.zip ./
 sudo unzip ./squeezelite-1.8.7-1052.zip
 cd ./squeezelite-master/
 export CFLAGS="-O3 -march=native -mcpu=native -DDSD -DRESAMPLE -DGPIO -fno-fast-math -mfloat-abi=hard -pipe -fPIC"
@@ -912,7 +914,7 @@ libxml2-dev libxslt1-dev libjsoncpp-dev python-requests python-pip
 2. Libupnp jfd5
 
 cd ~
-sudo cp ./rel-stretch/other/upmpdcli/libupnp-1.6.20.jfd5.tar.gz ./
+sudo cp ./moode/other/upmpdcli/libupnp-1.6.20.jfd5.tar.gz ./
 sudo tar xfz ./libupnp-1.6.20.jfd5.tar.gz
 cd libupnp-1.6.20.jfd5
 ./configure --prefix=/usr --sysconfdir=/etc
@@ -924,7 +926,7 @@ sudo rm libupnp-1.6.20.jfd5.tar.gz
 
 3. Libupnpp
 
-sudo cp ./rel-stretch/other/upmpdcli/libupnpp-0.16.0.tar.gz ./
+sudo cp ./moode/other/upmpdcli/libupnpp-0.16.0.tar.gz ./
 sudo tar xfz ./libupnpp-0.16.0.tar.gz
 cd libupnpp-0.16.0
 ./configure --prefix=/usr --sysconfdir=/etc
@@ -936,8 +938,8 @@ sudo rm libupnpp-0.16.0.tar.gz
 
 4. Upmpdcli
 
-sudo cp ./rel-stretch/other/upmpdcli/upmpdcli-code-1.2.16.tar.gz ./
-sudo tar xfz ./upmpdcli-code-1.2.16.tar.gz 
+sudo cp ./moode/other/upmpdcli/upmpdcli-code-1.2.16.tar.gz ./
+sudo tar xfz ./upmpdcli-code-1.2.16.tar.gz
 cd upmpdcli-code
 ./autogen.sh
 ./configure --prefix=/usr --sysconfdir=/etc
@@ -948,8 +950,8 @@ sudo rm -rf ./upmpdcli-code-1.2.16
 sudo rm upmpdcli-code-1.2.16.tar.gz
 
 sudo useradd upmpdcli
-sudo cp ./rel-stretch/lib/systemd/system/upmpdcli.service /lib/systemd/system
-sudo cp ./rel-stretch/etc/upmpdcli.conf /etc
+sudo cp ./moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
+sudo cp ./moode/etc/upmpdcli.conf /etc
 sudo chmod 0644 /etc/upmpdcli.conf
 sudo systemctl daemon-reload
 sudo systemctl disable upmpdcli
@@ -958,7 +960,7 @@ sudo systemctl disable upmpdcli
 
 NOTE: This also installs a bunch of other utils
 
-sudo cp -r ./rel-stretch/other/libupnppsamples-code/ ./
+sudo cp -r ./moode/other/libupnppsamples-code/ ./
 cd libupnppsamples-code
 sudo ./autogen.sh
 sudo ./configure
@@ -968,7 +970,7 @@ cd ~
 sudo rm -rf ./libupnppsamples-code
 
 6. Patch for upmpdcli gmusic plugin
-sudo cp ./rel-stretch/other/upmpdcli/session.py /usr/share/upmpdcli/cdplugins/gmusic
+sudo cp ./moode/other/upmpdcli/session.py /usr/share/upmpdcli/cdplugins/gmusic
 
 ////////////////////////////////////////////////////////////////
 //
@@ -983,7 +985,7 @@ sudo pip install gmusicapi
 
 ////////////////////////////////////////////////////////////////
 //
-// COMPONENT 8 - Local UI display 
+// COMPONENT 8 - Local UI display
 //
 ////////////////////////////////////////////////////////////////
 
@@ -1016,7 +1018,7 @@ d. Optionally, enter url chrome://extensions and install the xontab virtual keyb
 
 cd ~
 wget https://github.com/allocom/piano-firmware/archive/master.zip
-sudo unzip -q master.zip 
+sudo unzip -q master.zip
 sudo rm ./master.zip
 sudo cp -r ./piano-firmware-master/lib/firmware/allo /lib/firmware
 sudo rm -rf ./piano-firmware-master
