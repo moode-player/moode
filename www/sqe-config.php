@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -19,10 +19,10 @@
  * 2019-05-07 TC moOde 5.2
  *
  */
- 
+
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 session_write_close();
 
@@ -31,14 +31,14 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		if ($key == 'AUDIODEVICE') {
 			$value = $_SESSION['cardnum'];
-		}	
+		}
 		cfgdb_update('cfg_sl', $dbh, $key, $value);
 	}
-	
+
 	// update conf file
 	submitJob('slcfgupdate', '', 'Changes saved', ($_SESSION['slsvc'] == '1' ? 'Squeezelite restarted' : ''));
 }
-	
+
 // load settings
 $result = cfgdb_read('cfg_sl', $dbh);
 $cfg_sl = array();
@@ -68,12 +68,12 @@ $_sl_select['audio_codecs'] = $cfg_sl['CODECS'];
 // other options
 $_sl_select['other_options'] = $cfg_sl['OTHEROPTIONS'];
 
-waitWorker(1);
+waitWorker(1, 'sqe_config');
 
 $tpl = "sqe-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php'); 
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
