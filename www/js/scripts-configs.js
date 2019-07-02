@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 5.4
  *
  */
 jQuery(document).ready(function($){ 'use strict';
@@ -36,7 +36,7 @@ jQuery(document).ready(function($){ 'use strict';
 	var result = sendMoodeCmd('GET', 'read_cfg_all');
 	SESSION.json = result['cfg_system'];
 	THEME.json = result['cfg_theme'];
-	
+
 	var tempOp = themeOp;
 	if (themeOp == 0.74902) {tempOp = 0.1};
 
@@ -92,11 +92,11 @@ jQuery(document).ready(function($){ 'use strict';
 	$('#eqp-curve-name').change(function() {
 		//console.log('http://' + location.host + 'eqp-config.php?curve=' + $(this).val());
 		location.assign('http://' + location.host + '/eqp-config.php?curve=' + $(this).val());
-	});	                        
+	});
 	$('#eqg-curve-name').change(function() {
 		//console.log('http://' + location.host + 'eqg-config.php?curve=' + $(this).val());
 		location.assign('http://' + location.host + '/eqg-config.php?curve=' + $(this).val());
-	});	                        
+	});
 
 	// network config show static on page load/reload
 	if ($('#eth0-method').length && $('#eth0-method').val() == 'static') {
@@ -105,7 +105,7 @@ jQuery(document).ready(function($){ 'use strict';
 	if ($('#wlan0-method').length && $('#wlan0-method').val() == 'static') {
 		$('#wlan0-static').show();
 	}
-	// network config show/hide static 
+	// network config show/hide static
 	$('#eth0-method').change(function() {
 		if ($(this).val() == 'static') {
 			$('#eth0-static').show();
@@ -113,8 +113,8 @@ jQuery(document).ready(function($){ 'use strict';
 		}
 		else {
 			$('#eth0-static').hide();
-		}                                                            
-	});	                        
+		}
+	});
 	$('#wlan0-method').change(function() {
 		if ($(this).val() == 'static') {
 			if($('#wlan0ssid').val() != '' && $('#wlan0ssid').val() != 'blank (activates AP mode)') {
@@ -123,22 +123,22 @@ jQuery(document).ready(function($){ 'use strict';
 			}
 			else {
 				notify('needssid', '');
-			}                                                            
+			}
 		}
 	});
 	// network config ssid
 	$('#manual-ssid').on('shown.bs.modal', function() {
 		$('#wlan0otherssid').focus();
-	});  
+	});
 	$('#wlan0ssid').change(function() {
 		if ($('#wlan0-method').val() == 'static') {
 			if ($(this).val() == '' || $(this).val() == 'blank (activates AP mode)') {
 				notify('needdhcp', '');
 			}
-		}                      
-	});	                        
+		}
+	});
 
-	// nas config protocol type flags
+	// music source protocols (type)
 	if ($('#type').length) {
 		$('#mounttype').val($('#type').val()); // hidden input on manual server entry
 	}
@@ -149,20 +149,29 @@ jQuery(document).ready(function($){ 'use strict';
 			$('#options').val('vers=1.0,sec=ntlm,ro,dir_mode=0777,file_mode=0777');
 			$('#info-mount-flags').html('vers=2.0 or 3.0 may be needed and/or sec=ntlm removed depending on what the NAS requires.');
 			$('#scan-btn').show();
+			$('#edit-server').show();
+			$('#advanced-options').show();
 		}
-		// nfs
-		else {
+		else if ($(this).val() == 'nfs') {
 			$('#userid-password').hide();
 			$('#options').val('ro,nolock');
 			$('#info-mount-flags').html('vers=1.0 or higher may be needed depending on what the NAS requires.');
 			$('#scan-btn').hide();
-		}                       
+			$('#edit-server').show();
+			$('#advanced-options').show();
+		}
+		else if ($(this).val() == 'upnp') {
+			$('#userid-password').hide();
+			$('#scan-btn').show();
+			$('#edit-server').hide();
+			$('#advanced-options').hide();
+		}
 	});
 
 	// nas config pre-load manual server entry
 	$('#manual-server').on('shown.bs.modal', function() {
 		$('#manualserver').focus();
-	});  
+	});
 	$('#editserver').click(function(e) {
 		$('#manualserver').val($('#address').val().trim());
 	});
