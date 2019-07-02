@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -40,7 +40,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// restart if indicated
 	submitJob('airplaysvc', '', 'Changes saved', ($_SESSION['airplaysvc'] == '1' ? 'Airplay receiver restarted' : ''));
 }
-	
+
 session_write_close();
 
 // load settings
@@ -75,12 +75,12 @@ $_select['audio_backend_latency_offset_in_seconds'] = $cfg_airplay['audio_backen
 // audio buffer length (secs)
 $_select['audio_backend_buffer_desired_length_in_seconds'] = $cfg_airplay['audio_backend_buffer_desired_length_in_seconds'];
 
-waitWorker(1);
+waitWorker(1, 'apl-config');
 
 $tpl = "apl-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php'); 
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
