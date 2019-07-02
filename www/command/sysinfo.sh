@@ -19,34 +19,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-05-30 TC moOde 5.3
+# 2019-MM-DD TC moOde 5.4
 #
 
 # check for sudo
 [[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
 
 # r45e deprecate
-FREQ() { 
+FREQ() {
 	echo -e "\t  C L O C K    F R E Q U E N C I E S  \n";
-	   for src in arm core h264 isp v3d uart pwm emmc pixel vec hdmi dpi ; do     
+	   for src in arm core h264 isp v3d uart pwm emmc pixel vec hdmi dpi ; do
 	   F=$(/opt/vc/bin/vcgencmd measure_clock $src | cut -f 2 -d "=")
-	   echo -e "\t$src\t= $((F/1000000)) MHz";   
+	   echo -e "\t$src\t= $((F/1000000)) MHz";
 	   done | pr --indent=5 -r -t -2 -e3 -w 50
 	echo
 	grep  "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print "\t" "SD card" "\t= " $3/1000000 " MHz" }'
 }
 
 # r45e deprecate
-CPULOAD() { 
+CPULOAD() {
 	echo -e "\t  C P U    L O A D  \n";
 	mpstat -P ALL 2 1 | awk  '/Average:/  { print  "\t" $2 "\t" $3 "\t" $5 "\t" $12}'
 	echo
 }
 
 # r45e deprecate
-PROCESSLOAD() { 
+PROCESSLOAD() {
 	echo -e "\t  P R O C E S S    L O A D  \n";
-	ps -eo pri,rtprio,comm,%mem,psr,pcpu --sort=-pcpu | head -n 10 | sed 's/^/\t/g'  
+	ps -eo pri,rtprio,comm,%mem,psr,pcpu --sort=-pcpu | head -n 10 | sed 's/^/\t/g'
 	echo
 }
 
@@ -82,7 +82,7 @@ AUDIO() {
 
 	[[ $alsavolume = "none" ]] && hwvol="None" || hwvol="Controller detected"
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
-	
+
 	echo -e "\t  A P P E A R A N C E   S E T T I N G S  \n"
 	# themes and backgrounds
 	echo -e "\tTheme\t\t\t= $themename\c"
@@ -149,6 +149,9 @@ AUDIO() {
 	fi
 	if [ $(($feat_bitmask & $FEAT_GPIO)) -ne 0 ]; then
 		echo -e "\n\tGPIO button handler\t= $gpio_svc\c"
+	fi
+	if [ $(($feat_bitmask & $FEAT_DJMOUNT)) -ne 0 ]; then
+		echo -e "\n\tUPnP browser\t\t= $upnp_browser\c"
 	fi
 	echo -e "\n\c"
 	echo -e "\n\tRotary encoder\t\t= $rotaryenc\c"
@@ -244,6 +247,7 @@ FEAT_SQUEEZELITE=2#0000000000010000
 FEAT_UPMPDCLI=2#0000000000100000
 FEAT_SPOTIFY=2#0000100000000000
 FEAT_GPIO=2#0001000000000000
+FEAT_DJMOUNT=2#0010000000000000
 
 HOSTNAME=`uname -n`
 RASPBIANVER=`cat /etc/debian_version`
@@ -260,7 +264,7 @@ ARCH=`uname -m`
 MEMUSED=`free -m | grep "Mem" | awk {'print $3'}`
 MEMFREE=`free -m | grep "Mem" | awk {'print $4'}`
 
-if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then 
+if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
 else
 	GOV="NA - disabled in kernel"
@@ -271,7 +275,7 @@ WLAN0IP="$(ip addr list wlan0 2>&1 | grep "inet " |cut -d' ' -f6|cut -d/ -f1)"
 if [ "$ETH0IP" = "" ]; then
 	ETH0IP="unassigned"
 fi
-if [ "$WLAN0IP" = "" ]; then 
+if [ "$WLAN0IP" = "" ]; then
 	WLAN0IP="unassigned"
 fi
 ETH0MAC="$(ip addr list eth0 2>&1 | grep "ether " |cut -d' ' -f6|cut -d/ -f1)"
@@ -279,7 +283,7 @@ WLAN0MAC="$(ip addr list wlan0 2>&1 | grep "ether " |cut -d' ' -f6|cut -d/ -f1)"
 if [ "$ETH0MAC" = "" ]; then
 	ETH0MAC="no adapter"
 fi
-if [ "$WLAN0MAC" = "" ]; then 
+if [ "$WLAN0MAC" = "" ]; then
 	WLAN0MAC="no adapter"
 fi
 
@@ -296,7 +300,7 @@ ROOTAVAIL="$(df -h | grep /dev/root | awk '{print $4}')"
 /opt/vc/bin/tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
 
 NOW=$(date +"%Y-%m-%d %T")
-UPTIME="$(uptime -p)" 
+UPTIME="$(uptime -p)"
 
 [[ $(cat /proc/cpuinfo | grep 'Revision' | cut -f 2 -d " ") == 2* ]] && WARRANTY=void || WARRANTY=OK
 
@@ -312,12 +316,12 @@ TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone
 SDFREQ=$(grep "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print $3/1000000}')
 
 
-PHPVER=$(php -v 2>&1 | awk 'FNR==1{ print $2 }' | cut -c-6)
+PHPVER=$(php -v 2>&1 | awk 'FNR==1{ print $2 }' | cut -c-5)
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
 BTVER=$(bluetoothd -v)
 BAVER=$(bluealsa -V 2> /dev/null)
-if [ "$BAVER" = "" ]; then 
+if [ "$BAVER" = "" ]; then
 	BAVER="Turn BT on for version info"
 fi
 HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
@@ -532,6 +536,7 @@ rsmafterinp=${arr[120]}
 ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
+[[ "${arr[125]}" = "1" ]] && upnp_browser="On" || upnp_browser="Off"
 
 # renderer devices
 if [[ $alsaequal != "Off" ]]; then
@@ -557,7 +562,7 @@ else
 	USBBOOT="not available"
 fi
 
-modprobe configs 
+modprobe configs
 test -f /proc/config.gz && {
 	HZ=$(zcat /proc/config.gz | grep "^CONFIG_HZ=" | cut -f 2 -d "=")
 } || {
@@ -577,7 +582,7 @@ echo "
 	System uptime	= $UPTIME
 	Timezone	= $timezone
 	Release		= moOde $mooderel
-	Update		= $moodeupd	
+	Update		= $moodeupd
 
 	Host name	= $HOSTNAME
 	ETH0  IP	= $ETH0IP
@@ -603,7 +608,7 @@ echo "
 	MEM free 	= $MEMFREE MB
 	MEM used 	= $MEMUSED MB
 	Temperature 	= $TEMP
- 
+
 	CPU GOV		= $GOV
 	P3-WIFI		= $p3wifi
 	P3-BT		= $p3bt
