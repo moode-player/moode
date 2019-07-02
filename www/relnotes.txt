@@ -11,6 +11,36 @@
 
 ########################################################
 //
+// 5.4 2019-MM-DD
+//
+########################################################
+
+New features
+
+- NEW: Raspbian 10.0 (Buster Lite) OS
+- NEW: Support for Pi-4B 1/2/4GB
+- NEW: UPnP Media Browser
+
+Updates
+
+- UPD: Bump to Linux kernel 4.19.56
+- UPD: Bump to PHP 7.3.4
+- UPD: Bump to NGINX 1.14.2
+- UPD: Bump to SQLite 3.27.2
+- UPD: Bump to ALSA 1.1.8
+- UPD: Add clock radio Actions after stop
+- UPD: Add Spotify clear credential cache
+- UPD: Improve Play/Playall response on slower Pi-Zero
+- UPD: Add revision codes for Pi-4B 1/2/4GB
+- UPD: SwissGroove radio url
+
+Bug fixes
+
+- FIX: Lazyload not started after search in Album view
+- FIX: Missing href in Bluetooth Active overlay
+
+########################################################
+//
 // 5.3.1 2019-06-12
 //
 ########################################################
