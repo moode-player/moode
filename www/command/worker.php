@@ -20,13 +20,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-30 TC moOde 5.3
+ * 2019-MM-DD TC moOde 5.4
  *
  */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
-// 
+//
 sysCmd('truncate ' . MOODELOG . ' --size 0');
 workerLog('worker: - Start');
 //
@@ -52,13 +52,13 @@ switch ($pid = pcntl_fork()) {
 		fflush($lock);
 		exit;
 }
- 
+
 if (posix_setsid() === -1) {
 	$logmsg = 'worker: Could not setsid';
 	workerLog($logmsg);
 	exit($logmsg . "\n");
 }
- 
+
 fclose(STDIN);
 fclose(STDOUT);
 fclose(STDERR);
@@ -84,10 +84,12 @@ else {
 	workerLog('worker: Integrity check ('. $result .')');
 }
 
-// cache cfg_system in session vars
-sysCmd('chmod -R 0777 /var/local/www/db');
+// load cfg_system in session vars
 playerSession('open', '', '');
-// cache cfg_radio in session vars
+// configure sess_ file permissions
+sysCmd('chown www-data:www-data ' . SESSION_SAVE_PATH . '/sess_*');
+sysCmd('chmod 0666 ' . SESSION_SAVE_PATH . '/sess_*');
+// load cfg_radio in session vars
 $dbh = cfgdb_connect();
 $result = cfgdb_read('cfg_radio', $dbh);
 foreach ($result as $row) {
@@ -110,10 +112,10 @@ else {
 if (extMusicRoot() === false) {
 	workerLog('worker: Cant establish external music root');
 	workerLog('worker: Exited');
-	exit;	
+	exit;
 }
 
-// set worker ready flag to false 
+// set worker ready flag to false
 playerSession('write', 'wrkready', '0');
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
@@ -134,7 +136,7 @@ $result = sysCmd('cat /etc/debian_version');
 $_SESSION['raspbianver'] = $result[0];
 $_SESSION['moode_release'] = getMoodeRel();
 
-// log platform data 
+// log platform data
 workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // X.Y yyyy-mm-dd ex: 2.6 2016-06-07
 workerLog('worker: Upd  (' . $_SESSION['pkgdate'] . ')');
 workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')');
@@ -166,7 +168,7 @@ workerLog('worker: ' . $msg);
 
 // file system expansion status
 $result = sysCmd("df | grep root | awk '{print $2}'");
-$msg = $result[0] > 3000000 ? 'File system expanded' : 'File system not expanded yet'; 
+$msg = $result[0] > 3000000 ? 'File system expanded' : 'File system not expanded yet';
 workerLog('worker: ' . $msg);
 // turn on/off hdmi port
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
@@ -247,9 +249,9 @@ if (!empty($wlan0[0])) {
 	}
 
 	// wait for ip address
-	if ($_SESSION['apactivated'] == true || $ssidblank == false) {	
+	if ($_SESSION['apactivated'] == true || $ssidblank == false) {
 		$wlan0ip = waitForIpAddr('wlan0', 10);
-		// CASE: ssid blank, ap mode activated 
+		// CASE: ssid blank, ap mode activated
 		// CASE: ssid exists, ap mode fall back if no ip address after trying ssid
 		if ($ssidblank == false) {
 			if (empty($wlan0ip[0])) {
@@ -287,7 +289,7 @@ elseif (!empty($eth0ip[0])) {
 }
 else {
 	$_SESSION['ipaddress'] = '0.0.0.0';
-	workerLog('worker: no active network interface');	
+	workerLog('worker: no active network interface');
 }
 
 //
@@ -295,11 +297,11 @@ workerLog('worker: - Audio');
 //
 
 // ensure audio output is unmuted
-if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {	
+if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 	sysCmd('/var/www/command/util.sh unmute-pi-ampplus');
 	workerLog('worker: IQaudIO Pi-AMP+ unmuted');
 }
-else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {	
+else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
 	sysCmd('/var/www/command/util.sh unmute-pi-digiampplus');
 	workerLog('worker: IQaudIO Pi-DigiAMP+ unmuted');
 }
@@ -337,6 +339,9 @@ else {
 	workerLog('worker: Hdwr volume controller exists');
 }
 
+/* DEPRECATE
+// - No need to set them here since they persist on the chip
+// - Added the second arg to cfgChipOptions() as a bug fix
 // configure options for Burr Brown chips, r45d
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 $chips = array(
@@ -350,9 +355,10 @@ $chips = array(
 'Burr Brown TAS5756',
 'Burr Brown TAS5756M');
 if (in_array($result[0]['dacchip'], $chips) && !empty($result[0]['chipoptions'])) {
-	cfgChipOptions($result[0]['chipoptions']);
+	cfgChipOptions($result[0]['chipoptions'], 'burr_brown_pcm5');
 	workerLog('worker: Chip options (' . $result[0]['dacchip'] . ')');
 }
+*/
 
 // configure Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
@@ -389,7 +395,7 @@ $result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR pa
 
 // mpd
 
-updMpdConf($_SESSION['i2sdevice']); 
+updMpdConf($_SESSION['i2sdevice']);
 workerLog('worker: MPD conf updated');
 sysCmd("systemctl start mpd");
 workerLog('worker: MPD started');
@@ -420,8 +426,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_SOURCESEL) {
 	workerLog('worker: Audio source (' . $_SESSION['audioin'] . ')');
 	workerLog('worker: Output device (' . $_SESSION['audioout'] . ')');
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
-		setAudioIn($_SESSION['audioin']);			
-	} 
+		setAudioIn($_SESSION['audioin']);
+	}
 }
 else {
 	workerLog('worker: Source select (feat N/A)');
@@ -455,7 +461,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
 		cfgSqueezelite();
 		startSqueezeLite();
 		workerLog('worker: Squeezelite renderer started');
-	} 
+	}
 }
 else {
 	workerLog('worker: Squeezelite renderer (feat N/A)');
@@ -466,7 +472,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
 	if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
 		sysCmd('systemctl start upmpdcli');
 		workerLog('worker: UPnP renderer started');
-	} 
+	}
 }
 else {
 	workerLog('worker: UPnP renderer (feat N/A)');
@@ -483,12 +489,23 @@ else {
 	workerLog('worker: DLNA Server (feat N/A)');
 }
 
+// start upnp browser
+if ($_SESSION['feat_bitmask'] & FEAT_DJMOUNT) {
+	if (isset($_SESSION['upnp_browser']) && $_SESSION['upnp_browser'] == 1) {
+		sysCmd('djmount -o allow_other,nonempty,iocharset=utf-8 /mnt/UPNP');
+		workerLog('worker: UPnP browser started');
+	}
+}
+else {
+	workerLog('worker: UPnP browser (feat N/A)');
+}
+
 // start audio scrobbler
 if ($_SESSION['feat_bitmask'] & FEAT_MPDAS) {
 	if (isset($_SESSION['mpdassvc']) && $_SESSION['mpdassvc'] == 1) {
 		sysCmd('/usr/local/bin/mpdas > /dev/null 2>&1 &');
 		workerLog('worker: Audio scrobbler started');
-	} 
+	}
 }
 else {
 	workerLog('worker: Audio scrobbler (feat N/A)');
@@ -499,7 +516,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	if (isset($_SESSION['gpio_svc']) && $_SESSION['gpio_svc'] == 1) {
 		startGpioSvc();
 		workerLog('worker: GPIO button handler started');
-	} 
+	}
 }
 else {
 	workerLog('worker: GPIO button handler (feat N/A)');
@@ -508,22 +525,22 @@ else {
 // END FEATURES AVAILABILITY
 
 // start rotary encoder
-if (isset($_SESSION['rotaryenc']) && $_SESSION['rotaryenc'] == 1) {	
+if (isset($_SESSION['rotaryenc']) && $_SESSION['rotaryenc'] == 1) {
 	sysCmd('systemctl start rotenc');
 	workerLog('worker: Rotary encoder on (' . $_SESSION['rotenc_params'] . ')');
-} 
+}
 
 // start lcd updater engine
 if (isset($_SESSION['lcdup']) && $_SESSION['lcdup'] == 1) {
 	startLcdUpdater();
 	workerLog('worker: LCD updater engine started');
-} 
+}
 
 // start shellinabox
 if (isset($_SESSION['shellinabox']) && $_SESSION['shellinabox'] == 1) {
 	sysCmd('systemctl start shellinabox');
 	workerLog('worker: Shellinabox SSH started');
-} 
+}
 
 // start bluetooth controller
 if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
@@ -548,13 +565,13 @@ if ($usbdrives[0] == '') {
 }
 else {
 	foreach ($usbdrives as $usbdrive) {
-		workerLog('worker: USB source ' . '(' . $usbdrive . ')');	
+		workerLog('worker: USB source ' . '(' . $usbdrive . ')');
 	}
 }
 
-// mount nas sources
+// mount nas and upnp sources
 $result = sourceMount('mountall');
-workerLog('worker: NAS sources (' . $result . ')');
+workerLog('worker: NAS and UPnP sources (' . $result . ')');
 
 //
 workerLog('worker: - Miscellaneous');
@@ -583,18 +600,18 @@ else {
 
 // auto-play last played item if indicated
 if ($_SESSION['autoplay'] == '1') {
-	workerLog('worker: Auto-play is on');	
+	workerLog('worker: Auto-play is on');
 	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
-	workerLog('worker: ALSA output (' . $hwparams['status'] . ')');	
+	workerLog('worker: ALSA output (' . $hwparams['status'] . ')');
 	$status = parseStatus(getMpdStatus($sock));
 	sendMpdCmd($sock, 'playid ' . $status['songid']);
 	$resp = readMpdResp($sock);
 	workerLog('worker: Auto-playing id (' . $status['songid'] . ')');
 	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
-	workerLog('worker: ALSA output (' . $hwparams['status'] . ')');	
+	workerLog('worker: ALSA output (' . $hwparams['status'] . ')');
 }
 else {
-	workerLog('worker: Auto-play is off');	
+	workerLog('worker: Auto-play is off');
 	sendMpdCmd($sock, 'stop');
 	$resp = readMpdResp($sock);
 }
@@ -663,7 +680,7 @@ playerSession('write', 'wrkready', '1');
 
 while (1) {
 	sleep(3);
-		
+
 	session_start();
 
 	if ($_SESSION['scnsaver_timeout'] != 'Never') {
@@ -671,7 +688,7 @@ while (1) {
 	}
 	if ($_SESSION['maint_interval'] != 0) {
 		chkMaintenance($maint_interval);
-	}	
+	}
 	if ($_SESSION['cardnum'] == '1') { // TEST experimental usb audio hot-plug mgt
 		sysCmd('alsactl store');
 	}
@@ -694,22 +711,22 @@ while (1) {
 		updExtMetaFile();
 	}
  	if ($_SESSION['clkradio_mode'] == 'Clock Radio') {
-		chkClockRadio();		
+		chkClockRadio();
 	}
  	if ($_SESSION['clkradio_mode'] == 'Sleep Timer') {
-		chkSleepTimer();		
+		chkSleepTimer();
 	}
 	if ($_SESSION['playhist'] == 'Yes') {
-		updPlayHistory();		
+		updPlayHistory();
 	}
 	if ($GLOBALS['mpd_dbupd_initiated'] == '1') {
-		chkMpdDbUpdate();		
+		chkMpdDbUpdate();
 	}
 	if ($_SESSION['w_active'] == 1 && $_SESSION['w_lock'] == 0) {
 		runQueuedJob();
 	}
 
-	session_write_close();	
+	session_write_close();
 }
 
 //
@@ -733,7 +750,7 @@ function chkScnSaver() {
 function chkMaintenance() {
 	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - 3;
 	if ($GLOBALS['maint_interval'] <= 0) {
-		sysCmd('/var/local/www/commandw/maint.sh');		
+		sysCmd('/var/local/www/commandw/maint.sh');
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 		workerLog('worker: Maintenance completed');
 	}
@@ -747,7 +764,7 @@ function chkBtActive() {
 
 	$result = sysCmd('pgrep -l bluealsa-aplay');
 	if (strpos($result[0], 'bluealsa-aplay') !== false) {
-		// do this section only once 	
+		// do this section only once
 		if ($_SESSION['btactive'] == '0') {
 			playerSession('write', 'btactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
@@ -758,7 +775,7 @@ function chkBtActive() {
 		sendEngCmd('btactive1'); // placing here enables each conected device to be printed to the indicator overlay
 	}
 	else {
-		// do this section only once 	
+		// do this section only once
 		if ($_SESSION['btactive'] == '1') {
 			playerSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
@@ -767,14 +784,14 @@ function chkBtActive() {
 				sysCmd('mpc play');
 			}
 		}
-	}	
+	}
 }
 
 function chkAplActive() {
 	// get directly from sql since external spspre.sh and spspost.sh scripts don't update the session
 	$result = sdbquery("SELECT value FROM cfg_system WHERE param='airplayactv'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
-		// do this section only once 	
+		// do this section only once
 		if ($GLOBALS['aplactive'] == '0') {
 			$GLOBALS['aplactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
@@ -782,19 +799,19 @@ function chkAplActive() {
 		}
 	}
 	else {
-		// do this section only once 	
+		// do this section only once
 		if ($GLOBALS['aplactive'] == '1') {
 			$GLOBALS['aplactive'] = '0';
 			sendEngCmd('aplactive0');
 		}
-	}	
+	}
 }
 
 function chkSpotActive() {
 	// get directly from sql since external spotevent.sh script does not update the session
 	$result = sdbquery("SELECT value FROM cfg_system WHERE param='spotactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
-		// do this section only once 	
+		// do this section only once
 		if ($GLOBALS['spotactive'] == '0') {
 			$GLOBALS['spotactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
@@ -802,19 +819,19 @@ function chkSpotActive() {
 		}
 	}
 	else {
-		// do this section only once 	
+		// do this section only once
 		if ($GLOBALS['spotactive'] == '1') {
 			$GLOBALS['spotactive'] = '0';
 			sendEngCmd('spotactive0');
 		}
-	}	
+	}
 }
 
 function chkSlActive() {
 	// get directly from sql since external slpower.sh script does not update the session
 	$result = sdbquery("SELECT value FROM cfg_system WHERE param='slactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
-		// do this section only once 	
+		// do this section only once
 		if ($GLOBALS['slactive'] == '0') {
 			$GLOBALS['slactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
@@ -822,19 +839,19 @@ function chkSlActive() {
 		}
 	}
 	else {
-		// do this section only once 	
+		// do this section only once
 		if ($GLOBALS['slactive'] == '1') {
 			$GLOBALS['slactive'] = '0';
 			sendEngCmd('slactive0');
 		}
-	}	
+	}
 }
 
 function chkInpActive() {
-	//$result = sysCmd('pgrep -l alsaloop');	
+	//$result = sysCmd('pgrep -l alsaloop');
 	//if (strpos($result[0], 'alsaloop') !== false) {
 	if ($_SESSION['audioin'] != 'Local') {
-		// do this section only once 	
+		// do this section only once
 		if ($GLOBALS['inpactive'] == '0') {
 			playerSession('write', 'inpactive', '1');
 			$GLOBALS['inpactive'] = '1';
@@ -843,13 +860,13 @@ function chkInpActive() {
 		}
 	}
 	else {
-		// do this section only once 	
+		// do this section only once
 		if ($GLOBALS['inpactive'] == '1') {
 			playerSession('write', 'inpactive', '0');
 			$GLOBALS['inpactive'] = '0';
 			sendEngCmd('inpactive0');
 		}
-	}	
+	}
 }
 
 function updExtMetaFile() {
@@ -862,7 +879,7 @@ function updExtMetaFile() {
 	else {
 		$hwparams_format = '';
 		$hwparams_calcrate = '0 bps';
-	}			
+	}
 	// currentsong.txt
 	$filemeta = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
 	//workerLog($filemeta['file'] . ' | ' . $hwparams_calcrate);
@@ -875,18 +892,18 @@ function updExtMetaFile() {
 			}
 			elseif ($GLOBALS['spotactive'] == '1') {
 				$renderer = 'Spotify Active';
-			} 
+			}
 			elseif ($GLOBALS['slactive'] == '1') {
 				$renderer = 'Squeezelite Active';
-			} 
+			}
 			else {
 				$renderer = 'Bluetooth Active';
-			} 
+			}
 			// write file only if something has changed
 			if ($filemeta['file'] != $renderer && $hwparams_calcrate != '0 bps') {
 				//workerLog('writing file');
-				$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');			
-				$data = 'file=' . $renderer . "\n"; 
+				$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');
+				$data = 'file=' . $renderer . "\n";
 				$data .= 'outrate=' . $hwparams_format . $hwparams_calcrate . "\n"; ;
 				fwrite($fh, $data);
 				fclose($fh);
@@ -898,17 +915,17 @@ function updExtMetaFile() {
 		$sock = openMpdSock('localhost', 6600);
 		$current = parseStatus(getMpdStatus($sock));
 		$current = enhanceMetadata($current, $sock, 'worker_php');
-		closeMpdSock($sock);	
+		closeMpdSock($sock);
 
 		//workerLog('updExtMetaFile(): currentencoded=' . $_SESSION['currentencoded']);
 
 		// write file only if something has changed
-		if ($current['title'] != $filemeta['title'] || $current['album'] != $filemeta['album'] || $_SESSION['volknob'] != $filemeta['volume'] || 
-			$_SESSION['volmute'] != $filemeta['mute'] || $current['state'] != $filemeta['state'] || $filemeta['outrate'] != $hwparams_format . $hwparams_calcrate) {		
+		if ($current['title'] != $filemeta['title'] || $current['album'] != $filemeta['album'] || $_SESSION['volknob'] != $filemeta['volume'] ||
+			$_SESSION['volmute'] != $filemeta['mute'] || $current['state'] != $filemeta['state'] || $filemeta['outrate'] != $hwparams_format . $hwparams_calcrate) {
 			//workerLog('writing file');
 			$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');
-			// default 
-			$data = 'file=' . $current['file'] . "\n"; 
+			// default
+			$data = 'file=' . $current['file'] . "\n";
 			$data .= 'artist=' . $current['artist'] . "\n";
 			$data .= 'album=' . $current['album'] . "\n";
 			$data .= 'title=' . $current['title'] . "\n";
@@ -923,7 +940,7 @@ function updExtMetaFile() {
 			$data .= 'outrate=' . $hwparams_format . $hwparams_calcrate . "\n"; ;
 			$data .= 'volume=' . $_SESSION['volknob'] . "\n";
 			$data .= 'mute=' . $_SESSION['volmute'] . "\n";
-			$data .= 'state=' . $current['state'] . "\n";			
+			$data .= 'state=' . $current['state'] . "\n";
 			fwrite($fh, $data);
 			fclose($fh);
 		}
@@ -934,7 +951,7 @@ function chkClockRadio() {
 	$curtime = date('h,i,A'); // HH,MM,AP
 	$curday = date('N') - 1; // 0-6 where 0 = Monday
 	$retrystop = 2;
-	
+
 	if ($curtime == $GLOBALS['clkradio_start_time'] && $GLOBALS['clkradio_start_days'][$curday] == '1') {
 		$GLOBALS['clkradio_start_time'] = ''; // reset so this section is only done once
 		$sock = openMpdSock('localhost', 6600);
@@ -948,16 +965,16 @@ function chkClockRadio() {
 			list($element, $value) = explode(': ', $line, 2);
 			$array[$element] = $value;
 			$line = strtok("\n");
-		} 
+		}
 
 		// send play cmd
 		sendMpdCmd($sock, 'play ' . $array['Pos']);
 		$resp = readMpdResp($sock);
 		closeMpdSock($sock);
-		
+
 		// set volume
 		sysCmd('/var/www/vol.sh ' . $_SESSION['clkradio_volume']);
-		
+
 	}
 	else if ($curtime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$curday] == '1') {
 		//workerLog('chkClockRadio(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
@@ -975,9 +992,19 @@ function chkClockRadio() {
 		//workerLog('chkClockRadio(): $curtime=(' . $curtime . '), $curday=(' . $curday . ')');
 		//workerLog('chkClockRadio(): stop command sent');
 
-		// shutdown if requested
-		if ($_SESSION['clkradio_shutdown'] == "Yes") {
-			sysCmd('/var/local/www/commandw/restart.sh poweroff');
+		// action after stop
+		if ($_SESSION['clkradio_action'] != "None") {
+			if ($_SESSION['clkradio_action'] == 'Reboot') {
+				$action = 'reboot';
+				$delay = 45; // to ensure that after reboot $curtime != clkradio_stop_time
+			}
+			elseif ($_SESSION['clkradio_action'] == 'Shutdown') {
+				$action = 'poweroff';
+				$delay = 0;
+			}
+
+			sleep($delay);
+			sysCmd('/var/local/www/commandw/restart.sh ' . $action);
 		}
 	}
 
@@ -994,10 +1021,10 @@ function chkClockRadio() {
 }
 
 function chkSleepTimer() {
-	$curtime = date('h,i,A'); // HH,MM,AP 
+	$curtime = date('h,i,A'); // HH,MM,AP
 	$curday = date('N') - 1; // 0-6 where 0 = Monday
 	$retrystop = 2;
-	
+
 	if ($curtime == $GLOBALS['clkradio_stop_time'] && $GLOBALS['clkradio_stop_days'][$curday] == '1') {
 		//workerLog('chkSleepTimer(): stoptime=(' . $GLOBALS['clkradio_stop_time'] . ')');
 		$GLOBALS['clkradio_stop_time'] = '';  // reset so this section is only done once
@@ -1017,9 +1044,19 @@ function chkSleepTimer() {
 		//workerLog('chkSleepTimer(): $curtime=(' . $curtime . '), $curday=(' . $curday . ')');
 		//workerLog('chkSleepTimer(): stop command sent');
 
-		// shutdown if requested
-		if ($_SESSION['clkradio_shutdown'] == "Yes") {
-			sysCmd('/var/local/www/commandw/restart.sh poweroff');
+		// action after stop
+		if ($_SESSION['clkradio_action'] != "None") {
+			if ($_SESSION['clkradio_action'] == 'Reboot') {
+				$action = 'reboot';
+				$delay = 45; // to ensure that after reboot $curtime != clkradio_stop_time
+			}
+			elseif ($_SESSION['clkradio_action'] == 'Shutdown') {
+				$action = 'poweroff';
+				$delay = 0;
+			}
+
+			sleep($delay);
+			sysCmd('/var/local/www/commandw/restart.sh ' . $action);
 		}
 	}
 
@@ -1034,13 +1071,13 @@ function updPlayHistory() {
 	$sock = openMpdSock('localhost', 6600);
 	$song = parseCurrentSong($sock);
 	closeMpdSock($sock);
-	
+
 	// itunes aac file
 	if (isset($song['Name']) && getFileExt($song['file']) == 'm4a') {
 		$artist = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
-		$title = $song['Name']; 
+		$title = $song['Name'];
 		$album = isset($song['Album']) ? $song['Album'] : 'Unknown album';
-		
+
 		// search string
 		if ($artist == 'Unknown artist' && $album == 'Unknown album') {$searchstr = $title;}
 		else if ($artist == 'Unknown artist') {$searchstr = $album . '+' . $title;}
@@ -1059,14 +1096,14 @@ function updPlayHistory() {
 			// use custom name if indicated
 			$title = $_SESSION[$song['file']]['name'] == 'Classic And Jazz' ? 'CLASSIC & JAZZ (Paris - France)' : $song['Title'];
 		}
-		
+
 		if (isset($_SESSION[$song['file']])) {
 			$album = $_SESSION[$song['file']]['name'];
 		}
 		else {
 			$album = isset($song['Name']) ? $song['Name'] : 'Unknown station';
 		}
-		
+
 		// search string
 		if (substr($title, 0, 4) == 'http') {
 			$searchstr = $title;
@@ -1077,7 +1114,7 @@ function updPlayHistory() {
 			$searchstr = preg_replace('!\s+!', '+', $searchstr);
 		}
 	}
-	// song file or upnp url	
+	// song file or upnp url
 	else {
 		$artist = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 		$title = isset($song['Title']) ? $song['Title'] : pathinfo(basename($song['file']), PATHINFO_FILENAME);
@@ -1093,7 +1130,7 @@ function updPlayHistory() {
 	// search url
 	$searcheng = 'http://www.google.com/search?q=';
 	$searchurl = '<a href="' . $searcheng . $searchstr . '" class="playhistory-link" target="_blank"><i class="fas fa-external-link-square"></i></a>';
-	
+
 	// update playback history log
 	if ($title != '' && $title != $_SESSION['phistsong']) {
 		$_SESSION['phistsong'] = $title; // store title as-is
@@ -1108,7 +1145,7 @@ function updPlayHistory() {
 function chkMpdDbUpdate() {
 	$sock = openMpdSock('localhost', 6600);
 	$status = parseStatus(getMpdStatus($sock));
-	closeMpdSock($sock);	
+	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
 		sendEngCmd('dbupd_done');
@@ -1127,7 +1164,7 @@ function runQueuedJob() {
 	if ($_SESSION['w_queue'] != 'resetscnsaver') {
 		workerLog('worker: Job ' . $_SESSION['w_queue']);
 	}
-	
+
 	switch ($_SESSION['w_queue']) {
 		// screen saver reset job
 		case 'resetscnsaver':
@@ -1166,7 +1203,7 @@ function runQueuedJob() {
 			sysCmd('mkdir ' . THMCACHE_DIR);
 			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
 			break;
-		
+
 		// mpd-config jobs
 		case 'mpdrestart':
 			sysCmd('mpc stop');
@@ -1175,7 +1212,7 @@ function runQueuedJob() {
 		case 'mpdcfg':
 			// stop playback
 			sysCmd('mpc stop');
-			
+
 			// update config file
 			updMpdConf($_SESSION['i2sdevice']);
 
@@ -1228,7 +1265,7 @@ function runQueuedJob() {
 
 			if ($_SESSION['w_queueargs'] == '1') {
 				sysCmd('systemctl start rotenc');
-			}			
+			}
 			break;
 		case 'crossfeed':
 			sysCmd('mpc stop');
@@ -1237,20 +1274,20 @@ function runQueuedJob() {
 				sysCmd('mpc enable only 1');
 			}
 			else {
-				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]"' . ' /usr/share/alsa/alsa.conf.d/crossfeed.conf');
+				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 				sysCmd('mpc enable only 2');
 			}
 			setMpdHttpd();
-			break;			
+			break;
 		case 'invert_polarity':
 			sysCmd('mpc stop');
 			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable only 5' : 'mpc enable only 1';
-			sysCmd($cmd);			
+			sysCmd($cmd);
 			setMpdHttpd();
 			break;
 		case 'mpd_httpd':
 			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable 7' : 'mpc disable 7';
-			sysCmd($cmd);			
+			sysCmd($cmd);
 			break;
 		case 'mpd_httpd_port':
 			updMpdConf($_SESSION['i2sdevice']);
@@ -1277,7 +1314,7 @@ function runQueuedJob() {
 				$result = sdbquery("SELECT * FROM cfg_eqfa4p WHERE curve_name='" . $setting[1] . "'", $GLOBALS['dbh']);
 				$params = $result[0]['band1_params'] . '  ' . $result[0]['band2_params'] . '  ' . $result[0]['band3_params'] . '  ' . $result[0]['band4_params'] . '  ' . $result[0]['master_gain'];
 
-				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $params . ' ]"' . ' /usr/share/alsa/alsa.conf.d/eqfa4p.conf');
+				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $params . ' ]" ' . ALSA_PLUGIN_PATH . '/eqfa4p.conf');
 				sysCmd('mpc enable only 3');
 			}
 
@@ -1288,7 +1325,7 @@ function runQueuedJob() {
 			if ($_SESSION['airplaysvc'] == 1) {startSps();}
 			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
-			break; 
+			break;
 		case 'alsaequal':
 			// old,new curve name
 			$setting = explode(',', $_SESSION['w_queueargs']);
@@ -1317,7 +1354,7 @@ function runQueuedJob() {
 			if ($_SESSION['airplaysvc'] == 1) {startSps();}
 			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
-			break; 
+			break;
 		case 'mpdassvc':
 			sysCmd('killall -s 9 mpdas > /dev/null');
 			cfgAudioScrobbler();
@@ -1347,19 +1384,24 @@ function runQueuedJob() {
 			break;
 		case 'btmulti':
 			if ($_SESSION['btmulti'] == 1) {
-				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=btaplay_dmix' /etc/bluealsaaplay.conf");				
+				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=btaplay_dmix' /etc/bluealsaaplay.conf");
 			}
 			else {
-				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $_SESSION['cardnum'] . ",0' /etc/bluealsaaplay.conf");				
-			}		
+				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $_SESSION['cardnum'] . ",0' /etc/bluealsaaplay.conf");
+			}
 			break;
 		// airplay
 		case 'airplaysvc':
 			stopSps(); //r45b
 			if ($_SESSION['airplaysvc'] == 1) {startSps();}
-			break;			
+			break;
 		// spotify
 		case 'spotifysvc':
+			stopSpotify();
+			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
+			break;
+		case 'spotify_clear_credentials':
+			sysCmd('rm /var/local/www/spotify_cache/credentials.json');
 			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
 			break;
@@ -1369,7 +1411,7 @@ function runQueuedJob() {
 				sysCmd('mpc stop');
 				if ($_SESSION['alsavolume'] != 'none') {
 					sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
-				}				
+				}
 				cfgSqueezelite();
 				startSqueezeLite();
 			}
@@ -1395,7 +1437,7 @@ function runQueuedJob() {
 				startSqueezeLite();
 			}
 			break;
-		// upnp and minidlna			
+		// upnp and minidlna
 		case 'upnpsvc':
 			sysCmd('/var/www/command/util.sh chg-name upnp ' . $_SESSION['w_queueargs']);
 			sysCmd('systemctl stop upmpdcli');
@@ -1416,6 +1458,10 @@ function runQueuedJob() {
 			syscmd('rm -rf /var/cache/minidlna/* > /dev/null');
 			sleep(2);
 			startMiniDlna();
+			break;
+		case 'upnp_browser':
+			sysCmd('fusermount -u /mnt/UPNP > /dev/null 2>&1');
+			if ($_SESSION['upnp_browser'] == 1) {sysCmd('djmount -o allow_other,nonempty,iocharset=utf-8 /mnt/UPNP');}
 			break;
 
 		// net-config jobs
@@ -1443,7 +1489,7 @@ function runQueuedJob() {
 			sysCmd('cp /var/www/inc/mpd-' . $_SESSION['w_queueargs'] . ' /home/pi');
 			sysCmd('mv /home/pi/mpd-' . $_SESSION['w_queueargs'] . ' /usr/local/bin/mpd');
 			updMpdConf($_SESSION['i2sdevice']);
-			sysCmd('systemctl restart mpd');			
+			sysCmd('systemctl restart mpd');
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
@@ -1535,11 +1581,11 @@ function runQueuedJob() {
 
 		// Source select jobs (sel-config.php)
 		case 'audioin':
-			setAudioIn($_SESSION['w_queueargs']);				
-			break; 
+			setAudioIn($_SESSION['w_queueargs']);
+			break;
 		case 'audioout':
-			setAudioOut($_SESSION['w_queueargs']);	
-			break; 
+			setAudioOut($_SESSION['w_queueargs']);
+			break;
 
 		// command/moode jobs
 		case 'setbgimage':
@@ -1568,7 +1614,7 @@ function runQueuedJob() {
 				fclose($fh);
 
 				// thumbnail
-				$imgstr = file_get_contents($file);			
+				$imgstr = file_get_contents($file);
 				$image = imagecreatefromstring($imgstr);
 				$thm_w = 200;
 				$thm_q = 75;
@@ -1578,7 +1624,7 @@ function runQueuedJob() {
 				$img_h = imagesy($image);
 				// thumbnail height
 				$thm_h = ($img_h / $img_w) * $thm_w;
-			
+
 				if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
 					workerLog('setlogoimage: error 1: ' . $file);
 					break;
@@ -1598,7 +1644,7 @@ function runQueuedJob() {
 				if (imagedestroy($thumb) === false) {
 					workerLog('setlogoimage: error 5: ' . $file);
 					break;
-				}				
+				}
 			}
 			break;
 		case 'reboot':
@@ -1613,7 +1659,7 @@ function runQueuedJob() {
 			$GLOBALS['clkradio_stop_days'] = explode(',', substr($_SESSION['clkradio_stop'], 9));
 			break;
 	}
-	
+
 	// reset job queue
 	$_SESSION['w_queue'] = '';
 	$_SESSION['w_queueargs'] = '';
