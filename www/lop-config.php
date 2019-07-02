@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -28,13 +28,13 @@ $dbh = cfgdb_connect();
 // apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// detect changes requiring cache delete
-	if ($_POST['config']['libartistcol'] != $_SESSION['libartistcol'] || 
-		$_POST['config']['ignore_articles'] != $_SESSION['ignore_articles'] || 
-		$_POST['config']['compilation_rollup'] != $_SESSION['compilation_rollup'] || 
-		$_POST['config']['compilation_excludes'] != $_SESSION['compilation_excludes'] || 
+	if ($_POST['config']['libartistcol'] != $_SESSION['libartistcol'] ||
+		$_POST['config']['ignore_articles'] != $_SESSION['ignore_articles'] ||
+		$_POST['config']['compilation_rollup'] != $_SESSION['compilation_rollup'] ||
+		$_POST['config']['compilation_excludes'] != $_SESSION['compilation_excludes'] ||
 		$_POST['config']['library_utf8rep'] != $_SESSION['library_utf8rep']) {
 		clearLibCache();
-	} 
+	}
 
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_system', $dbh, $key, $value);
@@ -44,7 +44,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$_SESSION['notify']['title'] = 'Changes saved';
 }
 session_write_close();
-	
+
 // artist list ordering
 $_select['libartistcol'] .= "<option value=\"Artist\" " . (($_SESSION['libartistcol'] == 'Artist') ? "selected" : "") . ">Artist</option>\n";
 $_select['libartistcol'] .= "<option value=\"AlbumArtist\" " . (($_SESSION['libartistcol'] == 'AlbumArtist') ? "selected" : "") . ">Album Artist</option>\n";
@@ -68,12 +68,12 @@ $_select['library_hiresthm'] .= "<option value=\"400px\" " . (($_SESSION['librar
 $_select['library_covsearchpri'] .= "<option value=\"Embedded cover\" " . (($_SESSION['library_covsearchpri'] == 'Embedded cover') ? "selected" : "") . ">Embedded cover</option>\n";
 $_select['library_covsearchpri'] .= "<option value=\"Cover image file\" " . (($_SESSION['library_covsearchpri'] == 'Cover image file') ? "selected" : "") . ">Cover image file</option>\n";
 
-waitWorker(1);
+waitWorker(1, 'lop-config');
 
 $tpl = "lop-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php'); 
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
