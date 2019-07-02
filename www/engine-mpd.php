@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -22,7 +22,7 @@
  * 2019-04-12 TC moOde 5.0
  *
  */
- 
+
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 // load session vars
@@ -40,7 +40,7 @@ $sock = openMpdSock('localhost', 6600);
 if (!$sock) {
 	debugLog('engine-mpd: Connection to MPD failed');
 	echo json_encode(array('error' => 'openMpdSock() failed', 'module' => 'engine-mpd'));
-	exit(0);	
+	exit(0);
 }
 
 debugLog('engine-mpd: Get initial status');
@@ -51,14 +51,14 @@ debugLog('engine-mpd: UI state=(' . $_GET['state'] . '), MPD state=(' . $current
 if ($_GET['state'] == $current['state']) {
 	debugLog('engine-mpd: Wait for idle timeout');
 	sendMpdCmd($sock, 'idle');
-	stream_set_timeout($sock, $_SESSION['engine_mpd_sock_timeout']); // value determines how often PHP times out the socket	
-	$resp = readMpdResp($sock); 
+	stream_set_timeout($sock, $_SESSION['engine_mpd_sock_timeout']); // value determines how often PHP times out the socket
+	$resp = readMpdResp($sock);
 
 	$event = explode("\n", $resp)[0];
 	debugLog('engine-mpd: Idle timeout event=(' . $event . ')');
 	debugLog('engine-mpd: Get new status');
 	$current = parseStatus(getMpdStatus($sock));
-	$current['idle_timeout_event'] = $event;	
+	$current['idle_timeout_event'] = $event;
 }
 
 // create enhanced metadata
