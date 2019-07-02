@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -22,7 +22,7 @@
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
@@ -41,7 +41,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// restart if indicated
 	submitJob('upnpsvc', '', 'Changes saved', ($_SESSION['upnpsvc'] == '1' ? 'UPnP renderer restarted' : ''));
 }
-	
+
 session_write_close();
 
 // load settings
@@ -88,12 +88,12 @@ else {
 	}
 }
 
-waitWorker(1);
+waitWorker(1, 'upp-config');
 
 $tpl = "upp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php'); 
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
