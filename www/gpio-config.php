@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -34,7 +34,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// restart if indicated
 	submitJob('gpio_svc', $_SESSION['gpio_svc'], 'Changes saved', ($_SESSION['gpio_svc'] == '1' ? 'GPIO button handler restarted' : ''));
 }
-	
+
 session_write_close();
 
 // load gpio config
@@ -90,12 +90,12 @@ $_select['sw_8_cmd'] = $cfg_gpio['8']['command'];
 //$_select['debounce_value'] = $debounce_value;
 $_select['bounce_time'] = $cfg_gpio['99']['value'];
 
-waitWorker(1);
+waitWorker(1, 'gpio-config');
 
 $tpl = "gpio-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php'); 
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
