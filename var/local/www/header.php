@@ -19,10 +19,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-30 TC moOde 5.3
+ * 2019-MM-DD TC moOde 5.4
  *
  */
 -->
+<?php
+    //workerLog('-- header.php');
+    $return = session_start();
+    //workerLog('session_start=' . (($return) ? 'TRUE' : 'FALSE'));
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +36,7 @@
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-	
+
 	<!-- VERSIONED RESOURCES -->
 	<?php
 		// common css
@@ -57,7 +62,7 @@
 			versioned_script('js/jquery.scrollTo.min.js');
 			versioned_script('js/jquery.touchSwipe.min.js');
 			versioned_script('js/jquery.lazyload.js');
-			versioned_script('js/jquery.md5.js');	
+			versioned_script('js/jquery.md5.js');
 			versioned_script('js/jquery.adaptive-backgrounds.js');
 			versioned_script('js/notify.js');
 			versioned_script('js/jquery.knob.js');
@@ -94,7 +99,7 @@
 	<!-- ALBUM COVER BACKDROP -->
 	<div id="cover-backdrop"></div>
 
-	<!-- HEADER -->	
+	<!-- HEADER -->
 	<div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
 		<div id="playback-switch"><div></div></div>
 
@@ -111,7 +116,7 @@
 
 		<div class="busy-spinner"></div>
 
-		<!-- MAIN MENU -->	
+		<!-- MAIN MENU -->
 		<div class="dropdown">
 			<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget">m<i class="fas fa-chevron-down"></i></a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
@@ -139,8 +144,8 @@
 			<span id="clockradio-icon" class="clockradio-off">•</span>
 		</div>
 	</div>
-	
-	<!-- PLAYBAR -->	
+
+	<!-- PLAYBAR -->
 	<div id="menu-bottom" class="btn-group btn-list ui-footer ui-bar-f ui-footer-fixed slidedown" data-position="fixed" data-role="footer" role="banner">
 		<div id="playbar">
 			<div id="playbar-cover"></div>
