@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-MM-DD TC moOde 5.4
  *
  */
 
@@ -41,7 +41,7 @@ $hires_thm = $_SESSION['library_hiresthm'];
 $pixel_ratio = floor($_SESSION['library_pixelratio']);
 session_write_close();
 
-// r44d auto vs manual 
+// r44d auto vs manual
 if ($hires_thm == 'Auto') {
 	if ($pixel_ratio == 2) {
 		$thm_w = 200;
@@ -74,11 +74,42 @@ if (!file_exists(THMCACHE_DIR)) {
 	sysCmd('mkdir ' . THMCACHE_DIR);
 }
 
+// get root list
+$sock = openMpdSock('localhost', 6600);
+sendMpdCmd($sock, 'lsinfo');
+$resp = readMpdResp($sock);
+$dirs = array();
+$line = strtok($resp, "\n");
+$i = 0;
+
+// use directories only, exclude RADIO
+while ($line) {
+	list($param, $value) = explode(': ', $line, 2);
+
+	if ($param == 'directory' && $value != 'RADIO') {
+		$dirs[$i] = $value;
+		$i++;
+	}
+
+	$line = strtok("\n");
+}
+
+// get file list
+$resp = '';
+foreach ($dirs as $dir) {
+	workerLog('Directory: ' . $dir);
+	sendMpdCmd($sock, 'listall "' . $dir . '"');
+	$resp .= readMpdResp($sock);
+}
+closeMpdSock($sock);
+
+/* Original
 // generate file list from MPD db
 $sock = openMpdSock('localhost', 6600);
 sendMpdCmd($sock, 'list file');
 $resp = readMpdResp($sock);
 closeMpdSock($sock);
+*/
 
 if (is_null($resp) || substr($resp, 0, 2) == 'OK') {
 	workerLog('thmcache: exit: no files found');
@@ -94,22 +125,28 @@ if (is_null($resp) || substr($resp, 0, 2) == 'OK') {
 $count = 0;
 $line = strtok($resp, "\n");
 while ($line) {
-	$file_a = explode(': ', $line, 2)[1];
-	$dir_a = dirname($file_a);
+	if (strpos($line, 'directory:') === false) {
+		$file_a = explode(': ', $line, 2)[1];
+		$dir_a = dirname($file_a);
 
-	$line = strtok("\n");
+		$line = strtok("\n");
 
-	$file_b = explode(': ', $line, 2)[1];
-	$dir_b = dirname($file_b);
+		$file_b = explode(': ', $line, 2)[1];
+		$dir_b = dirname($file_b);
 
-	if ($dir_a != $dir_b) {
-		session_start();
-		$_SESSION['thmcache_status'] = 'Processing album ' . ++$count . ' ' . $dir_a;
-		session_write_close();
+		if ($dir_a != $dir_b) {
+			session_start();
+			$_SESSION['thmcache_status'] = 'Processing album ' . ++$count . ' ' . $dir_a;
+			session_write_close();
 
-		if (!file_exists(THMCACHE_DIR . md5($dir_a) . '.jpg')) {
-			createThumb($file_a, $dir_a, $search_pri, $thm_w, $thm_q);
+			if (!file_exists(THMCACHE_DIR . md5($dir_a) . '.jpg')) {
+				createThumb($file_a, $dir_a, $search_pri, $thm_w, $thm_q);
+			}
 		}
+	}
+	// skip directories
+	else {
+		$line = strtok("\n");
 	}
 }
 
@@ -135,12 +172,12 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 			if (substr($path, -1) !== '/') {$path .= '/';}
 			$imgstr = parseFolder($path);
 		}
-		else { 
+		else {
 			// file: cover image file in containing dir
 			$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
 			$imgstr = parseFolder($dirpath);
 		}
-		
+
 		if ($imgstr === false) {
 			if ($search_pri == 'Cover image file') { // embedded last
 				$imgstr = getImage($path);
@@ -190,7 +227,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	}
 }
 
-// modified versions of coverart.php functions 
+// modified versions of coverart.php functions
 // (C) 2015 Andreas Goetz
 function outImage($mime, $data) {
 	//workerLog('thmcache: outImage(): ' . $mime . ', ' . strlen($data) . ' bytes');
@@ -231,7 +268,7 @@ function getImage($path) {
 			$image = $path;
 			break;
 
-		// embedded images			
+		// embedded images
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
 			try {
@@ -243,8 +280,8 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Id3_Exception $e) {
-				workerLog('thmcache: mp3: ' . $path); 
-				workerLog('thmcache: mp3: Zend media exception: ' . $e->getMessage()); 
+				workerLog('thmcache: mp3: ' . $path);
+				workerLog('thmcache: mp3: Zend media exception: ' . $e->getMessage());
 			}
 			break;
 
@@ -259,8 +296,8 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Flac_Exception $e) {
-				workerLog('thmcache: flac: ' . $path); 
-				workerLog('thmcache: flac: Zend media exception: ' . $e->getMessage()); 
+				workerLog('thmcache: flac: ' . $path);
+				workerLog('thmcache: flac: Zend media exception: ' . $e->getMessage());
 			}
 			break;
 
@@ -281,8 +318,8 @@ function getImage($path) {
                 }
             }
             catch (Zend_Media_Iso14496_Exception $e) {
-				workerLog('thmcache: m4a: ' . $path); 
-				workerLog('thmcache: m4a: Zend media exception: ' . $e->getMessage()); 
+				workerLog('thmcache: m4a: ' . $path);
+				workerLog('thmcache: m4a: Zend media exception: ' . $e->getMessage());
             }
             break;
 	}
