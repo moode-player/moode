@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -37,18 +37,18 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
-	
+
 		// see if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[2] != $_POST['config']['digfilter']) {
 			//workerLog('digfilter changed');
-			$status = parseStatus(getMpdStatus($sock));	
+			$status = parseStatus(getMpdStatus($sock));
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
 				$cmds = array('pause', 'play');
 				chainMpdCmdsDelay($sock, $cmds, 1000000);
-			}						
+			}
 		}
-	
+
 		// update chip options
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
@@ -67,7 +67,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			}
 			$_SESSION['notify']['title'] = 'Chip and Device options updated';
 			$_SESSION['notify']['msg'] = 'REBOOT then APPLY MPD settings';
-			$_SESSION['notify']['duration'] = 10;			
+			$_SESSION['notify']['duration'] = 10;
 		}
 	}
 
@@ -75,10 +75,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 		$chipoptions = $_POST['config']['katana_osf'] . ',' . $_POST['config']['katana_deemphasis'] . ',' . $_POST['config']['katana_dop'];
 		$chiptype = 'ess_sabre_katana';
-	
+
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
-	
+
 		// see if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['katana_osf']) {
 			$status = parseStatus(getMpdStatus($sock));
@@ -86,9 +86,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			if ($status['state'] === 'play') {
 				$cmds = array('pause', 'play');
 				chainMpdCmdsDelay($sock, $cmds, 1000000);
-			}						
+			}
 		}
-	
+
 		// update chip options
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
@@ -98,10 +98,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
 		$chipoptions = $_POST['config']['audiophonics_q2m_osf'] . ',' . $_POST['config']['audiophonics_q2m_input'];
 		$chiptype = 'ess_sabre_audiophonics_q2m';
-	
+
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
-	
+
 		// see if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['audiophonics_q2m_osf']) {
 			$status = parseStatus(getMpdStatus($sock));
@@ -109,7 +109,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			if ($status['state'] === 'play') {
 				$cmds = array('pause', 'play');
 				chainMpdCmdsDelay($sock, $cmds, 1000000);
-			}						
+			}
 		}
 
 		// update chip options
@@ -117,7 +117,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$_SESSION['notify']['title'] = 'Chip options updated';
 	}
 }
-	
+
 session_write_close();
 
 // load chip options
@@ -126,13 +126,13 @@ $array = explode(',', $result[0]['chipoptions']);
 
 // Burr Brown PCM/5 and TAS chips
 if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchip'], 'TAS') !== false) {
-	$_burrbrown_hide = '';	
+	$_burrbrown_hide = '';
 
 	// Analog volume, analog volume boost, digital interpolation filter
 	$analoggain = $array[0];
 	$analogboost = $array[1];
 	$digfilter = $array[2];
-	
+
 	// analog volume
 	$_select['analoggain'] .= "<option value=\"100\" " . (($analoggain == '100') ? "selected" : "") . ">0 dB (2-Vrms)</option>\n";
 	$_select['analoggain'] .= "<option value=\"0\" " . (($analoggain == '0') ? "selected" : "") . ">-6 dB (1-Vrms)</option>\n";
@@ -146,7 +146,7 @@ if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchi
 	$_select['digfilter'] .= "<option value=\"Ringing-less low latency FIR\" " . (($digfilter == 'Ringing-less low latency FIR') ? "selected" : "") . ">Ringing-less low latency FIR</option>\n";
 }
 else {
-	$_burrbrown_hide = 'hide';	
+	$_burrbrown_hide = 'hide';
 }
 
 // Allo Piano 2.1 Hi-Fi DAC
@@ -210,7 +210,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 	$katana_osf = $array[0];
 	$katana_deemphasis = $array[1];
 	$katana_dop = $array[2];
-	
+
 	// oversampling filter
 	$_select['katana_osf'] .= "<option value=\"Apodizing Fast Roll-off Filter\" " . (($katana_osf == 'Apodizing Fast Roll-off Filter') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
 	$_select['katana_osf'] .= "<option value=\"Brick Wall Filter\" " . (($katana_osf == 'Brick Wall Filter') ? "selected" : "") . ">Brick Wall Filter</option>\n";
@@ -240,7 +240,7 @@ if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sde
 	// Oversampling filter, input select
 	$audiophonics_q2m_osf = $array[0];
 	$audiophonics_q2m_input = $array[1];
-	
+
 	// oversampling filter
 	if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC') {
 		$_select['audiophonics_q2m_osf'] .= "<option value=\"apodizing fast\" " . (($audiophonics_q2m_osf == 'apodizing fast') ? "selected" : "") . ">Apodizing Fast Roll-off Filter</option>\n";
@@ -257,7 +257,7 @@ if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sde
 		$_select['audiophonics_q2m_osf'] .= "<option value=\"corrected minimum phase fast\" " . (($audiophonics_q2m_osf == 'corrected minimum phase fast') ? "selected" : "") . ">PCM Filter fast</option>\n";
 		$_select['audiophonics_q2m_osf'] .= "<option value=\"minimum phase slow\" " . (($audiophonics_q2m_osf == 'minimum phase slow') ? "selected" : "") . ">PCM Filter slow</option>\n";
 	}
-	
+
 	// NOTE: this option s handled in the Source Select screen
 	$_select['audiophonics_q2m_input'] .= "<option value=\"I2S\" " . (($audiophonics_q2m_input == 'I2S') ? "selected" : "") . ">I2S</option>\n";
 	$_select['audiophonics_q2m_input'] .= "<option value=\"SPDIF\" " . (($audiophonics_q2m_input == 'SPDIF') ? "selected" : "") . ">S/PDIF</option>\n";
@@ -266,12 +266,12 @@ else{
 	$_audiophonics_q2m_hide = 'hide';
 }
 
-waitWorker(1);
+waitWorker(1, 'chp-config');
 
 $tpl = "chp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php'); 
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
