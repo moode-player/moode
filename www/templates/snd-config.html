@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-05-07 TC moOde 5.4
  *
  */
--->	
+-->
 <div class="container">
 <div class="container2">
 	<h1 class="snd-config">Audio Config</h1>
@@ -30,7 +30,7 @@
 			<div class="control-group">
 				<label class="control-label" for="i2sdevice">I2S audio device</label>
 				<div class="controls">
-					<select id="i2sdevice" class="input-large" name="i2sdevice">		
+					<select id="i2sdevice" class="input-large" name="i2sdevice">
 						$_i2s[i2sdevice]
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit btn-submit" type="submit" name="update_i2s_device" value="novalue">Set</button>
@@ -76,7 +76,7 @@
 				</div>
 			</div>
 		</fieldset>
-			
+
 		<legend>MPD</legend>
 		<fieldset>
 			<div class="control-group">
@@ -87,11 +87,11 @@
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdver" value="novalue">Set</button>
 					<span class="help-block-configs help-block-margin">
-						NOTE: MPD 0.21.y (Testing) is offered as an option for enthusiasts that want to test the newer series. Known issues in the context of moOde include (1) Failure to output to Bluetooth speaker and (2) Distortion on DSD playback in certain scenarios.<br>
+						NOTE: Additional MPD versions may be offered for testing and experimentation purposes.<br>
 						The MPD database will be regenerated after switching versions.
 					</span>
 				</div>
-			</div>	
+			</div>
 
 			<div class="control-group">
 				<label class="control-label">MPD options</label>
@@ -118,9 +118,9 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_ashufflesvc" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-ashufflesvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-ashufflesvc" class="help-block-configs help-block-margin2 hide">						
+					<span id="info-ashufflesvc" class="help-block-configs help-block-margin2 hide">
 						When the last song in the Playlist has finished playing Auto-shuffle adds two randomly selected songs from the music library
-						to the end of the Playlist then repeats the process. This creates a continuous stream of music without growing the Playlist and 
+						to the end of the Playlist then repeats the process. This creates a continuous stream of music without growing the Playlist and
 						having two tracks enables MPD Crossfade to be used. NOTE: Auto-shuffle replaces MPD random play as the method for the 'Random' button.<br>
                     </span>
 				</div>
@@ -152,7 +152,7 @@
 						<label class="toggle-radio" for="togglerotaryenc2">ON</label>
 						$_select[rotaryenc1]
 						<label class="toggle-radio" for="togglerotaryenc1">OFF</label>
-						$_select[rotaryenc0]				
+						$_select[rotaryenc0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<input class="input-large" type="text" id="rotenc_params" name="rotenc_params" value="$_select[rotenc_params]" style="width:117px;" required>
@@ -204,7 +204,7 @@
 						NOTE: Set to 0 to disable crossfade.
                     </span>
 				</div>
-			</div>	
+			</div>
 
 			<div class="control-group">
 				<label class="control-label" for="crossfeed">Crossfeed</label>
@@ -256,7 +256,7 @@
 						Default port is 8000. Port number range is 8000 - 9000.
                     </span>
 				</div>
-			</div>	
+			</div>
 
 			<div class="control-group">
 				<label class="control-label" for="mpd-httpd-encoder">Encoder</label>
@@ -466,6 +466,7 @@
 					<span class="help-block-configs help-block-margin">
 						<a href="spo-config.php">CONFIGURE</a> Spotify<br>
 						<a data-toggle="modal" href="$_spotify_restart">RESTART</a> Spotify<br>
+						<a data-toggle="modal" href="#spotify-clear-credentials">CLEAR</a> Credential cache<br>
 					</span>
 				</div>
 			</div>
@@ -530,19 +531,17 @@
 					<span id="info-upnpsvc" class="help-block-configs help-block-margin2 hide">
 						upmpdcli (UPnP Client for MPD) by Jean-Francois Dockes.<br>
 						- Supports Open Home Media (ohMedia).<br>
-						- Provides album art via upexplorer.<br>
-						- Supports Tidal, Qobuz and Google music services.<br>
-						- Supports radio stations via /etc/upmpdcli-radio.conf.<br>
+						- Radio station url's can be added to /etc/upmpdcli-radio.conf.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
-						<a href="upp-config.php">CONFIGURE</a> UPnP<br>
-						<a data-toggle="modal" href="$_upnp_restart">RESTART</a> UPnP<br>
+						<a href="upp-config.php">CONFIGURE</a> UPnP client<br>
+						<a data-toggle="modal" href="$_upnp_restart">RESTART</a> UPnP client<br>
 					</span>
 				</div>
-			</div> 
+			</div>
 
 			<div class="control-group $_feat_minidlna">
-				<label class="control-label">DLNA server</label>
+				<label class="control-label" for="dlnaname">DLNA server</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggledlnasvc2">ON</label>
@@ -556,16 +555,39 @@
 						<a class="info-toggle" data-cmd="info-dlnasvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-dlnasvc" class="help-block-configs help-block-margin2 hide">
-						DLNA server (miniDLNA) by Justin Maggard.<br>
+						DLNA media server (miniDLNA) by Justin Maggard.<br>
                     </span>
 					<span class="help-block-configs help-block-margin">
 						<a data-toggle="modal" href="#rebuild-dlnadb">REBUILD</a> Database<br>
-						<a id="dlnasvc-link" href="http://$_select[hostip]:8200" target="_blank">VIEW</a> Status of db update<br> 
+						<a id="dlnasvc-link" href="http://$_select[hostip]:8200" target="_blank">VIEW</a> Status of DB update<br>
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group $_feat_djmount">
+				<label class="control-label">UPnP Media Browser</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_upnp_browser2">ON</label>
+						$_select[upnp_browser1]
+						<label class="toggle-radio" for="toggle_upnp_browser1">OFF</label>
+						$_select[upnp_browser0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_upnp_browser" value="novalue">Set</button>
+						<a class="info-toggle" data-cmd="info-upnp-browser" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-upnp-browser" class="help-block-configs help-block-margin2 hide">
+						Djmount by Rémi Turboult. Mount UPnP/DLNA Media Servers as FUSE file systems to /mnt/UPNP.<br>
+						NOTE: Use Library config to create and index a UPnP music source.
+                    </span>
+					<span class="help-block-configs help-block-margin">
+						<a data-toggle="modal" href="$_upnp_browser_restart">RESTART</a> UPnP browser<br>
 					</span>
 				</div>
 			</div>
 		</fieldset>
-			
+
 		<legend class="$_feat_mpdas">Services</legend>
 		<fieldset>
 			<div class="control-group $_feat_mpdas">
@@ -622,14 +644,31 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Restart MPD service?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="mpdrestart" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="bt-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="bt-restart-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		</div>
+
+		<div class="modal-body">
+			<h6>Restart Bluetooth controller?</h6>
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="btrestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -639,11 +678,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Restart Airplay receiver?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="airplayrestart" value="1">Yes</button>
@@ -656,11 +695,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Restart Spotify receiver?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="spotifyrestart" value="1">Yes</button>
@@ -669,18 +708,18 @@
 </form>
 
 <form class="form-horizontal" method="post">
-	<div id="bt-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="bt-restart-label" aria-hidden="true">
+	<div id="spotify-clear-credentials" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="spotify-clear-credentials-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
-			<h6>Restart Bluetooth controller?</h6>
+			<h6>Clear credential cache?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="btrestart" value="1">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="spotify_clear_credentials" value="1">Yes</button>
 		</div>
 	</div>
 </form>
@@ -690,11 +729,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Restart Squeezelite renderer?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="slrestart" value="1">Yes</button>
@@ -707,14 +746,31 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Restart UPnP renderer?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="upnprestart" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="upnp-browser-restart" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="upnp-browser-restart-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		</div>
+
+		<div class="modal-body">
+			<h6>Restart UPnP browser?</h6>
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="upnp_browser_restart" value="1">Yes</button>
 		</div>
 	</div>
 </form>
