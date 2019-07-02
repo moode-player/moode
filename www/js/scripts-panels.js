@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-06-12 TC moOde 5.3.1
+ * 2019-MM-DD TC moOde 5.4
  *
  */
 
@@ -966,9 +966,16 @@ jQuery(document).ready(function($) { 'use strict';
 				$('#lib-album-filter-results').html('');
 			}
 
-			if ($('.album-view-btn').hasClass('active')) {
+			if ($('.tag-view-btn').hasClass('active')) {
+				var lazyClass = 'img.lazy-tagview';
+				var lazyContainer = '#lib-album';
+			}
+			else {
+				var lazyClass = 'img.lazy-albumview';
+				var lazyContainer = '#lib-albumcover';
 				$('#bottom-row').css('display', 'none');
 			}
+
 		    $('#albumcovers .lib-entry').removeClass('active');
 		    $('#albumsList .lib-entry').removeClass('active');
 			$('#lib-albumcover').css('height', '100%');
@@ -976,8 +983,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('#lib-albumcover').scrollTo(0, 200);
 			UI.libPos.fill(-3);
 
-			var lazyContainer = $('.tag-view-btn').hasClass('active') ? '#lib-album' : '#lib-albumcover';
-			$('img.lazy-tagview').lazyload({
+			$(lazyClass).lazyload({
 			    container: $(lazyContainer)
 			});
 		}, 750);

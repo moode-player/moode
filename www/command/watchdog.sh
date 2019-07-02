@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-05-30 TC moOde 5.3
+# 2019-MM-DD TC moOde 5.4
 #
 
 FPMLIMIT=40
@@ -35,7 +35,7 @@ while true; do
 		TIMESTAMP=$(date +'%Y%m%d %H%M%S')
 		LOGMSG=" watchdog: PHP restarted (fpm child limit > "$FPMLIMIT")"
 		echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
-		systemctl restart php7.0-fpm
+		systemctl restart php7.3-fpm
 	fi
 
 	# MPD
@@ -56,7 +56,7 @@ while true; do
 			/var/www/command/restart-renderer.php -spotify
 		fi
 	fi
-		
+
 	sleep 6
 	FPMCNT=$(pgrep -c -f "php-fpm: pool www")
 	MPDACTIVE=$(pgrep -c -x mpd)

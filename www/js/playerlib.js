@@ -18,24 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-06-12 TC 5.3.1
+ * 2019-MM-DD TC 5.4
  *
  */
 
 // features availability bitmask
-const FEAT_RESERVED =		0b0000000000000001;	//     1
-const FEAT_AIRPLAY =		0b0000000000000010;	//     2
-const FEAT_MINIDLNA =		0b0000000000000100;	//     4
-const FEAT_MPDAS =			0b0000000000001000;	//     8
-const FEAT_SQUEEZELITE =	0b0000000000010000;	//    16
-const FEAT_UPMPDCLI =		0b0000000000100000;	//    32
-const FEAT_SQSHCHK =		0b0000000001000000;	//    64
-const FEAT_GMUSICAPI =		0b0000000010000000;	//   128
-const FEAT_LOCALUI =		0b0000000100000000;	//   256
-const FEAT_SOURCESEL =		0b0000001000000000;	//   512
-const FEAT_UPNPSYNC =		0b0000010000000000;	//  1024
-const FEAT_SPOTIFY =		0b0000100000000000;	//  2048
-const FEAT_GPIO =			0b0001000000000000;	//  4096
+const FEAT_RESERVED =    0b0000000000000001; //     1
+const FEAT_AIRPLAY =     0b0000000000000010; //     2
+const FEAT_MINIDLNA =    0b0000000000000100; //     4
+const FEAT_MPDAS =       0b0000000000001000; //     8
+const FEAT_SQUEEZELITE = 0b0000000000010000; //    16
+const FEAT_UPMPDCLI =    0b0000000000100000; //    32
+const FEAT_SQSHCHK =     0b0000000001000000; //    64
+const FEAT_GMUSICAPI =   0b0000000010000000; //   128
+const FEAT_LOCALUI =     0b0000000100000000; //   256
+const FEAT_SOURCESEL =   0b0000001000000000; //   512
+const FEAT_UPNPSYNC =    0b0000010000000000; //  1024
+const FEAT_SPOTIFY =     0b0000100000000000; //  2048
+const FEAT_GPIO =		 0b0001000000000000; //  4096
+const FEAT_DJMOUNT =	 0b0010000000000000; //  8192
 
 var UI = {
 	knob: null,
@@ -838,7 +839,7 @@ function renderUI() {
 	// ensure renderer overlays get applied in case mpd ui updates get there first after browser refresh
 	// bluetooth renderer
 	if (SESSION.json['btactive'] == '1') {
-		inpSrcIndicator('btactive1', 'Bluetooth Active');
+		inpSrcIndicator('btactive1', '<a href="blu-config.php">Bluetooth Active</a>');
 	}
 	// airplay renderer
 	if (SESSION.json['airplayactv'] == '1') {
@@ -2702,7 +2703,7 @@ $('.context-menu a').click(function(e) {
 		$('#clockradio-stop-sat').prop('checked', (stop[8] == '1'))
 		$('#clockradio-stop-sun').prop('checked', (stop[9] == '1'))
 
-		$('#clockradio-shutdown span').text(SESSION.json['clkradio_shutdown']);
+		$('#clockradio-action span').text(SESSION.json['clkradio_action']);
 		$('#clockradio-volume').val(SESSION.json['clkradio_volume']);
 
 		setClkRadioCtls(SESSION.json['clkradio_mode']);
@@ -2902,7 +2903,7 @@ $('.btn-clockradio-update').click(function(e){
 	SESSION.json['clkradio_stop'] = stopHH +  ',' + stopMM + ',' + $('#clockradio-stoptime-ampm span').text() + ',' + stopDays;
 
 	SESSION.json['clkradio_volume'] = $('#clockradio-volume').val();
-	SESSION.json['clkradio_shutdown'] = $('#clockradio-shutdown span').text();
+	SESSION.json['clkradio_action'] = $('#clockradio-action span').text();
 
 	var result = sendMoodeCmd('POST', 'updcfgsystem', {
 		'clkradio_mode': SESSION.json['clkradio_mode'],
@@ -3149,8 +3150,8 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
 	else if ($(this).data('cmd') == 'clockradio-stoptime-ampm') {
 		$('#clockradio-stoptime-ampm span').text($(this).text());
 	}
-	else if ($(this).data('cmd') == 'clockradio-shutdown-yn') {
-		$('#clockradio-shutdown span').text($(this).text());
+	else if ($(this).data('cmd') == 'clockradio-action-sel') {
+		$('#clockradio-action span').text($(this).text());
 	}
 	// appearance: themes and backgrounds
 	else if ($(this).data('cmd') == 'theme-name-sel') {

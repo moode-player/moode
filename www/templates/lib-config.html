@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -19,29 +19,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 5.4
  *
  */
--->	
+-->
 <div class="container">
 	<div class="container2">
 	<h1 class="lib-config">Library Config</h1>
-	<p>
-		<legend>NAS Sources</legend>
+		<legend>Music Sources</legend>
 
 		<p>
-			<a href="lib-config.php?cmd=add"><button class="btn btn-medium btn-primary">Create</button></a>&nbsp;NAS source
+			<a href="lib-config.php?cmd=add"><button class="btn btn-medium btn-primary">Create</button></a>&nbsp;Music source
 		</p>
 
-		<p>List of configured NAS sources (click to edit)</p>
+		<p>List of configured Music sources (click to edit)</p>
 
 		<form class="form-horizontal" method="post">
 			$_mounts
 
 			<p>
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="remount" value="novalue" $_remount_disable>Re-mount</button>&nbsp;All NAS sources
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="remount" value="novalue" $_remount_disable>Re-mount</button>&nbsp;All Music sources
 				<span id="info-remount" class="help-block-configs help-block-margin">
-					Un-mount then re-mount all NAS sources.
+					Unmount then remount all Music sources.
                 </span>
 			</p>
 
@@ -95,10 +94,9 @@
                 </span>
 				<span id="info-regenthmcache" class="help-block-configs help-block-margin">
 					Update or regenerate the album cover thumbnail cache.<br>
-					<a id="view-thmcache-status" href="#notarget">VIEW</a> cache status:&nbsp;<span id="thmcache-status">$_thmcache_status</span><!-- r43h -->					
+					<a id="view-thmcache-status" href="#notarget">VIEW</a> cache status:&nbsp;<span id="thmcache-status">$_thmcache_status</span><!-- r43h -->
                 </span>
 			</p>
 		</form>
-	</p>
-</div>	
+	</div>
 </div>

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-06-12 TC moOde 5.3.1
+ * 2019-MM-DD TC moOde 5.4
  *
  */
 -->
@@ -31,7 +31,7 @@
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>
 			<ul>
-				<li>Release: 5.3.1 2019-06-12 <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
+				<li>Release: 5.4 2019-MM-DD <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
 				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
@@ -417,7 +417,7 @@
 		                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
 							<a class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-playname" class="help-block hide">
-			                    	Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
+			                    Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
 		                    </span>
 		                </div>
 
@@ -497,23 +497,28 @@
 							</div>
 		                </div>
 
-		                <label class="control-label" for="clockradio-shutdown">Shutdown</label>
+		                <label class="control-label" for="clockradio-action">Action</label>
 		                <div class="controls">
-	   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+	   						<div class="btn-group bootstrap-select" style="width: 120px;">
 								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="clockradio-shutdown" class="filter-option pull-left">
+									<div id="clockradio-action" class="filter-option pull-left">
 										<span></span> <!-- selection from dropdown gets placed here -->
 									</div>&nbsp;
 									<div class="caret"></div>
 								</button>
 								<div class="dropdown-menu open">
 									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-shutdown-yn"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-shutdown-yn"><span class="text">No</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">None</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Reboot</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Shutdown</span></a></li>
 									</ul>
 								</div>
 							</div>
-							<span class="control-aftertext">after stop</span>
+							<span class="control-aftertext">after stop
+							<a class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a></span>
+							<span id="info-action" class="help-block hide">
+								NOTE: The Reboot action is initiated 45 seconds after the specified stop time.
+							</span>
 		                </div>
 					</div>
 
@@ -629,13 +634,18 @@
 <!-- DISPLAY MESSAGES -->
 <script src="js/jquery-1.8.2.min.js"></script>
 <script src="js/jquery-ui-1.10.0.custom.min.js"></script>
+
 <?php
-	if (isset($_SESSION['notify']) && $_SESSION['notify'] != '') {
-		ui_notify($_SESSION['notify']);
-		session_start();
-		$_SESSION['notify'] = '';
-		session_write_close();
-	}
+    if (isset($_SESSION['notify']['title']) && $_SESSION['notify']['title'] != '') {
+        ui_notify($_SESSION['notify']);
+        $_SESSION['notify']['title'] = '';
+        $_SESSION['notify']['msg'] = '';
+        $_SESSION['notify']['duration'] = '3';
+    }
+
+    //workerLog('-- footer.php');
+    $return = session_write_close();
+    //workerLog('session_write_close=' . (($return) ? 'TRUE' : 'FALSE'));
 ?>
 
 </body>

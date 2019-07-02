@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-30 TC moOde 5.3
+ * 2019-MM-DD TC moOde 5.4
  *
  */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
 if (false === ($sock = openMpdSock('localhost', 6600))) {
-	$msg = 'command/moode: Connection to MPD failed'; 
+	$msg = 'command/moode: Connection to MPD failed';
 	workerLog($msg);
-	exit($msg . "\n");	
+	exit($msg . "\n");
 }
 else {
-	playerSession('open', '' ,''); 
+	playerSession('open', '' ,'');
 	$dbh = cfgdb_connect();
 	session_write_close();
 }
@@ -39,7 +39,7 @@ $playqueue_cmds = array('add', 'play', 'clradd', 'clrplay', 'addall', 'playall',
 if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 	echo 'command missing';
 }
-// these get sent to worker.php 
+// these get sent to worker.php
 else {
 	if (in_array($_GET['cmd'], $jobs)) {
 		$queue_args = ($_GET['cmd'] == 'updmpddb' && isset($_POST['path']) && $_POST['path'] != '') ? $_POST['path'] : '';
@@ -97,7 +97,7 @@ else {
 			/*else {
 				sendMpdCmd($sock, 'random 0');
 				$resp = readMpdResp($sock);
-			}*/			
+			}*/
 		}
 
 		switch ($_GET['cmd']) {
@@ -122,7 +122,7 @@ else {
 				else {
 					$cmd = '/usr/local/bin/ashuffle --queue_buffer 1 > /dev/null 2>&1 &';
 				}
-				
+
 				//workerlog($cmd);
 				$_GET['ashuffle'] == '1' ? sysCmd($cmd) : sysCmd('killall -s 9 ashuffle > /dev/null');
 
@@ -163,7 +163,7 @@ else {
 				// cfg_system
 				$result = cfgdb_read('cfg_system', $dbh);
 				$array_cfg_system = array();
-				foreach ($result as $row) {$array_cfg_system[$row['param']] = $row['value'];}				
+				foreach ($result as $row) {$array_cfg_system[$row['param']] = $row['value'];}
 				$array_cfg_system['mooderel'] = $_SESSION['mooderel']; // add extra vars
 				$array_cfg_system['pkgdate'] = $_SESSION['pkgdate'];
 				$array_cfg_system['raspbianver'] = $_SESSION['raspbianver'];
@@ -171,16 +171,16 @@ else {
 				$array_cfg_system['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
 				// cfg_theme
 				$result = cfgdb_read('cfg_theme', $dbh);
-				$array_cfg_theme = array();				
+				$array_cfg_theme = array();
 				foreach ($result as $row) {$array_cfg_theme[$row['theme_name']] = array('tx_color' => $row['tx_color'], 'bg_color' => $row['bg_color'], 'mbg_color' => $row['mbg_color']);}
 				// cfg_radio
 				$result = cfgdb_read('cfg_radio', $dbh);
 				$array_cfg_radio = array();
-				foreach ($result as $row) {$array_cfg_radio[$row['station']] = array('name' => $row['name']);}				
+				foreach ($result as $row) {$array_cfg_radio[$row['station']] = array('name' => $row['name']);}
 
-				$data['cfg_system'] = $array_cfg_system; 
-				$data['cfg_radio'] = $array_cfg_radio; 
-				$data['cfg_theme'] = $array_cfg_theme; 
+				$data['cfg_system'] = $array_cfg_system;
+				$data['cfg_radio'] = $array_cfg_radio;
+				$data['cfg_theme'] = $array_cfg_theme;
 
 				echo json_encode($data);
 				break;
@@ -189,7 +189,7 @@ else {
 			case 'readcfgsystem':
 				$result = cfgdb_read('cfg_system', $dbh);
 				$array = array();
-				
+
 				foreach ($result as $row) {
 					$array[$row['param']] = $row['value'];
 				}
@@ -201,7 +201,7 @@ else {
 				$array['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
 
 				echo json_encode($array);
-				break;			
+				break;
 			case 'updcfgsystem':
 				foreach (array_keys($_POST) as $var) {
 					playerSession('write', $var, $_POST[$var]);
@@ -213,19 +213,19 @@ else {
 			case 'readcfgtheme':
 				$result = cfgdb_read('cfg_theme', $dbh);
 				$array = array();
-				
+
 				foreach ($result as $row) {
 					$array[$row['theme_name']] = array('tx_color' => $row['tx_color'], 'bg_color' => $row['bg_color'], 'mbg_color' => $row['mbg_color']);
 				}
-				
+
 				echo json_encode($array);
 				break;
 			case 'readthemename':
 				if (isset($_POST['theme_name'])) {
-					$result = cfgdb_read('cfg_theme', $dbh, $_POST['theme_name']);				
+					$result = cfgdb_read('cfg_theme', $dbh, $_POST['theme_name']);
 					echo json_encode($result[0]); // return specific row
 				} else {
-					$result = cfgdb_read('cfg_theme', $dbh);				
+					$result = cfgdb_read('cfg_theme', $dbh);
 					echo json_encode($result); // return all rows
 				}
 				break;
@@ -233,17 +233,17 @@ else {
 			case 'readcfgradio':
 				$result = cfgdb_read('cfg_radio', $dbh);
 				$array = array();
-				
+
 				foreach ($result as $row) {
 					$array[$row['station']] = array('name' => $row['name']);
 				}
-				
+
 				echo json_encode($array);
-				break;	
+				break;
 			// audio devices
 			case 'readaudiodev':
 				if (isset($_POST['name'])) {
-					$result = cfgdb_read('cfg_audiodev', $dbh, $_POST['name']);				
+					$result = cfgdb_read('cfg_audiodev', $dbh, $_POST['name']);
 					echo json_encode($result[0]); // return specific row
 				} else {
 					$result = cfgdb_read('cfg_audiodev', $dbh, 'all');
@@ -261,10 +261,10 @@ else {
 					sendMpdCmd($sock, 'delete ' . $_GET['range']);
 					echo json_encode(readMpdResp($sock));
 				}
-				break;			
+				break;
 			case 'moveplitem':
 				if (isset($_GET['range']) && $_GET['range'] != '') {
-					sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);					
+					sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
 					echo json_encode(readMpdResp($sock));
 				}
 				break;
@@ -276,21 +276,21 @@ else {
 
 					$array = array();
 					$line = strtok($resp, "\n");
-					
+
 					while ($line) {
 						list($element, $value) = explode(': ', $line, 2);
 						$array[$element] = $value;
 						$line = strtok("\n");
-					} 
+					}
 
 					echo json_encode($array['file']);
 				}
-				break;			
+				break;
 	        case 'savepl':
 	            if (isset($_GET['plname']) && $_GET['plname'] != '') {
 	                sendMpdCmd($sock, 'rm "' . html_entity_decode($_GET['plname']) . '"');
 					$resp = readMpdResp($sock);
-	                
+
 	                sendMpdCmd($sock, 'save "' . html_entity_decode($_GET['plname']) . '"');
 	                echo json_encode(readMpdResp($sock));
 	            }
@@ -298,7 +298,7 @@ else {
 			case 'getfavname':
 				$result = cfgdb_read('cfg_system', $dbh, 'favorites_name');
 				echo json_encode($result[0]['value']);
-				break;			
+				break;
 			case 'setfav':
 	            if (isset($_GET['favname']) && $_GET['favname'] != '') {
 					$file = '/var/lib/mpd/playlists/' . $_GET['favname'] . '.m3u';
@@ -349,9 +349,12 @@ else {
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					$status = parseStatus(getMpdStatus($sock));
 					$pos = $status['playlistlength'] ;
-					
+
+					sendMpdCmd($sock, 'stop');
+					echo json_encode(readMpdResp($sock));
+
 					addToPL($sock, $_POST['path']);
-					
+
 					sendMpdCmd($sock, 'play ' . $pos);
 					echo json_encode(readMpdResp($sock));
 				}
@@ -360,25 +363,25 @@ else {
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					sendMpdCmd($sock,'clear');
 					$resp = readMpdResp($sock);
-					
+
 					addToPL($sock,$_POST['path']);
 					playerSession('write', 'toggle_song', '0'); // reset toggle_song
 
 					echo json_encode($resp);
 				}
-				break;				
+				break;
 			case 'clrplay':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					sendMpdCmd($sock,'clear');
 					$resp = readMpdResp($sock);
-					
+
 					addToPL($sock,$_POST['path']);
 					playerSession('write', 'toggle_song', '0'); // reset toggle_song
-					
+
 					sendMpdCmd($sock, 'play');
 					echo json_encode(readMpdResp($sock));
 				}
-				break;				
+				break;
 			case 'lsinfo':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					echo json_encode(searchDB($sock, 'lsinfo', $_POST['path']));
@@ -433,26 +436,26 @@ else {
 
 					$file =  MPD_MUSICROOT . 'RADIO/' . $station_name . '.pls';
 					$fh = fopen($file, 'w') or exit('moode.php: file create failed on ' . $file);
-	
+
 					$data = '[playlist]' . "\n";
 					$data .= 'numberofentries=1' . "\n";
 					$data .= 'File1='. $_POST['url'] . "\n";
 					$data .= 'Title1='. $station_name . "\n";
 					$data .= 'Length1=-1' . "\n";
 					$data .= 'version=2' . "\n";
-	
+
 					fwrite($fh, $data);
 					fclose($fh);
-	
+
 					sysCmd('chmod 777 "' . $file . '"');
 					sysCmd('chown root:root "' . $file . '"');
-	
+
 					// update time stamp on files so mpd picks up the change and commits the update
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
-	
+
 					sendMpdCmd($sock, 'update RADIO'); //r45p specify RADIO folder
 					readMpdResp($sock);
-					
+
 					echo json_encode('OK');
 				}
 				break;
@@ -466,17 +469,17 @@ else {
 					sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
 					sysCmd('rm "' . '/var/www/images/radio-logos/' . $station_name . '.jpg' . '"');
 					sysCmd('rm "' . '/var/www/images/radio-logos/thumbs/' . $station_name . '.jpg' . '"');
-					
+
 					// update time stamp on files so mpd picks up the change and commits the update
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
-					
+
 					sendMpdCmd($sock, 'update RADIO');
 					readMpdResp($sock);
-					
+
 					echo json_encode('OK');
 				}
 				break;
-				
+
 			// LIBRARY PANEL
 	        case 'addall':
 	            if (isset($_POST['path']) && $_POST['path'] != '') {
@@ -487,10 +490,13 @@ else {
 	            if (isset($_POST['path']) && $_POST['path'] != '') {
 					$status = parseStatus(getMpdStatus($sock));
 					$pos = $status['playlistlength'];
-					
+
+					sendMpdCmd($sock, 'stop');
+					echo json_encode(readMpdResp($sock));
+
 	            	addallToPL($sock, $_POST['path']);
-					usleep(500000); // needed after bulk add to pl
-					
+					//usleep(500000); // needed after bulk add to pl
+
 					playerSession('write', 'toggle_song', $pos); // reset toggle_song
 
 					sendMpdCmd($sock, 'play ' . $pos);
@@ -501,8 +507,8 @@ else {
 	            if (isset($_POST['path']) && $_POST['path'] != '') {
 					sendMpdCmd($sock,'clear');
 					$resp = readMpdResp($sock);
-							            
-	            	addallToPL($sock, $_POST['path']);		            
+
+	            	addallToPL($sock, $_POST['path']);
 					//usleep(500000); // needed after bulk add to pl
 
 					playerSession('write', 'toggle_song', '0'); // reset toggle_song
@@ -540,7 +546,7 @@ else {
 				echo json_encode($status);
 				break;
 		}
-	}		
+	}
 }
 
 closeMpdSock($sock);

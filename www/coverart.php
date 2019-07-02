@@ -85,8 +85,8 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Id3_Exception $e) {
-				workerLog('coverart: mp3: ' . $path); 
-				workerLog('coverart: mp3: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: mp3: ' . $path);
+				workerLog('coverart: mp3: Zend media exception: ' . $e->getMessage());
 			}
 			break;
 
@@ -102,8 +102,8 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Flac_Exception $e) {
-				workerLog('coverart: flac: ' . $path); 
-				workerLog('coverart: flac: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: flac: ' . $path);
+				workerLog('coverart: flac: Zend media exception: ' . $e->getMessage());
 			}
 			break;
 
@@ -124,8 +124,8 @@ function getImage($path) {
                 }
             }
             catch (Zend_Media_Iso14496_Exception $e) {
-				workerLog('coverart: m4a: ' . $path); 
-				workerLog('coverart: m4a: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: m4a: ' . $path);
+				workerLog('coverart: m4a: Zend media exception: ' . $e->getMessage());
             }
             break;
 	}
@@ -169,7 +169,7 @@ function parseFolder($path) {
  */
 
 session_id(playerSession('getsessionid'));
-session_start();
+$return = session_start();
 $search_pri = $_SESSION['library_covsearchpri'];
 $musicroot_ext = $_SESSION['musicroot_ext']; // $GLOBALS['musicroot_ext']
 session_write_close();

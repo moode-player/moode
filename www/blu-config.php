@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,15 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 5.4
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '' ,'');
-$section = basename(__FILE__, '.php');
-storeBackLink($section);
 
 // submitted actions
 if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
@@ -69,16 +67,16 @@ if (isset($_POST['rm_paired_device']) && $_POST['rm_paired_device'] == '1') {
 if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 	// update MAC address
 	if ($_POST['audioout'] == 'Bluetooth') {
-		sysCmd("sed -i '/device/c\ \t\tdevice \"" . $_POST['paired_device'] . "\"'" .  ' /usr/share/alsa/alsa.conf.d/btstream.conf');
+		sysCmd("sed -i '/device/c\ \t\tdevice \"" . $_POST['paired_device'] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 	}
 	// update MPD output
 	playerSession('write', 'audioout', $_POST['audioout']);
-	//setAudioOut($_POST['audioout']);	
+	//setAudioOut($_POST['audioout']);
 	// connect device
 	sysCmd('/var/www/command/bt.sh -C ' . '"' . $_POST['paired_device'] . '"');
 	$cmd = '-c';
 	sleep(1);
-	setAudioOut($_POST['audioout']);	
+	setAudioOut($_POST['audioout']);
 }
 
 // change MPD audio output
@@ -86,18 +84,18 @@ if (isset($_POST['chg_audioout']) && $_POST['chg_audioout'] == '1') {
 	// update MAC address
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
 		$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
-		sysCmd("sed -i '/device/c\ \t\tdevice \"" . $device . "\"'" .  ' /usr/share/alsa/alsa.conf.d/btstream.conf');
+		sysCmd("sed -i '/device/c\ \t\tdevice \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 	}
 	// update MPD output
 	playerSession('write', 'audioout', $_POST['audioout']);
-	setAudioOut($_POST['audioout']);	
+	setAudioOut($_POST['audioout']);
 }
 
 // disconnect paired device
 if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 	// update MPD output
 	playerSession('write', 'audioout', $_POST['audioout']);
-	setAudioOut($_POST['audioout']);	
+	setAudioOut($_POST['audioout']);
 	// disconnect
 	sysCmd('/var/www/command/bt.sh -d ' . '"' . $_POST['connected_device'] . '"');
 	$cmd = '-p';
@@ -125,7 +123,7 @@ $_bt_disabled = $_SESSION['btsvc'] == '1' ? '' : 'disabled';
 $_bt_msg_hide = $_SESSION['btsvc'] == '1' ? 'hide' : '';
 $_ao_msg_hide = ($cmd == '-p' || $cmd == '-c') ? '' : 'hide';
 
-// run the cmd 
+// run the cmd
 $result = sysCmd('/var/www/command/bt.sh ' . $cmd);
 if ($cmd == '-i') {
 	// remove ansi color codes and fix formatting in the output of -i
@@ -169,15 +167,18 @@ if ($cmd == '-p' || $cmd == '-c' || $cmd == '-l' || $cmd == '-s') {
 		$token = explode(' ', $result[$i], 3);
 		if (strpos($token[1], ':') !== false) {
 			$_device[$type] .= "<option value=\"" . $token[1] . "\">" . $token[2] . "</option>\n";
-		}		
+		}
 	}
 	// hide/unhide controls
 	$_hide_ctl[$type] = empty($_device[$type]) ? 'hide' : '';
 }
 
-waitWorker(1);
+waitWorker(1, 'blu-config');
 
 $tpl = "blu-config.html";
-include('/var/local/www/header.php'); 
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

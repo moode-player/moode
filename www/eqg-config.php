@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -88,7 +88,7 @@ else {
 }
 
 session_write_close();
-	
+
 // load curve list
 $_selected_curve = 'Flat';
 $curveList = sdbquery('SELECT curve_name FROM cfg_eqalsa', $dbh);
@@ -106,9 +106,9 @@ if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
 }
 
 // set control states
-$_disable_play = $_SESSION['alsaequal'] == 'Off' ? 'disabled' : ''; 
+$_disable_play = $_SESSION['alsaequal'] == 'Off' ? 'disabled' : '';
 $_disable_rm = $_selected_curve == 'Flat' ? 'disabled' : '';
-$_disable_rm_msg = $_selected_curve == 'Flat' ? 'Flat curve cannot be removed' : ''; 
+$_disable_rm_msg = $_selected_curve == 'Flat' ? 'Flat curve cannot be removed' : '';
 
 // load curve values
 $result = sdbquery("SELECT * FROM cfg_eqalsa WHERE curve_name='" . $_search_curve . "'", $dbh);
@@ -118,12 +118,12 @@ for ($i = 0; $i < 10; $i++) {
 	$_select['freq' . ($i + 1)] = $values[$i];
 }
 
-waitWorker(1);
+waitWorker(1, 'eqg-config');
 
 $tpl = "eqg-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php'); 
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

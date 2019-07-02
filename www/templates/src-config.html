@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,26 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 5.4
  *
  */
--->	
+-->
 <div class="container">
 	<div class="container2">
-	<h1 class="lib-config">NAS Source</h1>
+	<h1 class="lib-config">Music Source</h1>
 
 	<form class="form-horizontal" action="lib-config.php" method="post">
 		<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a href="#remove-nas-source" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
+			<a href="#remove-source" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
 			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				SAVE: Add new NAS config or update existing NAS config.<br>
-				REMOVE: Delete this NAS config.
+				SAVE: Add new Music source or update existing source.<br>
+				REMOVE: Remove this Music source.
             </span>
 		</legend>
 		<a data-toggle="modal" href="#moode-log" class="btn btn-small $_hide_error" style="margin-bottom: 15px; background-color: #333;">
-			<i class='fas fa-times red sx'></i>Mount error: Click to view moode.log for error msg
+			<i class='fas fa-times red sx'></i>NAS mount error: Click to view moode.log for errors
 		</a>
 
 		<fieldset>
@@ -48,13 +48,13 @@
 					</select>
 					<a class="info-toggle" data-cmd="info-fileshare-protocol" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-fileshare-protocol" class="help-block-configs help-block-margin hide">
-						Select SMB for Windows or Samba shares, NFS for UNIX shares.<br>
-						NOTE: Unsuccessful NFS mounts can have up to 1-2 min timeout.
+						Most NAS devices support SMB (Samba). NFS is only for UNIX/Linux. UPnP is for UPnP/DLNA media servers.<br>
+						NOTE: Unsuccessful NFS mounts can cause up to a 1-2 min timeout. This screen will appear to hang when this happens.
                     </span>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="address">Host/Share</label>
+				<label class="control-label" id="server-label" for="address">Host</label>
 				<div class="controls">
 					<select id="address" name="mount[address]" class="input-large">
 						$_address
@@ -62,10 +62,10 @@
 					<button id="scan-btn" class="btn btn-primary btn-small set-button  btn-submit status-msg $_scan_btn_hide" data-msg="Scan in progress" type="submit" name="scan" value="1">Scan</button>
 					<a class="info-toggle" data-cmd="info-server" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-server" class="help-block-configs help-block-margin hide">
-						Format is Host/Share or IPaddr/Share.<br>
-						SCAN generates a list of SMB (Samba) shares.
+						Format is Host/Share or IPaddr/Share for NAS devices and just Host for UPnP devices.<br>
+						SCAN generates a list of SMB (Samba) shares or UPnP devices.
                     </span>
-					<span class="help-block-configs help-block-margin">
+					<span id="edit-server" class="help-block-configs help-block-margin $_edit_server_hide">
 						<a id="editserver" data-toggle="modal" href="#manual-server">EDIT</a> Host/Share manually<br>
 					</span>
 				</div>
@@ -83,7 +83,7 @@
 						<input  id="nas-pasw" class="input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
 						<a class="info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-nas-uidpwd" class="help-block-configs help-block-margin hide">
-							Try userid = Guest and a blank password unless your NAS requires a specific userid/password.<br>
+							Try userid = Guest and a blank password unless your NAS device requires a specific userid/password.<br>
 							NOTE: Single and double quotes are not allowed.
 	                    </span>
 					</div>
@@ -98,70 +98,70 @@
 					<input type="hidden" name="mount[action]" value="$_action">
 					<a class="info-toggle" data-cmd="info-source-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-source-name" class="help-block-configs help-block-margin hide">
-						Name will appear under the Browse/NAS folder.<br>
+						This name will appear in Library Folder view under the NAS folder.<br>
 						1-25 chars, alphanumeric and hyphen allowed.
                     </span>
 					<span class="help-block-configs help-block-margin">
-                    	Friendly name for this NAS source.<br>
+                    	Friendly name (alias) for this Music source.<br>
                     </span>
 				</div>
 			</div>
-
 		</fieldset>
 
 		<fieldset>
-			<legend>Advanced</legend>
-			<div class="control-group">
-				<label class="control-label" for="nas-charset">Charset</label>
-				<div class="controls">
-					<select id="nas-charset" name="mount[charset]" class="input-large">
-						<option value="utf8" $_charset>UTF8 (default)</option>
-						<option value="iso8859-1" $_charset>ISO 8859-1</option>
-					</select>
-					<a class="info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mount-charset" class="help-block-configs help-block-margin hide">
-						Change this setting if there are problems with char encoding.
-                    </span>
+			<div id="advanced-options" class="$_advanced_options_hide">
+				<legend>Advanced</legend>
+				<div class="control-group">
+					<label class="control-label" for="nas-charset">Charset</label>
+					<div class="controls">
+						<select id="nas-charset" name="mount[charset]" class="input-large">
+							<option value="utf8" $_charset>UTF8 (default)</option>
+							<option value="iso8859-1" $_charset>ISO 8859-1</option>
+						</select>
+						<a class="info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-mount-charset" class="help-block-configs help-block-margin hide">
+							Change this setting if there are problems with char encoding.
+	                    </span>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="nas-rsize">Rsize</label>
-				<div class="controls">
-					<input class="input-large" type="number" id="nas-rsize" name="mount[rsize]" value="$_rsize">
-					<a class="info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mount-rsize" class="help-block-configs help-block-margin hide">
-						Default for this setting is 61440.
-                    </span>
+				<div class="control-group">
+					<label class="control-label" for="nas-rsize">Rsize</label>
+					<div class="controls">
+						<input class="input-large" type="number" id="nas-rsize" name="mount[rsize]" value="$_rsize">
+						<a class="info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-mount-rsize" class="help-block-configs help-block-margin hide">
+							Default for this setting is 61440.
+	                    </span>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="nas-wsize">Wsize</label>
-				<div class="controls">
-					<input class="input-large" type="number" id="nas-wsize" name="mount[wsize]" value="$_wsize">
-					<a class="info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mount-wsize" class="help-block-configs help-block-margin hide">
-						Default for this setting is 65536.
-                    </span>
+				<div class="control-group">
+					<label class="control-label" for="nas-wsize">Wsize</label>
+					<div class="controls">
+						<input class="input-large" type="number" id="nas-wsize" name="mount[wsize]" value="$_wsize">
+						<a class="info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-mount-wsize" class="help-block-configs help-block-margin hide">
+							Default for this setting is 65536.
+	                    </span>
+					</div>
 				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="options">Mount flags</label>
-				<div class="controls">
-					<input class="input-large" type="text" id="options" name="mount[options]" value="$_options">
-					<!--a class="info-toggle" data-cmd="info-mount-flags" href="#notarget"><i class="fas fa-info-circle"></i></a-->
-					<span id="info-mount-flags" class="help-block-configs help-block-margin">
-						vers=2.0 or 3.0 may be needed and/or sec=ntlm depending on what the NAS requires.
-                    </span>
+				<div class="control-group">
+					<label class="control-label" for="options">Mount flags</label>
+					<div class="controls">
+						<input class="input-large" type="text" id="options" name="mount[options]" value="$_options">
+						<span id="info-mount-flags" class="help-block-configs help-block-margin">
+							vers=2.0, 3.0, 3.1 etc may be needed and/or sec=ntlm depending on what the NAS device requires.
+	                    </span>
+					</div>
 				</div>
 			</div>
 		</fieldset>
 
-		<div id="remove-nas-source" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="remove-nas-source-label" aria-hidden="true">
+		<div id="remove-source" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="remove-source-label" aria-hidden="true">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-				<h6>Remove NAS source: $_name</h6>
+				<h6>Remove Music source: $_name?</h6>
 			</div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -177,13 +177,13 @@
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3>Moode Log</h3>
 	</div>
-	
+
 	<div class="modal-body">
 		<pre>
 			$_moode_log
 		</pre>
 	</div>
-	
+
 	<div class="modal-footer">
 		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
@@ -194,7 +194,7 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<div class="control-group">
 				<label class="control-label" for="manualserver">Server</label>
@@ -208,7 +208,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="manualentry" value="1">Ok</button>
