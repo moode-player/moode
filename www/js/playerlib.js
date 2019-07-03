@@ -2912,7 +2912,7 @@ $('.btn-clockradio-update').click(function(e){
 		'clkradio_start': SESSION.json['clkradio_start'],		
 		'clkradio_stop': SESSION.json['clkradio_stop'],		
 		'clkradio_volume': SESSION.json['clkradio_volume'],		
-		'clkradio_shutdown': SESSION.json['clkradio_shutdown']
+		'clkradio_action': SESSION.json['clkradio_action']
 	});
 
 	// update header and menu icon color
