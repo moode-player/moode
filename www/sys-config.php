@@ -358,7 +358,7 @@ $_select['eth0chk1'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0c
 $_select['eth0chk0'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
 // max usb current 2x (1200 mA)
-$rev = $_SESSION['hdwrrev'], 3, 1);
+$rev = substr($_SESSION['hdwrrev'], 3, 1);
 if ($rev == '1' || $rev == '2') { // Pi-1A/B and 2B
 	$_maxcurrent_hide = '';
 	$_select['maxusbcurrent1'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent1\" value=\"1\" " . (($_SESSION['maxusbcurrent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
