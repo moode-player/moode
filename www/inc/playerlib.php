@@ -32,7 +32,7 @@ define('PORT_FILE', '/tmp/portfile');
 define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
 define('LIBCACHE_JSON', '/var/local/www/libcache.json');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
-define('SESSION_SAVE_PATH', '/tmp'); // dir for php session file
+define('SESSION_SAVE_PATH', '/run/php');
 
 error_reporting(E_ERROR);
 
