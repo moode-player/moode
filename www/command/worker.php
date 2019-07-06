@@ -204,7 +204,7 @@ if (!empty($eth0)) {
 	workerLog('worker: eth0 exists');
 	// Wait for address (default), setting is on system config
 	if ($_SESSION['eth0chk'] == '1') {
-		$eth0ip = waitForIpAddr('eth0', 5);
+		$eth0ip = waitForIpAddr('eth0', 10);
 	}
 	else {
 		$eth0ip = sysCmd("ip addr list eth0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
@@ -250,7 +250,7 @@ if (!empty($wlan0[0])) {
 
 	// wait for ip address
 	if ($_SESSION['apactivated'] == true || $ssidblank == false) {
-		$wlan0ip = waitForIpAddr('wlan0', 5);
+		$wlan0ip = waitForIpAddr('wlan0', 10);
 		// CASE: ssid blank, ap mode activated
 		// CASE: ssid exists, ap mode fall back if no ip address after trying ssid
 		if ($ssidblank == false) {
@@ -260,7 +260,7 @@ if (!empty($wlan0[0])) {
 					workerLog('worker: wlan0 AP mode started');
 					$_SESSION['apactivated'] = true;
 					activateApMode();
-					$wlan0ip = waitForIpAddr('wlan0', 3);
+					$wlan0ip = waitForIpAddr('wlan0');
 				}
 				else {
 					workerLog('worker: eth0 address exists so AP mode not started');
