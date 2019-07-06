@@ -545,6 +545,7 @@ function resetPlayCtls() {
 	$('.ss-playlist li.active').removeClass('active');
 
 	refreshTimeKnob();
+    refreshTimer(0, 0, MPD.json['state']);
 	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').html('00:00');
 	$('#m-radio').hide();
 }
