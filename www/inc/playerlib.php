@@ -74,6 +74,8 @@ function debugLog($msg, $mode = 'a') {
 		return;
 	}
 
+	if (!isset($mode)) {$mode = 'a';} // default= append mode
+
 	$fh = fopen(MOODELOG, $mode);
 	fwrite($fh, date('Ymd His ') . $msg . "\n");
 	fclose($fh);
@@ -2240,6 +2242,10 @@ function resetApMode() {
 }
 
 function waitForIpAddr($iface, $maxloops = 3, $sleeptime = 3000000) {
+	// defaults
+	//if (!isset($maxloops)) {$maxloops = 3;}
+	//if (!isset($sleeptime)) {$sleeptime = 3000000;} // 3 secs
+
 	for ($i = 0; $i < $maxloops; $i++) {
 		$ipaddr = sysCmd('ip addr list ' . $iface . " | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 		if (!empty($ipaddr[0])) {
