@@ -6,7 +6,7 @@
 # - UPD: Use Buster Lite
 # - UPD: Add djmount, php7.3 and libs for udisks-glue to Step 3a
 # - UPD: Add mkdir /mnt/UPNP to Step 7
-# - UPD: Bump to kernel 4.19.57 in Step 11
+# - UPD: Bump to kernel 4.19.56 in Step 11
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
