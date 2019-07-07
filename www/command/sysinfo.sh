@@ -480,12 +480,13 @@ rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
 alsaequal=${arr[72]}
 eqfa4p=${arr[73]}
-if [[ $hdwrrev = "Pi-3B+ 1GB v1.3" || $hdwrrev = "Pi-3B 1GB v1.2" || $hdwrrev = "Pi-3A+ 512 MB v1.0" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
-	[[ "${arr[74]}" = "1" ]] && p3wifi="On" || p3wifi="Off"
-	[[ "${arr[75]}" = "1" ]] && p3bt="On" || p3bt="Off"
+rev=$(echo $hdwrrev | cut -c 4)
+if [[ $rev = "3" || $rev = "4" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
+	[[ "${arr[74]}" = "1" ]] && piwifi="On" || piwifi="Off"
+	[[ "${arr[75]}" = "1" ]] && pibt="On" || pibt="Off"
 else
-	p3wifi="None"
-	p3bt="None"
+	piwifi="None"
+	pibt="None"
 fi
 cardnum=${arr[76]}
 [[ "${arr[77]}" = "1" ]] && btsvc="On" || btsvc="Off"
@@ -610,8 +611,8 @@ echo "
 	Temperature 	= $TEMP
 
 	CPU GOV		= $GOV
-	P3-WIFI		= $p3wifi
-	P3-BT		= $p3bt
+	Pi-WIFI		= $piwifi
+	Pi-BT		= $pibt
 	HDMI		= $HDMI
 	ETH0 CHECK	= $eth0chk
 	MAX USB CUR	= $maxusbcurrent
