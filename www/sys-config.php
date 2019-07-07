@@ -338,7 +338,8 @@ $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == '
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
 
 // wifi bt
-if (substr($_SESSION['hdwrrev'], 0, 4) == 'Pi-3' || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') { // r44f change from Pi-3B to Pi-3 to cover 3B, 3B+ and 3A+
+$rev = substr($_SESSION['hdwrrev'], 3, 1);
+if ($rev == '3' || $rev == '4' || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') { // 3B/B+/A+, 4B, Zero W
 	$_wifibt_hide = '';
 	$_select['p3wifi1'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['p3wifi0'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi2\" value=\"0\" " . (($_SESSION['p3wifi'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -359,7 +360,7 @@ $_select['eth0chk0'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0c
 
 // max usb current 2x (1200 mA)
 $rev = substr($_SESSION['hdwrrev'], 3, 1);
-if ($rev == '1' || $rev == '2') { // Pi-1A/B and 2B
+if ($rev == '1' || $rev == '2') { // 1A/A+, 1B/B+ and 2B
 	$_maxcurrent_hide = '';
 	$_select['maxusbcurrent1'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent1\" value=\"1\" " . (($_SESSION['maxusbcurrent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['maxusbcurrent0'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent2\" value=\"0\" " . (($_SESSION['maxusbcurrent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -373,7 +374,7 @@ $_select['uac2fix1'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2f
 $_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix2\" value=\"0\" " . (($_SESSION['uac2fix'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
 // eth port fix
-if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+') {
+if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+') { // 3B+ only
 	$_eth_port_fix_hide = '';
 	$_select['eth_port_fix1'] = "<input type=\"radio\" name=\"eth_port_fix\" id=\"toggle_eth_port_fix0\" value=\"1\" " . (($_SESSION['eth_port_fix'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 	$_select['eth_port_fix0'] = "<input type=\"radio\" name=\"eth_port_fix\" id=\"toggle_eth_port_fix1\" value=\"0\" " . (($_SESSION['eth_port_fix'] == '0') ? "checked=\"checked\"" : "") . ">\n";
@@ -394,7 +395,8 @@ $result = sysCmd("df | grep root | awk '{print $2}'");
 $_expandrootfs_msg = $result[0] > 3500000 ? 'File system has been expanded' : 'File system has not been expanded yet';
 
 // usb boot
-if (substr($_SESSION['hdwrrev'], 0, 4) == 'Pi-3') { // r44f change from Pi-3B to Pi-3 to cover 3B, 3B+ and 3A+
+$rev = substr($_SESSION['hdwrrev'], 3, 1);
+if ($rev == '3' || $rev == '4') { // 3B/B+/A+, 4B
 	$_usbboot_hide = '';
 	$_select['usbboot1'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot1\" value=\"1\" " . ">\n";
 	$_select['usbboot0'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot2\" value=\"0\" " . "checked=\"checked\"".">\n";
