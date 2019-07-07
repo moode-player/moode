@@ -391,7 +391,7 @@ $_select['add2home0'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
 $_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs2\" value=\"0\" " . "checked=\"checked\"".">\n";
 $result = sysCmd("df | grep root | awk '{print $2}'");
-$_expandrootfs_msg = $result[0] > 3000000 ? 'File system has been expanded' : 'File system has not been expanded yet';
+$_expandrootfs_msg = $result[0] > 3500000 ? 'File system has been expanded' : 'File system has not been expanded yet';
 
 // usb boot
 if (substr($_SESSION['hdwrrev'], 0, 4) == 'Pi-3') { // r44f change from Pi-3B to Pi-3 to cover 3B, 3B+ and 3A+
