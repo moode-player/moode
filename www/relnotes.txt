@@ -31,8 +31,9 @@ Updates
 - UPD: Bump to ALSA 1.1.8
 - UPD: Add clock radio Actions after stop
 - UPD: Add Spotify clear credential cache
-- UPD: Improve Play/Playall response on slower Pi-Zero
 - UPD: Add revision codes for Pi-4B 1/2/4GB
+- UPD: Instant Play options (Add/Play, Clear/Play)
+- UPD: Improve Play/Playall response on slower Pi-Zero
 - UPD: SwissGroove radio url
 
 Bug fixes
