@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -67,6 +67,9 @@ $_select['library_hiresthm'] .= "<option value=\"400px\" " . (($_SESSION['librar
 // cover search prioroty
 $_select['library_covsearchpri'] .= "<option value=\"Embedded cover\" " . (($_SESSION['library_covsearchpri'] == 'Embedded cover') ? "selected" : "") . ">Embedded cover</option>\n";
 $_select['library_covsearchpri'] .= "<option value=\"Cover image file\" " . (($_SESSION['library_covsearchpri'] == 'Cover image file') ? "selected" : "") . ">Cover image file</option>\n";
+// instant play action
+$_select['library_instant_play'] .= "<option value=\"Add/Play\" " . (($_SESSION['library_instant_play'] == 'Add/Play') ? "selected" : "") . ">Add/Play</option>\n";
+$_select['library_instant_play'] .= "<option value=\"Clear/Play\" " . (($_SESSION['library_instant_play'] == 'Clear/Play') ? "selected" : "") . ">Clear/Play</option>\n";
 
 waitWorker(1, 'lop-config');
 
