@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
--->	
+-->
 <div class="container">
 <div class="container2">
 	<h1 class="lib-config">Library Options</h1>
@@ -125,6 +125,18 @@
 				</div>
 			</div>
 
+			<div class="control-group">
+				<label class="control-label" for="library_instant_play">Instant play action</label>
+				<div class="controls">
+					<select id="library_instant_play" class="input-large" name="config[library_instant_play]">
+						$_select[library_instant_play]
+					</select>
+					<a class="info-toggle" data-cmd="info_library_instant_play" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_instant_play" class="help-block-configs help-block-margin hide">
+						This option determines whether Instant Play performs Clear/Play or Add/Play.<br>
+                    </span>
+				</div>
+			</div>
 		</fieldset>
 	</form>
 </div>

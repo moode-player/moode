@@ -2426,8 +2426,9 @@ $('#albumcovers').on('click', 'img', function(e) {
 		files.push(allSongs[i].file);
 	}
 
-	//mpdDbCmd('playall', files);
-	mpdDbCmd('clrplayall', files);
+    var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'playall' : 'clrplayall';
+	mpdDbCmd(cmd, files);
+    notify(cmd, '');
 
 	// so tracks list doesn't open
 	return false;
@@ -2508,8 +2509,9 @@ $('#database-radio').on('click', 'img', function(e) {
 		UI.radioPos = pos;
 		storeRadioPos(UI.radioPos)
 
-		//mpdDbCmd('play', path);
-		mpdDbCmd('clrplay', path);
+        var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
+    	mpdDbCmd(cmd, path);
+        notify(cmd, '');
 
 		setTimeout(function() {
 			customScroll('radiocovers', UI.radioPos, 200);

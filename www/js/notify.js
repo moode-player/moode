@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -27,8 +27,12 @@ function notify(cmd, msg, duration) {
 
     var map = {
 		add: 'Added to playlist',
+        play: 'Added to playlist',
+        clradd: 'Added after playlist cleared',
 		clrplay: 'Added after playlist cleared',
-		clradd: 'Added after playlist cleared',
+        addall: 'Added to playlist',
+        playall: 'Added to playlist',
+        clrplayall: 'Added after playlist cleared',
 		updmpddb: 'Updating...',
 		remove: 'Removed from playlist',
 		move: 'Playlist items moved',
@@ -45,7 +49,6 @@ function notify(cmd, msg, duration) {
 		updclockradio: 'Clock radio updated',
 		updcustomize: 'Settings updated',
 		usbaudioready: 'USB audio ready',
-		//scnsaverexit: 'Leaving CoverView',
 		favset: 'Name has been set',
 		favadded: 'Favorite has been added',
 		nofavtoadd: 'Nothing to add',
