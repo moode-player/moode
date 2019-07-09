@@ -2,11 +2,14 @@
 #
 # Build Recipe v2.11, 2019-MM-DD
 #
-# moOde 5.4 2019-MM-DD
-# - UPD: Use Buster Lite
-# - UPD: Add djmount, php7.3 and libs for udisks-glue to Step 3a
-# - UPD: Add mkdir /mnt/UPNP to Step 7
-# - UPD: Bump to kernel 4.19.56 in Step 11
+# moOde 6.0.0 2019-MM-DD
+# - Based on Raspbian 10.0 (Buster)
+# - Expand SDCard to 3.5GB
+# - Add djmount package and /mnt/UPNP dir
+# - Switch to ffmpeg from libav-tools
+# - Remove tcpdump package (not needed)
+# - Use Buster hostapd instead of pre-compiled binary
+# - Use udisks-glue libs, packages and pre-compiled binary
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
@@ -152,8 +155,8 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r54.zip
-sudo unzip -q -o ./moode-r54.zip
+wget http://moodeaudio.org/downloads/prod/moode-r600.zip
+sudo unzip -q -o ./moode-r600.zip
 
 5. Expand the root partition to 3.5GB.
 
@@ -218,8 +221,6 @@ sudo apt-get -y install  libatasmart4 libdbus-glib-1-2 libgudev-1.0-0 \
 
 # udisks-glue packages
 dpkg -i ./moode/other/udisks-glue/liblvm2app2.2_2.02.168-2_armhf.deb
-dpkg -i ./moode/other/udisks-glue/libconfuse-common_2.7-5+deb8u1_all.deb
-dpkg -i ./moode/other/udisks-glue/libconfuse0_2.7-5+deb8u1_armhf.deb
 dpkg -i ./moode/other/udisks-glue/udisks_1.0.5-1+b1_armhf.deb
 
 # udisks-glue pre-compiled binary
@@ -240,11 +241,12 @@ sudo systemctl disable shellinabox
 
 sudo apt-get -y install dnsmasq hostapd
 
+# Deprecated: Buster hostapd package just works
 # Install precompiled hostapd 2.7 binaries
-sudo rm /usr/sbin/hostapd
-sudo rm /usr/sbin/hostapd_cli
-sudo cp ./moode/other/hostapd/hostapd-2.7 /usr/sbin/hostapd
-sudo cp ./moode/other/hostapd/hostapd_cli-2.7 /usr/sbin/hostapd_cli
+#sudo rm /usr/sbin/hostapd
+#sudo rm /usr/sbin/hostapd_cli
+#sudo cp ./moode/other/hostapd/hostapd-2.7 /usr/sbin/hostapd
+#sudo cp ./moode/other/hostapd/hostapd_cli-2.7 /usr/sbin/hostapd_cli
 
 sudo systemctl daemon-reload
 sudo systemctl unmask hostapd
