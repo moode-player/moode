@@ -1324,9 +1324,9 @@ function cfgdb_update($table, $dbh, $key = '', $value) {
 				"', gateway='" . $value['gateway'] .
 				"', pridns='" . $value['pridns'] .
 				"', secdns='" . $value['secdns'] .
-				"', wlanssid='" . str_replace("'", "''", $value['wlanssid']) .
+				"', wlanssid='" . SQLite3::escapeString($value['wlanssid']) .
 				"', wlansec='" . $value['wlansec'] .
-				"', wlanpwd='" . str_replace("'", "''", $value['wlanpwd']) .
+				"', wlanpwd='" . SQLite3::escapeString($value['wlanpwd']) .
 				"' WHERE iface='" . $key . "'";
 			//workerLog('cfgdb_update: ' . $querystr);
 			break;

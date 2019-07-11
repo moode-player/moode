@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -19,7 +19,7 @@
  * 2019-05-07 TC moOde 5.2
  *
  */
--->	
+-->
 <div class="container">
 	<div class="container2">
 	<h1 class="net-config">Network Config</h1>
@@ -35,7 +35,7 @@
 				RESET: Revert to Ethernet and DHCP.
             </span>
 		</legend>
-		
+
 		<fieldset>
 			<legend>Ethernet</legend>
 			<div class="control-group" >
@@ -51,7 +51,7 @@
                     </span>
 				</div>
 			</div>
-			
+
 			<div id="eth0-static" class="hide">
 				<div class="control-group">
 					<label class="control-label" for="eth0ip">IP address</label>
@@ -59,7 +59,7 @@
 						<input class="input-large" type="text" id="eth0ip" name="eth0ipaddr" value="$_eth0ipaddr">
 					</div>
 				</div>
-				
+
 				<div class="control-group" >
 					<label class="control-label" for="eth0-netmask" style="">Netmask</label>
 					<div class="controls">
@@ -75,14 +75,14 @@
 						<input class="input-large" type="text" id="eth0gateway" name="eth0gateway" value="$_eth0gateway">
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<label class="control-label" for="eth0pridns">Primary DNS</label>
 					<div class="controls">
 						<input class="input-large" type="text" id="eth0pridns" name="eth0pridns" value="$_eth0pridns">
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<label class="control-label" for="eth0secdns">Secondary DNS</label>
 					<div class="controls">
@@ -108,7 +108,7 @@
                     </span>
 				</div>
 			</div>
-			
+
 			<div class="control-group">
 				<label class="control-label" for="wlan0ssid">SSID</label>
 				<div class="controls">
@@ -126,7 +126,7 @@
 					</span>
 				</div>
 			</div>
-			
+
 			<div class="control-group">
 				<label class="control-label" for="wlan0sec">Security</label>
 				<div class="controls">
@@ -139,14 +139,14 @@
                     </span>
 				</div>
 			</div>
-			
+
 			<div class="control-group">
 				<label class="control-label" for="wlan0pwd">Password</label>
 				<div class="controls">
-					<input class="input-large" type="password" pattern="[^'\u0022]+" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
+					<input class="input-large" type="password" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
 					<a class="info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0pwd" class="help-block-configs help-block-margin hide">
-                    	Length 8-63 chars. NOTE: Single and double quotes are not allowed.
+                    	Length 8-63 chars.
                     </span>
 				</div>
 			</div>
@@ -163,7 +163,7 @@
                     </span>
 				</div>
 			</div>
-	
+
 			<div id="wlan0-static" class="hide">
 				<div class="control-group">
 					<label class="control-label" for="wlan0ip">IP address</label>
@@ -171,7 +171,7 @@
 						<input class="input-large" type="text" id="wlan0ip" name="wlan0ipaddr" value="$_wlan0ipaddr">
 					</div>
 				</div>
-				
+
 				<div class="control-group" >
 					<label class="control-label" for="wlan0-netmask" style="">Netmask</label>
 					<div class="controls">
@@ -180,21 +180,21 @@
 						</select>
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<label class="control-label" for="wlan0gateway">Gateway</label>
 					<div class="controls">
 						<input class="input-large" type="text" id="wlan0gateway" name="wlan0gateway" value="$_wlan0gateway">
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<label class="control-label" for="wlan0pridns">Primary DNS</label>
 					<div class="controls">
 						<input class="input-large" type="text" id="wlan0pridns" name="wlan0pridns" value="$_wlan0pridns">
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<label class="control-label" for="wlan0secdns">Secondary DNS</label>
 					<div class="controls">
@@ -215,8 +215,8 @@
 						Length 3-32 chars, A-Z, a-z, 0-9, and hyphen (-) are allowed.
 					</span>
                 </div>
-            </div>	
-			
+            </div>
+
 			<div class="control-group" >
                 <label class="control-label" for="apdchan">Channel</label>
                 <div class="controls">
@@ -226,8 +226,8 @@
 						2.4 GHz band supports channels 1-14.
 					</span>
                 </div>
-            </div>	
-			
+            </div>
+
 			<div class="control-group" >
                 <label class="control-label" for="apdpwd">Password</label>
                 <div class="controls">
@@ -237,7 +237,7 @@
 						Length 8-63 chars, A-Z, a-z, 0-9, are allowed.
 					</span>
                 </div>
-            </div>	
+            </div>
 		</fieldset>
 	</form>
 </div>
@@ -248,11 +248,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Reset network configuration to Ethernet and DHCP?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="reset" value="1">Yes</button>
@@ -265,7 +265,7 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<div class="control-group">
 				<label class="control-label" for="wlan0otherssid">SSID</label>
@@ -278,11 +278,10 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="manualssid" value="1">Ok</button>
 		</div>
 	</div>
 </form>
-
