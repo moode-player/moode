@@ -19,7 +19,7 @@
  * 2019-05-07 TC moOde 5.2
  *
  */
- 
+
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '' ,'');
@@ -66,7 +66,7 @@ $netcfg = sdbquery('select * from cfg_network', $dbh);
 $_eth0method .= "<option value=\"dhcp\" "   . ($netcfg[0]['method'] == 'dhcp' ? 'selected' : '') . " >DHCP</option>\n";
 $_eth0method .= "<option value=\"static\" " . ($netcfg[0]['method'] == 'static' ? 'selected' : '') . " >STATIC</option>\n";
 
-// display ipaddr or message 
+// display ipaddr or message
 $ipaddr = sysCmd("ip addr list eth0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 $_eth0currentip = empty($ipaddr[0]) ? 'Not in use' : $ipaddr[0];
 
@@ -136,7 +136,7 @@ else {
 }
 $_wlan0sec .= "<option value=\"wpa\"" . ($netcfg[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
 $_wlan0sec .= "<option value=\"none\"" . ($netcfg[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
-$_wlan0pwd = $netcfg[1]['wlanpwd'];
+$_wlan0pwd = htmlentities($netcfg[1]['wlanpwd']);
 
 // wifi country code
 $zonelist = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
@@ -163,13 +163,13 @@ $_wlan0pridns = $netcfg[1]['pridns'];
 $_wlan0secdns = $netcfg[1]['secdns'];
 
 // access point
-$_wlan0apdssid = $_SESSION['apdssid']; 
-$_wlan0apdchan = $_SESSION['apdchan']; 
-$_wlan0apdpwd = $_SESSION['apdpwd']; 
+$_wlan0apdssid = $_SESSION['apdssid'];
+$_wlan0apdchan = $_SESSION['apdchan'];
+$_wlan0apdpwd = $_SESSION['apdpwd'];
 
 session_write_close();
 
-waitWorker(1, 'net-config');	
+waitWorker(1, 'net-config');
 
 $tpl = "net-config.html";
 $section = basename(__FILE__, '.php');

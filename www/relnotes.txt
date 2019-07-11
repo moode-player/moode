@@ -32,6 +32,7 @@ Updates
 - UPD: Add clock radio Actions after stop
 - UPD: Add Spotify clear credential cache
 - UPD: Add revision codes for Pi-4B 1/2/4GB
+- UPD: Remove restriction on quotes in Wifi password
 - UPD: Instant Play options (Add/Play, Clear/Play)
 - UPD: Improve Play/Playall response on slower Pi-Zero
 - UPD: SwissGroove radio url
