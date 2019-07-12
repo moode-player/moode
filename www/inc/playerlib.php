@@ -2068,9 +2068,7 @@ function startMiniDlna() {
 
 // start lcd updater
 function startLcdUpdater() {
-	$script = $_SESSION['lcdupscript'] != '' ? $_SESSION['lcdupscript'] : 'cp /var/local/www/currentsong.txt /home/pi/lcd.txt';
-	$cmd = '/var/www/command/lcdup.sh ' . '"' . $script . '"';
-	sysCmd($cmd);
+	sysCmd('/var/www/command/lcdup.sh');
 }
 
 // start gpio button handler
