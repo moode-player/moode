@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -270,12 +270,6 @@ if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
 
 // lcd updater
 if (isset($_POST['update_lcdup'])) {
-	if (isset($_POST['lcdupscript']) && $_POST['lcdupscript'] != $_SESSION['lcdupscript']) {
-		$_SESSION['notify']['title'] = 'Script path updated';
-		$_SESSION['notify']['duration'] = 3;
-		playerSession('write', 'lcdupscript', $_POST['lcdupscript']);
-	}
-
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
 		$title = $_POST['lcdup'] == 1 ? 'LCD update engine on' : 'LCD update engine off';
 		submitJob('lcdup', $_POST['lcdup'], $title, '');
@@ -459,7 +453,6 @@ $_select['extmeta0'] .= "<input type=\"radio\" name=\"extmeta\" id=\"toggleextme
 // lcd updater
 $_select['lcdup1'] .= "<input type=\"radio\" name=\"lcdup\" id=\"togglelcdup1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['lcdup0'] .= "<input type=\"radio\" name=\"lcdup\" id=\"togglelcdup2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['lcdupscript'] = $_SESSION['lcdupscript'];
 
 // gpio
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
