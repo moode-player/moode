@@ -109,9 +109,10 @@ AUDIO() {
 	echo -e "\n\tCompilation rollup\t= $compilation_rollup\c"
 	echo -e "\n\tCompilation excludes\t= $compilation_excludes\c"
 	echo -e "\n\tUTF8 character filter\t= $library_utf8rep\c"
+	echo -e "\n\tHi-res thumbs\t\t= $library_hiresthm\c"
 	echo -e "\n\tCover search pri\t= $library_covsearchpri\c"
-	echo -e "\n\tHi-res covers\t\t= $library_hiresthm\c"
-	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\n"
+	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\c"
+	echo -e "\n\tInstant play action\t= $library_instant_play\n"
 
 	echo -e "\t  A U D I O    P A R A M E T E R S  \n"
 	echo -e "\tAudio device\t\t= $audiodevname\c"
@@ -446,7 +447,7 @@ mpdmixer=${arr[36]}
 xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
 lcdup=${arr[39]}
-lcdupscript=${arr[40]}
+reserved=${arr[40]}
 extmeta=${arr[41]}
 maint_interval=${arr[42]}
 hdwrrev=${arr[43]}
@@ -538,6 +539,7 @@ ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
 [[ "${arr[125]}" = "1" ]] && upnp_browser="On" || upnp_browser="Off"
+library_instant_play=${arr[126]}
 
 # renderer devices
 if [[ $alsaequal != "Off" ]]; then
