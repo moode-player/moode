@@ -168,7 +168,7 @@ workerLog('worker: ' . $msg);
 
 // file system expansion status
 $result = sysCmd("df | grep root | awk '{print $2}'");
-$msg = $result[0] > 3000000 ? 'File system expanded' : 'File system not expanded yet';
+$msg = $result[0] > 3500000 ? 'File system expanded' : 'File system not expanded yet';
 workerLog('worker: ' . $msg);
 // turn on/off hdmi port
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
