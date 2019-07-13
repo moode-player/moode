@@ -2183,10 +2183,11 @@ function cfgNetIfaces() {
 		$data .= "network={\n";
 		$data .= 'ssid=' . '"' . $result[1]['wlanssid'] . '"' . "\n";
 		$data .= "scan_ssid=1\n";
-		// secure network
+		// secure
 		if ($result[1]['wlansec'] == 'wpa') {
-			//$data .= "key_mgmt=WPA-PSK\n";
-			$data .= 'psk=' . '"' . $result[1]['wlanpwd'] . '"' . "\n";
+			//$data .= 'psk=' . '"' . $result[1]['wlanpwd'] . '"' . "\n";
+			$psk = explode('=', sysCmd('wpa_passphrase "' . $result[1]['wlanssid'] . '" "' . base64_decode($result[1]['wlanpwd']) . '"')[3]);
+			$data .= 'psk=' . $psk[1] . "\n";
 		}
 		// no security
 		else {
@@ -2196,6 +2197,9 @@ function cfgNetIfaces() {
 	}
 	fwrite($fp, $data);
 	fclose($fp);
+
+workerLog(base64_decode($result[1]['wlanpwd']));
+workerLog($psk[1]);
 }
 
 // configure hostapd conf
@@ -2224,11 +2228,17 @@ function cfgHostApd() {
 	$data .= "ignore_broadcast_ssid=0\n";
 	$data .= "wpa=2\n";
 	$data .= "wpa_key_mgmt=WPA-PSK\n";
-	$data .= "wpa_passphrase=" . $_SESSION['apdpwd'] . "\n";
+	//$data .= "wpa_passphrase=" . $_SESSION['apdpwd'] . "\n";
+	$psk = explode('=', sysCmd('wpa_passphrase "' . $_SESSION['apdssid'] . '" "' . base64_decode($_SESSION['apdpwd']) . '"')[3]);
+	$data .= 'wpa_psk=' . $psk[1] . "\n";
 	$data .= "rsn_pairwise=CCMP\n";
 
 	fwrite($fp, $data);
 	fclose($fp);
+
+	//workerLog($_SESSION['apdpwd']);
+	workerLog(base64_decode($_SESSION['apdpwd']));
+	workerLog($psk[1]);
 }
 
 function activateApMode() {
@@ -2485,7 +2495,7 @@ function autoConfig($cfgfile) {
 
 	// wlan ssid, security, password, country
 	$netcfg = sdbquery('select * from cfg_network', $dbh);
-	$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'], 'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'], 'wlanssid' => $autocfg['wlanssid'], 'wlansec' => $autocfg['wlansec'], 'wlanpwd' => $autocfg['wlanpwd']);
+	$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'], 'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'], 'wlanssid' => $autocfg['wlanssid'], 'wlansec' => $autocfg['wlansec'], 'wlanpwd' => base64_encode($autocfg['wlanpwd']));
 	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 	playerSession('write', 'wificountry', $autocfg['wlancountry']);
 
@@ -2499,7 +2509,8 @@ function autoConfig($cfgfile) {
 	// apd ssid, channel and passwpord
 	playerSession('write', 'apdssid', $autocfg['apdssid']);
 	playerSession('write', 'apdchan', $autocfg['apdchan']);
-	playerSession('write', 'apdpwd', $autocfg['apdpwd']);
+	//playerSession('write', 'apdpwd', $autocfg['apdpwd']);
+	playerSession('write', 'apdpwd', base64_encode($autocfg['apdpwd']));
 
 	cfgHostApd();
 

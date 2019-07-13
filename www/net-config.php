@@ -45,12 +45,13 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	if (empty($_POST['wlan0ssid']) || $_POST['wlan0ssid'] == 'blank (activates AP mode)') {
 		$_POST['wlan0method'] = 'dhcp';
 	}
-	$value = array('method' => $_POST['wlan0method'], 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'], 'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'], 'wlanssid' => $_POST['wlan0ssid'], 'wlansec' => $_POST['wlan0sec'], 'wlanpwd' => $_POST['wlan0pwd']);
+	$value = array('method' => $_POST['wlan0method'], 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'], 'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'], 'wlanssid' => $_POST['wlan0ssid'], 'wlansec' => $_POST['wlan0sec'], 'wlanpwd' => base64_encode($_POST['wlan0pwd']));
 	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 
 	playerSession('write', 'apdssid', $_POST['wlan0apdssid']);
 	playerSession('write', 'apdchan', $_POST['wlan0apdchan']);
-	playerSession('write', 'apdpwd', $_POST['wlan0apdpwd']);
+	//playerSession('write', 'apdpwd', $_POST['wlan0apdpwd']);
+	playerSession('write', 'apdpwd', base64_encode($_POST['wlan0apdpwd']));
 	playerSession('write', 'wificountry', $_POST['wlan0country']);
 
 	// submit job
@@ -136,7 +137,7 @@ else {
 }
 $_wlan0sec .= "<option value=\"wpa\"" . ($netcfg[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
 $_wlan0sec .= "<option value=\"none\"" . ($netcfg[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
-$_wlan0pwd = htmlentities($netcfg[1]['wlanpwd']);
+$_wlan0pwd = htmlentities(base64_decode($netcfg[1]['wlanpwd']));
 
 // wifi country code
 $zonelist = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
@@ -165,7 +166,8 @@ $_wlan0secdns = $netcfg[1]['secdns'];
 // access point
 $_wlan0apdssid = $_SESSION['apdssid'];
 $_wlan0apdchan = $_SESSION['apdchan'];
-$_wlan0apdpwd = $_SESSION['apdpwd'];
+//$_wlan0apdpwd = $_SESSION['apdpwd'];
+$_wlan0apdpwd = base64_decode($_SESSION['apdpwd']);
 
 session_write_close();
 
