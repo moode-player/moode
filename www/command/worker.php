@@ -156,16 +156,21 @@ if (file_exists('/boot/moodecfg.txt')) {
 }
 
 // boot device config
-$result = sysCmd('vcgencmd otp_dump | grep 17:');
-if ($result[0] == '17:3020000a') {
-	$msg = 'USB boot enabled';
-	sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
+$rev = substr($_SESSION['hdwrrev'], 3, 1);
+if ($rev == '3' /*|| $rev == '4'*/) { // 3B/B+/A+, NOTE: 4B USB boot not avail as of 2019-07-13
+	$result = sysCmd('vcgencmd otp_dump | grep 17:');
+	if ($result[0] == '17:3020000a') {
+		$msg = 'USB boot enabled';
+		sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
+	}
+	else {
+		$msg = 'USB boot not enabled yet';
+	}
+	workerLog('worker: ' . $msg);
 }
 else {
-	$msg = 'USB boot not enabled yet';
+	workerLog('worker: USB boot not available');
 }
-workerLog('worker: ' . $msg);
-
 // file system expansion status
 $result = sysCmd("df | grep root | awk '{print $2}'");
 $msg = $result[0] > 3500000 ? 'File system expanded' : 'File system not expanded yet';

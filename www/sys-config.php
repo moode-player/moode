@@ -390,7 +390,7 @@ $_expandrootfs_msg = $result[0] > 3500000 ? 'File system has been expanded' : 'F
 
 // usb boot
 $rev = substr($_SESSION['hdwrrev'], 3, 1);
-if ($rev == '3' || $rev == '4') { // 3B/B+/A+, 4B
+if ($rev == '3' /*|| $rev == '4'*/) { // 3B/B+/A+, NOTE: 4B USB boot not avail as of 2019-07-13
 	$_usbboot_hide = '';
 	$_select['usbboot1'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot1\" value=\"1\" " . ">\n";
 	$_select['usbboot0'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot2\" value=\"0\" " . "checked=\"checked\"".">\n";
