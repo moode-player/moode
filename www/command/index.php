@@ -36,7 +36,7 @@ elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') 
 	// check for valid chrs
     if (preg_match('/^[A-Za-z0-9 _.-]+$/', $_GET['cmd'])) {
 		// reject directory traversal ../
-		if (stripos($_GET['cmd'], '..') !== false) {
+		if (substr_count($_GET['cmd'], '.') > 1) {
 			echo 'Invalid string';
 		}
 		// check for valid commands
