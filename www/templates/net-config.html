@@ -143,7 +143,7 @@
 			<div class="control-group">
 				<label class="control-label" for="wlan0pwd">Password</label>
 				<div class="controls">
-					<input class="input-large" type="password" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
+					<input class="input-large" type="password" pattern=".{8,63}" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
 					<a class="info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0pwd" class="help-block-configs help-block-margin hide">
                     	Length 8-63 chars.
@@ -231,10 +231,11 @@
 			<div class="control-group" >
                 <label class="control-label" for="apdpwd">Password</label>
                 <div class="controls">
-                    <input class="input-large" type="text" pattern="[A-Za-z0-9]{8,63}" id="apdpwd" name="wlan0apdpwd" value="$_wlan0apdpwd" required>
+                    <input class="input-large" type="password" pattern="[A-Za-z0-9]{8,63}" id="apdpwd" name="wlan0apdpwd" value="$_wlan0apdpwd" required>
 					<a class="info-toggle" data-cmd="info-apdpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-apdpwd" class="help-block-configs help-block-margin hide">
-						Length 8-63 chars, A-Z, a-z, 0-9, are allowed.
+						Length 8-63 chars, A-Z, a-z, 0-9, are allowed.<br>
+						NOTE: the default password is moodeaudio
 					</span>
                 </div>
             </div>
