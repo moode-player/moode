@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
