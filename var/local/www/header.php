@@ -77,6 +77,7 @@
 			versioned_script('js/jquery.placeholder.js');
 			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
 			versioned_script('js/application.js');
+            versioned_script('js/notify.js');
 			versioned_script('js/scripts-configs.js');
 		}
 	?>
