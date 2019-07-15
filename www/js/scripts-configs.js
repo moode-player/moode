@@ -117,14 +117,17 @@ jQuery(document).ready(function($){ 'use strict';
 	});
 	$('#wlan0-method').change(function() {
 		if ($(this).val() == 'static') {
-			if($('#wlan0ssid').val() != '' && $('#wlan0ssid').val() != 'blank (activates AP mode)') {
-				$('#wlan0-static').show();
+			if($('#wlan0ssid').val() != '' && $('#wlan0ssid').val() != 'None (activates AP mode)') {
+			 	$('#wlan0-static').show();
 				//$('#eth0-method').val('dhcp').change(); // prevent both from being set to 'static'
 			}
 			else {
 				notify('needssid', '');
 			}
 		}
+        else {
+            $('#wlan0-static').hide();
+        }
 	});
 	// network config ssid
 	$('#manual-ssid').on('shown.bs.modal', function() {
@@ -132,9 +135,13 @@ jQuery(document).ready(function($){ 'use strict';
 	});
 	$('#wlan0ssid').change(function() {
 		if ($('#wlan0-method').val() == 'static') {
-			if ($(this).val() == '' || $(this).val() == 'blank (activates AP mode)') {
+			if ($(this).val() == '' || $(this).val() == 'None (activates AP mode)') {
+                $('#wlan0-static').hide();                
 				notify('needdhcp', '');
 			}
+            else {
+                $('#wlan0-static').show();
+            }
 		}
 	});
 
