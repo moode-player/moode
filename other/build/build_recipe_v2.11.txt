@@ -241,13 +241,6 @@ sudo systemctl disable shellinabox
 
 sudo apt-get -y install dnsmasq hostapd
 
-# Deprecated: Buster hostapd package just works
-# Install precompiled hostapd 2.7 binaries
-#sudo rm /usr/sbin/hostapd
-#sudo rm /usr/sbin/hostapd_cli
-#sudo cp ./moode/other/hostapd/hostapd-2.7 /usr/sbin/hostapd
-#sudo cp ./moode/other/hostapd/hostapd_cli-2.7 /usr/sbin/hostapd_cli
-
 sudo systemctl daemon-reload
 sudo systemctl unmask hostapd
 sudo systemctl disable hostapd
@@ -713,8 +706,8 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-# 4.19.56
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 5ed750aaca6aa04c53dbe4f90942e4bb138a1ba6
+# 4.19.58
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 43fa687ceb76958b4b00090dc3ae0ece6a8892bc
 
 # cleanup
 sudo rm -rf /lib/modules.bak
