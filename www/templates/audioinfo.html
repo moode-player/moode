@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 -->
 <div id="container-audioinfo">
 	<div>
-		<strong>Input Processing</strong>
+		<strong>Input decoding</strong>
 		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:100px;">
+			<col span="1" style="width:110px;">
 			<tr>
 				<td style="text-align:right;">Source:&nbsp;</td>
 				<td style="text-align:left;">$file</td>
@@ -38,43 +38,10 @@
 				<td style="text-align:left;">$decoded_to$decode_rate</td>
 			</tr>
 		</table>
-		
-		<strong>DSP Operations</strong>
+
+		<strong>Output stream</strong>
 		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:100px;">
-			<tr>
-				<td style="text-align:right;">Resampling:&nbsp;</td>
-				<td style="text-align:left;">$resampler_format$resampler</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Crossfeed:&nbsp;</td>
-				<td style="text-align:left;">$crossfeed</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Equalizer:&nbsp;</td>
-				<td style="text-align:left;">$equalizer</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Crossfade:&nbsp;</td>
-				<td style="text-align:left;">$crossfade</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Other:&nbsp;</td>
-				<td style="text-align:left;">$otherdsp</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Chip options:&nbsp;</td>
-				<td style="text-align:left;">$chip_options</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Volume ctl:&nbsp;</td>
-				<td style="text-align:left;">$volume</td>
-			</tr>
-		</table>
-	
-		<strong>Output Stream</strong>
-		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:100px;">
+			<col span="1" style="width:110px;">
 			<tr>
 				<td style="text-align:right;">Destination:&nbsp;</td>
 				<td style="text-align:left;">$output_destination</td>
@@ -84,10 +51,55 @@
 				<td style="text-align:left;">$hwparams_format$hwparams_calcrate</td>
 			</tr>
 		</table>
-	
+
+		<strong>DSP operations</strong>
+		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
+			<col span="1" style="width:110px;">
+			<tr>
+				<td style="text-align:right;">Volume ctl:&nbsp;</td>
+				<td style="text-align:left;">$volume_ctl</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Resampling:&nbsp;</td>
+				<td style="text-align:left;">$resampler_format$resampler_quality</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Polarity inv:&nbsp;</td>
+				<td style="text-align:left;">$polarity_inv</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Crossfade:&nbsp;</td>
+				<td style="text-align:left;">$crossfade</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Crossfeed:&nbsp;</td>
+				<td style="text-align:left;">$crossfeed</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Parametric EQ:&nbsp;</td>
+				<td style="text-align:left;">$peq</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Graphic EQ:&nbsp;</td>
+				<td style="text-align:left;">$geq</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Replaygain:&nbsp;</td>
+				<td style="text-align:left;">$replaygain</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Normalize vol:&nbsp;</td>
+				<td style="text-align:left;">$vol_normalize</td>
+			</tr>
+			<tr>
+				<td style="text-align:right;">Chip options:&nbsp;</td>
+				<td style="text-align:left;">$chip_options</td>
+			</tr>
+		</table>
+
 		<strong>Audio Device</strong>
 		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:100px;">
+			<col span="1" style="width:110px;">
 			<tr>
 				<td style="text-align:right;">Device:&nbsp;</td>
 				<td style="text-align:left;">$devname</td>
@@ -95,7 +107,7 @@
 			<tr>
 				<td style="text-align:right;">Chip:&nbsp;</td>
 				<td style="text-align:left;">$dacchip</td>
-			</tr-->
+			</tr>
 			<tr>
 				<td style="text-align:right;">Interface:&nbsp;</td>
 				<td style="text-align:left;">$iface</td>
