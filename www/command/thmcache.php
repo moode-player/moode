@@ -97,7 +97,7 @@ while ($line) {
 // get file list
 $resp = '';
 foreach ($dirs as $dir) {
-	workerLog('Directory: ' . $dir);
+	workerLog('thmcache: directory: ' . $dir);
 	sendMpdCmd($sock, 'listall "' . $dir . '"');
 	$resp .= readMpdResp($sock);
 }
