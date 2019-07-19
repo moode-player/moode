@@ -30,6 +30,7 @@ Updates
 - UPD: Bump to MiniDLNA 1.2.1
 - UPD: Bump to ALSA 1.1.8
 - UPD: Add rev codes for Pi-4B 1/2/4GB models
+- UPD: Add new sort tag options for Library
 - UPD: Add clock radio "after stop" Actions
 - UPD: Add Spotify clear credential cache
 - UPD: Add Instant Play options: Add/Play, Clear/Play
