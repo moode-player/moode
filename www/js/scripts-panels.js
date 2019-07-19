@@ -39,7 +39,7 @@ jQuery(document).ready(function($) { 'use strict';
 	//console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
 
 	// load current cfg
-	var result = sendMoodeCmd('GET', 'read_cfg_all');
+	var result = sendMoodeCmd('GET', 'read_cfgs');
 	SESSION.json = result['cfg_system'];
 	THEME.json = result['cfg_theme'];
 	RADIO.json = result['cfg_radio'];

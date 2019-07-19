@@ -90,6 +90,10 @@ var RADIO = {
 var THEME = {
 	json: 0
 };
+// networks (cfg_network table)
+var NETWORK = {
+	json: 0
+};
 
 // library
 var LIB = {
@@ -380,6 +384,7 @@ function engineMpdLite() {
         // network connection interrupted or client network stack timeout
 		error: function(data) {
 			debugLog('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
+            //console.log('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
 
 			setTimeout(function() {
 				if (data['statusText'] == 'error' && data['readyState'] == 0) {
