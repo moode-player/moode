@@ -172,7 +172,8 @@ APPEARANCE_SETTINGS() {
 LIBRARY_SETTINGS() {
 	echo -e "\t  L I B R A R Y   S E T T I N G S  \n"
 	# music library
-	echo -e "\tArtist list order\t= $libartistcol\c"
+	echo -e "\tArtist list order\t= $library_artist_col\c"
+	echo -e "\n\tAlbum list order\t= $library_album_col\c"
 	echo -e "\n\tIgnore articles\t\t= $ignore_articles\c"
 	echo -e "\n\tCompilation rollup\t= $compilation_rollup\c"
 	echo -e "\n\tCompilation excludes\t= $compilation_excludes\c"
@@ -458,7 +459,7 @@ timecountup=${arr[29]}
 accentcolor=${arr[30]}
 volknob=${arr[31]}
 [[ "${arr[32]}" = "1" ]] && volmute="Muted" || volmute="Unmuted"
-reserved34=${arr[33]}
+library_album_col=${arr[33]}
 alsavolume=${arr[34]}
 amixname=${arr[35]}
 mpdmixer=${arr[36]}
@@ -493,7 +494,7 @@ pkgid=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
 [[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
-libartistcol=${arr[68]}
+library_artist_col=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
