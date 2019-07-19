@@ -384,15 +384,14 @@ function genFlatList($sock) {
 function genLibrary($flat) {
 	$lib = array();
 
-	// use Artist or AlbumArtist for the Artist column
-	$libartist = $_SESSION['libartistcol'];
+	$lib_artist = $_SESSION['library_artist_col']; // Artist, ArtistSort, AlbumArtist or AlbumArtistSort
+	$lib_album = $_SESSION['library_album_col']; // Album or AlbumSort
 
 	foreach ($flat as $flatData) {
 		$genre = $flatData['Genre'] ? $flatData['Genre'] : 'Unknown';
-		$artist = $flatData[$libartist] ? $flatData[$libartist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown');
-		$album = $flatData['Album'] ? $flatData['Album'] : 'Unknown';
-		// add year (Date)
-		//$album = $flatData['Album'] ? $flatData['Date'] . ' - ' . $flatData['Album'] : 'Unknown';
+		$artist = $flatData[$lib_artist] ? $flatData[$lib_artist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown');
+		$album = $flatData[$lib_album] ? $flatData[$lib_album] : ($flatData['Album'] ? $flatData['Album'] : 'Unknown');
+		//$album = $flatData['Date'] ? $flatData['Date'] . ' - ' . $album : $album; // add year (Date tag)
 
 		if (!$lib[$genre]) {$lib[$genre] = array();}
 		if (!$lib[$genre][$artist]) {$lib[$genre][$artist] = array();}

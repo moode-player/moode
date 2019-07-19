@@ -36,14 +36,27 @@
 		<fieldset>
 	    	<legend>Options</legend>
 			<div class="control-group">
-				<label class="control-label" for="libartistcol">Artist list ordering</label>
+				<label class="control-label" for="library_artist_col">Artist list ordering</label>
 				<div class="controls">
-					<select id="libartistcol" class="input-large" name="config[libartistcol]">
-						$_select[libartistcol]
+					<select id="library_artist_col" class="input-large" name="config[library_artist_col]">
+						$_select[library_artist_col]
 					</select>
-					<a class="info-toggle" data-cmd="info_libartistcol" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_libartistcol" class="help-block-configs help-block-margin hide">
-						Use Artist or AlbumArtist tag for populating the Artists list in Tag and Album views.<br>
+					<a class="info-toggle" data-cmd="info_library_artist_col" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_artist_col" class="help-block-configs help-block-margin hide">
+						Specify which tag is used to populate the Artist list. If the tag doesn't exist in the song file the Artist tag will be used.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="library_album_col">Album list ordering</label>
+				<div class="controls">
+					<select id="library_album_col" class="input-large" name="config[library_album_col]">
+						$_select[library_album_col]
+					</select>
+					<a class="info-toggle" data-cmd="info_library_album_col" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_album_col" class="help-block-configs help-block-margin hide">
+						Specify which tag is used to populate the Album list. If the tag doesn't exist in the song file the Album tag will be used.
                     </span>
 				</div>
 			</div>
