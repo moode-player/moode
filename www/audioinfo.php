@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-06-12 TC moOde 5.3.1
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -44,7 +44,7 @@ $result = sysCmd('pgrep -l bluealsa-aplay');
 $btactive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 
 //
-// IMPUT PROCESSING
+// IMPUT
 //
 
 if ($_SESSION['airplayactv'] == '1') {
@@ -163,72 +163,7 @@ else {
 }
 
 //
-// DSP OPERATIONS
-//
-
-// dsp only applies to mpd
-if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $btactive === true) {
-	$resampler = 'n/a';
-	$resampler_format = '';
-	$crossfeed = 'n/a';
-	$equalizer = 'n/a';
-	$crossfade = 'n/a';
-	$otherdsp = 'n/a';
-}
-else {
-	// resampling
-	if ($cfg_mpd['audio_output_format'] == 'disabled') {
-		$resampler = 'off';
-		$resampler_format = '';
-	}
-	else {
-		$resampler_format = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
-		$resampler = ' (SoX ' . $cfg_mpd['samplerate_converter'] . ' quality)';
-	}
-	// crossfeed
-	if ($_SESSION['crossfeed'] != 'Off') {
-		$array = explode(' ', $_SESSION['crossfeed']);
-		$crossfeed = $array[0] . ' Hz ' . $array[1] . ' dB';
-	}
-	else {
-		$crossfeed = 'off';
-	}
-	// equalizers
-	$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
-	$peq = $_SESSION['eqfa4p'] == 'Off' ? 'off' : $_SESSION['eqfa4p'];
-	$equalizer = 'Graphic EQ: (' . $geq . '), Parametric EQ: (' . $peq . ')';
-	// crossfade and other dsp
-	$crossfade = $_SESSION['mpdcrossfade'] . ' seconds';
-	$otherdsp = 'Volume normalize (' . $cfg_mpd['volume_normalization'] . '), ' . 'Replaygain (' . $cfg_mpd['replaygain'] . ')';
-}
-// chip options
-$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
-$chips = array('Burr Brown PCM5242','Burr Brown PCM5142','Burr Brown PCM5122','Burr Brown PCM5121','Burr Brown PCM5122 (PCM5121)','Burr Brown TAS5756');
-if (in_array($result[0]['dacchip'], $chips) && $result[0]['chipoptions'] != '') {
-	$array = explode(',', $result[0]['chipoptions']);
-
-	$analoggain = $array[0] === '100' ? '0 dB' : '-6 dB'; // Analog gain
-	$analogboost = $array[1] === '100' ? '.8 dB' : '0 dB'; // Analog gain boost
-	$digfilter = $array[2]; // Digital interpolation filter
-
-	$chip_options = $digfilter . ', gain=' . $analoggain . ', boost=' . $analogboost;
-}
-else {
-	$chip_options = 'none';
-}
-// volume control
-if ($_SESSION['mpdmixer'] == 'hardware') {
-	$volume = 'Hardware (on-chip volume controller)';
-}
-else if ($_SESSION['mpdmixer'] == 'software') {
-	$volume = 'Software (MPD 32-bit float with dither)';
-}
-else {
-	$volume = 'Disabled (100% volume level is output by MPD)';
-}
-
-//
-// OUTPUT PROCESSING
+// OUTPUT
 //
 
 $output_destination = $_SESSION['audioout'];
@@ -245,7 +180,128 @@ else {
 	$hwparams_calcrate = '0 bps';
 }
 
-// audio device
+//
+// DSP
+//
+
+// Volume control
+if ($_SESSION['mpdmixer'] == 'hardware') {
+	$volume_ctl = 'Hardware (on-chip volume controller)';
+}
+elseif ($_SESSION['mpdmixer'] == 'software') {
+	$volume_ctl = 'Software (MPD 32-bit float with dither)';
+}
+else {
+	$volume = 'Disabled (100% volume level is output by MPD)';
+}
+
+// Renderers
+if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $_SESSION['inpactive'] == '1' || $btactive === true) {
+	$resampler_format = '';
+	$resampler_quality = 'n/a';
+	$polarity = 'n/a';
+	$crossfade = 'n/a';
+	$crossfeed = 'n/a';
+	$replaygain = 'n/a';
+	$vol_normalize = 'n/a';
+
+	if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1') {
+		$peq = $_SESSION['eqfa4p'] == 'Off' ? 'off' : $_SESSION['eqfa4p'];
+		$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
+	}
+	else {
+		$peq = 'n/a';
+		$geq = 'n/a';
+	}
+}
+// MPD
+else {
+	// Resampling
+	if ($cfg_mpd['audio_output_format'] == 'disabled') {
+		$resampler_format = '';
+		$resampler_quality = 'off';
+	}
+	else {
+		$resampler_format = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
+		$resampler_quality = ' (SoX ' . $cfg_mpd['samplerate_converter'] . ' quality)';
+	}
+	// Polarity inversion
+	$polarity_inv = $_SESSION['invert_polarity'] == '0' ? 'off' : 'on';
+	// MPD Crossfade
+	$crossfade = $_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' seconds';
+	// Crossfeed
+	if ($_SESSION['crossfeed'] != 'Off') {
+		$array = explode(' ', $_SESSION['crossfeed']);
+		$crossfeed = $array[0] . ' Hz ' . $array[1] . ' dB';
+	}
+	else {
+		$crossfeed = 'off';
+	}
+	// Equalizers
+	$peq = $_SESSION['eqfa4p'] == 'Off' ? 'off' : $_SESSION['eqfa4p'];
+	$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
+	// Replaygain and volume normalization
+	$replaygain = $cfg_mpd['replaygain'];
+	$vol_normalize = $cfg_mpd['volume_normalization'] == 'no' ? 'off' : $cfg_mpd['volume_normalization'];
+}
+// chip options
+$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
+$array = explode(',', $result[0]['chipoptions']);
+
+if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchip'], 'TAS') !== false) {
+	 // Analog gain, analog gain boost, digital interpolation filter
+	$analoggain = $array[0] === '100' ? '0dB' : '-6dB';
+	$analogboost = $array[1] === '100' ? '.8dB' : '0dB';
+	$digfilter = $array[2];
+	$chip_options = $digfilter . ', Gain=' . $analoggain . ', Boost=' . $analogboost;
+}
+elseif ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
+	// get current settings
+	$dualmode = sysCmd('/var/www/command/util.sh get-piano-dualmode');
+	$submode = sysCmd('/var/www/command/util.sh get-piano-submode');
+	$subvol = sysCmd('/var/www/command/util.sh get-piano-subvol');
+	$lowpass = sysCmd('/var/www/command/util.sh get-piano-lowpass');
+
+	// determine output mode
+	if ($dualmode[0] != 'None') {
+		$outputmode = $dualmode[0];
+		$sub_vol = '';
+		$low_pass = '';
+	}
+	elseif ($submode[0] == '2.0') {
+		$outputmode = 'Stereo';
+		$sub_vol = '';
+		$low_pass = '';
+	}
+	else {
+		$outputmode = 'Subwoofer' . $submode[0];
+		$sub_vol = 'Volume=' . $subvol;
+		$low_pass = 'Lowpass=' . $lowpass;
+	}
+
+	$chip_options = 'Mode=' . $outputmode . $sub_vol . $low_pass;
+}
+elseif ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
+	// Oversampling filter, de-emphasis, DoP
+	$katana_osf = $array[0];
+	$katana_deemphasis = $array[1];
+	$katana_dop = $array[2];
+	$chip_options = $katana_osf . ', De-emphasis=' . $katana_deemphasis . ', DoP=' . $katana_dop;
+
+}
+elseif ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+	$audiophonics_q2m_osf = $array[0];
+	$audiophonics_q2m_input = $array[1];
+	$chip_options = 'Filter=' . $audiophonics_q2m_osf . ', Input=' . $audiophonics_q2m_input;
+}
+else {
+	$chip_options = 'None';
+}
+
+//
+// AUDIO DEVICE
+//
+
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['adevname']);
 $devname = $_SESSION['adevname'];
 $dacchip = $result[0]['dacchip'];
