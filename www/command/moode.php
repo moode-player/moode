@@ -159,33 +159,54 @@ else {
 			// SQL DATA
 
 			// session vars
-			case 'read_cfg_all':
-				// cfg_system
+			case 'read_cfgs':
+			case 'read_cfgs_no_radio':
+				// system settings
 				$result = cfgdb_read('cfg_system', $dbh);
 				$array_cfg_system = array();
-				foreach ($result as $row) {$array_cfg_system[$row['param']] = $row['value'];}
-				$array_cfg_system['mooderel'] = $_SESSION['mooderel']; // add extra vars
+				foreach ($result as $row) {
+					$array_cfg_system[$row['param']] = $row['value'];
+				}
+				 // add extra vars
+				$array_cfg_system['mooderel'] = $_SESSION['mooderel'];
 				$array_cfg_system['pkgdate'] = $_SESSION['pkgdate'];
 				$array_cfg_system['raspbianver'] = $_SESSION['raspbianver'];
 				$array_cfg_system['ipaddress'] = $_SESSION['ipaddress'];
 				$array_cfg_system['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
-				// cfg_theme
+				$data['cfg_system'] = $array_cfg_system;
+
+				// theme settings
 				$result = cfgdb_read('cfg_theme', $dbh);
 				$array_cfg_theme = array();
-				foreach ($result as $row) {$array_cfg_theme[$row['theme_name']] = array('tx_color' => $row['tx_color'], 'bg_color' => $row['bg_color'], 'mbg_color' => $row['mbg_color']);}
-				// cfg_radio
-				$result = cfgdb_read('cfg_radio', $dbh);
-				$array_cfg_radio = array();
-				foreach ($result as $row) {$array_cfg_radio[$row['station']] = array('name' => $row['name']);}
-
-				$data['cfg_system'] = $array_cfg_system;
-				$data['cfg_radio'] = $array_cfg_radio;
+				foreach ($result as $row) {
+					$array_cfg_theme[$row['theme_name']] = array('tx_color' => $row['tx_color'], 'bg_color' => $row['bg_color'],
+					'mbg_color' => $row['mbg_color']);
+				}
 				$data['cfg_theme'] = $array_cfg_theme;
+
+				// network settings
+				$result = cfgdb_read('cfg_network', $dbh);
+				$array_cfg_network = array();
+				foreach ($result as $row) {
+					$array_cfg_network[$row['iface']] = array('method' => $row['method'], 'ipaddr' => $row['ipaddr'], 'netmask' => $row['netmask'],
+					'gateway' => $row['gateway'], 'pridns' => $row['pridns'], 'secdns' => $row['secdns'], 'wlanssid' => $row['wlanssid'],
+					'wlansec' => $row['wlansec'], 'wlanpwd' => $row['wlanpwd'], 'wlan_psk' => $row['wlan_psk'],
+					'wlan_country' => $row['wlan_country'], 'wlan_channel' => $row['wlan_channel']);
+				}
+				$data['cfg_network'] = $array_cfg_network;
+
+				// radio stations
+				if ($_GET['cmd'] == 'read_cfgs') {
+					$result = cfgdb_read('cfg_radio', $dbh);
+					$array_cfg_radio = array();
+					foreach ($result as $row) {
+						$array_cfg_radio[$row['station']] = array('name' => $row['name']);
+					}
+					$data['cfg_radio'] = $array_cfg_radio;
+				}
 
 				echo json_encode($data);
 				break;
-
-			// system settings
 			case 'readcfgsystem':
 				$result = cfgdb_read('cfg_system', $dbh);
 				$array = array();
@@ -193,7 +214,7 @@ else {
 				foreach ($result as $row) {
 					$array[$row['param']] = $row['value'];
 				}
-				// add extra session vars so they can be available to client
+				// add extra vars
 				$array['mooderel'] = $_SESSION['mooderel'];
 				$array['pkgdate'] = $_SESSION['pkgdate'];
 				$array['raspbianver'] = $_SESSION['raspbianver'];
@@ -209,7 +230,6 @@ else {
 
 				echo json_encode('OK');
 				break;
-			// themes
 			case 'readcfgtheme':
 				$result = cfgdb_read('cfg_theme', $dbh);
 				$array = array();
@@ -224,12 +244,12 @@ else {
 				if (isset($_POST['theme_name'])) {
 					$result = cfgdb_read('cfg_theme', $dbh, $_POST['theme_name']);
 					echo json_encode($result[0]); // return specific row
-				} else {
+				}
+				else {
 					$result = cfgdb_read('cfg_theme', $dbh);
 					echo json_encode($result); // return all rows
 				}
 				break;
-			// radio stations
 			case 'readcfgradio':
 				$result = cfgdb_read('cfg_radio', $dbh);
 				$array = array();
@@ -240,17 +260,16 @@ else {
 
 				echo json_encode($array);
 				break;
-			// audio devices
 			case 'readaudiodev':
 				if (isset($_POST['name'])) {
 					$result = cfgdb_read('cfg_audiodev', $dbh, $_POST['name']);
 					echo json_encode($result[0]); // return specific row
-				} else {
+				}
+				else {
 					$result = cfgdb_read('cfg_audiodev', $dbh, 'all');
 					echo json_encode($result); // return all rows
 				}
 				break;
-			// playback history
 			case 'readplayhistory':
 				echo json_encode(parsePlayHist(shell_exec('cat /var/local/www/playhistory.log')));
 				break;

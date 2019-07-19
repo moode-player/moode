@@ -35,7 +35,7 @@ workerLog('worker: - Start');
 $lock = fopen('/run/worker.pid', 'c+');
 if (!flock($lock, LOCK_EX | LOCK_NB)) {
 	workerLog('worker: Already running');
-	exit('Already running');
+	exit("Already running\n");
 }
 
 switch ($pid = pcntl_fork()) {
@@ -84,17 +84,19 @@ else {
 	workerLog('worker: Integrity check ('. $result .')');
 }
 
-// load cfg_system in session vars
+// load cfg_system into session
 playerSession('open', '', '');
-// configure sess_ file permissions
-sysCmd('chown www-data:www-data ' . SESSION_SAVE_PATH . '/sess_*');
-sysCmd('chmod 0666 ' . SESSION_SAVE_PATH . '/sess_*');
-// load cfg_radio in session vars
+// load cfg_radio into session
 $dbh = cfgdb_connect();
 $result = cfgdb_read('cfg_radio', $dbh);
 foreach ($result as $row) {
 	$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
 }
+// set worker ready flag to false
+playerSession('write', 'wrkready', '0');
+workerLog('worker: Session loaded');
+workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
+
 
 // zero out ALSA volume
 //workerLog('worker: Device: (' . $_SESSION['adevname'] . '), Cardnum: (' . $_SESSION['cardnum'] . '), Mixer: (' . $_SESSION['amixname'] . '), Alsavolume: (' . $_SESSION['alsavolume'] . ')');
@@ -114,11 +116,6 @@ if (extMusicRoot() === false) {
 	workerLog('worker: Exited');
 	exit;
 }
-
-// set worker ready flag to false
-playerSession('write', 'wrkready', '0');
-workerLog('worker: Session loaded');
-workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
 
 //
 workerLog('worker: - Platform');
@@ -227,11 +224,12 @@ $wlan0ip = '';
 $wlan0 = sysCmd('ip addr list | grep wlan0');
 if (!empty($wlan0[0])) {
 	workerLog('worker: wlan0 exists');
-	workerLog('worker: wifi country (' . $_SESSION['wificountry'] . ')');
+
 	$result = sdbquery('SELECT * FROM cfg_network', $dbh);
+	workerLog('worker: wifi country (' . $result[1]['wlan_country'] . ')');
 
 	 // CASE: no ssid
-	if (empty($result[1]['wlanssid']) || $result[1]['wlanssid'] == 'blank (activates AP mode)') {
+	if (empty($result[1]['wlanssid']) || $result[1]['wlanssid'] == 'None (activates AP mode)') {
 		$ssidblank = true;
 		workerLog('worker: wlan0 SSID is blank');
 		// CASE: no eth0 addr
@@ -653,7 +651,7 @@ $inpactive = '0';
 $mpd_dbupd_initiated = '0';
 
 $maint_interval = $_SESSION['maint_interval'];
-workerLog('worker: Maintenance interval (' . $_SESSION['maint_interval'] . ')');
+workerLog('worker: Maintenance interval (' . ($_SESSION['maint_interval'] / 3600) . ' hrs)');
 
 $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
@@ -672,12 +670,16 @@ $_SESSION['w_active'] = 0;
 // close session
 session_write_close();
 
+// ensure correct permissions on the session file
+phpSetPermissions();
+
 //
 workerLog('worker: Ready');
 //
 
-// update ready flag
+// update worker ready flag
 playerSession('write', 'wrkready', '1');
+
 
 //
 // BEGIN WORKER JOB LOOP

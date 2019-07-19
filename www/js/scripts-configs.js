@@ -33,9 +33,10 @@ jQuery(document).ready(function($){ 'use strict';
 	sendMoodeCmd('POST', 'updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
 
 	// load current cfg
-	var result = sendMoodeCmd('GET', 'read_cfg_all');
+	var result = sendMoodeCmd('GET', 'read_cfgs_no_radio');
 	SESSION.json = result['cfg_system'];
 	THEME.json = result['cfg_theme'];
+    NETWORK.json = result['cfg_network'];
 
 	var tempOp = themeOp;
 	if (themeOp == 0.74902) {tempOp = 0.1};
@@ -105,7 +106,7 @@ jQuery(document).ready(function($){ 'use strict';
 	if ($('#wlan0-method').length && $('#wlan0-method').val() == 'static') {
 		$('#wlan0-static').show();
 	}
-	// network config show/hide static
+	// show/hide static
 	$('#eth0-method').change(function() {
 		if ($(this).val() == 'static') {
 			$('#eth0-static').show();
@@ -117,7 +118,7 @@ jQuery(document).ready(function($){ 'use strict';
 	});
 	$('#wlan0-method').change(function() {
 		if ($(this).val() == 'static') {
-			if($('#wlan0ssid').val() != '' && $('#wlan0ssid').val() != 'None (activates AP mode)') {
+			if ($('#wlan0ssid').val() != '' && $('#wlan0ssid').val() != 'None (activates AP mode)') {
 			 	$('#wlan0-static').show();
 				//$('#eth0-method').val('dhcp').change(); // prevent both from being set to 'static'
 			}
@@ -129,20 +130,38 @@ jQuery(document).ready(function($){ 'use strict';
             $('#wlan0-static').hide();
         }
 	});
-	// network config ssid
+	// wlan0 ssid
 	$('#manual-ssid').on('shown.bs.modal', function() {
 		$('#wlan0otherssid').focus();
 	});
 	$('#wlan0ssid').change(function() {
+        //console.log(NETWORK.json['wlan0']['wlanssid'], NETWORK.json['wlan0']['wlan_psk']);
+        if ($('#wlan0ssid').val() == NETWORK.json['wlan0']['wlanssid']) {
+            $('#wlan0pwd').val(NETWORK.json['wlan0']['wlan_psk']);
+        }
+        else {
+            $('#wlan0pwd').val('');
+        }
+
 		if ($('#wlan0-method').val() == 'static') {
 			if ($(this).val() == '' || $(this).val() == 'None (activates AP mode)') {
-                $('#wlan0-static').hide();                
+                $('#wlan0-static').hide();
 				notify('needdhcp', '');
 			}
             else {
                 $('#wlan0-static').show();
             }
 		}
+	});
+    // apd0 ssid
+    $('#apdssid').on('input', function() {
+        //console.log(NETWORK.json['apd0']['wlanssid'], NETWORK.json['apd0']['wlan_psk']);
+        if ($('#apdssid').val() == NETWORK.json['apd0']['wlanssid']) {
+            $('#apdpwd').val(NETWORK.json['apd0']['wlan_psk']);
+        }
+        else {
+            $('#apdpwd').val('');
+        }
 	});
 
 	// music source protocols (type)
