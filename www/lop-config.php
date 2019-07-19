@@ -28,7 +28,8 @@ $dbh = cfgdb_connect();
 // apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// detect changes requiring cache delete
-	if ($_POST['config']['libartistcol'] != $_SESSION['libartistcol'] ||
+	if ($_POST['config']['library_artist_col'] != $_SESSION['library_artist_col'] ||
+		$_POST['config']['library_album_col'] != $_SESSION['library_album_col'] ||
 		$_POST['config']['ignore_articles'] != $_SESSION['ignore_articles'] ||
 		$_POST['config']['compilation_rollup'] != $_SESSION['compilation_rollup'] ||
 		$_POST['config']['compilation_excludes'] != $_SESSION['compilation_excludes'] ||
@@ -45,9 +46,14 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 }
 session_write_close();
 
-// artist list ordering
-$_select['libartistcol'] .= "<option value=\"Artist\" " . (($_SESSION['libartistcol'] == 'Artist') ? "selected" : "") . ">Artist</option>\n";
-$_select['libartistcol'] .= "<option value=\"AlbumArtist\" " . (($_SESSION['libartistcol'] == 'AlbumArtist') ? "selected" : "") . ">Album Artist</option>\n";
+// Artist list ordering
+$_select['library_artist_col'] .= "<option value=\"Artist\" " . (($_SESSION['library_artist_col'] == 'Artist') ? "selected" : "") . ">Artist</option>\n";
+$_select['library_artist_col'] .= "<option value=\"ArtistSort\" " . (($_SESSION['library_artist_col'] == 'ArtistSort') ? "selected" : "") . ">ArtistSort</option>\n";
+$_select['library_artist_col'] .= "<option value=\"AlbumArtist\" " . (($_SESSION['library_artist_col'] == 'AlbumArtist') ? "selected" : "") . ">AlbumArtist</option>\n";
+$_select['library_artist_col'] .= "<option value=\"AlbumArtistSort\" " . (($_SESSION['library_artist_col'] == 'AlbumArtistSort') ? "selected" : "") . ">AlbumArtistSort</option>\n";
+// Album list ordering
+$_select['library_album_col'] .= "<option value=\"Album\" " . (($_SESSION['library_album_col'] == 'Album') ? "selected" : "") . ">Album</option>\n";
+$_select['library_album_col'] .= "<option value=\"AlbumSort\" " . (($_SESSION['library_album_col'] == 'AlbumSort') ? "selected" : "") . ">AlbumSort</option>\n";
 // ignore articles
 $_select['ignore_articles'] = empty($_SESSION['ignore_articles']) ? 'None' : $_SESSION['ignore_articles'];
 // compilation rollup
