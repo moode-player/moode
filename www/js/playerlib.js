@@ -1829,7 +1829,7 @@ function compilationRollup() {
 	// NOTE the "compilation" tag is used in the onClick for Albums
 	var compAlbumStored = false;
 	var objCompilationAlbum = {'album': '', 'artist': '', 'compilation': '1'};
-	var excludeAlbums = SESSION.json['compilation_excludes'].split(',');
+	var excludeAlbums = SESSION.json['compilation_excludes'].replace(', ', ',').toLowerCase().split(',');
 
 	// start at 1 since first album starts at 0
 	if (allAlbumsTmp.length > 1) {
