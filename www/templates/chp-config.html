@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
--->	
+-->
 <div class="container">
 	<div class="container2">
 	<h1 class="snd-config">Chip/Device Options</h1>
@@ -34,12 +34,12 @@
 		</legend>
 
     	<legend>Options</legend>
-    
+
 		<div class="$_burrbrown_hide">
 			<h4>Burr Brown PCM and TAS chips</h4>
 			<fieldset>
 				<div class="control-group">
-					<label class="control-label" for="digfilter">Digital interpolation filter</label>
+					<label class="control-label" for="digfilter">Oversampling filter</label>
 					<div class="controls">
 						<select id="digfilter" class="input-large" name="config[digfilter]">
 							$_select[digfilter]
@@ -51,7 +51,7 @@
 	                    </span>
 					</div>
 				</div>
-	
+
 				<div class="control-group">
 					<label class="control-label" for="analoggain">Analog gain</label>
 					<div class="controls">
@@ -63,7 +63,7 @@
 	                    </span>
 					</div>
 				</div>
-	
+
 				<div class="control-group">
 					<label class="control-label" for="analogboost">Analog gain boost</label>
 					<div class="controls">
@@ -130,13 +130,13 @@
 							$_select[katana_osf]
 						</select>
 						<span class="help-block-configs help-block-margin">
-	                    		Filter is applied to PCM samples at oversampling stage.<br>							
+	                    		Filter is applied to PCM samples at oversampling stage.<br>
 							Playback is automatically restarted to make filter change effective.<br>
 							Default: Apodizing Fast Roll-off Filter
 	                    </span>
 					</div>
 				</div>
-	
+
 				<div class="control-group">
 					<label class="control-label" for="katana_deemphasis">De-emphasis</label>
 					<div class="controls">
@@ -149,7 +149,7 @@
 	                    </span>
 					</div>
 				</div>
-	
+
 				<div class="control-group">
 					<label class="control-label" for="katana_dop">DSD over PCM (DoP)</label>
 					<div class="controls">
@@ -175,7 +175,7 @@
 							$_select[audiophonics_q2m_osf]
 						</select>
 						<span class="help-block-configs help-block-margin">
-	                    		Filter is applied to PCM samples at oversampling stage.<br>							
+	                    		Filter is applied to PCM samples at oversampling stage.<br>
 							Playback is automatically restarted to make filter change effective.<br>
 	                    </span>
 					</div>
