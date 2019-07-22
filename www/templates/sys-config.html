@@ -28,7 +28,7 @@
 	    <p style="margin-top:1.5em";>
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="checkfor_update" value="novalue">Check</button>&nbsp;for software update<br>
 			$_available_upd
-			$_lastinstall_upd
+			<!--$_lastinstall_upd-->
 	    </p>
 
 		<legend>General</legend>
@@ -432,11 +432,11 @@
 							<a class="info-toggle" data-cmd="info_gpio_svc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info_gpio_svc" class="help-block-configs help-block-margin hide">
-							GPIO pin handler that maps attached buttons to MPD playback commands. By @Cyanoazimin.<br>
+							Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.<br>
 	                    </span>
-						<span class="help-block-configs help-block-margin">
-							<a href="gpio-config.php">CONFIGURE</a> GPIO pins<br>
-						</span>
+						<div class="help-block-margin">
+							<a href="gpio-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;GPIO pin mappings<br>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -457,9 +457,9 @@
 					<span id="info-shellinabox" class="help-block-configs help-block-margin hide">
 						Web based SSH terminal server using Shellinabox by Markus Gutschk and Luka Krajger.<br>
                     </span>
-					<span class="help-block-configs">
-						<a id="dlnasvc-link" href="http://$_select[hostip]:4200" target="_blank" style="margin-top: 0px; padding-top: 0px;">OPEN</a> Web SSH terminal.<br>
-					</span>
+					<div class="help-block-margin">
+						<a id="dlnasvc-link" href="http://$_select[hostip]:4200" target="_blank" class="btn btn-medium btn-primary $_ssh_btn_disable" style="padding-top:.35em;" $_ssh_link_disable>Open</a>&nbsp;Web SSH terminal<br>
+					</div>
 				</div>
 			</div>
 		</fieldset>
@@ -526,9 +526,7 @@
 			</div>
 			<div class="modal-body">
 				$_pkg_description
-				<ol style="font-family: Courier; font-size: 12px;">
-				$_pkg_content
-				</ol>
+				$_pkg_relnotes
 			</div>
 			<div class="modal-footer">
 				<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -536,9 +534,6 @@
 		</div>
 
 	</form>
-
-
-
 </div>
 </div>
 
