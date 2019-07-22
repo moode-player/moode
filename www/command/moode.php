@@ -94,10 +94,6 @@ else {
 				sendMpdCmd($sock, 'consume 0');
 				$resp = readMpdResp($sock);
 			}
-			/*else {
-				sendMpdCmd($sock, 'random 0');
-				$resp = readMpdResp($sock);
-			}*/
 		}
 
 		switch ($_GET['cmd']) {
@@ -147,15 +143,6 @@ else {
 				echo json_encode(getPLInfo($sock));
 				break;
 
-			/* DEPRECATE
-			case 'update':
-				if (isset($_POST['path']) && $_POST['path'] != '') {
-					clearLibCache();
-					sendMpdCmd($sock, 'update "' . html_entity_decode($_POST['path']) . '"');
-					echo json_encode(readMpdResp($sock));
-				}
-				break;*/
-
 			// SQL DATA
 
 			// session vars
@@ -168,8 +155,6 @@ else {
 					$array_cfg_system[$row['param']] = $row['value'];
 				}
 				 // add extra vars
-				$array_cfg_system['mooderel'] = $_SESSION['mooderel'];
-				$array_cfg_system['pkgdate'] = $_SESSION['pkgdate'];
 				$array_cfg_system['raspbianver'] = $_SESSION['raspbianver'];
 				$array_cfg_system['ipaddress'] = $_SESSION['ipaddress'];
 				$array_cfg_system['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
@@ -215,8 +200,6 @@ else {
 					$array[$row['param']] = $row['value'];
 				}
 				// add extra vars
-				$array['mooderel'] = $_SESSION['mooderel'];
-				$array['pkgdate'] = $_SESSION['pkgdate'];
 				$array['raspbianver'] = $_SESSION['raspbianver'];
 				$array['ipaddress'] = $_SESSION['ipaddress'];
 				$array['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
