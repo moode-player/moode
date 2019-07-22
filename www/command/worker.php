@@ -127,15 +127,13 @@ playerSession('write', 'kernelver', strtok(shell_exec('uname -r'),"\n"));
 playerSession('write', 'procarch', strtok(shell_exec('uname -m'),"\n"));
 $mpdver = explode(" ", strtok(shell_exec('mpd -V | grep "Music Player Daemon"'),"\n"));
 playerSession('write', 'mpdver', $mpdver[3]);
-$lastinstall = checkForUpd('/var/local/www/');
-$_SESSION['pkgdate'] = $lastinstall['pkgdate'];
 $result = sysCmd('cat /etc/debian_version');
 $_SESSION['raspbianver'] = $result[0];
-$_SESSION['moode_release'] = getMoodeRel();
+$_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
 // log platform data
-workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // X.Y yyyy-mm-dd ex: 2.6 2016-06-07
-workerLog('worker: Upd  (' . $_SESSION['pkgdate'] . ')');
+workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd ex: 6.0.1 2016-06-07
+//workerLog('worker: Upd  (' . $_SESSION['pkgdate'] . ')');
 workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Kern (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: MPD  (' . $_SESSION['mpdver'] . ')');
@@ -341,27 +339,6 @@ else {
 	playerSession('write', 'alsavolume', $result[0]); // volume level
 	workerLog('worker: Hdwr volume controller exists');
 }
-
-/* DEPRECATE
-// - No need to set them here since they persist on the chip
-// - Added the second arg to cfgChipOptions() as a bug fix
-// configure options for Burr Brown chips, r45d
-$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
-$chips = array(
-'Burr Brown PCM5121',
-'Burr Brown PCM5122',
-'Burr Brown PCM5122 (PCM5121)',
-'Burr Brown PCM5122, PCM1861 ADC',
-'Burr Brown PCM5122, Wolfson WM8804',
-'Burr Brown PCM5142',
-'Burr Brown PCM5242',
-'Burr Brown TAS5756',
-'Burr Brown TAS5756M');
-if (in_array($result[0]['dacchip'], $chips) && !empty($result[0]['chipoptions'])) {
-	cfgChipOptions($result[0]['chipoptions'], 'burr_brown_pcm5');
-	workerLog('worker: Chip options (' . $result[0]['dacchip'] . ')');
-}
-*/
 
 // configure Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
