@@ -34,6 +34,7 @@ Updates
 - UPD: Add clock radio "after stop" Actions
 - UPD: Add Spotify clear credential cache
 - UPD: Add Instant Play options: Add/Play, Clear/Play
+- UPD: Add Show Genres column (Yes/No) to Library options
 - UPD: Remove restriction on quotes in Wifi password
 - UPD: Improve Play/Playall response on slower Pi-Zero
 - UPD: Improve Audioinfo layout and content
