@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -19,7 +19,7 @@
  * 2019-05-07 TC moOde 5.2
  *
  */
--->	
+-->
 <div class="container">
 	<div class="container2">
 	<h1 class="snd-config">Parametric EQ</h1>
@@ -34,7 +34,7 @@
 				REMOVE: Delete the selected curve.<br>
             </span>
 		</legend>
-    
+
 		<fieldset>
 	    	<legend>Test &nbsp;
 				<button class="btn btn-primary btn-small btn-submit" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
@@ -54,13 +54,13 @@
 				- Bandwidth: 0.12 to 8 (lower values correspond to increasing resonance)<br>
 				- Gain: -24 to 24 dB<br>
             </span>
-			<span class="help-block-configs help-block-margin">
-				<a data-toggle="modal" href="#new-curvename">ENTER</a> New curve name<br>
-			</span>
+			<div class="help-block-margin">
+				<a data-toggle="modal" href="#new-curvename"><button class="btn btn-medium btn-primary">Enter</button></a> New curve name<br>
+			</div>
 		</fieldset>
 
 		<fieldset>
-			<div id="equalizer" class="sliderbank">					
+			<div id="equalizer" class="sliderbank">
 				<div class="eqp-label">Frequency Bands</div>
 				<div class="vslide1">
 					<div id="master-gain">$_select[master_gain] dB</div>
@@ -92,7 +92,7 @@
 					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band2-gain" name="band2_gain" value="$_select[band2_gain]"></div>
 					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band3-gain" name="band3_gain" value="$_select[band3_gain]"></div>
 					<div class="eqp-col1"><input class="input-mini eqp-input" type="number" min="-24" max="24" step=".1" id="band4-gain" name="band4_gain" value="$_select[band4_gain]"></div>
-	
+
 					<div id="eq-enabled-select">
 						<div class="eqp-col1">Enabled</div>
 						<div class="eqp-col1"><select id="band1-enabled" class="select-mini eqp-select" name="band1_enabled" style="width:71.5px;">$_select[band1_enabled]</select></div>
@@ -113,14 +113,14 @@
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Remove EQ curve</h3>
 		</div>
-		
+
 		<div class="modal-body">
 			<h4 id='rmcurve'>$_selected_curve</h4>
 			<span class="help-block" style="margin-bottom:5px;">
 				$_disable_rm_msg
 			</span>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="rmcurve" value="1" $_disable_rm>Yes</button>
@@ -134,7 +134,7 @@
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Enter new curve name</h3>
 		</div>
-		
+
 		<div class="modal-body">
 			<div class="control-group">
 				<label class="control-label" for="new-curvename">Curve name</label>
@@ -143,7 +143,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="newcurvename" value="1">Ok</button>

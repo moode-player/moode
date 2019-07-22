@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
--->	
+-->
 <div class="container">
 	<!--div class="container2" style="position:fixed"-->
 	<div class="container2">
@@ -35,7 +35,7 @@
 				REMOVE: Delete the selected curve.<br>
             </span>
 		</legend>
-    
+
 		<fieldset>
 	    	<legend>Test &nbsp;
 				<button class="btn btn-primary btn-small btn-submit" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
@@ -51,13 +51,13 @@
 			<span id="info-curve-name" class="help-block-configs help-block-margin hide">
 				Friendly name for the curve.<br>
             </span>
-			<span class="help-block-configs help-block-margin">
-				<a data-toggle="modal" href="#new-curvename">ENTER</a> New curve name<br>
-			</span>
+			<div class="help-block-margin">
+				<a data-toggle="modal" href="#new-curvename"><button class="btn btn-medium btn-primary">Enter</button></a> New curve name<br>
+			</div>
 		</fieldset>
 
 		<fieldset>
-			<div id="equalizer" class="sliderbank">					
+			<div id="equalizer" class="sliderbank">
 				<div class="eqg-label">Alsaequal values</div>
 				<div class="vslide3"><div id="freq1">$_select[freq1]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq1" value="$_select[freq1]" oninput="updEqgFreq('#freq1', this.value)"><div>31</div></div>
 				<div class="vslide3"><div id="freq2">$_select[freq2]</div><input class="vslide2" type="range" orient="vertical" min="34" max="100" step="1" name="freq2" value="$_select[freq2]" oninput="updEqgFreq('#freq2', this.value)"><div>63</div></div>
@@ -82,7 +82,7 @@
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Remove EQ curve</h3>
 		</div>
-		
+
 		<div class="modal-body">
 			<h4 id='rmcurve'>$_selected_curve</h4>
 			<span class="help-block" style="margin-bottom:5px;">
@@ -103,7 +103,7 @@
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Enter new curve name</h3>
 		</div>
-		
+
 		<div class="modal-body">
 			<div class="control-group">
 				<label class="control-label" for="new-curvename">Curve name</label>
@@ -112,7 +112,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="newcurvename" value="1">Ok</button>

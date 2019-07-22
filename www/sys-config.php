@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . '/inc/keyboard.php';
 
 playerSession('open', '' ,'');
 
-// SOFTWARE UPDATE AND IMAGE BUILDER DOWNLOAD
+// SOFTWARE UPDATE
 
 // check for software update
 if (isset($_POST['checkfor_update'])) {
@@ -37,29 +37,19 @@ if (isset($_POST['checkfor_update'])) {
 	$lastinstall = checkForUpd('/var/local/www/');
 
 	// up to date
-	if ($available['pkgdate'] == $lastinstall['pkgdate']) {
-	//if ($available['pkgdate'] != $lastinstall['pkgdate']) { // set to != for testing
+	if ($available['Date'] == $lastinstall['Date']) {
 		$_available_upd = 'Software is up to date<br>';
 	}
+	// update available
 	else {
-		// update available
-		$_available_upd .= '<u><em>Available</u></em><br>';
-		$_available_upd .= $available['pkgdate'] == 'None' ? $available['pkgdate'] . '<br>' : 'Package date: ' . $available['pkgdate'] .
-		//$_available_upd .= $available['pkgdate'] != 'None' ? $available['pkgdate'] . '<br>' : 'Package date: ' . $available['pkgdate'] .  // set to != for testing
+		//$_available_upd .= '<u><em>Available</u></em><br>';
+		$_available_upd = $available['Date'] == 'None' ? $available['Date'] . '<br>' : 'Package date: ' . $available['Date'] .
 			'<button class="btn btn-primary btn-small set-button btn-submit" id="install-update" type="submit" name="install_update" value="1">Install</button>' .
 			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>' .
 			'<span class="help-block-configs help-block-margin" style="margin-bottom:5px">Progress can be monitored via SSH cmd: moodeutl -t</span>'; //r45a
 
-		$_pkg_description = $available['pkgdesc'];
-		$cnt = $available['linecnt'];
-		for ($i = 1; $i <= $cnt; $i++) {
-			$_pkg_content .= '<li>' . $available[$i] . '</li>';
-		}
-
-		// last installed
-		$_lastinstall_upd .= '<u><em>Last installed</u></em><br>';
-		$_lastinstall_upd .= $lastinstall['pkgdate'] == 'None' ? $lastinstall['pkgdate'] : 'Package date: ' . $lastinstall['pkgdate'];
-		$_lastinstall_upd .= '<br>';
+		$_pkg_description = $available['Description'];
+		$_pkg_relnotes = $available['Relnotes'];
 	}
 }
 
@@ -87,7 +77,6 @@ if (isset($_POST['install_update'])) {
 		else {
 			submitJob('installupd', '', 'Software update installed', 'Reboot required', 60);
 			$_available_upd = 'Software is up to date<br>';
-			$_lastinstall_upd = '';
 		}
 	}
 }
@@ -467,6 +456,14 @@ else {
 $_select['shellinabox1'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggleshellinabox1\" value=\"1\" " . (($_SESSION['shellinabox'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['shellinabox0'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggleshellinabox2\" value=\"0\" " . (($_SESSION['shellinabox'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['hostip'] = getHostIp();
+if ($_SESSION['shellinabox'] == '1') {
+	$_ssh_btn_disable = '';
+	$_ssh_link_disable = '';
+}
+else {
+	$_ssh_btn_disable = 'disabled';
+	$_ssh_link_disable = 'onclick="return false;"';
+}
 
 // MAINTENANCE
 
