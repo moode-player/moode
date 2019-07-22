@@ -38,11 +38,13 @@ Updates
 - UPD: Improve Play/Playall response on slower Pi-Zero
 - UPD: Improve Audioinfo layout and content
 - UPD: Improve System info layout and content
+- UPD: Improve layout of config screens
+- UPD: Improve in-place update process
 - UPD: SwissGroove radio url
 
 Security
 
-- UPD: Improve input arg parsing in command/index.ph
+- UPD: Strengthen input arg parsing in command/index.ph
 - UPD: Remove script path input arg in lcdup.sh
 - UPD: Convert from plaintext WiFi passwords to PSK's
 
@@ -50,6 +52,7 @@ Bug fixes
 
 - FIX: Lazyload not started after search in Album view
 - FIX: Missing href in Bluetooth Active overlay
+- FIX: Wrong default fill color for radio buttons
 
 ########################################################
 //
