@@ -1,6 +1,6 @@
 ################################################################
 #
-# Build Recipe v2.11, 2019-MM-DD
+# Build Recipe v2.11 2019-MM-DD
 #
 # moOde 6.0.0 2019-MM-DD
 # - Based on Raspbian 10.0 (Buster)
@@ -191,13 +191,13 @@ sudo apt-get -y purge triggerhappy
 2. Install core packages.
 
 # NOTE: run these two commands separately
-sudo apt-get update
+sudo apt-get update --allow-releaseinfo-change
 sudo apt-get -y upgrade
 
 # SR2
 sudo reboot
 
-sudo apt-get update
+sudo apt-get update --allow-releaseinfo-change
 
 sudo apt-get -y install rpi-update php-fpm nginx sqlite3 php-sqlite3 php7.3-gd mpc \
     bs2b-ladspa libbs2b0 libasound2-plugin-equal telnet automake sysstat squashfs-tools shellinabox samba smbclient ntfs-3g \
@@ -308,12 +308,10 @@ sudo reboot
 
 1. WiringPi
 
-NOTE: Ignore warnings during build
+# Install 2.52 from deb package
+sudo cp ./moode/other/wiringpi/wiringPi-latest.deb ./
+sudo dpkg -i wiringpi-latest.deb
 
-sudo cp ./moode/other/wiringpi/wiringPi-2.50-36fb7f1.tar.gz ./
-sudo tar xfz ./wiringPi-2.50-36fb7f1.tar.gz
-cd wiringPi-36fb7f1
-sudo ./build
 cd ~/
 sudo rm -rf ./wiringPi*
 
