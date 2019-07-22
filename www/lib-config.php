@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC moOde 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -112,26 +112,26 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// server
 	if (empty(trim($_POST['mount']['address']))) {
 		$_SESSION['notify']['title'] = 'Host cannot be blank';
-		$_SESSION['notify']['duration'] = 20;
+		$_SESSION['notify']['duration'] = 5;
 	}
 	// share
 	elseif ($_POST['mount']['type'] != 'upnp' && empty(trim($_POST['mount']['remotedir']))) {
 		$_SESSION['notify']['title'] = 'Share cannot be blank';
-		$_SESSION['notify']['duration'] = 20;
+		$_SESSION['notify']['duration'] = 5;
 	}
 	// userid
 	elseif ($_POST['mount']['type'] == 'cifs' && empty(trim($_POST['mount']['username']))) {
 		$_SESSION['notify']['title'] = 'Userid cannot be blank';
-		$_SESSION['notify']['duration'] = 20;
+		$_SESSION['notify']['duration'] = 5;
 	}
 	// name
 	elseif ($_POST['mount']['action'] == 'add' && !empty($id[0])) {
 		$_SESSION['notify']['title'] = 'Name already exists';
-		$_SESSION['notify']['duration'] = 20;
+		$_SESSION['notify']['duration'] = 5;
 	}
 	elseif (empty(trim($_POST['mount']['name']))) {
 		$_SESSION['notify']['title'] = 'Name cannot be blank';
-		$_SESSION['notify']['duration'] = 20;
+		$_SESSION['notify']['duration'] = 5;
 	}
 	// ok so save
 	else {

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 -->
@@ -57,9 +57,8 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label">Chip/Device options</label>
 				<div class="controls">
-					$_chipoptions_btn
+					<a href="chp-config.php" $_chip_link_disable><button class="btn btn-primary btn-medium" $_chip_btn_disable>Edit</button></a>&nbsp;Chip/Device options
 				</div>
 			</div>
 
@@ -94,12 +93,11 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label">MPD options</label>
 				<div class="controls">
-					<a href="mpd-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit options</button></a>
-					<span class="help-block-configs help-block-margin">
-						<a data-toggle="modal" href="#mpd-restart">RESTART</a> MPD service<br>
-					</span>
+					<a href="mpd-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit</button></a>&nbsp;MPD config
+					<div style="margin-top:.75em">
+						<a data-toggle="modal" href="#mpd-restart"><button class="btn btn-medium btn-primary">Restart</button></a>&nbsp;MPD
+					</div>
 				</div>
 			</div>
 
@@ -288,9 +286,9 @@
 						Four Mitra-Regalia peaking equaliser filters in series; a vector arithmetic re-implementation of Fons Adriaensens "Parametric1" equaliser[fafil] with minor differences. Parallelisation of the serial filter organisation causes the output to lag by three samples. This EQ uses the EqFA4p component of the CAPS suite of DSP programs written by Tim Goetze<br>
 						<b>Note:</b> Equalizer processing applies to MPD, Airplay and Spotify output.<br>
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a href="eqp-config.php">CONFIGURE</a> EQ curve<br>
-					</span>
+					<div style="margin-top:.5em">
+						<a href="eqp-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;EQ curve<br>
+					</div>
 				</div>
 			</div>
 
@@ -306,9 +304,9 @@
 						A classic octave-band, constant-Q, second-order filter design. Frequency bands centered above Nyquist are automatically disabled. This EQ uses the Eq10X2 component of the CAPS suite of DSP programs written by Tim Goetze.<br>
 						<b>Note:</b> Equalizer processing applies to MPD, Airplay and Spotify output.<br>
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a href="eqg-config.php">CONFIGURE</a> EQ curve<br>
-					</span>
+					<div style="margin-top:.5em">
+						<a href="eqg-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;EQ curve<br>
+					</div>
 				</div>
 			</div>
 		</fieldset>
@@ -347,7 +345,7 @@
 						$_select[pairing_agent0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_pairing_agent" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_pairing_agent" value="novalue" $_bt_btn_disable>Set</button>
 						<a class="info-toggle" data-cmd="info_pairing_agent" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info_pairing_agent" class="help-block-configs help-block-margin2 hide">
@@ -363,7 +361,7 @@
 						$_select[btmulti0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_bt_multi" value="novalue">Set</button>
+ 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_bt_multi" value="novalue" $_bt_btn_disable>Set</button>
 						<a class="info-toggle" data-cmd="info-btmulti" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-btmulti" class="help-block-configs help-block-margin2 hide">
@@ -376,16 +374,18 @@
 						$_select[rsmafterbt]
 					</select>
 					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterbt" value="novalue">Set</button>
+ 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterbt" value="novalue" $_bt_btn_disable>Set</button>
  						<a class="info-toggle" data-cmd="info_rsmafterbt" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</span>
 					<span id="info_rsmafterbt" class="help-block-configs help-block-margin hide">
 						Resume MPD playback after Bluetooth client disconnects.<br>
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a href="blu-config.php">CONFIGURE</a> Bluetooth<br>
-						<a data-toggle="modal" href="$_bt_restart">RESTART</a> Bluetooth<br>
-					</span>
+					<div style="margin-top:.5em">
+						<a href="blu-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;BlueZ config<br>
+					</div>
+					<div style="margin-top:.75em">
+						<a data-toggle="modal" href="#bt-restart" $_bt_link_disable><button class="btn btn-medium btn-primary" $_bt_btn_disable>Restart</button></a>&nbsp;Bluetooth controller<br>
+					</div>
 				</div>
 			</div>
 
@@ -415,16 +415,18 @@
 						$_select[rsmafterapl]
 					</select>
 					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterapl" value="novalue">Set</button>
+ 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterapl" value="novalue" $_airplay_btn_disable>Set</button>
  						<a class="info-toggle" data-cmd="info_rsmafterapl" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</span>
 					<span id="info_rsmafterapl" class="help-block-configs help-block-margin hide">
 						Resume MPD playback after Airplay client stops playing.<br>
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a href="apl-config.php">CONFIGURE</a> Airplay<br>
-						<a data-toggle="modal" href="$_airplay_restart">RESTART</a> Airplay<br>
-					</span>
+					<div style="margin-top:.5em">
+						<a href="apl-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Airplay config<br>
+					</div>
+					<div style="margin-top:.75em">
+						<a data-toggle="modal" href="#airplay-restart" $_airplay_link_disable><button class="btn btn-medium btn-primary" $_airplay_btn_disable>Restart</button></a>&nbsp;Airplay renderer<br>
+					</div>
 				</div>
 			</div>
 
@@ -457,17 +459,21 @@
 						$_select[rsmafterspot]
 					</select>
 					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterspot" value="novalue">Set</button>
+ 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterspot" value="novalue" $_spotify_btn_disable>Set</button>
  						<a class="info-toggle" data-cmd="info_rsmafterspot" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</span>
 					<span id="info_rsmafterspot" class="help-block-configs help-block-margin hide">
 						Resume MPD playback after Spotify Connect client stops playing.<br>
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a href="spo-config.php">CONFIGURE</a> Spotify<br>
-						<a data-toggle="modal" href="$_spotify_restart">RESTART</a> Spotify<br>
-						<a data-toggle="modal" href="#spotify-clear-credentials">CLEAR</a> Credential cache<br>
-					</span>
+					<div style="margin-top:.5em">
+						<a href="spo-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Spotify config<br>
+					</div>
+					<div style="margin-top:.75em">
+						<a data-toggle="modal" href="#spotify-restart" $_spotify_link_disable><button class="btn btn-medium btn-primary" $_spotify_btn_disable>Restart</button></a>&nbsp;Spotify renderer<br>
+					</div>
+					<div style="margin-top:.75em">
+						<a data-toggle="modal" href="#spotify-clear-credentials" $_spotify_link_disable><button class="btn btn-medium btn-primary" $_spotify_btn_disable>Clear</button></a>&nbsp;Credential cache<br>
+					</div>
 				</div>
 			</div>
 
@@ -496,16 +502,18 @@
 						$_select[rsmaftersl]
 					</select>
 					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmaftersl" value="novalue">Set</button>
+ 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmaftersl" value="novalue" $_sl_btn_disable>Set</button>
  						<a class="info-toggle" data-cmd="info_rsmaftersl" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</span>
 					<span id="info_rsmaftersl" class="help-block-configs help-block-margin hide">
 						Resume MPD playback after LMS power off.<br>
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a href="sqe-config.php">CONFIGURE</a> Squeezelite<br>
-						<a data-toggle="modal" href="$_sl_restart">RESTART</a> Squeezelite<br>
-					</span>
+					<div style="margin-top:.5em">
+						<a href="sqe-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Squeezelite config<br>
+					</div>
+					<div style="margin-top:.75em">
+						<a data-toggle="modal" href="#sl-restart" $_sl_link_disable><button class="btn btn-medium btn-primary" $_sl_btn_disable>Restart</button></a>&nbsp;Squeezelite renderer<br>
+					</div>
 				</div>
 			</div>
 		</fieldset>
@@ -533,10 +541,12 @@
 						- Supports Open Home Media (ohMedia).<br>
 						- Radio station url's can be added to /etc/upmpdcli-radio.conf.<br>
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a href="upp-config.php">CONFIGURE</a> UPnP client<br>
-						<a data-toggle="modal" href="$_upnp_restart">RESTART</a> UPnP client<br>
-					</span>
+					<div style="margin-top:.5em">
+						<a href="upp-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;UPnP config<br>
+					</div>
+					<div style="margin-top:.75em">
+						<a data-toggle="modal" href="#upnp-restart" $_upnp_link_disable><button class="btn btn-medium btn-primary" $_upnp_btn_disable>Restart</button></a>&nbsp;UPnP renderer<br>
+					</div>
 				</div>
 			</div>
 
@@ -557,10 +567,12 @@
 					<span id="info-dlnasvc" class="help-block-configs help-block-margin2 hide">
 						DLNA media server (miniDLNA) by Justin Maggard.<br>
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a data-toggle="modal" href="#rebuild-dlnadb">REBUILD</a> Database<br>
-						<a id="dlnasvc-link" href="http://$_select[hostip]:8200" target="_blank">VIEW</a> Status of DB update<br>
-					</span>
+					<div class="help-block-margin">
+						<a data-toggle="modal" href="#rebuild-dlnadb" $_dlna_link_disable><button class="btn btn-medium btn-primary" $_dlna_btn_disable>Rebuild</button></a>&nbsp;DLNA database<br>
+					</div>
+					<div style="margin-top:.75em">
+						<a id="dlnasvc-link" href="http://$_select[hostip]:8200" target="_blank" class="btn btn-medium btn-primary $_dlna_btn_disable" style="padding-top:.35em;" $_dlna_link_disable>View</a>&nbsp;Database status<br>
+					</div>
 				</div>
 			</div>
 
@@ -581,9 +593,9 @@
 						Djmount by Rémi Turboult. Mount UPnP/DLNA Media Servers as FUSE file systems to /mnt/UPNP.<br>
 						NOTE: Use Library config to create and index a UPnP music source.
                     </span>
-					<span class="help-block-configs help-block-margin">
-						<a data-toggle="modal" href="$_upnp_browser_restart">RESTART</a> UPnP browser<br>
-					</span>
+					<div class="help-block-margin">
+						<a data-toggle="modal" href="#rebuild-dlnadb" $_djmount_link_disable><button class="btn btn-medium btn-primary" $_djmount_btn_disable>Restart</button></a>&nbsp;UPnP browser<br>
+					</div>
 				</div>
 			</div>
 		</fieldset>

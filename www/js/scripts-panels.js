@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC moOde 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -39,7 +39,7 @@ jQuery(document).ready(function($) { 'use strict';
 	//console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
 
 	// load current cfg
-	var result = sendMoodeCmd('GET', 'read_cfg_all');
+	var result = sendMoodeCmd('GET', 'read_cfgs');
 	SESSION.json = result['cfg_system'];
 	THEME.json = result['cfg_theme'];
 	RADIO.json = result['cfg_radio'];
@@ -82,7 +82,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	accentColor = themeToColors(SESSION.json['accent_color']);
 	document.body.style.setProperty('--themetext', themeMcolor);
-	var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor + "' cx='14' cy='14.5' r='11.5'/></svg>";
+	var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
 	var test = getCSSRule('.toggle .toggle-radio');
 	test.style.backgroundImage='url("' + radio1 + '")';
 	adaptColor = themeColor;
@@ -233,6 +233,12 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
 		$('.tag-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
+        if (SESSION.json['show_genres'] == 'Yes') {
+            $('#top-columns').removeClass('nogenre');
+        }
+        else {
+            $('#top-columns').addClass('nogenre');
+        }
 		setTimeout(function() {
 			$('img.lazy-tagview').lazyload({
 			    container: $('#lib-album')
@@ -300,7 +306,13 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.tag-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
 		$('#top-columns, #bottom-row').css('display', 'flex');
-
+        if (SESSION.json['show_genres'] == 'Yes') {
+            $('#top-columns').removeClass('nogenre');
+        }
+        else {
+            $('#top-columns').addClass('nogenre');
+        }
+        
 		currentView = 'tag';
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
 

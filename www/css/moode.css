@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-MM-DD TC moOde 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -102,6 +102,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* forms */
 .form-horizontal .controls {margin-left:12em;}
 .form-horizontal .control-label {width:11em;}
+/* update package txt ol */
+#update-pkg-ol {font-family:courier new;}
+#update-pkg-ol li {line-height:1em;}
 
 @supports ((backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px))) {
 	.modal-dropdown-text {color:#333;}

@@ -1,4 +1,5 @@
 disable_splash=1
+disable_overscan=1
 hdmi_drive=2
 dtparam=i2c_arm=on
 dtparam=i2s=on

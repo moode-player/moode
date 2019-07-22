@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -88,6 +88,10 @@ var RADIO = {
 };
 // themes (cfg_theme table)
 var THEME = {
+	json: 0
+};
+// networks (cfg_network table)
+var NETWORK = {
 	json: 0
 };
 
@@ -393,6 +397,7 @@ function engineMpdLite() {
 		// network connection interrupted or client network stack timeout
 		error: function(data) {
 			debugLog('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
+            //console.log('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
 
 			setTimeout(function() {
 				if (data['statusText'] == 'error' && data['readyState'] == 0) { 
@@ -558,6 +563,7 @@ function resetPlayCtls() {
 	$('.ss-playlist li.active').removeClass('active');
 
 	refreshTimeKnob();
+    refreshTimer(0, 0, MPD.json['state']);
 	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').html('00:00');
 	$('#m-radio').hide();
 }
@@ -2297,8 +2303,9 @@ $('#albumcovers').on('click', 'img', function(e) {
 		files.push(filteredSongs[i].file); 
 	}
 
-	//mpdDbCmd('playall', files);
-	mpdDbCmd('clrplayall', files);
+    var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'playall' : 'clrplayall';
+	mpdDbCmd(cmd, files);
+    notify(cmd, '');
 
 	// so tracks list doesn't open
 	return false;
@@ -2356,8 +2363,9 @@ $('#database-radio').on('click', 'img', function(e) {
 		UI.radioPos = pos;
 		storeRadioPos(UI.radioPos)
 
-		//mpdDbCmd('play', path);
-		mpdDbCmd('clrplay', path);
+        var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
+    	mpdDbCmd(cmd, path);
+        notify(cmd, '');
 
 		setTimeout(function() {
 			customScroll('radiocovers', UI.radioPos, 200);
@@ -2849,10 +2857,9 @@ $('.context-menu a').click(function(e) {
 		$('#quickhelp').load('quickhelp.html');
 		$('#quickhelp-modal').modal();
 	}
-    
+
 	// about
 	else if ($(this).data('cmd') == 'aboutmoode') {
-		$('#sys-upd-pkgdate').text(SESSION.json['pkgdate']);
 		$('#sys-raspbian-ver').text(SESSION.json['raspbianver']);
 		$('#sys-kernel-ver').text(SESSION.json['kernelver']);
 		$('#sys-processor-arch').text(SESSION.json['procarch']);
@@ -2992,7 +2999,7 @@ $('.btn-appearance-update').click(function(e){
 	}
 	if (accentColorChange == true) {
 		var accentColor = themeToColors(SESSION.json['accent_color']);
-		var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor + "' cx='14' cy='14.5' r='11.5'/></svg>";
+		var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
 		var test = getCSSRule('.toggle .toggle-radio');
 		test.style.backgroundImage='url("' + radio1 + '")';
 		$('.playbackknob').trigger('configure',{"fgColor":accentColor});

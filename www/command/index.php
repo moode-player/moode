@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC moOde 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -33,8 +33,14 @@ if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
 }
 // SH or PHP commands
 elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') !== false) {
+	// check for valid chrs
     if (preg_match('/^[A-Za-z0-9 _.-]+$/', $_GET['cmd'])) {
-        if (stripos($_GET['cmd'], 'vol.sh') !== false) {
+		// reject directory traversal ../
+		if (substr_count($_GET['cmd'], '.') > 1) {
+			echo 'Invalid string';
+		}
+		// check for valid commands
+        elseif (stripos($_GET['cmd'], 'vol.sh') !== false) {
            $result = sysCmd('/var/www/' . $_GET['cmd']);
            echo $result[0];
         }
@@ -43,7 +49,7 @@ elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') 
         }
     }
     else {
-        echo 'Invalid command';
+        echo 'Invalid string';
     }
 }
 // MPD commands

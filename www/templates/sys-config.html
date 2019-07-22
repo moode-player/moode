@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
--->	
+-->
 <div class="container">
 	<div class="container2">
 	<h1 class="sys-config">System Config</h1>
@@ -28,7 +28,7 @@
 	    <p style="margin-top:1.5em";>
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="checkfor_update" value="novalue">Check</button>&nbsp;for software update<br>
 			$_available_upd
-			$_lastinstall_upd
+			<!--$_lastinstall_upd-->
 	    </p>
 
 		<legend>General</legend>
@@ -36,7 +36,7 @@
 			<div class="control-group">
 				<label class="control-label" for="timezone">Timezone</label>
 				<div class="controls">
-					<select id="timezone" class="input-large" name="timezone">		
+					<select id="timezone" class="input-large" name="timezone">
 						$_timezone[timezone]
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_time_zone" value="novalue" style="margin-left: 8px;">Set</button>
@@ -52,7 +52,7 @@
 						Length 3-63 chars, alphanumeric and hyphen allowed.
 					</span>
                 </div>
-            </div>	
+            </div>
 
             <div class="control-group">
                 <label class="control-label" for="keyboard">Keyboard layout</label>
@@ -62,15 +62,15 @@
                     </select>
                     <button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_keyboard" value="novalue" style="margin-left: 8px;">Set</button>
                 </div>
-            </div>   
-			
+            </div>
+
 			<div class="control-group" >
                 <label class="control-label" for="browsertitle">Browser title</label>
                 <div class="controls">
                     <input class="input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_browser_title" value="novalue">Set</button>
                 </div>
-            </div>				
+            </div>
 		</fieldset>
 
 		<legend>System Modifications</legend>
@@ -84,11 +84,11 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_cpugov" value="novalue">Set</button>
 					<a class="info-toggle" data-cmd="info-cpugov" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-cpugov" class="help-block-configs help-block-margin hide">
-						<b>On-demand:</b> Dynamically scales cpu frequency based on demand.<br>
-						<b>Performance:</b> Runs the cpu at maximum frequency.<br>
+						<b>On-demand:</b> Scale CPU frequency from min to max based on load.<br>
+						<b>Performance:</b> Run the CPU at max frequency.<br>
 					</span>
 				</div>
-			</div>	
+			</div>
 
 			<div class="$_wifibt_hide">
 				<div class="control-group">
@@ -210,7 +210,7 @@
 						<a class="info-toggle" data-cmd="info-uac2fix" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-uac2fix" class="help-block-configs help-block-margin hide">
-						Try this fix if experiencing audio glitches with USB High Speed (UAC2) audio devices. 
+						Try this fix if experiencing audio glitches with USB High Speed (UAC2) audio devices.
                     </span>
 				</div>
 			</div>
@@ -247,11 +247,11 @@
 					<span id="info-expand-rootfs" class="help-block-configs help-block-margin hide">
 						Expand root file system to maximum size of storage device.<br>
 						- The system will automatically REBOOT after the expansion request has been queued.<br>
-						- Actual file system expansion occurs during reboot and may take some time.   
+						- Actual file system expansion occurs during reboot and may take some time.
                     </span>
 				</div>
-			</div> 
-			
+			</div>
+
 			<div class="$_usbboot_hide">
 				<div class="control-group">
 					<label class="control-label">USB boot</label>
@@ -267,7 +267,7 @@
 							- After OTP is updated, system can boot from SD card or USB drive.
 	                    </span>
 					</div>
-				</div> 
+				</div>
 			</div>
 
 			<!--div class="control-group">
@@ -284,9 +284,9 @@
 						The default value is (Never).<br>
 					</span>
 				</div>
-			</div r45b deprecate-->	
+			</div r45b deprecate-->
 		</fieldset>
-			
+
 		<div class="$_feat_localui">
 			<legend>Local Display</legend>
 			<fieldset>
@@ -307,8 +307,8 @@
 							Display moOde UI on locally attached display.<br>
 	                    </span>
 	                </div>
-	            </div>  
-	
+	            </div>
+
 				<div class="control-group">
 					<label class="control-label">Mouse cursor</label>
 					<div class="controls">
@@ -326,17 +326,17 @@
 							This prevents the cursor from showing on the display or Touch screen<br>
 	                    </span>
 	                </div>
-	            </div>  
-		
+	            </div>
+
 				<div class="control-group">
 					<label class="control-label" for="scnblank">Screen blank</label>
 					<div class="controls">
-						<select id="scnblank" class="input-large" name="scnblank">		
+						<select id="scnblank" class="input-large" name="scnblank">
 							$_select[scnblank]
 						</select>
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_scnblank" value="novalue" style="margin-left: 8px;">Set</button>
 					</div>
-	            </div>  
+	            </div>
 
 				<div class="control-group">
 					<label class="control-label" for="scnbrightness">Brightness</label>
@@ -348,12 +348,12 @@
 							Backlight brightness for 7" Pi Touch. Values are 0 - 255.<br>
 	                    </span>
 					</div>
-	            </div>  
+	            </div>
 
 				<div class="control-group">
 					<label class="control-label" for="scnrotate">Rotate screen</label>
 					<div class="controls">
-						<select id="scnrotate" class="input-large" name="scnrotate">		
+						<select id="scnrotate" class="input-large" name="scnrotate">
 							$_select[scnrotate]
 						</select>
 						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_scnrotate" value="novalue" style="margin-left: 8px;">Set</button>
@@ -366,13 +366,13 @@
 						<a href="#clear-browser-cache" data-toggle="modal"><button class="btn btn-primary btn-small" style="margin-top:0px;">Clear</button></a>
 						<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-clear-browser-cache" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-clear-browser-cache" class="help-block-configs help-block-margin hide">
-							Clear Chrome Browser cache for Local UI.<br> 
+							Clear Chrome Browser cache for Local UI.<br>
 	                    </span>
 					</div>
-				</div> 
+				</div>
 			</fieldset>
 		</div>
-	
+
 		<legend>Local Services</legend>
 		<fieldset>
 			<div class="control-group">
@@ -404,18 +404,15 @@
 						<label class="toggle-radio" for="togglelcdup1">OFF</label>
 						$_select[lcdup0]
 					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<input class="input-large" type="text" id="lcdupscript" name="lcdupscript" value="$_select[lcdupscript]" style="width:117px;" placeholder="Python script">
-						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
 						<a class="info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span class="help-block-configs">
-						Provide full path to Python script.
+						The LCD update engine runs lcdup.py script whenever UI state changes.<br>
 					</span>
 					<span id="info-lcdup" class="help-block-configs help-block-margin hide">
-						LCD update engine runs specified Python script whenever UI state changes.<br>
-						- Script must be executable (+x) and have shebang (#!/usr/bin/python) as first line.<br>
-						- File /var/local/www/currentsong.txt contains metadata and other information.<br>
+						A stub lcdup.py script is located in /var/local/www/commandw.
                     </span>
 				</div>
 			</div>
@@ -435,11 +432,11 @@
 							<a class="info-toggle" data-cmd="info_gpio_svc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
 						<span id="info_gpio_svc" class="help-block-configs help-block-margin hide">
-							GPIO pin handler that maps attached buttons to MPD playback commands. By @Cyanoazimin.<br>
+							Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.<br>
 	                    </span>
-						<span class="help-block-configs help-block-margin">
-							<a href="gpio-config.php">CONFIGURE</a> GPIO pins<br>
-						</span>
+						<div class="help-block-margin">
+							<a href="gpio-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;GPIO pin mappings<br>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -460,9 +457,9 @@
 					<span id="info-shellinabox" class="help-block-configs help-block-margin hide">
 						Web based SSH terminal server using Shellinabox by Markus Gutschk and Luka Krajger.<br>
                     </span>
-					<span class="help-block-configs">
-						<a id="dlnasvc-link" href="http://$_select[hostip]:4200" target="_blank" style="margin-top: 0px; padding-top: 0px;">OPEN</a> Web SSH terminal.<br> 
-					</span>
+					<div class="help-block-margin">
+						<a id="dlnasvc-link" href="http://$_select[hostip]:4200" target="_blank" class="btn btn-medium btn-primary $_ssh_btn_disable" style="padding-top:.35em;" $_ssh_link_disable>Open</a>&nbsp;Web SSH terminal<br>
+					</div>
 				</div>
 			</div>
 		</fieldset>
@@ -478,7 +475,7 @@
 						Clear the playback history log. Perform this task periodically since the log grows over time.<br>
                     </span>
 				</div>
-			</div> 
+			</div>
 
 			<div class="control-group">
 				<label class="control-label">System logs</label>
@@ -486,10 +483,10 @@
 					<a href="#clear-syslogs" data-toggle="modal"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Clear</button></a>
 					<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-clear-syslogs" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-clear-syslogs" class="help-block-configs help-block-margin hide">
-						Clear various system log files. NOTE: The logs are cleared periodically by the automatic Maintenance task.<br> 
+						Clear various system log files. NOTE: The logs are cleared periodically by the automatic Maintenance task.<br>
                     </span>
 				</div>
-			</div> 
+			</div>
 
 			<div class="control-group">
 				<label class="control-label">Sqlite database</label>
@@ -497,11 +494,11 @@
 					<a href="#compact-sqlitedb" data-toggle="modal"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Compact</button></a>
 					<a class="info-toggle" style="vertical-align: middle;" data-cmd="info-compactdb" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-compactdb" class="help-block-configs help-block-margin hide">
-						Compact the Sqlite database for best performance. NOTE: The database is compacted periodically by the automatic Maintenance task.<br> 
+						Compact the Sqlite database for best performance. NOTE: The database is compacted periodically by the automatic Maintenance task.<br>
                     </span>
 				</div>
-			</div> 
-			
+			</div>
+
 			<div class="control-group">
 				<label class="control-label">Debug logging</label>
 				<div class="controls">
@@ -529,9 +526,7 @@
 			</div>
 			<div class="modal-body">
 				$_pkg_description
-				<ol style="font-family: Courier; font-size: 12px;">
-				$_pkg_content
-				</ol>
+				$_pkg_relnotes
 			</div>
 			<div class="modal-footer">
 				<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -539,9 +534,6 @@
 		</div>
 
 	</form>
-
-
-
 </div>
 </div>
 
@@ -552,11 +544,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Expand root file system?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_expand_rootfs" value="novalue">Yes</button>
@@ -569,11 +561,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Enable USB boot?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_usbboot" value="novalue">Yes</button>
@@ -586,11 +578,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Clear LocalUI Browser cache?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_browser_cache" value="novalue">Yes</button>
@@ -603,11 +595,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Clear playback history?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_playhistory" value="novalue">Yes</button>
@@ -620,11 +612,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Clear system logs?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_clear_syslogs" value="novalue">Yes</button>
@@ -637,11 +629,11 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		</div>
-		
+
 		<div class="modal-body">
 			<h6>Compact sqlite database?</h6>
 		</div>
-		
+
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="update_compactdb" value="novalue">Yes</button>

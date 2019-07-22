@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC moOde 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -97,7 +97,7 @@ while ($line) {
 // get file list
 $resp = '';
 foreach ($dirs as $dir) {
-	workerLog('Directory: ' . $dir);
+	workerLog('thmcache: directory: ' . $dir);
 	sendMpdCmd($sock, 'listall "' . $dir . '"');
 	$resp .= readMpdResp($sock);
 }

@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC moOde 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -35,7 +35,7 @@ workerLog('worker: - Start');
 $lock = fopen('/run/worker.pid', 'c+');
 if (!flock($lock, LOCK_EX | LOCK_NB)) {
 	workerLog('worker: Already running');
-	exit('Already running');
+	exit("Already running\n");
 }
 
 switch ($pid = pcntl_fork()) {
@@ -84,17 +84,19 @@ else {
 	workerLog('worker: Integrity check ('. $result .')');
 }
 
-// load cfg_system in session vars
+// load cfg_system into session
 playerSession('open', '', '');
-// configure sess_ file permissions
-sysCmd('chown www-data:www-data ' . SESSION_SAVE_PATH . '/sess_*');
-sysCmd('chmod 0666 ' . SESSION_SAVE_PATH . '/sess_*');
-// load cfg_radio in session vars
+// load cfg_radio into session
 $dbh = cfgdb_connect();
 $result = cfgdb_read('cfg_radio', $dbh);
 foreach ($result as $row) {
 	$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
 }
+// set worker ready flag to false
+playerSession('write', 'wrkready', '0');
+workerLog('worker: Session loaded');
+workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
+
 
 // zero out ALSA volume
 //workerLog('worker: Device: (' . $_SESSION['adevname'] . '), Cardnum: (' . $_SESSION['cardnum'] . '), Mixer: (' . $_SESSION['amixname'] . '), Alsavolume: (' . $_SESSION['alsavolume'] . ')');
@@ -115,11 +117,6 @@ if (extMusicRoot() === false) {
 	exit;
 }
 
-// set worker ready flag to false
-playerSession('write', 'wrkready', '0');
-workerLog('worker: Session loaded');
-workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
-
 //
 workerLog('worker: - Platform');
 //
@@ -130,15 +127,13 @@ playerSession('write', 'kernelver', strtok(shell_exec('uname -r'),"\n"));
 playerSession('write', 'procarch', strtok(shell_exec('uname -m'),"\n"));
 $mpdver = explode(" ", strtok(shell_exec('mpd -V | grep "Music Player Daemon"'),"\n"));
 playerSession('write', 'mpdver', $mpdver[3]);
-$lastinstall = checkForUpd('/var/local/www/');
-$_SESSION['pkgdate'] = $lastinstall['pkgdate'];
 $result = sysCmd('cat /etc/debian_version');
 $_SESSION['raspbianver'] = $result[0];
-$_SESSION['moode_release'] = getMoodeRel();
+$_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
 // log platform data
-workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // X.Y yyyy-mm-dd ex: 2.6 2016-06-07
-workerLog('worker: Upd  (' . $_SESSION['pkgdate'] . ')');
+workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd ex: 6.0.1 2016-06-07
+//workerLog('worker: Upd  (' . $_SESSION['pkgdate'] . ')');
 workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Kern (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: MPD  (' . $_SESSION['mpdver'] . ')');
@@ -156,19 +151,24 @@ if (file_exists('/boot/moodecfg.txt')) {
 }
 
 // boot device config
-$result = sysCmd('vcgencmd otp_dump | grep 17:');
-if ($result[0] == '17:3020000a') {
-	$msg = 'USB boot enabled';
-	sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
+$rev = substr($_SESSION['hdwrrev'], 3, 1);
+if ($rev == '3' /*|| $rev == '4'*/) { // 3B/B+/A+, NOTE: 4B USB boot not avail as of 2019-07-13
+	$result = sysCmd('vcgencmd otp_dump | grep 17:');
+	if ($result[0] == '17:3020000a') {
+		$msg = 'USB boot enabled';
+		sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
+	}
+	else {
+		$msg = 'USB boot not enabled yet';
+	}
+	workerLog('worker: ' . $msg);
 }
 else {
-	$msg = 'USB boot not enabled yet';
+	workerLog('worker: USB boot not available');
 }
-workerLog('worker: ' . $msg);
-
 // file system expansion status
 $result = sysCmd("df | grep root | awk '{print $2}'");
-$msg = $result[0] > 3000000 ? 'File system expanded' : 'File system not expanded yet';
+$msg = $result[0] > 3500000 ? 'File system expanded' : 'File system not expanded yet';
 workerLog('worker: ' . $msg);
 // turn on/off hdmi port
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
@@ -204,7 +204,7 @@ if (!empty($eth0)) {
 	workerLog('worker: eth0 exists');
 	// Wait for address (default), setting is on system config
 	if ($_SESSION['eth0chk'] == '1') {
-		$eth0ip = waitForIpAddr('eth0', 10);
+		$eth0ip = waitForIpAddr('eth0', 5);
 	}
 	else {
 		$eth0ip = sysCmd("ip addr list eth0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
@@ -222,11 +222,12 @@ $wlan0ip = '';
 $wlan0 = sysCmd('ip addr list | grep wlan0');
 if (!empty($wlan0[0])) {
 	workerLog('worker: wlan0 exists');
-	workerLog('worker: wifi country (' . $_SESSION['wificountry'] . ')');
+
 	$result = sdbquery('SELECT * FROM cfg_network', $dbh);
+	workerLog('worker: wifi country (' . $result[1]['wlan_country'] . ')');
 
 	 // CASE: no ssid
-	if (empty($result[1]['wlanssid']) || $result[1]['wlanssid'] == 'blank (activates AP mode)') {
+	if (empty($result[1]['wlanssid']) || $result[1]['wlanssid'] == 'None (activates AP mode)') {
 		$ssidblank = true;
 		workerLog('worker: wlan0 SSID is blank');
 		// CASE: no eth0 addr
@@ -250,7 +251,7 @@ if (!empty($wlan0[0])) {
 
 	// wait for ip address
 	if ($_SESSION['apactivated'] == true || $ssidblank == false) {
-		$wlan0ip = waitForIpAddr('wlan0', 10);
+		$wlan0ip = waitForIpAddr('wlan0', 5);
 		// CASE: ssid blank, ap mode activated
 		// CASE: ssid exists, ap mode fall back if no ip address after trying ssid
 		if ($ssidblank == false) {
@@ -260,7 +261,7 @@ if (!empty($wlan0[0])) {
 					workerLog('worker: wlan0 AP mode started');
 					$_SESSION['apactivated'] = true;
 					activateApMode();
-					$wlan0ip = waitForIpAddr('wlan0');
+					$wlan0ip = waitForIpAddr('wlan0', 3);
 				}
 				else {
 					workerLog('worker: eth0 address exists so AP mode not started');
@@ -338,27 +339,6 @@ else {
 	playerSession('write', 'alsavolume', $result[0]); // volume level
 	workerLog('worker: Hdwr volume controller exists');
 }
-
-/* DEPRECATE
-// - No need to set them here since they persist on the chip
-// - Added the second arg to cfgChipOptions() as a bug fix
-// configure options for Burr Brown chips, r45d
-$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
-$chips = array(
-'Burr Brown PCM5121',
-'Burr Brown PCM5122',
-'Burr Brown PCM5122 (PCM5121)',
-'Burr Brown PCM5122, PCM1861 ADC',
-'Burr Brown PCM5122, Wolfson WM8804',
-'Burr Brown PCM5142',
-'Burr Brown PCM5242',
-'Burr Brown TAS5756',
-'Burr Brown TAS5756M');
-if (in_array($result[0]['dacchip'], $chips) && !empty($result[0]['chipoptions'])) {
-	cfgChipOptions($result[0]['chipoptions'], 'burr_brown_pcm5');
-	workerLog('worker: Chip options (' . $result[0]['dacchip'] . ')');
-}
-*/
 
 // configure Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
@@ -648,7 +628,7 @@ $inpactive = '0';
 $mpd_dbupd_initiated = '0';
 
 $maint_interval = $_SESSION['maint_interval'];
-workerLog('worker: Maintenance interval (' . $_SESSION['maint_interval'] . ')');
+workerLog('worker: Maintenance interval (' . ($_SESSION['maint_interval'] / 3600) . ' hrs)');
 
 $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
@@ -667,12 +647,16 @@ $_SESSION['w_active'] = 0;
 // close session
 session_write_close();
 
+// ensure correct permissions on the session file
+phpSetPermissions();
+
 //
 workerLog('worker: Ready');
 //
 
-// update ready flag
+// update worker ready flag
 playerSession('write', 'wrkready', '1');
+
 
 //
 // BEGIN WORKER JOB LOOP

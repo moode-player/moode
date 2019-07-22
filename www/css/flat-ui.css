@@ -16,17 +16,10 @@
  * Moode Audio Player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
- * 2014-08-23 1.0 TC initial rewrite
- * - theme colors
- * - disable btn hover highlight by setting hover background same as btn background
- * - remove text decoration from "a {"
- *
- * 2016-12-22 TC comment out *element legacy IE7 stuff that causes warnings
- * 2017-04-12 3.5 TC moodeOS 2.0 
- * 2017-07-31 3.8 TC reduce brightness of .btn text
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
- 
+
 @font-face {
   font-family: 'Lato';
   font-style: normal;
@@ -55,7 +48,7 @@
 body {
   color: #222222;
   font: 14px/1.231 "Lato", sans-serif;
-  --toggleon:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23c0392b' cx='14' cy='14.5' r='11.5'/></svg>");
+  --toggleon:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23555555' cx='14' cy='14.5' r='11.5'/></svg>"); /* was fill='%23c0392b' Alizarin */
 }
 
 a {
@@ -2418,4 +2411,3 @@ body.vjs-full-window {
 
 .mll, .mhl, .mal {
   margin-left: 20px; }
-

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC moOde 5.4
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 -->
@@ -77,6 +77,7 @@
 			versioned_script('js/jquery.placeholder.js');
 			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
 			versioned_script('js/application.js');
+            versioned_script('js/notify.js');
 			versioned_script('js/scripts-configs.js');
 		}
 	?>
