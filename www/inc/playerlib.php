@@ -2571,38 +2571,35 @@ function autoConfig($cfgfile) {
 	workerLog('worker: cfgfile removed');
 }
 
-// check for available software update
+// Check for available software update (ex: update-r601.txt)
+// $path = http: //moodeaudio.org/downloads/ or /var/local/www/
 function checkForUpd($path) {
-	// $path
-	// - http: //moodeaudio.org/downloads/
-	// - /var/local/www/
-
-	// check for update package ex: update-r26.txt
-	if (false === ($tmp = file_get_contents($path . 'update-' . getPkgId() . '.txt'))) {
-		$result['pkgdate'] = 'None';
+	if (false === ($pkgfile_contents = file_get_contents($path . 'update-' . getPkgId() . '.txt'))) {
+		$result['Date'] = 'None';
 	}
 	else {
-		$result = parseDelimFile($tmp, '=');
+		$result = parseDelimFile($pkgfile_contents, ': ');
 	}
 
 	return $result;
 }
 
-// get package id (either -test or '')
+// Get the id of the update package.
+// This allows appending a suffix to the id when testing packages. Ex: r601-test1
 function getPkgId () {
-	$result = sdbquery("select value from cfg_system where param='pkgid'", cfgdb_connect());
-	return getMoodeRel() . $result[0]['value'];
+	$result = sdbquery("select value from cfg_system where param='pkgid_suffix'", cfgdb_connect());
+	return $_SESSION['moode_release'] . $result[0]['value'];
 }
 
-// get moode release version and date
+// Get moode release
 function getMoodeRel($options = '') {
+	// Verbose: major.minor.patch yyyy-mm-dd ex: 6.0.1 2019-08-07
 	if ($options === 'verbose') {
-		// major.minor yyyy-mm-dd ex: 2.6 2016-06-07
 		$result = sysCmd("awk '/Release: /{print $2 " . '" "' . " $3;}' /var/www/footer.php | sed 's/,//'");
 		return $result[0];
 	}
+	// Compact: rNNN ex: r601
 	else {
-		// rXY ex: r26c
 		$result = sysCmd("awk '/Release: /{print $2;}' /var/www/footer.php | sed 's/,//'");
 		$str = 'r' . str_replace('.', '', $result[0]);
 		return $str;
