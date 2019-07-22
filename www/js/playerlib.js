@@ -3011,7 +3011,7 @@ $('.context-menu a').click(function(e) {
 
     // about
     else if ($(this).data('cmd') == 'aboutmoode') {
-		$('#sys-upd-pkgdate').text(SESSION.json['pkgdate']);
+		//$('#sys-upd-pkgdate').text(SESSION.json['pkgdate']);
 		$('#sys-raspbian-ver').text(SESSION.json['raspbianver']);
 		$('#sys-kernel-ver').text(SESSION.json['kernelver']);
 		$('#sys-processor-arch').text(SESSION.json['procarch']);
@@ -3150,7 +3150,7 @@ $('.btn-appearance-update').click(function(e){
 	}
 	if (accentColorChange == true) {
 		var accentColor = themeToColors(SESSION.json['accent_color']);
-		var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor + "' cx='14' cy='14.5' r='11.5'/></svg>";
+		var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
 		var test = getCSSRule('.toggle .toggle-radio');
 		test.style.backgroundImage='url("' + radio1 + '")';
 		$('.playbackknob').trigger('configure',{"fgColor":accentColor});
