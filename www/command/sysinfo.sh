@@ -27,7 +27,7 @@
 
 SYSTEM_PARAMETERS() {
 	echo -e "\n\t  S Y S T E M    P A R A M E T E R S  "
-	echo -e "\n\tmoOde release\t\t= $mooderel\c"
+	echo -e "\n\tmoOde release\t\t= $moode_rel\c"
 	echo -e "\n\tRaspbian OS\t\t= $RASPBIANVER\c"
 	echo -e "\n\tLinux kernel\t\t= $KERNEL\c"
 	echo -e "\n\tPi model\t\t= $hdwrrev\c"
@@ -348,8 +348,7 @@ HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
 WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
 
 # Moode release
-mooderel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
-moodeupd="$(awk '/worker: Upd  /{print $5;}' /var/log/moode.log | tr -d '()')"
+moode_rel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
 
 # Moode SQL data
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -490,7 +489,7 @@ toggle_song=${arr[59]}
 hdmiport=${arr[61]}
 cpugov=${arr[62]}
 [[ "${arr[63]}" = "1" ]] && pairing_agent="On" || pairing_agent="Off"
-pkgid=${arr[64]}
+pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
 [[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
