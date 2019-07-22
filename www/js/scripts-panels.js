@@ -233,6 +233,12 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
 		$('.tag-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
+        if (SESSION.json['show_genres'] == 'Yes') {
+            $('#top-columns').removeClass('nogenre');
+        }
+        else {
+            $('#top-columns').addClass('nogenre');
+        }
 		setTimeout(function() {
 			$('img.lazy-tagview').lazyload({
 			    container: $('#lib-album')
@@ -300,7 +306,13 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.tag-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
 		$('#top-columns, #bottom-row').css('display', 'flex');
-
+        if (SESSION.json['show_genres'] == 'Yes') {
+            $('#top-columns').removeClass('nogenre');
+        }
+        else {
+            $('#top-columns').addClass('nogenre');
+        }
+        
 		currentView = 'tag';
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
 

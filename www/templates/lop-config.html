@@ -62,6 +62,19 @@
 			</div>
 
 			<div class="control-group">
+				<label class="control-label" for="show_genres">Show Genres column</label>
+				<div class="controls">
+					<select id="show_genres" class="input-large" name="config[show_genres]">
+						$_select[show_genres]
+					</select>
+					<a class="info-toggle" data-cmd="info_show_genres" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_show_genres" class="help-block-configs help-block-margin hide">
+						Show the Genres column in Library Tag view.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
 				<label class="control-label" for="ignore_articles">Ignore Articles</label>
 				<div class="controls">
 					<input class="input-large" type="text" pattern="^\S*$" id="ignore_articles" name="config[ignore_articles]" value="$_select[ignore_articles]">
