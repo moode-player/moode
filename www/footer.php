@@ -32,7 +32,6 @@
 			<h4>Release Information</h4>
 			<ul>
 				<li>Release: 6.0.0 2019-MM-DD <a class="moode-about-link1" href="./relnotes.txt" target="_blank">View relnotes</a></li>
-				<li>Update: (<span id="sys-upd-pkgdate"></span>)</li>
 				<li>Setup guide: <a class="moode-about-link1" href="./setup.txt" target="_blank">View guide</a></li>
 				<li>Coding:	Tim Curtis &copy; 2014 <a class="moode-about-link1" href="http://moodeaudio.org" target="_blank">Moode Audio</a>, <a class="moode-about-link1" href="https://twitter.com/MoodeAudio" target="_blank">Twitter</a></li>
 				<li>Contributors: <a class="moode-about-link1" href="./CONTRIBS.html" target="_blank">View contributors</a></li>
