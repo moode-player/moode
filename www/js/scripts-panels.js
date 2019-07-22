@@ -82,7 +82,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	accentColor = themeToColors(SESSION.json['accent_color']);
 	document.body.style.setProperty('--themetext', themeMcolor);
-	var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor + "' cx='14' cy='14.5' r='11.5'/></svg>";
+	var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
 	var test = getCSSRule('.toggle .toggle-radio');
 	test.style.backgroundImage='url("' + radio1 + '")';
 	adaptColor = themeColor;
