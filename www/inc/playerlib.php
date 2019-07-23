@@ -197,7 +197,8 @@ if (phpVer() == '5.3') {
 	function session_status() {
 		if (session_id()) {
 			return 1;
-		} else {
+		}
+		else {
 			return 2;
 		}
 	}
@@ -424,14 +425,13 @@ function genLibrary($flat) {
 function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
-	// use Artist or AlbumAetist for the Artist column
-	$libartist = $_SESSION['libartistcol'];
+	$lib_artist = $_SESSION['library_artist_col']; // Artist, ArtistSort, AlbumArtist or AlbumArtistSort
+	$lib_album = $_SESSION['library_album_col']; // Album or AlbumSort
 
 	foreach ($flat as $flatData) {
 		$genre = utf8rep($flatData['Genre'] ? $flatData['Genre'] : 'Unknown');
  		$artist = utf8rep($flatData[$libartist] ? $flatData[$libartist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown'));
- 		$album = utf8rep($flatData['Album'] ? $flatData['Album'] : 'Unknown');
-		//$album = $flatData['AlbumSort'] ? $flatData['AlbumSort'] : ($flatData['Album'] ? $flatData['Album'] :'Unknown'); // albumsort tag if present
+		$album = utf8rep($flatData[$lib_album] ? $flatData[$lib_album] : ($flatData['Album'] ? $flatData['Album'] : 'Unknown'));
 
 		if (!$lib[$genre]) {$lib[$genre] = array();}
 		if (!$lib[$genre][$artist]) {$lib[$genre][$artist] = array();}
@@ -1028,10 +1028,12 @@ function playerSession($action, $var = '', $value = '') {
 
 // TODO: new session management
 function phpSetPermissions($max_loops = 3, $sleep_time = 2) {
-	// Make multiple attempts because one attempt often does not work and results in the
-	// permissions being reset back to -rw-------,root,root by some unknown PHP process.
+	$session_file = SESSION_SAVE_PATH . '/sess_' . $_SESSION['sessionid'];
+
+	// Retries to avoid permissions being reset back to -rw-------,root,root by ???
+	// We also check in watchdog.sh
 	for ($i = 0; $i < $max_loops; $i++) {
-		$result = sysCmd('ls -l /run/php/sess_' . $_SESSION['sessionid'] . " | awk '{print $1 \",\" $3 \",\" $4;}'");
+		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
 		if ($result[0] == '-rw-rw-rw-,www-data,www-data') {
 			workerLog('worker: Session permissions (OK)');
@@ -1039,18 +1041,18 @@ function phpSetPermissions($max_loops = 3, $sleep_time = 2) {
 		}
 		else {
 			//workerLog('worker: Session permissions (' . ($i + 1) . ')');
-			// twice for robustness
-			sysCmd('chown www-data:www-data ' . SESSION_SAVE_PATH . '/sess_*');
-			sysCmd('chmod 0666 ' . SESSION_SAVE_PATH . '/sess_*');
+			// Twice for robustness
+			sysCmd('chown www-data:www-data ' . $session_file);
+			sysCmd('chmod 0666 ' . $session_file);
 			sleep($sleep_time);
-			sysCmd('chown www-data:www-data ' . SESSION_SAVE_PATH . '/sess_*');
-			sysCmd('chmod 0666 ' . SESSION_SAVE_PATH . '/sess_*');
+			sysCmd('chown www-data:www-data ' . $session_file);
+			sysCmd('chmod 0666 ' . $session_file);
 		}
 	}
 
 	// check for failure case on the way out
 	if ($i == $max_loops) {
-		$result = sysCmd('ls -l /run/php/sess_' . $_SESSION['sessionid'] . " | awk '{print $1 \",\" $3 \",\" $4;}'");
+		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
 		if ($result[0] != '-rw-rw-rw-,www-data,www-data') {
 			workerLog('worker: Session permissions (Failed after ' . $max_loops . 'tries)');
@@ -1354,7 +1356,7 @@ function cfgdb_update($table, $dbh, $key = '', $value) {
 				"', secdns='" . $value['secdns'] .
 				"', wlanssid='" . SQLite3::escapeString($value['wlanssid']) .
 				"', wlansec='" . $value['wlansec'] .
-				"', wlanpwd='" . SQLite3::escapeString($value['wlanpwd']) .
+				"', wlanpwd='" . $value['wlanpwd'] .
 				"', wlan_psk='" . $value['wlan_psk'] .
 				"', wlan_country='" . $value['wlan_country'] .
 				"', wlan_channel='" . $value['wlan_channel'] .
