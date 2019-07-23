@@ -167,8 +167,7 @@ else {
 }
 $_wlan0sec .= "<option value=\"wpa\"" . ($netcfg[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
 $_wlan0sec .= "<option value=\"none\"" . ($netcfg[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
-//$_wlan0pwd = htmlentities(base64_decode($netcfg[1]['wlanpwd']));
-$_wlan0pwd = $netcfg[1]['wlanpwd'];
+$_wlan0pwd = $netcfg[1]['wlanpwd']; // old: htmlentities($netcfg[1]['wlanpwd'])
 
 // wifi country code
 $zonelist = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
