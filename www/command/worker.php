@@ -634,10 +634,6 @@ $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
 workerLog('worker: Screen saver activation (' . $_SESSION['scnsaver_timeout'] . ')');
 
-// start watchdog monitor
-sysCmd('/var/www/command/watchdog.sh > /dev/null 2>&1 &');
-workerLog('worker: Watchdog started');
-
 // inizialize worker job queue
 $_SESSION['w_queue'] = '';
 $_SESSION['w_queueargs'] = '';
@@ -649,6 +645,10 @@ session_write_close();
 
 // ensure correct permissions on the session file
 phpSetPermissions();
+
+// start watchdog monitor
+sysCmd('/var/www/command/watchdog.sh > /dev/null 2>&1 &');
+workerLog('worker: Watchdog started');
 
 //
 workerLog('worker: Ready');
