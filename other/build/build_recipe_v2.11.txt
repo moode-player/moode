@@ -15,7 +15,7 @@
 # and System Integrators and provide a recipe for making
 # a custom OS for running moOde audio player.
 #
-# NOTE: This recipe is based on Buster Lite 2019-06-20
+# NOTE: This recipe is based on Buster Lite 2019-07-10
 #
 # Unless otherwise noted or if a command requires user
 # interaction, groups of commands can be run in batch.
@@ -37,14 +37,14 @@
 // OPTION 1: Using Raspbian Linux (Raspberry Pi)
 ////////////////////////////////////////////////////////////////
 
-1. Download Raspbian Buster Lite 2019-06-20
-wget http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-06-24/2019-06-20-raspbian-buster-lite.zip
-sudo unzip 2019-06-20-raspbian-buster-lite.img
-sudo rm 2019-06-20-raspbian-buster-lite.zip
+1. Download Raspbian Buster Lite 2019-07-10
+wget http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip
+sudo unzip 2019-07-10-raspbian-buster-lite.img
+sudo rm 2019-07-10-raspbian-buster-lite.zip
 
 2. Mount the boot and root partitions
 LOOPDEV=$(sudo losetup -f)
-sudo losetup -P $LOOPDEV 2019-06-20-raspbian-buster-lite.img
+sudo losetup -P $LOOPDEV 2019-07-10-raspbian-buster-lite.img
 sudo mkdir /mnt/p1
 sudo mkdir /mnt/p2
 sudo mount -t vfat "$LOOPDEV"p1 /mnt/p1
@@ -93,8 +93,8 @@ sudo poweroff
 // OPTION 2: Using Windows or Mac computer
 ////////////////////////////////////////////////////////////////
 
-1. Download Raspbian Buster Lite 2019-06-20
-http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-06-24/2019-06-20-raspbian-buster-lite.zip
+1. Download Raspbian Buster Lite 2019-07-10
+http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-07-12/2019-07-10-raspbian-buster-lite.zip
 
 2. Unzip and install the .img file to an SD Card
 https://www.raspberrypi.org/documentation/installation/installing-images/
@@ -309,11 +309,10 @@ sudo reboot
 1. WiringPi
 
 # Install 2.52 from deb package
-sudo cp ./moode/other/wiringpi/wiringPi-latest.deb ./
+sudo cp ./moode/other/wiringpi/wiringpi-latest.deb ./
 sudo dpkg -i wiringpi-latest.deb
 
-cd ~/
-sudo rm -rf ./wiringPi*
+sudo rm ./wiringpi-latest.deb
 
 2. Rotenc
 
