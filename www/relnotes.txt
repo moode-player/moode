@@ -29,6 +29,7 @@ Updates
 - UPD: Bump to SQLite 3.27.2
 - UPD: Bump to MiniDLNA 1.2.1
 - UPD: Bump to ALSA 1.1.8
+- UPD: Bump to WiringPi 2.52
 - UPD: Add rev codes for Pi-4B 1/2/4GB models
 - UPD: Add new sort tag options for Library
 - UPD: Add clock radio "after stop" Actions
@@ -54,6 +55,7 @@ Bug fixes
 - FIX: Lazyload not started after search in Album view
 - FIX: Missing href in Bluetooth Active overlay
 - FIX: Wrong default fill color for radio buttons
+- FIX: JSON parse errors being unnecessarily displayed
 
 ########################################################
 //
