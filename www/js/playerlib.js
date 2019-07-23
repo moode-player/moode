@@ -287,13 +287,17 @@ function engineMpd() {
 
 				engineMpd();
 			}
-			// error of some sort, r45b streamline
+			// error of some sort
 			else {
 				debugLog('engineMpd: success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
 
-				// JSON encoding errors @ohinckel https: //github.com/moode-player/moode/pull/14/files
+				// JSON parse errors @ohinckel https: //github.com/moode-player/moode/pull/14/files
 				if (typeof(MPD.json['error']) == 'object') {
-					notify('mpderror', 'JSON encode error: ' + MPD.json['error']['message'] + ' (' + MPD.json['error']['code'] + ')');
+                    var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
+                    // This particular EOF error occurs when client is simply trying to reconnect
+                    if (MPD.json['error']['message'] != 'JSON Parse error: Unexpected EOF') {
+                        notify('mpderror', MPD.json['error']['message'] + errorCode);
+                    }
 				}
 				// MPD output --> Bluetooth but no actual BT connection
 				else if (MPD.json['error'] == 'Failed to open "ALSA bluetooth" (alsa); Failed to open ALSA device "btstream": No such device') {
