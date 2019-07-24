@@ -41,6 +41,7 @@ Updates
 - UPD: Improve Audioinfo layout and content
 - UPD: Improve System info layout and content
 - UPD: Improve layout of config screens
+- UPD: Improve auto-config process
 - UPD: Improve in-place update process
 - UPD: SwissGroove radio url
 
