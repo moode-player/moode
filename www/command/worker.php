@@ -141,18 +141,6 @@ workerLog('worker: Hdwr (' . $_SESSION['hdwrrev'] . ')');
 workerLog('worker: Arch (' . $_SESSION['procarch'] . ')');
 workerLog('worker: Gov  (' . $_SESSION['cpugov'] . ')');
 
-// Auto-configure if indicated
-if (file_exists('/boot/moodecfg.txt')) {
-	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
-	autoConfig('/boot/moodecfg.txt');
-
-	session_write_close();
-	sysCmd('sync');
-
-	autoCfgLog('autocfg: System rebooted');
-	sysCmd('reboot');
-}
-
 // boot device config
 $rev = substr($_SESSION['hdwrrev'], 3, 1);
 if ($rev == '3' /*|| $rev == '4'*/) { // 3B/B+/A+, NOTE: 4B USB boot not avail as of 2019-07-13
@@ -652,6 +640,15 @@ phpSetPermissions();
 // start watchdog monitor
 sysCmd('/var/www/command/watchdog.sh > /dev/null 2>&1 &');
 workerLog('worker: Watchdog started');
+
+// Auto-configure if indicated
+if (file_exists('/boot/moodecfg.txt')) {
+	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
+	autoConfig('/boot/moodecfg.txt');
+	sysCmd('sync');
+	autoCfgLog('autocfg: System rebooted');
+	sysCmd('reboot');
+}
 
 //
 workerLog('worker: Ready');
