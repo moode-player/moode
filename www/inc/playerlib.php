@@ -27,7 +27,8 @@ define('MPD_RESPONSE_ERR', 'ACK');
 define('MPD_RESPONSE_OK',  'OK');
 define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
 define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
-define('MOODELOG', '/var/log/moode.log');
+define('MOODE_LOG', '/var/log/moode.log');
+define('AUTOCFG_LOG', '/home/pi/autocfg.log');
 define('PORT_FILE', '/tmp/portfile');
 define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
 define('LIBCACHE_JSON', '/var/local/www/libcache.json');
@@ -36,7 +37,7 @@ define('SESSION_SAVE_PATH', '/run/php');
 
 error_reporting(E_ERROR);
 
-// features availability bitmask
+// Features availability bitmask
 const FEAT_RESERVED =	 0b0000000000000001; //     1
 const FEAT_AIRPLAY =	 0b0000000000000010; //     2
 const FEAT_MINIDLNA =	 0b0000000000000100; //     4
@@ -52,29 +53,35 @@ const FEAT_SPOTIFY =	 0b0000100000000000; //  2048
 const FEAT_GPIO =		 0b0001000000000000; //  4096
 const FEAT_DJMOUNT =	 0b0010000000000000; //  8192
 
-// mirror for footer.php
+// Mirror for footer.php
 $FEAT_AIRPLAY =		0b0000000000000010;
 $FEAT_SQUEEZELITE =	0b0000000000010000;
 $FEAT_UPMPDCLI = 	0b0000000000100000;
 $FEAT_SOURCESEL = 	0b0000001000000000;
 $FEAT_SPOTIFY =		0b0000100000000000;
 
-// worker message logger
+// Worker message logger
 function workerLog($msg, $mode = 'a') {
-	$mode = isset($mode) ? $mode : 'a';
-	$fh = fopen(MOODELOG, $mode);
+	$fh = fopen(MOODE_LOG, $mode);
 	fwrite($fh, date('Ymd His ') . $msg . "\n");
 	fclose($fh);
 }
 
-// debug message logger
+// Auto-config message logger
+function autoCfgLog($msg, $mode = 'a') {
+	$fh = fopen(AUTOCFG_LOG, $mode);
+	fwrite($fh, date('Ymd His ') . $msg . "\n");
+	fclose($fh);
+}
+
+// Debug message logger
 function debugLog($msg, $mode = 'a') {
 	// logging off
 	if (!isset($_SESSION['debuglog']) || $_SESSION['debuglog'] == '0') {
 		return;
 	}
 
-	$fh = fopen(MOODELOG, $mode);
+	$fh = fopen(MOODE_LOG, $mode);
 	fwrite($fh, date('Ymd His ') . $msg . "\n");
 	fclose($fh);
 }
@@ -2453,10 +2460,11 @@ function cfgAudioScrobbler($cfg) {
 	fclose($fp);
 }
 
-// auto-configure settings at worker startup
+// Auto-configure settings at worker startup
 function autoConfig($cfgfile) {
-	$contents = file_get_contents($cfgfile);
+	autoCfgLog('autocfg: Auto-configure initiated');
 
+	$contents = file_get_contents($cfgfile);
 	$autocfg = array();
 	$line = strtok($contents, "\n");
 
@@ -2471,54 +2479,51 @@ function autoConfig($cfgfile) {
 		$line = strtok("\n");
 	}
 
-	// [names]
+	autoCfgLog('autocfg: Configuration file parsed');
 
-	// host name
+	//
+	autoCfgLog('autocfg: - Names');
+	//
+
 	sysCmd('/var/www/command/util.sh chg-name host "moode" ' . '"' . $autocfg['hostname'] . '"');
 	playerSession('write', 'hostname', $autocfg['hostname']);
-	workerLog('worker: hostname (' . $autocfg['hostname'] . ')');
 
-	// browser title
 	sysCmd('/var/www/command/util.sh chg-name browsertitle "moOde Player" ' . '"' . $autocfg['browsertitle'] . '"');
 	playerSession('write', 'browsertitle', $autocfg['browsertitle']);
-	workerLog('worker: browsertitle (' . $autocfg['browsertitle'] . ')');
 
-	// bluetooth name
 	sysCmd('/var/www/command/util.sh chg-name bluetooth "Moode Bluetooth" ' . '"' . $autocfg['bluetoothname'] . '"');
 	playerSession('write', 'btname', $autocfg['bluetoothname']);
-	workerLog('worker: btname (' . $autocfg['bluetoothname'] . ')');
 
-	// airplay name
 	playerSession('write', 'airplayname', $autocfg['airplayname']);
-	workerLog('worker: airplayname (' . $autocfg['airplayname'] . ')');
-
-	// spotify name
 	playerSession('write', 'spotifyname', $autocfg['spotifyname']);
-	workerLog('worker: spotifyname (' . $autocfg['spotifyname'] . ')');
 
-	// squeezelite name
 	$dbh = cfgdb_connect();
 	$result = sdbquery('update cfg_sl set value=' . "'" . $autocfg['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
 	sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $autocfg['squeezelitename'] . '"');
 
-	// upnp name
 	sysCmd('/var/www/command/util.sh chg-name upnp "Moode UPNP" ' . '"' . $autocfg['upnpname'] . '"');
 	playerSession('write', 'upnpname', $autocfg['upnpname']);
-	workerLog('worker: upnpname (' . $autocfg['upnpname'] . ')');
 
-	// dlna name
 	sysCmd('/var/www/command/util.sh chg-name dlna "Moode DLNA" ' . '"' . $autocfg['dlnaname'] . '"');
 	playerSession('write', 'dlnaname', $autocfg['dlnaname']);
-	workerLog('worker: dlnaname (' . $autocfg['dlnaname'] . ')');
 
-	// mpd zeroconf name
 	sysCmd('/var/www/command/util.sh chg-name mpdzeroconf ' . "'" . '"Moode MPD"' . "'" . ' ' . "'" . '"' . $autocfg['mpdzeroconf'] . '"' . "'");
 	cfgdb_update('cfg_mpd', cfgdb_connect(), 'zeroconf_name', $autocfg['mpdzeroconf']);
-	workerLog('worker: mpdzeroconf (' . $autocfg['mpdzeroconf'] . ')');
 
-	// [network]
+	autoCfgLog('autocfg: Host name: ' . $autocfg['hostname']);
+	autoCfgLog('autocfg: Browser title: ' . $autocfg['browsertitle']);
+	autoCfgLog('autocfg: Bluetooth: ' . $autocfg['bluetoothname']);
+	autoCfgLog('autocfg: Airplay: ' . $autocfg['airplayname']);
+	autoCfgLog('autocfg: Spotify: ' . $autocfg['spotifyname']);
+	autoCfgLog('autocfg: Squeezelite: ' . $autocfg['squeezelitename']);
+	autoCfgLog('autocfg: UPnP: ' . $autocfg['upnpname']);
+	autoCfgLog('autocfg: DLNA: ' . $autocfg['dlnaname']);
+	autoCfgLog('autocfg: MPD zeroconf: ' . $autocfg['mpdzeroconf']);
 
-	// wlan0
+	//
+	autoCfgLog('autocfg: - Network (wlan0)');
+	//
+
 	$array = explode('=', sysCmd('wpa_passphrase "' . $autocfg['wlanssid'] . '" "' . $autocfg['wlanpwd'] . '"')[3]);
 	$psk = $array[1];
 	$netcfg = sdbquery('select * from cfg_network', $dbh);
@@ -2529,12 +2534,16 @@ function autoConfig($cfgfile) {
 	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 	cfgNetIfaces();
 
-	workerLog('worker: wlanssid (' . $autocfg['wlanssid'] . ')');
-	workerLog('worker: wlansec (' . $autocfg['wlansec'] . ')');
-	workerLog('worker: wlanpwd (' . $autocfg['wlanpwd'] . ')');
-	workerLog('worker: wlancountry (' . $autocfg['wlancountry'] . ')');
+	autoCfgLog('autocfg: SSID: ' . $autocfg['wlanssid']);
+	autoCfgLog('autocfg: Security: ' . $autocfg['wlansec']);
+	autoCfgLog('autocfg: Password: ' . $autocfg['wlanpwd']);
+	autoCfgLog('autocfg: PSK: ' . $psk);
+	autoCfgLog('autocfg: Country: ' . $autocfg['wlancountry']);
 
-	// apd0
+	//
+	autoCfgLog('autocfg: - Network (apd0)');
+	//
+
 	$array = explode('=', sysCmd('wpa_passphrase "' . $autocfg['apdssid'] . '" "' . $autocfg['apdpwd'] . '"')[3]);
 	$psk = $array[1];
 	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
@@ -2543,42 +2552,39 @@ function autoConfig($cfgfile) {
 	cfgdb_update('cfg_network', $dbh, 'apd0', $value);
 	cfgHostApd();
 
-	workerLog('worker: apdssid (' . $autocfg['apdssid'] . ')');
-	workerLog('worker: apdchan (' . $autocfg['apdchan'] . ')');
-	workerLog('worker: apdpwd (' . $autocfg['apdpwd'] . ')');
+	autoCfgLog('autocfg: SSID: ' . $autocfg['apdssid']);
+	autoCfgLog('autocfg: Password: ' . $autocfg['apdpwd']);
+	autoCfgLog('autocfg: PSK: ' . $psk);
+	autoCfgLog('autocfg: Channel: ' . $autocfg['apdchan']);
 
-	// [services]
+	//
+	autoCfgLog('autocfg: - Services');
+	//
 
-	// airplay receiver
 	playerSession('write', 'airplaysvc', $autocfg['airplaysvc']);
-	workerLog('worker: airplayrcvr (' . $autocfg['airplaysvc'] . ')');
-
-	// upnp renderer
 	playerSession('write', 'upnpsvc', $autocfg['upnpsvc']);
-	workerLog('worker: upnprenderer (' . $autocfg['upnpsvc'] . ')');
-
-	// dlna server
 	playerSession('write', 'dlnasvc', $autocfg['dlnasvc']);
-	workerLog('worker: dlnaserver (' . $autocfg['dlnasvc'] . ')');
 
-	// [other]
+	autoCfgLog('autocfg: Airplay: ' . ($autocfg['airplaysvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: UPnP: ' . ($autocfg['upnpsvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: DLNA: ' . ($autocfg['dlnasvc'] == '0' ? 'Off' : 'On'));
 
-	// timezone
+	//
+	autoCfgLog('autocfg: - Other');
+	//
+
 	sysCmd('/var/www/command/util.sh set-timezone ' . $autocfg['timezone']);
 	playerSession('write', 'timezone', $autocfg['timezone']);
-	workerLog('worker: timezone (' . $autocfg['timezone'] . ')');
-
-	// theme name, r45e
 	playerSession('write', 'themename', $autocfg['themename']);
-	workerLog('worker: theme name (' . $autocfg['themename'] . ')');
-
-	// accent color, r45e
 	playerSession('write', 'accent_color', $autocfg['accentcolor']);
-	workerLog('worker: accent color (' . $autocfg['accentcolor'] . ')');
 
-	// remove config file
+	autoCfgLog('autocfg: Time zone: ' . $autocfg['timezone']);
+	autoCfgLog('autocfg: Theme name: ' . $autocfg['themename']);
+	autoCfgLog('autocfg: Accent color: ' . $autocfg['accentcolor']);
+
 	sysCmd('rm ' . $cfgfile);
-	workerLog('worker: cfgfile removed');
+	autoCfgLog('autocfg: Configuration file deleted');
+	autoCfgLog('autocfg: Auto-configure complete');
 }
 
 // Check for available software update (ex: update-r601.txt)
