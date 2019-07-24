@@ -27,7 +27,7 @@
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
 //
-sysCmd('truncate ' . MOODELOG . ' --size 0');
+sysCmd('truncate ' . MOODE_LOG . ' --size 0');
 workerLog('worker: - Start');
 //
 
@@ -133,7 +133,6 @@ $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
 // log platform data
 workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd ex: 6.0.1 2016-06-07
-//workerLog('worker: Upd  (' . $_SESSION['pkgdate'] . ')');
 workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Kern (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: MPD  (' . $_SESSION['mpdver'] . ')');
@@ -142,12 +141,16 @@ workerLog('worker: Hdwr (' . $_SESSION['hdwrrev'] . ')');
 workerLog('worker: Arch (' . $_SESSION['procarch'] . ')');
 workerLog('worker: Gov  (' . $_SESSION['cpugov'] . ')');
 
-// auto-configure if indicated
+// Auto-configure if indicated
 if (file_exists('/boot/moodecfg.txt')) {
-	workerLog('worker: Auto-configure initiated');
+	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 	autoConfig('/boot/moodecfg.txt');
+
+	session_write_close();
+	sysCmd('sync');
+
+	autoCfgLog('autocfg: System rebooted');
 	sysCmd('reboot');
-	//workerLog('worker: Auto-configure done, reboot to make changes effective');
 }
 
 // boot device config
@@ -179,7 +182,7 @@ workerLog('worker: HDMI port ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
 if (!file_exists('/var/local/www/currentsong.txt')) {sysCmd('touch /var/local/www/currentsong.txt');}
 if (!file_exists(LIBCACHE_JSON)) {sysCmd('touch ' . LIBCACHE_JSON);}
 if (!file_exists('/var/local/www/sysinfo.txt')) {sysCmd('touch /var/local/www/sysinfo.txt');}
-if (!file_exists(MOODELOG)) {sysCmd('touch ' . MOODELOG);}
+if (!file_exists(MOODE_LOG)) {sysCmd('touch ' . MOODE_LOG);}
 if (!file_exists(THMCACHE_DIR)) {sysCmd('mkdir ' . THMCACHE_DIR);}
 if (!file_exists('/var/local/www/playhistory.log')) {
 	sysCmd('touch /var/local/www/playhistory.log');
@@ -191,7 +194,7 @@ sysCmd('chmod 0777 /var/local/www/currentsong.txt');
 sysCmd('chmod 0777 ' . LIBCACHE_JSON);
 sysCmd('chmod 0777 /var/local/www/playhistory.log');
 sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
-sysCmd('chmod 0666 ' . MOODELOG);
+sysCmd('chmod 0666 ' . MOODE_LOG);
 workerLog('worker: File check ok');
 
 //
