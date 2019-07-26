@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// format curve values
 	for($i = 0; $i < 9; $i++) {
 		$curve_values .= $_POST['freq' . ($i + 1)] . ',';
 	}
 	$curve_values .= $_POST['freq10'];
-workerLog($curve_values);
+	//workerLog($curve_values);
 
 	// add or update
 	$result = sdbquery("SELECT id FROM cfg_eqalsa WHERE curve_name='" . $_POST['curve_name'] . "'", $dbh);
@@ -76,7 +76,7 @@ if (isset($_POST['newcurvename'])) {
 	$_search_curve = 'Flat';
 }
 elseif (isset($_POST['rmcurve'])) {
-	$result = sdbquery("DELETE FROM cfg_eqalsa WHERE curve_name='" . $_POST['rm-curve'] . "'", $dbh);
+	$result = sdbquery("DELETE FROM cfg_eqalsa WHERE curve_name='" . $_GET['curve'] . "'", $dbh);
 	$_search_curve = 'Flat';
 	$_SESSION['notify']['title'] = 'Curve removed';
 }
@@ -88,7 +88,7 @@ else {
 }
 
 session_write_close();
-	
+
 // load curve list
 $_selected_curve = 'Flat';
 $curveList = sdbquery('SELECT curve_name FROM cfg_eqalsa', $dbh);
@@ -106,9 +106,9 @@ if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
 }
 
 // set control states
-$_disable_play = $_SESSION['alsaequal'] == 'Off' ? 'disabled' : ''; 
+$_disable_play = $_SESSION['alsaequal'] == 'Off' ? 'disabled' : '';
 $_disable_rm = $_selected_curve == 'Flat' ? 'disabled' : '';
-$_disable_rm_msg = $_selected_curve == 'Flat' ? 'Flat curve cannot be removed' : ''; 
+$_disable_rm_msg = $_selected_curve == 'Flat' ? 'Flat curve cannot be removed' : '';
 
 // load curve values
 $result = sdbquery("SELECT * FROM cfg_eqalsa WHERE curve_name='" . $_search_curve . "'", $dbh);
@@ -118,9 +118,12 @@ for ($i = 0; $i < 10; $i++) {
 	$_select['freq' . ($i + 1)] = $values[$i];
 }
 
-$section = basename(__FILE__, '.php');
+waitWorker(1, 'eqg-config');
+
 $tpl = "eqg-config.html";
-include('/var/local/www/header.php'); 
-waitWorker(1);
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

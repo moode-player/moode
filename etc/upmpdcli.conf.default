@@ -1,7 +1,3 @@
-#
-# 2018-01-26 TC moOde 4.0
-#
-
 # The XML tags in the comments are used to help produce the documentation
 # from the sample/reference file, and not at all at run time, where
 # comments are just comments. Edit at will.

@@ -25,21 +25,7 @@
  * - make sure client is configured to hand cover requests to /coverart.php or setup an nginx catch-all rule:
  * - try_files $uri $uri/ /coverart.php;
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-04-02 TC moOde 4.1
- * - set search priority to 0
- * 2018-07-18 TC moOde 4.2
- * - bump coverlink
- * 2018-09-27 TC moOde 4.3
- * - change glob to search only for image files
- * - use session vars for search pri and musicroot
- * - rep l/r bracket with backslash l/r bracket in path for glob
- * 2018-10-19 TC moOde 4.3 update
- * - add hash_only flag for Zend classes
- * - deprecate Id3v1 since it does not support embedded images
- * 2018-12-09 TC moOde 4.4
- * - add logging to Zend exception blocks
- * - deprecate code block that checked '?from=makeCoverUrl'
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
@@ -99,8 +85,8 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Id3_Exception $e) {
-				workerLog('coverart: mp3: ' . $path); 
-				workerLog('coverart: mp3: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: mp3: ' . $path);
+				workerLog('coverart: mp3: Zend media exception: ' . $e->getMessage());
 			}
 			break;
 
@@ -116,8 +102,8 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Flac_Exception $e) {
-				workerLog('coverart: flac: ' . $path); 
-				workerLog('coverart: flac: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: flac: ' . $path);
+				workerLog('coverart: flac: Zend media exception: ' . $e->getMessage());
 			}
 			break;
 
@@ -138,8 +124,8 @@ function getImage($path) {
                 }
             }
             catch (Zend_Media_Iso14496_Exception $e) {
-				workerLog('coverart: m4a: ' . $path); 
-				workerLog('coverart: m4a: Zend media exception: ' . $e->getMessage()); 
+				workerLog('coverart: m4a: ' . $path);
+				workerLog('coverart: m4a: Zend media exception: ' . $e->getMessage());
             }
             break;
 	}
@@ -183,7 +169,7 @@ function parseFolder($path) {
  */
 
 session_id(playerSession('getsessionid'));
-session_start();
+$return = session_start();
 $search_pri = $_SESSION['library_covsearchpri'];
 $musicroot_ext = $_SESSION['musicroot_ext']; // $GLOBALS['musicroot_ext']
 session_write_close();
@@ -203,13 +189,6 @@ if (null === $path) {
 	}
 	$path = MPD_MUSICROOT . $path;
 }
-
-/* r44h deprecate
-// r44a strip argument if called from Lib panel makeCoverUrl()
-$pos = strpos($path, '?from=makeCoverUrl');
-$path = $pos === false ? $path : substr($path, 0, $pos);
-//workerLog('coverart: $path=' . $path);
-*/
 
 // file: embedded cover
 if ($search_pri == 'Embedded cover') { // embedded first

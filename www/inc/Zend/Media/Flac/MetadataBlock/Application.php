@@ -40,8 +40,20 @@ require_once 'Zend/Media/Flac/MetadataBlock.php';
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Application.php 241 2011-06-11 16:46:52Z svollbehr $
  */
+
+/**
+ * 2019-05-07 TC moOde 5.2
+ * add private var declarations
+ */
+
 final class Zend_Media_Flac_MetadataBlock_Application extends Zend_Media_Flac_MetadataBlock
 {
+    /** @var integer */
+    private $_identifier;
+
+    /** @var string */
+    private $_data;
+
     /**
      * Constructs the class with given parameters and parses object related data.
      *

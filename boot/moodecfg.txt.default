@@ -12,6 +12,7 @@
 hostname=moode
 browsertitle=moOde Player
 airplayname=Moode Airplay
+spotifyname=Moode Spotify
 bluetoothname=Moode Bluetooth
 squeezelitename=Moode
 upnpname=Moode UPNP
@@ -27,10 +28,12 @@ dlnasvc=0
 wlanssid=MySSID
 wlansec=wpa
 wlanpwd=MyPassword
+wlancountry=US
 apdssid=Moode
 apdchan=6
 apdpwd=moodeaudio
 
 [other]
 timezone=America/Detroit
-themecolor=Emerald
+themename=Standard
+accentcolor=Emerald

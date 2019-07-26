@@ -1,6 +1,3 @@
-#
-# 2017-MM-DD TC moOde 4.0
-#
 ## Defaults for the MPD init script, sourced by /etc/init.d/mpd on Debian
 ## systems.  Uncomment (remove the leading '#') and change values as needed.
 

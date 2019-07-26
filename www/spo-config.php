@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,26 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-09-27 TC moOde 4.3
- * - initial version
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_spotify', $dbh, $key, $value);
 	}
 
 	// restart if indicated
-	submitJob('spotifysvc', '', 'Settings updated', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
+	submitJob('spotifysvc', '', 'Changes saved', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
 }
-	
+
 session_write_close();
 
 // load settings
@@ -47,9 +46,9 @@ foreach ($result as $row) {
 }
 
 // bit rate
-$_select['bitrate'] .= "<option value=\"96\" " . (($cfg_spotify['bitrate'] == '96') ? "selected" : "") . ">96 kHz</option>\n";
-$_select['bitrate'] .= "<option value=\"160\" " . (($cfg_spotify['bitrate'] == '160') ? "selected" : "") . ">160 kHz</option>\n";
-$_select['bitrate'] .= "<option value=\"320\" " . (($cfg_spotify['bitrate'] == '320') ? "selected" : "") . ">320 kHz</option>\n";
+$_select['bitrate'] .= "<option value=\"96\" " . (($cfg_spotify['bitrate'] == '96') ? "selected" : "") . ">96K</option>\n";
+$_select['bitrate'] .= "<option value=\"160\" " . (($cfg_spotify['bitrate'] == '160') ? "selected" : "") . ">160K</option>\n";
+$_select['bitrate'] .= "<option value=\"320\" " . (($cfg_spotify['bitrate'] == '320') ? "selected" : "") . ">320K</option>\n";
 // initial volume
 $_select['initial_volume'] = $cfg_spotify['initial_volume'];
 // volume curve
@@ -61,9 +60,12 @@ $_select['volume_normalization'] .= "<option value=\"No\" " . (($cfg_spotify['vo
 // ormalization pregain
 $_select['normalization_pregain'] = $cfg_spotify['normalization_pregain'];
 
-$section = basename(__FILE__, '.php');
+waitWorker(1, 'spo_config');
+
 $tpl = "spo-config.html";
-include('/var/local/www/header.php'); 
-waitWorker(1);
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

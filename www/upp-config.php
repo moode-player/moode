@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
+ * 2019-05-07 TC moOde 5.2
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_upnp', $dbh, $key, $value);
 
@@ -39,9 +39,9 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 	}
 
 	// restart if indicated
-	submitJob('upnpsvc', '', 'Settings updated', ($_SESSION['upnpsvc'] == '1' ? 'UPnP renderer restarted' : ''));
+	submitJob('upnpsvc', '', 'Changes saved', ($_SESSION['upnpsvc'] == '1' ? 'UPnP renderer restarted' : ''));
 }
-	
+
 session_write_close();
 
 // load settings
@@ -88,9 +88,12 @@ else {
 	}
 }
 
-$section = basename(__FILE__, '.php');
+waitWorker(1, 'upp-config');
+
 $tpl = "upp-config.html";
-include('/var/local/www/header.php'); 
-waitWorker(1);
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

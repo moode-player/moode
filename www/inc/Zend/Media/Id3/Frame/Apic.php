@@ -44,10 +44,8 @@ require_once 'Zend/Media/Id3/Encoding.php';
  */
 
 /**
- * 2018-10-19 TC moOde 4.3 update
- * - add hash_only option
- * 2018-12-09 TC moOde 4.3 update
- * - add _dataSize to hash
+ * 2019-04-12 TC moOde 5.0
+ *
  */
 
 final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
@@ -113,8 +111,8 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
         $this->_reader->setOffset(1 + strlen($this->_mimeType) + 1);
         $this->_imageType = $this->_reader->readUInt8();
 
-		/*// r44a DEBUG
-		$msg = 'Apic: options[hash_only]= ' . $options['hash_only'] . ', _size= ' . $this->_reader->getSize();
+		// r44a DEBUG
+		/*$msg = 'Apic: options[hash_only]= ' . $options['hash_only'] . ', _size= ' . $this->_reader->getSize();
 		$fh = fopen('/var/log/moode.log', 'a');
 		fwrite($fh, date('Ymd His ') . $msg . "\n");
 		fclose($fh);*/
@@ -129,7 +127,7 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
 
 				// r44a 
 				if ($options['hash_only'] === true) {
-	                list ($this->_description, $this->_imageData) = $this->_explodeString16($this->_reader->read(1054), 2);
+	                list ($this->_description, $this->_imageData) = $this->_explodeString16($this->_reader->read(2048), 2); // r45a more data for hash
 					$this->_imageData = md5($this->_imageData);
 				}
 				else {
@@ -145,8 +143,8 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
 
 				// r44a
 				if ($options['hash_only'] === true) {
-	                list ($this->_description, $this->_imageData) = $this->_explodeString8($this->_reader->read(1054), 2);
-					$this->_imageData = md5($this->_imageData + $this->_imageSize); // r44d
+	                list ($this->_description, $this->_imageData) = $this->_explodeString8($this->_reader->read(2048), 2); // r45a more data for hash
+					$this->_imageData = md5($this->_imageData); // r45a rm + $this->_imageSize
 				}
 				else {
 	                list ($this->_description, $this->_imageData) = $this->_explodeString8($this->_reader->read($this->_reader->getSize()), 2);

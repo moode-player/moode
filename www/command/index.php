@@ -19,45 +19,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-12-09 TC moOde 4.4
- * - only echo cmd output
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
- 
+
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
 playerSession('open', '' ,'');
 session_write_close();
 
-if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
-	echo 'command missing';
+if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
+	echo 'Command missing';
 }
-// BASH or PHP
-elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') !== false) {							
-	$result = sysCmd('/var/www/' . $_GET['cmd']);
-	echo $result[0]; // r44h
+// SH or PHP commands
+elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') !== false) {
+	// check for valid chrs
+    if (preg_match('/^[A-Za-z0-9 _.-]+$/', $_GET['cmd'])) {
+		// reject directory traversal ../
+		if (substr_count($_GET['cmd'], '.') > 1) {
+			echo 'Invalid string';
+		}
+		// check for valid commands
+        elseif (stripos($_GET['cmd'], 'vol.sh') !== false) {
+           $result = sysCmd('/var/www/' . $_GET['cmd']);
+           echo $result[0];
+        }
+        else {
+            echo 'Unknown command';
+        }
+    }
+    else {
+        echo 'Invalid string';
+    }
 }
-// MPD
+// MPD commands
 else {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		$msg = 'command/index: Connection to MPD failed'; 
+		$msg = 'command/index: Connection to MPD failed';
 		workerLog($msg);
-		exit($msg . "\n");	
-	} 
+		exit($msg . "\n");
+	}
 	else {
-		if (strpos($_GET['cmd'], ',') !== false) {
-			$cmds = explode(',', $_GET['cmd']);
-			chainMpdCmdsDelay($sock, $cmds, 250000);
-			//echo 'OK'; // r44h
-			closeMpdSock($sock);
-		}
-		else {
-			sendMpdCmd($sock, $_GET['cmd']);
-			//echo readMpdResp($sock); // r44h
-			$result = readMpdResp($sock);
-			closeMpdSock($sock);
-		}
+		sendMpdCmd($sock, $_GET['cmd']);
+		$result = readMpdResp($sock);
+		closeMpdSock($sock);
+		//echo $result;
 	}
 }
-

@@ -1,7 +1,3 @@
-#
-# 2018-01-26 TC moOde 4.0
-#
-
 ACTION=="add", KERNEL=="input[0-9]*", SUBSYSTEM=="input", ATTR{name}=="*:*:*:*:*:*", GOTO="bt_add"
 ACTION=="remove", KERNEL=="input[0-9]*", SUBSYSTEM=="input", DEVPATH=="/devices/virtual/input/*" GOTO="bt_remove"
 GOTO="bt_end"
