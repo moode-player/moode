@@ -16,15 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2018-01-26 TC moOde 4.0
-# 2018-04-02 TC moOde 4.1
-# - add /etc/bluetooth/main.conf to bluetooth name change
-# 2018-07-11 TC moOde 4.2
-# - add clearbrcache
-# 2018-09-27 TC moOde 4.3
-# - add mpd db update and lib cache reset to samba add/remove share blocks
-# 2018-10-19 TC moOde 4.3 update
-# - add usb_auto_updatedb setting check to smb add/remove
+# 2019-04-12 TC moOde 5.0
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -138,36 +130,6 @@ if [[ $1 = "get-piano-dualmode" || $1 = "set-piano-dualmode" || $1 = "get-piano-
 	fi
 fi
 
-# $1=colorName, $2=hexColorLight, $3=hexColorDark, $4=rgbaColorDark
-
-# $1 = colorName
-# $2 = hexColor
-# $3 = rgbaColor
-if [[ $1 = "alizarin" || $1 = "amethyst" || $1 = "bluejeans" || $1 = "carrot" || $1 = "emerald" || $1 = "fallenleaf" || $1 = "grass" || $1 = "herb" || $1 = "lavender" || $1 = "river" || $1 = "rose" || $1 = "silver" || $1 = "turquoise" ]]; then
-	# load the alizarin files
-	cp /var/www/themes/alizarin/bootstrap-select.css /var/local/www/cssw
-	cp /var/www/themes/alizarin/flat-ui.css /var/local/www/cssw
-	cp /var/www/themes/alizarin/panels.css /var/local/www/cssw
-	cp /var/www/themes/alizarin/indextpl.html /var/local/www/templatesw
-	cp /var/www/themes/alizarin/jquery.knob.js /var/local/www/jsw
-
-	if [[ $1 != "alizarin" ]]; then
-		# alizarin color -> new color
-		sed -i "s/c0392b/$2/g" /var/local/www/cssw/bootstrap-select.css
-		sed -i "s/c0392b/$2/g" /var/local/www/cssw/flat-ui.css
-		sed -i "s/c0392b/$2/g" /var/local/www/cssw/panels.css
-		sed -i "s/rgba(192,57,43,0.71)/$3/g" /var/local/www/cssw/panels.css
-		sed -i "s/rgba(192,57,43,0.71)/$3/g" /var/local/www/cssw/bootstrap-select.css
-		sed -i "s/c0392b/$2/g" /var/local/www/templatesw/indextpl.html
-		sed -i "s/c0392b/$2/g" /var/local/www/jsw/jquery.knob.js
-	fi
-
-	# copy radio slider control image for the config pages
-	cp /var/www/themes/$1-icon-on.png /var/local/www/imagesw/toggle/icon-on.png
-	cp /var/www/themes/$1-icon-on-2x.png /var/local/www/imagesw/toggle/icon-on-2x.png
-	exit
-fi
-
 if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/alternatives.log --size 0
 	truncate /var/log/apt/history.log --size 0
@@ -202,6 +164,11 @@ if [[ $1 = "clear-playhistory" ]]; then
 	TIMESTAMP=$(date +'%Y%m%d %H%M%S')
 	LOGMSG=" Log initialized"
 	echo $TIMESTAMP$LOGMSG > /var/local/www/playhistory.log
+	exit
+fi
+
+if [[ $1 = "clear-history" ]]; then
+	truncate /home/pi/.bash_history --size 0
 	exit
 fi
 

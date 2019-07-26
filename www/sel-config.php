@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,10 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-07-11 TC moOde 4.2
- * - minor wording updates
- * - remove FEAT_INPUTSEL
+ * 2019-05-30 TC moOde 5.3
  *
  */
 
@@ -27,28 +24,50 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '' ,'');
 
+if (isset($_POST['update_audioin']) && $_POST['audioin'] != $_SESSION['audioin']) {
+	if ($_POST['update_audioin'] != 'Local' && $_SESSION['mpdmixer'] == 'software') {
+		$_SESSION['notify']['title'] = 'MPD Volume control must first be set to Hardware or Disabled (0dB)';
+		$_SESSION['notify']['duration'] = 6;
+	}
+	else {
+		playerSession('write', 'audioin', $_POST['audioin']);
+		submitJob('audioin', $_POST['audioin'], 'Input set to ' . $_POST['audioin'], '');
+	}
+}
+if (isset($_POST['update_rsmafterinp']) && $_POST['rsmafterinp'] != $_SESSION['rsmafterinp']) {
+	playerSession('write', 'rsmafterinp', $_POST['rsmafterinp']);
+	$_SESSION['notify']['title'] = 'Setting updated';
+}
 if (isset($_POST['update_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
 	playerSession('write', 'audioout', $_POST['audioout']);
 	submitJob('audioout', $_POST['audioout'], 'Output set to ' . $_POST['audioout'], '');
 }
-if (isset($_POST['update_audioin']) && $_POST['audioin'] != $_SESSION['audioin']) {
-	playerSession('write', 'audioin', $_POST['audioin']);
-	submitJob('audioin', $_POST['audioin'], 'Input set to ' . $_POST['audioin'], '');
-}
 
 session_write_close();
 
-// output select
-$_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Audio output -> Local</option>\n";
-$_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Audio output -> Bluetooth</option>\n";
-// input select examples
-$_select['audioin'] .= "<option value=\"None\" " . (($_SESSION['audioin'] == 'None') ? "selected" : "") . ">None</option>\n";
-$_select['audioin'] .= "<option value=\"Analog\" " . (($_SESSION['audioin'] == 'Analog') ? "selected" : "") . ">Analog input</option>\n";
-$_select['audioin'] .= "<option value=\"S/PDIF\" " . (($_SESSION['audioin'] == 'S/PDIF') ? "selected" : "") . ">S/PDIF input</option>\n";
+// input source
+$_select['audioin'] .= "<option value=\"Local\" " . (($_SESSION['audioin'] == 'Local') ? "selected" : "") . ">Local (MPD)</option>\n";
+if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
+	$_select['audioin'] .= "<option value=\"Analog\" " . (($_SESSION['audioin'] == 'Analog') ? "selected" : "") . ">Analog input</option>\n";
+}
+elseif ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC (Pre 2019)') {
+	$_select['audioin'] .= "<option value=\"S/PDIF\" " . (($_SESSION['audioin'] == 'S/PDIF') ? "selected" : "") . ">S/PDIF input</option>\n";
+}
 
-$section = basename(__FILE__, '.php');
+// resume MPD after changing to Local
+$_select['rsmafterinp'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterinp'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['rsmafterinp'] .= "<option value=\"No\" " . (($_SESSION['rsmafterinp'] == 'No') ? "selected" : "") . ">No</option>\n";
+
+// output device
+$_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Local device</option>\n";
+//$_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth stream</option>\n";
+
+waitWorker(1, 'sel-config');
+
 $tpl = "sel-config.html";
-include('/var/local/www/header.php'); 
-waitWorker(1);
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

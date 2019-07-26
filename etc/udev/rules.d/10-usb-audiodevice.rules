@@ -1,11 +1,8 @@
-#
-# 2018-01-26 TC moOde 4.0
-#
-
-ACTION=="add", SUBSYSTEM=="usb", DRIVER=="snd-usb-audio", GOTO="usb-add"
+ACTION=="add", SUBSYSTEM=="usb", DRIVER=="snd-usb-audio", GOTO="usb-add-remove"
+#ACTION=="remove", SUBSYSTEM=="sound", GOTO="usb-add-remove"
 GOTO="usb_end"
 
-LABEL="usb-add"
-RUN+="/bin/systemctl restart mpd"
+LABEL="usb-add-remove"
+RUN+="/var/www/command/restartmpd.sh"
 
 LABEL="usb_end"

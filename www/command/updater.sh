@@ -16,9 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2018-01-26 TC moOde 4.0
-# 2018-04-02 TC moOde 4.1 add error checking
-# 2018-09-27 TC moOde 4.3 add message logging
+# 2019-04-12 TC moOde 5.0
 #
 
 # $1 = rXY ex: r26

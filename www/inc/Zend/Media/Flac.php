@@ -45,10 +45,8 @@ require_once 'Zend/Io/Reader.php';
  */
 
 /**
- * 2018-10-19 TC moOde 4.3 update
- * - add hash_only option
- * 2018-12-09 TC moOde 4.4
- * - add failsafe to prevent corrupt header from causing endless loop
+ * 2019-04-12 TC moOde 5.0
+ *
  */
 
 final class Zend_Media_Flac

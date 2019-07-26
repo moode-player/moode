@@ -252,6 +252,7 @@ $.extend(Countdown.prototype, {
 	   @param  target  (jQuery) the containing division
 	   @param  inst    (object) the current settings for this instance */
 	_updateCountdown: function(target, inst) {
+		//console.log($(target));
 		var $target = $(target);
 		inst = inst || $target.data(this.propertyName);
 		if (!inst) {

@@ -18,17 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
- * 2018-01-26 TC moOde 4.1
- * - remove unneeded msgs
- * - blank out icon
- * 2018-07-11 TC moOde 4.2
- * - reformat msg for 'update'
- * 2018-09-27 TC moOde 4.3
- * - update text for plnameerror
- * - favorites feature
- * - clear/add
- * - mpd errors
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
@@ -37,9 +27,13 @@ function notify(cmd, msg, duration) {
 
     var map = {
 		add: 'Added to playlist',
+        play: 'Added to playlist',
+        clradd: 'Added after playlist cleared',
 		clrplay: 'Added after playlist cleared',
-		clradd: 'Added after playlist cleared',
-		update: 'Updating...',
+        addall: 'Added to playlist',
+        playall: 'Added to playlist',
+        clrplayall: 'Added after playlist cleared',
+		updmpddb: 'Updating...',
 		remove: 'Removed from playlist',
 		move: 'Playlist items moved',
 		savepl: 'Playlist saved',
@@ -48,13 +42,13 @@ function notify(cmd, msg, duration) {
 		needssid: 'Static IP requres an SSID',
 		needdhcp: 'Blank SSID requires DHCP',
 		delsavedpl: 'Playlist deleted',
-		delstation: 'Radio station deleted',
-		addstation: 'Radio station added',
-		updstation: 'Radio station updated',
+		newstation: 'New station created',
+		updstation: 'Station updated',
+		blankentries: 'Blank entries are not allowed',
+		delstation: 'Station deleted',
 		updclockradio: 'Clock radio updated',
 		updcustomize: 'Settings updated',
 		usbaudioready: 'USB audio ready',
-		scnsaverexit: 'Leaving CoverView',
 		favset: 'Name has been set',
 		favadded: 'Favorite has been added',
 		nofavtoadd: 'Nothing to add',

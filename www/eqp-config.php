@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,22 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-01-26 TC moOde 4.0
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '' ,''); 
+playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
 // apply setting changes
-if (isset($_POST['apply']) && $_POST['apply'] == '1') {
+if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// format individual band params
 	for($i = 1; $i <= 4; $i++) {
 		$_POST['band' . $i . '_params'] = $_POST['band' . $i . '_enabled'] . ' ' . $_POST['band' . $i . '_freq'] . ' ' . (float)$_POST['band' . $i . '_q'] . ' ' . (float)$_POST['band' . $i . '_gain'];
 	}
-	
+
 	// add or update
 	$result = sdbquery("SELECT id FROM cfg_eqfa4p WHERE curve_name='" . $_POST['curve_name'] . "'", $dbh);
 	if (empty($result[0])) {
@@ -44,8 +44,8 @@ if (isset($_POST['apply']) && $_POST['apply'] == '1') {
 	else {
 		// update
 		$value = array('master_gain' => (float)$_POST['master_gain'], 'band1_params' => $_POST['band1_params'], 'band2_params' => $_POST['band2_params'], 'band3_params' => $_POST['band3_params'], 'band4_params' => $_POST['band4_params']);
-		cfgdb_update('cfg_eqfa4p', $dbh, $_POST['curve_name'], $value);	
-		$_SESSION['notify']['title'] = 'Curve database updated';
+		cfgdb_update('cfg_eqfa4p', $dbh, $_POST['curve_name'], $value);
+		$_SESSION['notify']['title'] = 'Curve updated';
 	}
 }
 
@@ -57,7 +57,7 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 	}
 
 	$params = $_POST['band1_params'] . '  ' . $_POST['band2_params'] . '  ' . $_POST['band3_params'] . '  ' . $_POST['band4_params'] . '  ' . (float)$_POST['master_gain'];
-	sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $params . ' ]"' . ' /usr/share/alsa/alsa.conf.d/eqfa4p.conf');
+	sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $params . ' ]" ' . ALSA_PLUGIN_PATH . '/eqfa4p.conf');
 
 	sysCmd('systemctl restart mpd');
 
@@ -75,12 +75,13 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 	$_SESSION['notify']['title'] = 'Playing curve';
 }
 
+//workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
 // add, remove, change, refresh
 if (isset($_POST['newcurvename'])) {
 	$_search_curve = 'Default';
 }
 elseif (isset($_POST['rmcurve'])) {
-	$result = sdbquery("DELETE FROM cfg_eqfa4p WHERE curve_name='" . $_POST['rm-curve'] . "'", $dbh);
+	$result = sdbquery("DELETE FROM cfg_eqfa4p WHERE curve_name='" . $_GET['curve'] . "'", $dbh);
 	$_search_curve = 'Default';
 	$_SESSION['notify']['title'] = 'Curve removed';
 }
@@ -92,7 +93,7 @@ else {
 }
 
 session_write_close();
-	
+
 // load curve list
 $_selected_curve = 'Default';
 $curveList = sdbquery('SELECT curve_name FROM cfg_eqfa4p', $dbh);
@@ -110,16 +111,16 @@ if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
 }
 
 // set control states
-$_disable_play = $_SESSION['eqfa4p'] == 'Off' ? 'disabled' : ''; 
+$_disable_play = $_SESSION['eqfa4p'] == 'Off' ? 'disabled' : '';
 $_disable_rm = $_selected_curve == 'Default' ? 'disabled' : '';
-$_disable_rm_msg = $_selected_curve == 'Default' ? 'Default curve cannot be removed' : ''; 
+$_disable_rm_msg = $_selected_curve == 'Default' ? 'Default curve cannot be removed' : '';
 
 // load curve params
 $result = sdbquery("SELECT * FROM cfg_eqfa4p WHERE curve_name='" . $_search_curve . "'", $dbh);
 
 $_select['master_gain'] = $result[0]['master_gain'];
 
-for($i = 1; $i <= 4; $i++) {	
+for($i = 1; $i <= 4; $i++) {
 	$params = explode(' ', $result[0]['band' . $i . '_params']);
 
 	$_select['band' . $i . '_enabled'] .= sprintf('<option value="%s"%s>%s</option>\n', '1', $params[0] == '1' ? 'selected' : '', 'Yes');
@@ -129,10 +130,12 @@ for($i = 1; $i <= 4; $i++) {
 	$_select['band' . $i . '_gain'] = $params[3];
 }
 
+waitWorker(1, 'eqp-config');
 
-$section = basename(__FILE__, '.php');
 $tpl = "eqp-config.html";
-include('/var/local/www/header.php'); 
-waitWorker(1);
+$section = basename(__FILE__, '.php');
+storeBackLink($section, $tpl);
+
+include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');

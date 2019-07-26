@@ -1,13 +1,13 @@
-http://listen.sub.fm/hi/;&type=mp3
+http://subfm.radioca.st/Sub.FM
 http://stream.radioactive.fm:8000/ractive
 http://kdhx-ice.streamguys1.com:80/live
 http://eno.emit.com:8000/2bob_live_64.mp3
 http://aac-64.streamthejazzgroove.com:80/stream
 http://listen.jazz88.org/ksds.mp3
-http://icy1.abacast.com:80/kplu-jazz24aac-64
+https://prod-18-234-41-31.wostreaming.net/ppm-jazz24aac-ibc1?session-id=123c7a3ddc8bf87808d64b6999e30ba5
 http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p
 http://direct.fipradio.fr/live/fip-midfi.mp3
-http://89.233.146.156/croddur-256.mp3
+http://icecast6.play.cz/croddur-256.mp3
 http://stream.wqxr.org/wqxr
 http://wdcb-ice.streamguys.org:80/wdcb128
 http://50.31.135.43:80/wwoz-hi.mp3
@@ -25,6 +25,7 @@ http://ice1.somafm.com/dronezone-128-aac
 http://ice1.somafm.com/dubstep-128-aac
 http://ice1.somafm.com/fluid-128-aac
 http://ice1.somafm.com/folkfwd-128-aac
+http://ice2.somafm.com/gsclassic-128-aac
 http://ice1.somafm.com/groovesalad-128-aac
 http://ice1.somafm.com/illstreet-128-aac
 http://ice1.somafm.com/indiepop-128-aac

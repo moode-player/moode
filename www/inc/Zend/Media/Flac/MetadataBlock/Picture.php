@@ -43,10 +43,8 @@ require_once 'Zend/Media/Flac/MetadataBlock.php';
  */
 
 /**
- * 2018-10-19 TC moOde 4.3 update
- * - add hash_only option
- * 2018-12-09 TC moOde 4.3 update
- * - add _dataSize to hash
+ * 2019-04-12 TC moOde 5.0
+ *
  */
 
 final class Zend_Media_Flac_MetadataBlock_Picture extends Zend_Media_Flac_MetadataBlock

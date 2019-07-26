@@ -11,12 +11,321 @@
 
 ########################################################
 //
-// 4.4 2018-12-09
+// 6.0.0 2019-MM-DD
 //
 ########################################################
 
 New features
 
+- NEW: Raspbian 10.0 (Buster Lite)
+- NEW: Support for Pi-4B 1/2/4GB models
+- NEW: UPnP Media Browser
+
+Updates
+
+- UPD: Bump to Linux kernel 4.19.58
+- UPD: Bump to PHP 7.3.4
+- UPD: Bump to NGINX 1.14.2
+- UPD: Bump to SQLite 3.27.2
+- UPD: Bump to MiniDLNA 1.2.1
+- UPD: Bump to ALSA 1.1.8
+- UPD: Bump to WiringPi 2.52
+- UPD: Add rev codes for Pi-4B 1/2/4GB models
+- UPD: Add new sort tag options for Library
+- UPD: Add clock radio "after stop" Actions
+- UPD: Add Spotify clear credential cache
+- UPD: Add Instant Play options: Add/Play, Clear/Play
+- UPD: Add Show Genres column (Yes/No) to Library options
+- UPD: Remove restriction on quotes in Wifi password
+- UPD: Improve Play/Playall response on slower Pi-Zero
+- UPD: Improve Audioinfo layout and content
+- UPD: Improve System info layout and content
+- UPD: Improve layout of config screens
+- UPD: Improve auto-config process
+- UPD: Improve in-place update process
+- UPD: SwissGroove radio url
+
+Security
+
+- UPD: Strengthen input arg parsing in command/index.ph
+- UPD: Remove script path input arg in lcdup.sh
+- UPD: Convert from plaintext WiFi passwords to PSK's
+
+Bug fixes
+
+- FIX: Lazyload not started after search in Album view
+- FIX: Missing href in Bluetooth Active overlay
+- FIX: Wrong default fill color for radio buttons
+- FIX: JSON parse errors being unnecessarily displayed
+
+########################################################
+//
+// 5.3.1 2019-06-12
+//
+########################################################
+
+Radio station updates
+
+- UPD: Jazz24
+
+Updates
+
+- UPD: Bump to Linux kernel 4.19.49
+- UPD: Bump to shairport-sync-3.3.1 bugfix release
+
+Bug fixes
+
+- FIX: Lazyload perf issue due to non-unique class names
+- FIX: Disable WiFi adapter not working in kernel 4.19.46
+- FIX: Parsing for Khadas Tone Board hdwr mixer name
+
+########################################################
+//
+// 5.3.0 2019-05-30
+//
+########################################################
+
+New features
+
+- NEW: Preamp mode for Audiophonics 9028/9038 DAC and HiFiberry DAC+ADC
+- NEW: Disconnect button added to "Renderer Active" screens
+
+Radio station updates
+
+- NEW: Soma FM - Groove Salad Classic
+- UPD: Audiophile Baroque
+- UPD: Audiophile Classical
+- UPD: Audiophile Jazz
+- UPD: Audiophile Lounge
+- UPD: Audiophile Rock-Blues
+
+Updates
+
+- UPD: Bump to Linux kernel 4.19.46
+- UPD: Bump to shairport-sync-3.3.0-3c4a878
+- UPD: Leave MPD random play alone for playqueue cmds
+- UPD: Add Name Service Switcher package
+- UPD: Improve performance of image lazyloader
+
+Bug fixes
+
+- FIX: Hostapd not starting due to service being masked
+- FIX: Show/hide track list between Tag and Album views
+- FIX: Artist - Album filter not using exact match
+- FIX: Lazyload not activated after search in Tag view
+- FIX: Function getYIQ return value not being parsed as int
+- FIX: High CPU util for CoverView animated backdrop
+
+########################################################
+//
+// 5.2.0 2019-05-07
+//
+########################################################
+
+New features
+
+- NEW: Artist/Station filter (see Quick help)
+
+Radio stations
+
+- UPD: KUVO HD2
+
+Updates
+
+- UPD: Further performance improvements for page loading
+- UPD: Performance improvement for Playlilst
+- UPD: Bump to MPD 0.20.23 (Default) and 0.21.8 (Testing)
+- UPD: Bump to shairport-sync-3.3.0-rc6-0c65236
+- UPD: Bump to Linux kernel 4.19.40
+- UPD: Revert MPD buffer time/period, ALSA auto-conv to internal defaults
+- UPD: Deprecate MPD replay gain handler setting, issue with 'mixer' option
+- UPD: Add hardware revision codes for CM3/3+
+
+Bug fixes
+
+- FIX: Remove curve not working in Graphic and Parameteric EQ
+- FIX: Input pattern missing from eq-p "Enter new curve name"
+- FIX: Playlist on certain mobile devices not scrolling when < 5 items
+- FIX: Firefox CORS error caused by getCSSRule() in playerlib
+- FIX: Missing member var declarations in Zend application.php
+- FIX: Radio station names with single quotes not being escaped
+
+########################################################
+//
+// 5.1.0 2019-04-22
+//
+########################################################
+
+Radio station updates
+
+- UPD: Roots Legacy Radio Dub UK & Reggae
+
+Updates
+
+- UPD: Performance improvement for page loading
+- UPD: Add "Update this folder" to Folder view context menu
+- UPD: Increase size of hit target on cover ellipsis
+- UPD: Increase opacity of certain UI elements
+- UPD: Display spinner icon when config is processing
+- UPD: Revert use of ArtistSort and AlbumSort tags
+- UPD: Adjust logic for Instant Play w/Auto-shuffle on
+- UPD: Setup guide (setup.txt)
+
+Bug fixes
+
+- FIX: Minor CSS/HTML bugs
+
+########################################################
+//
+// 5.0.0 2019-04-12
+//
+########################################################
+
+New features
+
+- NEW: Adaptive UI version 5 with Playbar
+- NEW: User added radio station logos
+- NEW: Redesigned Graphic and Parametric EQ's
+- NEW: EQ support in Airplay and Spotify
+- NEW: Bluetooth auto-pairing agent
+- NEW: HTTP streaming server for MPD
+- NEW: Polarity inversion for MPD output
+- NEW: GPIO button handler
+- NEW: Alpha index scroll for Library
+- NEW: ESS driver for Audiophonics ES9028/9038 DAC
+- NEW: Source select for HiFiBerry DAC+ ADC
+- NEW: User defined articles for Library sorts
+- NEW: Quick help for buttons and active elements
+- NEW: Moode utility command (moodeutl)
+
+Audio Devices
+
+- NEW: Audiophonics ES9028/9038 DAC
+- NEW: Audiophonics ES9028/9038 DAC (Pre 2019)
+- NEW: HiFiBerry Amp2
+- NEW: HiFiBerry Beocreate
+- NEW: HiFiBerry MiniAmp
+- NEW: HiFiBerry DAC Zero
+- NEW: HiFiBerry DAC+ ADC
+- NEW: HiFiBerry DAC+ DSP
+
+Radio station updates
+
+- NEW: JB Radio 2 USA (320K)
+- UPD: Audiophile Baroque
+- UPD: Audiophile Classical
+- UPD: Audiophile Jaxx
+- UPD: Audiophile Lounge
+- UPD: Audiophile Rock-Blues
+- UPD: Czech Radio Classical 256K
+- UPD: Folk Radio UK changed to Radionomy
+- UPD: KUVO 89.3 FM Denver
+- UPD: KUVO HD2 - Jazz with Bob Parlocha
+- UPD: Radio Caroline
+- UPD: SUB.FM - Where Bass Matters
+- DEL: EuropaRadioJazz - 88.3 Smooth Jazz HD
+- DEL: EuropaRadioJazz - The Sound of Jazz
+- DEL: The Finest Amsterdam
+- DEL: Radio X Brussels
+- DEL: Rock Radio 1
+- DEL: Somehow Jazz
+
+Updates
+
+- UPD: Include MPD 0.21.6 as a testing option
+- UPD: Bump to kernel 4.19.34
+- UPD: Bump to shairport-sync 3.3.0 RC2
+- UPD: Bump to librespot 2019-02-22 commit: daeeeaa
+- UPD: Bump to bluez 5.50
+- UPD: Bump to bluez-alsa 1.31 commit: d73282b
+- UPD: Bump to hostapd 2.7
+- UPD: Bump to wiringPi 2.50
+- UPD: Bump to rotenc 1.1
+- UPD: Freshen the Config pages
+- UPD: Streamline bgimage processing
+- UPD: Catch json data errors from engineMpd
+- UPD: Reduce debug log clutter
+- UPD: Add id3 "comment" tag to adv search
+- UPD: Deprecate Airplay auto-volume
+- UPD: Add "interpolation" to Airplay config
+- UPD: Replace avprobe with mediainfo
+- UPD: Remove restriction on NAS config Name
+- UPD: Move Save PL and Set Favs to context menu
+- UPD: Wrap to first PL item when skip from last
+- UPD: Chg wifi country Britain (UK) to United Kingdom (UK)
+- UPD: Revert to manual reboot for FS expand
+- UPD: Add quotes to cifs userid in mount
+- UPD: Add addl timeouts to screen blank for local ui
+- UPD: Add librespot to watchdog
+- UPD: Manual add/play/clrplay superceeds auto-shuffle
+- UPD: Implement versioned css and scripts
+- UPD: Deprecate manual "Tab default" setting
+- UPD: Deprecate /var/local/www/cssw,jsw,templatesw
+- UPD: Deprecate /var/www/themes
+
+Bug fixes
+
+- FIX: Mobile timeline unnecessary updates
+- FIX: Corner case for 0 handling in duration
+- FIX: Default cover width in Lib (Chrome only)
+- FIX: Time knob sometimes not resizing
+- FIX: Search reset icons not hiding when empty filter
+- FIX: String "Disc tag missing" appears in Library
+- FIX: Clock radio shutdown param name
+
+########################################################
+//
+// 4.4.0 2018-12-19 update
+//
+########################################################
+
+Bug fixes
+
+- FIX: ALSA vol for MPD software/disabled case
+
+########################################################
+//
+// 4.4.0 2018-12-18 update
+//
+########################################################
+
+New features
+
+- NEW: CoverView backdrop styles
+- NEW: Pure Black theme
+- NEW: Auto-shuffle Crossfade support
+- NEW: Auto-shuffle tag filter
+
+Radio stations
+
+- UPD: Amys FM Spirit of Soul (320K)
+- UPD: Buddha Radio
+
+Updates
+
+- UPD: Add Raspbian version to ssh header
+- UPD: Add icon for upmpdcli
+- UPD: Zero out ALSA volume at top of worker
+- UPD: Improve help text on System config
+- UPD: Bump auto-shuffle to v1.1.0
+
+Bug fixes
+
+- FIX: Duplicate symlink for Zend opcache
+- FIX: Cover not changing for mp3 format files
+- FIX: Extra metadata somtimes not updating
+- FIX: Adv search results add whole collection
+- FIX: Saved pl display incomplete
+
+########################################################
+//
+// 4.4.0 2018-12-09
+//
+########################################################
+
+New features
+
+- NEW: Adaptive UI version 4
 - NEW: Raspbian Stretch Lite 2018-11-13
 - NEW: Support for Raspberry Pi 3A+
 - NEW: Clock radio days-of-the-week setting
@@ -45,7 +354,7 @@ Updates
 - UPD: Use GNU cmd syntax in rotenc and volume scripts
 - UPD: Add disk utilization to sysmon.php
 - UPD: Add revision code 9020e0 for Pi-3A+
-- UPD: Add Close to all context menus
+- UPD: Add Close to all rs
 - UPD: Improve spacing on Radio and Album cover panels
 - UPD: Add 30px blur to list of Cover blur settings
 - UPD: Improve performance of Library loader/filter
@@ -70,7 +379,7 @@ Bug fixes
 
 ########################################################
 //
-// 4.3 Update 2018-10-19
+// 4.3.0 2018-10-19 update
 //
 ########################################################
 
@@ -102,7 +411,7 @@ Bug fixes
 
 ########################################################
 //
-// 4.3 2018-09-27
+// 4.3.0 2018-09-27
 //
 ########################################################
 
@@ -114,7 +423,7 @@ New features
 - NEW: High Res thumbs option for high DPI (Retina) screens
 - NEW: Cover art search priority (Embedded or Image File first)
 - NEW: CoverView UI controls HUD with next/prev, vol +/- and playlist
-- NEW: CoverView backdrop based on cover art 
+- NEW: CoverView backdrop based on cover art
 - NEW: Favorites (Add currently playing item to Favorites playlist)
 - NEW: Quick search in Browse panel
 - NEW: Swipe gesture for Library column headers
@@ -155,7 +464,7 @@ Bug fixes
 
 ########################################################
 //
-// 4.2 Update 2018-07-18
+// 4.2.0 2018-07-18 update
 //
 ########################################################
 
@@ -179,7 +488,7 @@ Radio stations
 
 ########################################################
 //
-// 4.2 Release 2018-07-11
+// 4.2.0 2018-07-11
 //
 ########################################################
 
@@ -193,7 +502,7 @@ New features
 - NEW: LMS-Squeezelite / MPD integration
 - NEW: Clear LocalUI Browser cache
 - NEW: Sysmon.php utility for CPU/RAM usage
-- NEW: Samba share point for Playlists 
+- NEW: Samba share point for Playlists
 
 Audio devices
 
@@ -203,7 +512,7 @@ Audio devices
 Bug fixes
 
 - FIX: Incompatibility with recent bluez-alsa commit
-- FIX: Cardnum in bluealsa-dmix, bluealsa-aplay 
+- FIX: Cardnum in bluealsa-dmix, bluealsa-aplay
 - FIX: Volume button position on HDMI panel
 - FIX: UPnP volume sync not working correctly
 - FIX: Players avahi file missing from r40a update
@@ -259,13 +568,13 @@ Radio stations
 
 ########################################################
 //
-// 4.1 Release 2018-04-02
+// 4.1.0 2018-04-02
 //
 ########################################################
 
 New features
 
-- NEW: NAS config with Samba scanner 
+- NEW: NAS config with Samba scanner
 - NEW: Pi Touch UI layout
 - NEW: Volume control with step limiter
 - NEW: Renderer active indicators
@@ -283,7 +592,7 @@ Updates
 - UPD: Bump to MPD 0.20.18
 - UPD: Bump to PHP 7.0.27
 - UPD: Bump to Upmpdcli 1.2.16
-- UPD: Bump to Squeezelite 1.8.7-1052 
+- UPD: Bump to Squeezelite 1.8.7-1052
 - UPD: Use mpd index order for Library track sort
 - UPD: Radio station supports playlist as url
 - UPD: Reset coverart search pri to 0
@@ -328,7 +637,7 @@ Bug fixes
 
 ########################################################
 //
-// 4.0 Release 2018-01-26
+// 4.0.0 2018-01-26
 //
 ########################################################
 
@@ -385,7 +694,7 @@ Updates
 - UPD: Use streamlined upmpdcli.conf file
 - UPD: Use avprobe instead of mediainfo
 - UPD: Redesigned NAS config screen
-- UPD: Improve method used to edit cmdline.txt for uac2fix 
+- UPD: Improve method used to edit cmdline.txt for uac2fix
 - UPD: Hide passwords in UPnP config
 - UPD: Rename /var/local/www/templates to /var/local/www/templatesw
 - UPD: Add try/catch block to engineSps() to ensure valid JSON
@@ -497,13 +806,15 @@ Bug fixes
 - FIX: Typo in some text on UPnP config screen
 - FIX: Bad var index for crossfeed in System info script
 - FIX: Bluetooth pairings not persisting after poweroff
-- FIX: Logic in coverart search priority 
+- FIX: Logic in coverart search priority
 - FIX: Duration not working for notification messages from modals
 - FIX: Input in knob canvas region not being blocked
 - FIX: Single/double quotes in passwords causing sql hang
 
 ########################################################
-// 3.8.4 Release 2017-08-28
+//
+// 3.8.4 2017-08-28
+//
 ########################################################
 
 Updates
@@ -517,7 +828,9 @@ Bug fixes
 - FIX: AIFF tags not being parsed by MPD (mpd fix)
 
 ########################################################
-// 3.8.3 Release 2017-08-23
+//
+// 3.8.3 2017-08-23
+//
 ########################################################
 
 Updates
@@ -532,7 +845,9 @@ Bug fixes
 - FIX: Piano 2.1 main vol not initialized at startup if MPD vol disabled
 
 ########################################################
-// 3.8.2 Release 2017-08-13
+//
+// 3.8.2 2017-08-13
+//
 ########################################################
 
 New features
@@ -549,7 +864,9 @@ Bug fixes
 - FIX: Wrong operator for FS expand in System info report
 
 ########################################################
-// 3.8.1 Release 2017-08-07
+//
+// 3.8.1 2017-08-07
+//
 ########################################################
 
 Updates
@@ -569,7 +886,9 @@ Bug fixes
 - FIX: Missing symlink that provides path to cover image files
 
 ########################################################
-// 3.8 Release 2017-07-31
+//
+// 3.8.0 2017-07-31
+//
 ########################################################
 
 New features
@@ -611,7 +930,9 @@ Audio Devices
 - NEW: NAD d1050 (usb)
 
 ########################################################
-// 3.7 Release 2017-05-25
+//
+// 3.7.0 2017-05-25
+//
 ########################################################
 
 New features
@@ -671,7 +992,9 @@ Bug fixes
 - FIX: Missing values in reset Network cfg
 
 ########################################################
-// 3.6 Release 2017-04-23
+//
+// 3.6.0 2017-04-23
+//
 ########################################################
 
 Updates
@@ -693,7 +1016,9 @@ Bug fixes
 - FIX: ALSA volume field "required" error
 
 ########################################################
-// 3.5 Release 2017-04-12
+//
+// 3.5.0 2017-04-12
+//
 ########################################################
 
 New features
@@ -701,7 +1026,7 @@ New features
 - NEW: Real-Time Advanced Audio Kernel
 - NEW: Advanced Audio Kernels for armv6l
 - NEW: Advanced driver options in Audio config
-- NEW: High performance compressed file system 
+- NEW: High performance compressed file system
 - NEW: Pi-Zero W support in Standard kernel
 - NEW: ALSA Equalizer DSP with preset curves
 - NEW: Airplay advanced config settings
@@ -782,7 +1107,9 @@ Bug fixes
 - FIX: Dhcpcd wait even if static ip address
 
 ########################################################
-// 3.1 Release 2016-12-05
+//
+// 3.1.0 2016-12-05
+//
 ########################################################
 
 Updates
@@ -796,7 +1123,7 @@ Updates
 
 Bug fixes
 
-- FIX: Logic in Squeezelite restart job in Worker 
+- FIX: Logic in Squeezelite restart job in Worker
 - FIX: Pegged CPU due to FIFO schedule pol in squeezelite svc
 - FIX: MPD/Squeezelite fail on 1-core armv7l due to CPUAffinity
 - FIX: Squeezelite compatibility with armv6l platform (Pi-1B/B+)
@@ -806,7 +1133,9 @@ Bug fixes
 - FIX: DLNA server status page not found
 
 ########################################################
-// 3.0 Release 2016-11-27
+//
+// 3.0.0 2016-11-27
+//
 ########################################################
 
 New features
@@ -868,10 +1197,12 @@ Updates
 
 Bug fixes
 
-- FIX: Bit rate formatting in Audioinfo 
+- FIX: Bit rate formatting in Audioinfo
 
 ########################################################
-// 2.7 Release 2016-08-28
+//
+// 2.7.0 2016-08-28
+//
 ########################################################
 
 New features
@@ -942,22 +1273,24 @@ Bug fixes
 
 - FIX: Remove circular symlinks for SDCARD and NAS
 - FIX: Playback panel toolbar not visible on iPad Mini
-- FIX: DHCP addr being assigned when eth0 set to static addr 
+- FIX: DHCP addr being assigned when eth0 set to static addr
 - FIX: Fail to get cover art embedded in AIFF format
 - FIX: Wrong encodedAT rate displayed for UPnP files
 - FIX: Null printed in Moode log for USB sources
 - FIX: Wrong indextpl.html cp file in 2016-07-10 update
 - FIX: Audioinfo volume "disabled" not being displayed
 - FIX: ALSA mixer names with embedded spaces not parsed
-- FIX: Airplay not working over AP mode 
+- FIX: Airplay not working over AP mode
 
 ########################################################
-// 2.6 Release 2016-06-07
+//
+// 2.6.0 2016-06-07
+//
 ########################################################
 
 New features
 
-- NEW: Support for Raspberry Pi 3 
+- NEW: Support for Raspberry Pi 3
 - NEW: moodeOS 1.0 J-Lite factored for Moode Audio Player
 - NEW: WiFi automatic Access Point (AP) mode for direct connection
 - NEW: Auto-shuffle for a continuous stream of music
@@ -1016,7 +1349,7 @@ Radio stations
 - NEW: RTS - option musique
 - NEW: Soma FM - The Silent Channel
 - NEW: The Jazz Groove - East
-- NEW: The Jazz Groove - West 
+- NEW: The Jazz Groove - West
 - NEW: WBJC Baltimore 91.5 - Classical
 - NEW: WCLV Cleveland 104.9 - Classical
 - NEW: WCRB Boston 99.5 - Classical
@@ -1058,7 +1391,7 @@ Updates
 - UPD: Bump to Linux kernel 4.4.8
 - UPD: MPD custom compiled version 0.19.15
 - UPD: WiringPi compiled version 2.32
-- UPD: PHP5 configured for Zend OPcache 
+- UPD: PHP5 configured for Zend OPcache
 - UPD: Shairport-sync 2.8.4 compiled for systemd
 - UPD: Upmpdcli 1.1.3 libupnpp 0.14.1 libupnp 1.6.19.jfd2
 - UPD: DLNA database rebuild added to sys config
@@ -1092,7 +1425,9 @@ Bug fixes
 - FIX: NFS mount options not being set
 
 ########################################################
-// 2.5 Release 2016-02-27
+//
+// 2.5.0 2016-02-27
+//
 ########################################################
 
 New features
@@ -1207,7 +1542,9 @@ Bug fixes
 - FIX: Library panel track list sort order for compilation albums
 
 ########################################################
-// 2.4 Release 2015-10-30
+//
+// 2.4.0 2015-10-30
+//
 ########################################################
 
 New features
@@ -1244,7 +1581,7 @@ Media
 
 Updates
 
-- UPD: I2S audio device selection automatically populates Customize and Audio info popups 
+- UPD: I2S audio device selection automatically populates Customize and Audio info popups
 - UPD: HifiBerry DAC+ Pro Dual Clock, PlainDAC and PlainDAC+ added to i2s select and device db
 - UPD: Audiophonics PCM5122 DAC, Lucid Labs Raspberry Pi DAC and Mamboberry DAC+ added to i2s select and device db
 - UPD: Arcam irDAC, Chord 2Qute, QuteHD (S/PDIF), LKS MH-DA003 and Nuforce HDP DAC added to device database
@@ -1269,14 +1606,16 @@ Bug fixes
 - FIX: Slider controls on config pages not changing to theme color on iPad
 - FIX: Incorrect parsing of radio station url when it contains "=" char
 - FIX: Controls mis-aligned on System config page when using IE/Chrome
-- FIX: Upmpdcli always being started via init.d script at boot time 
+- FIX: Upmpdcli always being started via init.d script at boot time
 - FIX: AAC decode bit depth shows as "f" instead of a bit depth, assume decode to 24 bit
 - FIX: Network config Apply Settings if pressed for existing WiFi conection, deletes setting
 - FIX: Excessive MPD logging ("verbose") causing potential performance issue
 - FIX: Inaccurate positioning for customScroll when varying item heights in Playlist
 
 ########################################################
-// 2.3 Release 2015-09-05
+//
+// 2.3.0 2015-09-05
+//
 ########################################################
 
 New features
@@ -1290,13 +1629,15 @@ Bug fixes
 - FIX: Airplay name change does not fully complete
 
 ########################################################
-// 2.2 Release 2015-08-30
+//
+// 2.2.0 2015-08-30
+//
 ########################################################
 
 New features
 
 - NEW: Synchronized multi-room audio via Shairport-sync Airplay receiver
-- NEW: Display album art embedded in FLAC and MP3 audio files 
+- NEW: Display album art embedded in FLAC and MP3 audio files
 - NEW: Serve album art to MPoD/MPaD clients (url=http://moode)
 - NEW: USB 2x current setting for improved support of non-powered USB storage devices
 - NEW: Automatic configuration of PCM5122 on-chip analog volume ctrls
@@ -1313,7 +1654,7 @@ Media
 - NEW: ArtSound FM 92.7
 - NEW: Radio Monash
 - NEW: SUB.FM - Where Bass Matters
-- NEW: Triple J 
+- NEW: Triple J
 - NEW: Triple J Unearthed
 - NEW: True Vinyl Radio
 - NEW: UCFM 87.8 - Canberra's Alternative
@@ -1336,7 +1677,9 @@ Bug fixes
 - FIX: MPD volume not being set to 0 for mixer type "disabled" prior to MPD restart
 
 ########################################################
-// 2.1 Release 2015-07-31
+//
+// 2.1.0 2015-07-31
+//
 ########################################################
 
 New features
@@ -1373,7 +1716,9 @@ Bug fixes
 - FIX: Incorrect decode bit depth for dsd/dsf on Audio info popup
 
 ########################################################
-// 2.0 Release 2015-06-26
+//
+// 2.0.0 2015-06-26
+//
 ########################################################
 
 New features
@@ -1424,7 +1769,9 @@ Bug fixes
 - FIX: Mixer name not being set correctly for Hifiberry Amp(Amp+)
 
 ########################################################
-// 1.9 Release 2015-05-30
+//
+// 1.9.0 2015-05-30
+//
 ########################################################
 
 New features
@@ -1432,7 +1779,7 @@ New features
 - NEW: Playback history log w/type down search and Google song search
 - NEW: Log maintenance for clearing System and Playback history logs
 - NEW: UPnP renderer with Album art display and improved metadata handling
-- NEW: Menu pick to reload page from server (useful on smartphones/tablets) 
+- NEW: Menu pick to reload page from server (useful on smartphones/tablets)
 - NEW: On-demand help/infomation text
 
 Media
@@ -1468,14 +1815,16 @@ Bug fixes
 - FIX: Position issue in Library Artists column
 
 ########################################################
-// 1.8 Release 2015-04-29
+//
+// 1.8.0 2015-04-29
+//
 ########################################################
 
 New features
 
 - NEW: Playback panel with integrated playlist
 - NEW: Set Player and network media service names
-- NEW: Set ALSA PCM volume level 
+- NEW: Set ALSA PCM volume level
 - NEW: Select local timezone
 - NEW: Choose Theme color from Customize popup
 - NEW: Theme colors (Bluejeans, Fallenleaf, Grass, Herb, Lavender and Rose)
@@ -1515,7 +1864,9 @@ Bug fixes
 - FIX: Html code in mpd config page
 
 ########################################################
-// 1.7 Release 2015-03-21
+//
+// 1.7.0 2015-03-21
+//
 ########################################################
 
 New features
@@ -1523,7 +1874,7 @@ New features
 - NEW: Player brand name and logotype!
 - NEW: Customization popup with selection list for Audio Device Descriptions
 - NEW: Automatic unmute at player start for IQaudIO AMP+
-- NEW: Support for up to 4 USB attached storage devices on Pi-2B 
+- NEW: Support for up to 4 USB attached storage devices on Pi-2B
 
 Media
 
@@ -1542,7 +1893,9 @@ Bug fixes
 - FIX: USB mount not detecting more than one attached device
 
 ########################################################
-// 1.6 Release 2015-02-25
+//
+// 1.6.0 2015-02-25
+//
 ########################################################
 
 New features
@@ -1577,7 +1930,9 @@ Bug fixes
 - FIX: System and MPD config pages hang on ARMv7l (Pi-2B)
 
 ########################################################
-// 1.5 Release 2015-01-27
+//
+// 1.5.0 2015-01-27
+//
 ########################################################
 
 New features
@@ -1601,30 +1956,30 @@ Updates
 - UPD: Volume knob diameter and formatting same as time knob
 - UPD: Countdown time includes hours if hours period > 0, font auto-scaling
 - UPD: Countdown time continuously updates during manual slider changes
-- UPD: Adjust Scroll-to compensation for line wrap 
+- UPD: Adjust Scroll-to compensation for line wrap
 - UPD: Action menus stay within item list area
 - UPD: Replace Library addall btns w action menu item
 - UPD: Modal form action button moved to footer
 - UPD: Streamlined i2s driver loads
 - UPD: Streamlined kernel profile processing
-- UPD: Improved robustness for Clock Radio 
+- UPD: Improved robustness for Clock Radio
 - UPD: Improved efficiency in generating playlist
-- UPD: Improved efficiency in generating Library albums list 
+- UPD: Improved efficiency in generating Library albums list
 - UPD: Reduced processor utilization for worker loop
 - UPD: Radio station update #7
-- UPD: Shovel & broom 
+- UPD: Shovel & broom
 
 Bug fixes
 
 - FIX: Time knob slider unnecessarily re-paints when volume, other btns pressed
-- FIX: Time knob slider continuously paints after reaching 100% when radio station playing  
+- FIX: Time knob slider continuously paints after reaching 100% when radio station playing
 - FIX: Toolbar top margin not set for Library when auto-unhide from Browse panel
 - FIX: Toolbar not auto-hiding when back-btn to Browse root screen
 - FIX: Formatting issue in Library 1st row when window height grows
 - FIX: Time display issue in countdown timer when releasing slider
 - FIX: Duplicate setvol cmds sent by volume knob
 - FIX: Wrong padding and margin values on Library headers
-- FIX: Incorrect module load list for some i2s devices 
+- FIX: Incorrect module load list for some i2s devices
 - FIX: Wrong value for clock radio max minutes
 - FIX: Formatting not correct for clock radio Play name
 - FIX: Colon (:) in clock radio play name causing parse issue in readTcmConf()
@@ -1634,7 +1989,9 @@ Bug fixes
 - FIX: Free space not truncated on SD card download image (2/3 smaller!)
 
 ########################################################
-// 1.4 Release 2015-01-01
+//
+// 1.4.0 2015-01-01
+//
 ########################################################
 
 New features
@@ -1643,11 +2000,11 @@ New features
 
 Updates
 
-- UPD: Adjust radio station logo file naming scheme 
+- UPD: Adjust radio station logo file naming scheme
 - UPD: Auto show toolbars in Browse panel when clicking into a dir/saved playlist
 - UPD: Auto highlight artist/album in Library if only one exists after filtering
 - UPD: Display genre and/or artist in Library metadata area when album not selected
-- UPD: Display track list total time in Library metadata area 
+- UPD: Display track list total time in Library metadata area
 - UPD: Display song time for Library tracks
 - UPD: Remove hover and highlight on play/pause button
 - UPD: Radio station update #6 (includes complete set of 28 Soma FM stations)
@@ -1660,14 +2017,16 @@ Bug fixes
 - FIX: Playback controls not centered
 
 ########################################################
-// 1.3 Release 2014-12-23
+//
+// 1.3.0 2014-12-23
+//
 ########################################################
 
 New features
 
 - NEW: Clock radio scheduled play
-- NEW: Volume control popup 
-- NEW: Playlist move/delete item or range of items 
+- NEW: Volume control popup
+- NEW: Playlist move/delete item or range of items
 - NEW: Radio station add, edit, delete, import
 - NEW: 3-button playback controls
 - NEW: Time counter click to toggle count up or down
@@ -1691,12 +2050,12 @@ Updates
 - UPD: Clean up pnotify style and message text
 - UPD: Change MPD defaults for mixer_type and zeroconf_name
 - UPD: Change max-width in moode.css @media section to match bootstrap
-- UPD: Remove position and bitrate lines from Playback panel 
+- UPD: Remove position and bitrate lines from Playback panel
 - UPD: Remove icons from footer buttons
 - UPD: Reduce width of modal popups automatically for small screens
 - UPD: Reduce left and right margins on header
 - UPD: Remove button hover highlight for ease of use on touch screens
-- UPD: Redo layout of Reset modals in MPD and Network config pages 
+- UPD: Redo layout of Reset modals in MPD and Network config pages
 - UPD: Change system menu item "Library" to "Sources"
 - UPD: Change title on sources config page to "Music Source Configuration"
 - UPD: Add alias logo for SmoothJazz.com KJAZ.DB radio station
@@ -1710,9 +2069,9 @@ Bug fixes
 
 - FIX: Missing dash between album and artist in Playlist panel
 - FIX: RADIO file permissions not being reset at player load
-- FIX: Persistent highlight on Library and MPD menu items 
+- FIX: Persistent highlight on Library and MPD menu items
 - FIX: Links to app config pages not staying within homescreen app on IOS
-- FIX: Wrong class selector on Power Off button 
+- FIX: Wrong class selector on Power Off button
 - FIX: Button hover highlight persists on touch screens after button press
 - FIX: Comment delimiter syntax in certain php files
 - FIX: Sticky mute state on popup volume ctl when using knob slider
@@ -1728,12 +2087,14 @@ Bug fixes
 - FIX: Duplicate class defs on certain input fields in config html's
 - FIX: Wrong for=id on certain input fields in config html's
 - FIX: Wrong action menu for radio stations within saved playlist
-- FIX: Search tally/result list not cleared when 0 results or search field empty 
+- FIX: Search tally/result list not cleared when 0 results or search field empty
 - FIX: Data type 'undefined' error when database search returns nothing
 - FIX: Wrong starting index after Library album list header click
 
 ########################################################
-// 1.2 Release 2014-10-31
+//
+// 1.2.0 2014-10-31
+//
 ########################################################
 
 New features
@@ -1742,11 +2103,11 @@ New features
 - NEW: Cover art and metadata in Library panel
 - NEW: Click-enabled column headers for "ALL" filters on Library panel
 - NEW: Action menu for song rows on Library panel
-- NEW: Place holder action menu items for create/edit/delete/import Webradio station 
+- NEW: Place holder action menu items for create/edit/delete/import Webradio station
 
 Updates
 
-- UPD: Add logo for alternate Webradio station string sent by EuropaJazzRadio - The Sound Of Jazz 
+- UPD: Add logo for alternate Webradio station string sent by EuropaJazzRadio - The Sound Of Jazz
 - UPD: Remove "Web Radio - " on 2nd line in Playlist panel and increase font size
 - UPD: Remove double quotes from AddictedToRadio names in Playlist and Playback panels
 - UPD: Turn off hover highlight in Library panel for cleaner touch tablet scrolling
@@ -1758,26 +2119,28 @@ Updates
 
 Bug fixes
 
-- FIX: MPD consume-mode sometimes on after boot/reboot 
+- FIX: MPD consume-mode sometimes on after boot/reboot
 - FIX: Persistent row highlighting on Browse and Library panel items
 - FIX: Compilation album roll up not excluding albums named "Greatest Hits"
-- FIX: Remove extra WDET file present in radio update 3 
+- FIX: Remove extra WDET file present in radio update 3
 - FIX: Wrong copy source for radio batch update in utility.sh
 - FIX: Cover art lookup failing on USB source due to case sensitivity
 
 ########################################################
-// 1.1 Release 2014-09-17
+//
+// 1.1.0 2014-09-17
+//
 ########################################################
 
 New Features
 
-- NEW: Saved playlist Click lists the items in the playlist 
-- NEW: Saved playlist root Action Menu includes "Delete this playlist" 
+- NEW: Saved playlist Click lists the items in the playlist
+- NEW: Saved playlist root Action Menu includes "Delete this playlist"
 - NEW: Saved playlist item Action Menu includes only Add, Add/play, Add/replace/play (same for Browse item)
 - NEW: Favicons for desktop and mobile, formatted for adding to home screens
 - NEW: Library panel compilation albums rolled up by album name
 - NEW: Library panel Add/replace/play all btn
-- NEW: Library panel double high songlist rows and large Addsong btn for ease of use on touch   
+- NEW: Library panel double high songlist rows and large Addsong btn for ease of use on touch
 - NEW: Library panel notify messages for Playall, Addall and Add/replace/playall buttons
 - NEW: Library panel custom hover color for Addsong btn for improved visability
 - NEW: Library panel animated icon on Library button for long running actions
@@ -1802,7 +2165,9 @@ Bug Fixes
 - FIX: Certain un-escaped characters in coverart url causing 404 not found error
 
 ########################################################
-// 1.0 Release 2014-08-23
+//
+// 1.0.0 2014-08-23
+//
 ########################################################
 
 New Features
@@ -1811,7 +2176,7 @@ New Features
 - NEW: Audio Information popup shows input, dsp, output, device and system attributes
 - NEW: Power Off and Audio Info buttons on left side header
 - NEW: Audio device description file for Audio Information popup
-- NEW: Power off and Reboot reconnect pages  
+- NEW: Power off and Reboot reconnect pages
 - NEW: Cover art displayed when an image file exists in the album folder, refer to (1) below
 - NEW: Image file search list includes folder.jpg, folder.png, cover.jpg and cover.png
 - NEW: Custom cover art displayed when Webradio station is playing
@@ -1831,8 +2196,8 @@ New Features
 
 Updates
 
-- UPD: Change WebUI base color scheme to Flat-UI Midnight Blue 
-- UPD: Change modal base color scheme to Flat-UI Midnight Blue 
+- UPD: Change WebUI base color scheme to Flat-UI Midnight Blue
+- UPD: Change modal base color scheme to Flat-UI Midnight Blue
 - UPD: Set notification message fade to 1 sec from default of 8 secs for panel messages
 - UPD: Change trashcan icon to list icon for Playlist "consume mode”
 - UPD: Remove "Main" pick from Menu (redundant with Playback footer button)
@@ -1844,16 +2209,18 @@ Updates
 - UPD: Display bitrate only for Webradio (remove bit depth)
 - UPD: Change column headers to all caps for visibility in Library panel
 - UPD: Allow text to wrap in Library panel
-- UPD: Sort DAC btn list alphabetically 
+- UPD: Sort DAC btn list alphabetically
 - UPD: Reenable Zeroconf controls to allow service name to be changed
 - UPD: Add (optionally) 1GHz overclock parms to /boot/config.txt
-       
+
 Bug Fixes
 
 - FIX: Sample rate converter setting never changes from "Fastest Sinc Interpolator"
 - FIX: Timer knob not updating due to bug in jquery.countdown.js 1.6.2 (v1.6.3 fixes it)
 - FIX: Syntax error in line 38 "minwords..." in js/i18n/_messages.en.js
 
-########################################################==       
+########################################################==
+//
 // END RELEASE NOTES
-########################################################==       
+//
+########################################################==

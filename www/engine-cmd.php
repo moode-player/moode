@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2018-04-02 TC moOde 4.1
+ * 2019-04-12 TC moOde 5.0
  *
  */
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -72,6 +72,10 @@ if ($cmd == 'btactive1') {
 		}
 	}
 }
+elseif ($cmd == 'inpactive1') {
+	$result = sdbquery("SELECT value FROM cfg_system WHERE param='audioin'", cfgdb_connect());
+	$cmd .= ',' . $result[0]['value'];
+}
 
-//workerLog('engineCmd(): Returning to client');
+//workerLog('engineCmd(): Returning cmd to client');
 echo json_encode($cmd);

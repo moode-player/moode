@@ -19,75 +19,68 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2017-03-03 KS initial version (rev 4)
-# 2018-01-26 TC moOde 4.0
-# 2018-04-02 TC moOde 4.1
-# - add raspbian version info
-# - add 2>&1 and FNR to awk command for PHPVER
-# - fix audiodevname not being set correctly
-# - change cfg_system id 70 from ktimerfreq to rsmafterbt
-# - change cfg_system id 83 from res_boot_config_txt to btactive
-# - replace volwarning with wificountry 
-# 2018-07-11 TC moOde 4.2
-# - deprecate rsmaftersps in cfg_airplay, replace with rsmafterapl from cfg_system
-# - add slactive, rsmaftersl from cfg_system
-# - add section for Bluetooth settings
-# - use "Controller detected" instead of value for HWVOL
-# - add Pi-3B+ 1GB v1.3 to hdwrrev
-# - change df cmd to use /dev/root instead of root
-# 2018-09-27 TC moOde 4.3
-# - cfg_system column adds
-# - support arm64 (@jesset)
-# - spotify
-# 2018-10-19 TC moOde 4.3 update
-# - add on/off for spotifysvc
-# - add cover backdrop, blur and scale settings
-# - add eth port fix setting and speed
-# 2018-12-09 TC moOde 4.4
-# - new clock radio sql cols
-# - add compilation rollup and compilation_excludes
-# - chg iface from on-board to SoC
-# - add Pi-3A+ to wifi bt 
+# 2019-MM-DD TC moOde 6.0.0
 #
 
-FREQ() { 
-	echo -e "\t  C L O C K    F R E Q U E N C I E S  \n";
-	   for src in arm core h264 isp v3d uart pwm emmc pixel vec hdmi dpi ; do     
-	   F=$(/opt/vc/bin/vcgencmd measure_clock $src | cut -f 2 -d "=")
-	   echo -e "\t$src\t= $((F/1000000)) MHz";   
-	   done | pr --indent=5 -r -t -2 -e3 -w 50
-	echo
-	grep  "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print "\t" "SD card" "\t= " $3/1000000 " MHz" }'
+# check for sudo
+[[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
+
+SYSTEM_PARAMETERS() {
+	echo -e "\n\t  S Y S T E M    P A R A M E T E R S  "
+	echo -e "\n\tmoOde release\t\t= $moode_rel\c"
+	echo -e "\n\tRaspbian OS\t\t= $RASPBIANVER\c"
+	echo -e "\n\tLinux kernel\t\t= $KERNEL\c"
+	echo -e "\n\tPi model\t\t= $hdwrrev\c"
+	echo -e "\n\tSystem uptime\t\t= $UPTIME\c"
+	echo -e "\n\tTimezone\t\t= $timezone\c"
+	echo -e "\n\tCurrent time\t\t= $NOW\c"
+	echo -e "\n\c"
+	echo -e "\n\tHost name\t\t= $HOSTNAME\c"
+	echo -e "\n\tEthernet address\t= $ETH0IP\c"
+	echo -e "\n\tEthernet MAC\t\t= $ETH0MAC\c"
+	echo -e "\n\tWLAN address\t\t= $WLAN0IP\c"
+	echo -e "\n\tWLAN MAC\t\t= $WLAN0MAC\c"
+	echo -e "\n\tWLAN country\t\t= $wlancountry\c"
+	echo -e "\n\c"
+	echo -e "\n\tSoC identifier\t\t= $SOC\c"
+	echo -e "\n\tCore count\t\t= $CORES\c"
+	echo -e "\n\tArchitecture\t\t= $ARCH\c"
+	echo -e "\n\tKernel timer freq\t= $HZ Hz\c"
+	echo -e "\n\tSDCard freq\t\t= $SDFREQ MHz\c"
+	echo -e "\n\tUSB boot\t\t= $USBBOOT\c"
+	echo -e "\n\tWarranty\t\t= $WARRANTY\c"
+	echo -e "\n\c"
+	echo -e "\n\tRoot size\t\t= $ROOTSIZE\c"
+	echo -e "\n\tRoot used\t\t= $ROOTUSED\c"
+	echo -e "\n\tRoot available\t\t= $ROOTAVAIL\c"
+	echo -e "\n\tRoot expand\t\t= $FSEXPAND\c"
+	echo -e "\n\tMemory free\t\t= $MEMFREE MB\c"
+	echo -e "\n\tMemory used\t\t= $MEMUSED MB\c"
+	echo -e "\n\tSoC temperature\t\t= $TEMP\c"
+	echo -e "\n\c"
+	echo -e "\n\tCPU governor\t\t= $GOV\c"
+	echo -e "\n\tOnboard WiFi\t\t= $piwifi\c"
+	echo -e "\n\tOnboard BT\t\t= $pibt\c"
+	echo -e "\n\tHDMI output\t\t= $HDMI\c"
+	echo -e "\n\tEth addr wait\t\t= $eth0chk\c"
+	echo -e "\n\tMax USB current\t\t= $maxusbcurrent\c"
+	echo -e "\n\tUSB (UAC2) fix\t\t= $uac2fix\c"
+	echo -e "\n\tPi-3B+ eth fix\t\t= $eth_port_fix\c"
+	echo -e "\n\tSSH term server\t\t= $shellinabox\c"
+	echo -e "\n\c"
+	echo -e "\n\tPHP-FPM version\t\t= $PHPVER\c"
+	echo -e "\n\tNGINX version\t\t= $NGINXVER\c"
+	echo -e "\n\tSQLite3 version\t\t= $SQLITEVER\c"
+	echo -e "\n\tHostapd version\t\t= $HOSTAPDVER\c"
+	echo -e "\n\tWiringPi version\t= $WIRINGPI_VER\n"
 }
 
-CPULOAD() { 
-	echo -e "\t  C P U    L O A D  \n";
-	mpstat -P ALL 2 1 | awk  '/Average:/  { print  "\t" $2 "\t" $3 "\t" $5 "\t" $12}'
-	echo
-}
-
-PROCESSLOAD() { 
-	echo -e "\t  P R O C E S S    L O A D  \n";
-	ps -eo pri,rtprio,comm,%mem,psr,pcpu --sort=-pcpu | head -n 10 | sed 's/^/\t/g'  
-	echo
-}
-
-VOLT() {
-	echo -e "\n\t  S Y S T E M    V O L T A G E S  \n"
-	/opt/vc/bin/vcgencmd measure_volts core|awk -F "=" '{print "\t" "core" "\t" "\t" "\t" "= " $2 }'
-	/opt/vc/bin/vcgencmd measure_volts sdram_c|awk -F "=" '{print "\t" "sdram controller" "\t" "= " $2 }'
-	/opt/vc/bin/vcgencmd measure_volts sdram_i|awk -F "=" '{print "\t" "sdram I/O" "\t" "\t" "= " $2 }'
-	/opt/vc/bin/vcgencmd measure_volts sdram_p|awk -F "=" '{print "\t" "sdram chip" "\t" "\t" "= " $2 "\n"}'
-}
-
-AUDIO() {
+AUDIO_PARAMETERS() {
+	ALSAVER="$(dpkg -l | awk '/libasound2:/ { print  $3 }')"
+ 	SOXVER="$(dpkg -l | awk '/libsoxr0:/ { print  $3 }')"
 	BITS="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w format | cut -f 2 -d " ")"
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
 	[[ "$BITS" = "" ]] && OUTSTREAM="Closed" || OUTSTREAM="$BITS / $RATE"
-
-	# support arm64
-	ALSAVER="$(dpkg -l | awk '/libasound2:/ { print  $3 }')"
- 	SOXVER="$(dpkg -l | awk '/libsoxr0:/ { print  $3 }')"
 
 	if [[ $i2sdevice = "none" ]]; then
 		[[ $device = "0" ]] && audiodevname="On-board audio device" || audiodevname="USB audio device"
@@ -103,40 +96,24 @@ AUDIO() {
 
 	[[ $alsavolume = "none" ]] && hwvol="None" || hwvol="Controller detected"
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
-	
-	echo -e "\t  U I  C U S T O M I Z A T I O N S  \n"
-	echo -e "\tTheme\t\t\t= $themename\c"
-	echo -e "\n\tAccent color\t\t= $themecolor\c"
-	echo -e "\n\tAlpha blend\t\t= $alphablend\c"
-	echo -e "\n\tAdaptive background\t= $adaptive\c"
-	if [ -f //var/local/www/imagesw/bgimage.jpg ]; then bgimage="Yes"; else bgimage="No"; fi
-	echo -e "\n\tBackground image\t= $bgimage\c"
-	echo -e "\n\tPlayback history\t= $playhist\c"
-	echo -e "\n\tExtra metadata\t\t= $xtagdisp\c"
-	echo -e "\n\tArtist list order\t= $libartistcol\c"
-	echo -e "\n\tCompilation rollup\t= $compilation_rollup\c"
-	echo -e "\n\tCompilation excludes\t= $compilation_excludes\c"
-	echo -e "\n\tCover search pri\t= $library_covsearchpri\c"
-	echo -e "\n\tHi-res covers\t\t= $library_hiresthm\c"
-	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\c"
-	echo -e "\n\tCover backdrop\t\t= $cover_backdrop\c"
-	echo -e "\n\tCover blur\t\t= $cover_blur\c"
-	echo -e "\n\tCover scale\t\t= $cover_scale\n"
 
 	echo -e "\t  A U D I O    P A R A M E T E R S  \n"
 	echo -e "\tAudio device\t\t= $audiodevname\c"
 	echo -e "\n\tInterface\t\t= $iface\c"
-	echo -e "\n\tHdwr volume\t\t= $hwvol\c"
+	echo -e "\n\tHardware volume\t\t= $hwvol\c"
 	echo -e "\n\tMixer name\t\t= $volmixer\c"
-	echo -e "\n\tOutput stream\t\t= $OUTSTREAM\c"
+	echo -e "\n\tAudio source\t\t= $audioin\c"
+	echo -e "\n\tOutput device\t\t= $audioout\c"
+	echo -e "\n\tResume MPD\t\t= $rsmafterinp\c"
+	echo -e "\n\tVolume knob\t\t= $volknob\c"
+	echo -e "\n\tVolume mute\t\t= $volmute\c"
+	echo -e "\n\tSaved MPD vol\t\t= $volknob_mpd\c"
+	echo -e "\n\tPreamp volume\t\t= $volknob_preamp\c"
 	echo -e "\n\tALSA version\t\t= $ALSAVER\c"
 	echo -e "\n\tSoX version\t\t= $SOXVER\c"
 	echo -e "\n\c"
-	echo -e "\n\tVolume knob\t\t= $volknob\c"
-	echo -e "\n\tVolume mute\t\t= $volmute\c"
-	echo -e "\n\c"
 	echo -e "\n\tBluetooth controller\t= $btsvc\c"
-
+	echo -e "\n\tPairing agent\t\t= $pairing_agent\c"
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		echo -e "\n\tAirplay receiver\t= $airplaysvc\c"
 	fi
@@ -152,17 +129,62 @@ AUDIO() {
 	if [ $(($feat_bitmask & $FEAT_MINIDLNA)) -ne 0 ]; then
 		echo -e "\n\tDLNA server\t\t= $dlnasvc\c"
 	fi
-
+	if [ $(($feat_bitmask & $FEAT_GPIO)) -ne 0 ]; then
+		echo -e "\n\tGPIO button handler\t= $gpio_svc\c"
+	fi
+	if [ $(($feat_bitmask & $FEAT_DJMOUNT)) -ne 0 ]; then
+		echo -e "\n\tUPnP browser\t\t= $upnp_browser\c"
+	fi
 	echo -e "\n\c"
-	echo -e "\n\tRotary encoder\t\t= $rotaryenc\c"
-	echo -e "\n\tEncoder params\t\t= $rotenc_params\c"
-	echo -e "\n\tCrossfeed\t\t= $crossfeed\c"
-	echo -e "\n\tParametric EQ\t\t= $eqfa4p\c"
-	echo -e "\n\tGraphic EQ\t\t= $alsaequal\c"
 	echo -e "\n\tAuto-shuffle\t\t= $ashufflesvc\c"
 	echo -e "\n\tAutoplay\t\t= $autoplay\c"
-	echo -e "\n\tMPD crossfade\t\t= $mpdcrossfade\n"
+	echo -e "\n\tRotary encoder\t\t= $rotaryenc\c"
+	echo -e "\n\tEncoder params\t\t= $rotenc_params\c"
+	echo -e "\n\tPolarity inversion\t= $invert_polarity\c"
+	echo -e "\n\tCrossfeed\t\t= $crossfeed\c"
+	echo -e "\n\tCrossfade\t\t= $mpdcrossfade\c"
+	echo -e "\n\tParametric EQ\t\t= $eqfa4p\c"
+	echo -e "\n\tGraphic EQ\t\t= $alsaequal\c"
+	echo -e "\n\tMPD httpd\t\t= $mpd_httpd\n"
+}
 
+APPEARANCE_SETTINGS() {
+	echo -e "\t  A P P E A R A N C E   S E T T I N G S  \n"
+	# themes and backgrounds
+	echo -e "\tTheme\t\t\t= $themename\c"
+	echo -e "\n\tAccent color\t\t= $accentcolor\c"
+	echo -e "\n\tAlpha blend\t\t= $alphablend\c"
+	echo -e "\n\tAdaptive background\t= $adaptive\c"
+	if [ -f //var/local/www/imagesw/bgimage.jpg ]; then bgimage="Yes"; else bgimage="No"; fi
+	echo -e "\n\tBackground image\t= $bgimage\c"
+	echo -e "\n\tCover backdrop\t\t= $cover_backdrop\c"
+	echo -e "\n\tCover blur\t\t= $cover_blur\c"
+	echo -e "\n\tCover scale\t\t= $cover_scale\c"
+	# coverview options
+	echo -e "\n\tCoverView auto-display\t= $scnsaver_timeout\c"
+	echo -e "\n\tCoverView style\t\t= $scnsaver_style\c"
+	# other options
+	echo -e "\n\tAuto-shuffle filter\t= $ashuffle_filter\c"
+	echo -e "\n\tExtra metadata\t\t= $xtagdisp\c"
+	echo -e "\n\tPlayback history\t= $playhist\n"
+}
+
+LIBRARY_SETTINGS() {
+	echo -e "\t  L I B R A R Y   S E T T I N G S  \n"
+	# music library
+	echo -e "\tArtist list order\t= $library_artist_col\c"
+	echo -e "\n\tAlbum list order\t= $library_album_col\c"
+	echo -e "\n\tIgnore articles\t\t= $ignore_articles\c"
+	echo -e "\n\tCompilation rollup\t= $compilation_rollup\c"
+	echo -e "\n\tCompilation excludes\t= $compilation_excludes\c"
+	echo -e "\n\tUTF8 character filter\t= $library_utf8rep\c"
+	echo -e "\n\tHi-res thumbs\t\t= $library_hiresthm\c"
+	echo -e "\n\tCover search pri\t= $library_covsearchpri\c"
+	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\c"
+	echo -e "\n\tInstant play action\t= $library_instant_play\n"
+}
+
+MPD_SETTINGS() {
 	echo -e "\t  M P D    S E T T I N G S  \n"
 	echo -e "\tVersion\t\t\t= $mpdver\c"
 	echo -e "\n\tVolume control\t\t= $mixer_type\c"
@@ -170,13 +192,19 @@ AUDIO() {
 	echo -e "\n\tSoX resampling\t\t= $audio_output_format\c"
 	echo -e "\n\tSoX quality\t\t= $samplerate_converter\c"
 	echo -e "\n\tSoX multithreading\t= $sox_multithreading\c"
-	echo -e "\n\tAudio buffer (kb)\t= $audio_buffer_size\c"
-	echo -e "\n\tBuffer before play\t= $buffer_before_play\c"
-	echo -e "\n\tOutput buffer size (kb)\t= $max_output_buffer_size\c"
-	echo -e "\n\tVolume normalization\t= $volume_normalization\c"
 	echo -e "\n\tDSD over PCM (DoP)\t= $dop\c"
-	echo -e "\n\tReplay gain\t\t= $replaygain\n"
-
+	echo -e "\n\tReplaygain\t\t= $replaygain\c"
+	echo -e "\n\tReplaygain preamp\t= $replaygain_preamp\c"
+	echo -e "\n\tVolume normalization\t= $volume_normalization\c"
+	echo -e "\n\tAudio buffer (kb)\t= $audio_buffer_size\c"
+	echo -e "\n\tOutput buffer size (kb)\t= $max_output_buffer_size\n"
+	#echo -e "\n\tALSA auto-resample\t= $auto_resample\c"
+	#echo -e "\n\tALSA auto-channels\t= $auto_channels\c"
+	#echo -e "\n\tALSA auto-format\t= $auto_format\c"
+	#echo -e "\n\tHardware buffer time\t= $buffer_time\c"
+	#echo -e "\n\tHardware period time\t= $period_time\n"
+}
+RENDERER_SETTINGS() {
 	echo -e "\t  B L U E T O O T H    S E T T I N G S  \n"
 	echo -e "\tBluetooth ver\t\t= $BTVER\c"
 	echo -e "\n\tBluealsa ver\t\t= $BAVER\c"
@@ -188,27 +216,27 @@ AUDIO() {
 		echo -e "\t  A I R P L A Y    S E T T I N G S  \n"
 		echo -e "\tVersion\t\t\t= $SPSVER\c"
 		echo -e "\n\tFriendly name\t\t= $airplayname\c"
-		echo -e "\n\tALSA device\t\t= hw:$device\c"
-		echo -e "\n\tVolume mixer\t\t= $airplayvol\c"
-		echo -e "\n\tResume MPD\t\t= $rsmafterapl\c"
+		echo -e "\n\tALSA device\t\t= $airplay_device\c"
+		echo -e "\n\tInterpolation\t\t= $interpolation\c"
 		echo -e "\n\tOutput bit depth\t= $output_format\c"
 		echo -e "\n\tOutput sample rate\t= $output_rate\c"
 		echo -e "\n\tSession interruption\t= $allow_session_interruption\c"
 		echo -e "\n\tSession timeout (ms)\t= $session_timeout\c"
-		echo -e "\n\tAudio buffer (secs)\t= $audio_backend_buffer_desired_length_in_seconds\n"
+		echo -e "\n\tAudio buffer (secs)\t= $audio_backend_buffer_desired_length_in_seconds\c"
+		echo -e "\n\tResume MPD\t\t= $rsmafterapl\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
 		SPOTDEV="$(aplay -L | grep -w default)"
 		echo -e "\t  S P O T I F Y    S E T T I N G S  \n"
 		echo -e "\tFriendly name\t\t= $spotifyname\c"
-		echo -e "\n\tALSA device\t\t= $SPOTDEV\c"
-		echo -e "\n\tResume MPD\t\t= $rsmafterspot\c"
+		echo -e "\n\tALSA device\t\t= $spotify_device\c"
 		echo -e "\n\tBit rate\t\t= $bitrate\c"
 		echo -e "\n\tInitial volume\t\t= $initial_volume\c"
 		echo -e "\n\tVolume curve\t\t= $volume_curve\c"
 		echo -e "\n\tVolume normalization\t= $volume_normalization\c"
-		echo -e "\n\tNormalization pregain\t= $normalization_pregain\n"
+		echo -e "\n\tNormalization pregain\t= $normalization_pregain\c"
+		echo -e "\n\tResume MPD\t\t= $rsmafterspot\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
@@ -222,44 +250,41 @@ AUDIO() {
 		echo -e "\n\tOutput buffers\t\t= $OUTPUTBUFFERS\c"
 		echo -e "\n\tTask priority\t\t= $TASKPRIORITY\c"
 		echo -e "\n\tCodec list\t\t= $CODECS\c"
-		echo -e "\n\tResume MPD\t\t= $rsmaftersl\c"
-		echo -e "\n\tOther options\t\t= $OTHEROPTIONS\n" | cut -c 1-45
+		echo -e "\n\tOther options\t\t= $OTHEROPTIONS\c" | cut -c 1-45
+		echo -e "\tResume MPD\t\t= $rsmaftersl\n"
 	fi
+}
 
-	echo -e "\t  M O O D E    L O G  \n"
+MOODE_LOG() {
+	echo -e "\t  M O O D E    S T A R T U P    L O G  \n"
 	sed -e 's/^/    /' /var/log/moode.log > /tmp/moode.log
 	cat /tmp/moode.log
-	echo -e "\n\n"
-
+	#echo -e "\n\n"
 }
 
-LINE() {
-	echo "____________________________________________________________________________"
-}
+#
+# Gather data
+#
+
 # feature availability bitmasks
 FEAT_AIRPLAY=2#0000000000000010
 FEAT_MINIDLNA=2#0000000000000100
 FEAT_SQUEEZELITE=2#0000000000010000
 FEAT_UPMPDCLI=2#0000000000100000
 FEAT_SPOTIFY=2#0000100000000000
+FEAT_GPIO=2#0001000000000000
+FEAT_DJMOUNT=2#0010000000000000
 
 HOSTNAME=`uname -n`
 RASPBIANVER=`cat /etc/debian_version`
 KERNEL=`uname -r`
-#CPU=`cat /proc/cpuinfo | grep "Hardware" | cut -f 2 -d ":" | tr -d " "`
-# support arm64
-if [[ $(uname -m) == "aarch64" ]];then
-	CPU=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
-else
-	CPU=`cat /proc/cpuinfo | grep "Hardware" | cut -f 2 -d ":" | tr -d " "`
-fi
+SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
 ARCH=`uname -m`
 MEMUSED=`free -m | grep "Mem" | awk {'print $3'}`
 MEMFREE=`free -m | grep "Mem" | awk {'print $4'}`
 
-
-if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then 
+if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
 else
 	GOV="NA - disabled in kernel"
@@ -270,7 +295,7 @@ WLAN0IP="$(ip addr list wlan0 2>&1 | grep "inet " |cut -d' ' -f6|cut -d/ -f1)"
 if [ "$ETH0IP" = "" ]; then
 	ETH0IP="unassigned"
 fi
-if [ "$WLAN0IP" = "" ]; then 
+if [ "$WLAN0IP" = "" ]; then
 	WLAN0IP="unassigned"
 fi
 ETH0MAC="$(ip addr list eth0 2>&1 | grep "ether " |cut -d' ' -f6|cut -d/ -f1)"
@@ -278,7 +303,7 @@ WLAN0MAC="$(ip addr list wlan0 2>&1 | grep "ether " |cut -d' ' -f6|cut -d/ -f1)"
 if [ "$ETH0MAC" = "" ]; then
 	ETH0MAC="no adapter"
 fi
-if [ "$WLAN0MAC" = "" ]; then 
+if [ "$WLAN0MAC" = "" ]; then
 	WLAN0MAC="no adapter"
 fi
 
@@ -295,7 +320,7 @@ ROOTAVAIL="$(df -h | grep /dev/root | awk '{print $4}')"
 /opt/vc/bin/tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
 
 NOW=$(date +"%Y-%m-%d %T")
-UPTIME="$(uptime -p)" 
+UPTIME="$(uptime -p)"
 
 [[ $(cat /proc/cpuinfo | grep 'Revision' | cut -f 2 -d " ") == 2* ]] && WARRANTY=void || WARRANTY=OK
 
@@ -308,18 +333,22 @@ else
 fi
 
 TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
+SDFREQ=$(grep "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print $3/1000000}')
 
-PHPVER=$(php -v 2>&1 | awk 'FNR==1{ print $2 }' | cut -c-6)
+
+PHPVER=$(php -v 2>&1 | awk 'FNR==1{ print $2 }' | cut -c-5)
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
 BTVER=$(bluetoothd -v)
 BAVER=$(bluealsa -V 2> /dev/null)
-if [ "$BAVER" = "" ]; then 
+if [ "$BAVER" = "" ]; then
 	BAVER="Turn BT on for version info"
 fi
+HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
+WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
 
 # Moode release
-mooderel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
+moode_rel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
 
 # Moode SQL data
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -327,29 +356,51 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 # Airplay settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_airplay")
 readarray -t arr <<<"$RESULT"
-#[[ "${arr[0]}" = "1" ]] && airplaymeta2="On" || airplaymeta2="Off"
-airplayvol=${arr[1]}
-#rsmaftersps=${arr[2]}
+#[[ "${arr[0]}" = "1" ]] && airplaymeta2="On" || airplaymeta2="Off" deprecated
+#airplayvol=${arr[1]} deprecated
+interpolation=${arr[2]}
 output_format=${arr[3]}
 output_rate=${arr[4]}
 allow_session_interruption=${arr[5]}
 session_timeout=${arr[6]}
 audio_backend_buffer_desired_length_in_seconds=${arr[7]}
 
-# MPD settings
-RESULT=$(sqlite3 $SQLDB "select value_player from cfg_mpd where param in ('device', 'mixer_type', 'audio_output_format', 'samplerate_converter', 'sox_multithreading', 'dop', 'replaygain', 'volume_normalization', 'audio_buffer_size', 'buffer_before_play', 'max_output_buffer_size')")
+# MPD settings, r45b
+RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
+'device',
+'mixer_type',
+'dop',
+'audio_output_format',
+'samplerate_converter',
+'sox_multithreading',
+'replaygain',
+'replaygain_preamp',
+'volume_normalization',
+'audio_buffer_size',
+'max_output_buffer_size',
+'auto_resample',
+'auto_channels',
+'auto_format',
+'buffer_time',
+'period_time'
+)")
 readarray -t arr <<<"$RESULT"
 device=${arr[0]}
 mixer_type=${arr[1]}
-audio_output_format=${arr[2]}
-samplerate_converter=${arr[3]}
-[[ "${arr[4]}" = "1" ]] && sox_multithreading="off" || sox_multithreading="on"
-dop=${arr[5]}
+dop=${arr[2]}
+audio_output_format=${arr[3]}
+samplerate_converter=${arr[4]}
+[[ "${arr[5]}" = "1" ]] && sox_multithreading="off" || sox_multithreading="on"
 replaygain=${arr[6]}
-volume_normalization=${arr[7]}
-audio_buffer_size=${arr[8]}
-buffer_before_play=${arr[9]}
+replaygain_preamp=${arr[7]}
+volume_normalization=${arr[8]}
+audio_buffer_size=${arr[9]}
 max_output_buffer_size=${arr[10]}
+auto_resample=${arr[11]}
+auto_channels=${arr[12]}
+auto_format=${arr[13]}
+buffer_time=${arr[14]}
+period_time=${arr[15]}
 
 # Spotify settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_spotify")
@@ -401,27 +452,27 @@ clkradio_volume=${arr[23]}
 clkradio_shutdown=${arr[24]}
 playhist=${arr[25]}
 phistsong=${arr[26]}
-reserved28=${arr[27]}
-musictab_default=${arr[28]}
+library_utf8rep=${arr[27]}
+current_view=${arr[28]}
 timecountup=${arr[29]}
-themecolor=${arr[30]}
+accentcolor=${arr[30]}
 volknob=${arr[31]}
 [[ "${arr[32]}" = "1" ]] && volmute="Muted" || volmute="Unmuted"
-wificountry=${arr[33]}
+library_album_col=${arr[33]}
 alsavolume=${arr[34]}
 amixname=${arr[35]}
 mpdmixer=${arr[36]}
 xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
 lcdup=${arr[39]}
-lcdupscript=${arr[40]}
+reserved41=${arr[40]}
 extmeta=${arr[41]}
 maint_interval=${arr[42]}
 hdwrrev=${arr[43]}
 [[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
-apdssid=${arr[45]}
-apdchan=${arr[46]}
-apdpwd=${arr[47]}
+reserved46=${arr[45]}
+reserved47=${arr[46]}
+reserved48=${arr[47]}
 airplaymeta=${arr[48]}
 airplayactv=${arr[49]}
 [[ "${arr[50]}" = "1" ]] && debuglog="On" || debuglog="Off"
@@ -433,27 +484,28 @@ mpdasuser=${arr[55]}
 [[ "${arr[56]}" = "1" ]] && uac2fix="On" || uac2fix="Off"
 keyboard=${arr[57]}
 kvariant=${arr[58]}
-kernel=${arr[59]}
+toggle_song=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
 hdmiport=${arr[61]}
 cpugov=${arr[62]}
-[[ "${arr[63]}" = "other" ]] && mpdsched="TS" || mpdsched=${arr[67]}
-pkgid=${arr[64]}
-airplayvol=${arr[65]}
+[[ "${arr[63]}" = "1" ]] && pairing_agent="On" || pairing_agent="Off"
+pkgid_suffix=${arr[64]}
+lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
 [[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
-libartistcol=${arr[68]}
+library_artist_col=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
 alsaequal=${arr[72]}
 eqfa4p=${arr[73]}
-if [[ $hdwrrev = "Pi-3B+ 1GB v1.3" || $hdwrrev = "Pi-3B 1GB v1.2" || $hdwrrev = "Pi-3A+ 512 MB v1.0" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
-	[[ "${arr[74]}" = "1" ]] && p3wifi="On" || p3wifi="Off"
-	[[ "${arr[75]}" = "1" ]] && p3bt="On" || p3bt="Off"
+rev=$(echo $hdwrrev | cut -c 4)
+if [[ $rev = "3" || $rev = "4" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
+	[[ "${arr[74]}" = "1" ]] && piwifi="On" || piwifi="Off"
+	[[ "${arr[75]}" = "1" ]] && pibt="On" || pibt="Off"
 else
-	p3wifi="None"
-	p3bt="None"
+	piwifi="None"
+	pibt="None"
 fi
 cardnum=${arr[76]}
 [[ "${arr[77]}" = "1" ]] && btsvc="On" || btsvc="Off"
@@ -492,6 +544,41 @@ cover_blur=${arr[109]}
 cover_scale=${arr[110]}
 [[ "${arr[111]}" = "1" ]] && eth_port_fix="On" || eth_port_fix="Off"
 compilation_rollup=${arr[112]}
+scnsaver_style=${arr[113]}
+ashuffle_filter=${arr[114]}
+[[ "${arr[115]}" = "1" ]] && mpd_httpd="On" || mpd_httpd="Off"
+mpd_httpd_port=${arr[116]}
+mpd_httpd_encoder=${arr[117]}
+[[ "${arr[118]}" = "1" ]] && invert_polarity="On" || invert_polarity="Off"
+inpactive=${arr[119]}
+rsmafterinp=${arr[120]}
+[[ "${arr[121]}" = "1" ]] && gpio_svc="On" || gpio_svc="Off"
+ignore_articles=${arr[122]}
+volknob_mpd=${arr[123]}
+volknob_preamp=${arr[124]}
+[[ "${arr[125]}" = "1" ]] && upnp_browser="On" || upnp_browser="Off"
+library_instant_play=${arr[126]}
+
+# Network settings
+RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
+readarray -t arr <<<"$RESULT"
+wlanssid=$(echo ${arr[1]} | cut -f 9 -d "|")
+wlansec=$(echo ${arr[1]} | cut -f 10 -d "|")
+wlancountry=$(echo ${arr[1]} | cut -f 13 -d "|")
+apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
+apdchan=$(echo ${arr[2]} | cut -f 14 -d "|")
+
+# Renderers
+if [[ $alsaequal != "Off" ]]; then
+	airplay_device="alsaequal"
+	spotify_device="alsaequal"
+elif [[ $eqfa4p != "Off" ]]; then
+	airplay_device="eqfa4p"
+	spotify_device="eqfa4p"
+else
+	airplay_device="hw:"$cardnum
+	spotify_device="plughw:"$cardnum
+fi
 
 MODEL=${hdwrrev:0:5}
 if [ $MODEL = Pi-3B ]; then
@@ -505,7 +592,7 @@ else
 	USBBOOT="not available"
 fi
 
-modprobe configs 
+modprobe configs
 test -f /proc/config.gz && {
 	HZ=$(zcat /proc/config.gz | grep "^CONFIG_HZ=" | cut -f 2 -d "=")
 } || {
@@ -513,78 +600,16 @@ test -f /proc/config.gz && {
 }
 rmmod configs
 
-########################################################
-# Output
 #
-########################################################
+# Generate output
+#
 
-#LINE
-echo -e "\n\t  S Y S T E M    P A R A M E T E R S  "
-
-echo "
-	Date and time	= $NOW
-	System uptime	= $UPTIME
-	Timezone	= $timezone
-	moOde		= Release $mooderel
-
-	Host name	= $HOSTNAME
-	ETH0  IP	= $ETH0IP
-	ETH0  MAC	= $ETH0MAC
-	WLAN0 IP	= $WLAN0IP
-	WLAN0 MAC	= $WLAN0MAC
-	WiFi country	= $wificountry
-
-	HDWR REV	= $hdwrrev
-	SoC 		= $CPU
-	CORES		= $CORES
-	ARCH		= $ARCH
-	RASPBIAN	= $RASPBIANVER
-	KERNEL		= $KERNEL
-	KTIMER FREQ	= $HZ Hz
-	USB BOOT	= $USBBOOT
-	Warranty	= $WARRANTY
-
-	ROOT size	= $ROOTSIZE
-	ROOT used 	= $ROOTUSED
-	ROOT avail	= $ROOTAVAIL
-	FS expand	= $FSEXPAND
-	MEM free 	= $MEMFREE MB
-	MEM used 	= $MEMUSED MB
-	Temperature 	= $TEMP
- 
-	CPU GOV		= $GOV
-	MPD SCHDPOL	= $mpdsched
-	P3-WIFI		= $p3wifi
-	P3-BT		= $p3bt
-	HDMI		= $HDMI
-	ETH0 CHECK	= $eth0chk
-	MAX USB CUR	= $maxusbcurrent
-	UAC2 FIX	= $uac2fix
-	ETHPORT FIX	= $eth_port_fix
-	SSH server	= $shellinabox
-
-	LED0		= $LED0
-	LED1		= $LED1
-"
-#LINE
-echo -e "\t  C O R E    S E R V E R S  "
-
-echo "
-	PHP-FPM		= $PHPVER
-	NGINX		= $NGINXVER
-	SQLite		= $SQLITEVER
-"
-
-#LINE
-CPULOAD
-#LINE
-PROCESSLOAD
-#LINE                                 
-FREQ
-#LINE
-VOLT
-#LINE
-AUDIO
-#LINE
+SYSTEM_PARAMETERS
+AUDIO_PARAMETERS
+APPEARANCE_SETTINGS
+LIBRARY_SETTINGS
+MPD_SETTINGS
+RENDERER_SETTINGS
+MOODE_LOG
 
 exit 0
