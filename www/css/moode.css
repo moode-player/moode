@@ -454,6 +454,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 .info-toggle {text-decoration:none;margin-left:5px;font-size:18px;}
 .quickhelp {margin-left:0;color:#333;font-size:1em;font-weight:500;}
 .set-button {margin: 0 4px 0 8px;} /* for system config page 'set' buttons */
+
+/* for icon placement in file browse panel */
+a.btn i.sx { float:left;}
+/* TODO - there are some icons that are placed by javascript style, but could be done using css */
+
 /* playback history log */
 #container-playhistory {padding-top:5px;padding-left: 5px;}
 ol.playhistory {margin-left:55px;}
