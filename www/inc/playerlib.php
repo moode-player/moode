@@ -556,11 +556,14 @@ function addToPL($sock, $path, $is_playlist=false) {
 
 			if ($is_playlist) {
 				// debugLog("Cuesheet:\n" . $cuesheet);
+				sendMpdCmd($sock, 'load "' . html_entity_decode($path) . '"');
+			} else {
+				sendMpdCmd($sock, 'add "' . html_entity_decode($path) . '"');		
 			}
 		}
 		catch (Zend_Media_Flac_Exception $e) {
-			// workerLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
-			debugLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
+			workerLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
+			//debugLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
 		}
 	}
 
