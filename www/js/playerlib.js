@@ -3738,7 +3738,7 @@ function getCSSRule(ruleName) {
 	for (var i = 0; i < document.styleSheets.length; i++) {
 		var styleSheet = document.styleSheets[i];
 
-		if (styleSheet.href.indexOf('flat-ui.css') != -1 ) {
+		if (styleSheet.href && styleSheet.href.indexOf('flat-ui.css') != -1 ) {
 			var cssRules = styleSheet.cssRules;
 			for (var j = 0; j < cssRules.length; j++) {
 				var cssRule = cssRules[j];
