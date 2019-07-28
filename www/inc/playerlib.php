@@ -491,7 +491,6 @@ function clearLibCache() {
 function addallToPL($sock, $songs) {
 	foreach ($songs as $song) {
 		$path = $song;
-/is_plah
 		// do this inside the loop to take advantage of the add/load logic
 		addToPL($sock, $path);
 	}
