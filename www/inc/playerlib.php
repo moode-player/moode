@@ -364,9 +364,17 @@ function genFlatList($sock) {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
-			// screen out dir and pl from listallinfo
-			elseif ($element == 'directory' || $element == 'playlist') {
+			// screen out dir from listallinfo, and skip next 'Last-Modified' line
+			elseif ($element == 'directory') {
 				++$i;
+			}
+			// screen out pl from listallinfo, and skip next 'Last-Modified' line
+			// except, an embedded flac playlist does not have a Last-Modified...
+			elseif ($element == 'playlist') {
+				$ext = pathinfo($value, PATHINFO_EXTENSION);
+				if ($ext != 'flac') {
+					++$i;
+				}
 			}
 			else {
 				$flat[$item][$element] = $value;
@@ -481,19 +489,21 @@ function clearLibCache() {
 
 // add group of songs to playlist (library panel)
 function addallToPL($sock, $songs) {
-	$cmds = array();
-
 	foreach ($songs as $song) {
 		$path = $song;
-		array_push($cmds, 'add "' . html_entity_decode($path) . '"');
+/is_plah
+		// do this inside the loop to take advantage of the add/load logic
+		addToPL($sock, $path);
 	}
-
-	chainMpdCmds($sock, $cmds);
 }
 
-// add to playlist (from folder and radio panels)
-function addToPL($sock, $path) {
-	//workerLog($path);
+// add to playlist (from folder and radio panels) - in the develop branch
+// but in the original PR, this was to work in the browse branch as well.
+// TESTME: the change to put this test in place as part of 5.X (&& $path != 'NAS' && $path != 'SDCARD')) might break the functionality from this PR
+// allow playlist url as File1=
+// is_playlist parameter isn't used in calling this function yet... but maybe
+function addToPL($sock, $path, $is_playlist=false) {
+	set_include_path('/var/www/inc');
 	$ext = getFileExt($path);
 
 	// radio dir
@@ -521,8 +531,44 @@ function addToPL($sock, $path) {
 			$resp = readMpdResp($sock);
 		}
 	}
-	// playlist
-	elseif ($ext == 'm3u' || $ext == 'pls' || $ext == 'cue' || (strpos($path, '/') === false && $path != 'NAS' && $path != 'SDCARD')) {
+	// this could become a case statement with approaches to handle .wv / wavepack
+	elseif ($ext == 'flac') {
+		require_once 'Zend/Media/Flac.php';
+		debugLog('addToPL(): Checking for cuesheet in: ' . $path);
+		try {
+			$flac = new Zend_Media_Flac(MPD_MUSICROOT . $path);
+			// this is the standard / modern case
+			if ($flac->hasMetadataBlock(Zend_Media_Flac::VORBIS_COMMENT)) {
+				$vorbis = $flac->getVorbisComment();
+				$cuesheet = $vorbis->CUESHEET();
+				// with minimal verification that the cuesheet is valid
+				if ($cuesheet && (strpos($cuesheet, 'TITLE') !== false)) {
+					debugLog('addToPL(): Cuesheet found in VorbisComment');
+					$is_playlist = true;
+				}
+			}
+			// The flac format allows for this, but is it used?
+			elseif ($flac->hasMetadataBlock(Zend_Media_Flac::CUESHEET)) {
+				debugLog('addToPL(): Cuesheet found in MetaDataBlock.');
+				$cuesheet = 'FIXME'; // don't have a sample to test extraction
+				$is_playlist = true;
+			}
+			else {
+				debugLog('addToPL(): No Cuesheet found');
+			}
+			if ($is_playlist) {
+				// debugLog("Cuesheet:\n" . $cuesheet);
+				sendMpdCmd($sock, 'load "' . html_entity_decode($path) . '"');
+			} else {
+				sendMpdCmd($sock, 'add "' . html_entity_decode($path) . '"');
+			}
+		}
+		catch (Zend_Media_Flac_Exception $e) {
+			workerLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
+			//debugLog('addToPL(): Check for cuesheet: Zend media exception: ' . $e->getMessage());
+		}
+	}
+	elseif ($is_playlist || $ext == 'm3u' || $ext == 'pls' || $ext == 'cue' || (strpos($path, '/') === false && $path != 'NAS' && $path != 'SDCARD')) {
 		// radio stations
 		if (strpos($path, 'RADIO') !== false) {
 			// check for playlist as url
@@ -531,6 +577,16 @@ function addToPL($sock, $path) {
 			$end = substr($url, -4);
 			if ($end == '.pls' || $end == '.m3u') {
 				$path = $url;
+			}
+// not sure where this came from - not directly tied to this change
+			else {
+				// check for playlist as url
+				$pls = file_get_contents(MPD_MUSICROOT . $path);
+				$url = parseDelimFile($pls, '=')['File1'];
+				$end = substr($url, -4);
+				if ($end == '.pls' || $end == '.m3u') {
+					$path = $url;
+				}
 			}
 		}
 		sendMpdCmd($sock, 'load "' . html_entity_decode($path) . '"');
@@ -563,6 +619,32 @@ function parseDelimFile($data, $delim) {
 		$line = strtok("\n");
 	}
 
+	return $array;
+}
+
+// list songfiles under path
+function listAll($sock, $path) {
+	sendMpdCmd($sock, 'listall "' . $path . '"');
+	$resp = readMpdResp($sock);
+	$pl = parseListAll($resp);
+	return $pl;
+}
+function parseListAll($resp) {
+	if (is_null($resp)) {
+		return NULL;
+	}
+	$array = array();
+	$line = strtok($resp,"\n");
+	$file = '';
+	$idx = 0;
+	while ($line) {
+		list ($element, $value) = explode(': ', $line, 2);
+		if ($element == 'file') {
+			$file = $value;
+			$array[$idx++] = $value;
+		}
+		$line = strtok("\n");
+	}
 	return $array;
 }
 

@@ -1023,6 +1023,14 @@ function mpdDbCmd(cmd, path) {
 		var result = sendMoodeCmd('POST', cmd, {'path': path});
 		$.post('command/moode.php?cmd=lsinfo', {'path': 'RADIO'}, function(data) {renderBrowse(data, 'RADIO');}, 'json');
 	}
+	else if (['folderadd', 'folderplay', 'folderplayall', 'folderaddall', 'folderclradd', 'folderclrplay'].indexOf(cmd) != -1) {
+		var realcmd = cmd.substr(6);
+		// since path is passed as array, need to force use the 'all' variants
+		realcmd += realcmd.substr(length-3) == 'all' ? '' : 'all';
+		// TODO? break sort function out of renderBrowse, so that lists from this approach are consistent.
+		//TODO - need to add a clraddall handler, for consistency (does not seem to be called yet, though)
+		$.post('command/moode.php?cmd=listall', {'path': path}, function(data) {mpdDbCmd(realcmd, data);}, 'json')
+	}
 }
 
 // render browse panel with optimized sort
@@ -1293,8 +1301,10 @@ function formatBrowseData(data, path, i, panel) {
 	// saved playlists
 	else if (typeof data[i].playlist != 'undefined') {
 		// skip .wv (WavPack) files, apparently they can contain embedded playlist
-		if (data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase() == 'wv') {
-			output= '';
+		// flac files can also contain embedded playlists - and now they are handled as such, automatically
+		fileext = data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase();
+		if (['wv', 'flac'].indexOf(fileext) >= 0 ) {
+			output = '';
 		}
 		else {
 			output = '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
@@ -2747,21 +2757,22 @@ $('#currentsong').click(function(e) {
 
 // context menus and main menu
 $('.context-menu a').click(function(e) {
-    var path = UI.dbEntry[0]; // file path or item num
+	var path = UI.dbEntry[0]; // file path or item num
+	var in_browse = $('.browse-panel-btn.active').length > 0 ? 'folder' : '';
 	//console.log('path', path);
 
 	// CONTEXT MENUS
 
 	if ($(this).data('cmd') == 'add') {
-		mpdDbCmd('add', path);
+		mpdDbCmd(in_browse + 'add', path);
 		notify('add', '');
 	}
 	else if ($(this).data('cmd') == 'play') {
-		mpdDbCmd('play', path);
+		mpdDbCmd(in_browse + 'play', path);
 		notify('add', '');
 	}
 	else if ($(this).data('cmd') == 'clradd') {
-		mpdDbCmd('clradd', path);
+		mpdDbCmd(in_browse + 'clradd', path);
 		notify('clradd', '');
 		// see if its a playlist, preload the saved playlist name
 		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD') {
@@ -2772,7 +2783,7 @@ $('.context-menu a').click(function(e) {
 		}
 	}
 	else if ($(this).data('cmd') == 'clrplay') {
-		mpdDbCmd('clrplay', path);
+		mpdDbCmd(in_browse + 'clrplay', path);
 		notify('clrplay', '');
 		// see if its a playlist, preload the saved playlist name
 		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD') {
