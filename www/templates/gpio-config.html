@@ -27,7 +27,7 @@
     <form class="form-horizontal" action="" method="post">
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
 				SAVE: Update button configuration and restart GPIO button handler.<br><br>
 				<img src="images/gpio-pins.png"><br><br>
@@ -197,7 +197,7 @@
 				<div class="controls">
 					<input class="hide" name="config[99][param]" value="bounce_time">
 					<input class="input-medium" type="number" min="1" max="2000" id="debounce_time" name="config[99][value]" value="$_select[bounce_time]"> (ms)
-					<a class="info-toggle" data-cmd="info-debounce" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-debounce" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-debounce" class="help-block-configs help-block-margin hide">
 						Bounce time in miliseconds (ms). This parameter is used to ignore all subsequent changes for the bounce time after the first change is reported.<br>
 		            </span>

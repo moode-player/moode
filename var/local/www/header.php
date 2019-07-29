@@ -98,14 +98,14 @@
 
 <body onorientationchange="javascript:location.reload(true); void 0;">
 	<!-- ALBUM COVER BACKDROP -->
-	<div id="cover-backdrop"></div>
+	<div aria-label="Album Cover Backdrop" id="cover-backdrop"></div>
 
 	<!-- HEADER -->
 	<div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
-		<div id="playback-switch"><div></div></div>
+		<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
 
 		<div id="config-back">
-			<a href="<?php echo $_SESSION['http_config_back'] ?>"><i class="far fa-arrow-left"></i></a>
+			<a aria-label="Back" href="<?php echo $_SESSION['http_config_back'] ?>"><i class="far fa-arrow-left"></i></a>
 		</div>
 
 		<div id="config-tabs" class="viewswitch-cfgs hide">
@@ -115,11 +115,11 @@
 			<a id="sys-config-btn" class="btn" href="sys-config.php">System</a>
 		</div>
 
-		<div class="busy-spinner"></div>
+		<div aria-label="Busy" class="busy-spinner"></div>
 
 		<!-- MAIN MENU -->
 		<div class="dropdown">
-			<a class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget">m<i class="fas fa-chevron-down"></i></a>
+			<a aria-label="Menu" class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget">m<i class="fas fa-chevron-down"></i></a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
 				<?php if ($section == 'index') { ?>
 					<li><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
@@ -142,14 +142,14 @@
 			</ul>
 		</div>
 		<div class="menu-top">
-			<span id="clockradio-icon" class="clockradio-off">•</span>
+			<span aria-label="Clock Radio" id="clockradio-icon" class="clockradio-off">•</span>
 		</div>
 	</div>
 
 	<!-- PLAYBAR -->
 	<div id="menu-bottom" class="btn-group btn-list ui-footer ui-bar-f ui-footer-fixed slidedown" data-position="fixed" data-role="footer" role="banner">
 		<div id="playbar">
-			<div id="playbar-cover"></div>
+			<div aria-label="Cover" id="playbar-cover"></div>
 			<div id="playbar-title">
 				<div id="playbar-currentsong"></div>
 				<div id="playbar-currentalbum"></div>
@@ -158,26 +158,26 @@
 					<div id="playbar-mtotal"></div>
 				</div>
 			</div>
-			<div id="playbar-switch"><div></div></div>
+			<div aria-label="Switch to Playback" id="playbar-switch"><div></div></div>
 			<div id="playbar-controls">
-				<button class="btn btn-cmd prev"><i class="fas fa-backward"></i></button>
-				<button class="btn btn-cmd play"><i class="fas fa-play"></i></button>
-				<button class="btn btn-cmd next"><i class="fas fa-forward"></i></button>
+				<button aria-label="Previous" class="btn btn-cmd prev"><i class="fas fa-backward"></i></button>
+				<button aria-label="Play / Pause" class="btn btn-cmd play"><i class="fas fa-play"></i></button>
+				<button aria-label="Next" class="btn btn-cmd next"><i class="fas fa-forward"></i></button>
 			</div>
 			<div id="playbar-toggles">
-				<button class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
-				<button class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
-				<button class="btn btn-cmd ralbum hide"><i class="fal fa-dot-circle"></i></button>
-				<button class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
-				<button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button>
-				<button class="btn btn-cmd btn-toggle consume hide" id="playbar-consume" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
-				<button class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
+				<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
+				<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
+				<button aria-label="Hide" class="btn btn-cmd ralbum hide"><i class="fal fa-dot-circle"></i></button>
+				<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
+				<button aria-label="Volume" class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button>
+				<button aria-label="Consume" class="btn btn-cmd btn-toggle consume hide" id="playbar-consume" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
+				<button aria-label="Add To Favourites" class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
 			</div>
 			<div id="playbar-timeline">
 				<div class="timeline-bg"></div>
 				<div class="timeline-progress"><div class="inner-progress"></div></div>
 				<div class="timeline-thm">
-					<input id="playbar-timetrack" type="range" min="0" max="1000" value="0" step="1">
+					<input aria-label="Timeline" id="playbar-timetrack" type="range" min="0" max="1000" value="0" step="1">
 				</div>
 				<div id="playbar-time">
 					<div id="playbar-countdown"></div>

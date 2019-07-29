@@ -27,7 +27,7 @@
     <form class="form-horizontal" action="" method="post">
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
 				SAVE: Update Airplay configuration and restart Airplay receiver.<br>
             </span>
@@ -41,7 +41,7 @@
 					<select id="interpolation" class="input-large" name="config[interpolation]">
 						$_select[interpolation]
 					</select>
-					<a class="info-toggle" data-cmd="info-interpolation" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-interpolation" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-interpolation" class="help-block-configs help-block-margin hide">
 						Default is SoX for best quality, alternative is Basic which consumes fewer CPU resources.<br>
                     </span>
@@ -54,7 +54,7 @@
 					<select id="output_format" class="input-large" name="config[output_format]">
 						$_select[output_format]
 					</select>
-					<a class="info-toggle" data-cmd="info_output_format" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_output_format" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_output_format" class="help-block-configs help-block-margin hide">
 						Bit depth output by Airplay receiver. Default is 16 bit.<br>
                     </span>
@@ -67,7 +67,7 @@
 					<select id="output_rate" class="input-large" name="config[output_rate]">
 						$_select[output_rate]
 					</select>
-					<a class="info-toggle" data-cmd="info_output_rate" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_output_rate" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_output_rate" class="help-block-configs help-block-margin hide">
 						Sample rate output by Airplay receiver. Default is 44.1 kHz.<br>
 						Conversion is done using simple upsampling and should only be used if the audio device doesn't support 44,100 rate.<br>
@@ -81,7 +81,7 @@
 					<select id="allow_session_interruption" class="input-large" name="config[allow_session_interruption]">
 						$_select[allow_session_interruption]
 					</select>
-					<a class="info-toggle" data-cmd="info_allow_session_interruption" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_allow_session_interruption" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_allow_session_interruption" class="help-block-configs help-block-margin hide">
 						Allow session to be interrupted by another Airplay sender. Default is No.<br>
                     </span>
@@ -92,7 +92,7 @@
 				<label class="control-label" for="session_timeout">Session timeout (secs)</label>
 				<div class="controls">
 					<input class="input-large" type="number" id="session_timeout" name="config[session_timeout]" value="$_select[session_timeout]">
-					<a class="info-toggle" data-cmd="info_session_timeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_session_timeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_session_timeout" class="help-block-configs help-block-margin hide">
 						Wait for this number of seconds after a source disappears before terminating the session and becoming available again. Default is 120.<br>
                     </span>
@@ -103,7 +103,7 @@
 				<label class="control-label" for="audio_backend_latency_offset_in_seconds">Latency offset (secs)</label>
 				<div class="controls">
 					<input class="input-large" type="text" id="audio_backend_latency_offset_in_seconds" name="config[audio_backend_latency_offset_in_seconds]" value="$_select[audio_backend_latency_offset_in_seconds]">
-					<a class="info-toggle" data-cmd="info_audio_backend_latency_offset_in_seconds" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_audio_backend_latency_offset_in_seconds" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_audio_backend_latency_offset_in_seconds" class="help-block-configs help-block-margin hide">
 						Set this offset to compensate for a fixed delay in the audio back end. E.g. if the output device delays by 100 ms, set this to -0.1.<br>
                     </span>
@@ -114,7 +114,7 @@
 				<label class="control-label" for="audio_backend_buffer_desired_length_in_seconds">Buffer length (secs)</label>
 				<div class="controls">
 					<input class="input-large" type="text" id="audio_backend_buffer_desired_length_in_seconds" name="config[audio_backend_buffer_desired_length_in_seconds]" value="$_select[audio_backend_buffer_desired_length_in_seconds]">
-					<a class="info-toggle" data-cmd="info_audio_backend_buffer_desired_length_in_seconds" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_audio_backend_buffer_desired_length_in_seconds" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_audio_backend_buffer_desired_length_in_seconds" class="help-block-configs help-block-margin hide">
 						If set too small, buffer underflow occurs on low-powered machines. Too long and the response times with software mixer become annoying. Default is 0.15.<br>
 	                </span>

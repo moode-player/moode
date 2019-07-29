@@ -29,7 +29,7 @@
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
-			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
 				SAVE: Add new curve or update existing curve with new parameters.<br>
 				REMOVE: Delete the selected curve.<br>
@@ -39,7 +39,7 @@
 		<fieldset>
 	    	<legend>Test &nbsp;
 				<button class="btn btn-primary btn-small btn-submit" type="submit" name="play" value="1" $_disable_play><i class="fas fa-play"></i></button>
-				<a class="info-toggle" data-cmd="info-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-play" class="help-block-configs help-block-margin hide" style="line-height:16px; padding-bottom:10px; font-size:14px; font-weight:normal;">
 					Start playback using the currently selected Curve. The EQ must be turned on in Audio config to enable Play.<br>
 	            </span>
@@ -47,7 +47,7 @@
 			<select id="eqg-curve-name" class="input-large" name="curve_name">
 				$_select[curve_name]
 			</select>
-			<a class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-curve-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-curve-name" class="help-block-configs help-block-margin hide">
 				Friendly name for the curve.<br>
             </span>

@@ -26,7 +26,7 @@
 <!-- ABOUT -->
 <div id="about-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="about-modal-label" aria-hidden="true">
 	<div class="modal-body">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<p style="text-align:center;font-size:40px;font-weight:500;letter-spacing:-2px;margin-top:2px">m<span style="color:#d35400;line-height:12px">oO</span>de<span style="font-size:12px;position:relative;top:-15px;left:-3px;">™</span></p>
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>
@@ -49,14 +49,14 @@
 		</p>
 	</div>
 	<div class="modal-footer">
-		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <!-- CONFIGURE -->
 <div id="configure-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="configure-modal-label" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="configure-modal-label">Configuration settings</h3>
 	</div>
 	<div class="modal-body">
@@ -95,14 +95,14 @@
 			<?php } ?>
 		</div>
 		<br>
-		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <!-- CUSTOMIZE -->
 <div id="customize-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="customize-modal-label" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="customize-modal-label">Appearance</h3>
 	</div>
 	<div class="modal-body" id="container-customize">
@@ -123,7 +123,7 @@
 								<ul id="theme-name-list" class="dropdown-menu custom-select inner" role="menu"></ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-themecolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-themecolor" class="help-block hide">
 	                    	Sets the text and background color of the Radio, Folder, Tag and Album views.<br>
 	                    </span>
@@ -142,7 +142,7 @@
 								<ul id="accent-color-list" class="dropdown-menu custom-select inner" role="menu"></ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-accentcolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-accentcolor" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-accentcolor" class="help-block hide">
 	                    	Sets the color of the knobs and other active elements.<br>
 	                    </span>
@@ -161,7 +161,7 @@
 								<ul id="alpha-blend-list" class="dropdown-menu custom-select inner" role="menu"></ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-alphablend" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-alphablend" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-alphablend" class="help-block hide">
 	                    	Sets the opacity of the background color from 0.00 (fully transparent) to 1.00 (fully opaque). Values less than 1.00 allow Cover and Image backdrops to become visible.<br>
 	                    </span>
@@ -183,7 +183,7 @@
 								</ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-adaptive" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-adaptive" class="help-block hide">
 	                    	Sets the Playback panel color scheme based on the dominant color in the album artwork.<br>
 	                    </span>
@@ -198,7 +198,7 @@
 							<button id="remove-bgimage" class="btn btn-primary btn-small" style="font-size: 12px; margin-top: 2px; margin-bottom:.5em;color: #333;">Remove</button>
 						</div>
 						<div id="current-bgimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
-						<a class="info-toggle" id="info-toggle-bgimage" data-cmd="info-bgimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" id="info-toggle-bgimage" data-cmd="info-bgimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<div id="error-bgimage"></div>
 						<div id="info-bgimage" class="help-block hide">
 							Sets the backdrop to the choosen JPEG image. Max image size is 1MB.<br>
@@ -221,7 +221,7 @@
 								</ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-cover-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-cover-backdrop" class="help-block hide">
 	                    	Sets the backdrop to the currently displayed album cover.<br>
 	                    </span>
@@ -240,7 +240,7 @@
 								<ul id="cover-blur-list" class="dropdown-menu custom-select inner" role="menu"></ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-cover-blur" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-blur" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-cover-blur" class="help-block hide">
 	                    	Sets the amount of blur to apply to the cover backdrop.<br>
 	                    </span>
@@ -259,7 +259,7 @@
 								<ul id="cover-scale-list" class="dropdown-menu custom-select inner" role="menu"></ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-cover-scale" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-scale" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-cover-scale" class="help-block hide">
 	                    	Increases the size of the cover backdrop.<br>
 	                    </span>
@@ -283,7 +283,7 @@
 								<ul id="scnsaver-timeout-list" class="dropdown-menu custom-select inner" role="menu"></ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-scnsaver-timeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-timeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-timeout" class="help-block hide">
 	                    	Display a fullscreen view of cover art and song data after the specified number of minutes.<br>
 	                    </span>
@@ -302,7 +302,7 @@
 								<ul id="scnsaver-style-list" class="dropdown-menu custom-select inner" role="menu"></ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-scnsaver-style" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-style" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-style" class="help-block hide">
 	                    	Set the effect used for the backdrop.<br>
 							<b>- Animated:</b> Cover backdrop with color change overlay<br>
@@ -320,7 +320,7 @@
 	                <label class="control-label" for="ashuffle-filter">Auto-shuffle filter</label>
 	                <div class="controls">
 	                    <input id="ashuffle-filter" class="input-xlarge input-height-x" type="text">
-						<a class="info-toggle" data-cmd="info-ashuffle-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-ashuffle-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-ashuffle-filter" class="help-block hide">
 							String of TAG VALUE pairs that Auto-shuffle uses to select the tracks being shuffled. Only one occurance of a given TAG is allowed. The filter is case insensitive and it performs a TAG contains VALUE substring match.<br>
 							Example: genre "indie rock" artist coldplay<br>
@@ -343,7 +343,7 @@
 								</ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-extratag-display" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-extratag-display" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-extratag-display" class="help-block hide">
 		                    	Display additional metadata under the cover art on the Playback panel.<br>
 	                    </span>
@@ -365,7 +365,7 @@
 								</ul>
 							</div>
 						</div>
-						<a class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-play-history" class="help-block hide">
 	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.<br>
 	                    </span>
@@ -376,15 +376,15 @@
 	</div>
 
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-appearance-update btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Update" class="btn btn-appearance-update btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
 <!-- CLOCK RADIO -->
 <div id="clockradio-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="clockradio-modal-label" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="clockradio-modal-label">Clock radio settings</h3>
 	</div>
 	<div class="modal-body" id="container-clockradio">
@@ -414,7 +414,7 @@
 		                <label class="control-label" for="clockradio-playname">Play</label>
 		                <div class="controls">
 		                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
-							<a class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-playname" class="help-block hide">
 			                    Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
 		                    </span>
@@ -514,7 +514,7 @@
 								</div>
 							</div>
 							<span class="control-aftertext">after stop
-							<a class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a></span>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a></span>
 							<span id="info-action" class="help-block hide">
 								NOTE: The Reboot action is initiated 45 seconds after the specified stop time.
 							</span>
@@ -533,76 +533,76 @@
 		</form>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button class="btn btn-clockradio-update btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Update" class="btn btn-clockradio-update btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
 <!-- PLAYERS -->
 <div id="players-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="players-modal-label">Players</h3>
 	</div>
 	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <!-- AUDIO INFO -->
 <div id="audioinfo-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="audioinfo-modal-label" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="audioinfo-modal-label">Audio information</h3>
 	</div>
 	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <!-- SYSTEM INFO -->
 <div id="sysinfo-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="sysinfo-modal-label" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="sysinfo-modal-label">System information</h3>
 	</div>
 	<div class="modal-body">
 	</div>
 	<div class="modal-footer">
-		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <!-- QUICK HELP -->
 <div id="quickhelp-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="help-modal-label" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="help-modal-label">Quick Help</h3>
 	</div>
 	<div class="modal-body">
 		<div id="quickhelp"></div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
 
 <!-- RESTART -->
 <div id="restart-modal" class="modal modal-sm2 hide fade" tabindex="-1" role="dialog" aria-labelledby="restart-modal-label" aria-hidden="true">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="restart-modal-label"><i class="fas fa-power-off sx"></i></h3>
 	</div>
 	<div class="modal-body">
-		<button id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
-		<button id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;"></i>Reboot</button>
+		<button aria-label="Shutdown" id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
+		<button aria-label="Reboot" id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;"></i>Reboot</button>
 	</div>
 	<div class="modal-footer">
-		<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
 </div>
 
