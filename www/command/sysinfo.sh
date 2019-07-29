@@ -512,7 +512,7 @@ cardnum=${arr[76]}
 btname=${arr[78]}
 [[ "${arr[79]}" = "1" ]] && btmulti="Yes" || btmulti="No"
 feat_bitmask=${arr[80]}
-engine_mpd_sock_timeout=${arr[81]}
+reserved82=${arr[81]}
 btactive=${arr[82]}
 touchscn=${arr[83]}
 scnblank=${arr[84]}
