@@ -45,9 +45,8 @@ else {
 			echo json_encode('worker busy');
 		}
 	}
-	// send client ip to worker
 	elseif ($_GET['cmd'] == 'resetscnsaver') {
-		if (submitJob($_GET['cmd'], $_SERVER['REMOTE_ADDR'], '', '')) {
+		if (submitJob($_GET['cmd'], $_SERVER['REMOTE_ADDR'], '', '')) { // NOTE: Worker does not use the client ip anymore
 			echo json_encode('job submitted');
 		}
 		else {
@@ -85,7 +84,7 @@ else {
 			exit(0);
 		}
 
-		// turn off auto-shuffle when playqueue cmds submitted
+		// Turn off auto-shuffle when playqueue cmds submitted
 		if (in_array($_GET['cmd'], $playqueue_cmds)) {
 			if ($_SESSION['ashuffle'] == '1') {
 				playerSession('write', 'ashuffle', '0');
@@ -100,7 +99,7 @@ else {
 				playerSession('write', 'volknob', $_POST['volknob']);
 				sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
 				$resp = readMpdResp($sock);
-				// intentionally omit the echo to cause ajax abort with JSON parse error.
+				// Intentionally omit the echo to cause ajax abort with JSON parse error.
 				// This causes $('.volumeknob').knob change action to also abort which prevents
 				// knob update and subsequent bounce back to +10 level. Knob will get updated
 				// to +10 level in renderUIVol() routine as a result of MPD idle timeout.
@@ -124,7 +123,7 @@ else {
 					echo json_encode(readMpdResp($sock));
 				}
 				break;
-			case 'getplitemfile': // for Clock Radio
+			case 'getplitemfile': // For Clock Radio
 				if (isset($_GET['songpos']) && $_GET['songpos'] != '') {
 					sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
 					$resp = readMpdResp($sock);
@@ -164,7 +163,7 @@ else {
 						sendMpdCmd($sock, 'update /var/lib/mpd/playlists');
 						readMpdResp($sock);
 					}
-					else { // ensure permissions
+					else { // Ensure corrent permissions
 						sysCmd('chmod 777 "' . $file . '"');
 						sysCmd('chown root:root "' . $file . '"');
 					}
@@ -182,7 +181,7 @@ else {
 						sendMpdCmd($sock, 'update /var/lib/mpd/playlists');
 						readMpdResp($sock);
 					}
-					else { // ensure permissions
+					else { // Ensure correct permissions
 						sysCmd('chmod 777 "' . $file . '"');
 						sysCmd('chown root:root "' . $file . '"');
 					}
@@ -218,7 +217,7 @@ else {
 					$resp = readMpdResp($sock);
 
 					addToPL($sock,$_POST['path']);
-					playerSession('write', 'toggle_song', '0'); // reset toggle_song
+					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
 
 					echo json_encode($resp);
 				}
@@ -229,7 +228,7 @@ else {
 					$resp = readMpdResp($sock);
 
 					addToPL($sock,$_POST['path']);
-					playerSession('write', 'toggle_song', '0'); // reset toggle_song
+					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
 
 					sendMpdCmd($sock, 'play');
 					echo json_encode(readMpdResp($sock));
@@ -263,23 +262,23 @@ else {
 					$station_name = $_POST['path'];
 
 					if ($_GET['cmd'] == 'newstation') {
-						// cant have same name as existing station
+						// Can't have same name as existing station
 						$result = sdbquery("SELECT id FROM cfg_radio WHERE name='" . SQLite3::escapeString($station_name) . "'", $dbh);
 
 						// true = query successful but no results, array = results, false = query bombed (not likely)
 						if ($result === true) {
-							// add new row to sql table
+							// Add new row to sql table
 							$values = "'" . $_POST['url'] . "'," . "'" . SQLite3::escapeString($station_name) . "','u','local'";
 							$result = sdbquery('INSERT INTO cfg_radio VALUES (NULL,' . $values . ')', $dbh); // NULL causes the Id column to be set to the next number
 						}
 					}
 					else {
-						// if name changed then its same as an add and we have to check the name doesnt already exist
-						// if only the url changed then we update
+						// If name changed then its same as an add and we have to check that the name doesn't already exist.
+						// If only the url changed then we update.
 						$result = cfgdb_update('cfg_radio', $dbh, SQLite3::escapeString($station_name), $_POST['url']);
 					}
 
-					// add session var
+					// Add session var
 					session_start();
 					$_SESSION[$_POST['url']] = array('name' => $station_name, 'type' => 'u', 'logo' => 'local');
 					session_write_close();
@@ -300,7 +299,7 @@ else {
 					sysCmd('chmod 777 "' . $file . '"');
 					sysCmd('chown root:root "' . $file . '"');
 
-					// update time stamp on files so mpd picks up the change and commits the update
+					// Update time stamp on files so mpd picks up the change and commits the update
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 
 					sendMpdCmd($sock, 'update RADIO');
@@ -314,13 +313,13 @@ else {
 					$station_name = substr($_POST['path'], 6, -4); // trim 'RADIO/' and '.pls' from path
 					//workerLog($_GET['cmd'] . ', ' . $station_name);
 
-					// remove row and delete file
+					// Remove row and delete file
 					$result = sdbquery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($station_name) . "'", $dbh);
 					sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
 					sysCmd('rm "' . '/var/www/images/radio-logos/' . $station_name . '.jpg' . '"');
 					sysCmd('rm "' . '/var/www/images/radio-logos/thumbs/' . $station_name . '.jpg' . '"');
 
-					// update time stamp on files so mpd picks up the change and commits the update
+					// Update time stamp on files so mpd picks up the change and commits the update
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 
 					sendMpdCmd($sock, 'update RADIO');
@@ -345,7 +344,7 @@ else {
 	            	addallToPL($sock, $_POST['path']);
 					//usleep(500000); // needed after bulk add to pl
 
-					playerSession('write', 'toggle_song', $pos); // reset toggle_song
+					playerSession('write', 'toggle_song', $pos); // Reset toggle_song
 
 					sendMpdCmd($sock, 'play ' . $pos);
 					echo json_encode(readMpdResp($sock));
@@ -359,9 +358,9 @@ else {
 	            	addallToPL($sock, $_POST['path']);
 					//usleep(500000); // needed after bulk add to pl
 
-					playerSession('write', 'toggle_song', '0'); // reset toggle_song
+					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
 
-					sendMpdCmd($sock, 'play'); // defaults to pos 0
+					sendMpdCmd($sock, 'play'); // Defaults to pos 0
 					echo json_encode(readMpdResp($sock));
 				}
 				break;
@@ -376,19 +375,19 @@ else {
 		switch ($_GET['cmd']) {
 			case 'read_cfgs':
 			case 'read_cfgs_no_radio':
-				// system settings
+				// System settings
 				$result = cfgdb_read('cfg_system', $dbh);
 				$array_cfg_system = array();
 				foreach ($result as $row) {
 					$array_cfg_system[$row['param']] = $row['value'];
 				}
-				 // add extra vars
+				 // Add extra vars
 				$array_cfg_system['raspbianver'] = $_SESSION['raspbianver'];
 				$array_cfg_system['ipaddress'] = $_SESSION['ipaddress'];
 				$array_cfg_system['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
 				$data['cfg_system'] = $array_cfg_system;
 
-				// theme settings
+				// Theme settings
 				$result = cfgdb_read('cfg_theme', $dbh);
 				$array_cfg_theme = array();
 				foreach ($result as $row) {
@@ -397,7 +396,7 @@ else {
 				}
 				$data['cfg_theme'] = $array_cfg_theme;
 
-				// network settings
+				// Network settings
 				$result = cfgdb_read('cfg_network', $dbh);
 				$array_cfg_network = array();
 				foreach ($result as $row) {
@@ -408,7 +407,7 @@ else {
 				}
 				$data['cfg_network'] = $array_cfg_network;
 
-				// radio stations
+				// Radio stations
 				if ($_GET['cmd'] == 'read_cfgs') {
 					$result = cfgdb_read('cfg_radio', $dbh);
 					$array_cfg_radio = array();
@@ -427,7 +426,7 @@ else {
 				foreach ($result as $row) {
 					$array[$row['param']] = $row['value'];
 				}
-				// add extra vars
+				// Add extra vars
 				$array['raspbianver'] = $_SESSION['raspbianver'];
 				$array['ipaddress'] = $_SESSION['ipaddress'];
 				$array['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
@@ -482,11 +481,11 @@ else {
 				}
 				break;
 
-			// toggle auto-shuffle on/off
+			// Toggle auto-shuffle on/off
 			case 'ashuffle':
 				playerSession('write', 'ashuffle', $_GET['ashuffle']);
 
-				// filter and queue_buffer
+				// Filter and buffer
 				if (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') {
 					$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue_buffer 1 --file - > /dev/null 2>&1 &';
 				}
@@ -534,7 +533,8 @@ else {
 				echo json_encode(parsePlayHist(shell_exec('cat /var/local/www/playhistory.log')));
 				break;
 
-			// DEPRECATED: Return client ip address
+			// Return client ip address
+			// NOTE: We may use this in the future
 			case 'clientip':
 				echo json_encode($_SERVER['REMOTE_ADDR']);
 				break;
