@@ -20,6 +20,7 @@ New features
 - NEW: Raspbian 10.0 (Buster Lite)
 - NEW: Support for Pi-4B 1/2/4GB models
 - NEW: UPnP Media Browser
+- NEW: Screen reader accessibility
 
 Updates
 
@@ -30,6 +31,7 @@ Updates
 - UPD: Bump to MiniDLNA 1.2.1
 - UPD: Bump to ALSA 1.1.8
 - UPD: Bump to WiringPi 2.52
+- UPD: Add haveged entropy generator
 - UPD: Add rev codes for Pi-4B 1/2/4GB models
 - UPD: Add new sort tag options for Library
 - UPD: Add clock radio "after stop" Actions
@@ -37,12 +39,14 @@ Updates
 - UPD: Add Instant Play options: Add/Play, Clear/Play
 - UPD: Add Show Genres column (Yes/No) to Library options
 - UPD: Remove restriction on quotes in Wifi password
+- UPD: Disable PHP session clean and timer
 - UPD: Improve Play/Playall response on slower Pi-Zero
 - UPD: Improve Audioinfo layout and content
 - UPD: Improve System info layout and content
 - UPD: Improve layout of config screens
 - UPD: Improve auto-config process
 - UPD: Improve in-place update process
+- UPD: Improve overall robustness and performance
 - UPD: SwissGroove radio url
 
 Security
