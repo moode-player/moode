@@ -42,7 +42,6 @@ if (isset($_POST['checkfor_update'])) {
 	}
 	// update available
 	else {
-		//$_available_upd .= '<u><em>Available</u></em><br>';
 		$_available_upd = $available['Date'] == 'None' ? $available['Date'] . '<br>' : 'Package date: ' . $available['Date'] .
 			'<button class="btn btn-primary btn-small set-button btn-submit" id="install-update" type="submit" name="install_update" value="1">Install</button>' .
 			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>' .
@@ -191,14 +190,6 @@ if (isset($_POST['update_expand_rootfs'])) {
 if (isset($_POST['update_usbboot'])) {
 	submitJob('usbboot', '', 'USB boot enabled', 'Reboot required', 30);
 }
-
-// mpd engine timeout
-/*if (isset($_POST['update_mpdtimeout']) && $_POST['mpdtimeout'] != $_SESSION['engine_mpd_sock_timeout']) {
-	$_SESSION['notify']['title'] = 'MPD engine timeout updated';
-	$_SESSION['notify']['msg'] = 'Refresh Browse to activate';
-	$_SESSION['notify']['duration'] = 6;
-	playerSession('write', 'engine_mpd_sock_timeout', $_POST['mpdtimeout']);
-} r45b deprecate */
 
 // LOCAL DISPLAY
 
@@ -390,12 +381,6 @@ if ($rev == '3' /*|| $rev == '4'*/) { // 3B/B+/A+, NOTE: 4B USB boot not avail a
 else {
 	$_usbboot_hide = 'hide';
 }
-
-// mpd engine timeout, r45b deprecate
-/*$_select['mpdtimeout'] .= "<option value=\"600000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '600000') ? "selected" : "") . ">Never</option>\n";
-$_select['mpdtimeout'] .= "<option value=\"18000\" " . (($_SESSION['engine_mpd_sock_timeout'] == '18000') ? "selected" : "") . ">5 Hours</option>\n";
-$_select['mpdtimeout'] .= "<option value=\"3600\" " . (($_SESSION['engine_mpd_sock_timeout'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
-$_select['mpdtimeout'] .= "<option value=\"1800\" " . (($_SESSION['engine_mpd_sock_timeout'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";*/
 
 // LOCAL DISPLAY
 
