@@ -33,7 +33,7 @@ define('PORT_FILE', '/tmp/portfile');
 define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
 define('LIBCACHE_JSON', '/var/local/www/libcache.json');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
-define('SESSION_SAVE_PATH', '/run/php');
+define('SESSION_SAVE_PATH', '/var/local/php');
 
 error_reporting(E_ERROR);
 
@@ -1025,12 +1025,11 @@ function playerSession($action, $var = '', $value = '') {
 	}
 }
 
-// TODO: new session management
-function phpSetPermissions($max_loops = 3, $sleep_time = 2) {
+// TODO: new session management functions
+function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
 	$session_file = SESSION_SAVE_PATH . '/sess_' . $_SESSION['sessionid'];
 
-	// Retries to avoid permissions being reset back to -rw-------,root,root by ???
-	// We also check in watchdog.sh
+	// NOTE: There is also a check in watchdog.sh
 	for ($i = 0; $i < $max_loops; $i++) {
 		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
@@ -1039,22 +1038,21 @@ function phpSetPermissions($max_loops = 3, $sleep_time = 2) {
 			break;
 		}
 		else {
-			//workerLog('worker: Session permissions (' . ($i + 1) . ')');
-			// Twice for robustness
-			sysCmd('chown www-data:www-data ' . $session_file);
-			sysCmd('chmod 0666 ' . $session_file);
-			sleep($sleep_time);
+			workerLog('worker: Session permissions retry (' . ($i + 1) . ')');
 			sysCmd('chown www-data:www-data ' . $session_file);
 			sysCmd('chmod 0666 ' . $session_file);
 		}
+
+		sleep($sleep_time);
 	}
 
-	// check for failure case on the way out
+	// Check for failure case on the way out
 	if ($i == $max_loops) {
 		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
 		if ($result[0] != '-rw-rw-rw-,www-data,www-data') {
-			workerLog('worker: Session permissions (Failed after ' . $max_loops . 'tries)');
+			workerLog('worker: Session permissions (Failed after ' . $max_loops . ' retries)');
+			workerLog('worker: Session permissions (' . $result[0] . ')');
 		}
 	}
 }
@@ -2741,11 +2739,13 @@ function ctlBt($ctl) {
 	}
 }
 
-// set audio source
+// Set audio source
 function setAudioIn($input_source) {
 	sysCmd('mpc stop');
+	$result = sdbquery("SELECT value FROM cfg_system WHERE param='wrkready'", cfgdb_connect());
 
-	if ($input_source == 'Local' && $_SESSION['wrkready'] == '1') { // no need to configure Local during startup (wrkready = 0)
+ 	// No need to configure Local during startup (wrkready = 0)
+	if ($input_source == 'Local' && $result[0]['value'] == '1') {
 		if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
 			sysCmd('killall -s 9 alsaloop');
 		}
@@ -2767,8 +2767,9 @@ function setAudioIn($input_source) {
 	// NOTE: the Source Select form requires MPD Volume control is set to Hardware or Disabled (0dB)
 	elseif ($input_source == 'Analog' || $input_source == 'S/PDIF') {
 		if ($_SESSION['mpdmixer'] == 'hardware') {
-			if ($_SESSION['wrkready'] == '1') {
-				playerSession('write', 'volknob_mpd', $_SESSION['volknob']); // don't update this value during startup (wrkready = 0)
+			// Only update this value during startup (wrkready = 0)
+			if ($result[0]['value'] == '1') {
+				playerSession('write', 'volknob_mpd', $_SESSION['volknob']);
 			}
 			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_preamp']);
 		}
