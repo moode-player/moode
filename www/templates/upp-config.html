@@ -27,7 +27,7 @@
     <form class="form-horizontal" action="" method="post">
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
 				SAVE: Update UPnP configuration and restart UPnP renderer.<br>
             </span>
@@ -41,7 +41,7 @@
 					<select id="checkcontentformat" class="input-large" name="config[checkcontentformat]">
 						$_select[checkcontentformat]
 					</select>
-					<a class="info-toggle" data-cmd="info_checkcontentformat" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_checkcontentformat" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_checkcontentformat" class="help-block-configs help-block-margin hide">
 						Check that the input format is supported. Set this option to No if a control point or media server sends good audio data with bad metadata.<br>
                     </span>
@@ -55,7 +55,7 @@
 				<label class="control-label" for="tidaluser">Userid</label>
 				<div class="controls">
 					<input class="input-large" type="text" id="tidaluser" name="config[tidaluser]" value="$_select[tidaluser]">
-					<a class="info-toggle" data-cmd="info_tidaluser" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_tidaluser" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_tidaluser" class="help-block-configs help-block-margin hide">
 						Your Tidal login name.<br>
                     </span>
@@ -66,7 +66,7 @@
 				<label class="control-label" for="tidalpass">Password</label>
 				<div class="controls">
 					<input class="input-large" type="password" pattern="[^'\u0022]+" id="tidaluser" name="config[tidalpass]" value="$_select[tidalpass]">
-					<a class="info-toggle" data-cmd="info_tidalpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_tidalpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_tidalpass" class="help-block-configs help-block-margin hide">
 						The password for your Tidal account. NOTE: Single and double quotes are not allowed.<br>
                     </span>
@@ -79,7 +79,7 @@
 					<select id="tidalquality" class="input-large" name="config[tidalquality]">
 						$_select[tidalquality]
 					</select>
-					<a class="info-toggle" data-cmd="info_tidalquality" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_tidalquality" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_tidalquality" class="help-block-configs help-block-margin hide">
 						Stream quality: 'low' and 'high' are AAC streams, 'lossless' is FLAC and will only work if your subscription allows it.<br>
                     </span>
@@ -93,7 +93,7 @@
 				<label class="control-label" for="qobuzuser">Userid</label>
 				<div class="controls">
 					<input class="input-large" type="text" id="qobuzuser" name="config[qobuzuser]" value="$_select[qobuzuser]">
-					<a class="info-toggle" data-cmd="info_qobuzuser" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_qobuzuser" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_qobuzuser" class="help-block-configs help-block-margin hide">
 						Your Qobuz login name.<br>
                     </span>
@@ -104,7 +104,7 @@
 				<label class="control-label" for="qobuzpass">Password</label>
 				<div class="controls">
 					<input class="input-large" type="password" pattern="[^'\u0022]+" id="tidaluser" name="config[qobuzpass]" value="$_select[qobuzpass]">
-					<a class="info-toggle" data-cmd="info_qobuzpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_qobuzpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_qobuzpass" class="help-block-configs help-block-margin hide">
 						The password for your Qobuz account. NOTE: Single and double quotes are not allowed.<br>
                     </span>
@@ -117,7 +117,7 @@
 					<select id="qobuzformatid" class="input-large" name="config[qobuzformatid]">
 						$_select[qobuzformatid]
 					</select>
-					<a class="info-toggle" data-cmd="info_qobuzformatid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_qobuzformatid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_qobuzformatid" class="help-block-configs help-block-margin hide">
 						Stream quality: 320K (MP3) or lossless (FLAC) if your subscription allows it.<br>
                     </span>
@@ -140,7 +140,7 @@
 					<label class="control-label" for="gmusicuser">Userid</label>
 					<div class="controls">
 						<input class="input-large" type="text" id="gmusicuser" name="config[gmusicuser]" value="$_select[gmusicuser]">
-						<a class="info-toggle" data-cmd="info_gmusicuser" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicuser" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info_gmusicuser" class="help-block-configs help-block-margin hide">
 							Your Google Music login name (Gmail address).<br>
 	                    </span>
@@ -151,7 +151,7 @@
 					<label class="control-label" for="gmusicpass">Password</label>
 					<div class="controls">
 						<input class="input-large" type="password" pattern="[^'\u0022]+" id="gmusicpass" name="config[gmusicpass]" value="$_select[gmusicpass]">
-						<a class="info-toggle" data-cmd="info_gmusicpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info_gmusicpass" class="help-block-configs help-block-margin hide">
 							The password for your Google Music account. NOTE: Single and double quotes are not allowed.<br>
 	                    </span>
@@ -164,7 +164,7 @@
 						<select id="gmusicquality" class="input-large" name="config[gmusicquality]">
 							$_select[gmusicquality]
 						</select>
-						<a class="info-toggle" data-cmd="info_gmusicquality" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicquality" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info_gmusicquality" class="help-block-configs help-block-margin hide">
 							Stream quality: 320K, 160K or 128K (MP3).<br>
 	                    </span>
@@ -175,7 +175,7 @@
 					<label class="control-label" for="gmusicdeviceid">Music device id</label>
 					<div class="controls">
 						<input class="input-large" type="text" id="gmusicdeviceid" name="config[gmusicdeviceid]" value="$_select[gmusicdeviceid]">
-						<a class="info-toggle" data-cmd="info_gmusicdeviceid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicdeviceid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info_gmusicdeviceid" class="help-block-configs help-block-margin hide">
 							Music device id. Your system MAC address will be used by default, but this will count against the maximum count of registered devices for this account. You can optionally set this value to the device ID from a phone or tablet on which you also use Google Play Music.<br>
 	                    </span>

@@ -28,7 +28,7 @@
 		<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 			<a href="#net-config-defaults" data-toggle="modal"><button class="btn btn-medium btn-primary">Reset</button></button>
-			<a class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
 				<!--BACK: Return to Playbar view.<br-->
 				SAVE: Update network configuration, reboot to make changes effective.<br>
@@ -44,7 +44,7 @@
 					<select id="eth0-method" name="eth0method" class="input-large" style="width: 100px">
 						$_eth0method
 					</select>
-					<a class="info-toggle" data-cmd="info-eth0method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-eth0method" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span><br>$_eth0currentip</span>
 					<span id="info-eth0method" class="help-block-configs help-block-margin hide">
                     	IP address assignment method.<br>
@@ -100,7 +100,7 @@
 					<select id="wlan0-method" name="wlan0method" class="input-large">
 						$_wlan0method
 					</select>
-					<a class="info-toggle" data-cmd="info-wlan0method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-wlan0method" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span><br>$_wlan0currentip</span>
 					<span id="info-wlan0method" class="help-block-configs help-block-margin hide">
                     	IP address assignment method.<br>
@@ -116,7 +116,7 @@
 						$_wlan0ssid
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="scan" value="1">Scan</button>
-					<a class="info-toggle" data-cmd="info-wlan0ssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-wlan0ssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0ssid" class="help-block-configs help-block-margin hide">
 						SCAN generates a list of available SSID's.<br>
                     </span>
@@ -133,7 +133,7 @@
 					<select id="wlan0sec" name="wlan0sec" class="input-large">
 						$_wlan0sec
 					</select>
-					<a class="info-toggle" data-cmd="info-wlan0sec" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-wlan0sec" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0sec" class="help-block-configs help-block-margin hide">
                     	Security protocol.
                     </span>
@@ -144,7 +144,7 @@
 				<label class="control-label" for="wlan0pwd">Password</label>
 				<div class="controls">
 					<input class="input-large" type="password" pattern=".{8,64}" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
-					<a class="info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0pwd" class="help-block-configs help-block-margin hide">
                     	Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.
                     </span>
@@ -157,7 +157,7 @@
 					<select id="wlan0country" name="wlan0country" class="input-large">
 						$_wlan0country
 					</select>
-					<a class="info-toggle" data-cmd="info-wlan0country" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-wlan0country" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0country" class="help-block-configs help-block-margin hide">
 						The country code determines what frequency bands the WiFi adapter supports.<br>
                     </span>
@@ -210,7 +210,7 @@
                 <label class="control-label" for="apdssid">SSID</label>
                 <div class="controls">
                     <input class="input-large" type="text" pattern="[A-Za-z0-9\-]{3,32}" id="apdssid" name="wlan0apdssid" value="$_wlan0apdssid" required>
-					<a class="info-toggle" data-cmd="info-apdssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-apdssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-apdssid" class="help-block-configs help-block-margin hide">
 						Length 3-32 chars, A-Z, a-z, 0-9, and hyphen (-) are allowed.
 					</span>
@@ -221,7 +221,7 @@
                 <label class="control-label" for="apdchan">Channel</label>
                 <div class="controls">
                     <input class="input-large" type="number" maxlength="2" min="1" max="14" id="apdchan" name="wlan0apdchan" value="$_wlan0apdchan" required>
-					<a class="info-toggle" data-cmd="info-apdchan" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-apdchan" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-apdchan" class="help-block-configs help-block-margin hide">
 						2.4 GHz band supports channels 1-14.
 					</span>
@@ -232,7 +232,7 @@
                 <label class="control-label" for="apdpwd">Password</label>
                 <div class="controls">
                     <input class="input-large" type="password" pattern=".{8,64}" id="apdpwd" name="wlan0apdpwd" value="$_wlan0apdpwd" required>
-					<a class="info-toggle" data-cmd="info-apdpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-apdpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-apdpwd" class="help-block-configs help-block-margin hide">
 						Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.<br>
 						NOTE: the default password is moodeaudio
@@ -272,7 +272,7 @@
 				<label class="control-label" for="wlan0otherssid">SSID</label>
 				<div class="controls">
 					<input class="input-large" type="text" pattern="[A-Za-z0-9\-\_]{3,32}" id="wlan0otherssid" name="wlan0otherssid" value="">
-					<a class="info-toggle" data-cmd="info-manualssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-manualssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-manualssid" class="help-block hide">
                     	Length 2-32 chars.
                     </span>
