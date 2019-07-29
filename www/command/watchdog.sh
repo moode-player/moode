@@ -27,7 +27,7 @@ FPMCNT=$(pgrep -c -f "php-fpm: pool www")
 MPDACTIVE=$(pgrep -c -x mpd)
 SPOTACTIVE=$(pgrep -c -x librespot)
 SQLDB=/var/local/www/db/moode-sqlite3.db
-SESSDIR=/run/php
+SESSDIR=/var/local/php
 SESSFILE=$SESSDIR/sess_$(sqlite3 $SQLDB "select value from cfg_system where param='sessionid'")
 
 while true; do
