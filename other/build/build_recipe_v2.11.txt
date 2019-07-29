@@ -202,7 +202,7 @@ sudo apt-get update --allow-releaseinfo-change
 sudo apt-get -y install rpi-update php-fpm nginx sqlite3 php-sqlite3 php7.3-gd mpc \
     bs2b-ladspa libbs2b0 libasound2-plugin-equal telnet automake sysstat squashfs-tools shellinabox samba smbclient ntfs-3g \
     exfat-fuse git inotify-tools ffmpeg avahi-utils ninja-build python3-setuptools libmediainfo0v5 libmms0 libtinyxml2-6a \
-    libzen0v5 libmediainfo-dev libzen-dev winbind libnss-winbind djmount
+    libzen0v5 libmediainfo-dev libzen-dev winbind libnss-winbind djmount haveged
 
 # meson
 sudo cp ./moode/other/mpd/build-tools/meson-0.50.1.tar.gz ./
@@ -229,7 +229,11 @@ sudo cp ./moode/other/udisks-glue/udisks-glue-1.3.5-70376b7 /usr/bin/udisks-glue
 # autoremove php 7.2
 sudo apt-get -y autoremove
 
+# Systemd
+sudo systemctl enable haveged
 sudo systemctl disable shellinabox
+sudo systemctl disable phpsessionclean.service
+sudo systemctl disable phpsessionclean.timer
 
 ////////////////////////////////////////////////////////////////
 //
@@ -538,6 +542,7 @@ sudo mkdir /var/local/www/commandw
 sudo mkdir /var/local/www/imagesw
 sudo mkdir /var/local/www/imagesw/toggle
 sudo mkdir /var/local/www/db
+sudo mkdir /var/local/php
 sudo chmod -R 0755 /var/local/www
 sudo mkdir /var/lib/mpd/music/RADIO
 # Mount points
@@ -571,6 +576,7 @@ sudo cp ./moode/var/local/www/db/moode-sqlite3.db.default /var/local/www/db/mood
 # Permissions
 sudo chmod 0777 /var/lib/mpd/music/RADIO
 sudo chmod -R 0777 /var/local/www/db
+sudo chown www-data:www-data /var/local/php
 # Deletes
 sudo rm -r /var/www/html
 sudo rm /etc/update-motd.d/10-uname
@@ -703,8 +709,8 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-# 4.19.59
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 2096a8d567eed47cb742ddb1ce9bf9ac25726980
+# 4.19.60
+echo "y" | sudo PRUNE_MODULES=1 rpi-update ce2a9f85a6fd88f8c42ef54b7bad99b42e76e403
 
 # cleanup
 sudo rm -rf /lib/modules.bak
