@@ -349,6 +349,7 @@ sudo chmod 0666 /etc/mpd.conf
 
 2. Install MPD dev libs.
 
+# Packages
 sudo apt-get -y install libmad0-dev libmpg123-dev libid3tag0-dev \
 libflac-dev libvorbis-dev libfaad-dev \
 libwavpack-dev \
@@ -363,9 +364,17 @@ libmpdclient-dev \
 libavahi-client-dev \
 libsystemd-dev \
 libwrap0-dev \
-libboost-dev \
 libicu-dev \
 libglib2.0-dev
+
+# Boost 1.68
+sudo cp ./moode/other/boost/boost_1.68_headers.tar.gz /
+sudo cp ./moode/other/boost/boost_1.68_libraries.tar.gz /
+cd /
+sudo tar xfz ./boost_1.68_headers.tar.gz
+sudo tar xfz ./boost_1.68_libraries.tar.gz
+sudo rm ./boost_*.gz
+cd ~
 
 3. Download MPD 0.20.23 sources and prep for compile.
 
@@ -431,6 +440,7 @@ sudo chmod 0666 /etc/mpd.conf
 
 2. Install MPD dev libs.
 
+# Packages
 sudo apt-get -y install libmad0-dev libmpg123-dev libid3tag0-dev \
 libflac-dev libvorbis-dev libaudiofile-dev libfaad-dev \
 libwavpack-dev \
@@ -445,19 +455,27 @@ libmpdclient-dev \
 libavahi-client-dev \
 libsystemd-dev \
 libwrap0-dev \
-libboost-dev \
 libicu-dev \
 libglib2.0-dev
 
-3. Download MPD 0.21.8 sources and prep for compile.
+# Boost 1.68
+sudo cp ./moode/other/boost/boost_1.68_headers.tar.gz /
+sudo cp ./moode/other/boost/boost_1.68_libraries.tar.gz /
+cd /
+sudo tar xfz ./boost_1.68_headers.tar.gz
+sudo tar xfz ./boost_1.68_libraries.tar.gz
+sudo rm ./boost_*.gz
+cd ~
+
+3. Download MPD 0.21.11 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.21.8 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.21.11 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.8.tar.xz
-sudo tar xf mpd-0.21.8.tar.xz
-cd mpd-0.21.8
+sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.11.tar.xz
+sudo tar xf mpd-0.21.11.tar.xz
+cd mpd-0.21.11
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
@@ -513,7 +531,7 @@ output/release
 sudo ninja -C output/release
 sudo ninja -C output/release install
 cd ~
-sudo rm -rf ./mpd-0.21.8*
+sudo rm -rf ./mpd-0.21.11*
 
 sudo apt-get clean
 sudo apt-get -y autoremove
