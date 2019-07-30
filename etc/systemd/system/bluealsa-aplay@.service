@@ -7,7 +7,7 @@ Type=simple
 #User=pi
 #Group=audio
 EnvironmentFile=-/etc/bluealsaaplay.conf
-ExecStart=/usr/bin/bluealsa-aplay --profile-a2dp -d $AUDIODEV %I
+ExecStart=/usr/bin/bluealsa-aplay --profile-a2dp --pcm-buffer-time=${BUFFERTIME} -d $AUDIODEV %I
 
 [Install]
 WantedBy=multi-user.target

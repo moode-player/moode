@@ -209,7 +209,8 @@ RENDERER_SETTINGS() {
 	echo -e "\tBluetooth ver\t\t= $BTVER\c"
 	echo -e "\n\tBluealsa ver\t\t= $BAVER\c"
 	echo -e "\n\tSpeaker sharing\t\t= $btmulti\c"
-	echo -e "\n\tResume MPD\t\t= $rsmafterbt\n"
+	echo -e "\n\tResume MPD\t\t= $rsmafterbt\c"
+	echo -e "\n\tPCM buffer time\t\t= $bluez_pcm_buffer (microseconds)\n"
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		SPSVER="$(shairport-sync -V | cut -f 1 -d '-')"
@@ -470,7 +471,7 @@ extmeta=${arr[41]}
 maint_interval=${arr[42]}
 hdwrrev=${arr[43]}
 [[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
-reserved46=${arr[45]}
+bluez_pcm_buffer=${arr[45]}
 reserved47=${arr[46]}
 reserved48=${arr[47]}
 airplaymeta=${arr[48]}

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.0
  *
  */
 -->
@@ -33,10 +33,10 @@
 			<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="run_btcmd" value="1" $_bt_disabled>Submit</button>
 			<a aria-label="Help" class="info-toggle" data-cmd="info_btcmd" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info_btcmd" class="help-block-configs hide">
-				Select a command to submit to the Bluetooth controller.<br>
+				Select a command to submit to the Bluetooth controller.
 	        </span>
 			<span class="help-block-configs $_bt_msg_hide" style="margin-bottom:.5em;">
-				Turn on Bluetooth in Audio config then select a command to submit to the Bluetooth controller.<br>
+				Turn on Bluetooth in Audio config then select a command to submit to the Bluetooth controller.
 	        </span>
 		</fieldset>
 
@@ -46,36 +46,36 @@
 			</div>
 
 			<div class="$_hide_ctl[paired_device]">
-				<select id="paired-device" class="select-large" name="paired_device" style="margin-bottom: 5px;">
+				<select id="paired-device" class="select-large" name="paired_device">
 					$_device[paired_device]
 				</select>
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="connectto_device" value="1">Connect</button>
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="rm_paired_device" value="1">Remove</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info_rm_paired_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_rm_paired_device" class="help-block-configs hide">
-					Connect or remove a paired device.<br>
+					Connect or remove a paired device.
 	            </span>
 			</div>
 
 			<div class="$_hide_ctl[connected_device]">
-				<select id="connected-device" class="select-large" name="connected_device" style="margin-bottom: 5px;">
+				<select id="connected-device" class="select-large" name="connected_device">
 					$_device[connected_device]
 				</select>
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="disconnect_device" value="1">Disconnect</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info_disconnect_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_disconnect_device" class="help-block-configs hide">
-					Disconnect the currently connected device.<br>
+					Disconnect the currently connected device.
 	            </span>
 			</div>
 
 			<div class="$_hide_ctl[scanned_device]">
-				<select id="scanned-device" class="select-large" name="scanned_device" style="margin-bottom: 5px;">
+				<select id="scanned-device" class="select-large" name="scanned_device">
 					$_device[scanned_device]
 				</select>
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="pairwith_device" value="1">Pair</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info_pairwith_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_pairwith_device" class="help-block-configs hide">
-					Select a device to pair with.<br>
+					Select a device to pair with.
 	            </span>
 			</div>
 
@@ -86,10 +86,24 @@
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="chg_audioout" value="1">Change</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info_audioout" class="help-block-configs hide">
-					Send MPD audio output to the Local audio device or over a Bluetooth connection to another audio device.<br>
+					Send MPD audio output to the Local audio device or over a Bluetooth connection to another audio device.
 	            </span>
-				<span class="help-block-configs help-block-margin $_ao_msg_hide">
-					Connect, Remove and Disconnect will also automatically change to the selected MPD audio output.<br>
+				<span class="help-block-configs $_ao_msg_hide">
+					Connect, Remove and Disconnect will also automatically change to the selected MPD audio output.
+	            </span>
+			</div>
+
+			<div style="margin-top: .5em;">
+				<select id="pcm_buffer" class="select-large" name="pcm_buffer">
+					$_select[pcm_buffer]
+				</select>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_pcm_buffer" value="1">Set</button>
+				<a aria-label="Help" class="info-toggle" data-cmd="info_pcm_buffer" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_pcm_buffer" class="help-block-configs hide">
+					Lower values result in less latency but may also cause dropouts on poor quality connections.
+	            </span>
+				<span class="help-block-configs">
+					Length of ALSA PCM output buffer in miliseconds.
 	            </span>
 			</div>
 		</fieldset>
