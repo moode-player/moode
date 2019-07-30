@@ -31,6 +31,8 @@ Updates
 - UPD: Bump to MiniDLNA 1.2.1
 - UPD: Bump to ALSA 1.1.8
 - UPD: Bump to WiringPi 2.52
+- UPD: Bump to Boost 1.68
+- UPD: Add MPD 0.21.11 for testing
 - UPD: Add haveged entropy generator
 - UPD: Add rev codes for Pi-4B 1/2/4GB models
 - UPD: Add new sort tag options for Library
