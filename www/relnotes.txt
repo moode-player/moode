@@ -20,7 +20,7 @@ New features
 - NEW: Raspbian 10.0 (Buster Lite)
 - NEW: Support for Pi-4B 1/2/4GB models
 - NEW: UPnP Media Browser
-- NEW: Screen reader accessibility
+- NEW: Screen Reader accessibility
 
 Updates
 
@@ -40,7 +40,7 @@ Updates
 - UPD: Add Spotify clear credential cache
 - UPD: Add Instant Play options: Add/Play, Clear/Play
 - UPD: Add Show Genres column (Yes/No) to Library options
-- UPD: Add BUFFERTIME param to BlueZ config
+- UPD: Add buffertime param to BlueZ config
 - UPD: Remove restriction on quotes in Wifi password
 - UPD: Disable PHP session clean and timer
 - UPD: Improve Play/Playall response on slower Pi-Zero
