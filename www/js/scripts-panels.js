@@ -102,7 +102,9 @@ jQuery(document).ready(function($) { 'use strict';
 	// connect to server engines
     engineMpd();
     engineCmd();
-    UI.clientIP = sendMoodeCmd('GET', 'clientip');
+
+    // NOTE: We may use this in the future
+    //UI.clientIP = sendMoodeCmd('GET', 'clientip');
 	//console.log(UI.clientIP);
 
 	// start radio, folder and library loads
@@ -312,7 +314,7 @@ jQuery(document).ready(function($) { 'use strict';
         else {
             $('#top-columns').addClass('nogenre');
         }
-        
+
 		currentView = 'tag';
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
 
