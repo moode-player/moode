@@ -24,7 +24,7 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 4.19.58
+- UPD: Bump to Linux kernel 4.19.60
 - UPD: Bump to PHP 7.3.4
 - UPD: Bump to NGINX 1.14.2
 - UPD: Bump to SQLite 3.27.2
