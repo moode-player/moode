@@ -582,7 +582,7 @@ if ($_SESSION['autoplay'] == '1') {
 	workerLog('worker: ALSA output (' . $hwparams['status'] . ')');
 }
 else {
-	workerLog('worker: Auto-play (Off');
+	workerLog('worker: Auto-play (Off)');
 	sendMpdCmd($sock, 'stop');
 	$resp = readMpdResp($sock);
 }
