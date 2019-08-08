@@ -292,7 +292,7 @@ function sockWrite($sock, $msg) {
     return false;
 }
 
-// caching library loader TC and AG
+// Caching library loader
 function loadLibrary($sock) {
 	if (filesize(LIBCACHE_JSON) != 0) {
 		debugLog('loadLibrary(): Cache data returned to client');
@@ -305,7 +305,7 @@ function loadLibrary($sock) {
 		if ($flat != '') {
 			debugLog('loadLibrary(): Flat list generated');
 			debugLog('loadLibrary(): Generating library...');
-			// normal or UTF8 replace
+			// Normal or UTF8 replace
 			if ($_SESSION['library_utf8rep'] == 'No') {
 				$tagarray = genLibrary($flat);
 			}
@@ -322,16 +322,16 @@ function loadLibrary($sock) {
 	}
 }
 
-// generate flat list from mpd tag database
+// Generate flat list from mpd tag database
 function genFlatList($sock) {
-	// get root list
+	// Get root list
 	sendMpdCmd($sock, 'lsinfo');
 	$resp = readMpdResp($sock);
 	$dirs = array();
 	$line = strtok($resp, "\n");
 	$i = 0;
 
-	// use directories only, exclude RADIO
+	// Use directories only and exclude RADIO
 	while ($line) {
 		list($param, $value) = explode(': ', $line, 2);
 
@@ -343,7 +343,7 @@ function genFlatList($sock) {
 		$line = strtok("\n");
 	}
 
-	// get metadata
+	// Get metadata
 	$resp = '';
 	foreach ($dirs as $dir) {
 		//workerLog('Directory: ' . $dir);
@@ -364,7 +364,7 @@ function genFlatList($sock) {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
-			// screen out dir and pl from listallinfo
+			// Exclude directories and playlists from listallinfo
 			elseif ($element == 'directory' || $element == 'playlist') {
 				++$i;
 			}
@@ -380,36 +380,28 @@ function genFlatList($sock) {
 	}
 }
 
-// generate library {Genre1: {Artist1: {Album1: [{song1}, {song2}], Album2:...}, Artist2:...}, Genre2:...}
+// Generate library array (@chris-rudmin enhancements)
 function genLibrary($flat) {
 	$lib = array();
 
-	$lib_artist = $_SESSION['library_artist_col']; // Artist, ArtistSort, AlbumArtist or AlbumArtistSort
-	$lib_album = $_SESSION['library_album_col']; // Album or AlbumSort
-
 	foreach ($flat as $flatData) {
-		$genre = $flatData['Genre'] ? $flatData['Genre'] : 'Unknown';
-		$artist = $flatData[$lib_artist] ? $flatData[$lib_artist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown');
-		$album = $flatData[$lib_album] ? $flatData[$lib_album] : ($flatData['Album'] ? $flatData['Album'] : 'Unknown');
-		//$album = $flatData['Date'] ? $flatData['Date'] . ' - ' . $album : $album; // add year (Date tag)
-
-		if (!$lib[$genre]) {$lib[$genre] = array();}
-		if (!$lib[$genre][$artist]) {$lib[$genre][$artist] = array();}
-		if (!$lib[$genre][$artist][$album]) {$lib[$genre][$artist][$album] = array();}
-
 		$songData = array(
 			'file' => $flatData['file'],
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
-			'title' => $flatData['Title'],
+			'title' => ($flatData['Title'] ? $flatData['Title'] : 'Unknown Title'),
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
-			'actual_artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing'),
+			'artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist'),
+			'album_artist' => $flatData['AlbumArtist'],
 			'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
 			'year' => $flatData['Date'],
 			'time' => $flatData['Time'],
-			'time_mmss' => songTime($flatData['Time'])
+			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
+			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
+			'time_mmss' => songTime($flatData['Time']),
+			'last_modified' => $flatData['Last-Modified']
 		);
 
-		array_push($lib[$genre][$artist][$album], $songData);
+		array_push($lib, $songData);
 	}
 
 	$json_lib = json_encode($lib);
@@ -424,31 +416,25 @@ function genLibrary($flat) {
 function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
-	$lib_artist = $_SESSION['library_artist_col']; // Artist, ArtistSort, AlbumArtist or AlbumArtistSort
-	$lib_album = $_SESSION['library_album_col']; // Album or AlbumSort
-
 	foreach ($flat as $flatData) {
-		$genre = utf8rep($flatData['Genre'] ? $flatData['Genre'] : 'Unknown');
- 		$artist = utf8rep($flatData[$libartist] ? $flatData[$libartist] : ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown'));
-		$album = utf8rep($flatData[$lib_album] ? $flatData[$lib_album] : ($flatData['Album'] ? $flatData['Album'] : 'Unknown'));
-
-		if (!$lib[$genre]) {$lib[$genre] = array();}
-		if (!$lib[$genre][$artist]) {$lib[$genre][$artist] = array();}
-        if (!$lib[$genre][$artist][$album]) {$lib[$genre][$artist][$album] = array();}
 
 		$songData = array(
- 			'file' => utf8rep($flatData['file']),
- 			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')), //r44f add inner brackets
- 			'title' => utf8rep($flatData['Title']),
+			'file' => utf8rep($flatData['file']),
+			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')), //r44f add inner brackets
+			'title' => utf8rep(($flatData['Title'] ? $flatData['Title'] : 'Unknown Title')),
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
- 			'actual_artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Artist tag missing')), //r44f add inner brackets
+			'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist')), //r44f add inner brackets
+			'album_artist' => utf8rep($flatData['AlbumArtist']),
 			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
- 			'year' => utf8rep($flatData['Date']),
- 			'time' => utf8rep($flatData['Time']),
- 			'time_mmss' => utf8rep(songTime($flatData['Time']))
+			'year' => utf8rep($flatData['Date']),
+			'time' => utf8rep($flatData['Time']),
+			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
+			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
+			'time_mmss' => utf8rep(songTime($flatData['Time'])),
+			'last_modified' => $flatData['Last-Modified']
 		);
 
-		array_push($lib[$genre][$artist][$album], $songData);
+		array_push($lib, $songData);
 	}
 
 	$json_lib = json_encode($lib);
@@ -459,7 +445,7 @@ function genLibraryUTF8Rep($flat) {
 }
 // UTF8 replace (@lazybat)
 function utf8rep($some_string) {
-	// reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ? (@lazybat)
+	// Reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ? (@lazybat)
 	$some_string = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
 		'|[\x00-\x7F][\x80-\xBF]+'.
 		'|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'.
@@ -467,7 +453,7 @@ function utf8rep($some_string) {
 		'|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
 		'--', $some_string );
 
-	//reject overly long 3 byte sequences and UTF-16 surrogates and replace with ?
+	// Reject overly long 3 byte sequences and UTF-16 surrogates and replace with ?
 	$some_string = preg_replace('/\xE0[\x80-\x9F][\x80-\xBF]'.
 		'|\xED[\xA0-\xBF][\x80-\xBF]/S','--', $some_string );
 

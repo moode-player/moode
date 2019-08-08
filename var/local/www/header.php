@@ -39,7 +39,7 @@
 
 	<!-- VERSIONED RESOURCES -->
 	<?php
-		// common css
+		// Common css
 		versioned_resource('css/bootstrap.min.css');
 		versioned_resource('css/bootstrap-select.css');
 		versioned_resource('css/flat-ui.css');
@@ -48,14 +48,14 @@
 		versioned_resource('css/panels.css');
 		versioned_resource('css/moode.css');
 
-		// common js
+		// Common js
 		versioned_script('js/bootstrap.min.js');
 		versioned_script('js/bootstrap-select.min.js');
 		versioned_script('js/jquery.pnotify.min.js');
 		versioned_script('js/playerlib.js');
 		versioned_script('js/links.js');
 
-		// playback/library
+		// Playback / Library
 		if ($section == 'index') {
 			versioned_resource('css/jquery.countdown.css');
 			versioned_script('js/jquery.countdown.js');
@@ -67,9 +67,10 @@
 			versioned_script('js/notify.js');
 			versioned_script('js/jquery.knob.js');
 			versioned_script('js/bootstrap-contextmenu.js');
-			versioned_script('js/scripts-panels.js');
+            versioned_script('js/scripts-library.js');
+            versioned_script('js/scripts-panels.js');
 		}
-		// configs
+		// Configs
 		else {
 			versioned_script('js/custom_checkbox_and_radio.js');
 			versioned_script('js/custom_radio.js');

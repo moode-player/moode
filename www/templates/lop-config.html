@@ -36,27 +36,14 @@
 		<fieldset>
 	    	<legend>Options</legend>
 			<div class="control-group">
-				<label class="control-label" for="library_artist_col">Artist list ordering</label>
+				<label class="control-label" for="library_instant_play">Instant play action</label>
 				<div class="controls">
-					<select id="library_artist_col" class="input-large" name="config[library_artist_col]">
-						$_select[library_artist_col]
+					<select id="library_instant_play" class="input-large" name="config[library_instant_play]">
+						$_select[library_instant_play]
 					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_library_artist_col" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_library_artist_col" class="help-block-configs help-block-margin hide">
-						Specify which tag is used to populate the Artist list. If the tag doesn't exist in the song file the Artist tag will be used.
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="library_album_col">Album list ordering</label>
-				<div class="controls">
-					<select id="library_album_col" class="input-large" name="config[library_album_col]">
-						$_select[library_album_col]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_library_album_col" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_library_album_col" class="help-block-configs help-block-margin hide">
-						Specify which tag is used to populate the Album list. If the tag doesn't exist in the song file the Album tag will be used.
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_instant_play" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_instant_play" class="help-block-configs help-block-margin hide">
+						This option determines whether Instant Play performs Clear/Play or Add/Play.<br>
                     </span>
 				</div>
 			</div>
@@ -83,30 +70,6 @@
 						Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed.<br>
 						NOTE: A blank list will result in "None" and will effectively disable the option.
                     </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="compilation_rollup">Compilation rollup</label>
-				<div class="controls">
-					<select id="compilation_rollup" class="input-large" name="config[compilation_rollup]">
-						$_select[compilation_rollup]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_compilation_rollup" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_compilation_rollup" class="help-block-configs help-block-margin hide">
-						Automatically rollup albums with same album name but different artists into a single compilation album.<br>
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="compilation_excludes">Compilation excludes</label>
-				<div class="controls">
-					<input class="input-large" type="text" id="compilation_excludes" name="config[compilation_excludes]" value="$_select[compilation_excludes]">
-					<a aria-label="Help" class="info-toggle" data-cmd="info_compilation_excludes" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_compilation_excludes" class="help-block-configs help-block-margin hide">
-						Comma separated list of album names that are excluded from Compilation rollup.<br>
-					</span>
 				</div>
 			</div>
 
@@ -151,15 +114,29 @@
 				</div>
 			</div>
 
-			<div class="control-group">
-				<label class="control-label" for="library_instant_play">Instant play action</label>
+			<!-- FOR FUTURE USE -->
+			<div class="control-group hide">
+				<label class="control-label" for="library_artist_sort">Artist sort tag</label>
 				<div class="controls">
-					<select id="library_instant_play" class="input-large" name="config[library_instant_play]">
-						$_select[library_instant_play]
+					<select id="library_artist_sort" class="input-large" name="config[library_artist_sort]">
+						$_select[library_artist_sort]
 					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_library_instant_play" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_library_instant_play" class="help-block-configs help-block-margin hide">
-						This option determines whether Instant Play performs Clear/Play or Add/Play.<br>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_artist_sort" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_artist_sort" class="help-block-configs help-block-margin hide">
+						Specify which tag is used to populate the Artist list. If the tag doesn't exist in the song file the Artist tag will be used.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group hide">
+				<label class="control-label" for="library_album_sort">Album list ordering</label>
+				<div class="controls">
+					<select id="library_album_sort" class="input-large" name="config[library_album_sort]">
+						$_select[library_album_sort]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_album_sort" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_album_sort" class="help-block-configs help-block-margin hide">
+						Specify which tag is used to populate the Album list. If the tag doesn't exist in the song file the Album tag will be used.
                     </span>
 				</div>
 			</div>

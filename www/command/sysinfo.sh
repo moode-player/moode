@@ -171,17 +171,14 @@ APPEARANCE_SETTINGS() {
 
 LIBRARY_SETTINGS() {
 	echo -e "\t  L I B R A R Y   S E T T I N G S  \n"
-	# music library
-	echo -e "\tArtist list order\t= $library_artist_col\c"
-	echo -e "\n\tAlbum list order\t= $library_album_col\c"
+	echo -e "\tInstant play action\t= $library_instant_play\c"
 	echo -e "\n\tIgnore articles\t\t= $ignore_articles\c"
-	echo -e "\n\tCompilation rollup\t= $compilation_rollup\c"
-	echo -e "\n\tCompilation excludes\t= $compilation_excludes\c"
 	echo -e "\n\tUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\n\tHi-res thumbs\t\t= $library_hiresthm\c"
 	echo -e "\n\tCover search pri\t= $library_covsearchpri\c"
 	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\c"
-	echo -e "\n\tInstant play action\t= $library_instant_play\n"
+	echo -e "\n\tArtist sort tag\t\t= $library_artist_sort\c"
+	echo -e "\n\tAlbum sort tag\t\t= $library_album_sort\n"
 }
 
 MPD_SETTINGS() {
@@ -459,7 +456,7 @@ timecountup=${arr[29]}
 accentcolor=${arr[30]}
 volknob=${arr[31]}
 [[ "${arr[32]}" = "1" ]] && volmute="Muted" || volmute="Unmuted"
-library_album_col=${arr[33]}
+RESERVED_34=${arr[33]}
 alsavolume=${arr[34]}
 amixname=${arr[35]}
 mpdmixer=${arr[36]}
@@ -472,8 +469,8 @@ maint_interval=${arr[42]}
 hdwrrev=${arr[43]}
 [[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
 bluez_pcm_buffer=${arr[45]}
-reserved47=${arr[46]}
-reserved48=${arr[47]}
+[[ "${arr[46]}" = "1" ]] && upnp_browser="On" || upnp_browser="Off"
+library_instant_play=${arr[47]}
 airplaymeta=${arr[48]}
 airplayactv=${arr[49]}
 [[ "${arr[50]}" = "1" ]] && debuglog="On" || debuglog="Off"
@@ -494,7 +491,7 @@ pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
 [[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
-library_artist_col=${arr[68]}
+library_artist_sort=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
@@ -513,7 +510,7 @@ cardnum=${arr[76]}
 btname=${arr[78]}
 [[ "${arr[79]}" = "1" ]] && btmulti="Yes" || btmulti="No"
 feat_bitmask=${arr[80]}
-reserved82=${arr[81]}
+library_album_sort=${arr[81]}
 btactive=${arr[82]}
 touchscn=${arr[83]}
 scnblank=${arr[84]}
@@ -530,7 +527,7 @@ rsmaftersl=${arr[94]}
 mpdmixer_local=${arr[95]}
 wrkready=${arr[96]}
 scnsaver_timeout=${arr[97]}
-compilation_excludes=${arr[98]}
+RESERVED_99=${arr[98]}
 favorites_name=${arr[99]}
 [[ "${arr[100]}" = "1" ]] && spotifysvc="On" || spotifysvc="Off"
 spotifyname=${arr[101]}
@@ -544,7 +541,7 @@ cover_backdrop=${arr[108]}
 cover_blur=${arr[109]}
 cover_scale=${arr[110]}
 [[ "${arr[111]}" = "1" ]] && eth_port_fix="On" || eth_port_fix="Off"
-compilation_rollup=${arr[112]}
+RESERVED_113=${arr[112]}
 scnsaver_style=${arr[113]}
 ashuffle_filter=${arr[114]}
 [[ "${arr[115]}" = "1" ]] && mpd_httpd="On" || mpd_httpd="Off"
@@ -557,8 +554,6 @@ rsmafterinp=${arr[120]}
 ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
-[[ "${arr[125]}" = "1" ]] && upnp_browser="On" || upnp_browser="Off"
-library_instant_play=${arr[126]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
