@@ -310,7 +310,31 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-1. WiringPi
+1a. WiringPi from sources
+
+# Remove 2.52 version installed from .deb file
+sudo dpkg -P wiringpi
+
+# NOTE: Ignore warnings during build
+sudo cp ./moode/other/wiringpi/wiringPi-2.50-36fb7f1.tar.gz ./
+sudo tar xfz ./wiringPi-2.50-36fb7f1.tar.gz
+cd wiringPi-36fb7f1
+sudo ./build
+cd ~/
+sudo rm -rf ./wiringPi*
+
+1b. WiringPi from .deb package
+
+# Remove 2.50 version compiled from sources
+sudo rm /usr/local/lib/libwiringPi*
+sudo rm /usr/local/bin/gpio
+
+cd /usr/local/include
+sudo rm ads1115.h ds1302.h lcd128x64.h maxdetect.h mcp23017.h mcp23x08.h mcp4802.h piGlow.h scrollPhat.h softTone.h wiringPiSPI.h \
+bmp180.h ds18b20.h lcd.h mcp23008.h mcp23s08.h mcp3002.h pcf8574.h piNes.h sn3218.h sr595.h wiringSerial.h drcNet.h \
+gertboard.h max31855.h mcp23016.h mcp23s17.h mcp3004.h pcf8591.h pseudoPins.h softPwm.h wiringPi.h wiringShift.h drcSerial.h \
+htu21d.h max5322.h mcp23016reg.h mcp23x0817.h mcp3422.h piFace.h rht03.h softServo.h wiringPiI2C.h wpiExtensions.h
+cd ~/
 
 # Install 2.52 from deb package
 sudo cp ./moode/other/wiringpi/wiringpi-latest.deb ./
@@ -467,15 +491,15 @@ sudo tar xfz ./boost_1.68_libraries.tar.gz
 sudo rm ./boost_*.gz
 cd ~
 
-3. Download MPD 0.21.11 sources and prep for compile.
+3. Download MPD 0.21.13 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.21.11 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.21.13 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.11.tar.xz
-sudo tar xf mpd-0.21.11.tar.xz
-cd mpd-0.21.11
+sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.13.tar.xz
+sudo tar xf mpd-0.21.13.tar.xz
+cd mpd-0.21.13
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
@@ -531,7 +555,7 @@ output/release
 sudo ninja -C output/release
 sudo ninja -C output/release install
 cd ~
-sudo rm -rf ./mpd-0.21.11*
+sudo rm -rf ./mpd-0.21*
 
 sudo apt-get clean
 sudo apt-get -y autoremove
@@ -727,8 +751,8 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-# 4.19.63
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 87843c15bb3236ec394c7e7fbc74dba5548d1456
+# 4.19.64
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 02b8afc4d1db9239ed367cf671d296d7061b6904
 
 # cleanup
 sudo rm -rf /lib/modules.bak
@@ -864,9 +888,9 @@ sudo chmod 0755 /usr/local/etc/mpdasrc
 sudo apt-get -y install autoconf libtool libdaemon-dev libasound2-dev libpopt-dev libconfig-dev \
 avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
 
-sudo cp ./moode/other/shairport-sync/shairport-sync-3.3.1-3615b99.zip ./
-sudo unzip ./shairport-sync-3.3.1-3615b99.zip
-cd ./shairport-sync-3.3.1
+sudo cp ./moode/other/shairport-sync/shairport-sync-3.3.2-b4c54fc.zip ./
+sudo unzip ./shairport-sync-3.3.2-b4c54fc.zip
+cd ./shairport-sync-3.3.2
 
 
 sudo autoreconf -i -f
