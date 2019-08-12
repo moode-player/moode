@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.0.1
  *
  */
 -->
@@ -108,7 +108,10 @@
 			<div class="control-group">
 				<label class="control-label" for="new-curvename">Curve name</label>
 				<div class="controls">
-					<input class="input-large" type="text" pattern="[A-Za-z0-9\-]{1,32}" id="newcurvename" name="new-curvename" value="">
+					<input class="input-large" type="text" pattern="[A-Za-z0-9 .\-]{1,32}" id="new-curvename-input" name="new-curvename" value="">
+					<span class="help-block help-block-modal">
+						Length 1-32 chars, alphanumeric, space and period are allowed.
+					</span>
 				</div>
 			</div>
 		</div>
