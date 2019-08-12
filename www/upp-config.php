@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.0.1
  *
  */
 
@@ -59,15 +59,16 @@ $_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfg_upnp['checkcon
 // TIDAL
 $_select['tidaluser'] = $cfg_upnp['tidaluser'];
 $_select['tidalpass'] = $cfg_upnp['tidalpass'];
-$_select['tidalquality'] .= "<option value=\"lossless\" " . (($cfg_upnp['tidalquality'] == 'lossless') ? "selected" : "") . ">lossless (FLAC)</option>\n";
-$_select['tidalquality'] .= "<option value=\"high\" " . (($cfg_upnp['tidalquality'] == 'high') ? "selected" : "") . ">high bitrate (AAC)</option>\n";
-$_select['tidalquality'] .= "<option value=\"low\" " . (($cfg_upnp['tidalquality'] == 'low') ? "selected" : "") . ">low bitrate (AAC)</option>\n";
+$_select['tidalquality'] .= "<option value=\"lossless\" " . (($cfg_upnp['tidalquality'] == 'lossless') ? "selected" : "") . ">FLAC (Lossless)</option>\n";
+$_select['tidalquality'] .= "<option value=\"high\" " . (($cfg_upnp['tidalquality'] == 'high') ? "selected" : "") . ">AAC (High bitrate)</option>\n";
+$_select['tidalquality'] .= "<option value=\"low\" " . (($cfg_upnp['tidalquality'] == 'low') ? "selected" : "") . ">AAC (Low bitrate)</option>\n";
 
 // QOBUZ
 $_select['qobuzuser'] = $cfg_upnp['qobuzuser'];
 $_select['qobuzpass'] = $cfg_upnp['qobuzpass'];
-$_select['qobuzformatid'] .= "<option value=\"7\" " . (($cfg_upnp['qobuzformatid'] == '7') ? "selected" : "") . ">lossless (FLAC)</option>\n";
-$_select['qobuzformatid'] .= "<option value=\"5\" " . (($cfg_upnp['qobuzformatid'] == '5') ? "selected" : "") . ">320K (MP3)</option>\n";
+$_select['qobuzformatid'] .= "<option value=\"7\" " . (($cfg_upnp['qobuzformatid'] == '7') ? "selected" : "") . ">FLAC (up to 96K)</option>\n";
+$_select['qobuzformatid'] .= "<option value=\"27\" " . (($cfg_upnp['qobuzformatid'] == '27') ? "selected" : "") . ">FLAC (up to 192K)</option>\n";
+$_select['qobuzformatid'] .= "<option value=\"5\" " . (($cfg_upnp['qobuzformatid'] == '5') ? "selected" : "") . ">MP3 (320K)</option>\n";
 
 // GOOGLE MUSIC
 $_gmusicapi_msg = 'hide';
@@ -76,9 +77,9 @@ if ($result[0] == 'exists' && ($_SESSION['feat_bitmask'] & FEAT_GMUSICAPI)) {
 	$_feat_gmusicapi = '';
 	$_select['gmusicuser'] = $cfg_upnp['gmusicuser'];
 	$_select['gmusicpass'] = $cfg_upnp['gmusicpass'];
-	$_select['gmusicquality'] .= "<option value=\"hi\" " . (($cfg_upnp['gmusicquality'] == 'hi') ? "selected" : "") . ">320K (MP3)</option>\n";
-	$_select['gmusicquality'] .= "<option value=\"med\" " . (($cfg_upnp['gmusicquality'] == 'med') ? "selected" : "") . ">160K (MP3)</option>\n";
-	$_select['gmusicquality'] .= "<option value=\"low\" " . (($cfg_upnp['gmusicquality'] == 'low') ? "selected" : "") . ">128K (MP3)</option>\n";
+	$_select['gmusicquality'] .= "<option value=\"hi\" " . (($cfg_upnp['gmusicquality'] == 'hi') ? "selected" : "") . ">MP3 (320K)</option>\n";
+	$_select['gmusicquality'] .= "<option value=\"med\" " . (($cfg_upnp['gmusicquality'] == 'med') ? "selected" : "") . ">MP3 (160K)</option>\n";
+	$_select['gmusicquality'] .= "<option value=\"low\" " . (($cfg_upnp['gmusicquality'] == 'low') ? "selected" : "") . ">MP3 (128K)</option>\n";
 	$_select['gmusicdeviceid'] = $cfg_upnp['gmusicdeviceid'];
 }
 else {
