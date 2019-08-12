@@ -89,7 +89,7 @@ jQuery(document).ready(function($){ 'use strict';
 		$('.busy-spinner').show();
 	});
 
-	// eq configs
+	// EQ configs
 	$('#eqp-curve-name').change(function() {
 		//console.log('http://' + location.host + 'eqp-config.php?curve=' + $(this).val());
 		location.assign('http://' + location.host + '/eqp-config.php?curve=' + $(this).val());
@@ -97,6 +97,23 @@ jQuery(document).ready(function($){ 'use strict';
 	$('#eqg-curve-name').change(function() {
 		//console.log('http://' + location.host + 'eqg-config.php?curve=' + $(this).val());
 		location.assign('http://' + location.host + '/eqg-config.php?curve=' + $(this).val());
+	});
+    $('#master-gain-up, #master-gain-dn').on('mousedown mouseup click', function(e) {
+    	if (e.type == 'mousedown') {
+    		var selector = $(this).attr('id');
+    	    eqGainUpdInterval = setInterval(function() {
+    			updEqpMasterGainSlider(selector);
+    	    },50); // ms
+    	}
+    	else if (e.type == 'mouseup') {
+    		clearInterval(eqGainUpdInterval);
+    	}
+    	else if (e.type == 'click') {
+    		updEqpMasterGainSlider($(this).attr('id'));
+    	}
+    });
+    $('#new-curvename').on('shown.bs.modal', function() {
+		$('#new-curvename-input').focus();
 	});
 
 	// network config show static on page load/reload
