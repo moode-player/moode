@@ -401,7 +401,7 @@ function engineMpdLite() {
     });
 }
 
-// command engine
+// Command engine
 function engineCmd() {
 	var cmd;
 
@@ -414,26 +414,26 @@ function engineCmd() {
 			//console.log('engineCmd: success branch: data=(' + data + ')');
 
 			cmd = JSON.parse(data).split(',');
-			if (cmd[0] == 'btactive1' || cmd[0] == 'btactive0') {
-				// cmd[1] is the connected device name
+
+			if (cmd[0] == 'btactive1' || cmd[0] == 'btactive0') { // NOTE: cmd[1] is the connected device name
 				inpSrcIndicator(cmd[0], '<a href="blu-config.php">Bluetooth Active</a><br><span>' + cmd[1] + '</span>');
 			}
-			if (cmd[0] == 'aplactive1' || cmd[0] == 'aplactive0') {
+			else if (cmd[0] == 'aplactive1' || cmd[0] == 'aplactive0') {
 				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><span class="disconnect-renderer" data-job="airplaysvc">disconnect</span>');
 			}
-			if (cmd[0] == 'spotactive1' || cmd[0] == 'spotactive0') {
+			else if (cmd[0] == 'spotactive1' || cmd[0] == 'spotactive0') {
 				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><span class="disconnect-renderer" data-job="spotifysvc">disconnect</span>');
 			}
-			if (cmd[0] == 'slactive1' || cmd[0] == 'slactive0') {
+			else if (cmd[0] == 'slactive1' || cmd[0] == 'slactive0') {
 				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">disconnect</span>');
 			}
-			if (cmd[0] == 'inpactive1' || cmd[0] == 'inpactive0') {
-				// cmd[1] is the input source name
+			else if (cmd[0] == 'inpactive1' || cmd[0] == 'inpactive0') { // NOTE: cmd[1] is the input source name
 				inpSrcIndicator(cmd[0], '<a href="sel-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
 			}
-			if (cmd[0] == 'scnactive1') {
+			else if (cmd[0] == 'scnactive1') {
 				screenSaver(cmd[0]);
 			}
+
 			if (cmd[0] == 'dbupd_done') {
 				$('.busy-spinner').hide();
 			}
@@ -465,7 +465,14 @@ function inpSrcIndicator(cmd, msgText) {
 	}
 	else {
 		if ($('#screen-saver').css('display') == 'none') {
-			$('#menu-top, .btnlist-top, .alphabits').show();
+            $('#menu-top, .btnlist-top').show();
+            $('#index-artists.alphabits').show();
+            $('#index-albums.alphabits').show();
+
+            if (SESSION.json['show_genres'] == 'Yes') {
+                $('#index-genres.alphabits').show();
+            }
+
 			if (currentView.indexOf('playback') == -1) {
 				$('#menu-bottom').show();
 				$('.viewswitch').css('display', 'flex');
