@@ -19,7 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.0.1
+ *
+ * This includes the @chris-rudmin rewrite of the GenLibrary() function
+ * to support the new Library renderer /var/www/js/scripts-library.js
+ * Refer to https://github.com/moode-player/moode/pull/16 for more info.
  *
  */
 
@@ -380,7 +384,7 @@ function genFlatList($sock) {
 	}
 }
 
-// Generate library array (@chris-rudmin enhancements)
+// Generate library array (@chris-rudmin rewrite)
 function genLibrary($flat) {
 	$lib = array();
 
