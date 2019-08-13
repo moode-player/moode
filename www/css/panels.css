@@ -291,7 +291,7 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-load {color:#ddd;font-size:18px;font-weight:bold;margin-left:-72px;position:absolute;top:50%;left:50%;}
 #content-position {height:100%;width:100%;display:flex;position:absolute;overflow:hidden;} /* prevents horiz scrollbar from apprearing on pi touch lib panel */
 #top-columns {height:47%;width:100%;display:flex;flex-direction:row;top:0;top:env(safe-area-inset-top);left:0%;position:absolute;}
-#bottom-row {height:53%;width:100%;display:flex;flex-direction:row;top:45%;top:calc(env(safe-area-inset-top) + 47%);left:0%;position:absolute;border-top:1px solid var(--btnshade);}
+#bottom-row {height:53%;width:100%;display:flex;flex-direction:row;top:47%;top:calc(env(safe-area-inset-top) + 47%);left:0%;position:absolute;border-top:1px solid var(--btnshade);}
 #lib-content {display:none;position:absolute;top:2.75rem;left:0px;right:0px;bottom:0px;background-color:inherit;}
 #lib-genre-header, #lib-genre, #lib-artist-header, #lib-artist, #lib-album-header, #lib-album {position:absolute;box-sizing:border-box;width:33.33%;overflow:auto;overflow-x:hidden;}
 #lib-genre-header {border-top:1px solid var(--btnshade);border-bottom:1px solid var(--btnshade);border-right:1px solid var(--btnshade);}
