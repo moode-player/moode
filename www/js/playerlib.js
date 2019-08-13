@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.0.1
  *
  */
 
@@ -616,15 +616,17 @@ function renderUI() {
 		SESSION.json = result;
 	}
 
-	// highlight track in Library
-	if (typeof(allSongs) != 'undefined') {
-		for (i = 0; i < allSongs.length; i++) {
-			if (allSongs[i].title == MPD.json['title']) {
-				$('#songsList .lib-entry-song .songtrack').removeClass('songTrackHighlight');
-				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('songTrackHighlight');
+	// Highlight track in Library
+    if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
+        //console.log(filteredSongs.length, $('#songsList li').length);
+		for (i = 0; i < filteredSongs.length; i++) {
+			if (filteredSongs[i].title == MPD.json['title']) {
+				$('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
+				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-highlight');
 				break;
 			}
 		}
+        //customScroll('tracks', i, 200);
 	}
 
 	// disabled volume, 0dB output
@@ -793,7 +795,7 @@ function renderUI() {
 	if (SESSION.json['ashufflesvc'] === '1') {
 		if (SESSION.json['ashuffle'] ==='1') {
 			$('.random, .consume').addClass('btn-primary')
-			$('#songsList .lib-entry-song .songtrack').removeClass('songTrackHighlight');
+			$('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
 		}
 		else {
 			$('.random').removeClass('btn-primary');
@@ -1537,7 +1539,7 @@ function formatSongTime(seconds) {
     return str;
 }
 
-// format total time for all songs in library
+// Format total time for all songs in library
 function formatTotalTime(seconds) {
 	var output, hours, minutes, hh, mm, ss;
 
@@ -1549,29 +1551,18 @@ function formatTotalTime(seconds) {
     	minutes = Math.floor(seconds / 60);
     	minutes = (minutes < 60) ? minutes : (minutes % 60);
 
-    	if (hours == 0) {
-	    	hh = '';
-    	} else if (hours == 1) {
-	    	hh = hours + ' hour';
-    	} else {
-	    	hh = hours + ' hours';
-    	}
-
-    	if (minutes == 0) {
-	    	mm = '';
-    	} else if (minutes == 1) {
-	    	mm = minutes + ' minute';
-    	} else {
-	    	mm = minutes + ' minutes';
-    	}
+        hh = hours == 0 ? '' : (hours == 1 ? hours + ' hour' : hours + ' hours');
+        mm = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
 
 		if (hours > 0) {
 			if (minutes > 0) {
 				output = hh + ', ' + mm;
-			} else {
+			}
+            else {
 				output = hh;
 			}
-		} else {
+		}
+        else {
 			output = mm;
 		}
     }
@@ -1644,6 +1635,11 @@ function customScroll(list, itemNum, speed) {
 		chDivisor = 6;
 		itemNum = list == 'albums' ? itemNum : itemNum + 1;
 	}
+    else if (list == 'tracks') {
+		listSelector = '#trackscontainer';
+		scrollSelector = '#lib-file';
+		chDivisor = 600;
+	}
 	else if (list == 'radiocovers') {
 		listSelector = '#database-radio';
 		scrollSelector = listSelector;
@@ -1663,7 +1659,7 @@ function customScroll(list, itemNum, speed) {
 	centerHeight = parseInt($(scrollSelector).height()/chDivisor);
 	scrollTop = $(scrollSelector).scrollTop();
 	scrollCalc = (itemPos + scrollTop) - centerHeight;
-	//console.log('scrollSelector=' + scrollSelector + ', itemPos=' + itemPos + ', chDivisor=' + chDivisor + ', centerHeight=' + centerHeight + ', scrollTop=' + scrollTop + ', scrollCalc=' + scrollCalc);
+	//console.log('scrollSelector=' + scrollSelector + ', itemPos=' + itemPos + ', height=' + $(scrollSelector).height() + ', chDivisor=' + chDivisor + ', centerHeight=' + centerHeight + ', scrollTop=' + scrollTop + ', scrollCalc=' + scrollCalc);
 
 	if (scrollCalc > scrollTop) {
 	    scrollOffset = '+=' + Math.abs(scrollCalc - scrollTop) + 'px';
@@ -2621,72 +2617,56 @@ function setColors() {
 	}
 }
 
-// graphic eq
+// Graphic eq
 function updEqgFreq(selector, value) {
-	$(selector).html(value);
+    $(selector).html(value);
 }
-// parametric eq
+// Parametric eq
 function updEqpMasterGain(selector, value) {
-	$(selector).html(value + ' dB');
+    $(selector).html(value + ' dB');
 }
 function updEqpFreq(selector1, selector2, value) {
-	$(selector1).html(value + ' Hz');
-	$(selector2).val(value);
     $(selector1).html(value + ' Hz');
     $(selector2).val(value);
 }
 function updEqpMasterGainSlider(selector) {
-		var step = selector == 'master-gain-up' ? 0.1 : -0.1;
-		var new_val = (parseFloat($('#master-gain-slider').val()) + step).toFixed(1);
-		new_val = new_val > 24 ? 24 : (new_val < -24 ? -24 : new_val);
-		$('#master-gain-slider').val(new_val);
-		$('#master-gain').html(new_val + ' dB');
+    var step = selector == 'master-gain-up' ? 0.1 : -0.1;
+    var new_val = (parseFloat($('#master-gain-slider').val()) + step).toFixed(1);
+    new_val = new_val > 24 ? 24 : (new_val < -24 ? -24 : new_val);
+    $('#master-gain-slider').val(new_val);
+    $('#master-gain').html(new_val + ' dB');
 }
-$('#master-gain-up, #master-gain-dn').on('mousedown mouseup click', function(e) {
-	if (e.type == 'mousedown') {
-		var selector = $(this).attr('id');
-	    eqGainUpdInterval = setInterval(function() {
-			updEqpMasterGainSlider(selector);
-	    },50); // ms
-	}
-	else if (e.type == 'mouseup') {
-		clearInterval(eqGainUpdInterval);
-	}
-	else if (e.type == 'click') {
-		updEqpMasterGainSlider($(this).attr('id'));
-	}
-});
 
-// manages toolbar when scrolling
+// Manages toolbar when scrolling
 $(window).on('scroll', function(e) {
 	//console.log('window scroll');
-		if ($(window).scrollTop() > 1 && !showMenuTopW) {
-			//console.log('window scroll, scrollTop() > 1 && !showMenuTopW');
-			if (UI.mobile) {
-				$('#mobile-toolbar').css('display', 'none');
-				$('#container-playlist').css('visibility','visible');
-				$('#menu-bottom').show();
-			}
-			$('#menu-top').css('height', $('#menu-top').css('line-height'));
-			$('#menu-top').css('backdrop-filter', 'blur(20px)');
-			showMenuTopW = true;
+	if ($(window).scrollTop() > 1 && !showMenuTopW) {
+		//console.log('window scroll, scrollTop() > 1 && !showMenuTopW');
+		if (UI.mobile) {
+			$('#mobile-toolbar').css('display', 'none');
+			$('#container-playlist').css('visibility','visible');
+			$('#menu-bottom').show();
 		}
-		else if ($(window).scrollTop() == '0' ) {
-			//console.log('window scroll, scrollTop() = 0');
-			if (UI.mobile) {
-				$('#container-playlist').css('visibility','hidden');
-				$('#mobile-toolbar').css('display', 'block');
-				if (currentView.indexOf('playback') !== -1) {
-					$('#menu-bottom').hide();
-				}
+		$('#menu-top').css('height', $('#menu-top').css('line-height'));
+		$('#menu-top').css('backdrop-filter', 'blur(20px)');
+		showMenuTopW = true;
+	}
+	else if ($(window).scrollTop() == '0' ) {
+		//console.log('window scroll, scrollTop() = 0');
+		if (UI.mobile) {
+			$('#container-playlist').css('visibility','hidden');
+			$('#mobile-toolbar').css('display', 'block');
+			if (currentView.indexOf('playback') !== -1) {
+				$('#menu-bottom').hide();
 			}
-			$('#menu-top').css('height', '0');
-			$('#menu-top').css('backdrop-filter', '');
-			showMenuTopW = false;
 		}
+		$('#menu-top').css('height', '0');
+		$('#menu-top').css('backdrop-filter', '');
+		showMenuTopW = false;
+	}
 });
 
-// get css rule object
+// Get CSS rule object
 function getCSSRule(ruleName) {
 	for (var i = 0; i < document.styleSheets.length; i++) {
 		var styleSheet = document.styleSheets[i];
@@ -2788,18 +2768,6 @@ function listLook(list, name, search) {
 	}
 }
 
-// equalizers
-function updEqgFreq(selector, value) {
-	$(selector).html(value);
-}
-function updEqpGain(selector, value) {
-	$(selector).html(value);
-}
-function updEqpFreq(selector1, selector2, value) {
-	$(selector1).html(value);
-	$(selector2).val(value);
-}
-
 // radio pos
 function storeRadioPos(pos) {
 	//console.log('radio_pos', pos);
@@ -2821,12 +2789,19 @@ $("#coverart-url, #playback-switch").click(function(e){
 	$('#playback-switch').hide();
 	$('html, body').animate({ scrollTop: 0 }, 100);
 
-
 	if (currentView == 'tag') {
 		$('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
 		$('.tag-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
 		setColors();
+
+        if (SESSION.json['show_genres'] == 'Yes') {
+            $('#top-columns').removeClass('nogenre');
+        }
+        else {
+            $('#top-columns').addClass('nogenre');
+        }
+
 		$('#top-columns, #bottom-row').show();
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // async
 		if (UI.tagViewCovers) {
