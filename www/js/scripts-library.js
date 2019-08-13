@@ -18,8 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
- * - @chris-rudmin enhancements
+ * 2019-MM-DD TC moOde 6.0.1
+ *
+ * This is the @chris-rudmin rewrite of the library group/filter routines
+ * including modifications to all dependant functions and event handlers.
+ * Refer to https://github.com/moode-player/moode/pull/16 for more info.
  *
  */
 
@@ -417,7 +420,7 @@ var renderSongs = function(albumPos) {
 			}
 
 			var composer = filteredSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + filteredSongs[i].composer + '</span></span>';
-			var highlight = filteredSongs[i].title == MPD.json['title'] ? ' songTrackHighlight' : '';
+			var highlight = filteredSongs[i].title == MPD.json['title'] ? ' lib-track-highlight' : '';
 
 	    output += discDiv
 			+ '<li id="lib-song-' + (i + 1) + '" class="clearfix">'
@@ -886,7 +889,7 @@ $('#context-menu-lib-all a').click(function(e) {
 		if ($('#bottom-row').css('display') == 'none') {
 			$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
 			$('#bottom-row').css('display', 'flex')
-			$('#lib-albumcover').css('height', 'calc(50% - 2em)'); // Was 1.75em
+			$('#lib-albumcover').css('height', 'calc(47% - 2em)'); // Was 1.75em
 			$('#index-albumcovers').hide();
 		}
 		else {
