@@ -70,6 +70,12 @@ else {
 		}
 	}
 	elseif ($_GET['cmd'] == 'disconnect-renderer') {
+		if ($_POST['job'] == 'slsvc') {
+			session_start();
+			playerSession('write', 'slsvc', '0');
+			session_write_close();
+		}
+
 		if (submitJob($_POST['job'], '', '', '')) {
 			echo json_encode('job submitted');
 		}

@@ -425,7 +425,7 @@ function engineCmd() {
 				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><span class="disconnect-renderer" data-job="spotifysvc">disconnect</span>');
 			}
 			else if (cmd[0] == 'slactive1' || cmd[0] == 'slactive0') {
-				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">disconnect</span>');
+				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">turn off</span>');
 			}
 			else if (cmd[0] == 'inpactive1' || cmd[0] == 'inpactive0') { // NOTE: cmd[1] is the input source name
 				inpSrcIndicator(cmd[0], '<a href="sel-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
@@ -858,7 +858,7 @@ function renderUI() {
 	}
 	// squeezelite renderer
 	if (SESSION.json['slactive'] == '1') {
-		inpSrcIndicator('slactive1', 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">disconnect</span>');
+		inpSrcIndicator('slactive1', 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">turn off</span>');
 	}
 	// analog input source
 	if (SESSION.json['inpactive'] == '1') {
