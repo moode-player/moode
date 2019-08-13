@@ -2632,6 +2632,8 @@ function updEqpMasterGain(selector, value) {
 function updEqpFreq(selector1, selector2, value) {
 	$(selector1).html(value + ' Hz');
 	$(selector2).val(value);
+    $(selector1).html(value + ' Hz');
+    $(selector2).val(value);
 }
 function updEqpMasterGainSlider(selector) {
 		var step = selector == 'master-gain-up' ? 0.1 : -0.1;
