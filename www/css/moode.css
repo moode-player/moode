@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.0.1
  *
  */
 
@@ -85,6 +85,7 @@ legend {border-bottom: 1px solid #999;}
 li.modal-dropdown-text:hover,
 li.modal-dropdown-text:focus {color:#eee;}
 .help-block, .help-inline {color:#333;}
+.help-block-modal {margin:0 !important;}
 .bootstrap-select .dropdown-menu {background-color:transparent;}
 .bootstrap-select.btn-group .dropdown-menu li > a {color:inherit;}
 .btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.2);border-radius:4px;}
@@ -248,6 +249,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-toggles .ralbum {display:inline-block;}
 	#playbar-toggles .ralbum svg {height:12px;width:12px;margin-top:2px;} /* only valid fancy */
 	#playbar-div {display:block;}
+	/* This undoes the normal nogenres setting cos on mobile we already only show two cols in Tag view */
+	#top-columns.nogenre #lib-genre-header, #top-columns.nogenre #index-genres, #top-columns.nogenre #lib-genre {display:block;}
+	#top-columns.nogenre #lib-artist-header, #top-columns.nogenre #lib-artist {left:50%;width:50%;}
+	#top-columns.nogenre #index-artists {right:calc(0% + var(--sbw));}
+	#top-columns.nogenre #lib-album-header, #top-columns.nogenre #lib-album {left:100%;width:50%;}
 }
 
 /* smaller landscape for small screens */
@@ -303,6 +309,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#index-albumcovers {display:none;}
 	#index-browse {display:none;}
 	#index-radio {display:none;}
+	/* so cover scrolls with tracks */
+	#lib-coverart-meta-area {position:relative;}
 }
 
 /* in-browser view for mobile screens */
@@ -331,6 +339,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 @media (max-height: 320px) and (max-width: 568px) {
 	.database-radio li {width:75px;height:auto;margin:10px 10px;}
 	.lib-coverart {min-width:unset;}
+	/* so cover scrolls with tracks */
+	#lib-coverart-meta-area {position:relative;}
 }
 
 /* coverview for large screens */
@@ -366,7 +376,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#albumcovers li {width:9em;font-size:0.8em;height:auto;}
 	#ss-currentsong {font-size:1.4em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.15em;}
-	#lib-file {display:inline-flex;}
+	/* so cover scrolls with tracks */
+	/*#lib-file {display:inline-flex;}*/
 	#lib-coverart-meta-area {position:relative;}
 	/* playbar */
 	#playbar-title {font-size:.9rem;}
