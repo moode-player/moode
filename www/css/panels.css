@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.0.1
  *
  */
 
@@ -45,7 +45,7 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--shiftybg:rgba(0,0,0,0.85);
 	--pbfont:calc(0.75em + 1vmin);
 	--radiobadge:url('../images/radio-l.svg');
-	--defcover:'images/default-cover-v6-l.svg'; /* TEST */
+	--defcover:'images/default-cover-v6-l.svg';
 }
 
 html {background-color:inherit;}
@@ -206,7 +206,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #lib-file .songcomposer {font-style:italic;}
 #lib-file .songtime {font-style:normal;margin-left:1em;float:left;display:table-cell;}
 #lib-file .songyear {font-style:normal;position:absolute;right:1em;float:right;display:table-cell;}
-.songTrackHighlight {font-weight:700;}
+.lib-track-highlight {font-weight:700;}
 #playlist .songtime {font-size:.8em;font-style:normal;font-weight:normal;word-break:normal;color:var(--textvariant);}
 .icon-root {color:inherit;}
 .playlist .pl-action {float:right;padding:0px;text-align:center;}
@@ -290,8 +290,8 @@ legend {border-color:-moz-use-text-color -moz-use-text-color #34495E;color:inher
 code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-load {color:#ddd;font-size:18px;font-weight:bold;margin-left:-72px;position:absolute;top:50%;left:50%;}
 #content-position {height:100%;width:100%;display:flex;position:absolute;overflow:hidden;} /* prevents horiz scrollbar from apprearing on pi touch lib panel */
-#top-columns {height:50%;width:100%;display:flex;flex-direction:row;top:0;top:env(safe-area-inset-top);left:0%;position:absolute;}
-#bottom-row {height:50%;width:100%;display:flex;flex-direction:row;top:50%;top:calc(env(safe-area-inset-top) + 50%);left:0%;position:absolute;border-top:1px solid var(--btnshade);}
+#top-columns {height:47%;width:100%;display:flex;flex-direction:row;top:0;top:env(safe-area-inset-top);left:0%;position:absolute;}
+#bottom-row {height:53%;width:100%;display:flex;flex-direction:row;top:45%;top:calc(env(safe-area-inset-top) + 47%);left:0%;position:absolute;border-top:1px solid var(--btnshade);}
 #lib-content {display:none;position:absolute;top:2.75rem;left:0px;right:0px;bottom:0px;background-color:inherit;}
 #lib-genre-header, #lib-genre, #lib-artist-header, #lib-artist, #lib-album-header, #lib-album {position:absolute;box-sizing:border-box;width:33.33%;overflow:auto;overflow-x:hidden;}
 #lib-genre-header {border-top:1px solid var(--btnshade);border-bottom:1px solid var(--btnshade);border-right:1px solid var(--btnshade);}
@@ -310,7 +310,7 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 img.lib-coverart {float:left;width:calc(20vw - 1em);box-shadow:0px 0px .2em rgba(0,0,0,0.2);}
 img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 .lib-albumname-meta {margin-top:0px;font-weight:700;text-align:center;}
-.lib-artistname-meta {font-size:calc(0.40em + 1vmin);font-weight:normal;text-align:center;cursor:pointer;}
+.lib-artistname-meta {margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-size:calc(0.40em + 1vmin);font-weight:700;text-align:center;cursor:pointer;}
 .lib-albumyear-meta {display:none;font-size:calc(0.40em + 1vmin);font-weight:normal;text-align:center;}
 .lib-numtracks-meta {font-size:calc(0.40em + 1vmin);font-weight:normal;font-style:italic;color:inherit !important;text-align:center;}
 #lib-content ul {display:table;margin:.25em 0;overflow-x:hidden;width:100%;word-wrap:break-word;}
@@ -331,7 +331,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 .lib-disc a {font-size:.9em;opacity:.75;}
 #songsList .lib-disc a.active {font-weight:700;color:unset;}
 #songsList li.active {font-weight:700;}
-#trackscontainer {width:calc(81vw - var(--sbw));float:right;} /* was 80 vw */
+#trackscontainer {width:calc(80vw - var(--sbw));float:right;} /* Was 81vw */
 #m-countdown {padding-right:5px;font-size:10px;}
 #m-total {font-size:10px;padding-left:5px;}
 #random-album {margin-top:-1.5em;float:right;position:relative;padding:.25em .5em 0em .5em;}
@@ -455,7 +455,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar.visacc #playbar-switch div {opacity:.35;}
 #playbar {display:flex;align-items:center;height:6.25em;position:absolute;bottom:0;width:100%;color:var(--adapttext);} /* was 9.25vh*/
 #playbar-cover {height:5em;width:5em;margin-left:.5em;border-radius:.25rem;overflow:hidden;position:relative;cursor:pointer;}
-#playbar-title {width:calc(50vw - 5.5rem);height:auto;position:absolute;font-size:.9rem;left:50%;top:55%;transform:translate(-50%, -50%);text-align:center;padding-bottom:1.5rem;line-height:1.5em;}
+#playbar-title {width:calc(50vw - 8.5rem)/* Was 5.5rem */;height:auto;position:absolute;font-size:.9rem;left:50%;top:55%;transform:translate(-50%, -50%);text-align:center;padding-bottom:1.5rem;line-height:1.5em;}
 #playbar-title a {padding:0;margin:0;display:unset;text-align:unset;font-size:.9rem;color:var(--adapttext) !important;}
 #playbar.visacc #playbar-title a {color:var(--textvariant) !important;}
 #playbar.visacc #playbar-currentalbum {color:var(--textvariant)}
@@ -478,7 +478,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-radio, #m-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;background-size:contain;width:20%;height:15px;left:50%;transform:translate(-50%, -50%);display:none;}
 #playbar-radio {position:absolute;top:90%;}
 #m-radio {position:relative;transform:translate(-50%, 0);}
-/* for hide/show Genres column in Library Tag view*/
+/* for hide/show Genres column in Library Tag view */
 #top-columns.nogenre #lib-genre-header, #top-columns.nogenre #index-genres, #top-columns.nogenre #lib-genre {display:none;}
 #top-columns.nogenre #lib-artist-header, #top-columns.nogenre #lib-artist {left:0;width:50%;}
 #top-columns.nogenre #index-artists {right:calc(50% + var(--sbw));}
