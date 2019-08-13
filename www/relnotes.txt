@@ -11,6 +11,24 @@
 
 ########################################################
 //
+// 6.0.1 2019-MM-DD
+//
+########################################################
+
+Updates
+
+- UPD: Improve performance of UI rendering
+- UPD: Add Qobuz format id 27 for FLAC (up to 192K)
+- UPD: Add to header comments for new lib loader
+
+Bug fixes
+
+- FIX: Input field validation for Curve name in the EQ's
+- FIX: Cover info in Tag view is sometimes obscured
+- FIX: Missing col in mobile portrait / Show Genres = No
+
+########################################################
+//
 // 6.0.0 2019-08-08
 //
 ########################################################
