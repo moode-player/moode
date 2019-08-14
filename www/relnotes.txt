@@ -19,6 +19,7 @@ Updates
 
 - UPD: Improve performance of UI rendering
 - UPD: Add Qobuz format id 27 for FLAC (up to 192K)
+- UPD: Change to "turn off" on Squeezelite Active overlay
 - UPD: Add to header comments for new lib loader
 
 Bug fixes
