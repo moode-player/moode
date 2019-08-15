@@ -2589,7 +2589,7 @@ function getPkgId () {
 
 // Get moode release
 function getMoodeRel($options = '') {
-	// Verbose: major.minor.patch yyyy-mm-dd ex: 6.0.1 2019-08-07
+	// Verbose: major.minor.patch yyyy-mm-dd
 	if ($options === 'verbose') {
 		$result = sysCmd("awk '/Release: /{print $2 " . '" "' . " $3;}' /var/www/footer.php | sed 's/,//'");
 		return $result[0];

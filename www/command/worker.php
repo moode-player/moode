@@ -134,7 +134,7 @@ $_SESSION['raspbianver'] = $result[0];
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
 // Log platform data
-workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd ex: 6.0.1 2016-06-07
+workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
 workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Kern (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: MPD  (' . $_SESSION['mpdver'] . ')');
