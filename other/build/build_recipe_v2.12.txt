@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.11 2019-08-08
+# Build Recipe v2.12 2019-08-15
 #
-# moOde 6.0.0 2019-08-08
+# moOde 6.0.1 2019-08-15
 # - Based on Raspbian 10.0 (Buster)
 # - Expand SDCard to 3.5GB
 # - Add djmount package and /mnt/UPNP dir
@@ -751,8 +751,8 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-# 4.19.64
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 02b8afc4d1db9239ed367cf671d296d7061b6904
+# 4.19.65
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 4cf061b4500b87c26c721db4d847593452270cff
 
 # cleanup
 sudo rm -rf /lib/modules.bak
@@ -926,8 +926,8 @@ sudo reboot
 cd ~
 sudo apt-get -y install portaudio19-dev
 
-sudo cp ./moode/other/librespot/librespot-master-daeeeaa.zip ./
-unzip ./librespot-master-daeeeaa.zip
+sudo cp ./moode/other/librespot/librespot-master-51a634d.zip ./
+unzip ./librespot-master-51a634d.zip
 cd ./librespot-master
 
 cargo build --release --features alsa-backend
@@ -936,7 +936,7 @@ sudo cp target/release/librespot /usr/local/bin/librespot
 cd ~
 
 sudo rm -rf librespot-master
-sudo rm -f ./librespot-daeeeaa.zip
+sudo rm -f ./librespot-master-51a634d.zip
 
 ////////////////////////////////////////////////////////////////
 //
