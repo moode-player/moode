@@ -751,8 +751,8 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-# 4.19.65
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 4cf061b4500b87c26c721db4d847593452270cff
+# 4.19.66
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 3750f3204096f6bb365ceaf484a496584e46782b
 
 # cleanup
 sudo rm -rf /lib/modules.bak

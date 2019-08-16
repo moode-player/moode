@@ -22,7 +22,7 @@ Updates
 - UPD: Change to "turn off" on Squeezelite Active overlay
 - UPD: Add to header comments for new lib loader
 - UPD: Bump to librespot-51a634d
-- UPD: Bump to Linux kernel 4.19.65
+- UPD: Bump to Linux kernel 4.19.66
 
 Bug fixes
 
