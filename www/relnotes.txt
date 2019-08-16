@@ -11,7 +11,7 @@
 
 ########################################################
 //
-// 6.0.1 2019-MM-DD
+// 6.0.1 2019-08-15
 //
 ########################################################
 
@@ -21,6 +21,8 @@ Updates
 - UPD: Add Qobuz format id 27 for FLAC (up to 192K)
 - UPD: Change to "turn off" on Squeezelite Active overlay
 - UPD: Add to header comments for new lib loader
+- UPD: Bump to librespot-51a634d
+- UPD: Bump to Linux kernel 4.19.65
 
 Bug fixes
 
