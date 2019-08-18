@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-08-15 TC moOde 6.0.1
  *
  */
 
@@ -218,11 +218,19 @@ if (isset($_POST['update_scnblank'])) {
     }
 }
 
-// screen blank timeout
+// Screen brightness
 if (isset($_POST['update_scnbrightness'])) {
     if (isset($_POST['scnbrightness']) && $_POST['scnbrightness'] != $_SESSION['scnbrightness']) {
 		submitJob('scnbrightness', $_POST['scnbrightness'], 'Setting updated');
 		playerSession('write', 'scnbrightness', $_POST['scnbrightness']);
+    }
+}
+
+// Pixel aspect ratio
+if (isset($_POST['update_pixel_aspect_ratio'])) {
+    if (isset($_POST['pixel_aspect_ratio']) && $_POST['pixel_aspect_ratio'] != $_SESSION['pixel_aspect_ratio']) {
+		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], 'Setting updated', 'Reboot required');
+		playerSession('write', 'pixel_aspect_ratio', $_POST['pixel_aspect_ratio']);
     }
 }
 
@@ -407,8 +415,12 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['scnblank'] .= "<option value=\"1800\" " . (($_SESSION['scnblank'] == '1800') ? "selected" : "") . ">30 Mins</option>\n";
 	$_select['scnblank'] .= "<option value=\"3600\" " . (($_SESSION['scnblank'] == '3600') ? "selected" : "") . ">1 Hour</option>\n";
 
-	// backlight brightess
+	// Backlight brightess
 	$_select['scnbrightness'] = $_SESSION['scnbrightness'];
+
+	// Pixel aspect ratio
+	$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
+	$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
 
 	// screen rotate
 	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";

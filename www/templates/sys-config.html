@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-08-15 TC moOde 6.0.1
  *
  */
 -->
@@ -344,7 +344,21 @@
 						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_scnbrightness" value="novalue" style="margin-left: 8px;">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-brightness" class="help-block-configs help-block-margin hide">
-							Backlight brightness for 7" Pi Touch. Values are 0 - 255.<br>
+							Backlight brightness for 7" Pi Touch. Values are 0 - 255.
+	                    </span>
+					</div>
+	            </div>
+
+				<div class="control-group">
+					<label class="control-label" for="pixel_aspect_ratio">Pixel aspect ratio</label>
+					<div class="controls">
+						<select id="pixel_aspect_ratio" class="input-large" name="pixel_aspect_ratio">
+							$_select[pixel_aspect_ratio]
+						</select>
+						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" style="margin-left: 8px;">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info_pixel_aspect_ratio" class="help-block-configs help-block-margin hide">
+							Rectangular (default) or square pixels for 7" Pi Touch.
 	                    </span>
 					</div>
 	            </div>

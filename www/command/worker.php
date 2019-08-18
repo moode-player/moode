@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-08-15 TC moOde 6.0.1
  *
  */
 
@@ -1518,6 +1518,18 @@ function runQueuedJob() {
 			}
 		case 'scnbrightness':
 			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');
+			break;
+		case 'pixel_aspect_ratio':
+			if ($_SESSION['w_queueargs'] == 'Square') {
+				sysCmd('sed -i /framebuffer_/d ' . '/boot/config.txt'); // Remove first to prevent any chance of duplicate adds
+				sysCmd('echo framebuffer_width=800 >> ' . '/boot/config.txt');
+				sysCmd('echo framebuffer_height=444 >> ' . '/boot/config.txt');
+				sysCmd('echo framebuffer_aspect=-1 >> ' . '/boot/config.txt');
+			}
+			else {
+				sysCmd('sed -i /framebuffer_/d ' . '/boot/config.txt');
+			}
+			break;
 		case 'scnrotate':
 			sysCmd('sed -i /lcd_rotate/d ' . '/boot/config.txt');
 			if ($_SESSION['w_queueargs'] == '180') {
