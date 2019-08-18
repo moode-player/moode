@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-08-15 TC moOde 6.0.1
  *
  */
 
@@ -51,6 +51,8 @@ $_select['library_instant_play'] .= "<option value=\"Clear/Play\" " . (($_SESSIO
 // Show Genres column
 $_select['show_genres'] .= "<option value=\"Yes\" " . (($_SESSION['show_genres'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['show_genres'] .= "<option value=\"No\" " . (($_SESSION['show_genres'] == 'No') ? "selected" : "") . ">No</option>\n";
+// Compilation identifier
+$_select['library_comp_id'] = $_SESSION['library_comp_id'];
 // Ignore articles
 $_select['ignore_articles'] = empty($_SESSION['ignore_articles']) ? 'None' : $_SESSION['ignore_articles'];
 // Library utf8 replace

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-08-15 TC moOde 6.0.1
  *
  */
 -->
@@ -62,7 +62,18 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="ignore_articles">Ignore Articles</label>
+				<label class="control-label" for="library_comp_id">Compilation identifier</label>
+				<div class="controls">
+					<input class="input-large" type="text" id="library_comp_id" name="config[library_comp_id]" value="$_select[library_comp_id]" required>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_comp_id" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_comp_id" class="help-block-configs help-block-margin hide">
+						Enter the text that is present in the AlbumArtist tag to identify tracks as belonging to a compilation album. The default is "Various Artists".
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="ignore_articles">Ignore articles</label>
 				<div class="controls">
 					<input class="input-large" type="text" pattern="^\S*$" id="ignore_articles" name="config[ignore_articles]" value="$_select[ignore_articles]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_ignore_articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
