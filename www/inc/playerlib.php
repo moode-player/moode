@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-15 TC moOde 6.0.1
+ * 2019-08-18 TC moOde 6.1.0
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -2567,7 +2567,7 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Auto-configure complete');
 }
 
-// Check for available software update (ex: update-r601.txt)
+// Check for available software update (ex: update-rNNN.txt)
 // $path = http: //moodeaudio.org/downloads/ or /var/local/www/
 function checkForUpd($path) {
 	if (false === ($pkgfile_contents = file_get_contents($path . 'update-' . getPkgId() . '.txt'))) {
@@ -2581,7 +2581,7 @@ function checkForUpd($path) {
 }
 
 // Get the id of the update package.
-// This allows appending a suffix to the id when testing packages. Ex: r601-test1
+// This allows appending a suffix to the id when testing packages. Ex: rNNN-test1
 function getPkgId () {
 	$result = sdbquery("select value from cfg_system where param='pkgid_suffix'", cfgdb_connect());
 	return $_SESSION['moode_release'] . $result[0]['value'];
@@ -2594,7 +2594,7 @@ function getMoodeRel($options = '') {
 		$result = sysCmd("awk '/Release: /{print $2 " . '" "' . " $3;}' /var/www/footer.php | sed 's/,//'");
 		return $result[0];
 	}
-	// Compact: rNNN ex: r601
+	// Compact: rNNN
 	else {
 		$result = sysCmd("awk '/Release: /{print $2;}' /var/www/footer.php | sed 's/,//'");
 		$str = 'r' . str_replace('.', '', $result[0]);

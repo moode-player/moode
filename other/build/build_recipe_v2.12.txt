@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.12 2019-08-15
+# Build Recipe v2.12 2019-08-18
 #
-# moOde 6.0.1 2019-08-15
+# moOde 6.1.0 2019-08-18
 # - Based on Raspbian 10.0 (Buster)
 # - Expand SDCard to 3.5GB
 # - Add djmount package and /mnt/UPNP dir
