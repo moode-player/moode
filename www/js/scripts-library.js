@@ -180,7 +180,12 @@ function filterByArtist(item) {
 	var album_artist = item.album_artist && item.album_artist.toLowerCase();
 	return LIB.filters.artists.find(function(artistFilter){
 		var artistFilterLower = artistFilter.toLowerCase();
-		return artist === artistFilterLower || album_artist === artistFilterLower;
+        if (LIB.filters.artists == SESSION.json['library_comp_id']) {
+            return artist === artistFilterLower || album_artist === artistFilterLower;
+        }
+        else if (album_artist != SESSION.json['library_comp_id'].toLowerCase()) {
+            return artist === artistFilterLower || album_artist === artistFilterLower;
+        }
 	});
 }
 
