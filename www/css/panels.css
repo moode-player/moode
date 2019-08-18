@@ -483,6 +483,8 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #top-columns.nogenre #lib-artist-header, #top-columns.nogenre #lib-artist {left:0;width:50%;}
 #top-columns.nogenre #index-artists {right:calc(50% + var(--sbw));}
 #top-columns.nogenre #lib-album-header, #top-columns.nogenre #lib-album {left:50%;width:50%;}
+/* For updater view modal */
+.updater-relnotes {list-style-type:none;margin-left:0;}
 
 @supports (backdrop-filter:blur(10px)) or (-webkit-backdrop-filter:blur(10px)) {
     #menu-top .dropdown-menu, .dropdown-menu {
