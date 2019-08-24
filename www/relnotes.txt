@@ -18,12 +18,10 @@
 New features
 
 - NEW: Library "Recently Added" filter
-- NEW: Rotary encoder driver for Pi-4B
 
 Updates
 
 - UPD: Add Local Display section to System info
-- UPD: Add RPi.GPIO package for Python3
 
 Bug fixes
 
@@ -31,7 +29,6 @@ Bug fixes
 - FIX: Moode log not displayed for failed mount
 - FIX: System info not listing some Library options
 - FIX: Fail to render covers on some old Browsers
-- FIX: Setting Audio Scrobbler userid/pwd causes crash
 
 ########################################################
 //
