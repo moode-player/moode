@@ -18,13 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
  * Refer to https://github.com/moode-player/moode/pull/16 for more info.
  *
  */
+
+var LIB = {
+    albumClicked: false,
+    recentlyAddedClicked: false,
+    currentDate: null,
+    totalTime: 0,
+    totalSongs: 0,
+    filters: {artists: [], genres: [], albums: []}
+};
 
 var allGenres = [];
 var allAlbums = [];
@@ -193,6 +202,15 @@ function filterByAlbum(item) {
 	return LIB.filters.albums.includes(item.key);
 }
 
+function filterAlbumsByDate(item) {
+    // NOTE: library_recently_added is in milliseconds, 1 day = 86400000 ms
+    return LIB.currentDate.getTime() - item.last_modified.getTime() <= parseInt(SESSION.json['library_recently_added']);
+}
+function filterSongsByDate(item) {
+    itemDateObj = new Date(item.last_modified);
+    return LIB.currentDate.getTime() - itemDateObj.getTime() <= parseInt(SESSION.json['library_recently_added']);
+}
+
 function filterArtists() {
 	// Filter artists by genre
 	var songsfilteredByGenre = allSongs;
@@ -211,25 +229,37 @@ function filterAlbums() {
 		filteredAlbums = filteredAlbums.filter(filterByAllGenres);
 		filteredAlbumCovers = filteredAlbumCovers.filter(filterByAllGenres);
 	}
-
 	// Filter by artist
 	if (LIB.filters.artists.length) {
 		filteredAlbums = filteredAlbums.filter(filterByArtist);
-		filteredAlbumCovers = filteredAlbums.filter(filterByArtist);
+		filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
 	}
+    // Filter by file last-updated timestamp
+    if (LIB.recentlyAddedClicked) {
+        LIB.currentDate = new Date();
+        filteredAlbums = filteredAlbums.filter(filterAlbumsByDate);
+        filteredAlbumCovers = filteredAlbumCovers.filter(filterAlbumsByDate);
+    }
 }
 
 function filterSongs() {
 	filteredSongs = allSongs;
+
 	if (LIB.filters.genres.length) {
 		filteredSongs = filteredSongs.filter(filterByGenre);
 	}
+
 	if (LIB.filters.artists.length) {
 		filteredSongs = filteredSongs.filter(filterByArtist);
 	}
+
 	if (LIB.filters.albums.length) {
 		filteredSongs = filteredSongs.filter(filterByAlbum);
 	}
+
+    if (LIB.recentlyAddedClicked) {
+        filteredSongs = filteredSongs.filter(filterSongsByDate);
+    }
 }
 
 function filterLib() {
@@ -490,6 +520,7 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 	LIB.filters.genres.length = 0;
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
+    LIB.recentlyAddedClicked = false;
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.genres, renderGenres);
@@ -501,6 +532,7 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 $('#artistheader').on('click', '.lib-heading', function(e) {
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
+    LIB.recentlyAddedClicked = false;
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
@@ -517,11 +549,13 @@ $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
 		$('#lib-albumcover').css('height', '100%');
 		LIB.filters.artists.length = 0;
 		LIB.filters.albums.length = 0;
+        LIB.recentlyAddedClicked = false;
 		UI.libPos.fill(-2);
 		clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
 	}
 	else {
 		LIB.filters.albums.length = 0;
+        LIB.recentlyAddedClicked = false;
 		UI.libPos.fill(-2);
 		clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
 	}
@@ -556,7 +590,6 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 
 // Click album
 $('#albumsList').on('click', '.lib-entry', function(e) {
-
 	var pos = $('#albumsList .lib-entry').index(this);
 
 	UI.libPos[0] = pos;
@@ -578,7 +611,7 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	UI.libAlbum = album;
 });
 
-// Click random album button
+// Click 'random album' button
 $('#random-album, #random-albumcover').click(function(e) {
 	var array = new Uint16Array(1);
 	window.crypto.getRandomValues(array);
@@ -608,6 +641,20 @@ $('#random-album, #random-albumcover').click(function(e) {
 
 	// Song list for regular album
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
+});
+
+// Click 'recently added' button
+$('.recently-added').click(function(e) {
+    LIB.recentlyAddedClicked = true;
+	LIB.filters.albums.length = 0;
+	UI.libPos.fill(-2);
+
+	filterLib();
+    renderAlbums();
+
+	storeLibPos(UI.libPos);
+	$("#searchResetLib").hide();
+	showSearchResetLib = false;
 });
 
 // Click album cover menu button
