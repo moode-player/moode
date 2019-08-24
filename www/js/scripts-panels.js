@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 
@@ -235,6 +235,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
 		$('.tag-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
+        $('.recently-added').css('margin-left', '-.25em');
 
         if (SESSION.json['show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
@@ -261,6 +262,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.album-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header').show();
 		$('#top-columns, #bottom-row').css('display', 'none');
+
 		setTimeout(function() {
             $('img.lazy-albumview').lazyload({
 			    container: $('#lib-album')
@@ -310,6 +312,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.tag-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
 		$('#top-columns, #bottom-row').css('display', 'flex');
+        $('.recently-added').css('margin-left', '-.25em');
 
         if (SESSION.json['show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
@@ -361,6 +364,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#top-columns, #bottom-row').css('display', 'none');
 		$('#lib-albumcover').css('height', '100%');
 		$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+        $('.recently-added').css('margin-left', '');
 
 		currentView = 'album';
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
