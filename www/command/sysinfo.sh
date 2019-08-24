@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-08-08 TC moOde 6.0.0
+# 2019-MM-DD TC moOde 6.2.0
 #
 
 # check for sudo
@@ -172,13 +172,16 @@ APPEARANCE_SETTINGS() {
 LIBRARY_SETTINGS() {
 	echo -e "\t  L I B R A R Y   S E T T I N G S  \n"
 	echo -e "\tInstant play action\t= $library_instant_play\c"
+	echo -e "\n\tShow genres column\t= $show_genres\c"
+	echo -e "\n\tCompilation identifier\t= $library_comp_id\c"
+	echo -e "\n\tRecently added\t\t= $library_recently_added\c"
 	echo -e "\n\tIgnore articles\t\t= $ignore_articles\c"
 	echo -e "\n\tUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\n\tHi-res thumbs\t\t= $library_hiresthm\c"
 	echo -e "\n\tCover search pri\t= $library_covsearchpri\c"
-	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\c"
-	echo -e "\n\tArtist sort tag\t\t= $library_artist_sort\c"
-	echo -e "\n\tAlbum sort tag\t\t= $library_album_sort\n"
+	echo -e "\n\tPixel ratio\t\t= $library_pixelratio\n"
+	#echo -e "\n\tArtist sort tag\t\t= $library_artist_sort\c"
+	#echo -e "\n\tAlbum sort tag\t\t= $library_album_sort\n"
 }
 
 MPD_SETTINGS() {
@@ -251,6 +254,16 @@ RENDERER_SETTINGS() {
 		echo -e "\n\tOther options\t\t= $OTHEROPTIONS\c" | cut -c 1-45
 		echo -e "\tResume MPD\t\t= $rsmaftersl\n"
 	fi
+
+	if [ $(($feat_bitmask & $FEAT_LOCALUI)) -ne 0 ]; then
+		echo -e "\t  L O C A L   D I S P L A Y    S E T T I N G S  \n"
+		echo -e "\tLocal UI display\t= $localui\c"
+		echo -e "\n\tMouse cursor\t\t= $touchscn\c"
+		echo -e "\n\tScreen blank\t\t= $scnblank Secs\c"
+		echo -e "\n\tBrightness\t\t= $scnbrightness\c"
+		echo -e "\n\tPixel aspect ratio\t= $pixel_aspect_ratio\c"
+		echo -e "\n\tRotate screen\t\t= $scnrotate Deg\n"
+	fi
 }
 
 MOODE_LOG() {
@@ -268,6 +281,7 @@ MOODE_LOG() {
 FEAT_AIRPLAY=2#0000000000000010
 FEAT_MINIDLNA=2#0000000000000100
 FEAT_SQUEEZELITE=2#0000000000010000
+FEAT_LOCALUI=2#0000000100000000
 FEAT_UPMPDCLI=2#0000000000100000
 FEAT_SPOTIFY=2#0000100000000000
 FEAT_GPIO=2#0001000000000000
@@ -463,7 +477,7 @@ mpdmixer=${arr[36]}
 xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
 lcdup=${arr[39]}
-reserved41=${arr[40]}
+show_genres=${arr[40]}
 extmeta=${arr[41]}
 maint_interval=${arr[42]}
 hdwrrev=${arr[43]}
@@ -481,7 +495,7 @@ mpdaspwd=${arr[54]}
 mpdasuser=${arr[55]}
 [[ "${arr[56]}" = "1" ]] && uac2fix="On" || uac2fix="Off"
 keyboard=${arr[57]}
-kvariant=${arr[58]}
+[[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
 toggle_song=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
 hdmiport=${arr[61]}
@@ -491,7 +505,7 @@ pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
 [[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
-library_artist_sort=${arr[68]}
+RESERVED_69=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
@@ -510,9 +524,19 @@ cardnum=${arr[76]}
 btname=${arr[78]}
 [[ "${arr[79]}" = "1" ]] && btmulti="Yes" || btmulti="No"
 feat_bitmask=${arr[80]}
-library_album_sort=${arr[81]}
+if [[ "${arr[81]}" = "604800000" ]]; then
+	library_recently_added="1 Week"
+elif [[ "${arr[81]}" = "2592000000" ]]; then
+	library_recently_added="1 Month"
+elif [[ "${arr[81]}" = "7776000000" ]]; then
+	library_recently_added="3 Months"
+elif [[ "${arr[81]}" = "15552000000" ]]; then
+	library_recently_added="6 Months"
+elif [[ "${arr[81]}" = "31536000000" ]]; then
+	library_recently_added="1 Year"
+fi
 btactive=${arr[82]}
-touchscn=${arr[83]}
+[[ "${arr[83]}" = "1" ]] && touchscn="On" || touchscn="Off"
 scnblank=${arr[84]}
 scnrotate=${arr[85]}
 scnbrightness=${arr[86]}
@@ -527,7 +551,7 @@ rsmaftersl=${arr[94]}
 mpdmixer_local=${arr[95]}
 wrkready=${arr[96]}
 scnsaver_timeout=${arr[97]}
-RESERVED_99=${arr[98]}
+pixel_aspect_ratio=${arr[98]}
 favorites_name=${arr[99]}
 [[ "${arr[100]}" = "1" ]] && spotifysvc="On" || spotifysvc="Off"
 spotifyname=${arr[101]}
@@ -541,7 +565,7 @@ cover_backdrop=${arr[108]}
 cover_blur=${arr[109]}
 cover_scale=${arr[110]}
 [[ "${arr[111]}" = "1" ]] && eth_port_fix="On" || eth_port_fix="Off"
-RESERVED_113=${arr[112]}
+library_comp_id=${arr[112]}
 scnsaver_style=${arr[113]}
 ashuffle_filter=${arr[114]}
 [[ "${arr[115]}" = "1" ]] && mpd_httpd="On" || mpd_httpd="Off"
