@@ -47,6 +47,20 @@ var filteredSongs = [];
 var filteredSongsDisc = [];
 var filteredAlbumCovers = [];
 
+// Shim for older Browsers that don't support Object.values
+if (!Object.values) {
+    Object.defineProperty(Object, 'values', {
+        configurable: true,
+        enumerable: false,
+        value: function (object) {
+            return Object.keys(object).map(function (key) {
+                return object[key];
+            });
+        },
+        writable: true
+    });
+}
+
 function loadLibrary() {
 	$.post('command/moode.php?cmd=loadlib', {}, function(data) {
 		$('#lib-loader').hide();
