@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 -->
@@ -68,6 +68,19 @@
 					<a aria-label="Help" class="info-toggle" data-cmd="info_library_comp_id" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_library_comp_id" class="help-block-configs help-block-margin hide">
 						Enter the text that is present in the AlbumArtist tag to identify tracks as belonging to a compilation album. The default is "Various Artists".
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="library_recently_added">Recently added</label>
+				<div class="controls">
+					<select id="library_recently_added" class="input-large" name="config[library_recently_added]">
+						$_select[library_recently_added]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_recently_added" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_recently_added" class="help-block-configs help-block-margin hide">
+						Time period used to filter the Library for recently added albums. The default is 1 month.
                     </span>
 				</div>
 			</div>
@@ -125,7 +138,7 @@
 				</div>
 			</div>
 
-			<!-- FOR FUTURE USE -->
+			<!-- NOTE: Artist and Album sort tags are for future use -->
 			<div class="control-group hide">
 				<label class="control-label" for="library_artist_sort">Artist sort tag</label>
 				<div class="controls">
