@@ -16,7 +16,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #	Inspired by the script posted in moOde Forum by @Cyanoazimin
-#	2019-MM-DD TC moOde 6.2.0
+#	2019-04-12 TC moOde 5.0
 #
 
 import RPi.GPIO as GPIO
@@ -27,24 +27,24 @@ import os
 import subprocess
 import sqlite3
 
-# Use Broad SoC pin numbering
+# Set GPIO pin numbering mode
 GPIO.setmode(GPIO.BCM)
 
-# Get the configuration
+# get the configuration
 db = sqlite3.connect('/var/local/www/db/moode-sqlite3.db')
 db.row_factory = sqlite3.Row
 db.text_factory = str
 cursor = db.cursor()
 
-# Get bounce_time
+# get bounce_time 
 cursor.execute("SELECT value FROM cfg_gpio WHERE param='bounce_time'")
 row = cursor.fetchone()
 bounce_time = int(row['value'])
 #print str(datetime.datetime.now())[:19] + ' bounce_time=' + str(bounce_time)
 
-# Configure the pins
+# configure the pins
 cursor.execute("SELECT * FROM cfg_gpio")
-for row in cursor:
+for row in cursor:	
 	#print str(datetime.datetime.now())[:19] + ' row id=' + str(row['id']) + ', enabled=' + row['enabled'] + ', command=' + row['command']
 	if str(row['id']) == '1' and row['enabled'] == '1':
 		sw_1_pin = int(row['pin'])
