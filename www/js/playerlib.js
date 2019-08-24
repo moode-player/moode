@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 
@@ -95,15 +95,7 @@ var NETWORK = {
 	json: 0
 };
 
-// library
-var LIB = {
-	albumClicked: false,
-	totalTime: 0,
-	totalSongs: 0,
-	filters: {artists: [], genres: [], albums: []}
-};
-
-//
+// Eventually migrate remaining global vars here
 var GLOBAL = {
 	regExIgnoreArticles: ''
 }
