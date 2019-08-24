@@ -11,6 +11,26 @@
 
 ########################################################
 //
+// 6.2.0 2019-MM-DD
+//
+########################################################
+
+New features
+
+- NEW: Library "Recently Added" filter
+
+Updates
+
+- UPD: Add Local Display section to System info
+
+Bug fixes
+
+- FIX: Wrong aria-label for "Random album" button
+- FIX: Moode log not displayed for failed mount
+- FIX: System info not listing some Library options
+
+########################################################
+//
 // 6.1.0 2019-08-18
 //
 ########################################################
