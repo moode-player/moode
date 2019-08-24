@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -2422,7 +2422,7 @@ c0 3111	4B		1.1	4GB			Sony UK
 */
 
 // config audio scrobbler
-function cfgAudioScrobbler($cfg) {
+function cfgAudioScrobbler() {
 	$file = '/usr/local/etc/mpdasrc';
 	$fp = fopen($file, 'w');
 
