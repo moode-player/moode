@@ -28,6 +28,7 @@ Bug fixes
 - FIX: Wrong aria-label for "Random album" button
 - FIX: Moode log not displayed for failed mount
 - FIX: System info not listing some Library options
+- FIX: Fail to render covers on some old Browsers
 
 ########################################################
 //
