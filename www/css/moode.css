@@ -69,12 +69,12 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 .span4 {padding:0;width:38%;}
 .span3 {width:24%;margin-left:0px;}
 .btn-group.bootstrap-select .btn {padding:2px 12px;margin-bottom:5px;}
-#players {margin-left:auto;margin-right:auto;text-align:center;}
-#players .btn {background:rgba(128,128,128,0.08);}
-#players ul > li {display:inline-flex;padding:.75em;}
-#players ul {margin:0;}
-#players i {font-size:1.95em;padding:.25em;}
-#players a {font-size:1em;width:4em;height:4em;}
+#players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
+#players, #configure .btn {background:rgba(128,128,128,0.08);}
+#players, #configure ul > li {display:inline-flex;padding:.75em;}
+#players, #configure ul {margin:0;}
+#players, #configure i {font-size:1.95em;padding:.25em;}
+#players, #configure a {font-size:1em;width:4em;height:4em;}
 .btn.btn-large {padding-top:.75em;padding-bottom:.75em;}
 legend {border-bottom: 1px solid #999;}
 .modal {background-color: rgba(240,240,240,0.9);color: #333;}
@@ -92,7 +92,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .dropdown-menu .custom-select.inner {background-color:transparent;}
 .dropdown-menu.open {background-color:rgba(240,240,240,0.9);backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);}
 .container2 .dropdown-menu.open {background-color:rgba(50,50,50,0.95);-webkit-overflow-scrolling:touch;}
-#players .btn {background:rgba(64,64,64,0.08);}
+#players .btn, #configure .btn {background:rgba(64,64,64,0.08);}
 .modal-xs{min-width:230px;text-align:center;}
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
 #info-toggle-bgimage {position:absolute;margin-left:5px;}
@@ -121,7 +121,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.2);border-radius:4px;}
 	.dropdown-menu .custom-select.inner {background-color:transparent;}
 	.dropdown-menu.open {background-color:rgba(240,240,240,0.1);backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);}
-	#players .btn {background:rgba(64,64,64,0.08);}
+	#players .btn, #configure .btn {background:rgba(64,64,64,0.08);}
 }
 
 @media (orientation:portrait) {

@@ -60,7 +60,7 @@
 		<h3 id="configure-modal-label">Configuration settings</h3>
 	</div>
 	<div class="modal-body">
-		<div id="players">
+		<div id="configure">
 			<ul>
 				<li><a href="lib-config.php" class="btn btn-large"><i class="fas fa-database"></i><br>Library</a></li>
 				<li><a href="snd-config.php" class="btn btn-large"><i class="fas fa-volume-up"></i><br>Audio</a></li>
