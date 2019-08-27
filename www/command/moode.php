@@ -457,11 +457,11 @@ else {
 					$fh = fopen($file, 'w') or exit('moode.php: file create failed on ' . $file);
 
 					$data = '[playlist]' . "\n";
-					$data .= 'numberofentries=1' . "\n";
 					$data .= 'File1='. $_POST['url'] . "\n";
 					$data .= 'Title1='. $station_name . "\n";
+					$data .= 'NumberOfEntries=1' . "\n";
 					$data .= 'Length1=-1' . "\n";
-					$data .= 'version=2' . "\n";
+					$data .= 'Version=2' . "\n";
 
 					fwrite($fh, $data);
 					fclose($fh);
