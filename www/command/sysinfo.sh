@@ -72,7 +72,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "\n\tNGINX version\t\t= $NGINXVER\c"
 	echo -e "\n\tSQLite3 version\t\t= $SQLITEVER\c"
 	echo -e "\n\tHostapd version\t\t= $HOSTAPDVER\c"
-	echo -e "\n\tWiringPi version\t= $WIRINGPI_VER\n"
+	echo -e "\n\tWiringPi version\t= $WIRINGPI_VER\c"
+	echo -e "\n\tRPi.GPIO version\t= $RPI_GPIO_VER\n"
 }
 
 AUDIO_PARAMETERS() {
@@ -358,6 +359,7 @@ if [ "$BAVER" = "" ]; then
 fi
 HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
 WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
+RPI_GPIO_VER=$(pip3 show RPi-GPIO | grep Version | awk '{ print  $2 }')
 
 # Moode release
 moode_rel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
