@@ -20,10 +20,10 @@
  * NOTE: std=c99 required if using ‘for’ loop initial declarations
  *
  * Usage:
- * rotenc <DELAY> <ACCEL> <STEP> <PIN_A> <PIN_B> <DEBUG 1|2>
+ * rotenc <poll_interval> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug 1|2>
  * rotenc 100 2 3 4 5 1
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 
@@ -33,19 +33,19 @@
 #include <stdlib.h>
 #include <wiringPi.h>
 
-static volatile int currentPos = 0;
-static volatile int lastPos = 0;
-static volatile int currentState;
-static volatile int lastState = 0;
-static volatile int strBufSize = (sizeof(int) * 8) + 1;
-static volatile int isrActive = FALSE;
-static volatile int PIN_A = 4;
-static volatile int PIN_B = 5;
-static volatile int ISRDBG = FALSE;
+static volatile int current_pos = 0;
+static volatile int last_pos = 0;
+static volatile int current_state;
+static volatile int last_state = 0;
+static volatile int pin_a = 4; // wiringPi pin numbering
+static volatile int pin_b = 5;
+static volatile int str_buf_size = (sizeof(int) * 8) + 1;
+static volatile int isr_active = FALSE;
+static volatile int print_isr_debug = FALSE;
 
 // Function prototypes
-void encoderISR();
-void int2bin(int bitMask, char *strBuf, int strBufSize, char *binStr);
+void encoder_isr();
+void int_to_bin(int bit_mask, char *str_buf, int str_buf_size, char *bin_str);
 
 //
 // MAIN
@@ -53,170 +53,166 @@ void int2bin(int bitMask, char *strBuf, int strBufSize, char *binStr);
 int main(int argc, char * argv[])
 {
 	// Defaults
-	int DELAY = 100; 
-	int ACCEL = 2;
-	int STEP = 3;
-	//int PRIORITY = 42;
-	int DEBUG = 0;
+	int poll_interval = 100; // milliseconds
+	int accel_factor = 2;
+	int volume_step = 3;
+	int print_debug = 0;
 
 	// Print program version and exit
 	if (argc == 2 && strcmp(argv[1], "-v") == 0) {
-		printf("rotenc version: 1.1 \n");
+		printf("rotenc.c version: 1.2 \n");
 		exit(0);
 	}
 
 	// Override defaults with values from input args if they are present
 	if (argc > 1) {
-		DELAY = atoi(argv[1]);
-		ACCEL = atoi(argv[2]);
-		STEP = atoi(argv[3]);
-		PIN_A = atoi(argv[4]);
-		PIN_B = atoi(argv[5]);
+		poll_interval = atoi(argv[1]);
+		accel_factor = atoi(argv[2]);
+		volume_step = atoi(argv[3]);
+		pin_a = atoi(argv[4]);
+		pin_b = atoi(argv[5]);
 	}
 
 	if (argc > 6) {
 		int tmp = atoi(argv[6]);
-		if (tmp > 0) DEBUG = TRUE;
-		if (tmp == 2) ISRDBG = TRUE;
-		printf("DEBUG: %d \n", DEBUG);
-		printf("ISRDBG: %d \n", ISRDBG);
+		if (tmp > 0) print_debug = TRUE;
+		if (tmp == 2) print_isr_debug = TRUE;
+		printf("print_debug: %d \n", print_debug);
+		printf("print_isr_debug: %d \n", print_isr_debug);
 	}
 
-	if (DEBUG) {
-		printf("delay: %d \n", DELAY);
-		printf("accel: %d \n", ACCEL);
-		printf("step: %d \n", STEP);
-		printf("pin_a: %d \n", PIN_A);
-		printf("pin_b: %d \n", PIN_B);
+	if (print_debug) {
+		printf("poll_interval: %d \n", poll_interval);
+		printf("accel_factor: %d \n", accel_factor);
+		printf("volume_step: %d \n", volume_step);
+		printf("pin_a: %d \n", pin_a);
+		printf("pin_b: %d \n", pin_b);
 	}
 
 	// Format volume step command strings
-	char cmdUpMore[33];
-	char cmdDnMore[33];
-	char volStep[1];
-	strcpy(cmdUpMore, "/var/www/command/rotvol.sh -up ");
-	strcpy(cmdDnMore, "/var/www/command/rotvol.sh -dn ");
-	sprintf(volStep, "%d", STEP);
-	strcat(cmdUpMore, volStep);
-	strcat(cmdDnMore, volStep);
+	char cmd_up_more[33];
+	char cmd_dn_more[33];
+	char volume_step_str[1];
+	strcpy(cmd_up_more, "/var/www/command/rotvol.sh -up ");
+	strcpy(cmd_dn_more, "/var/www/command/rotvol.sh -dn ");
+	sprintf(volume_step_str, "%d", volume_step);
+	strcat(cmd_up_more, volume_step_str);
+	strcat(cmd_dn_more, volume_step_str);
 
-	// Initialize for WiringPi
-	wiringPiSetup ();
-	//piHiPri(PRIORITY);
-	pinMode(PIN_A, INPUT); 
-	pinMode(PIN_B, INPUT); 
-	pullUpDnControl (PIN_A, PUD_UP); // turn on pull-up resistors
-	pullUpDnControl (PIN_B, PUD_UP); 
-	wiringPiISR (PIN_A, INT_EDGE_BOTH, &encoderISR);
-	wiringPiISR (PIN_B, INT_EDGE_BOTH, &encoderISR);
+	// Setup GPIO
+	wiringPiSetup();
+	pinMode(pin_a, INPUT);
+	pinMode(pin_b, INPUT);
+	pullUpDnControl(pin_a, PUD_UP); // Turn on pull-up resistors
+	pullUpDnControl(pin_b, PUD_UP);
+	wiringPiISR(pin_a, INT_EDGE_BOTH, &encoder_isr);
+	wiringPiISR(pin_b, INT_EDGE_BOTH, &encoder_isr);
 
-	if (DEBUG) printf("start \n");
-	
-	// Update volume
+	if (print_debug) printf("Start \n");
+
+	// Polling loop for updating volume
 	while(1) {
-		if (currentPos > lastPos) {
-			if ((currentPos - lastPos) < ACCEL) {
+		if (current_pos > last_pos) {
+			if ((current_pos - last_pos) < accel_factor) {
 				system("/var/www/command/rotvol.sh -up 1");
 			}
 			else {
-				system(cmdUpMore);
+				system(cmd_up_more);
 			}
 
-			if (DEBUG) printf("up: %d \n", (currentPos - lastPos));
+			if (print_debug) printf("+ %d \n", (current_pos - last_pos));
 		}
-	  	else if (currentPos < lastPos) {
-			if ((lastPos - currentPos) < ACCEL) {
+	  	else if (current_pos < last_pos) {
+			if ((last_pos - current_pos) < accel_factor) {
 				system("/var/www/command/rotvol.sh -dn 1");
 			}
 			else {
-				system(cmdDnMore);
+				system(cmd_dn_more);
 			}
 
-			if (DEBUG) printf("dn: %d \n", (lastPos - currentPos));
+			if (print_debug) printf("- %d \n", (last_pos - current_pos));
 		}
 
-		lastPos = currentPos;
+		last_pos = current_pos;
 
-		delay(DELAY);
+		delay(poll_interval);
 	}
-} 
+}
 
 //
-// Interrupt Service Routine
+// Interrupt service routine (ISR)
+// Check transition from last_state to current_state to determine encoder direction
 //
-// Check transition from lastState to currentState
-// to determine encoder direction.
-//
-void encoderISR() {
-    char strBuf[strBufSize];
-    strBuf[strBufSize - 1] = '\0';
-	char binStr[5];
-	binStr[4] = '\0';
+void encoder_isr() {
+    char str_buf[str_buf_size];
+    str_buf[str_buf_size - 1] = '\0';
+	char bin_str[5];
+	bin_str[4] = '\0';
 
-	if (isrActive == TRUE) return;
-	isrActive = TRUE;
+	if (isr_active == TRUE) return;
+	isr_active = TRUE;
 
-	int pinAState = digitalRead(PIN_A);
-    int pinBState = digitalRead(PIN_B);
+	int pin_a_state = digitalRead(pin_a);
+    int pin_b_state = digitalRead(pin_b);
 
-    int currentState = (pinAState << 1) | pinBState;	// 0000, 0001, 0010, 0011
-    int bitMask = (lastState << 2) | currentState;		// 00xx, 01xx, 10xx, 11xx
+    int current_state = (pin_a_state << 1) | pin_b_state;	// 0000, 0001, 0010, 0011
+    int bit_mask = (last_state << 2) | current_state;		// 00xx, 01xx, 10xx, 11xx
 
-    if (ISRDBG) int2bin(bitMask, strBuf, strBufSize, binStr);
+    if (print_isr_debug) int_to_bin(bit_mask, str_buf, str_buf_size, bin_str);
 
 	// CW state transitions (hex d, b, 4, 2)
-    if (bitMask == 0b1101 || bitMask == 0b1011 || bitMask == 0b0100 || bitMask == 0b0010) {
-		currentPos++;
-		if (ISRDBG) printf("up %s %x %d \n", binStr, bitMask, currentPos);
+    if (bit_mask == 0b1101 || bit_mask == 0b1011 || bit_mask == 0b0100 || bit_mask == 0b0010) {
+		current_pos++;
+		if (print_isr_debug) printf("up %s %x %d \n", bin_str, bit_mask, current_pos);
 	}
 	// CCW state transitions (hex e, 8, 7, 1)
-	else if (bitMask == 0b1110 || bitMask == 0b1000 || bitMask == 0b0111 || bitMask == 0b0001) {
-		currentPos--;
-		if (ISRDBG) printf("dn %s %x %d \n", binStr, bitMask, currentPos);
+	else if (bit_mask == 0b1110 || bit_mask == 0b1000 || bit_mask == 0b0111 || bit_mask == 0b0001) {
+		current_pos--;
+		if (print_isr_debug) printf("dn %s %x %d \n", bin_str, bit_mask, current_pos);
 	}
 	// The remaining state transitions represent (a) no state transition (b) both pins swapped states
 	else {
-    	if (ISRDBG) printf("-- %s %x \n", binStr, bitMask);
+    	if (print_isr_debug) printf("-- %s %x \n", bin_str, bit_mask);
 	}
 
-    lastState = currentState;
+    last_state = current_state;
 
-	isrActive = FALSE;
+	isr_active = FALSE;
 }
 
 //
 // Integer to binary string
-// Write to the buffer backwards so that the binary representation is in
-// the correct MSB...LSB order. strBuf must have size >= sizeof(int) + 1
+// Write to the buffer backwards so that the binary representation is in the correct MSB...LSB order
+// str_buf must have size >= sizeof(int) + 1
 //
-void int2bin(int bitMask, char *strBuf, int strBufSize, char *binStr) {
-    strBuf += (strBufSize - 2);
+void int_to_bin(int bit_mask, char *str_buf, int str_buf_size, char *bin_str) {
+    str_buf += (str_buf_size - 2);
 
     for (int i = 31; i >= 0; i--) {
-        *strBuf-- = (bitMask & 1) + '0';
-        bitMask >>= 1;
+        *str_buf-- = (bit_mask & 1) + '0';
+        bit_mask >>= 1;
     }
 
-	memcpy(binStr, &strBuf[strBufSize - 4], 4);
+	memcpy(bin_str, &str_buf[str_buf_size - 4], 4);
     //return subBuf;
 }
 
 /*
- *	pin AB bitmask
- *		lastAB|currentAB
+ *	Pin A/B bit_mask
+ *		last_AB|current_AB
  *
- *	states that indicate encoder is turning
- *		0001 = 1 DN, B goes low to high, A low 
+ *	States that indicate encoder is turning
+ *		0001 = 1 DN, B goes low to high, A low
  *		0111 = 7 DN, A goes low to high, B high
  *		1000 = 8 DN, A goes high to low, B low
  *		1110 = e DN, B goes high to low, A high
- *		
+ *
  *		0010 = 2 UP, A goes low to high, B low
  *		0100 = 4 UP, B goes high to low, A low
  *		1011 = b UP, B goes low to high, A high
  *		1101 = d UP, A goes high to low, B high
  *
- *	states where encoder direction can't be determined
+ *	States where encoder direction can't be determined
  *		0000 = 0 no change
  *		0101 = 5 no change
  *		1010 = a no change
