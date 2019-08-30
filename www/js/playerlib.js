@@ -525,7 +525,7 @@ function disableVolKnob() {
 	if (UI.mobile) {
 		$('#volume-2').attr('data-readOnly', 'true');
 		$('#volumedn-2, #volumeup-2').prop('disabled', true);
-		$('.mvol-progress').css('width', '100%');
+		$('#mvol-progress').css('width', '100%');
 		$('.repeat').show();
 		//$('#context-menu-consume').hide();
 	}
@@ -590,7 +590,7 @@ function renderUIVol() {
 
 		// update mobile volume
 		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
-		$('.mvol-progress').css('width', SESSION.json['volknob'] + '%');
+		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
 	   	// update mute and ss mute state
 		if (SESSION.json['volmute'] == '1') {
@@ -638,7 +638,7 @@ function renderUI() {
 		$('#volume').val(SESSION.json['volknob']).trigger('change');
 		$('.volume-display, #ssvolume, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
 		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
-		$('mvol-progress').css('width', SESSION.json['volknob'] + '%');
+		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
 	   	// update mute state
 		if (SESSION.json['volmute'] == '1') {
