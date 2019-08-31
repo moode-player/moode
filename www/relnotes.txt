@@ -24,6 +24,7 @@ Updates
 
 - UPD: Add Local Display section to System info
 - UPD: Add RPi.GPIO 0.7.0 and musicpd 0.4.4 for Python3
+- UPD: Improve UPnP Browser support for Media Servers
 
 Bug fixes
 
