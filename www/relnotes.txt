@@ -25,6 +25,8 @@ Updates
 - UPD: Add Local Display section to System info
 - UPD: Add RPi.GPIO 0.7.0 and musicpd 0.4.4 for Python3
 - UPD: Add UPnP folder drill-down to Music Source Config
+- UPD: ABC Jazz playable url
+- UPD: SwissGroove playable url
 
 Bug fixes
 
