@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Usage:
-# rotenc.py <poll_interval in ms> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug>
-# rotenc.py 75 2 3 23 24 1
+# rotenc_py <poll_interval in ms> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug>
+# rotenc_py 100 2 3 23 24 1 (print_debug is optional)
 #
 # 2019-MM-DD TC moOde 6.2.0
 #
