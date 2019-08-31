@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC moOde 6.1.1
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 
@@ -151,7 +151,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		}
 		// upnp
 		else {
-			$_POST['mount']['remotedir'] = '';
+			//$_POST['mount']['remotedir'] = '';
 			$_POST['mount']['username'] = '';
 			$_POST['mount']['password'] = '';
 			$_POST['mount']['charset'] = '';
@@ -209,11 +209,27 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 	}
 	// upnp
 	elseif ($_POST['mount']['type'] == 'upnp') {
-		$result = file_get_contents('/mnt/UPNP/devices');
-		$line = strtok($result, "\n");
-		while ($line) {
-			$_address .= sprintf('<option value="%s" %s>%s</option>\n', $line, '', $line);
-			$line = strtok("\n");
+		$path = trim($_POST['mount']['address']);
+
+		if ($path == '..') {
+			// '.' means we are at /mnt/upnp
+			$path = dirname($_SESSION['saved_upnp_path']) == '.' ? '' : dirname($_SESSION['saved_upnp_path']);
+		}
+
+		$result = sysCmd('find "/mnt/UPNP/' . $path . '" -maxdepth 1 -type d');
+		$_address = sprintf('<option value="%s" %s>%s</option>\n', '..', '', '..');
+
+		foreach ($result as $dir) {
+			$dir = substr($dir, 10); // strip out /mnt/UPNP/
+			if (!empty($dir) && substr($dir, 0, 1) != '.' && stripos($dir, '_search') === false && stripos($dir, '/.') === false) {
+				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $dir, '', $dir);
+			}
+		}
+
+		if ($path != '..' && $path != '.') {
+			session_start();
+			$_SESSION['saved_upnp_path'] = $path;
+			session_write_close();
 		}
 	}
 }

@@ -1788,7 +1788,7 @@ function sourceMount($action, $id = '') {
 			}
 			// upnp
 			else {
-				$mountstr = 'ln -s "/mnt/UPNP/' . $mp[0]['address'] . '/Music/Album" "/var/lib/mpd/music/' . $mp[0]['name'] . '"';
+				$mountstr = 'ln -s "/mnt/UPNP/' . $mp[0]['address'] . "/" . $mp[0]['remotedir'] . '" "/var/lib/mpd/music/' . $mp[0]['name'] . '"';
 				$result = sysCmd($mountstr);
 				$return = empty($result) ? true : false;
 			}

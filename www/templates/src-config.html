@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 -->
@@ -54,7 +54,7 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" id="server-label" for="address">Host</label>
+				<label class="control-label" id="server-label" for="address">Path</label>
 				<div class="controls">
 					<select id="address" name="mount[address]" class="input-large">
 						$_address
@@ -62,8 +62,10 @@
 					<button id="scan-btn" class="btn btn-primary btn-small set-button  btn-submit status-msg $_scan_btn_hide" data-msg="Scan in progress" type="submit" name="scan" value="1">Scan</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-server" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-server" class="help-block-configs help-block-margin hide">
-						Format is Host/Share or IPaddr/Share for NAS devices and just Host for UPnP devices.<br>
-						SCAN generates a list of SMB (Samba) shares or UPnP devices.
+						NAS devices: the format is Host/Share or IP_Addr/Share.<br>
+						UPnP devices: the format is Host/Folder.<br>
+						SCAN generates a list of SMB (Samba) shares or UPnP folders.<br>
+						For UPnP folders, select a folder then SCAN to display its sub-folders.
                     </span>
 					<div id="edit-server" class="help-block-margin $_edit_server_hide">
 						<a id="editserver" data-toggle="modal" href="#manual-server"><button class="btn btn-medium btn-primary">EDIT</button></a>&nbsp;Host/Share manually
