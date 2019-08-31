@@ -10,7 +10,7 @@
 # - Remove tcpdump package (not needed)
 # - Use Buster hostapd instead of pre-compiled binary
 # - Use udisks-glue libs, packages and pre-compiled binary
-# - Add pip3 and RPi.GPIO for Python3
+# - Add pip3, RPi.GPIO and musicpd for Python3
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
@@ -342,16 +342,25 @@ sudo cp ./moode/other/wiringpi/wiringpi-latest.deb ./
 sudo dpkg -i wiringpi-latest.deb
 sudo rm ./wiringpi-latest.deb
 
-1c. RPi-GPIO 0.7.0 package for Python3 and rotenc.py
+1c. RPi-GPIO 0.7.0 and musicpd packages for Python3 and rotenc.py
 
-pip3 install RPi.GPIO
+sudo pip3 install RPi.GPIO
+sudo pip3 install python-musicpd
 
-2. Rotenc
+2. Rotary encoder driver
+
+2a. Compile and install C version of the driver.
+NOTE: This version does not work on Pi-4B because of wiringPi / 4B compatibility issues which may or may not be resolved due
+to wiringPi being deprecated by the maintainer on 2019-08-06 http://wiringpi.com/wiringpi-deprecated/
 
 sudo cp ./moode/other/rotenc/rotenc.c ./
 sudo gcc -std=c99 rotenc.c -orotenc -lwiringPi
-sudo cp ./rotenc /usr/local/bin
+sudo cp ./rotenc /usr/local/bin/rotenc_c
 sudo rm ./rotenc*
+
+2b. Install Python version of the driver (default)
+
+sudo cp ./moode/other/rotenc/rotenc.py /usr/local/bin/rotenc
 
 ////////////////////////////////////////////////////////////////
 //

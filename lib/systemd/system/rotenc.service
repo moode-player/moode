@@ -1,5 +1,5 @@
 #
-# 2019-04-12 TC moOde 5.0
+# 2019-MM-DD TC moOde 6.2.0
 #
 #
 
@@ -42,15 +42,15 @@ Nice=-10
 #CPUAffinity=0,1
 
 # Launch params
-# rotenc <DELAY> <ACCEL> <STEP> <PIN_A> <PIN_B> <DEBUG 1|2>
-# rotenc 100 2 3 4 5 1 (with optional debug print)
-# rotenc 100 2 3 4 5
-# DELAY:	Number of ms delay for each iteration of the volume update loop. Default=100
-# ACCEL:	Threshold (difference between last and current position of encoder) to determine whether to use 1 step or STEP steps. Default=2.
-# STEP:		Number of steps to use when knob turns at fast rate. Default=3. 
-# PIN_A,B:	WiringPi GPIO pin numbers. Defaults=4,5 (23,24).
-# DEBUG:	Print debug information to console. 1=normal, 2=verbose. This is an optional param.
-ExecStart=/usr/local/bin/rotenc 100 2 3 4 5
+# rotenc <poll_interval in ms> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug>
+# rotenc 100 2 3 23 24 1 (with optional debug print)
+# rotenc 100 2 3 23 24 (normal)
+# poll_interval:	Number of ms delay for each iteration of the volume update loop. Default=100
+# accel_factor:	    Threshold (difference between last and current position of encoder) to determine whether to use 1 step or STEP steps. Default=2.
+# volume_step:		Number of steps to use when knob turns at fast rate. Default=3.
+# pin_a/b:	        GPIO pin numbers. Defaults: rotenc_py (23,24 - Broadcom SoC), rotenc_c (4,5 wiringPi).
+# print_debug:	    Print debug information to console. 1=normal, 2=verbose (2 is for rotenc_c only). This is an optional param.
+ExecStart=/usr/local/bin/rotenc 100 2 3 23 24
 
 [Install]
 WantedBy=multi-user.target
