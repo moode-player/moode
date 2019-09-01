@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 
@@ -179,7 +179,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#mt3 .btn-primary, #mt1 .btn-primary {color:var(--accentxts);}
 	.tab-content.visacc #mt1 .btn {color:var(--textvariant);}
 	.tab-content.visacc #mt1 .btn-primary {color:var(--adapttext);background-color:var(--btnshade2);}
-	#mt2 > .btn {font-size:1.75em;}
 	#msingle {display:none;}
 	#maddfav i {font-size:1.1em;}
 	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
@@ -198,7 +197,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	img.libart {width:90%;}
 	.modal-sm2 {min-width:80%;}
 	.form-horizontal .controls {margin-left:0;}
-	.btnlist.btnlist-top.btnlist-top-lib {width:30%;}
+	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
+	#pl-filter-results {display:none;}
 }
 
 /* smaller portrait for small screens */
@@ -206,7 +206,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	body {font-size:var(--pbfont);}
 	#menu-top .dropdown-menu > li > a {font-size:1.15rem;}
 	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta {font-size:calc(0.65em + 1vmin);}
-	#mt2 .btn {font-size:2.75rem;padding:0 1em;width:25%;}
+	#mt2 .btn {font-size:2.75rem;padding:0 1rem;width:25%;}
 	.playlist span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
 	input[type="text"] {font-size:1em;}
 	#menu-settings {font-size:1.65rem;padding:0 .5em;}
@@ -334,6 +334,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.playlist li:before {width:1.75em;}
 	.playlist span {margin-left:calc(2.75rem + 1vmin;)}
 	#playbar-title {width:calc(60vw - 6rem);}
+	#pl-search input, #ra-search input, #lib-album-search input {width:4em;}
 }
 /* iPhone5 landscape */
 @media (max-height: 320px) and (max-width: 568px) {
@@ -406,6 +407,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-toggles {right:calc(env(safe-area-inset-right) + 1rem);bottom:1rem;}
 	#timeline {width:75%;}
 	#mt1 {margin:6rem 1.5rem 0rem 1.5rem;}
+	#mt2 .btn {font-size:3rem;padding:0 1.25rem;width:28%;}
 	.timeline-bg {margin-top:1px;}
 	#currentsong, #currentalbum, #currentartist {padding-top:1.75rem;}
 	.busy-spinner {top:calc(env(safe-area-inset-top) + .57rem);}
@@ -441,7 +443,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 
 /* miscellaneous stuff */
 .database-radiolist li {width:90%;padding:.5em 0 .25em;} /* new */
-#playbtns i {font-size:1.5em;}
 /* for links on the About modal */
 .moode-about-link1 {color:#777;text-decoration:none;}
 .moode-about-link2 {color:#777;text-decoration:none;display:inline-block;margin-bottom:2px;}
