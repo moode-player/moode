@@ -221,8 +221,8 @@ sudo apt-get -y install  libatasmart4 libdbus-glib-1-2 libgudev-1.0-0 \
 	libsgutils2-2 libdevmapper-event1.02.1 libconfuse-dev libdbus-glib-1-dev
 
 # udisks-glue packages
-dpkg -i ./moode/other/udisks-glue/liblvm2app2.2_2.02.168-2_armhf.deb
-dpkg -i ./moode/other/udisks-glue/udisks_1.0.5-1+b1_armhf.deb
+sudo dpkg -i ./moode/other/udisks-glue/liblvm2app2.2_2.02.168-2_armhf.deb
+sudo dpkg -i ./moode/other/udisks-glue/udisks_1.0.5-1+b1_armhf.deb
 
 # udisks-glue pre-compiled binary
 sudo cp ./moode/other/udisks-glue/udisks-glue-1.3.5-70376b7 /usr/bin/udisks-glue
@@ -764,8 +764,8 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-# 4.19.66
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 3750f3204096f6bb365ceaf484a496584e46782b
+# 4.19.69
+echo "y" | sudo PRUNE_MODULES=1 rpi-update f8c5a8734cde51ab94e07c204c97563a65a68636
 
 # cleanup
 sudo rm -rf /lib/modules.bak
