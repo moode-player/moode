@@ -23,7 +23,9 @@ New features
 Updates
 
 - UPD: Add Local Display section to System info
+- UPD: Bump to Linux kernel 4.19.69
 - UPD: Add RPi.GPIO 0.7.0 and musicpd 0.4.4 for Python3
+- UPD: Larger font size for play buttons
 - UPD: Add UPnP folder drill-down to Music Source Config
 - UPD: ABC Jazz playable url
 - UPD: SwissGroove playable url
@@ -35,6 +37,8 @@ Bug fixes
 - FIX: System info not listing some Library options
 - FIX: Fail to render covers on some old Browsers
 - FIX: Setting Audio Scrobbler userid/pwd causes crash
+- FIX: Layout issue with search reset icon
+- FIX: Search reset not cleared when refresh radio panel
 
 ########################################################
 //
