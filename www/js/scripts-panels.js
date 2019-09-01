@@ -828,12 +828,14 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 	$('#ra-home').click(function(e) {
-		$('#ra-filter-results').hide();
 		UI.raFolderLevel[4] = 0;
 		UI.pathr = '';
 		mpdDbCmd('lsinfo_radio', 'RADIO');
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)
+        $('#ra-filter-results').hide();
+        $("#searchResetRa").hide();
+        showSearchResetRa = false;
 	});
 	// refresh panel
 	$('#ra-refresh').click(function(e) {
@@ -841,6 +843,9 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#database-radio').scrollTo(0, 200);
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)
+        $('#ra-filter-results').hide();
+        $("#searchResetRa").hide();
+        showSearchResetRa = false;
 	});
 	// create new station
 	$('#ra-new').click(function(e) {
@@ -852,6 +857,7 @@ jQuery(document).ready(function($) { 'use strict';
 	// radio search
 	$('#ra-filter').keyup(function(e){
 		if (!showSearchResetRa) {
+            $('#ra-filter-results').show();
 			$('#searchResetRa').show();
 			showSearchResetRa = true;
 		}
@@ -892,10 +898,10 @@ jQuery(document).ready(function($) { 'use strict';
 		}, 750);
 	});
 	$('#searchResetRa').click(function(e) {
-		$("#searchResetRa").hide();
-		showSearchResetRa = false;
 		$('.database-radio li').css('display', 'inline-block');
 		$('#ra-filter-results').html('');
+        $("#searchResetRa").hide();
+		showSearchResetRa = false;
 	});
 
     // playlist search

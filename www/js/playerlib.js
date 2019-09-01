@@ -1198,6 +1198,8 @@ function renderRadio(data, path) {
 
 	$('.btnlist-top-ra').show();
 	$('#ra-filter-results').html('')
+    $("#searchResetRa").hide();
+    showSearchResetRa = false;
 	$('#ra-search-keyword').val('');
 	$('#ra-filter').val('');
 
