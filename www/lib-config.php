@@ -63,11 +63,10 @@ if (isset($_POST['remount'])) {
 	//workerLog('lib-config: remount: (' . $result_unmount . ', ' . $result_mount . ')');
 	$_SESSION['notify']['title'] = 'Re-mount started...';
 }
-// reset library cache
+// Clear library cache
 if (isset($_POST['clrlibcache'])) {
 	clearLibCache();
 	$_SESSION['notify']['title'] = 'Library cache cleared';
-	$_SESSION['notify']['msg'] = 'Open the Library to regenerate it';
 }
 // update thumbnail cache
 if (isset($_POST['updthmcache'])) {
