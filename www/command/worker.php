@@ -525,6 +525,9 @@ if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
 	sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
 }
 
+// USB auto-mounter
+workerLog('worker: USB auto-mounter (' . $_SESSION['usb_auto_mounter'] . ')');
+
 //
 workerLog('worker: - Music sources');
 //
@@ -870,7 +873,7 @@ function updExtMetaFile() {
 	$filemeta = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
 	//workerLog($filemeta['file'] . ' | ' . $hwparams_calcrate);
 
-	if ($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1' || $GLOBALS['slactive'] == '1' || ($_SESSION['btactive'] && $_SESSION['audioout'] == 'Local')) {
+	if ($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1' || $GLOBALS['slactive'] == '1' || $GLOBALS['inpactive'] == '1' || ($_SESSION['btactive'] && $_SESSION['audioout'] == 'Local')) {
 			//workerLog('renderer active');
 			// Renderer active
 			if ($GLOBALS['aplactive'] == '1') {
@@ -881,6 +884,9 @@ function updExtMetaFile() {
 			}
 			elseif ($GLOBALS['slactive'] == '1') {
 				$renderer = 'Squeezelite Active';
+			}
+			elseif ($GLOBALS['inpactive'] == '1') {
+				$renderer = $_SESSION['audioin'] .' Input Active';
 			}
 			else {
 				$renderer = 'Bluetooth Active';
@@ -1479,10 +1485,14 @@ function runQueuedJob() {
 			if ($_SESSION['w_queueargs'] == 'udisks-glue') {
 				sysCmd('sed -e "/udisks-glue/ s/^#*//" -i /etc/rc.local');
 				sysCmd('sed -e "/devmon/ s/^#*/#/" -i /etc/rc.local');
+				sysCmd('systemctl enable udisks');
+				sysCmd('systemctl disable udisks2');
 			}
 			elseif ($_SESSION['w_queueargs'] == 'devmon') {
 				sysCmd('sed -e "/udisks-glue/ s/^#*/#/" -i /etc/rc.local');
 				sysCmd('sed -e "/devmon/ s/^#*//" -i /etc/rc.local');
+				sysCmd('systemctl disable udisks');
+				sysCmd('systemctl enable udisks2');
 			}
 			break;
 		case 'p3wifi':
