@@ -852,7 +852,7 @@ function renderUI() {
 	if (SESSION.json['slactive'] == '1') {
 		inpSrcIndicator('slactive1', 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">turn off</span>');
 	}
-	// analog input source
+	// Input source
 	if (SESSION.json['inpactive'] == '1') {
 		inpSrcIndicator('inpactive1', '<a href="sel-config.php">' + SESSION.json['audioin'] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
 	}
