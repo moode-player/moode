@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-04-12 TC moOde 5.0
+# 2019-MM-DD TC moOde 6.2.0
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -69,7 +69,7 @@ if [[ $1 = "chg-name" ]]; then
 	exit
 fi
 
-# card 0 = i2s or onboard, card 1 = usb 
+# card 0 = i2s or onboard, card 1 = usb
 # save alsa state after set-alsavol to support hotplug for card 1 USB audio device
 if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 	TMP=$(cat /proc/asound/card1/id 2>/dev/null)
@@ -82,12 +82,12 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 	else
 		# set-alsavol
 		amixer -c $CARD_NUM sset "$2" "$3%" >/dev/null
-		
+
 		# store alsa state if card 1 to preverve volume in case hotplug
 		if [[ $CARD_NUM -eq 1 ]]; then
 			alsactl store 1
 		fi
-			
+
 		exit
 	fi
 fi
@@ -107,25 +107,25 @@ if [[ $1 = "get-piano-dualmode" || $1 = "set-piano-dualmode" || $1 = "get-piano-
 		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c 0 sget "Dual Mode")
 		exit
 	elif [[ $1 = "set-piano-dualmode" ]]; then
-		amixer -c 0 sset "Dual Mode" "$2" >/dev/null		
+		amixer -c 0 sset "Dual Mode" "$2" >/dev/null
 		exit
 	elif [[ $1 = "get-piano-submode" ]]; then
 		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c 0 sget "Subwoofer mode")
 		exit
 	elif [[ $1 = "set-piano-submode" ]]; then
-		amixer -c 0 sset "Subwoofer mode" "$2" >/dev/null		
+		amixer -c 0 sset "Subwoofer mode" "$2" >/dev/null
 		exit
 	elif [[ $1 = "get-piano-lowpass" ]]; then
 		awk -F"'" '/Item0/ {print $2; count++; if (count==1) exit}' <(amixer -c 0 sget "Lowpass")
 		exit
 	elif [[ $1 = "set-piano-lowpass" ]]; then
-		amixer -c 0 sset "Lowpass" "$2" >/dev/null		
+		amixer -c 0 sset "Lowpass" "$2" >/dev/null
 		exit
 	elif [[ $1 = "get-piano-subvol" ]]; then
 		awk -F"[][]" '/%/ {print $2; count++; if (count==1) exit}' <(amixer -c 0 sget "Subwoofer")
 		exit
 	elif [[ $1 = "set-piano-subvol" ]]; then
-		amixer -c 0 sset "Subwoofer" "$2%" >/dev/null		
+		amixer -c 0 sset "Subwoofer" "$2%" >/dev/null
 		exit
 	fi
 fi
@@ -185,13 +185,13 @@ fi
 if [[ $1 = "unmute-pi-ampplus" || $1 = "unmute-pi-digiampplus" ]]; then
 	echo "22" >/sys/class/gpio/export
 	echo "out" >/sys/class/gpio/gpio22/direction
-	echo "1" >/sys/class/gpio/gpio22/value	
+	echo "1" >/sys/class/gpio/gpio22/value
 	exit
 fi
 
-# add remove samba share blocks
-# auto update MPD db
-# $2 = %mount_point
+# Udisks-glue add/remove samba share blocks
+# - auto update MPD db
+# - $2 = mount point (/media/DISK_LABEL)
 if [[ $1 = "smbadd" ]]; then
 	if [[ $(grep -w -c "$2" /etc/samba/smb.conf) = 0 ]]; then
 		sed -i "$ a[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
@@ -220,9 +220,42 @@ if [[ $1 = "smbrem" ]]; then
     exit
 fi
 
+# Devmon add/remove samba share blocks
+# - auto update MPD db
+# - $2 = mount point: /media/DISK_LABEL
+# - $3 = device: /dev/sda1, sdb1, sdc1
+if [[ $1 = "smb_add" ]]; then
+	if [[ $(grep -w -c "$2" /etc/samba/smb.conf) = 0 ]]; then
+		sed -i "$ a# $3\n[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
+		systemctl restart smbd
+		systemctl restart nmbd
+		# r44a
+		RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
+		if [[ $RESULT = "1" ]]; then
+			mpc update USB
+			truncate /var/local/www/libcache.json --size 0
+		fi
+	fi
+	exit
+fi
+
+# $2 = device w/o the number: /dev/sda, sdb, sdc
+if [[ $1 = "smb_remove" ]]; then
+	sed -i "\|$2|,\|guest| d" /etc/samba/smb.conf
+	systemctl restart smbd
+	systemctl restart nmbd
+	# r44a
+	RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
+	if [[ $RESULT = "1" ]]; then
+		mpc update USB
+		truncate /var/local/www/libcache.json --size 0
+	fi
+    exit
+fi
+
 # check for directory existance
 if [[ $1 = "check-dir" ]]; then
-	if [ -d "$2" ]; then 
+	if [ -d "$2" ]; then
 		echo "exists"
 	fi
     exit

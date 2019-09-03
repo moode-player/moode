@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 
@@ -1474,6 +1474,16 @@ function runQueuedJob() {
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
+			break;
+		case 'usb_auto_mounter':
+			if ($_SESSION['w_queueargs'] == 'udisks-glue') {
+				sysCmd('sed -e "/udisks-glue/ s/^#*//" -i /etc/rc.local');
+				sysCmd('sed -e "/devmon/ s/^#*/#/" -i /etc/rc.local');
+			}
+			elseif ($_SESSION['w_queueargs'] == 'devmon') {
+				sysCmd('sed -e "/udisks-glue/ s/^#*/#/" -i /etc/rc.local');
+				sysCmd('sed -e "/devmon/ s/^#*//" -i /etc/rc.local');
+			}
 			break;
 		case 'p3wifi':
 			ctlWifi($_SESSION['w_queueargs']);

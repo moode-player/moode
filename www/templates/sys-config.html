@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 -->
@@ -85,6 +85,20 @@
 					<span id="info-cpugov" class="help-block-configs help-block-margin hide">
 						<b>On-demand:</b> Scale CPU frequency from min to max based on load.<br>
 						<b>Performance:</b> Run the CPU at max frequency.<br>
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="usb_auto_mounter">USB auto-mounter</label>
+				<div class="controls">
+					<select id="usb_auto_mounter" class="input-large" name="usb_auto_mounter">
+						$_select[usb_auto_mounter]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_usb_auto_mounter" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_usb_auto_mounter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_usb_auto_mounter" class="help-block-configs help-block-margin hide">
+						For ARM6 platforms (Pi-1B, Zero/w, etc) select Devmon, otherwise select Udisks-glue.
 					</span>
 				</div>
 			</div>

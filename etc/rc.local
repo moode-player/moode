@@ -2,11 +2,15 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-# set cpu govenor
+# Set cpu govenor
 RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='cpugov'")
 echo "$RESULT" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
+# USB storage auto-mounter
 /usr/bin/udisks-glue --config=/etc/udisks-glue.conf > /dev/null 2>&1
+#/usr/bin/devmon --exec-on-drive "/var/www/command/util.sh smb_add %d %f" --exec-on-remove "/var/www/command/util.sh smb_remove %f" --always-exec --no-gui > /dev/null 2>&1 &
+
+# moOde startup and job processor daemon
 /var/www/command/worker.php > /dev/null 2>&1
 
 exit 0

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-18 TC moOde 6.1.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 
@@ -122,10 +122,15 @@ if (isset($_POST['update_browser_title'])) {
 
 // SYSTEM MODIFICATIONS
 
-// cpu governor
+// CPU governor
 if (isset($_POST['update_cpugov'])) {
 	submitJob('cpugov', $_POST['cpugov'], 'CPU governor updated', '');
 	playerSession('write', 'cpugov', $_POST['cpugov']);
+}
+
+if (isset($_POST['update_usb_auto_mounter'])) {
+	submitJob('usb_auto_mounter', $_POST['usb_auto_mounter'], 'USB auto-mounter updated', 'Reboot required');
+	playerSession('write', 'usb_auto_mounter', $_POST['usb_auto_mounter']);
 }
 
 // integrated WiFi adapter
@@ -315,9 +320,13 @@ $_select['browsertitle'] = $_SESSION['browsertitle'];
 
 // SYSTEM MODIFICATIONS
 
-// cpu governor
+// CPU governor
 $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
+
+// USB auto-mounter
+$_select['usb_auto_mounter'] .= "<option value=\"udisks-glue\" " . (($_SESSION['usb_auto_mounter'] == 'udisks-glue') ? "selected" : "") . ">Udisks-glue (Default)</option>\n";
+$_select['usb_auto_mounter'] .= "<option value=\"devmon\" " . (($_SESSION['usb_auto_mounter'] == 'devmon') ? "selected" : "") . ">Devmon</option>\n";
 
 // wifi bt
 $rev = substr($_SESSION['hdwrrev'], 3, 1);
