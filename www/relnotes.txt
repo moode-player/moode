@@ -18,15 +18,16 @@
 New features
 
 - NEW: Library "Recently Added" filter
+- NEW: UPnP folder drill-down in Music Source Config
 - NEW: Rotary encoder driver with support for Pi-4B
+- NEW: System Config option to select USB auto-mounter
 
 Updates
 
 - UPD: Add Local Display section to System info
+- UPD: Add Python3 RPi.GPIO 0.7.0 and musicpd 0.4.4
 - UPD: Bump to Linux kernel 4.19.69
-- UPD: Add RPi.GPIO 0.7.0 and musicpd 0.4.4 for Python3
 - UPD: Larger font size for play buttons
-- UPD: Add UPnP folder drill-down to Music Source Config
 - UPD: ABC Jazz playable url
 - UPD: SwissGroove playable url
 
