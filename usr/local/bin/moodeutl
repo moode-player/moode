@@ -81,7 +81,9 @@ function systemMonitor() {
 		$cputemp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
 
 		// cpu utilization
-		$cpuload = exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print $2 + $4 + $6}'");
+		$cpuload = exec("top -bn 2 -d 1.0 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
+		$cpuload += exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
+		$cpuload = $cpuload / 2;
 		$cpuload = number_format($cpuload,0,'.','');
 
 		// memory utilization
