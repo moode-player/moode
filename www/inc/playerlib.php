@@ -227,6 +227,9 @@ function integrityCheck() {
 				workerLog('worker: Integrity check (' . $row['action'] . ': ' . basename($row['param']) . ')');
 				$warning = true;
 			}
+			elseif ($row['action'] === 'ignore') {
+				// NOP
+			}
 			else {
 				return false;
 			}
