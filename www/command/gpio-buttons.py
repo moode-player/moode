@@ -16,7 +16,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #	Inspired by the script posted in moOde Forum by @Cyanoazimin
-#	2019-MM-DD TC moOde 6.2.0
+#	2019-09-05 TC moOde 6.2.0
 #
 
 import RPi.GPIO as GPIO

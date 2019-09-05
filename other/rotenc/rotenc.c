@@ -23,7 +23,7 @@
  * rotenc <poll_interval> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug 1|2>
  * rotenc 100 2 3 4 5 1
  *
- * 2019-MM-DD TC moOde 6.2.0
+ * 2019-09-05 TC moOde 6.2.0
  *
  */
 
