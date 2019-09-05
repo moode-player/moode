@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.2.0
  *
  */
 
-define('VERSION', '1.1');
+define('VERSION', '1.2');
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
