@@ -27,7 +27,7 @@ import os
 import subprocess
 import sqlite3
 
-# Use Broad SoC pin numbering
+# Use SoC pin numbering
 GPIO.setmode(GPIO.BCM)
 
 # Get the configuration
