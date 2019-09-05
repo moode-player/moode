@@ -2348,7 +2348,7 @@ function getHdwrRev() {
 		'20a0' => 'Pi-CM3 1GB v1.0',
 		'20d3' => 'Pi-3B+ 1GB v1.3',
 		'20e0' => 'Pi-3A+ 512 MB v1.0',
-		'2100' => 'Pi-CM3+ 1GB',
+		'2100' => 'Pi-CM3+ 1GB v1.0',
 		'3111' => 'Pi-4B 1/2/4GB', // reference only
 		'311a' => 'Pi-4B 1GB', // these rev codes are artificial and only for the code block below to determine the RAM size
 		'311b' => 'Pi-4B 2GB',
