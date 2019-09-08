@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.2.1
  *
  */
 
@@ -386,7 +386,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #ss-toolbar button {font-size:.5em;}
 #ss-toggle-pl {padding:.75em 1.75em .75em 3em;float:right;}
 #ss-hud .toggle-song {padding:.75em 3em .75em 1.75em;float:left;}
-#ss-container-playlist {display:none;width:30vw;height:50vh;font-size:.62em;overflow:auto;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;padding-top:1em;border-top: 1px solid rgba(64,64,64,0.5);backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);}
+#ss-container-playlist {display:none;width:30vw;height:50vh;font-size:1rem;overflow:auto;-ms-overflow-style:-ms-autohiding-scrollbar;-webkit-overflow-scrolling:touch;padding-top:1em;border-top: 1px solid rgba(64,64,64,0.5);backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);}
 .ss-playlist {display:block;margin:0;padding:0;list-style:none;counter-reset:item;word-wrap: break-word;}
 .ss-playlist li {display:block;position:relative;margin:0;cursor:pointer;text-align:left;padding-left:0;}
 .ss-playlist li:before {display:block;float:left;width:2.5em;line-height:normal;padding:0 1em 0 0;text-align:right;counter-increment:item;content:counter(item) ' ';font-size:.9em;}
