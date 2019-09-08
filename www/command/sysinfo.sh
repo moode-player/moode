@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-09-05 TC moOde 6.2.0
+# 2019-MM-DD TC moOde 6.2.1
 #
 
 # check for sudo
@@ -359,7 +359,7 @@ if [ "$BAVER" = "" ]; then
 fi
 HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
 WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
-RPI_GPIO_VER=$(pip3 show RPi-GPIO | grep Version | awk '{ print  $2 }')
+RPI_GPIO_VER=$(grep -iRl "RPi.GPIO-" /usr/local/lib/python3.7/dist-packages/ | awk -F "." '{print $3 "." $4 "." $5}' | cut -f 2 -d "-")
 
 # Moode release
 moode_rel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
