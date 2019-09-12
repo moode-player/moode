@@ -26,6 +26,18 @@
 #	- mute is on 6th bit (counted from 0), 0 is mute ON, 1 is mute OFF
 #	- overall value for volume is in range of 0 - 127, but mute being off makes it 64 - 127
 #
+#	Configuration
+#	- sudo apt-get -y install python-smbus i2c-tools libi2c-dev
+#	- sudo nano /etc/modules
+# /etc/modules: kernel modules to load at boot time.
+#
+# This file contains the names of kernel modules that should be loaded
+# at boot time, one per line. Lines beginning with "#" are ignored.
+#i2c-dev
+#i2c-bcm2708
+#
+#sudo i2cdetect -y 1
+#
 
 import smbus
 import sys
