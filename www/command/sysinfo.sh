@@ -26,7 +26,8 @@
 [[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
 
 SYSTEM_PARAMETERS() {
-	echo -e "S Y S T E M    P A R A M E T E R S"
+	echo -e "\n\c"
+	echo -e "S Y S T E M   P A R A M E T E R S"
 	echo -e "\nmoOde release\t\t= $moode_rel\c"
 	echo -e "\nRaspbian OS\t\t= $RASPBIANVER\c"
 	echo -e "\nLinux kernel\t\t= $KERNEL\c"
@@ -98,7 +99,7 @@ AUDIO_PARAMETERS() {
 	[[ $alsavolume = "none" ]] && hwvol="None" || hwvol="Controller detected"
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
 
-	echo -e "A U D I O    P A R A M E T E R S"
+	echo -e "A U D I O   P A R A M E T E R S"
 	echo -e "\nAudio device\t\t= $audiodevname\c"
 	echo -e "\nInterface\t\t= $iface\c"
 	echo -e "\nHardware volume\t\t= $hwvol\c"
@@ -186,7 +187,7 @@ LIBRARY_SETTINGS() {
 }
 
 MPD_SETTINGS() {
-	echo -e "M P D    S E T T I N G S"
+	echo -e "M P D   S E T T I N G S"
 	echo -e "\nVersion\t\t\t= $mpdver\c"
 	echo -e "\nVolume control\t\t= $mixer_type\c"
 	echo -e "\nALSA device\t\t= hw:$device\c"
@@ -206,7 +207,7 @@ MPD_SETTINGS() {
 	#echo -e "\nHardware period time\t= $period_time\n"
 }
 RENDERER_SETTINGS() {
-	echo -e "B L U E T O O T H    S E T T I N G S"
+	echo -e "B L U E T O O T H   S E T T I N G S"
 	echo -e "\nBluetooth ver\t\t= $BTVER\c"
 	echo -e "\nBluealsa ver\t\t= $BAVER\c"
 	echo -e "\nSpeaker sharing\t\t= $btmulti\c"
@@ -215,7 +216,7 @@ RENDERER_SETTINGS() {
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		SPSVER="$(shairport-sync -V | cut -f 1 -d '-')"
-		echo -e "A I R P L A Y    S E T T I N G S"
+		echo -e "A I R P L A Y   S E T T I N G S"
 		echo -e "\nVersion\t\t\t= $SPSVER\c"
 		echo -e "\nFriendly name\t\t= $airplayname\c"
 		echo -e "\nALSA device\t\t= $airplay_device\c"
@@ -230,7 +231,7 @@ RENDERER_SETTINGS() {
 
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
 		SPOTDEV="$(aplay -L | grep -w default)"
-		echo -e "S P O T I F Y    S E T T I N G S"
+		echo -e "S P O T I F Y   S E T T I N G S"
 		echo -e "\nFriendly name\t\t= $spotifyname\c"
 		echo -e "\nALSA device\t\t= $spotify_device\c"
 		echo -e "\nBit rate\t\t= $bitrate\c"
@@ -244,7 +245,7 @@ RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		SL=`squeezelite -? | grep "Squeezelite" | cut -f 2 -d "v" | cut -f 1 -d ","`
 		squeezelite -? | grep "\-Z" >/dev/null && SLT="\"DSD/SRC enabled\"" || SLT="\"DSD/SRC disabled\""
-		echo -e "S Q U E E Z E L I T E    S E T T I N G S"
+		echo -e "S Q U E E Z E L I T E   S E T T I N G S"
 		echo -e "\nVersion\t\t\t= $SL $SLT\c"
 		echo -e "\nFriendly name\t\t= $PLAYERNAME\c"
 		echo -e "\nALSA device\t\t= hw:$AUDIODEVICE\c"
@@ -257,7 +258,7 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_LOCALUI)) -ne 0 ]; then
-		echo -e "L O C A L   D I S P L A Y    S E T T I N G S"
+		echo -e "L O C A L   D I S P L A Y   S E T T I N G S"
 		echo -e "\nLocal UI display\t= $localui\c"
 		echo -e "\nMouse cursor\t\t= $touchscn\c"
 		echo -e "\nScreen blank\t\t= $scnblank Secs\c"
@@ -268,7 +269,7 @@ RENDERER_SETTINGS() {
 }
 
 MOODE_LOG() {
-	echo -e "M O O D E    S T A R T U P    L O G"
+	echo -e "M O O D E   S T A R T U P   L O G"
 	echo -e "\n\c"
 	cat /var/log/moode.log
 	#sed -e 's/^/    /' /var/log/moode.log > /tmp/moode.log
