@@ -11,15 +11,15 @@
 
 ########################################################
 //
-// 6.2.1 2019-MM-DD
+// 6.2.1 2019-09-12
 //
 ########################################################
 
 Bug fixes
 
 - FIX: Slow cmd used in Sysinfo to get RPi.GPIO version
-- FIX: HUD playlist font size too small in full screen
 - FIX: System info layout for mobile
+- FIX: HUD playlist font size too small in full screen
 
 ########################################################
 //

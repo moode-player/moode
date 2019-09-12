@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-MM-DD TC moOde 6.2.1
+# 2019-09-12 TC moOde 6.2.1
 #
 
 # check for sudo
