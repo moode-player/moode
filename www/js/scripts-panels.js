@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
@@ -1235,6 +1235,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('#ss-toggle-pl i').addClass('fa-chevron-up');
 			clearTimeout(hudTimer);
 		}
+        document.body.style.setProperty('--textvariant', 'rgba(128,128,128,1.0)');
 		$('#ss-container-playlist').slideToggle(200, function(e) {
 			customScroll('ss-pl', parseInt(MPD.json['song']), 200);
 		});
@@ -1246,6 +1247,7 @@ jQuery(document).ready(function($) { 'use strict';
 		if ($('#screen-saver').css('display') == 'block' || SESSION.json['scnsaver_timeout'] != 'Never') {
 			$('#screen-saver').hide();
 			$('#ss-hud').hide();
+            setColors();
 			$('#playback-panel, #folder-panel, #library-panel, #radio-panel').removeClass('hidden');
 			$('#menu-top').show();
 			if (currentView.indexOf('playback') == -1) {
