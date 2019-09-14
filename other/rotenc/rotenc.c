@@ -21,9 +21,9 @@
  *
  * Usage:
  * rotenc <poll_interval> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug 1|2>
- * rotenc 100 2 3 4 5 1
+ * rotenc 100 2 3 23 24 1
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
@@ -37,8 +37,8 @@ static volatile int current_pos = 0;
 static volatile int last_pos = 0;
 static volatile int current_state;
 static volatile int last_state = 0;
-static volatile int pin_a = 4; // wiringPi pin numbering
-static volatile int pin_b = 5;
+static volatile int pin_a = 23; // SoC pin numbering
+static volatile int pin_b = 24;
 static volatile int str_buf_size = (sizeof(int) * 8) + 1;
 static volatile int isr_active = FALSE;
 static volatile int print_isr_debug = FALSE;
@@ -60,7 +60,7 @@ int main(int argc, char * argv[])
 
 	// Print program version and exit
 	if (argc == 2 && strcmp(argv[1], "-v") == 0) {
-		printf("rotenc.c version: 1.2 \n");
+		printf("rotenc.c version: 1.3.0 \n");
 		exit(0);
 	}
 
@@ -100,7 +100,7 @@ int main(int argc, char * argv[])
 	strcat(cmd_dn_more, volume_step_str);
 
 	// Setup GPIO
-	wiringPiSetup();
+	wiringPiSetupGpio();
 	pinMode(pin_a, INPUT);
 	pinMode(pin_b, INPUT);
 	pullUpDnControl(pin_a, PUD_UP); // Turn on pull-up resistors
