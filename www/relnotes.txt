@@ -17,11 +17,11 @@
 
 New features
 
-- NEW: Library option for Album grouping
+- NEW: Library option for Album grouping by Artist, Album or Year
 
 Updates
 
-- UPD: Change to SoC pin numbering in rotenc.c
+- UPD: Change to Broadcom SoC pin numbering in rotenc.c
 
 Bug fixes
 
