@@ -22,6 +22,7 @@ New features
 Updates
 
 - UPD: Change to Broadcom SoC pin numbering in rotenc.c
+- UPD: Include supported audio formats in Audio info
 
 Bug fixes
 
