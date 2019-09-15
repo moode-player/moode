@@ -125,7 +125,7 @@ function getYear(albumTracks){
 	var allYear = albumTracks.map(function(track){
 		return track.year;
 	});
-	return Math.min.apply(null, allYear);
+	return Math.max.apply(null, allYear);
 }
 
 function groupLib(fullLib) {
