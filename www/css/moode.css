@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
@@ -70,11 +70,11 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 .span3 {width:24%;margin-left:0px;}
 .btn-group.bootstrap-select .btn {padding:2px 12px;margin-bottom:5px;}
 #players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
-#players, #configure .btn {background:rgba(128,128,128,0.08);}
-#players, #configure ul > li {display:inline-flex;padding:.75em;}
-#players, #configure ul {margin:0;}
-#players, #configure i {font-size:1.95em;padding:.25em;}
-#players, #configure a {font-size:1em;width:4em;height:4em;}
+#players .btn, #configure .btn {background:rgba(128,128,128,0.08);}
+#players ul > li, #configure ul > li {display:inline-flex;padding:.75em;}
+#players ul, #configure ul {margin:0;}
+#players i, #configure i {font-size:1.95em;padding:.25em;}
+#players a, #configure a {font-size:1em;width:4em;height:4em;}
 .btn.btn-large {padding-top:.75em;padding-bottom:.75em;}
 legend {border-bottom: 1px solid #999;}
 .modal {background-color: rgba(240,240,240,0.9);color: #333;}
