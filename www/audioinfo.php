@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
@@ -306,6 +306,7 @@ $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['adevname']);
 $devname = $_SESSION['adevname'];
 $dacchip = $result[0]['dacchip'];
 $iface = $result[0]['iface'];
+$audio_formats = $_SESSION['audio_formats'];
 
 $tpl = 'audioinfo.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
