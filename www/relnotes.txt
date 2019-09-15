@@ -26,6 +26,7 @@ Updates
 Bug fixes
 
 - FIX: Text color for HUD playlist line 2
+- FIX: Broken CSS for Players modal
 
 ########################################################
 //
