@@ -362,6 +362,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.album-view-btn').addClass('active');
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').show();
 		$('#top-columns, #bottom-row').css('display', 'none');
+        $('#albumview-header-text').text('Albums' + (SESSION.json['library_album_grouping'] != 'Album' ? ' by ' + SESSION.json['library_album_grouping'] : ''));
 		$('#lib-albumcover').css('height', '100%');
 		$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
         $('.recently-added').css('margin-left', '');
