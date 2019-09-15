@@ -159,12 +159,11 @@
 					</div>
 					<span id="info-rotary-enc" class="help-block-configs help-block-margin2 hide">
 						Enable a rotary encoder device to control MPD volume.<br>
-						Driver uses RPi.GPIO library and defaults to using GPIO 23,24,GND.<br>
-						Params: poll_interval accel_factor volume_step pin_a pin_b<br>
-						- poll_interval: Number of ms sleep for the volume update polling loop (default=100).<br>
-						- accell_factor: Threshold (diff betw last/current enc pos) to determine whether to use 1 step or volume_step steps (default=2).<br>
-						- volume_step: Number of steps to use when knob turns at fast rate (default=3).<br>
-						- pin_a/b: Broadcom SoC pin numbers (default=23,24).
+						Driver args:<br>
+						- poll_interval: Number of ms sleep for the volume update polling loop. Default = 100.<br>
+						- accell_factor: Threshold (diff betw last/current enc pos) to determine whether to use 1 step or volume_step steps. Default = 2.<br>
+						- volume_step: Number of steps to use when knob turns at fast rate. Default = 3.<br>
+						- pin_a, pin_b: Broadcom SoC pin numbers. Default = 23, 24.
                     </span>
 				</div>
 			</div>
