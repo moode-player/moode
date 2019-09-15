@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
@@ -121,6 +121,13 @@ function getLastModified(albumTracks){
 	return new Date(Math.max.apply(null, allLastModified));
 }
 
+function getYear(albumTracks){
+	var allYear = albumTracks.map(function(track){
+		return track.year;
+	});
+	return Math.min.apply(null, allYear);
+}
+
 function groupLib(fullLib) {
 	allSongs = fullLib.map(function(track){
 		var modifiedTrack = track;
@@ -136,8 +143,10 @@ function groupLib(fullLib) {
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var artist = findAlbumProp(albumTracks, 'artist');
 		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
+        var year = SESSION.json['library_album_grouping'] == 'Year' ? getYear(albumTracks) : '';
 		return {
 			last_modified: getLastModified(albumTracks),
+            year: year,
 			album: findAlbumProp(albumTracks, 'album'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
@@ -160,7 +169,15 @@ function groupLib(fullLib) {
 		});
 
 		allAlbumCovers.sort(function(a, b) {
-			return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+            if (SESSION.json['library_album_grouping'] == 'Artist') {
+                return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+            }
+            else if (SESSION.json['library_album_grouping'] == 'Album') {
+                return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
+            }
+            else if (SESSION.json['library_album_grouping'] == 'Year') {
+                return ( collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])) );
+            }
 		});
 	}
     // Fallback to default ordering
@@ -384,13 +401,15 @@ var renderAlbums = function() {
 			tmp = '';
 		}
 
+        var year = SESSION.json['library_album_grouping'] == 'Year' ? filteredAlbumCovers[i].year + '<br>' : '';
+
 		if (UI.tagViewCovers) {
 			output += '<li><div class="lib-entry'
 				+ tmp
 				+ '">' + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '"><div class="albumsList-album-name">' + filteredAlbums[i].album + '</div><span>' + filteredAlbums[i].artist + '</span></div></li>';
 			output2 += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + year + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
 		}
 		else {
 			output += '<li><div class="lib-entry'
@@ -398,7 +417,7 @@ var renderAlbums = function() {
 				+ '">' + filteredAlbums[i].album + '<span>' + filteredAlbums[i].artist + '</span></div></li>';
 			output2 += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + year + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
 		}
 	}
 

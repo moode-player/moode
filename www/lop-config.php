@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
@@ -30,6 +30,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Detect changes requiring cache delete
 	if ($_POST['config']['ignore_articles'] != $_SESSION['ignore_articles'] ||
 		$_POST['config']['library_utf8rep'] != $_SESSION['library_utf8rep'] ||
+		$_POST['config']['library_album_grouping'] != $_SESSION['library_album_grouping'] ||
 
 		// NOTE: Artist and Album sort tags are for future use
 		$_POST['config']['library_artist_sort'] != $_SESSION['library_artist_sort'] ||
@@ -53,6 +54,10 @@ $_select['library_instant_play'] .= "<option value=\"Clear/Play\" " . (($_SESSIO
 // Show Genres column
 $_select['show_genres'] .= "<option value=\"Yes\" " . (($_SESSION['show_genres'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['show_genres'] .= "<option value=\"No\" " . (($_SESSION['show_genres'] == 'No') ? "selected" : "") . ">No</option>\n";
+// Album grouping
+$_select['library_album_grouping'] .= "<option value=\"Artist\" " . (($_SESSION['library_album_grouping'] == 'Artist') ? "selected" : "") . ">by Artist</option>\n";
+$_select['library_album_grouping'] .= "<option value=\"Album\" " . (($_SESSION['library_album_grouping'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
+$_select['library_album_grouping'] .= "<option value=\"Year\" " . (($_SESSION['library_album_grouping'] == 'Year') ? "selected" : "") . ">by Year</option>\n";
 // Compilation identifier
 $_select['library_comp_id'] = $_SESSION['library_comp_id'];
 // Recently added

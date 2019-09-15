@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 -->
@@ -57,6 +57,19 @@
 					<a aria-label="Help" class="info-toggle" data-cmd="info_show_genres" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_show_genres" class="help-block-configs help-block-margin hide">
 						Show the Genres column in Library Tag view.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="library_album_grouping">Album grouping</label>
+				<div class="controls">
+					<select id="library_album_grouping" class="input-large" name="config[library_album_grouping]">
+						$_select[library_album_grouping]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_album_grouping" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_album_grouping" class="help-block-configs help-block-margin hide">
+						This option determines how albums are grouped in Album view.
                     </span>
 				</div>
 			</div>
