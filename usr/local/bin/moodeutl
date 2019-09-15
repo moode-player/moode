@@ -17,30 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
-define('VERSION', '1.2');
+define('VERSION', '1.3.0');
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
 switch ($option) {
+	case '-f':
+		audio_formats();
+		break;
 	case '-i':
-		echo "Generating system info...\n";
-		echo shell_exec('sudo /var/www/command/sysinfo.sh');
+		system_info();
 		break;
 	case '-l':
-		echo shell_exec('cat /var/log/moode.log');
+		moode_log();
 		break;
 	case '-m':
-		systemMonitor();
+		system_monitor();
 		break;
 	case '-r':
-		restartServers();
+		restart_servers();
 		break;
 	case '-t':
-		tailLog('/var/log/moode.log');
+		tail_log();
 		break;
 	case '--version':
 		echo VERSION . "\n";
@@ -53,55 +55,71 @@ Moode utility programs
 
 With no OPTION print the help text and exit.
 
+ -f\t\tprint supported audio formats
  -i\t\tprint system info
- -l\t\tprint the moode log
- -m\t\trun the system monitor
- -r\t\trestart the servers
+ -l\t\tprint moode log
+ -m\t\trun system monitor
+ -r\t\trestart servers
  -t\t\tprint last 10 lines of moode log and wait
  --version\tprint the program version
  --help\t\tprint this help text\n";
 		break;
 }
 
-function systemMonitor() {
+function audio_formats() {
+	// NOTE: $device will contain a string enclosed in dbl quotes e.g. "hw:0,0"
+	$device = trim(shell_exec("awk '/hw/ {print $2}' /etc/mpd.conf | head -n 1"));
+	echo shell_exec("aplay -D " . $device . " --dump-hw-params /dev/zero 2>&1 | awk '/- / {print $2}'");
+}
+
+function system_info() {
+	echo "Generating info...\n";
+	echo shell_exec('sudo /var/www/command/sysinfo.sh');
+}
+
+function moode_log() {
+	echo shell_exec('cat /var/log/moode.log');
+}
+
+function system_monitor() {
 	echo "Gathering data...\r";
 	while(true) {
-		// cpu frequency
-		$cpufreq = file_get_contents('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');
-		if ($cpufreq < 1000000) {
-	        $cpufreq = number_format((int)$cpufreq / 1000, 0, '.', '');
-	        $cpufreq .= ' MHz';
+		// Frequency
+		$cpu_freq = file_get_contents('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');
+		if ($cpu_freq < 1000000) {
+	        $cpu_freq = number_format((int)$cpu_freq / 1000, 0, '.', '');
+	        $cpu_freq .= ' MHz';
 		}
 		else {
-	        $cpufreq = number_format((int)$cpufreq / 1000000, 1, '.', '');
-	        $cpufreq .= ' GHz';
+	        $cpu_freq = number_format((int)$cpu_freq / 1000000, 1, '.', '');
+	        $cpu_freq .= ' GHz';
 		}
 
-		// cpu temp
-		$cputemp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
+		// Temp
+		$cpu_temp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
 
 		// cpu utilization
-		$cpuload = exec("top -bn 2 -d 1.0 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
-		$cpuload += exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
-		$cpuload = $cpuload / 2;
-		$cpuload = number_format($cpuload,0,'.','');
+		$cpu_load = exec("top -bn 2 -d 1.0 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
+		$cpu_load += exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
+		$cpu_load = $cpu_load / 2;
+		$cpu_load = number_format($cpu_load,0,'.','');
 
-		// memory utilization
-		$memtotal = exec("grep MemTotal /proc/meminfo | awk '{print $2}'");
-		$memavail = exec("grep MemAvailable /proc/meminfo | awk '{print $2}'");
-		$memutil = number_format(100 * (1 - ($memavail / $memtotal)), 0, '.', '');
+		// Memory
+		$mem_total = exec("grep MemTotal /proc/meminfo | awk '{print $2}'");
+		$mem_avail = exec("grep MemAvailable /proc/meminfo | awk '{print $2}'");
+		$mem_util = number_format(100 * (1 - ($mem_avail / $mem_total)), 0, '.', '');
 
 		// disk utilization
-		$diskutil = exec("df -h | awk 'FNR==2 {print $5}'");
+		$disk_util = exec("df -h | awk 'FNR==2 {print $5}'");
 
 		// php fpm pool count
-		$fpmpool = exec('pgrep -c -f "php-fpm: pool www"');
+		$fpm_pool = exec('pgrep -c -f "php-fpm: pool www"');
 
-		echo 'CPU: ' . $cpufreq . ' | LOAD: ' . $cpuload . '%' . ' | TEMP: ' . $cputemp . "\xB0" . 'C | RAM_USED: ' . $memutil . '% | DISK_USED: ' . $diskutil . ' | FPM_POOL: ' . $fpmpool . ' workers ' . "\r";
+		echo 'CPU: ' . $cpu_freq . ' | LOAD: ' . $cpu_load . '%' . ' | TEMP: ' . $cpu_temp . "\xB0" . 'C | RAM_USED: ' . $mem_util . '% | DISK_USED: ' . $disk_util . ' | FPM_POOL: ' . $fpm_pool . ' workers ' . "\r";
 	}
 }
 
-function restartServers() {
+function restart_servers() {
 	exec('sudo killall worker.php');
 	exec('sudo killall watchdog.sh');
 	exec('sudo rm /run/worker.pid');
@@ -112,7 +130,8 @@ function restartServers() {
 	echo "Servers restarted\n";
 }
 
-function tailLog($file) {
+function tail_log() {
+	$file = '/var/log/moode.log';
 	$size = filesize($file) - 1024;
 	while (true) {
 		clearstatcache();
