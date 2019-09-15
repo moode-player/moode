@@ -143,7 +143,8 @@ function groupLib(fullLib) {
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var artist = findAlbumProp(albumTracks, 'artist');
 		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
-        var year = SESSION.json['library_album_grouping'] == 'Year' ? getYear(albumTracks) : '';
+        //var year = SESSION.json['library_album_grouping'] == 'Year' ? getYear(albumTracks) : '';
+        var year = getYear(albumTracks);
 		return {
 			last_modified: getLastModified(albumTracks),
             year: year,
@@ -421,14 +422,8 @@ var renderAlbums = function() {
 			tmp = '';
 		}
 
-        if (SESSION.json['library_album_grouping'] == 'Year') {
-            var album_year = filteredAlbums[i].year;
-            var album_year2 = filteredAlbumCovers[i].year + '<br>';
-        }
-        else {
-            var album_year = '';
-            var album_year2 = '';
-        }
+        var album_year = filteredAlbums[i].year;
+        var album_year2 = filteredAlbumCovers[i].year;
 
 		if (UI.tagViewCovers) {
 			output += '<li><div class="lib-entry'
@@ -436,7 +431,7 @@ var renderAlbums = function() {
 				+ '">' + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '"><div class="albumsList-album-name">' + filteredAlbums[i].album + '</div><span>' + ' - ' + filteredAlbums[i].artist + ', ' + album_year + '</span></div></li>';
 			output2 += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + album_year2 + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + '<span class="album-year">' + album_year2 + '</span>' + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
 		}
 		else {
 			output += '<li><div class="lib-entry'
@@ -444,12 +439,18 @@ var renderAlbums = function() {
 				+ '">' + filteredAlbums[i].album + '<span>' + ' - ' + filteredAlbums[i].artist + ', ' + album_year + '</span></div></li>';
 			output2 += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + album_year2 + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + '<span class="album-year">' + album_year2 + '</span>' + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
 		}
 	}
 
+    // Output the lists
 	$('#albumsList').html(output);
 	$('#albumcovers').html(output2);
+
+    // Control whether to display album year
+    if (SESSION.json['library_album_grouping'] == 'Year') {
+        $('#albumcovers .lib-entry .album-year').css('display', 'block');
+    }
 
 	// Headers clicked
 	if (UI.libPos[0] == -2) {
