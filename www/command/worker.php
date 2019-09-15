@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
@@ -314,6 +314,12 @@ else {
 	workerLog($logmsg . 'Audio output (I2S audio device)');
 	workerLog($logmsg . 'Audio device (' . $_SESSION['i2sdevice'] . ')');
 }
+$formats = sysCmd('moodeutl -f');
+foreach($formats as $format) {
+	$audio_formats .= $format . ', ';
+}
+$_SESSION['audio_formats'] = !empty($audio_formats) ? substr($audio_formats, 0, -2) : 'Audio device busy';
+workerLog('worker: Supported audio formats (' . $_SESSION['audio_formats'] . ')');
 
 // Store alsa mixer name for use by util.sh get/set-alsavol and vol.sh
 playerSession('write', 'amixname', getMixerName($_SESSION['i2sdevice']));
