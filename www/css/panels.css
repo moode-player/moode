@@ -285,7 +285,7 @@ hr {border-color:#333;border-width:1px 0 0;}
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {background:inherit;border:1px solid rgba(128,128,128,0.5);color:inherit;padding-top:2px;padding-bottom:2px;margin-bottom:5px;border-radius:4px;-webkit-appearance:none;-moz-appearance:none;font-size:1rem;}
 .btn .caret {border-top-color:initial;}
 #container-audioinfo tbody {vertical-align:top;}
-#container-audioinfo table {margin-top:5px;margin-bottom:5px;}
+#container-audioinfo table {margin-bottom:5px;}
 #container-audioinfo strong {font-weight:600;text-transform:uppercase;}
 legend {border-color:-moz-use-text-color -moz-use-text-color #34495E;color:inherit;font-weight:600;}
 code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
