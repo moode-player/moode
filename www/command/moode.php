@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
@@ -30,6 +30,7 @@ $jobs = array('reboot', 'poweroff', 'updclockradio', 'updmpddb');
 $playqueue_cmds = array('add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall');
 $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
 	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib');
+$turn_consume_off = false;
 
 if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 	workerLog('moode.php: command missing');
@@ -91,13 +92,14 @@ else {
 		}
 
 		// Turn off auto-shuffle when playqueue cmds submitted
-		if (in_array($_GET['cmd'], $playqueue_cmds)) {
-			if ($_SESSION['ashuffle'] == '1') {
-				playerSession('write', 'ashuffle', '0');
-				sysCmd('killall -s 9 ashuffle > /dev/null');
-				sendMpdCmd($sock, 'consume 0');
-				$resp = readMpdResp($sock);
-			}
+		if (in_array($_GET['cmd'], $playqueue_cmds) && $_SESSION['ashuffle'] == '1') {
+			playerSession('write', 'ashuffle', '0');
+			sysCmd('killall -s 9 ashuffle > /dev/null');
+
+			// Turn Consume mode off after playqueue cmd processed
+			$turn_consume_off = true;
+			//sendMpdCmd($sock, 'consume 0');
+			//$resp = readMpdResp($sock);
 		}
 
 		switch ($_GET['cmd']) {
@@ -110,6 +112,86 @@ else {
 				// knob update and subsequent bounce back to +10 level. Knob will get updated
 				// to +10 level in renderUIVol() routine as a result of MPD idle timeout.
 				//echo json_encode('OK');
+				break;
+			// Radio, Folder, Library tracks list
+			case 'add':
+				if (isset($_POST['path']) && $_POST['path'] != '') {
+					echo json_encode(addToPL($sock, $_POST['path']));
+				}
+				break;
+			case 'play':
+				if (isset($_POST['path']) && $_POST['path'] != '') {
+					$status = parseStatus(getMpdStatus($sock));
+					$pos = $status['playlistlength'] ;
+
+					sendMpdCmd($sock, 'stop');
+					echo json_encode(readMpdResp($sock));
+
+					addToPL($sock, $_POST['path']);
+
+					sendMpdCmd($sock, 'play ' . $pos);
+					echo json_encode(readMpdResp($sock));
+				}
+				break;
+			case 'clradd':
+				if (isset($_POST['path']) && $_POST['path'] != '') {
+					sendMpdCmd($sock,'clear');
+					$resp = readMpdResp($sock);
+
+					addToPL($sock,$_POST['path']);
+					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
+
+					echo json_encode($resp);
+				}
+				break;
+			case 'clrplay':
+				if (isset($_POST['path']) && $_POST['path'] != '') {
+					sendMpdCmd($sock,'clear');
+					$resp = readMpdResp($sock);
+
+					addToPL($sock,$_POST['path']);
+					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
+
+					sendMpdCmd($sock, 'play');
+					echo json_encode(readMpdResp($sock));
+				}
+				break;
+			// Library Cover, Genre, Artist, Album
+			case 'addall':
+	            if (isset($_POST['path']) && $_POST['path'] != '') {
+	                echo json_encode(addallToPL($sock, $_POST['path']));
+				}
+				break;
+	        case 'playall':
+	            if (isset($_POST['path']) && $_POST['path'] != '') {
+					$status = parseStatus(getMpdStatus($sock));
+					$pos = $status['playlistlength'];
+
+					sendMpdCmd($sock, 'stop');
+					echo json_encode(readMpdResp($sock));
+
+	            	addallToPL($sock, $_POST['path']);
+					//usleep(500000); // needed after bulk add to pl
+
+					playerSession('write', 'toggle_song', $pos); // Reset toggle_song
+
+					sendMpdCmd($sock, 'play ' . $pos);
+					echo json_encode(readMpdResp($sock));
+	            }
+				break;
+	        case 'clrplayall':
+	            if (isset($_POST['path']) && $_POST['path'] != '') {
+					sendMpdCmd($sock,'clear');
+					$resp = readMpdResp($sock);
+
+	            	addallToPL($sock, $_POST['path']);
+					//usleep(500000); // needed after bulk add to pl
+
+					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
+
+					sendMpdCmd($sock, 'play'); // Defaults to pos 0
+					echo json_encode(readMpdResp($sock));
+				}
 				break;
 			case 'getmpdstatus':
 				echo json_encode(parseStatus(getMpdStatus($sock)));
@@ -198,48 +280,9 @@ else {
 					echo json_encode('OK');
 				}
 				break;
-			case 'add':
-				if (isset($_POST['path']) && $_POST['path'] != '') {
-					echo json_encode(addToPL($sock, $_POST['path']));
-				}
-				break;
-			case 'play':
-				if (isset($_POST['path']) && $_POST['path'] != '') {
-					$status = parseStatus(getMpdStatus($sock));
-					$pos = $status['playlistlength'] ;
-
-					sendMpdCmd($sock, 'stop');
-					echo json_encode(readMpdResp($sock));
-
-					addToPL($sock, $_POST['path']);
-
-					sendMpdCmd($sock, 'play ' . $pos);
-					echo json_encode(readMpdResp($sock));
-				}
-				break;
-			case 'clradd':
-				if (isset($_POST['path']) && $_POST['path'] != '') {
-					sendMpdCmd($sock,'clear');
-					$resp = readMpdResp($sock);
-
-					addToPL($sock,$_POST['path']);
-					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
-
-					echo json_encode($resp);
-				}
-				break;
-			case 'clrplay':
-				if (isset($_POST['path']) && $_POST['path'] != '') {
-					sendMpdCmd($sock,'clear');
-					$resp = readMpdResp($sock);
-
-					addToPL($sock,$_POST['path']);
-					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
-
-					sendMpdCmd($sock, 'play');
-					echo json_encode(readMpdResp($sock));
-				}
-				break;
+			case 'loadlib':
+				echo loadLibrary($sock);
+	        	break;
 			case 'lsinfo':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					echo json_encode(searchDB($sock, 'lsinfo', $_POST['path']));
@@ -334,46 +377,12 @@ else {
 					echo json_encode('OK');
 				}
 				break;
-	        case 'addall':
-	            if (isset($_POST['path']) && $_POST['path'] != '') {
-	                echo json_encode(addallToPL($sock, $_POST['path']));
-				}
-				break;
-	        case 'playall':
-	            if (isset($_POST['path']) && $_POST['path'] != '') {
-					$status = parseStatus(getMpdStatus($sock));
-					$pos = $status['playlistlength'];
-
-					sendMpdCmd($sock, 'stop');
-					echo json_encode(readMpdResp($sock));
-
-	            	addallToPL($sock, $_POST['path']);
-					//usleep(500000); // needed after bulk add to pl
-
-					playerSession('write', 'toggle_song', $pos); // Reset toggle_song
-
-					sendMpdCmd($sock, 'play ' . $pos);
-					echo json_encode(readMpdResp($sock));
-	            }
-				break;
-	        case 'clrplayall':
-	            if (isset($_POST['path']) && $_POST['path'] != '') {
-					sendMpdCmd($sock,'clear');
-					$resp = readMpdResp($sock);
-
-	            	addallToPL($sock, $_POST['path']);
-					//usleep(500000); // needed after bulk add to pl
-
-					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
-
-					sendMpdCmd($sock, 'play'); // Defaults to pos 0
-					echo json_encode(readMpdResp($sock));
-				}
-				break;
-	        case 'loadlib':
-				echo loadLibrary($sock);
-	        	break;
-
+		}
+		// Turn off Consume mode if indicated
+		if (in_array($_GET['cmd'], $playqueue_cmds) && $turn_consume_off === true) {
+			sendMpdCmd($sock, 'consume 0');
+			$resp = readMpdResp($sock);
+			$turn_consume_off = false;
 		}
 	}
 	// Other commands
