@@ -30,6 +30,7 @@ Bug fixes
 - FIX: Broken CSS for Players modal
 - FIX: Playqueue cmds not turning off Auto-shuffle properly
 - FIX: Position of CUE sheet icon and others
+- FIX: Order and case of radio station pls files
 
 ########################################################
 //
