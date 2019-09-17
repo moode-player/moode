@@ -22,13 +22,14 @@ New features
 Updates
 
 - UPD: Change to Broadcom SoC pin numbering in rotenc.c
-- UPD: Include supported audio formats in Audio info
+- UPD: Include audio formats in Audio info and moode log
 
 Bug fixes
 
 - FIX: Text color for HUD playlist line 2
 - FIX: Broken CSS for Players modal
-- FIX: Playqueue cmds not turning off Auto-shuffle propoerly
+- FIX: Playqueue cmds not turning off Auto-shuffle properly
+- FIX: Position of CUE sheet icon and others
 
 ########################################################
 //
