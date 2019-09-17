@@ -339,7 +339,7 @@ else {
 					$data .= 'File1='. $_POST['url'] . "\n";
 					$data .= 'Title1='. $station_name . "\n";
 					$data .= 'Length1=-1' . "\n";
-					$data .= 'NumberOfEntries=1' . "\n"
+					$data .= 'NumberOfEntries=1' . "\n";
 					$data .= 'Version=2' . "\n";
 
 					fwrite($fh, $data);
