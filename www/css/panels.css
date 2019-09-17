@@ -236,6 +236,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #ra-search input, #dbfs {margin-left:.5em;padding:0;height:2.1rem;border:none;}
 #searchResetPl, #searchResetLib {font-size:1rem;margin-top:.1em;}
 #db-browse {margin:0;width:200px;}
+.db-browse-icon {float:left;}
 #pl-controls {float:left;margin:6px 0 0 10px;}
 #folder-panel .btn.disabled, #folder-panel .btn[disabled] {background-color:#34495E;color:white;}
 #folder-panel, #radio-panel {width:100%;height:100vh;position:relative;overflow:hidden;}

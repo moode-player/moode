@@ -1219,7 +1219,7 @@ function renderRadio(data, path) {
 	radioRendering = false;
 }
 
-// format for Browse panel
+// Format for Browse panel
 function formatBrowseData(data, path, i, panel) {
 	var output = '';
 
@@ -1234,23 +1234,23 @@ function formatBrowseData(data, path, i, panel) {
 	}
 
 	if (typeof data[i].file != 'undefined') {
-		// for cue sheet and future extensions
+		// For CUE sheet and future extensions
 		var fileExt = data[i].file.substr(data[i].file.lastIndexOf('.') + 1).toLowerCase();
 
-		// song files
+		// Song files
 		if (typeof data[i].Title != 'undefined') {
 			output = '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">'
 			// click on item line for menu
 			output += '<div class="db-icon db-song db-action">';
 			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
-			output += '<i class="fas fa-music sx db-browse" style="float:left;"></i></a></div>';
+            output += '<i class="fas fa-music sx db-browse db-browse-icon"></i></a></div>';
 			output += '<div class="db-entry db-song">' + data[i].Title + ' <em class="songtime">' + data[i].TimeMMSS + '</em>';
 			output += ' <span>' + data[i].Artist + ' - ' + data[i].Album + '</span></div></li>';
 		}
-		// radio stations, playlist items
+		// Radio stations, playlist items
 		else {
 			output = '<li id="db-' + (i + 1) + '" data-path="';
-			// remove file extension, except if its url (savedplaylist can contain url's)
+			// Remove file extension, except if its url (savedplaylist can contain url's)
 			var filename = '';
 			if (data[i].file.substr(0,4) == 'http') {
 				filename = data[i].file;
@@ -1270,23 +1270,22 @@ function formatBrowseData(data, path, i, panel) {
 					output += '"><div class="db-icon db-song db-browse db-action"><img class="lazy-radioview" data-original="' + imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
 				}
 				else {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-radio-item"><i class="fas fa-microphone sx db-browse" style="float:left;"></i></a></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-radio-item"><i class="fas fa-microphone sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
 				}
 				itemType = '';
 			}
-			// cue sheet, use song file action menu
+			// CUE sheet
 			else if (fileExt == 'cue') {
-				output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item"><i class="fas fa-list-ul icon-root sx"></i></a></div><div class="db-entry db-song db-browse">';
-				itemType = 'Cue sheet';
+				output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item"><i class="fas fa-list-ul icon-root sx db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
+				itemType = 'CUE sheet';
 			}
-			// different icon for song file vs radio station in saved playlist
-			// click on item line for menu
+			// Different icon for song file vs radio station in saved playlist
 			else {
 				if (data[i].file.substr(0,4) == 'http') {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-microphone sx db-browse" style="float:left;"></i></a></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-microphone sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
 					itemType = typeof(RADIO.json[data[i].file]) === 'undefined' ? 'Radio station' : RADIO.json[data[i].file]['name'];
 				} else {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-music sx db-browse" style="float:left;"></i></a></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-music sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
 					itemType = 'Song file';
 				}
 			}
@@ -1296,9 +1295,9 @@ function formatBrowseData(data, path, i, panel) {
 			output += '</span></div></li>';
 		}
 	}
-	// saved playlists
+	// Saved playlists
 	else if (typeof data[i].playlist != 'undefined') {
-		// skip .wv (WavPack) files, apparently they can contain embedded playlist
+		// Skip .wv (WavPack) files, apparently they can contain embedded playlist
 		if (data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase() == 'wv') {
 			output= '';
 		}
@@ -1311,9 +1310,9 @@ function formatBrowseData(data, path, i, panel) {
 			output += '</div></li>';
 		}
 	}
-	// directories
+	// Directories
 	else {
-		if (data[i].directory !== 'RADIO') { // exclude in Folder view
+		if (data[i].directory !== 'RADIO') { // Exclude in Folder view
 			output = '<li id="db-' + (i + 1) + '" data-path="';
 			output += data[i].directory;
 			if (path != '') {
