@@ -2381,7 +2381,7 @@ function getHdwrRev() {
 }
 
 /*
-old style revision codes
+Old style revision codes
 0002	B		1.0	256 MB	Egoman
 0003	B		1.0	256 MB	Egoman
 0004	B		2.0	256 MB	Sony UK
@@ -2399,29 +2399,29 @@ old style revision codes
 0013	B+		1.2	512 MB	Embest
 0014	CM1		1.0	512 MB	Embest
 0015	A+		1.1	256 MB / 512 MB	Embest
-new style revision codes
+New style revision codes
 90 0021	A+		1.1	512 MB	Sony UK
 90 0032	B+		1.2	512 MB	Sony UK
 90 0092	Zero	1.2	512 MB		Sony UK
 90 0093	Zero	1.3	512 MB		Sony UK
 90 00c1	Zero W	1.1	512 MB	Sony UK
 90 20e0	3A+		1.0	512 MB	Sony UK
-92 0093	Zero	1.3	512 MB		Embest
-a0 1040	2B		1.0	1 GB		Sony UK
-a0 1041	2B		1.1	1 GB		Sony UK
-a0 2082	3B		1.2	1 GB		Sony UK
-a0 20a0	CM3		1.0	1 GB		Sony UK
-a0 20d3	3B+		1.3	1 GB		Sony UK
-a0 2100 CM3+		1.0	1 GB		Sony UK
-a2 1041	2B		1.1	1 GB		Embest
-a2 2042	2B		1.2	1 GB		Embest (with BCM2837)
-a2 2082	3B		1.2	1 GB		Embest
-a2 20a0 CM3		1.0	1 GB		Embest
-a3 2082	3B		1.2	1 GB		Sony Japan
-a5 2082	3B		1.2	1 GB		Stadium
-a0 3111	4B		1.1	1GB			Sony UK
-b0 3111	4B		1.1	2GB			Sony UK
-c0 3111	4B		1.1	4GB			Sony UK
+92 0093	Zero	1.3	512 MB	Embest
+a0 1040	2B		1.0	1 GB	Sony UK
+a0 1041	2B		1.1	1 GB	Sony UK
+a0 2082	3B		1.2	1 GB	Sony UK
+a0 20a0	CM3		1.0	1 GB	Sony UK
+a0 20d3	3B+		1.3	1 GB	Sony UK
+a0 2100	CM3+	1.0	1 GB	Sony UK
+a2 1041	2B		1.1	1 GB	Embest
+a2 2042	2B		1.2	1 GB	Embest (with BCM2837)
+a2 2082	3B		1.2	1 GB	Embest
+a2 20a0	CM3		1.0	1 GB	Embest
+a3 2082	3B		1.2	1 GB	Sony Japan
+a5 2082	3B		1.2	1 GB	Stadium
+a0 3111	4B		1.1	1GB		Sony UK
+b0 3111	4B		1.1	2GB		Sony UK
+c0 3111	4B		1.1	4GB		Sony UK
 */
 
 // config audio scrobbler
