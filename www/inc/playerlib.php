@@ -2348,30 +2348,36 @@ function getHdwrRev() {
 		'20a0' => 'Pi-CM3 1GB v1.0',
 		'20d3' => 'Pi-3B+ 1GB v1.3',
 		'20e0' => 'Pi-3A+ 512 MB v1.0',
+		// Generic CM3+ code
 		'2100' => 'Pi-CM3+ 1GB v1.0',
-		'3111' => 'Pi-4B 1/2/4GB', // reference only
-		'311a' => 'Pi-4B 1GB', // these rev codes are artificial and only for the code block below to determine the RAM size
+		// Artificial code For Allo USBridge Signatire (CM3+ based PCB)
+		'210a' => 'Allo USBridge Signature (Pi-CM3+ 1GB v1.0)',
+		// Generic Pi-4B code
+		'3111' => 'Pi-4B 1/2/4GB',
+		 // Artificial codes to identify RAM size for Pi-4B
+		'311a' => 'Pi-4B 1GB',
 		'311b' => 'Pi-4B 2GB',
 		'311c' => 'Pi-4B 4GB'
 	);
 
-	//$revnum = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,length($3)-3)}' . "'" . ' /proc/cpuinfo');
-	// support arm64
+	// 64 bit architcture
 	$uname=posix_uname();
 	if ($uname['machine'] === 'aarch64') {
 		$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
 	}
+	// 32 bit architecture
 	else {
-		$uname=posix_uname();
-		if ($uname['machine'] === 'aarch64') {
-			$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
+		$revnum = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,length($3)-3)}' . "'" . ' /proc/cpuinfo');
+		// Pi-4B
+		if ($revnum[0] == '3111') {
+			$prefix = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,0,2)}' . "'" . ' /proc/cpuinfo'); // Get first char
+			$revnum[0] =  substr($revnum[0], 0, 3) . $prefix[0];
 		}
-		else {
-			$revnum = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,length($3)-3)}' . "'" . ' /proc/cpuinfo');
-			// for Pi-4B Only
-			if ($revnum[0] == '3111') {
-				$prefix = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,0,2)}' . "'" . ' /proc/cpuinfo'); // only first char
-				$revnum[0] =  substr($revnum[0], 0, 3) . $prefix[0];
+		// Allo USBridge Signature (CM3+)
+		elseif ($revnum[0] == '2100') {
+			$chip_id = sysCmd('lsusb | grep "0451:8142"'); // Chip ID for Texas Instruments, Inc. TUSB8041 4-Port Hub
+			if (!empty(chip_id[0])) {
+				$revnum[0] =  '210a';
 			}
 
 		}
