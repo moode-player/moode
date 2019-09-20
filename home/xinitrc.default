@@ -16,20 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-05-30 TC moOde 5.3
+# 2019-MM-DD TC moOde 6.3.0
 #
 #
 
-# turn off display power management
+# Turn off display power management
 xset -dpms
 
 # Screensaver timeout in secs or 'off' for no timeout
 xset s 600
 
-# capture screen size
+# Capture screen size
 SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"
 
-# launch chrome browser
-#chromium-browser --kiosk --touch-events --disable-touch-drag-drop --enable-touchview --enable-pinch --window-size=$SCREENSIZE --window-position=0,0 --disable-session-crashed-bubble --disable-infobars --no-first-run --app=http://localhost/
-chromium-browser --app=http://localhost/ --window-size=$SCREENSIZE --window-position=0,0 --no-first-run --disable-infobars --disable-session-crashed-bubble --disk-cache-dir=/dev/null
-
+# Launch chromium browser
+# --disk-cache-dir=/dev/null
+chromium-browser --app=http://localhost/ --window-size=$SCREENSIZE --window-position=0,0 --no-first-run --disable-infobars --disable-session-crashed-bubble
