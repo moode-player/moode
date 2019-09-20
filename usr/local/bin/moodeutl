@@ -67,10 +67,10 @@ With no OPTION print the help text and exit.
 }
 
 function audio_formats() {
-	// NOTE: $device will contain a string enclosed in dbl quotes e.g. "hw:0,0"
-	$device = trim(shell_exec("awk '/hw/ {print $2}' /etc/mpd.conf | head -n 1"));
-	$audio_formats = shell_exec("aplay -D " . $device . " --dump-hw-params /dev/zero 2>&1 | awk '/- / {print $2}'");
-	echo !empty($audio_formats) ? $audio_formats : "Audio device busy\n";
+	$result = shell_exec("alsa-capabilities -n 2>&1 | awk -F '=' '/encoding formats/ {print $2}'");
+	$audio_formats = explode("\n", $result);
+	echo trim($audio_formats[0])  . "\n";
+	//echo preg_replace("/[^A-Za-z0-9 ]/", '', $audio_formats[0]) . "\n";
 }
 
 function system_info() {
