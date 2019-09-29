@@ -17,14 +17,17 @@
 
 New features
 
+- NEW: Support for Allo USBridge SIG including enhanced Eth/USB driver
+- NEW: Support for Comfast CF-912AC dual-band WiFi adapter
 - NEW: Library option for Album grouping by Artist, Album or Year
-- NEW: Support for Allo USBridge Signature SBC
 
 Updates
 
+- UPD: Bump to Linux kernel 4.19.75 build #1270
 - UPD: Change to Broadcom SoC pin numbering in rotenc.c
-- UPD: Include audio formats in Audio info and moode log
-- UPD: Shairport-sync config file
+- UPD: Include audio formats and platform in Audio info and moode log
+- UPD: Shairport-sync config file with additional options
+- UPD: Show/hide Play history item on system menu
 
 Bug fixes
 
@@ -33,6 +36,7 @@ Bug fixes
 - FIX: Playqueue cmds not turning off Auto-shuffle properly
 - FIX: Position of CUE sheet icon and others
 - FIX: Order and case of entries in radio station pls files
+- FIX: Edimax EW-7811Un segfault in HostAP mode
 
 ########################################################
 //
