@@ -41,9 +41,10 @@
 		<p>
 			<h4>Platform Information</h4>
 			<ul>
-				<li>Raspbian ver: <span id="sys-raspbian-ver"></span></li>
-				<li>Linux kernel: <span id="sys-kernel-ver"></span>, <span id="sys-processor-arch"></span></li>
-				<li>Hdwr revision: <span id="sys-hardware-rev"></span></li>
+				<li>Raspbian: <span id="sys-raspbian-ver"></span></li>
+				<li>Linux kernel: <span id="sys-kernel-ver"></span></li>
+				<li>Platform: <span id="sys-hardware-rev"></span></li>
+				<li>Architecture: <span id="sys-processor-arch"></span></li>
 				<li>MPD version: <span id="sys-mpd-ver"></span></li>
 			</ul>
 		</p>
