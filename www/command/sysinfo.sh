@@ -30,8 +30,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "S Y S T E M   P A R A M E T E R S"
 	echo -e "\nmoOde release\t\t= $moode_rel\c"
 	echo -e "\nRaspbian OS\t\t= $RASPBIANVER\c"
-	echo -e "\nLinux kernel\t\t= $KERNEL\c"
-	echo -e "\nPi model\t\t= $hdwrrev\c"
+	echo -e "\nLinux kernel\t\t= $kernelver\c"
+	echo -e "\nPlatform\t\t= $hdwrrev\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
 	echo -e "\nTimezone\t\t= $timezone\c"
 	echo -e "\nCurrent time\t\t= $NOW\c"
@@ -293,7 +293,7 @@ FEAT_DJMOUNT=2#0010000000000000
 
 HOSTNAME=`uname -n`
 RASPBIANVER=`cat /etc/debian_version`
-KERNEL=`uname -r`
+#KERNEL=`uname -r`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
 ARCH=`uname -m`
