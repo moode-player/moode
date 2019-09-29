@@ -1,9 +1,4 @@
 #!/bin/bash
 
-UPD=$(awk '/worker: Upd  /{print $5;}' /var/log/moode.log | tr -d '()')
-if [[ $UPD != "None" ]]; then
-	REL="$(awk '/Release: /{print $2;}' /var/www/footer.php) $UPD"
-else
-	REL=$(awk '/Release: /{print $2 " " $3;}' /var/www/footer.php | tr -d ',') 
-fi
-echo Kernel $(uname -r), Raspbian $(cat /etc/debian_version), moOde $REL
+REL=$(awk '/Release: /{print $2 " " $3;}' /var/www/footer.php | tr -d ',')
+echo Kernel $(uname -r) $(uname -v | awk '{print $1}'), Raspbian $(cat /etc/debian_version), moOde $REL
