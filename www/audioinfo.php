@@ -307,6 +307,7 @@ $devname = $_SESSION['adevname'];
 $dacchip = $result[0]['dacchip'];
 $iface = $result[0]['iface'];
 $audio_formats = $_SESSION['audio_formats'];
+$hdwr_rev = $_SESSION['hdwrrev'];
 
 $tpl = 'audioinfo.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
