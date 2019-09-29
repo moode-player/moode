@@ -2350,8 +2350,8 @@ function getHdwrRev() {
 		'20e0' => 'Pi-3A+ 512 MB v1.0',
 		// Generic CM3+ code
 		'2100' => 'Pi-CM3+ 1GB v1.0',
-		// Artificial code For Allo USBridge Signatire (CM3+ based PCB)
-		'210a' => 'Allo USBridge Signature (Pi-CM3+ 1GB v1.0)',
+		// Artificial code For Allo USBridge Signature (CM3+ based PCB)
+		'210a' => 'Allo USBridge SIG [Pi-CM3+ Lite 1GB v1.0]',
 		// Generic Pi-4B code
 		'3111' => 'Pi-4B 1/2/4GB',
 		 // Artificial codes to identify RAM size for Pi-4B
