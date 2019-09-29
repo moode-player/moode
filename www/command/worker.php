@@ -34,7 +34,7 @@ sysCmd('truncate ' . MOODE_LOG . ' --size 0');
 $dbh = cfgdb_connect();
 
 //
-workerLog('worker: - Start');
+workerLog('worker: -- Start');
 $result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", $dbh);
 //
 
@@ -120,12 +120,12 @@ if (extMusicRoot() === false) {
 }
 
 //
-workerLog('worker: - Platform');
+workerLog('worker: -- System');
 //
 
 // Store platform data
 playerSession('write', 'hdwrrev', getHdwrRev());
-playerSession('write', 'kernelver', strtok(shell_exec('uname -r'),"\n"));
+playerSession('write', 'kernelver', strtok(shell_exec('uname -r'),"\n") . ' ' . strtok(shell_exec("uname -v | awk '{print $1}'"),"\n"));
 playerSession('write', 'procarch', strtok(shell_exec('uname -m'),"\n"));
 $mpdver = explode(" ", strtok(shell_exec('mpd -V | grep "Music Player Daemon"'),"\n"));
 playerSession('write', 'mpdver', $mpdver[3]);
@@ -134,14 +134,14 @@ $_SESSION['raspbianver'] = $result[0];
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
 // Log platform data
-workerLog('worker: Rel  (Moode ' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
-workerLog('worker: Rasp (' . $_SESSION['raspbianver'] . ')');
-workerLog('worker: Kern (' . $_SESSION['kernelver'] . ')');
-workerLog('worker: MPD  (' . $_SESSION['mpdver'] . ')');
-workerLog('worker: Host (' . $_SESSION['hostname'] . ')');
-workerLog('worker: Hdwr (' . $_SESSION['hdwrrev'] . ')');
-workerLog('worker: Arch (' . $_SESSION['procarch'] . ')');
-workerLog('worker: Gov  (' . $_SESSION['cpugov'] . ')');
+workerLog('worker: Host name     (' . $_SESSION['hostname'] . ')');
+workerLog('worker: moOde release (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
+workerLog('worker: Raspbian OS   (' . $_SESSION['raspbianver'] . ')');
+workerLog('worker: Linux kernel  (' . $_SESSION['kernelver'] . ')');
+workerLog('worker: Platform      (' . $_SESSION['hdwrrev'] . ')');
+workerLog('worker: Architecture  (' . $_SESSION['procarch'] . ')');
+workerLog('worker: MPD version   (' . $_SESSION['mpdver'] . ')');
+workerLog('worker: CPU governor  (' . $_SESSION['cpugov'] . ')');
 
 // Boot device config
 $rev = substr($_SESSION['hdwrrev'], 3, 1);
@@ -187,7 +187,7 @@ sysCmd('chmod 0666 ' . MOODE_LOG);
 workerLog('worker: File check (OK)');
 
 //
-workerLog('worker: - Network');
+workerLog('worker: -- Network');
 //
 
 // Check ETH0
@@ -286,7 +286,7 @@ else {
 }
 
 //
-workerLog('worker: - Audio');
+workerLog('worker: -- Audio');
 //
 
 // Ensure audio output is unmuted
@@ -364,7 +364,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 }
 
 //
-workerLog('worker: - Services');
+workerLog('worker: -- Services');
 //
 
 // Reset renderer active flags
@@ -535,7 +535,7 @@ if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
 workerLog('worker: USB auto-mounter (' . $_SESSION['usb_auto_mounter'] . ')');
 
 //
-workerLog('worker: - Music sources');
+workerLog('worker: -- Music sources');
 //
 
 // List usb sources
@@ -554,7 +554,7 @@ $result = sourceMount('mountall');
 workerLog('worker: NAS and UPnP sources (' . $result . ')');
 
 //
-workerLog('worker: - Miscellaneous');
+workerLog('worker: -- Miscellaneous');
 //
 
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
