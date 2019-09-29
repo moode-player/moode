@@ -1822,7 +1822,7 @@ $('.context-menu a').click(function(e) {
 
 	// MAIN MENU
 
-    // customize popup
+    // Appearance settings
     else if ($(this).data('cmd') == 'appearance') {
 		// reset indicator
 		bgImgChange = false;
@@ -2042,7 +2042,7 @@ $('.btn-clockradio-update').click(function(e){
     notify('updclockradio', '');
 });
 
-// update appearance options
+// Update appearance options
 $('.btn-appearance-update').click(function(e){
 	// detect certain changes
 	var xtagdispChange = false;
@@ -2050,6 +2050,7 @@ $('.btn-appearance-update').click(function(e){
 	var themeSettingsChange = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
+    var playHistoryChange = false;
 	// general
 	if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
 	if (SESSION.json['scnsaver_timeout'] != screenSaverTimeout($('#scnsaver-timeout span').text(), 'value')) {scnSaverTimeoutChange = true;}
@@ -2062,6 +2063,8 @@ $('.btn-appearance-update').click(function(e){
 	if (SESSION.json['cover_backdrop'] != $('#cover-backdrop-enabled span').text()) {themeSettingsChange = true;};
 	if (SESSION.json['cover_blur'] != $('#cover-blur span').text()) {themeSettingsChange = true;};
 	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;};
+    // Other
+    if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;};
 
 	// general
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
@@ -2132,7 +2135,7 @@ $('.btn-appearance-update').click(function(e){
 	}
 
 	// auto-reload page if indicated
-	if (xtagdispChange == true || scnSaverStyleChange == true || UI.bgImgChange == true) {
+	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true) {
 	    notify('updcustomize', 'Auto-refresh in 3 seconds');
 		setTimeout(function() {
 			location.reload(true);

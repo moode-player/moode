@@ -164,6 +164,14 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.volume-display').text(SESSION.json['volknob']);
 	}
 
+    // Show or hide Play history item on system menu
+    if (SESSION.json['playhist'] == 'Yes') {
+        $('#playhistory-hide').css('display', 'block');
+    }
+    else {
+        $('#playhistory-hide').css('display', 'none');
+    }
+
 	// load swipe handler for top columns in library (mobile)
 	if (UI.mobile) {
 		$(function() {
