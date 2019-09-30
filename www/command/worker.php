@@ -144,8 +144,9 @@ workerLog('worker: MPD version   (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU governor  (' . $_SESSION['cpugov'] . ')');
 
 // Boot device config
-$rev = substr($_SESSION['hdwrrev'], 3, 1);
-if ($rev == '3' /*|| $rev == '4'*/) { // 3B/B+/A+, NOTE: 4B USB boot not avail as of 2019-07-13
+$model = substr($_SESSION['hdwrrev'], 3, 1);
+// 3B/B+/A+, NOTE: 4B USB boot not avail as of 2019-07-13
+if ($model == '3' /*|| $model == '4'*/) {
 	$result = sysCmd('vcgencmd otp_dump | grep 17:');
 	if ($result[0] == '17:3020000a') {
 		$msg = 'USB boot enabled';
@@ -1486,6 +1487,10 @@ function runQueuedJob() {
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
+			break;
+		case 'kernel_architecture':
+			$cmd = $_SESSION['w_queueargs'] == '32-bit' ? 'sed -i /arm_64bit/d ' . '/boot/config.txt' : 'echo arm_64bit=1 >> ' . '/boot/config.txt';
+			sysCmd($cmd);
 			break;
 		case 'usb_auto_mounter':
 			if ($_SESSION['w_queueargs'] == 'udisks-glue') {

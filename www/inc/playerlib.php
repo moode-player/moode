@@ -42,7 +42,7 @@ define('SESSION_SAVE_PATH', '/var/local/php');
 error_reporting(E_ERROR);
 
 // Features availability bitmask
-const FEAT_RESERVED =	 0b0000000000000001; //     1
+const FEAT_KERNEL =		 0b0000000000000001; //     1
 const FEAT_AIRPLAY =	 0b0000000000000010; //     2
 const FEAT_MINIDLNA =	 0b0000000000000100; //     4
 const FEAT_MPDAS =		 0b0000000000001000; //     8

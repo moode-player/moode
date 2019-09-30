@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.0
  *
  */
 
@@ -126,6 +126,12 @@ if (isset($_POST['update_browser_title'])) {
 if (isset($_POST['update_cpugov'])) {
 	submitJob('cpugov', $_POST['cpugov'], 'CPU governor updated', '');
 	playerSession('write', 'cpugov', $_POST['cpugov']);
+}
+
+// Linux kernel
+if (isset($_POST['update_kernel_architecture'])) {
+	submitJob('kernel_architecture', $_POST['kernel_architecture'], $_POST['kernel_architecture'] . ' kernel selected', 'Reboot required');
+	playerSession('write', 'kernel_architecture', $_POST['kernel_architecture']);
 }
 
 if (isset($_POST['update_usb_auto_mounter'])) {
@@ -324,13 +330,30 @@ $_select['browsertitle'] = $_SESSION['browsertitle'];
 $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
 
+// Linux kernel
+if ($_SESSION['feat_bitmask'] & FEAT_KERNEL) {
+	$_feat_kernel = '';
+	$_select['kernel_architecture'] .= "<option value=\"32-bit\" " . (($_SESSION['kernel_architecture'] == '32-bit') ? "selected" : "") . ">32-bit</option>\n";
+	$model = substr($_SESSION['hdwrrev'], 3, 1);
+	$name = $_SESSION['hdwrrev'];
+	// Pi-2B rev 1.2, Allo USBridge SIG, Pi-3B/B+/A+, Pi-4B
+	if ($name == 'Pi-2B 1GB v1.2' || $name == 'Allo USBridge SIG [Pi-CM3+ Lite 1GB v1.0]' || $model == '3' || $model == '4') {
+		$_select['kernel_architecture'] .= "<option value=\"64-bit\" " . (($_SESSION['kernel_architecture'] == '64-bit') ? "selected" : "") . ">64-bit</option>\n";
+	}
+}
+else {
+	$_feat_kernel = 'hide';
+}
+
 // USB auto-mounter
 $_select['usb_auto_mounter'] .= "<option value=\"udisks-glue\" " . (($_SESSION['usb_auto_mounter'] == 'udisks-glue') ? "selected" : "") . ">Udisks-glue (Default)</option>\n";
 $_select['usb_auto_mounter'] .= "<option value=\"devmon\" " . (($_SESSION['usb_auto_mounter'] == 'devmon') ? "selected" : "") . ">Devmon</option>\n";
 
-// wifi bt
-$rev = substr($_SESSION['hdwrrev'], 3, 1);
-if ($rev == '3' || $rev == '4' || substr($_SESSION['hdwrrev'], 0, 9) == 'Pi-Zero W') { // 3B/B+/A+, 4B, Zero W
+// WiFi BT
+$model = substr($_SESSION['hdwrrev'], 3, 1);
+$name = $_SESSION['hdwrrev'];
+// Pi-Zero W, Pi-3B/B+/A+, Pi-4B
+if ($name == 'Pi-Zero W' || $model == '3' || $model == '4') {
 	$_wifibt_hide = '';
 	$_select['p3wifi1'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['p3wifi0'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi2\" value=\"0\" " . (($_SESSION['p3wifi'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -349,9 +372,10 @@ $_select['hdmiport0'] .= "<input type=\"radio\" name=\"hdmiport\" id=\"togglehdm
 $_select['eth0chk1'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['eth0chk0'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-// max usb current 2x (1200 mA)
-$rev = substr($_SESSION['hdwrrev'], 3, 1);
-if ($rev == '1' || $rev == '2') { // 1A/A+, 1B/B+ and 2B
+// Max usb current 2x (1200 mA)
+$model = substr($_SESSION['hdwrrev'], 3, 1);
+// Pi-1A/A+, Pi-1B/B+, Pi-2B
+if ($model == '1' || $model == '2') {
 	$_maxcurrent_hide = '';
 	$_select['maxusbcurrent1'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent1\" value=\"1\" " . (($_SESSION['maxusbcurrent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['maxusbcurrent0'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent2\" value=\"0\" " . (($_SESSION['maxusbcurrent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -385,9 +409,10 @@ $_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"t
 $result = sysCmd("df | grep root | awk '{print $2}'");
 $_expandrootfs_msg = $result[0] > 3500000 ? 'File system has been expanded' : 'File system has not been expanded yet';
 
-// usb boot
-$rev = substr($_SESSION['hdwrrev'], 3, 1);
-if ($rev == '3' /*|| $rev == '4'*/) { // 3B/B+/A+, NOTE: 4B USB boot not avail as of 2019-07-13
+// USB boot
+$model = substr($_SESSION['hdwrrev'], 3, 1);
+// Pi-3B/B+/A+, NOTE: Pi-4B USB boot not avail as of 2019-07-13
+if ($model == '3' /*|| $model == '4'*/) {
 	$_usbboot_hide = '';
 	$_select['usbboot1'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot1\" value=\"1\" " . ">\n";
 	$_select['usbboot0'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot2\" value=\"0\" " . "checked=\"checked\"".">\n";
