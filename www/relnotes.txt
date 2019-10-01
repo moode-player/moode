@@ -20,11 +20,12 @@ New features
 - NEW: Support for Allo USBridge SIG including enhanced Eth/USB driver
 - NEW: Support for Comfast CF-912AC dual-band WiFi adapter
 - NEW: Library option for Album grouping by Artist, Album or Year
-- NEW: Option for 64-bit Linux kernel (experimental)
+- NEW: Option for 64-bit Linux kernel (testing)
 
 Updates
 
 - UPD: Bump to Linux kernel 4.19.75 build #1270
+- UPD: Bump to MPD 0.21.15 (testing)
 - UPD: Change to Broadcom SoC pin numbering in rotenc.c
 - UPD: Include audio formats and platform in Audio info and moode log
 - UPD: Shairport-sync config file with additional options
