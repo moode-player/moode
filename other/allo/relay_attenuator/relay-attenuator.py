@@ -15,7 +15,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-#	2019-MM-DD TC moOde 6.3.0
+#	2019-10-02 TC moOde 6.3.0
 #	Inspired by code written by @andrewewa
 #
 #	Allo Relay Attenuator
