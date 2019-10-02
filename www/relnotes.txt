@@ -24,12 +24,13 @@ New features
 
 Updates
 
+- UPD: Bump to Raspbian Buster Lite 10.1 (2019-09-26)
 - UPD: Bump to Linux kernel 4.19.75 build #1270
 - UPD: Bump to MPD 0.21.15 (testing)
 - UPD: Change to Broadcom SoC pin numbering in rotenc.c
 - UPD: Include audio formats and platform in Audio info and moode log
 - UPD: Shairport-sync config file with additional options
-- UPD: Show/hide Play history item on system menu
+- UPD: Play history item on system menu defaults to hidden
 
 Bug fixes
 
