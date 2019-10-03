@@ -32,6 +32,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nRaspbian OS\t\t= $RASPBIANVER\c"
 	echo -e "\nLinux kernel\t\t= $kernelver\c"
 	echo -e "\nPlatform\t\t= $hdwrrev\c"
+	echo -e "\nArchitecture\t\t= $ARCH ($kernel_architecture)\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
 	echo -e "\nTimezone\t\t= $timezone\c"
 	echo -e "\nCurrent time\t\t= $NOW\c"
@@ -45,7 +46,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\n\c"
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
-	echo -e "\nArchitecture\t\t= $ARCH\c"
 	echo -e "\nKernel timer freq\t= $HZ Hz\c"
 	echo -e "\nSDCard freq\t\t= $SDFREQ MHz\c"
 	echo -e "\nUSB boot\t\t= $USBBOOT\c"
@@ -175,6 +175,7 @@ LIBRARY_SETTINGS() {
 	echo -e "L I B R A R Y   S E T T I N G S"
 	echo -e "\nInstant play action\t= $library_instant_play\c"
 	echo -e "\nShow genres column\t= $show_genres\c"
+	echo -e "\nAlbum grouping\t\t= by $library_album_grouping\c"
 	echo -e "\nCompilation identifier\t= $library_comp_id\c"
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
 	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
@@ -583,6 +584,8 @@ rsmafterinp=${arr[120]}
 ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
+library_album_grouping=${arr[125]}
+kernel_architecture=${arr[126]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
