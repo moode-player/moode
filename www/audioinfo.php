@@ -145,6 +145,7 @@ else {
 				$decoded_to = 'PCM, ' . $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
 				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
+		}
 		else if ($status['audio_sample_depth'] == 'dsd1024') {
 			$encoded_at = 'DSD1024, 1 bit, 90.304 Mbps Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
