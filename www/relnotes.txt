@@ -17,7 +17,7 @@
 
 New features
 
-- NEW: Support for Allo USBridge SIG including enhanced Eth/USB driver
+- NEW: Support for Allo USBridge SIG including enhanced Eth driver
 - NEW: Support for Comfast CF-912AC dual-band WiFi adapter
 - NEW: Library option for Album grouping by Artist, Album or Year
 - NEW: Option for 64-bit Linux kernel (testing)
