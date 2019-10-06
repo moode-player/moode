@@ -85,69 +85,83 @@ else {
 	$status = parseStatus(getMpdStatus($sock));
 
 	if ($hwparams['status'] == 'active' || $_SESSION['audioout'] == 'Bluetooth') {
-		// dsd: DoP, Native bitstream, DSD-to-PCM
+		// DSD: DoP, Native bitstream
 		if ($status['audio_sample_depth'] == 'dsd64') {
-			$encoded_at = 'DSD64, 1 bit, 2.822 mbps Stereo';
+			$encoded_at = 'DSD64, 1 bit, 5.644 Mbps Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 176.4 kHz, Stereo';
-				$decode_rate = '8,467 mbps';
+				$decode_rate = '8.467 Mbps';
 			}
 			elseif ($hwparams['format'] == 'DSD bitstream') {
 				$decoded_to = 'DSD bitstream';
-				$decode_rate = $hwparams['calcrate'] . ' mbps';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 			else {
 				$decoded_to = 'PCM, ' . $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
-				$decode_rate = $hwparams['calcrate'] . ' mbps';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 		}
 		else if ($status['audio_sample_depth'] == 'dsd128') {
-			$encoded_at = 'DSD128, 1 bit, 5.644 msps Stereo';
+			$encoded_at = 'DSD128, 1 bit, 11.288 Mbps Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 352.8 kHz, Stereo';
-				$decode_rate = '16.934 mbps';
+				$decode_rate = '16.934 Mbps';
 			}
 			elseif ($hwparams['format'] == 'DSD bitstream') {
 				$decoded_to = 'DSD bitstream';
-				$decode_rate = $hwparams['calcrate'] . ' mbps';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 			else {
 				$decoded_to = 'PCM, ' . $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
-				$decode_rate = $hwparams['calcrate'] . ' mbps';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 		}
 		else if ($status['audio_sample_depth'] == 'dsd256') {
-			$encoded_at = 'DSD256, 1 bit, 11.288 msps Stereo';
+			$encoded_at = 'DSD256, 1 bit, 22.576 Mbps Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 705.6 kHz, Stereo';
-				$decode_rate = '33.868 mbps';
+				$decode_rate = '33.868 Mbps';
 			}
 			elseif ($hwparams['format'] == 'DSD bitstream') {
 				$decoded_to = 'DSD bitstream';
-				$decode_rate = $hwparams['calcrate'] . ' mbps';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 			else {
 				$decoded_to = 'PCM, ' . $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
-				$decode_rate = $hwparams['calcrate'] . ' mbps';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 		}
 		else if ($status['audio_sample_depth'] == 'dsd512') {
-			$encoded_at = 'DSD512, 1 bit, 22.576 msps Stereo';
+			$encoded_at = 'DSD512, 1 bit, 45.152 Mbps Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 1.411 MHz, Stereo';
-				$decode_rate = '67.736 mbps';
+				$decode_rate = '67.736 Mbps';
 			}
 			elseif ($hwparams['format'] == 'DSD bitstream') {
 				$decoded_to = 'DSD bitstream';
-				$decode_rate = $hwparams['calcrate'] . ' mbps';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 			else {
 				$decoded_to = 'PCM, ' . $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
-				$decode_rate = $hwparams['calcrate'] . ' mbps';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
+			}
+		else if ($status['audio_sample_depth'] == 'dsd1024') {
+			$encoded_at = 'DSD1024, 1 bit, 90.304 Mbps Stereo';
+			if ($cfg_mpd['dop'] == 'yes') {
+				$decoded_to = 'DoP 24 bit 2.822 MHz, Stereo';
+				$decode_rate = '135.472 Mbps';
+			}
+			elseif ($hwparams['format'] == 'DSD bitstream') {
+				$decoded_to = 'DSD bitstream';
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
+			}
+			else {
+				$decoded_to = 'PCM, ' . $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
+				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 		}
 
-		// pcm
+		// PCM
 		else {
 			$decoded_to = $status['audio_sample_depth'] . ' bit, ' . $status['audio_sample_rate'];
 			$decoded_to .= empty($status['audio_sample_rate']) ? '' : ' kHz, ' . $status['audio_channels'];
@@ -169,11 +183,11 @@ else {
 $output_destination = $_SESSION['audioout'];
 if ($_SESSION['audioout'] == 'Bluetooth') {
 	$hwparams_format = '16 bit, 44.1 kHz, Stereo, ';
-	$hwparams_calcrate = '1.411 mbps';
+	$hwparams_calcrate = '1.411 Mbps';
 }
 elseif ($hwparams['status'] == 'active') {
 	$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
-	$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' mbps';
+	$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' Mbps';
 }
 else {
 	$hwparams_format = '';
