@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-09-12 TC moOde 6.2.1
+ * 2019-MM-DD TC moOde 6.3.1
  *
  */
 
@@ -188,7 +188,8 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important}
 #albumsList li, #artistsList li, #genresList li {line-height:calc(1.45em + 1vmin);}
 #albumsList .lib-entry img {width:3rem;margin:.15em .25em .15em 0;}
-#albumsList .albumsList-album-name {display:inline-flex;vertical-align:middle;max-width:calc(100% - 3rem - .25em);line-height:1.25em;}
+#albumsList .album-name {display:inline-flex;vertical-align:middle;max-width:calc(100% - 3rem - .25em);line-height:1.25em;}
+#albumsList .album-year {display:none;font-size:0.85em;color:var(--textvariant);}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .tab-content.visacc .playlist .active .pll1 {color:var(--adapttext);}
@@ -350,7 +351,8 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #albumcovers li, .database-radio li {width:11rem;text-align:center;font-size:.9rem;margin:0 .75rem;display:inline-block;vertical-align:top;height:auto;padding:0 0 .5rem 0;}
 #albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(11rem * .9);margin:.5rem 0;box-shadow:0px 0px .25em rgba(0,0,0,0.3);border-radius:.1em;}
 #albumcovers .lib-entry {width:100%;line-height:normal;padding:0 0 .2em 0;}
-#albumcovers .lib-entry span {opacity:.55;display:block;}
+#albumcovers .lib-entry .artist-name {color:var(--textvariant);display:block;}
+#albumcovers .lib-entry .album-name {opacity:1.0;}
 #albumcovers .lib-entry .album-year {display:none;opacity:1.0;}
 #lib-albumcover-header {position:absolute;box-sizing:border-box;width:100%;overflow:auto;overflow-x:hidden;left:0;border-top:1px solid var(--btnshade);border-bottom:1px solid var(--btnshade);border-left:1px solid var(--btnshade);top: env(safe-area-inset-top);}
 #random-albumcover {margin-top:-1.5em;float:right;position:relative;padding:.25em .5em 0em .5em;}
