@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2019-MM-DD TC moOde 6.3.1
  *
  */
 
@@ -207,8 +207,7 @@ else {
 	$eth0ip = '';
 	workerLog('worker: eth0 does not exist');
 }
-$logmsg = !empty($eth0ip[0]) ? 'eth0 (' . $eth0ip[0] . ')' : 'eth0 address not assigned';
-workerLog('worker: ' . $logmsg);
+!empty($eth0ip[0]) ? log_network_info('eth0') : workerLog('worker: eth0 address not assigned');
 
 // Check WLAN0
 $wlan0ip = '';
@@ -263,9 +262,7 @@ if (!empty($wlan0[0])) {
 			}
 		}
 	}
-
-	$logmsg = !empty($wlan0ip[0]) ? 'wlan0 (' . $wlan0ip[0] . ')' : ($_SESSION['apactivated'] == true ? 'wlan0 unable to start AP mode' : 'wlan0 address not assigned');
-	workerLog('worker: ' . $logmsg);
+	!empty($wlan0ip[0]) ? log_network_info('wlan0') : ($_SESSION['apactivated'] == true ? workerLog('worker: wlan0 unable to start AP mode') : workerLog('worker: wlan0 address not assigned'));
 
 	// Reset dhcpcd.conf in case a hard reboot or poweroff occurs
 	resetApMode();
@@ -304,7 +301,7 @@ else {
 	workerLog('worker: ALSA outputs unmuted');
 }
 
-// Log device info
+// Log audio device info
 $logmsg = 'worker: ';
 workerLog($logmsg . 'ALSA card number (' . $_SESSION['cardnum'] . ')');
 if ($_SESSION['i2sdevice'] == 'none') {
@@ -320,7 +317,7 @@ foreach($formats as $format) {
 	$audio_formats .= $format . ', ';
 }
 $_SESSION['audio_formats'] = !empty($audio_formats) ? substr($audio_formats, 0, -2) : 'Audio device busy';
-workerLog('worker: Supported audio formats (' . $_SESSION['audio_formats'] . ')');
+workerLog('worker: Audio formats (' . $_SESSION['audio_formats'] . ')');
 
 // Store alsa mixer name for use by util.sh get/set-alsavol and vol.sh
 playerSession('write', 'amixname', getMixerName($_SESSION['i2sdevice']));
@@ -1150,6 +1147,15 @@ function chkMpdDbUpdate() {
 		sendEngCmd('dbupd_done');
 		$GLOBALS['mpd_dbupd_initiated'] = '0';
 	}
+}
+
+// Log info for the active interface (eth0 or wlan0)
+function log_network_info($interface) {
+	workerLog('worker: IP addr (' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $2}'")[0] . ')');
+	workerLog('worker: Netmask (' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $4}'")[0] . ')');
+	workerLog('worker: Gateway (' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0] . ')');
+	workerLog('worker: Pri DNS (' . sysCmd("cat /etc/resolv.conf | awk 'NR==3 {print $2}'")[0] . ')');
+	workerLog('worker:  Domain (' . sysCmd("cat /etc/resolv.conf | awk 'NR==2 {print $2}'")[0] . ')');
 }
 
 //
