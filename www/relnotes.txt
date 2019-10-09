@@ -11,6 +11,23 @@
 
 ########################################################
 //
+// 6.3.1 2019-MM-DD
+//
+########################################################
+
+Updates
+
+- UPD: Tag view albums list gets same grouping as Album view
+- UPD: Hide quick jump index if grouping albums by year
+- UPD: Quick jump to artist if grouping by Artist
+- UPD: Add network interface info to Moode log
+
+Bug fixes
+
+- FIX: JSON encode fail in genLibrary() if bad UTF-8 chars
+
+########################################################
+//
 // 6.3.0 2019-10-02
 //
 ########################################################
