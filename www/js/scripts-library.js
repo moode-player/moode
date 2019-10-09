@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2019-MM-DD TC moOde 6.3.1
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
@@ -123,7 +123,7 @@ function getLastModified(albumTracks){
 
 function getYear(albumTracks){
 	var allYear = albumTracks.map(function(track){
-		return track.year;
+		return track.year.length > 4 ? track.year.substr(0, 4) : track.year;
 	});
 	return Math.max.apply(null, allYear);
 }
@@ -165,21 +165,26 @@ function groupLib(fullLib) {
 			return collator.compare(removeArticles(a['album_artist'] || a['artist']), removeArticles(b['album_artist'] || b['artist']));
 		});
 
-		allAlbums.sort(function(a, b) {
-			return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
-		});
-
         if (SESSION.json['library_album_grouping'] == 'Artist') {
+            allAlbums.sort(function(a, b) {
+                return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+    		});
             allAlbumCovers.sort(function(a, b) {
                 return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
     		});
         }
         else if (SESSION.json['library_album_grouping'] == 'Album') {
+            allAlbums.sort(function(a, b) {
+                return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
+            });
             allAlbumCovers.sort(function(a, b) {
                 return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
             });
         }
         else if (SESSION.json['library_album_grouping'] == 'Year') {
+            allAlbums.sort(function(a, b) {
+                return (collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+            });
             allAlbumCovers.sort(function(a, b) {
                 return (collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
             });
@@ -193,13 +198,12 @@ function groupLib(fullLib) {
 			return a > b ? 1 : (a < b ? -1 : 0);
 		});
 
-		allAlbums.sort(function(a, b) {
-			a = removeArticles(a['album'].toLowerCase());
-			b = removeArticles(b['album'].toLowerCase());
-			return a > b ? 1 : (a < b ? -1 : 0);
-		});
-
         if (SESSION.json['library_album_grouping'] == 'Artist') {
+            allAlbums.sort(function(a, b) {
+    			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
+    			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
+    			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
+    		});
             allAlbumCovers.sort(function(a, b) {
     			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
     			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
@@ -207,6 +211,11 @@ function groupLib(fullLib) {
     		});
         }
         else if (SESSION.json['library_album_grouping'] == 'Album') {
+            allAlbums.sort(function(a, b) {
+                a = removeArticles(a['album'].toLowerCase());
+    			b = removeArticles(b['album'].toLowerCase());
+    			return a > b ? 1 : (a < b ? -1 : 0);
+    		});
             allAlbumCovers.sort(function(a, b) {
                 a = removeArticles(a['album'].toLowerCase());
     			b = removeArticles(b['album'].toLowerCase());
@@ -214,6 +223,11 @@ function groupLib(fullLib) {
     		});
         }
         else if (SESSION.json['library_album_grouping'] == 'Year') {
+            allAlbums.sort(function(a, b) {
+    			var x1 = a['year'], x2 = b['year'];
+    			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
+    			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
+    		});
             allAlbumCovers.sort(function(a, b) {
     			var x1 = a['year'], x2 = b['year'];
     			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
@@ -425,13 +439,14 @@ var renderAlbums = function() {
         var album_year = filteredAlbums[i].year;
         var album_year2 = filteredAlbumCovers[i].year;
 
+        //UI.tagViewCovers = false;
 		if (UI.tagViewCovers) {
 			output += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '"><div class="albumsList-album-name">' + filteredAlbums[i].album + '</div><span>' + ' - ' + filteredAlbums[i].artist + ', ' + album_year + '</span></div></li>';
+				+ '">' + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '"><div class="album-name">' + filteredAlbums[i].album + '<br><span class="album-year">' + album_year + '</span><span class="artist-name">' + filteredAlbums[i].artist + '</span></div></div></li>';
 			output2 += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + '<span class="album-year">' + album_year2 + '</span>' + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + '<span class="album-year">' + album_year2 + '</span>' + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span></div><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span></div></li>';
 		}
 		else {
 			output += '<li><div class="lib-entry'
@@ -439,7 +454,7 @@ var renderAlbums = function() {
 				+ '">' + filteredAlbums[i].album + '<span>' + ' - ' + filteredAlbums[i].artist + ', ' + album_year + '</span></div></li>';
 			output2 += '<li><div class="lib-entry'
 				+ tmp
-				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + '<span class="album-year">' + album_year2 + '</span>' + filteredAlbumCovers[i].album + '</div><span>' + filteredAlbumCovers[i].artist + '</span></div></li>';
+				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + '<span class="album-year">' + album_year2 + '</span>' + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span></div><span class=artist-name>' + filteredAlbumCovers[i].artist + '</span></div></li>';
 		}
 	}
 
@@ -449,6 +464,7 @@ var renderAlbums = function() {
 
     // Control whether to display album year
     if (SESSION.json['library_album_grouping'] == 'Year') {
+        $('#albumsList .lib-entry .album-year').css('display', 'contents');
         $('#albumcovers .lib-entry .album-year').css('display', 'block');
     }
 
