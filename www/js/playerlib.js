@@ -2735,7 +2735,7 @@ function themeToColors(accentColor) {
 	return ac1;
 }
 
-// alphabits quick scroll
+// Alphabits quick search
 $('#index-genres li').on('click', function(e) {
 	listLook('genresList li', 'genres', $(this).text());
 });
@@ -2743,10 +2743,14 @@ $('#index-artists li').on('click', function(e) {
 	listLook('artistsList li', 'artists', $(this).text());
 });
 $('#index-albums li').on('click', function(e) {
-	listLook('albumsList li', 'albums', $(this).text());
+    // .artist-name or .album-name
+    var selector = '.' + SESSION.json['library_album_grouping'].toLowerCase() + '-name'
+    listLook('albumsList li ' + selector, 'albums', $(this).text());
 });
 $('#index-albumcovers li').on('click', function(e) {
-	listLook('albumcovers li div span', 'albumcovers', $(this).text());
+    // .artist-name or .album-name
+    var selector = '.' + SESSION.json['library_album_grouping'].toLowerCase() + '-name'
+    listLook('albumcovers li ' + selector, 'albumcovers', $(this).text());
 });
 $('#index-browse li').on('click', function(e) {
 	listLook('database li', 'db', $(this).text());
@@ -2759,7 +2763,8 @@ function listLook(list, name, search) {
 	if (search != '#') {
 		$('#' + list).each(function(){
 			var text = removeArticles($(this).text().toLowerCase());
-			if (text.indexOf(search) == 0) {
+			//if (text.indexOf(search) == 0) {
+            if (text.substr(0, 1) == search) {
 				return false;
 			}
 			alphabitsFilter++;
