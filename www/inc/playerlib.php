@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2019-MM-DD TC moOde 6.3.1
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -310,7 +310,7 @@ function loadLibrary($sock) {
 		$flat = genFlatList($sock);
 
 		if ($flat != '') {
-			debugLog('loadLibrary(): Flat list generated');
+			debugLog('loadLibrary(): Flat list generated, size (' . sizeof($flat) . ')');
 			debugLog('loadLibrary(): Generating library...');
 			// Normal or UTF8 replace
 			if ($_SESSION['library_utf8rep'] == 'No') {
@@ -319,7 +319,7 @@ function loadLibrary($sock) {
 			else {
 				$tagarray = genLibraryUTF8Rep($flat);
 			}
-			debugLog('loadLibrary(): Cache data returned to client');
+			debugLog('loadLibrary(): Cache data returned to client, length (' . sizeof($tagarray) . ')');
 			return $tagarray;
 		}
 		else {
@@ -358,11 +358,13 @@ function genFlatList($sock) {
 		$resp .= readMpdResp($sock);
 	}
 
+	//workerLog('genFlatList(): is_null($resp)= ' . (is_null($resp) === true ? 'true' : 'false') . ', substr($resp, 0, 2)= ' . substr($resp, 0, 2));
 	if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
 		$lines = explode("\n", $resp);
 		$item = 0;
 		$flat = array();
 		$linecount = count($lines);
+		//workerLog('genFlatList(): $linecount= ' . $linecount);
 
 		for ($i = 0; $i < $linecount; $i++) {
 			list($element, $value) = explode(': ', $lines[$i], 2);
@@ -379,7 +381,7 @@ function genFlatList($sock) {
 				$flat[$item][$element] = $value;
 			}
 		}
-		//workerLog(print_r($flat, true));
+		//workerLog('genFlatList(): ' . print_r($flat, true));
 		return $flat;
 	}
 	else {
@@ -411,13 +413,62 @@ function genLibrary($flat) {
 		array_push($lib, $songData);
 	}
 
-	$json_lib = json_encode($lib);
+	$json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE);
+	debugLog('genLibrary(): $lib, size= ' . sizeof($lib));
+	debugLog('genLibrary(): $json_lib, length= ' . strlen($json_lib));
+	debugLog('genLibrary(): json_last_error()= ' . json_last_error_msg());
+
 	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
 		debugLog('genLibrary: create libcache.json failed');
 	}
 	//workerLog(print_r($lib, true));
 	return $json_lib;
 }
+
+function json_error_message() {
+	switch (json_last_error()) {
+		case JSON_ERROR_NONE:
+			$error_message = 'No errors';
+			break;
+		case JSON_ERROR_DEPTH:
+			$error_message = 'Maximum stack depth exceeded';
+			break;
+		case JSON_ERROR_STATE_MISMATCH:
+			$error_message = 'Underflow or the modes mismatch';
+			break;
+		case JSON_ERROR_CTRL_CHAR:
+			$error_message = 'Unexpected control character found';
+			break;
+		case JSON_ERROR_SYNTAX:
+			$error_message = 'Syntax error, malformed JSON';
+			break;
+		case JSON_ERROR_UTF8:
+			$error_message = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+			break;
+		default:
+			$error_message = 'Unknown error';
+			break;
+	}
+
+	return $error_message;
+}
+
+
+/*
+JSON_ERROR_NONE	No error has occurred
+JSON_ERROR_DEPTH	The maximum stack depth has been exceeded
+JSON_ERROR_STATE_MISMATCH	Invalid or malformed JSON
+JSON_ERROR_CTRL_CHAR	Control character error, possibly incorrectly encoded
+JSON_ERROR_SYNTAX	Syntax error
+JSON_ERROR_UTF8	Malformed UTF-8 characters, possibly incorrectly encoded	PHP 5.3.3
+
+JSON_ERROR_RECURSION	One or more recursive references in the value to be encoded	PHP 5.5.0
+JSON_ERROR_INF_OR_NAN	One or more NAN or INF values in the value to be encoded	PHP 5.5.0
+JSON_ERROR_UNSUPPORTED_TYPE	A value of a type that cannot be encoded was given	PHP 5.5.0
+JSON_ERROR_INVALID_PROPERTY_NAME	A property name that cannot be encoded was given	PHP 7.0.0
+JSON_ERROR_UTF16	Malformed UTF-16 characters, possibly incorrectly encoded	PHP 7.0.0
+*/
+
 // Many Chinese songs and song directories have characters that are not UTF8 causing json_encode to fail which leaves the
 // libcache.json file empty. Replacing the non-UTF8 chars in the array before json_encode solves this problem (@lazybat).
 function genLibraryUTF8Rep($flat) {
