@@ -1155,7 +1155,7 @@ function log_network_info($interface) {
 	workerLog('worker: Netmask (' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $4}'")[0] . ')');
 	workerLog('worker: Gateway (' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0] . ')');
 	workerLog('worker: Pri DNS (' . sysCmd("cat /etc/resolv.conf | awk 'NR==3 {print $2}'")[0] . ')');
-	workerLog('worker:  Domain (' . sysCmd("cat /etc/resolv.conf | awk 'NR==2 {print $2}'")[0] . ')');
+	workerLog('worker: Domain  (' . sysCmd("cat /etc/resolv.conf | awk 'NR==2 {print $2}'")[0] . ')');
 }
 
 //
