@@ -21,6 +21,7 @@ Updates
 - UPD: Hide quick jump index if grouping albums by year
 - UPD: Quick jump to artist if grouping by Artist
 - UPD: Add network interface info to Moode log
+- UPD: Add max ALSA volume setting to Audio Config
 
 Bug fixes
 
