@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.3.1
  *
  */
 
@@ -46,11 +46,11 @@ if (isset($_POST['update_drvoptions'])) {
 	}
 }
 
-// alsa volume
-if (isset($_POST['update_alsa_volume'])) {
-	if (isset($_POST['alsavolume'])) {
-		submitJob('alsavolume', $_POST['alsavolume'], 'ALSA volume updated', '');
-		playerSession('write', 'alsavolume', $_POST['alsavolume']);
+// Max ALSA volume
+if (isset($_POST['update_alsavolume_max'])) {
+	if (isset($_POST['alsavolume_max'])) {
+		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'Max ALSA volume updated', '');
+		playerSession('write', 'alsavolume_max', $_POST['alsavolume_max']);
 	}
 }
 
@@ -87,10 +87,9 @@ if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashuffle
 	}
 }
 
-// autoplay last played item after reboot/powerup
+// Autoplay last played item after reboot/powerup
 if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 	$_SESSION['notify']['title'] = $_POST['autoplay'] == 1 ? 'Autoplay on' : 'Autoplay off';
-	$_SESSION['notify']['duration'] = 3;
 	playerSession('write', 'autoplay', $_POST['autoplay']);
 }
 
@@ -403,24 +402,18 @@ else {
 $_chip_btn_disable = !empty($result[0]['chipoptions']) ? '' : 'disabled';
 $_chip_link_disable = !empty($result[0]['chipoptions']) ? '' : 'onclick="return false;"';
 
-// alsa volume
+// Max ALSA volume
 if ($_SESSION['alsavolume'] == 'none') {
-	$_alsa_volume = '';
-	$_alsa_volume_readonly = 'readonly';
-	$_alsa_volume_hide = 'hide';
-	$_alsa_volume_msg = "<span class=\"help-block-configs help-block-margin\">Hardware volume controller not detected</span>";
+	$_alsavolume_max = '';
+	$_alsavolume_max_readonly = 'readonly';
+	$_alsavolume_hide = 'hide'; // Hides the SET button
+	$_alsavolume_msg = "<span class=\"help-block-configs help-block-margin\">Hardware volume controller not detected</span>";
 }
 else {
-	$mixername = getMixerName($_SESSION['i2sdevice']);
-	// TC there is a visudo config that allows this cmd to be run by www-data, the user context for this page
-	$result = sysCmd("/var/www/command/util.sh get-alsavol " . '"' . $mixername . '"');
-	$_alsa_volume = str_replace('%', '', $result[0]);
-	if (isset($_POST['alsavolume']) && $_alsa_volume != $_POST['alsavolume']) { // worker has not processed the change yet
-		$_alsa_volume = $_POST['alsavolume'];
-	}
-	$_alsa_volume_readonly = '';
-	$_alsa_volume_hide = '';
-	$_alsa_volume_msg = '';
+	$_alsavolume_max = $_SESSION['alsavolume_max'];
+	$_alsavolume_max_readonly = '';
+	$_alsavolume_max_hide = '';
+	$_alsavolume_max_msg = '';
 }
 
 // MPD

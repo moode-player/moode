@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2019-MM-DD TC moOde 6.3.1
  *
  */
 -->
@@ -63,15 +63,15 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="alsavolume">ALSA volume (%)</label>
+				<label class="control-label" for="alsavolume_max">Max ALSA volume</label>
 				<div class="controls">
-                    <input class="input-large" $_alsa_volume_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume" name="alsavolume" value="$_alsa_volume">
-					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsa_volume_hide" data-msg="Processing" type="submit" name="update_alsa_volume" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-alsavol" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-alsavol" class="help-block-configs help-block-margin hide">
-						The value displayed in this field is the current ALSA setting.
+                    <input class="input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">
+					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-alsavolume_max" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-alsavolume_max" class="help-block-configs help-block-margin hide">
+						Establishes ALSA volume level that is used to set 0dB when MPD volume control is set to Software or Disabled, or when any of the Audio Renderers are active.
                     </span>
-					$_alsa_volume_msg
+					$_alsavolume_max_msg
 				</div>
 			</div>
 		</fieldset>

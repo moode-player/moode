@@ -2885,15 +2885,15 @@ function setMpdHttpd () {
 	//workerLog('$result=(' . $result[0]);
 }
 
-// reconfigure MPD volume
+// Reconfigure MPD volume
 function reconfMpdVolume($mixertype) {
 	cfgdb_update('cfg_mpd', cfgdb_connect(), 'mixer_type', $mixertype);
 	playerSession('write', 'mpdmixer', $mixertype);
-	// reset hardware volume to 0dB (100) if indicated
+	// Reset hardware volume to 0dB if indicated
 	if (($mixertype == 'software' || $mixertype == 'disabled') && $_SESSION['alsavolume'] != 'none') {
-		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
+		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
-	// update /etc/mpd.conf
+	// Update /etc/mpd.conf
 	updMpdConf($_SESSION['i2sdevice']);
 }
 

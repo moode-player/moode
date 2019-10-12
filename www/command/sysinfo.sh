@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-09-12 TC moOde 6.2.1
+# 2019-MM-DD TC moOde 6.3.1
 #
 
 # check for sudo
@@ -102,8 +102,9 @@ AUDIO_PARAMETERS() {
 	echo -e "A U D I O   P A R A M E T E R S"
 	echo -e "\nAudio device\t\t= $audiodevname\c"
 	echo -e "\nInterface\t\t= $iface\c"
-	echo -e "\nHardware volume\t\t= $hwvol\c"
 	echo -e "\nMixer name\t\t= $volmixer\c"
+	echo -e "\nHardware volume\t\t= $hwvol\c"
+	echo -e "\nMax ALSA volume\t\t= $alsavolume_max\c"
 	echo -e "\nAudio source\t\t= $audioin\c"
 	echo -e "\nOutput device\t\t= $audioout\c"
 	echo -e "\nResume MPD\t\t= $rsmafterinp\c"
@@ -476,7 +477,7 @@ timecountup=${arr[29]}
 accentcolor=${arr[30]}
 volknob=${arr[31]}
 [[ "${arr[32]}" = "1" ]] && volmute="Muted" || volmute="Unmuted"
-RESERVED_34=${arr[33]}
+alsavolume_max=${arr[33]}
 alsavolume=${arr[34]}
 amixname=${arr[35]}
 mpdmixer=${arr[36]}
