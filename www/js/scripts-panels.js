@@ -172,6 +172,14 @@ jQuery(document).ready(function($) { 'use strict';
         $('#playhistory-hide').css('display', 'none');
     }
 
+    // Set correct header text
+    $('#tagview-header-text, #albumview-header-text').text('Albums' +
+        (SESSION.json['library_album_grouping'] != 'Album' ? ' by ' + SESSION.json['library_album_grouping'] : ''));
+    // Hide alphabits index if indicated
+    if (SESSION.json['library_album_grouping'] == 'Year') {
+        $('#index-albums, #index-albumcovers').hide();
+    }
+
 	// load swipe handler for top columns in library (mobile)
 	if (UI.mobile) {
 		$(function() {
@@ -248,12 +256,8 @@ jQuery(document).ready(function($) { 'use strict';
         $('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
         $('.recently-added').css('margin-left', '-.25em');
         $('#lib-albumcover, #lib-albumcover-header').hide();
-        $('#tagview-header-text').text('Albums' + (SESSION.json['library_album_grouping'] != 'Album' ? ' by ' + SESSION.json['library_album_grouping'] : ''));
 
         $('#index-albumcovers').hide();
-        if (SESSION.json['library_album_grouping'] == 'Year') {
-            $('#index-albums').hide();
-        }
 
         if (SESSION.json['show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
@@ -280,11 +284,6 @@ jQuery(document).ready(function($) { 'use strict';
         $('.folder-view-btn, .tag-view-btn, .radio-view-btn').removeClass('active');
         $('#lib-albumcover, #lib-albumcover-header').show();
         $('#top-columns, #bottom-row').css('display', 'none');
-        $('#albumview-header-text').text('Albums' + (SESSION.json['library_album_grouping'] != 'Album' ? ' by ' + SESSION.json['library_album_grouping'] : ''));
-
-        if (SESSION.json['library_album_grouping'] == 'Year') {
-            $('#index-albumcovers').hide();
-        }
 
 		setTimeout(function() {
             $('img.lazy-albumview').lazyload({
