@@ -334,6 +334,7 @@ else {
 	$result[0] = str_replace('%', '', $result[0]);
 	playerSession('write', 'alsavolume', $result[0]); // volume level
 	workerLog('worker: Hdwr volume controller exists');
+	workerLog('worker: Max ALSA volume (' . $_SESSION['alsavolume_max'] . '%)');
 }
 
 // Configure Allo Piano 2.1
@@ -558,7 +559,7 @@ workerLog('worker: -- Miscellaneous');
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
 if ($_SESSION['alsavolume'] != 'none') {
 	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') {
-		$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
+		$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
 }
 
@@ -762,7 +763,7 @@ function chkBtActive() {
 			playerSession('write', 'btactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 			if ($_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
+				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 			}
 		}
 		sendEngCmd('btactive1'); // Placing here enables each conected device to be printed to the indicator overlay
@@ -1223,7 +1224,7 @@ function runQueuedJob() {
 
 			// Reset hardware volume to 0dB (100) if indicated
 			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') && $_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
+				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 			}
 
 			// Restart mpd and pick up conf changes
@@ -1259,9 +1260,10 @@ function runQueuedJob() {
 			playerSession('write', 'autoplay', '0'); // to prevent play before MPD setting applied
 			cfgI2sOverlay($_SESSION['w_queueargs']);
 			break;
-		case 'alsavolume':
-			$mixername = getMixerName($_SESSION['i2sdevice']);
-			sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $mixername  . '"' . ' ' . $_SESSION['w_queueargs']);
+		case 'alsavolume_max':
+			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') && $_SESSION['alsavolume'] != 'none') {
+				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['w_queueargs']);
+			}
 			break;
 		case 'rotaryenc':
 			sysCmd('systemctl stop rotenc');
@@ -1411,7 +1413,7 @@ function runQueuedJob() {
 			if ($_SESSION['slsvc'] == '1') {
 				sysCmd('mpc stop');
 				if ($_SESSION['alsavolume'] != 'none') {
-					sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '"' . ' 100');
+					sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 				}
 				cfgSqueezelite();
 				startSqueezeLite();
