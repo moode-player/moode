@@ -115,8 +115,10 @@ AUDIO_PARAMETERS() {
 	echo -e "\nALSA version\t\t= $ALSAVER\c"
 	echo -e "\nSoX version\t\t= $SOXVER\c"
 	echo -e "\n\c"
-	echo -e "\nBluetooth controller\t= $btsvc\c"
-	echo -e "\nPairing agent\t\t= $pairing_agent\c"
+	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
+		echo -e "\nBluetooth controller\t= $btsvc\c"
+		echo -e "\nPairing agent\t\t= $pairing_agent\c"
+	fi
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		echo -e "\nAirplay receiver\t= $airplaysvc\c"
 	fi
@@ -209,12 +211,14 @@ MPD_SETTINGS() {
 	#echo -e "\nHardware period time\t= $period_time\n"
 }
 RENDERER_SETTINGS() {
-	echo -e "B L U E T O O T H   S E T T I N G S"
-	echo -e "\nBluetooth ver\t\t= $BTVER\c"
-	echo -e "\nBluealsa ver\t\t= $BAVER\c"
-	echo -e "\nSpeaker sharing\t\t= $btmulti\c"
-	echo -e "\nResume MPD\t\t= $rsmafterbt\c"
-	echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer (\u03bcs)\n"
+	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
+		echo -e "B L U E T O O T H   S E T T I N G S"
+		echo -e "\nBluetooth ver\t\t= $BTVER\c"
+		echo -e "\nBluealsa ver\t\t= $BAVER\c"
+		echo -e "\nSpeaker sharing\t\t= $btmulti\c"
+		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
+		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer (\u03bcs)\n"
+	fi
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
 		SPSVER="$(shairport-sync -V | cut -f 1 -d '-')"
@@ -292,6 +296,7 @@ FEAT_UPMPDCLI=2#0000000000100000
 FEAT_SPOTIFY=2#0000100000000000
 FEAT_GPIO=2#0001000000000000
 FEAT_DJMOUNT=2#0010000000000000
+FEAT_BLUETOOTH=2#0100000000000000
 
 HOSTNAME=`uname -n`
 RASPBIANVER=`cat /etc/debian_version`

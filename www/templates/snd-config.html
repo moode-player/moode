@@ -314,7 +314,7 @@
 
 		<legend>Renderers</legend>
 		<fieldset>
-			<div class="control-group">
+			<div class="control-group $_feat_bluetooth">
 				<label class="control-label" for="btname">Bluetooth</label>
 				<div class="controls">
 					<div class="toggle">
@@ -332,7 +332,7 @@
 						Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (Bluez-alsa).<br>
                     </span>
 					<span class="help-block-configs help-block-margin2">
-						WARNING: Make sure a Bluetooth adapter is physically attached and enabled otherwise the system will hang.<br>
+						WARNING: A Bluetooth adapter must be physically attached and enabled before turning this ON otherwise moOde startup will fail.
                     </span>
 				</div>
 				<label class="control-label">Pairing agent</label>
@@ -386,9 +386,10 @@
 						<a data-toggle="modal" href="#bt-restart" $_bt_link_disable><button class="btn btn-medium btn-primary" $_bt_btn_disable>Restart</button></a>&nbsp;Bluetooth controller<br>
 					</div>
 				</div>
-			</div>
 
-			<div class="horiz-rule-light"></div>
+				<div class="horiz-rule-light"></div>
+
+			</div>
 
 			<div class="control-group $_feat_airplay">
 				<label class="control-label" for="airplayname">Airplay</label>

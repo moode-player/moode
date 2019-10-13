@@ -498,6 +498,22 @@ else {
 	workerLog('worker: GPIO button handler (feat N/A)');
 }
 
+if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
+	// Start bluetooth controller
+	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
+		workerLog('worker: Bluetooth controller started');
+		startBt();
+	}
+	// Start bluetooth pairing agent
+	if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
+		workerLog('worker: Bluetooth pairing agent started');
+		sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+	}
+}
+else {
+	workerLog('worker: Bluetooth (feat N/A)');
+}
+
 // END FEATURES AVAILABILITY
 
 // Start rotary encoder
@@ -516,18 +532,6 @@ if (isset($_SESSION['lcdup']) && $_SESSION['lcdup'] == 1) {
 if (isset($_SESSION['shellinabox']) && $_SESSION['shellinabox'] == 1) {
 	sysCmd('systemctl start shellinabox');
 	workerLog('worker: Shellinabox SSH started');
-}
-
-// Start bluetooth controller
-if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
-	workerLog('worker: Bluetooth controller started');
-	startBt();
-}
-
-// Start bluetooth pairing agent
-if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
-	workerLog('worker: Bluetooth pairing agent started');
-	sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
 }
 
 // USB auto-mounter
