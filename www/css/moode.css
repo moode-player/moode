@@ -63,8 +63,6 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .modal-footer .btn-primary{border-left:1px solid rgba(128,128,128,0.3);text-transform:capitalize;border-radius:0px;}
 .modal-footer .singleton {width:100%;}
 h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: center;}
-.bootstrap-select .dropdown-menu {background-color:rgba(50,50,50,0.98);}
-.bootstrap-select .dropdown-menu li a {color:#eee;}
 .span5 {width:38%;}
 .span4 {padding:0;width:38%;}
 .span3 {width:24%;margin-left:0px;}
@@ -79,6 +77,7 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 legend {border-bottom: 1px solid #999;}
 .modal {background-color: rgba(240,240,240,0.9);color: #333;}
 .modal-header, .modal-footer {background-color: transparent;}
+.modal-xs{min-width:230px;text-align:center;}
 .form-horizontal .control-group {margin-bottom:15px;}
 #togglebtns {padding-top:10px;}
 .modal-dropdown-text {color:#333;}
@@ -86,15 +85,22 @@ li.modal-dropdown-text:hover,
 li.modal-dropdown-text:focus {color:#eee;}
 .help-block, .help-inline {color:#333;}
 .help-block-modal {margin:0 !important;}
+
+/* dropdown menus */
+
+.dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 1em;background:none;color:var(--adapttext);font-size:1em;}
+.dropdown-menu {float:right;position:absolute;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);border:none;box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;}
+.dropdown-menu.open {padding:0;margin:0;}
 .bootstrap-select .dropdown-menu {background-color:transparent;}
-.bootstrap-select.btn-group .dropdown-menu li > a {color:inherit;}
-.btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.2);border-radius:4px;}
-.dropdown-menu .custom-select.inner {background-color:transparent;}
-.dropdown-menu.open {background-color:rgba(240,240,240,0.9);backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);}
-.container2 .dropdown-menu.open {background-color:rgba(50,50,50,0.95);-webkit-overflow-scrolling:touch;}
-#players .btn, #configure .btn {background:rgba(64,64,64,0.08);}
-.modal-xs{min-width:230px;text-align:center;}
+.btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.3);box-shadow:none;border-radius:4px;}
+.bootstrap-select.btn-group .dropdown-menu.inner {background-color:rgba(240,240,240,0.95);color:#333;border-radius:.51rem .5rem;overflow:hidden;} /* weird border radius cos bug in chrome? */
+.bootstrap-select .dropdown-menu > li > a {color:inherit;padding:0 1em;}
+/*.bootstrap-select .dropdown-menu > li:first-child > a {padding-top:.5em !important;}
+.bootstrap-select .dropdown-menu > li:last-child > a {padding-bottom:.5em !important;}*/
+.container2 .dropdown-menu.inner {background-color:rgba(50,50,50,0.95) !important;color:#eee !important;-webkit-overflow-scrolling:touch;} /* config theme menu bg */
+
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
+#players .btn, #configure .btn {background:rgba(64,64,64,0.08);}
 #info-toggle-bgimage {position:absolute;margin-left:5px;}
 /* clock radio */
 .checkbox-grp {margin:.35em 0 .85em 0;}
@@ -107,20 +113,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 #update-pkg-ol {font-family:courier new;}
 #update-pkg-ol li {line-height:1em;}
 
-@supports ((backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px))) {
-	.modal-dropdown-text {color:#333;}
-	li.modal-dropdown-text:hover,
-	li.modal-dropdown-text:focus {color:#eee;}
-	.modal-backdrop {background-color: rgba(48,48,48,0.2);backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);}
+@supports (-webkit-backdrop-filter: blur(10px)) {
+	.modal-backdrop {background-color: rgba(32,32,32,0.9);backdrop-filter: blur(10px);-webkit-backdrop-filter: blur(10px);}
 	.modal-backdrop.fade.in {opacity:1.0;}
-	.modal {background-color:rgba(240,240,240,0.7);color:#333;}
-	.modal.fade.in{opacity:1.0;}
-	.help-block, .help-inline {color:#333;}
-	.bootstrap-select .dropdown-menu {background-color:transparent;}
-	.bootstrap-select.btn-group .dropdown-menu li > a {color:inherit;}
-	.btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.2);border-radius:4px;}
-	.dropdown-menu .custom-select.inner {background-color:transparent;}
-	.dropdown-menu.open {background-color:rgba(240,240,240,0.1);backdrop-filter: blur(20px);-webkit-backdrop-filter: blur(20px);}
+	.modal {background-color:rgba(240,240,240,0.7);} /* bit more translucent */
+	.bootstrap-select.btn-group .dropdown-menu.inner {background-color:rgba(240,240,240,0.25);}
+	.container2 .bootstrap-select.btn-group .dropdown-menu.inner {background-color:rgba(50,50,50,0.25)} /* config theme menu bg */
 	#players .btn, #configure .btn {background:rgba(64,64,64,0.08);}
 }
 
@@ -235,7 +233,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-timeline {display:none;}
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;font-size:.9em;}
-	#menu-top .dropdown-menu {right:0;min-width:13rem;/*min-width:15rem;top:.25em;*/box-shadow:0px 4px 10px rgba(0, 0, 0, 0.1);border-radius:.5em;background-color:var(--adaptmbg);z-index:1000;padding-top:0;}
+	/*#menu-top .dropdown-menu {min-width:13rem;}*/
 	#menu-top .dropdown.open {background-color:transparent;border-radius:unset;box-shadow:none;backdrop-filter:none;padding-left:0}
 	/* playbar */
 	#playbar-title {text-align:left;top:0;margin-left:.75rem;width:calc(64vw - 6rem);height:auto;position:relative;transform:none;font-size:1rem;line-height:1.5rem;left:0;padding:0;}
