@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD: Tag view albums list gets same grouping as Album view
+- UPD: Tag View album list gets same grouping as Album View
 - UPD: Hide quick jump index if grouping albums by year
 - UPD: Quick jump to artist if grouping by Artist
 - UPD: Add network interface info to Moode log
