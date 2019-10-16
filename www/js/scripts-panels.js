@@ -73,7 +73,7 @@ jQuery(document).ready(function($) { 'use strict';
 	themeBack = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + SESSION.json['alphablend'] +')';
 	themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
 	if (SESSION.json['adaptive'] == "No") {document.body.style.setProperty('--adaptmbg', themeBack);}
-	blurrr == true ? themeOp = .55 : themeOp = .95;
+	blurrr == true ? themeOp = .7 : themeOp = .95;
 
 	/*themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
 	tempcolor = splitColor($('.dropdown-menu').css('background-color'));*/
