@@ -17,17 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2019-MM-DD TC moOde 6.3.1
  *
  */
 
-define('VERSION', '1.3.0');
+define('VERSION', '1.3.1');
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
 switch ($option) {
 	case '-f':
-		audio_formats();
+	case '-F':
+		audio_formats($option);
 		break;
 	case '-i':
 		system_info();
@@ -56,6 +57,7 @@ Moode utility programs
 With no OPTION print the help text and exit.
 
  -f\t\tprint supported audio formats
+ -F\t\tprint supported audio formats and sample rates
  -i\t\tprint system info
  -l\t\tprint moode log
  -m\t\trun system monitor
@@ -66,11 +68,51 @@ With no OPTION print the help text and exit.
 		break;
 }
 
-function audio_formats() {
-	$result = shell_exec("alsa-capabilities -n 2>&1 | awk -F '=' '/encoding formats/ {print $2}'");
-	$audio_formats = explode("\n", $result);
-	echo trim($audio_formats[0])  . "\n";
-	//echo preg_replace("/[^A-Za-z0-9 ]/", '', $audio_formats[0]) . "\n";
+function audio_formats($option) {
+	$card_num = trim(shell_exec("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT value FROM cfg_mpd WHERE param='device'\""));
+	$audio_output = trim(shell_exec('cat /proc/asound/card0/pcm0p/sub0/hw_params | grep closed'));
+
+	if ($audio_output == 'closed') {
+		$rate_option = $option == '-F' ? '-s' : '';
+
+	 	$result = json_decode(shell_exec('alsa-capabilities -n ' . $rate_option .' -j 2>&1'), true);
+		//echo print_r($result, true);
+
+		// Without sample rates
+		if ($option == '-f') {
+			foreach ($result['cards'] as $card) {
+				foreach ($card['outputs'] as $output) {
+					foreach ($output['encoding_formats'] as $format) {
+						echo trim($format) . "\n";
+			 		}
+				}
+			}
+		}
+		// With sample rates
+		else {
+			foreach ($result['cards'] as $card) {
+				foreach ($card['outputs'] as $output) {
+					foreach ($output['encoding_formats'] as $format) {
+						//echo trim($format) . "\n";
+						foreach ($format as $fmt => $rates) {
+							//echo trim($fmt) . "\n";
+							$print_line = $fmt . ': ';
+							foreach ($rates as $rate) {
+								//echo trim($rate) . "\n";
+								$print_line .= $rate / 1000 . 'K|';
+							}
+
+							$print_line = substr($print_line, 0, -2);
+							echo $print_line . "\n";
+						}
+			 		}
+				}
+			}
+		}
+	}
+	else {
+		echo "Can't detect formats or rates because audio device is in use\n";
+	}
 }
 
 function system_info() {
