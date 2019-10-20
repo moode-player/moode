@@ -217,7 +217,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nBluealsa ver\t\t= $BAVER\c"
 		echo -e "\nSpeaker sharing\t\t= $btmulti\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
-		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer (\u03bcs)\n"
+		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\n"
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
@@ -633,6 +633,12 @@ test -f /proc/config.gz && {
 	HZ="No /proc/config.gz"
 }
 rmmod configs
+
+if [[ "$1" = "html" ]]; then
+	micro_symbol="&micro;s"
+else
+	micro_symbol="\u03bcs"
+fi
 
 #
 # Generate output

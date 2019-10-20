@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-MM-DD TC moOde 6.3.1
  *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 $file = '/var/local/www/sysinfo.txt';
-sysCmd('/var/www/command/sysinfo.sh > ' . $file);
+sysCmd('/var/www/command/sysinfo.sh html > ' . $file);
 
 $fh = fopen($file, 'r');
 $text = fread($fh, filesize($file));
@@ -31,4 +31,3 @@ fclose($fh);
 
 $tpl = 'sysinfo.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
-
