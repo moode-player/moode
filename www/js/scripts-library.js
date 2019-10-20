@@ -123,7 +123,7 @@ function getLastModified(albumTracks){
 
 function getYear(albumTracks){
 	var allYear = albumTracks.map(function(track){
-		return track.year.length > 4 ? track.year.substr(0, 4) : track.year;
+        return track.year;
 	});
 	return Math.max.apply(null, allYear);
 }

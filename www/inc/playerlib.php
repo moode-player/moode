@@ -303,7 +303,7 @@ function sockWrite($sock, $msg) {
 // Caching library loader
 function loadLibrary($sock) {
 	if (filesize(LIBCACHE_JSON) != 0) {
-		debugLog('loadLibrary(): Cache data returned to client');
+		debugLog('loadLibrary(): Cache data returned to client, length (' . filesize(LIBCACHE_JSON) . ')');
 		return file_get_contents(LIBCACHE_JSON);
 	}
 	else {
@@ -315,13 +315,13 @@ function loadLibrary($sock) {
 			debugLog('loadLibrary(): Generating library...');
 			// Normal or UTF8 replace
 			if ($_SESSION['library_utf8rep'] == 'No') {
-				$tagarray = genLibrary($flat);
+				$json_lib = genLibrary($flat);
 			}
 			else {
-				$tagarray = genLibraryUTF8Rep($flat);
+				$json_lib = genLibraryUTF8Rep($flat);
 			}
-			debugLog('loadLibrary(): Cache data returned to client, length (' . sizeof($tagarray) . ')');
-			return $tagarray;
+			debugLog('loadLibrary(): Cache data returned to client, length (' . strlen($json_lib) . ')');
+			return $json_lib;
 		}
 		else {
 			debugLog('loadLibrary(): Flat list empty');
@@ -403,7 +403,7 @@ function genLibrary($flat) {
 			'artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist'),
 			'album_artist' => $flatData['AlbumArtist'],
 			'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
-			'year' => $flatData['Date'],
+			'year' => substr($flatData['Date'], 0, 4),
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
