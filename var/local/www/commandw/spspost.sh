@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-MM-DD TC moOde 6.3.1
+# 2019-MM-DD TC moOde 6.4.0
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
