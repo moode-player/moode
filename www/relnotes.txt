@@ -17,17 +17,21 @@
 
 Updates
 
+- UPD: Bump to Linux kernel 4.19.79
+- UPD: Bump to alsa-capabilities 2.0.1
 - UPD: Tag View album list gets same grouping as Album View
 - UPD: Hide quick jump index if grouping albums by year
 - UPD: Quick jump to artist if grouping by Artist
 - UPD: Add network interface info to Moode log
 - UPD: Add max ALSA volume setting to Audio Config
 - UPD: Add HifiBerry DAC/DAC+ Zero to audio device table
+- UPD: Add option -F to moodeutl to print sample rates
 
 Bug fixes
 
 - FIX: JSON encode fail in genLibrary() if bad UTF-8 chars
 - FIX: Wrong symbol code used for microseconds in html Sysinfo
+- FIX: Swap file not disabled
 
 ########################################################
 //
