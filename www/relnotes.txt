@@ -22,10 +22,12 @@ Updates
 - UPD: Quick jump to artist if grouping by Artist
 - UPD: Add network interface info to Moode log
 - UPD: Add max ALSA volume setting to Audio Config
+- UPD: Add HifiBerry DAC/DAC+ Zero to audio device table
 
 Bug fixes
 
 - FIX: JSON encode fail in genLibrary() if bad UTF-8 chars
+- FIX: Wrong symbol code used for microseconds in html Sysinfo
 
 ########################################################
 //
