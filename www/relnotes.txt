@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD: Bump to Linux kernel 4.19.79
+- UPD: Bump to Linux kernel 4.19.79 build #1273
 - UPD: Bump to alsa-capabilities 2.0.1
 - UPD: Tag View album list gets same grouping as Album View
 - UPD: Hide quick jump index if grouping albums by year
@@ -31,7 +31,8 @@ Bug fixes
 
 - FIX: JSON encode fail in genLibrary() if bad UTF-8 chars
 - FIX: Wrong symbol code used for microseconds in html Sysinfo
-- FIX: Swap file not disabled
+- FIX: Swap file not disabled during build
+- FIX: PSK not generated when password contains certain chars
 
 ########################################################
 //
