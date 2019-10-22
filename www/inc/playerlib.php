@@ -2565,8 +2565,7 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: - Network (wlan0)');
 	//
 
-	$array = explode('=', sysCmd('wpa_passphrase "' . $autocfg['wlanssid'] . '" "' . $autocfg['wlanpwd'] . '"')[3]);
-	$psk = $array[1];
+	$psk = genWpaPSK($autocfg['wlanssid'], $autocfg['wlanpwd']);
 	$netcfg = sdbquery('select * from cfg_network', $dbh);
 	$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
 		'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
@@ -2585,8 +2584,7 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: - Network (apd0)');
 	//
 
-	$array = explode('=', sysCmd('wpa_passphrase "' . $autocfg['apdssid'] . '" "' . $autocfg['apdpwd'] . '"')[3]);
-	$psk = $array[1];
+	$psk = genWpaPSK($autocfg['apdssid'], $autocfg['apdpwd']);
 	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 		'wlanssid' => $autocfg['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
 		'wlan_country' => '', 'wlan_channel' => $autocfg['apdchan']);
@@ -2626,6 +2624,19 @@ function autoConfig($cfgfile) {
 	sysCmd('rm ' . $cfgfile);
 	autoCfgLog('autocfg: Configuration file deleted');
 	autoCfgLog('autocfg: Auto-configure complete');
+}
+
+function genWpaPSK($ssid, $passphrase) {
+	$fh = fopen('/tmp/passphrase', 'w');
+	fwrite($fh, $passphrase . "\n");
+	fclose($fh);
+
+	$result = sysCmd('wpa_passphrase "' . $ssid . '" < /tmp/passphrase');
+	sysCmd('rm /tmp/passphrase');
+	//workerLog(print_r($result, true));
+
+	$psk = explode('=', $result[4]);
+	return $psk[1];
 }
 
 // Check for available software update (ex: update-rNNN.txt)

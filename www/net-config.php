@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.4.0
  *
  */
 
@@ -57,8 +57,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	$method = (empty($_POST['wlan0ssid']) || $_POST['wlan0ssid'] == 'None (activates AP mode)') ? 'dhcp' : $_POST['wlan0method'];
 
 	if ($_POST['wlan0ssid'] != $netcfg[1]['wlanssid'] || $_POST['wlan0pwd'] != $netcfg[1]['wlan_psk']) {
-		$array = explode('=', sysCmd('wpa_passphrase "' . $_POST['wlan0ssid'] . '" "' . $_POST['wlan0pwd'] . '"')[3]);
-		$psk = $array[1]; // new
+		$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
 	}
 	else {
 		$psk = $netcfg[1]['wlan_psk']; // existing
@@ -72,8 +71,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 
 	// apd0
 	if ($_POST['wlan0apdssid'] != $netcfg[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $netcfg[2]['wlan_psk']) {
-		$array = explode('=', sysCmd('wpa_passphrase "' . $_POST['wlan0apdssid'] . '" "' . $_POST['wlan0apdpwd'] . '"')[3]);
-		$psk = $array[1]; // new
+		$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
 	}
 	else {
 		$psk = $netcfg[2]['wlan_psk']; // existing
