@@ -100,8 +100,17 @@ foreach ($result as $row) {
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
 
+// Verify device configuration
+$card0 = trim(file_get_contents('/proc/asound/card0/id'));
+$card1 = trim(file_get_contents('/proc/asound/card1/id'));
+$result = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
+workerLog('worker: Device raw: Card0 (' . $card0 . ') | Card1 (' . $card1 . ') | I2Sdev (' . $_SESSION['i2sdevice'] . ')');
+workerLog('worker: Device cfg: Name (' . $_SESSION['adevname'] . ') | Card (' . $_SESSION['cardnum'] . ') | MPDdev (' . $result[0]['value'] . ') | Mixer (' . $_SESSION['amixname'] . ') | Alsavol: (' . $_SESSION['alsavolume'] . ')');
+if ($_SESSION['i2sdevice'] != 'none' && $_SESSION['cardnum'] != '0') {
+	workerLog('worker: ERROR: Device raw/cfg card mismatch');
+}
+
 // Zero out ALSA volume
-//workerLog('worker: Device: (' . $_SESSION['adevname'] . '), Cardnum: (' . $_SESSION['cardnum'] . '), Mixer: (' . $_SESSION['amixname'] . '), Alsavolume: (' . $_SESSION['alsavolume'] . ')');
 if ($_SESSION['alsavolume'] != 'none') {
 	$amixname = getMixerName($_SESSION['i2sdevice']);
 	sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $amixname . '"' . ' 0');
