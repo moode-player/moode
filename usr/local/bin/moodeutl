@@ -82,31 +82,40 @@ function audio_formats($option) {
 		if ($option == '-f') {
 			foreach ($result['cards'] as $card) {
 				foreach ($card['outputs'] as $output) {
-					foreach ($output['encoding_formats'] as $format) {
-						echo trim($format) . "\n";
-			 		}
+					if ($output['hwaddress'] == 'hw:' . $card_num . ',0') {
+						foreach ($output['encoding_formats'] as $format) {
+							echo trim($format == '(n/a)' ? 'Unable to determine formats' : $format) . "\n";
+				 		}
+					}
 				}
 			}
 		}
 		// With sample rates
 		else {
-			foreach ($result['cards'] as $card) {
-				foreach ($card['outputs'] as $output) {
-					foreach ($output['encoding_formats'] as $format) {
-						//echo trim($format) . "\n";
-						foreach ($format as $fmt => $rates) {
-							//echo trim($fmt) . "\n";
-							$print_line = $fmt . ': ';
-							foreach ($rates as $rate) {
-								//echo trim($rate) . "\n";
-								$print_line .= $rate / 1000 . 'K|';
-							}
+			if (is_array($result['cards'])) {
+				foreach ($result['cards'] as $card) {
+					foreach ($card['outputs'] as $output) {
+						if ($output['hwaddress'] == 'hw:' . $card_num . ',0') {
+							foreach ($output['encoding_formats'] as $format) {
+								//echo trim($format) . "\n";
+								foreach ($format as $fmt => $rates) {
+									//echo trim($fmt) . "\n";
+									$print_line = $fmt . ': ';
+									foreach ($rates as $rate) {
+										//echo trim($rate) . "\n";
+										$print_line .= $rate / 1000 . 'K|';
+									}
 
-							$print_line = substr($print_line, 0, -2);
-							echo $print_line . "\n";
+									$print_line = substr($print_line, 0, -2);
+									echo $print_line . "\n";
+								}
+					 		}
 						}
-			 		}
+					}
 				}
+			}
+			else {
+				echo "Unable to determine formats\n";
 			}
 		}
 	}
