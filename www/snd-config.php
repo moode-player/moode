@@ -26,15 +26,18 @@ playerSession('open', '' ,'');
 
 // DEVICE
 
-// i2s device
+// I2S device
 if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice'])) {
 		playerSession('write', 'i2sdevice', $_POST['i2sdevice']);
-		submitJob('i2sdevice', $_POST['i2sdevice'], 'I2S audio device updated', '- Edit Driver options<br>- Reboot then edit Chip options', 20);
+		$title = 'I2S audio device updated';
+		$msg = '<b>Reboot required</b><br>After rebooting:<br>- Edit MPD Config and SAVE<br>- Edit chip options<br>- Edit driver options';
+
+		submitJob('i2sdevice', $_POST['i2sdevice'], $title, $msg, 30);
 	}
 }
 
-// advanced driver options
+// Advanced driver options
 if (isset($_POST['update_drvoptions'])) {
 	if (isset($_POST['drvoptions']) && $_POST['drvoptions'] != 'none') {
 		$result = sdbquery("SELECT driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
