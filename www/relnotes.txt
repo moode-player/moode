@@ -26,6 +26,7 @@ Updates
 - UPD: Add max ALSA volume setting to Audio Config
 - UPD: Add HifiBerry DAC/DAC+ Zero to audio device table
 - UPD: Add option -F to moodeutl to print sample rates
+- UPD: Add eye icon for show/hide password plaintext
 
 Bug fixes
 

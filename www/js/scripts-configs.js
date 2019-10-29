@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.4.0
  *
  */
 jQuery(document).ready(function($){ 'use strict';
@@ -180,6 +180,14 @@ jQuery(document).ready(function($){ 'use strict';
             $('#apdpwd').val('');
         }
 	});
+
+    // Show/hide password plaintext
+    $('.show-hide-password').click(function(e) {
+        var password_field = document.getElementById($(this).data('id'));
+        if ($('#' + $(this).data('id')).val() != '') {
+            password_field.type == 'password' ? password_field.type = 'text' : password_field.type = 'password';
+        }
+    });
 
 	// music source protocols (type)
 	if ($('#type').length) {

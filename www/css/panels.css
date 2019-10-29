@@ -491,6 +491,8 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #top-columns.nogenre #lib-album-header, #top-columns.nogenre #lib-album {left:50%;width:50%;}
 /* For updater view modal */
 .updater-relnotes {list-style-type:none;margin-left:0;}
+/* Show/hide password plaintext */
+.show-hide-password {font-size:18px;margin-left:.5em}
 
 @supports (backdrop-filter:blur(10px)) or (-webkit-backdrop-filter:blur(10px)) {
     #menu-top .dropdown-menu, .dropdown-menu {

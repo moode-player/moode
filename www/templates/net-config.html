@@ -145,6 +145,7 @@
 				<div class="controls">
 					<input class="input-large" type="password" pattern=".{8,64}" id="wlan0pwd" name="wlan0pwd" value="$_wlan0pwd">
 					<a aria-label="Help" class="info-toggle" data-cmd="info-wlan0pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a class="show-hide-password" href="#notarget" data-id="wlan0pwd"><i class="fal fa-eye"></i></a>
 					<span id="info-wlan0pwd" class="help-block-configs help-block-margin hide">
                     	Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.
                     </span>
@@ -233,6 +234,7 @@
                 <div class="controls">
                     <input class="input-large" type="password" pattern=".{8,64}" id="apdpwd" name="wlan0apdpwd" value="$_wlan0apdpwd" required>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-apdpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a class="show-hide-password" href="#notarget" data-id="apdpwd"><i class="fal fa-eye"></i></a>
 					<span id="info-apdpwd" class="help-block-configs help-block-margin hide">
 						Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.<br>
 						NOTE: the default password is moodeaudio

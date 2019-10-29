@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.4.0
  *
  */
--->	
+-->
 <div class="container">
 	<div class="container2">
 	<h1 class="snd-config">UPnP Config</h1>
@@ -48,7 +48,7 @@
 				</div>
 			</div>
 		</fieldset>
-    
+
 		<fieldset>
 			<legend>TIDAL</legend>
 			<div class="control-group">
@@ -65,8 +65,9 @@
 			<div class="control-group">
 				<label class="control-label" for="tidalpass">Password</label>
 				<div class="controls">
-					<input class="input-large" type="password" pattern="[^'\u0022]+" id="tidaluser" name="config[tidalpass]" value="$_select[tidalpass]">
+					<input class="input-large" type="password" pattern="[^'\u0022]+" id="tidalpass" name="config[tidalpass]" value="$_select[tidalpass]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_tidalpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a class="show-hide-password" href="#notarget" data-id="tidalpass"><i class="fal fa-eye"></i></a>
 					<span id="info_tidalpass" class="help-block-configs help-block-margin hide">
 						The password for your Tidal account. NOTE: Single and double quotes are not allowed.<br>
                     </span>
@@ -103,8 +104,9 @@
 			<div class="control-group">
 				<label class="control-label" for="qobuzpass">Password</label>
 				<div class="controls">
-					<input class="input-large" type="password" pattern="[^'\u0022]+" id="tidaluser" name="config[qobuzpass]" value="$_select[qobuzpass]">
+					<input class="input-large" type="password" pattern="[^'\u0022]+" id="qobuzpass" name="config[qobuzpass]" value="$_select[qobuzpass]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_qobuzpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a class="show-hide-password" href="#notarget" data-id="qobuzpass"><i class="fal fa-eye"></i></a>
 					<span id="info_qobuzpass" class="help-block-configs help-block-margin hide">
 						The password for your Qobuz account. NOTE: Single and double quotes are not allowed.<br>
                     </span>
@@ -129,7 +131,7 @@
 			<legend>Google Play</legend>
 			<p>
 				The Google Music feature is enabled but the API must be manually installed.<br>
-				Run the command "sudo pip install gmusicapi" from an ssh session. 
+				Run the command "sudo pip install gmusicapi" from an ssh session.
 			</p>
 		</div>
 
@@ -146,18 +148,19 @@
 	                    </span>
 					</div>
 				</div>
-	
+
 				<div class="control-group">
 					<label class="control-label" for="gmusicpass">Password</label>
 					<div class="controls">
 						<input class="input-large" type="password" pattern="[^'\u0022]+" id="gmusicpass" name="config[gmusicpass]" value="$_select[gmusicpass]">
 						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<a class="show-hide-password" href="#notarget" data-id="gmusicpass"><i class="fal fa-eye"></i></a>
 						<span id="info_gmusicpass" class="help-block-configs help-block-margin hide">
 							The password for your Google Music account. NOTE: Single and double quotes are not allowed.<br>
 	                    </span>
 					</div>
 				</div>
-	
+
 				<div class="control-group">
 					<label class="control-label" for="gmusicquality">Stream quality</label>
 					<div class="controls">
@@ -170,7 +173,7 @@
 	                    </span>
 					</div>
 				</div>
-	
+
 				<div class="control-group">
 					<label class="control-label" for="gmusicdeviceid">Music device id</label>
 					<div class="controls">
