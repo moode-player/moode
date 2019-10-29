@@ -337,7 +337,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_KERNEL) {
 	$model = substr($_SESSION['hdwrrev'], 3, 1);
 	$name = $_SESSION['hdwrrev'];
 	// Pi-2B rev 1.2, Allo USBridge SIG, Pi-3B/B+/A+, Pi-4B
-	if ($name == 'Pi-2B 1GB v1.2' || $name == 'Allo USBridge SIG [Pi-CM3+ Lite 1GB v1.0]' || $model == '3' || $model == '4') {
+	if ($name == 'Pi-2B 1GB v1.2' || $name == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || $model == '3' || $model == '4') {
 		$_select['kernel_architecture'] .= "<option value=\"64-bit\" " . (($_SESSION['kernel_architecture'] == '64-bit') ? "selected" : "") . ">64-bit</option>\n";
 	}
 }
