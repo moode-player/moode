@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2019-MM-DD TC moOde 6.4.0
  *
  */
 
@@ -32,6 +32,7 @@ $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'm
 	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib');
 $turn_consume_off = false;
 
+//workerLog('moode.php: cmd=(' . $_GET['cmd'] . ')');
 if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 	workerLog('moode.php: command missing');
 }
@@ -236,10 +237,6 @@ else {
 	                sendMpdCmd($sock, 'save "' . html_entity_decode($_GET['plname']) . '"');
 	                echo json_encode(readMpdResp($sock));
 	            }
-				break;
-			case 'getfavname':
-				$result = cfgdb_read('cfg_system', $dbh, 'favorites_name');
-				echo json_encode($result[0]['value']);
 				break;
 			case 'setfav':
 	            if (isset($_GET['favname']) && $_GET['favname'] != '') {
@@ -496,6 +493,11 @@ else {
 				}
 				break;
 
+			// Get Favorites name for display in modal
+			case 'getfavname':
+				$result = cfgdb_read('cfg_system', $dbh, 'favorites_name');
+				echo json_encode($result[0]['value']);
+				break;
 			// Toggle auto-shuffle on/off
 			case 'ashuffle':
 				playerSession('write', 'ashuffle', $_GET['ashuffle']);
@@ -508,7 +510,6 @@ else {
 					$cmd = '/usr/local/bin/ashuffle --queue_buffer 1 > /dev/null 2>&1 &';
 				}
 
-				//workerlog($cmd);
 				$_GET['ashuffle'] == '1' ? sysCmd($cmd) : sysCmd('killall -s 9 ashuffle > /dev/null');
 
 				echo json_encode('toggle ashuffle ' . $_GET['ashuffle']);
