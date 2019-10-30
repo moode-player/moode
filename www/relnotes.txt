@@ -27,6 +27,9 @@ Updates
 - UPD: Add HifiBerry DAC/DAC+ Zero to audio device table
 - UPD: Add option -F to moodeutl to print sample rates
 - UPD: Add eye icon for show/hide password plaintext
+- UPD: Add XFS filesystem support to udisks-glue
+- UPD: Gpio-buttons Python 2/3 compatibility improvements
+
 
 Bug fixes
 
@@ -34,6 +37,7 @@ Bug fixes
 - FIX: Wrong symbol code used for microseconds in html Sysinfo
 - FIX: Swap file not disabled during build
 - FIX: PSK not generated when password contains certain chars
+- FIX: Menu anomaly on iOS 13 / A12 processors
 
 ########################################################
 //
