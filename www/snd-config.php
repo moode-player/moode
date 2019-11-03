@@ -60,7 +60,7 @@ if (isset($_POST['update_alsavolume_max'])) {
 // MPD
 
 // mpd version
-if (isset($_POST['update_mpdver'])) {
+if (isset($_POST['update_mpdver']) && $_POST['mpdver'] != $_SESSION['mpdver']) {
 	playerSession('write', 'mpdver', $_POST['mpdver']);
 	submitJob('mpdver', $_POST['mpdver'], 'MPD ' . $_POST['mpdver'] . ' installed', 'Database rebuild started...');
 }
@@ -421,9 +421,9 @@ else {
 
 // MPD
 
-// mpd version
-$_select['mpdver'] .= "<option value=\"0.20.23\" " . (($_SESSION['mpdver'] == '0.20.23') ? "selected" : "") . ">0.20.23 (Default)</option>\n";
-$_select['mpdver'] .= "<option value=\"0.21.15\" " . (($_SESSION['mpdver'] == '0.21.15') ? "selected" : "") . ">0.21.15 (Testing)</option>\n";
+// MPD version
+//$_select['mpdver'] .= "<option value=\"0.20.23\" " . (($_SESSION['mpdver'] == '0.20.23') ? "selected" : "") . ">0.20.23 (Default)</option>\n";
+$_select['mpdver'] .= "<option value=\"0.21.15\" " . (($_SESSION['mpdver'] == '0.21.15') ? "selected" : "") . ">0.21.15 (Default)</option>\n";
 
 // auto-shuffle
 $_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
