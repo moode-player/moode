@@ -40,8 +40,6 @@ Bug fixes
 - FIX: Swap file not disabled during build
 - FIX: PSK not generated when password contains certain chars
 
-- ???? FIX: Menu anomaly on iOS 13 / A12 processors
-
 ########################################################
 //
 // 6.3.0 2019-10-02
