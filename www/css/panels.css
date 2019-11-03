@@ -429,7 +429,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 .alphabits ul {display:table;height:100%;margin:0 !important;border-spacing:.2em;}
 .alphabits ul li {display:table-row !important;font-size:.7em;text-align:center !important;text-transform:uppercase;opacity:.75;line-height:normal;}
 /* playback ellipsis context menu */
-#context-menu-playback .dropdown-menu {min-width:12rem;}
+#context-menu-playback .dropdown-menu {min-width:12em;white-space:nowrap;}
 #menu-check-consume, #menu-check-repeat, #menu-check-single {display:none;float:right;color:var(--adapttext);line-height:2.75em;position:absolute;right:.5em;}
 /* playbar */
 #timetrack {display:flex;width:100%;padding:0;color:inherit;height:15px;z-index:10;position:relative;}

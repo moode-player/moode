@@ -88,8 +88,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 
 /* dropdown menus */
 
-.dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1em;white-space:normal;}
-.dropdown-menu {float:right;position:absolute;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);border:none;box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;}
+.dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1em;white-space:nowrap;}
+.dropdown-menu {float:right;position:absolute;min-width:11.5em;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);border:none;box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;}
 .dropdown-menu.open {padding:0;margin:0;}
 .bootstrap-select .dropdown-menu {background-color:transparent;}
 .btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.3);box-shadow:none;border-radius:4px;}
