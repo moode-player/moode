@@ -366,6 +366,25 @@
 	            </div>
 
 				<div class="control-group">
+					<label class="control-label">Wake display on play</label>
+					<div class="controls">
+						<div class="toggle">
+							<label class="toggle-radio" for="toggle_wake_display2">ON</label>
+							$_select[wake_display1]
+							<label class="toggle-radio" for="toggle_wake_display1">OFF</label>
+							$_select[wake_display0]
+						</div>
+						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+		                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_wake_display" value="novalue">Set</button>
+							<a aria-label="Help" class="info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						</div>
+						<span id="info_wake_display" class="help-block-configs help-block-margin hide">
+							Wake the display when audio starts playing.
+	                    </span>
+	                </div>
+	            </div>
+
+				<div class="control-group">
 					<label class="control-label" for="scnbrightness">Brightness</label>
 					<div class="controls">
                     	<input class="input-mini" style="margin-right: 14px;"type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]">

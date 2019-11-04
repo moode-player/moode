@@ -268,6 +268,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nLocal UI display\t= $localui\c"
 		echo -e "\nMouse cursor\t\t= $touchscn\c"
 		echo -e "\nScreen blank\t\t= $scnblank Secs\c"
+		echo -e "\nWake display on play\t= $wake_display\c"
 		echo -e "\nBrightness\t\t= $scnbrightness\c"
 		echo -e "\nPixel aspect ratio\t= $pixel_aspect_ratio\c"
 		echo -e "\nRotate screen\t\t= $scnrotate Deg\n"
@@ -592,6 +593,7 @@ volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
 library_album_grouping=${arr[125]}
 kernel_architecture=${arr[126]}
+[[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

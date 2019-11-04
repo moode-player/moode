@@ -19,58 +19,81 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-08-08 TC moOde 6.0.0
+# 2019-MM-DD TC moOde 6.4.0
 #
 
-FPMLIMIT=40
-FPMCNT=$(pgrep -c -f "php-fpm: pool www")
-MPDACTIVE=$(pgrep -c -x mpd)
-SPOTACTIVE=$(pgrep -c -x librespot)
-SQLDB=/var/local/www/db/moode-sqlite3.db
-SESSDIR=/var/local/php
-SESSFILE=$SESSDIR/sess_$(sqlite3 $SQLDB "select value from cfg_system where param='sessionid'")
+FPM_LIMIT=40
+FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
+MPD_ACTIVE=$(pgrep -c -x mpd)
+SPOT_ACTIVE=$(pgrep -c -x librespot)
+HW_PARAMS_LAST=""
+SQL_DB=/var/local/www/db/moode-sqlite3.db
+SESSION_DIR=/var/local/php
+SESSION_FILE=$SESSION_DIR/sess_$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='sessionid'")
 
 while true; do
 	# PHP-FPM
-	if (( FPMCNT > FPMLIMIT )); then
-		TIMESTAMP=$(date +'%Y%m%d %H%M%S')
-		LOGMSG=" watchdog: PHP restarted (fpm child limit > "$FPMLIMIT")"
-		echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
+	if (( FPM_CNT > FPM_LIMIT )); then
+		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+		LOG_MSG=" watchdog: PHP restarted (fpm child limit > "$FPM_LIMIT")"
+		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 		systemctl restart php7.3-fpm
 	fi
 
 	# PHP session permissions
-	PERMS=$(ls -l $SESSFILE | awk '{print $1 "," $3 "," $4;}')
+	PERMS=$(ls -l $SESSION_FILE | awk '{print $1 "," $3 "," $4;}')
 	if [[ $PERMS != "-rw-rw-rw-,www-data,www-data" ]]; then
-		TIMESTAMP=$(date +'%Y%m%d %H%M%S')
-		LOGMSG=" watchdog: Session permissions (Reapplied)"
-		echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
-		chown www-data:www-data $SESSFILE
-		chmod 0666 $SESSFILE
+		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+		LOG_MSG=" watchdog: Session permissions (Reapplied)"
+		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+		chown www-data:www-data $SESSION_FILE
+		chmod 0666 $SESSION_FILE
 	fi
 
 	# MPD
-	if [[ $MPDACTIVE = 0 ]]; then
-		TIMESTAMP=$(date +'%Y%m%d %H%M%S')
-		LOGMSG=" watchdog: MPD restarted (check syslog for errors)"
-		echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
+	if [[ $MPD_ACTIVE = 0 ]]; then
+		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+		LOG_MSG=" watchdog: MPD restarted (check syslog for errors)"
+		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 		systemctl start mpd
 	fi
 
-	# LIBRESPOT
-	RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='spotifysvc'")
+	# Librespot
+	RESULT=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='spotifysvc'")
 	if [[ $RESULT = "1" ]]; then
-		if [[ $SPOTACTIVE = 0 ]]; then
-			TIMESTAMP=$(date +'%Y%m%d %H%M%S')
-			LOGMSG=" watchdog: LIBRESPOT restarted (check syslog for errors)"
-			echo $TIMESTAMP$LOGMSG >> /var/log/moode.log
+		if [[ $SPOT_ACTIVE = 0 ]]; then
+			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+			LOG_MSG=" watchdog: LIBRESPOT restarted (check syslog for errors)"
+			echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 			/var/www/command/restart-renderer.php -spotify
 		fi
 	fi
 
+	# Audio output
+	CARD_NUM=$(sqlite3 $SQL_DB "SELECT value FROM cfg_mpd WHERE param='device'")
+	HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
+	if [[ $HW_PARAMS != $HW_PARAMS_LAST ]]; then
+		if [[ $HW_PARAMS = "closed" ]]; then
+			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+			LOG_MSG=" watchdog: Audio output closed"
+			echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+		else
+			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+			LOG_MSG=" watchdog: Audio output in use"
+			echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+			# Wake display on play
+			WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
+			if [[ $WAKE_DISPLAY = "1" ]]; then
+				export DISPLAY=:0
+				xset s reset > /dev/null 2>&1
+			fi
+		fi
+	fi
+
 	sleep 6
-	FPMCNT=$(pgrep -c -f "php-fpm: pool www")
-	MPDACTIVE=$(pgrep -c -x mpd)
-	SPOTACTIVE=$(pgrep -c -x librespot)
+	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
+	MPD_ACTIVE=$(pgrep -c -x mpd)
+	SPOT_ACTIVE=$(pgrep -c -x librespot)
+	HW_PARAMS_LAST=$HW_PARAMS
 
 done > /dev/null 2>&1 &
