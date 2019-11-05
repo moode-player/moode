@@ -308,7 +308,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 .lib-artistname-meta {margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-size:calc(0.40em + 1vmin);font-weight:700;text-align:center;cursor:pointer;}
 .lib-albumyear-meta {display:none;font-size:calc(0.40em + 1vmin);font-weight:normal;text-align:center;}
 .lib-numtracks-meta {font-size:calc(0.40em + 1vmin);font-weight:normal;font-style:italic;color:inherit !important;text-align:center;}
-#lib-content ul {display:table;margin:.25em 0;overflow-x:hidden;width:100%;word-wrap:break-word;}
+#lib-content ul {display:table;margin:.25em 0;overflow-x:hidden;width:100%;word-break:break-word;}
 #songsList {padding-bottom:calc(8em + env(safe-area-inset-bottom));margin:.5em .25em !important;}
 #lib-content li {display:block;position:relative;cursor:pointer;text-align:left;font-weight:normal;line-height:1.25em;}
 #lib-genre li, #lib-artist li, #lib-album li {line-height:2em;}
