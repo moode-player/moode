@@ -44,6 +44,7 @@ Bug fixes
 - FIX: Swap file not disabled during build
 - FIX: PSK not generated when password contains certain chars
 - FIX: Date parsing in function genLibraryUTF8Rep()
+- FIX: Line wrap in Library Tag and Album views
 
 ########################################################
 //
