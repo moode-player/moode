@@ -44,7 +44,7 @@ while true; do
 	PERMS=$(ls -l $SESSION_FILE | awk '{print $1 "," $3 "," $4;}')
 	if [[ $PERMS != "-rw-rw-rw-,www-data,www-data" ]]; then
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		LOG_MSG=" watchdog: Session permissions (Reapplied)"
+		LOG_MSG=" watchdog: PHP session permissions (reapplied)"
 		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 		chown www-data:www-data $SESSION_FILE
 		chmod 0666 $SESSION_FILE
@@ -73,14 +73,12 @@ while true; do
 	CARD_NUM=$(sqlite3 $SQL_DB "SELECT value FROM cfg_mpd WHERE param='device'")
 	HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
 	if [[ $HW_PARAMS != $HW_PARAMS_LAST ]]; then
+		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
 		if [[ $HW_PARAMS = "closed" ]]; then
-			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-			LOG_MSG=" watchdog: Audio output closed"
-			echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+			LOG_MSG=" watchdog: INFO Audio output is (closed)"
 		else
 			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-			LOG_MSG=" watchdog: Audio output in use"
-			echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+			LOG_MSG=" watchdog: INFO Audio output is (in use)"
 			# Wake display on play
 			WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
 			if [[ $WAKE_DISPLAY = "1" ]]; then
@@ -88,6 +86,7 @@ while true; do
 				xset s reset > /dev/null 2>&1
 			fi
 		fi
+		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 	fi
 
 	sleep 6
