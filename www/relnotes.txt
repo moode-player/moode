@@ -17,11 +17,11 @@
 
 New features
 
-- NEW: Option to wake the display when audio starts playing
+- NEW: Option to wake display when audio starts playing
 
 Updates
 
-- UPD: Bump to Linux kernel 4.19.81 build #1276
+- UPD: Bump to Linux kernel 4.19.79 build #1273
 - UPD: Bump to Bluez-alsa 2.0.0
 - UPD: Bump to alsa-capabilities 2.0.1
 - UPD: Deprecate MPD 0.20.23 and make 0.21.15 the default
@@ -37,8 +37,13 @@ Updates
 - UPD: Add hdmi_blanking=1 to /boot/config.txt
 - UPD: Improve Gpio-buttons Python 2/3 compatibility
 
+Radio stations
+
+- UPD: Playable URL for Jazz24
+
 Bug fixes
 
+- FIX: Pi-4B / Allo Katana driver load failure
 - FIX: JSON encode fail in genLibrary() if bad UTF-8 chars
 - FIX: Wrong symbol code used for microseconds in html Sysinfo
 - FIX: Swap file not disabled during build
