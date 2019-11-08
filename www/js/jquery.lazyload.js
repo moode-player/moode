@@ -11,7 +11,7 @@
  *
  * Version:  1.9.7
  *
- * 2019-06-12 TC moOde 5.3.1
+ * 2019-MM-DD TC moOde 6.4.0
  *
  */
 
@@ -29,10 +29,10 @@
             container       : window,
             data_attribute  : "original",
             data_srcset     : "srcset",
-            skip_invisible  : false,
+            skip_invisible  : true,
             appear          : null,
             load            : null,
-			// r43k gray square
+			// Gray square
 			placeholder     : "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs="
         };
 
