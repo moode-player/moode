@@ -115,15 +115,15 @@ html {background-color:inherit;}
 #countdown, #time, #volcontrol {position:relative;}
 #time {visibility:hidden;}
 #volcontrol, #volcontrol-2 {margin:auto;height:12.5em;width:12.5em;}
-.volume-display {position:absolute;transform:translate(-50%, -50%);top:51%;left:50%;font-size:2.1em;font-weight:bold;cursor:pointer;color:var(--accentxts);}
+.volume-display {position:absolute;transform:translate(-50%, -50%);top:51%;left:50%;/*font-family:monospace;*/font-size:2.25em;font-weight:bold;cursor:pointer;color:var(--accentxts);}
 .tab-content.visacc .volume-display {color:var(--textvariant);}
 #volume, #volume-2 {display:none;} /* using .volume-display to overlay this element so it can be used as a mute toggle */
 #countdown {margin:0 auto;height:12.5em;width:12.5em;}
 #countdown div {margin:0 auto;} /* needed to center the knob */
 .countdown-caret {margin-left:2px;color:var(--accentxts);}
-#countdown-display {position:absolute;top:51%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%);font-size:28px;font-weight:bold;cursor:pointer;}
-#total {position:absolute;top:63%;left:50%;transform:translate(-50%);margin-left:.5em;}
-.total-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;width:20%;height:20px;margin-left:0 !important;}
+#countdown-display {position:absolute;top:51%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%);/*font-family:monospace;*/font-weight:bold;cursor:pointer;}
+#total {position:absolute;top:63%;left:50%;transform:translate(-50%);margin-left:.5em;/*font-family:monospace;*/}
+.total-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;width:22%;height:20px;margin-left:0 !important;}
 #playbtns, #playbtns .btn-group {font-size:1em;margin:.75em 0;}
 #playbtns .btn {font-size:2rem;padding:1.25rem;}
 #togglebtns .btn-group {font-size:1em;white-space:normal;}
