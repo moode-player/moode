@@ -24,7 +24,9 @@ Updates
 - UPD: Bump to Linux kernel 4.19.79 build #1273
 - UPD: Bump to Bluez-alsa 2.0.0
 - UPD: Bump to alsa-capabilities 2.0.1
-- UPD: Deprecate MPD 0.20.23 and make 0.21.15 the default
+- UPD: Bump to MPD 0.21.16
+- UPD: Bump to shairport-sync 3.3.5 w/mqtt support
+- UPD: Deprecate MPD 0.20.23 and make 0.21.16 the default
 - UPD: Tag View album list gets same grouping as Album View
 - UPD: Hide quick jump index if grouping albums by year
 - UPD: Quick jump to artist if grouping by Artist
@@ -36,6 +38,7 @@ Updates
 - UPD: Add XFS filesystem support to udisks-glue
 - UPD: Add hdmi_blanking=1 to /boot/config.txt
 - UPD: Improve Gpio-buttons Python 2/3 compatibility
+- UPD: Add xfsprogs package for xfs file system support
 
 Radio stations
 
@@ -50,6 +53,7 @@ Bug fixes
 - FIX: PSK not generated when password contains certain chars
 - FIX: Date parsing in function genLibraryUTF8Rep()
 - FIX: Line wrap in Library Tag and Album views
+- FIX: Time knob counter left position and radio badge width
 
 ########################################################
 //
