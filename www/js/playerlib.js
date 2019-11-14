@@ -1400,36 +1400,32 @@ function watchCountdown(period) {
 	// period[4] (hours) > 0 reduce font-size so time fits nicely within knob
 	//console.log('period ' + period[4]);
 
-	// default
+	// Default
 	if ($(window).height() > 479) {
+        $('#countdown-display').css('margin-top','-.5em');
+
 		if (period[4] == 0) {
-			$('#countdown-display').css('font-size', '1.9em');
-			$('#countdown-display').css('margin-top', '-.5em');
+            $('#countdown-display').css('font-size','1.9em');
 		}
 		else if (period[4] < 10) {
-			$('#countdown-display').css('font-size', '1.8em');
-			$('#countdown-display').css('margin-top', '-.5em');
-			$('#countdown-display').css('left', '51%');
+            $('#countdown-display').css('font-size','1.8em');
 		}
 		else {
-			$('#countdown-display').css('font-size', '1.6em');
-			$('#countdown-display').css('margin-top', '-.5em');
+            $('#countdown-display').css('font-size','1.6em');
 		}
 	}
-	// pi touch 799 x 479
+	// Pi 7" touch 799 x 479
 	else {
+        $('#countdown-display').css('margin-top','-1em');
+
 		if (period[4] == 0) {
-			$('#countdown-display').css('font-size', '1.8em');
-			$('#countdown-display').css('margin-top', '-1em');
+            $('#countdown-display').css('font-size','1.7em');
 		}
 		else if (period[4] < 10) {
-			$('#countdown-display').css('font-size', '1.6em');
-			$('#countdown-display').css('margin-top', '-1em');
-			$('#countdown-display').css('left', '51%');
+            $('#countdown-display').css('font-size','1.6em');
 		}
 		else {
-			$('#countdown-display').css('font-size', '1.5em');
-			$('#countdown-display').css('margin-top', '-1em');
+            $('#countdown-display').css('font-size','1.5em');
 		}
 	}
 }
