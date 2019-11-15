@@ -54,6 +54,7 @@ Bug fixes
 - FIX: Date parsing in function genLibraryUTF8Rep()
 - FIX: Line wrap in Library Tag and Album views
 - FIX: Time knob counter left position and radio badge width
+- FIX: Airplay settings section of Sysinfo
 
 ########################################################
 //
