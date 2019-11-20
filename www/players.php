@@ -28,6 +28,7 @@ $thishost = strtolower($array[0]['value']);
 $result = shell_exec("avahi-browse -a -t -r -p | awk -F '[;.]' '/IPv4/ && /moOde/ && /audio/ && /player/ && /=/ {print $7\",\"$9\".\"$10\".\"$11\".\"$12}' | sort");
 $line = strtok($result, "\n");
 $_players = '';
+
 while ($line) {
 	list($host, $ipaddr) = explode(",", $line);
 	if (strtolower($host) != $thishost) {

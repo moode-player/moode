@@ -3,7 +3,7 @@
 # Build Recipe v2.15 2019-MM-DD
 #
 # moOde 6.4.0 2019-MM-DD
-# - Based on Raspbian Buster Lite (10.1)
+# - Based on Raspbian Buster Lite 10.1
 # - Bump to r640 sources
 # - Bump to Linux kernel 4.19.79
 # - Bump to bluez-alsa 2.0.0
