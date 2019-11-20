@@ -23,9 +23,10 @@ Updates
 
 - UPD: Bump to Linux kernel 4.19.79 build #1273
 - UPD: Bump to Bluez-alsa 2.0.0
-- UPD: Bump to alsa-capabilities 2.0.1
 - UPD: Bump to MPD 0.21.16
 - UPD: Bump to shairport-sync 3.3.5 w/mqtt support
+- UPD: Bump to alsa-capabilities 2.0.1
+- UPD: Bump to moodeutl 1.3.1
 - UPD: Deprecate MPD 0.20.23 and make 0.21.16 the default
 - UPD: Tag View album list gets same grouping as Album View
 - UPD: Hide quick jump index if grouping albums by year
