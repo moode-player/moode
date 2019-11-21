@@ -565,15 +565,15 @@ sudo tar xfz ./boost_1.68_libraries.tar.gz
 sudo rm ./boost_*.gz
 cd ~
 
-3. Download MPD 0.21.15 sources and prep for compile.
+3. Download MPD 0.21.16 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.21.15 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.21.16 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.15.tar.xz
-sudo tar xf mpd-0.21.15.tar.xz
-cd mpd-0.21.15
+sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.16.tar.xz
+sudo tar xf mpd-0.21.16.tar.xz
+cd mpd-0.21.16
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
