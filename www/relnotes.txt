@@ -38,8 +38,9 @@ Updates
 - UPD: Add eye icon for show/hide password plaintext
 - UPD: Add XFS filesystem support to udisks-glue
 - UPD: Add hdmi_blanking=1 to /boot/config.txt
-- UPD: Improve Gpio-buttons Python 2/3 compatibility
 - UPD: Add xfsprogs package for xfs file system support
+- UPD: Improve Gpio-buttons Python 2/3 compatibility
+- UPD: Change a2dp auto-connect rule to avoid UDEV sandboxing
 
 Radio stations
 
