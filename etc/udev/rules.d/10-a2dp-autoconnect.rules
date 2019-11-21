@@ -3,7 +3,7 @@ ACTION=="remove", KERNEL=="input[0-9]*", SUBSYSTEM=="input", DEVPATH=="/devices/
 GOTO="bt_end"
 
 LABEL="bt_add"
-RUN+="/usr/bin/mpc stop"
+RUN+="/bin/systemctl restart mpd"
 RUN+="/usr/local/bin/a2dp-autoconnect"
 GOTO="bt_end"
 
