@@ -5,7 +5,7 @@
 # moOde 6.4.0 2019-MM-DD
 # - Based on Raspbian Buster Lite 10.1
 # - Bump to r640 sources
-# - Bump to Linux kernel 4.19.79
+# - Bump to Linux kernel 4.19.83
 # - Bump to bluez-alsa 2.0.0
 # - Bump to MPD 0.21.16
 # - Bump to shairport-sync 3.3.5
@@ -304,6 +304,17 @@ sudo systemctl disable hciuart.service
 sudo mkdir -p /var/run/bluealsa
 sudo sync
 sudo apt-get clean
+
+5. Compile trx 0.4
+
+sudo apt-get -y install libopus-dev
+sudo cp ./moode/other/trx/trx-0.4.tar.gz ./
+sudo tar xfz ./trx-0.4.tar.gz
+cd trx-0.4
+sudo make
+sudo make install
+cd ..
+sudo rm -rf trx-0.4*
 
 # SR3
 sudo reboot
