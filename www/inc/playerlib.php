@@ -1519,7 +1519,7 @@ function updMpdConf($i2sdevice) {
 
 	foreach ($mpdcfg as $cfg) {
 		switch ($cfg['param']) {
-			// code block or other params
+			// Code block or other params
 			case 'metadata_to_use':
 				$data .= $mpdver == '0.20' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
@@ -1545,7 +1545,6 @@ function updMpdConf($i2sdevice) {
 				$sox_multithreading = $cfg['value'];
 				break;
 			case 'replay_gain_handler':
-				//$replay_gain_handler = $mpdver == '0.21' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				$replay_gain_handler = $cfg['value'];
 				break;
 			case 'buffer_before_play':
@@ -1566,7 +1565,7 @@ function updMpdConf($i2sdevice) {
 			case 'period_time':
 				$period_time = $cfg['value'];
 				break;
-			// default param handling
+			// Default param handling
 			default:
 				$data .= $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				if ($cfg['param'] == 'replaygain') {$replaygain = $cfg['value'];}
@@ -1574,7 +1573,7 @@ function updMpdConf($i2sdevice) {
 		}
 	}
 
-	// input
+	// Input
 	$data .= "max_connections \"128\"\n";
 	$data .= "\n";
 	$data .= "decoder {\n";
@@ -1585,14 +1584,14 @@ function updMpdConf($i2sdevice) {
 	$data .= "plugin \"curl\"\n";
 	$data .= "}\n\n";
 
-	// resampler
+	// Resampler
 	$data .= "resampler {\n";
 	$data .= "plugin \"soxr\"\n";
 	$data .= "quality \"" . $samplerate_converter . "\"\n";
 	$data .= "threads \"" . $sox_multithreading . "\"\n";
 	$data .= "}\n\n";
 
-	// alsa local outputs
+	// ALSA local (outputs 1 - 5)
 	$names = array (
 		"name \"ALSA default\"\n" . "device \"hw:" . $device . ",0\"\n",
 		"name \"ALSA crossfeed\"\n" . "device \"crossfeed\"\n",
@@ -1607,34 +1606,18 @@ function updMpdConf($i2sdevice) {
 		$data .= "mixer_type \"" . $mixertype . "\"\n";
 		$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $device . "\"\n" . "mixer_index \"0\"\n" : '';
 		$data .= "dop \"" . $dop . "\"\n";
-		/* DEPRECATE because when hardware volume is present and replay_gain_handler = 'mixer', 0dB ALSA volume is output when track starts playing. Instead use MPD internal default (software).
-		$data .= $replaygain != 'off' ? "replay_gain_handler \"" . $replay_gain_handler . "\"\n" : '';*/
-		/* DEPRECATE because the explicit settings cause distortion on HDMI and On-board audio outputs. Instead use MPD internal defaults.
-		$data .= "auto_resample \"" . $auto_resample . "\"\n";
-		$data .= "auto_channels \"" . $auto_channels . "\"\n";
-		$data .= "auto_format \"" . $auto_format . "\"\n";
-		$data .= "buffer_time \"" . $buffer_time . "\"\n";
-		$data .= "period_time \"" . $period_time . "\"\n";*/
 		$data .= "}\n\n";
 	}
 
-	// alsa bluetooth output
+	// ALSA bluetooth (output 6)
 	$data .= "audio_output {\n";
 	$data .= "type \"alsa\"\n";
 	$data .= "name \"ALSA bluetooth\"\n";
 	$data .= "device \"btstream\"\n";
 	$data .= "mixer_type \"software\"\n";
-	/* DEPRECATE
-	$data .= $replaygain != 'off' ? "replay_gain_handler \"software\"\n" : '';*/
-	/* DEPRECATE
-	$data .= "auto_resample \"" . $auto_resample . "\"\n";
-	$data .= "auto_channels \"" . $auto_channels . "\"\n";
-	$data .= "auto_format \"" . $auto_format . "\"\n";
-	$data .= "buffer_time \"" . $buffer_time . "\"\n";
-	$data .= "period_time \"" . $period_time . "\"\n";*/
 	$data .= "}\n\n";
 
-	// mpd httpd
+	// MPD httpd (output 7)
 	$data .= "audio_output {\n";
 	$data .= "type \"httpd\"\n";
 	$data .= "name \"HTTP stream\"\n";
@@ -1643,13 +1626,24 @@ function updMpdConf($i2sdevice) {
 	$data .= $_SESSION['mpd_httpd_encoder'] == 'flac' ? "compression \"0\"\n" : "bitrate \"320\"\n";
 	$data .= "tags \"yes\"\n";
 	$data .= "always_on \"yes\"\n";
+	$data .= "}\n\n";
+
+	// TRX multiroom (output 8)
+	$data .= "audio_output {\n";
+	$data .= "type \"alsa\"\n";
+	$data .= "name \"TRX multiroom\"\n";
+	$data .= "device \"multiroom\"\n";
+	$data .= "mixer_type \"" . $mixertype . "\"\n";
+	$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $device . "\"\n" . "mixer_index \"0\"\n" : '';
+	$data .= "dop \"" . $dop . "\"\n";
+	$data .= "#allowed_formats \"48000:16:2\"\n";
 	$data .= "}\n";
 
 	$fh = fopen('/etc/mpd.conf', 'w');
 	fwrite($fh, $data);
 	fclose($fh);
 
-	// update confs with device num (cardnum)
+	// Update confs with device num (cardnum)
 	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa4p.conf');
 	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
@@ -1657,7 +1651,7 @@ function updMpdConf($i2sdevice) {
 	sysCmd("sed -i '/card/c\ \t    card " . $device . "' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $device . ",0' /etc/bluealsaaplay.conf");
 
-	// store device name for Audio info popup
+	// Store device name for Audio info popup
 	if ($_SESSION['i2sdevice'] != 'none') {
 		$adevname = $_SESSION['i2sdevice'];
 	}
@@ -1670,7 +1664,7 @@ function updMpdConf($i2sdevice) {
 	playerSession('write', 'adevname', $adevname);
 }
 
-// return amixer name
+// Return amixer name
 function getMixerName($i2sdevice) {
 	// USB and On-board: default is PCM otherwise use returned mixer name
 	if ($i2sdevice == 'none') {
@@ -1693,14 +1687,14 @@ function getMixerName($i2sdevice) {
 	return $mixername;
 }
 
-// make text for audio device field (mpd and sqe-config)
+// Make text for audio device field (mpd and sqe-config)
 function getDeviceNames () {
 	$dev = array();
 
 	$card0 = file_get_contents('/proc/asound/card0/id');
 	$card1 = file_get_contents('/proc/asound/card1/id');
 
-	// device 0
+	// Device 0
 	if ($card0 == "ALSA\n") {
 		$dev[0] = 'On-board audio device';
 	}
@@ -1711,7 +1705,7 @@ function getDeviceNames () {
 		$dev[0] = '';
 	}
 
-	// device 1
+	// Device 1
 	if ($card1 != '' && $card0 == "ALSA\n") {
 		$dev[1] = 'USB audio device';
 	}
