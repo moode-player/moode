@@ -21,7 +21,7 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 4.19.79 build #1273
+- UPD: Bump to Linux kernel 4.19.83 build #1277
 - UPD: Bump to Bluez-alsa 2.0.0
 - UPD: Bump to MPD 0.21.16
 - UPD: Bump to shairport-sync 3.3.5 w/mqtt support
