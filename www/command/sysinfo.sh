@@ -361,7 +361,7 @@ TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone
 SDFREQ=$(grep "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print $3/1000000}')
 
 
-PHPVER=$(php -v 2>&1 | awk 'FNR==1{ print $2 }' | cut -c-5)
+PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
 BTVER=$(bluetoothd -v)
