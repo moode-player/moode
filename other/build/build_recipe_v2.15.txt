@@ -292,9 +292,6 @@ sudo make
 sudo make install
 cd ../..
 sudo rm -rf bluez-alsa-master*
-# Set permissions for D-Bus comms
-sudo usermod -G audio mpd
-
 
 3. Services are started by moOde Worker so lets disable them here.
 
@@ -400,6 +397,8 @@ sudo chown -R mpd:audio /var/log/mpd
 sudo cp ./moode/mpd/mpd.conf.default /etc/mpd.conf
 sudo chown mpd:audio /etc/mpd.conf
 sudo chmod 0666 /etc/mpd.conf
+# Set permissions for D-Bus (for bluez-alsa)
+sudo usermod -a -G audio mpd
 
 2. Install MPD dev libs.
 
