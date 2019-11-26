@@ -333,7 +333,7 @@ if [ "$WLAN0MAC" = "" ]; then
 fi
 
 TMP="$(df | grep /dev/root | awk '{print $2}')"
-if [[ $TMP -gt 3000000 ]]; then
+if [[ $TMP -gt 3500000 ]]; then
 	FSEXPAND="expanded"
 else
 	FSEXPAND="not expanded"
