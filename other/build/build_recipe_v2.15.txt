@@ -3,8 +3,9 @@
 # Build Recipe v2.15 2019-11-24
 #
 # moOde 6.4.0 2019-11-24
-# - Based on Raspbian Buster Lite 10.1
+# - Based on Raspbian Buster Lite (10.1)
 # - Bump to r640 sources
+# - Bump to Buster Lite 10.2
 # - Bump to Linux kernel 4.19.83
 # - Bump to bluez-alsa 2.0.0
 # - Bump to MPD 0.21.16
@@ -188,13 +189,15 @@ sudo apt-get -y purge triggerhappy
 2. Install core packages.
 
 # NOTE: run these two commands separately
-sudo apt-get update --allow-releaseinfo-change
+#sudo apt-get update --allow-releaseinfo-change
+sudo apt-get update
 sudo apt-get -y upgrade
 
 # SR2
 sudo reboot
 
-sudo apt-get update --allow-releaseinfo-change
+#sudo apt-get update --allow-releaseinfo-change
+sudo apt-get update
 
 sudo apt-get -y install rpi-update php-fpm nginx sqlite3 php-sqlite3 php7.3-gd mpc \
     bs2b-ladspa libbs2b0 libasound2-plugin-equal telnet automake sysstat squashfs-tools shellinabox samba smbclient ntfs-3g \
