@@ -21,6 +21,8 @@ New features
 
 Updates
 
+- UPD: Bump to Raspbian Buster Lite 10.2
+- UPD: Bump to PHP 7.3.11 build 10/26/19
 - UPD: Bump to Linux kernel 4.19.83 build #1277
 - UPD: Bump to Bluez-alsa 2.0.0
 - UPD: Bump to MPD 0.21.16
@@ -57,6 +59,7 @@ Bug fixes
 - FIX: Line wrap in Library Tag and Album views
 - FIX: Time knob counter left position and radio badge width
 - FIX: Airplay settings section of Sysinfo
+- FIX: File system expand test in Sysinfo
 
 ########################################################
 //
