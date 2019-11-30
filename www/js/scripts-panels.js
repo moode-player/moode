@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 
@@ -693,6 +693,9 @@ jQuery(document).ready(function($) { 'use strict';
 			notify('needplname', '');
 		}
     });
+    $('#savepl-modal').on('shown.bs.modal', function(e) {
+        $('#pl-saveName').focus();
+    });
 	// set favorites
     $('#pl-btnSetFav').click(function(e){
 		var favname = $('#pl-favName').val();
@@ -709,6 +712,9 @@ jQuery(document).ready(function($) { 'use strict';
 		else {
 			notify('needplname', '');
 		}
+    });
+    $('#setfav-modal').on('shown.bs.modal', function() {
+        $('#pl-favName').focus();
     });
 	// add item to favorites
     $('.addfav').click(function(e){
@@ -894,6 +900,9 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#current-logoimage').val('');
 		$('#newstation-modal').modal();
 	});
+    $('#newstation-modal').on('shown.bs.modal', function() {
+        $('#new-station-name').focus();
+    });
 	// radio search
 	$('#ra-filter').keyup(function(e){
 		if (!showSearchResetRa) {
