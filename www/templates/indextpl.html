@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 -->
@@ -366,7 +366,7 @@
 				<div class="control-group">
 	                <label class="control-label" for="dbsearch-alltags">Search string</label>
 	                <div class="controls">
-	                    <input id="dbsearch-alltags" class="input-xlarge" type="text">
+	                    <input id="dbsearch-alltags" class="input-xlarge" type="text" autofocus>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-alltags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-alltags" class="help-block hide">
 	                    	All tags are searched using an OR relationship.
@@ -573,13 +573,13 @@
 <div id="savepl-modal" class="modal modal-xs hide fade" tabindex="-1" role="dialog" aria-labelledby="savepl-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="moveplitems-modal-label">Save playlist</h3>
+		<h3 id="savepl-modal-label">Save playlist</h3>
 	</div>
 	<div class="modal-body">
 		<form id="pl-save" method="post" onsubmit="return false;">
 	    	<fieldset>
 				<div class="controls">
-					<input id="pl-saveName" type="text" value="">
+					<input id="pl-saveName" type="text" value="" autofocus>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-savepl" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-savepl" class="help-block help-block2 hide">
 	                	Saved playlists are maintained in the Browse view.
@@ -604,7 +604,7 @@
 		<form id="set-fav" method="post" onsubmit="return false;">
 	    	<fieldset>
 				<div class="controls">
-					<input id="pl-favName" type="text" value="">
+					<input id="pl-favName" type="text" value="" autofocus>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-favname" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-favname" class="help-block help-block2 hide">
 		            	Sets the playlist that will be used to store favorited items. If the playlist does not already exist it will be created. Playlists are maintained in the Browse view.
@@ -631,7 +631,7 @@
 				<div class="control-group">
 	                <label class="control-label" for="new-station-name">Name</label>
 	                <div class="controls">
-	                    <input id="new-station-name" class="input-xlarge" type="text" name="add_station_name" size="200" value="">
+	                    <input id="new-station-name" class="input-xlarge" type="text" name="add_station_name" size="200" value="" autofocus>
 	                </div>
 	                <label class="control-label" for="new-station-url">URL</label>
 	                <div class="controls">
