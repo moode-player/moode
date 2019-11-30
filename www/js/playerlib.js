@@ -18,26 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 
-// features availability bitmask
-const FEAT_RESERVED =    0b0000000000000001; //     1
-const FEAT_AIRPLAY =     0b0000000000000010; //     2
-const FEAT_MINIDLNA =    0b0000000000000100; //     4
-const FEAT_MPDAS =       0b0000000000001000; //     8
-const FEAT_SQUEEZELITE = 0b0000000000010000; //    16
-const FEAT_UPMPDCLI =    0b0000000000100000; //    32
-const FEAT_SQSHCHK =     0b0000000001000000; //    64
-const FEAT_GMUSICAPI =   0b0000000010000000; //   128
-const FEAT_LOCALUI =     0b0000000100000000; //   256
-const FEAT_SOURCESEL =   0b0000001000000000; //   512
-const FEAT_UPNPSYNC =    0b0000010000000000; //  1024
-const FEAT_SPOTIFY =     0b0000100000000000; //  2048
-const FEAT_GPIO =		 0b0001000000000000; //  4096
-const FEAT_DJMOUNT =	 0b0010000000000000; //  8192
-const FEAT_BLUETOOTH =   0b0100000000000000; //  16384
+const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
+const FEAT_AIRPLAY      = 2;        // y Airplay renderer
+const FEAT_MINIDLNA     = 4;        // y DLNA server
+const FEAT_MPDAS        = 8;        // y MPD audio scrobbler
+const FEAT_SQUEEZELITE  = 16;       // y Squeezelite renderer
+const FEAT_UPMPDCLI     = 32;       // y UPnP client for MPD
+const FEAT_SQSHCHK      = 64;       //   Require squashfs when installing software update
+const FEAT_GMUSICAPI    = 128;      // y Google Play music service
+const FEAT_LOCALUI      = 256;      // y Local display
+const FEAT_SOURCESEL    = 512;      // y Input source select
+const FEAT_UPNPSYNC     = 1024;     //   UPnP volume sync
+const FEAT_SPOTIFY      = 2048;     // y Spotify Connect renderer
+const FEAT_GPIO         = 4096;     // y GPIO button handler
+const FEAT_DJMOUNT      = 8192;     // y UPnP media browser
+const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 
 var UI = {
     knob: null,
