@@ -19,6 +19,7 @@ Updates
 
 - UPD: Add features availability to moodeutl
 - UPD: Improve volume step limiter
+- UPD: Use mixer name 'Channels' for HiFiBerry Amp(Amp+)
 
 Bug fixes
 
