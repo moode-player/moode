@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 -->
@@ -76,20 +76,6 @@
 			<a href="mpd-config.php" class="moode-config-settings-link2">MPD</a>
 			<a href="eqp-config.php" class="moode-config-settings-link2">EQ-P</a>
 			<a href="eqg-config.php" class="moode-config-settings-link2">EQ-G</a>
-			<!--
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_AIRPLAY) { ?>
-				<a href="apl-config.php" class="moode-config-settings-link2">AIR</a>
-			<?php } ?>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SPOTIFY) { ?>
-				<a href="spo-config.php" class="moode-config-settings-link2">SPO</a>
-			<?php } ?>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SQUEEZELITE) { ?>
-				<a href="sqe-config.php" class="moode-config-settings-link2">SQE</a>
-			<?php } ?>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_UPMPDCLI) { ?>
-				<a href="upp-config.php" class="moode-config-settings-link2">UPP</a>
-			<?php } ?>
-			-->
 			<a href="#notarget" class="moode-config-settings-link2" data-cmd="setforclockradio-m">CLK-RADIO</a>
 			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SOURCESEL) { ?>
 				<a href="sel-config.php" class="moode-config-settings-link2">SOURCE-SEL</a>
