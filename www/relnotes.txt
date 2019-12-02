@@ -18,6 +18,7 @@
 Updates
 
 - UPD: Add features availability to moodeutl
+- UPD: Improve volume step limiter
 
 Bug fixes
 
