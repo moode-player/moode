@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 
@@ -108,11 +108,7 @@ else {
 				playerSession('write', 'volknob', $_POST['volknob']);
 				sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
 				$resp = readMpdResp($sock);
-				// Intentionally omit the echo to cause ajax abort with JSON parse error.
-				// This causes $('.volumeknob').knob change action to also abort which prevents
-				// knob update and subsequent bounce back to +10 level. Knob will get updated
-				// to +10 level in renderUIVol() routine as a result of MPD idle timeout.
-				//echo json_encode('OK');
+				echo json_encode('OK');
 				break;
 			// Radio, Folder, Library tracks list
 			case 'add':

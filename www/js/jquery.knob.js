@@ -15,10 +15,10 @@
  * Moode Audio Player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
- * 2019-04-12 TC moOde 5.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
- 
+
 (function($) {
 
     /**
@@ -293,13 +293,19 @@
         };
 
         this._touch = function (e) {
-
             var touchMove = function (e) {
 
                 var v = s.xy2val(
-                            e.originalEvent.touches[s.t].pageX,
-                            e.originalEvent.touches[s.t].pageY
-                            );
+                    e.originalEvent.touches[s.t].pageX,
+                    e.originalEvent.touches[s.t].pageY
+                );
+
+                // Volume step limiter
+                if (s.$div.parent().hasClass('volume-step-limiter')) {
+                    if (v - parseInt(SESSION.json['volknob']) > 10) {
+        				v = parseInt(SESSION.json['volknob']) + 10;
+        			}
+                }
 
                 if (v == s.cv) return;
 
@@ -340,9 +346,16 @@
         };
 
         this._mouse = function (e) {
-
             var mouseMove = function (e) {
                 var v = s.xy2val(e.pageX, e.pageY);
+
+                // Volume step limiter
+                if (s.$div.parent().hasClass('volume-step-limiter')) {
+                    if (v - parseInt(SESSION.json['volknob']) > 10) {
+        				v = parseInt(SESSION.json['volknob']) + 10;
+        			}
+                }
+
                 if (v == s.cv) return;
 
                 if (

@@ -606,18 +606,12 @@ jQuery(document).ready(function($) { 'use strict';
 		*/
     });
 
-    // volume control knob
+    // Volume control knob
     $('.volumeknob').knob({
 		configure: {'fgColor':accentColor},
         change : function(value) {
 			value = value > 100 ? 100 : value;
-			if (value - parseInt(SESSION.json['volknob']) > 10) {
-				value = parseInt(SESSION.json['volknob']) + 10;
-				setVolume(value, 'change');
-			}
-			else {
-	            setVolume(value, 'change');
-			}
+            setVolume(value, 'change');
         }
 		/*
         release : function() {}
