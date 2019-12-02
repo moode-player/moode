@@ -17,21 +17,67 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 
-define('VERSION', '1.3.1');
+define('VERSION', '1.3.2');
+define('SQLDB', '/var/local/www/db/moode-sqlite3.db');
+
+// Features availability bitmask
+// NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
+// sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='feat_bitmask'"
+// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='31679' WHERE param='feat_bitmask'"
+const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
+const FEAT_AIRPLAY		= 2;		// y Airplay renderer
+const FEAT_MINIDLNA 	= 4;		// y DLNA server
+const FEAT_MPDAS		= 8; 		// y MPD audio scrobbler
+const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
+const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
+const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
+const FEAT_GMUSICAPI	= 128;		// y Google Play music service
+const FEAT_LOCALUI		= 256;		// y Local display
+const FEAT_SOURCESEL	= 512;		// y Input source select
+const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
+const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer
+const FEAT_GPIO 		= 4096;		// y GPIO button handler
+const FEAT_DJMOUNT		= 8192;		// y UPnP media browser
+const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
+//						-------
+//						  31679
+
+$features = array(
+	FEAT_KERNEL => 'Kernel architecture',
+	FEAT_AIRPLAY =>	'Airplay renderer',
+	FEAT_MINIDLNA => 'DLNA server',
+	FEAT_MPDAS => 'MPD audio scrobbler',
+	FEAT_SQUEEZELITE => 'Squeezelite renderer',
+	FEAT_UPMPDCLI => 'UPnP client for MPD',
+	FEAT_SQSHCHK => 'Require squashfs for software update',
+	FEAT_GMUSICAPI => 'Google Play music service',
+	FEAT_LOCALUI => 'Local display',
+	FEAT_SOURCESEL => 'Input source select',
+	FEAT_UPNPSYNC => 'UPnP volume sync',
+	FEAT_SPOTIFY => 'Spotify Connect renderer',
+	FEAT_GPIO => 'GPIO button handler',
+	FEAT_DJMOUNT => 'UPnP media browser',
+	FEAT_BLUETOOTH => 'Bluetooth renderer'
+);
+
+$feat_bitmask = trim(shell_exec("sqlite3 " .  SQLDB . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
 switch ($option) {
+	case '-a':
+		print_features_availability($features, $feat_bitmask);
+		break;
+	case '-A':
+		update_features_availability($features, $feat_bitmask, $argv);
+		break;
 	case '-f':
 	case '-F':
 		audio_formats($option);
-		break;
-	case '-i':
-		system_info();
 		break;
 	case '-l':
 		moode_log();
@@ -41,6 +87,9 @@ switch ($option) {
 		break;
 	case '-r':
 		restart_servers();
+		break;
+	case '-s':
+		system_info();
 		break;
 	case '-t':
 		tail_log();
@@ -56,6 +105,8 @@ Moode utility programs
 
 With no OPTION print the help text and exit.
 
+ -a\t\tprint features availability
+ -A [add|rm N] \tupdate features availability
  -f\t\tprint supported audio formats
  -F\t\tprint supported audio formats and sample rates
  -i\t\tprint system info
@@ -69,7 +120,7 @@ With no OPTION print the help text and exit.
 }
 
 function audio_formats($option) {
-	$card_num = trim(shell_exec("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT value FROM cfg_mpd WHERE param='device'\""));
+	$card_num = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
 	$audio_output = trim(shell_exec('cat /proc/asound/card0/pcm0p/sub0/hw_params | grep closed'));
 
 	if ($audio_output == 'closed') {
@@ -124,11 +175,6 @@ function audio_formats($option) {
 	}
 }
 
-function system_info() {
-	echo "Generating info...\n";
-	echo shell_exec('sudo /var/www/command/sysinfo.sh');
-}
-
 function moode_log() {
 	echo shell_exec('cat /var/log/moode.log');
 }
@@ -150,7 +196,7 @@ function system_monitor() {
 		// Temp
 		$cpu_temp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
 
-		// cpu utilization
+		// CPU utilization
 		$cpu_load = exec("top -bn 2 -d 1.0 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
 		$cpu_load += exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
 		$cpu_load = $cpu_load / 2;
@@ -182,6 +228,11 @@ function restart_servers() {
 	echo "Servers restarted\n";
 }
 
+function system_info() {
+	echo "Generating info...\n";
+	echo shell_exec('sudo /var/www/command/sysinfo.sh');
+}
+
 function tail_log() {
 	$file = '/var/log/moode.log';
 	$size = filesize($file) - 1024;
@@ -201,5 +252,56 @@ function tail_log() {
 		}
 		fclose($fh);
 		$size = $current_size;
+	}
+}
+
+function print_features_availability($features, $feat_bitmask) {
+	foreach ($features as $key => $value) {
+		echo $key . "\t" . ($key & $feat_bitmask ? 'y' : '') . "\t" . $value . "\n";
+	}
+}
+
+function update_features_availability($features, $feat_bitmask, $argv) {
+	if (!isset($argv[2])) {
+		echo 'Missing 2nd argument [add or rm]' . "\n";
+		return;
+	}
+	if (!($argv[2] == 'add' || $argv[2] == 'rm')) {
+		echo '2nd argument must be add or rm' . "\n";
+		return;
+	}
+	if (!isset($argv[3])) {
+		echo "Missing 3rd argument [N], the feature's numeric value" . "\n";
+		return;
+	}
+
+	$match = false;
+	foreach ($features as $key => $value) {
+		if ($argv[3] == $key) {
+			$match = true;
+			break;
+		}
+	}
+
+	$bitmask = (int)$feat_bitmask;
+	$arg3 = (int)$argv[3];
+
+	if ($match == false) {
+		echo '3rd argument N does equal any feature value' . "\n";
+		return;
+	}
+	elseif ($argv[2] == 'add' && ($arg3 & $bitmask)) {
+		echo 'Feature is already enabled, cannot add' . "\n";
+		return;
+	}
+	elseif ($argv[2] == 'rm' && !($arg3 & $bitmask)) {
+		echo 'Feature is not already enabled, cannot remove' . "\n";
+		return;
+	}
+	else {
+		$new_bitmask = $argv[2] == 'add' ? $bitmask + $arg3 : $bitmask - $arg3;
+		shell_exec("sqlite3 " .  SQLDB . " \"UPDATE cfg_system set value='" . $new_bitmask . "' WHERE param='feat_bitmask'\"");
+		echo 'Old bitmask ' . $feat_bitmask . "\n";
+		echo 'New bitmask ' . $new_bitmask . "\n";
 	}
 }
