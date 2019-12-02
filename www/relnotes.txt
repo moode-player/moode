@@ -15,10 +15,15 @@
 //
 ########################################################
 
+Updates
+
+- UPD: Add features availability to moodeutl
+
 Bug fixes
 
 - FIX: 64-bit kernel not listed in dropdown if USBridge SIG
 - FIX: Partial fix for Autofocus not working on modal popups
+- FIX: Parsing nameserver and domian from /etc/resolv.conf
 
 ########################################################
 //
