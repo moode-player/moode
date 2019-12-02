@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 
@@ -1168,8 +1168,12 @@ function log_network_info($interface) {
 	workerLog('worker: IP addr (' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $2}'")[0] . ')');
 	workerLog('worker: Netmask (' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $4}'")[0] . ')');
 	workerLog('worker: Gateway (' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0] . ')');
-	workerLog('worker: Pri DNS (' . sysCmd("cat /etc/resolv.conf | awk 'NR==3 {print $2}'")[0] . ')');
-	workerLog('worker: Domain  (' . sysCmd("cat /etc/resolv.conf | awk 'NR==2 {print $2}'")[0] . ')');
+	$line3 = sysCmd("cat /etc/resolv.conf | awk 'NR==3 {print $2}'")[0]; // nameserver
+	$line2 = sysCmd("cat /etc/resolv.conf | awk 'NR==2 {print $2}'")[0]; // domain
+	$primary_dns = !empty($line3) ? $line3 : $line2;
+	$domain_name = !empty($line3) ? $line2 : 'None';
+	workerLog('worker: Pri DNS (' . $primary_dns . ')');
+	workerLog('worker: Domain  (' . $domain_name . ')');
 }
 
 //
