@@ -42,6 +42,7 @@ define('SESSION_SAVE_PATH', '/var/local/php');
 error_reporting(E_ERROR);
 
 // Features availability bitmask
+// NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
 // sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='feat_bitmask'"
 // sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='31679' WHERE param='feat_bitmask'"
 const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
@@ -50,7 +51,7 @@ const FEAT_MINIDLNA 	= 4;		// y DLNA server
 const FEAT_MPDAS		= 8; 		// y MPD audio scrobbler
 const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
-const FEAT_SQSHCHK		= 64;		// 	 Require squashfs when installing software update
+const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
 const FEAT_GMUSICAPI	= 128;		// y Google Play music service
 const FEAT_LOCALUI		= 256;		// y Local display
 const FEAT_SOURCESEL	= 512;		// y Input source select
@@ -63,11 +64,7 @@ const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 //						  31679
 
 // Mirror for footer.php
-$FEAT_AIRPLAY 		= 2;
-$FEAT_SQUEEZELITE	= 16;
-$FEAT_UPMPDCLI		= 32;
 $FEAT_SOURCESEL 	= 512;
-$FEAT_SPOTIFY		= 2048;
 
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
