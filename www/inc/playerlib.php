@@ -1677,7 +1677,10 @@ function getMixerName($i2sdevice) {
         }
 	}
 	// I2S exceptions
-	elseif ($i2sdevice == 'HiFiBerry Amp(Amp+)' || $i2sdevice == 'Allo Katana DAC' || ($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
+	elseif ($i2sdevice == 'HiFiBerry Amp(Amp+)') {
+		$mixername = 'Channels';
+	}
+	elseif ($i2sdevice == 'Allo Katana DAC' || ($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
 		$mixername = 'Master';
 	}
 	// I2S default
