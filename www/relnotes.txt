@@ -18,14 +18,16 @@
 Updates
 
 - UPD: Add features availability to moodeutl
-- UPD: Improve volume step limiter
+- UPD: Improve volume knob step limiter
 - UPD: Use mixer name 'Channels' for HiFiBerry Amp(Amp+)
+- UPD: Comment out Info logging from watchdog
 
 Bug fixes
 
 - FIX: 64-bit kernel not listed in dropdown if USBridge SIG
 - FIX: Partial fix for Autofocus not working on modal popups
-- FIX: Parsing nameserver and domian from /etc/resolv.conf
+- FIX: Logic to parse /etc/resolv.conf for Moode log
+- FIX: Minor bugs in various HTML files
 
 ########################################################
 //
