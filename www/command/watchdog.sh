@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-11-24 TC moOde 6.4.0
+# 2019-MM-DD TC moOde 6.4.1
 #
 
 FPM_LIMIT=40
@@ -75,10 +75,10 @@ while true; do
 	if [[ $HW_PARAMS != $HW_PARAMS_LAST ]]; then
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
 		if [[ $HW_PARAMS = "closed" ]]; then
-			LOG_MSG=" watchdog: INFO Audio output is (closed)"
+			LOG_MSG=" watchdog: Info: Audio output is (closed)"
 		else
 			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-			LOG_MSG=" watchdog: INFO Audio output is (in use)"
+			LOG_MSG=" watchdog: Info: Audio output is (in use)"
 			# Wake display on play
 			WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
 			if [[ $WAKE_DISPLAY = "1" ]]; then
@@ -86,7 +86,7 @@ while true; do
 				xset s reset > /dev/null 2>&1
 			fi
 		fi
-		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 	fi
 
 	sleep 6
