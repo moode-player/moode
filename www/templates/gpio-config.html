@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
--->	
+-->
 <div class="container">
 <div class="container2">
 	<h1 class="sys-config">GPIO Config</h1>
@@ -30,7 +30,7 @@
 			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
 				SAVE: Update button configuration and restart GPIO button handler.<br><br>
-				<img src="images/gpio-pins.png"><br><br>
+				<img src="images/gpio-pins.png" alt="GPIO Pins"><br><br>
 				- The GPIO button handler configures pins as input / pull-up.<br>
 				- The pins are 3V3. Pins GPIO2 and GPIO3 have fixed pull-up resistors.<br>
 				- At power on the pins are set to input mode, pins 0-8 are pull-ups to 3V3, pins 9-27 are pull-downs to 0V.
@@ -50,11 +50,11 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
 						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_1_pin" name="config[1][pin]" value="$_select[sw_1_pin]"> 
+						<input class="input-mini" type="number" min="2" max="27" id="sw_1_pin" name="config[1][pin]" value="$_select[sw_1_pin]">
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_1_cmd" name="config[1][command]" value="$_select[sw_1_cmd]"> 
+						<input class="input-large" type="text" id="sw_1_cmd" name="config[1][command]" value="$_select[sw_1_cmd]">
 					</div>
 				</div>
 			</div>
@@ -69,11 +69,11 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
 						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_2_pin" name="config[2][pin]" value="$_select[sw_2_pin]"> 
+						<input class="input-mini" type="number" min="2" max="27" id="sw_2_pin" name="config[2][pin]" value="$_select[sw_2_pin]">
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_2_cmd" name="config[2][command]" value="$_select[sw_2_cmd]"> 
+						<input class="input-large" type="text" id="sw_2_cmd" name="config[2][command]" value="$_select[sw_2_cmd]">
 					</div>
 				</div>
 			</div>
@@ -88,11 +88,11 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
 						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_3_pin" name="config[3][pin]" value="$_select[sw_3_pin]"> 
+						<input class="input-mini" type="number" min="2" max="27" id="sw_3_pin" name="config[3][pin]" value="$_select[sw_3_pin]">
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_3_cmd" name="config[3][command]" value="$_select[sw_3_cmd]"> 
+						<input class="input-large" type="text" id="sw_3_cmd" name="config[3][command]" value="$_select[sw_3_cmd]">
 					</div>
 				</div>
 			</div>
@@ -107,11 +107,11 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
 						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_4_pin" name="config[4][pin]" value="$_select[sw_4_pin]"> 
+						<input class="input-mini" type="number" min="2" max="27" id="sw_4_pin" name="config[4][pin]" value="$_select[sw_4_pin]">
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_4_cmd" name="config[4][command]" value="$_select[sw_4_cmd]"> 
+						<input class="input-large" type="text" id="sw_4_cmd" name="config[4][command]" value="$_select[sw_4_cmd]">
 					</div>
 				</div>
 			</div>
@@ -126,11 +126,11 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
 						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_5_pin" name="config[5][pin]" value="$_select[sw_5_pin]"> 
+						<input class="input-mini" type="number" min="2" max="27" id="sw_5_pin" name="config[5][pin]" value="$_select[sw_5_pin]">
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_5_cmd" name="config[5][command]" value="$_select[sw_5_cmd]"> 
+						<input class="input-large" type="text" id="sw_5_cmd" name="config[5][command]" value="$_select[sw_5_cmd]">
 					</div>
 				</div>
 			</div>
@@ -145,11 +145,11 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
 						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_6_pin" name="config[6][pin]" value="$_select[sw_6_pin]"> 
+						<input class="input-mini" type="number" min="2" max="27" id="sw_6_pin" name="config[6][pin]" value="$_select[sw_6_pin]">
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_6_cmd" name="config[6][command]" value="$_select[sw_6_cmd]"> 
+						<input class="input-large" type="text" id="sw_6_cmd" name="config[6][command]" value="$_select[sw_6_cmd]">
 					</div>
 				</div>
 			</div>
@@ -164,11 +164,11 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
 						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_7_pin" name="config[7][pin]" value="$_select[sw_7_pin]"> 
+						<input class="input-mini" type="number" min="2" max="27" id="sw_7_pin" name="config[7][pin]" value="$_select[sw_7_pin]">
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_7_cmd" name="config[7][command]" value="$_select[sw_7_cmd]"> 
+						<input class="input-large" type="text" id="sw_7_cmd" name="config[7][command]" value="$_select[sw_7_cmd]">
 					</div>
 				</div>
 			</div>
@@ -183,11 +183,11 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
 						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_8_pin" name="config[8][pin]" value="$_select[sw_8_pin]"> 
+						<input class="input-mini" type="number" min="2" max="27" id="sw_8_pin" name="config[8][pin]" value="$_select[sw_8_pin]">
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
 						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_8_cmd" name="config[8][command]" value="$_select[sw_8_cmd]"> 
+						<input class="input-large" type="text" id="sw_8_cmd" name="config[8][command]" value="$_select[sw_8_cmd]">
 					</div>
 				</div>
 			</div>
