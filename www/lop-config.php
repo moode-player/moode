@@ -58,6 +58,15 @@ $_select['show_genres'] .= "<option value=\"No\" " . (($_SESSION['show_genres'] 
 $_select['library_album_grouping'] .= "<option value=\"Artist\" " . (($_SESSION['library_album_grouping'] == 'Artist') ? "selected" : "") . ">by Artist</option>\n";
 $_select['library_album_grouping'] .= "<option value=\"Album\" " . (($_SESSION['library_album_grouping'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
 $_select['library_album_grouping'] .= "<option value=\"Year\" " . (($_SESSION['library_album_grouping'] == 'Year') ? "selected" : "") . ">by Year</option>\n";
+// Show Subtitle in Album List in Tag view
+$_select['taglist_sub'] .= "<option value=\"None\" " . (($_SESSION['taglist_sub'] == 'None') ? "selected" : "") . ">None</option>\n";
+$_select['taglist_sub'] .= "<option value=\"Artist\" " . (($_SESSION['taglist_sub'] == 'Artist') ? "selected" : "") . ">Artist</option>\n";
+$_select['taglist_sub'] .= "<option value=\"Year\" " . (($_SESSION['taglist_sub'] == 'Year') ? "selected" : "") . ">Year</option>\n";
+$_select['taglist_sub'] .= "<option value=\"Artist (Year)\" " . (($_SESSION['taglist_sub'] == 'Artist (Year)') ? "selected" : "") . ">Artist (Year)</option>\n";
+// Show Year label in Album view
+$_select['show_year_av'] .= "<option value=\"None\" " . (($_SESSION['show_year_av'] == 'None') ? "selected" : "") . ">None</option>\n";
+$_select['show_year_av'] .= "<option value=\"Before Album\" " . (($_SESSION['show_year_av'] == 'Before Album') ? "selected" : "") . ">Before Album</option>\n";
+$_select['show_year_av'] .= "<option value=\"After Artist\" " . (($_SESSION['show_year_av'] == 'After Artist') ? "selected" : "") . ">After Artist</option>\n";
 // Compilation identifier
 $_select['library_comp_id'] = $_SESSION['library_comp_id'];
 // Recently added
