@@ -37,7 +37,6 @@
 				<li>Contributors: <a class="moode-about-link1" href="./CONTRIBS.html" target="_blank">View contributors</a></li>
 				<li>License: <a class="moode-about-link1" href="./COPYING.html" target="_blank">View GPLv3</a></li>
 			</ul>
-		</p>
 		<p>
 			<h4>Platform Information</h4>
 			<ul>
@@ -599,8 +598,8 @@
 		<h3 id="restart-modal-label"><i class="fas fa-power-off sx"></i></h3>
 	</div>
 	<div class="modal-body">
-		<button aria-label="Shutdown" id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block"></i>Shutdown</button>
-		<button aria-label="Reboot" id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;"></i>Reboot</button>
+		<button aria-label="Shutdown" id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block">Shutdown</button>
+		<button aria-label="Reboot" id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;">Reboot</button>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
