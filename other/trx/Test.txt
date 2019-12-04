@@ -8,8 +8,8 @@ GENERIC CONFIGURATION AND TEST
 
 sudo apt-get -y install libopus-dev
 
-wget https://github.com/moode-player/moode/tree/develop/other/trx/trx-0.4.tar.gz
-sudo tar xfz ./trx-0.4.tar.gz
+wget https://github.com/moode-player/moode/tree/develop/other/trx/trx-0.4.zip
+sudo unzip trx-0.4.zip
 cd trx-0.4
 sudo make
 sudo make install
