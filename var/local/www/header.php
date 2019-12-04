@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 -->
@@ -92,7 +92,7 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="/v5-favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/v5-favicon-16x16.png">
 	<!--link rel="manifest" href="/site.webmanifest"-->
-	<meta name="theme-color" content="#ffffff"-->
+	<meta name="theme-color" content="#ffffff">
 	<!-- Microsoft -->
 	<meta name="msapplication-TileColor" content="#da532c">
 </head>
