@@ -27,7 +27,8 @@ Bug fixes
 - FIX: 64-bit kernel not listed in dropdown if USBridge SIG
 - FIX: Partial fix for Autofocus not working on modal popups
 - FIX: Logic to parse /etc/resolv.conf for Moode log
-- FIX: Minor bugs in various HTML files
+- FIX: Minor bugs in various HTML template files
+- FIX: Spurious HTML tags in header.php and footer.php
 
 ########################################################
 //
