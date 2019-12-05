@@ -69,11 +69,37 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_library_album_grouping" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_library_album_grouping" class="help-block-configs help-block-margin hide">
-						This option determines how albums are grouped in Album view.<br>
+						This option determines how albums are grouped in both Tag and Album views.<br>
 						NOTE: When grouping by Year if not all tracks in the album have the same Year the highest Year will be used.
                     </span>
 				</div>
 			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="taglist_sub">Subtitle in Tag View</label>
+				<div class="controls">
+					<select id="taglist_sub" class="input-large" name="config[taglist_sub]">
+						$_select[taglist_sub]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_taglist_sub" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_taglist_sub" class="help-block-configs help-block-margin hide">
+						Show 'Artist', 'Year', 'Artist (Year)' or nothing as a subtitle below each album in the Tag view.
+                    </span>
+				</div>
+			</div>	
+			
+			<div class="control-group">
+				<label class="control-label" for="show_year_av">Show Year in Album view</label>
+				<div class="controls">
+					<select id="show_year_av" class="input-large" name="config[show_year_av]">
+						$_select[show_year_av]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_show_year_av" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_show_year_av" class="help-block-configs help-block-margin hide">
+						Show and position, or hide, 'Year' details in the Album view.
+                    </span>
+				</div>
+			</div>				
 
 			<div class="control-group">
 				<label class="control-label" for="library_comp_id">Compilation identifier</label>
