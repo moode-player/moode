@@ -29,7 +29,7 @@ Bug fixes
 - FIX: Logic to parse /etc/resolv.conf for Moode log
 - FIX: Minor bugs in various HTML template files
 - FIX: Spurious HTML tags in header.php and footer.php
-- FIX: Auto-config fail if moodecfg.txt contains CRLF (\r\n)
+- FIX: Auto-config fails if moodecfg.txt contains CRLF
 
 ########################################################
 //
