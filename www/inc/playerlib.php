@@ -2503,7 +2503,8 @@ function cfgAudioScrobbler() {
 function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Auto-configure initiated');
 
-	$contents = file_get_contents($cfgfile);
+	//$contents = file_get_contents($cfgfile);
+	$contents = str_replace("\r\n", "\n", file_get_contents($cfgfile));
 	$autocfg = array();
 	$line = strtok($contents, "\n");
 
