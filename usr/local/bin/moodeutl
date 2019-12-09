@@ -109,10 +109,10 @@ With no OPTION print the help text and exit.
  -A [add|rm N] \tupdate features availability
  -f\t\tprint supported audio formats
  -F\t\tprint supported audio formats and sample rates
- -i\t\tprint system info
  -l\t\tprint moode log
  -m\t\trun system monitor
  -r\t\trestart servers
+ -s\t\tprint system info
  -t\t\tprint last 10 lines of moode log and wait
  --version\tprint the program version
  --help\t\tprint this help text\n";
