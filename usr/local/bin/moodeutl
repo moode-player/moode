@@ -70,10 +70,10 @@ $option = isset($argv[1]) ? $argv[1] : '';
 
 switch ($option) {
 	case '-a':
-		print_features_availability($features, $feat_bitmask);
+		print_features($features, $feat_bitmask);
 		break;
 	case '-A':
-		update_features_availability($features, $feat_bitmask, $argv);
+		update_features($features, $feat_bitmask, $argv);
 		break;
 	case '-f':
 	case '-F':
@@ -117,6 +117,61 @@ With no OPTION print the help text and exit.
  --version\tprint the program version
  --help\t\tprint this help text\n";
 		break;
+}
+function sysCmd($cmd) {
+	exec('sudo ' . $cmd . " 2>&1", $output);
+	return $output;
+}
+
+function print_features($features, $feat_bitmask) {
+	foreach ($features as $key => $value) {
+		echo $key . "\t" . ($key & $feat_bitmask ? 'y' : '') . "\t" . $value . "\n";
+	}
+}
+
+function update_features($features, $feat_bitmask, $argv) {
+	if (!isset($argv[2])) {
+		echo 'Missing 2nd argument [add or rm]' . "\n";
+		return;
+	}
+	if (!($argv[2] == 'add' || $argv[2] == 'rm')) {
+		echo '2nd argument must be add or rm' . "\n";
+		return;
+	}
+	if (!isset($argv[3])) {
+		echo "Missing 3rd argument [N], the feature's numeric value" . "\n";
+		return;
+	}
+
+	$match = false;
+	foreach ($features as $key => $value) {
+		if ($argv[3] == $key) {
+			$match = true;
+			break;
+		}
+	}
+
+	$bitmask = (int)$feat_bitmask;
+	$arg3 = (int)$argv[3];
+
+	if ($match == false) {
+		echo '3rd argument N does equal any feature value' . "\n";
+		return;
+	}
+	elseif ($argv[2] == 'add' && ($arg3 & $bitmask)) {
+		echo 'Feature is already enabled, cannot add' . "\n";
+		return;
+	}
+	elseif ($argv[2] == 'rm' && !($arg3 & $bitmask)) {
+		echo 'Feature is not already enabled, cannot remove' . "\n";
+		return;
+	}
+	else {
+		$new_bitmask = $argv[2] == 'add' ? $bitmask + $arg3 : $bitmask - $arg3;
+		shell_exec("sqlite3 " .  SQLDB . " \"UPDATE cfg_system set value='" . $new_bitmask . "' WHERE param='feat_bitmask'\"");
+		echo 'Old bitmask ' . $feat_bitmask . "\n";
+		echo 'New bitmask ' . $new_bitmask . "\n";
+	}
 }
 
 function audio_formats($option) {
@@ -252,56 +307,5 @@ function tail_log() {
 		}
 		fclose($fh);
 		$size = $current_size;
-	}
-}
-
-function print_features_availability($features, $feat_bitmask) {
-	foreach ($features as $key => $value) {
-		echo $key . "\t" . ($key & $feat_bitmask ? 'y' : '') . "\t" . $value . "\n";
-	}
-}
-
-function update_features_availability($features, $feat_bitmask, $argv) {
-	if (!isset($argv[2])) {
-		echo 'Missing 2nd argument [add or rm]' . "\n";
-		return;
-	}
-	if (!($argv[2] == 'add' || $argv[2] == 'rm')) {
-		echo '2nd argument must be add or rm' . "\n";
-		return;
-	}
-	if (!isset($argv[3])) {
-		echo "Missing 3rd argument [N], the feature's numeric value" . "\n";
-		return;
-	}
-
-	$match = false;
-	foreach ($features as $key => $value) {
-		if ($argv[3] == $key) {
-			$match = true;
-			break;
-		}
-	}
-
-	$bitmask = (int)$feat_bitmask;
-	$arg3 = (int)$argv[3];
-
-	if ($match == false) {
-		echo '3rd argument N does equal any feature value' . "\n";
-		return;
-	}
-	elseif ($argv[2] == 'add' && ($arg3 & $bitmask)) {
-		echo 'Feature is already enabled, cannot add' . "\n";
-		return;
-	}
-	elseif ($argv[2] == 'rm' && !($arg3 & $bitmask)) {
-		echo 'Feature is not already enabled, cannot remove' . "\n";
-		return;
-	}
-	else {
-		$new_bitmask = $argv[2] == 'add' ? $bitmask + $arg3 : $bitmask - $arg3;
-		shell_exec("sqlite3 " .  SQLDB . " \"UPDATE cfg_system set value='" . $new_bitmask . "' WHERE param='feat_bitmask'\"");
-		echo 'Old bitmask ' . $feat_bitmask . "\n";
-		echo 'New bitmask ' . $new_bitmask . "\n";
 	}
 }
