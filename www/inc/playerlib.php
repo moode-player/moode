@@ -1665,16 +1665,12 @@ function updMpdConf($i2sdevice) {
 	playerSession('write', 'adevname', $adevname);
 }
 
-// Return amixer name
+// Return mixer name
 function getMixerName($i2sdevice) {
 	// USB and On-board: default is PCM otherwise use returned mixer name
 	if ($i2sdevice == 'none') {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
-		$mixername = $result[0] == '' ? 'PCM' : $result[0];
-        // USB exceptions
-        if ($mixername == 'Khadas Tone Control') {
-            $mixername = 'Khadas Tone Control ';
-        }
+		$mixername = $result[0] == '' ? 'PCM' : str_replace(array('(', ')'), '', $result[0]);
 	}
 	// I2S exceptions
 	elseif ($i2sdevice == 'HiFiBerry Amp(Amp+)') {
@@ -2410,27 +2406,23 @@ function getHdwrRev() {
 		'311c' => 'Pi-4B 4GB'
 	);
 
-	// 64 bit architcture
-	$uname=posix_uname();
-	if ($uname['machine'] === 'aarch64') {
-		$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
-	}
-	// 32 bit architecture
-	else {
-		$revnum = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,length($3)-3)}' . "'" . ' /proc/cpuinfo');
-		// Pi-4B
-		if ($revnum[0] == '3111') {
-			$prefix = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,0,2)}' . "'" . ' /proc/cpuinfo'); // Get first char
-			$revnum[0] =  substr($revnum[0], 0, 3) . $prefix[0];
-		}
-		// Allo USBridge Signature (CM3+)
-		elseif ($revnum[0] == '2100') {
-			$chip_id = sysCmd('lsusb | grep "0451:8142"'); // Chip ID for Texas Instruments, Inc. TUSB8041 4-Port Hub
-			if (!empty(chip_id[0])) {
-				$revnum[0] =  '210a';
-			}
+	$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
 
+	// Pi-4B
+	if ($revnum[0] == '3111') {
+		// Differentiate the models
+		$prefix = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,0,2)}' . "'" . ' /proc/cpuinfo');
+		$revnum[0] =  substr($revnum[0], 0, 3) . $prefix[0];
+	}
+	// Pi-CM3+
+	elseif ($revnum[0] == '2100') {
+ 		// Chip ID for Texas Instruments, Inc. TUSB8041 4-Port Hub
+ 		$chip_id = sysCmd('lsusb | grep "0451:8142"');
+		if (!empty(chip_id[0])) {
+			// Allo USBridge Signature
+			$revnum[0] =  '210a';
 		}
+
 	}
 
 	return array_key_exists($revnum[0], $revname) ? $revname[$revnum[0]] : 'Unknown Pi-model';
