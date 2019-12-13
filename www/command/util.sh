@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-09-05 TC moOde 6.2.0
+# 2019-MM-DD TC moOde 6.4.1
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -92,12 +92,10 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 	fi
 fi
 
-# get alsa mixer name for card1 (USB)
+# Get alsa mixer name
 if [[ $1 = "get-mixername" ]]; then
-	TMP=$(cat /proc/asound/card1/id 2>/dev/null)
-	if [[ $TMP = "" ]]; then CARD_NUM=0; else CARD_NUM=1; fi
-
-	awk -F"'" '/Simple mixer control/{print $2;}' <(amixer -c $CARD_NUM)
+	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
+	awk -F"'" '/Simple mixer control/{print "(" $2 ")";}' <(amixer -c $CARD_NUM)
 	exit
 fi
 
