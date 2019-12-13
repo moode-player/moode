@@ -4,9 +4,9 @@
 #
 # These instructions are designed to initially configure
 # moOde audio player. Additional help is provided within
-# the player via the (i) information buttons. 
+# the player via the (i) information buttons.
 #
-# Updated: 2019-05-07
+# Updated: 2019-MM-DD
 #
 # (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -29,7 +29,7 @@ NOTE: Use http://moode, moode.local or IP address, whichever works on your netwo
 
 WIFI ADAPTERS THAT SUPPORT ACCESS POINT MODE (not a complete list)
 
-- Raspberry Pi 3 series and Zero W integrated WiFi adapters
+- Raspberry Pi 3, 4 and Zero W integrated WiFi adapters
 - Canakit WiFi Adapter
 - Raspberry Pi USB WiFi Dongle
 - WiFi adapters based on RTL RT5370 chipset
@@ -72,17 +72,21 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     b) Select "None" for I2S audio device then SET
     c) Reboot
     d) Menu, Configure, Audio
-    e) MPD options: EDIT OPTIONS
+    e) EDIT MPD config
     f) Leave Volume control set to "Software"
-    g) Set Device type to "USB audio device" then SAVE
+    g) Set Device type to "USB audio device"
+    h) SAVE
+    i) Reboot
+
     - I2S DEVICE
     a) Menu, Configure, Audio
     b) Select an I2S audio device then SET
     c) Reboot
     d) Menu, Configure, Audio
-    e) MPD options: EDIT OPTIONS
+    e) EDIT MPD config
     f) Leave Volume control set to "Software"
-    g) Verify Audio device is set to "I2S audio device" then SAVE
+    g) Verify Audio device is set to "I2S audio device"
+    h) SAVE
 
  3. TIME ZONE
     a) Menu, Configure, System
@@ -92,19 +96,19 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     - USB STORAGE DEVICES
     a) Insert USB storage device
     b) Menu, Configure, Sources
-    c) UPDATE or RE-GEN MPD database 
+    c) UPDATE or RE-GEN MPD database
     d) Optionally select Yes to automatically update MPD database on USB insert/remove
-    e) Wait for completion (no spinner on the Library tab)
+    e) Wait for completion (no spinner)
     f) Library tab, Folder view. Click the refresh button to update the folder list.
     - SDCARD STORAGE DEVICES
     a) Menu, Configure, Sources
-    b) UPDATE or RE-GEN MPD database 
-    c) Wait for completion (no spinner on the Library tab)
+    b) UPDATE or RE-GEN MPD database
+    c) Wait for completion (no spinner)
     d) Library tab, Folder view. Click the refresh button to update the folder list.
     - NAS DEVICE
     a) Menu, Configure, Sources
-    b) CREATE NAS source (MPD database update initiates automatically after SAVE)
-    c) Wait for completion (no spinner on the Library tab)
+    b) CREATE Music source (MPD database update initiates automatically after SAVE)
+    c) Wait for completion (no spinner)
     d) Library tab, Folder view. Click the refresh button to update the folder list.
 
  5. VERIFY AUDIO PLAYBACK
@@ -159,12 +163,12 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     b) Paste contents into /boot/moodecfg.txt
     c) sudo reboot
     d) Join AP SSID if using AP mode, then http://hostname.local (or http://172.24.1.1)
- 
+
 ##########################################
 # Copy this file to /boot/moodecfg.txt
 # worker will process it at startup then
 # delete it and automatically reboot.
-# 
+#
 # All param=value pairs must be present.
 # Set wlanssid=<nothing> to start AP mode.
 # Example: wlanssid=
@@ -211,14 +215,14 @@ accentcolor=Emerald
 
  1. Switching from USB to I2S audio device
     a) Unplug USB audio device
-    b) Menu, Restart, Shutdown 
+    b) Menu, Restart, Shutdown
     c) Install I2S audio device
     d) Power on
     e) Menu, Configure, Audio
     f) Select appropriate I2S audio device then SET
     g) Menu, Restart, Reboot
-    h) Menu, Configure, Audio, MPD options: EDIT OPTIONS
-    i) Verify Audio device set to "I2S audio device"
+    h) Menu, Configure, Audio, EDIT MPD config
+    i) Verify Device type is set to "I2S audio device"
     j) SAVE
 
  2. Switching from I2S to USB audio device
@@ -228,16 +232,17 @@ accentcolor=Emerald
     d) Optionally unplug I2S audio device
     e) Plug in USB audio device
     f) Power on
-    g) Menu, Configure, Audio, MPD options: EDIT OPTIONS
-    h) Select "USB audio device" for Audio device
+    g) Menu, Configure, Audio,  EDIT MPD config
+    h) Set Device type to "USB audio device"
     i) SAVE
+    j) Menu, Restart, Reboot
 
  3. Switching from WiFi back to Ethernet
-    a) Plug in Ethernet cable 
-    b) Menu, Configure, Network 
+    a) Plug in Ethernet cable
+    b) Menu, Configure, Network
     c) RESET network configuration to defaults
     d) Menu, Restart, Shutdown
-    e) Remove WiFi adapter 
+    e) Remove WiFi adapter
     f) Power on
 
 ////////////////////////////////////////////////////////
