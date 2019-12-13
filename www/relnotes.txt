@@ -19,8 +19,11 @@ Updates
 
 - UPD: Add features availability to moodeutl
 - UPD: Improve volume knob step limiter
+- UPD: Improve mixer name parsing for USB DAC's
+- UPD: Improve message after changing Device type
 - UPD: Use mixer name 'Channels' for HiFiBerry Amp(Amp+)
 - UPD: Comment out Info logging from watchdog
+- UPD: Edit Setup guide to reflect changes
 
 Bug fixes
 
@@ -30,6 +33,7 @@ Bug fixes
 - FIX: Minor bugs in various HTML template files
 - FIX: Spurious HTML tags in header.php and footer.php
 - FIX: Auto-config fails if moodecfg.txt contains CRLF
+- FIX: Revision number parsing when 64-bit kernel
 
 ########################################################
 //
