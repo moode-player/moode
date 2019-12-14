@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2019-MM-DD TC moOde 6.4.1
  *
  */
 
@@ -207,14 +207,14 @@ elseif ($_SESSION['mpdmixer'] == 'software') {
 	$volume_ctl = 'Software (MPD 32-bit float with dither)';
 }
 else {
-	$volume = 'Disabled (100% volume level is output by MPD)';
+	$volume_ctl = 'Disabled (100% volume is output by MPD)';
 }
 
 // Renderers
 if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $_SESSION['inpactive'] == '1' || $btactive === true) {
 	$resampler_format = '';
 	$resampler_quality = 'n/a';
-	$polarity = 'n/a';
+	$polarity_inv = 'n/a';
 	$crossfade = 'n/a';
 	$crossfeed = 'n/a';
 	$replaygain = 'n/a';
