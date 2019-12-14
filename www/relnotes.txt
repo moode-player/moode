@@ -34,6 +34,8 @@ Bug fixes
 - FIX: Spurious HTML tags in header.php and footer.php
 - FIX: Auto-config fails if moodecfg.txt contains CRLF
 - FIX: Revision number parsing when 64-bit kernel
+- FIX: Minor bugs in certain Audio info var names
+- FIX: Missing -S option in stock squeezelite.conf
 
 ########################################################
 //
