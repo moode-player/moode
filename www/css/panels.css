@@ -180,8 +180,8 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important}
 #albumsList li, #artistsList li, #genresList li {line-height:calc(1.45em + 1vmin);}
 #albumsList .lib-entry img {width:3rem;margin:.15em .25em .15em 0;}
-#albumsList .album-name {display:inline-flex;vertical-align:middle;max-width:calc(100% - 3rem - .25em);line-height:1.25em;}
-#albumsList .album-year {display:contents;font-size:0.85em;color:var(--textvariant);}
+#albumsList .album-name {display:inline-block;vertical-align:middle;max-width:calc(100% - 3rem - .25em);line-height:1.25em;}
+#albumsList .album-year {display:block;font-size:0.85em;color:var(--textvariant);}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .tab-content.visacc .playlist .active .pll1 {color:var(--adapttext);}

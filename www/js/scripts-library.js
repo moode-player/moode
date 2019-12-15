@@ -442,13 +442,13 @@ var renderAlbums = function() {
 		// Tag view - list subtitle options
 		switch (SESSION.json['taglist_sub']) {
 			case "Year":
-				tmpSub = '<br><span class="album-year">' + filteredAlbums[i].year + '</span>';
+				tmpSub = '<span class="album-year">' + filteredAlbums[i].year + '</span>';
 				break;
 			case "Artist":
-        		tmpSub = '<br><span class="album-year">' + filteredAlbums[i].artist + '</span>';
+        		tmpSub = '<span class="album-year">' + filteredAlbums[i].artist + '</span>';
 				break;
 			case "Artist (Year)":
-				tmpSub = '<br><span class="album-year">' + filteredAlbums[i].artist + ' ('+ filteredAlbums[i].year + ') </span>';
+				tmpSub = '<span class="album-year">' + filteredAlbums[i].artist + ' ('+ filteredAlbums[i].year + ') </span>';
 				break;
 			default: tmpSub = '';
 		}
