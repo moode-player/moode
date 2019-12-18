@@ -24,17 +24,17 @@ Updates
 - UPD: Use mixer name 'Channels' for HiFiBerry Amp(Amp+)
 - UPD: Comment out Info logging from watchdog
 - UPD: Edit Setup guide to reflect changes
+- UPD: Remove 64-bit kernel option for USBridge SIG (missing drivers)
 
 Bug fixes
 
-- FIX: 64-bit kernel not listed in dropdown if USBridge SIG
 - FIX: Partial fix for Autofocus not working on modal popups
 - FIX: Logic to parse /etc/resolv.conf for Moode log
 - FIX: Minor bugs in various HTML template files
 - FIX: Spurious HTML tags in header.php and footer.php
 - FIX: Auto-config fails if moodecfg.txt contains CRLF
 - FIX: Revision number parsing when 64-bit kernel
-- FIX: Minor bugs in certain Audio info var names
+- FIX: Minor bugs in certain Audio info variable names
 - FIX: Missing -S option in stock squeezelite.conf
 
 ########################################################
