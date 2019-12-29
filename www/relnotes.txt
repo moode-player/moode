@@ -36,6 +36,7 @@ Bug fixes
 - FIX: Revision number parsing when 64-bit kernel
 - FIX: Minor bugs in certain Audio info variable names
 - FIX: Missing -S option in stock squeezelite.conf
+- FIX: PHP log file name in util.sh
 
 ########################################################
 //
