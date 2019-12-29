@@ -80,7 +80,7 @@ if (isset($_POST['install_update'])) {
 	}
 }
 
-// GEBERAL
+// GENERAL
 
 // timezone
 if (isset($_POST['update_time_zone'])) {
