@@ -22,6 +22,7 @@ Updates
 - UPD: Improve mixer name parsing for USB DAC's
 - UPD: Improve message after changing Device type
 - UPD: Use mixer name 'Channels' for HiFiBerry Amp(Amp+)
+- UPD: Use mixer name 'DSPVolume' for HiFiBerry DAC+ DSP
 - UPD: Comment out Info logging from watchdog
 - UPD: Edit Setup guide to reflect changes
 - UPD: Remove 64-bit kernel option for USBridge SIG (missing drivers)
