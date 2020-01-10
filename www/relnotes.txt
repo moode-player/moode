@@ -38,6 +38,7 @@ Bug fixes
 - FIX: Minor bugs in certain Audio info variable names
 - FIX: Missing -S option in stock squeezelite.conf
 - FIX: PHP log file name in util.sh
+- FIX: URI not being encoded when adding to Favorites
 
 ########################################################
 //
