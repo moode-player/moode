@@ -722,7 +722,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		// add current pl item to favorites playlist
 		if (MPD.json['file'] != null) {
-			var result = sendMoodeCmd('GET', 'addfav&favitem=' + MPD.json['file'], '', true);
+			var result = sendMoodeCmd('GET', 'addfav&favitem=' + encodeURIComponent(MPD.json['file']), '', true);
 			notify('favadded', '');
 		}
 		else {
