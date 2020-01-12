@@ -148,8 +148,8 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r640.zip
-sudo unzip -q -o ./moode-r640.zip
+wget http://moodeaudio.org/downloads/prod/moode-r641.zip
+sudo unzip -q -o ./moode-r641.zip
 
 5. Expand the root partition to 3.5GB.
 
