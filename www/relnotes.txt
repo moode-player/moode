@@ -39,6 +39,8 @@ Bug fixes
 - FIX: Missing -S option in stock squeezelite.conf
 - FIX: PHP log file name in util.sh
 - FIX: URI not being encoded when adding to Favorites
+- FIX: Index search fails when tagViewCovers flag is false
+- FIX: Minor HTML typo in header.php
 
 ########################################################
 //
