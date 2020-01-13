@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.16 2019-MM-DD
+# Build Recipe v2.16 2020-MM-DD
 #
-# moOde 6.4.1 2019-MM-DD
+# moOde 6.4.1 2020-MM-DD
 # - Based on Raspbian Buster Lite (10.2)
 # - Bump to r641 sources
 #
