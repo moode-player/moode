@@ -104,7 +104,7 @@ workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'of
 $card0 = trim(file_get_contents('/proc/asound/card0/id'));
 $card1 = trim(file_get_contents('/proc/asound/card1/id'));
 $result = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
-workerLog('worker: Device raw: (0:' . $card0 . '|1:' . (empty($card1) ? 'empty' : $card1) . '|' . $_SESSION['i2sdevice'] . ')');
+workerLog('worker: Device raw: (0:' . $card0 . '|1:' . (empty($card1) ? 'empty' : $card1) . '|i2s:' . $_SESSION['i2sdevice'] . ')');
 workerLog('worker: Device cfg: (' . $_SESSION['adevname'] . '|' . $_SESSION['cardnum'] . '|' . $result[0]['value'] . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . ')');
 if ($_SESSION['i2sdevice'] != 'none' && $_SESSION['cardnum'] != '0') {
 	workerLog('worker: ERROR: Device raw/cfg card mismatch');
