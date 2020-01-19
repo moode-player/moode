@@ -251,7 +251,7 @@ function system_monitor() {
 		// Temp
 		$cpu_temp = substr(file_get_contents('/sys/class/thermal/thermal_zone0/temp'), 0, 2);
 
-		// CPU utilization
+		// CPU
 		$cpu_load = exec("top -bn 2 -d 1.0 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
 		$cpu_load += exec("top -bn 2 -d 0.75 | grep 'Cpu(s)' | tail -n 1 | awk '{print 100 - $8}'");
 		$cpu_load = $cpu_load / 2;
@@ -262,13 +262,14 @@ function system_monitor() {
 		$mem_avail = exec("grep MemAvailable /proc/meminfo | awk '{print $2}'");
 		$mem_util = number_format(100 * (1 - ($mem_avail / $mem_total)), 0, '.', '');
 
-		// disk utilization
-		$disk_util = exec("df -h | awk 'FNR==2 {print $5}'");
+		// Disk
+		$disk_used = exec("df -h | awk 'FNR==2 {print $5}'");
+		$disk_free = exec("df -h | grep /dev/root | awk '{print $4}'");
 
-		// php fpm pool count
+		// PHP FPM pool count
 		$fpm_pool = exec('pgrep -c -f "php-fpm: pool www"');
 
-		echo 'CPU: ' . $cpu_freq . ' | LOAD: ' . $cpu_load . '%' . ' | TEMP: ' . $cpu_temp . "\xB0" . 'C | RAM_USED: ' . $mem_util . '% | DISK_USED: ' . $disk_util . ' | FPM_POOL: ' . $fpm_pool . ' workers ' . "\r";
+		echo 'CPU: ' . $cpu_freq . ' | LOAD: ' . $cpu_load . '%' . ' | TEMP: ' . $cpu_temp . "\xB0" . 'C | RAM_USED: ' . $mem_util . '% | DISK_USED: ' . $disk_used . ' | DISK_FREE: ' . $disk_free . ' | FPM_POOL: ' . $fpm_pool . ' workers ' . "\r";
 	}
 }
 
