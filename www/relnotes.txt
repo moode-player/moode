@@ -17,15 +17,17 @@
 
 Updates
 
-- UPD: Add features availability to moodeutl
+- UPD: Add feat availability, free disk space to moodeutl
 - UPD: Improve volume knob step limiter
 - UPD: Improve mixer name parsing for USB DAC's
-- UPD: Improve message after changing Device type
+- UPD: Improve message after changing MPD Device type
+- UPD: Improve system integrity checking
+- UPD: Improve system maintenance task
 - UPD: Use mixer name 'Channels' for HiFiBerry Amp(Amp+)
 - UPD: Use mixer name 'DSPVolume' for HiFiBerry DAC+ DSP
 - UPD: Comment out Info logging from watchdog
-- UPD: Edit Setup guide to reflect changes
 - UPD: Remove 64-bit kernel option for USBridge SIG (missing drivers)
+- UPD: Edit Setup guide to reflect changes
 
 Bug fixes
 
@@ -40,7 +42,7 @@ Bug fixes
 - FIX: PHP log file name in util.sh
 - FIX: URI not being encoded when adding to Favorites
 - FIX: Index search fails when tagViewCovers flag is false
-- FIX: Minor HTML typo in header.php
+- FIX: Highlight rectangle showing after button press
 
 ########################################################
 //
