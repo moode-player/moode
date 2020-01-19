@@ -68,7 +68,7 @@ if (isset($_POST['install_update'])) {
 			$_SESSION['notify']['msg'] = "File system is compressed and read-only";
 			$_SESSION['notify']['duration'] = 20;
 		}
-		elseif ($space[0] < 500000) {
+		elseif ($space[0] < 512000) {
 			$_SESSION['notify']['title'] = 'Insufficient space';
 			$_SESSION['notify']['msg'] = "Update cannot proceed without at least 500M space";
 			$_SESSION['notify']['duration'] = 20;
