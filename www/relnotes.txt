@@ -11,13 +11,12 @@
 
 ########################################################
 //
-// 6.4.1 2020-MM-DD
+// 6.4.1 2020-01-19
 //
 ########################################################
 
 Updates
 
-- UPD: Add feat availability, free disk space to moodeutl
 - UPD: Improve volume knob step limiter
 - UPD: Improve mixer name parsing for USB DAC's
 - UPD: Improve message after changing MPD Device type
@@ -26,6 +25,7 @@ Updates
 - UPD: Use mixer name 'Channels' for HiFiBerry Amp(Amp+)
 - UPD: Use mixer name 'DSPVolume' for HiFiBerry DAC+ DSP
 - UPD: Comment out Info logging from watchdog
+- UPD: Add feat availability, free disk space to moodeutl
 - UPD: Remove 64-bit kernel option for USBridge SIG (missing drivers)
 - UPD: Edit Setup guide to reflect changes
 
