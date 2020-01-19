@@ -200,23 +200,6 @@ function echoTemplate($template) {
 	echo $template;
 }
 
-function phpVer() {
-	$version = phpversion();
-	return substr($version, 0, 3);
-}
-
-if (phpVer() == '5.3') {
-	// fix sessions per environment PHP 5.3
-	function session_status() {
-		if (session_id()) {
-			return 1;
-		}
-		else {
-			return 2;
-		}
-	}
-}
-
 function integrityCheck() {
 	$warning = false;
 
