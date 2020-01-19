@@ -83,7 +83,7 @@ workerLog('worker: Successfully daemonized');
 // Ensure critical files are factory default
 $result = integrityCheck();
 if ($result === false) {
-	workerLog('worker: Integrity check (failed)');
+	workerLog('worker: Integrity check (failed:' . $_SESSION['ic_return_code'] . ')');
 	workerLog('worker: Exited');
 	exit;
 }
@@ -104,8 +104,8 @@ workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'of
 $card0 = trim(file_get_contents('/proc/asound/card0/id'));
 $card1 = trim(file_get_contents('/proc/asound/card1/id'));
 $result = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
-workerLog('worker: Device raw: Card0 (' . $card0 . ') | Card1 (' . $card1 . ') | I2Sdev (' . $_SESSION['i2sdevice'] . ')');
-workerLog('worker: Device cfg: Name (' . $_SESSION['adevname'] . ') | Card (' . $_SESSION['cardnum'] . ') | MPDdev (' . $result[0]['value'] . ') | Mixer (' . $_SESSION['amixname'] . ') | Alsavol: (' . $_SESSION['alsavolume'] . ')');
+workerLog('worker: Device raw: (0:' . $card0 . '|1:' . (empty($card1) ? 'empty' : $card1) . '|' . $_SESSION['i2sdevice'] . ')');
+workerLog('worker: Device cfg: (' . $_SESSION['adevname'] . '|' . $_SESSION['cardnum'] . '|' . $result[0]['value'] . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . ')');
 if ($_SESSION['i2sdevice'] != 'none' && $_SESSION['cardnum'] != '0') {
 	workerLog('worker: ERROR: Device raw/cfg card mismatch');
 }
@@ -122,8 +122,8 @@ else {
 }
 
 // Establish music root for external
-if (extMusicRoot() === false) {
-	workerLog('worker: Cant establish external music root');
+if (extMusicRoot('new') !== true) {
+	workerLog('worker: Problem setting external music root');
 	workerLog('worker: Exited');
 	exit;
 }
@@ -628,25 +628,40 @@ if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+' && $_SESSION['eth_port_fix'] 
 	workerLog('worker: eth0 (100 Mb/s full duplex)');
 }
 
-// Globals
+//
+// Globals section
+//
+
+// Clock radio
 $clkradio_start_time = substr($_SESSION['clkradio_start'], 0, 8); // parse out the time (HH,MM,AP)
 $clkradio_stop_time = substr($_SESSION['clkradio_stop'], 0, 8);
 $clkradio_start_days = explode(',', substr($_SESSION['clkradio_start'], 9)); // parse out the days (M,T,W,T,F,S,S)
 $clkradio_stop_days = explode(',', substr($_SESSION['clkradio_stop'], 9));
+
+// Renderer active
 $aplactive = '0';
 $spotactive = '0';
 $slactive = '0';
 $inpactive = '0';
+
+// MPD database update
 $mpd_dbupd_initiated = '0';
 
+// Maintenance task
 $maint_interval = $_SESSION['maint_interval'];
-workerLog('worker: Maintenance interval (' . ($_SESSION['maint_interval'] / 3600) . ' hrs)');
+$maint_interval_formatted = $maint_interval == 3600 ? '1 hr' : ($maint_interval < 3600 ? ($maint_interval / 60) . ' mins' : ($maint_interval / 3600) . ' hrs');
+workerLog('worker: Maintenance interval (' . $maint_interval_formatted . ')');
 
+// Screen saver
 $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
 workerLog('worker: Screen saver activation (' . $_SESSION['scnsaver_timeout'] . ')');
 
-// inizialize job queue
+//
+// End globals section
+//
+
+// Inizialize job queue
 $_SESSION['w_queue'] = '';
 $_SESSION['w_queueargs'] = '';
 $_SESSION['w_lock'] = 0;
@@ -694,7 +709,7 @@ while (true) {
 		chkScnSaver();
 	}
 	if ($_SESSION['maint_interval'] != 0) {
-		chkMaintenance($maint_interval);
+		chkMaintenance();
 	}
 	if ($_SESSION['cardnum'] == '1') { // TEST: experimental usb audio hot-plug mgt
 		sysCmd('alsactl store');
@@ -757,9 +772,29 @@ function chkScnSaver() {
 function chkMaintenance() {
 	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - 3;
 	if ($GLOBALS['maint_interval'] <= 0) {
-		sysCmd('/var/local/www/commandw/maint.sh');
+		// Clear logs
+		$result = sysCmd('/var/www/command/util.sh "clear-syslogs"');
+		if (!empty($result)) {
+			workerLog('Maintenance: Problem clearing logs');
+		}
+
+		// Compact SQLite database
+		$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
+		if (!empty($result)) {
+			workerLog('Maintenance: Problem compacting SQLite database');
+		}
+
+		// Check for low disk soace
+		$free_space = sysCmd("df | grep /dev/root | awk '{print $4}'");
+		if ($free_space[0] < 512000) {
+			workerLog('Maintenance: Free disk space < 512M required for in-place updates');
+		}
+
+		// Reapply external music root
+		extMusicRoot('reapply');
+
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
-		workerLog('worker: Maintenance completed');
+		//workerLog('worker: Maintenance completed');
 	}
 }
 
