@@ -219,10 +219,27 @@ if (phpVer() == '5.3') {
 
 function integrityCheck() {
 	$warning = false;
+
+	// Check database schema
+	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db .schema | grep ro_columns');
+	if (empty($result)) {
+		$_SESSION['ic_return_code'] = '1';
+		return false;
+	}
+
+	// Check hash table
 	$result = cfgdb_read('cfg_hash', cfgdb_connect());
 	foreach ($result as $row) {
+		// Check mapped action
+		if ($row['id'] < 8 && $row['action'] !== 'exit') {
+			$_SESSION['ic_return_code'] = '2';
+			return false;
+		}
+
+		// Check file hash
 		if (md5(file_get_contents($row['param'])) !== $row['value']) {
 			if ($row['action'] === 'exit') {
+				$_SESSION['ic_return_code'] = '3';
 				return false;
 			}
 			elseif ($row['action'] === 'warning') {
@@ -233,6 +250,7 @@ function integrityCheck() {
 				// NOP
 			}
 			else {
+				$_SESSION['ic_return_code'] = '9';
 				return false;
 			}
 		}
@@ -241,10 +259,18 @@ function integrityCheck() {
 	return $warning === true ? 'passed with warnings' : 'passed';
 }
 
-function extMusicRoot() {
-	$_SESSION['musicroot_ext'] = rand(1000000, 9999999);
+function extMusicRoot($option = 'new') {
+	if (!($option == 'new' || $option == 'reapply')) {
+		return false;
+	}
+
+	if ($option == 'new') {
+		$_SESSION['musicroot_ext'] = rand(1000000, 9999999);
+	}
+
 	sysCmd('find /var/www -type l -delete');
 	sysCmd('ln -s ' . MPD_MUSICROOT . ' /var/www/' . $_SESSION['musicroot_ext']);
+
 	return true;
 }
 
