@@ -27,6 +27,7 @@ Updates
 - UPD: Comment out Info logging from watchdog
 - UPD: Add feat availability, free disk space to moodeutl
 - UPD: Remove 64-bit kernel option for USBridge SIG (missing drivers)
+- UPD: Add back button to Radio view
 - UPD: Edit Setup guide to reflect changes
 
 Bug fixes
