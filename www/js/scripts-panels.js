@@ -867,6 +867,21 @@ jQuery(document).ready(function($) { 'use strict';
 			mpdDbCmd('lsinfo_radio', $(this).parent().data('path'));
 		}
 	});
+    // radio folder back button                                
+    $('#ra-back').click(function(e) {
+        if (UI.radioPos > -1) {
+            --UI.radioPos;
+			var pathr = UI.pathr;
+			var cutpos = pathr.lastIndexOf('/');
+			if (cutpos !=-1) {
+				var pathr = pathr.slice(0,cutpos);
+			}
+			else {
+				pathr = '';
+			}
+            mpdDbCmd('lsinfo_radio', pathr);
+		}
+	});
 	$('#ra-home').click(function(e) {
 		UI.raFolderLevel[4] = 0;
 		UI.pathr = '';
