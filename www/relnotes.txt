@@ -28,6 +28,7 @@ Updates
 - UPD: Add feat availability, free disk space to moodeutl
 - UPD: Remove 64-bit kernel option for USBridge SIG (missing drivers)
 - UPD: Add back button to Radio view
+- UPD: Add revision code for Pi-4B v1.2
 - UPD: Edit Setup guide to reflect changes
 
 Bug fixes
