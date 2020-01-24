@@ -129,6 +129,7 @@ if [[ $1 = "get-piano-dualmode" || $1 = "set-piano-dualmode" || $1 = "get-piano-
 fi
 
 if [[ $1 = "clear-syslogs" ]]; then
+	# Operating logs
 	truncate /var/log/alternatives.log --size 0
 	truncate /var/log/apt/history.log --size 0
 	truncate /var/log/apt/term.log --size 0
@@ -150,11 +151,21 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/regen_ssh_keys.log --size 0
 	truncate /var/log/samba/log.nmbd --size 0
 	truncate /var/log/samba/log.smbd --size 0
+	truncate /var/log/shairport-sync.log --size 0
 	truncate /var/log/syslog --size 0
 	truncate /var/log/user.log --size 0
 	truncate /var/log/wtmp --size 0
-	truncate /var/log/shairport-sync.log --size 0
-	#truncate /var/log/moode.log --size 0
+
+	# Rotated logs from settings in /etc/logrotate.d
+	rm /var/log/*.log.* 2> /dev/null
+	rm /var/log/debug.* 2> /dev/null
+	rm /var/log/messages.* 2> /dev/null
+	rm /var/log/syslog.* 2> /dev/null
+	rm /var/log/btmp.* 2> /dev/null
+	rm /var/log/apt/*.log.* 2> /dev/null
+	rm /var/log/nginx/*.log.* 2> /dev/null
+	rm /var/log/samba/log.*.* 2> /dev/null
+
 	exit
 fi
 
