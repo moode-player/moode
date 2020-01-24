@@ -22,13 +22,14 @@ Updates
 - UPD: Improve message after changing MPD Device type
 - UPD: Improve system integrity checking
 - UPD: Improve system maintenance task
+- UPD: Improve clear-syslogs in util.sh
 - UPD: Use mixer name 'Channels' for HiFiBerry Amp(Amp+)
 - UPD: Use mixer name 'DSPVolume' for HiFiBerry DAC+ DSP
 - UPD: Comment out Info logging from watchdog
 - UPD: Add feat availability, free disk space to moodeutl
-- UPD: Remove 64-bit kernel option for USBridge SIG (missing drivers)
 - UPD: Add back button to Radio view
 - UPD: Add revision code for Pi-4B v1.2
+- UPD: Remove 64-bit kernel option for USBridge SIG (missing drivers)
 - UPD: Edit Setup guide to reflect changes
 
 Bug fixes
