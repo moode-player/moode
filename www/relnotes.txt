@@ -11,6 +11,21 @@
 
 ########################################################
 //
+// 6.4.2 2020-MM-DD
+//
+########################################################
+
+Updates
+
+- UPD: Purge orphaned stations from session during startup
+- UPD: Add dump_session option to moodeutl
+
+Bug fixes
+
+- FIX: Session not updated when radio station deleted
+
+########################################################
+//
 // 6.4.1 2020-01-23
 //
 ########################################################
