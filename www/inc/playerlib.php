@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2020-MM-DD TC moOde 6.4.2
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -1006,7 +1006,7 @@ function playerSession($action, $var = '', $value = '') {
 	if ($action == 'open') {
 		$status = session_status();
 		//workerLog('playerSession(open): session_status=' . ($status == 0 ? 'PHP_SESSION_DISABLED' : ($status == 1 ? 'PHP_SESSION_NONE' : 'PHP_SESSION_ACTIVE')));
-		if($status != PHP_SESSION_ACTIVE) {
+		if ($status != PHP_SESSION_ACTIVE) {
 			// use stored id
 			$sessionid = playerSession('getsessionid');
 			if (!empty($sessionid)) {
