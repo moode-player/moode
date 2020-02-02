@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2020-MM-DD TC moOde 6.4.2
  *
  */
 
@@ -91,8 +91,15 @@ else {
 	workerLog('worker: Integrity check ('. $result .')');
 }
 
-// Load cfg_system and cfg_radio into session
+// Load cfg_system into session
 playerSession('open', '', '');
+// Delete radio station session vars to purge any orphans
+foreach ($_SESSION as $key => $value) {
+	if (substr($key, 0, 4) == 'http') {
+		unset($_SESSION[$key]);
+	}
+}
+// Load cfg_radio into session
 $result = cfgdb_read('cfg_radio', $dbh);
 foreach ($result as $row) {
 	$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);

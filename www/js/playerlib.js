@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2020-MM-DD TC moOde 6.4.2
  *
  */
 
@@ -1020,11 +1020,21 @@ function mpdDbCmd(cmd, path) {
 	}
 	else if (cmd == 'newstation' || cmd == 'updstation') {
 		var arg = path.split('\n');
+        RADIO.json[arg[1]] = {'name': arg[0]};
 		var result = sendMoodeCmd('POST', cmd, {'path': arg[0], 'url': arg[1]});
 		$.post('command/moode.php?cmd=lsinfo', { 'path': 'RADIO' }, function(data) {renderBrowse(data, 'RADIO');}, 'json');
 	}
 	else if (cmd == 'delstation') {
-		var result = sendMoodeCmd('POST', cmd, {'path': path});
+        // Delete the station from Object array
+        var station_name = path.slice(0,path.lastIndexOf('.')).substr(6); // Trim 'RADIO/' and '.pls' from path
+        for (let [key, value] of Object.entries(RADIO.json)) {
+            if (value.name == station_name) {
+                delete RADIO.json[key];
+            }
+        }
+
+        // Delete the station from cfg_radio table
+        var result = sendMoodeCmd('POST', cmd, {'path': path});
 		$.post('command/moode.php?cmd=lsinfo', {'path': 'RADIO'}, function(data) {renderBrowse(data, 'RADIO');}, 'json');
 	}
 }

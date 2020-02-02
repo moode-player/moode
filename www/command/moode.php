@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2020-MM-DD TC moOde 6.4.2
  *
  */
 
@@ -302,21 +302,25 @@ else {
 			case 'updstation':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					$station_name = $_POST['path'];
+					$add_upd_ok = true;
 
+					// Add
 					if ($_GET['cmd'] == 'newstation') {
 						// Can't have same name as existing station
 						$result = sdbquery("SELECT id FROM cfg_radio WHERE name='" . SQLite3::escapeString($station_name) . "'", $dbh);
-
-						// true = query successful but no results, array = results, false = query bombed (not likely)
+						// True: no results, array: results, false: query bombed (unlikely)
 						if ($result === true) {
-							// Add new row to sql table
+							// Add new row, NULL causes Id column to be set to next number
 							$values = "'" . $_POST['url'] . "'," . "'" . SQLite3::escapeString($station_name) . "','u','local'";
-							$result = sdbquery('INSERT INTO cfg_radio VALUES (NULL,' . $values . ')', $dbh); // NULL causes the Id column to be set to the next number
+							$result = sdbquery('INSERT INTO cfg_radio VALUES (NULL,' . $values . ')', $dbh);
+						}
+						else {
+							// Return "station already exists" error to client?
 						}
 					}
+					// Update
 					else {
-						// If name changed then its same as an add and we have to check that the name doesn't already exist.
-						// If only the url changed then we update.
+						// Client prevents name change so just update the URL
 						$result = cfgdb_update('cfg_radio', $dbh, SQLite3::escapeString($station_name), $_POST['url']);
 					}
 
@@ -352,16 +356,26 @@ else {
 				break;
 			case 'delstation':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
-					$station_name = substr($_POST['path'], 6, -4); // trim 'RADIO/' and '.pls' from path
+					// Trim 'RADIO/' and '.pls' from path
+					$station_name = substr($_POST['path'], 6, -4);
 					//workerLog($_GET['cmd'] . ', ' . $station_name);
 
-					// Remove row and delete file
+					// Delete row, session var and file
 					$result = sdbquery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($station_name) . "'", $dbh);
+
+					session_start();
+					foreach ($_SESSION as $key => $value) {
+						if ($value['name'] == $station_name) {
+							unset($_SESSION[$key]);
+						}
+					}
+					session_write_close();
+
 					sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
 					sysCmd('rm "' . '/var/www/images/radio-logos/' . $station_name . '.jpg' . '"');
 					sysCmd('rm "' . '/var/www/images/radio-logos/thumbs/' . $station_name . '.jpg' . '"');
 
-					// Update time stamp on files so mpd picks up the change and commits the update
+					// Update time stamp on files so mpd picks up the change
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 
 					sendMpdCmd($sock, 'update RADIO');
