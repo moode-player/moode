@@ -18,7 +18,7 @@
 Updates
 
 - UPD: Purge orphaned stations from session during startup
-- UPD: Add dump_session option to moodeutl
+- UPD: Add moodeutl option to dump the session file
 - UPD: Deprecate TRX
 
 Bug fixes
