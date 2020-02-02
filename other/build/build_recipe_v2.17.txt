@@ -1,10 +1,10 @@
 ################################################################
 #
-# Build Recipe v2.16 2020-01-23
+# Build Recipe v2.17 2020-MM-DD
 #
-# moOde 6.4.1 2020-01-23
+# moOde 6.4.2 2020-MM-DD
 # - Based on Raspbian Buster Lite (10.2)
-# - Bump to r641 sources
+# - Bump to r642 sources
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
@@ -148,8 +148,8 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r641.zip
-sudo unzip -q -o ./moode-r641.zip
+wget http://moodeaudio.org/downloads/prod/moode-r642.zip
+sudo unzip -q -o ./moode-r642.zip
 
 5. Expand the root partition to 3.5GB.
 
@@ -299,17 +299,6 @@ sudo systemctl disable hciuart.service
 sudo mkdir -p /var/run/bluealsa
 sudo sync
 sudo apt-get clean
-
-5. Compile trx 0.4
-
-sudo apt-get -y install libopus-dev
-sudo cp ./moode/other/trx/trx-0.4.zip ./
-sudo unzip ./trx-0.4.zip
-cd trx-0.4
-sudo make
-sudo make install
-cd ..
-sudo rm -rf trx-0.4*
 
 # SR3
 sudo reboot

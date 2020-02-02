@@ -1638,17 +1638,6 @@ function updMpdConf($i2sdevice) {
 	$data .= "always_on \"yes\"\n";
 	$data .= "}\n\n";
 
-	// TRX multiroom (output 8)
-	$data .= "audio_output {\n";
-	$data .= "type \"alsa\"\n";
-	$data .= "name \"TRX multiroom\"\n";
-	$data .= "device \"multiroom\"\n";
-	$data .= "mixer_type \"" . $mixertype . "\"\n";
-	$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $device . "\"\n" . "mixer_index \"0\"\n" : '';
-	$data .= "dop \"" . $dop . "\"\n";
-	$data .= "#allowed_formats \"48000:16:2\"\n";
-	$data .= "}\n";
-
 	$fh = fopen('/etc/mpd.conf', 'w');
 	fwrite($fh, $data);
 	fclose($fh);
