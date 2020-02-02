@@ -110,7 +110,7 @@ With no OPTION print the help text and exit.
 
  -a\t\tprint features availability
  -A [add|rm N] \tupdate features availability
- -d\t\tdump session vars (requires sudo)
+ -d\t\tdump session file (requires sudo)
  -f\t\tprint supported audio formats
  -F\t\tprint supported audio formats and sample rates
  -l\t\tprint moode log
