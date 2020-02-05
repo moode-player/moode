@@ -17,9 +17,11 @@
 
 Updates
 
+- UPD: Bump to Linux kernel 4.19.97
+- UPD: Bump to v2.0.0 ASIX USB/Ethernet driver
 - UPD: Purge orphaned stations from session during startup
 - UPD: Add moodeutl option to dump the session file
-- UPD: Deprecate TRX
+- UPD: Deprecate TRX test software
 
 Bug fixes
 
