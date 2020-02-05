@@ -822,9 +822,9 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-KERNEL=4.19.83
-BUILD=#1277
-echo "y" | sudo PRUNE_MODULES=1 rpi-update d86586926cfca6aa158cab13888194d53ae23d1b
+KERNEL=4.19.97
+BUILD=#1293
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 993f47507f287f5da56495f718c2d0cd05ccbc19
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
@@ -839,7 +839,7 @@ sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.ko /lib/modules/$KERN
 sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.conf /etc/modprobe.d/
 sudo chmod 0644 /lib/modules/$KERNEL"-v7+"/kernel/drivers/net/wireless/8812au.ko
 sudo chmod 0644 /etc/modprobe.d/*.conf
-# Eth/USB driver v0.1.4 (Allo enhanced)
+# Eth/USB driver v2.0.0 (Allo enhanced)
 sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/ax88179_178a.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb
 sudo depmod $KERNEL-v7+
 
