@@ -2,11 +2,11 @@
 #
 # Setup Guide for moOde audio player
 #
-# These instructions are designed to initially configure
-# moOde audio player. Additional help is provided within
-# the player via the (i) information buttons.
+# These instructions are designed for initial configuration
+# of moOde audio player. Additional configuration help is
+# provided within the player via the (i) information buttons.
 #
-# Updated: 2020-01-23
+# Updated: 2020-MM-DD
 #
 # (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -18,27 +18,33 @@
 //
 ////////////////////////////////////////////////////////
 
-NOTE: Use http://moode, moode.local or IP address, whichever works on your network. Typically Android OS will only work with IP address.
+NOTE: Use http://moode, moode.local or IP address, whichever works on your network.
+Typically Android OS will only work with IP address.
 
 - SSH login user: pi, pwd: moodeaudio
-- Preface all commands with sudo
-- AP mode IP address: 172.24.1.1, SSID: Moode, pwd: moodeaudio, channel: 6
-- AP mode starts automatically when wlan0 SSID is 'blank' in Network config and there is no Ethernet connection, or WiFi SSID is defined but no IP address is assigned
-- Default Samba shares are NAS, RADIO, SDCARD, USB
+- Preface commands requiring root permission with sudo
+- Access Point (AP) mode:
+  (a) IP address: 172.24.1.1
+  (b) SSID: Moode
+  (c) Password: moodeaudio
+  (d) Channel: 6
+- AP mode starts automatically when:
+  (a) WiFi SSID is set to 'None' in Network config and there is no Ethernet connection
+  (b) WiFi SSID is defined but no IP address was assigned by DHCP. This typically
+  occurs when connection to the SSID fails.
+- Default Samba shares are NAS, Playlists, Radio, and SDCard
 - Each USB disk will also have a Samba share named after its Disk Label
 
-WIFI ADAPTERS THAT SUPPORT ACCESS POINT MODE (not a complete list)
+WIFI ADAPTERS THAT ARE REPORTED TO SUPPORT AP MODE
 
 - Raspberry Pi 3, 4 and Zero W integrated WiFi adapters
-- Canakit WiFi Adapter
-- Raspberry Pi USB WiFi Dongle
-- WiFi adapters based on RTL RT5370 chipset
-- Edimax EW-7811Un
+- Comfast CF-912AC dual-band WiFi adapter
+- For all other adapters consult the manufacturer
 
 IN-PLACE SOFTWARE UPDATES
 
-- Updates to moOde software are made available periodically and can be downloaded and
-  installed from within moOde itself by clicking "CHECK for software update" in System config
+- Updates to moOde software are made available periodically and can be downloaded
+  and installed from by clicking "CHECK for software update" in System Config
 - Click VIEW to see a list of what is contained in the update package
 - Click INSTALL to download and install the update package
 
@@ -64,7 +70,7 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     a) Insert WiFi adapter that supports AP mode
     b) Power on
     c) Join network SSID=Moode, pwd=moodeaudio
-    d) http://moode.local (or http://172.24.1.1)
+    d) http://moode.local or http://172.24.1.1
 
  2. AUDIO DEVICE SETUP
     - USB DEVICE
@@ -162,15 +168,15 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     a) Change values in the file below
     b) Paste contents into /boot/moodecfg.txt
     c) sudo reboot
-    d) Join AP SSID if using AP mode, then http://hostname.local (or http://172.24.1.1)
+    d) Join AP SSID if using AP mode, then http://hostname.local or http://172.24.1.1
 
 ##########################################
 # Copy this file to /boot/moodecfg.txt
-# worker will process it at startup then
-# delete it and automatically reboot.
+# It will be processed at startup and the
+# system will automaticly reboot.
 #
 # All param=value pairs must be present.
-# Set wlanssid=<nothing> to start AP mode.
+# Set wlanssid= blank to start AP mode.
 # Example: wlanssid=
 ##########################################
 
