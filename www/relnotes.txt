@@ -22,6 +22,8 @@ Updates
 - UPD: Purge orphaned stations from session during startup
 - UPD: Add moodeutl option to dump the session file
 - UPD: Deprecate TRX test software
+- UPD: Reset Auto-shuffle random play to Off during startup
+- UPD: Edit Setup guide to reflect changes
 
 Bug fixes
 
