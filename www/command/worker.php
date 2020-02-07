@@ -614,7 +614,6 @@ else {
 	sendMpdCmd($sock, 'stop');
 	$resp = readMpdResp($sock);
 }
-closeMpdSock($sock);
 
 // Start localui
 if ($_SESSION['localui'] == '1') {
@@ -622,10 +621,13 @@ if ($_SESSION['localui'] == '1') {
 	workerLog('worker: LocalUI started');
 }
 
-// Start auto-shuffle
+// Turn off Auto-shuffle based random play if it's on
+workerLog('worker: Auto-shuffle service (' . ($_SESSION['ashufflesvc'] == '1' ? 'On' : 'Off') . ')');
 if ($_SESSION['ashuffle'] == '1') {
-	sysCmd('/usr/local/bin/ashuffle > /dev/null 2>&1 &');
-	workerLog('worker: Auto-shuffle started');
+	playerSession('write', 'ashuffle', '0');
+	sendMpdCmd($sock, 'consume 0');
+	$resp = readMpdResp($sock);
+	workerLog('worker: Random Play reset to (Off)');
 }
 
 // Reducing 3B+ eth port speed fixes audio glitches when using certain usb dacs
@@ -673,6 +675,9 @@ $_SESSION['w_queue'] = '';
 $_SESSION['w_queueargs'] = '';
 $_SESSION['w_lock'] = 0;
 $_SESSION['w_active'] = 0;
+
+// Close MPD socket
+closeMpdSock($sock);
 
 // Close session
 session_write_close();
