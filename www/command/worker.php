@@ -328,11 +328,8 @@ else {
 	workerLog($logmsg . 'Audio output (I2S audio device)');
 	workerLog($logmsg . 'Audio device (' . $_SESSION['i2sdevice'] . ')');
 }
-$formats = sysCmd('moodeutl -f');
-foreach($formats as $format) {
-	$audio_formats .= $format . ', ';
-}
-$_SESSION['audio_formats'] = !empty($audio_formats) ? substr($audio_formats, 0, -2) : 'Audio device busy';
+
+$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
 workerLog('worker: Audio formats (' . $_SESSION['audio_formats'] . ')');
 
 // Store alsa mixer name for use by util.sh get/set-alsavol and vol.sh

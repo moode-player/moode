@@ -112,7 +112,7 @@ With no OPTION print the help text and exit.
  -A [add|rm N] \tupdate features availability
  -d\t\tdump session file (requires sudo)
  -f\t\tprint supported audio formats
- -F\t\tprint supported audio formats and sample rates
+ -F\t\tprint full alsacap info
  -l\t\tprint moode log
  -m\t\trun system monitor
  -r\t\trestart servers
@@ -195,60 +195,24 @@ function dump_session() {
 	}
 	session_write_close();
 }
-
 function audio_formats($option) {
 	$card_num = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
 	$audio_output = trim(shell_exec('cat /proc/asound/card0/pcm0p/sub0/hw_params | grep closed'));
 
 	if ($audio_output == 'closed') {
-		$rate_option = $option == '-F' ? '-s' : '';
-
-	 	$result = json_decode(shell_exec('alsa-capabilities -n ' . $rate_option .' -j 2>&1'), true);
-		//echo print_r($result, true);
-
-		// Without sample rates
+		// Just formats for the configured device
 		if ($option == '-f') {
-			foreach ($result['cards'] as $card) {
-				foreach ($card['outputs'] as $output) {
-					if ($output['hwaddress'] == 'hw:' . $card_num . ',0') {
-						foreach ($output['encoding_formats'] as $format) {
-							echo trim($format == '(n/a)' ? 'Unable to determine formats' : $format) . "\n";
-				 		}
-					}
-				}
-			}
+			$result = shell_exec('alsacap -C ' . $card_num . ' -D 0 2>&1 | grep "Sample formats:"');
+			echo explode(': ', $result)[1];
 		}
-		// With sample rates
+		// Full info
 		else {
-			if (is_array($result['cards'])) {
-				foreach ($result['cards'] as $card) {
-					foreach ($card['outputs'] as $output) {
-						if ($output['hwaddress'] == 'hw:' . $card_num . ',0') {
-							foreach ($output['encoding_formats'] as $format) {
-								//echo trim($format) . "\n";
-								foreach ($format as $fmt => $rates) {
-									//echo trim($fmt) . "\n";
-									$print_line = $fmt . ': ';
-									foreach ($rates as $rate) {
-										//echo trim($rate) . "\n";
-										$print_line .= $rate / 1000 . 'K|';
-									}
-
-									$print_line = substr($print_line, 0, -2);
-									echo $print_line . "\n";
-								}
-					 		}
-						}
-					}
-				}
-			}
-			else {
-				echo "Unable to determine formats\n";
-			}
+			$result = shell_exec('alsacap 2>&1');
+			echo $result;
 		}
 	}
 	else {
-		echo "Can't detect formats or rates because audio device is in use\n";
+		echo "Audio device busy \n" ;
 	}
 }
 
