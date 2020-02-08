@@ -23,6 +23,7 @@ Updates
 - UPD: Add moodeutl option to dump the session file
 - UPD: Deprecate TRX test software
 - UPD: Reset Auto-shuffle random play to Off during startup
+- UPD: Replace alsa-capabilities with alsacap
 - UPD: Edit Setup guide to reflect changes
 
 Bug fixes
