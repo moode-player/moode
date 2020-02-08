@@ -210,6 +210,9 @@ sudo rm -rf meson-0.50.1*
 # mediainfo
 sudo cp ./moode/other/mediainfo/mediainfo-18.12 /usr/local/bin/mediainfo
 
+# alsacap
+sudo cp ./moode/other/alsacap/alssacap /usr/local/bin
+
 # udisks-glue libs
 sudo apt-get -y install libatasmart4 libdbus-glib-1-2 libgudev-1.0-0 \
 	libsgutils2-2 libdevmapper-event1.02.1 libconfuse-dev libdbus-glib-1-dev
