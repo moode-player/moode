@@ -102,7 +102,9 @@ foreach ($_SESSION as $key => $value) {
 // Load cfg_radio into session
 $result = cfgdb_read('cfg_radio', $dbh);
 foreach ($result as $row) {
-	$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
+	if ($row['station'] != 'DELETED') {
+		$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
+	}
 }
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
