@@ -24,6 +24,7 @@ Updates
 - UPD: Deprecate TRX test software
 - UPD: Reset Auto-shuffle random play to Off during startup
 - UPD: Replace alsa-capabilities with alsacap
+- UPD: Remove DR P7 Mix station (no longer broadcasting)
 - UPD: Edit Setup guide to reflect changes
 
 Bug fixes
