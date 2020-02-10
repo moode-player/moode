@@ -21,6 +21,7 @@ Updates
 - UPD: Bump to v2.0.0 ASIX USB/Eth driver for USBridge SIG
 - UPD: Purge orphaned stations from session during startup
 - UPD: Add moodeutl option to dump the session file
+- UPD: Add triggerhappy (disabled) plus default media.conf
 - UPD: Deprecate TRX test software
 - UPD: Reset Auto-shuffle random play to Off during startup
 - UPD: Replace alsa-capabilities with alsacap
