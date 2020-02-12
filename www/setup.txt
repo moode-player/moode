@@ -6,7 +6,7 @@
 # of moOde audio player. Additional configuration help is
 # provided within the player via the (i) information buttons.
 #
-# Updated: 2020-MM-DD
+# Updated: 2020-02-12
 #
 # (C) Tim Curtis 2017 http://moodeaudio.org
 #

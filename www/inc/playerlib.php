@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 6.4.2
+ * 2020-02-12 TC moOde 6.4.2
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
