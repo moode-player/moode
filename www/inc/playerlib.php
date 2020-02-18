@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-02-12 TC moOde 6.4.2
+ * 2020-MM-DD TC moOde 6.5.0
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -839,7 +839,7 @@ function parseStatus($resp) {
 function formatRate ($rate) {
 	$rates = array('*' => '*', '32000' => '32', '48000' => '48', '96000' => '96', '192000' => '192', '384000' => '384', '768000' => '768',
 	'22050' => '22.05', '44100' => '44.1', '88200' => '88.2', '176400' => '176.4', '352800' => '352.8', '705600' => '705.6',
-	'dsd64' => 'dsd64', 'dsd128' => 'dsd128');
+	'dsd64' => 'dsd64', 'dsd128' => 'dsd128', '2822400' => '2.822', '5644800' => '5.644', '11289600' => '11.288', '22579200' => '22.576');
 
 	return $rates[$rate];
 }
@@ -1989,13 +1989,12 @@ function getEncodedAt($song, $outformat) {
 	}
 	// DSD file
 	elseif (getFileExt($song['file']) == 'dsf' || getFileExt($song['file']) == 'dff') {
-		$encoded = 'DSD';
+		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song['file'] . '"');
+		$encoded = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' Mbps');
 	}
 	// PCM file
 	else {
-		$fullpath = MPD_MUSICROOT . $song['file'];
-
-		if ($song['file'] == '' || !file_exists($fullpath)) {
+		if ($song['file'] == '' || !file_exists(MPD_MUSICROOT . $song['file'])) {
 			return 'File does not exist';
 		}
 
@@ -2005,7 +2004,7 @@ function getEncodedAt($song, $outformat) {
 		putenv('LC_ALL=' . $locale);
 
 		// mediainfo
-		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . $fullpath . '"';
+		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song['file'] . '"';
 		debugLog($cmd);
 		$result = sysCmd($cmd);
 
@@ -2015,13 +2014,12 @@ function getEncodedAt($song, $outformat) {
 		$format = $result[3];
 
 		if ($outformat == 'default') {
-			$encoded = $bitdepth == '?' ? formatRate($samplerate) . ' ' . $format : $bitdepth . '/' . formatRate($samplerate) . ' ' . $format;
+			$encoded = ($bitdepth == '?' ? formatRate($samplerate) . ' ' . $format : $bitdepth . '/' . formatRate($samplerate) . ' ' . $format);
 		}
 		else {
-			$encoded = $bitdepth == '?' ? formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format : $bitdepth . ' bit, ' . formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format;
+			$encoded = ($bitdepth == '?' ? formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format : $bitdepth . ' bit, ' . formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format);
 		}
 	}
-
 	return $encoded;
 }
 
