@@ -101,21 +101,21 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
  4. ADD SOURCE(S) CONTAINING MUSIC FILES
     - USB STORAGE DEVICES
     a) Insert USB storage device
-    b) Menu, Configure, Sources
+    b) Menu, Configure, Library
     c) UPDATE or RE-GEN MPD database
     d) Optionally select Yes to automatically update MPD database on USB insert/remove
     e) Wait for completion (no spinner)
-    f) Library tab, Folder view. Click the refresh button to update the folder list.
     - SDCARD STORAGE DEVICES
-    a) Menu, Configure, Sources
+    a) Menu, Configure, Library
     b) UPDATE or RE-GEN MPD database
     c) Wait for completion (no spinner)
-    d) Library tab, Folder view. Click the refresh button to update the folder list.
     - NAS DEVICE
-    a) Menu, Configure, Sources
+    a) Menu, Configure, Library
     b) CREATE Music source (MPD database update initiates automatically after SAVE)
     c) Wait for completion (no spinner)
-    d) Library tab, Folder view. Click the refresh button to update the folder list.
+    - ALBUM COVER THUMBNAILS
+    a) UPDATE or RE-GEN the album cover thumbnail cache.
+    b) VIEW cache status periodically and wait until Done.
 
  5. VERIFY AUDIO PLAYBACK
     - Ethernet mode
