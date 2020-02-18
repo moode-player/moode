@@ -11,13 +11,33 @@
 
 ########################################################
 //
+// 2020-MM-DD TC moOde 6.5.0
+//
+########################################################
+
+Updates
+
+- UPD: Bump to Raspbian Buster Lite 10.3
+- UPD: Bump to Linux kernel 4.19.102 build #1295
+- UPD: Bump to MPD 0.21.20
+- UPD: Add DSD rate to extra metadata
+- UPD: RadioActive FM 88.6 playable URL
+
+Bug fixes
+
+- FIX: Wrong DSD encoded-at rates reported on Audio info
+- FIX: Audio info Formats showing PHP error message
+- FIX: Minor corrections to Setup guide
+
+########################################################
+//
 // 6.4.2 2020-02-12
 //
 ########################################################
 
 Updates
 
-- UPD: Bump to Linux kernel 4.19.97
+- UPD: Bump to Linux kernel 4.19.97 build #1293
 - UPD: Bump to v2.0.0 ASIX USB/Eth driver for USBridge SIG
 - UPD: Purge orphaned stations from session during startup
 - UPD: Add moodeutl option to dump the session file
