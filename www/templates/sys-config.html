@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 -->
@@ -182,6 +182,45 @@
 				</div>
 			</div>
 
+			<div class="control-group">
+				<label class="control-label">LED0 (Activity)</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_actled2">ON</label>
+						$_select[actled1]
+						<label class="toggle-radio" for="toggle_actled1">OFF</label>
+						$_select[actled0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_actled" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-actled" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-actled" class="help-block-configs help-block-margin hide">
+						LED0 default trigger is SDCard (mmc0) activity.
+                    </span>
+				</div>
+			</div>
+
+			<div class="$_pwrled_hide">
+				<div class="control-group">
+					<label class="control-label">LED1 (Power)</label>
+					<div class="controls">
+						<div class="toggle">
+							<label class="toggle-radio" for="toggle_pwrled2">ON</label>
+							$_select[pwrled1]
+							<label class="toggle-radio" for="toggle_pwrled1">OFF</label>
+							$_select[pwrled0]
+						</div>
+						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_pwrled" value="novalue">Set</button>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						</div>
+						<span id="info-pwrled" class="help-block-configs help-block-margin hide">
+							LED1 default trigger is default-on for Power.
+	                    </span>
+					</div>
+				</div>
+			</div>
 			<div class="control-group">
 				<label class="control-label">Wait for eth0 address</label>
 				<div class="controls">
