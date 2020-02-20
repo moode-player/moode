@@ -78,6 +78,9 @@ switch ($option) {
 	case '-d':
 		dump_session();
 		break;
+	case '-D':
+		delete_session_var($argv);
+		break;
 	case '-f':
 	case '-F':
 		audio_formats($option);
@@ -111,6 +114,7 @@ With no OPTION print the help text and exit.
  -a\t\tprint features availability
  -A [add|rm N] \tupdate features availability
  -d\t\tdump session file (requires sudo)
+ -D [var name] \tdelete session variable (requires sudo)
  -f\t\tprint supported audio formats
  -F\t\tprint full alsacap info
  -l\t\tprint moode log
@@ -195,6 +199,20 @@ function dump_session() {
 	}
 	session_write_close();
 }
+
+function delete_session_var($argv) {
+	if (!isset($argv[2])) {
+		echo 'Missing 2nd argument [variable name]' . "\n";
+		return;
+	}
+
+	$session_id = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+	session_id($session_id);
+	session_start();
+	unset($_SESSION[$argv[2]]);
+	session_write_close();
+}
+
 function audio_formats($option) {
 	$card_num = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
 	$audio_output = trim(shell_exec('cat /proc/asound/card0/pcm0p/sub0/hw_params | grep closed'));
