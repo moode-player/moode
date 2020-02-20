@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-02-12 TC moOde 6.4.2
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -537,6 +537,9 @@ if (isset($_SESSION['rotaryenc']) && $_SESSION['rotaryenc'] == 1) {
 	workerLog('worker: Rotary encoder on (' . $_SESSION['rotenc_params'] . ')');
 }
 
+// Log USB volume knob on/off state
+workerLog('worker: USB volume knob (' . ($_SESSION['usb_volknob'] == '1' ? 'On' : 'Off') . ')');
+
 // Start lcd updater engine
 if (isset($_SESSION['lcdup']) && $_SESSION['lcdup'] == 1) {
 	startLcdUpdater();
@@ -574,6 +577,31 @@ workerLog('worker: NAS and UPnP sources (' . $result . ')');
 //
 workerLog('worker: -- Miscellaneous');
 //
+
+// LED states
+if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
+	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	$led0_brightness = explode(',', $_SESSION['led_state'])[0] == '0' ? '1' : '0';
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
+	sysCmd('echo ' . $led0_brightness . ' | sudo tee /sys/class/leds/led0/brightness > /dev/null 2>&1');
+	workerLog('worker: LED0 trigger (' . $led0_trigger . ')');
+	workerLog('worker: LED0 brightness (' . $led0_brightness . ')');
+	workerLog('worker: LED1 sysclass does not exist');
+}
+elseif ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
+	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
+	workerLog('worker: LED0 trigger (' . $led0_trigger . ')');
+	workerLog('worker: LED1 sysclass does not exist');
+}
+else {
+	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	$led1_brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
+	sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null 2>&1');
+	workerLog('worker: LED0 trigger (' . $led0_trigger . ')');
+	workerLog('worker: LED1 brightness (' . $led1_brightness . ')');
+}
 
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
 if ($_SESSION['alsavolume'] != 'none') {
@@ -1337,6 +1365,22 @@ function runQueuedJob() {
 				sysCmd('systemctl start rotenc');
 			}
 			break;
+		case 'usb_volknob':
+			if ($_SESSION['w_queueargs'] == '1') {
+				sysCmd('systemctl enable triggerhappy');
+				sysCmd('systemctl start triggerhappy');
+			}
+			else {
+				sysCmd('systemctl stop triggerhappy');
+				sysCmd('systemctl disable triggerhappy');
+			}
+			break;
+		case 'invert_polarity':
+			sysCmd('mpc stop');
+			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable only 5' : 'mpc enable only 1';
+			sysCmd($cmd);
+			setMpdHttpd();
+			break;
 		case 'crossfeed':
 			sysCmd('mpc stop');
 
@@ -1347,12 +1391,6 @@ function runQueuedJob() {
 				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 				sysCmd('mpc enable only 2');
 			}
-			setMpdHttpd();
-			break;
-		case 'invert_polarity':
-			sysCmd('mpc stop');
-			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable only 5' : 'mpc enable only 1';
-			sysCmd($cmd);
 			setMpdHttpd();
 			break;
 		case 'mpd_httpd':
@@ -1586,6 +1624,22 @@ function runQueuedJob() {
 		case 'hdmiport':
 			$cmd = $_SESSION['w_queueargs'] == '1' ? 'tvservice -p' : 'tvservice -o';
 			sysCmd($cmd . ' > /dev/null');
+			break;
+		case 'actled': // LED0
+			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
+				$led0_trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
+				$led0_brightness = $_SESSION['w_queueargs'] == '0' ? '1' : '0';
+				sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
+				sysCmd('echo ' . $led0_brightness . ' | sudo tee /sys/class/leds/led0/brightness > /dev/null 2>&1');
+			}
+			else {
+				$led0_trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
+				sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
+			}
+			break;
+		case 'pwrled': // LED1
+			$led1_brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
+			sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null 2>&1');
 			break;
 		case 'maxusbcurrent':
 			$cmd = $_SESSION['w_queueargs'] == 1 ? 'echo max_usb_current=1 >> ' . '/boot/config.txt' : 'sed -i /max_usb_current/d ' . '/boot/config.txt';
