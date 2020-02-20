@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 -->
@@ -164,6 +164,26 @@
 						- accell_factor: Threshold (diff betw last/current enc pos) to determine whether to use 1 step or volume_step steps. Default = 2.<br>
 						- volume_step: Number of steps to use when knob turns at fast rate. Default = 3.<br>
 						- pin_a, pin_b: Broadcom SoC pin numbers. Default = 23, 24.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">USB volume knob</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_usb_volknob2">ON</label>
+						$_select[usb_volknob1]
+						<label class="toggle-radio" for="toggle_usb_volknob1">OFF</label>
+						$_select[usb_volknob0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_usb_volknob" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_usb_volknob" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info_usb_volknob" class="help-block-configs help-block-margin2 hide">
+						Activates the triggerhappy key mapping daemon for USB volume knobs.<br>
+						Refer to /etc/triggerhappy/triggers.d/media.conf for key/event mappings.
                     </span>
 				</div>
 			</div>

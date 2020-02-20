@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -111,6 +111,13 @@ if (isset($_POST['update_rotenc'])) {
 	if (isset($title)) {
 		submitJob('rotaryenc', $_POST['rotaryenc'], $title, '');
 	}
+}
+
+// USB volume knob
+if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
+	$title = $_POST['usb_volknob'] == 1 ? 'USB volume knob on' : 'USB volume knob off';
+	submitJob('usb_volknob', $_POST['usb_volknob'], $title, '');
+	playerSession('write', 'usb_volknob', $_POST['usb_volknob']);
 }
 
 // polarity inversion
@@ -422,8 +429,7 @@ else {
 // MPD
 
 // MPD version
-//$_select['mpdver'] .= "<option value=\"0.20.23\" " . (($_SESSION['mpdver'] == '0.20.23') ? "selected" : "") . ">0.20.23 (Default)</option>\n";
-$_select['mpdver'] .= "<option value=\"0.21.16\" " . (($_SESSION['mpdver'] == '0.21.16') ? "selected" : "") . ">0.21.16 (Default)</option>\n";
+$_select['mpdver'] .= "<option value=\"0.21.20\" " . (($_SESSION['mpdver'] == '0.21.20') ? "selected" : "") . ">0.21.20 (Default)</option>\n";
 
 // auto-shuffle
 $_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
@@ -437,6 +443,10 @@ $_select['autoplay0'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleaut
 $_select['rotaryenc1'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"togglerotaryenc1\" value=\"1\" " . (($_SESSION['rotaryenc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['rotaryenc0'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"togglerotaryenc2\" value=\"0\" " . (($_SESSION['rotaryenc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['rotenc_params'] = $_SESSION['rotenc_params'];
+
+// USB volume knob
+$_select['usb_volknob1'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle_usb_volknob1\" value=\"1\" " . (($_SESSION['usb_volknob'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+$_select['usb_volknob0'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"toggle_usb_volknob2\" value=\"0\" " . (($_SESSION['usb_volknob'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
 // polarity invrsion
 $_select['invert_polarity1'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . ">\n";
