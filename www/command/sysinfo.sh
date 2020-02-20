@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-01-23 TC moOde 6.4.1
+# 2020-MM-DD TC moOde 6.5.0
 #
 
 # check for sudo
@@ -63,6 +63,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nOnboard WiFi\t\t= $piwifi\c"
 	echo -e "\nOnboard BT\t\t= $pibt\c"
 	echo -e "\nHDMI output\t\t= $HDMI\c"
+	echo -e "\nLED state\t\t= $led_state\c"
 	echo -e "\nEth addr wait\t\t= $eth0chk\c"
 	echo -e "\nMax USB current\t\t= $maxusbcurrent\c"
 	echo -e "\nUSB (UAC2) fix\t\t= $uac2fix\c"
@@ -145,6 +146,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nAutoplay\t\t= $autoplay\c"
 	echo -e "\nRotary encoder\t\t= $rotaryenc\c"
 	echo -e "\nEncoder params\t\t= $rotenc_params\c"
+	echo -e "\nUSB volume knob\t\t= $usb_volknob\c"
 	echo -e "\nPolarity inversion\t= $invert_polarity\c"
 	echo -e "\nCrossfeed\t\t= $crossfeed\c"
 	echo -e "\nCrossfade\t\t= $mpdcrossfade\c"
@@ -596,6 +598,8 @@ volknob_preamp=${arr[124]}
 library_album_grouping=${arr[125]}
 kernel_architecture=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
+[[ "${arr[128]}" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
+led_state=${arr[129]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
