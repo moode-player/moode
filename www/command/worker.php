@@ -436,6 +436,20 @@ else {
 }
 
 // Start spotify receiver
+// NOTE: moOde ships with an armv7l-only version of librespot that will segfault on armv6l.
+$bitmask = (int)$_SESSION['feat_bitmask'];
+if (trim(sysCmd('librespot 2>&1')[0]) == 'Segmentation fault') {
+	if (FEAT_SPOTIFY & $bitmask) {
+		playerSession('write', 'feat_bitmask', $_SESSION['feat_bitmask'] - FEAT_SPOTIFY);
+		workerLog('worker: Spotify feature disabled');
+	}
+}
+else {
+	if (!(FEAT_SPOTIFY & $bitmask)) {
+		playerSession('write', 'feat_bitmask', $_SESSION['feat_bitmask'] + FEAT_SPOTIFY);
+		workerLog('worker: Spotify feature enabled');
+	}
+}
 if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
 	if (isset($_SESSION['spotifysvc']) && $_SESSION['spotifysvc'] == 1) {
 		startSpotify();
