@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -59,6 +59,9 @@ $_select['volume_normalization'] .= "<option value=\"Yes\" " . (($cfg_spotify['v
 $_select['volume_normalization'] .= "<option value=\"No\" " . (($cfg_spotify['volume_normalization'] == 'No') ? "selected" : "") . ">No</option>\n";
 // ormalization pregain
 $_select['normalization_pregain'] = $cfg_spotify['normalization_pregain'];
+// Autoplay
+$_select['autoplay'] .= "<option value=\"Yes\" " . (($cfg_spotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['autoplay'] .= "<option value=\"No\" " . (($cfg_spotify['autoplay'] == 'No') ? "selected" : "") . ">No</option>\n";
 
 waitWorker(1, 'spo_config');
 
