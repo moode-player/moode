@@ -4,9 +4,10 @@
 #
 # moOde 6.5.0 2020-MM-DD
 # - Based on Raspbian Buster Lite (10.3)
-# - Bump to Linus kernel 4.19.102 build #1295
+# - Bump to Linux kernel 4.19.102 build #1295
 # - Bump to r650 sources
 # - Bump to MPD 0.21.20
+# - Bump to librespot v0.1.1 (armv7l only)
 # - Image prep and build is Linux and Ethernet only
 # - Remove dead code and instructions
 #
@@ -799,33 +800,31 @@ sudo rm -rf ./shairport-sync-*
 //
 ////////////////////////////////////////////////////////////////
 
-# The procedure for librespot is to compile it on armv6l architecture (Pi-1B | Zero | Zero W) because
-# this binary also runs equally well on armv7l (Pi-2B | 3B | 3A+ | 3B+).
+# NOTE: armv7l librespot will segfault on armv6l but not vis versa. If it can be compiled on
+# or for armv6l architecture (Pi-1B | Zero | Zero W) then it will be cross-platform.
 
-#You can uninstall at any time with rustup self uninstall and these changes will be reverted.
-cd ~
+# NOTE: To uninstall
 rustup self uninstall
 
-# Install the rust compiler and cargo package manager. Choose #1 when prompted.
+# Install rust compiler, cargo package manager and portaudio dev lib.
+# Choose #1 when prompted.
 cd ~
 curl https://sh.rustup.rs -sSf | sh
-sudo reboot
-
-# Compile librespot
-cd ~
 sudo apt-get -y install portaudio19-dev
 
-sudo cp ./moode/other/librespot/librespot-master-51a634d.zip ./
-unzip ./librespot-master-51a634d.zip
-cd ./librespot-master
-
+# Compile librespot
+source $HOME/.cargo/env
+sudo cp ./moode/other/librespot/librespot-0.1.1.zip ./
+unzip ./librespot-0.1.1.zip
+cd ./librespot-0.1.1
 cargo build --release --features alsa-backend
-# copy binary
+
+# Copy binary
 sudo cp target/release/librespot /usr/local/bin/librespot
 cd ~
 
-sudo rm -rf librespot-master
-sudo rm -f ./librespot-master-51a634d.zip
+# Cleanup
+sudo rm -rf librespot*
 
 ////////////////////////////////////////////////////////////////
 //
