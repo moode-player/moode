@@ -15,19 +15,41 @@
 //
 ########################################################
 
+New features
+
+- NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
+- NEW: Audio config option for USB volume knob ON/OFF
+- NEW: System config option for LED0 and LED1 ON/OFF
+- NEW: Spotify config option to autoplay similar songs
+
 Updates
 
-- UPD: Bump to Raspbian Buster Lite 10.3
 - UPD: Bump to Linux kernel 4.19.102 build #1295
 - UPD: Bump to MPD 0.21.20
+- UPD: Bump to librespot v0.1.1 armv7l-only
+- UPD: Bump to moodeutl 1.4.0
+- UPD: Deprecate librespot armv6l binary
 - UPD: Add DSD rate to extra metadata
-- UPD: RadioActive FM 88.6 playable URL
+- UPD: Add -D option to moodeutl (delete session var)
 
 Bug fixes
 
-- FIX: Wrong DSD encoded-at rates reported on Audio info
+- FIX: Wrong DSD encoded-at rates shown on Audio info
 - FIX: Audio info Formats showing PHP error message
+- FIX: WiFi/BT options missing from System config for Zero W
 - FIX: Minor corrections to Setup guide
+
+Radio stations
+
+- UPD: RadioActive FM 88.6
+- UPD: Swedish Classic Radio
+- UPD: WBJC Baltimore 91.5 - Classical
+- DEL: Amys FM (320K)
+- DEL: Amys FM Spirit of Soul (320K)
+- DEL: JB Radio-2 USA (320K)
+- DEL: Radio Monash
+- DEL: Rinse FM
+- DEL: VRT - Sporza
 
 ########################################################
 //
