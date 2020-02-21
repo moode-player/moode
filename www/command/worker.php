@@ -95,7 +95,7 @@ else {
 playerSession('open', '', '');
 // Delete radio station session vars to purge any orphans
 foreach ($_SESSION as $key => $value) {
-	if (substr($key, 0, 4) == 'http') {
+	if (substr($key, 0, 5) == 'http:') {
 		unset($_SESSION[$key]);
 	}
 }
