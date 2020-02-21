@@ -21,7 +21,7 @@
  *
  */
 
-define('VERSION', '1.3.4');
+define('VERSION', '1.4.0');
 define('SQLDB', '/var/local/www/db/moode-sqlite3.db');
 
 // Features availability bitmask
@@ -184,6 +184,11 @@ function update_features($features, $feat_bitmask, $argv) {
 }
 
 function dump_session() {
+	if (posix_getuid() != 0){
+		echo "This option requires sudo\n";
+		return;
+	}
+
 	$session_id = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
 	session_id($session_id);
 	session_start();
@@ -201,6 +206,11 @@ function dump_session() {
 }
 
 function delete_session_var($argv) {
+	if (posix_getuid() != 0){
+		echo "This option requires sudo\n";
+		return;
+	}
+
 	if (!isset($argv[2])) {
 		echo 'Missing 2nd argument [variable name]' . "\n";
 		return;
