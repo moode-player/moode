@@ -2095,6 +2095,7 @@ function startSpotify() {
 
 	$linear_volume = $cfg_spotify['volume_curve'] == 'Linear' ? ' --linear-volume' : '';
 	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ? ' --enable-volume-normalisation --normalisation-pregain ' .  $cfg_spotify['normalization_pregain'] : '';
+	$autoplay = $cfg_spotify['autoplay'] == 'Yes' ? ' --autoplay' : '';
 
 	$cmd = 'librespot' .
 		' --name "' . $_SESSION['spotifyname'] . '"' .
@@ -2102,6 +2103,7 @@ function startSpotify() {
 		' --initial-volume ' . $cfg_spotify['initial_volume'] .
 		$linear_volume .
 		$volume_normalization .
+		$autoplay .
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' . // audio file cache eats disk space
 		' --onevent /var/local/www/commandw/spotevent.sh' .
 		' > /dev/null 2>&1 &';
