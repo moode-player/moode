@@ -248,6 +248,7 @@ RENDERER_SETTINGS() {
 		echo -e "\nVolume curve\t\t= $volume_curve\c"
 		echo -e "\nVolume normalization\t= $volume_normalization\c"
 		echo -e "\nNormalization pregain\t= $normalization_pregain\c"
+		echo -e "\nAutoplay\t\t= $spotify_autoplay\c"
 		echo -e "\nResume MPD\t\t= $rsmafterspot\n"
 	fi
 
@@ -439,6 +440,7 @@ initial_volume=${arr[1]}
 volume_curve=${arr[2]}
 volume_normalization=${arr[3]}
 normalization_pregain=${arr[4]}
+spotify_autoplay=${arr[5]}
 
 # Squeezelite settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_sl")
