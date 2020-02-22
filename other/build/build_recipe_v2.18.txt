@@ -778,9 +778,9 @@ sudo chmod 0755 /usr/local/etc/mpdasrc
 sudo apt-get -y install autoconf libtool libdaemon-dev libasound2-dev libpopt-dev libconfig-dev \
 avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev libmosquitto-dev
 
-sudo cp ./moode/other/shairport-sync/shairport-sync-3.3.5-b1a5056.zip ./
-sudo unzip ./shairport-sync-3.3.5-b1a5056.zip
-cd ./shairport-sync-3.3.5
+sudo cp ./moode/other/shairport-sync/shairport-sync-3.3.6-15fd1d0.zip ./
+sudo unzip ./shairport-sync-3.3.6-15fd1d0.zip
+cd ./shairport-sync-3.3.6
 
 
 sudo autoreconf -i -f
