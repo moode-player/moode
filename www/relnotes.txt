@@ -26,6 +26,7 @@ Updates
 
 - UPD: Bump to Linux kernel 4.19.102 build #1295
 - UPD: Bump to MPD 0.21.20
+- UPD: Bump to shairport-sync 3.3.6
 - UPD: Bump to librespot v0.1.1 armv7l-only
 - UPD: Bump to moodeutl 1.4.0
 - UPD: Deprecate librespot armv6l binary
