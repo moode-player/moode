@@ -424,6 +424,9 @@ var renderAlbums = function() {
 	var output = '';
 	var output2 = '';
 	var tmp = '';
+	var tmpSub = '';   // For subtitles in Tag View
+	var tmpYear1 = ''; // For display of Year in Album View before Album title
+	var tmpYear2 = ''; // For display of Year in Album View	after Artist
 	var defCover = "this.src='images/default-cover-v6.svg'";
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
@@ -435,41 +438,56 @@ var renderAlbums = function() {
 		else {
 			tmp = '';
 		}
-
-        var album_year = filteredAlbums[i].year;
-        var album_year2 = filteredAlbumCovers[i].year;
-
-        // TEST
+    
+		// Tag view - list subtitle options
+		switch (SESSION.json['taglist_sub']) {
+			case "Year":
+				tmpSub = '<br><span class="artist-name">' + filteredAlbums[i].artist + '</span><span class="album-year">' + filteredAlbums[i].year + '</span>';
+				break;
+			case "Artist":
+        		tmpSub = '<br><span class="artist-name">' + filteredAlbums[i].artist + '</span><span class="album-year">' + filteredAlbums[i].artist + '</span>';
+				break;
+			case "Artist (Year)":
+				tmpSub = '<br><span class="artist-name">' + filteredAlbums[i].artist + '</span><span class="album-year">' + filteredAlbums[i].artist + ' (' + filteredAlbums[i].year + ') </span>';
+				break;
+			default: tmpSub = '<span class="artist-name">' + filteredAlbums[i].artist + '</span>';  // Allows quick-jump filter to work when 'none' is selected
+		}
+		
+		// Album view - 'Year' display options
+		switch (SESSION.json['show_year_av']) {
+			case "Before Album":
+				tmpYear1 = '<span class="album-year">' + filteredAlbumCovers[i].year + '&nbsp;-&nbsp;</span>';
+				tmpYear2 = '</span>';
+				break;
+			case "After Artist":
+				tmpYear1 = '';
+				tmpYear2 = ' (' + filteredAlbumCovers[i].year + ')</span>';
+				break;
+			default:
+				tmpYear1 = '';
+				tmpYear2 = '';				
+		}
+                   
+        //TEST
         //UI.tagViewCovers = false;
         //
-		if (UI.tagViewCovers) {
-			output += '<li><div class="lib-entry'
-				+ tmp
-				+ '">' + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '"><div class="album-name">' + filteredAlbums[i].album + '<br><span class="album-year">' + album_year + '</span><span class="artist-name">' + filteredAlbums[i].artist + '</span></div></div></li>';
-			output2 += '<li><div class="lib-entry'
-				+ tmp
-				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + '<span class="album-year">' + album_year2 + '</span>' + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span></div><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span></div></li>';
+ 		if (UI.tagViewCovers) {
+			output += '<li><div class="lib-entry' + tmp + '">' 
+              + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '"><div class="album-name">' + filteredAlbums[i].album 
+				+ tmpSub + '</div></div></li>';
 		}
 		else {
-			output += '<li><div class="lib-entry'
-				+ tmp
-				//+ '">' + filteredAlbums[i].album + '<span>' + ' - ' + filteredAlbums[i].artist + ', ' + album_year + '</span></div></li>';
-                + '">' + '<div class="album-name">' + filteredAlbums[i].album + '<br><span class="album-year">' + album_year + '</span><span class="artist-name">' + filteredAlbums[i].artist + '</span></div></div></li>';
-			output2 += '<li><div class="lib-entry'
-				+ tmp
-				+ '">' + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + '<span class="album-year">' + album_year2 + '</span>' + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span></div><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span></div></li>';
-		}
+			output += '<li><div class="lib-entry' + tmp + '">'
+              + '<div class="album-name">' + filteredAlbums[i].album + tmpSub + '</div></div></li>';
+        }
+		
+            output2 += '<li><div class="lib-entry' + tmp + '">' 
+              + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div><div class="albumcover">' + tmpYear1 + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span></div><span class="artist-name">' + filteredAlbumCovers[i].artist + tmpYear2 + '</div></li>';		
 	}
 
     // Output the lists
 	$('#albumsList').html(output);
 	$('#albumcovers').html(output2);
-
-    // Control whether to display album year
-    if (SESSION.json['library_album_grouping'] == 'Year') {
-        $('#albumsList .lib-entry .album-year').css('display', 'contents');
-        $('#albumcovers .lib-entry .album-year').css('display', 'block');
-    }
 
 	// Headers clicked
 	if (UI.libPos[0] == -2) {

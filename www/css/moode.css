@@ -291,7 +291,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* tag view */
 	.lib-entry {margin-right:0;}
 	.lib-entry-song {font-size:unset;}
-	.songyear {display:none;}
+	/*.songyear {display:none;}*/
 	/* folder view */
 	#folder-panel {padding-top:1.875em;height:calc(100vh - 1.875em);}
 	#database .btn {font-size:.9em;}
