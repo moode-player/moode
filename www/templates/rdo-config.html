@@ -1,0 +1,304 @@
+<!--
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2019-09-05 TC moOde 6.2.0
+ *
+ */
+-->
+
+<style>
+    .network-logos {
+        display     : block;
+        margin      : 0px;
+        padding     : 0px 0px 0px 40px;
+        list-style-type: none;
+        height      : 225px;
+        max-width   : 100%;
+        overflow-x  : hidden;
+        overflow-y  : auto;
+    }
+    
+    .network-logos li {
+        display     : inline-block;
+        margin      : 15px;
+    }
+    
+    .network-logos li small {
+        display     :inline-block;
+        width       : 100px;
+    }
+    
+    .network-logos li img {
+        display     : block;
+        width       : 90px;
+        height      : 90px;
+        margin      : 15px;
+        border      : 1px solid rgba(128,128,128,0.5);
+        border-radius : 3px;
+    }
+    
+    .network-logos input[type="file"],
+    .ui-plsupload input[type="file"] {
+        display     : none;
+    }
+    
+    .network-logos .btn {
+        color       : var(--accentxts);
+    }
+    
+    
+    .ui-userupload {
+        max-width : 425px;
+    }
+    
+    .ui-userupload .items {
+        border  : 1px solid var(--accentxts);
+        float   : left;
+        padding : 15px;
+        margin-bottom  : 25px;
+    }
+    
+    .ui-userupload .repeater-add-btn {
+        display : none;
+    }
+    
+    .ui-lineup {
+        list-style-type:none;
+        margin-left : 0px;
+        padding-left : 0px;
+        
+    }
+    
+    .ui-lineup li {
+        display : inline-block;
+        margin : 15px;
+    }
+    
+    .ui-lineup li a {
+        display : inline-block;
+        color : var(--themetxt);
+        border : 1px solid var(--accentxts);
+        padding : 8px;
+    }
+    
+    .ui-lineup .lup-id {
+        color : var(--accentxts);
+        display : inline-block;
+        margin-right : 15px;
+        font-weight : bold;
+        
+    }
+    .ui-lineup .lup-hostname {
+       display : none;
+    }
+    
+    .ui-lupu {
+        margin-left : 200px;
+    }
+    
+    
+    @media only screen and (max-width: 500px) {
+        
+    }
+</style>
+
+
+<div class="container">
+<div class="container2">
+	<h1 class="lib-config">Radio Options</h1>
+    
+    
+    <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+    	<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				SAVE: Update User Added Stations.<br>
+            </span>
+		</legend>
+
+		<fieldset>
+			
+            <legend>Moode Stations</legend>
+            
+            <div class="control-group">
+                <label class="control-label">Hide PLS Stations</label>
+                <div class="controls">
+                    
+                    <div class="toggle">
+                        <label class="toggle-radio" for="toggle_station_hide1">YES</label>
+                        $_select[toggle_station_hide1]
+                        <label class="toggle-radio" for="toggle_station_hide0">NO</label>
+                        $_select[toggle_station_hide0]
+                    </div>
+                    
+                    <div style="display: inline-block; vertical-align: top; margin-top: 5px;">
+                        <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_station_hide" value="novalue">Set</button>
+                    </div>
+                    
+                    
+                    <span id="info-stationhide" class="help-block-configs" style="margin-top:-.35em;">
+                        Set Moode default stations hidden or visible<br>
+                        TIP: This takes a while, due to avoidance of moving user defined stations
+                    </span>
+                    <p>&nbsp;</p>
+                    <a aria-label="Help" class="info-toggle" data-cmd="info-stations" href="#notarget"><i class="fas fa-microphone"></i> Station Lineup</a>
+                    <span id="info-stations" class="help-block-configs help-block-margin legend-info-help hide">
+                        Drag and drop these to your desktop or browser bookmarks bar to create shortcuts to play these stations!
+                        <p>&nbsp;</p>
+                        $_lups
+                    </span>
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            
+            <legend>User Added Stations</legend>
+    
+            <div class="control-group">
+                <label class="control-label">Station Exchange</label>
+                <div class="controls">
+        
+                    <div style="display: inline-block; vertical-align: top; margin-top: 5px;">
+                        <button class="btn btn-primary btn-small btn-submit" type="submit" name="import_stations" value="import">Import</button>
+                    </div>
+                    
+                    <div style="display: inline-block; vertical-align: top; margin-top: 5px;">
+                        <button class="btn btn-primary btn-small btn-submit" type="submit" name="export_stations" value="export">Export</button>
+                    </div>
+                    
+                    <p>&nbsp;</p>
+                    
+                    $_usrstationhtml
+                    
+                    <span id="info-stationhide" class="help-block-configs" style="margin-top:-.35em;">
+                        Import and export stations to and from a zip file<br>
+                        TIP: The zip file must be placed in the root of the SDCARD directory and named stations.zip
+                    </span>
+                    <p>&nbsp;</p>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="control-group ui-userupload">
+            <label class="control-label">Bulk Add Stations</label>   
+                
+            <div class="controls">
+                <div id="repeater">
+                    
+                    <!-- Repeater Heading -->
+                    <div class="repeater-heading">
+                        <a href="#" class="btn btn-primary btn-small pt-5 pull-right repeater-add-btn" id="repeater-add-btn">
+                            Add
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                    
+                    <!-- Repeater Items -->
+                    <div class="items pull-left" data-group="userstation">
+                        <!-- Repeater Content -->
+                        <div class="item-content">
+                            <div class="control-group">
+                                <label for="inputName" class="control-label">Name</label>
+                                <div class="controls"><input type="text" class="input-large" id="inputName" data-name="name"></div>
+                            </div>
+                            <div class="control-group">
+                                <label for="inputURL" class="control-label">URL</label>
+                                <div class="controls"><input type="text" class="input-large" id="inputURL" data-name="url"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="pull-right repeater-adder-btn">
+                            <span class="btn btn-primary btn-small faux-add-btn" onclick="document.getElementById('repeater-add-btn').click();">
+                                +1
+                            </span>
+                        </div>
+                        <div class="pull-right repeater-remove-btn">
+                            <button class="btn btn-default btn-small remove-btn repeater-remove-btn">
+                                Remove
+                            </button>
+                        </div>
+                        
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
+                
+                
+                
+            </div>
+                
+            </div>
+            <p>&nbsp;</p>
+            <a aria-label="Help" class="info-toggle ui-lupu" data-cmd="info-ustations" href="#notarget"><i class="fas fa-microphone"></i> Station Lineup</a>
+            <span id="info-ustations" class="help-block-configs help-block-margin legend-info-help hide ui-lupu">
+                $_lupu
+            </span>
+            <p>&nbsp;</p>
+            
+            
+            <legend>User Added Station Logos</legend>
+            <div class="control-group ui-plsupload">
+                 <p><small class="help-block-configs">Click each logo to select the relevant JPG file then hit "Save Logos".<br>Images recommended to be at least 700px by 700px.</small></p>
+                 
+                 $_networklogos
+            </div>
+           
+            
+		</fieldset>
+	</form>
+    
+    
+    
+    <script src="js/jquery-1.8.2.min.js"></script>
+    <script>
+    $( document ).ready(function() {
+    
+    });
+    // CHANGE SAVE FOR UI FEEDBACK
+    $(document).on('submit','form.form-horizontal',function(){
+        // SAVE SPINNER
+        //$('button[name="save"]').append( '&nbsp; <i class="fas fa-cog fa-spin" style="color: var(--themetext);"></i>' );
+        
+        // INFO SPINNER
+        $('.legend-configs .info-toggle i').removeClass("fa-info-circle").addClass("fa-spinner fa-spin");
+    });
+           
+        
+    </script>
+    
+    <script src="/radio/sources/repeater.js" type="text/javascript"></script>
+    <script>
+        /* Create Repeater */
+        $("#repeater").createRepeater({
+            showFirstItemToDefault: true,
+        });
+    </script>
+    
+    
+    
+</div>
+</div>

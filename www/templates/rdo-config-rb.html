@@ -1,0 +1,322 @@
+<!--
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2019-09-05 TC moOde 6.2.0
+ *
+ */
+-->
+
+<style>
+    .ui-rdo-tags {
+        overflow-y  : scroll; 
+        height      : 225px; 
+        max-width   : 385px; 
+        margin      : 30px 30px 30px 65px;
+    }
+    
+    .ui-rdo-tags ul {
+        list-style      : none; 
+        margin-left     : 0px; 
+        padding-left    : 15px;
+        border-left     : 3px solid var(--accentxts);
+
+    }
+    
+    .ui-rdo-controls { 
+        max-width   : 500px; 
+        margin      : 15px 15px 60px 65px;
+        
+    }
+    
+    .ui-rdo-console {
+        max-width   : 499px;
+        margin      : 15px 15px 60px 65px;
+           
+        
+        height      : 223px;
+        overflow-x  : hidden;
+        overflow-y  : scroll;
+        border      : 1px solid var(--accentxts);
+        background  : #000;
+        
+        position    : relative;
+        top         : -255px;
+        margin-bottom: -250px;
+        display     : $_consolevis;
+    }
+    
+    .ui-rdo-console pre {
+        color       : var(--accentxts);
+    }
+    
+    
+    .network-logos {
+        display     : block;
+        margin      : 0px;
+        padding     : 0px 0px 0px 40px;
+        list-style-type: none;
+        height      : 225px;
+        max-width   : 100%;
+        overflow-x  : hidden;
+        overflow-y  : auto;
+    }
+    
+    .network-logos li {
+        display     : inline-block;
+        margin      : 15px;
+    }
+    
+    .network-logos li img {
+        display     : block;
+        width       : 90px;
+        height      : 90px;
+        margin      : 15px;
+        border      : 1px solid rgba(128,128,128,0.5);
+        border-radius : 3px;
+    }
+    
+    .network-logos input[type="file"],
+    .ui-plsupload input[type="file"] {
+        display     : none;
+    }
+    
+    .network-logos .btn {
+        color       : var(--accentxts);
+    }
+    
+    .ui-userupload {
+        max-width : 425px;
+    }
+    
+    .ui-userupload .items {
+        border  : 1px solid var(--accentxts);
+        float   : left;
+        padding : 15px;
+        margin-bottom  : 5px;
+    }
+    
+    
+    @media only screen and (max-width: 500px) {
+        .ui-rdo-tags {
+            overflow-y  : scroll; 
+            height      : 225px; 
+            max-width   : 100%; 
+            margin      : 15px 15px 15px 0px;
+        }
+
+        .ui-rdo-tags ul {
+            list-style      : none; 
+            margin-left     : 0px; 
+            padding-left    : 15px;
+            border-left     : 3px solid var(--accentxts);
+        }
+        
+        .ui-rdo-controls {
+            max-width   : 100%; 
+            margin      : 15px 15px 30px 0px;
+        }
+    }
+</style>
+
+
+<div class="container">
+<div class="container2">
+	<h1 class="lib-config">Radio Sources</h1>
+    
+    
+    <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+    	<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button> <button class="btn btn-medium btn-primary btn-submit" type="submit" name="refresh" value="1">Refresh Tags</button>
+            
+			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				SAVE: Update Radio Sources.<br>
+                REFRESH: Tags are cached locally for your convenience and to conserve server resources, refresh tags when needed<br>
+            </span>
+		</legend>
+
+		<fieldset>
+	    	<legend>Community Radio Browser</legend>
+            
+            
+            <div class="ui-rdo-tags">
+                <p style="opacity:0.25; font-size:85%;">$_usrmsg</p>
+                <ul class="rdo-tags">$_tags</ul>
+            </div>
+            
+            <div class="ui-rdo-console">
+            <pre>$_output</pre>
+            </div>
+            
+            <div class="ui-rdo-controls">
+                <!-- Run API commands in iFrame-->
+                <iframe src="" name="iframe_a" style="border:none; overflow:hidden; width : 100%; height:30px; margin-bottom : 5px;" scrolling="no"></iframe>
+
+                <p><small>Tag Preview Controls</small></p>
+                <a class="btn btn-medium btn-primary" href="javascript:window.open('/radio/?type=mpc&cmd=prev', 'iframe_a');"><i class="fas fa-backward"></i></a>
+                <a class="btn btn-medium btn-primary" href="javascript:window.open('/radio/?type=mpc&cmd=stop', 'iframe_a');"><i class="fas fa-stop"></i></a>
+                <a class="btn btn-medium btn-primary" href="javascript:window.open('/radio/?type=mpc&cmd=next', 'iframe_a');"><i class="fas fa-forward"></i></a>
+            </div>  
+            
+			<div class="control-group" style="margin-top:15px;">
+				<label class="control-label" for="radio_tags">Radio Tags</label>
+				<div class="controls">
+					<input class="input-large" type="text" pattern="^\S*$" id="radio_tags" name="config[radio_tags]" value="$_taglist">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_radio_tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_radio_tags" class="help-block-configs help-block-margin hide">
+						Specify a comma separated list of tags to search the source.<br>
+						EXAMPLE: ambient,chill,sounds of nature,80s
+                    </span>
+				</div>
+			</div>
+            
+            <div class="control-group">
+				<label class="control-label" for="radio_tags">Station Range</label>
+				<div class="controls">
+					<input class="input-large" type="text" pattern="^\S*$" id="radio_range" name="config[radio_range]" value="$_range">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_radio_range" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_radio_range" class="help-block-configs help-block-margin hide">
+						Specify a dash separated min and max range of stations to return per tag<br>
+						EXAMPLE: 30-100 returns tags with a range of 30 and 100 stations
+                    </span>
+				</div>
+			</div>
+            
+            
+            <div class="control-group">
+                <label class="control-label">Station Singles</label>
+                <div class="controls">
+                    <div class="toggle">
+                        <label class="toggle-radio" for="toggle_station_split1">YES</label>
+                        $_select[toggle_station_split1]
+                        <label class="toggle-radio" for="toggle_station_split0">NO</label>
+                        $_select[toggle_station_split0]
+                    </div>
+                    <div style="display: inline-block; vertical-align: top; margin-top: 5px;">
+                        <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_station_split" value="novalue">Set</button>
+                    </div>
+                    <span id="info-stationsplit" class="help-block-configs" style="margin-top:-.35em;">
+                        Choose to parse each station in a tag into its own playlist.<br>
+                        TIP: Set this toggle before hitting save, selecting yes may cause a long save delay.<br>
+                    </span>
+                </div>
+            </div>
+            
+            
+            
+            <div class="control-group">
+				<label class="control-label" for="radio_stations">Radio Networks</label>
+				<div class="controls">
+					<input class="input-large" type="text" pattern="^\S*$" id="radio_stations" name="config[radio_stations]" value="$_stations"> 
+					<a aria-label="Help" class="info-toggle" data-cmd="info_radio_stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_radio_stations" class="help-block-configs help-block-margin hide">
+						Specify a comma separated list of network names to search for in the source.<br>
+						EXAMPLE: net:bbc,net:somafm,tag:dash
+                    </span>
+				</div>
+			</div>
+
+            
+            $_networklogos
+            
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+			
+            
+		</fieldset>
+	</form>
+    
+    
+    
+    <script src="js/jquery-1.8.2.min.js"></script>
+    <script>
+    $( document ).ready(function() {
+        
+        var old_tags = $("input#radio_tags").val();
+        var arr_tags = old_tags.split(",");
+        
+        
+        // CHANGE TAG ACTION ICONS ON PAGE LOAD
+        tag_list = $(".rdo-tags").find("li").each(function(){
+            var tagname = $(this).find("a").attr('data-name');
+            if(jQuery.inArray(tagname, arr_tags) != -1) {
+                $(this).find("a.tag-icon").removeClass("btn-default").addClass("btn-primary");
+                $(this).find("i").removeClass("fa-plus-circle").addClass("fa-heart-circle");
+            }
+        });
+        
+        
+        // CHANGE TAG ACTION ICONS ON CLICK
+        $(".rdo-tags .tag-icon").click(function() {
+            var old_tags = $("input#radio_tags").val();
+            var new_tags = $(this).attr('data-name');
+            var arr_tags = old_tags.split(",");
+            
+            
+            if(jQuery.inArray(new_tags, arr_tags) != -1) {
+                $(this).removeClass("tag-add").addClass("tag-del");
+                $(this).removeClass("btn-primary").addClass("btn-default");
+                $(this).find("i").removeClass("fa-heart-circle").addClass("fa-plus-circle");
+                
+                // REMOVE TAG FROM ARRAY
+                var index = 0;
+                var pop_tags = "";
+                arr_tags.splice( arr_tags.indexOf(new_tags), 1 );
+                
+                // REBUILD TAG SELECTION
+                while (index < arr_tags.length) { 
+                    pop_tags = pop_tags + arr_tags[index] + ","; 
+                    index++; 
+                }
+                pop_tags = pop_tags.slice(0, -1);
+                $("input#radio_tags").val(pop_tags);
+               
+                
+                
+            } else {
+                // ADD THE TAG TO THE INPUT FIELD
+                $("input#radio_tags").val(old_tags + ',' + new_tags);
+                $(this).removeClass("btn-default").addClass("btn-primary");
+                $(this).removeClass("tag-del").addClass("tag-add");
+                $(this).find("i").removeClass("fa-plus-circle").addClass("fa-heart-circle");
+            } 
+
+            
+        });
+        
+    });
+        
+        
+    // CHANGE SAVE FOR UI FEEDBACK
+    $(document).on('submit','form.form-horizontal',function(){
+        // SAVE SPINNER
+        //$('button[name="save"]').append( '&nbsp; <i class="fas fa-cog fa-spin" style="color: var(--themetext);"></i>' );
+        
+        // INFO SPINNER
+        $('.legend-configs .info-toggle i').removeClass("fa-info-circle").addClass("fa-spinner fa-spin");
+    });
+           
+        
+    </script>
+    
+    
+    
+    
+</div>
+</div>
