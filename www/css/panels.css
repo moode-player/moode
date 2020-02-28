@@ -183,8 +183,8 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important}
 #albumsList li, #artistsList li, #genresList li {line-height:calc(1.45em + 1vmin);}
 #albumsList .lib-entry img {width:3rem;margin:.15em .25em .15em 0;}
-#albumsList .album-name {display:inline-flex;vertical-align:middle;max-width:calc(100% - 3rem - .25em);line-height:1.25em;}
-#albumsList .album-year {display:none;font-size:0.85em;color:var(--textvariant);}
+#albumsList .album-name {display:inline-block;vertical-align:middle;max-width:calc(100% - 3rem - .25em);line-height:1.25em;}
+#albumsList .album-year {display:inline-block;font-size:0.85em;color:var(--textvariant); vertical-align:top;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .tab-content.visacc .playlist .active .pll1 {color:var(--adapttext);}
@@ -299,7 +299,7 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-genre {top:calc(1.5em + 1px);height:calc(100% - 1.5em);border-right:1px solid var(--btnshade);-webkit-overflow-scrolling:touch;box-sizing:border-box;}
 #lib-artist {top:calc(1.5em + 1px);height:calc(100% - 1.5em);left:33.33%;margin-left:0px;-webkit-overflow-scrolling:touch;box-sizing:border-box;}
 #lib-album {top:calc(1.5em + 1px);height:calc(100% - 1.5em);left:66.66%;border-left:1px solid var(--btnshade);margin-left:0px;-webkit-overflow-scrolling:touch;box-sizing:border-box;}
-#lib-album span {display:none;vertical-align:middle;}
+/*#lib-album span {display:none;vertical-align:middle;}*/
 #lib-file {overflow-y:scroll;overflow-x:hidden;margin:1px 0 0 0;height:100%;width:100%;-webkit-overflow-scrolling:touch;}
 #lib-coverart-meta-area {width:20vw;line-height:normal;padding:0;float:left;position:fixed;}
 #lib-coverart-img {margin:.5em .25em 0 .5em;}
