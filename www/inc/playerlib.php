@@ -2401,21 +2401,25 @@ function getHdwrRev() {
 		'210a' => 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]',
 		// Generic Pi-4B v1.1 code
 		'3111' => 'Pi-4B 1/2/4GB v1.1',
-		 // Artificial codes to identify RAM size for Pi-4B v1.1
-		'311a' => 'Pi-4B 1GB v1.',
-		'311b' => 'Pi-4B 2GB v1.',
-		'311c' => 'Pi-4B 4GB v1.1',
+		// Custom Pi-4B v1.1 codes to identify RAM size
+		'a111' => 'Pi-4B 1GB v1.1',
+		'b111' => 'Pi-4B 2GB v1.1',
+		'c111' => 'Pi-4B 4GB v1.1',
 		// Generic Pi-4B v1.2 code
-		'3112' => 'Pi-4B 4GB v1.2'
+		'3112' => 'Pi-4B 4GB v1.2',
+		// Custom Pi-4B v1.2 codes to identify RAM size
+		'a112' => 'Pi-4B 1GB v1.2',
+		'b112' => 'Pi-4B 2GB v1.2',
+		'c112' => 'Pi-4B 4GB v1.2'
 	);
 
 	$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
 
-	// Pi-4B v1.1
-	if ($revnum[0] == '3111') {
-		// Differentiate the models
+	// Pi-4B
+	// Custom codes to identify the models by RAM size
+ 	if ($revnum[0] == '3111' || $revnum[0] == '3112') {
 		$prefix = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,0,2)}' . "'" . ' /proc/cpuinfo');
-		$revnum[0] =  substr($revnum[0], 0, 3) . $prefix[0];
+		$revnum[0] = $prefix[0] . substr($revnum[0], 1, 3);
 	}
 	// Pi-CM3+
 	elseif ($revnum[0] == '2100') {
@@ -2473,6 +2477,8 @@ a5 2082	3B		1.2	1 GB	Stadium
 a0 3111	4B		1.1	1GB		Sony UK
 b0 3111	4B		1.1	2GB		Sony UK
 c0 3111	4B		1.1	4GB		Sony UK
+a0 3112	4B		1.2	1GB		Sony UK
+b0 3112	4B		1.2	2GB		Sony UK
 c0 3112	4B		1.2	4GB		Sony UK
 */
 
