@@ -56,6 +56,7 @@ $_select['show_genres'] .= "<option value=\"Yes\" " . (($_SESSION['show_genres']
 $_select['show_genres'] .= "<option value=\"No\" " . (($_SESSION['show_genres'] == 'No') ? "selected" : "") . ">No</option>\n";
 // Album grouping
 $_select['library_album_grouping'] .= "<option value=\"Artist\" " . (($_SESSION['library_album_grouping'] == 'Artist') ? "selected" : "") . ">by Artist</option>\n";
+$_select['library_album_grouping'] .= "<option value=\"Artist/Year\" " . (($_SESSION['library_album_grouping'] == 'Artist/Year') ? "selected" : "") . ">by Artist/Year</option>\n";
 $_select['library_album_grouping'] .= "<option value=\"Album\" " . (($_SESSION['library_album_grouping'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
 $_select['library_album_grouping'] .= "<option value=\"Year\" " . (($_SESSION['library_album_grouping'] == 'Year') ? "selected" : "") . ">by Year</option>\n";
 // Compilation identifier
