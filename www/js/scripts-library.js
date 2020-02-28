@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2020-MM-DD TC moOde 6.5.0
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
@@ -196,7 +196,7 @@ function groupLib(fullLib) {
             allAlbumCovers.sort(function(a, b) {
                 return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(a['year'],b['year']));
             });
-        }        
+        }
 	}
     // Fallback to default ordering
 	catch (e) {
@@ -463,32 +463,32 @@ var renderAlbums = function() {
 		tmpSub = ' (' + filteredAlbums[i].year + ')';
 		tmpSubR = tmpSub.replace(/ \(0\)/g, '');         // remove (Year) when Year is not set in Tag
 		tmpSub =  tmpSubR.replace(/\(NaN\)/g, '');       // remove (Year) when Year in Tag is NaN
-        
+
 		tmpYear = ' (' + filteredAlbumCovers[i].year + ')';
 		tmpYearR = tmpYear.replace(/ \(0\)/g, '');       // remove (Year) when Year is not set in Tag
 		tmpYear =  tmpYearR.replace(/\(NaN\)/g, '');     // remove (Year) when Year in Tag is NaN
-    
+
         // TEST
         //UI.tagViewCovers = false;
         //
 		if (UI.tagViewCovers) {
-			output += '<li><div class="lib-entry' + tmp + '">' 
+			output += '<li><div class="lib-entry' + tmp + '">'
              + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
              + '<div class="album-name">' + filteredAlbums[i].album
              + '<br><span class="artist-name album-year">' + filteredAlbums[i].artist + tmpSub + '</span></div></div></li>'
 		}
 		else {
 			output += '<li><div class="lib-entry' + tmp + '">'
-             + '<div class="album-name">' + filteredAlbums[i].album 
+             + '<div class="album-name">' + filteredAlbums[i].album
              + '<br><span class="artist-name album-year">' + filteredAlbums[i].artist + tmpSub + '</span></div></div></li>'
         }
-		
-		output2 += '<li><div class="lib-entry' + tmp + '">' 
+
+		output2 += '<li><div class="lib-entry' + tmp + '">'
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
             + '<div class="albumcover"><span class="album-name">' + filteredAlbumCovers[i].album + '</span></div>'
-            + '<span class="artist-name">' + filteredAlbumCovers[i].artist + tmpYear + '</span></div></li>';		
-	} 
+            + '<span class="artist-name">' + filteredAlbumCovers[i].artist + tmpYear + '</span></div></li>';
+	}
 
     // Output the lists
 	$('#albumsList').html(output);
