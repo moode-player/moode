@@ -944,7 +944,7 @@ function parseCfgMpd($dbh) {
 	 	$array['audio_output_depth'] = $format[1];
 	 	$array['audio_output_chan'] = formatChan($format[2]);
 	}
-
+	
 	return $array;
 }
 
@@ -1603,7 +1603,7 @@ function updMpdConf($i2sdevice) {
 
 	// ALSA local (outputs 1 - 5)
 	$names = array (
-		"name \"ALSA default\"\n" . "device \"hw:" . $device . ",0\"\n",
+		"name \"ALSA default\"\n" . "device \"hw:" . $device . ",0\"\nauto_format \"" . $auto_format . "\"\nauto_resample \"" . $auto_resample . "\"\n",
 		"name \"ALSA crossfeed\"\n" . "device \"crossfeed\"\n",
 		"name \"ALSA parametric eq\"\n" . "device \"eqfa4p\"\n",
 		"name \"ALSA graphic eq\"\n" . "device \"alsaequal\"\n",

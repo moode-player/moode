@@ -83,6 +83,37 @@
                 </div>
             </div>
 
+		    <div class="control-group">							
+                <label class="control-label" for="auto-resample">ALSA auto-resample</label>
+                <div class="controls">
+					<select id="auto-resample" name="conf[auto_resample]" class="input-large">
+						$_mpd_select[auto_resample]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-auto-resample" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-auto-resample" class="help-block-configs help-block-margin hide">
+						Setting this to "No" disables ALSA's software resampling. NOTE: This lets MPD do the resampling if the hardware does not support the required sample rate. Default: "Yes".
+					</span>
+                </div>
+            </div>
+
+			<div class="control-group">
+                <label class="control-label" for="auto-format">ALSA auto-format</label>
+                <div class="controls">
+					<select id="auto-format" name="conf[auto_format]" class="input-large">
+						$_mpd_select[auto_format]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-auto-format" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-auto-format" class="help-block-configs help-block-margin hide">
+						Setting this to "No" disables ALSA's sample format conversion. WARNING: If set to "No" and the hardware does not support the required sample format MPD will fail to open the audio output. Default: "Yes".
+					</span>
+					<!--
+					<span class="help-block-configs help-block-margin">
+	                    WARNING: Setting this to "No" is not compatible with Crossfeed, Parametric EQ or Graphic EQ.
+					</span>
+					-->
+                </div>
+            </div> 			
+
             <!--div class="control-group">
                 <label class="control-label" for="gapless-mp3-playback">Gapless mp3 playback</label>
                 <div class="controls">
@@ -239,7 +270,7 @@
                 </div>
             </div>
 
-			<div class="control-group">
+				<div class="control-group">			
 				<legend>ALSA auto-conversion</legend>
                 <label class="control-label" for="auto-resample">ALSA auto-resample</label>
                 <div class="controls">
@@ -264,7 +295,7 @@
 						Setting this to "No disables ALSA's channel conversion. WARNING: If set to "No" and the hardware does not support the required number of channels MPD will fail to open the audio output. Default: "Yes".
 					</span>
                 </div>
-            </div>
+            </div>			
 
 			<div class="control-group">
                 <label class="control-label" for="auto-format">ALSA auto-format</label>
@@ -280,7 +311,7 @@
 	                    WARNING: Setting this to "No" is not compatible with Crossfeed, Parametric EQ or Graphic EQ.
 					</span>
                 </div>
-            </div-->
+            </div--> 			
 		</fieldset>		
     </form>
 </div>

@@ -177,17 +177,19 @@ $_mpd_select['period_time'] .= "<option value=\"512000000\" " . (($mpdconf['peri
 $_mpd_select['period_time'] .= "<option value=\"64000000\" " . (($mpdconf['period_time'] == '64000000') ? "selected" : "") . " >0.25X</option>\n";
 $_mpd_select['period_time'] .= "<option value=\"640000\" " . (($mpdconf['period_time'] == '640000') ? "selected" : "") . " >0.0025X</option>\n";
 $_mpd_select['period_time'] .= "<option value=\"64000\" " . (($mpdconf['period_time'] == '64000') ? "selected" : "") . " >0.00025X</option>\n";
-
+*/
 // ALSA auto-resample
 $_mpd_select['auto_resample'] .= "<option value=\"yes\" " . (($mpdconf['auto_resample'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['auto_resample'] .= "<option value=\"no\" " . (($mpdconf['auto_resample'] == 'no') ? "selected" : "") . " >No</option>\n";
+/*
 // ALSA auto-channels, r45b
 $_mpd_select['auto_channels'] .= "<option value=\"yes\" " . (($mpdconf['auto_channels'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['auto_channels'] .= "<option value=\"no\" " . (($mpdconf['auto_channels'] == 'no') ? "selected" : "") . " >No</option>\n";
+*/
 /// ALSA auto-format, r45b
 $_mpd_select['auto_format'] .= "<option value=\"yes\" " . (($mpdconf['auto_format'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['auto_format'] .= "<option value=\"no\" " . (($mpdconf['auto_format'] == 'no') ? "selected" : "") . " >No</option>\n";
-*/
+
 
 /* DEPRECATE
 // Zeroconf
