@@ -2910,3 +2910,9 @@ $('#playbar-switch, #playbar-cover').click(function(e){
 		}
 	}
 });
+
+$('#context-backdrop').click(function(e){
+	$('#context-backdrop').hide();
+	$('.context-menu').removeClass('open');
+	$('.context-menu-lib').removeClass('open');
+})
