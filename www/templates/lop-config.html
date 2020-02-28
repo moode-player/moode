@@ -69,8 +69,15 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_library_album_grouping" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_library_album_grouping" class="help-block-configs help-block-margin hide">
-						This option determines how albums are grouped in Album view.<br>
-						NOTE: When grouping by Year if not all tracks in the album have the same Year the highest Year will be used.
+						This option determines how albums are grouped in both Tag and Album views.<br><br>
+                        Options are:<br>
+                        &nbsp;&nbsp;&nbsp; "by Artist"      - all artists, and the albums for each artist, will be sorted alphabetically,<br>
+                        &nbsp;&nbsp;&nbsp; "by Artist/Year" - all artists will be listed alphabetically and the albums for each artist will be sorted chronologically,<br>
+                        &nbsp;&nbsp;&nbsp; "by Album"       - all albums in the library will be listed alphabetically, irrespective of the artist,<br>
+                        &nbsp;&nbsp;&nbsp; "by Year"        - all albums in the library will be listed chronologically, irrespective of the artist.<br><br>
+                        NOTE:<br>
+                        &nbsp;&nbsp;&nbsp; When grouping by Year if not all tracks in the album have the same Year tag then the latest year will be used.<br>
+                        &nbsp;&nbsp;&nbsp; If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
                     </span>
 				</div>
 			</div>
