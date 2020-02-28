@@ -1,4 +1,24 @@
 #!/bin/bash
 
-REL=$(awk '/Release: /{print $2 " " $3;}' /var/www/footer.php | tr -d ',')
-echo Kernel $(uname -r) $(uname -v | awk '{print $1}'), Raspbian $(cat /etc/debian_version), moOde $REL
+MOODE_RELEASE=$(awk '/Release: /{print $2 " " $3;}' /var/www/footer.php | tr -d ',')
+KERNEL_ARCH=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='kernel_architecture'")
+echo Raspbian $(cat /etc/debian_version) \| $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\)
+
+echo "
+                          ____     __
+              __ _  ___  / __ \___/ /__
+             /  ' \/ _ \/ /_/ / _  / -_)
+            /_/_/_/\___/\____/\_,_/\__/
+
+                 moOde audio player
+              Release $MOODE_RELEASE
+                (C) 2014 Tim Curtis
+
+
+
+The programs included with Moode are free software; the
+exact distribution terms for each program are described
+in the individual files in /usr/share/doc/*/copyright.
+Moode comes with absolutely no warranties expressed or
+implied, or any other guarantees.
+"

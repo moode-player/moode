@@ -2,6 +2,9 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
+# Unblock WiFi
+/usr/sbin/rfkill unblock wifi > /dev/null 2>&1
+
 # Set cpu govenor
 CPU_GOV=$(sqlite3 $SQLDB "select value from cfg_system where param='cpugov'")
 echo "$CPU_GOV" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
