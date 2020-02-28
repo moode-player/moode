@@ -74,7 +74,7 @@
 			$menu.attr('style', '')
 				.css(tp)
 				.addClass('open');
-
+				$('#context-backdrop').show();
 
 			return false;
 		}
@@ -107,6 +107,7 @@
 			$('html').on('click.context.data-api', function (e) {
 				if (!e.ctrlKey) {
 					$target.removeClass('open');
+					$('#context-backdrop').hide();
 				}
 			});
 		}
@@ -176,6 +177,7 @@
 				$('[data-toggle=context]').each(function() {
 					this.getMenu()
 						.removeClass('open');
+					$('#context-backdrop').hide();
 				});
 			}
 		}
