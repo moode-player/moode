@@ -55,14 +55,13 @@ $_select['library_instant_play'] .= "<option value=\"Clear/Play\" " . (($_SESSIO
 $_select['show_genres'] .= "<option value=\"Yes\" " . (($_SESSION['show_genres'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['show_genres'] .= "<option value=\"No\" " . (($_SESSION['show_genres'] == 'No') ? "selected" : "") . ">No</option>\n";
 // Album grouping
+$_select['library_album_sort'] .= "<option value=\"Album\" " . (($_SESSION['library_album_sort'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
 $_select['library_album_sort'] .= "<option value=\"Artist\" " . (($_SESSION['library_album_sort'] == 'Artist') ? "selected" : "") . ">by Artist</option>\n";
 $_select['library_album_sort'] .= "<option value=\"Artist/Year\" " . (($_SESSION['library_album_sort'] == 'Artist/Year') ? "selected" : "") . ">by Artist/Year</option>\n";
-$_select['library_album_sort'] .= "<option value=\"Album\" " . (($_SESSION['library_album_sort'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
 $_select['library_album_sort'] .= "<option value=\"Year\" " . (($_SESSION['library_album_sort'] == 'Year') ? "selected" : "") . ">by Year</option>\n";
 // Compilation identifier
 $_select['library_comp_id'] = $_SESSION['library_comp_id'];
-// Recently added
-// NOTE: library_recently_added is in milliseconds, 1 day = 86400000 ms
+// Recently added NOTE: library_recently_added is in milliseconds, 1 day = 86400000 ms
 $_select['library_recently_added'] .= "<option value=\"604800000\" " . (($_SESSION['library_recently_added'] == '604800000') ? "selected" : "") . ">1 Week</option>\n";
 $_select['library_recently_added'] .= "<option value=\"2592000000\" " . (($_SESSION['library_recently_added'] == '2592000000') ? "selected" : "") . ">1 Month</option>\n";
 $_select['library_recently_added'] .= "<option value=\"7776000000\" " . (($_SESSION['library_recently_added'] == '7776000000') ? "selected" : "") . ">3 Months</option>\n";
@@ -82,16 +81,6 @@ $_select['library_hiresthm'] .= "<option value=\"400px\" " . (($_SESSION['librar
 // Cover search prioroty
 $_select['library_covsearchpri'] .= "<option value=\"Embedded cover\" " . (($_SESSION['library_covsearchpri'] == 'Embedded cover') ? "selected" : "") . ">Embedded cover</option>\n";
 $_select['library_covsearchpri'] .= "<option value=\"Cover image file\" " . (($_SESSION['library_covsearchpri'] == 'Cover image file') ? "selected" : "") . ">Cover image file</option>\n";
-
-// NOTE: Artist and Album sort tags are for future use
-// Artist sort tag
-$_select['library_artist_sort'] .= "<option value=\"Artist\" " . (($_SESSION['library_artist_sort'] == 'Artist') ? "selected" : "") . ">Artist</option>\n";
-$_select['library_artist_sort'] .= "<option value=\"ArtistSort\" " . (($_SESSION['library_artist_sort'] == 'ArtistSort') ? "selected" : "") . ">ArtistSort</option>\n";
-$_select['library_artist_sort'] .= "<option value=\"AlbumArtist\" " . (($_SESSION['library_artist_sort'] == 'AlbumArtist') ? "selected" : "") . ">AlbumArtist</option>\n";
-$_select['library_artist_sort'] .= "<option value=\"AlbumArtistSort\" " . (($_SESSION['library_artist_sort'] == 'AlbumArtistSort') ? "selected" : "") . ">AlbumArtistSort</option>\n";
-// Album sort tag
-$_select['library_album_sort'] .= "<option value=\"Album\" " . (($_SESSION['library_album_sort'] == 'Album') ? "selected" : "") . ">Album</option>\n";
-$_select['library_album_sort'] .= "<option value=\"AlbumSort\" " . (($_SESSION['library_album_sort'] == 'AlbumSort') ? "selected" : "") . ">AlbumSort</option>\n";
 
 waitWorker(1, 'lop-config');
 
