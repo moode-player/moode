@@ -6,7 +6,7 @@
  *
  * New options added by @jeremyhubble for javascript launching
  *  $('#elem').contextmenu({target:'#menu',before:function(e) { return true; } });
- *   
+ *
  *
  * Twitter Bootstrap (http://twitter.github.com/bootstrap).
  *
@@ -14,6 +14,8 @@
  *	- UI.dbEntry[] from original player code
  * 2018-07-11 TC moOde 4.2
  * - enhance positioning
+ * 2020-MM-DD TC moOde 6.5.0
+ * - @swizzle context menu backdrop
  */
 
 /* =========================================================
@@ -45,7 +47,7 @@
 			this.options = options
 			this.before = this.options.before || this.before
 			this.onItem = this.options.onItem || this.onItem
-			if (this.options.target) 
+			if (this.options.target)
 				this.$element.attr('data-target',this.options.target)
 
 			this.listen()
@@ -168,7 +170,7 @@
 			parentOffset = $menu.offsetParent().offset();
 			X.left = X.left - parentOffset.left;
 			Y.top = Y.top - parentOffset.top;
- 
+
 			return $.extend(tp, Y, X);
 		}
 
@@ -191,7 +193,7 @@
 			var $this = $(this)
 				, data = $this.data('context')
 				, options = typeof option == 'object' && option
-		
+
 			if (!data) $this.data('context', (data = new ContextMenu(this, options)));
 			// "show" method must also be passed the event for positioning
 			if (typeof option == 'string') data[option].call(data,e);
@@ -209,7 +211,7 @@
 				var pos = $(this).offset();
 				UI.dbEntry[1] = pos.left;
 				UI.dbEntry[2] = pos.top;
-				$(this).contextmenu('show',e);				
+				$(this).contextmenu('show',e);
 				e.preventDefault();
 		});
 
