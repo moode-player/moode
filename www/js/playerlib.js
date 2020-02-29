@@ -2750,13 +2750,13 @@ $('#index-artists li').on('click', function(e) {
 });
 $('#index-albums li').on('click', function(e) {
     // .artist-name or .album-name
-    var selector = '.' + SESSION.json['library_album_grouping'].toLowerCase() + '-name';
+    var selector = '.' + SESSION.json['library_album_sort'].toLowerCase() + '-name';
     var selector2 = selector.replace(/\/year/g, '');
     listLook('albumsList li ' + selector2, 'albums', $(this).text());
 });
 $('#index-albumcovers li').on('click', function(e) {
     // .artist-name or .album-name
-    var selector = '.' + SESSION.json['library_album_grouping'].toLowerCase() + '-name';
+    var selector = '.' + SESSION.json['library_album_sort'].toLowerCase() + '-name';
     var selector2 = selector.replace(/\/year/g, '');
     listLook('albumcovers li ' + selector2, 'albumcovers', $(this).text());
 });

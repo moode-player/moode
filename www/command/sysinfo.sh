@@ -180,7 +180,7 @@ LIBRARY_SETTINGS() {
 	echo -e "L I B R A R Y   S E T T I N G S"
 	echo -e "\nInstant play action\t= $library_instant_play\c"
 	echo -e "\nShow genres column\t= $show_genres\c"
-	echo -e "\nAlbum grouping\t\t= by $library_album_grouping\c"
+	echo -e "\nAlbum sort\t\t= by $library_album_sort\c"
 	echo -e "\nCompilation identifier\t= $library_comp_id\c"
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
 	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
@@ -597,7 +597,7 @@ rsmafterinp=${arr[120]}
 ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
-library_album_grouping=${arr[125]}
+library_album_sort=${arr[125]}
 kernel_architecture=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
 [[ "${arr[128]}" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
