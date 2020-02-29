@@ -2254,58 +2254,60 @@ function setClkRadioCtls(ctlValue) {
 	}
 }
 
-// custom select controls
+// Custom select controls
 $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
-	// clock radio
-	if ($(this).data('cmd') == 'clockradio-mode-sel') {
-		$('#clockradio-mode span').text($(this).text());
-		setClkRadioCtls($(this).text());
-	}
-	else if ($(this).data('cmd') == 'clockradio-starttime-ampm') {
-		$('#clockradio-starttime-ampm span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'clockradio-stoptime-ampm') {
-		$('#clockradio-stoptime-ampm span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'clockradio-action-sel') {
-		$('#clockradio-action span').text($(this).text());
-	}
-	// appearance: themes and backgrounds
-	else if ($(this).data('cmd') == 'theme-name-sel') {
-		$('#theme-name span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'accent-color-sel') {
-		$('#accent-color span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'adaptive-enabled-yn') {
-		$('#adaptive-enabled span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'alpha-blend-sel') {
-		$('#alpha-blend span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'cover-backdrop-enabled-yn') {
-		$('#cover-backdrop-enabled span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'cover-blur-sel') {
-		$('#cover-blur span').text($(this).text());
-	}
-	// appearance: coverview options
-	else if ($(this).data('cmd') == 'scnsaver-timeout-sel') {
-		$('#scnsaver-timeout span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'scnsaver-style-sel') {
-		$('#scnsaver-style span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'cover-scale-sel') {
-		$('#cover-scale span').text($(this).text());
-	}
-	// appearance: other options
-	else if ($(this).data('cmd') == 'extratag-display-yn') {
-		$('#extratag-display span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'play-history-enabled-yn') {
-		$('#play-history-enabled span').text($(this).text());
-	}
+    switch ($(this).data('cmd')) {
+        // Clock radio
+    	case 'clockradio-mode-sel':
+    		$('#clockradio-mode span').text($(this).text());
+    		setClkRadioCtls($(this).text());
+            break;
+    	case 'clockradio-starttime-ampm':
+    		$('#clockradio-starttime-ampm span').text($(this).text());
+    	    break;
+    	case 'clockradio-stoptime-ampm':
+    		$('#clockradio-stoptime-ampm span').text($(this).text());
+            break;
+    	case 'clockradio-action-sel':
+    		$('#clockradio-action span').text($(this).text());
+            break;
+    	// Appearance: Themes and backgrounds
+    	case 'theme-name-sel':
+    		$('#theme-name span').text($(this).text());
+            break;
+    	case 'accent-color-sel':
+    		$('#accent-color span').text($(this).text());
+            break;
+    	case 'adaptive-enabled-yn':
+    		$('#adaptive-enabled span').text($(this).text());
+            break;
+    	case 'alpha-blend-sel':
+    		$('#alpha-blend span').text($(this).text());
+            break;
+    	case 'cover-backdrop-enabled-yn':
+    		$('#cover-backdrop-enabled span').text($(this).text());
+            break;
+    	case 'cover-blur-sel':
+    		$('#cover-blur span').text($(this).text());
+            break;
+    	// Appearance: Coverview options
+    	case 'scnsaver-timeout-sel':
+    		$('#scnsaver-timeout span').text($(this).text());
+            break;
+    	case 'scnsaver-style-sel':
+    		$('#scnsaver-style span').text($(this).text());
+            break;
+    	case 'cover-scale-sel':
+    		$('#cover-scale span').text($(this).text());
+            break;
+    	// Appearance: Other options
+    	case 'extratag-display-yn':
+    		$('#extratag-display span').text($(this).text());
+            break;
+    	case 'play-history-enabled-yn':
+    		$('#play-history-enabled span').text($(this).text());
+            break;
+    }
 });
 
 $('#syscmd-reboot').click(function(e) {
