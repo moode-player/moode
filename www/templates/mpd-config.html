@@ -83,36 +83,7 @@
                 </div>
             </div>
 
-		    <div class="control-group">							
-                <label class="control-label" for="auto-resample">ALSA auto-resample</label>
-                <div class="controls">
-					<select id="auto-resample" name="conf[auto_resample]" class="input-large">
-						$_mpd_select[auto_resample]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-auto-resample" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-auto-resample" class="help-block-configs help-block-margin hide">
-						Setting this to "No" disables ALSA's software resampling. NOTE: This lets MPD do the resampling if the hardware does not support the required sample rate. Default: "Yes".
-					</span>
-                </div>
-            </div>
-
-			<div class="control-group">
-                <label class="control-label" for="auto-format">ALSA auto-format</label>
-                <div class="controls">
-					<select id="auto-format" name="conf[auto_format]" class="input-large">
-						$_mpd_select[auto_format]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-auto-format" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-auto-format" class="help-block-configs help-block-margin hide">
-						Setting this to "No" disables ALSA's sample format conversion. WARNING: If set to "No" and the hardware does not support the required sample format MPD will fail to open the audio output. Default: "Yes".
-					</span>
-					<!--
-					<span class="help-block-configs help-block-margin">
-	                    WARNING: Setting this to "No" is not compatible with Crossfeed, Parametric EQ or Graphic EQ.
-					</span>
-					-->
-                </div>
-            </div> 			
+ 			
 
             <!--div class="control-group">
                 <label class="control-label" for="gapless-mp3-playback">Gapless mp3 playback</label>
@@ -311,7 +282,76 @@
 	                    WARNING: Setting this to "No" is not compatible with Crossfeed, Parametric EQ or Graphic EQ.
 					</span>
                 </div>
-            </div--> 			
+            </div--> 		
+			<div class="control-group" $_mpd_tweaks_unlock>
+			    <legend>MPD Tweaks</legend>
+				<label class="control-label">Enable MPD Tweaks</label>
+				<div class="controls">
+					<div class="toggle">
+	                    <label class="toggle-radio" for="togglealsa_tweaks2">ON</label>
+						$_select[alsa_tweaks1]
+						<label class="toggle-radio" for="togglealsa_tweaks1">OFF</label>
+						$_select[alsa_tweaks0]					
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_mpd_tweaks" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-mpd-tweaks" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-mpd-tweaks" class="help-block-configs help-block-margin2 hide">
+						Enable manualy tweaking of the MPD options. Only enable this option if you know what you doing! Tweaks can lead to unasable configuration.
+                    </span>
+					<span class="help-block-configs help-block-margin">
+	                    Enabling MPD tweaks  may lead to an unusable system!<br>
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group" $_mpd_tweaks_visible_style>										    
+                <label class="control-label" for="auto-resample">Auto resample</label>
+                <div class="controls">
+					<select id="auto-resample" name="conf[auto_resample]" class="input-large">
+						$_mpd_select[auto_resample]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-auto-resample" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-auto-resample" class="help-block-configs help-block-margin hide">
+						Setting this to "No" disables MPD's software resampling for the default audio device. NOTE: This lets MPD do the resampling if the hardware does not support the required sample rate. Default: "Yes".
+					</span>
+                </div>
+            </div>
+
+			<div class="control-group" $_mpd_tweaks_visible_style>
+                <label class="control-label" for="auto-format">Auto format</label>
+                <div class="controls">
+					<select id="auto-format" name="conf[auto_format]" class="input-large" >
+						$_mpd_select[auto_format]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-auto-format" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-auto-format" class="help-block-configs help-block-margin hide">
+						Setting this to "No" disables MPD's sample format conversion for the default audio device. WARNING: If set to "No" and the hardware does not support the required sample format MPD will fail to open the audio output. Default: "Yes".
+					</span>					
+                </div>
+            </div>	
+
+		   <div class="control-group" $_mpd_tweaks_visible_style>  
+                <label class="control-label" for="mpd-extra-params">General parameters</label>
+                <div class="controls">				
+                    <input class="input-large" type="text" id="mpd-extra-params" name="conf[mpd_extra_params]" value="$mpdconf[mpd_extra_params]">
+					<span class="help-block-configs help-block-margin">
+						Provide additional general MPD parameters. See MPD.conf for more information. Multiple parameters are separated by a ";".
+					</span>
+                </div>
+            </div>
+
+		   <div class="control-group" $_mpd_tweaks_visible_style>  
+                <label class="control-label" for="mpd-dev-extra-params">Device parameters</label>
+                <div class="controls">				
+                    <input class="input-large" type="text" id="mpd-dev-extra-params" name="conf[mpd_dev_extra_params]" value="$mpdconf[mpd_dev_extra_params]">					
+					<span class="help-block-configs help-block-margin">
+						Provide additional MPD parameters to the default output device. See MPD.conf for more information. Multiple parameters are separated by a ";".
+					</span>					
+                </div>
+            </div>
+
 		</fieldset>		
     </form>
 </div>

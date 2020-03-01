@@ -1518,6 +1518,22 @@ function sdbquery($querystr, $dbh) {
 	}
 }
 
+/***
+ * split an one liner with multiple MPD parameters(separated by a ';' into an dictonary) into an array with param as key
+ * example parameter_str 'auto_format "no"; auto_resample "yes"'
+ * 
+ */
+function _split_parameter_string  ($parameters_str) {
+	$parameters=array();
+	foreach(explode(';', trim($parameters_str)) as $value) {			
+		$parts = explode(' ', trim($value), 2);
+		if( count($parts)== 2 ) {
+			$parameters [ trim($parts[0]) ] = trim($parts[1]);
+		 }
+	}
+	return $parameters;
+}
+
 function updMpdConf($i2sdevice) {
 	$mpdcfg = sdbquery("SELECT param, value FROM cfg_mpd WHERE value!=''", cfgdb_connect());
 	$mpdver = substr($_SESSION['mpdver'], 0, 4);
@@ -1527,11 +1543,16 @@ function updMpdConf($i2sdevice) {
 	$data .= "# by the MPD configuration page.         \n";
 	$data .= "#########################################\n\n";
 
+	$mpd_general_params = array(); // // [paramname] = value
+	$mpd_dev_extra_params = array(); // [paramname] = value
+
 	foreach ($mpdcfg as $cfg) {
 		switch ($cfg['param']) {
 			// Code block or other params
-			case 'metadata_to_use':
-				$data .= $mpdver == '0.20' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+			case 'metadata_to_use':						
+				if($mpdver != '0.20') {
+					$mpd_general_params['metadata_to_use'] =$cfg['value'];
+				}
 				break;
 			case 'device':
 				$device = $cfg['value'];
@@ -1546,7 +1567,9 @@ function updMpdConf($i2sdevice) {
 				$dop = $cfg['value'];
 				break;
 			case 'audio_output_format':
-				$data .= $cfg['value'] == 'disabled' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+				if($cfg['value'] != 'disabled') {
+					$mpd_general_params['audio_output_format'] =$cfg['value'];
+				}
 				break;
 			case 'samplerate_converter':
 				$samplerate_converter = $cfg['value'];
@@ -1558,15 +1581,18 @@ function updMpdConf($i2sdevice) {
 				$replay_gain_handler = $cfg['value'];
 				break;
 			case 'buffer_before_play':
-				$data .= $mpdver == '0.20' ? $cfg['param'] . " \"" . $cfg['value'] . "\"\n" : '';
+				if($mpdver != '0.20') {
+					$mpd_general_params['buffer_before_play'] =$cfg['value'];
+				}
 				break;
+			// following three aren't applied to the general part but to default playback device
 			case 'auto_resample':
 				$auto_resample = $cfg['value'];
 				break;
 			case 'auto_channels':
 				$auto_channels = $cfg['value'];
 				break;
-			case 'auto_format':
+			case 'auto_format':				
 				$auto_format = $cfg['value'];
 				break;
 			case 'buffer_time':
@@ -1575,16 +1601,63 @@ function updMpdConf($i2sdevice) {
 			case 'period_time':
 				$period_time = $cfg['value'];
 				break;
+			case 'mpd_tweaks':
+				$mpd_tweaks = $cfg['value'] == 1;
+				break;
+			case 'mpd_tweaks_unlock':
+				$mpd_tweaks_unlock = $cfg['value'] == 1;
+				break;
+			case 'mpd_extra_params':			
+				$mpd_extra_params = _split_parameter_string($cfg['value']) ;
+				break;
+			case 'mpd_dev_extra_params':
+				$mpd_dev_extra_params = _split_parameter_string($cfg['value']) ;
+				break;
 			// Default param handling
-			default:
-				$data .= $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+			default:			    
+				$mpd_general_params[$cfg['param']] = $cfg['value'];
 				if ($cfg['param'] == 'replaygain') {$replaygain = $cfg['value'];}
 				break;
 		}
 	}
+	
+    // only allow if the tweaks are unlock ind db and user enabled it in the user interface	
+	$mpd_tweaks = $mpd_tweaks and $mpd_tweaks_unlock; 
+
+	// make sure manual tweaks override ui tweaks
+	if($mpd_tweaks and array_key_exists('auto_resample', $mpd_dev_extra_params)==false ){	   
+	   $mpd_dev_extra_params['auto_resample'] = "\"".$auto_resample."\"";
+	}
+	if($mpd_tweaks and array_key_exists('auto_format', $mpd_dev_extra_params)==false ){	   
+		$mpd_dev_extra_params['auto_format'] ="\"".$auto_format."\"";
+	 }
+ 
+	$mpd_general_params["max_connections"] = "128";
+
+	foreach($mpd_general_params as $param => $value) {
+		if( array_key_exists($param, $mpd_extra_params) ) {
+			$data .= "# ".$param." \"".$value."\"  <<< overriden by MPD tweaks\n";
+		}		 
+   	    else {
+			$data .= $param." \"".$value."\"\n";
+		}
+	}
+	
+	if($mpd_tweaks) {
+		$data .= "# --------- MPD General Tweaks ---------\n";
+		//mpd_general_params
+		foreach($mpd_extra_params as $param => $value) {
+			if( array_key_exists($param, $mpd_general_params) ) {
+				$data .= $param." ".$value."  # warning override setting from Moode!\n";
+			}		 
+			else {
+				$data .= $param." ".$value."\n";
+			}
+		}
+		$data .= "# --------------------------------------\n";
+	}
 
 	// Input
-	$data .= "max_connections \"128\"\n";
 	$data .= "\n";
 	$data .= "decoder {\n";
 	$data .= "plugin \"ffmpeg\"\n";
@@ -1601,21 +1674,66 @@ function updMpdConf($i2sdevice) {
 	$data .= "threads \"" . $sox_multithreading . "\"\n";
 	$data .= "}\n\n";
 
-	// ALSA local (outputs 1 - 5)
-	$names = array (
-		"name \"ALSA default\"\n" . "device \"hw:" . $device . ",0\"\nauto_format \"" . $auto_format . "\"\nauto_resample \"" . $auto_resample . "\"\n",
-		"name \"ALSA crossfeed\"\n" . "device \"crossfeed\"\n",
-		"name \"ALSA parametric eq\"\n" . "device \"eqfa4p\"\n",
-		"name \"ALSA graphic eq\"\n" . "device \"alsaequal\"\n",
-		"name \"ALSA polarity inversion\"\n" . "device \"invpolarity\"\n"
+    // common for all ALSA outputs
+	$common_output_params = Array(
+		"type" => "alsa",
+		"mixer_type" => $mixertype,
+		"dop" => $dop
+	);	
+
+	if( $mixertype == 'hardware' ) {
+		$mixer_setting = Array (
+			"mixer_control" => $hwmixer,
+			"mixer_device" => $device, 
+			"mixer_index" => "0" 		
 		);
-	foreach ($names as $name) {
-		$data .= "audio_output {\n";
-		$data .= "type \"alsa\"\n";
-		$data .= $name;
-		$data .= "mixer_type \"" . $mixertype . "\"\n";
-		$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $device . "\"\n" . "mixer_index \"0\"\n" : '';
-		$data .= "dop \"" . $dop . "\"\n";
+		$common_output_params= array_merge($common_output_params, $mixer_setting);
+	}
+
+	// ALSA local (outputs 1 - 5)
+	$outputs = array (
+		Array("name" => "ALSA default", 
+			  "device" => "hw:" . $device . ",0", 
+			//   "auto_format" => $mpd_tweaks ? $auto_format: "yes", 
+			//   "auto_resample" => $mpd_tweaks ? $auto_resample: "yes" ),
+			  "auto_format" => "yes", 
+			  "auto_resample" => "yes" ),
+		Array("name" => "ALSA crossfeed" ,
+		      "device" => "crossfeed" ), 
+		Array("name" => "ALSA parametric eq",
+		      "device" => "eqfa4p" ),
+		Array("name" => "ALSA graphic eq",
+		      "device" => "alsaequal" ),
+		Array("name" => "ALSA polarity inversion",
+		  	  "device" => "invpolarity")
+	);
+
+	foreach ($outputs as $output) {
+		// only apply device tweak to default output device
+		$default_output = $output["name"] == "ALSA default"; 		
+		$data .= "audio_output {\n";		
+		$output_params = array_merge($output, $common_output_params);	
+
+        foreach($output_params as $param => $value)	{
+			if( $mpd_tweaks and $default_output and array_key_exists($param, $mpd_dev_extra_params) ) {
+				$data .= "  #".$param." \"".$value."\" <<< overridden by MPD tweaks\n";
+			}		 
+			   else {
+				$data .= "  ".$param." \"".$value."\"\n";
+			}
+		}
+
+		if($mpd_tweaks and $default_output) {
+			$data .= "  # MPD Tweaks\n";
+			foreach($mpd_dev_extra_params as $param => $value)	{
+				if( array_key_exists($param, $output_params) ) {
+					$data .= "  ".$param." ".$value." # warning overridde setting from Moode!\n";
+				}		 
+					else {
+					$data .= "  ".$param." ".$value."\n";
+				}				
+			}		
+		}
 		$data .= "}\n\n";
 	}
 

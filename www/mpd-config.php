@@ -63,6 +63,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	submitJob('mpdcfg', $queueargs, $title, $message, $duration);
 }
 
+if (isset($_POST['update_mpd_tweaks']))  {	
+	cfgdb_update('cfg_mpd', $dbh, 'mpd_tweaks', $_POST['conf']['mpd_tweaks']);
+}	
+
 // Load settings
 $result = cfgdb_read('cfg_mpd', $dbh);
 $mpdconf = array();
@@ -197,6 +201,15 @@ $_mpd_select['zeroconf_enabled'] .= "<option value=\"yes\" " . (($mpdconf['zeroc
 $_mpd_select['zeroconf_enabled'] .= "<option value=\"no\" " . (($mpdconf['zeroconf_enabled'] == 'no') ? "selected" : "") . ">No</option>\n";
 $_mpd_select['zeroconf_name'] = $mpdconf['zeroconf_name'];
 */
+
+// mpd-tweaks
+$_select['alsa_tweaks1'] .= "<input type=\"radio\" name=\"conf[mpd_tweaks]\" id=\"togglealsa_tweaks1\" value=\"1\" " . (($mpdconf['mpd_tweaks'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+$_select['alsa_tweaks0'] .= "<input type=\"radio\" name=\"conf[mpd_tweaks]\" id=\"togglealsa_tweaks2\" value=\"0\" " . (($mpdconf['mpd_tweaks'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+
+$_mpd_tweaks_unlock = ($mpdconf['mpd_tweaks_unlock'] == 0) ? "style=\"visibility:hidden;\"" : ""; // the prevents that the tweaks are even visible
+$_mpd_tweaks_visible_style = ($mpdconf['mpd_tweaks'] == 0 or $mpdconf['mpd_tweaks_unlock'] == 0) ? "style=\"visibility:hidden;\"" : ""; // help to hide or show mpd tweak settings
+$mpdconf[mpd_extra_params]=htmlspecialchars($mpdconf[mpd_extra_params]); // escape the mpd params string
+$mpdconf[mpd_dev_extra_params]=htmlspecialchars($mpdconf[mpd_dev_extra_params]); // escape the mpd params string
 
 waitWorker(1, 'mpd-config');
 
