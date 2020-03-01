@@ -725,6 +725,13 @@ function renderUI() {
 	else {
 		$('#extratags, #ss-extratags').html('');
 	}
+    
+	if (SESSION.json['tagviewcovers'] == 'Yes') {
+        UI.tagViewCovers = true;
+    }
+    else {
+        UI.tagViewCovers = false;
+    }  
 
 	// default metadata
 	if (MPD.json['album']) {
@@ -1836,6 +1843,7 @@ $('.context-menu a').click(function(e) {
 		// general
 		$('#play-history-enabled span').text(SESSION.json['playhist']);
 		$('#extratag-display span').text(SESSION.json['xtagdisp']);
+		$('#tagviewcovers-display span').text(SESSION.json['tagviewcovers']);
 		$('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
 
 		// themes and backgrounds
@@ -2057,8 +2065,10 @@ $('.btn-appearance-update').click(function(e){
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
     var playHistoryChange = false;
+	var tagViewCoversChange = false;
 	// general
 	if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
+	if (SESSION.json['tagviewcovers'] != $('#tagviewcovers-display span').text()) {tagViewCoversChange = true;}    
 	if (SESSION.json['scnsaver_timeout'] != screenSaverTimeout($('#scnsaver-timeout span').text(), 'value')) {scnSaverTimeoutChange = true;}
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
 	// theme and backgrounds
@@ -2075,6 +2085,7 @@ $('.btn-appearance-update').click(function(e){
 	// general
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
 	SESSION.json['xtagdisp'] = $('#extratag-display span').text();
+	SESSION.json['tagviewcovers'] = $('#tagviewcovers-display span').text();    
 	SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
 	// theme and backgrounds
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -2092,6 +2103,7 @@ $('.btn-appearance-update').click(function(e){
 	var result = sendMoodeCmd('POST', 'updcfgsystem',
 		{'playhist': SESSION.json['playhist'],
 		 'xtagdisp': SESSION.json['xtagdisp'],
+		 'tagviewcovers': SESSION.json['tagviewcovers'],
 		 'ashuffle_filter': SESSION.json['ashuffle_filter'],
 		 'themename': SESSION.json['themename'],
 		 'accent_color': SESSION.json['accent_color'],
@@ -2141,7 +2153,7 @@ $('.btn-appearance-update').click(function(e){
 	}
 
 	// auto-reload page if indicated
-	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true) {
+	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true || tagViewCoversChange == true) {
 	    notify('updcustomize', 'Auto-refresh in 3 seconds');
 		setTimeout(function() {
 			location.reload(true);
@@ -2303,6 +2315,9 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
 	else if ($(this).data('cmd') == 'extratag-display-yn') {
 		$('#extratag-display span').text($(this).text());
 	}
+	else if ($(this).data('cmd') == 'tagviewcovers-display-yn') {
+		$('#tagviewcovers-display span').text($(this).text());
+	}    
 	else if ($(this).data('cmd') == 'play-history-enabled-yn') {
 		$('#play-history-enabled span').text($(this).text());
 	}

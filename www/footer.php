@@ -334,6 +334,28 @@
 		                    	Display additional metadata under the cover art on the Playback panel.<br>
 	                    </span>
 	                </div>
+                    
+   	                <label class="control-label" for="tagviewcovers-display">Show covers in Tag view</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tagviewcovers-display" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagviewcovers-display-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagviewcovers-display-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tagviewcovers-display" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-tagviewcovers-display" class="help-block hide">
+		                    	Display cover art thumbnails in the Album column of the Tag view.<br>
+	                    </span>
+	                </div>                    
 
    	                <label class="control-label" for="play-history-enabled">Playback history</label>
 	                <div class="controls">
