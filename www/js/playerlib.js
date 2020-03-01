@@ -70,7 +70,6 @@ var UI = {
 	libAlbum: '',
 	mobile: false,
 	plModified: -1,
-	tagViewCovers: true // controls whether to display covers in tag view, no UI option yet
 };
 
 // mpd state and metadata
@@ -461,7 +460,7 @@ function inpSrcIndicator(cmd, msgText) {
             $('#index-artists.alphabits').show();
             $('#index-albums.alphabits').show();
 
-            if (SESSION.json['show_genres'] == 'Yes') {
+            if (SESSION.json['library_show_genres'] == 'Yes') {
                 $('#index-genres.alphabits').show();
             }
 
@@ -1830,15 +1829,9 @@ $('.context-menu a').click(function(e) {
 
     // Appearance settings
     else if ($(this).data('cmd') == 'appearance') {
-		// reset indicator
 		bgImgChange = false;
 
-		// general
-		$('#play-history-enabled span').text(SESSION.json['playhist']);
-		$('#extratag-display span').text(SESSION.json['xtagdisp']);
-		$('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
-
-		// themes and backgrounds
+		// Themes and backgrounds
 		$('#theme-name span').text(SESSION.json['themename']);
 		var obj = sendMoodeCmd('POST', 'readthemename');
 		var themelist = '';
@@ -1865,10 +1858,15 @@ $('.context-menu a').click(function(e) {
 		$('#cover-backdrop-enabled span').text(SESSION.json['cover_backdrop']);
 		$('#cover-blur span').text(SESSION.json['cover_blur']);
 		$('#cover-scale span').text(SESSION.json['cover_scale']);
-
-		// coverview screen saver
+        // Library options
+        $('#tagviewcovers-display span').text(SESSION.json['library_tagview_covers']);
+		// Coverview screen saver
         $('#scnsaver-timeout span').text(getParamOrValue('param', SESSION.json['scnsaver_timeout']));
 		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
+        // Other options
+        $('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
+		$('#play-history-enabled span').text(SESSION.json['playhist']);
+		$('#extratag-display span').text(SESSION.json['xtagdisp']);
 
         $('#customize-modal').modal();
     }
@@ -1980,18 +1978,15 @@ $('.btn-clockradio-update').click(function(e){
 
 // Update appearance options
 $('.btn-appearance-update').click(function(e){
-	// detect certain changes
-	var xtagdispChange = false;
+	// Detect certain changes
 	var accentColorChange = false;
 	var themeSettingsChange = false;
+    var libraryOptionsChange = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
+    var xtagdispChange = false;
     var playHistoryChange = false;
-	// general
-	if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
-    if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
-	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
-	// theme and backgrounds
+	// Theme and backgrounds
 	if (SESSION.json['themename'] != $('#theme-name span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['accent_color'] != $('#accent-color span').text()) {themeSettingsChange = true; accentColorChange = true;}
 	if (SESSION.json['alphablend'] != $('#alpha-blend span').text()) {themeSettingsChange = true;};
@@ -1999,14 +1994,16 @@ $('.btn-appearance-update').click(function(e){
 	if (SESSION.json['cover_backdrop'] != $('#cover-backdrop-enabled span').text()) {themeSettingsChange = true;};
 	if (SESSION.json['cover_blur'] != $('#cover-blur span').text()) {themeSettingsChange = true;};
 	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;};
-    // Other
+    // Library options
+    if (SESSION.json['library_tagview_covers'] != $('#tagviewcovers-display span').text()) {libraryOptionsChange = true;};
+    // Coverview screen saver
+    if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
+	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
+    // Other options
+    if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;};
 
-	// general
-	SESSION.json['playhist'] = $('#play-history-enabled span').text();
-	SESSION.json['xtagdisp'] = $('#extratag-display span').text();
-	SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
-	// theme and backgrounds
+	// Theme and backgrounds
 	SESSION.json['themename'] = $('#theme-name span').text();
 	SESSION.json['accent_color'] = $('#accent-color span').text();
 	SESSION.json['alphablend'] = $('#alpha-blend span').text();
@@ -2014,24 +2011,31 @@ $('.btn-appearance-update').click(function(e){
 	SESSION.json['cover_backdrop'] = $('#cover-backdrop-enabled span').text();
 	SESSION.json['cover_blur'] = $('#cover-blur span').text();
 	SESSION.json['cover_scale'] = $('#cover-scale span').text();
-	// covreview screen saver
+    // Library options
+    SESSION.json['library_tagview_covers'] = $('#tagviewcovers-display span').text();
+	// Ccovreview screen saver
     SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
+    // Other options
+    SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
+	SESSION.json['playhist'] = $('#play-history-enabled span').text();
+	SESSION.json['xtagdisp'] = $('#extratag-display span').text();
 
-	// update cfg_system and session vars
+	// Update cfg_system and session vars
 	var result = sendMoodeCmd('POST', 'updcfgsystem',
-		{'playhist': SESSION.json['playhist'],
-		 'xtagdisp': SESSION.json['xtagdisp'],
-		 'ashuffle_filter': SESSION.json['ashuffle_filter'],
-		 'themename': SESSION.json['themename'],
+		{'themename': SESSION.json['themename'],
 		 'accent_color': SESSION.json['accent_color'],
 		 'alphablend': SESSION.json['alphablend'],
 		 'adaptive': SESSION.json['adaptive'],
 		 'cover_backdrop': SESSION.json['cover_backdrop'],
 		 'cover_blur': SESSION.json['cover_blur'],
 		 'cover_scale': SESSION.json['cover_scale'],
+         'library_tagview_covers': SESSION.json['library_tagview_covers'],
 		 'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
-		 'scnsaver_style': SESSION.json['scnsaver_style']
+		 'scnsaver_style': SESSION.json['scnsaver_style'],
+         'ashuffle_filter': SESSION.json['ashuffle_filter'],
+         'playhist': SESSION.json['playhist'],
+         'xtagdisp': SESSION.json['xtagdisp']
 		}
 	);
 
@@ -2071,7 +2075,7 @@ $('.btn-appearance-update').click(function(e){
 	}
 
 	// auto-reload page if indicated
-	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true) {
+	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || libraryOptionsChange == true || UI.bgImgChange == true) {
 	    notify('updcustomize', 'Auto-refresh in 3 seconds');
 		setTimeout(function() {
 			location.reload(true);
@@ -2230,6 +2234,10 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
             break;
     	case 'cover-blur-sel':
     		$('#cover-blur span').text($(this).text());
+            break;
+        // Appearance: Library options
+    	case 'tagviewcovers-display-yn':
+    		$('#tagviewcovers-display span').text($(this).text());
             break;
     	// Appearance: Coverview options
     	case 'scnsaver-timeout-sel':
@@ -2754,7 +2762,7 @@ $("#coverart-url, #playback-switch").click(function(e){
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
 		setColors();
 
-        if (SESSION.json['show_genres'] == 'Yes') {
+        if (SESSION.json['library_show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
         }
         else {
@@ -2763,13 +2771,11 @@ $("#coverart-url, #playback-switch").click(function(e){
 
 		$('#top-columns, #bottom-row').show();
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // async
-		if (UI.tagViewCovers) {
+		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			setTimeout(function() {
-				if (UI.tagViewCovers) {
-					$('img.lazy-tagview').lazyload({
-					    container: $('#lib-album')
-					});
-				}
+				$('img.lazy-tagview').lazyload({
+				    container: $('#lib-album')
+				});
 				if (UI.libPos[0] >= 0) {
 					customScroll('albums', UI.libPos[0], 200);
 					$('#albumsList .lib-entry').eq(UI.libPos[0]).click();

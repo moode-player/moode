@@ -30,10 +30,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Detect changes requiring cache delete
 	if ($_POST['config']['ignore_articles'] != $_SESSION['ignore_articles'] ||
 		$_POST['config']['library_utf8rep'] != $_SESSION['library_utf8rep'] ||
-		$_POST['config']['library_album_sort'] != $_SESSION['library_album_sort'] ||
-
-		// NOTE: Artist and Album sort tags are for future use
-		$_POST['config']['library_artist_sort'] != $_SESSION['library_artist_sort'] ||
 		$_POST['config']['library_album_sort'] != $_SESSION['library_album_sort']) {
 
 		clearLibCache();
@@ -51,10 +47,13 @@ session_write_close();
 // Instant play action
 $_select['library_instant_play'] .= "<option value=\"Add/Play\" " . (($_SESSION['library_instant_play'] == 'Add/Play') ? "selected" : "") . ">Add/Play</option>\n";
 $_select['library_instant_play'] .= "<option value=\"Clear/Play\" " . (($_SESSION['library_instant_play'] == 'Clear/Play') ? "selected" : "") . ">Clear/Play</option>\n";
-// Show Genres column
-$_select['show_genres'] .= "<option value=\"Yes\" " . (($_SESSION['show_genres'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['show_genres'] .= "<option value=\"No\" " . (($_SESSION['show_genres'] == 'No') ? "selected" : "") . ">No</option>\n";
-// Album grouping
+// Show tagview genres
+$_select['library_show_genres'] .= "<option value=\"Yes\" " . (($_SESSION['library_show_genres'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['library_show_genres'] .= "<option value=\"No\" " . (($_SESSION['library_show_genres'] == 'No') ? "selected" : "") . ">No</option>\n";
+// Show tagview covers
+$_select['library_tagview_covers'] .= "<option value=\"Yes\" " . (($_SESSION['library_tagview_covers'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['library_tagview_covers'] .= "<option value=\"No\" " . (($_SESSION['library_tagview_covers'] == 'No') ? "selected" : "") . ">No</option>\n";
+// Album sort order
 $_select['library_album_sort'] .= "<option value=\"Album\" " . (($_SESSION['library_album_sort'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
 $_select['library_album_sort'] .= "<option value=\"Artist\" " . (($_SESSION['library_album_sort'] == 'Artist') ? "selected" : "") . ">by Artist</option>\n";
 $_select['library_album_sort'] .= "<option value=\"Artist/Year\" " . (($_SESSION['library_album_sort'] == 'Artist/Year') ? "selected" : "") . ">by Artist/Year</option>\n";

@@ -49,14 +49,27 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="show_genres">Show Genres column</label>
+				<label class="control-label" for="library_show_genres">Show tagview genres</label>
 				<div class="controls">
-					<select id="show_genres" class="input-large" name="config[show_genres]">
-						$_select[show_genres]
+					<select id="library_show_genres" class="input-large" name="config[library_show_genres]">
+						$_select[library_show_genres]
 					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_show_genres" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_show_genres" class="help-block-configs help-block-margin hide">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_show_genres" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_show_genres" class="help-block-configs help-block-margin hide">
 						Show the Genres column in Library Tag view.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="library_tagview_covers">Show tagview covers</label>
+				<div class="controls">
+					<select id="library_tagview_covers" class="input-large" name="config[library_tagview_covers]">
+						$_select[library_tagview_covers]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_tagview_covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_tagview_covers" class="help-block-configs help-block-margin hide">
+						Show covers in the Album column of Library Tag view.
                     </span>
 				</div>
 			</div>

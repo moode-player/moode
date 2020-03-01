@@ -85,7 +85,7 @@
 	</div>
 </div>
 
-<!-- CUSTOMIZE -->
+<!-- APPEARANCE -->
 <div id="customize-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="customize-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -299,6 +299,34 @@
 	                    	Increases the size of the cover backdrop.<br>
 	                    </span>
 	                </div>
+				</div>
+		    	</fieldset>
+
+			<h5>Library Options</h5>
+		    	<fieldset>
+				<div class="control-group">
+	                <label class="control-label" for="tagviewcovers-display">Show covers in Tag view</label>
+ 	                <div class="controls">
+    						<div class="btn-group bootstrap-select bootstrap-select-mini">
+ 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+ 								<div id="tagviewcovers-display" class="filter-option pull-left">
+ 									<span></span> <!-- selection from dropdown gets placed here -->
+ 								</div>&nbsp;
+ 								<div class="caret"></div>
+ 							</button>
+ 							<div class="dropdown-menu open">
+ 								<ul class="dropdown-menu custom-select inner" role="menu">
+ 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagviewcovers-display-yn"><span class="text">Yes</span></a></li>
+ 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagviewcovers-display-yn"><span class="text">No</span></a></li>
+ 								</ul>
+ 							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-tagviewcovers-display" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-tagviewcovers-display" class="help-block hide">
+ 		                    	Show covers in the Album column of Library Tag view.<br>
+ 	                    </span>
+ 	                </div>
+
 				</div>
 		    	</fieldset>
 

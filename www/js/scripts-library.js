@@ -461,10 +461,7 @@ var renderAlbums = function() {
         filteredAlbums[i].year ? tagViewYear = ' (' + filteredAlbums[i].year + ')' : tagViewYear = '';
         filteredAlbumCovers[i].year ? albumViewYear = ' (' + filteredAlbums[i].year + ')' : albumViewYear = '';
 
-        // TEST
-        //UI.tagViewCovers = false;
-        //
-		if (UI.tagViewCovers) {
+		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li><div class="lib-entry' + activeFlag + '">'
              + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
              + '<div class="album-name">' + filteredAlbums[i].album
@@ -504,7 +501,7 @@ var renderAlbums = function() {
 			container: $('#lib-albumcover')
 		});
 	}
-	else if ($('.tag-view-btn').hasClass('active') && UI.tagViewCovers) {
+	else if ($('.tag-view-btn').hasClass('active') && SESSION.json['library_tagview_covers'] == 'Yes') {
 		$('img.lazy-tagview').lazyload({
 		    container: $('#lib-album')
 		});

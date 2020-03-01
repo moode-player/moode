@@ -259,7 +259,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         $('#index-albumcovers').hide();
 
-        if (SESSION.json['show_genres'] == 'Yes') {
+        if (SESSION.json['library_show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
         }
         else {
@@ -344,7 +344,7 @@ jQuery(document).ready(function($) { 'use strict';
             $('#index-albums').hide();
         }
 
-        if (SESSION.json['show_genres'] == 'Yes') {
+        if (SESSION.json['library_show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
         }
         else {
