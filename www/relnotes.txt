@@ -19,6 +19,7 @@ New features
 
 - NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
 - NEW: Library option to sort by Artist/Year
+- NEW: Library option to hide covers in Tag view album column
 - NEW: Audio config option for USB volume knob ON/OFF
 - NEW: System config option for LED0 and LED1 ON/OFF
 - NEW: Spotify config option to autoplay similar songs
