@@ -96,7 +96,8 @@ var NETWORK = {
 
 // Eventually migrate remaining global vars here
 var GLOBAL = {
-	regExIgnoreArticles: ''
+	regExIgnoreArticles: '',
+	ArtistSelected: ''
 }
 
 // live timeline
