@@ -174,9 +174,9 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Set correct header text
     $('#tagview-header-text, #albumview-header-text').text('Albums' +
-        (SESSION.json['library_album_grouping'] != 'Album' ? ' by ' + SESSION.json['library_album_grouping'] : ''));
+        (SESSION.json['library_album_sort'] != 'Album' ? ' by ' + SESSION.json['library_album_sort'] : ''));
     // Hide alphabits index if indicated
-    if (SESSION.json['library_album_grouping'] == 'Year') {
+    if (SESSION.json['library_album_sort'] == 'Year') {
         $('#index-albums, #index-albumcovers').hide();
     }
 
@@ -259,7 +259,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         $('#index-albumcovers').hide();
 
-        if (SESSION.json['show_genres'] == 'Yes') {
+        if (SESSION.json['library_show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
         }
         else {
@@ -337,14 +337,14 @@ jQuery(document).ready(function($) { 'use strict';
         $('#top-columns, #bottom-row').css('display', 'flex');
         $('.recently-added').css('margin-left', '-.25em');
         $('#lib-albumcover, #lib-albumcover-header').hide();
-        $('#tagview-header-text').text('Albums' + (SESSION.json['library_album_grouping'] != 'Album' ? ' by ' + SESSION.json['library_album_grouping'] : ''));
+        $('#tagview-header-text').text('Albums' + (SESSION.json['library_album_sort'] != 'Album' ? ' by ' + SESSION.json['library_album_sort'] : ''));
 
         $('#index-albumcovers').hide();
-        if (SESSION.json['library_album_grouping'] == 'Year') {
+        if (SESSION.json['library_album_sort'] == 'Year') {
             $('#index-albums').hide();
         }
 
-        if (SESSION.json['show_genres'] == 'Yes') {
+        if (SESSION.json['library_show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
         }
         else {
@@ -394,12 +394,12 @@ jQuery(document).ready(function($) { 'use strict';
         $('#top-columns, #bottom-row').css('display', 'none');
         $('.recently-added').css('margin-left', '');
         $('#lib-albumcover, #lib-albumcover-header').show();
-        $('#albumview-header-text').text('Albums' + (SESSION.json['library_album_grouping'] != 'Album' ? ' by ' + SESSION.json['library_album_grouping'] : ''));
+        $('#albumview-header-text').text('Albums' + (SESSION.json['library_album_sort'] != 'Album' ? ' by ' + SESSION.json['library_album_sort'] : ''));
 
         $('#lib-albumcover').css('height', '100%');
         $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 
-        if (SESSION.json['library_album_grouping'] == 'Year') {
+        if (SESSION.json['library_album_sort'] == 'Year') {
             $('#index-albumcovers').hide();
         }
         else {

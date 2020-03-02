@@ -157,7 +157,7 @@ workerLog('worker: moOde release (' . getMoodeRel('verbose') . ')'); // major.mi
 workerLog('worker: Raspbian OS   (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Linux kernel  (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Platform      (' . $_SESSION['hdwrrev'] . ')');
-workerLog('worker: Architecture  (' . $_SESSION['procarch'] . ')');
+workerLog('worker: Architecture  (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] .' kernel)');
 workerLog('worker: MPD version   (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU governor  (' . $_SESSION['cpugov'] . ')');
 

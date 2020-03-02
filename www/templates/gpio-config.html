@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 -->
@@ -28,8 +28,11 @@
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span class="help-block-configs help-block-margin legend-info-help">
+				NOTE: Use a comma to delimit arguments in the CMD field. Example: mpc,load,My Playlist
+			</span>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				SAVE: Update button configuration and restart GPIO button handler.<br><br>
+				SAVE: Update the button configuration and restart GPIO button handler.<br><br>
 				<img src="images/gpio-pins.png" alt="GPIO Pins"><br><br>
 				- The GPIO button handler configures pins as input / pull-up.<br>
 				- The pins are 3V3. Pins GPIO2 and GPIO3 have fixed pull-up resistors.<br>

@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -183,8 +183,8 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important}
 #albumsList li, #artistsList li, #genresList li {line-height:calc(1.45em + 1vmin);}
 #albumsList .lib-entry img {width:3rem;margin:.15em .25em .15em 0;}
-#albumsList .album-name {display:inline-flex;vertical-align:middle;max-width:calc(100% - 3rem - .25em);line-height:1.25em;}
-#albumsList .album-year {display:none;font-size:0.85em;color:var(--textvariant);}
+#albumsList .album-name {display:inline-block;vertical-align:middle;max-width:calc(100% - 3rem - .25em);line-height:1.25em;}
+#albumsList .album-year {display:inline-block;font-size:0.85em;color:var(--textvariant); vertical-align:top;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .tab-content.visacc .playlist .active .pll1 {color:var(--adapttext);}
@@ -299,7 +299,7 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-genre {top:calc(1.5em + 1px);height:calc(100% - 1.5em);border-right:1px solid var(--btnshade);-webkit-overflow-scrolling:touch;box-sizing:border-box;}
 #lib-artist {top:calc(1.5em + 1px);height:calc(100% - 1.5em);left:33.33%;margin-left:0px;-webkit-overflow-scrolling:touch;box-sizing:border-box;}
 #lib-album {top:calc(1.5em + 1px);height:calc(100% - 1.5em);left:66.66%;border-left:1px solid var(--btnshade);margin-left:0px;-webkit-overflow-scrolling:touch;box-sizing:border-box;}
-#lib-album span {display:none;vertical-align:middle;}
+/*#lib-album span {display:none;vertical-align:middle;}*/
 #lib-file {overflow-y:scroll;overflow-x:hidden;margin:1px 0 0 0;height:100%;width:100%;-webkit-overflow-scrolling:touch;}
 #lib-coverart-meta-area {width:20vw;line-height:normal;padding:0;float:left;position:fixed;}
 #lib-coverart-img {margin:.5em .25em 0 .5em;}
@@ -354,6 +354,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #random-albumcover i {color:var(--adapttext);opacity:.3}
 .albumcover {max-height:2.75em;overflow:hidden;}
 #cover-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
+#context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}
 /* radio list view */
 .database-radiolist {text-align:left;padding-left:2rem;}
 .database-radiolist li {width:90%;display:inline-block;margin:0;font-size:1rem;}

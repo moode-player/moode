@@ -16,7 +16,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #	Inspired by the script posted in moOde Forum by @Cyanoazimin
-#	2019-11-24 TC moOde 6.4.0
+#	2020-MM-DD TC moOde 6.5.0
 #
 
 from __future__ import print_function, absolute_import
@@ -49,7 +49,8 @@ for row in cursor:
     #print(str(datetime.datetime.now())[:19] + ' row id=' + str(row['id']) + ', enabled=' + row['enabled'] + ', command=' + row['command'])
     if str(row['id']) == '1' and row['enabled'] == '1':
         sw_1_pin = int(row['pin'])
-        sw_1_cmd = row['command'].split(' ')
+        sw_1_cmd = row['command'].split(',')
+        sw_1_cmd = [x.strip() for x in sw_1_cmd]
         GPIO.setup(sw_1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         def sw_1_event(channel):
@@ -64,7 +65,8 @@ for row in cursor:
               ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
     elif str(row['id']) == '2' and row['enabled'] == '1':
         sw_2_pin = int(row['pin'])
-        sw_2_cmd = row['command'].split(' ')
+        sw_2_cmd = row['command'].split(',')
+        sw_2_cmd = [x.strip() for x in sw_2_cmd]
         GPIO.setup(sw_2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         def sw_2_event(channel):
@@ -79,7 +81,8 @@ for row in cursor:
               ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
     elif str(row['id']) == '3' and row['enabled'] == '1':
         sw_3_pin = int(row['pin'])
-        sw_3_cmd = row['command'].split(' ')
+        sw_3_cmd = row['command'].split(',')
+        sw_3_cmd = [x.strip() for x in sw_3_cmd]
         GPIO.setup(sw_3_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         def sw_3_event(channel):
@@ -94,7 +97,8 @@ for row in cursor:
               ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
     elif str(row['id']) == '4' and row['enabled'] == '1':
         sw_4_pin = int(row['pin'])
-        sw_4_cmd = row['command'].split(' ')
+        sw_4_cmd = row['command'].split(',')
+        sw_4_cmd = [x.strip() for x in sw_4_cmd]
         GPIO.setup(sw_4_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         def sw_4_event(channel):
@@ -109,7 +113,8 @@ for row in cursor:
               ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
     elif str(row['id']) == '5' and row['enabled'] == '1':
         sw_5_pin = int(row['pin'])
-        sw_5_cmd = row['command'].split(' ')
+        sw_5_cmd = row['command'].split(',')
+        sw_5_cmd = [x.strip() for x in sw_5_cmd]
         GPIO.setup(sw_5_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         def sw_5_event(channel):
@@ -124,7 +129,8 @@ for row in cursor:
               ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
     elif str(row['id']) == '6' and row['enabled'] == '1':
         sw_6_pin = int(row['pin'])
-        sw_6_cmd = row['command'].split(' ')
+        sw_6_cmd = row['command'].split(',')
+        sw_6_cmd = [x.strip() for x in sw_6_cmd]
         GPIO.setup(sw_6_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         def sw_6_event(channel):
@@ -139,7 +145,8 @@ for row in cursor:
               ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
     elif str(row['id']) == '7' and row['enabled'] == '1':
         sw_7_pin = int(row['pin'])
-        sw_7_cmd = row['command'].split(' ')
+        sw_7_cmd = row['command'].split(',')
+        sw_7_cmd = [x.strip() for x in sw_7_cmd]
         GPIO.setup(sw_7_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         def sw_7_event(channel):
@@ -154,7 +161,8 @@ for row in cursor:
               ', bounce_time=' + str(bounce_time) + ', cmd=' + row['command'])
     elif str(row['id']) == '8' and row['enabled'] == '1':
         sw_8_pin = int(row['pin'])
-        sw_8_cmd = row['command'].split(' ')
+        sw_8_cmd = row['command'].split(',')
+        sw_8_cmd = [x.strip() for x in sw_8_cmd]
         GPIO.setup(sw_8_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         def sw_8_event(channel):

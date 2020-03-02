@@ -18,6 +18,8 @@
 New features
 
 - NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
+- NEW: Library option to sort by Artist/Year
+- NEW: Library option to hide covers in Tag view album column
 - NEW: Audio config option for USB volume knob ON/OFF
 - NEW: System config option for LED0 and LED1 ON/OFF
 - NEW: Spotify config option to autoplay similar songs
@@ -27,11 +29,12 @@ Updates
 - UPD: Bump to Linux kernel 4.19.102 build #1295
 - UPD: Bump to MPD 0.21.20
 - UPD: Bump to shairport-sync 3.3.6
-- UPD: Bump to librespot v0.1.1 armv7l-only
+- UPD: Bump to librespot v0.1.1 (armv7l-only)
 - UPD: Bump to moodeutl 1.4.0
 - UPD: Deprecate librespot armv6l binary
 - UPD: Add DSD rate to extra metadata
 - UPD: Add -D option to moodeutl (delete session var)
+- UPD: Context menu close by click anywhere off menu
 
 Bug fixes
 

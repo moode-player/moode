@@ -100,6 +100,7 @@
 <body onorientationchange="javascript:location.reload(true); void 0;">
 	<!-- ALBUM COVER BACKDROP -->
 	<div aria-label="Album Cover Backdrop" id="cover-backdrop"></div>
+	<div id="context-backdrop"></div>
 
 	<!-- HEADER -->
 	<div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">

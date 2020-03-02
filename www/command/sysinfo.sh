@@ -157,7 +157,7 @@ AUDIO_PARAMETERS() {
 
 APPEARANCE_SETTINGS() {
 	echo -e "A P P E A R A N C E   S E T T I N G S"
-	# themes and backgrounds
+	# Themes and backgrounds
 	echo -e "\nTheme\t\t\t= $themename\c"
 	echo -e "\nAccent color\t\t= $accentcolor\c"
 	echo -e "\nAlpha blend\t\t= $alphablend\c"
@@ -167,10 +167,10 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nCover backdrop\t\t= $cover_backdrop\c"
 	echo -e "\nCover blur\t\t= $cover_blur\c"
 	echo -e "\nCover scale\t\t= $cover_scale\c"
-	# coverview options
+	# Coverview screen saver
 	echo -e "\nCoverView auto-display\t= $scnsaver_timeout\c"
 	echo -e "\nCoverView style\t\t= $scnsaver_style\c"
-	# other options
+	# Other options
 	echo -e "\nAuto-shuffle filter\t= $ashuffle_filter\c"
 	echo -e "\nExtra metadata\t\t= $xtagdisp\c"
 	echo -e "\nPlayback history\t= $playhist\n"
@@ -179,8 +179,9 @@ APPEARANCE_SETTINGS() {
 LIBRARY_SETTINGS() {
 	echo -e "L I B R A R Y   S E T T I N G S"
 	echo -e "\nInstant play action\t= $library_instant_play\c"
-	echo -e "\nShow genres column\t= $show_genres\c"
-	echo -e "\nAlbum grouping\t\t= by $library_album_grouping\c"
+	echo -e "\nShow tagview genres\t= $library_show_genres\c"
+	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
+	echo -e "\nAlbum sort order\t= by $library_album_sort\c"
 	echo -e "\nCompilation identifier\t= $library_comp_id\c"
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
 	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
@@ -188,8 +189,6 @@ LIBRARY_SETTINGS() {
 	echo -e "\nHi-res thumbs\t\t= $library_hiresthm\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
 	echo -e "\nPixel ratio\t\t= $library_pixelratio\n"
-	#echo -e "\nArtist sort tag\t\t= $library_artist_sort\c"
-	#echo -e "\nAlbum sort tag\t\t= $library_album_sort\n"
 }
 
 MPD_SETTINGS() {
@@ -496,7 +495,7 @@ mpdmixer=${arr[36]}
 xtagdisp=${arr[37]}
 rsmafterapl=${arr[38]}
 lcdup=${arr[39]}
-show_genres=${arr[40]}
+library_show_genres=${arr[40]}
 extmeta=${arr[41]}
 maint_interval=${arr[42]}
 hdwrrev=${arr[43]}
@@ -597,11 +596,12 @@ rsmafterinp=${arr[120]}
 ignore_articles=${arr[122]}
 volknob_mpd=${arr[123]}
 volknob_preamp=${arr[124]}
-library_album_grouping=${arr[125]}
+library_album_sort=${arr[125]}
 kernel_architecture=${arr[126]}
 [[ "${arr[127]}" = "1" ]] && wake_display="On" || wake_display="Off"
 [[ "${arr[128]}" = "1" ]] && usb_volknob="On" || usb_volknob="Off"
 led_state=${arr[129]}
+library_tagview_covers=${arr[130]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

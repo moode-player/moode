@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-02-12 TC moOde 6.4.2
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -70,7 +70,6 @@ var UI = {
 	libAlbum: '',
 	mobile: false,
 	plModified: -1,
-	tagViewCovers: true // controls whether to display covers in tag view, no UI option yet
 };
 
 // mpd state and metadata
@@ -461,7 +460,7 @@ function inpSrcIndicator(cmd, msgText) {
             $('#index-artists.alphabits').show();
             $('#index-albums.alphabits').show();
 
-            if (SESSION.json['show_genres'] == 'Yes') {
+            if (SESSION.json['library_show_genres'] == 'Yes') {
                 $('#index-genres.alphabits').show();
             }
 
@@ -1830,15 +1829,9 @@ $('.context-menu a').click(function(e) {
 
     // Appearance settings
     else if ($(this).data('cmd') == 'appearance') {
-		// reset indicator
 		bgImgChange = false;
 
-		// general
-		$('#play-history-enabled span').text(SESSION.json['playhist']);
-		$('#extratag-display span').text(SESSION.json['xtagdisp']);
-		$('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
-
-		// themes and backgrounds
+		// Themes and backgrounds
 		$('#theme-name span').text(SESSION.json['themename']);
 		var obj = sendMoodeCmd('POST', 'readthemename');
 		var themelist = '';
@@ -1847,46 +1840,8 @@ $('.context-menu a').click(function(e) {
 		}
 		$('#theme-name-list').html(themelist);
 		$('#alpha-blend span').text(SESSION.json['alphablend']);
-		$('#alpha-blend-list').html(
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">1.00</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.95</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.90</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.85</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.80</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.75</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.70</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.65</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.60</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.55</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.50</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.45</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.40</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.35</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.30</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.25</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.20</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.15</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.10</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.05</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="alpha-blend-sel"><span class="text">0.00</span></a></li>'
-		);
 		$('#adaptive-enabled span').text(SESSION.json['adaptive']);
 		$('#accent-color span').text(SESSION.json['accent_color']);
-		$('#accent-color-list').html(
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #c0392b; font-weight: bold;">Alizarin</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #8e44ad; font-weight: bold;">Amethyst</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #1a439c; font-weight: bold;">Bluejeans</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #d35400; font-weight: bold;">Carrot</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #27ae60; font-weight: bold;">Emerald</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #cb8c3e; font-weight: bold;">Fallenleaf</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #7ead49; font-weight: bold;">Grass</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #317589; font-weight: bold;">Herb</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #876dc6; font-weight: bold;">Lavender</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #2980b9; font-weight: bold;">River</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #c1649b; font-weight: bold;">Rose</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #999999; font-weight: bold;">Silver</span></a></li>' +
-			'<li><a href="#notarget" data-cmd="accent-color-sel"><span class="text" style="color: #16a085; font-weight: bold;">Turquoise</span></a></li>'
-		);
 		$('#error-bgimage').text('');
 		$.ajax({
 			url:'imagesw/bgimage.jpg',
@@ -1902,42 +1857,16 @@ $('.context-menu a').click(function(e) {
 		});
 		$('#cover-backdrop-enabled span').text(SESSION.json['cover_backdrop']);
 		$('#cover-blur span').text(SESSION.json['cover_blur']);
-		$('#cover-blur-list').html(
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">0px</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">5px</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">10px</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">15px</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">20px</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">30px</span></a></li>'
-		);
 		$('#cover-scale span').text(SESSION.json['cover_scale']);
-		$('#cover-scale-list').html(
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel"><span class="text">1.0</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel"><span class="text">1.25</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel"><span class="text">1.5</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel"><span class="text">1.75</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel"><span class="text">2.0</span></a></li>'
-		);
-
-		// coverview screen saver
-		$('#scnsaver-timeout span').text(screenSaverTimeout(SESSION.json['scnsaver_timeout'], 'param'));
-		$('#scnsaver-timeout-list').html(
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-timeout-sel"><span class="text">Never</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-timeout-sel"><span class="text">1 minute</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-timeout-sel"><span class="text">2 minutes</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-timeout-sel"><span class="text">5 minutes</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-timeout-sel"><span class="text">10 minutes</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-timeout-sel"><span class="text">20 minutes</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-timeout-sel"><span class="text">30 minutes</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-timeout-sel"><span class="text">1 hour</span></a></li>'
-		);
+        // Library options
+        $('#tagviewcovers-display span').text(SESSION.json['library_tagview_covers']);
+		// Coverview screen saver
+        $('#scnsaver-timeout span').text(getParamOrValue('param', SESSION.json['scnsaver_timeout']));
 		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
-		$('#scnsaver-style-list').html(
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Animated</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Gradient</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Theme</span></a></li>' +
-			'<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Pure Black</span></a></li>'
-		);
+        // Other options
+        $('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
+		$('#play-history-enabled span').text(SESSION.json['playhist']);
+		$('#extratag-display span').text(SESSION.json['xtagdisp']);
 
         $('#customize-modal').modal();
     }
@@ -1968,7 +1897,6 @@ $('.context-menu a').click(function(e) {
 
     // about
     else if ($(this).data('cmd') == 'aboutmoode') {
-		//$('#sys-upd-pkgdate').text(SESSION.json['pkgdate']);
 		$('#sys-raspbian-ver').text(SESSION.json['raspbianver']);
 		$('#sys-kernel-ver').text(SESSION.json['kernelver']);
 		$('#sys-processor-arch').text(SESSION.json['procarch']);
@@ -2050,18 +1978,15 @@ $('.btn-clockradio-update').click(function(e){
 
 // Update appearance options
 $('.btn-appearance-update').click(function(e){
-	// detect certain changes
-	var xtagdispChange = false;
+	// Detect certain changes
 	var accentColorChange = false;
 	var themeSettingsChange = false;
+    var libraryOptionsChange = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
+    var xtagdispChange = false;
     var playHistoryChange = false;
-	// general
-	if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
-	if (SESSION.json['scnsaver_timeout'] != screenSaverTimeout($('#scnsaver-timeout span').text(), 'value')) {scnSaverTimeoutChange = true;}
-	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
-	// theme and backgrounds
+	// Theme and backgrounds
 	if (SESSION.json['themename'] != $('#theme-name span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['accent_color'] != $('#accent-color span').text()) {themeSettingsChange = true; accentColorChange = true;}
 	if (SESSION.json['alphablend'] != $('#alpha-blend span').text()) {themeSettingsChange = true;};
@@ -2069,14 +1994,16 @@ $('.btn-appearance-update').click(function(e){
 	if (SESSION.json['cover_backdrop'] != $('#cover-backdrop-enabled span').text()) {themeSettingsChange = true;};
 	if (SESSION.json['cover_blur'] != $('#cover-blur span').text()) {themeSettingsChange = true;};
 	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;};
-    // Other
+    // Library options
+    if (SESSION.json['library_tagview_covers'] != $('#tagviewcovers-display span').text()) {libraryOptionsChange = true;};
+    // Coverview screen saver
+    if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
+	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
+    // Other options
+    if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;};
 
-	// general
-	SESSION.json['playhist'] = $('#play-history-enabled span').text();
-	SESSION.json['xtagdisp'] = $('#extratag-display span').text();
-	SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
-	// theme and backgrounds
+	// Theme and backgrounds
 	SESSION.json['themename'] = $('#theme-name span').text();
 	SESSION.json['accent_color'] = $('#accent-color span').text();
 	SESSION.json['alphablend'] = $('#alpha-blend span').text();
@@ -2084,24 +2011,31 @@ $('.btn-appearance-update').click(function(e){
 	SESSION.json['cover_backdrop'] = $('#cover-backdrop-enabled span').text();
 	SESSION.json['cover_blur'] = $('#cover-blur span').text();
 	SESSION.json['cover_scale'] = $('#cover-scale span').text();
-	// covreview screen saver
-	SESSION.json['scnsaver_timeout'] = screenSaverTimeout($('#scnsaver-timeout span').text(), 'value');
+    // Library options
+    SESSION.json['library_tagview_covers'] = $('#tagviewcovers-display span').text();
+	// Ccovreview screen saver
+    SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
+    // Other options
+    SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
+	SESSION.json['playhist'] = $('#play-history-enabled span').text();
+	SESSION.json['xtagdisp'] = $('#extratag-display span').text();
 
-	// update cfg_system and session vars
+	// Update cfg_system and session vars
 	var result = sendMoodeCmd('POST', 'updcfgsystem',
-		{'playhist': SESSION.json['playhist'],
-		 'xtagdisp': SESSION.json['xtagdisp'],
-		 'ashuffle_filter': SESSION.json['ashuffle_filter'],
-		 'themename': SESSION.json['themename'],
+		{'themename': SESSION.json['themename'],
 		 'accent_color': SESSION.json['accent_color'],
 		 'alphablend': SESSION.json['alphablend'],
 		 'adaptive': SESSION.json['adaptive'],
 		 'cover_backdrop': SESSION.json['cover_backdrop'],
 		 'cover_blur': SESSION.json['cover_blur'],
 		 'cover_scale': SESSION.json['cover_scale'],
+         'library_tagview_covers': SESSION.json['library_tagview_covers'],
 		 'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
-		 'scnsaver_style': SESSION.json['scnsaver_style']
+		 'scnsaver_style': SESSION.json['scnsaver_style'],
+         'ashuffle_filter': SESSION.json['ashuffle_filter'],
+         'playhist': SESSION.json['playhist'],
+         'xtagdisp': SESSION.json['xtagdisp']
 		}
 	);
 
@@ -2141,7 +2075,7 @@ $('.btn-appearance-update').click(function(e){
 	}
 
 	// auto-reload page if indicated
-	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true) {
+	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || libraryOptionsChange == true || UI.bgImgChange == true) {
 	    notify('updcustomize', 'Auto-refresh in 3 seconds');
 		setTimeout(function() {
 			location.reload(true);
@@ -2152,16 +2086,27 @@ $('.btn-appearance-update').click(function(e){
 	}
 });
 
-function screenSaverTimeout (key, returnType) {
-	var scnSaverParam = ['Never','1 minute','2 minutes','5 minutes','10 minutes','20 minutes','30 minutes','1 hour'];
-	var scnSaverValue = ['Never','60','120','300','600','1200','1800','3600'];
+function getParamOrValue (type, key) {
+    let mapTable = new Map([
+        // Screen saver timeout
+        ['Never','Never'],['1 minute','60'],['2 minutes','120'],['5 minutes','300'],['10 minutes','600'],['20 minutes','1200'],['30 minutes','1800'],['1 hour','3600'],
+        // Library recently added
+        ['1 week','604800000'],['1 month','2592000000'],['3 months','7776000000'],['6 months','15552000000'],['1 year','31536000000']
+    ]);
 
-	if (returnType == 'param') {
-		return scnSaverParam[scnSaverValue.indexOf(key)];
-	}
-	if (returnType == 'value') {
-		return scnSaverValue[scnSaverParam.indexOf(key)];
-	}
+    if (type == 'value') {
+        var result = mapTable.get(key);
+    }
+    else if (type == 'param') {
+        for (let [param, value] of mapTable) {
+            if (value == key) {
+                var result = param;
+                break;
+            }
+        }
+    }
+
+    return result;
 }
 
 // remove bg image (NOTE choose bg image is in footer.php)
@@ -2254,58 +2199,64 @@ function setClkRadioCtls(ctlValue) {
 	}
 }
 
-// custom select controls
+// Custom select controls
 $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
-	// clock radio
-	if ($(this).data('cmd') == 'clockradio-mode-sel') {
-		$('#clockradio-mode span').text($(this).text());
-		setClkRadioCtls($(this).text());
-	}
-	else if ($(this).data('cmd') == 'clockradio-starttime-ampm') {
-		$('#clockradio-starttime-ampm span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'clockradio-stoptime-ampm') {
-		$('#clockradio-stoptime-ampm span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'clockradio-action-sel') {
-		$('#clockradio-action span').text($(this).text());
-	}
-	// appearance: themes and backgrounds
-	else if ($(this).data('cmd') == 'theme-name-sel') {
-		$('#theme-name span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'accent-color-sel') {
-		$('#accent-color span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'adaptive-enabled-yn') {
-		$('#adaptive-enabled span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'alpha-blend-sel') {
-		$('#alpha-blend span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'cover-backdrop-enabled-yn') {
-		$('#cover-backdrop-enabled span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'cover-blur-sel') {
-		$('#cover-blur span').text($(this).text());
-	}
-	// appearance: coverview options
-	else if ($(this).data('cmd') == 'scnsaver-timeout-sel') {
-		$('#scnsaver-timeout span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'scnsaver-style-sel') {
-		$('#scnsaver-style span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'cover-scale-sel') {
-		$('#cover-scale span').text($(this).text());
-	}
-	// appearance: other options
-	else if ($(this).data('cmd') == 'extratag-display-yn') {
-		$('#extratag-display span').text($(this).text());
-	}
-	else if ($(this).data('cmd') == 'play-history-enabled-yn') {
-		$('#play-history-enabled span').text($(this).text());
-	}
+    switch ($(this).data('cmd')) {
+        // Clock radio
+    	case 'clockradio-mode-sel':
+    		$('#clockradio-mode span').text($(this).text());
+    		setClkRadioCtls($(this).text());
+            break;
+    	case 'clockradio-starttime-ampm':
+    		$('#clockradio-starttime-ampm span').text($(this).text());
+    	    break;
+    	case 'clockradio-stoptime-ampm':
+    		$('#clockradio-stoptime-ampm span').text($(this).text());
+            break;
+    	case 'clockradio-action-sel':
+    		$('#clockradio-action span').text($(this).text());
+            break;
+    	// Appearance: Themes and backgrounds
+    	case 'theme-name-sel':
+    		$('#theme-name span').text($(this).text());
+            break;
+    	case 'accent-color-sel':
+    		$('#accent-color span').text($(this).text());
+            break;
+    	case 'adaptive-enabled-yn':
+    		$('#adaptive-enabled span').text($(this).text());
+            break;
+    	case 'alpha-blend-sel':
+    		$('#alpha-blend span').text($(this).text());
+            break;
+    	case 'cover-backdrop-enabled-yn':
+    		$('#cover-backdrop-enabled span').text($(this).text());
+            break;
+    	case 'cover-blur-sel':
+    		$('#cover-blur span').text($(this).text());
+            break;
+        // Appearance: Library options
+    	case 'tagviewcovers-display-yn':
+    		$('#tagviewcovers-display span').text($(this).text());
+            break;
+    	// Appearance: Coverview options
+    	case 'scnsaver-timeout-sel':
+    		$('#scnsaver-timeout span').text($(this).text());
+            break;
+    	case 'scnsaver-style-sel':
+    		$('#scnsaver-style span').text($(this).text());
+            break;
+    	case 'cover-scale-sel':
+    		$('#cover-scale span').text($(this).text());
+            break;
+    	// Appearance: Other options
+    	case 'extratag-display-yn':
+    		$('#extratag-display span').text($(this).text());
+            break;
+    	case 'play-history-enabled-yn':
+    		$('#play-history-enabled span').text($(this).text());
+            break;
+    }
 });
 
 $('#syscmd-reboot').click(function(e) {
@@ -2750,13 +2701,15 @@ $('#index-artists li').on('click', function(e) {
 });
 $('#index-albums li').on('click', function(e) {
     // .artist-name or .album-name
-    var selector = '.' + SESSION.json['library_album_grouping'].toLowerCase() + '-name'
-    listLook('albumsList li ' + selector, 'albums', $(this).text());
+    var selector = '.' + SESSION.json['library_album_sort'].toLowerCase() + '-name';
+    var selector2 = selector.replace(/\/year/g, '');
+    listLook('albumsList li ' + selector2, 'albums', $(this).text());
 });
 $('#index-albumcovers li').on('click', function(e) {
     // .artist-name or .album-name
-    var selector = '.' + SESSION.json['library_album_grouping'].toLowerCase() + '-name'
-    listLook('albumcovers li ' + selector, 'albumcovers', $(this).text());
+    var selector = '.' + SESSION.json['library_album_sort'].toLowerCase() + '-name';
+    var selector2 = selector.replace(/\/year/g, '');
+    listLook('albumcovers li ' + selector2, 'albumcovers', $(this).text());
 });
 $('#index-browse li').on('click', function(e) {
 	listLook('database li', 'db', $(this).text());
@@ -2809,7 +2762,7 @@ $("#coverart-url, #playback-switch").click(function(e){
 		$('#lib-albumcover, #lib-albumcover-header, #index-albumcovers').hide();
 		setColors();
 
-        if (SESSION.json['show_genres'] == 'Yes') {
+        if (SESSION.json['library_show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
         }
         else {
@@ -2818,13 +2771,11 @@ $("#coverart-url, #playback-switch").click(function(e){
 
 		$('#top-columns, #bottom-row').show();
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // async
-		if (UI.tagViewCovers) {
+		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			setTimeout(function() {
-				if (UI.tagViewCovers) {
-					$('img.lazy-tagview').lazyload({
-					    container: $('#lib-album')
-					});
-				}
+				$('img.lazy-tagview').lazyload({
+				    container: $('#lib-album')
+				});
 				if (UI.libPos[0] >= 0) {
 					customScroll('albums', UI.libPos[0], 200);
 					$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
@@ -2908,3 +2859,9 @@ $('#playbar-switch, #playbar-cover').click(function(e){
 		}
 	}
 });
+
+$('#context-backdrop').click(function(e){
+	$('#context-backdrop').hide();
+	$('.context-menu').removeClass('open');
+	$('.context-menu-lib').removeClass('open');
+})

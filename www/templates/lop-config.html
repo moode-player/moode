@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-10-02 TC moOde 6.3.0
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 -->
@@ -49,28 +49,48 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="show_genres">Show Genres column</label>
+				<label class="control-label" for="library_show_genres">Show tagview genres</label>
 				<div class="controls">
-					<select id="show_genres" class="input-large" name="config[show_genres]">
-						$_select[show_genres]
+					<select id="library_show_genres" class="input-large" name="config[library_show_genres]">
+						$_select[library_show_genres]
 					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_show_genres" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_show_genres" class="help-block-configs help-block-margin hide">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_show_genres" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_show_genres" class="help-block-configs help-block-margin hide">
 						Show the Genres column in Library Tag view.
                     </span>
 				</div>
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="library_album_grouping">Album grouping</label>
+				<label class="control-label" for="library_tagview_covers">Show tagview covers</label>
 				<div class="controls">
-					<select id="library_album_grouping" class="input-large" name="config[library_album_grouping]">
-						$_select[library_album_grouping]
+					<select id="library_tagview_covers" class="input-large" name="config[library_tagview_covers]">
+						$_select[library_tagview_covers]
 					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_library_album_grouping" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_library_album_grouping" class="help-block-configs help-block-margin hide">
-						This option determines how albums are grouped in Album view.<br>
-						NOTE: When grouping by Year if not all tracks in the album have the same Year the highest Year will be used.
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_tagview_covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_tagview_covers" class="help-block-configs help-block-margin hide">
+						Show covers in the Album column of Library Tag view.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="library_album_sort">Album sort order</label>
+				<div class="controls">
+					<select id="library_album_sort" class="input-large" name="config[library_album_sort]">
+						$_select[library_album_sort]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_library_album_sort" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_library_album_sort" class="help-block-configs help-block-margin hide">
+						This option determines how albums are sorted in both Tag and Album views.<br><br>
+                        Options are:<br>
+                        &nbsp;&nbsp;&nbsp; "by Artist"      - Artists, and the albums for each artist, will be sorted alphabetically,<br>
+                        &nbsp;&nbsp;&nbsp; "by Artist/Year" - Artists will be listed alphabetically and the albums for each artist will be sorted chronologically,<br>
+                        &nbsp;&nbsp;&nbsp; "by Album"       - Albums in the library will be listed alphabetically, irrespective of the artist,<br>
+                        &nbsp;&nbsp;&nbsp; "by Year"        - Albums in the library will be listed chronologically, irrespective of the artist.<br><br>
+                        NOTE:<br>
+                        &nbsp;&nbsp;&nbsp; When sorted by Year if not all tracks in the album have the same Year tag then the latest year will be used.<br>
+                        &nbsp;&nbsp;&nbsp; If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
                     </span>
 				</div>
 			</div>
