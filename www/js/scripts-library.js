@@ -498,7 +498,7 @@ var renderAlbums = function() {
 		}
 
         filteredAlbums[i].year ? tagViewYear = ' (' + filteredAlbums[i].year + ')' : tagViewYear = '';
-        filteredAlbumCovers[i].year ? albumViewYear = ' (' + filteredAlbums[i].year + ')' : albumViewYear = '';
+        filteredAlbumCovers[i].year ? albumViewYear = ' (' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li><div class="lib-entry' + activeFlag + '">'
