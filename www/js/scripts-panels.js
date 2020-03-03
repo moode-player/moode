@@ -294,6 +294,7 @@ jQuery(document).ready(function($) { 'use strict';
 				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
 				customScroll('albumcovers', UI.libPos[1], 200);
 			}
+            /*TEST*/$('#albumcovers .lib-entry span').addClass('albumcover-ellipsis-limited');
 		}, 500);
 	}
 
