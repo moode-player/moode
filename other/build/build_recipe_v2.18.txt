@@ -128,6 +128,12 @@ sudo systemctl disable dphys-swapfile
 sudo systemctl disable cron.service
 sudo systemctl enable rpcbind
 sudo systemctl set-default multi-user.target
+sudo systemctl stop apt-daily.timer
+sudo systemctl disable apt-daily.timer
+sudo systemctl mask apt-daily.timer
+sudo systemctl stop apt-daily-upgrade.timer
+sudo systemctl disable apt-daily-upgrade.timer
+sudo systemctl mask apt-daily-upgrade.timer
 
 2. Install core packages.
 
