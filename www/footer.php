@@ -305,7 +305,51 @@
 			<h5>Library Options</h5>
 		    	<fieldset>
 				<div class="control-group">
-	                <label class="control-label" for="tagviewcovers-display">Show covers in Tag view</label>
+   	                <label class="control-label" for="instant-play-action">Instant play action</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="instant-play-action" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Add/Play</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Clear/Play</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-instant-play-action" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-instant-play-action" class="help-block hide">
+	                    	Configure Instant Play to perform Clear/Play or Add/Play.
+	                    </span>
+	                </div>
+
+					<label class="control-label" for="show-genres-column">Show genres column</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-genres-column" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-show-genres-column" class="help-block hide">
+	                    	Show the Genres column in Library Tag view.
+	                    </span>
+	                </div>
+
+					<label class="control-label" for="tagviewcovers-display">Show covers in Tag view</label>
  	                <div class="controls">
     						<div class="btn-group bootstrap-select bootstrap-select-mini">
  							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -326,6 +370,42 @@
  		                    	Show covers in the Album column of Library Tag view.<br>
  	                    </span>
  	                </div>
+
+					<label class="control-label" for="album-sort-order">Album sort order</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="album-sort-order" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="album-sort-order-sel"><span class="text">by Album</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="album-sort-order-sel"><span class="text">by Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="album-sort-order-sel"><span class="text">by Artist/Year</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="album-sort-order-sel"><span class="text">by Year</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-album-sort-order" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-album-sort-order" class="help-block hide">
+							This option determines how albums are sorted in both Tag and Album views.
+
+							Options are:
+								"by Album" - Albums in the library will be listed alphabetically, irrespective of the artist,
+							    "by Artist" - Artists, and the albums for each artist, will be sorted alphabetically,
+							    "by Artist/Year" - Artists will be listed alphabetically and the albums for each artist will be sorted chronologically,
+							    "by Year" - Albums in the library will be listed chronologically, irrespective of the artist.
+
+							NOTE:
+							    When sorted by Year if not all tracks in the album have the same Year tag then the latest year will be used.
+							    If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
+						</span>
+	                </div>
+
+
 
 				</div>
 		    	</fieldset>
