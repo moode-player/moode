@@ -34,7 +34,8 @@ Updates
 - UPD: Deprecate librespot armv6l binary
 - UPD: Add DSD rate to extra metadata
 - UPD: Add -D option to moodeutl (delete session var)
-- UPD: Context menu close by click anywhere off menu
+- UPD: Add click anywhere off context menu to close
+- UPD: Disable apt-daily and apt-daily-upgrade
 
 Bug fixes
 
