@@ -93,8 +93,8 @@
 	</div>
 	<div class="modal-body" id="container-appearance">
 		<form class="form-horizontal" action="" method="">
-			<h5>Theme and backgrounds</h5>
-		    	<fieldset>
+			<div id='accordion'>
+			<h5 style="cursor:pointer;">Theme and backgrounds<span class="accordion-open">&nbsp;&#x25ba;</span></h5>
 				<div class="control-group">
    	                <label class="control-label" for="theme-name">Theme</label>
 	                <div class="controls">
@@ -300,10 +300,8 @@
 	                    </span>
 	                </div>
 				</div>
-		    	</fieldset>
 
-			<h5>Library Options</h5>
-		    	<fieldset>
+			<h5 style="cursor:pointer;">Library Options<span class="accordion-open">&nbsp;&#x25ba;</span></h5>
 				<div class="control-group">
    	                <label class="control-label" for="instant-play-action">Instant play action</label>
 	                <div class="controls">
@@ -566,10 +564,8 @@
  	                    </span>
  	                </div>
 				</div>
-		    	</fieldset>
 
-			<h5>CoverView Options</h5>
-		    	<fieldset>
+			<h5 style="cursor:pointer;">CoverView Options<span class="accordion-open">&nbsp;&#x25ba;</span></h5>
 				<div class="control-group">
    	                <label class="control-label" for="scnsaver-timeout">Automatic display</label>
 	                <div class="controls">
@@ -627,10 +623,8 @@
 	                    </span>
 	                </div>
 				</div>
-		    	</fieldset>
 
-			<h5>Other options</h5>
-		    	<fieldset>
+			<h5 style="cursor:pointer;">Other options<span class="accordion-open">&nbsp;&#x25ba;</span></h5>
 				<div class="control-group">
 	                <label class="control-label" for="ashuffle-filter">Auto-shuffle filter</label>
 	                <div class="controls">
@@ -686,7 +680,7 @@
 	                    </span>
 	                </div>
 				</div>
-		    	</fieldset>
+			</div> <!-- accordion -->
 		</form>
 	</div>
 
@@ -704,147 +698,144 @@
 	</div>
 	<div class="modal-body" id="container-clockradio">
 		<form class="form-horizontal" action="" method="">
-		    	<fieldset>
-				<div class="control-group">
-	                <label class="control-label" for="clockradio-mode">Mode</label>
+			<div class="control-group">
+                <label class="control-label" for="clockradio-mode">Mode</label>
+                <div class="controls">
+					<div class="btn-group bootstrap-select" style="width: 120px;">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="clockradio-mode" class="filter-option pull-left">
+								<span></span> <!-- selection from dropdown gets placed here -->
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Disabled</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Clock Radio</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Sleep Timer</span></a></li>
+							</ul>
+						</div>
+					</div>
+                </div>
+
+				<div id="clockradio-ctl-grp1">
+	                <label class="control-label" for="clockradio-playname">Play</label>
 	                <div class="controls">
-						<div class="btn-group bootstrap-select" style="width: 120px;">
+	                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-playname" class="help-block hide">
+		                    Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
+	                    </span>
+	                </div>
+
+	                <label class="control-label" for="clockradio-starttime-hh">Start time</label>
+	                <div class="controls">
+	                    <input id="clockradio-starttime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
+	                    <span>:</span>
+	                    <input id="clockradio-starttime-mm" class="input-mini input-height-x" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
+
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="clockradio-mode" class="filter-option pull-left">
+								<div id="clockradio-starttime-ampm" class="filter-option pull-left">
 									<span></span> <!-- selection from dropdown gets placed here -->
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Disabled</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Clock Radio</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-mode-sel"><span class="text">Sleep Timer</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">AM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">PM</span></a></li>
 								</ul>
 							</div>
 						</div>
 	                </div>
 
-					<div id="clockradio-ctl-grp1">
-		                <label class="control-label" for="clockradio-playname">Play</label>
-		                <div class="controls">
-		                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-playname" class="help-block hide">
-			                    Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
-		                    </span>
-		                </div>
+	                <label class="control-label" for="clockradio-start-mon"></label>
+	                <div class="controls">
+						<div class="checkbox-grp">
+							<input id="clockradio-start-mon" class="checkbox-ctl" type="checkbox" name="clockradio-start-mon">Mon
+							<input id="clockradio-start-tue" class="checkbox-ctl" type="checkbox" name="clockradio-start-tue">Tue
+							<input id="clockradio-start-wed" class="checkbox-ctl" type="checkbox" name="clockradio-start-wed">Wed
+							<input id="clockradio-start-thu" class="checkbox-ctl" type="checkbox" name="clockradio-start-thu">Thu
+							<input id="clockradio-start-fri" class="checkbox-ctl" type="checkbox" name="clockradio-start-fri">Fri
+							<span>&nbsp;&nbsp;&nbsp;</span>
+							<input id="clockradio-start-sat" class="checkbox-ctl" type="checkbox" name="clockradio-start-sat">Sat
+							<input id="clockradio-start-sun" class="checkbox-ctl" type="checkbox" name="clockradio-start-sun">Sun
+						</div>
+	                </div>
+				</div>
 
-		                <label class="control-label" for="clockradio-starttime-hh">Start time</label>
-		                <div class="controls">
-		                    <input id="clockradio-starttime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_starttime-hh" value="">
-		                    <span>:</span>
-		                    <input id="clockradio-starttime-mm" class="input-mini input-height-x" type="number" maxlength="2" min="0" max="59" name="clockradio_starttime-mm" value="">
+				<div id="clockradio-ctl-grp2">
+	                <label class="control-label" for="clockradio-stoptime-hh">Stop time</label>
+	                <div class="controls">
+	                    <input id="clockradio-stoptime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
+	                    <span>:</span>
+	                    <input id="clockradio-stoptime-mm" class="input-mini input-height-x" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
 
-							<div class="btn-group bootstrap-select bootstrap-select-mini">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="clockradio-starttime-ampm" class="filter-option pull-left">
-										<span></span> <!-- selection from dropdown gets placed here -->
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">AM</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">PM</span></a></li>
-									</ul>
-								</div>
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="clockradio-stoptime-ampm" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">AM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">PM</span></a></li>
+								</ul>
 							</div>
-		                </div>
+						</div>
+	                </div>
 
-						<!-- r44d -->
-		                <label class="control-label" for="clockradio-start-mon"></label>
-		                <div class="controls">
-							<div class="checkbox-grp">
-								<input id="clockradio-start-mon" class="checkbox-ctl" type="checkbox" name="clockradio-start-mon">Mon
-								<input id="clockradio-start-tue" class="checkbox-ctl" type="checkbox" name="clockradio-start-tue">Tue
-								<input id="clockradio-start-wed" class="checkbox-ctl" type="checkbox" name="clockradio-start-wed">Wed
-								<input id="clockradio-start-thu" class="checkbox-ctl" type="checkbox" name="clockradio-start-thu">Thu
-								<input id="clockradio-start-fri" class="checkbox-ctl" type="checkbox" name="clockradio-start-fri">Fri
-								<span>&nbsp;&nbsp;&nbsp;</span>
-								<input id="clockradio-start-sat" class="checkbox-ctl" type="checkbox" name="clockradio-start-sat">Sat
-								<input id="clockradio-start-sun" class="checkbox-ctl" type="checkbox" name="clockradio-start-sun">Sun
+					<!-- r44d -->
+	                <label class="control-label" for="clockradio-stop-mon"></label>
+	                <div class="controls">
+						<div class="checkbox-grp">
+							<input id="clockradio-stop-mon" class="checkbox-ctl" type="checkbox" name="clockradio-stop-mon">Mon
+							<input id="clockradio-stop-tue" class="checkbox-ctl" type="checkbox" name="clockradio-stop-tue">Tue
+							<input id="clockradio-stop-wed" class="checkbox-ctl" type="checkbox" name="clockradio-stop-wed">Wed
+							<input id="clockradio-stop-thu" class="checkbox-ctl" type="checkbox" name="clockradio-stop-thu">Thu
+							<input id="clockradio-stop-fri" class="checkbox-ctl" type="checkbox" name="clockradio-stop-fri">Fri
+							<span>&nbsp;&nbsp;&nbsp;</span>
+							<input id="clockradio-stop-sat" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sat">Sat
+							<input id="clockradio-stop-sun" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sun">Sun
+						</div>
+	                </div>
+
+	                <label class="control-label" for="clockradio-action">Action</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select" style="width: 120px;">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="clockradio-action" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">None</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Reboot</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Shutdown</span></a></li>
+								</ul>
 							</div>
-		                </div>
-					</div>
+						</div>
+						<span class="control-aftertext">after stop
+						<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a></span>
+						<span id="info-action" class="help-block hide">
+							NOTE: The Reboot action is initiated 45 seconds after the specified stop time.
+						</span>
+	                </div>
+				</div>
 
-					<div id="clockradio-ctl-grp2">
-		                <label class="control-label" for="clockradio-stoptime-hh">Stop time</label>
-		                <div class="controls">
-		                    <input id="clockradio-stoptime-hh" class="input-mini input-height-x" type="number" maxlength="2" min="1" max="12" name="clockradio_stoptime-hh" value="">
-		                    <span>:</span>
-		                    <input id="clockradio-stoptime-mm" class="input-mini input-height-x" type="number" maxlength="2" min="0" max="59" name="clockradio_stoptime-mm" value="">
+				<div id="clockradio-ctl-grp3">
+	                <label class="control-label" for="clockradio-volume">Volume</label>
+	                <div class="controls">
+	                    <input id="clockradio-volume" class="input-mini input-height-x" type="number" min="1" max="100" name="clockradio_volume" value="">
+	                </div>
+				</div>
 
-							<div class="btn-group bootstrap-select bootstrap-select-mini">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="clockradio-stoptime-ampm" class="filter-option pull-left">
-										<span></span> <!-- selection from dropdown gets placed here -->
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">AM</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">PM</span></a></li>
-									</ul>
-								</div>
-							</div>
-		                </div>
-
-						<!-- r44d -->
-		                <label class="control-label" for="clockradio-stop-mon"></label>
-		                <div class="controls">
-							<div class="checkbox-grp">
-								<input id="clockradio-stop-mon" class="checkbox-ctl" type="checkbox" name="clockradio-stop-mon">Mon
-								<input id="clockradio-stop-tue" class="checkbox-ctl" type="checkbox" name="clockradio-stop-tue">Tue
-								<input id="clockradio-stop-wed" class="checkbox-ctl" type="checkbox" name="clockradio-stop-wed">Wed
-								<input id="clockradio-stop-thu" class="checkbox-ctl" type="checkbox" name="clockradio-stop-thu">Thu
-								<input id="clockradio-stop-fri" class="checkbox-ctl" type="checkbox" name="clockradio-stop-fri">Fri
-								<span>&nbsp;&nbsp;&nbsp;</span>
-								<input id="clockradio-stop-sat" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sat">Sat
-								<input id="clockradio-stop-sun" class="checkbox-ctl" type="checkbox" name="clockradio-stop-sun">Sun
-							</div>
-		                </div>
-
-		                <label class="control-label" for="clockradio-action">Action</label>
-		                <div class="controls">
-	   						<div class="btn-group bootstrap-select" style="width: 120px;">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="clockradio-action" class="filter-option pull-left">
-										<span></span> <!-- selection from dropdown gets placed here -->
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">None</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Reboot</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Shutdown</span></a></li>
-									</ul>
-								</div>
-							</div>
-							<span class="control-aftertext">after stop
-							<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a></span>
-							<span id="info-action" class="help-block hide">
-								NOTE: The Reboot action is initiated 45 seconds after the specified stop time.
-							</span>
-		                </div>
-					</div>
-
-					<div id="clockradio-ctl-grp3">
-		                <label class="control-label" for="clockradio-volume">Volume</label>
-		                <div class="controls">
-		                    <input id="clockradio-volume" class="input-mini input-height-x" type="number" min="1" max="100" name="clockradio_volume" value="">
-		                </div>
-					</div>
-
-	            </div>
-		    	</fieldset>
+            </div>
 		</form>
 	</div>
 	<div class="modal-footer">

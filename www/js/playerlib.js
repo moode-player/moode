@@ -2950,3 +2950,14 @@ $('#context-backdrop').click(function(e){
 	$('.context-menu').removeClass('open');
 	$('.context-menu-lib').removeClass('open');
 });
+
+$('#accordion > h5').click(function(){
+    var contentDiv = $(this).next();
+    if (contentDiv.is(":visible")) {
+        contentDiv.slideUp();
+    }
+    else {
+        $('#accordion > div').slideUp();
+        contentDiv.slideDown();
+    }
+});

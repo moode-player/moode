@@ -492,6 +492,9 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 /* Show/hide password plaintext */
 .show-hide-password {font-size:18px;margin-left:.5em}
 
+/* accordion indicators */
+.accordion-open {font-weight:600;font-size:.8em;}
+
 /* https: //codepen.io/mallendeo/pen/eLIiG */
 .toggle {background-color:rgba(128,128,128,0.3);}
 .toggle.toggle-off {background-color:rgba(128,128,128,0.2);}

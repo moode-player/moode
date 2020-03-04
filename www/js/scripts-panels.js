@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -27,6 +27,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
 	$('#menu-bottom').css('display', 'flex');
+    $('#accordion > div').hide();
 
 	// compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
