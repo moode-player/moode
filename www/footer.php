@@ -435,6 +435,7 @@
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Album</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Album/Year</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Artist/Year</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Year</span></a></li>
 								</ul>
 							</div>
@@ -444,6 +445,7 @@
 							<b>by Album:</b> Albums are sorted alphabetically.<br>
 							<b>by Album/Year:</b> Albums are sorted alphabetically in the full list. When an Artist is clicked albums for the artist are sorted chronologically<br>
 	                        <b>by Artist:</b> Albums for each artist are sorted alphabetically.<br>
+							<b>by Artist/Year:</b> Albums for each artist are sorted chronologically.<br>
 	                        <b>by Year:</b> Albums are sorted chronologically.<br>
 	                        NOTE: When sorted by Year if not all tracks in the album have the same Year tag then the latest year will be used. If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
 						</span>
