@@ -370,7 +370,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#volumedn{margin-right:.5em;}
 	#volumeup{margin-left:.5em;}
 	#extratags {padding-top:5px;}
-	#container-customize, #container-clockradio {max-height: 280px;}
+	#container-appearance, #container-clockradio {max-height: 280px;}
 	.database-radio li {width:9em;font-size:0.8em;height:auto;}
 	#albumcovers li {width:9em;font-size:0.8em;height:auto;}
 	#ss-currentsong {font-size:1.4em;}

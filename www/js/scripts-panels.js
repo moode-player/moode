@@ -172,11 +172,12 @@ jQuery(document).ready(function($) { 'use strict';
         $('#playhistory-hide').css('display', 'none');
     }
 
-    // Set correct header text
-    $('#tagview-header-text, #albumview-header-text').text('Albums' +
-        (SESSION.json['library_album_sort'] != 'Album' ? ' by ' + SESSION.json['library_album_sort'] : ''));
+    // Set header text for Tag and Album views
+    setTagViewHeaderText();
+    setAlbumViewHeaderText();
+
     // Hide alphabits index if indicated
-    if (SESSION.json['library_album_sort'] == 'Year') {
+    if (SESSION.json['library_albumview_sort'] == 'Year') {
         $('#index-albums, #index-albumcovers').hide();
     }
 
@@ -338,10 +339,10 @@ jQuery(document).ready(function($) { 'use strict';
         $('#top-columns, #bottom-row').css('display', 'flex');
         $('.recently-added').css('margin-left', '-.25em');
         $('#lib-albumcover, #lib-albumcover-header').hide();
-        $('#tagview-header-text').text('Albums' + (SESSION.json['library_album_sort'] != 'Album' ? ' by ' + SESSION.json['library_album_sort'] : ''));
+        setTagViewHeaderText();
 
         $('#index-albumcovers').hide();
-        if (SESSION.json['library_album_sort'] == 'Year') {
+        if (SESSION.json['library_albumview_sort'] == 'Year') {
             $('#index-albums').hide();
         }
 
@@ -395,12 +396,12 @@ jQuery(document).ready(function($) { 'use strict';
         $('#top-columns, #bottom-row').css('display', 'none');
         $('.recently-added').css('margin-left', '');
         $('#lib-albumcover, #lib-albumcover-header').show();
-        $('#albumview-header-text').text('Albums' + (SESSION.json['library_album_sort'] != 'Album' ? ' by ' + SESSION.json['library_album_sort'] : ''));
+        setAlbumViewHeaderText();
 
         $('#lib-albumcover').css('height', '100%');
         $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 
-        if (SESSION.json['library_album_sort'] == 'Year') {
+        if (SESSION.json['library_albumview_sort'] == 'Year') {
             $('#index-albumcovers').hide();
         }
         else {

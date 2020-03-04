@@ -143,7 +143,7 @@ function groupLib(fullLib) {
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var artist = findAlbumProp(albumTracks, 'artist');
 		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
-        //var year = SESSION.json['library_album_sort'] == 'Year' ? getYear(albumTracks) : '';
+        //var year = SESSION.json['library_albumview_sort'] == 'Year' ? getYear(albumTracks) : '';
         var year = getYear(albumTracks);
 		return {
 			last_modified: getLastModified(albumTracks),
@@ -165,42 +165,42 @@ function groupLib(fullLib) {
 			return collator.compare(removeArticles(a['album_artist'] || a['artist']), removeArticles(b['album_artist'] || b['artist']));
 		});
 
-        if (SESSION.json['library_album_sort'] == 'Artist') {
+        if (SESSION.json['library_albumview_sort'] == 'Artist') {
             allAlbumCovers.sort(function(a, b) {
                 return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
     		});
         }
-        else if (SESSION.json['library_album_sort'] == 'Album') {
+        else if (SESSION.json['library_albumview_sort'] == 'Album') {
             allAlbumCovers.sort(function(a, b) {
                 return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
             });
         }
-        else if (SESSION.json['library_album_sort'] == 'Year') {
+        else if (SESSION.json['library_albumview_sort'] == 'Year') {
             allAlbumCovers.sort(function(a, b) {
                 return (collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
             });
         }
-        else if (SESSION.json['library_album_sort'] == 'Artist/Year') {
+        else if (SESSION.json['library_albumview_sort'] == 'Artist/Year') {
             allAlbumCovers.sort(function(a, b) {
                 return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(a['year'],b['year']));
             });
         }
-        if (SESSION.json['tag_album_sort'] == 'Artist') { // tag view
+        if (SESSION.json['library_tagview_sort'] == 'Artist') { // tag view
 			allAlbums.sort(function(a, b) {
 				return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
 			});
         }
-        else if (SESSION.json['tag_album_sort'] == 'Album' || SESSION.json['tag_album_sort'] == 'Album/Year') {
+        else if (SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') {
             allAlbums.sort(function(a, b) {
                 return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
             });
         }
-        else if (SESSION.json['tag_album_sort'] == 'Year') {
+        else if (SESSION.json['library_tagview_sort'] == 'Year') {
             allAlbums.sort(function(a, b) {
                 return (collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
             });
         }
-        else if (SESSION.json['tag_album_sort'] == 'Artist/Year') {
+        else if (SESSION.json['library_tagview_sort'] == 'Artist/Year') {
             allAlbums.sort(function(a, b) {
                 return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(a['year'],b['year']));
             });
@@ -214,56 +214,56 @@ function groupLib(fullLib) {
 			return a > b ? 1 : (a < b ? -1 : 0);
 		});
 
-        if (SESSION.json['library_album_sort'] == 'Artist') {
+        if (SESSION.json['library_albumview_sort'] == 'Artist') {
             allAlbumCovers.sort(function(a, b) {
     			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
     			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
     			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
     		});
         }
-        else if (SESSION.json['library_album_sort'] == 'Album') {
+        else if (SESSION.json['library_albumview_sort'] == 'Album') {
             allAlbumCovers.sort(function(a, b) {
                 a = removeArticles(a['album'].toLowerCase());
     			b = removeArticles(b['album'].toLowerCase());
     			return a > b ? 1 : (a < b ? -1 : 0);
     		});
         }
-        else if (SESSION.json['library_album_sort'] == 'Year') {
+        else if (SESSION.json['library_albumview_sort'] == 'Year') {
            allAlbumCovers.sort(function(a, b) {
     			var x1 = a['year'], x2 = b['year'];
     			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
     			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
     		});
         }
-        else if (SESSION.json['library_album_sort'] == 'Artist/Year') {
+        else if (SESSION.json['library_albumview_sort'] == 'Artist/Year') {
             allAlbumCovers.sort(function(a, b) {
     			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
     			var y1 = a['year'], y2 = b['year'];
     			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
     		});
         }
-        if (SESSION.json['tag_album_sort'] == 'Artist') { // tag view
+        if (SESSION.json['library_tagview_sort'] == 'Artist') { // tag view
             allAlbums.sort(function(a, b) {
     			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
     			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
     			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-    		});				
+    		});
         }
-        else if (SESSION.json['tag_album_sort'] == 'Album' || SESSION.json['tag_album_sort'] == 'Album/Year') {
+        else if (SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') {
             allAlbums.sort(function(a, b) {
                 a = removeArticles(a['album'].toLowerCase());
     			b = removeArticles(b['album'].toLowerCase());
     			return a > b ? 1 : (a < b ? -1 : 0);
-    		});	
+    		});
         }
-        else if (SESSION.json['tag_album_sort'] == 'Year') {
+        else if (SESSION.json['library_tagview_sort'] == 'Year') {
             allAlbums.sort(function(a, b) {
     			var x1 = a['year'], x2 = b['year'];
     			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
     			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
     		});
- 		}		
-        else if (SESSION.json['tag_album_sort'] == 'Artist/Year') {
+ 		}
+        else if (SESSION.json['library_tagview_sort'] == 'Artist/Year') {
             allAlbums.sort(function(a, b) {
     			var x1 = removeArticles(a['artist']).toLowerCase(), x2 = removeArticles(b['artist']).toLowerCase();
     			var y1 = a['year'], y2 = b['year'];
@@ -376,7 +376,7 @@ function filterSongs() {
 
 	if (LIB.filters.year.length) {
 		filteredSongs = filteredSongs.filter(filterByYear);
-	}	
+	}
 }
 
 function filterLib() {
@@ -428,7 +428,8 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 	}
 
 	filterLib();
-	if (SESSION.json['tag_album_sort'] == 'Album/Year' && GLOBAL.ArtistSelected) { // sort array by year
+
+	if (SESSION.json['library_tagview_sort'] == 'Album/Year' && GLOBAL.ArtistSelected) { // sort array by year
 		filteredAlbums.sort(function(a, b) {
 		    return parseInt(a.year) - parseInt(b.year);
 		});
@@ -436,6 +437,7 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 		//    return parseInt(a.year) - parseInt(b.year);
 		//});
 	}
+
 	renderFunc();
 }
 
@@ -655,6 +657,7 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 	LIB.filters.albums.length = 0;
     LIB.recentlyAddedClicked = false;
 	UI.libPos.fill(-2);
+    setTagViewHeaderText();
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.genres, renderGenres);
 	$("#searchResetLib").hide();
@@ -667,6 +670,7 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
     LIB.recentlyAddedClicked = false;
+    setTagViewHeaderText();
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
@@ -691,6 +695,7 @@ $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
 	else {
 		LIB.filters.albums.length = 0;
         LIB.recentlyAddedClicked = false;
+        setTagViewHeaderText();
 		UI.libPos.fill(-2);
 		clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
 	}
@@ -717,7 +722,10 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	UI.libPos[2] = pos;
 	LIB.filters.albums.length = 0;
 	storeLibPos(UI.libPos);
-	if (SESSION.json['tag_album_sort'] == 'Album/Year') GLOBAL.ArtistSelected = true;
+	if (SESSION.json['library_tagview_sort'] == 'Album/Year') {
+        GLOBAL.ArtistSelected = true;
+        $('#tagview-header-text').text('Albums by Year');
+    }
 	clickedLibItem(e, filteredArtists[pos], LIB.filters.artists, renderArtists);
 	if (UI.mobile) {
 		$('#top-columns').animate({left: '-50%'}, 200);

@@ -86,12 +86,12 @@
 </div>
 
 <!-- APPEARANCE -->
-<div id="customize-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="customize-modal-label" aria-hidden="true">
+<div id="appearance-modal" class="modal modal-sm hide fade" tabindex="-1" role="dialog" aria-labelledby="appearance-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="customize-modal-label">Appearance</h3>
+		<h3 id="appearance-modal-label">Appearance</h3>
 	</div>
-	<div class="modal-body" id="container-customize">
+	<div class="modal-body" id="container-appearance">
 		<form class="form-horizontal" action="" method="">
 			<h5>Theme and backgrounds</h5>
 		    	<fieldset>
@@ -307,7 +307,7 @@
 				<div class="control-group">
    	                <label class="control-label" for="instant-play-action">Instant play action</label>
 	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+   						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="instant-play-action" class="filter-option pull-left">
 									<span></span> <!-- selection from dropdown gets placed here -->
@@ -349,64 +349,198 @@
 	                    </span>
 	                </div>
 
-					<label class="control-label" for="tagviewcovers-display">Show covers in Tag view</label>
+					<label class="control-label" for="show-tagview-covers">Show covers in Tag view</label>
  	                <div class="controls">
-    						<div class="btn-group bootstrap-select bootstrap-select-mini">
- 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
- 								<div id="tagviewcovers-display" class="filter-option pull-left">
- 									<span></span> <!-- selection from dropdown gets placed here -->
- 								</div>&nbsp;
- 								<div class="caret"></div>
- 							</button>
- 							<div class="dropdown-menu open">
- 								<ul class="dropdown-menu custom-select inner" role="menu">
- 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagviewcovers-display-yn"><span class="text">Yes</span></a></li>
- 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagviewcovers-display-yn"><span class="text">No</span></a></li>
- 								</ul>
- 							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-tagviewcovers-display" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-tagviewcovers-display" class="help-block hide">
- 		                    	Show covers in the Album column of Library Tag view.<br>
- 	                    </span>
- 	                </div>
-
-					<label class="control-label" for="album-sort-order">Album sort order</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="album-sort-order" class="filter-option pull-left">
+								<div id="show-tagview-covers" class="filter-option pull-left">
 									<span></span> <!-- selection from dropdown gets placed here -->
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="album-sort-order-sel"><span class="text">by Album</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="album-sort-order-sel"><span class="text">by Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="album-sort-order-sel"><span class="text">by Artist/Year</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="album-sort-order-sel"><span class="text">by Year</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-show-tagview-covers" class="help-block hide">
+ 		                    	Show covers in the Album column of Library Tag view.<br>
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="albumview-sort-order">Albumview sort order</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="albumview-sort-order" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="albumview-sort-order-sel"><span class="text">by Album</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="albumview-sort-order-sel"><span class="text">by Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="albumview-sort-order-sel"><span class="text">by Artist/Year</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="albumview-sort-order-sel"><span class="text">by Year</span></a></li>
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-album-sort-order" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-album-sort-order" class="help-block hide">
-							This option determines how albums are sorted in both Tag and Album views.
-
-							Options are:
-								"by Album" - Albums in the library will be listed alphabetically, irrespective of the artist,
-							    "by Artist" - Artists, and the albums for each artist, will be sorted alphabetically,
-							    "by Artist/Year" - Artists will be listed alphabetically and the albums for each artist will be sorted chronologically,
-							    "by Year" - Albums in the library will be listed chronologically, irrespective of the artist.
-
-							NOTE:
-							    When sorted by Year if not all tracks in the album have the same Year tag then the latest year will be used.
-							    If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
+						<a aria-label="Help" class="info-toggle" data-cmd="info-albumview-sort-order" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-albumview-sort-order" class="help-block hide">
+							<b>by Album:</b> Albums are sorted alphabetically.<br>
+	                        <b>by Artist:</b> Albums for each artist are sorted alphabetically.<br>
+	                        <b>by Artist/Year:</b> Albums for each artist are sorted chronologically.<br>
+	                        <b>by Year:</b> Albums are sorted chronologically.<br>
+	                        NOTE: When sorted by Year if not all tracks in the album have the same Year tag then the latest year will be used. If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
 						</span>
 	                </div>
 
+					<label class="control-label" for="tagview-sort-order">Tagview sort order</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tagview-sort-order" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Album</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Album/Year</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tagview-sort-order-sel"><span class="text">by Year</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tagview-sort-order" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-tagview-sort-order" class="help-block hide">
+							<b>by Album:</b> Albums are sorted alphabetically.<br>
+							<b>by Album/Year:</b> Albums are sorted alphabetically in the full list. When an Artist is clicked albums for the artist are sorted chronologically<br>
+	                        <b>by Artist:</b> Albums for each artist are sorted alphabetically.<br>
+	                        <b>by Year:</b> Albums are sorted chronologically.<br>
+	                        NOTE: When sorted by Year if not all tracks in the album have the same Year tag then the latest year will be used. If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
+						</span>
+	                </div>
 
+					<label class="control-label" for="compilation-identifier">Compilation identifier</label>
+	                <div class="controls">
+	                    <input id="compilation-identifier" class="input-xlarge input-height-x" type="text">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-compilation-identifier" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-compilation-identifier" class="help-block hide">
+							Enter the text that is present in the AlbumArtist tag to identify tracks as belonging to a compilation album. The default is "Various Artists".
+						</span>
+	                </div>
 
+					<label class="control-label" for="recently-added">Recently added</label>
+ 	                <div class="controls">
+    						<div class="btn-group bootstrap-select select-medium">
+ 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+ 								<div id="recently-added" class="filter-option pull-left">
+ 									<span></span> <!-- selection from dropdown gets placed here -->
+ 								</div>&nbsp;
+ 								<div class="caret"></div>
+ 							</button>
+ 							<div class="dropdown-menu open">
+ 								<ul class="dropdown-menu custom-select inner" role="menu">
+ 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Week</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Month</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">3 Months</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">6 Months</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recently-added-sel"><span class="text">1 Year</span></a></li>
+ 								</ul>
+ 							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-recently-added" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-recently-added" class="help-block hide">
+ 		                    Time period used to filter the Library for recently added albums. The default is 1 month.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="ignore-articles">Ignore articles</label>
+	                <div class="controls">
+	                    <input id="ignore-articles" class="input-xlarge input-height-x" type="text">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-ignore-articles" class="help-block hide">
+							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed.<br>
+							NOTE: A blank list will result in "None" and will effectively disable the option.
+						</span>
+	                </div>
+
+					<label class="control-label" for="utf8-char-filter">UTF8 character filter</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="utf8-char-filter" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-utf8-char-filter" class="help-block hide">
+							Many Chinese songs and song directories have characters that are not UTF8 encoded causing the Library loader to fail. Replacing the non-UTF8 characters with a UTF8 compliant character solves this problem.<br>
+							NOTE: setting this to Yes may impact the performance of the Library loader.<br>
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="hires-thumbnails">Hi-res thumbnails</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="hires-thumbnails" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">Auto</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">100px</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">200px</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">300px</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-hires-thumbnails" class="help-block hide">
+							Tell the thumbnail generator to output high-resolution images suitable for large displays or high DPI (Retina) screens. The Auto setting will use the device's pixel ratio to determine an optimum image size and quality while maintaining the smallest file size. Manual settings will result in images of the specified size using a quality factor of 75.<br>
+							NOTE: larger images may result in slower loading of thumbnail images into the Album Cover panel.<br>
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="cover-search-priority">Cover search priority</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="cover-search-priority" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Embedded</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-search-priority-sel"><span class="text">Cover file</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-prioritys" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-cover-search-priority" class="help-block hide">
+							This option determines whether the Cover Art extractor looks first for Embedded covers or a Cover files.<br>
+ 	                    </span>
+ 	                </div>
 				</div>
 		    	</fieldset>
 

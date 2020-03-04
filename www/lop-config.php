@@ -30,8 +30,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Detect changes requiring cache delete
 	if ($_POST['config']['ignore_articles'] != $_SESSION['ignore_articles'] ||
 		$_POST['config']['library_utf8rep'] != $_SESSION['library_utf8rep'] ||
-		$_POST['config']['library_album_sort'] != $_SESSION['library_album_sort']) {
-
+		$_POST['config']['library_albumview_sort'] != $_SESSION['library_albumview_sort'] ||
+		$_POST['config']['library_tagview_sort'] != $_SESSION['library_tagview_sort']
+	) {
 		clearLibCache();
 	}
 
@@ -53,11 +54,16 @@ $_select['library_show_genres'] .= "<option value=\"No\" " . (($_SESSION['librar
 // Show tagview covers
 $_select['library_tagview_covers'] .= "<option value=\"Yes\" " . (($_SESSION['library_tagview_covers'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['library_tagview_covers'] .= "<option value=\"No\" " . (($_SESSION['library_tagview_covers'] == 'No') ? "selected" : "") . ">No</option>\n";
-// Album sort order
-$_select['library_album_sort'] .= "<option value=\"Album\" " . (($_SESSION['library_album_sort'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
-$_select['library_album_sort'] .= "<option value=\"Artist\" " . (($_SESSION['library_album_sort'] == 'Artist') ? "selected" : "") . ">by Artist</option>\n";
-$_select['library_album_sort'] .= "<option value=\"Artist/Year\" " . (($_SESSION['library_album_sort'] == 'Artist/Year') ? "selected" : "") . ">by Artist/Year</option>\n";
-$_select['library_album_sort'] .= "<option value=\"Year\" " . (($_SESSION['library_album_sort'] == 'Year') ? "selected" : "") . ">by Year</option>\n";
+// Albumview sort order
+$_select['library_albumview_sort'] .= "<option value=\"Album\" " . (($_SESSION['library_albumview_sort'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
+$_select['library_albumview_sort'] .= "<option value=\"Artist\" " . (($_SESSION['library_albumview_sort'] == 'Artist') ? "selected" : "") . ">by Artist</option>\n";
+$_select['library_albumview_sort'] .= "<option value=\"Artist/Year\" " . (($_SESSION['library_albumview_sort'] == 'Artist/Year') ? "selected" : "") . ">by Artist/Year</option>\n";
+$_select['library_albumview_sort'] .= "<option value=\"Year\" " . (($_SESSION['library_albumview_sort'] == 'Year') ? "selected" : "") . ">by Year</option>\n";
+// Tagview sort order
+$_select['library_tagview_sort'] .= "<option value=\"Album\" " . (($_SESSION['library_tagview_sort'] == 'Album') ? "selected" : "") . ">by Album</option>\n";
+$_select['library_tagview_sort'] .= "<option value=\"Album/Year\" " . (($_SESSION['library_tagview_sort'] == 'Album/Year') ? "selected" : "") . ">by Album/Year</option>\n";
+$_select['library_tagview_sort'] .= "<option value=\"Artist\" " . (($_SESSION['library_tagview_sort'] == 'Artist') ? "selected" : "") . ">by Artist</option>\n";
+$_select['library_tagview_sort'] .= "<option value=\"Year\" " . (($_SESSION['library_tagview_sort'] == 'Year') ? "selected" : "") . ">by Year</option>\n";
 // Compilation identifier
 $_select['library_comp_id'] = $_SESSION['library_comp_id'];
 // Recently added NOTE: library_recently_added is in milliseconds, 1 day = 86400000 ms
@@ -65,7 +71,7 @@ $_select['library_recently_added'] .= "<option value=\"604800000\" " . (($_SESSI
 $_select['library_recently_added'] .= "<option value=\"2592000000\" " . (($_SESSION['library_recently_added'] == '2592000000') ? "selected" : "") . ">1 Month</option>\n";
 $_select['library_recently_added'] .= "<option value=\"7776000000\" " . (($_SESSION['library_recently_added'] == '7776000000') ? "selected" : "") . ">3 Months</option>\n";
 $_select['library_recently_added'] .= "<option value=\"15552000000\" " . (($_SESSION['library_recently_added'] == '15552000000') ? "selected" : "") . ">6 Months</option>\n";
-$_select['library_recently_added'] .= "<option value=\"31536000000\" " . (($_SESSION['library_recently_added'] == '31536000000') ? "selected" : "") . ">1 year</option>\n";
+$_select['library_recently_added'] .= "<option value=\"31536000000\" " . (($_SESSION['library_recently_added'] == '31536000000') ? "selected" : "") . ">1 Year</option>\n";
 // Ignore articles
 $_select['ignore_articles'] = empty($_SESSION['ignore_articles']) ? 'None' : $_SESSION['ignore_articles'];
 // Library utf8 replace

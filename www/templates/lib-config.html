@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 6.5.0
  *
  */
 -->
@@ -60,6 +60,7 @@
                 </span>
 			</p>
 
+			<p>
 			<div class="toggle">
 				<label class="toggle-radio" for="toggle_usb_auto_updatedb1">YES</label>
 				$_select[usb_auto_updatedb1]
@@ -72,17 +73,19 @@
 			<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em;">
 				Automatically update MPD database on USB insert/remove.<br>
             </span>
-
-			<legend>Album and Tag Views</legend>
-			<p>
-				<a href="lop-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Library options
 			</p>
+
 			<p>
 				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="clrlibcache" value="novalue">Delete</button>&nbsp;Library tag cache
 				<span id="info-clrlibcache" class="help-block-configs help-block-margin">
-					The cache will be regenerated the next time the Library is opened.
+					The tag cache will be regenerated the next time the Library is opened.
                 </span>
 			</p>
+
+			<legend>Album cover thumbnails</legend>
+			<!--p>
+				<a href="lop-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Library options
+			</p-->
 			<p>
 				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="updthmcache" value="novalue">Update</button>&nbsp;Album cover thumbnail cache
 			</p>
