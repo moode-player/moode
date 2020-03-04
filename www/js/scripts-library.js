@@ -478,22 +478,28 @@ var renderArtists = function() {
 }
 
 var renderAlbums = function() {
-	// Clear search filter and results
-	$('#lib-album-filter').val('');
-	$('#lib-album-filter-results').html('');
-
 	var output = '';
 	var output2 = '';
 	var activeFlag = '';
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
+    var ellipsisLimitedText = '';
 	var defCover = "this.src='images/default-cover-v6.svg'";
 
+    // Clear search filter and results
+	$('#lib-album-filter').val('');
+	$('#lib-album-filter-results').html('');
+
+    // Ellipsis limited text
+    if (SESSION.json['library_ellipsis_limited_text'] == 'Yes') {
+        ellipsisLimitedText = ' albumcover-ellipsis-limited-text';
+    }
+
 	for (var i = 0; i < filteredAlbums.length; i++) {
-		// Add "|| filteredAlbums.length = 1" to automatically highlight if only 1 album in list
-		if (LIB.filters.albums.indexOf(keyAlbum(filteredAlbums[i])) >= 0 || filteredAlbums.length == 1) {
+		// If only 1 album automatically highlight and display tracks
+		if (filteredAlbums.length == 1) {
 			activeFlag = ' active';
-			LIB.albumClicked = true; // For renderSongs() so it can decide whether to display tracks
+			LIB.albumClicked = true;
 		}
 		else {
 			activeFlag = '';
@@ -517,8 +523,8 @@ var renderAlbums = function() {
 		output2 += '<li><div class="lib-entry' + activeFlag + '">'
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
-            + '<div class="albumcover"><span class="album-name">' + filteredAlbumCovers[i].album + '</span></div>'
-            + '<span class="artist-name">' + filteredAlbumCovers[i].artist + albumViewYear + '</span></div></li>';
+            + '<div class="albumcover"><span class="album-name' + ellipsisLimitedText + '">' + filteredAlbumCovers[i].album + '</span></div>'
+            + '<span class="artist-name' + ellipsisLimitedText + '">' + filteredAlbumCovers[i].artist + albumViewYear + '</span></div></li>';
 	}
 
     // Output the lists
@@ -547,13 +553,6 @@ var renderAlbums = function() {
 		    container: $('#lib-album')
 		});
 	}
-
-    // Ellipsis limited text
-    if (SESSION.json['library_ellipsis_limited_text'] == 'Yes') {
-        setTimeout(function() {
-            $('#albumcovers .lib-entry span').addClass('albumcover-ellipsis-limited');
-        }, 500);
-    }
 
 	renderSongs();
 }
