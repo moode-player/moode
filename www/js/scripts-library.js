@@ -496,7 +496,8 @@ var renderAlbums = function() {
 	var activeFlag = '';
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
-    var ellipsisLimitedText = '';
+    var albumViewEllipsisLimited = '';
+    var tagViewEllipsisLimited = '';
 	var defCover = "this.src='images/default-cover-v6.svg'";
 
     // Clear search filter and results
@@ -505,7 +506,8 @@ var renderAlbums = function() {
 
     // Ellipsis limited text
     if (SESSION.json['library_ellipsis_limited_text'] == 'Yes') {
-        ellipsisLimitedText = ' albumcover-ellipsis-limited-text';
+        albumViewEllipsisLimited = ' albumview-ellipsis-limited-text';
+        tagViewEllipsisLimited = ' tagview-ellipsis-limited-text';
     }
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
@@ -524,20 +526,20 @@ var renderAlbums = function() {
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li><div class="lib-entry' + activeFlag + '">'
              + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
-             + '<div class="album-name">' + filteredAlbums[i].album
-             + '<br><span class="artist-name album-year">' + filteredAlbums[i].artist + tagViewYear + '</span></div></div></li>'
+             + '<div class="album-name' + tagViewEllipsisLimited + '">' + filteredAlbums[i].album
+             + '<br><span class="artist-name album-year' + tagViewEllipsisLimited + '">' + filteredAlbums[i].artist + tagViewYear + '</span></div></div></li>'
 		}
 		else {
 			output += '<li><div class="lib-entry' + activeFlag + '">'
-             + '<div class="album-name">' + filteredAlbums[i].album
-             + '<br><span class="artist-name album-year">' + filteredAlbums[i].artist + tagViewYear + '</span></div></div></li>'
+             + '<div class="album-name' + tagViewEllipsisLimited + '">' + filteredAlbums[i].album
+             + '<br><span class="artist-name album-year' + tagViewEllipsisLimited + '">' + filteredAlbums[i].artist + tagViewYear + '</span></div></div></li>'
         }
 
 		output2 += '<li><div class="lib-entry' + activeFlag + '">'
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
-            + '<div class="albumcover"><span class="album-name' + ellipsisLimitedText + '">' + filteredAlbumCovers[i].album + '</span></div>'
-            + '<span class="artist-name' + ellipsisLimitedText + '">' + filteredAlbumCovers[i].artist + albumViewYear + '</span></div></li>';
+            + '<div class="albumcover"><span class="album-name' + albumViewEllipsisLimited + '">' + filteredAlbumCovers[i].album + '</span></div>'
+            + '<span class="artist-name' + albumViewEllipsisLimited + '">' + filteredAlbumCovers[i].artist + albumViewYear + '</span></div></li>';
 	}
 
     // Output the lists
