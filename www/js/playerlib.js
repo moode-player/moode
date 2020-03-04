@@ -2632,7 +2632,7 @@ function setColors() {
 				setTimeout(function() {
 					$('.playbackknob').trigger('configure',{"bgColor":"rgba(32,32,32,0.10)"});
 					$('.volumeknob').trigger('configure',{"bgColor":"rgba(32,32,32,0.10)"});
-				}, 250);
+				}, 500); // Was 250
 			}
 		}
 		else {
@@ -2645,7 +2645,7 @@ function setColors() {
 				setTimeout(function() {
 					$('.playbackknob').trigger('configure',{"bgColor":"rgba(240,240,240,0.10)"});
 					$('.volumeknob').trigger('configure',{"bgColor":"rgba(240,240,240,0.10)"});
-				}, 250);
+				}, 500); // Was 250
 			}
 		}
 	}
@@ -2865,7 +2865,7 @@ $("#coverart-url, #playback-switch").click(function(e){
 					customScroll('albums', UI.libPos[0], 200);
 					$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
 				}
-			}, 250);
+			}, 500); // Was 250
 		}
 	}
 	else if (currentView == 'album') {
@@ -2882,7 +2882,7 @@ $("#coverart-url, #playback-switch").click(function(e){
 			if (UI.libPos[1] >= 0) {
 				customScroll('albumcovers', UI.libPos[1], 200);
 			}
-		}, 250);
+		}, 500); // Was 250
 	}
 	else if (currentView == 'radiolist' || currentView == 'radiocover') {
 		$('#library-panel').removeClass('active');

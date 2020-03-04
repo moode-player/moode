@@ -921,7 +921,7 @@ $('#database-radio').on('click', 'img', function(e) {
 
 		setTimeout(function() {
 			customScroll('radiocovers', UI.radioPos, 200);
-		}, 250);
+		}, 500); // Was 250
 	}
 
 	// Needed ?
@@ -949,7 +949,7 @@ $('#ra-toggle-view').click(function(e) {
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);
 			}
-		}, 250);
+		}, 500); // Was 250
 	}
 });
 
@@ -968,7 +968,7 @@ $('#database-radio').on('click', '.db-entry', function(e) {
 
 	setTimeout(function() {
 		customScroll('radiocovers', UI.radioPos, 200);
-	}, 250);
+	}, 500); // Was 250
 
 	return false;
 });

@@ -242,7 +242,7 @@ jQuery(document).ready(function($) { 'use strict';
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);
 			}
-		}, 250);
+		}, 500); // Was 250
 	}
     // Folder view
 	else if (currentView == 'folder') {
@@ -318,7 +318,7 @@ jQuery(document).ready(function($) { 'use strict';
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);
 			}
-		}, 250);
+		}, 500); // Was 250
 	});
     // Folder view
 	$('.folder-view-btn').click(function(e){
@@ -386,7 +386,7 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos[0] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, 250);
+		}, 500); // Was 250
 	});
     // Album view
 	$('.album-view-btn').click(function(e){
@@ -432,7 +432,7 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos[1] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, 250);
+		}, 500); // Was 250
 	});
 
 	// mute toggle
