@@ -37,6 +37,7 @@ Updates
 - UPD: Add -D option to moodeutl (delete session var)
 - UPD: Add click anywhere off context menu to close
 - UPD: Disable apt-daily and apt-daily-upgrade timers
+- UPD: Add accordion headers to Appearance dialog
 
 Bug fixes
 
