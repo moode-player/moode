@@ -349,7 +349,7 @@
 	                    </span>
 	                </div>
 
-					<label class="control-label" for="show-tagview-covers">Show covers in Tag view</label>
+					<label class="control-label" for="show-tagview-covers">Show tagview covers</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select bootstrap-select-mini">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -368,6 +368,28 @@
  						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-show-tagview-covers" class="help-block hide">
  		                    	Show covers in the Album column of Library Tag view.<br>
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="ellipsis-limited-text">Ellipsis limited text</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="ellipsis-limited-text" class="filter-option pull-left">
+									<span></span> <!-- selection from dropdown gets placed here -->
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-ellipsis-limited-text" class="help-block hide">
+ 		                    	Display ellipsis limited text underneath the cover in Album view for a more compact look.<br>
  	                    </span>
  	                </div>
 

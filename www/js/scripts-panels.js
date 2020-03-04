@@ -58,8 +58,8 @@ jQuery(document).ready(function($) { 'use strict';
 	UI.mobile = $('#mt2').css('display') == 'block' ? true : false;
 
 	// compile the ignore articles regEx
-	if (SESSION.json['ignore_articles'] != 'None') {
-		GLOBAL.regExIgnoreArticles = new RegExp('^(' + SESSION.json['ignore_articles'].split(',').join('|') + ') (.*)', 'gi');
+	if (SESSION.json['library_ignore_articles'] != 'None') {
+		GLOBAL.regExIgnoreArticles = new RegExp('^(' + SESSION.json['library_ignore_articles'].split(',').join('|') + ') (.*)', 'gi');
 		//console.log (GLOBAL.regExIgnoreArticles);
 	}
 
@@ -295,7 +295,6 @@ jQuery(document).ready(function($) { 'use strict';
 				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
 				customScroll('albumcovers', UI.libPos[1], 200);
 			}
-            /*TEST*/$('#albumcovers .lib-entry span').addClass('albumcover-ellipsis-limited');
 		}, 500);
 	}
 

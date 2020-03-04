@@ -181,6 +181,7 @@ LIBRARY_SETTINGS() {
 	echo -e "\nInstant play action\t= $library_instant_play\c"
 	echo -e "\nShow tagview genres\t= $library_show_genres\c"
 	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
+	echo -e "\nEllipsis limited text\t= $library_ellipsis_limited_text\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
 	echo -e "\nCompilation identifier\t= $library_comp_id\c"
@@ -604,6 +605,7 @@ kernel_architecture=${arr[126]}
 led_state=${arr[129]}
 library_tagview_covers=${arr[130]}
 library_tagview_sort=${arr[131]}
+library_ellipsis_limited_text=${arr[132]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

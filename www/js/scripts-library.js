@@ -388,7 +388,7 @@ function filterLib() {
 
 // Remove artcles from beginning of string
 function removeArticles(string) {
-	return SESSION.json['ignore_articles'] != 'None' ? string.replace(GLOBAL.regExIgnoreArticles, '$2') : string;
+	return SESSION.json['library_ignore_articles'] != 'None' ? string.replace(GLOBAL.regExIgnoreArticles, '$2') : string;
 }
 
 // Generate album/artist key
@@ -547,6 +547,13 @@ var renderAlbums = function() {
 		    container: $('#lib-album')
 		});
 	}
+
+    // Ellipsis limited text
+    if (SESSION.json['library_ellipsis_limited_text'] == 'Yes') {
+        setTimeout(function() {
+            $('#albumcovers .lib-entry span').addClass('albumcover-ellipsis-limited');
+        }, 500);
+    }
 
 	renderSongs();
 }

@@ -28,7 +28,7 @@ $dbh = cfgdb_connect();
 // Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Detect changes requiring cache delete
-	if ($_POST['config']['ignore_articles'] != $_SESSION['ignore_articles'] ||
+	if ($_POST['config']['library_ignore_articles'] != $_SESSION['library_ignore_articles'] ||
 		$_POST['config']['library_utf8rep'] != $_SESSION['library_utf8rep'] ||
 		$_POST['config']['library_albumview_sort'] != $_SESSION['library_albumview_sort'] ||
 		$_POST['config']['library_tagview_sort'] != $_SESSION['library_tagview_sort']
@@ -73,7 +73,7 @@ $_select['library_recently_added'] .= "<option value=\"7776000000\" " . (($_SESS
 $_select['library_recently_added'] .= "<option value=\"15552000000\" " . (($_SESSION['library_recently_added'] == '15552000000') ? "selected" : "") . ">6 Months</option>\n";
 $_select['library_recently_added'] .= "<option value=\"31536000000\" " . (($_SESSION['library_recently_added'] == '31536000000') ? "selected" : "") . ">1 Year</option>\n";
 // Ignore articles
-$_select['ignore_articles'] = empty($_SESSION['ignore_articles']) ? 'None' : $_SESSION['ignore_articles'];
+$_select['library_ignore_articles'] = empty($_SESSION['library_ignore_articles']) ? 'None' : $_SESSION['library_ignore_articles'];
 // Library utf8 replace
 $_select['library_utf8rep'] .= "<option value=\"Yes\" " . (($_SESSION['library_utf8rep'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['library_utf8rep'] .= "<option value=\"No\" " . (($_SESSION['library_utf8rep'] == 'No') ? "selected" : "") . ">No</option>\n";

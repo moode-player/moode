@@ -1863,11 +1863,12 @@ $('.context-menu a').click(function(e) {
         $('#instant-play-action span').text(SESSION.json['library_instant_play']);
         $('#show-genres-column span').text(SESSION.json['library_show_genres']);
         $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
+        $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
         $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
         $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
         $('#compilation-identifier').val(SESSION.json['library_comp_id']);
         $('#recently-added span').text(getParamOrValue('param', SESSION.json['library_recently_added']));
-        $('#ignore-articles').val(SESSION.json['ignore_articles']);
+        $('#ignore-articles').val(SESSION.json['library_ignore_articles']);
         $('#utf8-char-filter span').text(SESSION.json['library_utf8rep']);
         $('#hires-thumbnails span').text(SESSION.json['library_hiresthm']);
         $('#cover-search-priority span').text(getParamOrValue('param', SESSION.json['library_covsearchpri']));
@@ -2000,29 +2001,30 @@ $('.btn-appearance-update').click(function(e){
 	// Theme and backgrounds
 	if (SESSION.json['themename'] != $('#theme-name span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['accent_color'] != $('#accent-color span').text()) {themeSettingsChange = true; accentColorChange = true;}
-	if (SESSION.json['alphablend'] != $('#alpha-blend span').text()) {themeSettingsChange = true;};
-	if (SESSION.json['adaptive'] != $('#adaptive-enabled span').text()) {themeSettingsChange = true;};
-	if (SESSION.json['cover_backdrop'] != $('#cover-backdrop-enabled span').text()) {themeSettingsChange = true;};
-	if (SESSION.json['cover_blur'] != $('#cover-blur span').text()) {themeSettingsChange = true;};
-	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;};
+	if (SESSION.json['alphablend'] != $('#alpha-blend span').text()) {themeSettingsChange = true;}
+	if (SESSION.json['adaptive'] != $('#adaptive-enabled span').text()) {themeSettingsChange = true;}
+	if (SESSION.json['cover_backdrop'] != $('#cover-backdrop-enabled span').text()) {themeSettingsChange = true;}
+	if (SESSION.json['cover_blur'] != $('#cover-blur span').text()) {themeSettingsChange = true;}
+	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;}
     // Library options
-    if (SESSION.json['library_instant_play'] != $('#instant-play-action span').text()) {libraryOptionsChange = true;};
-    if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {libraryOptionsChange = true;};
-    if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;};
-    if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;};
-    if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;};
-    if (SESSION.json['library_comp_id'] != $('#compilation-identifier span').text()) {libraryOptionsChange = true;};
-    if (SESSION.json['library_recently_added'] != getParamOrValue('value', $('#recently-added span').text())) {libraryOptionsChange = true;};
-    if (SESSION.json['ignore_articles'] != $('#ignore-articles span').text()) {libraryOptionsChange = true;};
-    if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;};
-    if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;};
-    if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;};
+    if (SESSION.json['library_instant_play'] != $('#instant-play-action span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
+    if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
+    if (SESSION.json['library_comp_id'] != $('#compilation-identifier').val()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_recently_added'] != getParamOrValue('value', $('#recently-added span').text())) {libraryOptionsChange = true;}
+    if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
     // Coverview screen saver
     if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
     // Other options
     if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
-    if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;};
+    if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
 
 	// Theme and backgrounds
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -2036,11 +2038,12 @@ $('.btn-appearance-update').click(function(e){
     SESSION.json['library_instant_play'] = $('#instant-play-action span').text();
     SESSION.json['library_show_genres'] = $('#show-genres-column span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
+    SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
     SESSION.json['library_albumview_sort'] = $('#albumview-sort-order span').text().replace('by ', '');
     SESSION.json['library_tagview_sort'] = $('#tagview-sort-order span').text().replace('by ', '');
     SESSION.json['library_comp_id'] = $('#compilation-identifier').val().trim();
     SESSION.json['library_recently_added'] = getParamOrValue('value', $('#recently-added span').text());
-    SESSION.json['ignore_articles'] = $('#ignore-articles').val().trim();
+    SESSION.json['library_ignore_articles'] = $('#ignore-articles').val().trim();
     SESSION.json['library_utf8rep'] = $('#utf8-char-filter span').text();
     SESSION.json['library_hiresthm'] = $('#hires-thumbnails span').text();
     SESSION.json['library_covsearchpri'] = getParamOrValue('value', $('#cover-search-priority span').text());
@@ -2064,11 +2067,12 @@ $('.btn-appearance-update').click(function(e){
          'library_instant_play': SESSION.json['library_instant_play'],
          'library_show_genres': SESSION.json['library_show_genres'],
          'library_tagview_covers': SESSION.json['library_tagview_covers'],
+         'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
          'library_albumview_sort': SESSION.json['library_albumview_sort'],
          'library_tagview_sort': SESSION.json['library_tagview_sort'],
          'library_comp_id': SESSION.json['library_comp_id'],
          'library_recently_added': SESSION.json['library_recently_added'],
-         'ignore_articles': SESSION.json['ignore_articles'],
+         'library_ignore_articles': SESSION.json['library_ignore_articles'],
          'library_utf8rep': SESSION.json['library_utf8rep'],
          'library_hiresthm': SESSION.json['library_hiresthm'],
          'library_covsearchpri': SESSION.json['library_covsearchpri'],
@@ -2287,6 +2291,9 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
             break;
     	case 'show-tagview-covers-yn':
     		$('#show-tagview-covers span').text($(this).text());
+            break;
+        case 'ellipsis-limited-text-yn':
+    		$('#ellipsis-limited-text span').text($(this).text());
             break;
         case 'tagview-sort-order-sel':
     		$('#tagview-sort-order span').text($(this).text());
