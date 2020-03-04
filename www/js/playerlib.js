@@ -2775,7 +2775,7 @@ $('#index-artists li').on('click', function(e) {
 });
 $('#index-albums li').on('click', function(e) {
     // .artist-name or .album-name
-    var selector = '.' + SESSION.json['library_albumview_sort'].toLowerCase() + '-name';
+    var selector = '.' + SESSION.json['library_tagview_sort'].toLowerCase() + '-name';
     var selector2 = selector.replace(/\/year/g, '');
     listLook('albumsList li ' + selector2, 'albums', $(this).text());
 });
