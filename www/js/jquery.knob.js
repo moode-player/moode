@@ -747,6 +747,8 @@
                 r = (this.cv == this.v);
             }
 
+			if (sat == eat) {return;} // don't draw if they're the same = nothing to draw = no blob
+
 			if (this.o.fgColor.substr(0,1) == '#') {
 				var temp = hexToRgb(this.o.fgColor);
 				this.o.fgColor = 'rgb(' + temp[0] + ',' + temp[1] + ',' + temp[2] + ')';
