@@ -2127,7 +2127,7 @@ function startBt() {
 	// initialize controller
 	else {
 		$result = sysCmd('/var/www/command/bt.sh -i');
-		workerLog('worker: Bluetooth controller initialized');
+		//workerLog('worker: Bluetooth controller initialized');
 	}
 }
 

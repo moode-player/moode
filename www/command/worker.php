@@ -377,13 +377,13 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	workerLog('worker: Piano 2.1 initialized');
 }
 
-//
-workerLog('worker: -- Services');
-//
-
 // Reset renderer active flags
-workerLog('worker: Reset renderer active state');
+workerLog('worker: Reset renderer active flags');
 $result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='airplayactv' OR param='spotactive' OR param='slactive' OR param='inpactive'", $dbh);
+
+//
+workerLog('worker: -- MPD');
+//
 
 // Start MPD
 updMpdConf($_SESSION['i2sdevice']);
@@ -410,140 +410,174 @@ workerLog('worker: ' . $result[6]); // MPD httpd
 // MPD crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
 
-// FEATURES AVAILABILITY CONTROLLED BY FEAT_BITMASK
+//
+workerLog('worker: -- Feature availability');
+//
 
 // Configure audio source
 if ($_SESSION['feat_bitmask'] & FEAT_SOURCESEL) {
-	workerLog('worker: Audio source (' . $_SESSION['audioin'] . ')');
-	workerLog('worker: Output device (' . $_SESSION['audioout'] . ')');
+	workerLog('worker: Source select (available)');
+	$audio_source = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
+	workerLog('worker: Source select (source: ' . $audio_source . ')');
+	$audio_output = $_SESSION['i2sdevice'] == 'none' ? ($_SESSION['cardnum'] == '1' ? 'USB audio device' : 'On-board audio device') : 'I2S audio device';
+	workerLog('worker: Source select (output: ' . $audio_output . ')');
+
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
 		setAudioIn($_SESSION['audioin']);
 	}
 }
 else {
-	workerLog('worker: Source select (feat N/A)');
+	workerLog('worker: Source select (n/a)');
 }
 
-// Start airplay receiver
-if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
-	if (isset($_SESSION['airplaysvc']) && $_SESSION['airplaysvc'] == 1) {
-		startSps();
-		workerLog('worker: Airplay receiver started');
+// Start bluetooth controller and pairing agent
+if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
+	workerLog('worker: Bluetooth (available)');
+	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
+		workerLog('worker: Bluetooth (started)');
+		startBt();
+	}
+	if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
+		workerLog('worker: Bluetooth pairing agent (started)');
+		sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
 	}
 }
 else {
-	workerLog('worker: Airplay receiver (feat N/A)');
+	workerLog('worker: Bluetooth (n/a)');
 }
 
-// Start spotify receiver
+// Start airplay renderer
+if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
+	workerLog('worker: Airplay renderer (available)');
+	if (isset($_SESSION['airplaysvc']) && $_SESSION['airplaysvc'] == 1) {
+		startSps();
+		workerLog('worker: Airplay renderer (started)');
+	}
+}
+else {
+	workerLog('worker: Airplay renderer (n/a)');
+}
+
+// Start Spotify renderer
 // NOTE: moOde ships with an armv7l-only version of librespot that will segfault on armv6l.
 $bitmask = (int)$_SESSION['feat_bitmask'];
 if (trim(sysCmd('librespot 2>&1')[0]) == 'Segmentation fault') {
 	if (FEAT_SPOTIFY & $bitmask) {
 		playerSession('write', 'feat_bitmask', $_SESSION['feat_bitmask'] - FEAT_SPOTIFY);
-		workerLog('worker: Spotify feature disabled');
+		workerLog('worker: Spotify renderer (feature disabled, not supported on armv6l)');
 	}
 }
 else {
 	if (!(FEAT_SPOTIFY & $bitmask)) {
 		playerSession('write', 'feat_bitmask', $_SESSION['feat_bitmask'] + FEAT_SPOTIFY);
-		workerLog('worker: Spotify feature enabled');
 	}
 }
 if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
+	workerLog('worker: Spotify renderer (available)');
 	if (isset($_SESSION['spotifysvc']) && $_SESSION['spotifysvc'] == 1) {
 		startSpotify();
-		workerLog('worker: Spotify receiver started');
+		workerLog('worker: Spotify renderer (started)');
 	}
 }
 else {
-	workerLog('worker: Spotify receiver (feat N/A)');
+	workerLog('worker: Spotify renderer (n/a)');
 }
 
 // Start squeezelite renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
+	workerLog('worker: Squeezelite renderer (available)');
 	if (isset($_SESSION['slsvc']) && $_SESSION['slsvc'] == 1) {
 		cfgSqueezelite();
 		startSqueezeLite();
-		workerLog('worker: Squeezelite renderer started');
+		workerLog('worker: Squeezelite renderer (started)');
 	}
 }
 else {
-	workerLog('worker: Squeezelite renderer (feat N/A)');
+	workerLog('worker: Squeezelite renderer (n/a)');
 }
 
-// Start upnp renderer
+// Start UPnP renderer
 if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
+	workerLog('worker: UPnP renderer (available)');
 	if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
 		sysCmd('systemctl start upmpdcli');
-		workerLog('worker: UPnP renderer started');
+		workerLog('worker: UPnP renderer (started)');
 	}
 }
 else {
-	workerLog('worker: UPnP renderer (feat N/A)');
+	workerLog('worker: UPnP renderer (n/a)');
 }
 
 // start minidlna
 if ($_SESSION['feat_bitmask'] & FEAT_MINIDLNA) {
+	workerLog('worker: DLNA server (available)');
 	if (isset($_SESSION['dlnasvc']) && $_SESSION['dlnasvc'] == 1) {
 		startMiniDlna();
-		workerLog('worker: DLNA server started');
+		workerLog('worker: DLNA server (started)');
 	}
 }
 else {
-	workerLog('worker: DLNA Server (feat N/A)');
+	workerLog('worker: DLNA Server (n/a)');
 }
 
 // Start upnp browser
 if ($_SESSION['feat_bitmask'] & FEAT_DJMOUNT) {
+	workerLog('worker: UPnP browser (available)');
 	if (isset($_SESSION['upnp_browser']) && $_SESSION['upnp_browser'] == 1) {
 		sysCmd('djmount -o allow_other,nonempty,iocharset=utf-8 /mnt/UPNP');
-		workerLog('worker: UPnP browser started');
+		workerLog('worker: UPnP browser (started)');
 	}
 }
 else {
-	workerLog('worker: UPnP browser (feat N/A)');
+	workerLog('worker: UPnP browser (n/a)');
 }
 
 // Start audio scrobbler
 if ($_SESSION['feat_bitmask'] & FEAT_MPDAS) {
+	workerLog('worker: Audio scrobbler (available)');
 	if (isset($_SESSION['mpdassvc']) && $_SESSION['mpdassvc'] == 1) {
 		sysCmd('/usr/local/bin/mpdas > /dev/null 2>&1 &');
-		workerLog('worker: Audio scrobbler started');
+		workerLog('worker: Audio scrobbler (started)');
 	}
 }
 else {
-	workerLog('worker: Audio scrobbler (feat N/A)');
+	workerLog('worker: Audio scrobbler (n/a)');
 }
 
 // Start gpio button handler
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
+	workerLog('worker: GPIO button handler (available)');
 	if (isset($_SESSION['gpio_svc']) && $_SESSION['gpio_svc'] == 1) {
 		startGpioSvc();
-		workerLog('worker: GPIO button handler started');
+		workerLog('worker: GPIO button handler (started)');
 	}
 }
 else {
-	workerLog('worker: GPIO button handler (feat N/A)');
+	workerLog('worker: GPIO button handler (n/a)');
 }
 
-if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
-	// Start bluetooth controller
-	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
-		workerLog('worker: Bluetooth controller started');
-		startBt();
-	}
-	// Start bluetooth pairing agent
-	if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
-		workerLog('worker: Bluetooth pairing agent started');
-		sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
-	}
+//
+workerLog('worker: -- Music sources');
+//
+
+// List usb sources
+$usbdrives = sysCmd('ls /media');
+if ($usbdrives[0] == '') {
+	workerLog('worker: USB sources (none attached)');
 }
 else {
-	workerLog('worker: Bluetooth (feat N/A)');
+	foreach ($usbdrives as $usbdrive) {
+		workerLog('worker: USB source ' . '(' . $usbdrive . ')');
+	}
 }
 
-// END FEATURES AVAILABILITY
+// Mount nas and upnp sources
+$result = sourceMount('mountall');
+workerLog('worker: NAS and UPnP sources (' . $result . ')');
+
+//
+workerLog('worker: -- Miscellaneous');
+//
 
 // Start rotary encoder
 if (isset($_SESSION['rotaryenc']) && $_SESSION['rotaryenc'] == 1) {
@@ -569,52 +603,28 @@ if (isset($_SESSION['shellinabox']) && $_SESSION['shellinabox'] == 1) {
 // USB auto-mounter
 workerLog('worker: USB auto-mounter (' . $_SESSION['usb_auto_mounter'] . ')');
 
-//
-workerLog('worker: -- Music sources');
-//
-
-// List usb sources
-$usbdrives = sysCmd('ls /media');
-if ($usbdrives[0] == '') {
-	workerLog('worker: USB sources (none attached)');
-}
-else {
-	foreach ($usbdrives as $usbdrive) {
-		workerLog('worker: USB source ' . '(' . $usbdrive . ')');
-	}
-}
-
-// Mount nas and upnp sources
-$result = sourceMount('mountall');
-workerLog('worker: NAS and UPnP sources (' . $result . ')');
-
-//
-workerLog('worker: -- Miscellaneous');
-//
-
 // LED states
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	$led0_brightness = explode(',', $_SESSION['led_state'])[0] == '0' ? '1' : '0';
 	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
 	sysCmd('echo ' . $led0_brightness . ' | sudo tee /sys/class/leds/led0/brightness > /dev/null 2>&1');
-	workerLog('worker: LED0 trigger (' . $led0_trigger . ')');
-	workerLog('worker: LED0 brightness (' . $led0_brightness . ')');
-	workerLog('worker: LED1 sysclass does not exist');
+	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
+	workerLog('worker: LED1 (sysclass does not exist)');
 }
 elseif ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
 	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
-	workerLog('worker: LED0 trigger (' . $led0_trigger . ')');
-	workerLog('worker: LED1 sysclass does not exist');
+	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
+	workerLog('worker: LED1 (sysclass does not exist)');
 }
 else {
 	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	$led1_brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
 	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
 	sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null 2>&1');
-	workerLog('worker: LED0 trigger (' . $led0_trigger . ')');
-	workerLog('worker: LED1 brightness (' . $led1_brightness . ')');
+	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
+	workerLog('worker: LED1 (' . ($led1_brightness == '0' ? 'Off' : 'On') . ')');
 }
 
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
@@ -647,6 +657,7 @@ if ($_SESSION['autoplay'] == '1') {
 	sendMpdCmd($sock, 'playid ' . $status['songid']);
 	$resp = readMpdResp($sock);
 	workerLog('worker: Auto-playing id (' . $status['songid'] . ')');
+	sleep(2); // Allow time for MPD to begin playback
 	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
 	workerLog('worker: ALSA output (' . $hwparams['status'] . ')');
 }
