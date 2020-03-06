@@ -32,6 +32,7 @@ var LIB = {
     currentDate: null,
     totalTime: 0,
     totalSongs: 0,
+    artistClicked: '',
     filters: {artists: [], genres: [], albums: [], year: []}
 };
 
@@ -442,7 +443,7 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 
 	filterLib();
 
-	if (SESSION.json['library_tagview_sort'] == 'Album/Year' && GLOBAL.ArtistSelected) { // sort array by year
+	if (SESSION.json['library_tagview_sort'] == 'Album/Year' && LIB.artistClicked) { // sort array by year
 		filteredAlbums.sort(function(a, b) {
 		    return parseInt(a.year) - parseInt(b.year);
 		});
@@ -672,7 +673,7 @@ var renderSongs = function(albumPos) {
 
 // Click genres header
 $('#genreheader').on('click', '.lib-heading', function(e) {
-	GLOBAL.ArtistSelected = false;
+	LIB.artistClicked = false;
 	LIB.filters.genres.length = 0;
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
@@ -687,7 +688,7 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 
 // Click artists header
 $('#artistheader').on('click', '.lib-heading', function(e) {
-	GLOBAL.ArtistSelected = false;
+	LIB.artistClicked = false;
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
     LIB.recentlyAddedClicked = false;
@@ -702,7 +703,7 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 // Click albums or album covers header
 $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
 	//console.log($(this).parent().attr('id'));
-	GLOBAL.ArtistSelected = false;
+	//LIB.artistClicked = false;
 	if ($(this).parent().attr('id') == 'albumcoverheader') {
 		$('#albumcovers .lib-entry').removeClass('active');
 		$('#bottom-row').css('display', 'none');
@@ -743,10 +744,9 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	UI.libPos[2] = pos;
 	LIB.filters.albums.length = 0;
 	storeLibPos(UI.libPos);
-	if (SESSION.json['library_tagview_sort'] == 'Album/Year') {
-        GLOBAL.ArtistSelected = true;
-        $('#tagview-header-text').text('Albums by Year');
-    }
+    LIB.artistClicked = true;
+    setTagViewHeaderText();
+
 	clickedLibItem(e, filteredArtists[pos], LIB.filters.artists, renderArtists);
 	if (UI.mobile) {
 		$('#top-columns').animate({left: '-50%'}, 200);

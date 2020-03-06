@@ -96,8 +96,7 @@ var NETWORK = {
 
 // Eventually migrate remaining global vars here
 var GLOBAL = {
-	regExIgnoreArticles: '',
-	ArtistSelected: ''
+	regExIgnoreArticles: ''
 }
 
 // live timeline
@@ -2822,9 +2821,12 @@ function storeLibPos(pos) {
 
 // Header text for Tag and Album views
 function setTagViewHeaderText() {
-    $('#tagview-header-text').text('Albums' +
-        ((SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') ?
-        '' : ' by ' + SESSION.json['library_tagview_sort']));
+    if (SESSION.json['library_tagview_sort'] == 'Album/Year') {
+        $('#tagview-header-text').text(LIB.artistClicked == true ? 'Albums by Year' : 'Albums');
+    }
+    else {
+        $('#tagview-header-text').text('Albums' + SESSION.json['library_tagview_sort'] == 'Album' ? '' : ' by ' + SESSION.json['library_tagview_sort']);
+    }
 }
 function setAlbumViewHeaderText() {
     $('#albumview-header-text').text('Albums' +
