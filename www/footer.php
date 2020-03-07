@@ -212,7 +212,7 @@
 		                </div>
 
 						<div id="cover-options">
-							<label class="control-label" for="choose-file">Image backdrop</label>
+							<label class="control-label bgimglabel" for="choose-file">Image backdrop</label>
 							<div class="controls">
 								<div style="display:inline-block;margin-bottom:.5em;margin-top:-1px">
 									<label for="import-bgimage" id="choose-bgimage" class="btn btn-primary btn-small">Choose</label>

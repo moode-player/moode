@@ -583,7 +583,11 @@ jQuery(document).ready(function($) { 'use strict';
 
     // click on playlist entry
     $('.playlist').on('click', '.pl-entry', function(e) {
-		var selector = $(this).parents('ul').hasClass('playlist');
+		var sender = e.target.className;
+		if (sender == 'pl-action' || sender == '') {
+			return;
+		}
+		var selector = $(this).parents('ul').hasClass('playlist') ? '.playlist' : '.ss-playlist';
         var pos = $(selector + ' .pl-entry').index(this);
 
         sendMpdCmd('play ' + pos);
@@ -591,6 +595,12 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (UI.mobile) { // for mobile scroll to top
 			$('html, body').animate({ scrollTop: 0 }, 'fast');
+		}
+		else if ($('#playback-panel').hasClass('newui') || $('#playback-panel').hasClass('cv')) {
+			$('#playback-queue').css('left','-10000px');
+			$('#playback-cover, #playback-controls').css('display','');
+			e.preventDefault();
+			return false;
 		}
     });
 

@@ -297,6 +297,7 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 #appearance-modal div.accordian .control-group {display:none;margin-bottom:1em;}
 #appearance-modal div.accordian.active .control-group {display:block;}
 #appearance-modal div.accordian .dtopen {display:none;}
+.bgimglabel {margin-top:5px;} /* gross but what r u gonna do */
 .modal label, .modal .controls {font-size:1em;}
 .control-label {margin-bottom:0px;}
 .modal .controls input {padding:0px 0px 0px 10px;}

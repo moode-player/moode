@@ -1362,11 +1362,13 @@ function updTimeKnob(mpdTime) {
 		var str = '';
 		$('#total').addClass('total-radio'); // radio station svg
 		$('#playbar-mtime').show();
+		$('#playbar-mtotal').hide();
 	}
 	else {
 		var str = formatSongTime(mpdTime);
 		$('#total').removeClass('total-radio'); // radio station svg
 		$('#playbar-mtime').hide();
+		$('#playbar-mtotal').show();
 	}
     return str;
 }
