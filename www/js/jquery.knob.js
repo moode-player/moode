@@ -15,10 +15,10 @@
  * Moode Audio Player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2019-04-12 TC moOde 5.0
  *
  */
-
+ 
 (function($) {
 
     /**
@@ -52,6 +52,8 @@
     k.o = function () {
         var s = this;
 
+		this.po = 11;   // pixel offset
+		this.bloom = true; // bloom
         this.o = null; // array of options
         this.$ = null; // jQuery wrapped element
         this.i = null; // mixed HTMLInputElement or array of HTMLInputElement
@@ -73,9 +75,9 @@
         this.eH = null; // cancel hook
         this.rH = null; // release hook
         this.scale = 1; // scale factor
-        this.relative = false;
-        this.relativeWidth = false;
-        this.relativeHeight = false;
+        this.relative = true;
+        this.relativeWidth = true;
+        this.relativeHeight = true;
         this.$div = null; // component div
 
         this.run = function () {
@@ -106,12 +108,12 @@
                                 || this.$.data('cursor')
                                 || 0,
                     thickness : this.$.data('thickness') || 0.35,
-                    lineCap : this.$.data('linecap') || 'butt',
+                    lineCap : this.$.data('linecap') || 'round',
                     width : this.$.data('width') || 200,
                     height : this.$.data('height') || 200,
                     displayInput : this.$.data('displayinput') == null || this.$.data('displayinput'),
                     displayPrevious : this.$.data('displayprevious'),
-					fgColor : accentColor || '#27ae60',
+					fgColor : this.$.data('fgcolor') || '#27ae60',
                     inputColor: this.$.data('inputcolor') || this.$.data('fgcolor') || '#4BBE87',
                     font: this.$.data('font') || 'Arial',
                     fontWeight: this.$.data('font-weight') || 'bold',
@@ -261,8 +263,8 @@
 
             // finalize canvas with computed width
             this.$c.attr({
-                width: this.w,
-                height: this.h
+                width: this.w + this.po / 2,
+                height: this.h + this.po / 2
             });
 
             // scaling
@@ -293,19 +295,18 @@
         };
 
         this._touch = function (e) {
+
             var touchMove = function (e) {
 
                 var v = s.xy2val(
-                    e.originalEvent.touches[s.t].pageX,
-                    e.originalEvent.touches[s.t].pageY
-                );
-
-                // Volume step limiter
-                if (s.$div.parent().hasClass('volume-step-limiter')) {
-                    if (v - parseInt(SESSION.json['volknob']) > 10) {
-        				v = parseInt(SESSION.json['volknob']) + 10;
-        			}
-                }
+                            e.originalEvent.touches[s.t].pageX,
+                            e.originalEvent.touches[s.t].pageY
+                            );
+			                if (s.$div.parent().hasClass('volume-step-limiter')) {
+			                    if (v - parseInt(SESSION.json['volknob']) > 10) {
+			        				v = parseInt(SESSION.json['volknob']) + 10;
+			        			}
+			                }
 
                 if (v == s.cv) return;
 
@@ -346,17 +347,15 @@
         };
 
         this._mouse = function (e) {
+
             var mouseMove = function (e) {
                 var v = s.xy2val(e.pageX, e.pageY);
-
-                // Volume step limiter
+                if (v == s.cv) return;
                 if (s.$div.parent().hasClass('volume-step-limiter')) {
                     if (v - parseInt(SESSION.json['volknob']) > 10) {
         				v = parseInt(SESSION.json['volknob']) + 10;
         			}
                 }
-
-                if (v == s.cv) return;
 
                 if (
                     s.cH
@@ -660,23 +659,25 @@
 
             this.o.angleOffset
             && (this.o.angleOffset = isNaN(this.o.angleOffset) ? 0 : this.o.angleOffset);
-
+			
             this.o.angleArc
             && (this.o.angleArc = isNaN(this.o.angleArc) ? this.PI2 : this.o.angleArc);
 
             // deg to rad
             this.angleOffset = this.o.angleOffset * Math.PI / 180;
+			this.ao2 = 360 * Math.PI / 180;
             this.angleArc = this.o.angleArc * Math.PI / 180;
 
             // compute start and end angles
             this.startAngle = 1.5 * Math.PI + this.angleOffset;
-            this.endAngle = 1.5 * Math.PI + this.angleOffset + this.angleArc;
+            this.endAngle = 1.5 * Math.PI + this.ao2 + this.angleArc; //ao2 here for full bg circle
 
             var s = max(
                             String(Math.abs(this.o.max)).length
                             , String(Math.abs(this.o.min)).length
                             , 2
                             ) + 2;
+
 
             this.o.displayInput
                 && this.i.css({
@@ -717,7 +718,7 @@
                 , eat = sat + a             // End angle
                 , sa, ea                    // Previous angles
                 , r = 1;
-
+			
             c.lineWidth = this.lineWidth;
 
             c.lineCap = this.lineCap;
@@ -725,10 +726,9 @@
             this.o.cursor
                 && (sat = eat - this.cursorExt)
                 && (eat = eat + this.cursorExt);
-
             c.beginPath();
                 c.strokeStyle = this.o.bgColor;
-                c.arc(this.xy, this.xy, this.radius, this.endAngle, this.startAngle, true);
+                c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, this.endAngle, this.startAngle, true);
             c.stroke();
 
             if (this.o.displayPrevious) {
@@ -740,14 +740,32 @@
 
                 c.beginPath();
                     c.strokeStyle = this.pColor;
-                    c.arc(this.xy, this.xy, this.radius, sa, ea, false);
+                    c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, sa, ea, false);
                 c.stroke();
                 r = (this.cv == this.v);
             }
+			
+			if (sat == eat) {return;}
 
+			if (this.o.fgColor.substr(0,1) == '#') {
+				var temp = hexToRgb(this.o.fgColor);
+				this.o.fgColor = 'rgb(' + temp[0] + ',' + temp[1] + ',' + temp[2] + ')';
+			}
+			if (this.o.fgColor.substr(0,4) == 'rgb(') {
+				var temp = splitRGB(this.o.fgColor) // rgb
+			} else {
+				var temp = splitColor(this.o.fgColor) // rgba
+			}
+			var tempcolor = 'rgba(' + temp[0] + ',' + temp[1] + ',' + temp[2] + ',.75)';
+			
             c.beginPath();
+				if (this.bloom) {
+					c.shadowBlur = (this.po / 1.5);
+					c.shadowColor = tempcolor;
+				}
+				//c.shadowColor = r ? this.o.fgColor : this.fgColor ;	
                 c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
-                c.arc(this.xy, this.xy, this.radius, sat, eat, false);
+                c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, sat, eat, false);
             c.stroke();
         };
 

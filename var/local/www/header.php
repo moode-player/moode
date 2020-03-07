@@ -101,6 +101,7 @@
 	<!-- ALBUM COVER BACKDROP -->
 	<div aria-label="Album Cover Backdrop" id="cover-backdrop"></div>
 	<div id="context-backdrop"></div>
+	<div id="splash"><div>moOde</div></div>
 
 	<!-- HEADER -->
 	<div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
@@ -117,15 +118,17 @@
 			<a id="sys-config-btn" class="btn" href="sys-config.php">System</a>
 		</div>
 
+		<div id="menu-header"></div>
 		<div aria-label="Busy" class="busy-spinner"></div>
 
 		<!-- MAIN MENU -->
 		<div class="dropdown">
-			<a aria-label="Menu" class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget">m<i class="fas fa-chevron-down"></i></a>
+			<a aria-label="Menu" class="dropdown-toggle btn" id="menu-settings" role="button" data-toggle="dropdown" data-target="#" href="#notarget"><div id="mblur">mm</div><div id="mbrand">m</div></a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings">
 				<?php if ($section == 'index') { ?>
 					<li><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="appearance"><i class="fas fa-eye sx"></i> Appearance</a></li>
+					<li><a href="javascript:updatempddb();"><i class="fas fa-sync sx"></i> Update library</a></li>
 					<li><a href="blu-config.php"><i class="fas fa-wifi sx"></i> BlueZ</a></li>
 					<li><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fas fa-forward sx"></i> Players</a></li>
 					<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="fas fa-music sx"></i> Audio info</a></li>

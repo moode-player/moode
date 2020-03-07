@@ -496,55 +496,43 @@ var renderAlbums = function() {
 	var activeFlag = '';
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
-    var albumViewEllipsisLimited = '';
-    var tagViewEllipsisLimited = '';
 	var defCover = "this.src='images/default-cover-v6.svg'";
+	SESSION.json["library_ellipsis_limited_text"] ? liClass = 'lib-entry limited' : liClass = 'lib-entry';
 
     // Clear search filter and results
 	$('#lib-album-filter').val('');
 	$('#lib-album-filter-results').html('');
 
-    // Ellipsis limited text
-    if (SESSION.json['library_ellipsis_limited_text'] == 'Yes') {
-        albumViewEllipsisLimited = ' albumview-ellipsis-limited-text';
-        tagViewEllipsisLimited = ' tagview-ellipsis-limited-text';
-    }
-
 	for (var i = 0; i < filteredAlbums.length; i++) {
-		// If only 1 album automatically highlight and display tracks
-		if (filteredAlbums.length == 1) {
-			activeFlag = ' active';
-			LIB.albumClicked = true;
-		}
-		else {
-			activeFlag = '';
-		}
 
         filteredAlbums[i].year ? tagViewYear = ' (' + filteredAlbums[i].year + ')' : tagViewYear = '';
         filteredAlbumCovers[i].year ? albumViewYear = ' (' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
-			output += '<li><div class="lib-entry' + activeFlag + '">'
+			output += '<li class="' + liClass + '">'
              + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
-             + '<div class="album-name' + tagViewEllipsisLimited + '">' + filteredAlbums[i].album
-             + '<br><span class="artist-name album-year' + tagViewEllipsisLimited + '">' + filteredAlbums[i].artist + tagViewYear + '</span></div></div></li>'
-		}
+             + '<div class="album-name">' + filteredAlbums[i].album
+             + '<br><span class="artist-name album-year">' + filteredAlbums[i].artist + tagViewYear + '</span></div></li>'		}
 		else {
-			output += '<li><div class="lib-entry' + activeFlag + '">'
-             + '<div class="album-name' + tagViewEllipsisLimited + '">' + filteredAlbums[i].album
-             + '<br><span class="artist-name album-year' + tagViewEllipsisLimited + '">' + filteredAlbums[i].artist + tagViewYear + '</span></div></div></li>'
+			output += '<li class="' + liClass + '"><span class="album-name">' + filteredAlbums[i].album
+             + '</span><span class="artist-name">' + filteredAlbums[i].artist + tagViewYear + '</span></li>'
         }
 
-		output2 += '<li><div class="lib-entry' + activeFlag + '">'
+		output2 += '<li class="' + liClass + '">'
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
-            + '<div class="albumcover"><span class="album-name' + albumViewEllipsisLimited + '">' + filteredAlbumCovers[i].album + '</span></div>'
-            + '<span class="artist-name' + albumViewEllipsisLimited + '">' + filteredAlbumCovers[i].artist + albumViewYear + '</span></div></li>';
+            + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
+            + '<span class="artist-name">' + filteredAlbumCovers[i].artist + albumViewYear + '</span></li>';
 	}
 
     // Output the lists
 	$('#albumsList').html(output);
 	$('#albumcovers').html(output2);
+	// If only 1 album automatically highlight and display tracks
+	if (filteredAlbums.length == 1) {
+		    $('#albumsList li').addClass('active');
+			LIB.albumClicked = true;
+	}
 
 	// Headers clicked
 	if (UI.libPos[0] == -2) {
@@ -670,19 +658,35 @@ var renderSongs = function(albumPos) {
 	}
 }
 
-// Click genres header
-$('#genreheader').on('click', '.lib-heading', function(e) {
-	GLOBAL.ArtistSelected = false;
+$('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc.
 	LIB.filters.genres.length = 0;
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
-    LIB.recentlyAddedClicked = false;
+	LIB.filters.year.length = 0;
+	if (currentView == 'tag' || currentView == 'album') {
+		GLOBAL.lazyTag, GLOBAL.lazyAlbum, GLOBAL.ArtistSelected = false;
+		$("#searchResetLib").hide();
+		showSearchResetLib = false;		
+		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
+			GLOBAL.musicScope = 'all';
+			//LIB.recentlyAddedClicked = false;
+		}
+		GLOBAL.searchLib = '';
+		if (currentView == 'album') {
+			$('#albumcovers .lib-entry').removeClass('active');
+			$('#bottom-row').css('display', '');
+			$('#lib-albumcover').css('height', '100%');
+		}
+		scopeR('Lib');
+	}
+	if (currentView == 'radiocovers' || currentView == 'radiolist') {
+		GLOBAL.searchRadio = '';
+		$('#searchResetRa').click();
+		scopeR('Radio Stations');
+	}
 	UI.libPos.fill(-2);
-    setTagViewHeaderText();
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.genres, renderGenres);
-	$("#searchResetLib").hide();
-	showSearchResetLib = false;
 });
 
 // Click artists header
@@ -691,7 +695,6 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
     LIB.recentlyAddedClicked = false;
-    setTagViewHeaderText();
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
@@ -701,11 +704,10 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 
 // Click albums or album covers header
 $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
-	//console.log($(this).parent().attr('id'));
 	GLOBAL.ArtistSelected = false;
 	if ($(this).parent().attr('id') == 'albumcoverheader') {
 		$('#albumcovers .lib-entry').removeClass('active');
-		$('#bottom-row').css('display', 'none');
+		$('#bottom-row').css('display', '');
 		$('#lib-albumcover').css('height', '100%');
 		LIB.filters.artists.length = 0;
 		LIB.filters.albums.length = 0;
@@ -716,7 +718,6 @@ $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
 	else {
 		LIB.filters.albums.length = 0;
         LIB.recentlyAddedClicked = false;
-        setTagViewHeaderText();
 		UI.libPos.fill(-2);
 		clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
 	}
@@ -745,7 +746,7 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	storeLibPos(UI.libPos);
 	if (SESSION.json['library_tagview_sort'] == 'Album/Year') {
         GLOBAL.ArtistSelected = true;
-        $('#tagview-header-text').text('Albums by Year');
+        //$('#tagview-header-text').text('Albums by Year');
     }
 	clickedLibItem(e, filteredArtists[pos], LIB.filters.artists, renderArtists);
 	if (UI.mobile) {
@@ -1111,7 +1112,7 @@ $('#context-menu-lib-all a').click(function(e) {
 		}
 		else {
 			$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
-			$('#bottom-row').css('display', 'none')
+			$('#bottom-row').css('display', '')
 			$('#lib-albumcover').css('height', '100%');
 			$('#index-albumcovers').show();
 		}
