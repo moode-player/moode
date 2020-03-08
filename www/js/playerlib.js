@@ -2091,7 +2091,7 @@ function getParamOrValue (type, key) {
         // Screen saver timeout
         ['Never','Never'],['1 minute','60'],['2 minutes','120'],['5 minutes','300'],['10 minutes','600'],['20 minutes','1200'],['30 minutes','1800'],['1 hour','3600'],
         // Library recently added
-        ['1 week','604800000'],['1 month','2592000000'],['3 months','7776000000'],['6 months','15552000000'],['1 year','31536000000']
+        ['Off','0'],['1 week','604800000'],['1 month','2592000000'],['3 months','7776000000'],['6 months','15552000000'],['1 year','31536000000']
     ]);
 
     if (type == 'value') {
@@ -2768,7 +2768,9 @@ $("#coverart-url, #playback-switch").click(function(e){
         else {
             $('#top-columns').addClass('nogenre');
         }
-
+        if (SESSION.json['library_recently_added'] == 0) {
+          $('.recently-added').css('display', 'none'); 
+        }
 		$('#top-columns, #bottom-row').show();
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // async
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
@@ -2789,6 +2791,9 @@ $("#coverart-url, #playback-switch").click(function(e){
 		setColors();
 		$('#lib-albumcover, #lib-albumcover-header').show();
 		$('#top-columns').css('display', 'none');
+    if (SESSION.json['library_recently_added'] == 0) {
+      $('.recently-added').css('display', 'none'); 
+    }
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
 		setTimeout(function() {
 			$('img.lazy-albumview').lazyload({

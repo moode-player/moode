@@ -254,7 +254,11 @@ jQuery(document).ready(function($) { 'use strict';
 	else if (currentView == 'tag'){
         $('#library-panel, .tag-view-btn').addClass('active');
         $('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
+        if (SESSION.json['library_recently_added'] == 0) {
+            $('.recently-added').css('display', 'none'); }
+        else {
         $('.recently-added').css('margin-left', '-.25em');
+        }
         $('#lib-albumcover, #lib-albumcover-header').hide();
 
         $('#index-albumcovers').hide();
@@ -284,6 +288,8 @@ jQuery(document).ready(function($) { 'use strict';
         $('.folder-view-btn, .tag-view-btn, .radio-view-btn').removeClass('active');
         $('#lib-albumcover, #lib-albumcover-header').show();
         $('#top-columns, #bottom-row').css('display', 'none');
+        if (SESSION.json['library_recently_added'] == 0) {
+            $('.recently-added').css('display', 'none'); }        
 
 		setTimeout(function() {
             $('img.lazy-albumview').lazyload({
@@ -335,6 +341,11 @@ jQuery(document).ready(function($) { 'use strict';
         $('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
         $('.tag-view-btn').addClass('active');
         $('#top-columns, #bottom-row').css('display', 'flex');
+        if (SESSION.json['library_recently_added'] == 0) {
+            $('.recently-added').css('display', 'none'); }
+        else {
+            $('.recently-added').css('margin-left', '-.25em');  
+        }        
         $('.recently-added').css('margin-left', '-.25em');
         $('#lib-albumcover, #lib-albumcover-header').hide();
         $('#tagview-header-text').text('Albums' + (SESSION.json['library_album_sort'] != 'Album' ? ' by ' + SESSION.json['library_album_sort'] : ''));
@@ -392,6 +403,9 @@ jQuery(document).ready(function($) { 'use strict';
         $('.folder-view-btn, .tag-view-btn, .radio-view-btn').removeClass('active');
         $('.album-view-btn').addClass('active');
         $('#top-columns, #bottom-row').css('display', 'none');
+        if (SESSION.json['library_recently_added'] == 0) {
+            $('.recently-added').css('display', 'none'); }
+        else {
         $('.recently-added').css('margin-left', '');
         $('#lib-albumcover, #lib-albumcover-header').show();
         $('#albumview-header-text').text('Albums' + (SESSION.json['library_album_sort'] != 'Album' ? ' by ' + SESSION.json['library_album_sort'] : ''));
@@ -1332,3 +1346,15 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 });
+
+// Highlight recent-filter icon
+set_recent = function() {
+    if (LIB.recentlyAddedClicked) {
+        $('i.fa-filter.fas').css("opacity", "0.35");         
+        $('i.fa-filter.fas').removeClass('fas').addClass('far'); 
+    } else {
+        $('i.fa-filter.far').css("opacity", "1"); 
+        $('.fa-filter.far').removeClass('far').addClass('fas');
+    }
+    LIB.recentlyAddedClicked = !LIB.recentlyAddedClicked;
+};

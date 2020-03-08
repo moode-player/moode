@@ -61,6 +61,7 @@ $_select['library_album_sort'] .= "<option value=\"Year\" " . (($_SESSION['libra
 // Compilation identifier
 $_select['library_comp_id'] = $_SESSION['library_comp_id'];
 // Recently added NOTE: library_recently_added is in milliseconds, 1 day = 86400000 ms
+$_select['library_recently_added'] .= "<option value=\"0\" " . (($_SESSION['library_recently_added'] == '0') ? "selected" : "") . ">Off</option>\n";
 $_select['library_recently_added'] .= "<option value=\"604800000\" " . (($_SESSION['library_recently_added'] == '604800000') ? "selected" : "") . ">1 Week</option>\n";
 $_select['library_recently_added'] .= "<option value=\"2592000000\" " . (($_SESSION['library_recently_added'] == '2592000000') ? "selected" : "") . ">1 Month</option>\n";
 $_select['library_recently_added'] .= "<option value=\"7776000000\" " . (($_SESSION['library_recently_added'] == '7776000000') ? "selected" : "") . ">3 Months</option>\n";

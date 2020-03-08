@@ -613,7 +613,6 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 	LIB.filters.genres.length = 0;
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
-    LIB.recentlyAddedClicked = false;
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.genres, renderGenres);
@@ -625,7 +624,6 @@ $('#genreheader').on('click', '.lib-heading', function(e) {
 $('#artistheader').on('click', '.lib-heading', function(e) {
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
-    LIB.recentlyAddedClicked = false;
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
@@ -648,7 +646,6 @@ $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
 	}
 	else {
 		LIB.filters.albums.length = 0;
-        LIB.recentlyAddedClicked = false;
 		UI.libPos.fill(-2);
 		clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
 	}
@@ -738,13 +735,16 @@ $('#random-album, #random-albumcover').click(function(e) {
 
 // Click 'recently added' button
 $('.recently-added').click(function(e) {
-    LIB.recentlyAddedClicked = true;
+    set_recent(); 
 	LIB.filters.albums.length = 0;
 	UI.libPos.fill(-2);
-
+    if (LIB.recentlyAddedClicked == false) { 
 	filterLib();
     renderAlbums();
-
+    }
+    else {
+        clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
+    }
 	storeLibPos(UI.libPos);
 	$("#searchResetLib").hide();
 	showSearchResetLib = false;
