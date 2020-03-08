@@ -32,6 +32,7 @@ var LIB = {
     currentDate: null,
     totalTime: 0,
     totalSongs: 0,
+    artistClicked: '',
     filters: {artists: [], genres: [], albums: [], year: []}
 };
 
@@ -442,7 +443,7 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 
 	filterLib();
 
-	if (SESSION.json['library_tagview_sort'] == 'Album/Year' && GLOBAL.ArtistSelected) { // sort array by year
+	if (SESSION.json['library_tagview_sort'] == 'Album/Year' && LIB.artistClicked) { // sort array by year
 		filteredAlbums.sort(function(a, b) {
 		    return parseInt(a.year) - parseInt(b.year);
 		});
@@ -664,7 +665,7 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 	LIB.filters.albums.length = 0;
 	LIB.filters.year.length = 0;
 	if (currentView == 'tag' || currentView == 'album') {
-		GLOBAL.lazyTag, GLOBAL.lazyAlbum, GLOBAL.ArtistSelected = false;
+		GLOBAL.lazyTag, GLOBAL.lazyAlbum, LIB.artistClicked = false;
 		$("#searchResetLib").hide();
 		showSearchResetLib = false;		
 		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
@@ -691,7 +692,7 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 
 // Click artists header
 $('#artistheader').on('click', '.lib-heading', function(e) {
-	GLOBAL.ArtistSelected = false;
+	LIB.artistClicked = false;
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
     LIB.recentlyAddedClicked = false;
@@ -704,7 +705,6 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 
 // Click albums or album covers header
 $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
-	//GLOBAL.ArtistSelected = false;
 	if ($(this).parent().attr('id') == 'albumcoverheader') {
 		$('#albumcovers .lib-entry').removeClass('active');
 		$('#bottom-row').css('display', '');
@@ -745,7 +745,7 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	LIB.filters.albums.length = 0;
 	storeLibPos(UI.libPos);
 	if (SESSION.json['library_tagview_sort'] == 'Album/Year') {
-        GLOBAL.ArtistSelected = true;
+        LIB.artistClicked = true;
         //$('#tagview-header-text').text('Albums by Year');
     }
 	clickedLibItem(e, filteredArtists[pos], LIB.filters.artists, renderArtists);
