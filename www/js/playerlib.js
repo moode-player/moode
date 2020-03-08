@@ -1421,63 +1421,48 @@ function refreshTimer(startFrom, stopTo, state) {
 function watchCountdown(period) {
 	// period[4] (hours) > 0 reduce font-size so time fits nicely within knob
 	//console.log('period ' + period[4]);
-
-	// Default
-	if ($(window).height() > 479) {
-        $('#countdown-display').css('margin-top','-.5em');
-
-		if (period[4] == 0) {
-            $('#countdown-display').css('font-size','1.9em');
-		}
-		else if (period[4] < 10) {
-            $('#countdown-display').css('font-size','1.8em');
-		}
-		else {
-            $('#countdown-display').css('font-size','1.6em');
-		}
-	}
-	// Pi 7" touch 799 x 479
-	else {
-        $('#countdown-display').css('margin-top','-1em');
-
-		if (period[4] == 0) {
-            $('#countdown-display').css('font-size','1.7em');
-		}
-		else if (period[4] < 10) {
-            $('#countdown-display').css('font-size','1.6em');
-		}
-		else {
-            $('#countdown-display').css('font-size','1.5em');
-		}
+	if (currentView.indexOf('playback') !== -1) { // don't do this if playback isn't showing
+		period[4] == 0 ? count = 1.9 : period[4] < 10 ? count = 1.7 : count = 1.6;
+		$(window).height() <= 479 ? count = count - .1 : ''; // raspberry pi touchscreen
+		$('#countdown-display').css('font-size', count + 'rem');
 	}
 }
 
 // update time knob, time track
 function refreshTimeKnob() {
 	var initTime, delta;
-
     window.clearInterval(UI.knob)
     initTime = parseInt(MPD.json['song_percent']);
     delta = parseInt(MPD.json['time']) / 1000;
-
 	if (UI.mobile) {
 		//$('#timetrack').val(initTime).trigger('change'); // ORIG
 		$('#timetrack').val(initTime * 10).trigger('change');
 	}
-	else {
+	else if (currentView.indexOf('playback') !== -1){ // playback screen
 		$('#time').val(initTime * 10).trigger('change');
+	} else { // library screen
 		//$('#playbar-timetrack').val(initTime).trigger('change'); // ORIG
 		$('#playbar-timetrack').val(initTime * 10).trigger('change');
 	}
 
+	if (MPD.json['state'] === 'stop') {
+	    $('#countdown-display').countdown('destroy');
+		if (UI.mobile) {
+			$('#m-total, #m-countdown, #playbar-mcount').html('00:00');
+			$('#playbar-mtotal').html('&nbsp;/&nbsp;00:00');
+		} else {
+			$('#playbar-total, #playbar-countdown, #countdown-display').html('00:00');
+		}
+	}
+
 	// radio station
-	if (delta === 0 || isNaN(delta)) {
+	else if (delta === 0 || isNaN(delta)) {
 		if (UI.mobile) {
 			$('#timeline').hide();
-			$('#m-radio, #playbar-mtime').show();
+			$('#m-radio').show();
 		}
 		else {
-			$('#playbar-timeline').hide();
+			$('#playbar-timeline').css('display', 'none');
 			$('#playbar-title').css('padding-bottom', '0');
 			//$('#playbar-radio').show();
 		}
@@ -1485,7 +1470,7 @@ function refreshTimeKnob() {
 	// song file
 	else {
 		if (UI.mobile) {
-			$('#timeline, #playbar-mtime').show();
+			$('#timeline').show();
 			$('#m-radio').hide();
 		}
 		else {
@@ -1496,18 +1481,27 @@ function refreshTimeKnob() {
 	}
 
     if (MPD.json['state'] === 'play') {
+		var tt = $('#timetrack'); // move these out of the timer
+		var pb = $('playbar-#timetrack');
+		var ti = $('#time');
+		var cv = currentView.indexOf('playback');
         UI.knob = setInterval(function() {
-			if (!timeSliderMove) {
-				$('#timetrack, #playbar-timetrack').val(initTime * 10).trigger('change');
+			if (UI.mobile || cv == -1) {
+				if (!timeSliderMove) {
+					syncTimers();
+					if (UI.mobile) {
+						tt.val(initTime * 10).trigger('change');
+					}
+				}
 			}
-
             delta === 0 ? initTime = initTime + 0.5 : initTime = initTime + 0.1; // fast paint when radio station playing
-            if (delta === 0 && initTime > 100) { // stops painting when radio (delta = 0) and knob fully painted
-				window.clearInterval(UI.knob)
-				UI.knobPainted = true;
-            }
-
-            $('#time').val(initTime * 10).trigger('change');
+			if (!UI.mobile) {
+	            if (delta === 0 && initTime > 100) { // stops painting when radio (delta = 0) and knob fully painted
+					window.clearInterval(UI.knob)
+					UI.knobPainted = true;
+	            }
+           		ti.val(initTime * 10).trigger('change');
+			}
         }, delta * 1000);
     }
 }
@@ -3051,17 +3045,17 @@ $('#appearance-modal .h5').click(function(e) {
 function syncTimers() {
 	var a = $('#countdown-display').text();
 	if (a != oldCount) { // only update if time has changed
-		var pb = currentView.indexOf('playback') + 1; // so 1 = playback, 0 = not for nicer conditionals
+		//var cv = currentView.indexOf('playback') + 1; // so 1 = playback, 0 = not for nicer conditionals
 		if (UI.mobile) { // only change when needed to save work
 			$('#m-countdown').text(a);
 			$('#playbar-mcount').text(a);
 		} else { // countdown-display is always running
-			if (pb) {
+			if (currentView.indexOf('playback') == 0) {
 				UI.knobPainted = false;
 			} else {
 				$('#playbar-countdown').text(a);
 				var c = a.split(':'); // m:s
-				var d = $('#total').text().split(':');
+				var d = $('#playbar-total').text().split(':');
 				var e = parseInt(c[0] * 60) + parseInt(c[1]); // convert to seconds
 				var f = parseInt(d[0] * 60) + parseInt(d[1]);
 				var g = (e / f) * 100; // percent of elapsed song for progress

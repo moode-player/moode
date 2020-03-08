@@ -527,7 +527,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-toggles .coverview i {font-size:.9rem;}
 #playbar-radio, #m-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;background-size:contain;width:20%;height:15px;left:50%;transform:translate(-50%, -50%);display:none;}
 #playbar-radio {position:absolute;top:90%;}
-#m-radio {position:relative;transform:translate(-50%, 0);}
+#m-radio {position:relative;transform:translate(-50%, 0);margin-top:.5em;}
 /* for hide/show Genres column in Library Tag view */
 #top-columns.nogenre #lib-genre-header, #top-columns.nogenre #index-genres, #top-columns.nogenre #lib-genre {display:none !important;}
 #top-columns.nogenre #lib-artist-header, #top-columns.nogenre #lib-artist {left:0;width:50%;}
