@@ -705,6 +705,8 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 
 // Click albums or album covers header
 $('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
+	//console.log($(this).parent().attr('id'));
+	//LIB.artistClicked = false;
 	if ($(this).parent().attr('id') == 'albumcoverheader') {
 		$('#albumcovers .lib-entry').removeClass('active');
 		$('#bottom-row').css('display', '');

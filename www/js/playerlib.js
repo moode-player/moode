@@ -96,14 +96,14 @@ var NETWORK = {
 
 // Eventually migrate remaining global vars here
 var GLOBAL = {
-	regExIgnoreArticles: '',
 	musicScope: 'all', // or not defined if saved, but prob don't bother saving...
 	searchLib: '', // used to store search results (x albums found) for the menu header
 	searchRadio: '',
 	searchFolder: '',
 	lazyAlbum: false, // call initial lazyload or use resize thingy
 	lazyTag: false,
-	lazyRadio: false
+	lazyRadio: false,
+	regExIgnoreArticles: ''
 }
 
 // live timeline
