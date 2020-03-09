@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -411,7 +411,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#total {top:63%;width:100%;}
 	#volknob {padding: 8px 0 0;}
 	.btn-toolbar {margin-top: 5px;margin-bottom:6px;}
-	#togglebtns {padding-top:.5em;}	
+	#togglebtns {padding-top:.5em;}
 	/*#volumedn{margin-right:.5em;}
 	#volumeup{margin-left:.5em;}*/
 	#extratags {padding-top:5px;}
@@ -475,7 +475,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {width:60%;height:55%;}
 	#albumcovers .lib-entry img, .database-radio img {max-height: calc(31vw * .9);}
 	#albumcovers li, .database-radio li {width:31vw;}
-	#playback-panel.newui #volcontrol, #playback-panel.newui #volcontrol-2, #playback-panel.newui #countdown {height:12.5rem;width:12.5rem;} 
+	#playback-panel.newui #volcontrol, #playback-panel.newui #volcontrol-2, #playback-panel.newui #countdown {height:12.5rem;width:12.5rem;}
 }
 @media (orientation: portrait) and (min-aspect-ratio: 2/3) {
 	#playback-panel.newui #timezone {left:12.5%;top:59%;}
@@ -501,15 +501,15 @@ li.modal-dropdown-text:focus {color:#eee;}
 @media (height: 834px) and (width: 1194px) {
 	/*#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}*/
 	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
-	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}	
+	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}
 }
 @media (height: 790px) and (width: 1194px) {
 	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;transition: width .5s;}
 	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
-	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}	
+	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}
 }
 
-#playback-panel.cv #playback-cover, #playback-panel.cv #coverart-url, #playback-panel.cv img.coverart {width:70vh;max-height:70vh;margin:0 auto;}	
+#playback-panel.cv #playback-cover, #playback-panel.cv #coverart-url, #playback-panel.cv img.coverart {width:70vh;max-height:70vh;margin:0 auto;}
 #playback-panel.cv {--textvariant:#aaa;--adapttext:#eee;}
 #playback-panel.cv #currentsong {color:var(--accentxts);}
 #content.visacc #playback-panel.cv #currentsong {color:var(--adaptext);}
@@ -554,7 +554,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .clockradio-on-m {color:#dddddd;font-size:16.5px;}
 .clockradio-off-m {color:#7f8c8d;font-size:16.5px;}
 .info-toggle {text-decoration:none;margin-left:5px;font-size:18px;line-height:normal;}
-.quickhelp {margin-left:0;color:#333;font-size:1em;font-weight:500;}
+.quickhelp {margin-left:0;/*color:#333;*/font-size:1em;font-weight:500;}
 .set-button {margin: 0 4px 0 8px;} /* for system config page 'set' buttons */
 /* playback history log */
 #container-playhistory {padding-top:5px;padding-left: 5px;}
