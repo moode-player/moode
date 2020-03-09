@@ -278,7 +278,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;}
 	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:calc(72vw - 6rem);height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
-	#playbar-controls {right:.25rem;transform:none;top:0;}
+	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
 	#playbar-controls .btn {padding:.4em;font-size:2.5rem;-webkit-tap-highlight-color:transparent);}
 	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:.4em;height:unset;width:unset;top:unset;left:unset;transform:none;}

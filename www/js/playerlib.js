@@ -1360,13 +1360,13 @@ function updTimeKnob(mpdTime) {
 	if (MPD.json['artist'] == 'Radio station') {
 		var str = '';
 		$('#total').addClass('total-radio'); // radio station svg
-		$('#playbar-mtime').show();
+		$('#playbar-mtime').css('display', 'block');
 		$('#playbar-mtotal').hide();
 	}
 	else {
 		var str = formatSongTime(mpdTime);
 		$('#total').removeClass('total-radio'); // radio station svg
-		$('#playbar-mtime').hide();
+		$('#playbar-mtime').css('display', '');
 		$('#playbar-mtotal').show();
 	}
     return str;

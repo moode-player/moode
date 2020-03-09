@@ -523,7 +523,7 @@ var renderAlbums = function() {
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
-            + '<span class="artist-name">' + filteredAlbumCovers[i].artist + albumViewYear + '</span></li>';
+            + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span><span class="album-year">' + albumViewYear + '</span></div></li>';
 	}
 
     // Output the lists
@@ -704,7 +704,7 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 });
 
 // Click albums or album covers header
-$('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
+$('#albumheader').on('click', '.lib-heading', function(e) {
 	//console.log($(this).parent().attr('id'));
 	//LIB.artistClicked = false;
 	if ($(this).parent().attr('id') == 'albumcoverheader') {

@@ -344,7 +344,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #lib-content #lib-file li:nth-child(odd).active {font-weight:600;}
 #lib-content #lib-file li div:hover {background-color:transparent;}
 #lib-content li div.active {color:var(--accentxts);}
-#lib-content li div.active, .albumslist .active, #radiocovers li.active {background-color:var(--accentxta);color:#eee;}
+#lib-content li.active, .albumslist .active, #radiocovers li.active {background-color:var(--accentxta);color:#eee;}
 .lib-entry {padding:0 .5em;margin-right:1.3rem;}
 .lib-entry-song {margin-left:4px;padding-top:4px;line-height:normal;margin-right:26px;}
 .lib-action {position:absolute;top:50%;transform:translate(0%,-50%);}
@@ -371,9 +371,10 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 /*#albumcovers .lib-entry span {display:block;max-height:1.5em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}*/
 #albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(18vw * .9);margin:.5rem 0;box-shadow:0px 0px .25em rgba(0,0,0,0.3);border-radius:.1em;}
 #albumcovers .lib-entry {width:18vw;line-height:normal;padding:0 0 .2em 0;}
-#albumcovers .lib-entry .artist-name {color:var(--textvariant);font-weight:500;}
+#albumcovers .artyear	{color:var(--textvariant);font-weight:500;}
+#albumcovers .lib-entry .artist-name {max-width:calc(18vw - 4em);display:inline-block;margin:0 .25em;}
 #albumcovers .lib-entry .album-name {color:inherit;font-weight:600;}
-#albumcovers .lib-entry .album-year {display:none;opacity:1.0;}
+#albumcovers .lib-entry .album-year {display:inline-block;opacity:1.0;}
 #lib-albumcover-header {display:none;position:absolute;top:env(safe-area-inset-top);width:100vw;transform: translate(-50%);left:50%;}
 #albumcoverheader {line-height:2.75rem !important;position:absolute !important;height:2.75rem;width:15%;left:75%;transform:translate(-50%);}
 #albumview-header-text {display:none;background:none;text-transform:unset;font-size:1.1rem;padding:0 3rem;}
@@ -508,7 +509,8 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playback-switch {position:absolute;height:2.5rem;width:20%;top:0;top:env(safe-area-inset-top);left:50%;transform:translate(-50%);text-align:center;font-size:1.2em;color:var(--adapttext);display:none;cursor:pointer;}
 #playback-switch div {/*background-color:var(--textvariant);*/background-color:transparent;height:.25rem;width:2rem;margin:1em auto;border-radius:1em;overflow:hidden;}
 #playbar {display:flex;align-items:center;height:4.8rem;position:absolute;bottom:0;width:100%;color:var(--adapttext);box-shadow: 0px -1px 3px rgba(0,0,0,0.1);} /* was 9.25vh*/
-#playbar-cover {height:4.8rem;width:4.8rem;margin-left:0;border-radius:0;overflow:hidden;position:relative;cursor:pointer;opacity:.75;}
+/*#playbar-cover {height:4.8rem;width:4.8rem;margin-left:0;border-radius:0;overflow:hidden;position:relative;cursor:pointer;opacity:.75;}*/
+#playbar-cover {height:4.8rem;width:9.6rem;/*4.8*/position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
 #playbar-title {width:calc(50vw - 8.5rem);/* Was 5.5rem */;height:auto;position:absolute;font-size:.9em;left:50%;top:50%;transform:translate(-50%, -50%);text-align:center;padding-bottom:1.75rem;line-height:1.5em;}
 #playbar-title a {padding:0;margin:0;display:unset;text-align:unset;font-size:.9rem;color:var(--adapttext) !important;}
 #playbar-title span {opacity:.55;}
@@ -516,11 +518,11 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-currentsong, #playbar-currentalbum {overflow:hidden;text-overflow:ellipsis;}
 #playbar-currentsong {font-weight:600;}
 #playbar-time, #playbar-total {font-size:.9rem;}
-#playbar-controls {position:absolute;right:1rem;top:50%;transform:translate(0, -50%);}
-#playbar-controls .btn {padding:.25em .75em;font-size:1.8rem;}
+#playbar-controls {position:absolute;left:.5rem;top:50%;transform:translate(0, -50%);opacity:1;}
+#playbar-controls .btn {padding:.25em;font-size:1.8rem;margin:0 .25em;}
 #playbar-switch {position:absolute;height:100%;width:100%;left:0;top:0;text-align:center;font-size:.9em;cursor:pointer;}
 #playbar-switch div {display:none;background-color:var(--textvariant);height:.25rem;width:2rem;margin:.5em auto;border-radius:1em;overflow:hidden;}
-#playbar-toggles {position:absolute;display:flex;flex-wrap:wrap;left:6rem;top:50%;transform:translate(0, -50%);}
+#playbar-toggles {position:absolute;display:flex;flex-wrap:wrap;right:.5rem;top:50%;transform:translate(0, -50%);}
 #playbar-toggles .btn {padding:0;margin:0 0.45rem;height:2.1rem;width:2.1rem;border-radius:50%;}
 #playbar-toggles .btn-primary {color:var(--accentxts);}
 #playbar-toggles i {font-size:1.1rem;margin-top:1px;}
