@@ -892,8 +892,7 @@ function renderPlaylist() {
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
 		var output = '';
 		UI.plModified = MPD.json['playlist'];
-		
-        
+
         // save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
 
@@ -921,7 +920,6 @@ function renderPlaylist() {
 					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
 					output += ' - ';
 					output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
-					
 				}
 				// radio station
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined')) {
@@ -948,11 +946,11 @@ function renderPlaylist() {
 							//$('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
 						}
 					}
-					
+
 					// line 2, station name
 					output += '<span class="pll2">';
 					output += '<i class="fas fa-microphone"></i> ';
-					
+
 					if (typeof(RADIO.json[data[i].file]) === 'undefined') {
 						var name = typeof(data[i].Name) === 'undefined' ? 'Radio station' : data[i].Name;
 						output += name;
@@ -967,14 +965,14 @@ function renderPlaylist() {
 						}
 					}
 				}
-				// song file or upnp url	
+				// song file or upnp url
 				else {
 	                // line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
 					if (typeof(data[i].Title) === 'undefined') { // use file name
 						var pos = data[i].file.lastIndexOf('.');
-						
+
 						if (pos == -1) {
 							output += data[i].file; // some upnp url's have no file ext
 						}
@@ -988,7 +986,7 @@ function renderPlaylist() {
 					// use title
 					else {
 	                    output += data[i].Title + '</span>';
-					}	                
+					}
 					// line 2 artist, album
 					output += '<span class="pll2">';
 					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
@@ -997,7 +995,7 @@ function renderPlaylist() {
 				}
 
                 output += '</span></div></li>';
-				
+
             } // end loop
         }
 
@@ -1006,7 +1004,7 @@ function renderPlaylist() {
 		if (MPD.json['state'] === 'stop') {
 			$('#currentalbum, #playbar-currentalbum').html($('#playlist li:nth-child(1) .pll2').text());
 			$('#currentsong, #playbar-currentsong').html($('#playlist li:nth-child(1) .pll1').text());
-		}	
+		}
     });
 }
 
@@ -1710,7 +1708,7 @@ $('.togglepl').click(function(e) {
 		clearTimeout(searchTimer);
 		$('#playback-panel').hasClass('cv') ? $('#playback-controls').css('display', '') : '';
 		$('#playback-queue').css('left','');
-		$('#playback-cover').css('display','');		
+		$('#playback-cover').css('display','');
 	}
 });
 
@@ -1741,7 +1739,7 @@ $('#currentsong').click(function(e) {
 // all music menu item
 $('.view-all').click(function(e) {
 		$('#viewswitch span').hide();
-		$('.view-all span').show();	
+		$('.view-all span').show();
 		$('#menu-header').click()
 		GLOBAL.musicScope = 'all';
 		GLOBAL.searchLib, GLOBAL.searchRadio = false;
@@ -2093,9 +2091,9 @@ $('.btn-appearance-update').click(function(e){
 	var scnSaverStyleChange = false;
     var xtagdispChange = false;
     var playHistoryChange = false;
-	var fontChange = false;
+	var fontSizeChange = false;
 
-	// set state...
+	// Set open/closed state for accordion headers
 	var temp = [0,0,0,0];
 	for (var x = 0; x < 4; x++) {
 		if ($('#appearance-modal div.control-group').eq(x).css('display') == 'block') {
@@ -2129,9 +2127,9 @@ $('.btn-appearance-update').click(function(e){
     if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
     // Other options
+    if (SESSION.json['font_size'] != $('#font-size span').text()) {fontSizeChange = true;};
     if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
-    if (SESSION.json['font_size'] != $('#font-size span').text()) {fontChange = true;};
 
 	// Theme and backgrounds
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -2158,44 +2156,45 @@ $('.btn-appearance-update').click(function(e){
     SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
     // Other options
+    SESSION.json['font_size'] = $('#font-size span').text();
     SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
 	SESSION.json['xtagdisp'] = $('#extratag-display span').text();
-	SESSION.json['font_size'] = $('#font-size span').text();
 
 	// Update cfg_system and session vars
 	var result = sendMoodeCmd('POST', 'updcfgsystem',
-		{'themename': SESSION.json['themename'],
-		 'accent_color': SESSION.json['accent_color'],
-		 'alphablend': SESSION.json['alphablend'],
-		 'adaptive': SESSION.json['adaptive'],
-		 'cover_backdrop': SESSION.json['cover_backdrop'],
-		 'cover_blur': SESSION.json['cover_blur'],
-		 'cover_scale': SESSION.json['cover_scale'],
-         'library_instant_play': SESSION.json['library_instant_play'],
-         'library_show_genres': SESSION.json['library_show_genres'],
-         'library_tagview_covers': SESSION.json['library_tagview_covers'],
-         'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
-         'library_albumview_sort': SESSION.json['library_albumview_sort'],
-         'library_tagview_sort': SESSION.json['library_tagview_sort'],
-         'library_comp_id': SESSION.json['library_comp_id'],
-         'library_recently_added': SESSION.json['library_recently_added'],
-         'library_ignore_articles': SESSION.json['library_ignore_articles'],
-         'library_utf8rep': SESSION.json['library_utf8rep'],
-         'library_hiresthm': SESSION.json['library_hiresthm'],
-         'library_covsearchpri': SESSION.json['library_covsearchpri'],
-		 'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
-		 'scnsaver_style': SESSION.json['scnsaver_style'],
-         'ashuffle_filter': SESSION.json['ashuffle_filter'],
-         'playhist': SESSION.json['playhist'],
-         'xtagdisp': SESSION.json['xtagdisp'],
-		 'appearance_modal_state': SESSION.json['appearance_modal_state'],
-	 	 'font_size': SESSION.json['font_size']	 
+		{
+        'themename': SESSION.json['themename'],
+		'accent_color': SESSION.json['accent_color'],
+        'alphablend': SESSION.json['alphablend'],
+        'adaptive': SESSION.json['adaptive'],
+        'cover_backdrop': SESSION.json['cover_backdrop'],
+        'cover_blur': SESSION.json['cover_blur'],
+        'cover_scale': SESSION.json['cover_scale'],
+        'library_instant_play': SESSION.json['library_instant_play'],
+        'library_show_genres': SESSION.json['library_show_genres'],
+        'library_tagview_covers': SESSION.json['library_tagview_covers'],
+        'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
+        'library_albumview_sort': SESSION.json['library_albumview_sort'],
+        'library_tagview_sort': SESSION.json['library_tagview_sort'],
+        'library_comp_id': SESSION.json['library_comp_id'],
+        'library_recently_added': SESSION.json['library_recently_added'],
+        'library_ignore_articles': SESSION.json['library_ignore_articles'],
+        'library_utf8rep': SESSION.json['library_utf8rep'],
+        'library_hiresthm': SESSION.json['library_hiresthm'],
+        'library_covsearchpri': SESSION.json['library_covsearchpri'],
+        'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
+        'scnsaver_style': SESSION.json['scnsaver_style'],
+        'font_size': SESSION.json['font_size'],
+        'ashuffle_filter': SESSION.json['ashuffle_filter'],
+        'playhist': SESSION.json['playhist'],
+        'xtagdisp': SESSION.json['xtagdisp'],
+        'appearance_modal_state': SESSION.json['appearance_modal_state']
 		}
 	);
 
-	if (fontChange) {
-		setFont();
+	if (fontSizeChange) {
+		setFontSize();
 		window.dispatchEvent(new Event('resize')); // resize knobs if needed
 	}
 
@@ -2253,7 +2252,9 @@ function getParamOrValue (type, key) {
         // Library recently added
         ['1 Week','604800000'],['1 Month','2592000000'],['3 Months','7776000000'],['6 Months','15552000000'],['1 Year','31536000000'],
         // Library cover search priority
-        ['Embedded','Embedded cover'],['Cover file','Cover image file']
+        ['Embedded','Embedded cover'],['Cover file','Cover image file'],
+        // Font size factors
+        ['Smaller',.35],['Small',.40],['Normal',.45],['Large',.55],['Larger',.65]
     ]);
 
     if (type == 'value') {
@@ -2618,7 +2619,7 @@ function rgbaToRgb(frac, op, rgba, rgb) {
 	var b3 = Math.round(((1 - frac) * rgb[2]) + (frac * rgba[2]));
 	var color = 'rgba(' + r3 + ', ' + g3 + ', ' + b3 + ', ' + op + ')';
 	return color;
-} 
+}
 
 function splitColor(tempcolor) {
     //var color = tempcolor.substr(5);
@@ -2796,7 +2797,7 @@ $(window).on('scroll', function(e) {
 			$('#menu-bottom').hide();
 			$('#menu-top').css('height', '0');
 			$('#menu-top').css('backdrop-filter', '');
-			showMenuTopW = false;	
+			showMenuTopW = false;
 		}
 	}
 });
@@ -3064,7 +3065,7 @@ function syncTimers() {
 				$('#playbar-timeline .timeline-progress').css('width', g);
 			}
 		}
-		oldCount = a;		
+		oldCount = a;
 	}
 }
 
@@ -3099,7 +3100,7 @@ function makeActive (vswitch, panel, view) {
 			$('#viewswitch-search').show();
 			GLOBAL.lazyTag && SESSION.json['tag_view_covers'] == 'Yes' ? '' : lazyLode('tag');
 			$('#library-panel').addClass('tag').removeClass('covers');
-			SESSION.json['show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
+			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 			scopeR(); // add album/year, artist, year
 			break;
 		default: // radio
@@ -3132,8 +3133,8 @@ function scopeR () {
 				view = "Recently Added";
 			} else {
 				$('.view-all span').show();
-		        LIB.recentlyAddedClicked = false;			
-			}			
+		        LIB.recentlyAddedClicked = false;
+			}
 		}
 	}
 	if (GLOBAL.searchFolder) {
@@ -3181,18 +3182,21 @@ function lazyLode(container) {
 		}
 }
 
-function setFont() {
-	var a = SESSION.json['font_size'];
-	var temp;
-	a == 'Smaller' ? temp = .35 : a == 'Small' ? temp = .40 : a == 'Large' ? temp = .55 : a == 'Larger' ? temp = .65 : temp = .45;
-	UI.mobile ? temp += .3 : '';
-	document.body.style.setProperty('--pbfont', 'calc(' + temp + 'rem + 1vmin)');
+function setFontSize() {
+    var sizeFactor = getParamOrValue('value',SESSION.json['font_size']);
+
+    if (UI.mobile) {
+        sizeFactor += .3;
+    }
+
+    document.body.style.setProperty('--pbfont', 'calc(' + sizeFactor + 'rem + 1vmin)');
 }
 
 // toggle cv class and use dark theme type colors for menus
 function setCV() {
 	$('#playback-panel').toggleClass('cv');
 	window.dispatchEvent(new Event('resize')); // resize for knobs
+    
 	if ($('#playback-panel').hasClass('cv')) {
 		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.11'});
 		$('#library-panel, #radio-panel, #folder-panel').removeClass('active');
@@ -3203,8 +3207,8 @@ function setCV() {
 		adaptMcolor = '#eee';
 		adaptMback = 'rgba(50,50,50,0.9)';
 		$('#playback-panel').addClass('active');
-		
-	} else {
+	}
+    else {
 		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.13'});
 		$('#menu-top').show();
 		adaptBack = tempBack;
@@ -3232,4 +3236,3 @@ function setCV() {
 	}
 	setColors();
 }
-

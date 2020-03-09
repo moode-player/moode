@@ -60,7 +60,7 @@ jQuery(document).ready(function($) { 'use strict';
 	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
 
 	// set the font size
-	setFont();
+	setFontSize();
 
 	// compile the ignore articles regEx
 	if (SESSION.json['library_ignore_articles'] != 'None') {
@@ -224,11 +224,11 @@ jQuery(document).ready(function($) { 'use strict';
 		$(window).scrollTop(0); // make sure it's scrolled to top
 		if (UI.mobile) {
 			$('#container-playlist').css('visibility','hidden');
-			$('#playback-controls').show();				
+			$('#playback-controls').show();
 		} else {
 			setTimeout(function() {
 		        customScroll('pl', parseInt(MPD.json['song']));
-			}, 500);			
+			}, 500);
 		}
 		$('#menu-bottom').hide();
 	}
@@ -266,7 +266,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	else if (currentView == 'tag'){
 		makeActive('.tag-view-btn','#library-panel', 'tag');
-        if (SESSION.json['show_genres'] == 'Yes') {
+        if (SESSION.json['library_show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
         }
         else {
@@ -293,7 +293,7 @@ jQuery(document).ready(function($) { 'use strict';
 			}
 		}, 500);
 	}
-			
+
 	//
 	// EVENT HANDLERS
 	//
@@ -310,15 +310,15 @@ jQuery(document).ready(function($) { 'use strict';
 			}
 		}, 250);
 	});
-    // Folder view	
+    // Folder view
 	$('.folder-view-btn').click(function(e){
 		makeActive('.folder-view-btn','#folder-panel','folder');
 		mpdDbCmd('lsinfo', '');
 	});
-    // Tag view	
+    // Tag view
 	$('.tag-view-btn').click(function(e){
 		makeActive('.tag-view-btn','#library-panel','tag');
-        SESSION.json['show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
+        SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
 		// Render library
 		if (!libRendered) {
@@ -970,7 +970,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 
 		clearTimeout(searchTimer);
-		
+
 		if (e.key == 'Enter') {
 			var filter = $(this).val();
 			LIB.filters.year = filter.split('-'); // [year 1][year 2 if present]
@@ -990,7 +990,7 @@ jQuery(document).ready(function($) { 'use strict';
 			if (currentView == 'tag') {
 				if (SESSION.json['tag_view_covers'] == 'Yes') {
 					lazyLode('tag');
-				}	
+				}
 			}
 			if (currentView == 'album') {
 				lazyLode('album');
@@ -1068,7 +1068,7 @@ jQuery(document).ready(function($) { 'use strict';
 			if (currentView == 'tag') {
 				if (SESSION.json['tag_view_covers'] == 'Yes') {
 					lazyLode('tag');
-				}	
+				}
 			}
 			if (currentView == 'album') {
 				lazyLode('album');
@@ -1262,21 +1262,21 @@ jQuery(document).ready(function($) { 'use strict';
 			// handle click off playback queue to revert to normal
 				//console.log($(e.target).parents());
 			$('#playback-queue').css('left','-10000px');
-			$('#playback-cover').css('display','');	
+			$('#playback-cover').css('display','');
 			$('#playback-controls').css('display','');
 		}
 		if (SESSION.json['scnsaver_timeout'] != 'Never' || $('#playback-panel').hasClass('cv')) {
 			if ($('#playback-panel').hasClass('cv')) {
 				$('#screen-saver').hide();
 				$('#playback-panel').hasClass('cv') ? setCV() : '';
-				$('#playback-panel').removeClass('cv');				
+				$('#playback-panel').removeClass('cv');
 			}
 			setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
 				var result = sendMoodeCmd('GET', 'resetscnsaver', '', true);
 			}, 3000);
-		}	
+		}
 	});
-	
+
 	// screen saver reset
 	$('#screen-saver, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
 		if ($('#screen-saver').css('display') == 'block' || SESSION.json['scnsaver_timeout'] != 'Never') {
