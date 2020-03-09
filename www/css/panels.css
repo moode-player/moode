@@ -200,7 +200,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList .lib-entry img {width:3rem;margin:.3em .35em .3em .15em;}
 #albumsList .album-name-art {display:inline-block;vertical-align:middle;max-width:calc(100% - 4.75em);line-height:1.25em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 #albumsList .album-name {display:inline-block;vertical-align:middle;max-width:calc(100% - 1.25em);}
-#albumsList .artist-name-art {display:inline-block;font-size:0.85em;color:var(--textvariant); vertical-align:top;}
+#albumsList .artist-name-art {display:inline-block;font-size:0.85em;line-height:normal;color:var(--textvariant); vertical-align:top;}
 #albumsList .artist-name {display:none}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
@@ -268,6 +268,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .viewswitch div {display:flex;color:var(--adapttext);}
 .viewswitch .btn {position:relative;width:100%;line-height:normal;font-size:1.1rem;padding:.75rem 1rem;background-color:transparent;text-align:left;color:var(--textvariant);}
 .viewswitch .btn.active {color:inherit;}
+.viewswitch .btn:hover {background-color:var(--accentxta);}
 .viewswitch .btn i {padding:0 .5rem 0 0;}
 #current-tab {font-size:1.1rem;font-weight:600;height:2.75rem;line-height:2.75rem;}
 #current-tab i {font-size:.7rem;margin-left:2px;}
@@ -294,6 +295,7 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 .modal h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:10px;font-weight:600;position:relative;text-align:right;right:52%;}
 .modal .h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:1em;font-weight:600;position:relative;text-align:right;display:inline-block;width:48%;}
 .dtclose, .dtopen {font-weight:600;font-size:1.2em;}
+.accordian:hover {cursor:pointer;}
 #appearance-modal div.accordian .control-group {display:none;margin-bottom:1em;}
 #appearance-modal div.accordian.active .control-group {display:block;}
 #appearance-modal div.accordian .dtopen {display:none;}

@@ -513,7 +513,7 @@ var renderAlbums = function() {
 			output += '<li class="' + liClass + '">'
              + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
              + '<div class="album-name">' + filteredAlbums[i].album
-             + '<br><span class="artist-name album-year">' + filteredAlbums[i].artist + tagViewYear + '</span></div></li>'		}
+             + '<br><span class="artist-name-art album-year">' + filteredAlbums[i].artist + tagViewYear + '</span></div></li>'		}
 		else {
 			output += '<li class="' + liClass + '"><span class="album-name">' + filteredAlbums[i].album
              + '</span><span class="artist-name">' + filteredAlbums[i].artist + tagViewYear + '</span></li>'
