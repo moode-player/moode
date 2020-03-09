@@ -52,6 +52,7 @@ function Countdown() {
 		tickInterval: 1 // Interval (seconds) between onTick callbacks
 	};
 	$.extend(this._defaults, this.regional['']);
+	var fps = 1;
 	this._serverSyncs = [];
 	var now = (typeof Date.now == 'function' ? Date.now :
 		function() { return new Date().getTime(); });
@@ -66,7 +67,9 @@ function Countdown() {
 			plugin._updateTargets();
 			animationStartTime = drawStart;
 		}
-		requestAnimationFrame(timerCallBack);
+		setTimeout(function(){
+			requestAnimationFrame(timerCallBack);
+		}, 1000 / fps);
 	}
 	var requestAnimationFrame = window.requestAnimationFrame ||
 		window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -79,8 +82,8 @@ function Countdown() {
 	}
 	else {
 		animationStartTime = window.animationStartTime ||
-			window.webkitAnimationStartTime || window.mozAnimationStartTime ||
-			window.oAnimationStartTime || window.msAnimationStartTime || now();
+		window.webkitAnimationStartTime || window.mozAnimationStartTime ||
+		window.oAnimationStartTime || window.msAnimationStartTime || now();
 		requestAnimationFrame(timerCallBack);
 	}
 }

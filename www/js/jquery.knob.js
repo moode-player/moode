@@ -15,7 +15,7 @@
  * Moode Audio Player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
- * 2020-01-23 TC moOde 6.4.1
+ * 2019-04-12 TC moOde 5.0
  *
  */
 
@@ -52,8 +52,8 @@
     k.o = function () {
         var s = this;
 
-		this.po = 0;   // pixel offset e.g. 11
-		this.bloom = false; // bloom e.g. true
+		this.po = 11;   // pixel offset
+		this.bloom = true; // bloom
         this.o = null; // array of options
         this.$ = null; // jQuery wrapped element
         this.i = null; // mixed HTMLInputElement or array of HTMLInputElement
@@ -113,7 +113,7 @@
                     height : this.$.data('height') || 200,
                     displayInput : this.$.data('displayinput') == null || this.$.data('displayinput'),
                     displayPrevious : this.$.data('displayprevious'),
-					fgColor : accentColor || '#27ae60',
+					fgColor : this.$.data('fgcolor') || '#27ae60',
                     inputColor: this.$.data('inputcolor') || this.$.data('fgcolor') || '#4BBE87',
                     font: this.$.data('font') || 'Arial',
                     fontWeight: this.$.data('font-weight') || 'bold',
@@ -295,19 +295,18 @@
         };
 
         this._touch = function (e) {
+
             var touchMove = function (e) {
 
                 var v = s.xy2val(
-                    e.originalEvent.touches[s.t].pageX,
-                    e.originalEvent.touches[s.t].pageY
-                );
-
-                // Volume step limiter
-                if (s.$div.parent().hasClass('volume-step-limiter')) {
-                    if (v - parseInt(SESSION.json['volknob']) > 10) {
-        				v = parseInt(SESSION.json['volknob']) + 10;
-        			}
-                }
+                            e.originalEvent.touches[s.t].pageX,
+                            e.originalEvent.touches[s.t].pageY
+                            );
+			                if (s.$div.parent().hasClass('volume-step-limiter')) {
+			                    if (v - parseInt(SESSION.json['volknob']) > 10) {
+			        				v = parseInt(SESSION.json['volknob']) + 10;
+			        			}
+			                }
 
                 if (v == s.cv) return;
 
@@ -348,17 +347,15 @@
         };
 
         this._mouse = function (e) {
+
             var mouseMove = function (e) {
                 var v = s.xy2val(e.pageX, e.pageY);
-
-                // Volume step limiter
+                if (v == s.cv) return;
                 if (s.$div.parent().hasClass('volume-step-limiter')) {
                     if (v - parseInt(SESSION.json['volknob']) > 10) {
         				v = parseInt(SESSION.json['volknob']) + 10;
         			}
                 }
-
-                if (v == s.cv) return;
 
                 if (
                     s.cH
@@ -680,6 +677,7 @@
                             , 2
                             ) + 2;
 
+
             this.o.displayInput
                 && this.i.css({
                         'width' : ((this.w / 2 + 4) >> 0) + 'px'
@@ -727,7 +725,6 @@
             this.o.cursor
                 && (sat = eat - this.cursorExt)
                 && (eat = eat + this.cursorExt);
-
             c.beginPath();
                 c.strokeStyle = this.o.bgColor;
                 c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, this.endAngle, this.startAngle, true);
@@ -759,13 +756,13 @@
 				var temp = splitColor(this.o.fgColor) // rgba
 			}
 			var tempcolor = 'rgba(' + temp[0] + ',' + temp[1] + ',' + temp[2] + ',.75)';
-			
+
             c.beginPath();
 				if (this.bloom) {
 					c.shadowBlur = (this.po / 1.5);
 					c.shadowColor = tempcolor;
 				}
-				//c.shadowColor = r ? this.o.fgColor : this.fgColor ;	
+				//c.shadowColor = r ? this.o.fgColor : this.fgColor ;
                 c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
                 c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, sat, eat, false);
             c.stroke();

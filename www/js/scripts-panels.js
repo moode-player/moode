@@ -27,7 +27,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
 	$('#menu-bottom').css('display', 'flex');
-    $('#accordion > div').hide();
+    //$('#accordian > div').hide();
 
 	// compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
@@ -55,8 +55,12 @@ jQuery(document).ready(function($) { 'use strict';
 	UI.libPos[0] = parseInt(tmpStr[0]); // album list
 	UI.libPos[1] = parseInt(tmpStr[1]); // album cover
 	UI.libPos[2] = parseInt(tmpStr[2]); // artist list
+
 	// mobile
-	UI.mobile = $('#mt2').css('display') == 'block' ? true : false;
+	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
+
+	// set the font size
+	setFont();
 
 	// compile the ignore articles regEx
 	if (SESSION.json['library_ignore_articles'] != 'None') {
@@ -74,7 +78,16 @@ jQuery(document).ready(function($) { 'use strict';
 	themeBack = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + SESSION.json['alphablend'] +')';
 	themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
 	if (SESSION.json['adaptive'] == "No") {document.body.style.setProperty('--adaptmbg', themeBack);}
-	blurrr == true ? themeOp = .7 : themeOp = .95;
+	blurrr == true ? themeOp = .85 : themeOp = .95;
+
+	// only display transparency related theme options if alphablend is < 1
+	$('#alpha-blend').on('DOMSubtreeModified',function(){
+		if ($('#alpha-blend span').text() < 1) {
+			$('#cover-options').show();
+		} else {
+			$('#cover-options').css('display', '');
+		}
+	});
 
 	/*themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
 	tempcolor = splitColor($('.dropdown-menu').css('background-color'));*/
@@ -162,7 +175,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#volume').val(SESSION.json['volknob']);
 		$('#volume-2').val(SESSION.json['volknob']);
 		$('.volume-display').css('opacity', '');
-		$('.volume-display').text(SESSION.json['volknob']);
+		$('.volume-display div').text(SESSION.json['volknob']);
 	}
 
     // Show or hide Play history item on system menu
@@ -207,25 +220,27 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Full screen playback
 	if (currentView.indexOf('playback') != -1) {
-        $('#playback-panel').addClass('active');
-        $('#menu-bottom, #top-columns, #bottom-row').hide();
-        $('#playback-switch').show();
-        setTimeout(function() {
-            customScroll('pl', parseInt(MPD.json['song']));
-        }, 500);
+		$('#playback-panel').addClass('active');
+		$(window).scrollTop(0); // make sure it's scrolled to top
+		if (UI.mobile) {
+			$('#container-playlist').css('visibility','hidden');
+			$('#playback-controls').show();				
+		} else {
+			setTimeout(function() {
+		        customScroll('pl', parseInt(MPD.json['song']));
+			}, 500);			
+		}
+		$('#menu-bottom').hide();
 	}
     // Library with Playbar
 	else {
-        $('#menu-bottom, .viewswitch').css('display', 'flex');
-        $('#playback-switch').hide();
+		$('#menu-bottom, #viewswitch').css('display', 'flex');
+		$('#playback-switch').hide();
 	}
 
     // Radio view
-	if (currentView == 'radiolist' || currentView == 'radiocover') {
-        $('#library-panel').removeClass('active');
-        $('#radio-panel, .radio-view-btn').addClass('active');
-        $('.folder-view-btn, .tag-view-btn, .album-view-btn').removeClass('active');
-        $('#lib-albumcover, #lib-albumcover-header').hide();
+	if (currentView == 'radiolist' || currentView == 'radiocovers') {
+		makeActive('.radio-view-btn','#radio-panel',currentView);
 
 		if (currentView == 'radiolist') {
 			$('#ra-toggle-view i').removeClass('fa-bars').addClass('fa-th');
@@ -237,31 +252,21 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 
 		setTimeout(function() {
-			$('img.lazy-radioview').lazyload({
-			    container: $('#radiocovers')
-			});
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);
 			}
-		}, 500); // Was 250
+		}, 250);
 	}
     // Folder view
 	else if (currentView == 'folder') {
-        $('#library-panel').removeClass('active');
-        $('#folder-panel, .folder-view-btn').addClass('active');
-        $('.tag-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
-        mpdDbCmd('lsinfo', '');
+		makeActive('.folder-view-btn','#folder-panel', 'folder');
+		mpdDbCmd('lsinfo', '');
 	}
     // Tag view
+
 	else if (currentView == 'tag'){
-        $('#library-panel, .tag-view-btn').addClass('active');
-        $('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
-        $('.recently-added').css('margin-left', '-.25em');
-        $('#lib-albumcover, #lib-albumcover-header').hide();
-
-        $('#index-albumcovers').hide();
-
-        if (SESSION.json['library_show_genres'] == 'Yes') {
+		makeActive('.tag-view-btn','#library-panel', 'tag');
+        if (SESSION.json['show_genres'] == 'Yes') {
             $('#top-columns').removeClass('nogenre');
         }
         else {
@@ -269,9 +274,6 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
 		setTimeout(function() {
-			$('img.lazy-tagview').lazyload({
-			    container: $('#lib-album')
-			});
 			if (UI.libPos[0] >= 0) {
 			    $('#albumsList .lib-entry').removeClass('active');
 				$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
@@ -280,81 +282,43 @@ jQuery(document).ready(function($) { 'use strict';
 			}
 		}, 500);
 	}
-    // Album view
+	// Album view
 	else if (currentView == 'album'){
-        $('#library-panel, .album-view-btn').addClass('active');
-        $('.folder-view-btn, .tag-view-btn, .radio-view-btn').removeClass('active');
-        $('#lib-albumcover, #lib-albumcover-header').show();
-        $('#top-columns, #bottom-row').css('display', 'none');
-
+		makeActive('.album-view-btn','#library-panel', 'album');
 		setTimeout(function() {
-            $('img.lazy-albumview').lazyload({
-			    container: $('#lib-album')
-			});
 			if (UI.libPos[1] >= 0) { // lib entry clicked or random album
 			    $('#albumcovers .lib-entry').removeClass('active');
 				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
-				customScroll('albumcovers', UI.libPos[1], 200);
+				customScroll('albumcovers', UI.libPos[1], 0);
 			}
 		}, 500);
 	}
-
+			
 	//
 	// EVENT HANDLERS
 	//
 
     // Radio view
 	$('.radio-view-btn').click(function(e){
-        $('.folder-view-btn, .tag-view-btn, .album-view-btn').removeClass('active');
-        $('.radio-view-btn').addClass('active');
-        $('#lib-albumcover, #lib-albumcover-header').hide();
 
-		currentView = $('#ra-toggle-view i').hasClass('fa-bars') ? 'radiocover' : 'radiolist';
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
+		$('ra-toggle-view i').hasClass('fa-bars') ? makeActive('.radio-view-btn','#radio-panel','radiocovers') : makeActive('.radio-view-btn','#radio-panel','radiocovers');
 
 		setTimeout(function() {
-			$('img.lazy-radioview').lazyload({
-			    container: $('#radiocovers')
-			});
+			lazyLode('radio');
 			if (UI.radioPos >= 0) {
-				customScroll('radiocovers', UI.radioPos, 200);
+				customScroll('radiocovers', UI.radioPos, 0);
 			}
-		}, 500); // Was 250
+		}, 250);
 	});
-    // Folder view
+    // Folder view	
 	$('.folder-view-btn').click(function(e){
-		$('.tag-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
-		$('.folder-view-btn').addClass('active');
-		$('#lib-albumcover, #lib-albumcover-header').hide();
-
-		currentView = 'folder';
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
-
+		makeActive('.folder-view-btn','#folder-panel','folder');
 		mpdDbCmd('lsinfo', '');
 	});
-    // Tag view
+    // Tag view	
 	$('.tag-view-btn').click(function(e){
-        $('.folder-view-btn, .album-view-btn, .radio-view-btn').removeClass('active');
-        $('.tag-view-btn').addClass('active');
-        $('#top-columns, #bottom-row').css('display', 'flex');
-        $('.recently-added').css('margin-left', '-.25em');
-        $('#lib-albumcover, #lib-albumcover-header').hide();
-        setTagViewHeaderText();
-
-        $('#index-albumcovers').hide();
-        if (SESSION.json['library_albumview_sort'] == 'Year') {
-            $('#index-albums').hide();
-        }
-
-        if (SESSION.json['library_show_genres'] == 'Yes') {
-            $('#top-columns').removeClass('nogenre');
-        }
-        else {
-            $('#top-columns').addClass('nogenre');
-        }
-
-		currentView = 'tag';
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
+		makeActive('.tag-view-btn','#library-panel','tag');
+        SESSION.json['show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
 		// Render library
 		if (!libRendered) {
@@ -363,77 +327,54 @@ jQuery(document).ready(function($) { 'use strict';
 			loadLibrary();
 		}
 		setTimeout(function() {
-			$('img.lazy-tagview').lazyload({
-			    container: $('#lib-album')
-			});
 			if (UI.libPos[0] >= 0) { // Lib entry clicked or random album
 			    $('#albumsList .lib-entry').removeClass('active');
 				$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
-				customScroll('albums', UI.libPos[0], 200);
+				customScroll('albums', UI.libPos[0], 0);
 				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
 			}
 			else if (UI.libPos[0] == -2) { // Lib headers clicked
 			    $('#albumsList .lib-entry').removeClass('active');
-				$('#lib-album').scrollTo(0, 200);
-				$('#lib-artist').scrollTo(0, 200);
+				$('#lib-album').scrollTo(0, 0);
+				$('#lib-artist').scrollTo(0, 0);
 				UI.libPos[0] = -1;
 				storeLibPos(UI.libPos);
 			}
 			else if (UI.libPos[0] == -3) { // Lib search performed
 			    $('#albumsList .lib-entry').removeClass('active');
-				$('#lib-album').scrollTo(0, 200);
+				$('#lib-album').scrollTo(0, 0);
 				$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
 				$('#lib-albumname, #lib-artistname, #lib-albumyear, #lib-numtracks, #songsList').html('');
 				UI.libPos[0] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, 500); // Was 250
+		}, 250);
 	});
     // Album view
 	$('.album-view-btn').click(function(e){
-        $('.folder-view-btn, .tag-view-btn, .radio-view-btn').removeClass('active');
-        $('.album-view-btn').addClass('active');
-        $('#top-columns, #bottom-row').css('display', 'none');
-        $('.recently-added').css('margin-left', '');
-        $('#lib-albumcover, #lib-albumcover-header').show();
-        setAlbumViewHeaderText();
-
-        $('#lib-albumcover').css('height', '100%');
-        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
-
-        if (SESSION.json['library_albumview_sort'] == 'Year') {
-            $('#index-albumcovers').hide();
-        }
-        else {
-            $('#index-albumcovers').show();
-        }
-
-		currentView = 'album';
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
+		$('#library-panel').addClass('covers').removeClass('tag');
+		GLOBAL.lazyCovers = false;
+		makeActive('.album-view-btn','#library-panel','album');
 
 		// Render library
 		if (!libRendered) {
 		    $('#lib-content').hide();
 		    $('#lib-loader').show();
-			//console.log('.album-view-btn (click), libRendered=' + libRendered);
 			loadLibrary();
 		}
 		setTimeout(function() {
-			$('img.lazy-albumview').lazyload({
-			    container: $('#lib-albumcover')
-			});
 			if (UI.libPos[1] >= 0) { // Lib entry clicked or random album
 			    $('#albumcovers .lib-entry').removeClass('active');
 				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
-				customScroll('albumcovers', UI.libPos[1], 200);
+				customScroll('albumcovers', UI.libPos[1], 0);
 			}
 			else if (UI.libPos[1] == -2 || UI.libPos[1] == -3) { // Lib headers clicked or search performed
 			    $('#albumcovers .lib-entry').removeClass('active');
-				$('#lib-albumcover').scrollTo(0, 200);
+				$('#lib-albumcover').scrollTo(0, 0);
 				UI.libPos[1] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, 500); // Was 250
+		}, 250);
 	});
 
 	// mute toggle
@@ -536,15 +477,17 @@ jQuery(document).ready(function($) { 'use strict';
 			sendMpdCmd('previous');
 		}
 	});
-	$('#volumeup,#volumeup-2,#ssvolup').click(function(e) {
+	$('#volumeup,#volumeup-2').click(function(e) {
 		var curVol = parseInt(SESSION.json['volknob']);
 		var newVol = curVol < 100 ? curVol + 1 : 100;
 		setVolume(newVol, '');
+		return false
 	});
-	$('#volumedn,#volumedn-2,#ssvoldn').click(function(e) {
+	$('#volumedn,#volumedn-2').click(function(e) {
 		var curVol = parseInt(SESSION.json['volknob']);
 		var newVol = curVol > 0 ? curVol - 1 : 0;
 		setVolume(newVol, '');
+		return false
 	});
 	$('.btn-toggle').click(function(e) {
 		//var id = $(this).attr('id');
@@ -639,7 +582,11 @@ jQuery(document).ready(function($) { 'use strict';
     });
 
     // click on playlist entry
-    $('.playlist, .ss-playlist').on('click', '.pl-entry', function(e) {
+    $('.playlist').on('click', '.pl-entry', function(e) {
+		var sender = e.target.className;
+		if (sender == 'pl-action' || sender == '') {
+			return;
+		}
 		var selector = $(this).parents('ul').hasClass('playlist') ? '.playlist' : '.ss-playlist';
         var pos = $(selector + ' .pl-entry').index(this);
 
@@ -648,6 +595,12 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (UI.mobile) { // for mobile scroll to top
 			$('html, body').animate({ scrollTop: 0 }, 'fast');
+		}
+		else if ($('#playback-panel').hasClass('newui') || $('#playback-panel').hasClass('cv')) {
+			$('#playback-queue').css('left','-10000px');
+			$('#playback-cover, #playback-controls').css('display','');
+			e.preventDefault();
+			return false;
 		}
     });
 
@@ -1010,18 +963,45 @@ jQuery(document).ready(function($) { 'use strict';
 
     // library search
 	$('#lib-album-filter').keyup(function(e){
+		e.preventDefault();
 		if (!showSearchResetLib) {
 			$('#searchResetLib').show();
 			showSearchResetLib = true;
 		}
 
 		clearTimeout(searchTimer);
+		
+		if (e.key == 'Enter') {
+			var filter = $(this).val();
+			LIB.filters.year = filter.split('-'); // [year 1][year 2 if present]
+		    LIB.recentlyAddedClicked = false;
+			LIB.filters.albums.length = 0;
+			LIB.filters.year[1] ? f = ' to ' + LIB.filters.year[1] : f = '';
+			console.log(LIB.filters.year);
+			$('#menu-header').text('Albums from ' + LIB.filters.year[0]+ f);
+			GLOBAL.searchLib = $('#menu-header').text(); // save for #menu-header
+			$('#viewswitch span').hide();
+			UI.libPos.fill(-2);
+			filterLib();
+		    renderAlbums();
+			$('#lib-album-filter').blur();
+			$('#viewswitch').click();
+			//GLOBAL.lazyTag, GLOBAL.lazyAlbum = false;
+			if (currentView == 'tag') {
+				if (SESSION.json['tag_view_covers'] == 'Yes') {
+					lazyLode('tag');
+				}	
+			}
+			if (currentView == 'album') {
+				lazyLode('album');
+			}
+			return;
+		}
 
 		var selector = this;
 		searchTimer = setTimeout(function(){
 			var filter = $(selector).val()
 			var count = 0;
-
 			if (filter == '') {
 				$('#searchResetLib').hide();
 				showSearchResetLib = false;
@@ -1046,41 +1026,54 @@ jQuery(document).ready(function($) { 'use strict';
 			});
 			var s = (count == 1) ? '' : 's';
 			if (filter != '') {
-				$('#lib-album-filter-results').html((+count) + '&nbsp;album' + s);
+				$('#menu-header').text((+count) + ' albums found');
+				GLOBAL.searchLib = $('#menu-header').text(); // save for #menu-header
+				//$('#lib-album-filter-results').html((+count) + '&nbsp;album' + s);
 			}
 			else {
 				$('#lib-album-filter-results').html('');
 			}
-
+			GLOBAL.lazyTag, GLOBAL.lazyAlbum = false;
 			if ($('.tag-view-btn').hasClass('active')) {
-				var lazyClass = 'img.lazy-tagview';
-				var lazyContainer = '#lib-album';
+				//GLOBAL.lazyTag = false; // whyyyy
+				lazyLode('tag');
 			}
 			else {
-				var lazyClass = 'img.lazy-albumview';
-				var lazyContainer = '#lib-albumcover';
-				$('#bottom-row').css('display', 'none');
+				//GLOBAL.lazyAlbum = false; // whyyyy
+				lazyLode('album');
+				$('#bottom-row').css('display', '');
 			}
 
 		    $('#albumcovers .lib-entry').removeClass('active');
 		    $('#albumsList .lib-entry').removeClass('active');
 			$('#lib-albumcover').css('height', '100%');
-			$('#lib-album').scrollTo(0, 200);
-			$('#lib-albumcover').scrollTo(0, 200);
 			UI.libPos.fill(-3);
-
-			$(lazyClass).lazyload({
-			    container: $(lazyContainer)
-			});
-		}, 750);
-	});
-	$('#searchResetLib').click(function(e) {
-		LIB.filters.albums.length = 0;
-		UI.libPos.fill(-2);
-		storeLibPos(UI.libPos);
-	    clickedLibItem(undefined, undefined, LIB.filters.albums, renderAlbums);
-		$("#searchResetLib").hide();
-		showSearchResetLib = false;
+		}, 250);
+		var filter = $(selector).val();
+		if (filter.slice(filter.length - 2) == '!r') { // rangify
+			var f = filter.slice(0, filter.length - 2);
+			LIB.filters.year = f.split('-'); // [year 1][year 2 if present]
+		    LIB.recentlyAddedClicked = false;
+			LIB.filters.albums.length = 0;
+			LIB.filters.year[1] ? f = ' to ' + LIB.filters.year[1] : f = '';
+			$('#menu-header').text('Albums from ' + LIB.filters.year[0]+ f);
+			GLOBAL.searchLib = $('#menu-header').text(); // save for #menu-header
+			$('#viewswitch span').hide();
+			UI.libPos.fill(-2);
+			filterLib();
+		    renderAlbums();
+			$('#lib-album-filter').blur();
+			$('#viewswitch').click();
+			//GLOBAL.lazyTag, GLOBAL.lazyAlbum = false;
+			if (currentView == 'tag') {
+				if (SESSION.json['tag_view_covers'] == 'Yes') {
+					lazyLode('tag');
+				}	
+			}
+			if (currentView == 'album') {
+				lazyLode('album');
+			}
+		}
 	});
 
 	// playback history search
@@ -1256,66 +1249,39 @@ jQuery(document).ready(function($) { 'use strict';
 		var result = sendMoodeCmd('POST', 'disconnect-renderer', {'job':job}, true);
 	});
 
-	// HUD for screen saver playback controls
-	$('#ss-coverart').on('click', '.coverart', function(e) {
-		e.stopImmediatePropagation();
-		if ($('#inpsrc-msg').text() == '') { // imput source (renderer) is not active
-			if ($('#ss-hud').css('display') == 'none') {
-				$('#ss-container-playlist').css('display', 'none')
-				$('#ss-toggle-pl i').removeClass('fa-chevron-up');
-				$('#ss-hud').fadeIn();
-				hudTimer = setTimeout(function() {
-					$('#ss-hud').fadeOut();
-				}, 5000);
+	$('#playback-panel').click(function(e){
+		if ($(e.target).hasClass('pl-action') || $(e.target).parent().hasClass('pl-action')){ // don't hide on context-menu click
+			return;
+		} else if ($('#playback-panel').hasClass('cv') && $('#playback-queue').css('left') == '0px'){
+			$('#playback-queue').css('left','-10000px');
+			$('#playback-cover').css('display','');
+			$('#playback-controls').css('display','');
+			e.preventDefault();
+			return false;
+		} else if ($('#playback-panel').hasClass('newui') && $('#playback-queue').css('left') == '0px') {
+			// handle click off playback queue to revert to normal
+				//console.log($(e.target).parents());
+			$('#playback-queue').css('left','-10000px');
+			$('#playback-cover').css('display','');	
+			$('#playback-controls').css('display','');
+		}
+		if (SESSION.json['scnsaver_timeout'] != 'Never' || $('#playback-panel').hasClass('cv')) {
+			if ($('#playback-panel').hasClass('cv')) {
+				$('#screen-saver').hide();
+				$('#playback-panel').hasClass('cv') ? setCV() : '';
+				$('#playback-panel').removeClass('cv');				
 			}
-			else {
-				clearTimeout(hudTimer);
-				$('#ss-hud').fadeOut();
-			}
-		}
+			setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
+				var result = sendMoodeCmd('GET', 'resetscnsaver', '', true);
+			}, 3000);
+		}	
 	});
-	$('#ss-hud').on('click', function(e) {
-		e.stopImmediatePropagation();
-		clearTimeout(hudTimer);
-		hudTimer = setTimeout(function() {
-			$('#ss-hud').fadeOut();
-		}, 5000);
-	});
-	$('#ss-toggle-pl').click(function(e){
-		e.stopImmediatePropagation();
-		if ($('#ss-toggle-pl i').hasClass('fa-chevron-up')) {
-			$('#ss-toggle-pl i').removeClass('fa-chevron-up');
-			clearTimeout(hudTimer);
-			hudTimer = setTimeout(function() {
-				$('#ss-hud').fadeOut();
-			}, 5000);
-		}
-		else {
-			$('#ss-toggle-pl i').addClass('fa-chevron-up');
-			clearTimeout(hudTimer);
-		}
-        document.body.style.setProperty('--textvariant', 'rgba(128,128,128,1.0)');
-		$('#ss-container-playlist').slideToggle(200, function(e) {
-			customScroll('ss-pl', parseInt(MPD.json['song']), 200);
-		});
-	});
-
+	
 	// screen saver reset
-	$('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
-		//console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ')');
+	$('#screen-saver, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
 		if ($('#screen-saver').css('display') == 'block' || SESSION.json['scnsaver_timeout'] != 'Never') {
 			$('#screen-saver').hide();
-			$('#ss-hud').hide();
-            setColors();
-			$('#playback-panel, #folder-panel, #library-panel, #radio-panel').removeClass('hidden');
-			$('#menu-top').show();
-			if (currentView.indexOf('playback') == -1) {
-				$('#menu-bottom, .viewswitch').css('display', 'flex');
-			}
-			else {
-				$('#menu-bottom').css('display', 'none');
-			}
-
+			//setCV();
 			// reset screen saver timeout global
 			setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
 				var result = sendMoodeCmd('GET', 'resetscnsaver', '', true);
