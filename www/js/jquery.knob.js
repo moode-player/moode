@@ -52,6 +52,8 @@
     k.o = function () {
         var s = this;
 
+		this.po = 0;   // pixel offset e.g. 11
+		this.bloom = false; // bloom e.g. true
         this.o = null; // array of options
         this.$ = null; // jQuery wrapped element
         this.i = null; // mixed HTMLInputElement or array of HTMLInputElement
@@ -73,9 +75,9 @@
         this.eH = null; // cancel hook
         this.rH = null; // release hook
         this.scale = 1; // scale factor
-        this.relative = false;
-        this.relativeWidth = false;
-        this.relativeHeight = false;
+        this.relative = true;
+        this.relativeWidth = true;
+        this.relativeHeight = true;
         this.$div = null; // component div
 
         this.run = function () {
@@ -106,7 +108,7 @@
                                 || this.$.data('cursor')
                                 || 0,
                     thickness : this.$.data('thickness') || 0.35,
-                    lineCap : this.$.data('linecap') || 'butt',
+                    lineCap : this.$.data('linecap') || 'round',
                     width : this.$.data('width') || 200,
                     height : this.$.data('height') || 200,
                     displayInput : this.$.data('displayinput') == null || this.$.data('displayinput'),
@@ -259,10 +261,10 @@
                 'height': this.h + 'px'
             });
 
-            // finalize canvas with computed width
+            // finalize canvas with computed width + pixel offset
             this.$c.attr({
-                width: this.w,
-                height: this.h
+                width: this.w + this.po / 2,
+                height: this.h + this.po / 2
             });
 
             // scaling
@@ -664,13 +666,13 @@
             this.o.angleArc
             && (this.o.angleArc = isNaN(this.o.angleArc) ? this.PI2 : this.o.angleArc);
 
-            // deg to rad
             this.angleOffset = this.o.angleOffset * Math.PI / 180;
+			this.ao2 = 360 * Math.PI / 180;
             this.angleArc = this.o.angleArc * Math.PI / 180;
 
             // compute start and end angles
             this.startAngle = 1.5 * Math.PI + this.angleOffset;
-            this.endAngle = 1.5 * Math.PI + this.angleOffset + this.angleArc;
+            this.endAngle = 1.5 * Math.PI + this.ao2 + this.angleArc; //ao2 here for full bg circle
 
             var s = max(
                             String(Math.abs(this.o.max)).length
@@ -728,7 +730,7 @@
 
             c.beginPath();
                 c.strokeStyle = this.o.bgColor;
-                c.arc(this.xy, this.xy, this.radius, this.endAngle, this.startAngle, true);
+                c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, this.endAngle, this.startAngle, true);
             c.stroke();
 
             if (this.o.displayPrevious) {
@@ -740,14 +742,32 @@
 
                 c.beginPath();
                     c.strokeStyle = this.pColor;
-                    c.arc(this.xy, this.xy, this.radius, sa, ea, false);
+                    c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, sa, ea, false);
                 c.stroke();
                 r = (this.cv == this.v);
             }
 
+			if (sat == eat) {return;} // don't draw if they're the same = nothing to draw = no blob
+
+			if (this.o.fgColor.substr(0,1) == '#') {
+				var temp = hexToRgb(this.o.fgColor);
+				this.o.fgColor = 'rgb(' + temp[0] + ',' + temp[1] + ',' + temp[2] + ')';
+			}
+			if (this.o.fgColor.substr(0,4) == 'rgb(') {
+				var temp = splitRGB(this.o.fgColor) // rgb
+			} else {
+				var temp = splitColor(this.o.fgColor) // rgba
+			}
+			var tempcolor = 'rgba(' + temp[0] + ',' + temp[1] + ',' + temp[2] + ',.75)';
+			
             c.beginPath();
+				if (this.bloom) {
+					c.shadowBlur = (this.po / 1.5);
+					c.shadowColor = tempcolor;
+				}
+				//c.shadowColor = r ? this.o.fgColor : this.fgColor ;	
                 c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
-                c.arc(this.xy, this.xy, this.radius, sat, eat, false);
+                c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, sat, eat, false);
             c.stroke();
         };
 
