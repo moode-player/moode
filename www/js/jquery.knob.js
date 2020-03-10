@@ -251,8 +251,8 @@
                 // apply relative
                 this.w = this.h = Math.min(w, h);
             } else {
-                this.w = this.o.width + this.po / 2;
-                this.h = this.o.height + this.po / 2;
+                this.w = this.o.width + parseInt(this.po / 2);
+                this.h = this.o.height + parseInt(this.po / 2);
             }
 
             // finalize div
