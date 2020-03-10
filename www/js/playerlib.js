@@ -670,7 +670,8 @@ function renderUI() {
 		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
     }
 	//tt = updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0);
-	$('#total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0) + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
+	$('#total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
+        (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>')));
 	$('#m-total, #playbar-total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0));
 	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + updTimeKnob(MPD.json['time']));
 
