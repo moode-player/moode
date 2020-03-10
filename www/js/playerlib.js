@@ -670,7 +670,7 @@ function renderUI() {
 		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
     }
 	//tt = updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0);
-	$('#total').html(updTimeKnob('0') + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
+	$('#total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0) + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
 	$('#m-total, #playbar-total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0));
 	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + updTimeKnob(MPD.json['time']));
 
@@ -3196,7 +3196,7 @@ function setFontSize() {
 function setCV() {
 	$('#playback-panel').toggleClass('cv');
 	window.dispatchEvent(new Event('resize')); // resize for knobs
-    
+
 	if ($('#playback-panel').hasClass('cv')) {
 		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.11'});
 		$('#library-panel, #radio-panel, #folder-panel').removeClass('active');
