@@ -52,7 +52,7 @@
     k.o = function () {
         var s = this;
 
-		this.po = 11;   // pixel offset
+		this.po = 12;   // pixel offset
 		this.bloom = true; // bloom
         this.o = null; // array of options
         this.$ = null; // jQuery wrapped element
@@ -251,8 +251,8 @@
                 // apply relative
                 this.w = this.h = Math.min(w, h);
             } else {
-                this.w = this.o.width;
-                this.h = this.o.height;
+                this.w = this.o.width + this.po / 2;
+                this.h = this.o.height + this.po / 2;
             }
 
             // finalize div
@@ -263,8 +263,8 @@
 
             // finalize canvas with computed width
             this.$c.attr({
-                width: this.w + this.po / 2,
-                height: this.h + this.po / 2
+                width: this.w,
+                height: this.h
             });
 
             // scaling
@@ -728,7 +728,7 @@
                 && (eat = eat + this.cursorExt);
             c.beginPath();
                 c.strokeStyle = this.o.bgColor;
-                c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, this.endAngle, this.startAngle, true);
+                c.arc(this.xy, this.xy, this.radius, this.endAngle, this.startAngle, true);
             c.stroke();
 
             if (this.o.displayPrevious) {
@@ -740,7 +740,7 @@
 
                 c.beginPath();
                     c.strokeStyle = this.pColor;
-                    c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, sa, ea, false);
+                    c.arc(this.xy, this.xy, this.radius, sa, ea, false);
                 c.stroke();
                 r = (this.cv == this.v);
             }
@@ -765,7 +765,7 @@
 				}
 				//c.shadowColor = r ? this.o.fgColor : this.fgColor ;	
                 c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
-                c.arc(this.xy + (this.po / 2), this.xy + (this.po / 2), this.radius, sat, eat, false);
+                c.arc(this.xy, this.xy, this.radius, sat, eat, false);
             c.stroke();
         };
 
