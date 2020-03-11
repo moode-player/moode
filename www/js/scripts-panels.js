@@ -266,12 +266,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	else if (currentView == 'tag'){
 		makeActive('.tag-view-btn','#library-panel', 'tag');
-        if (SESSION.json['library_show_genres'] == 'Yes') {
-            $('#top-columns').removeClass('nogenre');
-        }
-        else {
-            $('#top-columns').addClass('nogenre');
-        }
+        SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
 		setTimeout(function() {
 			if (UI.libPos[0] >= 0) {
@@ -457,11 +452,13 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 		window.clearInterval(UI.knob);
 		sendMpdCmd(cmd);
+		return false;
 	});
 
 	$('.next').click(function(e) {
 		var cmd = $(".playlist li").length == (parseInt(MPD.json['song']) + 1).toString() ? 'play 0' : 'next';
 		sendMpdCmd(cmd);
+		return false;
 	});
 	$('.prev').click(function(e) {
         if (parseInt(MPD.json['time']) > 0 && parseInt(sendMoodeCmd('GET', 'getmpdstatus')['elapsed']) > 0) {
@@ -476,6 +473,7 @@ jQuery(document).ready(function($) { 'use strict';
 		else {
 			sendMpdCmd('previous');
 		}
+		return false;
 	});
 	$('#volumeup,#volumeup-2').click(function(e) {
 		var curVol = parseInt(SESSION.json['volknob']);

@@ -230,6 +230,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#timezone, #volzone {display:none;}
 	#playback-cover {position:relative;}
 	#playback-queue {z-index:unset;}
+	.ralbum svg {height:1.2rem;width:1.2rem;}
+	#togglebtns .btn-group {width:unset;}
 	.tab-content {height:unset;}
 	.covers {width:100%;}
 	#menu-top .dropdown-menu > li > a {font-size:1.15rem;}
@@ -248,11 +250,14 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/*.playlist li, .playlist .active {padding-left:.5em;}*/
 	.playlist li:before {font-size:unset;}
 	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;}
+	.ui-pnotify {top:40% !important;}
 	#lib-albumcover {left:0;}
 	#albumsList li {max-width:calc(50vw - 1px) !important;}
 	#albumcovers .lib-entry, .database-radio li {width:45vw;font-size:.9em;padding-bottom:1em;margin:0 1vw;}
 	#albumcovers .lib-entry {padding-bottom:.4em;}
 	#albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(45vw * .9);margin:.75em 0 .5em 0;}
+	#albumcovers li.limited span {max-width:calc(45vw - 4em);}
+	#albumcovers li.limited .album-name {max-width:45vw;}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#ss-coverart-url img {width:65vh;}
@@ -278,7 +283,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;}
 	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:calc(72vw - 6rem);height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
-	#playbar-controls {right:.25rem;transform:none;top:0;}
+	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
 	#playbar-controls .btn {padding:.4em;font-size:2.5rem;-webkit-tap-highlight-color:transparent);}
 	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:.4em;height:unset;width:unset;top:unset;left:unset;transform:none;}

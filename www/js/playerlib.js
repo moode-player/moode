@@ -1358,14 +1358,14 @@ function formatBrowseData(data, path, i, panel) {
 function updTimeKnob(mpdTime) {
 	if (MPD.json['artist'] == 'Radio station') {
 		var str = '';
-		$('#total').addClass('total-radio'); // radio station svg
-		$('#playbar-mtime').show();
+		$('#total').html('').addClass('total-radio'); // radio station svg
+		$('#playbar-mtime').css('display', 'block');
 		$('#playbar-mtotal').hide();
 	}
 	else {
 		var str = formatSongTime(mpdTime);
 		$('#total').removeClass('total-radio'); // radio station svg
-		$('#playbar-mtime').hide();
+		$('#playbar-mtime').css('display', '');
 		$('#playbar-mtotal').show();
 	}
     return str;
@@ -2878,9 +2878,12 @@ $('#index-artists li').on('click', function(e) {
 });
 $('#index-albums li').on('click', function(e) {
     // .artist-name or .album-name
-    var selector = '.' + SESSION.json['library_tagview_sort'].toLowerCase() + '-name';
-    var selector2 = selector.replace(/\/year/g, '');
-    listLook('albumsList li ' + selector2, 'albums', $(this).text());
+	className = SESSION.json['library_tagview_sort'].toLowerCase().split('/');
+	SESSION.json['library_tagview_covers'] ? classPrefix = '-name-art' : classPrefix = '-name';
+    var selector = '.' + className[0] + classPrefix;
+	console.log('albumsList li ' + selector)
+    //var selector2 = selector.replace(/\/year/g, '');
+    listLook('albumsList li ' + selector, 'albums', $(this).text());
 });
 $('#index-albumcovers li').on('click', function(e) {
     // .artist-name or .album-name

@@ -459,9 +459,9 @@ var renderGenres = function() {
 	var output = '';
 
 	for (var i = 0; i < allGenres.length; i++) {
-		output += '<li><div class="lib-entry'
+		output += '<li class="lib-entry'
 			+ (LIB.filters.genres.indexOf(allGenres[i]) >= 0 ? ' active' : '')
-			+ '">' + allGenres[i] + '</div></li>';
+			+ '">' + allGenres[i] + '</li>';
 	}
 
 	$('#genresList').html(output);
@@ -477,9 +477,9 @@ var renderArtists = function() {
 
 	for (var i = 0; i < filteredArtists.length; i++) {
 		// Add "|| filteredArtists.length = 1" to automatically highlight if only 1 artist in list
-		output += '<li><div class="lib-entry'
+		output += '<li class="lib-entry'
 			+ ((LIB.filters.artists.indexOf(filteredArtists[i]) >= 0 || filteredArtists.length == 1) ? ' active' : '')
-			+ '">' + filteredArtists[i] + '</div></li>';
+			+ '">' + filteredArtists[i] + '</li>';
 	}
 
 	$('#artistsList').html(output);
@@ -498,7 +498,7 @@ var renderAlbums = function() {
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
 	var defCover = "this.src='images/default-cover-v6.svg'";
-	SESSION.json["library_ellipsis_limited_text"] ? liClass = 'lib-entry limited' : liClass = 'lib-entry';
+	SESSION.json["library_ellipsis_limited_text"] == "Yes" ? liClass = 'lib-entry limited' : liClass = 'lib-entry';
 
     // Clear search filter and results
 	$('#lib-album-filter').val('');
@@ -512,8 +512,8 @@ var renderAlbums = function() {
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="' + liClass + '">'
              + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
-             + '<div class="album-name">' + filteredAlbums[i].album
-             + '<br><span class="artist-name album-year">' + filteredAlbums[i].artist + tagViewYear + '</span></div></li>'		}
+             + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album
+             + '</span><span class="artist-name-art">' + filteredAlbums[i].artist + '</span><span class="album-year">' + tagViewYear + '</span></div></li>'		}
 		else {
 			output += '<li class="' + liClass + '"><span class="album-name">' + filteredAlbums[i].album
              + '</span><span class="artist-name">' + filteredAlbums[i].artist + tagViewYear + '</span></li>'
@@ -523,7 +523,7 @@ var renderAlbums = function() {
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
-            + '<span class="artist-name">' + filteredAlbumCovers[i].artist + albumViewYear + '</span></li>';
+            + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span><span class="album-year">' + albumViewYear + '</span></div></li>';
 	}
 
     // Output the lists
@@ -704,7 +704,7 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 });
 
 // Click albums or album covers header
-$('#albumheader, #albumcoverheader').on('click', '.lib-heading', function(e) {
+$('#albumheader').on('click', '.lib-heading', function(e) {
 	//console.log($(this).parent().attr('id'));
 	//LIB.artistClicked = false;
 	if ($(this).parent().attr('id') == 'albumcoverheader') {
