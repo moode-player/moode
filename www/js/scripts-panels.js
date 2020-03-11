@@ -399,7 +399,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('#volume-popup').modal('toggle');
 		}
 		else {
-			$('.volume-display').css('margin-top', '-16px');
+			//$('.volume-display').css('margin-top', '-16px');
 			if (SESSION.json['mpdmixer'] == 'disabled') {
 				$('.volume-display').css('opacity', '.3');
 			}
