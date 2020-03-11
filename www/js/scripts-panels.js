@@ -266,12 +266,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	else if (currentView == 'tag'){
 		makeActive('.tag-view-btn','#library-panel', 'tag');
-        if (SESSION.json['show_genres'] == 'Yes') {
-            $('#top-columns').removeClass('nogenre');
-        }
-        else {
-            $('#top-columns').addClass('nogenre');
-        }
+        SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
 		setTimeout(function() {
 			if (UI.libPos[0] >= 0) {

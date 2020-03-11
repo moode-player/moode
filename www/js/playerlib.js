@@ -670,7 +670,7 @@ function renderUI() {
 		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
     }
 	//tt = updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0);
-	$('#total').html(updTimeKnob('0') + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
+	$('#total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0) + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
 	$('#m-total, #playbar-total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0));
 	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + updTimeKnob(MPD.json['time']));
 
@@ -1359,7 +1359,7 @@ function formatBrowseData(data, path, i, panel) {
 function updTimeKnob(mpdTime) {
 	if (MPD.json['artist'] == 'Radio station') {
 		var str = '';
-		$('#total').addClass('total-radio'); // radio station svg
+		$('#total').html('').addClass('total-radio'); // radio station svg
 		$('#playbar-mtime').css('display', 'block');
 		$('#playbar-mtotal').hide();
 	}
@@ -2876,9 +2876,12 @@ $('#index-artists li').on('click', function(e) {
 });
 $('#index-albums li').on('click', function(e) {
     // .artist-name or .album-name
-    var selector = '.' + SESSION.json['library_tagview_sort'].toLowerCase() + '-name';
-    var selector2 = selector.replace(/\/year/g, '');
-    listLook('albumsList li ' + selector2, 'albums', $(this).text());
+	className = SESSION.json['library_tagview_sort'].toLowerCase().split('/');
+	SESSION.json['library_tagview_covers'] ? classPrefix = '-name-art' : classPrefix = '-name';
+    var selector = '.' + className[0] + classPrefix;
+	console.log('albumsList li ' + selector)
+    //var selector2 = selector.replace(/\/year/g, '');
+    listLook('albumsList li ' + selector, 'albums', $(this).text());
 });
 $('#index-albumcovers li').on('click', function(e) {
     // .artist-name or .album-name
