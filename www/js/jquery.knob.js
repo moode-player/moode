@@ -263,8 +263,8 @@
 
             // finalize canvas with computed width + pixel offset
             this.$c.attr({
-                width: this.w + 4,
-                height: this.h + 4
+                width: this.w + 2,
+                height: this.h + 2
             });
 
             // scaling

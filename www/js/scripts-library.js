@@ -534,7 +534,7 @@ var renderAlbums = function() {
 			LIB.albumClicked = true;
 	}
 	if (SESSION.json["library_ellipsis_limited_text"] == "Yes") {
-		$('#albumsList, #albumcovers').addClass('limited');
+		$('#library-panel').addClass('limited');
 	}
 
 	// Headers clicked
