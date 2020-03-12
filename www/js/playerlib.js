@@ -3067,7 +3067,7 @@ function syncTimers() {
 				var d = $('#playbar-total').text().split(':');
 				var e = parseInt(c[0] * 60) + parseInt(c[1]); // convert to seconds
 				var f = parseInt(d[0] * 60) + parseInt(d[1]);
-				var g = (e / f) * 100; // percent of elapsed song for progress
+				var g = 100 - ((e / f) * 100); // percent of elapsed song for progress
 				$('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
 				g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // adjust for thumb
 				$('#playbar-timeline .timeline-progress').css('width', g);
