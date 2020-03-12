@@ -93,7 +93,7 @@
 	</div>
 	<div class="modal-body" id="container-appearance">
 		<form class="form-horizontal" action="" method="">
-			<div id='accordion'>
+			<!--div id='accordion'-->
 				<div class="accordian"><span class="h5">Theme and backgrounds</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 					<div class="control-group">
 	   	                <label class="control-label" for="theme-name">Theme</label>
@@ -695,7 +695,7 @@
 		                </div>
 					</div>
 				</div>
-			</div>
+			<!--/div-->
 		</form>
 	</div>
 	<div class="modal-footer">
