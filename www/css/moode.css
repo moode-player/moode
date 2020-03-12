@@ -42,7 +42,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 /* general */
 .modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:10000;background-color:var(--modalbkdr);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
 .modal-backdrop.fade{opacity:0;}
-.modal-backdrop,.modal-backdrop.fade.in{opacity:.9;}
+.modal-backdrop,.modal-backdrop.fade.in{opacity:1;}
 .modal{position:fixed;top:0;top:env(safe-area-inset-top);left:50%;z-index:10001;width:40%;min-width:560px;font-size:1rem;opacity:.9;background-color:inherit;border:none;margin-left:0;border-radius:.4em;box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);background-clip:padding-box;outline:none;transform:translate(-50%,0%);-webkit-overflow-scrolling:touch;} /* 6.4.1 no font size */
 .modal h4 {font-size:1.25em;}
 .modal-header{padding:1em 1em 1.5em 1em;border-bottom:none;}
@@ -252,12 +252,18 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;}
 	.ui-pnotify {top:40% !important;}
 	#lib-albumcover {left:0;}
-	#albumsList li {max-width:calc(50vw - 1px) !important;}
-	#albumcovers .lib-entry, .database-radio li {width:45vw;font-size:.9em;padding-bottom:1em;margin:0 1vw;}
+	#albumsList li {max-width:calc(50vw - 1px) !important;min-width:33vw;}
+	#albumsList.limited span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+	#albumsList .album-name-art {max-width:calc(48vw - 1rem);}
+	#albumsList .album-name {max-width:44vw;}
+	#albumsList .artist-name-art, #albumsList .album-year {max-width:calc(35vw - 1rem);}
+	#albumsList.limited .album-name-art {max-width:calc(48vw - 3.6rem);}
+	#albumsList.limited .artist-name-art, #albumsList .album-year {max-width:calc(35vw - 3.6rem);}
+	#albumcovers.limited span {max-width:calc(var(--mthumbcols) - 4em);}
+	#albumcovers.limited .album-name {max-width:var(--mthumbcols);}
+	#albumcovers .lib-entry, .database-radio li {width:var(--mthumbcols);font-size:.9em;padding-bottom:1em;margin:0 1vw;}
 	#albumcovers .lib-entry {padding-bottom:.4em;}
-	#albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(45vw * .9);margin:.75em 0 .5em 0;}
-	#albumcovers li.limited span {max-width:calc(45vw - 4em);}
-	#albumcovers li.limited .album-name {max-width:45vw;}
+	#albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(var(--mthumbcols) * .9);margin:.75em 0 .5em 0;}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#ss-coverart-url img {width:65vh;}

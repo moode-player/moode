@@ -263,8 +263,8 @@
 
             // finalize canvas with computed width + pixel offset
             this.$c.attr({
-                width: this.w,
-                height: this.h
+                width: this.w + 4,
+                height: this.h + 4
             });
 
             // scaling
@@ -727,7 +727,7 @@
                 && (eat = eat + this.cursorExt);
             c.beginPath();
                 c.strokeStyle = this.o.bgColor;
-                c.arc(this.xy, this.xy, this.radius, this.endAngle, this.startAngle, true);
+                c.arc(this.xy + 2, this.xy + 2, this.radius, this.endAngle, this.startAngle, true);
             c.stroke();
 
             if (this.o.displayPrevious) {
@@ -739,7 +739,7 @@
 
                 c.beginPath();
                     c.strokeStyle = this.pColor;
-                    c.arc(this.xy, this.xy, this.radius, sa, ea, false);
+                    c.arc(this.xy + 2, this.xy + 2, this.radius, sa, ea, false);
                 c.stroke();
                 r = (this.cv == this.v);
             }
@@ -764,7 +764,7 @@
 				}
 				//c.shadowColor = r ? this.o.fgColor : this.fgColor ;
                 c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
-                c.arc(this.xy, this.xy, this.radius, sat, eat, false);
+                c.arc(this.xy + 2, this.xy + 2, this.radius, sat, eat, false);
             c.stroke();
         };
 
