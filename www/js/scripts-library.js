@@ -498,7 +498,6 @@ var renderAlbums = function() {
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
 	var defCover = "this.src='images/default-cover-v6.svg'";
-	SESSION.json["library_ellipsis_limited_text"] == "Yes" ? liClass = 'lib-entry limited' : liClass = 'lib-entry';
 
     // Clear search filter and results
 	$('#lib-album-filter').val('');
@@ -510,16 +509,16 @@ var renderAlbums = function() {
         filteredAlbumCovers[i].year ? albumViewYear = ' (' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
-			output += '<li class="' + liClass + '">'
+			output += '<li class="lib-entry">'
              + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
              + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album
              + '</span><span class="artist-name-art">' + filteredAlbums[i].artist + '</span><span class="album-year">' + tagViewYear + '</span></div></li>'		}
 		else {
-			output += '<li class="' + liClass + '"><span class="album-name">' + filteredAlbums[i].album
+			output += '<li class="lib-entry"><span class="album-name">' + filteredAlbums[i].album
              + '</span><span class="artist-name">' + filteredAlbums[i].artist + tagViewYear + '</span></li>'
         }
 
-		output2 += '<li class="' + liClass + '">'
+		output2 += '<li class="lib-entry">'
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
@@ -533,6 +532,9 @@ var renderAlbums = function() {
 	if (filteredAlbums.length == 1) {
 		    $('#albumsList li').addClass('active');
 			LIB.albumClicked = true;
+	}
+	if (SESSION.json["library_ellipsis_limited_text"] == "Yes") {
+		$('#albumsList, #albumcovers').addClass('limited');
 	}
 
 	// Headers clicked

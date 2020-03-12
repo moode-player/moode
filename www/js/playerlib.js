@@ -1618,7 +1618,7 @@ function setVolume(level, event) {
 function customScroll(list, itemNum, speed) {
 	//console.log('list=' + list + ', itemNum=(' + itemNum + '), speed=(' + speed + ')');
 	var listSelector, scrollSelector, chDivisor, centerHeight, scrollTop, itemHeight, scrollCalc, scrollOffset, itemPos;
-	speed = typeof(speed) === 'undefined' ? 500 : speed;
+	speed = typeof(speed) === 'undefined' ? 200 : speed;
 
 	if (list == 'db') {
 		listSelector = '#database';
@@ -2697,7 +2697,8 @@ function btnbarfix(temp1,temp2) {
 	tempcolor = rgbaToRgb(.6, '.7', temprgba, temprgb); // textvariant
 	document.body.style.setProperty('--btnshade3', tempcolor);
 	document.body.style.setProperty('--btnshade4', getYIQ(temp1) > 127 ? 'rgba(32,32,32,0.10)' : 'rgba(208,208,208,0.17)');
-	document.body.style.setProperty('--modalbkdr', rgbaToRgb(.95, '.95', temprgba, temprgb));
+	$('#content').hasClass('visacc') ? op = .95 : op = .9;
+	document.body.style.setProperty('--modalbkdr', rgbaToRgb(.95, op, temprgba, temprgb));
 	if ($('#content').hasClass('visacc')) {
 		(currentView.indexOf('playback') == -1 || SESSION.json['adaptive'] == 'No') ? UI.accenta = themeMcolor : UI.accenta = adaptMcolor;
 	} else {
