@@ -140,7 +140,7 @@ html {background-color:inherit;}
 #countdown div {margin:0 auto;} /* needed to center the knob */
 .countdown-caret {margin-left:2px;color:var(--accentxts);}
 #countdown-display {position:absolute;top:46%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:1.9rem;font-weight:500;cursor:pointer;}
-#total {position:absolute;top:63%;left:50%;transform:translate(-50%);margin-left:.4em;/*font-family:monospace;*/}
+#total {position:absolute;top:60%;left:50%;transform:translate(-50%);margin-left:.4em;/*font-family:monospace;*/}
 .total-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;width:22%;height:20px;margin-left:0 !important;}
 #playbtns, #playbtns .btn-group {font-size:1em;margin:.5em 0;}
 #playbtns .btn {font-size:2rem;padding:1rem;}
