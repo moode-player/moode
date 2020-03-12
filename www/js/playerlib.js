@@ -2953,6 +2953,7 @@ $("#coverart-url, #playback-switch").click(function(e){
 	$('#menu-bottom').show();
 	$('.viewswitch').css('display', 'flex');
 	$('#library-panel').addClass('active');
+    syncTimers();
 
 	if (currentView == 'tag') {
 		makeActive('.tag-view-btn','#library-panel','tag');
