@@ -971,29 +971,32 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (e.key == 'Enter') {
 			var filter = $(this).val();
-			LIB.filters.year = filter.split('-'); // [year 1][year 2 if present]
-		    LIB.recentlyAddedClicked = false;
-			LIB.filters.albums.length = 0;
-			LIB.filters.year[1] ? f = ' to ' + LIB.filters.year[1] : f = '';
-			console.log(LIB.filters.year);
-			$('#menu-header').text('Albums from ' + LIB.filters.year[0]+ f);
-			GLOBAL.searchLib = $('#menu-header').text(); // save for #menu-header
-			$('#viewswitch span').hide();
-			UI.libPos.fill(-2);
-			filterLib();
-		    renderAlbums();
+			if (parseInt(filter)) {
+				LIB.filters.year = filter.split('-'); // [year 1][year 2 if present]
+			    LIB.recentlyAddedClicked = false;
+				LIB.filters.albums.length = 0;
+				LIB.filters.year[1] ? f = ' to ' + LIB.filters.year[1] : f = '';
+				$('#menu-header').text('Albums from ' + LIB.filters.year[0]+ f);
+				GLOBAL.searchLib = $('#menu-header').text(); // save for #menu-header
+				$('#viewswitch span').hide();
+				UI.libPos.fill(-2);
+				filterLib();
+			    renderAlbums();
+				$('#lib-album-filter').blur();
+				$('#viewswitch').click();
+				//GLOBAL.lazyTag, GLOBAL.lazyAlbum = false;
+				if (currentView == 'tag') {
+					if (SESSION.json['tag_view_covers'] == 'Yes') {
+						lazyLode('tag');
+					}
+				}
+				if (currentView == 'album') {
+					lazyLode('album');
+				}
+				return;
+			}
 			$('#lib-album-filter').blur();
 			$('#viewswitch').click();
-			//GLOBAL.lazyTag, GLOBAL.lazyAlbum = false;
-			if (currentView == 'tag') {
-				if (SESSION.json['tag_view_covers'] == 'Yes') {
-					lazyLode('tag');
-				}
-			}
-			if (currentView == 'album') {
-				lazyLode('album');
-			}
-			return;
 		}
 
 		var selector = this;
