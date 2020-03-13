@@ -488,12 +488,11 @@ function inpSrcIndicator(cmd, msgText) {
 
 // show/hide screen saver
 function screenSaver(cmd) {
-    /*TEST*/console.log('6');
 	if ($('#inpsrc-indicator').css('display') == 'block') {
 		return;  // exit if input source is active
 	}
 	else if (cmd.slice(-1) == '1') {
-		/*NOTE*/$('#folder-panel, #library-panel, #radio-panel').addClass('hidden');
+		$('#folder-panel, #library-panel, #radio-panel').addClass('hidden');
 		$('#playback-panel').show();
 		setCV();
 		$('#menu-bottom, #menu-top').hide();
@@ -2941,7 +2940,6 @@ function setAlbumViewHeaderText() {
 
 // switch to library / playbar panel
 $("#coverart-url, #playback-switch").click(function(e){
-    /*TEST*/console.log('4');
 	if ($('#playback-panel').hasClass('cv')) {
 		e.stopImmediatePropagation();
 		$('.togglepl').click(); // or whatever show queue is
@@ -3003,7 +3001,6 @@ $('#playbar-switch, #playbar-cover').click(function(e){
 		$(window).scrollTop(0);
 	}
 	else {
-        /*TEST*/console.log('5');
 		currentView = 'playback,' + currentView;
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // async
 		syncTimers();
@@ -3080,7 +3077,6 @@ function syncTimers() {
 
 // active/inactive for buttons and panels
 function makeActive (vswitch, panel, view) {
-    /*TEST*/console.log('8');
     //const startTime = performance.now();
 	if (UI.mobile) {
 		$('#playback-controls').css('display', '');
@@ -3204,12 +3200,10 @@ function setFontSize() {
 
 // toggle cv class and use dark theme type colors for menus
 function setCV() {
-    /*TEST*/console.log('1', $('#playback-panel').hasClass('cv'));
 	$('#playback-panel').toggleClass('cv');
 	window.dispatchEvent(new Event('resize')); // resize for knobs
 
 	if ($('#playback-panel').hasClass('cv')) {
-        /*TEST*/console.log('2');
 		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.11'});
 		$('#library-panel, #radio-panel, #folder-panel').removeClass('active');
 		tempBack = adaptBack;
@@ -3221,18 +3215,15 @@ function setCV() {
 		$('#playback-panel').addClass('active');
 	}
     else {
-        /*TEST*/console.log('3', currentView);
 		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.13'});
 		$('#menu-top').show();
 		adaptBack = tempBack;
 		adaptMcolor = tempColor;
 		adaptMback = tempMback;
 		$('#playback-cover').css('display', '');
-
 		if (currentView.indexOf('playback') == -1) {
-			$('#playback-panel').removeClass('active');
-			$('#menu-bottom, #viewswitch').show();
-
+				$('#playback-panel').removeClass('active');
+				$('#menu-bottom, #viewswitch').show();
 			switch (currentView) {
 				case 'album':
 					$('#library-panel').addClass('active');
@@ -3248,9 +3239,6 @@ function setCV() {
 					break;
 			}
 		}
-        else {
-            // Placeholder
-        }
 	}
 	setColors();
 }

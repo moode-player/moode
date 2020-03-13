@@ -95,8 +95,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 
 /* dropdown menus */
 
-.dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1.1rem;white-space:nowrap;}
-.dropdown-menu {float:right;position:absolute;min-width:180px;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);border:none;box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;}
+.dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1rem;white-space:nowrap;}
+.dropdown-menu {float:right;position:absolute;min-width:200px;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;white-space:normal;}
 .dropdown-menu.open {padding:0;margin:0;}
 .bootstrap-select .dropdown-menu {background-color:transparent;}
 .btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.3);box-shadow:none;border-radius:4px;}
@@ -222,6 +222,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
 	/*body {font-size:calc(.75em + 1vmin);}*/
+	.dropdown-menu {min-width:180px;}
+	.dropdown-menu > li > a {font-size:1.12rem;}
 	#playback-panel, #content {position:relative;}
 	.modal-body{max-height:calc(100vh - 13.5rem - env(safe-area-inset-bottom));}
 	.modal-footer .btn {width:40%;}
@@ -252,18 +254,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;}
 	.ui-pnotify {top:40% !important;}
 	#lib-albumcover {left:0;}
-	#albumsList li {max-width:calc(50vw - 1px) !important;min-width:33vw;}
-	#albumsList.limited span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
-	#albumsList .album-name-art {max-width:calc(48vw - 1rem);}
-	#albumsList .album-name {max-width:44vw;}
-	#albumsList .artist-name-art, #albumsList .album-year {max-width:calc(35vw - 1rem);}
-	#albumsList.limited .album-name-art {max-width:calc(48vw - 3.6rem);}
-	#albumsList.limited .artist-name-art, #albumsList .album-year {max-width:calc(35vw - 3.6rem);}
-	#albumcovers.limited span {max-width:calc(var(--mthumbcols) - 4em);}
-	#albumcovers.limited .album-name {max-width:var(--mthumbcols);}
-	#albumcovers .lib-entry, .database-radio li {width:var(--mthumbcols);font-size:.9em;padding-bottom:1em;margin:0 1vw;}
-	#albumcovers .lib-entry {padding-bottom:.4em;}
-	#albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(var(--mthumbcols) * .9);margin:.75em 0 .5em 0;}
+	/* ellipsis madness */
+	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
+	#albumcovers .lib-entry, .database-radio .lib-entry {width:var(--mthumbcols);}
+	#albumcovers .lib-entry img, .database-radio img {max-height:calc(var(--mthumbcols) * .9);}
+
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#ss-coverart-url img {width:65vh;}
@@ -399,7 +394,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 
 /* large screens */
 @media (min-height: 1080px) {
-	.dropdown-menu {min-width:220px;}
+	.dropdown-menu, #context-menu-playback .dropdown-menu {min-width:13em;}
 	#ss-backdrop {filter: blur(40px);}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}

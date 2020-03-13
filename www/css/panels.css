@@ -49,6 +49,7 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--defcover:'images/default-cover-v6-l.svg';
 	--thumbcols:18vw;
 	--mthumbcols:45vw;
+	--coverback:'';
 }
 
 .btn {-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-user-select: none;-webkit-touch-callout: none;}
@@ -202,12 +203,21 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #top-columns.nogenre #albumsList li, #top-columns.nogenre #artistsList li {max-width:calc(50vw - 2.3rem);}
 #albumsList .lib-entry img {width:3rem;margin:.3em .35em .3em .15em;}
 #albumsList .tag-cover-text {display:inline-block;vertical-align:middle;transform:translate(0, .5em);min-width:50%;max-width:calc(100% - 3.6rem)}
-#albumsList .album-name-art {display:block;vertical-align:middle;max-width:calc(100% - 1em);min-width:25vw;line-height:1.25em;overflow:hidden;white-space:normal;text-overflow:ellipsis;}
-#albumsList.limited .album-name-art, #albumsList.limited .artist-name-art {white-space:nowrap;}
-#albumsList .album-name {display:inline-block;vertical-align:middle;max-width:calc(100% - 1em);min-width:25vw;line-height:normal;}
-#albumsList .artist-name-art, #albumsList .album-year {display:inline-block;font-size:0.85em;line-height:normal;color:var(--textvariant);vertical-align:top;max-width:calc(25vw - 3.6em);line-height:1.25em;overflow:hidden;white-space:normal;text-overflow:ellipsis;}
+#library-panel .lib-entry span {max-width:100%;display:inline-block;}
+#top-columns .lib-entry {font-size: 1em;}
+#top-columns .album-name-art, #top-columns .album-name {display:block !important;vertical-align:middle;min-width:25vw;line-height:1.25em;}
+.artist-name-art, #albumsList .album-year {font-size:.85em;color:var(--textvariant);}
+
 #albumsList .artist-name {display:none}
+#albumsList .artist-name-art, #albumsList .album-year {vertical-align:top;line-height:normal;}
 #albumsList .album-year {margin-left:.5em;}
+#library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
+#library-panel.limited .lib-entry, #library-panel.limited .lib-entry span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+
+/*#albumsList .album-name-art {display:block;vertical-align:middle;max-width:calc(100% - 1em);min-width:25vw;line-height:1.25em;white-space:normal;}
+#albumsList .album-name {display:inline-block;vertical-align:middle;max-width:calc(100% - 1em);min-width:25vw;line-height:normal;}
+#albumsList .artist-name-art, #albumsList .album-year {display:inline-block;font-size:0.85em;line-height:normal;color:var(--textvariant);vertical-align:top;white-space:normal;}
+#albumsList.limited .album-name-art, #albumsList.limited .artist-name-art {white-space:nowrap;max-width:calc(24vw - 3.6em);text-overflow:ellipsis;overflow:hidden;}*/
 
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
@@ -270,12 +280,14 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .reconnectbtn {position:relative;top:45%;text-transform:uppercase;color:#999;z-index:9999;}
 .viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);left:50%;background-color:transparent;color:inherit;display:none;z-index:1001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:.75rem;transform:none;}
 .viewswearch {height:2.25rem;padding:1.5rem 0 1.5rem 1rem !important;}
-#viewswitch span {float:right;display:none;transform:translate(.6rem);}
+#viewswitch span {float:right;display:none;}
+#searchResetLib {padding:.25em;position:relative;top:50%;transform:translate(0, -50%);font-size:1.2rem;}
 #viewswitch a {color:inherit;}
 .viewswitch div {display:flex;color:var(--adapttext);}
 .viewswitch .btn {position:relative;width:100%;line-height:normal;font-size:1.1rem;padding:.75rem 1rem;background-color:transparent;text-align:left;color:var(--textvariant);}
 .viewswitch .btn.active {color:inherit;}
 .viewswitch .btn:hover {background-color:var(--accentxta);}
+#viewswitch-search:hover {background-color:inherit;}
 .viewswitch .btn i {padding:0 .5rem 0 0;}
 #current-tab {font-size:1.1rem;font-weight:600;height:2.75rem;line-height:2.75rem;}
 #current-tab i {font-size:.7rem;margin-left:2px;}
@@ -379,25 +391,18 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 /* album cover panel */
 #lib-albumcover {height:100%;width:100%;position:absolute;box-sizing:border-box;left:0%;top:2.75em;top:calc(env(safe-area-inset-top) + 2.75em);overflow:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
 #albumcovers {text-align:center;margin:0;padding-bottom:12em;}
-#albumcovers li, .database-radio li {width:18vw;text-align:center;font-size:.95em;margin:0 .6vw;display:inline-block;vertical-align:top;height:auto;padding:0 0 .25rem 0;}
-/*#albumcovers .lib-entry span {display:block;max-height:1.5em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}*/
-#albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(18vw * .9);margin:.5rem 0;box-shadow:0px 0px .25em rgba(0,0,0,0.3);border-radius:.1em;}
-#albumcovers .lib-entry {width:18vw;line-height:normal;padding:0 0 .2em 0;}
-#albumcovers .artyear	{color:var(--textvariant);font-weight:500;}
-#albumcovers .lib-entry .artist-name {display:inline-block;margin:0 .15em;}
-#albumcovers .lib-entry .album-name {color:inherit;font-weight:600;}
-#albumcovers .lib-entry .album-year {display:inline-block;margin:0 .15em;}
-.albumcover {max-height:2.75em;overflow:hidden;}
-#albumcovers li span {display:block;white-space:normal;}
-#albumcovers.limited span {white-space:nowrap;max-height:1.5em;max-width:calc(18vw - 4em);overflow:hidden;text-overflow:ellipsis;}
-#albumcovers.limited .album-name {max-width:18vw;}
+
+#albumcovers .lib-entry, .database-radio .lib-entry {width:var(--thumbcols);text-align:center;display:inline-block;vertical-align:top;height:auto;font-size:.95em;padding-bottom:.4em;margin:0 1vw;}
+#albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(var(--thumbcols) * .9);margin:.75em 0 .5em 0;}
+#albumcovers .album-name {display:block !important;}
+#albumcovers .artyear {color:var(--textvariant);font-weight:500;}
+#albumcovers .artist-name, #albumcovers .album-year {margin:0 .15em;}
+
 #lib-albumcover-header {display:none;position:absolute;top:env(safe-area-inset-top);width:100vw;transform: translate(-50%);left:50%;}
 #albumcoverheader {line-height:2.75rem !important;position:absolute !important;height:2.75rem;width:15%;left:75%;transform:translate(-50%);}
 #albumview-header-text {display:none;background:none;text-transform:unset;font-size:1.1rem;padding:0 3rem;}
 #albumcoverheader .recently-added {margin:0;float:unset;padding:0;position:unset;opacity:1;}
 #albumcoverheader .recently-added i, #random-albumcover i {font-size:.9rem;opacity:0;} /* opacity hide for now */
-#cover-backdrop {filter:blur(20px);position:fixed;top:0;left:0;background-position:center center;height:100vh;width:100vw;background-size:cover;z-index:0;}
-#context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}
 /*#random-albumcover {margin-top:-1.5em;float:right;position:relative;padding:.25em .5em 0em .5em;}
 #random-albumcover i {color:var(--adapttext);opacity:.3}
 .albumcover {max-height:2.75em;overflow:hidden;}*/
@@ -482,7 +487,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 .alphabits ul li {display:table-row !important;font-size:.8em;text-align:center !important;text-transform:uppercase;opacity:.75;line-height:normal;}
 
 /* playback ellipsis context menu */
-#context-menu-playback .dropdown-menu {min-width:12em;white-space:nowrap;}
+#context-menu-playback .dropdown-menu {min-width:200px;white-space:nowrap;}
 #menu-check-consume, #menu-check-repeat, #menu-check-single {display:none;float:right;color:var(--adapttext);line-height:2.75em;position:absolute;right:.5em;}
 
 /* active/inactive css element manip */
@@ -737,4 +742,5 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 /*#albumcovers li.active span {max-height:unset;white-space:normal;}
 #albumcovers li:hover span {max-height:unset;white-space:normal;}*/
 
-#cover-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
+#cover-backdrop {height:100vh;width:100vw;background-size:cover;background-position:center center;z-index:0;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
+#context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}

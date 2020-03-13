@@ -1074,6 +1074,20 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
+	$('#searchResetLib').click(function(e) {
+		e.preventDefault();
+		GLOBAL.searchLib = '';
+		scopeR('Lib');
+		LIB.filters.albums.length = 0;
+		UI.libPos.fill(-2);
+		storeLibPos(UI.libPos);
+	    clickedLibItem(undefined, undefined, LIB.filters.albums, renderAlbums);
+		$("#searchResetLib").hide();
+		showSearchResetLib = false;
+		document.getElementById("lib-album-filter").focus();
+		return false;
+	});
+
 	// playback history search
 	$('#ph-filter').keyup(function(e){
 		if (!showSearchResetPh) {

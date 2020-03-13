@@ -258,7 +258,14 @@
 										<div class="caret"></div>
 									</button>
 									<div class="dropdown-menu open">
-										<ul id="cover-blur-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+										<ul id="cover-blur-list" class="dropdown-menu custom-select inner" role="menu">
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">0px</span></a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">5px</span></a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">10px</span></a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">15px</span></a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">20px</span></a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-blur-sel"><span class="text">30px</span></a></li>
+										</ul>
 									</div>
 								</div>
 								<a aria-label="Help" class="info-toggle" data-cmd="info-cover-blur" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -277,7 +284,13 @@
 										<div class="caret"></div>
 									</button>
 									<div class="dropdown-menu open">
-										<ul id="cover-scale-list" class="dropdown-menu custom-select inner" role="menu"></ul>
+										<ul id="cover-scale-list" class="dropdown-menu custom-select inner" role="menu">
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel">1.0</a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel">1.25</a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel">1.5</a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel">1.75</a></li>
+											<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-scale-sel">2.0</a></li>
+										</ul>
 									</div>
 								</div>
 								<a aria-label="Help" class="info-toggle" data-cmd="info-cover-scale" href="#notarget"><i class="fas fa-info-circle"></i></a>
