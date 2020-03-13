@@ -2113,9 +2113,13 @@ $('.btn-appearance-update').click(function(e){
 	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;}
     // Library options
     if (SESSION.json['library_instant_play'] != $('#instant-play-action span').text()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {
+		$('#show-genres-column span').text() == "Yes" ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
+	}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
+		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel').addClass('limited') : $('#library-panel').removeClass('limited');
+	}
     if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
     if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
     if (SESSION.json['library_comp_id'] != $('#compilation-identifier').val()) {libraryOptionsChange = true;}
@@ -2194,6 +2198,17 @@ $('.btn-appearance-update').click(function(e){
 		}
 	);
 
+	if (libraryOptionsChange == true) {
+		var libRendered = false;
+		if (currentView == 'tag' || currentView == 'album') {
+		    //notify('updcustomize', 'Reloading Library');
+			$('#lib-loader').show();
+			scopeR('Lib');
+		}
+		loadLibrary();
+		return;
+	}
+
 	if (fontSizeChange) {
 		setFontSize();
 		window.dispatchEvent(new Event('resize')); // resize knobs if needed
@@ -2235,7 +2250,7 @@ $('.btn-appearance-update').click(function(e){
 	}
 
 	// auto-reload page if indicated
-	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || libraryOptionsChange == true || UI.bgImgChange == true) {
+	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true) {
 	    notify('updcustomize', 'Auto-refresh in 3 seconds');
 		setTimeout(function() {
 			location.reload(true);
