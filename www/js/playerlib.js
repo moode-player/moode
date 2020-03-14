@@ -722,12 +722,8 @@ function renderUI() {
 			var extraTags = MPD.json['bitrate'] ? MPD.json['bitrate'] : 'VBR';
 		}
 		else {
-			var extraTags = MPD.json['track'] ? 'Track ' + MPD.json['track'] : '';
-			extraTags += MPD.json['disc'] ? (MPD.json['disc'] != 'Disc tag missing' ? '&nbsp;&bull; Disc ' + MPD.json['disc'] : '') : '';
-			extraTags += MPD.json['date'] ? '&nbsp;&bull; Year ' + (MPD.json['date']).slice(0,4) : '';
-			extraTags += MPD.json['composer'] ? '&nbsp;&bull; ' + MPD.json['composer'] : '';
-			extraTags += MPD.json['encoded'] ? (MPD.json['encoded'] != 'Unknown' ? '&nbsp;&bull;&nbsp;' + MPD.json['encoded'] : '') : ''; // rate, format, see getEncodedAt()
-			//extraTags += MPD.json['encoded'] ? (MPD.json['encoded'] != 'Unknown' ? '&nbsp&bull; ' + MPD.json['encoded'] : '') : ''; // rate only
+            // Rate, format, see getEncodedAt()
+            var extraTags = MPD.json['encoded'] ? (MPD.json['encoded'] != 'Unknown' ? MPD.json['encoded'] : '') : '';
 		}
 		$('#extratags').html(extraTags);
 	}
