@@ -35,14 +35,14 @@
 			<div id="ss-backdrop"></div>
 			<div id="ss-style"></div>
 		</div>
-		
+
 		<div id="viewswitch" class="viewswitch hide">
 				<div class="dropdown">
 					<a aria-label="Tabs" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
 					<ul class="dropdown-menu context-menu" role="menu">
 						<button aria-label="Search" id="viewswitch-search" class="viewswearch btn menu-separator">
 							<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
-									<input id="lib-album-filter" type="text" value="" placeholder="search">
+									<input id="lib-album-filter" type="text" value="" placeholder="search albums">
 							</form>
 							<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
 						</button>
@@ -51,11 +51,11 @@
 						<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag</button>
 						<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Cover</button>
 						<button aria-label="All Music" class="btn view-all" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
-						<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>						
+						<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
 					</ul>
 		    	</div>
 		</div>
-		
+
 
 		<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
 		<div id="playback-panel" class="tab-pane">
@@ -105,7 +105,7 @@
 						<div id="volzone">
 							<div id="volknob">
 								<div id="volcontrol" class='volume-step-limiter'>
-								
+
 									<input aria-label="Volume" readonly class="volumeknob" id="volume" data-min="0" data-max="100" step="10" data-width="100%" data-thickness=".13" data-bgColor="rgba(50,50,50,0.5)" data-fgColor="transparent" data-readOnly="false" data-cursor="false" data-angleArc="340" data-angleOffset="-170">
 								</div>
 								<div id="volbtns">
@@ -113,13 +113,13 @@
 									<div aria-label="Volume Display" class="volume-display" href="#notarget"><div></div></div>
 									<button aria-label="Volume Down" id="volumedn" class="btn btn-cmd btn-volume">−</i></button>
 								</div>
-							</div>					
+							</div>
 						</div>
 						<div id="togglebtns">
 							<div class="btn-group">
 								<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
 								<button href="#notarget" class="btn btn-cmd toggle-song hide" data-cmd="toggle-song"><i class="fal fa-exchange-alt"></i></button>
-							
+
 								<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
 								<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
 								<button aria-label="Consume" class="btn btn-cmd btn-toggle consume hide" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
