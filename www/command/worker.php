@@ -705,8 +705,9 @@ $spotactive = '0';
 $slactive = '0';
 $inpactive = '0';
 
-// MPD database update
+// MPD database and thumbcache update
 $mpd_dbupd_initiated = '0';
+$thm_upd_initiated = '0';
 
 // Maintenance task
 $maint_interval = $_SESSION['maint_interval'];
@@ -807,6 +808,9 @@ while (true) {
 	}
 	if ($GLOBALS['mpd_dbupd_initiated'] == '1') {
 		chkMpdDbUpdate();
+	}
+	if ($GLOBALS['thm_upd_initiated'] == '1') {
+		chkThmCacheUpdate();
 	}
 	if ($_SESSION['w_active'] == 1 && $_SESSION['w_lock'] == 0) {
 		runQueuedJob();
@@ -1259,6 +1263,24 @@ function chkMpdDbUpdate() {
 	if (!isset($status['updating_db'])) {
 		sendEngCmd('dbupd_done');
 		$GLOBALS['mpd_dbupd_initiated'] = '0';
+
+		// Launch thumbcache updater
+		$result = sysCmd('pgrep -l thmcache.php');
+		if (strpos($result[0], 'thmcache.php') === false) {
+			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
+			sendEngCmd('thmupd_initiated');
+			$GLOBALS['thm_upd_initiated'] = '1';
+		}
+	}
+}
+
+// Check for thumbcache update complete
+function chkThmCacheUpdate() {
+	$result = sysCmd('pgrep -l thmcache.php');
+
+	if (strpos($result[0], 'thmcache.php') === false) {
+		sendEngCmd('thmupd_done');
+		$GLOBALS['thm_upd_initiated'] = '0';
 	}
 }
 
@@ -1320,11 +1342,15 @@ function runQueuedJob() {
 			break;
 		case 'updthmcache':
 			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
+			sendEngCmd('thmupd_initiated');
+			$GLOBALS['thm_upd_initiated'] = '1';
 			break;
 		case 'regenthmcache':
 			sysCmd('rm -rf ' . THMCACHE_DIR);
 			sysCmd('mkdir ' . THMCACHE_DIR);
 			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
+			sendEngCmd('thmupd_initiated');
+			$GLOBALS['thm_upd_initiated'] = '1';
 			break;
 
 		// mpd-config jobs

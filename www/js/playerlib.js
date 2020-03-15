@@ -103,6 +103,7 @@ var GLOBAL = {
 	lazyAlbum: false, // call initial lazyload or use resize thingy
 	lazyTag: false,
 	lazyRadio: false,
+    thmupdInitiated: false,
 	regExIgnoreArticles: ''
 }
 
@@ -267,6 +268,9 @@ function engineMpd() {
 					if (typeof(MPD.json['updating_db']) != 'undefined') {
 						$('.busy-spinner').show();
 					}
+                    else if (GLOBAL.thmupdInitiated) {
+                		$('.busy-spinner').show();
+                	}
 					else {
 						$('.busy-spinner').hide();
 					}
@@ -368,6 +372,9 @@ function engineMpdLite() {
 				if (typeof(MPD.json['updating_db']) != 'undefined') {
 					$('.busy-spinner').show();
 				}
+                else if (GLOBAL.thmupdInitiated) {
+            		$('.busy-spinner').show();
+            	}
 				else {
 					$('.busy-spinner').hide();
 				}
@@ -434,6 +441,14 @@ function engineCmd() {
 			}
 
 			if (cmd[0] == 'dbupd_done') {
+				$('.busy-spinner').hide();
+			}
+            else if (cmd[0] == 'thmupd_initiated') {
+                GLOBAL.thmupdInitiated = true;
+				$('.busy-spinner').show();
+			}
+            else if (cmd[0] == 'thmupd_done') {
+                GLOBAL.thmupdInitiated = false;
 				$('.busy-spinner').hide();
 			}
 
@@ -861,6 +876,9 @@ function renderUI() {
 
 	// database update
 	if (typeof(MPD.json['updating_db']) != 'undefined') {
+		$('.busy-spinner').show();
+	}
+    else if (GLOBAL.thmupdInitiated) {
 		$('.busy-spinner').show();
 	}
 	else {

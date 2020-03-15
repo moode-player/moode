@@ -259,13 +259,27 @@ function extMusicRoot($option = 'new') {
 
 // socket routines for engine-cmd.php
 function sendEngCmd ($cmd) {
-	//workerLog('sendCmd(): Reading in portfile');
+	//workerLog('sendEngCmd(): cmd: ' . $cmd);
+	//workerLog('sendEngCmd(): Reading in portfile');
 	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
 		// this case is ok and occurs if UI has never been started
-		//workerLog('sendEngCmd(): File open failed');
+		workerLog('sendEngCmd(): File open failed, UI has never been started');
 	}
 	else {
 		//workerLog('sendEngCmd(): Connecting to each of ' . count($ports) . ' port(s)');
+		// Retry until UI connects or retry limit reached
+		$retry_limit = 4;
+		$retry_count = 0;
+		while (count($ports) === 0) {
+			++$retry_count;
+			//workerLog('sendEngCmd(): Reading in portfile (retry ' . $retry_count . ')');
+			$ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+			sleep (1);
+			if (--$retry_limit == 0) {
+				break;
+			}
+		}
+
 		foreach ($ports as $port) {
 			//workerLog('sendEngCmd(): Port: ' . $port);
 			if (false !== ($sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP))) {
@@ -275,6 +289,7 @@ function sendEngCmd ($cmd) {
 					socket_close($sock);
 				}
 				else {
+					//workerLog('sendEngCmd(): Socket connect to port ' . $port . ' failed');
 					//workerLog('sendEngCmd(): Updating portfile (remove ' . $port . ')');
 					sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
 				}

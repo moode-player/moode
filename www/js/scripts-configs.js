@@ -18,9 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2019-MM-DD TC moOde 6.5.0
  *
  */
+
 jQuery(document).ready(function($){ 'use strict';
 	$('#config-back').show();
 	$('#config-tabs').css('display', 'flex');
@@ -70,8 +71,14 @@ jQuery(document).ready(function($){ 'use strict';
     // setup pines notify
     $.pnotify.defaults.history = false;
 
-	// connect to server engine (lite version that just looks for db update running / complete)
-	engineMpdLite();
+	// Connect to server engines
+    engineMpdLite();
+    engineCmd();
+
+    // Busy spinner for Thumbcache update/re-gen initiated
+    if (GLOBAL.thmupdInitiated = true) {
+        $('.busy-spinner').show();
+    }
 
 	//
 	// EVENT HANDLERS

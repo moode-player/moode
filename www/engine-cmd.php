@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -31,7 +31,7 @@ socket_getsockname($sock, $addr, $port);
 //workerLog('engineCmd(): Listening on port (' . $port . '}');
 
 if (false === ($fp = fopen(PORT_FILE, 'a'))) {
-	//workerLog('engineCmd(): File create failed');
+	workerLog('engineCmd(): File create failed');
 	echo json_encode('file create failed');
 	exit();
 }
@@ -52,7 +52,7 @@ while($sockres = socket_accept($sock)) {
 	$cmd = str_replace(array("\r\n","\r","\n"), '', $data);
 	//workerLog('engineCmd(): Received cmd: ' . $cmd);
 	break;
-} 
+}
 
 //workerLog('engineCmd(): Closing socket: ' . $port);
 socket_close($sock);
