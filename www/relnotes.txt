@@ -18,6 +18,7 @@
 New features
 
 - NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
+- NEW: Library update that incorporates Thumbcache update
 - NEW: Library search for Tag and Album views
 - NEW: Library separate sorts for Tag and Album views
 - NEW: Library option to hide covers in Tag view album column
