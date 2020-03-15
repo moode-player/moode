@@ -157,7 +157,8 @@ AUDIO_PARAMETERS() {
 
 APPEARANCE_SETTINGS() {
 	echo -e "A P P E A R A N C E   S E T T I N G S"
-	# Themes and backgrounds
+	echo -e "\nThemes and backgrounds\c"
+	echo -e "\n----------------------\c"
 	echo -e "\nTheme\t\t\t= $themename\c"
 	echo -e "\nAccent color\t\t= $accentcolor\c"
 	echo -e "\nAlpha blend\t\t= $alphablend\c"
@@ -167,17 +168,8 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nCover backdrop\t\t= $cover_backdrop\c"
 	echo -e "\nCover blur\t\t= $cover_blur\c"
 	echo -e "\nCover scale\t\t= $cover_scale\c"
-	# Coverview screen saver
-	echo -e "\nCoverView auto-display\t= $scnsaver_timeout\c"
-	echo -e "\nCoverView style\t\t= $scnsaver_style\c"
-	# Other options
-	echo -e "\nAuto-shuffle filter\t= $ashuffle_filter\c"
-	echo -e "\nExtra metadata\t\t= $xtagdisp\c"
-	echo -e "\nPlayback history\t= $playhist\n"
-}
-
-LIBRARY_SETTINGS() {
-	echo -e "L I B R A R Y   S E T T I N G S"
+	echo -e "\n\nLibrary options\c"
+	echo -e "\n----------------------\c"
 	echo -e "\nInstant play action\t= $library_instant_play\c"
 	echo -e "\nShow tagview genres\t= $library_show_genres\c"
 	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
@@ -190,7 +182,17 @@ LIBRARY_SETTINGS() {
 	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\nHi-res thumbs\t\t= $library_hiresthm\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
-	echo -e "\nPixel ratio\t\t= $library_pixelratio\n"
+	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
+	echo -e "\n\nCoverview screen saver\c"
+	echo -e "\n----------------------\c"
+	echo -e "\nCoverView auto-display\t= $scnsaver_timeout\c"
+	echo -e "\nCoverView style\t\t= $scnsaver_style\c"
+	echo -e "\n\nOther options\c"
+	echo -e "\n----------------------\c"
+	echo -e "\nFont size\t\t= $font_size\c"
+	echo -e "\nAuto-shuffle filter\t= $ashuffle_filter\c"
+	echo -e "\nExtra metadata\t\t= $xtagdisp\c"
+	echo -e "\nPlayback history\t= $playhist\n"
 }
 
 MPD_SETTINGS() {
@@ -606,6 +608,8 @@ led_state=${arr[129]}
 library_tagview_covers=${arr[130]}
 library_tagview_sort=${arr[131]}
 library_ellipsis_limited_text=${arr[132]}
+appearance_modal_state=${arr[133]}
+font_size=${arr[134]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
@@ -661,7 +665,6 @@ fi
 SYSTEM_PARAMETERS
 AUDIO_PARAMETERS
 APPEARANCE_SETTINGS
-LIBRARY_SETTINGS
 MPD_SETTINGS
 RENDERER_SETTINGS
 MOODE_LOG
