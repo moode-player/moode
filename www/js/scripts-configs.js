@@ -76,7 +76,7 @@ jQuery(document).ready(function($){ 'use strict';
     engineCmd();
 
     // Busy spinner for Thumbcache update/re-gen initiated
-    if (GLOBAL.thmupdInitiated = true) {
+    if (GLOBAL.thmupdInitiated == true) {
         $('.busy-spinner').show();
     }
 
