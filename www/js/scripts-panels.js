@@ -685,7 +685,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// click on artist name in lib meta area
 	$('#lib-artistname').click(function(e) {
-		$('#artistsList li .lib-entry').filter(function() {return $(this).text() == $('#lib-artistname').text()}).click();
+		$('#artistsList .lib-entry').filter(function() {return $(this).text() == $('#lib-artistname').text()}).click();
 		customScroll('artists', UI.libPos[2], 200);
 	});
 
@@ -708,7 +708,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('#playback-switch').click();
 			$('.tag-view-btn').click();
 			setTimeout(function() {
-				$('#artistsList li .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
+				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
 				customScroll('artists', UI.libPos[2], 200);
 			}, 300);
 		}
