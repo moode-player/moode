@@ -418,39 +418,47 @@ function engineCmd() {
 		cache: false,
 		success: function(data) {
 			//console.log('engineCmd: success branch: data=(' + data + ')');
-
 			cmd = JSON.parse(data).split(',');
 
-			if (cmd[0] == 'btactive1' || cmd[0] == 'btactive0') { // NOTE: cmd[1] is the connected device name
-				inpSrcIndicator(cmd[0], '<a href="blu-config.php">Bluetooth Active</a><br><span>' + cmd[1] + '</span>');
-			}
-			else if (cmd[0] == 'aplactive1' || cmd[0] == 'aplactive0') {
-				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><span class="disconnect-renderer" data-job="airplaysvc">disconnect</span>');
-			}
-			else if (cmd[0] == 'spotactive1' || cmd[0] == 'spotactive0') {
-				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><span class="disconnect-renderer" data-job="spotifysvc">disconnect</span>');
-			}
-			else if (cmd[0] == 'slactive1' || cmd[0] == 'slactive0') {
-				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">turn off</span>');
-			}
-			else if (cmd[0] == 'inpactive1' || cmd[0] == 'inpactive0') { // NOTE: cmd[1] is the input source name
-				inpSrcIndicator(cmd[0], '<a href="sel-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
-			}
-			else if (cmd[0] == 'scnactive1') {
-				screenSaver(cmd[0]);
-			}
-
-			if (cmd[0] == 'dbupd_done') {
-				$('.busy-spinner').hide();
-			}
-            else if (cmd[0] == 'thmupd_initiated') {
-                GLOBAL.thmupdInitiated = true;
-				$('.busy-spinner').show();
-			}
-            else if (cmd[0] == 'thmupd_done') {
-                GLOBAL.thmupdInitiated = false;
-				$('.busy-spinner').hide();
-			}
+            switch (cmd[0]) {
+                case 'inpactive1':
+                case 'inpactive0':
+                    // NOTE: cmd[1] is the input source name
+    				inpSrcIndicator(cmd[0], '<a href="sel-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
+                    break;
+                case 'btactive1':
+                case 'btactive0':
+                    // NOTE: cmd[1] is the input source name
+                    inpSrcIndicator(cmd[0], '<a href="blu-config.php">Bluetooth Active</a><br><span>' + cmd[1] + '</span>');
+                    break;
+                case 'aplactive1':
+                case 'aplactive0':
+    				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><span class="disconnect-renderer" data-job="airplaysvc">disconnect</span>');
+                    break;
+                case 'spotactive1':
+                case 'spotactive0':
+    				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><span class="disconnect-renderer" data-job="spotifysvc">disconnect</span>');
+                    break;
+                case 'slactive1':
+                case 'slactive0':
+    				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">turn off</span>');
+                    break;
+                case 'scnactive1':
+    				screenSaver(cmd[0]);
+                    break;
+                case 'dbupd_done':
+    				$('.busy-spinner').hide();
+                    break;
+                case 'thmupd_initiated':
+                    notify('upd_thmcache');
+                    GLOBAL.thmupdInitiated = true;
+    				$('.busy-spinner').show();
+                    break;
+                case 'thmupd_done':
+                    GLOBAL.thmupdInitiated = false;
+    				$('.busy-spinner').hide();
+                    break;
+            }
 
 			engineCmd();
 		},
