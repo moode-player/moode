@@ -2919,7 +2919,7 @@ $('#index-albums li').on('click', function(e) {
 	className = SESSION.json['library_tagview_sort'].toLowerCase().split('/');
 	SESSION.json['library_tagview_covers'] ? classPrefix = '-name-art' : classPrefix = '-name';
     var selector = '.' + className[0] + classPrefix;
-	console.log('albumsList li ' + selector)
+	//console.log('albumsList li ' + selector)
     //var selector2 = selector.replace(/\/year/g, '');
     listLook('albumsList li ' + selector, 'albums', $(this).text());
 });
