@@ -42,11 +42,11 @@ $initiateDBUpd = false;
 
 // update mpd database
 if (isset($_POST['updatempd'])) {
-	submitJob('updmpddb', '', 'Database update started...', '');
+	submitJob('updmpddb', '', 'Updating database...', '');
 }
 // rescan mpd database
 if (isset($_POST['rescanmpd'])) {
-	submitJob('rescanmpddb', '', 'Database rescan started...', '');
+	submitJob('rescanmpddb', '', 'Regenerating database...', '');
 }
 // auto-update mpd db on usb insert/remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
@@ -61,7 +61,7 @@ if (isset($_POST['remount'])) {
 	$result_unmount = sourceMount('unmountall');
 	$result_mount = sourceMount('mountall');
 	//workerLog('lib-config: remount: (' . $result_unmount . ', ' . $result_mount . ')');
-	$_SESSION['notify']['title'] = 'Re-mount started...';
+	$_SESSION['notify']['title'] = 'Re-mounting NAS sources...';
 }
 // Clear library cache
 if (isset($_POST['clrlibcache'])) {
@@ -75,8 +75,8 @@ if (isset($_POST['updthmcache'])) {
 		$_SESSION['notify']['title'] = 'Process is currently running';
 	}
 	else {
-		$_SESSION['thmcache_status'] = 'Updating thumbnail cache...';
-		submitJob('updthmcache', '', 'Updating thumbnail cache...', '');
+		$_SESSION['thmcache_status'] = 'Updating thumbcache...';
+		submitJob('updthmcache', '', 'Updating thumbcache...', '');
 	}
 }
 // regenerate thumbnail cache
@@ -86,8 +86,8 @@ if (isset($_POST['regenthmcache'])) {
 		$_SESSION['notify']['title'] = 'Process is currently running';
 	}
 	else {
-		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';
-		submitJob('regenthmcache', '', 'Regenerating thumbnail cache...', '');
+		$_SESSION['thmcache_status'] = 'Regenerating thumbcache...';
+		submitJob('regenthmcache', '', 'Regenerating thumbcache...', '');
 	}
 }
 
@@ -97,7 +97,7 @@ if (isset($_POST['regenthmcache'])) {
 if (isset($_POST['delete']) && $_POST['delete'] == 1) {
 	$initiateDBUpd = true;
 	$_POST['mount']['action'] = 'delete';
-	submitJob('sourcecfg', $_POST, 'Music source removed', 'Database update started...');
+	submitJob('sourcecfg', $_POST, 'Music source removed', 'Updating database...');
 }
 // save source
 if (isset($_POST['save']) && $_POST['save'] == 1) {
@@ -174,7 +174,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$array['mount']['wsize'] = $_POST['mount']['wsize'];
 		$array['mount']['options'] = $_POST['mount']['options'];
 
-		submitJob('sourcecfg', $array, 'Source config saved', 'Database update started...');
+		submitJob('sourcecfg', $array, 'Source config saved', 'Updating database...');
 	}
 }
 // scanner
