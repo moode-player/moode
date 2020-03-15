@@ -448,15 +448,18 @@ function engineCmd() {
                     break;
                 case 'dbupd_done':
     				$('.busy-spinner').hide();
+                    //console.log('dbupd_done');
                     break;
                 case 'thmupd_initiated':
                     notify('upd_thmcache');
                     GLOBAL.thmupdInitiated = true;
     				$('.busy-spinner').show();
+                    //console.log('thmupd_initiated');
                     break;
                 case 'thmupd_done':
                     GLOBAL.thmupdInitiated = false;
     				$('.busy-spinner').hide();
+                    //console.log('thmupd_done');
                     break;
             }
 
