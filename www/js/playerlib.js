@@ -2992,6 +2992,10 @@ $("#coverart-url, #playback-switch").click(function(e){
 		$('.togglepl').click(); // or whatever show queue is
 		return;
 	}
+
+    // Prevent a display anomaly
+    $('#coverart-link').hide();
+
 	currentView = currentView.split(',')[1];
 	$('#menu-top').css('height', '0');
 	$('#menu-top').css('backdrop-filter', '');
@@ -3052,6 +3056,10 @@ $('#playbar-switch, #playbar-cover').click(function(e){
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // async
 		syncTimers();
 		setColors();
+
+        // Restore
+        $('#coverart-link').show();
+
 		$('#menu-header').text('');
 		$('#container-playlist').css('visibility','');
 		$('#menu-bottom, .viewswitch').css('display', 'none');
