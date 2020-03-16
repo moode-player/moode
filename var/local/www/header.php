@@ -135,14 +135,14 @@
 					<li id="playhistory-hide" class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fas fa-book sx"></i> Play history</a></li>
 					<li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fas fa-info sx"></i> Quick help</a></li>
 					<li class="context-menu menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
-					<li><a href="#restart-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Restart</a></li>
+					<li><a href="#power-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Power</a></li>
 				<?php } else { ?>
 					<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
 					<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="fas fa-music sx"></i> Audio info</a></li>
 					<li><a href="javascript:$('#sysinfo-modal .modal-body').load('sysinfo.php',function(e){$('#sysinfo-modal').modal('show');}); void 0"><i class="fas fa-file-alt sx"></i> System info</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="aboutmoode"><i class="fas fa-info sx"></i> About</a></li>
 					<li><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
-					<li><a href="#restart-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Restart</a></li>
+					<li><a href="#power-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Power</a></li>
 				<?php } ?>
 			</ul>
 		</div>

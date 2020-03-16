@@ -924,22 +924,22 @@
 	</div>
 </div>
 
-<!-- RESTART -->
-<div id="restart-modal" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="restart-modal-label" aria-hidden="true">
+<!-- POWER -->
+<div id="power-modal" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="power-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="restart-modal-label"><i class="fas fa-power-off sx"></i></h3>
+		<h3 id="power-modal-label">Power Options</h3>
 	</div>
 	<div class="modal-body">
 		<button aria-label="Shutdown" id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block">Shutdown</button>
-		<button aria-label="Reboot" id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;">Reboot</button>
+		<button aria-label="Restart" id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;">Restart</button>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
 </div>
 
-<!-- RECONNECT/REBOOT/POWEROFF -->
+<!-- RECONNECT/RESTART/POWEROFF -->
 <div id="reconnect" class="hide">
 	<div class="reconnectbg"></div>
 	<div class="reconnectbtn">
@@ -947,7 +947,7 @@
 	</div>
 </div>
 
-<div id="reboot" class="hide">
+<div id="restart" class="hide">
 	<div class="reconnectbg"></div>
 	<div class="reconnectbtn">
 		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>

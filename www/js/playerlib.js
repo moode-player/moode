@@ -533,7 +533,7 @@ function renderReconnect() {
 	debugLog('renderReconnect: UI.restart=(' + UI.restart + ')');
 
 	if (UI.restart == 'reboot') {
-		$('#reboot').show();
+		$('#restart').show();
 	}
 	else if (UI.restart == 'poweroff') {
 		$('#poweroff').show();
@@ -550,7 +550,7 @@ function renderReconnect() {
 
 function hideReconnect() {
 	//console.log('hideReconnect: (' + UI.hideReconnect + ')');
-	$('#reconnect, #reboot, #poweroff').hide();
+	$('#reconnect, #restart, #poweroff').hide();
 	UI.hideReconnect = false;
 }
 
