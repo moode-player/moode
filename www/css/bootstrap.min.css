@@ -473,8 +473,8 @@ button.btn.btn-mini,input[type="submit"].btn.btn-mini{/**padding-top:1px;*paddin
 .tabbable:after{clear:both;}
 .tab-content{overflow:auto;}
 .tabs-below>.nav-tabs,.tabs-right>.nav-tabs,.tabs-left>.nav-tabs{border-bottom:0;}
-.tab-content>.tab-pane,.pill-content>.pill-pane{display:none;}
-.tab-content>.active,.pill-content>.active{display:block;}
+.tab-content>.tab-pane,.pill-content>.pill-pane{visibility:hidden;}
+.tab-content>.active,.pill-content>.active{visibility:visible;}
 .tabs-below>.nav-tabs{border-top:1px solid #ddd;}
 .tabs-below>.nav-tabs>li{margin-top:-1px;margin-bottom:0;}
 .tabs-below>.nav-tabs>li>a{-webkit-border-radius:0 0 4px 4px;-moz-border-radius:0 0 4px 4px;border-radius:0 0 4px 4px;}.tabs-below>.nav-tabs>li>a:hover,.tabs-below>.nav-tabs>li>a:focus{border-bottom-color:transparent;border-top-color:#ddd;}

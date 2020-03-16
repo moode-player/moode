@@ -256,7 +256,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#lib-albumcover {left:0;}
 	/* ellipsis madness */
 	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
-	#albumcovers .lib-entry, .database-radio .lib-entry {width:var(--mthumbcols);}
+	#albumcovers .lib-entry, .database-radio li {width:var(--mthumbcols);}
 	#albumcovers .lib-entry img, .database-radio img {max-height:calc(var(--mthumbcols) * .9);}
 
 	#ss-currentsong {font-size:1.5em;}
@@ -283,7 +283,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* playbar */
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;}
-	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:calc(72vw - 6rem);height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
+	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:53vw;height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
 	#playbar-controls .btn {padding:.4em;font-size:2.5rem;-webkit-tap-highlight-color:transparent);}
@@ -476,11 +476,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 @media (orientation: portrait) and (min-aspect-ratio: 600/1024) {
 	#playback-panel.newui #timezone {left:12.5%;top:59%;}
 	#playback-panel.newui #volzone {right:12.5%;top:59%;}
-	#playback-panel.newui #playback-cover {width:75vw;} /* 75% cover h/w */
+	#playback-panel.newui #playback-cover {width:75vw;}
 	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:75vw;max-height:75vw;}
 	#playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {width:60%;height:55%;}
-	#albumcovers .lib-entry img, .database-radio img {max-height: calc(31vw * .9);}
-	#albumcovers li, .database-radio li {width:31vw;}
+	#playback-panel.newui#albumcovers .lib-entry img, #playback-panel.newui.database-radio img {max-height: calc(31vw * .9);}
+	#playback-panel.newui#albumcovers li, #playback-panel.newui.database-radio li {width:31vw;}
 	#playback-panel.newui #volcontrol, #playback-panel.newui #volcontrol-2, #playback-panel.newui #countdown {height:12.5rem;width:12.5rem;}
 }
 @media (orientation: portrait) and (min-aspect-ratio: 2/3) {

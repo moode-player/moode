@@ -148,7 +148,7 @@ var toggleSong = 'blank';
 var currentView = 'playback';
 var alphabitsFilter;
 var lastYIQ = ''; // last yiq value from setColors
-//var lastBack = ''; // r50 deprecate
+var extraTags = "%track% %disc% %year% %composer% %bitrate% %encoded%";
 
 function debugLog(msg)  {
 	if (SESSION.json['debuglog'] == '1') {
@@ -518,8 +518,8 @@ function screenSaver(cmd) {
 		return;  // exit if input source is active
 	}
 	else if (cmd.slice(-1) == '1') {
-		$('#folder-panel, #library-panel, #radio-panel').addClass('hidden');
-		$('#playback-panel').show();
+		//$('#folder-panel, #library-panel, #radio-panel').addClass('hidden');
+		//$('#playback-panel').show();
 		setCV();
 		$('#menu-bottom, #menu-top').hide();
 		$('.viewswitch').css('display', 'none');
@@ -742,16 +742,23 @@ function renderUI() {
 	}
 
 	// extra metadata
-	if (SESSION.json['xtagdisp'] == 'Yes') {
+	if (MPD.json['state'] === 'stop') {
+		$('#extratags').html('Not playing');
+	} else if (SESSION.json['xtagdisp'] == 'Yes') {
 		$('#extratags').text('');
+		var extraTemp = extraTags;
 		if (MPD.json['artist'] == 'Radio station') {
-			var extraTags = MPD.json['bitrate'] ? MPD.json['bitrate'] : 'VBR';
+			extraTemp = MPD.json['bitrate'] ? MPD.json['bitrate'] : 'VBR';
 		}
 		else {
-            // Rate, format, see getEncodedAt()
-            var extraTags = MPD.json['encoded'] ? (MPD.json['encoded'] != 'Unknown' ? MPD.json['encoded'] : '') : '';
+			extraTemp = extraTemp.replace("%track%", MPD.json['track'] ? 'Track ' + MPD.json['track'] : '');
+			extraTemp = extraTemp.replace(" %disc%", MPD.json['disc'] == "Disc tag missing" ? '' : ' • Disc ' + MPD.json['disc']);
+			extraTemp = extraTemp.replace(" %year%", MPD.json['date'] ? ' • ' + MPD.json['date'].slice(0,4) : '');
+			extraTemp = extraTemp = extraTemp.replace(" %composer%", MPD.json['composer'] ? ' • ' + MPD.json['composer'] : '');
+			extraTemp = extraTemp.replace(" %encoded%", MPD.json['encoded'] != 'Unknown' ? ' • ' + MPD.json['encoded'] : '');
+			extraTemp = extraTemp.replace(" %bitrate%", MPD.json['bitrate'] == '' ? '' : ' • ' + MPD.json['bitrate']);
 		}
-		$('#extratags').html(extraTags);
+		extraTemp ? $('#extratags').html(extraTemp) : $('#extratags').html(MPD.json["audio_sample_depth"] + '/' + MPD.json["audio_sample_rate"]);
 	}
 	else {
 		$('#extratags').html('');
@@ -3105,7 +3112,7 @@ function syncTimers() {
 				var d = $('#playbar-total').text().split(':');
 				var e = parseInt(c[0] * 60) + parseInt(c[1]); // convert to seconds
 				var f = parseInt(d[0] * 60) + parseInt(d[1]);
-				var g = 100 - ((e / f) * 100); // percent of elapsed song for progress
+				SESSION.json['timecountup'] == 1 ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // percent of elapsed song
 				$('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
 				g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // adjust for thumb
 				$('#playbar-timeline .timeline-progress').css('width', g);
@@ -3274,7 +3281,10 @@ function setCV() {
 				case 'folder':
 					$('#folder-panel').addClass('active');
 					break;
-				case 'radio':
+				case 'radiocovers':
+					$('#radio-panel').addClass('active');
+					break;
+				case 'radiolist':
 					$('#radio-panel').addClass('active');
 					break;
 			}
