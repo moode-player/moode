@@ -689,29 +689,38 @@ jQuery(document).ready(function($) { 'use strict';
 		customScroll('artists', UI.libPos[2], 200);
 	});
 
-	// click on artist or station name in playback
+    // Click on title in playback or cv
+    $('#playback-panel').click(function(e) {
+        if ($('#playback-panel').hasClass('cv')) {
+            e.preventDefault();
+        }
+	});
+
+	// Click on artist or station name in playback or cv
 	$('#currentalbum').click(function(e) {
-		// radio station
-		if (MPD.json['artist'] == 'Radio station') {
-			$('.database-radio li').each(function(index){
-				if ($(this).text().search(RADIO.json[MPD.json['file']]['name']) != -1) {
-					UI.radioPos = index + 1;
-				}
-			});
-			$('#playback-switch').click();
-			if (!$('.radio-view-btn').hasClass('active')) {
-				$('.radio-view-btn').click();
-			}
-		}
-		// song file
-		else {
-			$('#playback-switch').click();
-			$('.tag-view-btn').click();
-			setTimeout(function() {
-				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
-				customScroll('artists', UI.libPos[2], 200);
-			}, 300);
-		}
+        if (!$('#playback-panel').hasClass('cv')) {
+            // Radio station
+    		if (MPD.json['artist'] == 'Radio station') {
+    			$('.database-radio li').each(function(index){
+    				if ($(this).text().search(RADIO.json[MPD.json['file']]['name']) != -1) {
+    					UI.radioPos = index + 1;
+    				}
+    			});
+    			$('#playback-switch').click();
+    			if (!$('.radio-view-btn').hasClass('active')) {
+    				$('.radio-view-btn').click();
+    			}
+    		}
+    		// Song file
+    		else {
+    			$('#playback-switch').click();
+    			$('.tag-view-btn').click();
+    			setTimeout(function() {
+    				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
+    				customScroll('artists', UI.libPos[2], 200);
+    			}, 300);
+    		}
+        }
 	});
 
 	// browse panel
