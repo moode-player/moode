@@ -2250,7 +2250,7 @@ $('.btn-appearance-update').click(function(e){
 		var result = sendMoodeCmd('GET', 'resetscnsaver');
 	}
 	if (accentColorChange == true) {
-		var accentColor = themeToColors(SESSION.json['accent_color']);
+		accentColor = themeToColors(SESSION.json['accent_color']);
 		var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
 		var test = getCSSRule('.toggle .toggle-radio');
 		test.style.backgroundImage='url("' + radio1 + '")';
@@ -2269,7 +2269,7 @@ $('.btn-appearance-update').click(function(e){
 		/*themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp + ')';*/
 
 		//lastYIQ = 7;
-		lastYIQ = '';
+		lastYIQ = 0;
 		if(SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
 			$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
 			$('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
@@ -2927,9 +2927,9 @@ $('#index-artists li').on('click', function(e) {
 $('#index-albums li').on('click', function(e) {
     // .artist-name or .album-name
 	className = SESSION.json['library_tagview_sort'].toLowerCase().split('/');
-	SESSION.json['library_tagview_covers'] ? classPrefix = '-name-art' : classPrefix = '-name';
+	SESSION.json['library_tagview_covers'] == "Yes" ? classPrefix = '-name-art' : classPrefix = '-name';
     var selector = '.' + className[0] + classPrefix;
-	//console.log('albumsList li ' + selector)
+	console.log('albumsList li ' + selector)
     //var selector2 = selector.replace(/\/year/g, '');
     listLook('albumsList li ' + selector, 'albums', $(this).text());
 });
@@ -2986,7 +2986,7 @@ function setAlbumViewHeaderText() {
 }
 
 // switch to library / playbar panel
-$("#coverart-url, #playback-switch").click(function(e){
+$("#coverart-url, #playback-switch, #vee").click(function(e){
 	if ($('#playback-panel').hasClass('cv')) {
 		e.stopImmediatePropagation();
 		$('.togglepl').click(); // or whatever show queue is
@@ -3139,25 +3139,29 @@ function makeActive (vswitch, panel, view) {
 	switch (view) {
 		case 'album':
 			GLOBAL.lazyAlbum ? '' : lazyLode('album');
-			$('#viewswitch-search').show();
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
+			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('#library-panel').addClass('covers').removeClass('tag');
 			$('#bottom-row').css('display', '');
 			$('#lib-albumcover').css('height', '100%');
 			scopeR(); // type added in scoper
 			break;
 		case 'folder':
-			$('#viewswitch-search').hide();
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
+			$('#viewswitch .album-view-btn').removeClass('menu-separator');
 			scopeR();
 			break;
 		case 'tag':
-			$('#viewswitch-search').show();
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
+			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			GLOBAL.lazyTag && SESSION.json['tag_view_covers'] == 'Yes' ? '' : lazyLode('tag');
 			$('#library-panel').addClass('tag').removeClass('covers');
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 			scopeR(); // add album/year, artist, year
 			break;
 		default: // radio
-			$('#viewswitch-search').hide();
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
+			$('#viewswitch .album-view-btn').removeClass('menu-separator');
 			GLOBAL.lazyRadio ? '' : lazyLode('radio');
 			scopeR();
 			break;
@@ -3241,7 +3245,6 @@ function setFontSize() {
     if (UI.mobile) {
         sizeFactor += .3;
     }
-
     document.body.style.setProperty('--pbfont', 'calc(' + sizeFactor + 'rem + 1vmin)');
 }
 
@@ -3249,9 +3252,9 @@ function setFontSize() {
 function setCV() {
 	$('#playback-panel').toggleClass('cv');
 	window.dispatchEvent(new Event('resize')); // resize for knobs
-
+	$('#playback-panel').hasClass('cv') || $('#playback-panel').hasClass('newui') ? thickness = .11 : thickness = .13;
+	$('.playbackknob, .volumeknob').trigger('configure',{"thickness":thickness});
 	if ($('#playback-panel').hasClass('cv')) {
-		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.11'});
 		$('#library-panel, #radio-panel, #folder-panel').removeClass('active');
 		tempBack = adaptBack;
 		tempColor = adaptMcolor;
@@ -3262,7 +3265,6 @@ function setCV() {
 		$('#playback-panel').addClass('active');
 	}
     else {
-		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.13'});
 		$('#menu-top').show();
 		adaptBack = tempBack;
 		adaptMcolor = tempColor;

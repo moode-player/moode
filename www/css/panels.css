@@ -47,7 +47,7 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--pbfont:calc(0.45em + 1vmin);
 	--radiobadge:url('../images/radio-l.svg');
 	--defcover:'images/default-cover-v6-l.svg';
-	--thumbcols:16vw;
+	--thumbcols:18vw;
 	--mthumbcols:45vw;
 	--coverback:'';
 }
@@ -59,7 +59,7 @@ html {background-color:inherit;}
 #wrap {margin:0 auto -180px;height:100%;height:auto !important;height:100%;}
 #container {height:100%;}
 .container {position:relative;z-index:1;padding:0px;background-color:#202020;width:100%;height:100vh;}
-.container2 {padding:2em;padding:calc(2em + env(safe-area-inset-top)) 2em calc(2em + env(safe-area-inset-bottom)) 2em;background-color:inherit;}
+.container2 {padding:2em;padding:calc(2em + env(safe-area-inset-top)) 2em calc(2em + env(safe-area-inset-bottom)) 2em;background-color:inherit;font-size:var(--pbfont);}
 .push, #footer {height:180px;overflow:hidden;}
 
 .floatsx {float:left;}
@@ -127,7 +127,7 @@ html {background-color:inherit;}
 #volume-popup {display:none;height:100vh;width:100vw;background-color:var(--modalbkdr);}
 #volpad {position:fixed;top:calc(50% - 2.75rem - env(safe-area-inset-bottom));left:50%;width:30%;transform:translate(-50%, -50%);z-index:10001;}
 #volume-popup .modal-footer {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 5vh);width:inherit;border:none;}
-#volume-popup .modal-footer button {width:20%;color:var(--adapttext);left:50%;transform:translate(-50%);position:absolute;font-size:1.2rem;z-index:10001;}
+#volume-popup .modal-footer button {width:20%;color:var(--adapttext);left:50%;transform:translate(-50%);position:fixed;font-size:1.2rem;z-index:10001;}
 #volcontrol-2, #inpsrctick {height:25vw;width:25vw;padding:2em;}
 #volumeup-2, #volumedn-2 {font-size:2rem;}
 #volume-popup .volume-display {font-size:3em;font-weight:500;margin-top:0;}
@@ -152,16 +152,17 @@ html {background-color:inherit;}
 #togglebtns .coverview i {font-size: .85em;}
 #togglebtns .btn-primary {color:var(--accentxts);border-radius:.25em;}
 #menu-top, #menu-bottom {position:fixed;left:0;right:0;color:inherit;}
-.btnlist.btnlist-top.btnlist-top-pl, .btnlist.btnlist-top.btnlist-top-lib {top:0px;top:env(safe-area-inset-top);width:35%;z-index:1004;height:2.5rem;margin-left:.4rem;}
+.btnlist.btnlist-top.btnlist-top-pl {top:0px;top:env(safe-area-inset-top);width:35%;z-index:1004;display:none;}
+#vee {font-size:1.3rem;}
 .btn.btn-primary.btn-small, .btn.btn-primary.btn-medium {background:rgba(128,128,128,0.2);margin-top:-4px;}
 #menu-top {height:2.75rem;line-height:2.75rem;padding-top:0;padding-top:env(safe-area-inset-top);height:0;z-index:1002;display:flex;}
-#menu-top .dropdown {top:0;top:calc(env(safe-area-inset-top) + 0);right:.5em;position:absolute;}
+#menu-top .dropdown {top:0;top:calc(env(safe-area-inset-top) + 0);right:.75rem;position:absolute;}
 #menu-top .dropdown-menu {right:0;}
 #menu-top .dropdown-menu > li > a i, #context-menus .dropdown-menu > li > a i {width:1.75em;display:inline-block;text-align:center;}
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:active, .dropdown-menu > li > a:focus {background-color:var(--accentxta);background-image:none;}
 #menu-top a:hover, #menu-top a:focus, #context-menus .dropdown-menu a:hover, #context-menus .dropdown-menu a:focus {text-decoration:none;outline:none;}
 #menu-top #config-back i {font-size:1.35rem;position:relative;top:1px;}
-#menu-settings {font-size:1.7rem;font-weight:500;text-shadow:0px 0px 2px rgba(0, 0, 0, 0.2);color:var(--adapttext);position:relative;z-index:1001;top:50%;transform:translate(0,-50%);}
+#menu-settings {color:transparent;position:relative;bottom:.3rem;right:0;line-height:2.75rem;height:1.9rem;z-index:1001;padding:0 .75rem;border-radius:0;border-bottom:1px solid transparent;font-size:1.7rem;font-weight:500;margin-right:.1rem;}
 #mbrand, #mblur {font-weight:600;position:absolute;left:50%;top:-.25rem;}
 #mbrand {color:var(--adapttext);text-shadow: 0 0 0.25rem rgba(0,0,0,0.5);transform:translate(-50%);}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
@@ -202,14 +203,15 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList li, #artistsList li, #genresList li {line-height:calc(1.45em + 1vmin);max-width:calc(33vw - 2.3rem);}
 #top-columns.nogenre #albumsList li, #top-columns.nogenre #artistsList li {max-width:calc(50vw - 2.3rem);}
 #albumsList .lib-entry img {width:3rem;margin:.3em .35em .3em .15em;}
-#albumsList .tag-cover-text {display:inline-block;vertical-align:middle;transform:translate(0, .5em);min-width:50%;max-width:calc(100% - 3.6rem)}
-#library-panel .lib-entry span {max-width:100%;display:inline-block;}
+#albumsList .tag-cover-text {display:inline-block;vertical-align:middle;transform:translate(0, .2em);min-width:50%;max-width:calc(100% - 3.6rem);line-height:1rem;}
+#library-panel .lib-entry span {max-width:100%;display:inline;}
+#library-panel.limited .lib-entry span {display:inline-block;}
 #top-columns .lib-entry {font-size: 1em;}
 #top-columns .album-name-art, #top-columns .album-name {display:block !important;vertical-align:middle;min-width:25vw;}
 #top-columns .album-name-art {line-height:1.25em;}
 #albumsList .lib-entry span.artist-name {display:none}
 #albumsList .artist-name-art, #albumsList .album-year {vertical-align:top;line-height:normal;font-size:.85em;color:var(--textvariant);}
-#albumsList .album-year {margin-left:.5em;}
+#albumsList .album-year {margin-left:0;}
 #library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
 #library-panel.limited .lib-entry, #library-panel.limited .lib-entry span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 
@@ -247,7 +249,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .input-append, .input-prepend {margin-bottom:0em;font-size:1em;}
 .btnlist {position:fixed;left:0;right:0;display:block;width:auto;height:2.5em;padding:0;background:none;-webkit-border-radius:0px;-moz-border-radius:0px;border-radius:0px;z-index:999;}
 .btnlist:focus {outline:none;}
-.btnlist.pl-prevPage, .btnlist.db-prevPage, .btnlist.pl-firstPage, .btnlist.db-firstPage, .btnlist.btnlist-top {padding:0 .3em;}
+.btnlist.pl-prevPage, .btnlist.db-prevPage, .btnlist.pl-firstPage, .btnlist.db-firstPage {padding:0 .3em;}
 .btnlist-top-db, .btnlist-top-ra {position:relative;background-color:rgba(128,128,128,.1);;color:var(--adapttext);border-radius:.25em;border:1px solid var(--btnshade);width:calc(100vw - 2.5em);height:2.1rem;padding:0 !important;margin:0 auto;}
 #pl-filter, #lib-album-filter, #ra-filter {padding:0}
 #db-browse .dropdown {display:block;height:40px;line-height:40px;margin:0 20px 0 0;}
@@ -256,10 +258,10 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #db-browse .dropdown-menu > li > a:hover, #db-browse .dropdown-menu > li > a:focus, #db-browse .dropdown-menu > li.active > a {background-color:var(--accentxta);}
 .btnlist a {font-size:1em;text-decoration:none;color:inherit;}
 #pl-search, #lib-album-search, #ra-search {display:block;float:left;margin:0;z-index:1001;position:relative;}
-#pl-search, #lib-album-search {top:50%; transform:translate(0, -50%);}
+#pl-search, #lib-album-search {top:50%; transform:translate(0, -50%);width:11rem;}
 #savepl-modal, #setfav-modal .modal-body {padding:1em .25em 0 .25em;}
 #pl-save {display:block;float:left;margin-right:0;margin-left:0;z-index:1001;width:100%;text-align:center;}
-#pl-search input, #ra-search input, #lib-album-search input {margin:0;border:none;box-shadow:none;min-height:initial;width:6.5rem;height:2.75rem;padding:.25rem;font-size:1rem;}
+#pl-search input, #ra-search input, #lib-album-search input {margin:0;border:none;box-shadow:none;min-height:initial;height:2.75rem;font-size:1rem;padding:0;}
 #ra-search input, #dbfs {margin-left:.5em;padding:0;height:2.1rem;border:none;}
 #searchResetPl, #searchResetLib {font-size:1rem;margin-top:.1em;}
 #db-browse {margin:0;width:200px;}
@@ -277,7 +279,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #reconnect, #reboot, #poweroff {position:fixed;top:0;left:0;margin:0;padding:0;text-align:center;width:100%;height:100%;color:#ddd;z-index:9999;}
 .reconnectbg {position:absolute;top:0;left:0;margin:0;padding:0;text-align:center;background:rgba(0,0,0,0.9);width:100%;height:100%;z-index:9999;}
 .reconnectbtn {position:relative;top:45%;text-transform:uppercase;color:#999;z-index:9999;}
-.viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);left:50%;background-color:transparent;color:inherit;display:none;z-index:1001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:.75rem;transform:none;}
+.viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);left:50%;background-color:transparent;color:inherit;display:none;z-index:1001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:1rem;transform:none;}
 .viewswearch {height:2.25rem;padding:1.5rem 0 1.5rem 1rem !important;}
 #viewswitch span {float:right;display:none;}
 #searchResetLib {padding:.25em;position:relative;top:50%;transform:translate(0, -50%);font-size:1.2rem;}
@@ -322,7 +324,7 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 #appearance-modal div.accordian .dtopen {display:none;}
 .bgimglabel {margin-top:5px;} /* gross but what r u gonna do */
 .modal label, .modal .controls {font-size:1em;}
-.control-label {margin-bottom:0px;}
+.control-label {margin-bottom:0px;font-size:inherit;}
 .modal .controls input {padding:0px 0px 0px 10px;}
 .btn-group>.btn, .btn-group>.dropdown-menu {font-size:1rem;}
 hr {border-color:#333;border-width:1px 0 0;}
@@ -368,7 +370,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #lib-content #lib-file li div:hover {background-color:transparent;}
 #lib-content li div.active {color:var(--accentxts);}
 #lib-content li.active, .albumslist .active, #radiocovers li.active {background-color:var(--accentxta);color:#eee;}
-.lib-entry {padding:0 .5em;margin-right:1.3rem;}
+.lib-entry {padding:0 .5em;margin:0 .1rem;/*margin-right:1.3rem;*/}
 .lib-entry-song {margin-left:4px;padding-top:4px;line-height:normal;margin-right:26px;}
 .lib-action {position:absolute;top:50%;transform:translate(0%,-50%);}
 .lib-action .btn {font-size:.9em;line-height:normal;margin-top:.45em;padding-right:100vw;opacity:0} /* click whole line for menu */
@@ -391,7 +393,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #lib-albumcover {height:100%;width:100%;position:absolute;box-sizing:border-box;left:0%;top:2.75em;top:calc(env(safe-area-inset-top) + 2.75em);overflow:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
 #albumcovers {text-align:center;margin:0;padding-bottom:12em;}
 
-#albumcovers .lib-entry, .database-radio .lib-entry {width:var(--thumbcols);text-align:center;display:inline-block;vertical-align:top;height:auto;font-size:.95em;padding-bottom:.4em;margin:0 1vw;}
+#albumcovers .lib-entry, .database-radio .lib-entry {width:var(--thumbcols);text-align:center;display:inline-block;vertical-align:top;height:auto;font-size:.95em;padding:0 0 .4em 0;}
 #albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(var(--thumbcols) * .9);margin:.75em 0 .5em 0;}
 #albumcovers .album-name {display:block !important;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
@@ -493,6 +495,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #menu-header {position:absolute;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1.1rem;overflow:hidden;max-width:50%;text-overflow:ellipsis;white-space:nowrap;color:var(--adapttext);cursor:pointer;}
 #playback-panel #playback-controls {display:none;}
 #playback-panel.active #playback-controls, #playback-panel.active #playbtns, #playback-panel.active #togglebtns {display:block;}
+#playback-panel.active .btnlist.btnlist-top.btnlist-top-pl {display:inline-flex;}
 #library-panel {display:none;}
 #library-panel.active {height:100vh;display:block;}
 #lib-albumcover, #lib-albumcover-header, #top-columns, #bottom-row {display:none;}
@@ -743,3 +746,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 
 #cover-backdrop {height:100vh;width:100vw;background-size:cover;background-position:center center;z-index:0;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
 #context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}
+.stopscroll {height:100%;overflow:hidden;}

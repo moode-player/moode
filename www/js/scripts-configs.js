@@ -39,6 +39,9 @@ jQuery(document).ready(function($){ 'use strict';
 	THEME.json = result['cfg_theme'];
     NETWORK.json = result['cfg_network'];
 
+	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
+	setFontSize();
+
 	var tempOp = themeOp;
 	if (themeOp == 0.74902) {tempOp = 0.1};
 

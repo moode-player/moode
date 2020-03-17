@@ -563,6 +563,10 @@ jQuery(document).ready(function($) { 'use strict';
 		*/
     });
 
+	if ($('#playback-panel').hasClass('newui')) {
+		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.09'});
+	}
+
 	// toggle count up/down and direction icon, radio always counts up
 	$('#countdown-display, #m-countdown').click(function(e) {
 		if (MPD.json['artist'] != 'Radio station') {
