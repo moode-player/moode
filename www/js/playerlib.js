@@ -2994,7 +2994,8 @@ $("#coverart-url, #playback-switch").click(function(e){
 	}
 
     // Prevent a display anomaly
-    $('#coverart-link').hide();
+    // Corresponding .show() in $('#playbar-switch... and setCV()
+    /*TEST*/$('#coverart-link').hide();
 
 	currentView = currentView.split(',')[1];
 	$('#menu-top').css('height', '0');
@@ -3057,8 +3058,7 @@ $('#playbar-switch, #playbar-cover').click(function(e){
 		syncTimers();
 		setColors();
 
-        // Restore
-        $('#coverart-link').show();
+        /*TEST*/$('#coverart-link').show();
 
 		$('#menu-header').text('');
 		$('#container-playlist').css('visibility','');
@@ -3257,6 +3257,8 @@ function setFontSize() {
 function setCV() {
 	$('#playback-panel').toggleClass('cv');
 	window.dispatchEvent(new Event('resize')); // resize for knobs
+
+    /*TEST*/$('#coverart-link').show();
 
 	if ($('#playback-panel').hasClass('cv')) {
 		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.11'});
