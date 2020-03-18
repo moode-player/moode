@@ -72,12 +72,12 @@
 
 	<div class="modal-footer">
 		<div class="moode-config-settings-div context-menu">
-			<a href="mpd-config.php" class="moode-config-settings-link2">MPD</a>
-			<a href="eqp-config.php" class="moode-config-settings-link2">EQ-P</a>
-			<a href="eqg-config.php" class="moode-config-settings-link2">EQ-G</a>
-			<a href="#notarget" class="moode-config-settings-link2" data-cmd="setforclockradio-m">CLK-RADIO</a>
+			<a href="mpd-config.php" class="moode-config-settings-link2">MPD config</a>
+			<a href="eqp-config.php" class="moode-config-settings-link2">Parametric EQ</a>
+			<a href="eqg-config.php" class="moode-config-settings-link2">Graphic EQ</a>
+			<a href="#notarget" class="moode-config-settings-link2" data-cmd="setforclockradio-m">Clock radio</a>
 			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SOURCESEL) { ?>
-				<a href="sel-config.php" class="moode-config-settings-link2">SOURCE-SEL</a>
+				<a href="sel-config.php" class="moode-config-settings-link2">Input sources</a>
 			<?php } ?>
 		</div>
 		<br>
