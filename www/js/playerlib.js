@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.5.0-test
  *
  */
 
@@ -511,7 +511,7 @@ function inpSrcIndicator(cmd, msgText) {
 		$('#inpsrc-indicator').css('display', '');
 	}
 }
-
+/* DEPRECATE r650b2
 // show/hide screen saver
 function screenSaver(cmd) {
 	if ($('#inpsrc-indicator').css('display') == 'block') {
@@ -525,6 +525,30 @@ function screenSaver(cmd) {
 		$('.viewswitch').css('display', 'none');
 		//$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
 		$('#screen-saver').show()
+	}
+}
+*/
+// Show/hide CoverView screen saver (r642)
+function screenSaver(cmd) {
+	if ($('#inpsrc-indicator').css('display') == 'block') {
+		return;
+	}
+	else if (cmd.slice(-1) == '1') {
+        console.log(currentView);
+		$('#playback-panel, #folder-panel, #library-panel, #radio-panel').addClass('hidden');
+        $('#menu-top').hide();
+        $('#menu-bottom').show();
+		$('.viewswitch').css('display', 'none');
+		$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
+
+        // TEST
+        $('#ss-info').hide();
+        $('#playbar-toggles .coverview').hide();
+        if (currentView.indexOf('playback') == -1) {
+            $('.container-library').css('display', 'none');
+        }
+
+		$('#screen-saver').show();
 	}
 }
 
@@ -766,10 +790,10 @@ function renderUI() {
 
 	// default metadata
 	if (MPD.json['album']) {
-		$('#currentalbum, #playbar-currentalbum').html((MPD.json['artist'] == 'Radio station' ? '' : MPD.json['artist'] + ' - ') + MPD.json['album']);
+		$('#currentalbum, #ss-currentalbum, #playbar-currentalbum').html((MPD.json['artist'] == 'Radio station' ? '' : MPD.json['artist'] + ' - ') + MPD.json['album']);
 	}
 	else {
-		$('#currentalbum, #playbar-currentalbum').html('');
+		$('#currentalbum, #ss-currentalbum, #playbar-currentalbum').html('');
 	}
 
 	// song title
@@ -780,7 +804,7 @@ function renderUI() {
 	else {
 		$('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
 	}
-	$('#playbar-currentsong').html(MPD.json['title']);
+	$('#ss-currentsong, #playbar-currentsong').html(MPD.json['title']);
 
     // scrollto if song change
     if (MPD.json['file'] !== UI.currentFile) {
@@ -2987,9 +3011,11 @@ function setAlbumViewHeaderText() {
 
 // switch to library / playbar panel
 $("#coverart-url, #playback-switch").click(function(e){
+    console.log('here1');
 	if ($('#playback-panel').hasClass('cv')) {
 		e.stopImmediatePropagation();
 		$('.togglepl').click(); // or whatever show queue is
+        console.log('here2');
 		return;
 	}
 
@@ -3049,6 +3075,11 @@ $("#coverart-url, #playback-switch").click(function(e){
 
 // switch to playback panel
 $('#playbar-switch, #playbar-cover').click(function(e){
+    console.log('click playbar');
+    if ($('#screen-saver').css('display') == 'block') {
+        return;
+    }
+
 	if (currentView.indexOf('playback') == 0) { // while in playback means mobile, and view has scrolled, so scroll to top
 		$(window).scrollTop(0);
 	}
@@ -3253,12 +3284,13 @@ function setFontSize() {
     document.body.style.setProperty('--pbfont', 'calc(' + sizeFactor + 'rem + 1vmin)');
 }
 
+/* DEPRECATE r650b2
 // toggle cv class and use dark theme type colors for menus
 function setCV() {
 	$('#playback-panel').toggleClass('cv');
 	window.dispatchEvent(new Event('resize')); // resize for knobs
 
-    /*TEST*/$('#coverart-link').show();
+    //TEST$('#coverart-link').show();
 
 	if ($('#playback-panel').hasClass('cv')) {
 		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.11'});
@@ -3302,3 +3334,4 @@ function setCV() {
 	}
 	setColors();
 }
+*/

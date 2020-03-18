@@ -669,7 +669,7 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 	if (currentView == 'tag' || currentView == 'album') {
 		GLOBAL.lazyTag, GLOBAL.lazyAlbum, LIB.artistClicked = false;
 		$("#searchResetLib").hide();
-		showSearchResetLib = false;		
+		showSearchResetLib = false;
 		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
 			GLOBAL.musicScope = 'all';
 			//LIB.recentlyAddedClicked = false;
@@ -1025,6 +1025,7 @@ $('#songsList').on('click', '.lib-action', function(e) {
 
 // Playback ellipsis context menu
 $('#context-menu-playback a').click(function(e) {
+    //console.log($(this).data('cmd'));
 	if ($(this).data('cmd') == 'save-playlist') {
 		$('#savepl-modal').modal();
 	}
@@ -1034,7 +1035,8 @@ $('#context-menu-playback a').click(function(e) {
 		$('#setfav-modal').modal();
 	}
 	if ($(this).data('cmd') == 'toggle-song') {
-		$('.toggle-song').click();
+        sendMpdCmd('play ' + toggleSong);
+		//$('.toggle-song').click();
 	}
 	if ($(this).data('cmd') == 'consume') {
 		// Menu item
