@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-30 TC moOde 5.3
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -45,7 +45,7 @@ if (isset($_POST['update_audioout']) && $_POST['audioout'] != $_SESSION['audioou
 
 session_write_close();
 
-// input source
+// Input source
 $_select['audioin'] .= "<option value=\"Local\" " . (($_SESSION['audioin'] == 'Local') ? "selected" : "") . ">Local (MPD)</option>\n";
 if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC') {
 	$_select['audioin'] .= "<option value=\"Analog\" " . (($_SESSION['audioin'] == 'Analog') ? "selected" : "") . ">Analog input</option>\n";
@@ -54,17 +54,17 @@ elseif ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i
 	$_select['audioin'] .= "<option value=\"S/PDIF\" " . (($_SESSION['audioin'] == 'S/PDIF') ? "selected" : "") . ">S/PDIF input</option>\n";
 }
 
-// resume MPD after changing to Local
+// Resume MPD after changing to Local
 $_select['rsmafterinp'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterinp'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['rsmafterinp'] .= "<option value=\"No\" " . (($_SESSION['rsmafterinp'] == 'No') ? "selected" : "") . ">No</option>\n";
 
-// output device
+// Output device
 $_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">Local device</option>\n";
 //$_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">Bluetooth stream</option>\n";
 
-waitWorker(1, 'sel-config');
+waitWorker(1, 'inp-config');
 
-$tpl = "sel-config.html";
+$tpl = "inp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 

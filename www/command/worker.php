@@ -415,7 +415,7 @@ workerLog('worker: -- Feature availability');
 //
 
 // Configure audio source
-if ($_SESSION['feat_bitmask'] & FEAT_SOURCESEL) {
+if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 	workerLog('worker: Source select (available)');
 	$audio_source = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
 	workerLog('worker: Source select (source: ' . $audio_source . ')');
@@ -1779,7 +1779,7 @@ function runQueuedJob() {
 			sysCmd('systemctl start ntp');
 			break;
 
-		// sel-config jobs
+		// inp-config jobs
 		case 'audioin':
 			setAudioIn($_SESSION['w_queueargs']);
 			break;

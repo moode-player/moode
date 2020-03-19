@@ -54,7 +54,7 @@ const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
 const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
 const FEAT_GMUSICAPI	= 128;		// y Google Play music service
 const FEAT_LOCALUI		= 256;		// y Local display
-const FEAT_SOURCESEL	= 512;		// y Input source select
+const FEAT_INPSOURCE	= 512;		// y Input source select
 const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
 const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer
 const FEAT_GPIO 		= 4096;		// y GPIO button handler
@@ -64,7 +64,7 @@ const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 //						  31679
 
 // Mirror for footer.php
-$FEAT_SOURCESEL 	= 512;
+$FEAT_INPSOURCE 	= 512;
 
 // Worker message logger
 function workerLog($msg, $mode = 'a') {

@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-30 TC moOde 5.3
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 -->
 <div class="container">
 <div class="container2">
-	<h1 class="snd-config">Source Select</h1>
+	<h1 class="snd-config">Input Source</h1>
 
     <form class="form-horizontal" action="" method="post">
 		<fieldset>
 			<legend>Options</legend>
 			<div class="control-group">
-				<label class="control-label" for="audioout">Audio source</label>
+				<label class="control-label" for="audioout">Input</label>
 				<div class="controls">
 					<select id="audioin" class="select-medium2" name="audioin">
 						$_select[audioin]
@@ -36,7 +36,7 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_audioin" value="novalue">Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_audioin" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_audioin" class="help-block-configs help-block-margin hide">
-						Select which source provides audio.<br>
+						Select which input source provides audio.<br>
 		            </span>
 				</div>
 			</div>
@@ -56,7 +56,7 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="audioout">Output device</label>
+				<label class="control-label" for="audioout">Output</label>
 				<div class="controls">
 					<select id="audioout" class="select-medium2" name="audioout">
 						$_select[audioout]
@@ -64,7 +64,7 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_audioout" value="novalue">Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_audioout" class="help-block-configs help-block-margin hide">
-						Select which device will receive audio from the selected source.
+						Select which output device will receive audio from the selected source.
 		            </span>
 				</div>
 			</div>
@@ -72,7 +72,7 @@
 	</form>
 
 	<div style="background-color: #333; font-size: 14px; line-height: 18px; padding: 10px; margin-right: 40px; font-family: Courier New">
-		Select which source provides audio and which output device will receive it. The default audio source is Local (MPD) and the default output device is the locally attached device (DAC, Amp or Transport).<br><br> 
+		Select which input source provides audio and which output device will receive it. The default input source is Local (MPD) and the default output device is the locally attached device (DAC, Amp or Transport).<br><br>
 		If the audio device offers input sources for example Analog or S/PDIF they will be listed. These input sources use Hardware volume so be sure to set MPD Volume control to Hardware or Disabled (0dB). If MPD Volume control is set to Hardware moOde can function as a preamp.<br><br>
 	</div>
 </div>

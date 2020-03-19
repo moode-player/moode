@@ -76,8 +76,8 @@
 			<a href="eqp-config.php" class="moode-config-settings-link2">Parametric EQ</a>
 			<a href="eqg-config.php" class="moode-config-settings-link2">Graphic EQ</a>
 			<a href="#notarget" class="moode-config-settings-link2" data-cmd="setforclockradio-m">Clock radio</a>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_SOURCESEL) { ?>
-				<a href="sel-config.php" class="moode-config-settings-link2">Input sources</a>
+			<?php if ($_SESSION['feat_bitmask'] & $FEAT_INPSOURCE) { ?>
+				<a href="inp-config.php" class="moode-config-settings-link2">Input source</a>
 			<?php } ?>
 		</div>
 		<br>
