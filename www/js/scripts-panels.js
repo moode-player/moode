@@ -682,29 +682,38 @@ jQuery(document).ready(function($) { 'use strict';
 		customScroll('artists', UI.libPos[2], 200);
 	});
 
-	// click on artist or station name in playback
+    // Click on title in playback or cv
+    $('#playback-panel').click(function(e) {
+        if ($('#playback-panel').hasClass('cv')) {
+            e.preventDefault();
+        }
+	});
+
+	// Click on artist or station name in playback or cv
 	$('#currentalbum').click(function(e) {
-		// radio station
-		if (MPD.json['artist'] == 'Radio station') {
-			$('.database-radio li').each(function(index){
-				if ($(this).text().search(RADIO.json[MPD.json['file']]['name']) != -1) {
-					UI.radioPos = index + 1;
-				}
-			});
-			$('#playback-switch').click();
-			if (!$('.radio-view-btn').hasClass('active')) {
-				$('.radio-view-btn').click();
-			}
-		}
-		// song file
-		else {
-			$('#playback-switch').click();
-			$('.tag-view-btn').click();
-			setTimeout(function() {
-				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
-				customScroll('artists', UI.libPos[2], 200);
-			}, 300);
-		}
+        if (!$('#playback-panel').hasClass('cv')) {
+            // Radio station
+    		if (MPD.json['artist'] == 'Radio station') {
+    			$('.database-radio li').each(function(index){
+    				if ($(this).text().search(RADIO.json[MPD.json['file']]['name']) != -1) {
+    					UI.radioPos = index + 1;
+    				}
+    			});
+    			$('#playback-switch').click();
+    			if (!$('.radio-view-btn').hasClass('active')) {
+    				$('.radio-view-btn').click();
+    			}
+    		}
+    		// Song file
+    		else {
+    			$('#playback-switch').click();
+    			$('.tag-view-btn').click();
+    			setTimeout(function() {
+    				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
+    				customScroll('artists', UI.libPos[2], 200);
+    			}, 300);
+    		}
+        }
 	});
 
 	// browse panel
@@ -1238,11 +1247,11 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#consume-menu-icon').css('color', color);
 	});
 
-	// switch between current and previous song
-	$('.toggle-song').click(function(e) {
+	// DEPRECATE switch between current and previous song
+	/*$('.toggle-song').click(function(e) {
 		sendMpdCmd('play ' + toggleSong);
 		clearTimeout(toolbarTimer);
-	});
+	});*/
 
 	// playbar coverview btn
 	$('.coverview').on('click', function(e) {
@@ -1257,6 +1266,7 @@ jQuery(document).ready(function($) { 'use strict';
 		var result = sendMoodeCmd('POST', 'disconnect-renderer', {'job':job}, true);
 	});
 
+/* DEPRECATE r650b2
 	$('#playback-panel').click(function(e){
 		if ($(e.target).hasClass('pl-action') || $(e.target).parent().hasClass('pl-action')){ // don't hide on context-menu click
 			return;
@@ -1284,8 +1294,9 @@ jQuery(document).ready(function($) { 'use strict';
 			}, 3000);
 		}
 	});
-
-	// screen saver reset
+*/
+/* DEPRECATE r650b2
+	// screen saver reset (r650b2)
 	$('#screen-saver, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
 		if ($('#screen-saver').css('display') == 'block' || SESSION.json['scnsaver_timeout'] != 'Never') {
 			$('#screen-saver').hide();
@@ -1296,6 +1307,40 @@ jQuery(document).ready(function($) { 'use strict';
 			}, 3000);
 		}
 	});
+*/
+    // Screen saver (CoverView) reset (r642)
+    $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
+        //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
+
+        console.log('reset screensaver', currentView, $(this).attr('id'));
+        if ($(this).attr('id') == 'menu-bottom') {
+            return;
+        }
+
+        if ($('#screen-saver').css('display') == 'block' || SESSION.json['scnsaver_timeout'] != 'Never') {
+            $('#screen-saver').hide();
+            $('#ss-hud').hide();
+            setColors();
+            $('#playback-panel, #folder-panel, #library-panel, #radio-panel').removeClass('hidden');
+            $('#menu-top').show();
+
+            // NOTE: hidden in screenSaver()
+            $('#playbar-toggles .coverview').show();
+            $('.container-library').css('display', '');
+
+            if (currentView.indexOf('playback') == -1) {
+                $('#menu-bottom, .viewswitch').css('display', 'flex');
+            }
+            else {
+                $('#menu-bottom').css('display', 'none');
+            }
+
+            // reset screen saver timeout global
+            setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
+                var result = sendMoodeCmd('GET', 'resetscnsaver', '', true);
+            }, 3000);
+        }
+    });
 
 	// info button (i) show/hide toggle
 	$('.info-toggle').click(function(e) {

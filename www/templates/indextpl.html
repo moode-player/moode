@@ -34,6 +34,17 @@
 		<div id="screen-saver" class="hide" href="#notarget">
 			<div id="ss-backdrop"></div>
 			<div id="ss-style"></div>
+			<div id="ss-coverart" class="ss-coverart">
+				<div id="ss-split">
+					<div id="ss-coverart-url"></div>
+					<div id="ss-extratags"></div>
+				</div>
+				<div id="ss-info" class="ss-fsize ss-info">
+					<div id="ss-currentsong"></div>
+					<!--div id="ss-currentartist"></div-->
+					<div id="ss-currentalbum"></div>
+				</div>
+			</div>
 		</div>
 
 		<div id="viewswitch" class="viewswitch hide">
@@ -42,7 +53,7 @@
 					<ul class="dropdown-menu context-menu" role="menu">
 						<button aria-label="Search" id="viewswitch-search" class="viewswearch btn menu-separator">
 							<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
-									<input id="lib-album-filter" type="text" value="" placeholder="search albums">
+								<input id="lib-album-filter" type="text" value="" placeholder="search albums">
 							</form>
 							<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
 						</button>
@@ -55,7 +66,6 @@
 					</ul>
 		    	</div>
 		</div>
-
 
 		<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
 		<div id="playback-panel" class="tab-pane">
@@ -120,7 +130,6 @@
 							<div class="btn-group">
 								<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
 								<button href="#notarget" class="btn btn-cmd toggle-song hide" data-cmd="toggle-song"><i class="fal fa-exchange-alt"></i></button>
-
 								<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
 								<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
 								<button aria-label="Consume" class="btn btn-cmd btn-toggle consume hide" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
@@ -507,9 +516,9 @@
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="save-playlist"><i class="fal fa-save sx"></i> Save playlist</a></li>
 			<li><a href="#notarget" data-cmd="set-favorites"><i class="fal fa-heart-circle sx"></i> Set favorites</a></li>
-			<li id="context-menu-consume"><a href="#notarget" data-cmd="consume"><i class="fal fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fal fa-check"></i></span></a></li>
-			<li id="context-menu-repeat"><a href="#notarget" data-cmd="repeat"><i class="fal fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fal fa-check"></i></span></a></li>
-			<li id="context-menu-single"><a href="#notarget" data-cmd="single"><i class="fal fa-redo sx"></i> Single<span id="menu-check-single"><i class="fal fa-check"></i></span></a></li>
+			<li><a href="#notarget" data-cmd="consume"><i class="fal fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fal fa-check"></i></span></a></li>
+			<li><a href="#notarget" data-cmd="repeat"><i class="fal fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fal fa-check"></i></span></a></li>
+			<li><a href="#notarget" data-cmd="single"><i class="fal fa-redo sx"></i> Single<span id="menu-check-single"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="toggle-song"><i class="fal fa-exchange-alt sx"></i> Last track</a></li>
 		</ul>
 	</div>
