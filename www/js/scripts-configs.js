@@ -23,6 +23,7 @@
  */
 
 jQuery(document).ready(function($){ 'use strict';
+    GLOBAL.scriptSection = 'configs';
 	$('#config-back').show();
 	$('#config-tabs').css('display', 'flex');
 	$('#menu-bottom').css('display', 'none');

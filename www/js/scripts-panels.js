@@ -24,6 +24,7 @@
 
 jQuery(document).ready(function($) { 'use strict';
 	//console.log($(window).width() + 'x' + $(window).height());
+    GLOBAL.scriptSection = 'panels';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
 	$('#menu-bottom').css('display', 'flex');

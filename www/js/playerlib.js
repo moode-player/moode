@@ -104,6 +104,7 @@ var GLOBAL = {
 	lazyTag: false,
 	lazyRadio: false,
     thmupdInitiated: false,
+    scriptSection: 'panels',
 	regExIgnoreArticles: ''
 }
 
@@ -698,7 +699,7 @@ function renderUI() {
         if (UI.mobile) {
             $('.volume-popup').show();
         }
-        
+
 		// update volume knob, ss volume
 		$('#volume').val(SESSION.json['volknob']).trigger('change');
 		$('.volume-display div, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
@@ -2862,9 +2863,10 @@ function updEqpMasterGainSlider(selector) {
     $('#master-gain').html(new_val + ' dB');
 }
 
-// Manages toolbar when scrolling
+// Manages Playbar when scrolling
 $(window).on('scroll', function(e) {
-	if (UI.mobile && !currentView.indexOf('playback') && $('.modal-backdrop').css('display') != 'block') {
+	//if (UI.mobile && !currentView.indexOf('playback') && $('.modal-backdrop').css('display') != 'block') {
+    if (UI.mobile && GLOBAL.scriptSection == 'panels') {
 		if ($(window).scrollTop() > 1 && !showMenuTopW) {
 			$('#playback-controls').hide();
 			$('#container-playlist').css('visibility','visible');
