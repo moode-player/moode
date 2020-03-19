@@ -31,7 +31,7 @@ const FEAT_UPMPDCLI     = 32;       // y UPnP client for MPD
 const FEAT_SQSHCHK      = 64;       //   Require squashfs for software update
 const FEAT_GMUSICAPI    = 128;      // y Google Play music service
 const FEAT_LOCALUI      = 256;      // y Local display
-const FEAT_SOURCESEL    = 512;      // y Input source select
+const FEAT_INPSOURCE    = 512;      // y Input source select
 const FEAT_UPNPSYNC     = 1024;     //   UPnP volume sync
 const FEAT_SPOTIFY      = 2048;     // y Spotify Connect renderer
 const FEAT_GPIO         = 4096;     // y GPIO button handler
@@ -424,7 +424,7 @@ function engineCmd() {
                 case 'inpactive1':
                 case 'inpactive0':
                     // NOTE: cmd[1] is the input source name
-    				inpSrcIndicator(cmd[0], '<a href="sel-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
+    				inpSrcIndicator(cmd[0], '<a href="inp-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
                     break;
                 case 'btactive1':
                 case 'btactive0':
@@ -578,28 +578,29 @@ function hideReconnect() {
 	UI.hideReconnect = false;
 }
 
-// disable volume knob for mpdmixer == disabled (0dB)
+// Disable volume knob for mpdmixer == disabled (0dB)
 function disableVolKnob() {
 	SESSION.json['volmute'] == '1';
+    $('#volumedn, #volumeup, #volumedn-2, #volumeup-2').prop('disabled', true);
+    $('#volumeup, #volumedn, #volumedn-2, #volumeup-2, .volume-display').css('opacity', '.3');
+	$('.volume-display div, #inpsrc-preamp-volume').text('0dB');
+	$('.volume-display').css('cursor', 'unset');
+    //$('#volume-2').attr('data-readOnly', 'true');
+
 	if (UI.mobile) {
-		$('#volume-2').attr('data-readOnly', 'true');
-		$('#volumedn-2, #volumeup-2').prop('disabled', true);
 		$('#mvol-progress').css('width', '100%');
 		$('.repeat').show();
+        $('.volume-popup').hide();
 		//$('#context-menu-consume').hide();
 	}
 	else {
 		$('.repeat').hide();
+        if (currentView.indexOf('playback') == -1) {
+            $('.volume-popup').show();
+        }
 		//$('#ssvolume').attr('data-readOnly', 'true');
-		$('#volumedn, #volumeup').prop('disabled', true);
+        //$('#playbar-consume').show();
 	}
-
-	$('.volume-popup').hide();
-	//$('#playbar-consume').show();
-
-	$('.volume-display, #volumeup, #volumedn').css('opacity', '.3');
-	$('.volume-display div, #inpsrc-preamp-volume').text('0dB');
-	$('.volume-display').css('cursor', 'unset');
 }
 
 // when last item in laylist finishes just update a few things, called from engineCmd()
@@ -693,6 +694,11 @@ function renderUI() {
 	}
 	// software or hardware volume
 	else {
+        // Volume button visability
+        if (UI.mobile) {
+            $('.volume-popup').show();
+        }
+        
 		// update volume knob, ss volume
 		$('#volume').val(SESSION.json['volknob']).trigger('change');
 		$('.volume-display div, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
@@ -913,7 +919,7 @@ function renderUI() {
 	}
 	// Input source
 	if (SESSION.json['inpactive'] == '1') {
-		inpSrcIndicator('inpactive1', '<a href="sel-config.php">' + SESSION.json['audioin'] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
+		inpSrcIndicator('inpactive1', '<a href="inp-config.php">' + SESSION.json['audioin'] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
 	}
 
 	// database update
@@ -1000,7 +1006,7 @@ function renderPlaylist() {
 							else {
 								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
 							}
-							//$('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
+							$('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
 						}
 					}
 
@@ -1058,10 +1064,13 @@ function renderPlaylist() {
 
 		// render playlist
         $('#playlist ul').html(output);
+
+        /* ???
 		if (MPD.json['state'] === 'stop') {
 			$('#currentalbum, #playbar-currentalbum').html($('#playlist li:nth-child(1) .pll2').text());
 			$('#currentsong, #playbar-currentsong').html($('#playlist li:nth-child(1) .pll1').text());
 		}
+        */
     });
 }
 
