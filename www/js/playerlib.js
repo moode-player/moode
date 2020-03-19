@@ -566,16 +566,16 @@ function disableVolKnob() {
 	}
 	else {
 		$('.repeat').hide();
-		$('#ssvolume').attr('data-readOnly', 'true');
-		$('#volumedn, #volumeup, #ssvolup, #ssvoldn').prop('disabled', true);
+		//$('#ssvolume').attr('data-readOnly', 'true');
+		$('#volumedn, #volumeup').prop('disabled', true);
 	}
 
 	$('.volume-popup').hide();
 	//$('#playbar-consume').show();
 
-	$('.volume-display, #ssvolume, #volumeup, #volumedn').css('opacity', '.3');
-	$('.volume-display div, #ssvolume, #inpsrc-preamp-volume').text('0dB');
-	$('.volume-display, #ssvolume').css('cursor', 'unset');
+	$('.volume-display, #volumeup, #volumedn').css('opacity', '.3');
+	$('.volume-display div, #inpsrc-preamp-volume').text('0dB');
+	$('.volume-display').css('cursor', 'unset');
 }
 
 // when last item in laylist finishes just update a few things, called from engineCmd()
@@ -621,7 +621,7 @@ function renderUIVol() {
 
 		// update volume knob, ss volume
 		$('#volume').val(SESSION.json['volknob']).trigger('change');
-		$('.volume-display div, #ssvolume, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
+		$('.volume-display div, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
 
 		// update mobile volume
 		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
@@ -629,8 +629,8 @@ function renderUIVol() {
 
 	   	// update mute and ss mute state
 		if (SESSION.json['volmute'] == '1') {
-			$('.volume-display').css('opacity', '.3');
-			$('.volume-display div, #ssvolume, #inpsrc-preamp-volume').text('mute');
+			//$('.volume-display').css('opacity', '.3');
+			$('.volume-display div, #inpsrc-preamp-volume').text('mute');
 		}
 		else {
 			$('.volume-display').css('opacity', '');
@@ -671,18 +671,18 @@ function renderUI() {
 	else {
 		// update volume knob, ss volume
 		$('#volume').val(SESSION.json['volknob']).trigger('change');
-		$('.volume-display div, #ssvolume, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
+		$('.volume-display div, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
 		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
 		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
 	   	// update mute state
 		if (SESSION.json['volmute'] == '1') {
-			$('.volume-display').css('opacity', '.3');
-			$('.volume-display div, #ssvolume, #inpsrc-preamp-volume').text('mute');
+			//$('.volume-display').css('opacity', '.3');
+			$('.volume-display div, #inpsrc-preamp-volume').text('mute');
 		}
 		else {
 			$('.volume-display').css('opacity', '');
-			$('.volume-display div, #ssvolume').text(SESSION.json['volknob']);
+			$('.volume-display div').text(SESSION.json['volknob']);
 		}
 	}
 
@@ -3174,9 +3174,15 @@ function scopeR () {
 	UI.mobile ? view = '' : view = 'Browse by ';
 	if (currentView == 'radiocovers' || currentView == 'radiolist') {
 		view += 'Radio Stations';
+		if (GLOBAL.searchRadio) {
+			view = GLOBAL.searchRadio;
+		}
 	}
 	else if (currentView == 'folder') {
 		view += 'Folders';
+		if (GLOBAL.searchFolder) {
+			view = GLOBAL.searchFolder;
+		}
 	}
 	else if (currentView == 'album' || currentView == 'tag') {
 		if (GLOBAL.searchLib && GLOBAL.musicScope == 'all') {
@@ -3192,19 +3198,12 @@ function scopeR () {
 				$('.view-all span').show();
 		        LIB.recentlyAddedClicked = false;
 			}
+			if (LIB.filters.artists.length) {
+				view = 'Albums by ' + LIB.filters.artists[0];
+			}
 		}
 	}
-	if (GLOBAL.searchFolder) {
-		view = GLOBAL.searchFolder;
-	}
-	if (GLOBAL.searchRadio) {
-		view = GLOBAL.searchRadio;
-	}
-	if (LIB.filters.artists.length) {
-		$('#menu-header').text('Albums by ' + LIB.filters.artists[0]);
-	} else {
-		$('#menu-header').text(view);
-	}
+	$('#menu-header').text(view);
 }
 
 function lazyLode(container) {
@@ -3293,4 +3292,19 @@ function setCV() {
 		}
 	}
 	setColors();
+}
+
+function volMuteSwitch() {
+    if (SESSION.json['volmute'] == '0') {
+		SESSION.json['volmute'] = '1' // toggle to mute
+		var newVol = 0;
+		var volEvent = 'mute';
+    }
+	else {
+		SESSION.json['volmute'] = '0' // toggle to unmute
+		var newVol = SESSION.json['volknob'];
+		var volEvent = 'unmute';
+    }
+	var result = sendMoodeCmd('POST', 'updcfgsystem', {'volmute': SESSION.json['volmute']});
+	setVolume(newVol, volEvent);
 }

@@ -384,6 +384,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#currentsong, #currentalbum {padding-top:.75em;font-size:1.1em;}
 }
 
+@media (max-height: 640px) {
+	img.coverart {width:45vh;}
+}
 /* iPhone5 portrait */
 @media (max-height: 568px) and (max-width: 320px) {
 	#extratags {display:none;}

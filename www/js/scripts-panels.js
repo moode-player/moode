@@ -373,24 +373,11 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// mute toggle
-	$('.volume-display, #ssvolume').click(function(e) {
+	$('.volume-display').click(function(e) {
 		if (SESSION.json['mpdmixer'] == 'disabled') {
 			return false;
 		}
-
-        if (SESSION.json['volmute'] == '0') {
-			SESSION.json['volmute'] = '1' // toggle to mute
-			var newVol = 0;
-			var volEvent = 'mute';
-        }
-		else {
-			SESSION.json['volmute'] = '0' // toggle to unmute
-			var newVol = SESSION.json['volknob'];
-			var volEvent = 'unmute';
-        }
-
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'volmute': SESSION.json['volmute']});
-		setVolume(newVol, volEvent);
+		volMuteSwitch();
 	});
 
 	// volume control popup (for mobile and playbar)
@@ -476,12 +463,14 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('#volumeup,#volumeup-2').click(function(e) {
+		SESSION.json['volmute'] == '1' ? volMuteSwitch() : '';
 		var curVol = parseInt(SESSION.json['volknob']);
 		var newVol = curVol < 100 ? curVol + 1 : 100;
 		setVolume(newVol, '');
 		return false
 	});
 	$('#volumedn,#volumedn-2').click(function(e) {
+		SESSION.json['volmute'] == '1' ? volMuteSwitch() : '';
 		var curVol = parseInt(SESSION.json['volknob']);
 		var newVol = curVol > 0 ? curVol - 1 : 0;
 		setVolume(newVol, '');

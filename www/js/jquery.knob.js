@@ -535,6 +535,12 @@
         };
 
         this.xy2val = function (x, y) {
+
+			if (this.$div.parent().hasClass('volume-step-limiter')) {
+				if (SESSION.json['mpdmixer'] == 'disabled') {return false;}
+				if (SESSION.json['volmute'] == '1') {volMuteSwitch();}
+			}
+			
             var a, ret;
 
             a = Math.atan2(

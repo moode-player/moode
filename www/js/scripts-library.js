@@ -505,8 +505,8 @@ var renderAlbums = function() {
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
 
-        filteredAlbums[i].year ? tagViewYear = ' (' + filteredAlbums[i].year + ')' : tagViewYear = '';
-        filteredAlbumCovers[i].year ? albumViewYear = ' (' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
+        filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
+        filteredAlbumCovers[i].year ? albumViewYear = '(' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
@@ -756,6 +756,7 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	if (UI.mobile) {
 		$('#top-columns').animate({left: '-50%'}, 200);
 	}
+	scopeR();
 });
 
 // Click album

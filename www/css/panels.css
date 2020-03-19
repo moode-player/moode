@@ -143,7 +143,7 @@ html {background-color:inherit;}
 #countdown-display {position:absolute;top:46%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:1.9rem;font-weight:500;cursor:pointer;}
 #total {position:absolute;top:60%;left:50%;transform:translate(-50%);margin-left:.4em;/*font-family:monospace;*/}
 .total-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;width:22%;height:20px;margin-left:0 !important;}
-#playbtns, #playbtns .btn-group {font-size:1em;margin:.5em 0;}
+#playbtns, #playbtns .btn-group {font-size:1em;}
 #playbtns .btn {font-size:2rem;padding:1rem;}
 #togglebtns {padding-top:2rem;}
 #togglebtns .btn-group {font-size:1em;white-space:normal;width:100%;}
@@ -211,7 +211,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #top-columns .album-name-art {line-height:1.25em;}
 #albumsList .lib-entry span.artist-name {display:none}
 #albumsList .artist-name-art, #albumsList .album-year {vertical-align:top;line-height:normal;font-size:.85em;color:var(--textvariant);}
-#albumsList .album-year {margin-left:0;}
+#albumsList .album-year {margin-left:0;margin-left:.3em;}
 #library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
 #library-panel.limited .lib-entry, #library-panel.limited .lib-entry span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 
@@ -627,7 +627,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 
 /* newui */
 #playback-panel.newui #songsand, #playback-panel.cv #songsang {position:absolute;width:100vw;left:50%;transform:translate(-50%);}
-#playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {width:44%;height:75%;margin-top:-.5rem} /* transform instead of margin-top for ios */
+#playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {/*width:44%;*/height:75%;margin:-.5rem 0 0 3%;} /* transform instead of margin-top for ios */
 #playback-panel.newui #timezone {position:absolute;width:30%;height:34vw;left:0;}
 #playback-panel.newui #volzone {position:absolute;width:30%;height:34vw;right:0;}
 #playback-panel.newui #volbtns button {margin:.4em 0;font-size:1.75rem;}
