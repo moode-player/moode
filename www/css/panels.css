@@ -116,7 +116,7 @@ html {background-color:inherit;}
 #countdown, #time, #volcontrol {position:relative;}
 #time {visibility:hidden;}
 #volcontrol, #volcontrol-2 {margin:auto;height:17vw;width:17vw;}
-.volume-display {position:relative;color:var(--adapttext);font-size:1.9em;font-weight:500;cursor:pointer;height:50%;/*was 70%*/}
+.volume-display {position:relative;color:var(--adapttext);font-size:1.9rem;font-weight:500;cursor:pointer;height:50%;/*was 70%*/}
 .volume-display div {position:relative;top:50%;transform:translate(0, -50%);min-height:33%;text-align:center;}
 #volume, #volume-2 {display:none;} /* using .volume-display to overlay this element so it can be used as a mute toggle */
 
