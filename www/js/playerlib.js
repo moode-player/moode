@@ -532,6 +532,9 @@ function screenSaver(cmd) {
 	else if (cmd.slice(-1) == '1') {
 		$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
         $('body').addClass('cv');
+
+        /*TEST*/$('#lib-coverart-img').hide();
+
 		coverView = true;
 	}
 }
@@ -1054,7 +1057,7 @@ function renderPlaylist() {
 		// render playlist
         $('#playlist ul').html(output);
 
-        /* ???
+        /* CHECK
 		if (MPD.json['state'] === 'stop') {
 			$('#currentalbum, #playbar-currentalbum').html($('#playlist li:nth-child(1) .pll2').text());
 			$('#currentsong, #playbar-currentsong').html($('#playlist li:nth-child(1) .pll1').text());
@@ -3019,9 +3022,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 		return;
 	}
 
-    // Prevent a display anomaly
-    // Corresponding .show() in $('#playbar-switch... and setCV()
-    /*TEST*//*$('#coverart-link').hide();*/
+    /*TEST*/$('#coverart-link').hide();
 
 	currentView = currentView.split(',')[1];
 	$('#menu-top').css('height', '0');

@@ -1284,6 +1284,9 @@ jQuery(document).ready(function($) { 'use strict';
 			$('body').removeClass('cv');
 			coverView = false;
             setColors();
+
+            /*TEST*/$('#lib-coverart-img').show();
+
             // Reset screen saver timeout global
             setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
                 var result = sendMoodeCmd('GET', 'resetscnsaver', '', true);
