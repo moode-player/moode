@@ -667,7 +667,7 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 	LIB.filters.albums.length = 0;
 	LIB.filters.year.length = 0;
 	if (currentView == 'tag' || currentView == 'album') {
-		GLOBAL.lazyTag, GLOBAL.lazyAlbum, LIB.artistClicked = false;
+		GLOBAL.lazyTagInitiated, GLOBAL.lazyAlbumInitiated, LIB.artistClicked = false;
 		$("#searchResetLib").hide();
 		showSearchResetLib = false;
 		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
@@ -682,7 +682,7 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 		}
 		scopeR('Lib');
 	}
-	if (currentView == 'radiocovers' || currentView == 'radiolist') {
+	if (currentView == 'radiolist' || currentView == 'radiocovers') {
 		GLOBAL.searchRadio = '';
 		$('#searchResetRa').click();
 		scopeR('Radio Stations');
@@ -883,7 +883,7 @@ $('.ralbum').click(function(e) {
 		$('.ralbum svg').attr('class', 'spin');
 		setTimeout(function() {
 			$('.ralbum svg').attr('class', '');
-		}, 1500);
+		}, RALBUM_TIMEOUT);
 	}
 	var array = new Uint16Array(1);
 	window.crypto.getRandomValues(array);
@@ -915,7 +915,7 @@ $('.ralbum').click(function(e) {
     		endpos == 1 ? cmd = 'delplitem&range=0' : cmd = 'delplitem&range=0:' + endpos;
     		var result = sendMoodeCmd('GET', cmd, '', true);
     		sendMpdCmd('play 0');
-    	}, 500);
+    	}, CLRPLAY_TIMEOUT);
     }
 });
 
@@ -941,7 +941,7 @@ $('#database-radio').on('click', 'img', function(e) {
 
 		setTimeout(function() {
 			customScroll('radiocovers', UI.radioPos, 200);
-		}, 500); // Was 250
+		}, SCROLLTO_TIMEOUT);
 	}
 
 	// Needed ?
@@ -950,6 +950,7 @@ $('#database-radio').on('click', 'img', function(e) {
 
 // Radio list/cover toggle button
 $('#ra-toggle-view').click(function(e) {
+    console.log('#ra-toggle-view.click', UI.radioPos);
 	if ($('#ra-toggle-view i').hasClass('fa-bars')) {
 		$('#ra-toggle-view i').removeClass('fa-bars').addClass('fa-th');
 		$('#radiocovers').addClass('database-radiolist');
@@ -959,17 +960,14 @@ $('#ra-toggle-view').click(function(e) {
 	else {
 		$('#ra-toggle-view i').removeClass('fa-th').addClass('fa-bars');
 		$('#radiocovers').removeClass('database-radiolist');
-		currentView = 'radiocover';
+		currentView = 'radiocovers';
 		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
-
+        lazyLode('radio');
 		setTimeout(function() {
-			$('img.lazy-radioview').lazyload({
-				container: $('#radiocovers')
-			});
 			if (UI.radioPos >= 0) {
 				customScroll('radiocovers', UI.radioPos, 200);
 			}
-		}, 500); // Was 250
+		}, SCROLLTO_TIMEOUT);
 	}
 });
 
@@ -988,7 +986,7 @@ $('#database-radio').on('click', '.db-entry', function(e) {
 
 	setTimeout(function() {
 		customScroll('radiocovers', UI.radioPos, 200);
-	}, 500); // Was 250
+	}, SCROLLTO_TIMEOUT);
 
 	return false;
 });
@@ -1037,7 +1035,6 @@ $('#context-menu-playback a').click(function(e) {
 	}
 	if ($(this).data('cmd') == 'toggle-song') {
         sendMpdCmd('play ' + toggleSong);
-		//$('.toggle-song').click();
 	}
 	if ($(this).data('cmd') == 'consume') {
 		// Menu item
