@@ -158,7 +158,6 @@ var toggleSongId = 'blank';
 var currentView = 'playback';
 var alphabitsFilter;
 var lastYIQ = ''; // last yiq value from setColors
-var extraTags = "%track% %disc% %year% %composer% %bitrate% %encoded%";
 
 function debugLog(msg)  {
 	if (SESSION.json['debuglog'] == '1') {
@@ -769,31 +768,34 @@ function renderUI() {
 		}
 	}
 
-	// extra metadata
+	// Extra metadata displayed under the cover
 	if (MPD.json['state'] === 'stop') {
-		$('#extratags').html('Not playing');
+		$('#extra-tags-display').html('Not playing');
 	}
-    else if (SESSION.json['xtagdisp'] == 'Yes') {
-		$('#extratags').text('');
-		var extraTemp = extraTags;
-		if (MPD.json['artist'] == 'Radio station') {
-			extraTemp = MPD.json['bitrate'] ? MPD.json['bitrate'] : 'VBR';
-		}
-		else {
-			extraTemp = extraTemp.replace("%track%", MPD.json['track'] ? 'Track ' + MPD.json['track'] : '');
-			extraTemp = extraTemp.replace(" %disc%", MPD.json['disc'] == "Disc tag missing" ? '' : ' • Disc ' + MPD.json['disc']);
-			extraTemp = extraTemp.replace(" %year%", MPD.json['date'] ? ' • ' + MPD.json['date'].slice(0,4) : '');
-			extraTemp = extraTemp = extraTemp.replace(" %composer%", MPD.json['composer'] ? ' • ' + MPD.json['composer'] : '');
-			extraTemp = extraTemp.replace(" %encoded%", MPD.json['encoded'] != 'Unknown' ? ' • ' + MPD.json['encoded'] : '');
-			extraTemp = extraTemp.replace(" %bitrate%", MPD.json['bitrate'] == '' ? '' : ' • ' + MPD.json['bitrate']);
-		}
-		extraTemp ? $('#extratags').html(extraTemp) : $('#extratags').html(MPD.json["audio_sample_depth"] + '/' + MPD.json["audio_sample_rate"]);
+    else if (SESSION.json['extra_tags'].toLowerCase() == 'none' || SESSION.json['extra_tags'] == '') {
+        $('#extra-tags-display').html('');
+    }
+    else if (MPD.json['artist'] == 'Radio station') {
+		extraTags = MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate';
 	}
 	else {
-		$('#extratags').html('');
+        var elementDisplay, extraTagsDisplay = '';
+        var extraTagsArray = SESSION.json['extra_tags'].replace(/ /g, '').split(','); // Strip out whitespace
+
+        //NOTE: composer may be = null, disc may be = 'Disc tag missing', encoded may be = 'Unknown'
+        for (const element of extraTagsArray) {
+            //console.log(element, MPD.json[element]);
+            if (MPD.json[element] != null && MPD.json[element] != 'Disc tag missing' && MPD.json[element] != 'Unknown') {
+                elementDisplay = element == 'track' ? 'Track' : (element == 'disc' ? 'Disc' : '');
+                extraTagsDisplay += ((elementDisplay == '' ? '' : elementDisplay + ' ') + MPD.json[element] + ' • ');
+            }
+        }
+
+        extraTagsDisplay = extraTagsDisplay.slice(0, -3); // Strip trailing bullet
+        extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) : $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
 	}
 
-	// default metadata
+	// Default metadata
 	if (MPD.json['album']) {
 		$('#currentalbum, #playbar-currentalbum').html((MPD.json['artist'] == 'Radio station' ? '' : MPD.json['artist'] + ' - ') + MPD.json['album']);
 	}
@@ -2029,7 +2031,7 @@ $('.context-menu a').click(function(e) {
 		$('#font-size span').text(SESSION.json['font_size']);
         $('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
 		$('#play-history-enabled span').text(SESSION.json['playhist']);
-		$('#extratag-display span').text(SESSION.json['xtagdisp']);
+		$('#extra-tags').val(SESSION.json['extra_tags']);
 
         $('#appearance-modal').modal();
     }
@@ -2147,7 +2149,7 @@ $('.btn-appearance-update').click(function(e){
     var libraryOptionsChange = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
-    var xtagdispChange = false;
+    var extraTagsChange = false;
     var playHistoryChange = false;
 	var fontSizeChange = false;
 
@@ -2190,7 +2192,7 @@ $('.btn-appearance-update').click(function(e){
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
     // Other options
     if (SESSION.json['font_size'] != $('#font-size span').text()) {fontSizeChange = true;};
-    if (SESSION.json['xtagdisp'] != $('#extratag-display span').text()) {xtagdispChange = true;}
+    if (SESSION.json['extra_tags'] != $('#extra-tags').val()) {extraTagsChange = true;}
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
 
 	// Theme and backgrounds
@@ -2221,7 +2223,7 @@ $('.btn-appearance-update').click(function(e){
     SESSION.json['font_size'] = $('#font-size span').text();
     SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
-	SESSION.json['xtagdisp'] = $('#extratag-display span').text();
+	SESSION.json['extra_tags'] = $('#extra-tags').val();
 
 	// Update cfg_system and session vars
 	var result = sendMoodeCmd('POST', 'updcfgsystem',
@@ -2250,7 +2252,7 @@ $('.btn-appearance-update').click(function(e){
         'font_size': SESSION.json['font_size'],
         'ashuffle_filter': SESSION.json['ashuffle_filter'],
         'playhist': SESSION.json['playhist'],
-        'xtagdisp': SESSION.json['xtagdisp'],
+        'extra_tags': SESSION.json['extra_tags'],
         'appearance_modal_state': SESSION.json['appearance_modal_state']
 		}
 	);
@@ -2288,13 +2290,10 @@ $('.btn-appearance-update').click(function(e){
 		var temprgba = splitColor(adaptBack);
 		adaptBack = 'rgba(' + temprgba[0] + ',' + temprgba[1] + ',' + temprgba[2] + ',' + SESSION.json['alphablend'] + ')';
 		themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
-
 		tempcolor = (THEME.json[SESSION.json['themename']]['mbg_color']).split(",");
 		themeMback = 'rgba(' + tempcolor[0] + ',' + tempcolor[1] + ',' + tempcolor[2] + ',' + themeOp + ')';
-		/*themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp + ')';*/
-
-		//lastYIQ = 7;
 		lastYIQ = 0;
+
 		if(SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
 			$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
 			$('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
@@ -2303,11 +2302,12 @@ $('.btn-appearance-update').click(function(e){
 		else {
 			$('#cover-backdrop').html('');
 		}
+
 		setColors();
 	}
 
 	// auto-reload page if indicated
-	if (xtagdispChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true) {
+	if (extraTagsChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true) {
 	    notify('updcustomize', 'Auto-refresh in 3 seconds');
 		setTimeout(function() {
 			location.reload(true);
@@ -2516,13 +2516,10 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
     		$('#cover-scale span').text($(this).text());
             break;
     	// Appearance: Other options
-    	case 'extratag-display-yn':
-    		$('#extratag-display span').text($(this).text());
-            break;
     	case 'play-history-enabled-yn':
     		$('#play-history-enabled span').text($(this).text());
             break;
-		case 'font-size':
+		case 'font-size-sel':
 			$('#font-size span').text($(this).text());
 			break;
     }

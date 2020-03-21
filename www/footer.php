@@ -640,11 +640,11 @@
 								</button>
 								<div class="dropdown-menu open">
 									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size"><span class="text">Smaller</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size"><span class="text">Small</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size"><span class="text">Normal</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size"><span class="text">Large</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size"><span class="text">Larger</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Smaller</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Small</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Normal</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Large</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Larger</span></a></li>
 									</ul>
 								</div>
 							</div>
@@ -663,25 +663,12 @@
 							</span>
 		                </div>
 
-	   	                <label class="control-label" for="extratag-display">Show extra metadata</label>
+	   	                <label class="control-label" for="extra-tags">Show extra metadata</label>
 		                <div class="controls">
-	   						<div class="btn-group bootstrap-select bootstrap-select-mini">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="extratag-display" class="filter-option pull-left">
-										<span></span> <!-- selection from dropdown gets placed here -->
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="extratag-display-yn"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-extratag-display" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-extratag-display" class="help-block hide">
-			                    	Display additional metadata under the cover art on the Playback panel.<br>
+							<input id="extra-tags" class="input-xlarge input-height-x" type="text">
+							<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-extra-tags" class="help-block hide">
+			                    	Enter any combination of track, disc, year, composer, encoded or None for display under the cover art.
 		                    </span>
 		                </div>
 
