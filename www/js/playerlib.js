@@ -110,9 +110,9 @@ var GLOBAL = {
 	searchLib: '', // used to store search results (x albums found) for the menu header
 	searchRadio: '',
 	searchFolder: '',
-	lazyAlbumInitiated: false,
-	lazyTagInitiated: false,
-	lazyRadioInitiated: false,
+	lazyAlbumInitiated: false, // TEST
+	lazyTagInitiated: false, // TEST
+	lazyRadioInitiated: false, // TEST
     thmUpdInitiated: false,
     scriptSection: 'panels',
 	regExIgnoreArticles: ''
@@ -146,7 +146,6 @@ var blurrr = CSS.supports('-webkit-backdrop-filter','blur(1px)');
 var libRendered = false; // trigger library load
 var radioRendering = false;
 var dbFilterResults = [];
-var hudTimer = '';
 var searchTimer = '';
 var showSearchResetPl = false;
 var showSearchResetLib = false;
@@ -1818,7 +1817,7 @@ $('.view-all').click(function(e) {
 		storeLibPos(UI.libPos);
 		$("#searchResetLib").hide();
 		showSearchResetLib = false;
-		scopeR();
+		setLibMenuHeader();
 		//LIB.filters.artists.length ? $('#menu-header').text('Albums by' + LIB.artist.filter[0]) : $('#menu-header').text('Albums by Artist');
 });
 // recently played menu item
@@ -2261,7 +2260,7 @@ $('.btn-appearance-update').click(function(e){
 		if (currentView == 'tag' || currentView == 'album') {
 		    //notify('updcustomize', 'Reloading Library');
 			$('#lib-loader').show();
-			scopeR('Lib');
+			setLibMenuHeader();
 		}
 		loadLibrary();
 		return;
@@ -3182,6 +3181,18 @@ function makeActive (vswitch, panel, view) {
 	setColors();
 
 	switch (view) {
+        case 'radiolist':
+		case 'radiocovers':
+            if (!GLOBAL.lazyRadioInitiated) {lazyLode('radio')}
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
+			$('#viewswitch .album-view-btn').removeClass('menu-separator');
+			setLibMenuHeader();
+			break;
+        case 'folder':
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
+			$('#viewswitch .album-view-btn').removeClass('menu-separator');
+			setLibMenuHeader();
+			break;
 		case 'album':
             if (!GLOBAL.lazyAlbumInitiated) {lazyLode('album')}
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
@@ -3189,12 +3200,7 @@ function makeActive (vswitch, panel, view) {
 			$('#library-panel').addClass('covers').removeClass('tag');
 			$('#bottom-row').css('display', '');
 			$('#lib-albumcover').css('height', '100%');
-			scopeR(); // Type added in scopeR
-			break;
-		case 'folder':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
-			$('#viewswitch .album-view-btn').removeClass('menu-separator');
-			scopeR();
+			setLibMenuHeader();
 			break;
 		case 'tag':
             if (!GLOBAL.lazyTagInitiated) {lazyLode('tag')}
@@ -3202,47 +3208,41 @@ function makeActive (vswitch, panel, view) {
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('#library-panel').addClass('tag').removeClass('covers');
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
-			scopeR(); // Add album/year, artist, year
-			break;
-        case 'radiolist':
-		case 'radiocovers':
-            if (!GLOBAL.lazyRadioInitiated) {lazyLode('radio')}
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
-			$('#viewswitch .album-view-btn').removeClass('menu-separator');
-			scopeR();
+			setLibMenuHeader();
 			break;
 	}
 	//const duration = performance.now() - startTime;
     //console.log(duration + 'ms');
 }
 
-function scopeR () {
-	UI.mobile ? view = '' : view = 'Browse by ';
+// Set the text in the library menu header
+function setLibMenuHeader () {
+    var headerText = UI.mobile ? '' : 'Browse by ';
 
 	if (currentView == 'radiolist' || currentView == 'radiocovers') {
-		view += 'Radio Stations';
+		headerText += 'Radio Stations';
 		if (GLOBAL.searchRadio) {
-			view = GLOBAL.searchRadio;
+			headerText = GLOBAL.searchRadio;
 		}
 	}
 	else if (currentView == 'folder') {
-		view += 'Folders';
+		headerText += 'Folders';
 		if (GLOBAL.searchFolder) {
-			view = GLOBAL.searchFolder;
+			headerText = GLOBAL.searchFolder;
 		}
 	}
 	else if (currentView == 'album' || currentView == 'tag') {
 		if (GLOBAL.searchLib && GLOBAL.musicScope == 'all') {
-			view = GLOBAL.searchLib;
+			headerText = GLOBAL.searchLib;
 		}
         else {
-			currentView == 'album' ? view += SESSION.json['library_albumview_sort'] : view += SESSION.json['library_tagview_sort'];
+			currentView == 'album' ? headerText += SESSION.json['library_albumview_sort'] : headerText += SESSION.json['library_tagview_sort'];
 			$('#viewswitch span').hide();
 
 			if (GLOBAL.musicScope == 'recent') {
 				$('.view-recents span').show();
 		        LIB.recentlyAddedClicked = true;
-				view = "Recently Added";
+				headerText = "Recently Added";
 			}
             else {
 				$('.view-all span').show();
@@ -3250,11 +3250,12 @@ function scopeR () {
 			}
 
 			if (LIB.filters.artists.length) {
-				view = 'Albums by ' + LIB.filters.artists[0];
+				headerText = 'Albums by ' + LIB.filters.artists[0];
 			}
 		}
 	}
-	$('#menu-header').text(view);
+
+	$('#menu-header').text(headerText);
 }
 
 function lazyLode(view) {

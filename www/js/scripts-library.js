@@ -680,12 +680,12 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 			$('#bottom-row').css('display', '');
 			$('#lib-albumcover').css('height', '100%');
 		}
-		scopeR('Lib');
+		setLibMenuHeader();
 	}
 	if (currentView == 'radiolist' || currentView == 'radiocovers') {
 		GLOBAL.searchRadio = '';
 		$('#searchResetRa').click();
-		scopeR('Radio Stations');
+		setLibMenuHeader();
 	}
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
@@ -703,6 +703,7 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
 	$("#searchResetLib").hide();
 	showSearchResetLib = false;
+    setLibMenuHeader();
 });
 
 // Click albums or album covers header
@@ -756,7 +757,7 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	if (UI.mobile) {
 		$('#top-columns').animate({left: '-50%'}, 200);
 	}
-	scopeR();
+	setLibMenuHeader();
 });
 
 // Click album

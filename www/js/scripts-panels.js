@@ -302,7 +302,6 @@ jQuery(document).ready(function($) { 'use strict';
         }
         else {
             makeActive('.radio-view-btn','#radio-panel','radiocovers');
-            console.log('scripts-panels radiocovers', UI.radioPos)
             setTimeout(function() {
     			if (UI.radioPos >= 0) {
     				customScroll('radiocovers', UI.radioPos, 0);
@@ -1096,7 +1095,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#searchResetLib').click(function(e) {
 		e.preventDefault();
 		GLOBAL.searchLib = '';
-		scopeR('Lib');
+		setLibMenuHeader();
 		LIB.filters.albums.length = 0;
 		UI.libPos.fill(-2);
 		storeLibPos(UI.libPos);
