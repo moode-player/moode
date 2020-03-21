@@ -94,7 +94,7 @@ legend {border-bottom: 1px solid #999;}
 .modal-dropdown-text {color:#333;}
 li.modal-dropdown-text:hover,
 li.modal-dropdown-text:focus {color:#eee;}
-.help-block, .help-inline {color:var(--textvariant);}
+.help-block, .help-inline {/*color:var(--textvariant);*/color:inherit;}
 .help-block-modal {margin:0 !important;}
 /* dropdown menus */
 .dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1rem;white-space:nowrap;}
