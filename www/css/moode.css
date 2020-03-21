@@ -383,7 +383,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#ss-backdrop {filter: blur(40px);}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
-	.hudui {font-size:unset}
 }
 /* iPad landscape */
 @media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
