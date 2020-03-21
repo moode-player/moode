@@ -55,7 +55,7 @@ var UI = {
 	restart: '',
 	currentFile: 'blank',
 	currentHash: 'blank',
-	currentSong: 'blank',
+	currentSongId: 'blank',
 	defCover: 'images/default-cover-v6.svg',
 	knobPainted: false,
 	chipOptions: '',
@@ -155,7 +155,7 @@ var showSearchResetPh = false;
 var eqGainUpdInterval = '';
 var toolbarTimer = '';
 var oldCount;
-var toggleSong = 'blank';
+var toggleSongId = 'blank';
 var currentView = 'playback';
 var alphabitsFilter;
 var lastYIQ = ''; // last yiq value from setColors
@@ -820,16 +820,17 @@ function renderUI() {
         }
     }
 
-	// store toggle song
-	if (UI.currentSong != MPD.json['song']) {
-		toggleSong = UI.currentSong == 'blank' ? SESSION.json['toggle_song'] : UI.currentSong;
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'toggle_song': toggleSong}, true);
+	// Store songid for last track (toggle song)
+    //console.log('UI.currentSongId: ' + UI.currentSongId, 'MPD.json[songid]: ' + MPD.json['songid']);
+	if (UI.currentSongId != MPD.json['songid']) {
+		toggleSongId = UI.currentSongId == 'blank' ? SESSION.json['toggle_songid'] : UI.currentSongId;
+		var result = sendMoodeCmd('POST', 'updcfgsystem', {'toggle_songid': toggleSongId}, true);
 	}
 
 	// set current = new for next cycle
 	UI.currentFile = MPD.json['file'];
 	UI.currentHash = MPD.json['cover_art_hash'];
-	UI.currentSong = MPD.json['song'];
+	UI.currentSongId = MPD.json['songid'];
 
 	// toggle buttons
 	if (MPD.json['consume'] === '1') {

@@ -1034,7 +1034,7 @@ $('#context-menu-playback a').click(function(e) {
 		$('#setfav-modal').modal();
 	}
 	if ($(this).data('cmd') == 'toggle-song') {
-        sendMpdCmd('play ' + toggleSong);
+        sendMpdCmd('playid ' + toggleSongId);
 	}
 	if ($(this).data('cmd') == 'consume') {
 		// Menu item
