@@ -27,6 +27,9 @@ New features
 - NEW: System config option for LED0 and LED1 ON/OFF
 - NEW: Spotify config option to autoplay similar songs
 
+- NEW: CoverView screen saver
+- NEW: Configurable extra-metadata for display under cover
+
 Updates
 
 - UPD: Bump to Linux kernel 4.19.102 build #1295
@@ -35,10 +38,11 @@ Updates
 - UPD: Bump to librespot v0.1.1 (armv7l-only)
 - UPD: Bump to moodeutl 1.4.0
 - UPD: Deprecate librespot armv6l binary
-- UPD: Add DSD rate to extra metadata
+- UPD: Add DSD rate to extra-metadata
 - UPD: Add -D option to moodeutl (delete session var)
 - UPD: Add click anywhere off context menu to close
 - UPD: Disable apt-daily and apt-daily-upgrade timers
+- UPD: Modal dialogs converted to full screen
 - UPD: Add accordion headers to Appearance dialog
 
 Bug fixes
@@ -46,6 +50,7 @@ Bug fixes
 - FIX: Wrong DSD encoded-at rates shown on Audio info
 - FIX: Audio info Formats showing PHP error message
 - FIX: WiFi/BT options missing from System config for Zero W
+- FIX: Last track (toggle song) id not persisting
 - FIX: Minor corrections to Setup guide
 
 Radio stations
