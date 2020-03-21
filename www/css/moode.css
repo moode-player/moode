@@ -122,7 +122,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .modal-dropdown-text {color:inherit;}
 .modal .bootstrap-select .btn, #appearance-modal input {border: 1px solid var(--textvariant);}
 .modal .modal-footer {border-top: none;text-align:center;}
-.modal-footer .btn {border-radius:5rem;background-color:var(--btnshade4);margin:.2em 1em;width:25%;color:inherit;}
+.modal-footer .btn {border-radius:5rem;background-color:var(--btnshade4);margin:.2em 1em;width:10em;color:inherit;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}
 .modal.fade {top:0;top:env(safe-area-inset-top);transition:none;}
 .modal.fade.in {transition:none;}
@@ -333,12 +333,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.playlist span {line-height:initial;}
 	.playlist .active {padding-left:.5em;}
 	#playlist .songtime {top: 0px;}
-	#timeknob {padding:0px;}
+	#timeknob, #volknob {margin:1em 0;}
 	#countdown-display{margin-top:-10px;}
 	.countdown-caret {font-size:.9em;margin-left:2px;}
 	#countdown {height:75%;width:75%;margin:0 auto;padding-bottom:5px;}
 	#volcontrol {height:75%;width:75%;margin:0 auto;}
-	#total {font-size:.9em;margin-top:-10px;}
+	#total {font-size:.9em;}
 	#volknob {padding-top:5px;}
 	#btn-toolbar {margin-top:0px;margin-bottom:0px;}
 	#miscbtns .btn {font-size:.9em;}
@@ -423,14 +423,14 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* Pi 7" Touch */
 @media (height: 479px) and (width: 799px) {
 	.playlist .pll1 {font-size:unset;}
-	#timeknob {padding: 0 0 8px;}
+	/*#timeknob {padding: 0 0 8px;}
 	#total {top:63%;width:100%;}
-	#volknob {padding: 8px 0 0;}
+	#volknob {padding: 8px 0 0;}*/
 	.btn-toolbar {margin-top: 5px;margin-bottom:6px;}
 	#togglebtns {padding-top:.5em;}
 	/*#volumedn{margin-right:.5em;}
 	#volumeup{margin-left:.5em;}*/
-	#extratags {padding-top:5px;}
+	#extratags {padding-top:1em;}
 	#container-appearance, #container-clockradio {max-height: 72vh;}
 	.database-radio li {width:9em;font-size:0.8em;height:auto;}
 	#albumcovers li {width:9em;font-size:0.8em;height:auto;}

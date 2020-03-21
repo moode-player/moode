@@ -140,6 +140,8 @@ var showMenuTopW;
 var showMenuTopR;
 var thumbw = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='20'><circle fill='%23f0f0f0' cx='6.5' cy='10' r='3.5'/></svg>";
 var thumbd = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='20'><circle fill='%23303030' cx='6.5' cy='10' r='3.5'/></svg>";
+var fatthumbw = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='20'><circle fill='%23f0f0f0' cx='6.5' cy='10' r='5.5'/></svg>";
+var fatthumbd = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='20'><circle fill='%23303030' cx='6.5' cy='10' r='5.5'/></svg>";
 var blurrr = CSS.supports('-webkit-backdrop-filter','blur(1px)');
 
 // various flags and things
@@ -160,6 +162,7 @@ var currentView = 'playback';
 var alphabitsFilter;
 var lastYIQ = ''; // last yiq value from setColors
 var extraTags = "%track% %disc% %year% %composer% %bitrate% %encoded%";
+var coverView = false; // coverview active or not to save on more expensive conditional in interval timer
 
 function debugLog(msg)  {
 	if (SESSION.json['debuglog'] == '1') {
@@ -500,7 +503,7 @@ function inpSrcIndicator(cmd, msgText) {
 		$('#inpsrc-preamp-volume').text(preampVolume);
 	}
 	else {
-		if ($('#screen-saver').css('display') == 'none') {
+		if (!coverView) {
             $('#menu-top, .btnlist-top').show();
             $('#index-artists.alphabits').show();
             $('#index-albums.alphabits').show();
@@ -529,23 +532,9 @@ function screenSaver(cmd) {
 		return;
 	}
 	else if (cmd.slice(-1) == '1') {
-        $('#playback-panel').addClass('hidden');
-        $('#menu-top').hide();
-        $('#menu-bottom').show();
-		$('.viewswitch').css('display', 'none');
 		$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
-        $('#playbar-toggles .coverview').hide();
-
-        if (currentView.indexOf('playback') == -1) {
-            $('#container-radio').css('display', 'none');
-            $('#container-browse').css('display', 'none');
-            $('.container-library').css('display', 'none');
-        }
-
-        $('#playbar-title').css({'padding-bottom':'2em', 'font-size':'1.5em'});
-        $('#menu-bottom').css('background-color', 'transparent');
-
-		$('#screen-saver').show();
+        $('body').addClass('cv');
+		coverView = true;
 	}
 }
 
@@ -755,7 +744,7 @@ function renderUI() {
 		}
 		// screen saver
 		$('#ss-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
-		if ($('#screen-saver').css('display') == 'block') {
+		if (coverView) {
 			$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
 		}
 
@@ -1529,7 +1518,7 @@ function refreshTimeKnob() {
 		}
 		else {
 			$('#playbar-timeline').show();
-			$('#playbar-title').css('padding-bottom', '1.5em');
+			//$('#playbar-title').css('padding-bottom', '1.5em');
 			//$('#playbar-radio').hide();
 		}
 	}
@@ -1538,9 +1527,9 @@ function refreshTimeKnob() {
 		var tt = $('#timetrack'); // move these out of the timer
 		var pb = $('playbar-#timetrack');
 		var ti = $('#time');
-		var cv = currentView.indexOf('playback');
+		var cur = currentView.indexOf('playback');
         UI.knob = setInterval(function() {
-			if (UI.mobile || cv == -1) {
+			if (UI.mobile || cur == -1 || coverView == true) {
 				if (!timeSliderMove) {
 					syncTimers();
 					if (UI.mobile) {
@@ -2770,7 +2759,7 @@ function btnbarfix(temp1,temp2) {
 		var tempa = hexToRgb(accentColor);
 		UI.accenta = rgbaToRgb(.3 - tempx, .75, temprgba, tempa);
 	}
-	document.body.style.setProperty('--btnbarback', rgbaToRgb(.90, '.95', temprgba, temprgb));
+	document.body.style.setProperty('--btnbarback', rgbaToRgb(.90, '.9', temprgba, temprgb));
 }
 
 function getYIQ(color) {
@@ -2800,6 +2789,7 @@ function setColors() {
 		lastYIQ = yiqBool;
 		if (yiqBool) {
 			document.body.style.setProperty('--timethumb', 'url("' + thumbd + '")');
+			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbd + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
 			document.body.style.setProperty('--trackfill', 'rgba(48,48,48,1.0)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-d.svg")');
@@ -2813,6 +2803,7 @@ function setColors() {
 		}
 		else {
 			document.body.style.setProperty('--timethumb', 'url("' + thumbw + '")');
+			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbw + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
 			document.body.style.setProperty('--trackfill', 'rgba(240,240,240,1.0)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-l.svg")');
@@ -3014,14 +3005,14 @@ $('#coverart-url, #playback-switch').click(function(e){
 
     // Prevent a display anomaly
     // Corresponding .show() in $('#playbar-switch... and setCV()
-    /*TEST*/$('#coverart-link').hide();
+    /*TEST*//*$('#coverart-link').hide();*/
 
 	currentView = currentView.split(',')[1];
 	$('#menu-top').css('height', '0');
 	$('#menu-top').css('backdrop-filter', '');
 	$('#menu-bottom').show();
 	$('.viewswitch').css('display', 'flex');
-	$('#library-panel').addClass('active');
+	//$('#library-panel').addClass('active');*/
     syncTimers();
 
 	if (currentView == 'tag') {
@@ -3069,7 +3060,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 // switch to playback panel
 $('#playbar-switch, #playbar-cover').click(function(e){
     //console.log('click playbar');
-    if ($('#screen-saver').css('display') == 'block') {
+    if (coverView) {
         return;
     }
 
@@ -3125,10 +3116,7 @@ function syncTimers() {
 		if (UI.mobile) { // only change when needed to save work
 			$('#m-countdown').text(a);
 			$('#playbar-mcount').text(a);
-		} else { // countdown-display is always running
-			if (currentView.indexOf('playback') == 0) {
-				UI.knobPainted = false;
-			} else {
+		} else if (coverView || currentView.indexOf('playback') == -1) {
 				$('#playbar-countdown').text(a);
 				var c = a.split(':'); // m:s
 				var d = $('#playbar-total').text().split(':');
@@ -3137,8 +3125,9 @@ function syncTimers() {
 				SESSION.json['timecountup'] == 1 ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // percent of elapsed song
 				$('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
 				g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // adjust for thumb
-				$('#playbar-timeline .timeline-progress').css('width', g);
-			}
+				$('#playbar-timeline .timeline-progress').css('width', g);				
+		} else {
+				UI.knobPainted = false;
 		}
 		oldCount = a;
 	}

@@ -1278,27 +1278,10 @@ jQuery(document).ready(function($) { 'use strict';
             return;
         }
 
-        if ($('#screen-saver').css('display') == 'block' || SESSION.json['scnsaver_timeout'] != 'Never') {
-            $('#screen-saver').hide();
+        if (coverView || SESSION.json['scnsaver_timeout'] != 'Never') {
+			$('body').removeClass('cv');
+			coverView = false;
             setColors();
-
-            $('#playback-panel').removeClass('hidden');
-            $('#menu-top').show();
-            $('#playbar-toggles .coverview').show();
-            $('#container-radio').css('display', '');
-            $('#container-browse').css('display', '');
-            $('.container-library').css('display', '');
-
-            $('#playbar-title').css({'padding-bottom':'0px', 'font-size':'.9em'});
-            $('#menu-bottom').css('background-color', 'var(--btnbarback)');
-
-            if (currentView.indexOf('playback') == -1) {
-                $('#menu-bottom, .viewswitch').css('display', 'flex');
-            }
-            else {
-                $('#menu-bottom').css('display', 'none');
-            }
-
             // Reset screen saver timeout global
             setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
                 var result = sendMoodeCmd('GET', 'resetscnsaver', '', true);
