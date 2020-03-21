@@ -1521,17 +1521,11 @@ textarea,
 .palette-success-dark {
   background-color: #27ad60; }
 
-/*.palette-success-dark {
-  background-color: #27ae60; } r45e deprecate duplicate */
-
 .palette-info {
   background-color: var(--accentxts); }
 
 .palette-info-dark {
   background-color: var(--accentxts); }
-
-/*.palette-info-dark {
-  background-color: #2383c4; } r45e deprecate */
 
 .palette-warning {
   background-color: #f1c40f; }

@@ -143,7 +143,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 
 @media (orientation:portrait) {
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
-	#ss-container-playlist {width:65vw;}
 	#ss-coverart-url img {width:80vw;}
 }
 
@@ -357,9 +356,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#folder-panel {padding-top:1.875em;height:calc(100vh - 1.875em);}
 	#database .btn {font-size:.9em;}
 	/* coverview */
-	#ss-split {position:fixed;left:6%;top:50%;width:70vh;max-width:50%;transform:translate(0%, -50%);}
-	.ss-info {width:48%;text-align:left;position:fixed;top:calc(50% - 1em);left:52%;transform:translate(0, -50%);}
-	.ss-coverart {position:fixed;top:unset;left:unset;width:unset;max-width:unset;transform: none;}
 	#ss-currentsong {margin:1em 1em 0 0;}
 	#ss-currentalbum, #ss-currentartist {margin:1em 1em 0 0;}
 	#index-genres {display:none;}

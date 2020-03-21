@@ -35,42 +35,33 @@
 			<div id="ss-backdrop"></div>
 			<div id="ss-style"></div>
 			<div id="ss-coverart" class="ss-coverart">
-				<div id="ss-split">
-					<div id="ss-coverart-url"></div>
-					<div id="ss-extratags"></div>
-				</div>
-				<div id="ss-info" class="ss-fsize ss-info">
-					<div id="ss-currentsong"></div>
-					<!--div id="ss-currentartist"></div-->
-					<div id="ss-currentalbum"></div>
-				</div>
+				<div id="ss-coverart-url"></div>
 			</div>
 		</div>
 
 		<div id="viewswitch" class="viewswitch hide">
-				<div class="dropdown">
-					<a aria-label="Tabs" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
-					<ul class="dropdown-menu context-menu" role="menu">
-						<button aria-label="Search" id="viewswitch-search" class="viewswearch btn menu-separator">
-							<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
-								<input id="lib-album-filter" type="text" value="" placeholder="search albums">
-							</form>
-							<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
-						</button>
-						<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio</button>
-						<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder</button>
-						<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag</button>
-						<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Cover</button>
-						<button aria-label="All Music" class="btn view-all" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
-						<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
-					</ul>
-		    	</div>
+			<div class="dropdown">
+				<a aria-label="Tabs" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
+				<ul class="dropdown-menu context-menu" role="menu">
+					<button aria-label="Search" id="viewswitch-search" class="viewswearch btn menu-separator">
+						<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
+							<input id="lib-album-filter" type="text" value="" placeholder="search albums">
+						</form>
+						<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
+					</button>
+					<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio</button>
+					<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder</button>
+					<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag</button>
+					<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Cover</button>
+					<button aria-label="All Music" class="btn view-all" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
+					<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
+				</ul>
+	    	</div>
 		</div>
 
 		<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
 		<div id="playback-panel" class="tab-pane">
 			<div class="btnlist btnlist-top btnlist-top-pl">
-				<button id="vee" class="btn"><i class="far fa-chevron-down"></i></button>
 				<form id="pl-search" method="post" onSubmit="return false;">
 					<div class="input-append">
 						<input id="pl-filter" type="text" value="" placeholder="search">

@@ -1,4 +1,4 @@
-<!-- 
+<!--
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -22,7 +22,7 @@
  * 2019-05-07 TC moOde 5.2
  *
  */
--->	
+-->
 <div class="container">
 	<div class="container2">
     <h1 class="snd-config">MPD Config</h1>
@@ -43,9 +43,9 @@
             <div class="control-group">
 				<legend>Audio device</legend>
 				<label class="control-label" for="device">Device type</label>
-				<div class="controls">	
-	                <select id="device" name="conf[device]" class="input-large">					
-						$_mpd_select[device]					
+				<div class="controls">
+	                <select id="device" name="conf[device]" class="input-large">
+						$_mpd_select[device]
 	                </select>
 				</div>
             </div>
@@ -67,7 +67,7 @@
 					</span>
                 </div>
             </div>
-		
+
 			<div class="control-group">
                 <label class="control-label" for="dsd-usb">DSD over PCM</label>
                 <div class="controls">
@@ -82,19 +82,6 @@
                     </span>
                 </div>
             </div>
-
-            <!--div class="control-group">
-                <label class="control-label" for="gapless-mp3-playback">Gapless mp3 playback</label>
-                <div class="controls">
-					<select id="gapless-mp3-playback" name="conf[gapless_mp3_playback]" class="input-large">
-						$_mpd_select[gapless_mp3_playback]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-gapless-mp3-playback" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-gapless-mp3-playback" class="help-block-configs help-block-margin hide">
-                    	Select "no" if mp3 playback ends abruptly.
-                    </span>
-                </div>
-            </div r45b deprecate from form and conf file -->
 
 		    <div class="control-group">
 				<legend>SoX Resampling</legend>
@@ -119,7 +106,7 @@
 						<b>Medium Quality:&nbsp;</b>95% bandwidth, 100dB noise rejection, linear phase<br>
 					</span>
                 </div>
-            </div> 
+            </div>
 
             <div class="control-group">
                 <label class="control-label" for="sox-multithreading">Multithreading</label>
@@ -132,7 +119,7 @@
 	                    Run SoX in multiple threads for improved efficiency.<br>
 					</span>
                 </div>
-            </div> 
+            </div>
 
 			<div class="control-group">
 				<legend>Gain and Normalization</legend>
@@ -159,20 +146,6 @@
                 </div>
             </div>
 
-			<!-- DEPRECATE -->
-			<!--div class="control-group">
-                <label class="control-label" for="replaygain-handler">ReplayGain handler</label>
-                <div class="controls">
-					<select id="replay-gain-handler" name="conf[replay_gain_handler]" class="input-large">
-						$_mpd_select[replay_gain_handler]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-replay-gain-handler" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-replay-gain-handler" class="help-block-configs help-block-margin hide">
-						Specifies how replay gain is applied. The default is "software" which uses an internal software volume control. The setting "mixer" uses the configured (hardware) volume control.
-					</span>
-                </div>
-            </div-->
-
 			<div class="control-group">
                 <label class="control-label" for="volume-normalization">Volume normalization</label>
                 <div class="controls">
@@ -194,7 +167,7 @@
                     <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4096" max="65535">
 					<a aria-label="Help" class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
-                    	Range is 4096 to 65535 KB. Default size is 4096 KB. 
+                    	Range is 4096 to 65535 KB. Default size is 4096 KB.
                     </span>
                 </div>
             </div>
@@ -281,7 +254,7 @@
 					</span>
                 </div>
             </div-->
-		</fieldset>		
+		</fieldset>
     </form>
 </div>
 </div>

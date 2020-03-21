@@ -388,8 +388,6 @@ SQLDB=/var/local/www/db/moode-sqlite3.db
 # Airplay settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_airplay")
 readarray -t arr <<<"$RESULT"
-#[[ "${arr[0]}" = "1" ]] && airplaymeta2="On" || airplaymeta2="Off" deprecated
-#airplayvol=${arr[1]} deprecated
 interpolation=${arr[2]}
 output_format=${arr[3]}
 output_rate=${arr[4]}
