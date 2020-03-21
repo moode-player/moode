@@ -79,7 +79,7 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 #playback-panel.newui #playback-controls, #playback-panel.cv #playback-controls {margin-left:0px;width:100%;height:calc(100vh - 2.75rem);position:absolute;}
 .btn-group.bootstrap-select .btn {padding:2px 12px;margin-bottom:5px;}
 #players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
-#players .btn, #configure .btn {background:rgba(128,128,128,0.08);}
+#players .btn, #configure .btn {/*background:rgba(64,64,64,0.08);*/background-color:var(--btnshade4);}
 #players ul > li, #configure ul > li {display:inline-flex;padding:.75em;}
 #players ul, #configure ul {margin:0;}
 #players i, #configure i {font-size:1.95em;padding:.25em;}
@@ -120,7 +120,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal.fade.in {transition:none;}
 /* stuff */
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
-#players .btn, #configure .btn {background:rgba(64,64,64,0.08);}
 #info-toggle-bgimage {position:absolute;margin-left:5px;margin-top:8px;}
 /* clock radio */
 .checkbox-grp {margin:.35em 0 .85em 0;}
@@ -519,7 +518,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .moode-config-settings-div {width:100%;text-align:center;float:left;padding:0 0 2.75em 0;}
 .moode-config-settings-link {color:inherit;font-size:18px;font-weight:500;text-decoration:none;}
 .moode-config-settings-link:hover {color:inherit;text-decoration:none;font-weight:700;}
-.moode-config-settings-link2 {color:inherit;font-size:.9em;font-weight:500;text-decoration:none;padding:.4em;/*margin:0 .4em;*/line-height:normal;border-radius:.25rem;background-color:rgba(64,64,64,0.08);}
+.moode-config-settings-link2 {color:inherit;font-size:.9em;font-weight:500;text-decoration:none;padding:.4em;margin:0 .25em;line-height:normal;border-radius:.25rem;/*background-color:rgba(64,64,64,0.08);*/background-color:var(--btnshade4);}
 .moode-config-settings-link2:hover {color:inherit;text-decoration:none;}
 /* other stuff */
 .menu-separator {border-bottom:1px solid rgba(128,128,128,0.2);border-radius:0;}
