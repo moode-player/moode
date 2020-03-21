@@ -147,7 +147,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	body {padding-left:0px;padding-right:0px;height:initial;}
 	.container2 {padding:2em .5em;padding:calc(2em + env(safe-area-inset-top)) .5em calc(2em + env(safe-area-inset-bottom)) .5em;}
 	#playback-controls {width:100%;}
-	#extratags {padding-top:.45em;}
+	#extra-tags {padding-top:.45em;}
 	.modal-sm {min-width:80%;max-width:80%;}
 	#playback-cover {width:100%;text-align:center;margin-left:auto;margin-right:auto;}
 	#playback-queue {width:100%;}
@@ -320,7 +320,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#miscbtns .btn {font-size:.9em;}
 	#miscbtns {padding-top: 10px;}
 	#btn-toolbar .btn {padding:0px 12px;font-size:medium;}
-	#extratags {font-size:.8em;padding-top:5px;}
+	#extra-tags {font-size:.8em;padding-top:5px;}
 	#currentsong {font-size:1.25em;}
 	#currentalbum, #currentartist {font-size:1.15em;}
 	#volumedn, #volumeup {padding: .5em .75em;}
@@ -360,7 +360,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 /* iPhone5 portrait */
 @media (max-height: 568px) and (max-width: 320px) {
-	#extratags {display:none;}
+	#extra-tags {display:none;}
 	#currentsong {padding-top:.5em}
 	#context-menu-playback .dropdown-menu {min-width:150px;}
 	.playlist {font-size:1.2em;}
@@ -399,7 +399,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#volknob {padding: 8px 0 0;}
 	.btn-toolbar {margin-top: 5px;margin-bottom:6px;}
 	#togglebtns {padding-top:.5em;}
-	#extratags {padding-top:5px;}
+	#extra-tags {padding-top:5px;}
 	#container-appearance, #container-clockradio {max-height: 72vh;}
 	.database-radio li {width:9em;font-size:0.8em;height:auto;}
 	#albumcovers li {width:9em;font-size:0.8em;height:auto;}
