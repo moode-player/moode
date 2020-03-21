@@ -18,17 +18,17 @@
 New features
 
 - NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
-- NEW: Library update that incorporates Thumbcache update
 - NEW: Library search for Tag and Album views
 - NEW: Library separate sorts for Tag and Album views
 - NEW: Library option to hide covers in Tag view album column
 - NEW: Library option for ellipsis limited text in Tag/Album views
+- NEW: MPD database update that incorporates Thumbcache update
+- NEW: CoverView screen saver with Playbar controls
+- NEW: Global font size option for larger/smaller text
+- NEW: Configurable extra-metadata for display under cover
 - NEW: Audio config option for USB volume knob ON/OFF
 - NEW: System config option for LED0 and LED1 ON/OFF
 - NEW: Spotify config option to autoplay similar songs
-
-- NEW: CoverView screen saver
-- NEW: Configurable extra-metadata for display under cover
 
 Updates
 
