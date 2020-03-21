@@ -776,7 +776,7 @@ function renderUI() {
         $('#extra-tags-display').html('');
     }
     else if (MPD.json['artist'] == 'Radio station') {
-		extraTags = MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate';
+		$('#extra-tags-display').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
 	}
 	else {
         var elementDisplay, extraTagsDisplay = '';
