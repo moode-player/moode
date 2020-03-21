@@ -1294,6 +1294,8 @@ jQuery(document).ready(function($) { 'use strict';
 
             $('#playbar-title').css({'padding-bottom':'0px', 'font-size':'.9em'});
             $('#menu-bottom').css('background-color', 'var(--btnbarback)');
+            $('#menu-bottom').css('backdrop-filter', 'blur(20px)');
+            $('#menu-bottom').css('-webkit-backdrop-filter', 'blur(20px)');
 
             if (currentView.indexOf('playback') == -1) {
                 $('#menu-bottom, .viewswitch').css('display', 'flex');

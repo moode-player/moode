@@ -544,6 +544,8 @@ function screenSaver(cmd) {
 
         $('#playbar-title').css({'padding-bottom':'2em', 'font-size':'1.5em'});
         $('#menu-bottom').css('background-color', 'transparent');
+        $('#menu-bottom').css('backdrop-filter', 'none');
+        $('#menu-bottom').css('-webkit-backdrop-filter', 'none');
 
 		$('#screen-saver').show();
 	}
@@ -3109,6 +3111,7 @@ $('#playbar-switch, #playbar-cover').click(function(e){
 		$('#folder-panel, #radio-panel, #library-panel').removeClass('active');
 		$('#playback-panel').addClass('active');
 		$('#playback-controls').css('display', '');
+
 		if (UI.mobile) { // make sure playlist is hidden and controls are showing
 			showMenuTopW = false;
 			$(window).scrollTop(0);
@@ -3131,7 +3134,6 @@ $('#context-backdrop').click(function(e){
 });
 
 $('#appearance-modal .h5').click(function(e) {
-	//$('#customize-modal div.accordian').removeClass('active');
 	$(this).parent().children('div.control-group').slideToggle(100);
 	$(this).parent().children('.dtclose, .dtopen').toggle();
 });
@@ -3155,7 +3157,7 @@ function syncTimers() {
 				var e = parseInt(c[0] * 60) + parseInt(c[1]); // Convert to seconds
 				var f = parseInt(d[0] * 60) + parseInt(d[1]);
 				SESSION.json['timecountup'] == 1 ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // Percent of elapsed song
-				$('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
+				$('#playbar-timetrack').val(g * 10); // Min = 0, max = 1000
 				g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // Adjust for thumb
 				$('#playbar-timeline .timeline-progress').css('width', g);
 			}
@@ -3215,6 +3217,7 @@ function makeActive (vswitch, panel, view) {
 
 function scopeR () {
 	UI.mobile ? view = '' : view = 'Browse by ';
+
 	if (currentView == 'radiolist' || currentView == 'radiocovers') {
 		view += 'Radio Stations';
 		if (GLOBAL.searchRadio) {
@@ -3234,6 +3237,7 @@ function scopeR () {
         else {
 			currentView == 'album' ? view += SESSION.json['library_albumview_sort'] : view += SESSION.json['library_tagview_sort'];
 			$('#viewswitch span').hide();
+
 			if (GLOBAL.musicScope == 'recent') {
 				$('.view-recents span').show();
 		        LIB.recentlyAddedClicked = true;
@@ -3243,6 +3247,7 @@ function scopeR () {
 				$('.view-all span').show();
 		        LIB.recentlyAddedClicked = false;
 			}
+
 			if (LIB.filters.artists.length) {
 				view = 'Albums by ' + LIB.filters.artists[0];
 			}
@@ -3291,20 +3296,22 @@ function setFontSize() {
     if (UI.mobile) {
         sizeFactor += .3;
     }
+
     document.body.style.setProperty('--pbfont', 'calc(' + sizeFactor + 'rem + 1vmin)');
 }
 
 function volMuteSwitch() {
     if (SESSION.json['volmute'] == '0') {
-		SESSION.json['volmute'] = '1' // toggle to mute
+		SESSION.json['volmute'] = '1'
 		var newVol = 0;
 		var volEvent = 'mute';
     }
 	else {
-		SESSION.json['volmute'] = '0' // toggle to unmute
+		SESSION.json['volmute'] = '0'
 		var newVol = SESSION.json['volknob'];
 		var volEvent = 'unmute';
     }
+
 	var result = sendMoodeCmd('POST', 'updcfgsystem', {'volmute': SESSION.json['volmute']});
 	setVolume(newVol, volEvent);
 }
