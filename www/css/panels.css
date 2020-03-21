@@ -119,7 +119,6 @@ html {background-color:inherit;}
 .volume-display {position:relative;color:var(--adapttext);font-size:1.9rem;font-weight:500;cursor:pointer;height:50%;/*was 70%*/}
 .volume-display div {position:relative;top:50%;transform:translate(0, -50%);min-height:33%;text-align:center;}
 #volume, #volume-2 {display:none;} /* using .volume-display to overlay this element so it can be used as a mute toggle */
-
 #volzone, #timezone, #volbtns-2 {font-family:'SF Mono', 'Roboto Mono', monospace;} /* 'Letter Gothic Std', */
 #volbtns, #volbtns-2 {display:flex;position:absolute;transform:translate(-50%,-50%);top:50%;left:50%;height:70%;margin:0 auto;flex-direction:column;}
 #volumedn, #volumedn-2, #volumeup, #volumeup-2 {font-size:1.5em;font-weight:400;margin:0 auto;padding:.25rem 1rem;height:33%;/*line-height:1.5em;*/color:var(--adapttext);}
@@ -136,7 +135,6 @@ html {background-color:inherit;}
 #cover-options {display:none;}
 #choose-bgimage, #remove-bgimage {font-size:1em;margin-top:6px;color:inherit;padding-top:4px;line-height:1.5em;}
 #current-bgimage {max-height:calc(1.5rem + 6px);overflow:hidden;max-width:50px;margin:5px 0 0 5px;position:absolute;display:inline-block;border-radius:3px;}
-
 #countdown {margin:0 auto;height:17vw;width:17vw;}
 #countdown div {margin:0 auto;} /* needed to center the knob */
 .countdown-caret {margin-left:2px;color:var(--accentxts);}
@@ -213,12 +211,6 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList .album-year {margin-left:0;margin-left:.3em;}
 #library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
 #library-panel.limited .lib-entry, #library-panel.limited .lib-entry span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
-
-/*#albumsList .album-name-art {display:block;vertical-align:middle;max-width:calc(100% - 1em);min-width:25vw;line-height:1.25em;white-space:normal;}
-#albumsList .album-name {display:inline-block;vertical-align:middle;max-width:calc(100% - 1em);min-width:25vw;line-height:normal;}
-#albumsList .artist-name-art, #albumsList .album-year {display:inline-block;font-size:0.85em;line-height:normal;color:var(--textvariant);vertical-align:top;white-space:normal;}
-#albumsList.limited .album-name-art, #albumsList.limited .artist-name-art {white-space:nowrap;max-width:calc(24vw - 3.6em);text-overflow:ellipsis;overflow:hidden;}*/
-
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .thcolor {color:var(--accentxts);}
@@ -347,7 +339,6 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-genre {top:calc(1.5em + 1px);height:calc(100% - 1.5em);border-right:1px solid var(--btnshade);-webkit-overflow-scrolling:touch;box-sizing:border-box;}
 #lib-artist {top:calc(1.5em + 1px);height:calc(100% - 1.5em);left:33.33%;margin-left:0px;-webkit-overflow-scrolling:touch;box-sizing:border-box;}
 #lib-album {top:calc(1.5em + 1px);height:calc(100% - 1.5em);left:66.66%;border-left:1px solid var(--btnshade);margin-left:0px;-webkit-overflow-scrolling:touch;box-sizing:border-box;}
-/*#lib-album span {display:none;vertical-align:middle;}*/
 #lib-file {overflow-y:scroll;overflow-x:hidden;margin:1px 0 0 0;height:100%;width:100%;-webkit-overflow-scrolling:touch;}
 #lib-coverart-meta-area {width:20vw;line-height:normal;padding:0;float:left;position:fixed;}
 #lib-coverart-img {margin:.5em .25em 0 .5em;}
@@ -391,21 +382,16 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 /* album cover panel */
 #lib-albumcover {height:100%;width:100%;position:absolute;box-sizing:border-box;left:0%;top:2.75em;top:calc(env(safe-area-inset-top) + 2.75em);overflow:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
 #albumcovers {text-align:center;margin:0;padding-bottom:12em;}
-
 #albumcovers .lib-entry, .database-radio .lib-entry {width:var(--thumbcols);text-align:center;display:inline-block;vertical-align:top;height:auto;font-size:.95em;padding:0 0 .4em 0;}
 #albumcovers .lib-entry img, .database-radio img {width:90%;max-height:calc(var(--thumbcols) * .9);margin:.75em 0 .5em 0;}
 #albumcovers .album-name {display:block !important;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
 #albumcovers .artist-name, #albumcovers .album-year {margin:0 .15em;}
-
 #lib-albumcover-header {display:none;position:absolute;top:env(safe-area-inset-top);width:100vw;transform: translate(-50%);left:50%;}
 #albumcoverheader {line-height:2.75rem !important;position:absolute !important;height:2.75rem;width:15%;left:75%;transform:translate(-50%);}
 #albumview-header-text {display:none;background:none;text-transform:unset;font-size:1.1rem;padding:0 3rem;}
 #albumcoverheader .recently-added {margin:0;float:unset;padding:0;position:unset;opacity:1;}
 #albumcoverheader .recently-added i, #random-albumcover i {font-size:.9rem;opacity:0;} /* opacity hide for now */
-/*#random-albumcover {margin-top:-1.5em;float:right;position:relative;padding:.25em .5em 0em .5em;}
-#random-albumcover i {color:var(--adapttext);opacity:.3}
-.albumcover {max-height:2.75em;overflow:hidden;}*/
 /* radio list view */
 .database-radiolist {text-align:left;padding-left:2rem;}
 .database-radiolist li {width:90%;display:inline-block;margin:0;font-size:1rem;}
@@ -461,11 +447,9 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 .alphabits {position:absolute;/*background:var(--btnshade);*/z-index:999;}
 .alphabits ul {display:table;height:100%;margin:0 !important;border-spacing:.2em;}
 .alphabits ul li {display:table-row !important;font-size:.8em;text-align:center !important;text-transform:uppercase;opacity:.75;line-height:normal;}
-
 /* playback ellipsis context menu */
 #context-menu-playback .dropdown-menu {min-width:200px;white-space:nowrap;}
 #menu-check-consume, #menu-check-repeat, #menu-check-single {display:none;float:right;color:var(--adapttext);line-height:2.75em;position:absolute;right:.5em;}
-
 /* active/inactive css element manip */
 #menu-header {position:absolute;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1.1rem;overflow:hidden;max-width:50%;text-overflow:ellipsis;white-space:nowrap;color:var(--adapttext);cursor:pointer;}
 #playback-panel #playback-controls {display:none;}
@@ -487,7 +471,6 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #radio-panel.active {height:100vh;display:block;}
 #radio-panel.active #index-radio {display:block;}
 #radio-panel.active #btnlist-top-ra {display:block;}
-
 /* playbar */
 #timetrack {display:flex;width:100%;padding:0;color:inherit;height:15px;z-index:10;position:relative;}
 #timeline {width:65%;margin:.5em auto .3em;z-index:100;height:15px;display:none;}
@@ -536,11 +519,9 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 .updater-relnotes {list-style-type:none;margin-left:0;}
 /* Show/hide password plaintext */
 .show-hide-password {font-size:18px;margin-left:.5em}
-
 /* https: //codepen.io/mallendeo/pen/eLIiG */
 .toggle {background-color:rgba(128,128,128,0.3);}
 .toggle.toggle-off {background-color:rgba(128,128,128,0.2);}
-
 /* sliders w/firefox compatibility */
 input[type='range'] {
  -webkit-appearance:none;
@@ -569,7 +550,6 @@ input[type='range']::-webkit-slider-thumb {
  width:11px;
  background-repeat:no-repeat;
 }
-
 input[type='range']::-moz-range-thumb {
  border:none;
  width:0.75em;
@@ -581,7 +561,6 @@ input[type='range']::-moz-range-thumb {
 input[type="range"].vslide2 {height:10em;width:2.5em;margin:.5em 0;-webkit-appearance: slider-vertical;}
 input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;radius:50%;background-image:'';height:1em;width:1em;}
 input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radius:unset;background-color:var(--timecolor);}
-
 /* animate favorites button */
 @keyframes pulse {
 	0% {transform:scale(1);}
@@ -593,12 +572,8 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 	color: var(--accentxts);
 	animation: pulse 1s;
 }
-
-/* animate minimize / maximize playback for fancy*/
-/*.tab-content.fancy > .active {animation: fadeIn linear .25s;} /* fancy on tab-content for now */
 /* spin animation for fancy ralbum */
 .ralbum svg {fill:var(--adapttext);	height:.9rem;width:.9rem;margin-top:5px;}
-
 /* newui */
 #playback-panel.newui #songsand, #playback-panel.cv #songsang {position:absolute;width:100vw;left:50%;transform:translate(-50%);}
 #playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {/*width:44%;*/height:75%;margin:-.5rem 0 0 3%;} /* transform instead of margin-top for ios */
@@ -622,7 +597,6 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #playback-panel.newui .playlist, #playback-panel.cv .playlist {padding-bottom:0;}
 #playback-panel.newui #volcontrol, #playback-panel.cv #volcontrol, #playback-panel.newui #countdown, #playback-panel.cv #countdown {height:20vw;width:20vw;}
 #playback-queue {z-index:2;}
-
 /* cv */
 #playback-panel.cv #pl-filter, #playback-panel.cv .btnlist-top-pl {display:none;}
 #playback-panel.cv {color:#fff;position:fixed;z-index:1;top:0;width:100%;}
@@ -634,13 +608,11 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #playback-panel.cv #playbtns .addfav, #playback-panel.cv #playbtns .togglepl {display:inline-block;font-size:1.1em;margin:0 1em;}
 #playback-panel.cv #togglebtns .repeat, #playback-panel.cv #togglebtns .toggle-song {display:inline-block;}
 #playback-panel.cv #container-playlist {margin-top:0;}
-
 /* visacc */
 #content.visacc #mvol-progress {background-color:var(--textvariant);border-radius:1px;}
 #content.visacc .ralbum svg {fill:var(--textvariant);}
 #content.visacc #currentsong, #content.visacc #currentsong a {color:var(--adapttext);}
 #content.visacc #currentalbum {color:var(--textvariant);}
-/*#content.visacc .volume-display {color:var(--textvariant);}*/
 #content.visacc #togglebtns .btn-group {color:var(--textvariant);}
 #content.visacc #togglebtns .btn-primary {color:var(--adapttext);text-shadow: 0px 0px 4px var(--adapttext);}
 #content.visacc .playlist li.active:before {color:var(--adapttext);opacity:1;font-weight:600;}
@@ -648,11 +620,9 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #content.visacc .viewswitch .btn {color:var(--textvariant);}
 #content.visacc .viewswitch .btn.active {color:var(--adapttext);}
 #content.visacc #lib-content li.active, #content.visacc #radiocovers .active {background-color: var(--btnshade4);box-shadow:none;}
-/*#playbar.visacc #playbar-mtime {color:var(--textvariant);}*/
 #playbar.visacc .ralbum svg {fill:var(--textvariant);}
 #playbar.visacc #playbar-switch div {opacity:.35;}
 #playbar.visacc #playbar-title a {color:var(--textvariant) !important;}
-/*#playbar.visacc #playbar-currentalbum {color:var(--textvariant)}*/
 #playbar.visacc #playbar-toggles .btn {color:var(--textvariant);}
 #playbar.visacc #playbar-toggles .btn-primary {color:var(--adapttext);text-shadow: 0px 0px 4px var(--adapttext);}
 
@@ -668,7 +638,6 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 	display: inline-block;
 	animation: spin 1s infinite linear;
 }
-
 /* css spinner */
 /* https://github.com/lukehaas/css-loaders */
 .busy-spinner,
@@ -714,10 +683,6 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 		transform: rotate(360deg);
 	}
 }
-
-/*#albumcovers li.active span {max-height:unset;white-space:normal;}
-#albumcovers li:hover span {max-height:unset;white-space:normal;}*/
-
 #cover-backdrop {height:100vh;width:100vw;background-size:cover;background-position:center center;z-index:0;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
 #context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}
 .stopscroll {height:100%;overflow:hidden;}

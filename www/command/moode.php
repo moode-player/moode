@@ -279,7 +279,8 @@ else {
 			case 'lsinfo':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
 					echo json_encode(searchDB($sock, 'lsinfo', $_POST['path']));
-				} else {
+				}
+				else {
 					echo json_encode(searchDB($sock, 'lsinfo'));
 				}
 				break;

@@ -70,14 +70,13 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 .bootstrap-select.select-medium2:not([class*="span"]) {width:180px;}
 .bootstrap-select.select-large:not([class*="span"]) {width:250px;}
 .bootstrap-select.select-large2:not([class*="span"]) {width: 282px;}
-
+/* stuff */
 #playback-queue {width:38%;}
 #playback-cover {padding:0;width:38%;}
 #playback-controls {width:24%;margin-left:0px;}
 #playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {position:relative;width:44%;left:-10000px;;margin:0 auto;}
 #playback-panel.newui #playback-cover, #playback-panel.cv #playback-cover {padding:0;width:33vw;position:absolute;left:50%;transform:translate(-50%);}
 #playback-panel.newui #playback-controls, #playback-panel.cv #playback-controls {margin-left:0px;width:100%;height:calc(100vh - 2.75rem);position:absolute;}
-
 .btn-group.bootstrap-select .btn {padding:2px 12px;margin-bottom:5px;}
 #players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
 #players .btn, #configure .btn {background:rgba(128,128,128,0.08);}
@@ -91,16 +90,13 @@ legend {border-bottom: 1px solid #999;}
 .modal-header, .modal-footer {background-color: transparent;}
 .modal-xs{min-width:230px;text-align:center;}
 .form-horizontal .control-group {margin-bottom:15px;}
-/*#togglebtns {padding-top:1rem;}*/
 #playback-panel.newui #togglebtns, #playback-panel.cv #togglebtns {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 2vh);left:50%;transform:translate(-50%);}
 .modal-dropdown-text {color:#333;}
 li.modal-dropdown-text:hover,
 li.modal-dropdown-text:focus {color:#eee;}
 .help-block, .help-inline {color:var(--textvariant);}
 .help-block-modal {margin:0 !important;}
-
 /* dropdown menus */
-
 .dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1rem;white-space:nowrap;}
 .dropdown-menu {float:right;position:absolute;min-width:200px;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;white-space:normal;}
 .dropdown-menu.open {padding:0;margin:0;}
@@ -108,15 +104,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 .btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.3);box-shadow:none;border-radius:4px;}
 .bootstrap-select.btn-group .dropdown-menu.inner {border-radius:.51rem .5rem;overflow:hidden;} /* weird border radius cos bug in chrome? */
 .bootstrap-select .dropdown-menu > li > a {color:inherit;padding:0 1em;}
-/*.bootstrap-select .dropdown-menu > li:first-child > a {padding-top:.5em !important;}
-.bootstrap-select .dropdown-menu > li:last-child > a {padding-bottom:.5em !important;}*/
 .container2 .dropdown-menu.inner {background-color:rgba(50,50,50,0.95) !important;color:#eee !important;-webkit-overflow-scrolling:touch;} /* config theme menu bg */
-
 /* modal test */
 .modal {min-width:55vw;top:0;top:env(safe-area-inset-top);transition:none;background-color:transparent;color:var(--adapttext);box-shadow:none;}
 .modal .control-label {float:left;padding-top:0;line-height:24px;}
 .modal .btn.btn-primary.btn-small {background:var(--btnshade4);}
-/*.modal .btn-group.bootstrap-select .btn {padding:0 12px;}*/
 .modal .controls input {min-height:26px !important;}
 .modal .dropdown-menu.inner {background-color:var(--adaptmbg);color:var(--adapttext);}
 .modal .modal-dropdown-text {color:inherit;}
@@ -126,7 +118,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}
 .modal.fade {top:0;top:env(safe-area-inset-top);transition:none;}
 .modal.fade.in {transition:none;}
-
+/* stuff */
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
 #players .btn, #configure .btn {background:rgba(64,64,64,0.08);}
 #info-toggle-bgimage {position:absolute;margin-left:5px;margin-top:8px;}
@@ -140,12 +132,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* update package txt ol */
 #update-pkg-ol {font-family:courier new;}
 #update-pkg-ol li {line-height:1em;}
-
+/* media queries */
 @media (orientation:portrait) {
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
 	#ss-coverart-url img {width:80vw;}
 }
-
 @media (max-width: 769px) {
 	body {padding-left: 0px;padding-right: 0px;}
 	#playback-controls {width:24%;margin-left:0px;}
@@ -185,7 +176,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta {text-align:left;}
 	#trackscontainer {width:100%;max-width:100%;}
 	.container-playback {padding: 0;}
-	/*#mobile-toolbar {display:none;flex-direction:column;position:fixed;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) + 1vh);left:0;z-index:10;width:100%;padding-top:10vh;} /* r44c was padding-bottom:2vh; */
 	#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;width:100%;padding-top:10vh;} /* r44c was padding-bottom:2vh; */
 	#mt1, #mt2, #mt3 {font-size:inherit;}
 	#mt1 {margin:4rem 1.5rem 0rem 1.5rem;}
@@ -204,7 +194,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* display:flex & playback stuff */
 	.no-fluid {flex-direction:column-reverse;}
 	.covers {padding:0;margin:0;}
-	/*.btn-toolbar, .volumemute, #volbtns, #volknob, #togglebtns, #timeknob {display:none;}*/
 	#togglebtns {margin:4rem 1.5rem 0rem 1.5rem;padding:0;}
 	#togglebtns .btn-group {display:inline-flex;}
 	#togglebtns .btn-group .btn {transition:none;font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;height:2.5em;width:2.5em;/*color:var(--textvariant);*/}
@@ -225,10 +214,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 }
-
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
-	/*body {font-size:calc(.75em + 1vmin);}*/
 	.dropdown-menu {min-width:180px;}
 	.dropdown-menu > li > a {font-size:1.12rem;}
 	#playback-panel, #content {position:relative;}
@@ -238,7 +225,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.modal-body .form-horizontal .control-label {width:42%;}
 	.modal-body .form-horizontal .controls {margin-left:45%;}
 	.input-xlarge {width:150px;} /* same as medium */
-	/*#playback-controls {display:none;}*/
 	#timezone, #volzone {display:none;}
 	#playback-cover {position:relative;}
 	#playback-queue {z-index:unset;}
@@ -254,12 +240,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbtns .btn {font-size:3em;padding:.5em 1em;}
 	.dbtn {display:inline-block;font-size:3em;padding:0 1rem;width:25%;line-height:20px;vertical-align:middle;}
 	.playlist span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
-	/*#menu-settings {padding:0 .5em;}
-	#mnm {font-size:1.65rem;}
-	#menu-settings i {font-size:1rem;}*/
 	.playlist span {margin-left:calc(3.8rem + 1vmin);}
 	.playlist {padding:0 0 9rem 0;min-height:33vh;}
-	/*.playlist li, .playlist .active {padding-left:.5em;}*/
 	.playlist li:before {font-size:unset;}
 	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;}
 	.ui-pnotify {top:40% !important;}
@@ -268,7 +250,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
 	#albumcovers .lib-entry, .database-radio li {width:var(--mthumbcols);}
 	#albumcovers .lib-entry img, .database-radio img {max-height:calc(var(--mthumbcols) * .9);}
-
+	/* stuff */
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#ss-coverart-url img {width:65vh;}
@@ -282,10 +264,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#index-genres {right:calc(50% + var(--sbw));}
 	#index-artists {right:calc(0% + var(--sbw));}
 	#index-albums {right:calc(-50% + var(--sbw));}
-	/*.busy-spinner {top:1rem;top:calc(env(safe-area-inset-top) + 1em);}
-	/*#volbtns-2 {width:90%;}
-	#volumedn-2, #volumeup-2 {width:20%;left:0;right:0;}*/
-	/*#menu-top .dropdown-menu {min-width:13rem;}*/
 	#volcontrol-2 {height:65vw;width:65vw;}
 	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;}
 	#volume-pad {height:85vw;width:85vw;}
@@ -312,7 +290,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.modal {min-width:100vw;}
 	.btn-group.bootstrap-select.bootstrap-select-mini {width:6.5rem;}
 }
-
 /* smaller landscape for small screens */
 @media (max-height:479px) and (orientation:landscape) {
 	body {font-size:calc(0.65em + 1vmin);}
@@ -367,7 +344,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* so cover scrolls with tracks */
 	#lib-coverart-meta-area {position:relative;}
 }
-
 /* in-browser view for mobile screens */
 @media (max-width:479px) and (max-height:622px) and (orientation:portrait) {
 	#coverart-url img {width:45vh;min-height:45vh;}
@@ -379,7 +355,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#mobile-toolbar {bottom:3.5vh;}
 	#currentsong, #currentalbum {padding-top:.75em;font-size:1.1em;}
 }
-
+/* media queries */
 @media (max-height: 640px) {
 	img.coverart {width:45vh;}
 }
@@ -401,7 +377,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* so cover scrolls with tracks */
 	#lib-coverart-meta-area {position:relative;}
 }
-
 /* large screens */
 @media (min-height: 1080px) {
 	.dropdown-menu, #context-menu-playback .dropdown-menu {min-width:13em;}
@@ -410,7 +385,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	.hudui {font-size:unset}
 }
-
 /* iPad landscape */
 @media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
 	#ss-currentsong {font-size:1.4em;}
@@ -419,7 +393,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#folder-panel, #library-panel, #radio-panel {font-size:1.2em;}
 	/*#playbar-title {font-size:1.1rem;}*/
 }
-
 /* Pi 7" Touch */
 @media (height: 479px) and (width: 799px) {
 	.playlist .pll1 {font-size:unset;}
@@ -428,16 +401,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#volknob {padding: 8px 0 0;}
 	.btn-toolbar {margin-top: 5px;margin-bottom:6px;}
 	#togglebtns {padding-top:.5em;}
-	/*#volumedn{margin-right:.5em;}
-	#volumeup{margin-left:.5em;}*/
 	#extratags {padding-top:5px;}
 	#container-appearance, #container-clockradio {max-height: 72vh;}
 	.database-radio li {width:9em;font-size:0.8em;height:auto;}
 	#albumcovers li {width:9em;font-size:0.8em;height:auto;}
 	#ss-currentsong {font-size:1.4em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.15em;}
-	/* so cover scrolls with tracks */
-	/*#lib-file {display:inline-flex;}*/
 	#lib-coverart-meta-area {position:relative;}
 	/* playbar */
 	#playbar-title {font-size:.9rem;}
@@ -449,12 +418,10 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#index-radio ul li:nth-child(even), #index-browse ul li:nth-child(even), #index-albumcovers ul li:nth-child(even) {display:none !important;}
 	#index-radio ul li:nth-child(4n+0), #index-browse ul li:nth-child(4n+0), #index-albumcovers ul li:nth-child(4n+0) {display:block !important;}
 }
-
 /* iPhone X */
 @media (width: 375px) and (height:812px) {
 	.playlist {padding:0 0 8rem 0;min-height:35vh;}
 }
-
 /* iPhone XS Max */
 @media (width: 414px) and (height:896px) {
 	.ui-pnotify {left:50%;top:25%;transform:translate(-50%, -50%);}
@@ -468,19 +435,17 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.database-radiolist li .db-entry {margin-top:2px;}
 	#config-tabs {top:calc(env(safe-area-inset-top) - .5rem);}
 }
-
 @media (width: 896px) and (height:414px) {
 	#playback-queue {margin-left:calc(env(safe-area-inset-left) - 2rem);}
 	#playback-cover {margin-right:calc(env(safe-area-inset-right) - 2rem);}
 }
-
 @media (width: 896px) and (height:414px) {
 	#playback-queue {margin-left:calc(env(safe-area-inset-left) - 2rem);}
 	#playback-cover {margin-right:calc(env(safe-area-inset-right) - 2rem);}
 }
 
 #playback-panel.cv #coverart-url {width:40vw;margin:0 auto;}
-#playback-panel.cv #playback-cover {width:70vh;padding:0;/*position:absolute;left:50%;transform:translate(-50%);*/}
+#playback-panel.cv #playback-cover {width:70vh;padding:0;}
 
 /* larger portrait screens for newui */
 @media (orientation: portrait) and (min-aspect-ratio: 600/1024) {
@@ -508,12 +473,10 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:70vw;max-height:70vw;}
 	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
 }
-
 @media (orientation: landscape) and (max-aspect-ratio: 3/2){
 	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}
 	#playback-panel.newui #timezone, #playback-panel.newui #volzone {height:40vw;}
 }
-
 @media (height: 834px) and (width: 1194px) {
 	/*#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}*/
 	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
@@ -538,7 +501,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	80% {background-color: rgba(33,229,241,0.8);}
 	100% {background-color: rgba(32,32,32,0.8);}
 }
-
 @keyframes colors2 {
 	0%   {background-color: rgba(0,0,0,0.8);}
 	25% {background-color: rgba(10,18,43,0.8);}
@@ -546,8 +508,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	75% {background-color: rgba(54,15,22,0.8);}
 	100% {background-color: rgba(0,0,0,0.8);}
 }
-
-/* miscellaneous stuff */
+/* stuff */
 .database-radiolist li {width:90%;padding:.5em 0 .25em;} /* new */
 /* for links on the About modal */
 .moode-about-link1 {color:#777;text-decoration:none;}

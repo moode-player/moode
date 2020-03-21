@@ -97,7 +97,8 @@ if (isset($_POST['update_host_name'])) {
 			$_SESSION['notify']['title'] = 'Invalid input';
 			$_SESSION['notify']['msg'] = "Host name can only contain A-Z, a-z, 0-9 or hyphen (-).";
 			$_SESSION['notify']['duration'] = 3;
-		} else {
+		}
+		else {
 			submitJob('hostname', '"' . $_SESSION['hostname'] . '" ' . '"' . $_POST['hostname'] . '"', 'Host name changed', 'Reboot required');
 			playerSession('write', 'hostname', $_POST['hostname']);
 		}

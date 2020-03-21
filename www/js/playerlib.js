@@ -771,7 +771,8 @@ function renderUI() {
 	// extra metadata
 	if (MPD.json['state'] === 'stop') {
 		$('#extratags').html('Not playing');
-	} else if (SESSION.json['xtagdisp'] == 'Yes') {
+	}
+    else if (SESSION.json['xtagdisp'] == 'Yes') {
 		$('#extratags').text('');
 		var extraTemp = extraTags;
 		if (MPD.json['artist'] == 'Radio station') {
@@ -1359,7 +1360,8 @@ function formatBrowseData(data, path, i, panel) {
 				if (data[i].file.substr(0,4) == 'http') {
 					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-microphone sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
 					itemType = typeof(RADIO.json[data[i].file]) === 'undefined' ? 'Radio station' : RADIO.json[data[i].file]['name'];
-				} else {
+				}
+                else {
 					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-music sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
 					itemType = 'Song file';
 				}
@@ -1494,7 +1496,8 @@ function refreshTimeKnob() {
 	}
 	else if (currentView.indexOf('playback') !== -1){ // playback screen
 		$('#time').val(initTime * 10).trigger('change');
-	} else { // library screen
+	}
+    else { // library screen
 		//$('#playbar-timetrack').val(initTime).trigger('change'); // ORIG
 		$('#playbar-timetrack').val(initTime * 10).trigger('change');
 	}
@@ -1504,7 +1507,8 @@ function refreshTimeKnob() {
 		if (UI.mobile) {
 			$('#m-total, #m-countdown, #playbar-mcount').html('00:00');
 			$('#playbar-mtotal').html('&nbsp;/&nbsp;00:00');
-		} else {
+		}
+        else {
 			$('#playbar-total, #playbar-countdown, #countdown-display').html('00:00');
 		}
 	}
@@ -1760,7 +1764,8 @@ $('.togglepl').click(function(e) {
 			$('#playback-cover').css('display','');
 			$('#playback-panel').hasClass('cv') ? $('#playback-controls').css('display', '') : '';
 		}, 15000);
-	} else {
+	}
+    else {
 		clearTimeout(searchTimer);
 		$('#playback-panel').hasClass('cv') ? $('#playback-controls').css('display', '') : '';
 		$('#playback-queue').css('left','');
@@ -2550,11 +2555,14 @@ function rgbToHsl(color){
 
 	if (max === min) {
 		h = 0;
-	} else if (r === max) {
+	}
+    else if (r === max) {
 		h = (g - b) / delta;
-	} else if (g === max) {
+	}
+    else if (g === max) {
 		h = 2 + (b - r) / delta;
-	} else if (b === max) {
+	}
+    else if (b === max) {
 		h = 4 + (r - g) / delta;
 	}
 
@@ -2568,9 +2576,11 @@ function rgbToHsl(color){
 
 	if (max === min) {
 		s = 0;
-	} else if (l <= 0.5) {
+	}
+    else if (l <= 0.5) {
 		s = delta / (max + min);
-	} else {
+	}
+    else {
 		s = delta / (2 - max - min);
 	}
 	h = h / 360;
@@ -2595,7 +2605,8 @@ function hslToRgb(color){
 
 	if (l < 0.5) {
 		t2 = l * (1 + s);
-	} else {
+	}
+    else {
 		t2 = l + s - l * s;
 	}
 
@@ -2613,11 +2624,14 @@ function hslToRgb(color){
 
 		if (6 * t3 < 1) {
 			val = t1 + (t2 - t1) * 6 * t3;
-		} else if (2 * t3 < 1) {
+		}
+        else if (2 * t3 < 1) {
 			val = t2;
-		} else if (3 * t3 < 2) {
+		}
+        else if (3 * t3 < 2) {
 			val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
-		} else {
+		}
+        else {
 			val = t1;
 		}
 
@@ -2644,7 +2658,8 @@ function hslToRgba(color, alpha){
 
 	if (l < 0.5) {
 		t2 = l * (1 + s);
-	} else {
+	}
+    else {
 		t2 = l + s - l * s;
 	}
 
@@ -2662,11 +2677,14 @@ function hslToRgba(color, alpha){
 
 		if (6 * t3 < 1) {
 			val = t1 + (t2 - t1) * 6 * t3;
-		} else if (2 * t3 < 1) {
+		}
+        else if (2 * t3 < 1) {
 			val = t2;
-		} else if (3 * t3 < 2) {
+		}
+        else if (3 * t3 < 2) {
 			val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
-		} else {
+		}
+        else {
 			val = t1;
 		}
 
@@ -2766,7 +2784,8 @@ function btnbarfix(temp1,temp2) {
 	document.body.style.setProperty('--modalbkdr', rgbaToRgb(.95, op, temprgba, temprgb));
 	if ($('#content').hasClass('visacc')) {
 		(currentView.indexOf('playback') == -1 || SESSION.json['adaptive'] == 'No') ? UI.accenta = themeMcolor : UI.accenta = adaptMcolor;
-	} else {
+	}
+    else {
 		var tempa = hexToRgb(accentColor);
 		UI.accenta = rgbaToRgb(.3 - tempx, .75, temprgba, tempa);
 	}
@@ -3117,26 +3136,27 @@ $('#appearance-modal .h5').click(function(e) {
 	$(this).parent().children('.dtclose, .dtopen').toggle();
 });
 
-// synchronize times to/from playbar so we don't have to keep countdown timers running which = ugly 'idle' perf
+// Synchronize times to/from playbar so we don't have to keep countdown timers running which = ugly 'idle' perf
 function syncTimers() {
 	var a = $('#countdown-display').text();
-	if (a != oldCount) { // only update if time has changed
-		//var cv = currentView.indexOf('playback') + 1; // so 1 = playback, 0 = not for nicer conditionals
-		if (UI.mobile) { // only change when needed to save work
+	if (a != oldCount) { // Only update if time has changed
+		if (UI.mobile) { // Only change when needed to save work
 			$('#m-countdown').text(a);
 			$('#playbar-mcount').text(a);
-		} else { // countdown-display is always running
+		}
+        else { // Countdown-display is always running
 			if (currentView.indexOf('playback') == 0) {
 				UI.knobPainted = false;
-			} else {
+			}
+            else {
 				$('#playbar-countdown').text(a);
 				var c = a.split(':'); // m:s
 				var d = $('#playbar-total').text().split(':');
-				var e = parseInt(c[0] * 60) + parseInt(c[1]); // convert to seconds
+				var e = parseInt(c[0] * 60) + parseInt(c[1]); // Convert to seconds
 				var f = parseInt(d[0] * 60) + parseInt(d[1]);
-				SESSION.json['timecountup'] == 1 ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // percent of elapsed song
+				SESSION.json['timecountup'] == 1 ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // Percent of elapsed song
 				$('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
-				g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // adjust for thumb
+				g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // Adjust for thumb
 				$('#playbar-timeline .timeline-progress').css('width', g);
 			}
 		}
@@ -3146,19 +3166,18 @@ function syncTimers() {
 
 // Active/inactive for buttons and panels
 function makeActive (vswitch, panel, view) {
-    //console.log('makeActive', vswitch, panel, view);
     //const startTime = performance.now();
 	if (UI.mobile) {
 		$('#playback-controls').css('display', '');
 		$('#content').css('height', '100vh');
 	}
-	//$('#playback-controls').hide();
-	//$('#playback-controls').css('display', '');
+
 	$('#content .tab-pane, .viewswitch button').removeClass('active');
 	$(vswitch + ',' + panel).addClass('active');
 	var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': view}, true);
 	currentView = view;
 	setColors();
+
 	switch (view) {
 		case 'album':
             if (!GLOBAL.lazyAlbumInitiated) {lazyLode('album')}
@@ -3167,7 +3186,7 @@ function makeActive (vswitch, panel, view) {
 			$('#library-panel').addClass('covers').removeClass('tag');
 			$('#bottom-row').css('display', '');
 			$('#lib-albumcover').css('height', '100%');
-			scopeR(); // Type added in scoper
+			scopeR(); // Type added in scopeR
 			break;
 		case 'folder':
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
@@ -3210,15 +3229,17 @@ function scopeR () {
 	}
 	else if (currentView == 'album' || currentView == 'tag') {
 		if (GLOBAL.searchLib && GLOBAL.musicScope == 'all') {
-				view = GLOBAL.searchLib;
-		} else {
+			view = GLOBAL.searchLib;
+		}
+        else {
 			currentView == 'album' ? view += SESSION.json['library_albumview_sort'] : view += SESSION.json['library_tagview_sort'];
 			$('#viewswitch span').hide();
 			if (GLOBAL.musicScope == 'recent') {
 				$('.view-recents span').show();
 		        LIB.recentlyAddedClicked = true;
 				view = "Recently Added";
-			} else {
+			}
+            else {
 				$('.view-all span').show();
 		        LIB.recentlyAddedClicked = false;
 			}

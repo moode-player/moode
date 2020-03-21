@@ -85,7 +85,8 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#alpha-blend').on('DOMSubtreeModified',function(){
 		if ($('#alpha-blend span').text() < 1) {
 			$('#cover-options').show();
-		} else {
+		}
+        else {
 			$('#cover-options').css('display', '');
 		}
 	});
@@ -225,7 +226,8 @@ jQuery(document).ready(function($) { 'use strict';
 		if (UI.mobile) {
 			$('#container-playlist').css('visibility','hidden');
 			$('#playback-controls').show();
-		} else {
+		}
+        else {
 			setTimeout(function() {
 		        customScroll('pl', parseInt(MPD.json['song']));
 			}, SCROLLTO_TIMEOUT);
@@ -509,7 +511,8 @@ jQuery(document).ready(function($) { 'use strict';
 				var seekto = Math.floor((value * parseInt(MPD.json['time'])) / 1000);
 				if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
 					$('#countdown-display').html(formatSongTime(seekto)); // count up
-				} else {
+				}
+                else {
 					$('#countdown-display').html(formatSongTime(parseInt(MPD.json['time']) - seekto)); // count down
 				}
 			}

@@ -21,7 +21,7 @@
  * 2019-04-12 TC moOde 5.0
  *
  */
- 
+
 $(document).on('click', 'a', function(event) {
 		//debugLog('links.js: this.id=', this.id);
 		//debugLog('links.js: this.className=', this.className);
@@ -30,32 +30,34 @@ $(document).on('click', 'a', function(event) {
 		//return;
 
 	    // don't modify link if matches condition below
-		if (this.id == 'menu-settings' || 
-			this.id == 'coverart-link' || 
-			this.id == 'dlnasvc-link' || 
-			this.className == 'moode-about-link1' || 
+		if (this.id == 'menu-settings' ||
+			this.id == 'coverart-link' ||
+			this.id == 'dlnasvc-link' ||
+			this.className == 'moode-about-link1' ||
 			this.className == 'moode-about-link2' ||
-			this.className == 'playhistory-link' || 
+			this.className == 'playhistory-link' ||
 			// input dropdowns on config pages
 			(this.className == 'active' && $(this).attr('tabindex') == 0)) {
-				
+
 			//debugLog('links.js: link not modified, match found in exclusion list');
 			return;
-		} 
-		
+		}
+
 	    if (!$(this).hasClass('external')) {
 			//debugLog('links.js: link will be modified, does not have class external');
 	        event.preventDefault();
 	        if (!$(event.target).attr('href')) {
        			//debugLog('links.js: link modified, case 1: does not have attr href');
 	            location.href = $(event.target).parent().attr('href');
-	        } else {
+	        }
+            else {
        			//debugLog('links.js: link modified, case 2: has attr href');
 	            location.href = $(event.target).attr('href');
 	        }
-	    } else {
+	    }
+        else {
 			//debugLog('links.js: link not modified, not in exclusion list but has class external');
-			// place holder   
+			// place holder
 	    }
     }
 );

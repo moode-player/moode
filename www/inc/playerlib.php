@@ -862,9 +862,11 @@ function formatRate ($rate) {
 function formatChan($channels) {
 	if ($channels == '1') {
 	 	$chanStr = 'Mono';
-	} else if ($channels == '2' || $channels == '*') {
+	}
+	else if ($channels == '2' || $channels == '*') {
 	 	$chanStr = 'Stereo';
-	} else if ($channels > 2) {
+	}
+	else if ($channels > 2) {
 	 	$chanStr = 'Multichannel';
 	}
 
@@ -925,7 +927,8 @@ function parseCurrentSong($sock) {
 
 	if (is_null($resp) ) {
 		return 'Error, parseCurrentSong response is null';
-	} else {
+	}
+	else {
 		$array = array();
 		$line = strtok($resp, "\n");
 
@@ -953,7 +956,8 @@ function parseCfgMpd($dbh) {
 	 	$array['audio_output_rate'] = '';
 	 	$array['audio_output_depth'] = '';
 	 	$array['audio_output_chan'] = '';
-	} else {
+	}
+	else {
 	 	$format = explode(":", $array['audio_output_format']);
 	 	$array['audio_output_rate'] = formatRate($format[0]);
 	 	$array['audio_output_depth'] = $format[1];
@@ -967,7 +971,8 @@ function parseCfgMpd($dbh) {
 function parseStationFile($resp) {
 	if (is_null($resp) ) {
 		return 'Error, parseStationFile response is null';
-	} else {
+	}
+	else {
 		$array = array();
 		$line = strtok($resp, "\n");
 
@@ -985,7 +990,8 @@ function parseStationFile($resp) {
 function parsePlayHist($resp) {
 	if (is_null($resp) ) {
 		return 'parsePlayHist(): parsePlayHist response is null';
-	} else {
+	}
+	else {
 		$array = array();
 		$line = strtok($resp, "\n");
 		$i = 0;
