@@ -411,7 +411,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 body.cv #menu-bottom {display:flex !important;background-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;}
 body.cv #menu-top, body.cv #viewswitch, body.cv #playbar-toggles .coverview, body.cv #playbar-cover {display:none !important;}
 body.cv #content .tab-pane.active {visibility:hidden !important;}
-body.cv #playbar {box-shadow:none;}
+body.cv #playbar {box-shadow:none;color:#eee;}
 body.cv #playbar-title {font-size:1.4em;top:-25%;/* was -40%*/transform:translate(-50%, -50%);padding-bottom:0;}
 body.cv #playbar-currentsong, body.cv #playbar-currentalbum {padding-bottom:.5em;/*was 1em*/}
 body.cv #playbar-timeline {top:50%;width:40%;transform:translate(-50%, -50%);}
