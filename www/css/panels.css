@@ -305,8 +305,8 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 0 9px 10px;}
 .modal {background-color:rgba(240,240,240,0.9);color:#333;}
 .modal-header, .modal-footer {background-color:transparent;}
-.modal h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:10px;font-weight:600;position:relative;text-align:right;right:52%;}
-.modal .h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:1em;font-weight:600;position:relative;text-align:right;display:inline-block;width:48%;}
+/*.modal h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:10px;font-weight:600;position:relative;text-align:right;right:52%;}*/
+.modal .h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:1em;font-weight:600;position:relative;text-align:right;display:inline-block;width:30%;/* Was 48% */}
 .dtclose, .dtopen {font-weight:600;font-size:1.2em;}
 .accordian:hover {cursor:pointer;}
 #appearance-modal div.accordian .control-group {display:none;margin-bottom:1em;}
@@ -412,8 +412,8 @@ body.cv #menu-bottom {display:flex !important;background-color:transparent;backd
 body.cv #menu-top, body.cv #viewswitch, body.cv #playbar-toggles .coverview, body.cv #playbar-cover {display:none !important;}
 body.cv #content .tab-pane.active {visibility:hidden !important;}
 body.cv #playbar {box-shadow:none;}
-body.cv #playbar-title {font-size:1.4em;top:-40%;transform:translate(-50%, -50%);padding-bottom:0;}
-body.cv #playbar-currentsong, body.cv #playbar-currentalbum {padding-bottom:1em;}
+body.cv #playbar-title {font-size:1.4em;top:-25%;/* was -40%*/transform:translate(-50%, -50%);padding-bottom:0;}
+body.cv #playbar-currentsong, body.cv #playbar-currentalbum {padding-bottom:.5em;/*was 1em*/}
 body.cv #playbar-timeline {top:50%;width:40%;transform:translate(-50%, -50%);}
 body.cv #screen-saver, body.cv #menu-bottom {display:block !important;}
 /* misc */
@@ -703,3 +703,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #cover-backdrop {height:100vh;width:100vw;background-size:cover;background-position:center center;z-index:0;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
 #context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}
 .stopscroll {height:100%;overflow:hidden;}
+.sysinfo-modal {margin-top:-2em;}
