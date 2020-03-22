@@ -123,7 +123,8 @@ jQuery(document).ready(function($) { 'use strict';
     //UI.clientIP = sendMoodeCmd('GET', 'clientip');
 	//console.log(UI.clientIP);
 
-	// Start radio and library loads
+	// Start folder, radio and library loads
+    mpdDbCmd('lsinfo', '');
     mpdDbCmd('lsinfo_radio', 'RADIO');
 	loadLibrary();
 
@@ -1286,6 +1287,11 @@ jQuery(document).ready(function($) { 'use strict';
             setColors();
 
             /*TEST*/$('#lib-coverart-img').show();
+            /*TEST*/$('#playback-queue').css('width', '38.1%'); // Fix Playlist sometimes not begin visable after returning from cv
+            setTimeout(function() {
+                /*TEST*/$('#playback-queue').css('width', '38%'); // Restore correct width
+                customScroll('pl', parseInt(MPD.json['song']));
+            }, SCROLLTO_TIMEOUT);
 
             // Reset screen saver timeout global
             setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
