@@ -1249,12 +1249,6 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#container-playhistory').scrollTo('100%', 200);
 	});
 
-	// scrollto current song, mobile
-	// NOTE see renderUI() and renderPlaylist() for how #currentsong html is populated
-	$('#currentsong').click(function(e) {
-        customScroll('pl', parseInt(MPD.json['song']), 200);
-	});
-
 	// playback panel context menu
 	$('.playback-context-menu').click(function(e) {
 		var color = $('.consume').hasClass('btn-primary') ? 'var(--accentxts)' : 'inherit';
