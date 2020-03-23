@@ -602,7 +602,6 @@ function resetPlayCtls() {
     refreshTimer(0, 0, MPD.json['state']);
 
 	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').html('00:00');
-	$('#m-radio').hide();
 }
 
 // update UI volume and mute only
@@ -1511,7 +1510,6 @@ function refreshTimeKnob() {
 	else if (delta === 0 || isNaN(delta)) {
 		if (UI.mobile) {
 			$('#timeline').hide();
-			$('#m-radio').show();
 		}
 		else {
 			$('#playbar-timeline').css('display', 'none');
@@ -1523,7 +1521,6 @@ function refreshTimeKnob() {
 	else {
 		if (UI.mobile) {
 			$('#timeline').show();
-			$('#m-radio').hide();
 		}
 		else {
 			$('#playbar-timeline').show();
@@ -3075,7 +3072,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 });
 
 // switch to playback panel
-$('#playbar-switch, #playbar-cover').click(function(e){
+$('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
     //console.log('click playbar');
     if (coverView) {
         return;
