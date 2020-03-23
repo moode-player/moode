@@ -67,20 +67,20 @@
 				<li><a href="net-config.php" class="btn btn-large"><i class="fas fa-sitemap"></i><br>Network</a></li>
 				<li><a href="sys-config.php" class="btn btn-large"><i class="fas fa-desktop-alt"></i><br>System</a></li>
 			</ul>
+			<br>
+			<ul>
+				<li><a href="mpd-config.php" class="btn btn-small row2-btns">MPD config</a></li>
+				<li><a href="eqp-config.php" class="btn btn-small row2-btns">Parametric EQ</a></li>
+				<li><a href="eqg-config.php" class="btn btn-small row2-btns">Graphic EQ</a></li>
+				<li class="context-menu"><a href="#notarget" class="btn btn-small row2-btns" data-cmd="setforclockradio-m">Clock radio</a></li>
+				<?php if ($_SESSION['feat_bitmask'] & $FEAT_INPSOURCE) { ?>
+					<li><a href="inp-config.php" class="btn btn-small row2-btns">Input source</a></li>
+				<?php } ?>
+			</ul>
 		</div>
 	</div>
 
 	<div class="modal-footer">
-		<div class="moode-config-settings-div context-menu">
-			<a href="mpd-config.php" class="moode-config-settings-link2">MPD config</a>
-			<a href="eqp-config.php" class="moode-config-settings-link2">Parametric EQ</a>
-			<a href="eqg-config.php" class="moode-config-settings-link2">Graphic EQ</a>
-			<a href="#notarget" class="moode-config-settings-link2" data-cmd="setforclockradio-m">Clock radio</a>
-			<?php if ($_SESSION['feat_bitmask'] & $FEAT_INPSOURCE) { ?>
-				<a href="inp-config.php" class="moode-config-settings-link2">Input source</a>
-			<?php } ?>
-		</div>
-		<br>
 		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
@@ -860,7 +860,7 @@
 <div id="players-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="players-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="players-modal-label">Players</h3>
+		<h3 id="players-modal-label">Other Players</h3>
 	</div>
 	<div class="modal-body">
 	</div>

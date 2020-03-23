@@ -79,12 +79,13 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 #playback-panel.newui #playback-controls, #playback-panel.cv #playback-controls {margin-left:0px;width:100%;height:calc(100vh - 2.75rem);position:absolute;}
 .btn-group.bootstrap-select .btn {padding:2px 12px;margin-bottom:5px;}
 #players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
-#players .btn, #configure .btn {/*background:rgba(64,64,64,0.08);*/background-color:var(--btnshade4);}
+#players .btn, #configure .btn {background:var(--config_modal_btn_bg);}
 #players ul > li, #configure ul > li {display:inline-flex;padding:.75em;}
 #players ul, #configure ul {margin:0;}
 #players i, #configure i {font-size:1.95em;padding:.25em;}
 #players a, #configure a {font-size:1em;width:4em;height:4em;}
 .btn.btn-large {padding-top:.75em;padding-bottom:.75em;}
+#configure .row2-btns {font-size:.9em;width:unset;height:unset;}
 legend {border-bottom: 1px solid #999;}
 .modal {background-color: rgba(240,240,240,0.9);color: #333;}
 .modal-header, .modal-footer {background-color: transparent;}
@@ -273,7 +274,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:53vw;height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
-	#playbar-controls .btn {padding:.4em;font-size:2.5rem;-webkit-tap-highlight-color:transparent);}
+	#playbar-controls .btn {padding:.25em;font-size:2.5rem;-webkit-tap-highlight-color:transparent);}
 	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:.4em;height:unset;width:unset;top:unset;left:unset;transform:none;}
 	#playbar-toggles .btn {transition:none;border-radius:50%;padding:.5rem .7rem;margin-bottom:.5rem;width:unset;height:unset;line-height:11px;}
 	#playbar-timeline {display:none;}
@@ -513,13 +514,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 .moode-about-link2 {color:#777;text-decoration:none;display:inline-block;margin-bottom:2px;}
 .moode-about-link3 {color:#555;text-decoration:none;}
 .moode-about-link1:hover, .moode-about-link2:hover {color:#555;text-decoration:underline;}
-/* for links on the config settings popup */
-.moode-config-settings-header {margin-bottom: 3px;}
-.moode-config-settings-div {width:100%;text-align:center;float:left;padding:0 0 2.75em 0;}
-.moode-config-settings-link {color:inherit;font-size:18px;font-weight:500;text-decoration:none;}
-.moode-config-settings-link:hover {color:inherit;text-decoration:none;font-weight:700;}
-.moode-config-settings-link2 {color:inherit;font-size:.9em;font-weight:500;text-decoration:none;padding:.4em;margin:0 .25em;line-height:normal;border-radius:.25rem;/*background-color:rgba(64,64,64,0.08);*/background-color:var(--btnshade4);}
-.moode-config-settings-link2:hover {color:inherit;text-decoration:none;}
 /* other stuff */
 .menu-separator {border-bottom:1px solid rgba(128,128,128,0.2);border-radius:0;}
 .control-aftertext {position:absolute;margin: 3px 0 0 8px;}
