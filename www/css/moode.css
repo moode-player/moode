@@ -126,8 +126,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 .checkbox-ctl {margin:.25em 0 .5em .25em !important;}
 .input-height-x {height:1.65em !important;}
 /* forms */
-.modal-body .form-horizontal .controls {margin-left:45%;/*TEST 32% */}
-.modal-body .form-horizontal .control-label {width:42%;/*TEST 30% */text-align:right;margin-top:0;}
+.modal-body .form-horizontal .controls {margin-left:52%}
+.modal-body .form-horizontal .control-label {width:48%;text-align:right;margin-top:0;}
 /* update package txt ol */
 #update-pkg-ol {font-family:courier new;}
 #update-pkg-ol li {line-height:1em;}
