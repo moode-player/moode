@@ -711,7 +711,7 @@
 	<div class="modal-body" id="container-clockradio">
 		<form class="form-horizontal" action="" method="">
 			<div class="control-group">
-                <label class="control-label" for="clockradio-mode">Mode</label>
+                <label class="control-label" for="clockradio-mode">Clock mode</label>
                 <div class="controls">
 					<div class="btn-group bootstrap-select" style="width: 120px;">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -731,7 +731,7 @@
                 </div>
 
 				<div id="clockradio-ctl-grp1">
-	                <label class="control-label" for="clockradio-playname">Play</label>
+	                <label class="control-label" for="clockradio-playname">Item to play</label>
 	                <div class="controls">
 	                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-playname" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -800,7 +800,6 @@
 						</div>
 	                </div>
 
-					<!-- r44d -->
 	                <label class="control-label" for="clockradio-stop-mon"></label>
 	                <div class="controls">
 						<div class="checkbox-grp">
@@ -815,7 +814,7 @@
 						</div>
 	                </div>
 
-	                <label class="control-label" for="clockradio-action">Action</label>
+	                <label class="control-label" for="clockradio-action">Action after stop</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select" style="width: 120px;">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -827,15 +826,14 @@
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">None</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Reboot</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Restart</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Shutdown</span></a></li>
 								</ul>
 							</div>
 						</div>
-						<span class="control-aftertext">after stop
 						<a aria-label="Help" class="info-toggle" data-cmd="info-action" href="#notarget"><i class="fas fa-info-circle"></i></a></span>
 						<span id="info-action" class="help-block hide">
-							NOTE: The Reboot action is initiated 45 seconds after the specified stop time.
+							NOTE: The Restart action is initiated 45 seconds after the specified stop time.
 						</span>
 	                </div>
 				</div>

@@ -1107,7 +1107,7 @@ function chkClockRadio() {
 
 		// Action after stop
 		if ($_SESSION['clkradio_action'] != "None") {
-			if ($_SESSION['clkradio_action'] == 'Reboot') {
+			if ($_SESSION['clkradio_action'] == 'Restart') {
 				$action = 'reboot';
 				$delay = 45; // To ensure that after reboot $curtime != clkradio_stop_time
 			}
@@ -1159,7 +1159,7 @@ function chkSleepTimer() {
 
 		// Action after stop
 		if ($_SESSION['clkradio_action'] != "None") {
-			if ($_SESSION['clkradio_action'] == 'Reboot') {
+			if ($_SESSION['clkradio_action'] == 'Restart') {
 				$action = 'reboot';
 				$delay = 45; // To ensure that after reboot $curtime != clkradio_stop_time
 			}
