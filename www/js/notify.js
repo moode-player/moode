@@ -48,7 +48,7 @@ function notify(cmd, msg, duration) {
 		blankentries: 'Blank entries are not allowed',
 		delstation: 'Station deleted',
 		updclockradio: 'Clock radio updated',
-		updcustomize: 'Settings updated',
+		settings_updated: 'Settings updated',
 		usbaudioready: 'USB audio ready',
 		favset: 'Name has been set',
 		favadded: 'Favorite has been added',
