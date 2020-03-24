@@ -40,7 +40,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .legend-configs {border:none;margin-bottom:.35em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* general */
-#modal-backdrop{position:fixed;opacity:1;top:0;right:0;bottom:0;left:0;z-index:10000;background-color:var(--modalbkdr);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+#modal-backdrop{position:fixed;opacity:1;top:0;right:0;bottom:0;left:0;z-index:10000;background-color:var(--modalbkdr);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);}
 #modal-backdrop.fade{opacity:0;}
 .modal{position:fixed;top:0;top:env(safe-area-inset-top);left:50%;z-index:10001;width:40%;min-width:560px;font-size:1rem;opacity:.9;background-color:inherit;border:none;margin-left:0;border-radius:.4em;box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);background-clip:padding-box;outline:none;transform:translate(-50%,0%);-webkit-overflow-scrolling:touch;} /* 6.4.1 no font size */
 .modal h4 {font-size:1.25em;}
