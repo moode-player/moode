@@ -68,7 +68,7 @@
 						For UPnP folders, select a folder then SCAN to display its sub-folders.
                     </span>
 					<div id="edit-server" class="help-block-margin $_edit_server_hide">
-						<a id="editserver" data-toggle="modal" href="#manual-server"><button class="btn btn-medium btn-primary">EDIT</button></a>&nbsp;Host/Share manually
+						<a id="editserver" data-toggle="modal" href="#manual-server"><button class="btn btn-medium btn-primary">EDIT</button></a>&nbsp;Path manually
 					</div>
 				</div>
 			</div>
@@ -196,17 +196,18 @@
 	<div id="manual-server" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="manual-server-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
 		</div>
 
 		<div class="modal-body">
+			<h6>Manual path entry</h6>
 			<div class="control-group">
-				<label class="control-label" for="manualserver">Server</label>
+				<label class="control-label" for="manualserver">Path</label>
 				<div class="controls">
 					<input id="manualserver" class="input-large" type="text" pattern="^[A-Za-z0-9]{1,1}.*$" name="nas_manualserver" value="" autofocus>
 					<input id="mounttype" type="hidden" name="mounttype" value="">
 					<div id="info-manualserver" class="help-block" style="margin-top:5px;">
-						Format is Host/Share or IPaddr/Share.<br>
-						Up to 64 chars, leading slash / not allowed.
+						Format is Host/Share or IPaddr/Share. Up to 64 chars, leading slash / not allowed.
                     </div>
 				</div>
 			</div>
