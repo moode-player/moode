@@ -705,3 +705,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}
 .stopscroll {height:100%;overflow:hidden;}
 .sysinfo-modal {margin-top:-2em;}
+.config-label {color:#eee;}
