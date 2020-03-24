@@ -27,7 +27,7 @@ jQuery(document).ready(function($){ 'use strict';
 	$('#config-back').show();
 	$('#config-tabs').css('display', 'flex');
 	$('#menu-bottom').css('display', 'none');
-	$('.moode-config-settings-div').hide();
+	$('#configure .row2-btns').hide();
 
 	// compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
