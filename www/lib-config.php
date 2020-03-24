@@ -61,7 +61,7 @@ if (isset($_POST['remount'])) {
 	$result_unmount = sourceMount('unmountall');
 	$result_mount = sourceMount('mountall');
 	//workerLog('lib-config: remount: (' . $result_unmount . ', ' . $result_mount . ')');
-	$_SESSION['notify']['title'] = 'Re-mounting NAS sources...';
+	$_SESSION['notify']['title'] = 'Re-mounting music sources...';
 }
 // Clear library cache
 if (isset($_POST['clrlibcache'])) {
