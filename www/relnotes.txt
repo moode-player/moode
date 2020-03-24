@@ -44,6 +44,7 @@ Updates
 - UPD: Disable apt-daily and apt-daily-upgrade timers
 - UPD: Modal dialogs converted to full screen
 - UPD: Add accordion headers to Appearance dialog
+- UPD: Add confirmation modals to Library config
 
 Bug fixes
 
