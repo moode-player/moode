@@ -307,7 +307,7 @@ jQuery(document).ready(function($) { 'use strict';
     			if (UI.radioPos >= 0) {
     				customScroll('radiocovers', UI.radioPos, 0);
     			}
-    		}, SCROLLTO_TIMEOUT); // Was 250
+    		}, SCROLLTO_TIMEOUT);
         }
 	});
     // Folder view
@@ -321,7 +321,7 @@ jQuery(document).ready(function($) { 'use strict';
         SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
 		// Render library
-		if (!libRendered) {
+		if (!GLOBAL.libRendered) {
 		    $('#lib-content').hide();
 		    $('#lib-loader').show();
 			loadLibrary();
@@ -348,7 +348,7 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos[0] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, SCROLLTO_TIMEOUT); // Was 250
+		}, SCROLLTO_TIMEOUT);
 	});
     // Album view
 	$('.album-view-btn').click(function(e){
@@ -357,7 +357,7 @@ jQuery(document).ready(function($) { 'use strict';
 		makeActive('.album-view-btn','#library-panel','album');
 
 		// Render library
-		if (!libRendered) {
+		if (!GLOBAL.libRendered) {
 		    $('#lib-content').hide();
 		    $('#lib-loader').show();
 			loadLibrary();
@@ -374,7 +374,7 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos[1] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, SCROLLTO_TIMEOUT); // Was 250
+		}, SCROLLTO_TIMEOUT);
 	});
 
 	// mute toggle

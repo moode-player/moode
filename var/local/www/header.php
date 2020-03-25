@@ -128,7 +128,7 @@
 				<?php if ($section == 'index') { ?>
 					<li><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
 					<li class="context-menu menu-separator"><a href="#notarget" data-cmd="appearance"><i class="fas fa-eye sx"></i> Appearance</a></li>
-                    <li class="context-menu"><a href="#notarget" data-cmd="updmpddb"><i class="fas fa-sync sx"></i> Update library</a></li>
+                    <li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fas fa-sync sx"></i> Update library</a></li>
 					<li><a href="blu-config.php"><i class="fas fa-wifi sx"></i> BlueZ</a></li>
 					<li><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fas fa-forward sx"></i> Players</a></li>
 					<li><a href="javascript:$('#audioinfo-modal .modal-body').load('audioinfo.php',function(e){$('#audioinfo-modal').modal('show');}); void 0"><i class="fas fa-music sx"></i> Audio info</a></li>

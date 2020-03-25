@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-09-05 TC moOde 6.2.0
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -36,19 +36,19 @@ else {
 }
 
 // for save/remove actions
-$initiateDBUpd = false;
+$initiateLibraryUpd = false;
 
 // LIB CONFIG POSTS
 
 // update mpd database
 if (isset($_POST['updatempd'])) {
-	submitJob('updmpddb', '', 'Updating database...', '');
+	submitJob('updmpddb', '', 'Updating MPD database...', '');
 }
 // rescan mpd database
 if (isset($_POST['rescanmpd'])) {
-	submitJob('rescanmpddb', '', 'Regenerating database...', '');
+	submitJob('rescanmpddb', '', 'Regenerating MPD database...', '');
 }
-// auto-update mpd db on usb insert/remove
+// auto-update mpd db on usb insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
 	if (isset($_POST['usb_auto_updatedb']) && $_POST['usb_auto_updatedb'] != $_SESSION['usb_auto_updatedb']) {
 		$_SESSION['notify']['title'] = $_POST['usb_auto_updatedb'] == '1' ? 'MPD auto-update on' : 'MPD auto-update off';
@@ -75,8 +75,8 @@ if (isset($_POST['updthmcache'])) {
 		$_SESSION['notify']['title'] = 'Process is currently running';
 	}
 	else {
-		$_SESSION['thmcache_status'] = 'Updating thumbcache...';
-		submitJob('updthmcache', '', 'Updating thumbcache...', '');
+		$_SESSION['thmcache_status'] = 'Updating thumbnail cache...';
+		submitJob('updthmcache', '', 'Updating thumbnail cache...', '');
 	}
 }
 // regenerate thumbnail cache
@@ -86,8 +86,8 @@ if (isset($_POST['regenthmcache'])) {
 		$_SESSION['notify']['title'] = 'Process is currently running';
 	}
 	else {
-		$_SESSION['thmcache_status'] = 'Regenerating thumbcache...';
-		submitJob('regenthmcache', '', 'Regenerating thumbcache...', '');
+		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';
+		submitJob('regenthmcache', '', 'Regenerating thumbnail cache...', '');
 	}
 }
 
@@ -95,9 +95,9 @@ if (isset($_POST['regenthmcache'])) {
 
 // remove source
 if (isset($_POST['delete']) && $_POST['delete'] == 1) {
-	$initiateDBUpd = true;
+	$initiateLibraryUpd = true;
 	$_POST['mount']['action'] = 'delete';
-	submitJob('sourcecfg', $_POST, 'Music source removed', 'Updating database...');
+	submitJob('sourcecfg', $_POST, '', '');
 }
 // save source
 if (isset($_POST['save']) && $_POST['save'] == 1) {
@@ -134,7 +134,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	}
 	// ok so save
 	else {
-		$initiateDBUpd = true;
+		$initiateLibraryUpd = true;
 		// cifs and nfs defaults if blank
 		if ($_POST['mount']['type'] != 'upnp') {
 			if (empty(trim($_POST['mount']['rsize']))) {$_POST['mount']['rsize'] = 61440;}
@@ -174,7 +174,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$array['mount']['wsize'] = $_POST['mount']['wsize'];
 		$array['mount']['options'] = $_POST['mount']['options'];
 
-		submitJob('sourcecfg', $array, 'Source config saved', 'Updating database...');
+		submitJob('sourcecfg', $array, '', '');
 	}
 }
 // scanner
@@ -240,12 +240,12 @@ if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
 
 session_write_close();
 
-// initiate db update if indicated after sourcecfg job completes
+// Update library if indicated after sourcecfg job completes
 waitWorker(1, 'lib-config');
-
-if ($initiateDBUpd == true) {
-	//workerLog('lib-config(): Job: updmpddb');
-	submitJob('updmpddb', '', '', '');
+if ($initiateLibraryUpd == true) {
+	$title = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
+	submitJob('update_library', '', $title, 'Updating library...');
+	unset($_GET['cmd']);
 }
 
 // LIB CONFIG FORM

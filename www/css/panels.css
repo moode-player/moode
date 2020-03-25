@@ -307,7 +307,7 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 .modal {background-color:rgba(240,240,240,0.9);color:#333;}
 .modal-header, .modal-footer {background-color:transparent;}
 /*.modal h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:10px;font-weight:600;position:relative;text-align:right;right:52%;}*/
-.modal .h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:1em;font-weight:600;position:relative;text-align:right;display:inline-block;width:48%;/*TEST 30% */}
+.modal .h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:1em;font-weight:600;position:relative;text-align:right;display:inline-block;width:48%;}
 .dtclose, .dtopen {font-weight:600;font-size:1.2em;}
 .accordian:hover {cursor:pointer;}
 #appearance-modal div.accordian .control-group {display:none;margin-bottom:1em;}
@@ -499,7 +499,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playback-switch div {background-color:transparent;height:.25rem;width:2rem;margin:1em auto;border-radius:1em;overflow:hidden;}
 #playbar {display:flex;align-items:center;height:4.8rem;position:absolute;bottom:0;width:100%;color:var(--adapttext);box-shadow: 0px -1px 3px rgba(0,0,0,0.1);} /* was 9.25vh*/
 #playbar-cover {height:4.8rem;width:4.8rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0) 100%);}
-#playbar-title {width:calc(50vw - 8.5rem);/* Was 5.5rem */;height:auto;position:absolute;font-size:.9em;left:50%;top:50%;transform:translate(-50%, -50%);text-align:center;padding-bottom:1rem;/*TEST padding-bottom:1.75rem;*/line-height:1.5em;cursor:pointer;}
+#playbar-title {width:calc(50vw - 8.5rem);/* Was 5.5rem */;height:auto;position:absolute;font-size:.9em;left:50%;top:50%;transform:translate(-50%, -50%);text-align:center;padding-bottom:1rem;line-height:1.5em;cursor:pointer;}
 #playbar-title a {padding:0;margin:0;display:unset;text-align:unset;font-size:.9rem;color:var(--adapttext) !important;}
 #playbar-title span {opacity:.55;}
 #playbar-title span:first-child {opacity:1.0;}
@@ -660,5 +660,5 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}
 .stopscroll {height:100%;overflow:hidden;}
 .sysinfo-modal {margin-top:-2em;}
-.config-label {color:#eee;}
-.busy-spinner {display:none;top:0;right:3.5em;position:absolute;height:1rem;width:1rem;}
+.config-label {color:#eee;margin-left:.35em;}
+.busy-spinner {display:none;top:0;right:4em;position:absolute;height:1rem;width:1rem;}

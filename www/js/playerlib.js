@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 6.5.0-test
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -115,7 +115,8 @@ var GLOBAL = {
 	lazyRadioInitiated: false, // TEST
     thmUpdInitiated: false,
     scriptSection: 'panels',
-	regExIgnoreArticles: ''
+	regExIgnoreArticles: '',
+    libRendered: false
 }
 
 // live timeline
@@ -145,7 +146,6 @@ var fatthumbd = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
 var blurrr = CSS.supports('-webkit-backdrop-filter','blur(1px)');
 
 // various flags and things
-var libRendered = false; // trigger library load
 var radioRendering = false;
 var dbFilterResults = [];
 var searchTimer = '';
@@ -278,12 +278,15 @@ function engineMpd() {
 				// database update
 				if (MPD.json['idle_timeout_event'] == 'changed: update') {
 					if (typeof(MPD.json['updating_db']) != 'undefined') {
+                        //console.log('engineMpd() show spinner1'); /*TEST*/
 						$('.busy-spinner').show();
 					}
                     else if (GLOBAL.thmUpdInitiated) {
+                        //console.log('engineMpd() show spinner2'); /*TEST*/
                 		$('.busy-spinner').show();
                 	}
 					else {
+                        //console.log('engineMpd() hide spinner'); /*TEST*/
 						$('.busy-spinner').hide();
 					}
 				}
@@ -382,12 +385,15 @@ function engineMpdLite() {
 				}
 				// database update
 				if (typeof(MPD.json['updating_db']) != 'undefined') {
+                    //console.log('engineMpdLite() show spinner1'); /*TEST*/
 					$('.busy-spinner').show();
 				}
                 else if (GLOBAL.thmUpdInitiated) {
+                    //console.log('engineMpdLite() show spinner2'); /*TEST*/
             		$('.busy-spinner').show();
             	}
 				else {
+                    //console.log('engineMpdLite() hide spinner'); /*TEST*/
 					$('.busy-spinner').hide();
 				}
 
@@ -460,18 +466,22 @@ function engineCmd() {
                     break;
                 case 'dbupd_done':
     				$('.busy-spinner').hide();
-                    //console.log('dbupd_done');
+                    //console.log('engineCmd() dbupd_done, hide spinner'); /*TEST*/
                     break;
                 case 'thmupd_initiated':
-                    notify('upd_thmcache');
                     GLOBAL.thmUpdInitiated = true;
     				$('.busy-spinner').show();
-                    //console.log('thmupd_initiated');
+                    //console.log('engineCmd() thmupd_initiated, show spinner'); /*TEST*/
                     break;
                 case 'thmupd_done':
                     GLOBAL.thmUpdInitiated = false;
     				$('.busy-spinner').hide();
-                    //console.log('thmupd_done');
+                    //console.log('engineCmd() thmupd_done, hide spinner'); /*TEST*/
+                    break;
+                case 'library_update_done':
+                    GLOBAL.thmUpdInitiated = false;
+    				$('.busy-spinner').hide();
+                    //console.log('engineCmd() library_update_done, hide spinner'); /*TEST*/
                     break;
             }
 
@@ -913,14 +923,17 @@ function renderUI() {
 		inpSrcIndicator('inpactive1', '<a href="inp-config.php">' + SESSION.json['audioin'] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
 	}
 
-	// database update
+	// Database update
 	if (typeof(MPD.json['updating_db']) != 'undefined') {
+        //console.log('renderUI() show spinner1'); /*TEST*/
 		$('.busy-spinner').show();
 	}
     else if (GLOBAL.thmUpdInitiated) {
+        //console.log('renderUI() show spinner2'); /*TEST*/
 		$('.busy-spinner').show();
 	}
 	else {
+        //console.log('renderUI() hide spinner'); /*TEST*/
 		$('.busy-spinner').hide();
 	}
 }
@@ -1068,7 +1081,7 @@ function renderPlaylist() {
 // MPD commands for database, playlist, radio stations, saved playlists
 function mpdDbCmd(cmd, path) {
 	//console.log(cmd, path);
-	var cmds = ['add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'updmpddb'];
+	var cmds = ['add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'updmpddb', 'update_library'];
 	UI.dbCmd = cmd;
 
 	if (cmds.indexOf(cmd) != -1 ) {
@@ -1866,9 +1879,14 @@ $('.context-menu a').click(function(e) {
 		}
 	}
 	else if ($(this).data('cmd') == 'updmpddb') {
+        GLOBAL.libRendered = false;
 		mpdDbCmd('updmpddb', path);
 		notify('updmpddb', path);
-		libRendered = false;
+	}
+    else if ($(this).data('cmd') == 'update_library') {
+        GLOBAL.libRendered = false;
+		mpdDbCmd('update_library');
+		notify('update_library');
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
 		$('#savedpl-path').html(path);
@@ -2244,22 +2262,10 @@ $('.btn-appearance-update').click(function(e){
 		}
 	);
 
-	if (libraryOptionsChange == true) {
-		var libRendered = false;
-		if (currentView == 'tag' || currentView == 'album') {
-		    //notify('updcustomize', 'Reloading Library');
-			$('#lib-loader').show();
-			setLibMenuHeader();
-		}
-		loadLibrary();
-		return;
-	}
-
-	if (fontSizeChange) {
+	if (fontSizeChange == true) {
 		setFontSize();
 		window.dispatchEvent(new Event('resize')); // resize knobs if needed
 	}
-
 	if (scnSaverTimeoutChange == true) {
 		var result = sendMoodeCmd('GET', 'resetscnsaver');
 	}
@@ -2293,15 +2299,23 @@ $('.btn-appearance-update').click(function(e){
 		setColors();
 	}
 
-	// auto-reload page if indicated
-	if (extraTagsChange == true || scnSaverStyleChange == true || playHistoryChange == true || UI.bgImgChange == true) {
-	    notify('updcustomize', 'Auto-refresh in 3 seconds');
+	// Auto-reload page / library if indicated
+	if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || UI.bgImgChange) {
+        if (libraryOptionsChange) {
+    		GLOBAL.libRendered = false;
+    		if (currentView == 'tag' || currentView == 'album') {
+    			$('#lib-loader').show();
+    			setLibMenuHeader();
+    		}
+    		loadLibrary();
+    	}
+	    notify('settings_updated', 'Auto-refresh in 3 seconds');
 		setTimeout(function() {
 			location.reload(true);
 		}, 3000);
 	}
 	else {
-	    notify('updcustomize', '');
+	    notify('settings_updated', '');
 	}
 });
 
@@ -2776,7 +2790,7 @@ function btnbarfix(temp1,temp2) {
 		UI.accenta = rgbaToRgb(.3 - tempx, .75, temprgba, tempa);
 	}
 	document.body.style.setProperty('--btnbarback', rgbaToRgb(.90, '.9', temprgba, temprgb));
-    document.body.style.setProperty('--config_modal_btn_bg', getYIQ(temp1) > 127 ? 'rgba(64,64,64,0.08)' : 'rgba(64,64,64,0.35)');
+    document.body.style.setProperty('--config_modal_btn_bg', 'rgba(128,128,128,0.12)');
 }
 
 function getYIQ(color) {
@@ -3014,6 +3028,7 @@ function setAlbumViewHeaderText() {
 
 // switch to library / playbar panel
 $('#coverart-url, #playback-switch').click(function(e){
+    console.log('GLOBAL.libRendered: ' + GLOBAL.libRendered);
 	if ($('#playback-panel').hasClass('cv')) {
 		e.stopImmediatePropagation();
 		$('.togglepl').click(); // or whatever show queue is
@@ -3037,7 +3052,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 				customScroll('albums', UI.libPos[0], 200);
 				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
 			}
-		}, SCROLLTO_TIMEOUT); // Was 250
+		}, SCROLLTO_TIMEOUT);
 	}
 
 	else if (currentView == 'album') {
@@ -3046,7 +3061,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 			if (UI.libPos[1] >= 0) {
 				customScroll('albumcovers', UI.libPos[1], 0);
 			}
-		}, SCROLLTO_TIMEOUT); // Was 250
+		}, SCROLLTO_TIMEOUT);
 	}
 
 	else if (currentView == 'radiolist' || currentView == 'radiocovers') {
@@ -3107,7 +3122,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
         else { // don't need to scroll playlist on
 			setTimeout(function() { // wait a bit for panel to load
 				customScroll('pl', parseInt(MPD.json['song']), 0);
-			}, SCROLLTO_TIMEOUT); // Was 250
+			}, SCROLLTO_TIMEOUT);
 		}
 	}
 });

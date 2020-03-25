@@ -67,9 +67,10 @@ function loadLibrary() {
 		$('#lib-loader').hide();
 		$('#lib-content').show();
 		renderLibrary(data);
+        GLOBAL.libRendered = true;
 	}, 'json');
 
-	libRendered = true;
+	//GLOBAL.libRendered = true;
 }
 
 function renderLibrary(data) {

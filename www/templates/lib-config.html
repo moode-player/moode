@@ -29,7 +29,7 @@
 		<legend>Music Sources</legend>
 
 		<p>
-			<a href="lib-config.php?cmd=add"><button class="btn btn-medium btn-primary">Create</button></a>&nbsp;Music source
+			<a href="lib-config.php?cmd=add"><button class="btn btn-medium btn-primary">Create</button></a><span class="config-label">Music source</span>
 		</p>
 
 		<p>List of configured Music sources (click to edit)</p>
@@ -45,22 +45,36 @@
 			</p>
 
 			<p></p>
-			<legend>MPD Database</legend>
+			<legend>Music Database</legend>
 			<p>
-				<a href="#update-mpddb" data-toggle="modal"><button class="btn btn-medium btn-primary">Update</button><span class="config-label">MPD database</span></a>
-			</p>
-			<p>
-				<a href="#regen-mpddb" data-toggle="modal"><button class="btn btn-medium btn-primary">Re-gen</button><span class="config-label">MPD database</span></a>
+				<a href="#regen-mpddb" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">MPD database</span></a>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-regen-mpddb" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-regen-mpddb" class="help-block-configs help-block-margin hide">
-					Re-gen scans all files. Update only scans for files that have changed.
-                </span>
-				<span id="info-rescanmpd" class="help-block-configs help-block-margin">
-					Update or regenerate the MPD database.<br>
+					Rregenerate the MPD database. All files are scanned.
                 </span>
 			</p>
 
 			<p>
+				<a href="#clear-libcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Clear</button><span class="config-label">Library tag cache</span></a>
+				<span id="info-clrlibcache" class="help-block-configs help-block-margin">
+					The tag cache will be regenerated the next time the Library is opened.
+                </span>
+			</p>
+
+			<p>
+				<a href="#regen-thmcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">Album cover thumbnail cache</span></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-regen-thmcache" class="help-block-configs help-block-margin hide">
+					Regenerate the album cover thumbnail cache. The cache is first deleated and then all covers are added.
+                </span>
+			</p>
+
+			<p>
+				<a id="view-thmcache-status" href="#notarget"><button class="btn btn-medium btn-primary">VIEW STATUS</button></a><span id="thmcache-status" class="config-label">$_thmcache_status</span>
+			</p>
+
+			<p></p>
+
 			<div class="toggle">
 				<label class="toggle-radio" for="toggle_usb_auto_updatedb1">YES</label>
 				$_select[usb_auto_updatedb1]
@@ -71,35 +85,8 @@
 				<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_usb_auto_updatedb" value="novalue">Set</button>
 			</div>
 			<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em;">
-				Automatically update MPD database on USB insert/remove.<br>
+				Automatically update the MPD database on USB insert or remove.
             </span>
-			</p>
-
-			<p>
-				<a href="#clear-libcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Clear</button><span class="config-label">Library tag cache</span></a>
-				<span id="info-clrlibcache" class="help-block-configs help-block-margin">
-					The tag cache will be regenerated the next time the Library is opened.
-                </span>
-			</p>
-
-			<legend>Album cover thumbnails</legend>
-
-			<p>
-				<a href="#update-thmcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Update</button><span class="config-label">Album cover thumbnail cache</span></a>
-			</p>
-			<p>
-				<a href="#regen-thmcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Re-gen</button><span class="config-label">Album cover thumbnail cache</span></a>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-regen-thmcache" class="help-block-configs help-block-margin hide">
-					Re-gen deletes the cache and adds all covers afresh. Update only adds covers that are new or have changed.
-                </span>
-				<span id="info-regenthmcache" class="help-block-configs help-block-margin">
-					Update or regenerate the album cover thumbnail cache.<br>
-                </span>
-			</p>
-			<p>
-				<a id="view-thmcache-status" href="#notarget"><button class="btn btn-medium btn-primary">VIEW</button></a>&nbsp;Cache status:&nbsp;<span id="thmcache-status">$_thmcache_status</span>
-			</p>
 		</form>
 	</div>
 </div>

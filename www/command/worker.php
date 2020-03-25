@@ -705,9 +705,10 @@ $spotactive = '0';
 $slactive = '0';
 $inpactive = '0';
 
-// MPD database and thumbcache update
-$mpd_dbupd_initiated = '0';
-$thm_upd_initiated = '0';
+// MPD database, thumbcache and library update
+$check_mpddb_update = '0';
+$check_thmcache_update = '0';
+$check_library_update = '0';
 
 // Maintenance task
 $maint_interval = $_SESSION['maint_interval'];
@@ -806,10 +807,13 @@ while (true) {
 	if ($_SESSION['playhist'] == 'Yes') {
 		updPlayHistory();
 	}
-	if ($GLOBALS['mpd_dbupd_initiated'] == '1') {
+	if ($GLOBALS['check_library_update'] == '2') {
+		chkLibraryUpdate();
+	}
+	if ($GLOBALS['check_mpddb_update'] == '1') {
 		chkMpdDbUpdate();
 	}
-	if ($GLOBALS['thm_upd_initiated'] == '1') {
+	if ($GLOBALS['check_thmcache_update'] == '1') {
 		chkThmCacheUpdate();
 	}
 	if ($_SESSION['w_active'] == 1 && $_SESSION['w_lock'] == 0) {
@@ -1254,33 +1258,57 @@ function updPlayHistory() {
 	}
 }
 
+// Check for library update complete
+function chkLibraryUpdate() {
+	//workerLog('chkLibraryUpdate'); /*TEST*/
+	$sock = openMpdSock('localhost', 6600);
+	$status = parseStatus(getMpdStatus($sock));
+	closeMpdSock($sock);
+
+	if (!isset($status['updating_db'])) {
+		// Launch thumbcache updater
+		$result = sysCmd('pgrep -l thmcache.php');
+		if (strpos($result[0], 'thmcache.php') === false) {
+			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
+			$GLOBALS['check_thmcache_update'] = '1';
+			$GLOBALS['check_library_update'] = '1'; // Decrement from 2
+			//workerLog('chkLibraryUpdate, thmcache.php launched'); /*TEST*/
+		}
+	}
+}
+
 // Check for mpd db update complete
 function chkMpdDbUpdate() {
+	//workerLog('chkMpdDbUpdate'); /*TEST*/
 	$sock = openMpdSock('localhost', 6600);
 	$status = parseStatus(getMpdStatus($sock));
 	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
 		sendEngCmd('dbupd_done');
-		$GLOBALS['mpd_dbupd_initiated'] = '0';
-
-		// Launch thumbcache updater
-		$result = sysCmd('pgrep -l thmcache.php');
-		if (strpos($result[0], 'thmcache.php') === false) {
-			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
-			sendEngCmd('thmupd_initiated');
-			$GLOBALS['thm_upd_initiated'] = '1';
-		}
+		$GLOBALS['check_mpddb_update'] = '0';
+		//workerLog('chkMpdDbUpdate, sent dbupd_done'); /*TEST*/
 	}
 }
 
 // Check for thumbcache update complete
 function chkThmCacheUpdate() {
+	//workerLog('chkThmCacheUpdate'); /*TEST*/
+	sendEngCmd('thmupd_initiated');
 	$result = sysCmd('pgrep -l thmcache.php');
 
 	if (strpos($result[0], 'thmcache.php') === false) {
-		sendEngCmd('thmupd_done');
-		$GLOBALS['thm_upd_initiated'] = '0';
+		if ($GLOBALS['check_library_update'] == '1') {
+			//workerLog('chkThmCacheUpdate, sent library_update_done'); /*TEST*/
+			sendEngCmd('library_update_done');
+		}
+		else {
+			//workerLog('chkThmCacheUpdate, sent thmupd_done'); /*TEST*/
+			sendEngCmd('thmupd_done');
+		}
+
+		$GLOBALS['check_library_update'] = '0';
+		$GLOBALS['check_thmcache_update'] = '0';
 	}
 }
 
@@ -1318,6 +1346,8 @@ function runQueuedJob() {
 			//sendEngCmd('scnactive0,' . $_SESSION['w_queueargs']); // w_queueargs contains the client IP address
 			break;
 
+		// Menu, Update library
+		case 'update_library':
 		// lib-config jobs
 		case 'updmpddb':
 			clearLibCache();
@@ -1326,7 +1356,7 @@ function runQueuedJob() {
 			sendMpdCmd($sock, $cmd);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-			$GLOBALS['mpd_dbupd_initiated'] = '1';
+			$_SESSION['w_queue'] == 'update_library' ? $GLOBALS['check_library_update'] = '2' : $GLOBALS['check_mpddb_update'] = '1';
 			break;
 		case 'rescanmpddb':
 			clearLibCache();
@@ -1334,7 +1364,7 @@ function runQueuedJob() {
 			sendMpdCmd($sock, 'rescan');
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-			$GLOBALS['mpd_dbupd_initiated'] = '1';
+			$GLOBALS['check_mpddb_update'] = '1';
 			break;
 		case 'sourcecfg':
 			clearLibCache();
@@ -1343,14 +1373,14 @@ function runQueuedJob() {
 		case 'updthmcache':
 			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
 			sendEngCmd('thmupd_initiated');
-			$GLOBALS['thm_upd_initiated'] = '1';
+			$GLOBALS['check_thmcache_update'] = '1';
 			break;
 		case 'regenthmcache':
 			sysCmd('rm -rf ' . THMCACHE_DIR);
 			sysCmd('mkdir ' . THMCACHE_DIR);
 			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
 			sendEngCmd('thmupd_initiated');
-			$GLOBALS['thm_upd_initiated'] = '1';
+			$GLOBALS['check_thmcache_update'] = '1';
 			break;
 
 		// mpd-config jobs

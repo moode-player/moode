@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-02-12 TC moOde 6.4.2
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -26,7 +26,7 @@ playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 session_write_close();
 
-$jobs = array('reboot', 'poweroff', 'updclockradio', 'updmpddb');
+$jobs = array('reboot', 'poweroff', 'updclockradio', 'updmpddb', 'update_library');
 $playqueue_cmds = array('add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall');
 $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
 	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib');
