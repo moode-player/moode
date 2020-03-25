@@ -656,53 +656,9 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 	display: inline-block;
 	animation: spin 1s infinite linear;
 }
-/* css spinner */
-/* https://github.com/lukehaas/css-loaders */
-.busy-spinner,
-.busy-spinner:after {
-	border-radius: 50%;
-	width: 1em;
-	height: 1em;
-}
-.busy-spinner {
-	display:none;
-	font-size: 10px;
-	font-weight: 500;
-	position: absolute;
-	top:1.09rem;
-	right:4.25rem;
-	text-indent: -9999em;
-	border-top: .1em solid var(--textvariant);
-	border-right: .1em solid var(--textvariant);
-	border-bottom: .1em solid var(--textvariant);
-	border-left: .1em solid var(--adapttext);
-	-webkit-transform: translateZ(0);
-	transform: translateZ(0);
-	-webkit-animation: load8 1.1s infinite linear;
-	animation: load8 1.1s infinite linear;
-}
-@-webkit-keyframes load8 {
-	0% {
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-	100% {
-		-webkit-transform: rotate(360deg);
-		transform: rotate(360deg);
-	}
-}
-@keyframes load8 {
-	0% {
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-	100% {
-		-webkit-transform: rotate(360deg);
-		transform: rotate(360deg);
-	}
-}
 #cover-backdrop {height:100vh;width:100vw;background-size:cover;background-position:center center;z-index:0;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
 #context-backdrop {height:100vh;width:100vw;;overflow:hidden;position:fixed;top:0;left:0;z-index:9998;display:none;}
 .stopscroll {height:100%;overflow:hidden;}
 .sysinfo-modal {margin-top:-2em;}
 .config-label {color:#eee;}
+.busy-spinner {display:none;top:0;right:3.5em;position:absolute;height:1rem;width:1rem;}

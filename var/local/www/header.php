@@ -119,7 +119,7 @@
 		</div>
 
 		<div id="menu-header"></div>
-		<div aria-label="Busy" class="busy-spinner"></div>
+        <div aria-label="Busy" class="busy-spinner"><img src="../images/oval.svg"></div>
 
 		<!-- MAIN MENU -->
 		<div class="dropdown">
