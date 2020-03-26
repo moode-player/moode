@@ -131,7 +131,7 @@ html {background-color:inherit;}
 #volumeup-2, #volumedn-2 {font-size:2rem;}
 #volume-popup .volume-display {font-size:3em;font-weight:500;margin-top:0;}
 #volbtns-2 {z-index:10002;}
-#playbtns .addfav, #playbtns .togglepl {display:none;}
+#playbtns .addfav, #playbtns {display:none;}
 #cover-options {display:none;}
 #choose-bgimage, #remove-bgimage {font-size:1em;margin-top:6px;color:inherit;padding-top:4px;line-height:1.5em;}
 #current-bgimage {max-height:calc(1.5rem + 6px);overflow:hidden;max-width:50px;margin:5px 0 0 5px;position:absolute;display:inline-block;border-radius:3px;}
@@ -609,7 +609,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #playback-panel.newui .covers, #playback-panel.cv .covers {width:100%;margin:0;padding:0;}
 #playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:34vw;max-height:34vw;margin:0 auto;}
 #playback-panel.newui #togglebtns .btn {margin:0 .6em;}
-#playback-panel.newui #playbtns .addfav, #playback-panel.newui #playbtns .togglepl {display:inline-block;font-size:1.1em;margin:0 1em;}
+#playback-panel.newui #playbtns .addfav, #playback-panel.newui #playbtns {display:inline-block;font-size:1.1em;margin:0 1em;}
 #playback-panel.newui #togglebtns .addfav {display:none;}
 #content.fancy #playback-panel.newui #container-playlist {-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1) 1%, rgba(0,0,0,1) 99%, rgba(0,0,0,0) 100%);}
 #playback-panel.newui .playlist, #playback-panel.cv .playlist {padding-bottom:0;}
@@ -623,7 +623,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #playback-panel.cv #timezone {position:absolute;width:26%;height:34vw;left:0;}
 #playback-panel.cv #volzone {position:absolute;width:26%;height:34vw;right:0;}
 #playback-panel.cv #togglebtns .coverview, #playback-panel.cv #togglebtns .playback-context-menu, #playback-panel.cv #togglebtns .newy, #playback-panel.cv #togglebtns .fonty {display:none;}
-#playback-panel.cv #playbtns .addfav, #playback-panel.cv #playbtns .togglepl {display:inline-block;font-size:1.1em;margin:0 1em;}
+#playback-panel.cv #playbtns .addfav, #playback-panel.cv #playbtns {display:inline-block;font-size:1.1em;margin:0 1em;}
 #playback-panel.cv #togglebtns .repeat, #playback-panel.cv #togglebtns .toggle-song {display:inline-block;}
 #playback-panel.cv #container-playlist {margin-top:0;}
 /* visacc */

@@ -796,7 +796,8 @@ function renderUI() {
 
 	// Default metadata
 	if (MPD.json['album']) {
-		$('#currentalbum, #playbar-currentalbum').html((MPD.json['artist'] == 'Radio station' ? '' : MPD.json['artist'] + ' - ') + MPD.json['album']);
+		$('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
+        $('#playbar-currentalbum').html(MPD.json['artist'] == 'Radio station' ? RADIO.json[MPD.json['file']] : MPD.json['artist'] + ' - ' + MPD.json['album']);
 	}
 	else {
 		$('#currentalbum, #playbar-currentalbum').html('');
@@ -1068,13 +1069,6 @@ function renderPlaylist() {
 
 		// render playlist
         $('#playlist ul').html(output);
-
-        /* CHECK
-		if (MPD.json['state'] === 'stop') {
-			$('#currentalbum, #playbar-currentalbum').html($('#playlist li:nth-child(1) .pll2').text());
-			$('#currentsong, #playbar-currentsong').html($('#playlist li:nth-child(1) .pll1').text());
-		}
-        */
     });
 }
 
@@ -1497,14 +1491,12 @@ function refreshTimeKnob() {
     initTime = parseInt(MPD.json['song_percent']);
     delta = parseInt(MPD.json['time']) / 1000;
 	if (UI.mobile) {
-		//$('#timetrack').val(initTime).trigger('change'); // ORIG
 		$('#timetrack').val(initTime * 10).trigger('change');
 	}
 	else if (currentView.indexOf('playback') !== -1){ // playback screen
 		$('#time').val(initTime * 10).trigger('change');
 	}
     else { // library screen
-		//$('#playbar-timetrack').val(initTime).trigger('change'); // ORIG
 		$('#playbar-timetrack').val(initTime * 10).trigger('change');
 	}
 
@@ -1527,7 +1519,6 @@ function refreshTimeKnob() {
 		else {
 			$('#playbar-timeline').css('display', 'none');
 			$('#playbar-title').css('padding-bottom', '0');
-			//$('#playbar-radio').show();
 		}
 	}
 	// song file
@@ -1537,8 +1528,6 @@ function refreshTimeKnob() {
 		}
 		else {
 			$('#playbar-timeline').show();
-			//$('#playbar-title').css('padding-bottom', '1.5em');
-			//$('#playbar-radio').hide();
 		}
 	}
 
@@ -1753,40 +1742,6 @@ function customScroll(list, itemNum, speed) {
 	    $(scrollSelector).scrollTo(0, speed);
 	}
 }
-
-// show/hide playlist for cv
-$('.togglepl').click(function(e) {
-	e.stopImmediatePropagation();
-	if ($('#playback-cover').css('display') != 'none') {
-		$('#playback-panel').hasClass('cv') ? $('#playback-controls').css('display', 'block') : '';
-		$('#playback-cover').hide();
-		$('#playback-queue').css('left','0px');
-        customScroll('pl', parseInt(MPD.json['song']), 0);
-		clearTimeout(searchTimer);
-		searchTimer = setTimeout(function() {
-			$('#playback-queue').css('left','');
-			$('#playback-cover').css('display','');
-			$('#playback-panel').hasClass('cv') ? $('#playback-controls').css('display', '') : '';
-		}, 15000);
-	}
-    else {
-		clearTimeout(searchTimer);
-		$('#playback-panel').hasClass('cv') ? $('#playback-controls').css('display', '') : '';
-		$('#playback-queue').css('left','');
-		$('#playback-cover').css('display','');
-	}
-});
-
-/*$('#container-playlist').on('scroll', function(e) {
-	if ($('#playback-panel').hasClass('newui') && currentView.indexOf('playback') !== -1 || $('#playback-panel').hasClass('cv')) {
-		clearTimeout(searchTimer);
-		searchTimer = setTimeout(function() {
-			$('#playback-panel').hasClass('cv') ? $('#playback-controls').css('display', '') : '';
-			$('#playback-queue').css('left','');
-			$('#playback-cover').css('display','');
-		}, 15000);
-	}
-});*/
 
 // scroll to current song if title is clicked
 $('#currentsong').click(function(e) {
@@ -3022,7 +2977,6 @@ function setAlbumViewHeaderText() {
 $('#coverart-url, #playback-switch').click(function(e){
 	if ($('#playback-panel').hasClass('cv')) {
 		e.stopImmediatePropagation();
-		//$('.togglepl').click(); // or whatever show queue is/*TEST*/
 		return;
 	}
 
