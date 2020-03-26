@@ -63,14 +63,19 @@ if (!Object.values) {
 }
 
 function loadLibrary() {
+    if (currentView == 'tag' || currentView == 'album') {
+        $('#lib-loader').show();
+    }
+
 	$.post('command/moode.php?cmd=loadlib', {}, function(data) {
 		$('#lib-loader').hide();
-		$('#lib-content').show();
+        if (currentView == 'tag' || currentView == 'album') {
+            $('#lib-content').show();
+        }
+
 		renderLibrary(data);
         GLOBAL.libRendered = true;
 	}, 'json');
-
-	//GLOBAL.libRendered = true;
 }
 
 function renderLibrary(data) {

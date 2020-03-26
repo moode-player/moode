@@ -274,6 +274,7 @@ else {
 				}
 				break;
 			case 'loadlib':
+				//sleep(5); /*TEST*/
 				echo loadLibrary($sock);
 	        	break;
 			case 'lsinfo':

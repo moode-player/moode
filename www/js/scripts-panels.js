@@ -123,10 +123,9 @@ jQuery(document).ready(function($) { 'use strict';
     //UI.clientIP = sendMoodeCmd('GET', 'clientip');
 	//console.log(UI.clientIP);
 
-	// Start folder, radio and library loads
+	// Load folder and radio
     mpdDbCmd('lsinfo', '');
     mpdDbCmd('lsinfo_radio', 'RADIO');
-	loadLibrary();
 
     // setup pines notify
     $.pnotify.defaults.history = false;
@@ -271,6 +270,10 @@ jQuery(document).ready(function($) { 'use strict';
 		makeActive('.tag-view-btn','#library-panel', 'tag');
         SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
+        if (!GLOBAL.libRendered) {
+			loadLibrary();
+		}
+
 		setTimeout(function() {
 			if (UI.libPos[0] >= 0) {
 			    $('#albumsList .lib-entry').removeClass('active');
@@ -283,6 +286,11 @@ jQuery(document).ready(function($) { 'use strict';
 	// Album view
 	else if (currentView == 'album'){
 		makeActive('.album-view-btn','#library-panel', 'album');
+
+        if (!GLOBAL.libRendered) {
+			loadLibrary();
+		}
+
 		setTimeout(function() {
 			if (UI.libPos[1] >= 0) { // lib entry clicked or random album
 			    $('#albumcovers .lib-entry').removeClass('active');
@@ -320,12 +328,10 @@ jQuery(document).ready(function($) { 'use strict';
 		makeActive('.tag-view-btn','#library-panel','tag');
         SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
-		// Render library
 		if (!GLOBAL.libRendered) {
-		    $('#lib-content').hide();
-		    $('#lib-loader').show();
 			loadLibrary();
 		}
+
 		setTimeout(function() {
 			if (UI.libPos[0] >= 0) { // Lib entry clicked or random album
 			    $('#albumsList .lib-entry').removeClass('active');
@@ -356,12 +362,10 @@ jQuery(document).ready(function($) { 'use strict';
 		GLOBAL.lazyCovers = false;
 		makeActive('.album-view-btn','#library-panel','album');
 
-		// Render library
 		if (!GLOBAL.libRendered) {
-		    $('#lib-content').hide();
-		    $('#lib-loader').show();
 			loadLibrary();
 		}
+
 		setTimeout(function() {
 			if (UI.libPos[1] >= 0) { // Lib entry clicked or random album
 			    $('#albumcovers .lib-entry').removeClass('active');

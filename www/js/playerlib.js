@@ -2301,14 +2301,6 @@ $('.btn-appearance-update').click(function(e){
 
 	// Auto-reload page / library if indicated
 	if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || UI.bgImgChange) {
-        if (libraryOptionsChange) {
-    		GLOBAL.libRendered = false;
-    		if (currentView == 'tag' || currentView == 'album') {
-    			$('#lib-loader').show();
-    			setLibMenuHeader();
-    		}
-    		loadLibrary();
-    	}
 	    notify('settings_updated', 'Auto-refresh in 3 seconds');
 		setTimeout(function() {
 			location.reload(true);
@@ -3028,10 +3020,9 @@ function setAlbumViewHeaderText() {
 
 // switch to library / playbar panel
 $('#coverart-url, #playback-switch').click(function(e){
-    console.log('GLOBAL.libRendered: ' + GLOBAL.libRendered);
 	if ($('#playback-panel').hasClass('cv')) {
 		e.stopImmediatePropagation();
-		$('.togglepl').click(); // or whatever show queue is
+		//$('.togglepl').click(); // or whatever show queue is/*TEST*/
 		return;
 	}
 
@@ -3053,6 +3044,10 @@ $('#coverart-url, #playback-switch').click(function(e){
 				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
 			}
 		}, SCROLLTO_TIMEOUT);
+
+        if (!GLOBAL.libRendered) {
+            loadLibrary();
+        }
 	}
 
 	else if (currentView == 'album') {
@@ -3062,6 +3057,10 @@ $('#coverart-url, #playback-switch').click(function(e){
 				customScroll('albumcovers', UI.libPos[1], 0);
 			}
 		}, SCROLLTO_TIMEOUT);
+
+        if (!GLOBAL.libRendered) {
+            loadLibrary();
+        }
 	}
 
 	else if (currentView == 'radiolist' || currentView == 'radiocovers') {
