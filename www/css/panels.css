@@ -407,14 +407,17 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #ss-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
 #ss-style {position:fixed;top:0;left:0;height:100vh;width:100vw;animation:colors2 60s infinite;transform:translateZ(0);}
 #ss-coverart-url img {width:75vh;}
+#ss-currentsong {font-weight:600;}
+#ss-currentsong, #ss-currentalbum {margin-top:1em;}
 .ss-backdrop {min-width:100vw;min-height:100vh;max-width:unset;transform:translate(-50%, -50%);background-position:center center;position:relative;top:50vh;left:50vw;}
 .ss-coverart {position:fixed;top:1.5em;width:100%;}
 body.cv #menu-bottom {display:flex !important;background-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;}
 body.cv #menu-top, body.cv #viewswitch, body.cv #playbar-toggles .coverview, body.cv #playbar-cover {display:none !important;}
 body.cv #content .tab-pane.active {visibility:hidden !important;}
 body.cv #playbar {box-shadow:none;color:#eee;}
-body.cv #playbar-title {font-size:1.4em;top:-25%;/* was -40%*/transform:translate(-50%, -50%);padding-bottom:0;}
-body.cv #playbar-currentsong, body.cv #playbar-currentalbum {padding-bottom:.5em;/*was 1em*/}
+body.cv #playbar-title {font-size:1.4em;/*top:-25%;transform:translate(-50%, -50%);padding-bottom:0;*/}
+body.cv #playbar-currentsong, body.cv #playbar-currentalbum {display:none;padding-bottom:.5em;}
+body.cv #ss-currentsong, body.cv #ss-currentalbum {font-size:1.4em;}
 body.cv #playbar-timeline {top:50%;width:40%;transform:translate(-50%, -50%);}
 body.cv #screen-saver, body.cv #menu-bottom {display:block !important;}
 /* misc */

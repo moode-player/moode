@@ -797,21 +797,21 @@ function renderUI() {
 	// Default metadata
 	if (MPD.json['album']) {
 		$('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
-        $('#playbar-currentalbum').html(MPD.json['artist'] == 'Radio station' ? RADIO.json[MPD.json['file']] : MPD.json['artist'] + ' - ' + MPD.json['album']);
+        $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ? RADIO.json[MPD.json['file']] : MPD.json['artist'] + ' - ' + MPD.json['album']);
 	}
 	else {
-		$('#currentalbum, #playbar-currentalbum').html('');
+		$('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
 	}
 
-	// song title
+	// Song title
 	if (MPD.json['title'] === 'Streaming source' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
 		$('#currentsong').html(MPD.json['title']);
 	}
-	// add search url, see corresponding code in renderPlaylist()
+	// Add search url, see corresponding code in renderPlaylist()
 	else {
 		$('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
 	}
-	$('#playbar-currentsong').html(MPD.json['title']);
+	$('#playbar-currentsong, #ss-currentsong').html(MPD.json['title']);
 
     // scrollto if song change
     if (MPD.json['file'] !== UI.currentFile) {
@@ -1023,13 +1023,13 @@ function renderPlaylist() {
 						var name = typeof(data[i].Name) === 'undefined' ? 'Radio station' : data[i].Name;
 						output += name;
 						if (i == parseInt(MPD.json['song'])) { // active
-							$('#playbar-currentalbum').html(name);
+							$('#playbar-currentalbum, #ss-currentalbum').html(name);
 						}
 					}
 					else {
 						output += RADIO.json[data[i].file]['name'];
 						if (i == parseInt(MPD.json['song'])) { // active
-							$('#playbar-currentalbum').html(RADIO.json[data[i].file]['name']);
+							$('#playbar-currentalbum, #ss-currentalbum').html(RADIO.json[data[i].file]['name']);
 						}
 					}
 				}
@@ -1528,6 +1528,7 @@ function refreshTimeKnob() {
 		}
 		else {
 			$('#playbar-timeline').show();
+            $('#playbar-title').css('padding-bottom', '1rem');
 		}
 	}
 
