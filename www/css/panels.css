@@ -661,4 +661,5 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .stopscroll {height:100%;overflow:hidden;}
 .sysinfo-modal {margin-top:-2em;}
 .config-label {color:#eee;margin-left:.35em;}
-.busy-spinner {display:none;top:0;right:4em;position:absolute;height:1rem;width:1rem;}
+.busy-spinner {position:absolute;right:3.25rem;top:.2rem;top:calc(env(safe-area-inset-top) + .2rem);display:none;}
+.busy-spinner svg {stroke:var(--adapttext);height:1rem;width:1rem;}
