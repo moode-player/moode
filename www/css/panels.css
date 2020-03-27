@@ -250,6 +250,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .btnlist a {font-size:1em;text-decoration:none;color:inherit;}
 #pl-search, #lib-album-search, #ra-search {display:block;float:left;margin:0;z-index:1001;position:relative;}
 #pl-search, #lib-album-search {top:50%; transform:translate(0, -50%);width:11rem;}
+#pl-search {left:1rem}
 #savepl-modal, #setfav-modal .modal-body {padding:1em .25em 0 .25em;}
 #pl-save {display:block;float:left;margin-right:0;margin-left:0;z-index:1001;width:100%;text-align:center;}
 #pl-search input, #ra-search input, #lib-album-search input {margin:0;border:none;box-shadow:none;min-height:initial;height:2.75rem;font-size:1rem;padding:0;}
