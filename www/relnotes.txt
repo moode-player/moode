@@ -18,16 +18,13 @@
 New features
 
 - NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
-- NEW: Library search for Tag and Album views
-- NEW: Library separate sorts for Tag and Album views
-- NEW: Library option to hide covers in Tag view album column
-- NEW: Library option for ellipsis limited text in Tag/Album views
-- NEW: MPD database update that incorporates Thumbcache update
+- NEW: Adaptive UI version 6 with Playbar
+- NEW: Library sort, search and other options
+- NEW: Combined MPD database update and Thumbcache update
 - NEW: CoverView screen saver with Playbar controls
-- NEW: Global font size option for larger/smaller text
-- NEW: Configurable extra-metadata for display under cover
-- NEW: Audio config option for USB volume knob ON/OFF
-- NEW: System config option for LED0 and LED1 ON/OFF
+- NEW: Appearance options including Global font size
+- NEW: Audio config option for USB volume knob
+- NEW: System config option for LED0 and LED1
 - NEW: Spotify config option to autoplay similar songs
 
 Updates
@@ -42,8 +39,6 @@ Updates
 - UPD: Add -D option to moodeutl (delete session var)
 - UPD: Add click anywhere off context menu to close
 - UPD: Disable apt-daily and apt-daily-upgrade timers
-- UPD: Modal dialogs converted to full screen
-- UPD: Add accordion headers to Appearance dialog
 - UPD: Add confirmation modals to Library config
 
 Bug fixes
