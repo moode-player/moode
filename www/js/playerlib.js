@@ -116,7 +116,8 @@ var GLOBAL = {
     thmUpdInitiated: false,
     scriptSection: 'panels',
 	regExIgnoreArticles: '',
-    libRendered: false
+    libRendered: false,
+    playbarPlaylistTimer: ''
 }
 
 // live timeline
@@ -818,6 +819,9 @@ function renderUI() {
         countdownRestart(0);
         if ($('#playback-panel').hasClass('active')) {
 	        customScroll('pl', parseInt(MPD.json['song']));
+            if ($('#cv-playlist').css('display') == 'block') {
+                customScroll('pbpl', parseInt(MPD.json['song']));
+            }
         }
     }
 
@@ -1069,6 +1073,7 @@ function renderPlaylist() {
 
 		// render playlist
         $('#playlist ul').html(output);
+        $('#cv-playlist ul').html(output); /*TEST*/
     });
 }
 
@@ -1682,7 +1687,13 @@ function customScroll(list, itemNum, speed) {
         if (isNaN(itemNum)) {return;} // exit if last item in pl ended
 		listSelector = '#playlist';
 		scrollSelector = '#container-playlist';
-		chDivisor = scrollSelector == '#container-playlist' ? 6 : 1.75;
+		chDivisor = 6;
+	}
+    else if (list == 'pbpl') {
+        if (isNaN(itemNum)) {return;} // exit if last item in pl ended
+		listSelector = '#cv-playlist';
+		scrollSelector = listSelector;
+		chDivisor = 6;
 	}
 	else if (list == 'genres') {
 		listSelector = '#lib-genre';

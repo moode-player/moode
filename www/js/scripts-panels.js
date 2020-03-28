@@ -583,12 +583,8 @@ jQuery(document).ready(function($) { 'use strict';
     });
 
     // click on playlist entry
-    $('.playlist').on('click', '.pl-entry', function(e) {
-		var sender = e.target.className;
-		if (sender == 'pl-action' || sender == '') {
-			return;
-		}
-        var selector = '.playlist';
+    $('.playlist, .cv-playlist').on('click', '.pl-entry', function(e) {
+        var selector = $(this).parent().hasClass('playlist') ? '.playlist' : '.cv-playlist';
         var pos = $(selector + ' .pl-entry').index(this);
 
         sendMpdCmd('play ' + pos);
@@ -597,16 +593,10 @@ jQuery(document).ready(function($) { 'use strict';
 		if (UI.mobile) { // for mobile scroll to top
 			$('html, body').animate({ scrollTop: 0 }, 'fast');
 		}
-		else if ($('#playback-panel').hasClass('newui') || $('#playback-panel').hasClass('cv')) {
-			$('#playback-queue').css('left','-10000px');
-			$('#playback-cover, #playback-controls').css('display','');
-			e.preventDefault();
-			return false;
-		}
     });
 
 	// click on playlist action menu button
-    $('.playlist').on('click', '.pl-action', function(e) {
+    $('.playlist, .cv-playlist').on('click', '.pl-action', function(e) {
 		// store posn for later use by action menu selection
         UI.dbEntry[0] = $('.playlist .pl-action').index(this);
 
@@ -1265,6 +1255,25 @@ jQuery(document).ready(function($) { 'use strict';
 		screenSaver('1');
 	});
 
+    /*TEST*/// Coverview playlist
+	$('#cv-playlist-btn').on('click', function(e) {
+        $('#cv-playlist').toggle();
+
+        if ($('#cv-playlist').css('display') == 'block') {
+            setTimeout(function() {
+                customScroll('pbpl', parseInt(MPD.json['song']));
+            }, SCROLLTO_TIMEOUT);
+
+            GLOBAL.playbarPlaylistTimer = setTimeout(function() {
+                $('#cv-playlist').hide();
+            }, 20000);
+        }
+        else {
+            e.preventDefault();
+            window.clearTimeout(GLOBAL.playbarPlaylistTimer);
+        }
+	});
+
 	// disconnect active renderer
 	$('.disconnect-renderer').live('click', function(e) {
 		$('.disconnect-renderer').css('opacity', '.5');
@@ -1284,6 +1293,7 @@ jQuery(document).ready(function($) { 'use strict';
 			coverView = false;
             setColors();
 
+            /*TEST*/$('#cv-playlist').hide();
             /*TEST*/$('#lib-coverart-img').show();
             /*TEST*/$('#playback-queue').css('width', '38.1%'); // Fix Playlist sometimes not begin visable after returning from cv
             setTimeout(function() {

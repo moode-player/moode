@@ -184,6 +184,7 @@
 			<div id="playbar-radio"></div>
 			<div id="playbar-toggles">
 				<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
+                <button aria-label="Playlist" class="btn btn-cmd btn-toggle hide" id="cv-playlist-btn"><i class="fal fa-list"></i></button>
 				<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
 				<button aria-label="Hide" class="btn btn-cmd ralbum hide"><i class="fal fa-dot-circle"></i></button>
 				<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
@@ -193,3 +194,7 @@
 			</div>
 		</div>
 	</div>
+    <!--TEST-->
+    <div id="cv-playlist">
+        <ul class="cv-playlist"></ul>
+    </div>
