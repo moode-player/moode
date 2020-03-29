@@ -671,3 +671,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .config-label {color:#eee;margin-left:.35em;}
 .busy-spinner {position:absolute;right:3.25rem;top:.2rem;top:calc(env(safe-area-inset-top) + .2rem);display:none;}
 .busy-spinner svg {stroke:var(--adapttext);height:1rem;width:1rem;}
+#artist-cover {font-size:1.4em;height:calc(20.75vw - 1em);width:calc(20.75vw - 1em);background:rgba(64,64,64,.2);box-shadow: 0px 0px .2em rgba(0,0,0,0.2);}

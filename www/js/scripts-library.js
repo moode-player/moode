@@ -659,7 +659,12 @@ var renderSongs = function(albumPos) {
 		var album = LIB.filters.genres.length ? LIB.filters.genres : (LIB.filters.artists.length ? LIB.filters.artists : 'Music Library');
 		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
 
-		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
+        if (LIB.filters.artists.length == 0) {
+            $('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
+        }
+        else {
+            $('#lib-coverart-img').html('<button class="btn" id="artist-cover" data-toggle="context" data-target="#context-menu-lib-all">' + filteredSongs[0].artist + '</button>');
+        }
 		$('#lib-albumname').html(album);
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html('');
