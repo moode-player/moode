@@ -856,6 +856,7 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 
 // Click album cover for instant play
 $('#albumcovers').on('click', 'img', function(e) {
+    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
 	var pos = $(this).parents('li').index();
 
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
@@ -928,6 +929,7 @@ $('.ralbum').click(function(e) {
 
 // click radio cover for instant play
 $('#database-radio').on('click', 'img', function(e) {
+    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
 	var pos = $(this).parents('li').index();
 	var path = $(this).parents('li').data('path');
 

@@ -314,6 +314,7 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">No action</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Add/Play</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Clear/Play</span></a></li>
 								</ul>
