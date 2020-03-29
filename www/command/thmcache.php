@@ -108,12 +108,8 @@ closeMpdSock($sock);
 // Get list of music files in /mnt and /media directories
 $mnt_dirs = str_replace("\n", ', ', shell_exec('ls /mnt'));
 $media_dirs = str_replace("\n", ', ', shell_exec('ls /media'));
-if (!empty($media_dirs)) {
-	$dirs = $mnt_dirs . substr($media_dirs, 0, -2);
-}
-else {
-	$dirs = substr($mnt_dirs, 0, -2);
-}
+!empty($media_dirs) ? $dirs = $mnt_dirs . substr($media_dirs, 0, -2) : $dirs = substr($mnt_dirs, 0, -2);
+$dirs = str_replace('moode-player, ', '', $dirs); // This mount point is only present in dev
 workerLog('thmcache: Scanning: ' . $dirs);
 
 $resp = shell_exec('/var/www/command/listall.sh | sort');
