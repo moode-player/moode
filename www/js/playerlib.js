@@ -535,9 +535,9 @@ function inpSrcIndicator(cmd, msgText) {
 	}
 }
 
-// Show/hide CoverView screen saver (r642)
+// Show/hide CoverView screen saver
 function screenSaver(cmd) {
-	if ($('#inpsrc-indicator').css('display') == 'block') {
+	if ($('#inpsrc-indicator').css('display') == 'block' || UI.mobile) {
 		return;
 	}
 	else if (cmd.slice(-1) == '1') {
