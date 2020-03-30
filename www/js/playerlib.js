@@ -1866,7 +1866,7 @@ $('.context-menu a').click(function(e) {
 		$('#edit-station-url').val(sendMoodeCmd('POST', 'readstationfile', {'path': UI.dbEntry[0]})['File1']);
         $('#edit-logoimage').val('');
         $('#info-toggle-edit-logoimage').css('margin-left','60px');
-        $('#current-edit-logoimage').html('<img src="../images/radio-logos/thumbs/' + path + '.jpg">');
+        $('#preview-edit-logoimage').html('<img src="../images/radio-logos/thumbs/' + path + '.jpg">');
 		$('#editstation-modal').modal();
 	}
 	else if ($(this).data('cmd') == 'delstation') {
@@ -2355,23 +2355,23 @@ function importBgImage(files) {
 }
 
 // import station logo image to server
-function importLogoImage(files) {
+function newLogoImage(files) {
 	if (files[0].size > 1000000) {
-		$('#error-logoimage').text('Image must be less than 1MB in size');
+		$('#error-new-logoimage').text('Image must be less than 1MB in size');
 		return;
 	}
 	else if (files[0].type != 'image/jpeg') {
-		$('#error-logoimage').text('Image format must be JPEG');
+		$('#error-new-logoimage').text('Image format must be JPEG');
 		return;
 	}
 	else {
-		$('#error-logoimage').text('');
+		$('#error-new-logoimage').text('');
 	}
 
 	// import image
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$('#current-logoimage').html("<img src='" + imgUrl + "' />");
-	$('#info-toggle-logoimage').css('margin-left','60px');
+	$('#preview-new-logoimage').html("<img src='" + imgUrl + "' />");
+	$('#info-toggle-new-logoimage').css('margin-left','60px');
 	var stationName = $('#new-station-name').val();
 	URL.revokeObjectURL(imgUrl);
 	var reader = new FileReader();
@@ -2400,7 +2400,7 @@ function editLogoImage(files) {
 
 	// import image
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$('#current-edit-logoimage').html("<img src='" + imgUrl + "' />");
+	$('#preview-edit-logoimage').html("<img src='" + imgUrl + "' />");
 	$('#info-toggle-edit-logoimage').css('margin-left','60px');
 	var stationName = $('#edit-station-name').val();
 	URL.revokeObjectURL(imgUrl);

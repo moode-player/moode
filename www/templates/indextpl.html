@@ -577,23 +577,23 @@
 				<div class="control-group" style="margin-bottom:1.5em">
 	                <label class="control-label" for="new-station-name">Station name</label>
 	                <div class="controls">
-	                    <input id="new-station-name" class="input-xlarge" type="text" name="add_station_name" size="200" value="" autofocus>
+	                    <input id="new-station-name" class="input-xlarge" type="text" name="new_station_name" size="200" value="" autofocus>
 	                </div>
 	                <label class="control-label" for="new-station-url">Playable URL</label>
 	                <div class="controls">
-	                    <input id="new-station-url" class="input-xlarge" type="text" name="add_station_url" size="200" value="">
+	                    <input id="new-station-url" class="input-xlarge" type="text" name="new_station_url" size="200" value="">
 	                </div>
 
-					<label class="control-label" for="choose-radiologo">Logo image</label>
+					<label class="control-label" for="new-radiologo">Logo image</label>
 					<div class="controls">
 						<div style="display:inline-block;">
-							<label id="choose-radiologo" for="import-logoimage" class="btn btn-primary btn-small">Choose</label>
-							<input type="file" id="import-logoimage" accept="image/jpeg" style="display:none" onchange="importLogoImage(this.files)">
+							<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small">Choose</label>
+							<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newLogoImage(this.files)">
 						</div>
-						<div id="current-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
-						<a aria-label="Help" class="info-toggle" id="info-toggle-logoimage" data-cmd="info-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<div id="error-logoimage"></div>
-						<div id="info-logoimage" class="help-block hide">
+						<div id="preview-new-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+						<a aria-label="Help" class="info-toggle" id="info-toggle-new-logoimage" data-cmd="info-new-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<div id="error-new-logoimage"></div>
+						<div id="info-new-logoimage" class="help-block hide">
 							Add a JPEG logo image for the station. Max image size is 1MB.
 						</div>
 					</div>
@@ -631,7 +631,7 @@
 							<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small">Choose</label>
 							<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editLogoImage(this.files)">
 						</div>
-						<div id="current-edit-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+						<div id="preview-edit-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
 						<a aria-label="Help" class="info-toggle" id="info-toggle-edit-logoimage" data-cmd="info-edit-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<div id="error-edit-logoimage"></div>
 						<div id="info-edit-logoimage" class="help-block hide">

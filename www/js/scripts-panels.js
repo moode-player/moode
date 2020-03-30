@@ -891,9 +891,9 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#ra-new').click(function(e) {
 		$('#new-station-name').val('New station');
 		$('#new-station-url').val('http://');
-        $('#import-logoimage').val('');
-		$('#current-logoimage').html('');
-        $('#info-toggle-logoimage').css('margin-left','unset');
+        $('#new-logoimage').val('');
+		$('#preview-new-logoimage').html('');
+        $('#info-toggle-new-logoimage').css('margin-left','unset');
 		$('#newstation-modal').modal();
 	});
     $('#newstation-modal').on('shown.bs.modal', function() {
