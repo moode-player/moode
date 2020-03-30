@@ -38,6 +38,7 @@ define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
 define('LIBCACHE_JSON', '/var/local/www/libcache.json');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
+define('TMP_STATION_PREFIX', '__tmp__');
 
 error_reporting(E_ERROR);
 

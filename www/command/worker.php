@@ -203,6 +203,9 @@ sysCmd('chmod 0777 ' . LIBCACHE_JSON);
 sysCmd('chmod 0777 /var/local/www/playhistory.log');
 sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 ' . MOODE_LOG);
+// Delete any tmp files left over from New/Edit radio station
+sysCmd('rm /var/local/www/images/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
+sysCmd('rm /var/local/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
 workerLog('worker: File check (OK)');
 
 //
@@ -1838,7 +1841,7 @@ function runQueuedJob() {
 			}
 			else {
 				// main image
-				$file = '/var/www/images/radio-logos/' . $station_name . '.jpg';
+				$file = '/var/www/images/radio-logos/' . TMP_STATION_PREFIX . $station_name . '.jpg';
 				$fh = fopen($file, 'w');
 				fwrite($fh, $imgdata);
 				fclose($fh);
@@ -1867,7 +1870,7 @@ function runQueuedJob() {
 					workerLog('setlogoimage: error 3: ' . $file);
 					break;
 				}
-				if ((imagejpeg($thumb, '/var/www/images/radio-logos/thumbs/' . $station_name . '.jpg', $thm_q) ) === false) {
+				if ((imagejpeg($thumb, '/var/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) ) === false) {
 					workerLog('setlogoimage: error 4: ' . $file);
 					break;
 				}

@@ -574,17 +574,17 @@
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
-				<div class="control-group">
-	                <label class="control-label" for="new-station-name">Name</label>
+				<div class="control-group" style="margin-bottom:1.5em">
+	                <label class="control-label" for="new-station-name">Station name</label>
 	                <div class="controls">
 	                    <input id="new-station-name" class="input-xlarge" type="text" name="add_station_name" size="200" value="" autofocus>
 	                </div>
-	                <label class="control-label" for="new-station-url">URL</label>
+	                <label class="control-label" for="new-station-url">Playable URL</label>
 	                <div class="controls">
 	                    <input id="new-station-url" class="input-xlarge" type="text" name="add_station_url" size="200" value="">
 	                </div>
 
-					<label class="control-label" for="choose-file">Logo</label>
+					<label class="control-label" for="choose-radiologo">Logo image</label>
 					<div class="controls">
 						<div style="display:inline-block;">
 							<label id="choose-radiologo" for="import-logoimage" class="btn btn-primary btn-small">Choose</label>
@@ -594,7 +594,7 @@
 						<a aria-label="Help" class="info-toggle" id="info-toggle-logoimage" data-cmd="info-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<div id="error-logoimage"></div>
 						<div id="info-logoimage" class="help-block hide">
-							Add a JPEG logo image for the station. Max image size is 1MB.<br>
+							Add a JPEG logo image for the station. Max image size is 1MB.
 						</div>
 					</div>
 	            </div>
@@ -615,15 +615,29 @@
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
-				<div class="control-group">
-	                <label class="control-label" for="edit-station-name">Name</label>
+				<div class="control-group" style="margin-bottom:1.5em">
+	                <label class="control-label" for="edit-station-name">Station name</label>
 	                <div class="controls">
 	                    <input id="edit-station-name" class="input-xlarge" type="text" name="edit_station_name" size="200" value="" readonly>
 	                </div>
-	                <label class="control-label" for="edit-station-url">URL</label>
+	                <label class="control-label" for="edit-station-url">Playable URL</label>
 	                <div class="controls">
 	                    <input id="edit-station-url" class="input-xlarge" type="text" name="edit_station_url" size="200" value="">
 	                </div>
+
+					<label class="control-label" for="edit-radiologo">Logo image</label>
+					<div class="controls">
+						<div style="display:inline-block;">
+							<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small">Choose</label>
+							<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editLogoImage(this.files)">
+						</div>
+						<div id="current-edit-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+						<a aria-label="Help" class="info-toggle" id="info-toggle-edit-logoimage" data-cmd="info-edit-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<div id="error-edit-logoimage"></div>
+						<div id="info-edit-logoimage" class="help-block hide">
+							Add a JPEG logo image for the station. Max image size is 1MB.
+						</div>
+					</div>
 	            </div>
 	    	</fieldset>
 		</form>

@@ -331,21 +331,23 @@ else {
 					$_SESSION[$_POST['url']] = array('name' => $station_name, 'type' => 'u', 'logo' => 'local');
 					session_write_close();
 
+					// Write pls file and set permissions
 					$file =  MPD_MUSICROOT . 'RADIO/' . $station_name . '.pls';
 					$fh = fopen($file, 'w') or exit('moode.php: file create failed on ' . $file);
-
 					$data = '[playlist]' . "\n";
 					$data .= 'File1='. $_POST['url'] . "\n";
 					$data .= 'Title1='. $station_name . "\n";
 					$data .= 'Length1=-1' . "\n";
 					$data .= 'NumberOfEntries=1' . "\n";
 					$data .= 'Version=2' . "\n";
-
 					fwrite($fh, $data);
 					fclose($fh);
-
 					sysCmd('chmod 777 "' . $file . '"');
 					sysCmd('chown root:root "' . $file . '"');
+
+					// Write image
+					sysCmd('mv "/var/www/images/radio-logos/' . TMP_STATION_PREFIX . $station_name . '.jpg" "/var/www/images/radio-logos/' . $station_name . '.jpg"');
+					sysCmd('mv "/var/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg" "/var/www/images/radio-logos/thumbs/' . $station_name . '.jpg"');
 
 					// Update time stamp on files so mpd picks up the change and commits the update
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');

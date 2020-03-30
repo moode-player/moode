@@ -1863,6 +1863,9 @@ $('.context-menu a').click(function(e) {
 		path = path.slice(0,path.lastIndexOf('.')).substr(6); // trim 'RADIO/' and '.pls' from path
 		$('#edit-station-name').val(path);
 		$('#edit-station-url').val(sendMoodeCmd('POST', 'readstationfile', {'path': UI.dbEntry[0]})['File1']);
+        $('#edit-logoimage').val('');
+        $('#info-toggle-edit-logoimage').css('margin-left','60px');
+        $('#current-edit-logoimage').html('<img src="../images/radio-logos/thumbs/' + path + '.jpg">');
 		$('#editstation-modal').modal();
 	}
 	else if ($(this).data('cmd') == 'delstation') {
@@ -2369,6 +2372,36 @@ function importLogoImage(files) {
 	$('#current-logoimage').html("<img src='" + imgUrl + "' />");
 	$('#info-toggle-logoimage').css('margin-left','60px');
 	var stationName = $('#new-station-name').val();
+	URL.revokeObjectURL(imgUrl);
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		var dataURL = reader.result;
+		// strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
+		var data = dataURL.match(/,(.*)$/)[1];
+		var result = sendMoodeCmd('POST', 'setlogoimage', {'name': stationName, 'blob': data});
+	}
+	reader.readAsDataURL(files[0]);
+}
+
+// import station logo image to server
+function editLogoImage(files) {
+	if (files[0].size > 1000000) {
+		$('#error-edit-logoimage').text('Image must be less than 1MB in size');
+		return;
+	}
+	else if (files[0].type != 'image/jpeg') {
+		$('#error-edit-logoimage').text('Image format must be JPEG');
+		return;
+	}
+	else {
+		$('#error-edit-logoimage').text('');
+	}
+
+	// import image
+	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
+	$('#current-edit-logoimage').html("<img src='" + imgUrl + "' />");
+	$('#info-toggle-edit-logoimage').css('margin-left','60px');
+	var stationName = $('#edit-station-name').val();
 	URL.revokeObjectURL(imgUrl);
 	var reader = new FileReader();
 	reader.onload = function(e) {
