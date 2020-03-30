@@ -117,7 +117,8 @@ var GLOBAL = {
     scriptSection: 'panels',
 	regExIgnoreArticles: '',
     libRendered: false,
-    playbarPlaylistTimer: ''
+    playbarPlaylistTimer: '',
+    plActionClicked: false
 }
 
 // live timeline

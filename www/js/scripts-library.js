@@ -74,7 +74,11 @@ function loadLibrary() {
         }
 
 		renderLibrary(data);
-        GLOBAL.libRendered = true;
+
+        if (currentView.indexOf('playback') == -1) { // Not on Playback panel
+            GLOBAL.libRendered = true;
+        }
+
 	}, 'json');
 }
 
@@ -898,15 +902,16 @@ $('.ralbum').click(function(e) {
 			$('.ralbum svg').attr('class', '');
 		}, RALBUM_TIMEOUT);
 	}
+
 	var array = new Uint16Array(1);
 	window.crypto.getRandomValues(array);
 	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
 
-	UI.libPos[0] = pos;
+    UI.libPos[0] = pos;
 	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
 	var albumobj = filteredAlbums[pos];
 
-	storeLibPos(UI.libPos);
+	//storeLibPos(UI.libPos);
 	LIB.albumClicked = true; // For renderSongs()
 
     // Song list for regular album
@@ -917,7 +922,7 @@ $('.ralbum').click(function(e) {
 		files.push(filteredSongs[i].file);
 	}
 
-    if (SESSION.json['library_instant_play'] == 'Add/Play') {
+    if (SESSION.json['library_instant_play'] == 'Add/Play' || SESSION.json['library_instant_play'] == 'No action') {
         mpdDbCmd('playall', files);
     }
     // Clear/play using add first followed by delete. This approach makes for a smoother visual transition.
@@ -987,6 +992,7 @@ $('#ra-toggle-view').click(function(e) {
 
 // Click radio list item for instant play
 $('#database-radio').on('click', '.db-entry', function(e) {
+    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
 	var pos = $(this).parents('li').index();
 	var path = $(this).parents('li').data('path');
 

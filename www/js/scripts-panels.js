@@ -127,6 +127,14 @@ jQuery(document).ready(function($) { 'use strict';
     mpdDbCmd('lsinfo', '');
     mpdDbCmd('lsinfo_radio', 'RADIO');
 
+    // Load the Library if on Playback panel. This is required for ralbum and album links to work.
+    if (currentView.indexOf('playback') != -1) {
+        setTimeout(function() {
+            //console.log('pre-loading Library');
+            loadLibrary();
+        }, 1000);
+    }
+
     // setup pines notify
     $.pnotify.defaults.history = false;
 
@@ -582,8 +590,13 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
 
-    // click on playlist entry
+    // Click on playlist entry
     $('.playlist, .cv-playlist').on('click', '.pl-entry', function(e) {
+        if (GLOBAL.plActionClicked) {
+            GLOBAL.plActionClicked = false;
+            return;
+        }
+
         var selector = $(this).parent().hasClass('playlist') ? '.playlist' : '.cv-playlist';
         var pos = $(selector + ' .pl-entry').index(this);
 
@@ -595,22 +608,23 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
 
-	// click on playlist action menu button
-    $('.playlist, .cv-playlist').on('click', '.pl-action', function(e) {
+	// Click on playlist action menu button
+    $('.playlist').on('click', '.pl-action', function(e) {
+        GLOBAL.plActionClicked = true;
+
 		// store posn for later use by action menu selection
         UI.dbEntry[0] = $('.playlist .pl-action').index(this);
-
 		// store clock radio play name in UI.dbEntry[3]
-		if ($('#pl-' + (UI.dbEntry[0] + 1) + ' .pl-entry .pll2').html().substr(0, 2) == '<i') { // has icon (fa-microphone)
+		if ($('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) == '<i') { // has icon (fa-microphone)
 			// radio station
-			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pl-entry .pll2').html();
+			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html();
 			var station = line2.substr((line2.indexOf('</i>') + 4));
 			UI.dbEntry[3] = station.trim();
 		}
 		else {
 			// song file
-			var title = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pl-entry .pll1').html().trim();
-			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pl-entry .pll2').text(); // artist - album
+			var title = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll1').html().trim();
+			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').text(); // artist - album
 			var artist = line2.substr(0, (line2.indexOf('-') - 1)); // strip off album
 			UI.dbEntry[3] = title + ', ' + artist;
 		}
@@ -689,7 +703,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 	});
 
-	// Click on artist or station name in playback or cv
+	// Click on artist or station name in playback
 	$('#currentalbum').click(function(e) {
         if (!$('#playback-panel').hasClass('cv')) {
             // Radio station
@@ -813,16 +827,20 @@ jQuery(document).ready(function($) { 'use strict';
 	        notify('clrplay', '');
 		}
 	});
-	// radio panel sub folders
+	// Radio panel sub folders
 	$('.database-radio').on('click', '.db-browse', function(e) {
 		if ($(this).hasClass('db-radiofolder') || $(this).hasClass('db-radiofolder-icon')) {
 			e.stopImmediatePropagation();
 			UI.raFolderLevel[UI.raFolderLevel[4]] = $(this).parent().attr('id').replace('db-','');
 			++UI.raFolderLevel[4];
 			mpdDbCmd('lsinfo_radio', $(this).parent().data('path'));
+            lazyLode('radio');
+            setTimeout(function() {
+                $('#database-radio').scrollTo(0, 200);
+            }, SCROLLTO_TIMEOUT);
 		}
 	});
-    // radio folder back button
+    // Radio folder back button
     $('#ra-back').click(function(e) {
         if (UI.pathr != 'RADIO') {
 			var pathr = UI.pathr;
@@ -834,6 +852,10 @@ jQuery(document).ready(function($) { 'use strict';
 				pathr = '';
 			}
             mpdDbCmd('lsinfo_radio', pathr);
+            lazyLode('radio');
+            setTimeout(function() {
+                $('#database-radio').scrollTo(0, 200);
+            }, SCROLLTO_TIMEOUT);
 		}
 	});
 	$('#ra-home').click(function(e) {
