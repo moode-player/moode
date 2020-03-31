@@ -26,7 +26,7 @@ playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 session_write_close();
 
-$jobs = array('reboot', 'poweroff', 'updclockradio', 'updmpddb', 'update_library');
+$jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall');
 $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
 	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib');
@@ -39,7 +39,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 // Jobs sent to worker.php
 else {
 	if (in_array($_GET['cmd'], $jobs)) {
-		$queue_args = ($_GET['cmd'] == 'updmpddb' && isset($_POST['path']) && $_POST['path'] != '') ? $_POST['path'] : '';
+		$queue_args = ($_GET['cmd'] == 'update_library' && isset($_POST['path']) && $_POST['path'] != '') ? $_POST['path'] : '';
 		if (submitJob($_GET['cmd'], $queue_args, '', '')) {
 			echo json_encode('job submitted');
 		}
@@ -274,7 +274,7 @@ else {
 				}
 				break;
 			case 'loadlib':
-				//sleep(5); /*TEST*/
+				///*TEST*/ sleep(5); // For testing "Loading library..." overlay
 				echo loadLibrary($sock);
 	        	break;
 			case 'lsinfo':
@@ -527,10 +527,6 @@ else {
 				$_GET['ashuffle'] == '1' ? sysCmd($cmd) : sysCmd('killall -s 9 ashuffle > /dev/null');
 
 				echo json_encode('toggle ashuffle ' . $_GET['ashuffle']);
-				break;
-			case 'clrlibcache':
-				clearLibCache();
-				echo json_encode('OK');
 				break;
 			case 'thmcachestatus':
 				if (isset($_SESSION['thmcache_status']) && !empty($_SESSION['thmcache_status'])) {

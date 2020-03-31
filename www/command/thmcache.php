@@ -73,38 +73,7 @@ if (!file_exists(THMCACHE_DIR)) {
 	workerLog('thmcache: info: Missing thmcache dir, new one created');
 	sysCmd('mkdir ' . THMCACHE_DIR);
 }
-/* DEPRECATE
-// get root list
-$sock = openMpdSock('localhost', 6600);
-sendMpdCmd($sock, 'lsinfo');
-$resp = readMpdResp($sock);
-$dirs = array();
-$line = strtok($resp, "\n");
-$i = 0;
 
-// use directories only, exclude RADIO
-while ($line) {
-	list($param, $value) = explode(': ', $line, 2);
-
-	if ($param == 'directory' && $value != 'RADIO') {
-		$dirs[$i] = $value;
-		$i++;
-	}
-
-	$line = strtok("\n");
-}
-
-// get file list
-$resp = '';
-foreach ($dirs as $dir) {
-	workerLog('thmcache: directory: ' . $dir);
-	sendMpdCmd($sock, 'listall "' . $dir . '"');
-	$resp .= readMpdResp($sock);
-}
-closeMpdSock($sock);
-*/
-
-/*TEST*/
 // Get list of music files in /mnt and /media directories
 $mnt_dirs = str_replace("\n", ', ', shell_exec('ls /mnt'));
 $media_dirs = str_replace("\n", ', ', shell_exec('ls /media'));
@@ -128,29 +97,23 @@ if (is_null($resp) || substr($resp, 0, 2) == 'OK') {
 $count = 0;
 $line = strtok($resp, "\n");
 while ($line) {
-	//if (strpos($line, 'directory:') === false) {
-		$file_a = explode(': ', $line, 2)[1];
-		$dir_a = dirname($file_a);
+	$file_a = explode(': ', $line, 2)[1];
+	$dir_a = dirname($file_a);
 
-		$line = strtok("\n");
+	$line = strtok("\n");
 
-		$file_b = explode(': ', $line, 2)[1];
-		$dir_b = dirname($file_b);
+	$file_b = explode(': ', $line, 2)[1];
+	$dir_b = dirname($file_b);
 
-		if ($dir_a != $dir_b) {
-			session_start();
-			$_SESSION['thmcache_status'] = 'Processing album ' . ++$count . ' ' . $dir_a;
-			session_write_close();
+	if ($dir_a != $dir_b) {
+		session_start();
+		$_SESSION['thmcache_status'] = 'Processing album ' . ++$count . ' ' . $dir_a;
+		session_write_close();
 
-			if (!file_exists(THMCACHE_DIR . md5($dir_a) . '.jpg')) {
-				createThumb($file_a, $dir_a, $search_pri, $thm_w, $thm_q);
-			}
+		if (!file_exists(THMCACHE_DIR . md5($dir_a) . '.jpg')) {
+			createThumb($file_a, $dir_a, $search_pri, $thm_w, $thm_q);
 		}
-	//}
-	// Skip directories
-	//else {
-	//	$line = strtok("\n");
-	//}
+	}
 }
 
 session_start();

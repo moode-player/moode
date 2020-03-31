@@ -40,13 +40,9 @@ $initiateLibraryUpd = false;
 
 // LIB CONFIG POSTS
 
-// update mpd database
-if (isset($_POST['updatempd'])) {
-	submitJob('updmpddb', '', 'Updating MPD database...', '');
-}
 // rescan mpd database
-if (isset($_POST['rescanmpd'])) {
-	submitJob('rescanmpddb', '', 'Regenerating MPD database...', '');
+if (isset($_POST['regen_library'])) {
+	submitJob('regen_library', '', 'Regenerating library...', '');
 }
 // auto-update mpd db on usb insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
@@ -57,37 +53,32 @@ if (isset($_POST['update_usb_auto_updatedb'])) {
 	}
 }
 // re-mount nas sources
-if (isset($_POST['remount'])) {
-	$result_unmount = sourceMount('unmountall');
-	$result_mount = sourceMount('mountall');
-	//workerLog('lib-config: remount: (' . $result_unmount . ', ' . $result_mount . ')');
-	$_SESSION['notify']['title'] = 'Re-mounting music sources...';
+if (isset($_POST['remount_sources'])) {
+	$result = cfgdb_read('cfg_source', $dbh);
+	if ($result === true) {
+		$_SESSION['notify']['title'] = 'No sources configured';
+	}
+	else {
+		$result_unmount = sourceMount('unmountall');
+		$result_mount = sourceMount('mountall');
+		//workerLog('lib-config: remount_sources: (' . $result_unmount . ', ' . $result_mount . ')');
+		$_SESSION['notify']['title'] = 'Re-mounting music sources...';
+	}
 }
 // Clear library cache
-if (isset($_POST['clrlibcache'])) {
+if (isset($_POST['clear_libcache'])) {
 	clearLibCache();
 	$_SESSION['notify']['title'] = 'Library cache cleared';
 }
-// update thumbnail cache
-if (isset($_POST['updthmcache'])) {
-	$result = sysCmd('pgrep -l thmcache.php');
-	if (strpos($result[0], 'thmcache.php') !== false) {
-		$_SESSION['notify']['title'] = 'Process is currently running';
-	}
-	else {
-		$_SESSION['thmcache_status'] = 'Updating thumbnail cache...';
-		submitJob('updthmcache', '', 'Updating thumbnail cache...', '');
-	}
-}
 // regenerate thumbnail cache
-if (isset($_POST['regenthmcache'])) {
+if (isset($_POST['regen_thmcache'])) {
 	$result = sysCmd('pgrep -l thmcache.php');
 	if (strpos($result[0], 'thmcache.php') !== false) {
 		$_SESSION['notify']['title'] = 'Process is currently running';
 	}
 	else {
 		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';
-		submitJob('regenthmcache', '', 'Regenerating thumbnail cache...', '');
+		submitJob('regen_thmcache', '', 'Regenerating thumbnail cache...', '');
 	}
 }
 
@@ -270,11 +261,9 @@ if (!isset($_GET['cmd'])) {
 	// messages
 	if ($mounts === true) {
 		$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">None configured</p><p></p>';
-		$_remount_disable = 'disabled';
 	}
 	elseif ($mounts === false) {
 		$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">Query failed</p>';
-		$_remount_disable = '';
 	}
 
 	// auto-updatedb on usb insert/remove

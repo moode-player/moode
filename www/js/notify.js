@@ -33,7 +33,6 @@ function notify(cmd, msg, duration) {
         addall: 'Added to playlist',
         playall: 'Added to playlist',
         clrplayall: 'Added after playlist cleared',
-		updmpddb: 'Updating MPD database...',
         update_library: 'Updating library...',
         upd_thmcache: 'Updating thumbnail cache...',
 		remove: 'Removed from playlist',

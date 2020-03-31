@@ -47,16 +47,16 @@
 			<p></p>
 			<legend>Music Database</legend>
 			<p>
-				<a href="#regen-mpddb" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">MPD database</span></a>
+				<a href="#regen-mpddb" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">Music library</span></a>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-regen-mpddb" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-regen-mpddb" class="help-block-configs help-block-margin hide">
-					Rregenerate the MPD database. All files are scanned.
+					Rregenerate the MPD database by scanning all files then update the thumbnail cache.
                 </span>
 			</p>
 
 			<p>
 				<a href="#clear-libcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Clear</button><span class="config-label">Library tag cache</span></a>
-				<span id="info-clrlibcache" class="help-block-configs help-block-margin">
+				<span id="info-clear-libcache" class="help-block-configs help-block-margin">
 					The tag cache will be regenerated the next time the Library is opened.
                 </span>
 			</p>
@@ -65,7 +65,7 @@
 				<a href="#regen-thmcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">Album cover thumbnail cache</span></a>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-regen-thmcache" class="help-block-configs help-block-margin hide">
-					Regenerate the album cover thumbnail cache. The cache is first deleated and then all covers are added.
+					Regenerate the thumbnail cache by first deleting it before adding covers.
                 </span>
 			</p>
 
@@ -105,24 +105,7 @@
 
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="remount" value="novalue">Yes</button>
-		</div>
-	</div>
-</form>
-
-<form class="form-horizontal" method="post">
-	<div id="update-mpddb" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="update-mpddb-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		</div>
-
-		<div class="modal-body">
-			<h6>Update MPD database?</h6>
-		</div>
-
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="updatempd" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="remount_sources" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -134,12 +117,12 @@
 		</div>
 
 		<div class="modal-body">
-			<h6>Regenerate MPD database?</h6>
+			<h6>Regenerate Music Library?</h6>
 		</div>
 
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="rescanmpd" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="regen_library" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -156,24 +139,7 @@
 
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="clrlibcache" value="novalue">Yes</button>
-		</div>
-	</div>
-</form>
-
-<form class="form-horizontal" method="post">
-	<div id="update-thmcache" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="update-thmcache-label" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		</div>
-
-		<div class="modal-body">
-			<h6>Update thumbnail cache?</h6>
-		</div>
-
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="updthmcache" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="clear_libcache" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>
@@ -190,7 +156,7 @@
 
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="regenthmcache" value="novalue">Yes</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="regen_thmcache" value="novalue">Yes</button>
 		</div>
 	</div>
 </form>

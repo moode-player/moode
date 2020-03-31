@@ -110,7 +110,6 @@ var GLOBAL = {
 	searchLib: '', // used to store search results (x albums found) for the menu header
 	searchRadio: '',
 	searchFolder: '',
-    thmUpdInitiated: false,
     scriptSection: 'panels',
 	regExIgnoreArticles: '',
     libRendered: false,
@@ -277,15 +276,9 @@ function engineMpd() {
 				// database update
 				if (MPD.json['idle_timeout_event'] == 'changed: update') {
 					if (typeof(MPD.json['updating_db']) != 'undefined') {
-                        //console.log('engineMpd() show spinner1'); /*TEST*/
 						$('.busy-spinner').show();
 					}
-                    else if (GLOBAL.thmUpdInitiated) {
-                        //console.log('engineMpd() show spinner2'); /*TEST*/
-                		$('.busy-spinner').show();
-                	}
 					else {
-                        //console.log('engineMpd() hide spinner'); /*TEST*/
 						$('.busy-spinner').hide();
 					}
 				}
@@ -384,15 +377,9 @@ function engineMpdLite() {
 				}
 				// database update
 				if (typeof(MPD.json['updating_db']) != 'undefined') {
-                    //console.log('engineMpdLite() show spinner1'); /*TEST*/
 					$('.busy-spinner').show();
 				}
-                else if (GLOBAL.thmUpdInitiated) {
-                    //console.log('engineMpdLite() show spinner2'); /*TEST*/
-            		$('.busy-spinner').show();
-            	}
 				else {
-                    //console.log('engineMpdLite() hide spinner'); /*TEST*/
 					$('.busy-spinner').hide();
 				}
 
@@ -463,24 +450,11 @@ function engineCmd() {
                 case 'scnactive1':
     				screenSaver(cmd[0]);
                     break;
-                case 'dbupd_done':
+                case 'libupd_done':
     				$('.busy-spinner').hide();
-                    //console.log('engineCmd() dbupd_done, hide spinner'); /*TEST*/
                     break;
-                case 'thmupd_initiated':
-                    GLOBAL.thmUpdInitiated = true;
-    				$('.busy-spinner').show();
-                    //console.log('engineCmd() thmupd_initiated, show spinner'); /*TEST*/
-                    break;
-                case 'thmupd_done':
-                    GLOBAL.thmUpdInitiated = false;
+                case 'libregen_done':
     				$('.busy-spinner').hide();
-                    //console.log('engineCmd() thmupd_done, hide spinner'); /*TEST*/
-                    break;
-                case 'library_update_done':
-                    GLOBAL.thmUpdInitiated = false;
-    				$('.busy-spinner').hide();
-                    //console.log('engineCmd() library_update_done, hide spinner'); /*TEST*/
                     break;
             }
 
@@ -928,15 +902,9 @@ function renderUI() {
 
 	// Database update
 	if (typeof(MPD.json['updating_db']) != 'undefined') {
-        //console.log('renderUI() show spinner1'); /*TEST*/
-		$('.busy-spinner').show();
-	}
-    else if (GLOBAL.thmUpdInitiated) {
-        //console.log('renderUI() show spinner2'); /*TEST*/
 		$('.busy-spinner').show();
 	}
 	else {
-        //console.log('renderUI() hide spinner'); /*TEST*/
 		$('.busy-spinner').hide();
 	}
 }
@@ -1071,14 +1039,14 @@ function renderPlaylist() {
 
 		// render playlist
         $('#playlist ul').html(output);
-        $('#cv-playlist ul').html(output); /*TEST*/
+        $('#cv-playlist ul').html(output);
     });
 }
 
 // MPD commands for database, playlist, radio stations, saved playlists
 function mpdDbCmd(cmd, path) {
 	//console.log(cmd, path);
-	var cmds = ['add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'updmpddb', 'update_library'];
+	var cmds = ['add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'update_library'];
 	UI.dbCmd = cmd;
 
 	if (cmds.indexOf(cmd) != -1 ) {
@@ -1843,12 +1811,12 @@ $('.context-menu a').click(function(e) {
 			$('#pl-saveName').val('');
 		}
 	}
-	else if ($(this).data('cmd') == 'updmpddb') {
+    else if ($(this).data('cmd') == 'update_folder') {
         GLOBAL.libRendered = false;
-		mpdDbCmd('updmpddb', path);
-		notify('updmpddb', path);
+		mpdDbCmd('update_library', path);
+		notify('update_library', path);
 	}
-    else if ($(this).data('cmd') == 'update_library') {
+	else if ($(this).data('cmd') == 'update_library') {
         GLOBAL.libRendered = false;
 		mpdDbCmd('update_library');
 		notify('update_library');
