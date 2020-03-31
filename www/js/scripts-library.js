@@ -682,7 +682,7 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 	LIB.filters.albums.length = 0;
 	LIB.filters.year.length = 0;
 	if (currentView == 'tag' || currentView == 'album') {
-		GLOBAL.lazyTagInitiated, GLOBAL.lazyAlbumInitiated, LIB.artistClicked = false;
+		LIB.artistClicked = false;
 		$("#searchResetLib").hide();
 		showSearchResetLib = false;
 		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all

@@ -1039,13 +1039,10 @@ jQuery(document).ready(function($) { 'use strict';
 			else {
 				$('#lib-album-filter-results').html('');
 			}
-			GLOBAL.lazyTagInitiated, GLOBAL.lazyAlbumInitiated = false;
 			if ($('.tag-view-btn').hasClass('active')) {
-				//GLOBAL.lazyTagInitiated = false; // whyyyy
 				lazyLode('tag');
 			}
 			else {
-				//GLOBAL.lazyAlbumInitiated = false; // whyyyy
 				lazyLode('album');
 				$('#bottom-row').css('display', '');
 			}
@@ -1078,7 +1075,6 @@ jQuery(document).ready(function($) { 'use strict';
 		    renderAlbums();
 			$('#lib-album-filter').blur();
 			$('#viewswitch').click();
-			//GLOBAL.lazyTagInitiated, GLOBAL.lazyAlbumInitiated = false;
 			if (currentView == 'tag' && SESSION.json['tag_view_covers'] == 'Yes') {
 				lazyLode('tag');
 			}

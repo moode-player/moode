@@ -110,9 +110,6 @@ var GLOBAL = {
 	searchLib: '', // used to store search results (x albums found) for the menu header
 	searchRadio: '',
 	searchFolder: '',
-	lazyAlbumInitiated: false, // TEST
-	lazyTagInitiated: false, // TEST
-	lazyRadioInitiated: false, // TEST
     thmUpdInitiated: false,
     scriptSection: 'panels',
 	regExIgnoreArticles: '',
@@ -3180,7 +3177,7 @@ function makeActive (vswitch, panel, view) {
 	switch (view) {
         case 'radiolist':
 		case 'radiocovers':
-            if (!GLOBAL.lazyRadioInitiated) {lazyLode('radio')}
+            lazyLode('radio')
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
 			$('#viewswitch .album-view-btn').removeClass('menu-separator');
 			setLibMenuHeader();
@@ -3191,7 +3188,7 @@ function makeActive (vswitch, panel, view) {
 			setLibMenuHeader();
 			break;
 		case 'album':
-            if (!GLOBAL.lazyAlbumInitiated) {lazyLode('album')}
+            lazyLode('album')
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('#library-panel').addClass('covers').removeClass('tag');
@@ -3200,7 +3197,7 @@ function makeActive (vswitch, panel, view) {
 			setLibMenuHeader();
 			break;
 		case 'tag':
-            if (!GLOBAL.lazyTagInitiated) {lazyLode('tag')}
+            lazyLode('tag')
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('#library-panel').addClass('tag').removeClass('covers');
@@ -3259,32 +3256,26 @@ function lazyLode(view) {
     //console.log('lazylode', view);
 	switch (view) {
 		case 'radio':
-			//if (GLOBAL.lazyRadioInitiated) {return;}
 			setTimeout(function(){
 				$('img.lazy-radioview').lazyload({
 				    container: $('#radiocovers')
 				});
 			}, LAZYLOAD_TIMEOUT);
-			//GLOBAL.lazyRadioInitiated = true;
 			break;
 		case 'tag':
-			//if (GLOBAL.lazyTagInitiated) {return}
             if (SESSION.json['library_tagview_covers'] == 'No') {return;}
 			setTimeout(function(){
 				$('img.lazy-tagview').lazyload({
 				    container: $('#lib-album')
 				});
 			}, LAZYLOAD_TIMEOUT);
-			//GLOBAL.lazyTagInitiated = true;
 			break;
 		case 'album':
-			//if (GLOBAL.lazyAlbumInitiated) {return;}
 			setTimeout(function(){
 				$('img.lazy-albumview').lazyload({
 				    container: $('#lib-albumcover')
 				});
 			}, LAZYLOAD_TIMEOUT);
-			//GLOBAL.lazyAlbumInitiated = true;
 			break;
 		}
 }
