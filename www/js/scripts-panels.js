@@ -993,8 +993,10 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
     // library search
+    // NOTE: This performs typedown search and a special year or year range search
 	$('#lib-album-filter').keyup(function(e){
 		e.preventDefault();
+
 		if (!showSearchResetLib) {
 			$('#searchResetLib').show();
 			showSearchResetLib = true;
@@ -1002,40 +1004,11 @@ jQuery(document).ready(function($) { 'use strict';
 
 		clearTimeout(searchTimer);
 
-		if (e.key == 'Enter') {
-			var filter = $(this).val();
-			if (parseInt(filter)) {
-				LIB.filters.year = filter.split('-'); // [year 1][year 2 if present]
-			    LIB.recentlyAddedClicked = false;
-				LIB.filters.albums.length = 0;
-				LIB.filters.year[1] ? f = ' to ' + LIB.filters.year[1] : f = '';
-				$('#menu-header').text('Albums from ' + LIB.filters.year[0]+ f);
-				GLOBAL.searchLib = $('#menu-header').text(); // save for #menu-header
-				$('#viewswitch span').hide();
-				UI.libPos.fill(-2);
-				filterLib();
-			    renderAlbums();
-				$('#lib-album-filter').blur();
-				$('#viewswitch').click();
-				//GLOBAL.lazyTagInitiated, GLOBAL.lazyAlbumInitiated = false;
-				if (currentView == 'tag') {
-					if (SESSION.json['tag_view_covers'] == 'Yes') {
-						lazyLode('tag');
-					}
-				}
-				if (currentView == 'album') {
-					lazyLode('album');
-				}
-				return;
-			}
-			$('#lib-album-filter').blur();
-			$('#viewswitch').click();
-		}
-
 		var selector = this;
 		searchTimer = setTimeout(function(){
 			var filter = $(selector).val()
 			var count = 0;
+
 			if (filter == '') {
 				$('#searchResetLib').hide();
 				showSearchResetLib = false;
@@ -1061,8 +1034,7 @@ jQuery(document).ready(function($) { 'use strict';
 			var s = (count == 1) ? '' : 's';
 			if (filter != '') {
 				$('#menu-header').text((+count) + ' albums found');
-				GLOBAL.searchLib = $('#menu-header').text(); // save for #menu-header
-				//$('#lib-album-filter-results').html((+count) + '&nbsp;album' + s);
+				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
 			}
 			else {
 				$('#lib-album-filter-results').html('');
@@ -1084,15 +1056,22 @@ jQuery(document).ready(function($) { 'use strict';
 			UI.libPos.fill(-3);
 		}, LIBSEARCH_TIMEOUT);
 
-		var filter = $(selector).val();
-		if (filter.slice(filter.length - 2) == '!r') { // rangify
-			var f = filter.slice(0, filter.length - 2);
-			LIB.filters.year = f.split('-'); // [year 1][year 2 if present]
+        var filter = $(this).val();
+		if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
+            if (filter.slice(filter.length - 2) == '!r') {
+                filter = filter.slice(0, filter.length - 2);
+            }
+
+            LIB.filters.year = filter.split('-'); // [year 1][year 2 if present]
+            if (!(parseInt(LIB.filters.year[0]) || parseInt(LIB.filters.year[1]))) {
+                // For now do nothing for non integer (year) input
+                return false;
+            }
+
 		    LIB.recentlyAddedClicked = false;
 			LIB.filters.albums.length = 0;
-			LIB.filters.year[1] ? f = ' to ' + LIB.filters.year[1] : f = '';
-			$('#menu-header').text('Albums from ' + LIB.filters.year[0]+ f);
-			GLOBAL.searchLib = $('#menu-header').text(); // save for #menu-header
+			$('#menu-header').text('Albums from ' + LIB.filters.year[0] + (LIB.filters.year[1] ? ' to ' + LIB.filters.year[1] : ''));
+			GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
 			$('#viewswitch span').hide();
 			UI.libPos.fill(-2);
 			filterLib();
@@ -1100,14 +1079,14 @@ jQuery(document).ready(function($) { 'use strict';
 			$('#lib-album-filter').blur();
 			$('#viewswitch').click();
 			//GLOBAL.lazyTagInitiated, GLOBAL.lazyAlbumInitiated = false;
-			if (currentView == 'tag') {
-				if (SESSION.json['tag_view_covers'] == 'Yes') {
-					lazyLode('tag');
-				}
+			if (currentView == 'tag' && SESSION.json['tag_view_covers'] == 'Yes') {
+				lazyLode('tag');
 			}
-			if (currentView == 'album') {
+			else if (currentView == 'album') {
 				lazyLode('album');
 			}
+			$('#lib-album-filter').blur();
+			$('#viewswitch').click();
 		}
 	});
 
