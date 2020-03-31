@@ -19,12 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-07 TC moOde 5.2
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 -->
 <div class="container">
-	<div class="container2">
+	<div class="container2" style="padding-bottom:10em">
     <h1 class="snd-config">MPD Config</h1>
 
     <form class="form-horizontal" action="" method="post">
@@ -123,7 +123,7 @@
 
 			<div class="control-group">
 				<legend>Gain and Normalization</legend>
-                <label class="control-label" for="replay-gain">ReplayGain</label>
+                <label class="control-label" for="replaygain">ReplayGain</label>
                 <div class="controls">
 					<select id="replaygain" name="conf[replaygain]" class="input-large">
 						$_mpd_select[replaygain]
@@ -172,7 +172,7 @@
                 </div>
             </div>
 
-			<div class="control-group $_hide_020_params">  <!--r45b for 0.20 only -->
+			<div class="control-group $_hide_020_params">  <!-- for 0.20 only -->
                 <label class="control-label" for="buffer-before-play">Buffer fill before play</label>
                 <div class="controls">
 					<select id="buffer-before-play" name="conf[buffer_before_play]" class="input-large">
@@ -182,6 +182,20 @@
 					<span id="info-buffer-before-play" class="help-block-configs help-block-margin hide">
                     	Default fill is 10%, min/max fill is 10%/30%.
                     </span>
+                </div>
+            </div>
+
+			<div class="control-group">
+				<legend>Other options</legend>
+                <label class="control-label" for="log_level">Log level</label>
+                <div class="controls">
+					<select id="log_level" name="conf[log_level]" class="input-large">
+						$_mpd_select[log_level]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-log_level" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-log_level" class="help-block-configs help-block-margin hide">
+						Control the amount of detail in the MPD log (/var/log/mpd/log).
+                   </span>
                 </div>
             </div>
 
