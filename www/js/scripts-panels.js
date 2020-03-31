@@ -1254,7 +1254,7 @@ jQuery(document).ready(function($) { 'use strict';
 		screenSaver('1');
 	});
 
-    /*TEST*/// Coverview playlist
+    // Coverview playlist
 	$('#cv-playlist-btn').on('click', function(e) {
         $('#cv-playlist').toggle();
 
