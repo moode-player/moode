@@ -970,7 +970,6 @@ $('#database-radio').on('click', 'img', function(e) {
 
 // Radio list/cover toggle button
 $('#ra-toggle-view').click(function(e) {
-    console.log('#ra-toggle-view.click', UI.radioPos);
 	if ($('#ra-toggle-view i').hasClass('fa-bars')) {
 		$('#ra-toggle-view i').removeClass('fa-bars').addClass('fa-th');
 		$('#radiocovers').addClass('database-radiolist');
