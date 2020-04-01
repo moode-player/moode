@@ -273,7 +273,6 @@ jQuery(document).ready(function($) { 'use strict';
 		mpdDbCmd('lsinfo', '');
 	}
     // Tag view
-
 	else if (currentView == 'tag'){
 		makeActive('.tag-view-btn','#library-panel', 'tag');
         SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
@@ -713,6 +712,7 @@ jQuery(document).ready(function($) { 'use strict';
     					UI.radioPos = index + 1;
     				}
     			});
+                currentView = 'playback,radiocovers';
     			$('#playback-switch').click();
     			if (!$('.radio-view-btn').hasClass('active')) {
     				$('.radio-view-btn').click();
