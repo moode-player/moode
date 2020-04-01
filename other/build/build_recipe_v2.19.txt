@@ -1,10 +1,10 @@
 ################################################################
 #
-# Build Recipe v2.18 2020-MM-DD
+# Build Recipe v2.19 2020-MM-DD
 #
 # moOde 6.5.0 2020-MM-DD
 # - Based on Raspbian Buster Lite (10.3)
-# - Bump to Linux kernel 4.19.102 build #1295
+# - Bump to Linux kernel 4.19.108 build #1298
 # - Bump to r650 sources
 # - Bump to MPD 0.21.20
 # - Bump to librespot v0.1.1 (armv7l only)
@@ -639,9 +639,9 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-KERNEL=4.19.102
-BUILD=#1295
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 0dfefdceed89582e9ddda856a9056739d0cf9059
+KERNEL=4.19.108
+BUILD=#1298
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 9dbd67c91d371171c9d8a624e90dba1190645a2a
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
