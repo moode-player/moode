@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 -->
@@ -130,7 +130,7 @@
 							$_select[katana_osf]
 						</select>
 						<span class="help-block-configs help-block-margin">
-	                    		Filter is applied to PCM samples at oversampling stage.<br>
+	                    	Filter is applied to PCM samples at oversampling stage.<br>
 							Playback is automatically restarted to make filter change effective.<br>
 							Default: Apodizing Fast Roll-off Filter
 	                    </span>
@@ -175,7 +175,7 @@
 							$_select[audiophonics_q2m_osf]
 						</select>
 						<span class="help-block-configs help-block-margin">
-	                    		Filter is applied to PCM samples at oversampling stage.<br>
+	                    	Filter is applied to PCM samples at oversampling stage.<br>
 							Playback is automatically restarted to make filter change effective.<br>
 	                    </span>
 					</div>
@@ -190,6 +190,23 @@
 						</select>
 						<span class="help-block-configs help-block-margin">
 							Default: I2S
+	                    </span>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+
+		<div class="$_merus_ma12070p">
+			<h4>MERUS MA12070P multilevel class D amp</h4>
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label" for="katana_osf">Power mode profile</label>
+					<div class="controls">
+						<select id="merus_ma12070p_pmp" class="input-large" name="config[merus_ma12070p_pmp]">
+							$_select[merus_ma12070p_pmp]
+						</select>
+						<span class="help-block-configs help-block-margin">
+	                    	The MA12070P provides different power mode profiles for operating the internal power amplifiers. They define optimal settings of the amplifier for the intended application. The power mode profile selection affects various parameters such as switching frequency, modulation scheme and loop-gain, thus providing flexibility in design tradeoffs such as audio performance, power loss and EMI.
 	                    </span>
 					</div>
 				</div>

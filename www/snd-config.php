@@ -31,7 +31,7 @@ if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice'])) {
 		playerSession('write', 'i2sdevice', $_POST['i2sdevice']);
 		$title = 'I2S audio device updated';
-		$msg = '<b>Reboot required</b><br>After rebooting:<br>- Edit MPD Config and SAVE<br>- Edit chip options<br>- Edit driver options';
+		$msg = '<b>Reboot required</b><br>After rebooting edit chip options and/or driver options';
 
 		submitJob('i2sdevice', $_POST['i2sdevice'], $title, $msg, 30);
 	}

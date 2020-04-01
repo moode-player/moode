@@ -29,7 +29,7 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 4.19.102 build #1295
+- UPD: Bump to Linux kernel 4.19.108 build #1298
 - UPD: Bump to MPD 0.21.20
 - UPD: Bump to shairport-sync 3.3.6
 - UPD: Bump to librespot v0.1.1 (armv7l-only)
@@ -50,6 +50,10 @@ Bug fixes
 - FIX: WiFi/BT options missing from System config for Zero W
 - FIX: Last track (toggle song) id not persisting
 - FIX: Minor corrections to Setup guide
+
+Audio devices
+
+- NEW: MERUS MA12070P multilevel class D amp
 
 Radio stations
 
