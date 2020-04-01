@@ -452,9 +452,11 @@ function engineCmd() {
                     break;
                 case 'libupd_done':
     				$('.busy-spinner').hide();
+                    if (currentView == 'tag' || currentView == 'album') {loadLibrary();}
                     break;
                 case 'libregen_done':
     				$('.busy-spinner').hide();
+                    if (currentView == 'tag' || currentView == 'album') {loadLibrary();}
                     break;
             }
 
