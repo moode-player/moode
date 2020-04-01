@@ -16,7 +16,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2019-05-07 TC moOde 5.2
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -116,6 +116,19 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Chip options updated';
 	}
+
+	// MERUS MA12070P multilevel class D amp chip
+	if ($_SESSION['i2sdevice'] == 'MERUS MA12070P multilevel class D amp') {
+		$chipoptions = $_POST['config']['merus_ma12070p_pmp'];
+		$chiptype = 'merus_ma12070p';
+
+		// amixer cmds
+		cfgChipOptions($chipoptions, $chiptype);
+
+		// update chip options
+		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$_SESSION['notify']['title'] = 'Changes saved';
+	}
 }
 
 session_write_close();
@@ -198,7 +211,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	// subwoofer volume
 	$subwvol = str_replace('%', '', $subvol[0]);
 }
-else{
+else {
 	$_allo_piano_hide = 'hide';
 }
 
@@ -228,7 +241,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 	$_select['katana_dop'] .= "<option value=\"on\" " . (($katana_dop == 'on') ? "selected" : "") . ">On</option>\n";
 	$_select['katana_dop'] .= "<option value=\"off\" " . (($katana_dop == 'off') ? "selected" : "") . ">Off</option>\n";
 }
-else{
+else {
 	$_allo_katana_hide = 'hide';
 }
 
@@ -262,8 +275,24 @@ if ($_SESSION['i2sdevice'] == 'Audiophonics ES9028/9038 DAC' || $_SESSION['i2sde
 	$_select['audiophonics_q2m_input'] .= "<option value=\"I2S\" " . (($audiophonics_q2m_input == 'I2S') ? "selected" : "") . ">I2S</option>\n";
 	$_select['audiophonics_q2m_input'] .= "<option value=\"SPDIF\" " . (($audiophonics_q2m_input == 'SPDIF') ? "selected" : "") . ">S/PDIF</option>\n";
 }
-else{
+else {
 	$_audiophonics_q2m_hide = 'hide';
+}
+
+// MERUS MA12070P multilevel class D amp
+if ($_SESSION['i2sdevice'] == 'MERUS MA12070P multilevel class D amp') {
+	$_merus_ma12070p = '';
+	$merus_ma12070p_pmp = $array[0];
+
+	// Power mode profiles
+	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF0\" " . (($merus_ma12070p_pmp == 'PMF0') ? "selected" : "") . ">PMF0 - No filter, optimized efficiency, default applications</option>\n";
+	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF1\" " . (($merus_ma12070p_pmp == 'PMF1') ? "selected" : "") . ">PMF1 - No filter, optimized audio performance, active speaker applications</option>\n";
+	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF2\" " . (($merus_ma12070p_pmp == 'PMF2') ? "selected" : "") . ">PMF2 - No filter, optimized audio performance, default applications</option>\n";
+	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF3\" " . (($merus_ma12070p_pmp == 'PMF3') ? "selected" : "") . ">PMF3 - LC filter, high efficiency, high audio performance, good EMI, low ripple loss</option>\n";
+	$_select['merus_ma12070p_pmp'] .= "<option value=\"PMF4\" " . (($merus_ma12070p_pmp == 'PMF4') ? "selected" : "") . ">PMF4 - No filter, optimized efficiency, active speaker applications</option>\n";
+}
+else {
+	$_merus_ma12070p = 'hide';
 }
 
 waitWorker(1, 'chp-config');

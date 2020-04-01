@@ -2174,26 +2174,30 @@ function getUpnpCoverUrl() {
 	return $result[0];
 }
 
-// configure chip options
+// Configure chip options
 function cfgChipOptions($chipoptions, $chiptype) {
 	$array = explode(',', $chipoptions);
 
-	// analog volume, analog volume boost, digital interpolation filter
+	// Burr Brows PCM5: Analog volume, analog volume boost, digital interpolation filter
 	if ($chiptype == 'burr_brown_pcm5') {
 		sysCmd('amixer -c 0 sset "Analogue" ' . $array[0]);
 		sysCmd('amixer -c 0 sset "Analogue Playback Boost" ' . $array[1]);
 		sysCmd('amixer -c 0 sset "DSP Program" ' . '"' . $array[2] . '"');
 	}
-	// oversampling filter, de-emphasis, dop
+	// Allo Katana: Oversampling filter, de-emphasis, dop
 	else if ($chiptype == 'ess_sabre_katana') {
 		sysCmd('amixer -c 0 sset "DSP Program" ' . '"' . $array[0] . '"');
 		sysCmd('amixer -c 0 sset "Deemphasis" ' . $array[1]);
 		sysCmd('amixer -c 0 sset "DoP" ' . $array[2]);
 	}
-	// oversampling filter, input select
+	// Audiophonics ES9028/9038 Q2M: Oversampling filter, input select
 	else if ($chiptype == 'ess_sabre_audiophonics_q2m') {
 		sysCmd('amixer -c 0 sset "FIR Filter Type" ' . '"' . $array[0] . '"');
 		sysCmd('amixer -c 0 sset "I2S/SPDIF Select" ' . '"' . $array[1] . '"');
+	}
+	// MERUS MA12070P multilevel class D amp: Power mode profile
+	else if ($chiptype == 'merus_ma12070p') {
+		sysCmd('amixer -c 0 sset "Q.PM prof" ' . '"' . $array[0] . '"');
 	}
 }
 
