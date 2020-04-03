@@ -304,16 +304,13 @@
                             e.originalEvent.touches[s.t].pageX,
                             e.originalEvent.touches[s.t].pageY
                             );
-							if (v < oldv - 90 || v > oldv + 90) return;
 			                if (s.$div.parent().hasClass('volume-step-limiter')) {
+								if (oldv === 100 && v < 10 || oldv === 0 && v > 90) return;
 			                    if (v - parseInt(SESSION.json['volknob']) > 10) {
-									if (runaway == false) {
-										v = parseInt(SESSION.json['volknob']) + 10;
-										runaway = true;
-									} else {
-										return;
-									}
-			        			}
+									if (runaway) return;
+									v = parseInt(SESSION.json['volknob']) + 10;
+									runaway = true;
+								}
 			                }
                 if (v == s.cv) return;
                 if (
@@ -345,6 +342,7 @@
                             && (s.rH(s.cv) === false)
                         ) return;
 						runaway = false;
+						oldv = '';
                         s.val(s.cv);
                     }
                 );
