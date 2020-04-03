@@ -31,7 +31,9 @@
      */
     var k = {}, // kontrol
         max = Math.max,
-        min = Math.min;
+        min = Math.min,
+		runaway = false,
+		oldv;
 
     k.c = {};
     k.c.d = $(document);
@@ -302,20 +304,24 @@
                             e.originalEvent.touches[s.t].pageX,
                             e.originalEvent.touches[s.t].pageY
                             );
+							if (v < oldv - 90 || v > oldv + 90) return;
 			                if (s.$div.parent().hasClass('volume-step-limiter')) {
 			                    if (v - parseInt(SESSION.json['volknob']) > 10) {
-			        				v = parseInt(SESSION.json['volknob']) + 10;
+									if (runaway == false) {
+										v = parseInt(SESSION.json['volknob']) + 10;
+										runaway = true;
+									} else {
+										return;
+									}
 			        			}
 			                }
-
                 if (v == s.cv) return;
-
                 if (
                     s.cH
                     && (s.cH(v) === false)
                 ) return;
 
-
+				oldv = v;
                 s.change(s._validate(v));
                 s._draw();
             };
@@ -338,7 +344,7 @@
                             s.rH
                             && (s.rH(s.cv) === false)
                         ) return;
-
+						runaway = false;
                         s.val(s.cv);
                     }
                 );
