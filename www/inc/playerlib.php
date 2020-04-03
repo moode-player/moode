@@ -2195,7 +2195,7 @@ function cfgChipOptions($chipoptions, $chiptype) {
 		sysCmd('amixer -c 0 sset "FIR Filter Type" ' . '"' . $array[0] . '"');
 		sysCmd('amixer -c 0 sset "I2S/SPDIF Select" ' . '"' . $array[1] . '"');
 	}
-	// MERUS MA12070P multilevel class D amp: Power mode profile
+	// MERUS Amp HAT ZW: Power mode profile
 	else if ($chiptype == 'merus_ma12070p') {
 		sysCmd('amixer -c 0 sset "Q.PM prof" ' . '"' . $array[0] . '"');
 	}

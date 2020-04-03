@@ -53,7 +53,7 @@ Bug fixes
 
 Audio devices
 
-- NEW: MERUS MA12070P multilevel class D amp
+- NEW: MERUS Amp HAT ZW
 
 Radio stations
 

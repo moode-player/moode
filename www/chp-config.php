@@ -117,8 +117,8 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$_SESSION['notify']['title'] = 'Chip options updated';
 	}
 
-	// MERUS MA12070P multilevel class D amp chip
-	if ($_SESSION['i2sdevice'] == 'MERUS MA12070P multilevel class D amp') {
+	// MERUS Amp HAT ZW chip
+	if ($_SESSION['i2sdevice'] == 'MERUS Amp HAT ZW') {
 		$chipoptions = $_POST['config']['merus_ma12070p_pmp'];
 		$chiptype = 'merus_ma12070p';
 
@@ -279,8 +279,8 @@ else {
 	$_audiophonics_q2m_hide = 'hide';
 }
 
-// MERUS MA12070P multilevel class D amp
-if ($_SESSION['i2sdevice'] == 'MERUS MA12070P multilevel class D amp') {
+// MERUS Amp HAT ZW
+if ($_SESSION['i2sdevice'] == 'MERUS Amp HAT ZW') {
 	$_merus_ma12070p = '';
 	$merus_ma12070p_pmp = $array[0];
 
