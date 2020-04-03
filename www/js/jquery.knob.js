@@ -305,7 +305,10 @@
                             e.originalEvent.touches[s.t].pageY
                             );
 			                if (s.$div.parent().hasClass('volume-step-limiter')) {
-								if (oldv === 100 && v < 10 || oldv === 0 && v > 90) return;
+								if (oldv === 100 && v < 10 || oldv === 0 && v > 90) {
+									runaway = true;
+									return;
+								}
 			                    if (v - parseInt(SESSION.json['volknob']) > 10) {
 									if (runaway) return;
 									v = parseInt(SESSION.json['volknob']) + 10;
