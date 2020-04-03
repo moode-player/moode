@@ -707,15 +707,14 @@ function renderUI() {
 	// compare new to current to prevent unnecessary image reloads
 	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
 		debugLog(MPD.json['coverurl']);
-
-		/* TEST
-		if (MPD.json['coverurl'].indexOf('default-cover-v6') != -1) {
-			MPD.json['coverurl'] = getComputedStyle(document.body).getPropertyValue('--defcover');
-			console.log('MPD.json[coverurl]=', MPD.json['coverurl']);
-		}*/
-
+        // Original for Playback
 		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
-		$('#playbar-cover').html('<img src="' + MPD.json['coverurl'] + '">');
+        // Thumbnail for Playbar
+        var image_url = MPD.json['artist'] == 'Radio station' ?
+            encodeURIComponent(MPD.json['coverurl'].replace('images/radio-logos', 'images/radio-logos/thumbs')) :
+            '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
+        $('#playbar-cover').html('<img src="' + image_url + '">');
+
 		// cover backdrop or bgimage
 		if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
 			$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
