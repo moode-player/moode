@@ -1,4 +1,4 @@
-/* ===========================================================
+/*! ===========================================================
  * bootstrap-tooltip.js v2.3.0
  * http://twitter.github.com/bootstrap/javascript.html#tooltips
  * Inspired by the original jQuery.tipsy by Jason Frame

@@ -1,4 +1,4 @@
-/**
+/*!
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
@@ -753,19 +753,8 @@ function renderUI() {
 		$('#extra-tags-display').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
 	}
 	else {
-        var elementDisplay, extraTagsDisplay = '';
-        var extraTagsArray = SESSION.json['extra_tags'].replace(/ /g, '').split(','); // Strip out whitespace
-
-        //NOTE: composer may be = null, disc may be = 'Disc tag missing', encoded may be = 'Unknown'
-        for (const element of extraTagsArray) {
-            //console.log(element, MPD.json[element]);
-            if (MPD.json[element] != null && MPD.json[element] != 'Disc tag missing' && MPD.json[element] != 'Unknown') {
-                elementDisplay = element == 'track' ? 'Track' : (element == 'disc' ? 'Disc' : '');
-                extraTagsDisplay += ((elementDisplay == '' ? '' : elementDisplay + ' ') + MPD.json[element] + ' • ');
-            }
-        }
-
-        extraTagsDisplay = extraTagsDisplay.slice(0, -3); // Strip trailing bullet
+        var extraTagsDisplay = '';
+        extraTagsDisplay = formatExtraTagsString();
         extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) : $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
 	}
 
@@ -1071,14 +1060,8 @@ function mpdDbCmd(cmd, path) {
 		$.post('command/moode.php?cmd=lsinfo', { 'path': 'RADIO' }, function(data) {renderBrowse(data, 'RADIO');}, 'json');
 	}
 	else if (cmd == 'delstation') {
-        // Delete the station from Object array
-        var station_name = path.slice(0,path.lastIndexOf('.')).substr(6); // Trim 'RADIO/' and '.pls' from path
-        for (let [key, value] of Object.entries(RADIO.json)) {
-            if (value.name == station_name) {
-                delete RADIO.json[key];
-            }
-        }
-
+        // Delete station from Object array
+        deleteRadioStationObject(path.slice(0,path.lastIndexOf('.')).substr(6)); // Trim 'RADIO/' and '.pls' from path
         // Delete the station from cfg_radio table
         var result = sendMoodeCmd('POST', cmd, {'path': path});
 		$.post('command/moode.php?cmd=lsinfo', {'path': 'RADIO'}, function(data) {renderBrowse(data, 'RADIO');}, 'json');
@@ -2249,33 +2232,6 @@ $('.btn-appearance-update').click(function(e){
 	}
 });
 
-function getParamOrValue (type, key) {
-    let mapTable = new Map([
-        // Screen saver timeout
-        ['Never','Never'],['1 minute','60'],['2 minutes','120'],['5 minutes','300'],['10 minutes','600'],['20 minutes','1200'],['30 minutes','1800'],['1 hour','3600'],
-        // Library recently added
-        ['1 Week','604800000'],['1 Month','2592000000'],['3 Months','7776000000'],['6 Months','15552000000'],['1 Year','31536000000'],
-        // Library cover search priority
-        ['Embedded','Embedded cover'],['Cover file','Cover image file'],
-        // Font size factors
-        ['Smaller',.35],['Small',.40],['Normal',.45],['Large',.55],['Larger',.65]
-    ]);
-
-    if (type == 'value') {
-        var result = mapTable.get(key);
-    }
-    else if (type == 'param') {
-        for (let [param, value] of mapTable) {
-            if (value == key) {
-                var result = param;
-                break;
-            }
-        }
-    }
-
-    return result;
-}
-
 // remove bg image (NOTE choose bg image is in footer.php)
 $('#remove-bgimage').click(function(e) {
 	e.preventDefault();
@@ -2857,7 +2813,7 @@ function getCSSRule(ruleName) {
 	for (var i = 0; i < document.styleSheets.length; i++) {
 		var styleSheet = document.styleSheets[i];
 
-		if (styleSheet.href && styleSheet.href.indexOf('flat-ui.css') != -1 ) {
+		if (styleSheet.href && styleSheet.href.indexOf('flat-ui.min.css') != -1 ) {
 			var cssRules = styleSheet.cssRules;
 			for (var j = 0; j < cssRules.length; j++) {
 				var cssRule = cssRules[j];

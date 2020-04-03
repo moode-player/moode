@@ -41,45 +41,45 @@
 	<?php
 		// Common css
 		versioned_resource('css/bootstrap.min.css');
-		versioned_resource('css/bootstrap-select.css');
-		versioned_resource('css/flat-ui.css');
-		versioned_resource('css/jquery.pnotify.default.css');
-		versioned_resource('css/fontawesome-moode.css');
-		versioned_resource('css/panels.css');
-		versioned_resource('css/moode.css');
+		versioned_resource('css/bootstrap-select.min.css');
+		versioned_resource('css/flat-ui.min.css');
+		versioned_resource('css/jquery.pnotify.default.min.css');
+		versioned_resource('css/fontawesome-moode.min.css');
+		versioned_resource('css/panels.min.css');
+		versioned_resource('css/moode.min.css');
 
 		// Common js
 		versioned_script('js/bootstrap.min.js');
 		versioned_script('js/bootstrap-select.min.js');
 		versioned_script('js/jquery.pnotify.min.js');
-		versioned_script('js/playerlib.js');
-		versioned_script('js/links.js');
+        versioned_script('js/playerlib-nomin.js');
+		versioned_script('js/playerlib.min.js');
+		versioned_script('js/links.min.js');
 
 		// Playback / Library
 		if ($section == 'index') {
-			versioned_resource('css/jquery.countdown.css');
-			versioned_script('js/jquery.countdown.js');
+			versioned_resource('css/jquery.countdown.min.css');
+			versioned_script('js/jquery.countdown.min.js');
 			versioned_script('js/jquery.scrollTo.min.js');
 			versioned_script('js/jquery.touchSwipe.min.js');
-			versioned_script('js/jquery.lazyload.js');
-			versioned_script('js/jquery.md5.js');
-			versioned_script('js/jquery.adaptive-backgrounds.js');
-			versioned_script('js/notify.js');
-			versioned_script('js/jquery.knob.js');
-			versioned_script('js/bootstrap-contextmenu.js');
-            versioned_script('js/scripts-library.js');
-            versioned_script('js/scripts-panels.js');
+			versioned_script('js/jquery.lazyload.min.js');
+			versioned_script('js/jquery.md5.min.js');
+			versioned_script('js/jquery.adaptive-backgrounds.min.js');
+			versioned_script('js/notify.min.js');
+			versioned_script('js/jquery.knob.min.js');
+			versioned_script('js/bootstrap-contextmenu.min.js');
+            versioned_script('js/scripts-library.min.js');
+            versioned_script('js/scripts-panels.min.js');
 		}
 		// Configs
 		else {
-			versioned_script('js/custom_checkbox_and_radio.js');
+			versioned_script('js/custom_checkbox_and_radio.min.js');
 			versioned_script('js/custom_radio.js');
-			versioned_script('js/jquery.tagsinput.js');
-			versioned_script('js/jquery.placeholder.js');
+			versioned_script('js/jquery.tagsinput.min.js');
+			versioned_script('js/jquery.placeholder.min.js');
 			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
-			versioned_script('js/application.js');
-            versioned_script('js/notify.js');
-			versioned_script('js/scripts-configs.js');
+			versioned_script('js/application.min.js');
+			versioned_script('js/scripts-configs.min.js');
 		}
 	?>
 

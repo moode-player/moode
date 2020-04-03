@@ -1,4 +1,4 @@
-/**
+/*!
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
@@ -152,7 +152,7 @@ html {background-color:inherit;}
 #menu-top, #menu-bottom {position:fixed;left:0;right:0;color:inherit;}
 .btnlist.btnlist-top.btnlist-top-pl {top:0px;top:env(safe-area-inset-top);width:35%;z-index:1004;display:none;}
 .btn.btn-primary.btn-small, .btn.btn-primary.btn-medium {background:rgba(128,128,128,0.2);margin-top:-4px;}
-#menu-top {height:2.75rem;line-height:2.75rem;padding-top:0;padding-top:env(safe-area-inset-top);height:0;z-index:1002;display:flex;}
+#menu-top {line-height:2.75rem;padding-top:0;padding-top:env(safe-area-inset-top);height:0;z-index:1002;display:flex;}
 #menu-top .dropdown {top:0;top:calc(env(safe-area-inset-top) + 0);right:.75rem;position:absolute;}
 #menu-top .dropdown-menu {right:0;}
 #menu-top .dropdown-menu > li > a i, #context-menus .dropdown-menu > li > a i {width:1.75em;display:inline-block;text-align:center;}
@@ -273,7 +273,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #reconnect, #restart, #poweroff {position:fixed;top:0;left:0;margin:0;padding:0;text-align:center;width:100%;height:100%;color:#ddd;z-index:9999;}
 .reconnectbg {position:absolute;top:0;left:0;margin:0;padding:0;text-align:center;background:rgba(0,0,0,0.9);width:100%;height:100%;z-index:9999;}
 .reconnectbtn {position:relative;top:45%;text-transform:uppercase;color:#999;z-index:9999;}
-.viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);left:50%;background-color:transparent;color:inherit;display:none;z-index:1001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:1rem;transform:none;}
+.viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);background-color:transparent;color:inherit;display:none;z-index:1001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:1rem;transform:none;}
 .viewswearch {height:2.25rem;padding:1.5rem 0 1.5rem 1rem !important;}
 #viewswitch span {float:right;display:none;}
 #searchResetLib {padding:.25em;position:relative;top:50%;transform:translate(0, -50%);font-size:1.2rem;}

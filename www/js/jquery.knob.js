@@ -1,5 +1,5 @@
 /*!jQuery Knob*/
-/**
+/*!
  * Downward compatible, touchable dial
  *
  * Version: 1.2.0 (15/07/2012)
@@ -540,7 +540,7 @@
 				if (SESSION.json['mpdmixer'] == 'disabled') {return false;}
 				if (SESSION.json['volmute'] == '1') {volMuteSwitch();}
 			}
-			
+
             var a, ret;
 
             a = Math.atan2(

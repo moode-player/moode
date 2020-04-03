@@ -1,4 +1,4 @@
-/*
+/*!
  * jQuery MD5 Plugin 1.2.1
  * https://github.com/blueimp/jQuery-MD5
  *
@@ -7,7 +7,7 @@
  *
  * Licensed under the MIT license:
  * http://creativecommons.org/licenses/MIT/
- * 
+ *
  * Based on
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
  * Digest Algorithm, as defined in RFC 1321.
@@ -200,7 +200,7 @@
             ipad = [],
             opad = [],
             hash;
-        ipad[15] = opad[15] = undefined;                        
+        ipad[15] = opad[15] = undefined;
         if (bkey.length > 16) {
             bkey = binl_md5(bkey, key.length * 8);
         }
@@ -250,7 +250,7 @@
     function hex_hmac_md5(k, d) {
         return rstr2hex(raw_hmac_md5(k, d));
     }
-    
+
     $.md5 = function (string, key, raw) {
         if (!key) {
             if (!raw) {
@@ -265,5 +265,5 @@
             return raw_hmac_md5(key, string);
         }
     };
-    
+
 }(typeof jQuery === 'function' ? jQuery : this));

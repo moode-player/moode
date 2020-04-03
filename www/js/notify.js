@@ -1,4 +1,4 @@
-/**
+/*!
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2020-MM-DD TC moOde 6.5.0
  *
  */
 
@@ -34,7 +34,6 @@ function notify(cmd, msg, duration) {
         playall: 'Added to playlist',
         clrplayall: 'Added after playlist cleared',
         update_library: 'Updating library...',
-        upd_thmcache: 'Updating thumbnail cache...',
 		remove: 'Removed from playlist',
 		move: 'Playlist items moved',
 		savepl: 'Playlist saved',

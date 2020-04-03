@@ -1,4 +1,4 @@
-/**
+/*!
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
@@ -897,12 +897,10 @@ $('#albumcovers').on('click', 'img', function(e) {
 
 // Random album instant play (button on Playback panel)
 $('.ralbum').click(function(e) {
-	if ($('.tab-content').hasClass('fancy')) {
-		$('.ralbum svg').attr('class', 'spin');
-		setTimeout(function() {
-			$('.ralbum svg').attr('class', '');
-		}, RALBUM_TIMEOUT);
-	}
+	$('.ralbum svg').attr('class', 'spin');
+	setTimeout(function() {
+		$('.ralbum svg').attr('class', '');
+	}, RALBUM_TIMEOUT);
 
 	var array = new Uint16Array(1);
 	window.crypto.getRandomValues(array);

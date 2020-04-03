@@ -1,4 +1,4 @@
-/* jshint debug: true, expr: true */
+/*! jshint debug: true, expr: true */
 
 /* 2018-07-11 TC moOde 4.2
  * - css vars, other css for newui v2
@@ -52,7 +52,7 @@
 				adaptMcolor = themeMcolor;
 				adaptMback = themeMback;
 				adaptColor = themeColor;
-				adaptBack = themeBack; 
+				adaptBack = themeBack;
 			},
 			a.onload = function () {
 				var n = t("2d");
@@ -109,7 +109,7 @@
 					var cc = rgbToHsl(a(f.dominant.name));
 					//console.log(aa[2]);
 					//console.log(bb[2]);
-					//console.log(cc[2]);				  
+					//console.log(cc[2]);
 					var a1 = 0;
 					var a2 = 0;
 					if (aa[2] > bb[2]) {a1 = 0; a2 = 1;}
@@ -135,12 +135,12 @@
 	function shadeRGBColor(color, percent) {
 		var f=color.split(","),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);return "rgb("+(Math.round((t-R)*p)+R)+","+(Math.round((t-G)*p)+G)+","+(Math.round((t-B)*p)+B)+")";
 	}
-	
+
 	function blendRGBColors(c0, c1, p) {
 		var f=c0.split(","),t=c1.split(","),R=parseInt(f[0].slice(4)),G=parseInt(f[1]),B=parseInt(f[2]);return "rgb("+(Math.round((parseInt(t[0].slice(4))-R)*p)+R)+","+(Math.round((parseInt(t[1])-G)*p)+G)+","+(Math.round((parseInt(t[2])-B)*p)+B)+")";
 	}
 	/* jshint ignore:end */
-	
+
 	/*
 	Our main function declaration.
 	*/
@@ -148,7 +148,7 @@
 		run: function (options) {
 			var opts = $.extend({}, DEFAULTS, options);
 			abfound = 'false';
-			
+
 			/* Loop over each element, waiting for it to load
 			then finding its color, and triggering the
 			color found event when color has been found.
@@ -173,7 +173,7 @@
 					} else {
 						var img = useCSSBackground() ? getCSSBackground() : $this[0];
 					}
-					
+
 					RGBaster.colors(img, {
 						paletteSize: 20,
 						exclude: opts.exclude,
@@ -184,27 +184,27 @@
 								palette: colors.palette
 							});
 						}
-					});				
+					});
 				};
-				
+
 				// Helper function to calculate yiq - http://en.wikipedia.org/wiki/YIQ
 				var getYIQ = function (color) {
 					var rgb = color.match(/\d+/g);
 					return parseInt(((rgb[0] * 299) + (rgb[1] * 587) + (rgb[2] * 114)) / 1000);
 				};
-				
+
 				var useCSSBackground = function () {
 					var attr = $this.attr(DATA_CSS_BG);
 					return (typeof attr !== typeof undefined && attr !== false);
 				};
-				
+
 				var getCSSBackground = function () {
 					var str = $this.css('background-image');
 					var regex = /\(([^)]+)\)/;
 					var match = regex.exec(str)[1].replace(/"/g, '')
 					return match;
 				};
-				
+
 				var getShadeAdjustment = function (color) {
 					//console.log('datacolor' + color);
 					if (color == 'rgb()'){color = 'rgb(0,0,0)';}
@@ -214,7 +214,7 @@
 						return getYIQ(color) >= 128 ? blendRGBColors(color, opts.shadeColors.dark, opts.shadePercentage) : blendRGBColors(color, opts.shadeColors.light, opts.shadePercentage);
 					}
 				};
-				
+
 				/* Subscribe to our color-found event. */
 				$this.on(EVENT_CF, function (ev, data) {
 					// Try to find the parent.
@@ -230,10 +230,10 @@
 					} else {
 						$parent = $this.parent();
 					}
-				
+
 					if (!!opts.shadeVariation)
 						data.color = getShadeAdjustment(data.color);
-				
+
 					if ($.isNumeric(opts.transparent) && opts.transparent != null && opts.transparent >= 0.01 && opts.transparent <= 0.99) {
 						var dominantColor = data.color;
 						var rgbToRgba = dominantColor.replace("rgb", "rgba");
@@ -244,9 +244,9 @@
 					} //else {
 						//$parent.css({
 							//backgroundColor: data.color
-							//});			
+							//});
 					//}
-				
+
 					// stash adaptive bg color
 					//console.log(data.color);
 					var shade = rgbToHsl(data.color);
@@ -277,7 +277,7 @@
 					var getNormalizedTextColor = function (color) {
 						return getYIQ(color) >= 128 ? opts.normalizedTextColors.dark : opts.normalizedTextColors.light;
 					};
-				
+
 					var getLumaClass = function (color) {
 						return getYIQ(color) <= 128 ? opts.lumaClasses.dark : opts.lumaClasses.light;
 					};
@@ -297,7 +297,7 @@
 					//.attr('data-ab-yaq', getYIQ(data.color));
 					opts.success && opts.success($this, data);
 				});
-					
+
 				/* Handle the colors. */
 				handleColors();
 			});

@@ -1,4 +1,4 @@
-/**
+/*1
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
