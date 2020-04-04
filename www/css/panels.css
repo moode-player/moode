@@ -351,7 +351,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #lib-content ul {display:table;margin:.25em 0;overflow-x:hidden;width:100%;word-break:break-word;}
 #songsList {padding-bottom:calc(8em + env(safe-area-inset-bottom));margin:.5em .25em !important;}
 #lib-content li {display:block;position:relative;cursor:pointer;text-align:left;font-weight:normal;line-height:1.25em;}
-#lib-genre li, #lib-artist li, #lib-album li {line-height:2em;}
+#lib-genre li, #lib-artist li, #lib-album li {margin-top:7px;/* Was line-height:2em;*/}
 #lib-content #lib-file li {cursor:default;padding:.15em 0 .5em 0;}
 #lib-content #lib-file li:nth-child(odd) {background:rgba(128,128,128,0.1);}
 #lib-content #lib-file li:nth-child(odd).active {font-weight:600;}
