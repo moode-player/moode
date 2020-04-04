@@ -24,6 +24,12 @@
 
 jQuery(document).ready(function($) { 'use strict';
 	//console.log($(window).width() + 'x' + $(window).height());
+
+    // Initiate loads
+    loadLibrary();
+    mpdDbCmd('lsinfo', '');
+    mpdDbCmd('lsinfo_radio', 'RADIO');
+
     GLOBAL.scriptSection = 'panels';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
@@ -122,17 +128,16 @@ jQuery(document).ready(function($) { 'use strict';
     //UI.clientIP = sendMoodeCmd('GET', 'clientip');
 	//console.log(UI.clientIP);
 
-	// Load folder and radio
+    /*TEST
     mpdDbCmd('lsinfo', '');
     mpdDbCmd('lsinfo_radio', 'RADIO');
-
     // Load the Library if on Playback panel. This is required for ralbum and album links to work.
     if (currentView.indexOf('playback') != -1) {
         setTimeout(function() {
             //console.log('pre-loading Library');
             loadLibrary();
         }, 1000);
-    }
+    }*/
 
     // setup pines notify
     $.pnotify.defaults.history = false;

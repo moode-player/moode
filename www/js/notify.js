@@ -34,6 +34,8 @@ function notify(cmd, msg, duration) {
         playall: 'Added to playlist',
         clrplayall: 'Added after playlist cleared',
         update_library: 'Updating library...',
+        library_updating: 'Library update in progress',
+        library_loading: 'Library loading...',
 		remove: 'Removed from playlist',
 		move: 'Playlist items moved',
 		savepl: 'Playlist saved',

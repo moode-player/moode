@@ -303,8 +303,8 @@
                             e.originalEvent.touches[s.t].pageY
                             );
 			                if (s.$div.parent().hasClass('volume-step-limiter')) {
-			                    if (v - parseInt(SESSION.json['volknob']) > 10) {
-			        				v = parseInt(SESSION.json['volknob']) + 10;
+			                    if (v - parseInt(SESSION.json['volknob']) > VOLUME_STEP_LIMIT) {
+			        				v = parseInt(SESSION.json['volknob']) + VOLUME_STEP_LIMIT;
 			        			}
 			                }
 
@@ -352,8 +352,8 @@
                 var v = s.xy2val(e.pageX, e.pageY);
                 if (v == s.cv) return;
                 if (s.$div.parent().hasClass('volume-step-limiter')) {
-                    if (v - parseInt(SESSION.json['volknob']) > 10) {
-        				v = parseInt(SESSION.json['volknob']) + 10;
+                    if (v - parseInt(SESSION.json['volknob']) > VOLUME_STEP_LIMIT) {
+        				v = parseInt(SESSION.json['volknob']) + VOLUME_STEP_LIMIT;
         			}
                 }
 

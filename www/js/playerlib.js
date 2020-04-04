@@ -47,6 +47,7 @@ const PLSEARCH_TIMEOUT  = 750;
 const PHSEARCH_TIMEOUT  = 750;
 const RALBUM_TIMEOUT    = 1500;
 const CLRPLAY_TIMEOUT   = 500;
+const VOLUME_STEP_LIMIT = 5;
 
 var UI = {
     knob: null,
@@ -113,6 +114,7 @@ var GLOBAL = {
     scriptSection: 'panels',
 	regExIgnoreArticles: '',
     libRendered: false,
+    libLoading: false,
     playbarPlaylistTimer: '',
     plActionClicked: false
 }
@@ -452,11 +454,13 @@ function engineCmd() {
                     break;
                 case 'libupd_done':
     				$('.busy-spinner').hide();
-                    if (currentView == 'tag' || currentView == 'album') {loadLibrary();}
+                    loadLibrary();
+                    //if (currentView == 'tag' || currentView == 'album') {loadLibrary();}
                     break;
                 case 'libregen_done':
     				$('.busy-spinner').hide();
-                    if (currentView == 'tag' || currentView == 'album') {loadLibrary();}
+                    loadLibrary();
+                    //if (currentView == 'tag' || currentView == 'album') {loadLibrary();}
                     break;
             }
 
@@ -710,11 +714,15 @@ function renderUI() {
         // Original for Playback
 		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
         // Thumbnail for Playbar
-        var image_url = MPD.json['artist'] == 'Radio station' ?
-            encodeURIComponent(MPD.json['coverurl'].replace('images/radio-logos', 'images/radio-logos/thumbs')) :
-            '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
-        $('#playbar-cover').html('<img src="' + image_url + '">');
-
+        if (MPD.json['file']) {
+            var image_url = MPD.json['artist'] == 'Radio station' ?
+                encodeURIComponent(MPD.json['coverurl'].replace('images/radio-logos', 'images/radio-logos/thumbs')) :
+                '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
+            $('#playbar-cover').html('<img src="' + image_url + '">');
+        }
+        else {
+            $('#playbar-cover').html('<img src="' + UI.defCover + '">');
+        }
 		// cover backdrop or bgimage
 		if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
 			$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
@@ -1796,14 +1804,26 @@ $('.context-menu a').click(function(e) {
 		}
 	}
     else if ($(this).data('cmd') == 'update_folder') {
-        GLOBAL.libRendered = false;
-		mpdDbCmd('update_library', path);
-		notify('update_library', path);
+        if (GLOBAL.libLoading == false) {
+            GLOBAL.libLoading = true;
+            GLOBAL.libRendered = false;
+    		mpdDbCmd('update_library', path);
+    		notify('update_library', path);
+        }
+        else {
+            notify('library_updating');
+        }
 	}
 	else if ($(this).data('cmd') == 'update_library') {
-        GLOBAL.libRendered = false;
-		mpdDbCmd('update_library');
-		notify('update_library');
+        if (GLOBAL.libLoading == false) {
+            GLOBAL.libLoading = true;
+            GLOBAL.libRendered = false;
+    		mpdDbCmd('update_library');
+    		notify('update_library');
+        }
+        else {
+            notify('library_updating');
+        }
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
 		$('#savedpl-path').html(path);

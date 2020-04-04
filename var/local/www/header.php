@@ -53,7 +53,7 @@
 		versioned_script('js/bootstrap-select.min.js');
 		versioned_script('js/jquery.pnotify.min.js');
         versioned_script('js/playerlib-nomin.js');
-		versioned_script('js/playerlib.min.js');
+        versioned_script('js/playerlib.min.js');
 		versioned_script('js/links.min.js');
 
 		// Playback / Library
@@ -194,7 +194,7 @@
 			</div>
 		</div>
 	</div>
-    <!--TEST-->
+    <!-- COVERVIEW PLAYLIST -->
     <div id="cv-playlist">
         <ul class="cv-playlist"></ul>
     </div>

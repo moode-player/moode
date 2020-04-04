@@ -274,7 +274,7 @@ else {
 				}
 				break;
 			case 'loadlib':
-				///*TEST*/ sleep(5); // For testing "Loading library..." overlay
+				///*TEST*/ sleep(8); // To simulate long library load
 				echo loadLibrary($sock);
 	        	break;
 			case 'lsinfo':

@@ -63,21 +63,16 @@ if (!Object.values) {
 }
 
 function loadLibrary() {
+    GLOBAL.libLoading = true;
     if (currentView == 'tag' || currentView == 'album') {
-        $('#lib-loader').show();
+        notify('library_loading');
     }
 
 	$.post('command/moode.php?cmd=loadlib', {}, function(data) {
-		$('#lib-loader').hide();
-        if (currentView == 'tag' || currentView == 'album') {
-            $('#lib-content').show();
-        }
-
+        $('#lib-content').show();
 		renderLibrary(data);
-
-        if (currentView.indexOf('playback') == -1) { // Not on Playback panel
-            GLOBAL.libRendered = true;
-        }
+        GLOBAL.libRendered = true;
+        GLOBAL.libLoading = false;
 
 	}, 'json');
 }
@@ -924,7 +919,8 @@ $('.ralbum').click(function(e) {
     if (SESSION.json['library_instant_play'] == 'Add/Play' || SESSION.json['library_instant_play'] == 'No action') {
         mpdDbCmd('playall', files);
     }
-    // Clear/play using add first followed by delete. This approach makes for a smoother visual transition.
+    // Clear/play using add first followed by delete.
+    // We do this because clrplayall directly from the Playback panel results in missed ui and pl updates.
     else {
     	var endpos = $(".playlist li").length
     	mpdDbCmd('addall', files);
