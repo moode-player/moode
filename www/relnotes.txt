@@ -26,6 +26,7 @@ New features
 - NEW: Audio config option for USB volume knob
 - NEW: System config option for LED0 and LED1
 - NEW: Spotify config option to autoplay similar songs
+- NEW: Configurable volume step limit
 
 Updates
 

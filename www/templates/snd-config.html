@@ -189,6 +189,20 @@
 			</div>
 
 			<div class="control-group">
+				<label class="control-label" for="volume_step_limit">Volume step limit</label>
+				<div class="controls">
+					<select id="volume_step_limit" class="input-large" name="volume_step_limit">
+						$_select[volume_step_limit]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_volume_step_limit" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_step_limit" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_volume_step_limit" class="help-block-configs help-block-margin hide">
+						This option determines the maximum amount the volume knob will advance when its clicked.
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
 				<label class="control-label">Polarity inversion</label>
 				<div class="controls">
 					<div class="toggle">

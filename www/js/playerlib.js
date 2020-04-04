@@ -47,7 +47,6 @@ const PLSEARCH_TIMEOUT  = 750;
 const PHSEARCH_TIMEOUT  = 750;
 const RALBUM_TIMEOUT    = 1500;
 const CLRPLAY_TIMEOUT   = 500;
-const VOLUME_STEP_LIMIT = 5;
 
 var UI = {
     knob: null,
