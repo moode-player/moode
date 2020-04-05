@@ -30,7 +30,7 @@ session_write_close();
 if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
 	echo 'Command missing';
 }
-// SH, PHP or other defined commands commands
+// SH, PHP or other defined commands
 elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') !== false || $_GET['cmd'] == 'libupd_submit') {
 	// Check for valid chrs
     if (preg_match('/^[A-Za-z0-9 _.-]+$/', $_GET['cmd'])) {
