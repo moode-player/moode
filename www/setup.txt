@@ -253,19 +253,19 @@ accentcolor=Emerald
 
 ////////////////////////////////////////////////////////
 //
-// Web API
+// Command API
 //
 // Below are a list of commands that can be submitted to
-// moOde via http.
+// moOde via http or ssh
 //
 ////////////////////////////////////////////////////////
 
 1. Base URL is http://moode/command/?cmd=
 2. MPD commands that are listed in MPC help
 3. Volume commands that are listed in /var/www/vol.sh --help
-4. Library update via the command libupd_submit
+4. Library update via the command libupd-submit
 
-Examples:
+HTTP examples:
 
 // MPD
 http://moode/command/?cmd=stop
@@ -276,7 +276,20 @@ http://moode/command/?cmd=vol.sh up 2
 http://moode/command/?cmd=vol.sh mute
 
 // Library update
-http://moode/command/?cmd=libupd_submit
+http://moode/command/?cmd=libupd-submit.php
+
+SSH examples:
+
+// MPD
+mpc stop
+mpc play
+
+// Volume
+/var/www/vol.sh up 2
+/var/www/vol.sh mute
+
+// Library update
+sudo /var/www/libupd-submit.php
 
 ////////////////////////////////////////////////////////
 //

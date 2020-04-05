@@ -451,9 +451,6 @@ function engineCmd() {
                 case 'scnactive1':
     				screenSaver(cmd[0]);
                     break;
-                case 'libupd_submit':
-                    submitLibraryUpdate();
-                    break;
                 case 'libupd_done':
     				$('.busy-spinner').hide();
                     loadLibrary();
