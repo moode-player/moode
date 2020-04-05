@@ -27,22 +27,25 @@ require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
 playerSession('open', '' ,'');
 session_write_close();
-
 if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
 	echo 'Command missing';
 }
-// SH or PHP commands
-elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') !== false) {
-	// check for valid chrs
+// SH, PHP or other defined commands commands
+elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') !== false || $_GET['cmd'] == 'libupd_submit') {
+	// Check for valid chrs
     if (preg_match('/^[A-Za-z0-9 _.-]+$/', $_GET['cmd'])) {
-		// reject directory traversal ../
+		// Reject directory traversal ../
 		if (substr_count($_GET['cmd'], '.') > 1) {
 			echo 'Invalid string';
 		}
-		// check for valid commands
+		// Check for valid commands
         elseif (stripos($_GET['cmd'], 'vol.sh') !== false) {
            $result = sysCmd('/var/www/' . $_GET['cmd']);
            echo $result[0];
+        }
+		elseif (stripos($_GET['cmd'], 'libupd_submit') !== false) {
+           sendEngCmd('libupd_submit');
+           echo 'Library update submitted';
         }
         else {
             echo 'Unknown command';

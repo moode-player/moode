@@ -451,15 +451,16 @@ function engineCmd() {
                 case 'scnactive1':
     				screenSaver(cmd[0]);
                     break;
+                case 'libupd_submit':
+                    submitLibraryUpdate();
+                    break;
                 case 'libupd_done':
     				$('.busy-spinner').hide();
                     loadLibrary();
-                    //if (currentView == 'tag' || currentView == 'album') {loadLibrary();}
                     break;
                 case 'libregen_done':
     				$('.busy-spinner').hide();
                     loadLibrary();
-                    //if (currentView == 'tag' || currentView == 'album') {loadLibrary();}
                     break;
             }
 
@@ -1803,26 +1804,10 @@ $('.context-menu a').click(function(e) {
 		}
 	}
     else if ($(this).data('cmd') == 'update_folder') {
-        if (GLOBAL.libLoading == false) {
-            GLOBAL.libLoading = true;
-            GLOBAL.libRendered = false;
-    		mpdDbCmd('update_library', path);
-    		notify('update_library', path);
-        }
-        else {
-            notify('library_updating');
-        }
+        submitLibraryUpdate(path);
 	}
 	else if ($(this).data('cmd') == 'update_library') {
-        if (GLOBAL.libLoading == false) {
-            GLOBAL.libLoading = true;
-            GLOBAL.libRendered = false;
-    		mpdDbCmd('update_library');
-    		notify('update_library');
-        }
-        else {
-            notify('library_updating');
-        }
+        submitLibraryUpdate();
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
 		$('#savedpl-path').html(path);
@@ -3246,4 +3231,16 @@ function volMuteSwitch() {
 
 	var result = sendMoodeCmd('POST', 'updcfgsystem', {'volmute': SESSION.json['volmute']});
 	setVolume(newVol, volEvent);
+}
+
+function submitLibraryUpdate (path) {
+    if (GLOBAL.libLoading == false) {
+        GLOBAL.libLoading = true;
+        GLOBAL.libRendered = false;
+        mpdDbCmd('update_library', path);
+        notify('update_library', path);
+    }
+    else {
+        notify('library_updating');
+    }
 }
