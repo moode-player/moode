@@ -76,18 +76,18 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     - USB DEVICE
 	a) Menu, Configure, Audio
     b) Select "None" for I2S audio device then SET
-    c) Reboot
+    c) Restart
     d) Menu, Configure, Audio
     e) EDIT MPD config
     f) Leave Volume control set to "Software"
     g) Set Device type to "USB audio device"
     h) SAVE
-    i) Reboot
+    i) Restart
 
     - I2S DEVICE
     a) Menu, Configure, Audio
     b) Select an I2S audio device then SET
-    c) Reboot
+    c) Restart
     d) Menu, Configure, Audio
     e) EDIT MPD config
     f) Leave Volume control set to "Software"
@@ -145,7 +145,7 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     c) http://moode
     d) Menu, Configure, Network
     e) Configure a wifi connection
-    f) Menu, Restart, Shutdown
+    f) Menu, Power, Shutdown
     g) Unplug eth cable
     h) Power on
     - Access Point (AP) mode
@@ -153,12 +153,12 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     b) http://moode.local
     c) Menu, Configure, Network
     d) Configure a wifi connection
-    e) Menu, Restart, Reboot
+    e) Menu, Power, Restart
 
  2. CHANGE HOST AND SERVICE NAMES
     a) Menu, Configure, System (and Audio)
     b) SET after entering appropriate value in each name field
-    c) Reboot is required if changing Host name
+    c) Restart is required if changing Host name
 
  3. AUTO-CONFIGURE AT BOOT
 
@@ -173,7 +173,7 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
 ##########################################
 # Copy this file to /boot/moodecfg.txt
 # It will be processed at startup and the
-# system will automaticly reboot.
+# system will automaticly Restart.
 #
 # All param=value pairs must be present.
 # Set wlanssid= blank to start AP mode.
@@ -221,12 +221,12 @@ accentcolor=Emerald
 
  1. Switching from USB to I2S audio device
     a) Unplug USB audio device
-    b) Menu, Restart, Shutdown
+    b) Menu, Power, Shutdown
     c) Install I2S audio device
     d) Power on
     e) Menu, Configure, Audio
     f) Select appropriate I2S audio device then SET
-    g) Menu, Restart, Reboot
+    g) Menu, Power, Restart
     h) Menu, Configure, Audio, EDIT MPD config
     i) Verify Device type is set to "I2S audio device"
     j) SAVE
@@ -234,22 +234,49 @@ accentcolor=Emerald
  2. Switching from I2S to USB audio device
     a) Menu, Configure, Audio
     b) Select "None" for I2S audio device then SET
-    c) Menu, Restart, Shutdown
+    c) Menu, Power, Shutdown
     d) Optionally unplug I2S audio device
     e) Plug in USB audio device
     f) Power on
     g) Menu, Configure, Audio,  EDIT MPD config
     h) Set Device type to "USB audio device"
     i) SAVE
-    j) Menu, Restart, Reboot
+    j) Menu, Power, Restart
 
  3. Switching from WiFi back to Ethernet
     a) Plug in Ethernet cable
     b) Menu, Configure, Network
     c) RESET network configuration to defaults
-    d) Menu, Restart, Shutdown
+    d) Menu, Power, Shutdown
     e) Remove WiFi adapter
     f) Power on
+
+////////////////////////////////////////////////////////
+//
+// Web API
+//
+// Below are a list of commands that can be submitted to
+// moOde via http.
+//
+////////////////////////////////////////////////////////
+
+1. Base URL is http://moode/command/?cmd=
+2. MPD commands that are listed in MPC help
+3. Volume commands that are listed in /var/www/vol.sh --help
+4. Library update via the command libupd_submit
+
+Examples:
+
+// MPD
+http://moode/command/?cmd=stop
+http://moode/command/?cmd=play
+
+// Volume
+http://moode/command/?cmd=vol.sh up 2
+http://moode/command/?cmd=vol.sh mute
+
+// Library update
+http://moode/command/?cmd=libupd_submit
 
 ////////////////////////////////////////////////////////
 //
