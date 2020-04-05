@@ -2690,12 +2690,12 @@ function getPkgId () {
 function getMoodeRel($options = '') {
 	// Verbose: major.minor.patch yyyy-mm-dd
 	if ($options === 'verbose') {
-		$result = sysCmd("awk '/Release: /{print $2 " . '" "' . " $3;}' /var/www/footer.php | sed 's/,//'");
+		$result = sysCmd("awk '/Release: /{print $2 " . '" "' . " $3;}' /var/www/footer-plain.php | sed 's/,//'");
 		return $result[0];
 	}
 	// Compact: rNNN
 	else {
-		$result = sysCmd("awk '/Release: /{print $2;}' /var/www/footer.php | sed 's/,//'");
+		$result = sysCmd("awk '/Release: /{print $2;}' /var/www/footer-plain.php | sed 's/,//'");
 		$str = 'r' . str_replace('.', '', $result[0]);
 		return $str;
 	}
