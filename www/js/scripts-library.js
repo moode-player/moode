@@ -860,7 +860,6 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 
 // Click album cover for instant play
 $('#albumcovers').on('click', 'img', function(e) {
-    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
 	var pos = $(this).parents('li').index();
 
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
@@ -880,6 +879,8 @@ $('#albumcovers').on('click', 'img', function(e) {
 	for (var i in filteredSongs) {
 		files.push(filteredSongs[i].file);
 	}
+
+    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
 
     var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'playall' : 'clrplayall';
 	mpdDbCmd(cmd, files);
