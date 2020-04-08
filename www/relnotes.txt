@@ -18,9 +18,9 @@
 New features
 
 - NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
-- NEW: Adaptive UI version 6 with Playbar
-- NEW: Library sort, search and other options
-- NEW: Combined MPD database update and Thumbcache update
+- NEW: Library Tag and Album views get their own sorts
+- NEW: Library custom search by year or year range
+- NEW: MPD DB and Thumb udpate combined into "Library update"
 - NEW: CoverView screen saver with Playbar controls
 - NEW: Appearance options including Global font size
 - NEW: Audio config option for USB volume knob
@@ -35,6 +35,7 @@ Updates
 - UPD: Bump to shairport-sync 3.3.6
 - UPD: Bump to librespot v0.1.1 (armv7l-only)
 - UPD: Bump to moodeutl 1.4.0
+- UPD: Adaptive UI v6 performance and usability improvements
 - UPD: Add DSD rate to extra-metadata
 - UPD: Add -D option to moodeutl (delete session var)
 - UPD: Add click anywhere off context menu to close
