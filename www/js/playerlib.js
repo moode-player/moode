@@ -558,21 +558,11 @@ function disableVolKnob() {
     $('#volumeup, #volumedn, #volumedn-2, #volumeup-2, .volume-display').css('opacity', '.3');
 	$('.volume-display div, #inpsrc-preamp-volume').text('0dB');
 	$('.volume-display').css('cursor', 'unset');
-    //$('#volume-2').attr('data-readOnly', 'true');
 
 	if (UI.mobile) {
 		$('#mvol-progress').css('width', '100%');
 		$('.repeat').show();
         $('.volume-popup').hide();
-		//$('#context-menu-consume').hide();
-	}
-	else {
-		$('.repeat').hide();
-        if (currentView.indexOf('playback') == -1) {
-            $('.volume-popup').show();
-        }
-		//$('#ssvolume').attr('data-readOnly', 'true');
-        //$('#playbar-consume').show();
 	}
 }
 
@@ -3014,7 +3004,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
         return;
     }
 
-	if (currentView.indexOf('playback') == 0) { // while in playback means mobile, and view has scrolled, so scroll to top
+	if (currentView.indexOf('playback') == 0) { // While in playback means mobile and view has scrolled, so scroll to top
 		$(window).scrollTop(0);
 	}
 	else {
