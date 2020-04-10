@@ -208,8 +208,8 @@ jQuery(document).ready(function($) { 'use strict';
         $('#index-albums, #index-albumcovers').hide();
     }
 
-	// load swipe handler for top columns in library (mobile)
-	if (UI.mobile) {
+	// Load swipe handler for top columns in library (mobile)
+	if (UI.mobile && SESSION.json['library_show_genres'] == 'Yes') {
 		$(function() {
 			$("#top-columns").swipe({
 				swipeLeft:function(event, direction, distance, duration, fingerCount) {
