@@ -157,9 +157,9 @@
 			<div aria-label="Cover" id="playbar-cover"></div>
 			<div aria-label="Switch to Playback" id="playbar-switch"><div></div></div>
 			<div id="playbar-controls">
-				<button aria-label="Previous" class="btn btn-cmd prev"><i class="fas fa-backward"></i></button>
+				<button aria-label="Previous" class="btn btn-cmd prev"><i class="fas fa-step-backward"></i></button>
 				<button aria-label="Play / Pause" class="btn btn-cmd play"><i class="fas fa-play"></i></button>
-				<button aria-label="Next" class="btn btn-cmd next"><i class="fas fa-forward"></i></button>
+				<button aria-label="Next" class="btn btn-cmd next"><i class="fas fa-step-forward"></i></button>
 			</div>
             <div id="playbar-title">
 				<div id="playbar-currentsong"></div>

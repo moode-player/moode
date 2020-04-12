@@ -373,6 +373,12 @@ readers do not read off random characters that represent icons */
 .fa-spinner:before {
   content: "\f110"; }
 
+.fa-step-backward:before {
+  content: "\f048"; }
+
+.fa-step-forward:before {
+  content: "\f051"; }
+
 .fa-stop:before {
   content: "\f04d"; }
 
