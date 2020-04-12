@@ -639,9 +639,9 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-KERNEL=4.19.108
-BUILD=#1298
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 9dbd67c91d371171c9d8a624e90dba1190645a2a
+KERNEL=4.19.102
+BUILD=#1295
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 0dfefdceed89582e9ddda856a9056739d0cf9059
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
