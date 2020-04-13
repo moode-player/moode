@@ -176,7 +176,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta {text-align:left;}
 	#trackscontainer {width:100%;max-width:100%;}
 	.container-playback {padding: 0;}
-	#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;padding-top:10vh;}
+#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;/*padding-top:10vh;*/}
 	#mt1, #mt2, #mt3 {font-size:inherit;}
 	#mt1 {margin:4rem 1.5rem 0rem 1.5rem;}
 	#mt3 {margin-right:5px;float:right;margin-top:25vh;}
