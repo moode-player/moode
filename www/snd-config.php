@@ -435,7 +435,8 @@ else {
 // MPD
 
 // MPD version
-$_select['mpdver'] .= "<option value=\"0.21.20\" " . (($_SESSION['mpdver'] == '0.21.20') ? "selected" : "") . ">0.21.20 (Default)</option>\n";
+$_select['mpdver'] .= "<option value=\"0.21.22\" " . (($_SESSION['mpdver'] == '0.21.22') ? "selected" : "") . ">0.21.22 (Default)</option>\n";
+$_select['mpdver'] .= "<option value=\"0.22~git\" " . (($_SESSION['mpdver'] == '0.22~git') ? "selected" : "") . ">0.22~git (Test)</option>\n";
 
 // auto-shuffle
 $_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
