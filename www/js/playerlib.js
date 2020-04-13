@@ -2777,8 +2777,7 @@ function updEqpMasterGainSlider(selector) {
 
 // Manages Playbar when scrolling
 $(window).on('scroll', function(e) {
-	//if (UI.mobile && !currentView.indexOf('playback') && $('.modal-backdrop').css('display') != 'block') {
-    if (UI.mobile && GLOBAL.scriptSection == 'panels') {
+    if (UI.mobile && GLOBAL.scriptSection == 'panels' && currentView.indexOf('playback') != -1) {
 		if ($(window).scrollTop() > 1 && !showMenuTopW) {
 			$('#playback-controls').hide();
 			$('#container-playlist').css('visibility','visible');
@@ -2942,9 +2941,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 	currentView = currentView.split(',')[1];
 	$('#menu-top').css('height', '0');
 	$('#menu-top').css('backdrop-filter', '');
-	$('#menu-bottom').show();
-	$('.viewswitch').css('display', 'flex');
-	//$('#library-panel').addClass('active');*/
+	$('#menu-bottom, .viewswitch').css('display', 'flex');
     syncTimers();
 
 	if (currentView == 'tag') {
