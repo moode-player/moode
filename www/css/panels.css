@@ -366,7 +366,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 .lib-disc {margin:0;text-transform:uppercase;background-color:rgba(128,128,128,0.1);box-shadow:0 .04em .025em rgba(0,0,0,0.15);display:none;}
 .lib-disc a {font-size:.9em;opacity:.75;}
 #songsList .lib-disc a.active {font-weight:700;color:unset;}
-#songsList li.active {font-weight:700;}
+#songsList li.active {font-weight:700;background-color:unset;}
 #trackscontainer {width:calc(80vw - var(--sbw));float:right;} /* Was 81vw */
 #m-countdown {padding-right:5px;font-size:10px;}
 #m-total {font-size:10px;padding-left:5px;}
