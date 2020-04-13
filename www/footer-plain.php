@@ -609,8 +609,9 @@
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Animated</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Gradient</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Theme</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Gradient (Linear)</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Gradient (Radial)</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-style-sel"><span class="text">Pure Black</span></a></li>
 								</ul>
 							</div>
@@ -618,10 +619,11 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-style" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-style" class="help-block hide">
 	                    	Set the effect used for the backdrop.<br>
-							<b>- Animated:</b> Cover backdrop with color change overlay.<br>
-							<b>- Gradient:</b> Cover backdrop with dark gradient overlay.<br>
-							<b>- Theme:</b> Soild backdrop matching the Theme color.<br>
-							<b>- Pure Black:</b> Solid black backdrop.
+							<b>Animated:</b> Color change overlay.<br>
+							<b>Theme:</b> Theme color overlay.<br>
+							<b>Gradient (Linear):</b> Gradient overlay, top to bottom.<br>
+							<b>Gradient (Radial):</b> Gradient overlay, center to edge.<br>
+							<b>Pure Black:</b> Solid black overlay.
 	                    </span>
 	                </div>
 				</div>

@@ -147,19 +147,24 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#playbtns, #togglebtns').show();
 	}
 
-	// set screen saver style
+	// Screen saver backdrop style
 	if (SESSION.json['scnsaver_style'] == 'Animated') {
 		$('#ss-style').css('background', '');
 		$('#ss-style').css('animation', 'colors2 60s infinite');
 		$('#ss-style, #ss-backdrop').css('display', '');
 	}
-	else if (SESSION.json['scnsaver_style'] == 'Gradient') {
+    else if (SESSION.json['scnsaver_style'] == 'Theme') {
+		$('#ss-style, #ss-backdrop').css('display', 'none');
+	}
+	else if (SESSION.json['scnsaver_style'] == 'Gradient (Linear)') {
 		$('#ss-style').css('animation', 'initial');
 		$('#ss-style').css('background', 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.60) 25%,rgba(0,0,0,0.75) 40%, rgba(0,0,0,.8) 60%, rgba(0,0,0,.9) 100%)');
 		$('#ss-style, #ss-backdrop').css('display', '');
 	}
-	else if (SESSION.json['scnsaver_style'] == 'Theme') {
-		$('#ss-style, #ss-backdrop').css('display', 'none');
+    else if (SESSION.json['scnsaver_style'] == 'Gradient (Radial)') {
+		$('#ss-style').css('animation', 'initial');
+		$('#ss-style').css('background', 'radial-gradient(circle at 50%, rgba(128, 128, 128, 1) 5%, rgba(0, 0, 0, 1) 75%)');
+		$('#ss-style, #ss-backdrop').css('display', '');
 	}
 	else if (SESSION.json['scnsaver_style'] == 'Pure Black') {
 		$('#ss-style').css('animation', 'initial');
@@ -606,9 +611,9 @@ jQuery(document).ready(function($) { 'use strict';
         sendMpdCmd('play ' + pos);
         $(this).parent().addClass('active');
 
-		if (UI.mobile) { // for mobile scroll to top
+		/*if (UI.mobile) { // for mobile scroll to top
 			$('html, body').animate({ scrollTop: 0 }, 'fast');
-		}
+		}*/
     });
 
 	// Click on playlist action menu button
