@@ -34,7 +34,6 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
 	$('#menu-bottom').css('display', 'flex');
-    //$('#accordian > div').hide();
 
 	// compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
@@ -65,6 +64,9 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// mobile
 	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
+
+    // Set volume knob max
+    $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);
 
 	// set the font size
 	setFontSize();
@@ -127,17 +129,6 @@ jQuery(document).ready(function($) { 'use strict';
     // NOTE: We may use this in the future
     //UI.clientIP = sendMoodeCmd('GET', 'clientip');
 	//console.log(UI.clientIP);
-
-    /*TEST
-    mpdDbCmd('lsinfo', '');
-    mpdDbCmd('lsinfo_radio', 'RADIO');
-    // Load the Library if on Playback panel. This is required for ralbum and album links to work.
-    if (currentView.indexOf('playback') != -1) {
-        setTimeout(function() {
-            //console.log('pre-loading Library');
-            loadLibrary();
-        }, 1000);
-    }*/
 
     // setup pines notify
     $.pnotify.defaults.history = false;
