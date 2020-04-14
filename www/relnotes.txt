@@ -18,7 +18,7 @@
 New features
 
 - NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
-- NEW: Library play or instant play existing Playlist item  
+- NEW: Library play or instant play existing Playlist item
 - NEW: Library Tag and Album views get their own sorts
 - NEW: Library custom search by year or year range
 - NEW: Library context menu option for Track info
@@ -29,6 +29,7 @@ New features
 - NEW: System config option for LED0 and LED1
 - NEW: Spotify config option to autoplay similar songs
 - NEW: Configurable volume step limit
+- NEW: Configurable max MPD volume
 
 Updates
 

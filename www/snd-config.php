@@ -126,6 +126,12 @@ if (isset($_POST['volume_step_limit']) && $_POST['volume_step_limit'] != $_SESSI
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 
+// Volume step limit
+if (isset($_POST['volume_mpd_max']) && $_POST['volume_mpd_max'] != $_SESSION['volume_mpd_max']) {
+	playerSession('write', 'volume_mpd_max', $_POST['volume_mpd_max']);
+	$_SESSION['notify']['title'] = 'Setting updated';
+}
+
 // polarity inversion
 if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SESSION['invert_polarity']) {
 	$title = $_POST['invert_polarity'] == 1 ? 'Polarity inversion on' : 'Polarity inversion off';
@@ -459,6 +465,9 @@ $_select['usb_volknob0'] .= "<input type=\"radio\" name=\"usb_volknob\" id=\"tog
 $_select['volume_step_limit'] .= "<option value=\"2\" " . (($_SESSION['volume_step_limit'] == '2') ? "selected" : "") . ">2</option>\n";
 $_select['volume_step_limit'] .= "<option value=\"5\" " . (($_SESSION['volume_step_limit'] == '5') ? "selected" : "") . ">5</option>\n";
 $_select['volume_step_limit'] .= "<option value=\"10\" " . (($_SESSION['volume_step_limit'] == '10') ? "selected" : "") . ">10</option>\n";
+
+// MPD max volume
+$_volume_mpd_max = $_SESSION['volume_mpd_max'];
 
 // polarity invrsion
 $_select['invert_polarity1'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . ">\n";

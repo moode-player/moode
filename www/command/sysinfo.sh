@@ -106,6 +106,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nMixer name\t\t= $volmixer\c"
 	echo -e "\nHardware volume\t\t= $hwvol\c"
 	echo -e "\nMax ALSA volume\t\t= $alsavolume_max\c"
+	echo -e "\nMax MPD volume\t\t= $volume_mpd_max\c"
 	echo -e "\nVolume step limit\t= $volume_step_limit\c"
 	echo -e "\nAudio source\t\t= $audioin\c"
 	echo -e "\nOutput device\t\t= $audioout\c"
@@ -610,6 +611,7 @@ library_ellipsis_limited_text=${arr[132]}
 appearance_modal_state=${arr[133]}
 font_size=${arr[134]}
 volume_step_limit=${arr[135]}
+volume_mpd_max=${arr[136]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

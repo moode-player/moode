@@ -16,15 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-04-12 TC moOde 5.0
+# 2019-MM-DD TC moOde 6.5.0
 #
 
-VER="5.0"
+VER="5.1.0"
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 if [[ -z $1 ]]; then
-	echo $(sqlite3 $SQLDB "select value from cfg_system where id='32'")
+	echo $(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE id='32'")
 	exit 0
 fi
 
@@ -50,28 +50,25 @@ if [[ $1 = "--version" ]]; then
 	exit 1
 fi
 
-# get config settings
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where id in ('32', '33', '36', '37', '77')")
-
-# friendly names
+# Get config settings
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE id IN  ('32', '33', 137)")
+# Friendly names
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
 VOLMUTE=${arr[1]}
-AMIXNAME=${arr[3]}
-MPDMIXER=${arr[4]}
-CARDNUM=${arr[5]}
-# cardnum 0 = i2s or onboard, cardnum 1 = usb 
+MPDMAX=${arr[2]}
+# cardnum 0 = i2s or onboard, cardnum 1 = usb
 
 REGEX='^[0-9]+$'
 
-# parse OPTIONS
+# Parse OPTIONS
 if [[ $1 = "-mute" || $1 = "mute" ]]; then
 	if [[ $VOLMUTE = "1" ]]; then
-		sqlite3 $SQLDB "update cfg_system set value='0' where id='33'"
+		sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE id='33'"
 		VOLMUTE=0
-		LEVEL=$VOLKNOB 
+		LEVEL=$VOLKNOB
 	else
-		sqlite3 $SQLDB "update cfg_system set value='1' where id='33'"
+		sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE id='33'"
 		VOLMUTE=1
 	fi
 else
@@ -96,28 +93,33 @@ else
 		LEVEL=$1
 	fi
 
-	# numeric check
+	# Numeric check
 	if ! [[ $LEVEL =~ $REGEX ]]; then
 		echo "Invalid OPTION or VOLUME not numeric"
 		exit 1
 	fi
-	
-	# range check
+
+	# Limit check
+	if (( $LEVEL > $MPDMAX )); then
+		LEVEL=$MPDMAX
+	fi
+
+	# Range check
 	if (( $LEVEL < 0 )); then
 		LEVEL=0
 	elif (( $LEVEL > 100 )); then
 		LEVEL=100
 	fi
 
-	# update knob level
-	sqlite3 $SQLDB "update cfg_system set value=$LEVEL where id='32'"
+	# Update knob level
+	sqlite3 $SQLDB "UPDATE cfg_system SET value=$LEVEL WHERE id='32'"
 fi
 
-# mute if indicated
+# Mute if indicated
 if [[ $VOLMUTE = "1" ]]; then
 	mpc volume 0 >/dev/null
 	exit 1
 fi
 
-# volume: update MPD volume --> MPD idle timeout --> UI updated
+# Volume: update MPD volume --> MPD idle timeout --> UI updated
 mpc volume $LEVEL >/dev/null

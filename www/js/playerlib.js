@@ -1594,22 +1594,24 @@ function countdownRestart(startFrom) {
 
 // volume control
 function setVolume(level, event) {
-	level = parseInt(level); // ensure numeric
+    // Check against max and ensure numeric
+    level = level > SESSION.json['volume_mpd_max'] ? SESSION.json['volume_mpd_max'] : level;
+	level = parseInt(level);
 
-	// unmuted, set volume (incl 0 vol)
+	// Unmuted, set volume (incl 0 vol)
 	if (SESSION.json['volmute'] == '0') {
 		SESSION.json['volknob'] = level.toString();
-		// update sql value and issue mpd setvol in one round trip
+		// Update sql value and issue mpd setvol in one round trip
 		sendVolCmd('POST', 'updvolume', {'volknob': SESSION.json['volknob']});
     }
-	// muted
+	// Muted
 	else {
 		if (level == 0 && event == 'mute')	{
 			sendMpdCmd('setvol 0');
 			//console.log('setvol 0');
 		}
 		else {
-			// vol up/dn btns pressed, just store the volume for display
+			// Vol up/dn btns pressed, just store the volume for display
 			SESSION.json['volknob'] = level.toString();
 		}
 

@@ -197,8 +197,20 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_volume_step_limit" value="novalue">Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_step_limit" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_volume_step_limit" class="help-block-configs help-block-margin hide">
-						This option determines the maximum amount the volume knob will advance when its clicked.
+						Sets the maximum amount the volume knob will advance when its clicked ahead of its current position.
 					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="volume_mpd_max">Max MPD volume</label>
+				<div class="controls">
+                    <input class="input-large" type="number" maxlength="2" min="0" max="100" id="volume_mpd_max" name="volume_mpd_max" value="$_volume_mpd_max" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_volume_mpd_max" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_mpd_max" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_volume_mpd_max" class="help-block-configs help-block-margin hide">
+						Establishes the highest level that can be set by the Volume Knob and via vol.sh and rotvol.sh.
+                    </span>
 				</div>
 			</div>
 
