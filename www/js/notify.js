@@ -27,7 +27,6 @@ function notify(cmd, msg, duration) {
 
     var map = {
 		add: 'Added to playlist',
-        play: 'Added to playlist',
         clradd: 'Added after playlist cleared',
 		clrplay: 'Added after playlist cleared',
         addall: 'Added to playlist',

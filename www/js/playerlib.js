@@ -1766,7 +1766,7 @@ $('.context-menu a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'play') {
 		mpdDbCmd('play', path);
-		notify('add', '');
+		//notify('add', '');
 	}
 	else if ($(this).data('cmd') == 'clradd') {
 		mpdDbCmd('clradd', path);

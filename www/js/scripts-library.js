@@ -951,7 +951,9 @@ $('#database-radio').on('click', 'img', function(e) {
 
         var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
     	mpdDbCmd(cmd, path);
-        notify(cmd, '');
+        if (cmd != 'play') {
+            notify(cmd, '');
+        }
 
 		setTimeout(function() {
 			customScroll('radiocovers', UI.radioPos, 200);
@@ -996,7 +998,9 @@ $('#database-radio').on('click', '.db-entry', function(e) {
 
     var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
     mpdDbCmd(cmd, path);
-    notify(cmd, '');
+    if (cmd != 'play') {
+        notify(cmd, '');
+    }
 
 	setTimeout(function() {
 		customScroll('radiocovers', UI.radioPos, 200);
@@ -1086,7 +1090,7 @@ $('#context-menu-lib-item a').click(function(e) {
 	else if ($(this).data('cmd') == 'play') {
 		// NOTE: We could check to see if the file is already in the playlist and then just play it
 		mpdDbCmd('play', filteredSongs[UI.dbEntry[0]].file);
-		notify('add', '');
+		//notify('add', '');
 	}
 	else if ($(this).data('cmd') == 'clrplay') {
 		mpdDbCmd('clrplay', filteredSongs[UI.dbEntry[0]].file);

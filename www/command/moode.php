@@ -118,16 +118,36 @@ else {
 				break;
 			case 'play':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
-					$status = parseStatus(getMpdStatus($sock));
-					$pos = $status['playlistlength'] ;
+					// Radio station
+					if (strpos($_POST['path'], 'RADIO/') !== false) {
+						$result = parseListPlaylist($sock, $_POST['path']);
+						$path = $result['file'];
+					}
+					// Song file
+					else {
+						$path = $_POST['path'];
+					}
 
-					sendMpdCmd($sock, 'stop');
-					echo json_encode(readMpdResp($sock));
+					// Play existing item if already in playlist
+					$result = parsePlaylistFind($sock, $path);
+					if (isset($result['Pos'])) {
+						sendMpdCmd($sock, 'play ' . $result['Pos']);
+						echo json_encode(readMpdResp($sock));
+					}
+					// Play item after adding to playlist
+					else {
+						$status = parseStatus(getMpdStatus($sock));
+						$pos = $status['playlistlength'] ;
 
-					addToPL($sock, $_POST['path']);
+ 						// NOTE: is this still necessary?
+						//sendMpdCmd($sock, 'stop');
+						//echo json_encode(readMpdResp($sock));
 
-					sendMpdCmd($sock, 'play ' . $pos);
-					echo json_encode(readMpdResp($sock));
+						addToPL($sock, $path);
+
+						sendMpdCmd($sock, 'play ' . $pos);
+						echo json_encode(readMpdResp($sock));
+					}
 				}
 				break;
 			case 'clradd':

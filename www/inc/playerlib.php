@@ -943,6 +943,50 @@ function parseCurrentSong($sock) {
 	}
 }
 
+// Parse MPD playlistfind output
+function parsePlaylistFind($sock, $path) {
+	sendMpdCmd($sock, 'playlistfind file "' . $path . '"');
+	$resp = readMpdResp($sock);
+
+	if (is_null($resp) ) {
+		return 'Error, parsePlaylistFind response is null';
+	}
+	else {
+		$array = array();
+		$line = strtok($resp, "\n");
+
+		while ($line) {
+			list ($element, $value) = explode(": ", $line, 2);
+			$array[$element] = $value;
+			$line = strtok("\n");
+		}
+
+		return $array;
+	}
+}
+
+// Parse MPD listplaylist output
+function parseListPlaylist($sock, $path) {
+	sendMpdCmd($sock, 'listplaylist "' . $path . '"');
+	$resp = readMpdResp($sock);
+
+	if (is_null($resp) ) {
+		return 'Error, parseListPlaylist response is null';
+	}
+	else {
+		$array = array();
+		$line = strtok($resp, "\n");
+
+		while ($line) {
+			list ($element, $value) = explode(": ", $line, 2);
+			$array[$element] = $value;
+			$line = strtok("\n");
+		}
+
+		return $array;
+	}
+}
+
 // parse cfg_mpd settings
 function parseCfgMpd($dbh) {
 	$result = cfgdb_read('cfg_mpd', $dbh);
