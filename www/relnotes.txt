@@ -57,10 +57,6 @@ Bug fixes
 - FIX: Last track (toggle song) id not persisting
 - FIX: Minor corrections to Setup guide
 
-Audio devices
-
-- NEW: MERUS Amp HAT ZW
-
 Radio stations
 
 - UPD: RadioActive FM 88.6
