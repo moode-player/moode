@@ -60,6 +60,7 @@ Bug fixes
 Radio stations
 
 - UPD: RadioActive FM 88.6
+- UPD: Radio Caroline
 - UPD: Swedish Classic Radio
 - UPD: WBJC Baltimore 91.5 - Classical
 - DEL: Amys FM (320K)
