@@ -448,6 +448,7 @@
 			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="track_info"><i class="fal fa-music sx"></i> Track info</a></li>
 		</ul>
 	</div>
 
@@ -504,6 +505,20 @@
 			<li><a href="#notarget" data-cmd="single"><i class="fal fa-redo sx"></i> Single<span id="menu-check-single"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="toggle-song"><i class="fal fa-exchange-alt sx"></i> Last track</a></li>
 		</ul>
+	</div>
+</div>
+
+<!-- TRACK INFO -->
+<div id="track-info-modal" class="modal modal-xs hide" tabindex="-1" role="dialog" aria-labelledby="track-info-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="track-info-modal-label">Track information</h3>
+	</div>
+	<div class="modal-body">
+		<pre id="track-info-text"></pre>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
 </div>
 

@@ -29,7 +29,7 @@ session_write_close();
 $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall');
 $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
-	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib');
+	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'track_info');
 $turn_consume_off = false;
 
 //workerLog('moode.php: cmd=(' . $_GET['cmd'] . ')');
@@ -150,6 +150,12 @@ else {
 					playerSession('write', 'toggle_song', '0'); // Reset toggle_song
 
 					sendMpdCmd($sock, 'play');
+					echo json_encode(readMpdResp($sock));
+				}
+				break;
+			case 'track_info':
+				if (isset($_POST['path']) && $_POST['path'] != '') {
+					sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');
 					echo json_encode(readMpdResp($sock));
 				}
 				break;

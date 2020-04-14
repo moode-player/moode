@@ -1083,15 +1083,21 @@ $('#context-menu-lib-item a').click(function(e) {
 		mpdDbCmd('add', filteredSongs[UI.dbEntry[0]].file);
 		notify('add', '');
 	}
-	if ($(this).data('cmd') == 'play') {
+	else if ($(this).data('cmd') == 'play') {
 		// NOTE: We could check to see if the file is already in the playlist and then just play it
 		mpdDbCmd('play', filteredSongs[UI.dbEntry[0]].file);
 		notify('add', '');
 	}
-	if ($(this).data('cmd') == 'clrplay') {
+	else if ($(this).data('cmd') == 'clrplay') {
 		mpdDbCmd('clrplay', filteredSongs[UI.dbEntry[0]].file);
 		notify('clrplay', '');
 		$('#pl-saveName').val(''); // Clear saved playlist name if any
+	}
+    else if ($(this).data('cmd') == 'track_info') {
+        var result = sendMoodeCmd('POST', 'track_info', {'path': filteredSongs[UI.dbEntry[0]].file});
+        //$('#track-info-text').html(result.replace(/(?:\r\n|\r|\n)/g, '<br>'));
+        $('#track-info-text').html(result);
+        $('#track-info-modal').modal();
 	}
 });
 
