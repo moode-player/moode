@@ -1837,7 +1837,7 @@ function runQueuedJob() {
 					workerLog('setlogoimage: error 1: ' . $file);
 					break;
 				}
-				if ((imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h)) === false) {
+				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
 					workerLog('setlogoimage: error 2: ' . $file);
 					break;
 				}
@@ -1845,7 +1845,7 @@ function runQueuedJob() {
 					workerLog('setlogoimage: error 3: ' . $file);
 					break;
 				}
-				if ((imagejpeg($thumb, '/var/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) ) === false) {
+				if (imagejpeg($thumb, '/var/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) === false) {
 					workerLog('setlogoimage: error 4: ' . $file);
 					break;
 				}

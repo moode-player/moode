@@ -74,15 +74,15 @@ if (!file_exists(THMCACHE_DIR)) {
 	sysCmd('mkdir ' . THMCACHE_DIR);
 }
 
-// Get list of music files in /mnt and /media directories
+// List the dirs in /mnt and /media directories
 $mnt_dirs = str_replace("\n", ', ', shell_exec('ls /mnt'));
 $media_dirs = str_replace("\n", ', ', shell_exec('ls /media'));
 !empty($media_dirs) ? $dirs = $mnt_dirs . substr($media_dirs, 0, -2) : $dirs = substr($mnt_dirs, 0, -2);
 $dirs = str_replace('moode-player, ', '', $dirs); // This mount point is only present in dev
 workerLog('thmcache: Scanning: ' . $dirs);
 
+// Generate the file list
 $resp = shell_exec('/var/www/command/listall.sh | sort');
-
 if (is_null($resp) || substr($resp, 0, 2) == 'OK') {
 	workerLog('thmcache: exit: no files found');
 	session_start();
@@ -175,7 +175,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 		workerLog('thmcache: error 1: ' . $file);
 		return;
 	}
-	if ((imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h)) === false) {
+	if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
 		workerLog('thmcache: error 2: ' . $file);
 		return;
 	}
@@ -183,7 +183,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 		workerLog('thmcache: error 3: ' . $file);
 		return;
 	}
-	if ((imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thm_q) ) === false) {
+	if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thm_q) === false) {
 		workerLog('thmcache: error 4: ' . $file);
 		return;
 	}
