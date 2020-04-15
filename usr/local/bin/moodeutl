@@ -100,6 +100,9 @@ switch ($option) {
 	case '-t':
 		tail_log();
 		break;
+	case '-u':
+		check_station_urls();
+		break;
 	case '--version':
 		echo VERSION . "\n";
 		break;
@@ -122,6 +125,7 @@ With no OPTION print the help text and exit.
  -r\t\trestart servers
  -s\t\tprint system info
  -t\t\tprint last 10 lines of moode log and wait
+ -u\t\tcheck radio station urls for playability
  --version\tprint the program version
  --help\t\tprint this help text\n";
 		break;
@@ -327,5 +331,27 @@ function tail_log() {
 		}
 		fclose($fh);
 		$size = $current_size;
+	}
+}
+
+function check_station_urls() {
+	error_reporting(E_ERROR | E_PARSE);
+	$results = shell_exec("sqlite3 " . SQLDB . " \"SELECT station, name FROM cfg_radio WHERE station!='DELETED'\"");
+	$line = strtok($results, "\n");
+	$count = 0;
+	while ($line) {
+		list($url, $name) = explode('|', $line);
+		// Skip BBC geo fenced stations and the reserved 499 row
+		if (strpos($name, '- 320K') === false && strpos($name, 'zx reserved 499') === false) {
+			$tmpfile = file_get_contents($url, FALSE, NULL, 0, 1024);
+			$playable = false === $tmpfile ? '?' : 'OK';
+			if ($tmpfile == false) {
+				echo ++$count . "\t" . '?' . "\t" . $name . ' | ' . $url . "\n";
+			}
+			else {
+				echo ++$count . "\t" . 'OK' . "\t" . $name . "\n";
+			}
+		}
+		$line = strtok("\n");
 	}
 }
