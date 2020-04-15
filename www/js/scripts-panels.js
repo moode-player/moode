@@ -154,7 +154,7 @@ jQuery(document).ready(function($) { 'use strict';
 	}
     else if (SESSION.json['scnsaver_style'] == 'Gradient (Radial)') {
 		$('#ss-style').css('animation', 'initial');
-		$('#ss-style').css('background', 'radial-gradient(circle at 50%, rgba(128, 128, 128, 1) 5%, rgba(0, 0, 0, 1) 75%)');
+		$('#ss-style').css('background', 'radial-gradient(circle at 50% center, rgba(64, 64, 64, .5) 5%, rgba(0, 0, 0, .85) 60%)');
 		$('#ss-style, #ss-backdrop').css('display', '');
 	}
 	else if (SESSION.json['scnsaver_style'] == 'Pure Black') {
