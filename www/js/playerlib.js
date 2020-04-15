@@ -1051,14 +1051,12 @@ function mpdDbCmd(cmd, path) {
 		var arg = path.split('\n');
         RADIO.json[arg[1]] = {'name': arg[0]};
 		var result = sendMoodeCmd('POST', cmd, {'path': arg[0], 'url': arg[1]});
-		$.post('command/moode.php?cmd=lsinfo', { 'path': 'RADIO' }, function(data) {renderBrowse(data, 'RADIO');}, 'json');
+        $('#ra-refresh').click();
 	}
 	else if (cmd == 'delstation') {
-        // Delete station from Object array
-        deleteRadioStationObject(path.slice(0,path.lastIndexOf('.')).substr(6)); // Trim 'RADIO/' and '.pls' from path
-        // Delete the station from cfg_radio table
+        deleteRadioStationObject(path.slice(0,path.lastIndexOf('.')).substr(6));
         var result = sendMoodeCmd('POST', cmd, {'path': path});
-		$.post('command/moode.php?cmd=lsinfo', {'path': 'RADIO'}, function(data) {renderBrowse(data, 'RADIO');}, 'json');
+        $('#ra-refresh').click();
 	}
 }
 
@@ -1802,16 +1800,17 @@ $('.context-menu a').click(function(e) {
 		$('#deletesavedpl-modal').modal();
 	}
 	else if ($(this).data('cmd') == 'editradiostn') {
-		path = path.slice(0,path.lastIndexOf('.')).substr(6); // trim 'RADIO/' and '.pls' from path
-		$('#edit-station-name').val(path);
+        var stationName = path.slice(path.lastIndexOf('/') + 1); // Trim 'RADIO/sub_directory/'
+        stationName = stationName.slice(0, stationName.lastIndexOf('.')); // Trim .pls
+		$('#edit-station-name').val(stationName);
 		$('#edit-station-url').val(sendMoodeCmd('POST', 'readstationfile', {'path': UI.dbEntry[0]})['File1']);
         $('#edit-logoimage').val('');
         $('#info-toggle-edit-logoimage').css('margin-left','60px');
-        $('#preview-edit-logoimage').html('<img src="../images/radio-logos/thumbs/' + path + '.jpg">');
+        $('#preview-edit-logoimage').html('<img src="../images/radio-logos/thumbs/' + stationName + '.jpg">');
 		$('#editstation-modal').modal();
 	}
 	else if ($(this).data('cmd') == 'delstation') {
-		$('#station-path').html(path.slice(0,path.lastIndexOf('.')).substr(6)); // trim 'RADIO/' and '.pls' from path
+		$('#station-path').html(path.slice(0,path.lastIndexOf('.')).substr(6)); // Trim 'RADIO/' and '.pls'
 		$('#deletestation-modal').modal();
 	}
 	else if ($(this).data('cmd') == 'deleteplitem') {

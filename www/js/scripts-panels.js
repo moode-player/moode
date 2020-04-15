@@ -1180,7 +1180,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 		else {
 			mpdDbCmd('updstation', $('#edit-station-name').val() + '\n' + $('#edit-station-url').val() + '\n');
-			notify('updstation');
+			notify('updstation', 'Updated logo may not appear until page has expired from Browser cache and page refreshed.', 8000);
 		}
 	});
 	$('.btn-del-station').click(function(e){
