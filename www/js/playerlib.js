@@ -1764,15 +1764,14 @@ $('.context-menu a').click(function(e) {
 
 	if ($(this).data('cmd') == 'add') {
 		mpdDbCmd('add', path);
-		notify('add', '');
+		notify('add');
 	}
 	else if ($(this).data('cmd') == 'play') {
 		mpdDbCmd('play', path);
-		//notify('add', '');
 	}
 	else if ($(this).data('cmd') == 'clradd') {
 		mpdDbCmd('clradd', path);
-		notify('clradd', '');
+		notify('clradd');
 		// see if its a playlist, preload the saved playlist name
 		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD') {
 			$('#pl-saveName').val(path);
@@ -1783,7 +1782,7 @@ $('.context-menu a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'clrplay') {
 		mpdDbCmd('clrplay', path);
-		notify('clrplay', '');
+		notify('clrplay');
 		// see if its a playlist, preload the saved playlist name
 		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD') {
 			$('#pl-saveName').val(path);
@@ -2056,7 +2055,7 @@ $('.btn-clockradio-update').click(function(e){
 	// update globals within worker loop
 	var result = sendMoodeCmd('GET', 'updclockradio');
 
-    notify('updclockradio', '');
+    notify('updclockradio');
 });
 
 // Update appearance options
@@ -2214,13 +2213,13 @@ $('.btn-appearance-update').click(function(e){
 
 	// Auto-reload page / library if indicated
 	if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || UI.bgImgChange) {
-	    notify('settings_updated', 'Auto-refresh in 3 seconds');
+	    notify('settings_updated', 'Auto-refresh in 2 seconds');
 		setTimeout(function() {
 			location.reload(true);
-		}, 3000);
+		}, 2000);
 	}
 	else {
-	    notify('settings_updated', '');
+	    notify('settings_updated');
 	}
 });
 

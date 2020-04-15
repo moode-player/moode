@@ -1085,16 +1085,15 @@ $('#context-menu-lib-item a').click(function(e) {
 
 	if ($(this).data('cmd') == 'add') {
 		mpdDbCmd('add', filteredSongs[UI.dbEntry[0]].file);
-		notify('add', '');
+		notify('add');
 	}
 	else if ($(this).data('cmd') == 'play') {
-		// NOTE: We could check to see if the file is already in the playlist and then just play it
+		// See moode.php: We check to see if the file is already in the playlist and then just play it
 		mpdDbCmd('play', filteredSongs[UI.dbEntry[0]].file);
-		//notify('add', '');
 	}
 	else if ($(this).data('cmd') == 'clrplay') {
 		mpdDbCmd('clrplay', filteredSongs[UI.dbEntry[0]].file);
-		notify('clrplay', '');
+		notify('clrplay');
 		$('#pl-saveName').val(''); // Clear saved playlist name if any
 	}
     else if ($(this).data('cmd') == 'track_info') {
@@ -1121,15 +1120,15 @@ $('#context-menu-lib-all a').click(function(e) {
 
 	if ($(this).data('cmd') == 'addall') {
 		mpdDbCmd('addall', files);
-		notify('add', '');
+		notify('add');
 	}
 	else if ($(this).data('cmd') == 'playall') {
 		mpdDbCmd('playall', files);
-		notify('add', '');
+		notify('add');
 	}
 	else if ($(this).data('cmd') == 'clrplayall') {
 		mpdDbCmd('clrplayall', files);
-		notify('clrplay', '');
+		notify('clrplay');
 	}
 	else if ($(this).data('cmd') == 'tracklist') {
 		if ($('#bottom-row').css('display') == 'none') {
@@ -1161,14 +1160,14 @@ $('#context-menu-lib-disc a').click(function(e) {
 
 	if ($(this).data('cmd') == 'addall') {
 		mpdDbCmd('addall', files);
-		notify('add', '');
+		notify('add');
 	}
 	if ($(this).data('cmd') == 'playall') {
 		mpdDbCmd('playall', files);
-		notify('add', '');
+		notify('add');
 	}
 	if ($(this).data('cmd') == 'clrplayall') {
 		mpdDbCmd('clrplayall', files);
-		notify('clrplay', '');
+		notify('clrplay');
 	}
 });

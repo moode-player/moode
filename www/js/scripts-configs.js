@@ -154,7 +154,7 @@ jQuery(document).ready(function($){ 'use strict';
 				//$('#eth0-method').val('dhcp').change(); // prevent both from being set to 'static'
 			}
 			else {
-				notify('needssid', '');
+				notify('needssid');
 			}
 		}
         else {
@@ -177,7 +177,7 @@ jQuery(document).ready(function($){ 'use strict';
 		if ($('#wlan0-method').val() == 'static') {
 			if ($(this).val() == '' || $(this).val() == 'None (activates AP mode)') {
                 $('#wlan0-static').hide();
-				notify('needdhcp', '');
+				notify('needdhcp');
 			}
             else {
                 $('#wlan0-static').show();

@@ -635,15 +635,15 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (plname) {
 			if (~plname.indexOf('NAS') || ~plname.indexOf('RADIO') || ~plname.indexOf('SDCARD')) {
-				notify('plnameerror', '');
+				notify('plnameerror');
 			}
 			else {
 				var result = sendMoodeCmd('GET', 'savepl&plname=' + plname, '', true);
-				notify('savepl', '');
+				notify('savepl');
 			}
 		}
 		else {
-			notify('needplname', '');
+			notify('needplname');
 		}
     });
     $('#savepl-modal').on('shown.bs.modal', function(e) {
@@ -655,15 +655,15 @@ jQuery(document).ready(function($) { 'use strict';
 
 		if (favname) {
 			if (~favname.indexOf('NAS') || ~favname.indexOf('RADIO') || ~favname.indexOf('SDCARD')) {
-				notify('plnameerror', '');
+				notify('plnameerror');
 			}
 			else {
 				var result = sendMoodeCmd('GET', 'setfav&favname=' + favname, '', true);
-				notify('favset', '');
+				notify('favset');
 			}
 		}
 		else {
-			notify('needplname', '');
+			notify('needplname');
 		}
     });
     $('#setfav-modal').on('shown.bs.modal', function() {
@@ -682,10 +682,10 @@ jQuery(document).ready(function($) { 'use strict';
 		// add current pl item to favorites playlist
 		if (MPD.json['file'] != null) {
 			var result = sendMoodeCmd('GET', 'addfav&favitem=' + encodeURIComponent(MPD.json['file']), '', true);
-			notify('favadded', '');
+			notify('favadded');
 		}
 		else {
-			notify('nofavtoadd', '');
+			notify('nofavtoadd');
 		}
     });
 
@@ -816,15 +816,15 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#db-search-results').css('font-weight', 'normal');
 	    if ($(this).data('cmd') == 'addall') {
 	        mpdDbCmd('addall', dbFilterResults);
-	        notify('add', '');
+	        notify('add');
 		}
 	    if ($(this).data('cmd') == 'playall') {
 	        mpdDbCmd('playall', dbFilterResults);
-	        notify('add', '');
+	        notify('add');
 		}
 	    if ($(this).data('cmd') == 'clrplayall') {
 	        mpdDbCmd('clrplayall', dbFilterResults);
-	        notify('clrplay', '');
+	        notify('clrplay');
 		}
 	});
 	// Radio panel sub folders
@@ -1163,7 +1163,7 @@ jQuery(document).ready(function($) { 'use strict';
 	// buttons on modals
 	$('.btn-del-savedpl').click(function(e){
 		mpdDbCmd('delsavedpl', UI.dbEntry[0]);
-		notify('delsavedpl', '');
+		notify('delsavedpl');
 	});
 	$('.btn-new-station').click(function(e){
 		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
@@ -1171,7 +1171,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 		else {
 			mpdDbCmd('newstation', $('#new-station-name').val() + '\n' + $('#new-station-url').val() + '\n');
-			notify('newstation', '');
+			notify('newstation');
 		}
 	});
 	$('.btn-upd-station').click(function(e){
@@ -1180,12 +1180,12 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 		else {
 			mpdDbCmd('updstation', $('#edit-station-name').val() + '\n' + $('#edit-station-url').val() + '\n');
-			notify('updstation', '');
+			notify('updstation');
 		}
 	});
 	$('.btn-del-station').click(function(e){
 		mpdDbCmd('delstation', UI.dbEntry[0]);
-		notify('delstation', '');
+		notify('delstation');
 	});
 	$('.btn-delete-plitem').click(function(e){
 		var cmd = '';
@@ -1193,7 +1193,7 @@ jQuery(document).ready(function($) { 'use strict';
 		var endpos = $('#delete-plitem-endpos').val() - 1;
 		// NOTE: format for single or multiple, endpos not inclusive so must be bumped for multiple
 		begpos == endpos ? cmd = 'delplitem&range=' + begpos : cmd = 'delplitem&range=' + begpos + ':' + (endpos + 1);
-		notify('remove', '');
+		notify('remove');
 		var result = sendMoodeCmd('GET', cmd, '', true);
 	});
 	// speed btns on delete modal
@@ -1213,7 +1213,7 @@ jQuery(document).ready(function($) { 'use strict';
 		// NOTE: format for single or multiple, endpos not inclusive so must be bumped for multiple
 		// move begpos newpos or move begpos:endpos newpos
 		begpos == endpos ? cmd = 'moveplitem&range=' + begpos + '&newpos=' + newpos : cmd = 'moveplitem&range=' + begpos + ':' + (endpos + 1) + '&newpos=' + newpos;
-		notify('move', '');
+		notify('move');
 		var result = sendMoodeCmd('GET', cmd, '', true);
 	});
 	// speed btns on move modal
