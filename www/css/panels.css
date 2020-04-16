@@ -83,7 +83,7 @@ html {background-color:inherit;}
 .ab-light {color:#ddd;}
 
 /* full screen impsrc indicator */
-.inpsrc {position:fixed;z-index:9999;backdrop-filter: blur(5px);-webkit-backdrop-filter:blur(5px);overflow:hidden;color:#eee;background-color:rgba(16,16,16,0.95);display:none;}
+.inpsrc {position:fixed;z-index:9999;backdrop-filter: blur(5px);-webkit-backdrop-filter:blur(5px);overflow:hidden;color:var(--adapttext);background-color:var(--modalbkdr);display:none;}
 #inpsrc-indicator {font-size:1.85em;width:100vw;height:100vh;text-align:center;}
 #content.fancy #inpsrc-indicator {animation:colorchange 90s infinite;}
 #inpsrc-indicator span {font-size:1.25em;}
