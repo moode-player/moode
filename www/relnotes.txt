@@ -66,9 +66,12 @@ Radio stations
 - UPD: WBJC Baltimore 91.5 - Classical
 - DEL: Amys FM (320K)
 - DEL: Amys FM Spirit of Soul (320K)
+- DEL: CBC Radio 2
 - DEL: JB Radio-2 USA (320K)
 - DEL: Radio Monash
+- DEL: Radionomy
 - DEL: Rinse FM
+- DEL: RSD Radio
 - DEL: VRT - Sporza
 
 ########################################################
