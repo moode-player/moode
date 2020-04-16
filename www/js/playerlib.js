@@ -754,8 +754,7 @@ function renderUI() {
 
 	// Default metadata
 	if (MPD.json['album']) {
-		$('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
-        $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ? RADIO.json[MPD.json['file']] : MPD.json['artist'] + ' - ' + MPD.json['album']);
+		$('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
 	}
 	else {
 		$('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
