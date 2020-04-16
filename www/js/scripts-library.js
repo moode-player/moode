@@ -1096,9 +1096,8 @@ $('#context-menu-lib-item a').click(function(e) {
 		notify('clrplay');
 		$('#pl-saveName').val(''); // Clear saved playlist name if any
 	}
-    else if ($(this).data('cmd') == 'track_info') {
+    else if ($(this).data('cmd') == 'track_info_lib') {
         var result = sendMoodeCmd('POST', 'track_info', {'path': filteredSongs[UI.dbEntry[0]].file});
-        //$('#track-info-text').html(result.replace(/(?:\r\n|\r|\n)/g, '<br>'));
         $('#track-info-text').html(result);
         $('#track-info-modal').modal();
 	}

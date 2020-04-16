@@ -1733,7 +1733,6 @@ $('.view-recents').click(function(e) {
 // context menus and main menu
 $('.context-menu a').click(function(e) {
     var path = UI.dbEntry[0]; // file path or item num
-	//console.log('path', path);
 
 	// CONTEXT MENUS
 
@@ -1771,6 +1770,11 @@ $('.context-menu a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'update_library') {
         submitLibraryUpdate();
+	}
+    else if ($(this).data('cmd') == 'track_info_folder') {
+        var result = sendMoodeCmd('POST', 'track_info', {'path': path});
+        $('#track-info-text').html(result);
+        $('#track-info-modal').modal();
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
 		$('#savedpl-path').html(path);
