@@ -14,7 +14,7 @@
  *	- UI.dbEntry[] from original player code
  * 2018-07-11 TC moOde 4.2
  * - enhance positioning
- * 2020-MM-DD TC moOde 6.5.0
+ * 2020-04-16 TC moOde 6.5.0
  * - @swizzle context menu backdrop
  */
 

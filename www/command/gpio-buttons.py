@@ -16,7 +16,7 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #	Inspired by the script posted in moOde Forum by @Cyanoazimin
-#	2020-MM-DD TC moOde 6.5.0
+#	2020-04-16 TC moOde 6.5.0
 #
 
 from __future__ import print_function, absolute_import
