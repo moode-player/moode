@@ -2906,7 +2906,7 @@ function setAlbumViewHeaderText() {
         (SESSION.json['library_albumview_sort'] == 'Album' ? '' : ' by ' + SESSION.json['library_albumview_sort']));
 }
 
-// switch to library / playbar panel
+// Switch to Library
 $('#coverart-url, #playback-switch').click(function(e){
 	if ($('#playback-panel').hasClass('cv')) {
 		e.stopImmediatePropagation();
@@ -2926,7 +2926,6 @@ $('#coverart-url, #playback-switch').click(function(e){
 		setTimeout(function() {
 			if (UI.libPos[0] >= 0) {
 				customScroll('albums', UI.libPos[0], 200);
-				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
 			}
 		}, SCROLLTO_TIMEOUT);
 
@@ -2934,7 +2933,6 @@ $('#coverart-url, #playback-switch').click(function(e){
             loadLibrary();
         }
 	}
-
 	else if (currentView == 'album') {
 		makeActive('.album-view-btn','#library-panel','album');
 		setTimeout(function() {
@@ -2947,7 +2945,6 @@ $('#coverart-url, #playback-switch').click(function(e){
             loadLibrary();
         }
 	}
-
 	else if (currentView == 'radiolist' || currentView == 'radiocovers') {
 		makeActive('.radio-view-btn','#radio-panel',currentView);
 		if (currentView == 'radiolist') {
@@ -2964,21 +2961,20 @@ $('#coverart-url, #playback-switch').click(function(e){
 			}
 		}, SCROLLTO_TIMEOUT);
 	}
-
-	// default to folder view
+	// Default to folder view
 	else {
 		makeActive('.folder-view-btn','#folder-panel','folder');
 	}
 });
 
-// switch to playback panel
+// Switch to playback panel
 $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
     //console.log('click playbar');
     if (coverView) {
         return;
     }
-
-	if (currentView.indexOf('playback') == 0) { // While in playback means mobile and view has scrolled, so scroll to top
+	if (currentView.indexOf('playback') == 0) {
+        // Already in playback means mobile and view has scrolled, so scroll to top
 		$(window).scrollTop(0);
 	}
 	else {
@@ -2996,15 +2992,16 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#playback-panel').addClass('active');
 		$('#playback-controls').css('display', '');
 
-		if (UI.mobile) { // make sure playlist is hidden and controls are showing
+		if (UI.mobile) {
+            // Make sure playlist is hidden and controls are showing
 			showMenuTopW = false;
 			$(window).scrollTop(0);
 			$('#content').css('height', 'unset');
 			$('#container-playlist').css('visibility','hidden');
 			var a = $('#countdown-display').text() ? $('#m-countdown').text(a) : $('#m-countdown').text('00:00');
 		}
-        else { // don't need to scroll playlist on
-			setTimeout(function() { // wait a bit for panel to load
+        else {
+			setTimeout(function() {
 				customScroll('pl', parseInt(MPD.json['song']), 0);
 			}, SCROLLTO_TIMEOUT);
 		}
