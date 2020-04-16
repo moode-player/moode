@@ -1641,7 +1641,7 @@ function customScroll(list, itemNum, speed) {
 	else if (list == 'radiocovers') {
 		listSelector = '#database-radio';
 		scrollSelector = listSelector;
-		chDivisor = 60;
+		chDivisor = 6;
 	}
 
 	// item position
