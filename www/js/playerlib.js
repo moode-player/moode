@@ -477,6 +477,7 @@ function inpSrcIndicator(cmd, msgText) {
 	UI.currentFile = 'blank';
 
 	if (cmd.slice(-1) == '1') {
+        $('body').removeClass('cv');
 		$('#menu-top, #menu-bottom, .btnlist-top, .alphabits').hide();
 		$('.viewswitch').css('display', 'none');
 
@@ -504,6 +505,9 @@ function inpSrcIndicator(cmd, msgText) {
 				$('#menu-bottom').hide();
 			}
 		}
+        else {
+            $('body').addClass('cv');
+        }
 
 		$('#inpsrc-msg').html('');
 		$('#inpsrc-indicator').css('display', '');
