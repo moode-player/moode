@@ -25,141 +25,136 @@
 -->
 
 <div id="content" class="tab-content">
-		<!-- INPUT SOURCE INDICATOR -->
-		<div id="inpsrc-indicator" class="inpsrc">
-			<div id="inpsrc-msg"></div>
+	<!-- SCREEN SAVER -->
+	<div id="screen-saver" class="hide" href="#notarget">
+		<div id="ss-backdrop"></div>
+		<div id="ss-style"></div>
+		<div id="ss-coverart" class="ss-coverart">
+			<div id="ss-coverart-url"></div>
+			<div id="ss-currentsong"></div>
+			<div id="ss-currentalbum"></div>
 		</div>
+	</div>
 
-		<!-- SCREEN SAVER -->
-		<div id="screen-saver" class="hide" href="#notarget">
-			<div id="ss-backdrop"></div>
-			<div id="ss-style"></div>
-			<div id="ss-coverart" class="ss-coverart">
-				<div id="ss-coverart-url"></div>
-				<div id="ss-currentsong"></div>
-				<div id="ss-currentalbum"></div>
-			</div>
+	<div id="viewswitch" class="viewswitch hide">
+		<div class="dropdown">
+			<a aria-label="Tabs" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
+			<ul class="dropdown-menu context-menu" role="menu">
+				<button aria-label="Search" id="viewswitch-search" class="viewswearch btn menu-separator">
+					<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
+						<input id="lib-album-filter" type="text" value="" placeholder="search albums">
+					</form>
+					<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
+				</button>
+				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio</button>
+				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder</button>
+				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag</button>
+				<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Cover</button>
+				<button aria-label="All Music" class="btn view-all" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
+				<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
+			</ul>
+    	</div>
+	</div>
+
+	<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
+	<div id="playback-panel" class="tab-pane">
+		<div class="btnlist btnlist-top btnlist-top-pl">
+			<form id="pl-search" method="post" onSubmit="return false;">
+				<div class="input-append">
+					<input id="pl-filter" type="text" value="" placeholder="search">
+					<button aria-label="Reset" id="searchResetPl" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+				</div>
+			</form>
+			<div id="pl-filter-results"></div>
 		</div>
+		<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
+		<div id="container-playback" class="container-playback txtmid">
+			<div class="no-fluid">
+				<!-- playlist -->
+				<div id="playback-queue" class="span5">
 
-		<div id="viewswitch" class="viewswitch hide">
-			<div class="dropdown">
-				<a aria-label="Tabs" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
-				<ul class="dropdown-menu context-menu" role="menu">
-					<button aria-label="Search" id="viewswitch-search" class="viewswearch btn menu-separator">
-						<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
-							<input id="lib-album-filter" type="text" value="" placeholder="search albums">
-						</form>
-						<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
-					</button>
-					<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio</button>
-					<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder</button>
-					<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag</button>
-					<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Cover</button>
-					<button aria-label="All Music" class="btn view-all" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
-					<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
-				</ul>
-	    	</div>
-		</div>
-
-		<!-- PLAYBACK PANEL WITH INTEGRATED PLAYLIST -->
-		<div id="playback-panel" class="tab-pane">
-			<div class="btnlist btnlist-top btnlist-top-pl">
-				<form id="pl-search" method="post" onSubmit="return false;">
-					<div class="input-append">
-						<input id="pl-filter" type="text" value="" placeholder="search">
-						<button aria-label="Reset" id="searchResetPl" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
-					</div>
-				</form>
-				<div id="pl-filter-results"></div>
-			</div>
-			<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
-			<div id="container-playback" class="container-playback txtmid">
-				<div class="no-fluid">
-					<!-- playlist -->
-					<div id="playback-queue" class="span5">
-
-						<div id="container-playlist">
-							<div id="playlist">
-								<ul class="playlist"></ul>
-							</div>
+					<div id="container-playlist">
+						<div id="playlist">
+							<ul class="playlist"></ul>
 						</div>
 					</div>
+				</div>
 
-					<!-- knobs and playback controls -->
-					<div id="playback-controls" class="span3">
-						<div id="timezone">
-							<div id="timeknob">
-								<div id="countdown">
-									<input aria-label="Playback Time" class="playbackknob" id="time" data-min="0" data-max="1000" data-width="100%" data-thickness=".13" data-bgColor="rgba(50,50,50,0.5)" data-fgcolor="transparent" data-readonly="false">
-								</div>
-								<div aria-label="Countdown Display" id="countdown-display" href="#notarget"></div>
-								<div aria-label="Total" id="total"></div>
+				<!-- knobs and playback controls -->
+				<div id="playback-controls" class="span3">
+					<div id="timezone">
+						<div id="timeknob">
+							<div id="countdown">
+								<input aria-label="Playback Time" class="playbackknob" id="time" data-min="0" data-max="1000" data-width="100%" data-thickness=".13" data-bgColor="rgba(50,50,50,0.5)" data-fgcolor="transparent" data-readonly="false">
 							</div>
-						</div>
-
-						<div id="playbtns" class="btn-toolbar">
-							<div class="btn-group">
-								<button aria-label="Add To Favorites" class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
-								<button aria-label="Previous" class="btn btn-cmd prev"><i class="fas fa-step-backward"></i></button>
-								<button aria-label="Play / Pause" class="btn btn-cmd play"><i class="fas fa-play"></i></button>
-								<button aria-label="Next" class="btn btn-cmd next"><i class="fas fa-step-forward"></i></button>
-							</div>
-						</div>
-						<div id="volzone">
-							<div id="volknob">
-								<div id="volcontrol" class='volume-step-limiter'>
-
-									<input aria-label="Volume" readonly class="volumeknob" id="volume" data-min="0" data-max="100" step="10" data-width="100%" data-thickness=".13" data-bgColor="rgba(50,50,50,0.5)" data-fgColor="transparent" data-readOnly="false" data-cursor="false" data-angleArc="340" data-angleOffset="-170">
-								</div>
-								<div id="volbtns">
-									<button aria-label="Volume Up" id="volumeup" class="btn btn-cmd btn-volume">+</button>
-									<div aria-label="Volume Display" class="volume-display" href="#notarget"><div></div></div>
-									<button aria-label="Volume Down" id="volumedn" class="btn btn-cmd btn-volume">−</i></button>
-								</div>
-							</div>
-						</div>
-						<div id="togglebtns">
-							<div class="btn-group">
-								<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
-								<button href="#notarget" class="btn btn-cmd toggle-song hide" data-cmd="toggle-song"><i class="fal fa-exchange-alt"></i></button>
-								<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
-								<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
-								<button aria-label="Consume" class="btn btn-cmd btn-toggle consume hide" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
-								<button aria-label="Repeat" class="btn btn-cmd btn-toggle repeat hide" data-cmd="repeat"><i class="fal fa-repeat"></i></button>
-								<button aria-label="Single" class="btn btn-cmd btn-toggle single hide" data-cmd="single"><i class="fal fa-redo"></i></button>
-								<button aria-label="Random Album" class="btn btn-cmd ralbum"><i class="fal fa-dot-circle"></i></button>
-								<button aria-label="Volume Up" class="btn volume-popup hide" data-toggle="modal"><i class="fal fa-volume-up"></i><div id="mvol-bar"><div id="mvol-bg"></div><div aria-label="Volume" id="mvol-progress"></div></div></button>
-								<button aria-label="Add To Favorites" class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
-							</div>
+							<div aria-label="Countdown Display" id="countdown-display" href="#notarget"></div>
+							<div aria-label="Total" id="total"></div>
 						</div>
 					</div>
 
-					<!-- cover art and song metadata -->
-					<div id="playback-cover" class="span4">
-						<div class="covers">
-							<div aria-label="Cover Art" id="coverart-url"></div>
-							<div id="timeline">
-								<div class="timeline-bg"></div>
-								<div class="timeline-progress"></div>
-								<div class="timeline-thm">
-									<input aria-label="Time" id="timetrack" type="range" min="0" max="1000" value="0" step="1">
-								</div>
-								<div id="mobile-time">
-									<div aria-label="Countdown" id="m-countdown"></div>
-									<div aria-label="Total" id="m-total"></div>
-								</div>
-							</div>
+					<div id="playbtns" class="btn-toolbar">
+						<div class="btn-group">
+							<button aria-label="Add To Favorites" class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
+							<button aria-label="Previous" class="btn btn-cmd prev"><i class="fas fa-step-backward"></i></button>
+							<button aria-label="Play / Pause" class="btn btn-cmd play"><i class="fas fa-play"></i></button>
+							<button aria-label="Next" class="btn btn-cmd next"><i class="fas fa-step-forward"></i></button>
+						</div>
+					</div>
+					<div id="volzone">
+						<div id="volknob">
+							<div id="volcontrol" class='volume-step-limiter'>
 
-							<div id="songsand">
-								<div id="extra-tags-display"></div>
-								<span id="currentsong"></span>
-								<span id="currentalbum"></span>
+								<input aria-label="Volume" readonly class="volumeknob" id="volume" data-min="0" data-max="100" step="10" data-width="100%" data-thickness=".13" data-bgColor="rgba(50,50,50,0.5)" data-fgColor="transparent" data-readOnly="false" data-cursor="false" data-angleArc="340" data-angleOffset="-170">
 							</div>
+							<div id="volbtns">
+								<button aria-label="Volume Up" id="volumeup" class="btn btn-cmd btn-volume">+</button>
+								<div aria-label="Volume Display" class="volume-display" href="#notarget"><div></div></div>
+								<button aria-label="Volume Down" id="volumedn" class="btn btn-cmd btn-volume">−</i></button>
+							</div>
+						</div>
+					</div>
+					<div id="togglebtns">
+						<div class="btn-group">
+							<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
+							<button href="#notarget" class="btn btn-cmd toggle-song hide" data-cmd="toggle-song"><i class="fal fa-exchange-alt"></i></button>
+							<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
+							<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
+							<button aria-label="Consume" class="btn btn-cmd btn-toggle consume hide" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
+							<button aria-label="Repeat" class="btn btn-cmd btn-toggle repeat hide" data-cmd="repeat"><i class="fal fa-repeat"></i></button>
+							<button aria-label="Single" class="btn btn-cmd btn-toggle single hide" data-cmd="single"><i class="fal fa-redo"></i></button>
+							<button aria-label="Random Album" class="btn btn-cmd ralbum"><i class="fal fa-dot-circle"></i></button>
+							<button aria-label="Volume Up" class="btn volume-popup hide" data-toggle="modal"><i class="fal fa-volume-up"></i><div id="mvol-bar"><div id="mvol-bg"></div><div aria-label="Volume" id="mvol-progress"></div></div></button>
+							<button aria-label="Add To Favorites" class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
+						</div>
+					</div>
+				</div>
+
+				<!-- cover art and song metadata -->
+				<div id="playback-cover" class="span4">
+					<div class="covers">
+						<div aria-label="Cover Art" id="coverart-url"></div>
+						<div id="timeline">
+							<div class="timeline-bg"></div>
+							<div class="timeline-progress"></div>
+							<div class="timeline-thm">
+								<input aria-label="Time" id="timetrack" type="range" min="0" max="1000" value="0" step="1">
+							</div>
+							<div id="mobile-time">
+								<div aria-label="Countdown" id="m-countdown"></div>
+								<div aria-label="Total" id="m-total"></div>
+							</div>
+						</div>
+
+						<div id="songsand">
+							<div id="extra-tags-display"></div>
+							<span id="currentsong"></span>
+							<span id="currentalbum"></span>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
 	<!-- LIBRARY PANEL -->
 	<div id="library-panel" class="tab-pane">

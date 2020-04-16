@@ -477,38 +477,12 @@ function inpSrcIndicator(cmd, msgText) {
 	UI.currentFile = 'blank';
 
 	if (cmd.slice(-1) == '1') {
-        $('body').removeClass('cv');
-		$('#menu-top, #menu-bottom, .btnlist-top, .alphabits').hide();
-		$('.viewswitch').css('display', 'none');
-
 		$('#inpsrc-indicator').css('display', 'block');
 		$('#inpsrc-msg').html(msgText);
-
-		var preampVolume = SESSION.json['mpdmixer'] == 'disabled' ? '0dB' : SESSION.json['volknob'];
+        var preampVolume = SESSION.json['mpdmixer'] == 'disabled' ? '0dB' : SESSION.json['volknob'];
 		$('#inpsrc-preamp-volume').text(preampVolume);
 	}
 	else {
-		if (!coverView) {
-            $('#menu-top, .btnlist-top').show();
-            $('#index-artists.alphabits').show();
-            $('#index-albums.alphabits').show();
-
-            if (SESSION.json['library_show_genres'] == 'Yes') {
-                $('#index-genres.alphabits').show();
-            }
-
-			if (currentView.indexOf('playback') == -1) {
-				$('#menu-bottom').show();
-				$('.viewswitch').css('display', 'flex');
-			}
-			else {
-				$('#menu-bottom').hide();
-			}
-		}
-        else {
-            $('body').addClass('cv');
-        }
-
 		$('#inpsrc-msg').html('');
 		$('#inpsrc-indicator').css('display', '');
 	}

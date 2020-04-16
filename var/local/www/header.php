@@ -103,6 +103,11 @@
 	<div id="context-backdrop"></div>
 	<div id="splash"><div>moOde</div></div>
 
+    <!-- INPUT SOURCE INDICATOR -->
+    <div id="inpsrc-indicator" class="inpsrc">
+        <div id="inpsrc-msg"></div>
+    </div>
+
 	<!-- HEADER -->
 	<div id="menu-top" class="ui-header ui-bar-f ui-header-fixed slidedown" data-position="fixed" data-role="header" role="banner">
 		<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
