@@ -926,7 +926,7 @@ $('.ralbum').click(function(e) {
     	mpdDbCmd('addall', files);
     	setTimeout(function() {
     		endpos == 1 ? cmd = 'delplitem&range=0' : cmd = 'delplitem&range=0:' + endpos;
-    		var result = sendMoodeCmd('GET', cmd, '', true);
+    		var result = sendMoodeCmd('GET', cmd, '', true); // Async
     		sendMpdCmd('play 0');
     	}, CLRPLAY_TIMEOUT);
     }
@@ -970,13 +970,13 @@ $('#ra-toggle-view').click(function(e) {
 		$('#ra-toggle-view i').removeClass('fa-bars').addClass('fa-th');
 		$('#radiocovers').addClass('database-radiolist');
 		currentView = 'radiolist';
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
+		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // Async
 	}
 	else {
 		$('#ra-toggle-view i').removeClass('fa-th').addClass('fa-bars');
 		$('#radiocovers').removeClass('database-radiolist');
 		currentView = 'radiocovers';
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true);
+		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // Async
         lazyLode('radio');
 		setTimeout(function() {
 			if (UI.radioPos >= 0) {

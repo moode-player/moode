@@ -637,7 +637,7 @@ jQuery(document).ready(function($) { 'use strict';
 				notify('plnameerror');
 			}
 			else {
-				var result = sendMoodeCmd('GET', 'savepl&plname=' + plname, '', true);
+				var result = sendMoodeCmd('GET', 'savepl&plname=' + plname, '', true); // Async
 				notify('savepl');
 			}
 		}
@@ -657,7 +657,7 @@ jQuery(document).ready(function($) { 'use strict';
 				notify('plnameerror');
 			}
 			else {
-				var result = sendMoodeCmd('GET', 'setfav&favname=' + favname, '', true);
+				var result = sendMoodeCmd('GET', 'setfav&favname=' + favname, '', true); // Async
 				notify('favset');
 			}
 		}
@@ -680,7 +680,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		// add current pl item to favorites playlist
 		if (MPD.json['file'] != null) {
-			var result = sendMoodeCmd('GET', 'addfav&favitem=' + encodeURIComponent(MPD.json['file']), '', true);
+			var result = sendMoodeCmd('GET', 'addfav&favitem=' + encodeURIComponent(MPD.json['file']), '', true); // Async
 			notify('favadded');
 		}
 		else {
@@ -1193,7 +1193,7 @@ jQuery(document).ready(function($) { 'use strict';
 		// NOTE: format for single or multiple, endpos not inclusive so must be bumped for multiple
 		begpos == endpos ? cmd = 'delplitem&range=' + begpos : cmd = 'delplitem&range=' + begpos + ':' + (endpos + 1);
 		notify('remove');
-		var result = sendMoodeCmd('GET', cmd, '', true);
+		var result = sendMoodeCmd('GET', cmd, '', true); // Async
 	});
 	// speed btns on delete modal
 	$('#btn-delete-setpos-top').click(function(e){
@@ -1213,7 +1213,7 @@ jQuery(document).ready(function($) { 'use strict';
 		// move begpos newpos or move begpos:endpos newpos
 		begpos == endpos ? cmd = 'moveplitem&range=' + begpos + '&newpos=' + newpos : cmd = 'moveplitem&range=' + begpos + ':' + (endpos + 1) + '&newpos=' + newpos;
 		notify('move');
-		var result = sendMoodeCmd('GET', cmd, '', true);
+		var result = sendMoodeCmd('GET', cmd, '', true); // Async
 	});
 	// speed btns on move modal
 	$('#btn-move-setpos-top').click(function(e){
@@ -1276,7 +1276,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.disconnect-renderer').live('click', function(e) {
 		$('.disconnect-renderer').css('opacity', '.5');
 		var job = $(this).data('job');
-		var result = sendMoodeCmd('POST', 'disconnect-renderer', {'job':job}, true);
+		var result = sendMoodeCmd('POST', 'disconnect-renderer', {'job':job}, true); // Async
 	});
 
     // Screen saver (CoverView) reset (r642 variant)
@@ -1301,7 +1301,7 @@ jQuery(document).ready(function($) { 'use strict';
 
             // Reset screen saver timeout global
             setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
-                var result = sendMoodeCmd('GET', 'resetscnsaver', '', true);
+                var result = sendMoodeCmd('GET', 'resetscnsaver', '', true); // Async
             }, 3000);
         }
     });
