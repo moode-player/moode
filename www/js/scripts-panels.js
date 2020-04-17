@@ -344,7 +344,6 @@ jQuery(document).ready(function($) { 'use strict';
 			    $('#albumsList .lib-entry').removeClass('active');
 				$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
 				customScroll('albums', UI.libPos[0], 0);
-				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
 			}
 			else if (UI.libPos[0] == -2) { // Lib headers clicked
 			    $('#albumsList .lib-entry').removeClass('active');
