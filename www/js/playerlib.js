@@ -767,7 +767,7 @@ function renderUI() {
     //console.log('UI.currentSongId: ' + UI.currentSongId, 'MPD.json[songid]: ' + MPD.json['songid']);
 	if (UI.currentSongId != MPD.json['songid']) {
 		toggleSongId = UI.currentSongId == 'blank' ? SESSION.json['toggle_songid'] : UI.currentSongId;
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'toggle_songid': toggleSongId}, true);
+		var result = sendMoodeCmd('POST', 'updcfgsystem', {'toggle_songid': toggleSongId}, true); // Async
 	}
 
 	// set current = new for next cycle
@@ -1581,7 +1581,7 @@ function setVolume(level, event) {
 	if (SESSION.json['volmute'] == '0') {
 		SESSION.json['volknob'] = level.toString();
 		// Update sql value and issue mpd setvol in one round trip
-		sendVolCmd('POST', 'updvolume', {'volknob': SESSION.json['volknob']});
+		sendVolCmd('POST', 'updvolume', {'volknob': SESSION.json['volknob']}, true); // Async
     }
 	// Muted
 	else {
@@ -1594,7 +1594,7 @@ function setVolume(level, event) {
 			SESSION.json['volknob'] = level.toString();
 		}
 
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'volknob': SESSION.json['volknob']});
+		var result = sendMoodeCmd('POST', 'updcfgsystem', {'volknob': SESSION.json['volknob']}, true); // Async
     }
 }
 
@@ -2895,12 +2895,12 @@ function listLook(list, name, search) {
 // radio pos
 function storeRadioPos(pos) {
 	//console.log('radio_pos', pos);
-	var result = sendMoodeCmd('POST', 'updcfgsystem', {'radio_pos': pos}); // sync
+	var result = sendMoodeCmd('POST', 'updcfgsystem', {'radio_pos': pos});
 }
 // library pos
 function storeLibPos(pos) {
 	//console.log('lib_pos', pos[0], pos[1], pos[2]);
-	var result = sendMoodeCmd('POST', 'updcfgsystem', {'lib_pos': pos[0] + ',' + pos[1] + ',' + pos[2]}); // sync
+	var result = sendMoodeCmd('POST', 'updcfgsystem', {'lib_pos': pos[0] + ',' + pos[1] + ',' + pos[2]});
 }
 
 // Header text for Tag and Album views
@@ -2987,7 +2987,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 	}
 	else {
 		currentView = 'playback,' + currentView;
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // async
+		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // Async
 		syncTimers();
 		setColors();
 
@@ -3063,7 +3063,7 @@ function makeActive (vswitch, panel, view) {
 
 	$('#content .tab-pane, .viewswitch button').removeClass('active');
 	$(vswitch + ',' + panel).addClass('active');
-	var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': view}, true);
+	var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': view}, true); // Async
 	currentView = view;
 	setColors();
 
