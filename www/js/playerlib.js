@@ -731,12 +731,16 @@ function renderUI() {
 	}
 
 	// Default metadata
-	if (MPD.json['album']) {
-		$('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
-	}
-	else {
-		$('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
-	}
+    if (MPD.json['album']) {
+        //$('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
+        $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
+        // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
+        $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
+            (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
+    }
+    else {
+        $('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
+    }
 
 	// Song title
 	if (MPD.json['title'] === 'Streaming source' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
