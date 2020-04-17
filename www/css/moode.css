@@ -509,11 +509,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 /* stuff */
 .database-radiolist li {width:90%;padding:.5em 0 .25em;} /* new */
-/* for links on the About modal */
-.moode-about-link1 {color:#777;text-decoration:none;}
-.moode-about-link2 {color:#777;text-decoration:none;display:inline-block;margin-bottom:2px;}
-.moode-about-link3 {color:#555;text-decoration:none;}
-.moode-about-link1:hover, .moode-about-link2:hover {color:#555;text-decoration:underline;}
+/* For links on the About modal */
+.moode-about-link {color:var(--adapttext);text-decoration:none;}
+.moode-about-link:hover {color:var(--adapttext);text-decoration:underline;}
 /* other stuff */
 .menu-separator {border-bottom:1px solid rgba(128,128,128,0.2);border-radius:0;}
 .control-aftertext {position:absolute;margin: 3px 0 0 8px;}

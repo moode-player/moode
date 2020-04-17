@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2020-04-16 TC moOde 6.5.0
  *
  */
 
@@ -33,8 +33,7 @@ $(document).on('click', 'a', function(event) {
 		if (this.id == 'menu-settings' ||
 			this.id == 'coverart-link' ||
 			this.id == 'dlnasvc-link' ||
-			this.className == 'moode-about-link1' ||
-			this.className == 'moode-about-link2' ||
+			this.className == 'moode-about-link' ||
 			this.className == 'playhistory-link' ||
 			// input dropdowns on config pages
 			(this.className == 'active' && $(this).attr('tabindex') == 0)) {
