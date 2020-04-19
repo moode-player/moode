@@ -15,7 +15,7 @@
  * Moode Audio Player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
- * 2019-04-12 TC moOde 5.0
+ * 2020-04-16 TC moOde 6.5.0
  *
  */
 
@@ -524,6 +524,10 @@
         };
 
         this.val = function (v) {
+            //console.log('val');
+            if (this.$div.parent().hasClass('volume-step-limiter')) {
+                this.o.max = SESSION.json['volume_mpd_max'];
+            }
             if (null != v) {
                 this.cv = this.o.stopper ? max(min(v, this.o.max), this.o.min) : v;
                 this.v = this.cv;
