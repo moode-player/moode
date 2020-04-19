@@ -198,6 +198,9 @@ if (isset($_POST['update_bt_settings'])) {
 	if (isset($_POST['btsvc']) && $_POST['btsvc'] != $_SESSION['btsvc']) {
 		$title = $_POST['btsvc'] == 1 ? 'Bluetooth controller on' : 'Bluetooth controller off';
 		playerSession('write', 'btsvc', $_POST['btsvc']);
+		if ($_POST['btsvc'] == '0') {
+			playerSession('write', 'pairing_agent', '0');
+		}
 	}
 
 	if (isset($title)) {

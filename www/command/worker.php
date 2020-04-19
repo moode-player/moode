@@ -439,10 +439,11 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
 		workerLog('worker: Bluetooth (started)');
 		startBt();
-	}
-	if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
-		workerLog('worker: Bluetooth pairing agent (started)');
-		sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+
+		if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
+			workerLog('worker: Bluetooth pairing agent (started)');
+			sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+		}
 	}
 }
 else {
@@ -1542,7 +1543,12 @@ function runQueuedJob() {
 			playerSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
 
-			if ($_SESSION['btsvc'] == 1) {startBt();}
+			if ($_SESSION['btsvc'] == 1) {
+				startBt();
+			}
+			else {
+				sysCmd('killall -s 9 bt-agent.py');
+			}
 			break;
 		case 'pairing_agent':
 			$cmd = $_SESSION['w_queueargs'] == 1 ? '/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &' : 'killall -s 9 bt-agent.py';
