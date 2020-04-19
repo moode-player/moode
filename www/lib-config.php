@@ -42,7 +42,7 @@ $initiateLibraryUpd = false;
 
 // rescan mpd database
 if (isset($_POST['regen_library'])) {
-	submitJob('regen_library', '', 'Regenerating library...', '');
+	submitJob('regen_library', '', 'Regenerating library...', 'Stay on this screen until the progress spinner is cleared');
 }
 // auto-update mpd db on usb insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
@@ -101,7 +101,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 
 	// server
 	if (empty(trim($_POST['mount']['address']))) {
-		$_SESSION['notify']['title'] = 'Host cannot be blank';
+		$_SESSION['notify']['title'] = 'Path cannot be blank';
 		$_SESSION['notify']['duration'] = 5;
 	}
 	// share
@@ -234,8 +234,12 @@ session_write_close();
 // Update library if indicated after sourcecfg job completes
 waitWorker(1, 'lib-config');
 if ($initiateLibraryUpd == true) {
-	$title = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
-	submitJob('update_library', '', $title, 'Updating library...');
+	//$title = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
+	//submitJob('update_library', '', $title, 'Updating library...');
+	session_start();
+	$_SESSION['notify']['title'] = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
+	$_SESSION['notify']['duration'] = 3;
+	session_write_close();
 	unset($_GET['cmd']);
 }
 
