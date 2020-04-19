@@ -96,7 +96,6 @@ fi
 if [[ $1 = "get-mixername" ]]; then
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 	#awk -F"'" '/Simple mixer control/{print "(" $2 ")";}' <(amixer -c $CARD_NUM)
-	#TEST#
 	amixer -c $CARD_NUM | awk 'BEGIN{FS="\n"; RS="Simple mixer control"} $0 ~ "pvolume" {print $1}' | awk -F"'" '{print "(" $2 ")";}'
 	exit
 fi
