@@ -32,61 +32,61 @@ jQuery(document).ready(function($){ 'use strict';
 	// compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
 	// store device pixel ratio
-	sendMoodeCmd('POST', 'updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
+    $.post('command/moode.php?cmd=updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
 
 	// load current cfg
-	var result = sendMoodeCmd('GET', 'read_cfgs_no_radio');
-	SESSION.json = result['cfg_system'];
-	THEME.json = result['cfg_theme'];
-    NETWORK.json = result['cfg_network'];
+    $.getJSON('command/moode.php?cmd=read_cfgs_no_radio', function(result) {
+    	SESSION.json = result['cfg_system'];
+    	THEME.json = result['cfg_theme'];
+        NETWORK.json = result['cfg_network'];
 
-	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
-	setFontSize();
+    	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
+    	setFontSize();
 
-	var tempOp = themeOp;
-	if (themeOp == 0.74902) {tempOp = 0.1};
+    	var tempOp = themeOp;
+    	if (themeOp == 0.74902) {tempOp = 0.1};
 
-	// set theme
-	themeColor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
-	themeBack = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + SESSION.json['alphablend'] +')';
-	themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
-	tempcolor = splitColor($('.dropdown-menu').css('background-color'));
-	themeOp = tempcolor[3];
-	themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
-	accentColor = themeToColors(SESSION.json['accent_color']);
-	document.body.style.setProperty('--themetext', themeMcolor);
-	var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
-	var test = getCSSRule('.toggle .toggle-radio');
-	test.style.backgroundImage='url("' + radio1 + '")';
+    	// set theme
+    	themeColor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
+    	themeBack = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + SESSION.json['alphablend'] +')';
+    	themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
+    	tempcolor = splitColor($('.dropdown-menu').css('background-color'));
+    	themeOp = tempcolor[3];
+    	themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
+    	accentColor = themeToColors(SESSION.json['accent_color']);
+    	document.body.style.setProperty('--themetext', themeMcolor);
+    	var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
+    	var test = getCSSRule('.toggle .toggle-radio');
+    	test.style.backgroundImage='url("' + radio1 + '")';
 
-    document.body.style.setProperty('--config_modal_btn_bg', 'rgba(64,64,64,0.75)');
-    $('.modal-footer .btn').css('background-color', 'rgba(128,128,128,.35)');
+        document.body.style.setProperty('--config_modal_btn_bg', 'rgba(64,64,64,0.75)');
+        $('.modal-footer .btn').css('background-color', 'rgba(128,128,128,.35)');
 
-	if ($('.lib-config').length) {
-		$('#lib-config-btn').addClass('active');
-	}
-	else if ($('.snd-config').length) {
-		$('#snd-config-btn').addClass('active');
-	}
-	else if ($('.net-config').length) {
-		$('#net-config-btn').addClass('active');
-	}
-	else if ($('.sys-config').length) {
-		$('#sys-config-btn').addClass('active');
-	}
+    	if ($('.lib-config').length) {
+    		$('#lib-config-btn').addClass('active');
+    	}
+    	else if ($('.snd-config').length) {
+    		$('#snd-config-btn').addClass('active');
+    	}
+    	else if ($('.net-config').length) {
+    		$('#net-config-btn').addClass('active');
+    	}
+    	else if ($('.sys-config').length) {
+    		$('#sys-config-btn').addClass('active');
+    	}
 
-    // setup pines notify
-    $.pnotify.defaults.history = false;
+        // setup pines notify
+        $.pnotify.defaults.history = false;
 
-	// Connect to server engines
-    engineMpdLite();
-    engineCmd();
+    	// Connect to server engines
+        engineMpdLite();
+        engineCmd();
 
-    // Busy spinner for Thumbcache update/re-gen initiated
-    if (GLOBAL.thmUpdInitiated == true) {
-        $('.busy-spinner').show();
-    }
-
+        // Busy spinner for Thumbcache update/re-gen initiated
+        if (GLOBAL.thmUpdInitiated == true) {
+            $('.busy-spinner').show();
+        }
+});
 	//
 	// EVENT HANDLERS
 	//
@@ -243,8 +243,9 @@ jQuery(document).ready(function($){ 'use strict';
 
 	// view thmcache status
     $('#view-thmcache-status').click(function(e) {
-		var resp = sendMoodeCmd('GET', 'thmcachestatus');
-		$('#thmcache-status').html(resp);
+        $.getJSON('command/moode.php?cmd=thmcachestatus', function(result) {
+            $('#thmcache-status').html(result);
+        });
 	});
 
     // info button (i) show/hide toggle

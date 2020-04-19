@@ -63,12 +63,13 @@ if (!Object.values) {
 }
 
 function loadLibrary() {
+    //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
     if (currentView == 'tag' || currentView == 'album') {
         notify('library_loading');
     }
 
-	$.post('command/moode.php?cmd=loadlib', {}, function(data) {
+	$.post('command/moode.php?cmd=loadlib', function(data) {
         $('#lib-content').show();
 		renderLibrary(data);
         GLOBAL.libRendered = true;
@@ -366,6 +367,14 @@ function filterAlbums() {
         LIB.currentDate = new Date();
         filteredAlbums = filteredAlbums.filter(filterAlbumsByDate);
         filteredAlbumCovers = filteredAlbumCovers.filter(filterAlbumsByDate);
+        // Sort descending
+        var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        filteredAlbums.sort(function(a, b) {
+            return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
+        });
+        filteredAlbumCovers.sort(function(a, b) {
+            return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
+        });
     }
 	// Filter by year(s)
 	if (LIB.filters.year.length) {
@@ -380,19 +389,15 @@ function filterSongs() {
 	if (LIB.filters.genres.length) {
 		filteredSongs = filteredSongs.filter(filterByGenre);
 	}
-
 	if (LIB.filters.artists.length) {
 		filteredSongs = filteredSongs.filter(filterByArtist);
 	}
-
 	if (LIB.filters.albums.length) {
 		filteredSongs = filteredSongs.filter(filterByAlbum);
 	}
-
     if (LIB.recentlyAddedClicked) {
         filteredSongs = filteredSongs.filter(filterSongsByDate);
     }
-
 	if (LIB.filters.year.length) {
 		filteredSongs = filteredSongs.filter(filterByYear);
 	}
@@ -825,20 +830,6 @@ $('#random-album, #random-albumcover').click(function(e) {
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 });
 
-// Click 'recently added' button
-$('.recently-added').click(function(e) {
-    LIB.recentlyAddedClicked = true;
-	LIB.filters.albums.length = 0;
-	UI.libPos.fill(-2);
-
-	filterLib();
-    renderAlbums();
-
-	storeLibPos(UI.libPos);
-	$("#searchResetLib").hide();
-	showSearchResetLib = false;
-});
-
 // Click album cover menu button
 $('#albumcovers').on('click', '.cover-menu', function(e) {
 	var pos = $(this).parents('li').index();
@@ -926,8 +917,9 @@ $('.ralbum').click(function(e) {
     	mpdDbCmd('addall', files);
     	setTimeout(function() {
     		endpos == 1 ? cmd = 'delplitem&range=0' : cmd = 'delplitem&range=0:' + endpos;
-    		var result = sendMoodeCmd('GET', cmd, '', true); // Async
-    		sendMpdCmd('play 0');
+            $.get('command/moode.php?cmd=' + cmd, function(){
+                sendMpdCmd('play 0');
+            });
     	}, CLRPLAY_TIMEOUT);
     }
 });
@@ -970,13 +962,14 @@ $('#ra-toggle-view').click(function(e) {
 		$('#ra-toggle-view i').removeClass('fa-bars').addClass('fa-th');
 		$('#radiocovers').addClass('database-radiolist');
 		currentView = 'radiolist';
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // Async
+        $.post('command/moode.php?cmd=updcfgsystem', {'current_view': currentView});
+
 	}
 	else {
 		$('#ra-toggle-view i').removeClass('fa-th').addClass('fa-bars');
 		$('#radiocovers').removeClass('database-radiolist');
 		currentView = 'radiocovers';
-		var result = sendMoodeCmd('POST', 'updcfgsystem', {'current_view': currentView}, true); // Async
+        $.post('command/moode.php?cmd=updcfgsystem', {'current_view': currentView});
         lazyLode('radio');
 		setTimeout(function() {
 			if (UI.radioPos >= 0) {
@@ -1047,9 +1040,10 @@ $('#context-menu-playback a').click(function(e) {
 		$('#savepl-modal').modal();
 	}
 	if ($(this).data('cmd') == 'set-favorites') {
-		var favname = sendMoodeCmd('GET', 'getfavname');
-		$('#pl-favName').val(favname);
-		$('#setfav-modal').modal();
+        $.getJSON('command/moode.php?cmd=getfavname', function(favname) {
+            $('#pl-favName').val(favname);
+            $('#setfav-modal').modal();
+        });
 	}
 	if ($(this).data('cmd') == 'toggle-song') {
         sendMpdCmd('playid ' + toggleSongId);
@@ -1097,9 +1091,10 @@ $('#context-menu-lib-item a').click(function(e) {
 		$('#pl-saveName').val(''); // Clear saved playlist name if any
 	}
     else if ($(this).data('cmd') == 'track_info_lib') {
-        var result = sendMoodeCmd('POST', 'track_info', {'path': filteredSongs[UI.dbEntry[0]].file});
-        $('#track-info-text').html(result);
-        $('#track-info-modal').modal();
+        $.post('command/moode.php?cmd=track_info', {'path': filteredSongs[UI.dbEntry[0]].file}, function(result) {
+            $('#track-info-text').html(result);
+            $('#track-info-modal').modal();
+        }, 'json' );
 	}
 });
 
