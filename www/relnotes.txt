@@ -18,6 +18,7 @@
 New features
 
 - NEW: Upgrade to Raspbian Buster Lite 10.3 2020-02-13
+- NEW: Adaptive UI version 6.5 fully asynchronous
 - NEW: Library play or instant play existing Playlist item
 - NEW: Library Tag and Album views get their own sorts
 - NEW: Library custom search by year or year range
@@ -33,12 +34,11 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 4.19.102 build #1295
+- UPD: Bump to Linux kernel 4.19.115 build #1305
 - UPD: Bump to MPD 0.21.22 (default) plus MPD 0.22~git (test)
 - UPD: Bump to shairport-sync 3.3.6
 - UPD: Bump to librespot v0.1.1 (armv7l-only)
 - UPD: Bump to moodeutl 1.4.0
-- UPD: Adaptive UI v6 performance and usability improvements
 - UPD: Add DSD rate to extra-metadata
 - UPD: Add -D option to moodeutl (delete session var)
 - UPD: Add click anywhere off context menu to close
@@ -46,6 +46,7 @@ Updates
 - UPD: Add "No action" option to Library Instant play action
 - UPD: Add ability to update station logo while editing station
 - UPD: Add Command API section to Setup guide
+- UPD: Sort recently added albums so most recent is on top
 - UPD: Disable apt-daily and apt-daily-upgrade timers
 - UPD: Deprecate librespot armv6l binary
 
@@ -56,6 +57,10 @@ Bug fixes
 - FIX: WiFi/BT options missing from System config for Zero W
 - FIX: Last track (toggle song) id not persisting
 - FIX: Minor corrections to Setup guide
+
+Audio devices
+
+- NEW: Infineon MERUS Amp HAT ZW
 
 Radio stations
 
