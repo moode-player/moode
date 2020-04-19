@@ -367,14 +367,29 @@ function filterAlbums() {
         LIB.currentDate = new Date();
         filteredAlbums = filteredAlbums.filter(filterAlbumsByDate);
         filteredAlbumCovers = filteredAlbumCovers.filter(filterAlbumsByDate);
+
         // Sort descending
-        var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-        filteredAlbums.sort(function(a, b) {
-            return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
-        });
-        filteredAlbumCovers.sort(function(a, b) {
-            return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
-        });
+        try {
+            var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+            filteredAlbums.sort(function(a, b) {
+                return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
+            });
+            filteredAlbumCovers.sort(function(a, b) {
+                return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
+            });
+        }
+        catch (e) {
+            filteredAlbums.sort(function(a, b) {
+                a = a['last_modified'].getTime();
+                b = b['last_modified'].getTime();
+                return b > a ? 1 : (b < a ? -1 : 0);
+            });
+            filteredAlbumCovers.sort(function(a, b) {
+                a = a['last_modified'].getTime();
+                b = b['last_modified'].getTime();
+                return b > a ? 1 : (b < a ? -1 : 0);
+            });
+        }
     }
 	// Filter by year(s)
 	if (LIB.filters.year.length) {
