@@ -963,7 +963,6 @@ function renderPlaylist() {
 
         // Scroll
         setTimeout(function() {
-            countdownRestart(0);
             if ($('#playback-panel').hasClass('active')) {
                 customScroll('pl', parseInt(MPD.json['song']));
                 if ($('#cv-playlist').css('display') == 'block') {
