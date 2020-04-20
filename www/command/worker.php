@@ -152,14 +152,14 @@ $_SESSION['raspbianver'] = $result[0];
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
 // Log platform data
-workerLog('worker: Host name     (' . $_SESSION['hostname'] . ')');
-workerLog('worker: moOde release (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
-workerLog('worker: Raspbian OS   (' . $_SESSION['raspbianver'] . ')');
-workerLog('worker: Linux kernel  (' . $_SESSION['kernelver'] . ')');
-workerLog('worker: Platform      (' . $_SESSION['hdwrrev'] . ')');
-workerLog('worker: Architecture  (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] .' kernel)');
-workerLog('worker: MPD version   (' . $_SESSION['mpdver'] . ')');
-workerLog('worker: CPU governor  (' . $_SESSION['cpugov'] . ')');
+workerLog('worker: Host     (' . $_SESSION['hostname'] . ')');
+workerLog('worker: moOde    (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
+workerLog('worker: Raspbian (' . $_SESSION['raspbianver'] . ')');
+workerLog('worker: Kernel   (' . $_SESSION['kernelver'] . ')');
+workerLog('worker: Platform (' . $_SESSION['hdwrrev'] . ')');
+workerLog('worker: ARM arch (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] .' kernel)');
+workerLog('worker: MPD ver  (' . $_SESSION['mpdver'] . ')');
+workerLog('worker: CPU gov  (' . $_SESSION['cpugov'] . ')');
 
 // Boot device config
 $model = substr($_SESSION['hdwrrev'], 3, 1);
