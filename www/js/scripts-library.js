@@ -712,7 +712,7 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 		}
 		setLibMenuHeader();
 	}
-	if (currentView == 'radiolist' || currentView == 'radiocovers') {
+	if (currentView == 'radio') {
 		GLOBAL.searchRadio = '';
 		$('#searchResetRa').click();
 		setLibMenuHeader();
@@ -963,7 +963,7 @@ $('#database-radio').on('click', 'img', function(e) {
         }
 
 		setTimeout(function() {
-			customScroll('radiocovers', UI.radioPos, 200);
+			customScroll('radio', UI.radioPos, 200);
 		}, SCROLLTO_TIMEOUT);
 	}
 
@@ -971,27 +971,9 @@ $('#database-radio').on('click', 'img', function(e) {
 	return false;
 });
 
-// Radio list/cover toggle button
-$('#ra-toggle-view').click(function(e) {
-	if ($('#ra-toggle-view i').hasClass('fa-bars')) {
-		$('#ra-toggle-view i').removeClass('fa-bars').addClass('fa-th');
-		$('#radiocovers').addClass('database-radiolist');
-		currentView = 'radiolist';
-        $.post('command/moode.php?cmd=updcfgsystem', {'current_view': currentView});
-
-	}
-	else {
-		$('#ra-toggle-view i').removeClass('fa-th').addClass('fa-bars');
-		$('#radiocovers').removeClass('database-radiolist');
-		currentView = 'radiocovers';
-        $.post('command/moode.php?cmd=updcfgsystem', {'current_view': currentView});
-        lazyLode('radio');
-		setTimeout(function() {
-			if (UI.radioPos >= 0) {
-				customScroll('radiocovers', UI.radioPos, 200);
-			}
-		}, SCROLLTO_TIMEOUT);
-	}
+// Radio manager
+$('#radio-manager-btn').click(function(e) {
+    // Placeholder
 });
 
 // Click radio list item for instant play
@@ -1011,7 +993,7 @@ $('#database-radio').on('click', '.db-entry', function(e) {
     }
 
 	setTimeout(function() {
-		customScroll('radiocovers', UI.radioPos, 200);
+		customScroll('radio', UI.radioPos, 200);
 	}, SCROLLTO_TIMEOUT);
 
 	return false;

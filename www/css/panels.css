@@ -391,16 +391,6 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #albumview-header-text {display:none;background:none;text-transform:unset;font-size:1.1rem;padding:0 3rem;}
 #albumcoverheader .recently-added {margin:0;float:unset;padding:0;position:unset;opacity:1;}
 #albumcoverheader .recently-added i, #random-albumcover i {font-size:.9rem;opacity:0;} /* opacity hide for now */
-/* radio list view */
-.database-radiolist {text-align:left;padding-left:2rem;}
-.database-radiolist li {width:90%;display:inline-block;margin:0;font-size:1rem;}
-.database-radiolist li .db-icon img {display:none !important;}
-.database-radiolist li .db-icon .cover-menu {background-image:none !important;}
-.database-radiolist li .db-icon .cover-menu:before {content: "\f130";font-family:'Font Awesome 5 Pro';font-weight:100;}
-.database-radiolist li .db-radiofolder-icon:before {content: "\f07b";font-family:'Font Awesome 5 Pro';font-weight:100;}
-.database-radiolist .db-entry {font-size:1em;padding:.2rem 0;margin:0 0 .25rem 2.5rem;text-align:left;}
-.database-radiolist li .db-icon {float:left;padding:.25rem 0;}
-.database-radiolist .cover-menu {transform:none;height:1.5rem;width:2rem;opacity:1 !important;}
 /* coverview screen saver */
 #screen-saver {color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}
 #ss-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}

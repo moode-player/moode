@@ -253,21 +253,12 @@ jQuery(document).ready(function($) { 'use strict';
     	}
 
         // Radio view
-    	if (currentView == 'radiolist' || currentView == 'radiocovers') {
-    		makeActive('.radio-view-btn','#radio-panel',currentView);
-
-    		if (currentView == 'radiolist') {
-    			$('#ra-toggle-view i').removeClass('fa-bars').addClass('fa-th');
-    			$('#radiocovers').addClass('database-radiolist');
-    		}
-    		else {
-    			$('#ra-toggle-view i').removeClass('fa-th').addClass('fa-bars');
-    			$('#radiocovers').removeClass('database-radiolist');
-    		}
+    	if (currentView == 'radio') {
+    		makeActive('.radio-view-btn','#radio-panel', currentView);
 
     		setTimeout(function() {
     			if (UI.radioPos >= 0) {
-    				customScroll('radiocovers', UI.radioPos, 200);
+    				customScroll('radio', UI.radioPos, 200);
     			}
     		}, SCROLLTO_TIMEOUT);
     	}
@@ -318,17 +309,12 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Radio view
 	$('.radio-view-btn').click(function(e){
-        if ($('ra-toggle-view i').hasClass('fa-bars')) {
-            makeActive('.radio-view-btn','#radio-panel','radiolist')
-        }
-        else {
-            makeActive('.radio-view-btn','#radio-panel','radiocovers');
-            setTimeout(function() {
-    			if (UI.radioPos >= 0) {
-    				customScroll('radiocovers', UI.radioPos, 0);
-    			}
-    		}, SCROLLTO_TIMEOUT);
-        }
+        makeActive('.radio-view-btn','#radio-panel','radio');
+        setTimeout(function() {
+			if (UI.radioPos >= 0) {
+				customScroll('radio', UI.radioPos, 0);
+			}
+		}, SCROLLTO_TIMEOUT);
 	});
     // Folder view
 	$('.folder-view-btn').click(function(e){
@@ -393,15 +379,16 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// mute toggle
-	$('.volume-display').click(function(e) {
+	$('.volume-display').on('click', function(e) {
 		if (SESSION.json['mpdmixer'] == 'disabled') {
 			return false;
 		}
 		volMuteSwitch();
 	});
 
-	// volume control popup (for mobile and playbar)
-	$('.volume-popup').live('click', function(e) {
+	// Volume control popup btn for Playbar
+	//$('.volume-popup-btn').live('click', function(e) {
+    $(document).on('click', '.volume-popup-btn', function(e) {
 		if ($('#volume-popup').css('display') == 'block') {
 			$('#volume-popup').modal('toggle');
 		}
@@ -1283,8 +1270,9 @@ jQuery(document).ready(function($) { 'use strict';
         }
 	});
 
-	// disconnect active renderer
-	$('.disconnect-renderer').live('click', function(e) {
+	// Disconnect active renderer
+	//$('.disconnect-renderer').live('click', function(e) {
+    $(document).on('click', '.disconnect-renderer', function(e) {
 		$('.disconnect-renderer').css('opacity', '.5');
 		var job = $(this).data('job');
         $.post('command/moode.php?cmd=disconnect-renderer', {'job':job});

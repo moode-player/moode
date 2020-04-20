@@ -198,7 +198,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#togglebtns .btn-group {display:inline-flex;}
 	#togglebtns .btn-group .btn {transition:none;font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;height:2.5em;width:2.5em;/*color:var(--textvariant);*/}
 	#togglebtns .btn-group .btn i {min-width:1.25rem;}
-	#playbtns, #togglebtns/*, .volume-popup*/ {display:block;}
+	#playbtns, #togglebtns/*, .volume-popup-btn-*/ {display:block;}
 	.coverview {display:none;}
 	#currentsong {font-size:1.5em;font-weight:bold;}
 	#currentalbum {font-size:1.35em;margin-bottom:1.5em;}
@@ -431,7 +431,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.db-spinsync {top:calc(env(safe-area-inset-top) + -.2rem);}
 	.config-exit {top:calc(env(safe-area-inset-top) - .5rem);}
 	#radio-panel .viewswitch {top:calc(env(safe-area-inset-top) - .5em);}
-	.database-radiolist li .db-entry {margin-top:2px;}
 	#config-tabs {top:calc(env(safe-area-inset-top) - .5rem);}
 }
 @media (width: 896px) and (height:414px) {
@@ -507,8 +506,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	75% {background-color: rgba(54,15,22,0.8);}
 	100% {background-color: rgba(0,0,0,0.8);}
 }
-/* stuff */
-.database-radiolist li {width:90%;padding:.5em 0 .25em;} /* new */
 /* For links on the About modal */
 .moode-about-link {color:var(--adapttext);text-decoration:none;}
 .moode-about-link:hover {color:var(--adapttext);text-decoration:underline;}

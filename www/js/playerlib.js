@@ -397,7 +397,7 @@ function engineCmd() {
                 case 'inpactive1':
                 case 'inpactive0':
                     // NOTE: cmd[1] is the input source name
-    				inpSrcIndicator(cmd[0], '<a href="inp-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
+    				inpSrcIndicator(cmd[0], '<a href="inp-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
                     break;
                 case 'btactive1':
                 case 'btactive0':
@@ -508,7 +508,7 @@ function disableVolKnob() {
 	if (UI.mobile) {
 		$('#mvol-progress').css('width', '100%');
 		$('.repeat').show();
-        $('.volume-popup').hide();
+        $('.volume-popup-btn').hide();
 	}
 }
 
@@ -605,7 +605,7 @@ function renderUI() {
     	else {
             // Volume button visability
             if (UI.mobile) {
-                $('.volume-popup').show();
+                $('.volume-popup-btn').show();
             }
 
     		// Update volume knobs
@@ -818,7 +818,7 @@ function renderUI() {
     	}
     	// Input source
     	if (SESSION.json['inpactive'] == '1') {
-    		inpSrcIndicator('inpactive1', '<a href="inp-config.php">' + SESSION.json['audioin'] + ' Input Active</a>' + '<br><span><button class="btn volume-popup" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
+    		inpSrcIndicator('inpactive1', '<a href="inp-config.php">' + SESSION.json['audioin'] + ' Input Active</a>' + '<br><span><button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
     	}
 
     	// Database update
@@ -1608,7 +1608,7 @@ function customScroll(list, itemNum, speed) {
 		scrollSelector = '#lib-file';
 		chDivisor = 600;
 	}
-	else if (list == 'radiocovers') {
+	else if (list == 'radio') {
 		listSelector = '#database-radio';
 		scrollSelector = listSelector;
 		chDivisor = 6;
@@ -2860,7 +2860,7 @@ $('#index-browse li').on('click', function(e) {
 	listLook('database li', 'db', $(this).text());
 });
 $('#index-radio li').on('click', function(e) {
-	listLook('radiocovers li', 'radiocovers', $(this).text());
+	listLook('radiocovers li', 'radio', $(this).text());
 });
 function listLook(list, name, search) {
 	alphabitsFilter = 0;
@@ -2941,19 +2941,11 @@ $('#coverart-url, #playback-switch').click(function(e){
             loadLibrary();
         }
 	}
-	else if (currentView == 'radiolist' || currentView == 'radiocovers') {
+	else if (currentView == 'radio') {
 		makeActive('.radio-view-btn','#radio-panel',currentView);
-		if (currentView == 'radiolist') {
-			$('#ra-toggle-view i').removeClass('fa-bars').addClass('fa-th');
-			$('#radiocovers').addClass('database-radiolist');
-		}
-		else {
-			$('#ra-toggle-view i').removeClass('fa-th').addClass('fa-bars');
-			$('#radiocovers').removeClass('database-radiolist');
-		}
 		setTimeout(function() {
 			if (UI.radioPos >= 0) {
-				customScroll('radiocovers', UI.radioPos, 0);
+				customScroll('radio', UI.radioPos, 0);
 			}
 		}, SCROLLTO_TIMEOUT);
 	}
@@ -3058,8 +3050,7 @@ function makeActive (vswitch, panel, view) {
 	setColors();
 
 	switch (view) {
-        case 'radiolist':
-		case 'radiocovers':
+		case 'radio':
             lazyLode('radio')
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
 			$('#viewswitch .album-view-btn').removeClass('menu-separator');
@@ -3096,7 +3087,7 @@ function makeActive (vswitch, panel, view) {
 function setLibMenuHeader () {
     var headerText = UI.mobile ? '' : 'Browse by ';
 
-	if (currentView == 'radiolist' || currentView == 'radiocovers') {
+	if (currentView == 'radio') {
 		headerText += 'Radio Stations';
 		if (GLOBAL.searchRadio) {
 			headerText = GLOBAL.searchRadio;
