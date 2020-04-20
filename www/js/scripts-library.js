@@ -974,6 +974,7 @@ $('#database-radio').on('click', 'img', function(e) {
 // Radio manager
 $('#radio-manager-btn').click(function(e) {
     // Placeholder
+    $('#radio-manager-modal').modal();
 });
 
 // Click radio list item for instant play
