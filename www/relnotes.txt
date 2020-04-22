@@ -56,6 +56,8 @@ Bug fixes
 - FIX: Audio info Formats showing PHP error message
 - FIX: WiFi/BT options missing from System config for Zero W
 - FIX: Last track (toggle song) id not persisting
+- FIX: Typo in bt.sh help text
+- FIX: Checkbox layout in Clock Radio
 - FIX: Minor corrections to Setup guide
 
 Audio devices
