@@ -88,6 +88,7 @@ if (isset($_POST['regen_thmcache'])) {
 if (isset($_POST['delete']) && $_POST['delete'] == 1) {
 	$initiateLibraryUpd = true;
 	$_POST['mount']['action'] = 'delete';
+	$_POST['mount']['id'] = $_SESSION['src_mpid'];
 	submitJob('sourcecfg', $_POST, '', '');
 }
 // save source
