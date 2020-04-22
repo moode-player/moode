@@ -25,8 +25,8 @@
 # - some terminology changes and cleanup
 # - kill bluealsa-aplay (go offline!)to avoid playback during config
 # - show and kill active connections - "online"
-# - kill active connections before scanning 
-# - TODO: How to avoid double source connection?? 
+# - kill active connections before scanning
+# - TODO: How to avoid double source connection??
 #
 # This script is designed to work with bluez and bluez-alsa
 # It performs bluetooth controller initialization and provides management of bluetooth sources
@@ -65,17 +65,17 @@ echo "** Scanning for devices (${SCANPERIOD} secs)"
 echo "**"
 expect <(cat <<EOF
 log_user 0
-set timeout -1 
+set timeout -1
 match_max 100000
 spawn bluetoothctl
-expect "*# " 
+expect "*# "
 send -- "scan on\r"
 expect -exact "scan on\r"
-expect "*# " 
+expect "*# "
 sleep $SCANPERIOD
 send "scan off\r"
 expect -exact "scan off\r"
-expect "*# " 
+expect "*# "
 send "quit\r"
 expect eof
 EOF
@@ -92,7 +92,7 @@ TRUST() {
 	   y="$( echo $i | cut -d " " -f1)"
 	   echo -e "trust $y\nquit"  | bluetoothctl >/dev/null
 	   #sleep 1
-	done   
+	done
 	echo "**"
 }
 
@@ -148,7 +148,7 @@ REMOVE_ALL() {
 	   y="$( echo $i | cut -d " " -f1)"
 	   echo -e "remove $y\nquit"  | bluetoothctl >/dev/null
 	   sleep 1
-	done   
+	done
 	echo "** All devices removed"
 }
 
@@ -188,13 +188,13 @@ PAIRWITH_DEVICE() {
 echo "** Pairing with device $DEVICE"
 expect <(cat <<EOF
 log_user 0
-set timeout -1 
+set timeout -1
 match_max 100000
 spawn bluetoothctl
-expect "*# " 
+expect "*# "
 send "pair $DEVICE\r"
 expect -exact "Attempting to pair with $DEVICE\r"
-expect "*# " 
+expect "*# "
 sleep 5
 send "quit\r"
 expect eof
@@ -208,13 +208,13 @@ CONNECTTO_DEVICE() {
 echo "** Connecting to device $DEVICE"
 expect <(cat <<EOF
 log_user 0
-set timeout -1 
+set timeout -1
 match_max 100000
 spawn bluetoothctl
-expect "*# " 
+expect "*# "
 send "connect $DEVICE\r"
 expect -exact "Attempting to connect to $DEVICE\r"
-expect "*# " 
+expect "*# "
 sleep 5
 send "quit\r"
 expect eof
@@ -248,12 +248,12 @@ HELP_HTML() {
 	echo
 	echo -e "2) To send audio from your device to moOde:<br>First turn on the Pairing agent in Audio Config and then initiate the connection on your device. Your device should automatically pair and connect. You can verify that your device has been successfully paired and connected by submitting \"LIST paired\" or \"LIST connected\" commands."
 	echo
-	echo -e "3) To send audio from moOde to your device:<br>First submit a \"SCAN for devices\" command and verify that your device appears in the scan results. The scan runs for 20 seconds. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetuuth\" from the dropdown then CONNECT."
+	echo -e "3) To send audio from moOde to your device:<br>First submit a \"SCAN for devices\" command and verify that your device appears in the scan results. The scan runs for 20 seconds. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetooth\" from the dropdown then CONNECT."
 }
 
 # main
-	
-case $1 in 
+
+case $1 in
 
 	-i) INIT
 		exit 0
@@ -300,14 +300,14 @@ case $1 in
 		;;
 	-h) HELP_TERM
 		exit 0
-		;;        
+		;;
 	-H) HELP_HTML
 		exit 0
-		;;        
+		;;
 	*)  HELP_TERM
 		exit 0
-		;;        
-esac 
+		;;
+esac
 
 echo "**"
 exit 0
