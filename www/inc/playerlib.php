@@ -2241,7 +2241,7 @@ function cfgChipOptions($chipoptions, $chiptype) {
 	}
 	// MERUS Amp HAT ZW: Power mode profile
 	else if ($chiptype == 'merus_ma12070p') {
-		sysCmd('amixer -c 0 sset "Q.PM prof" ' . '"' . $array[0] . '"');
+		sysCmd('amixer -c 0 sset "Q.PM Prof" ' . '"' . $array[0] . '"');
 	}
 }
 
