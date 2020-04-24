@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-01-23 TC moOde 6.4.1
+# 2020-04-21 TC moOde 6.5.0
 #
 
 FPM_LIMIT=40
@@ -72,23 +72,20 @@ while true; do
 	# Audio output
 	CARD_NUM=$(sqlite3 $SQL_DB "SELECT value FROM cfg_mpd WHERE param='device'")
 	HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
-	# Commenting out the outer if statement prevents display blanling while audio is playing
-	#if [[ $HW_PARAMS != $HW_PARAMS_LAST ]]; then
+	TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+	if [[ $HW_PARAMS = "closed" ]]; then
+		LOG_MSG=" watchdog: Info: Audio output is (closed)"
+	else
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		if [[ $HW_PARAMS = "closed" ]]; then
-			LOG_MSG=" watchdog: Info: Audio output is (closed)"
-		else
-			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-			LOG_MSG=" watchdog: Info: Audio output is (in use)"
-			# Wake display on play
-			WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
-			if [[ $WAKE_DISPLAY = "1" ]]; then
-				export DISPLAY=:0
-				xset s reset > /dev/null 2>&1
-			fi
+		LOG_MSG=" watchdog: Info: Audio output is (in use)"
+		# Wake display on play
+		WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
+		if [[ $WAKE_DISPLAY = "1" ]]; then
+			export DISPLAY=:0
+			xset s reset > /dev/null 2>&1
 		fi
-		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
-	#fi
+	fi
+	#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 
 	sleep 6
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
