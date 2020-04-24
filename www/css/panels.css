@@ -234,7 +234,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .playlist .pl-action, .cv-playlist .pl-action {float:right;padding:0;text-align:center;}
 .cv-playlist .pl-action {display:none;}
 .database .db-action {float:left;width:1.875em;padding:0;position:relative;}
-.playlist .pl-action, .playlist .db-action a {position:relative;/*width:3em;*/font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
+.playlist .pl-action, .playlist .db-action a {position:relative;width:6em;font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
 .cv-playlist .pl-action, .cv-playlist .db-action a {position:relative;width:3em;font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
 #db-search-results {font-style:italic;float:left;padding:1em .5em 0em .5em;font-size:1em;display:none;}
 #pl-filter-results, #lib-album-filter-results, #ra-filter-results {font-style:italic;float:left;font-size:1em;position:relative;top:55%;transform:translate(0, -55%);}
