@@ -52,6 +52,7 @@
 		versioned_script('js/bootstrap.min.js');
 		versioned_script('js/bootstrap-select.min.js');
 		versioned_script('js/jquery.pnotify.min.js');
+        versioned_script('js/notify.min.js');
         versioned_script('js/playerlib-nomin.js');
         versioned_script('js/playerlib.min.js');
 		versioned_script('js/links.min.js');
@@ -65,7 +66,6 @@
 			versioned_script('js/jquery.lazyload.min.js');
 			versioned_script('js/jquery.md5.min.js');
 			versioned_script('js/jquery.adaptive-backgrounds.min.js');
-			versioned_script('js/notify.min.js');
 			versioned_script('js/jquery.knob.min.js');
 			versioned_script('js/bootstrap-contextmenu.min.js');
             versioned_script('js/scripts-library.min.js');
