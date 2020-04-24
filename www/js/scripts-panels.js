@@ -21,9 +21,9 @@
  * 2020-04-21 TC moOde 6.5.0
  *
  */
-
 jQuery(document).ready(function($) { 'use strict';
 	//console.log($(window).width() + 'x' + $(window).height());
+    //notify('viewport', window.innerWidth + 'x' + window.innerHeight, 10000);
     GLOBAL.scriptSection = 'panels';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
