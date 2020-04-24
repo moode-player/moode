@@ -46,6 +46,8 @@ Updates
 - UPD: Add "No action" option to Library Instant play action
 - UPD: Add ability to update station logo while editing station
 - UPD: Add Command API section to Setup guide
+- UPD: Add -enable-features=OverlayScrollbar to xinitrc
+- UPD: Pi 7" Touch prevent display blank while audio playing
 - UPD: Sort recently added albums so most recent is on top
 - UPD: Disable apt-daily and apt-daily-upgrade timers
 - UPD: Deprecate librespot armv6l binary
