@@ -21,7 +21,7 @@
 # 2. To match MPD listings, results for /media are prepended with "USB/".
 # 3. A music file must match one of the extensions listed below obtained from decoder-plugin values via MPD -V.
 #
-# 2020-04-21 TC moOde 6.5.0
+# 2020-04-24 TC moOde 6.5.0
 #
 
 # Audio file types

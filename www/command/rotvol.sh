@@ -1,6 +1,6 @@
 #!/bin/bash
 # moOde audio player (C) 2014 Tim Curtis, GPLv3
-# 2020-04-21 TC moOde 6.5.0
+# 2020-04-24 TC moOde 6.5.0
 RESULT=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE id IN ('32', 137)")
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}

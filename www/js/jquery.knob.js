@@ -15,7 +15,7 @@
  * Moode Audio Player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
- * 2020-04-21 TC moOde 6.5.0
+ * 2020-04-24 TC moOde 6.5.0
  *
  */
 
