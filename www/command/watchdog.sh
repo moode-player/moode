@@ -72,7 +72,8 @@ while true; do
 	# Audio output
 	CARD_NUM=$(sqlite3 $SQL_DB "SELECT value FROM cfg_mpd WHERE param='device'")
 	HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
-	if [[ $HW_PARAMS != $HW_PARAMS_LAST ]]; then
+	# Commenting out the outer if statement prevents display blanling while audio is playing
+	#if [[ $HW_PARAMS != $HW_PARAMS_LAST ]]; then
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
 		if [[ $HW_PARAMS = "closed" ]]; then
 			LOG_MSG=" watchdog: Info: Audio output is (closed)"
@@ -87,7 +88,7 @@ while true; do
 			fi
 		fi
 		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
-	fi
+	#fi
 
 	sleep 6
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
