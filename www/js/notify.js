@@ -54,8 +54,9 @@ function notify(cmd, msg, duration) {
 		favadded: 'Favorite has been added',
 		nofavtoadd: 'Nothing to add',
 		mpderror: 'MPD error',
-		reboot: 'Restarting...',
-		shutdown: 'Shutting down...'
+		restart: 'Restarting...',
+		shutdown: 'Shutting down...',
+        viewport: 'Viewport'
     };
 
     if (typeof map[cmd] === undefined) {
