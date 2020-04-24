@@ -372,8 +372,6 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #m-total {font-size:10px;padding-left:5px;}
 .recently-added {margin-top:-1.5em;float:left;position:relative;padding:.25em .5em 0em .5em;}
 .recently-added i {color:var(--adapttext);opacity:.35}
-#random-album {margin-top:-1.5em;float:left;position:relative;padding:.25em .5em 0em .5em;}
-#random-album i {color:var(--adapttext);opacity:.35}
 .span5, .span4 {margin-left:0px;margin-right:0px;}
 .bootstrap-select .btn {border:1px solid rgba(128,128,128,0.6);background:none;}
 .controls.controls-tog {line-height:30px;}
@@ -386,11 +384,8 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #albumcovers .album-name {display:block !important;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
 #albumcovers .artist-name, #albumcovers .album-year {margin:0 .15em;}
-#lib-albumcover-header {display:none;position:absolute;top:env(safe-area-inset-top);width:100vw;transform: translate(-50%);left:50%;}
-#albumcoverheader {line-height:2.75rem !important;position:absolute !important;height:2.75rem;width:15%;left:75%;transform:translate(-50%);}
-#albumview-header-text {display:none;background:none;text-transform:unset;font-size:1.1rem;padding:0 3rem;}
-#albumcoverheader .recently-added {margin:0;float:unset;padding:0;position:unset;opacity:1;}
-#albumcoverheader .recently-added i, #random-albumcover i {font-size:.9rem;opacity:0;} /* opacity hide for now */
+#random-album {position:absolute;top:env(safe-area-inset-top);left:7rem;line-height:2.75rem;height:2.75rem;transform:none;padding:.15em .5em 0 .5em;cursor:pointer;}
+#random-album i {font-size:1.1rem;color:var(--adapttext);opacity:.35;}
 /* coverview screen saver */
 #screen-saver {color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}
 #ss-backdrop {height:100vh;filter:blur(20px);overflow:hidden;position:fixed;top:0;left:0;transform:scale(1.2);}
@@ -459,8 +454,8 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playback-panel.active .btnlist.btnlist-top.btnlist-top-pl {display:inline-flex;}
 #library-panel {display:none;}
 #library-panel.active {height:100vh;display:block;}
-#lib-albumcover, #lib-albumcover-header, #top-columns, #bottom-row {display:none;}
-#library-panel.active.covers #lib-albumcover, #library-panel.active.covers #lib-albumcover-header {display:block;}
+#lib-albumcover, #top-columns, #bottom-row {display:none;}
+#library-panel.active.covers #lib-albumcover {display:block;}
 #library-panel.active.covers #index-albumcovers {display:block;}
 #library-panel.active.tag #top-columns {display:block}
 #library-panel.active.tag #bottom-row {display:flex;}

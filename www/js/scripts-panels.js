@@ -199,9 +199,11 @@ jQuery(document).ready(function($) { 'use strict';
             $('#playhistory-hide').css('display', 'none');
         }
 
-        // Set header text for Tag and Album views
-        setTagViewHeaderText();
-        setAlbumViewHeaderText();
+        // Tag view header text
+        $('#tagview-header-text').text('Albums' +
+            ((SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') ?
+            '' : ' by ' + SESSION.json['library_tagview_sort']));
+
 
         // Hide alphabits index if indicated
         if (SESSION.json['library_albumview_sort'] == 'Year') {

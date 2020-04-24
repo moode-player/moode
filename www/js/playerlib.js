@@ -2891,17 +2891,6 @@ function storeLibPos(pos) {
     $.post('command/moode.php?cmd=updcfgsystem', {'lib_pos': pos[0] + ',' + pos[1] + ',' + pos[2]});
 }
 
-// Header text for Tag and Album views
-function setTagViewHeaderText() {
-    $('#tagview-header-text').text('Albums' +
-        ((SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') ?
-        '' : ' by ' + SESSION.json['library_tagview_sort']));
-}
-function setAlbumViewHeaderText() {
-    $('#albumview-header-text').text('Albums' +
-        (SESSION.json['library_albumview_sort'] == 'Album' ? '' : ' by ' + SESSION.json['library_albumview_sort']));
-}
-
 // Switch to Library
 $('#coverart-url, #playback-switch').click(function(e){
 	if ($('#playback-panel').hasClass('cv')) {

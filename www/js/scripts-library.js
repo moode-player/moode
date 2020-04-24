@@ -740,6 +740,7 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 $('#albumheader').on('click', '.lib-heading', function(e) {
 	//console.log($(this).parent().attr('id'));
 	//LIB.artistClicked = false;
+    /* DEPRECATED
 	if ($(this).parent().attr('id') == 'albumcoverheader') {
 		$('#albumcovers .lib-entry').removeClass('active');
 		$('#bottom-row').css('display', '');
@@ -750,12 +751,12 @@ $('#albumheader').on('click', '.lib-heading', function(e) {
 		UI.libPos.fill(-2);
 		clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
 	}
-	else {
+	else {*/
 		LIB.filters.albums.length = 0;
         LIB.recentlyAddedClicked = false;
 		UI.libPos.fill(-2);
 		clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
-	}
+	//}
 
 	storeLibPos(UI.libPos);
 	$("#searchResetLib").hide();
@@ -813,13 +814,13 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	UI.libAlbum = album;
 });
 
-// Click 'random album' button
-$('#random-album, #random-albumcover').click(function(e) {
+// Click random album button
+$('#random-album').click(function(e) {
 	var array = new Uint16Array(1);
 	window.crypto.getRandomValues(array);
 	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
 
-	if ($(this).attr('id') == 'random-album') {
+	if (currentView == 'tag') {
 		var itemSelector = '#albumsList .lib-entry';
 		var scrollSelector = 'albums';
 		UI.libPos[0] = pos;
