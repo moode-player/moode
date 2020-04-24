@@ -957,8 +957,7 @@ rebooting and then accessing moOde on the local display.
 
 a. Connect a keyboard.
 b. Press Ctrl-t to open a separate instance of Chrome Browser.
-c. Enter url chrome://flags and scroll down to Overlay Scrollbars and enable the setting.
-d. Optionally, enter url chrome://extensions and install the xontab virtual keyboard extension.
+c. Enter url chrome://extensions and optionally install the xontab virtual keyboard extension.
 
 ////////////////////////////////////////////////////////////////
 //
