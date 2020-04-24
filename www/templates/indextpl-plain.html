@@ -50,7 +50,7 @@
 		<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
 		<div id="container-playback" class="container-playback txtmid">
 			<div class="no-fluid">
-				<!-- playlist -->
+				<!-- Playlist -->
 				<div id="playback-queue" class="span5">
 
 					<div id="container-playlist">
@@ -60,7 +60,7 @@
 					</div>
 				</div>
 
-				<!-- knobs and playback controls -->
+				<!-- Lnobs and playback controls -->
 				<div id="playback-controls" class="span3">
 					<div id="timezone">
 						<div id="timeknob">
@@ -109,7 +109,7 @@
 					</div>
 				</div>
 
-				<!-- cover art and song metadata -->
+				<!-- Cover art and song metadata -->
 				<div id="playback-cover" class="span4">
 					<div class="covers">
 						<div aria-label="Cover Art" id="coverart-url"></div>
@@ -150,7 +150,7 @@
 				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio</button>
 				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder</button>
 				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag</button>
-				<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Cover</button>
+				<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Album</button>
 				<button aria-label="All Music" class="btn view-all" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
 				<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
 			</ul>
@@ -251,7 +251,6 @@
 				</form>
 				<div id="db-search-results"></div>
 			</div>
-
 			<div id="database">
 				<ul class="database"></ul>
 			</div>
@@ -266,20 +265,20 @@
 	<!-- RADIO PANEL -->
 	<div id="radio-panel" class="tab-pane">
 		<div id="container-radio">
-		<div class="btnlist btnlist-top btnlist-top-ra">
-            <button aria-label="Back" id="ra-back" class="btn"><i class="far fa-arrow-left"></i></button>
-			<button aria-label="Home" id="ra-home" class="btn"><i class="fas fa-home"></i></button>
-			<button aria-label="Refresh" id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
-			<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="far fa-cog"></i></button>
-			<button aria-label="New Station" id="ra-new" class="btn"><i class="far fa-plus"></i></button>
-			<form id="ra-search" class="" method="post" onSubmit="return false;">
-				<div class="input-append">
-					<input id="ra-filter" type="text" value="" placeholder="search">
-				</div>
-				<button aria-label="Reset" id="searchResetRa" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
-			</form>
-			<div id="ra-filter-results"></div>
-		</div>
+			<div class="btnlist btnlist-top btnlist-top-ra">
+	            <button aria-label="Back" id="ra-back" class="btn"><i class="far fa-arrow-left"></i></button>
+				<button aria-label="Home" id="ra-home" class="btn"><i class="fas fa-home"></i></button>
+				<button aria-label="Refresh" id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
+				<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="far fa-cog"></i></button>
+				<button aria-label="New Station" id="ra-new" class="btn"><i class="far fa-plus"></i></button>
+				<form id="ra-search" class="" method="post" onSubmit="return false;">
+					<div class="input-append">
+						<input id="ra-filter" type="text" value="" placeholder="search">
+					</div>
+					<button aria-label="Reset" id="searchResetRa" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+				</form>
+				<div id="ra-filter-results"></div>
+			</div>
 			<div id="database-radio">
 				<ul id="radiocovers" class="database-radio"></ul>
 			</div>
