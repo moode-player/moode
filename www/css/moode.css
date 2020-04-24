@@ -176,7 +176,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta {text-align:left;}
 	#trackscontainer {width:100%;max-width:100%;}
 	.container-playback {padding: 0;}
-#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;/*padding-top:10vh;*/}
+	#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;/*padding-top:10vh;*/}
 	#mt1, #mt2, #mt3 {font-size:inherit;}
 	#mt1 {margin:4rem 1.5rem 0rem 1.5rem;}
 	#mt3 {margin-right:5px;float:right;margin-top:25vh;}
@@ -344,6 +344,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* so cover scrolls with tracks */
 	#lib-coverart-meta-area {position:relative;}
 }
+
 /* in-browser view for mobile screens */
 @media (max-width:479px) and (max-height:622px) and (orientation:portrait) {
 	#coverart-url img {width:45vh;min-height:45vh;}
@@ -393,30 +394,13 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/*#playbar-title {font-size:1.1rem;}*/
 }
 /* Pi 7" Touch */
-@media (height: 479px) and (width: 799px) {
-	.playlist .pll1 {font-size:unset;}
-	/*#timeknob {padding: 0 0 8px;}
-	#total {top:63%;width:100%;}
-	#volknob {padding: 8px 0 0;}*/
-	.btn-toolbar {margin-top: 5px;margin-bottom:6px;}
-	#togglebtns {padding-top:.5em;}
-	#extra-tags {padding-top:1em;}
-	#container-appearance, #container-clockradio {max-height: 72vh;}
-	.database-radio li {width:9em;font-size:0.8em;height:auto;}
-	#albumcovers li {width:9em;font-size:0.8em;height:auto;}
-	#ss-currentsong {font-size:1.4em;}
-	#ss-currentalbum, #ss-currentartist {font-size:1.15em;}
-	#lib-coverart-meta-area {position:relative;}
-	/* playbar */
-	#playbar-title {font-size:.9rem;}
-	.alphabits ul li {line-height:1em;}
-	/* alphabits */
-	#index-albumcovers {display:block;}
-	#index-browse {display:block;}
-	#index-radio {display:block;}
-	#index-radio ul li:nth-child(even), #index-browse ul li:nth-child(even), #index-albumcovers ul li:nth-child(even) {display:none !important;}
-	#index-radio ul li:nth-child(4n+0), #index-browse ul li:nth-child(4n+0), #index-albumcovers ul li:nth-child(4n+0) {display:block !important;}
+@media (height:598px) and (width:998px) {
+	.playlist .pll1, .playlist .pll2 {font-size:1.1em;}
+	#playbtns {margin:.25em 0;}
+	#playbar-title {font-size:1.1em;}
+	img.coverart {width:55vh;}
 }
+
 /* iPhone X */
 @media (width: 375px) and (height:812px) {
 	.playlist {padding:0 0 8rem 0;min-height:35vh;}
