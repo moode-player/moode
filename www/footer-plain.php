@@ -145,15 +145,15 @@
 		<h3 id="power-modal-label">Power Options</h3>
 	</div>
 	<div class="modal-body">
-		<button aria-label="Shutdown" id="syscmd-poweroff" data-dismiss="modal" class="btn btn-primary btn-large btn-block">Shutdown</button>
-		<button aria-label="Restart" id="syscmd-reboot" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;">Restart</button>
+		<button aria-label="Shutdown" id="system-shutdown" data-dismiss="modal" class="btn btn-primary btn-large btn-block">Shutdown</button>
+		<button aria-label="Restart" id="system-restart" data-dismiss="modal" class="btn btn-primary btn-large btn-block" style="margin-bottom:15px;">Restart</button>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	</div>
 </div>
 
-<!-- RECONNECT/RESTART/POWEROFF -->
+<!-- RECONNECT/RESTART/SHUTDOWN -->
 <div id="reconnect" class="hide">
 	<div class="reconnectbg"></div>
 	<div class="reconnectbtn">
@@ -165,15 +165,15 @@
 	<div class="reconnectbg"></div>
 	<div class="reconnectbtn">
 		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>
-		<br>System rebooting
+		<br>System restarting
 	</div>
 </div>
 
-<div id="poweroff" class="hide">
+<div id="shutdown" class="hide">
 	<div class="reconnectbg"></div>
 	<div class="reconnectbtn">
 		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>
-		<br>System powered off
+		<br>System shut down
 	</div>
 </div>
 

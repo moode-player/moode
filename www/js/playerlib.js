@@ -471,15 +471,15 @@ function screenSaver(cmd) {
 	}
 }
 
-// reconnect/reboot/poweroff
+// reconnect/reboot/restart
 function renderReconnect() {
 	debugLog('renderReconnect: UI.restart=(' + UI.restart + ')');
 
-	if (UI.restart == 'reboot') {
+	if (UI.restart == 'restart') {
 		$('#restart').show();
 	}
-	else if (UI.restart == 'poweroff') {
-		$('#poweroff').show();
+	else if (UI.restart == 'shutdown') {
+		$('#shutdown').show();
 	}
 	else {
 		$('#reconnect').show();
@@ -493,7 +493,7 @@ function renderReconnect() {
 
 function hideReconnect() {
 	//console.log('hideReconnect: (' + UI.hideReconnect + ')');
-	$('#reconnect, #restart, #poweroff').hide();
+	$('#reconnect, #restart, #shutdown').hide();
 	UI.hideReconnect = false;
 }
 
@@ -2405,16 +2405,16 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
     }
 });
 
-$('#syscmd-reboot').click(function(e) {
-	UI.restart = 'reboot';
+$('#system-restart').click(function(e) {
+	UI.restart = 'restart';
+	notify('restart', '', 8000);
     $.get('command/moode.php?cmd=reboot');
-	notify('reboot', '', 8000);
 });
 
-$('#syscmd-poweroff').click(function(e) {
-	UI.restart = 'poweroff';
+$('#system-shutdown').click(function(e) {
+	UI.restart = 'shutdown';
+    notify('shutdown', '', 8000);
     $.get('command/moode.php?cmd=poweroff');
-	notify('shutdown', '', 8000);
 });
 
 // https: //github.com/Qix-/color-convert/blob/master/conversions.js
