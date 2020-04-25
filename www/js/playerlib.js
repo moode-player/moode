@@ -1740,7 +1740,7 @@ $('.context-menu a').click(function(e) {
         $.post('command/moode.php?cmd=track_info', {'path': path}, function(result) {
             $('#track-info-text').html(result);
             $('#track-info-modal').modal();
-        });
+        }, 'json');
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
 		$('#savedpl-path').html(path);

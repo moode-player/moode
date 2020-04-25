@@ -1092,7 +1092,7 @@ $('#context-menu-lib-item a').click(function(e) {
         $.post('command/moode.php?cmd=track_info', {'path': filteredSongs[UI.dbEntry[0]].file}, function(result) {
             $('#track-info-text').html(result);
             $('#track-info-modal').modal();
-        }, 'json' );
+        }, 'json');
 	}
 });
 
