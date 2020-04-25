@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.5.1
  *
  */
 
@@ -79,8 +79,7 @@ var UI = {
 	// special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
 	radioPos: -1,
 	libAlbum: '',
-	mobile: false,
-	plModified: -1,
+	mobile: false
 };
 
 // mpd state and metadata
@@ -790,14 +789,8 @@ function renderUI() {
     		refreshTimeKnob();
     	}
 
-    	// for radio stations always update playlist
-    	if (MPD.json['artist'] == 'Radio station') {
-    		renderPlaylist();
-    	}
-    	// for song files only update if MPD playlilst seq
-    	else if (MPD.json['playlist'] != UI.plModified) {
-    		renderPlaylist();
-    	}
+        // Render the playlist
+        renderPlaylist();
 
     	// ensure renderer overlays get applied in case mpd ui updates get there first after browser refresh
     	// bluetooth renderer
@@ -851,7 +844,6 @@ function renderPlaylist() {
 	debugLog('renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
 		var output = '';
-		UI.plModified = MPD.json['playlist'];
 
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
