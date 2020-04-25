@@ -11,6 +11,23 @@
 
 ########################################################
 //
+// 2020-MM-DD TC moOde 6.5.1
+//
+########################################################
+
+Updates
+
+- UPD: Remove Radio and Playlist search result tallies
+
+Bug fixes
+
+- FIX: Playlist not auto-scrolling in certain cases
+- FIX: Playlist item line 2 left margin not correct
+- FIX: Position issue with search reset buttons
+
+
+########################################################
+//
 // 2020-04-24 TC moOde 6.5.0
 //
 ########################################################
