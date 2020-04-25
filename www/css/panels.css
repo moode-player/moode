@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.5.1
  *
  */
 
@@ -197,7 +197,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .database span, .database-radio span {display:block;font-weight:normal;color:inherit;opacity:.60;}
 .playlist span, .cv-playlist span {line-height:normal;margin-left:calc(3em + 1vmin);display:block;}
 .pll1 {font-size:1em;}
-.pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important}
+.pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important;margin-left: calc(3em + 1.5vmin)!important;}
 #albumsList li, #artistsList li, #genresList li {line-height:calc(1.45em + 1vmin);max-width:calc(33vw - 2.3rem);}
 #top-columns.nogenre #albumsList li, #top-columns.nogenre #artistsList li {max-width:calc(50vw - 2.3rem);}
 #albumsList .lib-entry img {width:3rem;margin:.3em .35em .3em .15em;}
