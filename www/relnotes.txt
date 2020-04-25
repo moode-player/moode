@@ -23,6 +23,7 @@ Bug fixes
 
 - FIX: Playlist not auto-scrolling in certain cases
 - FIX: Playlist item line 2 left margin not correct
+- FIX: Track info formatting from Folder view
 - FIX: Position issue with search reset buttons
 
 
