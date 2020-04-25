@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.5.1
  *
  */
 jQuery(document).ready(function($) { 'use strict';
@@ -866,7 +866,6 @@ jQuery(document).ready(function($) { 'use strict';
 
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)
-        $('#ra-filter-results').hide();
         $("#searchResetRa").hide();
         showSearchResetRa = false;
 	});
@@ -880,7 +879,6 @@ jQuery(document).ready(function($) { 'use strict';
 
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)
-        $('#ra-filter-results').hide();
         $("#searchResetRa").hide();
         showSearchResetRa = false;
 	});
@@ -899,7 +897,6 @@ jQuery(document).ready(function($) { 'use strict';
 	// radio search
 	$('#ra-filter').keyup(function(e){
 		if (!showSearchResetRa) {
-            $('#ra-filter-results').show();
 			$('#searchResetRa').show();
 			showSearchResetRa = true;
 		}
@@ -926,12 +923,6 @@ jQuery(document).ready(function($) { 'use strict';
 				}
 			});
 		    var s = (count == 1) ? '' : 's';
-		    if (filter != '') {
-				$('#ra-filter-results').html((+count) + '&nbsp;station' + s);
-		    }
-			else {
-				$('#ra-filter-results').html('');
-		    }
             lazyLode('radio');
             $('#database-radio').scrollTo(0, 200);
 
@@ -939,7 +930,6 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 	$('#searchResetRa').click(function(e) {
 		$('.database-radio li').css('display', 'inline-block');
-		$('#ra-filter-results').html('');
         $("#searchResetRa").hide();
 		showSearchResetRa = false;
 	});
@@ -973,12 +963,6 @@ jQuery(document).ready(function($) { 'use strict';
 				}
 			});
 		    var s = (count == 1) ? '' : 's';
-		    if (filter != '') {
-				$('#pl-filter-results').html((+count) + '&nbsp;item' + s);
-		    }
-			else {
-				$('#pl-filter-results').html('');
-		    }
 			$('#container-playlist').scrollTo(0, 200);
 		}, PLSEARCH_TIMEOUT);
 	});
@@ -986,7 +970,6 @@ jQuery(document).ready(function($) { 'use strict';
 		$("#searchResetPl").hide();
 		showSearchResetPl = false;
 		$('.playlist li').css('display', 'block');
-		$('#pl-filter-results').html('');
 	});
 
     // library search
@@ -1032,9 +1015,6 @@ jQuery(document).ready(function($) { 'use strict';
 			if (filter != '') {
 				$('#menu-header').text((+count) + ' albums found');
 				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
-			}
-			else {
-				$('#lib-album-filter-results').html('');
 			}
 			if ($('.tag-view-btn').hasClass('active')) {
 				lazyLode('tag');

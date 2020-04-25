@@ -1167,7 +1167,6 @@ function renderRadio(data, path) {
 	var output = '';
 
 	$('.btnlist-top-ra').show();
-	$('#ra-filter-results').html('')
     $("#searchResetRa").hide();
     showSearchResetRa = false;
 	$('#ra-search-keyword').val('');

@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.5.1
  *
  */
 
@@ -210,7 +210,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.modal-sm2 {min-width:80%;}
 	.form-horizontal .controls {margin-left:32.5%;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
-	#pl-filter-results {display:none;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 }
@@ -257,7 +256,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#volpad {width:100%;}
 	#volume-popup .modal-footer button {width:40%;margin:0;}
 	.modal-xs {min-width:70%;}
-	#lib-album-filter-results {display:none;}
 	#lib-coverart-meta-area {position:unset;}
 	.pl-btnSave {margin:1em 1em 4em 1em;}
 	.alphabits {right:0%;top:calc(1.5em + 1px);}
@@ -301,7 +299,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.modal-body {max-height:55vh;overflow:auto;}
 	/* playback */
 	#pl-search, #lib-album-search, #ra-search {margin:0;}
-	#pl-filter-results, #lib-album-filter-results, #ra-filter-results {line-height:30px;margin-top:2px;}
 	#playback-panel {padding:1.875em 0;min-height: calc(100vh - 3.75em);}
 	#playbackbtns .btn {padding: 0 10px;}
 	#playbtns, #playbtns .btn-group {margin:0;}

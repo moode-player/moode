@@ -237,8 +237,6 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .playlist .pl-action, .playlist .db-action a {position:relative;width:4.5em;margin-left:1em;font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
 .cv-playlist .pl-action, .cv-playlist .db-action a {position:relative;width:4.5em;margin-left:1em;font-weight:normal;text-decoration:none;z-index:3;font-size:.9em;line-height:.625em;padding:.318em 0;float:right;}
 #db-search-results {font-style:italic;float:left;padding:1em .5em 0em .5em;font-size:1em;display:none;}
-#pl-filter-results, #lib-album-filter-results, #ra-filter-results {font-style:italic;float:left;font-size:1em;position:relative;top:55%;transform:translate(0, -55%);}
-#pl-filter-results i {color:#34495E;}
 #pl-saveName, #pl-favName {width:85%;}
 .input-append, .input-prepend {margin-bottom:0em;font-size:1em;}
 .btnlist {position:fixed;left:0;right:0;display:block;width:auto;height:2.5em;padding:0;background:none;-webkit-border-radius:0px;-moz-border-radius:0px;border-radius:0px;z-index:999;}
@@ -252,13 +250,15 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #db-browse .dropdown-menu > li > a:hover, #db-browse .dropdown-menu > li > a:focus, #db-browse .dropdown-menu > li.active > a {background-color:var(--accentxta);}
 .btnlist a {font-size:1em;text-decoration:none;color:inherit;}
 #pl-search, #lib-album-search, #ra-search {display:block;float:left;margin:0;z-index:1001;position:relative;}
-#pl-search, #lib-album-search {top:50%; transform:translate(0, -50%);width:11rem;}
+#lib-album-search {top:50%; transform:translate(0, -50%);width:8rem;}
+#lib-album-filter {width:8rem;}
+/*#pl-search {top:50%; transform:translate(0, -50%);width:11rem;}*/
 #pl-search {left:1rem}
 #savepl-modal, #setfav-modal .modal-body {padding:1em .25em 0 .25em;}
 #pl-save {display:block;float:left;margin-right:0;margin-left:0;z-index:1001;width:100%;text-align:center;}
 #pl-search input, #ra-search input, #lib-album-search input {margin:0;border:none;box-shadow:none;min-height:initial;height:2.75rem;font-size:1rem;padding:0;}
 #ra-search input, #dbfs {margin-left:.5em;padding:0;height:2.1rem;border:none;}
-#searchResetPl, #searchResetLib {font-size:1rem;margin-top:.1em;}
+#searchResetPl {font-size:1rem;top:0;margin-top:.5em;float:left;padding-left:0;}
 #db-browse {margin:0;width:200px;}
 .db-browse-icon {float:left;}
 #pl-controls {float:left;margin:6px 0 0 10px;}
