@@ -22,16 +22,14 @@
  *
  */
 jQuery(document).ready(function($) { 'use strict';
-	//console.log($(window).width() + 'x' + $(window).height());
-    //notify('viewport', window.innerWidth + 'x' + window.innerHeight, 10000);
     GLOBAL.scriptSection = 'panels';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
 	$('#menu-bottom').css('display', 'flex');
 
-	// compensate for Android popup kbd changing the viewport, also for notch phones
+	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
-	// store device pixel ratio
+	// Store device pixel ratio
     $.post('command/moode.php?cmd=updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
 
 	// store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
@@ -45,6 +43,11 @@ jQuery(document).ready(function($) { 'use strict';
     	SESSION.json = result['cfg_system'];
     	THEME.json = result['cfg_theme'];
     	RADIO.json = result['cfg_radio'];
+
+        // Display viewport size for debugging by re-using the pkgid_suffix col. It's normaly used to test in-place update packages.
+        if (SESSION.json['pkgid_suffix'] == 'viewport') {
+            notify('viewport', window.innerWidth + 'x' + window.innerHeight, 10000);
+        }
 
     	// load current view
     	currentView = SESSION.json['current_view'];
