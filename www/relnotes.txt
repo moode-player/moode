@@ -25,6 +25,7 @@ Bug fixes
 - FIX: Playlist item line 2 left margin not correct
 - FIX: Track info formatting from Folder view
 - FIX: Position issue with search reset buttons
+- FIX: Incorrect volume level when unmuting
 
 
 ########################################################
