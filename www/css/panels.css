@@ -484,8 +484,8 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-countdown.radio {float:right;left:3em;}
 #mobile-time {margin-top:-13px;}
 #m-countdown, #m-total {font-size:.75em;}
-#playbar-countdown.long-time {left:-3.5rem!important;}
-#playbar-total.long-time {left:3.5rem!important;}
+#playbar-countdown.long-time, #m-countdown.long-time {left:-3.5rem!important;}
+#playbar-total.long-time, #m-total.long-time {left:3.5rem!important;}
 #playback-switch {position:absolute;height:2.5rem;width:20%;top:0;top:env(safe-area-inset-top);left:50%;transform:translate(-50%);text-align:center;font-size:1.2em;color:var(--adapttext);display:none;cursor:pointer;}
 #playback-switch div {background-color:transparent;height:.25rem;width:2rem;margin:1em auto;border-radius:1em;overflow:hidden;}
 #playbar {display:flex;align-items:center;height:4.8rem;position:absolute;bottom:0;width:100%;color:var(--adapttext);box-shadow: 0px -1px 3px rgba(0,0,0,0.1);} /* was 9.25vh*/

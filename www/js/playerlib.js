@@ -637,7 +637,8 @@ function renderUI() {
             (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>')));
     	$('#m-total, #playbar-total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0));
     	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + updTimeKnob(MPD.json['time']));
-        $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #playbar-total').addClass('long-time') : $('#playbar-countdown, #playbar-total').removeClass('long-time');
+        $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #m-countdown, #playbar-total, #m-total').addClass('long-time') :
+            $('#playbar-countdown, #m-countdown, #playbar-total, #m-total').removeClass('long-time');
 
     	//console.log('CUR: ' + UI.currentHash);
     	//console.log('NEW: ' + MPD.json['cover_art_hash']);
@@ -1364,8 +1365,8 @@ function watchCountdown(period) {
 		$('#countdown-display').css('font-size', fontSize.toString() + 'rem');
 	}
     // Playbar showing
-    else {
-        //console.log(currentView, period[4]);
+    else if ($('#playbar-total').text().length > 5) {
+        //console.log(currentView, period[4], 'length=' + $('#playbar-total').text().length);
         period[4] == 0 ? $('#playbar-countdown').removeClass('long-time') : $('#playbar-countdown').addClass('long-time');
     }
 }
