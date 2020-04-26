@@ -137,14 +137,14 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
 	#ss-coverart-url img {width:80vw;}
 }
-@media (max-width: 769px) {
+@media (max-width:769px) {
 	body {padding-left: 0px;padding-right: 0px;}
 	#playback-controls {width:24%;margin-left:0px;}
 	.container-playback {padding: 0px;}
 	#pl-search, #lib-album-search, #pl-save, #set-fav {margin-left: 0;}
 	body.index {padding:0;}
 }
-@media (max-width: 479px) {
+@media (max-width:479px) {
 	body {padding-left:0px;padding-right:0px;height:initial;}
 	.container2 {padding:2em .5em;padding:calc(2em + env(safe-area-inset-top)) .5em calc(2em + env(safe-area-inset-bottom)) .5em;}
 	#playback-controls {width:100%;}
@@ -356,11 +356,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#currentsong, #currentalbum {padding-top:.75em;font-size:1.1em;}
 }
 /* media queries */
-@media (max-height: 640px) {
+@media (max-height:640px) {
 	img.coverart {width:45vh;}
 }
 /* iPhone5 portrait */
-@media (max-height: 568px) and (max-width: 320px) {
+@media (max-height:568px) and (max-width:320px) {
 	#extra-tags {display:none;}
 	#currentsong {padding-top:.5em}
 	#context-menu-playback .dropdown-menu {min-width:150px;}
@@ -371,18 +371,19 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.bootstrap-select.select-medium:not([class*="span"]) {width:140px;}
 }
 /* iPhone5 landscape */
-@media (max-height: 320px) and (max-width: 568px) {
+@media (max-height:320px) and (max-width:568px) {
 	.database-radio li {width:75px;height:auto;margin:10px 10px;}
 	.lib-coverart {min-width:unset;}
 	/* so cover scrolls with tracks */
 	#lib-coverart-meta-area {position:relative;}
 }
 /* large screens */
-@media (min-height: 1080px) {
+@media (min-height:900px) and (min-width:1920px) {
 	.dropdown-menu, #context-menu-playback .dropdown-menu {min-width:13em;}
 	#ss-backdrop {filter: blur(40px);}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
+	#lib-coverart-meta-area {width:18vw;}
 }
 /* iPad landscape */
 @media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
@@ -407,11 +408,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 
 /* iPhone X */
-@media (width: 375px) and (height:812px) {
+@media (width:375px) and (height:812px) {
 	.playlist {padding:0 0 8rem 0;min-height:35vh;}
 }
 /* iPhone XS Max */
-@media (width: 414px) and (height:896px) {
+@media (width:414px) and (height:896px) {
 	.ui-pnotify {left:50%;top:25%;transform:translate(-50%, -50%);}
 	#playbar-toggles {right:calc(env(safe-area-inset-right) + 1rem);}
 	#mt1 {margin:6rem 1.5rem 0rem 1.5rem;}
@@ -422,11 +423,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#radio-panel .viewswitch {top:calc(env(safe-area-inset-top) - .5em);}
 	#config-tabs {top:calc(env(safe-area-inset-top) - .5rem);}
 }
-@media (width: 896px) and (height:414px) {
+@media (width:896px) and (height:414px) {
 	#playback-queue {margin-left:calc(env(safe-area-inset-left) - 2rem);}
 	#playback-cover {margin-right:calc(env(safe-area-inset-right) - 2rem);}
 }
-@media (width: 896px) and (height:414px) {
+@media (width:896px) and (height:414px) {
 	#playback-queue {margin-left:calc(env(safe-area-inset-left) - 2rem);}
 	#playback-cover {margin-right:calc(env(safe-area-inset-right) - 2rem);}
 }
@@ -435,7 +436,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 #playback-panel.cv #playback-cover {width:70vh;padding:0;}
 
 /* larger portrait screens for newui */
-@media (orientation: portrait) and (min-aspect-ratio: 600/1024) {
+@media (orientation: portrait) and (min-aspect-ratio:600/1024) {
 	#playback-panel.newui #timezone {left:12.5%;top:59%;}
 	#playback-panel.newui #volzone {right:12.5%;top:59%;}
 	#playback-panel.newui #playback-cover {width:75vw;}
@@ -445,7 +446,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui#albumcovers li, #playback-panel.newui.database-radio li {width:31vw;}
 	#playback-panel.newui #volcontrol, #playback-panel.newui #volcontrol-2, #playback-panel.newui #countdown {height:12.5rem;width:12.5rem;}
 }
-@media (orientation: portrait) and (min-aspect-ratio: 2/3) {
+@media (orientation: portrait) and (min-aspect-ratio:2/3) {
 	#playback-panel.newui #timezone {left:12.5%;top:59%;}
 	#playback-panel.newui #volzone {right:12.5%;top:59%;}
 	#playback-panel.newui #playback-cover {width:60vw;} /* 60% cover h/w */
@@ -453,23 +454,23 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {width:60%;height:58%;}
 	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
 }
-@media (orientation: portrait) and (min-aspect-ratio: 834/1194) { /* ipad pro 11 since I can fine tune */
+@media (orientation: portrait) and (min-aspect-ratio:834/1194) { /* ipad pro 11 since I can fine tune */
 	#playback-panel.newui #timezone {top:61%;}
 	#playback-panel.newui #volzone {top:61%;}
 	#playback-panel.newui #playback-cover {width:70vw;} /* 70% cover h/w */
 	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:70vw;max-height:70vw;}
 	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
 }
-@media (orientation: landscape) and (max-aspect-ratio: 3/2){
+@media (orientation: landscape) and (max-aspect-ratio:3/2){
 	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}
 	#playback-panel.newui #timezone, #playback-panel.newui #volzone {height:40vw;}
 }
-@media (height: 834px) and (width: 1194px) {
+@media (height:834px) and (width:1194px) {
 	/*#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}*/
 	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
 	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}
 }
-@media (height: 790px) and (width: 1194px) {
+@media (height:790px) and (width:1194px) {
 	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;transition: width .5s;}
 	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
 	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}
