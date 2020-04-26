@@ -116,7 +116,8 @@ var GLOBAL = {
     libLoading: false,
     playbarPlaylistTimer: '',
     plActionClicked: false,
-    mpdMaxVolume: 0
+    mpdMaxVolume: 0,
+    lastTimeCount: 0
 }
 
 // live timeline
@@ -155,7 +156,6 @@ var showSearchResetRa = false;
 var showSearchResetPh = false;
 var eqGainUpdInterval = '';
 var toolbarTimer = '';
-var oldCount;
 var toggleSongId = 'blank';
 var currentView = 'playback';
 var alphabitsFilter;
@@ -637,6 +637,7 @@ function renderUI() {
             (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>')));
     	$('#m-total, #playbar-total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0));
     	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + updTimeKnob(MPD.json['time']));
+        $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #playbar-total').addClass('long-time') : $('#playbar-countdown, #playbar-total').removeClass('long-time');
 
     	//console.log('CUR: ' + UI.currentHash);
     	//console.log('NEW: ' + MPD.json['cover_art_hash']);
@@ -1315,18 +1316,6 @@ function updTimeKnob(mpdTime) {
     return str;
 }
 
-// update time slider
-function updTimeSlider(mpdTime) {
-	if (MPD.json['artist'] == 'Radio station') {
-		var str = '';
-	}
-	else {
-		var str = formatSongTime(mpdTime);
-	}
-
-    return str;
-}
-
 // initialize the countdown timers
 function refreshTimer(startFrom, stopTo, state) {
 	var tick = 3; // call watchCountdown() every tick secs
@@ -1362,13 +1351,23 @@ function refreshTimer(startFrom, stopTo, state) {
 
 // onTick callback for automatic font sizing on time knob
 function watchCountdown(period) {
-	// period[4] (hours) > 0 reduce font-size so time fits nicely within knob
-	//console.log('period ' + period[4]);
-	if (currentView.indexOf('playback') !== -1) { // don't do this if playback isn't showing
-		period[4] == 0 ? count = 1.9 : period[4] < 10 ? count = 1.7 : count = 1.6;
-		$(window).height() <= 479 ? count = count - .1 : ''; // raspberry pi touchscreen
-		$('#countdown-display').css('font-size', count + 'rem');
+	// NOTE: period[4] (hours) > 0 reduce font-size so time fits nicely within knob
+
+    var fontSize;
+    // Playback panel
+	if (currentView.indexOf('playback') !== -1) {
+        //console.log(currentView, period[4]);
+		period[4] == 0 ? fontSize = 1.9 : (period[4] < 10 ? fontSize = 1.7 : fontSize = 1.6);
+        // Pi touch
+		$(window).height() <= 479 ? fontSize = fontSize - .1 : '';
+        // Adjust font size
+		$('#countdown-display').css('font-size', fontSize.toString() + 'rem');
 	}
+    // Playbar showing
+    else {
+        //console.log(currentView, period[4]);
+        period[4] == 0 ? $('#playbar-countdown').removeClass('long-time') : $('#playbar-countdown').addClass('long-time');
+    }
 }
 
 // update time knob, time track
@@ -2989,30 +2988,59 @@ $('#appearance-modal .h5').click(function(e) {
 	$(this).parent().children('.dtclose, .dtopen').toggle();
 });
 
-// Synchronize times to/from playbar so we don't have to keep countdown timers running which = ugly 'idle' perf
+// Synchronize times to/from playbar so we don't have to keep countdown timers running which = ugly idle perf
 function syncTimers() {
-	var a = $('#countdown-display').text();
-	if (a != oldCount) { // Only update if time has changed
-		if (UI.mobile) { // Only change when needed to save work
-			$('#m-countdown').text(a);
-			$('#playbar-mcount').text(a);
-		}
+    var a = $('#countdown-display').text();
+    if (a != GLOBAL.lastTimeCount) { // Only update if time has changed
+        if (UI.mobile) { // Only change when needed to save work
+            $('#m-countdown').text(a);
+            $('#playbar-mcount').text(a);
+        }
         else if (coverView || currentView.indexOf('playback') == -1) {
-			$('#playbar-countdown').text(a);
-			var c = a.split(':'); // m:s
-			var d = $('#playbar-total').text().split(':');
-			var e = parseInt(c[0] * 60) + parseInt(c[1]); // Convert to seconds
-			var f = parseInt(d[0] * 60) + parseInt(d[1]);
-			SESSION.json['timecountup'] == 1 ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // Percent of elapsed song
-			$('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
-			g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // Adjust for thumb
-			$('#playbar-timeline .timeline-progress').css('width', g);
-		}
+            $('#playbar-countdown').text(a);
+
+            var c = a.split(':'); // (h):m:s - current
+            var d = $('#playbar-total').text().split(':'); //(h):m:s - total
+
+            switch (c.length) {
+                case 1:     // ss
+                    var e = parseInt(c[0]);
+                    break;
+                case 2:     // mm:ss
+                    var e = parseInt(c[0] * 60) + parseInt(c[1]);
+                    break;
+                case 3:     // hh:mm:ss
+                    var e = parseInt(c[0] * 3600) + parseInt(c[1] * 60) + parseInt(c[2]);
+                    break;
+            } // e = current position in seconds
+
+            switch (d.length) {
+                case 1:     // ss
+                    var f = parseInt(d[0]);
+                    break;
+                case 2:     // mm:ss
+                    var f = parseInt(d[0] * 60) + parseInt(d[1]);
+                    break;
+                case 3:     // hh:mm:ss
+                    var f = parseInt(d[0] * 3600) + parseInt(d[1] * 60) + parseInt(d[2]);
+                    break;
+            } // f = total track length in seconds
+
+           //console.log('current '+ e);
+           //console.log('total ' + f);
+
+            SESSION.json['timecountup'] == '1' ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // Percent of elapsed song
+            $('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
+            g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // Adjust for thumb
+
+            $('#playbar-timeline .timeline-progress').css('width', g.toString());
+        }
         else {
-			UI.knobPainted = false;
-		}
-		oldCount = a;
-	}
+            UI.knobPainted = false;
+        }
+
+        GLOBAL.lastTimeCount = a;
+    }
 }
 
 // Active/inactive for buttons and panels
