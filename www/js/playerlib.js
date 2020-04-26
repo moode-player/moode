@@ -115,7 +115,8 @@ var GLOBAL = {
     libRendered: false,
     libLoading: false,
     playbarPlaylistTimer: '',
-    plActionClicked: false
+    plActionClicked: false,
+    mpdMaxVolume: 0
 }
 
 // live timeline
@@ -1530,9 +1531,9 @@ function countdownRestart(startFrom) {
 
 // volume control
 function setVolume(level, event) {
-    // Check against max and ensure numeric
-    level = level > SESSION.json['volume_mpd_max'] ? SESSION.json['volume_mpd_max'] : level;
-	level = parseInt(level);
+    level = parseInt(level);
+    level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
+    //console.log(level, event);
 
 	// Unmuted, set volume (incl 0 vol)
 	if (SESSION.json['volmute'] == '0') {
@@ -2997,18 +2998,18 @@ function syncTimers() {
 			$('#playbar-mcount').text(a);
 		}
         else if (coverView || currentView.indexOf('playback') == -1) {
-				$('#playbar-countdown').text(a);
-				var c = a.split(':'); // m:s
-				var d = $('#playbar-total').text().split(':');
-				var e = parseInt(c[0] * 60) + parseInt(c[1]); // Convert to seconds
-				var f = parseInt(d[0] * 60) + parseInt(d[1]);
-				SESSION.json['timecountup'] == 1 ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // Percent of elapsed song
-				$('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
-				g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // Adjust for thumb
-				$('#playbar-timeline .timeline-progress').css('width', g);
+			$('#playbar-countdown').text(a);
+			var c = a.split(':'); // m:s
+			var d = $('#playbar-total').text().split(':');
+			var e = parseInt(c[0] * 60) + parseInt(c[1]); // Convert to seconds
+			var f = parseInt(d[0] * 60) + parseInt(d[1]);
+			SESSION.json['timecountup'] == 1 ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // Percent of elapsed song
+			$('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
+			g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // Adjust for thumb
+			$('#playbar-timeline .timeline-progress').css('width', g);
 		}
         else {
-				UI.knobPainted = false;
+			UI.knobPainted = false;
 		}
 		oldCount = a;
 	}

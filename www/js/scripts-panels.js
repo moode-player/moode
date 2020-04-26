@@ -67,6 +67,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Set volume knob max
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);
+        GLOBAL.mpdMaxVolume = parseInt(SESSION.json['volume_mpd_max']);
 
     	// set the font size
     	setFontSize();
@@ -476,15 +477,15 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#volumeup,#volumeup-2').click(function(e) {
 		SESSION.json['volmute'] == '1' ? volMuteSwitch() : '';
 		var curVol = parseInt(SESSION.json['volknob']);
-		var newVol = curVol < 100 ? curVol + 1 : 100;
-		setVolume(newVol, '');
+		var newVol = curVol < GLOBAL.mpdMaxVolume ? curVol + 1 : GLOBAL.mpdMaxVolume;
+		setVolume(newVol, 'volume_up');
 		return false
 	});
 	$('#volumedn,#volumedn-2').click(function(e) {
 		SESSION.json['volmute'] == '1' ? volMuteSwitch() : '';
 		var curVol = parseInt(SESSION.json['volknob']);
 		var newVol = curVol > 0 ? curVol - 1 : 0;
-		setVolume(newVol, '');
+		setVolume(newVol, 'volune_down');
 		return false
 	});
 	$('.btn-toggle').click(function(e) {
@@ -554,8 +555,8 @@ jQuery(document).ready(function($) { 'use strict';
     $('.volumeknob').knob({
 		configure: {'fgColor':accentColor},
         change : function(value) {
-			value = value > 100 ? 100 : value;
-            setVolume(value, 'change');
+			value = value > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : value;
+            setVolume(value, 'knob_change');
         }
 		/*
         release : function() {}
