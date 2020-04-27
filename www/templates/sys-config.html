@@ -605,26 +605,27 @@
 				</div>
 			</div>
 		</fieldset>
-
-		<div id="view-pkgcontent" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="view-pkgcontent-label" aria-hidden="true">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3 id="view-pkgcontent-label">Package content</h3>
-			</div>
-			<div class="modal-body">
-				$_pkg_description
-				$_pkg_relnotes
-			</div>
-			<div class="modal-footer">
-				<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
-			</div>
-		</div>
-
 	</form>
 </div>
 </div>
 
 <!-- MODALS -->
+
+<form class="form-horizontal" method="post">
+	<div id="view-pkgcontent" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="view-pkgcontent-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3 id="view-pkgcontent-label">Package content</h3>
+		</div>
+		<div class="modal-body">
+			$_pkg_description
+			$_pkg_relnotes
+		</div>
+		<div class="modal-footer">
+			<button class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+		</div>
+	</div>
+</form>
 
 <form class="form-horizontal" method="post">
 	<div id="expand-rootfs" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="expand-rootfs-label" aria-hidden="true">
