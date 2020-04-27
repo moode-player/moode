@@ -1,11 +1,11 @@
 ################################################################
 #
-# Build Recipe v2.19 2020-04-24
+# Build Recipe v2.20 2020-04-27
 #
-# moOde 6.5.0 2020-04-24
+# moOde 6.5.1 2020-04-27
 # - Based on Raspbian Buster Lite (10.3)
 # - Bump to Linux kernel 4.19.115 build #1305
-# - Bump to r650 sources
+# - Bump to r651 sources
 # - Bump to MPD 0.21.22
 # - Bump to librespot v0.1.1 (armv7l only)
 # - Image prep and build is Linux and Ethernet only
@@ -92,9 +92,9 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r650.zip
-unzip -p -q ./moode-r650.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r650.zip moode/boot/config.txt.default > ./config.txt.default
+wget http://moodeaudio.org/downloads/prod/moode-r651.zip
+unzip -p -q ./moode-r651.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r651.zip moode/boot/config.txt.default > ./config.txt.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -115,8 +115,8 @@ sudo reboot
 ////////////////////////////////////////////////////////////////
 
 1. Unzip moOde release
-unzip -o -q ./moode-r650.zip
-rm -f ./moode-r650.zip
+unzip -o -q ./moode-r651.zip
+rm -f ./moode-r651.zip
 
 2. Basic optimizations
 
