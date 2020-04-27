@@ -27,7 +27,7 @@ Bug fixes
 - FIX: Position issue with search reset buttons
 - FIX: Incorrect volume level when unmuting
 - FIX: Playbar timeline margins for tracks > 60 mins
-- FIX: Knob size on Pi 7" Touch
+- FIX: Incorrect knob size on Pi 7" Touch
 
 ########################################################
 //
