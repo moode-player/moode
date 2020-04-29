@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.5.2
  *
  */
 
@@ -652,38 +652,44 @@ else {
 	workerLog('worker: ALSA volume level (None)');
 }
 
-// Auto-play last played item if indicated
+// Auto-play: start auto-shuffle random play or play last played item
 if ($_SESSION['autoplay'] == '1') {
 	workerLog('worker: Auto-play (On)');
-	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
-	workerLog('worker: ALSA output (' . $hwparams['status'] . ')');
-	$status = parseStatus(getMpdStatus($sock));
-	sendMpdCmd($sock, 'playid ' . $status['songid']);
-	$resp = readMpdResp($sock);
-	workerLog('worker: Auto-playing id (' . $status['songid'] . ')');
-	sleep(2); // Allow time for MPD to begin playback
-	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
-	workerLog('worker: ALSA output (' . $hwparams['status'] . ')');
+	if ($_SESSION['ashuffle'] == '1') {
+		workerLog('worker: Starting auto-shuffle');
+		if (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') {
+			$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue_buffer 1 --file - > /dev/null 2>&1 &';
+		}
+		else {
+			$cmd = '/usr/local/bin/ashuffle --queue_buffer 1 > /dev/null 2>&1 &';
+		}
+
+		sysCmd($cmd);
+	}
+	else {
+		$status = parseStatus(getMpdStatus($sock));
+		sendMpdCmd($sock, 'playid ' . $status['songid']);
+		$resp = readMpdResp($sock);
+		workerLog('worker: Auto-playing id (' . $status['songid'] . ')');
+	}
 }
 else {
 	workerLog('worker: Auto-play (Off)');
 	sendMpdCmd($sock, 'stop');
 	$resp = readMpdResp($sock);
+	// Turn off Auto-shuffle based random play if it's on
+	if ($_SESSION['ashuffle'] == '1') {
+		playerSession('write', 'ashuffle', '0');
+		sendMpdCmd($sock, 'consume 0');
+		$resp = readMpdResp($sock);
+		workerLog('worker: Random Play reset to (Off)');
+	}
 }
 
 // Start localui
 if ($_SESSION['localui'] == '1') {
 	sysCmd('systemctl start localui');
 	workerLog('worker: LocalUI started');
-}
-
-// Turn off Auto-shuffle based random play if it's on
-workerLog('worker: Auto-shuffle service (' . ($_SESSION['ashufflesvc'] == '1' ? 'On' : 'Off') . ')');
-if ($_SESSION['ashuffle'] == '1') {
-	playerSession('write', 'ashuffle', '0');
-	sendMpdCmd($sock, 'consume 0');
-	$resp = readMpdResp($sock);
-	workerLog('worker: Random Play reset to (Off)');
 }
 
 // Reducing 3B+ eth port speed fixes audio glitches when using certain usb dacs

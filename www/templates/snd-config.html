@@ -104,27 +104,6 @@
 			<div class="horiz-rule-light"></div>
 
 			<div class="control-group">
-				<label class="control-label">Auto-shuffle</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggleashufflesvc2">ON</label>
-						$_select[ashufflesvc1]
-						<label class="toggle-radio" for="toggleashufflesvc1">OFF</label>
-						$_select[ashufflesvc0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_ashufflesvc" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-ashufflesvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-ashufflesvc" class="help-block-configs help-block-margin2 hide">
-						When the last song in the Playlist has finished playing Auto-shuffle adds two randomly selected songs from the music library
-						to the end of the Playlist then repeats the process. This creates a continuous stream of music without growing the Playlist and
-						having two tracks enables MPD Crossfade to be used. NOTE: Auto-shuffle replaces MPD random play as the method for the 'Random' button.<br>
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
 				<label class="control-label">Autoplay after start</label>
 				<div class="controls">
 					<div class="toggle">
@@ -138,7 +117,28 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-autoplay" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-autoplay" class="help-block-configs help-block-margin2 hide">
-						Play the last played item after system boots up.<br>
+						Start auto-shuffle random play if it was previously active or play last played item.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Auto-shuffle</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggleashufflesvc2">ON</label>
+						$_select[ashufflesvc1]
+						<label class="toggle-radio" for="toggleashufflesvc1">OFF</label>
+						$_select[ashufflesvc0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_ashufflesvc" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-ashufflesvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-ashufflesvc" class="help-block-configs help-block-margin2 hide">
+						When the last song in the Playlist has finished playing, Auto-shuffle adds two randomly selected songs from the music library
+						to the end of the Playlist then repeats the process. This creates a continuous stream of music without growing the Playlist and
+						having two tracks enables MPD Crossfade to be used. NOTE: Auto-shuffle replaces MPD random play as the method for the 'Random' button.
                     </span>
 				</div>
 			</div>
