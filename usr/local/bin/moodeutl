@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.5.2
  *
  */
 
-define('VERSION', '1.4.0');
+define('VERSION', '1.5.0');
 define('SQLDB', '/var/local/www/db/moode-sqlite3.db');
 
 // Features availability bitmask
@@ -91,6 +91,9 @@ switch ($option) {
 	case '-m':
 		system_monitor();
 		break;
+	case '-q':
+		sql_query($argv);
+		break;
 	case '-r':
 		restart_servers();
 		break;
@@ -122,6 +125,7 @@ With no OPTION print the help text and exit.
  -F\t\tprint full alsacap info
  -l\t\tprint moode log
  -m\t\trun system monitor
+ -q\t\tquery sql database
  -r\t\trestart servers
  -s\t\tprint system info
  -t\t\tprint last 10 lines of moode log and wait
@@ -294,6 +298,10 @@ function system_monitor() {
 
 		echo 'CPU: ' . $cpu_freq . ' | LOAD: ' . $cpu_load . '%' . ' | TEMP: ' . $cpu_temp . "\xB0" . 'C | RAM_USED: ' . $mem_util . '% | DISK_USED: ' . $disk_used . ' | DISK_FREE: ' . $disk_free . ' | FPM_POOL: ' . $fpm_pool . ' workers ' . "\r";
 	}
+}
+
+function sql_query($argv) {
+	echo shell_exec("sqlite3 " . SQLDB . " \"" . $argv[2] . "\"");
 }
 
 function restart_servers() {
