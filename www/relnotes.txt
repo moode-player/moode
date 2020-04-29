@@ -11,6 +11,22 @@
 
 ########################################################
 //
+// 2020-MM-DD TC moOde 6.5.2
+//
+########################################################
+
+Updates
+
+- UPD: Add -q (sql query) option to moodeutl.php
+- UPD: Improve startup logic for auto play and auto-shuffle
+- UPD: Compile librespot to support both arm6 and arm7
+
+Bug fixes
+
+- FIX:
+
+########################################################
+//
 // 2020-04-27 TC moOde 6.5.1
 //
 ########################################################
