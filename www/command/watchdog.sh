@@ -87,6 +87,17 @@ while true; do
 	fi
 	#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 
+	# Wlan0
+	ETH0_IP_ADDR=$(ifconfig eth0 | grep "inet ")
+	if [[ $ETH0_IP_ADDR = "" ]]; then
+		WLAN0_IP_ADDR=$(ifconfig wlan0 | grep "inet ")
+		if [[ $WLAN0_IP_ADDR = "" ]]; then
+			ip --force link set wlan0 up > /dev/null 2>&1
+			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+			echo $TIME_STAMP" watchdog: Wlan0 down attempting reconnect" >> /var/log/moode.log
+		fi
+	fi
+
 	sleep 6
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 	MPD_ACTIVE=$(pgrep -c -x mpd)
