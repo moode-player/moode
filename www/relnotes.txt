@@ -26,6 +26,7 @@ Bug fixes
 - FIX: Librespot not compiled for arm6
 - FIX: Renderer active overlays not cleared when on configs
 - FIX: Podcast streams not being handled correctly
+- FIX: No Artist line when Tagview covers option = No
 
 ########################################################
 //
