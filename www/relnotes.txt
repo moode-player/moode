@@ -17,13 +17,15 @@
 
 Updates
 
-- UPD: Add -q (sql query) option to moodeutl.php
-- UPD: Improve startup logic for auto play and auto-shuffle
-- UPD: Compile librespot to support both arm6 and arm7
+- UPD: Bump to miniDLNA 1.2.1+0763719 DSD support
+- UPD: Add wlan0 check/reconnect to watchdog
 
 Bug fixes
 
-- FIX:
+- FIX: Start up logic for auto play and auto-shuffle
+- FIX: Librespot not compiled for arm6
+- FIX: Renderer active overlays not cleared when on configs
+- FIX: Podcast streams not being handled correctly
 
 ########################################################
 //
