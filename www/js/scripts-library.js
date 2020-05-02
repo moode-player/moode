@@ -534,12 +534,13 @@ var renderAlbums = function() {
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
-             + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
-             + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album
-             + '</span><span class="artist-name-art">' + filteredAlbums[i].artist + '</span><span class="album-year">' + tagViewYear + '</span></div></li>'		}
+                + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
+                + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album
+                + '</span><span class="artist-name-art">' + filteredAlbums[i].artist + '</span><span class="album-year">' + tagViewYear + '</span></div></li>'		}
 		else {
-			output += '<li class="lib-entry"><span class="album-name">' + filteredAlbums[i].album
-             + '</span><span class="artist-name">' + filteredAlbums[i].artist + tagViewYear + '</span></li>'
+			output += '<li class="lib-entry no-tagview-covers">'
+                + '<span class="album-name">' + filteredAlbums[i].album
+                + '</span><span class="artist-name-art">' + filteredAlbums[i].artist + '</span><span class="album-year">' + tagViewYear + '</span></li>'
         }
 
 		output2 += '<li class="lib-entry">'

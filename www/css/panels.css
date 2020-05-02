@@ -658,3 +658,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #artist-cover {font-size:1.4em;height:calc(20.75vw - 1em);width:calc(20.75vw - 1em);background:rgba(64,64,64,.2);box-shadow: 0px 0px .2em rgba(0,0,0,0.2);}
 #station-path {text-align:center;}
 #track-info-text {text-align:left;}
+.no-tagview-covers {padding-bottom:.5em;}
