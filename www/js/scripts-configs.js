@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.5.2
  *
  */
-
 jQuery(document).ready(function($){ 'use strict';
     GLOBAL.scriptSection = 'configs';
 	$('#config-back').show();
@@ -80,7 +79,7 @@ jQuery(document).ready(function($){ 'use strict';
 
     	// Connect to server engines
         engineMpdLite();
-        engineCmd();
+        engineCmdLite();
 
         // Busy spinner for Thumbcache update/re-gen initiated
         if (GLOBAL.thmUpdInitiated == true) {

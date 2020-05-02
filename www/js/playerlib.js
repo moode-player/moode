@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-27 TC moOde 6.5.1
+ * 2020-MM-DD TC moOde 6.5.2
  *
  */
-
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
 const FEAT_AIRPLAY      = 2;        // y Airplay renderer
 const FEAT_MINIDLNA     = 4;        // y DLNA server
@@ -168,7 +167,7 @@ function debugLog(msg) {
 	}
 }
 
-// mpd commands
+// MPD commands
 function sendMpdCmd(cmd, async) {
 	if (typeof(async) === 'undefined') {async = true;}
 
@@ -182,7 +181,7 @@ function sendMpdCmd(cmd, async) {
     });
 }
 
-// specifically for volume
+// Specifically for volume
 function sendVolCmd(type, cmd, data, async) {
 	if (typeof(data) === 'undefined') {data = '';}
 	if (typeof(async) === 'undefined') {async = false;}
@@ -210,7 +209,7 @@ function sendVolCmd(type, cmd, data, async) {
 	return obj;
 }
 
-// mpd metadata engine
+// MPD metadata engine
 function engineMpd() {
 	debugLog('engineMpd: state=(' + MPD.json['state'] + ')');
     $.ajax({
@@ -222,7 +221,7 @@ function engineMpd() {
 			debugLog('engineMpd: success branch: data=(' + data + ')');
 			//console.log('engineMpd: success branch: data=(' + data + ')');
 
-			// always have valid json
+			// Always have valid json
 			try {
 				MPD.json = JSON.parse(data);
 			}
@@ -237,12 +236,12 @@ function engineMpd() {
 				if (UI.hideReconnect === true) {
 					hideReconnect();
 				}
-				// mpd restarted by udev, watchdog, manually via cli, etc
-				// udev rule /etc/udev/rules.d/10-usb-audiodevice.rules
+				// MPD restarted by udev, watchdog, manually via cli, etc
+				// Udev rule /etc/udev/rules.d/10-usb-audiodevice.rules
 				if (MPD.json['idle_timeout_event'] === '') {
 					// nop
 				}
-				// database update
+				// Database update
 				if (MPD.json['idle_timeout_event'] == 'changed: update') {
 					if (typeof(MPD.json['updating_db']) != 'undefined') {
 						$('.busy-spinner').show();
@@ -251,22 +250,22 @@ function engineMpd() {
 						$('.busy-spinner').hide();
 					}
 				}
-				// render volume
+				// Render volume
 				else if (MPD.json['idle_timeout_event'] == 'changed: mixer') {
 					renderUIVol();
 				}
-				// when last item in playlist finishes just update a few things
+				// When last item in playlist finishes just update a few things
 				else if (MPD.json['idle_timeout_event'] == 'changed: player' && MPD.json['file'] == null) {
 					resetPlayCtls();
 				}
-				// render full UI
+				// Render full UI
 				else {
 					renderUI();
 				}
 
 				engineMpd();
 			}
-			// error of some sort
+			// Error of some sort
 			else {
 				debugLog('engineMpd: success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
 
@@ -282,15 +281,15 @@ function engineMpd() {
 				else if (MPD.json['error'] == 'Failed to open "ALSA bluetooth" (alsa); Failed to open ALSA device "btstream": No such device') {
 					notify('mpderror', 'Failed to open ALSA bluetooth output, no such device or connection');
 				}
-				// client connects before mpd started by worker ?
+				// Client connects before mpd started by worker ?
 				else if (MPD.json['error'] == 'SyntaxError: JSON Parse error: Unexpected EOF') {
 					notify('mpderror', 'JSON Parse error: Unexpected EOF');
 				}
-				// mpd bug may have been fixed in 0.20.20 ?
+				// MPD bug may have been fixed in 0.20.20 ?
 				else if (MPD.json['error'] == 'Not seekable') {
 					// nop
 				}
-				// other network or MPD errors
+				// Other network or MPD errors
 				else {
 					notify('mpderror', MPD.json['error']);
 				}
@@ -302,7 +301,7 @@ function engineMpd() {
 				}, ENGINE_TIMEOUT);
 			}
 		},
-        // network connection interrupted or client network stack timeout
+        // Network connection interrupted or client network stack timeout
 		error: function(data) {
 			debugLog('engineMpd: error branch: data=(' + JSON.stringify(data) + ')');
 
@@ -317,7 +316,7 @@ function engineMpd() {
     });
 }
 
-// mpd metadata engine, lite version for scripts-configs
+// MPD metadata engine lite (for scripts-configs)
 function engineMpdLite() {
 	debugLog('engineMpdLite: state=(' + MPD.json['state'] + ')');
     $.ajax({
@@ -329,7 +328,7 @@ function engineMpdLite() {
 			debugLog('engineMpdLite: success branch: data=(' + data + ')');
 			//console.log('engineMpdLite: success branch: data=(' + data + ')');
 
-			// always have valid json
+			// Always have valid json
 			try {
 				MPD.json = JSON.parse(data);
 			}
@@ -344,7 +343,7 @@ function engineMpdLite() {
 				if (UI.hideReconnect === true) {
 					hideReconnect();
 				}
-				// database update
+				// Database update
 				if (typeof(MPD.json['updating_db']) != 'undefined') {
 					$('.busy-spinner').show();
 				}
@@ -355,16 +354,16 @@ function engineMpdLite() {
 				engineMpdLite();
 
 			}
-			// error of some sort
+			// Error of some sort
 			else {
 				setTimeout(function() {
-					// client connects before mpd started by worker, various other network issues
+					// Client connects before mpd started by worker, various other network issues
 					debugLog('engineMpd: success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
 					engineMpdLite();
 				}, ENGINE_TIMEOUT);
 			}
 		},
-        // network connection interrupted or client network stack timeout
+        // Network connection interrupted or client network stack timeout
 		error: function(data) {
 			debugLog('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
             //console.log('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
@@ -423,10 +422,6 @@ function engineCmd() {
     				$('.busy-spinner').hide();
                     loadLibrary();
                     break;
-                case 'libregen_done':
-    				$('.busy-spinner').hide();
-                    loadLibrary();
-                    break;
             }
 
 			engineCmd();
@@ -436,6 +431,36 @@ function engineCmd() {
 			//console.log('engineCmd: error branch: data=(' + JSON.stringify(data) + ')');
 			setTimeout(function() {
 				engineCmd();
+			}, ENGINE_TIMEOUT);
+		}
+    });
+}
+
+// Command engine lite (for scripts-configs)
+function engineCmdLite() {
+	var cmd;
+
+    $.ajax({
+		type: 'GET',
+		url: 'engine-cmd.php',
+		async: true,
+		cache: false,
+		success: function(data) {
+			//console.log('engineCmd: success branch: data=(' + data + ')');
+			cmd = JSON.parse(data).split(',');
+
+            if (cmd[0] == 'libregen_done') {
+				$('.busy-spinner').hide();
+                loadLibrary();
+            }
+
+			engineCmdLite();
+		},
+
+		error: function(data) {
+			//console.log('engineCmd: error branch: data=(' + JSON.stringify(data) + ')');
+			setTimeout(function() {
+				engineCmdLite();
 			}, ENGINE_TIMEOUT);
 		}
     });
@@ -1302,7 +1327,7 @@ function formatBrowseData(data, path, i, panel) {
 
 // update time knob
 function updTimeKnob(mpdTime) {
-	if (MPD.json['artist'] == 'Radio station') {
+	if (MPD.json['artist'] == 'Radio station' && typeof(MPD.json['duration']) === 'undefined') {
 		var str = '';
 		$('#total').html('').addClass('total-radio'); // radio station svg
 		$('#playbar-mtime').css('display', 'block');
@@ -1371,7 +1396,7 @@ function watchCountdown(period) {
     }
 }
 
-// update time knob, time track
+// Update time knob, time track
 function refreshTimeKnob() {
 	var initTime, delta;
     window.clearInterval(UI.knob)
@@ -1380,10 +1405,12 @@ function refreshTimeKnob() {
 	if (UI.mobile) {
 		$('#timetrack').val(initTime * 10).trigger('change');
 	}
-	else if (currentView.indexOf('playback') !== -1){ // playback screen
+    // Playback
+	else if (currentView.indexOf('playback') !== -1){
 		$('#time').val(initTime * 10).trigger('change');
 	}
-    else { // library screen
+    // Library
+    else {
 		$('#playbar-timetrack').val(initTime * 10).trigger('change');
 	}
 
@@ -1397,9 +1424,9 @@ function refreshTimeKnob() {
 			$('#playbar-total, #playbar-countdown, #countdown-display').html('00:00');
 		}
 	}
-
-	// radio station
-	else if (delta === 0 || isNaN(delta)) {
+	// Radio station (never has a duration)
+	else if (MPD.json['artist'] == 'Radio station' && typeof(MPD.json['duration']) === 'undefined') {
+    //else if (delta === 0 || isNaN(delta)) {
 		if (UI.mobile) {
 			$('#timeline').hide();
 		}
@@ -1408,7 +1435,7 @@ function refreshTimeKnob() {
 			$('#playbar-title').css('padding-bottom', '0');
 		}
 	}
-	// song file
+	// Song file
 	else {
 		if (UI.mobile) {
 			$('#timeline').show();
@@ -1420,9 +1447,11 @@ function refreshTimeKnob() {
 	}
 
     if (MPD.json['state'] === 'play') {
-		var tt = $('#timetrack'); // move these out of the timer
+        // Move these out of the timer
+		var tt = $('#timetrack');
 		var pb = $('playbar-#timetrack');
 		var ti = $('#time');
+
 		var cur = currentView.indexOf('playback');
         UI.knob = setInterval(function() {
 			if (UI.mobile || cur == -1 || coverView == true) {
@@ -1654,46 +1683,46 @@ $('#currentsong').click(function(e) {
 
 // all music menu item
 $('.view-all').click(function(e) {
-		$('#viewswitch span').hide();
-		$('.view-all span').show();
-		$('#menu-header').click()
-		GLOBAL.musicScope = 'all';
-		GLOBAL.searchLib, GLOBAL.searchRadio = false;
-	    LIB.recentlyAddedClicked = false;
-		LIB.filters.albums.length = 0;
-		LIB.filters.year.length = 0;
-		UI.libPos.fill(-2);
+	$('#viewswitch span').hide();
+	$('.view-all span').show();
+	$('#menu-header').click()
+	GLOBAL.musicScope = 'all';
+	GLOBAL.searchLib, GLOBAL.searchRadio = false;
+    LIB.recentlyAddedClicked = false;
+	LIB.filters.albums.length = 0;
+	LIB.filters.year.length = 0;
+	UI.libPos.fill(-2);
 
-		filterLib();
-	    renderAlbums();
+	filterLib();
+    renderAlbums();
 
-		storeLibPos(UI.libPos);
-		$("#searchResetLib").hide();
-		showSearchResetLib = false;
-		setLibMenuHeader();
-		//LIB.filters.artists.length ? $('#menu-header').text('Albums by' + LIB.artist.filter[0]) : $('#menu-header').text('Albums by Artist');
+	storeLibPos(UI.libPos);
+	$("#searchResetLib").hide();
+	showSearchResetLib = false;
+	setLibMenuHeader();
+	//LIB.filters.artists.length ? $('#menu-header').text('Albums by' + LIB.artist.filter[0]) : $('#menu-header').text('Albums by Artist');
 });
 // recently played menu item
 $('.view-recents').click(function(e) {
-		GLOBAL.musicScope = 'recent';
-		$('#viewswitch span').hide();
-		$('.view-recents span').show();
-		    LIB.recentlyAddedClicked = true;
-			LIB.filters.albums.length = 0;
-			LIB.filters.year.length = 0;
-			UI.libPos.fill(-2);
+	GLOBAL.musicScope = 'recent';
+	$('#viewswitch span').hide();
+	$('.view-recents span').show();
+    LIB.recentlyAddedClicked = true;
+	LIB.filters.albums.length = 0;
+	LIB.filters.year.length = 0;
+	UI.libPos.fill(-2);
 
-			filterLib();
-		    renderAlbums();
+	filterLib();
+    renderAlbums();
 
-            // Reverse order (NOTE: we may use this someday)
-            //$('#lib-album ul').css('transform', 'rotate(180deg)');
-            //$('#lib-album ul > li').css('transform', 'rotate(-180deg)');
+    // Reverse order (NOTE: we may use this someday)
+    //$('#lib-album ul').css('transform', 'rotate(180deg)');
+    //$('#lib-album ul > li').css('transform', 'rotate(-180deg)');
 
-			storeLibPos(UI.libPos);
-			$("#searchResetLib").hide();
-			showSearchResetLib = false;
-			$('#menu-header').text('Recently Added (' + getParamOrValue('param', SESSION.json['library_recently_added']) + ')');
+	storeLibPos(UI.libPos);
+	$("#searchResetLib").hide();
+	showSearchResetLib = false;
+	$('#menu-header').text('Recently Added (' + getParamOrValue('param', SESSION.json['library_recently_added']) + ')');
 });
 
 // context menus and main menu

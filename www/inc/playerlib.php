@@ -755,10 +755,10 @@ function songTime($sec) {
 	return $mins . $secs;
 }
 
-// format mpd status output
+// Format MPD status output
 function parseStatus($resp) {
 
-	// this return probably needs a redo
+	// This return probably needs a redo
 	if (is_null($resp)) {
 		return NULL;
 		//workerLog('parseStatus(): NULL return');
@@ -773,26 +773,27 @@ function parseStatus($resp) {
 			$line = strtok("\n");
 		}
 
-		// elapsed time
-		// RADIO - time: 293:0, elapsed: 292.501, duration not present
-		// SONG  - time: 4:391, elapsed: 4.156, duration: 391.466
-		// if state is stop then time, elapsed and duration are not present
-		// time x:y where x = elapsed ss, y = duration ss
+		// Elapsed time
+		// Radio - time: 293:0, elapsed: 292.501, duration not present
+		// Song  - time: 4:391, elapsed: 4.156, duration: 391.466
+		// Podcast same as song.
+		// If state is stop then time, elapsed and duration are not present
+		// Time x:y where x = elapsed ss, y = duration ss
 		$time = explode(':', $array['time']);
 
-		// stopped
+		// Stopped
 		if ($array['state'] == 'stop') {
 			$percent = '0';
 			$array['elapsed'] = '0';
 			$array['time'] = '0';
 		}
-		// radio, upnp
+		// Radio, UPnP
 		elseif (!isset($array['duration']) || $array['duration'] == 0) { // @ohinckel https: //github.com/moode-player/moode/pull/13
 			$percent = '0';
 			$array['elapsed'] = $time[0];
 			$array['time'] = $time[1];
 		}
-		// song file
+		// Song file, Podcsst
 		else {
 			if ($time[0] != '0') {
 				$percent = round(($time[0] * 100) / $time[1]);
@@ -810,21 +811,21 @@ function parseStatus($resp) {
 		$array['elapsed'] = $time[0];
 		$array['time'] = $time[1];
 
-		// sample rate
-		// example formats for $array['audio'], dsd64:2, dsd128:2, 44100:24:2
+		// Sample rate
+		// Example formats for $array['audio'], dsd64:2, dsd128:2, 44100:24:2
 	 	$audio_format = explode(':', $array['audio']);
 	 	$array['audio_sample_rate'] = formatRate($audio_format[0]);
 
-		// bit depth
+		// Bit depth
 		if (strpos($array['audio_sample_rate'], 'dsd') !== false) {
 			$array['audio_sample_depth'] = $array['audio_sample_rate'];
 		}
 		else {
-			// workaround for AAC files that show "f" for bit depth, assume decoded to 24 bit
+			// Workaround for AAC files that show "f" for bit depth, assume decoded to 24 bit
 		 	$array['audio_sample_depth'] = $audio_format[1] == 'f' ? '24' : $audio_format[1];
 		}
 
-	 	// channels
+	 	// Channels
 	 	if (strpos($array['audio_sample_rate'], 'dsd') !== false) {
 	 		$array['audio_channels'] = formatChan($audio_format[1]);
 	 	}
@@ -832,14 +833,14 @@ function parseStatus($resp) {
 		 	$array['audio_channels'] = formatChan($audio_format[2]);
 		}
 
-		// bit rate
+		// Bit rate
 		if (!isset($array['bitrate']) || trim($array['bitrate']) == '') {
 			$array['bitrate'] = '0 bps';
 		}
 	 	else {
 			if ($array['bitrate'] == '0') {
 				$array['bitrate'] = '';
-				// for aiff, wav files and some radio stations ex: Czech Radio Classic
+				// For aiff, wav files and some radio stations ex: Czech Radio Classic
 			 	//$array['bitrate'] = number_format((( (float)$audio_format[0] * (float)$array['audio_sample_depth'] * (float)$audio_format[2] ) / 1000000), 3, '.', '');
 			}
 			else {
@@ -3004,7 +3005,7 @@ function storeBackLink($section, $tpl) {
 	//workerLog('storeBackLink(): back=' . $_SESSION['http_config_back'] . ', $tpl=' . $tpl . ', $section=' . $section . ', $referer_link=' . $referer_link);
 }
 
-// create enhanced metadata
+// Create enhanced metadata
 function enhanceMetadata($current, $sock, $caller = '') {
 	define(LOGO_ROOT_DIR, 'images/radio-logos/');
 	define(DEF_RADIO_COVER, 'images/default-cover-v6.svg');
@@ -3017,7 +3018,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
 	$current['composer'] = $song['Composer'];
-	// cover hash
+	// Cover hash
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
 		//workerLog('$current: cover hash: ' . $current['cover_art_hash']);
@@ -3034,7 +3035,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		//workerLog('enhanceMetadata(): Caller=' . $caller);
 		//workerLog('enhanceMetadata(): current= ' . $current['file']);
 		//workerLog('enhanceMetadata(): session= ' . $_SESSION['currentfile']);
-		// only do this code block once for a given file
+		// Only do this code block once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
 			$current['encoded'] = getEncodedAt($song, 'default'); // encoded bit depth and sample rate, r44d1 rm conditional logic
 			session_start();
@@ -3048,7 +3049,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		//debugLog('enhanceMetadata(): File=' . $current['file']);
 		//debugLog('enhanceMetadata(): Encoded=' . $current['encoded']);
 
-		// itunes aac or aiff file
+		// iTunes aac or aiff file
 		$ext = getFileExt($song['file']);
 		if (isset($song['Name']) && ($ext == 'm4a' || $ext == 'aif' || $ext == 'aiff')) {
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
@@ -3057,8 +3058,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
 			//debugLog('enhanceMetadata(): iTunes AAC or AIFF file');
 		}
-		// radio station
-		elseif (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && !isset($song['Artist']))) {
+		// Radio station
+		elseif (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && /*!isset($song['Artist'])*/!isset($current['duration']))) {
 			debugLog('enhanceMetadata(): Radio station');
 			$current['artist'] = 'Radio station';
 
@@ -3067,15 +3068,15 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				//$current['title'] = $song['file']; // URL
 			}
 			else {
-				// use custom name for certain stations if needed
+				// Use custom name for certain stations if needed
 				//$current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
 				$current['title'] = $song['Title'];
 			}
 
 			if (isset($_SESSION[$song['file']])) {
-				// use xmitted name for SOMA FM stations
+				// Use xmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
-				// include original station name
+				// Include original station name
 				$current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
 					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg"; // local logo image
@@ -3083,26 +3084,42 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				else {
 					$current['coverurl'] = $_SESSION[$song['file']]['logo']; // url logo image
 				}
-				# hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
+				# Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
 				if (strpos($_SESSION[$song['file']]['name'], 'BBC') !== false && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
 					$current['bitrate'] = '320';
 				}
 			}
 			else {
-				// not in radio station table, use xmitted name or 'unknown'
+				// Not in radio station table, use xmitted name or 'unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
 				$current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
 			}
 		}
-		// song file or upnp url
+		// Song file, UPnP URL or Podcast
 		else {
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = isset($song['Title']) ? $song['Title'] : pathinfo(basename($song['file']), PATHINFO_FILENAME);
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['disc'] = isset($song['Disc']) ? $song['Disc'] : 'Disc tag missing';
-			$current['coverurl'] = substr($song['file'], 0, 4) == 'http' ? getUpnpCoverUrl() : '/coverart.php/' . rawurlencode($song['file']);
-			// in case 2 url's are returned
+			if (substr($song['file'], 0, 4) == 'http') {
+				// Podcast
+				if (isset($_SESSION[$song['file']])) {
+					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg";
+					$current['artist'] = 'Radio station';
+					$current['album'] = $_SESSION[$song['file']]['name'];
+				}
+				// UPnP file
+				else {
+					$current['coverurl'] = getUpnpCoverUrl();
+				}
+			}
+			// Song file
+			else {
+				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
+			}
+			//$current['coverurl'] = substr($song['file'], 0, 4) == 'http' ? getUpnpCoverUrl() : '/coverart.php/' . rawurlencode($song['file']);
+			// In case 2 url's are returned
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
 			debugLog('enhanceMetadata(): coverurl: (' . $current['coverurl'] . ')');
 
