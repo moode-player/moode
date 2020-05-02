@@ -27,6 +27,7 @@ Bug fixes
 - FIX: Renderer active overlays not cleared when on configs
 - FIX: Podcast streams not being handled correctly
 - FIX: No Artist line when Tagview covers option = No
+- FIX: Enter key fail in Library search when alpha
 
 ########################################################
 //
