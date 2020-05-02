@@ -7,7 +7,8 @@
 # - Bump to Linux kernel 4.19.115 build #1305
 # - Bump to r652 sources
 # - Bump to MPD 0.21.22
-# - Recompile librespot v0.1.1 to run on both arm6 and arm7
+# - Compile librespot v0.1.1 to run on both arm6 and arm7
+# - Compile miniDLNA 1.2.1+0763719f
 # - Image prep and build is Linux and Ethernet only
 # - Remove dead code and instructions
 #
@@ -747,8 +748,21 @@ host name and other names at first boot. See the file /var/www/setup.txt for mor
 //
 ////////////////////////////////////////////////////////////////
 
+# Install package to get all the parts
 sudo apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install minidlna
 sudo systemctl disable minidlna
+
+# Recompile latest version
+sudo apt-get -y install libexif-dev libjpeg62-turbo-dev libsqlite3-dev
+git clone git://git.code.sf.net/p/minidlna/git
+cd git
+sed -i 's/VERSION "1.2.1"/VERSION "1.2.1+'$(git rev-parse --short HEAD)'"/' upnpglobalvars.h
+./autogen.sh
+./configure
+make
+sudo cp minidlnad /usr/sbin/minidlnad
+cd ~
+sudo rm -rf ./git
 
 ////////////////////////////////////////////////////////////////
 //
