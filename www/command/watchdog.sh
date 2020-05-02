@@ -92,9 +92,10 @@ while true; do
 	if [[ $ETH0_IP_ADDR = "" ]]; then
 		WLAN0_IP_ADDR=$(ifconfig wlan0 | grep "inet ")
 		if [[ $WLAN0_IP_ADDR = "" ]]; then
+			wpa_cli -i wlan0 scan > /dev/null 2>&1
 			ip --force link set wlan0 up > /dev/null 2>&1
 			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-			echo $TIME_STAMP" watchdog: Wlan0 down attempting reconnect" >> /var/log/moode.log
+			echo $TIME_STAMP" watchdog: Wlan0 down attempting reset" >> /var/log/moode.log
 		fi
 	fi
 
