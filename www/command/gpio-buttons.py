@@ -56,7 +56,7 @@ for row in cursor:
         def sw_1_event(channel):
             time.sleep(0.005) # edge debounce of 5 ms
             # only deal with valid edges
-            if GPIO.input(channel) == 1
+            if GPIO.input(channel) == 1:
                 subprocess.call(sw_1_cmd)
 
         GPIO.add_event_detect(sw_1_pin, GPIO.RISING, callback=sw_1_event, bouncetime=bounce_time)
@@ -72,7 +72,7 @@ for row in cursor:
         def sw_2_event(channel):
             time.sleep(0.005) # edge debounce of 5 ms
             # only deal with valid edges
-            if GPIO.input(channel) == 1
+            if GPIO.input(channel) == 1:
                 subprocess.call(sw_2_cmd)
 
         GPIO.add_event_detect(sw_2_pin, GPIO.RISING, callback=sw_2_event, bouncetime=bounce_time)
@@ -88,7 +88,7 @@ for row in cursor:
         def sw_3_event(channel):
             time.sleep(0.005) # edge debounce of 5 ms
             # only deal with valid edges
-            if GPIO.input(channel) == 1
+            if GPIO.input(channel) == 1:
                 subprocess.call(sw_3_cmd)
 
         GPIO.add_event_detect(sw_3_pin, GPIO.RISING, callback=sw_3_event, bouncetime=bounce_time)
@@ -104,7 +104,7 @@ for row in cursor:
         def sw_4_event(channel):
             time.sleep(0.005) # edge debounce of 5 ms
             # only deal with valid edges
-            if GPIO.input(channel) == 1
+            if GPIO.input(channel) == 1:
                 subprocess.call(sw_4_cmd)
 
         GPIO.add_event_detect(sw_4_pin, GPIO.RISING, callback=sw_4_event, bouncetime=bounce_time)
@@ -120,7 +120,7 @@ for row in cursor:
         def sw_5_event(channel):
             time.sleep(0.005) # edge debounce of 5 ms
             # only deal with valid edges
-            if GPIO.input(channel) == 1
+            if GPIO.input(channel) == 1:
                 subprocess.call(sw_5_cmd)
 
         GPIO.add_event_detect(sw_5_pin, GPIO.RISING, callback=sw_5_event, bouncetime=bounce_time)
@@ -136,7 +136,7 @@ for row in cursor:
         def sw_6_event(channel):
             time.sleep(0.005) # edge debounce of 5 ms
             # only deal with valid edges
-            if GPIO.input(channel) == 1
+            if GPIO.input(channel) == 1:
                 subprocess.call(sw_6_cmd)
 
         GPIO.add_event_detect(sw_6_pin, GPIO.RISING, callback=sw_6_event, bouncetime=bounce_time)
@@ -152,7 +152,7 @@ for row in cursor:
         def sw_7_event(channel):
             time.sleep(0.005) # edge debounce of 5 ms
             # only deal with valid edges
-            if GPIO.input(channel) == 1
+            if GPIO.input(channel) == 1:
                 subprocess.call(sw_7_cmd)
 
         GPIO.add_event_detect(sw_7_pin, GPIO.RISING, callback=sw_7_event, bouncetime=bounce_time)
@@ -168,7 +168,7 @@ for row in cursor:
         def sw_8_event(channel):
             time.sleep(0.005) # edge debounce of 5 ms
             # only deal with valid edges
-            if GPIO.input(channel) == 1
+            if GPIO.input(channel) == 1:
                 subprocess.call(sw_8_cmd)
 
         GPIO.add_event_detect(sw_8_pin, GPIO.RISING, callback=sw_8_event, bouncetime=bounce_time)
