@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.21 2020-MM-DD
+# Build Recipe v2.21 2020-05-03
 #
-# moOde 6.5.2 2020-MM-DD
+# moOde 6.5.2 2020-05-03
 # - Based on Raspbian Buster Lite (10.3)
 # - Bump to Linux kernel 4.19.115 build #1305
 # - Bump to r652 sources
