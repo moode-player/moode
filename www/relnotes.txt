@@ -18,7 +18,8 @@
 Updates
 
 - UPD: Bump to miniDLNA 1.2.1+0763719 DSD support
-- UPD: Add wlan0 check/reconnect to watchdog
+- UPD: Add wlan0 check/reset to watchdog
+- UPD: Add edge debounce delay to gpio-buttons
 
 Bug fixes
 
