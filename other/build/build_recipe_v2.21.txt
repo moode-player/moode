@@ -11,6 +11,7 @@
 # - Compile miniDLNA 1.2.1+0763719f
 # - Image prep and build is Linux and Ethernet only
 # - Remove dead code and instructions
+# - Compile upmpdcli 1.4.7
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
@@ -876,6 +877,14 @@ sudo rm -rf ./squeezelite-master/
 //
 // COMPONENT 6 - Upmpdcli
 //
+// upgrade build to upmpdcli-1.4.7
+//
+// prerequisite:
+//   the following tarballs downloaded to ~/moode/other/upmpdcli
+//     https://www.lesbonscomptes.com/upmpdcli/downloads/libnpupnp-2.2.1.tar.gz
+//     https://www.lesbonscomptes.com/upmpdcli/downloads/libupnpp-0.18.0.tar.gz
+//     https://www.lesbonscomptes.com/upmpdcli/downloads/upmpdcli-1.4.7.tar.gz
+//
 ////////////////////////////////////////////////////////////////
 
 // Enjoy a Coffee and listen to some Tunes while the compiles run :-)
@@ -883,45 +892,45 @@ sudo rm -rf ./squeezelite-master/
 1. Dev libraries
 
 sudo apt-get -y install libmicrohttpd-dev libexpat1-dev \
-libxml2-dev libxslt1-dev libjsoncpp-dev python-requests python-pip
+libcurl4-gnutls-dev python3-requests python3-pip
 
-2. Libupnp jfd5
+2. Libnpupnp
 
 cd ~
-sudo cp ./moode/other/upmpdcli/libupnp-1.6.20.jfd5.tar.gz ./
-sudo tar xfz ./libupnp-1.6.20.jfd5.tar.gz
-cd libupnp-1.6.20.jfd5
+sudo cp ./moode/other/upmpdcli/libnpupnp-2.2.1.tar.gz ./
+sudo tar xfz ./libnpupnp-2.2.1.tar.gz
+cd libnpupnp-2.2.1
 ./configure --prefix=/usr --sysconfdir=/etc
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./libupnp-1.6.20.jfd5
-sudo rm libupnp-1.6.20.jfd5.tar.gz
+sudo rm -rf ./libnpupnp-2.2.1
+sudo rm libnpupnp-2.2.1.tar.gz
 
 3. Libupnpp
 
-sudo cp ./moode/other/upmpdcli/libupnpp-0.16.0.tar.gz ./
-sudo tar xfz ./libupnpp-0.16.0.tar.gz
-cd libupnpp-0.16.0
+sudo cp ./moode/other/upmpdcli/libupnpp-0.18.0.tar.gz ./
+sudo tar xfz ./libupnpp-0.18.0.tar.gz
+cd libupnpp-0.18.0
 ./configure --prefix=/usr --sysconfdir=/etc
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./libupnpp-0.16.0
-sudo rm libupnpp-0.16.0.tar.gz
+sudo rm -rf ./libupnpp-0.18.0
+sudo rm libupnpp-0.18.0.tar.gz
 
 4. Upmpdcli
 
-sudo cp ./moode/other/upmpdcli/upmpdcli-code-1.2.16.tar.gz ./
-sudo tar xfz ./upmpdcli-code-1.2.16.tar.gz
-cd upmpdcli-code
+sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.7.tar.gz ./
+sudo tar xfz ./upmpdcli-1.4.7.tar.gz
+cd upmpdcli-1.4.7
 ./autogen.sh
 ./configure --prefix=/usr --sysconfdir=/etc
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./upmpdcli-code-1.2.16
-sudo rm upmpdcli-code-1.2.16.tar.gz
+sudo rm -rf ./upmpdcli-1.4.7
+sudo rm upmpdcli-1.4.7.tar.gz
 
 sudo useradd upmpdcli
 sudo cp ./moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
@@ -942,9 +951,6 @@ sudo make
 sudo make install
 cd ~
 sudo rm -rf ./libupnppsamples-code
-
-6. Patch for upmpdcli gmusic plugin
-sudo cp ./moode/other/upmpdcli/session.py /usr/share/upmpdcli/cdplugins/gmusic
 
 ////////////////////////////////////////////////////////////////
 //
