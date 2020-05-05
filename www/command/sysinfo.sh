@@ -382,7 +382,7 @@ WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
 RPI_GPIO_VER=$(grep -iRl "RPi.GPIO-" /usr/local/lib/python3.7/dist-packages/ | awk -F "." '{print $3 "." $4 "." $5}' | cut -f 2 -d "-")
 
 # Moode release
-moode_rel="$(cat /var/www/footer-plain.php | grep Release: | cut -f 2-3 -d " ")"
+moode_rel="$(cat /var/www/footer.php | grep Release: | cut -f 2-3 -d " ")"
 
 # Moode SQL data
 SQLDB=/var/local/www/db/moode-sqlite3.db

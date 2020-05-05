@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -22,15 +22,15 @@
  * 2019-04-12 TC moOde 5.0
  *
  */
- 
+
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-playerSession('open', '', ''); 
+playerSession('open', '', '');
 session_write_close();
 
 $section = basename(__FILE__, '.php');
 
-$tpl = "indextpl.html";
-include('/var/local/www/header.php'); 
+$tpl = "indextpl.min.html";
+include('/var/local/www/header.php');
 eval("echoTemplate(\"".getTemplate("/var/www/templates/$tpl")."\");");
-include('footer.php');
+include('footer.min.php');

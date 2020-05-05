@@ -70,4 +70,4 @@ storeBackLink($section, $tpl);
 
 include('/var/local/www/header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
-include('footer.php');
+include('footer.min.php');
