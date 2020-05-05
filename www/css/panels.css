@@ -18,7 +18,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-05-03 TC moOde 6.5.2
+ * 2020-MM-DD TC moOde 6.6.0
  *
  */
 
@@ -91,7 +91,8 @@ html {background-color:inherit;}
 #inpsrc-msg a {color:#eee;}
 #inpsrc-msg i {font-size:1.5em;}
 #inpsrc-preamp-volume {font-size:.7em !important;}
-.disconnect-renderer {font-size:.7em !important;cursor:pointer;}
+.configure-renderer, .disconnect-renderer {font-size:.7em!important;cursor:pointer;border-radius:5rem;background-color:var(--btnshade4);margin-top:1em;width:10em;color:inherit;}
+.configure-renderer:hover, .disconnect-renderer:hover {background-color:var(--btnshade4);} /* Mask hover effect */
 /* main ui */
 .playback-controls {display:none;position:absolute;top:0;left:50%;width:184px;margin:-1px 0 0 -92px;text-align:center;z-index:9;}
 #currentsong, #currentalbum, #format-bitrate, #elapsed, #countdown-display {display:block;}

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-05-03 TC moOde 6.5.2
+ * 2020-MM-DD TC moOde 6.6.0
  *
  */
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
@@ -396,24 +396,28 @@ function engineCmd() {
                 case 'inpactive1':
                 case 'inpactive0':
                     // NOTE: cmd[1] is the input source name
-    				inpSrcIndicator(cmd[0], '<a href="inp-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
+    				//inpSrcIndicator(cmd[0], '<a href="inp-config.php">' + cmd[1] + ' Input Active</a>' + '<br><span><button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
+                    inpSrcIndicator(cmd[0], cmd[1] +
+                        ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
+                        '<br><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
+                    );
                     break;
                 case 'btactive1':
                 case 'btactive0':
                     // NOTE: cmd[1] is the input source name
-                    inpSrcIndicator(cmd[0], '<a href="blu-config.php">Bluetooth Active</a><br><span>' + cmd[1] + '</span>');
+                    inpSrcIndicator(cmd[0], 'Bluetooth Active' + cmd[1] + '<br><a class="btn configure-renderer" href="blu-config.php">BlueZ Config</a>');
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
-    				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><span class="disconnect-renderer" data-job="airplaysvc">disconnect</span>');
+    				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>');
                     break;
                 case 'spotactive1':
                 case 'spotactive0':
-    				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><span class="disconnect-renderer" data-job="spotifysvc">disconnect</span>');
+    				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>');
                     break;
                 case 'slactive1':
                 case 'slactive0':
-    				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">turn off</span>');
+    				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><button class="btn disconnect-renderer" data-job="slsvc">turn off</button>');
                     break;
                 case 'scnactive1':
     				screenSaver(cmd[0]);
@@ -820,26 +824,29 @@ function renderUI() {
         // Render the playlist
         renderPlaylist();
 
-    	// ensure renderer overlays get applied in case mpd ui updates get there first after browser refresh
-    	// bluetooth renderer
-    	if (SESSION.json['btactive'] == '1') {
-    		inpSrcIndicator('btactive1', '<a href="blu-config.php">Bluetooth Active</a>');
-    	}
-    	// airplay renderer
-    	if (SESSION.json['airplayactv'] == '1') {
-    		inpSrcIndicator('aplactive1', 'Airplay Active' + '<br><span class="disconnect-renderer" data-job="airplaysvc">disconnect</span>');
-    	}
-    	// spotify renderer
-    	if (SESSION.json['spotactive'] == '1') {
-    		inpSrcIndicator('spotactive1', 'Spotify Active' + '<br><span class="disconnect-renderer" data-job="spotifysvc">disconnect</span>');
-    	}
-    	// squeezelite renderer
-    	if (SESSION.json['slactive'] == '1') {
-    		inpSrcIndicator('slactive1', 'Squeezelite Active' + '<br><span class="disconnect-renderer" data-job="slsvc">turn off</span>');
-    	}
-    	// Input source
+    	// Ensure renderer overlays get applied in case MPD UI updates get there first after browser refresh
+
+        // Input source
     	if (SESSION.json['inpactive'] == '1') {
-    		inpSrcIndicator('inpactive1', '<a href="inp-config.php">' + SESSION.json['audioin'] + ' Input Active</a>' + '<br><span><button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span></span>');
+    		inpSrcIndicator('inpactive1', SESSION.json['audioin'] + ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
+                '<br><a class="btn configure-renderer" href="inp-config.php">Input Source</a>'
+            );
+    	}
+    	// Bluetooth renderer
+    	if (SESSION.json['btactive'] == '1') {
+    		inpSrcIndicator('btactive1', 'Bluetooth Active' + '<br><a class="btn configure-renderer" href="blu-config.php">BlueZ Config</a>');
+     	}
+    	// Airplay renderer
+    	if (SESSION.json['airplayactv'] == '1') {
+    		inpSrcIndicator('aplactive1', 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>');
+    	}
+    	// Spotify renderer
+    	if (SESSION.json['spotactive'] == '1') {
+    		inpSrcIndicator('spotactive1', 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>');
+    	}
+    	// Squeezelite renderer
+    	if (SESSION.json['slactive'] == '1') {
+    		inpSrcIndicator('slactive1', 'Squeezelite Active' + '<br><button class="btn disconnect-renderer" data-job="slsvc">turn off</button>');
     	}
 
     	// Database update

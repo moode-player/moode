@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-05-03 TC moOde 6.5.2
+ * 2020-MM-DD TC moOde 6.6.0
  *
  */
 jQuery(document).ready(function($) { 'use strict';
@@ -1258,7 +1258,6 @@ jQuery(document).ready(function($) { 'use strict';
 	// Disconnect active renderer
 	//$('.disconnect-renderer').live('click', function(e) {
     $(document).on('click', '.disconnect-renderer', function(e) {
-		$('.disconnect-renderer').css('opacity', '.5');
 		var job = $(this).data('job');
         $.post('command/moode.php?cmd=disconnect-renderer', {'job':job});
 	});

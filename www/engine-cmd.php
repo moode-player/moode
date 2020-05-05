@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2020-MM-DD TC moOde 6.6.0
  *
  */
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -68,7 +68,7 @@ if ($cmd == 'btactive1') {
 	$cmd .= ',';
 	for ($i = 2; $i < count($result); $i++) {
 		if ($result[$i] != '**') {
-			$cmd .= substr($result[$i], 21) . '<br>';
+			$cmd .= ': ' . substr($result[$i], 21);
 		}
 	}
 }
