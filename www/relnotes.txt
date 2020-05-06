@@ -22,6 +22,7 @@ Updates
 Bug fixes
 
 - FIX: Unhandled "Database locked" error in vol.sh and rotvol.sh
+- FIX: Playlist line 2 left alignment in mobile portrait
 
 ########################################################
 //
