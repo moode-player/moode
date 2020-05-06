@@ -398,12 +398,16 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbtns {margin:.25em 0;}
 	#playbar-title {font-size:1.1em;}
 	img.coverart {width:55vh;}
+    #menu-bottom { height : 5em;}
+    #playbar-cover {height:6rem;width:6rem;}
 }
 @media (height:479px) and (width:799px) {
 	.playlist .pll1, .playlist .pll2 {font-size:1.1em;}
 	#playbtns {margin:.25em 0;}
 	#playbar-title {font-size:1.1em;}
 	img.coverart {width:55vh;}
+    #menu-bottom { height : 5em;}
+    #playbar-cover {height:6rem;width:6rem;}
 }
 
 /* iPhone X */
