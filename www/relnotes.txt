@@ -17,11 +17,11 @@
 
 Updates
 
-- UPD: Improve button style and layout for renderer/input active overlays 
+- UPD: Improve button style and layout for renderer/input active overlays
 
 Bug fixes
 
-- FIX:
+- FIX: Unhandled "Database locked" error in vol.sh and rotvol.sh
 
 ########################################################
 //

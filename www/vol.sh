@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-04-24 TC moOde 6.5.0
+# 2020-MM-DD TC moOde 6.6.0
 #
 
-VER="5.1.0"
+VER="5.2.0"
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
@@ -52,6 +52,13 @@ fi
 
 # Get config settings
 RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE id IN  ('32', '33', 137)")
+
+# Check for empty result due to "Database locked" error
+if [[ $RESULT = "" ]]; then
+	echo "Empty result from SQL query, exiting"
+	exit 1
+fi
+
 # Friendly names
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
