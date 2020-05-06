@@ -239,7 +239,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbtns .btn {font-size:3em;padding:.5em 1em;}
 	.dbtn {display:inline-block;font-size:3em;padding:0 1rem;width:25%;line-height:20px;vertical-align:middle;}
 	.playlist span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
-	.playlist span {margin-left:calc(3.8rem + 1vmin);}
+	.playlist span {margin-left:calc(3.8rem + 1vmin) !important;}
 	.playlist {padding:0 0 9rem 0;min-height:33vh;}
 	.playlist li:before {font-size:unset;}
 	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;}
