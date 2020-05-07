@@ -52,7 +52,7 @@
     k.o = function () {
         var s = this;
 
-		this.po = 12;   // pixel offset
+		this.po = 6;   // pixel offset
 		this.bloom = true; // bloom
         this.o = null; // array of options
         this.$ = null; // jQuery wrapped element
@@ -251,8 +251,8 @@
                 // apply relative
                 this.w = this.h = Math.min(w, h);
             } else {
-                this.w = this.o.width + parseInt(this.po / 2);
-                this.h = this.o.height + parseInt(this.po / 2);
+                this.w = this.o.width + this.po;
+                this.h = this.o.height + this.po;
             }
 
             // finalize div
@@ -263,8 +263,8 @@
 
             // finalize canvas with computed width + pixel offset
             this.$c.attr({
-                width: this.w + 2,
-                height: this.h + 2
+                width: this.w + this.po,
+                height: this.h + this.po
             });
 
             // scaling
@@ -737,7 +737,7 @@
                 && (eat = eat + this.cursorExt);
             c.beginPath();
                 c.strokeStyle = this.o.bgColor;
-                c.arc(this.xy + 2, this.xy + 2, this.radius, this.endAngle, this.startAngle, true);
+                c.arc(this.xy + this.po, this.xy + this.po, this.radius, this.endAngle, this.startAngle, true);
             c.stroke();
 
             if (this.o.displayPrevious) {
@@ -749,7 +749,7 @@
 
                 c.beginPath();
                     c.strokeStyle = this.pColor;
-                    c.arc(this.xy + 2, this.xy + 2, this.radius, sa, ea, false);
+                    c.arc(this.xy + this.po, this.xy + this.po, this.radius, sa, ea, false);
                 c.stroke();
                 r = (this.cv == this.v);
             }
@@ -769,12 +769,12 @@
 
             c.beginPath();
 				if (this.bloom) {
-					c.shadowBlur = (this.po / 1.5);
+					c.shadowBlur = this.po;
 					c.shadowColor = tempcolor;
 				}
 				//c.shadowColor = r ? this.o.fgColor : this.fgColor ;
                 c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
-                c.arc(this.xy + 2, this.xy + 2, this.radius, sat, eat, false);
+                c.arc(this.xy + this.po, this.xy + this.po, this.radius, sat, eat, false);
             c.stroke();
         };
 
