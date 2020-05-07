@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-05-03 TC moOde 6.5.2
+ * 2020-MM-DD TC moOde 6.6.0
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
@@ -628,15 +628,15 @@ var renderSongs = function(albumPos) {
 			var composer = filteredSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + filteredSongs[i].composer + '</span></span>';
 			var highlight = filteredSongs[i].title == MPD.json['title'] ? ' lib-track-highlight' : '';
 
-	    output += discDiv
-			+ '<li id="lib-song-' + (i + 1) + '" class="clearfix">'
-			+ '<div class="lib-entry-song"><span class="songtrack' + highlight + '">' + filteredSongs[i].tracknum + '</span>'
-			+ '<span class="songname">' + filteredSongs[i].title + '</span>'
-			+ '<span class="songtime"> ' + filteredSongs[i].time_mmss + '</span>'
-			+ '<span class="songartist"> ' + filteredSongs[i].artist + composer
-			+ '<span class="songyear"> ' + songyear + '</span></div>'
-			+ '<div class="lib-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
-			+ '</li>';
+            output += discDiv
+    			+ '<li id="lib-song-' + (i + 1) + '" class="clearfix">'
+    			+ '<div class="lib-entry-song"><span class="songtrack' + highlight + '">' + filteredSongs[i].tracknum + '</span>'
+    			+ '<span class="songname">' + filteredSongs[i].title + '</span>'
+    			+ '<span class="songtime"> ' + filteredSongs[i].time_mmss + '</span>'
+    			+ '<span class="songartist"> ' + filteredSongs[i].artist + composer
+    			+ '<span class="songyear"> ' + songyear + '</span></div>'
+    			+ '<div class="lib-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
+    			+ '</li>';
 
 			LIB.totalTime += parseSongTime(filteredSongs[i].time);
 		}
