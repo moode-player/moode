@@ -15,6 +15,10 @@
 //
 ########################################################
 
+New features
+
+- NEW: Option to adjust the number of thumbnail columns
+
 Updates
 
 - UPD: Improve button style/layout for renderer active overlays
