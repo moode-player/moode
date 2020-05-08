@@ -17,12 +17,15 @@
 
 Updates
 
-- UPD: Improve button style and layout for renderer/input active overlays
+- UPD: Improve button style/layout for renderer active overlays
+- UPD: Use MusicBrainz date tags if present in track
+- UPD: Add X-Large font size option to Appearance
 
 Bug fixes
 
 - FIX: Unhandled "Database locked" error in vol.sh and rotvol.sh
 - FIX: Playlist line 2 left alignment in mobile portrait
+- FIX: Wrong cover artist when album header clicked in Tag view
 
 ########################################################
 //
