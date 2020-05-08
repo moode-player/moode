@@ -1918,6 +1918,9 @@ $('.context-menu a').click(function(e) {
             $('#show-genres-column span').text(SESSION.json['library_show_genres']);
             $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
             $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
+
+            $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
+
             $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
             $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
             $('#compilation-identifier').val(SESSION.json['library_comp_id']);
@@ -2094,6 +2097,9 @@ $('.btn-appearance-update').click(function(e){
     if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
 		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel').addClass('limited') : $('#library-panel').removeClass('limited');
 	}
+    if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {
+		setLibraryThumbnailCols($('#thumbnail-columns span').text().substring(0,1));
+	}
     if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
     if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
     if (SESSION.json['library_comp_id'] != $('#compilation-identifier').val()) {libraryOptionsChange = true;}
@@ -2123,6 +2129,7 @@ $('.btn-appearance-update').click(function(e){
     SESSION.json['library_show_genres'] = $('#show-genres-column span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
+    SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
     SESSION.json['library_albumview_sort'] = $('#albumview-sort-order span').text().replace('by ', '');
     SESSION.json['library_tagview_sort'] = $('#tagview-sort-order span').text().replace('by ', '');
     SESSION.json['library_comp_id'] = $('#compilation-identifier').val().trim();
@@ -2191,6 +2198,7 @@ $('.btn-appearance-update').click(function(e){
         'library_show_genres': SESSION.json['library_show_genres'],
         'library_tagview_covers': SESSION.json['library_tagview_covers'],
         'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
+        'library_thumbnail_columns': SESSION.json['library_thumbnail_columns'],
         'library_albumview_sort': SESSION.json['library_albumview_sort'],
         'library_tagview_sort': SESSION.json['library_tagview_sort'],
         'library_comp_id': SESSION.json['library_comp_id'],
@@ -2221,6 +2229,13 @@ $('.btn-appearance-update').click(function(e){
         }
     );
 });
+
+function setLibraryThumbnailCols(cols) {
+    var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
+    var css = map[cols].split(',');
+    document.body.style.setProperty('--thumbcols', css[0]);
+    document.body.style.setProperty('--mthumbcols', css[1]);
+}
 
 // remove bg image (NOTE choose bg image is in footer.php)
 $('#remove-bgimage').click(function(e) {
@@ -2394,6 +2409,9 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
             break;
         case 'ellipsis-limited-text-yn':
     		$('#ellipsis-limited-text span').text($(this).text());
+            break;
+        case 'thumbnail-columns-sel':
+    		$('#thumbnail-columns span').text($(this).text());
             break;
         case 'tagview-sort-order-sel':
     		$('#tagview-sort-order span').text($(this).text());

@@ -49,8 +49,11 @@ jQuery(document).ready(function($) { 'use strict';
             notify('viewport', window.innerWidth + 'x' + window.innerHeight, 10000);
         }
 
-    	// load current view
+    	// Set currentView global
     	currentView = SESSION.json['current_view'];
+
+        // Set thumbnail columns
+        setLibraryThumbnailCols(SESSION.json['library_thumbnail_columns'].substring(0, 1));
 
         // Initiate loads
         loadLibrary();
