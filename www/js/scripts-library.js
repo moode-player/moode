@@ -669,7 +669,6 @@ var renderSongs = function(albumPos) {
 		else {
 			artist = filteredSongs[0].album_artist || filteredSongs[0].artist;
 		}
-
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html(filteredSongs[0].year);
 		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
@@ -738,25 +737,11 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 
 // Click albums or album covers header
 $('#albumheader').on('click', '.lib-heading', function(e) {
-	//console.log($(this).parent().attr('id'));
-	//LIB.artistClicked = false;
-    /* DEPRECATED
-	if ($(this).parent().attr('id') == 'albumcoverheader') {
-		$('#albumcovers .lib-entry').removeClass('active');
-		$('#bottom-row').css('display', '');
-		$('#lib-albumcover').css('height', '100%');
-		LIB.filters.artists.length = 0;
-		LIB.filters.albums.length = 0;
-        LIB.recentlyAddedClicked = false;
-		UI.libPos.fill(-2);
-		clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
-	}
-	else {*/
-		LIB.filters.albums.length = 0;
-        LIB.recentlyAddedClicked = false;
-		UI.libPos.fill(-2);
-		clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
-	//}
+	LIB.filters.albums.length = 0;
+    LIB.recentlyAddedClicked = false;
+    UI.libPos[0] = -2;
+    UI.libPos[1] = -2;
+	clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
 
 	storeLibPos(UI.libPos);
 	$("#searchResetLib").hide();
