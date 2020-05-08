@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.6.0
  *
  */
 
@@ -59,7 +59,7 @@ function getParamOrValue (type, key) {
         // Library cover search priority
         ['Embedded','Embedded cover'],['Cover file','Cover image file'],
         // Font size factors
-        ['Smaller',.35],['Small',.40],['Normal',.45],['Large',.55],['Larger',.65]
+        ['Smaller',.35],['Small',.40],['Normal',.45],['Large',.55],['Larger',.65],['X-Large',.75]
     ]);
 
     if (type == 'value') {
