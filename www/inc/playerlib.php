@@ -429,7 +429,7 @@ function genLibrary($flat) {
 			'artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist'),
 			'album_artist' => $flatData['AlbumArtist'],
 			'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
-			'year' => substr($flatData['Date'], 0, 4),
+			'year' => getTrackYear($flatData),
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
@@ -511,7 +511,7 @@ function genLibraryUTF8Rep($flat) {
 			'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist')), //r44f add inner brackets
 			'album_artist' => utf8rep($flatData['AlbumArtist']),
 			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
-			'year' => utf8rep(substr($flatData['Date'], 0, 4)),
+			'year' => utf8rep(getTrackYear($flatData)),
 			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
 			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
@@ -543,6 +543,23 @@ function utf8rep($some_string) {
 		'|\xED[\xA0-\xBF][\x80-\xBF]/S','--', $some_string );
 
 	return $some_string;
+}
+
+function getTrackYear($trackData) {
+    if (array_key_exists('OriginalDate', $trackData)) {
+        $trackYear = substr($trackData['OriginalDate'], 0, 4);
+    }
+    else if (array_key_exists('OriginalReleaseDate', $trackData)) {
+        $trackYear = substr($trackData['OriginalReleaseDate'], 0, 4);
+    }
+    else if (array_key_exists('Date', $trackData)) {
+        $trackYear = substr($trackData['Date'], 0, 4);
+    }
+	else {
+		$trackYear = '';
+	}
+
+    return $trackYear;
 }
 
 function clearLibCache() {
