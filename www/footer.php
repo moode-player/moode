@@ -155,26 +155,20 @@
 
 <!-- RECONNECT/RESTART/SHUTDOWN -->
 <div id="reconnect" class="hide">
-	<div class="reconnectbg"></div>
-	<div class="reconnectbtn">
-		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>
-	</div>
+	<div class="reconnect-bg"></div>
+	<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
 </div>
 
 <div id="restart" class="hide">
-	<div class="reconnectbg"></div>
-	<div class="reconnectbtn">
-		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>
-		<br>System restarting
-	</div>
+	<div class="reconnect-bg"></div>
+	<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
+	<span class="reconnect-msg">System restarted</span>
 </div>
 
 <div id="shutdown" class="hide">
-	<div class="reconnectbg"></div>
-	<div class="reconnectbtn">
-		<a href="javascript:location.reload(true); void 0" class="btn btn-primary btn-large">reconnect</a>
-		<br>System shut down
-	</div>
+	<div class="reconnect-bg"></div>
+	<a href="javascript:location.reload(true); void 0" class="btn reconnect-btn">Reconnect</a>
+	<span class="reconnect-msg">System shut down</span>
 </div>
 
 <!-- DISPLAY MESSAGES -->
