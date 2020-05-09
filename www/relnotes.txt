@@ -21,9 +21,9 @@ New features
 
 Updates
 
-- UPD: Improve button style/layout for renderer active overlays
 - UPD: Use MusicBrainz date tags if present in track
 - UPD: Add X-Large font size option to Appearance
+- UPD: Style of renderer active and restart/shutdown overlays
 
 Bug fixes
 
