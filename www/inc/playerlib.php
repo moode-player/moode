@@ -416,6 +416,43 @@ function genFlatList($sock) {
 	}
 }
 
+/**
+ *  Array with lossless audio file extensions
+ * 
+ *  wav  - raw wavefiles
+ *  flac - Free Lossless Audio Codec)
+ *  ogg  - Ogg Vorbis
+ *  wv   - Wavepack
+ *  dsf  - Direct Stream Digital 
+ */
+//DEFINE('AUDIO_FORMATS_LOSSLESS', array('flac','wav', 'wv', 'ogg', 'dsf')); // not supported by used PHP
+$AUDIO_FORMATS_LOSSLESS = array('flac','wav', 'wv', 'ogg', 'dsf');
+
+/**
+ *  getSoundQualityTag returns the sound quality of the track. 
+ *  If a lossy sound format is used, NULL is returned. If the format is 
+ *  lossless, the rounded samplerate devided by 1000 is returned.
+ */
+function getSoundQualityTag($trackdata) {
+	// $trackdata contains format and file like:
+	// 'format': '44100:16:2',
+	// 'file': 'NAS/losless/Artists/Youn Sun Nah/Youn Sun Nah - Lento (2013)/02 Lament.flac',
+	global $AUDIO_FORMATS_LOSSLESS;
+
+	$sqtag = '';
+	$ext =  trim(strtolower(pathinfo (  $trackdata['file'], PATHINFO_EXTENSION ) ));
+		
+	if( in_array($ext, $AUDIO_FORMATS_LOSSLESS ) == 1) {
+		$samplerate = NULL;
+		if(array_key_exists('Format', $trackdata) && $trackdata['Format']) {
+			$samplerate = intval(explode ( ':',  $trackdata['Format'] )[0] );
+			$sqtag = strval(floor($samplerate/1000));
+		}
+	}
+
+	return $sqtag;
+}
+
 // Generate library array (@chris-rudmin rewrite)
 function genLibrary($flat) {
 	$lib = array();
@@ -434,7 +471,8 @@ function genLibrary($flat) {
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
 			'time_mmss' => songTime($flatData['Time']),
-			'last_modified' => $flatData['Last-Modified']
+			'last_modified' => $flatData['Last-Modified'],
+			'soundquality' => getSoundQualityTag($flatData)
 		);
 
 		array_push($lib, $songData);
@@ -516,7 +554,8 @@ function genLibraryUTF8Rep($flat) {
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
 			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
-			'last_modified' => $flatData['Last-Modified']
+			'last_modified' => $flatData['Last-Modified'],
+			'sqlabel' => getSoundQualityTag($flatData)
 		);
 
 		array_push($lib, $songData);

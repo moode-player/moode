@@ -1,0 +1,129 @@
+@import "moode.min.css.clean";
+
+/*
+
+ https://mydevice.io
+
+                                                              number of thumbs  
+                  dia     jsres*      dpr   dpi  native res  landscape  portrait
+ Samsung S9    |  5.8"   740x320      3.0   288  2960×1440     6x2       2x6
+ Samsung Tab A | 10.5"   1280x720     1.5   144  1920x1200     7x3       5x5.8 
+ PC Monitor    |   24"   1920x1200    1.0    96  1920x1200     9x3.8      na
+
+  *native resolution is larger, see the dpr 
+*/
+
+/* Because I'm right handed, I like to have the mosten often used button on the right side.
+   So lets swap playbar-controls with playerbar-toggles */
+@media (min-width:700) {	
+
+	#playbar-controls {
+		left:unset;
+		right:.5rem;
+	}
+	#playbar-toggles {
+		left:3rem;
+		right:unset;
+	}
+}
+
+/* phone portrait ~4 col(*/
+@media (min-width:320px) and (max-width:470px) and (min-resolution: 180dpi){	
+	html, body{
+		--thumbcols:14vw;
+	}
+}
+
+/* phone landscape ~5 col*/
+@media (min-width:480px) and (min-resolution: 180dpi) {	
+	html, body{
+		--thumbcols:20vw;
+	}
+}
+
+/* tablet landscape with large screen (*/
+@media (min-width:720px) and (max-resolution: 150dpi) {	
+	html, body{
+		--thumbcols:18.5vw;
+	}
+}
+
+/* tablet portrait with large screen (*/
+@media (min-width:1280px) and (max-resolution: 150dpi) {	
+	html, body{
+		--thumbcols:13.6vw;
+	}
+}
+
+/* pc screen fullhd  ~9 cols */
+@media (min-width:1920px) and (max-resolution: 130dpi) {	
+	html, body{
+        --thumbcols:10.6vw;
+    };
+}
+
+/* pc screen fullhd+ ~12 cols */
+@media (min-width:1921px) and (max-resolution: 130dpi) {	
+	html, body{
+		--thumbcols:8vw;
+	}
+}
+
+
+/**
+ * From here are the classes for the samplerate overlay
+ */
+.audio-quality {
+	position:relative;
+	float:right;
+	height:3rem;width:3rem;
+	background-size:3rem 3rem;
+	background-repeat:no-repeat;
+	height:3rem;width:3rem;
+	background-position:.5rem 0rem;
+	transform:translate(-17%, -115%);
+	opacity: 0.4;
+}
+
+.audio-quality > div {
+	/* text bottom right*/
+	position: absolute;
+  	bottom: 0;
+	right:0;
+	/*background-color:grey; */
+	mix-blend-mode: difference;
+	text-shadow: 2px 2px 3px #000000;
+}
+
+/* used for compressed files */
+.sq_ {
+	background-image:url('/images/soundquality-overlay/triangle_orange.png');
+}
+
+/* all other used for specific samplerates*/
+.sq_44{
+	background-image: url('/images/soundquality-overlay/triangle_red.png');
+}
+
+.sq_48 {	
+	background-image: url('/images/soundquality-overlay/triangle_red.png');
+}
+
+.sq_88 {
+	background-image: url('/images/soundquality-overlay/triangle_aqua.png');
+}
+
+.sq_96 {
+	background-image: url('/images/soundquality-overlay/triangle_aqua.png');
+	
+}
+
+.sq_192 {
+	background-image: url('/images/soundquality-overlay/triangle_yellow.png');
+}
+
+.sq_384 {
+	background-image: url('/images/soundquality-overlay/triangle_yellow.png');
+}
+
+

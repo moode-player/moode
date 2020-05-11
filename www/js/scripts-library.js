@@ -150,8 +150,9 @@ function groupLib(fullLib) {
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var artist = findAlbumProp(albumTracks, 'artist');
 		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
-        //var year = SESSION.json['library_albumview_sort'] == 'Year' ? getYear(albumTracks) : '';
-        var year = getYear(albumTracks);
+		var year = getYear(albumTracks);
+		var soundquality = findAlbumProp(albumTracks, 'soundquality') ;
+		soundquality = soundquality? soundquality: "";
 		return {
 			last_modified: getLastModified(albumTracks),
             year: year,
@@ -159,6 +160,7 @@ function groupLib(fullLib) {
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
 			artist: albumArtist || artist,
+			soundquality: soundquality,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg'
 		};
 	});
@@ -545,7 +547,8 @@ var renderAlbums = function() {
 
 		output2 += '<li class="lib-entry">'
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
-            + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
+			+ '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
+			+ '<div class="audio-quality sq_'+filteredAlbumCovers[i].soundquality+'"><div class="bottom_aligner">'+filteredAlbumCovers[i].soundquality+'</div></div>'
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
             + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span><span class="album-year">' + albumViewYear + '</span></div></li>';
 	}
