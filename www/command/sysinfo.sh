@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-04-24 TC moOde 6.5.0
+# 2020-MM-DD TC moOde 6.6.0
 #
 
 # check for sudo
@@ -175,7 +175,9 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nInstant play action\t= $library_instant_play\c"
 	echo -e "\nShow tagview genres\t= $library_show_genres\c"
 	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
+	echo -e "\nShow sample rate\t= $library_encoded_at\c"
 	echo -e "\nEllipsis limited text\t= $library_ellipsis_limited_text\c"
+	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
 	echo -e "\nCompilation identifier\t= $library_comp_id\c"
@@ -612,6 +614,8 @@ appearance_modal_state=${arr[133]}
 font_size=${arr[134]}
 volume_step_limit=${arr[135]}
 volume_mpd_max=${arr[136]}
+library_thumbnail_columns=${arr[137]}
+library_encoded_at=${arr[138]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
