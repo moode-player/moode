@@ -781,6 +781,30 @@
  	                    </span>
  	                </div>
 
+					<label class="control-label" for="show-encoded-at">Show sample rate</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-encoded-at" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Text</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">Badge</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-encoded-at-sel"><span class="text">HD only</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-show-encoded-at" class="help-block hide">
+	                    	The bit depth and sample rate used to encode tracks in the Album can be displayed in several formats on or below the cover art. The "HD only" selection displays an HD badge when the sample rate is greater than 44.1 kHz.
+ 	                    </span>
+ 	                </div>
+
 					<label class="control-label" for="ellipsis-limited-text">Ellipsis limited text</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select bootstrap-select-mini">

@@ -421,6 +421,8 @@ function genLibrary($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
+		$ext = getFileExt($flatData['file']);
+
 		$songData = array(
 			'file' => $flatData['file'],
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
@@ -434,7 +436,9 @@ function genLibrary($flat) {
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
 			'time_mmss' => songTime($flatData['Time']),
-			'last_modified' => $flatData['Last-Modified']
+			'last_modified' => $flatData['Last-Modified'],
+			'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? getEncodedAt($flatData, 'default', false) :
+				getEncodedAt($flatData, 'default', true))
 		);
 
 		array_push($lib, $songData);
@@ -502,13 +506,14 @@ function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
+		$ext = getFileExt($flatData['file']);
 
 		$songData = array(
 			'file' => utf8rep($flatData['file']),
-			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')), //r44f add inner brackets
+			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')),
 			'title' => utf8rep(($flatData['Title'] ? $flatData['Title'] : 'Unknown Title')),
 			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
-			'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist')), //r44f add inner brackets
+			'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist')),
 			'album_artist' => utf8rep($flatData['AlbumArtist']),
 			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
 			'year' => utf8rep(getTrackYear($flatData)),
@@ -516,7 +521,9 @@ function genLibraryUTF8Rep($flat) {
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
 			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
-			'last_modified' => $flatData['Last-Modified']
+			'last_modified' => $flatData['Last-Modified'],
+			'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? utf8rep(getEncodedAt($flatData, 'default', false)) :
+				utf8rep(getEncodedAt($flatData, 'default', true)))
 		);
 
 		array_push($lib, $songData);
@@ -2055,16 +2062,26 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 	}
 }
 
-// extract "Audio" metadata from file and format it for display
-function getEncodedAt($song, $outformat) {
-	// outformat 'default' = 16/44.1k FLAC
-	// outformat 'verbose' = 16 bit, 44.1 kHz, Stereo FLAC
+// Extract "Audio" metadata from file and format it for display
+function getEncodedAt($song, $outformat, $use_mpd_format_tag = false) {
+	// $outformat 'default' = 16/44.1k FLAC
+	// $outformat 'verbose' = 16 bit, 44.1 kHz, Stereo FLAC
 	// bit depth is omitted if the format is lossy
 
 	$encoded = 'NULL';
 
-	// radio station
-	if (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && !isset($song['Artist']))) {
+	// Called from genLibrary()
+	if ($use_mpd_format_tag) {
+		$mpd_format_tag = explode(':', $song['Format']);
+		if (getFileExt($song['file']) == 'mp3' || $mpd_format_tag[1] == 'f') {
+			$encoded = formatRate($mpd_format_tag[0]) . ' ' . strtoupper(getFileExt($song['file']));
+		}
+		else {
+			$encoded = $mpd_format_tag[1] . '/' . formatRate($mpd_format_tag[0]) . ' ' . strtoupper(getFileExt($song['file']));
+		}
+	}
+	// Radio station
+	elseif (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && !isset($song['Artist']))) {
 		$encoded = $outformat == 'verbose' ? 'VBR compression' : 'VBR';
 	}
 	// UPnP file
@@ -2082,12 +2099,12 @@ function getEncodedAt($song, $outformat) {
 			return 'File does not exist';
 		}
 
-		// hack to allow file names with accented characters to work when passed to mediainfo via exec()
-		$locale = 'en_GB.utf-8'; // is this still needed?
+		// Hack to allow file names with accented characters to work when passed to mediainfo via exec()
+		$locale = 'en_GB.utf-8'; // Is this still needed?
 		setlocale(LC_ALL, $locale);
 		putenv('LC_ALL=' . $locale);
 
-		// mediainfo
+		// Mediainfo
 		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song['file'] . '"';
 		debugLog($cmd);
 		$result = sysCmd($cmd);
@@ -2104,6 +2121,7 @@ function getEncodedAt($song, $outformat) {
 			$encoded = ($bitdepth == '?' ? formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format : $bitdepth . ' bit, ' . formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format);
 		}
 	}
+
 	return $encoded;
 }
 
@@ -3054,7 +3072,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		//workerLog('enhanceMetadata(): session= ' . $_SESSION['currentfile']);
 		// Only do this code block once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
-			$current['encoded'] = getEncodedAt($song, 'default'); // encoded bit depth and sample rate, r44d1 rm conditional logic
+			$current['encoded'] = getEncodedAt($song, 'default'); // encoded bit depth and sample rate
 			session_start();
 			$_SESSION['currentfile'] = $current['file'];
 			$_SESSION['currentencoded'] = $current['encoded'];

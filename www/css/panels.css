@@ -662,3 +662,8 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #station-path {text-align:center;}
 #track-info-text {text-align:left;}
 .no-tagview-covers {padding-top:.4em;padding-bottom:.4em;}
+/* Show sample rate */
+.encoded-at {display:none}
+.encoded-at-text {font-size:.9em;font-style:italic;color:var(--textvariant);}
+.encoded-at-badge {color:#eee;background:rgba(64,64,64,.5);border-radius:15%;font-size:.8em;font-style:italic;position:absolute;bottom:3.2rem;right:1rem;}
+.encoded-at-hdonly {display:none;color:gold;background:black;border:2px solid gold;border-radius:15%;font-size:.8em;font-style:normal;font-weight:900;padding:.1em .2em 0 .25em;position:absolute;bottom:3.2rem;right:1rem;}

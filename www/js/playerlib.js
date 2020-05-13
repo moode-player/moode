@@ -1917,10 +1917,9 @@ $('.context-menu a').click(function(e) {
             $('#instant-play-action span').text(SESSION.json['library_instant_play']);
             $('#show-genres-column span').text(SESSION.json['library_show_genres']);
             $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
+            $('#show-encoded-at span').text(SESSION.json['library_encoded_at']);
             $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
-
             $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
-
             $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
             $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
             $('#compilation-identifier').val(SESSION.json['library_comp_id']);
@@ -2094,6 +2093,9 @@ $('.btn-appearance-update').click(function(e){
 		$('#show-genres-column span').text() == "Yes" ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 	}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_encoded_at'] != $('#show-encoded-at span').text()) {
+		setLibraryEncodedAt($('#show-encoded-at span').text());
+	}
     if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
 		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel').addClass('limited') : $('#library-panel').removeClass('limited');
 	}
@@ -2128,6 +2130,7 @@ $('.btn-appearance-update').click(function(e){
     SESSION.json['library_instant_play'] = $('#instant-play-action span').text();
     SESSION.json['library_show_genres'] = $('#show-genres-column span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
+    SESSION.json['library_encoded_at'] = $('#show-encoded-at span').text();
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
     SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
     SESSION.json['library_albumview_sort'] = $('#albumview-sort-order span').text().replace('by ', '');
@@ -2197,6 +2200,7 @@ $('.btn-appearance-update').click(function(e){
         'library_instant_play': SESSION.json['library_instant_play'],
         'library_show_genres': SESSION.json['library_show_genres'],
         'library_tagview_covers': SESSION.json['library_tagview_covers'],
+        'library_encoded_at': SESSION.json['library_encoded_at'],
         'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
         'library_thumbnail_columns': SESSION.json['library_thumbnail_columns'],
         'library_albumview_sort': SESSION.json['library_albumview_sort'],
@@ -2229,6 +2233,28 @@ $('.btn-appearance-update').click(function(e){
         }
     );
 });
+
+function setLibraryEncodedAt(option) {
+    $('.encoded-at').removeClass('encoded-at-text');
+    $('.encoded-at').removeClass('encoded-at-badge');
+    $('.encoded-at, .encoded-at-hdonly').css('display', 'none');
+
+    switch (option) {
+        case 'No':
+            break;
+        case 'Text':
+            $('.encoded-at').css('display', 'block');
+            $('.encoded-at').addClass('encoded-at-text');
+            break;
+        case 'Badge':
+            $('.encoded-at').css('display', 'block');
+            $('.encoded-at').addClass('encoded-at-badge');
+            break;
+        case 'HD only':
+            $('.encoded-at-hdonly').css('display', 'block');
+            break;
+    }
+}
 
 function setLibraryThumbnailCols(cols) {
     var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
@@ -2406,6 +2432,9 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
             break;
     	case 'show-tagview-covers-yn':
     		$('#show-tagview-covers span').text($(this).text());
+            break;
+        case 'show-encoded-at-sel':
+    		$('#show-encoded-at span').text($(this).text());
             break;
         case 'ellipsis-limited-text-yn':
     		$('#ellipsis-limited-text span').text($(this).text());
@@ -3174,7 +3203,7 @@ function setLibMenuHeader () {
 			if (GLOBAL.musicScope == 'recent') {
 				$('.view-recents span').show();
 		        LIB.recentlyAddedClicked = true;
-				headerText = "Recently Added";
+				headerText = 'Recently Added (' + getParamOrValue('param', SESSION.json['library_recently_added']) + ')';
 			}
             else {
 				$('.view-all span').show();
