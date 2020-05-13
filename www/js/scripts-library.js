@@ -533,13 +533,29 @@ var renderAlbums = function() {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
         filteredAlbumCovers[i].year ? albumViewYear = '(' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
 
-        // Integer sample rate
-        var tagViewRate = filteredAlbums[i].encoded_at.split(' ');
-        var albumViewRate = filteredAlbumCovers[i].encoded_at.split(' ');
-        tagViewRate = tagViewRate[0].indexOf('/') === -1 ? parseInt(tagViewRate[0]) : parseInt(tagViewRate[0].split('/')[1]);
-        albumViewRate = albumViewRate[0].indexOf('/') === -1 ? parseInt(albumViewRate[0]) : parseInt(albumViewRate[0].split('/')[1]);
-        var tagViewHdDiv = tagViewRate > 44 ? '<div class="encoded-at-hdonly">HD</div>' : '';
-        var albumViewHdDiv = albumViewRate > 44 ? '<div class="encoded-at-hdonly">HD</div>' : '';
+        // Tag view
+        var encodedAt = filteredAlbums[i].encoded_at.split(' ');
+        if (encodedAt[0].indexOf('/') === -1) {
+            var tagViewBits = 16;
+            var tagViewRate = parseInt(encodedAt[0]);
+        }
+        else {
+            var tagViewBits = parseInt(encodedAt[0].split('/')[0]);
+            var tagViewRate = parseInt(encodedAt[0].split('/')[1]);
+        }
+        var tagViewHdDiv = tagViewBits > 16 || tagViewRate > 44 ? '<div class="encoded-at-hdonly">HD</div>' : '';
+
+        // Album view
+        var encodedAt = filteredAlbumCovers[i].encoded_at.split(' ');
+        if (encodedAt[0].indexOf('/') === -1) {
+            var albumViewBits = 16;
+            var albumViewRate = parseInt(encodedAt[0]);
+        }
+        else {
+            var albumViewBits = parseInt(encodedAt[0].split('/')[0]);
+            var albumViewRate = parseInt(encodedAt[0].split('/')[1]);
+        }
+        var albumViewHdDiv = albumViewBits > 16 || albumViewRate > 44 ? '<div class="encoded-at-hdonly">HD</div>' : '';
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
