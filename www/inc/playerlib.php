@@ -421,7 +421,7 @@ function genLibrary($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		$ext = getFileExt($flatData['file']);
+		//$ext = getFileExt($flatData['file']);
 
 		$songData = array(
 			'file' => $flatData['file'],
@@ -437,8 +437,9 @@ function genLibrary($flat) {
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified'],
-			'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? getEncodedAt($flatData, 'default', false) :
-				getEncodedAt($flatData, 'default', true))
+			//'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? getEncodedAt($flatData, 'default', false) :
+			//	getEncodedAt($flatData, 'default', true))
+			'encoded_at' => getEncodedAt($flatData, 'default', true)
 		);
 
 		array_push($lib, $songData);
@@ -506,7 +507,7 @@ function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		$ext = getFileExt($flatData['file']);
+		//$ext = getFileExt($flatData['file']);
 
 		$songData = array(
 			'file' => utf8rep($flatData['file']),
@@ -522,8 +523,10 @@ function genLibraryUTF8Rep($flat) {
 			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified'],
-			'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? utf8rep(getEncodedAt($flatData, 'default', false)) :
-				utf8rep(getEncodedAt($flatData, 'default', true)))
+			//'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? utf8rep(getEncodedAt($flatData, 'default', false)) :
+			//	utf8rep(getEncodedAt($flatData, 'default', true)))
+			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true))
+
 		);
 
 		array_push($lib, $songData);
@@ -2063,21 +2066,31 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 }
 
 // Extract "Audio" metadata from file and format it for display
-function getEncodedAt($song, $outformat, $use_mpd_format_tag = false) {
+function getEncodedAt($song, $outformat, $called_from_genlib = false) {
 	// $outformat 'default' = 16/44.1k FLAC
 	// $outformat 'verbose' = 16 bit, 44.1 kHz, Stereo FLAC
 	// bit depth is omitted if the format is lossy
 
 	$encoded = 'NULL';
+	$ext = getFileExt($song['file']);
 
-	// Called from genLibrary()
-	if ($use_mpd_format_tag) {
-		$mpd_format_tag = explode(':', $song['Format']);
-		if (getFileExt($song['file']) == 'mp3' || $mpd_format_tag[1] == 'f') {
-			$encoded = formatRate($mpd_format_tag[0]) . ' ' . strtoupper(getFileExt($song['file']));
+	// Called from genLibrary() to populate the  element
+	// Returned string is bits:rate:format
+	if ($called_from_genlib) {
+		$mpd_format_tag = explode(':', $song['Format']); // rate:bits:channels
+		// Lossy: return just the format since bit depth has no meaning and bitrate is not known until playback
+		if ($ext == 'mp3' || ($mpd_format_tag[1] == 'f' && $mpd_format_tag[2] <= 2)) {
+			$encoded = strtoupper($ext) . ',s';
 		}
+		// DSD
+		elseif ($ext == 'dsf' || $ext == 'dff') {
+			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song['file'] . '"');
+			$encoded = $result[1] == '' ? 'DSD,h' : formatRate($result[1]) . ' DSD,h';
+		}
+		// PCM or Multichannel PCM
 		else {
-			$encoded = $mpd_format_tag[1] . '/' . formatRate($mpd_format_tag[0]) . ' ' . strtoupper(getFileExt($song['file']));
+			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > 16) || $mpd_format_tag[0] > 44100 ? ',h' : ',s';
+			$encoded = ($mpd_format_tag[1] == 'f' ? '' : $mpd_format_tag[1] . '/') . formatRate($mpd_format_tag[0]) . ' ' . strtoupper($ext) . $hd;
 		}
 	}
 	// Radio station
@@ -2089,7 +2102,7 @@ function getEncodedAt($song, $outformat, $use_mpd_format_tag = false) {
 		$encoded = 'Unknown';
 	}
 	// DSD file
-	elseif (getFileExt($song['file']) == 'dsf' || getFileExt($song['file']) == 'dff') {
+	elseif ($ext == 'dsf' || $ext == 'dff') {
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song['file'] . '"');
 		$encoded = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' Mbps');
 	}

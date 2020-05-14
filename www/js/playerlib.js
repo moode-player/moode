@@ -2251,7 +2251,7 @@ function setLibraryEncodedAt(option) {
             $('.encoded-at').addClass('encoded-at-badge');
             break;
         case 'HD only':
-            $('.encoded-at-hdonly').css('display', 'block');
+            $('.encoded-at-hdonly, .encoded-at-hdonly-tagview').css('display', 'block');
             break;
     }
 }
