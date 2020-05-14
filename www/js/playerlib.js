@@ -2237,7 +2237,7 @@ $('.btn-appearance-update').click(function(e){
 function setLibraryEncodedAt(option) {
     $('.encoded-at').removeClass('encoded-at-text');
     $('.encoded-at').removeClass('encoded-at-badge');
-    $('.encoded-at, .encoded-at-hdonly').css('display', 'none');
+    $('.encoded-at, .encoded-at-hdonly, .encoded-at-hdonly-tagview').css('display', 'none');
 
     switch (option) {
         case 'No':
