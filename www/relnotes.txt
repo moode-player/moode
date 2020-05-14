@@ -31,7 +31,7 @@ Bug fixes
 - FIX: Unhandled "Database locked" error in vol.sh and rotvol.sh
 - FIX: Playlist line 2 left alignment in mobile portrait
 - FIX: Wrong cover artist when album header clicked in Tag view
-- FIX: Recently added header text being set incorrectly
+- FIX: Header text for "Recently added" being set incorrectly
 
 ########################################################
 //
