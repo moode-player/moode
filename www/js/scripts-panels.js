@@ -999,6 +999,7 @@ jQuery(document).ready(function($) { 'use strict';
 			if (filter == '') {
 				$('#searchResetLib').hide();
 				showSearchResetLib = false;
+                $('#searchResetLib').click();
 			}
 
 			$('.albumslist li').each(function() {
