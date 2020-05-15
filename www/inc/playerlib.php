@@ -2065,50 +2065,51 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 	}
 }
 
-// Extract "Audio" metadata from file and format it for display
-function getEncodedAt($song, $outformat, $called_from_genlib = false) {
-	// $outformat 'default' = 16/44.1k FLAC
-	// $outformat 'verbose' = 16 bit, 44.1 kHz, Stereo FLAC
-	// bit depth is omitted if the format is lossy
+// Extract bit depth, sample rate and audio format for display
+function getEncodedAt($song_data, $display_format, $called_from_genlib = false) {
+	// $display_formats: 'default' Ex: 16/44.1k FLAC, 'verbose' Ex: 16 bit, 44.1 kHz, Stereo FLAC
+	// NOTE: Bit depth is omitted if the format is lossy
 
-	$encoded = 'NULL';
-	$ext = getFileExt($song['file']);
+	$encoded_at = 'NULL';
+	$ext = getFileExt($song_data['file']);
 
-	// Called from genLibrary() to populate the  element
-	// Returned string is bits:rate:format
+	// Special sectuon to handle calls from genLibrary() to populate the element "encoded_at"
+	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
+	// Returnesd string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
+	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
 	if ($called_from_genlib) {
-		$mpd_format_tag = explode(':', $song['Format']); // rate:bits:channels
+		$mpd_format_tag = explode(':', $song_data['Format']);
 		// Lossy: return just the format since bit depth has no meaning and bitrate is not known until playback
 		if ($ext == 'mp3' || ($mpd_format_tag[1] == 'f' && $mpd_format_tag[2] <= 2)) {
-			$encoded = strtoupper($ext) . ',s';
+			$encoded_at = strtoupper($ext) . ',l';
 		}
 		// DSD
 		elseif ($ext == 'dsf' || $ext == 'dff') {
-			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song['file'] . '"');
-			$encoded = $result[1] == '' ? 'DSD,h' : formatRate($result[1]) . ' DSD,h';
+			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"');
+			$encoded_at = $result[1] == '' ? 'DSD,h' : formatRate($result[1]) . ' DSD,h';
 		}
 		// PCM or Multichannel PCM
 		else {
 			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > 16) || $mpd_format_tag[0] > 44100 ? ',h' : ',s';
-			$encoded = ($mpd_format_tag[1] == 'f' ? '' : $mpd_format_tag[1] . '/') . formatRate($mpd_format_tag[0]) . ' ' . strtoupper($ext) . $hd;
+			$encoded_at = ($mpd_format_tag[1] == 'f' ? '' : $mpd_format_tag[1] . '/') . formatRate($mpd_format_tag[0]) . ' ' . strtoupper($ext) . $hd;
 		}
 	}
 	// Radio station
-	elseif (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && !isset($song['Artist']))) {
-		$encoded = $outformat == 'verbose' ? 'VBR compression' : 'VBR';
+	elseif (isset($song_data['Name']) || (substr($song_data['file'], 0, 4) == 'http' && !isset($song_data['Artist']))) {
+		$encoded_at = $display_format == 'verbose' ? 'VBR compression' : 'VBR';
 	}
 	// UPnP file
-	elseif (substr($song['file'], 0, 4) == 'http' && isset($song['Artist'])) {
-		$encoded = 'Unknown';
+	elseif (substr($song_data['file'], 0, 4) == 'http' && isset($song_data['Artist'])) {
+		$encoded_at = 'Unknown';
 	}
 	// DSD file
 	elseif ($ext == 'dsf' || $ext == 'dff') {
-		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song['file'] . '"');
-		$encoded = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' Mbps');
+		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"');
+		$encoded_at = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' Mbps');
 	}
 	// PCM file
 	else {
-		if ($song['file'] == '' || !file_exists(MPD_MUSICROOT . $song['file'])) {
+		if ($song_data['file'] == '' || !file_exists(MPD_MUSICROOT . $song_data['file'])) {
 			return 'File does not exist';
 		}
 
@@ -2118,7 +2119,7 @@ function getEncodedAt($song, $outformat, $called_from_genlib = false) {
 		putenv('LC_ALL=' . $locale);
 
 		// Mediainfo
-		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song['file'] . '"';
+		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"';
 		debugLog($cmd);
 		$result = sysCmd($cmd);
 
@@ -2127,15 +2128,15 @@ function getEncodedAt($song, $outformat, $called_from_genlib = false) {
 		$channels = $result[2];
 		$format = $result[3];
 
-		if ($outformat == 'default') {
-			$encoded = ($bitdepth == '?' ? formatRate($samplerate) . ' ' . $format : $bitdepth . '/' . formatRate($samplerate) . ' ' . $format);
+		if ($display_format == 'default') {
+			$encoded_at = ($bitdepth == '?' ? formatRate($samplerate) . ' ' . $format : $bitdepth . '/' . formatRate($samplerate) . ' ' . $format);
 		}
 		else {
-			$encoded = ($bitdepth == '?' ? formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format : $bitdepth . ' bit, ' . formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format);
+			$encoded_at = ($bitdepth == '?' ? formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format : $bitdepth . ' bit, ' . formatRate($samplerate) . ' kHz, ' . formatChan($channels) . ' ' . $format);
 		}
 	}
 
-	return $encoded;
+	return $encoded_at;
 }
 
 function stopSps () {
