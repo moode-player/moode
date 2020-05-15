@@ -532,7 +532,8 @@ var renderAlbums = function() {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
         filteredAlbumCovers[i].year ? albumViewYear = '(' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
 
-        // encoded_at [0] bits/rate format  [1] standard (s) or hd (h)
+        // encoded_at[0] bits/rate format
+        // encoded_at[1] flag: "l" lossy, "s" standard def or "h" high def
         // Tag view
         var encodedAt = filteredAlbums[i].encoded_at.split(',');
         var tagViewHdDiv = encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly-tagview">HD</div>' : '';
