@@ -18,7 +18,7 @@
 New features
 
 - NEW: Option to adjust the number of thumbnail columns
-- NEW: Option to display sample rate in Album view
+- NEW: Option to display sample rate or HD badge in Library
 
 Updates
 
@@ -32,6 +32,7 @@ Bug fixes
 - FIX: Playlist line 2 left alignment in mobile portrait
 - FIX: Wrong cover artist when album header clicked in Tag view
 - FIX: Header text for "Recently added" being set incorrectly
+- FIX: Empty search filter not resetting lib header
 
 ########################################################
 //
