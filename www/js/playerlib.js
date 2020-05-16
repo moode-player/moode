@@ -2236,8 +2236,7 @@ $('.btn-appearance-update').click(function(e){
 
 function setLibraryEncodedAt(option) {
     $('.encoded-at').removeClass('encoded-at-text');
-    $('.encoded-at').removeClass('encoded-at-badge');
-    $('.encoded-at, .encoded-at-hdonly, .encoded-at-hdonly-tagview').css('display', 'none');
+    $('.encoded-at, .encoded-at-badge, .encoded-at-hdonly, .encoded-at-hdonly-tagview').css('display', 'none');
 
     switch (option) {
         case 'No':
@@ -2247,8 +2246,7 @@ function setLibraryEncodedAt(option) {
             $('.encoded-at').addClass('encoded-at-text');
             break;
         case 'Badge':
-            $('.encoded-at').css('display', 'block');
-            $('.encoded-at').addClass('encoded-at-badge');
+			$('.encoded-at-badge').css('display', 'block');
             break;
         case 'HD only':
             $('.encoded-at-hdonly, .encoded-at-hdonly-tagview').css('display', 'block');
