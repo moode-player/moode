@@ -622,9 +622,9 @@
 	                </div>
 
 					<div id="cover-options">
-						<label class="control-label bgimglabel" for="choose-file">Image backdrop</label>
+						<label class="control-label bgimglabel">Image backdrop</label>
 						<div class="controls">
-							<div style="display:inline-block;margin-bottom:.5em;margin-top:-1px">
+							<div class="modal-button-style">
 								<label for="import-bgimage" id="choose-bgimage" class="btn btn-primary btn-small">Choose</label>
 								<input type="file" id="import-bgimage" accept="image/jpeg" style="display:none" onchange="importBgImage(this.files)">
 								<button id="remove-bgimage" class="btn btn-primary btn-small hide">Remove</button>
@@ -1483,12 +1483,34 @@
 		<h3 id="radio-manager-modal-label">Radio Manager</h3>
 	</div>
 	<div class="modal-body">
-		<h4>
-			This space is reserved for the Radio Manager feature which will provide useful options and services for managing your DIY radio station collection.
-		</h4>
-		<h4 class="txtmid">
-			Stay tuned for more!
-		</h4>
+		<!-- IMPORT/EXPORT STATIONS -->
+		<form class="form-horizontal" action="" method="">
+			<div class="control-group">
+				<label class="control-label">Import station package</label>
+				<div class="controls">
+					<div class="modal-button-style">
+						<label for="import-station-pkg" id="choose-station-pkg" class="btn btn-primary btn-medium">Import</label>
+						<input type="file" id="import-station-pkg" accept=".zip" style="display:none" onchange="importStationPkg(this.files)">
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div id="info-import-station-pkg" class="help-block hide">
+						Import a radio station package into the Library.
+					</div>
+				</div>
+
+				<label class="control-label">Export radio stations</label>
+				<div class="controls">
+					<div class="modal-button-style">
+						<button id="export-stations" class="btn btn-primary btn-small">Export</button>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div id="info-export-stations" class="help-block hide">
+						Export and download the radio station database as a package file that can be imported into the Library at a later date. The package file is downloaded to the default "downloads" folder on the client.
+					</div>
+				</div>
+			</div>
+		</form>
+
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
