@@ -352,6 +352,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 .lib-artistname-meta {margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-size:calc(0.40em + 1vmin);font-weight:700;text-align:center;cursor:pointer;}
 .lib-albumyear-meta {display:none;font-size:calc(0.40em + 1vmin);font-weight:normal;text-align:center;}
 .lib-numtracks-meta {font-size:calc(0.40em + 1vmin);font-weight:normal;font-style:italic;color:inherit !important;text-align:center;}
+.lib-encoded-at-meta {font-size:calc(0.40em + 1vmin);font-weight:normal;font-style:italic;color:inherit !important;text-align:center;}
 #lib-content ul {display:table;margin:.25em 0;overflow-x:hidden;width:100%;word-break:break-word;}
 #songsList {padding-bottom:calc(8em + env(safe-area-inset-bottom));margin:.5em .25em !important;}
 #lib-content li {display:block;position:relative;cursor:pointer;text-align:left;font-weight:normal;line-height:1.25em;}
@@ -665,7 +666,55 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 /* Show sample rate */
 .encoded-at {display:none}
 .encoded-at-text {font-size:.85em;font-style:italic;color:var(--textvariant);}
-.encoded-at-badge {position:absolute;width:6.75em;line-height:1.5em;right:1.15rem;bottom:5.6em;color:white;background:rgba(64,64,64,.9);border-radius:10%;font-size:.65em;font-style:normal;font-weight:normal;}
-.encoded-at-hdonly {display:none;position:absolute;width:2em;height:1.25em;line-height:1.5em;right:1.15rem;bottom:5.6em;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.65em;font-style:normal;font-weight:700;}
-.encoded-at-hdonly-tagview {display:none;position:absolute;width:1.6em;height:1.25em;line-height:1.5em;left:2.8rem;bottom:1em;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.39em;font-style:normal;font-weight:600;}
-.modal-button-style {display:inline-block;margin-bottom:.5em;/*margin-top:-1px*/}
+.encoded-at-badge {
+	display:none;
+	position:absolute;
+	float:right;
+	width:6.75em;
+	line-height:1.5em;
+	right:1.15rem;
+	color:white;
+	background:rgba(64,64,64,.9);
+	border-radius:10%;
+	font-size:.65em;
+	font-style:normal;
+	font-weight:normal;
+
+	transform:translate(0%, -195%);
+}
+.encoded-at-hdonly {
+	display:none;
+	position:absolute;
+	float:right;
+	width:2em;
+	height:1.25em;
+	line-height:1.5em;
+	right:1.15rem;
+	color:gold;
+	background:#000;
+	border:1px solid gold;
+	border-radius:10%;
+	box-shadow:1px 1px 3px gold,-1px -1px 3px gold;
+	font-size:.65em;
+	font-style:normal;
+	font-weight:700;
+
+	transform:translate(0%, -195%);
+}
+.encoded-at-hdonly-tagview {
+display:none;
+position:absolute;
+width:1.6em;
+height:1.25em;
+line-height:1.5em;
+left:2.8rem;
+bottom:1em;
+color:gold;
+background:#000;
+border:1px solid gold;
+border-radius:10%;
+box-shadow:1px 1px 3px gold,-1px -1px 3px gold;
+font-size:.39em;
+font-style:normal;
+font-weight:600;
+}
