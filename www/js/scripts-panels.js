@@ -779,20 +779,20 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#db-search-submit').click(function(e) {
 		var searchStr = '';
 		if ($('#dbsearch-alltags').val() != '') {
-			searchStr = $('#dbsearch-alltags').val();
+			searchStr = $('#dbsearch-alltags').val().trim();
 			$.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {renderBrowse(data, '', searchStr);}, 'json');
 		}
 		else {
-			searchStr = $('#dbsearch-genre').val() == '' ? '' : 'genre "' + $('#dbsearch-genre').val() + '"'
-			searchStr += $('#dbsearch-artist').val() == '' ? '' : ' artist "' + $('#dbsearch-artist').val() + '"'
-			searchStr += $('#dbsearch-album').val() == '' ? '' : ' album "' + $('#dbsearch-album').val() + '"'
-			searchStr += $('#dbsearch-title').val() == '' ? '' : ' title "' + $('#dbsearch-title').val() + '"'
-			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : ' albumartist "' + $('#dbsearch-albumartist').val() + '"'
-			searchStr += $('#dbsearch-date').val() == '' ? '' : ' date "' + $('#dbsearch-date').val() + '"'
-			searchStr += $('#dbsearch-composer').val() == '' ? '' : ' composer "' + $('#dbsearch-composer').val() + '"'
-			searchStr += $('#dbsearch-performer').val() == '' ? '' : ' performer "' + $('#dbsearch-performer').val() + '"'
-			searchStr += $('#dbsearch-comment').val() == '' ? '' : ' comment "' + $('#dbsearch-comment').val() + '"'
-			searchStr += $('#dbsearch-file').val() == '' ? '' : ' file "' + $('#dbsearch-file').val() + '"'
+			searchStr = $('#dbsearch-genre').val() == '' ? '' : 'genre "' + $('#dbsearch-genre').val().trim(); + '"'
+			searchStr += $('#dbsearch-artist').val() == '' ? '' : ' artist "' + $('#dbsearch-artist').val().trim(); + '"'
+			searchStr += $('#dbsearch-album').val() == '' ? '' : ' album "' + $('#dbsearch-album').val().trim(); + '"'
+			searchStr += $('#dbsearch-title').val() == '' ? '' : ' title "' + $('#dbsearch-title').val().trim(); + '"'
+			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : ' albumartist "' + $('#dbsearch-albumartist').val().trim(); + '"'
+			searchStr += $('#dbsearch-date').val() == '' ? '' : ' date "' + $('#dbsearch-date').val().trim(); + '"'
+			searchStr += $('#dbsearch-composer').val() == '' ? '' : ' composer "' + $('#dbsearch-composer').val().trim(); + '"'
+			searchStr += $('#dbsearch-performer').val() == '' ? '' : ' performer "' + $('#dbsearch-performer').val().trim(); + '"'
+			searchStr += $('#dbsearch-comment').val() == '' ? '' : ' comment "' + $('#dbsearch-comment').val().trim(); + '"'
+			searchStr += $('#dbsearch-file').val() == '' ? '' : ' file "' + $('#dbsearch-file').val().trim(); + '"'
 			if (searchStr != '') {
 				$.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {renderBrowse(data, '', searchStr);}, 'json');
 			}
@@ -912,7 +912,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		var selector = this;
 		searchTimer = setTimeout(function(){
-			var filter = $(selector).val()
+			var filter = $(selector).val().trim();
 			var count = 0;
 
 			if (filter == '') {
@@ -952,7 +952,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		var selector = this;
 		searchTimer = setTimeout(function(){
-			var filter = $(selector).val()
+			var filter = $(selector).val().trim();
 			var count = 0;
 
 			if (filter == '') {
@@ -993,7 +993,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		var selector = this;
 		searchTimer = setTimeout(function(){
-			var filter = $(selector).val()
+			var filter = $(selector).val().trim();
 			var count = 0;
 
 			if (filter == '') {
@@ -1038,7 +1038,7 @@ jQuery(document).ready(function($) { 'use strict';
 			UI.libPos.fill(-3);
 		}, LIBSEARCH_TIMEOUT);
 
-        var filter = $(this).val();
+        var filter = $(this).val().trim();
 		if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
             if (filter.slice(filter.length - 2) == '!r') {
                 filter = filter.slice(0, filter.length - 2);
@@ -1095,7 +1095,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 		var selector = this;
 		searchTimer = setTimeout(function(){
-			var filter = $(selector).val()
+			var filter = $(selector).val().trim();
 			var count = 0;
 
 			$('.playhistory li').each(function(){
