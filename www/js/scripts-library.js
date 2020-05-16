@@ -539,7 +539,7 @@ var renderAlbums = function() {
         var tagViewHdDiv = encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly-tagview">HD</div>' : '';
         // Album view
         var encodedAt = filteredAlbumCovers[i].encoded_at.split(',');
-		var albumViewHdDiv = encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly">HD</div>' : '';
+        var albumViewHdDiv = encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly">HD</div>' : '';
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
@@ -560,11 +560,10 @@ var renderAlbums = function() {
 		output2 += '<li class="lib-entry">'
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
-			+ albumViewHdDiv
-			+ '<div class="encoded-at-badge">' + encodedAt[0] + '</div>'
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
             + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span><span class="album-year">' + albumViewYear + '</span></div>'
             + '<div class="encoded-at">' + encodedAt[0] + '</div>'
+            + albumViewHdDiv
             + '</li>';
 	}
 
@@ -696,7 +695,6 @@ var renderSongs = function(albumPos) {
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html(filteredSongs[0].year);
 		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
-		$('#lib-encoded-at').html(filteredSongs[0].encoded_at);
 	}
 	else {
 		var album = LIB.filters.genres.length ? LIB.filters.genres : (LIB.filters.artists.length ? LIB.filters.artists : 'Music Library');
@@ -712,7 +710,6 @@ var renderSongs = function(albumPos) {
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html('');
 		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
-		$('#lib-encoded-at').html('');
 	}
 }
 
