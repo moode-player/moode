@@ -254,7 +254,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #lib-album-search {top:50%; transform:translate(0, -50%);width:8rem;}
 #lib-album-filter {width:8rem;}
 /*#pl-search {top:50%; transform:translate(0, -50%);width:11rem;}*/
-#pl-search {left:1rem}
+#pl-search {left:7rem}
 #savepl-modal, #setfav-modal .modal-body {padding:1em .25em 0 .25em;}
 #pl-save {display:block;float:left;margin-right:0;margin-left:0;z-index:1001;width:100%;text-align:center;}
 #pl-search input, #ra-search input, #lib-album-search input {margin:0;border:none;box-shadow:none;min-height:initial;height:2.75rem;font-size:1rem;padding:0;}
@@ -272,13 +272,13 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .reconnect-btn {position:fixed;padding:.75rem;transform: translate(-50%,-50%);top: 50%;left: 50%;width: 10em;text-transform:uppercase;z-index:9999;font-size:1.25em;cursor:pointer;border-radius:5rem;color:var(--themetext);background-color:var(--btnshade4);}
 .reconnect-btn:hover {background-color:var(--btnshade4);} /* Mask hover effect */
 .reconnect-msg {transform: translate(-50%,-50%);position: absolute;top: 50%;margin: 3em 0 0 0;text-transform: uppercase;transform: translate(-50%,-50%);position: absolute;top: 50%;margin: 3em 0 0 0;z-index: 9999;text-transform: uppercase;}
-.viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);background-color:transparent;color:inherit;display:none;z-index:1001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:1rem;transform:none;}
+.viewswitch {position:fixed;top:0;top:env(safe-area-inset-top);background-color:transparent;color:inherit;z-index:2001;line-height:2.75rem;font-size:inherit;transform:translate(-50%, 0%);height:2.75rem;align-items:center;left:1rem;transform:none;}
 .viewswearch {height:2.25rem;padding:1.5rem 0 1.5rem 1rem !important;}
-#viewswitch span {float:right;display:none;}
+#viewswitch span {float:right;}
 #searchResetLib {padding:.25em;position:relative;top:50%;transform:translate(0, -50%);font-size:1.2rem;}
 #viewswitch a {color:inherit;}
 .viewswitch div {display:flex;color:var(--adapttext);}
-.viewswitch .btn {position:relative;width:100%;line-height:normal;font-size:1.1rem;padding:.75rem 1rem;background-color:transparent;text-align:left;color:var(--textvariant);}
+.viewswitch .btn {position:relative;width:100%;line-height:normal;font-size:1.1rem;padding:.75rem 1rem;background-color:transparent;text-align:left;}
 .viewswitch .btn.active {color:inherit;}
 .viewswitch .btn:hover {background-color:var(--accentxta);}
 #viewswitch-search:hover {background-color:inherit;}
@@ -388,7 +388,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #albumcovers .album-name {display:block !important;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
 #albumcovers .artist-name, #albumcovers .album-year {margin:0 .15em;}
-#random-album {position:absolute;top:env(safe-area-inset-top);left:7rem;line-height:2.75rem;height:2.75rem;transform:none;padding:.15em .5em 0 .5em;cursor:pointer;}
+#random-album {position:absolute;top:env(safe-area-inset-top);left:8rem;line-height:2.75rem;height:2.75rem;transform:none;padding:.15em .5em 0 .5em;cursor:pointer;}
 #random-album i {font-size:1.1rem;color:var(--adapttext);opacity:.35;}
 /* coverview screen saver */
 #screen-saver {color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}

@@ -725,9 +725,9 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 		LIB.artistClicked = false;
 		$("#searchResetLib").hide();
 		showSearchResetLib = false;
-		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
-			GLOBAL.musicScope = 'all';
-		}
+		//if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
+		//	GLOBAL.musicScope = 'all';
+		//}
 		GLOBAL.searchLib = '';
 		if (currentView == 'album') {
 			$('#albumcovers .lib-entry').removeClass('active');
@@ -735,6 +735,7 @@ $('#genreheader, #menu-header').on('click', function(e) { // reset all tags, etc
 			$('#lib-albumcover').css('height', '100%');
 		}
 		setLibMenuHeader();
+		getRecentsMenu();
 	}
 	if (currentView == 'radio') {
 		GLOBAL.searchRadio = '';

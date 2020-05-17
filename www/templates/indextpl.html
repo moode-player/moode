@@ -41,7 +41,7 @@
 		<div class="btnlist btnlist-top btnlist-top-pl">
 			<form id="pl-search" method="post" onSubmit="return false;">
 				<div class="input-append">
-					<input id="pl-filter" type="text" value="" placeholder="search">
+					<input id="pl-filter" type="text" value="" placeholder="search track">
 				</div>
 				<button aria-label="Reset" id="searchResetPl" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
 			</form>
@@ -81,14 +81,14 @@
 					</div>
 					<div id="volzone">
 						<div id="volknob">
-							<div id="volcontrol" class='volume-step-limiter'>
+							<div id="volcontrol" class="volume-step-limiter">
 
 								<input aria-label="Volume" readonly class="volumeknob" id="volume" data-min="0" data-max="100" step="10" data-width="100%" data-thickness=".13" data-bgColor="rgba(50,50,50,0.5)" data-fgColor="transparent" data-readOnly="false" data-cursor="false" data-angleArc="340" data-angleOffset="-170">
 							</div>
 							<div id="volbtns">
 								<button aria-label="Volume Up" id="volumeup" class="btn btn-cmd btn-volume">+</button>
 								<div aria-label="Volume Display" class="volume-display" href="#notarget"><div></div></div>
-								<button aria-label="Volume Down" id="volumedn" class="btn btn-cmd btn-volume">−</i></button>
+								<button aria-label="Volume Down" id="volumedn" class="btn btn-cmd btn-volume">−</button>
 							</div>
 						</div>
 					</div>
@@ -136,9 +136,9 @@
 	</div>
 
 	<!-- LIBRARY VIEWSWITCH MENU -->
-	<div id="viewswitch" class="viewswitch hide">
+	<div id="viewswitch" class="viewswitch">
 		<div class="dropdown">
-			<a aria-label="Tabs" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
+			<a aria-label="Tabs" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Playback<i class="fas fa-chevron-down"></i></a>
 			<ul class="dropdown-menu context-menu" role="menu">
 				<button aria-label="Search" id="viewswitch-search" class="viewswearch btn menu-separator">
 					<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
@@ -146,10 +146,11 @@
 					</form>
 					<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
 				</button>
-				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio</button>
-				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder</button>
-				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag</button>
-				<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Album</button>
+				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio<span class="pane"><i class="fal fa-check"></i></span></button>
+				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder<span class="pane"><i class="fal fa-check"></i></span></button>
+				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
+				<button aria-label="Album" class="btn album-view-btn" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
+                <button aria-label="Playback" class="btn playback-view-btn menu-separator" href="#playback-panel"><i class="fas fa-play"></i> Playback<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="All Music" class="btn view-all" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
 				<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
 			</ul>
