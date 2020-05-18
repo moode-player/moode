@@ -20,6 +20,7 @@ New features
 - NEW: Option to adjust the number of thumbnail columns
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
+- NEW: Basic first use help 
 
 Updates
 
