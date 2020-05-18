@@ -401,7 +401,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-title {font-size:1rem;}
 	img.coverart {width:55vh;}
 }
-@media (height:479px) and (width:799px) {
+@media (min-height:443px) and (width:799px) { /* 443 = Square pixel AR, 479 = Default pixel AR */
 	.playlist .pll1 {font-size:1rem;}
 	.playlist .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
 	.playlist .pl-action {padding:1rem 0;}
