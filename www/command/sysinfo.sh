@@ -196,7 +196,8 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nFont size\t\t= $font_size\c"
 	echo -e "\nAuto-shuffle filter\t= $ashuffle_filter\c"
 	echo -e "\nExtra metadata\t\t= $xtagdisp\c"
-	echo -e "\nPlayback history\t= $playhist\n"
+	echo -e "\nPlayback history\t= $playhist\c"
+	echo -e "\nFirst use help\t\t= $first_use_help\n"
 }
 
 MPD_SETTINGS() {
@@ -616,6 +617,7 @@ volume_step_limit=${arr[135]}
 volume_mpd_max=${arr[136]}
 library_thumbnail_columns=${arr[137]}
 library_encoded_at=${arr[138]}
+first_use_help=${arr[139]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

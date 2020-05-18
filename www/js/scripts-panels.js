@@ -78,6 +78,11 @@ jQuery(document).ready(function($) { 'use strict';
     	// set the font size
     	setFontSize();
 
+        // Show/hide first use help
+        var firstUseHelp = SESSION.json['first_use_help'].split(',');
+        if (firstUseHelp[0] == 'y') {$('#playback-firstuse-help').css('display', 'block');}
+        if (firstUseHelp[1] == 'y') {$('#playbar-firstuse-help').css('display', 'block');}
+
     	// compile the ignore articles regEx
     	if (SESSION.json['library_ignore_articles'] != 'None') {
     		GLOBAL.regExIgnoreArticles = new RegExp('^(' + SESSION.json['library_ignore_articles'].split(',').join('|') + ') (.*)', 'gi');
@@ -1291,6 +1296,16 @@ jQuery(document).ready(function($) { 'use strict';
                 $.get('command/moode.php?cmd=resetscnsaver');
             }, 3000);
         }
+    });
+
+    // First use help
+    $('#playback-firstuse-help i').click(function(e) {
+        $('#playback-firstuse-help').css('display', 'none');
+        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': 'n,' + SESSION.json['first_use_help'].split(',')[1]});
+    });
+    $('#playbar-firstuse-help i').click(function(e) {
+        $('#playbar-firstuse-help').css('display', 'none');
+        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help'].split(',')[0] + ',n'});
     });
 
 	// Info button (i) show/hide toggle
