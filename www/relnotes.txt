@@ -19,6 +19,7 @@ New features
 
 - NEW: Option to adjust the number of thumbnail columns
 - NEW: Option to display sample rate or HD badge in Library
+- NEW: Filter Library by sample rate and/or audio format
 
 Updates
 
@@ -33,6 +34,7 @@ Bug fixes
 - FIX: Wrong cover artist when album header clicked in Tag view
 - FIX: Header text for "Recently added" being set incorrectly
 - FIX: Empty search filter not resetting lib header
+- FIX: No media query for Pi Touch 443 x 799 viewport (Sq Pixels)
 
 ########################################################
 //
