@@ -117,7 +117,7 @@ var GLOBAL = {
     plActionClicked: false,
     mpdMaxVolume: 0,
     lastTimeCount: 0
-}
+};
 
 // live timeline
 var timeSliderMove = false;
@@ -1690,7 +1690,7 @@ $('#currentsong').click(function(e) {
 
 // all music menu item
 $('.view-all').click(function(e) {
-	$('#viewswitch span').hide();
+	$('.view-recents span').hide();
 	$('.view-all span').show();
 	$('#menu-header').click()
 	GLOBAL.musicScope = 'all';
@@ -1712,7 +1712,7 @@ $('.view-all').click(function(e) {
 // recently played menu item
 $('.view-recents').click(function(e) {
 	GLOBAL.musicScope = 'recent';
-	$('#viewswitch span').hide();
+	$('.view-all span').hide();
 	$('.view-recents span').show();
     LIB.recentlyAddedClicked = true;
 	LIB.filters.albums.length = 0;
@@ -3121,35 +3121,36 @@ function makeActive (vswitch, panel, view) {
 
 	currentView = view;
 	setColors();
-
+	setLibMenuHeader();
+	$('#viewswitch span.pane').hide();	
 	switch (view) {
 		case 'radio':
-            lazyLode('radio')
+			lazyLode('radio');
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
 			$('#viewswitch .album-view-btn').removeClass('menu-separator');
-			setLibMenuHeader();
+			$('.radio-view-btn .pane').show();
 			break;
-        case 'folder':
+		case 'folder':
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
 			$('#viewswitch .album-view-btn').removeClass('menu-separator');
-			setLibMenuHeader();
+			$('.folder-view-btn .pane').show();
 			break;
 		case 'album':
-            lazyLode('album')
+			lazyLode('album');
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
+			$('.album-view-btn .pane').show();  
 			$('#library-panel').addClass('covers').removeClass('tag');
 			$('#bottom-row').css('display', '');
 			$('#lib-albumcover').css('height', '100%');
-			setLibMenuHeader();
 			break;
 		case 'tag':
-            lazyLode('tag')
+			lazyLode('tag');
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
+			$('.tag-view-btn .pane').show();
 			$('#library-panel').addClass('tag').removeClass('covers');
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
-			setLibMenuHeader();
 			break;
 	}
 	//const duration = performance.now() - startTime;
@@ -3178,7 +3179,8 @@ function setLibMenuHeader () {
 		}
         else {
 			currentView == 'album' ? headerText += SESSION.json['library_albumview_sort'] : headerText += SESSION.json['library_tagview_sort'];
-			$('#viewswitch span').hide();
+			$('.view-recents span').hide();
+			$('.view-all span').hide();  
 
 			if (GLOBAL.musicScope == 'recent') {
 				$('.view-recents span').show();

@@ -278,7 +278,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #searchResetLib {padding:.25em;position:relative;top:50%;transform:translate(0, -50%);font-size:1.2rem;}
 #viewswitch a {color:inherit;}
 .viewswitch div {display:flex;color:var(--adapttext);}
-.viewswitch .btn {position:relative;width:100%;line-height:normal;font-size:1.1rem;padding:.75rem 1rem;background-color:transparent;text-align:left;color:var(--textvariant);}
+.viewswitch .btn {position:relative;width:100%;line-height:normal;font-size:1.1rem;padding:.75rem 1rem;background-color:transparent;text-align:left;}
 .viewswitch .btn.active {color:inherit;}
 .viewswitch .btn:hover {background-color:var(--accentxta);}
 #viewswitch-search:hover {background-color:inherit;}

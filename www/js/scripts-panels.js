@@ -1054,7 +1054,8 @@ jQuery(document).ready(function($) { 'use strict';
 				LIB.filters.albums.length = 0;
 				$('#menu-header').text('Albums from ' + LIB.filters.year[0] + (LIB.filters.year[1] ? ' to ' + LIB.filters.year[1] : ''));
 				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
-				$('#viewswitch span').hide();
+				$('.view-recents span').hide();
+				$('.view-all span').hide();  
 				UI.libPos.fill(-2);
 				filterLib();
 			    renderAlbums();
