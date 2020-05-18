@@ -59,7 +59,9 @@ function getParamOrValue (type, key) {
         // Library cover search priority
         ['Embedded','Embedded cover'],['Cover file','Cover image file'],
         // Font size factors
-        ['Smaller',.35],['Small',.40],['Normal',.45],['Large',.55],['Larger',.65],['X-Large',.75]
+        ['Smaller',.35],['Small',.40],['Normal',.45],['Large',.55],['Larger',.65],['X-Large',.75],
+        // Sample rate display options
+        ['No (searchable)',0],['HD only',1],['Text',2],['Badge',3],['No',9]
     ]);
 
     if (type == 'value') {

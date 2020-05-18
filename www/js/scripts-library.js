@@ -528,27 +528,34 @@ var renderAlbums = function() {
     // Clear search filter and results
 	$('#lib-album-filter').val('');
 
+    // SESSION.json['library_encoded_at']
+    // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
+    var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
+
 	for (var i = 0; i < filteredAlbums.length; i++) {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
         filteredAlbumCovers[i].year ? albumViewYear = '(' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
 
-        // encoded_at[0] bits/rate format
-        // encoded_at[1] flag: "l" lossy, "s" standard def or "h" high def
+        // filteredAlbums[i].encoded_at
+        // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
         // Tag view
-        var encodedAt = filteredAlbums[i].encoded_at.split(',');
-        var tagViewHdDiv = encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly-tagview">HD</div>' : '';
+        var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="encoded-at-hdonly-tagview">HD</div>' : '';
+        var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
         // Album view
         var encodedAt = filteredAlbumCovers[i].encoded_at.split(',');
-		var albumViewHdDiv = encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly">HD</div>' : '';
+        var albumViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + filteredAlbumCovers[i].encoded_at.split(',')[0] + '</div>' : '';
+        var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly">HD</div>' : '';
+        var albumViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + encodedAt[0] + '</div>' : '';
+        var albumViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + encodedAt[0] + '</div>' : '';
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
                 + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
+                + tagViewHdDiv
                 + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album + '</span>'
                 + '<span class="artist-name-art">' + filteredAlbums[i].artist + '</span>'
                 + '<span class="album-year">' + tagViewYear + '</span></div>'
-                + '<div class="encoded-at">' + filteredAlbums[i].encoded_at + '</div>'
-                + tagViewHdDiv
+                + tagViewNvDiv
                 + '</li>';
         }
 		else {
@@ -561,10 +568,11 @@ var renderAlbums = function() {
             + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
 			+ albumViewHdDiv
-			+ '<div class="encoded-at-badge">' + encodedAt[0] + '</div>'
+			+ albumViewBgDiv
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
             + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span><span class="album-year">' + albumViewYear + '</span></div>'
-            + '<div class="encoded-at">' + encodedAt[0] + '</div>'
+            + albumViewTxDiv
+            + albumViewNvDiv
             + '</li>';
 	}
 
@@ -582,9 +590,6 @@ var renderAlbums = function() {
 	if (SESSION.json["library_ellipsis_limited_text"] == "Yes") {
 		$('#library-panel').addClass('limited');
 	}
-
-    // Set encoded at
-    setLibraryEncodedAt(SESSION.json['library_encoded_at']);
 
 	// Headers clicked
 	if (UI.libPos[0] == -2) {

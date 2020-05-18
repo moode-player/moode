@@ -1917,7 +1917,7 @@ $('.context-menu a').click(function(e) {
             $('#instant-play-action span').text(SESSION.json['library_instant_play']);
             $('#show-genres-column span').text(SESSION.json['library_show_genres']);
             $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
-            $('#show-encoded-at span').text(SESSION.json['library_encoded_at']);
+            $('#show-encoded-at span').text(getParamOrValue('param', SESSION.json['library_encoded_at']));
             $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
             $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
             $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
@@ -2069,6 +2069,7 @@ $('.btn-appearance-update').click(function(e){
     var extraTagsChange = false;
     var playHistoryChange = false;
 	var fontSizeChange = false;
+    var encodedAtChange = false;
 
 	// Set open/closed state for accordion headers
 	var temp = [0,0,0,0];
@@ -2093,9 +2094,7 @@ $('.btn-appearance-update').click(function(e){
 		$('#show-genres-column span').text() == "Yes" ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 	}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_encoded_at'] != $('#show-encoded-at span').text()) {
-		setLibraryEncodedAt($('#show-encoded-at span').text());
-	}
+    if (SESSION.json['library_encoded_at'] != getParamOrValue('value', $('#show-encoded-at span').text())) {encodedAtChange = true;}
     if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
 		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel').addClass('limited') : $('#library-panel').removeClass('limited');
 	}
@@ -2130,7 +2129,7 @@ $('.btn-appearance-update').click(function(e){
     SESSION.json['library_instant_play'] = $('#instant-play-action span').text();
     SESSION.json['library_show_genres'] = $('#show-genres-column span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
-    SESSION.json['library_encoded_at'] = $('#show-encoded-at span').text();
+    SESSION.json['library_encoded_at'] = getParamOrValue('value', $('#show-encoded-at span').text());
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
     SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
     SESSION.json['library_albumview_sort'] = $('#albumview-sort-order span').text().replace('by ', '');
@@ -2227,32 +2226,15 @@ $('.btn-appearance-update').click(function(e){
                     location.reload(true);
                 }, 2000);
             }
+            else if (encodedAtChange) {
+                loadLibrary();
+            }
             else {
                 notify('settings_updated');
             }
         }
     );
 });
-
-function setLibraryEncodedAt(option) {
-    $('.encoded-at').removeClass('encoded-at-text');
-    $('.encoded-at, .encoded-at-badge, .encoded-at-hdonly, .encoded-at-hdonly-tagview').css('display', 'none');
-
-    switch (option) {
-        case 'No':
-            break;
-        case 'Text':
-            $('.encoded-at').css('display', 'block');
-            $('.encoded-at').addClass('encoded-at-text');
-            break;
-        case 'Badge':
-			$('.encoded-at-badge').css('display', 'block');
-            break;
-        case 'HD only':
-            $('.encoded-at-hdonly, .encoded-at-hdonly-tagview').css('display', 'block');
-            break;
-    }
-}
 
 function setLibraryThumbnailCols(cols) {
     var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
