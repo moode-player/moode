@@ -3122,7 +3122,7 @@ function makeActive (vswitch, panel, view) {
 	currentView = view;
 	setColors();
 	setLibMenuHeader();
-	$('#viewswitch span.pane').hide();	
+	$('#viewswitch span.pane').hide();
 	switch (view) {
 		case 'radio':
 			lazyLode('radio');
@@ -3139,7 +3139,7 @@ function makeActive (vswitch, panel, view) {
 			lazyLode('album');
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
-			$('.album-view-btn .pane').show();  
+			$('.album-view-btn .pane').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
 			$('#bottom-row').css('display', '');
 			$('#lib-albumcover').css('height', '100%');
@@ -3180,7 +3180,7 @@ function setLibMenuHeader () {
         else {
 			currentView == 'album' ? headerText += SESSION.json['library_albumview_sort'] : headerText += SESSION.json['library_tagview_sort'];
 			$('.view-recents span').hide();
-			$('.view-all span').hide();  
+			$('.view-all span').hide();
 
 			if (GLOBAL.musicScope == 'recent') {
 				$('.view-recents span').show();
