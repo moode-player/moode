@@ -20,13 +20,14 @@ New features
 - NEW: Option to adjust the number of thumbnail columns
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
-- NEW: Basic first use help 
+- NEW: Basic first use help for Playback/Playbar switch
 
 Updates
 
 - UPD: Use MusicBrainz date tags if present in track
 - UPD: Add X-Large font size option to Appearance
-- UPD: Style of renderer active and restart/shutdown overlays
+- UPD: Improve renderer active and restart/shutdown overlays
+- UPD: Use check mark style on Library menu
 
 Bug fixes
 
