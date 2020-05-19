@@ -1264,7 +1264,7 @@ function formatBrowseData(data, path, i, panel) {
 			if (data[i].file.substr(0, 5) == 'RADIO') {
 				if (panel == 'radio_panel') {
 					var imgurl = '../images/radio-logos/thumbs/' + filename.replace(path + '/', '') + '.jpg';
-					output += '"><div class="db-icon db-song db-browse db-action"><img class="lazy-radioview" data-original="' + imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action"><img class="lazy-radioview" loading="lazy" data-original="' + imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
 				}
 				else {
 					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-radio-item"><i class="fas fa-microphone sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
@@ -3201,32 +3201,49 @@ function setLibMenuHeader () {
 	$('#menu-header').text(headerText);
 }
 
+/**
+ * Enable lazy loading of images for a certain view.
+ * Instead of src the image should have a data-original.
+ * 
+ * When the client doesn't supports native lazy loading the library jquery.lazyload is used.
+ * 
+ * @param {string} view - the view for lazy loading
+ */
 function lazyLode(view) {
-    //console.log('lazylode', view);
+	var container,
+		selector;
+		
 	switch (view) {
 		case 'radio':
-			setTimeout(function(){
-				$('img.lazy-radioview').lazyload({
-				    container: $('#radiocovers')
-				});
-			}, LAZYLOAD_TIMEOUT);
+			selector = 'img.lazy-radioview';
+			container = '#radiocovers';
 			break;
 		case 'tag':
-            if (SESSION.json['library_tagview_covers'] == 'No') {return;}
-			setTimeout(function(){
-				$('img.lazy-tagview').lazyload({
-				    container: $('#lib-album')
-				});
-			}, LAZYLOAD_TIMEOUT);
+            if (SESSION.json['library_tagview_covers'] == 'No') {break;}
+			selector = 'img.lazy-tagview';
+			container = '#lib-albums';
 			break;
 		case 'album':
+			selector = 'img.lazy-albumview';
+			container = '#lib-albumcover';
+			break;
+	}
+
+	if( selector && container) {
+		if ('loading' in HTMLImageElement.prototype) {
+			const images = document.querySelectorAll(selector);
+			images.forEach(img => {
+				img.src = img.dataset.original; // set the url back to the src				
+			});			
+		} else {		
 			setTimeout(function(){
-				$('img.lazy-albumview').lazyload({
-				    container: $('#lib-albumcover')
+				$(selector).lazyload({
+					container: $(container)
 				});
 			}, LAZYLOAD_TIMEOUT);
-			break;
 		}
+    }
+
 }
 
 function setFontSize() {

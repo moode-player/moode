@@ -550,7 +550,7 @@ var renderAlbums = function() {
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
-                + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
+                + '<img class="lazy-tagview" loading="lazy" data-original="' + filteredAlbums[i].imgurl + '">'
                 + tagViewHdDiv
                 + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album + '</span>'
                 + '<span class="artist-name-art">' + filteredAlbums[i].artist + '</span>'
@@ -565,7 +565,7 @@ var renderAlbums = function() {
         }
 
 		output2 += '<li class="lib-entry">'
-            + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
+            + '<img class="lazy-albumview" loading="lazy" data-original="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
 			+ albumViewHdDiv
 			+ albumViewBgDiv
@@ -604,14 +604,10 @@ var renderAlbums = function() {
 
 	// Start lazy load
 	if ($('.album-view-btn').hasClass('active')) {
-		$('img.lazy-albumview').lazyload({
-			container: $('#lib-albumcover')
-		});
+		lazyLode('album');
 	}
 	else if ($('.tag-view-btn').hasClass('active') && SESSION.json['library_tagview_covers'] == 'Yes') {
-		$('img.lazy-tagview').lazyload({
-		    container: $('#lib-album')
-		});
+		lazyLode('tag');
 	}
 
 	renderSongs();
