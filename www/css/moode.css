@@ -98,7 +98,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .help-block-modal {margin:0 !important;}
 /* dropdown menus */
 .dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1.1rem;white-space:nowrap;}
-.dropdown-menu {float:right;position:absolute;min-width:260px;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;white-space:normal;}
+.dropdown-menu {float:right;position:absolute;min-width:230px;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;white-space:normal;}
 .dropdown-menu.open {padding:0;margin:0;}
 .bootstrap-select .dropdown-menu {background-color:transparent;}
 .btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.3);box-shadow:none;border-radius:4px;}
@@ -108,7 +108,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* modal test */
 .modal {min-width:55vw;top:0;top:env(safe-area-inset-top);transition:none;background-color:transparent;color:var(--adapttext);box-shadow:none;}
 .modal .control-label {float:left;padding-top:0;line-height:24px;}
-.modal .btn.btn-primary.btn-small {background:var(--btnshade4);}
+.modal .btn.btn-primary.btn-small, .modal .btn.btn-primary.btn-medium {background:var(--btnshade4);}
 .modal .controls input {min-height:26px !important;}
 .modal .dropdown-menu.inner {background-color:var(--adaptmbg);color:var(--adapttext);}
 .modal .modal-dropdown-text {color:inherit;}
