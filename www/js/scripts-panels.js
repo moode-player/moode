@@ -901,6 +901,16 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-logoimage').val('');
 		$('#preview-new-logoimage').html('');
         $('#info-toggle-new-logoimage').css('margin-left','unset');
+
+        $('#new-station-tags').css('margin-top', '0');
+        $('#new-station-genre').val('');
+        $('#new-station-broadcaster').val('');
+        $('#new-station-language').val('');
+        $('#new-station-country').val('');
+        $('#new-station-region').val('');
+        $('#new-station-bitrate').val('');
+        $('#new-station-format').val('');
+
 		$('#newstation-modal').modal();
 	});
     $('#newstation-modal').on('shown.bs.modal', function() {
@@ -1055,7 +1065,7 @@ jQuery(document).ready(function($) { 'use strict';
 				$('#menu-header').text('Albums from ' + LIB.filters.year[0] + (LIB.filters.year[1] ? ' to ' + LIB.filters.year[1] : ''));
 				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
 				$('.view-recents span').hide();
-				$('.view-all span').hide();  
+				$('.view-all span').hide();
 				UI.libPos.fill(-2);
 				filterLib();
 			    renderAlbums();

@@ -1792,6 +1792,16 @@ $('.context-menu a').click(function(e) {
             $('#edit-logoimage').val('');
             $('#info-toggle-edit-logoimage').css('margin-left','60px');
             $('#preview-edit-logoimage').html('<img src="../images/radio-logos/thumbs/' + stationName + '.jpg">');
+
+            $('#edit-station-tags').css('margin-top', '30px');
+            $('#edit-station-genre').val('');
+            $('#edit-station-broadcaster').val('');
+            $('#edit-station-language').val('');
+            $('#edit-station-country').val('');
+            $('#edit-station-region').val('');
+            $('#edit-station-bitrate').val('');
+            $('#edit-station-format').val('');
+
     		$('#editstation-modal').modal();
         }, 'json');
 	}
@@ -2307,6 +2317,7 @@ function newLogoImage(files) {
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
 	$('#preview-new-logoimage').html("<img src='" + imgUrl + "' />");
 	$('#info-toggle-new-logoimage').css('margin-left','60px');
+    $('#new-station-tags').css('margin-top', '30px');
 	var stationName = $('#new-station-name').val();
 	URL.revokeObjectURL(imgUrl);
 	var reader = new FileReader();

@@ -1405,7 +1405,7 @@
 					<label class="control-label" for="new-radiologo">Logo image</label>
 					<div class="controls">
 						<div style="display:inline-block;">
-							<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small">Choose</label>
+							<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 							<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newLogoImage(this.files)">
 						</div>
 						<div id="preview-new-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
@@ -1414,6 +1414,37 @@
 						<div id="info-new-logoimage" class="help-block hide">
 							Add a JPEG logo image for the station. Max image size is 1MB.
 						</div>
+					</div>
+
+					<div id="new-station-tags">
+						<label class="control-label" for="new-station-genre">Genre</label>
+						<div class="controls">
+							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" size="200" value="">
+						</div>
+						<label class="control-label" for="new-station-broadcaster">Broadcaster</label>
+						<div class="controls">
+		                    <input id="new-station-broadcaster" class="input-xlarge" type="text" name="new_station_broadcaster" size="200" value="">
+		                </div>
+						<label class="control-label" for="new-station-language">Language</label>
+						<div class="controls">
+		                    <input id="new-station-language" class="input-xlarge" type="text" name="new_station_language" size="200" value="">
+		                </div>
+						<label class="control-label" for="new-station-country">Country</label>
+						<div class="controls">
+		                    <input id="new-station-country" class="input-xlarge" type="text" name="new_station_country" size="200" value="">
+		                </div>
+						<label class="control-label" for="new-station-region">Region</label>
+						<div class="controls">
+		                    <input id="new-station-region" class="input-xlarge" type="text" name="new_station_region" size="200" value="">
+		                </div>
+						<label class="control-label" for="new-station-bitrate">Bit rate</label>
+						<div class="controls">
+		                    <input id="new-station-bitrate" class="input-xlarge" type="text" name="new_station_bitrate" size="200" value="">
+		                </div>
+						<label class="control-label" for="new-station-format">Audio format</label>
+						<div class="controls">
+		                    <input id="new-station-format" class="input-xlarge" type="text" name="new_station_format" size="200" value="">
+		                </div>
 					</div>
 	            </div>
 	    	</fieldset>
@@ -1446,7 +1477,7 @@
 					<label class="control-label" for="edit-radiologo">Logo image</label>
 					<div class="controls">
 						<div style="display:inline-block;">
-							<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small">Choose</label>
+							<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 							<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editLogoImage(this.files)">
 						</div>
 						<div id="preview-edit-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
@@ -1455,6 +1486,37 @@
 						<div id="info-edit-logoimage" class="help-block hide">
 							Add a JPEG logo image for the station. Max image size is 1MB.
 						</div>
+					</div>
+
+					<div id="edit-station-tags">
+						<label class="control-label" for="edit-station-genre">Genre</label>
+						<div class="controls">
+							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" size="200" value="">
+						</div>
+						<label class="control-label" for="edit-station-broadcaster">Broadcaster</label>
+						<div class="controls">
+		                    <input id="edit-station-broadcaster" class="input-xlarge" type="text" name="edit_station_broadcaster" size="200" value="">
+		                </div>
+						<label class="control-label" for="edit-station-language">Language</label>
+						<div class="controls">
+		                    <input id="edit-station-language" class="input-xlarge" type="text" name="edit_station_language" size="200" value="">
+		                </div>
+						<label class="control-label" for="edit-station-country">Country</label>
+						<div class="controls">
+		                    <input id="edit-station-country" class="input-xlarge" type="text" name="edit_station_country" size="200" value="">
+		                </div>
+						<label class="control-label" for="edit-station-region">Region</label>
+						<div class="controls">
+		                    <input id="edit-station-region" class="input-xlarge" type="text" name="edit_station_region" size="200" value="">
+		                </div>
+						<label class="control-label" for="edit-station-bitrate">Bit rate</label>
+						<div class="controls">
+		                    <input id="edit-station-bitrate" class="input-xlarge" type="text" name="edit_station_bitrate" size="200" value="">
+		                </div>
+						<label class="control-label" for="edit-station-format">Audio format</label>
+						<div class="controls">
+		                    <input id="edit-station-format" class="input-xlarge" type="text" name="edit_station_format" size="200" value="">
+		                </div>
 					</div>
 	            </div>
 	    	</fieldset>
