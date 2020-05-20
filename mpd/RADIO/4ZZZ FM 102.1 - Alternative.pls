@@ -1,5 +1,5 @@
 [playlist]
-File1=http://stream.4zzzfm.org.au:789
+File1=https://stream.4zzz.org.au:9200/4zzz
 Title1=4ZZZ FM 102.1 - Alternative
 NumberOfEntries=1
 Length1=-1

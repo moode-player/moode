@@ -29,6 +29,11 @@ Updates
 - UPD: Improve renderer active and restart/shutdown overlays
 - UPD: Use check mark style on Library menu
 
+Radio stations
+
+- UPD: Playable url for 4ZZZ FM
+- UPD: Station logos for Absolut stations
+
 Bug fixes
 
 - FIX: Unhandled "Database locked" error in vol.sh and rotvol.sh
