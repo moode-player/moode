@@ -616,7 +616,17 @@ font_size=${arr[134]}
 volume_step_limit=${arr[135]}
 volume_mpd_max=${arr[136]}
 library_thumbnail_columns=${arr[137]}
-library_encoded_at=${arr[138]}
+if [[ "${arr[138]}" = "9" ]]; then
+	library_encoded_at="No"
+elif [[ "${arr[138]}" = "0" ]]; then
+	library_encoded_at="No (searchable)"
+elif [[ "${arr[138]}" = "1" ]]; then
+	library_encoded_at="HD only"
+elif [[ "${arr[138]}" = "2" ]]; then
+	library_encoded_at="Text"
+elif [[ "${arr[138]}" = "3" ]]; then
+	library_encoded_at="Badge"
+fi
 first_use_help=${arr[139]}
 
 # Network settings
