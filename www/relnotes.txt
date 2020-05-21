@@ -17,10 +17,11 @@
 
 New features
 
+- NEW: Radio feature with rich metadata and maint utils
 - NEW: Option to adjust the number of thumbnail columns
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
-- NEW: Basic first use help for Playback/Playbar switch
+- NEW: First use help for Playback/Playbar switch
 
 Updates
 
