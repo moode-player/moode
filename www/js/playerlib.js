@@ -173,7 +173,7 @@ function sendMpdCmd(cmd, async) {
 
 	$.ajax({
 		type: 'GET',
-		url: 'command/?cmd=' + cmd,
+		url: 'command/index.php?cmd=' + cmd,
 		async: async,
 		cache: false,
 		success: function(data) {
