@@ -130,13 +130,6 @@ else {
 	workerLog('worker: ALSA volume (None)');
 }
 
-// Establish music root for external
-if (extMusicRoot('new') !== true) {
-	workerLog('worker: Problem setting external music root');
-	workerLog('worker: Exited');
-	exit;
-}
-
 //
 workerLog('worker: -- System');
 //
@@ -854,9 +847,6 @@ function chkMaintenance() {
 		if ($free_space[0] < 512000) {
 			workerLog('Maintenance: Free disk space < 512M required for in-place updates');
 		}
-
-		// Reapply external music root
-		extMusicRoot('reapply');
 
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 		//workerLog('worker: Maintenance completed');

@@ -173,10 +173,8 @@ function parseFolder($path) {
 session_id(playerSession('getsessionid'));
 $return = session_start();
 $search_pri = $_SESSION['library_covsearchpri'];
-$musicroot_ext = $_SESSION['musicroot_ext']; // $GLOBALS['musicroot_ext']
 session_write_close();
 //workerLog('coverart: $search_pri=' . $search_pri);
-//workerLog('coverart: $musicroot_ext=' . $musicroot_ext);
 
 // Get options- cmd line or GET
 $options = getopt('p:', array('path:'));
