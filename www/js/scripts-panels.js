@@ -896,13 +896,14 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 	// create new station
 	$('#ra-new').click(function(e) {
-		$('#new-station-name').val('New station');
+		$('#new-station-pls-name').val('New station');
 		$('#new-station-url').val('http://');
         $('#new-logoimage').val('');
 		$('#preview-new-logoimage').html('');
         $('#info-toggle-new-logoimage').css('margin-left','unset');
 
         $('#new-station-tags').css('margin-top', '0');
+        $('#new-station-display-name').val('');
         $('#new-station-genre').val('');
         $('#new-station-broadcaster').val('');
         $('#new-station-language').val('');
@@ -914,8 +915,12 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#newstation-modal').modal();
 	});
     $('#newstation-modal').on('shown.bs.modal', function() {
-        $('#new-station-name').focus();
+        $('#new-station-pls-name').focus();
     });
+    $('#new-station-pls-name').change(function(e){
+        $('#new-station-display-name').val($('#new-station-pls-name').val());
+    });
+
 	// radio search
 	$('#ra-filter').keyup(function(e){
 		if (!showSearchResetRa) {
@@ -1166,27 +1171,47 @@ jQuery(document).ready(function($) { 'use strict';
 		notify('delsavedpl');
 	});
 	$('.btn-new-station').click(function(e){
-		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
+		if ($('#new-station-pls-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
 			notify('blankentries', 'Station not created');
 		}
 		else {
-			mpdDbCmd('newstation', $('#new-station-name').val() + '\n' + $('#new-station-url').val() + '\n');
-			notify('newstation');
+			mpdDbCmd('newstation', {
+                'pls_name': $('#new-station-pls-name').val(),
+                'url': $('#new-station-url').val(),
+                'display_name': $('#new-station-display-name').val(),
+                'genre': $('#new-station-genre').val(),
+                'broadcaster': $('#new-station-broadcaster').val(),
+                'language': $('#new-station-language').val(),
+                'country': $('#new-station-country').val(),
+                'region': $('#new-station-region').val(),
+                'bitrate': $('#new-station-bitrate').val(),
+                'format': $('#new-station-format').val()
+            });
 		}
 	});
 	$('.btn-upd-station').click(function(e){
-		if ($('#edit-station-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
+		if ($('#edit-station-pls-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
 			notify('blankentries', 'Station not updated');
 		}
 		else {
-			mpdDbCmd('updstation', $('#edit-station-name').val() + '\n' + $('#edit-station-url').val() + '\n');
-			//notify('updstation', 'Updated logo may not appear until page has expired from Browser cache and page refreshed.', 8000);
-            notify('updstation');
+			//mpdDbCmd('updstation', $('#edit-station-pls-name').val() + '\n' + $('#edit-station-url').val() + '\n');
+            mpdDbCmd('updstation', {
+                'id': GLOBAL.editStationId,
+                'pls_name': $('#edit-station-pls-name').val(),
+                'url': $('#edit-station-url').val(),
+                'display_name': $('#edit-station-display-name').val(),
+                'genre': $('#edit-station-genre').val(),
+                'broadcaster': $('#edit-station-broadcaster').val(),
+                'language': $('#edit-station-language').val(),
+                'country': $('#edit-station-country').val(),
+                'region': $('#edit-station-region').val(),
+                'bitrate': $('#edit-station-bitrate').val(),
+                'format': $('#edit-station-format').val()
+            });
 		}
 	});
 	$('.btn-del-station').click(function(e){
 		mpdDbCmd('delstation', UI.dbEntry[0]);
-		notify('delstation');
 	});
 	$('.btn-delete-plitem').click(function(e){
 		var cmd = '';

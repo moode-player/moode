@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.6.0
  *
  */
 
@@ -45,6 +45,7 @@ function notify(cmd, msg, duration) {
 		delsavedpl: 'Playlist deleted',
 		newstation: 'New station created',
 		updstation: 'Station updated',
+        validation_check: 'Validation check',
 		blankentries: 'Blank entries are not allowed',
 		delstation: 'Station deleted',
 		updclockradio: 'Clock radio updated',

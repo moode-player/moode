@@ -1393,13 +1393,13 @@
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="new-station-name">Station name</label>
+	                <label class="control-label" for="new-station-pls-name">Station name</label>
 	                <div class="controls">
-	                    <input id="new-station-name" class="input-xlarge" type="text" name="new_station_name" size="200" value="" autofocus>
+	                    <input id="new-station-pls-name" class="input-xlarge" type="text" name="new_station_pls_name" maxlength="200" value="" autofocus>
 	                </div>
 	                <label class="control-label" for="new-station-url">Playable URL</label>
 	                <div class="controls">
-	                    <input id="new-station-url" class="input-xlarge" type="text" name="new_station_url" size="200" value="">
+	                    <input id="new-station-url" class="input-xlarge" type="text" name="new_station_url" maxlength="200" value="">
 	                </div>
 
 					<label class="control-label" for="new-radiologo">Logo image</label>
@@ -1417,33 +1417,37 @@
 					</div>
 
 					<div id="new-station-tags">
+						<label class="control-label" for="new-station-display-name">Name (displayed)</label>
+						<div class="controls">
+							<input id="new-station-display-name" class="input-xlarge" type="text" name="new_station_display_name" maxlength="200" value="">
+						</div>
 						<label class="control-label" for="new-station-genre">Genre</label>
 						<div class="controls">
-							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" size="200" value="">
+							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" maxlength="200" value="">
 						</div>
 						<label class="control-label" for="new-station-broadcaster">Broadcaster</label>
 						<div class="controls">
-		                    <input id="new-station-broadcaster" class="input-xlarge" type="text" name="new_station_broadcaster" size="200" value="">
+		                    <input id="new-station-broadcaster" class="input-xlarge" type="text" name="new_station_broadcaster" maxlength="200" value="">
 		                </div>
 						<label class="control-label" for="new-station-language">Language</label>
 						<div class="controls">
-		                    <input id="new-station-language" class="input-xlarge" type="text" name="new_station_language" size="200" value="">
+		                    <input id="new-station-language" class="input-xlarge" type="text" name="new_station_language" maxlength="2" value="">
 		                </div>
 						<label class="control-label" for="new-station-country">Country</label>
 						<div class="controls">
-		                    <input id="new-station-country" class="input-xlarge" type="text" name="new_station_country" size="200" value="">
+		                    <input id="new-station-country" class="input-xlarge" type="text" name="new_station_country" maxlength="200" value="">
 		                </div>
 						<label class="control-label" for="new-station-region">Region</label>
 						<div class="controls">
-		                    <input id="new-station-region" class="input-xlarge" type="text" name="new_station_region" size="200" value="">
+		                    <input id="new-station-region" class="input-xlarge" type="text" name="new_station_region" maxlength="200" value="">
 		                </div>
-						<label class="control-label" for="new-station-bitrate">Bit rate</label>
+						<label class="control-label" for="new-station-bitrate">Bit rate (kbps)</label>
 						<div class="controls">
-		                    <input id="new-station-bitrate" class="input-xlarge" type="text" name="new_station_bitrate" size="200" value="">
+		                    <input id="new-station-bitrate" class="input-xlarge" type="text" maxlength="5" name="new_station_bitrate" value="">
 		                </div>
 						<label class="control-label" for="new-station-format">Audio format</label>
 						<div class="controls">
-		                    <input id="new-station-format" class="input-xlarge" type="text" name="new_station_format" size="200" value="">
+		                    <input id="new-station-format" class="input-xlarge" type="text" name="new_station_format" maxlength="10" value="">
 		                </div>
 					</div>
 	            </div>
@@ -1465,13 +1469,13 @@
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="edit-station-name">Station name</label>
+	                <label class="control-label" for="edit-station-pls-name">Station name</label>
 	                <div class="controls">
-	                    <input id="edit-station-name" class="input-xlarge" type="text" name="edit_station_name" size="200" value="" readonly>
+	                    <input id="edit-station-pls-name" class="input-xlarge" type="text" name="edit_station_name" maxlength="200" value="" readonly>
 	                </div>
 	                <label class="control-label" for="edit-station-url">Playable URL</label>
 	                <div class="controls">
-	                    <input id="edit-station-url" class="input-xlarge" type="text" name="edit_station_url" size="200" value="">
+	                    <input id="edit-station-url" class="input-xlarge" type="text" name="edit_station_url" maxlength="200" value="">
 	                </div>
 
 					<label class="control-label" for="edit-radiologo">Logo image</label>
@@ -1489,33 +1493,37 @@
 					</div>
 
 					<div id="edit-station-tags">
+						<label class="control-label" for="edit-station-display-name">Name (displayed)</label>
+						<div class="controls">
+							<input id="edit-station-display-name" class="input-xlarge" type="text" name="edit_station_name_displayed" maxlength="200" value="">
+						</div>
 						<label class="control-label" for="edit-station-genre">Genre</label>
 						<div class="controls">
-							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" size="200" value="">
+							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" maxlength="200" value="">
 						</div>
 						<label class="control-label" for="edit-station-broadcaster">Broadcaster</label>
 						<div class="controls">
-		                    <input id="edit-station-broadcaster" class="input-xlarge" type="text" name="edit_station_broadcaster" size="200" value="">
+		                    <input id="edit-station-broadcaster" class="input-xlarge" type="text" name="edit_station_broadcaster" maxlength="200" value="">
 		                </div>
 						<label class="control-label" for="edit-station-language">Language</label>
 						<div class="controls">
-		                    <input id="edit-station-language" class="input-xlarge" type="text" name="edit_station_language" size="200" value="">
+		                    <input id="edit-station-language" class="input-xlarge" type="text" name="edit_station_language" maxlength="2" value="">
 		                </div>
 						<label class="control-label" for="edit-station-country">Country</label>
 						<div class="controls">
-		                    <input id="edit-station-country" class="input-xlarge" type="text" name="edit_station_country" size="200" value="">
+		                    <input id="edit-station-country" class="input-xlarge" type="text" name="edit_station_country" maxlength="200" value="">
 		                </div>
 						<label class="control-label" for="edit-station-region">Region</label>
 						<div class="controls">
-		                    <input id="edit-station-region" class="input-xlarge" type="text" name="edit_station_region" size="200" value="">
+		                    <input id="edit-station-region" class="input-xlarge" type="text" name="edit_station_region" maxlength="200" value="">
 		                </div>
-						<label class="control-label" for="edit-station-bitrate">Bit rate</label>
+						<label class="control-label" for="edit-station-bitrate">Bit rate (kbps)</label>
 						<div class="controls">
-		                    <input id="edit-station-bitrate" class="input-xlarge" type="text" name="edit_station_bitrate" size="200" value="">
+		                    <input id="edit-station-bitrate" class="input-xlarge" type="text" maxlength="5" name="edit_station_bitrate" value="">
 		                </div>
 						<label class="control-label" for="edit-station-format">Audio format</label>
 						<div class="controls">
-		                    <input id="edit-station-format" class="input-xlarge" type="text" name="edit_station_format" size="200" value="">
+		                    <input id="edit-station-format" class="input-xlarge" type="text" name="edit_station_format" maxlength="10" value="">
 		                </div>
 					</div>
 	            </div>

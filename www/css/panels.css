@@ -624,3 +624,5 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #playback-firstuse-help {display:none;}
 #playbar-firstuse-help {display:none;position:absolute;left:0;top:0;z-index:9999}
 #playback-firstuse-help i, #playbar-firstuse-help i {cursor:pointer;}
+/* New/edit radio station modals */
+#new-station-language, #edit-station-language, #new-station-format, #EDIT-station-format {text-transform:uppercase;}
