@@ -716,7 +716,7 @@ var renderSongs = function(albumPos) {
 		$('#lib-albumname').html(album);
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html('');
-		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
+		$('#lib-numtracks').html(formatNumCommas(filteredAlbums.length) + ' albums<br>' + formatNumCommas(filteredSongs.length) + ((filteredSongs.length == 1) ? ' track<br>' : ' tracks<br>') + formatTotalTime(LIB.totalTime));
 		$('#lib-encoded-at').html('');
 	}
 }

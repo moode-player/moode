@@ -633,7 +633,7 @@ function renderUI() {
     	}
     	// Software or hardware volume
     	else {
-            // Volume button visability
+            // Volume button visibility
             if (UI.mobile) {
                 $('.volume-popup-btn').show();
             }
@@ -1537,16 +1537,16 @@ function formatTotalTime(seconds) {
     	output = '';
     }
 	else {
-	    hours = Math.floor(seconds / 3600);
-    	minutes = Math.floor(seconds / 60);
-    	minutes = (minutes < 60) ? minutes : (minutes % 60);
+	    hours = ~~(seconds / 3600); // ~~ = faster Math.floor
+    	seconds %= 3600;
+    	minutes = ~~(seconds / 60);
 
         hh = hours == 0 ? '' : (hours == 1 ? hours + ' hour' : hours + ' hours');
         mm = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
 
 		if (hours > 0) {
 			if (minutes > 0) {
-				output = hh + ', ' + mm;
+				output = hh + ' ' + mm;
 			}
             else {
 				output = hh;
@@ -1556,8 +1556,11 @@ function formatTotalTime(seconds) {
 			output = mm;
 		}
     }
+    return formatNumCommas(output);
+}
 
-    return output;
+function formatNumCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function countdownRestart(startFrom) {
