@@ -172,7 +172,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#lib-file .songartist {float:left;width:calc(40% - 25px);overflow:hidden;left:60%;margin-left:5px;}
 	#lib-file .songyear {display:none;}
 	.lib-albumname-meta {font-weight:600;text-align:left;overflow:hidden;width:100%;word-wrap: break-word;}
-	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta {text-align:left;}
+	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta, .lib-encoded-at-meta {text-align:left;}
 	#trackscontainer {width:100%;max-width:100%;}
 	.container-playback {padding: 0;}
 	#playback-controls {display:flex;flex-direction:column;position:fixed;width:100%;bottom:1vh;bottom:calc(env(safe-area-inset-bottom) - 1vh);left:0;z-index:10;/*padding-top:10vh;*/}
