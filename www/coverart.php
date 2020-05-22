@@ -61,18 +61,20 @@ function getImage($path) {
 	$ext = pathinfo($path, PATHINFO_EXTENSION);
 
 	switch (strtolower($ext)) {
-		// image file -> redirect
+		// image file -> serve from disc
 		case 'gif':
 		case 'jpg':
 		case 'jpeg':
 		case 'png':
 		case 'tif':
 		case 'tiff':
-			$path = '/' . $GLOBALS['musicroot_ext'] . substr($path, strlen(MPD_MUSICROOT)-1);
-			$path = str_replace('#', '%23', $path);
-			header('Location: ' . $path);
-			exit(0);
-
+			$mimeType = 'image/'.$ext;
+			$filesize = filesize($path);
+			$fh = fopen($path, 'rb');
+			$imageData = fread($fh, $filesize);
+			fclose($fh);
+			outImage($mimeType, $imageData);
+			break;
 		// embedded images
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
