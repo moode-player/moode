@@ -61,18 +61,20 @@ function getImage($path) {
 	$ext = pathinfo($path, PATHINFO_EXTENSION);
 
 	switch (strtolower($ext)) {
-		// image file -> redirect
+		// image file -> serve from disc
 		case 'gif':
 		case 'jpg':
 		case 'jpeg':
 		case 'png':
 		case 'tif':
 		case 'tiff':
-			$path = '/' . $GLOBALS['musicroot_ext'] . substr($path, strlen(MPD_MUSICROOT)-1);
-			$path = str_replace('#', '%23', $path);
-			header('Location: ' . $path);
-			exit(0);
-
+			$mimeType = 'image/'.$ext;
+			$filesize = filesize($path);
+			$fh = fopen($path, 'rb');
+			$imageData = fread($fh, $filesize);
+			fclose($fh);
+			outImage($mimeType, $imageData);
+			break;
 		// embedded images
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
@@ -171,10 +173,8 @@ function parseFolder($path) {
 session_id(playerSession('getsessionid'));
 $return = session_start();
 $search_pri = $_SESSION['library_covsearchpri'];
-$musicroot_ext = $_SESSION['musicroot_ext']; // $GLOBALS['musicroot_ext']
 session_write_close();
 //workerLog('coverart: $search_pri=' . $search_pri);
-//workerLog('coverart: $musicroot_ext=' . $musicroot_ext);
 
 // Get options- cmd line or GET
 $options = getopt('p:', array('path:'));

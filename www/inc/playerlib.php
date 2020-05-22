@@ -243,21 +243,6 @@ function integrityCheck() {
 	return $warning === true ? 'passed with warnings' : 'passed';
 }
 
-function extMusicRoot($option = 'new') {
-	if (!($option == 'new' || $option == 'reapply')) {
-		return false;
-	}
-
-	if ($option == 'new') {
-		$_SESSION['musicroot_ext'] = rand(1000000, 9999999);
-	}
-
-	sysCmd('find /var/www -type l -delete');
-	sysCmd('ln -s ' . MPD_MUSICROOT . ' /var/www/' . $_SESSION['musicroot_ext']);
-
-	return true;
-}
-
 // socket routines for engine-cmd.php
 function sendEngCmd ($cmd) {
 	//workerLog('sendEngCmd(): cmd: ' . $cmd);
