@@ -40,6 +40,7 @@
 	<!-- VERSIONED RESOURCES -->
 	<?php
 		// Common css
+		//removeIf(USEBUNDLE)
 		versioned_resource('css/bootstrap.min.css');
 		versioned_resource('css/bootstrap-select.min.css');
 		versioned_resource('css/flat-ui.min.css');
@@ -47,8 +48,12 @@
 		versioned_resource('css/fontawesome-moode.min.css');
 		versioned_resource('css/panels.min.css');
 		versioned_resource('css/moode.min.css');
+		//endRemoveIf(USEBUNDLE)
+		// USEBUNDLE versioned_resource('css/styles.min.css');
+		
 
 		// Common js
+		//removeIf(USEBUNDLE)
 		versioned_script('js/bootstrap.min.js');
 		versioned_script('js/bootstrap-select.min.js');
 		versioned_script('js/jquery.pnotify.min.js');
@@ -56,9 +61,13 @@
         versioned_script('js/playerlib-nomin.js');
         versioned_script('js/playerlib.min.js');
 		versioned_script('js/links.min.js');
+		//endRemoveIf(USEBUNDLE)
+		// USEBUNDLE versioned_script('js/lib.min.js');
 
 		// Playback / Library
 		if ($section == 'index') {
+			// USEBUNDLE versioned_resource('css/main.min.css');
+			//removeIf(USEBUNDLE)
 			versioned_resource('css/jquery.countdown.min.css');
 			versioned_script('js/jquery.countdown.min.js');
 			versioned_script('js/jquery.scrollTo.min.js');
@@ -68,11 +77,14 @@
 			versioned_script('js/jquery.adaptive-backgrounds.min.js');
 			versioned_script('js/jquery.knob.min.js');
 			versioned_script('js/bootstrap-contextmenu.min.js');
-            versioned_script('js/scripts-library.min.js');
-            versioned_script('js/scripts-panels.min.js');
+			versioned_script('js/scripts-library.min.js');
+			versioned_script('js/scripts-panels.min.js');
+			//endRemoveIf(USEBUNDLE)
+			// USEBUNDLE versioned_script('js/main.min.js');
 		}
 		// Configs
 		else {
+			//removeIf(USEBUNDLE)
 			versioned_script('js/custom_checkbox_and_radio.min.js');
 			versioned_script('js/custom_radio.js');
 			versioned_script('js/jquery.tagsinput.min.js');
@@ -80,6 +92,8 @@
 			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
 			versioned_script('js/application.min.js');
 			versioned_script('js/scripts-configs.min.js');
+			//endRemoveIf(USEBUNDLE)
+			// USEBUNDLE versioned_script('js/config.min.js');
 		}
 	?>
 
