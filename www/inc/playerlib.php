@@ -211,6 +211,9 @@ function integrityCheck() {
 		return false;
 	}
 
+	// Broom www root
+	sysCmd('find /var/www -type l -delete');
+
 	// Check hash table
 	$result = cfgdb_read('cfg_hash', cfgdb_connect());
 	foreach ($result as $row) {
