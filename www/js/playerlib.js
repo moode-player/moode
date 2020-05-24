@@ -2848,13 +2848,12 @@ $(window).on('scroll', function(e) {
 function getCSSRule(ruleName) {
 	for (var i = 0; i < document.styleSheets.length; i++) {
 		var styleSheet = document.styleSheets[i];
-		if (styleSheet.href && styleSheet.href.indexOf('flat-ui.min.css') != -1 ) {
-			var cssRules = styleSheet.cssRules;
-			for (var j = 0; j < cssRules.length; j++) {
-				var cssRule = cssRules[j];
-				if (cssRule.selectorText == ruleName) {
-					return cssRule;
-				}
+
+		var cssRules = styleSheet.cssRules;
+		for (var j = 0; j < cssRules.length; j++) {
+			var cssRule = cssRules[j];
+			if (cssRule.selectorText == ruleName) {
+				return cssRule;
 			}
 		}
 	}
