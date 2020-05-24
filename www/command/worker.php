@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-05-03 TC moOde 6.5.2
+ * 2020-MM-DD TC moOde 6.6.0
  *
  */
 
@@ -847,6 +847,9 @@ function chkMaintenance() {
 		if ($free_space[0] < 512000) {
 			workerLog('Maintenance: Free disk space < 512M required for in-place updates');
 		}
+
+		// Broom www root
+		sysCmd('find /var/www -type l -delete');
 
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 		//workerLog('worker: Maintenance completed');
