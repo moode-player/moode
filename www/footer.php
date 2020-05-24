@@ -172,8 +172,10 @@
 </div>
 
 <!-- DISPLAY MESSAGES -->
+<!--removeIf(USEBUNDLE)-->
 <script src="js/jquery-1.8.2.min.js"></script>
 <script src="js/jquery-ui-1.10.0.custom.min.js"></script>
+<!--endRemoveIf(USEBUNDLE)-->
 
 <?php
     if (isset($_SESSION['notify']['title']) && $_SESSION['notify']['title'] != '') {
