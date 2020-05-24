@@ -26,15 +26,18 @@ New features
 Updates
 
 - UPD: Use MusicBrainz date tags if present in track
-- UPD: Add X-Large font size option to Appearance
-- UPD: Improve renderer active and restart/shutdown overlays
 - UPD: Use check mark style on Library menu
+- UPD: Add X-Large font size option to Appearance
 - UPD: Add album count to Tag view
+- UPD: Improve renderer active and restart/shutdown overlays
+- UPD: Improve cover art fetch for image files
 
 Radio stations
 
+- NEW: Soma FM - Heavyweight Reggae
 - UPD: Playable url for 4ZZZ FM
 - UPD: Station logos for Absolut stations
+- UPD: Station logo for Soma FM - DEF CON
 
 Bug fixes
 
