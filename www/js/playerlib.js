@@ -2175,9 +2175,10 @@ $('.btn-appearance-update').click(function(e){
 	}
 	if (accentColorChange == true) {
 		accentColor = themeToColors(SESSION.json['accent_color']);
-		var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
-		var test = getCSSRule('.toggle .toggle-radio');
-		test.style.backgroundImage='url("' + radio1 + '")';
+        // DEPRECATE
+		//var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
+		//var test = getCSSRule('.toggle .toggle-radio');
+		//test.style.backgroundImage='url("' + radio1 + '")';
 		$('.playbackknob').trigger('configure',{"fgColor":accentColor});
 		$('.volumeknob').trigger('configure',{"fgColor":accentColor});
 	}
@@ -2847,7 +2848,6 @@ $(window).on('scroll', function(e) {
 function getCSSRule(ruleName) {
 	for (var i = 0; i < document.styleSheets.length; i++) {
 		var styleSheet = document.styleSheets[i];
-
 		if (styleSheet.href && styleSheet.href.indexOf('flat-ui.min.css') != -1 ) {
 			var cssRules = styleSheet.cssRules;
 			for (var j = 0; j < cssRules.length; j++) {
