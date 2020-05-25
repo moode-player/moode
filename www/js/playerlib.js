@@ -3231,11 +3231,11 @@ function lazyLode(view) {
 
 	if( selector && container) {
 		if ('loading' in HTMLImageElement.prototype) {
-			const images = document.querySelectorAll(selector);
-			images.forEach(img => {
-				img.src = img.dataset.original; // set the url back to the src				
-			});			
-		} else {		
+			var images = document.querySelectorAll(selector);
+			images.forEach( function ( img ) {
+				img.src = img.dataset.original; // set the url back to the src
+			});
+		} else {
 			setTimeout(function(){
 				$(selector).lazyload({
 					container: $(container)
