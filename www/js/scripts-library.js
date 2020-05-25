@@ -531,6 +531,7 @@ var renderAlbums = function() {
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
     var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
+    var imgAttribute = isLazyLoadNative() ? 'src' : 'data-original';
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
@@ -550,7 +551,7 @@ var renderAlbums = function() {
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
-                + '<img class="lazy-tagview" loading="lazy" data-original="' + filteredAlbums[i].imgurl + '">'
+                + '<img class="lazy-tagview" loading="lazy" '+imgAttribute+'="' + filteredAlbums[i].imgurl + '">'
                 + tagViewHdDiv
                 + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album + '</span>'
                 + '<span class="artist-name-art">' + filteredAlbums[i].artist + '</span>'
@@ -565,7 +566,7 @@ var renderAlbums = function() {
         }
 
 		output2 += '<li class="lib-entry">'
-            + '<img class="lazy-albumview" loading="lazy" data-original="' + filteredAlbumCovers[i].imgurl + '">'
+            + '<img class="lazy-albumview" loading="lazy" '+imgAttribute+'="' + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
 			+ albumViewHdDiv
 			+ albumViewBgDiv

@@ -1264,7 +1264,8 @@ function formatBrowseData(data, path, i, panel) {
 			if (data[i].file.substr(0, 5) == 'RADIO') {
 				if (panel == 'radio_panel') {
 					var imgurl = '../images/radio-logos/thumbs/' + filename.replace(path + '/', '') + '.jpg';
-					output += '"><div class="db-icon db-song db-browse db-action"><img class="lazy-radioview" loading="lazy" data-original="' + imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
+					var imgAttribute = isLazyLoadNative() ? 'src' : 'data-original';
+					output += '"><div class="db-icon db-song db-browse db-action"><img class="lazy-radioview" loading="lazy" '+imgAttribute+'="' + imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
 				}
 				else {
 					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-radio-item"><i class="fas fa-microphone sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
@@ -3201,6 +3202,11 @@ function setLibMenuHeader () {
 	$('#menu-header').text(headerText);
 }
 
+function isLazyLoadNative() {
+	//return false;
+	return 'loading' in HTMLImageElement.prototype;
+}
+
 /**
  * Enable lazy loading of images for a certain view.
  * Instead of src the image should have a data-original.
@@ -3210,40 +3216,34 @@ function setLibMenuHeader () {
  * @param {string} view - the view for lazy loading
  */
 function lazyLode(view) {
-	var container,
+	if( isLazyLoadNative() ==false ) {
+		var container,
 		selector;
-		
-	switch (view) {
-		case 'radio':
-			selector = 'img.lazy-radioview';
-			container = '#radiocovers';
-			break;
-		case 'tag':
-            if (SESSION.json['library_tagview_covers'] == 'No') {break;}
-			selector = 'img.lazy-tagview';
-			container = '#lib-albums';
-			break;
-		case 'album':
-			selector = 'img.lazy-albumview';
-			container = '#lib-albumcover';
-			break;
-	}
 
-	if( selector && container) {
-		if ('loading' in HTMLImageElement.prototype) {
-			var images = document.querySelectorAll(selector);
-			images.forEach( function ( img ) {
-				img.src = img.dataset.original; // set the url back to the src
-			});
-		} else {
+		switch (view) {
+			case 'radio':
+				selector = 'img.lazy-radioview';
+				container = '#radiocovers';
+				break;
+			case 'tag':
+				if (SESSION.json['library_tagview_covers'] == 'No') {break;}
+				selector = 'img.lazy-tagview';
+				container = '#lib-albums';
+				break;
+			case 'album':
+				selector = 'img.lazy-albumview';
+				container = '#lib-albumcover';
+				break;
+		}
+
+		if( selector && container) {
 			setTimeout(function(){
 				$(selector).lazyload({
 					container: $(container)
 				});
 			}, LAZYLOAD_TIMEOUT);
 		}
-    }
-
+	}
 }
 
 function setFontSize() {
