@@ -1,16 +1,17 @@
 ################################################################
 #
-# Build Recipe v2.21 2020-05-03
+# Build Recipe v2.22 2020-MM-DD
 #
-# moOde 6.5.2 2020-05-03
+# moOde 6.6.2 2020-MM-DD
 # - Based on Raspbian Buster Lite (10.3)
-# - Bump to Linux kernel 4.19.115 build #1305
-# - Bump to r652 sources
-# - Bump to MPD 0.21.22
-# - Compile librespot v0.1.1 to run on both arm6 and arm7
-# - Compile miniDLNA 1.2.1+0763719f
+# - Bump to r660 sources
+# - Bump to Linux kernel _______________
+# - Bump to bluez-alsa 2.1.0-49ad348
+# - Bump to MPD _______________
+# - Bump to librespot _______________
+# - Bump to shairport-sync _______________
+# - Bump to upmpdcli _______________
 # - Image prep and build is Linux and Ethernet only
-# - Remove dead code and instructions
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
@@ -232,10 +233,10 @@ sudo rm -rf /usr/lib/bluetooth
 # Create symlink for new bluetoothd
 sudo ln -s /usr/libexec/bluetooth/bluetoothd /usr/sbin/bluetoothd
 
-# Compile bluez-alsa 2.0.0
-# 2019-10-27 commit 4af3ebb361a66dc497accffa47301dfa1fd7b42f
-sudo cp ./moode/other/bluetooth/bluez-alsa-master-2.0.0-4af3ebb.zip ./
-sudo unzip -q bluez-alsa-master-2.0.0-4af3ebb.zip
+# Compile bluez-alsa 2.1.0-49ad348
+# 2020-04-15 commit 49ad348808a15485aa7cb2df0a4d13654cc0cee3
+sudo cp ./moode/other/bluetooth/bluez-alsa-master-2.1.0-49ad348.zip ./
+sudo unzip -q bluez-alsa-master-2.1.0-49ad348.zip
 cd bluez-alsa-master
 # NOTE: Ignore warnings from autoreconf and configure
 sudo autoreconf --install
