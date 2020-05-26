@@ -1,3 +1,7 @@
+#
+# 2020-MM-DD TC moOde 6.6.0
+#
+#
 [Unit]
 Description=BlueAlsa-Aplay
 Requires=bluetooth.service bluealsa.service
@@ -7,7 +11,7 @@ Type=simple
 #User=pi
 #Group=audio
 EnvironmentFile=-/etc/bluealsaaplay.conf
-ExecStart=/usr/bin/bluealsa-aplay --profile-a2dp --pcm-buffer-time=${BUFFERTIME} -d $AUDIODEV %I
+ExecStart=/usr/bin/bluealsa-aplay --profile-a2dp --pcm-buffer-time=${BUFFERTIME} -D $AUDIODEV %I
 
 [Install]
 WantedBy=multi-user.target
