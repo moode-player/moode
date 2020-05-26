@@ -25,6 +25,7 @@ New features
 
 Updates
 
+- UPD: Bump to bluez-alsa 2.1.0-49ad348
 - UPD: Use MusicBrainz date tags if present in track
 - UPD: Use check mark style on Library menu
 - UPD: Add X-Large font size option to Appearance
@@ -41,6 +42,7 @@ Radio stations
 
 Bug fixes
 
+- FIX: Bluez-alsa hangs at end of Playlist
 - FIX: Unhandled "Database locked" error in vol.sh and rotvol.sh
 - FIX: Playlist line 2 left alignment in mobile portrait
 - FIX: Wrong cover artist when album header clicked in Tag view
