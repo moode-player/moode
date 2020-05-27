@@ -523,7 +523,9 @@ var renderAlbums = function() {
 	var activeFlag = '';
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
-	var defCover = "this.src='images/default-cover-v6.svg'";
+
+    // NOT USED
+    //var defCover = "this.src='images/default-cover-v6.svg'";
 
     // Clear search filter and results
 	$('#lib-album-filter').val('');
@@ -531,6 +533,7 @@ var renderAlbums = function() {
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
     var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
+    var tagViewHdDiv, tagViewNvDiv, albumViewNvDiv, albumViewHdDiv, albumViewTxDiv, albumViewBgDiv = '';
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
@@ -538,15 +541,17 @@ var renderAlbums = function() {
 
         // filteredAlbums[i].encoded_at
         // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
-        // Tag view
-        var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="encoded-at-hdonly-tagview">HD</div>' : '';
-        var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
-        // Album view
-        var encodedAt = filteredAlbumCovers[i].encoded_at.split(',');
-        var albumViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + filteredAlbumCovers[i].encoded_at.split(',')[0] + '</div>' : '';
-        var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly">HD</div>' : '';
-        var albumViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + encodedAt[0] + '</div>' : '';
-        var albumViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + encodedAt[0] + '</div>' : '';
+        if (encodedAtOption != 9) {
+            // Tag view
+            var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="encoded-at-hdonly-tagview">HD</div>' : '';
+            var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
+            // Album view
+            var encodedAt = filteredAlbumCovers[i].encoded_at.split(',');
+            var albumViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + filteredAlbumCovers[i].encoded_at.split(',')[0] + '</div>' : '';
+            var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly">HD</div>' : '';
+            var albumViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + encodedAt[0] + '</div>' : '';
+            var albumViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + encodedAt[0] + '</div>' : '';
+        }
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
