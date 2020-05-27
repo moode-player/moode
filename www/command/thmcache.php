@@ -20,14 +20,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.6.0
  *
  */
 
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
 
-define('FAKEFILE', '/var/www/images/nothingfound.jpg');
+define('NOT_FOUND', '/var/www/images/notfound.jpg');
 
 //
 // MAIN
@@ -82,8 +82,8 @@ $dirs = str_replace('moode-player, ', '', $dirs); // This mount point is only pr
 workerLog('thmcache: Scanning: ' . $dirs);
 
 // Generate the file list
-$resp = shell_exec('/var/www/command/listall.sh | sort');
-if (is_null($resp) || substr($resp, 0, 2) == 'OK') {
+$result = shell_exec('/var/www/command/listall.sh | sort');
+if (is_null($result) || substr($result, 0, 2) == 'OK') {
 	workerLog('thmcache: exit: no files found');
 	session_start();
 	$_SESSION['thmcache_status'] = 'No files found';
@@ -95,7 +95,7 @@ if (is_null($resp) || substr($resp, 0, 2) == 'OK') {
 // - Compare the containing dir paths for file (file_a) and file+1 (file_b)
 // - When they are different we create a thumb using file_a and dir_a
 $count = 0;
-$line = strtok($resp, "\n");
+$line = strtok($result, "\n");
 while ($line) {
 	$file_a = explode(': ', $line, 2)[1];
 	$dir_a = dirname($file_a);
@@ -124,47 +124,41 @@ workerLog('thmcache: Done: ' . $count . ' album dirs processed');
 // Create thumbnail image
 function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	$path = MPD_MUSICROOT . $file;
-	$imgstr = false;
+	$img_str = false;
 	//workerlog('thmcache: path: ' . $path);
 
-	// File: embedded cover
-	if ($search_pri == 'Embedded cover') { // Embedded first
-		$imgstr = getImage($path);
+	if ($search_pri == 'Embedded cover') {
+		// Check for embedded cover in file
+		$img_str = getImage($path);
 	}
 
-	if ($imgstr === false) {
-		if (is_dir($path)) {
-			// Dir: cover image file
-			if (substr($path, -1) !== '/') {$path .= '/';}
-			$imgstr = parseFolder($path);
-		}
-		else {
-			// File: cover image file in containing dir
-			$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
-			$imgstr = parseFolder($dirpath);
-		}
+	if ($img_str === false) {
+		// Check for cover image file in containing dir
+		$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
+		$img_str = parseFolder($dirpath);
 
-		if ($imgstr === false) {
-			if ($search_pri == 'Cover image file') { // embedded last
-				$imgstr = getImage($path);
+		if ($img_str === false) {
+			if ($search_pri == 'Cover image file') {
+				// Check for embedded cover
+				$img_str = getImage($path);
 			}
 		}
 
-		if ($imgstr === false) {
+		if ($img_str === false) {
 			// Nothing found
-			$imgstr = FAKEFILE;
+			$img_str = NOT_FOUND;
 		}
 	}
 
 	// Image file path, convert image to string
-	if (strlen($imgstr) < 256) {
-		$imgstr = file_get_contents($imgstr);
+	if (strlen($img_str) < 256) {
+		$img_str = file_get_contents($img_str);
 	}
 	else {
 		//workerlog('thmcache: embedded image');
 	}
 
-	$image = imagecreatefromstring($imgstr);
+	$image = imagecreatefromstring($img_str);
 	// Image h/w
 	$img_w = imagesx($image);
 	$img_h = imagesy($image);
