@@ -524,11 +524,17 @@ var renderAlbums = function() {
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
 
-    // NOT USED
-    //var defCover = "this.src='images/default-cover-v6.svg'";
-
     // Clear search filter and results
 	$('#lib-album-filter').val('');
+
+    if (GLOBAL.nativeLazyLoad) {
+    	var tagViewLazy = '<img loading="lazy" src="';
+        var albumViewLazy = tagViewLazy;
+    }
+    else {
+    	var tagViewLazy = '<img class="lazy-tagview" data-original="';
+    	var albumViewLazy = '<img class="lazy-albumview" data-original="';
+    }
 
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
@@ -555,7 +561,7 @@ var renderAlbums = function() {
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
-                + '<img class="lazy-tagview" data-original="' + filteredAlbums[i].imgurl + '">'
+                + tagViewLazy + filteredAlbums[i].imgurl + '">'
                 + tagViewHdDiv
                 + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album + '</span>'
                 + '<span class="artist-name-art">' + filteredAlbums[i].artist + '</span>'
@@ -570,7 +576,7 @@ var renderAlbums = function() {
         }
 
 		output2 += '<li class="lib-entry">'
-            + '<img class="lazy-albumview" data-original="' + filteredAlbumCovers[i].imgurl + '">'
+            + albumViewLazy + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
 			+ albumViewHdDiv
 			+ albumViewBgDiv

@@ -38,6 +38,12 @@ jQuery(document).ready(function($) { 'use strict';
 	$("body").get(0).style.setProperty("--sbw", sbw + 'px');
 	//console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
 
+    // Check for native lazy load support in Browser
+    // @bitkeeper contribution: https://github.com/moode-player/moode/pull/131
+    if ('loading' in HTMLImageElement.prototype) {
+        GLOBAL.nativeLazyLoad = true;
+    }
+
 	// load current cfg
     $.getJSON('command/moode.php?cmd=read_cfgs', function(result) {
     	SESSION.json = result['cfg_system'];

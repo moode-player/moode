@@ -117,7 +117,8 @@ var GLOBAL = {
     plActionClicked: false,
     mpdMaxVolume: 0,
     lastTimeCount: 0,
-    editStationId: ''
+    editStationId: '',
+    nativeLazyLoad: false
 };
 
 // live timeline
@@ -1209,8 +1210,10 @@ function renderRadio(data, path) {
 	$('#ra-search-keyword').val('');
 	$('#ra-filter').val('');
 
+    var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
+
 	for (var i = 0; i < data.length; i++) {
-		output += formatBrowseData(data, path, i, 'radio_panel');
+		output += formatBrowseData(data, path, i, 'radio_panel', radioViewLazy);
 	}
 
 	$('ul.database-radio').html(output);
@@ -1219,7 +1222,7 @@ function renderRadio(data, path) {
 }
 
 // Format for Browse panel
-function formatBrowseData(data, path, i, panel) {
+function formatBrowseData(data, path, i, panel, radioViewLazy) {
 	var output = '';
 
 	if (path == '' && typeof data[i].file != 'undefined') {
@@ -1266,7 +1269,7 @@ function formatBrowseData(data, path, i, panel) {
 			if (data[i].file.substr(0, 5) == 'RADIO') {
 				if (panel == 'radio_panel') {
 					var imgurl = '../images/radio-logos/thumbs/' + filename.replace(path + '/', '') + '.jpg';
-					output += '"><div class="db-icon db-song db-browse db-action"><img class="lazy-radioview" data-original="' + imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
 				}
 				else {
 					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-radio-item"><i class="fas fa-microphone sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
@@ -3219,31 +3222,35 @@ function setLibMenuHeader () {
 }
 
 function lazyLode(view) {
-    //console.log('lazylode', view);
-	switch (view) {
-		case 'radio':
-			setTimeout(function(){
-				$('img.lazy-radioview').lazyload({
-				    container: $('#radiocovers')
-				});
-			}, LAZYLOAD_TIMEOUT);
-			break;
-		case 'tag':
-            if (SESSION.json['library_tagview_covers'] == 'No') {return;}
-			setTimeout(function(){
-				$('img.lazy-tagview').lazyload({
-				    container: $('#lib-album')
-				});
-			}, LAZYLOAD_TIMEOUT);
-			break;
-		case 'album':
-			setTimeout(function(){
-				$('img.lazy-albumview').lazyload({
-				    container: $('#lib-albumcover')
-				});
-			}, LAZYLOAD_TIMEOUT);
-			break;
-		}
+    // If browser does not support native lazy load then fall back to JQuery lazy load
+    if (!GLOBAL.nativeLazyLoad) {
+ 		var container, selector;
+
+ 		switch (view) {
+ 			case 'radio':
+ 				selector = 'img.lazy-radioview';
+ 				container = '#radiocovers';
+ 				break;
+ 			case 'tag':
+ 				if (SESSION.json['library_tagview_covers'] == 'Yes') {
+     				selector = 'img.lazy-tagview';
+     				container = '#lib-album';
+                }
+ 				break;
+ 			case 'album':
+ 				selector = 'img.lazy-albumview';
+ 				container = '#lib-albumcover';
+ 				break;
+ 		}
+
+        if (selector && container) {
+ 			setTimeout(function(){
+ 				$(selector).lazyload({
+ 					container: $(container)
+ 				});
+ 			}, LAZYLOAD_TIMEOUT);
+        }
+ 	}
 }
 
 function setFontSize() {
