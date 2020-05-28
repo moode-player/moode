@@ -37,6 +37,15 @@ Updates
 
 Radio stations
 
+- NEW: Hi On Line - Classical
+- NEW: Hi On Line - France
+- NEW: Hi On Line - Gold
+- NEW: Hi On Line - Jazz
+- NEW: Hi On Line - Latin
+- NEW: Hi On Line - Lounge
+- NEW: Hi On Line - Pop (320K)
+- NEW: Hi On Line - Pop (FLAC)
+- NEW: Hi On Line - World
 - NEW: Soma FM - Heavyweight Reggae
 - UPD: Playable url for 4ZZZ FM
 - UPD: Station logos for Absolut stations
