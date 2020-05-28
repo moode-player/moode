@@ -117,20 +117,20 @@ html {background-color:inherit;}
 #countdown, #time, #volcontrol {position:relative;}
 #time {visibility:hidden;}
 #volcontrol, #volcontrol-2 {margin:auto;height:17vw;width:17vw;}
-.volume-display {position:relative;color:var(--adapttext);font-size:1.9rem;font-weight:500;cursor:pointer;height:50%;/*was 70%*/}
+.volume-display {position:relative;font-size:2.5vw;color:var(--adapttext);font-weight:500;cursor:pointer;height:50%;}
 .volume-display div {position:relative;top:50%;transform:translate(0, -50%);min-height:33%;text-align:center;}
 #volume, #volume-2 {display:none;} /* using .volume-display to overlay this element so it can be used as a mute toggle */
 #volzone, #timezone, #volbtns-2 {font-family:'SF Mono', 'Roboto Mono', monospace;} /* 'Letter Gothic Std', */
 #volbtns, #volbtns-2 {display:flex;position:absolute;transform:translate(-50%,-50%);top:50%;left:50%;height:70%;margin:0 auto;flex-direction:column;}
-#volumedn, #volumedn-2, #volumeup, #volumeup-2 {font-size:1.5em;font-weight:400;margin:0 auto;padding:.25rem 1rem;height:33%;/*line-height:1.5em;*/color:var(--adapttext);}
+#volumedn, #volumedn-2, #volumeup, #volumeup-2 {font-size:2.5vw;font-weight:400;margin:0 auto;padding:.25rem 1rem;height:33%;color:var(--adapttext);}
 #songsand {width:98%;margin:0 auto;}
 #volume-popup {display:none;height:100vh;width:100vw;background-color:var(--modalbkdr);}
 #volpad {position:fixed;top:calc(50% - 2.75rem - env(safe-area-inset-bottom));left:50%;width:30%;transform:translate(-50%, -50%);z-index:10001;}
 #volume-popup .modal-footer {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 5vh);width:inherit;border:none;}
 #volume-popup .modal-footer button {width:20%;color:var(--adapttext);left:50%;transform:translate(-50%);position:fixed;font-size:1.2rem;z-index:10001;}
 #volcontrol-2, #inpsrctick {height:25vw;width:25vw;padding:2em;}
-#volumeup-2, #volumedn-2 {font-size:2rem;}
-#volume-popup .volume-display {font-size:3em;font-weight:500;margin-top:0;}
+#volumeup-2, #volumedn-2 {font-size:3.1vw;}
+#volume-popup .volume-display {font-size:3.5vw;font-weight:500;margin-top:0;}
 #volbtns-2 {z-index:10002;}
 #playbtns .addfav, #playbtns {display:none;}
 #cover-options {display:none;}
@@ -139,12 +139,12 @@ html {background-color:inherit;}
 #countdown {margin:0 auto;height:17vw;width:17vw;}
 #countdown div {margin:0 auto;} /* needed to center the knob */
 .countdown-caret {margin-left:2px;color:var(--accentxts);}
-#countdown-display {position:absolute;top:46%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:1.9rem;font-weight:500;cursor:pointer;}
-#total {position:absolute;top:62%;left:50%;transform:translate(-50%);margin-left:.4em;/*font-family:monospace;*/}
-.total-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;width:22%;height:20px;margin-left:0 !important;}
+#countdown-display {position:absolute;top:46%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:2.5vw;font-weight:500;cursor:pointer;}
+#total {position:absolute;top:62%;left:50%;transform:translate(-50%);margin-left:.4em;font-size:1.5vw;}
+.total-radio {background-image:var(--radiobadge);background-position:center center;background-size:100%;background-repeat:no-repeat;width:22%;height:20px;margin-left:0 !important;}
 #playbtns, #playbtns .btn-group {font-size:1em;margin:1em 0;}
-#playbtns .btn {font-size:2rem;padding:1.25rem;}
-#playbtns .next, #playbtns .prev {font-size:1.8rem;}
+#playbtns .btn {/*font-size:2rem;*/font-size:2.5vw;padding:1.25rem;}
+#playbtns .next, #playbtns .prev {/*font-size:1.8rem;*/font-size:2.4vw;}
 #togglebtns {padding-top:2rem;}
 #togglebtns .btn-group {font-size:1em;white-space:normal;width:100%;}
 #togglebtns .btn-group .btn {font-size:.9em;margin:0 .3em;width:12%;padding:0;}

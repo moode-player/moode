@@ -1356,16 +1356,15 @@ function updTimeKnob(mpdTime) {
 
 // initialize the countdown timers
 function refreshTimer(startFrom, stopTo, state) {
-	var tick = 3; // call watchCountdown() every tick secs
 	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('destroy');
 
     if (state == 'play' || state == 'pause') {
 		if (SESSION.json['timecountup'] == "1" || parseInt(MPD.json['time']) == 0) {
-			$('#countdown-display').countdown({since: -(startFrom), onTick: watchCountdown, tickInterval: tick, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
+			$('#countdown-display').countdown({since: -(startFrom), compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({since: -(startFrom), compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 	    }
 		else {
-			$('#countdown-display').countdown({until: startFrom, onTick: watchCountdown, tickInterval: tick, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
+			$('#countdown-display').countdown({until: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({until: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 	    }
 
@@ -1375,36 +1374,15 @@ function refreshTimer(startFrom, stopTo, state) {
     }
 	else if (state == 'stop') {
 		if (SESSION.json['timecountup'] == "1" || parseInt(MPD.json['time']) == 0) {
-			$('#countdown-display').countdown({since: 0, onTick: watchCountdown, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
+			$('#countdown-display').countdown({since: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({since: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
     	}
 		else {
-			$('#countdown-display').countdown({until: 0, onTick: watchCountdown, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
+			$('#countdown-display').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 	    }
 
 		$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('pause');
-    }
-}
-
-// onTick callback for automatic font sizing on time knob
-function watchCountdown(period) {
-	// NOTE: period[4] (hours) > 0 reduce font-size so time fits nicely within knob
-
-    var fontSize;
-    // Playback panel
-	if (currentView.indexOf('playback') !== -1) {
-        //console.log(currentView, period[4]);
-		period[4] == 0 ? fontSize = 1.9 : (period[4] < 10 ? fontSize = 1.7 : fontSize = 1.6);
-        // Pi touch
-		$(window).height() <= 479 ? fontSize = fontSize - .1 : '';
-        // Adjust font size
-		$('#countdown-display').css('font-size', fontSize.toString() + 'rem');
-	}
-    // Playbar showing
-    else if ($('#playbar-total').text().length > 5) {
-        //console.log(currentView, period[4], 'length=' + $('#playbar-total').text().length);
-        period[4] == 0 ? $('#playbar-countdown').removeClass('long-time') : $('#playbar-countdown').addClass('long-time');
     }
 }
 
@@ -1567,9 +1545,8 @@ function formatNumCommas(x) {
 }
 
 function countdownRestart(startFrom) {
-	var tick = 3; // call watchCountdown() every tick secs
     $('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('destroy');
-    $('#countdown-display').countdown({since: startFrom, onTick: watchCountdown, tickInterval: tick, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
+    $('#countdown-display').countdown({since: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
     $('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({since: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 }
 

@@ -262,7 +262,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#index-artists {right:calc(0% + var(--sbw));}
 	#index-albums {right:calc(-50% + var(--sbw));}
 	#volcontrol-2 {height:65vw;width:65vw;}
-	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;}
+	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;font-size:8.5vw;}
+	#volume-popup .volume-display {font-size:9.5vw}
 	#volume-pad {height:85vw;width:85vw;}
 	#menu-top .dropdown.open {background-color:transparent;border-radius:unset;box-shadow:none;backdrop-filter:none;padding-left:0}
 	/* playbar */
