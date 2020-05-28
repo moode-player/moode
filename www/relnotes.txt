@@ -60,6 +60,7 @@ Bug fixes
 - FIX: Header text for "Recently added" being set incorrectly
 - FIX: Empty search filter not resetting lib header
 - FIX: No media query for Pi Touch 443 x 799 viewport (Sq Pixels)
+- FIX: Knob text and play controls not scaling
 
 ########################################################
 //
