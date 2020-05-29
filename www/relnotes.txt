@@ -34,6 +34,7 @@ Updates
 - UPD: Improve renderer active and restart/shutdown overlays
 - UPD: Improve fetch for cover image files
 - UPD: Improve thumbnail generator
+- UPD: Larger top buttons in Radio/Folder views for mobile
 
 Radio stations
 
@@ -50,6 +51,7 @@ Radio stations
 - UPD: Playable url for 4ZZZ FM
 - UPD: Station logos for Absolut stations
 - UPD: Station logo for Soma FM - DEF CON
+- UPD: Change Koffee to smooth Chill
 
 Bug fixes
 
