@@ -974,7 +974,7 @@ function updExtMetaFile() {
 	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
 	if ($hwparams['status'] == 'active') {
 		$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
-		$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' mbps';
+		$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' Mbps';
 	}
 	else {
 		$hwparams_format = '';

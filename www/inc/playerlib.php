@@ -860,7 +860,7 @@ function parseStatus($resp) {
 			}
 			else {
 			 	$array['bitrate'] = strlen($array['bitrate']) < 4 ? $array['bitrate'] : substr($array['bitrate'], 0, 1) . '.' . substr($array['bitrate'], 1, 3) ;
-			 	$array['bitrate'] .= strpos($array['bitrate'], '.') === false ? ' kbps' : ' mbps';
+			 	$array['bitrate'] .= strpos($array['bitrate'], '.') === false ? ' kbps' : ' Mbps';
 			}
 		}
 	}
@@ -925,7 +925,7 @@ function parseHwParams($resp) {
 		$_chans = (float)$array['channels'];
 		$array['channels'] = formatChan($array['channels']);
 
-		// mbps rate
+		// Mbps rate
 		$array['status'] = 'active';
 		$array['calcrate'] = number_format((($_rate * $_bits * $_chans) / 1000000), 3, '.', '');
 	}
