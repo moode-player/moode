@@ -47,6 +47,10 @@ Radio stations
 - NEW: Hi On Line - Pop (320K)
 - NEW: Hi On Line - Pop (FLAC)
 - NEW: Hi On Line - World
+- NEW: Radio Paradise - Main Mix
+- NEW: Radio Paradise - Mellow
+- NEW: Radio Paradise - Rock
+- NEW: Radio Paradise - World
 - NEW: Soma FM - Heavyweight Reggae
 - UPD: Playable url for 4ZZZ FM
 - UPD: Station logos for Absolut stations
