@@ -31,22 +31,28 @@ playerSession('open', '' ,'');
 
 // SOFTWARE UPDATE
 
-// check for software update
+// Check for software update
 if (isset($_POST['checkfor_update'])) {
 	$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
 	$lastinstall = checkForUpd('/var/local/www/');
 
-	// up to date
+	// Up to date
 	if ($available['Date'] == $lastinstall['Date']) {
 		$_available_upd = 'Software is up to date<br>';
 	}
-	// update available
+	// Image-only release available
+	elseif ($available['ImageOnly'] == 'Yes') {
+		$_available_upd = $available['Date'] . '<br>' : 'Release date: ' . $available['Date'] .
+			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>' .
+		$_pkg_description = $available['Description'];
+		$_pkg_relnotes = $available['Relnotes'];
+	}
+	// In-place update available
 	else {
 		$_available_upd = $available['Date'] == 'None' ? $available['Date'] . '<br>' : 'Package date: ' . $available['Date'] .
 			'<button class="btn btn-primary btn-small set-button btn-submit" id="install-update" type="submit" name="install_update" value="1">Install</button>' .
 			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>' .
-			'<span class="help-block-configs help-block-margin" style="margin-bottom:5px">Progress can be monitored via SSH cmd: moodeutl -t</span>'; //r45a
-
+			'<span class="help-block-configs help-block-margin" style="margin-bottom:5px">Progress can be monitored via SSH cmd: moodeutl -t</span>';
 		$_pkg_description = $available['Description'];
 		$_pkg_relnotes = $available['Relnotes'];
 	}
