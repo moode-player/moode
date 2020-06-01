@@ -42,10 +42,7 @@ if (isset($_POST['checkfor_update'])) {
 	}
 	// Image-only release available
 	elseif ($available['ImageOnly'] == 'Yes') {
-		$_available_upd = $available['Date'] . '<br>' : 'Release date: ' . $available['Date'] .
-			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>' .
-		$_pkg_description = $available['Description'];
-		$_pkg_relnotes = $available['Relnotes'];
+		$_available_upd = 'A new image-only release of moOde is available. Visit <a href="http://moodeaudio.org" class="moode-about-link" target="_blank">moodeaudio.org</a> for more information.';
 	}
 	// In-place update available
 	else {
