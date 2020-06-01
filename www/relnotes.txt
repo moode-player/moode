@@ -34,6 +34,7 @@ Updates
 - UPD: Improve renderer active and restart/shutdown overlays
 - UPD: Improve fetch for cover image files
 - UPD: Improve thumbnail generator
+- UPD: Improve software update check
 - UPD: Larger top buttons in Radio/Folder views for mobile
 
 Radio stations
@@ -59,6 +60,10 @@ Radio stations
 - UPD: Station logo for Maschinengeist Radio
 - UPD: Station logo for Morow - Retro Progressive Rock
 - UPD: Change Koffee to smooth Chill
+- DEL: MPR - Minnesota Public Radio
+- DEL: Radio Caroline
+- DEL: Radio SRF News
+- DEL: France Culture Live
 
 Bug fixes
 
