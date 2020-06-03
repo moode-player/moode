@@ -2241,7 +2241,7 @@ function setLibraryThumbnailCols(cols) {
     document.body.style.setProperty('--mthumbcols', css[1]);
 }
 
-// remove bg image (NOTE choose bg image is in footer.php)
+// Remove bg image (NOTE choose bg image is in indextpl.html)
 $('#remove-bgimage').click(function(e) {
 	e.preventDefault();
 	if ($('#current-bgimage').html() != '') {
@@ -2253,9 +2253,10 @@ $('#remove-bgimage').click(function(e) {
         $.post('command/moode.php?cmd=rmbgimage');
 		UI.bgImgChange = true;
 	}
-	return false; // so modal stays open
+    // So modal stays open
+	return false;
 });
-// import bg image to server
+// Import bg image to server
 function importBgImage(files) {
 	//console.log('files[0].size=(' + files[0].size + ')');
 	if (files[0].size > 1000000) {
@@ -2270,7 +2271,6 @@ function importBgImage(files) {
 		$('#error-bgimage').text('');
 	}
 
-	// import image
 	UI.bgImgChange = true;
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
 	$('#current-bgimage').html("<img src='" + imgUrl + "' />");
@@ -2279,7 +2279,7 @@ function importBgImage(files) {
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
+		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
         $.post('command/moode.php?cmd=setbgimage', {'blob': data});
 
@@ -2287,7 +2287,7 @@ function importBgImage(files) {
 	reader.readAsDataURL(files[0]);
 }
 
-// import station logo image to server
+// Import station logo image to server
 function newLogoImage(files) {
 	if (files[0].size > 1000000) {
 		$('#error-new-logoimage').text('Image must be less than 1MB in size');
@@ -2301,7 +2301,6 @@ function newLogoImage(files) {
 		$('#error-new-logoimage').text('');
 	}
 
-	// import image
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
 	$('#preview-new-logoimage').html("<img src='" + imgUrl + "' />");
 	$('#info-toggle-new-logoimage').css('margin-left','60px');
@@ -2311,14 +2310,12 @@ function newLogoImage(files) {
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
+		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
         $.post('command/moode.php?cmd=setlogoimage', {'name': stationPlsName, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
 }
-
-// import station logo image to server
 function editLogoImage(files) {
 	if (files[0].size > 1000000) {
 		$('#error-edit-logoimage').text('Image must be less than 1MB in size');
@@ -2332,7 +2329,6 @@ function editLogoImage(files) {
 		$('#error-edit-logoimage').text('');
 	}
 
-	// import image
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
 	$('#preview-edit-logoimage').html("<img src='" + imgUrl + "' />");
 	$('#info-toggle-edit-logoimage').css('margin-left','60px');
@@ -2341,9 +2337,29 @@ function editLogoImage(files) {
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
-		// strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
+		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
         $.post('command/moode.php?cmd=setlogoimage', {'name': stationPlsName, 'blob': data});
+	}
+	reader.readAsDataURL(files[0]);
+}
+
+// Import station zip package to server
+function importStationPkg(files) {
+    //console.log('files[0].size=(' + files[0].size + ')');
+    $('#import-export-msg').text('Importing station package into the Library...');
+	objUrl = (URL || webkitURL).createObjectURL(files[0]);
+	URL.revokeObjectURL(objUrl);
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		var dataURL = reader.result;
+		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
+        // For zip files its data:application/zip;base64,
+		var data = dataURL.match(/,(.*)$/)[1];
+        $.post('command/moode.php?cmd=import_stations', {'blob': data}, function() {
+            $('#import-export-msg').text('Import complete');
+            $('#import-station-pkg').val('');
+        });
 	}
 	reader.readAsDataURL(files[0]);
 }
