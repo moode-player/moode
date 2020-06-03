@@ -655,7 +655,7 @@ else {
 				break;
 			case 'export_stations':
 				syscmd('sqlite3 /var/local/www/db/moode-sqlite3.db -csv "select * from cfg_radio" > /var/local/www/db/cfg_radio.csv');
-				sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/www/images/radio-logos/* /var/local/www/db/cfg_radio.csv');
+				sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/local/www/imagesw/radio-logos/* /var/local/www/db/cfg_radio.csv');
 				syscmd('rm /var/local/www/db/cfg_radio.csv');
 				break;
 
