@@ -681,7 +681,7 @@ function renderUI() {
             // Thumbnail for Playbar
             if (MPD.json['file']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
-                    encodeURIComponent(MPD.json['coverurl'].replace('images/radio-logos', 'images/radio-logos/thumbs')) :
+                    encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
                     '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             }
@@ -1268,7 +1268,7 @@ function formatBrowseData(data, path, i, panel, radioViewLazy) {
 			var itemType = '';
 			if (data[i].file.substr(0, 5) == 'RADIO') {
 				if (panel == 'radio_panel') {
-					var imgurl = '../images/radio-logos/thumbs/' + filename.replace(path + '/', '') + '.jpg';
+					var imgurl = '../imagesw/radio-logos/thumbs/' + filename.replace(path + '/', '') + '.jpg';
 					output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgurl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
 				}
 				else {
@@ -1777,7 +1777,7 @@ $('.context-menu a').click(function(e) {
     		$('#edit-station-url').val(result['station']);
             $('#edit-logoimage').val('');
             $('#info-toggle-edit-logoimage').css('margin-left','60px');
-            $('#preview-edit-logoimage').html('<img src="../images/radio-logos/thumbs/' + stationPlsName + '.jpg">');
+            $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + stationPlsName + '.jpg">');
 
             $('#edit-station-tags').css('margin-top', '30px');
             $('#edit-station-display-name').val(result['name']);

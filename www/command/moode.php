@@ -435,8 +435,8 @@ else {
 						sysCmd('chown root:root "' . $file . '"');
 
 						// Write image
-						sysCmd('mv "/var/www/images/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/www/images/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
-						sysCmd('mv "/var/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/www/images/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
+						sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
+						sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
 
 						// Update time stamp on files so mpd picks up the change and commits the update
 						sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
@@ -467,8 +467,8 @@ else {
 					// Delete pls and logo image files
 					$station_pls_name = substr($_POST['path'], 6, -4); // Trim RADIO/ and .pls
 					sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
-					sysCmd('rm "' . '/var/www/images/radio-logos/' . $station_pls_name . '.jpg' . '"');
-					sysCmd('rm "' . '/var/www/images/radio-logos/thumbs/' . $station_pls_name . '.jpg' . '"');
+					sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/' . $station_pls_name . '.jpg' . '"');
+					sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $station_pls_name . '.jpg' . '"');
 
 					// Update time stamp on files so mpd picks up the change
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
