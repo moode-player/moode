@@ -3045,7 +3045,7 @@ function storeBackLink($section, $tpl) {
 
 // Create enhanced metadata
 function enhanceMetadata($current, $sock, $caller = '') {
-	define(LOGO_ROOT_DIR, 'images/radio-logos/');
+	define(LOGO_ROOT_DIR, 'imagesw/radio-logos/');
 	define(DEF_RADIO_COVER, 'images/default-cover-v6.svg');
 	define(DEF_COVER, 'images/default-cover-v6.svg');
 

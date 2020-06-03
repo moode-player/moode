@@ -523,7 +523,7 @@ sudo rm /etc/update-motd.d/10-uname
 
 # Ignore "no such file or directory" errors if they appear.
 sudo rm /var/lib/mpd/music/RADIO/*
-sudo rm -rf /var/www/images/radio-logos/
+sudo rm -rf /var/local/www/imagesw/radio-logos/
 
 sudo cp ./moode/mpd/RADIO/* /var/lib/mpd/music/RADIO
 sudo cp ./moode/mpd/playlists/* /var/lib/mpd/playlists
