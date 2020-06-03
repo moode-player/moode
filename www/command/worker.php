@@ -93,19 +93,7 @@ else {
 
 // Load cfg_system into session
 playerSession('open', '', '');
-// Delete radio station session vars to purge any orphans
-foreach ($_SESSION as $key => $value) {
-	if (substr($key, 0, 5) == 'http:') {
-		unset($_SESSION[$key]);
-	}
-}
-// Load cfg_radio into session
-$result = cfgdb_read('cfg_radio', $dbh);
-foreach ($result as $row) {
-	if ($row['station'] != 'DELETED') {
-		$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
-	}
-}
+loadRadio();
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
 
@@ -1844,6 +1832,35 @@ function runQueuedJob() {
 				if (imagedestroy($thumb) === false) {
 					workerLog('setlogoimage: error 5: ' . $file);
 					break;
+				}
+			}
+			break;
+		case 'import_stations':
+			if (false === ($zip_data = base64_decode($_SESSION['w_queueargs'], true))) {
+				workerLog('moode.php: import_stations base64_decode failed');
+			}
+			else {
+				$file = '/var/local/www/station_import.zip';
+				if (false === ($fh = fopen($file, 'w'))) {
+					workerLog('moode.php: file create failed on ' . $file);
+				}
+				else {
+					if (false === ($bytes_written = fwrite($fh, $zip_data))) {
+						workerLog('moode.php: file write failed on ' . $file);
+					}
+					else {
+						// Import station data
+						sysCmd('/var/www/command/import_stations.sh');
+						// Update MPD RADIO folder
+						$sock = openMpdSock('localhost', 6600);
+						sendMpdCmd($sock, 'update RADIO');
+						$resp = readMpdResp($sock);
+						closeMpdSock($sock);
+						$GLOBALS['check_library_update'] = '1';
+						// Update the session
+						loadRadio();
+					}
+					fclose($fh);
 				}
 			}
 			break;

@@ -71,6 +71,14 @@ else {
 			echo json_encode('worker busy');
 		}
 	}
+	elseif ($_GET['cmd'] == 'import_stations') {
+		if (submitJob($_GET['cmd'], $_POST['blob'], '', '')) {
+			echo json_encode('job submitted');
+		}
+		else {
+			echo json_encode('worker busy');
+		}
+	}
 	elseif ($_GET['cmd'] == 'disconnect-renderer') {
 		if ($_POST['job'] == 'slsvc') {
 			session_start();
@@ -644,6 +652,11 @@ else {
 				break;
 			case 'readplayhistory':
 				echo json_encode(parsePlayHist(shell_exec('cat /var/local/www/playhistory.log')));
+				break;
+			case 'export_stations':
+				syscmd('sqlite3 /var/local/www/db/moode-sqlite3.db -csv "select * from cfg_radio" > /var/local/www/db/cfg_radio.csv');
+				sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/www/images/radio-logos/* /var/local/www/db/cfg_radio.csv');
+				syscmd('rm /var/local/www/db/cfg_radio.csv');
 				break;
 
 			// Return client ip address

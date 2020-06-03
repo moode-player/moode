@@ -39,6 +39,7 @@ define('LIBCACHE_JSON', '/var/local/www/libcache.json');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
 define('TMP_STATION_PREFIX', '__tmp__');
+define('EXPORT_DIR', '/var/local/www/imagesw');
 
 error_reporting(E_ERROR);
 
@@ -3348,4 +3349,21 @@ function parseDir($path) {
 	}
 
 	return $result;
+}
+
+// Load radio data into session
+function loadRadio() {
+	// Delete radio station session vars to purge any orphans
+	foreach ($_SESSION as $key => $value) {
+		if (substr($key, 0, 5) == 'http:') {
+			unset($_SESSION[$key]);
+		}
+	}
+	// Load cfg_radio into session
+	$result = cfgdb_read('cfg_radio', cfgdb_connect());
+	foreach ($result as $row) {
+		if ($row['station'] != 'DELETED') {
+			$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
+		}
+	}
 }
