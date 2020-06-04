@@ -60,10 +60,8 @@ Radio stations
 - UPD: Station logo for Maschinengeist Radio
 - UPD: Station logo for Morow - Retro Progressive Rock
 - UPD: Change Koffee to smooth Chill
-- DEL: MPR - Minnesota Public Radio
 - DEL: Radio Caroline
-- DEL: Radio SRF News
-- DEL: France Culture Live
+- DEL: MPR - Minnesota Public Radio
 
 Bug fixes
 
