@@ -830,14 +830,15 @@ function chkMaintenance() {
 			workerLog('Maintenance: Problem compacting SQLite database');
 		}
 
+		// Prune temp or intermediate resources
+		sysCmd('find /var/www -type l -delete');
+		sysCmd('rm /var/local/www/imagesw/stations.zip > /dev/null 2>&1');
+
 		// Check for low disk soace
 		$free_space = sysCmd("df | grep /dev/root | awk '{print $4}'");
 		if ($free_space[0] < 512000) {
 			workerLog('Maintenance: Free disk space < 512M required for in-place updates');
 		}
-
-		// Broom www root
-		sysCmd('find /var/www -type l -delete');
 
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 		//workerLog('worker: Maintenance completed');
