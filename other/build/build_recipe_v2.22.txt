@@ -117,8 +117,8 @@ sudo reboot
 ////////////////////////////////////////////////////////////////
 
 1. Unzip moOde release
-unzip -o -q ./moode-r652.zip
-rm -f ./moode-r652.zip
+unzip -o -q ./moode-r660.zip
+rm -f ./moode-r660.zip
 
 2. Basic optimizations
 
