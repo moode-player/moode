@@ -60,8 +60,9 @@ Radio stations
 - UPD: Station logo for Maschinengeist Radio
 - UPD: Station logo for Morow - Retro Progressive Rock
 - UPD: Change Koffee to smooth Chill
-- DEL: Radio Caroline
+- DEL: Radio Caroline (playable URL fail)
 - DEL: MPR - Minnesota Public Radio
+- DEL: JB Radio 2 (FLAC)
 
 Bug fixes
 
