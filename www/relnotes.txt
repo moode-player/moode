@@ -61,8 +61,8 @@ Radio stations
 - UPD: Station logo for Morow - Retro Progressive Rock
 - UPD: Change Koffee to smooth Chill
 - DEL: Radio Caroline (playable URL fail)
-- DEL: MPR - Minnesota Public Radio
-- DEL: JB Radio 2 (FLAC)
+- DEL: MPR - Minnesota Public Radio (playable URL fail)
+- DEL: JB Radio 2 FLAC (stops after song ends)
 
 Bug fixes
 
