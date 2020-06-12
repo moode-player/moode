@@ -3205,6 +3205,9 @@ function setLibMenuHeader () {
 		        LIB.recentlyAddedClicked = false;
 			}
 
+            if (LIB.filters.genres.length) {
+				headerText = 'Browse ' + LIB.filters.genres[0];
+			}
 			if (LIB.filters.artists.length) {
 				headerText = 'Albums by ' + LIB.filters.artists[0];
 			}
