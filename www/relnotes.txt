@@ -31,6 +31,7 @@ Updates
 - UPD: Use check mark style on Library menu
 - UPD: Add X-Large font size option to Appearance
 - UPD: Add album count to Tag view
+- UPD: Improve browsing in Tag view
 - UPD: Improve renderer active and restart/shutdown overlays
 - UPD: Improve fetch for cover image files
 - UPD: Improve thumbnail generator
