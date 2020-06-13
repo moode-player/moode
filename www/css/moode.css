@@ -162,10 +162,13 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.lib-entry {padding: 0 .25em;}
 	.lib-entry-song {font-size:.95em;}
 	#lib-file {left:0%;width:100%;padding-left:0px;}
-	#lib-coverart-img {float:left;min-width:68px;width:68px;margin:0;}
-	#lib-coverart-meta-area img {height:68px;width:68px;min-width:68px;max-width:68px;margin:.25em;}
+
+	#tagview-text-cover {font-size:1rem;width:75px;height:75px;}
+	#lib-coverart-img {float:left;min-width:75px;width:75px;height:75px;margin:0;}
+	#lib-coverart-meta-area img {height:75px;width:75px;min-width:75px;max-width:75px;margin:.25em;}
 	#lib-coverart-meta-area {float:left;width:100%;line-height:14px;}
-	#lib-meta-summary {width:calc(100% - 68px - .75em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
+	#lib-meta-summary {width:calc(100% - 75px - .75em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
+
 	#songsList {margin:.25em !important;}
 	#lib-file .songname {overflow:hidden;float:left;width:calc(50% - 15px);height:auto;margin-left:5px;}
 	#lib-file .songtime {float:left;width:10%;left:50%;margin-left:5px;}
