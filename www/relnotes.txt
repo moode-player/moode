@@ -60,6 +60,7 @@ Radio stations
 - UPD: Station logo for Soma FM - DEF CON
 - UPD: Station logo for Maschinengeist Radio
 - UPD: Station logo for Morow - Retro Progressive Rock
+- UPD: Station logo for Roots Legacy Radio - Dub UK & Roots Reggae
 - UPD: Change Koffee to smooth Chill
 - DEL: Radio Caroline (playable URL fail)
 - DEL: MPR - Minnesota Public Radio (playable URL fail)
