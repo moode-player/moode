@@ -648,7 +648,7 @@ else {
 				$result = sdbquery("SELECT * FROM cfg_radio WHERE station='" . SQLite3::escapeString($station_file['File1']) . "'", $dbh);
 				$array = array('id' => $result[0]['id'], 'station' => $result[0]['station'], 'name' => $result[0]['name'], 'type' => $result[0]['type'],
 				 	'logo' =>  $result[0]['logo'], 'genre' => $result[0]['genre'], 'broadcaster' => $result[0]['broadcaster'], 'language' => $result[0]['language'],
-					'country' => $result[0]['country'], 'region' => $result[0]['region'],	'bitrate' => $result[0]['bitrate'], 'format' => $result[0]['format']);
+					'country' => $result[0]['country'], 'region' => $result[0]['region'], 'bitrate' => $result[0]['bitrate'], 'format' => $result[0]['format']);
 				echo json_encode($array);
 				break;
 			// Remove background image
