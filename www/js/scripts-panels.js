@@ -44,6 +44,12 @@ jQuery(document).ready(function($) { 'use strict';
         GLOBAL.nativeLazyLoad = true;
     }
 
+    // Determine whether on OS X or not. This is for enabling custom scroll bars on non-OSX desktop platforms.
+    if (navigator.platform.toUpperCase().indexOf('MAC') == -1 && navigator.appVersion.toUpperCase().indexOf('OS X') == -1) {
+        $('body').addClass('not-osx');
+    }
+    //console.log(navigator.platform, navigator.appVersion);
+
 	// load current cfg
     $.getJSON('command/moode.php?cmd=read_cfgs', function(result) {
     	SESSION.json = result['cfg_system'];
