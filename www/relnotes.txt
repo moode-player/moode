@@ -22,7 +22,9 @@ New features
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
 - NEW: First use help for Playback/Playbar switch
+- NEW: Airplay and Spotify renderers output via Bluetooth
 - NEW: Support for Browser native image lazy load
+- NEW: Custom scroll bars replace default white scroll bars
 
 Updates
 
