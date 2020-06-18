@@ -2152,7 +2152,10 @@ function startSps() {
 	$array = sdbquery('select value from cfg_mpd where param="device"', cfgdb_connect());
 	$device = $array[0]['value'];
 
-	if ($_SESSION['alsaequal'] != 'Off') {
+	if ($_SESSION['audioout'] == 'Bluetooth' ) {
+		$device = 'btstream';
+	}
+	elseif ($_SESSION['alsaequal'] != 'Off') {
 		$device = 'alsaequal';
 	}
 	elseif ($_SESSION['eqfa4p'] != 'Off') {
@@ -2188,7 +2191,10 @@ function startSpotify() {
 		$cfg_spotify[$row['param']] = $row['value'];
 	}
 
-	if ($_SESSION['alsaequal'] != 'Off') {
+	if ($_SESSION['audioout'] == 'Bluetooth' ) {
+		$device = 'btstream';
+	}
+	elseif ($_SESSION['alsaequal'] != 'Off') {
 		$device = 'alsaequal';
 	}
 	elseif ($_SESSION['eqfa4p'] != 'Off') {
@@ -2957,8 +2963,9 @@ function setAudioIn($input_source) {
 	}
 }
 
-// set MPD audio output
+// Set MPD and renderer audio output
 function setAudioOut($audioout) {
+	// MPD
 	if ($audioout == 'Local') {
 		reconfMpdVolume($_SESSION['mpdmixer_local']);
 		sysCmd('/var/www/vol.sh -restore');
@@ -2995,6 +3002,13 @@ function setAudioOut($audioout) {
 		sysCmd('mpc enable only 6'); // ALSA bluetooth output
 	}
 
+	// Renderers
+	stopSps();
+	stopSpotify();
+	startSps();
+	startSpotify();
+
+	// Other
 	setMpdHttpd();
 	sysCmd('systemctl restart mpd');
 }
