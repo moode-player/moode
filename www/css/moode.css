@@ -532,21 +532,47 @@ ol.playhistory {margin-left:55px;}
 #ph-search {margin-bottom:8px;}
 #ph-search input {width:145px;margin:0;padding: 2px 0 2px 10px;border-top-right-radius:0px;border-bottom-right-radius:0px;}
 
-/* Only normal monitors (pointer: fine) and not OS X since OS X has system-wide setting for overlay scroll bars */
+/* Use custom scroll bars for desktop monitors */
 @media (pointer: fine) {
-    .not-osx ::-webkit-scrollbar {
+    .custom-scrollbars ::-webkit-scrollbar {
         width: 10px;
     }
 
-    .not-osx ::-webkit-scrollbar-track {
+    .custom-scrollbars ::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.25);
         border-radius: 10px;
     }
 
-    .not-osx ::-webkit-scrollbar-thumb {
+    .custom-scrollbars ::-webkit-scrollbar-thumb {
         border-radius: 10px;
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.25);
         background-color: var(--textvariant);
 		opacity:.25;
     }
+
+	/* Firefox */
+	* {
+		.custom-scrollbars scrollbar-width: thin;
+		.custom-scrollbars scrollbar-color: auto;
+	}
+}
+/* @swizzle */
+@media (pointer: fine) {
+   .scroll ::-webkit-scrollbar {
+    width: 11px;
+   }
+   .scroll ::-webkit-scrollbar-track:hover {
+    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+       border-radius: 6px;
+   }
+   .scroll ::-webkit-scrollbar-thumb {
+       border-radius: 6px;
+       background-color: var(--btnshade2);
+    border:2px solid rgba(0,0,0,0);
+    background-clip: padding-box;
+    min-height:1.5em;
+   }
+   .scroll ::-webkit-scrollbar-thumb:active {
+    background-color:var(--textvariant);
+   }
 }

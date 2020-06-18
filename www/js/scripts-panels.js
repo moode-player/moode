@@ -32,23 +32,22 @@ jQuery(document).ready(function($) { 'use strict';
 	// Store device pixel ratio
     $.post('command/moode.php?cmd=updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
 
-	// store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
+	// Store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
 	var hiddenDiv = $("<div style='position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;'></div>").appendTo("body");
 	var sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
 	$("body").get(0).style.setProperty("--sbw", sbw + 'px');
-	//console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
+    //console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
+
+    // Enable custom scroll bars if always-on scroll bars are enabled
+    if (sbw) {
+        $('body').addClass('custom-scrollbars');
+    }
 
     // Check for native lazy load support in Browser
     // @bitkeeper contribution: https://github.com/moode-player/moode/pull/131
     if ('loading' in HTMLImageElement.prototype) {
         GLOBAL.nativeLazyLoad = true;
     }
-
-    // Determine whether on OS X or not. This is for enabling custom scroll bars on non-OSX desktop platforms.
-    if (navigator.platform.toUpperCase().indexOf('MAC') == -1 && navigator.appVersion.toUpperCase().indexOf('OS X') == -1) {
-        $('body').addClass('not-osx');
-    }
-    //console.log(navigator.platform, navigator.appVersion);
 
 	// load current cfg
     $.getJSON('command/moode.php?cmd=read_cfgs', function(result) {
