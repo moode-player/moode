@@ -38,7 +38,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$("body").get(0).style.setProperty("--sbw", sbw + 'px');
     //console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
 
-    // Enable custom scroll bars if always-on scroll bars are enabled
+    // Enable custom scroll bars unless overlay scroll bars are enabled on the platform (scroll bar width sbw = 0)
     if (sbw) {
         $('body').addClass('custom-scrollbars');
     }

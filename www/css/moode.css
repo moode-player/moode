@@ -534,45 +534,30 @@ ol.playhistory {margin-left:55px;}
 
 /* Use custom scroll bars for desktop monitors */
 @media (pointer: fine) {
-    .custom-scrollbars ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    .custom-scrollbars ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.25);
-        border-radius: 10px;
-    }
-
-    .custom-scrollbars ::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.25);
-        background-color: var(--textvariant);
-		opacity:.25;
-    }
-
-	/* Firefox */
-	* {
-		.custom-scrollbars scrollbar-width: thin;
-		.custom-scrollbars scrollbar-color: auto;
-	}
-}
-/* @swizzle */
-@media (pointer: fine) {
-   .scroll ::-webkit-scrollbar {
-    width: 11px;
+	.custom-scrollbars ::-webkit-scrollbar {
+		width: 11px;
    }
-   .scroll ::-webkit-scrollbar-track:hover {
-    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
-       border-radius: 6px;
+
+   .custom-scrollbars ::-webkit-scrollbar-track:hover {
+	    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+		border-radius: 6px;
    }
-   .scroll ::-webkit-scrollbar-thumb {
-       border-radius: 6px;
-       background-color: var(--btnshade2);
-    border:2px solid rgba(0,0,0,0);
-    background-clip: padding-box;
-    min-height:1.5em;
+
+   .custom-scrollbars ::-webkit-scrollbar-thumb {
+		border-radius: 6px;
+		background-color: var(--btnshade2);
+		border:2px solid rgba(0,0,0,0);
+		background-clip: padding-box;
+		min-height:1.5em;
    }
-   .scroll ::-webkit-scrollbar-thumb:active {
-    background-color:var(--textvariant);
+
+   .custom-scrollbars ::-webkit-scrollbar-thumb:active {
+	   background-color:var(--textvariant);
+   }
+
+   /* Firefox */
+   * {
+	   .custom-scrollbars scrollbar-width: thin;
+	   .custom-scrollbars scrollbar-color: auto;
    }
 }
