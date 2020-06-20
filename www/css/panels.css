@@ -396,7 +396,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #albumcovers .artist-name, #albumcovers .album-year {margin:0 .15em;}
 /* index improvements */
 #radiocovers, #albumcovers {width:calc(100% - 2 * (var(--sbw) + 1.17rem));margin-left:calc(var(--sbw) + 1.17rem);}
-#lib-genre ul, #lib-artist ul, #lib-album ul {width:calc(100% - (var(--sbw) + 1rem));margin:.25em 0;}
+#lib-genre ul, #lib-artist ul, #lib-album ul {width:calc(100% - (var(--sbw) + 1.17rem));margin:.25em 0;}
 /**/
 #random-album {position:absolute;top:env(safe-area-inset-top);left:7rem;line-height:2.75rem;height:2.75rem;transform:none;padding:.15em .5em 0 .5em;cursor:pointer;}
 #random-album i {font-size:1.1rem;color:var(--adapttext);opacity:.35;}
