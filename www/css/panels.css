@@ -369,6 +369,7 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 .lib-action .btn {font-size:.9em;line-height:normal;margin-top:.45em;padding-right:100vw;opacity:0} /* click whole line for menu */
 .lib-disc {margin:0;text-transform:uppercase;background-color:rgba(128,128,128,0.1);box-shadow:0 .04em .025em rgba(0,0,0,0.15);display:none;}
 .lib-disc a {font-size:.9em;opacity:.75;}
+.lib-album-heading {font-size:.9em;opacity:.75;margin:0;text-transform:uppercase;background-color:rgba(128,128,128,0.1);box-shadow:0 .04em .025em rgba(0,0,0,0.15);display:none;}
 #songsList .lib-disc a.active {font-weight:700;color:unset;}
 #songsList li.active {font-weight:700;background-color:unset;}
 #trackscontainer {width:calc(80vw - var(--sbw));float:right;} /* Was 81vw */
@@ -608,7 +609,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .config-label {color:#eee;margin-left:.35em;}
 .busy-spinner {position:absolute;right:3.25rem;top:.2rem;top:calc(env(safe-area-inset-top) + .2rem);display:none;}
 .busy-spinner svg {stroke:var(--adapttext);height:1rem;width:1rem;}
-#artist-cover {font-size:1.4em;height:calc(20.75vw - 1em);width:calc(20.75vw - 1em);background:rgba(64,64,64,.2);box-shadow: 0px 0px .2em rgba(0,0,0,0.2);}
+#tagview-text-cover {font-size:1.8rem;line-height:1.1em;height:calc(20vw - 1em);width:100%;background:rgba(64,64,64,.2);box-shadow: 0px 0px .2em rgba(0,0,0,0.2);}
 #station-path {text-align:center;}
 #track-info-text {text-align:left;}
 .no-tagview-covers {padding-top:.4em;padding-bottom:.4em;}
@@ -625,4 +626,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #playbar-firstuse-help {display:none;position:absolute;left:0;top:0;z-index:9999}
 #playback-firstuse-help i, #playbar-firstuse-help i {cursor:pointer;}
 /* New/edit radio station modals */
-#new-station-language, #edit-station-language, #new-station-format, #EDIT-station-format {text-transform:uppercase;}
+#new-station-format, #EDIT-station-format {text-transform:uppercase;}

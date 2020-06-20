@@ -435,8 +435,14 @@ else {
 						sysCmd('chown root:root "' . $file . '"');
 
 						// Write image
-						sysCmd('mv "/var/www/images/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/www/images/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
-						sysCmd('mv "/var/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/www/images/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
+						if (!file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg')) {
+							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
+							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
+						}
+						else {
+							sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
+							sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
+						}
 
 						// Update time stamp on files so mpd picks up the change and commits the update
 						sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
@@ -467,8 +473,8 @@ else {
 					// Delete pls and logo image files
 					$station_pls_name = substr($_POST['path'], 6, -4); // Trim RADIO/ and .pls
 					sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
-					sysCmd('rm "' . '/var/www/images/radio-logos/' . $station_pls_name . '.jpg' . '"');
-					sysCmd('rm "' . '/var/www/images/radio-logos/thumbs/' . $station_pls_name . '.jpg' . '"');
+					sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/' . $station_pls_name . '.jpg' . '"');
+					sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $station_pls_name . '.jpg' . '"');
 
 					// Update time stamp on files so mpd picks up the change
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
@@ -642,7 +648,7 @@ else {
 				$result = sdbquery("SELECT * FROM cfg_radio WHERE station='" . SQLite3::escapeString($station_file['File1']) . "'", $dbh);
 				$array = array('id' => $result[0]['id'], 'station' => $result[0]['station'], 'name' => $result[0]['name'], 'type' => $result[0]['type'],
 				 	'logo' =>  $result[0]['logo'], 'genre' => $result[0]['genre'], 'broadcaster' => $result[0]['broadcaster'], 'language' => $result[0]['language'],
-					'country' => $result[0]['country'], 'region' => $result[0]['region'],	'bitrate' => $result[0]['bitrate'], 'format' => $result[0]['format']);
+					'country' => $result[0]['country'], 'region' => $result[0]['region'], 'bitrate' => $result[0]['bitrate'], 'format' => $result[0]['format']);
 				echo json_encode($array);
 				break;
 			// Remove background image
@@ -655,7 +661,7 @@ else {
 				break;
 			case 'export_stations':
 				syscmd('sqlite3 /var/local/www/db/moode-sqlite3.db -csv "select * from cfg_radio" > /var/local/www/db/cfg_radio.csv');
-				sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/www/images/radio-logos/* /var/local/www/db/cfg_radio.csv');
+				sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/local/www/imagesw/radio-logos/* /var/local/www/db/cfg_radio.csv');
 				syscmd('rm /var/local/www/db/cfg_radio.csv');
 				break;
 

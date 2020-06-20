@@ -185,8 +185,8 @@ sysCmd('chmod 0777 /var/local/www/playhistory.log');
 sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 ' . MOODE_LOG);
 // Delete any tmp files left over from New/Edit radio station
-sysCmd('rm /var/local/www/images/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
-sysCmd('rm /var/local/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
+sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
+sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
 workerLog('worker: File check (OK)');
 
 //
@@ -830,14 +830,15 @@ function chkMaintenance() {
 			workerLog('Maintenance: Problem compacting SQLite database');
 		}
 
+		// Prune temp or intermediate resources
+		sysCmd('find /var/www -type l -delete');
+		sysCmd('rm /var/local/www/imagesw/stations.zip > /dev/null 2>&1');
+
 		// Check for low disk soace
 		$free_space = sysCmd("df | grep /dev/root | awk '{print $4}'");
 		if ($free_space[0] < 512000) {
 			workerLog('Maintenance: Free disk space < 512M required for in-place updates');
 		}
-
-		// Broom www root
-		sysCmd('find /var/www -type l -delete');
 
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 		//workerLog('worker: Maintenance completed');
@@ -1796,7 +1797,7 @@ function runQueuedJob() {
 			}
 			else {
 				// main image
-				$file = '/var/www/images/radio-logos/' . TMP_STATION_PREFIX . $station_name . '.jpg';
+				$file = '/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $station_name . '.jpg';
 				$fh = fopen($file, 'w');
 				fwrite($fh, $imgdata);
 				fclose($fh);
@@ -1825,7 +1826,7 @@ function runQueuedJob() {
 					workerLog('setlogoimage: error 3: ' . $file);
 					break;
 				}
-				if (imagejpeg($thumb, '/var/www/images/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) === false) {
+				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) === false) {
 					workerLog('setlogoimage: error 4: ' . $file);
 					break;
 				}

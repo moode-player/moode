@@ -22,7 +22,9 @@ New features
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
 - NEW: First use help for Playback/Playbar switch
+- NEW: Airplay and Spotify renderers output via Bluetooth
 - NEW: Support for Browser native image lazy load
+- NEW: Custom scroll bars replace default white scroll bars
 
 Updates
 
@@ -31,10 +33,12 @@ Updates
 - UPD: Use check mark style on Library menu
 - UPD: Add X-Large font size option to Appearance
 - UPD: Add album count to Tag view
+- UPD: Improve browsing in Tag view
 - UPD: Improve renderer active and restart/shutdown overlays
 - UPD: Improve fetch for cover image files
 - UPD: Improve thumbnail generator
 - UPD: Improve software update check
+- UPD: Improve scroll bar appearance for non-OSX platforms
 - UPD: Larger top buttons in Radio/Folder views for mobile
 
 Radio stations
@@ -59,11 +63,11 @@ Radio stations
 - UPD: Station logo for Soma FM - DEF CON
 - UPD: Station logo for Maschinengeist Radio
 - UPD: Station logo for Morow - Retro Progressive Rock
+- UPD: Station logo for Roots Legacy Radio - Dub UK & Roots Reggae
 - UPD: Change Koffee to smooth Chill
-- DEL: MPR - Minnesota Public Radio
-- DEL: Radio Caroline
-- DEL: Radio SRF News
-- DEL: France Culture Live
+- DEL: Radio Caroline (playable URL fail)
+- DEL: MPR - Minnesota Public Radio (playable URL fail)
+- DEL: JB Radio 2 FLAC (stops after song ends)
 
 Bug fixes
 

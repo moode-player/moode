@@ -18,8 +18,8 @@
 
 # Purge existing station data
 rm /var/lib/mpd/music/RADIO/* 2> /dev/null
-rm /var/www/images/radio-logos/*.jpg 2> /dev/null
-rm /var/www/images/radio-logos/thumbs/*.jpg 2> /dev/null
+rm /var/local/www/imagesw/radio-logos/*.jpg 2> /dev/null
+rm /var/local/www/imagesw/radio-logos/thumbs/*.jpg 2> /dev/null
 sqlite3 /var/local/www/db/moode-sqlite3.db "DELETE FROM cfg_radio"
 
 # Install new station data

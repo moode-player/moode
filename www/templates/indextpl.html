@@ -1431,7 +1431,7 @@
 		                </div>
 						<label class="control-label" for="new-station-language">Language</label>
 						<div class="controls">
-		                    <input id="new-station-language" class="input-xlarge" type="text" name="new_station_language" maxlength="2" value="">
+		                    <input id="new-station-language" class="input-xlarge" type="text" name="new_station_language" maxlength="32" value="">
 		                </div>
 						<label class="control-label" for="new-station-country">Country</label>
 						<div class="controls">
@@ -1507,7 +1507,7 @@
 		                </div>
 						<label class="control-label" for="edit-station-language">Language</label>
 						<div class="controls">
-		                    <input id="edit-station-language" class="input-xlarge" type="text" name="edit_station_language" maxlength="2" value="">
+		                    <input id="edit-station-language" class="input-xlarge" type="text" name="edit_station_language" maxlength="32" value="">
 		                </div>
 						<label class="control-label" for="edit-station-country">Country</label>
 						<div class="controls">
@@ -1567,7 +1567,7 @@
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-import-station-pkg" class="help-block hide">
-						Import a radio station zip package into the Library.
+						Import a radio station zip package into the Library. The contents of the zip package will replace the existing stations.
 					</div>
 				</div>
 
@@ -1578,7 +1578,7 @@
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-export-stations" class="help-block hide">
-						Export the radio station database and logos to stations.zip in the client default download directory.
+						Export the radio station sql table, pls files and station logos to stations.zip in the client default download directory.
 					</div>
 					<div id="import-export-msg" class="help-block"></div>
 				</div>
@@ -1588,7 +1588,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-upd-radio-manager btn-primary" data-dismiss="modal">Update</button>
+		<!--button aria-label="Update" class="btn btn-upd-radio-manager btn-primary" data-dismiss="modal">Update</button-->
 	</div>
 </div>
 

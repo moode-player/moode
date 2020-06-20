@@ -32,11 +32,16 @@ jQuery(document).ready(function($) { 'use strict';
 	// Store device pixel ratio
     $.post('command/moode.php?cmd=updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
 
-	// store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
+	// Store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
 	var hiddenDiv = $("<div style='position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;'></div>").appendTo("body");
 	var sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
 	$("body").get(0).style.setProperty("--sbw", sbw + 'px');
-	//console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
+    //console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
+
+    // Enable custom scroll bars unless overlay scroll bars are enabled on the platform (scroll bar width sbw = 0)
+    if (sbw) {
+        $('body').addClass('custom-scrollbars');
+    }
 
     // Check for native lazy load support in Browser
     // @bitkeeper contribution: https://github.com/moode-player/moode/pull/131
