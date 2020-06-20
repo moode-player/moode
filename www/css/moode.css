@@ -556,8 +556,8 @@ ol.playhistory {margin-left:55px;}
    }
 
    /* Firefox */
-   * {
-	   .custom-scrollbars scrollbar-width: thin;
-	   .custom-scrollbars scrollbar-color: auto;
+   .custom-scrollbars * {
+	   scrollbar-width: thin;
+	   scrollbar-color: auto;
    }
 }
