@@ -199,7 +199,10 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .playlist span, .cv-playlist span {line-height:normal;margin-left:calc(3em + 1vmin);display:block;}
 .pll1 {font-size:1em;}
 .pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important;margin-left: calc(3em + 1.5vmin)!important;}
-#albumsList li, #artistsList li, #genresList li {line-height:calc(1.45em + 1vmin);max-width:calc(33vw - 2.3rem);}
+/* index improvements */
+#genresList li, #artistsList li, #albumsList li {line-height:calc(1.45em + 1vmin);max-width:calc(33vw - 2.3rem);}
+#genresList li, #artistsList li, #albumsList li {width:calc(100% - (var(--sbw) + 1.17rem));}
+/**/
 #top-columns.nogenre #albumsList li, #top-columns.nogenre #artistsList li {max-width:calc(50vw - 2.3rem);}
 #albumsList .lib-entry img {width:3rem;margin:.3em .35em .3em .15em;}
 #albumsList .tag-cover-text {display:inline-block;vertical-align:middle;transform:translate(0, .2em);min-width:50%;max-width:calc(100% - 3.6rem);/*line-height:1.6rem;*/}
@@ -353,9 +356,11 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 .lib-albumyear-meta {display:none;font-size:calc(0.40em + 1vmin);font-weight:normal;text-align:center;}
 .lib-numtracks-meta {font-size:calc(0.40em + 1vmin);font-weight:normal;font-style:italic;color:inherit !important;text-align:center;}
 .lib-encoded-at-meta {font-size:calc(0.30em + 1vmin);font-weight:normal;font-style:italic;color:inherit !important;text-align:center;}
-#lib-content ul {display:table;margin:.25em 0;overflow-x:hidden;width:100%;word-break:break-word;}
-#songsList {padding-bottom:calc(8em + env(safe-area-inset-bottom));margin:.5em .25em !important;}
-#lib-content li {display:block;position:relative;cursor:pointer;text-align:left;font-weight:normal;line-height:1.25em;}
+/* index improvements */
+#lib-content ul {display:table;overflow-x:hidden;word-break:break-word;}
+#lib-content li {display:block;position:relative;cursor:pointer;line-height:1.25em;}
+#songsList {padding-bottom:calc(8em + env(safe-area-inset-bottom));margin:.5em .25em;width:calc(100% - var(--sbw));}
+/**/
 #lib-genre li, #lib-artist li/*, #lib-album li*/ {padding: 0.4em 0.5em;/*line-height:2em; /*margin-top:7px;*/}
 #lib-content #lib-file li {cursor:default;padding:.15em 0 .5em 0;}
 #lib-content #lib-file li:nth-child(odd) {background:rgba(128,128,128,0.1);}
@@ -389,6 +394,10 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #albumcovers .album-name {display:block !important;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
 #albumcovers .artist-name, #albumcovers .album-year {margin:0 .15em;}
+/* index improvements */
+#radiocovers, #albumcovers {width:calc(100% - 2 * (var(--sbw) + 1.17rem));margin-left:calc(var(--sbw) + 1.17rem);}
+#lib-genre ul, #lib-artist ul, #lib-album ul {width:calc(100% - (var(--sbw) + 1rem));margin:.25em 0;}
+/**/
 #random-album {position:absolute;top:env(safe-area-inset-top);left:7rem;line-height:2.75rem;height:2.75rem;transform:none;padding:.15em .5em 0 .5em;cursor:pointer;}
 #random-album i {font-size:1.1rem;color:var(--adapttext);opacity:.35;}
 /* coverview screen saver */
@@ -440,15 +449,20 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #menu-bottom .btn {border:none;background-color:transparent;margin-bottom:.15rem;}
 #theme-name-menu {margin:0;border-radius:.5rem;overflow:hidden;opacity:.95;}
 /* alphabet quick jump stuff */
-#index-genres {display:none;right:calc(66.66% + var(--sbw));top:calc(2rem + 3px);height:calc(100% - 1.5rem - 3px);}
-#index-artists {display:none;right:calc(33.33% + var(--sbw));top:calc(2rem + 3px);height:calc(100% - 1.5rem - 3px);}
-#index-albums {display:none;right:calc(0% + var(--sbw));top:calc(2rem + 3px);height:calc(100% - 1.5rem - 3px);}
-#index-albumcovers {display:none;position:fixed;right:calc(0% + var(--sbw));top:calc(3.5rem + 1px);top:calc(3.5rem + 1px + env(safe-area-inset-top));height:calc(100% - 9rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
-#index-browse {display:none;right:calc(0% + var(--sbw));top:calc(3rem + 1px);height:calc(100% - 10rem);height:calc(100% - 10rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
-#index-radio {display:none;right:calc(0% + var(--sbw));top:calc(3rem + 1px);height:calc(100% - 12rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
+/* index improvements */
+#index-genres, #index-artists, #index-albums, #index-albumcovers, #index-browse, #index-radio {display:none;width:1.17rem}
+#index-genres {right:calc(66.85% + var(--sbw));top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
+#index-artists {right:calc(33.33% + var(--sbw));top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
+#index-albums {right:var(--sbw);top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
+#index-albumcovers {position:fixed;right:var(--sbw);top:calc(3.5rem + 1px);top:calc(3.5rem + 1px + env(safe-area-inset-top));height:calc(100% - 9rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
+#index-browse {right:var(--sbw);top:calc(3rem + 1px);height:calc(100% - 10rem);height:calc(100% - 10rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
+#index-radio {right:var(--sbw);top:calc(3rem + 1px);height:calc(100% - 12rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));}
+/**/
 .alphabits {position:absolute;/*background:var(--btnshade);*/z-index:999;}
 .alphabits ul {display:table;height:100%;margin:0 !important;border-spacing:.2em;}
-.alphabits ul li {display:table-row !important;font-size:.8em;text-align:center !important;text-transform:uppercase;opacity:.75;line-height:normal;}
+/* index improvements */
+.alphabits ul li {display:table-row !important;font-size:.8em;text-transform:uppercase;line-height:normal;font-weight:600;color:var(--textvariant);text-align:center;}
+/**/
 /* playback ellipsis context menu */
 #context-menu-playback .dropdown-menu {min-width:200px;white-space:nowrap;}
 #menu-check-consume, #menu-check-repeat, #menu-check-single {display:none;float:right;color:var(--adapttext);line-height:2.75em;position:absolute;right:.5em;}
