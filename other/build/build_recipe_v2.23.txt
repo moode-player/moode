@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.22 2020-MM-DD
+# Build Recipe v2.23 2020-MM-DD
 #
-# moOde 6.6.2 2020-MM-DD
+# moOde 6.6.0 2020-MM-DD
 # - Based on Raspbian Buster Lite (10.3)
 # - Bump to r660 sources
 # - Bump to Linux kernel _______________
@@ -644,6 +644,10 @@ sudo reboot
 KERNEL=4.19.115
 BUILD=#1305
 echo "y" | sudo PRUNE_MODULES=1 rpi-update 87fea11838d706311dc3708d67c334967505a292
+
+KERNEL=4.19.118
+BUILD=#1311
+echo "y" | sudo PRUNE_MODULES=1 rpi-update e1050e94821a70b2e4c72b318d6c6c968552e9a2
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
