@@ -2347,7 +2347,7 @@ function editLogoImage(files) {
 // Import station zip package to server
 function importStationPkg(files) {
     //console.log('files[0].size=(' + files[0].size + ')');
-    $('#import-export-msg').text('Importing station package into the Library...');
+    $('#import-export-msg').text('Importing...');
 	objUrl = (URL || webkitURL).createObjectURL(files[0]);
 	URL.revokeObjectURL(objUrl);
 	var reader = new FileReader();
