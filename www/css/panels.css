@@ -48,7 +48,7 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--pbfont:calc(0.45em + 1vmin);
 	--radiobadge:url('../images/radio-l.svg');
 	--defcover:'images/default-cover-v6-l.svg';
-	--thumbcols:16vw;
+	--thumbcols:15vw;
 	--mthumbcols:45vw;
 	--coverback:'';
 	--config_modal_btn_bg:rgba(64,64,64,0.08);
@@ -395,7 +395,8 @@ img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
 #albumcovers .artist-name, #albumcovers .album-year {margin:0 .15em;}
 /* index improvements */
-#radiocovers, #albumcovers {width:calc(100% - 2 * (var(--sbw) + 1.17rem));margin-left:calc(var(--sbw) + 1.17rem);}
+/*#radiocovers, #albumcovers {width:calc(100% - var(--sbw) - 2.34rem);margin-left:calc(var(--sbw) + 1.17rem);}*/
+#radiocovers, #albumcovers {width:100%;margin-left:0;}
 #lib-genre ul, #lib-artist ul, #lib-album ul {width:calc(100% - (var(--sbw) + 1.17rem));margin:.25em 0;}
 /**/
 #random-album {position:absolute;top:env(safe-area-inset-top);left:7rem;line-height:2.75rem;height:2.75rem;transform:none;padding:.15em .5em 0 .5em;cursor:pointer;}
