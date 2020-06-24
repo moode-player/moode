@@ -2992,6 +2992,11 @@ $('#coverart-url, #playback-switch').click(function(e){
 		setTimeout(function() {
 			if (UI.libPos[1] >= 0) {
 				customScroll('albumcovers', UI.libPos[1], 0);
+                if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
+                    $('#bottom-row').css('display', 'flex')
+        			$('#lib-albumcover').css('height', 'calc(47% - 2em)'); // Was 1.75em
+        			$('#index-albumcovers').hide();
+                }
 			}
 		}, SCROLLTO_TIMEOUT);
 
