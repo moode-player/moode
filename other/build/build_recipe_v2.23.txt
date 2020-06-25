@@ -4,13 +4,14 @@
 #
 # moOde 6.6.0 2020-MM-DD
 # - Based on Raspbian Buster Lite (10.3)
+# - Based on Raspberry Pi OS (10.y) ???
 # - Bump to r660 sources
 # - Bump to Linux kernel _______________
 # - Bump to bluez-alsa 2.1.0-49ad348
 # - Bump to MPD _______________
 # - Bump to librespot _______________
 # - Bump to shairport-sync _______________
-# - Bump to upmpdcli _______________
+# - Bump to upmpdcli 1.4.12
 # - Image prep and build is Linux and Ethernet only
 #
 # These instructions are written for Linux Enthusiasts
@@ -656,7 +657,7 @@ sudo mv /etc/modprobe.d/blacklist-rtl8192cu.conf /etc/modprobe.d/blacklist-rtl81
 # WiFi driver (Comfast CF-912AC, MrEngman stock)
 sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless
 sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.conf /etc/modprobe.d/
-sudo chmod 0644 /lib/modules/$KERNEL"-v7+"/kernel/drivers/net/wireless/8812au.ko
+sudo chmod 0644 /lib/modulesupmpdcli/$KERNEL"-v7+"/kernel/drivers/net/wireless/8812au.ko
 sudo chmod 0644 /etc/modprobe.d/*.conf
 # Eth/USB driver v2.0.0 (Allo enhanced)
 sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/ax88179_178a.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb
@@ -879,50 +880,48 @@ sudo rm -rf ./squeezelite-master/
 //
 ////////////////////////////////////////////////////////////////
 
-// Enjoy a Coffee and listen to some Tunes while the compiles run :-)
-
 1. Dev libraries
 
 sudo apt-get -y install libmicrohttpd-dev libexpat1-dev \
 libxml2-dev libxslt1-dev libjsoncpp-dev python-requests python-pip
 
-2. Libupnp jfd5
+2. Libnpupnp 4.0.6
 
 cd ~
-sudo cp ./moode/other/upmpdcli/libupnp-1.6.20.jfd5.tar.gz ./
-sudo tar xfz ./libupnp-1.6.20.jfd5.tar.gz
-cd libupnp-1.6.20.jfd5
+sudo cp ./moode/other/upmpdcli/libnpupnp-4.0.6.tar.gz ./
+sudo tar xfz ./libnpupnp-4.0.6.tar.gz
+cd libnpupnp-4.0.6
 ./configure --prefix=/usr --sysconfdir=/etc
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./libupnp-1.6.20.jfd5
-sudo rm libupnp-1.6.20.jfd5.tar.gz
+sudo rm -rf ./libnpupnp-4.0.6
+sudo rm libnpupnp-4.0.6.tar.gz
 
-3. Libupnpp
+3. Libupnpp 0.19.1
 
-sudo cp ./moode/other/upmpdcli/libupnpp-0.16.0.tar.gz ./
-sudo tar xfz ./libupnpp-0.16.0.tar.gz
-cd libupnpp-0.16.0
+sudo cp ./moode/other/upmpdcli/libupnpp-0.19.1.tar.gz ./
+sudo tar xfz ./libupnpp-0.19.1.tar.gz
+cd libupnpp-0.19.1
 ./configure --prefix=/usr --sysconfdir=/etc
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./libupnpp-0.16.0
-sudo rm libupnpp-0.16.0.tar.gz
+sudo rm -rf ./libupnpp-0.19.1
+sudo rm libupnpp-0.19.1.tar.gz
 
-4. Upmpdcli
+4. Upmpdcli 1.4.12
 
-sudo cp ./moode/other/upmpdcli/upmpdcli-code-1.2.16.tar.gz ./
-sudo tar xfz ./upmpdcli-code-1.2.16.tar.gz
-cd upmpdcli-code
+sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.12.tar.gz ./
+sudo tar xfz ./upmpdcli-1.4.12.tar.gz
+cd upmpdcli-1.4.12
 ./autogen.sh
-./configure --prefix=/usr --sysconfdir=/etc
+./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./upmpdcli-code-1.2.16
-sudo rm upmpdcli-code-1.2.16.tar.gz
+sudo rm -rf ./upmpdcli-1.4.12
+sudo rm upmpdcli-1.4.12.tar.gz
 
 sudo useradd upmpdcli
 sudo cp ./moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
@@ -943,6 +942,8 @@ sudo make
 sudo make install
 cd ~
 sudo rm -rf ./libupnppsamples-code
+
+# IS THIS PATCH STILL NEEDED?
 
 6. Patch for upmpdcli gmusic plugin
 sudo cp ./moode/other/upmpdcli/session.py /usr/share/upmpdcli/cdplugins/gmusic
