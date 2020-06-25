@@ -1024,11 +1024,11 @@ $('#radio-manager-btn').click(function(e) {
     $('#radio-manager-modal').modal();
 });
 $('#export-stations').click(function(e) {
-    $('#import-export-msg').text('Exporting stations.zip to the default downloads folder...');
+    $('#import-export-msg').text('Exporting...');
+    e.preventDefault();
     $.post('command/moode.php?cmd=export_stations', function() {
-        e.preventDefault();
         window.location.href = '/imagesw/stations.zip';
-        $('#import-export-msg').text('Export stations.zip complete');
+        $('#import-export-msg').text('Export complete');
 	});
 });
 

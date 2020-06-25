@@ -270,7 +270,7 @@
 	            <button aria-label="Back" id="ra-back" class="btn"><i class="far fa-arrow-left"></i></button>
 				<button aria-label="Home" id="ra-home" class="btn"><i class="fas fa-home"></i></button>
 				<button aria-label="Refresh" id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
-				<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="far fa-cog"></i></button>
+				<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="fas fa-cog"></i></button>
 				<button aria-label="New Station" id="ra-new" class="btn"><i class="far fa-plus"></i></button>
 				<form id="ra-search" class="" method="post" onSubmit="return false;">
 					<div class="input-append">
@@ -1565,9 +1565,9 @@
 						<label for="import-station-pkg" id="choose-station-pkg" class="btn btn-primary btn-medium">Import</label>
 						<input type="file" id="import-station-pkg" accept=".zip" style="display:none" onchange="importStationPkg(this.files)">
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<div id="info-import-station-pkg" class="help-block hide">
-						Import a radio station zip package into the Library. The contents of the zip package will replace the existing stations.
+					<!--a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a-->
+					<div id="info-import-station-pkg" class="help-block">
+						Import a radio station ZIP package into the Library. The package contents will replace the existing radio station SQL table, PLS files and station logos. The package must be in the exact format of an exported <b>"stations.zip"</b> file.
 					</div>
 				</div>
 
@@ -1576,11 +1576,15 @@
 					<div class="modal-button-style">
 						<button id="export-stations" class="btn btn-primary btn-small">Export</button>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<div id="info-export-stations" class="help-block hide">
-						Export the radio station sql table, pls files and station logos to stations.zip in the client default download directory.
+					<!--a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a-->
+					<div id="info-export-stations" class="help-block">
+						Export the radio station SQL table, PLS files and station logos to the file named <b>"stations.zip"</b> in the default download directory of the client.
 					</div>
-					<div id="import-export-msg" class="help-block"></div>
+				</div>
+
+				<label class="control-label">Import/export status:</label>
+				<div class="controls">
+\					<div id="import-export-msg" class="help-block" style="line-height:24px;"></div>
 				</div>
 			</div>
 		</form>

@@ -2152,7 +2152,7 @@ function startSps() {
 	$array = sdbquery('select value from cfg_mpd where param="device"', cfgdb_connect());
 	$device = $array[0]['value'];
 
-	if ($_SESSION['audioout'] == 'Bluetooth' ) {
+	if ($_SESSION['audioout'] == 'Bluetooth') {
 		$device = 'btstream';
 	}
 	elseif ($_SESSION['alsaequal'] != 'Off') {
@@ -2191,7 +2191,7 @@ function startSpotify() {
 		$cfg_spotify[$row['param']] = $row['value'];
 	}
 
-	if ($_SESSION['audioout'] == 'Bluetooth' ) {
+	if ($_SESSION['audioout'] == 'Bluetooth') {
 		$device = 'btstream';
 	}
 	elseif ($_SESSION['alsaequal'] != 'Off') {

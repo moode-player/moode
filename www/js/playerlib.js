@@ -2235,7 +2235,8 @@ $('.btn-appearance-update').click(function(e){
 });
 
 function setLibraryThumbnailCols(cols) {
-    var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
+    //var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
+    var map = {6:'15vw,45vw', 7:'13vw,30vw', 8:'11vw,22vw'}
     var css = map[cols].split(',');
     document.body.style.setProperty('--thumbcols', css[0]);
     document.body.style.setProperty('--mthumbcols', css[1]);
@@ -2347,7 +2348,7 @@ function editLogoImage(files) {
 // Import station zip package to server
 function importStationPkg(files) {
     //console.log('files[0].size=(' + files[0].size + ')');
-    $('#import-export-msg').text('Importing station package into the Library...');
+    $('#import-export-msg').text('Importing...');
 	objUrl = (URL || webkitURL).createObjectURL(files[0]);
 	URL.revokeObjectURL(objUrl);
 	var reader = new FileReader();
@@ -2991,6 +2992,11 @@ $('#coverart-url, #playback-switch').click(function(e){
 		setTimeout(function() {
 			if (UI.libPos[1] >= 0) {
 				customScroll('albumcovers', UI.libPos[1], 0);
+                if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
+                    $('#bottom-row').css('display', 'flex')
+        			$('#lib-albumcover').css('height', 'calc(47% - 2em)'); // Was 1.75em
+        			$('#index-albumcovers').hide();
+                }
 			}
 		}, SCROLLTO_TIMEOUT);
 
