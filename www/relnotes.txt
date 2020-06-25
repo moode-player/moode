@@ -29,7 +29,8 @@ New features
 Updates
 
 - UPD: Bump to bluez-alsa 2.1.0-49ad348
-- UPD: Bump to mpd-0.22~git-c6a7f6d (Test)
+- UPD: Bump to MPD 0.21.24 (Default)
+- UPD: Bump to MPD 0.22~git-c6a7f6d (Test)
 - UPD: Use MusicBrainz date tags if present in track
 - UPD: Use check mark style on Library menu
 - UPD: Add X-Large font size option to Appearance
