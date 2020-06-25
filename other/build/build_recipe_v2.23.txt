@@ -8,7 +8,7 @@
 # - Bump to r660 sources
 # - Bump to Linux kernel _______________
 # - Bump to bluez-alsa 2.1.0-49ad348
-# - Bump to MPD _______________
+# - Bump to MPD 0.21.24 (Default), 0.22~git-c6a7f6d (Test)
 # - Bump to librespot _______________
 # - Bump to shairport-sync _______________
 # - Bump to upmpdcli 1.4.12
@@ -382,15 +382,15 @@ sudo tar xfz ./boost_1.68_libraries.tar.gz
 sudo rm ./boost_*.gz
 cd ~
 
-3. Download MPD 0.21.22 sources and prep for compile.
+3. Download MPD 0.21.24 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.21.22 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.21.24 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.22.tar.xz
-sudo tar xf mpd-0.21.22.tar.xz
-cd mpd-0.21.22
+sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.24.tar.xz
+sudo tar xf mpd-0.21.24.tar.xz
+cd mpd-0.21.24
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
