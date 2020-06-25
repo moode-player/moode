@@ -444,7 +444,7 @@ else {
 // MPD
 
 // MPD version
-$_select['mpdver'] .= "<option value=\"0.21.22\" " . (($_SESSION['mpdver'] == '0.21.22') ? "selected" : "") . ">0.21.22 (Default)</option>\n";
+$_select['mpdver'] .= "<option value=\"0.21.24\" " . (($_SESSION['mpdver'] == '0.21.24') ? "selected" : "") . ">0.21.24 (Default)</option>\n";
 $_select['mpdver'] .= "<option value=\"0.22~git\" " . (($_SESSION['mpdver'] == '0.22~git') ? "selected" : "") . ">0.22~git (Test)</option>\n";
 
 // auto-shuffle
