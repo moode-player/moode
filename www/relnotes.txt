@@ -17,10 +17,10 @@
 
 New features
 
-- NEW: Radio feature with rich metadata and admin utils
-- NEW: Option to adjust the number of thumbnail columns
+- NEW: Radio station import/export
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
+- NEW: Option to adjust the number of thumbnail columns
 - NEW: First use help for Playback/Playbar switch
 - NEW: Airplay and Spotify renderers output via Bluetooth
 - NEW: Support for Browser native image lazy load
