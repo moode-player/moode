@@ -17,10 +17,10 @@
 
 New features
 
-- NEW: Radio feature with rich metadata and admin utils
-- NEW: Option to adjust the number of thumbnail columns
+- NEW: Radio station import/export
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
+- NEW: Option to adjust the number of thumbnail columns
 - NEW: First use help for Playback/Playbar switch
 - NEW: Airplay and Spotify renderers output via Bluetooth
 - NEW: Support for Browser native image lazy load
@@ -29,6 +29,8 @@ New features
 Updates
 
 - UPD: Bump to bluez-alsa 2.1.0-49ad348
+- UPD: Bump to MPD 0.21.24 (Default)
+- UPD: Bump to MPD 0.22~git-c6a7f6d (Test)
 - UPD: Use MusicBrainz date tags if present in track
 - UPD: Use check mark style on Library menu
 - UPD: Add X-Large font size option to Appearance
