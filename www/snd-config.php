@@ -444,8 +444,26 @@ else {
 // MPD
 
 // MPD version
-$_select['mpdver'] .= "<option value=\"0.21.24\" " . (($_SESSION['mpdver'] == '0.21.24') ? "selected" : "") . ">0.21.24 (Default)</option>\n";
-$_select['mpdver'] .= "<option value=\"0.22~git\" " . (($_SESSION['mpdver'] == '0.22~git') ? "selected" : "") . ">0.22~git (Test)</option>\n";
+$fhandle = fopen("/var/local/www/mpdversions.cfg", "r");
+if($fhandle) {
+	while (!feof($fhandle ) ) {
+		$line = fgets($fhandle);
+		if (strpos($line, '#') !== 0) {
+			$parts = explode(";", $line);
+			if(count($parts) === 2) {
+				$version = trim($parts[0]);
+				$label = trim($parts[1]);
+				$_select['mpdver'] .= "<option value=\"".$version."\" " . (($_SESSION['mpdver'] == $version) ? "selected" : "") . ">".$label."</option>\n";
+			}
+		}
+	}
+	fclose($fhandle);
+}
+else {
+	$version = $_SESSION['mpdver'];
+	$label = $_SESSION['mpdver'];
+	$_select['mpdver'] .= "<option value=\"".$version."\" " . (($_SESSION['mpdver'] == $version) ? "selected" : "") . ">".$label."</option>\n";
+}
 
 // auto-shuffle
 $_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
