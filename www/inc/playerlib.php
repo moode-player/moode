@@ -40,6 +40,7 @@ define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
 define('TMP_STATION_PREFIX', '__tmp__');
 define('EXPORT_DIR', '/var/local/www/imagesw');
+define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 
 error_reporting(E_ERROR);
 

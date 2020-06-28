@@ -444,7 +444,7 @@ else {
 // MPD
 
 // MPD version
-$fhandle = fopen("/var/local/www/mpdversions.cfg", "r");
+$fhandle = fopen(MPD_VERSIONS_CONF, "r");
 if($fhandle) {
 	while (!feof($fhandle ) ) {
 		$line = fgets($fhandle);
