@@ -934,14 +934,16 @@ sudo systemctl disable upmpdcli
 
 NOTE: This also installs a bunch of other utils
 
-sudo cp -r ./moode/other/libupnppsamples-code/ ./
-cd libupnppsamples-code
+sudo cp ./moode/other/libupnpp-samples-master.zip/ ./
+sudo unzip -q ./libupnpp-samples-master.zip
+cd ./libupnpp-samples-master
 sudo ./autogen.sh
 sudo ./configure
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./libupnppsamples-code
+sudo rm -rf ./libupnpp-samples-master
+sudo rm ./libupnpp-samples-master.zip
 
 # IS THIS PATCH STILL NEEDED?
 
