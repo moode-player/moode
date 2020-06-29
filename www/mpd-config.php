@@ -80,10 +80,6 @@ else {
 	$_hide_msg = 'hide';
 }
 
-// MPD version specific params
-$_hide_020_params = substr($_SESSION['mpdver'], 0, 4) == '0.21' ? 'hide' : '';
-$_hide_021_params = substr($_SESSION['mpdver'], 0, 4) == '0.20' ? 'hide' : '';
-
 // Device type
 $dev = getDeviceNames();
 if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
@@ -155,14 +151,6 @@ $_mpd_select['volume_normalization'] .= "<option value=\"no\" " . (($mpdconf['vo
 
 // Audio buffer size
 $_mpd_select['audio_buffer_size'] = $mpdconf['audio_buffer_size'];
-
-// Buffer fill % before play (0.20.y only)
-if ($_hide_020_params == '') {
-	$_mpd_select['buffer_before_play'] .= "<option value=\"0%\" " . (($mpdconf['buffer_before_play'] == '0%') ? "selected" : "") . " >Disabled</option>\n";
-	$_mpd_select['buffer_before_play'] .= "<option value=\"10%\" " . (($mpdconf['buffer_before_play'] == '10%') ? "selected" : "") . " >10%</option>\n";
-	$_mpd_select['buffer_before_play'] .= "<option value=\"20%\" " . (($mpdconf['buffer_before_play'] == '20%') ? "selected" : "") . " >20%</option>\n";
-	$_mpd_select['buffer_before_play'] .= "<option value=\"30%\" " . (($mpdconf['buffer_before_play'] == '30%') ? "selected" : "") . " >30%</option>\n";
-}
 
 // Log level
 $_mpd_select['log_level'] .= "<option value=\"default\" " . (($mpdconf['log_level'] == 'default') ? "selected" : "") . " >Default</option>\n";
