@@ -1781,7 +1781,7 @@ function getDeviceNames () {
 	$card1 = file_get_contents('/proc/asound/card1/id');
 
 	// Device 0
-	if ($card0 == "ALSA\n") {
+	if ($card0 == "ALSA\n" || $card0 == "Headphones\n") {
 		$dev[0] = 'On-board audio device';
 	}
 	else if ($_SESSION['i2sdevice'] != 'none') {
@@ -1792,7 +1792,7 @@ function getDeviceNames () {
 	}
 
 	// Device 1
-	if ($card1 != '' && $card0 == "ALSA\n") {
+	if ($card1 != '' && ($card0 == "ALSA\n" || $card0 == "Headphones\n")) {
 		$dev[1] = 'USB audio device';
 	}
 	else {
