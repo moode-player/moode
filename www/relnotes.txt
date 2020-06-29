@@ -82,6 +82,7 @@ Bug fixes
 - FIX: No media query for Pi Touch 443 x 799 viewport (Sq Pixels)
 - FIX: Knob text and play controls not scaling
 - FIX: Tag view tracklist show/hide state when switching to Library
+- FIX: Rotary encoder driver (rotenc.py) not checking volume_mpd_max
 
 ########################################################
 //
