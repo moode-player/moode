@@ -25,6 +25,7 @@ New features
 - NEW: Airplay and Spotify renderers output via Bluetooth
 - NEW: Support for Browser native image lazy load
 - NEW: Custom scroll bars replace default white scroll bars
+- NEW: 64-bit ASIX and CF-912AC drivers for Allo USBridge SIG
 
 Updates
 
