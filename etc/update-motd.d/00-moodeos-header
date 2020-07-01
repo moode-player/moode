@@ -2,7 +2,7 @@
 
 MOODE_RELEASE=$(awk '/Release: /{print $2 " " $3;}' /var/www/footer.php | cut -d'<' -f 1) # // Remove trailing </li>
 KERNEL_ARCH=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='kernel_architecture'")
-echo Raspbian $(cat /etc/debian_version) \| $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\)
+echo RaspiOS $(cat /etc/debian_version) \| $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\)
 
 echo "
                           ____     __
