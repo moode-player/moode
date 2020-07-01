@@ -10,7 +10,7 @@
 # - Bump to MPD 0.21.24 (Default), 0.22~git-c6a7f6d (Test)
 # - Bump to librespot _______________
 # - Bump to shairport-sync _______________
-# - Bump to upmpdcli 1.4.12
+# - Bump to upmpdcli 1.4.12-7ea91f5d
 # - Add 64-bit ASIX and CF-912AC drivers for Allo USBridge SIG
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
@@ -514,6 +514,7 @@ sudo chown www-data:www-data /var/local/php
 # Deletes
 sudo rm -r /var/www/html
 sudo rm /etc/update-motd.d/10-uname
+sudo rm /etc/motd
 
 ////////////////////////////////////////////////////////////////
 //
@@ -922,18 +923,18 @@ cd ~
 sudo rm -rf ./libupnpp-0.19.1
 sudo rm libupnpp-0.19.1.tar.gz
 
-4. Upmpdcli 1.4.12
+4. Upmpdcli 1.4.12-7ea91f5d
 
-sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.12.tar.gz ./
-sudo tar xfz ./upmpdcli-1.4.12.tar.gz
-cd upmpdcli-1.4.12
+sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.12-master-7ea91f5d.tar.gz ./
+sudo tar xfz ./upmpdcli-1.4.12-master-7ea91f5d.tar.gz
+cd upmpdcli-master
 ./autogen.sh
 ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./upmpdcli-1.4.12
-sudo rm upmpdcli-1.4.12.tar.gz
+sudo rm -rf ./upmpdcli-master
+sudo rm upmpdcli-1.4.12-master-7ea91f5d.tar.gz
 
 sudo useradd upmpdcli
 sudo cp ./moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
@@ -946,7 +947,7 @@ sudo systemctl disable upmpdcli
 
 NOTE: This also installs a bunch of other utils
 
-sudo cp ./moode/other/libupnpp-samples-master.zip/ ./
+sudo cp ./moode/other/libupnpp-samples-master.zip ./
 sudo unzip -q ./libupnpp-samples-master.zip
 cd ./libupnpp-samples-master
 sudo ./autogen.sh
