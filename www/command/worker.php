@@ -135,7 +135,7 @@ $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 // Log platform data
 workerLog('worker: Host     (' . $_SESSION['hostname'] . ')');
 workerLog('worker: moOde    (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
-workerLog('worker: Raspbian (' . $_SESSION['raspbianver'] . ')');
+workerLog('worker: RaspiOS  (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Kernel   (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Platform (' . $_SESSION['hdwrrev'] . ')');
 workerLog('worker: ARM arch (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] .' kernel)');

@@ -40,7 +40,7 @@
 		<p>
 			<h4>Platform Information</h4>
 			<ul>
-				<li>Raspbian: <span id="sys-raspbian-ver"></span></li>
+				<li>RaspiOS: <span id="sys-raspbian-ver"></span></li>
 				<li>Linux kernel: <span id="sys-kernel-ver"></span></li>
 				<li>Platform: <span id="sys-hardware-rev"></span></li>
 				<li>Architecture: <span id="sys-processor-arch"></span></li>

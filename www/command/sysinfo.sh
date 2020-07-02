@@ -29,7 +29,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\n\c"
 	echo -e "S Y S T E M   P A R A M E T E R S"
 	echo -e "\nmoOde release\t\t= $moode_rel\c"
-	echo -e "\nRaspbian OS\t\t= $RASPBIANVER\c"
+	echo -e "\nRaspiOS\t\t= $RASPIOS_VER\c"
 	echo -e "\nLinux kernel\t\t= $kernelver\c"
 	echo -e "\nPlatform\t\t= $hdwrrev\c"
 	echo -e "\nArchitecture\t\t= $ARCH ($kernel_architecture)\c"
@@ -312,7 +312,7 @@ FEAT_DJMOUNT=8192
 FEAT_BLUETOOTH=16384
 
 HOSTNAME=`uname -n`
-RASPBIANVER=`cat /etc/debian_version`
+RASPIOS_VER=`cat /etc/debian_version`
 #KERNEL=`uname -r`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
