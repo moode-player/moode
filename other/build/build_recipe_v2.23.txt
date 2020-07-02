@@ -3,13 +3,11 @@
 # Build Recipe v2.23 2020-MM-DD
 #
 # moOde 6.6.0 2020-MM-DD
-# - Based on Raspberry Pi OS Lite 2020-05-27 (10.4 Buster)
+# - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r660 sources
 # - Bump to Linux kernel 5.4.49
 # - Bump to bluez-alsa 2.1.0-49ad348
-# - Bump to MPD 0.21.24 (Default), 0.22~git-c6a7f6d (Test)
-# - Bump to librespot _______________
-# - Bump to shairport-sync _______________
+# - Bump to MPD 0.21.24 (Default)
 # - Bump to upmpdcli 1.4.12-7ea91f5d
 # - Add 64-bit ASIX and CF-912AC drivers for Allo USBridge SIG
 #
