@@ -537,7 +537,12 @@ var renderAlbums = function() {
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
     var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
-    var tagViewHdDiv, tagViewNvDiv, albumViewNvDiv, albumViewHdDiv, albumViewTxDiv, albumViewBgDiv = '';
+    var tagViewHdDiv = '';
+    var tagViewNvDiv = '';
+    var albumViewNvDiv = '';
+    var albumViewHdDiv = '';
+    var albumViewTxDiv= '';
+    var albumViewBgDiv = '';
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
