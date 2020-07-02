@@ -1629,7 +1629,7 @@ function runQueuedJob() {
 			break;
 		case 'mpdver':
 			sysCmd('mpc stop');
-			sysCmd('cp /var/www/inc/mpd-' . $_SESSION['w_queueargs'] . ' /home/pi');
+			sysCmd('cp /var/local/www/mpd_versions/mpd-' . $_SESSION['w_queueargs'] . ' /home/pi');
 			sysCmd('mv /home/pi/mpd-' . $_SESSION['w_queueargs'] . ' /usr/local/bin/mpd');
 			updMpdConf($_SESSION['i2sdevice']);
 			sysCmd('systemctl restart mpd');
