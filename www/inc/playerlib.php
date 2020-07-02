@@ -213,6 +213,9 @@ function integrityCheck() {
 		return false;
 	}
 
+	// Output static tables
+	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "select id,name,dacchip,iface,list,driver from cfg_audiodev" > /tmp/cfg_audiodev.sql');
+
 	// Broom www root
 	sysCmd('find /var/www -type l -delete');
 
@@ -220,7 +223,7 @@ function integrityCheck() {
 	$result = cfgdb_read('cfg_hash', cfgdb_connect());
 	foreach ($result as $row) {
 		// Check mapped action
-		if ($row['id'] < 8 && $row['action'] !== 'exit') {
+		if ($row['id'] < 9 && $row['action'] !== 'exit') {
 			$_SESSION['ic_return_code'] = '2';
 			return false;
 		}
