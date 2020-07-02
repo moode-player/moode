@@ -29,6 +29,7 @@ New features
 
 Updates
 
+- UPD: Upgrade to RaspiOS Lite 2020-05-27 (10.4 Buster): New image only
 - UPD: Bump to bluez-alsa 2.1.0-49ad348
 - UPD: Bump to MPD 0.21.24 (Default)
 - UPD: Bump to MPD 0.22~git-c6a7f6d (Test)
