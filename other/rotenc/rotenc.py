@@ -17,7 +17,7 @@
 # rotenc_py <poll_interval in ms> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug>
 # rotenc_py 100 2 3 23 24 1 (print_debug is optional)
 #
-# 2020-MM-DD TC moOde 6.6.0
+# 2020-07-05 TC moOde 6.6.0
 #
 
 import RPi.GPIO as GPIO
