@@ -27,6 +27,16 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '', '');
 session_write_close();
+$dbh = cfgdb_connect();
+
+// Load settings
+$result = cfgdb_read('cfg_mpd', $dbh);
+$mpdconf = array();
+
+foreach ($result as $row) {
+	$mpdconf[$row['param']] = $row['value'];
+}
+$_vol_disabled = (($mpdconf['mixer_type'] == 'disabled') ? "style=\"display:none\"" : "");
 
 $section = basename(__FILE__, '.php');
 
