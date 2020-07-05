@@ -23,7 +23,12 @@ rm /var/local/www/imagesw/radio-logos/thumbs/*.jpg 2> /dev/null
 sqlite3 /var/local/www/db/moode-sqlite3.db "DELETE FROM cfg_radio"
 
 # Install new station data
-unzip -q /var/local/www/station_import.zip -d /
-sqlite3 /var/local/www/db/moode-sqlite3.db -csv ".import /var/local/www/db/cfg_radio.csv cfg_radio"
+unzip -q /var/local/www/station_import.zip -d /tmp
+sudo cp /tmp/var/lib/mpd/music/RADIO/*.pls var/lib/mpd/music/RADIO
+sudo cp /tmp/var/local/www/imagesw/radio-logos/*.jpg var/local/www/imagesw/radio-logos
+sudo cp /tmp/var/local/www/imagesw/radio-logos/thumbs/*.jpg var/local/www/imagesw/radio-logos/thumbs
+sqlite3 /var/local/www/db/moode-sqlite3.db -csv ".import /tmp/var/local/www/db/cfg_radio.csv cfg_radio"
+
+# Cleanup temp files
 rm /var/local/www/station_import.zip 2> /dev/null
-rm /var/local/www/db/cfg_radio.csv 2> /dev/null
+rm -rf /tmp/var 2> /dev/null
