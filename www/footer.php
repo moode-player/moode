@@ -32,7 +32,7 @@
 			<h4>Release Information</h4>
 			<ul>
 				<li>Release: 6.6.0 2020-MM-DD</li> <!-- NOTE: getMoodeRel() parses this  -->
-				<li>Coding:	Tim Curtis &copy; 2014</li>
+				<li>Coding: Tim Curtis &copy; 2014</li>
 				<li>Documentation: <a class="moode-about-link" href="./relnotes.txt" target="_blank">View release notes,</a>&nbsp<a class="moode-about-link" href="./setup.txt" target="_blank">View setup guide</a></li>
 				<li>Contributors: <a class="moode-about-link" href="./CONTRIBS.html" target="_blank">View contributors</a></li>
 				<li>License: <a class="moode-about-link" href="./COPYING.html" target="_blank">View GPLv3</a></li>
