@@ -17,7 +17,7 @@
 
 New features
 
-- NEW: Radio station import/export
+- NEW: Radio station batch import/export
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
 - NEW: Option to adjust the number of thumbnail columns
