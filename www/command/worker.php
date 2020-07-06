@@ -102,9 +102,10 @@ $card0 = trim(file_get_contents('/proc/asound/card0/id'));
 $card1 = trim(file_get_contents('/proc/asound/card1/id'));
 $result = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
 workerLog('worker: Device raw: (0:' . $card0 . '|1:' . (empty($card1) ? 'empty' : $card1) . '|i2s:' . $_SESSION['i2sdevice'] . ')');
-workerLog('worker: Device cfg: (' . $_SESSION['adevname'] . '|' . $_SESSION['cardnum'] . '|' . $result[0]['value'] . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . ')');
-if ($_SESSION['i2sdevice'] != 'none' && $_SESSION['cardnum'] != '0') {
-	workerLog('worker: ERROR: Device raw/cfg card mismatch');
+workerLog('worker: Device mpd: (' . $result[0]['value'] . ':' . $_SESSION['adevname'] . ')');
+workerLog('worker: Device ses: (' . $_SESSION['cardnum'] . '|' . $_SESSION['adevname'] . '|' . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . '%)');
+if ($_SESSION['i2sdevice'] != 'none' && $result[0]['value'] != '0') {
+	workerLog('worker: ERROR: Device raw/mpd card mismatch');
 }
 
 // Zero out ALSA volume
@@ -112,10 +113,10 @@ if ($_SESSION['alsavolume'] != 'none') {
 	$amixname = getMixerName($_SESSION['i2sdevice']);
 	sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $amixname . '"' . ' 0');
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $amixname . '"');
-	workerLog('worker: ALSA volume set to (' . $result[0] . ')');
+	workerLog('worker: ALSA ' . $amixname . ' volume (' . $result[0] . ')');
 }
 else {
-	workerLog('worker: ALSA volume (None)');
+	workerLog('worker: ALSA ' . $amixname . ' volume (None)');
 }
 
 //
@@ -289,6 +290,10 @@ else {
 workerLog('worker: -- Audio');
 //
 
+// Update MPD config
+updMpdConf($_SESSION['i2sdevice']);
+workerLog('worker: MPD conf updated');
+
 // Ensure audio output is unmuted
 if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 	sysCmd('/var/www/command/util.sh unmute-pi-ampplus');
@@ -370,8 +375,8 @@ workerLog('worker: -- MPD');
 //
 
 // Start MPD
-updMpdConf($_SESSION['i2sdevice']);
-workerLog('worker: MPD conf updated');
+#updMpdConf($_SESSION['i2sdevice']);
+#workerLog('worker: MPD conf updated');
 sysCmd("systemctl start mpd");
 workerLog('worker: MPD started');
 $sock = openMpdSock('localhost', 6600);
@@ -614,7 +619,7 @@ sysCmd('/var/www/vol.sh ' . $volume);
 workerLog('worker: MPD volume level (' . $volume . ') restored');
 if ($_SESSION['alsavolume'] != 'none') {
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	workerLog('worker: ALSA volume level (' . $result[0] . ')');
+	workerLog('worker: ALSA ' . $_SESSION['amixname'] . ' volume (' . $result[0] . ')');
 }
 else {
 	workerLog('worker: ALSA volume level (None)');

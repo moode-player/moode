@@ -2889,14 +2889,16 @@ function startSqueezeLite () {
 function cfgI2sOverlay($i2sDevice) {
 	sysCmd('sed -i /dtoverlay/d ' . '/boot/config.txt'); // remove dtoverlays
 
-	// on-board or i2s audio
 	if ($i2sDevice == 'none') {
+		// On-board or USB audio device
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" ' . '/boot/config.txt');
 	}
 	else {
+		// I2S audio device
 		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sDevice);
 		sysCmd('sed -i "s/dtparam=audio=on/dtparam=audio=off/" ' . '/boot/config.txt');
 		sysCmd('echo dtoverlay=' . $result[0]['driver'] . ' >> ' . '/boot/config.txt');
+		playerSession('write', 'cardnum', '0');
 	}
 
 	// add these back in
