@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-05 TC moOde 6.6.0
+ * 2020-07-09 TC moOde 6.6.0
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
