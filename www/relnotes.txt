@@ -29,8 +29,9 @@ New features
 
 Updates
 
-- UPD: Upgrade to RaspiOS Buster Lite 2020-05-27 (10.4) NOTE: New image only
-- UPD: Bump to PHP-FPM 7.3.14 NOTE: New image only
+- UPD: Upgrade to RaspiOS Buster Lite 2020-05-27 10.4 (New image only)
+- UPD: Bump to Linux kernel 5.4.49 build #1323
+- UPD: Bump to PHP-FPM 7.3.14 (New image only)
 - UPD: Bump to bluez-alsa 2.1.0-49ad348
 - UPD: Bump to MPD 0.21.24 (Default)
 - UPD: Bump to MPD 0.22~git-4d88bdd (Test)
