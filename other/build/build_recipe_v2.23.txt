@@ -1,18 +1,17 @@
 ################################################################
 #
-# Build Recipe v2.23 2020-MM-DD
+# Build Recipe v2.23 2020-07-09
 #
-# moOde 6.6.0 2020-MM-DD
-# - Based on Raspbian Buster Lite (10.3)
-# - Based on Raspberry Pi OS (10.y) ???
+# moOde 6.6.0 2020-07-09
+# - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r660 sources
-# - Bump to Linux kernel _______________
+# - Bump to Linux kernel 5.4.49
 # - Bump to bluez-alsa 2.1.0-49ad348
-# - Bump to MPD 0.21.24 (Default), 0.22~git-c6a7f6d (Test)
-# - Bump to librespot _______________
-# - Bump to shairport-sync _______________
-# - Bump to upmpdcli 1.4.12
-# - Image prep and build is Linux and Ethernet only
+# - Bump to MPD 0.21.24 (Default)
+# - Bump to upmpdcli 1.4.12-7ea91f5d
+# - Add 64-bit ASIX and CF-912AC drivers for Allo USBridge SIG
+#
+# - NOTE: Image prep and build is Linux and Ethernet only
 #
 # These instructions are written for Linux Enthusiasts
 # and System Integrators and provide a recipe for making
@@ -27,18 +26,18 @@
 
 ////////////////////////////////////////////////////////////////
 //
-// STEP 1 - Modify Raspbian Lite and create a new base image
+// STEP 1 - Modify Raspberry Pi OS Lite and create a new base image
 //
 ////////////////////////////////////////////////////////////////
 
-1. Download Raspbian Buster Lite 2020-02-13
-wget http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2020-02-14/2020-02-13-raspbian-buster-lite.zip
-sudo unzip -q 2020-02-13-raspbian-buster-lite.zip
-sudo rm 2020-02-13-raspbian-buster-lite.zip
+1. Download Raspberry Pi OS Lite 2020-05-27 (Buster)
+wget http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-05-28/2020-05-27-raspios-buster-lite-armhf.zip
+sudo unzip -q 2020-05-27-raspios-buster-lite-armhf.zip
+sudo rm 2020-05-27-raspios-buster-lite-armhf.zip
 
 2. Mount the boot and root partitions
 LOOPDEV=$(sudo losetup -f)
-sudo losetup -P $LOOPDEV 2020-02-13-raspbian-buster-lite.img
+sudo losetup -P $LOOPDEV 2020-05-27-raspios-buster-lite-armhf.img
 sudo mkdir /mnt/p1
 sudo mkdir /mnt/p2
 sudo mount -t vfat "$LOOPDEV"p1 /mnt/p1
@@ -513,6 +512,7 @@ sudo chown www-data:www-data /var/local/php
 # Deletes
 sudo rm -r /var/www/html
 sudo rm /etc/update-motd.d/10-uname
+sudo rm /etc/motd
 
 ////////////////////////////////////////////////////////////////
 //
@@ -642,9 +642,9 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-KERNEL=4.19.118
-BUILD=#1311
-echo "y" | sudo PRUNE_MODULES=1 rpi-update e1050e94821a70b2e4c72b318d6c6c968552e9a2
+KERNEL=5.4.49
+BUILD=#1323
+echo "y" | sudo PRUNE_MODULES=1 rpi-update da3752a358a86014cdcce5fc3be5b18d7ec074c4
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
@@ -654,6 +654,8 @@ sudo apt-get clean
 sudo mv /etc/modprobe.d/blacklist-rtl8192cu.conf /etc/modprobe.d/blacklist-rtl8192cu.conf.delete
 
 # Install drivers for Allo USBridge Signature
+
+# 32-bit
 # WiFi driver (Comfast CF-912AC, MrEngman stock)
 sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless
 sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.conf /etc/modprobe.d/
@@ -662,6 +664,15 @@ sudo chmod 0644 /etc/modprobe.d/*.conf
 # Eth/USB driver v2.0.0 (Allo enhanced)
 sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/ax88179_178a.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb
 sudo depmod $KERNEL-v7+
+
+# 64-bit
+# NOTE uses same /etc/modprobe.d/8812au.conf as 32-bit driver
+# WiFi driver (Comfast CF-912AC, MrEngman stock)
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v8+/8812au.ko /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless
+sudo chmod 0644 /lib/modules/$KERNEL"-v8+"/kernel/drivers/net/wireless/8812au.ko
+# Eth/USB driver v2.0.0 (Allo enhanced)
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v8+/ax88179_178a.ko /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb
+sudo depmod $KERNEL-v8+
 
 # SR7
 sudo reboot
@@ -910,18 +921,18 @@ cd ~
 sudo rm -rf ./libupnpp-0.19.1
 sudo rm libupnpp-0.19.1.tar.gz
 
-4. Upmpdcli 1.4.12
+4. Upmpdcli 1.4.12-7ea91f5d
 
-sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.12.tar.gz ./
-sudo tar xfz ./upmpdcli-1.4.12.tar.gz
-cd upmpdcli-1.4.12
+sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.12-master-7ea91f5d.tar.gz ./
+sudo tar xfz ./upmpdcli-1.4.12-master-7ea91f5d.tar.gz
+cd upmpdcli-master
 ./autogen.sh
 ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./upmpdcli-1.4.12
-sudo rm upmpdcli-1.4.12.tar.gz
+sudo rm -rf ./upmpdcli-master
+sudo rm upmpdcli-1.4.12-master-7ea91f5d.tar.gz
 
 sudo useradd upmpdcli
 sudo cp ./moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
@@ -934,14 +945,16 @@ sudo systemctl disable upmpdcli
 
 NOTE: This also installs a bunch of other utils
 
-sudo cp -r ./moode/other/libupnppsamples-code/ ./
-cd libupnppsamples-code
+sudo cp ./moode/other/libupnpp-samples-master.zip ./
+sudo unzip -q ./libupnpp-samples-master.zip
+cd ./libupnpp-samples-master
 sudo ./autogen.sh
 sudo ./configure
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./libupnppsamples-code
+sudo rm -rf ./libupnpp-samples-master
+sudo rm ./libupnpp-samples-master.zip
 
 # IS THIS PATCH STILL NEEDED?
 

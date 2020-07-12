@@ -11,13 +11,36 @@
 
 ########################################################
 //
-// 2020-MM-DD TC moOde 6.6.0
+// 2020-MM-DD TC moOde 6.6.1
 //
 ########################################################
 
 New features
 
-- NEW: Radio station import/export
+- NEW:
+
+Updates
+
+- UPD: Help text on System Config for 64-bit kernel option
+
+Radio stations
+
+- UPD: Playable url for...
+
+Bug fixes
+
+- FIX: Index search position for Tag view Album column on mobile
+- FIX: Logo path for BBC 320K stations
+
+########################################################
+//
+// 2020-07-09 TC moOde 6.6.0
+//
+########################################################
+
+New features
+
+- NEW: Radio station batch import/export
 - NEW: Option to display sample rate or HD badge in Library
 - NEW: Filter Library by sample rate and/or audio format
 - NEW: Option to adjust the number of thumbnail columns
@@ -25,12 +48,17 @@ New features
 - NEW: Airplay and Spotify renderers output via Bluetooth
 - NEW: Support for Browser native image lazy load
 - NEW: Custom scroll bars replace default white scroll bars
+- NEW: 64-bit ASIX and CF-912AC drivers for Allo USBridge SIG
 
 Updates
 
+- UPD: Upgrade to RaspiOS Buster Lite 2020-05-27 10.4 (New image only)
+- UPD: Bump to Linux kernel 5.4.49 build #1323
+- UPD: Bump to PHP-FPM 7.3.14 (New image only)
 - UPD: Bump to bluez-alsa 2.1.0-49ad348
 - UPD: Bump to MPD 0.21.24 (Default)
-- UPD: Bump to MPD 0.22~git-c6a7f6d (Test)
+- UPD: Bump to MPD 0.22~git-4d88bdd (Test)
+- UPD: Bump to upmpdcli 1.4.12-7ea91f5d
 - UPD: Use MusicBrainz date tags if present in track
 - UPD: Use check mark style on Library menu
 - UPD: Add X-Large font size option to Appearance
@@ -81,6 +109,7 @@ Bug fixes
 - FIX: No media query for Pi Touch 443 x 799 viewport (Sq Pixels)
 - FIX: Knob text and play controls not scaling
 - FIX: Tag view tracklist show/hide state when switching to Library
+- FIX: Rotary encoder driver (rotenc.py) not checking volume_mpd_max
 
 ########################################################
 //

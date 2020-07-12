@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-MM-DD TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 6.6.1
  *
  */
 body {background-color:var(--themebg);}
@@ -261,7 +261,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.modal-xs {min-width:70%;}
 	#lib-coverart-meta-area {position:unset;}
 	.pl-btnSave {margin:1em 1em 4em 1em;}
-	.alphabits {right:0%!important;/*top:calc(1.5em + 1px);*/top:0%!important;}
+	/*.alphabits {right:0%!important;top:0%!important;}*/
 	#index-genres {right:calc(50% + var(--sbw));}
 	#index-artists {right:calc(0% + var(--sbw));}
 	#index-albums {right:calc(-50% + var(--sbw));}

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 6.6.0
+ * 2020-07-09 TC moOde 6.6.0
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -40,6 +40,7 @@ define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
 define('TMP_STATION_PREFIX', '__tmp__');
 define('EXPORT_DIR', '/var/local/www/imagesw');
+define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 
 error_reporting(E_ERROR);
 
@@ -212,6 +213,9 @@ function integrityCheck() {
 		return false;
 	}
 
+	// Output static tables
+	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "select id,name,dacchip,iface,list,driver from cfg_audiodev" > /tmp/cfg_audiodev.sql');
+
 	// Broom www root
 	sysCmd('find /var/www -type l -delete');
 
@@ -219,7 +223,7 @@ function integrityCheck() {
 	$result = cfgdb_read('cfg_hash', cfgdb_connect());
 	foreach ($result as $row) {
 		// Check mapped action
-		if ($row['id'] < 8 && $row['action'] !== 'exit') {
+		if ($row['id'] < 9 && $row['action'] !== 'exit') {
 			$_SESSION['ic_return_code'] = '2';
 			return false;
 		}
@@ -1641,7 +1645,8 @@ function updMpdConf($i2sdevice) {
 				$replay_gain_handler = $cfg['value'];
 				break;
 			case 'buffer_before_play':
-				$data .= $mpdver == '0.20' ? $cfg['param'] . " \"" . $cfg['value'] . "\"\n" : '';
+				//$data .= $mpdver == '0.20' ? $cfg['param'] . " \"" . $cfg['value'] . "\"\n" : '';
+				$data .=  '';
 				break;
 			case 'auto_resample':
 				$auto_resample = $cfg['value'];
@@ -1779,7 +1784,7 @@ function getDeviceNames () {
 	$card1 = file_get_contents('/proc/asound/card1/id');
 
 	// Device 0
-	if ($card0 == "ALSA\n") {
+	if ($card0 == "ALSA\n" || $card0 == "Headphones\n") {
 		$dev[0] = 'On-board audio device';
 	}
 	else if ($_SESSION['i2sdevice'] != 'none') {
@@ -1790,7 +1795,7 @@ function getDeviceNames () {
 	}
 
 	// Device 1
-	if ($card1 != '' && $card0 == "ALSA\n") {
+	if ($card1 != '' && ($card0 == "ALSA\n" || $card0 == "Headphones\n")) {
 		$dev[1] = 'USB audio device';
 	}
 	else {
@@ -2884,14 +2889,16 @@ function startSqueezeLite () {
 function cfgI2sOverlay($i2sDevice) {
 	sysCmd('sed -i /dtoverlay/d ' . '/boot/config.txt'); // remove dtoverlays
 
-	// on-board or i2s audio
 	if ($i2sDevice == 'none') {
+		// On-board or USB audio device
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" ' . '/boot/config.txt');
 	}
 	else {
+		// I2S audio device
 		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sDevice);
 		sysCmd('sed -i "s/dtparam=audio=on/dtparam=audio=off/" ' . '/boot/config.txt');
 		sysCmd('echo dtoverlay=' . $result[0]['driver'] . ' >> ' . '/boot/config.txt');
+		playerSession('write', 'cardnum', '0');
 	}
 
 	// add these back in

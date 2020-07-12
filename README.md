@@ -13,7 +13,7 @@ Tim Curtis © 2014
 
 ## Other Resources
 Raspberry Pi: https://github.com/raspberrypi<br/>
-Raspbian: https://www.raspbian.org/RaspbianRepository<br/>
+RaspiOS: https://www.raspbian.org/RaspbianRepository<br/>
 Moode OS Builder: https://github.com/moode-player/mosbuild<br/>
 moodeaudio.org: http://moodeaudio.org<br/>
 moOde Twitter feed: http://twitter.com/MoodeAudio</br>

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 6.6.0
+ * 2020-07-09 TC moOde 6.6.0
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
@@ -537,7 +537,12 @@ var renderAlbums = function() {
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
     var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
-    var tagViewHdDiv, tagViewNvDiv, albumViewNvDiv, albumViewHdDiv, albumViewTxDiv, albumViewBgDiv = '';
+    var tagViewHdDiv = '';
+    var tagViewNvDiv = '';
+    var albumViewNvDiv = '';
+    var albumViewHdDiv = '';
+    var albumViewTxDiv= '';
+    var albumViewBgDiv = '';
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';

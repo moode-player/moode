@@ -17,7 +17,7 @@
 # rotenc_py <poll_interval in ms> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug>
 # rotenc_py 100 2 3 23 24 1 (print_debug is optional)
 #
-# 2019-09-05 TC moOde 6.2.0
+# 2020-07-09 TC moOde 6.6.0
 #
 
 import RPi.GPIO as GPIO
@@ -148,14 +148,19 @@ def poll_encoder():
 
 # Update MPD and UI volume
 def update_volume(direction, step):
-	db_cursor.execute("SELECT value FROM cfg_system WHERE param='volknob'")
+	db_cursor.execute("SELECT value FROM cfg_system WHERE param='volknob' or param='volume_mpd_max'")
 	row = db_cursor.fetchone()
 	current_vol = int(row['value'])
+	row = db_cursor.fetchone()
+	volume_mpd_max = int(row['value'])
 
 	if direction == "+":
 		new_volume = current_vol + step
 	else:
 		new_volume = current_vol - step
+
+	if new_volume > volume_mpd_max:
+		new_volume = volume_mpd_max
 
 	if new_volume > 100:
 		new_volume = 100

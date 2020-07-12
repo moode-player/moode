@@ -167,7 +167,7 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
 
     a) Change values in the file below
     b) Paste contents into /boot/moodecfg.txt
-    c) sudo reboot
+    c) Insert SD Card in Pi and power up
     d) Join AP SSID if using AP mode, then http://hostname.local or http://172.24.1.1
 
 ##########################################
