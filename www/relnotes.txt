@@ -11,6 +11,29 @@
 
 ########################################################
 //
+// 2020-MM-DD TC moOde 6.6.1
+//
+########################################################
+
+New features
+
+- NEW:
+
+Updates
+
+- UPD: Help text on System Config for 64-bit kernel option
+
+Radio stations
+
+- UPD: Playable url for...
+
+Bug fixes
+
+- FIX: Index search position for Tag view Album column on mobile
+- FIX: Logo path for BBC 320K stations
+
+########################################################
+//
 // 2020-07-09 TC moOde 6.6.0
 //
 ########################################################
