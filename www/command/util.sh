@@ -69,12 +69,13 @@ if [[ $1 = "chg-name" ]]; then
 	exit
 fi
 
+# NOTE may need a redo for the new card numbering scheme involving HDMI
 # card 0 = i2s or onboard, card 1 = usb
 # save alsa state after set-alsavol to support hotplug for card 1 USB audio device
 if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 	#TMP=$(cat /proc/asound/card1/id 2>/dev/null)
 	#if [[ $TMP = "" ]]; then CARD_NUM=0; else CARD_NUM=1; fi
-	
+
 	# Use configured card number
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 

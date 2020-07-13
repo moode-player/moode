@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 6.6.1
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -1776,33 +1776,78 @@ function getMixerName($i2sdevice) {
 	return $mixername;
 }
 
-// Make text for audio device field (mpd and sqe-config)
+// Get device names assigned to each audio card
 function getDeviceNames () {
-	$dev = array();
+	// DEBUGGING
+	$cards = array();
+	$friendly_name = array('Headphones' => 'Headphone jack', 'b1' => 'HDMI-1', 'b1' => 'HDMI-2');
+	for ($i = 0; $i < 4; $i++) {
+		$alsa_name = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+		$cards[$i] = $friendly_name[$alsa_name] == '' ? $alsa_name : $friendly_name[$alsa_name];
+		workerLog('card' . $i . ' (' . $cards[$i] . ')');
 
+	}
+
+	// ORIGINAL
+	$device = array();
+
+	// card0: Headphones, b1 (HDMI 1), I2S
 	$card0 = file_get_contents('/proc/asound/card0/id');
 	$card1 = file_get_contents('/proc/asound/card1/id');
 
 	// Device 0
 	if ($card0 == "ALSA\n" || $card0 == "Headphones\n") {
-		$dev[0] = 'On-board audio device';
+		$device[0] = 'On-board audio device';
 	}
 	else if ($_SESSION['i2sdevice'] != 'none') {
-		$dev[0] = 'I2S audio device';
+		$device[0] = 'I2S audio device';
 	}
 	else {
-		$dev[0] = '';
+		$device[0] = '';
 	}
 
 	// Device 1
 	if ($card1 != '' && ($card0 == "ALSA\n" || $card0 == "Headphones\n")) {
-		$dev[1] = 'USB audio device';
+		$device[1] = 'USB audio device';
 	}
 	else {
-		$dev[1] = '';
+		$device[1] = '';
 	}
 
-	return $dev;
+	return $device;
+}
+
+// NOTE needs a redo for the new card numbering scheme involving HDMI
+// Make text for audio device field (mpd and sqe-config)
+function __getDeviceNames () {
+	$device = array();
+
+	// card0: Headphones, b1 (HDMI 1), I2S
+	$card0 = file_get_contents('/proc/asound/card0/id');
+	$card1 = file_get_contents('/proc/asound/card1/id');
+	$card2 = file_get_contents('/proc/asound/card2/id');
+	$card3 = file_get_contents('/proc/asound/card3/id');
+
+	// Device 0
+	if ($card0 == "ALSA\n" || $card0 == "Headphones\n") {
+		$device[0] = 'On-board audio device';
+	}
+	else if ($_SESSION['i2sdevice'] != 'none') {
+		$device[0] = 'I2S audio device';
+	}
+	else {
+		$device[0] = '';
+	}
+
+	// Device 1
+	if ($card1 != '' && ($card0 == "ALSA\n" || $card0 == "Headphones\n")) {
+		$device[1] = 'USB audio device';
+	}
+	else {
+		$device[1] = '';
+	}
+
+	return $device;
 }
 
 // Music source config
@@ -3145,7 +3190,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				}
 				# Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
 				if (strpos($_SESSION[$song['file']]['name'], 'BBC') !== false && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
-					$current['bitrate'] = '320';
+					$current['bitrate'] = '320 kbps';
 				}
 			}
 			else {

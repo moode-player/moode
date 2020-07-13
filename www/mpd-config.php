@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.6.1
  *
  */
 
@@ -80,6 +80,7 @@ else {
 	$_hide_msg = 'hide';
 }
 
+// NOTE needs a redo for the new card numbering scheme involving HDMI
 // Device type
 $dev = getDeviceNames();
 if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
