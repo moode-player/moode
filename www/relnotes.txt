@@ -26,6 +26,7 @@ Updates
 Radio stations
 
 - UPD: Playable url for...
+- DEL: Soho Radio London (only available as an app now)
 
 Bug fixes
 
