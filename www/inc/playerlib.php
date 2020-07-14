@@ -1780,12 +1780,11 @@ function getMixerName($i2sdevice) {
 function getDeviceNames () {
 	// DEBUGGING
 	$cards = array();
-	$friendly_name = array('Headphones' => 'Headphone jack', 'b1' => 'HDMI-1', 'b1' => 'HDMI-2');
+	$friendly_name = array('Headphones' => 'Headphone jack', 'b1' => 'HDMI-1', 'b2' => 'HDMI-2');
 	for ($i = 0; $i < 4; $i++) {
 		$alsa_name = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 		$cards[$i] = $friendly_name[$alsa_name] == '' ? $alsa_name : $friendly_name[$alsa_name];
 		workerLog('card' . $i . ' (' . $cards[$i] . ')');
-
 	}
 
 	// ORIGINAL
