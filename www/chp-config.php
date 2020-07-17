@@ -16,7 +16,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.7.0
  *
  */
 
@@ -280,7 +280,7 @@ else {
 }
 
 // MERUS Amp HAT ZW
-if ($_SESSION['i2sdevice'] == 'MERUS Amp HAT ZW') {
+if ($_SESSION['i2sdevice'] == 'MERUS(tm) Amp piHAT ZW') {
 	$_merus_ma12070p = '';
 	$merus_ma12070p_pmp = $array[0];
 
