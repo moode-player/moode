@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.7.0
  *
  */
 
@@ -318,9 +318,18 @@ else {
 //
 
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['adevname']);
-$devname = $_SESSION['adevname'];
-$dacchip = $result[0]['dacchip'];
-$iface = $result[0]['iface'];
+// Not in table implies USB audio device
+if ($result === true) {
+	$devname = 'USB audio device (' . $_SESSION['adevname'] . ')';
+	$dacchip = '';
+	$iface = 'USB';
+}
+else {
+	$devname = $_SESSION['adevname'];
+	$dacchip = $result[0]['dacchip'];
+	$iface = $result[0]['iface'];
+}
+$mixer_name = $_SESSION['amixname'];
 $audio_formats = $_SESSION['audio_formats'];
 $hdwr_rev = $_SESSION['hdwrrev'];
 

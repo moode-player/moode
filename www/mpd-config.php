@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 6.6.1
+ * 2020-MM-DD TC moOde 6.7.0
  *
  */
 
@@ -41,9 +41,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 	// Set 0 volume for mixer type disabled
 	if ($_POST['conf']['mixer_type'] == 'disabled') {
-		sendMpdCmd($sock, 'setvol 0');
-		$resp = readMpdResp($sock);
-		closeMpdSock($sock);
+		sysCmd('/var/www/vol.sh 0');
 	}
 
 	// Update the mixertype for audioout -> local
@@ -51,7 +49,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 	// Update /etc/mpd.conf
 	if ($queueargs == 'devicechg') {
-		$title = 'Device type has changed';
+		$title = 'Audio output has changed';
 		$message = 'Reboot required';
 		$duration = 10;
 	}
@@ -85,6 +83,8 @@ else {
 $dev = getDeviceNames();
 if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
 if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
+if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($mpdconf['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}
+if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($mpdconf['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
 
 // Volume control
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
