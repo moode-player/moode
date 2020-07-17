@@ -11,21 +11,21 @@
 
 ########################################################
 //
-// 2020-MM-DD TC moOde 6.6.1
+// 2020-MM-DD TC moOde 6.7.0
 //
 ########################################################
 
-New features
-
-- NEW:
-
 Updates
 
+- UPD: Support new ALSA card assignment scheme
+- UPD: Improved HDMI display support
+- UPD: Improved USB audio hot plug handling
 - UPD: Help text on System Config for 64-bit kernel option
+- UPD: Device name for Merus Amp HAT ZW
 
 Radio stations
 
-- UPD: Playable url for...
+- UPD: Playable url for NME 1 and 2 to 256K streams
 - DEL: Soho Radio London (only available as an app now)
 
 Bug fixes
