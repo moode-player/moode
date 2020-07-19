@@ -39,7 +39,7 @@ if [[ $1 = "chg-name" ]]; then
 	fi
 
 	if [[ $2 = "browsertitle" ]]; then
-		sed -i "s/<title>$3/<title>$4/" /var/local/www/header.php
+		sed -i "s/<title>$3/<title>$4/" /var/www/header.php
 	fi
 
 	if [[ $2 = "squeezelite" ]]; then

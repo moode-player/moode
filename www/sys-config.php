@@ -441,7 +441,7 @@ else {
 }
 
 // android 'add to home'
-$result = sysCmd('grep "add2home_off" /var/local/www/header.php');
+$result = sysCmd('grep "add2home_off" /var/www/header.php');
 $_select['add2home1'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd2home1\" value=\"1\" " . ((empty($result[0])) ? "checked=\"checked\"" : "") . ">\n";
 $_select['add2home0'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd2home2\" value=\"0\" " . ((!empty($result[0])) ? "checked=\"checked\"" : "") . ">\n";
 
@@ -554,6 +554,6 @@ $tpl = "sys-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php');
+include('header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.min.php');
