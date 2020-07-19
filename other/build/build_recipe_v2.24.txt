@@ -1,15 +1,11 @@
 ################################################################
 #
-# Build Recipe v2.23 2020-07-09
+# Build Recipe v2.24 2020-MM-DD
 #
-# moOde 6.6.0 2020-07-09
+# moOde 6.7.0 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
-# - Bump to r660 sources
-# - Bump to Linux kernel 5.4.49
-# - Bump to bluez-alsa 2.1.0-49ad348
-# - Bump to MPD 0.21.24 (Default)
-# - Bump to upmpdcli 1.4.12-7ea91f5d
-# - Add 64-bit ASIX and CF-912AC drivers for Allo USBridge SIG
+# - Bump to r670 sources
+# - Bump to Linux kernel 5.4.51 build #1325
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
@@ -117,8 +113,8 @@ sudo reboot
 ////////////////////////////////////////////////////////////////
 
 1. Unzip moOde release
-unzip -o -q ./moode-r660.zip
-rm -f ./moode-r660.zip
+unzip -o -q ./moode-r670.zip
+rm -f ./moode-r670.zip
 
 2. Basic optimizations
 
@@ -642,16 +638,16 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-KERNEL=5.4.49
-BUILD=#1323
-echo "y" | sudo PRUNE_MODULES=1 rpi-update da3752a358a86014cdcce5fc3be5b18d7ec074c4
+KERNEL=5.4.51
+BUILD=#1325
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 8382ece2b30be0beb87cac7f3b36824f194d01e9
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
 sudo apt-get clean
 
-# Install Edimax EW-7811Un fix
-sudo mv /etc/modprobe.d/blacklist-rtl8192cu.conf /etc/modprobe.d/blacklist-rtl8192cu.conf.delete
+# Install Edimax EW-7811Un fix (IS THIS NEEDED ANYMORE ?)
+#sudo mv /etc/modprobe.d/blacklist-rtl8192cu.conf /etc/modprobe.d/blacklist-rtl8192cu.conf.delete
 
 # Install drivers for Allo USBridge Signature
 
