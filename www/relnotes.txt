@@ -17,16 +17,18 @@
 
 Updates
 
+- UPD: Bump to Linux kernel 5.4.51 build #1325
 - UPD: Support new ALSA card assignment scheme
 - UPD: Improved HDMI display support
 - UPD: Improved USB audio hot plug handling
 - UPD: Help text on System Config for 64-bit kernel option
 - UPD: Device name for Merus Amp HAT ZW
+- UPD: Setup guide to reflect changes
 
 Radio stations
 
 - UPD: Playable url for NME 1 and 2 to 256K streams
-- DEL: Soho Radio London (only available as an app now)
+- UPD: Playable url for Soho Radio London to 320K stream
 
 Bug fixes
 
