@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Sun Jul 19 10:44:28 2020
+-- File generated with SQLiteStudio v3.2.1 on Sun Jul 19 11:19:47 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -210,8 +210,8 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/p
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '7c14d47c060cb6117c7c1e824c9bc5cc', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '1c9cf7d406420563015ef9de319f8981', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', '99eb7f24ef702ce22ca5f67265ed1aa8', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '7dae420e1dbb2c493cd4085e8ce81758', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', '507310f00f3bdc2a38ef5af60b9576d7', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', '5240753d8c4beca8454ac34d6d64ce40', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
 
