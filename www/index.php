@@ -31,6 +31,6 @@ session_write_close();
 $section = basename(__FILE__, '.php');
 
 $tpl = "indextpl.min.html";
-include('/var/local/www/header.php');
+include('header.php');
 eval("echoTemplate(\"".getTemplate("/var/www/templates/$tpl")."\");");
 include('footer.min.php');
