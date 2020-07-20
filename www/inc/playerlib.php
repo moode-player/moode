@@ -214,7 +214,7 @@ function integrityCheck() {
 	}
 
 	// Output static tables
-	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "select id,name,dacchip,iface,list,driver from cfg_audiodev" > /tmp/cfg_audiodev.sql');
+	$result = sysCmd("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT id,name,dacchip,iface,list,driver FROM cfg_audiodev WHERE drvoptions=''\" > /tmp/cfg_audiodev.sql");
 
 	// Broom www root
 	sysCmd('find /var/www -type l -delete');
