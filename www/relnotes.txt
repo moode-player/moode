@@ -11,6 +11,21 @@
 
 ########################################################
 //
+// 2020-MM-DD TC moOde 6.7.1
+//
+########################################################
+
+Updates
+
+- UPD: Use new dtoverlay names for pi3-disable-wifi/bt
+- UPD: Improve method to change Browser title
+
+Bug fixes
+
+- FIX: Volume knob showing -1 in certain edge case
+
+########################################################
+//
 // 2020-07-19 TC moOde 6.7.0
 //
 ########################################################
@@ -98,7 +113,6 @@ Radio stations
 - UPD: Station logo for Morow - Retro Progressive Rock
 - UPD: Station logo for Roots Legacy Radio - Dub UK & Roots Reggae
 - UPD: Change Koffee to smooth Chill
-- DEL: Radio Caroline (playable URL fail)
 - DEL: MPR - Minnesota Public Radio (playable URL fail)
 - DEL: JB Radio 2 FLAC (stops after song ends)
 
