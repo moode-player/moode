@@ -1553,7 +1553,8 @@ function countdownRestart(startFrom) {
 // volume control
 function setVolume(level, event) {
     level = parseInt(level);
-    level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
+	level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
+	level = level < 0 ? 0 : level;
     //console.log(level, event);
 
 	// Unmuted, set volume (incl 0 vol)
