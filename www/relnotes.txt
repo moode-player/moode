@@ -23,7 +23,7 @@ Updates
 Bug fixes
 
 - FIX: Volume knob showing -1 in certain edge case
-- FIX: Driver options for Allo Boss/MiniBoss and Piano
+- FIX: Driver option enable causes IC fail
 
 ########################################################
 //
