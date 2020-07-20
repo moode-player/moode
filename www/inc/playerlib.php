@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-19 TC moOde 6.7.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -2633,7 +2633,6 @@ function autoConfig($cfgfile) {
 	sysCmd('/var/www/command/util.sh chg-name host "moode" ' . '"' . $autocfg['hostname'] . '"');
 	playerSession('write', 'hostname', $autocfg['hostname']);
 
-	sysCmd('/var/www/command/util.sh chg-name browsertitle "moOde Player" ' . '"' . $autocfg['browsertitle'] . '"');
 	playerSession('write', 'browsertitle', $autocfg['browsertitle']);
 
 	sysCmd('/var/www/command/util.sh chg-name bluetooth "Moode Bluetooth" ' . '"' . $autocfg['bluetoothname'] . '"');

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  */
 -->
@@ -32,7 +32,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>moOde Player</title>
+	<title><?php echo $_SESSION['browsertitle']; ?></title>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">

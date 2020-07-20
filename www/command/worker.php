@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  */
 
@@ -1632,9 +1632,6 @@ function runQueuedJob() {
 			break;
 		case 'hostname':
 			sysCmd('/var/www/command/util.sh chg-name host ' . $_SESSION['w_queueargs']);
-			break;
-		case 'browsertitle':
-			sysCmd('/var/www/command/util.sh chg-name browsertitle ' . $_SESSION['w_queueargs']);
 			break;
 		case 'mpdver':
 			sysCmd('mpc stop');
