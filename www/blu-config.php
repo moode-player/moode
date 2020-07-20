@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  */
 
@@ -105,7 +105,7 @@ if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 	playerSession('write', 'bluez_pcm_buffer', $_POST['pcm_buffer']);
 	sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $_POST['pcm_buffer'] . "' /etc/bluealsaaplay.conf");
-	$_SESSION['notify']['title'] = 'Buffer time updated';	
+	$_SESSION['notify']['title'] = 'Buffer time updated';
 }
 
 session_write_close();
