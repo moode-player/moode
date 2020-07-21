@@ -17,6 +17,7 @@
 
 Updates
 
+- UPD: Use aplay names in MPD Audio output dropdown
 - UPD: Use new dtoverlay names for pi3-disable-wifi/bt
 - UPD: Improve method to change Browser title
 
