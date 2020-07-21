@@ -1773,16 +1773,17 @@ function getMixerName($i2sdevice) {
 function getDeviceNames () {
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB audio device
 	if ($_SESSION['i2sdevice'] == 'none') {
-		$device_names = array('b1' => 'Pi HDMI-1', 'b2' => 'Pi HDMI-2', 'Headphones' => 'Pi Headphone jack');
+		$pi_device_names = array('b1' => 'Pi HDMI 1', 'b2' => 'Pi HDMI 2', 'Headphones' => 'Pi Headphone jack');
 		for ($i = 0; $i < 4; $i++) {
 			$alsa_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-			$devices[$i] = $device_names[$alsa_id] == '' ? $alsa_id : $device_names[$alsa_id];
+			$aplay_device_name = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
+			$devices[$i] = $pi_device_names[$alsa_id] != '' ? $pi_device_names[$alsa_id] : $aplay_device_name;
 			//workerLog('card' . $i . ' (' . $devices[$i] . ')');
 		}
 	}
 	// I2S audio device
 	else {
-		$devices[0] = trim(file_get_contents('/proc/asound/card0/id'));
+		$devices[0] = trim(sysCmd("aplay -l | awk -F'[' '/card 0/{print $2}' | cut -d']' -f1")[0]);
 	}
 
 	return $devices;
