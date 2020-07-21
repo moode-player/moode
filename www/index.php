@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-04-12 TC moOde 5.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  */
 
@@ -31,6 +31,6 @@ session_write_close();
 $section = basename(__FILE__, '.php');
 
 $tpl = "indextpl.min.html";
-include('/var/local/www/header.php');
+include('header.php');
 eval("echoTemplate(\"".getTemplate("/var/www/templates/$tpl")."\");");
 include('footer.min.php');

@@ -434,14 +434,16 @@ else {
 						sysCmd('chmod 777 "' . $file . '"');
 						sysCmd('chown root:root "' . $file . '"');
 
-						// Write image
-						if (!file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg')) {
-							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
-							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
-						}
-						else {
+						// Write logo image
+						sleep(3); // Allow time for setlogoimage job to complete which creates new image file
+						if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg')) {
 							sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
 							sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
+						}
+						// Write default logo image if an image does not already exist
+ 						else if (!file_exists('/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg')) {
+							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
+							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
 						}
 
 						// Update time stamp on files so mpd picks up the change and commits the update

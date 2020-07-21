@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  */
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
@@ -1553,7 +1553,8 @@ function countdownRestart(startFrom) {
 // volume control
 function setVolume(level, event) {
     level = parseInt(level);
-    level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
+	level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
+	level = level < 0 ? 0 : level;
     //console.log(level, event);
 
 	// Unmuted, set volume (incl 0 vol)

@@ -6,7 +6,7 @@
 # of moOde audio player. Additional configuration help is
 # provided within the player via the (i) information buttons.
 #
-# Updated: 2020-02-12
+# Updated: 2020-07-19
 #
 # (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -80,7 +80,7 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     d) Menu, Configure, Audio
     e) EDIT MPD config
     f) Leave Volume control set to "Software"
-    g) Set Device type to "USB audio device"
+    g) Set Audio output to the name of the USB audio device
     h) SAVE
     i) Restart
 
@@ -91,7 +91,7 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
     d) Menu, Configure, Audio
     e) EDIT MPD config
     f) Leave Volume control set to "Software"
-    g) Verify Audio device is set to "I2S audio device"
+    g) Verify Audio output is set to the name of the I2S audio device
     h) SAVE
 
  3. TIME ZONE
@@ -101,21 +101,20 @@ https://www.raspberrypi.org/documentation/installation/installing-images/
  4. ADD SOURCE(S) CONTAINING MUSIC FILES
     - USB STORAGE DEVICES
     a) Insert USB storage device
-    b) Menu, Configure, Library
-    c) UPDATE or RE-GEN MPD database
-    d) Optionally select Yes to automatically update MPD database on USB insert/remove
-    e) Wait for completion (no spinner)
-    - SDCARD STORAGE DEVICES
-    a) Menu, Configure, Library
-    b) UPDATE or RE-GEN MPD database
+    b) Menu, Update library
     c) Wait for completion (no spinner)
+    - SDCARD STORAGE DEVICES
+    a) Menu, Update library
+    b) Wait for completion (no spinner)
     - NAS DEVICE
     a) Menu, Configure, Library
-    b) CREATE Music source (MPD database update initiates automatically after SAVE)
-    c) Wait for completion (no spinner)
-    - ALBUM COVER THUMBNAILS
-    a) UPDATE or RE-GEN the album cover thumbnail cache.
-    b) VIEW cache status periodically and wait until Done.
+    b) CREATE Music source
+    c) After SAVE, return to Playback or Library
+    d) Menu, Update library
+    e) Wait for completion (no spinner)
+    - MUSIC DATABASE UTILITIES
+    a) Menu, Configure, Library
+    b) Various utilities will be listed in the Music Library section
 
  5. VERIFY AUDIO PLAYBACK
     - Ethernet mode
@@ -228,7 +227,7 @@ accentcolor=Emerald
     f) Select appropriate I2S audio device then SET
     g) Menu, Power, Restart
     h) Menu, Configure, Audio, EDIT MPD config
-    i) Verify Device type is set to "I2S audio device"
+    i) Verify Audio output is set to "I2S audio device"
     j) SAVE
 
  2. Switching from I2S to USB audio device

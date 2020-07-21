@@ -1,5 +1,5 @@
 [playlist]
-File1=http://streaming.radio.co/s57043ec0a/listen
+File1=https://sohoradiomusic.doughunt.co.uk:8010/320mp3
 Title1=Soho Radio London
 NumberOfEntries=1
 Length1=-1

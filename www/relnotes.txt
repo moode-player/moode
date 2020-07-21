@@ -11,26 +11,46 @@
 
 ########################################################
 //
-// 2020-MM-DD TC moOde 6.6.1
+// 2020-MM-DD TC moOde 6.7.1
 //
 ########################################################
 
-New features
+Updates
 
-- NEW:
+- UPD: Use new dtoverlay names for pi3-disable-wifi/bt
+- UPD: Improve method to change Browser title
+
+Bug fixes
+
+- FIX: Volume knob showing -1 in certain edge case
+- FIX: Driver option enable causes IC fail
+
+########################################################
+//
+// 2020-07-19 TC moOde 6.7.0
+//
+########################################################
 
 Updates
 
+- UPD: Bump to Linux kernel 5.4.51 build #1325
+- UPD: Support new ALSA card assignment scheme
+- UPD: Improved HDMI display support
+- UPD: Improved USB audio hot plug handling
 - UPD: Help text on System Config for 64-bit kernel option
+- UPD: Device name for Merus Amp HAT ZW
+- UPD: Setup guide to reflect changes
 
 Radio stations
 
-- UPD: Playable url for...
+- UPD: Playable url for NME 1 and 2 to 256K streams
+- UPD: Playable url for Soho Radio London to 320K stream
 
 Bug fixes
 
 - FIX: Index search position for Tag view Album column on mobile
 - FIX: Logo path for BBC 320K stations
+- FIX: Missing 'kbps' label for BBC 320K stations
 
 ########################################################
 //
@@ -94,7 +114,6 @@ Radio stations
 - UPD: Station logo for Morow - Retro Progressive Rock
 - UPD: Station logo for Roots Legacy Radio - Dub UK & Roots Reggae
 - UPD: Change Koffee to smooth Chill
-- DEL: Radio Caroline (playable URL fail)
 - DEL: MPR - Minnesota Public Radio (playable URL fail)
 - DEL: JB Radio 2 FLAC (stops after song ends)
 

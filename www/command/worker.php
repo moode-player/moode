@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  */
 
@@ -98,13 +98,18 @@ workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
 
 // Verify device configuration
-$card0 = trim(file_get_contents('/proc/asound/card0/id'));
-$card1 = trim(file_get_contents('/proc/asound/card1/id'));
-$result = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
-workerLog('worker: Device raw: (0:' . $card0 . '|1:' . (empty($card1) ? 'empty' : $card1) . '|i2s:' . $_SESSION['i2sdevice'] . ')');
-workerLog('worker: Device mpd: (' . $result[0]['value'] . ':' . $_SESSION['adevname'] . ')');
-workerLog('worker: Device ses: (' . $_SESSION['cardnum'] . '|' . $_SESSION['adevname'] . '|' . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . '%)');
-if ($_SESSION['i2sdevice'] != 'none' && $result[0]['value'] != '0') {
+//$card0 = trim(file_get_contents('/proc/asound/card0/id'));
+//$card1 = trim(file_get_contents('/proc/asound/card1/id'));
+$mpd_device = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
+for ($i = 0; $i < 4; $i++) {
+	$card_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+	$cards[$i] = empty($card_id) ? 'empty' : $card_id;
+}
+workerLog('worker: Device raw: (0:' . $cards[0] . '|1:' . $cards[1]. '|2:' . $cards[2]. '|3:' . $cards[3]);
+workerLog('worker: Device i2s: (' . $_SESSION['i2sdevice'] . ')');
+workerLog('worker: Device mpd: (' . $mpd_device[0]['value'] . ':' . $_SESSION['adevname'] . ')');
+workerLog('worker: Device ses: (' . $_SESSION['cardnum'] . '|' . $_SESSION['adevname'] . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . '%)');
+if ($_SESSION['i2sdevice'] != 'none' && $mpd_device[0]['value'] != '0') {
 	workerLog('worker: ERROR: Device raw/mpd card mismatch');
 }
 
@@ -113,7 +118,7 @@ if ($_SESSION['alsavolume'] != 'none') {
 	$amixname = getMixerName($_SESSION['i2sdevice']);
 	sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $amixname . '"' . ' 0');
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $amixname . '"');
-	workerLog('worker: ALSA ' . $amixname . ' volume (' . $result[0] . ')');
+	workerLog('worker: ALSA ' . $amixname . ' volume set to (' . $result[0] . ')');
 }
 else {
 	workerLog('worker: ALSA ' . $amixname . ' volume (None)');
@@ -309,19 +314,25 @@ else {
 }
 
 // Log audio device info
-$logmsg = 'worker: ';
-workerLog($logmsg . 'ALSA card number (' . $_SESSION['cardnum'] . ')');
+workerLog('worker: ALSA card number (' . $_SESSION['cardnum'] . ')');
 if ($_SESSION['i2sdevice'] == 'none') {
-	$logmsg .= $_SESSION['cardnum'] == '1' ? 'Audio output (USB audio device)' : 'Audio output (On-board audio device)';
-	workerLog($logmsg);
+	workerLog('worker: Audio output (' . getDeviceNames()[$_SESSION['cardnum']] . ')');
 }
 else {
-	workerLog($logmsg . 'Audio output (I2S audio device)');
-	workerLog($logmsg . 'Audio device (' . $_SESSION['i2sdevice'] . ')');
+	workerLog('worker: Audio output (' . $_SESSION['i2sdevice'] . ')');
 }
 
 $_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
 workerLog('worker: Audio formats (' . $_SESSION['audio_formats'] . ')');
+
+// Might need this at some point
+$device_name = getDeviceNames()[$_SESSION['cardnum']];
+if ($_SESSION['i2sdevice'] == 'none' && $device_name != 'Headphone jack' && $device_name != 'HDMI-1' && $device_name != 'HDMI-2') {
+	$usb_audio = true;
+}
+else {
+	$usb_audio = false;
+}
 
 // Store alsa mixer name for use by util.sh get/set-alsavol and vol.sh
 playerSession('write', 'amixname', getMixerName($_SESSION['i2sdevice']));
@@ -408,7 +419,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 	workerLog('worker: Source select (available)');
 	$audio_source = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
 	workerLog('worker: Source select (source: ' . $audio_source . ')');
-	$audio_output = $_SESSION['i2sdevice'] == 'none' ? ($_SESSION['cardnum'] == '1' ? 'USB audio device' : 'On-board audio device') : 'I2S audio device';
+	$audio_output = $_SESSION['i2sdevice'] == 'none' ? getDeviceNames()[$_SESSION['cardnum']] : $_SESSION['i2sdevice'];
 	workerLog('worker: Source select (output: ' . $audio_output . ')');
 
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
@@ -758,9 +769,6 @@ while (true) {
 	}
 	if ($_SESSION['maint_interval'] != 0) {
 		chkMaintenance();
-	}
-	if ($_SESSION['cardnum'] == '1') { // TEST: experimental usb audio hot-plug mgt
-		sysCmd('alsactl store');
 	}
 	if ($_SESSION['btsvc'] == '1' && $_SESSION['audioout'] == 'Local') {
 		chkBtActive();
@@ -1365,13 +1373,8 @@ function runQueuedJob() {
 			$sock = openMpdSock('localhost', 6600);
 			closeMpdSock($sock);
 
-			// Set knob and mpd/hardware volume to 0
+			// Set knob and MPD/hardware volume to 0
 			sysCmd('/var/www/vol.sh 0');
-
-			// TEST: for usb audio hot-plug
-			if ($_SESSION['cardnum'] == '1') {
-				sysCmd('alsactl store');
-			}
 
 			// Restart renderers if device num changed
 			if ($_SESSION['w_queueargs'] == 'devicechg') {
@@ -1388,6 +1391,7 @@ function runQueuedJob() {
 
 		// snd-config jobs
 		case 'i2sdevice':
+			sysCmd('/var/www/vol.sh 0'); // Set knob and MPD/hardware volume to 0
 			playerSession('write', 'autoplay', '0'); // to prevent play before MPD setting applied
 			cfgI2sOverlay($_SESSION['w_queueargs']);
 			break;
@@ -1628,9 +1632,6 @@ function runQueuedJob() {
 			break;
 		case 'hostname':
 			sysCmd('/var/www/command/util.sh chg-name host ' . $_SESSION['w_queueargs']);
-			break;
-		case 'browsertitle':
-			sysCmd('/var/www/command/util.sh chg-name browsertitle ' . $_SESSION['w_queueargs']);
 			break;
 		case 'mpdver':
 			sysCmd('mpc stop');

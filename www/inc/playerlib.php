@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -214,7 +214,7 @@ function integrityCheck() {
 	}
 
 	// Output static tables
-	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "select id,name,dacchip,iface,list,driver from cfg_audiodev" > /tmp/cfg_audiodev.sql');
+	$result = sysCmd("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT id,name,dacchip,iface,list,driver FROM cfg_audiodev WHERE drvoptions=''\" > /tmp/cfg_audiodev.sql");
 
 	// Broom www root
 	sysCmd('find /var/www -type l -delete');
@@ -1739,21 +1739,14 @@ function updMpdConf($i2sdevice) {
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $device . ",0' /etc/bluealsaaplay.conf");
 
 	// Store device name for Audio info popup
-	if ($_SESSION['i2sdevice'] != 'none') {
-		$adevname = $_SESSION['i2sdevice'];
-	}
-	else if ($device == '0') {
-		$adevname = 'On-board audio device';
-	}
-	else {
-		$adevname = 'USB audio device';
-	}
+	$adevname = $_SESSION['i2sdevice'] == 'none' ? getDeviceNames()[$device] : $_SESSION['i2sdevice'];
 	playerSession('write', 'adevname', $adevname);
 }
 
 // Return mixer name
 function getMixerName($i2sdevice) {
 	// USB and On-board: default is PCM otherwise use returned mixer name
+	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
 	if ($i2sdevice == 'none') {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		$mixername = $result[0] == '' ? 'PCM' : str_replace(array('(', ')'), '', $result[0]);
@@ -1776,33 +1769,23 @@ function getMixerName($i2sdevice) {
 	return $mixername;
 }
 
-// Make text for audio device field (mpd and sqe-config)
+// Get device names assigned to each ALSA card
 function getDeviceNames () {
-	$dev = array();
-
-	$card0 = file_get_contents('/proc/asound/card0/id');
-	$card1 = file_get_contents('/proc/asound/card1/id');
-
-	// Device 0
-	if ($card0 == "ALSA\n" || $card0 == "Headphones\n") {
-		$dev[0] = 'On-board audio device';
+	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB audio device
+	if ($_SESSION['i2sdevice'] == 'none') {
+		$device_names = array('b1' => 'Pi HDMI-1', 'b2' => 'Pi HDMI-2', 'Headphones' => 'Pi Headphone jack');
+		for ($i = 0; $i < 4; $i++) {
+			$alsa_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+			$devices[$i] = $device_names[$alsa_id] == '' ? $alsa_id : $device_names[$alsa_id];
+			//workerLog('card' . $i . ' (' . $devices[$i] . ')');
+		}
 	}
-	else if ($_SESSION['i2sdevice'] != 'none') {
-		$dev[0] = 'I2S audio device';
-	}
+	// I2S audio device
 	else {
-		$dev[0] = '';
+		$devices[0] = trim(file_get_contents('/proc/asound/card0/id'));
 	}
 
-	// Device 1
-	if ($card1 != '' && ($card0 == "ALSA\n" || $card0 == "Headphones\n")) {
-		$dev[1] = 'USB audio device';
-	}
-	else {
-		$dev[1] = '';
-	}
-
-	return $dev;
+	return $devices;
 }
 
 // Music source config
@@ -2650,7 +2633,6 @@ function autoConfig($cfgfile) {
 	sysCmd('/var/www/command/util.sh chg-name host "moode" ' . '"' . $autocfg['hostname'] . '"');
 	playerSession('write', 'hostname', $autocfg['hostname']);
 
-	sysCmd('/var/www/command/util.sh chg-name browsertitle "moOde Player" ' . '"' . $autocfg['browsertitle'] . '"');
 	playerSession('write', 'browsertitle', $autocfg['browsertitle']);
 
 	sysCmd('/var/www/command/util.sh chg-name bluetooth "Moode Bluetooth" ' . '"' . $autocfg['bluetoothname'] . '"');
@@ -2889,38 +2871,40 @@ function startSqueezeLite () {
 function cfgI2sOverlay($i2sDevice) {
 	sysCmd('sed -i /dtoverlay/d ' . '/boot/config.txt'); // remove dtoverlays
 
+	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
 	if ($i2sDevice == 'none') {
-		// On-board or USB audio device
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" ' . '/boot/config.txt');
 	}
+	// I2S audio device
 	else {
-		// I2S audio device
 		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sDevice);
 		sysCmd('sed -i "s/dtparam=audio=on/dtparam=audio=off/" ' . '/boot/config.txt');
 		sysCmd('echo dtoverlay=' . $result[0]['driver'] . ' >> ' . '/boot/config.txt');
 		playerSession('write', 'cardnum', '0');
+		playerSession('write', 'adevname', $result[0]['name']);
+		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
 	}
 
 	// add these back in
-	$cmd = $_SESSION['p3wifi'] == '0' ? 'echo dtoverlay=pi3-disable-wifi >> ' . '/boot/config.txt' : 'echo "#dtoverlay=pi3-disable-wifi" >> ' . '/boot/config.txt';
+	$cmd = $_SESSION['p3wifi'] == '0' ? 'echo dtoverlay=disable-wifi >> ' . '/boot/config.txt' : 'echo "#dtoverlay=disable-wifi" >> ' . '/boot/config.txt';
 	sysCmd($cmd);
-	$cmd = $_SESSION['p3bt'] == '0' ? 'echo dtoverlay=pi3-disable-bt >> ' . '/boot/config.txt' : 'echo "#dtoverlay=pi3-disable-bt" >> ' . '/boot/config.txt';
+	$cmd = $_SESSION['p3bt'] == '0' ? 'echo dtoverlay=disable-bt >> ' . '/boot/config.txt' : 'echo "#dtoverlay=disable-bt" >> ' . '/boot/config.txt';
 	sysCmd($cmd);
 }
 
 // pi3 wifi adapter enable/disable
 function ctlWifi($ctl) {
-	$cmd = $ctl == '0' ? 'sed -i /pi3-disable-wifi/c\dtoverlay=pi3-disable-wifi ' . '/boot/config.txt' : 'sed -i /pi3-disable-wifi/c\#dtoverlay=pi3-disable-wifi ' . '/boot/config.txt';
+	$cmd = $ctl == '0' ? 'sed -i /disable-wifi/c\dtoverlay=disable-wifi ' . '/boot/config.txt' : 'sed -i /disable-wifi/c\#dtoverlay=disable-wifi ' . '/boot/config.txt';
 	sysCmd($cmd);
 }
 
 // pi3 bt adapter enable/disable
 function ctlBt($ctl) {
 	if ($ctl == '0') {
-		sysCmd('sed -i /pi3-disable-bt/c\dtoverlay=pi3-disable-bt ' . '/boot/config.txt');
+		sysCmd('sed -i /disable-bt/c\dtoverlay=disable-bt ' . '/boot/config.txt');
 	}
 	else {
-		sysCmd('sed -i /pi3-disable-bt/c\#dtoverlay=pi3-disable-bt ' . '/boot/config.txt');
+		sysCmd('sed -i /disable-bt/c\#dtoverlay=disable-bt ' . '/boot/config.txt');
 	}
 }
 
@@ -3145,7 +3129,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				}
 				# Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
 				if (strpos($_SESSION[$song['file']]['name'], 'BBC') !== false && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
-					$current['bitrate'] = '320';
+					$current['bitrate'] = '320 kbps';
 				}
 			}
 			else {

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Sat Jul 11 08:51:10 2020
+-- File generated with SQLiteStudio v3.2.1 on Mon Jul 20 12:15:13 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -126,45 +126,47 @@ INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, d
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (104, 'Matrix Mini-i Pro', 'ESS Sabre ES9016', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (105, 'Meridian Director DAC', 'Cirrus Logic CS4353', '', 'USB, S/PDIF', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (106, 'Meridian Explorer 2', 'Burr Brown PCM5102', '', 'USB(UAC2)', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (107, 'MERUS Amp HAT ZW', 'Infineon MA12070P', 'PMF0', 'I2S', 'yes', 'merus-amp', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (107, 'MERUS(tm) Amp piHAT ZW', 'Infineon MA12070P', 'PMF0', 'I2S', 'yes', 'merus-amp', '');
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (108, 'Musical Fidelity V90-DAC', 'Burr Brown PCM1795', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (109, 'NAD D 3020', 'Cirrus Logic CS42528', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (110, 'NAD d1050', 'Cirrus Logic CS4398', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (111, 'Nubert Active Speaker System A 200', 'TBD', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (112, 'Nuforce DDA 100', 'Infineon SAB2403ENT V2.1', '', 'USB, S/PDIF', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (113, 'Nuforce HDP DAC', 'ESS Sabre ES9032', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (114, 'On-board audio device', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (115, 'Peachtree Nova 220SE', 'ESS Sabre ES9032', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (116, 'Perreaux Audiant 80i', 'ESS Sabre ES9006', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (117, 'Pi2Design 502DAC', 'Burr Brown PCM5122, Wolfson WM8804', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (118, 'Pi2Design 502DAC PRO', 'Burr Brown PCM1792, Wolfson WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (119, 'Pi2Design 503HTA Hybrid Tube Amp', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (120, 'Pimoroni pHAT DAC', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (121, 'Pioneer U05', 'ESS Sabre ES9018', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (122, 'PlainAMP', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (123, 'PlainDAC', 'Burr Brown PCM5100', '', 'I2S', 'yes', 'hifiberry-dac', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (124, 'PlainDAC+', 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (125, 'PlainDSP', 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (126, 'RaspyPlay4', 'Burr Brown PCM5122', '', 'I2S', 'yes', 'iqaudio-dac', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (127, 'RME Fireface UCX', 'A/D Cirrus Logic CS5368, D/A Burr Brown PCM4104', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (128, 'Rockna Wavedream DAC', 'FPGA based', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (129, 'RPi-DAC', 'Burr Brown PCM1794A', '', 'I2S', 'yes', 'rpi-dac', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (130, 'Schiit Modi 2', 'AKM AK4396', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (131, 'SMSL M8 DAC', 'ESS Sabre ES9018K2M', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (132, 'SMSL Sanskrit Pro-B', 'AK4490EQ', '', 'USB(UAC2)', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (133, 'Soekris DAC1101 (USB powered)', 'FPGA based', '', 'USB(UAC2)', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (134, 'Soekris DAC1321 (w/o Headphone amp)', 'FPGA based', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (135, 'Soekris DAC1421 (Standard outputs)', 'FPGA based', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (136, 'Soekris DAC1541 (Balanced outputs)', 'FPGA based', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (137, 'Soekris DAM1021/1121 (I2S)', 'FPGA based', '', 'I2S', 'yes', 'rpi-dac', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (138, 'Soekris DAM1021/1121 (USB)', 'FPGA based', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (139, 'Suptronics x400', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (140, 'TEAC UD-501', 'Burr Brown PCM1795', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (141, 'Teac UD-H01', 'Burr Brown PCM1795', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (142, 'Topping D20', 'Analog Devices AD1852', '', 'USB, S/PDIF', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (143, 'Trends UD-10.1', 'Burr Brown PCM2704', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (144, 'USB audio device', '', '', 'USB', 'yes', '', '');
-INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (145, 'Wyred4sound DAC-2 DSD SE', 'ESS Sabre ES9018', '', 'USB(UAC2)', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (114, 'Peachtree Nova 220SE', 'ESS Sabre ES9032', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (115, 'Perreaux Audiant 80i', 'ESS Sabre ES9006', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (116, 'Pi HDMI-1', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (117, 'Pi HDMI-2', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (118, 'Pi Headphone jack', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (119, 'Pi2Design 502DAC', 'Burr Brown PCM5122, Wolfson WM8804', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (120, 'Pi2Design 502DAC PRO', 'Burr Brown PCM1792, Wolfson WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (121, 'Pi2Design 503HTA Hybrid Tube Amp', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (122, 'Pimoroni pHAT DAC', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (123, 'Pioneer U05', 'ESS Sabre ES9018', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (124, 'PlainAMP', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (125, 'PlainDAC', 'Burr Brown PCM5100', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (126, 'PlainDAC+', 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (127, 'PlainDSP', 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (128, 'RaspyPlay4', 'Burr Brown PCM5122', '', 'I2S', 'yes', 'iqaudio-dac', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (129, 'RME Fireface UCX', 'A/D Cirrus Logic CS5368, D/A Burr Brown PCM4104', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (130, 'Rockna Wavedream DAC', 'FPGA based', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (131, 'RPi-DAC', 'Burr Brown PCM1794A', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (132, 'Schiit Modi 2', 'AKM AK4396', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (133, 'SMSL M8 DAC', 'ESS Sabre ES9018K2M', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (134, 'SMSL Sanskrit Pro-B', 'AK4490EQ', '', 'USB(UAC2)', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (135, 'Soekris DAC1101 (USB powered)', 'FPGA based', '', 'USB(UAC2)', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (136, 'Soekris DAC1321 (w/o Headphone amp)', 'FPGA based', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (137, 'Soekris DAC1421 (Standard outputs)', 'FPGA based', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (138, 'Soekris DAC1541 (Balanced outputs)', 'FPGA based', '', 'USB(UAC2), S/PDIF', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (139, 'Soekris DAM1021/1121 (I2S)', 'FPGA based', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (140, 'Soekris DAM1021/1121 (USB)', 'FPGA based', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (141, 'Suptronics x400', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (142, 'TEAC UD-501', 'Burr Brown PCM1795', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (143, 'Teac UD-H01', 'Burr Brown PCM1795', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (144, 'Topping D20', 'Analog Devices AD1852', '', 'USB, S/PDIF', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (145, 'Trends UD-10.1', 'Burr Brown PCM2704', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (146, 'USB audio device', '', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (147, 'Wyred4sound DAC-2 DSD SE', 'ESS Sabre ES9018', '', 'USB(UAC2)', 'yes', '', '');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
@@ -207,10 +209,10 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/p
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', '63aaed1e3a99b11a05c2bef2910fe072', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '0060d90d51ae7a297d7a95f549fe42d9', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '1c9cf7d406420563015ef9de319f8981', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', '99eb7f24ef702ce22ca5f67265ed1aa8', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', '5240753d8c4beca8454ac34d6d64ce40', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '6ebe3812408a959a4785c9d4e0469f56', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '5689b58510d8d7359e19b02d527f0203', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', '8826e62f202dbb4d34dccdf1385ff547', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', '87e0b83609e62c0dd4664ef6b0ef9b0d', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
 
 -- Table: cfg_mpd
@@ -340,8 +342,8 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (76, 'DELETED', 'MPR - Minnesota Public Radio', 's', 'local', '', '', '', '', '', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (77, 'https://radios.rtbf.be/musiq3-128.aac', 'Musiq 3', 's', 'local', 'Classical', 'RTBF', 'French', 'Belgium', 'Europe', '128', 'AAC');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (78, 'http://37.130.228.60:8090/', 'Naim Radio', 's', 'local', 'Eclectic', 'Naim', 'English', 'United Kingdom', 'Europe', '320', 'MP3');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (79, 'http://svr1.msmn.co:8136', 'NME 1 - Classic & New Indie Alt', 's', 'local', 'Indie', 'NME', 'English', 'United Kingdom', 'Europe', '128', 'MP3');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (80, 'http://msmn.co:8118', 'NME 2 - New & Upfront Indie Alt', 's', 'local', 'Indie', 'NME', 'English', 'United Kingdom', 'Europe', '128', 'MP3');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (79, 'http://listen-nme.sharp-stream.com/nme1high.mp3', 'NME 1 - Classic & New Indie Alt', 's', 'local', 'Indie', 'NME', 'English', 'United Kingdom', 'Europe', '128', 'MP3');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (80, 'http://listen-nme.sharp-stream.com/nme2high.mp3', 'NME 2 - New & Upfront Indie Alt', 's', 'local', 'Indie', 'NME', 'English', 'United Kingdom', 'Europe', '128', 'MP3');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (81, 'http://icecast.omroep.nl/radio1-bb-aac', 'NPO Radio 1', 's', 'local', 'News', 'NPO', 'Dutch', 'Netherlands', 'Europe', '64', 'AAC');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (82, 'http://icecast.omroep.nl/radio2-bb-aac', 'NPO Radio 2', 's', 'local', 'Hot AC,Dance,Oldies,Pop,Mainstream Rock', 'NPO', 'Dutch', 'Netherlands', 'Europe', '64', 'AAC');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (83, 'http://icecast.omroep.nl/radio4-bb-aac', 'NPO Radio 4', 's', 'local', 'Ckassical', 'NPO', 'Dutch', 'Netherlands', 'Europe', '64', 'AAC');
@@ -387,7 +389,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (123, 'http://listen.jazz88.org/ksds.mp3', 'San Diego Jazz 88.3', 's', 'local', 'Jazz', 'KSDS', 'English', 'United States', 'North America', '96', 'MP3');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (124, 'http://streaming.novaentertainment.com.au/koffee', 'smooth Chill', 's', 'local', 'Chill', 'NOVA Entertainment', 'English', 'Australia', 'Asia', '48', 'AAC');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (125, 'http://sj256.hnux.com', 'SmoothJazz Global Radio', 's', 'local', 'Jazz,Smooth Jazz', 'Global Radio', 'English', 'United States', 'North America', '256', 'AAC');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (126, 'http://streaming.radio.co/s57043ec0a/listen', 'Soho Radio London', 's', 'local', 'Eclectic,Culture', 'Soho Radio', 'English', 'United Kingdom', 'Europe', '128', 'MP3');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (126, 'DELETED', 'Soho Radio London', 's', 'local', 'Eclectic,Culture', 'Soho Radio', 'English', 'United Kingdom', 'Europe', '128', 'MP3');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (127, 'http://ice1.somafm.com/bagel-128-aac', 'Soma FM - BAGeL Radio', 's', 'local', 'Alternative Rock', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (128, 'http://ice1.somafm.com/beatblender-128-aac', 'Soma FM - Beat Blender', 's', 'local', 'Deep House,Down-Tempo Chill', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format) VALUES (129, 'http://ice1.somafm.com/brfm-128-aac', 'Soma FM - Black Rock FM', 's', 'local', 'Burning Man Festival Music', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC');

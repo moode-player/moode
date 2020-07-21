@@ -1,8 +1,0 @@
-ACTION=="add", SUBSYSTEM=="usb", DRIVER=="snd-usb-audio", GOTO="usb-add-remove"
-#ACTION=="remove", SUBSYSTEM=="sound", GOTO="usb-add-remove"
-GOTO="usb_end"
-
-LABEL="usb-add-remove"
-RUN+="/var/www/command/restartmpd.sh"
-
-LABEL="usb_end"

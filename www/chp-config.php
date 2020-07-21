@@ -16,7 +16,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 6.7.1
  *
  */
 
@@ -280,7 +280,7 @@ else {
 }
 
 // MERUS Amp HAT ZW
-if ($_SESSION['i2sdevice'] == 'MERUS Amp HAT ZW') {
+if ($_SESSION['i2sdevice'] == 'MERUS(tm) Amp piHAT ZW') {
 	$_merus_ma12070p = '';
 	$merus_ma12070p_pmp = $array[0];
 
@@ -301,6 +301,6 @@ $tpl = "chp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
-include('/var/local/www/header.php');
+include('header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.min.php');
