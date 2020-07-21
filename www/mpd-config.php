@@ -50,7 +50,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Update /etc/mpd.conf
 	if ($queueargs == 'devicechg') {
 		$title = 'Audio output has changed';
-		$message = 'Reboot required';
+		$message = 'Restart required';
 		$duration = 10;
 	}
 	else {
