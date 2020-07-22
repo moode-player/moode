@@ -42,7 +42,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 
 	// submit job
-	submitJob('netcfg', '', 'Network config reset', 'Reboot required');
+	submitJob('netcfg', '', 'Network config reset', 'Restart required');
 }
 
 // update interfaces
@@ -83,7 +83,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	cfgdb_update('cfg_network', $dbh, 'apd0', $value);
 
 	// submit job
-	submitJob('netcfg', '', 'Changes saved', 'Reboot required');
+	submitJob('netcfg', '', 'Changes saved', 'Restart required');
 }
 
 // populate form fields

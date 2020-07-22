@@ -742,7 +742,7 @@ if (file_exists('/boot/moodecfg.txt')) {
 	autoConfig('/boot/moodecfg.txt');
 
 	sysCmd('sync');
-	autoCfgLog('autocfg: System rebooted');
+	autoCfgLog('autocfg: System restarted');
 	sysCmd('reboot');
 }
 

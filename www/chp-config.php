@@ -66,7 +66,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 				sysCmd('/var/www/command/util.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
 			}
 			$_SESSION['notify']['title'] = 'Chip and Device options updated';
-			$_SESSION['notify']['msg'] = 'REBOOT then APPLY MPD settings';
+			$_SESSION['notify']['msg'] = 'Restart then apply MPD settings';
 			$_SESSION['notify']['duration'] = 10;
 		}
 	}

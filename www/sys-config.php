@@ -77,7 +77,7 @@ if (isset($_POST['install_update'])) {
 			$_SESSION['notify']['duration'] = 20;
 		}
 		else {
-			submitJob('installupd', '', 'Software update installed', 'Reboot required', 60);
+			submitJob('installupd', '', 'Software update installed', 'Restart required', 60);
 			$_available_upd = 'Software is up to date<br>';
 		}
 	}
@@ -102,7 +102,7 @@ if (isset($_POST['update_host_name'])) {
 			$_SESSION['notify']['duration'] = 3;
 		}
 		else {
-			submitJob('hostname', '"' . $_SESSION['hostname'] . '" ' . '"' . $_POST['hostname'] . '"', 'Host name changed', 'Reboot required');
+			submitJob('hostname', '"' . $_SESSION['hostname'] . '" ' . '"' . $_POST['hostname'] . '"', 'Host name changed', 'Restart required');
 			playerSession('write', 'hostname', $_POST['hostname']);
 		}
 	}
@@ -111,7 +111,7 @@ if (isset($_POST['update_host_name'])) {
 // keyboard layout
 if (isset($_POST['update_keyboard'])) {
     if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
-        submitJob('keyboard', $_POST['keyboard'], 'Keyboard layout updated ', 'Reboot required');
+        submitJob('keyboard', $_POST['keyboard'], 'Keyboard layout updated ', 'Restart required');
         playerSession('write', 'keyboard', $_POST['keyboard']);
     }
 }
@@ -133,27 +133,27 @@ if (isset($_POST['update_cpugov'])) {
 
 // Linux kernel
 if (isset($_POST['update_kernel_architecture'])) {
-	submitJob('kernel_architecture', $_POST['kernel_architecture'], $_POST['kernel_architecture'] . ' kernel selected', 'Reboot required');
+	submitJob('kernel_architecture', $_POST['kernel_architecture'], $_POST['kernel_architecture'] . ' kernel selected', 'Restart required');
 	playerSession('write', 'kernel_architecture', $_POST['kernel_architecture']);
 }
 
 // USB auto-mounter
 if (isset($_POST['update_usb_auto_mounter'])) {
-	submitJob('usb_auto_mounter', $_POST['usb_auto_mounter'], 'USB auto-mounter updated', 'Reboot required');
+	submitJob('usb_auto_mounter', $_POST['usb_auto_mounter'], 'USB auto-mounter updated', 'Restart required');
 	playerSession('write', 'usb_auto_mounter', $_POST['usb_auto_mounter']);
 }
 
 // integrated WiFi adapter
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
 	$title = $_POST['p3wifi'] == 1 ? 'WiFi adapter on' : 'WiFi adapter off';
-	submitJob('p3wifi', $_POST['p3wifi'], $title, 'Reboot required');
+	submitJob('p3wifi', $_POST['p3wifi'], $title, 'Restart required');
 	playerSession('write', 'p3wifi', $_POST['p3wifi']);
 }
 
 // integrated Bluetooth adapter
 if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
 	$title = $_POST['p3bt'] == 1 ? 'Bluetooth adapter on' : 'Bluetooth adapter off';
-	submitJob('p3bt', $_POST['p3bt'], $title, 'Reboot required');
+	submitJob('p3bt', $_POST['p3bt'], $title, 'Restart required');
 	playerSession('write', 'p3bt', $_POST['p3bt']);
 }
 
@@ -181,14 +181,14 @@ if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION
 // eth0 check
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	$_SESSION['notify']['title'] = $_POST['eth0chk'] == 1 ? 'Eth0 IP check on' : 'Eth0 IP check off';
-	$_SESSION['notify']['msg'] = 'Reboot required';
+	$_SESSION['notify']['msg'] = 'Restart required';
 	playerSession('write', 'eth0chk', $_POST['eth0chk']);
 }
 
 // set USB curent to 2X (1200 mA)
 if (isset($_POST['maxusbcurrent']) && $_POST['maxusbcurrent'] != $_SESSION['maxusbcurrent']) {
 	$title = $_POST['maxusbcurrent'] == 1 ? 'USB current 2x on' : 'USB current 2x off';
-	submitJob('maxusbcurrent', $_POST['maxusbcurrent'], $title, 'Reboot required');
+	submitJob('maxusbcurrent', $_POST['maxusbcurrent'], $title, 'Restart required');
 	playerSession('write', 'maxusbcurrent', $_POST['maxusbcurrent']);
 }
 
@@ -196,7 +196,7 @@ if (isset($_POST['maxusbcurrent']) && $_POST['maxusbcurrent'] != $_SESSION['maxu
 if (isset($_POST['update_uac2fix'])) {
 	if (isset($_POST['uac2fix']) && $_POST['uac2fix'] != $_SESSION['uac2fix']) {
 		$title = $_POST['uac2fix'] == 1 ? 'USB(UAC2) fix on' : 'USB(UAC2) fix off';
-		submitJob('uac2fix', $_POST['uac2fix'], $title, 'Reboot required');
+		submitJob('uac2fix', $_POST['uac2fix'], $title, 'Restart required');
 		playerSession('write', 'uac2fix', $_POST['uac2fix']);
 	}
 }
@@ -205,19 +205,19 @@ if (isset($_POST['update_uac2fix'])) {
 if (isset($_POST['update_eth_port_fix'])) {
 	if (isset($_POST['eth_port_fix']) && $_POST['eth_port_fix'] != $_SESSION['eth_port_fix']) {
 		$_SESSION['notify']['title'] = $_POST['eth_port_fix'] == 1 ? 'Ethernet port fix on' : 'Ethernet port fix off';
-		$_SESSION['notify']['msg'] = 'Reboot required';
+		$_SESSION['notify']['msg'] = 'Restart required';
 		playerSession('write', 'eth_port_fix', $_POST['eth_port_fix']);
 	}
 }
 
 // expand root file system
 if (isset($_POST['update_expand_rootfs'])) {
-	submitJob('expandrootfs', '', 'File system expanded', 'Reboot required', 30);
+	submitJob('expandrootfs', '', 'File system expanded', 'Restart required', 30);
 }
 
 // enable usb boot
 if (isset($_POST['update_usbboot'])) {
-	submitJob('usbboot', '', 'USB boot enabled', 'Reboot required', 30);
+	submitJob('usbboot', '', 'USB boot enabled', 'Restart required', 30);
 }
 
 // LOCAL DISPLAY
@@ -226,7 +226,7 @@ if (isset($_POST['update_usbboot'])) {
 if (isset($_POST['update_localui'])) {
     if (isset($_POST['localui']) && $_POST['localui'] != $_SESSION['localui']) {
 		$title = $_POST['localui'] == 1 ? 'Local UI display on' : 'Local UI display off';
-        submitJob('localui', $_POST['localui'], $title, 'Reboot may be required');
+        submitJob('localui', $_POST['localui'], $title, 'Restart may be required');
         playerSession('write', 'localui', $_POST['localui']);
     }
 }
@@ -266,7 +266,7 @@ if (isset($_POST['update_scnbrightness'])) {
 // Pixel aspect ratio
 if (isset($_POST['update_pixel_aspect_ratio'])) {
     if (isset($_POST['pixel_aspect_ratio']) && $_POST['pixel_aspect_ratio'] != $_SESSION['pixel_aspect_ratio']) {
-		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], 'Setting updated', 'Reboot required');
+		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], 'Setting updated', 'Restart required');
 		playerSession('write', 'pixel_aspect_ratio', $_POST['pixel_aspect_ratio']);
     }
 }
@@ -274,7 +274,7 @@ if (isset($_POST['update_pixel_aspect_ratio'])) {
 // screen rotation
 if (isset($_POST['update_scnrotate'])) {
     if (isset($_POST['scnrotate']) && $_POST['scnrotate'] != $_SESSION['scnrotate']) {
-		submitJob('scnrotate', $_POST['scnrotate'], 'Setting updated', 'Reboot required');
+		submitJob('scnrotate', $_POST['scnrotate'], 'Setting updated', 'Restart required');
 		playerSession('write', 'scnrotate', $_POST['scnrotate']);
     }
 }
