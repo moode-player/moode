@@ -1,10 +1,10 @@
 ################################################################
 #
-# Build Recipe v2.25 2020-07-22
+# Build Recipe v2.26 2020-MM-DD
 #
-# moOde 6.7.1 2020-07-22
+# moOde 7.0.0 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
-# - Bump to r671 sources
+# - Bump to r700 sources
 # - Bump to Linux kernel 5.4.51 build #1325
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
@@ -90,9 +90,9 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r671.zip
-unzip -p -q ./moode-r671.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r671.zip moode/boot/config.txt.default > ./config.txt.default
+wget http://moodeaudio.org/downloads/prod/moode-r700.zip
+unzip -p -q ./moode-r700.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r700.zip moode/boot/config.txt.default > ./config.txt.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -113,8 +113,8 @@ sudo reboot
 ////////////////////////////////////////////////////////////////
 
 1. Unzip moOde release
-unzip -o -q ./moode-r671.zip
-rm -f ./moode-r671.zip
+unzip -o -q ./moode-r700.zip
+rm -f ./moode-r700.zip
 
 2. Basic optimizations
 
@@ -500,7 +500,9 @@ sudo cp ./moode/network/wpa_supplicant.conf.default /etc/wpa_supplicant/wpa_supp
 
 sudo cp ./moode/network/dhcpcd.conf.default /etc/dhcpcd.conf
 sudo cp ./moode/network/hostapd.conf.default /etc/hostapd/hostapd.conf
-sudo cp ./moode/var/local/www/db/moode-sqlite3.db.default /var/local/www/db/moode-sqlite3.db
+#sudo cp ./moode/var/local/www/db/moode-sqlite3.db.default /var/local/www/db/moode-sqlite3.db
+sudo cat ./moode/var/local/www/db/moode-sqlite3.db.sql | sqlite3 /var/local/www/db/moode-sqlite3.db
+
 # Permissions
 sudo chmod 0777 /var/lib/mpd/music/RADIO
 sudo chmod -R 0777 /var/local/www/db
