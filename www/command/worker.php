@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 6.7.1
+ * 2020-07-22 TC moOde 6.7.1
  *
  */
 
@@ -742,7 +742,7 @@ if (file_exists('/boot/moodecfg.txt')) {
 	autoConfig('/boot/moodecfg.txt');
 
 	sysCmd('sync');
-	autoCfgLog('autocfg: System rebooted');
+	autoCfgLog('autocfg: System restarted');
 	sysCmd('reboot');
 }
 

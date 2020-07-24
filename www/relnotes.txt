@@ -11,14 +11,17 @@
 
 ########################################################
 //
-// 2020-MM-DD TC moOde 6.7.1
+// 2020-07-22 TC moOde 6.7.1
 //
 ########################################################
 
 Updates
 
+- UPD: Bump to librespot v0.1.2 with gapless support
+- UPD: Use aplay names in MPD Audio output dropdown
 - UPD: Use new dtoverlay names for pi3-disable-wifi/bt
 - UPD: Improve method to change Browser title
+- UPD: Change "Reboot" to "Restart" in notifications
 
 Bug fixes
 

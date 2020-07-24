@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-19 TC moOde 6.7.0
+ * 2020-07-22 TC moOde 6.7.1
  *
  */
 -->
@@ -31,7 +31,7 @@
 			<p>Moode Audio Player is a derivative of the wonderful WebUI audio player client for MPD originally designed and coded by Andrea Coiutti and Simone De Gregori, and subsequently enhanced by early efforts from the RaspyFi/Volumio projects.</p>
 			<h4>Release Information</h4>
 			<ul>
-				<li>Release: 6.7.0 2020-07-19</li> <!-- NOTE: getMoodeRel() parses this  -->
+				<li>Release: 6.7.1 2020-07-22</li> <!-- NOTE: getMoodeRel() parses this  -->
 				<li>Coding: Tim Curtis &copy; 2014</li>
 				<li>Documentation: <a class="moode-about-link" href="./relnotes.txt" target="_blank">View release notes,</a>&nbsp<a class="moode-about-link" href="./setup.txt" target="_blank">View setup guide</a></li>
 				<li>Contributors: <a class="moode-about-link" href="./CONTRIBS.html" target="_blank">View contributors</a></li>

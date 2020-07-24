@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 6.7.1
+ * 2020-07-22 TC moOde 6.7.1
  *
  */
 
@@ -42,7 +42,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 
 	// submit job
-	submitJob('netcfg', '', 'Network config reset', 'Reboot required');
+	submitJob('netcfg', '', 'Network config reset', 'Restart required');
 }
 
 // update interfaces
@@ -83,7 +83,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	cfgdb_update('cfg_network', $dbh, 'apd0', $value);
 
 	// submit job
-	submitJob('netcfg', '', 'Changes saved', 'Reboot required');
+	submitJob('netcfg', '', 'Changes saved', 'Restart required');
 }
 
 // populate form fields

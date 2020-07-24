@@ -16,7 +16,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-MM-DD TC moOde 6.7.1
+ * 2020-07-22 TC moOde 6.7.1
  *
  */
 
@@ -66,7 +66,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 				sysCmd('/var/www/command/util.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
 			}
 			$_SESSION['notify']['title'] = 'Chip and Device options updated';
-			$_SESSION['notify']['msg'] = 'REBOOT then APPLY MPD settings';
+			$_SESSION['notify']['msg'] = 'Restart then apply MPD settings';
 			$_SESSION['notify']['duration'] = 10;
 		}
 	}
