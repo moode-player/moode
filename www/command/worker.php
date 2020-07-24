@@ -675,14 +675,16 @@ if ($_SESSION['localui'] == '1') {
 	sysCmd('systemctl start localui');
 	workerLog('worker: LocalUI started');
 }
-
+/* DEPRECATE:
+// - ethtool appears to kill the connection rather than change its settings.
+// - This could be a kernel dependant bug
 // Reducing 3B+ eth port speed fixes audio glitches when using certain usb dacs
 if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+' && $_SESSION['eth_port_fix'] == '1' && !empty($eth0ip[0])) {
 	sysCmd('ethtool -s eth0 speed 100 duplex full');
 	workerLog('worker: eth0 port fix applied');
 	workerLog('worker: eth0 (100 Mb/s full duplex)');
 }
-
+*/
 //
 // Globals section
 //

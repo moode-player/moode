@@ -201,6 +201,7 @@ if (isset($_POST['update_uac2fix'])) {
 	}
 }
 
+/* DEPRECATE: See worker.php comments
 // eth port fix
 if (isset($_POST['update_eth_port_fix'])) {
 	if (isset($_POST['eth_port_fix']) && $_POST['eth_port_fix'] != $_SESSION['eth_port_fix']) {
@@ -209,7 +210,7 @@ if (isset($_POST['update_eth_port_fix'])) {
 		playerSession('write', 'eth_port_fix', $_POST['eth_port_fix']);
 	}
 }
-
+*/
 // expand root file system
 if (isset($_POST['update_expand_rootfs'])) {
 	submitJob('expandrootfs', '', 'File system expanded', 'Restart required', 30);
@@ -429,6 +430,7 @@ else {
 $_select['uac2fix1'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix1\" value=\"1\" " . (($_SESSION['uac2fix'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix2\" value=\"0\" " . (($_SESSION['uac2fix'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
+/* DEPRECATE: See worker.php comments
 // eth port fix
 if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+') { // 3B+ only
 	$_eth_port_fix_hide = '';
@@ -438,11 +440,14 @@ if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+') { // 3B+ only
 else {
 	$_eth_port_fix_hide = 'hide';
 }
+*/
 
+/* DELETE
 // android 'add to home'
 $result = sysCmd('grep "add2home_off" /var/www/header.php');
 $_select['add2home1'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd2home1\" value=\"1\" " . ((empty($result[0])) ? "checked=\"checked\"" : "") . ">\n";
 $_select['add2home0'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd2home2\" value=\"0\" " . ((!empty($result[0])) ? "checked=\"checked\"" : "") . ">\n";
+*/
 
 // expand root file system
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
