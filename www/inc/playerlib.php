@@ -63,7 +63,7 @@ const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer
 const FEAT_GPIO 		= 4096;		// y GPIO button handler
 const FEAT_DJMOUNT		= 8192;		// y UPnP media browser
 const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
-const FEAT_DEVTWEAKS	= 32768;	// n Developer tweaks
+const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 //						-------
 //						  31679
 
