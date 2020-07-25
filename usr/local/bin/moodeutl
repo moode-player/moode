@@ -43,6 +43,7 @@ const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer
 const FEAT_GPIO 		= 4096;		// y GPIO button handler
 const FEAT_DJMOUNT		= 8192;		// y UPnP media browser
 const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
+const FEAT_DEVTWEAKS	= 32768;	// n Developer tweaks
 //						-------
 //						  31679
 
@@ -61,7 +62,8 @@ $features = array(
 	FEAT_SPOTIFY => 'Spotify Connect renderer',
 	FEAT_GPIO => 'GPIO button handler',
 	FEAT_DJMOUNT => 'UPnP media browser',
-	FEAT_BLUETOOTH => 'Bluetooth renderer'
+	FEAT_BLUETOOTH => 'Bluetooth renderer',
+	FEAT_DEVTWEAKS	=> 'Developer tweaks'
 );
 
 $feat_bitmask = trim(shell_exec("sqlite3 " .  SQLDB . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));
