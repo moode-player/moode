@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-07-09 TC moOde 6.6.0
+# 2020-MM-DD TC moOde 7.0.0
 #
 
 # Purge existing station data
@@ -24,9 +24,9 @@ sqlite3 /var/local/www/db/moode-sqlite3.db "DELETE FROM cfg_radio"
 
 # Install new station data
 unzip -q /var/local/www/station_import.zip -d /tmp
-sudo cp /tmp/var/lib/mpd/music/RADIO/*.pls var/lib/mpd/music/RADIO
-sudo cp /tmp/var/local/www/imagesw/radio-logos/*.jpg var/local/www/imagesw/radio-logos
-sudo cp /tmp/var/local/www/imagesw/radio-logos/thumbs/*.jpg var/local/www/imagesw/radio-logos/thumbs
+cp /tmp/var/lib/mpd/music/RADIO/*.pls /var/lib/mpd/music/RADIO
+cp /tmp/var/local/www/imagesw/radio-logos/*.jpg /var/local/www/imagesw/radio-logos
+cp /tmp/var/local/www/imagesw/radio-logos/thumbs/*.jpg /var/local/www/imagesw/radio-logos/thumbs
 sqlite3 /var/local/www/db/moode-sqlite3.db -csv ".import /tmp/var/local/www/db/cfg_radio.csv cfg_radio"
 
 # Cleanup temp files
