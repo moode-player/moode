@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-19 TC moOde 6.7.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -238,7 +238,7 @@ else {
 	}
 	else {
 		$resampler_format = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
-		$resampler_quality = ' (SoX ' . $cfg_mpd['samplerate_converter'] . ' quality)';
+		$resampler_quality = ' (SoX ' . $cfg_mpd['sox_quality'] . ' quality)';
 	}
 	// Polarity inversion
 	$polarity_inv = $_SESSION['invert_polarity'] == '0' ? 'off' : 'on';

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -78,8 +78,7 @@ else {
 	$_hide_msg = 'hide';
 }
 
-// NOTE needs a redo for the new card numbering scheme involving HDMI
-// Device type
+// Audio output
 $dev = getDeviceNames();
 if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
 if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
@@ -128,10 +127,36 @@ $_mpd_select['audio_output_format'] .= "<option value=\"192000:32:2\" " . (($mpd
 $_mpd_select['audio_output_format'] .= "<option value=\"352800:32:2\" " . (($mpdconf['audio_output_format'] == '352800:32:2') ? "selected" : "") . ">32 bit / 352.8 kHz</option>\n";
 $_mpd_select['audio_output_format'] .= "<option value=\"384000:32:2\" " . (($mpdconf['audio_output_format'] == '384000:32:2') ? "selected" : "") . ">32 bit / 384 kHz</option>\n";
 
+// Selective resample mode
+$_mpd_select['selective_resample_mode'] .= "<option value=\"0\" " . (($mpdconf['selective_resample_mode'] == '0') ? "selected" : "") . " >Disable</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"1\" " . (($mpdconf['selective_resample_mode'] == '1') ? "selected" : "") . " >Only upsample</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"2\" " . (($mpdconf['selective_resample_mode'] == '2') ? "selected" : "") . " >Only upsample source below 88.2kHz</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"3\" " . (($mpdconf['selective_resample_mode'] == '3') ? "selected" : "") . " >Use integer multiplier</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"4\" " . (($mpdconf['selective_resample_mode'] == '4') ? "selected" : "") . " >Only upsample, use integer multiplier</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"5\" " . (($mpdconf['selective_resample_mode'] == '5') ? "selected" : "") . " >Only upsample source below 88.2kHz, use integer multiplier</option>\n";
+
 // Resampling quality
-$_mpd_select['samplerate_converter'] .= "<option value=\"very high\" " . (($mpdconf['samplerate_converter'] == 'very high') ? "selected" : "") . " >Very high quality</option>\n";
-$_mpd_select['samplerate_converter'] .= "<option value=\"high\" " . (($mpdconf['samplerate_converter'] == 'high') ? "selected" : "") . " >High quality</option>\n";
-$_mpd_select['samplerate_converter'] .= "<option value=\"medium\" " . (($mpdconf['samplerate_converter'] == 'medium') ? "selected" : "") . " >Medium quality</option>\n";
+$_mpd_select['sox_quality'] .= "<option value=\"very high\" " . (($mpdconf['sox_quality'] == 'very high') ? "selected" : "") . " >Very high quality</option>\n";
+$_mpd_select['sox_quality'] .= "<option value=\"high\" " . (($mpdconf['sox_quality'] == 'high') ? "selected" : "") . " >High quality</option>\n";
+$_mpd_select['sox_quality'] .= "<option value=\"medium\" " . (($mpdconf['sox_quality'] == 'medium') ? "selected" : "") . " >Medium quality</option>\n";
+$_mpd_select['sox_quality'] .= "<option value=\"custom\" " . (($mpdconf['sox_quality'] == 'custom') ? "selected" : "") . " >Custom recipe</option>\n";
+
+// Custom SoX recipe
+$_mpd_select['sox_precision'] .= "<option value=\"16\" " . (($mpdconf['sox_precision'] == '16') ? "selected" : "") . " >16 bit</option>\n";
+$_mpd_select['sox_precision'] .= "<option value=\"20\" " . (($mpdconf['sox_precision'] == '20') ? "selected" : "") . " >20 bit</option>\n";
+$_mpd_select['sox_precision'] .= "<option value=\"24\" " . (($mpdconf['sox_precision'] == '24') ? "selected" : "") . " >24 bit</option>\n";
+$_mpd_select['sox_precision'] .= "<option value=\"28\" " . (($mpdconf['sox_precision'] == '28') ? "selected" : "") . " >28 bit</option>\n";
+$_mpd_select['sox_precision'] .= "<option value=\"32\" " . (($mpdconf['sox_precision'] == '32') ? "selected" : "") . " >32 bit</option>\n";
+$_mpd_select['sox_phase_response'] = $mpdconf['sox_phase_response'];
+$_mpd_select['sox_passband_end'] = $mpdconf['sox_passband_end'];
+$_mpd_select['sox_stopband_begin'] = $mpdconf['sox_stopband_begin'];
+$_mpd_select['sox_attenuation'] = $mpdconf['sox_attenuation'];
+$_mpd_select['sox_flags'] .= "<option value=\"0\" " . (($mpdconf['sox_flags'] == '0') ? "selected" : "") . " >ROLLOFF_SMALL (0.01 dB)</option>\n";
+$_mpd_select['sox_flags'] .= "<option value=\"1\" " . (($mpdconf['sox_flags'] == '1') ? "selected" : "") . " >ROLLOFF_MEDIUM (0.35 dB)</option>\n";
+$_mpd_select['sox_flags'] .= "<option value=\"2\" " . (($mpdconf['sox_flags'] == '2') ? "selected" : "") . " >ROLLOFF_NONE (Chebyshev bandwidth)</option>\n";
+$_mpd_select['sox_flags'] .= "<option value=\"8\" " . (($mpdconf['sox_flags'] == '8') ? "selected" : "") . " >HI_PREC_CLOCK (Increase irrational ratio accuracy)</option>\n";
+$_mpd_select['sox_flags'] .= "<option value=\"16\" " . (($mpdconf['sox_flags'] == '16') ? "selected" : "") . " >DOUBLE_PRECISION (Use DP calcs even if precision <= 20)</option>\n";
+$_mpd_select['sox_flags'] .= "<option value=\"32\" " . (($mpdconf['sox_flags'] == '32') ? "selected" : "") . " >SOXR_VR (Variable-rate resampling)</option>\n";
 
 // SoX multithreading
 $_mpd_select['sox_multithreading'] .= "<option value=\"0\" " . (($mpdconf['sox_multithreading'] == '0') ? "selected" : "") . " >Yes</option>\n";

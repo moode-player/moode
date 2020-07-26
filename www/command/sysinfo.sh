@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-07-09 TC moOde 6.6.0
+# 2020-MM-DD TC moOde 7.0.0
 #
 
 # check for sudo
@@ -206,7 +206,7 @@ MPD_SETTINGS() {
 	echo -e "\nVolume control\t\t= $mixer_type\c"
 	echo -e "\nALSA device\t\t= hw:$device\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
-	echo -e "\nSoX quality\t\t= $samplerate_converter\c"
+	echo -e "\nSoX quality\t\t= $sox_quality\c"
 	echo -e "\nSoX multithreading\t= $sox_multithreading\c"
 	echo -e "\nDSD over PCM (DoP)\t= $dop\c"
 	echo -e "\nReplaygain\t\t= $replaygain\c"
@@ -407,7 +407,7 @@ RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
 'mixer_type',
 'dop',
 'audio_output_format',
-'samplerate_converter',
+'sox_quality',
 'sox_multithreading',
 'replaygain',
 'replaygain_preamp',
@@ -425,7 +425,7 @@ device=${arr[0]}
 mixer_type=${arr[1]}
 dop=${arr[2]}
 audio_output_format=${arr[3]}
-samplerate_converter=${arr[4]}
+sox_quality=${arr[4]}
 [[ "${arr[5]}" = "1" ]] && sox_multithreading="off" || sox_multithreading="on"
 replaygain=${arr[6]}
 replaygain_preamp=${arr[7]}
