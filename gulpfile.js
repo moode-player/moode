@@ -203,6 +203,7 @@ gulp.task('browserSync', function(done) {
         },
         middleware: [ 
             $.httpProxyMiddleware.createProxyMiddleware('/imagesw/thmcache',  { target: pkg.server.proxy, changeOrigin: true }),
+            $.httpProxyMiddleware.createProxyMiddleware('/imagesw/radio-logos',  { target: pkg.server.proxy, changeOrigin: true }),
             $.httpProxyMiddleware.createProxyMiddleware('/command/',  { target: pkg.server.proxy , changeOrigin: true}),
             $.httpProxyMiddleware.createProxyMiddleware('/*.php',  { target: pkg.server.proxy, changeOrigin: true }),
             $.httpProxyMiddleware.createProxyMiddleware('/*.php/*',  { target: pkg.server.proxy, changeOrigin: true })
