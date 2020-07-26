@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-07-22 TC moOde 7.0.0
  *
  * This includes the @chris-rudmin rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -1618,9 +1618,11 @@ function updMpdConf($i2sdevice) {
 	foreach ($mpdcfg as $cfg) {
 		switch ($cfg['param']) {
 			// Code block or other params
+			/* DEPRECATE
 			case 'metadata_to_use':
 				$data .= $mpdver == '0.20' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
+			*/
 			case 'device':
 				$device = $cfg['value'];
 				playerSession('write', 'cardnum', $cfg['value']);
@@ -1636,8 +1638,8 @@ function updMpdConf($i2sdevice) {
 			case 'audio_output_format':
 				$data .= $cfg['value'] == 'disabled' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
-			case 'samplerate_converter':
-				$samplerate_converter = $cfg['value'];
+			case 'sox_quality':
+				$sox_quality = $cfg['value'];
 				break;
 			case 'sox_multithreading':
 				$sox_multithreading = $cfg['value'];
@@ -1646,8 +1648,7 @@ function updMpdConf($i2sdevice) {
 				$replay_gain_handler = $cfg['value'];
 				break;
 			case 'buffer_before_play':
-				//$data .= $mpdver == '0.20' ? $cfg['param'] . " \"" . $cfg['value'] . "\"\n" : '';
-				$data .=  '';
+				$data .=  ''; // DEPRECATED
 				break;
 			case 'auto_resample':
 				$auto_resample = $cfg['value'];
@@ -1664,10 +1665,33 @@ function updMpdConf($i2sdevice) {
 			case 'period_time':
 				$period_time = $cfg['value'];
 				break;
+			case 'sox_precision':
+				$sox_precision = $cfg['value'];
+				break;
+			case 'sox_phase_response':
+				$sox_phase_response = $cfg['value'];
+				break;
+			case 'sox_passband_end':
+				$sox_passband_end = $cfg['value'];
+				break;
+			case 'sox_stopband_begin':
+				$sox_stopband_begin = $cfg['value'];
+				break;
+			case 'sox_attenuation':
+				$sox_attenuation = $cfg['value'];
+				break;
+			case 'sox_flags':
+				$sox_flags = $cfg['value'];
+				break;
+			case 'selective_resample_mode':
+				// TEST: don;t add to mpd.conf until the patches are applied otherwise MPD will not start
+				$data .= '#' . $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+				break;
+
 			// Default param handling
 			default:
 				$data .= $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
-				if ($cfg['param'] == 'replaygain') {$replaygain = $cfg['value'];}
+				// DEAD CODE if ($cfg['param'] == 'replaygain') {$replaygain = $cfg['value'];}
 				break;
 		}
 	}
@@ -1686,8 +1710,17 @@ function updMpdConf($i2sdevice) {
 	// Resampler
 	$data .= "resampler {\n";
 	$data .= "plugin \"soxr\"\n";
-	$data .= "quality \"" . $samplerate_converter . "\"\n";
+	$data .= "quality \"" . $sox_quality . "\"\n";
 	$data .= "threads \"" . $sox_multithreading . "\"\n";
+	if ($sox_quality == 'custom') {
+		$data .= "precision \"" . $sox_precision . "\"\n";
+	    $data .= "phase_response \"" . $sox_phase_response . "\"\n";
+	    $data .= "passband_end \"" . $sox_passband_end . "\"\n";
+	    $data .= "stopband_begin \"" . $sox_stopband_begin . "\"\n";
+	    $data .= "attenuation \"" . $sox_attenuation . "\"\n";
+	    $data .= "flags \"" . $sox_flags . "\"\n";
+
+	}
 	$data .= "}\n\n";
 
 	// ALSA local (outputs 1 - 5)

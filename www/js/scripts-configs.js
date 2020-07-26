@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-05-03 TC moOde 6.5.2
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 jQuery(document).ready(function($){ 'use strict';
@@ -246,6 +246,20 @@ jQuery(document).ready(function($){ 'use strict';
             $('#thmcache-status').html(result);
         });
 	});
+
+    // MPD config show/hide SoX custom recipe fields
+    $('#sox_quality').change(function() {
+        if ($('#sox_quality').val() == 'custom') {
+            $('#sox_custom_recipe').show();
+        }
+        else {
+            $('#sox_custom_recipe').hide();
+        }
+	});
+    // MPD config show SoX custom recipe fields on page load/reload
+	if ($('#sox_quality').length && $('#sox_quality').val() == 'custom') {
+		$('#sox_custom_recipe').show();
+	}
 
     // info button (i) show/hide toggle
     $('.info-toggle').click(function(e) {

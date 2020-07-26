@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Wed Jul 22 09:41:35 2020
+-- File generated with SQLiteStudio v3.2.1 on Sat Jul 25 23:40:20 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -241,20 +241,27 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (21, 'device', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (22, 'mixer_type', 'software');
 INSERT INTO cfg_mpd (id, param, value) VALUES (23, 'dop', 'no');
 INSERT INTO cfg_mpd (id, param, value) VALUES (24, 'audio_output_format', 'disabled');
-INSERT INTO cfg_mpd (id, param, value) VALUES (25, 'samplerate_converter', 'very high');
+INSERT INTO cfg_mpd (id, param, value) VALUES (25, 'sox_quality', 'very high');
 INSERT INTO cfg_mpd (id, param, value) VALUES (26, 'sox_multithreading', '1');
 INSERT INTO cfg_mpd (id, param, value) VALUES (27, 'replaygain', 'off');
 INSERT INTO cfg_mpd (id, param, value) VALUES (28, 'replaygain_preamp', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (29, 'replay_gain_handler', 'software');
 INSERT INTO cfg_mpd (id, param, value) VALUES (30, 'volume_normalization', 'no');
 INSERT INTO cfg_mpd (id, param, value) VALUES (31, 'audio_buffer_size', '4096');
-INSERT INTO cfg_mpd (id, param, value) VALUES (32, 'buffer_before_play', '10%');
+INSERT INTO cfg_mpd (id, param, value) VALUES (32, 'buffer_before_play', 'DEPRECATED');
 INSERT INTO cfg_mpd (id, param, value) VALUES (33, 'max_output_buffer_size', '131072');
 INSERT INTO cfg_mpd (id, param, value) VALUES (34, 'auto_resample', 'yes');
 INSERT INTO cfg_mpd (id, param, value) VALUES (35, 'auto_channels', 'yes');
 INSERT INTO cfg_mpd (id, param, value) VALUES (36, 'auto_format', 'yes');
 INSERT INTO cfg_mpd (id, param, value) VALUES (37, 'buffer_time', '500000');
 INSERT INTO cfg_mpd (id, param, value) VALUES (38, 'period_time', '256000000');
+INSERT INTO cfg_mpd (id, param, value) VALUES (39, 'selective_resample_mode', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (40, 'sox_precision', '20');
+INSERT INTO cfg_mpd (id, param, value) VALUES (41, 'sox_phase_response', '50');
+INSERT INTO cfg_mpd (id, param, value) VALUES (42, 'sox_passband_end', '95');
+INSERT INTO cfg_mpd (id, param, value) VALUES (43, 'sox_stopband_begin', '100');
+INSERT INTO cfg_mpd (id, param, value) VALUES (44, 'sox_attenuation', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
 
 -- Table: cfg_network
 CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3));
