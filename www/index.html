@@ -479,7 +479,7 @@
 	            <button aria-label="Back" id="ra-back" class="btn"><i class="far fa-arrow-left"></i></button>
 				<button aria-label="Home" id="ra-home" class="btn"><i class="fas fa-home"></i></button>
 				<button aria-label="Refresh" id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
-				<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="far fa-cog"></i></button>
+				<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="fas fa-cog"></i></button>
 				<button aria-label="New Station" id="ra-new" class="btn"><i class="far fa-plus"></i></button>
 				<form id="ra-search" class="" method="post" onSubmit="return false;">
 					<div class="input-append">
@@ -1602,19 +1602,19 @@
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="new-station-name">Station name</label>
+	                <label class="control-label" for="new-station-pls-name">Station name</label>
 	                <div class="controls">
-	                    <input id="new-station-name" class="input-xlarge" type="text" name="new_station_name" size="200" value="" autofocus>
+	                    <input id="new-station-pls-name" class="input-xlarge" type="text" name="new_station_pls_name" maxlength="200" value="" autofocus>
 	                </div>
 	                <label class="control-label" for="new-station-url">Playable URL</label>
 	                <div class="controls">
-	                    <input id="new-station-url" class="input-xlarge" type="text" name="new_station_url" size="200" value="">
+	                    <input id="new-station-url" class="input-xlarge" type="text" name="new_station_url" maxlength="200" value="">
 	                </div>
 
 					<label class="control-label" for="new-radiologo">Logo image</label>
 					<div class="controls">
 						<div style="display:inline-block;">
-							<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small">Choose</label>
+							<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 							<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newLogoImage(this.files)">
 						</div>
 						<div id="preview-new-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
@@ -1623,6 +1623,41 @@
 						<div id="info-new-logoimage" class="help-block hide">
 							Add a JPEG logo image for the station. Max image size is 1MB.
 						</div>
+					</div>
+
+					<div id="new-station-tags">
+						<label class="control-label" for="new-station-display-name">Name (displayed)</label>
+						<div class="controls">
+							<input id="new-station-display-name" class="input-xlarge" type="text" name="new_station_display_name" maxlength="200" value="">
+						</div>
+						<label class="control-label" for="new-station-genre">Genre</label>
+						<div class="controls">
+							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" maxlength="200" value="">
+						</div>
+						<label class="control-label" for="new-station-broadcaster">Broadcaster</label>
+						<div class="controls">
+		                    <input id="new-station-broadcaster" class="input-xlarge" type="text" name="new_station_broadcaster" maxlength="200" value="">
+		                </div>
+						<label class="control-label" for="new-station-language">Language</label>
+						<div class="controls">
+		                    <input id="new-station-language" class="input-xlarge" type="text" name="new_station_language" maxlength="32" value="">
+		                </div>
+						<label class="control-label" for="new-station-country">Country</label>
+						<div class="controls">
+		                    <input id="new-station-country" class="input-xlarge" type="text" name="new_station_country" maxlength="200" value="">
+		                </div>
+						<label class="control-label" for="new-station-region">Region</label>
+						<div class="controls">
+		                    <input id="new-station-region" class="input-xlarge" type="text" name="new_station_region" maxlength="200" value="">
+		                </div>
+						<label class="control-label" for="new-station-bitrate">Bit rate (kbps)</label>
+						<div class="controls">
+		                    <input id="new-station-bitrate" class="input-xlarge" type="text" maxlength="5" name="new_station_bitrate" value="">
+		                </div>
+						<label class="control-label" for="new-station-format">Audio format</label>
+						<div class="controls">
+		                    <input id="new-station-format" class="input-xlarge" type="text" name="new_station_format" maxlength="10" value="">
+		                </div>
 					</div>
 	            </div>
 	    	</fieldset>
@@ -1638,24 +1673,25 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="editstation-modal-label">Edit station</h3>
+		<p>NOTE when updating a station logo image it may take some time before the Browser expires the old image from its cache.</p>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="edit-station-name">Station name</label>
+	                <label class="control-label" for="edit-station-pls-name">Station name</label>
 	                <div class="controls">
-	                    <input id="edit-station-name" class="input-xlarge" type="text" name="edit_station_name" size="200" value="" readonly>
+	                    <input id="edit-station-pls-name" class="input-xlarge" type="text" name="edit_station_name" maxlength="200" value="" readonly>
 	                </div>
 	                <label class="control-label" for="edit-station-url">Playable URL</label>
 	                <div class="controls">
-	                    <input id="edit-station-url" class="input-xlarge" type="text" name="edit_station_url" size="200" value="">
+	                    <input id="edit-station-url" class="input-xlarge" type="text" name="edit_station_url" maxlength="200" value="">
 	                </div>
 
 					<label class="control-label" for="edit-radiologo">Logo image</label>
 					<div class="controls">
 						<div style="display:inline-block;">
-							<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small">Choose</label>
+							<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
 							<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editLogoImage(this.files)">
 						</div>
 						<div id="preview-edit-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
@@ -1664,6 +1700,41 @@
 						<div id="info-edit-logoimage" class="help-block hide">
 							Add a JPEG logo image for the station. Max image size is 1MB.
 						</div>
+					</div>
+
+					<div id="edit-station-tags">
+						<label class="control-label" for="edit-station-display-name">Name (displayed)</label>
+						<div class="controls">
+							<input id="edit-station-display-name" class="input-xlarge" type="text" name="edit_station_name_displayed" maxlength="200" value="">
+						</div>
+						<label class="control-label" for="edit-station-genre">Genre</label>
+						<div class="controls">
+							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" maxlength="200" value="">
+						</div>
+						<label class="control-label" for="edit-station-broadcaster">Broadcaster</label>
+						<div class="controls">
+		                    <input id="edit-station-broadcaster" class="input-xlarge" type="text" name="edit_station_broadcaster" maxlength="200" value="">
+		                </div>
+						<label class="control-label" for="edit-station-language">Language</label>
+						<div class="controls">
+		                    <input id="edit-station-language" class="input-xlarge" type="text" name="edit_station_language" maxlength="32" value="">
+		                </div>
+						<label class="control-label" for="edit-station-country">Country</label>
+						<div class="controls">
+		                    <input id="edit-station-country" class="input-xlarge" type="text" name="edit_station_country" maxlength="200" value="">
+		                </div>
+						<label class="control-label" for="edit-station-region">Region</label>
+						<div class="controls">
+		                    <input id="edit-station-region" class="input-xlarge" type="text" name="edit_station_region" maxlength="200" value="">
+		                </div>
+						<label class="control-label" for="edit-station-bitrate">Bit rate (kbps)</label>
+						<div class="controls">
+		                    <input id="edit-station-bitrate" class="input-xlarge" type="text" maxlength="5" name="edit_station_bitrate" value="">
+		                </div>
+						<label class="control-label" for="edit-station-format">Audio format</label>
+						<div class="controls">
+		                    <input id="edit-station-format" class="input-xlarge" type="text" name="edit_station_format" maxlength="10" value="">
+		                </div>
 					</div>
 	            </div>
 	    	</fieldset>
@@ -1704,9 +1775,9 @@
 						<label for="import-station-pkg" id="choose-station-pkg" class="btn btn-primary btn-medium">Import</label>
 						<input type="file" id="import-station-pkg" accept=".zip" style="display:none" onchange="importStationPkg(this.files)">
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<div id="info-import-station-pkg" class="help-block hide">
-						Import a radio station package into the Library.
+					<!--a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a-->
+					<div id="info-import-station-pkg" class="help-block">
+						Import a radio station ZIP package into the Library. The package contents will replace the existing radio station SQL table, PLS files and station logos. The package must be in the exact format of an exported <b>"stations.zip"</b> file.
 					</div>
 				</div>
 
@@ -1715,10 +1786,15 @@
 					<div class="modal-button-style">
 						<button id="export-stations" class="btn btn-primary btn-small">Export</button>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<div id="info-export-stations" class="help-block hide">
-						Export and download the radio station database as a package file that can be imported into the Library at a later date. The package file is downloaded to the default "downloads" folder on the client.
+					<!--a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a-->
+					<div id="info-export-stations" class="help-block">
+						Export the radio station SQL table, PLS files and station logos to the file named <b>"stations.zip"</b> in the default download directory of the client.
 					</div>
+				</div>
+
+				<label class="control-label">Import/export status:</label>
+				<div class="controls">
+\					<div id="import-export-msg" class="help-block" style="line-height:24px;"></div>
 				</div>
 			</div>
 		</form>
@@ -1726,7 +1802,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-upd-radio-manager btn-primary" data-dismiss="modal">Update</button>
+		<!--button aria-label="Update" class="btn btn-upd-radio-manager btn-primary" data-dismiss="modal">Update</button-->
 	</div>
 </div>
 
