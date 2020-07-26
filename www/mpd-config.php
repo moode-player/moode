@@ -128,7 +128,7 @@ $_mpd_select['audio_output_format'] .= "<option value=\"352800:32:2\" " . (($mpd
 $_mpd_select['audio_output_format'] .= "<option value=\"384000:32:2\" " . (($mpdconf['audio_output_format'] == '384000:32:2') ? "selected" : "") . ">32 bit / 384 kHz</option>\n";
 
 // Selective resample mode
-$_mpd_select['selective_resample_mode'] .= "<option value=\"0\" " . (($mpdconf['selective_resample_mode'] == '0') ? "selected" : "") . " >Disable</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"0\" " . (($mpdconf['selective_resample_mode'] == '0') ? "selected" : "") . " >Disabled</option>\n";
 $_mpd_select['selective_resample_mode'] .= "<option value=\"1\" " . (($mpdconf['selective_resample_mode'] == '1') ? "selected" : "") . " >Only upsample</option>\n";
 $_mpd_select['selective_resample_mode'] .= "<option value=\"2\" " . (($mpdconf['selective_resample_mode'] == '2') ? "selected" : "") . " >Only upsample source below 88.2kHz</option>\n";
 $_mpd_select['selective_resample_mode'] .= "<option value=\"3\" " . (($mpdconf['selective_resample_mode'] == '3') ? "selected" : "") . " >Use integer multiplier</option>\n";
