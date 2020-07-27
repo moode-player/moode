@@ -300,7 +300,26 @@ gulp.task('patchfooter', function (done) {
     return gulp.src(pkg.app.src+'/footer.php')
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.removeCode({USEBUNDLE:true, commentStart: "<!--", commentEnd:"-->"}))
+        .pipe($.htmlmin({ collapseWhitespace: true,
+            ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ] 
+        }))
+        .pipe($.rename(function (path) {
+            path.basename += '.min';
+         }))
         .pipe(gulp.dest(DEPLOY_LOCATION))
+        .on('end', done);
+});
+
+gulp.task('minifyhtml', function (done) {
+    return gulp.src(pkg.app.src+'/templates/indextpl.html')
+        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
+        .pipe($.htmlmin({ collapseWhitespace: true,
+            ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ] 
+        }))
+        .pipe($.rename(function (path) {
+            path.basename += '.min';
+         }))
+        .pipe(gulp.dest(DEPLOY_LOCATION+'/templates/'))
         .on('end', done);
 });
 
@@ -325,7 +344,7 @@ gulp.task('build', gulp.series( [`sass`, `bundle`, `genindex`, `artwork`], funct
     done();
 }));
 
-gulp.task('deployback', gulp.series(['patchheader','patchfooter'], function (done) {
+gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'minifyhtml'], function (done) {
     return gulp.src([  pkg.app.src+'/*.php'
                       ,pkg.app.src+'/command/**/*'
                       ,pkg.app.src+'/inc/**/*'
@@ -335,7 +354,9 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter'], function (don
                       //,'!'+pkg.app.src+'/index.php'
                       ,'!'+pkg.app.src+'/header.php'
                       ,'!'+pkg.app.src+'/footer.php'
-                      ,'!'+pkg.app.src+'/footer.min.php'],
+                      ,'!'+pkg.app.src+'/footer.min.php'
+                      ,'!'+pkg.app.src+'/templates/indextpl.html'],
+
                       {base: pkg.app.src})
         // optional headers fields can be update and or added:
         //.pipe( $.replaceTask({ patterns: REPLACEMENT_PATTERNS }))
@@ -355,8 +376,8 @@ gulp.task('deployfront', function (done) {
         .on('end', done);
 });
 
-//gulp.task('deploy', gulp.series( [`build`, `deployfront`, `deployback`],function (done) {
-gulp.task('deploy', gulp.series( [`deployfront`, `deployback`], function (done) {
+gulp.task('deploy', gulp.series( [`build`, `deployfront`, `deployback`],function (done) {
+//gulp.task('deploy', gulp.series( [`deployfront`, `deployback`], function (done) {
     done();
 }));
 

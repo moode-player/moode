@@ -45,6 +45,7 @@
     "gulp-cli": "^2.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-header": "^2.0.9",
+    "gulp-htmlmin": "^5.0.1",
     "gulp-if": "^3.0.0",
     "gulp-load-plugins": "^2.0.3",
     "gulp-mode": "^1.0.2",
