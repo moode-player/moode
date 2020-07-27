@@ -323,6 +323,19 @@ gulp.task('minifyhtml', function (done) {
         .on('end', done);
 });
 
+gulp.task('minifyhtml', function (done) {
+    return gulp.src(pkg.app.src+'/templates/indextpl.html')
+        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
+        .pipe($.htmlmin({ collapseWhitespace: true,
+            ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ] 
+        }))
+        .pipe($.rename(function (path) {
+            path.basename += '.min';
+         }))
+        .pipe(gulp.dest(DEPLOY_LOCATION+'/templates/'))
+        .on('end', done);
+});
+
 gulp.task('artwork', function(done) {
     gulp.src([ pkg.app.src+'/webfonts/**/*'
               ,pkg.app.src+'/fonts/**/*'
