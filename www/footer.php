@@ -187,8 +187,6 @@
 
     //workerLog('-- footer.php');
     $return = session_write_close();
-    //workerLog('session_write_close=' . (($return) ? 'TRUE' : 'FALSE'));
+	//workerLog('session_write_close=' . (($return) ? 'TRUE' : 'FALSE'));
+	echo "</body></html>";
 ?>
-
-</body>
-</html>
