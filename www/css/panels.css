@@ -221,6 +221,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .thcolor {color:var(--accentxts);}
 .playlist .pll1, .cv-playlist .pll1 {font-weight:400;opacity:1;}
 .playlist .pl-entry, .cv-playlist .pl-entry {padding:0px;}
+.playlist .pl-thumb {float: left; width: 2.2rem; margin-left: 1vmin; margin-right: 1vmin;filter:brightness(80%)}
 .database .db-entry {margin-left:2.5em;padding:.5em 0;max-width:calc(100vw - 10px);overflow:hidden;}
 .database .db-icon {display:block;float:left;height:19px;line-height:19px;width:1.875em;padding:0;color:inherit;}
 .database .db-icon .btn {font-size:1em;padding:.5em .4em 1em .4em;}

@@ -877,18 +877,24 @@ function genSearchUrl (artist, title, album) {
 	return '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
 }
 
-function renderPlaylist() {
+function renderPlaylist() {	
 	debugLog('renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
 		var output = '';
 
+		if (GLOBAL.nativeLazyLoad) {
+			var playlistLazy = '<img loading="lazy" src="';
+		}
+		else {
+			var playlistLazy = '<img class="lazy-playlistview" data-original="';
+		}
+
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
-
+		var option_show_playlistart = SESSION.json['playlist_art'] == 'Yes';
 		// Format playlist items
         if (data) {
             for (i = 0; i < data.length; i++) {
-			//console.log(data[i].file);
 
 	            // Item highlight
 	            if (i == parseInt(MPD.json['song'])) {
@@ -898,7 +904,6 @@ function renderPlaylist() {
 	                output += '<li id="pl-' + (i + 1) + '" class="pl-entry">';
 	            }
 
-				// iTunes AAC file
 				if (typeof(data[i].Name) !== 'undefined' && data[i].file.substr(data[i].file.lastIndexOf('.') + 1).toLowerCase() == 'm4a') {
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
@@ -911,7 +916,8 @@ function renderPlaylist() {
 					output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
 				}
 				// Radio station
-				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined')) {
+				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
+					output += option_show_playlistart && (typeof(data[i].Comment) === 'undefined' || data[i].Comment!== 'client=upmpdcli;')  ? '<span class="pl-thumb">'+playlistLazy+'/imagesw/radio-logos/thumbs/' + encodeURIComponent(data[i].Name || data[i].Title) + '.jpg"/></span>' : '';
 	                // Line 1 title
 					// Use custom name for particular station
 	                if (typeof(data[i].Title) === 'undefined' || data[i].Title.trim() == '' || data[i].file == 'http://stream.radioactive.fm:8000/ractive') {
@@ -954,6 +960,7 @@ function renderPlaylist() {
 				}
 				// Song file or upnp url
 				else {
+					output += option_show_playlistart ? '<span class="pl-thumb">'+playlistLazy+'/imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '.jpg"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -989,6 +996,10 @@ function renderPlaylist() {
 		// Render playlist
         $('#playlist ul').html(output);
         $('#cv-playlist ul').html(output);
+
+		if( GLOBAL.nativeLazyLoad && option_show_playlistart) {
+			lazyLode('playlist');
+		}
 
         // Scroll
         setTimeout(function() {
@@ -1933,6 +1944,7 @@ $('.context-menu a').click(function(e) {
     		$('#font-size span').text(SESSION.json['font_size']);
             $('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
     		$('#play-history-enabled span').text(SESSION.json['playhist']);
+            $('#playlist-art-enabled span').text(SESSION.json['playlist_art']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
 
             $('#appearance-modal').modal();
@@ -2068,6 +2080,7 @@ $('.btn-appearance-update').click(function(e){
     var playHistoryChange = false;
 	var fontSizeChange = false;
     var encodedAtChange = false;
+    var playlistArtChange = false;
 
 	// Set open/closed state for accordion headers
 	var temp = [0,0,0,0];
@@ -2114,6 +2127,7 @@ $('.btn-appearance-update').click(function(e){
     if (SESSION.json['font_size'] != $('#font-size span').text()) {fontSizeChange = true;};
     if (SESSION.json['extra_tags'] != $('#extra-tags').val()) {extraTagsChange = true;}
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
+    if (SESSION.json['playlist_art'] != $('#playlist-art-enabled span').text()) {playlistArtChange = true;}
 
 	// Theme and backgrounds
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -2146,6 +2160,7 @@ $('.btn-appearance-update').click(function(e){
     SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
 	SESSION.json['extra_tags'] = $('#extra-tags').val();
+    SESSION.json['playlist_art'] = $('#playlist-art-enabled span').text();
 
 	if (fontSizeChange == true) {
 		setFontSize();
@@ -2184,6 +2199,9 @@ $('.btn-appearance-update').click(function(e){
 
 		setColors();
 	}
+	if(playlistArtChange == true) {
+		renderPlaylist();
+	}
 
     // Update database
     $.post('command/moode.php?cmd=updcfgsystem',
@@ -2215,7 +2233,8 @@ $('.btn-appearance-update').click(function(e){
         'ashuffle_filter': SESSION.json['ashuffle_filter'],
         'playhist': SESSION.json['playhist'],
         'extra_tags': SESSION.json['extra_tags'],
-        'appearance_modal_state': SESSION.json['appearance_modal_state']
+        'appearance_modal_state': SESSION.json['appearance_modal_state'],
+        'playlist_art': SESSION.json['playlist_art'],
         },
         function() {
             if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange ||
@@ -2470,6 +2489,9 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
     	// Appearance: Other options
     	case 'play-history-enabled-yn':
     		$('#play-history-enabled span').text($(this).text());
+            break;
+        case 'playlist-art-enabled-yn':
+            $('#playlist-art-enabled span').text($(this).text());
             break;
 		case 'font-size-sel':
 			$('#font-size span').text($(this).text());
@@ -3243,7 +3265,11 @@ function lazyLode(view) {
  			case 'album':
  				selector = 'img.lazy-albumview';
  				container = '#lib-albumcover';
- 				break;
+				 break;
+		 	case 'playlist':
+				selector = 'img.lazy-playlistview';
+				container = '#playlist';
+				break;
  		}
 
         if (selector && container) {

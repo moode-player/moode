@@ -1156,7 +1156,30 @@
 						<span id="info-play-history" class="help-block hide">
 	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
 	                    </span>
-	                </div>
+					</div>
+
+					<label class="control-label" for="playlist-art-enabled">Playlist show cover</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="playlist-art-enabled" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-playlist-art" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-playlist-art" class="help-block hide">
+	                    	Shows for tracks from the library and radio station cover art in the playlist.
+	                    </span>
+					</div>
+
 				</div>
 			</div>
 		</form>
