@@ -151,12 +151,7 @@ $_mpd_select['sox_phase_response'] = $mpdconf['sox_phase_response'];
 $_mpd_select['sox_passband_end'] = $mpdconf['sox_passband_end'];
 $_mpd_select['sox_stopband_begin'] = $mpdconf['sox_stopband_begin'];
 $_mpd_select['sox_attenuation'] = $mpdconf['sox_attenuation'];
-$_mpd_select['sox_flags'] .= "<option value=\"0\" " . (($mpdconf['sox_flags'] == '0') ? "selected" : "") . " >ROLLOFF_SMALL (0.01 dB)</option>\n";
-$_mpd_select['sox_flags'] .= "<option value=\"1\" " . (($mpdconf['sox_flags'] == '1') ? "selected" : "") . " >ROLLOFF_MEDIUM (0.35 dB)</option>\n";
-$_mpd_select['sox_flags'] .= "<option value=\"2\" " . (($mpdconf['sox_flags'] == '2') ? "selected" : "") . " >ROLLOFF_NONE (Chebyshev bandwidth)</option>\n";
-$_mpd_select['sox_flags'] .= "<option value=\"8\" " . (($mpdconf['sox_flags'] == '8') ? "selected" : "") . " >HI_PREC_CLOCK (Increase irrational ratio accuracy)</option>\n";
-$_mpd_select['sox_flags'] .= "<option value=\"16\" " . (($mpdconf['sox_flags'] == '16') ? "selected" : "") . " >DOUBLE_PRECISION (Use DP calcs even if precision <= 20)</option>\n";
-$_mpd_select['sox_flags'] .= "<option value=\"32\" " . (($mpdconf['sox_flags'] == '32') ? "selected" : "") . " >SOXR_VR (Variable-rate resampling)</option>\n";
+$_mpd_select['sox_flags'] = $mpdconf['sox_flags'];
 
 // SoX multithreading
 $_mpd_select['sox_multithreading'] .= "<option value=\"0\" " . (($mpdconf['sox_multithreading'] == '0') ? "selected" : "") . " >Yes</option>\n";

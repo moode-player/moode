@@ -1,4 +1,4 @@
-/*1
+/*!
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
@@ -247,6 +247,19 @@ jQuery(document).ready(function($){ 'use strict';
         });
 	});
 
+    // MPD config show/hide Selective resample
+    $('#audio-output-format').change(function() {
+        if ($('#audio-output-format').val() != 'disabled') {
+            $('#selective_resample').show();
+        }
+        else {
+            $('#selective_resample').hide();
+        }
+	});
+    // MPD config show Selective resample field on page load/reload
+	if ($('#audio-output-format').length && $('#audio-output-format').val() != 'disabled') {
+		$('#selective_resample').show();
+	}
     // MPD config show/hide SoX custom recipe fields
     $('#sox_quality').change(function() {
         if ($('#sox_quality').val() == 'custom') {

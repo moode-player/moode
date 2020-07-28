@@ -95,19 +95,21 @@
 			</div>
 
 			<!-- Selective resample mode -->
-			<div class="control-group">
-                <label class="control-label" for="selective_resample_mode">Selective resampling</label>
-                <div class="controls">
-                    <select id="selective_resample_mode" name="conf[selective_resample_mode]" class="input-large">
-						$_mpd_select[selective_resample_mode]
-                    </select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_selective_resample_mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_selective_resample_mode" class="help-block-configs help-block-margin hide" style="color:#eee">
-						<img src="images/selective_resample_mode-1.png" alt="Selective resample modes"><br><br>
-						When active the purple shows resampled source rates, the green is resampled with an forced integer multiplier. Note that for the green modes 3,4,5 the target rate should be set as the max sample rate in a multiple of 48kHz.
-					</span>
-                </div>
-            </div>
+			<div id="selective_resample" class="hide">
+				<div class="control-group">
+	                <label class="control-label" for="selective_resample_mode">Selective resampling</label>
+	                <div class="controls">
+	                    <select id="selective_resample_mode" name="conf[selective_resample_mode]" class="input-large">
+							$_mpd_select[selective_resample_mode]
+	                    </select>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_selective_resample_mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info_selective_resample_mode" class="help-block-configs help-block-margin hide" style="color:#eee">
+							<img src="images/selective_resample_mode-1.png" alt="Selective resample modes"><br><br>
+							When active the purple shows resampled source rates, the green is resampled with an forced integer multiplier. Note that for the green modes 3,4,5 the target rate should be set as the max sample rate in a multiple of 48kHz.
+						</span>
+	                </div>
+	            </div>
+			</div>
 
 			<!-- SoX quality -->
             <div class="control-group">
@@ -170,12 +172,16 @@
 	                </div>
 	                <label class="control-label" for="sox_flags">Flags</label>
 	                <div class="controls">
-						<select id="sox_flags" name="conf[sox_flags]" class="input-large">
-							$_mpd_select[sox_flags]
-	                    </select>
+						<input class="input-large" type="number" id="sox_flags" name="conf[sox_flags]" value="$_mpd_select[sox_flags]">
 						<a aria-label="Help" class="info-toggle" data-cmd="info_sox_flags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info_sox_flags" class="help-block-configs help-block-margin2 hide">
-							Bit mask for setting special SoX options.
+							Bit mask for setting special SoX options.<br>
+							00 ROLLOFF_SMALL 0.01 dB<br>
+							01 ROLLOFF_MEDIUM 0.35 dB<br>
+							02 ROLLOFF_NONE For Chebyshev bandwidth.<br>
+							08 HI_PREC_CLOCK Increase "irrational" ratio accuracy.<br>
+							16 DOUBLE_PRECISION Use DP calcs even if precision <= 20<br>
+							32 SOXR_VR Variable-rate resampling.
 	                    </span>
 	                </div>
 				</div>
