@@ -129,11 +129,11 @@ $_mpd_select['audio_output_format'] .= "<option value=\"384000:32:2\" " . (($mpd
 
 // Selective resample mode
 $_mpd_select['selective_resample_mode'] .= "<option value=\"0\" " . (($mpdconf['selective_resample_mode'] == '0') ? "selected" : "") . " >Disabled</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"1\" " . (($mpdconf['selective_resample_mode'] == '1') ? "selected" : "") . " >Upsample if source < target rate</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"2\" " . (($mpdconf['selective_resample_mode'] == '2') ? "selected" : "") . " >Upsample only 44.1K source rate</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"3\" " . (($mpdconf['selective_resample_mode'] == '3') ? "selected" : "") . " >Upsample only 44.1K and 48K source rates</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"4\" " . (($mpdconf['selective_resample_mode'] == '4') ? "selected" : "") . " >Resample (adhere to base freq)</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"5\" " . (($mpdconf['selective_resample_mode'] == '5') ? "selected" : "") . " >Upsample if source < target rate (adhere to base freq)</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ALL . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ALL) ? "selected" : "") . " >Upsample if source < target rate</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_41K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_41K) ? "selected" : "") . " >Upsample only 44.1K source rate</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_4148K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_4148K) ? "selected" : "") . " >Upsample only 44.1K and 48K source rates</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_ADHERE_BASE_FREQ . "\" " . (($mpdconf['selective_resample_mode'] == SOX_ADHERE_BASE_FREQ) ? "selected" : "") . " >Resample (adhere to base freq)</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) . "\" " . (($mpdconf['selective_resample_mode'] == (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ)) ? "selected" : "") . " >Upsample if source < target rate (adhere to base freq)</option>\n";
 
 // Resampling quality
 $_mpd_select['sox_quality'] .= "<option value=\"very high\" " . (($mpdconf['sox_quality'] == 'very high') ? "selected" : "") . " >Very high quality</option>\n";
