@@ -353,7 +353,7 @@ gulp.task('clean', function(done) {
         return $.del([pkg.app.dest,pkg.app.dist]);
 });
 
-gulp.task('build', gulp.series( [`sass`, `bundle`, `genindex`, `artwork`], function (done) {        
+gulp.task('build', gulp.series( [`sass`, `bundle`, `genindex`, `artwork`], function (done) {
     done();
 }));
 
@@ -364,12 +364,12 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'minifyhtml'],
                       ,pkg.app.src+'/templates/**/*'
                       ,pkg.app.src+'/*'
                       ,'!'+pkg.app.src+'/index.html'
-                      //,'!'+pkg.app.src+'/index.php'
+                      ,'!'+pkg.app.src+'/templates/indextpl.min.html'
+                      ,'!'+pkg.app.src+'/templates/indextpl.html'
                       ,'!'+pkg.app.src+'/header.php'
                       ,'!'+pkg.app.src+'/footer.php'
                       ,'!'+pkg.app.src+'/footer.min.php'
-                      ,'!'+pkg.app.src+'/templates/indextpl.html'],
-
+                      ],
                       {base: pkg.app.src})
         // optional headers fields can be update and or added:
         //.pipe( $.replaceTask({ patterns: REPLACEMENT_PATTERNS }))
@@ -389,8 +389,8 @@ gulp.task('deployfront', function (done) {
         .on('end', done);
 });
 
-gulp.task('deploy', gulp.series( [`build`, `deployfront`, `deployback`],function (done) {
-//gulp.task('deploy', gulp.series( [`deployfront`, `deployback`], function (done) {
+//gulp.task('deploy', gulp.series( [`build`, `deployfront`, `deployback`],function (done) {
+gulp.task('deploy', gulp.series( [`deployfront`, `deployback`], function (done) {
     done();
 }));
 
