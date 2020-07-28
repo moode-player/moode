@@ -36,6 +36,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 	// Update sql table
 	foreach ($_POST['conf'] as $key => $value) {
+		if ($key == 'audio_buffer_size' || $key == 'max_output_buffer_size') {
+			$value = $value * 1024; // Convert from MB to KB
+		}
+
 		cfgdb_update('cfg_mpd', $dbh, $key, $value);
 	}
 
@@ -170,8 +174,10 @@ $_mpd_select['replaygain_preamp'] = $mpdconf['replaygain_preamp'];
 $_mpd_select['volume_normalization'] .= "<option value=\"yes\" " . (($mpdconf['volume_normalization'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['volume_normalization'] .= "<option value=\"no\" " . (($mpdconf['volume_normalization'] == 'no') ? "selected" : "") . " >No</option>\n";
 
-// Audio buffer size
-$_mpd_select['audio_buffer_size'] = $mpdconf['audio_buffer_size'];
+// Resource limits
+$_mpd_select['audio_buffer_size'] = $mpdconf['audio_buffer_size'] / 1024; // Convert these from KB to MB
+$_mpd_select['max_output_buffer_size'] = $mpdconf['max_output_buffer_size'] / 1024;
+$_mpd_select['max_playlist_length'] = $mpdconf['max_playlist_length'];
 
 // Log level
 $_mpd_select['log_level'] .= "<option value=\"default\" " . (($mpdconf['log_level'] == 'default') ? "selected" : "") . " >Default</option>\n";
