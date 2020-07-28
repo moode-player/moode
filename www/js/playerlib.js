@@ -997,7 +997,7 @@ function renderPlaylist() {
         $('#playlist ul').html(output);
         $('#cv-playlist ul').html(output);
 
-		if( GLOBAL.nativeLazyLoad && option_show_playlistart) {
+		if( option_show_playlistart ) {
 			lazyLode('playlist');
 		}
 
