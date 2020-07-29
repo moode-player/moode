@@ -820,9 +820,9 @@ sudo make
 sudo make install
 sudo rm -f /lib/systemd/system/shairport-sync.service
 sudo rm -f /usr/local/etc/shairport-sync.conf.sample
+cd ~
 sudo cp ./moode/etc/dbus-1/system.d/shairport-sync-dbus.conf /etc/dbus-1/system.d
 sudo cp ./moode/etc/shairport-sync.conf /etc
-cd ~
 sudo rm -rf ./shairport-sync-*
 
 ////////////////////////////////////////////////////////////////
