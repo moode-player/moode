@@ -882,6 +882,7 @@ sudo make
 sudo cp ./squeezelite /usr/local/bin/
 cd ~
 sudo rm -rf ./squeezelite-master/
+unset CFLAGS
 
 ////////////////////////////////////////////////////////////////
 //
