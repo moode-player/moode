@@ -1624,11 +1624,6 @@ function updMpdConf($i2sdevice) {
 	foreach ($mpdcfg as $cfg) {
 		switch ($cfg['param']) {
 			// Code block or other params
-			/* DEPRECATE
-			case 'metadata_to_use':
-				$data .= $mpdver == '0.20' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
-				break;
-			*/
 			case 'device':
 				$device = $cfg['value'];
 				playerSession('write', 'cardnum', $cfg['value']);
@@ -1654,7 +1649,7 @@ function updMpdConf($i2sdevice) {
 				$replay_gain_handler = $cfg['value'];
 				break;
 			case 'buffer_before_play':
-				$data .=  ''; // DEPRECATED
+				$data .=  ''; // Deprecated in > 0.20.y MPD. Param needs to be deleted from cfg_mpd at some point.
 				break;
 			case 'auto_resample':
 				$auto_resample = $cfg['value'];
@@ -1696,7 +1691,6 @@ function updMpdConf($i2sdevice) {
 			// Default param handling
 			default:
 				$data .= $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
-				// DEAD CODE if ($cfg['param'] == 'replaygain') {$replaygain = $cfg['value'];}
 				break;
 		}
 	}
