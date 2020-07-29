@@ -36,6 +36,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 	// Update sql table
 	foreach ($_POST['conf'] as $key => $value) {
+		if ($key == 'audio_buffer_size' || $key == 'max_output_buffer_size') {
+			$value = $value * 1024; // Convert from MB to KB
+		}
+
 		cfgdb_update('cfg_mpd', $dbh, $key, $value);
 	}
 
@@ -129,11 +133,11 @@ $_mpd_select['audio_output_format'] .= "<option value=\"384000:32:2\" " . (($mpd
 
 // Selective resample mode
 $_mpd_select['selective_resample_mode'] .= "<option value=\"0\" " . (($mpdconf['selective_resample_mode'] == '0') ? "selected" : "") . " >Disabled</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"1\" " . (($mpdconf['selective_resample_mode'] == '1') ? "selected" : "") . " >Only upsample</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"2\" " . (($mpdconf['selective_resample_mode'] == '2') ? "selected" : "") . " >Only upsample source below 88.2kHz</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"3\" " . (($mpdconf['selective_resample_mode'] == '3') ? "selected" : "") . " >Use integer multiplier</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"4\" " . (($mpdconf['selective_resample_mode'] == '4') ? "selected" : "") . " >Only upsample, use integer multiplier</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"5\" " . (($mpdconf['selective_resample_mode'] == '5') ? "selected" : "") . " >Only upsample source below 88.2kHz, use integer multiplier</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ALL . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ALL) ? "selected" : "") . " >Upsample if source < target rate</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_41K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_41K) ? "selected" : "") . " >Upsample only 44.1K source rate</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_4148K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_4148K) ? "selected" : "") . " >Upsample only 44.1K and 48K source rates</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_ADHERE_BASE_FREQ . "\" " . (($mpdconf['selective_resample_mode'] == SOX_ADHERE_BASE_FREQ) ? "selected" : "") . " >Resample (adhere to base freq)</option>\n";
+$_mpd_select['selective_resample_mode'] .= "<option value=\"" . (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) . "\" " . (($mpdconf['selective_resample_mode'] == (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ)) ? "selected" : "") . " >Upsample if source < target rate (adhere to base freq)</option>\n";
 
 // Resampling quality
 $_mpd_select['sox_quality'] .= "<option value=\"very high\" " . (($mpdconf['sox_quality'] == 'very high') ? "selected" : "") . " >Very high quality</option>\n";
@@ -170,8 +174,10 @@ $_mpd_select['replaygain_preamp'] = $mpdconf['replaygain_preamp'];
 $_mpd_select['volume_normalization'] .= "<option value=\"yes\" " . (($mpdconf['volume_normalization'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['volume_normalization'] .= "<option value=\"no\" " . (($mpdconf['volume_normalization'] == 'no') ? "selected" : "") . " >No</option>\n";
 
-// Audio buffer size
-$_mpd_select['audio_buffer_size'] = $mpdconf['audio_buffer_size'];
+// Resource limits
+$_mpd_select['audio_buffer_size'] = $mpdconf['audio_buffer_size'] / 1024; // Convert these from KB to MB
+$_mpd_select['max_output_buffer_size'] = $mpdconf['max_output_buffer_size'] / 1024;
+$_mpd_select['max_playlist_length'] = $mpdconf['max_playlist_length'];
 
 // Log level
 $_mpd_select['log_level'] .= "<option value=\"default\" " . (($mpdconf['log_level'] == 'default') ? "selected" : "") . " >Default</option>\n";

@@ -770,7 +770,7 @@ cd git
 sed -i 's/VERSION "1.2.1"/VERSION "1.2.1+'$(git rev-parse --short HEAD)'"/' upnpglobalvars.h
 ./autogen.sh
 ./configure
-make
+sudo make
 sudo cp minidlnad /usr/sbin/minidlnad
 cd ~
 sudo rm -rf ./git
@@ -820,9 +820,9 @@ sudo make
 sudo make install
 sudo rm -f /lib/systemd/system/shairport-sync.service
 sudo rm -f /usr/local/etc/shairport-sync.conf.sample
+cd ~
 sudo cp ./moode/etc/dbus-1/system.d/shairport-sync-dbus.conf /etc/dbus-1/system.d
 sudo cp ./moode/etc/shairport-sync.conf /etc
-cd ~
 sudo rm -rf ./shairport-sync-*
 
 ////////////////////////////////////////////////////////////////
@@ -878,10 +878,11 @@ sudo unzip ./squeezelite-1.8.7-1052.zip
 cd ./squeezelite-master/
 export CFLAGS="-O3 -march=native -mcpu=native -DDSD -DRESAMPLE -DGPIO -fno-fast-math -mfloat-abi=hard -pipe -fPIC"
 cat ./scripts/squeezelite-ralphy-dsd.patch | patch -p 0
-make
+sudo make
 sudo cp ./squeezelite /usr/local/bin/
 cd ~
 sudo rm -rf ./squeezelite-master/
+unset CFLAGS
 
 ////////////////////////////////////////////////////////////////
 //
@@ -924,8 +925,8 @@ sudo rm libupnpp-0.19.1.tar.gz
 sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.12-master-7ea91f5d.tar.gz ./
 sudo tar xfz ./upmpdcli-1.4.12-master-7ea91f5d.tar.gz
 cd upmpdcli-master
-./autogen.sh
-./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
+sudo ./autogen.sh
+sudo ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
 sudo make
 sudo make install
 cd ~
@@ -943,7 +944,7 @@ sudo systemctl disable upmpdcli
 
 NOTE: This also installs a bunch of other utils
 
-sudo cp ./moode/other/libupnpp-samples-master.zip ./
+sudo cp ./moode/other/upmpdcli/libupnpp-samples-master.zip ./
 sudo unzip -q ./libupnpp-samples-master.zip
 cd ./libupnpp-samples-master
 sudo ./autogen.sh

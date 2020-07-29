@@ -70,6 +70,12 @@ const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 // Mirror for footer.php
 $FEAT_INPSOURCE 	= 512;
 
+// Selective resampling bitmask
+const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate
+const SOX_UPSAMPLE_ONLY_41K		= 1; // Upsample only 44.1K source rate
+const SOX_UPSAMPLE_ONLY_4148K	= 2; // Upsample only 44.1K and 48K source rates
+const SOX_ADHERE_BASE_FREQ		= 8; // Resample (adhere to base freq)
+
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
 	$fh = fopen(MOODE_LOG, $mode);
@@ -1684,7 +1690,7 @@ function updMpdConf($i2sdevice) {
 				$sox_flags = $cfg['value'];
 				break;
 			case 'selective_resample_mode':
-				// TEST: don;t add to mpd.conf until the patches are applied otherwise MPD will not start
+				// TEST: don't add to mpd.conf until the patches are applied otherwise MPD will not start
 				$data .= '#' . $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
 

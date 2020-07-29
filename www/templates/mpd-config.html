@@ -104,8 +104,9 @@
 	                    </select>
 						<a aria-label="Help" class="info-toggle" data-cmd="info_selective_resample_mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info_selective_resample_mode" class="help-block-configs help-block-margin hide" style="color:#eee">
-							<img src="images/selective_resample_mode-1.png" alt="Selective resample modes"><br><br>
-							When active the purple shows resampled source rates, the green is resampled with an forced integer multiplier. Note that for the green modes 3,4,5 the target rate should be set as the max sample rate in a multiple of 48kHz.
+							These charts show the effect of selective resampling modes for the example target rates.
+							<img src="images/Selective resampling chart 1.jpg" alt="Selective resampling chart 1"><br><br>
+							<img src="images/Selective resampling chart 2.jpg" alt="Selective resampling chart 2"><br><br>
 						</span>
 	                </div>
 	            </div>
@@ -240,13 +241,35 @@
             </div>
 
             <div class="control-group">
-				<legend>Audio buffers</legend>
-                <label class="control-label" for="audio-buffer-size">Audio buffer size (KB)</label>
+				<legend>Resource limits</legend>
+                <label class="control-label" for="audio-buffer-size">Audio buffer size</label>
                 <div class="controls">
-                    <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4096" max="65535">
+                    <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4" max="64">&nbsp;MB
 					<a aria-label="Help" class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
-                    	Range is 4096 to 65535 KB. Default size is 4096 KB.
+                    	Range is 4 to 64MB. Default size is 4MB.
+                    </span>
+                </div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="max_output_buffer_size">Max output buffer size</label>
+                <div class="controls">
+                    <input class="input-large" type="number" id="max_output_buffer_size" name="conf[max_output_buffer_size]" value="$_mpd_select[max_output_buffer_size]" min="8" max="512">&nbsp;MB
+					<a aria-label="Help" class="info-toggle" data-cmd="info_max_output_buffer_size" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_max_output_buffer_size" class="help-block-configs help-block-margin hide">
+                    	Range is 8 to 512MB. Default is 128MB.
+                    </span>
+                </div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="max_playlist_length">Max playlist items</label>
+                <div class="controls">
+                    <input class="input-large" type="number" id="max_playlist_length" name="conf[max_playlist_length]" value="$_mpd_select[max_playlist_length]" min="2" max="32768">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_max_playlist_length" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_max_playlist_length" class="help-block-configs help-block-margin hide">
+                    	Range is 2 to 32768 playlist items. Default is 16384 items.
                     </span>
                 </div>
             </div>
