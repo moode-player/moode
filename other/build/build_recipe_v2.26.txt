@@ -925,8 +925,8 @@ sudo rm libupnpp-0.19.1.tar.gz
 sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.12-master-7ea91f5d.tar.gz ./
 sudo tar xfz ./upmpdcli-1.4.12-master-7ea91f5d.tar.gz
 cd upmpdcli-master
-./autogen.sh
-./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
+sudo ./autogen.sh
+sudo ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
 sudo make
 sudo make install
 cd ~
@@ -944,7 +944,7 @@ sudo systemctl disable upmpdcli
 
 NOTE: This also installs a bunch of other utils
 
-sudo cp ./moode/other/libupnpp-samples-master.zip ./
+sudo cp ./moode/other/upmpdcli/libupnpp-samples-master.zip ./
 sudo unzip -q ./libupnpp-samples-master.zip
 cd ./libupnpp-samples-master
 sudo ./autogen.sh
