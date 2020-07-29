@@ -1690,7 +1690,7 @@ function updMpdConf($i2sdevice) {
 				$sox_flags = $cfg['value'];
 				break;
 			case 'selective_resample_mode':
-				// TEST: don;t add to mpd.conf until the patches are applied otherwise MPD will not start
+				// TEST: don't add to mpd.conf until the patches are applied otherwise MPD will not start
 				$data .= '#' . $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
 
