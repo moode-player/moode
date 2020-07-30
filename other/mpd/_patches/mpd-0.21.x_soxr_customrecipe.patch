@@ -1,3 +1,39 @@
+# MPD custom sox recipes (C) 2020 Marcel van de Weert
+# https://github.com/bitkeeper/dddac1794build/
+#
+# License: GPL v2
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+#
+# MPD use the soxr lib (https://sourceforge.net/projects/soxr/)
+# In the soxr.h file contains the information about the recipe structure
+# soxr_quality_spec:
+#   precision        16|20|24|28|32  bits
+#   phase_response   0-100           0=LINEAR_PHASE, 50= MINIMUM_PHASE
+#   passband_end     0-100 %
+#   stopband_begin   0-100 %
+#   flags            bit set
+# soxr_io_spec:
+#   scale            0-10      db attenuation
+#
+# Example use of the custom recipe:
+#
+# resampler {
+#   plugin "soxr"
+#   quality "custom"
+#   threads "2"
+#   precision "28"
+#   phase_response "45"
+#   passband_end "99.7.0"
+#   stopband_begin "100.0"
+#   attenuation "3.0"
+#   flags "0"
+# }
+#
 diff --git a/src/pcm/SoxrResampler.cxx b/src/pcm/SoxrResampler.cxx
 index 411e79b43..b0dbf7eea 100644
 --- a/src/pcm/SoxrResampler.cxx

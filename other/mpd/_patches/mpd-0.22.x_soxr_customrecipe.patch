@@ -1,17 +1,53 @@
+# MPD custom sox recipes (C) 2020 Marcel van de Weert
+# https://github.com/bitkeeper/dddac1794build/
+#
+# License: GPL v2
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+#
+# MPD use the soxr lib (https://sourceforge.net/projects/soxr/)
+# In the soxr.h file contains the information about the recipe structure
+# soxr_quality_spec:
+#   precision        16|20|24|28|32  bits
+#   phase_response   0-100           0=LINEAR_PHASE, 50= MINIMUM_PHASE
+#   passband_end     0-100 %
+#   stopband_begin   0-100 %
+#   flags            bit set
+# soxr_io_spec:
+#   scale            0-10      db attenuation
+#
+# Example use of the custom recipe:
+#
+# resampler {
+#   plugin "soxr"
+#   quality "custom"
+#   threads "2"
+#   precision "28"
+#   phase_response "45"
+#   passband_end "99.7.0"
+#   stopband_begin "100.0"
+#   attenuation "3.0"
+#   flags "0"
+# }
+#
 diff --git a/src/pcm/SoxrResampler.cxx b/src/pcm/SoxrResampler.cxx
 index e896bef7b..6d90e60f5 100644
 --- a/src/pcm/SoxrResampler.cxx
 +++ b/src/pcm/SoxrResampler.cxx
 @@ -29,7 +29,7 @@
  #include <cassert>
-
+ 
  #include <string.h>
 -
 +#include <math.h>
  static constexpr Domain soxr_domain("soxr");
-
+ 
  static constexpr unsigned long SOXR_DEFAULT_RECIPE = SOXR_HQ;
-@@ -38,9 +40,16 @@ static constexpr unsigned long SOXR_DEFAULT_RECIPE = SOXR_HQ;
+@@ -39,9 +39,16 @@ static constexpr unsigned long SOXR_DEFAULT_RECIPE = SOXR_HQ;
   */
  static constexpr unsigned long SOXR_INVALID_RECIPE = -1;
  
@@ -28,7 +64,7 @@ index e896bef7b..6d90e60f5 100644
  static constexpr struct {
  	unsigned long recipe;
  	const char *name;
-@@ -50,6 +59,7 @@ static constexpr struct {
+@@ -51,6 +58,7 @@ static constexpr struct {
  	{ SOXR_MQ, "medium" },
  	{ SOXR_LQ, "low" },
  	{ SOXR_QQ, "quick" },
@@ -36,7 +72,7 @@ index e896bef7b..6d90e60f5 100644
  	{ SOXR_INVALID_RECIPE, nullptr }
  };
  
-@@ -79,20 +89,110 @@ soxr_parse_quality(const char *quality) noexcept
+@@ -80,20 +88,110 @@ soxr_parse_quality(const char *quality) noexcept
  	return SOXR_INVALID_RECIPE;
  }
  
@@ -152,7 +188,7 @@ index e896bef7b..6d90e60f5 100644
  	FormatDebug(soxr_domain,
  		    "soxr converter '%s'",
  		    soxr_quality_name(recipe));
-@@ -108,14 +208,19 @@ SoxrPcmResampler::Open(AudioFormat &af, unsigned new_sample_rate)
+@@ -109,14 +207,19 @@ SoxrPcmResampler::Open(AudioFormat &af, unsigned new_sample_rate)
  	assert(audio_valid_sample_rate(new_sample_rate));
  
  	soxr_error_t e;
