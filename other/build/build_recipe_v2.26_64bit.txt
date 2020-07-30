@@ -1,11 +1,12 @@
 ################################################################
 #
-# Build Recipe v2.26 2020-MM-DD
+# Build Recipe v2.26-64bit 2020-MM-DD
+#
+# NOTE: This is for an experimental 64-bit build
 #
 # moOde 7.0.0 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
-# - Bump to r700 sources
-# - Bump to Linux kernel 5.4.51 build #1325
+# - Based on r700 sources
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
