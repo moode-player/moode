@@ -1686,7 +1686,7 @@ function updMpdConf($i2sdevice) {
 				$sox_flags = $cfg['value'];
 				break;
 			case 'selective_resample_mode':
-				$data =  ($cfg['value'] == '0' || $mpd_support_soxmod == false) ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
+				$data .= ($cfg['value'] == '0' || $mpd_support_soxmod == false) ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
 			// Default param handling
 			default:
