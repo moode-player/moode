@@ -206,14 +206,24 @@ MPD_SETTINGS() {
 	echo -e "\nVolume control\t\t= $mixer_type\c"
 	echo -e "\nALSA device\t\t= hw:$device\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
+	echo -e "\nSelective resampling\t= $selective_resample_mode\c"
 	echo -e "\nSoX quality\t\t= $sox_quality\c"
+	if [[ $sox_quality = "Custom recipe" ]]; then
+		echo -e "\nPrecision\t\t= $sox_precision\c"
+		echo -e "\nPhase response\t\t= $sox_phase_response\c"
+		echo -e "\nPassband end\t\t= $sox_passband_end\c"
+		echo -e "\nStopband begin\t\t= $sox_stopband_begin\c"
+		echo -e "\nAttenuation\t\t= $sox_attenuation\c"
+		echo -e "\nFlags\t\t= $sox_flags\c"
+	fi
 	echo -e "\nSoX multithreading\t= $sox_multithreading\c"
 	echo -e "\nDSD over PCM (DoP)\t= $dop\c"
 	echo -e "\nReplaygain\t\t= $replaygain\c"
 	echo -e "\nReplaygain preamp\t= $replaygain_preamp\c"
 	echo -e "\nVolume normalization\t= $volume_normalization\c"
-	echo -e "\nAudio buffer\t\t= $audio_buffer_size (kb)\c"
-	echo -e "\nOutput buffer size\t= $max_output_buffer_size (kb)\n"
+	echo -e "\nAudio buffer\t\t= $audio_buffer_size (MB)\c"
+	echo -e "\nOutput buffer size\t= $max_output_buffer_size (MB)\c"
+	echo -e "\nMax playlist items\t= $max_playlist_length\n"
 	#echo -e "\nALSA auto-resample\t= $auto_resample\c"
 	#echo -e "\nALSA auto-channels\t= $auto_channels\c"
 	#echo -e "\nALSA auto-format\t= $auto_format\c"
@@ -311,6 +321,12 @@ FEAT_GPIO=4096
 FEAT_DJMOUNT=8192
 FEAT_BLUETOOTH=16384
 
+# Selective resampling bitmask
+SOX_UPSAMPLE_ALL=3 # Upsample if source < target rate
+SOX_UPSAMPLE_ONLY_41K=1 # Upsample only 44.1K source rate
+SOX_UPSAMPLE_ONLY_4148K=2 # Upsample only 44.1K and 48K source rates
+SOX_ADHERE_BASE_FREQ=8 # Resample (adhere to base freq)
+
 HOSTNAME=`uname -n`
 RASPIOS_VER=`cat /etc/debian_version`
 #KERNEL=`uname -r`
@@ -401,7 +417,7 @@ session_timeout=${arr[6]}
 audio_backend_latency_offset_in_seconds=${arr[7]}
 audio_backend_buffer_desired_length_in_seconds=${arr[8]}
 
-# MPD settings, r45b
+# MPD settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
 'device',
 'mixer_type',
@@ -418,7 +434,15 @@ RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
 'auto_channels',
 'auto_format',
 'buffer_time',
-'period_time'
+'period_time',
+'selective_resample_mode',
+'sox_precision',
+'sox_phase_response',
+'sox_passband_end',
+'sox_stopband_begin',
+'sox_attenuation',
+'sox_flags',
+'max_playlist_length'
 )")
 readarray -t arr <<<"$RESULT"
 device=${arr[0]}
@@ -437,6 +461,19 @@ auto_channels=${arr[12]}
 auto_format=${arr[13]}
 buffer_time=${arr[14]}
 period_time=${arr[15]}
+[[ "${arr[16]}" = "0" ]] && selective_resample_mode="disabled"
+[[ "${arr[16]}" = "$SOX_UPSAMPLE_ALL" ]] && selective_resample_mode="Upsample if source < target rate"
+[[ "${arr[16]}" = "$SOX_UPSAMPLE_ONLY_41K" ]] && selective_resample_mode="Upsample only 44.1K source rate"
+[[ "${arr[16]}" = "$SOX_UPSAMPLE_ONLY_4148K" ]] && selective_resample_mode="Upsample only 44.1K and 48K source rates"
+[[ "${arr[16]}" = "$SOX_ADHERE_BASE_FREQ" ]] && selective_resample_mode="Resample (adhere to base freq)"
+[[ "${arr[16]}" = "$SOX_UPSAMPLE_ALL + $SOX_ADHERE_BASE_FREQ" ]] && selective_resample_mode="Upsample if source < target rate (adhere to base freq)"
+sox_precision=${arr[17]}
+sox_phase_response=${arr[18]}
+sox_passband_end=${arr[19]}
+sox_stopband_begin=${arr[20]}
+sox_attenuation=${arr[21]}
+sox_flags=${arr[22]}
+max_playlist_length=${arr[23]}
 
 # Spotify settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_spotify")

@@ -19,6 +19,7 @@ New features
 
 - NEW: Selective resampling
 - NEW: Custom SoX resampling recipes
+- NEW: Resource limits in MPD Config
 
 Updates
 
