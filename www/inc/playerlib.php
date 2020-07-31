@@ -1614,7 +1614,6 @@ function sdbquery($querystr, $dbh) {
 
 function updMpdConf($i2sdevice) {
 	$mpdcfg = sdbquery("SELECT param, value FROM cfg_mpd WHERE value!=''", cfgdb_connect());
-	$mpdver = substr($_SESSION['mpdver'], 0, 4);
 	$mpd_support_soxmod = strpos($_SESSION['mpdver'], '_soxmod') !== false;
 
 	$data .= "#########################################\n";
