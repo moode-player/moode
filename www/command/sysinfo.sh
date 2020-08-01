@@ -206,15 +206,19 @@ MPD_SETTINGS() {
 	echo -e "\nVolume control\t\t= $mixer_type\c"
 	echo -e "\nALSA device\t\t= hw:$device\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
-	echo -e "\nSelective resampling\t= $selective_resample_mode\c"
+	if [ $(($patch_id & $PATCH_SELECTIVE_RESAMPLING)) -ne 0 ]; then
+		echo -e "\nSelective resampling\t= $selective_resample_mode\c"
+	fi
 	echo -e "\nSoX quality\t\t= $sox_quality\c"
-	if [[ $sox_quality = "Custom recipe" ]]; then
-		echo -e "\nPrecision\t\t= $sox_precision\c"
-		echo -e "\nPhase response\t\t= $sox_phase_response\c"
-		echo -e "\nPassband end\t\t= $sox_passband_end\c"
-		echo -e "\nStopband begin\t\t= $sox_stopband_begin\c"
-		echo -e "\nAttenuation\t\t= $sox_attenuation\c"
-		echo -e "\nFlags\t\t= $sox_flags\c"
+	if [ $(($patch_id & $PATCH_SOX_CUSTOM_RECIPE)) -ne 0 ]; then
+		if [[ $sox_quality = "custom" ]]; then
+			echo -e "\nPrecision\t\t= $sox_precision\c"
+			echo -e "\nPhase response\t\t= $sox_phase_response\c"
+			echo -e "\nPassband end\t\t= $sox_passband_end\c"
+			echo -e "\nStopband begin\t\t= $sox_stopband_begin\c"
+			echo -e "\nAttenuation\t\t= $sox_attenuation\c"
+			echo -e "\nFlags\t\t\t= $sox_flags\c"
+		fi
 	fi
 	echo -e "\nSoX multithreading\t= $sox_multithreading\c"
 	echo -e "\nDSD over PCM (DoP)\t= $dop\c"
@@ -307,7 +311,7 @@ MOODE_LOG() {
 }
 
 #
-# Gather data
+# Constants
 #
 
 # Features availability bitmask
@@ -321,11 +325,19 @@ FEAT_GPIO=4096
 FEAT_DJMOUNT=8192
 FEAT_BLUETOOTH=16384
 
+# MPD patch availability bitmask
+PATCH_SELECTIVE_RESAMPLING=1 # Selective resampling options
+PATCH_SOX_CUSTOM_RECIPE=2	 # Custom SoX resampling recipes
+
 # Selective resampling bitmask
-SOX_UPSAMPLE_ALL=3 # Upsample if source < target rate
-SOX_UPSAMPLE_ONLY_41K=1 # Upsample only 44.1K source rate
-SOX_UPSAMPLE_ONLY_4148K=2 # Upsample only 44.1K and 48K source rates
-SOX_ADHERE_BASE_FREQ=8 # Resample (adhere to base freq)
+SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate
+SOX_UPSAMPLE_ONLY_41K=1		# Upsample only 44.1K source rate
+SOX_UPSAMPLE_ONLY_4148K=2	# Upsample only 44.1K and 48K source rates
+SOX_ADHERE_BASE_FREQ=8		# Resample (adhere to base freq)
+
+#
+# Gather data
+#
 
 HOSTNAME=`uname -n`
 RASPIOS_VER=`cat /etc/debian_version`
@@ -386,8 +398,6 @@ fi
 
 TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
 SDFREQ=$(grep "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print $3/1000000}')
-
-
 PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
@@ -466,7 +476,7 @@ period_time=${arr[15]}
 [[ "${arr[16]}" = "$SOX_UPSAMPLE_ONLY_41K" ]] && selective_resample_mode="Upsample only 44.1K source rate"
 [[ "${arr[16]}" = "$SOX_UPSAMPLE_ONLY_4148K" ]] && selective_resample_mode="Upsample only 44.1K and 48K source rates"
 [[ "${arr[16]}" = "$SOX_ADHERE_BASE_FREQ" ]] && selective_resample_mode="Resample (adhere to base freq)"
-[[ "${arr[16]}" = "$SOX_UPSAMPLE_ALL + $SOX_ADHERE_BASE_FREQ" ]] && selective_resample_mode="Upsample if source < target rate (adhere to base freq)"
+[[ "${arr[16]}" = "$(($SOX_UPSAMPLE_ALL + $SOX_ADHERE_BASE_FREQ))" ]] && selective_resample_mode="Upsample if source < target rate (adhere to base freq)"
 sox_precision=${arr[17]}
 sox_phase_response=${arr[18]}
 sox_passband_end=${arr[19]}
@@ -515,6 +525,7 @@ dlnaname=${arr[7]}
 [[ "${arr[13]}" = "1" ]] && autoplay="On" || autoplay="Off"
 kernelver=${arr[14]}
 mpdver=${arr[15]}
+patch_id=$(echo $mpdver | awk -F"_p0x" '{print $2}')
 procarch=${arr[16]}
 adevname=${arr[17]}
 clkradio_mode=${arr[18]}
