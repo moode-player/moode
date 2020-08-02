@@ -257,18 +257,18 @@
                     <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4" max="64">&nbsp;MB
 					<a aria-label="Help" class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
-                    	Range is 4 to 64MB. Default size is 4MB.
+                    	Buffer for audio samples. Range is 4 to 64MB. Default size is 4MB.
                     </span>
                 </div>
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="max_output_buffer_size">Max output buffer size</label>
+				<label class="control-label" for="max_output_buffer_size">Output buffer size</label>
                 <div class="controls">
                     <input class="input-large" type="number" id="max_output_buffer_size" name="conf[max_output_buffer_size]" value="$_mpd_select[max_output_buffer_size]" min="8" max="512">&nbsp;MB
 					<a aria-label="Help" class="info-toggle" data-cmd="info_max_output_buffer_size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_max_output_buffer_size" class="help-block-configs help-block-margin hide">
-                    	Range is 8 to 512MB. Default is 128MB.
+                    	Buffer for command output. Range is 8 to 512MB. Default is 128MB.
                     </span>
                 </div>
 			</div>
