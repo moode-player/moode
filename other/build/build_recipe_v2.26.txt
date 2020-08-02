@@ -408,7 +408,6 @@ sudo meson configure \
 -Dpipe=true \
 -Drecorder=true \
 -Dshout=enabled \
--Dsoundcloud=enabled \
 -Dsoxr=enabled \
 -Dvorbis=enabled \
 -Dwave_encoder=true \
@@ -434,6 +433,9 @@ sudo meson configure \
 -Dudisks=disabled \
 -Dupnp=disabled \
 -Dwildmidi=disabled \
+-Dsoundcloud=disabled \
+-Dtidal=disabled \
+-Dqobuz=disabled
 output/release
 
 5. Compile and install.
