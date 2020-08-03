@@ -642,10 +642,10 @@ if ($_SESSION['autoplay'] == '1') {
 	if ($_SESSION['ashuffle'] == '1') {
 		workerLog('worker: Starting auto-shuffle');
 		if (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') {
-			$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue_buffer 1 --file - > /dev/null 2>&1 &';
+			$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue-buffer 1 --file - > /dev/null 2>&1 &';
 		}
 		else {
-			$cmd = '/usr/local/bin/ashuffle --queue_buffer 1 > /dev/null 2>&1 &';
+			$cmd = '/usr/local/bin/ashuffle --queue-buffer 1 > /dev/null 2>&1 &';
 		}
 
 		sysCmd($cmd);
