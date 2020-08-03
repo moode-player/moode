@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
@@ -153,6 +153,7 @@ function groupLib(fullLib) {
         //var year = SESSION.json['library_albumview_sort'] == 'Year' ? getYear(albumTracks) : '';
         var year = getYear(albumTracks);
 		return {
+            key: findAlbumProp(albumTracks, 'key'),
 			last_modified: getLastModified(albumTracks),
             year: year,
 			album: findAlbumProp(albumTracks, 'album'),
@@ -643,12 +644,21 @@ var renderSongs = function(albumPos) {
     if (LIB.artistClicked == true || LIB.albumClicked == true) {
         // Order the songs according the the order of the albums
         var orderedSongs = [];
-        for (i = 0; i < filteredAlbums.length; i++) {
+        if (LIB.albumClicked == true) {
             for (j = 0; j < filteredSongs.length; j++) {
-                if (filteredSongs[j].album == filteredAlbums[i].album) {
+                if (filteredSongs[j].key == filteredAlbums[UI.libPos[0]].key) {
                     orderedSongs.push(filteredSongs[j]);
                 }
             }
+        }
+        else {
+            for (i = 0; i < filteredAlbums.length; i++) {
+                for (j = 0; j < filteredSongs.length; j++) {
+                    if (filteredSongs[j].key == filteredAlbums[i].key) {
+                        orderedSongs.push(filteredSongs[j]);
+                    }
+                }
+            }            
         }
         filteredSongs = orderedSongs;
 
@@ -658,7 +668,7 @@ var renderSongs = function(albumPos) {
         var multiDisc = [];
         for (i = 0; i < filteredSongs.length; i++) {
             if (filteredSongs[i].album == lastAlbum && filteredSongs[i].disc != lastDisc) {
-                console.log('Multi-disc: ' + filteredSongs[i].album);
+                //console.log('Multi-disc: ' + filteredSongs[i].album);
                 multiDisc.push(filteredSongs[i].album);
             }
             lastAlbum = filteredSongs[i].album;
@@ -859,7 +869,7 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	var pos = $('#albumsList .lib-entry').index(this);
     LIB.albumClicked = true;
 	UI.libPos[0] = pos;
-	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
 	var albumobj = filteredAlbums[pos];
 	var album = filteredAlbums[pos].album;
 	storeLibPos(UI.libPos);
@@ -882,13 +892,13 @@ $('#random-album').click(function(e) {
 		var itemSelector = '#albumsList .lib-entry';
 		var scrollSelector = 'albums';
 		UI.libPos[0] = pos;
-		UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+		UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
 		var albumobj = filteredAlbums[pos];
 	}
 	else {
 		var itemSelector = '#albumcovers .lib-entry';
 		var scrollSelector = 'albumcovers';
-		UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
+		UI.libPos[0] = filteredAlbums.map(function(e) {return e.key;}).indexOf(filteredAlbumCovers[pos].key);
 		UI.libPos[1] = pos;
 		var albumobj = filteredAlbumCovers[pos];
 	}
@@ -910,7 +920,7 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 	$('#tracklist-toggle').show();
 
-	UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
+	UI.libPos[0] = filteredAlbums.map(function(e) {return e.key;}).indexOf(filteredAlbumCovers[pos].key);
 	UI.libPos[1] = pos;
 	storeLibPos(UI.libPos);
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
@@ -927,7 +937,7 @@ $('#albumcovers').on('click', 'img', function(e) {
 
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 
-	UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
+	UI.libPos[0] = filteredAlbums.map(function(e) {return e.key;}).indexOf(filteredAlbumCovers[pos].key);
 	UI.libPos[1] = pos;
 	storeLibPos(UI.libPos);
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
@@ -964,7 +974,7 @@ $('.ralbum').click(function(e) {
 	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
 
     UI.libPos[0] = pos;
-	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
 	var albumobj = filteredAlbums[pos];
 
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
