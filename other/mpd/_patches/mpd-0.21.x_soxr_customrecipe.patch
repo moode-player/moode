@@ -35,10 +35,10 @@
 # }
 #
 diff --git a/src/pcm/SoxrResampler.cxx b/src/pcm/SoxrResampler.cxx
-index 411e79b43..b0dbf7eea 100644
+index 411e79b43..2abbfcd2e 100644
 --- a/src/pcm/SoxrResampler.cxx
 +++ b/src/pcm/SoxrResampler.cxx
-@@ -28,6 +28,7 @@
+@@ -28,19 +28,32 @@
  
  #include <assert.h>
  #include <string.h>
@@ -46,7 +46,15 @@ index 411e79b43..b0dbf7eea 100644
  
  static constexpr Domain soxr_domain("soxr");
  
-@@ -38,9 +39,16 @@ static constexpr unsigned long SOXR_DEFAULT_RECIPE = SOXR_HQ;
+ static constexpr unsigned long SOXR_DEFAULT_RECIPE = SOXR_HQ;
+ 
++/**
++ * The RESET_ON_CLEAR flag makes it possible to jump in the position off the current track
++ */
++static constexpr unsigned long RESET_ON_CLEAR = 2147483648; //2^31 defined in internal.h of soxr
++
+ /**
+  * Special value for "invalid argument".
   */
  static constexpr unsigned long SOXR_INVALID_RECIPE = -1;
  
@@ -63,7 +71,7 @@ index 411e79b43..b0dbf7eea 100644
  static constexpr struct {
  	unsigned long recipe;
  	const char *name;
-@@ -50,6 +58,7 @@ static constexpr struct {
+@@ -50,6 +63,7 @@ static constexpr struct {
  	{ SOXR_MQ, "medium" },
  	{ SOXR_LQ, "low" },
  	{ SOXR_QQ, "quick" },
@@ -71,7 +79,7 @@ index 411e79b43..b0dbf7eea 100644
  	{ SOXR_INVALID_RECIPE, nullptr }
  };
  
-@@ -79,20 +88,110 @@ soxr_parse_quality(const char *quality) noexcept
+@@ -79,20 +93,110 @@ soxr_parse_quality(const char *quality) noexcept
  	return SOXR_INVALID_RECIPE;
  }
  
@@ -173,7 +181,7 @@ index 411e79b43..b0dbf7eea 100644
 +		soxr_quality.phase_response = soxr_parse_phase_respons( block.GetBlockValue("phase_response", 50) );
 +		soxr_quality.passband_end = soxr_parse_passband_end(block.GetBlockValue("passband_end", "95.0") );
 +		soxr_quality.stopband_begin = soxr_parse_stopband_begin( block.GetBlockValue("stopband_begin", "100.0") );
-+		soxr_quality.flags = block.GetBlockValue("flags", 0) & 0x3F; // see soxr.h soxr_quality_spec.flags
++		soxr_quality.flags = RESET_ON_CLEAR | (block.GetBlockValue("flags", 0) & 0x3F); // see soxr.h soxr_quality_spec.flags
 +		soxr_io = soxr_io_spec(SOXR_FLOAT32_I, SOXR_FLOAT32_I);
 +		soxr_io.scale = soxr_parse_attenuation( block.GetBlockValue("attenuation", "0")); 
 +	}
@@ -187,7 +195,7 @@ index 411e79b43..b0dbf7eea 100644
  	FormatDebug(soxr_domain,
  		    "soxr converter '%s'",
  		    soxr_quality_name(recipe));
-@@ -108,14 +207,19 @@ SoxrPcmResampler::Open(AudioFormat &af, unsigned new_sample_rate)
+@@ -108,14 +212,19 @@ SoxrPcmResampler::Open(AudioFormat &af, unsigned new_sample_rate)
  	assert(audio_valid_sample_rate(new_sample_rate));
  
  	soxr_error_t e;
