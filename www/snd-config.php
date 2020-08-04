@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -70,23 +70,48 @@ if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
 	submitJob('mpdrestart', '', 'MPD restarted', '');
 }
 
-// auto-shuffle
+// Auto-shuffle
 if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashufflesvc']) {
 	$_SESSION['notify']['title'] = $_POST['ashufflesvc'] == 1 ? 'Auto-shuffle on' : 'Auto-shuffle off';
 	$_SESSION['notify']['duration'] = 3;
 	playerSession('write', 'ashufflesvc', $_POST['ashufflesvc']);
 
-	// turn off MPD random play so no conflict
+	// Turn off MPD random play so no conflict
 	$sock = openMpdSock('localhost', 6600);
 	sendMpdCmd($sock, 'random 0');
 	$resp = readMpdResp($sock);
 
-	// kill the service if indicated
+	// Kill the service if indicated
 	if ($_POST['ashufflesvc'] == 0) {
 		sysCmd('killall -s 9 ashuffle > /dev/null');
 		playerSession('write', 'ashuffle', '0');
 		sendMpdCmd($sock, 'consume 0');
 		$resp = readMpdResp($sock);
+	}
+}
+if (isset($_POST['update_ashuffle_mode']) && $_POST['ashuffle_mode'] != $_SESSION['ashuffle_mode']) {
+	playerSession('write', 'ashuffle_mode', $_POST['ashuffle_mode']);
+	if ($_SESSION['ashuffle'] == '1') {
+		$_SESSION['notify']['title'] = 'Mode updated, random turned off';
+		$_SESSION['notify']['duration'] = 3;
+		stopAutoShuffle();
+	}
+	else {
+		$_SESSION['notify']['title'] = 'Mode updated';
+		$_SESSION['notify']['duration'] = 3;
+	}
+}
+if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SESSION['ashuffle_filter']) {
+	$trim_filter = trim($_POST['ashuffle_filter']);
+	playerSession('write', 'ashuffle_filter', ($trim_filter == '' ? 'None' : $trim_filter));
+	if ($_SESSION['ashuffle'] == '1') {
+		$_SESSION['notify']['title'] = 'Filter updated, random turned off';
+		$_SESSION['notify']['duration'] = 3;
+		stopAutoShuffle();
+	}
+	else {
+		$_SESSION['notify']['title'] = 'Filter updated';
+		$_SESSION['notify']['duration'] = 3;
 	}
 }
 
@@ -465,9 +490,12 @@ else {
 	$_select['mpdver'] .= "<option value=\"".$version."\" " . (($_SESSION['mpdver'] == $version) ? "selected" : "") . ">".$label."</option>\n";
 }
 
-// auto-shuffle
+// Auto-shuffle
 $_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['ashufflesvc0'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc2\" value=\"0\" " . (($_SESSION['ashufflesvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$_select['ashuffle_mode'] .= "<option value=\"Track\" " . (($_SESSION['ashuffle_mode'] == 'Track') ? "selected" : "") . ">Track</option>\n";
+$_select['ashuffle_mode'] .= "<option value=\"Album\" " . (($_SESSION['ashuffle_mode'] == 'Album') ? "selected" : "") . ">Album</option>\n";
+$_ashuffle_filter = $_SESSION['ashuffle_filter'];
 
 // autoplay after start
 $_select['autoplay1'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . ">\n";

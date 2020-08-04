@@ -1931,7 +1931,6 @@ $('.context-menu a').click(function(e) {
     		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
             // Other options
     		$('#font-size span').text(SESSION.json['font_size']);
-            $('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
     		$('#play-history-enabled span').text(SESSION.json['playhist']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
 
@@ -2143,7 +2142,6 @@ $('.btn-appearance-update').click(function(e){
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
     // Other options
     SESSION.json['font_size'] = $('#font-size span').text();
-    SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
 	SESSION.json['extra_tags'] = $('#extra-tags').val();
 
@@ -2212,7 +2210,6 @@ $('.btn-appearance-update').click(function(e){
         'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
         'scnsaver_style': SESSION.json['scnsaver_style'],
         'font_size': SESSION.json['font_size'],
-        'ashuffle_filter': SESSION.json['ashuffle_filter'],
         'playhist': SESSION.json['playhist'],
         'extra_tags': SESSION.json['extra_tags'],
         'appearance_modal_state': SESSION.json['appearance_modal_state']

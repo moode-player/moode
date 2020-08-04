@@ -2296,6 +2296,26 @@ function startGpioSvc() {
 	sysCmd('/var/www/command/gpio-buttons.py > /dev/null 2&1 &');
 }
 
+// Auto-shuffle random play
+function startAutoShuffle() {
+	$ashuffle_filter = (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') ?
+		'mpc search ' . $_SESSION['ashuffle_filter'] . ' | ' : '';
+	$ashuffle_file = $ashuffle_filter != '' ? '--file -' : '';
+	$ashuffle_mode = $_SESSION['ashuffle_mode'] == 'Album' ? '--group-by album ' : '';
+	$result = sysCmd($ashuffle_filter . '/usr/local/bin/ashuffle --queue-buffer 1 ' . $ashuffle_mode . $ashuffle_file . ' > /dev/null 2>&1 &');
+}
+function stopAutoShuffle() {
+	sysCmd('killall -s 9 ashuffle > /dev/null');
+	playerSession('write', 'ashuffle', '0');
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('stopAutoShuffle(): MPD connect failed');
+		exit(0);
+	}
+	sendMpdCmd($sock, 'consume 0');
+	$resp = readMpdResp($sock);
+	closeMpdSock($sock);
+}
+
 // get upnp coverart url
 function getUpnpCoverUrl() {
 	$result = sysCmd('upexplorer --album-art "' . $_SESSION['upnpname'] . '"');

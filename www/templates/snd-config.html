@@ -25,10 +25,10 @@
 	<h1 class="snd-config">Audio Config</h1>
 
 	<form class="form-horizontal" method="post">
-		<legend>Devices</legend>
+		<legend>I2S (HAT) Device</legend>
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="i2sdevice">I2S audio device</label>
+				<label class="control-label" for="i2sdevice">Device</label>
 				<div class="controls">
 					<select id="i2sdevice" class="input-large" name="i2sdevice">
 						$_i2s[i2sdevice]
@@ -61,22 +61,26 @@
 					<a href="chp-config.php" $_chip_link_disable><button class="btn btn-primary btn-medium" $_chip_btn_disable>Edit</button></a>&nbsp;Chip/Device options
 				</div>
 			</div>
+		</fieldset>
 
+		<legend>ALSA Volume</legend>
+		<fieldset>
 			<div class="control-group">
 				<label class="control-label" for="alsavolume_max">Max ALSA volume</label>
 				<div class="controls">
-                    <input class="input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">
+					<input class="input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">&nbsp;%
 					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-alsavolume_max" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-alsavolume_max" class="help-block-configs help-block-margin hide">
-						Establishes ALSA volume level that is used to set 0dB when MPD volume control is set to Software or Disabled, or when any of the Audio Renderers are active.
-                    </span>
+					<!--a aria-label="Help" class="info-toggle" data-cmd="info-alsavolume_max" href="#notarget"><i class="fas fa-info-circle"></i></a-->
+					<span id="info-alsavolume_max" class="help-block-configs help-block-margin">
+						This volume level is used to set 0dB when MPD volume control is set to Software or Disabled, or when any of the Audio Renderers are active.
+					</span>
 					$_alsavolume_max_msg
 				</div>
 			</div>
 		</fieldset>
 
-		<legend>MPD</legend>
+		<legend>MPD Options</legend>
+		<div class="horiz-rule-light">General</div>
 		<fieldset>
 			<div class="control-group">
 				<label class="control-label" for="mpdver">MPD version</label>
@@ -86,23 +90,20 @@
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdver" value="novalue">Set</button>
 					<span class="help-block-configs help-block-margin">
-						NOTE: Additional MPD versions may be offered for testing and experimentation purposes.<br>
-						The MPD database will be regenerated when minor version changes for example 0.21.y to 0.22.y
+						Various MPD versions may be offered for testing and experimentation purposes.<br>
+						NOTE: The MPD database may be regenerated after changing versions. Watch for the progress spinner.
 					</span>
 				</div>
 			</div>
-
 			<div class="control-group">
+				<label class="control-label">MPD config</label>
 				<div class="controls">
-					<a href="mpd-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit</button></a>&nbsp;MPD config
+					<a href="mpd-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit</button></a>
 					<div style="margin-top:.75em">
 						<a data-toggle="modal" href="#mpd-restart"><button class="btn btn-medium btn-primary">Restart</button></a>&nbsp;MPD
 					</div>
 				</div>
 			</div>
-
-			<div class="horiz-rule-light"></div>
-
 			<div class="control-group">
 				<label class="control-label">Autoplay after start</label>
 				<div class="controls">
@@ -122,6 +123,7 @@
 				</div>
 			</div>
 
+			<div class="horiz-rule-light">Auto-shuffle</div>
 			<div class="control-group">
 				<label class="control-label">Auto-shuffle</label>
 				<div class="controls">
@@ -142,7 +144,77 @@
                     </span>
 				</div>
 			</div>
+			<div class="control-group">
+				<label class="control-label" for="ashuffle_mode">Mode</label>
+				<div class="controls">
+					<select id="cpugov" class="input-large" name="ashuffle_mode">
+						$_select[ashuffle_mode]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_ashuffle_mode" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_ashuffle_mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_ashuffle_mode" class="help-block-configs help-block-margin hide">
+						Play randomly selected track or whole album.
+					</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="ashuffle_filter">Tag filter</label>
+				<div class="controls">
+                    <input class="input-large" type="text" id="ashuffle_filter" name="ashuffle_filter" value="$_ashuffle_filter">
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_ashuffle_filter" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_ashuffle_filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_ashuffle_filter" class="help-block-configs help-block-margin hide">
+						String of TAG VALUE pairs that Auto-shuffle uses to select the tracks being shuffled.
+						Only one occurance of a given TAG is allowed. The filter is case insensitive and it performs a TAG contains VALUE substring match.
+						Example: genre "indie rock" artist coldplay.
+                    </span>
+				</div>
+			</div>
 
+			<div class="horiz-rule-light">Volume options</div>
+			<div class="control-group">
+				<label class="control-label" for="volume_step_limit">Volume step limit</label>
+				<div class="controls">
+					<select id="volume_step_limit" class="input-large" name="volume_step_limit">
+						$_select[volume_step_limit]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_volume_step_limit" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_step_limit" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_volume_step_limit" class="help-block-configs help-block-margin hide">
+						Sets the maximum amount the volume knob will advance when its clicked ahead of its current position.
+					</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="volume_mpd_max">Max MPD volume</label>
+				<div class="controls">
+                    <input class="input-large" type="number" maxlength="2" min="0" max="100" id="volume_mpd_max" name="volume_mpd_max" value="$_volume_mpd_max" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_volume_mpd_max" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_mpd_max" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_volume_mpd_max" class="help-block-configs help-block-margin hide">
+						Establishes the highest level that can be set by the Volume Knob and via vol.sh and rotvol.sh.
+                    </span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">USB volume knob</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_usb_volknob2">ON</label>
+						$_select[usb_volknob1]
+						<label class="toggle-radio" for="toggle_usb_volknob1">OFF</label>
+						$_select[usb_volknob0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_usb_volknob" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_usb_volknob" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info_usb_volknob" class="help-block-configs help-block-margin2 hide">
+						Activates the triggerhappy key mapping daemon for USB volume knobs.<br>
+						Refer to /etc/triggerhappy/triggers.d/media.conf for key/event mappings.
+                    </span>
+				</div>
+			</div>
 			<div class="control-group">
 				<label class="control-label">Rotary encoder</label>
 				<div class="controls">
@@ -168,52 +240,38 @@
 				</div>
 			</div>
 
+			<div class="horiz-rule-light">DSP options</div>
 			<div class="control-group">
-				<label class="control-label">USB volume knob</label>
+				<label class="control-label" for="mpdcrossfade">Crossfade (secs)</label>
 				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_usb_volknob2">ON</label>
-						$_select[usb_volknob1]
-						<label class="toggle-radio" for="toggle_usb_volknob1">OFF</label>
-						$_select[usb_volknob0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_usb_volknob" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_usb_volknob" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info_usb_volknob" class="help-block-configs help-block-margin2 hide">
-						Activates the triggerhappy key mapping daemon for USB volume knobs.<br>
-						Refer to /etc/triggerhappy/triggers.d/media.conf for key/event mappings.
+                    <input class="input-large" type="number" maxlength="2" min="0" max="15" id="mpdcrossfade" name="mpdcrossfade" value="$_mpdcrossfade" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdcrossfade" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-mpdcrossfade" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-mpdcrossfade" class="help-block-configs help-block-margin hide">
+						MPD uses its audio buffer for crossfading thus there must be enough buffer space available to perform the requested
+						number of seconds of crossfade for a given audio format.<br>
+						NOTE: Set to 0 to disable crossfade.
                     </span>
 				</div>
 			</div>
-
 			<div class="control-group">
-				<label class="control-label" for="volume_step_limit">Volume step limit</label>
+				<label class="control-label" for="crossfeed">Crossfeed</label>
 				<div class="controls">
-					<select id="volume_step_limit" class="input-large" name="volume_step_limit">
-						$_select[volume_step_limit]
+					<select id="crossfeed" class="input-large" name="crossfeed">
+						$_select[crossfeed]
 					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_volume_step_limit" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_step_limit" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_volume_step_limit" class="help-block-configs help-block-margin hide">
-						Sets the maximum amount the volume knob will advance when its clicked ahead of its current position.
-					</span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="volume_mpd_max">Max MPD volume</label>
-				<div class="controls">
-                    <input class="input-large" type="number" maxlength="2" min="0" max="100" id="volume_mpd_max" name="volume_mpd_max" value="$_volume_mpd_max" required>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_volume_mpd_max" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_mpd_max" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_volume_mpd_max" class="help-block-configs help-block-margin hide">
-						Establishes the highest level that can be set by the Volume Knob and via vol.sh and rotvol.sh.
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_crossfeed" value="novalue" $_crossfeed_set_disabled>Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-crossfeed" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-crossfeed" class="help-block-configs help-block-margin hide">
+						- 700 Hz, 4.5 dB - Default<br>
+						This setting is closest to the virtual speaker placement with azimuth 30 degrees and the removal of about 3 meters, while listening by headphones.<br>
+						- 700 Hz, 6.0 dB - Chu Moy (most popular)<br>
+						This setting is close to the parameters of a Chu Moy crossfeeder.<br>
+						- 650 Hz, 9.5 dB - Jan Meier<br>
+						This setting is close to the parameters of a crossfeeder implemented in Jan Meier's CORDA amplifiers, making the smallest change to the signal for relaxed listening with headphones.<br>
                     </span>
 				</div>
 			</div>
-
 			<div class="control-group">
 				<label class="control-label">Polarity inversion</label>
 				<div class="controls">
@@ -233,45 +291,9 @@
 				</div>
 			</div>
 
-			<div class="horiz-rule-light"></div>
-
+			<div class="horiz-rule-light">HTTP streaming</div>
 			<div class="control-group">
-				<label class="control-label" for="mpdcrossfade">Crossfade (secs)</label>
-				<div class="controls">
-                    <input class="input-large" type="number" maxlength="2" min="0" max="15" id="mpdcrossfade" name="mpdcrossfade" value="$_mpdcrossfade" required>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdcrossfade" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-mpdcrossfade" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mpdcrossfade" class="help-block-configs help-block-margin hide">
-						MPD uses its audio buffer for crossfading thus there must be enough buffer space available to perform the requested
-						number of seconds of crossfade for a given audio format.<br>
-						NOTE: Set to 0 to disable crossfade.
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="crossfeed">Crossfeed</label>
-				<div class="controls">
-					<select id="crossfeed" class="input-large" name="crossfeed">
-						$_select[crossfeed]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_crossfeed" value="novalue" $_crossfeed_set_disabled>Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-crossfeed" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-crossfeed" class="help-block-configs help-block-margin hide">
-						- 700 Hz, 4.5 dB - Default<br>
-						This setting is closest to the virtual speaker placement with azimuth 30 degrees and the removal of about 3 meters, while listening by headphones.<br>
-						- 700 Hz, 6.0 dB - Chu Moy (most popular)<br>
-						This setting is close to the parameters of a Chu Moy crossfeeder.<br>
-						- 650 Hz, 9.5 dB - Jan Meier<br>
-						This setting is close to the parameters of a crossfeeder implemented in Jan Meier's CORDA amplifiers, making the smallest change to the signal for relaxed listening with headphones.<br>
-                    </span>
-				</div>
-			</div>
-
-			<div class="horiz-rule-light"></div>
-
-			<div class="control-group">
-				<label class="control-label">HTTP streaming</label>
+				<label class="control-label">Streaming server</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggle-mpd-httpd2">ON</label>
@@ -288,7 +310,6 @@
                     </span>
 				</div>
 			</div>
-
 			<div class="control-group">
 				<label class="control-label" for="mpd-httpd-port">Port</label>
 				<div class="controls">
@@ -300,7 +321,6 @@
                     </span>
 				</div>
 			</div>
-
 			<div class="control-group">
 				<label class="control-label" for="mpd-httpd-encoder">Encoder</label>
 				<div class="controls">
@@ -314,10 +334,12 @@
 					</span>
 				</div>
 			</div>
-
 		</fieldset>
 
-		<legend>Equalisers</legend>
+		<legend>Equalizers</legend>
+		<p>
+			The parametric and graphic equalizers process audio output from MPD, Airplay and Spotify renderers.
+		</p><br>
 		<fieldset>
 			<div class="control-group">
 				<label class="control-label" for="eqfa4p">Parametric EQ</label>
@@ -358,9 +380,15 @@
 
 		<!-- RENDERERS, AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
 
-		<legend>Renderers</legend>
+		<legend>Audio Renderers</legend>
+		<p>
+			The audio renderers are playback applications that are separate from MPD.
+			When a client connects to one of the renderers MPD will stop and the renderer will begin playback.
+			When the clicnt stops or disconnects MPD can resume playback depending on the "Resume MPD" setting.
+		</p><br>
 		<fieldset>
 			<div class="control-group $_feat_bluetooth">
+				<div class="horiz-rule-light">Bluetooth renderer</div>
 				<label class="control-label" for="btname">Bluetooth</label>
 				<div class="controls">
 					<div class="toggle">
@@ -435,7 +463,7 @@
 			</div>
 
 			<div class="control-group $_feat_airplay">
-				<div class="horiz-rule-light"></div>
+				<div class="horiz-rule-light">Airplay renderer</div>
 
 				<label class="control-label" for="airplayname">Airplay</label>
 				<div class="controls">
@@ -476,7 +504,7 @@
 			</div>
 
 			<div class="control-group $_feat_spotify">
-				<div class="horiz-rule-light"></div>
+				<div class="horiz-rule-light">Spotify renderer</div>
 
 				<label class="control-label" for="spotifyname">Spotify</label>
 				<div class="controls">
@@ -523,7 +551,7 @@
 			</div>
 
 			<div class="control-group $_feat_squeezelite">
-				<div class="horiz-rule-light"></div>
+				<div class="horiz-rule-light">Squeezelite renderer</div>
 
 				<label class="control-label">Squeezelite</label>
 				<div class="controls">
