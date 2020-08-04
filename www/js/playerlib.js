@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
@@ -3161,8 +3161,16 @@ function makeActive (vswitch, panel, view) {
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('.album-view-btn .pane').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
-			$('#bottom-row').css('display', '');
-			$('#lib-albumcover').css('height', '100%');
+            if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
+                $('#bottom-row').css('display', 'flex')
+                $('#lib-albumcover').css('height', 'calc(47% - 2em)'); // Was 1.75em
+                $('#index-albumcovers').hide();
+            }
+            else {
+                $('#bottom-row').css('display', '');
+                $('#lib-albumcover').css('height', '100%');
+                $('#index-albumcovers').show();
+            }
 			break;
 		case 'tag':
 			lazyLode('tag');

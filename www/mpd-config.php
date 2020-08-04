@@ -132,30 +132,44 @@ $_mpd_select['audio_output_format'] .= "<option value=\"352800:32:2\" " . (($mpd
 $_mpd_select['audio_output_format'] .= "<option value=\"384000:32:2\" " . (($mpdconf['audio_output_format'] == '384000:32:2') ? "selected" : "") . ">32 bit / 384 kHz</option>\n";
 
 // Selective resample mode
-$_mpd_select['selective_resample_mode'] .= "<option value=\"0\" " . (($mpdconf['selective_resample_mode'] == '0') ? "selected" : "") . " >Disabled</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ALL . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ALL) ? "selected" : "") . " >Upsample if source < target rate</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_41K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_41K) ? "selected" : "") . " >Upsample only 44.1K source rate</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_4148K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_4148K) ? "selected" : "") . " >Upsample only 44.1K and 48K source rates</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_ADHERE_BASE_FREQ . "\" " . (($mpdconf['selective_resample_mode'] == SOX_ADHERE_BASE_FREQ) ? "selected" : "") . " >Resample (adhere to base freq)</option>\n";
-$_mpd_select['selective_resample_mode'] .= "<option value=\"" . (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) . "\" " . (($mpdconf['selective_resample_mode'] == (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ)) ? "selected" : "") . " >Upsample if source < target rate (adhere to base freq)</option>\n";
-
+$patch_id = explode('_p0x', $_SESSION['mpdver'])[1];
+if ($patch_id & PATCH_SELECTIVE_RESAMPLING) {
+	$_selective_resampling_hide = '';
+	$_mpd_select['selective_resample_mode'] .= "<option value=\"0\" " . (($mpdconf['selective_resample_mode'] == '0') ? "selected" : "") . " >Disabled</option>\n";
+	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ALL . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ALL) ? "selected" : "") . " >Upsample if source < target rate</option>\n";
+	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_41K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_41K) ? "selected" : "") . " >Upsample only 44.1K source rate</option>\n";
+	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_4148K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_4148K) ? "selected" : "") . " >Upsample only 44.1K and 48K source rates</option>\n";
+	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_ADHERE_BASE_FREQ . "\" " . (($mpdconf['selective_resample_mode'] == SOX_ADHERE_BASE_FREQ) ? "selected" : "") . " >Resample (adhere to base freq)</option>\n";
+	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) . "\" " . (($mpdconf['selective_resample_mode'] == (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ)) ? "selected" : "") . " >Upsample if source < target rate (adhere to base freq)</option>\n";
+}
+else {
+	$_selective_resampling_hide = 'hide';
+}
 // Resampling quality
-$_mpd_select['sox_quality'] .= "<option value=\"very high\" " . (($mpdconf['sox_quality'] == 'very high') ? "selected" : "") . " >Very high quality</option>\n";
-$_mpd_select['sox_quality'] .= "<option value=\"high\" " . (($mpdconf['sox_quality'] == 'high') ? "selected" : "") . " >High quality</option>\n";
-$_mpd_select['sox_quality'] .= "<option value=\"medium\" " . (($mpdconf['sox_quality'] == 'medium') ? "selected" : "") . " >Medium quality</option>\n";
-$_mpd_select['sox_quality'] .= "<option value=\"custom\" " . (($mpdconf['sox_quality'] == 'custom') ? "selected" : "") . " >Custom recipe</option>\n";
+$_mpd_select['sox_quality'] .= "<option value=\"very high\" " . (($mpdconf['sox_quality'] == 'very high') ? "selected" : "") . " >Very high</option>\n";
+$_mpd_select['sox_quality'] .= "<option value=\"high\" " . (($mpdconf['sox_quality'] == 'high') ? "selected" : "") . " >High (Default)</option>\n";
+$_mpd_select['sox_quality'] .= "<option value=\"medium\" " . (($mpdconf['sox_quality'] == 'medium') ? "selected" : "") . " >Medium</option>\n";
+if ($patch_id & PATCH_SOX_CUSTOM_RECIPE) {
+	$_mpd_select['sox_quality'] .= "<option value=\"custom\" " . (($mpdconf['sox_quality'] == 'custom') ? "selected" : "") . " >Custom recipe</option>\n";
+}
 
 // Custom SoX recipe
-$_mpd_select['sox_precision'] .= "<option value=\"16\" " . (($mpdconf['sox_precision'] == '16') ? "selected" : "") . " >16 bit</option>\n";
-$_mpd_select['sox_precision'] .= "<option value=\"20\" " . (($mpdconf['sox_precision'] == '20') ? "selected" : "") . " >20 bit</option>\n";
-$_mpd_select['sox_precision'] .= "<option value=\"24\" " . (($mpdconf['sox_precision'] == '24') ? "selected" : "") . " >24 bit</option>\n";
-$_mpd_select['sox_precision'] .= "<option value=\"28\" " . (($mpdconf['sox_precision'] == '28') ? "selected" : "") . " >28 bit</option>\n";
-$_mpd_select['sox_precision'] .= "<option value=\"32\" " . (($mpdconf['sox_precision'] == '32') ? "selected" : "") . " >32 bit</option>\n";
-$_mpd_select['sox_phase_response'] = $mpdconf['sox_phase_response'];
-$_mpd_select['sox_passband_end'] = $mpdconf['sox_passband_end'];
-$_mpd_select['sox_stopband_begin'] = $mpdconf['sox_stopband_begin'];
-$_mpd_select['sox_attenuation'] = $mpdconf['sox_attenuation'];
-$_mpd_select['sox_flags'] = $mpdconf['sox_flags'];
+if ($patch_id & PATCH_SOX_CUSTOM_RECIPE) {
+	$_sox_custom_recipe_hide = '';
+	$_mpd_select['sox_precision'] .= "<option value=\"16\" " . (($mpdconf['sox_precision'] == '16') ? "selected" : "") . " >16 bit</option>\n";
+	$_mpd_select['sox_precision'] .= "<option value=\"20\" " . (($mpdconf['sox_precision'] == '20') ? "selected" : "") . " >20 bit (Default)</option>\n";
+	$_mpd_select['sox_precision'] .= "<option value=\"24\" " . (($mpdconf['sox_precision'] == '24') ? "selected" : "") . " >24 bit</option>\n";
+	$_mpd_select['sox_precision'] .= "<option value=\"28\" " . (($mpdconf['sox_precision'] == '28') ? "selected" : "") . " >28 bit</option>\n";
+	$_mpd_select['sox_precision'] .= "<option value=\"32\" " . (($mpdconf['sox_precision'] == '32') ? "selected" : "") . " >32 bit</option>\n";
+	$_mpd_select['sox_phase_response'] = $mpdconf['sox_phase_response'];
+	$_mpd_select['sox_passband_end'] = $mpdconf['sox_passband_end'];
+	$_mpd_select['sox_stopband_begin'] = $mpdconf['sox_stopband_begin'];
+	$_mpd_select['sox_attenuation'] = $mpdconf['sox_attenuation'];
+	$_mpd_select['sox_flags'] = $mpdconf['sox_flags'];
+}
+else {
+	$_sox_custom_recipe_hide = 'hide';
+}
 
 // SoX multithreading
 $_mpd_select['sox_multithreading'] .= "<option value=\"0\" " . (($mpdconf['sox_multithreading'] == '0') ? "selected" : "") . " >Yes</option>\n";

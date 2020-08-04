@@ -615,10 +615,10 @@ else {
 
 				// Filter and buffer
 				if (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') {
-					$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue_buffer 1 --file - > /dev/null 2>&1 &';
+					$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue-buffer 1 --file - > /dev/null 2>&1 &';
 				}
 				else {
-					$cmd = '/usr/local/bin/ashuffle --queue_buffer 1 > /dev/null 2>&1 &';
+					$cmd = '/usr/local/bin/ashuffle --queue-buffer 1 > /dev/null 2>&1 &';
 				}
 
 				$_GET['ashuffle'] == '1' ? sysCmd($cmd) : sysCmd('killall -s 9 ashuffle > /dev/null');

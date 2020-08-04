@@ -149,15 +149,15 @@ sudo apt-get update
 sudo apt-get -y install rpi-update php-fpm nginx sqlite3 php-sqlite3 php7.3-gd mpc \
     bs2b-ladspa libbs2b0 libasound2-plugin-equal telnet automake sysstat squashfs-tools shellinabox samba smbclient ntfs-3g \
     exfat-fuse git inotify-tools ffmpeg avahi-utils ninja-build python3-setuptools libmediainfo0v5 libmms0 libtinyxml2-6a \
-    libzen0v5 libmediainfo-dev libzen-dev winbind libnss-winbind djmount haveged python3-pip xfsprogs triggerhappy zip id3v2
+    libzen0v5 libmediainfo-dev libzen-dev winbind libnss-winbind djmount haveged python3-pip xfsprogs triggerhappy zip id3v2 cmake
 
 # meson
-sudo cp ./moode/other/mpd/build-tools/meson-0.50.1.tar.gz ./
-sudo tar xfz meson-0.50.1.tar.gz
-cd meson-0.50.1
+sudo cp ./moode/other/meson-ninja/meson-0.55.0.tar.gz ./
+sudo tar xfz /meson-0.55.0.tar.gz
+cd meson-0.55.0
 sudo python3 setup.py install
 cd ~
-sudo rm -rf meson-0.50.1*
+sudo rm -rf meson-0.55.0*
 
 # mediainfo
 sudo cp ./moode/other/mediainfo/mediainfo-18.12 /usr/local/bin/mediainfo
@@ -408,7 +408,6 @@ sudo meson configure \
 -Dpipe=true \
 -Drecorder=true \
 -Dshout=enabled \
--Dsoundcloud=enabled \
 -Dsoxr=enabled \
 -Dvorbis=enabled \
 -Dwave_encoder=true \
@@ -434,6 +433,9 @@ sudo meson configure \
 -Dudisks=disabled \
 -Dupnp=disabled \
 -Dwildmidi=disabled \
+-Dsoundcloud=disabled \
+-Dtidal=disabled \
+-Dqobuz=disabled
 output/release
 
 5. Compile and install.
@@ -782,7 +784,7 @@ sudo rm -rf ./git
 ////////////////////////////////////////////////////////////////
 
 cd ~
-cp ./moode/other/ashuffle/ashuffle /usr/local/bin
+cp ./moode/other/ashuffle/ashuffle-3.7.2 /usr/local/bin/ashuffle
 
 ////////////////////////////////////////////////////////////////
 //

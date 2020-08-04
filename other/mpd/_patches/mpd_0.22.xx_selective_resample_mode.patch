@@ -197,7 +197,7 @@ index 3006bf159..94d407848 100644
 +				source_rate % 48000 == 0 && 
 +				target_rate % 44100 == 0 && 
 +				lut44to48.find(target_rate) != lut44to48.end() ) {
-+				out_sample_rate = lut48to44.find(target_rate)->second;
++				out_sample_rate = lut44to48.find(target_rate)->second;
 +			} else {
 +				out_sample_rate = target_rate;
 +			}
