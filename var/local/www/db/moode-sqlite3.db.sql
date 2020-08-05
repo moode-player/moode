@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Wed Aug 5 16:51:51 2020
+-- File generated with SQLiteStudio v3.2.1 on Wed Aug 5 18:34:36 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -570,7 +570,8 @@ INSERT INTO cfg_system (id, param, value) VALUES (137, 'volume_mpd_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (138, 'library_thumbnail_columns', '6/2 (Default)');
 INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '9');
 INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
-INSERT INTO cfg_system (id, param, value) VALUES (141, 'ashuffle_mode', 'Track');
+INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
