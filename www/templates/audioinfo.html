@@ -51,10 +51,6 @@
 		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
 			<col span="1" style="width:8.5em;">
 			<tr>
-				<td style="text-align:right;">Volume ctl:&nbsp;</td>
-				<td style="text-align:left;">$volume_ctl</td>
-			</tr>
-			<tr>
 				<td style="text-align:right;">Resample rate:&nbsp;</td>
 				<td style="text-align:left;">$resample_rate</td>
 			</tr>
@@ -98,6 +94,10 @@
 				<td style="text-align:right;">Chip options:&nbsp;</td>
 				<td style="text-align:left;">$chip_options</td>
 			</tr>
+			<tr>
+				<td style="text-align:right;">Volume mixer:&nbsp;</td>
+				<td style="text-align:left;">$volume_mixer</td>
+			</tr>
 		</table>
 
 		<strong>Audio Device</strong>
@@ -111,7 +111,7 @@
 				<td style="text-align:right;">Mixer name:&nbsp;</td>
 				<td style="text-align:left;">$mixer_name</td>
 			</tr>
-			<tr>
+			<tr class="$_chip_hide">
 				<td style="text-align:right;">Chip:&nbsp;</td>
 				<td style="text-align:left;">$dacchip</td>
 			</tr>
