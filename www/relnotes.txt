@@ -20,7 +20,7 @@ New features
 - NEW: Selective resampling modes
 - NEW: Custom SoX resampling recipes
 - NEW: Resource limits in MPD Config
-- NEW: Auto-shuffle modes: Track or Album
+- NEW: Auto-shuffle Album mode
 
 Updates
 
