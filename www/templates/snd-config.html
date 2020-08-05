@@ -25,7 +25,7 @@
 	<h1 class="snd-config">Audio Config</h1>
 
 	<form class="form-horizontal" method="post">
-		<legend>I2S (HAT) Device</legend>
+		<legend>I2S Audio Device</legend>
 		<fieldset>
 			<div class="control-group">
 				<label class="control-label" for="i2sdevice">Device</label>
@@ -35,7 +35,7 @@
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit btn-submit" type="submit" name="update_i2s_device" value="novalue">Set</button>
 					<span class="help-block-configs help-block-margin">
-						NOTE: Set this to None if using Pi HDMI, Headphone jack or a USB audio device.<br>
+						NOTE: Set this to "None" if using a USB audio device, Pi HDMI or Pi Headphone jack.<br>
 						Auto-play will be turned off as part of updating this setting.<br>
                     </span>
 				</div>
@@ -80,6 +80,10 @@
 		</fieldset>
 
 		<legend>MPD Options</legend>
+		<p>
+			Music Player Daemon (MPD) is the core audio server and playback engine in moOde.
+			MPD settings including Audio output, Volume mixer, SoX resampling and others can be configured via the EDIT button.
+		</p><br>
 		<div class="horiz-rule-light">General</div>
 		<fieldset>
 			<div class="control-group">
@@ -96,7 +100,7 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label">MPD config</label>
+				<label class="control-label">MPD settings</label>
 				<div class="controls">
 					<a href="mpd-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit</button></a>
 					<div style="margin-top:.75em">
@@ -384,7 +388,7 @@
 		<p>
 			The audio renderers are playback applications that are separate from MPD.
 			When a client connects to one of the renderers MPD will stop and the renderer will begin playback.
-			When the clicnt stops or disconnects MPD can resume playback depending on the "Resume MPD" setting.
+			When the client stops or disconnects MPD can resume playback depending on the "Resume MPD" setting.
 		</p><br>
 		<fieldset>
 			<div class="control-group $_feat_bluetooth">
