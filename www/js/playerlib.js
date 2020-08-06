@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
@@ -1942,7 +1942,6 @@ $('.context-menu a').click(function(e) {
     		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
             // Other options
     		$('#font-size span').text(SESSION.json['font_size']);
-            $('#ashuffle-filter').val(SESSION.json['ashuffle_filter']);
     		$('#play-history-enabled span').text(SESSION.json['playhist']);
             $('#playlist-art-enabled span').text(SESSION.json['playlist_art']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
@@ -2157,7 +2156,6 @@ $('.btn-appearance-update').click(function(e){
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
     // Other options
     SESSION.json['font_size'] = $('#font-size span').text();
-    SESSION.json['ashuffle_filter'] = $('#ashuffle-filter').val().trim() == '' ? 'None' : $('#ashuffle-filter').val();
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
 	SESSION.json['extra_tags'] = $('#extra-tags').val();
     SESSION.json['playlist_art'] = $('#playlist-art-enabled span').text();
@@ -2230,7 +2228,6 @@ $('.btn-appearance-update').click(function(e){
         'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
         'scnsaver_style': SESSION.json['scnsaver_style'],
         'font_size': SESSION.json['font_size'],
-        'ashuffle_filter': SESSION.json['ashuffle_filter'],
         'playhist': SESSION.json['playhist'],
         'extra_tags': SESSION.json['extra_tags'],
         'appearance_modal_state': SESSION.json['appearance_modal_state'],
@@ -3183,8 +3180,16 @@ function makeActive (vswitch, panel, view) {
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('.album-view-btn .pane').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
-			$('#bottom-row').css('display', '');
-			$('#lib-albumcover').css('height', '100%');
+            if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
+                $('#bottom-row').css('display', 'flex')
+                $('#lib-albumcover').css('height', 'calc(47% - 2em)'); // Was 1.75em
+                $('#index-albumcovers').hide();
+            }
+            else {
+                $('#bottom-row').css('display', '');
+                $('#lib-albumcover').css('height', '100%');
+                $('#index-albumcovers').show();
+            }
 			break;
 		case 'tag':
 			lazyLode('tag');

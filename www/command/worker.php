@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -641,14 +641,7 @@ if ($_SESSION['autoplay'] == '1') {
 	workerLog('worker: Auto-play (On)');
 	if ($_SESSION['ashuffle'] == '1') {
 		workerLog('worker: Starting auto-shuffle');
-		if (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') {
-			$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue_buffer 1 --file - > /dev/null 2>&1 &';
-		}
-		else {
-			$cmd = '/usr/local/bin/ashuffle --queue_buffer 1 > /dev/null 2>&1 &';
-		}
-
-		sysCmd($cmd);
+		startAutoShuffle();
 	}
 	else {
 		$status = parseStatus(getMpdStatus($sock));

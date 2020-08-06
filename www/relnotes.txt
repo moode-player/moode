@@ -17,15 +17,22 @@
 
 New features
 
-- NEW: Selective resampling
+- NEW: Selective resampling modes
 - NEW: Custom SoX resampling recipes
+- NEW: Resource limits in MPD Config
+- NEW: Auto-shuffle Album mode
 
 Updates
 
+- UPD: Bump to MPD 0.22~git commit 20200723-dbdf782
+- UPD: Bump to Auto-shuffle (ashuffle) 3.7.2
+- UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 
 Bug fixes
 
+- FIX: Album key and cross-index for Tag and Album views
+- FIX: Track list show/hide not preserved when switching views
 - FIX: Manual entry of SSID not accepting embedded space
 
 ########################################################

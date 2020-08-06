@@ -85,26 +85,21 @@ AUDIO_PARAMETERS() {
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
 	[[ "$BITS" = "" ]] && OUTSTREAM="Closed" || OUTSTREAM="$BITS / $RATE"
 
-	if [[ $i2sdevice = "none" ]]; then
-		[[ $device = "0" ]] && audiodevname="On-board audio device" || audiodevname="USB audio device"
+	RESULT=$(sqlite3 $SQLDB "select iface from cfg_audiodev where name='$adevname' or alt_name='$adevname'")
+	if [[ $RESULT = "" ]]; then
+		iface="USB"
 	else
-		audiodevname=$adevname
+		iface=$RESULT
 	fi
 
-	if [[ $i2sdevice = "none" ]]; then
-		[[ $device = "1" ]] && iface="USB" || iface="SoC"
-	else
-		iface="I2S"
-	fi
-
-	[[ $alsavolume = "none" ]] && hwvol="None" || hwvol="Controller detected"
+	[[ $alsavolume = "none" ]] && hwvol="No" || hwvol="Yes"
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
 
 	echo -e "A U D I O   P A R A M E T E R S"
-	echo -e "\nAudio device\t\t= $audiodevname\c"
+	echo -e "\nAudio device\t\t= $adevname\c"
 	echo -e "\nInterface\t\t= $iface\c"
 	echo -e "\nMixer name\t\t= $volmixer\c"
-	echo -e "\nHardware volume\t\t= $hwvol\c"
+	echo -e "\nHardware mixer\t\t= $hwvol\c"
 	echo -e "\nMax ALSA volume\t\t= $alsavolume_max\c"
 	echo -e "\nMax MPD volume\t\t= $volume_mpd_max\c"
 	echo -e "\nVolume step limit\t= $volume_step_limit\c"
@@ -203,17 +198,31 @@ APPEARANCE_SETTINGS() {
 MPD_SETTINGS() {
 	echo -e "M P D   S E T T I N G S"
 	echo -e "\nVersion\t\t\t= $mpdver\c"
-	echo -e "\nVolume control\t\t= $mixer_type\c"
+	echo -e "\nVolume mixer\t\t= $mixer_type\c"
 	echo -e "\nALSA device\t\t= hw:$device\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
+	if [ $(($patch_id & $PATCH_SELECTIVE_RESAMPLING)) -ne 0 ]; then
+		echo -e "\nSelective resampling\t= $selective_resample_mode\c"
+	fi
 	echo -e "\nSoX quality\t\t= $sox_quality\c"
+	if [ $(($patch_id & $PATCH_SOX_CUSTOM_RECIPE)) -ne 0 ]; then
+		if [[ $sox_quality = "custom" ]]; then
+			echo -e "\nPrecision\t\t= $sox_precision\c"
+			echo -e "\nPhase response\t\t= $sox_phase_response\c"
+			echo -e "\nPassband end\t\t= $sox_passband_end\c"
+			echo -e "\nStopband begin\t\t= $sox_stopband_begin\c"
+			echo -e "\nAttenuation\t\t= $sox_attenuation\c"
+			echo -e "\nFlags\t\t\t= $sox_flags\c"
+		fi
+	fi
 	echo -e "\nSoX multithreading\t= $sox_multithreading\c"
 	echo -e "\nDSD over PCM (DoP)\t= $dop\c"
 	echo -e "\nReplaygain\t\t= $replaygain\c"
 	echo -e "\nReplaygain preamp\t= $replaygain_preamp\c"
 	echo -e "\nVolume normalization\t= $volume_normalization\c"
-	echo -e "\nAudio buffer\t\t= $audio_buffer_size (kb)\c"
-	echo -e "\nOutput buffer size\t= $max_output_buffer_size (kb)\n"
+	echo -e "\nAudio buffer\t\t= $audio_buffer_size (MB)\c"
+	echo -e "\nOutput buffer size\t= $max_output_buffer_size (MB)\c"
+	echo -e "\nMax playlist items\t= $max_playlist_length\n"
 	#echo -e "\nALSA auto-resample\t= $auto_resample\c"
 	#echo -e "\nALSA auto-channels\t= $auto_channels\c"
 	#echo -e "\nALSA auto-format\t= $auto_format\c"
@@ -297,7 +306,7 @@ MOODE_LOG() {
 }
 
 #
-# Gather data
+# Constants
 #
 
 # Features availability bitmask
@@ -310,6 +319,20 @@ FEAT_SPOTIFY=2048
 FEAT_GPIO=4096
 FEAT_DJMOUNT=8192
 FEAT_BLUETOOTH=16384
+
+# MPD patch availability bitmask
+PATCH_SELECTIVE_RESAMPLING=1 # Selective resampling options
+PATCH_SOX_CUSTOM_RECIPE=2	 # Custom SoX resampling recipes
+
+# Selective resampling bitmask
+SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate
+SOX_UPSAMPLE_ONLY_41K=1		# Upsample only 44.1K source rate
+SOX_UPSAMPLE_ONLY_4148K=2	# Upsample only 44.1K and 48K source rates
+SOX_ADHERE_BASE_FREQ=8		# Resample (adhere to base freq)
+
+#
+# Gather data
+#
 
 HOSTNAME=`uname -n`
 RASPIOS_VER=`cat /etc/debian_version`
@@ -370,8 +393,6 @@ fi
 
 TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
 SDFREQ=$(grep "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print $3/1000000}')
-
-
 PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
@@ -401,7 +422,7 @@ session_timeout=${arr[6]}
 audio_backend_latency_offset_in_seconds=${arr[7]}
 audio_backend_buffer_desired_length_in_seconds=${arr[8]}
 
-# MPD settings, r45b
+# MPD settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
 'device',
 'mixer_type',
@@ -418,7 +439,15 @@ RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
 'auto_channels',
 'auto_format',
 'buffer_time',
-'period_time'
+'period_time',
+'selective_resample_mode',
+'sox_precision',
+'sox_phase_response',
+'sox_passband_end',
+'sox_stopband_begin',
+'sox_attenuation',
+'sox_flags',
+'max_playlist_length'
 )")
 readarray -t arr <<<"$RESULT"
 device=${arr[0]}
@@ -430,13 +459,26 @@ sox_quality=${arr[4]}
 replaygain=${arr[6]}
 replaygain_preamp=${arr[7]}
 volume_normalization=${arr[8]}
-audio_buffer_size=${arr[9]}
-max_output_buffer_size=${arr[10]}
+audio_buffer_size=$((${arr[9]}/1024))
+max_output_buffer_size=$((${arr[10]}/1024))
 auto_resample=${arr[11]}
 auto_channels=${arr[12]}
 auto_format=${arr[13]}
 buffer_time=${arr[14]}
 period_time=${arr[15]}
+[[ "${arr[16]}" = "0" ]] && selective_resample_mode="disabled"
+[[ "${arr[16]}" = "$SOX_UPSAMPLE_ALL" ]] && selective_resample_mode="Upsample if source < target rate"
+[[ "${arr[16]}" = "$SOX_UPSAMPLE_ONLY_41K" ]] && selective_resample_mode="Upsample only 44.1K source rate"
+[[ "${arr[16]}" = "$SOX_UPSAMPLE_ONLY_4148K" ]] && selective_resample_mode="Upsample only 44.1K and 48K source rates"
+[[ "${arr[16]}" = "$SOX_ADHERE_BASE_FREQ" ]] && selective_resample_mode="Resample (adhere to base freq)"
+[[ "${arr[16]}" = "$(($SOX_UPSAMPLE_ALL + $SOX_ADHERE_BASE_FREQ))" ]] && selective_resample_mode="Upsample if source < target rate (adhere to base freq)"
+sox_precision=${arr[17]}
+sox_phase_response=${arr[18]}
+sox_passband_end=${arr[19]}
+sox_stopband_begin=${arr[20]}
+sox_attenuation=${arr[21]}
+sox_flags=${arr[22]}
+max_playlist_length=${arr[23]}
 
 # Spotify settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_spotify")
@@ -478,6 +520,7 @@ dlnaname=${arr[7]}
 [[ "${arr[13]}" = "1" ]] && autoplay="On" || autoplay="Off"
 kernelver=${arr[14]}
 mpdver=${arr[15]}
+patch_id=$(echo $mpdver | awk -F"_p0x" '{print $2}')
 procarch=${arr[16]}
 adevname=${arr[17]}
 clkradio_mode=${arr[18]}

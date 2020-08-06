@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -104,11 +104,8 @@ else {
 		if (in_array($_GET['cmd'], $playqueue_cmds) && $_SESSION['ashuffle'] == '1') {
 			playerSession('write', 'ashuffle', '0');
 			sysCmd('killall -s 9 ashuffle > /dev/null');
-
 			// Turn Consume mode off after playqueue cmd processed
 			$turn_consume_off = true;
-			//sendMpdCmd($sock, 'consume 0');
-			//$resp = readMpdResp($sock);
 		}
 
 		switch ($_GET['cmd']) {
@@ -612,17 +609,7 @@ else {
 			// Toggle auto-shuffle on/off
 			case 'ashuffle':
 				playerSession('write', 'ashuffle', $_GET['ashuffle']);
-
-				// Filter and buffer
-				if (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') {
-					$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue_buffer 1 --file - > /dev/null 2>&1 &';
-				}
-				else {
-					$cmd = '/usr/local/bin/ashuffle --queue_buffer 1 > /dev/null 2>&1 &';
-				}
-
-				$_GET['ashuffle'] == '1' ? sysCmd($cmd) : sysCmd('killall -s 9 ashuffle > /dev/null');
-
+				$_GET['ashuffle'] == '1' ? startAutoShuffle() : stopAutoShuffle();
 				echo json_encode('toggle ashuffle ' . $_GET['ashuffle']);
 				break;
 			case 'thmcachestatus':
