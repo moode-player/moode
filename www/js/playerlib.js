@@ -824,7 +824,7 @@ function renderUI() {
     	}
 
         // Render the playlist
-        console.log('MPD idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
+        //console.log('MPD idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
         if (typeof(MPD.json['idle_timeout_event']) == 'undefined' || MPD.json['idle_timeout_event'] == 'changed: playlist') {
             renderPlaylist();
         }
@@ -1011,16 +1011,6 @@ function renderPlaylist() {
 			lazyLode('playlist');
             lazyLode('cv-playlist');
 		}
-
-        /*// Scroll
-        setTimeout(function() {
-            if ($('#playback-panel').hasClass('active')) {
-                customScroll('pl', parseInt(MPD.json['song']));
-                if ($('#cv-playlist').css('display') == 'block') {
-                    customScroll('pbpl', parseInt(MPD.json['song']));
-                }
-            }
-        }, SCROLLTO_TIMEOUT);*/
     });
 }
 
