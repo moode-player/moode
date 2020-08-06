@@ -824,6 +824,7 @@ function renderUI() {
     	}
 
         // Render the playlist
+        //console.log('MPD idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
         renderPlaylist();
 
     	// Ensure renderer overlays get applied in case MPD UI updates get there first after browser refresh
@@ -877,7 +878,7 @@ function genSearchUrl (artist, title, album) {
 	return '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
 }
 
-function renderPlaylist() {	
+function renderPlaylist() {
 	debugLog('renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
 		var output = '';
@@ -917,7 +918,7 @@ function renderPlaylist() {
 				}
 				// Radio station
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
-					output += option_show_playlistart && (typeof(data[i].Comment) === 'undefined' || data[i].Comment!== 'client=upmpdcli;')  ? '<span class="pl-thumb">'+playlistLazy+'/imagesw/radio-logos/thumbs/' + encodeURIComponent(data[i].Name || data[i].Title) + '.jpg"/></span>' : '';
+					output += option_show_playlistart && (typeof(data[i].Comment) === 'undefined' || data[i].Comment!== 'client=upmpdcli;')  ? '<span class="pl-thumb">'+playlistLazy+'/imagesw/radio-logos/thumbs/' + encodeURIComponent(RADIO.json[data[i].file]['name']) + '.jpg"/></span>' : '';
 	                // Line 1 title
 					// Use custom name for particular station
 	                if (typeof(data[i].Title) === 'undefined' || data[i].Title.trim() == '' || data[i].file == 'http://stream.radioactive.fm:8000/ractive') {
@@ -999,6 +1000,7 @@ function renderPlaylist() {
 
 		if( option_show_playlistart ) {
 			lazyLode('playlist');
+            lazyLode('cv-playlist');
 		}
 
         // Scroll
@@ -3274,6 +3276,10 @@ function lazyLode(view) {
 		 	case 'playlist':
 				selector = 'img.lazy-playlistview';
 				container = '#playlist';
+				break;
+            case 'cv-playlist':
+				selector = 'img.lazy-playlistview';
+				container = '#cv-playlist';
 				break;
  		}
 
