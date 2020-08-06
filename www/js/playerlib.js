@@ -824,11 +824,12 @@ function renderUI() {
     	}
 
         // Render the playlist
-        //console.log('MPD idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
-        renderPlaylist();
+        console.log('MPD idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
+        if (typeof(MPD.json['idle_timeout_event']) == 'undefined' || MPD.json['idle_timeout_event'] == 'changed: playlist') {
+            renderPlaylist();
+        }
 
     	// Ensure renderer overlays get applied in case MPD UI updates get there first after browser refresh
-
         // Input source
     	if (SESSION.json['inpactive'] == '1') {
     		inpSrcIndicator('inpactive1', SESSION.json['audioin'] + ' Input Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="inpsrc-preamp-volume"></span>' +
