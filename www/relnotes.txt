@@ -21,6 +21,7 @@ New features
 - NEW: Custom SoX resampling recipes
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode
+- NEW: Option to display thumbnails in the Playlist
 
 Updates
 
