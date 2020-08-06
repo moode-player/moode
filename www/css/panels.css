@@ -352,6 +352,7 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-meta-summary {margin-left:.5em;line-height:normal;}
 img.lib-coverart {float:left;width:calc(20vw - 1em);box-shadow:0px 0px .2em rgba(0,0,0,0.2);}
 img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
+img.lib-artistart {float:left;width:calc(20vw - 1em);height: calc(20vw - 2em);box-shadow:0px 0px .2em rgba(0,0,0,0.2);position:absolute;opacity:.4}
 .lib-albumname-meta {margin-top:0px;font-weight:700;text-align:center;}
 .lib-artistname-meta {margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-size:calc(0.40em + 1vmin);font-weight:700;text-align:center;cursor:pointer;}
 .lib-albumyear-meta {display:none;font-size:calc(0.40em + 1vmin);font-weight:normal;text-align:center;}
