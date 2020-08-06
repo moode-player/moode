@@ -599,6 +599,7 @@ var renderAlbums = function() {
 	if (filteredAlbums.length == 1) {
 	    $('#albumsList li').addClass('active');
 		LIB.albumClicked = true;
+        UI.libPos[0] = 0;
 	}
 
     // Set ellipsis text
@@ -658,7 +659,7 @@ var renderSongs = function(albumPos) {
                         orderedSongs.push(filteredSongs[j]);
                     }
                 }
-            }            
+            }
         }
         filteredSongs = orderedSongs;
 
