@@ -828,6 +828,14 @@ function renderUI() {
         if (typeof(MPD.json['idle_timeout_event']) == 'undefined' || MPD.json['idle_timeout_event'] == 'changed: playlist') {
             renderPlaylist();
         }
+        setTimeout(function() {
+            if ($('#playback-panel').hasClass('active')) {
+                customScroll('pl', parseInt(MPD.json['song']));
+                if ($('#cv-playlist').css('display') == 'block') {
+                    customScroll('pbpl', parseInt(MPD.json['song']));
+                }
+            }
+        }, SCROLLTO_TIMEOUT);
 
     	// Ensure renderer overlays get applied in case MPD UI updates get there first after browser refresh
         // Input source
@@ -1004,7 +1012,7 @@ function renderPlaylist() {
             lazyLode('cv-playlist');
 		}
 
-        // Scroll
+        /*// Scroll
         setTimeout(function() {
             if ($('#playback-panel').hasClass('active')) {
                 customScroll('pl', parseInt(MPD.json['song']));
@@ -1012,7 +1020,7 @@ function renderPlaylist() {
                     customScroll('pbpl', parseInt(MPD.json['song']));
                 }
             }
-        }, SCROLLTO_TIMEOUT);
+        }, SCROLLTO_TIMEOUT);*/
     });
 }
 
