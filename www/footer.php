@@ -69,7 +69,7 @@
 			</ul>
 			<br>
 			<ul>
-				<li><a href="mpd-config.php" class="btn btn-small row2-btns">MPD options</a></li>
+				<li><a href="mpd-config.php" class="btn btn-small row2-btns">MPD settings</a></li>
 				<li><a href="eqp-config.php" class="btn btn-small row2-btns">Parametric EQ</a></li>
 				<li><a href="eqg-config.php" class="btn btn-small row2-btns">Graphic EQ</a></li>
 				<li class="context-menu"><a href="#notarget" class="btn btn-small row2-btns" data-cmd="setforclockradio-m">Clock radio</a></li>

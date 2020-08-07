@@ -41,33 +41,14 @@
 
         <fieldset>
             <div class="control-group">
-				<legend>Audio device</legend>
-				<label class="control-label" for="device">Audio output</label>
+				<legend>Audio output</legend>
+				<label class="control-label" for="device">Output device</label>
 				<div class="controls">
 	                <select id="device" name="conf[device]" class="input-large">
 						$_mpd_select[device]
 	                </select>
 				</div>
             </div>
-
-            <div class="control-group">
-                <label class="control-label" for="mixer-type">Volume control</label>
-                <div class="controls">
-                    <select id="mixer-type" name="conf[mixer_type]" class="input-large">
-						$_mpd_select[mixer_type]
-                    </select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
-	                    <b>- Disabled (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.<br>
-						<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
-	                    <b>- Software:&nbsp;</b>Use MPD volume controller (32 bit float with dither).
-					</span>
-					<span class="help-block-configs help-block-margin">
-	                    The "Disabled" setting will result in 100% (0dB) volume output<br>
-					</span>
-                </div>
-            </div>
-
 			<div class="control-group">
                 <label class="control-label" for="dsd-usb">DSD over PCM</label>
                 <div class="controls">
@@ -83,7 +64,25 @@
                 </div>
             </div>
 
-			<!-- Sample rate -->
+            <div class="control-group">
+				<legend>Volume mixer</legend>
+                <label class="control-label" for="mixer-type">Mixer type</label>
+                <div class="controls">
+                    <select id="mixer-type" name="conf[mixer_type]" class="input-large">
+						$_mpd_select[mixer_type]
+                    </select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
+						<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
+	                    <b>- Software:&nbsp;</b>Use MPD software volume routine (32 bit float with dither).<br>
+						<b>- Disabled (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.
+					</span>
+					<span class="help-block-configs help-block-margin">
+	                    The "Disabled" setting will result in 100% (0dB) volume output<br>
+					</span>
+                </div>
+            </div>
+
 		    <div class="control-group">
 				<legend>SoX Resampling</legend>
 				<label class="control-label" for="audio-output-format">Sample rate</label>
@@ -93,8 +92,6 @@
                     </select>
                 </div>
 			</div>
-
-			<!-- Selective resample mode -->
 			<div class="$_selective_resampling_hide">
 				<div id="selective_resample" class="hide">
 					<div class="control-group">
@@ -113,8 +110,6 @@
 		            </div>
 				</div>
 			</div>
-
-			<!-- SoX quality -->
             <div class="control-group">
                 <label class="control-label" for="sox_quality">Quality</label>
                 <div class="controls">
@@ -135,7 +130,6 @@
 						</span>
 					</span>
                 </div>
-				<!-- Custom SoX recipe -->
 				<div class="$_sox_custom_recipe_hide">
 					<div id="sox_custom_recipe" class="hide" style="margin-top:.5em;">
 						<label class="control-label" for="sox_precision">Precision</label>
@@ -197,7 +191,6 @@
 					</div>
 				</div>
             </div>
-
             <div class="control-group">
                 <label class="control-label" for="sox-multithreading">Multithreading</label>
                 <div class="controls">
@@ -224,7 +217,6 @@
                    </span>
                 </div>
             </div>
-
 			<div class="control-group">
                 <label class="control-label" for="replaygain-preamp">ReplayGain preamp</label>
                 <div class="controls">
@@ -235,7 +227,6 @@
                     </span>
                 </div>
             </div>
-
 			<div class="control-group">
                 <label class="control-label" for="volume-normalization">Volume normalization</label>
                 <div class="controls">
@@ -261,7 +252,6 @@
                     </span>
                 </div>
 			</div>
-
 			<div class="control-group">
 				<label class="control-label" for="max_output_buffer_size">Output buffer size</label>
                 <div class="controls">
@@ -272,7 +262,6 @@
                     </span>
                 </div>
 			</div>
-
 			<div class="control-group">
 				<label class="control-label" for="max_playlist_length">Max playlist items</label>
                 <div class="controls">
@@ -283,7 +272,6 @@
                     </span>
                 </div>
             </div>
-
 			<div class="control-group">
 				<legend>Other options</legend>
                 <label class="control-label" for="log_level">Log level</label>

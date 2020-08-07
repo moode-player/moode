@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 -->
@@ -506,6 +506,8 @@
 	</div>
 	<div class="modal-body" id="container-appearance">
 		<form class="form-horizontal" action="" method="">
+
+			<!-- THEME & BACKGROUND -->
 			<div class="accordian"><span class="h5">Theme & background</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
    	                <label class="control-label" for="theme-name">Theme</label>
@@ -714,6 +716,34 @@
 				</div>
 			</div>
 
+			<!-- PLAYBACK -->
+			<div class="accordian"><span class="h5">Playback</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
+				<div class="control-group">
+					<label class="control-label" for="playlist-art-enabled">Show playlist thumbs</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="playlist-art-enabled" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-yn"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-yn"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-playlist-art" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-playlist-art" class="help-block hide">
+							Shows thumbnail images for songs and radio stations in the Playlist.
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- LIBRARY -->
 			<div class="accordian"><span class="h5">Library</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
    	                <label class="control-label" for="instant-play-action">Instant play action</label>
@@ -1028,6 +1058,7 @@
 				</div>
 			</div>
 
+			<!-- COVERVIEW -->
 			<div class="accordian"><span class="h5">CoverView</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
    	                <label class="control-label" for="scnsaver-timeout">Automatic display</label>
@@ -1090,6 +1121,7 @@
 				</div>
 			</div>
 
+			<!-- OTHER -->
 			<div class="accordian"><span class="h5">Other</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
    	                <label class="control-label" for="font-size">Font size</label>
@@ -1116,15 +1148,6 @@
 						<span id="info-font-size" class="help-block hide">
 		                    	Set the size of the font used.
 	                    </span>
-	                </div>
-	                <label class="control-label" for="ashuffle-filter">Auto-shuffle filter</label>
-	                <div class="controls">
-	                    <input id="ashuffle-filter" class="input-xlarge input-height-x" type="text">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-ashuffle-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-ashuffle-filter" class="help-block hide">
-							String of TAG VALUE pairs that Auto-shuffle uses to select the tracks being shuffled. Only one occurance of a given TAG is allowed. The filter is case insensitive and it performs a TAG contains VALUE substring match.<br>
-							Example: genre "indie rock" artist coldplay.
-						</span>
 	                </div>
 
    	                <label class="control-label" for="extra-tags">Extra metadata</label>
@@ -1156,7 +1179,8 @@
 						<span id="info-play-history" class="help-block hide">
 	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
 	                    </span>
-	                </div>
+					</div>
+
 				</div>
 			</div>
 		</form>

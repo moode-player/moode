@@ -231,7 +231,7 @@ function integrityCheck() {
 	}
 
 	// Output static tables
-	$result = sysCmd("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT id,name,dacchip,iface,list,driver FROM cfg_audiodev WHERE drvoptions=''\" > /tmp/cfg_audiodev.sql");
+	$result = sysCmd("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT * FROM cfg_audiodev WHERE drvoptions NOT IN ('slave', 'glb_mclk')\" > /tmp/cfg_audiodev.sql");
 
 	// Broom www root
 	sysCmd('find /var/www -type l -delete');
@@ -1476,7 +1476,7 @@ function cfgdb_read($table, $dbh, $param = '', $id = '') {
 	}
 	else if ($table == 'cfg_audiodev') {
 		$filter = $param == 'all' ? ' WHERE list="yes"' : ' WHERE name="' . $param . '" AND list="yes"';
-		$querystr = 'SELECT name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
+		$querystr = 'SELECT name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
 	}
 	else if ($table == 'cfg_theme') {
 		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
@@ -1821,19 +1821,24 @@ function getMixerName($i2sdevice) {
 
 // Get device names assigned to each ALSA card
 function getDeviceNames () {
-	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB audio device
+	// Pi HDMI 1, HDMI 2 or Headphone jack, or a USB audio device
 	if ($_SESSION['i2sdevice'] == 'none') {
-		$pi_device_names = array('b1' => 'Pi HDMI 1', 'b2' => 'Pi HDMI 2', 'Headphones' => 'Pi Headphone jack');
 		for ($i = 0; $i < 4; $i++) {
 			$alsa_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 			$aplay_device_name = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
-			$devices[$i] = $pi_device_names[$alsa_id] != '' ? $pi_device_names[$alsa_id] : $aplay_device_name;
+			$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $alsa_id);
+			if ($result === true) { // Not in table
+				$devices[$i] = $aplay_device_name;
+			}
+			else {
+				$devices[$i] = $result[0]['alt_name'];
+			}
 			//workerLog('card' . $i . ' (' . $devices[$i] . ')');
 		}
 	}
 	// I2S audio device
 	else {
-		$devices[0] = trim(sysCmd("aplay -l | awk -F'[' '/card 0/{print $2}' | cut -d']' -f1")[0]);
+		$devices[0] = $_SESSION['i2sdevice'];
 	}
 
 	return $devices;
@@ -2294,6 +2299,26 @@ function startLcdUpdater() {
 // start gpio button handler
 function startGpioSvc() {
 	sysCmd('/var/www/command/gpio-buttons.py > /dev/null 2&1 &');
+}
+
+// Auto-shuffle random play
+function startAutoShuffle() {
+	$ashuffle_filter = (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') ?
+		'mpc search ' . $_SESSION['ashuffle_filter'] . ' | ' : '';
+	$ashuffle_file = $ashuffle_filter != '' ? '--file -' : '';
+	$ashuffle_mode = $_SESSION['ashuffle_mode'] == 'Album' ? '--group-by album ' : '';
+	$result = sysCmd($ashuffle_filter . '/usr/local/bin/ashuffle --queue-buffer 1 ' . $ashuffle_mode . $ashuffle_file . ' > /dev/null 2>&1 &');
+}
+function stopAutoShuffle() {
+	sysCmd('killall -s 9 ashuffle > /dev/null');
+	playerSession('write', 'ashuffle', '0');
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('stopAutoShuffle(): MPD connect failed');
+		exit(0);
+	}
+	sendMpdCmd($sock, 'consume 0');
+	$resp = readMpdResp($sock);
+	closeMpdSock($sock);
 }
 
 // get upnp coverart url

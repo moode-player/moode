@@ -5,15 +5,14 @@ KERNEL_ARCH=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_
 echo RaspiOS $(cat /etc/debian_version) \| $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\)
 
 echo "
-                          ____     __
-              __ _  ___  / __ \___/ /__
-             /  ' \/ _ \/ /_/ / _  / -_)
-            /_/_/_/\___/\____/\_,_/\__/
+                      ____     __        ____
+          __ _  ___  / __ \___/ /__     /_  /
+         /  ' \/ _ \/ /_/ / _  / -_)     / /
+        /_/_/_/\___/\____/\_,_/\__/     /_/
 
                  moOde audio player
               Release $MOODE_RELEASE
                 (C) 2014 Tim Curtis
-
 
 
 The programs included with moOde are free software; the

@@ -599,6 +599,7 @@ var renderAlbums = function() {
 	if (filteredAlbums.length == 1) {
 	    $('#albumsList li').addClass('active');
 		LIB.albumClicked = true;
+        UI.libPos[0] = 0;
 	}
 
     // Set ellipsis text
@@ -658,7 +659,7 @@ var renderSongs = function(albumPos) {
                         orderedSongs.push(filteredSongs[j]);
                     }
                 }
-            }            
+            }
         }
         filteredSongs = orderedSongs;
 
@@ -760,7 +761,10 @@ var renderSongs = function(albumPos) {
 		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
 
         if (LIB.filters.artists.length > 0) {
-            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-all">' + LIB.filters.artists[0] + '</button>');
+            $('#lib-coverart-img').html(
+                '<img class="lib-artistart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '>' +
+                '<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-all">' +
+                LIB.filters.artists[0] + '</button>');
             artist = '';
         }
         else if (LIB.filters.genres.length > 0) {

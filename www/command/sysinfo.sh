@@ -85,26 +85,21 @@ AUDIO_PARAMETERS() {
 	RATE="$(cat /proc/asound/card0/pcm0p/sub0/hw_params | grep -w rate | cut -f 2 -d " ")"
 	[[ "$BITS" = "" ]] && OUTSTREAM="Closed" || OUTSTREAM="$BITS / $RATE"
 
-	if [[ $i2sdevice = "none" ]]; then
-		[[ $device = "0" ]] && audiodevname="On-board audio device" || audiodevname="USB audio device"
+	RESULT=$(sqlite3 $SQLDB "select iface from cfg_audiodev where name='$adevname' or alt_name='$adevname'")
+	if [[ $RESULT = "" ]]; then
+		iface="USB"
 	else
-		audiodevname=$adevname
+		iface=$RESULT
 	fi
 
-	if [[ $i2sdevice = "none" ]]; then
-		[[ $device = "1" ]] && iface="USB" || iface="SoC"
-	else
-		iface="I2S"
-	fi
-
-	[[ $alsavolume = "none" ]] && hwvol="None" || hwvol="Controller detected"
+	[[ $alsavolume = "none" ]] && hwvol="No" || hwvol="Yes"
 	[[ "$amixname" = "" ]] && volmixer="None" || volmixer=$amixname
 
 	echo -e "A U D I O   P A R A M E T E R S"
-	echo -e "\nAudio device\t\t= $audiodevname\c"
+	echo -e "\nAudio device\t\t= $adevname\c"
 	echo -e "\nInterface\t\t= $iface\c"
 	echo -e "\nMixer name\t\t= $volmixer\c"
-	echo -e "\nHardware volume\t\t= $hwvol\c"
+	echo -e "\nHardware mixer\t\t= $hwvol\c"
 	echo -e "\nMax ALSA volume\t\t= $alsavolume_max\c"
 	echo -e "\nMax MPD volume\t\t= $volume_mpd_max\c"
 	echo -e "\nVolume step limit\t= $volume_step_limit\c"
@@ -203,7 +198,7 @@ APPEARANCE_SETTINGS() {
 MPD_SETTINGS() {
 	echo -e "M P D   S E T T I N G S"
 	echo -e "\nVersion\t\t\t= $mpdver\c"
-	echo -e "\nVolume control\t\t= $mixer_type\c"
+	echo -e "\nVolume mixer\t\t= $mixer_type\c"
 	echo -e "\nALSA device\t\t= hw:$device\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
 	if [ $(($patch_id & $PATCH_SELECTIVE_RESAMPLING)) -ne 0 ]; then
@@ -464,8 +459,8 @@ sox_quality=${arr[4]}
 replaygain=${arr[6]}
 replaygain_preamp=${arr[7]}
 volume_normalization=${arr[8]}
-audio_buffer_size=${arr[9]}
-max_output_buffer_size=${arr[10]}
+audio_buffer_size=$((${arr[9]}/1024))
+max_output_buffer_size=$((${arr[10]}/1024))
 auto_resample=${arr[11]}
 auto_channels=${arr[12]}
 auto_format=${arr[13]}
