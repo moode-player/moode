@@ -41,33 +41,14 @@
 
         <fieldset>
             <div class="control-group">
-				<legend>Audio device</legend>
-				<label class="control-label" for="device">Audio output</label>
+				<legend>Audio output</legend>
+				<label class="control-label" for="device">Output device</label>
 				<div class="controls">
 	                <select id="device" name="conf[device]" class="input-large">
 						$_mpd_select[device]
 	                </select>
 				</div>
             </div>
-
-            <div class="control-group">
-                <label class="control-label" for="mixer-type">Volume control</label>
-                <div class="controls">
-                    <select id="mixer-type" name="conf[mixer_type]" class="input-large">
-						$_mpd_select[mixer_type]
-                    </select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
-	                    <b>- Disabled (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.<br>
-						<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
-	                    <b>- Software:&nbsp;</b>Use MPD volume controller (32 bit float with dither).
-					</span>
-					<span class="help-block-configs help-block-margin">
-	                    The "Disabled" setting will result in 100% (0dB) volume output<br>
-					</span>
-                </div>
-            </div>
-
 			<div class="control-group">
                 <label class="control-label" for="dsd-usb">DSD over PCM</label>
                 <div class="controls">
@@ -83,7 +64,25 @@
                 </div>
             </div>
 
-			<!-- Sample rate -->
+            <div class="control-group">
+				<legend>Volume mixer</legend>
+                <label class="control-label" for="mixer-type">Mixer type</label>
+                <div class="controls">
+                    <select id="mixer-type" name="conf[mixer_type]" class="input-large">
+						$_mpd_select[mixer_type]
+                    </select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
+						<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
+	                    <b>- Software:&nbsp;</b>Use MPD software volume routine (32 bit float with dither).<br>
+						<b>- Disabled (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.
+					</span>
+					<span class="help-block-configs help-block-margin">
+	                    The "Disabled" setting will result in 100% (0dB) volume output<br>
+					</span>
+                </div>
+            </div>
+
 		    <div class="control-group">
 				<legend>SoX Resampling</legend>
 				<label class="control-label" for="audio-output-format">Sample rate</label>
@@ -93,26 +92,24 @@
                     </select>
                 </div>
 			</div>
-
-			<!-- Selective resample mode -->
-			<div id="selective_resample" class="hide">
-				<div class="control-group">
-	                <label class="control-label" for="selective_resample_mode">Selective resampling</label>
-	                <div class="controls">
-	                    <select id="selective_resample_mode" name="conf[selective_resample_mode]" class="input-large">
-							$_mpd_select[selective_resample_mode]
-	                    </select>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_selective_resample_mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_selective_resample_mode" class="help-block-configs help-block-margin hide" style="color:#eee">
-							These charts show the effect of selective resampling modes for the example target rates.
-							<img src="images/Selective resampling chart 1.jpg" alt="Selective resampling chart 1"><br><br>
-							<img src="images/Selective resampling chart 2.jpg" alt="Selective resampling chart 2"><br><br>
-						</span>
-	                </div>
-	            </div>
+			<div class="$_selective_resampling_hide">
+				<div id="selective_resample" class="hide">
+					<div class="control-group">
+		                <label class="control-label" for="selective_resample_mode">Selective resampling</label>
+		                <div class="controls">
+		                    <select id="selective_resample_mode" name="conf[selective_resample_mode]" class="input-large">
+								$_mpd_select[selective_resample_mode]
+		                    </select>
+							<a aria-label="Help" class="info-toggle" data-cmd="info_selective_resample_mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info_selective_resample_mode" class="help-block-configs help-block-margin hide" style="color:#eee">
+								These charts show the effect of selective resampling modes for the example target rates.
+								<img src="images/Selective resampling chart 1.jpg" alt="Selective resampling chart 1"><br><br>
+								<img src="images/Selective resampling chart 2.jpg" alt="Selective resampling chart 2"><br><br>
+							</span>
+		                </div>
+		            </div>
+				</div>
 			</div>
-
-			<!-- SoX quality -->
             <div class="control-group">
                 <label class="control-label" for="sox_quality">Quality</label>
                 <div class="controls">
@@ -121,73 +118,79 @@
                     </select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_sox_quality" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_sox_quality" class="help-block-configs help-block-margin hide">
-						<b>Very High Quality:&nbsp;</b>95% bandwidth, 175dB noise rejection, linear phase<br>
-						<b>High Quality:&nbsp;</b>95% bandwidth, 120dB noise rejection, linear phase<br>
-						<b>Medium Quality:&nbsp;</b>95% bandwidth, 100dB noise rejection, linear phase<br>
-						<b>Custom recipe:&nbsp;</b>Set individual parameters<br>
+						<b>Very high:</b><br>
+						Precision 28, Phase response 50 (Minimum phase), Passband end 91%, Stopband begin 100%, Attenuation 0dB<br>
+						<b>High (Default):</b><br>
+						Precision 20, Phase response 50 (Minimum phase), Passband end 91%, Stopband_begin 100%, Attenuation 0dB<br>
+						<b>Medium:</b><br>
+						Precision 16, Phase response 50 (Minimum phase), Passband end 92%, Stopband begin 100%, Attenuation 0dB<br>
+						<span class="$_sox_custom_recipe_hide">
+							<b>Custom recipe</b><br>
+							Set individual parameters<br>
+						</span>
 					</span>
                 </div>
-				<!-- Custom SoX recipe -->
-				<div id="sox_custom_recipe" class="hide">
-					<label class="control-label" for="sox_precision">Precision</label>
-	                <div class="controls">
-	                    <select id="sox_precision" name="conf[sox_precision]" class="input-large">
-							$_mpd_select[sox_precision]
-	                    </select>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_sox_precision" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_sox_precision" class="help-block-configs help-block-margin2 hide">
-							Number of bits used 16|20|24|28|32. Default is 20 which corresponds to the "High quality" quality setting.
-						</span>
+				<div class="$_sox_custom_recipe_hide">
+					<div id="sox_custom_recipe" class="hide" style="margin-top:.5em;">
+						<label class="control-label" for="sox_precision">Precision</label>
+		                <div class="controls">
+		                    <select id="sox_precision" name="conf[sox_precision]" class="input-large">
+								$_mpd_select[sox_precision]
+		                    </select>
+							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_precision" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info_sox_precision" class="help-block-configs help-block-margin2 hide">
+								Number of bits used 16|20|24|28|32. Default is 20 which corresponds to the "High quality" quality setting.
+							</span>
+						</div>
+		                <label class="control-label" for="sox_phase_response">Phase response</label>
+		                <div class="controls">
+		                    <input class="input-large" type="number" id="sox_phase_response" name="conf[sox_phase_response]" value="$_mpd_select[sox_phase_response]" min="0" max="50">
+							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_phase_response" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info_sox_phase_response" class="help-block-configs help-block-margin2 hide">
+								Range is 0 (Linear phase) to 50 (Minimum phase). Default is 50.
+		                    </span>
+		                </div>
+		                <label class="control-label" for="sox_passband_end">Passband end</label>
+		                <div class="controls">
+		                    <input class="input-large" type="number" id="sox_passband_end" name="conf[sox_passband_end]" value="$_mpd_select[sox_passband_end]" min="80" max="100" step="0.1">&nbsp;%
+							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_passband_end" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info_sox_passband_end" class="help-block-configs help-block-margin2 hide">
+								Original bandwidth of source used (80 to 100%). Default is 95%.
+		                    </span>
+		                </div>
+		                <label class="control-label" for="sox_stopband_begin">Stopband begin</label>
+		                <div class="controls">
+		                    <input class="input-large" type="number" id="sox_stopband_begin" name="conf[sox_stopband_begin]" value="$_mpd_select[sox_stopband_begin]" min="100" max="200" step="0.1">&nbsp;%
+							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_stopband_begin" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info_sox_stopband_begin" class="help-block-configs help-block-margin2 hide">
+								A percentage >= 100. Default is 100%.
+		                    </span>
+		                </div>
+		                <label class="control-label" for="sox_attenuation">Attenuation</label>
+		                <div class="controls">
+		                    <input class="input-large" type="number" id="sox_attenuation" name="conf[sox_attenuation]" value="$_mpd_select[sox_attenuation]" min="0" max="24" step="0.1">&nbsp;dB
+							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_attenuation" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info_sox_attenuation" class="help-block-configs help-block-margin2 hide">
+								Reduce the amplitude of the source to prevent clipping. Range is 0 to 24dB. Default is 0dB.
+		                    </span>
+		                </div>
+		                <label class="control-label" for="sox_flags">Flags</label>
+		                <div class="controls">
+							<input class="input-large" type="number" id="sox_flags" name="conf[sox_flags]" value="$_mpd_select[sox_flags]">
+							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_flags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info_sox_flags" class="help-block-configs help-block-margin2 hide">
+								Bit mask for setting special SoX options.<br>
+								00 ROLLOFF_SMALL 0.01 dB<br>
+								01 ROLLOFF_MEDIUM 0.35 dB<br>
+								02 ROLLOFF_NONE For Chebyshev bandwidth.<br>
+								08 HI_PREC_CLOCK Increase "irrational" ratio accuracy.<br>
+								16 DOUBLE_PRECISION Use DP calcs even if precision <= 20<br>
+								32 SOXR_VR Variable-rate resampling.
+		                    </span>
+		                </div>
 					</div>
-	                <label class="control-label" for="sox_phase_response">Phase response</label>
-	                <div class="controls">
-	                    <input class="input-large" type="number" id="sox_phase_response" name="conf[sox_phase_response]" value="$_mpd_select[sox_phase_response]" min="0" max="50">
-						<a aria-label="Help" class="info-toggle" data-cmd="info_sox_phase_response" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_sox_phase_response" class="help-block-configs help-block-margin2 hide">
-							Range is 0 (Linear phase) to 50 (Minum phase). Default is 0.
-	                    </span>
-	                </div>
-	                <label class="control-label" for="sox_passband_end">Passband end</label>
-	                <div class="controls">
-	                    <input class="input-large" type="number" id="sox_passband_end" name="conf[sox_passband_end]" value="$_mpd_select[sox_passband_end]" min="80" max="100" step="0.1">&nbsp;%
-						<a aria-label="Help" class="info-toggle" data-cmd="info_sox_passband_end" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_sox_passband_end" class="help-block-configs help-block-margin2 hide">
-							Original bandwidth of source used (80 to 100%). Deafault is 95%.
-	                    </span>
-	                </div>
-	                <label class="control-label" for="sox_stopband_begin">Stopband begin</label>
-	                <div class="controls">
-	                    <input class="input-large" type="number" id="sox_stopband_begin" name="conf[sox_stopband_begin]" value="$_mpd_select[sox_stopband_begin]" min="100" max="200" step="0.1">&nbsp;%
-						<a aria-label="Help" class="info-toggle" data-cmd="info_sox_stopband_begin" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_sox_stopband_begin" class="help-block-configs help-block-margin2 hide">
-							A percentage >= 100. Default is 100%.
-	                    </span>
-	                </div>
-	                <label class="control-label" for="sox_attenuation">Attenuation</label>
-	                <div class="controls">
-	                    <input class="input-large" type="number" id="sox_attenuation" name="conf[sox_attenuation]" value="$_mpd_select[sox_attenuation]" min="0" max="24" step="0.1">&nbsp;dB
-						<a aria-label="Help" class="info-toggle" data-cmd="info_sox_attenuation" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_sox_attenuation" class="help-block-configs help-block-margin2 hide">
-							Reduce the amplitude of the source to prevent clipping. Range is 0 to 24dB. Default is 0dB.
-	                    </span>
-	                </div>
-	                <label class="control-label" for="sox_flags">Flags</label>
-	                <div class="controls">
-						<input class="input-large" type="number" id="sox_flags" name="conf[sox_flags]" value="$_mpd_select[sox_flags]">
-						<a aria-label="Help" class="info-toggle" data-cmd="info_sox_flags" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_sox_flags" class="help-block-configs help-block-margin2 hide">
-							Bit mask for setting special SoX options.<br>
-							00 ROLLOFF_SMALL 0.01 dB<br>
-							01 ROLLOFF_MEDIUM 0.35 dB<br>
-							02 ROLLOFF_NONE For Chebyshev bandwidth.<br>
-							08 HI_PREC_CLOCK Increase "irrational" ratio accuracy.<br>
-							16 DOUBLE_PRECISION Use DP calcs even if precision <= 20<br>
-							32 SOXR_VR Variable-rate resampling.
-	                    </span>
-	                </div>
 				</div>
             </div>
-
             <div class="control-group">
                 <label class="control-label" for="sox-multithreading">Multithreading</label>
                 <div class="controls">
@@ -214,7 +217,6 @@
                    </span>
                 </div>
             </div>
-
 			<div class="control-group">
                 <label class="control-label" for="replaygain-preamp">ReplayGain preamp</label>
                 <div class="controls">
@@ -225,7 +227,6 @@
                     </span>
                 </div>
             </div>
-
 			<div class="control-group">
                 <label class="control-label" for="volume-normalization">Volume normalization</label>
                 <div class="controls">
@@ -247,22 +248,20 @@
                     <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4" max="64">&nbsp;MB
 					<a aria-label="Help" class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
-                    	Range is 4 to 64MB. Default size is 4MB.
+                    	Buffer for audio samples. Range is 4 to 64MB. Default size is 4MB.
                     </span>
                 </div>
 			</div>
-
 			<div class="control-group">
-				<label class="control-label" for="max_output_buffer_size">Max output buffer size</label>
+				<label class="control-label" for="max_output_buffer_size">Output buffer size</label>
                 <div class="controls">
                     <input class="input-large" type="number" id="max_output_buffer_size" name="conf[max_output_buffer_size]" value="$_mpd_select[max_output_buffer_size]" min="8" max="512">&nbsp;MB
 					<a aria-label="Help" class="info-toggle" data-cmd="info_max_output_buffer_size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_max_output_buffer_size" class="help-block-configs help-block-margin hide">
-                    	Range is 8 to 512MB. Default is 128MB.
+                    	Buffer for command output. Range is 8 to 512MB. Default is 128MB.
                     </span>
                 </div>
 			</div>
-
 			<div class="control-group">
 				<label class="control-label" for="max_playlist_length">Max playlist items</label>
                 <div class="controls">
@@ -273,7 +272,6 @@
                     </span>
                 </div>
             </div>
-
 			<div class="control-group">
 				<legend>Other options</legend>
                 <label class="control-label" for="log_level">Log level</label>

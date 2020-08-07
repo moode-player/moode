@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-07-19 TC moOde 6.7.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 body {background-color:var(--themebg);}
@@ -35,7 +35,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .viewswitch-cfgs .active a {color:inherit;}
 #config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
-.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;}
+.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.25em;font-style:italic;color: #888;}
 .legend-configs {border:none;margin-bottom:.35em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* general */

@@ -1,0 +1,21 @@
+////////////////////////////////////////////
+
+# Build meson, install ninja
+
+////////////////////////////////////////////
+
+# meson
+sudo apt-get -y install python3-setuptools
+sudo ./dev.sh mount-moode
+sudo cp /mnt/moode-player/GitHub/moode/other/meson-ninja/meson-0.55.0.tar.gz ./
+sudo tar xfz meson-0.55.0.tar.gz
+cd meson-0.55.0
+sudo python3 setup.py install
+cd ~
+sudo rm -rf meson-0.55.0*
+
+# ninja
+sudo apt-get -y install ninja-build
+
+# List compile options ??
+sudo meson configure output/release

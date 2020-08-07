@@ -199,21 +199,21 @@ else {
 // DSP
 //
 
-// Volume control
+// Volume mixer
 if ($_SESSION['mpdmixer'] == 'hardware') {
-	$volume_ctl = 'Hardware (on-chip volume controller)';
+	$volume_mixer = 'Hardware (On-chip)';
 }
 elseif ($_SESSION['mpdmixer'] == 'software') {
-	$volume_ctl = 'Software (MPD 32-bit float with dither)';
+	$volume_mixer = 'Software (MPD)';
 }
 else {
-	$volume_ctl = 'Disabled (100% volume is output by MPD)';
+	$volume_mixer = 'Disabled (0dB output)';
 }
 
 // Renderers
 if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $_SESSION['inpactive'] == '1' || $btactive === true) {
-	$resampler_format = '';
-	$resampler_quality = 'n/a';
+	$resample_rate = '';
+	$resample_quality = 'n/a';
 	$polarity_inv = 'n/a';
 	$crossfade = 'n/a';
 	$crossfeed = 'n/a';
@@ -233,12 +233,39 @@ if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSI
 else {
 	// Resampling
 	if ($cfg_mpd['audio_output_format'] == 'disabled') {
-		$resampler_format = '';
-		$resampler_quality = 'off';
+		$resample_rate = 'off';
+		$selective_resample = 'off';
+		$resample_quality = 'off';
 	}
 	else {
-		$resampler_format = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
-		$resampler_quality = ' (SoX ' . $cfg_mpd['sox_quality'] . ' quality)';
+		$resample_rate = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
+		$patch_id = explode('_p0x', $_SESSION['mpdver'])[1];
+		$resample_modes = array('0' => 'disabled',
+			SOX_UPSAMPLE_ALL => 'Upsample if source < target rate',
+			SOX_UPSAMPLE_ONLY_41K => 'Upsample only 44.1K source rate',
+			SOX_UPSAMPLE_ONLY_4148K => 'Upsample only 44.1K and 48K source rates',
+			SOX_ADHERE_BASE_FREQ => 'Resample (adhere to base freq)',
+			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'Upsample if source < target rate (adhere to base freq)'
+		);
+		if ($patch_id & PATCH_SELECTIVE_RESAMPLING) {
+			$_selective_resampling_hide = '';
+			$selective_resample = $resample_modes[$cfg_mpd['selective_resample_mode']];
+		}
+		else {
+			$_selective_resampling_hide = 'hide';
+		}
+		$resample_quality = $cfg_mpd['sox_quality'];
+		if ($patch_id & PATCH_SOX_CUSTOM_RECIPE) {
+			if ($cfg_mpd['sox_quality'] == 'custom') {
+				$resample_quality .= ' [' .
+				'p=' . $cfg_mpd['sox_precision'] .
+				' | r=' . $cfg_mpd['sox_phase_response'] .
+				' | e=' . $cfg_mpd['sox_passband_end'] .
+				' | b=' . $cfg_mpd['sox_stopband_begin'] .
+				' | a=' . $cfg_mpd['sox_attenuation'] .
+				' | f=' . $cfg_mpd['sox_flags'] . ']';
+			}
+		}
 	}
 	// Polarity inversion
 	$polarity_inv = $_SESSION['invert_polarity'] == '0' ? 'off' : 'on';
@@ -317,15 +344,15 @@ else {
 // AUDIO DEVICE
 //
 
-$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['adevname']);
-// Not in table implies USB audio device
-if ($result === true) {
-	$devname = 'USB audio device (' . $_SESSION['adevname'] . ')';
-	$dacchip = '';
+$result = sdbquery("select * from cfg_audiodev where name='" . $_SESSION['adevname'] . "' or alt_name='" . $_SESSION['adevname'] . "'", $dbh);
+if ($result === true) { // Not in table
+	$devname = $_SESSION['adevname'];
+	$_chip_hide = 'hide';
 	$iface = 'USB';
 }
 else {
 	$devname = $_SESSION['adevname'];
+	$_chip_hide = '';
 	$dacchip = $result[0]['dacchip'];
 	$iface = $result[0]['iface'];
 }

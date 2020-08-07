@@ -51,20 +51,16 @@
 		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
 			<col span="1" style="width:8.5em;">
 			<tr>
-				<td style="text-align:right;">Volume ctl:&nbsp;</td>
-				<td style="text-align:left;">$volume_ctl</td>
+				<td style="text-align:right;">Resample rate:&nbsp;</td>
+				<td style="text-align:left;">$resample_rate</td>
 			</tr>
-			<tr>
-				<td style="text-align:right;">Resampling:&nbsp;</td>
-				<td style="text-align:left;">$resampler_format$resampler_quality</td>
-			</tr>
-			<tr>
+			<tr class="$_selective_resampling_hide">
 				<td style="text-align:right;">Selective rate:&nbsp;</td>
 				<td style="text-align:left;">$selective_resample</td>
 			</tr>
 			<tr>
-				<td style="text-align:right;">Custiom recipe:&nbsp;</td>
-				<td style="text-align:left;">$custom_recipe</td>
+				<td style="text-align:right;">Rsample quality:&nbsp;</td>
+				<td style="text-align:left;">$resample_quality</td>
 			</tr>
 			<tr>
 				<td style="text-align:right;">Polarity inv:&nbsp;</td>
@@ -98,6 +94,10 @@
 				<td style="text-align:right;">Chip options:&nbsp;</td>
 				<td style="text-align:left;">$chip_options</td>
 			</tr>
+			<tr>
+				<td style="text-align:right;">Volume mixer:&nbsp;</td>
+				<td style="text-align:left;">$volume_mixer</td>
+			</tr>
 		</table>
 
 		<strong>Audio Device</strong>
@@ -111,7 +111,7 @@
 				<td style="text-align:right;">Mixer name:&nbsp;</td>
 				<td style="text-align:left;">$mixer_name</td>
 			</tr>
-			<tr>
+			<tr class="$_chip_hide">
 				<td style="text-align:right;">Chip:&nbsp;</td>
 				<td style="text-align:left;">$dacchip</td>
 			</tr>
