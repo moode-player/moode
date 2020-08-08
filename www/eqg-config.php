@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -108,7 +108,7 @@ if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
 // set control states
 $_disable_play = $_SESSION['alsaequal'] == 'Off' ? 'disabled' : '';
 $_disable_rm = $_selected_curve == 'Flat' ? 'disabled' : '';
-$_disable_rm_msg = $_selected_curve == 'Flat' ? 'Flat curve cannot be removed' : '';
+$_disable_rm_msg = $_selected_curve == 'Flat' ? 'The Flat curve cannot be removed' : '';
 
 // load curve values
 $result = sdbquery("SELECT * FROM cfg_eqalsa WHERE curve_name='" . $_search_curve . "'", $dbh);
