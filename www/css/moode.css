@@ -215,6 +215,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.5rem;width:3.1rem;}
+	.playlist .pl-thumb, .cv-playlist .pl-thumb {display:none;}
 }
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {

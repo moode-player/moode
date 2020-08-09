@@ -118,7 +118,8 @@ var GLOBAL = {
     mpdMaxVolume: 0,
     lastTimeCount: 0,
     editStationId: '',
-    nativeLazyLoad: false
+    nativeLazyLoad: false,
+    playlistChanged: false
 };
 
 // live timeline
@@ -825,7 +826,16 @@ function renderUI() {
 
         // Render the playlist
         //console.log('ID ' + MPD.json['playlist'], MPD.json['idle_timeout_event'], MPD.json['state']);
-        renderPlaylist();
+        // Page load/reload, playlist changed (items added/removed)
+        if (typeof(MPD.json['idle_timeout_event']) == 'undefined' ||
+            MPD.json['idle_timeout_event'] == 'changed: playlist' ||
+            GLOBAL.playlistChanged == true) {
+            renderPlaylist();
+        }
+        //
+        else {
+            updateActivePlItem();
+        }
 
     	// Ensure renderer overlays get applied in case MPD UI updates get there first after browser refresh
         // Input source
@@ -877,9 +887,57 @@ function genSearchUrl (artist, title, album) {
 	return '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
 }
 
+// Update active Playlist item
+function updateActivePlItem() {
+	debugLog('updatePlaylist()');
+    $.getJSON('command/moode.php?cmd=playlist', function(data) {
+        if (data) {
+            for (i = 0; i < data.length; i++) {
+                // Current song
+	            if (i == parseInt(MPD.json['song'])) {
+                    // Radio station
+    				if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
+    	                // Line 1 title
+    					// Csustom title for particular station
+    	                if (typeof(data[i].Title) === 'undefined' || data[i].Title.trim() == '' || data[i].file == 'http://stream.radioactive.fm') {
+    						$('#pl-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html('Streaming source');
+    					}
+                        // Standard title
+    					else {
+                            $('#pl-' + (parseInt(MPD.json['song']) + 1).toString() + ' .pll1').html(data[i].Title);
+    						if (i == parseInt(MPD.json['song'])) { // active
+    							// Update in case MPD did not get Title tag at initial play
+    							if (data[i].Title.substr(0, 4) === 'http' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
+    								$('#currentsong').html(data[i].Title);
+    							}
+    							// Add search url, see corresponding code in renderUI()
+    							else {
+    								$('#currentsong').html(genSearchUrl(data[i].Artist, data[i].Title, data[i].Album));
+    							}
+    							$('#ss-currentsong, #playbar-currentsong').html(data[i].Title);
+    						}
+    					}
+                    }
+                }
+            } // End loop
+        }
+    });
+
+    setTimeout(function() {
+        if ($('#playback-panel').hasClass('active')) {
+            customScroll('pl', parseInt(MPD.json['song']));
+            if ($('#cv-playlist').css('display') == 'block') {
+                customScroll('pbpl', parseInt(MPD.json['song']));
+            }
+        }
+    }, SCROLLTO_TIMEOUT);
+}
+
+// Render the Playlist
 function renderPlaylist() {
 	debugLog('renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
+
 		var output = '';
 
 		if (GLOBAL.nativeLazyLoad) {
@@ -892,6 +950,7 @@ function renderPlaylist() {
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
 		var option_show_playlistart = SESSION.json['playlist_art'] == 'Yes';
+
 		// Format playlist items
         if (data) {
             for (i = 0; i < data.length; i++) {
@@ -919,11 +978,12 @@ function renderPlaylist() {
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
 					output += option_show_playlistart && (typeof(data[i].Comment) === 'undefined' || data[i].Comment!== 'client=upmpdcli;')  ? '<span class="pl-thumb">'+playlistLazy+'/imagesw/radio-logos/thumbs/' + encodeURIComponent(RADIO.json[data[i].file]['name']) + '.jpg"/></span>' : '';
 	                // Line 1 title
-					// Use custom name for particular station
-	                if (typeof(data[i].Title) === 'undefined' || data[i].Title.trim() == '' || data[i].file == 'http://stream.radioactive.fm:8000/ractive') {
-						output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
+					// Custom name for particular station
+	                if (typeof(data[i].Title) === 'undefined' || data[i].Title.trim() == '' || data[i].file == 'http://stream.radioactive.fm') {
+						output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlis2qesfct-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 						output += '<span class="pll1">Streaming source</span>';
 					}
+                    // Standard title
 					else {
 						output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 						output += '<span class="pll1">' + data[i].Title + '</span>';
@@ -1010,6 +1070,9 @@ function renderPlaylist() {
                 }
             }
         }, SCROLLTO_TIMEOUT);
+
+        // Reset
+        GLOBAL.playlistChanged = false;
     });
 }
 
@@ -1020,6 +1083,7 @@ function mpdDbCmd(cmd, path) {
 	UI.dbCmd = cmd;
 
 	if (cmds.indexOf(cmd) != -1 ) {
+        GLOBAL.playlistChanged = true;
 		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(path) {}, 'json');
 	}
 	else if (cmd == 'lsinfo' || cmd == 'listsavedpl') {
