@@ -30,6 +30,7 @@ Updates
 - UPD: Bump to squeezelite 1.9.7-1270
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
+- UPD: Improve logging for Library update process
 
 Bug fixes
 

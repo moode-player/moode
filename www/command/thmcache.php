@@ -107,7 +107,7 @@ while ($line) {
 
 	if ($dir_a != $dir_b) {
 		session_start();
-		$_SESSION['thmcache_status'] = 'Processing album ' . ++$count . ' ' . $dir_a;
+		$_SESSION['thmcache_status'] = 'Scanning folder ' . ++$count . ' ' . $dir_a;
 		session_write_close();
 
 		if (!file_exists(THMCACHE_DIR . md5($dir_a) . '.jpg')) {
@@ -117,9 +117,9 @@ while ($line) {
 }
 
 session_start();
-$_SESSION['thmcache_status'] = 'Done: '  . $count . ' album folders processed';
+$_SESSION['thmcache_status'] = 'Done: '  . $count . ' album folders scanned for images';
 session_write_close();
-workerLog('thmcache: Done: ' . $count . ' album dirs processed');
+workerLog('thmcache: Done: ' . $count . ' album folders scanned for images');
 
 // Create thumbnail image
 function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {

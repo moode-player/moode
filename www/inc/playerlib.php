@@ -201,8 +201,13 @@ function chainMpdCmdsDelay($sock, $cmds, $delay) {
 function getMpdStatus($sock) {
 	sendMpdCmd($sock, 'status');
 	$status = readMpdResp($sock);
-
 	return $status;
+}
+
+function getMpdStats($sock) {
+	sendMpdCmd($sock, 'stats');
+	$stats = readMpdResp($sock);
+	return $stats;
 }
 
 // miscellaneous core functions

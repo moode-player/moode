@@ -1246,11 +1246,13 @@ function chkLibraryUpdate() {
 	//workerLog('chkLibraryUpdate');
 	$sock = openMpdSock('localhost', 6600);
 	$status = parseStatus(getMpdStatus($sock));
+	$stats = parseDelimFile(getMpdStats($sock), ': ');
 	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
 		sendEngCmd('libupd_done');
 		$GLOBALS['check_library_update'] = '0';
+		workerLog('mpdindex: Done: indexed ' . $stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs');
 		workerLog('worker: Job update_library done');
 	}
 }
@@ -1292,6 +1294,9 @@ function runQueuedJob() {
 	// No need to log screen saver resets
 	if ($_SESSION['w_queue'] != 'resetscnsaver') {
 		workerLog('worker: Job ' . $_SESSION['w_queue']);
+		if ($_SESSION['w_queue'] == 'update_library') {
+			workerLog('mpdindex: Start');
+		}
 	}
 
 	switch ($_SESSION['w_queue']) {
@@ -1311,11 +1316,10 @@ function runQueuedJob() {
 			sendMpdCmd($sock, $cmd);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-			// Launch thumbcache updater
+			// Start thumbcache updater
 			$result = sysCmd('pgrep -l thmcache.php');
 			if (strpos($result[0], 'thmcache.php') === false) {
 				sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
-				//workerLog('update_library, thmcache.php launched');
 			}
 			$GLOBALS['check_library_update'] = '1';
 			break;
