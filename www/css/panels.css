@@ -218,7 +218,8 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #library-panel.limited .lib-entry, #library-panel.limited .lib-entry span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
-.thcolor {color:var(--accentxts);}
+.playlist .active .pl-thumb, .cv-playlist .active .pl-thumb {border-top: 1px solid var(--accentxts);}
+/*.thcolor {color:var(--accentxts);} DELETE*/
 .playlist .pll1, .cv-playlist .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .playlist .pl-entry, .cv-playlist .pl-entry {padding:0px;}
 .playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.2rem; margin-left: 1vmin; margin-right: 1vmin;filter:brightness(80%)}
