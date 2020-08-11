@@ -436,8 +436,6 @@ function genLibrary($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		//$ext = getFileExt($flatData['file']);
-
 		$songData = array(
 			'file' => $flatData['file'],
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
@@ -452,8 +450,6 @@ function genLibrary($flat) {
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified'],
-			//'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? getEncodedAt($flatData, 'default', false) :
-			//	getEncodedAt($flatData, 'default', true))
 			'encoded_at' => getEncodedAt($flatData, 'default', true)
 		);
 
@@ -522,8 +518,6 @@ function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		//$ext = getFileExt($flatData['file']);
-
 		$songData = array(
 			'file' => utf8rep($flatData['file']),
 			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')),
@@ -538,10 +532,7 @@ function genLibraryUTF8Rep($flat) {
 			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified'],
-			//'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? utf8rep(getEncodedAt($flatData, 'default', false)) :
-			//	utf8rep(getEncodedAt($flatData, 'default', true)))
 			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true))
-
 		);
 
 		array_push($lib, $songData);
