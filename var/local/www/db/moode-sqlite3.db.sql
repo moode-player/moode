@@ -1,37 +1,73 @@
 --
--- File generated with SQLiteStudio v3.0.0 on Sat Aug 8 08:28:26 2020
+-- File generated with SQLiteStudio v3.0.0 on Tue Aug 11 21:21:26 2020
 --
 -- Text encoding used: UTF-8
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
--- Table: cfg_gpio
-CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32))
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
+-- Table: cfg_mpd
+CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
+INSERT INTO cfg_mpd (id, param, value) VALUES (1, 'music_directory', '/var/lib/mpd/music');
+INSERT INTO cfg_mpd (id, param, value) VALUES (2, 'playlist_directory', '/var/lib/mpd/playlists');
+INSERT INTO cfg_mpd (id, param, value) VALUES (3, 'db_file', '/var/lib/mpd/database');
+INSERT INTO cfg_mpd (id, param, value) VALUES (4, 'log_file', '/var/log/mpd/log');
+INSERT INTO cfg_mpd (id, param, value) VALUES (5, 'pid_file', '/var/run/mpd/pid');
+INSERT INTO cfg_mpd (id, param, value) VALUES (6, 'state_file', '/var/lib/mpd/state');
+INSERT INTO cfg_mpd (id, param, value) VALUES (7, 'sticker_file', '/var/lib/mpd/sticker.sql');
+INSERT INTO cfg_mpd (id, param, value) VALUES (8, 'user', 'mpd');
+INSERT INTO cfg_mpd (id, param, value) VALUES (9, 'group', 'audio');
+INSERT INTO cfg_mpd (id, param, value) VALUES (10, 'bind_to_address', 'any');
+INSERT INTO cfg_mpd (id, param, value) VALUES (11, 'port', '6600');
+INSERT INTO cfg_mpd (id, param, value) VALUES (12, 'log_level', 'default');
+INSERT INTO cfg_mpd (id, param, value) VALUES (13, 'restore_paused', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (14, 'auto_update', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (15, 'follow_outside_symlinks', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (16, 'follow_inside_symlinks', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (17, 'zeroconf_enabled', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (18, 'zeroconf_name', 'Moode MPD');
+INSERT INTO cfg_mpd (id, param, value) VALUES (19, 'filesystem_charset', 'UTF-8');
+INSERT INTO cfg_mpd (id, param, value) VALUES (20, 'metadata_to_use', '+comment');
+INSERT INTO cfg_mpd (id, param, value) VALUES (21, 'device', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (22, 'mixer_type', 'software');
+INSERT INTO cfg_mpd (id, param, value) VALUES (23, 'dop', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (24, 'audio_output_format', 'disabled');
+INSERT INTO cfg_mpd (id, param, value) VALUES (25, 'sox_quality', 'very high');
+INSERT INTO cfg_mpd (id, param, value) VALUES (26, 'sox_multithreading', '1');
+INSERT INTO cfg_mpd (id, param, value) VALUES (27, 'replaygain', 'off');
+INSERT INTO cfg_mpd (id, param, value) VALUES (28, 'replaygain_preamp', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (29, 'replay_gain_handler', 'software');
+INSERT INTO cfg_mpd (id, param, value) VALUES (30, 'volume_normalization', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (31, 'audio_buffer_size', '4096');
+INSERT INTO cfg_mpd (id, param, value) VALUES (32, 'buffer_before_play', 'DEPRECATED');
+INSERT INTO cfg_mpd (id, param, value) VALUES (33, 'max_output_buffer_size', '131072');
+INSERT INTO cfg_mpd (id, param, value) VALUES (34, 'auto_resample', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (35, 'auto_channels', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (36, 'auto_format', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (37, 'buffer_time', '500000');
+INSERT INTO cfg_mpd (id, param, value) VALUES (38, 'period_time', '256000000');
+INSERT INTO cfg_mpd (id, param, value) VALUES (39, 'selective_resample_mode', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (40, 'sox_precision', '20');
+INSERT INTO cfg_mpd (id, param, value) VALUES (41, 'sox_phase_response', '50');
+INSERT INTO cfg_mpd (id, param, value) VALUES (42, 'sox_passband_end', '95');
+INSERT INTO cfg_mpd (id, param, value) VALUES (43, 'sox_stopband_begin', '100');
+INSERT INTO cfg_mpd (id, param, value) VALUES (44, 'sox_attenuation', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384');
 
--- Table: cfg_hash
-CREATE TABLE cfg_hash (id INTEGER PRIMARY KEY, param CHAR (64), value CHAR (64), "action" CHAR (32))
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '7cfa7f4c830f5c446396ae2397bf59a1', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (2, '/etc/nginx/fastcgi_params', '953d4fb6958806a7edd317ac36558fdd', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '1f695c247f64fe4f482d967dfea33b41', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/php-fpm.conf', '8d60ea0c8a646382b1dda59393d1d90b', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', '63aaed1e3a99b11a05c2bef2910fe072', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '787d82e9de10d1217c705fff2b7577f9', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '5e53efb08d5a222830f96952f356fd9b', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'ce394e0c9fb2972d8eb0ec31ac4fd22e', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', 'e43068c89c0878541524ce84d671f4f9', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
+-- Table: cfg_source
+CREATE TABLE cfg_source (
+id INTEGER PRIMARY KEY,
+name CHAR(25),
+type CHAR(8),
+address CHAR(15),
+remotedir CHAR(30),
+username CHAR(30),
+password CHAR(60),
+charset CHAR(15),
+rsize INT(4),
+wsize INT(4)
+, options CHAR(60), error CHAR(150))
 
 -- Table: cfg_system
 CREATE TABLE cfg_system (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
@@ -194,6 +230,32 @@ INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (11, 'Classic V Plu
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (12, 'Vinyl Touch', '60,66,62,61,60,60,60,54,48,68');
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (13, 'Vinyl Touch Plus', '60,68,64,60,60,60,60,46,41,68');
 
+-- Table: cfg_upnp
+CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
+INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'tidaluser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'tidalpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'low');
+INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '5');
+INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'gmusicuser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'gmusicpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'gmusicquality', 'low');
+INSERT INTO cfg_upnp (id, param, value) VALUES (10, 'gmusicdeviceid', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (11, 'checkcontentformat', 'Yes');
+
+-- Table: cfg_gpio
+CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32))
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
+
 -- Table: cfg_spotify
 CREATE TABLE cfg_spotify (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
 INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '160');
@@ -202,6 +264,12 @@ INSERT INTO cfg_spotify (id, param, value) VALUES (3, 'volume_curve', 'Logarithm
 INSERT INTO cfg_spotify (id, param, value) VALUES (4, 'volume_normalization', 'No');
 INSERT INTO cfg_spotify (id, param, value) VALUES (5, 'normalization_pregain', '0');
 INSERT INTO cfg_spotify (id, param, value) VALUES (6, 'autoplay', 'No');
+
+-- Table: cfg_network
+CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3))
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None (activates AP mode)', 'wpa', '', '', 'US', '');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', '', '6');
 
 -- Table: cfg_audiodev
 CREATE TABLE cfg_audiodev (id INTEGER PRIMARY KEY, name CHAR (64), alt_name CHAR (64), dacchip CHAR (64), chipoptions CHAR (64), iface CHAR (32), list CHAR (10), driver CHAR (64), drvoptions CHAR (64))
@@ -282,26 +350,6 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (202, 'Headphones', 'Pi Headphone jack', 'Broadcom SoC', NULL, 'SOC', 'yes', NULL, NULL);
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', NULL, 'USB', 'yes', NULL, NULL);
 
--- Table: cfg_source
-CREATE TABLE cfg_source (
-id INTEGER PRIMARY KEY,
-name CHAR(25),
-type CHAR(8),
-address CHAR(15),
-remotedir CHAR(30),
-username CHAR(30),
-password CHAR(60),
-charset CHAR(15),
-rsize INT(4),
-wsize INT(4)
-, options CHAR(60), error CHAR(150))
-
--- Table: cfg_network
-CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3))
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None (activates AP mode)', 'wpa', '', '', 'US', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', '', '6');
-
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32))
 INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (1, 'Default', 'ddd', '32,32,32', '50, 50, 50, 0.75');
@@ -320,72 +368,20 @@ INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (13
 INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (14, 'Serene Sky', 'ddd', '84,109,155', '89,116,165,0.75');
 INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (15, 'Whiteshade', '333', '243,243,243', '251,251,251,0.75');
 
--- Table: cfg_eqfa4p
-CREATE TABLE cfg_eqfa4p (id INTEGER PRIMARY KEY, curve_name CHAR (32), master_gain CHAR (32), band1_params CHAR (32), band2_params CHAR (32), band3_params CHAR (32), band4_params CHAR (32))
-INSERT INTO cfg_eqfa4p (id, curve_name, master_gain, band1_params, band2_params, band3_params, band4_params) VALUES (1, 'Default curve', '0', '1 20 1 0', '1 180 1 0', '1 2000 1 0', '1 11700 1 0');
-
--- Table: cfg_mpd
-CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
-INSERT INTO cfg_mpd (id, param, value) VALUES (1, 'music_directory', '/var/lib/mpd/music');
-INSERT INTO cfg_mpd (id, param, value) VALUES (2, 'playlist_directory', '/var/lib/mpd/playlists');
-INSERT INTO cfg_mpd (id, param, value) VALUES (3, 'db_file', '/var/lib/mpd/database');
-INSERT INTO cfg_mpd (id, param, value) VALUES (4, 'log_file', '/var/log/mpd/log');
-INSERT INTO cfg_mpd (id, param, value) VALUES (5, 'pid_file', '/var/run/mpd/pid');
-INSERT INTO cfg_mpd (id, param, value) VALUES (6, 'state_file', '/var/lib/mpd/state');
-INSERT INTO cfg_mpd (id, param, value) VALUES (7, 'sticker_file', '/var/lib/mpd/sticker.sql');
-INSERT INTO cfg_mpd (id, param, value) VALUES (8, 'user', 'mpd');
-INSERT INTO cfg_mpd (id, param, value) VALUES (9, 'group', 'audio');
-INSERT INTO cfg_mpd (id, param, value) VALUES (10, 'bind_to_address', 'any');
-INSERT INTO cfg_mpd (id, param, value) VALUES (11, 'port', '6600');
-INSERT INTO cfg_mpd (id, param, value) VALUES (12, 'log_level', 'default');
-INSERT INTO cfg_mpd (id, param, value) VALUES (13, 'restore_paused', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (14, 'auto_update', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (15, 'follow_outside_symlinks', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (16, 'follow_inside_symlinks', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (17, 'zeroconf_enabled', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (18, 'zeroconf_name', 'Moode MPD');
-INSERT INTO cfg_mpd (id, param, value) VALUES (19, 'filesystem_charset', 'UTF-8');
-INSERT INTO cfg_mpd (id, param, value) VALUES (20, 'metadata_to_use', '+comment');
-INSERT INTO cfg_mpd (id, param, value) VALUES (21, 'device', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (22, 'mixer_type', 'software');
-INSERT INTO cfg_mpd (id, param, value) VALUES (23, 'dop', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (24, 'audio_output_format', 'disabled');
-INSERT INTO cfg_mpd (id, param, value) VALUES (25, 'sox_quality', 'very high');
-INSERT INTO cfg_mpd (id, param, value) VALUES (26, 'sox_multithreading', '1');
-INSERT INTO cfg_mpd (id, param, value) VALUES (27, 'replaygain', 'off');
-INSERT INTO cfg_mpd (id, param, value) VALUES (28, 'replaygain_preamp', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (29, 'replay_gain_handler', 'software');
-INSERT INTO cfg_mpd (id, param, value) VALUES (30, 'volume_normalization', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (31, 'audio_buffer_size', '4096');
-INSERT INTO cfg_mpd (id, param, value) VALUES (32, 'buffer_before_play', 'DEPRECATED');
-INSERT INTO cfg_mpd (id, param, value) VALUES (33, 'max_output_buffer_size', '131072');
-INSERT INTO cfg_mpd (id, param, value) VALUES (34, 'auto_resample', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (35, 'auto_channels', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (36, 'auto_format', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (37, 'buffer_time', '500000');
-INSERT INTO cfg_mpd (id, param, value) VALUES (38, 'period_time', '256000000');
-INSERT INTO cfg_mpd (id, param, value) VALUES (39, 'selective_resample_mode', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (40, 'sox_precision', '20');
-INSERT INTO cfg_mpd (id, param, value) VALUES (41, 'sox_phase_response', '50');
-INSERT INTO cfg_mpd (id, param, value) VALUES (42, 'sox_passband_end', '95');
-INSERT INTO cfg_mpd (id, param, value) VALUES (43, 'sox_stopband_begin', '100');
-INSERT INTO cfg_mpd (id, param, value) VALUES (44, 'sox_attenuation', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384');
-
--- Table: cfg_upnp
-CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
-INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'tidaluser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'tidalpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'low');
-INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '5');
-INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'gmusicuser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'gmusicpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'gmusicquality', 'low');
-INSERT INTO cfg_upnp (id, param, value) VALUES (10, 'gmusicdeviceid', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (11, 'checkcontentformat', 'Yes');
+-- Table: cfg_hash
+CREATE TABLE cfg_hash (id INTEGER PRIMARY KEY, param CHAR (64), value CHAR (64), "action" CHAR (32))
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '7cfa7f4c830f5c446396ae2397bf59a1', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (2, '/etc/nginx/fastcgi_params', '953d4fb6958806a7edd317ac36558fdd', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '1f695c247f64fe4f482d967dfea33b41', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/php-fpm.conf', '8d60ea0c8a646382b1dda59393d1d90b', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', '63aaed1e3a99b11a05c2bef2910fe072', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '787d82e9de10d1217c705fff2b7577f9', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '5e53efb08d5a222830f96952f356fd9b', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'ce394e0c9fb2972d8eb0ec31ac4fd22e', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', 'e43068c89c0878541524ce84d671f4f9', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (8), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), favorite CHAR (3), reserved1 CHAR (32), reserved2 CHAR (32))
@@ -496,7 +492,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (105, 'http://stream.srg-ssr.ch/m/rsc_de/aacp_96', 'Radio Swiss Classic', 's', 'local', 'Classical', 'Swiss Broadcasting Corporation', 'German', 'Switzerland', 'Europe', '96', 'AAC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (106, 'http://stream.srg-ssr.ch/m/rsj/aacp_96', 'Radio Swiss Jazz', 's', 'local', 'Jazz', 'Swiss Broadcasting Corporation', 'German', 'Switzerland', 'Europe', '96', 'AAC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (107, 'http://stream.srg-ssr.ch/m/rsp/aacp_96', 'Radio Swiss Pop', 's', 'local', 'Pop', 'Swiss Broadcasting Corporation', 'German', 'Switzerland', 'Europe', '96', 'AAC', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (108, 'http://media-sov.musicradio.com:80/RadioXLondonMP3', 'Radio X London', 's', 'local', 'Alternative,Indie Rock', 'Global Radio', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (108, 'DELETED', 'Radio X London', 's', 'local', 'Alternative,Indie Rock', 'Global Radio', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (109, 'http://stream.radioactive.fm', 'RadioActive FM 88.6', 's', 'local', 'Alternative', 'Radio Active', 'English', 'New Zealand', 'Asia', '192', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (110, 'DELETED', 'Radionomy', 's', 'local', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (111, 'http://stream.resonance.fm:8000/resonance', 'Resonance Radio 104.4 FM', 's', 'local', 'Eclectic', 'Resonance Radio', 'English', 'United Kingdom', 'Europe', '192', 'MP3', NULL, NULL, NULL);
@@ -583,16 +579,6 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (192, 'http://lb.zenfm.be/zenfm.mp3', 'Zen FM', 's', 'local', 'Chill', 'Zen FM', 'Dutch', 'Belgium', 'Europe', '192', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 's', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
--- Table: cfg_sl
-CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64))
-INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
-INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', '0');
-INSERT INTO cfg_sl (id, param, value) VALUES (3, 'ALSAPARAMS', '80:4::1');
-INSERT INTO cfg_sl (id, param, value) VALUES (4, 'OUTPUTBUFFERS', '40000:100000');
-INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
-INSERT INTO cfg_sl (id, param, value) VALUES (6, 'CODECS', 'flac,pcm,mp3,ogg,aac,alac,dsd');
-INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E -S /var/local/www/commandw/slpower.sh');
-
 -- Table: cfg_airplay
 CREATE TABLE cfg_airplay (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
 INSERT INTO cfg_airplay (id, param, value) VALUES (1, 'airplaymeta', 'deprecated');
@@ -604,5 +590,19 @@ INSERT INTO cfg_airplay (id, param, value) VALUES (6, 'allow_session_interruptio
 INSERT INTO cfg_airplay (id, param, value) VALUES (7, 'session_timeout', '120');
 INSERT INTO cfg_airplay (id, param, value) VALUES (8, 'audio_backend_latency_offset_in_seconds', '0.0');
 INSERT INTO cfg_airplay (id, param, value) VALUES (9, 'audio_backend_buffer_desired_length_in_seconds', '0.2');
+
+-- Table: cfg_sl
+CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64))
+INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
+INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', '0');
+INSERT INTO cfg_sl (id, param, value) VALUES (3, 'ALSAPARAMS', '80:4::1');
+INSERT INTO cfg_sl (id, param, value) VALUES (4, 'OUTPUTBUFFERS', '40000:100000');
+INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
+INSERT INTO cfg_sl (id, param, value) VALUES (6, 'CODECS', 'flac,pcm,mp3,ogg,aac,alac,dsd');
+INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E -S /var/local/www/commandw/slpower.sh');
+
+-- Table: cfg_eqfa4p
+CREATE TABLE cfg_eqfa4p (id INTEGER PRIMARY KEY, curve_name CHAR (32), master_gain CHAR (32), band1_params CHAR (32), band2_params CHAR (32), band3_params CHAR (32), band4_params CHAR (32))
+INSERT INTO cfg_eqfa4p (id, curve_name, master_gain, band1_params, band2_params, band3_params, band4_params) VALUES (1, 'Default curve', '0', '1 20 1 0', '1 180 1 0', '1 2000 1 0', '1 11700 1 0');
 
 COMMIT TRANSACTION;
