@@ -889,7 +889,7 @@ function genSearchUrl (artist, title, album) {
 
 // Update active Playlist item
 function updateActivePlItem() {
-	debugLog('updatePlaylist()');
+	debugLog('updateActivePlItem()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
         if (data) {
             for (i = 0; i < data.length; i++) {
@@ -1296,7 +1296,7 @@ function renderRadio(data, path) {
 	radioRendering = false;
 }
 
-// Format for Browse panel
+// Format lines for Folder and Radio views
 function formatBrowseData(data, path, i, panel, radioViewLazy) {
 	var output = '';
 
@@ -1945,9 +1945,9 @@ $('.context-menu a').click(function(e) {
     else if ($(this).data('cmd') == 'appearance') {
 		bgImgChange = false;
 
-		// set up disclosures
+		// Set up disclosures
 		var temp = SESSION.json['appearance_modal_state'].split(',');
-		for (var x = 0; x < 4; x++) {
+		for (var x = 0; x < 5; x++) {
 			if (temp[x] == '1') {
 				$('#appearance-modal div.control-group').eq(x).show();
 				$('#appearance-modal .accordian .dtopen').eq(x).show();
@@ -2146,13 +2146,13 @@ $('.btn-appearance-update').click(function(e){
     var playlistArtChange = false;
 
 	// Set open/closed state for accordion headers
-	var temp = [0,0,0,0];
-	for (var x = 0; x < 4; x++) {
+	var temp = [0,0,0,0,0];
+	for (var x = 0; x < 5; x++) {
 		if ($('#appearance-modal div.control-group').eq(x).css('display') == 'block') {
 			temp[x] = 1;
 		}
 	}
-	SESSION.json['appearance_modal_state'] = temp[0] + ',' + temp[1] + ',' + temp[2] + ',' + temp[3];
+	SESSION.json['appearance_modal_state'] = temp[0] + ',' + temp[1] + ',' + temp[2] + ',' + temp[3] + ',' + temp[4];
 
 	// Theme and backgrounds
 	if (SESSION.json['themename'] != $('#theme-name span').text()) {themeSettingsChange = true;}
