@@ -44,6 +44,7 @@ Bug fixes
 - FIX: Track list show/hide not preserved when switching views
 - FIX: Manual entry of SSID not accepting embedded space
 - FIX: Graphic EQ curves are +6 alsaequal units too high
+- FIX: Listall.sh script not handling mixed case extentions
 
 ########################################################
 //
