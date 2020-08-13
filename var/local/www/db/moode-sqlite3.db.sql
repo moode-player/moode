@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.0.0 on Tue Aug 11 21:21:26 2020
+-- File generated with SQLiteStudio v3.0.0 on Wed Aug 12 21:20:48 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -458,7 +458,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (71, 'http://89.16.185.174:8003/stream', 'Linn Radio', 's', 'local', 'Eclectic', 'Linn', 'English', 'United Kingdom', 'Europe', '320', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (72, 'http://psn1.prostreaming.net:8095/stream', 'Mad Music Asylum', 's', 'local', 'Rock,Eclectic', 'Mad Music Asylum', 'English', 'United States', 'North America', '128', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (73, 'http://i.20hz.biz:8000/maschinengeist.org.192.mp3', 'Maschinengeist Radio', 's', 'local', 'Ambient,Downtempo,Experimental', 'Maschinengeist', 'German', 'Germany', 'Europe', '192', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (74, 'http://stream1.megarockradio.net:8240/', 'Megarock - All Request Rock Radio', 's', 'local', 'Rock', 'Megarock Radio', 'English', 'United States', 'North America', '320', 'MP3', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (74, 'DELETED', 'Megarock - All Request Rock Radio', 's', 'local', 'Rock', 'Megarock Radio', 'English', 'United States', 'North America', '320', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (75, 'http://stream.fr.morow.com:8080/morow_hi.aacp', 'Morow - Retro Progressive Rock', 's', 'local', 'Progressive Rock,Rock', 'Morow', 'English', 'France', 'Europe', '128', 'AAC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (76, 'DELETED', 'MPR - Minnesota Public Radio', 's', 'local', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (77, 'https://radios.rtbf.be/musiq3-128.aac', 'Musiq 3', 's', 'local', 'Classical', 'RTBF', 'French', 'Belgium', 'Europe', '128', 'AAC', NULL, NULL, NULL);

@@ -32,6 +32,11 @@ Updates
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 - UPD: Improve logging for Library update process
 
+Radio stations
+
+- DEL: Radio X London due to metadata issues
+- DEL: Megarock Radio due to failed stream link
+
 Bug fixes
 
 - FIX: Album key and cross-index for Tag and Album views
