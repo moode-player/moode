@@ -3175,7 +3175,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			//debugLog('enhanceMetadata(): iTunes AAC or AIFF file');
 		}
 		// Radio station
-		elseif (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && /*!isset($song['Artist'])*/!isset($current['duration']))) {
+		elseif (substr($song['file'], 0, 4) == 'http' && /*!isset($song['Artist'])*/!isset($current['duration'])) {
 			debugLog('enhanceMetadata(): Radio station');
 			$current['artist'] = 'Radio station';
 
