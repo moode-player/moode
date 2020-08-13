@@ -31,6 +31,7 @@ Updates
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 - UPD: Improve logging for Library update process
+- UPD: Add Genre to the Extra metadata appearance option
 
 Radio stations
 
