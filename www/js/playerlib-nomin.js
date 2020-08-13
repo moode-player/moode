@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -28,7 +28,7 @@ function formatExtraTagsString () {
     var elementDisplay, extraTagsDisplay = '';
     var extraTagsArray = SESSION.json['extra_tags'].replace(/ /g, '').split(','); // Strip out whitespace
 
-    //NOTE: composer may be = null, disc may be = 'Disc tag missing', encoded may be = 'Unknown'
+    // NOTE: composer may be = null, disc may be = 'Disc tag missing', encoded may be = 'Unknown'
     for (const element of extraTagsArray) {
         //console.log(element, MPD.json[element]);
         if (MPD.json[element] != null && MPD.json[element] != 'Disc tag missing' && MPD.json[element] != 'Unknown') {
