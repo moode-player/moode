@@ -3130,6 +3130,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['file'] = $song['file'];
 
 	// NOTE any of these might be '' null string
+	$current['genre'] = $song['Genre'];
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
 	$current['composer'] = $song['Composer'];
