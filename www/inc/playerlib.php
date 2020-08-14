@@ -3129,7 +3129,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$song = parseCurrentSong($sock);
 	$current['file'] = $song['file'];
 
-	// NOTE any of these might be '' null string
+	// NOTE: Any of these might be '' (empty)
 	$current['genre'] = $song['Genre'];
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
@@ -3137,7 +3137,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	// Cover hash
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
-		//workerLog('$current: cover hash: ' . $current['cover_art_hash']);
 	}
 
 	if ($current['file'] == null) {
@@ -3148,9 +3147,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		debugLog('enhanceMetadata(): File is NULL');
 	}
 	else {
-		//workerLog('enhanceMetadata(): Caller=' . $caller);
-		//workerLog('enhanceMetadata(): current= ' . $current['file']);
-		//workerLog('enhanceMetadata(): session= ' . $_SESSION['currentfile']);
 		// Only do this code block once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
 			$current['encoded'] = getEncodedAt($song, 'default'); // encoded bit depth and sample rate
@@ -3162,8 +3158,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		else {
 			$current['encoded'] = $_SESSION['currentencoded'];
 		}
-		//debugLog('enhanceMetadata(): File=' . $current['file']);
-		//debugLog('enhanceMetadata(): Encoded=' . $current['encoded']);
 
 		// iTunes aac or aiff file
 		$ext = getFileExt($song['file']);
@@ -3172,41 +3166,41 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['title'] = $song['Name'];
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
-			//debugLog('enhanceMetadata(): iTunes AAC or AIFF file');
 		}
 		// Radio station
-		elseif (substr($song['file'], 0, 4) == 'http' && /*!isset($song['Artist'])*/!isset($current['duration'])) {
+		elseif (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
 			debugLog('enhanceMetadata(): Radio station');
 			$current['artist'] = 'Radio station';
 
 			if (!isset($song['Title']) || trim($song['Title']) == '') {
 				$current['title'] = 'Streaming source';
-				//$current['title'] = $song['file']; // URL
 			}
 			else {
 				// Use custom name for certain stations if needed
-				//$current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
+				// EX: $current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
 				$current['title'] = $song['Title'];
 			}
 
 			if (isset($_SESSION[$song['file']])) {
-				// Use xmitted name for SOMA FM stations
+				// Use transmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
 				// Include original station name
 				$current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
-					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg"; // local logo image
+					// Local logo image
+					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg";
 				}
 				else {
-					$current['coverurl'] = $_SESSION[$song['file']]['logo']; // url logo image
+					// URL logo image
+					$current['coverurl'] = $_SESSION[$song['file']]['logo'];
 				}
-				# Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
+				# NOTE: Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
 				if (strpos($_SESSION[$song['file']]['name'], 'BBC') !== false && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
 					$current['bitrate'] = '320 kbps';
 				}
 			}
 			else {
-				// Not in radio station table, use xmitted name or 'unknown'
+				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
 				$current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
@@ -3234,10 +3228,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			else {
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
 			}
-			//$current['coverurl'] = substr($song['file'], 0, 4) == 'http' ? getUpnpCoverUrl() : '/coverart.php/' . rawurlencode($song['file']);
-			// In case 2 url's are returned
+			// In case 2 url's are returned, use the first
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
-			debugLog('enhanceMetadata(): coverurl: (' . $current['coverurl'] . ')');
 
 			if (substr($song['file'], 0, 4) == 'http') {
 				debugLog('enhanceMetadata(): UPnP url');
@@ -3251,7 +3243,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	return $current;
 }
 
-//function getCoverHash($file, $ext) {
 function getCoverHash($file) {
 	set_include_path('/var/www/inc');
 	$ext = getFileExt($file);
@@ -3264,10 +3255,9 @@ function getCoverHash($file) {
 
 		$path = MPD_MUSICROOT . $file;
 		$hash = false;
-		//workerlog('getCoverHash(): path: ' . $path);
 
 		// file: embedded cover
-		if ($search_pri == 'Embedded cover') { // embedded first
+		if ($search_pri == 'Embedded cover') { // Embedded first
 			$hash = getHash($path);
 		}
 
@@ -3284,29 +3274,27 @@ function getCoverHash($file) {
 			}
 
 			if ($hash === false) {
-				if ($search_pri == 'Cover image file') { // embedded last
+				if ($search_pri == 'Cover image file') { // Embedded last
 					$hash = getHash($path);
 				}
 			}
 
 			if ($hash === false) {
-				// nothing found
+				// Nothing found
 				$hash = 'getCoverHash(): no cover found';
 			}
 		}
 	}
 	else {
-		//$hash = 'getCoverHash(): not a PCM file';
 		$hash = rand();
 	}
 
 	return $hash;
 }
 
-// modified versions of coverart.php functions
+// Modified versions of coverart.php functions
 // (C) 2015 Andreas Goetz
 function rtnHash($mime, $hash) {
-	//workerLog('getCoverHash(): rtnHash(): ' . $mime . ', ' . strlen($hash) . ' bytes');
 	switch ($mime) {
 		case "image/gif":
 		case "image/jpg":
@@ -3322,9 +3310,7 @@ function rtnHash($mime, $hash) {
 	return false;
 }
 function getHash($path) {
-	//workerLog('getCoverHash(): getHash(): ' . $path);
 	if (!file_exists($path)) {
-		//workerLog('getCoverHash(): getHash(): ' . $path . ' (does not exist)');
 		return false;
 	}
 
@@ -3332,7 +3318,7 @@ function getHash($path) {
 	$ext = pathinfo($path, PATHINFO_EXTENSION);
 
 	switch (strtolower($ext)) {
-		// image file
+		// Image file
 		case 'gif':
 		case 'jpg':
 		case 'jpeg':
@@ -3343,7 +3329,7 @@ function getHash($path) {
 			$hash = md5(file_get_contents($path, 1024) + $stat['size']);
 			break;
 
-		// embedded images
+		// Embedded images
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
 			try {
@@ -3366,7 +3352,6 @@ function getHash($path) {
 
 				if ($flac->hasMetadataBlock(Zend_Media_Flac::PICTURE)) {
 					$picture = $flac->getPicture();
-					//workerLog('getCoverHash(): flac: getData(): length: ' . strlen($picture->getData()));
 					$hash = rtnHash($picture->getMimeType(), $picture->getData());
 				}
 			}
@@ -3400,8 +3385,7 @@ function getHash($path) {
 	return $hash;
 }
 function parseDir($path) {
-	//workerLog('getCoverHash(): parseDir(): ' . $path);
-	// default cover files
+	// Default cover files
 	$covers = array(
 		'Cover.jpg', 'cover.jpg', 'Cover.jpeg', 'cover.jpeg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff',
 		'Folder.jpg', 'folder.jpg', 'Folder.jpeg', 'folder.jpeg', 'Folder.png', 'folder.png', 'Folder.tif', 'folder.tif', 'Folder.tiff', 'folder.tiff'
@@ -3412,12 +3396,11 @@ function parseDir($path) {
 			break;
 		}
 	}
-	// all other image files
+	// All other image files
 	$extensions = array('jpg', 'jpeg', 'png', 'tif', 'tiff');
 	$path = str_replace('[', '\[', $path);
 	$path = str_replace(']', '\]', $path);
 	foreach (glob($path . '*') as $file) {
-		//workerLog('getCoverHash(): parseDir(): glob' . $file);
 		if (is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $extensions)) {
 			$result = getHash($file);
 			if ($result !== false) {
