@@ -198,13 +198,12 @@ function sendVolCmd(type, cmd, data, async) {
 		cache: false,
 		data: data,
 		success: function(result) {
-			//debugLog('result=(' + result + ')');
 			obj = JSON.parse(result);
 			// Omit the try/catch to enable improved volume knob behavior
 			// See moode.php case 'updvolume' for explanation
 		},
 		error: function() {
-			//debugLog(cmd + ' no data returned');
+			//debugLog('sendVolCmd(): ' + cmd + ' no data returned');
 			obj = false;
 		}
 	});
@@ -214,15 +213,13 @@ function sendVolCmd(type, cmd, data, async) {
 
 // MPD metadata engine
 function engineMpd() {
-	debugLog('engineMpd: state=(' + MPD.json['state'] + ')');
     $.ajax({
 		type: 'GET',
 		url: 'engine-mpd.php?state=' + MPD.json['state'],
 		async: true,
 		cache: false,
 		success: function(data) {
-			debugLog('engineMpd: success branch: data=(' + data + ')');
-			//console.log('engineMpd: success branch: data=(' + data + ')');
+			//debugLog('engineMpd(): success branch: data=(' + data + ')');
 
 			// Always have valid json
 			try {
@@ -233,8 +230,7 @@ function engineMpd() {
 			}
 
 			if (typeof(MPD.json['error']) === 'undefined') {
-				debugLog('engineMpd: idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
-				//console.log('engineMpd: idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
+				//console.log('engineMpd(): idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
 
 				if (UI.hideReconnect === true) {
 					hideReconnect();
@@ -270,7 +266,7 @@ function engineMpd() {
 			}
 			// Error of some sort
 			else {
-				debugLog('engineMpd: success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
+				debugLog('engineMpd(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
 
 				// JSON parse errors @ohinckel https: //github.com/moode-player/moode/pull/14/files
 				if (typeof(MPD.json['error']) == 'object') {
@@ -306,7 +302,7 @@ function engineMpd() {
 		},
         // Network connection interrupted or client network stack timeout
 		error: function(data) {
-			debugLog('engineMpd: error branch: data=(' + JSON.stringify(data) + ')');
+			debugLog('engineMpd(): error branch: data=(' + JSON.stringify(data) + ')');
 
 			setTimeout(function() {
 				if (data['statusText'] == 'error' && data['readyState'] == 0) {
@@ -321,15 +317,14 @@ function engineMpd() {
 
 // MPD metadata engine lite (for scripts-configs)
 function engineMpdLite() {
-	debugLog('engineMpdLite: state=(' + MPD.json['state'] + ')');
+	//debugLog('engineMpdLite(): state=(' + MPD.json['state'] + ')');
     $.ajax({
 		type: 'GET',
 		url: 'engine-mpd.php?state=' + MPD.json['state'],
 		async: true,
 		cache: false,
 		success: function(data) {
-			debugLog('engineMpdLite: success branch: data=(' + data + ')');
-			//console.log('engineMpdLite: success branch: data=(' + data + ')');
+			//debugLog('engineMpdLite(): success branch: data=(' + data + ')');
 
 			// Always have valid json
 			try {
@@ -340,7 +335,6 @@ function engineMpdLite() {
 			}
 
 			if (typeof(MPD.json['error']) === 'undefined') {
-				debugLog('engineMpdLite: idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')');
 				//console.log('engineMpdLite: idle_timeout_event=(' + MPD.json['idle_timeout_event'] + ')', 'state', MPD.json['state']);
 
 				if (UI.hideReconnect === true) {
@@ -361,14 +355,14 @@ function engineMpdLite() {
 			else {
 				setTimeout(function() {
 					// Client connects before mpd started by worker, various other network issues
-					debugLog('engineMpd: success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
+					debugLog('engineMpdLite(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
 					engineMpdLite();
 				}, ENGINE_TIMEOUT);
 			}
 		},
         // Network connection interrupted or client network stack timeout
 		error: function(data) {
-			debugLog('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
+			debugLog('engineMpdLite(): error branch: data=(' + JSON.stringify(data) + ')');
             //console.log('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
 
 			setTimeout(function() {
@@ -505,8 +499,7 @@ function screenSaver(cmd) {
 
 // reconnect/reboot/restart
 function renderReconnect() {
-	debugLog('renderReconnect: UI.restart=(' + UI.restart + ')');
-
+	//console.log('renderReconnect(): UI.restart=(' + UI.restart + ')');
 	if (UI.restart == 'restart') {
 		$('#restart').show();
 	}
@@ -524,7 +517,7 @@ function renderReconnect() {
 }
 
 function hideReconnect() {
-	//console.log('hideReconnect: (' + UI.hideReconnect + ')');
+	//console.log('hideReconnect(): (' + UI.hideReconnect + ')');
 	$('#reconnect, #restart, #shutdown').hide();
 	UI.hideReconnect = false;
 }
@@ -546,7 +539,7 @@ function disableVolKnob() {
 
 // when last item in laylist finishes just update a few things, called from engineCmd()
 function resetPlayCtls() {
-	//console.log('resetPlayCtls()');
+	//console.log('resetPlayCtls():');
 	$('#m-total, #playbar-total, #playbar-mtotal').html(updTimeKnob('0'));
 	$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
 	$('#total').html(updTimeKnob('0') + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
@@ -559,7 +552,7 @@ function resetPlayCtls() {
 }
 
 function renderUIVol() {
-	debugLog('renderUIVol');
+	//console.log('renderUIVol()');
 	// Load session vars (required for multi-client)
     $.getJSON('command/moode.php?cmd=readcfgsystem', function(result) {
     	if (result === false) {
@@ -604,7 +597,7 @@ function renderUIVol() {
 }
 
 function renderUI() {
-	debugLog('renderUI');
+	//console.log('renderUI()');
 	var searchStr, searchEngine;
 
 	// Highlight track in Library
@@ -676,7 +669,7 @@ function renderUI() {
     	//console.log('NEW: ' + MPD.json['cover_art_hash']);
     	// compare new to current to prevent unnecessary image reloads
     	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
-    		debugLog(MPD.json['coverurl']);
+    		//console.log(MPD.json['coverurl']);
             // Original for Playback
     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
             // Thumbnail for Playbar
@@ -889,7 +882,7 @@ function genSearchUrl (artist, title, album) {
 
 // Update active Playlist item
 function updateActivePlItem() {
-	debugLog('updateActivePlItem()');
+	//console.log'updateActivePlItem()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
         if (data) {
             for (i = 0; i < data.length; i++) {
@@ -935,7 +928,7 @@ function updateActivePlItem() {
 
 // Render the Playlist
 function renderPlaylist() {
-	debugLog('renderPlaylist()');
+	//console.log'renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
 
 		var output = '';

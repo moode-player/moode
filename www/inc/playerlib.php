@@ -127,8 +127,7 @@ function versioned_script($file, $type='') {
 function openMpdSock($host, $port) {
 	for ($i = 0; $i < 6; $i++) {
 		if (false === ($sock = @stream_socket_client('tcp://' . $host . ':' . $port, $errorno, $errorstr, 30))) {
-			debugLog('openMpdSocket(): connection failed (' . ($i + 1) . ')');
-			debugLog('openMpdSocket(): errorno: ' . $errorno . ', ' . $errorstr);
+			debugLog('openMpdSocket(): error: connection failed (' . ($i + 1) . ') ' . $errorno . ', ' . $errorstr);
 		}
 		else {
 			$resp = readMpdResp($sock);
@@ -144,13 +143,10 @@ function openMpdSock($host, $port) {
 // TC rewrite to handle fgets() fail
 function readMpdResp($sock) {
 	$resp = '';
-	//debugLog('readMpdResponse(): reading response'); // comment these out to reduce log clutter
 
 	while (false !== ($str = fgets($sock, 1024)) && !feof($sock)) {
 		if (strncmp(MPD_RESPONSE_OK, $str, strlen(MPD_RESPONSE_OK)) == 0) {
 			$resp = $resp == '' ? $str : $resp;
-			//debugLog('readMpdResponse(): success $str=(' . explode("\n", $str)[0] . ')');
-			//debugLog('readMpdResponse(): success $resp[0]=(' . explode("\n", $resp)[0] . ')');
 			return $resp;
 		}
 
@@ -164,8 +160,8 @@ function readMpdResp($sock) {
 	}
 
 	if (!feof($sock)) {
-		debugLog('readMpdResponse(): error: fgets fail due to socket being timed out or PHP/MPD connection failure');
-		debugLog('readMpdResponse(): error: $resp[0]=(' . explode("\n", $resp)[0] . ')');
+		// Socket timed out or PHP/MPD connection failure
+		debugLog('readMpdResponse(): error: fgets failure (' . explode("\n", $resp)[0] . ')');
 	}
 
 	return $resp;
@@ -173,7 +169,6 @@ function readMpdResp($sock) {
 
 function closeMpdSock($sock) {
 	sendMpdCmd($sock, 'close');
-	//$resp = readMpdResp($sock);
 	fclose($sock);
 }
 
@@ -344,16 +339,12 @@ function sockWrite($sock, $msg) {
 // Caching library loader
 function loadLibrary($sock) {
 	if (filesize(LIBCACHE_JSON) != 0) {
-		debugLog('loadLibrary(): Cache data returned to client, length (' . filesize(LIBCACHE_JSON) . ')');
 		return file_get_contents(LIBCACHE_JSON);
 	}
 	else {
-		debugLog('loadLibrary(): Generating flat list...');
 		$flat = genFlatList($sock);
 
 		if ($flat != '') {
-			debugLog('loadLibrary(): Flat list generated, size (' . sizeof($flat) . ')');
-			debugLog('loadLibrary(): Generating library...');
 			// Normal or UTF8 replace
 			if ($_SESSION['library_utf8rep'] == 'No') {
 				$json_lib = genLibrary($flat);
@@ -361,11 +352,9 @@ function loadLibrary($sock) {
 			else {
 				$json_lib = genLibraryUTF8Rep($flat);
 			}
-			debugLog('loadLibrary(): Cache data returned to client, length (' . strlen($json_lib) . ')');
 			return $json_lib;
 		}
 		else {
-			debugLog('loadLibrary(): Flat list empty');
 			return '';
 		}
 	}
@@ -457,12 +446,9 @@ function genLibrary($flat) {
 	}
 
 	$json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE);
-	debugLog('genLibrary(): $lib, size= ' . sizeof($lib));
-	debugLog('genLibrary(): $json_lib, length= ' . strlen($json_lib));
-	debugLog('genLibrary(): json_last_error()= ' . json_last_error_msg());
 
 	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
-		debugLog('genLibrary: create libcache.json failed');
+		debugLog('genLibrary(): error: libcache.json file create failed');
 	}
 	//workerLog(print_r($lib, true));
 	return $json_lib;
@@ -540,7 +526,7 @@ function genLibraryUTF8Rep($flat) {
 
 	$json_lib = json_encode($lib);
 	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
-		debugLog('genLibrary: create libcache.json failed');
+		debugLog('genLibraryUTF8Rep(): error: libcache.json file create failed');
 	}
 	return $json_lib;
 }
@@ -1966,7 +1952,7 @@ function sourceMount($action, $id = '') {
 				$return = empty($result) ? true : false;
 			}
 
-			debugLog('sourceMount(): result=(' . implode("\n", $result) . ')');
+			debugLog('sourceMount(): Command=(' . $mountstr . ')');
 			break;
 
 		case 'mountall':
@@ -2149,7 +2135,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 
 		// Mediainfo
 		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"';
-		debugLog($cmd);
+		//workerLog($cmd);
 		$result = sysCmd($cmd);
 
 		$bitdepth = $result[0] == '' ? '?' : $result[0];
@@ -2178,7 +2164,7 @@ function stopSps () {
 }
 
 function startSps() {
-	// verbose logging
+	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
 		$logging = '-vv';
 		$logfile = '/var/log/shairport-sync.log';
@@ -2188,7 +2174,7 @@ function startSps() {
 		$logfile = '/dev/null';
 	}
 
-	// get device num
+	// Get device num
 	$array = sdbquery('select value from cfg_mpd where param="device"', cfgdb_connect());
 	$device = $array[0]['value'];
 
@@ -2205,13 +2191,12 @@ function startSps() {
 		$device = 'plughw:' . $array[0]['value'];
 	}
 
-	// interpolation param handled in config file
+	// Interpolation param handled in config file
 	$cmd = '/usr/local/bin/shairport-sync ' . $logging .
 		' -a "' . $_SESSION['airplayname'] . '" ' .
-		//'-w -B /var/local/www/commandw/spspre.sh -E /var/local/www/commandw/spspost.sh ' .
 		'-- -d ' . $device . ' > ' . $logfile . ' 2>&1 &';
 
-	debugLog('worker: (' . $cmd . ')');
+	debugLog('startSps(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
 
@@ -2258,9 +2243,9 @@ function startSpotify() {
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' . // audio file cache eats disk space
 		' --onevent /var/local/www/commandw/spotevent.sh' .
 		' > /dev/null 2>&1 &';
-		//' -v > /home/pi/librespot.txt 2>&1 &'; // r45a debug
+		//' -v > /home/pi/librespot.txt 2>&1 &'; // For debug
 
-	debugLog('worker: (' . $cmd . ')');
+	debugLog('startSpotify(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
 
@@ -2273,12 +2258,12 @@ function startBt() {
 	// we should have a MAC address
 	$result = sysCmd('ls /var/lib/bluetooth');
 	if ($result[0] == '') {
-		workerLog('worker: Bluetooth error, no MAC address');
+		workerLog('startBt(): Bluetooth error, no MAC address');
 	}
 	// initialize controller
 	else {
 		$result = sysCmd('/var/www/command/bt.sh -i');
-		//workerLog('worker: Bluetooth controller initialized');
+		//workerLog('startBt(): Bluetooth controller initialized');
 	}
 }
 
@@ -3144,7 +3129,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		$current['title'] = '';
 		$current['album'] = '';
 		$current['coverurl'] = DEF_COVER;
-		debugLog('enhanceMetadata(): File is NULL');
+		debugLog('enhanceMetadata(): error: currentsong file is NULL');
 	}
 	else {
 		// Only do this code block once for a given file
@@ -3162,6 +3147,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		// iTunes aac or aiff file
 		$ext = getFileExt($song['file']);
 		if (isset($song['Name']) && ($ext == 'm4a' || $ext == 'aif' || $ext == 'aiff')) {
+			//workerLog('enhanceMetadata(): AAC or AIFF song file');
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name'];
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
@@ -3169,7 +3155,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		}
 		// Radio station
 		elseif (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
-			debugLog('enhanceMetadata(): Radio station');
+			//workerLog('enhanceMetadata(): Radio station');
 			$current['artist'] = 'Radio station';
 
 			if (!isset($song['Title']) || trim($song['Title']) == '') {
@@ -3232,10 +3218,10 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
 
 			if (substr($song['file'], 0, 4) == 'http') {
-				debugLog('enhanceMetadata(): UPnP url');
+				//workerLog('enhanceMetadata(): UPnP url');
 			}
 			else {
-				debugLog('enhanceMetadata(): Song file');
+				//workerLog('enhanceMetadata(): Song file');
 			}
 		}
 	}
