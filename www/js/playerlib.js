@@ -1080,14 +1080,14 @@ function mpdDbCmd(cmd, path) {
 		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(path) {}, 'json');
 	}
 	else if (cmd == 'lsinfo' || cmd == 'listsavedpl') {
-		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {renderBrowse(data, path);}, 'json');
+		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {renderFolderView(data, path);}, 'json');
 	}
 	else if (cmd == 'lsinfo_radio' && radioRendering == false) {
-		$.post('command/moode.php?cmd=' + 'lsinfo', {'path': path}, function(data) {renderRadio(data, path);}, 'json');
+		$.post('command/moode.php?cmd=' + 'lsinfo', {'path': path}, function(data) {renderRadioView(data, path);}, 'json');
 	}
 	else if (cmd == 'delsavedpl') {
 		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {}, 'json');
-		$.post('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {renderBrowse(data, '');}, 'json');
+		$.post('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {renderFolderView(data, '');}, 'json');
 	}
 	else if (cmd == 'newstation' || cmd == 'updstation') {
         RADIO.json[path['url']] = {'name': path['display_name']};
@@ -1106,7 +1106,7 @@ function mpdDbCmd(cmd, path) {
 }
 
 // render browse panel with optimized sort
-function renderBrowse(data, path, searchstr) {
+function renderFolderView(data, path, searchstr) {
 	//console.log('renderBowse(): path=(' + path + ')');
 	//console.log('UI.dbPos[10]= ' + UI.dbPos[10].toString());
 	//console.log('UI.dbPos[' + UI.dbPos[10].toString() + ']= ' + UI.dbPos[UI.dbPos[10]].toString());
@@ -1211,9 +1211,35 @@ function renderBrowse(data, path, searchstr) {
 	}
 }
 
+// Render Radio view
+function renderRadioView(data, path) {
+    $.getJSON('command/moode.php?cmd=read_cfg_radio', function(radioStations) {
+        var tag = 'genre';
+
+        // Natural ordering
+        try {
+    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+            radioStations.sort(function(a, b) {
+                return collator.compare(a[tag], b[tag]);
+            });
+        }
+        // Fallback to default ordering
+        catch (e) {
+            radioStations.sort(function(a, b) {
+                a = a[tag];
+                b = b[tag];
+                return a > b ? 1 : (a < b ? -1 : 0);
+            });
+        }
+        console.log(radioStations);
+    });
+
+    // Old folder based rendering
+    __renderRadioView(data, path);
+}
 // render radio panel
-function renderRadio(data, path) {
-	//console.log('renderRadio(): path=(' + path + ')');
+function __renderRadioView(data, path) {
+	//console.log('renderRadioView(): path=(' + path + ')');
 	radioRendering = true;
 	UI.pathr = path;
 
@@ -1242,7 +1268,7 @@ function renderRadio(data, path) {
 			});
 		}
 		if (typeof(files[0]) != 'undefined') {
-			files.sort(function(a, b) {
+			files.sort(function(a, b) {;['']
 				return collator.compare(removeArticles(a.file.substring(6)), removeArticles(b.file.substring(6)));
 			});
 		}

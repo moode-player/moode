@@ -580,15 +580,9 @@ else {
 					echo json_encode($result); // return all rows
 				}
 				break;
-			case 'readcfgradio':
-				$result = cfgdb_read('cfg_radio', $dbh);
-				$array = array();
-
-				foreach ($result as $row) {
-					$array[$row['station']] = array('name' => $row['name']);
-				}
-
-				echo json_encode($array);
+			case 'read_cfg_radio':
+				$result = sdbquery("select * from cfg_radio where station not in ('DELETED', 'zx reserved 499')", $dbh);
+				echo json_encode($result);
 				break;
 			case 'readaudiodev':
 				if (isset($_POST['name'])) {
