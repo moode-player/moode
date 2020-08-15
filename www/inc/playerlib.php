@@ -385,6 +385,30 @@ function genFlatList($sock) {
 	$resp = '';
 	foreach ($dirs as $dir) {
 		//workerLog('Directory: ' . $dir);
+
+		/*
+		// TODO: Alternate method for generating the flat list which allows filtering by audio format or directory
+		// NOTE: MPD must be compiled with libpcre++-dev to make use of PERL compatible regex
+		// All (Default): file contains '.'
+		// Lossless only: file =~ '.flac|.aif|.wav|.dsf|.dff'
+		// Lossy only: file !~ '.flac|.aif|.wav|.dsf|.dff'
+		switch ($_SESSION['library_flatlist_filter']) {
+			case 'all':
+				$cmd = "search \"((base '" . $dir . "') AND (file contains '.'))\"";
+				break;
+			case 'lossless':
+				$cmd = "search \"((base '" . $dir . "') AND (file =~ '.flac|.aif|.wav|.dsf|.dff'))\"";
+				break;
+			case 'lossy':
+				$cmd = "search \"((base '" . $dir . "') AND (file !~ '.flac|.aif|.wav|.dsf|.dff'))\"";
+				break;
+			default: // directory path
+				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter'] . "'))\"";
+				break;
+		}
+		sendMpdCmd($sock, $cmd);
+		*/
+
 		sendMpdCmd($sock, 'listallinfo "' . $dir . '"');
 		$resp .= readMpdResp($sock);
 	}
@@ -448,7 +472,7 @@ function genLibrary($flat) {
 	$json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE);
 
 	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
-		debugLog('genLibrary(): error: libcache.json file create failed');
+		workerLog('genLibrary(): error: libcache.json file create failed');
 	}
 	//workerLog(print_r($lib, true));
 	return $json_lib;
@@ -526,7 +550,7 @@ function genLibraryUTF8Rep($flat) {
 
 	$json_lib = json_encode($lib);
 	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
-		debugLog('genLibraryUTF8Rep(): error: libcache.json file create failed');
+		workerLog('genLibraryUTF8Rep(): error: libcache.json file create failed');
 	}
 	return $json_lib;
 }

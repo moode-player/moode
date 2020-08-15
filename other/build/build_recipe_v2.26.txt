@@ -366,7 +366,8 @@ libsystemd-dev \
 libvorbis-dev \
 libwavpack-dev \
 libwrap0-dev \
-libzzip-dev
+libzzip-dev \
+libpcre++-dev
 
 # Boost 1.68
 sudo cp ./moode/other/boost/boost_1.68_headers.tar.gz /
@@ -413,6 +414,7 @@ sudo meson configure \
 -Dwave_encoder=true \
 -Dwavpack=enabled \
 -Dzeroconf=avahi \
+-Dpcre=enabled \
 -Dzzip=enabled \
 -Dao=disabled \
 -Daudiofile=disabled \
