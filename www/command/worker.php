@@ -95,7 +95,7 @@ else {
 playerSession('open', '', '');
 loadRadio();
 workerLog('worker: Session loaded');
-workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
+workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
 
 // Verify device configuration
 //$card0 = trim(file_get_contents('/proc/asound/card0/id'));
