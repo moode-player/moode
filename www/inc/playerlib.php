@@ -2144,7 +2144,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 	// DSD file
 	elseif ($ext == 'dsf' || $ext == 'dff') {
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"');
-		$encoded_at = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' Mbps');
+		$encoded_at = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' MHz');
 	}
 	// PCM file
 	else {
