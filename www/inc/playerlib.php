@@ -705,11 +705,11 @@ function delPLFile($sock, $plname) {
 	return $resp;
 }
 
-// search mpd database
+// Search mpd database
 function searchDB($sock, $querytype, $query = '') {
 	//workerLog($querytype . ', ' . $query);
 	switch ($querytype) {
-		// list a database path
+		// List a database path
 		case 'lsinfo':
 			if (!empty($query)){
 				sendMpdCmd($sock, 'lsinfo "' . html_entity_decode($query) . '"');
@@ -719,11 +719,11 @@ function searchDB($sock, $querytype, $query = '') {
 				sendMpdCmd($sock, 'lsinfo');
 				break;
 			}
-		// search all tags
+		// Search all tags
 		case 'any':
 			sendMpdCmd($sock, 'search any "' . html_entity_decode($query) . '"');
 			break;
-		// search specified tags
+		// Search specified tags
 		case 'specific':
 			sendMpdCmd($sock, 'search ' . html_entity_decode($query));
 			break;
@@ -733,7 +733,7 @@ function searchDB($sock, $querytype, $query = '') {
 	return parseList($resp);
 }
 
-// format mpd lsinfo output
+// Format searchDB output
 function parseList($resp) {
 	if (is_null($resp)) {
 		return NULL;
@@ -741,7 +741,6 @@ function parseList($resp) {
 	else {
 		$array = array();
 		$line = strtok($resp,"\n");
-		$file = '';
 		$idx = -1;
 
 		while ($line) {
@@ -749,27 +748,25 @@ function parseList($resp) {
 
 			if ($element == 'file') {
 				$idx++;
-				$file = $value;
-				$array[$idx]['file'] = $file;
-				$array[$idx]['fileext'] = getFileExt($file);
+				$array[$idx]['file'] = $value;
+				$array[$idx]['fileext'] = getFileExt($value);
 			}
 			else if ($element == 'directory') {
 				$idx++;
-				$diridx++; // record directory index for further processing
-				$file = $value;
-				$array[$idx]['directory'] = $file;
+				$diridx++; // Save directory index for further processing
+				$array[$idx]['directory'] = $value;
+				$cover_file = md5($value) . '.jpg';
+				$array[$idx]['cover_url'] = file_exists(THMCACHE_DIR . $cover_file) ? '/imagesw/thmcache/' . $cover_file : '';
 			}
 			else if ($element == 'playlist') {
 				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
 					$idx++;
-					$file = $value;
-					$array[$idx]['file'] = $file;
-					$array[$idx]['fileext'] = getFileExt($file);
+					$array[$idx]['file'] = $value;
+					$array[$idx]['fileext'] = getFileExt($value);
 				}
 				else {
 					$idx++;
-					$file = $value;
-					$array[$idx]['playlist'] = $file;
+					$array[$idx]['playlist'] = $value;
 				}
 			}
 			else {
@@ -780,7 +777,7 @@ function parseList($resp) {
 			$line = strtok("\n");
 		}
 
-		// put dirs on top
+		// Put dirs on top
 		if (isset($diridx) && isset($array[0]['file']) ) {
 			$files = array_slice($array, 0, -$diridx);
             $dirs = array_slice($array, -$diridx);

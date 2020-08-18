@@ -706,7 +706,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
 
-	// click on artist name in lib meta area
+	// Click on artist name in lib meta area
 	$('#lib-artistname').click(function(e) {
 		$('#artistsList .lib-entry').filter(function() {return $(this).text() == $('#lib-artistname').text()}).click();
 		customScroll('artists', UI.libPos[2], 200);
@@ -747,7 +747,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 	});
 
-	// browse panel
+	// Folder view
 	$('.database').on('click', '.db-browse', function(e) {
 	    if ($(this).hasClass('db-folder') || $(this).hasClass('db-savedplaylist')) {
 			var cmd = $(this).hasClass('db-folder') ? 'lsinfo' : 'listsavedpl';
@@ -793,7 +793,7 @@ jQuery(document).ready(function($) { 'use strict';
 		var searchStr = '';
 		if ($('#dbsearch-alltags').val() != '') {
 			searchStr = $('#dbsearch-alltags').val().trim();
-			$.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {renderBrowse(data, '', searchStr);}, 'json');
+			$.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
 		}
 		else {
 			searchStr = $('#dbsearch-genre').val() == '' ? '' : 'genre "' + $('#dbsearch-genre').val().trim(); + '"'
@@ -807,7 +807,7 @@ jQuery(document).ready(function($) { 'use strict';
 			searchStr += $('#dbsearch-comment').val() == '' ? '' : ' comment "' + $('#dbsearch-comment').val().trim(); + '"'
 			searchStr += $('#dbsearch-file').val() == '' ? '' : ' file "' + $('#dbsearch-file').val().trim(); + '"'
 			if (searchStr != '') {
-				$.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {renderBrowse(data, '', searchStr);}, 'json');
+				$.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
 			}
 		}
 	});
@@ -828,7 +828,6 @@ jQuery(document).ready(function($) { 'use strict';
 			dbFilterResults.push($(this).attr('data-path'));
 		});
 	});
-	// context menu
 	$('#context-menu-db-search-results a').click(function(e) {
 		$('#db-search-results').css('font-weight', 'normal');
 	    if ($(this).data('cmd') == 'addall') {
@@ -844,7 +843,8 @@ jQuery(document).ready(function($) { 'use strict';
 	        notify('clrplay');
 		}
 	});
-	// Radio panel sub folders
+
+	// Radio view sub folders (DEPRECATED)
 	$('.database-radio').on('click', '.db-browse', function(e) {
 		if ($(this).hasClass('db-radiofolder') || $(this).hasClass('db-radiofolder-icon')) {
 			e.stopImmediatePropagation();
@@ -857,7 +857,7 @@ jQuery(document).ready(function($) { 'use strict';
             }, SCROLLTO_TIMEOUT);
 		}
 	});
-    // Radio folder back button
+    // Radio folder back button (DEPRECATED)
     $('#ra-back').click(function(e) {
         if (UI.pathr != 'RADIO') {
 			var pathr = UI.pathr;
@@ -875,6 +875,7 @@ jQuery(document).ready(function($) { 'use strict';
             }, SCROLLTO_TIMEOUT);
 		}
 	});
+    // Radio folder root list (DEPRECATED)
 	$('#ra-home').click(function(e) {
 		UI.raFolderLevel[4] = 0;
 		UI.pathr = '';
@@ -889,7 +890,7 @@ jQuery(document).ready(function($) { 'use strict';
         $("#searchResetRa").hide();
         showSearchResetRa = false;
 	});
-	// refresh panel
+    // Refresh the station list
 	$('#ra-refresh').click(function(e) {
 		mpdDbCmd('lsinfo_radio', UI.pathr);
         lazyLode('radio');
@@ -902,7 +903,7 @@ jQuery(document).ready(function($) { 'use strict';
         $("#searchResetRa").hide();
         showSearchResetRa = false;
 	});
-	// create new station
+	// Create new station
 	$('#ra-new').click(function(e) {
 		$('#new-station-pls-name').val('New station');
 		$('#new-station-url').val('http://');
@@ -929,7 +930,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-station-display-name').val($('#new-station-pls-name').val());
     });
 
-	// radio search
+	// Radio search
 	$('#ra-filter').keyup(function(e){
 		if (!showSearchResetRa) {
 			$('#searchResetRa').show();
