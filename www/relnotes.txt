@@ -29,6 +29,7 @@ Updates
 - UPD: Bump to MPD 0.22~git commit 20200723-dbdf782
 - UPD: Bump to Auto-shuffle (ashuffle) 3.7.2
 - UPD: Bump to squeezelite 1.9.7-1270
+- UPD: Bump to librespot 0.1.3
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 - UPD: Improve logging for Library update process
