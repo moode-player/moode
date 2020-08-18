@@ -5,7 +5,7 @@
 # moOde 7.0.0 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r700 sources
-# - Bump to Linux kernel 5.4.51 build #1325
+# - Bump to Linux kernel 5.4.58 build #1335
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
@@ -644,9 +644,9 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-KERNEL=5.4.51
-BUILD=#1325
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 8382ece2b30be0beb87cac7f3b36824f194d01e9
+KERNEL=5.4.58
+BUILD=#1335
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 23141000a5eae7ddbe11d4ac283198afd3031263
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak

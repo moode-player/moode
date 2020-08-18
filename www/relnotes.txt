@@ -26,6 +26,7 @@ New features
 
 Updates
 
+- UPD: Bump to Linux kernel 5.4.58 build #1335
 - UPD: Bump to MPD 0.22~git commit 20200723-dbdf782
 - UPD: Bump to Auto-shuffle (ashuffle) 3.7.2
 - UPD: Bump to squeezelite 1.9.7-1270
