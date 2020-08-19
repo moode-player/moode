@@ -431,6 +431,7 @@ else {
 						sysCmd('chown root:root "' . $file . '"');
 
 						// Write logo image
+						sendEngCmd('set_logo_image1');
 						sleep(3); // Allow time for setlogoimage job to complete which creates new image file
 						if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg')) {
 							sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
@@ -447,6 +448,7 @@ else {
 
 						sendMpdCmd($sock, 'update RADIO');
 						readMpdResp($sock);
+						sendEngCmd('set_logo_image0');
 					}
 				}
 				break;

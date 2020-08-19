@@ -422,6 +422,12 @@ function engineCmd() {
     				$('.busy-spinner').hide();
                     loadLibrary();
                     break;
+                case 'set_logo_image1':
+                    $('.busy-spinner').show();
+                    break;
+                case 'set_logo_image0':
+    				$('.busy-spinner').hide();
+                    break;
             }
 
 			engineCmd();
@@ -1090,6 +1096,7 @@ function mpdDbCmd(cmd, path) {
 	}
 	else if (cmd == 'newstation' || cmd == 'updstation') {
         RADIO.json[path['url']] = {'name': path['name']};
+        cmd == 'newstation' ? notify('creating_station') : notify('updating_station');
         $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(return_msg) {
             return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, 5000);
             $('#ra-refresh').click();
