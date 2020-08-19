@@ -1146,7 +1146,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-font-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-font-size" class="help-block hide">
-		                    	Set the size of the font used.
+		                    Set the size of the font used.
 	                    </span>
 	                </div>
 
@@ -1417,9 +1417,9 @@
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="new-station-pls-name">Station name</label>
+	                <label class="control-label" for="new-station-name">Station name</label>
 	                <div class="controls">
-	                    <input id="new-station-pls-name" class="input-xlarge" type="text" name="new_station_pls_name" maxlength="200" value="" autofocus>
+	                    <input id="new-station-name" class="input-xlarge" type="text" name="new_station_name" maxlength="200" value="" autofocus>
 	                </div>
 	                <label class="control-label" for="new-station-url">Playable URL</label>
 	                <div class="controls">
@@ -1442,25 +1442,27 @@
 
 					<div id="new-station-tags">
 						<label class="control-label" for="new-station-type">Type</label>
-						<div class="btn-group bootstrap-select select-medium">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="new-station-type" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Regular</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Favorite</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Hidden</span></a></li>
-								</ul>
-							</div>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="new-station-type" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Regular</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Favorite</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Hidden</span></a></li>
+									</ul>
+								</div>
+	 						</div>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-new-station-type" class="help-block hide">
-			                    This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
-		                    </span>
- 						</div>
+								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+							</span>
+						</div>
 						<label class="control-label" for="new-station-genre">Genre</label>
 						<div class="controls">
 							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" maxlength="200" value="">
@@ -1489,6 +1491,20 @@
 						<div class="controls">
 		                    <input id="new-station-format" class="input-xlarge" type="text" name="new_station_format" maxlength="10" value="">
 		                </div>
+						<!--
+						<label class="control-label" for="new-station-reserved0">Reserved0</label>
+						<div class="controls">
+		                    <input id="new-station-reserved0" class="input-xlarge" type="text" name="new_station_reserved0" maxlength="10" value="">
+		                </div>
+						<label class="control-label" for="new-station-reserved1">Reserved1</label>
+						<div class="controls">
+		                    <input id="new-station-reserved1" class="input-xlarge" type="text" name="new_station_reserved1" maxlength="10" value="">
+		                </div>
+						<label class="control-label" for="new-station-reserved2">Reserved2</label>
+						<div class="controls">
+		                    <input id="new-station-reserved2" class="input-xlarge" type="text" name="new_station_reserved2" maxlength="10" value="">
+		                </div>
+						-->
 					</div>
 	            </div>
 	    	</fieldset>
@@ -1510,9 +1526,9 @@
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="edit-station-pls-name">Station name</label>
+	                <label class="control-label" for="edit-station-name">Station name</label>
 	                <div class="controls">
-	                    <input id="edit-station-pls-name" class="input-xlarge" type="text" name="edit_station_name" maxlength="200" value="" readonly>
+	                    <input id="edit-station-name" class="input-xlarge" type="text" name="edit_station_name" maxlength="200" value="" readonly>
 	                </div>
 	                <label class="control-label" for="edit-station-url">Playable URL</label>
 	                <div class="controls">
@@ -1535,21 +1551,27 @@
 
 					<div id="edit-station-tags">
 						<label class="control-label" for="edit-station-type">Type</label>
-						<div class="btn-group bootstrap-select select-medium">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="edit-station-type" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Regular</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Favorite</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Hidden</span></a></li>
-								</ul>
-							</div>
- 						</div>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="edit-station-type" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Regular</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Favorite</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Hidden</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-edit-station-type" class="help-block hide">
+								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+							</span>
+						</div>
 						<label class="control-label" for="edit-station-genre">Genre</label>
 						<div class="controls">
 							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" maxlength="200" value="">
@@ -1578,6 +1600,20 @@
 						<div class="controls">
 		                    <input id="edit-station-format" class="input-xlarge" type="text" name="edit_station_format" maxlength="10" value="">
 		                </div>
+						<!--
+						<label class="control-label" for="edit-station-reserved0">Reserved0</label>
+						<div class="controls">
+		                    <input id="edit-station-reserved0" class="input-xlarge" type="text" name="edit_station_reserved0" maxlength="10" value="">
+		                </div>
+						<label class="control-label" for="new-station-reserved1">Reserved1</label>
+						<div class="controls">
+		                    <input id="edit-station-reserved1" class="input-xlarge" type="text" name="edit_station_reserved1" maxlength="10" value="">
+		                </div>
+						<label class="control-label" for="new-station-reserved2">Reserved2</label>
+						<div class="controls">
+		                    <input id="edit-station-reserved2" class="input-xlarge" type="text" name="edit_station_reserved2" maxlength="10" value="">
+		                </div>
+						-->
 					</div>
 	            </div>
 	    	</fieldset>

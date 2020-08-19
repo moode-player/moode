@@ -149,7 +149,6 @@ var fatthumbd = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'
 var blurrr = CSS.supports('-webkit-backdrop-filter','blur(1px)');
 
 // various flags and things
-var radioRendering = false;
 var dbFilterResults = [];
 var searchTimer = '';
 var showSearchResetPl = false;
@@ -1082,9 +1081,6 @@ function mpdDbCmd(cmd, path) {
 	else if (cmd == 'lsinfo' || cmd == 'listsavedpl') {
 		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {renderFolderView(data, path);}, 'json');
 	}
-//	else if (cmd == 'lsinfo_radio' && radioRendering == false) {
-//		$.post('command/moode.php?cmd=' + 'lsinfo', {'path': path}, function(data) {renderRadioView(data, path);}, 'json');
-//	}
     else if (cmd == 'lsinfo_radio') {
 		renderRadioView();
 	}
@@ -1093,7 +1089,7 @@ function mpdDbCmd(cmd, path) {
 		$.post('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {renderFolderView(data, '');}, 'json');
 	}
 	else if (cmd == 'newstation' || cmd == 'updstation') {
-        RADIO.json[path['url']] = {'name': path['display_name']};
+        RADIO.json[path['url']] = {'name': path['name']};
         $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(return_msg) {
             return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, 5000);
             $('#ra-refresh').click();
@@ -1300,7 +1296,6 @@ function formatFolderViewEntries(data, path, i) {
 
 // Render Radio view
 function renderRadioView() {
-    //radioRendering = true; // NEEDED ?
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         var tag = 'name';
@@ -1341,12 +1336,10 @@ function renderRadioView() {
     		output += '</div></li>';
     	}
     	$('ul.database-radio').html(output);
-
-        //radioRendering = false; // NEEDED ?
     });
 }
 /*
-// Format entries for Radio view
+// Format entries for Radio view (DEPRECATED)
 function formatRadioViewEntries(data, path, i, radioViewLazy) {
 	var output = '';
 	if (data) {
@@ -1886,17 +1879,17 @@ $('.context-menu a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'editradiostn') {
         $.post('command/moode.php?cmd=readstationfile', {'path': UI.dbEntry[0]}, function(result) {
-            var stationPlsName = path.slice(path.lastIndexOf('/') + 1); // Trim 'RADIO/sub_directory/'
-            stationPlsName = stationPlsName.slice(0, stationPlsName.lastIndexOf('.')); // Trim .pls
-            GLOBAL.editStationId = result['id']; // this is to pass to the update station routine so it can uniquely identify the row
-    		$('#edit-station-pls-name').val(stationPlsName);
+            var stationName = path.slice(path.lastIndexOf('/') + 1); // Trim 'RADIO/sub_directory/'
+            stationName = stationName.slice(0, stationName.lastIndexOf('.')); // Trim .pls
+            GLOBAL.editStationId = result['id']; // This is to pass to the update station routine so it can uniquely identify the row
+    		$('#edit-station-name').val(stationName);
     		$('#edit-station-url').val(result['station']);
             $('#edit-logoimage').val('');
             $('#info-toggle-edit-logoimage').css('margin-left','60px');
-            $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + stationPlsName + '.jpg">');
+            $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + stationName + '.jpg">');
 
             $('#edit-station-tags').css('margin-top', '30px');
-            $('#edit-station-display-name').val(result['name']);
+            $('#edit-station-type span').text(getParamOrValue('param', result['type']));
             $('#edit-station-genre').val(result['genre']);
             $('#edit-station-broadcaster').val(result['broadcaster']);
             $('#edit-station-language').val(result['language']);
@@ -1904,6 +1897,9 @@ $('.context-menu a').click(function(e) {
             $('#edit-station-region').val(result['region']);
             $('#edit-station-bitrate').val(result['bitrate']);
             $('#edit-station-format').val(result['format']);
+            //$('#edit-station-reserved0').val(result['reserved0']);
+            //$('#edit-station-reserved1').val(result['reserved1']);
+            //$('#edit-station-reserved2').val(result['reserved2']);
 
     		$('#editstation-modal').modal();
         }, 'json');
@@ -2273,10 +2269,6 @@ $('.btn-appearance-update').click(function(e){
 	}
 	if (accentColorChange == true) {
 		accentColor = themeToColors(SESSION.json['accent_color']);
-        // DEPRECATE
-		//var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
-		//var test = getCSSRule('.toggle .toggle-radio');
-		//test.style.backgroundImage='url("' + radio1 + '")';
 		$('.playbackknob').trigger('configure',{"fgColor":accentColor});
 		$('.volumeknob').trigger('configure',{"fgColor":accentColor});
 	}
@@ -2427,14 +2419,14 @@ function newLogoImage(files) {
 	$('#preview-new-logoimage').html("<img src='" + imgUrl + "' />");
 	$('#info-toggle-new-logoimage').css('margin-left','60px');
     $('#new-station-tags').css('margin-top', '30px');
-	var stationPlsName = $('#new-station-pls-name').val();
+	var stationName = $('#new-station-name').val();
 	URL.revokeObjectURL(imgUrl);
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
 		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=setlogoimage', {'name': stationPlsName, 'blob': data});
+        $.post('command/moode.php?cmd=setlogoimage', {'name': stationName, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
 }
@@ -2454,14 +2446,14 @@ function editLogoImage(files) {
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
 	$('#preview-edit-logoimage').html("<img src='" + imgUrl + "' />");
 	$('#info-toggle-edit-logoimage').css('margin-left','60px');
-	var stationPlsName = $('#edit-station-pls-name').val();
+	var stationName = $('#edit-station-name').val();
 	URL.revokeObjectURL(imgUrl);
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
 		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=setlogoimage', {'name': stationPlsName, 'blob': data});
+        $.post('command/moode.php?cmd=setlogoimage', {'name': stationName, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
 }

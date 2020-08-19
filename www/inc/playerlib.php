@@ -1485,7 +1485,7 @@ function cfgdb_read($table, $dbh, $param = '', $id = '') {
 		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
 	}
 	else if ($table == 'cfg_radio') {
-		$querystr = 'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
+		$querystr = 'SELECT station, name, type, logo FROM ' . $table . ' WHERE station="' . $param . '"';
 	}
 	else {
 		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';

@@ -334,44 +334,47 @@ else {
 			case 'newstation':
 			case 'updstation':
 				if (isset($_POST['path']) && $_POST['path'] != '') {
-					$pls_name = $_POST['path']['pls_name'];
+					$name = $_POST['path']['name'];
 					$return_msg = 'OK';
 
 					// Add new station
 					if ($_GET['cmd'] == 'newstation') {
 						// Check for existing pls file
-						if (file_exists(MPD_MUSICROOT . 'RADIO/' . $_POST['path']['pls_name'] . '.pls')) {
+						if (file_exists(MPD_MUSICROOT . 'RADIO/' . $_POST['path']['name'] . '.pls')) {
 							$return_msg = 'A station .pls file with the same name already exists';
 						}
-						// Check for existing url or display name
+						// Check for existing url or name in the table
 						// NOTE: true = no results, array = results, false = query bombed (unlikely)
 						else {
 							$result = sdbquery("select id from cfg_radio where station='" . SQLite3::escapeString($_POST['path']['url']) . "'", $dbh);
 							if ($result !== true) {
-								$return_msg = 'A station with same URL already exists';
+								$return_msg = 'A station with same URL already exists in the SQL table';
 							}
 							else {
-								$result = sdbquery("select id from cfg_radio where name='" . SQLite3::escapeString($_POST['path']['display_name']) . "'", $dbh);
+								$result = sdbquery("select id from cfg_radio where name='" . SQLite3::escapeString($_POST['path']['name']) . "'", $dbh);
 								if ($result !== true) {
-									$return_msg = 'A station with same display name already exists';
+									$return_msg = 'A station with the same name already exists in the SQL table';
 								}
 							}
 						}
 
 						if ($return_msg == 'OK') {
 							// Add new row, NULL causes Id column to be set to next number
-							// $values have to be in volumn order
+							// NOTE: $values have to be in column order
 							$values =
 								"'"	. $_POST['path']['url'] . "'," .
-								"'" . SQLite3::escapeString($_POST['path']['display_name']) . "'," .
-								"'u','local'," .
+								"'" . SQLite3::escapeString($_POST['path']['name']) . "'," .
+								"'r','local'," .
 								"\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1,g2,g3
 								"'" . $_POST['path']['broadcaster'] . "'," .
 								"'" . $_POST['path']['language'] . "'," .
 								"'" . $_POST['path']['country'] . "'," .
 								"'" . $_POST['path']['region'] . "'," .
 								"'" . $_POST['path']['bitrate'] . "'," .
-								"'" . $_POST['path']['format'] . "'";
+								"'" . $_POST['path']['format'] . "'," .
+								"'" . $_POST['path']['reserved0'] . "'," .
+								"'" . $_POST['path']['reserved1'] . "'," .
+								"'" . $_POST['path']['reserved2'] . "'";
 							$result = sdbquery('insert into cfg_radio values (NULL,' . $values . ')', $dbh);
 						}
 
@@ -379,32 +382,28 @@ else {
 					}
 					// Update station
 					else {
-						// Client prevents pls name change so only need to check url and display name
+						// Client prevents pls name change so only need to check url
 						$result = sdbquery("select id from cfg_radio where id!='" . $_POST['path']['id'] . "' and station='" . SQLite3::escapeString($_POST['path']['url']) . "'", $dbh);
 						if ($result !== true) {
 							$return_msg = 'A station with same URL already exists';
 						}
-						else {
-							$result = sdbquery("select id from cfg_radio where id!='" . $_POST['path']['id'] . "' and name='" . SQLite3::escapeString($_POST['path']['display_name']) . "'", $dbh);
-							if ($result !== true) {
-								$return_msg = 'A station with same display name already exists';
-							}
-						}
 
 						if ($return_msg == 'OK') {
-							// cfgdb_update($table, $dbh, $key, $vslue)
-							//$result = cfgdb_update('cfg_radio', $dbh, SQLite3::escapeString($_POST['path']['display_name']), $_POST['path']['url']);
 							$columns =
 							"station='" . $_POST['path']['url'] . "'," .
-							"name='" . SQLite3::escapeString($_POST['path']['display_name']) . "'," .
-							"type='u',logo='local'," .
+							"name='" . SQLite3::escapeString($_POST['path']['name']) . "'," .
+							"type='" . $_POST['path']['type'] . "'," .
+							"logo='local'," .
 							"genre=\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1,g2,g3
 							"broadcaster='" . $_POST['path']['broadcaster'] . "'," .
 							"language='" . $_POST['path']['language'] . "'," .
 							"country='" . $_POST['path']['country'] . "'," .
 							"region='" . $_POST['path']['region'] . "'," .
 							"bitrate='" . $_POST['path']['bitrate'] . "'," .
-							"format='" . $_POST['path']['format'] . "'";
+							"format='" . $_POST['path']['format'] . "'," .
+							"reserved0='" . $_POST['path']['reserved0'] . "'," .
+							"reserved1='" . $_POST['path']['reserved0'] . "'," .
+							"reserved2='" . $_POST['path']['reserved0'] . "'";
 							$result = sdbquery('UPDATE cfg_radio SET ' . $columns . ' WHERE id=' . $_POST['path']['id'], $dbh);
 						}
 
@@ -414,15 +413,15 @@ else {
 					if ($return_msg == 'OK') {
 						// Add session var
 						session_start();
-						$_SESSION[$_POST['path']['url']] = array('name' => $_POST['path']['display_name'], 'type' => 'u', 'logo' => 'local');
+						$_SESSION[$_POST['path']['url']] = array('name' => $_POST['path']['name'], 'type' => $_POST['path']['type'], 'logo' => 'local');
 						session_write_close();
 
 						// Write pls file and set permissions
-						$file =  MPD_MUSICROOT . 'RADIO/' . $_POST['path']['pls_name'] . '.pls';
+						$file =  MPD_MUSICROOT . 'RADIO/' . $_POST['path']['name'] . '.pls';
 						$fh = fopen($file, 'w') or exit('moode.php: file create failed on ' . $file);
 						$data = '[playlist]' . "\n";
 						$data .= 'File1='. $_POST['path']['url'] . "\n";
-						$data .= 'Title1='. $_POST['path']['display_name'] . "\n";
+						$data .= 'Title1='. $_POST['path']['name'] . "\n";
 						$data .= 'Length1=-1' . "\n";
 						$data .= 'NumberOfEntries=1' . "\n";
 						$data .= 'Version=2' . "\n";
@@ -433,14 +432,14 @@ else {
 
 						// Write logo image
 						sleep(3); // Allow time for setlogoimage job to complete which creates new image file
-						if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg')) {
-							sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
-							sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['pls_name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
+						if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg')) {
+							sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
+							sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
 						}
 						// Write default logo image if an image does not already exist
- 						else if (!file_exists('/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg')) {
-							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['pls_name'] . '.jpg"');
-							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['pls_name'] . '.jpg"');
+ 						else if (!file_exists('/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg')) {
+							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
+							sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
 						}
 
 						// Update time stamp on files so mpd picks up the change and commits the update
@@ -470,10 +469,10 @@ else {
 					$result = sdbquery("delete from cfg_radio where id='" . $result[0]['id'] . "'", $dbh);
 
 					// Delete pls and logo image files
-					$station_pls_name = substr($_POST['path'], 6, -4); // Trim RADIO/ and .pls
+					$station_name = substr($_POST['path'], 6, -4); // Trim RADIO/ and .pls
 					sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
-					sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/' . $station_pls_name . '.jpg' . '"');
-					sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $station_pls_name . '.jpg' . '"');
+					sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/' . $station_name . '.jpg' . '"');
+					sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $station_name . '.jpg' . '"');
 
 					// Update time stamp on files so mpd picks up the change
 					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
@@ -631,7 +630,8 @@ else {
 				$result = sdbquery("SELECT * FROM cfg_radio WHERE station='" . SQLite3::escapeString($station_file['File1']) . "'", $dbh);
 				$array = array('id' => $result[0]['id'], 'station' => $result[0]['station'], 'name' => $result[0]['name'], 'type' => $result[0]['type'],
 				 	'logo' =>  $result[0]['logo'], 'genre' => $result[0]['genre'], 'broadcaster' => $result[0]['broadcaster'], 'language' => $result[0]['language'],
-					'country' => $result[0]['country'], 'region' => $result[0]['region'], 'bitrate' => $result[0]['bitrate'], 'format' => $result[0]['format']);
+					'country' => $result[0]['country'], 'region' => $result[0]['region'], 'bitrate' => $result[0]['bitrate'], 'format' => $result[0]['format'],
+				 	'reserved0' => $result[0]['reserved0'], 'reserved1' => $result[0]['reserved1'], 'reserved2' => $result[0]['reserved2']);
 				echo json_encode($array);
 				break;
 			// Remove background image
