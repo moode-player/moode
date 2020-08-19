@@ -19,6 +19,7 @@ New features
 
 - NEW: Selective resampling modes
 - NEW: Custom SoX resampling recipes
+- NEW: Radio view
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode
 - NEW: Option to display thumbnails in the Playlist
@@ -48,6 +49,7 @@ Bug fixes
 - FIX: Manual entry of SSID not accepting embedded space
 - FIX: Graphic EQ curves are +6 alsaequal units too high
 - FIX: Listall.sh script not handling mixed case extentions
+- FIX: Airplay, Spotify renderers started after BlueZ disconnect
 
 ########################################################
 //

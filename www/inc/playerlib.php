@@ -3072,10 +3072,15 @@ function setAudioOut($audioout) {
 	}
 
 	// Renderers
-	stopSps();
-	stopSpotify();
-	startSps();
-	startSpotify();
+	if ($_SESSION['airplaysvc'] == '1') {
+		stopSps();
+		startSps();
+	}
+
+	if ($_SESSION['spotifysvc'] == '1') {
+		stopSpotify();
+		startSpotify();
+	}
 
 	// Other
 	setMpdHttpd();
