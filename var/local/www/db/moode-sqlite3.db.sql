@@ -1,73 +1,32 @@
 --
--- File generated with SQLiteStudio v3.0.0 on Wed Aug 12 21:20:48 2020
+-- File generated with SQLiteStudio v3.0.0 on Tue Aug 18 23:41:49 2020
 --
 -- Text encoding used: UTF-8
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
--- Table: cfg_mpd
-CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
-INSERT INTO cfg_mpd (id, param, value) VALUES (1, 'music_directory', '/var/lib/mpd/music');
-INSERT INTO cfg_mpd (id, param, value) VALUES (2, 'playlist_directory', '/var/lib/mpd/playlists');
-INSERT INTO cfg_mpd (id, param, value) VALUES (3, 'db_file', '/var/lib/mpd/database');
-INSERT INTO cfg_mpd (id, param, value) VALUES (4, 'log_file', '/var/log/mpd/log');
-INSERT INTO cfg_mpd (id, param, value) VALUES (5, 'pid_file', '/var/run/mpd/pid');
-INSERT INTO cfg_mpd (id, param, value) VALUES (6, 'state_file', '/var/lib/mpd/state');
-INSERT INTO cfg_mpd (id, param, value) VALUES (7, 'sticker_file', '/var/lib/mpd/sticker.sql');
-INSERT INTO cfg_mpd (id, param, value) VALUES (8, 'user', 'mpd');
-INSERT INTO cfg_mpd (id, param, value) VALUES (9, 'group', 'audio');
-INSERT INTO cfg_mpd (id, param, value) VALUES (10, 'bind_to_address', 'any');
-INSERT INTO cfg_mpd (id, param, value) VALUES (11, 'port', '6600');
-INSERT INTO cfg_mpd (id, param, value) VALUES (12, 'log_level', 'default');
-INSERT INTO cfg_mpd (id, param, value) VALUES (13, 'restore_paused', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (14, 'auto_update', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (15, 'follow_outside_symlinks', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (16, 'follow_inside_symlinks', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (17, 'zeroconf_enabled', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (18, 'zeroconf_name', 'Moode MPD');
-INSERT INTO cfg_mpd (id, param, value) VALUES (19, 'filesystem_charset', 'UTF-8');
-INSERT INTO cfg_mpd (id, param, value) VALUES (20, 'metadata_to_use', '+comment');
-INSERT INTO cfg_mpd (id, param, value) VALUES (21, 'device', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (22, 'mixer_type', 'software');
-INSERT INTO cfg_mpd (id, param, value) VALUES (23, 'dop', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (24, 'audio_output_format', 'disabled');
-INSERT INTO cfg_mpd (id, param, value) VALUES (25, 'sox_quality', 'very high');
-INSERT INTO cfg_mpd (id, param, value) VALUES (26, 'sox_multithreading', '1');
-INSERT INTO cfg_mpd (id, param, value) VALUES (27, 'replaygain', 'off');
-INSERT INTO cfg_mpd (id, param, value) VALUES (28, 'replaygain_preamp', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (29, 'replay_gain_handler', 'software');
-INSERT INTO cfg_mpd (id, param, value) VALUES (30, 'volume_normalization', 'no');
-INSERT INTO cfg_mpd (id, param, value) VALUES (31, 'audio_buffer_size', '4096');
-INSERT INTO cfg_mpd (id, param, value) VALUES (32, 'buffer_before_play', 'DEPRECATED');
-INSERT INTO cfg_mpd (id, param, value) VALUES (33, 'max_output_buffer_size', '131072');
-INSERT INTO cfg_mpd (id, param, value) VALUES (34, 'auto_resample', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (35, 'auto_channels', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (36, 'auto_format', 'yes');
-INSERT INTO cfg_mpd (id, param, value) VALUES (37, 'buffer_time', '500000');
-INSERT INTO cfg_mpd (id, param, value) VALUES (38, 'period_time', '256000000');
-INSERT INTO cfg_mpd (id, param, value) VALUES (39, 'selective_resample_mode', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (40, 'sox_precision', '20');
-INSERT INTO cfg_mpd (id, param, value) VALUES (41, 'sox_phase_response', '50');
-INSERT INTO cfg_mpd (id, param, value) VALUES (42, 'sox_passband_end', '95');
-INSERT INTO cfg_mpd (id, param, value) VALUES (43, 'sox_stopband_begin', '100');
-INSERT INTO cfg_mpd (id, param, value) VALUES (44, 'sox_attenuation', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
-INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384');
+-- Table: cfg_airplay
+CREATE TABLE cfg_airplay (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
+INSERT INTO cfg_airplay (id, param, value) VALUES (1, 'airplaymeta', 'deprecated');
+INSERT INTO cfg_airplay (id, param, value) VALUES (2, 'airplayvol', 'deprecated');
+INSERT INTO cfg_airplay (id, param, value) VALUES (3, 'interpolation', 'soxr');
+INSERT INTO cfg_airplay (id, param, value) VALUES (4, 'output_format', 'S16');
+INSERT INTO cfg_airplay (id, param, value) VALUES (5, 'output_rate', '44100');
+INSERT INTO cfg_airplay (id, param, value) VALUES (6, 'allow_session_interruption', 'no');
+INSERT INTO cfg_airplay (id, param, value) VALUES (7, 'session_timeout', '120');
+INSERT INTO cfg_airplay (id, param, value) VALUES (8, 'audio_backend_latency_offset_in_seconds', '0.0');
+INSERT INTO cfg_airplay (id, param, value) VALUES (9, 'audio_backend_buffer_desired_length_in_seconds', '0.2');
 
--- Table: cfg_source
-CREATE TABLE cfg_source (
-id INTEGER PRIMARY KEY,
-name CHAR(25),
-type CHAR(8),
-address CHAR(15),
-remotedir CHAR(30),
-username CHAR(30),
-password CHAR(60),
-charset CHAR(15),
-rsize INT(4),
-wsize INT(4)
-, options CHAR(60), error CHAR(150))
+-- Table: cfg_sl
+CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64))
+INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
+INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', '0');
+INSERT INTO cfg_sl (id, param, value) VALUES (3, 'ALSAPARAMS', '80:4::1');
+INSERT INTO cfg_sl (id, param, value) VALUES (4, 'OUTPUTBUFFERS', '40000:100000');
+INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
+INSERT INTO cfg_sl (id, param, value) VALUES (6, 'CODECS', 'flac,pcm,mp3,ogg,aac,alac,dsd');
+INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E -S /var/local/www/commandw/slpower.sh');
 
 -- Table: cfg_system
 CREATE TABLE cfg_system (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
@@ -214,6 +173,10 @@ INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
 INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
 
+-- Table: cfg_eqfa4p
+CREATE TABLE cfg_eqfa4p (id INTEGER PRIMARY KEY, curve_name CHAR (32), master_gain CHAR (32), band1_params CHAR (32), band2_params CHAR (32), band3_params CHAR (32), band4_params CHAR (32))
+INSERT INTO cfg_eqfa4p (id, curve_name, master_gain, band1_params, band2_params, band3_params, band4_params) VALUES (1, 'Default curve', '0', '1 20 1 0', '1 180 1 0', '1 2000 1 0', '1 11700 1 0');
+
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32))
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (1, 'Flat', '60,60,60,60,60,60,60,60,60,60');
@@ -230,32 +193,6 @@ INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (11, 'Classic V Plu
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (12, 'Vinyl Touch', '60,66,62,61,60,60,60,54,48,68');
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (13, 'Vinyl Touch Plus', '60,68,64,60,60,60,60,46,41,68');
 
--- Table: cfg_upnp
-CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
-INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'tidaluser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'tidalpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'low');
-INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '5');
-INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'gmusicuser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'gmusicpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'gmusicquality', 'low');
-INSERT INTO cfg_upnp (id, param, value) VALUES (10, 'gmusicdeviceid', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (11, 'checkcontentformat', 'Yes');
-
--- Table: cfg_gpio
-CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32))
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
-
 -- Table: cfg_spotify
 CREATE TABLE cfg_spotify (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
 INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '160');
@@ -265,90 +202,68 @@ INSERT INTO cfg_spotify (id, param, value) VALUES (4, 'volume_normalization', 'N
 INSERT INTO cfg_spotify (id, param, value) VALUES (5, 'normalization_pregain', '0');
 INSERT INTO cfg_spotify (id, param, value) VALUES (6, 'autoplay', 'No');
 
--- Table: cfg_network
-CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3))
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None (activates AP mode)', 'wpa', '', '', 'US', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', '', '6');
+-- Table: cfg_source
+CREATE TABLE cfg_source (
+id INTEGER PRIMARY KEY,
+name CHAR(25),
+type CHAR(8),
+address CHAR(15),
+remotedir CHAR(30),
+username CHAR(30),
+password CHAR(60),
+charset CHAR(15),
+rsize INT(4),
+wsize INT(4)
+, options CHAR(60), error CHAR(150))
 
--- Table: cfg_audiodev
-CREATE TABLE cfg_audiodev (id INTEGER PRIMARY KEY, name CHAR (64), alt_name CHAR (64), dacchip CHAR (64), chipoptions CHAR (64), iface CHAR (32), list CHAR (10), driver CHAR (64), drvoptions CHAR (64))
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (1, 'Allo Boss DAC', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (2, 'Allo DigiOne', NULL, 'Cirrus Logic WM8805', NULL, 'I2S', 'yes', 'allo-digione', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (3, 'Allo DigiOne Signature', NULL, 'Cirrus Logic WM8805', NULL, 'I2S', 'yes', 'allo-digione', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (4, 'Allo Katana DAC', NULL, 'ESS Sabre ES9038Q2M', 'Apodizing Fast Roll-off Filter,Bypass,on', 'I2S', 'yes', 'allo-katana-dac-audio', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (5, 'Allo MiniBoss DAC', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (6, 'Allo Piano 2.1 Hi-Fi DAC', NULL, 'Burr Brown PCM5142', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-piano-dac-plus-pcm512x-audio', 'glb_mclk');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (7, 'Allo Piano Hi-Fi DAC', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-piano-dac-pcm512x-audio', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (8, 'Audiophonics ES9018 DAC', NULL, 'ESS Sabre ES9018 K2M', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (9, 'Audiophonics ES9023 DAC', NULL, 'ESS Sabre ES9023', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (10, 'Audiophonics ES9028/9038 DAC', NULL, 'ESS Sabre ES9028/9038 Q2M', 'brick wall,I2S', 'I2S', 'yes', 'i-sabre-q2m', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (11, 'Audiophonics ES9028/9038 DAC (Pre 2019)', NULL, 'ESS Sabre ES9028/9038 Q2M', 'brick wall,I2S', 'I2S', 'yes', 'i-sabre-q2m', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (12, 'Audiophonics PCM5102 DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (13, 'Audiophonics PCM5122 DAC', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (14, 'Audiophonics TDA1387 DAC', NULL, 'Philips TDA1387', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (15, 'Buffalo I', NULL, 'ESS Sabre ES9008', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (16, 'Buffalo II/IIIse', NULL, 'ESS Sabre ES9018', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (17, 'DDDAC1794 NOS', NULL, 'Burr Brown PCM1794', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (18, 'Denafrips Pontus R2R DAC (I2S)', NULL, 'Altera MAX II CPLD', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (19, 'DIAL-DAC', NULL, 'Burr Brown PCM1793', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (20, 'Dion Audio LOCO', NULL, 'Burr Brown PCM5242 DAC, TPA3118 AMP', NULL, 'I2S', 'yes', 'dionaudio-loco', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (21, 'Dion Audio LOCO V2', NULL, 'Burr Brown PCM5242 DAC, TPA3118 AMP', NULL, 'I2S', 'yes', 'dionaudio-loco-v2', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (22, 'DIYINHK ES9023 DAC', NULL, 'ESS Sabre ES9023', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (23, 'Durio Sound PRO', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (24, 'G2 Labs BerryNOS', NULL, 'Philips TDA1543', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (25, 'G2 Labs BerryNOS Red', NULL, 'Philips TDA1543', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (26, 'Generic-1 I2S (hifiberry-dac)', NULL, 'ESS Sabre ES90xx, Burr Brown PCM5102', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (27, 'Generic-2 I2S (rpi-dac)', NULL, 'ESS Sabre ES9018, Burr Brown PCM1794', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (28, 'HIFI DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (29, 'HIFI DAC+', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (30, 'HIFI Digi', NULL, 'Wolfson WM8804G', NULL, 'I2S', 'yes', 'hifiberry-digi', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (31, 'HIFI Digi+', NULL, 'Wolfson WM8804G', NULL, 'I2S', 'yes', 'hifiberry-digi', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (32, 'HiFiBerry Amp(Amp+)', NULL, 'Burr Brown TAS5713', NULL, 'I2S', 'yes', 'hifiberry-amp', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (33, 'HiFiBerry Amp2', NULL, 'Burr Brown TAS5756M', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (34, 'HiFiBerry Beocreate', NULL, 'Burr Brown PCM4104 DAC, TPA3128 Amp, Analog Devices ADAU1451 DSP', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (35, 'HiFiBerry DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (36, 'HiFiBerry DAC/DAC+ Zero', NULL, 'Burr Brown PCM5101A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (37, 'HiFiBerry DAC+', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (38, 'HiFiBerry DAC+ ADC', NULL, 'Burr Brown PCM5122, PCM1861 ADC', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplusadc', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (39, 'HiFiBerry DAC+ DSP', NULL, 'Burr Brown PCM5102A, Analog Devices ADAU1451 DSP', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (40, 'HiFiBerry DAC+ Light', NULL, 'ESS Sabre ES9023', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (41, 'HiFiBerry DAC+ Pro', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (42, 'HiFiBerry Digi(Digi+)', NULL, 'Cirrus Logic WM8804', NULL, 'I2S', 'yes', 'hifiberry-digi', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (43, 'HiFiBerry Digi+ Pro', NULL, 'Cirrus Logic WM8804', NULL, 'I2S', 'yes', 'hifiberry-digi-pro', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (44, 'HiFiBerry MiniAmp', NULL, 'Burr Brown PCM5101A, Diodes PAM8403', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (45, 'Hifimediy ES9023', NULL, 'ESS Sabre ES9023', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (46, 'IanFIFO II', NULL, 'Altera Max II CPLD', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (47, 'IQaudIO Pi-AMP+', NULL, 'Burr Brown TPA3118', NULL, 'I2S', 'yes', 'iqaudio-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (48, 'IQaudIO Pi-DAC', NULL, 'Burr Brown PCM5122', NULL, 'I2S', 'yes', 'iqaudio-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (49, 'IQaudIO Pi-DAC PRO', NULL, 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (50, 'IQaudIO Pi-DAC+', NULL, 'Burr Brown PCM5122', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (51, 'IQaudIO Pi-DACZero', NULL, 'Burr Brown PCM5122', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (52, 'IQaudIO Pi-Digi+', NULL, 'Wolfson WM8804', NULL, 'I2S', 'yes', 'iqaudio-digi-wm8804-audio', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (53, 'IQaudIO Pi-DigiAMP+', NULL, 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (54, 'JustBoom AMP HAT(Zero)', NULL, 'Burr Brown TAS5756', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'justboom-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (55, 'JustBoom DAC HAT(Zero)', NULL, 'Burr Brown PCM5122 (PCM5121)', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'justboom-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (56, 'JustBoom Digi HAT(Zero)', NULL, 'Wolfson WM8804G', NULL, 'I2S', 'yes', 'justboom-digi', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (57, 'Lucid Labs Raspberry Pi DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (58, 'Mamboberry HiFi DAC+', NULL, 'ESS Sabre ES9032', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (59, 'Mamboberry LS DAC+', NULL, 'ESS Sabre ES9023p', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (60, 'MERUS(tm) Amp piHAT ZW', NULL, 'Infineon MA12070P', 'PMF0', 'I2S', 'yes', 'merus-amp', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (61, 'Pi2Design 502DAC', NULL, 'Burr Brown PCM5122, Wolfson WM8804', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (62, 'Pi2Design 502DAC PRO', NULL, 'Burr Brown PCM1792, Wolfson WM8804', NULL, 'I2S', 'yes', 'hifiberry-digi-pro', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (63, 'Pi2Design 503HTA Hybrid Tube Amp', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (64, 'Pimoroni pHAT DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (65, 'PlainAMP', NULL, 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (66, 'PlainDAC', NULL, 'Burr Brown PCM5100', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (67, 'PlainDAC+', NULL, 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (68, 'PlainDSP', NULL, 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (69, 'RaspyPlay4', NULL, 'Burr Brown PCM5122', NULL, 'I2S', 'yes', 'iqaudio-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (70, 'RPi-DAC', NULL, 'Burr Brown PCM1794A', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (71, 'Soekris DAM1021/1121 (I2S)', NULL, 'FPGA based', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (72, 'Suptronics x400', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (200, 'b1', 'Pi HDMI 1', 'Broadcom SoC', NULL, 'SOC', 'yes', NULL, NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (201, 'b2', 'Pi HDMI 2', 'Broadcom SoC', NULL, 'SOC', 'yes', NULL, NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (202, 'Headphones', 'Pi Headphone jack', 'Broadcom SoC', NULL, 'SOC', 'yes', NULL, NULL);
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', NULL, 'USB', 'yes', NULL, NULL);
+-- Table: cfg_mpd
+CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
+INSERT INTO cfg_mpd (id, param, value) VALUES (1, 'music_directory', '/var/lib/mpd/music');
+INSERT INTO cfg_mpd (id, param, value) VALUES (2, 'playlist_directory', '/var/lib/mpd/playlists');
+INSERT INTO cfg_mpd (id, param, value) VALUES (3, 'db_file', '/var/lib/mpd/database');
+INSERT INTO cfg_mpd (id, param, value) VALUES (4, 'log_file', '/var/log/mpd/log');
+INSERT INTO cfg_mpd (id, param, value) VALUES (5, 'pid_file', '/var/run/mpd/pid');
+INSERT INTO cfg_mpd (id, param, value) VALUES (6, 'state_file', '/var/lib/mpd/state');
+INSERT INTO cfg_mpd (id, param, value) VALUES (7, 'sticker_file', '/var/lib/mpd/sticker.sql');
+INSERT INTO cfg_mpd (id, param, value) VALUES (8, 'user', 'mpd');
+INSERT INTO cfg_mpd (id, param, value) VALUES (9, 'group', 'audio');
+INSERT INTO cfg_mpd (id, param, value) VALUES (10, 'bind_to_address', 'any');
+INSERT INTO cfg_mpd (id, param, value) VALUES (11, 'port', '6600');
+INSERT INTO cfg_mpd (id, param, value) VALUES (12, 'log_level', 'default');
+INSERT INTO cfg_mpd (id, param, value) VALUES (13, 'restore_paused', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (14, 'auto_update', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (15, 'follow_outside_symlinks', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (16, 'follow_inside_symlinks', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (17, 'zeroconf_enabled', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (18, 'zeroconf_name', 'Moode MPD');
+INSERT INTO cfg_mpd (id, param, value) VALUES (19, 'filesystem_charset', 'UTF-8');
+INSERT INTO cfg_mpd (id, param, value) VALUES (20, 'metadata_to_use', '+comment');
+INSERT INTO cfg_mpd (id, param, value) VALUES (21, 'device', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (22, 'mixer_type', 'software');
+INSERT INTO cfg_mpd (id, param, value) VALUES (23, 'dop', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (24, 'audio_output_format', 'disabled');
+INSERT INTO cfg_mpd (id, param, value) VALUES (25, 'sox_quality', 'very high');
+INSERT INTO cfg_mpd (id, param, value) VALUES (26, 'sox_multithreading', '1');
+INSERT INTO cfg_mpd (id, param, value) VALUES (27, 'replaygain', 'off');
+INSERT INTO cfg_mpd (id, param, value) VALUES (28, 'replaygain_preamp', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (29, 'replay_gain_handler', 'software');
+INSERT INTO cfg_mpd (id, param, value) VALUES (30, 'volume_normalization', 'no');
+INSERT INTO cfg_mpd (id, param, value) VALUES (31, 'audio_buffer_size', '4096');
+INSERT INTO cfg_mpd (id, param, value) VALUES (32, 'buffer_before_play', 'DEPRECATED');
+INSERT INTO cfg_mpd (id, param, value) VALUES (33, 'max_output_buffer_size', '131072');
+INSERT INTO cfg_mpd (id, param, value) VALUES (34, 'auto_resample', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (35, 'auto_channels', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (36, 'auto_format', 'yes');
+INSERT INTO cfg_mpd (id, param, value) VALUES (37, 'buffer_time', '500000');
+INSERT INTO cfg_mpd (id, param, value) VALUES (38, 'period_time', '256000000');
+INSERT INTO cfg_mpd (id, param, value) VALUES (39, 'selective_resample_mode', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (40, 'sox_precision', '20');
+INSERT INTO cfg_mpd (id, param, value) VALUES (41, 'sox_phase_response', '50');
+INSERT INTO cfg_mpd (id, param, value) VALUES (42, 'sox_passband_end', '95');
+INSERT INTO cfg_mpd (id, param, value) VALUES (43, 'sox_stopband_begin', '100');
+INSERT INTO cfg_mpd (id, param, value) VALUES (44, 'sox_attenuation', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
+INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32))
@@ -368,20 +283,25 @@ INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (13
 INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (14, 'Serene Sky', 'ddd', '84,109,155', '89,116,165,0.75');
 INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (15, 'Whiteshade', '333', '243,243,243', '251,251,251,0.75');
 
--- Table: cfg_hash
-CREATE TABLE cfg_hash (id INTEGER PRIMARY KEY, param CHAR (64), value CHAR (64), "action" CHAR (32))
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '7cfa7f4c830f5c446396ae2397bf59a1', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (2, '/etc/nginx/fastcgi_params', '953d4fb6958806a7edd317ac36558fdd', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '1f695c247f64fe4f482d967dfea33b41', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/php-fpm.conf', '8d60ea0c8a646382b1dda59393d1d90b', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', '63aaed1e3a99b11a05c2bef2910fe072', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '787d82e9de10d1217c705fff2b7577f9', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '5e53efb08d5a222830f96952f356fd9b', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'ce394e0c9fb2972d8eb0ec31ac4fd22e', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', 'e43068c89c0878541524ce84d671f4f9', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
+-- Table: cfg_upnp
+CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
+INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'tidaluser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'tidalpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'low');
+INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '5');
+INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'gmusicuser', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'gmusicpass', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'gmusicquality', 'low');
+INSERT INTO cfg_upnp (id, param, value) VALUES (10, 'gmusicdeviceid', '');
+INSERT INTO cfg_upnp (id, param, value) VALUES (11, 'checkcontentformat', 'Yes');
+
+-- Table: cfg_network
+CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3))
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None (activates AP mode)', 'wpa', '', '', 'US', '');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', '', '6');
 
 -- Table: cfg_radio
 CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (8), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), favorite CHAR (3), reserved1 CHAR (32), reserved2 CHAR (32))
@@ -406,20 +326,20 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (19, 'http://94.23.201.38:8030', 'Audiophile Lounge', 's', 'local', 'Ambient,Lounge', 'Audiophile Stream Network', 'English', 'Greece', 'Europe', '320', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (20, 'http://94.23.201.38:8040', 'Audiophile Rock-Blues', 's', 'local', 'Rock,Blues', 'Audiophile Stream Network', 'English', 'Greece', 'Europe', '320', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (21, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/ak/bbc_asian_network.m3u8', 'BBC Asian Network', 's', 'local', 'Contempoary,Bollywood,Bhangra,Pop,Urban', 'BBC', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (22, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_asian_network.m3u8', 'BBC Asian Network - 320K', 's', 'imagesw/radio-logos/BBC 320K Asian Network.jpg', 'Contempoary,Bollywood,Bhangra,Pop,Urban', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (22, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_asian_network.m3u8', 'BBC Asian Network - 320K', 's', 'imagesw/radio-logos/BBC Asian Network.jpg', 'Contempoary,Bollywood,Bhangra,Pop,Urban', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (23, 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p', 'BBC Radio 1', 's', 'local', 'Top 40,Chart,Pop', 'BBC', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (24, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_one.m3u8', 'BBC Radio 1 - 320K', 's', 'imagesw/radio-logos/BBC 320K Radio 1.jpg', 'Top 40,Chart,Pop', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (24, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_one.m3u8', 'BBC Radio 1 - 320K', 's', 'imagesw/radio-logos/BBC Radio 1.jpg', 'Top 40,Chart,Pop', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (25, 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio2_mf_p', 'BBC Radio 2', 's', 'local', 'Contemporary,Pop', 'BBC', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (26, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_two.m3u8', 'BBC Radio 2 - 320K', 's', 'imagesw/radio-logos/BBC 320K Radio 2.jpg', 'Contemporary,Pop', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (26, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_two.m3u8', 'BBC Radio 2 - 320K', 's', 'imagesw/radio-logos/BBC Radio 2.jpg', 'Contemporary,Pop', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (27, 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio3_mf_p', 'BBC Radio 3', 's', 'local', 'Classical,Jazz,World Music', 'BBC', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (28, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_three.m3u8', 'BBC Radio 3 - 320K', 's', 'imagesw/radio-logos/BBC 320K Radio 3.jpg', 'Classical,Jazz,World Music', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (28, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_three.m3u8', 'BBC Radio 3 - 320K', 's', 'imagesw/radio-logos/BBC Radio 3.jpg', 'Classical,Jazz,World Music', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (29, 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p', 'BBC Radio 4 FM', 's', 'local', 'Spoken Word', 'BBC', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (30, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_fourfm.m3u8', 'BBC Radio 4 FM - 320K', 's', 'imagesw/radio-logos/BBC 320K Radio 4 FM.jpg', 'Spoken Word', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (30, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_fourfm.m3u8', 'BBC Radio 4 FM - 320K', 's', 'imagesw/radio-logos/BBC Radio 4 FM.jpg', 'Spoken Word', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (31, 'http://open.live.bbc.co.uk/mediaselector/5/redir/version/2.0/mediaset/http-icy-mp3-a-stream/proto/http/vpid/bbc_radio_five_live', 'BBC Radio 5 live', 's', 'local', 'News,Sports', 'BBC', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (32, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_five_live.m3u8', 'BBC Radio 5 live - 320K', 's', 'imagesw/radio-logos/BBC 320K Radio 5 live.jpg', 'News,Sports', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (33, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_five_live_sports_extra.m3u8', 'BBC Radio 5 live sports extra - 320K', 's', 'imagesw/radio-logos/BBC 320K Radio 5 live sports extra.jpg', 'News,Sports', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (32, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_five_live.m3u8', 'BBC Radio 5 live - 320K', 's', 'imagesw/radio-logos/BBC Radio 5 live.jpg', 'News,Sports', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (33, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_radio_five_live_sports_extra.m3u8', 'BBC Radio 5 live sports extra - 320K', 's', 'local', 'News,Sports', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (34, 'http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p', 'BBC Radio 6 music', 's', 'local', 'Alternative,Rock,Funk', 'BBC', 'English', 'United Kingdom', 'Europe', '128', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (35, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_6music.m3u8', 'BBC Radio 6 music - 320K', 's', 'imagesw/radio-logos/BBC 320K Radio 6 music.jpg', 'Alternative,Rock,Funk', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (35, 'http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/uk/sbr_high/ak/bbc_6music.m3u8', 'BBC Radio 6 music - 320K', 's', 'imagesw/radio-logos/BBC Radio 6 music.jpg', 'Alternative,Rock,Funk', 'BBC', 'English', 'United Kingdom', 'Europe', '320', 'AAC-LC', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (36, 'https://wz4web.scahw.com.au/live/4buddha_32.stream/playlist.m3u8', 'Buddha Radio', 's', 'local', 'Chill', 'Buddah', 'English', 'Australia', 'Asia', '32', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (37, 'DELETED', 'CBC Radio 2', 's', 'local', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (38, 'http://icecast6.play.cz/croddur-256.mp3', 'Czech Radio Classical (256K)', 's', 'local', 'Classical', 'ČRo D-Dur', 'Czech', 'Czech Republic', 'Europe', '256', 'MP3', NULL, NULL, NULL);
@@ -570,7 +490,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (183, 'http://stream0.wfmu.org/freeform-best-available', 'WFMU 91.1 FM', 's', 'local', 'Classical', 'WFMU', 'English', 'United States', 'North America', '256', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (184, 'http://wqed.ic.llnwd.net/stream/wqed_wqed', 'WQED Pittsburgh 89.3 - Classical', 's', 'local', 'Classical', 'WQED', 'English', 'United States', 'North America', '128', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (185, 'http://stream.wqxr.org/wqxr', 'WQXR New York - Classical Music', 's', 'local', 'Classical', 'New York Public Radio', 'English', 'United States', 'North America', '128', 'MP3', NULL, NULL, NULL);
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (186, 'http://q2stream.wqxr.org/q2', 'WQXR Q2 - Living Music,Living Composers', 's', 'local', 'Classical', 'New York Public Radio', 'English', 'United States', 'North America', '128', 'MP3', NULL, NULL, NULL);
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (186, 'http://q2stream.wqxr.org/q2', 'WQXR Q2 - Living Music, Living Composers', 's', 'local', 'Classical', 'New York Public Radio', 'English', 'United States', 'North America', '128', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (187, 'http://icecast1.wrpi.org:8000/mp3-128.mp3', 'WRPI 91.5 FM Troy', 's', 'local', 'Eclectic', 'Rensselaer Polytechnic Institute', 'English', 'United States', 'North America', '128', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (188, 'http://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_CLASSICAL.mp3', 'WRTI Philadelphia 90.1 - Classical', 's', 'local', 'Classical', 'Temple University', 'English', 'United States', 'North America', '128', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (189, 'http://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_JAZZ.mp3', 'WRTI Philadelphia 90.1 - Jazz', 's', 'local', 'Jazz', 'Temple University', 'English', 'United States', 'North America', '128', 'MP3', NULL, NULL, NULL);
@@ -579,30 +499,110 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (192, 'http://lb.zenfm.be/zenfm.mp3', 'Zen FM', 's', 'local', 'Chill', 'Zen FM', 'Dutch', 'Belgium', 'Europe', '192', 'MP3', NULL, NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, favorite, reserved1, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 's', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
--- Table: cfg_airplay
-CREATE TABLE cfg_airplay (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32))
-INSERT INTO cfg_airplay (id, param, value) VALUES (1, 'airplaymeta', 'deprecated');
-INSERT INTO cfg_airplay (id, param, value) VALUES (2, 'airplayvol', 'deprecated');
-INSERT INTO cfg_airplay (id, param, value) VALUES (3, 'interpolation', 'soxr');
-INSERT INTO cfg_airplay (id, param, value) VALUES (4, 'output_format', 'S16');
-INSERT INTO cfg_airplay (id, param, value) VALUES (5, 'output_rate', '44100');
-INSERT INTO cfg_airplay (id, param, value) VALUES (6, 'allow_session_interruption', 'no');
-INSERT INTO cfg_airplay (id, param, value) VALUES (7, 'session_timeout', '120');
-INSERT INTO cfg_airplay (id, param, value) VALUES (8, 'audio_backend_latency_offset_in_seconds', '0.0');
-INSERT INTO cfg_airplay (id, param, value) VALUES (9, 'audio_backend_buffer_desired_length_in_seconds', '0.2');
+-- Table: cfg_audiodev
+CREATE TABLE cfg_audiodev (id INTEGER PRIMARY KEY, name CHAR (64), alt_name CHAR (64), dacchip CHAR (64), chipoptions CHAR (64), iface CHAR (32), list CHAR (10), driver CHAR (64), drvoptions CHAR (64))
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (1, 'Allo Boss DAC', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (2, 'Allo DigiOne', NULL, 'Cirrus Logic WM8805', NULL, 'I2S', 'yes', 'allo-digione', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (3, 'Allo DigiOne Signature', NULL, 'Cirrus Logic WM8805', NULL, 'I2S', 'yes', 'allo-digione', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (4, 'Allo Katana DAC', NULL, 'ESS Sabre ES9038Q2M', 'Apodizing Fast Roll-off Filter,Bypass,on', 'I2S', 'yes', 'allo-katana-dac-audio', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (5, 'Allo MiniBoss DAC', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (6, 'Allo Piano 2.1 Hi-Fi DAC', NULL, 'Burr Brown PCM5142', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-piano-dac-plus-pcm512x-audio', 'glb_mclk');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (7, 'Allo Piano Hi-Fi DAC', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-piano-dac-pcm512x-audio', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (8, 'Audiophonics ES9018 DAC', NULL, 'ESS Sabre ES9018 K2M', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (9, 'Audiophonics ES9023 DAC', NULL, 'ESS Sabre ES9023', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (10, 'Audiophonics ES9028/9038 DAC', NULL, 'ESS Sabre ES9028/9038 Q2M', 'brick wall,I2S', 'I2S', 'yes', 'i-sabre-q2m', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (11, 'Audiophonics ES9028/9038 DAC (Pre 2019)', NULL, 'ESS Sabre ES9028/9038 Q2M', 'brick wall,I2S', 'I2S', 'yes', 'i-sabre-q2m', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (12, 'Audiophonics PCM5102 DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (13, 'Audiophonics PCM5122 DAC', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (14, 'Audiophonics TDA1387 DAC', NULL, 'Philips TDA1387', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (15, 'Buffalo I', NULL, 'ESS Sabre ES9008', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (16, 'Buffalo II/IIIse', NULL, 'ESS Sabre ES9018', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (17, 'DDDAC1794 NOS', NULL, 'Burr Brown PCM1794', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (18, 'Denafrips Pontus R2R DAC (I2S)', NULL, 'Altera MAX II CPLD', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (19, 'DIAL-DAC', NULL, 'Burr Brown PCM1793', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (20, 'Dion Audio LOCO', NULL, 'Burr Brown PCM5242 DAC, TPA3118 AMP', NULL, 'I2S', 'yes', 'dionaudio-loco', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (21, 'Dion Audio LOCO V2', NULL, 'Burr Brown PCM5242 DAC, TPA3118 AMP', NULL, 'I2S', 'yes', 'dionaudio-loco-v2', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (22, 'DIYINHK ES9023 DAC', NULL, 'ESS Sabre ES9023', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (23, 'Durio Sound PRO', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (24, 'G2 Labs BerryNOS', NULL, 'Philips TDA1543', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (25, 'G2 Labs BerryNOS Red', NULL, 'Philips TDA1543', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (26, 'Generic-1 I2S (hifiberry-dac)', NULL, 'ESS Sabre ES90xx, Burr Brown PCM5102', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (27, 'Generic-2 I2S (rpi-dac)', NULL, 'ESS Sabre ES9018, Burr Brown PCM1794', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (28, 'HIFI DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (29, 'HIFI DAC+', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (30, 'HIFI Digi', NULL, 'Wolfson WM8804G', NULL, 'I2S', 'yes', 'hifiberry-digi', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (31, 'HIFI Digi+', NULL, 'Wolfson WM8804G', NULL, 'I2S', 'yes', 'hifiberry-digi', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (32, 'HiFiBerry Amp(Amp+)', NULL, 'Burr Brown TAS5713', NULL, 'I2S', 'yes', 'hifiberry-amp', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (33, 'HiFiBerry Amp2', NULL, 'Burr Brown TAS5756M', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (34, 'HiFiBerry Beocreate', NULL, 'Burr Brown PCM4104 DAC, TPA3128 Amp, Analog Devices ADAU1451 DSP', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (35, 'HiFiBerry DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (36, 'HiFiBerry DAC/DAC+ Zero', NULL, 'Burr Brown PCM5101A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (37, 'HiFiBerry DAC+', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (38, 'HiFiBerry DAC+ ADC', NULL, 'Burr Brown PCM5122, PCM1861 ADC', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplusadc', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (39, 'HiFiBerry DAC+ DSP', NULL, 'Burr Brown PCM5102A, Analog Devices ADAU1451 DSP', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (40, 'HiFiBerry DAC+ Light', NULL, 'ESS Sabre ES9023', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (41, 'HiFiBerry DAC+ Pro', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (42, 'HiFiBerry Digi(Digi+)', NULL, 'Cirrus Logic WM8804', NULL, 'I2S', 'yes', 'hifiberry-digi', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (43, 'HiFiBerry Digi+ Pro', NULL, 'Cirrus Logic WM8804', NULL, 'I2S', 'yes', 'hifiberry-digi-pro', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (44, 'HiFiBerry MiniAmp', NULL, 'Burr Brown PCM5101A, Diodes PAM8403', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (45, 'Hifimediy ES9023', NULL, 'ESS Sabre ES9023', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (46, 'IanFIFO II', NULL, 'Altera Max II CPLD', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (47, 'IQaudIO Pi-AMP+', NULL, 'Burr Brown TPA3118', NULL, 'I2S', 'yes', 'iqaudio-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (48, 'IQaudIO Pi-DAC', NULL, 'Burr Brown PCM5122', NULL, 'I2S', 'yes', 'iqaudio-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (49, 'IQaudIO Pi-DAC PRO', NULL, 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (50, 'IQaudIO Pi-DAC+', NULL, 'Burr Brown PCM5122', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (51, 'IQaudIO Pi-DACZero', NULL, 'Burr Brown PCM5122', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (52, 'IQaudIO Pi-Digi+', NULL, 'Wolfson WM8804', NULL, 'I2S', 'yes', 'iqaudio-digi-wm8804-audio', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (53, 'IQaudIO Pi-DigiAMP+', NULL, 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (54, 'JustBoom AMP HAT(Zero)', NULL, 'Burr Brown TAS5756', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'justboom-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (55, 'JustBoom DAC HAT(Zero)', NULL, 'Burr Brown PCM5122 (PCM5121)', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'justboom-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (56, 'JustBoom Digi HAT(Zero)', NULL, 'Wolfson WM8804G', NULL, 'I2S', 'yes', 'justboom-digi', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (57, 'Lucid Labs Raspberry Pi DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (58, 'Mamboberry HiFi DAC+', NULL, 'ESS Sabre ES9032', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (59, 'Mamboberry LS DAC+', NULL, 'ESS Sabre ES9023p', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (60, 'MERUS(tm) Amp piHAT ZW', NULL, 'Infineon MA12070P', 'PMF0', 'I2S', 'yes', 'merus-amp', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (61, 'Pi2Design 502DAC', NULL, 'Burr Brown PCM5122, Wolfson WM8804', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (62, 'Pi2Design 502DAC PRO', NULL, 'Burr Brown PCM1792, Wolfson WM8804', NULL, 'I2S', 'yes', 'hifiberry-digi-pro', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (63, 'Pi2Design 503HTA Hybrid Tube Amp', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (64, 'Pimoroni pHAT DAC', NULL, 'Burr Brown PCM5102A', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (65, 'PlainAMP', NULL, 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (66, 'PlainDAC', NULL, 'Burr Brown PCM5100', NULL, 'I2S', 'yes', 'hifiberry-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (67, 'PlainDAC+', NULL, 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (68, 'PlainDSP', NULL, 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (69, 'RaspyPlay4', NULL, 'Burr Brown PCM5122', NULL, 'I2S', 'yes', 'iqaudio-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (70, 'RPi-DAC', NULL, 'Burr Brown PCM1794A', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (71, 'Soekris DAM1021/1121 (I2S)', NULL, 'FPGA based', NULL, 'I2S', 'yes', 'rpi-dac', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (72, 'Suptronics x400', NULL, 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (200, 'b1', 'Pi HDMI 1', 'Broadcom SoC', NULL, 'SOC', 'yes', NULL, NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (201, 'b2', 'Pi HDMI 2', 'Broadcom SoC', NULL, 'SOC', 'yes', NULL, NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (202, 'Headphones', 'Pi Headphone jack', 'Broadcom SoC', NULL, 'SOC', 'yes', NULL, NULL);
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', NULL, 'USB', 'yes', NULL, NULL);
 
--- Table: cfg_sl
-CREATE TABLE cfg_sl (id INTEGER PRIMARY KEY, param CHAR (20), value CHAR (64))
-INSERT INTO cfg_sl (id, param, value) VALUES (1, 'PLAYERNAME', 'Moode');
-INSERT INTO cfg_sl (id, param, value) VALUES (2, 'AUDIODEVICE', '0');
-INSERT INTO cfg_sl (id, param, value) VALUES (3, 'ALSAPARAMS', '80:4::1');
-INSERT INTO cfg_sl (id, param, value) VALUES (4, 'OUTPUTBUFFERS', '40000:100000');
-INSERT INTO cfg_sl (id, param, value) VALUES (5, 'TASKPRIORITY', '45');
-INSERT INTO cfg_sl (id, param, value) VALUES (6, 'CODECS', 'flac,pcm,mp3,ogg,aac,alac,dsd');
-INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E -S /var/local/www/commandw/slpower.sh');
+-- Table: cfg_hash
+CREATE TABLE cfg_hash (id INTEGER PRIMARY KEY, param CHAR (64), value CHAR (64), "action" CHAR (32))
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '7cfa7f4c830f5c446396ae2397bf59a1', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (2, '/etc/nginx/fastcgi_params', '953d4fb6958806a7edd317ac36558fdd', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '1f695c247f64fe4f482d967dfea33b41', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/php-fpm.conf', '8d60ea0c8a646382b1dda59393d1d90b', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', '63aaed1e3a99b11a05c2bef2910fe072', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '787d82e9de10d1217c705fff2b7577f9', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '5e53efb08d5a222830f96952f356fd9b', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'ce394e0c9fb2972d8eb0ec31ac4fd22e', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', 'e43068c89c0878541524ce84d671f4f9', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
 
--- Table: cfg_eqfa4p
-CREATE TABLE cfg_eqfa4p (id INTEGER PRIMARY KEY, curve_name CHAR (32), master_gain CHAR (32), band1_params CHAR (32), band2_params CHAR (32), band3_params CHAR (32), band4_params CHAR (32))
-INSERT INTO cfg_eqfa4p (id, curve_name, master_gain, band1_params, band2_params, band3_params, band4_params) VALUES (1, 'Default curve', '0', '1 20 1 0', '1 180 1 0', '1 2000 1 0', '1 11700 1 0');
+-- Table: cfg_gpio
+CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32))
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
 
 COMMIT TRANSACTION;

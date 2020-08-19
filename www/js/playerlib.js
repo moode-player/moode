@@ -1082,8 +1082,11 @@ function mpdDbCmd(cmd, path) {
 	else if (cmd == 'lsinfo' || cmd == 'listsavedpl') {
 		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {renderFolderView(data, path);}, 'json');
 	}
-	else if (cmd == 'lsinfo_radio' && radioRendering == false) {
-		$.post('command/moode.php?cmd=' + 'lsinfo', {'path': path}, function(data) {renderRadioView(data, path);}, 'json');
+//	else if (cmd == 'lsinfo_radio' && radioRendering == false) {
+//		$.post('command/moode.php?cmd=' + 'lsinfo', {'path': path}, function(data) {renderRadioView(data, path);}, 'json');
+//	}
+    else if (cmd == 'lsinfo_radio') {
+		renderRadioView();
 	}
 	else if (cmd == 'delsavedpl') {
 		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {}, 'json');
@@ -1296,31 +1299,67 @@ function formatFolderViewEntries(data, path, i) {
 }
 
 // Render Radio view
-function renderRadioView(data, path) {
-    $.getJSON('command/moode.php?cmd=read_cfg_radio', function(radioStations) {
-        var tag = 'genre';
+function renderRadioView() {
+    //radioRendering = true; // NEEDED ?
+    var data = '';
+    $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
+        var tag = 'name';
 
         // Natural ordering
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            radioStations.sort(function(a, b) {
+            data.sort(function(a, b) {
                 return collator.compare(a[tag], b[tag]);
             });
         }
         // Fallback to default ordering
         catch (e) {
-            radioStations.sort(function(a, b) {
+            data.sort(function(a, b) {
                 a = a[tag];
                 b = b[tag];
                 return a > b ? 1 : (a < b ? -1 : 0);
             });
         }
-        console.log(radioStations);
-    });
+        console.log(data);
 
-    // Old folder based rendering (DEPRECATED)
-    __renderRadioView(data, path);
+        // Clear search results if any
+        $('.btnlist-top-ra').show();
+        $("#searchResetRa").hide();
+        showSearchResetRa = false;
+    	$('#ra-search-keyword').val('');
+    	$('#ra-filter').val('');
+
+        // Output the list
+    	$('ul.database-radio').html('');
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
+        var output = '';
+    	for (var i = 0; i < data.length; i++) {
+            var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
+    		output += '<li id="db-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
+    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
+            output += data[i].name;
+    		output += '</div></li>';
+    	}
+    	$('ul.database-radio').html(output);
+
+        //radioRendering = false; // NEEDED ?
+    });
 }
+/*
+// Format entries for Radio view
+function formatRadioViewEntries(data, path, i, radioViewLazy) {
+	var output = '';
+	if (data) {
+        var imgUrl = 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg';
+		output = '<li id="db-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
+		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
+        output += data[i].name;
+		output += '</div></li>';
+	}
+
+	return output;
+}
+
 // Render radio view (DEPRECATED)
 function __renderRadioView(data, path) {
 	//console.log('renderRadioView(): path=(' + path + ')');
@@ -1390,14 +1429,14 @@ function __renderRadioView(data, path) {
     var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
     var output = '';
 	for (var i = 0; i < data.length; i++) {
-		output += formatRadioViewEntries(data, path, i, radioViewLazy);
+		output += __formatRadioViewEntries(data, path, i, radioViewLazy);
 	}
 	$('ul.database-radio').html(output);
 
 	radioRendering = false; // NEEDED ?
 }
 // Format entries for Radio view (DEPRECATED)
-function formatRadioViewEntries(data, path, i, radioViewLazy) {
+function __formatRadioViewEntries(data, path, i, radioViewLazy) {
 	var output = '';
 	if (typeof data[i].file != 'undefined') {
         var cutPos = data[i].file.lastIndexOf('.');
@@ -1412,7 +1451,7 @@ function formatRadioViewEntries(data, path, i, radioViewLazy) {
 
 	return output;
 }
-
+*/
 // Update time knob
 function updTimeKnob(mpdTime) {
 	if (MPD.json['artist'] == 'Radio station' && typeof(MPD.json['duration']) === 'undefined') {
@@ -2558,6 +2597,13 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
 		case 'font-size-sel':
 			$('#font-size span').text($(this).text());
 			break;
+        // New/Edit radio station
+        case 'new-station-type-sel':
+            $('#new-station-type span').text($(this).text());
+            break;
+        case 'edit-station-type-sel':
+            $('#edit-station-type span').text($(this).text());
+            break;
     }
 });
 

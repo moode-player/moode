@@ -1441,10 +1441,26 @@
 					</div>
 
 					<div id="new-station-tags">
-						<label class="control-label" for="new-station-display-name">Name (displayed)</label>
-						<div class="controls">
-							<input id="new-station-display-name" class="input-xlarge" type="text" name="new_station_display_name" maxlength="200" value="">
-						</div>
+						<label class="control-label" for="new-station-type">Type</label>
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="new-station-type" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Regular</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Favorite</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Hidden</span></a></li>
+								</ul>
+							</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-new-station-type" class="help-block hide">
+			                    This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+		                    </span>
+ 						</div>
 						<label class="control-label" for="new-station-genre">Genre</label>
 						<div class="controls">
 							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" maxlength="200" value="">
@@ -1518,10 +1534,22 @@
 					</div>
 
 					<div id="edit-station-tags">
-						<label class="control-label" for="edit-station-display-name">Name (displayed)</label>
-						<div class="controls">
-							<input id="edit-station-display-name" class="input-xlarge" type="text" name="edit_station_name_displayed" maxlength="200" value="">
-						</div>
+						<label class="control-label" for="edit-station-type">Type</label>
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="edit-station-type" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Regular</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Favorite</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Hidden</span></a></li>
+								</ul>
+							</div>
+ 						</div>
 						<label class="control-label" for="edit-station-genre">Genre</label>
 						<div class="controls">
 							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" maxlength="200" value="">
