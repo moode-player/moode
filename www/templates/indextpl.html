@@ -834,7 +834,7 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-show-encoded-at" class="help-block hide">
-	                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when the bit depth > 24 or sample rate > 44.1 kHz.
+	                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when for Song files the bit depth > 16 or sample rate > 44.1 kHz, and for Radio stations the bit rate is > 128 kbps.
  	                    </span>
  	                </div>
 
@@ -1647,6 +1647,7 @@
 	<div class="modal-body">
 		<!-- IMPORT/EXPORT STATIONS -->
 		<form class="form-horizontal" action="" method="">
+			<span class="h5">Import/Export Utilities</span>
 			<div class="control-group">
 				<label class="control-label">Import station package</label>
 				<div class="controls">
@@ -1659,7 +1660,6 @@
 						Import a radio station ZIP package into the Library. The package contents will replace the existing radio station SQL table, PLS files and station logos. The package must be in the exact format of an exported <b>"stations.zip"</b> file.
 					</div>
 				</div>
-
 				<label class="control-label">Export radio stations</label>
 				<div class="controls">
 					<div class="modal-button-style">
@@ -1670,18 +1670,115 @@
 						Export the radio station SQL table, PLS files and station logos to the file named <b>"stations.zip"</b> in the default download directory of the client.
 					</div>
 				</div>
-
 				<label class="control-label">Import/export status:</label>
 				<div class="controls">
-\					<div id="import-export-msg" class="help-block" style="line-height:24px;"></div>
+					<div id="import-export-msg" class="help-block"></div>
+				</div>
+			</div>
+			<!-- SORT/GROUP OPTIONS -->
+			<span class="h5">Sort/Group Options</span>
+			<div class="control-group">
+				<label class="control-label" for="sort-tag">Sort tag</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="sort-tag" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Name</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Genre</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Broadcaster</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Language</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Country</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Region</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Bitrate</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Format</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-sort-tag" class="help-block hide">
+						Specify which tag is used to tsort the station list.
+					</span>
+				</div>
+				<label class="control-label" for="group-method">Grouping</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="group-method" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="group-method-sel"><span class="text">Favorites first</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="group-method-sel"><span class="text">Favorites first</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="group-method-sel"><span class="text">No grouping</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-group-method" class="help-block hide">
+						Specify how to break the list into groups separated by a named header.
+					</span>
+				</div>
+			</div>
+			<!-- SHOW/HIDE STATIONS -->
+			<span class="h5">Show/Hide Stations</span>
+			<div class="control-group">
+				<label class="control-label" for="show-hide-moode-stations">moOde stations</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="show-hide-moode-stations" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-hide-moode-stations-sel"><span class="text">Show hidden</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-hide-moode-stations-sel"><span class="text">Hide all</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-show-hide-moode-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-show-hide-moode-stations" class="help-block hide">
+						Help text goes here.
+					</span>
+				</div>
+				<label class="control-label" for="show-hide-other-stations">Other stations</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="show-hide-other-stations" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-hide-other-stations-sel"><span class="text">Show hidden</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-hide-other-stations-sel"><span class="text">Hide all</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-show-hide-other-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-show-hide-other-stations" class="help-block hide">
+						Help text goes here.
+					</span>
 				</div>
 			</div>
 		</form>
-
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<!--button aria-label="Update" class="btn btn-upd-radio-manager btn-primary" data-dismiss="modal">Update</button-->
+		<button aria-label="Update" class="btn btn-upd-radio-manager btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 

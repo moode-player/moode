@@ -1400,7 +1400,7 @@ function renderRadioView() {
                 var bitrate = parseInt(data[i].bitrate);
                 var bitrateAndFormat = data[i].format == 'FLAC' ? data[i].bitrate + ' ' + data[i].format : data[i].bitrate + 'K ' + data[i].format;
                 var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
-                var radioViewHdDiv = encodedAtOption == 1 && bitrate >= 256 ? '<div class="encoded-at-hdonly">HD</div>' : '';
+                var radioViewHdDiv = encodedAtOption == 1 && (bitrate > 128 || data[i].format == 'FLAC') ? '<div class="encoded-at-hdonly">HD</div>' : '';
                 var radioViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + bitrateAndFormat + '</div>' : '';
                 var radioViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
             }
@@ -2565,6 +2565,12 @@ function setClkRadioCtls(ctlValue) {
 
 // Custom select controls
 $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
+
+    // TODO: Convert to below. Need to change all -yn's to -sel's
+    // NOTE: clockradio-mode-sel will still need its own case or if/then
+    //var selector = '#' + $(this).data('cmd').substr(0, $(this).data('cmd').indexOf('-sel'));
+    //$(selector + ' span').text($(this).text());
+
     switch ($(this).data('cmd')) {
         // Clock radio
     	case 'clockradio-mode-sel':
@@ -2662,6 +2668,14 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
             break;
         case 'edit-station-type-sel':
             $('#edit-station-type span').text($(this).text());
+            break;
+        // Radio manager
+        case 'sort-tag-sel':
+        case 'group-method-sel':
+        case 'show-hide-moode-stations-sel':
+        case 'show-hide-other-stations-sel':
+            var selector = '#' + $(this).data('cmd').substr(0, $(this).data('cmd').indexOf('-sel'));
+            $(selector + ' span').text($(this).text());
             break;
     }
 });
