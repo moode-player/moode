@@ -1307,22 +1307,73 @@ function renderRadioView() {
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         var tag = 'name';
 
-        // Natural ordering
+        // Separate out Regular, Favorite and Hidden stations
+    	var regular = [];
+        var favorite = [];
+        var hidden = [];
+        var j = 0, k = 0, l = 0;
+    	for (var i = 0; i < data.length; i++) {
+            switch (data[i].type) {
+                case 'r':
+                    regular[j] = data[i];
+                    j = j + 1;
+                    break;
+                case 'f':
+                    favorite[k] = data[i];
+                    k = k + 1;
+                    break;
+                case 'h':
+                    hidden[l] = data[i];
+                    l = l + 1;
+                    break;
+            }
+    	}
+
+        // Regular stations
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            data.sort(function(a, b) {
+            regular.sort(function(a, b) {
                 return collator.compare(a[tag], b[tag]);
             });
         }
-        // Fallback to default ordering
         catch (e) {
-            data.sort(function(a, b) {
+            regular.sort(function(a, b) {
                 a = a[tag];
                 b = b[tag];
                 return a > b ? 1 : (a < b ? -1 : 0);
             });
         }
-        console.log(data);
+        // Favorite stations
+        try {
+    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+            favorite.sort(function(a, b) {
+                return collator.compare(a['name'], b['name']);
+            });
+        }
+        catch (e) {
+            regular.sort(function(a, b) {
+                a = a['name'];
+                b = b['name'];
+                return a > b ? 1 : (a < b ? -1 : 0);
+            });
+        }
+        // Hidden stations
+        try {
+    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+            hidden.sort(function(a, b) {
+                return collator.compare(a['name'], b['name']);
+            });
+        }
+        catch (e) {
+            hidden.sort(function(a, b) {
+                a = a['name'];
+                b = b['name'];
+                return a > b ? 1 : (a < b ? -1 : 0);
+            });
+        }
+
+        // Merge back together, exclude hidden stations
+    	data = favorite.concat(regular);
 
         // Clear search results if any
         $('.btnlist-top-ra').show();
@@ -1331,35 +1382,43 @@ function renderRadioView() {
     	$('#ra-search-keyword').val('');
     	$('#ra-filter').val('');
 
+        // SESSION.json['library_encoded_at']
+        // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
+        var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
+        var radioViewNvDiv = '';
+        var radioViewHdDiv = '';
+        var radioViewTxDiv = '';
+        var radioViewBgDiv = '';
+
         // Output the list
     	$('ul.database-radio').html('');
         var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
         var output = '';
+
     	for (var i = 0; i < data.length; i++) {
+            if (encodedAtOption != 9) {
+                var bitrate = parseInt(data[i].bitrate);
+                var bitrateAndFormat = data[i].format == 'FLAC' ? data[i].bitrate + ' ' + data[i].format : data[i].bitrate + 'K ' + data[i].format;
+                var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
+                var radioViewHdDiv = encodedAtOption == 1 && bitrate >= 256 ? '<div class="encoded-at-hdonly">HD</div>' : '';
+                var radioViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + bitrateAndFormat + '</div>' : '';
+                var radioViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
+            }
+
             var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
     		output += '<li id="db-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
-    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
+    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
+            output += radioViewHdDiv;
+			output += radioViewBgDiv;
             output += data[i].name;
-    		output += '</div></li>';
+            output += radioViewTxDiv;
+            output += radioViewNvDiv;
+            output += '</li>';
     	}
     	$('ul.database-radio').html(output);
     });
 }
 /*
-// Format entries for Radio view (DEPRECATED)
-function formatRadioViewEntries(data, path, i, radioViewLazy) {
-	var output = '';
-	if (data) {
-        var imgUrl = 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg';
-		output = '<li id="db-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
-		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse">';
-        output += data[i].name;
-		output += '</div></li>';
-	}
-
-	return output;
-}
-
 // Render radio view (DEPRECATED)
 function __renderRadioView(data, path) {
 	//console.log('renderRadioView(): path=(' + path + ')');
@@ -2345,6 +2404,7 @@ $('.btn-appearance-update').click(function(e){
                 }, 2000);
             }
             else if (encodedAtChange) {
+                $('#ra-refresh').click();
                 loadLibrary();
             }
             else {
