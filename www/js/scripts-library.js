@@ -542,7 +542,7 @@ var renderAlbums = function() {
     var tagViewNvDiv = '';
     var albumViewNvDiv = '';
     var albumViewHdDiv = '';
-    var albumViewTxDiv= '';
+    var albumViewTxDiv = '';
     var albumViewBgDiv = '';
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
