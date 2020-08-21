@@ -2527,7 +2527,15 @@ function editLogoImage(files) {
 
 // Import station zip package to server
 function importStationPkg(files) {
-    //console.log('files[0].size=(' + files[0].size + ')');
+    console.log('files[0].size=(' + files[0].size + ')');
+    if (files[0].size > 30000000) {
+		$('#import-export-msg').text('Image must be less than 30MB in size');
+		return;
+	}
+	else {
+		$('#import-export-msg').text('');
+	}
+
     $('#import-export-msg').text('Importing...');
 	objUrl = (URL || webkitURL).createObjectURL(files[0]);
 	URL.revokeObjectURL(objUrl);
