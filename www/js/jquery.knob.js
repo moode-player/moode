@@ -296,6 +296,10 @@
 
         this._touch = function (e) {
 
+            if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+				return;
+			}
+
             var touchMove = function (e) {
 
                 var v = s.xy2val(
@@ -347,6 +351,10 @@
         };
 
         this._mouse = function (e) {
+
+            if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+				return;
+			}
 
             var mouseMove = function (e) {
                 var v = s.xy2val(e.pageX, e.pageY);
@@ -572,19 +580,24 @@
             // bind MouseWheel
             var s = this,
                 mw = function (e) {
-                            e.preventDefault();
-                            var ori = e.originalEvent
-                                ,deltaX = ori.detail || ori.wheelDeltaX
-                                ,deltaY = ori.detail || ori.wheelDeltaY
-                                ,v = parseInt(s.$.val()) + (deltaX>0 || deltaY>0 ? s.o.step : deltaX<0 || deltaY<0 ? -s.o.step : 0);
 
-                            if (
-                                s.cH
-                                && (s.cH(v) === false)
-                            ) return;
+                    if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+        				return;
+        			}
 
-                            s.val(v);
-                        }
+                    e.preventDefault();
+                    var ori = e.originalEvent
+                        ,deltaX = ori.detail || ori.wheelDeltaX
+                        ,deltaY = ori.detail || ori.wheelDeltaY
+                        ,v = parseInt(s.$.val()) + (deltaX>0 || deltaY>0 ? s.o.step : deltaX<0 || deltaY<0 ? -s.o.step : 0);
+
+                    if (
+                        s.cH
+                        && (s.cH(v) === false)
+                    ) return;
+
+                    s.val(v);
+                }
                 , kval, to, m = 1, kv = {37:-s.o.step, 38:s.o.step, 39:s.o.step, 40:-s.o.step};
 
             this.$

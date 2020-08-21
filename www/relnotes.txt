@@ -50,6 +50,7 @@ Bug fixes
 - FIX: Graphic EQ curves are +6 alsaequal units too high
 - FIX: Listall.sh script not handling mixed case extentions
 - FIX: Airplay, Spotify renderers started after BlueZ disconnect
+- FIX: Disabled volume knob processing scroll events
 
 ########################################################
 //
