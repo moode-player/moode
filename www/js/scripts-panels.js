@@ -1179,7 +1179,7 @@ jQuery(document).ready(function($) { 'use strict';
 		mpdDbCmd('delsavedpl', UI.dbEntry[0]);
 		notify('delsavedpl');
 	});
-	$('.btn-new-station').click(function(e){
+	$('#btn-new-station').click(function(e){
 		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
 			notify('blankentries', 'Station not created');
 		}
@@ -1201,7 +1201,7 @@ jQuery(document).ready(function($) { 'use strict';
             });
 		}
 	});
-	$('.btn-upd-station').click(function(e){
+	$('#btn-upd-station').click(function(e){
 		if ($('#edit-station-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
 			notify('blankentries', 'Station not updated');
 		}
@@ -1224,7 +1224,7 @@ jQuery(document).ready(function($) { 'use strict';
             });
 		}
 	});
-	$('.btn-del-station').click(function(e){
+	$('#btn-del-station').click(function(e){
 		mpdDbCmd('delstation', UI.dbEntry[0]);
 	});
 	$('.btn-delete-plitem').click(function(e){

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Aug 19 18:59:49 2020
+-- File generated with SQLiteStudio v3.1.0 on Sat Aug 22 10:53:09 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -375,7 +375,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (130, 'led_state', '1,1');
 INSERT INTO cfg_system (id, param, value) VALUES (131, 'library_tagview_covers', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (132, 'library_tagview_sort', 'Artist');
 INSERT INTO cfg_system (id, param, value) VALUES (133, 'library_ellipsis_limited_text', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (134, 'appearance_modal_state', '1,0,0,0');
+INSERT INTO cfg_system (id, param, value) VALUES (134, 'appearance_modal_state', '1,0,0,0,0');
 INSERT INTO cfg_system (id, param, value) VALUES (135, 'font_size', 'Normal');
 INSERT INTO cfg_system (id, param, value) VALUES (136, 'volume_step_limit', '10');
 INSERT INTO cfg_system (id, param, value) VALUES (137, 'volume_mpd_max', '100');
@@ -384,6 +384,8 @@ INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '9'
 INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
 INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
+INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'name,favorites');
+INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'no_action,no_action');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
@@ -588,11 +590,11 @@ INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL,
 
 -- Table: cfg_hash
 CREATE TABLE cfg_hash (id INTEGER PRIMARY KEY, param CHAR (64), value CHAR (64), "action" CHAR (32));
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '7cfa7f4c830f5c446396ae2397bf59a1', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '85d6ca69a3d4b11b71e5463e1aff1ff5', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (2, '/etc/nginx/fastcgi_params', '953d4fb6958806a7edd317ac36558fdd', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '1f695c247f64fe4f482d967dfea33b41', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '57ffe914e3f46b4afab54299bc98d6c1', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/php-fpm.conf', '8d60ea0c8a646382b1dda59393d1d90b', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', '63aaed1e3a99b11a05c2bef2910fe072', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', '3cae92a82b939e9d7562903eec9e9dbd', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '787d82e9de10d1217c705fff2b7577f9', 'exit');

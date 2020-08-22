@@ -1034,14 +1034,44 @@ $('#database-radio').on('click', 'img', function(e) {
 	}
 
 	// Needed ?
-	return false;
+	//return false;
 });
 
-// Radio manager
+// Radio manager dialog
 $('#radio-manager-btn').click(function(e) {
+    var sortGroup = SESSION.json['radioview_sort_group'].split(',');
+    var showHide = SESSION.json['radioview_show_hide'].split(',');
+    sortGroup[0] = sortGroup[0].charAt(0).toUpperCase() + sortGroup[0].slice(1); // Cap firat letter
+    $('#radioview-sort-tag span').text(sortGroup[0]);
+    $('#radioview-group-method span').text(getParamOrValue('param', sortGroup[1]));
+    $('#radioview-show-hide-moode span').text(getParamOrValue('param', showHide[0]));
+    $('#radioview-show-hide-other span').text(getParamOrValue('param', showHide[1]));
     $('#import-export-msg').text('');
     $('#radio-manager-modal').modal();
 });
+
+// Update Radio manager
+$('#btn-upd-radio-manager').click(function(e) {
+    var sortTag = $('#radioview-sort-tag span').text().toLowerCase();
+    var groupMethod = getParamOrValue('value', $('#radioview-group-method span').text());
+    var showHideMoode = getParamOrValue('value', $('#radioview-show-hide-moode span').text());
+    var showHideOther = getParamOrValue('value', $('#radioview-show-hide-other span').text());
+    SESSION.json['radioview_sort_group'] = sortTag + ',' + groupMethod;
+    SESSION.json['radioview_show_hide'] = showHideMoode + ',' + showHideOther;
+    $.post('command/moode.php?cmd=updcfgsystem', {
+        'radioview_sort_group': SESSION.json['radioview_sort_group'],
+        'radioview_show_hide': SESSION.json['radioview_show_hide']
+         }, function() {
+             notify('settings_updated');
+             $('#ra-refresh').click();
+         }
+     );
+});
+
+// Import stations.zip file
+// NOTE: this function is handled in indextpl.html
+
+// Export to stations.zip file
 $('#export-stations').click(function(e) {
     $('#import-export-msg').text('Exporting...');
     e.preventDefault();
@@ -1051,7 +1081,7 @@ $('#export-stations').click(function(e) {
 	});
 });
 
-// Click radio list item for instant play
+// Click radio station for instant play
 $('#database-radio').on('click', '.db-entry', function(e) {
     if (SESSION.json['library_instant_play'] == 'No action') {return false;}
 	var pos = $(this).parents('li').index();

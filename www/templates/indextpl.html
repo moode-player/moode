@@ -1187,7 +1187,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-appearance-update btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-appearance-update" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -1339,7 +1339,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-clockradio-update btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-clockradio-update" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -1512,7 +1512,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Create" class="btn btn-new-station btn-primary" data-dismiss="modal">Create</button>
+		<button aria-label="Create" id="btn-new-station" class="btn btn-primary" data-dismiss="modal">Create</button>
 	</div>
 </div>
 
@@ -1621,7 +1621,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-upd-station btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-upd-station" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -1635,7 +1635,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Delete" class="btn btn-del-station btn-primary" data-dismiss="modal">Delete</button>
+		<button aria-label="Delete" id="btn-del-station" class="btn btn-primary" data-dismiss="modal">Delete</button>
 	</div>
 </div>
 
@@ -1655,9 +1655,9 @@
 						<label for="import-station-pkg" id="choose-station-pkg" class="btn btn-primary btn-medium">Import</label>
 						<input type="file" id="import-station-pkg" accept=".zip" style="display:none" onchange="importStationPkg(this.files)">
 					</div>
-					<!--a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a-->
-					<div id="info-import-station-pkg" class="help-block">
-						Import a radio station ZIP package into the Library. The package contents will replace the existing radio station SQL table, PLS files and station logos. The package must be in the exact format of an exported <b>"stations.zip"</b> file.
+					<a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div id="info-import-station-pkg" class="help-block hide">
+						Import a radio station ZIP package into the Library. The package contents will replace the existing radio station SQL table, PLS files and station logos. The package must be in the exact format of an exported <b>"stations.zip"</b> file. File size must be < 50MB.
 					</div>
 				</div>
 				<label class="control-label">Export radio stations</label>
@@ -1665,8 +1665,8 @@
 					<div class="modal-button-style">
 						<button id="export-stations" class="btn btn-primary btn-small">Export</button>
 					</div>
-					<!--a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a-->
-					<div id="info-export-stations" class="help-block">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div id="info-export-stations" class="help-block hide">
 						Export the radio station SQL table, PLS files and station logos to the file named <b>"stations.zip"</b> in the default download directory of the client.
 					</div>
 				</div>
@@ -1678,99 +1678,105 @@
 			<!-- SORT/GROUP OPTIONS -->
 			<span class="h5">Sort/Group Options</span>
 			<div class="control-group">
-				<label class="control-label" for="sort-tag">Sort tag</label>
+				<label class="control-label" for="radioview-sort-tag">Sort tag</label>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-medium">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="sort-tag" class="filter-option pull-left">
+							<div id="radioview-sort-tag" class="filter-option pull-left">
 								<span></span>
 							</div>&nbsp;
 							<div class="caret"></div>
 						</button>
 						<div class="dropdown-menu open">
 							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Name</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Genre</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Broadcaster</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Language</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Country</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Region</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Bitrate</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="sort-tag-sel"><span class="text">Format</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Name</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Genre</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Broadcaster</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Language</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Country</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Region</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Bitrate</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Format</span></a></li>
 							</ul>
 						</div>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-sort-tag" class="help-block hide">
-						Specify which tag is used to tsort the station list.
+					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-radioview-sort-tag" class="help-block hide">
+						Specify which tag is used to sort the station list.
 					</span>
 				</div>
-				<label class="control-label" for="group-method">Grouping</label>
+				<label class="control-label" for="radioview-group-method">Group method</label>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-medium">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="group-method" class="filter-option pull-left">
+							<div id="radioview-group-method" class="filter-option pull-left">
 								<span></span>
 							</div>&nbsp;
 							<div class="caret"></div>
 						</button>
 						<div class="dropdown-menu open">
 							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="group-method-sel"><span class="text">Favorites first</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="group-method-sel"><span class="text">Favorites first</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="group-method-sel"><span class="text">No grouping</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">Favorites first</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">Sort tag</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">No grouping</span></a></li>
 							</ul>
 						</div>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-group-method" class="help-block hide">
-						Specify how to break the list into groups separated by a named header.
+					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-radioview-group-method" class="help-block hide">
+						Specify how to break the list into groups separated by a named header. The "Favorites first" selection places favorite stations at the top of the list sorted by Name followed by the rest of the stations grouped by Sort tag.
 					</span>
 				</div>
 			</div>
 			<!-- SHOW/HIDE STATIONS -->
 			<span class="h5">Show/Hide Stations</span>
 			<div class="control-group">
-				<label class="control-label" for="show-hide-moode-stations">moOde stations</label>
+				<label class="control-label" for="radioview-show-hide-moode">moOde stations</label>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-medium">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="show-hide-moode-stations" class="filter-option pull-left">
+							<div id="radioview-show-hide-moode" class="filter-option pull-left">
 								<span></span>
 							</div>&nbsp;
 							<div class="caret"></div>
 						</button>
 						<div class="dropdown-menu open">
 							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-hide-moode-stations-sel"><span class="text">Show hidden</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-hide-moode-stations-sel"><span class="text">Hide all</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">No action</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Show hidden</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide all</span></a></li>
 							</ul>
 						</div>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-show-hide-moode-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-show-hide-moode-stations" class="help-block hide">
-						Help text goes here.
+					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-moode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-radioview-show-hide-moode" class="help-block hide">
+						<b>Show hidden:&nbsp;</b> Display hidden moOde stations for review but leave their type set to Hidden.<br>
+						<b>Hide all:&nbsp;</b> Set all noOde stations to type Hidden.<br>
+						NOTE: moOde stations are the default set of stations in the release. They have ID's less than 500.
 					</span>
 				</div>
-				<label class="control-label" for="show-hide-other-stations">Other stations</label>
+				<label class="control-label" for="radioview-show-hide-other">Other stations</label>
 				<div class="controls">
 					<div class="btn-group bootstrap-select select-medium">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-							<div id="show-hide-other-stations" class="filter-option pull-left">
+							<div id="radioview-show-hide-other" class="filter-option pull-left">
 								<span></span>
 							</div>&nbsp;
 							<div class="caret"></div>
 						</button>
 						<div class="dropdown-menu open">
 							<ul class="dropdown-menu custom-select inner" role="menu">
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-hide-other-stations-sel"><span class="text">Show hidden</span></a></li>
-								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-hide-other-stations-sel"><span class="text">Hide all</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">No action</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Show hidden</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Hide all</span></a></li>
 							</ul>
 						</div>
 					</div>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-show-hide-other-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-show-hide-other-stations" class="help-block hide">
-						Help text goes here.
+					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-other" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-radioview-show-hide-other" class="help-block hide">
+						<b>Show hidden:&nbsp;</b> Display other (non-moOde) hidden stations for review but leave their type set to Hidden.<br>
+						<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden.<br>
+						NOTE: Other stations are those that have been user added. They have ID's greater than or equal to 500.
 					</span>
 				</div>
 			</div>
@@ -1778,7 +1784,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-upd-radio-manager btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-upd-radio-manager" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 

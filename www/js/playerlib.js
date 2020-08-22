@@ -2156,7 +2156,7 @@ $('.context-menu a').click(function(e) {
 });
 
 // Update clock radio settings
-$('.btn-clockradio-update').click(function(e){
+$('#btn-clockradio-update').click(function(e){
     var startHH, startMM, startDays, stopHH, stopMM, stopDays;
 
 	SESSION.json['clkradio_mode'] = $('#clockradio-mode span').text();
@@ -2234,7 +2234,7 @@ function updateClockRadioCfgSys() {
 }
 
 // Update appearance options
-$('.btn-appearance-update').click(function(e){
+$('#btn-appearance-update').click(function(e){
 	// Detect certain changes
 	var accentColorChange = false;
 	var themeSettingsChange = false;
@@ -2527,9 +2527,9 @@ function editLogoImage(files) {
 
 // Import station zip package to server
 function importStationPkg(files) {
-    console.log('files[0].size=(' + files[0].size + ')');
-    if (files[0].size > 30000000) {
-		$('#import-export-msg').text('Image must be less than 30MB in size');
+    //console.log('files[0].size=(' + files[0].size + ')');
+    if (files[0].size > 50000000) {
+		$('#import-export-msg').text('ZIP file must be less than 50MB in size');
 		return;
 	}
 	else {

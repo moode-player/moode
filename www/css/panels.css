@@ -647,4 +647,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #playback-firstuse-help i, #playbar-firstuse-help i {cursor:pointer;}
 /* New/edit radio station modals */
 #new-station-format, #edit-station-format {text-transform:uppercase;}
-#import-export-msg {line-height:24px;color:gold;}
+#import-export-msg {line-height:24px;color:var(--adapttext);}
