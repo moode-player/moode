@@ -844,52 +844,6 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
-	// Radio view sub folders (DEPRECATED)
-	$('.database-radio').on('click', '.db-browse', function(e) {
-		if ($(this).hasClass('db-radiofolder') || $(this).hasClass('db-radiofolder-icon')) {
-			e.stopImmediatePropagation();
-			UI.raFolderLevel[UI.raFolderLevel[4]] = $(this).parent().attr('id').replace('db-','');
-			++UI.raFolderLevel[4];
-			mpdDbCmd('lsinfo_radio', $(this).parent().data('path'));
-            lazyLode('radio');
-            setTimeout(function() {
-                $('#database-radio').scrollTo(0, 200);
-            }, SCROLLTO_TIMEOUT);
-		}
-	});
-    // Radio folder back button (DEPRECATED)
-    $('#ra-back').click(function(e) {
-        if (UI.pathr != 'RADIO') {
-			var pathr = UI.pathr;
-			var cutpos = pathr.lastIndexOf('/');
-			if (cutpos != -1) {
-				var pathr = pathr.slice(0,cutpos);
-			}
-			else {
-				pathr = '';
-			}
-            mpdDbCmd('lsinfo_radio', pathr);
-            lazyLode('radio');
-            setTimeout(function() {
-                $('#database-radio').scrollTo(0, 200);
-            }, SCROLLTO_TIMEOUT);
-		}
-	});
-    // Radio folder root list (DEPRECATED)
-	$('#ra-home').click(function(e) {
-		UI.raFolderLevel[4] = 0;
-		UI.pathr = '';
-		mpdDbCmd('lsinfo_radio', 'RADIO');
-        lazyLode('radio');
-        setTimeout(function() {
-            $('#database-radio').scrollTo(0, 200);
-        }, SCROLLTO_TIMEOUT);
-
-		UI.radioPos = -1;
-		storeRadioPos(UI.radioPos)
-        $("#searchResetRa").hide();
-        showSearchResetRa = false;
-	});
     // Refresh the station list
 	$('#ra-refresh').click(function(e) {
 		mpdDbCmd('lsinfo_radio', UI.pathr);
