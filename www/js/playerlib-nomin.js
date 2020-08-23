@@ -63,11 +63,7 @@ function getParamOrValue (type, key) {
         // Sample rate display options
         ['No (searchable)',0],['HD only',1],['Text',2],['Badge',3],['No',9],
         // Radioview station types
-        ['Regular','r'],['Favorite','f'],['Hidden','h'],
-        // Radioview group method
-        ['Favorites first','favorites'],['Sort tag','tag'],['No grouping','none'],
-        // Radioview show/hide stations
-        ['No action','no_action'],['Show hidden','show'],['Hide all','hide']
+        ['Regular','r'],['Favorite','f'],['Hidden','h']
     ]);
 
     if (type == 'value') {

@@ -267,8 +267,8 @@
 	<div id="radio-panel" class="tab-pane">
 		<div id="container-radio">
 			<div class="btnlist btnlist-top btnlist-top-ra">
-				<button aria-label="Refresh" id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
 				<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="fas fa-cog"></i></button>
+				<button aria-label="Refresh" id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
 				<button aria-label="New Station" id="ra-new" class="btn"><i class="far fa-plus"></i></button>
 				<form id="ra-search" class="" method="post" onSubmit="return false;">
 					<div class="input-append">
@@ -1743,6 +1743,7 @@
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">No action</span></a></li>
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Show hidden</span></a></li>
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide all</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide all</span></a></li>
 							</ul>
 						</div>
 					</div>
@@ -1750,7 +1751,8 @@
 					<span id="info-radioview-show-hide-moode" class="help-block hide">
 						<b>Show hidden:&nbsp;</b> Display hidden moOde stations for review but leave their type set to Hidden.<br>
 						<b>Hide all:&nbsp;</b> Set all noOde stations to type Hidden.<br>
-						NOTE: moOde stations are the default set of stations in the release. They have ID's less than 500.
+						<b>Un-hide all:&nbsp;</b> Set all noOde stations to type Regular.<br>
+						NOTE: moOde stations are the custom curated set of stations shipped in the release.
 					</span>
 				</div>
 				<label class="control-label" for="radioview-show-hide-other">Other stations</label>
@@ -1767,6 +1769,7 @@
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">No action</span></a></li>
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Show hidden</span></a></li>
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Hide all</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Un-hide all</span></a></li>
 							</ul>
 						</div>
 					</div>
@@ -1774,7 +1777,8 @@
 					<span id="info-radioview-show-hide-other" class="help-block hide">
 						<b>Show hidden:&nbsp;</b> Display other (non-moOde) hidden stations for review but leave their type set to Hidden.<br>
 						<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden.<br>
-						NOTE: Other stations are those that have been user added. They have ID's greater than or equal to 500.
+						<b>Un-hide all:&nbsp;</b> Set all other (non-moOde) stations to type Regular.<br>
+						NOTE: Other stations are those that have been user added.
 					</span>
 				</div>
 			</div>

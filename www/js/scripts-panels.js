@@ -846,8 +846,10 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Refresh the station list
 	$('#ra-refresh').click(function(e) {
-		mpdDbCmd('lsinfo_radio', UI.pathr);
-        lazyLode('radio');
+		mpdDbCmd('lsinfo_radio');
+        setTimeout(function() {
+            lazyLode('radio');
+        }, LAZYLOAD_TIMEOUT);
         setTimeout(function() {
             $('#database-radio').scrollTo(0, 200);
         }, SCROLLTO_TIMEOUT);

@@ -51,7 +51,6 @@ const ENGINE_TIMEOUT    = 3000;
 var UI = {
     knob: null,
     path: '',
-    pathr: '',
 	restart: '',
 	currentFile: 'blank',
 	currentHash: 'blank',
@@ -1305,75 +1304,157 @@ function formatFolderViewEntries(data, path, i) {
 function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
-        var tag = 'name';
+        // Sort/Group and Show/Hide options
+        var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
+        var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
+        var showHideMoodeStations = SESSION.json['radioview_show_hide'].split(',')[0];
+        var showHideOtherStations = SESSION.json['radioview_show_hide'].split(',')[1];
 
-        // Separate out Regular, Favorite and Hidden stations
-    	var regular = [];
-        var favorite = [];
-        var hidden = [];
-        var j = 0, k = 0, l = 0;
+        // Hide/Un-hide all
+        // NOTE: these are one-shot actions
+        // Moode stations
+        if (showHideMoodeStations == 'Hide all' || showHideMoodeStations == 'Un-hide all') {
+            var stationType = showHideMoodeStations == 'Hide all' ? 'h' : 'r';
+            for (var i = 0; i < data.length; i++) {
+                if (parseInt(data[i].id) < 499) {
+                    data[i].type = stationType;
+                }
+            }
+            if (data.length > 0) {
+                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Moode', 'stationType': stationType});
+            }
+            // Reset
+            SESSION.json['radioview_show_hide'] = 'No action,' + showHideOtherStations;
+        }
+        // Other stations
+        if (showHideOtherStations == 'Hide all' || showHideOtherStations == 'Un-hide all') {
+            var stationType = showHideOtherStations == 'Hide all' ? 'h' : 'r';
+            for (var i = 0; i < data.length; i++) {
+                if (parseInt(data[i].id) > 499 ) {
+                    data[i].type = stationType;
+                }
+            }
+            if (data.length > 0) {
+                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Other', 'stationType': stationType});
+            }
+            // Reset
+            SESSION.json['radioview_show_hide'] = showHideMoodeStations + ',No action';
+        }
+
+        // Separate out All Non-hidden, Regular, Favorite and Hidden stations
+        var allNonHiddenStations = [];
+    	var regularStations = [];
+        var favoriteStations = [];
+        var hiddenMoodeStations = [];
+        var hiddenOtherStations = [];
+        var j = 0, k = 0, l = 0, m = 0, n = 0;
     	for (var i = 0; i < data.length; i++) {
             switch (data[i].type) {
                 case 'r':
-                    regular[j] = data[i];
+                    allNonHiddenStations[j] = data[i];
                     j = j + 1;
-                    break;
-                case 'f':
-                    favorite[k] = data[i];
+                    regularStations[k] = data[i];
                     k = k + 1;
                     break;
-                case 'h':
-                    hidden[l] = data[i];
+                case 'f':
+                    allNonHiddenStations[j] = data[i];
+                    j = j + 1;
+                    favoriteStations[l] = data[i];
                     l = l + 1;
+                    break;
+                case 'h':
+                    if (parseInt(data[i].id) < 499 ) {
+                        hiddenMoodeStations[m] = data[i];
+                        m = m + 1;
+                    }
+                    else {
+                        hiddenOtherStations[n] = data[i];
+                        n = n + 1;
+                    }
                     break;
             }
     	}
 
-        // Regular stations
+        // All non-hidden stations
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            regular.sort(function(a, b) {
-                return collator.compare(a[tag], b[tag]);
+            allNonHiddenStations.sort(function(a, b) {
+                return collator.compare(a[sortTag], b[sortTag]);
             });
         }
         catch (e) {
-            regular.sort(function(a, b) {
-                a = a[tag];
-                b = b[tag];
+            allNonHiddenStations.sort(function(a, b) {
+                a = a[sortTag];
+                b = b[sortTag];
+                return a > b ? 1 : (a < b ? -1 : 0);
+            });
+        }
+        // Regular stations
+        try {
+    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+            regularStations.sort(function(a, b) {
+                return collator.compare(a[sortTag], b[sortTag]);
+            });
+        }
+        catch (e) {
+            regularStations.sort(function(a, b) {
+                a = a[sortTag];
+                b = b[sortTag];
                 return a > b ? 1 : (a < b ? -1 : 0);
             });
         }
         // Favorite stations
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            favorite.sort(function(a, b) {
-                return collator.compare(a['name'], b['name']);
+            favoriteStations.sort(function(a, b) {
+                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
             });
         }
         catch (e) {
-            regular.sort(function(a, b) {
-                a = a['name'];
-                b = b['name'];
+            favoriteStations.sort(function(a, b) {
+                a = removeArticles(a['name']);
+                b = removeArticles(b['name']);
                 return a > b ? 1 : (a < b ? -1 : 0);
             });
         }
         // Hidden stations
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            hidden.sort(function(a, b) {
-                return collator.compare(a['name'], b['name']);
+            hiddenMoodeStations.sort(function(a, b) {
+                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
+            });
+            hiddenOtherStations.sort(function(a, b) {
+                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
             });
         }
         catch (e) {
-            hidden.sort(function(a, b) {
-                a = a['name'];
-                b = b['name'];
+            hiddenOtherStations.sort(function(a, b) {
+                a = removeArticles(a['name']);
+                b = removeArticles(b['name']);
+                return a > b ? 1 : (a < b ? -1 : 0);
+            });
+            hiddenOtherStations.sort(function(a, b) {
+                a = removeArticles(a['name']);
+                b = removeArticles(b['name']);
                 return a > b ? 1 : (a < b ? -1 : 0);
             });
         }
 
-        // Merge back together, exclude hidden stations
-    	data = favorite.concat(regular);
+        // Build the station list
+        // Show/hide
+        if (showHideMoodeStations == 'Show hidden') {
+            data = hiddenMoodeStations;
+        }
+        else if (showHideOtherStations == 'Show hidden') {
+            data = hiddenOtherStations;
+        }
+        // Group method
+        else if (groupMethod == 'Favorites first') {
+            data = favoriteStations.concat(regularStations);
+        }
+        else if (groupMethod == 'Sort tag' || groupMethod == 'No grouping') {
+            data =  allNonHiddenStations;
+        }
 
         // Clear search results if any
         $('.btnlist-top-ra').show();
@@ -1391,6 +1472,9 @@ function renderRadioView() {
         var radioViewBgDiv = '';
 
         // Output the list
+
+        // TODO: If groupMethod == 'No grouping' then omit the group headers
+
     	$('ul.database-radio').html('');
         var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
         var output = '';

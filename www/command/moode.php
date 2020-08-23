@@ -585,6 +585,18 @@ else {
 				$result = sdbquery("select * from cfg_radio where station not in ('DELETED', 'zx reserved 499')", $dbh);
 				echo json_encode($result);
 				break;
+			case 'upd_cfg_radio_show_hide':
+				// Update cfg_radio
+				$operator = $_POST['stationBlock'] == 'Moode' ? '<' : '>';
+				$result = sdbquery("update cfg_radio set type='" . $_POST['stationType'] . "' where id" . $operator . '499', $dbh);
+				// Update cfg_system and reset show/hide
+				//$result = sdbquery("select value from cfg_system where param='radioview_show_hide'", $dbh);
+				$result = cfgdb_read('cfg_system', $dbh, 'radioview_show_hide');
+				$radioview_show_hide = explode(',', $result[0]['value']);
+				$_POST['stationBlock'] == 'Moode' ?  $radioview_show_hide[0] = 'No action' : $radioview_show_hide[1] = 'No action';
+				playerSession('write', 'radioview_show_hide', $radioview_show_hide[0] . ',' . $radioview_show_hide[1]);
+
+				break;
 			case 'readaudiodev':
 				if (isset($_POST['name'])) {
 					$result = cfgdb_read('cfg_audiodev', $dbh, $_POST['name']);

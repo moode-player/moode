@@ -1011,59 +1011,44 @@ $('#database-radio').on('click', 'img', function(e) {
 	var pos = $(this).parents('li').index();
 	var path = $(this).parents('li').data('path');
 
-    // Radio list view
-	if ($(this).parents().hasClass('db-radiofolder-icon')) {
-		UI.raFolderLevel[UI.raFolderLevel[4]] = $(this).parents('li').attr('id').replace('db-','');
-		++UI.raFolderLevel[4];
-		mpdDbCmd('lsinfo_radio', $(this).parents('li').data('path'));
-	}
-    // Radio cover view
-	else {
-		UI.radioPos = pos;
-		storeRadioPos(UI.radioPos)
+	UI.radioPos = pos;
+	storeRadioPos(UI.radioPos)
 
-        var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
-    	mpdDbCmd(cmd, path);
-        if (cmd != 'play') {
-            notify(cmd, '');
-        }
+    var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
+	mpdDbCmd(cmd, path);
+    if (cmd != 'play') {
+        notify(cmd, '');
+    }
 
-		setTimeout(function() {
-			customScroll('radio', UI.radioPos, 200);
-		}, SCROLLTO_TIMEOUT);
-	}
-
-	// Needed ?
-	//return false;
+	setTimeout(function() {
+		customScroll('radio', UI.radioPos, 200);
+	}, SCROLLTO_TIMEOUT);
 });
 
 // Radio manager dialog
 $('#radio-manager-btn').click(function(e) {
     var sortGroup = SESSION.json['radioview_sort_group'].split(',');
     var showHide = SESSION.json['radioview_show_hide'].split(',');
-    sortGroup[0] = sortGroup[0].charAt(0).toUpperCase() + sortGroup[0].slice(1); // Cap firat letter
     $('#radioview-sort-tag span').text(sortGroup[0]);
-    $('#radioview-group-method span').text(getParamOrValue('param', sortGroup[1]));
-    $('#radioview-show-hide-moode span').text(getParamOrValue('param', showHide[0]));
-    $('#radioview-show-hide-other span').text(getParamOrValue('param', showHide[1]));
+    $('#radioview-group-method span').text(sortGroup[1]);
+    $('#radioview-show-hide-moode span').text(showHide[0]);
+    $('#radioview-show-hide-other span').text(showHide[1]);
     $('#import-export-msg').text('');
     $('#radio-manager-modal').modal();
 });
 
 // Update Radio manager
 $('#btn-upd-radio-manager').click(function(e) {
-    var sortTag = $('#radioview-sort-tag span').text().toLowerCase();
-    var groupMethod = getParamOrValue('value', $('#radioview-group-method span').text());
-    var showHideMoode = getParamOrValue('value', $('#radioview-show-hide-moode span').text());
-    var showHideOther = getParamOrValue('value', $('#radioview-show-hide-other span').text());
-    SESSION.json['radioview_sort_group'] = sortTag + ',' + groupMethod;
-    SESSION.json['radioview_show_hide'] = showHideMoode + ',' + showHideOther;
+    SESSION.json['radioview_sort_group'] = $('#radioview-sort-tag span').text() + ',' + $('#radioview-group-method span').text();
+    SESSION.json['radioview_show_hide'] = $('#radioview-show-hide-moode span').text() + ',' + $('#radioview-show-hide-other span').text();
     $.post('command/moode.php?cmd=updcfgsystem', {
         'radioview_sort_group': SESSION.json['radioview_sort_group'],
         'radioview_show_hide': SESSION.json['radioview_show_hide']
          }, function() {
              notify('settings_updated');
-             $('#ra-refresh').click();
+             setTimeout(function() {
+                 $('#ra-refresh').click();
+         	}, LAZYLOAD_TIMEOUT);
          }
      );
 });
