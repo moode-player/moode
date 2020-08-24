@@ -1379,7 +1379,7 @@ function renderRadioView() {
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
             allNonHiddenStations.sort(function(a, b) {
-                return collator.compare(a[sortTag], b[sortTag]);
+                return sortTag == 'name' ? collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag])) : collator.compare(a[sortTag], b[sortTag]);
             });
         }
         catch (e) {
@@ -1393,7 +1393,15 @@ function renderRadioView() {
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
             regularStations.sort(function(a, b) {
-                return collator.compare(a[sortTag], b[sortTag]);
+                if (sortTag == 'name') {
+                    return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
+                }
+                else if (sortTag == 'genre') {
+                    return collator.compare(removeArticles(a[sortTag].split(',')[0]), removeArticles(b[sortTag].split(',')[0]));
+                }
+                else {
+                    return collator.compare(a[sortTag], b[sortTag]);
+                }
             });
         }
         catch (e) {
@@ -1471,15 +1479,18 @@ function renderRadioView() {
         var radioViewTxDiv = '';
         var radioViewBgDiv = '';
 
-        // Output the list
-
-        // TODO: If groupMethod == 'No grouping' then omit the group headers
-
-    	$('ul.database-radio').html('');
+        // Generate the output list
         var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
         var output = '';
 
+        // Favorites header (if any)
+        if (groupMethod == 'Favorites first') {
+            output += favoriteStations.length > 0 ? '<div class="horiz-rule-radioview">Favorites</div>' : '';
+        }
+
+        var lastSortTag = '';
     	for (var i = 0; i < data.length; i++) {
+            // Encoded-at div's
             if (encodedAtOption != 9) {
                 var bitrate = parseInt(data[i].bitrate);
                 var bitrateAndFormat = data[i].format == 'FLAC' ? data[i].bitrate + ' ' + data[i].format : data[i].bitrate + 'K ' + data[i].format;
@@ -1489,16 +1500,48 @@ function renderRadioView() {
                 var radioViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
             }
 
+            // Sub-genre div
+            var subGenreDiv = sortTag == 'genre' ? '<div class="encoded-at-text">' + data[i].genre.substr(data[i].genre.indexOf(',') + 1) + '</div>' : '';
+            // Country div
+            var countryDiv = sortTag == 'region' ? '<div class="encoded-at-text">' + data[i].country + '</div>' : '';
+
+            // Output Favorites first
+            if (groupMethod == 'Favorites first' && data[i].type == 'f') {
+                //NOP
+            }
+            // Switch to Sort tag unless No grouping
+            else if (groupMethod != 'No grouping') {
+                groupMethod = 'Sort tag';
+            }
+            if (groupMethod == 'Sort tag') {
+                if (sortTag == 'name' && removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase() != removeArticles(lastSortTag).substr(0, 1).toUpperCase()) {
+                    output += '<div class="horiz-rule-radioview">' + removeArticles(data[i].name).substr(0, 1).toUpperCase() + '</div>';
+                }
+                else if (sortTag == 'genre' && data[i][sortTag].split(',')[0] != lastSortTag.split(',')[0]) {
+                    output += '<div class="horiz-rule-radioview">' + data[i][sortTag].split(',')[0] + '</div>';
+                }
+                else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTag) {
+                    output += '<div class="horiz-rule-radioview">' + data[i][sortTag] + '</div>';
+                }
+            }
+
+            // Construct the line
             var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
     		output += '<li id="db-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
     		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
             output += data[i].name;
+            output += subGenreDiv;
+            output += countryDiv;
             output += radioViewTxDiv;
             output += radioViewNvDiv;
             output += '</li>';
+
+            lastSortTag = data[i][sortTag];
     	}
+
+        // Render the list
     	$('ul.database-radio').html(output);
     });
 }

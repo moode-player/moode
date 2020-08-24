@@ -635,7 +635,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .no-tagview-covers {padding-top:.4em;padding-bottom:.4em;}
 /* Show sample rate */
 .encoded-at-notvisible {display:none}
-.encoded-at-text {font-size:.85em;font-style:italic;color:var(--textvariant);}
+.encoded-at-text {font-weight:600;color:var(--textvariant);}
 .encoded-at-badge {position:absolute;float:right;width:6.75em;line-height:1.5em;right:1.15rem;color:white;background:rgba(64,64,64,.9);border-radius:10%;font-size:.65em;font-style:normal;font-weight:normal;transform:translate(0%, -195%);}
 .encoded-at-hdonly {position:absolute;float:right;width:2em;height:1.25em;line-height:1.5em;right:1.15rem;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.65em;font-style:normal;font-weight:700;transform:translate(0%, -195%);}
 .encoded-at-hdonly-tagview {position:absolute;width:1.6em;height:1.25em;line-height:1.5em;left:2.8rem;bottom:1em;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.39em;font-style:normal;font-weight:600;}
