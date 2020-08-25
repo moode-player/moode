@@ -1461,27 +1461,6 @@
 								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
 							</span>
 						</div>
-						<label class="control-label" for="new-station-geo-fenced">Geo-fenced</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="new-station-geo-fenced" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-new-station-geo-fenced" class="help-block hide">
-								Specifies whether the station stream is only avalable in a certain country or region.
-							</span>
-						</div>
 						<label class="control-label" for="new-station-genre">Genre</label>
 						<div class="controls">
 							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" maxlength="200" value="">
@@ -1504,12 +1483,33 @@
 		                </div>
 						<label class="control-label" for="new-station-bitrate">Bit rate (kbps)</label>
 						<div class="controls">
-		                    <input id="new-station-bitrate" class="input-xlarge" type="text" maxlength="5" name="new_station_bitrate" value="">
+		                    <input id="new-station-bitrate" class="input-xlarge" type="text" maxlength="4" name="new_station_bitrate" value="">
 		                </div>
 						<label class="control-label" for="new-station-format">Audio format</label>
 						<div class="controls">
 		                    <input id="new-station-format" class="input-xlarge" type="text" name="new_station_format" maxlength="10" value="">
 		                </div>
+						<label class="control-label" for="new-station-geo-fenced">Geo-fenced</label>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="new-station-geo-fenced" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">No</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-new-station-geo-fenced" class="help-block hide">
+								Specifies whether the station stream is only avalable in a certain country or region.
+							</span>
+						</div>
 						<!--
 						<label class="control-label" for="new-station-reserved1">Reserved1</label>
 						<div class="controls">
@@ -1587,27 +1587,6 @@
 								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
 							</span>
 						</div>
-						<label class="control-label" for="edit-station-geo-fenced">Geo-fenced</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="edit-station-geo-fenced" class="filter-option pull-left">
-										<span></span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">No</span></a></li>
-									</ul>
-								</div>
-	 						</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-edit-station-geo-fenced" class="help-block hide">
-								Specifies whether the station stream is only avalable in a certain country or region.
-							</span>
-						</div>
 						<label class="control-label" for="edit-station-genre">Genre</label>
 						<div class="controls">
 							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" maxlength="200" value="">
@@ -1630,12 +1609,33 @@
 		                </div>
 						<label class="control-label" for="edit-station-bitrate">Bit rate (kbps)</label>
 						<div class="controls">
-		                    <input id="edit-station-bitrate" class="input-xlarge" type="text" maxlength="5" name="edit_station_bitrate" value="">
+		                    <input id="edit-station-bitrate" class="input-xlarge" type="text" maxlength="4" name="edit_station_bitrate" value="">
 		                </div>
 						<label class="control-label" for="edit-station-format">Audio format</label>
 						<div class="controls">
 		                    <input id="edit-station-format" class="input-xlarge" type="text" name="edit_station_format" maxlength="10" value="">
 		                </div>
+						<label class="control-label" for="edit-station-geo-fenced">Geo-fenced</label>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="edit-station-geo-fenced" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">No</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-edit-station-geo-fenced" class="help-block hide">
+								Specifies whether the station stream is only avalable in a certain country or region.
+							</span>
+						</div>
 						<!--
 						<label class="control-label" for="new-station-reserved1">Reserved1</label>
 						<div class="controls">
