@@ -1341,7 +1341,7 @@ function renderRadioView() {
             SESSION.json['radioview_show_hide'] = showHideMoodeStations + ',No action';
         }
 
-        // Separate out All Non-hidden, Regular, Favorite and Hidden stations
+        // Separate out Non-hidden, Regular, Favorite and Hidden stations
         var allNonHiddenStations = [];
     	var regularStations = [];
         var favoriteStations = [];
@@ -1375,6 +1375,7 @@ function renderRadioView() {
             }
     	}
 
+        // Sorts
         // All non-hidden stations
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
