@@ -1307,6 +1307,7 @@ function renderRadioView() {
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
+        var configuredGroupMethod = groupMethod; // NOTE: For code block "Mark the end of Favorites"
         var showHideMoodeStations = SESSION.json['radioview_show_hide'].split(',')[0];
         var showHideOtherStations = SESSION.json['radioview_show_hide'].split(',')[1];
 
@@ -1380,14 +1381,30 @@ function renderRadioView() {
         try {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
             allNonHiddenStations.sort(function(a, b) {
-                return sortTag == 'name' ? collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag])) : collator.compare(a[sortTag], b[sortTag]);
+                if (sortTag == 'name') {
+                    return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
+                }
+                else if (sortTag == 'genre') {
+                    return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
+                }
+                else {
+                    return collator.compare(a[sortTag], b[sortTag]);
+                }
             });
         }
         catch (e) {
             allNonHiddenStations.sort(function(a, b) {
-                a = a[sortTag];
-                b = b[sortTag];
-                return a > b ? 1 : (a < b ? -1 : 0);
+                if (sortTag == 'name') {
+                    a = removeArticles(a[sortTag]), b = removeArticles(b[sortTag]);
+                    return a > b ? 1 : (a < b ? -1 : 0);
+                }
+                else if (sortTag == 'genre') {
+                    a = removeArticles(a[sortTag].split(', ')[0]), b = removeArticles(b[sortTag].split(', ')[0]);
+                    return a > b ? 1 : (a < b ? -1 : 0);
+                }
+                else {
+                    return collator.compare(a[sortTag], b[sortTag]);
+                }
             });
         }
         // Regular stations
@@ -1407,9 +1424,17 @@ function renderRadioView() {
         }
         catch (e) {
             regularStations.sort(function(a, b) {
-                a = a[sortTag];
-                b = b[sortTag];
-                return a > b ? 1 : (a < b ? -1 : 0);
+                if (sortTag == 'name') {
+                    a = removeArticles(a[sortTag]), b = removeArticles(b[sortTag]);
+                    return a > b ? 1 : (a < b ? -1 : 0);
+                }
+                else if (sortTag == 'genre') {
+                    a = removeArticles(a[sortTag].split(', ')[0]), b = removeArticles(b[sortTag].split(', ')[0]);
+                    return a > b ? 1 : (a < b ? -1 : 0);
+                }
+                else {
+                    return collator.compare(a[sortTag], b[sortTag]);
+                }
             });
         }
         // Favorite stations
@@ -1421,8 +1446,7 @@ function renderRadioView() {
         }
         catch (e) {
             favoriteStations.sort(function(a, b) {
-                a = removeArticles(a['name']);
-                b = removeArticles(b['name']);
+                a = removeArticles(a['name']), b = removeArticles(b['name']);
                 return a > b ? 1 : (a < b ? -1 : 0);
             });
         }
@@ -1438,13 +1462,11 @@ function renderRadioView() {
         }
         catch (e) {
             hiddenOtherStations.sort(function(a, b) {
-                a = removeArticles(a['name']);
-                b = removeArticles(b['name']);
+                a = removeArticles(a['name']), b = removeArticles(b['name']);
                 return a > b ? 1 : (a < b ? -1 : 0);
             });
             hiddenOtherStations.sort(function(a, b) {
-                a = removeArticles(a['name']);
-                b = removeArticles(b['name']);
+                a = removeArticles(a['name']), b = removeArticles(b['name']);
                 return a > b ? 1 : (a < b ? -1 : 0);
             });
         }
@@ -1511,17 +1533,20 @@ function renderRadioView() {
             if (groupMethod == 'Favorites first' && data[i].type == 'f') {
                 //NOP
             }
-            // Default to Sort tag unless No grouping
+            // Change to Sort tag grouping unless method is No grouping
             else if (groupMethod != 'No grouping') {
                 groupMethod = 'Sort tag';
             }
 
-            // To mark the end of Favorites
-            if (endOfFavs === false && data[i].type != 'f' && lastSortTagValue != '') {
-                lastSortTagValue = '';
-                endOfFavs = true;
+            // Mark the end of Favorites
+            if (configuredGroupMethod == 'Favorites first') {
+                if (endOfFavs === false && data[i].type != 'f' && lastSortTagValue != '') {
+                    lastSortTagValue = '';
+                    endOfFavs = true;
+                }
             }
 
+            // Construct group headers
             if (groupMethod == 'Sort tag') {
                 if (sortTag == 'name' && removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase() != removeArticles(lastSortTagValue).substr(0, 1).toUpperCase()) {
                     output += '<li class="horiz-rule-radioview">' + removeArticles(data[i].name).substr(0, 1).toUpperCase() + '</li>';
@@ -1534,7 +1559,7 @@ function renderRadioView() {
                 }
             }
 
-            // Construct the line
+            // Construct station entries
             var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
     		output += '<li id="db-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
     		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
