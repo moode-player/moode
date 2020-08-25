@@ -3119,6 +3119,7 @@ $('#coverart-url, #playback-switch').click(function(e){
     /*TEST*/$('#coverart-link').hide();
 
 	currentView = currentView.split(',')[1];
+    $('#container-playlist').css('visibility','hidden');
 	$('#menu-top').css('height', '0');
 	$('#menu-top').css('backdrop-filter', '');
 	$('#menu-bottom, .viewswitch').css('display', 'flex');
