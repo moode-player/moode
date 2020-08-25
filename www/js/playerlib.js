@@ -1521,6 +1521,7 @@ function renderRadioView() {
     	$('#ra-filter').val('');
 
         // Format filtered list
+        var numHeaderPrinted = false;
         var lastSortTagValue = '';
     	for (var i = 0; i < data.length; i++) {
             // Encoded-at div's
@@ -1555,10 +1556,18 @@ function renderRadioView() {
                 }
             }
 
-            // Construct group headers
+            // Construct group header
             if (groupMethod == 'Sort tag') {
-                if (sortTag == 'name' && removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase() != removeArticles(lastSortTagValue).substr(0, 1).toUpperCase()) {
-                    output += '<li class="horiz-rule-radioview">' + removeArticles(data[i].name).substr(0, 1).toUpperCase() + '</li>';
+                var currentChr1 = removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase();
+                var lastChr1 = removeArticles(lastSortTagValue).substr(0, 1).toUpperCase()
+                if (sortTag == 'name' && currentChr1 != lastChr1) {
+                    if (isNaN(currentChr1) === false && numHeaderPrinted === false) {
+                        output += '<li class="horiz-rule-radioview">0-9</li>';
+                        numHeaderPrinted = true;
+                    }
+                    else if (isNaN(currentChr1) === true) {
+                        output += '<li class="horiz-rule-radioview">' + currentChr1 + '</li>';
+                    }
                 }
                 else if (sortTag == 'genre' && data[i][sortTag].split(', ')[0] != lastSortTagValue.split(', ')[0]) {
                     output += '<li class="horiz-rule-radioview">' + data[i][sortTag].split(', ')[0] + '</li>';
