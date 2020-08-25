@@ -1397,7 +1397,7 @@ function renderRadioView() {
                     return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
                 }
                 else if (sortTag == 'genre') {
-                    return collator.compare(removeArticles(a[sortTag].split(',')[0]), removeArticles(b[sortTag].split(',')[0]));
+                    return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
                 }
                 else {
                     return collator.compare(a[sortTag], b[sortTag]);
@@ -1476,7 +1476,7 @@ function renderRadioView() {
         var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
         var radioViewNvDiv = '';
         var radioViewHdDiv = '';
-        var radioViewTxDiv = '';
+        //var radioViewTxDiv = '';
         var radioViewBgDiv = '';
 
         // Generate the output list
@@ -1488,7 +1488,8 @@ function renderRadioView() {
             output += favoriteStations.length > 0 ? '<div class="horiz-rule-radioview">Favorites</div>' : '';
         }
 
-        var lastSortTag = '';
+        var endOfFavs = favoriteStations.length > 0 ? false : true;
+        var lastSortTagValue = '';
     	for (var i = 0; i < data.length; i++) {
             // Encoded-at div's
             if (encodedAtOption != 9) {
@@ -1496,31 +1497,38 @@ function renderRadioView() {
                 var bitrateAndFormat = data[i].format == 'FLAC' ? data[i].bitrate + ' ' + data[i].format : data[i].bitrate + 'K ' + data[i].format;
                 var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
                 var radioViewHdDiv = encodedAtOption == 1 && (bitrate > 128 || data[i].format == 'FLAC') ? '<div class="encoded-at-hdonly">HD</div>' : '';
-                var radioViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + bitrateAndFormat + '</div>' : '';
+                //var radioViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + bitrateAndFormat + '</div>' : '';
                 var radioViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
             }
 
-            // Sub-genre div
-            var subGenreDiv = sortTag == 'genre' ? '<div class="encoded-at-text">' + data[i].genre.substr(data[i].genre.indexOf(',') + 1) + '</div>' : '';
-            // Country div
-            var countryDiv = sortTag == 'region' ? '<div class="encoded-at-text">' + data[i].country + '</div>' : '';
+            // Metadata div's
+            var subGenreDiv = sortTag == 'genre' ? '<div class="radioview-metadata-text">' + data[i].genre.substr(data[i].genre.indexOf(', ') + 1) + '</div>' : '';
+            var countryDiv = sortTag == 'region' ? '<div class="radioview-metadata-text">' + data[i].country + '</div>' : '';
+            var bitrateDiv = (sortTag == 'bitrate' || sortTag == 'format') ? '<div class="radioview-metadata-text">' + data[i].bitrate + 'K ' + data[i].format + '</div>' : '';
 
             // Output Favorites first
             if (groupMethod == 'Favorites first' && data[i].type == 'f') {
                 //NOP
             }
-            // Switch to Sort tag unless No grouping
+            // Default to Sort tag unless No grouping
             else if (groupMethod != 'No grouping') {
                 groupMethod = 'Sort tag';
             }
+
+            // To mark the end of Favorites
+            if (endOfFavs === false && data[i].type != 'f' && lastSortTagValue != '') {
+                lastSortTagValue = '';
+                endOfFavs = true;
+            }
+
             if (groupMethod == 'Sort tag') {
-                if (sortTag == 'name' && removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase() != removeArticles(lastSortTag).substr(0, 1).toUpperCase()) {
+                if (sortTag == 'name' && removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase() != removeArticles(lastSortTagValue).substr(0, 1).toUpperCase()) {
                     output += '<div class="horiz-rule-radioview">' + removeArticles(data[i].name).substr(0, 1).toUpperCase() + '</div>';
                 }
-                else if (sortTag == 'genre' && data[i][sortTag].split(',')[0] != lastSortTag.split(',')[0]) {
-                    output += '<div class="horiz-rule-radioview">' + data[i][sortTag].split(',')[0] + '</div>';
+                else if (sortTag == 'genre' && data[i][sortTag].split(', ')[0] != lastSortTagValue.split(', ')[0]) {
+                    output += '<div class="horiz-rule-radioview">' + data[i][sortTag].split(', ')[0] + '</div>';
                 }
-                else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTag) {
+                else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTagValue) {
                     output += '<div class="horiz-rule-radioview">' + data[i][sortTag] + '</div>';
                 }
             }
@@ -1534,11 +1542,12 @@ function renderRadioView() {
             output += data[i].name;
             output += subGenreDiv;
             output += countryDiv;
-            output += radioViewTxDiv;
+            output += bitrateDiv;
+            //output += radioViewTxDiv;
             output += radioViewNvDiv;
             output += '</li>';
 
-            lastSortTag = data[i][sortTag];
+            lastSortTagValue = data[i][sortTag];
     	}
 
         // Render the list
