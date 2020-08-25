@@ -36,7 +36,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
 .horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.25em;font-style:italic;color: #888;}
-.horiz-rule-radioview {border-bottom: 1px solid var(--textvariant);margin: 0 1em 0 .75em;font-size: 1.5em;font-style: italic;color: var(--textvariant);text-align: left;}
+.horiz-rule-radioview {border-bottom:1px solid var(--textvariant);margin: 0 1em 0 .75em!important;font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:96%!important;padding-bottom:0!important;}
 .legend-configs {border:none;margin-bottom:.35em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* general */

@@ -1486,7 +1486,7 @@ function renderRadioView() {
 
         // Favorites header (if any)
         if (groupMethod == 'Favorites first') {
-            output += favoriteStations.length > 0 ? '<div class="horiz-rule-radioview">Favorites</div>' : '';
+            output += favoriteStations.length > 0 ? '<li class="horiz-rule-radioview">Favorites</li>' : '';
         }
 
         var endOfFavs = favoriteStations.length > 0 ? false : true;
@@ -1524,13 +1524,13 @@ function renderRadioView() {
 
             if (groupMethod == 'Sort tag') {
                 if (sortTag == 'name' && removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase() != removeArticles(lastSortTagValue).substr(0, 1).toUpperCase()) {
-                    output += '<div class="horiz-rule-radioview">' + removeArticles(data[i].name).substr(0, 1).toUpperCase() + '</div>';
+                    output += '<li class="horiz-rule-radioview">' + removeArticles(data[i].name).substr(0, 1).toUpperCase() + '</li>';
                 }
                 else if (sortTag == 'genre' && data[i][sortTag].split(', ')[0] != lastSortTagValue.split(', ')[0]) {
-                    output += '<div class="horiz-rule-radioview">' + data[i][sortTag].split(', ')[0] + '</div>';
+                    output += '<li class="horiz-rule-radioview">' + data[i][sortTag].split(', ')[0] + '</li>';
                 }
                 else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTagValue) {
-                    output += '<div class="horiz-rule-radioview">' + data[i][sortTag] + '</div>';
+                    output += '<li class="horiz-rule-radioview">' + data[i][sortTag] + '</li>';
                 }
             }
 
@@ -1540,7 +1540,7 @@ function renderRadioView() {
     		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
-            output += data[i].name;
+            output += '<span class="station-name">' + data[i].name + '</span>';
             output += subGenreDiv;
             output += countryDiv;
             output += bitrateDiv;
@@ -3085,8 +3085,7 @@ function listLook(list, name, search) {
 	alphabitsFilter = 0;
 	if (search != '#') {
 		$('#' + list).each(function(){
-			var text = removeArticles($(this).text().toLowerCase());
-			//if (text.indexOf(search) == 0) {
+            var text = removeArticles($(this).children('span').text().toLowerCase());
             if (text.substr(0, 1) == search) {
 				return false;
 			}

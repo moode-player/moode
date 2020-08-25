@@ -195,7 +195,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .database-radio li {width:var(--thumbcols);text-align:center;font-size:.95em;/*margin:.25em .75em .75em .75em*/;display:inline-block;vertical-align:top;height:auto;padding:0 0 .5em 0;}
 .database li {margin-left:2px;margin-right:5px;padding:0;}
 .playlist li.active:before, .cv-playlist li.active:before {color:var(--accentxts);opacity:1;}
-.database span, .database-radio span {display:block;font-weight:normal;color:inherit;opacity:.60;}
+.database span {display:block;font-weight:normal;color:inherit;opacity:.60;}
 .playlist span, .cv-playlist span {line-height:normal;margin-left:calc(3em + 1vmin);display:block;}
 .pll1 {font-size:1em;}
 .pll2 {font-size:.9em;margin-bottom:.75em;color:var(--textvariant) !important;margin-left: calc(3em + 1.5vmin)!important;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
