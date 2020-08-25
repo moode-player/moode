@@ -1304,6 +1304,8 @@ function formatFolderViewEntries(data, path, i) {
 function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
+        // Lazyload method
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
@@ -1342,7 +1344,7 @@ function renderRadioView() {
             SESSION.json['radioview_show_hide'] = showHideMoodeStations + ',No action';
         }
 
-        // Separate out Non-hidden, Regular, Favorite and Hidden stations
+        // Generate filtered lists
         var allNonHiddenStations = [];
     	var regularStations = [];
         var favoriteStations = [];
@@ -1471,15 +1473,13 @@ function renderRadioView() {
             });
         }
 
-        // Build the station list
-        // Show/hide
+        // Set filtered list
         if (showHideMoodeStations == 'Show hidden') {
             data = hiddenMoodeStations;
         }
         else if (showHideOtherStations == 'Show hidden') {
             data = hiddenOtherStations;
         }
-        // Group method
         else if (groupMethod == 'Favorites first') {
             data = favoriteStations.concat(regularStations);
         }
@@ -1487,13 +1487,7 @@ function renderRadioView() {
             data =  allNonHiddenStations;
         }
 
-        // Clear search results if any
-        $('.btnlist-top-ra').show();
-        $("#searchResetRa").hide();
-        showSearchResetRa = false;
-    	$('#ra-search-keyword').val('');
-    	$('#ra-filter').val('');
-
+        // Encoded-at div's
         // SESSION.json['library_encoded_at']
         // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
         var encodedAtOption = parseInt(SESSION.json['library_encoded_at']);
@@ -1502,16 +1496,18 @@ function renderRadioView() {
         //var radioViewTxDiv = '';
         var radioViewBgDiv = '';
 
-        // Generate the output list
-        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
-        var output = '';
-
-        // Favorites header (if any)
-        if (groupMethod == 'Favorites first') {
-            output += favoriteStations.length > 0 ? '<li class="horiz-rule-radioview">Favorites</li>' : '';
-        }
-
+        // Favorites header (if any) and end flag
+        var output = (groupMethod == 'Favorites first' && favoriteStations.length > 0) ? '<li class="horiz-rule-radioview">Favorites</li>' : '';
         var endOfFavs = favoriteStations.length > 0 ? false : true;
+
+        // Clear search results (if any)
+        $('.btnlist-top-ra').show();
+        $("#searchResetRa").hide();
+        showSearchResetRa = false;
+    	$('#ra-search-keyword').val('');
+    	$('#ra-filter').val('');
+
+        // Format filtered list
         var lastSortTagValue = '';
     	for (var i = 0; i < data.length; i++) {
             // Encoded-at div's
