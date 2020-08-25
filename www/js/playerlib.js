@@ -1526,9 +1526,9 @@ function renderRadioView() {
             // Encoded-at div's
             if (encodedAtOption != 9) {
                 var bitrate = parseInt(data[i].bitrate);
-                var bitrateAndFormat = data[i].format == 'FLAC' ? data[i].bitrate + ' ' + data[i].format : data[i].bitrate + 'K ' + data[i].format;
+                var bitrateAndFormat = data[i].bitrate + 'K ' + data[i].format;
                 var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
-                var radioViewHdDiv = encodedAtOption == 1 && (bitrate > 128 || data[i].format == 'FLAC') ? '<div class="encoded-at-hdonly">HD</div>' : '';
+                var radioViewHdDiv = (encodedAtOption == 1 && bitrate > 128) ? '<div class="encoded-at-hdonly">HD</div>' : '';
                 //var radioViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + bitrateAndFormat + '</div>' : '';
                 var radioViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
             }
@@ -1564,7 +1564,8 @@ function renderRadioView() {
                     output += '<li class="horiz-rule-radioview">' + data[i][sortTag].split(', ')[0] + '</li>';
                 }
                 else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTagValue) {
-                    output += '<li class="horiz-rule-radioview">' + data[i][sortTag] + '</li>';
+
+                    output += '<li class="horiz-rule-radioview">' + data[i][sortTag] + (sortTag == 'bitrate' ? ' kbps' : '') + '</li>';
                 }
             }
 
