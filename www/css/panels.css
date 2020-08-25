@@ -192,7 +192,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .playlist li, .cv-playlist li, .database li, .database-radio li {display:block;position:relative;margin:0;cursor:pointer;text-align:left;padding-left:.75em;}
 /*.playlist li:before {display:block;float:left;width:2.5em;line-height:normal;text-align:right;counter-increment:item;content:counter(item) ' ';color:var(--textvariant);font-size:1em;letter-spacing:-1px;}*/
 .playlist li:before, .cv-playlist li:before {float:left;width:2.9em;letter-spacing:-1px;text-align:right;line-height:normal;counter-increment:item;content:counter(item) ' ';color:var(--textvariant);font-size:1em;}
-.database-radio li {width:var(--thumbcols);text-align:center;font-size:.9em;/*margin:.25em .75em .75em .75em*/;display:inline-block;vertical-align:top;height:auto;padding:0 0 .5em 0;}
+.database-radio li {width:var(--thumbcols);text-align:center;font-size:.95em;/*margin:.25em .75em .75em .75em*/;display:inline-block;vertical-align:top;height:auto;padding:0 0 .5em 0;}
 .database li {margin-left:2px;margin-right:5px;padding:0;}
 .playlist li.active:before, .cv-playlist li.active:before {color:var(--accentxts);opacity:1;}
 .database span, .database-radio span {display:block;font-weight:normal;color:inherit;opacity:.60;}
@@ -635,12 +635,14 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .no-tagview-covers {padding-top:.4em;padding-bottom:.4em;}
 /* Show sample rate */
 .encoded-at-notvisible {display:none}
-.encoded-at-text {font-weight:600;color:var(--textvariant);}
+.encoded-at-text {color:var(--textvariant);}
 .encoded-at-badge {position:absolute;float:right;width:6.75em;line-height:1.5em;right:1.15rem;color:white;background:rgba(64,64,64,.9);border-radius:10%;font-size:.65em;font-style:normal;font-weight:normal;transform:translate(0%, -195%);}
 .encoded-at-hdonly {position:absolute;float:right;width:2em;height:1.25em;line-height:1.5em;right:1.15rem;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.65em;font-style:normal;font-weight:700;transform:translate(0%, -195%);}
 .encoded-at-hdonly-tagview {position:absolute;width:1.6em;height:1.25em;line-height:1.5em;left:2.8rem;bottom:1em;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.39em;font-style:normal;font-weight:600;}
 /* Radio manager */
 .modal-button-style {display:inline-block;margin-bottom:.5em;/*margin-top:-1px*/}
+/* Radio view */
+.radioview-metadata-text {color:var(--textvariant);}
 /* First use help */
 #playback-firstuse-help {display:none;}
 #playbar-firstuse-help {display:none;position:absolute;left:0;top:0;z-index:9999}
