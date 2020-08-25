@@ -372,7 +372,7 @@ else {
 								"'" . $_POST['path']['region'] . "'," .
 								"'" . $_POST['path']['bitrate'] . "'," .
 								"'" . $_POST['path']['format'] . "'," .
-								"'" . $_POST['path']['reserved0'] . "'," .
+								"'" . $_POST['path']['geo_fenced'] . "'," .
 								"'" . $_POST['path']['reserved1'] . "'," .
 								"'" . $_POST['path']['reserved2'] . "'";
 							$result = sdbquery('insert into cfg_radio values (NULL,' . $values . ')', $dbh);
@@ -401,7 +401,7 @@ else {
 							"region='" . $_POST['path']['region'] . "'," .
 							"bitrate='" . $_POST['path']['bitrate'] . "'," .
 							"format='" . $_POST['path']['format'] . "'," .
-							"reserved0='" . $_POST['path']['reserved0'] . "'," .
+							"geo_fenced='" . $_POST['path']['geo_fenced'] . "'," .
 							"reserved1='" . $_POST['path']['reserved0'] . "'," .
 							"reserved2='" . $_POST['path']['reserved0'] . "'";
 							$result = sdbquery('UPDATE cfg_radio SET ' . $columns . ' WHERE id=' . $_POST['path']['id'], $dbh);
@@ -586,16 +586,21 @@ else {
 				echo json_encode($result);
 				break;
 			case 'upd_cfg_radio_show_hide':
-				// Update cfg_radio
-				$operator = $_POST['stationBlock'] == 'Moode' ? '<' : '>';
-				$result = sdbquery("update cfg_radio set type='" . $_POST['stationType'] . "' where id" . $operator . '499', $dbh);
+				if ($_POST['stationBlock'] == 'Moode') {
+					$where_clause = "where id < '499' and type != 'f'";
+				}
+				elseif ($_POST['stationBlock'] == 'Moode geo-locked') {
+					$where_clause = "where id < '499' and type != 'f' and geo_fenced = 'Yes'";
+				}
+				elseif ($_POST['stationBlock'] == 'Other') {
+					$where_clause = "where id > '499' and type != 'f'";
+				}
+				$result = sdbquery("update cfg_radio set type='" . $_POST['stationType'] . "' " . $where_clause, $dbh);
 				// Update cfg_system and reset show/hide
-				//$result = sdbquery("select value from cfg_system where param='radioview_show_hide'", $dbh);
 				$result = cfgdb_read('cfg_system', $dbh, 'radioview_show_hide');
 				$radioview_show_hide = explode(',', $result[0]['value']);
-				$_POST['stationBlock'] == 'Moode' ?  $radioview_show_hide[0] = 'No action' : $radioview_show_hide[1] = 'No action';
+				strpos($_POST['stationBlock'], 'Moode') !== false ?  $radioview_show_hide[0] = 'No action' : $radioview_show_hide[1] = 'No action';
 				playerSession('write', 'radioview_show_hide', $radioview_show_hide[0] . ',' . $radioview_show_hide[1]);
-
 				break;
 			case 'readaudiodev':
 				if (isset($_POST['name'])) {
@@ -645,7 +650,7 @@ else {
 				$array = array('id' => $result[0]['id'], 'station' => $result[0]['station'], 'name' => $result[0]['name'], 'type' => $result[0]['type'],
 				 	'logo' =>  $result[0]['logo'], 'genre' => $result[0]['genre'], 'broadcaster' => $result[0]['broadcaster'], 'language' => $result[0]['language'],
 					'country' => $result[0]['country'], 'region' => $result[0]['region'], 'bitrate' => $result[0]['bitrate'], 'format' => $result[0]['format'],
-				 	'reserved0' => $result[0]['reserved0'], 'reserved1' => $result[0]['reserved1'], 'reserved2' => $result[0]['reserved2']);
+				 	'geo_fenced' => $result[0]['geo_fenced'], 'reserved1' => $result[0]['reserved1'], 'reserved2' => $result[0]['reserved2']);
 				echo json_encode($array);
 				break;
 			// Remove background image

@@ -866,7 +866,6 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-logoimage').val('');
 		$('#preview-new-logoimage').html('');
         $('#info-toggle-new-logoimage').css('margin-left','unset');
-
         $('#new-station-tags').css('margin-top', '0');
         $('#new-station-type span').text('Regular');
         $('#new-station-genre').val('');
@@ -876,7 +875,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-station-region').val('');
         $('#new-station-bitrate').val('');
         $('#new-station-format').val('');
-        //$('#new-station-reserved0').val('']);
+        $('#new-station-geo-fenced span').text('No');
         //$('#new-station-reserved1').val('');
         //$('#new-station-reserved2').val('');
 
@@ -1135,7 +1134,7 @@ jQuery(document).ready(function($) { 'use strict';
 		mpdDbCmd('delsavedpl', UI.dbEntry[0]);
 		notify('delsavedpl');
 	});
-	$('#btn-new-station').click(function(e){
+	$('#btn-create-station').click(function(e){
 		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
 			notify('blankentries', 'Station not created');
 		}
@@ -1151,13 +1150,13 @@ jQuery(document).ready(function($) { 'use strict';
                 'region': $('#new-station-region').val(),
                 'bitrate': $('#new-station-bitrate').val(),
                 'format': $('#new-station-format').val(),
-                'reserved0': 'NULL',
+                'geo_fenced': $('#new-station-geo-fenced span').text(),
                 'reserved1': 'NULL',
                 'reserved2': 'NULL'
             });
 		}
 	});
-	$('#btn-upd-station').click(function(e){
+	$('#btn-update-station').click(function(e){
 		if ($('#edit-station-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
 			notify('blankentries', 'Station not updated');
 		}
@@ -1174,7 +1173,7 @@ jQuery(document).ready(function($) { 'use strict';
                 'region': $('#edit-station-region').val(),
                 'bitrate': $('#edit-station-bitrate').val(),
                 'format': $('#edit-station-format').val(),
-                'reserved0': 'NULL',
+                'geo_fenced': $('#edit-station-geo-fenced span').text(),
                 'reserved1': 'NULL',
                 'reserved2': 'NULL'
             });

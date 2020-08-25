@@ -1461,6 +1461,27 @@
 								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
 							</span>
 						</div>
+						<label class="control-label" for="new-station-geo-fenced">Geo-fenced</label>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="new-station-geo-fenced" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">No</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-new-station-geo-fenced" class="help-block hide">
+								Specifies whether the station stream is only avalable in a certain country or region.
+							</span>
+						</div>
 						<label class="control-label" for="new-station-genre">Genre</label>
 						<div class="controls">
 							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" maxlength="200" value="">
@@ -1490,10 +1511,6 @@
 		                    <input id="new-station-format" class="input-xlarge" type="text" name="new_station_format" maxlength="10" value="">
 		                </div>
 						<!--
-						<label class="control-label" for="new-station-reserved0">Reserved0</label>
-						<div class="controls">
-		                    <input id="new-station-reserved0" class="input-xlarge" type="text" name="new_station_reserved0" maxlength="10" value="">
-		                </div>
 						<label class="control-label" for="new-station-reserved1">Reserved1</label>
 						<div class="controls">
 		                    <input id="new-station-reserved1" class="input-xlarge" type="text" name="new_station_reserved1" maxlength="10" value="">
@@ -1510,7 +1527,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Create" id="btn-new-station" class="btn btn-primary" data-dismiss="modal">Create</button>
+		<button aria-label="Create" id="btn-create-station" class="btn btn-primary" data-dismiss="modal">Create</button>
 	</div>
 </div>
 
@@ -1570,6 +1587,27 @@
 								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
 							</span>
 						</div>
+						<label class="control-label" for="edit-station-geo-fenced">Geo-fenced</label>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="edit-station-geo-fenced" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">No</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-edit-station-geo-fenced" class="help-block hide">
+								Specifies whether the station stream is only avalable in a certain country or region.
+							</span>
+						</div>
 						<label class="control-label" for="edit-station-genre">Genre</label>
 						<div class="controls">
 							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" maxlength="200" value="">
@@ -1599,10 +1637,6 @@
 		                    <input id="edit-station-format" class="input-xlarge" type="text" name="edit_station_format" maxlength="10" value="">
 		                </div>
 						<!--
-						<label class="control-label" for="edit-station-reserved0">Reserved0</label>
-						<div class="controls">
-		                    <input id="edit-station-reserved0" class="input-xlarge" type="text" name="edit_station_reserved0" maxlength="10" value="">
-		                </div>
 						<label class="control-label" for="new-station-reserved1">Reserved1</label>
 						<div class="controls">
 		                    <input id="edit-station-reserved1" class="input-xlarge" type="text" name="edit_station_reserved1" maxlength="10" value="">
@@ -1619,7 +1653,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" id="btn-upd-station" class="btn btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-update-station" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -1744,14 +1778,18 @@
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Show hidden</span></a></li>
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide all</span></a></li>
 								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide all</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide geo-fenced</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide geo-fenced</span></a></li>
 							</ul>
 						</div>
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-moode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-radioview-show-hide-moode" class="help-block hide">
 						<b>Show hidden:&nbsp;</b> Display hidden moOde stations for review but leave their type set to Hidden.<br>
-						<b>Hide all:&nbsp;</b> Set all noOde stations to type Hidden.<br>
-						<b>Un-hide all:&nbsp;</b> Set all noOde stations to type Regular.<br>
+						<b>Hide all:&nbsp;</b> Set all noOde stations to type Hidden except for Favorites.<br>
+						<b>Un-hide all:&nbsp;</b> Set all noOde stations to type Regular except for Favorites.<br>
+						<b>Hide geo-fenced:&nbsp;</b> Set geo-fenced noOde stations to type Hidden except for Favorites.<br>
+						<b>Un-hide geo-fenced:&nbsp;</b> Set geo-fenced noOde stations to type Regular except for Favorites.<br>
 						NOTE: moOde stations are the custom curated set of stations shipped in the release.
 					</span>
 				</div>
@@ -1776,8 +1814,8 @@
 					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-other" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-radioview-show-hide-other" class="help-block hide">
 						<b>Show hidden:&nbsp;</b> Display other (non-moOde) hidden stations for review but leave their type set to Hidden.<br>
-						<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden.<br>
-						<b>Un-hide all:&nbsp;</b> Set all other (non-moOde) stations to type Regular.<br>
+						<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden except for Favorites.<br>
+						<b>Un-hide all:&nbsp;</b> Set all other (non-moOde) stations to type Regular except for Favorites.<br>
 						NOTE: Other stations are those that have been user added.
 					</span>
 				</div>

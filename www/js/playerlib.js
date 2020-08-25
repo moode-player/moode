@@ -1313,32 +1313,45 @@ function renderRadioView() {
         var showHideMoodeStations = SESSION.json['radioview_show_hide'].split(',')[0];
         var showHideOtherStations = SESSION.json['radioview_show_hide'].split(',')[1];
 
-        // Hide/Un-hide all
+        // Hide/Un-hide
         // NOTE: these are one-shot actions
         // Moode stations
         if (showHideMoodeStations == 'Hide all' || showHideMoodeStations == 'Un-hide all') {
-            var stationType = showHideMoodeStations == 'Hide all' ? 'h' : 'r';
+            var newStationType = showHideMoodeStations == 'Hide all' ? 'h' : 'r';
             for (var i = 0; i < data.length; i++) {
-                if (parseInt(data[i].id) < 499) {
-                    data[i].type = stationType;
+                if (parseInt(data[i].id) < 499 && data[i].type != 'f') {
+                    data[i].type = newStationType;
                 }
             }
             if (data.length > 0) {
-                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Moode', 'stationType': stationType});
+                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Moode', 'stationType': newStationType});
+            }
+            // Reset
+            SESSION.json['radioview_show_hide'] = 'No action,' + showHideOtherStations;
+        }
+        if (showHideMoodeStations == 'Hide geo-fenced' || showHideMoodeStations == 'Un-hide geo-fenced') {
+            var newStationType = showHideMoodeStations == 'Hide geo-fenced' ? 'h' : 'r';
+            for (var i = 0; i < data.length; i++) {
+                if (parseInt(data[i].id) < 499 && data[i].type != 'f' && data[i].geo_fenced == 'Yes') {
+                    data[i].type = newStationType;
+                }
+            }
+            if (data.length > 0) {
+                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Moode geo-locked', 'stationType': newStationType});
             }
             // Reset
             SESSION.json['radioview_show_hide'] = 'No action,' + showHideOtherStations;
         }
         // Other stations
         if (showHideOtherStations == 'Hide all' || showHideOtherStations == 'Un-hide all') {
-            var stationType = showHideOtherStations == 'Hide all' ? 'h' : 'r';
+            var newStationType = showHideOtherStations == 'Hide all' ? 'h' : 'r';
             for (var i = 0; i < data.length; i++) {
-                if (parseInt(data[i].id) > 499 ) {
-                    data[i].type = stationType;
+                if (parseInt(data[i].id) > 499 && data[i].type != 'f') {
+                    data[i].type = newStationType;
                 }
             }
             if (data.length > 0) {
-                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Other', 'stationType': stationType});
+                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Other', 'stationType': newStationType});
             }
             // Reset
             SESSION.json['radioview_show_hide'] = showHideMoodeStations + ',No action';
@@ -2019,7 +2032,6 @@ $('.context-menu a').click(function(e) {
             $('#edit-logoimage').val('');
             $('#info-toggle-edit-logoimage').css('margin-left','60px');
             $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + stationName + '.jpg">');
-
             $('#edit-station-tags').css('margin-top', '30px');
             $('#edit-station-type span').text(getParamOrValue('param', result['type']));
             $('#edit-station-genre').val(result['genre']);
@@ -2029,7 +2041,7 @@ $('.context-menu a').click(function(e) {
             $('#edit-station-region').val(result['region']);
             $('#edit-station-bitrate').val(result['bitrate']);
             $('#edit-station-format').val(result['format']);
-            //$('#edit-station-reserved0').val(result['reserved0']);
+            $('#edit-station-geo-fenced span').text(result['geo_fenced']);
             //$('#edit-station-reserved1').val(result['reserved1']);
             //$('#edit-station-reserved2').val(result['reserved2']);
 
