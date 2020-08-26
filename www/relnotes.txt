@@ -19,7 +19,7 @@ New features
 
 - NEW: Selective resampling modes
 - NEW: Custom SoX resampling recipes
-- NEW: Radio view
+- NEW: Radio view with sort/group and metadata
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode
 - NEW: Option to display thumbnails in the Playlist
