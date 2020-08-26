@@ -21,6 +21,8 @@
  * 2020-MM-DD TC moOde 7.0.0
  *
  */
+
+// Features availability bitmask
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
 const FEAT_AIRPLAY      = 2;        // y Airplay renderer
 const FEAT_MINIDLNA     = 4;        // y DLNA server
@@ -36,16 +38,23 @@ const FEAT_SPOTIFY      = 2048;     // y Spotify Connect renderer
 const FEAT_GPIO         = 4096;     // y GPIO button handler
 const FEAT_DJMOUNT      = 8192;     // y UPnP media browser
 const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
+const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
+//                      -------
+//                        31679
 
-const LAZYLOAD_TIMEOUT  = 250;      // Milliseconds
+// TODO: Reduce timeout const's
+const DEFAULT_TIMEOUT   = 250;
+const SEARCH_TIMEOUT    = 750;
+// For setTimout() in milliseconds
+const LAZYLOAD_TIMEOUT  = 250;
 const SCROLLTO_TIMEOUT  = 250;
 const KNOBCOLOR_TIMEOUT = 250;
 const LIBSEARCH_TIMEOUT = 250;
 const RASEARCH_TIMEOUT  = 750;
 const PLSEARCH_TIMEOUT  = 750;
 const PHSEARCH_TIMEOUT  = 750;
-const RALBUM_TIMEOUT    = 1500;
 const CLRPLAY_TIMEOUT   = 500;
+const RALBUM_TIMEOUT    = 1500;
 const ENGINE_TIMEOUT    = 3000;
 
 var UI = {
@@ -67,7 +76,6 @@ var UI = {
 	// [3]: ui row num of song item so highlight can be removed after context menu action
 	// [4]: num playlist items for use by delete/move item modals
 	dbCmd: '',
-	raFolderLevel: [0,0,0,0,0],
 	// [0-3]: folder level
 	// [4]: master index
 	libPos: [-1,-1,-1],
@@ -1510,8 +1518,12 @@ function renderRadioView() {
         var radioViewBgDiv = '';
 
         // Favorites header (if any) and end flag
-        var output = (groupMethod == 'Favorites first' && favoriteStations.length > 0) ? '<li class="horiz-rule-radioview">Favorites</li>' : '';
-        var endOfFavs = favoriteStations.length > 0 ? false : true;
+        var output = '';
+        var endOfFavs = true;
+        if (groupMethod == 'Favorites first' && favoriteStations.length > 0) {
+            output = '<li class="horiz-rule-radioview">Favorites</li>';
+            endOfFavs = false;
+        }
 
         // Clear search results (if any)
         $('.btnlist-top-ra').show();
@@ -1521,7 +1533,7 @@ function renderRadioView() {
     	$('#ra-filter').val('');
 
         // Format filtered list
-        var numHeaderPrinted = false;
+        var numericHeaderPrinted = false;
         var lastSortTagValue = '';
     	for (var i = 0; i < data.length; i++) {
             // Encoded-at div's
@@ -1561,9 +1573,9 @@ function renderRadioView() {
                 var currentChr1 = removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase();
                 var lastChr1 = removeArticles(lastSortTagValue).substr(0, 1).toUpperCase()
                 if (sortTag == 'name' && currentChr1 != lastChr1) {
-                    if (isNaN(currentChr1) === false && numHeaderPrinted === false) {
+                    if (isNaN(currentChr1) === false && numericHeaderPrinted === false) {
                         output += '<li class="horiz-rule-radioview">0-9</li>';
-                        numHeaderPrinted = true;
+                        numericHeaderPrinted = true;
                     }
                     else if (isNaN(currentChr1) === true) {
                         output += '<li class="horiz-rule-radioview">' + currentChr1 + '</li>';
@@ -1573,14 +1585,13 @@ function renderRadioView() {
                     output += '<li class="horiz-rule-radioview">' + data[i][sortTag].split(', ')[0] + '</li>';
                 }
                 else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTagValue) {
-
                     output += '<li class="horiz-rule-radioview">' + data[i][sortTag] + (sortTag == 'bitrate' ? ' kbps' : '') + '</li>';
                 }
             }
 
             // Construct station entries
             var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
-    		output += '<li id="db-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
+    		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
     		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
@@ -3201,7 +3212,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 		makeActive('.radio-view-btn','#radio-panel',currentView);
 		setTimeout(function() {
 			if (UI.radioPos >= 0) {
-				customScroll('radio', UI.radioPos, 0);
+                customScroll('radio', UI.radioPos, 0);
 			}
 		}, SCROLLTO_TIMEOUT);
 	}

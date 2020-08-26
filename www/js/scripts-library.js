@@ -1021,7 +1021,7 @@ $('#database-radio').on('click', 'img', function(e) {
     }
 
 	setTimeout(function() {
-		customScroll('radio', UI.radioPos, 200);
+        customScroll('radio', UI.radioPos, 200);
 	}, SCROLLTO_TIMEOUT);
 });
 
@@ -1064,29 +1064,6 @@ $('#export-stations').click(function(e) {
         window.location.href = '/imagesw/stations.zip';
         $('#import-export-msg').text('Export complete');
 	});
-});
-
-// Click radio station for instant play
-$('#database-radio').on('click', '.db-entry', function(e) {
-    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
-	var pos = $(this).parents('li').index();
-	var path = $(this).parents('li').data('path');
-
-	// set new pos
-	UI.radioPos = pos;
-	storeRadioPos(UI.radioPos)
-
-    var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
-    mpdDbCmd(cmd, path);
-    if (cmd != 'play') {
-        notify(cmd, '');
-    }
-
-	setTimeout(function() {
-		customScroll('radio', UI.radioPos, 200);
-	}, SCROLLTO_TIMEOUT);
-
-	return false;
 });
 
 // Click lib coverart

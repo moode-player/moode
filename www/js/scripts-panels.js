@@ -338,7 +338,7 @@ jQuery(document).ready(function($) { 'use strict';
         makeActive('.radio-view-btn','#radio-panel','radio');
         setTimeout(function() {
 			if (UI.radioPos >= 0) {
-				customScroll('radio', UI.radioPos, 0);
+                customScroll('radio', UI.radioPos, 0);
 			}
 		}, SCROLLTO_TIMEOUT);
 	});
@@ -724,16 +724,26 @@ jQuery(document).ready(function($) { 'use strict';
         if (!$('#playback-panel').hasClass('cv')) {
             // Radio station
     		if (MPD.json['artist'] == 'Radio station') {
+                // Count number of headers before the item
+                var headerCount = 0;
     			$('.database-radio li').each(function(index){
+                    if ($(this).hasClass('horiz-rule-radioview')) {
+                        headerCount = headerCount + 1;
+                    }
     				if ($(this).text().search(RADIO.json[MPD.json['file']]['name']) != -1) {
     					UI.radioPos = index + 1;
+                        return false;
     				}
     			});
-                currentView = 'playback,radiocovers';
+                currentView = 'playback,radio';
     			$('#playback-switch').click();
     			if (!$('.radio-view-btn').hasClass('active')) {
     				$('.radio-view-btn').click();
     			}
+                $('#' + UI.dbEntry[3]).removeClass('active');
+                setTimeout(function() {
+                    $('#ra-' + (UI.radioPos - headerCount)).addClass('active');
+                }, DEFAULT_TIMEOUT);
     		}
     		// Song file
     		else {
@@ -742,7 +752,7 @@ jQuery(document).ready(function($) { 'use strict';
     			setTimeout(function() {
     				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
     				customScroll('artists', UI.libPos[2], 200);
-    			}, 300);
+    			}, DEFAULT_TIMEOUT);
     		}
         }
 	});
@@ -1109,22 +1119,31 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#ph-filter-results').html('');
 	});
 
-	// browse, radio action menus
-	$('.database, .database-radio').on('click', '.db-action', function(e) {
+	// Folder view item click
+	$('.database').on('click', '.db-action', function(e) {
 		UI.dbEntry[0] = $(this).parent().attr('data-path');
-		UI.dbEntry[3] = $(this).parent().attr('id'); // used in .context-menu a click handler to remove highlight
+		UI.dbEntry[3] = $(this).parent().attr('id'); // Used in .context-menu a click handler to remove highlight
 		$('#db-search-results').css('font-weight', 'normal');
-		$('.database li, .database-radio li').removeClass('active');
+		$('.database li').removeClass('active');
+		$(this).parent().addClass('active');
+	});
+
+    // Radio view context menu
+	$('.database-radio').on('click', '.db-action', function(e) {
+        //console.log('.database-radio click', $(this).parent().children('span').text());
+		UI.dbEntry[0] = $(this).parent().attr('data-path');
+		UI.dbEntry[3] = $(this).parent().attr('id'); // Used in .context-menu a click handler to remove highlight
+		$('.database-radio li').removeClass('active');
 		$(this).parent().addClass('active');
 		// set new pos
 		UI.radioPos = parseInt(UI.dbEntry[3].substr(3));
 		storeRadioPos(UI.radioPos)
 	});
 
-	// remove highlight from station logo
+	// Remove highlight from station logo
 	$('.btnlist-top-ra').click(function(e) {
 		//console.log('click .btnlist-top-ra')
-		if (UI.dbEntry[3].substr(0, 3) == 'db-') {
+		if (UI.dbEntry[3].substr(0, 3) == 'ra-') {
 			$('#' + UI.dbEntry[3]).removeClass('active');
 		}
 	});
