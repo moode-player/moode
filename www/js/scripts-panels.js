@@ -806,16 +806,16 @@ jQuery(document).ready(function($) { 'use strict';
 			$.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
 		}
 		else {
-			searchStr = $('#dbsearch-genre').val() == '' ? '' : 'genre "' + $('#dbsearch-genre').val().trim(); + '"'
-			searchStr += $('#dbsearch-artist').val() == '' ? '' : ' artist "' + $('#dbsearch-artist').val().trim(); + '"'
-			searchStr += $('#dbsearch-album').val() == '' ? '' : ' album "' + $('#dbsearch-album').val().trim(); + '"'
-			searchStr += $('#dbsearch-title').val() == '' ? '' : ' title "' + $('#dbsearch-title').val().trim(); + '"'
-			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : ' albumartist "' + $('#dbsearch-albumartist').val().trim(); + '"'
-			searchStr += $('#dbsearch-date').val() == '' ? '' : ' date "' + $('#dbsearch-date').val().trim(); + '"'
-			searchStr += $('#dbsearch-composer').val() == '' ? '' : ' composer "' + $('#dbsearch-composer').val().trim(); + '"'
-			searchStr += $('#dbsearch-performer').val() == '' ? '' : ' performer "' + $('#dbsearch-performer').val().trim(); + '"'
-			searchStr += $('#dbsearch-comment').val() == '' ? '' : ' comment "' + $('#dbsearch-comment').val().trim(); + '"'
-			searchStr += $('#dbsearch-file').val() == '' ? '' : ' file "' + $('#dbsearch-file').val().trim(); + '"'
+			searchStr += $('#dbsearch-genre').val() == '' ? '' : 'genre "' + $('#dbsearch-genre').val().trim() + '"'
+			searchStr += $('#dbsearch-artist').val() == '' ? '' : ' artist "' + $('#dbsearch-artist').val().trim() + '"'
+			searchStr += $('#dbsearch-album').val() == '' ? '' : ' album "' + $('#dbsearch-album').val().trim() + '"'
+			searchStr += $('#dbsearch-title').val() == '' ? '' : ' title "' + $('#dbsearch-title').val().trim() + '"'
+			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : ' albumartist "' + $('#dbsearch-albumartist').val().trim() + '"'
+			searchStr += $('#dbsearch-date').val() == '' ? '' : ' date "' + $('#dbsearch-date').val().trim() + '"'
+			searchStr += $('#dbsearch-composer').val() == '' ? '' : ' composer "' + $('#dbsearch-composer').val().trim() + '"'
+			searchStr += $('#dbsearch-performer').val() == '' ? '' : ' performer "' + $('#dbsearch-performer').val().trim() + '"'
+			searchStr += $('#dbsearch-comment').val() == '' ? '' : ' comment "' + $('#dbsearch-comment').val().trim() + '"'
+			searchStr += $('#dbsearch-file').val() == '' ? '' : ' file "' + $('#dbsearch-file').val().trim() + '"'
 			if (searchStr != '') {
 				$.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
 			}

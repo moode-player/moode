@@ -51,6 +51,7 @@ Bug fixes
 - FIX: Listall.sh script not handling mixed case extentions
 - FIX: Airplay, Spotify renderers started after BlueZ disconnect
 - FIX: Disabled volume knob processing scroll events
+- FIX: Regression causing Folder view, Advanced search to fail
 
 ########################################################
 //
