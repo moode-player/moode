@@ -740,7 +740,7 @@ jQuery(document).ready(function($) { 'use strict';
     			if (!$('.radio-view-btn').hasClass('active')) {
     				$('.radio-view-btn').click();
     			}
-                $('#' + UI.dbEntry[3]).removeClass('active');
+                $('.database-radio li').removeClass('active');
                 setTimeout(function() {
                     $('#ra-' + (UI.radioPos - headerCount)).addClass('active');
                 }, DEFAULT_TIMEOUT);
@@ -1129,15 +1129,16 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
     // Radio view context menu
-	$('.database-radio').on('click', '.db-action', function(e) {
-        //console.log('.database-radio click', $(this).parent().children('span').text());
-		UI.dbEntry[0] = $(this).parent().attr('data-path');
-		UI.dbEntry[3] = $(this).parent().attr('id'); // Used in .context-menu a click handler to remove highlight
-		$('.database-radio li').removeClass('active');
-		$(this).parent().addClass('active');
-		// set new pos
-		UI.radioPos = parseInt(UI.dbEntry[3].substr(3));
+	$('.database-radio').on('click', '.cover-menu', function(e) {
+        var pos = $(this).parents('li').index();
+        var path = $(this).parents('li').data('path');
+
+        UI.dbEntry[0] = path;
+        UI.radioPos = pos;
 		storeRadioPos(UI.radioPos)
+
+        $('.database-radio li').removeClass('active');
+        $(this).parents('li').addClass('active');
 	});
 
 	// Remove highlight from station logo

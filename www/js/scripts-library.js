@@ -1005,7 +1005,7 @@ $('.ralbum').click(function(e) {
     }
 });
 
-// click radio cover for instant play
+// Click radio cover for instant play
 $('#database-radio').on('click', 'img', function(e) {
     if (SESSION.json['library_instant_play'] == 'No action') {return false;}
 	var pos = $(this).parents('li').index();
@@ -1013,6 +1013,9 @@ $('#database-radio').on('click', 'img', function(e) {
 
 	UI.radioPos = pos;
 	storeRadioPos(UI.radioPos)
+
+    $('.database-radio li').removeClass('active');
+    $(this).parents('li').addClass('active');
 
     var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
 	mpdDbCmd(cmd, path);

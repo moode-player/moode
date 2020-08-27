@@ -1852,57 +1852,61 @@ function setVolume(level, event) {
     }
 }
 
-// scroll item so visible
+// Scroll item so it's visible
 function customScroll(list, itemNum, speed) {
 	//console.log('list=' + list + ', itemNum=(' + itemNum + '), speed=(' + speed + ')');
 	var listSelector, scrollSelector, chDivisor, centerHeight, scrollTop, itemHeight, scrollCalc, scrollOffset, itemPos;
 	speed = typeof(speed) === 'undefined' ? 200 : speed;
 
-	if (list == 'db') {
-		listSelector = '#database';
-		scrollSelector = listSelector;
-		chDivisor = 4;
-	}
-	else if (list == 'pl') {
-        if (isNaN(itemNum)) {return;} // exit if last item in pl ended
-		listSelector = '#playlist';
-		scrollSelector = '#container-playlist';
-		chDivisor = 6;
-	}
-    else if (list == 'pbpl') {
-        if (isNaN(itemNum)) {return;} // exit if last item in pl ended
-		listSelector = '#cv-playlist';
-		scrollSelector = listSelector;
-		chDivisor = 6;
-	}
-	else if (list == 'genres') {
-		listSelector = '#lib-genre';
-		scrollSelector = listSelector;
-		chDivisor = 6;
-	}
-	else if (list == 'artists') {
-		listSelector = '#lib-artist';
-		scrollSelector = listSelector;
-		chDivisor = 6;
-	}
-	else if (list == 'albums' || list == 'albumcovers') {
-		listSelector = list == 'albums' ? '#lib-album' : '#lib-albumcover';
-		scrollSelector = listSelector;
-		chDivisor = 6;
-		itemNum = list == 'albums' ? itemNum : itemNum + 1;
-	}
-    else if (list == 'tracks') {
-		listSelector = '#trackscontainer';
-		scrollSelector = '#lib-file';
-		chDivisor = 600;
-	}
-	else if (list == 'radio') {
-		listSelector = '#database-radio';
-		scrollSelector = listSelector;
-		chDivisor = 6;
-	}
+    switch (list) {
+        case 'db':
+            listSelector = '#database';
+    		scrollSelector = listSelector;
+    		chDivisor = 4;
+            break;
+        case 'pl':
+            if (isNaN(itemNum)) {return;} // Exit if last item in pl ended
+    		listSelector = '#playlist';
+    		scrollSelector = '#container-playlist';
+    		chDivisor = 6;
+            break;
+        case 'pbpl': // TODO: change to 'cvpl'
+            if (isNaN(itemNum)) {return;} // Exit if last item in CoverView pl ended
+    		listSelector = '#cv-playlist';
+    		scrollSelector = listSelector;
+    		chDivisor = 6;
+            break;
+        case 'genres':
+    		listSelector = '#lib-genre';
+    		scrollSelector = listSelector;
+    		chDivisor = 6;
+            break;
+        case 'artists':
+    		listSelector = '#lib-artist';
+    		scrollSelector = listSelector;
+    		chDivisor = 6;
+            break;
+        case 'albums':
+        case 'albumcovers':
+        	listSelector = list == 'albums' ? '#lib-album' : '#lib-albumcover';
+    		scrollSelector = listSelector;
+    		chDivisor = 6;
+    		itemNum = list == 'albums' ? itemNum : itemNum + 1;
+            break;
+        case 'tracks':
+    		listSelector = '#trackscontainer';
+    		scrollSelector = '#lib-file';
+    		chDivisor = 600;
+            break;
+        case 'radio':
+        case 'radio_headers':
+    		listSelector = '#database-radio';
+    		scrollSelector = listSelector;
+    		chDivisor = list == 'radio' ? 6 : 600;
+            break;
+    }
 
-	// item position
+	// Item position
 	//console.log($(listSelector + ' ul li:nth-child(' + itemNum + ')').position());
 	if ($(listSelector + ' ul li:nth-child(' + itemNum + ')').position() != undefined) {
 		itemPos = $(listSelector + ' ul li:nth-child(' + itemNum + ')').position().top;
@@ -1911,7 +1915,7 @@ function customScroll(list, itemNum, speed) {
 		itemPos = 0;
 	}
 
-	// scroll to
+	// Scroll to
 	centerHeight = parseInt($(scrollSelector).height()/chDivisor);
 	scrollTop = $(scrollSelector).scrollTop();
 	scrollCalc = (itemPos + scrollTop) - centerHeight;
@@ -3133,31 +3137,40 @@ $('#index-browse li').on('click', function(e) {
 	listLook('database li', 'db', $(this).text());
 });
 $('#index-radio li').on('click', function(e) {
-	listLook('radiocovers li', 'radio', $(this).text());
+    list = SESSION.json['radioview_sort_group'].split(',')[1] == 'No grouping' ? 'radio' : 'radio_headers';
+	listLook('radiocovers li', list, $(this).text());
 });
-function listLook(list, name, search) {
-	alphabitsFilter = 0;
 
-	if (search != '#') {
-        if (name == 'radio') {
-            $('#' + list).each(function() {
+function listLook(selector, list, searchText) {
+    //console.log(selector, list, searchText);
+	itemNum = 0;
+
+	if (searchText != '#') {
+        if (list == 'radio') {
+            $('#' + selector).each(function() {
                 var text = removeArticles($(this).children('span').text().toLowerCase());
-                //console.log(text);
-                if (text.substr(0, 1) == search) {return false;}
-        		alphabitsFilter++;
+                if (text.substr(0, 1) == searchText) {return false;}
+        		itemNum++;
+        	});
+        }
+        else if (list == 'radio_headers') {
+            $('#' + selector).each(function() {
+                var text = $(this).hasClass('horiz-rule-radioview') ? removeArticles($(this).text().toLowerCase()) : '';
+                if (text.substr(0, 1) == searchText) {return false;}
+        		itemNum++;
         	});
         }
         else {
-            $('#' + list).each(function() {
+            $('#' + selector).each(function() {
                 var text = removeArticles($(this).text().toLowerCase());
-                if (text.substr(0, 1) == search) {return false;}
-        		alphabitsFilter++;
+                if (text.substr(0, 1) == searchText) {return false;}
+        		itemNum++;
         	});
         }
 	}
 
-	if (alphabitsFilter != $('#' + list).length) {
-		customScroll(name, alphabitsFilter, 100);
+	if (itemNum != $('#' + selector).length) {
+		customScroll(list, itemNum, 200);
 	}
 }
 
