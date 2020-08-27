@@ -21,9 +21,9 @@ New features
 - NEW: Custom SoX resampling recipes
 - NEW: Radio view with sort/group and metadata
 - NEW: Resource limits in MPD Config
-- NEW: Auto-shuffle Album mode
+- NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Playlist
-- NEW: Thumbnails displayed in Folder view
+- NEW: Thumbnails displayed for albums in Folder view
 
 Updates
 
@@ -39,6 +39,9 @@ Updates
 
 Radio stations
 
+- UPD: Radio Caroline playable URL
+- UPD: Soma FM - DEF CON Radio logo image
+- UPD: Update NME station URL's to 256 kbps MP3
 - DEL: Radio X London due to metadata issues
 - DEL: Megarock Radio due to failed stream link
 
@@ -48,9 +51,9 @@ Bug fixes
 - FIX: Track list show/hide not preserved when switching views
 - FIX: Manual entry of SSID not accepting embedded space
 - FIX: Graphic EQ curves are +6 alsaequal units too high
-- FIX: Listall.sh script not handling mixed case extentions
-- FIX: Airplay, Spotify renderers started after BlueZ disconnect
-- FIX: Disabled volume knob processing scroll events
+- FIX: Listall.sh script not handling mixed case file extentions
+- FIX: Airplay and Spotify renderers started after BlueZ disconnect
+- FIX: Disabled volume knob processing scroll/swipe events
 - FIX: Regression causing Folder view, Advanced search to fail
 
 ########################################################
