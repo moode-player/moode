@@ -3286,10 +3286,14 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 	}
 });
 
+// Click anywhere off the context menu
 $('#context-backdrop').click(function(e){
 	$('#context-backdrop').hide();
 	$('.context-menu').removeClass('open');
 	$('.context-menu-lib').removeClass('open');
+    // Remove Tag view highlighted iyems
+    $('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
+    $('img.lib-coverart').removeClass('active');
 });
 
 $('#appearance-modal .h5').click(function(e) {
