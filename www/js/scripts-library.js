@@ -781,7 +781,7 @@ var renderSongs = function(albumPos) {
 	}
 }
 
-// Cleck genre or menu header (reset all)
+// Click genre or menu header (reset all)
 $('#genreheader, #menu-header').on('click', function(e) {
 	LIB.filters.genres.length = 0;
 	LIB.filters.artists.length = 0;
