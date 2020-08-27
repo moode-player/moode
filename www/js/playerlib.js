@@ -930,9 +930,9 @@ function updateActivePlItem() {
 
     setTimeout(function() {
         if ($('#playback-panel').hasClass('active')) {
-            customScroll('pl', parseInt(MPD.json['song']));
+            customScroll('playlist', parseInt(MPD.json['song']));
             if ($('#cv-playlist').css('display') == 'block') {
-                customScroll('pbpl', parseInt(MPD.json['song']));
+                customScroll('cv-playlist', parseInt(MPD.json['song']));
             }
         }
     }, SCROLLTO_TIMEOUT);
@@ -1069,9 +1069,9 @@ function renderPlaylist() {
 
         setTimeout(function() {
             if ($('#playback-panel').hasClass('active')) {
-                customScroll('pl', parseInt(MPD.json['song']));
+                customScroll('playlist', parseInt(MPD.json['song']));
                 if ($('#cv-playlist').css('display') == 'block') {
-                    customScroll('pbpl', parseInt(MPD.json['song']));
+                    customScroll('cv-playlist', parseInt(MPD.json['song']));
                 }
             }
         }, SCROLLTO_TIMEOUT);
@@ -1207,7 +1207,7 @@ function renderFolderView(data, path, searchstr) {
 
 	// Scroll and highlight
     // NOTE: Don't highlight if at root or only 1 item in list
-	customScroll('db', UI.dbPos[UI.dbPos[10]], 100);
+	customScroll('folder', UI.dbPos[UI.dbPos[10]], 100);
 	if (path != '' && UI.dbPos[UI.dbPos[10]] > 1) {
 		$('#db-' + UI.dbPos[UI.dbPos[10]].toString()).addClass('active');
 	}
@@ -1859,18 +1859,18 @@ function customScroll(list, itemNum, speed) {
 	speed = typeof(speed) === 'undefined' ? 200 : speed;
 
     switch (list) {
-        case 'db':
+        case 'folder':
             listSelector = '#database';
     		scrollSelector = listSelector;
     		chDivisor = 4;
             break;
-        case 'pl':
+        case 'playlist':
             if (isNaN(itemNum)) {return;} // Exit if last item in pl ended
     		listSelector = '#playlist';
     		scrollSelector = '#container-playlist';
     		chDivisor = 6;
             break;
-        case 'pbpl': // TODO: change to 'cvpl'
+        case 'cv-playlist': // TODO: change to 'cvpl'
             if (isNaN(itemNum)) {return;} // Exit if last item in CoverView pl ended
     		listSelector = '#cv-playlist';
     		scrollSelector = listSelector;
@@ -3280,7 +3280,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		}
         else {
 			setTimeout(function() {
-				customScroll('pl', parseInt(MPD.json['song']), 0);
+				customScroll('playlist', parseInt(MPD.json['song']), 0);
 			}, SCROLLTO_TIMEOUT);
 		}
 	}

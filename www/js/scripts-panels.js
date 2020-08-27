@@ -267,7 +267,7 @@ jQuery(document).ready(function($) { 'use strict';
     		}
             else {
     			setTimeout(function() {
-    		        customScroll('pl', parseInt(MPD.json['song']));
+    		        customScroll('playlist', parseInt(MPD.json['song']));
     			}, SCROLLTO_TIMEOUT);
     		}
     		$('#menu-bottom').hide();
@@ -452,7 +452,7 @@ jQuery(document).ready(function($) { 'use strict';
 			}
 			else {
 				$('#countdown-display, #playbar-countdown, #playbar-mcount').countdown('resume'); // add #playbar-mcount, same for below
-				customScroll('pl', parseInt(MPD.json['song']), 200);
+				customScroll('playlist', parseInt(MPD.json['song']), 200);
 			}
 			var cmd = 'play';
 		}
@@ -466,7 +466,7 @@ jQuery(document).ready(function($) { 'use strict';
 				$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			}
 			if (!UI.mobile) {
-		        customScroll('pl', parseInt(MPD.json['song']), 200);
+		        customScroll('playlist', parseInt(MPD.json['song']), 200);
 			}
 			var cmd = 'play';
 		}
@@ -1276,7 +1276,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         if ($('#cv-playlist').css('display') == 'block') {
             setTimeout(function() {
-                customScroll('pbpl', parseInt(MPD.json['song']));
+                customScroll('cv-playlist', parseInt(MPD.json['song']));
             }, SCROLLTO_TIMEOUT);
 
             GLOBAL.playbarPlaylistTimer = setTimeout(function() {
@@ -1313,7 +1313,7 @@ jQuery(document).ready(function($) { 'use strict';
             /*TEST*/$('#playback-queue').css('width', '38.1%'); // Fix Playlist sometimes not being visable after returning from cv
             setTimeout(function() {
                 /*TEST*/$('#playback-queue').css('width', '38%'); // Restore correct width
-                customScroll('pl', parseInt(MPD.json['song']));
+                customScroll('playlist', parseInt(MPD.json['song']));
             }, SCROLLTO_TIMEOUT);
 
             // Reset screen saver timeout global
