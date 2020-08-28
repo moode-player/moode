@@ -24,6 +24,11 @@ sqlite3 /var/local/www/db/moode-sqlite3.db "DELETE FROM cfg_radio"
 
 # Install new station data
 unzip -q /var/local/www/station_import.zip -d /tmp
+
+# TODO: basic file sanitizing
+# Convert crlf to lf in the pls files and csv file (dos2unix)
+# Delete annoying os x dot files/dirs
+
 cp /tmp/var/lib/mpd/music/RADIO/*.pls /var/lib/mpd/music/RADIO
 cp /tmp/var/local/www/imagesw/radio-logos/*.jpg /var/local/www/imagesw/radio-logos
 cp /tmp/var/local/www/imagesw/radio-logos/thumbs/*.jpg /var/local/www/imagesw/radio-logos/thumbs
