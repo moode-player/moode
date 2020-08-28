@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Aug 25 15:14:50 2020
+-- File generated with SQLiteStudio v3.1.0 on Fri Aug 28 14:39:00 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -46,7 +46,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (36, 'https://wz4web.scahw.com.au/live/4buddha_32.stream/playlist.m3u8', 'Buddha Radio', 'r', 'local', 'Chill Out', 'Buddah', 'English', 'Australia', 'Asia', '32', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (37, 'DELETED', 'CBC Radio 2', 'r', 'local', '', '', '', '', '', '', '', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (38, 'http://icecast6.play.cz/croddur-256.mp3', 'Czech Radio Classical', 'r', 'local', 'Classical', 'ČRo D-Dur', 'Czech', 'Czech Republic', 'Europe', '256', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (39, 'http://live-icy.gss.dr.dk:8000/A/A29H.mp3', 'DR P6 Beat', 'r', 'local', 'Alternative, Rock', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (39, 'http://live-icy.gss.dr.dk:8000/A/A29H.mp3', 'DR P6 Beat', 'r', 'local', 'Alternative, Alt Rock, Rock', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (40, 'DELETED', 'DR P7 Mix', 'r', 'local', '', '', '', '', '', '', '', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (41, 'http://live-icy.gss.dr.dk:8000/A/A22H.mp3', 'DR P8 Jazz', 'r', 'local', 'Jazz', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (42, 'http://81.92.238.33:80', 'Eldoradio', 'r', 'local', 'Pop, Top 40, Chart', 'Eldoradio', 'Luxembourgish', 'Luxembourg', 'Europe', '256', 'MP3', 'No', '', '');
@@ -67,7 +67,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (57, 'http://mscp2.live-streams.nl:8100/flac.flac', 'Hi On Line - Pop (FLAC)', 'r', 'local', 'Pop', 'Hi.Fine', 'English', 'Netherlands', 'Europe', '1411', 'FLAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (58, 'http://mediaserv38.live-streams.nl:8027/live', 'Hi On Line - World', 'r', 'local', 'World Music', 'Hi.Fine', 'English', 'Netherlands', 'Europe', '320', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (59, 'http://live.wostreaming.net/direct/ppm-jazz24aac256-ibc1', 'Jazz24', 'r', 'local', 'Jazz', 'Jazz24.org', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (60, 'http://cristina.torontocast.com:8007/mp3-320', 'JB Radio-2 (320K)', 'r', 'local', 'Alternative, Rock, Eclectic', 'JB Radio-2', 'English', 'Canada', 'North America', '320', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (60, 'http://cristina.torontocast.com:8007/mp3-320', 'JB Radio2 (320K)', 'r', 'local', 'Alternative, Rock, Eclectic', 'JB Radio', 'English', 'Canada', 'North America', '320', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (61, 'DELETED', 'JB Radio-2 (FLAC)', 'r', 'local', '', '', '', '', '', '', '', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (62, 'DELETED', 'JB Radio-2 USA (320K)', 'r', 'local', '', '', '', '', '', '', '', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (63, 'http://current.stream.publicradio.org/kcmp.mp3', 'KCMP 89.3 FM - The Current', 'r', 'local', 'Alternative', 'PBS', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
@@ -384,7 +384,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (139, 'library_encoded_at', '9'
 INSERT INTO cfg_system (id, param, value) VALUES (140, 'first_use_help', 'y,y');
 INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
-INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Genre,Favorites first');
+INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
 INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
 
 -- Table: cfg_theme
