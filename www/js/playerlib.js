@@ -2252,7 +2252,7 @@ $('.context-menu a').click(function(e) {
         $('#about-modal').modal();
     }
 
-	// remove row highlight after selecting action menu item (Browse)
+	// Remove highlight after selecting action menu item
 	if (UI.dbEntry[3].substr(0, 3) == 'db-') {
 		$('#' + UI.dbEntry[3]).removeClass('active');
 	}
@@ -3286,14 +3286,23 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 	}
 });
 
-// Click anywhere off the context menu
+// Click anywhere off a context menu
+// Closes the menu and de-highlights the items
 $('#context-backdrop').click(function(e){
 	$('#context-backdrop').hide();
 	$('.context-menu').removeClass('open');
 	$('.context-menu-lib').removeClass('open');
-    // Remove Tag view highlighted iyems
-    $('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
-    $('img.lib-coverart').removeClass('active');
+    if (currentView == 'folder' || currentView == 'radio') {
+        //console.log(UI.dbPos[UI.dbPos[10]], UI.dbEntry[3]);
+        $('#' + UI.dbEntry[3]).removeClass('active');
+    }
+    else if (currentView == 'tag') {
+        $('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
+        $('img.lib-coverart').removeClass('active');
+    }
+    else if (currentView == 'album') {
+        $('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
+    }
 });
 
 $('#appearance-modal .h5').click(function(e) {

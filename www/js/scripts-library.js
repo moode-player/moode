@@ -1014,7 +1014,8 @@ $('#database-radio').on('click', 'img', function(e) {
 	UI.radioPos = pos;
 	storeRadioPos(UI.radioPos)
 
-    $('.database-radio li').removeClass('active');
+    $('#' + UI.dbEntry[3]).removeClass('active');
+    UI.dbEntry[3] = $(this).parents('li').attr('id');
     $(this).parents('li').addClass('active');
 
     var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';

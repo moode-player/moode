@@ -730,16 +730,20 @@ jQuery(document).ready(function($) { 'use strict';
                     if ($(this).hasClass('horiz-rule-radioview')) {
                         headerCount = headerCount + 1;
                     }
-    				if ($(this).text().search(RADIO.json[MPD.json['file']]['name']) != -1) {
+                    if ($(this).children('span').text() == RADIO.json[MPD.json['file']]['name']) {
     					UI.radioPos = index + 1;
                         return false;
     				}
     			});
+
                 currentView = 'playback,radio';
     			$('#playback-switch').click();
-    			if (!$('.radio-view-btn').hasClass('active')) {
+
+                if (!$('.radio-view-btn').hasClass('active')) {
     				$('.radio-view-btn').click();
     			}
+
+                //console.log(UI.radioPos, headerCount, RADIO.json[MPD.json['file']]['name']);
                 $('.database-radio li').removeClass('active');
                 setTimeout(function() {
                     $('#ra-' + (UI.radioPos - headerCount)).addClass('active');
@@ -757,14 +761,25 @@ jQuery(document).ready(function($) { 'use strict';
         }
 	});
 
-	// Folder view
+	// Folder view item click
 	$('.database').on('click', '.db-browse', function(e) {
+        //console.log('Folder item click');
 	    if ($(this).hasClass('db-folder') || $(this).hasClass('db-savedplaylist')) {
 			var cmd = $(this).hasClass('db-folder') ? 'lsinfo' : 'listsavedpl';
+            UI.dbEntry[3] = $(this).parent().attr('id');
 			UI.dbPos[UI.dbPos[10]] = $(this).parent().attr('id').replace('db-','');
 			++UI.dbPos[10];
 			mpdDbCmd(cmd, $(this).parent().data('path'));
 		}
+	});
+    // Folder view context menu click
+	$('.database').on('click', '.db-action', function(e) {
+        //console.log('Folder menu click');
+		UI.dbEntry[0] = $(this).parent().attr('data-path');
+		UI.dbEntry[3] = $(this).parent().attr('id'); // Used in .context-menu a click handler to remove highlight
+		$('#db-search-results').css('font-weight', 'normal');
+		$('.database li').removeClass('active');
+		$(this).parent().addClass('active');
 	});
 	$('#db-back').click(function(e) {
 		$('#db-search-results').hide();
@@ -1119,15 +1134,6 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#ph-filter-results').html('');
 	});
 
-	// Folder view item click
-	$('.database').on('click', '.db-action', function(e) {
-		UI.dbEntry[0] = $(this).parent().attr('data-path');
-		UI.dbEntry[3] = $(this).parent().attr('id'); // Used in .context-menu a click handler to remove highlight
-		$('#db-search-results').css('font-weight', 'normal');
-		$('.database li').removeClass('active');
-		$(this).parent().addClass('active');
-	});
-
     // Radio view context menu
 	$('.database-radio').on('click', '.cover-menu', function(e) {
         var pos = $(this).parents('li').index();
@@ -1137,16 +1143,19 @@ jQuery(document).ready(function($) { 'use strict';
         UI.radioPos = pos;
 		storeRadioPos(UI.radioPos)
 
-        $('.database-radio li').removeClass('active');
+        $('#' + UI.dbEntry[3]).removeClass('active');
+        UI.dbEntry[3] = $(this).parents('li').attr('id');
         $(this).parents('li').addClass('active');
 	});
 
-	// Remove highlight from station logo
-	$('.btnlist-top-ra').click(function(e) {
-		//console.log('click .btnlist-top-ra')
-		if (UI.dbEntry[3].substr(0, 3) == 'ra-') {
-			$('#' + UI.dbEntry[3]).removeClass('active');
-		}
+	// De-highlight folder or radio station
+	$('.btnlist-top-db, .btnlist-top-ra').click(function(e) {
+        if (currentView == 'folder') {
+            $('#db-' + UI.dbPos[UI.dbPos[10]].toString()).removeClass('active');
+        }
+        else if (currentView == 'radio') {
+            $('#' + UI.dbEntry[3]).removeClass('active');
+        }
 	});
 
 	// buttons on modals
