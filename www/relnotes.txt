@@ -55,7 +55,7 @@ Bug fixes
 - FIX: Airplay and Spotify renderers started after BlueZ disconnect
 - FIX: Disabled volume knob processing scroll/swipe events
 - FIX: Regression causing Folder view, Advanced search to fail
-- FIX: Highlights not being removed in Tag view
+- FIX: Item highlight/de-highlight in all views
 
 ########################################################
 //
