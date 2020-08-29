@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -26,12 +26,9 @@ function notify(cmd, msg, duration) {
     msg = msg || '';
 
     var map = {
-		add: 'Added to playlist',
-        clradd: 'Added after playlist cleared',
-		clrplay: 'Added after playlist cleared',
-        addall: 'Added to playlist',
-        playall: 'Added to playlist',
-        clrplayall: 'Added after playlist cleared',
+		add: 'Added to queue',
+        clradd: 'Added after queue cleared',
+		clrplay: 'Playing after queue cleared',
         update_library: 'Updating library...',
         library_updating: 'Library update in progress',
         library_loading: 'Library loading...',

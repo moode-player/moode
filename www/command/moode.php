@@ -134,7 +134,7 @@ else {
 					}
 
 					// Play existing item if already in playlist
-					$result = parsePlaylistFind($sock, $path);
+					$result = parsePlaylistFind($sock, 'file', $path);
 					if (isset($result['Pos'])) {
 						sendMpdCmd($sock, 'play ' . $result['Pos']);
 						echo json_encode(readMpdResp($sock));
@@ -192,19 +192,30 @@ else {
 				break;
 	        case 'playall':
 	            if (isset($_POST['path']) && $_POST['path'] != '') {
-					$status = parseStatus(getMpdStatus($sock));
-					$pos = $status['playlistlength'];
+					// Determine if album is already in the queue
+					sendMpdCmd($sock, 'lsinfo "' . $_POST['path'][0] . '"');
+					$album = parseDelimFile(readMpdResp($sock), ': ')['Album'];
+					$result = parsePlaylistFind($sock, 'album', $album);
+
+					// Album is in queue if First and last file exist sequentially
+					$last = count($_POST['path']) - 1;
+					if ($_POST['path'][0] == $result[0]['file'] && $_POST['path'][$last] == $result[$last]['file']) {
+						$playPos = $result[0]['Pos'];
+					}
+					// Otherwise add to queue
+					else {
+						$status = parseStatus(getMpdStatus($sock));
+						$playPos = $status['playlistlength'];
+		            	addallToPL($sock, $_POST['path']);
+						//usleep(500000); // needed after bulk add to pl
+					}
 
 					sendMpdCmd($sock, 'stop');
-					echo json_encode(readMpdResp($sock));
-
-	            	addallToPL($sock, $_POST['path']);
-					//usleep(500000); // needed after bulk add to pl
-
-					playerSession('write', 'toggle_song', $pos); // Reset toggle_song
-
-					sendMpdCmd($sock, 'play ' . $pos);
-					echo json_encode(readMpdResp($sock));
+					$resp = readMpdResp($sock);
+					sendMpdCmd($sock, 'play ' . $playPos);
+					$resp = readMpdResp($sock);
+					playerSession('write', 'toggle_song', $playPos);
+					echo json_encode('OK');
 	            }
 				break;
 	        case 'clrplayall':

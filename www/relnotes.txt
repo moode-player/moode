@@ -24,6 +24,7 @@ New features
 - NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Playlist
 - NEW: Thumbnails displayed for albums in Folder view
+- NEW: Albums played directly if already in the queue
 
 Updates
 
@@ -56,6 +57,7 @@ Bug fixes
 - FIX: Disabled volume knob processing scroll/swipe events
 - FIX: Regression causing Folder view, Advanced search to fail
 - FIX: Item highlight/de-highlight in all views
+- FIX: Radio Instant play not obeying No Action
 
 ########################################################
 //

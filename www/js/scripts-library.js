@@ -955,11 +955,14 @@ $('#albumcovers').on('click', 'img', function(e) {
 		files.push(filteredSongs[i].file);
 	}
 
-    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
 
-    var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'playall' : 'clrplayall';
-	mpdDbCmd(cmd, files);
-    notify(cmd, '');
+    if (SESSION.json['library_instant_play'] == 'Add/Play') {
+        mpdDbCmd('playall', files);
+    }
+    else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+        mpdDbCmd('clrplayall', files);
+        notify('clrplay', '');
+    }
 
 	// So tracks list doesn't open
 	return false;
@@ -1018,14 +1021,16 @@ $('#database-radio').on('click', 'img', function(e) {
     UI.dbEntry[3] = $(this).parents('li').attr('id');
     $(this).parents('li').addClass('active');
 
-    var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
-	mpdDbCmd(cmd, path);
-    if (cmd != 'play') {
-        notify(cmd, '');
+    if (SESSION.json['library_instant_play'] == 'Add/Play') {
+        mpdDbCmd('play', path);
+    }
+    else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+        mpdDbCmd('clrplay', path);
+        notify('clrplay', '');
     }
 
 	setTimeout(function() {
-        customScroll('radio', UI.radioPos, 200);
+        customScroll('radio', UI.radioPos + 1, 200);
 	}, SCROLLTO_TIMEOUT);
 });
 
@@ -1186,7 +1191,6 @@ $('#context-menu-lib-all a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'playall') {
 		mpdDbCmd('playall', files);
-		notify('add');
 	}
 	else if ($(this).data('cmd') == 'clrplayall') {
 		mpdDbCmd('clrplayall', files);
@@ -1226,7 +1230,6 @@ $('#context-menu-lib-disc a').click(function(e) {
 	}
 	if ($(this).data('cmd') == 'playall') {
 		mpdDbCmd('playall', files);
-		notify('add');
 	}
 	if ($(this).data('cmd') == 'clrplayall') {
 		mpdDbCmd('clrplayall', files);

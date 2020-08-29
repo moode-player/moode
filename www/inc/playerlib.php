@@ -985,25 +985,47 @@ function parseCurrentSong($sock) {
 }
 
 // Parse MPD playlistfind output
-function parsePlaylistFind($sock, $path) {
-	sendMpdCmd($sock, 'playlistfind file "' . $path . '"');
+function parsePlaylistFind($sock, $tag, $search) {
+	sendMpdCmd($sock, 'playlistfind ' . $tag . ' "' . $search . '"');
 	$resp = readMpdResp($sock);
 
 	if (is_null($resp) ) {
 		return 'Error, parsePlaylistFind response is null';
 	}
-	else {
-		$array = array();
-		$line = strtok($resp, "\n");
 
+	$array = array();
+	$line = strtok($resp, "\n");
+
+	// Return position
+	if ($tag == 'file') {
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
-			$array[$element] = $value;
+			if ($element == 'Pos') {
+				$array['Pos'] = $value;
+				break;
+			}
+
 			$line = strtok("\n");
 		}
-
-		return $array;
 	}
+	// Return files and positions
+	else if ($tag == 'album') {
+		$i = 0;
+		while ($line) {
+			list ($element, $value) = explode(": ", $line, 2);
+			if ($element == 'file') {
+				$array[$i]['file'] = $value;
+			}
+			if ($element == 'Pos') {
+				$array[$i]['Pos'] = $value;
+				$i++;
+			}
+
+			$line = strtok("\n");
+		}
+	}
+
+	return $array;
 }
 
 // Parse MPD listplaylist output
