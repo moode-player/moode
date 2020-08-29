@@ -276,6 +276,32 @@ gulp.task('bundle', gulp.series([`cache`, `maps`],function (done) {
         .on('end', done);
 }));
 
+/**
+ * During frontend development based on gulp we cannot use index.php.
+ * An alternative index.html has to be generated. It should contain the content of:
+ *  - header.php
+ *  - templates/indextpl.html 
+ *  - footer.php
+ * 
+ * It uses index.dev.html to create the index.html. This one includes the (parts of the )resources aboveheader.php.
+ *
+ */
+gulp.task('genindexdev', function(done){
+    return gulp.src(pkg.app.src+'/index.dev.html')
+        .pipe($.include({
+            hardFail: true,
+            separateInputs: true,
+            includePaths: [
+            __dirname + '/www'
+            ]}))
+            .pipe($.rename(function (path) {
+                path.basename = 'index';
+            }))
+        .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, commentStart: "<!--", commentEnd:"-->"}))
+        .pipe((gulp.dest(pkg.app.src) ))
+        .on('end', done);
+});
+
 gulp.task('genindex', function(done){
     return gulp.src(pkg.app.src+'/index.html')
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dest})))
@@ -353,7 +379,7 @@ gulp.task('clean', function(done) {
         return $.del([pkg.app.dest,pkg.app.dist]);
 });
 
-gulp.task('build', gulp.series( [`sass`, `bundle`, `genindex`, `artwork`], function (done) {
+gulp.task('build', gulp.series( [`sass`, `bundle`, `genindexdev`, `genindex`, `artwork`], function (done) {
     done();
 }));
 
@@ -394,8 +420,8 @@ gulp.task('deploy', gulp.series( [`deployfront`, `deployback`], function (done) 
     done();
 }));
 
-var watchTasks = mode.build() ? ['build', 'browserSync']: ['sass', 'browserSync'],
-    triggerTasks = mode.build() ? ['build', 'browserReload']: ['sass', 'browserReload'];
+var watchTasks = mode.build() ? ['build', 'browserSync']: ['sass', 'genindexdev', 'browserSync'],
+    triggerTasks = mode.build() ? ['build', 'browserReload']: ['sass', 'genindexdev', 'browserReload'];
 gulp.task('watch',  gulp.series( watchTasks, function (done){
     gulp.watch(pkg.app.src+'/scss/**/*.scss', gulp.series(triggerTasks));
     gulp.watch(pkg.app.src+'/css/**/*.css', gulp.series(triggerTasks));

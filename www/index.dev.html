@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!--
+/**
+ * moOde audio player (C) @@__COPYRIGHT__ Tim Curtis
+ * http://moodeaudio.org
+ *
+ * tsunamp player ui (C) 2013 Andrea Coiutti & Simone De Gregori
+ * http://www.tsunamp.com
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @@__CURRENTDATE__ TC moOde @@__VERSION__
+ *
+ */
+-->
+
+<!-- 
+/**
+ * Purpose of this file is to replace index.php when doing local development.
+ * This file isn't deployed! 
+ *
+ * Any file linked into header.php should also be included here. HTML changes to 
+ * header.php should also be copied to here.
+ */
+
+-->
+<html lang="en">
+<head>
+	<title>moOde Player</title>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+
+	<!-- MOBILE APP ICONS -->
+	<!-- Apple -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="apple-touch-icon" sizes="180x180" href="/v5-apple-touch-icon.png">
+	<link rel="mask-icon" href="/v5-safari-pinned-tab.svg" color="#5bbad5">
+	<!-- Android/Chrome -->
+	<link rel="icon" type="image/png" sizes="32x32" href="/v5-favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/v5-favicon-16x16.png">
+	<!--link rel="manifest" href="/site.webmanifest"-->
+	<meta name="theme-color" content="#ffffff">
+	<!-- Microsoft -->
+	<meta name="msapplication-TileColor" content="#da532c">
+
+	<!-- build:css css/styles.min.css -->
+	<link href="css/bootstrap.css" rel="stylesheet" />
+	<link href="css/bootstrap-select.css" rel="stylesheet" />
+	<link href="css/flat-ui.css" rel="stylesheet"/>
+	<link href="css/jquery.pnotify.default.css" rel="stylesheet"/>
+	<link href="css/fontawesome-moode.css" rel="stylesheet"/>
+	
+	<link href="css/panels.css" rel="stylesheet"/>
+	<link href="css/moode.css" rel="stylesheet"/>
+	<!-- endbuild -->
+
+	<!-- build:css css/main.min.css -->	
+	<link href="css/jquery.countdown.css" rel="stylesheet">	
+	<!-- endbuild -->
+	
+	<!-- build:js js/lib.min.js defer -->
+	<script src="js/jquery-1.8.2.js" />
+	<script src="js/jquery-ui/jquery-ui.js" ></script>
+	<script src="js/jquery-ui/jquery.ui.core.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.widget.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.mouse.js" defer></script>	
+	<script src="js/jquery-ui/jquery.ui.position.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.datepicker.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.slider.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.tooltip.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.effect.js" defer></script>
+	
+	<script src="js/bootstrap.js" defer ></script>
+	<script src="js/bootstrap-select.js" defer></script>
+	
+	<script src="js/jquery.pnotify.js" defer></script>
+	<script src="js/notify.js" defer></script>
+	<script src="js/links.js" defer></script>
+
+	<script src="js/playerlib-nomin.js" defer></script>
+	<script src="js/playerlib.js" defer></script>
+	<!-- endbuild -->
+	
+	<!-- build:js js/main.min.js defer -->
+	<script src="js/jquery.countdown.js" defer></script>
+	<script src="js/jquery.scrollTo.js" defer></script>
+	<script src="js/jquery.touchSwipe.js" defer></script>
+	<script src="js/jquery.lazyload.js" defer></script>
+	<script src="js/jquery.md5.js" defer></script>
+	<script src="js/jquery.adaptive-backgrounds.js" defer></script>
+	<script src="js/jquery.knob.js" defer></script>
+	<script src="js/bootstrap-contextmenu.js" defer></script>	
+
+	<script src="js/scripts-library.js" defer></script>
+	<script src="js/scripts-panels.js" defer></script>
+	<!-- endbuild -->
+
+ 	<!-- @ifndef STRIP_CONFIG -->
+	<!-- build:js js/config.min.js defer -->
+	<!-- BUNDLE_TAG
+	<script src="js/custom_checkbox_and_radio.min.js" defer></script>
+	<script src="js/custom_radio.js" defer></script>
+	<script src="js/jquery.tagsinput.min.js" defer></script>
+	<script src="js/jquery.placeholder.min.js" defer></script>
+	<script src="js/i18n/_messages.en.js', 'text/javascript" defer></script>
+	<script src="js/application.js" defer></script>
+	<script src="js/scripts-configs.js" defer></script>
+	BUNDLE_TAG -->
+	<!-- endbuild -->
+	<!-- @endif -->
+</head>
+
+	<!-- START HEADER  INCLUDE -->
+	<!--=include header.php -->
+	<!-- END HEADER TMPL  INCLUDE -->
+
+	<!-- START INDEX TMPL  INCLUDE -->
+	<!--=include templates/indextpl.html -->
+	<!-- END INDEX TMPL  INCLUDE -->
+
+	<!-- START FOOTER INCLUDE -->
+	<!--=include footer.php -->
+	<!-- END FOOTER INCLUDE -->
+
+</body>
+</html>
+
