@@ -50,16 +50,14 @@
 				</div>
             </div>
 			<div class="control-group">
-                <label class="control-label" for="dsd-usb">DSD over PCM</label>
+                <label class="control-label" for="dsd-usb">DSD support</label>
                 <div class="controls">
 					<select id="dsd-usb" name="conf[dop]" class="input-large">
 						$_mpd_select[dop]
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-dsd-audio" class="help-block-configs help-block-margin hide">
-						<b>Native DSD is used automatically if supported in Linux/ALSA and the audio device.</b><br>
-						- Yes:&nbsp;DoP is used if native DSD support is not available.<br>
-						- No:&nbsp;DSD to PCM on-the-fly conversion is used if native DSD support is not available.
+						If Native DSD is selected and the audio device does not actually support it then DSD to PCM on-the-fly conversion will be performed.
                     </span>
                 </div>
             </div>
