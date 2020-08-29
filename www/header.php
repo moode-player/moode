@@ -23,6 +23,8 @@
  *
  */
 -->
+
+<!--removeIf(GENINDEXDEV)-->
 <?php
     //workerLog('-- header.php');
     $return = session_start();
@@ -110,6 +112,7 @@
 	<!-- Microsoft -->
 	<meta name="msapplication-TileColor" content="#da532c">
 </head>
+<!--endRemoveIf(GENINDEXDEV)-->
 
 <body onorientationchange="javascript:location.reload(true); void 0;">
 	<!-- ALBUM COVER BACKDROP -->
