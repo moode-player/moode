@@ -16,6 +16,48 @@
 # 2020-MM-DD TC moOde 7.0.0
 #
 
+# Store working dir
+WD=pwd
+
+# Unzip the package
+unzip -q /var/local/www/station_import.zip -d /tmp
+if [ $? -ne 0 ] ; then
+    TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+    LOG_MSG=" import_stations: Unzip failed, import cancelled"
+    echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+    exit 1
+fi
+
+# Basic file sanitizing
+dos2unix -q /tmp/var/lib/mpd/music/RADIO/*.pls
+if [ $? -ne 0 ] ; then
+    TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+    LOG_MSG=" import_stations: Dos2unix failed on .pls files, import cancelled"
+    echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+    exit 1
+fi
+dos2unix -q /tmp/var/local/www/db/cfg_radio.csv
+if [ $? -ne 0 ] ; then
+    TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+    LOG_MSG=" import_stations: Dos2unix failed on .csv file, import cancelled"
+    echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+    exit 1
+fi
+cd /tmp/var
+find . -name "._*" -exec rm -rf {} \; 2> /dev/null
+find . -name ".Trashes" -exec rm -rf {} \; 2> /dev/null
+find . -name "._.Trashes" -exec rm -rf {} \; 2> /dev/null
+find . -name ".Spotlight*" -exec rm -rf {} \; 2> /dev/null
+find . -name ".DS_Store" -exec rm -rf {} \; 2> /dev/null
+find . -name "._.DS_Store" -exec rm -rf {} \; 2> /dev/null
+find . -name ".fseventsd*" -exec rm -rf {} \; 2> /dev/null
+find . -name "._.com.apple.timemachine.donotpresent" -exec rm -rf {} \; 2> /dev/null
+find . -name ".com.apple.timemachine.donotpresent" -exec rm -rf {} \; 2> /dev/null
+find . -name ".TemporaryItems" -exec rm -rf {} \; 2> /dev/null
+find . -name "._.TemporaryItems" -exec rm -rf {} \; 2> /dev/null
+find . -name "__MACOSX" -exec rm -rf {} \; 2> /dev/null
+cd $WD
+
 # Purge existing station data
 rm /var/lib/mpd/music/RADIO/* 2> /dev/null
 rm /var/local/www/imagesw/radio-logos/*.jpg 2> /dev/null
@@ -23,12 +65,6 @@ rm /var/local/www/imagesw/radio-logos/thumbs/*.jpg 2> /dev/null
 sqlite3 /var/local/www/db/moode-sqlite3.db "DELETE FROM cfg_radio"
 
 # Install new station data
-unzip -q /var/local/www/station_import.zip -d /tmp
-
-# TODO: basic file sanitizing
-# Convert crlf to lf in the pls files and csv file (dos2unix)
-# Delete annoying os x dot files/dirs
-
 cp /tmp/var/lib/mpd/music/RADIO/*.pls /var/lib/mpd/music/RADIO
 cp /tmp/var/local/www/imagesw/radio-logos/*.jpg /var/local/www/imagesw/radio-logos
 cp /tmp/var/local/www/imagesw/radio-logos/thumbs/*.jpg /var/local/www/imagesw/radio-logos/thumbs
