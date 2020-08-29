@@ -145,8 +145,8 @@ else {
 						$pos = $status['playlistlength'] ;
 
  						// NOTE: is this still necessary?
-						//sendMpdCmd($sock, 'stop');
-						//echo json_encode(readMpdResp($sock));
+						sendMpdCmd($sock, 'stop');
+						echo json_encode(readMpdResp($sock));
 
 						addToPL($sock, $path);
 
