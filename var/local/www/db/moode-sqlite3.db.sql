@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Aug 28 14:39:00 2020
+-- File generated with SQLiteStudio v3.1.0 on Sat Aug 29 07:14:08 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- Table: cfg_radio
-CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (8), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (32), reserved1 CHAR (32), reserved2 CHAR (32));
+CREATE TABLE cfg_radio (id INTEGER PRIMARY KEY, station CHAR (128), name CHAR (128), type CHAR (1), logo CHAR (128), genre CHAR (32), broadcaster CHAR (32), language CHAR (32), country CHAR (32), region CHAR (32), bitrate CHAR (32), format CHAR (32), geo_fenced CHAR (3), reserved1 CHAR (32), reserved2 CHAR (32));
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (1, 'http://strm112.1.fm/blues_mobile_mp3', '1.FM - Blues Radio', 'r', 'local', 'Blues', '1.FM', 'English', 'Switzerland', 'Europe', '192', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (2, 'http://eno.emit.com:8000/2bob_live_64.mp3', '2BOB Radio 104.7 FM', 'r', 'local', 'Alternative', 'BOB 2.00', 'English', 'Australia', 'Asia', '64', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (3, 'https://stream.4zzz.org.au:9200/4zzz', '4ZZZ FM 102.1 - Alternative', 'r', 'local', 'Alternative', '4ZZZ FM', 'English', 'Australia', 'Asia', '128', 'MP3', 'No', '', '');
@@ -590,11 +590,11 @@ INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL,
 
 -- Table: cfg_hash
 CREATE TABLE cfg_hash (id INTEGER PRIMARY KEY, param CHAR (64), value CHAR (64), "action" CHAR (32));
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '85d6ca69a3d4b11b71e5463e1aff1ff5', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '390ed3c2876a41cbe45479a709470410', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (2, '/etc/nginx/fastcgi_params', '953d4fb6958806a7edd317ac36558fdd', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '57ffe914e3f46b4afab54299bc98d6c1', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/php-fpm.conf', '8d60ea0c8a646382b1dda59393d1d90b', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', '3cae92a82b939e9d7562903eec9e9dbd', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', 'd9f65519e484de1cf5240ead12bdde46', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '787d82e9de10d1217c705fff2b7577f9', 'exit');
