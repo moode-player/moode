@@ -187,7 +187,8 @@ if ($_SESSION['audioout'] == 'Bluetooth') {
 	$hwparams_calcrate = '1.411 Mbps';
 }
 elseif ($hwparams['status'] == 'active') {
-	$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
+	$pcm_rate = $hwparams['format'] == 'DSD bitstream' ?  '' : ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
+	$hwparams_format = $hwparams['format'] . $pcm_rate;
 	$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' Mbps';
 }
 else {
