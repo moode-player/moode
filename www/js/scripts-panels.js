@@ -1149,15 +1149,15 @@ jQuery(document).ready(function($) { 'use strict';
         $(this).parents('li').addClass('active');
 	});
 
-	// De-highlight folder or radio station
-	$('.btnlist-top-db, .btnlist-top-ra').click(function(e) {
+	// De-highlight folder or radio station (DEPRECATED)
+	/*$('.btnlist-top-db, .btnlist-top-ra').click(function(e) {
         if (currentView == 'folder') {
             $('#db-' + UI.dbPos[UI.dbPos[10]].toString()).removeClass('active');
         }
         else if (currentView == 'radio') {
             $('#' + UI.dbEntry[3]).removeClass('active');
         }
-	});
+	});*/
 
 	// buttons on modals
 	$('.btn-del-savedpl').click(function(e){
