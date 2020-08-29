@@ -19,10 +19,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-05-03 TC moOde 6.5.2
+# 2020-MM-DD TC moOde 7.0.0
 #
 
-FPM_LIMIT=40
+# NOTE: was 40
+FPM_LIMIT=20
+
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_ACTIVE=$(pgrep -c -x mpd)
 SPOT_ACTIVE=$(pgrep -c -x librespot)
@@ -35,7 +37,7 @@ while true; do
 	# PHP-FPM
 	if (( FPM_CNT > FPM_LIMIT )); then
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		LOG_MSG=" watchdog: PHP restarted (fpm child limit > "$FPM_LIMIT")"
+		LOG_MSG=" watchdog: PHP restarted (fpm workers > limit of "$FPM_LIMIT")"
 		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 		systemctl restart php7.3-fpm
 	fi
