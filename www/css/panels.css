@@ -456,7 +456,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #theme-name-menu {margin:0;border-radius:.5rem;overflow:hidden;opacity:.95;}
 /* alphabet quick jump stuff */
 /* index improvements */
-#index-genres, #index-artists, #index-albums, #index-albumcovers, #index-browse, #index-radio {display:none;width:1.17rem}
+#index-genres, #index-artists, #index-albums, #index-albumcovers, #index-browse, #index-radio {display:none;width:1.17rem;cursor:pointer;}
 #index-genres {right:calc(66.85% + var(--sbw));top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
 #index-artists {right:calc(33.33% + var(--sbw));top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
 #index-albums {right:var(--sbw);top:calc(1.55rem + 3px);height:calc(100% - 1.5rem - 3px);}
