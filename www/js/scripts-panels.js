@@ -747,6 +747,7 @@ jQuery(document).ready(function($) { 'use strict';
                 $('.database-radio li').removeClass('active');
                 setTimeout(function() {
                     $('#ra-' + (UI.radioPos - headerCount)).addClass('active');
+                    UI.dbEntry[3] = 'ra-' + (UI.radioPos - headerCount);
                 }, DEFAULT_TIMEOUT);
     		}
     		// Song file
