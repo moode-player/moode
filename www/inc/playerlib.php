@@ -1302,7 +1302,7 @@ function phpSession($action, $param = '', $value = '') {
 }
 
 // TODO: new database management
-function dbConnect() {
+/*function dbConnect() {
 	if ($dbh = new PDO(SQLDB)) {
 		return $dbh;
 	}
@@ -1330,7 +1330,8 @@ function dbRead($table, $dbh, $param = '', $id = '') {
 		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
 	}
 	else if ($table == 'cfg_radio') {
-		$querystr = 'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
+		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("DELETED", "zx reserved 499")' :
+			'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
 	}
 	else {
 		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
@@ -1477,7 +1478,7 @@ function dbQuery($querystr, $dbh) {
 		return false;
 	}
 }
-
+*/
 // database management
 function cfgdb_connect() {
 	if ($dbh = new PDO(SQLDB)) {
@@ -1507,7 +1508,8 @@ function cfgdb_read($table, $dbh, $param = '', $id = '') {
 		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
 	}
 	else if ($table == 'cfg_radio') {
-		$querystr = 'SELECT station, name, type, logo FROM ' . $table . ' WHERE station="' . $param . '"';
+		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("DELETED", "zx reserved 499")' :
+			'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
 	}
 	else {
 		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
@@ -3450,15 +3452,15 @@ function parseDir($path) {
 function loadRadio() {
 	// Delete radio station session vars to purge any orphans
 	foreach ($_SESSION as $key => $value) {
-		if (substr($key, 0, 5) == 'http:') {
+		if (substr($key, 0, 4) == 'http') {
 			unset($_SESSION[$key]);
 		}
 	}
 	// Load cfg_radio into session
-	$result = cfgdb_read('cfg_radio', cfgdb_connect());
+	$result = cfgdb_read('cfg_radio', cfgdb_connect(), 'all');
 	foreach ($result as $row) {
-		if ($row['station'] != 'DELETED') {
+		//if ($row['station'] != 'DELETED' && $row['station'] != 'zx reserved 499') {
 			$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
-		}
+		//}
 	}
 }

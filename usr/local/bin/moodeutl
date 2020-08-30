@@ -204,12 +204,12 @@ function dump_session() {
 	session_start();
 	foreach ($_SESSION as $key => $value) {
 		// Radio stations
-		if (substr($key, 0, 5) == 'http:' || substr($key, 0, 6) == 'https:' || $key == 'zx reserved 499') {
-			echo $key . ', ' . $value['name'] . "\n";
+		if (substr($key, 0, 4) == 'http') {
+			echo $key . '|' . $value['name'] . '|' . $value['type'] . "\n";
 		}
 		// Cfg_system, etc
 		else {
-			echo $key . ', ' . (is_array($value) ? 'Array' : $value) . "\n";
+			echo $key . '|' . (is_array($value) ? 'Array' : $value) . "\n";
 		}
 	}
 	session_write_close();
@@ -346,13 +346,14 @@ function tail_log() {
 
 function check_station_urls() {
 	error_reporting(E_ERROR | E_PARSE);
-	$results = shell_exec("sqlite3 " . SQLDB . " \"SELECT station, name, broadcaster, bitrate FROM cfg_radio WHERE station!='DELETED'\"");
+	$results = shell_exec("sqlite3 " . SQLDB .
+		" \"SELECT station, name, broadcaster, bitrate FROM cfg_radio WHERE station not in ('DELETED', 'zx reserved 499')\"");
 	$line = strtok($results, "\n");
 	$count = 0;
 	while ($line) {
 		list($url, $name, $broadcaster, $bitrate) = explode('|', $line);
-		// Skip BBC geo fenced stations and the reserved 499 row
-		if (!($broadcaster == 'BBC' && $bitrate == '320') && strpos($name, 'zx reserved 499') === false) {
+		// Skip BBC geo fenced stations
+		if (!($broadcaster == 'BBC' && $bitrate == '320')) {
 			$tmpfile = file_get_contents($url, FALSE, NULL, 0, 1024);
 			$playable = false === $tmpfile ? '?' : 'OK';
 			if ($tmpfile == false) {

@@ -942,15 +942,8 @@ function updateActivePlItem() {
 function renderPlaylist() {
 	//console.log'renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
-
 		var output = '';
-
-		if (GLOBAL.nativeLazyLoad) {
-			var playlistLazy = '<img loading="lazy" src="';
-		}
-		else {
-			var playlistLazy = '<img class="lazy-playlistview" data-original="';
-		}
+        var playlistLazy = GLOBAL.nativeLazyLoad === true ? '<img loading="lazy" src=' : '<img class="lazy-playlistview" data-original=';
 
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
@@ -981,7 +974,10 @@ function renderPlaylist() {
 				}
 				// Radio station
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
-					output += option_show_playlistart && (typeof(data[i].Comment) === 'undefined' || data[i].Comment!== 'client=upmpdcli;')  ? '<span class="pl-thumb">'+playlistLazy+'/imagesw/radio-logos/thumbs/' + encodeURIComponent(RADIO.json[data[i].file]['name']) + '.jpg"/></span>' : '';
+                    var logoThumb = typeof(RADIO.json[data[i].file]) === 'undefined' ? '"images/notfound.jpg"' : '"imagesw/radio-logos/thumbs/' +
+                        encodeURIComponent(RADIO.json[data[i].file]['name']) + '.jpg"';
+					output += option_show_playlistart && (typeof(data[i].Comment) === 'undefined' || data[i].Comment !== 'client=upmpdcli;')  ?
+                        '<span class="pl-thumb">' + playlistLazy + logoThumb + '></span>' : '';
 	                // Line 1 title
 					// Custom name for particular station
 	                if (typeof(data[i].Title) === 'undefined' || data[i].Title.trim() == '' || data[i].file == 'http://stream.radioactive.fm') {
@@ -1025,7 +1021,7 @@ function renderPlaylist() {
 				}
 				// Song file or upnp url
 				else {
-					output += option_show_playlistart ? '<span class="pl-thumb">'+playlistLazy+'/imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '.jpg"/></span>' : '';
+					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '.jpg"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -1102,9 +1098,10 @@ function mpdDbCmd(cmd, path) {
 		$.post('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {renderFolderView(data, '');}, 'json');
 	}
 	else if (cmd == 'newstation' || cmd == 'updstation') {
-        RADIO.json[path['url']] = {'name': path['name']};
+        //RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
         cmd == 'newstation' ? notify('creating_station') : notify('updating_station');
         $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(return_msg) {
+            RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
             return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, 5000);
             $('#ra-refresh').click();
         }, 'json');
@@ -1345,7 +1342,7 @@ function renderRadioView() {
                 }
             }
             if (data.length > 0) {
-                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Moode geo-locked', 'stationType': newStationType});
+                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Moode geo-fenced', 'stationType': newStationType});
             }
             // Reset
             SESSION.json['radioview_show_hide'] = 'No action,' + showHideOtherStations;
@@ -2631,12 +2628,9 @@ function editLogoImage(files) {
 // Import station zip package to server
 function importStationPkg(files) {
     //console.log('files[0].size=(' + files[0].size + ')');
-    if (files[0].size > 50000000) {
-		$('#import-export-msg').text('ZIP file must be less than 50MB in size');
+    if (files[0].size > 75000000) {
+		$('#import-export-msg').text('ZIP file must be less than 75MB in size');
 		return;
-	}
-	else {
-		$('#import-export-msg').text('');
 	}
 
     $('#import-export-msg').text('Importing...');
