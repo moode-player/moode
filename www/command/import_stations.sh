@@ -36,6 +36,7 @@ if [ $? -ne 0 ] ; then
     echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
     exit 1
 fi
+
 dos2unix -q /tmp/var/local/www/db/cfg_radio.csv
 if [ $? -ne 0 ] ; then
     TIME_STAMP=$(date +'%Y%m%d %H%M%S')
@@ -43,7 +44,9 @@ if [ $? -ne 0 ] ; then
     echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
     exit 1
 fi
+
 cd /tmp/var
+
 find . -name "._*" -exec rm -rf {} \; 2> /dev/null
 find . -name ".Trashes" -exec rm -rf {} \; 2> /dev/null
 find . -name "._.Trashes" -exec rm -rf {} \; 2> /dev/null
@@ -56,6 +59,7 @@ find . -name ".com.apple.timemachine.donotpresent" -exec rm -rf {} \; 2> /dev/nu
 find . -name ".TemporaryItems" -exec rm -rf {} \; 2> /dev/null
 find . -name "._.TemporaryItems" -exec rm -rf {} \; 2> /dev/null
 find . -name "__MACOSX" -exec rm -rf {} \; 2> /dev/null
+
 cd $WD
 
 # Purge existing station data
@@ -65,9 +69,9 @@ rm /var/local/www/imagesw/radio-logos/thumbs/*.jpg 2> /dev/null
 sqlite3 /var/local/www/db/moode-sqlite3.db "DELETE FROM cfg_radio"
 
 # Install new station data
-cp /tmp/var/lib/mpd/music/RADIO/*.pls /var/lib/mpd/music/RADIO
-cp /tmp/var/local/www/imagesw/radio-logos/*.jpg /var/local/www/imagesw/radio-logos
-cp /tmp/var/local/www/imagesw/radio-logos/thumbs/*.jpg /var/local/www/imagesw/radio-logos/thumbs
+cp /tmp/var/lib/mpd/music/RADIO/*.pls /var/lib/mpd/music/RADIO/
+cp /tmp/var/local/www/imagesw/radio-logos/*.jpg /var/local/www/imagesw/radio-logos/
+cp /tmp/var/local/www/imagesw/radio-logos/thumbs/*.jpg /var/local/www/imagesw/radio-logos/thumbs/
 sqlite3 /var/local/www/db/moode-sqlite3.db -csv ".import /tmp/var/local/www/db/cfg_radio.csv cfg_radio"
 
 # Cleanup temp files
