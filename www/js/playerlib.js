@@ -482,11 +482,24 @@ function engineCmdLite() {
 function inpSrcIndicator(cmd, msgText) {
 	UI.currentFile = 'blank';
 
+    // Set custom backdrop (if any)
+    if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
+        $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
+        $('#inpsrc-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
+        $('#inpsrc-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
+    }
+    else if (SESSION.json['bgimage'] != '') {
+        $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + SESSION.json['bgimage'] + '">');
+        $('#inpsrc-backdrop').css('filter', 'blur(0px)');
+        $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
+    }
+
+    // Set the button and preamp volume
+    // NOTE: Preamp volume #id will only exist if audioin != Local
 	if (cmd.slice(-1) == '1') {
 		$('#inpsrc-indicator').css('display', 'block');
 		$('#inpsrc-msg').html(msgText);
-        var preampVolume = SESSION.json['mpdmixer'] == 'disabled' ? '0dB' : SESSION.json['volknob'];
-		$('#inpsrc-preamp-volume').text(preampVolume);
+		$('#inpsrc-preamp-volume').text(SESSION.json['mpdmixer'] == 'disabled' ? '0dB' : SESSION.json['volknob']);
 	}
 	else {
 		$('#inpsrc-msg').html('');
