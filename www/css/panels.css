@@ -532,8 +532,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-toggles .btn-primary {color:var(--accentxts);}
 #playbar-toggles i {font-size:1.1rem;margin-top:1px;}
 #playbar-toggles .coverview i {font-size:.9rem;}
-#playbar-radio, #m-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;background-size:contain;width:20%;height:15px;left:50%;transform:translate(-50%, -50%);display:none;}
-#playbar-radio {position:absolute;top:90%;}
+#m-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;background-size:contain;width:20%;height:15px;left:50%;transform:translate(-50%, -50%);display:none;}
 #m-radio {position:relative;transform:translate(-50%, 0);margin-top:.5em;}
 /* for hide/show Genres column in Library Tag view */
 #top-columns.nogenre #lib-genre-header, #top-columns.nogenre #index-genres, #top-columns.nogenre #lib-genre {display:none !important;}
@@ -637,8 +636,8 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .encoded-at-notvisible {display:none}
 .encoded-at-text {color:var(--textvariant);}
 .encoded-at-badge {position:absolute;float:right;width:6.75em;line-height:1.5em;right:1.15rem;color:white;background:rgba(64,64,64,.9);border-radius:10%;font-size:.65em;font-style:normal;font-weight:normal;transform:translate(0%, -195%);}
-.encoded-at-hdonly {position:absolute;float:right;width:2em;height:1.25em;line-height:1.5em;right:1.15rem;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.65em;font-style:normal;font-weight:700;transform:translate(0%, -195%);}
-.encoded-at-hdonly-tagview {position:absolute;width:1.6em;height:1.25em;line-height:1.5em;left:2.8rem;bottom:1em;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.39em;font-style:normal;font-weight:600;}
+.encoded-at-hdonly {position:absolute;float:right;width:2em;/*height:1.25em;*/line-height:1.5em;right:1.15rem;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.65em;font-style:normal;font-weight:700;transform:translate(0%, -195%);}
+.encoded-at-hdonly-tagview {position:absolute;width:1.6em;/*height:1.25em;*/line-height:1.5em;left:2.8rem;bottom:1em;color:gold;background:#000;border:1px solid gold;border-radius:10%;box-shadow:1px 1px 3px gold,-1px -1px 3px gold;font-size:.39em;font-style:normal;font-weight:600;}
 /* Radio manager */
 .modal-button-style {display:inline-block;margin-bottom:.5em;/*margin-top:-1px*/}
 /* Radio view */
