@@ -91,6 +91,28 @@ else {
 	workerLog('worker: Integrity check ('. $result .')');
 }
 
+// Ensure certain files exist and with the correct permissions
+if (!file_exists('/var/local/www/playhistory.log')) {
+	sysCmd('touch /var/local/www/playhistory.log');
+	// This sets the "Log initialized" header
+	sysCmd('/var/www/command/util.sh clear-playhistory');
+}
+sysCmd('touch ' . LIBCACHE_JSON);
+sysCmd('touch /var/local/www/sysinfo.txt');
+sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
+sysCmd('truncate /var/local/www/currentsong.txt --size 0');
+// Delete any tmp files left over from New/Edit radio station
+sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
+sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
+// Set permissions
+sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
+sysCmd('chmod 0777 /var/local/www/currentsong.txt');
+sysCmd('chmod 0777 ' . LIBCACHE_JSON);
+sysCmd('chmod 0777 /var/local/www/playhistory.log');
+sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
+sysCmd('chmod 0666 ' . MOODE_LOG);
+workerLog('worker: File check (OK)');
+
 // Load cfg_system into session
 playerSession('open', '', '');
 loadRadio();
@@ -173,27 +195,6 @@ workerLog('worker: ' . $msg);
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
 sysCmd($cmd . ' > /dev/null');
 workerLog('worker: HDMI port ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
-
-// Ensure certain files exist
-if (!file_exists('/var/local/www/currentsong.txt')) {sysCmd('touch /var/local/www/currentsong.txt');}
-if (!file_exists(LIBCACHE_JSON)) {sysCmd('touch ' . LIBCACHE_JSON);}
-if (!file_exists('/var/local/www/sysinfo.txt')) {sysCmd('touch /var/local/www/sysinfo.txt');}
-if (!file_exists(MOODE_LOG)) {sysCmd('touch ' . MOODE_LOG);}
-if (!file_exists(THMCACHE_DIR)) {sysCmd('mkdir ' . THMCACHE_DIR);}
-if (!file_exists('/var/local/www/playhistory.log')) {
-	sysCmd('touch /var/local/www/playhistory.log');
-	sysCmd('/var/www/command/util.sh clear-playhistory');
-}
-sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
-sysCmd('chmod 0777 /var/local/www/currentsong.txt');
-sysCmd('chmod 0777 ' . LIBCACHE_JSON);
-sysCmd('chmod 0777 /var/local/www/playhistory.log');
-sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
-sysCmd('chmod 0666 ' . MOODE_LOG);
-// Delete any tmp files left over from New/Edit radio station
-sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
-sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
-workerLog('worker: File check (OK)');
 
 //
 workerLog('worker: -- Network');
