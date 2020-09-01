@@ -105,6 +105,7 @@
 
     <!-- INPUT SOURCE INDICATOR -->
     <div id="inpsrc-indicator" class="inpsrc">
+        <div id="inpsrc-backdrop"></div>
         <div id="inpsrc-msg"></div>
     </div>
 
@@ -187,7 +188,6 @@
 					<div id="playbar-total"></div>
 				</div>
 			</div>
-			<div id="playbar-radio"></div>
 			<div id="playbar-toggles">
 				<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
                 <button aria-label="Playlist" class="btn btn-cmd btn-toggle hide" id="cv-playlist-btn"><i class="fal fa-list"></i></button>
