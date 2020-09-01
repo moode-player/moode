@@ -87,13 +87,16 @@ function renderLibrary(data) {
 	renderGenres();
 }
 
+// Rewritten by @Atair: Allow for track.genre as array of genre values
 function reduceGenres(acc, track) {
-	var genre = track.genre.toLowerCase();
-	if (!acc[genre]) {
-		acc[genre] = [];
-		acc[genre].genre = track.genre;
+	for (i = 0; i < track.genre.length; i++) {
+		var genre = track.genre[i].toLowerCase();
+		if (!acc[genre]) {
+			acc[genre] = [];
+			acc[genre].genre = track.genre[i];
+		}
+		acc[genre].push(track);
 	}
-	acc[genre].push(track);
 	return acc;
 }
 
@@ -296,11 +299,15 @@ function groupLib(fullLib) {
 	}
 }
 
+// Rewritten by @Atair: Allow for item.genre as array of genre values
 function filterByGenre(item) {
-	var genre = item.genre.toLowerCase();
-	return LIB.filters.genres.find(function(genreFilter){
-		return genre === genreFilter.toLowerCase();
+	var genre = item.genre.map(function(g){return g.toLowerCase();});
+	result= LIB.filters.genres.find(function(genreFilter){
+		return genre.find(function(g){
+			return g == genreFilter.toLowerCase();
+		});
 	});
+	return result;
 }
 
 function filterByAllGenres(album) {

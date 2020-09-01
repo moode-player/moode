@@ -432,6 +432,15 @@ function genFlatList($sock) {
 			elseif ($element == 'directory' || $element == 'playlist') {
 				++$i;
 			}
+			// @Atair: Gather possible multiple Genre values as array
+			elseif ($element == 'Genre') {
+				if ($flat[$item]['Genre']) {
+					array_push($flat[$item]['Genre'], $value);
+				}
+				else {
+					$flat[$item]['Genre'] = array($value);
+				}
+			}
 			else {
 				$flat[$item][$element] = $value;
 			}
@@ -460,7 +469,8 @@ function genLibrary($flat) {
 			'year' => getTrackYear($flatData),
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
-			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
+			// @Atair: 'Unknown' genre has to be an array
+			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')),
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified'],
 			'encoded_at' => getEncodedAt($flatData, 'default', true)
@@ -539,7 +549,8 @@ function genLibraryUTF8Rep($flat) {
 			'year' => utf8rep(getTrackYear($flatData)),
 			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
+			// @Atair: 'Unknown' genre has to be an array
+			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))),
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified'],
 			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true))
