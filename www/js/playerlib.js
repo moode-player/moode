@@ -57,6 +57,14 @@ const CLRPLAY_TIMEOUT   = 500;
 const RALBUM_TIMEOUT    = 1500;
 const ENGINE_TIMEOUT    = 3000;
 
+// Album and Radio HD parameters
+const ALBUM_HD_BADGE_TEXT = 'HD';
+const ALBUM_BIT_DEPTH_THRESHOLD = 16;
+const ALBUM_SAMPLE_RATE_THRESHOLD = 44100;
+const RADIO_HD_BADGE_TEXT = 'HiRes';
+const RADIO_BITRATE_THRESHOLD = 128;
+
+
 var UI = {
     knob: null,
     path: '',
@@ -230,6 +238,7 @@ function engineMpd() {
 			// Always have valid json
 			try {
 				MPD.json = JSON.parse(data);
+                //console.log(MPD.json);
 			}
 			catch (e) {
 				MPD.json['error'] = e;
@@ -742,11 +751,13 @@ function renderUI() {
         }
         else if (MPD.json['artist'] == 'Radio station') {
     		$('#extra-tags-display').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
+            $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(RADIO_HD_BADGE_TEXT);
     	}
     	else {
             var extraTagsDisplay = '';
             extraTagsDisplay = formatExtraTagsString();
             extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) : $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
+            $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(ALBUM_HD_BADGE_TEXT);
     	}
 
     	// Default metadata
@@ -756,6 +767,7 @@ function renderUI() {
             // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
                 (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
+            MPD.json['hidef'] == 'yes' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
         else {
             $('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
@@ -1550,10 +1562,10 @@ function renderRadioView() {
             if (encodedAtOption != 9) {
                 var bitrate = parseInt(data[i].bitrate);
                 var bitrateAndFormat = data[i].bitrate + 'K ' + data[i].format;
-                var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
-                var radioViewHdDiv = (encodedAtOption == 1 && bitrate > 128) ? '<div class="encoded-at-hdonly">HD</div>' : '';
-                //var radioViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + bitrateAndFormat + '</div>' : '';
-                var radioViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
+                var radioViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + bitrateAndFormat + '</div>' : '';
+                var radioViewHdDiv = (encodedAtOption == 1 && bitrate > RADIO_BITRATE_THRESHOLD) ? '<div class="lib-encoded-at-hdonly">' + RADIO_HD_BADGE_TEXT + '</div>' : '';
+                //var radioViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + bitrateAndFormat + '</div>' : '';
+                var radioViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + bitrateAndFormat + '</div>' : '';
             }
 
             // Metadata div's

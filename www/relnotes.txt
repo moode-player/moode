@@ -38,6 +38,7 @@ Updates
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 - UPD: Improve logging for Library update process
 - UPD: Add Genre to the Extra metadata appearance option
+- UPD: Extend HD badging to Playbar, CoverView amd Playback
 
 Radio stations
 

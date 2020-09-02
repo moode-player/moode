@@ -217,6 +217,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.5rem;width:3.1rem;}
 	.playlist .pl-thumb, .cv-playlist .pl-thumb {display:none;}
+	#playbar-hd-badge {margin-top:.6em;}
 }
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
@@ -278,7 +279,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:53vw;height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
-	#playbar-controls .btn {padding:.25em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}
+	#playbar-controls .btn {padding:.5em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}
 	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:.4em;height:unset;width:unset;top:unset;left:unset;transform:none;}
 	#playbar-toggles .btn {transition:none;border-radius:50%;padding:.5rem .7rem;margin-bottom:.5rem;width:unset;height:unset;line-height:11px;}
 	#playbar-timeline {display:none;}

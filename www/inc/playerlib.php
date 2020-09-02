@@ -86,6 +86,14 @@ const SOX_UPSAMPLE_ONLY_41K		= 1; // Upsample only 44.1K source rate
 const SOX_UPSAMPLE_ONLY_4148K	= 2; // Upsample only 44.1K and 48K source rates
 const SOX_ADHERE_BASE_FREQ		= 8; // Resample (adhere to base freq)
 
+// Album and Radio HD badge parameters
+// NOTE: These are mirrored in playerlib.js
+const ALBUM_HD_BADGE_TEXT = 'HD';
+const ALBUM_BIT_DEPTH_THRESHOLD = 16;
+const ALBUM_SAMPLE_RATE_THRESHOLD = 44100;
+const RADIO_HD_BADGE_TEXT = 'HiRes';
+const RADIO_BITRATE_THRESHOLD = 128;
+
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
 	$fh = fopen(MOODE_LOG, $mode);
@@ -2161,7 +2169,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 		}
 		// PCM or Multichannel PCM
 		else {
-			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > 16) || $mpd_format_tag[0] > 44100 ? ',h' : ',s';
+			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > ALBUM_BIT_DEPTH_THRESHOLD) || $mpd_format_tag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? ',h' : ',s';
 			$encoded_at = ($mpd_format_tag[1] == 'f' ? '' : $mpd_format_tag[1] . '/') . formatRate($mpd_format_tag[0]) . ' ' . strtoupper($ext) . $hd;
 		}
 	}
@@ -3213,11 +3221,13 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['title'] = $song['Name'];
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
+			$current['hidef'] = ($ext == 'aif' || $ext == 'aiff') ? 'yes' : 'no';
 		}
 		// Radio station
 		elseif (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
 			//workerLog('enhanceMetadata(): Radio station');
 			$current['artist'] = 'Radio station';
+			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
 			if (!isset($song['Title']) || trim($song['Title']) == '') {
 				$current['title'] = 'Streaming source';
@@ -3274,6 +3284,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			// Song file
 			else {
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
+				$current['hidef'] = ($current['audio_sample_depth'] > 16 || ($current['audio_sample_rate'] * 1000) > 44100) ? 'yes' : 'no';
 			}
 			// In case 2 url's are returned, use the first
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
@@ -3470,8 +3481,7 @@ function loadRadio() {
 	// Load cfg_radio into session
 	$result = cfgdb_read('cfg_radio', cfgdb_connect(), 'all');
 	foreach ($result as $row) {
-		//if ($row['station'] != 'DELETED' && $row['station'] != 'zx reserved 499') {
-			$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
-		//}
+		$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'],
+			'bitrate' => $row['bitrate'], 'format' => $row['format']);
 	}
 }
