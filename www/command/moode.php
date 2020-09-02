@@ -422,9 +422,15 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				}
 
 				if ($return_msg == 'OK') {
-					// Add session var
+					// Add/update session var
 					session_start();
-					$_SESSION[$_POST['path']['url']] = array('name' => $_POST['path']['name'], 'type' => $_POST['path']['type'], 'logo' => 'local');
+					$_SESSION[$_POST['path']['url']] = array(
+						'name' => $_POST['path']['name'],
+						'type' => $_POST['path']['type'],
+						'logo' => 'local',
+						'bitrate' => $_POST['path']['bitrate'],
+						'format' => $_POST['path']['format']
+					);
 					session_write_close();
 
 					// Write pls file and set permissions
