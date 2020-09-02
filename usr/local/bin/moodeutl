@@ -205,7 +205,7 @@ function dump_session() {
 	foreach ($_SESSION as $key => $value) {
 		// Radio stations
 		if (substr($key, 0, 4) == 'http') {
-			echo $key . '|' . $value['name'] . '|' . $value['type'] . "\n";
+			echo $key . '|' . $value['name'] . '|' . $value['type'] . '|' . $value['bitrate'] . '|' . $value['format'] . "\n";
 		}
 		// Cfg_system, etc
 		else {
