@@ -492,15 +492,17 @@ function inpSrcIndicator(cmd, msgText) {
 	UI.currentFile = 'blank';
 
     // Set custom backdrop (if any)
-    if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
-        $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
-        $('#inpsrc-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
-        $('#inpsrc-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
-    }
-    else if (SESSION.json['bgimage'] != '') {
-        $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + SESSION.json['bgimage'] + '">');
-        $('#inpsrc-backdrop').css('filter', 'blur(0px)');
-        $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
+    if (SESSION.json['renderer_backdrop'] == 'Yes') {
+        if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
+            $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
+            $('#inpsrc-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
+            $('#inpsrc-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
+        }
+        else if (SESSION.json['bgimage'] != '') {
+            $('#inpsrc-backdrop').html('<img class="ss-backdrop" ' + 'src="' + SESSION.json['bgimage'] + '">');
+            $('#inpsrc-backdrop').css('filter', 'blur(0px)');
+            $('#inpsrc-backdrop').css('transform', 'scale(1.0)');
+        }
     }
 
     // Set the button and preamp volume
@@ -2213,7 +2215,16 @@ $('.context-menu a').click(function(e) {
     		$('#cover-backdrop-enabled span').text(SESSION.json['cover_backdrop']);
     		$('#cover-blur span').text(SESSION.json['cover_blur']);
     		$('#cover-scale span').text(SESSION.json['cover_scale']);
+
+            // Playback options
+            $('#playlist-art-enabled span').text(SESSION.json['playlist_art']);
+            $('#renderer-backdrop span').text(SESSION.json['renderer_backdrop']);
+
             // Library options
+            $('#library-flatlist-filter span').text(SESSION.json['library_flatlist_filter']);
+            (SESSION.json['library_flatlist_filter'] == 'Format' || SESSION.json['library_flatlist_filter'] == 'Directory') ?
+                $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
+            $('#library-flatlist-filter-str').val(SESSION.json['library_flatlist_filter_str']);
             $('#instant-play-action span').text(SESSION.json['library_instant_play']);
             $('#show-genres-column span').text(SESSION.json['library_show_genres']);
             $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
@@ -2234,7 +2245,6 @@ $('.context-menu a').click(function(e) {
             // Other options
     		$('#font-size span').text(SESSION.json['font_size']);
     		$('#play-history-enabled span').text(SESSION.json['playhist']);
-            $('#playlist-art-enabled span').text(SESSION.json['playlist_art']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
 
             $('#appearance-modal').modal();
@@ -2389,7 +2399,14 @@ $('#btn-appearance-update').click(function(e){
 	if (SESSION.json['cover_backdrop'] != $('#cover-backdrop-enabled span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['cover_blur'] != $('#cover-blur span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;}
+
+    // Playback options
+    if (SESSION.json['playlist_art'] != $('#playlist-art-enabled span').text()) {playlistArtChange = true;}
+    //if (SESSION.json['render_backdrop'] != $('#renderer-backdrop span').text()) {}
+
     // Library options
+    if (SESSION.json['library_flatlist_filter'] != $('#library-flatlist-filter span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_flatlist_filter_str'] != $('#library-flatlist-filter-str').val()) {libraryOptionsChange = true;}
     if (SESSION.json['library_instant_play'] != $('#instant-play-action span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {
 		$('#show-genres-column span').text() == "Yes" ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
@@ -2417,7 +2434,6 @@ $('#btn-appearance-update').click(function(e){
     if (SESSION.json['font_size'] != $('#font-size span').text()) {fontSizeChange = true;};
     if (SESSION.json['extra_tags'] != $('#extra-tags').val()) {extraTagsChange = true;}
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
-    if (SESSION.json['playlist_art'] != $('#playlist-art-enabled span').text()) {playlistArtChange = true;}
 
 	// Theme and backgrounds
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -2427,7 +2443,14 @@ $('#btn-appearance-update').click(function(e){
 	SESSION.json['cover_backdrop'] = $('#cover-backdrop-enabled span').text();
 	SESSION.json['cover_blur'] = $('#cover-blur span').text();
 	SESSION.json['cover_scale'] = $('#cover-scale span').text();
+
+    // Playback options
+    SESSION.json['playlist_art'] = $('#playlist-art-enabled span').text();
+    SESSION.json['renderer_backdrop'] = $('#renderer-backdrop span').text();
+
     // Library options
+    SESSION.json['library_flatlist_filter'] = $('#library-flatlist-filter span').text();
+    SESSION.json['library_flatlist_filter_str'] = $('#library-flatlist-filter-str').val().trim();
     SESSION.json['library_instant_play'] = $('#instant-play-action span').text();
     SESSION.json['library_show_genres'] = $('#show-genres-column span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
@@ -2449,7 +2472,6 @@ $('#btn-appearance-update').click(function(e){
     SESSION.json['font_size'] = $('#font-size span').text();
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
 	SESSION.json['extra_tags'] = $('#extra-tags').val();
-    SESSION.json['playlist_art'] = $('#playlist-art-enabled span').text();
 
 	if (fontSizeChange == true) {
 		setFontSize();
@@ -2519,6 +2541,9 @@ $('#btn-appearance-update').click(function(e){
         'extra_tags': SESSION.json['extra_tags'],
         'appearance_modal_state': SESSION.json['appearance_modal_state'],
         'playlist_art': SESSION.json['playlist_art'],
+        'renderer_backdrop': SESSION.json['renderer_backdrop'],
+        'library_flatlist_filter': SESSION.json['library_flatlist_filter'],
+        'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str']
         },
         function() {
             if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange ||
@@ -2537,6 +2562,11 @@ $('#btn-appearance-update').click(function(e){
             }
         }
     );
+});
+
+$('#library-flatlist-filter span').on('DOMSubtreeModified',function(){
+    ($('#library-flatlist-filter span').text() == 'Format' || $('#library-flatlist-filter span').text() == 'Directory') ?
+        $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
 });
 
 function setLibraryThumbnailCols(cols) {

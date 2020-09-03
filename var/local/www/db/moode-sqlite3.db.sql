@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Aug 29 07:14:08 2020
+-- File generated with SQLiteStudio v3.1.0 on Thu Sep 3 07:16:20 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -330,7 +330,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (85, 'scnblank', '600');
 INSERT INTO cfg_system (id, param, value) VALUES (86, 'scnrotate', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (87, 'scnbrightness', '255');
 INSERT INTO cfg_system (id, param, value) VALUES (88, 'themename', 'Default');
-INSERT INTO cfg_system (id, param, value) VALUES (89, 'res_software_upd_url', 'http://d3oddxvgenziko.cloudfront.net');
+INSERT INTO cfg_system (id, param, value) VALUES (89, 'k', 'http://d3oddxvgenziko.cloudfront.net');
 INSERT INTO cfg_system (id, param, value) VALUES (90, 'alphablend', '1.0');
 INSERT INTO cfg_system (id, param, value) VALUES (91, 'adaptive', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (92, 'audioout', 'Local');
@@ -386,6 +386,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (141, 'playlist_art', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track');
 INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
 INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
+INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'All');
+INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', NULL);
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

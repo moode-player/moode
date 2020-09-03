@@ -584,6 +584,10 @@ else {
 			break;
 		case 'updcfgsystem':
 			foreach (array_keys($_POST) as $var) {
+				if ($_SESSION['library_flatlist_filter'] != $_POST['library_flatlist_filter'] ||
+					$_SESSION['library_flatlist_filter_str'] != $_POST['library_flatlist_filter_str']) {
+					sysCmd('truncate ' . LIBCACHE_JSON . ' --size 0');
+				}
 				playerSession('write', $var, $_POST[$var]);
 			}
 

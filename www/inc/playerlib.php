@@ -392,37 +392,33 @@ function genFlatList($sock) {
 	// Get metadata
 	$resp = '';
 	foreach ($dirs as $dir) {
-		//workerLog('Directory: ' . $dir);
-
-		/*
-		// TODO: Alternate method for generating the flat list which allows filtering by audio format or directory
 		// NOTE: MPD must be compiled with libpcre++-dev to make use of PERL compatible regex
-		// All (Default): file contains '.'
-		// Lossless only: file =~ '.flac|.aif|.wav|.dsf|.dff'
-		// Lossy only: file !~ '.flac|.aif|.wav|.dsf|.dff'
 		switch ($_SESSION['library_flatlist_filter']) {
-			case 'all':
-				$cmd = "search \"((base '" . $dir . "') AND (file contains '.'))\"";
+			case 'None':
+				$cmd = "search base \"" . $dir . "\"";
 				break;
-			case 'lossless':
+			case 'Lossless':
 				$cmd = "search \"((base '" . $dir . "') AND (file =~ '.flac|.aif|.wav|.dsf|.dff'))\"";
 				break;
-			case 'lossy':
+			case 'Lossy':
 				$cmd = "search \"((base '" . $dir . "') AND (file !~ '.flac|.aif|.wav|.dsf|.dff'))\"";
 				break;
-			default: // directory path
-				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter'] . "'))\"";
+			case 'Format':
+			case 'Directory':
+				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
 				break;
 		}
 		sendMpdCmd($sock, $cmd);
-		*/
-
-		sendMpdCmd($sock, 'listallinfo "' . $dir . '"');
 		$resp .= readMpdResp($sock);
+
+		// ORIGINAL
+		//sendMpdCmd($sock, 'listallinfo "' . $dir . '"');
+		//$resp .= readMpdResp($sock);
 	}
 
 	//workerLog('genFlatList(): is_null($resp)= ' . (is_null($resp) === true ? 'true' : 'false') . ', substr($resp, 0, 2)= ' . substr($resp, 0, 2));
-	if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
+	// ORIGINAL if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
+	if (!is_null($resp)) {
 		$lines = explode("\n", $resp);
 		$item = 0;
 		$flat = array();
@@ -432,14 +428,17 @@ function genFlatList($sock) {
 		for ($i = 0; $i < $linecount; $i++) {
 			list($element, $value) = explode(': ', $lines[$i], 2);
 
-			if ($element == 'file') {
+			if ($element == 'OK') {
+				// NOTE: Skip any ACK's
+			}
+			else if ($element == 'file') {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
-			// Exclude directories and playlists from listallinfo
-			elseif ($element == 'directory' || $element == 'playlist') {
-				++$i;
-			}
+			// ORIGINAL Exclude directories and playlists from listallinfo
+			//elseif ($element == 'directory' || $element == 'playlist') {
+			//	++$i;
+			//}
 			// @Atair: Gather possible multiple Genre values as array
 			elseif ($element == 'Genre') {
 				if ($flat[$item]['Genre']) {

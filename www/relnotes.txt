@@ -24,8 +24,10 @@ New features
 - NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Playlist
 - NEW: Thumbnails displayed for albums in Folder view
-- NEW: Library supports tracks tagged with multiple genres
 - NEW: Albums played directly if already in the queue
+- NEW: Library support for tracks tagged with multiple genres
+- NEW: Library filters (Lossless, Lossy, Format or Directory)
+- NEW: Renderer overlay backdrop (Cover or Backdrop image)
 
 Updates
 

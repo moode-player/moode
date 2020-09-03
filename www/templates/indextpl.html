@@ -744,12 +744,75 @@
 							Shows thumbnail images for songs and radio stations in the Playlist.
 						</span>
 					</div>
+
+					<label class="control-label" for="renderer-backdrop">Renderer backdrop</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="renderer-backdrop" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-backdrop-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-backdrop-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-renderer-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-renderer-backdrop" class="help-block hide">
+							Display the image or cover backdrop specified in the Theme and Background section or display the default, semi-transparent dark overlay.
+						</span>
+					</div>
 				</div>
 			</div>
 
 			<!-- LIBRARY -->
 			<div class="accordian"><span class="h5">Library</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
+					<label class="control-label" for="library-flatlist-filter">Library filter</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-flatlist-filter" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">None</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Lossless</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Lossy</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Format</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Directory</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-library-flatlist-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-flatlist-filter" class="help-block hide">
+	                    	This option filters the Library as it is being generated.<br>
+							<b>None:</b>&nbsp;Include all tracks in the collection.<br>
+							<b>Lossless:</b>&nbsp;Include tracks whose format is one of .flac|.aif|.wav|.dsf|.dff<br>
+							<b>Lossy:</b>&nbsp;Include tracks whose format is not one of the Lossless formats.<br>
+							<b>Format:</b>&nbsp;Include tracks of a specific format.<br>
+							<b>Directory:</b>&nbsp;Include tracks in a specific directory.<br>
+	                    </span>
+	                </div>
+
+					<div id="library-flatlist-filter-div">
+						<label class="control-label" for="library-flatlist-filter-str">Filter string</label>
+		                <div class="controls">
+		                    <input id="library-flatlist-filter-str" class="input-xlarge input-height-x" type="text">
+							<a aria-label="Help" class="info-toggle" data-cmd="info-library-flatlist-filter-str" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-library-flatlist-filter-str" class="help-block hide">
+								Audio format or directory path used to filter the Library as it is being generated.
+							</span>
+		                </div>
+					</div>
+
    	                <label class="control-label" for="instant-play-action">Instant play action</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium">
