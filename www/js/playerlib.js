@@ -42,17 +42,9 @@ const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 //                      -------
 //                        31679
 
-// TODO: Reduce timeout const's
+// For setTimout() in milliseconds
 const DEFAULT_TIMEOUT   = 250;
 const SEARCH_TIMEOUT    = 750;
-// For setTimout() in milliseconds
-const LAZYLOAD_TIMEOUT  = 250;
-const SCROLLTO_TIMEOUT  = 250;
-const KNOBCOLOR_TIMEOUT = 250;
-const LIBSEARCH_TIMEOUT = 250;
-const RASEARCH_TIMEOUT  = 750;
-const PLSEARCH_TIMEOUT  = 750;
-const PHSEARCH_TIMEOUT  = 750;
 const CLRPLAY_TIMEOUT   = 500;
 const RALBUM_TIMEOUT    = 1500;
 const ENGINE_TIMEOUT    = 3000;
@@ -63,7 +55,6 @@ const ALBUM_BIT_DEPTH_THRESHOLD = 16;
 const ALBUM_SAMPLE_RATE_THRESHOLD = 44100;
 const RADIO_HD_BADGE_TEXT = 'HiRes';
 const RADIO_BITRATE_THRESHOLD = 128;
-
 
 var UI = {
     knob: null,
@@ -118,7 +109,7 @@ var NETWORK = {
 	json: 0
 };
 
-// Eventually migrate all global vars here
+// TODO: Eventually migrate all global vars here
 var GLOBAL = {
 	musicScope: 'all', // or not defined if saved, but prob don't bother saving...
 	searchLib: '', // used to store search results (x albums found) for the menu header
@@ -962,7 +953,7 @@ function updateActivePlItem() {
                 customScroll('cv-playlist', parseInt(MPD.json['song']));
             }
         }
-    }, SCROLLTO_TIMEOUT);
+    }, DEFAULT_TIMEOUT);
 }
 
 // Render the Playlist
@@ -1097,7 +1088,7 @@ function renderPlaylist() {
                     customScroll('cv-playlist', parseInt(MPD.json['song']));
                 }
             }
-        }, SCROLLTO_TIMEOUT);
+        }, DEFAULT_TIMEOUT);
 
         // Reset
         GLOBAL.playlistChanged = false;
@@ -3037,7 +3028,7 @@ function setColors() {
 					"fgColor":UI.accenta
 				});
 				//UI.mobile ? '' : $('#playback-controls').show();
-			}, KNOBCOLOR_TIMEOUT);
+			}, DEFAULT_TIMEOUT);
 		}
 		else {
 			document.body.style.setProperty('--timethumb', 'url("' + thumbw + '")');
@@ -3051,7 +3042,7 @@ function setColors() {
 					"fgColor":UI.accenta
 				});
 				//UI.mobile ? '' : $('#playback-controls').show();
-			}, KNOBCOLOR_TIMEOUT);
+			}, DEFAULT_TIMEOUT);
 		}
 	}
 }
@@ -3256,7 +3247,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 			if (UI.libPos[0] >= 0) {
 				customScroll('albums', UI.libPos[0], 200);
 			}
-		}, SCROLLTO_TIMEOUT);
+		}, DEFAULT_TIMEOUT);
 
         if (!GLOBAL.libRendered) {
             loadLibrary();
@@ -3273,7 +3264,7 @@ $('#coverart-url, #playback-switch').click(function(e){
         			$('#index-albumcovers').hide();
                 }
 			}
-		}, SCROLLTO_TIMEOUT);
+		}, DEFAULT_TIMEOUT);
 
         if (!GLOBAL.libRendered) {
             loadLibrary();
@@ -3285,7 +3276,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 			if (UI.radioPos >= 0) {
                 customScroll('radio', UI.radioPos, 0);
 			}
-		}, SCROLLTO_TIMEOUT);
+		}, DEFAULT_TIMEOUT);
 	}
 	// Default to folder view
 	else {
@@ -3330,7 +3321,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
         else {
 			setTimeout(function() {
 				customScroll('playlist', parseInt(MPD.json['song']), 0);
-			}, SCROLLTO_TIMEOUT);
+			}, DEFAULT_TIMEOUT);
 		}
 	}
 });
@@ -3554,7 +3545,7 @@ function lazyLode(view) {
  				$(selector).lazyload({
  					container: $(container)
  				});
- 			}, LAZYLOAD_TIMEOUT);
+ 			}, DEFAULT_TIMEOUT);
         }
  	}
 }

@@ -1038,7 +1038,7 @@ $('#database-radio').on('click', 'img', function(e) {
 
 	setTimeout(function() {
         customScroll('radio', UI.radioPos + 1, 200);
-	}, SCROLLTO_TIMEOUT);
+	}, DEFAULT_TIMEOUT);
 });
 
 // Radio manager dialog
@@ -1064,7 +1064,7 @@ $('#btn-upd-radio-manager').click(function(e) {
              notify('settings_updated');
              setTimeout(function() {
                  $('#ra-refresh').click();
-         	}, LAZYLOAD_TIMEOUT);
+         	}, DEFAULT_TIMEOUT);
          }
      );
 });

@@ -268,7 +268,7 @@ jQuery(document).ready(function($) { 'use strict';
             else {
     			setTimeout(function() {
     		        customScroll('playlist', parseInt(MPD.json['song']));
-    			}, SCROLLTO_TIMEOUT);
+    			}, DEFAULT_TIMEOUT);
     		}
     		$('#menu-bottom').hide();
     	}
@@ -286,7 +286,7 @@ jQuery(document).ready(function($) { 'use strict';
     			if (UI.radioPos >= 0) {
     				customScroll('radio', UI.radioPos, 200);
     			}
-    		}, SCROLLTO_TIMEOUT);
+    		}, DEFAULT_TIMEOUT);
     	}
         // Folder view
     	else if (currentView == 'folder') {
@@ -309,7 +309,7 @@ jQuery(document).ready(function($) { 'use strict';
     				customScroll('albums', UI.libPos[0], 200);
     				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
     			}
-    		}, SCROLLTO_TIMEOUT);
+    		}, DEFAULT_TIMEOUT);
     	}
     	// Album view
     	else if (currentView == 'album'){
@@ -325,7 +325,7 @@ jQuery(document).ready(function($) { 'use strict';
     				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
     				customScroll('albumcovers', UI.libPos[1], 0);
     			}
-    		}, SCROLLTO_TIMEOUT);
+    		}, DEFAULT_TIMEOUT);
     	}
     });
 
@@ -340,7 +340,7 @@ jQuery(document).ready(function($) { 'use strict';
 			if (UI.radioPos >= 0) {
                 customScroll('radio', UI.radioPos, 0);
 			}
-		}, SCROLLTO_TIMEOUT);
+		}, DEFAULT_TIMEOUT);
 	});
     // Folder view
 	$('.folder-view-btn').click(function(e){
@@ -377,7 +377,7 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos[0] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, SCROLLTO_TIMEOUT);
+		}, DEFAULT_TIMEOUT);
 	});
     // Album view
 	$('.album-view-btn').click(function(e){
@@ -401,7 +401,7 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos[1] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, SCROLLTO_TIMEOUT);
+		}, DEFAULT_TIMEOUT);
 	});
 
 	// mute toggle
@@ -875,10 +875,10 @@ jQuery(document).ready(function($) { 'use strict';
 		mpdDbCmd('lsinfo_radio');
         setTimeout(function() {
             lazyLode('radio');
-        }, LAZYLOAD_TIMEOUT);
+        }, DEFAULT_TIMEOUT);
         setTimeout(function() {
             $('#database-radio').scrollTo(0, 200);
-        }, SCROLLTO_TIMEOUT);
+        }, DEFAULT_TIMEOUT);
 
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)
@@ -943,7 +943,7 @@ jQuery(document).ready(function($) { 'use strict';
             lazyLode('radio');
             $('#database-radio').scrollTo(0, 200);
 
-		}, RASEARCH_TIMEOUT);
+		}, SEARCH_TIMEOUT);
 	});
 	$('#searchResetRa').click(function(e) {
 		$('.database-radio li').css('display', 'inline-block');
@@ -981,7 +981,7 @@ jQuery(document).ready(function($) { 'use strict';
 			});
 		    var s = (count == 1) ? '' : 's';
 			$('#container-playlist').scrollTo(0, 200);
-		}, PLSEARCH_TIMEOUT);
+		}, SEARCH_TIMEOUT);
 	});
 	$('#searchResetPl').click(function(e) {
 		$("#searchResetPl").hide();
@@ -1046,7 +1046,7 @@ jQuery(document).ready(function($) { 'use strict';
 		    $('#albumsList .lib-entry').removeClass('active');
 			$('#lib-albumcover').css('height', '100%');
 			UI.libPos.fill(-3);
-		}, LIBSEARCH_TIMEOUT);
+		}, DEFAULT_TIMEOUT);
 
         var filter = $(this).val().trim();
 		if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
@@ -1126,7 +1126,7 @@ jQuery(document).ready(function($) { 'use strict';
 				$('#ph-filter-results').html('');
 			}
 			$('#container-playhistory').scrollTo(0, 200);
-		}, PHSEARCH_TIMEOUT);
+		}, SEARCH_TIMEOUT);
 	});
 	$('#searchResetPh').click(function(e) {
 		$("#searchResetPh").hide();
@@ -1287,7 +1287,7 @@ jQuery(document).ready(function($) { 'use strict';
         if ($('#cv-playlist').css('display') == 'block') {
             setTimeout(function() {
                 customScroll('cv-playlist', parseInt(MPD.json['song']));
-            }, SCROLLTO_TIMEOUT);
+            }, DEFAULT_TIMEOUT);
 
             GLOBAL.playbarPlaylistTimer = setTimeout(function() {
                 $('#cv-playlist').hide();
@@ -1324,7 +1324,7 @@ jQuery(document).ready(function($) { 'use strict';
             setTimeout(function() {
                 /*TEST*/$('#playback-queue').css('width', '38%'); // Restore correct width
                 customScroll('playlist', parseInt(MPD.json['song']));
-            }, SCROLLTO_TIMEOUT);
+            }, DEFAULT_TIMEOUT);
 
             // Reset screen saver timeout global
             setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
