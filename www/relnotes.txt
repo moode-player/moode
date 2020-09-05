@@ -41,6 +41,7 @@ Updates
 - UPD: Improve logging for Library update process
 - UPD: Add Genre to the Extra metadata appearance option
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
+- UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
 
 Radio stations
 

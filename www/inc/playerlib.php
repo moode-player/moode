@@ -2113,6 +2113,8 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 		}
 		// PCM or Multichannel PCM
 		else {
+			// Workaround for wrong bit depth returned for ALAC encoded m4a files
+			$mpd_format_tag[1] = ($ext == 'm4a' && $mpd_format_tag[1] == '32') ? '24' : '32';
 			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > ALBUM_BIT_DEPTH_THRESHOLD) || $mpd_format_tag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? ',h' : ',s';
 			$encoded_at = ($mpd_format_tag[1] == 'f' ? '' : $mpd_format_tag[1] . '/') . formatRate($mpd_format_tag[0]) . ' ' . strtoupper($ext) . $hd;
 		}
