@@ -33,7 +33,7 @@ $dbh = cfgdb_connect();
 session_write_close();
 
 $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
-$playqueue_cmds = array('add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall');
+$playqueue_cmds = array('add', 'add_next', 'play', 'play_next', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall');
 $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
 	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'track_info');
 $turn_consume_off = false;
@@ -119,10 +119,18 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			break;
 		// Queue commands for single items
 		case 'add':
-			echo json_encode(addItemToQueue($sock, $_POST['path']));
+		case 'add_next':
+			$resp = addItemToQueue($sock, $_POST['path']);
+			if ($_GET['cmd'] == 'add_next') {
+				$status = parseStatus(getMpdStatus($sock));
+				sendMpdCmd($sock, 'move ' . ($status['playlistlength'] - 1) . ' ' . ($status['song'] + 1));
+				$resp = readMpdResp($sock);
+			}
+			echo json_encode($resp);
 			break;
 		case 'play':
-			// Search Queue for item
+		case 'play_next':
+			// Search the Queue for the item
 			$search = strpos($_POST['path'], 'RADIO') !== false ?
 				parseDelimFile(file_get_contents(MPD_MUSICROOT . $_POST['path']), '=')['File1'] : $_POST['path'];
 			$result = findInQueue($sock, 'file', $search);
@@ -130,29 +138,52 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			// Play already Queued item
 			if (isset($result['Pos'])) {
 				sendMpdCmd($sock, 'play ' . $result['Pos']);
-				echo json_encode(readMpdResp($sock));
+				$resp = readMpdResp($sock);
 			}
-			// Otherwise play item after adding to the Queue
+			// Otherwise play the item after adding it to the Queue
 			else {
 				$status = parseStatus(getMpdStatus($sock));
-				$pos = $status['playlistlength'] ;
+				$resp = addItemToQueue($sock, $_POST['path']);
+				if ($_GET['cmd'] == 'play_next') {
+					$pos = $status['song'] + 1;
+					sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ' ' . $pos);
+					$resp = readMpdResp($sock);
+				}
+				else {
+					$pos = $status['playlistlength'];
+				}
 
-				addItemToQueue($sock, $_POST['path']);
 				usleep(500000); // NOTE: Needed
 
 				// NOTE: is the stop still needed?
 				sendMpdCmd($sock, 'stop');
-				echo json_encode(readMpdResp($sock));
+				$resp = readMpdResp($sock);
 
 				sendMpdCmd($sock, 'play ' . $pos);
-				echo json_encode(readMpdResp($sock));
+				$resp = readMpdResp($sock);
+
+				/* ORIGINAL
+				$status = parseStatus(getMpdStatus($sock));
+				$pos = $status['playlistlength'] ;
+
+				$resp = addItemToQueue($sock, $_POST['path']);
+				usleep(500000); // NOTE: Needed
+
+				// NOTE: is the stop still needed?
+				sendMpdCmd($sock, 'stop');
+				$resp = readMpdResp($sock);
+
+				sendMpdCmd($sock, 'play ' . $pos);
+				$resp = readMpdResp($sock);
+				*/
 			}
+			echo json_encode($resp);
 			break;
 		case 'clrplay':
 			sendMpdCmd($sock,'clear');
 			$resp = readMpdResp($sock);
 
-			addItemToQueue($sock,$_POST['path']);
+			addItemToQueue($sock, $_POST['path']);
 			playerSession('write', 'toggle_song', '0'); // Reset toggle_song
 
 			sendMpdCmd($sock, 'play');
@@ -165,11 +196,13 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			echo json_encode(readMpdResp($sock));
 			break;
 
-		// Queue commands for group of items
+		// Queue commands for a group of items (Tag/Album view)
 		case 'addall':
+		case 'add_group_next':
             echo json_encode(addGroupToQueue($sock, $_POST['path']));
 			break;
         case 'playall':
+		case 'play_group_next':
 			// Determine if album is already in the Queue
 			sendMpdCmd($sock, 'lsinfo "' . $_POST['path'][0] . '"');
 			$album = parseDelimFile(readMpdResp($sock), ': ')['Album'];
@@ -661,7 +694,7 @@ else {
 			syscmd('rm /var/local/www/db/cfg_radio.csv');
 			break;
 
-		// Return client ip address
+		// Return client IP address
 		// NOTE: We may use this in the future
 		case 'clientip':
 			echo json_encode($_SERVER['REMOTE_ADDR']);

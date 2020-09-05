@@ -1157,13 +1157,12 @@ $('#context-menu-lib-item a').click(function(e) {
 	$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 	$('img.lib-coverart').removeClass('active');
 
-	if ($(this).data('cmd') == 'add') {
-		mpdDbCmd('add', filteredSongs[UI.dbEntry[0]].file);
+	if ($(this).data('cmd') == 'add' || $(this).data('cmd') == 'add_next') {
+		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
 		notify('add');
 	}
-	else if ($(this).data('cmd') == 'play') {
-		// See moode.php: We check to see if the file is already in the playlist and then just play it
-		mpdDbCmd('play', filteredSongs[UI.dbEntry[0]].file);
+	else if ($(this).data('cmd') == 'play' || $(this).data('cmd') == 'play_next') {
+		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
 	}
 	else if ($(this).data('cmd') == 'clrplay') {
 		mpdDbCmd('clrplay', filteredSongs[UI.dbEntry[0]].file);

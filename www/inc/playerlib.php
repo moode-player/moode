@@ -88,11 +88,11 @@ const SOX_ADHERE_BASE_FREQ		= 8; // Resample (adhere to base freq)
 
 // Album and Radio HD badge parameters
 // NOTE: These are mirrored in playerlib.js
-const ALBUM_HD_BADGE_TEXT = 'HD';
-const ALBUM_BIT_DEPTH_THRESHOLD = 16;
-const ALBUM_SAMPLE_RATE_THRESHOLD = 44100;
-const RADIO_HD_BADGE_TEXT = 'HiRes';
-const RADIO_BITRATE_THRESHOLD = 128;
+const ALBUM_HD_BADGE_TEXT 			= 'HD';
+const ALBUM_BIT_DEPTH_THRESHOLD 	= 16;
+const ALBUM_SAMPLE_RATE_THRESHOLD 	= 44100;
+const RADIO_HD_BADGE_TEXT 			= 'HiRes';
+const RADIO_BITRATE_THRESHOLD 		= 128;
 
 // Reserved root directory names
 $ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
@@ -123,15 +123,15 @@ function debugLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
-// Helper functions for html generation (pcasto)
-function versioned_resource($file, $type='stylesheet') {
+// Helper functions for html generation (@pcasto)
+function versioned_stylesheet($file, $type='stylesheet') {
 	echo '<link href="' . $file . '?v=' . $_SESSION['moode_release'] . '" rel="' . $type .'">' . "\n";
 }
 function versioned_script($file, $type='') {
 	echo '<script src="' . $file . '?v=' . $_SESSION['moode_release'] . '"' . ($type != '' ? ' type="' . $type . '"' . ' defer></script>' : ' defer></script>') . "\n";
 }
 
-// core mpd functions
+// Core MPD functions
 
 // AG from Moode 3 prototype
 // TC retry to improve robustness
@@ -641,8 +641,7 @@ function addItemToQueue($sock, $path) {
 		sendMpdCmd($sock, 'add "' . html_entity_decode($path) . '"');
 	}
 
-	$resp = readMpdResp($sock);
-	return $resp;
+	return readMpdResp($sock);
 }
 
 // Get file extension
@@ -2114,7 +2113,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 		// PCM or Multichannel PCM
 		else {
 			// Workaround for wrong bit depth returned for ALAC encoded m4a files
-			$mpd_format_tag[1] = ($ext == 'm4a' && $mpd_format_tag[1] == '32') ? '24' : '32';
+			$mpd_format_tag[1] = ($ext == 'm4a' && $mpd_format_tag[1] == '32') ? '24' : $mpd_format_tag[1];
 			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > ALBUM_BIT_DEPTH_THRESHOLD) || $mpd_format_tag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? ',h' : ',s';
 			$encoded_at = ($mpd_format_tag[1] == 'f' ? '' : $mpd_format_tag[1] . '/') . formatRate($mpd_format_tag[0]) . ' ' . strtoupper($ext) . $hd;
 		}

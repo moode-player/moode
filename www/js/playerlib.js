@@ -50,11 +50,11 @@ const RALBUM_TIMEOUT    = 1500;
 const ENGINE_TIMEOUT    = 3000;
 
 // Album and Radio HD parameters
-const ALBUM_HD_BADGE_TEXT = 'HD';
-const ALBUM_BIT_DEPTH_THRESHOLD = 16;
-const ALBUM_SAMPLE_RATE_THRESHOLD = 44100;
-const RADIO_HD_BADGE_TEXT = 'HiRes';
-const RADIO_BITRATE_THRESHOLD = 128;
+const ALBUM_HD_BADGE_TEXT           = 'HD';
+const ALBUM_BIT_DEPTH_THRESHOLD     = 16;
+const ALBUM_SAMPLE_RATE_THRESHOLD   = 44100;
+const RADIO_HD_BADGE_TEXT           = 'HiRes';
+const RADIO_BITRATE_THRESHOLD       = 128;
 
 var UI = {
     knob: null,
@@ -1103,7 +1103,7 @@ function renderPlaylist() {
 // MPD commands for database, playlist, radio stations, saved playlists
 function mpdDbCmd(cmd, path) {
 	//console.log(cmd, path);
-	var cmds = ['add', 'play', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'update_library'];
+	var cmds = ['add', 'add_next', 'play', 'play_next', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'update_library'];
 	UI.dbCmd = cmd;
 
 	if (cmds.indexOf(cmd) != -1 ) {
@@ -2019,15 +2019,16 @@ $('.view-recents').click(function(e) {
 // context menus and main menu
 $('.context-menu a').click(function(e) {
     var path = UI.dbEntry[0]; // file path or item num
+    //console.log($(this).data('cmd'));
 
 	// CONTEXT MENUS
 
-	if ($(this).data('cmd') == 'add') {
-		mpdDbCmd('add', path);
+	if ($(this).data('cmd') == 'add' || $(this).data('cmd') == 'add_next') {
+		mpdDbCmd($(this).data('cmd'), path);
 		notify('add');
 	}
-	else if ($(this).data('cmd') == 'play') {
-		mpdDbCmd('play', path);
+	else if ($(this).data('cmd') == 'play' || $(this).data('cmd') == 'play_next') {
+		mpdDbCmd($(this).data('cmd'), path);
 	}
 	else if ($(this).data('cmd') == 'clradd') {
 		mpdDbCmd('clradd', path);
