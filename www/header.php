@@ -37,17 +37,58 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 
+    <!-- RESOURCES -->
+    <!-- Common CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="css/flat-ui.min.css" rel="stylesheet">
+    <link href="css/jquery.pnotify.default.min.css" rel="stylesheet">
+    <link href="css/fontawesome-moode.min.css" rel="stylesheet">
+    <link href="css/panels.min.css" rel="stylesheet">
+    <link href="css/moode.min.css" rel="stylesheet">
+    <!-- Common JS -->
+    <script src="js/bootstrap.min.js" defer></script>
+    <script src="js/bootstrap-select.min.js" defer></script>
+    <script src="js/jquery.pnotify.min.js" defer></script>
+    <script src="js/notify.min.js" defer></script>
+    <script src="js/playerlib-nomin.js" defer></script>
+    <script src="js/playerlib.min.js" defer></script>
+    <script src="js/links.min.js" defer></script>
+    <!-- Playback / Library -->
+    <?php if ($section == 'index') { ?>
+        <link href="css/jquery.countdown.min.css" rel="stylesheet">
+        <script src="js/jquery.countdown.min.js" defer></script>
+        <script src="js/jquery.scrollTo.min.js" defer></script>
+        <script src="js/jquery.touchSwipe.min.js" defer></script>
+        <script src="js/jquery.lazyload.min.js" defer></script>
+        <script src="js/jquery.md5.min.js" defer></script>
+        <script src="js/jquery.adaptive-backgrounds.min.js" defer></script>
+        <script src="js/jquery.knob.min.js" defer></script>
+        <script src="js/bootstrap-contextmenu.min.js" defer></script>
+        <script src="js/scripts-library.min.js" defer></script>
+        <script src="js/scripts-panels.min.js" defer></script>
+    <!-- Configs -->
+    <?php } else { ?>
+        <script src="js/custom_checkbox_and_radio.min.js" defer></script>
+        <script src="js/custom_radio.js" defer></script>
+        <script src="js/jquery.tagsinput.min.js" defer></script>
+        <script src="js/jquery.placeholder.min.js" defer></script>
+        <script src="js/i18n/_messages.en.js', 'text/javascript" defer></script>
+        <script src="js/application.min.js" defer></script>
+        <script src="js/scripts-configs.min.js" defer></script>
+    <?php } ?>
+
 	<!-- VERSIONED RESOURCES -->
 	<?php
+        /*
 		// Common css
-		versioned_resource('css/bootstrap.min.css');
-		versioned_resource('css/bootstrap-select.min.css');
-		versioned_resource('css/flat-ui.min.css');
-		versioned_resource('css/jquery.pnotify.default.min.css');
-		versioned_resource('css/fontawesome-moode.min.css');
-		versioned_resource('css/panels.min.css');
-		versioned_resource('css/moode.min.css');
-
+		versioned_stylesheet('css/bootstrap.min.css');
+		versioned_stylesheet('css/bootstrap-select.min.css');
+		versioned_stylesheet('css/flat-ui.min.css');
+		versioned_stylesheet('css/jquery.pnotify.default.min.css');
+		versioned_stylesheet('css/fontawesome-moode.min.css');
+		versioned_stylesheet('css/panels.min.css');
+		versioned_stylesheet('css/moode.min.css');
 		// Common js
 		versioned_script('js/bootstrap.min.js');
 		versioned_script('js/bootstrap-select.min.js');
@@ -56,10 +97,9 @@
         versioned_script('js/playerlib-nomin.js');
         versioned_script('js/playerlib.min.js');
 		versioned_script('js/links.min.js');
-
 		// Playback / Library
 		if ($section == 'index') {
-			versioned_resource('css/jquery.countdown.min.css');
+			versioned_stylesheet('css/jquery.countdown.min.css');
 			versioned_script('js/jquery.countdown.min.js');
 			versioned_script('js/jquery.scrollTo.min.js');
 			versioned_script('js/jquery.touchSwipe.min.js');
@@ -81,6 +121,7 @@
 			versioned_script('js/application.min.js');
 			versioned_script('js/scripts-configs.min.js');
 		}
+        */
 	?>
 
 	<!-- MOBILE APP ICONS -->
@@ -203,6 +244,7 @@
 			</div>
 		</div>
 	</div>
+    
     <!-- COVERVIEW PLAYLIST -->
     <div id="cv-playlist">
         <ul class="cv-playlist"></ul>
