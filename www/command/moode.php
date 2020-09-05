@@ -109,6 +109,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 		$turn_consume_off = true;
 	}
 
+	//workerLog($_GET['cmd'] . '|' . $_POST['path']);
 	switch ($_GET['cmd']) {
 		case 'updvolume':
 			playerSession('write', 'volknob', $_POST['volknob']);
@@ -116,122 +117,99 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			$resp = readMpdResp($sock);
 			echo json_encode('OK');
 			break;
-		// Radio, Folder, Library tracks list
+		// Queue commands for single items
 		case 'add':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				echo json_encode(addToPL($sock, $_POST['path']));
-			}
+			echo json_encode(addItemToQueue($sock, $_POST['path']));
 			break;
 		case 'play':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				// Radio station
-				if (strpos($_POST['path'], 'RADIO/') !== false) {
-					$result = parseListPlaylist($sock, $_POST['path']);
-					$path = $result['file'];
-				}
-				// Song file
-				else {
-					$path = $_POST['path'];
-				}
+			// Search Queue for item
+			$search = strpos($_POST['path'], 'RADIO') !== false ?
+				parseDelimFile(file_get_contents(MPD_MUSICROOT . $_POST['path']), '=')['File1'] : $_POST['path'];
+			$result = findInQueue($sock, 'file', $search);
 
-				// Play existing item if already in playlist
-				$result = parsePlaylistFind($sock, 'file', $path);
-				if (isset($result['Pos'])) {
-					sendMpdCmd($sock, 'play ' . $result['Pos']);
-					echo json_encode(readMpdResp($sock));
-				}
-				// Play item after adding to playlist
-				else {
-					$status = parseStatus(getMpdStatus($sock));
-					$pos = $status['playlistlength'] ;
-
-						// NOTE: is this still necessary?
-					sendMpdCmd($sock, 'stop');
-					echo json_encode(readMpdResp($sock));
-
-					addToPL($sock, $path);
-
-					sendMpdCmd($sock, 'play ' . $pos);
-					echo json_encode(readMpdResp($sock));
-				}
+			// Play already Queued item
+			if (isset($result['Pos'])) {
+				sendMpdCmd($sock, 'play ' . $result['Pos']);
+				echo json_encode(readMpdResp($sock));
 			}
-			break;
-		case 'clradd':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				sendMpdCmd($sock,'clear');
-				$resp = readMpdResp($sock);
+			// Otherwise play item after adding to the Queue
+			else {
+				$status = parseStatus(getMpdStatus($sock));
+				$pos = $status['playlistlength'] ;
 
-				addToPL($sock,$_POST['path']);
-				playerSession('write', 'toggle_song', '0'); // Reset toggle_song
+				addItemToQueue($sock, $_POST['path']);
+				usleep(500000); // NOTE: Needed
 
-				echo json_encode($resp);
+				// NOTE: is the stop still needed?
+				sendMpdCmd($sock, 'stop');
+				echo json_encode(readMpdResp($sock));
+
+				sendMpdCmd($sock, 'play ' . $pos);
+				echo json_encode(readMpdResp($sock));
 			}
 			break;
 		case 'clrplay':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				sendMpdCmd($sock,'clear');
-				$resp = readMpdResp($sock);
+			sendMpdCmd($sock,'clear');
+			$resp = readMpdResp($sock);
 
-				addToPL($sock,$_POST['path']);
-				playerSession('write', 'toggle_song', '0'); // Reset toggle_song
+			addItemToQueue($sock,$_POST['path']);
+			playerSession('write', 'toggle_song', '0'); // Reset toggle_song
 
-				sendMpdCmd($sock, 'play');
-				echo json_encode(readMpdResp($sock));
-			}
+			sendMpdCmd($sock, 'play');
+			$resp = readMpdResp($sock);
+
+			echo json_encode($resp);
 			break;
 		case 'track_info':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');
-				echo json_encode(readMpdResp($sock));
-			}
+			sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');
+			echo json_encode(readMpdResp($sock));
 			break;
-		// Library Cover, Genre, Artist, Album
+
+		// Queue commands for group of items
 		case 'addall':
-            if (isset($_POST['path']) && $_POST['path'] != '') {
-                echo json_encode(addallToPL($sock, $_POST['path']));
-			}
+            echo json_encode(addGroupToQueue($sock, $_POST['path']));
 			break;
         case 'playall':
-            if (isset($_POST['path']) && $_POST['path'] != '') {
-				// Determine if album is already in the queue
-				sendMpdCmd($sock, 'lsinfo "' . $_POST['path'][0] . '"');
-				$album = parseDelimFile(readMpdResp($sock), ': ')['Album'];
-				$result = parsePlaylistFind($sock, 'album', $album);
+			// Determine if album is already in the Queue
+			sendMpdCmd($sock, 'lsinfo "' . $_POST['path'][0] . '"');
+			$album = parseDelimFile(readMpdResp($sock), ': ')['Album'];
+			$result = findInQueue($sock, 'album', $album);
 
-				// Album is in queue if First and last file exist sequentially
-				$last = count($_POST['path']) - 1;
-				if ($_POST['path'][0] == $result[0]['file'] && $_POST['path'][$last] == $result[$last]['file']) {
-					$playPos = $result[0]['Pos'];
-				}
-				// Otherwise add to queue
-				else {
-					$status = parseStatus(getMpdStatus($sock));
-					$playPos = $status['playlistlength'];
-	            	addallToPL($sock, $_POST['path']);
-					//usleep(500000); // needed after bulk add to pl
-				}
+			// Album is already in the Queue if first and last file exist sequentially
+			$last = count($_POST['path']) - 1;
+			if ($_POST['path'][0] == $result[0]['file'] && $_POST['path'][$last] == $result[$last]['file']) {
+				$pos = $result[0]['Pos'];
+			}
+			// Otherwise add to the Queue
+			else {
+				$status = parseStatus(getMpdStatus($sock));
+				$pos = $status['playlistlength'];
+            	addGroupToQueue($sock, $_POST['path']);
+				usleep(500000); // NOTE: Needed
+			}
 
-				sendMpdCmd($sock, 'stop');
-				$resp = readMpdResp($sock);
-				sendMpdCmd($sock, 'play ' . $playPos);
-				$resp = readMpdResp($sock);
-				playerSession('write', 'toggle_song', $playPos);
-				echo json_encode('OK');
-            }
+			// NOTE: is the stop still needed?
+			sendMpdCmd($sock, 'stop');
+			$resp = readMpdResp($sock);
+
+			sendMpdCmd($sock, 'play ' . $pos);
+			$resp = readMpdResp($sock);
+
+			playerSession('write', 'toggle_song', $pos);
+
+			echo json_encode('OK'); // NOTE: Needed after bulk add to the Queue
 			break;
         case 'clrplayall':
-            if (isset($_POST['path']) && $_POST['path'] != '') {
-				sendMpdCmd($sock,'clear');
-				$resp = readMpdResp($sock);
+			sendMpdCmd($sock,'clear');
+			$resp = readMpdResp($sock);
 
-            	addallToPL($sock, $_POST['path']);
-				//usleep(500000); // needed after bulk add to pl
+        	addGroupToQueue($sock, $_POST['path']);
+			usleep(500000); // NOTE: Needed
 
-				playerSession('write', 'toggle_song', '0'); // Reset toggle_song
+			playerSession('write', 'toggle_song', '0'); // Reset toggle_song
 
-				sendMpdCmd($sock, 'play'); // Defaults to pos 0
-				echo json_encode(readMpdResp($sock));
-			}
+			sendMpdCmd($sock, 'play'); // Defaults to pos 0
+			echo json_encode(readMpdResp($sock));
 			break;
 		case 'getmpdstatus':
 			echo json_encode(parseStatus(getMpdStatus($sock)));
@@ -240,60 +218,50 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			echo json_encode(getPLInfo($sock));
 			break;
 		case 'delplitem':
-			if (isset($_GET['range']) && $_GET['range'] != '') {
-				sendMpdCmd($sock, 'delete ' . $_GET['range']);
-				echo json_encode(readMpdResp($sock));
-			}
+			sendMpdCmd($sock, 'delete ' . $_GET['range']);
+			echo json_encode(readMpdResp($sock));
 			break;
 		case 'moveplitem':
-			if (isset($_GET['range']) && $_GET['range'] != '') {
-				sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
-				echo json_encode(readMpdResp($sock));
-			}
+			sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
+			echo json_encode(readMpdResp($sock));
 			break;
 		case 'getplitemfile': // For Clock Radio
-			if (isset($_GET['songpos']) && $_GET['songpos'] != '') {
-				sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
-				$resp = readMpdResp($sock);
+			sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
+			$resp = readMpdResp($sock);
 
-				$array = array();
-				$line = strtok($resp, "\n");
+			$array = array();
+			$line = strtok($resp, "\n");
 
-				while ($line) {
-					list($element, $value) = explode(': ', $line, 2);
-					$array[$element] = $value;
-					$line = strtok("\n");
-				}
-
-				echo json_encode($array['file']);
+			while ($line) {
+				list($element, $value) = explode(': ', $line, 2);
+				$array[$element] = $value;
+				$line = strtok("\n");
 			}
+
+			echo json_encode($array['file']);
 			break;
         case 'savepl':
-            if (isset($_GET['plname']) && $_GET['plname'] != '') {
-                sendMpdCmd($sock, 'rm "' . html_entity_decode($_GET['plname']) . '"');
-				$resp = readMpdResp($sock);
+            sendMpdCmd($sock, 'rm "' . html_entity_decode($_GET['plname']) . '"');
+			$resp = readMpdResp($sock);
 
-                sendMpdCmd($sock, 'save "' . html_entity_decode($_GET['plname']) . '"');
-                echo json_encode(readMpdResp($sock));
-            }
+            sendMpdCmd($sock, 'save "' . html_entity_decode($_GET['plname']) . '"');
+            echo json_encode(readMpdResp($sock));
 			break;
 		case 'setfav':
-            if (isset($_GET['favname']) && $_GET['favname'] != '') {
-				$file = '/var/lib/mpd/playlists/' . $_GET['favname'] . '.m3u';
-				if (!file_exists($file)) {
-					sysCmd('touch "' . $file . '"');
-					sysCmd('chmod 777 "' . $file . '"');
-					sysCmd('chown root:root "' . $file . '"');
-					sendMpdCmd($sock, 'update /var/lib/mpd/playlists');
-					readMpdResp($sock);
-				}
-				else { // Ensure corrent permissions
-					sysCmd('chmod 777 "' . $file . '"');
-					sysCmd('chown root:root "' . $file . '"');
-				}
-				playerSession('write', 'favorites_name', $_GET['favname']);
-				echo json_encode('OK');
+			$file = '/var/lib/mpd/playlists/' . $_GET['favname'] . '.m3u';
+			if (!file_exists($file)) {
+				sysCmd('touch "' . $file . '"');
+				sysCmd('chmod 777 "' . $file . '"');
+				sysCmd('chown root:root "' . $file . '"');
+				sendMpdCmd($sock, 'update /var/lib/mpd/playlists');
+				readMpdResp($sock);
 			}
+			else { // Ensure corrent permissions
+				sysCmd('chmod 777 "' . $file . '"');
+				sysCmd('chown root:root "' . $file . '"');
+			}
+			playerSession('write', 'favorites_name', $_GET['favname']);
+			echo json_encode('OK');
 			break;
 		case 'addfav':
             if (isset($_GET['favitem']) && $_GET['favitem'] != '' && $_GET['favitem'] != 'null') {
@@ -317,10 +285,11 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			}
 			break;
 		case 'loadlib':
-			///*TEST*/ sleep(8); // To simulate long library load
+			//sleep(8); // To simulate a long Library load
 			echo loadLibrary($sock);
         	break;
 		case 'lsinfo':
+			// NOTE: empty or no path indicates call is to return the root list
 			if (isset($_POST['path']) && $_POST['path'] != '') {
 				echo json_encode(searchDB($sock, 'lsinfo', $_POST['path']));
 			}
@@ -334,182 +303,174 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			}
 			break;
 		case 'listsavedpl':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				echo json_encode(listSavedPL($sock, $_POST['path']));
-			}
+			echo json_encode(listSavedPL($sock, $_POST['path']));
 			break;
 		case 'delsavedpl':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				echo json_encode(delPLFile($sock, $_POST['path']));
-			}
+			echo json_encode(delPLFile($sock, $_POST['path']));
 			break;
 		case 'newstation':
 		case 'updstation':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				$name = $_POST['path']['name'];
-				$return_msg = 'OK';
+			$name = $_POST['path']['name'];
+			$return_msg = 'OK';
 
-				// Add new station
-				if ($_GET['cmd'] == 'newstation') {
-					// Check for existing pls file
-					if (file_exists(MPD_MUSICROOT . 'RADIO/' . $_POST['path']['name'] . '.pls')) {
-						$return_msg = 'A station .pls file with the same name already exists';
-					}
-					// Check for existing url or name in the table
-					// NOTE: true = no results, array = results, false = query bombed (unlikely)
-					else {
-						$result = sdbquery("select id from cfg_radio where station='" . SQLite3::escapeString($_POST['path']['url']) . "'", $dbh);
-						if ($result !== true) {
-							$return_msg = 'A station with same URL already exists in the SQL table';
-						}
-						else {
-							$result = sdbquery("select id from cfg_radio where name='" . SQLite3::escapeString($_POST['path']['name']) . "'", $dbh);
-							if ($result !== true) {
-								$return_msg = 'A station with the same name already exists in the SQL table';
-							}
-						}
-					}
-
-					if ($return_msg == 'OK') {
-						// Add new row, NULL causes Id column to be set to next number
-						// NOTE: $values have to be in column order
-						$values =
-							"'"	. $_POST['path']['url'] . "'," .
-							"'" . SQLite3::escapeString($_POST['path']['name']) . "'," .
-							"'r','local'," .
-							"\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
-							"'" . $_POST['path']['broadcaster'] . "'," .
-							"'" . $_POST['path']['language'] . "'," .
-							"'" . $_POST['path']['country'] . "'," .
-							"'" . $_POST['path']['region'] . "'," .
-							"'" . $_POST['path']['bitrate'] . "'," .
-							"'" . $_POST['path']['format'] . "'," .
-							"'" . $_POST['path']['geo_fenced'] . "'," .
-							"'" . $_POST['path']['reserved1'] . "'," .
-							"'" . $_POST['path']['reserved2'] . "'";
-						$result = sdbquery('insert into cfg_radio values (NULL,' . $values . ')', $dbh);
-					}
-
-					echo json_encode($return_msg);
+			// Add new station
+			if ($_GET['cmd'] == 'newstation') {
+				// Check for existing pls file
+				if (file_exists(MPD_MUSICROOT . 'RADIO/' . $_POST['path']['name'] . '.pls')) {
+					$return_msg = 'A station .pls file with the same name already exists';
 				}
-				// Update station
+				// Check for existing url or name in the table
+				// NOTE: true = no results, array = results, false = query bombed (unlikely)
 				else {
-					// NOTE: Client prevents pls name change so check for existing station with same URL
-					$result = sdbquery("select id from cfg_radio where id != '" . $_POST['path']['id'] . "' and station = '" . SQLite3::escapeString($_POST['path']['url']) . "'", $dbh);
+					$result = sdbquery("select id from cfg_radio where station='" . SQLite3::escapeString($_POST['path']['url']) . "'", $dbh);
 					if ($result !== true) {
-						$return_msg = 'A station with same URL already exists';
+						$return_msg = 'A station with same URL already exists in the SQL table';
 					}
-
-					if ($return_msg == 'OK') {
-						$columns =
-						"station='" . $_POST['path']['url'] . "'," .
-						"name='" . SQLite3::escapeString($_POST['path']['name']) . "'," .
-						"type='" . $_POST['path']['type'] . "'," .
-						"logo='local'," .
-						"genre=\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
-						"broadcaster='" . $_POST['path']['broadcaster'] . "'," .
-						"language='" . $_POST['path']['language'] . "'," .
-						"country='" . $_POST['path']['country'] . "'," .
-						"region='" . $_POST['path']['region'] . "'," .
-						"bitrate='" . $_POST['path']['bitrate'] . "'," .
-						"format='" . $_POST['path']['format'] . "'," .
-						"geo_fenced='" . $_POST['path']['geo_fenced'] . "'," .
-						"reserved1='" . $_POST['path']['reserved0'] . "'," .
-						"reserved2='" . $_POST['path']['reserved0'] . "'";
-						$result = sdbquery('UPDATE cfg_radio SET ' . $columns . ' WHERE id=' . $_POST['path']['id'], $dbh);
+					else {
+						$result = sdbquery("select id from cfg_radio where name='" . SQLite3::escapeString($_POST['path']['name']) . "'", $dbh);
+						if ($result !== true) {
+							$return_msg = 'A station with the same name already exists in the SQL table';
+						}
 					}
-					echo json_encode($return_msg);
 				}
 
 				if ($return_msg == 'OK') {
-					// Add/update session var
-					session_start();
-					$_SESSION[$_POST['path']['url']] = array(
-						'name' => $_POST['path']['name'],
-						'type' => $_POST['path']['type'],
-						'logo' => 'local',
-						'bitrate' => $_POST['path']['bitrate'],
-						'format' => $_POST['path']['format']
-					);
-					session_write_close();
-
-					// Write pls file and set permissions
-					$file =  MPD_MUSICROOT . 'RADIO/' . $_POST['path']['name'] . '.pls';
-					if (false === ($fh = fopen($file, 'w'))) {
-						workerLog('moode.php: file create failed on ' . $file);
-						break;
-					}
-
-					$data = '[playlist]' . "\n";
-					$data .= 'File1='. $_POST['path']['url'] . "\n";
-					$data .= 'Title1='. $_POST['path']['name'] . "\n";
-					$data .= 'Length1=-1' . "\n";
-					$data .= 'NumberOfEntries=1' . "\n";
-					$data .= 'Version=2' . "\n";
-
-					if (false === ($bytes_written = fwrite($fh, $data))) {
-						workerLog('moode.php: file write failed on ' . $file);
-						break;
-					}
-
-					fclose($fh);
-					sysCmd('chmod 777 "' . $file . '"');
-					sysCmd('chown root:root "' . $file . '"');
-
-					// Write logo image
-					sendEngCmd('set_logo_image1'); // Show spinner
-					sleep(3); // Allow time for setlogoimage job to complete which creates tmp new image file
-
-					// Write new image if one exists
-					if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg')) {
-						sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
-						sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
-					}
-					// Write default logo image if an image does not already exist
-						else if (!file_exists('/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg')) {
-						sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
-						sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
-					}
-
-					// Update time stamp on files so mpd picks up the change and commits the update
-					sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
-
-					sendMpdCmd($sock, 'update RADIO');
-					readMpdResp($sock);
-					sendEngCmd('set_logo_image0'); // Hide spinner
+					// Add new row, NULL causes Id column to be set to next number
+					// NOTE: $values have to be in column order
+					$values =
+						"'"	. $_POST['path']['url'] . "'," .
+						"'" . SQLite3::escapeString($_POST['path']['name']) . "'," .
+						"'r','local'," .
+						"\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
+						"'" . $_POST['path']['broadcaster'] . "'," .
+						"'" . $_POST['path']['language'] . "'," .
+						"'" . $_POST['path']['country'] . "'," .
+						"'" . $_POST['path']['region'] . "'," .
+						"'" . $_POST['path']['bitrate'] . "'," .
+						"'" . $_POST['path']['format'] . "'," .
+						"'" . $_POST['path']['geo_fenced'] . "'," .
+						"'" . $_POST['path']['reserved1'] . "'," .
+						"'" . $_POST['path']['reserved2'] . "'";
+					$result = sdbquery('insert into cfg_radio values (NULL,' . $values . ')', $dbh);
 				}
+
+				echo json_encode($return_msg);
 			}
-			break;
-		case 'delstation':
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				// Get the row id
-				$station_file = parseStationFile(shell_exec('cat "' . MPD_MUSICROOT . $_POST['path'] . '"'));
-				$result = sdbquery("select id,name from cfg_radio where station='" . SQLite3::escapeString($station_file['File1']) . "'", $dbh);
-
-				// Delete session var
-				session_start();
-				foreach ($_SESSION as $key => $value) {
-					if ($value['name'] == $result[0]['name']) {
-						unset($_SESSION[$key]);
-					}
+			// Update station
+			else {
+				// NOTE: Client prevents pls name change so check for existing station with same URL
+				$result = sdbquery("select id from cfg_radio where id != '" . $_POST['path']['id'] . "' and station = '" . SQLite3::escapeString($_POST['path']['url']) . "'", $dbh);
+				if ($result !== true) {
+					$return_msg = 'A station with same URL already exists';
 				}
+
+				if ($return_msg == 'OK') {
+					$columns =
+					"station='" . $_POST['path']['url'] . "'," .
+					"name='" . SQLite3::escapeString($_POST['path']['name']) . "'," .
+					"type='" . $_POST['path']['type'] . "'," .
+					"logo='local'," .
+					"genre=\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
+					"broadcaster='" . $_POST['path']['broadcaster'] . "'," .
+					"language='" . $_POST['path']['language'] . "'," .
+					"country='" . $_POST['path']['country'] . "'," .
+					"region='" . $_POST['path']['region'] . "'," .
+					"bitrate='" . $_POST['path']['bitrate'] . "'," .
+					"format='" . $_POST['path']['format'] . "'," .
+					"geo_fenced='" . $_POST['path']['geo_fenced'] . "'," .
+					"reserved1='" . $_POST['path']['reserved0'] . "'," .
+					"reserved2='" . $_POST['path']['reserved0'] . "'";
+					$result = sdbquery('UPDATE cfg_radio SET ' . $columns . ' WHERE id=' . $_POST['path']['id'], $dbh);
+				}
+				echo json_encode($return_msg);
+			}
+
+			if ($return_msg == 'OK') {
+				// Add/update session var
+				session_start();
+				$_SESSION[$_POST['path']['url']] = array(
+					'name' => $_POST['path']['name'],
+					'type' => $_POST['path']['type'],
+					'logo' => 'local',
+					'bitrate' => $_POST['path']['bitrate'],
+					'format' => $_POST['path']['format']
+				);
 				session_write_close();
 
-				// Delete row
-				$result = sdbquery("delete from cfg_radio where id='" . $result[0]['id'] . "'", $dbh);
+				// Write pls file and set permissions
+				$file =  MPD_MUSICROOT . 'RADIO/' . $_POST['path']['name'] . '.pls';
+				if (false === ($fh = fopen($file, 'w'))) {
+					workerLog('moode.php: file create failed on ' . $file);
+					break;
+				}
 
-				// Delete pls and logo image files
-				$station_name = substr($_POST['path'], 6, -4); // Trim RADIO/ and .pls
-				sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
-				sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/' . $station_name . '.jpg' . '"');
-				sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $station_name . '.jpg' . '"');
+				$data = '[playlist]' . "\n";
+				$data .= 'File1='. $_POST['path']['url'] . "\n";
+				$data .= 'Title1='. $_POST['path']['name'] . "\n";
+				$data .= 'Length1=-1' . "\n";
+				$data .= 'NumberOfEntries=1' . "\n";
+				$data .= 'Version=2' . "\n";
 
-				// Update time stamp on files so mpd picks up the change
+				if (false === ($bytes_written = fwrite($fh, $data))) {
+					workerLog('moode.php: file write failed on ' . $file);
+					break;
+				}
+
+				fclose($fh);
+				sysCmd('chmod 777 "' . $file . '"');
+				sysCmd('chown root:root "' . $file . '"');
+
+				// Write logo image
+				sendEngCmd('set_logo_image1'); // Show spinner
+				sleep(3); // Allow time for setlogoimage job to complete which creates tmp new image file
+
+				// Write new image if one exists
+				if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg')) {
+					sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
+					sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
+				}
+				// Write default logo image if an image does not already exist
+					else if (!file_exists('/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg')) {
+					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
+					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
+				}
+
+				// Update time stamp on files so mpd picks up the change and commits the update
 				sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
 
 				sendMpdCmd($sock, 'update RADIO');
 				readMpdResp($sock);
+				sendEngCmd('set_logo_image0'); // Hide spinner
 			}
+			break;
+		case 'delstation':
+			// Get the row id
+			$station_file = parseStationFile(shell_exec('cat "' . MPD_MUSICROOT . $_POST['path'] . '"'));
+			$result = sdbquery("select id,name from cfg_radio where station='" . SQLite3::escapeString($station_file['File1']) . "'", $dbh);
+
+			// Delete session var
+			session_start();
+			foreach ($_SESSION as $key => $value) {
+				if ($value['name'] == $result[0]['name']) {
+					unset($_SESSION[$key]);
+				}
+			}
+			session_write_close();
+
+			// Delete row
+			$result = sdbquery("delete from cfg_radio where id='" . $result[0]['id'] . "'", $dbh);
+
+			// Delete pls and logo image files
+			$station_name = substr($_POST['path'], 6, -4); // Trim RADIO/ and .pls
+			sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
+			sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/' . $station_name . '.jpg' . '"');
+			sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $station_name . '.jpg' . '"');
+
+			// Update time stamp on files so mpd picks up the change
+			sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
+
+			sendMpdCmd($sock, 'update RADIO');
+			readMpdResp($sock);
 			break;
 	}
 	// Turn off Consume mode if indicated
@@ -586,7 +547,7 @@ else {
 			foreach (array_keys($_POST) as $var) {
 				if ($_SESSION['library_flatlist_filter'] != $_POST['library_flatlist_filter'] ||
 					$_SESSION['library_flatlist_filter_str'] != $_POST['library_flatlist_filter_str']) {
-					sysCmd('truncate ' . LIBCACHE_JSON . ' --size 0');
+					clearLibCache();
 				}
 				playerSession('write', $var, $_POST[$var]);
 			}

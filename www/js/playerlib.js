@@ -999,7 +999,7 @@ function renderPlaylist() {
 	                // Line 1 title
 					// Custom name for particular station
 	                if (typeof(data[i].Title) === 'undefined' || data[i].Title.trim() == '' || data[i].file == 'http://stream.radioactive.fm') {
-						output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlis2qesfct-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
+						output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 						output += '<span class="pll1">Streaming source</span>';
 					}
                     // Standard title
@@ -1076,19 +1076,24 @@ function renderPlaylist() {
         $('#playlist ul').html(output);
         $('#cv-playlist ul').html(output);
 
-		if( option_show_playlistart ) {
-			lazyLode('playlist');
-            lazyLode('cv-playlist');
-		}
+        if (output) {
+            if (option_show_playlistart) {
+    			lazyLode('playlist');
+                lazyLode('cv-playlist');
+    		}
 
-        setTimeout(function() {
-            if ($('#playback-panel').hasClass('active')) {
-                customScroll('playlist', parseInt(MPD.json['song']));
-                if ($('#cv-playlist').css('display') == 'block') {
-                    customScroll('cv-playlist', parseInt(MPD.json['song']));
+            setTimeout(function() {
+                if ($('#playback-panel').hasClass('active')) {
+                    customScroll('playlist', parseInt(MPD.json['song']));
+                    if ($('#cv-playlist').css('display') == 'block') {
+                        customScroll('cv-playlist', parseInt(MPD.json['song']));
+                    }
                 }
-            }
-        }, DEFAULT_TIMEOUT);
+            }, DEFAULT_TIMEOUT);
+        }
+        else {
+            $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+        }
 
         // Reset
         GLOBAL.playlistChanged = false;

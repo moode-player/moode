@@ -26,9 +26,9 @@ function notify(cmd, msg, duration) {
     msg = msg || '';
 
     var map = {
-		add: 'Added to queue',
-        clradd: 'Added after queue cleared',
-		clrplay: 'Playing after queue cleared',
+		add: 'Added to the Queue',
+        clradd: 'Added after Queue cleared',
+		clrplay: 'Playing after Queue cleared',
         update_library: 'Updating library...',
         library_updating: 'Library update in progress',
         library_loading: 'Library loading...',

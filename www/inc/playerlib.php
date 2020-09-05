@@ -94,6 +94,9 @@ const ALBUM_SAMPLE_RATE_THRESHOLD = 44100;
 const RADIO_HD_BADGE_TEXT = 'HiRes';
 const RADIO_BITRATE_THRESHOLD = 128;
 
+// Reserved root directory names
+$ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
+
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
 	$fh = fopen(MOODE_LOG, $mode);
@@ -410,14 +413,9 @@ function genFlatList($sock) {
 		}
 		sendMpdCmd($sock, $cmd);
 		$resp .= readMpdResp($sock);
-
-		// ORIGINAL
-		//sendMpdCmd($sock, 'listallinfo "' . $dir . '"');
-		//$resp .= readMpdResp($sock);
 	}
 
 	//workerLog('genFlatList(): is_null($resp)= ' . (is_null($resp) === true ? 'true' : 'false') . ', substr($resp, 0, 2)= ' . substr($resp, 0, 2));
-	// ORIGINAL if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
 	if (!is_null($resp)) {
 		$lines = explode("\n", $resp);
 		$item = 0;
@@ -435,10 +433,6 @@ function genFlatList($sock) {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
-			// ORIGINAL Exclude directories and playlists from listallinfo
-			//elseif ($element == 'directory' || $element == 'playlist') {
-			//	++$i;
-			//}
 			// @Atair: Gather possible multiple Genre values as array
 			elseif ($element == 'Genre') {
 				if ($flat[$item]['Genre']) {
@@ -611,63 +605,38 @@ function clearLibCache() {
 	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
 }
 
-// add group of songs to playlist (library panel)
-function addallToPL($sock, $songs) {
-	$cmds = array();
+// Add group of song files to the Queue (Tag/Album view)
+function addGroupToQueue($sock, $songs) {
+	$mpd_cmds = array();
 
 	foreach ($songs as $song) {
-		$path = $song;
-		array_push($cmds, 'add "' . html_entity_decode($path) . '"');
+		array_push($mpd_cmds, 'add "' . html_entity_decode($song) . '"');
 	}
 
-	chainMpdCmds($sock, $cmds);
+	chainMpdCmds($sock, $mpd_cmds);
 }
 
-// add to playlist (from folder and radio panels)
-function addToPL($sock, $path) {
-	//workerLog($path);
+// Add one item (song file, playlist, radio station, directory) to the Queue
+function addItemToQueue($sock, $path) {
 	$ext = getFileExt($path);
+	$pl_extensions = array('m3u', 'pls', 'cue');
+	//workerLog($path . ' (' . $ext . ')');
 
-	// radio dir
-	if ($path == 'RADIO') {
-		sendMpdCmd($sock, 'listfiles RADIO');
-		$resp = readMpdResp($sock);
-
-		$files = array();
-		$line = strtok($resp, "\n");
-		$i = 0;
-
-		while ($line) {
-			list($param, $value) = explode(': ', $line, 2);
-			if ($param == 'file') {
-				$files[$i] = $value;
-				$i++;
-			}
-			$line = strtok("\n");
-		}
-
-		natcasesort($files);
-
-		foreach($files as $file) {
-			sendMpdCmd($sock, 'load "RADIO/' . $file . '"');
-			$resp = readMpdResp($sock);
-		}
-	}
-	// playlist
-	elseif ($ext == 'm3u' || $ext == 'pls' || $ext == 'cue' || (strpos($path, '/') === false && $path != 'NAS' && $path != 'SDCARD')) {
-		// radio stations
+	// Use load for saved playlist, cue sheet, radio station
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && !in_array($path, $ROOT_DIRECTORIES))) {
+		// Radio station special case
 		if (strpos($path, 'RADIO') !== false) {
-			// check for playlist as url
+			// Check for playlist as URL
 			$pls = file_get_contents(MPD_MUSICROOT . $path);
 			$url = parseDelimFile($pls, '=')['File1'];
-			$end = substr($url, -4);
-			if ($end == '.pls' || $end == '.m3u') {
+			$ext = substr($url, -4);
+			if ($ext == '.pls' || $ext == '.m3u') {
 				$path = $url;
 			}
 		}
 		sendMpdCmd($sock, 'load "' . html_entity_decode($path) . '"');
 	}
-	// file or dir
+	// Use add for song file or directory
 	else {
 		sendMpdCmd($sock, 'add "' . html_entity_decode($path) . '"');
 	}
@@ -676,15 +645,13 @@ function addToPL($sock, $path) {
 	return $resp;
 }
 
-// get file extension
+// Get file extension
 function getFileExt($file) {
-	$pos = strrpos($file, '.');
-	$ext = substr($file, $pos + 1);
-
-	return strtolower($ext);
+	$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+	return $ext == '' ? 'no_extension_found' : $ext;
 }
 
-// parse delimited file
+// Parse delimited file
 function parseDelimFile($data, $delim) {
 	$array = array();
 	$line = strtok($data, "\n");
@@ -936,7 +903,7 @@ function formatChan($channels) {
 // parse audio output hardware params
 function parseHwParams($resp) {
 	if (is_null($resp)) {
-		return 'Error, parseHwParams response is null';
+		return 'parseHwParams(): Response is null';
 	}
 	elseif ($resp != "closed\n" && $resp != "no setup\n") {
 		$array = array();
@@ -986,7 +953,7 @@ function parseCurrentSong($sock) {
 	$resp = readMpdResp($sock);
 
 	if (is_null($resp) ) {
-		return 'Error, parseCurrentSong response is null';
+		return 'parseCurrentSong(): Response is null';
 	}
 	else {
 		$array = array();
@@ -1002,13 +969,13 @@ function parseCurrentSong($sock) {
 	}
 }
 
-// Parse MPD playlistfind output
-function parsePlaylistFind($sock, $tag, $search) {
+// Find a file or album in the Queue
+function findInQueue($sock, $tag, $search) {
 	sendMpdCmd($sock, 'playlistfind ' . $tag . ' "' . $search . '"');
 	$resp = readMpdResp($sock);
 
-	if (is_null($resp) ) {
-		return 'Error, parsePlaylistFind response is null';
+	if ($resp == "OK\n") {
+		return 'findInQueue(): ' . $tag . ' ' . $search . ' not found';
 	}
 
 	$array = array();
@@ -1046,28 +1013,6 @@ function parsePlaylistFind($sock, $tag, $search) {
 	return $array;
 }
 
-// Parse MPD listplaylist output
-function parseListPlaylist($sock, $path) {
-	sendMpdCmd($sock, 'listplaylist "' . $path . '"');
-	$resp = readMpdResp($sock);
-
-	if (is_null($resp) ) {
-		return 'Error, parseListPlaylist response is null';
-	}
-	else {
-		$array = array();
-		$line = strtok($resp, "\n");
-
-		while ($line) {
-			list ($element, $value) = explode(": ", $line, 2);
-			$array[$element] = $value;
-			$line = strtok("\n");
-		}
-
-		return $array;
-	}
-}
-
 // parse cfg_mpd settings
 function parseCfgMpd($dbh) {
 	$result = cfgdb_read('cfg_mpd', $dbh);
@@ -1096,7 +1041,7 @@ function parseCfgMpd($dbh) {
 // parse radio station file
 function parseStationFile($resp) {
 	if (is_null($resp) ) {
-		return 'Error, parseStationFile response is null';
+		return 'parseStationFile(): Response is null';
 	}
 	else {
 		$array = array();
@@ -1115,7 +1060,7 @@ function parseStationFile($resp) {
 // parse play history log
 function parsePlayHist($resp) {
 	if (is_null($resp) ) {
-		return 'parsePlayHist(): parsePlayHist response is null';
+		return 'parsePlayHist(): Response is null';
 	}
 	else {
 		$array = array();
@@ -2153,7 +2098,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 
 	// Special sectuon to handle calls from genLibrary() to populate the element "encoded_at"
 	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
-	// Returnesd string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
+	// Returned string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
 	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
 	if ($called_from_genlib) {
 		$mpd_format_tag = explode(':', $song_data['Format']);
