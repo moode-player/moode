@@ -365,7 +365,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1em);height: calc(20vw - 2em);bo
 /* index improvements */
 #lib-content ul {display:table;overflow-x:hidden;word-break:break-word;}
 #lib-content li {display:block;position:relative;cursor:pointer;line-height:1.25em;}
-#songsList {padding-bottom:calc(8em + env(safe-area-inset-bottom));margin:.5em .25em;width:calc(100% - var(--sbw));}
+#songsList {padding-bottom:calc(10em + env(safe-area-inset-bottom));margin:.5em .25em;width:calc(100% - var(--sbw));}
 /**/
 #lib-genre li, #lib-artist li/*, #lib-album li*/ {padding: 0.4em 0.5em;/*line-height:2em; /*margin-top:7px;*/}
 #lib-content #lib-file li {cursor:default;padding:.15em 0 .5em 0;}
