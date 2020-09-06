@@ -81,6 +81,8 @@ jQuery(document).ready(function($) { 'use strict';
 
     	// mobile
     	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
+        //console.log('window: ' + $(window).width() + 'x' + $(window).height());
+        //console.log('viewport: ' + window.innerWidth + 'x' + window.innerHeight);
 
         // Set volume knob max
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);
