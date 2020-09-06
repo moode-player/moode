@@ -1322,9 +1322,9 @@ jQuery(document).ready(function($) { 'use strict';
 
             /*TEST*/$('#cv-playlist').hide();
             /*TEST*/$('#lib-coverart-img').show();
-            /*TEST*/$('#playback-queue').css('width', '38.1%'); // Fix Playlist sometimes not being visable after returning from cv
+            ///*TEST*/$('#playback-queue').css('width', '38.1%'); // Fix Playlist sometimes not being visable after returning from cv
             setTimeout(function() {
-                /*TEST*/$('#playback-queue').css('width', '38%'); // Restore correct width
+                ///*TEST*/$('#playback-queue').css('width', '38%'); // Restore correct width
                 customScroll('playlist', parseInt(MPD.json['song']));
             }, DEFAULT_TIMEOUT);
 

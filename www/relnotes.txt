@@ -65,6 +65,7 @@ Bug fixes
 - FIX: Item highlight/de-highlight in all views
 - FIX: Radio Instant play not obeying the "No Action" option
 - FIX: Insufficient bottom padding on Library tracks list
+- FIX: Wrong Playlist width (mobile) when CV auto-display enabled
 
 ########################################################
 //
