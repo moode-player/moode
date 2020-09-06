@@ -49,7 +49,7 @@ if (in_array($_GET['cmd'], $jobs)) {
 	}
 }
 elseif ($_GET['cmd'] == 'resetscnsaver') {
-	if (submitJob($_GET['cmd'], $_SERVER['REMOTE_ADDR'], '', '')) { // NOTE: Worker does not use the client ip anymore
+	if (submitJob($_GET['cmd'], $_SERVER['REMOTE_ADDR'], '', '')) { // NOTE: Worker does not use the client IP anymore
 		echo json_encode('job submitted');
 	}
 	else {
