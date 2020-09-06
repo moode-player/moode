@@ -374,7 +374,7 @@ jQuery(document).ready(function($) { 'use strict';
 			else if (UI.libPos[0] == -3) { // Lib search performed
 			    $('#albumsList .lib-entry').removeClass('active');
 				$('#lib-album').scrollTo(0, 0);
-				$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
+				$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
 				$('#lib-albumname, #lib-artistname, #lib-albumyear, #lib-numtracks, #songsList').html('');
 				UI.libPos[0] = -1;
 				storeLibPos(UI.libPos);
@@ -858,17 +858,17 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 	$('#context-menu-db-search-results a').click(function(e) {
 		$('#db-search-results').css('font-weight', 'normal');
-	    if ($(this).data('cmd') == 'addall') {
-	        mpdDbCmd('addall', dbFilterResults);
-	        notify('add');
+	    if ($(this).data('cmd') == 'add_group') {
+	        mpdDbCmd('add_group', dbFilterResults);
+	        notify($(this).data('cmd'));
 		}
-	    if ($(this).data('cmd') == 'playall') {
-	        mpdDbCmd('playall', dbFilterResults);
-	        notify('add');
+	    if ($(this).data('cmd') == 'play_group') {
+	        mpdDbCmd('play_group', dbFilterResults);
+	        notify($(this).data('cmd'));
 		}
-	    if ($(this).data('cmd') == 'clrplayall') {
-	        mpdDbCmd('clrplayall', dbFilterResults);
-	        notify('clrplay');
+	    if ($(this).data('cmd') == 'clear_play_group') {
+	        mpdDbCmd('clear_play_group', dbFilterResults);
+	        notify($(this).data('cmd'));
 		}
 	});
 

@@ -1103,7 +1103,7 @@ function renderPlaylist() {
 // MPD commands for database, playlist, radio stations, saved playlists
 function mpdDbCmd(cmd, path) {
 	//console.log(cmd, path);
-	var cmds = ['add', 'add_next', 'play', 'play_next', 'clradd', 'clrplay', 'addall', 'playall', 'clrplayall', 'update_library'];
+	var cmds = ['add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_play_item', 'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_play_group', 'update_library'];
 	UI.dbCmd = cmd;
 
 	if (cmds.indexOf(cmd) != -1 ) {
@@ -2023,28 +2023,17 @@ $('.context-menu a').click(function(e) {
 
 	// CONTEXT MENUS
 
-	if ($(this).data('cmd') == 'add' || $(this).data('cmd') == 'add_next') {
+	if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
 		mpdDbCmd($(this).data('cmd'), path);
-		notify('add');
+		notify($(this).data('cmd'));
 	}
-	else if ($(this).data('cmd') == 'play' || $(this).data('cmd') == 'play_next') {
+	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
 		mpdDbCmd($(this).data('cmd'), path);
 	}
-	else if ($(this).data('cmd') == 'clradd') {
-		mpdDbCmd('clradd', path);
-		notify('clradd');
-		// see if its a playlist, preload the saved playlist name
-		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD') {
-			$('#pl-saveName').val(path);
-		}
-		else {
-			$('#pl-saveName').val('');
-		}
-	}
-	else if ($(this).data('cmd') == 'clrplay') {
-		mpdDbCmd('clrplay', path);
-		notify('clrplay');
-		// see if its a playlist, preload the saved playlist name
+	else if ($(this).data('cmd') == 'clear_play_item') {
+		mpdDbCmd('clear_play_item', path);
+		notify($(this).data('cmd'));
+		// If its a playlist, preload the saved playlist name
 		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD') {
 			$('#pl-saveName').val(path);
 		}
