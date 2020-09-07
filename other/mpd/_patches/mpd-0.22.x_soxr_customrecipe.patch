@@ -13,9 +13,9 @@
 # In the soxr.h file contains the information about the recipe structure
 # soxr_quality_spec:
 #   precision        16|20|24|28|32  bits
-#   phase_response   0-100           0=LINEAR_PHASE, 50= MINIMUM_PHASE
+#   phase_response   0-100           0=MINIMUM_PHASE, 50=LINEAR_PHASE
 #   passband_end     0-100 %
-#   stopband_begin   0-100 %
+#   stopband_begin   100-199 %
 #   flags            bit set
 # soxr_io_spec:
 #   scale            0-10      db attenuation
@@ -35,173 +35,172 @@
 # }
 #
 diff --git a/src/pcm/SoxrResampler.cxx b/src/pcm/SoxrResampler.cxx
-index e896bef7b..51a99866d 100644
+index e896bef7b..c0c325916 100644
 --- a/src/pcm/SoxrResampler.cxx
 +++ b/src/pcm/SoxrResampler.cxx
-@@ -29,19 +29,31 @@
+@@ -28,6 +28,7 @@
+ 
  #include <cassert>
  
++#include <cmath>
  #include <string.h>
--
-+#include <math.h>
+ 
  static constexpr Domain soxr_domain("soxr");
- 
- static constexpr unsigned long SOXR_DEFAULT_RECIPE = SOXR_HQ;
- 
-+/**
-+ * The RESET_ON_CLEAR flag makes it possible to jump in the position off the current track
-+ */
-+static constexpr unsigned long RESET_ON_CLEAR = 2147483648; //2^31 defined in internal.h of soxr
-+
- /**
-  * Special value for "invalid argument".
+@@ -39,8 +40,16 @@ static constexpr unsigned long SOXR_DEFAULT_RECIPE = SOXR_HQ;
   */
  static constexpr unsigned long SOXR_INVALID_RECIPE = -1;
  
 +/**
-+ * Special value for custom recipe.
++ * Special value for the recipe selection for custom recipe.
 + */
 +static constexpr unsigned long SOXR_CUSTOM_RECIPE = -2;
 +
-+static soxr_io_spec_t soxr_io;
++static soxr_io_spec_t soxr_io_custom_recipe;
  static soxr_quality_spec_t soxr_quality;
  static soxr_runtime_spec_t soxr_runtime;
- 
++static bool soxr_use_custom_recipe;
 +
+ 
  static constexpr struct {
  	unsigned long recipe;
- 	const char *name;
-@@ -51,6 +63,7 @@ static constexpr struct {
+@@ -51,6 +60,7 @@ static constexpr struct {
  	{ SOXR_MQ, "medium" },
  	{ SOXR_LQ, "low" },
  	{ SOXR_QQ, "quick" },
-+	{ SOXR_CUSTOM_RECIPE, "custom"},
++	{ SOXR_CUSTOM_RECIPE, "custom" },
  	{ SOXR_INVALID_RECIPE, nullptr }
  };
  
-@@ -80,20 +93,110 @@ soxr_parse_quality(const char *quality) noexcept
+@@ -80,20 +90,117 @@ soxr_parse_quality(const char *quality) noexcept
  	return SOXR_INVALID_RECIPE;
  }
  
-+static unsigned 
-+soxr_parse_precision(unsigned value) {
-+	switch(value) {
-+		case 16:
-+		case 20:
-+		case 24:
-+		case 28:
-+		case 32:
-+			break;
-+		default:
-+			throw FormatInvalidArgument("soxr converter invalid precision : %d [16|20|24|28|32]",
-+					    value);
-+			break;
++static unsigned
++SoxrParsePrecision(unsigned value) {
++	switch (value) {
++	case 16:
++	case 20:
++	case 24:
++	case 28:
++	case 32:
++		break;
++	default:
++		throw FormatInvalidArgument(
++			"soxr converter invalid precision : %d [16|20|24|28|32]", value);
 +	}
 +	return value;
 +}
 +
 +static double
-+soxr_parse_phase_respons(signed value) {
-+	if(value<0 || value> 100) {
-+			throw FormatInvalidArgument("soxr converter invalid phase_respons : %d (0-100)",
-+					    value);
++SoxrParsePhaseResponse(unsigned value) {
++	if (value > 100) {
++		throw FormatInvalidArgument(
++			"soxr converter invalid phase_respons : %d (0-100)", value);
 +	}
 +
-+	return value;
++	return double(value);
 +}
 +
 +static double
-+soxr_parse_passband_end(const char* svalue) {
-+	char* endptr;
-+	double value=strtod (svalue, &endptr);
-+	if(*endptr) {
-+			throw FormatInvalidArgument("soxr converter passband_end value not a number: %s",
-+					    svalue);
++SoxrParsePassbandEnd(const char *svalue) {
++	char *endptr;
++	double value = strtod(svalue, &endptr);
++	if (svalue == endptr || *endptr != 0) {
++		throw FormatInvalidArgument(
++			"soxr converter passband_end value not a number: %s", svalue);
 +	}
 +
-+	if(value<1 || value> 100) {
-+			throw FormatInvalidArgument("soxr converter invalid passband_end : %d (1-100%)",
-+					    value);
++	if (value < 1 || value > 100) {
++		throw FormatInvalidArgument(
++			"soxr converter invalid passband_end : %s (1-100%%)", svalue);
 +	}
 +
-+	return value/100.0;
++	return value / 100.0;
 +}
 +
 +static double
-+soxr_parse_stopband_begin(const char* svalue) {
-+	char* endptr;
-+	double value=strtod (svalue, &endptr);
-+	if(*endptr) {
-+			throw FormatInvalidArgument("soxr converter stopband_begin value not a number: %s",
-+					    svalue);
++SoxrParseStopbandBegin(const char *svalue) {
++	char *endptr;
++	double value = strtod(svalue, &endptr);
++	if (svalue == endptr || *endptr != 0) {
++		throw FormatInvalidArgument(
++			"soxr converter stopband_begin value not a number: %s", svalue);
 +	}
 +
-+	if(value<100 || value> 150) {
-+			throw FormatInvalidArgument("soxr converter invalid stopband_begin : %d (100-150%)",
-+					    value);
++	if (value < 100 || value > 199) {
++		throw FormatInvalidArgument(
++			"soxr converter invalid stopband_begin : %s (100-150%%)", svalue);
 +	}
 +
-+	return value/100.0;
++	return value / 100.0;
 +}
 +
 +static double
-+soxr_parse_attenuation(const char* svalue) {
-+	char* endptr;
-+	double value=strtod (svalue, &endptr);
-+	if(*endptr) {
-+			throw FormatInvalidArgument("soxr converter attenuation value not a number: %s",
-+					    svalue);
++SoxrParseAttenuation(const char *svalue) {
++	char *endptr;
++	double value = strtod(svalue, &endptr);
++	if (svalue == endptr || *endptr != 0) {
++		throw FormatInvalidArgument(
++			"soxr converter attenuation value not a number: %s", svalue);
 +	}
 +
-+	if(value<0 || value> 30) {
-+			throw FormatInvalidArgument("soxr converter invalid attenuation : %d (0-30)%)",
-+					    value);
++	if (value < 0 || value > 30) {
++		throw FormatInvalidArgument(
++			"soxr converter invalid attenuation : %s (0-30dB))", svalue);
 +	}
 +
-+	return 1/pow(10, value/10.0);
++	return 1 / pow(10, value / 10.0);
 +}
 +
  void
  pcm_resample_soxr_global_init(const ConfigBlock &block)
  {
  	const char *quality_string = block.GetBlockValue("quality");
--	unsigned long recipe = soxr_parse_quality(quality_string);
-+	unsigned long recipe = SOXR_INVALID_RECIPE;
+ 	unsigned long recipe = soxr_parse_quality(quality_string);
++	soxr_use_custom_recipe = recipe == SOXR_CUSTOM_RECIPE;
 +
-+	recipe = soxr_parse_quality(quality_string);
  	if (recipe == SOXR_INVALID_RECIPE) {
  		assert(quality_string != nullptr);
 -
  		throw FormatRuntimeError("unknown quality setting '%s' in line %d",
--					 quality_string, block.line);
-+					quality_string, block.line);
- 	}
-+	else if (recipe == SOXR_CUSTOM_RECIPE ) {
-+		soxr_quality.precision = soxr_parse_precision( block.GetBlockValue("precision", SOXR_HQ) );
-+		soxr_quality.phase_response = soxr_parse_phase_respons( block.GetBlockValue("phase_response", 50) );
-+		soxr_quality.passband_end = soxr_parse_passband_end(block.GetBlockValue("passband_end", "95.0") );
-+		soxr_quality.stopband_begin = soxr_parse_stopband_begin( block.GetBlockValue("stopband_begin", "100.0") );		
-+		soxr_quality.flags = RESET_ON_CLEAR | (block.GetBlockValue("flags", 0) & 0x3F); // see soxr.h soxr_quality_spec.flags
-+		soxr_io = soxr_io_spec(SOXR_FLOAT32_I, SOXR_FLOAT32_I);
-+		soxr_io.scale = soxr_parse_attenuation( block.GetBlockValue("attenuation", "0")); 
-+	}
-+	else {
-+		soxr_quality = soxr_quality_spec(recipe, 0);
-+	};
- 
+ 					 quality_string, block.line);
+-	}
+-
 -	soxr_quality = soxr_quality_spec(recipe, 0);
 -
++	} else if (recipe == SOXR_CUSTOM_RECIPE) {
++		// used to preset possible internal flags, like SOXR_RESET_ON_CLEAR
++		soxr_quality = soxr_quality_spec(SOXR_DEFAULT_RECIPE, 0);
++		soxr_io_custom_recipe = soxr_io_spec(SOXR_FLOAT32_I, SOXR_FLOAT32_I);
++		
++		soxr_quality.precision =
++			SoxrParsePrecision(block.GetBlockValue("precision", SOXR_HQ));
++		soxr_quality.phase_response =
++			SoxrParsePhaseResponse(block.GetBlockValue("phase_response", 50));
++		soxr_quality.passband_end = 
++			SoxrParsePassbandEnd(block.GetBlockValue("passband_end", "95.0"));
++		soxr_quality.stopband_begin = SoxrParseStopbandBegin(
++			block.GetBlockValue("stopband_begin", "100.0"));
++		// see soxr.h soxr_quality_spec.flags
++		soxr_quality.flags = (soxr_quality.flags & 0xFFFFFFC0) |
++			(block.GetBlockValue("flags", 0) & 0x3F);
++		soxr_io_custom_recipe.scale = 
++			SoxrParseAttenuation(block.GetBlockValue("attenuation", "0")); 
++	} else {
++		soxr_quality = soxr_quality_spec(recipe, 0);
++	};
++
 +	
  	FormatDebug(soxr_domain,
  		    "soxr converter '%s'",
  		    soxr_quality_name(recipe));
-@@ -109,14 +212,19 @@ SoxrPcmResampler::Open(AudioFormat &af, unsigned new_sample_rate)
+@@ -109,14 +216,32 @@ SoxrPcmResampler::Open(AudioFormat &af, unsigned new_sample_rate)
  	assert(audio_valid_sample_rate(new_sample_rate));
  
  	soxr_error_t e;
 +	soxr_io_spec_t* p_soxr_io = nullptr;
-+	if(soxr_io.scale != 0) {
-+	 	p_soxr_io = & soxr_io;
++	if(soxr_use_custom_recipe) {
++		p_soxr_io = & soxr_io_custom_recipe;
 +	}
  	soxr = soxr_create(af.sample_rate, new_sample_rate,
  			   af.channels, &e,
@@ -212,7 +211,20 @@ index e896bef7b..51a99866d 100644
  					 e);
  
  	FormatDebug(soxr_domain, "soxr engine '%s'", soxr_engine(soxr));
-+	FormatDebug(soxr_domain, "soxr precision=%2.0f, phase_response=%0.2f, passband_end=%0.2f, stopband_begin=%0.2f scale=%0.2f, flags=%lu", soxr_quality.precision, soxr_quality.phase_response, soxr_quality.passband_end, soxr_quality.stopband_begin, soxr_io.scale, soxr_quality.flags  );
++	if (soxr_use_custom_recipe)
++		FormatDebug(soxr_domain,
++			    "soxr precision=%0.0f, phase_response=%0.2f, "
++				"passband_end=%0.2f, stopband_begin=%0.2f scale=%0.2f",
++				soxr_quality.precision, soxr_quality.phase_response,
++				soxr_quality.passband_end, soxr_quality.stopband_begin, 
++				soxr_io_custom_recipe.scale);
++	else {
++		FormatDebug(soxr_domain,
++			    "soxr precision=%0.0f, phase_response=%0.2f, "
++				"passband_end=%0.2f, stopband_begin=%0.2f",
++				soxr_quality.precision, soxr_quality.phase_response,
++				soxr_quality.passband_end, soxr_quality.stopband_begin);
++	}
  
  	channels = af.channels;
  

@@ -14,8 +14,8 @@ PATCH_ID=""
 sudo cp /mnt/moode-player/GitHub/moode/other/mpd/mpd-0.21.24.tar.xz ./
 sudo tar xf ./mpd-0.21.24.tar.xz
 # Git master version
-sudo cp /mnt/moode-player/GitHub/moode/other/mpd/mpd-0.22~git-20200723-dbdf782.zip ./
-sudo unzip -q ./mpd-0.22~git-20200723-dbdf782.zip
+sudo cp /mnt/moode-player/GitHub/moode/other/mpd/mpd-0.22~git-20200904-67c7116.zip ./
+sudo unzip -q ./mpd-0.22~git-20200904-67c7116.zip
 
 #/////////////////////////////////////////////
 #// Apply patches
@@ -40,7 +40,8 @@ sudo cp meson.build meson.build.orig
 sudo sed -i "/version: '0/s/',/$PATCH_ID',/" ./meson.build
 VERSION=22
 cd ~/MPD-master
-sudo patch -p1 < ~/mpd-0.$VERSION.x_soxr_customrecipe.patch
+# NOTE: patch not needed since being accepted into master branch 
+##sudo patch -p1 < ~/mpd-0.$VERSION.x_soxr_customrecipe.patch
 sudo patch -p1 < ~/mpd_0.$VERSION.xx_selective_resample_mode.patch
 sudo cp meson.build meson.build.orig
 sudo sed -i "/version: '0/s/',/$PATCH_ID',/" ./meson.build
@@ -79,3 +80,4 @@ sudo cp output/release/mpd /var/local/www/mpd_versions/mpd-0.22~git$PATCH_ID
 cd ~
 sudo rm -rf ./mpd*
 sudo rm -rf ./MPD*
+
