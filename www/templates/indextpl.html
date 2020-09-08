@@ -1072,7 +1072,7 @@
  	                    </span>
  	                </div>
 
-					<label class="control-label" for="hires-thumbnails">Hi-res thumbnails</label>
+					<label class="control-label" for="hires-thumbnails">Thumbnail resolution</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1084,17 +1084,19 @@
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">Auto</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">100px</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">200px</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">300px</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px,80</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">500px,80</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">600px,90</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">800px,90</span></a></li>
 								</ul>
 							</div>
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-hires-thumbnails" class="help-block hide">
-							Tell the thumbnail generator to output high-resolution images suitable for large displays or high DPI (Retina) screens. The Auto setting will use the device's pixel ratio to determine an optimum image size and quality while maintaining the smallest file size. Manual settings will result in images of the specified size using a quality factor of 75.<br>
-							NOTE: larger images may result in slower loading of thumbnail images into the Album Cover panel.
+							This option sets the resolution and quality of the JPEG images output by the Thumbnail Generator. Regenerate the thumbnail images after changing this setting.<br>
+							<b>Auto:</b>&nbsp;Uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time).<br>
+							<b>Manual:</b>&nbsp;Use the specified resolution and quality factor. This works best when the majority of covers have a higher resolution than this setting.<br>
+							<b>NOTE:</b>&nbsp;Higher resolutions will impact the performance of the Thumbnail Generator and result in slower loading of thumbnail images into Tag and Album views.
  	                    </span>
  	                </div>
 

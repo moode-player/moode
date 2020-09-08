@@ -179,7 +179,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
 	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
 	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
-	echo -e "\nHi-res thumbs\t\t= $library_hiresthm\c"
+	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
 	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
 	echo -e "\n\nCoverview screen saver\c"
