@@ -33,7 +33,8 @@ $dbh = cfgdb_connect();
 session_write_close();
 
 $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
-$playqueue_cmds = array('add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_play_item', 'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_play_group');
+$playqueue_cmds = array('add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_add_item', 'clear_play_item',
+	'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_add_group', 'clear_play_group');
 $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
 	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'track_info');
 $turn_consume_off = false;
@@ -154,6 +155,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				$resp = readMpdResp($sock);
 			}
 			break;
+		case 'clear_add_item':
 		case 'clear_play_item':
 			sendMpdCmd($sock,'clear');
 			$resp = readMpdResp($sock);
@@ -161,8 +163,10 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			addItemToQueue($sock, $_POST['path']);
 			playerSession('write', 'toggle_song', '0');
 
-			sendMpdCmd($sock, 'play');
-			$resp = readMpdResp($sock);
+			if ($_GET['cmd'] == 'clear_play_item') {
+				sendMpdCmd($sock, 'play');
+				$resp = readMpdResp($sock);
+			}
 			break;
 		case 'track_info':
 			sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');
@@ -209,6 +213,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			$resp = readMpdResp($sock);
 			playerSession('write', 'toggle_song', $pos);
 			break;
+		case 'clear_add_group':
         case 'clear_play_group':
 			sendMpdCmd($sock,'clear');
 			$resp = readMpdResp($sock);
@@ -216,7 +221,10 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
         	addGroupToQueue($sock, $_POST['path']);
 			playerSession('write', 'toggle_song', '0');
 
-			sendMpdCmd($sock, 'play'); // Defaults to pos 0
+			if ($_GET['cmd'] == 'clear_play_group') {
+				sendMpdCmd($sock, 'play'); // Defaults to pos 0
+				$resp = readMpdResp($sock);
+			}
 			break;
 		case 'getmpdstatus':
 			echo json_encode(parseStatus(getMpdStatus($sock)));

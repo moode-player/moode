@@ -30,6 +30,8 @@ function notify(cmd, msg, duration) {
         add_item_next: 'Added to the Queue',
         add_group: 'Added to the Queue',
         add_group_next: 'Added to the Queue',
+        clear_add_item: 'Added after Queue cleared',
+        clear_add_group: 'Added after Queue cleared',
 		clear_play_item: 'Playing after Queue cleared',
         clear_play_group: 'Playing after Queue cleared',
         update_library: 'Updating library...',

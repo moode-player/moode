@@ -533,6 +533,8 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playbar-toggles .btn-primary {color:var(--accentxts);}
 #playbar-toggles i {font-size:1.1rem;margin-top:1px;}
 #playbar-toggles .coverview i {font-size:.9rem;}
+#playbar-volume-popup-btn {width:3rem!important;}
+#playbar-volume-level {margin-left:.15em;vertical-align:top;}
 #m-radio {background-image:var(--radiobadge);background-position:center center;background-repeat:no-repeat;background-size:contain;width:20%;height:15px;left:50%;transform:translate(-50%, -50%);display:none;}
 #m-radio {position:relative;transform:translate(-50%, 0);margin-top:.5em;}
 /* for hide/show Genres column in Library Tag view */

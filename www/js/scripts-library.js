@@ -962,63 +962,77 @@ $('#albumcovers').on('click', 'img', function(e) {
 		files.push(filteredSongs[i].file);
 	}
 
-
-    if (SESSION.json['library_instant_play'] == 'Add/Play') {
-        mpdDbCmd('play_group', files);
-    }
-    else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
-        mpdDbCmd('clear_play_group', files);
-        notify('clear_play_group', '');
+    if (SESSION.json['library_instant_play'] != 'No action') {
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
+            mpdDbCmd(queueCmd, files);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
+            mpdDbCmd(queueCmd, files);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+            mpdDbCmd('clear_play_group', files);
+            notify('clear_play_group');
+        }
     }
 
 	// So tracks list doesn't open
 	return false;
 });
 
-// Random album instant play (button on Playback panel)
+// Random album instant play button on Playback
 $('.ralbum').click(function(e) {
-	$('.ralbum svg').attr('class', 'spin');
-	setTimeout(function() {
-		$('.ralbum svg').attr('class', '');
-	}, RALBUM_TIMEOUT);
-
-	var array = new Uint16Array(1);
-    LIB.albumClicked = true;
-	window.crypto.getRandomValues(array);
-	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
-
-    UI.libPos[0] = pos;
-	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
-	var albumobj = filteredAlbums[pos];
-
-	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
-
-	var files = [];
-	for (var i in filteredSongs) {
-		files.push(filteredSongs[i].file);
-	}
-
-    if (SESSION.json['library_instant_play'] == 'Add/Play' || SESSION.json['library_instant_play'] == 'No action') {
-        mpdDbCmd('play_group', files);
-    }
-    // Clear/play using add first followed by delete.
-    // We do this because clear_play_group directly from the Playback panel results in missed ui and pl updates.
-    else {
-    	var endpos = $(".playlist li").length
-    	mpdDbCmd('add_group', files);
+    if (SESSION.json['library_instant_play'] != 'No action') {
+    	$('.ralbum svg').attr('class', 'spin');
     	setTimeout(function() {
-    		endpos == 1 ? cmd = 'delplitem&range=0' : cmd = 'delplitem&range=0:' + endpos;
-            $.get('command/moode.php?cmd=' + cmd, function(){
-                sendMpdCmd('play 0');
-            });
-    	}, CLRPLAY_TIMEOUT);
+    		$('.ralbum svg').attr('class', '');
+    	}, RALBUM_TIMEOUT);
+
+    	var array = new Uint16Array(1);
+        LIB.albumClicked = true;
+    	window.crypto.getRandomValues(array);
+    	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
+
+        UI.libPos[0] = pos;
+    	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
+    	var albumobj = filteredAlbums[pos];
+
+    	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
+
+    	var files = [];
+    	for (var i in filteredSongs) {
+    		files.push(filteredSongs[i].file);
+    	}
+
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
+            mpdDbCmd(queueCmd, files);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
+            mpdDbCmd(queueCmd, files);
+        }
+        // Clear/play using add first followed by delete.
+        // We do this because clear_play_group directly from the Playback panel results in missed UI and Queue updates.
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+        	var endpos = $(".playlist li").length
+        	mpdDbCmd('add_group', files);
+        	setTimeout(function() {
+        		endpos == 1 ? cmd = 'delplitem&range=0' : cmd = 'delplitem&range=0:' + endpos;
+                $.get('command/moode.php?cmd=' + cmd, function(){
+                    sendMpdCmd('play 0');
+                });
+        	}, CLRPLAY_TIMEOUT);
+        }
     }
 });
 
 // Click radio cover for instant play
 $('#database-radio').on('click', 'img', function(e) {
-    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
-	var pos = $(this).parents('li').index();
+    var pos = $(this).parents('li').index();
 	var path = $(this).parents('li').data('path');
 
 	UI.radioPos = pos;
@@ -1028,12 +1042,20 @@ $('#database-radio').on('click', 'img', function(e) {
     UI.dbEntry[3] = $(this).parents('li').attr('id');
     $(this).parents('li').addClass('active');
 
-    if (SESSION.json['library_instant_play'] == 'Add/Play') {
-        mpdDbCmd('play_item', path);
-    }
-    else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
-        mpdDbCmd('clear_play_item', path);
-        notify('clear_play_item', '');
+    if (SESSION.json['library_instant_play'] != 'No action') {
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_item' : 'add_item_next';
+            mpdDbCmd(queueCmd, path);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_item' : 'play_item_next';
+            mpdDbCmd(queueCmd, path);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+            mpdDbCmd('clear_play_item', path);
+            notify('clear_play_item');
+        }
     }
 
 	setTimeout(function() {

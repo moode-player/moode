@@ -2,7 +2,7 @@
  * Font Awesome Pro 5.0.10 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license (Commercial License)
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 .fa,
@@ -232,6 +232,9 @@ readers do not read off random characters that represent icons */
 .fa-caret-down:before {
   content: "\f0d7"; }
 
+.fa-caret-square-right:before {
+  content: "\f152"; }
+
 .fa-caret-up:before {
   content: "\f0d8"; }
 
@@ -246,6 +249,12 @@ readers do not read off random characters that represent icons */
 
 .fa-chevron-up:before {
   content: "\f077"; }
+
+.fa-chevron-circle-right:before {
+  content: "\f138"; }
+
+.fa-chevron-square-right:before {
+  content: "\f32b"; }
 
 .fa-cog:before {
   content: "\f013"; }
@@ -343,6 +352,9 @@ readers do not read off random characters that represent icons */
 .fa-plus-circle:before {
   content: "\f055"; }
 
+.fa-plus-square:before {
+  content: "\f0fe"; }
+
 .fa-power-off:before {
   content: "\f011"; }
 
@@ -360,9 +372,6 @@ readers do not read off random characters that represent icons */
 
 .fa-search:before {
   content: "\f002"; }
-
-.fa-share-square:before {
-  content: "\f14d"; }
 
 .fa-signal:before {
   content: "\f012"; }
@@ -399,6 +408,9 @@ readers do not read off random characters that represent icons */
 
 .fa-tv:before {
   content: "\f26c"; }
+
+.fa-volume-off:before {
+  content: "\f026"; }
 
 .fa-volume-mute:before {
   content: "\f2e2"; }

@@ -554,7 +554,7 @@ function disableVolKnob() {
 	SESSION.json['volmute'] == '1';
     $('#volumedn, #volumeup, #volumedn-2, #volumeup-2').prop('disabled', true);
     $('#volumeup, #volumedn, #volumedn-2, #volumeup-2, .volume-display').css('opacity', '.3');
-	$('.volume-display div, #inpsrc-preamp-volume').text('0dB');
+	$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text('0dB');
 	$('.volume-display').css('cursor', 'unset');
 
 	if (UI.mobile) {
@@ -608,16 +608,17 @@ function renderUIVol() {
 
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
-    		$('.volume-display div, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
+    		$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text(SESSION.json['volknob']);
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
     		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
     			$('.volume-display div, #inpsrc-preamp-volume').text('mute');
+                $('#playbar-volume-level').text('x');
     		}
     		else {
-    			$('.volume-display div').text(SESSION.json['volknob']);
+    			$('.volume-display div, #playbar-volume-level').text(SESSION.json['volknob']);
     		}
     	}
     });
@@ -662,16 +663,17 @@ function renderUI() {
 
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
-    		$('.volume-display div, #inpsrc-preamp-volume').text(SESSION.json['volknob']);
+    		$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text(SESSION.json['volknob']);
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
     		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
     			$('.volume-display div, #inpsrc-preamp-volume').text('mute');
+                $('#playbar-volume-level').text('x');;
     		}
     		else {
-    			$('.volume-display div').text(SESSION.json['volknob']);
+    			$('.volume-display div, #playbar-volume-level').text(SESSION.json['volknob']);
     		}
     	}
 
@@ -1103,7 +1105,8 @@ function renderPlaylist() {
 // MPD commands for database, playlist, radio stations, saved playlists
 function mpdDbCmd(cmd, path) {
 	//console.log(cmd, path);
-	var cmds = ['add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_play_item', 'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_play_group', 'update_library'];
+	var cmds = ['add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_add_item', 'clear_play_item',
+        'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_add_group', 'clear_play_group', 'update_library'];
 	UI.dbCmd = cmd;
 
 	if (cmds.indexOf(cmd) != -1 ) {
@@ -2030,8 +2033,8 @@ $('.context-menu a').click(function(e) {
 	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
 		mpdDbCmd($(this).data('cmd'), path);
 	}
-	else if ($(this).data('cmd') == 'clear_play_item') {
-		mpdDbCmd('clear_play_item', path);
+	else if ($(this).data('cmd') == 'clear_add_item' || $(this).data('cmd') == 'clear_play_item') {
+		mpdDbCmd($(this).data('cmd'), path);
 		notify($(this).data('cmd'));
 		// If its a playlist, preload the saved playlist name
 		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD') {
