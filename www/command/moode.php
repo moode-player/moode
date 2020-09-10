@@ -101,12 +101,11 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 		exit(0);
 	}
 
-	// Turn off auto-shuffle when playqueue cmds submitted
+	// Turn off Auto-shuffle before processing Queue
 	if (in_array($_GET['cmd'], $playqueue_cmds) && $_SESSION['ashuffle'] == '1') {
 		playerSession('write', 'ashuffle', '0');
 		sysCmd('killall -s 9 ashuffle > /dev/null');
-		// Turn Consume mode off after playqueue cmd processed
-		$turn_consume_off = true;
+		$turn_consume_off = true; // Also turn off Consume mode
 	}
 
 	//workerLog($_GET['cmd'] . '|' . $_POST['path']);
@@ -117,7 +116,8 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			$resp = readMpdResp($sock);
 			echo json_encode('OK');
 			break;
-		// Queue commands for single items
+
+		// Queue commands for single items: Songs, Radio stations, Stored playlists, Directories
 		case 'add_item':
 		case 'add_item_next':
 			$status = parseStatus(getMpdStatus($sock));
@@ -126,16 +126,12 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ' ' . ($status['song'] + 1));
 				$resp = readMpdResp($sock);
 			}
-
-			//echo json_encode($resp);
 			break;
 		case 'play_item':
 		case 'play_item_next':
 			// Search the Queue for the item
-			$search = strpos($_POST['path'], 'RADIO') !== false ?
-				parseDelimFile(file_get_contents(MPD_MUSICROOT . $_POST['path']), '=')['File1'] : $_POST['path'];
+			$search = strpos($_POST['path'], 'RADIO') !== false ? parseDelimFile(file_get_contents(MPD_MUSICROOT . $_POST['path']), '=')['File1'] : $_POST['path'];
 			$result = findInQueue($sock, 'file', $search);
-
 			// Play already Queued item
 			if (isset($result['Pos'])) {
 				sendMpdCmd($sock, 'play ' . $result['Pos']);
@@ -153,37 +149,27 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				else {
 					$pos = $status['playlistlength'];
 				}
-
-				usleep(500000); // NOTE: Needed
-
-				// NOTE: is the stop still needed?
-				sendMpdCmd($sock, 'stop');
-				$resp = readMpdResp($sock);
-
+				usleep(500000); // NOTE: This brief delay allows the WebUI some time to process and display the Queue
 				sendMpdCmd($sock, 'play ' . $pos);
 				$resp = readMpdResp($sock);
 			}
-
-			//echo json_encode($resp);
 			break;
 		case 'clear_play_item':
 			sendMpdCmd($sock,'clear');
 			$resp = readMpdResp($sock);
 
 			addItemToQueue($sock, $_POST['path']);
-			playerSession('write', 'toggle_song', '0'); // Reset toggle_song
+			playerSession('write', 'toggle_song', '0');
 
 			sendMpdCmd($sock, 'play');
 			$resp = readMpdResp($sock);
-
-			//echo json_encode($resp);
 			break;
 		case 'track_info':
 			sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');
 			echo json_encode(readMpdResp($sock));
 			break;
 
-		// Queue commands for a group of items (Tag/Album view)
+		// Queue commands for a group of songs: Genre, Artist or Albums in Tag/Album view
 		case 'add_group':
 		case 'add_group_next':
 			$status = parseStatus(getMpdStatus($sock));
@@ -192,27 +178,22 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
 				$resp = readMpdResp($sock);
 			}
-
-			//echo json_encode($resp);
-            //echo json_encode(addGroupToQueue($sock, $_POST['path']));
 			break;
         case 'play_group':
 		case 'play_group_next':
-			// Determine if album is already in the Queue
+			// Search the Queue for the group
 			sendMpdCmd($sock, 'lsinfo "' . $_POST['path'][0] . '"');
 			$album = parseDelimFile(readMpdResp($sock), ': ')['Album'];
 			$result = findInQueue($sock, 'album', $album);
-
-			// Album is already in the Queue if first and last file exist sequentially
+			// Group is already in the Queue if first and last file exist sequentially
 			$last = count($_POST['path']) - 1;
 			if ($_POST['path'][0] == $result[0]['file'] && $_POST['path'][$last] == $result[$last]['file']) {
 				$pos = $result[0]['Pos'];
 			}
-			// Otherwise play the item after adding it to the Queue
+			// Otherwise play the group after adding it to the Queue
 			else {
 				$status = parseStatus(getMpdStatus($sock));
 				$resp = addGroupToQueue($sock, $_POST['path']);
-
 				if ($_GET['cmd'] == 'play_group_next') {
 					$pos = $status['song'] + 1;
 					sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
@@ -223,30 +204,19 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				}
 			}
 
-			usleep(500000); // NOTE: Needed
-
-			// NOTE: is the stop still needed?
-			sendMpdCmd($sock, 'stop');
-			$resp = readMpdResp($sock);
-
+			usleep(500000); // NOTE: This brief delay allows the WebUI some time to process and display the Queue
 			sendMpdCmd($sock, 'play ' . $pos);
 			$resp = readMpdResp($sock);
-
 			playerSession('write', 'toggle_song', $pos);
-
-			echo json_encode('OK'); // NOTE: Needed after bulk add to the Queue ?
 			break;
         case 'clear_play_group':
 			sendMpdCmd($sock,'clear');
 			$resp = readMpdResp($sock);
 
         	addGroupToQueue($sock, $_POST['path']);
-			usleep(500000); // NOTE: Needed
-
-			playerSession('write', 'toggle_song', '0'); // Reset toggle_song
+			playerSession('write', 'toggle_song', '0');
 
 			sendMpdCmd($sock, 'play'); // Defaults to pos 0
-			echo json_encode(readMpdResp($sock));
 			break;
 		case 'getmpdstatus':
 			echo json_encode(parseStatus(getMpdStatus($sock)));
@@ -256,11 +226,9 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			break;
 		case 'delplitem':
 			sendMpdCmd($sock, 'delete ' . $_GET['range']);
-			echo json_encode(readMpdResp($sock));
 			break;
 		case 'moveplitem':
 			sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
-			echo json_encode(readMpdResp($sock));
 			break;
 		case 'getplitemfile': // For Clock Radio
 			sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
