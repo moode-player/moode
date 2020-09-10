@@ -39,9 +39,23 @@
 <h4>Configuration</h4>
 <p>The Configuration screens are accessed via the Main Menu and provide settings for the Library, Audio, Network and System.</p>
 
-<h4>The Queue</h4>
-<p>The play queue is displayed in Playback and in CoverView. It's a dynamically managed list that is populated by </p>
-<p>If the setting is "Play" and the item is currently in the Queue then it is played directly rather than adding a new duplicate item.<p>
+<h4>Queue</h4>
+<p>The Queue is displayed in Playback and CoverView and contains all items to be played. It's populated primarily by selecting an item from the Library and then tapping one of the Queue commands listed on a context menu. It can also be populated automatically by Auto-shuffle. The Queue commands are listed below.</p>
+
+<div id="quickhelp-queue-commands">
+	<ul>
+		<li><span> Add | Play</span>
+			<p>The Add command adds the item to the end of the Queue. The Play command does the same and then begins play except if the item already exists in the Queue then the existing item is played.</p>
+		</li>
+		<li><span> Add next | Play next</span>
+			<p>The Add next command adds the item immediately after the currently playing or last played item. The Play command does the same and then begins play except if the item already exists in the Queue then the existing item is played.</p>
+		</li>
+	
+		<li><span> Clear/Add | Clear/Play</span>
+			<p>The Clear/Add command first clear the Queue then adds the item. The Clear/Play command does the same and then begins play.</p>
+		</li>
+	</ul>
+</div>
 
 <h4>Special Buttons</h4>
 <p>Most buttons are self explanatory but several perform unique functions.</p>
@@ -54,7 +68,7 @@
 		</li>
 		<li><i class="far fa-random sx"></i>
 			<span> Random</span>
-			<p>Play randomly selected tracks from the Queue (default) or play randomly selected tracks or albums from the entire Music Library if Auto-shuffle is ON (see Audio Config).</p>
+			<p>Play randomly selected tracks from the Queue (default) or if Auto-shuffle is ON (see Audio Config) play randomly selected tracks or albums from the entire Music Library.</p>
 		</li>
 		<li><i class="far fa-arrow-down sx"></i>
 			<span> Consume</span>
@@ -70,11 +84,11 @@
 		</li>
 		<li><i class="far fa-exchange-alt sx"></i>
 			<span> Last track</span>
-			<p>Toggle between the currently playing item and the previously played item.</p>
+			<p>Toggle between the currently playing item and the last played item.</p>
 		</li>
 		<li><i class="far fa-dot-circle sx"></i>
 			<span> Select random album</span>
-			<p>Select a random Album for review when in Tag or Album views.</p>
+			<p>Select a random Album for review when in Tag or Album view.</p>
 		</li>
 		<li><i class="far fa-asterisk sx"></i>
 			<span> Instant Play a random album</span>

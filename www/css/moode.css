@@ -524,7 +524,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .set-button {margin: 0 4px 0 8px;} /* for system config page 'set' buttons */
 #quickhelp-special-buttons ul {list-style:none;margin-left:0;}
 #quickhelp-special-buttons p {margin-left:1.5em;}
-#quickhelp-special-buttons span, #quickhelp-active-elements span {margin-left:0;font-size:1em;font-weight:500;}
+#quickhelp-special-buttons span, #quickhelp-active-elements span, #quickhelp-queue-commands span {margin-left:0;font-size:1em;font-weight:500;}
 /* playback history log */
 #container-playhistory {padding-top:5px;padding-left: 5px;}
 ol.playhistory {margin-left:55px;}
