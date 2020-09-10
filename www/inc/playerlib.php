@@ -187,21 +187,15 @@ function sendMpdCmd($sock, $cmd) {
 	fputs($sock, $cmd . "\n");
 }
 
-function chainMpdCmds($sock, $cmds) {
+function chainMpdCmds($sock, $cmds, $delay = 0) {
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
         $resp = readMpdResp($sock);
+
+		if ($delay > 0) {
+			usleep($delay); // Microseconds
+		}
     }
-}
-
-function chainMpdCmdsDelay($sock, $cmds, $delay) {
-    sendMpdCmd($sock, $cmds[0]);
-    $resp = readMpdResp($sock);
-
-	usleep($delay); // microseconds 1000000 = 1 sec
-
-    sendMpdCmd($sock, $cmds[1]);
-    $resp = readMpdResp($sock);
 }
 
 function getMpdStatus($sock) {
