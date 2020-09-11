@@ -338,6 +338,7 @@ sudo chown -R mpd:audio /var/log/mpd
 sudo cp ./moode/mpd/mpd.conf.default /etc/mpd.conf
 sudo chown mpd:audio /etc/mpd.conf
 sudo chmod 0666 /etc/mpd.conf
+sudo bash -c 'echo -e "**/*.cue\n**/*.CUE" >/var/lib/mpd/music/.mpdignore'
 
 2. Install MPD dev libs.
 
