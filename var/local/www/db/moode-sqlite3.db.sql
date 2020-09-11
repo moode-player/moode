@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sun Sep 6 08:17:57 2020
+-- File generated with SQLiteStudio v3.1.0 on Fri Sep 11 09:19:58 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -289,7 +289,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (44, 'hdwrrev', 'Pi-3B 1GB');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
 INSERT INTO cfg_system (id, param, value) VALUES (47, 'upnp_browser', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_instant_play', 'Add/Play');
+INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_instant_play', 'Play');
 INSERT INTO cfg_system (id, param, value) VALUES (49, 'radio_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (50, 'airplayactv', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (51, 'debuglog', '0');
