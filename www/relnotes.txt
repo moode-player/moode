@@ -41,6 +41,7 @@ Updates
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 - UPD: Add Genre to the Extra metadata appearance option
 - UPD: Add higher resolutions for thumbnail generator
+- UPD: Add "Update Library" to action list for Clock Radio
 - UPD: Instant play actions to include Add next, Play next
 - UPD: Improve logging for Library update process
 - UPD: Extend HD badging to Playbar, CoverView amd Playback

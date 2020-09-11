@@ -1096,16 +1096,16 @@ function chkClockRadio() {
 		// Action after stop
 		if ($_SESSION['clkradio_action'] != "None") {
 			if ($_SESSION['clkradio_action'] == 'Restart') {
-				$action = 'reboot';
-				$delay = 45; // To ensure that after reboot $curtime != clkradio_stop_time
+				sleep(45); // To ensure that after reboot $curtime != clkradio_stop_time
+				sysCmd('/var/local/www/commandw/restart.sh reboot');
 			}
 			elseif ($_SESSION['clkradio_action'] == 'Shutdown') {
-				$action = 'poweroff';
-				$delay = 0;
+				sysCmd('/var/local/www/commandw/restart.sh poweroff');
 			}
-
-			sleep($delay);
-			sysCmd('/var/local/www/commandw/restart.sh ' . $action);
+			elseif ($_SESSION['clkradio_action'] == 'Update Library') {
+				workerLog('update library');
+				submitJob('update_library', '', '', '');
+			}
 		}
 	}
 
@@ -1148,16 +1148,16 @@ function chkSleepTimer() {
 		// Action after stop
 		if ($_SESSION['clkradio_action'] != "None") {
 			if ($_SESSION['clkradio_action'] == 'Restart') {
-				$action = 'reboot';
-				$delay = 45; // To ensure that after reboot $curtime != clkradio_stop_time
+				sleep(45); // To ensure that after reboot $curtime != clkradio_stop_time
+				sysCmd('/var/local/www/commandw/restart.sh reboot');
 			}
 			elseif ($_SESSION['clkradio_action'] == 'Shutdown') {
-				$action = 'poweroff';
-				$delay = 0;
+				sysCmd('/var/local/www/commandw/restart.sh poweroff');
 			}
-
-			sleep($delay);
-			sysCmd('/var/local/www/commandw/restart.sh ' . $action);
+			elseif ($_SESSION['clkradio_action'] == 'Update Library') {
+				workerLog('update library');
+				submitJob('update_library', '', '', '');
+			}
 		}
 	}
 
