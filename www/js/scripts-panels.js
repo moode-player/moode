@@ -1036,12 +1036,13 @@ jQuery(document).ready(function($) { 'use strict';
 				$('#menu-header').text((+count) + ' albums found');
 				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
 			}
-			if ($('.tag-view-btn').hasClass('active')) {
+            if (currentView == 'tag' && SESSION.json['tag_view_covers'] == 'Yes') {
 				lazyLode('tag');
 			}
 			else {
 				lazyLode('album');
 				$('#bottom-row').css('display', '');
+                $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 			}
 
 		    $('#albumcovers .lib-entry').removeClass('active');
@@ -1050,6 +1051,7 @@ jQuery(document).ready(function($) { 'use strict';
 			UI.libPos.fill(-3);
 		}, DEFAULT_TIMEOUT);
 
+        // Special year or year range search
         var filter = $(this).val().trim();
 		if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
             if (filter.slice(filter.length - 2) == '!r') {
@@ -1073,6 +1075,8 @@ jQuery(document).ready(function($) { 'use strict';
 				}
 				else if (currentView == 'album') {
 					lazyLode('album');
+                    $('#bottom-row').css('display', '');
+                    $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 				}
 			}
 			else {
