@@ -1983,7 +1983,8 @@ $('.view-all').click(function(e) {
 	$('.view-all span').show();
 	$('#menu-header').click()
 	GLOBAL.musicScope = 'all';
-	GLOBAL.searchLib, GLOBAL.searchRadio = false;
+	GLOBAL.searchLib = '';
+    GLOBAL.searchRadio = false;
     LIB.recentlyAddedClicked = false;
 	LIB.filters.albums.length = 0;
 	LIB.filters.year.length = 0;

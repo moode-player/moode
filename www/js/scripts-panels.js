@@ -992,7 +992,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
     // library search
-    // NOTE: This performs typedown search and a special year or year range search
+    // NOTE: This performs typedown search or a special year or year range search
 	$('#lib-album-filter').keyup(function(e){
 		e.preventDefault();
 
@@ -1002,62 +1002,19 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 
 		clearTimeout(searchTimer);
-
-		var selector = this;
-		searchTimer = setTimeout(function(){
-			var filter = $(selector).val().trim();
-			var count = 0;
-
-			if (filter == '') {
-				$('#searchResetLib').hide();
-				showSearchResetLib = false;
-                $('#searchResetLib').click();
-			}
-
-			$('.albumslist li').each(function() {
-				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
-					$(this).hide();
-				}
-				else {
-					$(this).show();
-					count++;
-				}
-			});
-			$('.albumcovers li').each(function() {
-				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
-					$(this).hide();
-				}
-				else {
-					$(this).show();
-				}
-			});
-			var s = (count == 1) ? '' : 's';
-			if (filter != '') {
-				$('#menu-header').text((+count) + ' albums found');
-				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
-			}
-            if (currentView == 'tag' && SESSION.json['tag_view_covers'] == 'Yes') {
-				lazyLode('tag');
-			}
-			else {
-				lazyLode('album');
-				$('#bottom-row').css('display', '');
-                $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
-			}
-
-		    $('#albumcovers .lib-entry').removeClass('active');
-		    $('#albumsList .lib-entry').removeClass('active');
-			$('#lib-albumcover').css('height', '100%');
-			UI.libPos.fill(-3);
-		}, DEFAULT_TIMEOUT);
-
-        // Special year or year range search
         var filter = $(this).val().trim();
-		if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
+
+        if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
+            // Search using filterLib()
+            $('#lib-album-filter').blur();
+            $('#viewswitch').click();
+
             if (filter.slice(filter.length - 2) == '!r') {
                 filter = filter.slice(0, filter.length - 2);
             }
+
             LIB.filters.year = filter.split('-').map( Number ); // [year 1][year 2 if present]
+
             if (LIB.filters.year[0]) {
 			    LIB.recentlyAddedClicked = false;
 				LIB.filters.albums.length = 0;
@@ -1068,13 +1025,11 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos.fill(-2);
 				filterLib();
 			    renderAlbums();
-				$('#lib-album-filter').blur();
-				$('#viewswitch').click();
 				if (currentView == 'tag' && SESSION.json['tag_view_covers'] == 'Yes') {
-					lazyLode('tag');
+					//lazyLode('tag');
 				}
 				else if (currentView == 'album') {
-					lazyLode('album');
+					//lazyLode('album');
                     $('#bottom-row').css('display', '');
                     $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 				}
@@ -1082,9 +1037,64 @@ jQuery(document).ready(function($) { 'use strict';
 			else {
 				LIB.filters.year = '';
 			}
-			$('#lib-album-filter').blur();
-			$('#viewswitch').click();
-		}
+        }
+        else {
+            // Search using typedown
+    		searchTimer = setTimeout(function(){
+    			var count = 0;
+
+    			if (filter == '') {
+    				$('#searchResetLib').hide();
+    				showSearchResetLib = false;
+                    $('#searchResetLib').click();
+    			}
+
+    			$('.albumslist li').each(function() {
+    				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
+    					$(this).hide();
+    				}
+    				else {
+    					$(this).show();
+    					count++;
+    				}
+    			});
+
+    			$('.albumcovers li').each(function() {
+    				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
+    					$(this).hide();
+    				}
+    				else {
+    					$(this).show();
+    				}
+    			});
+
+    			var s = (count == 1) ? '' : 's';
+    			if (filter != '') {
+    				$('#menu-header').text((+count) + ' albums found');
+    				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
+    			}
+
+                if (currentView == 'tag' && SESSION.json['tag_view_covers'] == 'Yes') {
+    				lazyLode('tag');
+    			}
+    			else {
+    				lazyLode('album');
+    				$('#bottom-row').css('display', '');
+                    $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+    			}
+
+    		    $('#albumcovers .lib-entry').removeClass('active');
+    		    $('#albumsList .lib-entry').removeClass('active');
+    			$('#lib-albumcover').css('height', '100%');
+    			UI.libPos.fill(-3);
+    		}, DEFAULT_TIMEOUT);
+        }
+
+        if (filter == '') {
+            $('#searchResetLib').hide();
+            showSearchResetLib = false;
+            $('#searchResetLib').click();
+        }
 	});
 
 	$('#searchResetLib').click(function(e) {
@@ -1092,6 +1102,7 @@ jQuery(document).ready(function($) { 'use strict';
 		GLOBAL.searchLib = '';
 		setLibMenuHeader();
 		LIB.filters.albums.length = 0;
+        LIB.filters.year = '';
 		UI.libPos.fill(-2);
 		storeLibPos(UI.libPos);
 	    clickedLibItem(undefined, undefined, LIB.filters.albums, renderAlbums);
