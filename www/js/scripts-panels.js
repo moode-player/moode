@@ -131,10 +131,6 @@ jQuery(document).ready(function($) { 'use strict';
 
     	accentColor = themeToColors(SESSION.json['accent_color']);
     	document.body.style.setProperty('--themetext', themeMcolor);
-        // DEPRECATE
-    	//var radio1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle fill='%23" + accentColor.substr(1) + "' cx='14' cy='14.5' r='11.5'/></svg>";
-    	//var test = getCSSRule('.toggle .toggle-radio');
-    	//test.style.backgroundImage='url("' + radio1 + '")';
     	adaptColor = themeColor;
     	adaptBack = themeBack;
     	adaptMhalf = themeMback;
@@ -992,7 +988,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
     // library search
-    // NOTE: This performs typedown search or a special year or year range search
+    // NOTE: This performs either a special year or year range search or a typedown search
 	$('#lib-album-filter').keyup(function(e){
 		e.preventDefault();
 
@@ -1004,8 +1000,8 @@ jQuery(document).ready(function($) { 'use strict';
 		clearTimeout(searchTimer);
         var filter = $(this).val().trim();
 
+        // Search year or year range using filterLib()
         if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
-            // Search using filterLib()
             $('#lib-album-filter').blur();
             $('#viewswitch').click();
 
@@ -1025,11 +1021,7 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos.fill(-2);
 				filterLib();
 			    renderAlbums();
-				if (currentView == 'tag' && SESSION.json['tag_view_covers'] == 'Yes') {
-					//lazyLode('tag');
-				}
-				else if (currentView == 'album') {
-					//lazyLode('album');
+				if (currentView == 'album') {
                     $('#bottom-row').css('display', '');
                     $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 				}
@@ -1038,16 +1030,10 @@ jQuery(document).ready(function($) { 'use strict';
 				LIB.filters.year = '';
 			}
         }
+        // Search using typedown
         else {
-            // Search using typedown
     		searchTimer = setTimeout(function(){
     			var count = 0;
-
-    			if (filter == '') {
-    				$('#searchResetLib').hide();
-    				showSearchResetLib = false;
-                    $('#searchResetLib').click();
-    			}
 
     			$('.albumslist li').each(function() {
     				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
@@ -1074,7 +1060,7 @@ jQuery(document).ready(function($) { 'use strict';
     				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
     			}
 
-                if (currentView == 'tag' && SESSION.json['tag_view_covers'] == 'Yes') {
+                if (currentView == 'tag') {
     				lazyLode('tag');
     			}
     			else {
@@ -1165,16 +1151,6 @@ jQuery(document).ready(function($) { 'use strict';
         UI.dbEntry[3] = $(this).parents('li').attr('id');
         $(this).parents('li').addClass('active');
 	});
-
-	// De-highlight folder or radio station (DEPRECATED)
-	/*$('.btnlist-top-db, .btnlist-top-ra').click(function(e) {
-        if (currentView == 'folder') {
-            $('#db-' + UI.dbPos[UI.dbPos[10]].toString()).removeClass('active');
-        }
-        else if (currentView == 'radio') {
-            $('#' + UI.dbEntry[3]).removeClass('active');
-        }
-	});*/
 
 	// buttons on modals
 	$('.btn-del-savedpl').click(function(e){
