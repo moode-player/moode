@@ -71,6 +71,7 @@ Bug fixes
 - FIX: Insufficient bottom padding on Library tracks list
 - FIX: Wrong Playlist width (mobile) when CV auto-display enabled
 - FIX: Library special year search partially broken
+- FIX: Library thumbnail columns 8/4 setting has incorrect width
 
 ########################################################
 //

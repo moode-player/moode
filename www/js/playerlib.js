@@ -2563,7 +2563,7 @@ $('#library-flatlist-filter span').on('DOMSubtreeModified',function(){
 
 function setLibraryThumbnailCols(cols) {
     //var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
-    var map = {6:'15vw,45vw', 7:'13vw,30vw', 8:'11vw,22vw'}
+    var map = {6:'15vw,45vw', 7:'13vw,30vw', 8:'12vw,22vw'}
     var css = map[cols].split(',');
     document.body.style.setProperty('--thumbcols', css[0]);
     document.body.style.setProperty('--mthumbcols', css[1]);
