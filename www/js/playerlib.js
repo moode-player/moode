@@ -746,14 +746,16 @@ function renderUI() {
         }
         else if (MPD.json['artist'] == 'Radio station') {
     		$('#extra-tags-display').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
-            $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(RADIO_HD_BADGE_TEXT);
     	}
     	else {
             var extraTagsDisplay = '';
             extraTagsDisplay = formatExtraTagsString();
             extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) : $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
-            $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(ALBUM_HD_BADGE_TEXT);
     	}
+
+        // HD badge text
+        var hdBadgeText = MPD.json['artist'] == 'Radio station' ? RADIO_HD_BADGE_TEXT : ALBUM_HD_BADGE_TEXT;
+        $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(hdBadgeText);
 
     	// Default metadata
         if (MPD.json['album']) {
