@@ -1299,7 +1299,7 @@ jQuery(document).ready(function($) { 'use strict';
         $.post('command/moode.php?cmd=disconnect-renderer', {'job':job});
 	});
 
-    // Screen saver (CoverView) reset (r642 variant)
+    // CoverView screen saver reset
     $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
         //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
         if ($(this).attr('id') == 'menu-bottom') {
@@ -1311,16 +1311,21 @@ jQuery(document).ready(function($) { 'use strict';
 			coverView = false;
             setColors();
 
-            /*TEST*/$('#cv-playlist').hide();
-            /*TEST*/$('#lib-coverart-img').show();
-            ///*TEST*/$('#playback-queue').css('width', '38.1%'); // Fix Playlist sometimes not being visable after returning from cv
+            // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
+            $('#cv-playlist').hide();
+            $('#lib-coverart-img').show();
+            // TEST: Fixes Queue sometimes not being visable after returning from CoverView
+            var width = UI.mobile ? '100%' : '38%';
+            $('#playback-queue').css('width', '38.1%');
+
             setTimeout(function() {
-                ///*TEST*/$('#playback-queue').css('width', '38%'); // Restore correct width
+                $('#playback-queue').css('width', width); // TEST: Restore correct width to force Queue visable
                 customScroll('playlist', parseInt(MPD.json['song']));
             }, DEFAULT_TIMEOUT);
 
             // Reset screen saver timeout global
-            setTimeout(function() { // wait a bit to allow other job that may be queued to be processed
+            // Wait a bit to allow other job that may be queued to be processed
+            setTimeout(function() {
                 $.get('command/moode.php?cmd=resetscnsaver');
             }, 3000);
         }

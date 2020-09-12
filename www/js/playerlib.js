@@ -518,7 +518,8 @@ function screenSaver(cmd) {
 		$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
         $('body').addClass('cv');
 
-        /*TEST*/$('#lib-coverart-img').hide();
+        // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
+        $('#lib-coverart-img').hide();
 
 		coverView = true;
 	}
@@ -3023,12 +3024,10 @@ function setColors() {
 			document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
 			document.body.style.setProperty('--trackfill', 'rgba(48,48,48,1.0)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-d.svg")');
-			//document.body.style.setProperty('--defcover', 'images/default-cover-v6-d.svg'); // TEST
 			setTimeout(function() {
 				$('.playbackknob, .volumeknob').trigger('configure',{"bgColor":"rgba(32,32,32,0.06)",
 					"fgColor":UI.accenta
 				});
-				//UI.mobile ? '' : $('#playback-controls').show();
 			}, DEFAULT_TIMEOUT);
 		}
 		else {
@@ -3037,7 +3036,6 @@ function setColors() {
 			document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
 			document.body.style.setProperty('--trackfill', 'rgba(240,240,240,1.0)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-l.svg")');
-			//document.body.style.setProperty('--defcover', 'images/default-cover-v6-l.svg'); // TEST
 			setTimeout(function() {
 				$('.playbackknob, .volumeknob').trigger('configure',{"bgColor":"rgba(224,224,224,0.09)",
 					"fgColor":UI.accenta
@@ -3233,7 +3231,8 @@ $('#coverart-url, #playback-switch').click(function(e){
 		return;
 	}
 
-    /*TEST*/$('#coverart-link').hide();
+    // TEST: Fixes issue where some elements briefly remain on-screen when switching between Playback and Library
+    $('#coverart-link').hide();
 
 	currentView = currentView.split(',')[1];
     $('#container-playlist').css('visibility','hidden');
@@ -3285,7 +3284,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 	}
 });
 
-// Switch to playback panel
+// Switch to Playback
 $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
     //console.log('click playbar');
     if (coverView) {
@@ -3302,7 +3301,8 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		syncTimers();
 		setColors();
 
-        /*TEST*/$('#coverart-link').show();
+        // TEST: Fixes issue where some elements briefly remain on-screen when switching between Playback and Library
+        $('#coverart-link').show();
 
 		$('#menu-header').text('');
 		$('#container-playlist').css('visibility','');
