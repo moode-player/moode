@@ -608,7 +608,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
 
-    // Click on playlist entry
+    // Click on Queue item
     $('.playlist, .cv-playlist').on('click', '.pl-entry', function(e) {
         if (GLOBAL.plActionClicked) {
             GLOBAL.plActionClicked = false;
@@ -622,7 +622,7 @@ jQuery(document).ready(function($) { 'use strict';
         $(this).parent().addClass('active');
     });
 
-	// Click on playlist action menu button
+	// Click on Queue action menu button (ellipsis)
     $('.playlist').on('click', '.pl-action', function(e) {
         GLOBAL.plActionClicked = true;
 
@@ -1279,6 +1279,9 @@ jQuery(document).ready(function($) { 'use strict';
 
         if ($('#cv-playlist').css('display') == 'block') {
             setTimeout(function() {
+                if (SESSION.json['playlist_art'] == 'Yes') {
+                    lazyLode('cv-playlist');
+                }
                 customScroll('cv-playlist', parseInt(MPD.json['song']));
             }, DEFAULT_TIMEOUT);
 
@@ -1320,6 +1323,9 @@ jQuery(document).ready(function($) { 'use strict';
 
             setTimeout(function() {
                 $('#playback-queue').css('width', width); // TEST: Restore correct width to force Queue visable
+                if (SESSION.json['playlist_art'] == 'Yes') {
+                    lazyLode('playlist');
+                }
                 customScroll('playlist', parseInt(MPD.json['song']));
             }, DEFAULT_TIMEOUT);
 

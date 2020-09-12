@@ -681,8 +681,9 @@ function renderUI() {
     	// playback controls, playlist highlight
         if (MPD.json['state'] == 'play') {
     		$('.play i').removeClass('fas fa-play').addClass('fas fa-pause');
-    		$('.playlist li.active').removeClass('active');
+    		$('.playlist li.active, .cv-playlist li.active').removeClass('active');
             $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
+            $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
         }
     	else if (MPD.json['state'] == 'pause' || MPD.json['state'] == 'stop') {
     		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
@@ -760,7 +761,6 @@ function renderUI() {
 
     	// Default metadata
         if (MPD.json['album']) {
-            //$('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
             $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
             // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
@@ -852,9 +852,9 @@ function renderUI() {
     		refreshTimeKnob();
     	}
 
-        // Render the playlist
+        // Render the Queue
         //console.log('ID ' + MPD.json['playlist'], MPD.json['idle_timeout_event'], MPD.json['state']);
-        // Page load/reload, playlist changed (items added/removed)
+        // Page load/reload, Queue changed (items added/removed)
         if (typeof(MPD.json['idle_timeout_event']) == 'undefined' ||
             MPD.json['idle_timeout_event'] == 'changed: playlist' ||
             GLOBAL.playlistChanged == true) {
@@ -917,7 +917,7 @@ function genSearchUrl (artist, title, album) {
 
 // Update active Playlist item
 function updateActivePlItem() {
-	//console.log'updateActivePlItem()');
+	//console.log('updateActivePlItem()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
         if (data) {
             for (i = 0; i < data.length; i++) {
@@ -963,14 +963,14 @@ function updateActivePlItem() {
 
 // Render the Playlist
 function renderPlaylist() {
-	//console.log'renderPlaylist()');
+	//console.log('renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
 		var output = '';
         var playlistLazy = GLOBAL.nativeLazyLoad === true ? '<img loading="lazy" src=' : '<img class="lazy-playlistview" data-original=';
 
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
-		var option_show_playlistart = SESSION.json['playlist_art'] == 'Yes';
+		var option_show_playlistart = SESSION.json['playlist_art'] == 'Yes' ? true : false;
 
 		// Format playlist items
         if (data) {
