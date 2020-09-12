@@ -3175,7 +3175,7 @@ $('#index-albumcovers li').on('click', function(e) {
     listLook('albumcovers li ' + selector2, 'albumcovers', $(this).text());
 });
 $('#index-browse li').on('click', function(e) {
-	listLook('database li', 'db', $(this).text());
+	listLook('database li', 'folder', $(this).text());
 });
 $('#index-radio li').on('click', function(e) {
     list = SESSION.json['radioview_sort_group'].split(',')[1] == 'No grouping' ? 'radio' : 'radio_headers';
