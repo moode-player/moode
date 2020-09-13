@@ -43,15 +43,15 @@
 	<?php
 		// Common css
 		//removeIf(USEBUNDLE)
-		versioned_resource('css/bootstrap.min.css');
-		versioned_resource('css/bootstrap-select.min.css');
-		versioned_resource('css/flat-ui.min.css');
-		versioned_resource('css/jquery.pnotify.default.min.css');
-		versioned_resource('css/fontawesome-moode.min.css');
-		versioned_resource('css/panels.min.css');
-		versioned_resource('css/moode.min.css');
+		versioned_stylesheet('css/bootstrap.min.css');
+		versioned_stylesheet('css/bootstrap-select.min.css');
+		versioned_stylesheet('css/flat-ui.min.css');
+		versioned_stylesheet('css/jquery.pnotify.default.min.css');
+		versioned_stylesheet('css/fontawesome-moode.min.css');
+		versioned_stylesheet('css/panels.min.css');
+		versioned_stylesheet('css/moode.min.css');
 		//endRemoveIf(USEBUNDLE)
-		// USEBUNDLE versioned_resource('css/styles.min.css');
+		// USEBUNDLE versioned_stylesheet('css/styles.min.css');
 		
 
 		// Common js
@@ -68,9 +68,9 @@
 
 		// Playback / Library
 		if ($section == 'index') {
-			// USEBUNDLE versioned_resource('css/main.min.css');
+			// USEBUNDLE versioned_stylesheet('css/main.min.css');
 			//removeIf(USEBUNDLE)
-			versioned_resource('css/jquery.countdown.min.css');
+			versioned_stylesheet('css/jquery.countdown.min.css');
 			versioned_script('js/jquery.countdown.min.js');
 			versioned_script('js/jquery.scrollTo.min.js');
 			versioned_script('js/jquery.touchSwipe.min.js');
