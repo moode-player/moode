@@ -101,10 +101,10 @@ function reduceGenres(acc, track) {
 }
 
 function reduceArtists(acc, track) {
-	var artist = (track.album_artist || track.artist).toLowerCase();
+    var artist = (track.album_artist || track.artist).toLowerCase();
 	if (!acc[artist]) {
 		acc[artist] = [];
-		acc[artist].artist = track.album_artist || track.artist;
+        acc[artist].artist = track.album_artist || track.artist;
 	}
 	acc[artist].push(track);
 	return acc;
@@ -153,7 +153,6 @@ function groupLib(fullLib) {
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var artist = findAlbumProp(albumTracks, 'artist');
 		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
-        //var year = SESSION.json['library_albumview_sort'] == 'Year' ? getYear(albumTracks) : '';
         var year = getYear(albumTracks);
 		return {
             key: findAlbumProp(albumTracks, 'key'),
@@ -162,7 +161,7 @@ function groupLib(fullLib) {
 			album: findAlbumProp(albumTracks, 'album'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
-			artist: albumArtist || artist,
+            artist: albumArtist || artist,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
             encoded_at: findAlbumProp(albumTracks, 'encoded_at')
 		};
@@ -321,12 +320,16 @@ function filterByArtist(item) {
 	var album_artist = item.album_artist && item.album_artist.toLowerCase();
 	return LIB.filters.artists.find(function(artistFilter){
 		var artistFilterLower = artistFilter.toLowerCase();
-        if (LIB.filters.artists == SESSION.json['library_comp_id']) {
+        // REMOVE: This code block is not needed because the compilation grouping is naturally
+        // formed using the tagging scheme where compilations have album artist tag set to a string
+        // for example "Various Artists" plus the priority of using album artist over artist.
+        /*if (LIB.filters.artists == SESSION.json['library_comp_id']) {
             return artist === artistFilterLower || album_artist === artistFilterLower;
         }
         else if (album_artist != SESSION.json['library_comp_id'].toLowerCase()) {
             return artist === artistFilterLower || album_artist === artistFilterLower;
-        }
+        }*/
+        return artist === artistFilterLower || album_artist === artistFilterLower;
 	});
 }
 
@@ -439,9 +442,9 @@ function removeArticles(string) {
 	return SESSION.json['library_ignore_articles'] != 'None' ? string.replace(GLOBAL.regExIgnoreArticles, '$2') : string;
 }
 
-// Generate album/artist key
+// Generate album@artist key
 function keyAlbum(obj) {
-	return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase();
+    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase();
 }
 
 // Return numeric song time
@@ -508,10 +511,11 @@ var renderArtists = function() {
 	var output = '';
 
 	for (var i = 0; i < filteredArtists.length; i++) {
-		// Add "|| filteredArtists.length = 1" to automatically highlight if only 1 artist in list
+		// NOTE: Add "|| filteredArtists.length = 1" to automatically highlight if only 1 artist in list
+        var artist = filteredArtists[i] == SESSION.json['library_comp_id'] ? filteredArtists[i] + ' (Compilations)' : filteredArtists[i];
 		output += '<li class="lib-entry'
 			+ ((LIB.filters.artists.indexOf(filteredArtists[i]) >= 0 || filteredArtists.length == 1) ? ' active' : '')
-			+ '">' + filteredArtists[i] + '</li>';
+			+ '">' + artist + '</li>';
 	}
 
 	$('#artistsList').html(output);
@@ -768,10 +772,11 @@ var renderSongs = function(albumPos) {
 		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
 
         if (LIB.filters.artists.length > 0) {
+            var artist2 = LIB.filters.artists[0] == SESSION.json['library_comp_id'] ? LIB.filters.artists[0] + ' (Compilations)' : LIB.filters.artists[0];
             $('#lib-coverart-img').html(
                 '<img class="lib-artistart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '>' +
                 '<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
-                LIB.filters.artists[0] + '</button>');
+                artist2 + '</button>');
             artist = '';
         }
         else if (LIB.filters.genres.length > 0) {
