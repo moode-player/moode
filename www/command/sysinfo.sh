@@ -179,7 +179,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
 	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
 	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
-	echo -e "\nHi-res thumbs\t\t= $library_hiresthm\c"
+	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
 	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
 	echo -e "\n\nCoverview screen saver\c"
@@ -192,7 +192,15 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nAuto-shuffle filter\t= $ashuffle_filter\c"
 	echo -e "\nExtra metadata\t\t= $xtagdisp\c"
 	echo -e "\nPlayback history\t= $playhist\c"
-	echo -e "\nFirst use help\t\t= $first_use_help\n"
+	echo -e "\nFirst use help\t\t= $first_use_help\c"
+	echo -e "\nPlaylist covers\t\t= $playlist_art\c"
+	echo -e "\nAshuffle mode\t\t= $ashuffle_mode\n"
+}
+
+RADIO_MANAGER_SETTINGS() {
+	echo -e "R A D I O   M A N A G E R   S E T T I N G S"
+	echo -e "\nRadioview sort/group\t= $radioview_sort_group\c"
+	echo -e "\nRadioview show/hide\t= $radioview_show_hide\n"
 }
 
 MPD_SETTINGS() {
@@ -671,6 +679,10 @@ elif [[ "${arr[138]}" = "3" ]]; then
 	library_encoded_at="Badge"
 fi
 first_use_help=${arr[139]}
+playlist_art=${arr[140]}
+ashuffle_mode=${arr[141]}
+radioview_sort_group=${arr[142]}
+radioview_show_hide=${arr[143]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
@@ -726,6 +738,7 @@ fi
 SYSTEM_PARAMETERS
 AUDIO_PARAMETERS
 APPEARANCE_SETTINGS
+RADIO_MANAGER_SETTINGS
 MPD_SETTINGS
 RENDERER_SETTINGS
 MOODE_LOG

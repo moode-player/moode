@@ -15,7 +15,7 @@
  * Moode Audio Player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -52,7 +52,7 @@
     k.o = function () {
         var s = this;
 
-		this.po = 6;   // pixel offset
+		this.po = 2; // pixel offset
 		this.bloom = true; // bloom
         this.o = null; // array of options
         this.$ = null; // jQuery wrapped element
@@ -296,17 +296,22 @@
 
         this._touch = function (e) {
 
+            if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+				return false;
+			}
+
             var touchMove = function (e) {
 
                 var v = s.xy2val(
-                            e.originalEvent.touches[s.t].pageX,
-                            e.originalEvent.touches[s.t].pageY
-                            );
-			                if (s.$div.parent().hasClass('volume-step-limiter')) {
-			                    if (v - parseInt(SESSION.json['volknob']) > parseInt(SESSION.json['volume_step_limit'])) {
-			        				v = parseInt(SESSION.json['volknob']) + parseInt(SESSION.json['volume_step_limit']);
-			        			}
-			                }
+                    e.originalEvent.touches[s.t].pageX,
+                    e.originalEvent.touches[s.t].pageY
+                );
+
+                if (s.$div.parent().hasClass('volume-step-limiter')) {
+                    if (v - parseInt(SESSION.json['volknob']) > parseInt(SESSION.json['volume_step_limit'])) {
+        				v = parseInt(SESSION.json['volknob']) + parseInt(SESSION.json['volume_step_limit']);
+        			}
+                }
 
                 if (v == s.cv) return;
 
@@ -347,6 +352,10 @@
         };
 
         this._mouse = function (e) {
+
+            if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+				return false;
+			}
 
             var mouseMove = function (e) {
                 var v = s.xy2val(e.pageX, e.pageY);
@@ -541,8 +550,12 @@
         this.xy2val = function (x, y) {
 
 			if (this.$div.parent().hasClass('volume-step-limiter')) {
-				if (SESSION.json['mpdmixer'] == 'disabled') {return false;}
-				if (SESSION.json['volmute'] == '1') {volMuteSwitch();}
+				if (SESSION.json['mpdmixer'] == 'disabled') {
+                    return false;
+                }
+				if (SESSION.json['volmute'] == '1') {
+                    volMuteSwitch();
+                }
 			}
 
             var a, ret;
@@ -572,19 +585,24 @@
             // bind MouseWheel
             var s = this,
                 mw = function (e) {
-                            e.preventDefault();
-                            var ori = e.originalEvent
-                                ,deltaX = ori.detail || ori.wheelDeltaX
-                                ,deltaY = ori.detail || ori.wheelDeltaY
-                                ,v = parseInt(s.$.val()) + (deltaX>0 || deltaY>0 ? s.o.step : deltaX<0 || deltaY<0 ? -s.o.step : 0);
 
-                            if (
-                                s.cH
-                                && (s.cH(v) === false)
-                            ) return;
+                    if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+        				return false;
+        			}
 
-                            s.val(v);
-                        }
+                    e.preventDefault();
+                    var ori = e.originalEvent
+                        ,deltaX = ori.detail || ori.wheelDeltaX
+                        ,deltaY = ori.detail || ori.wheelDeltaY
+                        ,v = parseInt(s.$.val()) + (deltaX>0 || deltaY>0 ? s.o.step : deltaX<0 || deltaY<0 ? -s.o.step : 0);
+
+                    if (
+                        s.cH
+                        && (s.cH(v) === false)
+                    ) return;
+
+                    s.val(v);
+                }
                 , kval, to, m = 1, kv = {37:-s.o.step, 38:s.o.step, 39:s.o.step, 40:-s.o.step};
 
             this.$

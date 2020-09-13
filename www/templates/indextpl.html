@@ -32,7 +32,10 @@
 		<div id="ss-coverart" class="ss-coverart">
 			<div id="ss-coverart-url"></div>
 			<div id="ss-currentsong"></div>
-			<div id="ss-currentalbum"></div>
+			<div id="ss-currentalbum-div">
+				<span id="ss-currentalbum"></span>
+				<span id="ss-hd-badge"></span>
+			</div>
 		</div>
 	</div>
 
@@ -102,7 +105,7 @@
 							<button aria-label="Repeat" class="btn btn-cmd btn-toggle repeat hide" data-cmd="repeat"><i class="fal fa-repeat"></i></button>
 							<button aria-label="Single" class="btn btn-cmd btn-toggle single hide" data-cmd="single"><i class="fal fa-redo"></i></button>
 							<button aria-label="Random Album" class="btn btn-cmd ralbum"><i class="fal fa-dot-circle"></i></button>
-							<button aria-label="Volume Up" class="btn volume-popup-btn hide" data-toggle="modal"><i class="fal fa-volume-up"></i><div id="mvol-bar"><div id="mvol-bg"></div><div aria-label="Volume" id="mvol-progress"></div></div></button>
+							<button aria-label="Volume" class="btn volume-popup-btn hide" data-toggle="modal"><i class="fal fa-volume-up"></i><div id="mvol-bar"><div id="mvol-bg"></div><div aria-label="Volume" id="mvol-progress"></div></div></button>
 							<button aria-label="Add To Favorites" class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
 						</div>
 					</div>
@@ -128,7 +131,10 @@
 						<div id="songsand">
 							<div id="extra-tags-display"></div>
 							<span id="currentsong"></span>
-							<span id="currentalbum"></span>
+							<div id="currentalbum-div">
+								<span id="currentalbum"></span>
+								<span id="playback-hd-badge"></span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -267,10 +273,8 @@
 	<div id="radio-panel" class="tab-pane">
 		<div id="container-radio">
 			<div class="btnlist btnlist-top btnlist-top-ra">
-	            <button aria-label="Back" id="ra-back" class="btn"><i class="far fa-arrow-left"></i></button>
-				<button aria-label="Home" id="ra-home" class="btn"><i class="fas fa-home"></i></button>
-				<button aria-label="Refresh" id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
 				<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="fas fa-cog"></i></button>
+				<button aria-label="Refresh" id="ra-refresh" class="btn"><i class="far fa-redo"></i></button>
 				<button aria-label="New Station" id="ra-new" class="btn"><i class="far fa-plus"></i></button>
 				<form id="ra-search" class="" method="post" onSubmit="return false;">
 					<div class="input-append">
@@ -291,7 +295,7 @@
 	</div>
 </div>
 
-<!-- ADVANCED SEARCH (BROWSE PANEL) -->
+<!-- ADVANCED SEARCH (FOLDER VIEW) -->
 <div id="dbsearch-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="dbsearch-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -390,89 +394,88 @@
 <div id="context-menus">
 	<div id="context-menu-folder" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clradd"><i class="fal fa-share-square sx"></i> Clear/Add</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="update_folder"><i class="fal fa-sync sx"></i> Update this folder</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-folder-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="track_info_folder"><i class="fal fa-music sx"></i> Track info</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-savedpl-root" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clradd"><i class="fal fa-share-square sx"></i> Clear/Add</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="delsavedpl"><i class="fal fa-trash sx"></i> Delete playlist</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-savedpl-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-db-search-results" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-lib-item" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="track_info_lib"><i class="fal fa-music sx"></i> Track info</a></li>
 		</ul>
 	</div>
 
-	<div id="context-menu-lib-all" class="context-menu-lib">
+	<div id="context-menu-lib-album" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_group_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a id="tracklist-toggle" href="#notarget" data-cmd="tracklist"><i class="fal fa-list sx"></i> Show tracks</a></li>
 		</ul>
 	</div>
 
-	<div id="context-menu-lib-disc" class="context-menu-lib"> <!-- r44f -->
+	<div id="context-menu-lib-disc" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="addall"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="playall"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clrplayall"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
-		</ul>
-	</div>
-
-	<div id="context-menu-radio-folder" class="context-menu">
-		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clradd"><i class="fal fa-share-square sx"></i> Clear/Add</a></li>
-			<li><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_group_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
+			<li><a href="#notarget" data-cmd="clear_play_group"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-radio-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="add"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play"><i class="fal fa-play sx"></i> Play</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="clrplay"><i class="fal fa-share-square sx"></i> Clear/Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
+			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
+			<li><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="editradiostn"><i class="fal fa-edit sx"></i> Edit station</a></li>
 			<li><a href="#notarget" data-cmd="delstation"><i class="fal fa-trash sx"></i> Delete station</a></li>
 		</ul>
@@ -614,8 +617,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="adaptive-enabled-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -651,8 +654,8 @@
 								</button>
 								<div class="dropdown-menu open">
 									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-backdrop-enabled-yn"><span class="text">Yes</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-backdrop-enabled-yn"><span class="text">No</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-backdrop-enabled-sel"><span class="text">Yes</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="cover-backdrop-enabled-sel"><span class="text">No</span></a></li>
 									</ul>
 								</div>
 							</div>
@@ -719,7 +722,7 @@
 			<!-- PLAYBACK -->
 			<div class="accordian"><span class="h5">Playback</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
-					<label class="control-label" for="playlist-art-enabled">Show playlist thumbs</label>
+					<label class="control-label" for="playlist-art-enabled">Show Queue thumbs</label>
 					<div class="controls">
 						<div class="btn-group bootstrap-select bootstrap-select-mini">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -730,14 +733,37 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-playlist-art" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-playlist-art" class="help-block hide">
-							Shows thumbnail images for songs and radio stations in the Playlist.
+							Shows thumbnail images for songs and radio stations in the Queue.<br>
+							NOTE: Showing thumbnails may impact performance.
+						</span>
+					</div>
+
+					<label class="control-label" for="renderer-backdrop">Renderer backdrop</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="renderer-backdrop" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-backdrop-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-backdrop-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-renderer-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-renderer-backdrop" class="help-block hide">
+							Display the image or cover backdrop specified in the Theme and Background section or display the default, semi-transparent dark overlay.
 						</span>
 					</div>
 				</div>
@@ -746,6 +772,47 @@
 			<!-- LIBRARY -->
 			<div class="accordian"><span class="h5">Library</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
+					<label class="control-label" for="library-flatlist-filter">Library filter</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-flatlist-filter" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">None</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Lossless</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Lossy</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Format</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Directory</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-library-flatlist-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-library-flatlist-filter" class="help-block hide">
+	                    	This feature filters the MPD database as part of generating the Library.<br>
+							<b>None:</b>&nbsp;Include all tracks in the collection.<br>
+							<b>Lossless:</b>&nbsp;Include tracks whose format is any of .flac|.aif|.wav|.dsf|.dff<br>
+							<b>Lossy:</b>&nbsp;Include tracks whose format is not any of the Lossless formats.<br>
+							<b>Format:</b>&nbsp;Include tracks of a specific format.<br>
+							<b>Directory:</b>&nbsp;Include tracks in a specific directory.<br>
+	                    </span>
+	                </div>
+
+					<div id="library-flatlist-filter-div">
+						<label class="control-label" for="library-flatlist-filter-str">Filter string</label>
+		                <div class="controls">
+		                    <input id="library-flatlist-filter-str" class="input-xlarge input-height-x" type="text">
+							<a aria-label="Help" class="info-toggle" data-cmd="info-library-flatlist-filter-str" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-library-flatlist-filter-str" class="help-block hide">
+								Audio format or directory path used to filter the MPD database.
+							</span>
+		                </div>
+					</div>
+
    	                <label class="control-label" for="instant-play-action">Instant play action</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium">
@@ -758,14 +825,18 @@
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">No action</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Add/Play</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Add</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Play</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Add next</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Play next</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Clear/Play</span></a></li>
 								</ul>
 							</div>
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-instant-play-action" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-instant-play-action" class="help-block hide">
-	                    	Configure Instant Play to perform Clear/Play or Add/Play.
+	                    	Configure Instant Play to perform the selected action or No action.
+							NOTE: This setting affects Radio and Album cover instant play and also the random Album instant play on Playback.
 	                    </span>
 	                </div>
 
@@ -780,8 +851,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -802,8 +873,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
  						</div>
@@ -834,7 +905,7 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-show-encoded-at" class="help-block hide">
-	                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when the bit depth > 24 or sample rate > 44.1 kHz.
+	                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when for Song files the bit depth > 16 or sample rate > 44.1 kHz, and for Radio stations the bit rate is > 128 kbps.
  	                    </span>
  	                </div>
 
@@ -849,8 +920,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
  						</div>
@@ -996,8 +1067,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
  						</div>
@@ -1008,7 +1079,7 @@
  	                    </span>
  	                </div>
 
-					<label class="control-label" for="hires-thumbnails">Hi-res thumbnails</label>
+					<label class="control-label" for="hires-thumbnails">Thumbnail resolution</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1020,17 +1091,19 @@
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">Auto</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">100px</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">200px</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">300px</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px,80</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">500px,80</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">600px,90</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">800px,90</span></a></li>
 								</ul>
 							</div>
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-hires-thumbnails" class="help-block hide">
-							Tell the thumbnail generator to output high-resolution images suitable for large displays or high DPI (Retina) screens. The Auto setting will use the device's pixel ratio to determine an optimum image size and quality while maintaining the smallest file size. Manual settings will result in images of the specified size using a quality factor of 75.<br>
-							NOTE: larger images may result in slower loading of thumbnail images into the Album Cover panel.
+							This option sets the resolution and quality of the JPEG images output by the Thumbnail Generator. Regenerate the thumbnail images after changing this setting.<br>
+							<b>Auto:</b>&nbsp;Uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time).<br>
+							<b>Manual:</b>&nbsp;Use the specified resolution and quality factor. This works best when the majority of covers have a higher resolution than this setting.<br>
+							<b>NOTE:</b>&nbsp;Higher resolutions will impact the performance of the Thumbnail Generator and result in slower loading of thumbnail images into Tag and Album views.
  	                    </span>
  	                </div>
 
@@ -1114,7 +1187,7 @@
 							<b>Animated:</b> Color change overlay.<br>
 							<b>Theme:</b> Theme color overlay.<br>
 							<b>Gradient (Linear):</b> Gradient overlay, top to bottom.<br>
-							<b>Gradient (Radial):</b> Gradient overlay, center to edge.<br>
+				context-menu-lib-albumal):</b> Gradient overlay, center to edge.<br>
 							<b>Pure Black:</b> Solid black overlay.
 	                    </span>
 	                </div>
@@ -1146,7 +1219,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-font-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-font-size" class="help-block hide">
-		                    	Set the size of the font used.
+		                    Set the size of the font used.
 	                    </span>
 	                </div>
 
@@ -1155,7 +1228,7 @@
 						<input id="extra-tags" class="input-xlarge input-height-x" type="text">
 						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-extra-tags" class="help-block hide">
-		                    	Enter any combination of track, disc, year, composer, encoded or None for display under the cover art.
+		                    	Enter any combination of genre, track, disc, year, composer, encoded or None for display under the cover art.
 	                    </span>
 	                </div>
 
@@ -1170,8 +1243,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-yn"><span class="text">No</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-sel"><span class="text">No</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -1187,7 +1260,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-appearance-update btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-appearance-update" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -1244,8 +1317,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">AM</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm"><span class="text">PM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm-sel"><span class="text">AM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-starttime-ampm-sel"><span class="text">PM</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -1282,8 +1355,8 @@
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">AM</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm"><span class="text">PM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm-sel"><span class="text">AM</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-stoptime-ampm-sel"><span class="text">PM</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -1317,6 +1390,7 @@
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">None</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Restart</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Shutdown</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="clockradio-action-sel"><span class="text">Update Library</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -1339,7 +1413,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-clockradio-update btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-clockradio-update" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -1370,7 +1444,7 @@
 					<input id="pl-saveName" type="text" value="" autofocus>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-savepl" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-savepl" class="help-block help-block2 hide">
-	                	Saved playlists are maintained in the Browse view.
+	                	Saved playlists are maintained in Folder view.
 	                </span>
 	            </div>
 	    	</fieldset>
@@ -1395,7 +1469,7 @@
 					<input id="pl-favName" type="text" value="" autofocus>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-favname" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-favname" class="help-block help-block2 hide">
-		            	Sets the playlist that will be used to store favorited items. If the playlist does not already exist it will be created. Playlists are maintained in the Browse view.
+		            	Sets the playlist that will be used to store favorited items. If the playlist does not already exist it will be created. Playlists are maintained in Folder view.
 		            </span>
 	            </div>
 	    	</fieldset>
@@ -1417,9 +1491,9 @@
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="new-station-pls-name">Station name</label>
+	                <label class="control-label" for="new-station-name">Station name</label>
 	                <div class="controls">
-	                    <input id="new-station-pls-name" class="input-xlarge" type="text" name="new_station_pls_name" maxlength="200" value="" autofocus>
+	                    <input id="new-station-name" class="input-xlarge" type="text" name="new_station_name" maxlength="200" value="" autofocus>
 	                </div>
 	                <label class="control-label" for="new-station-url">Playable URL</label>
 	                <div class="controls">
@@ -1441,13 +1515,35 @@
 					</div>
 
 					<div id="new-station-tags">
-						<label class="control-label" for="new-station-display-name">Name (displayed)</label>
+						<label class="control-label" for="new-station-type">Type</label>
 						<div class="controls">
-							<input id="new-station-display-name" class="input-xlarge" type="text" name="new_station_display_name" maxlength="200" value="">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="new-station-type" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Regular</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Favorite</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-type-sel"><span class="text">Hidden</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-new-station-type" class="help-block hide">
+								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+							</span>
 						</div>
 						<label class="control-label" for="new-station-genre">Genre</label>
 						<div class="controls">
 							<input id="new-station-genre" class="input-xlarge" type="text" name="new_station_genre" maxlength="200" value="">
+							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-new-station-genre" class="help-block hide">
+								The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+							</span>
 						</div>
 						<label class="control-label" for="new-station-broadcaster">Broadcaster</label>
 						<div class="controls">
@@ -1467,12 +1563,43 @@
 		                </div>
 						<label class="control-label" for="new-station-bitrate">Bit rate (kbps)</label>
 						<div class="controls">
-		                    <input id="new-station-bitrate" class="input-xlarge" type="text" maxlength="5" name="new_station_bitrate" value="">
+		                    <input id="new-station-bitrate" class="input-xlarge" type="text" maxlength="4" name="new_station_bitrate" value="">
 		                </div>
 						<label class="control-label" for="new-station-format">Audio format</label>
 						<div class="controls">
 		                    <input id="new-station-format" class="input-xlarge" type="text" name="new_station_format" maxlength="10" value="">
 		                </div>
+						<label class="control-label" for="new-station-geo-fenced">Geo-fenced</label>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="new-station-geo-fenced" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="new-station-geo-fenced-sel"><span class="text">No</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-new-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-new-station-geo-fenced" class="help-block hide">
+								Specifies whether the station stream is only avalable in a certain country or region.
+							</span>
+						</div>
+						<!--
+						<label class="control-label" for="new-station-reserved1">Reserved1</label>
+						<div class="controls">
+		                    <input id="new-station-reserved1" class="input-xlarge" type="text" name="new_station_reserved1" maxlength="10" value="">
+		                </div>
+						<label class="control-label" for="new-station-reserved2">Reserved2</label>
+						<div class="controls">
+		                    <input id="new-station-reserved2" class="input-xlarge" type="text" name="new_station_reserved2" maxlength="10" value="">
+		                </div>
+						-->
 					</div>
 	            </div>
 	    	</fieldset>
@@ -1480,7 +1607,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Create" class="btn btn-new-station btn-primary" data-dismiss="modal">Create</button>
+		<button aria-label="Create" id="btn-create-station" class="btn btn-primary" data-dismiss="modal">Create</button>
 	</div>
 </div>
 
@@ -1494,9 +1621,9 @@
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
-	                <label class="control-label" for="edit-station-pls-name">Station name</label>
+	                <label class="control-label" for="edit-station-name">Station name</label>
 	                <div class="controls">
-	                    <input id="edit-station-pls-name" class="input-xlarge" type="text" name="edit_station_name" maxlength="200" value="" readonly>
+	                    <input id="edit-station-name" class="input-xlarge" type="text" name="edit_station_name" maxlength="200" value="" readonly>
 	                </div>
 	                <label class="control-label" for="edit-station-url">Playable URL</label>
 	                <div class="controls">
@@ -1518,13 +1645,35 @@
 					</div>
 
 					<div id="edit-station-tags">
-						<label class="control-label" for="edit-station-display-name">Name (displayed)</label>
+						<label class="control-label" for="edit-station-type">Type</label>
 						<div class="controls">
-							<input id="edit-station-display-name" class="input-xlarge" type="text" name="edit_station_name_displayed" maxlength="200" value="">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="edit-station-type" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Regular</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Favorite</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-type-sel"><span class="text">Hidden</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-edit-station-type" class="help-block hide">
+								This setting controls the visibility of the station and whether it's considered a Favorite. Stations marked as Hidden can be Un-Hidden via the Radio Manager.
+							</span>
 						</div>
 						<label class="control-label" for="edit-station-genre">Genre</label>
 						<div class="controls">
 							<input id="edit-station-genre" class="input-xlarge" type="text" name="edit_station_genre" maxlength="200" value="">
+							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-edit-station-genre" class="help-block hide">
+								The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+							</span>
 						</div>
 						<label class="control-label" for="edit-station-broadcaster">Broadcaster</label>
 						<div class="controls">
@@ -1544,12 +1693,43 @@
 		                </div>
 						<label class="control-label" for="edit-station-bitrate">Bit rate (kbps)</label>
 						<div class="controls">
-		                    <input id="edit-station-bitrate" class="input-xlarge" type="text" maxlength="5" name="edit_station_bitrate" value="">
+		                    <input id="edit-station-bitrate" class="input-xlarge" type="text" maxlength="4" name="edit_station_bitrate" value="">
 		                </div>
 						<label class="control-label" for="edit-station-format">Audio format</label>
 						<div class="controls">
 		                    <input id="edit-station-format" class="input-xlarge" type="text" name="edit_station_format" maxlength="10" value="">
 		                </div>
+						<label class="control-label" for="edit-station-geo-fenced">Geo-fenced</label>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="edit-station-geo-fenced" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">Yes</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="edit-station-geo-fenced-sel"><span class="text">No</span></a></li>
+									</ul>
+								</div>
+	 						</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-station-geo-fenced" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-edit-station-geo-fenced" class="help-block hide">
+								Specifies whether the station stream is only avalable in a certain country or region.
+							</span>
+						</div>
+						<!--
+						<label class="control-label" for="new-station-reserved1">Reserved1</label>
+						<div class="controls">
+		                    <input id="edit-station-reserved1" class="input-xlarge" type="text" name="edit_station_reserved1" maxlength="10" value="">
+		                </div>
+						<label class="control-label" for="new-station-reserved2">Reserved2</label>
+						<div class="controls">
+		                    <input id="edit-station-reserved2" class="input-xlarge" type="text" name="edit_station_reserved2" maxlength="10" value="">
+		                </div>
+						-->
 					</div>
 	            </div>
 	    	</fieldset>
@@ -1557,7 +1737,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" class="btn btn-upd-station btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-update-station" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -1571,7 +1751,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Delete" class="btn btn-del-station btn-primary" data-dismiss="modal">Delete</button>
+		<button aria-label="Delete" id="btn-del-station" class="btn btn-primary" data-dismiss="modal">Delete</button>
 	</div>
 </div>
 
@@ -1583,6 +1763,7 @@
 	<div class="modal-body">
 		<!-- IMPORT/EXPORT STATIONS -->
 		<form class="form-horizontal" action="" method="">
+			<span class="h5">Import/Export Utilities</span>
 			<div class="control-group">
 				<label class="control-label">Import station package</label>
 				<div class="controls">
@@ -1590,34 +1771,144 @@
 						<label for="import-station-pkg" id="choose-station-pkg" class="btn btn-primary btn-medium">Import</label>
 						<input type="file" id="import-station-pkg" accept=".zip" style="display:none" onchange="importStationPkg(this.files)">
 					</div>
-					<!--a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a-->
-					<div id="info-import-station-pkg" class="help-block">
-						Import a radio station ZIP package into the Library. The package contents will replace the existing radio station SQL table, PLS files and station logos. The package must be in the exact format of an exported <b>"stations.zip"</b> file.
+					<a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div id="info-import-station-pkg" class="help-block hide">
+						Import a radio station ZIP package into the Library. The package contents will replace the existing radio station SQL table, PLS files and station logos. The package must be in the exact format of an exported <b>"stations.zip"</b> file. File size must be < 50MB.
 					</div>
 				</div>
-
 				<label class="control-label">Export radio stations</label>
 				<div class="controls">
 					<div class="modal-button-style">
 						<button id="export-stations" class="btn btn-primary btn-small">Export</button>
 					</div>
-					<!--a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a-->
-					<div id="info-export-stations" class="help-block">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div id="info-export-stations" class="help-block hide">
 						Export the radio station SQL table, PLS files and station logos to the file named <b>"stations.zip"</b> in the default download directory of the client.
 					</div>
 				</div>
-
 				<label class="control-label">Import/export status:</label>
 				<div class="controls">
-\					<div id="import-export-msg" class="help-block" style="line-height:24px;"></div>
+					<div id="import-export-msg" class="help-block"></div>
+				</div>
+			</div>
+			<!-- SORT/GROUP OPTIONS -->
+			<span class="h5">Sort/Group Options</span>
+			<div class="control-group">
+				<label class="control-label" for="radioview-sort-tag">Sort tag</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="radioview-sort-tag" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Name</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Genre</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Broadcaster</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Language</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Country</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Region</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Bitrate</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-sort-tag-sel"><span class="text">Format</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-radioview-sort-tag" class="help-block hide">
+						Specify which tag is used to sort the station list.
+					</span>
+				</div>
+				<label class="control-label" for="radioview-group-method">Group method</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="radioview-group-method" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">Favorites first</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">Sort tag</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-group-method-sel"><span class="text">No grouping</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-radioview-group-method" class="help-block hide">
+						Specify how to break the list into groups separated by a named header. The "Favorites first" selection places favorite stations at the top of the list sorted by Name followed by the rest of the stations grouped by Sort tag.
+					</span>
+				</div>
+			</div>
+			<!-- SHOW/HIDE STATIONS -->
+			<span class="h5">Show/Hide Stations</span>
+			<div class="control-group">
+				<label class="control-label" for="radioview-show-hide-moode">moOde stations</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="radioview-show-hide-moode" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">No action</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Show hidden</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide all</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide all</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Hide geo-fenced</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-moode-sel"><span class="text">Un-hide geo-fenced</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-moode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-radioview-show-hide-moode" class="help-block hide">
+						<b>Show hidden:&nbsp;</b> Display hidden moOde stations for review but leave their type set to Hidden.<br>
+						<b>Hide all:&nbsp;</b> Set all moOde stations to type Hidden except for Favorites.<br>
+						<b>Un-hide all:&nbsp;</b> Set all moOde stations to type Regular except for Favorites.<br>
+						<b>Hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Hidden except for Favorites.<br>
+						<b>Un-hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Regular except for Favorites.<br>
+						NOTE: moOde stations are the custom curated set of stations shipped in the release.
+					</span>
+				</div>
+				<label class="control-label" for="radioview-show-hide-other">Other stations</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="radioview-show-hide-other" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">No action</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Show hidden</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Hide all</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="radioview-show-hide-other-sel"><span class="text">Un-hide all</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-radioview-show-hide-other" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-radioview-show-hide-other" class="help-block hide">
+						<b>Show hidden:&nbsp;</b> Display other (non-moOde) hidden stations for review but leave their type set to Hidden.<br>
+						<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden except for Favorites.<br>
+						<b>Un-hide all:&nbsp;</b> Set all other (non-moOde) stations to type Regular except for Favorites.<br>
+						NOTE: Other stations are those that have been user added.
+					</span>
 				</div>
 			</div>
 		</form>
-
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<!--button aria-label="Update" class="btn btn-upd-radio-manager btn-primary" data-dismiss="modal">Update</button-->
+		<button aria-label="Update" id="btn-upd-radio-manager" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
@@ -1625,7 +1916,7 @@
 <div id="deleteplitems-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="deleteplitems-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="deleteplitems-modal-label">Remove playlist items</h3>
+		<h3 id="deleteplitems-modal-label">Remove Queue items</h3>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
@@ -1654,7 +1945,7 @@
 <div id="moveplitems-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="moveplitems-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="moveplitems-modal-label">Move playlist items</h3>
+		<h3 id="moveplitems-modal-label">Move Queue items</h3>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">

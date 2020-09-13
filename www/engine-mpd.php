@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
+ * 2019-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -33,39 +33,39 @@ if ($result[0]['value'] == '0') {
 	exit;
 }
 
-// Check for MPD failure
+// Check for MPD connection failure
 $sock = openMpdSock('localhost', 6600);
 if (!$sock) {
-	workerLog('engine-mpd: Connection to MPD failed');
+	debugLog('engine-mpd: Connection to MPD failed');
 	echo json_encode(array('error' => 'openMpdSock() failed', 'module' => 'engine-mpd'));
 	exit;
 }
 
-debugLog('engine-mpd: Get initial status');
+//workerLog('engine-mpd: Get initial status');
 $current = parseStatus(getMpdStatus($sock));
 
 // Initiate MPD idle
-debugLog('engine-mpd: UI state=(' . $_GET['state'] . '), MPD state=(' . $current['state'] .')');
+//workerLog('engine-mpd: UI state=(' . $_GET['state'] . '), MPD state=(' . $current['state'] .')');
 if ($_GET['state'] == $current['state']) {
-	debugLog('engine-mpd: Wait for idle timeout');
+	//workerLog('engine-mpd: Wait for idle timeout');
 	sendMpdCmd($sock, 'idle');
 	stream_set_timeout($sock, 600000); // Value determines how often PHP times out the socket
 	$resp = readMpdResp($sock);
 
 	$event = explode("\n", $resp)[0];
-	debugLog('engine-mpd: Idle timeout event=(' . $event . ')');
-	debugLog('engine-mpd: Get new status');
+	//workerLog('engine-mpd: Idle timeout event=(' . $event . ')');
+	//workerLog('engine-mpd: Get new status');
 	$current = parseStatus(getMpdStatus($sock));
 	$current['idle_timeout_event'] = $event;
 }
 
 // Create enhanced metadata
-debugLog('engine-mpd: Generating enhanced metadata');
+//workerLog('engine-mpd: Generating enhanced metadata');
 $current = enhanceMetadata($current, $sock, 'engine_mpd_php');
 closeMpdSock($sock);
-debugLog('engine-mpd: Metadata returned to client: Size=(' . sizeof($current) . ')');
-//foreach ($current as $key => $value) {debugLog('engine-mpd: Metadata returned to client: Raw=(' . $key . ' ' . $value . ')');}
-//debugLog('engine-mpd: Metadata returned to client: Json=(' . json_encode($current) . ')');
+//workerLog('engine-mpd: Metadata returned to client: Size=(' . sizeof($current) . ')');
+//foreach ($current as $key => $value) {workerLog('engine-mpd: Metadata returned to client: Raw=(' . $key . ' ' . $value . ')');}
+//workerLog('engine-mpd: Metadata returned to client: Json=(' . json_encode($current) . ')');
 
 // @ohinckel https: //github.com/moode-player/moode/pull/14/files
 $current_json = json_encode($current);

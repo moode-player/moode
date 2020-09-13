@@ -5,7 +5,7 @@
 # moOde 7.0.0 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r700 sources
-# - Bump to Linux kernel 5.4.51 build #1325
+# - Bump to Linux kernel 5.4.61 build #1339
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
@@ -149,7 +149,8 @@ sudo apt-get update
 sudo apt-get -y install rpi-update php-fpm nginx sqlite3 php-sqlite3 php7.3-gd mpc \
     bs2b-ladspa libbs2b0 libasound2-plugin-equal telnet automake sysstat squashfs-tools shellinabox samba smbclient ntfs-3g \
     exfat-fuse git inotify-tools ffmpeg avahi-utils ninja-build python3-setuptools libmediainfo0v5 libmms0 libtinyxml2-6a \
-    libzen0v5 libmediainfo-dev libzen-dev winbind libnss-winbind djmount haveged python3-pip xfsprogs triggerhappy zip id3v2 cmake
+    libzen0v5 libmediainfo-dev libzen-dev winbind libnss-winbind djmount haveged python3-pip xfsprogs triggerhappy zip id3v2 \
+    cmake dos2unix
 
 # meson
 sudo cp ./moode/other/meson-ninja/meson-0.55.0.tar.gz ./
@@ -366,7 +367,8 @@ libsystemd-dev \
 libvorbis-dev \
 libwavpack-dev \
 libwrap0-dev \
-libzzip-dev
+libzzip-dev \
+libpcre++-dev
 
 # Boost 1.68
 sudo cp ./moode/other/boost/boost_1.68_headers.tar.gz /
@@ -413,6 +415,7 @@ sudo meson configure \
 -Dwave_encoder=true \
 -Dwavpack=enabled \
 -Dzeroconf=avahi \
+-Dpcre=enabled \
 -Dzzip=enabled \
 -Dao=disabled \
 -Daudiofile=disabled \
@@ -642,9 +645,9 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-KERNEL=5.4.51
-BUILD=#1325
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 8382ece2b30be0beb87cac7f3b36824f194d01e9
+KERNEL=5.4.61
+BUILD=#1339
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 039088f7d929b0d1cc49e8d2012df0652f908518
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
@@ -857,9 +860,9 @@ sudo apt-get -y install portaudio19-dev
 
 # Compile librespot
 source $HOME/.cargo/env
-sudo cp ./moode/other/librespot/librespot-0.1.2.zip ./
-unzip ./librespot-0.1.2.zip
-cd ./librespot-0.1.2
+sudo cp ./moode/other/librespot/librespot-0.1.3.zip ./
+unzip -q ./librespot-0.1.3.zip
+cd ./librespot-0.1.3
 RUSTFLAGS=-Ccodegen-units=1 cargo build --release --features alsa-backend
 
 # Copy binary
@@ -875,16 +878,14 @@ sudo rm -rf librespot*
 //
 ////////////////////////////////////////////////////////////////
 
-sudo cp ./moode/other/squeezelite/squeezelite-1.8.7-1052.zip ./
-sudo unzip ./squeezelite-1.8.7-1052.zip
+sudo cp ./moode/other/squeezelite/squeezelite-1.9.7-1270.zip ./
+sudo -q unzip ./squeezelite-1.9.7-1270.zip
 cd ./squeezelite-master/
-export CFLAGS="-O3 -march=native -mcpu=native -DDSD -DRESAMPLE -DGPIO -fno-fast-math -mfloat-abi=hard -pipe -fPIC"
-cat ./scripts/squeezelite-ralphy-dsd.patch | patch -p 0
-make
+sudo sed -i '/OPTS/c\OPTS = -DRESAMPLE -DDSD -DGPIO -DRPI -DLINKALL -I./include -I/usr/local/include -s -O3 -march=native -mcpu=native -mfloat-abi=hard -mfpu=vfp' ./Makefile.rpi
+sudo make --makefile=Makefile.rpi
 sudo cp ./squeezelite /usr/local/bin/
 cd ~
-sudo rm -rf ./squeezelite-master/
-unset CFLAGS
+sudo rm -rf ./squeezelite*
 
 ////////////////////////////////////////////////////////////////
 //

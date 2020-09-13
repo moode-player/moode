@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -78,24 +78,24 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 //workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
 // add, remove, change, refresh
 if (isset($_POST['newcurvename'])) {
-	$_search_curve = 'Default';
+	$_search_curve = 'Default curve';
 }
 elseif (isset($_POST['rmcurve'])) {
 	$result = sdbquery("DELETE FROM cfg_eqfa4p WHERE curve_name='" . $_GET['curve'] . "'", $dbh);
-	$_search_curve = 'Default';
+	$_search_curve = 'Default curve';
 	$_SESSION['notify']['title'] = 'Curve removed';
 }
 elseif (isset($_GET['curve'])) {
 	$_search_curve = $_GET['curve'];
 }
 else {
-	$_search_curve = $_SESSION['eqfa4p'] == 'Off' ? 'Default' : $_SESSION['eqfa4p'];
+	$_search_curve = $_SESSION['eqfa4p'] == 'Off' ? 'Default curve' : $_SESSION['eqfa4p'];
 }
 
 session_write_close();
 
 // load curve list
-$_selected_curve = 'Default';
+$_selected_curve = 'Default curve';
 $curveList = sdbquery('SELECT curve_name FROM cfg_eqfa4p', $dbh);
 foreach ($curveList as $curve) {
 	$selected = ($_search_curve == $curve['curve_name'] && $_POST['newcurvename'] != '1') ? 'selected' : '';
@@ -112,8 +112,8 @@ if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
 
 // set control states
 $_disable_play = $_SESSION['eqfa4p'] == 'Off' ? 'disabled' : '';
-$_disable_rm = $_selected_curve == 'Default' ? 'disabled' : '';
-$_disable_rm_msg = $_selected_curve == 'Default' ? 'Default curve cannot be removed' : '';
+$_disable_rm = $_selected_curve == 'Default curve' ? 'disabled' : '';
+$_disable_rm_msg = $_selected_curve == 'Default curve' ? 'The Default curve cannot be removed' : '';
 
 // load curve params
 $result = sdbquery("SELECT * FROM cfg_eqfa4p WHERE curve_name='" . $_search_curve . "'", $dbh);

@@ -260,7 +260,7 @@ if (isset($_POST['update_airplay_settings'])) {
 	}
 
 	if (isset($_POST['airplaysvc']) && $_POST['airplaysvc'] != $_SESSION['airplaysvc']) {
-		$title = $_POST['airplaysvc'] == 1 ? 'Airplay receiver on' : 'Airplay receiver off';
+		$title = $_POST['airplaysvc'] == 1 ? 'Airplay renderer on' : 'Airplay renderer off';
 		playerSession('write', 'airplaysvc', $_POST['airplaysvc']);
 	}
 
@@ -275,7 +275,7 @@ if (isset($_POST['update_rsmafterapl'])) {
 }
 // restart airplay
 if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSION['airplaysvc'] == '1') {
-	submitJob('airplaysvc', '', 'Airplay receiver restarted', '');
+	submitJob('airplaysvc', '', 'Airplay renderer restarted', '');
 }
 
 // SPOTIFY RENDERER
@@ -286,7 +286,7 @@ if (isset($_POST['update_spotify_settings'])) {
 	}
 
 	if (isset($_POST['spotifysvc']) && $_POST['spotifysvc'] != $_SESSION['spotifysvc']) {
-		$title = $_POST['spotifysvc'] == 1 ? 'Spotify receiver on' : 'Spotify receiver off';
+		$title = $_POST['spotifysvc'] == 1 ? 'Spotify renderer on' : 'Spotify renderer off';
 		playerSession('write', 'spotifysvc', $_POST['spotifysvc']);
 	}
 
@@ -301,7 +301,7 @@ if (isset($_POST['update_rsmafterspot'])) {
 }
 // restart spotify
 if (isset($_POST['spotifyrestart']) && $_POST['spotifyrestart'] == 1 && $_SESSION['spotifysvc'] == '1') {
-	submitJob('spotifysvc', '', 'Spotify receiver restarted', '');
+	submitJob('spotifysvc', '', 'Spotify renderer restarted', '');
 }
 // clear credential cache
 if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credentials'] == 1) {

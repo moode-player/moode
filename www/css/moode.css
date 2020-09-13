@@ -36,6 +36,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
 .horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.25em;font-style:italic;color: #888;}
+.horiz-rule-radioview {border-bottom:1px solid var(--textvariant);font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:92%!important;padding-bottom:0!important;}
 .legend-configs {border:none;margin-bottom:.35em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* general */
@@ -165,9 +166,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 
 	#tagview-text-cover {font-size:1rem;width:75px;height:75px;}
 	#lib-coverart-img {float:left;min-width:75px;width:75px;height:75px;margin:0;}
-	#lib-coverart-meta-area img {height:75px;width:75px;min-width:75px;max-width:75px;margin:.25em;}
+	#lib-coverart-meta-area img {height:75px;width:75px;min-width:75px;max-width:75px;margin:.25em .25em .25em .5em;}
 	#lib-coverart-meta-area {float:left;width:100%;line-height:14px;}
-	#lib-meta-summary {width:calc(100% - 75px - .75em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
+	#lib-meta-summary {width:calc(100% - 75px - 1em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
 
 	#songsList {margin:.25em !important;}
 	#lib-file .songname {overflow:hidden;float:left;width:calc(50% - 15px);height:auto;margin-left:5px;}
@@ -215,6 +216,10 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.5rem;width:3.1rem;}
+	.playlist .pl-thumb, .cv-playlist .pl-thumb {display:none;}
+	#playbar-hd-badge {margin-top:.6em;}
+	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
+	#playbar-volume-popup-btn {width:initial!important;}
 }
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
@@ -276,7 +281,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:53vw;height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
-	#playbar-controls .btn {padding:.25em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}
+	#playbar-controls .btn {padding:.5em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}
 	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:.4em;height:unset;width:unset;top:unset;left:unset;transform:none;}
 	#playbar-toggles .btn {transition:none;border-radius:50%;padding:.5rem .7rem;margin-bottom:.5rem;width:unset;height:unset;line-height:11px;}
 	#playbar-timeline {display:none;}
@@ -519,7 +524,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .set-button {margin: 0 4px 0 8px;} /* for system config page 'set' buttons */
 #quickhelp-special-buttons ul {list-style:none;margin-left:0;}
 #quickhelp-special-buttons p {margin-left:1.5em;}
-#quickhelp-special-buttons span, #quickhelp-active-elements span {margin-left:0;font-size:1em;font-weight:500;}
+#quickhelp-special-buttons span, #quickhelp-active-elements span, #quickhelp-queue-commands span {margin-left:0;font-size:1em;font-weight:500;}
 /* playback history log */
 #container-playhistory {padding-top:5px;padding-left: 5px;}
 ol.playhistory {margin-left:55px;}

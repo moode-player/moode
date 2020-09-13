@@ -45,7 +45,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
 				$cmds = array('pause', 'play');
-				chainMpdCmdsDelay($sock, $cmds, 1000000);
+				chainMpdCmds($sock, $cmds, 1000000);
 			}
 		}
 
@@ -85,7 +85,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
 				$cmds = array('pause', 'play');
-				chainMpdCmdsDelay($sock, $cmds, 1000000);
+				chainMpdCmds($sock, $cmds, 1000000);
 			}
 		}
 
@@ -108,7 +108,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
 				$cmds = array('pause', 'play');
-				chainMpdCmdsDelay($sock, $cmds, 1000000);
+				chainMpdCmds($sock, $cmds, 1000000);
 			}
 		}
 

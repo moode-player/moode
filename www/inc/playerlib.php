@@ -86,6 +86,17 @@ const SOX_UPSAMPLE_ONLY_41K		= 1; // Upsample only 44.1K source rate
 const SOX_UPSAMPLE_ONLY_4148K	= 2; // Upsample only 44.1K and 48K source rates
 const SOX_ADHERE_BASE_FREQ		= 8; // Resample (adhere to base freq)
 
+// Album and Radio HD badge parameters
+// NOTE: These are mirrored in playerlib.js
+const ALBUM_HD_BADGE_TEXT 			= 'HD';
+const ALBUM_BIT_DEPTH_THRESHOLD 	= 16;
+const ALBUM_SAMPLE_RATE_THRESHOLD 	= 44100;
+const RADIO_HD_BADGE_TEXT 			= 'HiRes';
+const RADIO_BITRATE_THRESHOLD 		= 128;
+
+// Reserved root directory names
+$ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
+
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
 	$fh = fopen(MOODE_LOG, $mode);
@@ -112,23 +123,22 @@ function debugLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
-// Helper functions for html generation (pcasto)
-function versioned_resource($file, $type='stylesheet') {
+// Helper functions for html generation (@pcasto)
+function versioned_stylesheet($file, $type='stylesheet') {
 	echo '<link href="' . $file . '?v=' . $_SESSION['moode_release'] . '" rel="' . $type .'">' . "\n";
 }
 function versioned_script($file, $type='') {
 	echo '<script src="' . $file . '?v=' . $_SESSION['moode_release'] . '"' . ($type != '' ? ' type="' . $type . '"' . ' defer></script>' : ' defer></script>') . "\n";
 }
 
-// core mpd functions
+// Core MPD functions
 
 // AG from Moode 3 prototype
 // TC retry to improve robustness
 function openMpdSock($host, $port) {
 	for ($i = 0; $i < 6; $i++) {
 		if (false === ($sock = @stream_socket_client('tcp://' . $host . ':' . $port, $errorno, $errorstr, 30))) {
-			debugLog('openMpdSocket(): connection failed (' . ($i + 1) . ')');
-			debugLog('openMpdSocket(): errorno: ' . $errorno . ', ' . $errorstr);
+			debugLog('openMpdSocket(): error: connection failed (' . ($i + 1) . ') ' . $errorno . ', ' . $errorstr);
 		}
 		else {
 			$resp = readMpdResp($sock);
@@ -144,13 +154,10 @@ function openMpdSock($host, $port) {
 // TC rewrite to handle fgets() fail
 function readMpdResp($sock) {
 	$resp = '';
-	//debugLog('readMpdResponse(): reading response'); // comment these out to reduce log clutter
 
 	while (false !== ($str = fgets($sock, 1024)) && !feof($sock)) {
 		if (strncmp(MPD_RESPONSE_OK, $str, strlen(MPD_RESPONSE_OK)) == 0) {
 			$resp = $resp == '' ? $str : $resp;
-			//debugLog('readMpdResponse(): success $str=(' . explode("\n", $str)[0] . ')');
-			//debugLog('readMpdResponse(): success $resp[0]=(' . explode("\n", $resp)[0] . ')');
 			return $resp;
 		}
 
@@ -164,8 +171,8 @@ function readMpdResp($sock) {
 	}
 
 	if (!feof($sock)) {
-		debugLog('readMpdResponse(): error: fgets fail due to socket being timed out or PHP/MPD connection failure');
-		debugLog('readMpdResponse(): error: $resp[0]=(' . explode("\n", $resp)[0] . ')');
+		// Socket timed out or PHP/MPD connection failure
+		debugLog('readMpdResponse(): error: fgets failure (' . explode("\n", $resp)[0] . ')');
 	}
 
 	return $resp;
@@ -173,7 +180,6 @@ function readMpdResp($sock) {
 
 function closeMpdSock($sock) {
 	sendMpdCmd($sock, 'close');
-	//$resp = readMpdResp($sock);
 	fclose($sock);
 }
 
@@ -181,28 +187,27 @@ function sendMpdCmd($sock, $cmd) {
 	fputs($sock, $cmd . "\n");
 }
 
-function chainMpdCmds($sock, $cmds) {
+function chainMpdCmds($sock, $cmds, $delay = 0) {
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
         $resp = readMpdResp($sock);
+
+		if ($delay > 0) {
+			usleep($delay); // Microseconds
+		}
     }
-}
-
-function chainMpdCmdsDelay($sock, $cmds, $delay) {
-    sendMpdCmd($sock, $cmds[0]);
-    $resp = readMpdResp($sock);
-
-	usleep($delay); // microseconds 1000000 = 1 sec
-
-    sendMpdCmd($sock, $cmds[1]);
-    $resp = readMpdResp($sock);
 }
 
 function getMpdStatus($sock) {
 	sendMpdCmd($sock, 'status');
 	$status = readMpdResp($sock);
-
 	return $status;
+}
+
+function getMpdStats($sock) {
+	sendMpdCmd($sock, 'stats');
+	$stats = readMpdResp($sock);
+	return $stats;
 }
 
 // miscellaneous core functions
@@ -339,16 +344,12 @@ function sockWrite($sock, $msg) {
 // Caching library loader
 function loadLibrary($sock) {
 	if (filesize(LIBCACHE_JSON) != 0) {
-		debugLog('loadLibrary(): Cache data returned to client, length (' . filesize(LIBCACHE_JSON) . ')');
 		return file_get_contents(LIBCACHE_JSON);
 	}
 	else {
-		debugLog('loadLibrary(): Generating flat list...');
 		$flat = genFlatList($sock);
 
 		if ($flat != '') {
-			debugLog('loadLibrary(): Flat list generated, size (' . sizeof($flat) . ')');
-			debugLog('loadLibrary(): Generating library...');
 			// Normal or UTF8 replace
 			if ($_SESSION['library_utf8rep'] == 'No') {
 				$json_lib = genLibrary($flat);
@@ -356,11 +357,9 @@ function loadLibrary($sock) {
 			else {
 				$json_lib = genLibraryUTF8Rep($flat);
 			}
-			debugLog('loadLibrary(): Cache data returned to client, length (' . strlen($json_lib) . ')');
 			return $json_lib;
 		}
 		else {
-			debugLog('loadLibrary(): Flat list empty');
 			return '';
 		}
 	}
@@ -390,13 +389,28 @@ function genFlatList($sock) {
 	// Get metadata
 	$resp = '';
 	foreach ($dirs as $dir) {
-		//workerLog('Directory: ' . $dir);
-		sendMpdCmd($sock, 'listallinfo "' . $dir . '"');
+		// NOTE: MPD must be compiled with libpcre++-dev to make use of PERL compatible regex
+		switch ($_SESSION['library_flatlist_filter']) {
+			case 'None':
+				$cmd = "search base \"" . $dir . "\"";
+				break;
+			case 'Lossless':
+				$cmd = "search \"((base '" . $dir . "') AND (file =~ '.flac|.aif|.wav|.dsf|.dff'))\"";
+				break;
+			case 'Lossy':
+				$cmd = "search \"((base '" . $dir . "') AND (file !~ '.flac|.aif|.wav|.dsf|.dff'))\"";
+				break;
+			case 'Format':
+			case 'Directory':
+				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
+				break;
+		}
+		sendMpdCmd($sock, $cmd);
 		$resp .= readMpdResp($sock);
 	}
 
 	//workerLog('genFlatList(): is_null($resp)= ' . (is_null($resp) === true ? 'true' : 'false') . ', substr($resp, 0, 2)= ' . substr($resp, 0, 2));
-	if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
+	if (!is_null($resp)) {
 		$lines = explode("\n", $resp);
 		$item = 0;
 		$flat = array();
@@ -406,13 +420,21 @@ function genFlatList($sock) {
 		for ($i = 0; $i < $linecount; $i++) {
 			list($element, $value) = explode(': ', $lines[$i], 2);
 
-			if ($element == 'file') {
+			if ($element == 'OK') {
+				// NOTE: Skip any ACK's
+			}
+			else if ($element == 'file') {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
-			// Exclude directories and playlists from listallinfo
-			elseif ($element == 'directory' || $element == 'playlist') {
-				++$i;
+			// @Atair: Gather possible multiple Genre values as array
+			elseif ($element == 'Genre') {
+				if ($flat[$item]['Genre']) {
+					array_push($flat[$item]['Genre'], $value);
+				}
+				else {
+					$flat[$item]['Genre'] = array($value);
+				}
 			}
 			else {
 				$flat[$item][$element] = $value;
@@ -431,8 +453,6 @@ function genLibrary($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		//$ext = getFileExt($flatData['file']);
-
 		$songData = array(
 			'file' => $flatData['file'],
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
@@ -444,11 +464,10 @@ function genLibrary($flat) {
 			'year' => getTrackYear($flatData),
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
-			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
+			// @Atair: 'Unknown' genre has to be an array
+			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')),
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified'],
-			//'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? getEncodedAt($flatData, 'default', false) :
-			//	getEncodedAt($flatData, 'default', true))
 			'encoded_at' => getEncodedAt($flatData, 'default', true)
 		);
 
@@ -456,12 +475,9 @@ function genLibrary($flat) {
 	}
 
 	$json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE);
-	debugLog('genLibrary(): $lib, size= ' . sizeof($lib));
-	debugLog('genLibrary(): $json_lib, length= ' . strlen($json_lib));
-	debugLog('genLibrary(): json_last_error()= ' . json_last_error_msg());
 
 	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
-		debugLog('genLibrary: create libcache.json failed');
+		workerLog('genLibrary(): error: libcache.json file create failed');
 	}
 	//workerLog(print_r($lib, true));
 	return $json_lib;
@@ -517,8 +533,6 @@ function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		//$ext = getFileExt($flatData['file']);
-
 		$songData = array(
 			'file' => utf8rep($flatData['file']),
 			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')),
@@ -530,13 +544,11 @@ function genLibraryUTF8Rep($flat) {
 			'year' => utf8rep(getTrackYear($flatData)),
 			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
+			// @Atair: 'Unknown' genre has to be an array
+			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))),
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified'],
-			//'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? utf8rep(getEncodedAt($flatData, 'default', false)) :
-			//	utf8rep(getEncodedAt($flatData, 'default', true)))
 			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true))
-
 		);
 
 		array_push($lib, $songData);
@@ -544,7 +556,7 @@ function genLibraryUTF8Rep($flat) {
 
 	$json_lib = json_encode($lib);
 	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
-		debugLog('genLibrary: create libcache.json failed');
+		workerLog('genLibraryUTF8Rep(): error: libcache.json file create failed');
 	}
 	return $json_lib;
 }
@@ -587,80 +599,52 @@ function clearLibCache() {
 	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
 }
 
-// add group of songs to playlist (library panel)
-function addallToPL($sock, $songs) {
-	$cmds = array();
+// Add group of song files to the Queue (Tag/Album view)
+function addGroupToQueue($sock, $songs) {
+	$mpd_cmds = array();
 
 	foreach ($songs as $song) {
-		$path = $song;
-		array_push($cmds, 'add "' . html_entity_decode($path) . '"');
+		array_push($mpd_cmds, 'add "' . html_entity_decode($song) . '"');
 	}
 
-	chainMpdCmds($sock, $cmds);
+	chainMpdCmds($sock, $mpd_cmds);
 }
 
-// add to playlist (from folder and radio panels)
-function addToPL($sock, $path) {
-	//workerLog($path);
+// Add one item (song file, playlist, radio station, directory) to the Queue
+function addItemToQueue($sock, $path) {
 	$ext = getFileExt($path);
+	$pl_extensions = array('m3u', 'pls', 'cue');
+	//workerLog($path . ' (' . $ext . ')');
 
-	// radio dir
-	if ($path == 'RADIO') {
-		sendMpdCmd($sock, 'listfiles RADIO');
-		$resp = readMpdResp($sock);
-
-		$files = array();
-		$line = strtok($resp, "\n");
-		$i = 0;
-
-		while ($line) {
-			list($param, $value) = explode(': ', $line, 2);
-			if ($param == 'file') {
-				$files[$i] = $value;
-				$i++;
-			}
-			$line = strtok("\n");
-		}
-
-		natcasesort($files);
-
-		foreach($files as $file) {
-			sendMpdCmd($sock, 'load "RADIO/' . $file . '"');
-			$resp = readMpdResp($sock);
-		}
-	}
-	// playlist
-	elseif ($ext == 'm3u' || $ext == 'pls' || $ext == 'cue' || (strpos($path, '/') === false && $path != 'NAS' && $path != 'SDCARD')) {
-		// radio stations
+	// Use load for saved playlist, cue sheet, radio station
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && !in_array($path, $ROOT_DIRECTORIES))) {
+		// Radio station special case
 		if (strpos($path, 'RADIO') !== false) {
-			// check for playlist as url
+			// Check for playlist as URL
 			$pls = file_get_contents(MPD_MUSICROOT . $path);
 			$url = parseDelimFile($pls, '=')['File1'];
-			$end = substr($url, -4);
-			if ($end == '.pls' || $end == '.m3u') {
+			$ext = substr($url, -4);
+			if ($ext == '.pls' || $ext == '.m3u') {
 				$path = $url;
 			}
 		}
 		sendMpdCmd($sock, 'load "' . html_entity_decode($path) . '"');
 	}
-	// file or dir
+	// Use add for song file or directory
 	else {
 		sendMpdCmd($sock, 'add "' . html_entity_decode($path) . '"');
 	}
 
-	$resp = readMpdResp($sock);
-	return $resp;
+	return readMpdResp($sock);
 }
 
-// get file extension
+// Get file extension
 function getFileExt($file) {
-	$pos = strrpos($file, '.');
-	$ext = substr($file, $pos + 1);
-
-	return strtolower($ext);
+	$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+	return $ext == '' ? 'no_extension_found' : $ext;
 }
 
-// parse delimited file
+// Parse delimited file
 function parseDelimFile($data, $delim) {
 	$array = array();
 	$line = strtok($data, "\n");
@@ -699,11 +683,11 @@ function delPLFile($sock, $plname) {
 	return $resp;
 }
 
-// search mpd database
+// Search mpd database
 function searchDB($sock, $querytype, $query = '') {
 	//workerLog($querytype . ', ' . $query);
 	switch ($querytype) {
-		// list a database path
+		// List a database path
 		case 'lsinfo':
 			if (!empty($query)){
 				sendMpdCmd($sock, 'lsinfo "' . html_entity_decode($query) . '"');
@@ -713,11 +697,11 @@ function searchDB($sock, $querytype, $query = '') {
 				sendMpdCmd($sock, 'lsinfo');
 				break;
 			}
-		// search all tags
+		// Search all tags
 		case 'any':
 			sendMpdCmd($sock, 'search any "' . html_entity_decode($query) . '"');
 			break;
-		// search specified tags
+		// Search specified tags
 		case 'specific':
 			sendMpdCmd($sock, 'search ' . html_entity_decode($query));
 			break;
@@ -727,7 +711,7 @@ function searchDB($sock, $querytype, $query = '') {
 	return parseList($resp);
 }
 
-// format mpd lsinfo output
+// Format searchDB output
 function parseList($resp) {
 	if (is_null($resp)) {
 		return NULL;
@@ -735,7 +719,6 @@ function parseList($resp) {
 	else {
 		$array = array();
 		$line = strtok($resp,"\n");
-		$file = '';
 		$idx = -1;
 
 		while ($line) {
@@ -743,27 +726,25 @@ function parseList($resp) {
 
 			if ($element == 'file') {
 				$idx++;
-				$file = $value;
-				$array[$idx]['file'] = $file;
-				$array[$idx]['fileext'] = getFileExt($file);
+				$array[$idx]['file'] = $value;
+				$array[$idx]['fileext'] = getFileExt($value);
 			}
 			else if ($element == 'directory') {
 				$idx++;
-				$diridx++; // record directory index for further processing
-				$file = $value;
-				$array[$idx]['directory'] = $file;
+				$diridx++; // Save directory index for further processing
+				$array[$idx]['directory'] = $value;
+				$cover_file = md5($value) . '.jpg';
+				$array[$idx]['cover_url'] = file_exists(THMCACHE_DIR . $cover_file) ? '/imagesw/thmcache/' . $cover_file : '';
 			}
 			else if ($element == 'playlist') {
 				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
 					$idx++;
-					$file = $value;
-					$array[$idx]['file'] = $file;
-					$array[$idx]['fileext'] = getFileExt($file);
+					$array[$idx]['file'] = $value;
+					$array[$idx]['fileext'] = getFileExt($value);
 				}
 				else {
 					$idx++;
-					$file = $value;
-					$array[$idx]['playlist'] = $file;
+					$array[$idx]['playlist'] = $value;
 				}
 			}
 			else {
@@ -774,7 +755,7 @@ function parseList($resp) {
 			$line = strtok("\n");
 		}
 
-		// put dirs on top
+		// Put dirs on top
 		if (isset($diridx) && isset($array[0]['file']) ) {
 			$files = array_slice($array, 0, -$diridx);
             $dirs = array_slice($array, -$diridx);
@@ -915,7 +896,7 @@ function formatChan($channels) {
 // parse audio output hardware params
 function parseHwParams($resp) {
 	if (is_null($resp)) {
-		return 'Error, parseHwParams response is null';
+		return 'parseHwParams(): Response is null';
 	}
 	elseif ($resp != "closed\n" && $resp != "no setup\n") {
 		$array = array();
@@ -965,7 +946,7 @@ function parseCurrentSong($sock) {
 	$resp = readMpdResp($sock);
 
 	if (is_null($resp) ) {
-		return 'Error, parseCurrentSong response is null';
+		return 'parseCurrentSong(): Response is null';
 	}
 	else {
 		$array = array();
@@ -981,48 +962,48 @@ function parseCurrentSong($sock) {
 	}
 }
 
-// Parse MPD playlistfind output
-function parsePlaylistFind($sock, $path) {
-	sendMpdCmd($sock, 'playlistfind file "' . $path . '"');
+// Find a file or album in the Queue
+function findInQueue($sock, $tag, $search) {
+	sendMpdCmd($sock, 'playlistfind ' . $tag . ' "' . $search . '"');
 	$resp = readMpdResp($sock);
 
-	if (is_null($resp) ) {
-		return 'Error, parsePlaylistFind response is null';
+	if ($resp == "OK\n") {
+		return 'findInQueue(): ' . $tag . ' ' . $search . ' not found';
 	}
-	else {
-		$array = array();
-		$line = strtok($resp, "\n");
 
+	$array = array();
+	$line = strtok($resp, "\n");
+
+	// Return position
+	if ($tag == 'file') {
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
-			$array[$element] = $value;
+			if ($element == 'Pos') {
+				$array['Pos'] = $value;
+				break;
+			}
+
 			$line = strtok("\n");
 		}
-
-		return $array;
 	}
-}
-
-// Parse MPD listplaylist output
-function parseListPlaylist($sock, $path) {
-	sendMpdCmd($sock, 'listplaylist "' . $path . '"');
-	$resp = readMpdResp($sock);
-
-	if (is_null($resp) ) {
-		return 'Error, parseListPlaylist response is null';
-	}
-	else {
-		$array = array();
-		$line = strtok($resp, "\n");
-
+	// Return files and positions
+	else if ($tag == 'album') {
+		$i = 0;
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
-			$array[$element] = $value;
+			if ($element == 'file') {
+				$array[$i]['file'] = $value;
+			}
+			if ($element == 'Pos') {
+				$array[$i]['Pos'] = $value;
+				$i++;
+			}
+
 			$line = strtok("\n");
 		}
-
-		return $array;
 	}
+
+	return $array;
 }
 
 // parse cfg_mpd settings
@@ -1053,7 +1034,7 @@ function parseCfgMpd($dbh) {
 // parse radio station file
 function parseStationFile($resp) {
 	if (is_null($resp) ) {
-		return 'Error, parseStationFile response is null';
+		return 'parseStationFile(): Response is null';
 	}
 	else {
 		$array = array();
@@ -1072,7 +1053,7 @@ function parseStationFile($resp) {
 // parse play history log
 function parsePlayHist($resp) {
 	if (is_null($resp) ) {
-		return 'parsePlayHist(): parsePlayHist response is null';
+		return 'parsePlayHist(): Response is null';
 	}
 	else {
 		$array = array();
@@ -1277,7 +1258,7 @@ function phpSession($action, $param = '', $value = '') {
 }
 
 // TODO: new database management
-function dbConnect() {
+/*function dbConnect() {
 	if ($dbh = new PDO(SQLDB)) {
 		return $dbh;
 	}
@@ -1305,7 +1286,8 @@ function dbRead($table, $dbh, $param = '', $id = '') {
 		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
 	}
 	else if ($table == 'cfg_radio') {
-		$querystr = 'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
+		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("DELETED", "zx reserved 499")' :
+			'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
 	}
 	else {
 		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
@@ -1452,7 +1434,7 @@ function dbQuery($querystr, $dbh) {
 		return false;
 	}
 }
-
+*/
 // database management
 function cfgdb_connect() {
 	if ($dbh = new PDO(SQLDB)) {
@@ -1482,7 +1464,8 @@ function cfgdb_read($table, $dbh, $param = '', $id = '') {
 		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
 	}
 	else if ($table == 'cfg_radio') {
-		$querystr = 'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
+		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("DELETED", "zx reserved 499")' :
+			'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
 	}
 	else {
 		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
@@ -1970,7 +1953,7 @@ function sourceMount($action, $id = '') {
 				$return = empty($result) ? true : false;
 			}
 
-			debugLog('sourceMount(): result=(' . implode("\n", $result) . ')');
+			debugLog('sourceMount(): Command=(' . $mountstr . ')');
 			break;
 
 		case 'mountall':
@@ -2108,7 +2091,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 
 	// Special sectuon to handle calls from genLibrary() to populate the element "encoded_at"
 	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
-	// Returnesd string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
+	// Returned string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
 	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
 	if ($called_from_genlib) {
 		$mpd_format_tag = explode(':', $song_data['Format']);
@@ -2123,7 +2106,9 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 		}
 		// PCM or Multichannel PCM
 		else {
-			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > 16) || $mpd_format_tag[0] > 44100 ? ',h' : ',s';
+			// Workaround for wrong bit depth returned for ALAC encoded m4a files
+			$mpd_format_tag[1] = ($ext == 'm4a' && $mpd_format_tag[1] == '32') ? '24' : $mpd_format_tag[1];
+			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > ALBUM_BIT_DEPTH_THRESHOLD) || $mpd_format_tag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? ',h' : ',s';
 			$encoded_at = ($mpd_format_tag[1] == 'f' ? '' : $mpd_format_tag[1] . '/') . formatRate($mpd_format_tag[0]) . ' ' . strtoupper($ext) . $hd;
 		}
 	}
@@ -2138,7 +2123,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 	// DSD file
 	elseif ($ext == 'dsf' || $ext == 'dff') {
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"');
-		$encoded_at = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' Mbps');
+		$encoded_at = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' MHz');
 	}
 	// PCM file
 	else {
@@ -2153,7 +2138,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 
 		// Mediainfo
 		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"';
-		debugLog($cmd);
+		//workerLog($cmd);
 		$result = sysCmd($cmd);
 
 		$bitdepth = $result[0] == '' ? '?' : $result[0];
@@ -2182,7 +2167,7 @@ function stopSps () {
 }
 
 function startSps() {
-	// verbose logging
+	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
 		$logging = '-vv';
 		$logfile = '/var/log/shairport-sync.log';
@@ -2192,7 +2177,7 @@ function startSps() {
 		$logfile = '/dev/null';
 	}
 
-	// get device num
+	// Get device num
 	$array = sdbquery('select value from cfg_mpd where param="device"', cfgdb_connect());
 	$device = $array[0]['value'];
 
@@ -2209,13 +2194,12 @@ function startSps() {
 		$device = 'plughw:' . $array[0]['value'];
 	}
 
-	// interpolation param handled in config file
+	// Interpolation param handled in config file
 	$cmd = '/usr/local/bin/shairport-sync ' . $logging .
 		' -a "' . $_SESSION['airplayname'] . '" ' .
-		//'-w -B /var/local/www/commandw/spspre.sh -E /var/local/www/commandw/spspost.sh ' .
 		'-- -d ' . $device . ' > ' . $logfile . ' 2>&1 &';
 
-	debugLog('worker: (' . $cmd . ')');
+	debugLog('startSps(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
 
@@ -2262,9 +2246,9 @@ function startSpotify() {
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' . // audio file cache eats disk space
 		' --onevent /var/local/www/commandw/spotevent.sh' .
 		' > /dev/null 2>&1 &';
-		//' -v > /home/pi/librespot.txt 2>&1 &'; // r45a debug
+		//' -v > /home/pi/librespot.txt 2>&1 &'; // For debug
 
-	debugLog('worker: (' . $cmd . ')');
+	debugLog('startSpotify(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
 
@@ -2277,12 +2261,12 @@ function startBt() {
 	// we should have a MAC address
 	$result = sysCmd('ls /var/lib/bluetooth');
 	if ($result[0] == '') {
-		workerLog('worker: Bluetooth error, no MAC address');
+		workerLog('startBt(): Bluetooth error, no MAC address');
 	}
 	// initialize controller
 	else {
 		$result = sysCmd('/var/www/command/bt.sh -i');
-		//workerLog('worker: Bluetooth controller initialized');
+		//workerLog('startBt(): Bluetooth controller initialized');
 	}
 }
 
@@ -3070,10 +3054,15 @@ function setAudioOut($audioout) {
 	}
 
 	// Renderers
-	stopSps();
-	stopSpotify();
-	startSps();
-	startSpotify();
+	if ($_SESSION['airplaysvc'] == '1') {
+		stopSps();
+		startSps();
+	}
+
+	if ($_SESSION['spotifysvc'] == '1') {
+		stopSpotify();
+		startSpotify();
+	}
 
 	// Other
 	setMpdHttpd();
@@ -3133,14 +3122,14 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$song = parseCurrentSong($sock);
 	$current['file'] = $song['file'];
 
-	// NOTE any of these might be '' null string
+	// NOTE: Any of these might be '' (empty)
+	$current['genre'] = $song['Genre'];
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
 	$current['composer'] = $song['Composer'];
 	// Cover hash
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
-		//workerLog('$current: cover hash: ' . $current['cover_art_hash']);
 	}
 
 	if ($current['file'] == null) {
@@ -3148,12 +3137,9 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		$current['title'] = '';
 		$current['album'] = '';
 		$current['coverurl'] = DEF_COVER;
-		debugLog('enhanceMetadata(): File is NULL');
+		debugLog('enhanceMetadata(): error: currentsong file is NULL');
 	}
 	else {
-		//workerLog('enhanceMetadata(): Caller=' . $caller);
-		//workerLog('enhanceMetadata(): current= ' . $current['file']);
-		//workerLog('enhanceMetadata(): session= ' . $_SESSION['currentfile']);
 		// Only do this code block once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
 			$current['encoded'] = getEncodedAt($song, 'default'); // encoded bit depth and sample rate
@@ -3165,51 +3151,52 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		else {
 			$current['encoded'] = $_SESSION['currentencoded'];
 		}
-		//debugLog('enhanceMetadata(): File=' . $current['file']);
-		//debugLog('enhanceMetadata(): Encoded=' . $current['encoded']);
 
 		// iTunes aac or aiff file
 		$ext = getFileExt($song['file']);
 		if (isset($song['Name']) && ($ext == 'm4a' || $ext == 'aif' || $ext == 'aiff')) {
+			//workerLog('enhanceMetadata(): AAC or AIFF song file');
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name'];
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
-			//debugLog('enhanceMetadata(): iTunes AAC or AIFF file');
+			$current['hidef'] = ($ext == 'aif' || $ext == 'aiff') ? 'yes' : 'no';
 		}
 		// Radio station
-		elseif (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && /*!isset($song['Artist'])*/!isset($current['duration']))) {
-			debugLog('enhanceMetadata(): Radio station');
+		elseif (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
+			//workerLog('enhanceMetadata(): Radio station');
 			$current['artist'] = 'Radio station';
+			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
 			if (!isset($song['Title']) || trim($song['Title']) == '') {
 				$current['title'] = 'Streaming source';
-				//$current['title'] = $song['file']; // URL
 			}
 			else {
 				// Use custom name for certain stations if needed
-				//$current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
+				// EX: $current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
 				$current['title'] = $song['Title'];
 			}
 
 			if (isset($_SESSION[$song['file']])) {
-				// Use xmitted name for SOMA FM stations
+				// Use transmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
 				// Include original station name
 				$current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
-					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg"; // local logo image
+					// Local logo image
+					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg";
 				}
 				else {
-					$current['coverurl'] = $_SESSION[$song['file']]['logo']; // url logo image
+					// URL logo image
+					$current['coverurl'] = $_SESSION[$song['file']]['logo'];
 				}
-				# Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
+				# NOTE: Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
 				if (strpos($_SESSION[$song['file']]['name'], 'BBC') !== false && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
 					$current['bitrate'] = '320 kbps';
 				}
 			}
 			else {
-				// Not in radio station table, use xmitted name or 'unknown'
+				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
 				$current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
@@ -3236,17 +3223,16 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			// Song file
 			else {
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
+				$current['hidef'] = ($current['audio_sample_depth'] > 16 || ($current['audio_sample_rate'] * 1000) > 44100) ? 'yes' : 'no';
 			}
-			//$current['coverurl'] = substr($song['file'], 0, 4) == 'http' ? getUpnpCoverUrl() : '/coverart.php/' . rawurlencode($song['file']);
-			// In case 2 url's are returned
+			// In case 2 url's are returned, use the first
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
-			debugLog('enhanceMetadata(): coverurl: (' . $current['coverurl'] . ')');
 
 			if (substr($song['file'], 0, 4) == 'http') {
-				debugLog('enhanceMetadata(): UPnP url');
+				//workerLog('enhanceMetadata(): UPnP url');
 			}
 			else {
-				debugLog('enhanceMetadata(): Song file');
+				//workerLog('enhanceMetadata(): Song file');
 			}
 		}
 	}
@@ -3254,7 +3240,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	return $current;
 }
 
-//function getCoverHash($file, $ext) {
 function getCoverHash($file) {
 	set_include_path('/var/www/inc');
 	$ext = getFileExt($file);
@@ -3267,10 +3252,9 @@ function getCoverHash($file) {
 
 		$path = MPD_MUSICROOT . $file;
 		$hash = false;
-		//workerlog('getCoverHash(): path: ' . $path);
 
 		// file: embedded cover
-		if ($search_pri == 'Embedded cover') { // embedded first
+		if ($search_pri == 'Embedded cover') { // Embedded first
 			$hash = getHash($path);
 		}
 
@@ -3287,29 +3271,27 @@ function getCoverHash($file) {
 			}
 
 			if ($hash === false) {
-				if ($search_pri == 'Cover image file') { // embedded last
+				if ($search_pri == 'Cover image file') { // Embedded last
 					$hash = getHash($path);
 				}
 			}
 
 			if ($hash === false) {
-				// nothing found
+				// Nothing found
 				$hash = 'getCoverHash(): no cover found';
 			}
 		}
 	}
 	else {
-		//$hash = 'getCoverHash(): not a PCM file';
 		$hash = rand();
 	}
 
 	return $hash;
 }
 
-// modified versions of coverart.php functions
+// Modified versions of coverart.php functions
 // (C) 2015 Andreas Goetz
 function rtnHash($mime, $hash) {
-	//workerLog('getCoverHash(): rtnHash(): ' . $mime . ', ' . strlen($hash) . ' bytes');
 	switch ($mime) {
 		case "image/gif":
 		case "image/jpg":
@@ -3325,9 +3307,7 @@ function rtnHash($mime, $hash) {
 	return false;
 }
 function getHash($path) {
-	//workerLog('getCoverHash(): getHash(): ' . $path);
 	if (!file_exists($path)) {
-		//workerLog('getCoverHash(): getHash(): ' . $path . ' (does not exist)');
 		return false;
 	}
 
@@ -3335,7 +3315,7 @@ function getHash($path) {
 	$ext = pathinfo($path, PATHINFO_EXTENSION);
 
 	switch (strtolower($ext)) {
-		// image file
+		// Image file
 		case 'gif':
 		case 'jpg':
 		case 'jpeg':
@@ -3346,7 +3326,7 @@ function getHash($path) {
 			$hash = md5(file_get_contents($path, 1024) + $stat['size']);
 			break;
 
-		// embedded images
+		// Embedded images
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
 			try {
@@ -3369,7 +3349,6 @@ function getHash($path) {
 
 				if ($flac->hasMetadataBlock(Zend_Media_Flac::PICTURE)) {
 					$picture = $flac->getPicture();
-					//workerLog('getCoverHash(): flac: getData(): length: ' . strlen($picture->getData()));
 					$hash = rtnHash($picture->getMimeType(), $picture->getData());
 				}
 			}
@@ -3403,8 +3382,7 @@ function getHash($path) {
 	return $hash;
 }
 function parseDir($path) {
-	//workerLog('getCoverHash(): parseDir(): ' . $path);
-	// default cover files
+	// Default cover files
 	$covers = array(
 		'Cover.jpg', 'cover.jpg', 'Cover.jpeg', 'cover.jpeg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff',
 		'Folder.jpg', 'folder.jpg', 'Folder.jpeg', 'folder.jpeg', 'Folder.png', 'folder.png', 'Folder.tif', 'folder.tif', 'Folder.tiff', 'folder.tiff'
@@ -3415,12 +3393,11 @@ function parseDir($path) {
 			break;
 		}
 	}
-	// all other image files
+	// All other image files
 	$extensions = array('jpg', 'jpeg', 'png', 'tif', 'tiff');
 	$path = str_replace('[', '\[', $path);
 	$path = str_replace(']', '\]', $path);
 	foreach (glob($path . '*') as $file) {
-		//workerLog('getCoverHash(): parseDir(): glob' . $file);
 		if (is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $extensions)) {
 			$result = getHash($file);
 			if ($result !== false) {
@@ -3436,15 +3413,14 @@ function parseDir($path) {
 function loadRadio() {
 	// Delete radio station session vars to purge any orphans
 	foreach ($_SESSION as $key => $value) {
-		if (substr($key, 0, 5) == 'http:') {
+		if (substr($key, 0, 4) == 'http') {
 			unset($_SESSION[$key]);
 		}
 	}
 	// Load cfg_radio into session
-	$result = cfgdb_read('cfg_radio', cfgdb_connect());
+	$result = cfgdb_read('cfg_radio', cfgdb_connect(), 'all');
 	foreach ($result as $row) {
-		if ($row['station'] != 'DELETED') {
-			$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
-		}
+		$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'],
+			'bitrate' => $row['bitrate'], 'format' => $row['format']);
 	}
 }

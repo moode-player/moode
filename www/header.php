@@ -39,8 +39,50 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 
+    <!-- RESOURCES -->
+    <!-- Common CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="css/flat-ui.min.css" rel="stylesheet">
+    <link href="css/jquery.pnotify.default.min.css" rel="stylesheet">
+    <link href="css/fontawesome-moode.min.css" rel="stylesheet">
+    <link href="css/panels.min.css" rel="stylesheet">
+    <link href="css/moode.min.css" rel="stylesheet">
+    <!-- Common JS -->
+    <script src="js/bootstrap.min.js" defer></script>
+    <script src="js/bootstrap-select.min.js" defer></script>
+    <script src="js/jquery.pnotify.min.js" defer></script>
+    <script src="js/notify.min.js" defer></script>
+    <script src="js/playerlib-nomin.js" defer></script>
+    <script src="js/playerlib.min.js" defer></script>
+    <script src="js/links.min.js" defer></script>
+    <!-- Playback / Library -->
+    <?php if ($section == 'index') { ?>
+        <link href="css/jquery.countdown.min.css" rel="stylesheet">
+        <script src="js/jquery.countdown.min.js" defer></script>
+        <script src="js/jquery.scrollTo.min.js" defer></script>
+        <script src="js/jquery.touchSwipe.min.js" defer></script>
+        <script src="js/jquery.lazyload.min.js" defer></script>
+        <script src="js/jquery.md5.min.js" defer></script>
+        <script src="js/jquery.adaptive-backgrounds.min.js" defer></script>
+        <script src="js/jquery.knob.min.js" defer></script>
+        <script src="js/bootstrap-contextmenu.min.js" defer></script>
+        <script src="js/scripts-library.min.js" defer></script>
+        <script src="js/scripts-panels.min.js" defer></script>
+    <!-- Configs -->
+    <?php } else { ?>
+        <script src="js/custom_checkbox_and_radio.min.js" defer></script>
+        <script src="js/custom_radio.js" defer></script>
+        <script src="js/jquery.tagsinput.min.js" defer></script>
+        <script src="js/jquery.placeholder.min.js" defer></script>
+        <script src="js/i18n/_messages.en.js', 'text/javascript" defer></script>
+        <script src="js/application.min.js" defer></script>
+        <script src="js/scripts-configs.min.js" defer></script>
+    <?php } ?>
+
 	<!-- VERSIONED RESOURCES -->
 	<?php
+        /*
 		// Common css
 		//removeIf(USEBUNDLE)
 		versioned_stylesheet('css/bootstrap.min.css');
@@ -97,6 +139,7 @@
 			//endRemoveIf(USEBUNDLE)
 			// USEBUNDLE versioned_script('js/config.min.js');
 		}
+        */
 	?>
 
 	<!-- MOBILE APP ICONS -->
@@ -122,6 +165,7 @@
 
     <!-- INPUT SOURCE INDICATOR -->
     <div id="inpsrc-indicator" class="inpsrc">
+        <div id="inpsrc-backdrop"></div>
         <div id="inpsrc-msg"></div>
     </div>
 
@@ -186,7 +230,10 @@
 			</div>
             <div id="playbar-title">
 				<div id="playbar-currentsong"></div>
-				<div id="playbar-currentalbum"></div>
+                <div>
+                    <span id="playbar-currentalbum"></span>
+                    <span id="playbar-hd-badge"></span>
+                </div>
 				<div id="playbar-mtime">
 					<div id="playbar-mcount"></div>
 					<div id="playbar-mtotal"></div>
@@ -204,19 +251,20 @@
 					<div id="playbar-total"></div>
 				</div>
 			</div>
-			<div id="playbar-radio"></div>
 			<div id="playbar-toggles">
 				<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
                 <button aria-label="Playlist" class="btn btn-cmd btn-toggle hide" id="cv-playlist-btn"><i class="fal fa-list"></i></button>
 				<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
 				<button aria-label="Random Album" class="btn btn-cmd ralbum hide"><i class="fal fa-dot-circle"></i></button>
 				<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
-				<button aria-label="Volume" class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button>
+				<!--button aria-label="Volume" class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button-->
+                <button aria-label="Volume" id="playbar-volume-popup-btn" class="btn volume-popup-btn" data-toggle="modal"><i class="fas fa-volume-off"></i><span id="playbar-volume-level"></span></button>
 				<button aria-label="Consume" class="btn btn-cmd btn-toggle consume hide" id="playbar-consume" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
 				<button aria-label="Add To Favourites" class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
 			</div>
 		</div>
 	</div>
+
     <!-- COVERVIEW PLAYLIST -->
     <div id="cv-playlist">
         <ul class="cv-playlist"></ul>
