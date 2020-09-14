@@ -608,7 +608,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
 
-    // Click on playlist entry
+    // Click on Queue item
     $('.playlist, .cv-playlist').on('click', '.pl-entry', function(e) {
         if (GLOBAL.plActionClicked) {
             GLOBAL.plActionClicked = false;
@@ -622,7 +622,7 @@ jQuery(document).ready(function($) { 'use strict';
         $(this).parent().addClass('active');
     });
 
-	// Click on playlist action menu button
+	// Click on Queue action menu button (ellipsis)
     $('.playlist').on('click', '.pl-action', function(e) {
         GLOBAL.plActionClicked = true;
 
@@ -1279,6 +1279,9 @@ jQuery(document).ready(function($) { 'use strict';
 
         if ($('#cv-playlist').css('display') == 'block') {
             setTimeout(function() {
+                if (SESSION.json['playlist_art'] == 'Yes') {
+                    lazyLode('cv-playlist');
+                }
                 customScroll('cv-playlist', parseInt(MPD.json['song']));
             }, DEFAULT_TIMEOUT);
 
@@ -1315,11 +1318,19 @@ jQuery(document).ready(function($) { 'use strict';
             $('#cv-playlist').hide();
             $('#lib-coverart-img').show();
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
-            var width = UI.mobile ? '100%' : '38%';
-            $('#playback-queue').css('width', '38.1%');
-
+            if (UI.mobile) {
+                var width = '100%';
+                $('#playback-queue').css('width', '99.9%');
+            }
+            else {
+                var width = '38%';
+                $('#playback-queue').css('width', '38.1%');
+            }
             setTimeout(function() {
                 $('#playback-queue').css('width', width); // TEST: Restore correct width to force Queue visable
+                if (SESSION.json['playlist_art'] == 'Yes') {
+                    lazyLode('playlist');
+                }
                 customScroll('playlist', parseInt(MPD.json['song']));
             }, DEFAULT_TIMEOUT);
 

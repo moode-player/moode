@@ -41,7 +41,7 @@ while true; do
 	# PHP-FPM
 	if (( FPM_CNT > FPM_LIMIT )); then
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		LOG_MSG=" watchdog: Info: Moderating PHP fpm worker pool"
+		LOG_MSG=" watchdog: Info: Reducing PHP fpm worker pool"
 		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 		systemctl restart php7.3-fpm
 	fi

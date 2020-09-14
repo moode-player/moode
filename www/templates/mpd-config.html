@@ -57,7 +57,8 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-dsd-audio" class="help-block-configs help-block-margin hide">
-						If Native DSD is selected and the audio device does not actually support it then DSD to PCM on-the-fly conversion will be performed.
+						<b>Native DSD:</b>&nbsp;If the audio device reports that it supports Native DSD then MPD will send the unaltered DSD botstream to the device otherwose MPD will perform DSD to PCM on-the-fly conversion.<br>
+						<b>DSD over PCM (DoP):</b>&nbsp;There is no way to detect if an audio device supports DoP so only enable this if you are certain that the device support it otherwise the encapsulated DSD botstream may cause loud or unpredictable distortion.
                     </span>
                 </div>
             </div>
