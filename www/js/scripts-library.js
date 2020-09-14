@@ -159,6 +159,7 @@ function groupLib(fullLib) {
 			last_modified: getLastModified(albumTracks),
             year: year,
 			album: findAlbumProp(albumTracks, 'album'),
+            musicbrainz_albumid: findAlbumProp(albumTracks, 'musicbrainz_albumid'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
             artist: albumArtist || artist,
@@ -320,15 +321,6 @@ function filterByArtist(item) {
 	var album_artist = item.album_artist && item.album_artist.toLowerCase();
 	return LIB.filters.artists.find(function(artistFilter){
 		var artistFilterLower = artistFilter.toLowerCase();
-        // REMOVE: This code block is not needed because the compilation grouping is naturally
-        // formed using the tagging scheme where compilations have album artist tag set to a string
-        // for example "Various Artists" plus the priority of using album artist over artist.
-        /*if (LIB.filters.artists == SESSION.json['library_comp_id']) {
-            return artist === artistFilterLower || album_artist === artistFilterLower;
-        }
-        else if (album_artist != SESSION.json['library_comp_id'].toLowerCase()) {
-            return artist === artistFilterLower || album_artist === artistFilterLower;
-        }*/
         return artist === artistFilterLower || album_artist === artistFilterLower;
 	});
 }
@@ -444,7 +436,7 @@ function removeArticles(string) {
 
 // Generate album@artist key
 function keyAlbum(obj) {
-    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase();
+    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.musicbrainz_albumid;
 }
 
 // Return numeric song time
@@ -691,11 +683,11 @@ var renderSongs = function(albumPos) {
         lastAlbum = '';
         lastDisc = '';
 		for (i = 0; i < filteredSongs.length; i++) {
-			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0,4) : ' ';
-
-            if (filteredSongs[i].album != lastAlbum) {
-                albumDiv = '<div class="lib-album-heading">' + filteredSongs[i].album + '</div>';
-                lastAlbum = filteredSongs[i].album;
+			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
+            var album = filteredSongs[i].musicbrainz_albumid == '0' ? filteredSongs[i].album : filteredSongs[i].album + ' (' + filteredSongs[i].musicbrainz_albumid.slice(0, 8) + ')';
+            if (album != lastAlbum) {
+                albumDiv = '<div class="lib-album-heading">' + album + '</div>';
+                lastAlbum = album;
             }
             else {
                 albumDiv = '';
