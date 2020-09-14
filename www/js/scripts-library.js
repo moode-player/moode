@@ -365,8 +365,8 @@ function filterAlbums() {
 	}
 	// Filter by artist
 	if (LIB.filters.artists.length) {
-		artistSongs = allSongs.filter(filterByArtist);
-		songKeys = artistSongs.map(a => a.key)
+		var artistSongs = allSongs.filter(filterByArtist);
+		var songKeys = artistSongs.map(a => a.key)
 		filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));}); 
 		filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));}); 
 	}
