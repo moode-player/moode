@@ -98,10 +98,10 @@ function reduceGenres(acc, track) {
 }
 
 function reduceArtists(acc, track) {
-	var artist = (track.album_artist || track.artist).toLowerCase();
+	var artist = (track.artist || track.album_artist).toLowerCase();
 	if (!acc[artist]) {
 		acc[artist] = [];
-		acc[artist].artist = track.album_artist || track.artist;
+		acc[artist].artist = track.artist || track.album_artist;
 	}
 	acc[artist].push(track);
 	return acc;
@@ -347,6 +347,11 @@ function filterArtists() {
 		songsfilteredByGenre = songsfilteredByGenre.filter(filterByGenre);
 	}
 	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
+	filteredArtists.sort(function(a, b) {
+                        a = removeArticles(a).toLowerCase();
+                        b = removeArticles(b).toLowerCase();
+                        return a > b ? 1 : (a < b ? -1 : 0);
+                });
 }
 
 function filterAlbums() {
@@ -360,8 +365,10 @@ function filterAlbums() {
 	}
 	// Filter by artist
 	if (LIB.filters.artists.length) {
-		filteredAlbums = filteredAlbums.filter(filterByArtist);
-		filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
+		artistSongs = allSongs.filter(filterByArtist);
+		songKeys = artistSongs.map(a => a.key)
+		filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));}); 
+		filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));}); 
 	}
     // Filter by file last-updated timestamp
     if (LIB.recentlyAddedClicked) {
