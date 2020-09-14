@@ -204,6 +204,7 @@ gulp.task('browserSync', function(done) {
         middleware: [ 
             $.httpProxyMiddleware.createProxyMiddleware('/imagesw/thmcache',  { target: pkg.server.proxy, changeOrigin: true }),
             $.httpProxyMiddleware.createProxyMiddleware('/imagesw/radio-logos',  { target: pkg.server.proxy, changeOrigin: true }),
+            $.httpProxyMiddleware.createProxyMiddleware('/imagesw/bgimage.jpg',  { target: pkg.server.proxy, changeOrigin: true }),
             $.httpProxyMiddleware.createProxyMiddleware('/command/',  { target: pkg.server.proxy , changeOrigin: true}),
             $.httpProxyMiddleware.createProxyMiddleware('/*.php',  { target: pkg.server.proxy, changeOrigin: true }),
             $.httpProxyMiddleware.createProxyMiddleware('/*.php/*',  { target: pkg.server.proxy, changeOrigin: true })
@@ -404,7 +405,7 @@ gulp.task('minifyhtml', function (done) {
         .pipe($.rename(function (path) {
             path.basename += '.min';
          }))
-        .pipe(gulp.dest(DEPLOY_LOCATION))
+        .pipe(gulp.dest(DEPLOY_LOCATION+'/templates'))
         .on('end', done);
 });
 

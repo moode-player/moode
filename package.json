@@ -1,6 +1,6 @@
 {
   "name": "moOde",
-  "version": "6.6.0d",
+  "version": "7.0.0b1",
   "description": "moOde audio player",
   "author": "Tim Curtis",
   "main": "index.js",
