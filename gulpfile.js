@@ -230,15 +230,28 @@ function fileNameToMin(relpath) {
     return newrelpath;
 }
 
+/**
+ * Cache create from used js and css resources minified and sourcemaps files.
+ *
+ */
 gulp.task('cache', function(done){
     var plugins=[
         autoprefixer({cascade: false}),
         cssnano()
     ];
-    return gulp.src(pkg.app.src+'/index.html')
-        .pipe($.replace(/.*BUNDLE_TAG/g, "")) // remove comment blocks to in clude everything
+    return gulp.src(pkg.app.src+'/header.php')
+        .pipe($.rename(function (path) {
+            path.basename = 'index';
+            path.extname = '.html';
+        }))
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // remove comment blocks to in clude everything
+        .pipe($.replace(/.*CONFIGBLOCKSECTION.*/g, ""))
+        .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, ""))        
+        .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.useref({ noconcat: true
-                        ,allowEmpty: true } ))
+                         ,allowEmpty: true } ))
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.cache, map: fileNameToMin}) ))
         .pipe($.if('!*.html', $.sourcemaps.init({loadMaps: true})))
         .pipe($.if('*.css', $.postcss(plugins) ))
@@ -250,6 +263,8 @@ gulp.task('cache', function(done){
         .pipe($.sourcemaps.write('maps'))
         .pipe($.if('!*.html', $.if(!mode.force(), $.size({showFiles: true, total: true}))))
         .pipe($.if(['**/*.js','**/*.css', '**/*.map'], gulp.dest(pkg.app.cache)) )
+//        .pipe($.if('*.html',$.size({showFiles: true, total: true})))
+//        .pipe($.if('*.html', gulp.dest(pkg.app.cache)) )
         .on('end', done);
 });
 
@@ -260,10 +275,22 @@ gulp.task('maps', function (done) {
         .pipe(gulp.dest(pkg.app.dest));
 });
 
+/**
+ * Generate the bundle files for css and js, excluding the html file.
+ * It reuse the minified files in the cache
+ */
 gulp.task('bundle', gulp.series([`cache`, `maps`],function (done) {
-    return gulp.src(pkg.app.src+'/index.html')
-        // process everything; remove the lines with BUNDLE_TAG
-        .pipe($.replace(/.*BUNDLE_TAG.*/g, ""))
+    return gulp.src(pkg.app.src+'/header.php')
+        .pipe($.rename(function (path) {
+            path.basename = 'index';
+            path.extname = '.html';
+        }))
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // remove comment blocks to in clude everything
+        .pipe($.replace(/.*CONFIGBLOCKSECTION.*/g, ""))
+        .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, ""))        
+        .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.useref( { // transform name to .min version
                           transformPath:fileNameToMin 
                           // use add path the location with the min versions
@@ -283,28 +310,56 @@ gulp.task('bundle', gulp.series([`cache`, `maps`],function (done) {
  *  - templates/indextpl.html 
  *  - footer.php
  * 
- * It uses index.dev.html to create the index.html. This one includes the (parts of the )resources aboveheader.php.
+ * It uses header.php with processing tage to create the src/index.html. This one includes the (parts of the ) resources.
  *
  */
+
 gulp.task('genindexdev', function(done){
-    return gulp.src(pkg.app.src+'/index.dev.html')
+    return gulp.src(pkg.app.src+'/header.php')
+        .pipe($.rename(function (path) {
+            path.basename = 'index';
+            path.extname = '.html';
+        }))
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // adds multiple jquery files instead of one jquery bundle
+        .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, "")) // make wellformed by adding cloding body and html
+        .pipe($.replace(/.*CONFIGBLOCKSECTION_BEGIN.*/g, "<!-- CONFIGBLOCKSECTION")) // adds multiple jquery files instead of one jquery bundle        
+        .pipe($.replace(/.*CONFIGBLOCKSECTION_END.*/g, "CONFIGBLOCKSECTION -->")) // adds multiple jquery files instead of one jquery bundle        
         .pipe($.include({
             hardFail: true,
             separateInputs: true,
             includePaths: [
             __dirname + '/www'
-            ]}))
-            .pipe($.rename(function (path) {
-                path.basename = 'index';
-            }))
+            ]})) // include templates/indextpl.html and footer.php to create working index.html
         .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe((gulp.dest(pkg.app.src) ))
         .on('end', done);
 });
 
+/**
+ * Generates the develop index.html (uses the bundles)
+ */
 gulp.task('genindex', function(done){
-    return gulp.src(pkg.app.src+'/index.html')
+    return gulp.src(pkg.app.src+'/header.php')
+        .pipe($.rename(function (path) {
+            path.basename = 'index';
+            path.extname = '.html';
+        }))        
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dest})))
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // adds multiple jquery files instead of one jquery bundle
+        .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, "")) // make wellformed by adding cloding body and html
+        .pipe($.replace(/.*CONFIGBLOCKSECTION_BEGIN.*/g, "<!-- CONFIGBLOCKSECTION")) // adds multiple jquery files instead of one jquery bundle        
+        .pipe($.replace(/.*CONFIGBLOCKSECTION_END.*/g, "CONFIGBLOCKSECTION -->")) // adds multiple jquery files instead of one jquery bundle        
+        .pipe($.include({
+            hardFail: true,
+            separateInputs: true,
+            includePaths: [
+            __dirname + '/www'
+            ]})) // include templates/indextpl.html and footer.php to create working index.html
+        .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, NOCONFIGSECTION:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.useref({noAssets: true}))
         .pipe($.replaceTask({ patterns: REPLACEMENT_PATTERNS }))
         .pipe($.preprocess({ context: { STRIP_CONFIG: true } }))
@@ -316,8 +371,12 @@ gulp.task('genindex', function(done){
 gulp.task('patchheader', function (done) {
     return gulp.src(pkg.app.src+'/header.php')
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
-        .pipe($.removeCode({USEBUNDLE:true}))
-        .pipe($.replace(/\/\/[ ]USEBUNDLE[ ]/g, ""))
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/.*BUNDLE_TAG.*/g, ""))
+        .pipe($.removeCode({ GENINDEXDEV: false, NOCONFIGSECTION: false, GENINDEXDEV: false, USEBUNDLE:true, commentStart: "<!--", commentEnd:"-->"}))
+        .pipe($.preprocess({ context: { STRIP_CONFIG: true } }))
+        .pipe($.useref({noAssets: true}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
 });
@@ -340,25 +399,12 @@ gulp.task('minifyhtml', function (done) {
     return gulp.src(pkg.app.src+'/templates/indextpl.html')
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.htmlmin({ collapseWhitespace: true,
-            ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ] 
+             ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ] 
         }))
         .pipe($.rename(function (path) {
             path.basename += '.min';
          }))
         .pipe(gulp.dest(DEPLOY_LOCATION))
-        .on('end', done);
-});
-
-gulp.task('minifyhtml', function (done) {
-    return gulp.src(pkg.app.src+'/templates/indextpl.html')
-        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
-        .pipe($.htmlmin({ collapseWhitespace: true,
-            ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ] 
-        }))
-        .pipe($.rename(function (path) {
-            path.basename += '.min';
-         }))
-        .pipe(gulp.dest(DEPLOY_LOCATION+'/templates/'))
         .on('end', done);
 });
 
@@ -374,12 +420,12 @@ gulp.task('artwork', function(done) {
 
 gulp.task('clean', function(done) {
     if(mode.all() )
-        return $.del([pkg.app.dest,pkg.app.dist, pkg.app.cache]);
+        return $.del([pkg.app.dest,pkg.app.dist, pkg.app.src+'/index.html', pkg.app.cache]);
     else
-        return $.del([pkg.app.dest,pkg.app.dist]);
+        return $.del([pkg.app.dest,pkg.app.dist, pkg.app.src+'/index.html']);
 });
 
-gulp.task('build', gulp.series( [`sass`, `bundle`, `genindexdev`, `genindex`, `artwork`], function (done) {
+gulp.task('build', gulp.series( [`sass`, `genindexdev`, `genindex`, `bundle`, `artwork`], function (done) {
     done();
 }));
 
