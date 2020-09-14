@@ -2367,6 +2367,7 @@ $('#btn-appearance-update').click(function(e){
 	var accentColorChange = false;
 	var themeSettingsChange = false;
     var libraryOptionsChange = false;
+    var libraryFilterChange = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
     var extraTagsChange = false;
@@ -2398,8 +2399,8 @@ $('#btn-appearance-update').click(function(e){
     //if (SESSION.json['render_backdrop'] != $('#renderer-backdrop span').text()) {}
 
     // Library options
-    if (SESSION.json['library_flatlist_filter'] != $('#library-flatlist-filter span').text()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_flatlist_filter_str'] != $('#library-flatlist-filter-str').val()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_flatlist_filter'] != $('#library-flatlist-filter span').text()) {libraryFilterChange = true;}
+    if (SESSION.json['library_flatlist_filter_str'] != $('#library-flatlist-filter-str').val()) {libraryFilterChange = true;}
     if (SESSION.json['library_instant_play'] != $('#instant-play-action span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {
 		$('#show-genres-column span').text() == "Yes" ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
@@ -2472,6 +2473,9 @@ $('#btn-appearance-update').click(function(e){
 	}
 	if (scnSaverTimeoutChange == true) {
         $.get('command/moode.php?cmd=resetscnsaver');
+	}
+    if (libraryFilterChange == true) {
+        $.get('command/moode.php?cmd=clear_libcache');
 	}
 	if (accentColorChange == true) {
 		accentColor = themeToColors(SESSION.json['accent_color']);
