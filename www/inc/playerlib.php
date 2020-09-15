@@ -124,6 +124,7 @@ function debugLog($msg, $mode = 'a') {
 }
 
 // Helper functions for html generation (@pcasto)
+// NOTE: These were used in header.php but as of the 7.0.0 release they are no longer used.
 function versioned_stylesheet($file, $type='stylesheet') {
 	echo '<link href="' . $file . '?v=' . $_SESSION['moode_release'] . '" rel="' . $type .'">' . "\n";
 }

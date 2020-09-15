@@ -78,52 +78,6 @@
         <script src="js/scripts-configs.min.js" defer></script>
     <?php } ?>
 
-	<!-- VERSIONED RESOURCES -->
-	<?php
-        /*
-		// Common css
-		versioned_stylesheet('css/bootstrap.min.css');
-		versioned_stylesheet('css/bootstrap-select.min.css');
-		versioned_stylesheet('css/flat-ui.min.css');
-		versioned_stylesheet('css/jquery.pnotify.default.min.css');
-		versioned_stylesheet('css/fontawesome-moode.min.css');
-		versioned_stylesheet('css/panels.min.css');
-		versioned_stylesheet('css/moode.min.css');
-		// Common js
-		versioned_script('js/bootstrap.min.js');
-		versioned_script('js/bootstrap-select.min.js');
-		versioned_script('js/jquery.pnotify.min.js');
-        versioned_script('js/notify.min.js');
-        versioned_script('js/playerlib-nomin.js');
-        versioned_script('js/playerlib.min.js');
-		versioned_script('js/links.min.js');
-		// Playback / Library
-		if ($section == 'index') {
-			versioned_stylesheet('css/jquery.countdown.min.css');
-			versioned_script('js/jquery.countdown.min.js');
-			versioned_script('js/jquery.scrollTo.min.js');
-			versioned_script('js/jquery.touchSwipe.min.js');
-			versioned_script('js/jquery.lazyload.min.js');
-			versioned_script('js/jquery.md5.min.js');
-			versioned_script('js/jquery.adaptive-backgrounds.min.js');
-			versioned_script('js/jquery.knob.min.js');
-			versioned_script('js/bootstrap-contextmenu.min.js');
-            versioned_script('js/scripts-library.min.js');
-            versioned_script('js/scripts-panels.min.js');
-		}
-		// Configs
-		else {
-			versioned_script('js/custom_checkbox_and_radio.min.js');
-			versioned_script('js/custom_radio.js');
-			versioned_script('js/jquery.tagsinput.min.js');
-			versioned_script('js/jquery.placeholder.min.js');
-			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
-			versioned_script('js/application.min.js');
-			versioned_script('js/scripts-configs.min.js');
-		}
-        */
-	?>
-
 	<!-- MOBILE APP ICONS -->
 	<!-- Apple -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
