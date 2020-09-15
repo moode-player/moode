@@ -164,7 +164,8 @@ function groupLib(fullLib) {
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
             artist: albumArtist || artist,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
-            encoded_at: findAlbumProp(albumTracks, 'encoded_at')
+            encoded_at: findAlbumProp(albumTracks, 'encoded_at'),
+            comment: findAlbumProp(albumTracks, 'comment')
 		};
 	});
 
@@ -684,7 +685,8 @@ var renderSongs = function(albumPos) {
         lastDisc = '';
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
-            var album = filteredSongs[i].musicbrainz_albumid == '0' ? filteredSongs[i].album : filteredSongs[i].album + ' (' + filteredSongs[i].musicbrainz_albumid.slice(0, 8) + ')';
+            //var album = filteredSongs[i].musicbrainz_albumid == '0' ? filteredSongs[i].album : filteredSongs[i].album + ' (' + filteredSongs[i].musicbrainz_albumid.slice(0, 8) + ')';
+            var album = filteredSongs[i].musicbrainz_albumid == '0' ? filteredSongs[i].album : filteredSongs[i].album + ' (' + filteredSongs[i].comment + ')';
             if (album != lastAlbum) {
                 albumDiv = '<div class="lib-album-heading">' + album + '</div>';
                 lastAlbum = album;
@@ -728,8 +730,12 @@ var renderSongs = function(albumPos) {
 
 	$('#songsList').html(output);
 
-    // Display album name heading if more than 1 album for clicked artist
-	if (filteredAlbums.length > 1 && LIB.artistClicked == true && LIB.albumClicked == false) {
+    // Display album name heading:
+    // - if more than 1 album for clicked artist
+    // - if first song musicbrainz_albumid != '0'
+
+	if ((filteredAlbums.length > 1 && LIB.artistClicked == true && LIB.albumClicked == false) ||
+        filteredSongs[0].musicbrainz_albumid != '0') {
 		$('.lib-album-heading').css('display', 'block');
 	}
 
