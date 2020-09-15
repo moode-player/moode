@@ -124,6 +124,7 @@ function debugLog($msg, $mode = 'a') {
 }
 
 // Helper functions for html generation (@pcasto)
+// NOTE: These were used in header.php but as of the 7.0.0 release they are no longer used.
 function versioned_stylesheet($file, $type='stylesheet') {
 	echo '<link href="' . $file . '?v=' . $_SESSION['moode_release'] . '" rel="' . $type .'">' . "\n";
 }
@@ -464,6 +465,7 @@ function genLibrary($flat) {
 			'year' => getTrackYear($flatData),
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
+			'musicbrainz_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
 			// @Atair: 'Unknown' genre has to be an array
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')),
 			'time_mmss' => songTime($flatData['Time']),
@@ -474,12 +476,17 @@ function genLibrary($flat) {
 		array_push($lib, $songData);
 	}
 
-	$json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE);
+	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
+		workerLog('genLibrary(): error: json_encode($lib) failed');
+	}
 
-	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
+	if (false === (file_put_contents(LIBCACHE_JSON, $json_lib))) {
 		workerLog('genLibrary(): error: libcache.json file create failed');
 	}
+
 	//workerLog(print_r($lib, true));
+	//workerLog(print_r($json_lib, true));
+	//workerLog('genLibrary(): json_error_message(): ' . json_error_message());
 	return $json_lib;
 }
 
@@ -544,6 +551,7 @@ function genLibraryUTF8Rep($flat) {
 			'year' => utf8rep(getTrackYear($flatData)),
 			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
+			'musicbrainz_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : ''),
 			// @Atair: 'Unknown' genre has to be an array
 			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))),
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
@@ -554,10 +562,14 @@ function genLibraryUTF8Rep($flat) {
 		array_push($lib, $songData);
 	}
 
-	$json_lib = json_encode($lib);
-	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
+	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
+		workerLog('genLibraryUTF8Rep(): error: json_encode($lib) failed');
+	}
+
+	if (false === (file_put_contents(LIBCACHE_JSON, $json_lib))) {
 		workerLog('genLibraryUTF8Rep(): error: libcache.json file create failed');
 	}
+
 	return $json_lib;
 }
 // UTF8 replace (@lazybat)

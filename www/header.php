@@ -115,7 +115,7 @@
     <?php } ?>
 	<!--endRemoveIf(GENINDEXDEV)-->
 
-	<!-- VERSIONED RESOURCES -->
+  <!-- VERSIONED RESOURCES -->
 	<?php
         /*
 		// Common css

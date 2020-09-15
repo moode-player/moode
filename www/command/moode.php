@@ -558,10 +558,6 @@ else {
 			break;
 		case 'updcfgsystem':
 			foreach (array_keys($_POST) as $var) {
-				if ($_SESSION['library_flatlist_filter'] != $_POST['library_flatlist_filter'] ||
-					$_SESSION['library_flatlist_filter_str'] != $_POST['library_flatlist_filter_str']) {
-					clearLibCache();
-				}
 				playerSession('write', $var, $_POST[$var]);
 			}
 
@@ -672,6 +668,9 @@ else {
 			syscmd('sqlite3 /var/local/www/db/moode-sqlite3.db -csv "select * from cfg_radio" > /var/local/www/db/cfg_radio.csv');
 			sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/local/www/imagesw/radio-logos/* /var/local/www/db/cfg_radio.csv');
 			syscmd('rm /var/local/www/db/cfg_radio.csv');
+			break;
+		case 'clear_libcache':
+			clearLibCache();
 			break;
 
 		// Return client IP address
