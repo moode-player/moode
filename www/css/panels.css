@@ -222,7 +222,9 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 /*.playlist .active .pl-thumb img, .cv-playlist .active .pl-thumb img {filter:brightness(50%);}
 .playlist .active .pl-thumb:after, .cv-playlist .active .pl-thumb:after {position:absolute;top:50%;transform:translate(-120%, -50%);font-family:'Font Awesome 5 Pro';font-size:1.25em;content: "\f028";}*/
-.playlist li.active:before {font-family:'Font Awesome 5 Pro';content: "\f028";margin-top:.35em;}
+/*.playlist li.active:before {font-family:'Font Awesome 5 Pro';content: "\f028";margin-top:.35em;}*/
+.playlist li.active:before {color:transparent !important;background:url('../images/audio.svg') no-repeat right;margin-top:.35em;}
+
 .playlist .pll1, .cv-playlist .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .playlist .pl-entry, .cv-playlist .pl-entry {padding:0px;}
 .playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.2rem; margin-left: 1.2vmin; margin-right: 1.2vmin;margin-top:4px;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
@@ -659,3 +661,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 /* New/edit radio station modals */
 #new-station-format, #edit-station-format {text-transform:uppercase;}
 #import-export-msg {line-height:24px;color:var(--adapttext);}
+
