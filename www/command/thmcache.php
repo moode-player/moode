@@ -183,7 +183,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	// Thumbnail height
 	$thm_h = round(($img_h / $img_w) * $thm_w);
 
-	// Standard thumb nail
+	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
 		workerLog('thmcache: error 1: imagecreatetruecolor()' . $file);
 		return;
@@ -204,7 +204,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 		workerLog('thmcache: error 5: imagedestroy()' . $file);
 		return;
 	}
-	// Small thumb nail
+	// Small thumbnail
 	if (($thumb_sm = imagecreatetruecolor(50, 50)) === false) {
 		workerLog('thmcache: error 1b: imagecreatetruecolor()' . $file);
 		return;

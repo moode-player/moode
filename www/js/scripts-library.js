@@ -733,7 +733,6 @@ var renderSongs = function(albumPos) {
     // Display album name heading:
     // - if more than 1 album for clicked artist
     // - if first song musicbrainz_albumid != '0'
-
 	if ((filteredAlbums.length > 1 && LIB.artistClicked == true && LIB.albumClicked == false) ||
         filteredSongs[0].musicbrainz_albumid != '0') {
 		$('.lib-album-heading').css('display', 'block');
