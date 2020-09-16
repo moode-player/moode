@@ -1822,32 +1822,28 @@ function runQueuedJob() {
 
 				// Standard thumbnail
 				if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
-					workerLog('setlogoimage: error 1: imagecreatetruecolor()' . $file);
+					workerLog('setlogoimage: error 1a: imagecreatetruecolor()' . $file);
 					break;
 				}
 				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-					workerLog('setlogoimage: error 2: imagecopyresampled()' . $file);
+					workerLog('setlogoimage: error 2a: imagecopyresampled()' . $file);
 					break;
 				}
-				//if (imagedestroy($image) === false) {
-				//	workerLog('setlogoimage: error 3: imagedestroy()' . $file);
-				//	break;
-				//}
 				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) === false) {
-					workerLog('setlogoimage: error 4: imagejpeg()' . $file);
+					workerLog('setlogoimage: error 4a: imagejpeg()' . $file);
 					break;
 				}
 				if (imagedestroy($thumb) === false) {
-					workerLog('setlogoimage: error 5: imagedestroy()' . $file);
+					workerLog('setlogoimage: error 5a: imagedestroy()' . $file);
 					break;
 				}
 
 				// Small thumbnail
-				if (($thumb = imagecreatetruecolor(50, 50)) === false) {
+				if (($thumb = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
 					workerLog('setlogoimage: error 1b: imagecreatetruecolor()' . $file);
 					break;
 				}
-				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, 50, 50, $img_w, $img_h) === false) {
+				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
 					workerLog('setlogoimage: error 2b: imagecopyresampled()' . $file);
 					break;
 				}
@@ -1855,7 +1851,7 @@ function runQueuedJob() {
 					workerLog('setlogoimage: error 3b: imagedestroy()' . $file);
 					break;
 				}
-				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '_sm.jpg', $thm_q) === false) {
+				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '_sm.jpg', THM_SM_Q) === false) {
 					workerLog('setlogoimage: error 4b: imagejpeg()' . $file);
 					break;
 				}

@@ -42,6 +42,12 @@ define('TMP_STATION_PREFIX', '__tmp__');
 define('EXPORT_DIR', '/var/local/www/imagesw');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 
+// Size and quality factor for small thumbs
+// Used in thmcache.php, worker.php
+define('THM_SM_W', '80');
+define('THM_SM_H', '80');
+define('THM_SM_Q', '75');
+
 error_reporting(E_ERROR);
 
 // Features availability bitmask
