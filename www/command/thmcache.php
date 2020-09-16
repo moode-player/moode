@@ -27,6 +27,7 @@
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
 
+// Image to use when no cover found
 define('NOT_FOUND', '/var/www/images/notfound.jpg');
 
 //
@@ -83,8 +84,8 @@ else {
 workerLog('thmcache: Priority: ' . $search_pri);
 workerLog('thmcache: Res,Qual: ' . $hires_thm);
 workerLog('thmcache: Px ratio: ' . $pixel_ratio);
-workerLog('thmcache: Thumb W:  ' . $thm_w);
-workerLog('thmcache: Quality:  ' . $thm_q);
+workerLog('thmcache: Th width: ' . $thm_w);
+workerLog('thmcache: Thm qual: ' . $thm_q);
 
 // Ensure cache dir exists
 if (!file_exists(THMCACHE_DIR)) {
@@ -185,31 +186,28 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 
 	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
-		workerLog('thmcache: error 1: imagecreatetruecolor()' . $file);
+		workerLog('thmcache: error 1a: imagecreatetruecolor()' . $file);
 		return;
 	}
 	if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-		workerLog('thmcache: error 2: imagecopyresampled()' . $file);
+		workerLog('thmcache: error 2a: imagecopyresampled()' . $file);
 		return;
 	}
-	//if (imagedestroy($image) === false) {
-	//	workerLog('thmcache: error 3: imagedestroy()' . $file);
-	//	return;
-	//}
 	if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thm_q) === false) {
-		workerLog('thmcache: error 4: imagejpeg()' . $file);
+		workerLog('thmcache: error 4a: imagejpeg()' . $file);
 		return;
 	}
 	if (imagedestroy($thumb) === false) {
-		workerLog('thmcache: error 5: imagedestroy()' . $file);
+		workerLog('thmcache: error 5a: imagedestroy()' . $file);
 		return;
 	}
+
 	// Small thumbnail
-	if (($thumb_sm = imagecreatetruecolor(50, 50)) === false) {
+	if (($thumb_sm = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
 		workerLog('thmcache: error 1b: imagecreatetruecolor()' . $file);
 		return;
 	}
-	if (imagecopyresampled($thumb_sm, $image, 0, 0, 0, 0, 50, 50, $img_w, $img_h) === false) {
+	if (imagecopyresampled($thumb_sm, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
 		workerLog('thmcache: error 2b: imagecopyresampled()' . $file);
 		return;
 	}
@@ -217,7 +215,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 		workerLog('thmcache: error 3b: imagedestroy()' . $file);
 		return;
 	}
-	if (imagejpeg($thumb_sm, THMCACHE_DIR . md5($dir) . '_sm.jpg', $thm_q) === false) {
+	if (imagejpeg($thumb_sm, THMCACHE_DIR . md5($dir) . '_sm.jpg', THM_SM_Q) === false) {
 		workerLog('thmcache: error 4b: imagejpeg()' . $file);
 		return;
 	}
