@@ -87,7 +87,7 @@ elseif ($_GET['cmd'] == 'disconnect-renderer') {
 		playerSession('write', 'slsvc', '0');
 		session_write_close();
 	}
-
+	// TODO: pass 'disconnect-renderer' string as a queue arg and then test for it in worker so that MPD play can be resumed.
 	if (submitJob($_POST['job'], '', '', '')) {
 		echo json_encode('job submitted');
 	}
