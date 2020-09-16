@@ -183,6 +183,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	// Thumbnail height
 	$thm_h = round(($img_h / $img_w) * $thm_w);
 
+	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
 		workerLog('thmcache: error 1: imagecreatetruecolor()' . $file);
 		return;
@@ -191,10 +192,10 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 		workerLog('thmcache: error 2: imagecopyresampled()' . $file);
 		return;
 	}
-	if (imagedestroy($image) === false) {
-		workerLog('thmcache: error 3: imagedestroy()' . $file);
-		return;
-	}
+	//if (imagedestroy($image) === false) {
+	//	workerLog('thmcache: error 3: imagedestroy()' . $file);
+	//	return;
+	//}
 	if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thm_q) === false) {
 		workerLog('thmcache: error 4: imagejpeg()' . $file);
 		return;
@@ -203,7 +204,27 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 		workerLog('thmcache: error 5: imagedestroy()' . $file);
 		return;
 	}
-
+	// Small thumbnail
+	if (($thumb_sm = imagecreatetruecolor(50, 50)) === false) {
+		workerLog('thmcache: error 1b: imagecreatetruecolor()' . $file);
+		return;
+	}
+	if (imagecopyresampled($thumb_sm, $image, 0, 0, 0, 0, 50, 50, $img_w, $img_h) === false) {
+		workerLog('thmcache: error 2b: imagecopyresampled()' . $file);
+		return;
+	}
+	if (imagedestroy($image) === false) {
+		workerLog('thmcache: error 3b: imagedestroy()' . $file);
+		return;
+	}
+	if (imagejpeg($thumb_sm, THMCACHE_DIR . md5($dir) . '_sm.jpg', $thm_q) === false) {
+		workerLog('thmcache: error 4b: imagejpeg()' . $file);
+		return;
+	}
+	if (imagedestroy($thumb_sm) === false) {
+		workerLog('thmcache: error 5b: imagedestroy()' . $file);
+		return;
+	}
 
 	// DEBUG
 	//$size = getimagesize(THMCACHE_DIR . md5($dir) . '.jpg');

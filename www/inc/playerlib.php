@@ -470,7 +470,8 @@ function genLibrary($flat) {
 			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')),
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified'],
-			'encoded_at' => getEncodedAt($flatData, 'default', true)
+			'encoded_at' => getEncodedAt($flatData, 'default', true),
+			'comment' => ($flatData['Comment'] ? $flatData['Comment'] : '0')
 		);
 
 		array_push($lib, $songData);
@@ -551,12 +552,13 @@ function genLibraryUTF8Rep($flat) {
 			'year' => utf8rep(getTrackYear($flatData)),
 			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-			'musicbrainz_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : ''),
+			'musicbrainz_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
 			// @Atair: 'Unknown' genre has to be an array
 			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))),
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified'],
-			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true))
+			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
+			'comment' => utf8rep($flatData['Comment'] ? $flatData['Comment'] : '0')
 		);
 
 		array_push($lib, $songData);
@@ -745,7 +747,7 @@ function parseList($resp) {
 				$idx++;
 				$diridx++; // Save directory index for further processing
 				$array[$idx]['directory'] = $value;
-				$cover_file = md5($value) . '.jpg';
+				$cover_file = md5($value) . '_sm.jpg';
 				$array[$idx]['cover_url'] = file_exists(THMCACHE_DIR . $cover_file) ? '/imagesw/thmcache/' . $cover_file : '';
 			}
 			else if ($element == 'playlist') {

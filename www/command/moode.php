@@ -441,11 +441,13 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg')) {
 					sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
 					sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
+					sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '_sm.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '_sm.jpg"');
 				}
 				// Write default logo image if an image does not already exist
 					else if (!file_exists('/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg')) {
 					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
 					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
+					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '_sm.jpg"');
 				}
 
 				// Update time stamp on files so mpd picks up the change and commits the update
@@ -478,6 +480,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			sysCmd('rm "' . MPD_MUSICROOT . $_POST['path'] . '"');
 			sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/' . $station_name . '.jpg' . '"');
 			sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $station_name . '.jpg' . '"');
+			sysCmd('rm "' . '/var/local/www/imagesw/radio-logos/thumbs/' . $station_name . '_sm.jpg' . '"');
 
 			// Update time stamp on files so mpd picks up the change
 			sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');

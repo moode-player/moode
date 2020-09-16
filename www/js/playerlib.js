@@ -998,7 +998,7 @@ function renderPlaylist() {
 				// Radio station
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
                     var logoThumb = typeof(RADIO.json[data[i].file]) === 'undefined' ? '"images/notfound.jpg"' : '"imagesw/radio-logos/thumbs/' +
-                        encodeURIComponent(RADIO.json[data[i].file]['name']) + '.jpg"';
+                        encodeURIComponent(RADIO.json[data[i].file]['name']) + '_sm.jpg"';
 					output += option_show_playlistart && (typeof(data[i].Comment) === 'undefined' || data[i].Comment !== 'client=upmpdcli;')  ?
                         '<span class="pl-thumb">' + playlistLazy + logoThumb + '></span>' : '';
 	                // Line 1 title
@@ -1044,7 +1044,7 @@ function renderPlaylist() {
 				}
 				// Song file or upnp url
 				else {
-					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '.jpg"/></span>' : '';
+					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
