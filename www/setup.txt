@@ -202,7 +202,7 @@ i2sdevice=None
 [renderers]
 btsvc=0
 pairing_agent=0
-rsmafterbt=0
+rsmafterbt=No
 airplaysvc=0
 rsmafterapl=No
 spotifysvc=0
