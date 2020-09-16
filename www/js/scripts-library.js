@@ -159,7 +159,7 @@ function groupLib(fullLib) {
 			last_modified: getLastModified(albumTracks),
             year: year,
 			album: findAlbumProp(albumTracks, 'album'),
-            musicbrainz_albumid: findAlbumProp(albumTracks, 'musicbrainz_albumid'),
+            mb_albumid: findAlbumProp(albumTracks, 'mb_albumid'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
             artist: albumArtist || artist,
@@ -437,7 +437,7 @@ function removeArticles(string) {
 
 // Generate album@artist key
 function keyAlbum(obj) {
-    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.musicbrainz_albumid;
+    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
 }
 
 // Return numeric song time
@@ -685,8 +685,14 @@ var renderSongs = function(albumPos) {
         lastDisc = '';
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
-            //var album = filteredSongs[i].musicbrainz_albumid == '0' ? filteredSongs[i].album : filteredSongs[i].album + ' (' + filteredSongs[i].musicbrainz_albumid.slice(0, 8) + ')';
-            var album = filteredSongs[i].musicbrainz_albumid == '0' ? filteredSongs[i].album : filteredSongs[i].album + ' (' + filteredSongs[i].comment + ')';
+            if (SESSION.json['library_inc_comment_tag'] == 'Yes') {
+                var comment = typeof(filteredSongs[i].comment) != 'undefined' ? ' (' + filteredSongs[i].comment + ')' : '';
+            }
+            else {
+                var comment = filteredSongs[i].mb_albumid != '0' ? ' (' + filteredSongs[i].mb_albumid.slice(0, 8) + ')' : '';
+            }
+            var album = filteredSongs[i].album + comment;
+
             if (album != lastAlbum) {
                 albumDiv = '<div class="lib-album-heading">' + album + '</div>';
                 lastAlbum = album;
@@ -734,7 +740,7 @@ var renderSongs = function(albumPos) {
     // - if more than 1 album for clicked artist
     // - if first song musicbrainz_albumid != '0'
 	if ((filteredAlbums.length > 1 && LIB.artistClicked == true && LIB.albumClicked == false) ||
-        filteredSongs[0].musicbrainz_albumid != '0') {
+        filteredSongs[0].mb_albumid != '0') {
 		$('.lib-album-heading').css('display', 'block');
 	}
 
