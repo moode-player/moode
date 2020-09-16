@@ -48,6 +48,7 @@ Updates
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
 - UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
 - UPD: Show volume level on Playbar
+- UPD: Generate additional set of small thumbnails for lists
 
 Radio stations
 
