@@ -40,7 +40,7 @@ Updates
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 - UPD: Add Genre to the Extra metadata Appearance option
-- UPD: Add Appearance option to include the comments tag
+- UPD: Add Appearance option to include the comment tag
 - UPD: Add higher resolutions for thumbnail generator
 - UPD: Add "Update Library" to action list for Clock Radio
 - UPD: Add MUSICBRAINZ_ALBUMID as part of the album key
