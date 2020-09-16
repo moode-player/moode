@@ -3071,6 +3071,7 @@ function setColors() {
 			document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
 			document.body.style.setProperty('--trackfill', 'rgba(48,48,48,1.0)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-d.svg")');
+			document.body.style.setProperty('--npicon', 'url("../images/audiod.svg")');
 			setTimeout(function() {
 				$('.playbackknob, .volumeknob').trigger('configure',{"bgColor":"rgba(32,32,32,0.06)",
 					"fgColor":UI.accenta
@@ -3083,6 +3084,7 @@ function setColors() {
 			document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
 			document.body.style.setProperty('--trackfill', 'rgba(240,240,240,1.0)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-l.svg")');
+			document.body.style.setProperty('--npicon', 'url("../images/audiow.svg")');
 			setTimeout(function() {
 				$('.playbackknob, .volumeknob').trigger('configure',{"bgColor":"rgba(224,224,224,0.09)",
 					"fgColor":UI.accenta

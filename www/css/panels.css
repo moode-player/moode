@@ -52,6 +52,7 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--mthumbcols:45vw;
 	--coverback:'';
 	--config_modal_btn_bg:rgba(64,64,64,0.08);
+	--npicon: url('../images/audiow.svg');
 }
 
 .btn, .lib-entry, .dropdown, #menu-header, div#playbar-title, #coverart-url {-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-user-select: none;-webkit-touch-callout: none;}
@@ -223,11 +224,11 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 /*.playlist .active .pl-thumb img, .cv-playlist .active .pl-thumb img {filter:brightness(50%);}
 .playlist .active .pl-thumb:after, .cv-playlist .active .pl-thumb:after {position:absolute;top:50%;transform:translate(-120%, -50%);font-family:'Font Awesome 5 Pro';font-size:1.25em;content: "\f028";}*/
 /*.playlist li.active:before {font-family:'Font Awesome 5 Pro';content: "\f028";margin-top:.35em;}*/
-.playlist li.active:before {color:transparent !important;background:url('../images/audio.svg') no-repeat right;margin-top:.35em;}
+.playlist li.active:before {color:transparent !important;background:var(--npicon) no-repeat right;margin-top:.35em;}
 
 .playlist .pll1, .cv-playlist .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .playlist .pl-entry, .cv-playlist .pl-entry {padding:0px;}
-.playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.2rem; margin-left: 1.2vmin; margin-right: 1.2vmin;margin-top:4px;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
+.playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.4rem; margin-left: 1.2vmin; margin-right: 1.2vmin;margin-top:4px;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
 .database .db-entry {margin-left:2.5em;padding:1em 0;max-width:calc(100vw - 10px);overflow:hidden;}
 .database .db-song {padding:.5em 0;}
 .database .db-icon {display:block;float:left;height:19px;line-height:19px;width:1.875em;padding:0;color:inherit;}
