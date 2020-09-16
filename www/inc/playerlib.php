@@ -471,13 +471,12 @@ function genLibrary($flat) {
 			'year' => getTrackYear($flatData),
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
-			'musicbrainz_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
-			// @Atair: 'Unknown' genre has to be an array
-			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')),
+			'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
+			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified'],
 			'encoded_at' => getEncodedAt($flatData, 'default', true),
-			'comment' => ($flatData['Comment'] ? $flatData['Comment'] : '0')
+			'comment' => (($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
 		);
 
 		array_push($lib, $songData);
@@ -558,13 +557,12 @@ function genLibraryUTF8Rep($flat) {
 			'year' => utf8rep(getTrackYear($flatData)),
 			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-			'musicbrainz_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
-			// @Atair: 'Unknown' genre has to be an array
-			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))),
+			'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
+			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified'],
 			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
-			'comment' => utf8rep($flatData['Comment'] ? $flatData['Comment'] : '0')
+			'comment' => utf8rep(($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
 		);
 
 		array_push($lib, $songData);
