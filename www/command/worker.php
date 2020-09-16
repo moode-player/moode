@@ -1547,12 +1547,18 @@ function runQueuedJob() {
 			}
 			break;
 		case 'airplaysvc':
-			stopSps(); //r45b
+			stopSps();
 			if ($_SESSION['airplaysvc'] == 1) {startSps();}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
+				sysCmd('mpc play');
+			}
 			break;
 		case 'spotifysvc':
 			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterspot'] == 'Yes') {
+				sysCmd('mpc play');
+			}
 			break;
 		case 'spotify_clear_credentials':
 			sysCmd('rm /var/local/www/spotify_cache/credentials.json');
@@ -1575,6 +1581,9 @@ function runQueuedJob() {
 				playerSession('write', 'slactive', '0');
 				$GLOBALS['slactive'] = '0';
 				sendEngCmd('slactive0');
+			}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmaftersl'] == 'Yes') {
+				sysCmd('mpc play');
 			}
 			break;
 		case 'slrestart':

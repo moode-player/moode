@@ -50,6 +50,7 @@ Updates
 - UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
 - UPD: Show volume level on Playbar
 - UPD: Generate additional set of small thumbnails for lists
+- UPD: Honor "Resume MPD" setting when disconnecting a renderer
 
 Radio stations
 
