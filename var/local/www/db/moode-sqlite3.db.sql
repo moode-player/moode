@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Sep 11 09:19:58 2020
+-- File generated with SQLiteStudio v3.1.0 on Wed Sep 16 08:42:53 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -389,6 +389,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'N
 INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'All');
 INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', NULL);
+INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_inc_comment_tag', 'No');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
@@ -540,7 +541,7 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (21, 'device', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (22, 'mixer_type', 'software');
 INSERT INTO cfg_mpd (id, param, value) VALUES (23, 'dop', 'no');
 INSERT INTO cfg_mpd (id, param, value) VALUES (24, 'audio_output_format', 'disabled');
-INSERT INTO cfg_mpd (id, param, value) VALUES (25, 'sox_quality', 'very high');
+INSERT INTO cfg_mpd (id, param, value) VALUES (25, 'sox_quality', 'high');
 INSERT INTO cfg_mpd (id, param, value) VALUES (26, 'sox_multithreading', '1');
 INSERT INTO cfg_mpd (id, param, value) VALUES (27, 'replaygain', 'off');
 INSERT INTO cfg_mpd (id, param, value) VALUES (28, 'replaygain_preamp', '0');
