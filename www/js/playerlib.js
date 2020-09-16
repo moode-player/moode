@@ -702,16 +702,17 @@ function renderUI() {
     	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
     		//console.log(MPD.json['coverurl']);
             // Original for Playback
-    		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
+     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
             // Thumbnail for Playbar
-            if (MPD.json['file']) {
+            if (MPD.json['file'] && !MPD.json['file'].match(/\/tidal\//)) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
                     '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             }
             else {
-                $('#playbar-cover').html('<img src="' + UI.defCover + '">');
+	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
+                $('#playbar-cover').html('<img src="' + 'images/default-cover-v6.png' + '">');
             }
     		// cover backdrop or bgimage
     		if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
@@ -765,7 +766,8 @@ function renderUI() {
             // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
                 (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
-            MPD.json['hidef'] == 'yes' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+            //MPD.json['hidef'] == 'yes' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+			MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
         else {
             $('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
@@ -3001,10 +3003,14 @@ function dbFastSearch() {
 // temp1 = theme/adaptBack(ground), temp2 = theme/adaptColor, temprgba is an array holding the rgba components,
 // temprgb is an array holding the rgb version of the text color
 
+// generate a set of colors based on the background and text color for use in buttons, etc.
+//
+// temp1 = theme/adaptBack(ground), temp2 = theme/adaptColor, temprgba is an array holding the rgba components,
+// temprgb is an array holding the rgb version of the text color
+
 function btnbarfix(temp1,temp2) {
 	var temprgba = splitColor(temp1);
 	var temprgb = hexToRgb(temp2);
-
 	var tempx = 0; // adjust the opacity if the alphablend value falls below a certain threshold to make it more visible
 	if ((SESSION.json['alphablend']) < .85) {
 		tempx = ((.9 - (SESSION.json['alphablend'])));
@@ -3016,7 +3022,7 @@ function btnbarfix(temp1,temp2) {
 	document.body.style.setProperty('--btnshade', tempcolor);
 	tempcolor = rgbaToRgb(.8 - tempx, '0.6', temprgba, temprgb); // btnshade2
 	document.body.style.setProperty('--btnshade2', tempcolor);
-	tempcolor = rgbaToRgb(.45, '1.0', temprgba, temprgb); // textvariant
+	tempcolor = rgbaToRgb(.3, '1.0', temprgba, temprgb); // textvariant
 	document.body.style.setProperty('--textvariant', tempcolor);
 	tempcolor = rgbaToRgb(.6, '.7', temprgba, temprgb); // textvariant
 	document.body.style.setProperty('--btnshade3', tempcolor);

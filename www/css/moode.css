@@ -217,7 +217,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.5rem;width:3.1rem;}
-	.playlist .pl-thumb, .cv-playlist .pl-thumb {/*display:none;*/margin-left:1vmin!important;}
+	.playlist .pl-thumb, .cv-playlist .pl-thumb {/*display:none;*/margin-left:1.2vmin !important;margin-right:1.2vmin;margin-top:4px;}
 	#playbar-hd-badge {margin-top:.6em;}
 	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
 	#playbar-volume-popup-btn {width:initial!important;}
@@ -394,6 +394,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#lib-coverart-meta-area {width:18vw;}
+	#volcontrol, #volcontrol-2, #countdown {height:15vw;width:15vw;}
 }
 /* iPad landscape */
 @media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
