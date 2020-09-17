@@ -1079,12 +1079,14 @@ function renderPlaylist() {
 
 		// Render playlist
         $('#playlist ul').html(output);
-        $('#cv-playlist ul').html(output);
+        //$('#cv-playlist ul').html(output);
 
         if (output) {
             if (option_show_playlistart) {
     			lazyLode('playlist');
-                lazyLode('cv-playlist');
+                if ($('#cv-playlist').css('display') == 'block') {
+                    lazyLode('cv-playlist');
+                }
     		}
 
             setTimeout(function() {
@@ -2580,7 +2582,7 @@ $('#btn-appearance-update').click(function(e){
             'appearance_modal_state': SESSION.json['appearance_modal_state']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd || 
+            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
                 setTimeout(function() {

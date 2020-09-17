@@ -1278,6 +1278,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#cv-playlist').toggle();
 
         if ($('#cv-playlist').css('display') == 'block') {
+            $('#cv-playlist ul').html($('#playlist ul').html());
             setTimeout(function() {
                 if (SESSION.json['playlist_art'] == 'Yes') {
                     lazyLode('cv-playlist');
@@ -1286,11 +1287,13 @@ jQuery(document).ready(function($) { 'use strict';
             }, DEFAULT_TIMEOUT);
 
             GLOBAL.playbarPlaylistTimer = setTimeout(function() {
+                $('#cv-playlist ul').html('');
                 $('#cv-playlist').hide();
             }, 20000);
         }
         else {
             e.preventDefault();
+            $('#cv-playlist ul').html('');
             window.clearTimeout(GLOBAL.playbarPlaylistTimer);
         }
 	});
@@ -1315,6 +1318,7 @@ jQuery(document).ready(function($) { 'use strict';
             setColors();
 
             // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
+            $('#cv-playlist ul').html('');
             $('#cv-playlist').hide();
             $('#lib-coverart-img').show();
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
