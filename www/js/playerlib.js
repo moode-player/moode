@@ -84,7 +84,9 @@ var UI = {
 	// special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
 	radioPos: -1,
 	libAlbum: '',
-	mobile: false
+	mobile: false,
+	npIcon: 'url("../images/audiod.svg")',
+	npIconPaused: 'url("../images/audiod-flat.svg")'
 };
 
 // mpd state and metadata
@@ -681,12 +683,14 @@ function renderUI() {
     	// playback controls, playlist highlight
         if (MPD.json['state'] == 'play') {
     		$('.play i').removeClass('fas fa-play').addClass('fas fa-pause');
+			document.body.style.setProperty('--npicon', npIcon);
     		$('.playlist li.active, .cv-playlist li.active').removeClass('active');
             $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
             $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
         }
     	else if (MPD.json['state'] == 'pause' || MPD.json['state'] == 'stop') {
     		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
+			document.body.style.setProperty('--npicon', npIconPaused);
         }
     	//tt = updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0);
     	$('#total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
@@ -3066,12 +3070,13 @@ function setColors() {
 	if (lastYIQ !== yiqBool) {
 		lastYIQ = yiqBool;
 		if (yiqBool) {
+			npIcon = 'url("../images/audiod.svg")';
+			npIconPaused = 'url("../images/audiod-flat.svg")'
 			document.body.style.setProperty('--timethumb', 'url("' + thumbd + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbd + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
 			document.body.style.setProperty('--trackfill', 'rgba(48,48,48,1.0)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-d.svg")');
-			document.body.style.setProperty('--npicon', 'url("../images/audiod.svg")');
 			setTimeout(function() {
 				$('.playbackknob, .volumeknob').trigger('configure',{"bgColor":"rgba(32,32,32,0.06)",
 					"fgColor":UI.accenta
@@ -3079,12 +3084,13 @@ function setColors() {
 			}, DEFAULT_TIMEOUT);
 		}
 		else {
+			npIcon = 'url("../images/audiow.svg")';
+			npIconPaused = 'url("../images/audiow-flat.svg")'
 			document.body.style.setProperty('--timethumb', 'url("' + thumbw + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbw + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
 			document.body.style.setProperty('--trackfill', 'rgba(240,240,240,1.0)');
 			document.body.style.setProperty('--radiobadge', 'url("../images/radio-l.svg")');
-			document.body.style.setProperty('--npicon', 'url("../images/audiow.svg")');
 			setTimeout(function() {
 				$('.playbackknob, .volumeknob').trigger('configure',{"bgColor":"rgba(224,224,224,0.09)",
 					"fgColor":UI.accenta
@@ -3092,6 +3098,7 @@ function setColors() {
 				//UI.mobile ? '' : $('#playback-controls').show();
 			}, DEFAULT_TIMEOUT);
 		}
+		document.body.style.setProperty('--npicon', npIcon);
 	}
 }
 
