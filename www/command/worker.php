@@ -1547,12 +1547,18 @@ function runQueuedJob() {
 			}
 			break;
 		case 'airplaysvc':
-			stopSps(); //r45b
+			stopSps();
 			if ($_SESSION['airplaysvc'] == 1) {startSps();}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
+				sysCmd('mpc play');
+			}
 			break;
 		case 'spotifysvc':
 			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterspot'] == 'Yes') {
+				sysCmd('mpc play');
+			}
 			break;
 		case 'spotify_clear_credentials':
 			sysCmd('rm /var/local/www/spotify_cache/credentials.json');
@@ -1575,6 +1581,9 @@ function runQueuedJob() {
 				playerSession('write', 'slactive', '0');
 				$GLOBALS['slactive'] = '0';
 				sendEngCmd('slactive0');
+			}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmaftersl'] == 'Yes') {
+				sysCmd('mpc play');
 			}
 			break;
 		case 'slrestart':
@@ -1820,24 +1829,43 @@ function runQueuedJob() {
 				// thumbnail height
 				$thm_h = ($img_h / $img_w) * $thm_w;
 
+				// Standard thumbnail
 				if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
-					workerLog('setlogoimage: error 1: ' . $file);
+					workerLog('setlogoimage: error 1a: imagecreatetruecolor()' . $file);
 					break;
 				}
 				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-					workerLog('setlogoimage: error 2: ' . $file);
-					break;
-				}
-				if (imagedestroy($image) === false) {
-					workerLog('setlogoimage: error 3: ' . $file);
+					workerLog('setlogoimage: error 2a: imagecopyresampled()' . $file);
 					break;
 				}
 				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) === false) {
-					workerLog('setlogoimage: error 4: ' . $file);
+					workerLog('setlogoimage: error 4a: imagejpeg()' . $file);
 					break;
 				}
 				if (imagedestroy($thumb) === false) {
-					workerLog('setlogoimage: error 5: ' . $file);
+					workerLog('setlogoimage: error 5a: imagedestroy()' . $file);
+					break;
+				}
+
+				// Small thumbnail
+				if (($thumb = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
+					workerLog('setlogoimage: error 1b: imagecreatetruecolor()' . $file);
+					break;
+				}
+				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
+					workerLog('setlogoimage: error 2b: imagecopyresampled()' . $file);
+					break;
+				}
+				if (imagedestroy($image) === false) {
+					workerLog('setlogoimage: error 3b: imagedestroy()' . $file);
+					break;
+				}
+				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '_sm.jpg', THM_SM_Q) === false) {
+					workerLog('setlogoimage: error 4b: imagejpeg()' . $file);
+					break;
+				}
+				if (imagedestroy($thumb) === false) {
+					workerLog('setlogoimage: error 5b: imagedestroy()' . $file);
 					break;
 				}
 			}

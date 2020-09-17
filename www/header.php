@@ -78,52 +78,6 @@
         <script src="js/scripts-configs.min.js" defer></script>
     <?php } ?>
 
-	<!-- VERSIONED RESOURCES -->
-	<?php
-        /*
-		// Common css
-		versioned_stylesheet('css/bootstrap.min.css');
-		versioned_stylesheet('css/bootstrap-select.min.css');
-		versioned_stylesheet('css/flat-ui.min.css');
-		versioned_stylesheet('css/jquery.pnotify.default.min.css');
-		versioned_stylesheet('css/fontawesome-moode.min.css');
-		versioned_stylesheet('css/panels.min.css');
-		versioned_stylesheet('css/moode.min.css');
-		// Common js
-		versioned_script('js/bootstrap.min.js');
-		versioned_script('js/bootstrap-select.min.js');
-		versioned_script('js/jquery.pnotify.min.js');
-        versioned_script('js/notify.min.js');
-        versioned_script('js/playerlib-nomin.js');
-        versioned_script('js/playerlib.min.js');
-		versioned_script('js/links.min.js');
-		// Playback / Library
-		if ($section == 'index') {
-			versioned_stylesheet('css/jquery.countdown.min.css');
-			versioned_script('js/jquery.countdown.min.js');
-			versioned_script('js/jquery.scrollTo.min.js');
-			versioned_script('js/jquery.touchSwipe.min.js');
-			versioned_script('js/jquery.lazyload.min.js');
-			versioned_script('js/jquery.md5.min.js');
-			versioned_script('js/jquery.adaptive-backgrounds.min.js');
-			versioned_script('js/jquery.knob.min.js');
-			versioned_script('js/bootstrap-contextmenu.min.js');
-            versioned_script('js/scripts-library.min.js');
-            versioned_script('js/scripts-panels.min.js');
-		}
-		// Configs
-		else {
-			versioned_script('js/custom_checkbox_and_radio.min.js');
-			versioned_script('js/custom_radio.js');
-			versioned_script('js/jquery.tagsinput.min.js');
-			versioned_script('js/jquery.placeholder.min.js');
-			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
-			versioned_script('js/application.min.js');
-			versioned_script('js/scripts-configs.min.js');
-		}
-        */
-	?>
-
 	<!-- MOBILE APP ICONS -->
 	<!-- Apple -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -234,9 +188,9 @@
 			</div>
 			<div id="playbar-toggles">
 				<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
-                <button aria-label="Playlist" class="btn btn-cmd btn-toggle hide" id="cv-playlist-btn"><i class="fal fa-list"></i></button>
 				<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
 				<button aria-label="Random Album" class="btn btn-cmd ralbum hide"><i class="fal fa-dot-circle"></i></button>
+                <button aria-label="Queue" class="btn btn-cmd btn-toggle hide" id="cv-playlist-btn"><i class="fal fa-list"></i></button>
 				<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
 				<!--button aria-label="Volume" class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button-->
                 <button aria-label="Volume" id="playbar-volume-popup-btn" class="btn volume-popup-btn" data-toggle="modal"><i class="fas fa-volume-off"></i><span id="playbar-volume-level"></span></button>

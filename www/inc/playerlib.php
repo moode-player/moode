@@ -42,6 +42,12 @@ define('TMP_STATION_PREFIX', '__tmp__');
 define('EXPORT_DIR', '/var/local/www/imagesw');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 
+// Size and quality factor for small thumbs
+// Used in thmcache.php, worker.php
+define('THM_SM_W', '80');
+define('THM_SM_H', '80');
+define('THM_SM_Q', '75');
+
 error_reporting(E_ERROR);
 
 // Features availability bitmask
@@ -124,6 +130,7 @@ function debugLog($msg, $mode = 'a') {
 }
 
 // Helper functions for html generation (@pcasto)
+// NOTE: These were used in header.php but as of the 7.0.0 release they are no longer used.
 function versioned_stylesheet($file, $type='stylesheet') {
 	echo '<link href="' . $file . '?v=' . $_SESSION['moode_release'] . '" rel="' . $type .'">' . "\n";
 }
@@ -464,22 +471,28 @@ function genLibrary($flat) {
 			'year' => getTrackYear($flatData),
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
-			// @Atair: 'Unknown' genre has to be an array
-			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')),
+			'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
+			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified'],
-			'encoded_at' => getEncodedAt($flatData, 'default', true)
+			'encoded_at' => getEncodedAt($flatData, 'default', true),
+			'comment' => (($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
 		);
 
 		array_push($lib, $songData);
 	}
 
-	$json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE);
+	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
+		workerLog('genLibrary(): error: json_encode($lib) failed');
+	}
 
-	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
+	if (false === (file_put_contents(LIBCACHE_JSON, $json_lib))) {
 		workerLog('genLibrary(): error: libcache.json file create failed');
 	}
+
 	//workerLog(print_r($lib, true));
+	//workerLog(print_r($json_lib, true));
+	//workerLog('genLibrary(): json_error_message(): ' . json_error_message());
 	return $json_lib;
 }
 
@@ -544,20 +557,25 @@ function genLibraryUTF8Rep($flat) {
 			'year' => utf8rep(getTrackYear($flatData)),
 			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-			// @Atair: 'Unknown' genre has to be an array
-			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))),
+			'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
+			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified'],
-			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true))
+			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
+			'comment' => utf8rep(($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
 		);
 
 		array_push($lib, $songData);
 	}
 
-	$json_lib = json_encode($lib);
-	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
+	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
+		workerLog('genLibraryUTF8Rep(): error: json_encode($lib) failed');
+	}
+
+	if (false === (file_put_contents(LIBCACHE_JSON, $json_lib))) {
 		workerLog('genLibraryUTF8Rep(): error: libcache.json file create failed');
 	}
+
 	return $json_lib;
 }
 // UTF8 replace (@lazybat)
@@ -733,7 +751,7 @@ function parseList($resp) {
 				$idx++;
 				$diridx++; // Save directory index for further processing
 				$array[$idx]['directory'] = $value;
-				$cover_file = md5($value) . '.jpg';
+				$cover_file = md5($value) . '_sm.jpg';
 				$array[$idx]['cover_url'] = file_exists(THMCACHE_DIR . $cover_file) ? '/imagesw/thmcache/' . $cover_file : '';
 			}
 			else if ($element == 'playlist') {

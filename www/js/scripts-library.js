@@ -159,11 +159,13 @@ function groupLib(fullLib) {
 			last_modified: getLastModified(albumTracks),
             year: year,
 			album: findAlbumProp(albumTracks, 'album'),
+            mb_albumid: findAlbumProp(albumTracks, 'mb_albumid'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
             artist: albumArtist || artist,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
-            encoded_at: findAlbumProp(albumTracks, 'encoded_at')
+            encoded_at: findAlbumProp(albumTracks, 'encoded_at'),
+            comment: findAlbumProp(albumTracks, 'comment')
 		};
 	});
 
@@ -320,15 +322,6 @@ function filterByArtist(item) {
 	var album_artist = item.album_artist && item.album_artist.toLowerCase();
 	return LIB.filters.artists.find(function(artistFilter){
 		var artistFilterLower = artistFilter.toLowerCase();
-        // REMOVE: This code block is not needed because the compilation grouping is naturally
-        // formed using the tagging scheme where compilations have album artist tag set to a string
-        // for example "Various Artists" plus the priority of using album artist over artist.
-        /*if (LIB.filters.artists == SESSION.json['library_comp_id']) {
-            return artist === artistFilterLower || album_artist === artistFilterLower;
-        }
-        else if (album_artist != SESSION.json['library_comp_id'].toLowerCase()) {
-            return artist === artistFilterLower || album_artist === artistFilterLower;
-        }*/
         return artist === artistFilterLower || album_artist === artistFilterLower;
 	});
 }
@@ -451,7 +444,7 @@ function removeArticles(string) {
 
 // Generate album@artist key
 function keyAlbum(obj) {
-    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase();
+    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
 }
 
 // Return numeric song time
@@ -698,11 +691,18 @@ var renderSongs = function(albumPos) {
         lastAlbum = '';
         lastDisc = '';
 		for (i = 0; i < filteredSongs.length; i++) {
-			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0,4) : ' ';
+			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
+            if (SESSION.json['library_inc_comment_tag'] == 'Yes') {
+                var comment = typeof(filteredSongs[i].comment) != 'undefined' ? ' (' + filteredSongs[i].comment + ')' : '';
+            }
+            else {
+                var comment = filteredSongs[i].mb_albumid != '0' ? ' (' + filteredSongs[i].mb_albumid.slice(0, 8) + ')' : '';
+            }
+            var album = filteredSongs[i].album + comment;
 
-            if (filteredSongs[i].album != lastAlbum) {
-                albumDiv = '<div class="lib-album-heading">' + filteredSongs[i].album + '</div>';
-                lastAlbum = filteredSongs[i].album;
+            if (album != lastAlbum) {
+                albumDiv = '<div class="lib-album-heading">' + album + '</div>';
+                lastAlbum = album;
             }
             else {
                 albumDiv = '';
@@ -743,8 +743,11 @@ var renderSongs = function(albumPos) {
 
 	$('#songsList').html(output);
 
-    // Display album name heading if more than 1 album for clicked artist
-	if (filteredAlbums.length > 1 && LIB.artistClicked == true && LIB.albumClicked == false) {
+    // Display album name heading:
+    // - if more than 1 album for clicked artist
+    // - if first song musicbrainz_albumid != '0'
+	if ((filteredAlbums.length > 1 && LIB.artistClicked == true && LIB.albumClicked == false) ||
+        filteredSongs[0].mb_albumid != '0') {
 		$('.lib-album-heading').css('display', 'block');
 	}
 

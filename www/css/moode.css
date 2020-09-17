@@ -37,6 +37,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
 .horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.25em;font-style:italic;color: #888;}
 .horiz-rule-radioview {border-bottom:1px solid var(--textvariant);font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:92%!important;padding-bottom:0!important;}
+.horiz-rule-appearance {width:48%;text-align:right;margin:.25em 0;font-size: 1.15em;font-style:italic;color:var(--textvariant);}
 .legend-configs {border:none;margin-bottom:.35em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* general */
@@ -216,7 +217,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.5rem;width:3.1rem;}
-	.playlist .pl-thumb, .cv-playlist .pl-thumb {display:none;}
+	.playlist .pl-thumb, .cv-playlist .pl-thumb {/*display:none;*/margin-left:1vmin!important;}
 	#playbar-hd-badge {margin-top:.6em;}
 	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
 	#playbar-volume-popup-btn {width:initial!important;}

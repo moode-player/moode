@@ -1309,7 +1309,7 @@ jQuery(document).ready(function($) { 'use strict';
             return;
         }
 
-        if (coverView || SESSION.json['scnsaver_timeout'] != 'Never') {
+        if (coverView) {
 			$('body').removeClass('cv');
 			coverView = false;
             setColors();
@@ -1318,18 +1318,17 @@ jQuery(document).ready(function($) { 'use strict';
             $('#cv-playlist').hide();
             $('#lib-coverart-img').show();
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
-            var width = UI.mobile ? '100%' : '38%';
-            $('#playback-queue').css('width', '38.1%');
-
+            UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
             setTimeout(function() {
-                $('#playback-queue').css('width', width); // TEST: Restore correct width to force Queue visable
+                $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
                 if (SESSION.json['playlist_art'] == 'Yes') {
                     lazyLode('playlist');
                 }
                 customScroll('playlist', parseInt(MPD.json['song']));
             }, DEFAULT_TIMEOUT);
-
-            // Reset screen saver timeout global
+        }
+        // Reset screen saver timeout global
+        else if (SESSION.json['scnsaver_timeout'] != 'Never') {
             // Wait a bit to allow other job that may be queued to be processed
             setTimeout(function() {
                 $.get('command/moode.php?cmd=resetscnsaver');

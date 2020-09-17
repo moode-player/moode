@@ -28,7 +28,7 @@ New features
 - NEW: Library support for tracks tagged with multiple genres
 - NEW: Library filters (Lossless, Lossy, Format or Directory)
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
-- NEW: Add next, Play next by inserting after the current item
+- NEW: Add next, Play next by inserting after current item
 
 Updates
 
@@ -39,14 +39,18 @@ Updates
 - UPD: Bump to librespot 0.1.3
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
-- UPD: Add Genre to the Extra metadata appearance option
+- UPD: Add Genre to the Extra metadata Appearance option
+- UPD: Add Appearance option to include the comment tag
 - UPD: Add higher resolutions for thumbnail generator
 - UPD: Add "Update Library" to action list for Clock Radio
-- UPD: Instant play actions to include Add next, Play next
+- UPD: Add MUSICBRAINZ_ALBUMID as part of the album key
+- UPD: Instant play actions include Add next, Play next
 - UPD: Improve logging for Library update process
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
 - UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
 - UPD: Show volume level on Playbar
+- UPD: Generate additional set of small thumbnails for lists
+- UPD: Honor "Resume MPD" setting when disconnecting a renderer
 
 Radio stations
 
