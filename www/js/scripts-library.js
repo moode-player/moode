@@ -591,7 +591,10 @@ var renderAlbums = function() {
         }
 
 		output2 += '<li class="lib-entry">'
-            + albumViewLazy + filteredAlbumCovers[i].imgurl + '">'
+            + '<div style="margin: 0.75em auto 0.5em auto; width:90%; xmax-height: calc(var(--thumbcols)*0.9); position:relative;">'
+            + '<div style="position: relative; padding-bottom:100%;"></div>'
+            + albumViewLazy + filteredAlbumCovers[i].imgurl + '" style="position:absolute; top:0; left:0; height:100%; width:100%; margin:0; max-height:100%;">'
+            + '</div>';
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-album"></div>'
 			+ albumViewHdDiv
 			+ albumViewBgDiv
