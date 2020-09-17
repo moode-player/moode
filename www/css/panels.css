@@ -426,7 +426,7 @@ body.cv #ss-currentsong, body.cv #ss-currentalbum {font-size:1.4em;}
 body.cv #playbar-timeline {top:50%;width:40%;transform:translate(-50%, -50%);}
 body.cv #screen-saver/*, body.cv #menu-bottom*/ {display:block !important;}
 body.cv #cv-playlist-btn {display:block;}
-#cv-playlist {display:none;position:absolute;top:1.5em;right:.1em;width:35%;z-index:2;height:calc(100% - 2.75em - 45px);overflow:auto;-webkit-overflow-scrolling:touch;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(32,32,32,.25);}
+#cv-playlist {display:none;position:absolute;top:1.5em;right:.1em;/*width:35%;*/z-index:2;height:calc(100% - 2.75em - 45px);overflow:auto;-webkit-overflow-scrolling:touch;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(32,32,32,.25);}
 /* misc */
 #splash {height:100vh;width:100vw;z-index:11111;position:fixed;background:rgba(32,32,32,0.95);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;}
 #splash div {position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);font-size:10vw;font-weight:200;letter-spacing:-.06em;opacity:0;transition:1s;}
