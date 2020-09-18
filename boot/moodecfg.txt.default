@@ -65,4 +65,4 @@ cover_scale=1.25
 [other]
 font_size=Normal
 playhist=No
-first_use_help=y,y
+first_use_help=Yes

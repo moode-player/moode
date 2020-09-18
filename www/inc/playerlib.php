@@ -2838,7 +2838,7 @@ function autoConfig($cfgfile) {
 
 	playerSession('write', 'font_size', $autocfg['font_size']);
 	playerSession('write', 'playhist', $autocfg['playhist']);
-	playerSession('write', 'first_use_help', $autocfg['first_use_help']);
+	playerSession('write', 'first_use_help', ($autocfg['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
 
 	autoCfgLog('autocfg: Font size: ' . $autocfg['font_size']);
 	autoCfgLog('autocfg: Play history: ' . $autocfg['playhist']);
