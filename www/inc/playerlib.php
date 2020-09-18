@@ -2737,6 +2737,7 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: - Device');
 	//
 
+	cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $autocfg['i2sdevice']);
 	playerSession('write', 'i2sdevice', $autocfg['i2sdevice']);
 
 	autoCfgLog('autocfg: i2sdevice: ' . $autocfg['i2sdevice']);
