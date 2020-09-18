@@ -51,6 +51,7 @@ Updates
 - UPD: Show volume level on Playbar
 - UPD: Generate additional set of small thumbnails for lists
 - UPD: Honor "Resume MPD" setting when disconnecting a renderer
+- UPD: Only load CoverView Queue when it's opened
 
 Radio stations
 
