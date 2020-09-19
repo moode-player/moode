@@ -402,6 +402,15 @@ jQuery(document).ready(function($) { 'use strict';
 		}, DEFAULT_TIMEOUT);
 	});
 
+    // Clear Library tag cache
+	$('.btn-clear-libcache').on('click', function(e) {
+        $.get('command/moode.php?cmd=clear_libcache');
+        notify('clear_libcache', 'Auto-refresh in 2 seconds');
+        setTimeout(function() {
+            location.reload(true);
+        }, 2000);
+	});
+
 	// mute toggle
 	$('.volume-display').on('click', function(e) {
 		if (SESSION.json['mpdmixer'] == 'disabled') {

@@ -44,6 +44,7 @@ Updates
 - UPD: Add higher resolutions for thumbnail generator
 - UPD: Add "Update Library" to action list for Clock Radio
 - UPD: Add MUSICBRAINZ_ALBUMID as part of the album key
+- UPD: Add "Clear Library cache" to Library menu
 - UPD: Instant play actions include Add next, Play next
 - UPD: Improve logging for Library update process
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
