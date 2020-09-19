@@ -2729,8 +2729,8 @@ function autoConfig($cfgfile) {
 	sysCmd('/var/www/command/util.sh chg-name dlna "Moode DLNA" ' . '"' . $autocfg['dlnaname'] . '"');
 	playerSession('write', 'dlnaname', $autocfg['dlnaname']);
 
-	sysCmd('/var/www/command/util.sh chg-name mpdzeroconf ' . "'" . '"Moode MPD"' . "'" . ' ' . "'" . '"' . $autocfg['mpdzeroconf'] . '"' . "'");
-	cfgdb_update('cfg_mpd', cfgdb_connect(), 'zeroconf_name', $autocfg['mpdzeroconf']);
+	//sysCmd('/var/www/command/util.sh chg-name mpdzeroconf ' . "'" . '"Moode MPD"' . "'" . ' ' . "'" . '"' . $autocfg['mpdzeroconf'] . '"' . "'");
+	//cfgdb_update('cfg_mpd', cfgdb_connect(), 'zeroconf_name', $autocfg['mpdzeroconf']);
 
 	autoCfgLog('autocfg: Host name: ' . $autocfg['hostname']);
 	autoCfgLog('autocfg: Browser title: ' . $autocfg['browsertitle']);
@@ -2738,9 +2738,72 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Airplay: ' . $autocfg['airplayname']);
 	autoCfgLog('autocfg: Spotify: ' . $autocfg['spotifyname']);
 	autoCfgLog('autocfg: Squeezelite: ' . $autocfg['squeezelitename']);
-	autoCfgLog('autocfg: UPnP: ' . $autocfg['upnpname']);
+	autoCfgLog('autocfg: UPnP Client: ' . $autocfg['upnpname']);
 	autoCfgLog('autocfg: DLNA: ' . $autocfg['dlnaname']);
-	autoCfgLog('autocfg: MPD zeroconf: ' . $autocfg['mpdzeroconf']);
+	//autoCfgLog('autocfg: MPD zeroconf: ' . $autocfg['mpdzeroconf']);
+
+	//
+	autoCfgLog('autocfg: - System');
+	//
+
+	sysCmd('/var/www/command/util.sh set-timezone ' . $autocfg['timezone']);
+	playerSession('write', 'timezone', $autocfg['timezone']);
+	sysCmd('/var/www/command/util.sh set-keyboard ' . $autocfg['keyboard']);
+	playerSession('write', 'keyboard', $autocfg['keyboard']);
+	playerSession('write', 'cpugov', $autocfg['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
+	playerSession('write', 'eth0chk', $autocfg['eth0chk']);
+	playerSession('write', 'localui', $autocfg['localui']);
+
+	autoCfgLog('autocfg: Time zone: ' . $autocfg['timezone']);
+	autoCfgLog('autocfg: Keyboard: ' . $autocfg['keyboard']);
+	autoCfgLog('autocfg: CPU Governor: ' . $autocfg['cpugov']);
+	autoCfgLog('autocfg: Wait for eth0 address: ' . ($autocfg['eth0chk'] == '0' ? 'No' : 'Yes'));
+	autoCfgLog('autocfg: Local UI: ' . ($autocfg['localui'] == '0' ? 'Off' : 'On'));
+
+	//
+	autoCfgLog('autocfg: - Device');
+	//
+
+	cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $autocfg['i2sdevice']);
+	playerSession('write', 'i2sdevice', $autocfg['i2sdevice']);
+
+	autoCfgLog('autocfg: i2sdevice: ' . $autocfg['i2sdevice']);
+
+	//
+	autoCfgLog('autocfg: - Renderers');
+	//
+
+	playerSession('write', 'btsvc', $autocfg['btsvc']);
+	playerSession('write', 'pairing_agent', $autocfg['pairing_agent']);
+	playerSession('write', 'rsmafterbt', $autocfg['rsmafterbt'] == 'No' ? '0' : '1');
+	playerSession('write', 'airplaysvc', $autocfg['airplaysvc']);
+	playerSession('write', 'rsmafterapl', $autocfg['rsmafterapl']);
+	playerSession('write', 'spotifysvc', $autocfg['spotifysvc']);
+	playerSession('write', 'rsmafterspot', $autocfg['rsmafterspot']);
+	playerSession('write', 'slsvc', $autocfg['slsvc']);
+	playerSession('write', 'rsmaftersl', $autocfg['rsmaftersl']);
+
+	autoCfgLog('autocfg: Bluetooth: ' . ($autocfg['btsvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Bluetooth pairing agent: ' . ($autocfg['pairing_agent'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Bluetooth resume: ' . $autocfg['rsmafterbt']);
+	autoCfgLog('autocfg: Airplay: ' . ($autocfg['airplaysvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Airplay resume: ' . $autocfg['rsmafterapl']);
+	autoCfgLog('autocfg: Spotify: ' . ($autocfg['spotifysvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Spotify resume: ' . $autocfg['rsmafterspot']);
+	autoCfgLog('autocfg: Squeezlite: ' . ($autocfg['slsvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Squeezlite resume: ' . $autocfg['rsmaftersl']);
+
+	//
+	autoCfgLog('autocfg: - UPnP/DLNA');
+	//
+
+	playerSession('write', 'upnpsvc', $autocfg['upnpsvc']);
+	playerSession('write', 'dlnasvc', $autocfg['dlnasvc']);
+	playerSession('write', 'upnp_browser', $autocfg['upnp_browser']);
+
+	autoCfgLog('autocfg: UPnP Client: ' . ($autocfg['upnpsvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: DLNA: ' . ($autocfg['dlnasvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: UPnP Browser: ' . ($autocfg['upnp_browser'] == '0' ? 'Off' : 'On'));
 
 	//
 	autoCfgLog('autocfg: - Network (wlan0)');
@@ -2778,29 +2841,35 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Channel: ' . $autocfg['apdchan']);
 
 	//
-	autoCfgLog('autocfg: - Services');
+	autoCfgLog('autocfg: - Theme & Background');
 	//
 
-	playerSession('write', 'airplaysvc', $autocfg['airplaysvc']);
-	playerSession('write', 'upnpsvc', $autocfg['upnpsvc']);
-	playerSession('write', 'dlnasvc', $autocfg['dlnasvc']);
+	playerSession('write', 'themename', $autocfg['themename']);
+	playerSession('write', 'accent_color', $autocfg['accentcolor']);
+	playerSession('write', 'alphablend', $autocfg['alphablend']);
+	playerSession('write', 'adaptive', $autocfg['adaptive']);
+	playerSession('write', 'cover_backdrop', $autocfg['cover_backdrop']);
+	playerSession('write', 'cover_blur', $autocfg['cover_blur']);
+	playerSession('write', 'cover_scale', $autocfg['cover_scale']);
 
-	autoCfgLog('autocfg: Airplay: ' . ($autocfg['airplaysvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: UPnP: ' . ($autocfg['upnpsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: DLNA: ' . ($autocfg['dlnasvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Theme name: ' . $autocfg['themename']);
+	autoCfgLog('autocfg: Accent color: ' . $autocfg['accentcolor']);
+	autoCfgLog('autocfg: Adapting coloring: ' . $autocfg['adaptive']);
+	autoCfgLog('autocfg: Cover backdrop: ' . $autocfg['cover_backdrop']);
+	autoCfgLog('autocfg: Cover blur: ' . $autocfg['cover_blur']);
+	autoCfgLog('autocfg: Cover scale: ' . $autocfg['cover_scale']);
 
 	//
 	autoCfgLog('autocfg: - Other');
 	//
 
-	sysCmd('/var/www/command/util.sh set-timezone ' . $autocfg['timezone']);
-	playerSession('write', 'timezone', $autocfg['timezone']);
-	playerSession('write', 'themename', $autocfg['themename']);
-	playerSession('write', 'accent_color', $autocfg['accentcolor']);
+	playerSession('write', 'font_size', $autocfg['font_size']);
+	playerSession('write', 'playhist', $autocfg['playhist']);
+	playerSession('write', 'first_use_help', ($autocfg['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
 
-	autoCfgLog('autocfg: Time zone: ' . $autocfg['timezone']);
-	autoCfgLog('autocfg: Theme name: ' . $autocfg['themename']);
-	autoCfgLog('autocfg: Accent color: ' . $autocfg['accentcolor']);
+	autoCfgLog('autocfg: Font size: ' . $autocfg['font_size']);
+	autoCfgLog('autocfg: Play history: ' . $autocfg['playhist']);
+	autoCfgLog('autocfg: first use help: ' . $autocfg['first_use_help']);
 
 	sysCmd('rm ' . $cfgfile);
 	autoCfgLog('autocfg: Configuration file deleted');

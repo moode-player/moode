@@ -1,10 +1,10 @@
 ##########################################
 # Copy this file to /boot/moodecfg.txt
-# worker will process it at startup then
-# delete it and automatically reboot.
-# 
+# It will be processed at startup and the
+# system will automaticly Restart.
+#
 # All param=value pairs must be present.
-# Set wlanssid=<nothing> to start AP mode.
+# Set wlanssid= blank to start AP mode.
 # Example: wlanssid=
 ##########################################
 
@@ -17,12 +17,32 @@ bluetoothname=Moode Bluetooth
 squeezelitename=Moode
 upnpname=Moode UPNP
 dlnaname=Moode DLNA
-mpdzeroconf=Moode MPD
 
-[services]
+[system]
+timezone=America/Detroit
+keyboard=us
+cpugov=On-demand
+eth0chk=1
+localui=0
+
+[device]
+i2sdevice=None
+
+[renderers]
+btsvc=0
+pairing_agent=0
+rsmafterbt=No
 airplaysvc=0
+rsmafterapl=No
+spotifysvc=0
+rsmafterspot=No
+slsvc=0
+rsmaftersl=No
+
+[upnp/dlna]
 upnpsvc=0
 dlnasvc=0
+upnp_browser=0
 
 [network]
 wlanssid=MySSID
@@ -33,7 +53,16 @@ apdssid=Moode
 apdchan=6
 apdpwd=moodeaudio
 
-[other]
-timezone=America/Detroit
+[theme & background]
 themename=Default
 accentcolor=Emerald
+alphablend=1.0
+adaptive=No
+cover_backdrop=No
+cover_blur=20px
+cover_scale=1.25
+
+[other]
+font_size=Normal
+playhist=No
+first_use_help=Yes
