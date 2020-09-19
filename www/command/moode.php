@@ -353,7 +353,8 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 					$values =
 						"'"	. $_POST['path']['url'] . "'," .
 						"'" . SQLite3::escapeString($_POST['path']['name']) . "'," .
-						"'r','local'," .
+						"'"	. $_POST['path']['type'] . "'," .
+						"'"	. 'local' . "'," .
 						"\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
 						"'" . $_POST['path']['broadcaster'] . "'," .
 						"'" . $_POST['path']['language'] . "'," .
