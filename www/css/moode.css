@@ -114,7 +114,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .controls input {min-height:26px !important;}
 .modal .dropdown-menu.inner {background-color:var(--adaptmbg);color:var(--adapttext);}
 .modal .modal-dropdown-text {color:inherit;}
-.modal .bootstrap-select .btn, #appearance-modal input {border: 1px solid var(--textvariant);}
+.modal .bootstrap-select .btn, #appearance-modal input, #clockradio-modal input, #radio-manager-modal input, #editstation-modal input, #newstation-modal input {border: 1px solid var(--textvariant);}
 .modal .modal-footer {border-top: none;text-align:center;}
 .modal-footer .btn {border-radius:5rem;background-color:var(--btnshade4);margin:.2em 1em;width:10em;color:inherit;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}
