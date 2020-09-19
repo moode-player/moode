@@ -84,7 +84,9 @@ var UI = {
 	// special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
 	radioPos: -1,
 	libAlbum: '',
-	mobile: false
+	mobile: false,
+	npIcon: 'url("../images/audiod.svg")',
+	npIconPaused: 'url("../images/audiod-flat.svg")'
 };
 
 // mpd state and metadata
@@ -681,12 +683,14 @@ function renderUI() {
     	// playback controls, playlist highlight
         if (MPD.json['state'] == 'play') {
     		$('.play i').removeClass('fas fa-play').addClass('fas fa-pause');
+			document.body.style.setProperty('--npicon', npIcon);
     		$('.playlist li.active, .cv-playlist li.active').removeClass('active');
             $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
             $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
         }
     	else if (MPD.json['state'] == 'pause' || MPD.json['state'] == 'stop') {
     		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
+			document.body.style.setProperty('--npicon', npIconPaused);
         }
     	//tt = updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0);
     	$('#total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
@@ -702,16 +706,17 @@ function renderUI() {
     	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
     		//console.log(MPD.json['coverurl']);
             // Original for Playback
-    		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
+     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
             // Thumbnail for Playbar
-            if (MPD.json['file']) {
+            if (MPD.json['file'] && !MPD.json['file'].match(/\/tidal\//)) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
                     '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             }
             else {
-                $('#playbar-cover').html('<img src="' + UI.defCover + '">');
+	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
+                $('#playbar-cover').html('<img src="' + 'images/default-cover-v6.png' + '">');
             }
     		// cover backdrop or bgimage
     		if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
@@ -765,7 +770,8 @@ function renderUI() {
             // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
                 (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
-            MPD.json['hidef'] == 'yes' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+            //MPD.json['hidef'] == 'yes' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+			MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
         else {
             $('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
@@ -3003,10 +3009,14 @@ function dbFastSearch() {
 // temp1 = theme/adaptBack(ground), temp2 = theme/adaptColor, temprgba is an array holding the rgba components,
 // temprgb is an array holding the rgb version of the text color
 
+// generate a set of colors based on the background and text color for use in buttons, etc.
+//
+// temp1 = theme/adaptBack(ground), temp2 = theme/adaptColor, temprgba is an array holding the rgba components,
+// temprgb is an array holding the rgb version of the text color
+
 function btnbarfix(temp1,temp2) {
 	var temprgba = splitColor(temp1);
 	var temprgb = hexToRgb(temp2);
-
 	var tempx = 0; // adjust the opacity if the alphablend value falls below a certain threshold to make it more visible
 	if ((SESSION.json['alphablend']) < .85) {
 		tempx = ((.9 - (SESSION.json['alphablend'])));
@@ -3018,7 +3028,7 @@ function btnbarfix(temp1,temp2) {
 	document.body.style.setProperty('--btnshade', tempcolor);
 	tempcolor = rgbaToRgb(.8 - tempx, '0.6', temprgba, temprgb); // btnshade2
 	document.body.style.setProperty('--btnshade2', tempcolor);
-	tempcolor = rgbaToRgb(.45, '1.0', temprgba, temprgb); // textvariant
+	tempcolor = rgbaToRgb(.3, '1.0', temprgba, temprgb); // textvariant
 	document.body.style.setProperty('--textvariant', tempcolor);
 	tempcolor = rgbaToRgb(.6, '.7', temprgba, temprgb); // textvariant
 	document.body.style.setProperty('--btnshade3', tempcolor);
@@ -3062,6 +3072,8 @@ function setColors() {
 	if (lastYIQ !== yiqBool) {
 		lastYIQ = yiqBool;
 		if (yiqBool) {
+			npIcon = 'url("../images/audiod.svg")';
+			npIconPaused = 'url("../images/audiod-flat.svg")'
 			document.body.style.setProperty('--timethumb', 'url("' + thumbd + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbd + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
@@ -3074,6 +3086,8 @@ function setColors() {
 			}, DEFAULT_TIMEOUT);
 		}
 		else {
+			npIcon = 'url("../images/audiow.svg")';
+			npIconPaused = 'url("../images/audiow-flat.svg")'
 			document.body.style.setProperty('--timethumb', 'url("' + thumbw + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbw + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
@@ -3086,6 +3100,7 @@ function setColors() {
 				//UI.mobile ? '' : $('#playback-controls').show();
 			}, DEFAULT_TIMEOUT);
 		}
+		document.body.style.setProperty('--npicon', npIcon);
 	}
 }
 
