@@ -2751,22 +2751,23 @@ function autoConfig($cfgfile) {
 	sysCmd('/var/www/command/util.sh set-keyboard ' . $autocfg['keyboard']);
 	playerSession('write', 'keyboard', $autocfg['keyboard']);
 	playerSession('write', 'cpugov', $autocfg['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
+	playerSession('write', 'hdmiport', $autocfg['hdmiport']);
 	playerSession('write', 'eth0chk', $autocfg['eth0chk']);
 	playerSession('write', 'localui', $autocfg['localui']);
 
 	autoCfgLog('autocfg: Time zone: ' . $autocfg['timezone']);
 	autoCfgLog('autocfg: Keyboard: ' . $autocfg['keyboard']);
 	autoCfgLog('autocfg: CPU Governor: ' . $autocfg['cpugov']);
+	autoCfgLog('autocfg: HDMI port: ' . ($autocfg['hdmiport'] == '0' ? 'Off' : 'On'));
 	autoCfgLog('autocfg: Wait for eth0 address: ' . ($autocfg['eth0chk'] == '0' ? 'No' : 'Yes'));
 	autoCfgLog('autocfg: Local UI: ' . ($autocfg['localui'] == '0' ? 'Off' : 'On'));
 
 	//
-	autoCfgLog('autocfg: - Device');
+	autoCfgLog('autocfg: - I2S Device');
 	//
 
 	cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $autocfg['i2sdevice']);
 	playerSession('write', 'i2sdevice', $autocfg['i2sdevice']);
-
 	autoCfgLog('autocfg: i2sdevice: ' . $autocfg['i2sdevice']);
 
 	//
@@ -2785,13 +2786,13 @@ function autoConfig($cfgfile) {
 
 	autoCfgLog('autocfg: Bluetooth: ' . ($autocfg['btsvc'] == '0' ? 'Off' : 'On'));
 	autoCfgLog('autocfg: Bluetooth pairing agent: ' . ($autocfg['pairing_agent'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Bluetooth resume: ' . $autocfg['rsmafterbt']);
+	autoCfgLog('autocfg: Bluetooth MPD resume: ' . $autocfg['rsmafterbt']);
 	autoCfgLog('autocfg: Airplay: ' . ($autocfg['airplaysvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Airplay resume: ' . $autocfg['rsmafterapl']);
+	autoCfgLog('autocfg: Airplay MPD resume: ' . $autocfg['rsmafterapl']);
 	autoCfgLog('autocfg: Spotify: ' . ($autocfg['spotifysvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Spotify resume: ' . $autocfg['rsmafterspot']);
+	autoCfgLog('autocfg: Spotify MPD resume: ' . $autocfg['rsmafterspot']);
 	autoCfgLog('autocfg: Squeezlite: ' . ($autocfg['slsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Squeezlite resume: ' . $autocfg['rsmaftersl']);
+	autoCfgLog('autocfg: Squeezlite MPD resume: ' . $autocfg['rsmaftersl']);
 
 	//
 	autoCfgLog('autocfg: - UPnP/DLNA');
@@ -2854,7 +2855,7 @@ function autoConfig($cfgfile) {
 
 	autoCfgLog('autocfg: Theme name: ' . $autocfg['themename']);
 	autoCfgLog('autocfg: Accent color: ' . $autocfg['accentcolor']);
-	autoCfgLog('autocfg: Adapting coloring: ' . $autocfg['adaptive']);
+	autoCfgLog('autocfg: Adaptive coloring: ' . $autocfg['adaptive']);
 	autoCfgLog('autocfg: Cover backdrop: ' . $autocfg['cover_backdrop']);
 	autoCfgLog('autocfg: Cover blur: ' . $autocfg['cover_blur']);
 	autoCfgLog('autocfg: Cover scale: ' . $autocfg['cover_scale']);
