@@ -65,10 +65,9 @@ if (!Object.values) {
 function loadLibrary() {
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
-    if (currentView == 'tag' || currentView == 'album') {
+    /*if (currentView == 'tag' || currentView == 'album') {
         notify('library_loading');
-    }
-
+    }*/
 	$.post('command/moode.php?cmd=loadlib', function(data) {
         $('#lib-content').show();
 		renderLibrary(data);
@@ -532,12 +531,12 @@ var renderAlbums = function() {
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
-        var albumViewLazy = tagViewLazy;
+        var albumViewLazy = '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' ;
     }
     else {
     	var tagViewLazy = '<img class="lazy-tagview" data-original="';
-    	var albumViewLazy = '<img class="lazy-albumview" data-original="';
-    }
+    	var albumViewLazy = '<img class="lazy-albumview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" data-original="';
+    }	
 
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
@@ -555,7 +554,7 @@ var renderAlbums = function() {
 
         // filteredAlbums[i].encoded_at
         // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
-        if (encodedAtOption != 9) {
+        if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
             var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="lib-encoded-at-hdonly-tagview">' + ALBUM_HD_BADGE_TEXT + '</div>' : '';
             var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
@@ -580,7 +579,7 @@ var renderAlbums = function() {
 		else {
 			output += '<li class="lib-entry no-tagview-covers">'
                 + '<span class="album-name">' + filteredAlbums[i].album
-                + '</span><span class="artist-name-art">' + filteredAlbums[i].artist + '</span><span class="album-year">' + tagViewYear + '</span></li>'
+                + '</span><span class="artist-name">' + filteredAlbums[i].artist + tagViewYear + '</span></li>'
         }
 
 		output2 += '<li class="lib-entry">'
@@ -596,6 +595,7 @@ var renderAlbums = function() {
 	}
 
     // Output the lists
+	
 	$('#albumsList').html(output);
 	$('#albumcovers').html(output2);
 
@@ -685,13 +685,13 @@ var renderSongs = function(albumPos) {
         lastDisc = '';
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
-            if (SESSION.json['library_inc_comment_tag'] == 'Yes') {
+            /*if (SESSION.json['library_inc_comment_tag'] == 'Yes') {
                 var comment = typeof(filteredSongs[i].comment) != 'undefined' ? ' (' + filteredSongs[i].comment + ')' : '';
             }
             else {
                 var comment = filteredSongs[i].mb_albumid != '0' ? ' (' + filteredSongs[i].mb_albumid.slice(0, 8) + ')' : '';
-            }
-            var album = filteredSongs[i].album + comment;
+            }*/
+            var album = filteredSongs[i].album/* + comment*/;
 
             if (album != lastAlbum) {
                 albumDiv = '<div class="lib-album-heading">' + album + '</div>';

@@ -34,15 +34,15 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// Store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
 	var hiddenDiv = $("<div style='position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;'></div>").appendTo("body");
-	var sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
-	$("body").get(0).style.setProperty("--sbw", sbw + 'px');
+	GLOBAL.sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
+	$("body").get(0).style.setProperty("--sbw", GLOBAL.sbw + 'px');
     //console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
 
     // Enable custom scroll bars unless overlay scroll bars are enabled on the platform (scroll bar width sbw = 0)
-    if (sbw) {
+    if (GLOBAL.sbw) {
         $('body').addClass('custom-scrollbars');
     }
-
+	
     // Check for native lazy load support in Browser
     // @bitkeeper contribution: https://github.com/moode-player/moode/pull/131
     if ('loading' in HTMLImageElement.prototype) {
@@ -63,9 +63,6 @@ jQuery(document).ready(function($) { 'use strict';
     	// Set currentView global
     	currentView = SESSION.json['current_view'];
 
-        // Set thumbnail columns
-        setLibraryThumbnailCols(SESSION.json['library_thumbnail_columns'].substring(0, 1));
-
         // Initiate loads
         loadLibrary();
         mpdDbCmd('lsinfo', '');
@@ -83,6 +80,9 @@ jQuery(document).ready(function($) { 'use strict';
     	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
         //console.log('window: ' + $(window).width() + 'x' + $(window).height());
         //console.log('viewport: ' + window.innerWidth + 'x' + window.innerHeight);
+
+		// set library & radio columns & thumb image size
+		getThumbHW();
 
         // Set volume knob max
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);

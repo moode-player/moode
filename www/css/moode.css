@@ -256,8 +256,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#lib-albumcover {left:0;}
 	/* ellipsis madness */
 	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
-	#albumcovers .lib-entry, .database-radio li {width:var(--mthumbcols);}
-	#albumcovers .lib-entry img, .database-radio img {max-height:calc(var(--mthumbcols) * .9);}
+	#albumcovers .lib-entry, .database-radio li {width:var(--thumbcols);}
+	#albumcovers .lib-entry img, .database-radio img {max-height:var(--thumbimagesize);}
 	/* stuff */
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}

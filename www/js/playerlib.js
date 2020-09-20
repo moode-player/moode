@@ -86,7 +86,8 @@ var UI = {
 	libAlbum: '',
 	mobile: false,
 	npIcon: 'url("../images/audiod.svg")',
-	npIconPaused: 'url("../images/audiod-flat.svg")'
+	npIconPaused: 'url("../images/audiod-flat.svg")',
+	thumbHW: '0px'
 };
 
 // mpd state and metadata
@@ -708,10 +709,10 @@ function renderUI() {
             // Original for Playback
      		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
             // Thumbnail for Playbar
-            if (MPD.json['file'] && !MPD.json['file'].match(/\/tidal\//)) {
+            if (MPD.json['file'] && !RegExp('/tidal/').test(MPD.json['file'])) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
-                    '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
+                    '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '_sm.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             }
             else {
@@ -1050,7 +1051,8 @@ function renderPlaylist() {
 				}
 				// Song file or upnp url
 				else {
-					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
+					var thumb = RegExp('/tidal/').test(data[i].file) ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
+					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"' + thumb + '"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -1345,7 +1347,7 @@ function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         // Lazyload method
-        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' : '<img class="lazy-radioview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + 'data-original="';
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
@@ -2215,40 +2217,33 @@ $('.context-menu a').click(function(e) {
     		$('#cover-blur span').text(SESSION.json['cover_blur']);
     		$('#cover-scale span').text(SESSION.json['cover_scale']);
 
-            // Playback
-            $('#instant-play-action span').text(SESSION.json['library_instant_play']);
+            // Playback options
             $('#playlist-art-enabled span').text(SESSION.json['playlist_art']);
             $('#renderer-backdrop span').text(SESSION.json['renderer_backdrop']);
 
-            // Library
-            // Sorting and Filtering
-            $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
-            $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
+            // Library options
             $('#library-flatlist-filter span').text(SESSION.json['library_flatlist_filter']);
             (SESSION.json['library_flatlist_filter'] == 'Format' || SESSION.json['library_flatlist_filter'] == 'Directory') ?
                 $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
-                $('#library-flatlist-filter-str').val(SESSION.json['library_flatlist_filter_str']);
-            $('#recently-added span').text(getParamOrValue('param', SESSION.json['library_recently_added']));
-            $('#utf8-char-filter span').text(SESSION.json['library_utf8rep']);
-            // Metadata and Tags
-            $('#compilation-identifier').val(SESSION.json['library_comp_id']);
-            $('#ignore-articles').val(SESSION.json['library_ignore_articles']);
-            $('#library-inc-comment-tag span').text(SESSION.json['library_inc_comment_tag']);
-            // User Interface elements
-            $('#show-encoded-at span').text(getParamOrValue('param', SESSION.json['library_encoded_at']));
+            $('#library-flatlist-filter-str').val(SESSION.json['library_flatlist_filter_str']);
+            $('#instant-play-action span').text(SESSION.json['library_instant_play']);
             $('#show-genres-column span').text(SESSION.json['library_show_genres']);
             $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
+            $('#show-encoded-at span').text(getParamOrValue('param', SESSION.json['library_encoded_at']));
             $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
-            // Covers and thumbnails
-            $('#cover-search-priority span').text(getParamOrValue('param', SESSION.json['library_covsearchpri']));
-            $('#hires-thumbnails span').text(SESSION.json['library_hiresthm']);
             $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
-
-    		// CoverView
+            $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
+            $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
+            $('#compilation-identifier').val(SESSION.json['library_comp_id']);
+            $('#recently-added span').text(getParamOrValue('param', SESSION.json['library_recently_added']));
+            $('#ignore-articles').val(SESSION.json['library_ignore_articles']);
+            $('#utf8-char-filter span').text(SESSION.json['library_utf8rep']);
+            $('#hires-thumbnails span').text(SESSION.json['library_hiresthm']);
+            $('#cover-search-priority span').text(getParamOrValue('param', SESSION.json['library_covsearchpri']));
+    		// Coverview screen saver
             $('#scnsaver-timeout span').text(getParamOrValue('param', SESSION.json['scnsaver_timeout']));
     		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
-
-            // Other
+            // Other options
     		$('#font-size span').text(SESSION.json['font_size']);
     		$('#play-history-enabled span').text(SESSION.json['playhist']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
@@ -2380,7 +2375,6 @@ $('#btn-appearance-update').click(function(e){
 	var accentColorChange = false;
 	var themeSettingsChange = false;
     var libraryOptionsChange = false;
-    var clearLibcacheReqd = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
     var extraTagsChange = false;
@@ -2407,44 +2401,38 @@ $('#btn-appearance-update').click(function(e){
 	if (SESSION.json['cover_blur'] != $('#cover-blur span').text()) {themeSettingsChange = true;}
 	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;}
 
-    // Playback
-    if (SESSION.json['library_instant_play'] != $('#instant-play-action span').text()) {libraryOptionsChange = true;}
+    // Playback options
     if (SESSION.json['playlist_art'] != $('#playlist-art-enabled span').text()) {playlistArtChange = true;}
     //if (SESSION.json['render_backdrop'] != $('#renderer-backdrop span').text()) {}
 
-    // Library
-    // Sorting and Filtering
-    if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
-    if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
-    if (SESSION.json['library_flatlist_filter'] != $('#library-flatlist-filter span').text()) {clearLibcacheReqd = true;}
-    if (SESSION.json['library_flatlist_filter_str'] != $('#library-flatlist-filter-str').val()) {clearLibcacheReqd = true;}
-    if (SESSION.json['library_recently_added'] != getParamOrValue('value', $('#recently-added span').text())) {libraryOptionsChange = true;}
-    if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;}
-    // Metadata and Tags
-    if (SESSION.json['library_comp_id'] != $('#compilation-identifier').val()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_inc_comment_tag'] != $('#library-inc-comment-tag span').text()) {clearLibcacheReqd = true;}
-    // User Interface elements
-    if (SESSION.json['library_encoded_at'] != getParamOrValue('value', $('#show-encoded-at span').text())) {encodedAtChange = true;}
+    // Library options
+    if (SESSION.json['library_flatlist_filter'] != $('#library-flatlist-filter span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_flatlist_filter_str'] != $('#library-flatlist-filter-str').val()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_instant_play'] != $('#instant-play-action span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {
 		$('#show-genres-column span').text() == "Yes" ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 	}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_encoded_at'] != getParamOrValue('value', $('#show-encoded-at span').text())) {encodedAtChange = true;}
     if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
 		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel').addClass('limited') : $('#library-panel').removeClass('limited');
 	}
-    // Covers and Thumbnails
-    if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
-    if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {
-		setLibraryThumbnailCols($('#thumbnail-columns span').text().substring(0,1));
+		//setLibraryThumbnailCols($('#thumbnail-columns span').text().substring(0,1));
+		libraryOptionsChange = true;
 	}
-
-    // CoverView
+    if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
+    if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
+    if (SESSION.json['library_comp_id'] != $('#compilation-identifier').val()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_recently_added'] != getParamOrValue('value', $('#recently-added span').text())) {libraryOptionsChange = true;}
+    if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
+    // Coverview screen saver
     if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
-
-    // Other
+    // Other options
     if (SESSION.json['font_size'] != $('#font-size span').text()) {fontSizeChange = true;};
     if (SESSION.json['extra_tags'] != $('#extra-tags').val()) {extraTagsChange = true;}
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
@@ -2458,38 +2446,31 @@ $('#btn-appearance-update').click(function(e){
 	SESSION.json['cover_blur'] = $('#cover-blur span').text();
 	SESSION.json['cover_scale'] = $('#cover-scale span').text();
 
-    // Playback
-    SESSION.json['library_instant_play'] = $('#instant-play-action span').text();
+    // Playback options
     SESSION.json['playlist_art'] = $('#playlist-art-enabled span').text();
     SESSION.json['renderer_backdrop'] = $('#renderer-backdrop span').text();
 
-    // Library
-    // Sorting and Filtering
-    SESSION.json['library_albumview_sort'] = $('#albumview-sort-order span').text().replace('by ', '');
-    SESSION.json['library_tagview_sort'] = $('#tagview-sort-order span').text().replace('by ', '');
+    // Library options
     SESSION.json['library_flatlist_filter'] = $('#library-flatlist-filter span').text();
     SESSION.json['library_flatlist_filter_str'] = $('#library-flatlist-filter-str').val().trim();
-    SESSION.json['library_recently_added'] = getParamOrValue('value', $('#recently-added span').text());
-    SESSION.json['library_utf8rep'] = $('#utf8-char-filter span').text();
-    // Metadata and Tags
-    SESSION.json['library_comp_id'] = $('#compilation-identifier').val().trim();
-    SESSION.json['library_ignore_articles'] = $('#ignore-articles').val().trim();
-    SESSION.json['library_inc_comment_tag'] = $('#library-inc-comment-tag span').text();
-    // User Interface elements
-    SESSION.json['library_encoded_at'] = getParamOrValue('value', $('#show-encoded-at span').text());
+    SESSION.json['library_instant_play'] = $('#instant-play-action span').text();
     SESSION.json['library_show_genres'] = $('#show-genres-column span').text();
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
+    SESSION.json['library_encoded_at'] = getParamOrValue('value', $('#show-encoded-at span').text());
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
-    // Covers and Thumbnails
-    SESSION.json['library_covsearchpri'] = getParamOrValue('value', $('#cover-search-priority span').text());
-    SESSION.json['library_hiresthm'] = $('#hires-thumbnails span').text();
     SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
-
-    // CoverView
+    SESSION.json['library_albumview_sort'] = $('#albumview-sort-order span').text().replace('by ', '');
+    SESSION.json['library_tagview_sort'] = $('#tagview-sort-order span').text().replace('by ', '');
+    SESSION.json['library_comp_id'] = $('#compilation-identifier').val().trim();
+    SESSION.json['library_recently_added'] = getParamOrValue('value', $('#recently-added span').text());
+    SESSION.json['library_ignore_articles'] = $('#ignore-articles').val().trim();
+    SESSION.json['library_utf8rep'] = $('#utf8-char-filter span').text();
+    SESSION.json['library_hiresthm'] = $('#hires-thumbnails span').text();
+    SESSION.json['library_covsearchpri'] = getParamOrValue('value', $('#cover-search-priority span').text());
+    // Ccovreview screen saver
     SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
-
-    // Other
+    // Other options
     SESSION.json['font_size'] = $('#font-size span').text();
 	SESSION.json['playhist'] = $('#play-history-enabled span').text();
 	SESSION.json['extra_tags'] = $('#extra-tags').val();
@@ -2500,9 +2481,6 @@ $('#btn-appearance-update').click(function(e){
 	}
 	if (scnSaverTimeoutChange == true) {
         $.get('command/moode.php?cmd=resetscnsaver');
-	}
-    if (clearLibcacheReqd == true) {
-        $.get('command/moode.php?cmd=clear_libcache');
 	}
 	if (accentColorChange == true) {
 		accentColor = themeToColors(SESSION.json['accent_color']);
@@ -2537,58 +2515,44 @@ $('#btn-appearance-update').click(function(e){
     // Update database
     $.post('command/moode.php?cmd=updcfgsystem',
         {
-            // Theme and Background
-            'themename': SESSION.json['themename'],
-            'accent_color': SESSION.json['accent_color'],
-            'alphablend': SESSION.json['alphablend'],
-            'adaptive': SESSION.json['adaptive'],
-            'cover_backdrop': SESSION.json['cover_backdrop'],
-            'cover_blur': SESSION.json['cover_blur'],
-            'cover_scale': SESSION.json['cover_scale'],
-
-            // Playback
-            'library_instant_play': SESSION.json['library_instant_play'],
-            'playlist_art': SESSION.json['playlist_art'],
-            'renderer_backdrop': SESSION.json['renderer_backdrop'],
-
-            // Library
-            // Sorting and Filtering
-            'library_albumview_sort': SESSION.json['library_albumview_sort'],
-            'library_tagview_sort': SESSION.json['library_tagview_sort'],
-            'library_flatlist_filter': SESSION.json['library_flatlist_filter'],
-            'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str'],
-            'library_recently_added': SESSION.json['library_recently_added'],
-            'library_utf8rep': SESSION.json['library_utf8rep'],
-            // Metadata and Tags
-            'library_comp_id': SESSION.json['library_comp_id'],
-            'library_ignore_articles': SESSION.json['library_ignore_articles'],
-            'library_inc_comment_tag': SESSION.json['library_inc_comment_tag'],
-            // User Interface elements
-            'library_encoded_at': SESSION.json['library_encoded_at'],
-            'library_show_genres': SESSION.json['library_show_genres'],
-            'library_tagview_covers': SESSION.json['library_tagview_covers'],
-            'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
-            // Covers and Thumbs
-            'library_covsearchpri': SESSION.json['library_covsearchpri'],
-            'library_hiresthm': SESSION.json['library_hiresthm'],
-            'library_thumbnail_columns': SESSION.json['library_thumbnail_columns'],
-
-            // CoverView
-            'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
-            'scnsaver_style': SESSION.json['scnsaver_style'],
-
-            // Other
-            'font_size': SESSION.json['font_size'],
-            'playhist': SESSION.json['playhist'],
-            'extra_tags': SESSION.json['extra_tags'],
-
-            // Internal
-            'appearance_modal_state': SESSION.json['appearance_modal_state']
+        'themename': SESSION.json['themename'],
+        'accent_color': SESSION.json['accent_color'],
+        'alphablend': SESSION.json['alphablend'],
+        'adaptive': SESSION.json['adaptive'],
+        'cover_backdrop': SESSION.json['cover_backdrop'],
+        'cover_blur': SESSION.json['cover_blur'],
+        'cover_scale': SESSION.json['cover_scale'],
+        'library_instant_play': SESSION.json['library_instant_play'],
+        'library_show_genres': SESSION.json['library_show_genres'],
+        'library_tagview_covers': SESSION.json['library_tagview_covers'],
+        'library_encoded_at': SESSION.json['library_encoded_at'],
+        'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
+        'library_thumbnail_columns': SESSION.json['library_thumbnail_columns'],
+        'library_albumview_sort': SESSION.json['library_albumview_sort'],
+        'library_tagview_sort': SESSION.json['library_tagview_sort'],
+        'library_comp_id': SESSION.json['library_comp_id'],
+        'library_recently_added': SESSION.json['library_recently_added'],
+        'library_ignore_articles': SESSION.json['library_ignore_articles'],
+        'library_utf8rep': SESSION.json['library_utf8rep'],
+        'library_hiresthm': SESSION.json['library_hiresthm'],
+        'library_covsearchpri': SESSION.json['library_covsearchpri'],
+        'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
+        'scnsaver_style': SESSION.json['scnsaver_style'],
+        'font_size': SESSION.json['font_size'],
+        'playhist': SESSION.json['playhist'],
+        'extra_tags': SESSION.json['extra_tags'],
+        'appearance_modal_state': SESSION.json['appearance_modal_state'],
+        'playlist_art': SESSION.json['playlist_art'],
+        'renderer_backdrop': SESSION.json['renderer_backdrop'],
+        'library_flatlist_filter': SESSION.json['library_flatlist_filter'],
+        'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd || 
+            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
+				// set library & radio thumb image size
+				getThumbHW();
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
@@ -2609,13 +2573,13 @@ $('#library-flatlist-filter span').on('DOMSubtreeModified',function(){
         $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
 });
 
-function setLibraryThumbnailCols(cols) {
+/*function setLibraryThumbnailCols(cols) {
     //var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
     var map = {6:'15vw,45vw', 7:'13vw,30vw', 8:'12vw,22vw'}
     var css = map[cols].split(',');
     document.body.style.setProperty('--thumbcols', css[0]);
     document.body.style.setProperty('--mthumbcols', css[1]);
-}
+}*/
 
 // Remove bg image (NOTE choose bg image is in indextpl.html)
 $('#remove-bgimage').click(function(e) {
@@ -3645,3 +3609,29 @@ function submitLibraryUpdate (path) {
         notify('library_updating');
     }
 }
+
+function getThumbHW() {
+	var cols = SESSION.json['library_thumbnail_columns'].slice(0,1);
+	if (UI.mobile) cols = cols - 4;
+	var divM = Math.round(2 * convertRem(1.5)); // 1.5rem l/r margin for div
+	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
+	UI.thumbHW = columnW - (divM / 2);
+	$("body").get(0).style.setProperty("--thumbimgsize", UI.thumbHW + 'px');
+	$("body").get(0).style.setProperty("--thumbcols", columnW + 'px');	
+}
+
+function convertRem(value) {
+  return value * getRootElementFontSize();
+}
+
+function getRootElementFontSize() {
+  // Returns a number
+  return parseFloat(
+    // of the computed font-size, so in px
+    getComputedStyle(
+      // for the root <html> element
+      document.documentElement
+    ).fontSize
+  );
+}
+
