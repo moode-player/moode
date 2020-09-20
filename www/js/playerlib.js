@@ -86,7 +86,8 @@ var UI = {
 	libAlbum: '',
 	mobile: false,
 	npIcon: 'url("../images/audiod.svg")',
-	npIconPaused: 'url("../images/audiod-flat.svg")'
+	npIconPaused: 'url("../images/audiod-flat.svg")',
+	thumbHW: '0px'
 };
 
 // mpd state and metadata
@@ -708,7 +709,7 @@ function renderUI() {
             // Original for Playback
      		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
             // Thumbnail for Playbar
-            if (MPD.json['file'] && !MPD.json['file'].match(/\/tidal\//)) {
+            if (MPD.json['file'] && !RegExp('/tidal/').test(MPD.json['file'])) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
                     '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
@@ -1050,7 +1051,9 @@ function renderPlaylist() {
 				}
 				// Song file or upnp url
 				else {
-					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
+					var thumb = RegExp('/tidal/').test(data[i].file) ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
+					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"' + thumb + '"/></span>' : '';
+					//output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -1347,7 +1350,7 @@ function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         // Lazyload method
-        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' : '<img class="lazy-radioview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + 'data-original="';
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
@@ -2439,7 +2442,7 @@ $('#btn-appearance-update').click(function(e){
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
     if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {
-		setLibraryThumbnailCols($('#thumbnail-columns span').text().substring(0,1));
+		libraryOptionsChange = true;
 	}
 
     // CoverView
@@ -2591,6 +2594,8 @@ $('#btn-appearance-update').click(function(e){
             if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
+				// set library & radio thumb image size
+				getThumbHW();
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
@@ -2611,13 +2616,13 @@ $('#library-flatlist-filter span').on('DOMSubtreeModified',function(){
         $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
 });
 
-function setLibraryThumbnailCols(cols) {
+/*function setLibraryThumbnailCols(cols) {
     //var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
     var map = {6:'15vw,45vw', 7:'13vw,30vw', 8:'12vw,22vw'}
     var css = map[cols].split(',');
     document.body.style.setProperty('--thumbcols', css[0]);
     document.body.style.setProperty('--mthumbcols', css[1]);
-}
+}*/
 
 // Remove bg image (NOTE choose bg image is in indextpl.html)
 $('#remove-bgimage').click(function(e) {
@@ -3646,4 +3651,29 @@ function submitLibraryUpdate (path) {
     else {
         notify('library_updating');
     }
+}
+
+function getThumbHW() {
+	var cols = SESSION.json['library_thumbnail_columns'].slice(0,1);
+	if (UI.mobile) cols = cols - 4;
+	var divM = Math.round(2 * convertRem(1.5)); // 1.5rem l/r margin for div
+	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
+	UI.thumbHW = columnW - (divM / 2);
+	$("body").get(0).style.setProperty("--thumbimagesize", UI.thumbHW + 'px');
+	$("body").get(0).style.setProperty("--thumbcols", columnW + 'px');	
+}
+
+function convertRem(value) {
+  return value * getRootElementFontSize();
+}
+
+function getRootElementFontSize() {
+  // Returns a number
+  return parseFloat(
+    // of the computed font-size, so in px
+    getComputedStyle(
+      // for the root <html> element
+      document.documentElement
+    ).fontSize
+  );
 }
