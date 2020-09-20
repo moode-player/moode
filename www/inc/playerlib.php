@@ -31,6 +31,7 @@ define('MPD_RESPONSE_ERR', 'ACK');
 define('MPD_RESPONSE_OK',  'OK');
 define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
 define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
+define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
 define('MOODE_LOG', '/var/log/moode.log');
 define('AUTOCFG_LOG', '/home/pi/autocfg.log');
 define('PORT_FILE', '/tmp/portfile');
@@ -235,18 +236,17 @@ function echoTemplate($template) {
 function integrityCheck() {
 	$warning = false;
 
+	// Export device table
+	sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT * FROM cfg_audiodev WHERE drvoptions NOT IN ('slave', 'glb_mclk') AND chipoptions = ''\" > /tmp/cfg_audiodev.sql");
+	// Broom www root
+	sysCmd('find /var/www -type l -delete');
+
 	// Check database schema
 	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db .schema | grep ro_columns');
 	if (empty($result)) {
 		$_SESSION['ic_return_code'] = '1';
 		return false;
 	}
-
-	// Output static tables
-	$result = sysCmd("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT * FROM cfg_audiodev WHERE drvoptions NOT IN ('slave', 'glb_mclk')\" > /tmp/cfg_audiodev.sql");
-
-	// Broom www root
-	sysCmd('find /var/www -type l -delete');
 
 	// Check hash table
 	$result = cfgdb_read('cfg_hash', cfgdb_connect());
@@ -275,6 +275,13 @@ function integrityCheck() {
 				return false;
 			}
 		}
+	}
+
+	// Verify the row count
+	$count = sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT COUNT() FROM cfg_audiodev\"");
+	if ($count[0] != 76) {
+		$_SESSION['ic_return_code'] = '4';
+		return false;
 	}
 
 	return $warning === true ? 'passed with warnings' : 'passed';
