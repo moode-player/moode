@@ -45,6 +45,7 @@ Updates
 - UPD: Add "Update Library" to action list for Clock Radio
 - UPD: Add MUSICBRAINZ_ALBUMID as part of the album key
 - UPD: Add "Clear Library cache" to Library menu
+- UPD: Add place holder H/W for native lazyload
 - UPD: Include Add next, Play next in list of "One touch actions"
 - UPD: Improve logging for Library update process
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
