@@ -1087,12 +1087,14 @@ function renderPlaylist() {
 
 		// Render playlist
         $('#playlist ul').html(output);
-        $('#cv-playlist ul').html(output);
+        //$('#cv-playlist ul').html(output);
 
         if (output) {
             if (option_show_playlistart) {
     			lazyLode('playlist');
-                lazyLode('cv-playlist');
+                if ($('#cv-playlist').css('display') == 'block') {
+                    lazyLode('cv-playlist');
+                }
     		}
 
             setTimeout(function() {
@@ -2548,7 +2550,7 @@ $('#btn-appearance-update').click(function(e){
         'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange ||
+            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
 				// set library & radio thumb image size

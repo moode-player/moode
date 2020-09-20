@@ -402,6 +402,15 @@ jQuery(document).ready(function($) { 'use strict';
 		}, DEFAULT_TIMEOUT);
 	});
 
+    // Clear Library tag cache
+	$('.btn-clear-libcache').on('click', function(e) {
+        $.get('command/moode.php?cmd=clear_libcache');
+        notify('clear_libcache', 'Auto-refresh in 2 seconds');
+        setTimeout(function() {
+            location.reload(true);
+        }, 2000);
+	});
+
 	// mute toggle
 	$('.volume-display').on('click', function(e) {
 		if (SESSION.json['mpdmixer'] == 'disabled') {
@@ -1278,6 +1287,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#cv-playlist').toggle();
 
         if ($('#cv-playlist').css('display') == 'block') {
+            $('#cv-playlist ul').html($('#playlist ul').html());
             setTimeout(function() {
                 if (SESSION.json['playlist_art'] == 'Yes') {
                     lazyLode('cv-playlist');
@@ -1286,11 +1296,13 @@ jQuery(document).ready(function($) { 'use strict';
             }, DEFAULT_TIMEOUT);
 
             GLOBAL.playbarPlaylistTimer = setTimeout(function() {
+                $('#cv-playlist ul').html('');
                 $('#cv-playlist').hide();
             }, 20000);
         }
         else {
             e.preventDefault();
+            $('#cv-playlist ul').html('');
             window.clearTimeout(GLOBAL.playbarPlaylistTimer);
         }
 	});
@@ -1315,6 +1327,7 @@ jQuery(document).ready(function($) { 'use strict';
             setColors();
 
             // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
+            $('#cv-playlist ul').html('');
             $('#cv-playlist').hide();
             $('#lib-coverart-img').show();
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
