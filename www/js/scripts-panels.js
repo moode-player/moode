@@ -34,12 +34,12 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// Store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
 	var hiddenDiv = $("<div style='position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;'></div>").appendTo("body");
-	var sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
-	$("body").get(0).style.setProperty("--sbw", sbw + 'px');
+	GLOBAL.sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
+	$("body").get(0).style.setProperty("--sbw", GLOBAL.sbw + 'px');
     //console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
 
     // Enable custom scroll bars unless overlay scroll bars are enabled on the platform (scroll bar width sbw = 0)
-    if (sbw) {
+    if (GLOBAL.sbw) {
         $('body').addClass('custom-scrollbars');
     }
 
@@ -63,8 +63,13 @@ jQuery(document).ready(function($) { 'use strict';
     	// Set currentView global
     	currentView = SESSION.json['current_view'];
 
+    	// mobile
+    	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
+        //console.log('window: ' + $(window).width() + 'x' + $(window).height());
+        //console.log('viewport: ' + window.innerWidth + 'x' + window.innerHeight);
+
         // Set thumbnail columns
-        setLibraryThumbnailCols(SESSION.json['library_thumbnail_columns'].substring(0, 1));
+        getThumbHW();
 
         // Initiate loads
         loadLibrary();
@@ -78,11 +83,6 @@ jQuery(document).ready(function($) { 'use strict';
     	UI.libPos[0] = parseInt(tmpStr[0]); // album list
     	UI.libPos[1] = parseInt(tmpStr[1]); // album cover
     	UI.libPos[2] = parseInt(tmpStr[2]); // artist list
-
-    	// mobile
-    	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
-        //console.log('window: ' + $(window).width() + 'x' + $(window).height());
-        //console.log('viewport: ' + window.innerWidth + 'x' + window.innerHeight);
 
         // Set volume knob max
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);

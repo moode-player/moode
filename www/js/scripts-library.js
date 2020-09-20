@@ -532,12 +532,12 @@ var renderAlbums = function() {
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
-        var albumViewLazy = tagViewLazy;
+        var albumViewLazy = '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' ;
     }
     else {
     	var tagViewLazy = '<img class="lazy-tagview" data-original="';
-    	var albumViewLazy = '<img class="lazy-albumview" data-original="';
-    }
+    	var albumViewLazy = '<img class="lazy-albumview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" data-original="';
+    }	
 
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
@@ -555,7 +555,7 @@ var renderAlbums = function() {
 
         // filteredAlbums[i].encoded_at
         // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
-        if (encodedAtOption != 9) {
+        if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
             var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="lib-encoded-at-hdonly-tagview">' + ALBUM_HD_BADGE_TEXT + '</div>' : '';
             var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
