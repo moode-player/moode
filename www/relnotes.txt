@@ -46,6 +46,7 @@ Updates
 - UPD: Add MUSICBRAINZ_ALBUMID as part of the album key
 - UPD: Add "Clear Library cache" to Library menu
 - UPD: Add place holder H/W for native lazyload
+- UPD: Add "Now Playing" EQ style icon to the Queue
 - UPD: Include Add next, Play next in list of "One touch actions"
 - UPD: Improve logging for Library update process
 - UPD: Extend HD badging to Playbar, CoverView amd Playback

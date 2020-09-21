@@ -85,8 +85,8 @@ var UI = {
 	radioPos: -1,
 	libAlbum: '',
 	mobile: false,
-	npIcon: 'url("../images/audiod.svg")',
-	npIconPaused: 'url("../images/audiod-flat.svg")',
+	npIcon: 'url("../images/4band-npicon/audiod.svg")',
+	npIconPaused: 'url("../images/4band-npicon/audiod-flat.svg")',
 	thumbHW: '0px'
 };
 
@@ -3077,8 +3077,8 @@ function setColors() {
 	if (lastYIQ !== yiqBool) {
 		lastYIQ = yiqBool;
 		if (yiqBool) {
-			npIcon = 'url("../images/audiod.svg")';
-			npIconPaused = 'url("../images/audiod-flat.svg")'
+			npIcon = 'url("../images/4band-npicon/audiod.svg")';
+			npIconPaused = 'url("../images/4band-npicon/audiod-flat.svg")'
 			document.body.style.setProperty('--timethumb', 'url("' + thumbd + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbd + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
@@ -3091,8 +3091,8 @@ function setColors() {
 			}, DEFAULT_TIMEOUT);
 		}
 		else {
-			npIcon = 'url("../images/audiow.svg")';
-			npIconPaused = 'url("../images/audiow-flat.svg")'
+			npIcon = 'url("../images/4band-npicon/audiow.svg")';
+			npIconPaused = 'url("../images/4band-npicon/audiow-flat.svg")'
 			document.body.style.setProperty('--timethumb', 'url("' + thumbw + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbw + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');

@@ -52,7 +52,7 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--thumbimagesize:0px;
 	--coverback:'';
 	--config_modal_btn_bg:rgba(64,64,64,0.08);
-	--npicon: url('../images/audiow.svg');
+	--npicon: url('../images/4band-npicon/audiow.svg');
 }
 
 .btn, .lib-entry, .dropdown, #menu-header, div#playbar-title, #coverart-url {-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-user-select: none;-webkit-touch-callout: none;}
