@@ -102,9 +102,11 @@ function reduceGenres(acc, track) {
 
 function reduceArtists(acc, track) {
     var artist = (track.album_artist || track.artist).toLowerCase();
+	// TEST: var artist = (track.artist || track.album_artist).toLowerCase();
 	if (!acc[artist]) {
 		acc[artist] = [];
         acc[artist].artist = track.album_artist || track.artist;
+        // TEST: acc[artist].artist = track.artist || track.album_artist;
 	}
 	acc[artist].push(track);
 	return acc;
@@ -351,6 +353,13 @@ function filterArtists() {
 		songsfilteredByGenre = songsfilteredByGenre.filter(filterByGenre);
 	}
 	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
+    // TEST:
+    //filteredArtists.sort(function(a, b) {
+    //     a = removeArticles(a).toLowerCase();
+    //     b = removeArticles(b).toLowerCase();
+    //     return a > b ? 1 : (a < b ? -1 : 0);
+    //});
+    // TEST:
 }
 
 function filterAlbums() {
@@ -366,6 +375,12 @@ function filterAlbums() {
 	if (LIB.filters.artists.length) {
 		filteredAlbums = filteredAlbums.filter(filterByArtist);
 		filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
+        // TEST:
+        //var artistSongs = allSongs.filter(filterByArtist);
+ 		//var songKeys = artistSongs.map(function(a) {return a.key;});
+ 		//filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
+ 		//filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
+        // TEST:
 	}
     // Filter by file last-updated timestamp
     if (LIB.recentlyAddedClicked) {
@@ -537,7 +552,7 @@ var renderAlbums = function() {
     else {
     	var tagViewLazy = '<img class="lazy-tagview" data-original="';
     	var albumViewLazy = '<img class="lazy-albumview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" data-original="';
-    }	
+    }
 
     // SESSION.json['library_encoded_at']
     // 0 = No (searchable), 1 = HD only, 2 = Text, 3 = Badge, 9 = No
