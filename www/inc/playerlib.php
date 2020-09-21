@@ -800,7 +800,6 @@ function songTime($sec) {
 
 // Format MPD status output
 function parseStatus($resp) {
-
 	// This return probably needs a redo
 	if (is_null($resp)) {
 		return NULL;
@@ -3247,15 +3246,16 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['encoded'] = $_SESSION['currentencoded'];
 		}
 
-		// iTunes aac or aiff file
+		// File extension
 		$ext = getFileExt($song['file']);
+
+		// iTunes aac or aiff file
 		if (isset($song['Name']) && ($ext == 'm4a' || $ext == 'aif' || $ext == 'aiff')) {
 			//workerLog('enhanceMetadata(): AAC or AIFF song file');
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name'];
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
-			$current['hidef'] = ($ext == 'aif' || $ext == 'aiff') ? 'yes' : 'no';
 		}
 		// Radio station
 		elseif (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
@@ -3318,7 +3318,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			// Song file
 			else {
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
-				$current['hidef'] = ($current['audio_sample_depth'] > 16 || ($current['audio_sample_rate'] * 1000) > 44100) ? 'yes' : 'no';
 			}
 			// In case 2 url's are returned, use the first
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
@@ -3329,6 +3328,24 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			else {
 				//workerLog('enhanceMetadata(): Song file');
 			}
+		}
+
+		// Determine badging
+		// NOTE: This is modeled after the code in getEncodedAt()
+		sendMpdCmd($sock, 'lsinfo "' . $song['file'] . '"');
+		$song_data = parseDelimFile(readMpdResp($sock), ': ');
+		$mpd_format_tag = explode(':', $song_data['Format']);
+		// Lossy
+		if ($ext == 'mp3' || ($mpd_format_tag[1] == 'f' && $mpd_format_tag[2] <= 2)) {
+			$current['hidef'] = 'no';
+		}
+		// DSD
+		elseif ($ext == 'dsf' || $ext == 'dff') {
+			$current['hidef'] = 'yes';
+		}
+		// PCM or Multichannel PCM
+		else {
+			$current['hidef'] = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > ALBUM_BIT_DEPTH_THRESHOLD) || $mpd_format_tag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? 'yes' : 'no';
 		}
 	}
 
