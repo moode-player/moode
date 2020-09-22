@@ -84,7 +84,10 @@ var UI = {
 	// special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
 	radioPos: -1,
 	libAlbum: '',
-	mobile: false
+	mobile: false,
+	npIcon: 'url("../images/4band-npicon/audiod.svg")',
+	npIconPaused: 'url("../images/4band-npicon/audiod-flat.svg")',
+	thumbHW: '0px'
 };
 
 // mpd state and metadata
@@ -681,12 +684,14 @@ function renderUI() {
     	// playback controls, playlist highlight
         if (MPD.json['state'] == 'play') {
     		$('.play i').removeClass('fas fa-play').addClass('fas fa-pause');
+			document.body.style.setProperty('--npicon', npIcon);
     		$('.playlist li.active, .cv-playlist li.active').removeClass('active');
             $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
             $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
         }
     	else if (MPD.json['state'] == 'pause' || MPD.json['state'] == 'stop') {
     		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
+			document.body.style.setProperty('--npicon', npIconPaused);
         }
     	//tt = updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0);
     	$('#total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
@@ -702,16 +707,17 @@ function renderUI() {
     	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
     		//console.log(MPD.json['coverurl']);
             // Original for Playback
-    		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
+     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
             // Thumbnail for Playbar
-            if (MPD.json['file']) {
+            if (MPD.json['file'] && !RegExp('/tidal/').test(MPD.json['file'])) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
                     '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             }
             else {
-                $('#playbar-cover').html('<img src="' + UI.defCover + '">');
+	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
+                $('#playbar-cover').html('<img src="' + 'images/default-cover-v6.png' + '">');
             }
     		// cover backdrop or bgimage
     		if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
@@ -765,7 +771,8 @@ function renderUI() {
             // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
                 (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
-            MPD.json['hidef'] == 'yes' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+            //MPD.json['hidef'] == 'yes' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+			MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
         else {
             $('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
@@ -1044,7 +1051,9 @@ function renderPlaylist() {
 				}
 				// Song file or upnp url
 				else {
-					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
+					var thumb = RegExp('/tidal/').test(data[i].file) ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
+					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"' + thumb + '"/></span>' : '';
+					//output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -1079,12 +1088,14 @@ function renderPlaylist() {
 
 		// Render playlist
         $('#playlist ul').html(output);
-        $('#cv-playlist ul').html(output);
+        //$('#cv-playlist ul').html(output);
 
         if (output) {
             if (option_show_playlistart) {
     			lazyLode('playlist');
-                lazyLode('cv-playlist');
+                if ($('#cv-playlist').css('display') == 'block') {
+                    lazyLode('cv-playlist');
+                }
     		}
 
             setTimeout(function() {
@@ -1339,7 +1350,7 @@ function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         // Lazyload method
-        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' : '<img class="lazy-radioview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" data-original="';
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
@@ -2431,7 +2442,7 @@ $('#btn-appearance-update').click(function(e){
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
     if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {
-		setLibraryThumbnailCols($('#thumbnail-columns span').text().substring(0,1));
+		libraryOptionsChange = true;
 	}
 
     // CoverView
@@ -2580,9 +2591,11 @@ $('#btn-appearance-update').click(function(e){
             'appearance_modal_state': SESSION.json['appearance_modal_state']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd || 
+            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
+				// set library & radio thumb image size
+				getThumbHW();
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
@@ -2603,13 +2616,13 @@ $('#library-flatlist-filter span').on('DOMSubtreeModified',function(){
         $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
 });
 
-function setLibraryThumbnailCols(cols) {
+/*function setLibraryThumbnailCols(cols) {
     //var map = {6:'16vw,45vw', 7:'14vw,30vw', 8:'12vw,22vw'}
     var map = {6:'15vw,45vw', 7:'13vw,30vw', 8:'12vw,22vw'}
     var css = map[cols].split(',');
     document.body.style.setProperty('--thumbcols', css[0]);
     document.body.style.setProperty('--mthumbcols', css[1]);
-}
+}*/
 
 // Remove bg image (NOTE choose bg image is in indextpl.html)
 $('#remove-bgimage').click(function(e) {
@@ -3001,10 +3014,14 @@ function dbFastSearch() {
 // temp1 = theme/adaptBack(ground), temp2 = theme/adaptColor, temprgba is an array holding the rgba components,
 // temprgb is an array holding the rgb version of the text color
 
+// generate a set of colors based on the background and text color for use in buttons, etc.
+//
+// temp1 = theme/adaptBack(ground), temp2 = theme/adaptColor, temprgba is an array holding the rgba components,
+// temprgb is an array holding the rgb version of the text color
+
 function btnbarfix(temp1,temp2) {
 	var temprgba = splitColor(temp1);
 	var temprgb = hexToRgb(temp2);
-
 	var tempx = 0; // adjust the opacity if the alphablend value falls below a certain threshold to make it more visible
 	if ((SESSION.json['alphablend']) < .85) {
 		tempx = ((.9 - (SESSION.json['alphablend'])));
@@ -3016,7 +3033,7 @@ function btnbarfix(temp1,temp2) {
 	document.body.style.setProperty('--btnshade', tempcolor);
 	tempcolor = rgbaToRgb(.8 - tempx, '0.6', temprgba, temprgb); // btnshade2
 	document.body.style.setProperty('--btnshade2', tempcolor);
-	tempcolor = rgbaToRgb(.45, '1.0', temprgba, temprgb); // textvariant
+	tempcolor = rgbaToRgb(.3, '1.0', temprgba, temprgb); // textvariant
 	document.body.style.setProperty('--textvariant', tempcolor);
 	tempcolor = rgbaToRgb(.6, '.7', temprgba, temprgb); // textvariant
 	document.body.style.setProperty('--btnshade3', tempcolor);
@@ -3060,6 +3077,8 @@ function setColors() {
 	if (lastYIQ !== yiqBool) {
 		lastYIQ = yiqBool;
 		if (yiqBool) {
+			npIcon = 'url("../images/4band-npicon/audiod.svg")';
+			npIconPaused = 'url("../images/4band-npicon/audiod-flat.svg")'
 			document.body.style.setProperty('--timethumb', 'url("' + thumbd + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbd + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(96,96,96,0.25)');
@@ -3072,6 +3091,8 @@ function setColors() {
 			}, DEFAULT_TIMEOUT);
 		}
 		else {
+			npIcon = 'url("../images/4band-npicon/audiow.svg")';
+			npIconPaused = 'url("../images/4band-npicon/audiow-flat.svg")'
 			document.body.style.setProperty('--timethumb', 'url("' + thumbw + '")');
 			document.body.style.setProperty('--fatthumb', 'url("' + fatthumbw + '")');
 			document.body.style.setProperty('--timecolor', 'rgba(240,240,240,0.25)');
@@ -3084,6 +3105,7 @@ function setColors() {
 				//UI.mobile ? '' : $('#playback-controls').show();
 			}, DEFAULT_TIMEOUT);
 		}
+		document.body.style.setProperty('--npicon', npIcon);
 	}
 }
 
@@ -3629,4 +3651,29 @@ function submitLibraryUpdate (path) {
     else {
         notify('library_updating');
     }
+}
+
+function getThumbHW() {
+	var cols = SESSION.json['library_thumbnail_columns'].slice(0,1);
+	if (UI.mobile) cols = cols - 4;
+	var divM = Math.round(2 * convertRem(1.5)); // 1.5rem l/r margin for div
+	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
+	UI.thumbHW = columnW - (divM / 2);
+	$("body").get(0).style.setProperty("--thumbimagesize", UI.thumbHW + 'px');
+	$("body").get(0).style.setProperty("--thumbcols", columnW + 'px');
+}
+
+function convertRem(value) {
+  return value * getRootElementFontSize();
+}
+
+function getRootElementFontSize() {
+  // Returns a number
+  return parseFloat(
+    // of the computed font-size, so in px
+    getComputedStyle(
+      // for the root <html> element
+      document.documentElement
+    ).fontSize
+  );
 }

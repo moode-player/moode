@@ -34,6 +34,7 @@ function notify(cmd, msg, duration) {
         clear_add_group: 'Added after Queue cleared',
 		clear_play_item: 'Playing after Queue cleared',
         clear_play_group: 'Playing after Queue cleared',
+        clear_libcache: 'Library cache cleared',
         update_library: 'Updating library...',
         library_updating: 'Library update in progress',
         library_loading: 'Library loading...',

@@ -101,10 +101,12 @@ function reduceGenres(acc, track) {
 }
 
 function reduceArtists(acc, track) {
-	var artist = (track.artist || track.album_artist).toLowerCase();
+    var artist = (track.album_artist || track.artist).toLowerCase();
+	// TEST: var artist = (track.artist || track.album_artist).toLowerCase();
 	if (!acc[artist]) {
 		acc[artist] = [];
-		acc[artist].artist = track.artist || track.album_artist;
+        acc[artist].artist = track.album_artist || track.artist;
+        // TEST: acc[artist].artist = track.artist || track.album_artist;
 	}
 	acc[artist].push(track);
 	return acc;
@@ -351,11 +353,13 @@ function filterArtists() {
 		songsfilteredByGenre = songsfilteredByGenre.filter(filterByGenre);
 	}
 	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
-	filteredArtists.sort(function(a, b) {
-                        a = removeArticles(a).toLowerCase();
-                        b = removeArticles(b).toLowerCase();
-                        return a > b ? 1 : (a < b ? -1 : 0);
-                });
+    // TEST:
+    //filteredArtists.sort(function(a, b) {
+    //     a = removeArticles(a).toLowerCase();
+    //     b = removeArticles(b).toLowerCase();
+    //     return a > b ? 1 : (a < b ? -1 : 0);
+    //});
+    // TEST:
 }
 
 function filterAlbums() {
@@ -369,10 +373,14 @@ function filterAlbums() {
 	}
 	// Filter by artist
 	if (LIB.filters.artists.length) {
-		var artistSongs = allSongs.filter(filterByArtist);
-		var songKeys = artistSongs.map(a => a.key)
-		filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));}); 
-		filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));}); 
+		filteredAlbums = filteredAlbums.filter(filterByArtist);
+		filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
+        // TEST:
+        //var artistSongs = allSongs.filter(filterByArtist);
+ 		//var songKeys = artistSongs.map(function(a) {return a.key;});
+ 		//filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
+ 		//filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
+        // TEST:
 	}
     // Filter by file last-updated timestamp
     if (LIB.recentlyAddedClicked) {
@@ -539,11 +547,11 @@ var renderAlbums = function() {
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
-        var albumViewLazy = tagViewLazy;
+        var albumViewLazy = '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' ;
     }
     else {
     	var tagViewLazy = '<img class="lazy-tagview" data-original="';
-    	var albumViewLazy = '<img class="lazy-albumview" data-original="';
+    	var albumViewLazy = '<img class="lazy-albumview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" data-original="';
     }
 
     // SESSION.json['library_encoded_at']
@@ -562,7 +570,7 @@ var renderAlbums = function() {
 
         // filteredAlbums[i].encoded_at
         // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
-        if (encodedAtOption != 9) {
+        if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
             var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="lib-encoded-at-hdonly-tagview">' + ALBUM_HD_BADGE_TEXT + '</div>' : '';
             var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
@@ -591,10 +599,7 @@ var renderAlbums = function() {
         }
 
 		output2 += '<li class="lib-entry">'
-            + '<div style="margin: 0.75em auto 0.5em auto; width:90%; xmax-height: calc(var(--thumbcols)*0.9); position:relative;">'
-            + '<div style="position: relative; padding-bottom:100%;"></div>'
-            + albumViewLazy + filteredAlbumCovers[i].imgurl + '" style="position:absolute; top:0; left:0; height:100%; width:100%; margin:0; max-height:100%;">'
-            + '</div>';
+            + albumViewLazy + filteredAlbumCovers[i].imgurl + '">'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-album"></div>'
 			+ albumViewHdDiv
 			+ albumViewBgDiv

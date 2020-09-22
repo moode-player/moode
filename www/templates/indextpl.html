@@ -54,7 +54,6 @@
 			<div class="no-fluid">
 				<!-- Playlist -->
 				<div id="playback-queue" class="span5">
-
 					<div id="container-playlist">
 						<div id="playlist">
 							<ul class="playlist"></ul>
@@ -157,6 +156,7 @@
 				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
+				<button aria-label="Clear Library cache" class="btn clear-libcache-btn menu-separator" data-toggle="modal" href="#clear-libcache"><i class="far fa-trash"></i> Clear Library cache</button>
 				<button aria-label="All Music" class="btn view-all" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
 				<button aria-label="Recently Added" class="btn view-recents" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
 			</ul>
@@ -722,7 +722,7 @@
 			<!-- PLAYBACK -->
 			<div class="accordian"><span class="h5">Playback</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
-					<label class="control-label" for="instant-play-action">Instant play action</label>
+					<label class="control-label" for="instant-play-action">One touch action</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -744,8 +744,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-instant-play-action" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-instant-play-action" class="help-block hide">
-	                    	Configure Instant Play to perform the selected action or No action.
-							NOTE: This setting affects Radio and Album cover instant play and also the random Album instant play on Playback.
+	                    	Specify an action to be performed when tapping a cover in Library Radio or Album view, or tapping the random Album button in Playback.
 	                    </span>
 	                </div>
 
@@ -1944,7 +1943,7 @@
 <div id="deleteplitems-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="deleteplitems-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="deleteplitems-modal-label">Remove Queue items</h3>
+		<h3 id="deleteplitems-modal-label">Remove Queue items?</h3>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
@@ -1973,7 +1972,7 @@
 <div id="moveplitems-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="moveplitems-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="moveplitems-modal-label">Move Queue items</h3>
+		<h3 id="moveplitems-modal-label">Move Queue items?</h3>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
@@ -2009,7 +2008,7 @@
 <div id="deletesavedpl-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="deletesavedpl-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="deletesavedpl-modal-label">Delete saved playlist</h3>
+		<h3 id="deletesavedpl-modal-label">Delete saved playlist?</h3>
 	</div>
 	<div class="modal-body">
 		<h4 id="savedpl-path"></h4>
@@ -2063,5 +2062,18 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
+<!-- CLEAR LIBRARY TAG CACHE -->
+<div id="clear-libcache" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="clear-libcache-label" aria-hidden="true">
+	<div class="modal-header">
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="clear-libcache-label">Clear Library cache?</h3>
+	</div>
+	<div class="modal-body">This operation clears the Library tag cache. It will be regenerated after the page is refreshed.</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Clear" class="btn btn-clear-libcache btn-primary" data-dismiss="modal">Clear</button>
 	</div>
 </div>

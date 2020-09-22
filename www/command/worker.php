@@ -1905,6 +1905,7 @@ function runQueuedJob() {
 		// Other jobs
 		case 'reboot':
 		case 'poweroff':
+			$result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", cfgdb_connect());
 			resetApMode();
 			sysCmd('/var/local/www/commandw/restart.sh ' . $_SESSION['w_queue']);
 			break;
