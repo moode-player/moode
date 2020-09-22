@@ -794,7 +794,8 @@ var renderSongs = function(albumPos) {
             $('#lib-coverart-img').html(
                 '<img class="lib-artistart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '>' +
                 '<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
-                artist2 + '</button>');
+                artist2 + '</button>'
+            );
             artist = '';
         }
         else if (LIB.filters.genres.length > 0) {
