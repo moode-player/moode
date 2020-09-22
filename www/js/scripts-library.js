@@ -859,6 +859,7 @@ $('#genreheader, #menu-header').on('click', function(e) {
         LIB.albumClicked = false;
 		$("#searchResetLib").hide();
 		showSearchResetLib = false;
+        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
 			GLOBAL.musicScope = 'all';
 		}
