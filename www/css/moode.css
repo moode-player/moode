@@ -250,7 +250,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.playlist span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
 	.playlist span {margin-left:calc(3.8rem + 1vmin) !important;}
 	.playlist {padding:0 0 9rem 0;min-height:33vh;}
-	.playlist li:before {font-size:unset;}
+	.playlist li:before {font-size:unset;width:1.75em!important;}
 	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;}
 	.ui-pnotify {top:40% !important;}
 	#lib-albumcover {left:0;}
