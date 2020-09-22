@@ -701,7 +701,7 @@ var renderSongs = function(albumPos) {
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
             if (SESSION.json['library_inc_comment_tag'] == 'Yes') {
-                var comment = typeof(filteredSongs[i].comment) != 'undefined' ? ' (' + filteredSongs[i].comment + ')' : '';
+                var comment = filteredSongs[i].comment != '' ? ' (' + filteredSongs[i].comment + ')' : '';
             }
             else {
                 var comment = filteredSongs[i].mb_albumid != '0' ? ' (' + filteredSongs[i].mb_albumid.slice(0, 8) + ')' : '';
