@@ -100,13 +100,41 @@ function reduceGenres(acc, track) {
 	return acc;
 }
 
+// TEST:
+// This replaces the entire original reduceArtists
+/*
 function reduceArtists(acc, track) {
+	if (track.artist) {
+		var artist = (track.artist).toLowerCase();
+		if (!acc[artist]) {
+			acc[artist] = [];
+			acc[artist].artist = track.artist;
+		}
+		acc[artist].push(track);
+	} else {
+		// track.artist not set, define artist for comparison below
+		var artist = null;
+	}
+	if (track.album_artist) {
+		var album_artist = (track.album_artist).toLowerCase();
+		if (album_artist != artist) {
+			if (!acc[album_artist]) {
+				acc[album_artist] = [];
+				acc[album_artist].artist = track.album_artist;
+			}
+			acc[album_artist].push(track);
+		}
+	}
+	return acc;
+}
+*/
+// TEST:
+
+function reduceArtists(acc, track) {	
     var artist = (track.album_artist || track.artist).toLowerCase();
-	// TEST: var artist = (track.artist || track.album_artist).toLowerCase();
 	if (!acc[artist]) {
 		acc[artist] = [];
         acc[artist].artist = track.album_artist || track.artist;
-        // TEST: acc[artist].artist = track.artist || track.album_artist;
 	}
 	acc[artist].push(track);
 	return acc;
