@@ -315,7 +315,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#container-playlist {margin-top:.75em;height: calc(100% - 40px);}
 	.playlist li, .database li {padding-left:.5em;}
 	.playlist span {line-height:initial;}
-	.playlist .active {padding-left:.5em;}
+	/*.playlist .active {padding-left:.5em;}*/
 	#playlist .songtime {top: 0px;}
 	#timeknob, #volknob {margin:1em 0;}
 	#countdown-display{margin-top:-10px;}

@@ -221,14 +221,10 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #library-panel.limited .lib-entry, #library-panel.limited .lib-entry span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
-/*.playlist .active .pl-thumb img, .cv-playlist .active .pl-thumb img {filter:brightness(50%);}
-.playlist .active .pl-thumb:after, .cv-playlist .active .pl-thumb:after {position:absolute;top:50%;transform:translate(-120%, -50%);font-family:'Font Awesome 5 Pro';font-size:1.25em;content: "\f028";}*/
-/*.playlist li.active:before {font-family:'Font Awesome 5 Pro';content: "\f028";margin-top:.35em;}*/
-.playlist li.active:before, .cv-playlist li.active:before {color:transparent !important;background:var(--npicon) no-repeat right;background-size:1em;margin-top:.35em;}
-
+.playlist li.active:before, .cv-playlist li.active:before {width:2.9em;color:transparent !important;background:var(--npicon) no-repeat right;background-size:1em;/*margin-top:.35em;*/}
 .playlist .pll1, .cv-playlist .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .playlist .pl-entry, .cv-playlist .pl-entry {padding:0px;}
-.playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.4rem; margin-left: 1.2vmin; margin-right: 1.2vmin;margin-top:4px;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
+.playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.4rem; margin-left: 1.2vmin; margin-right: 1.2vmin;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
 .database .db-entry {margin-left:2.5em;padding:1em 0;max-width:calc(100vw - 10px);overflow:hidden;}
 .database .db-song {padding:.5em 0;}
 .database .db-icon {display:block;float:left;height:19px;line-height:19px;width:1.875em;padding:0;color:inherit;}
@@ -637,7 +633,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .config-label {color:#eee;margin-left:.35em;}
 .busy-spinner {position:absolute;right:3.25rem;top:.2rem;top:calc(env(safe-area-inset-top) + .2rem);display:none;}
 .busy-spinner svg {stroke:var(--adapttext);height:1rem;width:1rem;}
-#tagview-text-cover {font-size:1.8rem;line-height:1.1em;height:calc(20vw - 1em);width:100%;background:rgba(64,64,64,.2);box-shadow: 0px 0px .2em rgba(0,0,0,0.2);}
+#tagview-text-cover {position:relative;font-size:1.8rem;line-height:1.1em;height:calc(20vw - 1em);width:100%;background:rgba(64,64,64,.2);box-shadow: 0px 0px .2em rgba(0,0,0,0.2);}
 #station-path {text-align:center;}
 #track-info-text {text-align:left;}
 .no-tagview-covers {padding-top:.4em;padding-bottom:.4em;}
