@@ -1324,6 +1324,16 @@ jQuery(document).ready(function($) { 'use strict';
         $.post('command/moode.php?cmd=disconnect-renderer', {'job':job});
 	});
 
+    // First use help
+    $('#playback-firstuse-help').click(function(e) {
+        $('#playback-firstuse-help').css('display', '');
+        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': 'n,' + SESSION.json['first_use_help'].split(',')[1]});
+    });
+    $('#playbar-firstuse-help').click(function(e) {
+        $('#playbar-firstuse-help').css('display', '');
+        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help'].split(',')[0] + ',n'});
+    });
+
     // CoverView screen saver reset
     $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
         //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
@@ -1357,16 +1367,6 @@ jQuery(document).ready(function($) { 'use strict';
                 $.get('command/moode.php?cmd=resetscnsaver');
             }, 3000);
         }
-    });
-
-    // First use help
-    $('#playback-firstuse-help i').click(function(e) {
-        $('#playback-firstuse-help').css('display', 'none');
-        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': 'n,' + SESSION.json['first_use_help'].split(',')[1]});
-    });
-    $('#playbar-firstuse-help i').click(function(e) {
-        $('#playbar-firstuse-help').css('display', 'none');
-        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help'].split(',')[0] + ',n'});
     });
 
 	// Info button (i) show/hide toggle

@@ -1350,7 +1350,7 @@ function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         // Lazyload method
-        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' : '<img class="lazy-radioview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" data-original="';
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
@@ -2393,6 +2393,7 @@ $('#btn-appearance-update').click(function(e){
 	var fontSizeChange = false;
     var encodedAtChange = false;
     var playlistArtChange = false;
+	var thumbSizeChange = false;
 
 	// Set open/closed state for accordion headers
 	var temp = [0,0,0,0,0];
@@ -2442,7 +2443,7 @@ $('#btn-appearance-update').click(function(e){
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
     if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {
-		libraryOptionsChange = true;
+		thumbSizeChange = true;
 	}
 
     // CoverView
@@ -2538,6 +2539,9 @@ $('#btn-appearance-update').click(function(e){
 	if(playlistArtChange == true) {
 		renderPlaylist();
 	}
+	if(thumbSizeChange){
+		getThumbHW();
+	}
 
     // Update database
     $.post('command/moode.php?cmd=updcfgsystem',
@@ -2595,7 +2599,6 @@ $('#btn-appearance-update').click(function(e){
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
 				// set library & radio thumb image size
-				getThumbHW();
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
@@ -3293,7 +3296,6 @@ $('#coverart-url, #playback-switch').click(function(e){
 		e.stopImmediatePropagation();
 		return;
 	}
-
     // TEST: Fixes issue where some elements briefly remain on-screen when switching between Playback and Library
     $('#coverart-link').hide();
 
