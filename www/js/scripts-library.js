@@ -583,11 +583,11 @@ var renderAlbums = function() {
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
-        var albumViewLazy = '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' ;
+        var albumViewLazy = '<img loading="lazy" src="' ;
     }
     else {
     	var tagViewLazy = '<img class="lazy-tagview" data-original="';
-    	var albumViewLazy = '<img class="lazy-albumview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" data-original="';
+    	var albumViewLazy = '<img class="lazy-albumview" data-original="';
     }
 
     // SESSION.json['library_encoded_at']

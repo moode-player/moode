@@ -1350,7 +1350,7 @@ function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         // Lazyload method
-        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" src="' : '<img class="lazy-radioview" height="' + UI.thumbHW + '" width="' + UI.thumbHW + '" data-original="';
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
@@ -3293,7 +3293,6 @@ $('#coverart-url, #playback-switch').click(function(e){
 		e.stopImmediatePropagation();
 		return;
 	}
-
     // TEST: Fixes issue where some elements briefly remain on-screen when switching between Playback and Library
     $('#coverart-link').hide();
 

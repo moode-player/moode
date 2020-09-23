@@ -156,7 +156,7 @@
 	<div id="menu-bottom" class="btn-group btn-list ui-footer ui-bar-f ui-footer-fixed slidedown" data-position="fixed" data-role="footer" role="banner">
 		<div id="playbar">
 			<div aria-label="Cover" id="playbar-cover"></div>
-			<div aria-label="First use help" id="playbar-firstuse-help">Tap on the Playbar to switch to Playback <i class="fal fa-times-circle"></i></div>
+			<div aria-label="First use help" id="playbar-firstuse-help"><div></div></div>
             <div aria-label="Switch to Playback" id="playbar-switch"><div></div></div>
 			<div id="playbar-controls">
 				<button aria-label="Previous" class="btn btn-cmd prev"><i class="fas fa-step-backward"></i></button>
