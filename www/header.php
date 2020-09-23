@@ -23,12 +23,14 @@
  *
  */
 -->
+<!--removeIf(GENINDEXDEV)-->
+
 <?php
     //workerLog('-- header.php');
     $return = session_start();
     //workerLog('session_start=' . (($return) ? 'TRUE' : 'FALSE'));
 ?>
-
+<!--endRemoveIf(GENINDEXDEV)-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,6 +41,7 @@
 
     <!-- RESOURCES -->
     <!-- Common CSS -->
+	<!-- build:css css/styles.min.css -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-select.min.css" rel="stylesheet">
     <link href="css/flat-ui.min.css" rel="stylesheet">
@@ -46,7 +49,22 @@
     <link href="css/fontawesome-moode.min.css" rel="stylesheet">
     <link href="css/panels.min.css" rel="stylesheet">
     <link href="css/moode.min.css" rel="stylesheet">
+	<!-- endbuild -->
+
     <!-- Common JS -->
+	<!-- build:js js/lib.min.js defer -->
+	<!-- BUNDLE_TAG
+	<script src="js/jquery-1.8.2.js" />
+	<script src="js/jquery-ui/jquery-ui.js" ></script>
+	<script src="js/jquery-ui/jquery.ui.core.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.widget.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.mouse.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.position.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.datepicker.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.slider.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.tooltip.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.effect.js" defer></script>
+	BUNDLE_TAG -->
     <script src="js/bootstrap.min.js" defer></script>
     <script src="js/bootstrap-select.min.js" defer></script>
     <script src="js/jquery.pnotify.min.js" defer></script>
@@ -54,9 +72,16 @@
     <script src="js/playerlib-nomin.js" defer></script>
     <script src="js/playerlib.min.js" defer></script>
     <script src="js/links.min.js" defer></script>
+	<!-- endbuild -->
+
     <!-- Playback / Library -->
+	<!--removeIf(GENINDEXDEV)-->
     <?php if ($section == 'index') { ?>
+	<!--endRemoveIf(GENINDEXDEV)-->
+		<!-- build:css css/main.min.css -->
         <link href="css/jquery.countdown.min.css" rel="stylesheet">
+		<!-- endbuild -->
+		<!-- build:js js/main.min.js defer -->
         <script src="js/jquery.countdown.min.js" defer></script>
         <script src="js/jquery.scrollTo.min.js" defer></script>
         <script src="js/jquery.touchSwipe.min.js" defer></script>
@@ -67,8 +92,14 @@
         <script src="js/bootstrap-contextmenu.min.js" defer></script>
         <script src="js/scripts-library.min.js" defer></script>
         <script src="js/scripts-panels.min.js" defer></script>
+		<!-- endbuild -->
     <!-- Configs -->
+	<!--removeIf(GENINDEXDEV)-->
     <?php } else { ?>
+	<!--endRemoveIf(GENINDEXDEV)-->
+		<!--removeIf(NOCONFIGSECTION)-->
+		<!-- build:js js/config.min.js defer -->
+		<!-- CONFIGBLOCKSECTION_BEGIN -->
         <script src="js/custom_checkbox_and_radio.min.js" defer></script>
         <script src="js/custom_radio.js" defer></script>
         <script src="js/jquery.tagsinput.min.js" defer></script>
@@ -76,7 +107,13 @@
         <script src="js/i18n/_messages.en.js', 'text/javascript" defer></script>
         <script src="js/application.min.js" defer></script>
         <script src="js/scripts-configs.min.js" defer></script>
+		<!-- CONFIGBLOCKSECTION_END -->
+		<!-- endbuild -->
+		<!--endRemoveIf(NOCONFIGSECTION)-->
+
+	<!--removeIf(GENINDEXDEV)-->
     <?php } ?>
+	<!--endRemoveIf(GENINDEXDEV)-->
 
 	<!-- MOBILE APP ICONS -->
 	<!-- Apple -->
@@ -91,6 +128,7 @@
 	<!-- Microsoft -->
 	<meta name="msapplication-TileColor" content="#da532c">
 </head>
+
 
 <body onorientationchange="javascript:location.reload(true); void 0;">
 	<!-- ALBUM COVER BACKDROP -->
@@ -204,3 +242,13 @@
     <div id="cv-playlist">
         <ul class="cv-playlist"></ul>
     </div>
+
+	<!-- Only included when generate index.html for developmed purpose -->
+	<!--=include templates/indextpl.html -->
+	<!--=include footer.php -->
+
+<!-- make wellformed html; correct unclosed body and html (normally done by footer ) -->
+<!-- GEN_DEV_INDEX_TAG
+	</body>
+</html>
+GEN_DEV_INDEX_TAG -->

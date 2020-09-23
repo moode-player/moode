@@ -12,3 +12,6 @@
 .TemporaryItems
 ._.TemporaryItems
 __MACOSX
+/build
+/node_modules
+/www/index.html
