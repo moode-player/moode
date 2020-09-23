@@ -100,9 +100,18 @@ function reduceGenres(acc, track) {
 	return acc;
 }
 
+function ___reduceArtists(acc, track) {
+    var artist = (track.album_artist || track.artist).toLowerCase();
+	if (!acc[artist]) {
+		acc[artist] = [];
+        acc[artist].artist = track.album_artist || track.artist;
+	}
+	acc[artist].push(track);
+	return acc;
+}
+
 // TEST:
 // This replaces the entire original reduceArtists
-/*
 function reduceArtists(acc, track) {
 	if (track.artist) {
 		var artist = (track.artist).toLowerCase();
@@ -127,18 +136,7 @@ function reduceArtists(acc, track) {
 	}
 	return acc;
 }
-*/
 // TEST:
-
-function reduceArtists(acc, track) {	
-    var artist = (track.album_artist || track.artist).toLowerCase();
-	if (!acc[artist]) {
-		acc[artist] = [];
-        acc[artist].artist = track.album_artist || track.artist;
-	}
-	acc[artist].push(track);
-	return acc;
-}
 
 function reduceAlbums(acc, track) {
 	var key = track.key;
@@ -382,11 +380,21 @@ function filterArtists() {
 	}
 	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
     // TEST:
-    //filteredArtists.sort(function(a, b) {
-    //     a = removeArticles(a).toLowerCase();
-    //     b = removeArticles(b).toLowerCase();
-    //     return a > b ? 1 : (a < b ? -1 : 0);
-    //});
+    // Natural ordering
+	try {
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        filteredArtists.sort(function(a, b) {
+            return collator.compare(removeArticles(a).toLowerCase(), removeArticles(b).toLowerCase());
+        });
+    }
+    // Fallback to Default ordering
+    catch (e) {
+        filteredArtists.sort(function(a, b) {
+             a = removeArticles(a).toLowerCase();
+             b = removeArticles(b).toLowerCase();
+             return a > b ? 1 : (a < b ? -1 : 0);
+        });
+    }
     // TEST:
 }
 
@@ -401,13 +409,13 @@ function filterAlbums() {
 	}
 	// Filter by artist
 	if (LIB.filters.artists.length) {
-		filteredAlbums = filteredAlbums.filter(filterByArtist);
-		filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
+		//filteredAlbums = filteredAlbums.filter(filterByArtist);
+		//filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
         // TEST:
-        //var artistSongs = allSongs.filter(filterByArtist);
- 		//var songKeys = artistSongs.map(function(a) {return a.key;});
- 		//filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
- 		//filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
+        var artistSongs = allSongs.filter(filterByArtist);
+ 		var songKeys = artistSongs.map(function(a) {return a.key;});
+ 		filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
+ 		filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
         // TEST:
 	}
     // Filter by file last-updated timestamp
@@ -729,7 +737,7 @@ var renderSongs = function(albumPos) {
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
             if (SESSION.json['library_inc_comment_tag'] == 'Yes') {
-                var comment = typeof(filteredSongs[i].comment) != 'undefined' ? ' (' + filteredSongs[i].comment + ')' : '';
+                var comment = filteredSongs[i].comment != '' ? ' (' + filteredSongs[i].comment + ')' : '';
             }
             else {
                 var comment = filteredSongs[i].mb_albumid != '0' ? ' (' + filteredSongs[i].mb_albumid.slice(0, 8) + ')' : '';
@@ -822,7 +830,8 @@ var renderSongs = function(albumPos) {
             $('#lib-coverart-img').html(
                 '<img class="lib-artistart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '>' +
                 '<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
-                artist2 + '</button>');
+                artist2 + '</button>'
+            );
             artist = '';
         }
         else if (LIB.filters.genres.length > 0) {
@@ -850,6 +859,7 @@ $('#genreheader, #menu-header').on('click', function(e) {
         LIB.albumClicked = false;
 		$("#searchResetLib").hide();
 		showSearchResetLib = false;
+        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
 			GLOBAL.musicScope = 'all';
 		}

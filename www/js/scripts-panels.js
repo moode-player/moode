@@ -27,6 +27,16 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#config-tabs').css('display', 'none');
 	$('#menu-bottom').css('display', 'flex');
 
+    // NOTE: This is a workaround for the time knob progress slider not updating correctly when the window is hidden
+    document.addEventListener("visibilitychange", visChange);
+    function visChange() {
+        //console.log('visChange()', document.visibilityState);
+        if (document.visibilityState == 'visible') {
+            // This will cause MPD idle timeout and subsequent renderUI() which will refresh the time eknob using current data 
+    		sendMpdCmd('subscribe dumy_channel');
+        }
+    }
+
 	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
 	// Store device pixel ratio
