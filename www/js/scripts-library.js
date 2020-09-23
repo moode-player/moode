@@ -944,10 +944,23 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
 	var albumobj = filteredAlbums[pos];
 	var album = filteredAlbums[pos].album;
+	// Store the active state before it gets set below
+        var alreadyActive = this.className.includes('active')
 	storeLibPos(UI.libPos);
 	$('#albumsList .lib-entry').removeClass('active');
 	$('#albumsList .lib-entry').eq(pos).addClass('active');
-	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
+	// If a compilation album is already selected but for only a subset
+	// of the artists such that some tracks are not show clicking the
+	// album twice (or once after it is set active) will cause the full
+	// track list for the album to populate the song list
+        if(alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.artist)) {
+		LIB.filters.artists.push(albumobj.artist);
+		filterSongs();
+		LIB.filters.artists.pop();
+		renderSongs()
+        } else {
+		clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
+	}
 	$('#bottom-row').css('display', 'flex')
 	$('#lib-file').scrollTo(0, 200);
 	UI.libAlbum = album;
