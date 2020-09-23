@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Sep 16 08:42:53 2020
+-- File generated with SQLiteStudio v3.1.0 on Sun Sep 20 13:10:36 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -279,7 +279,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (35, 'alsavolume', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'PCM');
 INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
-INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'track,disc,date,composer,encoded');
+INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'genre,track,disc,date,composer,encoded');
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
@@ -601,7 +601,7 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/p
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', 'd9f65519e484de1cf5240ead12bdde46', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '787d82e9de10d1217c705fff2b7577f9', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', 'af524693ee7b9ca86c7e184f0b2a8543', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '5e53efb08d5a222830f96952f356fd9b', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'ce394e0c9fb2972d8eb0ec31ac4fd22e', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', 'e43068c89c0878541524ce84d671f4f9', 'warning');

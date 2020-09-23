@@ -22,9 +22,9 @@ New features
 - NEW: Radio view with sort/group and metadata
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode option
-- NEW: Option to display thumbnails in the Playlist
+- NEW: Option to display thumbnails in the Queue
 - NEW: Thumbnails displayed for albums in Folder view
-- NEW: Albums played directly if already in the queue
+- NEW: Albums played directly if already in the Queue
 - NEW: Library support for tracks tagged with multiple genres
 - NEW: Library filters (Lossless, Lossy, Format or Directory)
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
@@ -44,14 +44,17 @@ Updates
 - UPD: Add higher resolutions for thumbnail generator
 - UPD: Add "Update Library" to action list for Clock Radio
 - UPD: Add MUSICBRAINZ_ALBUMID as part of the album key
-- UPD: Instant play actions include Add next, Play next
+- UPD: Add "Clear Library cache" to Library menu
+- UPD: Add place holder H/W for native lazyload
+- UPD: Add "Now Playing" EQ style icon to the Queue
+- UPD: Include Add next, Play next in list of "One touch actions"
 - UPD: Improve logging for Library update process
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
 - UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
 - UPD: Show volume level on Playbar
 - UPD: Generate additional set of small thumbnails for lists
 - UPD: Honor "Resume MPD" setting when disconnecting a renderer
-- UPD: Only load CoverView Queue when it's opened
+- UPD: Only load CoverView Queue HTML when it's opened
 
 Radio stations
 

@@ -31,6 +31,7 @@ define('MPD_RESPONSE_ERR', 'ACK');
 define('MPD_RESPONSE_OK',  'OK');
 define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
 define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
+define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
 define('MOODE_LOG', '/var/log/moode.log');
 define('AUTOCFG_LOG', '/home/pi/autocfg.log');
 define('PORT_FILE', '/tmp/portfile');
@@ -235,18 +236,17 @@ function echoTemplate($template) {
 function integrityCheck() {
 	$warning = false;
 
+	// Export device table
+	sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT * FROM cfg_audiodev WHERE drvoptions NOT IN ('slave', 'glb_mclk') AND chipoptions = ''\" > /tmp/cfg_audiodev.sql");
+	// Broom www root
+	sysCmd('find /var/www -type l -delete');
+
 	// Check database schema
 	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db .schema | grep ro_columns');
 	if (empty($result)) {
 		$_SESSION['ic_return_code'] = '1';
 		return false;
 	}
-
-	// Output static tables
-	$result = sysCmd("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT * FROM cfg_audiodev WHERE drvoptions NOT IN ('slave', 'glb_mclk')\" > /tmp/cfg_audiodev.sql");
-
-	// Broom www root
-	sysCmd('find /var/www -type l -delete');
 
 	// Check hash table
 	$result = cfgdb_read('cfg_hash', cfgdb_connect());
@@ -275,6 +275,13 @@ function integrityCheck() {
 				return false;
 			}
 		}
+	}
+
+	// Verify the row count
+	$count = sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT COUNT() FROM cfg_audiodev\"");
+	if ($count[0] != 76) {
+		$_SESSION['ic_return_code'] = '4';
+		return false;
 	}
 
 	return $warning === true ? 'passed with warnings' : 'passed';
@@ -793,7 +800,6 @@ function songTime($sec) {
 
 // Format MPD status output
 function parseStatus($resp) {
-
 	// This return probably needs a redo
 	if (is_null($resp)) {
 		return NULL;
@@ -2729,8 +2735,8 @@ function autoConfig($cfgfile) {
 	sysCmd('/var/www/command/util.sh chg-name dlna "Moode DLNA" ' . '"' . $autocfg['dlnaname'] . '"');
 	playerSession('write', 'dlnaname', $autocfg['dlnaname']);
 
-	sysCmd('/var/www/command/util.sh chg-name mpdzeroconf ' . "'" . '"Moode MPD"' . "'" . ' ' . "'" . '"' . $autocfg['mpdzeroconf'] . '"' . "'");
-	cfgdb_update('cfg_mpd', cfgdb_connect(), 'zeroconf_name', $autocfg['mpdzeroconf']);
+	//sysCmd('/var/www/command/util.sh chg-name mpdzeroconf ' . "'" . '"Moode MPD"' . "'" . ' ' . "'" . '"' . $autocfg['mpdzeroconf'] . '"' . "'");
+	//cfgdb_update('cfg_mpd', cfgdb_connect(), 'zeroconf_name', $autocfg['mpdzeroconf']);
 
 	autoCfgLog('autocfg: Host name: ' . $autocfg['hostname']);
 	autoCfgLog('autocfg: Browser title: ' . $autocfg['browsertitle']);
@@ -2738,9 +2744,73 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Airplay: ' . $autocfg['airplayname']);
 	autoCfgLog('autocfg: Spotify: ' . $autocfg['spotifyname']);
 	autoCfgLog('autocfg: Squeezelite: ' . $autocfg['squeezelitename']);
-	autoCfgLog('autocfg: UPnP: ' . $autocfg['upnpname']);
+	autoCfgLog('autocfg: UPnP Client: ' . $autocfg['upnpname']);
 	autoCfgLog('autocfg: DLNA: ' . $autocfg['dlnaname']);
-	autoCfgLog('autocfg: MPD zeroconf: ' . $autocfg['mpdzeroconf']);
+	//autoCfgLog('autocfg: MPD zeroconf: ' . $autocfg['mpdzeroconf']);
+
+	//
+	autoCfgLog('autocfg: - System');
+	//
+
+	sysCmd('/var/www/command/util.sh set-timezone ' . $autocfg['timezone']);
+	playerSession('write', 'timezone', $autocfg['timezone']);
+	sysCmd('/var/www/command/util.sh set-keyboard ' . $autocfg['keyboard']);
+	playerSession('write', 'keyboard', $autocfg['keyboard']);
+	playerSession('write', 'cpugov', $autocfg['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
+	playerSession('write', 'hdmiport', $autocfg['hdmiport']);
+	playerSession('write', 'eth0chk', $autocfg['eth0chk']);
+	playerSession('write', 'localui', $autocfg['localui']);
+
+	autoCfgLog('autocfg: Time zone: ' . $autocfg['timezone']);
+	autoCfgLog('autocfg: Keyboard: ' . $autocfg['keyboard']);
+	autoCfgLog('autocfg: CPU Governor: ' . $autocfg['cpugov']);
+	autoCfgLog('autocfg: HDMI port: ' . ($autocfg['hdmiport'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Wait for eth0 address: ' . ($autocfg['eth0chk'] == '0' ? 'No' : 'Yes'));
+	autoCfgLog('autocfg: Local UI: ' . ($autocfg['localui'] == '0' ? 'Off' : 'On'));
+
+	//
+	autoCfgLog('autocfg: - I2S Device');
+	//
+
+	cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $autocfg['i2sdevice']);
+	playerSession('write', 'i2sdevice', $autocfg['i2sdevice']);
+	autoCfgLog('autocfg: i2sdevice: ' . $autocfg['i2sdevice']);
+
+	//
+	autoCfgLog('autocfg: - Renderers');
+	//
+
+	playerSession('write', 'btsvc', $autocfg['btsvc']);
+	playerSession('write', 'pairing_agent', $autocfg['pairing_agent']);
+	playerSession('write', 'rsmafterbt', $autocfg['rsmafterbt'] == 'No' ? '0' : '1');
+	playerSession('write', 'airplaysvc', $autocfg['airplaysvc']);
+	playerSession('write', 'rsmafterapl', $autocfg['rsmafterapl']);
+	playerSession('write', 'spotifysvc', $autocfg['spotifysvc']);
+	playerSession('write', 'rsmafterspot', $autocfg['rsmafterspot']);
+	playerSession('write', 'slsvc', $autocfg['slsvc']);
+	playerSession('write', 'rsmaftersl', $autocfg['rsmaftersl']);
+
+	autoCfgLog('autocfg: Bluetooth: ' . ($autocfg['btsvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Bluetooth pairing agent: ' . ($autocfg['pairing_agent'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Bluetooth MPD resume: ' . $autocfg['rsmafterbt']);
+	autoCfgLog('autocfg: Airplay: ' . ($autocfg['airplaysvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Airplay MPD resume: ' . $autocfg['rsmafterapl']);
+	autoCfgLog('autocfg: Spotify: ' . ($autocfg['spotifysvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Spotify MPD resume: ' . $autocfg['rsmafterspot']);
+	autoCfgLog('autocfg: Squeezlite: ' . ($autocfg['slsvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Squeezlite MPD resume: ' . $autocfg['rsmaftersl']);
+
+	//
+	autoCfgLog('autocfg: - UPnP/DLNA');
+	//
+
+	playerSession('write', 'upnpsvc', $autocfg['upnpsvc']);
+	playerSession('write', 'dlnasvc', $autocfg['dlnasvc']);
+	playerSession('write', 'upnp_browser', $autocfg['upnp_browser']);
+
+	autoCfgLog('autocfg: UPnP Client: ' . ($autocfg['upnpsvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: DLNA: ' . ($autocfg['dlnasvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: UPnP Browser: ' . ($autocfg['upnp_browser'] == '0' ? 'Off' : 'On'));
 
 	//
 	autoCfgLog('autocfg: - Network (wlan0)');
@@ -2778,29 +2848,35 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Channel: ' . $autocfg['apdchan']);
 
 	//
-	autoCfgLog('autocfg: - Services');
+	autoCfgLog('autocfg: - Theme & Background');
 	//
 
-	playerSession('write', 'airplaysvc', $autocfg['airplaysvc']);
-	playerSession('write', 'upnpsvc', $autocfg['upnpsvc']);
-	playerSession('write', 'dlnasvc', $autocfg['dlnasvc']);
+	playerSession('write', 'themename', $autocfg['themename']);
+	playerSession('write', 'accent_color', $autocfg['accentcolor']);
+	playerSession('write', 'alphablend', $autocfg['alphablend']);
+	playerSession('write', 'adaptive', $autocfg['adaptive']);
+	playerSession('write', 'cover_backdrop', $autocfg['cover_backdrop']);
+	playerSession('write', 'cover_blur', $autocfg['cover_blur']);
+	playerSession('write', 'cover_scale', $autocfg['cover_scale']);
 
-	autoCfgLog('autocfg: Airplay: ' . ($autocfg['airplaysvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: UPnP: ' . ($autocfg['upnpsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: DLNA: ' . ($autocfg['dlnasvc'] == '0' ? 'Off' : 'On'));
+	autoCfgLog('autocfg: Theme name: ' . $autocfg['themename']);
+	autoCfgLog('autocfg: Accent color: ' . $autocfg['accentcolor']);
+	autoCfgLog('autocfg: Adaptive coloring: ' . $autocfg['adaptive']);
+	autoCfgLog('autocfg: Cover backdrop: ' . $autocfg['cover_backdrop']);
+	autoCfgLog('autocfg: Cover blur: ' . $autocfg['cover_blur']);
+	autoCfgLog('autocfg: Cover scale: ' . $autocfg['cover_scale']);
 
 	//
 	autoCfgLog('autocfg: - Other');
 	//
 
-	sysCmd('/var/www/command/util.sh set-timezone ' . $autocfg['timezone']);
-	playerSession('write', 'timezone', $autocfg['timezone']);
-	playerSession('write', 'themename', $autocfg['themename']);
-	playerSession('write', 'accent_color', $autocfg['accentcolor']);
+	playerSession('write', 'font_size', $autocfg['font_size']);
+	playerSession('write', 'playhist', $autocfg['playhist']);
+	playerSession('write', 'first_use_help', ($autocfg['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
 
-	autoCfgLog('autocfg: Time zone: ' . $autocfg['timezone']);
-	autoCfgLog('autocfg: Theme name: ' . $autocfg['themename']);
-	autoCfgLog('autocfg: Accent color: ' . $autocfg['accentcolor']);
+	autoCfgLog('autocfg: Font size: ' . $autocfg['font_size']);
+	autoCfgLog('autocfg: Play history: ' . $autocfg['playhist']);
+	autoCfgLog('autocfg: first use help: ' . $autocfg['first_use_help']);
 
 	sysCmd('rm ' . $cfgfile);
 	autoCfgLog('autocfg: Configuration file deleted');
@@ -3170,15 +3246,16 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['encoded'] = $_SESSION['currentencoded'];
 		}
 
-		// iTunes aac or aiff file
+		// File extension
 		$ext = getFileExt($song['file']);
+
+		// iTunes aac or aiff file
 		if (isset($song['Name']) && ($ext == 'm4a' || $ext == 'aif' || $ext == 'aiff')) {
 			//workerLog('enhanceMetadata(): AAC or AIFF song file');
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name'];
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
-			$current['hidef'] = ($ext == 'aif' || $ext == 'aiff') ? 'yes' : 'no';
 		}
 		// Radio station
 		elseif (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
@@ -3241,7 +3318,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			// Song file
 			else {
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
-				$current['hidef'] = ($current['audio_sample_depth'] > 16 || ($current['audio_sample_rate'] * 1000) > 44100) ? 'yes' : 'no';
 			}
 			// In case 2 url's are returned, use the first
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
@@ -3252,6 +3328,24 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			else {
 				//workerLog('enhanceMetadata(): Song file');
 			}
+		}
+
+		// Determine badging
+		// NOTE: This is modeled after the code in getEncodedAt()
+		sendMpdCmd($sock, 'lsinfo "' . $song['file'] . '"');
+		$song_data = parseDelimFile(readMpdResp($sock), ': ');
+		$mpd_format_tag = explode(':', $song_data['Format']);
+		// Lossy
+		if ($ext == 'mp3' || ($mpd_format_tag[1] == 'f' && $mpd_format_tag[2] <= 2)) {
+			$current['hidef'] = 'no';
+		}
+		// DSD
+		elseif ($ext == 'dsf' || $ext == 'dff') {
+			$current['hidef'] = 'yes';
+		}
+		// PCM or Multichannel PCM
+		else {
+			$current['hidef'] = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > ALBUM_BIT_DEPTH_THRESHOLD) || $mpd_format_tag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? 'yes' : 'no';
 		}
 	}
 

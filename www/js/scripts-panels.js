@@ -27,6 +27,16 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#config-tabs').css('display', 'none');
 	$('#menu-bottom').css('display', 'flex');
 
+    // NOTE: This is a workaround for the time knob progress slider not updating correctly when the window is hidden
+    document.addEventListener("visibilitychange", visChange);
+    function visChange() {
+        //console.log('visChange()', document.visibilityState);
+        if (document.visibilityState == 'visible') {
+            // This will cause MPD idle timeout and subsequent renderUI() which will refresh the time eknob using current data 
+    		sendMpdCmd('subscribe dumy_channel');
+        }
+    }
+
 	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
 	// Store device pixel ratio
@@ -34,12 +44,12 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// Store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
 	var hiddenDiv = $("<div style='position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;'></div>").appendTo("body");
-	var sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
-	$("body").get(0).style.setProperty("--sbw", sbw + 'px');
+	GLOBAL.sbw = hiddenDiv.width() - hiddenDiv[0].clientWidth;
+	$("body").get(0).style.setProperty("--sbw", GLOBAL.sbw + 'px');
     //console.log(hiddenDiv.width() - hiddenDiv[0].clientWidth + 'px');
 
     // Enable custom scroll bars unless overlay scroll bars are enabled on the platform (scroll bar width sbw = 0)
-    if (sbw) {
+    if (GLOBAL.sbw) {
         $('body').addClass('custom-scrollbars');
     }
 
@@ -63,8 +73,13 @@ jQuery(document).ready(function($) { 'use strict';
     	// Set currentView global
     	currentView = SESSION.json['current_view'];
 
+    	// mobile
+    	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
+        //console.log('window: ' + $(window).width() + 'x' + $(window).height());
+        //console.log('viewport: ' + window.innerWidth + 'x' + window.innerHeight);
+
         // Set thumbnail columns
-        setLibraryThumbnailCols(SESSION.json['library_thumbnail_columns'].substring(0, 1));
+        getThumbHW();
 
         // Initiate loads
         loadLibrary();
@@ -78,11 +93,6 @@ jQuery(document).ready(function($) { 'use strict';
     	UI.libPos[0] = parseInt(tmpStr[0]); // album list
     	UI.libPos[1] = parseInt(tmpStr[1]); // album cover
     	UI.libPos[2] = parseInt(tmpStr[2]); // artist list
-
-    	// mobile
-    	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
-        //console.log('window: ' + $(window).width() + 'x' + $(window).height());
-        //console.log('viewport: ' + window.innerWidth + 'x' + window.innerHeight);
 
         // Set volume knob max
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);
@@ -400,6 +410,15 @@ jQuery(document).ready(function($) { 'use strict';
 				storeLibPos(UI.libPos);
 			}
 		}, DEFAULT_TIMEOUT);
+	});
+
+    // Clear Library tag cache
+	$('.btn-clear-libcache').on('click', function(e) {
+        $.get('command/moode.php?cmd=clear_libcache');
+        notify('clear_libcache', 'Auto-refresh in 2 seconds');
+        setTimeout(function() {
+            location.reload(true);
+        }, 2000);
 	});
 
 	// mute toggle
