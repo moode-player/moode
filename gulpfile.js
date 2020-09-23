@@ -20,20 +20,20 @@
 
 
 /**
- * 
- * Description: gulp buildscript for frontend 
- * 
+ *
+ * Description: gulp buildscript for frontend
+ *
  * Features:
  * - provide automatic bundling of the javascripts files.
  * - uses a cache for speed
  * - provide sourcemaps for browser side debugging
  * - patches files to use the bundles
  * - easy way to deploy
- * - webserver for frontend development (backup running on moode instance, webserver on desktop computer, uses proxy) 
- * 
+ * - webserver for frontend development (backup running on moode instance, webserver on desktop computer, uses proxy)
+ *
  * Usage:
- * 
- * 
+ *
+ *
  * Install:
  * - install npm (apt-get npm, mac and windows download and running installers)
  * - from the moode git repro directory run npm ci (installs the required npm modules)
@@ -41,26 +41,26 @@
  * - check if your environment is ok by running gulp -v .
  *   - if says 'command not found', run node_modules/.bin/gulp instead
  * - now you can run commands like:
- * 
+ *
  * Main build targets:
  *  gulp clean [--all]          - Empties the build/build and build/distr directory, with the --all also the cache is flushed.
- * 
+ *
  *  gulp build [--force]        - Build frontend from {app.src} and put output in {app.dest}
- *  gulp watch [--build]   - Start web server with as root {app.src} with proxy to moode, used for local web development. 
+ *  gulp watch [--build]   - Start web server with as root {app.src} with proxy to moode, used for local web development.
  *             [--force]                 When --build is given, also perform a build and use {app.dest} as web root
  *  gulp deploy [--test]        - Deploys everything needed (inc php etc) {app.deploy}.
  *              [--force]                  With the option --test deploy to build/dist (app.dist).
  *                                When used to real don't forget to sudo first
- * 
+ *
  *  Default most task only update/use files that are changed (= is newer).  With force the files are also updated.
- * 
+ *
  * Sub build targets (are automaticly called by the main build targets on need):
  *  gulp cache                  - fill cache with files (basedon changed and index.html)
  *  gulp bundle                 - (re)bundle the files
  *  gulp listplugins            - list available gulp plugins
- * 
+ *
  * Generated Directory tree:
- * 
+ *
  * moode
  *  |- build               - directory used by the build scripts for temporary files, no need to checkin. maybe cache checkin for speed.
  *     |- cache            - temporary cache with all individual minified js/css files
@@ -69,12 +69,12 @@
  *          |- maps        - matching sourcemaps
  *     |- build            - all build bundles, including enough files to run again a local js development server
  *     |- distr            - result of a test deploy
- * 
- * 
+ *
+ *
  * Inspiration taken from:
  * - https://css-tricks.com/gulp-for-beginners/
  * - https://nystudio107.com/blog/a-gulp-workflow-for-frontend-development-automation
- * 
+ *
  */
 
 // package vars
@@ -102,8 +102,8 @@ var onError = function(err) {
 const banner = [
     "/**",
     " * <%= pkg.description %> (C) <%= pkg.copyright %> <%= pkg.author %>",
-    " * <%= pkg.homepage %>",       
-    " *",  
+    " * <%= pkg.homepage %>",
+    " *",
     " * This Program is free software; you can redistribute it and/or modify",
     " * it under the terms of the GNU General Public License as published by",
     " * the Free Software Foundation; either version 3, or (at your option)",
@@ -126,12 +126,12 @@ const banner = [
 ].join("\n");
 
 // banner used for generated html files
-// const banner_html = [    
+// const banner_html = [
 //     "<!--",
 //     "/**",
 //     " * <%= pkg.description %> (C) <%= pkg.copyright %> <%= pkg.author %>",
-//     " * <%= pkg.homepage %>",   
-//     " *",  
+//     " * <%= pkg.homepage %>",
+//     " *",
 //     " * @project        <%= pkg.name %>",
 //     " * @version        <%= pkg.version %>",
 //     " * @author         <%= pkg.author %>",
@@ -160,11 +160,11 @@ const REPLACEMENT_PATTERNS= [
     {
       match: '__COPYRIGHT__',
       replacement: pkg.copyright
-    }            
+    }
   ];
 
 // configure the gulp mode options
-const mode = $.mode( {  modes: ["build", "development", "test", "all", "force"], 
+const mode = $.mode( {  modes: ["build", "development", "test", "all", "force"],
                         default: "development",
                         verbose: false});
 
@@ -201,7 +201,7 @@ gulp.task('browserSync', function(done) {
         server: {
             baseDir: mode.build() ? pkg.app.dest: pkg.app.src,
         },
-        middleware: [ 
+        middleware: [
             $.httpProxyMiddleware.createProxyMiddleware('/imagesw/thmcache',  { target: pkg.server.proxy, changeOrigin: true }),
             $.httpProxyMiddleware.createProxyMiddleware('/imagesw/radio-logos',  { target: pkg.server.proxy, changeOrigin: true }),
             $.httpProxyMiddleware.createProxyMiddleware('/imagesw/bgimage.jpg',  { target: pkg.server.proxy, changeOrigin: true }),
@@ -249,7 +249,7 @@ gulp.task('cache', function(done){
         .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // remove comment blocks to in clude everything
         .pipe($.replace(/.*CONFIGBLOCKSECTION.*/g, ""))
-        .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, ""))        
+        .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, ""))
         .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.useref({ noconcat: true
                          ,allowEmpty: true } ))
@@ -290,17 +290,17 @@ gulp.task('bundle', gulp.series([`cache`, `maps`],function (done) {
         .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // remove comment blocks to in clude everything
         .pipe($.replace(/.*CONFIGBLOCKSECTION.*/g, ""))
-        .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, ""))        
+        .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, ""))
         .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.useref( { // transform name to .min version
-                          transformPath:fileNameToMin 
+                          transformPath:fileNameToMin
                           // use add path the location with the min versions
                          ,searchPath: pkg.app.cache
                          ,allowEmpty: true }))
         .pipe($.if(['**/*.min.js', '**/*.min.css'], $.header(banner, {pkg: pkg}) ))
         .pipe($.size({showFiles: true, total: true}))
         // don't write the patched html file
-        .pipe($.if('!*.html', gulp.dest(pkg.app.dest))) 
+        .pipe($.if('!*.html', gulp.dest(pkg.app.dest)))
         .on('end', done);
 }));
 
@@ -308,9 +308,9 @@ gulp.task('bundle', gulp.series([`cache`, `maps`],function (done) {
  * During frontend development based on gulp we cannot use index.php.
  * An alternative index.html has to be generated. It should contain the content of:
  *  - header.php
- *  - templates/indextpl.html 
+ *  - templates/indextpl.html
  *  - footer.php
- * 
+ *
  * It uses header.php with processing tage to create the src/index.html. This one includes the (parts of the ) resources.
  *
  */
@@ -325,8 +325,8 @@ gulp.task('genindexdev', function(done){
         .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // adds multiple jquery files instead of one jquery bundle
         .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, "")) // make wellformed by adding cloding body and html
-        .pipe($.replace(/.*CONFIGBLOCKSECTION_BEGIN.*/g, "<!-- CONFIGBLOCKSECTION")) // adds multiple jquery files instead of one jquery bundle        
-        .pipe($.replace(/.*CONFIGBLOCKSECTION_END.*/g, "CONFIGBLOCKSECTION -->")) // adds multiple jquery files instead of one jquery bundle        
+        .pipe($.replace(/.*CONFIGBLOCKSECTION_BEGIN.*/g, "<!-- CONFIGBLOCKSECTION")) // adds multiple jquery files instead of one jquery bundle
+        .pipe($.replace(/.*CONFIGBLOCKSECTION_END.*/g, "CONFIGBLOCKSECTION -->")) // adds multiple jquery files instead of one jquery bundle
         .pipe($.include({
             hardFail: true,
             separateInputs: true,
@@ -346,14 +346,14 @@ gulp.task('genindex', function(done){
         .pipe($.rename(function (path) {
             path.basename = 'index';
             path.extname = '.html';
-        }))        
+        }))
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dest})))
         .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
         .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // adds multiple jquery files instead of one jquery bundle
         .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, "")) // make wellformed by adding cloding body and html
-        .pipe($.replace(/.*CONFIGBLOCKSECTION_BEGIN.*/g, "<!-- CONFIGBLOCKSECTION")) // adds multiple jquery files instead of one jquery bundle        
-        .pipe($.replace(/.*CONFIGBLOCKSECTION_END.*/g, "CONFIGBLOCKSECTION -->")) // adds multiple jquery files instead of one jquery bundle        
+        .pipe($.replace(/.*CONFIGBLOCKSECTION_BEGIN.*/g, "<!-- CONFIGBLOCKSECTION")) // adds multiple jquery files instead of one jquery bundle
+        .pipe($.replace(/.*CONFIGBLOCKSECTION_END.*/g, "CONFIGBLOCKSECTION -->")) // adds multiple jquery files instead of one jquery bundle
         .pipe($.include({
             hardFail: true,
             separateInputs: true,
@@ -364,34 +364,36 @@ gulp.task('genindex', function(done){
         .pipe($.useref({noAssets: true}))
         .pipe($.replaceTask({ patterns: REPLACEMENT_PATTERNS }))
         .pipe($.preprocess({ context: { STRIP_CONFIG: true } }))
-        .pipe($.size({showFiles: true, total: true}))
+        .pipe($.size({showFiles: true, total: false}))
         .pipe(($.if('index.html', gulp.dest(pkg.app.dest))) )
         .on('end', done);
 });
 
 gulp.task('patchheader', function (done) {
     return gulp.src(pkg.app.src+'/header.php')
-        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
+        //.pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
         .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, ""))
         .pipe($.removeCode({ GENINDEXDEV: false, NOCONFIGSECTION: false, GENINDEXDEV: false, USEBUNDLE:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.preprocess({ context: { STRIP_CONFIG: true } }))
         .pipe($.useref({noAssets: true}))
+        .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
 });
 
 gulp.task('patchfooter', function (done) {
     return gulp.src(pkg.app.src+'/footer.php')
-        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
+        //.pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.removeCode({USEBUNDLE:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.htmlmin({ collapseWhitespace: true,
-            ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ] 
+            ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ]
         }))
         .pipe($.rename(function (path) {
             path.basename += '.min';
          }))
+        .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
 });
@@ -400,11 +402,12 @@ gulp.task('minifyhtml', function (done) {
     return gulp.src(pkg.app.src+'/templates/indextpl.html')
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
         .pipe($.htmlmin({ collapseWhitespace: true,
-             ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ] 
+             ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[=|php]?[\s\S]*?\?>/ ]
         }))
         .pipe($.rename(function (path) {
             path.basename += '.min';
          }))
+        .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION+'/templates'))
         .on('end', done);
 });
@@ -455,7 +458,7 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'minifyhtml'],
         .on('end', done);
 }));
 
-gulp.task('deployfront', function (done) {    
+gulp.task('deployfront', function (done) {
     return gulp.src( [pkg.app.dest+'/**/*', '!'+pkg.app.dest+'/index.html'] )
         .pipe($.if(!mode.force(), $.newer( { dest: DEPLOY_LOCATION})))
         .pipe(gulp.dest(DEPLOY_LOCATION))
