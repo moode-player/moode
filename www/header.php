@@ -50,7 +50,7 @@
     <link href="css/panels.min.css" rel="stylesheet">
     <link href="css/moode.min.css" rel="stylesheet">
 	<!-- endbuild -->
-	
+
     <!-- Common JS -->
 	<!-- build:js js/lib.min.js defer -->
 	<!-- BUNDLE_TAG
@@ -58,7 +58,7 @@
 	<script src="js/jquery-ui/jquery-ui.js" ></script>
 	<script src="js/jquery-ui/jquery.ui.core.js" defer></script>
 	<script src="js/jquery-ui/jquery.ui.widget.js" defer></script>
-	<script src="js/jquery-ui/jquery.ui.mouse.js" defer></script>	
+	<script src="js/jquery-ui/jquery.ui.mouse.js" defer></script>
 	<script src="js/jquery-ui/jquery.ui.position.js" defer></script>
 	<script src="js/jquery-ui/jquery.ui.datepicker.js" defer></script>
 	<script src="js/jquery-ui/jquery.ui.slider.js" defer></script>
@@ -73,7 +73,7 @@
     <script src="js/playerlib.min.js" defer></script>
     <script src="js/links.min.js" defer></script>
 	<!-- endbuild -->
-	
+
     <!-- Playback / Library -->
 	<!--removeIf(GENINDEXDEV)-->
     <?php if ($section == 'index') { ?>
@@ -106,76 +106,14 @@
         <script src="js/jquery.placeholder.min.js" defer></script>
         <script src="js/i18n/_messages.en.js', 'text/javascript" defer></script>
         <script src="js/application.min.js" defer></script>
-        <script src="js/scripts-configs.min.js" defer></script>		
+        <script src="js/scripts-configs.min.js" defer></script>
 		<!-- CONFIGBLOCKSECTION_END -->
 		<!-- endbuild -->
 		<!--endRemoveIf(NOCONFIGSECTION)-->
-				
+
 	<!--removeIf(GENINDEXDEV)-->
     <?php } ?>
 	<!--endRemoveIf(GENINDEXDEV)-->
-
-  <!-- VERSIONED RESOURCES -->
-	<?php
-        /*
-		// Common css
-		//removeIf(USEBUNDLE)
-		versioned_stylesheet('css/bootstrap.min.css');
-		versioned_stylesheet('css/bootstrap-select.min.css');
-		versioned_stylesheet('css/flat-ui.min.css');
-		versioned_stylesheet('css/jquery.pnotify.default.min.css');
-		versioned_stylesheet('css/fontawesome-moode.min.css');
-		versioned_stylesheet('css/panels.min.css');
-		versioned_stylesheet('css/moode.min.css');
-		//endRemoveIf(USEBUNDLE)
-		// USEBUNDLE versioned_stylesheet('css/styles.min.css');
-		
-
-		// Common js
-		//removeIf(USEBUNDLE)
-		versioned_script('js/bootstrap.min.js');
-		versioned_script('js/bootstrap-select.min.js');
-		versioned_script('js/jquery.pnotify.min.js');
-        versioned_script('js/notify.min.js');
-        versioned_script('js/playerlib-nomin.js');
-        versioned_script('js/playerlib.min.js');
-		versioned_script('js/links.min.js');
-		//endRemoveIf(USEBUNDLE)
-		// USEBUNDLE versioned_script('js/lib.min.js');
-
-		// Playback / Library
-		if ($section == 'index') {
-			// USEBUNDLE versioned_stylesheet('css/main.min.css');
-			//removeIf(USEBUNDLE)
-			versioned_stylesheet('css/jquery.countdown.min.css');
-			versioned_script('js/jquery.countdown.min.js');
-			versioned_script('js/jquery.scrollTo.min.js');
-			versioned_script('js/jquery.touchSwipe.min.js');
-			versioned_script('js/jquery.lazyload.min.js');
-			versioned_script('js/jquery.md5.min.js');
-			versioned_script('js/jquery.adaptive-backgrounds.min.js');
-			versioned_script('js/jquery.knob.min.js');
-			versioned_script('js/bootstrap-contextmenu.min.js');
-			versioned_script('js/scripts-library.min.js');
-			versioned_script('js/scripts-panels.min.js');
-			//endRemoveIf(USEBUNDLE)
-			// USEBUNDLE versioned_script('js/main.min.js');
-		}
-		// Configs
-		else {
-			//removeIf(USEBUNDLE)
-			versioned_script('js/custom_checkbox_and_radio.min.js');
-			versioned_script('js/custom_radio.js');
-			versioned_script('js/jquery.tagsinput.min.js');
-			versioned_script('js/jquery.placeholder.min.js');
-			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
-			versioned_script('js/application.min.js');
-			versioned_script('js/scripts-configs.min.js');
-			//endRemoveIf(USEBUNDLE)
-			// USEBUNDLE versioned_script('js/config.min.js');
-		}
-        */
-	?>
 
 	<!-- MOBILE APP ICONS -->
 	<!-- Apple -->
