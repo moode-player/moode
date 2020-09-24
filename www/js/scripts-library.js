@@ -113,25 +113,32 @@ function ___reduceArtists(acc, track) {
 // TEST:
 // This replaces the entire original reduceArtists
 function reduceArtists(acc, track) {
-	if (track.artist) {
-		var artist = (track.artist).toLowerCase();
-		if (!acc[artist]) {
-			acc[artist] = [];
-			acc[artist].artist = track.artist;
-		}
-		acc[artist].push(track);
-	} else {
-		// track.artist not set, define artist for comparison below
-		var artist = null;
-	}
 	if (track.album_artist) {
 		var album_artist = (track.album_artist).toLowerCase();
-		if (album_artist != artist) {
-			if (!acc[album_artist]) {
-				acc[album_artist] = [];
-				acc[album_artist].artist = track.album_artist;
+		if (!acc[album_artist]) {
+			acc[album_artist] = [];
+			acc[album_artist].artist = track.album_artist;
+		}
+		acc[album_artist].push(track);
+		// ONLY ALBUM ARTIST SWITCH GOES HERE
+		// Set the sense according to how you define the variable
+		// The next if should evaluate to true if you ONLY want
+		// to use album_artist when set.  (old behavior)
+		if (SESSION.json['library_artist_tag']) {
+			return acc;
+		}
+	} else {
+		// track.album_artist not set, define album_artist for comparison below
+		var album_artist = null;
+	}
+	if (track.artist) {
+		var artist = (track.artist).toLowerCase();
+		if (artist != album_artist) {
+			if (!acc[artist]) {
+				acc[artist] = [];
+				acc[artist].artist = track.artist;
 			}
-			acc[album_artist].push(track);
+			acc[artist].push(track);
 		}
 	}
 	return acc;
