@@ -556,10 +556,9 @@ var renderArtists = function() {
 
 	for (var i = 0; i < filteredArtists.length; i++) {
 		// NOTE: Add "|| filteredArtists.length = 1" to automatically highlight if only 1 artist in list
-        var artist = filteredArtists[i] == SESSION.json['library_comp_id'] ? filteredArtists[i] + ' (Compilations)' : filteredArtists[i];
 		output += '<li class="lib-entry'
 			+ ((LIB.filters.artists.indexOf(filteredArtists[i]) >= 0 || filteredArtists.length == 1) ? ' active' : '')
-			+ '">' + artist + '</li>';
+			+ '">' + filteredArtists[i] + '</li>';
 	}
 
 	$('#artistsList').html(output);
@@ -826,11 +825,10 @@ var renderSongs = function(albumPos) {
 		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
 
         if (LIB.filters.artists.length > 0) {
-            var artist2 = LIB.filters.artists[0] == SESSION.json['library_comp_id'] ? LIB.filters.artists[0] + ' (Compilations)' : LIB.filters.artists[0];
             $('#lib-coverart-img').html(
                 '<img class="lib-artistart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '>' +
                 '<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
-                artist2 + '</button>'
+                LIB.filters.artists[0] + '</button>'
             );
             artist = '';
         }
