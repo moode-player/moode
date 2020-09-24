@@ -100,18 +100,15 @@ function reduceGenres(acc, track) {
 	return acc;
 }
 
-function ___reduceArtists(acc, track) {
-    var artist = (track.album_artist || track.artist).toLowerCase();
-	if (!acc[artist]) {
-		acc[artist] = [];
-        acc[artist].artist = track.album_artist || track.artist;
-	}
-	acc[artist].push(track);
-	return acc;
-}
-
-// TEST:
-// This replaces the entire original reduceArtists
+// Rewritten by @scripple
+// NOTE: This routine and associated marked code blocks provide a flexible way to populate the artist list in Tag view.
+// 1. library_tagview_artist = 'Artist': List all artists including those in compilation albums but retain any compilation
+// album grouping present in the Album Artist tag i.e. "Various Artists" will be in the list. Compilation albums listed
+// for a given clicked artist will show only the tracks belonging to the Artist. Clicking the Album will show all the
+// album's tracks vs just those for the given artist.
+// 2. library_tagview_artist = Album Artist: List all the Album Artists. If the album artist tag is empty then the Artist tag
+// will be used. Albums will be grouped by Album Artist. Compilation albums should therefore have the Album Artist tag
+// set to a consistent string for example "Various Artists" to be grouped correctly.
 function reduceArtists(acc, track) {
 	if (track.album_artist) {
 		var album_artist = (track.album_artist).toLowerCase();
@@ -124,10 +121,11 @@ function reduceArtists(acc, track) {
 		// Set the sense according to how you define the variable
 		// The next if should evaluate to true if you ONLY want
 		// to use album_artist when set.  (old behavior)
-		if (SESSION.json['library_artist_tag']) {
+		if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
 			return acc;
 		}
-	} else {
+	}
+    else {
 		// track.album_artist not set, define album_artist for comparison below
 		var album_artist = null;
 	}
@@ -143,7 +141,6 @@ function reduceArtists(acc, track) {
 	}
 	return acc;
 }
-// TEST:
 
 function reduceAlbums(acc, track) {
 	var key = track.key;
@@ -386,7 +383,7 @@ function filterArtists() {
 		songsfilteredByGenre = songsfilteredByGenre.filter(filterByGenre);
 	}
 	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
-    // TEST:
+    // @scripple: Add sort
     // Natural ordering
 	try {
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
@@ -402,7 +399,6 @@ function filterArtists() {
              return a > b ? 1 : (a < b ? -1 : 0);
         });
     }
-    // TEST:
 }
 
 function filterAlbums() {
@@ -416,14 +412,11 @@ function filterAlbums() {
 	}
 	// Filter by artist
 	if (LIB.filters.artists.length) {
-		//filteredAlbums = filteredAlbums.filter(filterByArtist);
-		//filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
-        // TEST:
+        // @scripple:
         var artistSongs = allSongs.filter(filterByArtist);
  		var songKeys = artistSongs.map(function(a) {return a.key;});
  		filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
  		filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
-        // TEST:
 	}
     // Filter by file last-updated timestamp
     if (LIB.recentlyAddedClicked) {

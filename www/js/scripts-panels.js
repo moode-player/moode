@@ -32,7 +32,7 @@ jQuery(document).ready(function($) { 'use strict';
     function visChange() {
         //console.log('visChange()', document.visibilityState);
         if (document.visibilityState == 'visible') {
-            // This will cause MPD idle timeout and subsequent renderUI() which will refresh the time eknob using current data 
+            // This will cause MPD idle timeout and subsequent renderUI() which will refresh the time eknob using current data
     		sendMpdCmd('subscribe dumy_channel');
         }
     }
@@ -1327,11 +1327,13 @@ jQuery(document).ready(function($) { 'use strict';
     // First use help
     $('#playback-firstuse-help').click(function(e) {
         $('#playback-firstuse-help').css('display', '');
-        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': 'n,' + SESSION.json['first_use_help'].split(',')[1]});
+        SESSION.json['first_use_help'] = 'n,' + SESSION.json['first_use_help'].split(',')[1];
+        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help']});
     });
     $('#playbar-firstuse-help').click(function(e) {
         $('#playbar-firstuse-help').css('display', '');
-        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help'].split(',')[0] + ',n'});
+        SESSION.json['first_use_help'] = SESSION.json['first_use_help'].split(',')[0] + ',n';
+        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help']});
     });
 
     // CoverView screen saver reset

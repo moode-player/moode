@@ -2236,7 +2236,7 @@ $('.context-menu a').click(function(e) {
             $('#recently-added span').text(getParamOrValue('param', SESSION.json['library_recently_added']));
             $('#utf8-char-filter span').text(SESSION.json['library_utf8rep']);
             // Metadata and Tags
-            $('#compilation-identifier').val(SESSION.json['library_comp_id']);
+            $('#tag-view-artist span').text(SESSION.json['library_tagview_artist']);
             $('#ignore-articles').val(SESSION.json['library_ignore_articles']);
             $('#library-inc-comment-tag span').text(SESSION.json['library_inc_comment_tag']);
             // User Interface elements
@@ -2427,7 +2427,7 @@ $('#btn-appearance-update').click(function(e){
     if (SESSION.json['library_recently_added'] != getParamOrValue('value', $('#recently-added span').text())) {libraryOptionsChange = true;}
     if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;}
     // Metadata and Tags
-    if (SESSION.json['library_comp_id'] != $('#compilation-identifier').val()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}
     if (SESSION.json['library_inc_comment_tag'] != $('#library-inc-comment-tag span').text()) {clearLibcacheReqd = true;}
     // User Interface elements
@@ -2478,7 +2478,7 @@ $('#btn-appearance-update').click(function(e){
     SESSION.json['library_recently_added'] = getParamOrValue('value', $('#recently-added span').text());
     SESSION.json['library_utf8rep'] = $('#utf8-char-filter span').text();
     // Metadata and Tags
-    SESSION.json['library_comp_id'] = $('#compilation-identifier').val().trim();
+    SESSION.json['library_tagview_artist'] = $('#tag-view-artist span').text();
     SESSION.json['library_ignore_articles'] = $('#ignore-articles').val().trim();
     SESSION.json['library_inc_comment_tag'] = $('#library-inc-comment-tag span').text();
     // User Interface elements
@@ -2569,7 +2569,7 @@ $('#btn-appearance-update').click(function(e){
             'library_recently_added': SESSION.json['library_recently_added'],
             'library_utf8rep': SESSION.json['library_utf8rep'],
             // Metadata and Tags
-            'library_comp_id': SESSION.json['library_comp_id'],
+            'library_tagview_artist': SESSION.json['library_tagview_artist'],
             'library_ignore_articles': SESSION.json['library_ignore_articles'],
             'library_inc_comment_tag': SESSION.json['library_inc_comment_tag'],
             // User Interface elements
