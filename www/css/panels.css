@@ -50,6 +50,7 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--defcover:'images/default-cover-v6-l.svg';
 	--thumbcols:0px;
 	--thumbimagesize:0px;
+	--thumbmargin:0px;
 	--coverback:'';
 	--config_modal_btn_bg:rgba(64,64,64,0.08);
 	--npicon: url('../images/4band-npicon/audiow.svg');
@@ -209,15 +210,15 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList li {padding-top:.4em;padding-bottom:.4em;}
 #albumsList .tag-cover-text {display:inline-block;vertical-align:middle;transform:translate(0, .2em);min-width:50%;max-width:calc(100% - 3.6rem);/*line-height:1.6rem;*/}
 #library-panel .lib-entry span {max-width:100%;display:inline;}
-#library-panel.limited .lib-entry span {display:inline-block;}
+#content.limited .lib-entry span {display:inline-block;}
 #top-columns .lib-entry {font-size: 1em;}
 #top-columns .album-name-art, #top-columns .album-name {display:block !important;vertical-align:middle;min-width:25vw;}
 #top-columns .album-name-art {line-height:1.25em;}
 #albumsList .lib-entry span.artist-name {display:none}
 #albumsList .artist-name-art, #albumsList .album-year {vertical-align:top;line-height:normal;font-size:.85em;color:var(--textvariant);}
 #albumsList .album-year {margin-left:0;margin-left:.3em;}
-#library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
-#library-panel.limited .lib-entry, #library-panel.limited .lib-entry span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+#content.limited .artist-name-art, #content.limited #albumcovers .artist-name {max-width:67%;}
+#content.limited .lib-entry, #content.limited .lib-entry span, #content.limited .station-name {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .playlist li.active:before, .cv-playlist li.active:before {color:transparent !important;background:var(--npicon) no-repeat right;background-size:1em;}
@@ -229,7 +230,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .database .db-icon {display:block;float:left;height:19px;line-height:19px;width:1.875em;padding:0;color:inherit;}
 .database .db-icon .btn {font-size:1em;padding:1em .4em 1em .4em;}
 .database .db-icon .btn img {margin-top:-.5em;}
-.db-icon.db-song.db-browse.db-action img, .db-icon.db-radiofolder-icon.db-browse.db-action img {width:90%;}
+/*.db-icon.db-song.db-browse.db-action img, .db-icon.db-radiofolder-icon.db-browse.db-action img {width:90%;}*/
 .db-song.db-action a {width:100vw;height:2em;/*padding-top:.75em !important;*/}
 #lib-file .songtrack {left:0px;text-align:right;width:2em;float:left;display:table-cell;}
 #lib-file .songname {overflow:hidden;width:40%;height:auto;float:left;margin-left:1em;display:table-cell;}
@@ -397,7 +398,8 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #lib-albumcover {height:100%;width:100%;position:absolute;box-sizing:border-box;left:0%;top:2.75em;top:calc(env(safe-area-inset-top) + 2.75em);overflow:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
 #albumcovers {text-align:center;margin:0;padding-bottom:12em;}
 #albumcovers .lib-entry, .database-radio .lib-entry {width:var(--thumbcols);text-align:center;display:inline-block;vertical-align:top;height:auto;font-size:.95em;padding:0 0 .4em 0;}
-#albumcovers .lib-entry img, .database-radio img {height:var(--thumbimagesize);width:var(--thumbimagesize);max-height:var(--thumbimagesize);margin:.75em 0 .5em 0;}
+#albumcovers .lib-entry img, .database-radio img {position:absolute;left:var(--thumbmargin);bottom:0;width:var(--thumbimagesize);max-height:var(--thumbimagesize);}
+#albumcovers .thumbHW, #radiocovers .thumbHW {height:var(--thumbimagesize);width:var(--thumbimagesize);position:relative;margin:.75em 0 .5em 0;}
 #albumcovers .album-name {display:block !important;}
 #albumcovers .artyear {color:var(--textvariant);font-weight:500;}
 #albumcovers .artist-name, #albumcovers .album-year {margin:0 .15em;}

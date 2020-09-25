@@ -560,11 +560,10 @@ function disableVolKnob() {
     $('#volumeup, #volumedn, #volumedn-2, #volumeup-2, .volume-display').css('opacity', '.3');
 	$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text('0dB');
 	$('.volume-display').css('cursor', 'unset');
-
+    $('.volume-popup-btn').hide();
 	if (UI.mobile) {
 		$('#mvol-progress').css('width', '100%');
 		$('.repeat').show();
-        $('.volume-popup-btn').hide();
 	}
 }
 
@@ -1350,7 +1349,7 @@ function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         // Lazyload method
-        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<div class="thumbHW"><img loading="lazy" src="' : '<div class="thumbHW"><img class="lazy-radioview" data-original="';
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
@@ -1629,10 +1628,10 @@ function renderRadioView() {
             // Construct station entries
             var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
     		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
-    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
+    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
-            output += '<span class="station-name">' + data[i].name + '</span>';
+            output += '<div class="station-name">' + data[i].name + '</div>';
             output += subGenreDiv;
             output += countryDiv;
             output += bitrateDiv;
@@ -2437,7 +2436,7 @@ $('#btn-appearance-update').click(function(e){
 	}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
-		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel').addClass('limited') : $('#library-panel').removeClass('limited');
+		$('#ellipsis-limited-text span').text() == "Yes" ? $('#content').addClass('limited') : $('#content').removeClass('limited');
 	}
     // Covers and Thumbnails
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
@@ -3662,6 +3661,7 @@ function getThumbHW() {
 	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
 	UI.thumbHW = columnW - (divM / 2);
 	$("body").get(0).style.setProperty("--thumbimagesize", UI.thumbHW + 'px');
+	$("body").get(0).style.setProperty("--thumbmargin", ((columnW - UI.thumbHW) / 2) + 'px');
 	$("body").get(0).style.setProperty("--thumbcols", columnW + 'px');
 }
 

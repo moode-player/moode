@@ -582,11 +582,11 @@ var renderAlbums = function() {
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
-        var albumViewLazy = '<img loading="lazy" src="' ;
+        var albumViewLazy = '<div class="thumbHW"><img loading="lazy" src="' ;
     }
     else {
     	var tagViewLazy = '<img class="lazy-tagview" data-original="';
-    	var albumViewLazy = '<img class="lazy-albumview" data-original="';
+    	var albumViewLazy = '<div class="thumbHW"><img class="lazy-albumview" data-original="';
     }
 
     // SESSION.json['library_encoded_at']
@@ -634,7 +634,7 @@ var renderAlbums = function() {
         }
 
 		output2 += '<li class="lib-entry">'
-            + albumViewLazy + filteredAlbumCovers[i].imgurl + '">'
+            + albumViewLazy + filteredAlbumCovers[i].imgurl + '"></div>'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-album"></div>'
 			+ albumViewHdDiv
 			+ albumViewBgDiv
@@ -658,7 +658,7 @@ var renderAlbums = function() {
 
     // Set ellipsis text
 	if (SESSION.json["library_ellipsis_limited_text"] == "Yes") {
-		$('#library-panel').addClass('limited');
+		$('#content').addClass('limited');
 	}
 
 	// Headers clicked
