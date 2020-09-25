@@ -2749,7 +2749,7 @@ function autoConfig($cfgfile) {
 		'System',
 		['requires' => ['timezone'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-timezone %s'],
 		['requires' => ['keyboard'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-keyboard %s'],
-		['cpugov' => ['keyboard'] , 'handler' => function($values) {
+		['cpugov' => ['cpugov'] , 'handler' => function($values) {
 			playerSession('write', 'cpugov', $values['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
 		}],
 		['requires' => ['hdmiport'] , 'handler' => setPlayerSession],
@@ -2757,7 +2757,7 @@ function autoConfig($cfgfile) {
 		['requires' => ['localui'] , 'handler' => setPlayerSession],
 
 		'I2S Device',
-		['i2sdevice' => ['keyboard'] , 'handler' => function($values) {
+		['i2sdevice' => ['i2sdevice'] , 'handler' => function($values) {
 			cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
 			playerSession('write', 'i2sdevice', $values['i2sdevice']);
 		}],
