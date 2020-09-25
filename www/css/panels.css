@@ -218,7 +218,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList .artist-name-art, #albumsList .album-year {vertical-align:top;line-height:normal;font-size:.85em;color:var(--textvariant);}
 #albumsList .album-year {margin-left:0;margin-left:.3em;}
 #library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
-#library-panel.limited .lib-entry span, #radio-panel.limited .station-name {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+#library-panel.limited .lib-entry span, #radio-panel.limited .station-name span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .playlist li.active:before, .cv-playlist li.active:before {color:transparent !important;background:var(--npicon) no-repeat right;background-size:1em;}
@@ -653,7 +653,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .radioview-metadata-text {color:var(--textvariant);}
 /* First use help */
 #playback-firstuse-help, #playbar-firstuse-help {display:none;position:absolute;background:rgba(0,0,0,0.9);cursor:pointer;}
-#playback-firstuse-help:after, #playbar-firstuse-help:after {position:absolute;top:.75em;right:.75em;font-family:"Font Awesome 5 Pro";content:"\f057";color:var(--accentxts);font-size:1.75em;font-weight:100;} 
+#playback-firstuse-help:after, #playbar-firstuse-help:after {position:absolute;top:.75em;right:.75em;font-family:"Font Awesome 5 Pro";content:"\f057";color:var(--accentxts);font-size:1.75em;font-weight:100;}
 #playback-firstuse-help {height:calc(38vw - 2em);width:calc(38vw - 2em);z-index:999;}
 #playbar-firstuse-help {z-index:9999;height:100%;width:100%;}
 #playback-firstuse-help div, #playbar-firstuse-help div {box-sizing:border-box;border:2px dashed var(--accentxts);height:calc(100% - 8px);width:calc(100% - 8px);margin:4px 0 0 4px;}
