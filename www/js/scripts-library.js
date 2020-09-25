@@ -658,7 +658,7 @@ var renderAlbums = function() {
 
     // Set ellipsis text
 	if (SESSION.json["library_ellipsis_limited_text"] == "Yes") {
-		$('#content').addClass('limited');
+		$('#library-panel, #radio-panel').addClass('limited');
 	}
 
 	// Headers clicked

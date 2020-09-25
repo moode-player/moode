@@ -2436,7 +2436,7 @@ $('#btn-appearance-update').click(function(e){
 	}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
-		$('#ellipsis-limited-text span').text() == "Yes" ? $('#content').addClass('limited') : $('#content').removeClass('limited');
+		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel, #radio-panel').addClass('limited') : $('#library-panel, #radio-panel').removeClass('limited');
 	}
     // Covers and Thumbnails
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
