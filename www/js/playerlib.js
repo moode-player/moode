@@ -1631,7 +1631,7 @@ function renderRadioView() {
     		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
-            output += '<div class="station-name">' + data[i].name + '</div>';
+            output += '<span class="station-name">' + data[i].name + '</span>';
             output += subGenreDiv;
             output += countryDiv;
             output += bitrateDiv;
