@@ -6,6 +6,7 @@
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r700 sources
 # - Bump to Linux kernel 5.4.61 build #1339
+# - Stop auth.log spam
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
@@ -595,6 +596,9 @@ sudo chmod 0777 /var/local/www/currentsong.txt
 sudo touch /var/local/www/libcache.json
 sudo chmod 0777 /var/local/www/libcache.json
 
+7. Permission for the 010_moode file
+sudo chmod 0440 /etc/sudoers.d/010_moode
+
 # SR5
 sudo reboot
 
@@ -1080,24 +1084,32 @@ sudo reboot
 
 1. Write SD Card to image file with truncation to the root partition end blk.
 
-moOde 5.0 sudo fdisk -l
------------------------
-Device         Boot Start     End Sectors  Size Id Type
-/dev/mmcblk0p1       8192   98045   89854 43.9M  c W95 FAT32 (LBA)
-/dev/mmcblk0p2      98304 6242303 6144000    3G 83 Linux
+moOde 5.4.0 fdisk -l (Raspbian Buster)
+======================================
+Device         Boot  Start     End Sectors  Size Id Type
+/dev/mmcblk0p1        8192  532480  524289  256M  c W95 FAT32 (LBA)
+/dev/mmcblk0p2      540672 7708671 7168000  3.4G 83 Linux
 
-Use end block + 1 as the block count in dd
+moOde 6.6.0 fdisk -l (RaspiOS Buster)
+=====================================
+Device         Boot  Start     End Sectors  Size Id Type
+/dev/mmcblk0p1        8192  532479  524288  256M  c W95 FAT32 (LBA)
+/dev/mmcblk0p2      532480 7700479 7168000  3.4G 83 Linux
+
+
+Use End block + 1 as the block count in dd
 
 diskutil list
 diskutil unmountDisk /dev/disk3
-sudo dd if=/dev/disk3 of=/Users/Lt1user/Documents/moode.img count=6242304 bs=512
+# sudo dd if=/dev/disk3 of=/Users/Lt5user/Documents/moode-iso.img count=7708672 bs=512
+sudo dd if=/dev/disk3 of=/Users/Lt5user/Documents/moode-iso.img count=7700480 bs=512
 diskutil eject /dev/disk3
 
 2. Write image to SD Card.
 
 diskutil list
 diskutil unmountDisk /dev/disk3
-sudo dd if=/Users/Lt1user/Documents/moode.img of=/dev/rdisk3 bs=1m
+sudo dd if=/Users/Lt5user/Documents/moode-iso.img of=/dev/rdisk3 bs=1m
 diskutil eject /dev/disk3
 
 ////////////////////////////////////////////////////////////////
