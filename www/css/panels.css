@@ -210,15 +210,15 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList li {padding-top:.4em;padding-bottom:.4em;}
 #albumsList .tag-cover-text {display:inline-block;vertical-align:middle;transform:translate(0, .2em);min-width:50%;max-width:calc(100% - 3.6rem);/*line-height:1.6rem;*/}
 #library-panel .lib-entry span {max-width:100%;display:inline;}
-#content.limited .lib-entry span {display:inline-block;}
+#library-panel.limited .lib-entry span {display:inline-block;}
 #top-columns .lib-entry {font-size: 1em;}
 #top-columns .album-name-art, #top-columns .album-name {display:block !important;vertical-align:middle;min-width:25vw;}
 #top-columns .album-name-art {line-height:1.25em;}
 #albumsList .lib-entry span.artist-name {display:none}
 #albumsList .artist-name-art, #albumsList .album-year {vertical-align:top;line-height:normal;font-size:.85em;color:var(--textvariant);}
 #albumsList .album-year {margin-left:0;margin-left:.3em;}
-#content.limited .artist-name-art, #content.limited #albumcovers .artist-name {max-width:67%;}
-#content.limited .lib-entry, #content.limited .lib-entry span, #content.limited .station-name {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+#library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
+#library-panel.limited .lib-entry span, #radio-panel.limited .station-name {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .playlist li.active:before, .cv-playlist li.active:before {color:transparent !important;background:var(--npicon) no-repeat right;background-size:1em;}
