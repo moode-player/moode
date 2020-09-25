@@ -1281,185 +1281,7 @@ function phpSession($action, $param = '', $value = '') {
 	}
 }
 
-// TODO: new database management
-/*function dbConnect() {
-	if ($dbh = new PDO(SQLDB)) {
-		return $dbh;
-	}
-	else {
-		workerLog('dbConnect(): Connection failed');
-		return false;
-	}
-}
-
-function dbRead($table, $dbh, $param = '', $id = '') {
-	if(empty($param)) {
-		$querystr = 'SELECT * FROM ' . $table;
-	}
-	else if (!empty($id)) {
-		$querystr = "SELECT * FROM " . $table . " WHERE id='" . $id . "'";
-	}
-	else if ($param == 'mpdconf') {
-		$querystr = "SELECT param, value FROM cfg_mpd WHERE value!=''";
-	}
-	else if ($table == 'cfg_audiodev') {
-		$filter = $param == 'all' ? ' WHERE list="yes"' : ' WHERE name="' . $param . '" AND list="yes"';
-		$querystr = 'SELECT name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
-	}
-	else if ($table == 'cfg_theme') {
-		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
-	}
-	else if ($table == 'cfg_radio') {
-		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("DELETED", "zx reserved 499")' :
-			'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
-	}
-	else {
-		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
-	}
-
-	if ($result = dbQuery($querystr, $dbh)) {
-		return $result;
-	}
-	else {
-		workerLog('dbRead(): Query failed or empty result set');
-		return false;
-	}
-}
-
-function dbUpdate($table, $dbh, $key = '', $value) {
-	switch ($table) {
-		case 'cfg_system':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' where param='" . $key . "'";
-			break;
-
-		case 'cfg_mpd':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' where param='" . $key . "'";
-			break;
-
-		case 'cfg_network':
-			// use escaped single quotes in ssid and pwd
-			$querystr = "UPDATE " . $table .
-				" SET method='" . $value['method'] .
-				"', ipaddr='" . $value['ipaddr'] .
-				"', netmask='" . $value['netmask'] .
-				"', gateway='" . $value['gateway'] .
-				"', pridns='" . $value['pridns'] .
-				"', secdns='" . $value['secdns'] .
-				"', wlanssid='" . str_replace("'", "''", $value['wlanssid']) .
-				"', wlansec='" . $value['wlansec'] .
-				"', wlanpwd='" . str_replace("'", "''", $value['wlanpwd']) .
-				"' WHERE iface='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-
-		case 'cfg_source':
-			$querystr = "UPDATE " . $table . " SET name='" . $value['name'] . "', type='" . $value['type'] . "', address='" . $value['address'] . "', remotedir='" . $value['remotedir'] . "', username='" . $value['username'] . "', password='" . $value['password'] . "', charset='" . $value['charset'] . "', rsize='" . $value['rsize'] . "', wsize='" . $value['wsize'] . "', options='" . $value['options'] . "', error='" . $value['error'] . "' WHERE id=" . $value['id'];
-			break;
-
-		case 'cfg_audiodev':
-			$querystr = "UPDATE " . $table . " SET chipoptions='" . $value . "' WHERE name='" . $key . "'";
-			break;
-
-		case 'cfg_radio':
-			$querystr = "UPDATE " . $table . " SET station='" . $value . "' WHERE name='" . $key . "'";
-			break;
-		case 'cfg_sl':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_airplay':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_spotify':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_upnp':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_eqfa4p':
-			$querystr = "UPDATE " . $table .
-				" SET master_gain='" . $value['master_gain'] .
-				"', band1_params='" . $value['band1_params'] .
-				"', band2_params='" . $value['band2_params'] .
-				"', band3_params='" . $value['band3_params'] .
-				"', band4_params='" . $value['band4_params'] .
-				"' WHERE curve_name='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-		case 'cfg_gpio':
-			$querystr = "UPDATE " . $table .
-				" SET enabled='" . $value['enabled'] .
-				"', pin='" . $value['pin'] .
-				"', command='" . trim($value['command']) .
-				"', param='" . $value['param'] .
-				"', value='" . $value['value'] .
-				"' WHERE id='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-	}
-
-	if (dbQuery($querystr, $dbh)) {
-		return true;
-	}
-	else {
-		workerLog('dbUpdate(): Query failed');
-		return false;
-	}
-}
-
-//function cfgdb_write($table, $dbh, $values) {
-function dbInsert($table, $dbh, $values) {
-	$querystr = "INSERT INTO " . $table . " VALUES (NULL, " . $values . ")"; // NULL causes the Id column to be set to the next number
-
-	if (dbQuery($querystr,$dbh)) {
-		return true;
-	}
-	else {
-		workerLog('dbInsert(): Query failed');
-		return false;
-	}
-}
-
-function dbDelete($table, $dbh, $id = '') {
-	$querystr = empty($id) ? 'DELETE FROM ' . $table : 'DELETE FROM ' . $table . ' WHERE id=' . $id;
-
-	if (dbQuery($querystr, $dbh)) {
-		return true;
-	}
-	else {
-		workerLog('dbDelete(): Query failed');
-		return false;
-	}
-}
-
-function dbQuery($querystr, $dbh) {
-	$query = $dbh->prepare($querystr);
-
-	if ($query->execute()) {
-		$result = array();
-		$i = 0;
-		foreach ($query as $value) {
-			$result[$i] = $value;
-			$i++;
-		}
-
-		// destroy the PDO connection object created by dbConnect()
-		// its also automatically destroyed when the script that created it ends
-		$dbh = null;
-
-		if (empty($result)) {
-			return true;
-		}
-		else {
-			return $result;
-		}
-	}
-	else {
-		workerLog('dbQuery(): Query failed (' . $querystr . ')');
-		return false;
-	}
-}
-*/
-// database management
+// Database management
 function cfgdb_connect() {
 	if ($dbh = new PDO(SQLDB)) {
 		return $dbh;
@@ -3191,20 +3013,20 @@ function storeBackLink($section, $tpl) {
 	session_start();
 
 	if ($tpl == 'src-config.html') {
-		$_SESSION['http_config_back'] = '/lib-config.php';
+		$_SESSION['config_back_link'] = '/lib-config.php';
 	}
 	else if (in_array($section, $root_configs)) {
-		$_SESSION['http_config_back'] = '/index.php';
+		$_SESSION['config_back_link'] = '/index.php';
 	}
 	else if (stripos($_SERVER['HTTP_REFERER'], $section) === false) {
-		$_SESSION['http_config_back'] = $referer_link;
+		$_SESSION['config_back_link'] = $referer_link;
 	}
 	else {
 		//workerLog('storeBackLink(): else block');
 	}
 
 	session_write_close();
-	//workerLog('storeBackLink(): back=' . $_SESSION['http_config_back'] . ', $tpl=' . $tpl . ', $section=' . $section . ', $referer_link=' . $referer_link);
+	//workerLog('storeBackLink(): back=' . $_SESSION['config_back_link'] . ', $tpl=' . $tpl . ', $section=' . $section . ', $referer_link=' . $referer_link);
 }
 
 // Create enhanced metadata
