@@ -2746,8 +2746,8 @@ function importStationPkg(files) {
 		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
         // For zip files its data:application/zip;base64,
 		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=import_stations', {'blob': data}, function() {
-            $('#import-export-msg').text('Import complete');
+        $.post('command/moode.php?cmd=import_stations', {'blob': data}, function(result) {
+            $('#import-export-msg').text(result);
             $('#import-station-pkg').val('');
         });
 	}

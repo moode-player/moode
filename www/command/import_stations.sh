@@ -17,31 +17,59 @@
 #
 
 # Store working dir
-WD=pwd
+WD=$(pwd)
+
+# Cleanup temp files
+cleanup_temp_files() {
+    rm /var/local/www/station_import.zip 2> /dev/null
+    rm /var/local/www/db/cfg_radio.schema 2> /dev/null
+    rm -rf /tmp/var 2> /dev/null
+}
+
+log_errors() {
+    TIME_STAMP=$(date +'%Y%m%d %H%M%S')
+    echo $TIME_STAMP" import_stations: "$LOG_MSG >> /var/log/moode.log
+    echo $LOG_MSG > /tmp/station_import_error.txt
+}
+
+# Cleanup any leftover files
+rm /tmp/station_import_error.txt 2> /dev/null
+rm /var/local/www/db/cfg_radio.schema 2> /dev/null
+rm -rf /tmp/var 2> /dev/null
 
 # Unzip the package
 unzip -q /var/local/www/station_import.zip -d /tmp
 if [ $? -ne 0 ] ; then
-    TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-    LOG_MSG=" import_stations: Unzip failed, import cancelled"
-    echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+    LOG_MSG="Unzip failed, import cancelled"
+    log_errors
+    cleanup_temp_files
+    exit 1
+fi
+
+# Check the schema
+sqlite3 /var/local/www/db/moode-sqlite3.db ".schema cfg_radio" > /var/local/www/db/cfg_radio.schema
+diff -q /var/local/www/db/cfg_radio.schema /tmp/var/local/www/db/cfg_radio.schema
+if [ $? -ne 0 ] ; then
+    LOG_MSG="Schema mismatch, import cancelled"
+    log_errors
+    cleanup_temp_files
     exit 1
 fi
 
 # Basic file sanitizing
 dos2unix -q /tmp/var/lib/mpd/music/RADIO/*.pls
 if [ $? -ne 0 ] ; then
-    TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-    LOG_MSG=" import_stations: Dos2unix failed on .pls files, import cancelled"
-    echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+    LOG_MSG="Dos2unix failed on .pls files, import cancelled"
+    log_errors
+    cleanup_temp_files
     exit 1
 fi
 
 dos2unix -q /tmp/var/local/www/db/cfg_radio.csv
 if [ $? -ne 0 ] ; then
-    TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-    LOG_MSG=" import_stations: Dos2unix failed on .csv file, import cancelled"
-    echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+    LOG_MSG="Dos2unix failed on .csv file, import cancelled"
+    log_errors
+    cleanup_temp_files
     exit 1
 fi
 
@@ -74,6 +102,4 @@ cp /tmp/var/local/www/imagesw/radio-logos/*.jpg /var/local/www/imagesw/radio-log
 cp /tmp/var/local/www/imagesw/radio-logos/thumbs/*.jpg /var/local/www/imagesw/radio-logos/thumbs/
 sqlite3 /var/local/www/db/moode-sqlite3.db -csv ".import /tmp/var/local/www/db/cfg_radio.csv cfg_radio"
 
-# Cleanup temp files
-rm /var/local/www/station_import.zip 2> /dev/null
-rm -rf /tmp/var 2> /dev/null
+cleanup_temp_files

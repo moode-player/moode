@@ -73,6 +73,7 @@ elseif ($_GET['cmd'] == 'setlogoimage') {
 		echo json_encode('worker busy');
 	}
 }
+/*
 elseif ($_GET['cmd'] == 'import_stations') {
 	if (submitJob($_GET['cmd'], $_POST['blob'], '', '')) {
 		echo json_encode('job submitted');
@@ -81,6 +82,7 @@ elseif ($_GET['cmd'] == 'import_stations') {
 		echo json_encode('worker busy');
 	}
 }
+*/
 elseif ($_GET['cmd'] == 'disconnect-renderer') {
 	if ($_POST['job'] == 'slsvc') {
 		session_start();
@@ -670,8 +672,55 @@ else {
 			break;
 		case 'export_stations':
 			syscmd('sqlite3 /var/local/www/db/moode-sqlite3.db -csv "select * from cfg_radio" > /var/local/www/db/cfg_radio.csv');
-			sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/local/www/imagesw/radio-logos/* /var/local/www/db/cfg_radio.csv');
+			syscmd('sqlite3 /var/local/www/db/moode-sqlite3.db ".schema cfg_radio" > /var/local/www/db/cfg_radio.schema');
+			sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/local/www/imagesw/radio-logos/* /var/local/www/db/cfg_radio.csv /var/local/www/db/cfg_radio.schema');
 			syscmd('rm /var/local/www/db/cfg_radio.csv');
+			syscmd('rm /var/local/www/db/cfg_radio.schema');
+			break;
+		case 'import_stations':
+			if (false === ($zip_data = base64_decode($_POST['blob'], true))) {
+				workerLog('worker: import_stations: base64_decode failed');
+				$msg = 'Error: base64 decode failed';
+			}
+			else {
+				$file = '/var/local/www/station_import.zip';
+				sysCmd('touch ' . $file);
+				sysCmd('chmod 0777 ' . $file);
+				if (false === ($fh = fopen($file, 'w'))) {
+					workerLog('worker: import_stations: file open failed on ' . $file);
+					$msg = 'Error: file open failed';
+				}
+				else {
+					if (false === ($bytes_written = fwrite($fh, $zip_data))) {
+						workerLog('worker: import_stations: file write failed on ' . $file);
+						$msg = 'Error: file write failed';
+					}
+					else {
+						// Import station data from zip
+						$result = sysCmd('/var/www/command/import_stations.sh');
+						if (!empty($result[0])) {
+							$msg = file_get_contents('/tmp/station_import_error.txt');
+							str_replace("\"", '', $msg);
+						}
+						else {
+							$msg = 'Import complete';
+							// Update MPD database
+							$GLOBALS['check_library_update'] = '1';
+							$sock = openMpdSock('localhost', 6600);
+							sendMpdCmd($sock, 'update RADIO');
+							$resp = readMpdResp($sock);
+							closeMpdSock($sock);
+							// Update .pls file permissions
+							sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
+							// Update the session
+							loadRadio();
+						}
+
+					}
+					fclose($fh);
+				}
+			}
+			echo $msg;
 			break;
 		case 'clear_libcache':
 			clearLibCache();
