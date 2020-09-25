@@ -36,7 +36,7 @@ jQuery(document).ready(function($) { 'use strict';
     		sendMpdCmd('subscribe dumy_channel');
         }
     }
-
+/*
 	// resize thumbs on window resize
 	$(window).bind('resize', function(e){
 	    window.resizeEvt;
@@ -46,6 +46,11 @@ jQuery(document).ready(function($) { 'use strict';
 				getThumbHW();
 	        }, 750);
 	    });
+	});
+*/
+    // Resize thumbs on window resize
+	$(window).bind('resize', function(e){
+		getThumbHW();
 	});
 
 	// Compensate for Android popup kbd changing the viewport, also for notch phones
