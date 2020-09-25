@@ -946,8 +946,7 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
         var alreadyActive = this.className.includes('active')
         var alreadyExpanded = this.className.includes('expanded')
 	storeLibPos(UI.libPos);
-	$('#albumsList .lib-entry').removeClass('active');
-	$('#albumsList .lib-entry').removeClass('expanded');
+	$('#albumsList .lib-entry').removeClass('active expanded');
 	$('#albumsList .lib-entry').eq(pos).addClass('active');
 	// If a compilation album is already selected but for only a subset
 	// of the artists such that some tracks are not show clicking the
@@ -999,8 +998,7 @@ $('#random-album').click(function(e) {
 
 	storeLibPos(UI.libPos);
 
-	$(itemSelector).removeClass('active');
-	$(itemSelector).removeClass('expanded');
+	$(itemSelector).removeClass('active expanded');
 	$(itemSelector).eq(pos).addClass('active');
 	customScroll(scrollSelector, pos, 200);
 
