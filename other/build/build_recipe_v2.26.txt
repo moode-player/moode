@@ -797,17 +797,19 @@ cp ./moode/other/ashuffle/ashuffle-3.7.2 /usr/local/bin/ashuffle
 //
 // COMPONENT 3 - MPD Audio Scrobbler
 //
+// NOTE: This code is not maintained and apparently doesn't work with the new Last.FM protocol
+//
 ////////////////////////////////////////////////////////////////
 
-cd ~
-sudo git clone https://github.com/hrkfdn/mpdas
-cd mpdas
-sudo make
-sudo cp ./mpdas /usr/local/bin
-cd ~
-sudo rm -rf ./mpdas
-sudo cp ./moode/usr/local/etc/mpdasrc.default /usr/local/etc/mpdasrc
-sudo chmod 0755 /usr/local/etc/mpdasrc
+#cd ~
+#sudo git clone https://github.com/hrkfdn/mpdas
+#cd mpdas
+#sudo make
+#sudo cp ./mpdas /usr/local/bin
+#cd ~
+#sudo rm -rf ./mpdas
+#sudo cp ./moode/usr/local/etc/mpdasrc.default /usr/local/etc/mpdasrc
+#sudo chmod 0755 /usr/local/etc/mpdasrc
 
 ////////////////////////////////////////////////////////////////
 //
