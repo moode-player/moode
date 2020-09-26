@@ -65,7 +65,7 @@ function getParamOrValue (type, key) {
         // Radioview station types
         ['Regular','r'],['Favorite','f'],['Hidden','h'],
         // Thumbnail resolutiona
-        ['400px','400px,75'],['500px','500px,75'],['600px','600px,75']
+        ['Auto','Auto'],['400px','400px,75'],['500px','500px,75'],['600px','600px,75']
     ]);
 
     if (type == 'value') {
