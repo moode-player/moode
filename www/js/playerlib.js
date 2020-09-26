@@ -560,11 +560,10 @@ function disableVolKnob() {
     $('#volumeup, #volumedn, #volumedn-2, #volumeup-2, .volume-display').css('opacity', '.3');
 	$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text('0dB');
 	$('.volume-display').css('cursor', 'unset');
-
+    $('.volume-popup-btn').hide();
 	if (UI.mobile) {
 		$('#mvol-progress').css('width', '100%');
 		$('.repeat').show();
-        $('.volume-popup-btn').hide();
 	}
 }
 
@@ -1350,7 +1349,7 @@ function renderRadioView() {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
         // Lazyload method
-        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<img loading="lazy" src="' : '<img class="lazy-radioview" data-original="';
+        var radioViewLazy = GLOBAL.nativeLazyLoad ? '<div class="thumbHW"><img loading="lazy" src="' : '<div class="thumbHW"><img class="lazy-radioview" data-original="';
         // Sort/Group and Show/Hide options
         var sortTag = SESSION.json['radioview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['radioview_sort_group'].split(',')[1];
@@ -1629,7 +1628,7 @@ function renderRadioView() {
             // Construct station entries
             var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
     		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
-    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
+    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
             output += '<span class="station-name">' + data[i].name + '</span>';
@@ -2246,7 +2245,7 @@ $('.context-menu a').click(function(e) {
             $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
             // Covers and thumbnails
             $('#cover-search-priority span').text(getParamOrValue('param', SESSION.json['library_covsearchpri']));
-            $('#hires-thumbnails span').text(SESSION.json['library_hiresthm']);
+            $('#hires-thumbnails span').text(getParamOrValue('param', SESSION.json['library_hiresthm']));
             $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
 
     		// CoverView
@@ -2386,6 +2385,7 @@ $('#btn-appearance-update').click(function(e){
 	var themeSettingsChange = false;
     var libraryOptionsChange = false;
     var clearLibcacheReqd = false;
+    var regenThumbsReqd = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
     var extraTagsChange = false;
@@ -2437,11 +2437,11 @@ $('#btn-appearance-update').click(function(e){
 	}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
-		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel').addClass('limited') : $('#library-panel').removeClass('limited');
+		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel, #radio-panel').addClass('limited') : $('#library-panel, #radio-panel').removeClass('limited');
 	}
     // Covers and Thumbnails
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
-    if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_hiresthm'] != getParamOrValue('value', $('#hires-thumbnails span').text())) {regenThumbsReqd = true;}
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {
 		thumbSizeChange = true;
 	}
@@ -2488,7 +2488,7 @@ $('#btn-appearance-update').click(function(e){
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
     // Covers and Thumbnails
     SESSION.json['library_covsearchpri'] = getParamOrValue('value', $('#cover-search-priority span').text());
-    SESSION.json['library_hiresthm'] = $('#hires-thumbnails span').text();
+    SESSION.json['library_hiresthm'] = getParamOrValue('value', $('#hires-thumbnails span').text());
     SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
 
     // CoverView
@@ -2598,7 +2598,6 @@ $('#btn-appearance-update').click(function(e){
             if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
-				// set library & radio thumb image size
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
@@ -2606,6 +2605,9 @@ $('#btn-appearance-update').click(function(e){
             else if (encodedAtChange) {
                 $('#ra-refresh').click();
                 loadLibrary();
+            }
+            else if (regenThumbsReqd) {
+                notify('regen_thumbs', 'Thumbnails must be regenerated after changing this setting', 5000);
             }
             else {
                 notify('settings_updated');
@@ -2747,8 +2749,8 @@ function importStationPkg(files) {
 		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
         // For zip files its data:application/zip;base64,
 		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=import_stations', {'blob': data}, function() {
-            $('#import-export-msg').text('Import complete');
+        $.post('command/moode.php?cmd=import_stations', {'blob': data}, function(result) {
+            $('#import-export-msg').text(result);
             $('#import-station-pkg').val('');
         });
 	}
@@ -3662,6 +3664,7 @@ function getThumbHW() {
 	var columnW = parseInt(($(window).width() - (2 * GLOBAL.sbw) - divM) / cols);
 	UI.thumbHW = columnW - (divM / 2);
 	$("body").get(0).style.setProperty("--thumbimagesize", UI.thumbHW + 'px');
+	$("body").get(0).style.setProperty("--thumbmargin", ((columnW - UI.thumbHW) / 2) + 'px');
 	$("body").get(0).style.setProperty("--thumbcols", columnW + 'px');
 }
 

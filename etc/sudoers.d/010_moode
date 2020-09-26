@@ -1,0 +1,2 @@
+Defaults:root     !logfile, !syslog
+Defaults:www-data     !logfile, !syslog

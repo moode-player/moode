@@ -1,0 +1,6 @@
+#%PAM-1.0
+
+@include common-auth
+@include common-account
+session [success=1 default=ignore] pam_succeed_if.so quiet uid = 0 user = root
+@include common-session-noninteractive

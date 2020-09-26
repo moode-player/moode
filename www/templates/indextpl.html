@@ -966,7 +966,7 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-tag-view-artist" class="help-block hide">
 							Select which tag is used to populate the Artist list in Tag view.<br>
-							<b>Artist:</b>&nbsp;List all artists including those in compilation albums but retain any compilation album grouping present in the Album Artist tag i.e. "Various Artists" will be in the list. Compilation albums listed for a given clicked artist will show only the tracks belonging to the Artist. Clicking the Album will show all the album's tracks vs just those for the given artist.<br>
+							<b>Artist:</b>&nbsp;List all artists including those in compilation albums but retain any compilation album grouping present in the Album Artist tag i.e. "Various Artists" will be in the list. Compilation albums listed for a given clicked artist will show only the tracks belonging to the Artist. Clicking the Album will show all the album's tracks.<br>
 							<b>Album Artist:</b>&nbsp;List all the Album Artists. If the album artist tag is empty then the Artist tag will be used. Albums will be grouped by Album Artist. Compilation albums should therefore have the Album Artist tag set to a consistent string for example "Various Artists" to be grouped correctly.
 						</span>
 	                </div>
@@ -1131,18 +1131,16 @@
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">Auto</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px,80</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">500px,80</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">600px,90</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">800px,90</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">400px</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">500px</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="hires-thumbnails-sel"><span class="text">600px</span></a></li>
 								</ul>
 							</div>
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-hires-thumbnails" class="help-block hide">
-							This option sets the resolution and quality of the JPEG images output by the Thumbnail Generator. Regenerate the thumbnail images after changing this setting.<br>
+							This option sets the resolution of the JPEG images output by the Thumbnail Generator. Regenerate the thumbnail images after changing this setting.<br>
 							<b>Auto:</b>&nbsp;Uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time).<br>
-							<b>Manual:</b>&nbsp;Use the specified resolution and quality factor. This works best when the majority of covers have a higher resolution than this setting.<br>
 							<b>NOTE:</b>&nbsp;Higher resolutions will impact the performance of the Thumbnail Generator and the Library resulting in slower loading of thumbnail images into Tag and Album views.
  	                    </span>
  	                </div>
@@ -1810,7 +1808,7 @@
 				<label class="control-label">Import station package</label>
 				<div class="controls">
 					<div class="modal-button-style">
-						<label for="import-station-pkg" id="choose-station-pkg" class="btn btn-primary btn-medium">Import</label>
+						<label for="import-station-pkg" id="choose-station-pkg" class="btn btn-primary btn-medium">Import...</label>
 						<input type="file" id="import-station-pkg" accept=".zip" style="display:none" onchange="importStationPkg(this.files)">
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-import-station-pkg" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -1821,7 +1819,7 @@
 				<label class="control-label">Export radio stations</label>
 				<div class="controls">
 					<div class="modal-button-style">
-						<button id="export-stations" class="btn btn-primary btn-small">Export</button>
+						<button id="export-stations" class="btn btn-primary btn-small">Export...</button>
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-export-stations" class="help-block hide">

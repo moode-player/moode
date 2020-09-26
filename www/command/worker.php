@@ -1870,38 +1870,6 @@ function runQueuedJob() {
 				}
 			}
 			break;
-		case 'import_stations':
-			if (false === ($zip_data = base64_decode($_SESSION['w_queueargs'], true))) {
-				workerLog('worker: import_stations: base64_decode failed');
-			}
-			else {
-				$file = '/var/local/www/station_import.zip';
-				if (false === ($fh = fopen($file, 'w'))) {
-					workerLog('worker: import_stations: file create failed on ' . $file);
-				}
-				else {
-					if (false === ($bytes_written = fwrite($fh, $zip_data))) {
-						workerLog('worker: import_stations: file write failed on ' . $file);
-					}
-					else {
-						// Import station data from zip
-						sysCmd('/var/www/command/import_stations.sh');
-						// Update MPD database
-						$GLOBALS['check_library_update'] = '1';
-						$sock = openMpdSock('localhost', 6600);
-						sendMpdCmd($sock, 'update RADIO');
-						$resp = readMpdResp($sock);
-						closeMpdSock($sock);
-						// Update .pls file permissions
-						sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
-						// Update the session
-						loadRadio();
-					}
-					fclose($fh);
-				}
-			}
-			break;
-
 		// Other jobs
 		case 'reboot':
 		case 'poweroff':

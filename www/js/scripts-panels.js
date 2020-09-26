@@ -36,6 +36,22 @@ jQuery(document).ready(function($) { 'use strict';
     		sendMpdCmd('subscribe dumy_channel');
         }
     }
+/*
+	// resize thumbs on window resize
+	$(window).bind('resize', function(e){
+	    window.resizeEvt;
+	    $(window).resize(function(){
+	        clearTimeout(window.resizeEvt);
+	        window.resizeEvt = setTimeout(function(){
+				getThumbHW();
+	        }, 750);
+	    });
+	});
+*/
+    // Resize thumbs on window resize
+	$(window).bind('resize', function(e){
+		getThumbHW();
+	});
 
 	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");

@@ -504,6 +504,7 @@ function makeCoverUrl(filepath) {
 
 // Default post-click handler for lib items
 function clickedLibItem(event, item, currentFilter, renderFunc) {
+    //console.log(event);
 	if (item == undefined) {
 		// all
 		currentFilter.length = 0;
@@ -582,11 +583,11 @@ var renderAlbums = function() {
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
-        var albumViewLazy = '<img loading="lazy" src="' ;
+        var albumViewLazy = '<div class="thumbHW"><img loading="lazy" src="' ;
     }
     else {
     	var tagViewLazy = '<img class="lazy-tagview" data-original="';
-    	var albumViewLazy = '<img class="lazy-albumview" data-original="';
+    	var albumViewLazy = '<div class="thumbHW"><img class="lazy-albumview" data-original="';
     }
 
     // SESSION.json['library_encoded_at']
@@ -634,7 +635,7 @@ var renderAlbums = function() {
         }
 
 		output2 += '<li class="lib-entry">'
-            + albumViewLazy + filteredAlbumCovers[i].imgurl + '">'
+            + albumViewLazy + filteredAlbumCovers[i].imgurl + '"></div>'
             + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-album"></div>'
 			+ albumViewHdDiv
 			+ albumViewBgDiv
@@ -658,7 +659,7 @@ var renderAlbums = function() {
 
     // Set ellipsis text
 	if (SESSION.json["library_ellipsis_limited_text"] == "Yes") {
-		$('#library-panel').addClass('limited');
+		$('#library-panel, #radio-panel').addClass('limited');
 	}
 
 	// Headers clicked
@@ -943,20 +944,45 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	var albumobj = filteredAlbums[pos];
 	var album = filteredAlbums[pos].album;
 	// Store the active state before it gets set below
-        var alreadyActive = this.className.includes('active')
+    var alreadyActive = this.className.includes('active')
 	storeLibPos(UI.libPos);
 	$('#albumsList .lib-entry').removeClass('active');
 	$('#albumsList .lib-entry').eq(pos).addClass('active');
-	// If a compilation album is already selected but for only a subset
-	// of the artists such that some tracks are not show clicking the
-	// album twice (or once after it is set active) will cause the full
-	// track list for the album to populate the song list
-        if(alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.artist)) {
-		LIB.filters.artists.push(albumobj.artist);
-		filterSongs();
-		LIB.filters.artists.pop();
-		renderSongs()
-        } else {
+	// If a compilation album is already selected (active) but for only a
+	// subset of the artists such that some tracks are not shown clicking
+	// the album will cause the full track list for the album to populate
+	// the song list.
+	// Clicking again will contract back to just the selected artists.
+    if (alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.artist)) {
+        var displayedArtists = filteredSongs.map(
+        	function getArtist(a) {
+        		return a.artist;
+        	}).filter( function unique(value, index, self) {
+        		return self.indexOf(value) === index;
+        	});
+		// Have to do this check because someone might have
+		// ctrl+clicked to select multiple artists which may
+		// or may not be on the same displayed albums.
+		// So we can't just use the count.
+		var expanded = false;
+		for(let a of displayedArtists) {
+			if(!LIB.filters.artists.includes(a)) {
+				expanded = true;
+				break;
+			}
+		}
+		if (expanded) {
+			filterSongs();
+			renderSongs()
+		}
+        else {
+			LIB.filters.artists.push(albumobj.artist);
+			filterSongs();
+			LIB.filters.artists.pop();
+			renderSongs()
+		}
+    }
+    else {
 		clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 	}
 	$('#bottom-row').css('display', 'flex')
