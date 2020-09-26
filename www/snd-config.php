@@ -498,7 +498,6 @@ $_select['ashufflesvc0'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"tog
 $_select['ashuffle_mode'] .= "<option value=\"Track\" " . (($_SESSION['ashuffle_mode'] == 'Track') ? "selected" : "") . ">Track</option>\n";
 $_select['ashuffle_mode'] .= "<option value=\"Album\" " . (($_SESSION['ashuffle_mode'] == 'Album') ? "selected" : "") . ">Album</option>\n";
 $_ashuffle_filter = str_replace('"', '&quot;', $_SESSION['ashuffle_filter']);
-workerLog($_ashuffle_filter);
 
 // autoplay after start
 $_select['autoplay1'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . ">\n";
