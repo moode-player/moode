@@ -36,19 +36,7 @@ jQuery(document).ready(function($) { 'use strict';
     		sendMpdCmd('subscribe dumy_channel');
         }
     }
-/*
-	// resize thumbs on window resize
-	$(window).bind('resize', function(e){
-	    window.resizeEvt;
-	    $(window).resize(function(){
-	        clearTimeout(window.resizeEvt);
-	    	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
-	        window.resizeEvt = setTimeout(function(){
-				getThumbHW();
-	        }, 250);
-	    });
-	});
-*/
+
     // Resize thumbs on window resize
 	$(window).bind('resize', function(e){
 		getThumbHW();
