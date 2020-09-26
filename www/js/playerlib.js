@@ -2245,7 +2245,7 @@ $('.context-menu a').click(function(e) {
             $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
             // Covers and thumbnails
             $('#cover-search-priority span').text(getParamOrValue('param', SESSION.json['library_covsearchpri']));
-            $('#hires-thumbnails span').text(SESSION.json['library_hiresthm']);
+            $('#hires-thumbnails span').text(getParamOrValue('param', SESSION.json['library_hiresthm']));
             $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
 
     		// CoverView
@@ -2385,6 +2385,7 @@ $('#btn-appearance-update').click(function(e){
 	var themeSettingsChange = false;
     var libraryOptionsChange = false;
     var clearLibcacheReqd = false;
+    var regenThumbsReqd = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
     var extraTagsChange = false;
@@ -2440,7 +2441,7 @@ $('#btn-appearance-update').click(function(e){
 	}
     // Covers and Thumbnails
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
-    if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_hiresthm'] != getParamOrValue('value', $('#hires-thumbnails span').text())) {regenThumbsReqd = true;}
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {
 		thumbSizeChange = true;
 	}
@@ -2487,7 +2488,7 @@ $('#btn-appearance-update').click(function(e){
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
     // Covers and Thumbnails
     SESSION.json['library_covsearchpri'] = getParamOrValue('value', $('#cover-search-priority span').text());
-    SESSION.json['library_hiresthm'] = $('#hires-thumbnails span').text();
+    SESSION.json['library_hiresthm'] = getParamOrValue('value', $('#hires-thumbnails span').text());
     SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
 
     // CoverView
@@ -2597,7 +2598,6 @@ $('#btn-appearance-update').click(function(e){
             if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
-				// set library & radio thumb image size
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
@@ -2605,6 +2605,9 @@ $('#btn-appearance-update').click(function(e){
             else if (encodedAtChange) {
                 $('#ra-refresh').click();
                 loadLibrary();
+            }
+            else if (regenThumbsReqd) {
+                notify('regen_thumbs', 'Thumbnails must be regenerated after changing this setting', 5000);
             }
             else {
                 notify('settings_updated');

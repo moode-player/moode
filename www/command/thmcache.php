@@ -114,6 +114,8 @@ if (is_null($result) || substr($result, 0, 2) == 'OK') {
 // - Compare the containing dir paths for file (file_a) and file+1 (file_b)
 // - When they are different we create a thumb using file_a and dir_a
 $count = 0;
+$copied = 0;
+$resampled = 0;
 $line = strtok($result, "\n");
 while ($line) {
 	$file_a = explode(': ', $line, 2)[1];
@@ -138,7 +140,7 @@ while ($line) {
 session_start();
 $_SESSION['thmcache_status'] = 'Done: '  . $count . ' album folders scanned for images';
 session_write_close();
-workerLog('thmcache: Done: ' . $count . ' album folders scanned for images');
+workerLog('thmcache: Done: ' . $count . ' album folders scanned for images. ' . $copied . ' copied, ' . $resampled . ' resampled.');
 
 // Create thumbnail image
 function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
@@ -184,14 +186,28 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	// Thumbnail height
 	$thm_h = round(($img_h / $img_w) * $thm_w);
 
+	$copy_or_resample = ($img_w * $img_h <= $thm_w * $thm_h) ? 'copy' : 'resample';
+
 	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
 		workerLog('thmcache: error 1a: imagecreatetruecolor()' . $file);
 		return;
 	}
-	if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-		workerLog('thmcache: error 2a: imagecopyresampled()' . $file);
-		return;
+	if ($copy_or_resample == 'resample') {
+		//workerLog('resample: '. $file);
+		$GLOBALS['resampled']++;
+		if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
+			workerLog('thmcache: error 2a: imagecopyresampled()' . $file);
+			return;
+		}
+	}
+	else {
+		//workerLog('copy: '. $file);
+		$GLOBALS['copied']++;
+		if (imagecopy($thumb, $image, 0, 0, 0, 0, $img_w, $img_h) === false) {
+			workerLog('thmcache: error 2a: imagecopy()' . $file);
+			return;
+		}
 	}
 	if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thm_q) === false) {
 		workerLog('thmcache: error 4a: imagejpeg()' . $file);

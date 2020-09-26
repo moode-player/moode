@@ -38,6 +38,7 @@ function notify(cmd, msg, duration) {
         update_library: 'Updating library...',
         library_updating: 'Library update in progress',
         library_loading: 'Library loading...',
+        regen_thumbs: 'Thumbnail resolution updated',
 		remove: 'Removed from Queue',
 		move: 'Queue items moved',
 		savepl: 'Playlist saved',
