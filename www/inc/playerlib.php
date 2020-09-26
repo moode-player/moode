@@ -279,7 +279,7 @@ function integrityCheck() {
 
 	// Verify the row count
 	$count = sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT COUNT() FROM cfg_audiodev\"");
-	if ($count[0] != 76) {
+	if ($count[0] != 77) {
 		$_SESSION['ic_return_code'] = '4';
 		return false;
 	}
