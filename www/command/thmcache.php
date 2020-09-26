@@ -186,14 +186,22 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	// Thumbnail height
 	$thm_h = round(($img_h / $img_w) * $thm_w);
 
-	$copy_or_resample = ($img_w * $img_h <= $thm_w * $thm_h) ? 'copy' : 'resample';
+	// Copy or resample
+	if ($img_w * $img_h <= $thm_w * $thm_h) {
+		$resample = false;
+		$thm_h = $img_h;
+		$thm_w = $img_w;
+	}
+	else {
+		$resample = true;
+	}
 
 	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
 		workerLog('thmcache: error 1a: imagecreatetruecolor()' . $file);
 		return;
 	}
-	if ($copy_or_resample == 'resample') {
+	if ($resample === true) {
 		//workerLog('resample: '. $file);
 		$GLOBALS['resampled']++;
 		if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
