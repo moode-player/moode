@@ -504,6 +504,7 @@ function makeCoverUrl(filepath) {
 
 // Default post-click handler for lib items
 function clickedLibItem(event, item, currentFilter, renderFunc) {
+    //console.log(event);
 	if (item == undefined) {
 		// all
 		currentFilter.length = 0;
@@ -943,23 +944,23 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	var albumobj = filteredAlbums[pos];
 	var album = filteredAlbums[pos].album;
 	// Store the active state before it gets set below
-        var alreadyActive = this.className.includes('active')
+    var alreadyActive = this.className.includes('active')
 	storeLibPos(UI.libPos);
 	$('#albumsList .lib-entry').removeClass('active');
 	$('#albumsList .lib-entry').eq(pos).addClass('active');
-	// If a compilation album is already selected (active) but for only a 
-	// subset of the artists such that some tracks are not shown clicking 
-	// the album will cause the full track list for the album to populate 
+	// If a compilation album is already selected (active) but for only a
+	// subset of the artists such that some tracks are not shown clicking
+	// the album will cause the full track list for the album to populate
 	// the song list.
 	// Clicking again will contract back to just the selected artists.
-        if (alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.artist)) {
-		var displayedArtists = filteredSongs.map(
-			function getArtist(a) {
-				return a.artist;
-			}).filter( function unique(value, index, self) {
-				return self.indexOf(value) === index;
-			});
-		// Have to do this check because someone might have 
+    if (alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.artist)) {
+        var displayedArtists = filteredSongs.map(
+        	function getArtist(a) {
+        		return a.artist;
+        	}).filter( function unique(value, index, self) {
+        		return self.indexOf(value) === index;
+        	});
+		// Have to do this check because someone might have
 		// ctrl+clicked to select multiple artists which may
 		// or may not be on the same displayed albums.
 		// So we can't just use the count.
@@ -973,14 +974,15 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 		if (expanded) {
 			filterSongs();
 			renderSongs()
-		} else {
+		}
+        else {
 			LIB.filters.artists.push(albumobj.artist);
 			filterSongs();
 			LIB.filters.artists.pop();
 			renderSongs()
 		}
-        }
-        else {
+    }
+    else {
 		clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 	}
 	$('#bottom-row').css('display', 'flex')
