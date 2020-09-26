@@ -42,9 +42,10 @@ jQuery(document).ready(function($) { 'use strict';
 	    window.resizeEvt;
 	    $(window).resize(function(){
 	        clearTimeout(window.resizeEvt);
+	    	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
 	        window.resizeEvt = setTimeout(function(){
 				getThumbHW();
-	        }, 750);
+	        }, 250);
 	    });
 	});
 */
@@ -463,13 +464,7 @@ jQuery(document).ready(function($) { 'use strict';
 	// playback button handlers
 	$('.play').click(function(e) {
 		if (MPD.json['state'] == 'play') {
-			$('#playbar-mcount').countdown('pause'); // new
-			if (UI.mobile) {
-				$('#m-countdown').countdown('pause');
-			}
-			else {
-				$('#countdown-display, #playbar-countdown').countdown('pause');
-			}
+			$('#countdown-display').countdown('pause');
 
 			if (MPD.json['file'].substr(0, 4).toLowerCase() == 'http') {
 				var cmd = MPD.json['artist'] == 'Radio station' ? 'stop' : 'pause'; // pause if for upnp url
@@ -479,24 +474,16 @@ jQuery(document).ready(function($) { 'use strict';
 			}
 		}
 		else if (MPD.json['state'] == 'pause') {
-			$('#playbar-mcount').countdown('resume'); // new
-			if (UI.mobile) {
-				$('#m-countdown').countdown('resume');
-			}
-			else {
-				$('#countdown-display, #playbar-countdown, #playbar-mcount').countdown('resume'); // add #playbar-mcount, same for below
-				customScroll('playlist', parseInt(MPD.json['song']), 200);
-			}
+			$('#countdown-display').countdown('resume');
+			customScroll('playlist', parseInt(MPD.json['song']), 200);
 			var cmd = 'play';
 		}
 		else if (MPD.json['state'] == 'stop') {
 			if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
 				$('#countdown-display').countdown({since: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-				$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({since: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			}
 			else {
 				$('#countdown-display').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-				$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 			}
 			if (!UI.mobile) {
 		        customScroll('playlist', parseInt(MPD.json['song']), 200);
