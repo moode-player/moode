@@ -732,10 +732,10 @@ phpSessionCheck();
 // NOTE: This is done near the end of startup because autoConfig() uses the wpa_passphrase utility which requires
 // sufficient kernel entropy in order to generate the PSK. If there is not enough entropy, wpa_passphrase returns
 // the input password instead of a PSK.
-if (file_exists('/boot/moodecfg.txt')) {
+if (file_exists('/boot/moodecfg.ini')) {
 	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 
-	autoConfig('/boot/moodecfg.txt');
+	autoConfig('/boot/moodecfg.ini');
 
 	sysCmd('sync');
 	autoCfgLog('autocfg: System restarted');

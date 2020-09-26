@@ -2688,31 +2688,8 @@ function cfgAudioScrobbler() {
 	fclose($fp);
 }
 
-// Auto-configure settings at worker startup
-function autoConfig($cfgfile) {
-	autoCfgLog('autocfg: Auto-configure initiated');
-
-	// Config file looks almost like a standard ini format, difference:
-	// - # used for comment
-	// - string are not between ""
-	// so an own parser is required
-	function parseAutoConfig($configurationfilename) {
-		$contents = str_replace("\r\n", "\n", file_get_contents($cfgfile));
-		$autocfg = array();
-		$line = strtok($contents, "\n");
-
-		while ($line) {
-			$firstchr = substr($line, 0, 1);
-
-			if (!($firstchr == '#' || $firstchr == '[')) {
-				list ($element, $value) = explode("=", $line, 2);
-				$autocfg[$element] = $value;
-			}
-
-			$line = strtok("\n");
-		}
-		return $autocfg;
-	}
+// returns the settings for reading/writing the autoConfig file
+function autoConfigSettings() {
 
 	// handler is config item name is just setting the playSession
 	function setPlayerSession($values) {
@@ -2817,40 +2794,54 @@ function autoConfig($cfgfile) {
 		}],
 	];
 
-	$autocfg = parseAutoConfig($cfgfile);
-	autoCfgLog('autocfg: Configuration file parsed');
+	return $configurationHandlers;
+}
 
-	$available_configs = array_keys($autocfg);
-	$section = '';
-	foreach ($configurationHandlers as $config) {
-		$values = array();
+// Auto-configure settings at worker startup
+function autoConfig($cfgfile) {
+	autoCfgLog('autocfg: Auto-configure initiated');
 
-		// print new section header
-		if( is_string($config) ) {
-			autoCfgLog('autocfg: - '. $config);
-		}
-		// check if alrequired cfgkeys are present
-		elseif( !array_diff_key(array_flip($config['requires']), $available_configs) ) {
-			// is so get copie all key/value sets
-			foreach ($config['requires'] as $config_name) {
-				$value = $autocfg[$config_name];
-				// is config name differs from session var the session_var can be used
-				$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
-				$values[$config_key] = $value;
-				autoCfgLog('autocfg: '. $config_name.': ' . $value);
-				// remove used autoconfig
-				unset($available_configs[$config_name]);
+	try {
+		$autocfg = parse_ini_file($cfgfile, false);
+		$available_configs = array_keys($autocfg);
+
+		autoCfgLog('autocfg: Configuration file parsed');
+		$configurationHandlers = autoConfigSettings(); // contains supported configuration items
+
+		$section = '';
+		foreach ($configurationHandlers as $config) {
+			$values = array();
+
+			// print new section header
+			if( is_string($config) ) {
+				autoCfgLog('autocfg: - '. $config);
 			}
-			// call handler
-			$config['handler'] ($values);
+			// check if alrequired cfgkeys are present
+			elseif( !array_diff_key(array_flip($config['requires']), $available_configs) ) {
+				// is so get copie all key/value sets
+				foreach ($config['requires'] as $config_name) {
+					$value = $autocfg[$config_name];
+					// is config name differs from session var the session_var can be used
+					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
+					$values[$config_key] = $value;
+					autoCfgLog('autocfg: '. $config_name.': ' . $value);
+					// remove used autoconfig
+					unset($available_configs[$config_name]);
+				}
+				// call handler
+				$config['handler'] ($values);
+			}
+		}
+
+		// check for unused but supplied autocfg settings
+		if( empty($available_configs) ) {
+			foreach ($available_configs as $config_name) {
+				autoCfgLog('autocfg: Warning: '. $config_name.': is unused, incomplete or wrong name.');
+			}
 		}
 	}
-
-	// check for unused but supplied autocfg settings
-	if( empty($available_configs) ) {
-		foreach ($available_configs as $config_name) {
-			autoCfgLog('autocfg: Warning: '. $config_name.': is unused, incomplete or wrong name.');
-		}
+	catch (Exception $e) {
+		autoCfgLog('autocfg: Caught exception: '.  $e->getMessage() );
 	}
 
 	sysCmd('rm ' . $cfgfile);
