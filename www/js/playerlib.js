@@ -128,7 +128,8 @@ var GLOBAL = {
     lastTimeCount: 0,
     editStationId: '',
     nativeLazyLoad: false,
-    playlistChanged: false
+    playlistChanged: false,
+	initTime: 0
 };
 
 // live timeline
@@ -541,7 +542,7 @@ function renderReconnect() {
 		$('#reconnect').show();
 	}
 
-	$('#countdown-display, #m-countdown, #playbar-countdown').countdown('pause');
+	$('#countdown-display').countdown('pause');
 
 	window.clearInterval(UI.knob);
 	UI.hideReconnect = true;
@@ -1666,52 +1667,48 @@ function updTimeKnob(mpdTime) {
 
 // Initialize the countdown timers
 function refreshTimer(startFrom, stopTo, state) {
-	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('destroy');
+	$('#countdown-display').countdown('destroy');
 
     if (state == 'play' || state == 'pause') {
 		if (SESSION.json['timecountup'] == "1" || parseInt(MPD.json['time']) == 0) {
 			$('#countdown-display').countdown({since: -(startFrom), compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({since: -(startFrom), compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 	    }
 		else {
 			$('#countdown-display').countdown({until: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({until: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 	    }
 
 	    if (state == 'pause') {
-			$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('pause');
+			$('#countdown-display').countdown('pause');
 		}
     }
 	else if (state == 'stop') {
 		if (SESSION.json['timecountup'] == "1" || parseInt(MPD.json['time']) == 0) {
 			$('#countdown-display').countdown({since: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({since: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
     	}
 		else {
 			$('#countdown-display').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-			$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 	    }
 
-		$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('pause');
+		$('#countdown-display').countdown('pause');
     }
 }
 
 // Update time knob, time track
 function refreshTimeKnob() {
-	var initTime, delta;
+	var delta;
     window.clearInterval(UI.knob)
-    initTime = parseInt(MPD.json['song_percent']);
+    GLOBAL.initTime = parseInt(MPD.json['song_percent']);
     delta = parseInt(MPD.json['time']) / 1000;
 	if (UI.mobile) {
-		$('#timetrack').val(initTime * 10).trigger('change');
+		$('#timetrack').val(GLOBAL.initTime * 10).trigger('change');
 	}
     // Playback
 	else if (currentView.indexOf('playback') !== -1){
-		$('#time').val(initTime * 10).trigger('change');
+		$('#time').val(GLOBAL.initTime * 10).trigger('change');
 	}
     // Library
     else {
-		$('#playbar-timetrack').val(initTime * 10).trigger('change');
+		$('#playbar-timetrack').val(GLOBAL.initTime * 10).trigger('change');
 	}
 
 	if (MPD.json['state'] === 'stop') {
@@ -1749,26 +1746,25 @@ function refreshTimeKnob() {
     if (MPD.json['state'] === 'play') {
         // Move these out of the timer
 		var tt = $('#timetrack');
-		var pb = $('playbar-#timetrack');
 		var ti = $('#time');
+		playbar = $('#menu-bottom').css('display') == 'flex' ? true : false;
 
-		var cur = currentView.indexOf('playback');
         UI.knob = setInterval(function() {
-			if (UI.mobile || cur == -1 || coverView == true) {
+			if (UI.mobile || playbar) {
 				if (!timeSliderMove) {
 					syncTimers();
 					if (UI.mobile) {
-						tt.val(initTime * 10).trigger('change');
-					}
+						tt.val(GLOBAL.initTime * 10).trigger('change');
+					}					
 				}
 			}
-            delta === 0 ? initTime = initTime + 0.5 : initTime = initTime + 0.1; // fast paint when radio station playing
+            delta === 0 ? GLOBAL.initTime = GLOBAL.initTime + 0.5 : GLOBAL.initTime = GLOBAL.initTime + 0.1; // fast paint when radio station playing
 			if (!UI.mobile) {
-	            if (delta === 0 && initTime > 100) { // stops painting when radio (delta = 0) and knob fully painted
+	            if (delta === 0 && GLOBAL.initTime > 100) { // stops painting when radio (delta = 0) and knob fully painted
 					window.clearInterval(UI.knob)
 					UI.knobPainted = true;
 	            }
-           		ti.val(initTime * 10).trigger('change');
+           		ti.val(GLOBAL.initTime * 10).trigger('change');
 			}
         }, delta * 1000);
     }
@@ -1784,7 +1780,7 @@ $('input[type="range"]').change(function() {
 
 $('#timetrack, #playbar-timetrack').bind('touchstart mousedown', function(e) {
 	timeSliderMove = true;
-	$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown('pause');
+	//$('#m-countdown, #playbar-countdown, #playbar-mcount').countdown('pause');
 });
 
 $('#timetrack, #playbar-timetrack').bind('touchend mouseup', function(e) {
@@ -1855,9 +1851,8 @@ function formatNumCommas(x) {
 }
 
 function countdownRestart(startFrom) {
-    $('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').countdown('destroy');
+    $('#countdown-display').countdown('destroy');
     $('#countdown-display').countdown({since: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-    $('#m-countdown, #playbar-countdown, #playbar-mcount').countdown({since: startFrom, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
 }
 
 // volume control
@@ -3425,47 +3420,13 @@ function syncTimers() {
         }
         else if (coverView || currentView.indexOf('playback') == -1) {
             $('#playbar-countdown').text(a);
-
-            var c = a.split(':'); // (h):m:s - current
-            var d = $('#playbar-total').text().split(':'); //(h):m:s - total
-
-            switch (c.length) {
-                case 1:     // ss
-                    var e = parseInt(c[0]);
-                    break;
-                case 2:     // mm:ss
-                    var e = parseInt(c[0] * 60) + parseInt(c[1]);
-                    break;
-                case 3:     // hh:mm:ss
-                    var e = parseInt(c[0] * 3600) + parseInt(c[1] * 60) + parseInt(c[2]);
-                    break;
-            } // e = current position in seconds
-
-            switch (d.length) {
-                case 1:     // ss
-                    var f = parseInt(d[0]);
-                    break;
-                case 2:     // mm:ss
-                    var f = parseInt(d[0] * 60) + parseInt(d[1]);
-                    break;
-                case 3:     // hh:mm:ss
-                    var f = parseInt(d[0] * 3600) + parseInt(d[1] * 60) + parseInt(d[2]);
-                    break;
-            } // f = total track length in seconds
-
-           //console.log('current '+ e);
-           //console.log('total ' + f);
-
-            SESSION.json['timecountup'] == '1' ? g = (e / f) * 100 : g = 100 - ((e / f) * 100); // Percent of elapsed song
-            $('#playbar-timetrack').val(g * 10); // min = 0, max = 1000
-            g < 50 ? g = 'calc(' + g + '% + 2px)' : g = 'calc(' + g + '% - 2px)'; // Adjust for thumb
-
-            $('#playbar-timeline .timeline-progress').css('width', g.toString());
+            GLOBAL.initTime < 50 ? g = GLOBAL.initTime + 1 : g = GLOBAL.initTime - 1; // Adjust for thumb
+            $('#playbar-timetrack').val(GLOBAL.initTime * 10); // min = 0, max = 1000
+            $('#playbar-timeline .timeline-progress').css('width', g + '%');
         }
         else {
             UI.knobPainted = false;
         }
-
         GLOBAL.lastTimeCount = a;
     }
 }
