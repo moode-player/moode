@@ -2719,7 +2719,7 @@ function autoConfigSettings() {
 			$dbh = cfgdb_connect();
 			$result = sdbquery('update cfg_sl set value=' . "'" . $values['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
 			sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $values['squeezelitename'] . '"');
-		}],
+		}, 'custom_write' => function() {}],
 		['requires' => ['upnpname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name upnp "Moode UPNP" "%s"'],
 		['requires' => ['dlnaname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name dlna "Moode DLNA" "%s"'],
 
@@ -2727,8 +2727,9 @@ function autoConfigSettings() {
 		['requires' => ['timezone'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-timezone %s'],
 		['requires' => ['keyboard'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-keyboard %s'],
 		['cpugov' => ['cpugov'] , 'handler' => function($values) {
+			//TODO: use native of the caption one ? , is not the same as in session. give problems with extraction
 			playerSession('write', 'cpugov', $values['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
-		}],
+		}, 'custom_write' => function() {}],
 		['requires' => ['hdmiport'] , 'handler' => setPlayerSession],
 		['requires' => ['eth0chk'] , 'handler' => setPlayerSession],
 		['requires' => ['localui'] , 'handler' => setPlayerSession],
@@ -2765,7 +2766,7 @@ function autoConfigSettings() {
 				'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
 			cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 			cfgNetIfaces();
-		}],
+		}, 'custom_write' => function() {}],
 
 		'Network (apd0)',
 		['requires' => ['apdssid', 'apdpwd', 'apdchan'] , 'handler' => function($values) {
@@ -2775,7 +2776,7 @@ function autoConfigSettings() {
 				'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
 			cfgdb_update('cfg_network', $dbh, 'apd0', $value);
 			cfgHostApd();
-		}],
+		}, 'custom_write' => function() {}],
 
 		'Theme & Background',
 		['requires' => ['themename'] , 'handler' => setPlayerSession],
@@ -2847,6 +2848,33 @@ function autoConfig($cfgfile) {
 	sysCmd('rm ' . $cfgfile);
 	autoCfgLog('autocfg: Configuration file deleted');
 	autoCfgLog('autocfg: Auto-configure complete');
+}
+
+// generates an autoconfig file as string based on the current settings
+function autoconfigExtract() {
+	$autoconfigstring = '';
+
+	foreach ($configurationHandlers as $config) {
+		$values = array();
+
+		// print new section header
+		if( is_string($config) ) {
+			$autoconfigstring = $autoconfigstring . '['. config. ']\n';
+		} else {
+			if( !array_key_exists('custom_write', $config)) {
+				foreach ($config['requires'] as $config_name) {
+					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
+					if( array_key_exists($config_key, $_SESSION) ) {
+						$autoconfigstring = $autoconfigstring . $config_key. ' = "'.$_SESSION[$config_key].'"\n';
+					}
+				}
+			} else {
+				//TODO: implement custom writer support, requires handler in the configuration
+			}
+		}
+	}
+
+	return autoconfigstring;
 }
 
 function genWpaPSK($ssid, $passphrase) {
