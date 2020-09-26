@@ -947,16 +947,40 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	storeLibPos(UI.libPos);
 	$('#albumsList .lib-entry').removeClass('active');
 	$('#albumsList .lib-entry').eq(pos).addClass('active');
-	// If a compilation album is already selected but for only a subset
-	// of the artists such that some tracks are not show clicking the
-	// album twice (or once after it is set active) will cause the full
-	// track list for the album to populate the song list
-        if(alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.artist)) {
-		LIB.filters.artists.push(albumobj.artist);
-		filterSongs();
-		LIB.filters.artists.pop();
-		renderSongs()
-        } else {
+	// If a compilation album is already selected (active) but for only a 
+	// subset of the artists such that some tracks are not shown clicking 
+	// the album will cause the full track list for the album to populate 
+	// the song list.
+	// Clicking again will contract back to just the selected artists.
+        if (alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.artist)) {
+		var displayedArtists = filteredSongs.map(
+			function getArtist(a) {
+				return a.artist;
+			}).filter( function unique(value, index, self) {
+				return self.indexOf(value) === index;
+			});
+		// Have to do this check because someone might have 
+		// ctrl+clicked to select multiple artists which may
+		// or may not be on the same displayed albums.
+		// So we can't just use the count.
+		var expanded = false;
+		for(let a of displayedArtists) {
+			if(!LIB.filters.artists.includes(a)) {
+				expanded = true;
+				break;
+			}
+		}
+		if (expanded) {
+			filterSongs();
+			renderSongs()
+		} else {
+			LIB.filters.artists.push(albumobj.artist);
+			filterSongs();
+			LIB.filters.artists.pop();
+			renderSongs()
+		}
+        }
+        else {
 		clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 	}
 	$('#bottom-row').css('display', 'flex')
