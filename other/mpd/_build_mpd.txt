@@ -8,14 +8,20 @@
 
 sudo ./dev.sh mount-moode
 PATCH_ID=""
+MPD_OLD=mpd-0.21.24.tar.xz
+MPD_REL=mpd-0.22.tar.xz
+MPD_GIT=mpd-VER~git-YYYYMMDD-COMMIT.zip
 
 # Get sources
+# Old version
+sudo cp /mnt/moode-player/GitHub/moode/other/mpd/$MPD_OLD ./
+sudo tar xf ./$MPD_OLD
 # Release version
-sudo cp /mnt/moode-player/GitHub/moode/other/mpd/mpd-0.21.24.tar.xz ./
-sudo tar xf ./mpd-0.21.24.tar.xz
+sudo cp /mnt/moode-player/GitHub/moode/other/mpd/$MPD_REL ./
+sudo tar xf ./$MPD_REL
 # Git master version
-sudo cp /mnt/moode-player/GitHub/moode/other/mpd/mpd-0.22~git-20200904-67c7116.zip ./
-sudo unzip -q ./mpd-0.22~git-20200904-67c7116.zip
+sudo cp /mnt/moode-player/GitHub/moode/other/mpd/$MPD_GIT ./
+sudo unzip -q ./$MPD_GIT
 
 #/////////////////////////////////////////////
 #// Apply patches
@@ -39,7 +45,7 @@ sudo patch -p1 < ~/mpd_0.$VERSION.xx_selective_resample_mode.patch
 sudo cp meson.build meson.build.orig
 sudo sed -i "/version: '0/s/',/$PATCH_ID',/" ./meson.build
 VERSION=22
-cd ~/MPD-master
+cd ~/mpd-0.22
 # NOTE: patch not needed since being accepted into master branch 
 ##sudo patch -p1 < ~/mpd-0.$VERSION.x_soxr_customrecipe.patch
 sudo patch -p1 < ~/mpd_0.$VERSION.xx_selective_resample_mode.patch
@@ -50,14 +56,14 @@ sudo sed -i "/version: '0/s/',/$PATCH_ID',/" ./meson.build
 #// Compile MPD
 #////////////////////////////////////////////
 
-# Compile MPD 0.21.y
+# Compile Old version
 cd ~/mpd-0.21.24
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 sudo meson configure -Dalsa=enabled -Dbzip2=enabled -Dcurl=enabled -Ddatabase=true -Ddsd=true -Dffmpeg=enabled -Dfaad=enabled -Dflac=enabled -Dhttpd=true -Did3tag=enabled -Dlame=enabled -Dlibmpdclient=enabled -Dmad=enabled -Dmpg123=enabled -Dpipe=true -Drecorder=true -Dshout=enabled -Dsoxr=enabled -Dvorbis=enabled -Dwave_encoder=true -Dwavpack=enabled -Dzeroconf=avahi -Dpcre=enabled -Dzzip=enabled -Dao=disabled -Daudiofile=disabled -Ddbus=disabled -Dexpat=disabled -Dfluidsynth=disabled -Dgme=disabled -Dipv6=disabled -Djack=disabled -Dlibsamplerate=disabled -Dnfs=disabled -Doss=disabled -Dpulse=disabled -Dsidplay=disabled -Dsmbclient=disabled -Dsndfile=disabled -Dsqlite=disabled -Dudisks=disabled -Dupnp=disabled -Dwildmidi=disabled -Dsoundcloud=disabled -Dtidal=disabled -Dqobuz=disabled output/release
 sudo ninja -C output/release
 
-# Compile MPD 0.22~git
-cd ~/MPD-master
+# Compile Rel versiuon
+cd ~/mpd-0.22
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 sudo meson configure -Dalsa=enabled -Dbzip2=enabled -Dcurl=enabled -Ddatabase=true -Ddsd=true -Dffmpeg=enabled -Dfaad=enabled -Dflac=enabled -Dhttpd=true -Did3tag=enabled -Dlame=enabled -Dlibmpdclient=enabled -Dmad=enabled -Dmpg123=enabled -Dpipe=true -Drecorder=true -Dshout=enabled -Dsoxr=enabled -Dvorbis=enabled -Dwave_encoder=true -Dwavpack=enabled -Dzeroconf=avahi -Dpcre=enabled -Dzzip=enabled -Dao=disabled -Daudiofile=disabled -Ddbus=disabled -Dexpat=disabled -Dfluidsynth=disabled -Dgme=disabled -Dipv6=disabled -Djack=disabled -Dlibsamplerate=disabled -Dnfs=disabled -Doss=disabled -Dpulse=disabled -Dsidplay=disabled -Dsmbclient=disabled -Dsndfile=disabled -Dsqlite=disabled -Dudisks=disabled -Dupnp=disabled -Dwildmidi=disabled -Dsoundcloud=disabled -Dtidal=disabled -Dqobuz=disabled output/release
 sudo ninja -C output/release
@@ -69,9 +75,9 @@ sudo ninja -C output/release
 cd ~/mpd-0.21.24
 sudo cp output/release/mpd /mnt/SDCARD/mpd-0.21.24$PATCH_ID
 sudo cp output/release/mpd /var/local/www/mpd_versions/mpd-0.21.24$PATCH_ID
-cd ~/MPD-master
-sudo cp output/release/mpd /mnt/SDCARD/mpd-0.22~git$PATCH_ID
-sudo cp output/release/mpd /var/local/www/mpd_versions/mpd-0.22~git$PATCH_ID
+cd ~/mpd-0.22
+sudo cp output/release/mpd /mnt/SDCARD/mpd-0.22.0$PATCH_ID
+sudo cp output/release/mpd /var/local/www/mpd_versions/mpd-0.22.0$PATCH_ID
 
 #/////////////////////////////////////////////
 #// Cleanup
