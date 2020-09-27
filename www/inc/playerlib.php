@@ -2538,30 +2538,35 @@ function autoConfigSettings() {
 		['requires' => ['airplayname'] , 'handler' => setPlayerSession],
 		['requires' => ['spotifyname'] , 'handler' => setPlayerSession],
 		['requires' => ['squeezelitename'] , 'handler' => function($values) {
-			$dbh = cfgdb_connect();
-			$result = sdbquery('update cfg_sl set value=' . "'" . $values['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
-			sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $values['squeezelitename'] . '"');
-		}, 'custom_write' => function() {}],
+				$dbh = cfgdb_connect();
+				$result = sdbquery('update cfg_sl set value=' . "'" . $values['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
+				sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $values['squeezelitename'] . '"');
+			}, 'custom_write' => function($values) {
+				$dbh = cfgdb_connect();
+				$result = sdbquery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
+				return "squeezelitename = \"".$result."\"\n";
+			}],
 		['requires' => ['upnpname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name upnp "Moode UPNP" "%s"'],
 		['requires' => ['dlnaname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name dlna "Moode DLNA" "%s"'],
 
 		'System',
 		['requires' => ['timezone'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-timezone %s'],
 		['requires' => ['keyboard'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-keyboard %s'],
-		['cpugov' => ['cpugov'] , 'handler' => function($values) {
-			//TODO: use native of the caption one ? , is not the same as in session. give problems with extraction
-			playerSession('write', 'cpugov', $values['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
-		}, 'custom_write' => function() {}],
+		//TODO: decide use the same value as in the database or make Captalized ?then also required a custom writer?
+		// ['requires' => ['cpugov'] , 'handler' => function($values) {
+		// 		//TODO: use native of the caption one ? , is not the same as in session. give problems with extraction
+		// 		playerSession('write', 'cpugov', $values['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
+		//}],
+		['requires' => ['cpugov'] , 'handler' => setPlayerSession],
 		['requires' => ['hdmiport'] , 'handler' => setPlayerSession],
 		['requires' => ['eth0chk'] , 'handler' => setPlayerSession],
 		['requires' => ['localui'] , 'handler' => setPlayerSession],
 
 		'I2S Device',
-		['i2sdevice' => ['i2sdevice'] , 'handler' => function($values) {
-			cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
-			playerSession('write', 'i2sdevice', $values['i2sdevice']);
+		['requires' => ['i2sdevice'] , 'handler' => function($values) {
+				cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
+				playerSession('write', 'i2sdevice', $values['i2sdevice']);
 		}],
-
 		'Renderers',
 		['requires' => ['btsvc'] , 'handler' => setPlayerSession],
 		['requires' => ['pairing_agent'] , 'handler' => setPlayerSession],
@@ -2579,26 +2584,38 @@ function autoConfigSettings() {
 		['requires' => ['upnp_browser'] , 'handler' => setPlayerSession],
 
 		'Network (wlan0)',
+		//TODO: fix value for wlanssid "None (activates AP mode)", make it a empty string in the config
 		['requires' => ['wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'] , 'handler' => function($values) {
-			$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
-			$netcfg = sdbquery('select * from cfg_network', $dbh);
-			$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
-				'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
-				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-				'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
-			cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
-			cfgNetIfaces();
-		}, 'custom_write' => function() {}],
+				$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
+				$netcfg = sdbquery('select * from cfg_network', $dbh);
+				$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
+					'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
+					'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+					'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
+				cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
+				cfgNetIfaces();
+			}, 'custom_write' => function($values) {
+				$dbh = cfgdb_connect();
+				$row = sdbquery("select * from cfg_network where iface='wlan0'", $dbh)[0];
+				$result="";
+				$result = $result."wlanssid = \"".$row['wlanssid']."\"\n";
+				$result = $result."wlanpwd = \"".$row['wlanpwdd']."\"\n";
+				$result = $result."wlansec = \"".$row['wlansec']."\"\n";
+				$result = $result."wlancountry = \"".$row['wlan_country']."\"\n";
+				return $result;
+			}],
 
 		'Network (apd0)',
 		['requires' => ['apdssid', 'apdpwd', 'apdchan'] , 'handler' => function($values) {
-			$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
-			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
-				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-				'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
-			cfgdb_update('cfg_network', $dbh, 'apd0', $value);
-			cfgHostApd();
-		}, 'custom_write' => function() {}],
+				$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
+				$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
+					'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+					'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
+				cfgdb_update('cfg_network', $dbh, 'apd0', $value);
+				cfgHostApd();
+			}, 'custom_write' => function($values) {
+				//TODO: implement
+			}],
 
 		'Theme & Background',
 		['requires' => ['themename'] , 'handler' => setPlayerSession],
@@ -2674,29 +2691,39 @@ function autoConfig($cfgfile) {
 
 // generates an autoconfig file as string based on the current settings
 function autoconfigExtract() {
-	$autoconfigstring = '';
+	$autoconfigstring = <<<EOT
+	; #########################################
+	; Copy this file to /boot/moodecfg.ini
+	; It will be processed at startup and the
+	; system will automaticly Restart.
+	;
+	; All param="value" pairs must be present.
+	; Set wlanssid= blank to start AP mode.
+	; Example: wlanssid=""
+	; ##########################################
+	EOT;
+	$configurationHandlers = autoConfigSettings(); // contains supported configuration items
 
-	foreach ($configurationHandlers as $config) {
+	foreach ($configurationHandlers as &$config) {
 		$values = array();
-
 		// print new section header
 		if( is_string($config) ) {
-			$autoconfigstring = $autoconfigstring . '['. config. ']\n';
+			$autoconfigstring = $autoconfigstring . "\n[". $config. "]\n";
 		} else {
 			if( !array_key_exists('custom_write', $config)) {
 				foreach ($config['requires'] as $config_name) {
 					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
 					if( array_key_exists($config_key, $_SESSION) ) {
-						$autoconfigstring = $autoconfigstring . $config_key. ' = "'.$_SESSION[$config_key].'"\n';
+						$autoconfigstring = $autoconfigstring . $config_key. " = \"".$_SESSION[$config_key]."\"\r\n";
 					}
 				}
 			} else {
-				//TODO: implement custom writer support, requires handler in the configuration
+				$autoconfigstring = $autoconfigstring . $config['custom_write']($config['requires']);
 			}
 		}
 	}
 
-	return autoconfigstring;
+	return $autoconfigstring;
 }
 
 function genWpaPSK($ssid, $passphrase) {
