@@ -30,6 +30,7 @@ New features
 - NEW: Library option to select which tag for the Artist list
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
 - NEW: Add next, Play next by inserting after current item
+- NEW: Support up to 384K rate for DDDAC1794 NOS
 
 Updates
 
