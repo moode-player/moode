@@ -140,6 +140,8 @@ AUDIO_PARAMETERS() {
 	fi
 	echo -e "\n\c"
 	echo -e "\nAuto-shuffle\t\t= $ashufflesvc\c"
+	echo -e "\nAshuffle mode\t\t= $ashuffle_mode\c"
+	echo -e "\nAshuffle filter\t\t= $ashuffle_filter\c"
 	echo -e "\nAutoplay\t\t= $autoplay\c"
 	echo -e "\nRotary encoder\t\t= $rotaryenc\c"
 	echo -e "\nEncoder params\t\t= $rotenc_params\c"
@@ -154,7 +156,7 @@ AUDIO_PARAMETERS() {
 
 APPEARANCE_SETTINGS() {
 	echo -e "A P P E A R A N C E   S E T T I N G S"
-	echo -e "\nThemes and backgrounds\c"
+	echo -e "\nTheme and background\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nTheme\t\t\t= $themename\c"
 	echo -e "\nAccent color\t\t= $accentcolor\c"
@@ -165,36 +167,43 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nCover backdrop\t\t= $cover_backdrop\c"
 	echo -e "\nCover blur\t\t= $cover_blur\c"
 	echo -e "\nCover scale\t\t= $cover_scale\c"
-	echo -e "\n\nLibrary options\c"
+	echo -e "\n\nPlayback\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nInstant play action\t= $library_instant_play\c"
-	echo -e "\nShow tagview genres\t= $library_show_genres\c"
-	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
-	echo -e "\nShow sample rate\t= $library_encoded_at\c"
-	echo -e "\nEllipsis limited text\t= $library_ellipsis_limited_text\c"
-	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
+	echo -e "\nOne touch action\t= $library_instant_play\c"
+	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
+	echo -e "\nRenderer backdrop\t= $renderer_backdrop\c"
+	echo -e "\n\nLibrary\c"
+	echo -e "\n----------------------\c"
+	echo -e "\n- Sorting and Filtering\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
-	echo -e "\nCompilation identifier\t= $library_comp_id\c"
+	echo -e "\nLibrary filter\t\t= by $library_flatlist_filter\c"
+	echo -e "\nLibrary filter str\t= by $library_flatlist_filter_str\c"
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
-	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
 	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
-	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
+	echo -e "\n- Metadata and Tags\c"
+	echo -e "\nTag view artist\t\t= $library_tagview_artist\c"
+	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
+	echo -e "\nInclude comment tag\t= $library_inc_comment_tag\c"
+	echo -e "\n- UI elements\c"
+	echo -e "\nShow sample rate\t= $library_encoded_at\c"
+	echo -e "\nShow tagview genres\t= $library_show_genres\c"
+	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
+	echo -e "\nEllipsis limited text\t= $library_ellipsis_limited_text\c"
+	echo -e "\n- Covers and Thumbs\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
 	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
-	echo -e "\n\nCoverview screen saver\c"
+	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
+	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
+	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nCoverView auto-display\t= $scnsaver_timeout\c"
-	echo -e "\nCoverView style\t\t= $scnsaver_style\c"
-	echo -e "\n\nOther options\c"
+	echo -e "\nAutomatic display\t= $scnsaver_timeout\c"
+	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
+	echo -e "\n\nOther\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nFont size\t\t= $font_size\c"
-	echo -e "\nAuto-shuffle filter\t= $ashuffle_filter\c"
 	echo -e "\nExtra metadata\t\t= $xtagdisp\c"
-	echo -e "\nPlayback history\t= $playhist\c"
-	echo -e "\nFirst use help\t\t= $first_use_help\c"
-	echo -e "\nPlaylist covers\t\t= $playlist_art\c"
-	echo -e "\nAshuffle mode\t\t= $ashuffle_mode\n"
+	echo -e "\nPlayback history\t= $playhist\n"
 }
 
 RADIO_MANAGER_SETTINGS() {
@@ -641,7 +650,7 @@ cover_backdrop=${arr[108]}
 cover_blur=${arr[109]}
 cover_scale=${arr[110]}
 [[ "${arr[111]}" = "1" ]] && eth_port_fix="On" || eth_port_fix="Off"
-library_comp_id=${arr[112]}
+library_tagview_artist=${arr[112]}
 scnsaver_style=${arr[113]}
 ashuffle_filter=${arr[114]}
 [[ "${arr[115]}" = "1" ]] && mpd_httpd="On" || mpd_httpd="Off"
@@ -683,6 +692,10 @@ playlist_art=${arr[140]}
 ashuffle_mode=${arr[141]}
 radioview_sort_group=${arr[142]}
 radioview_show_hide=${arr[143]}
+renderer_backdrop=${arr[144]}
+library_flatlist_filter=${arr[145]}
+library_flatlist_filter_str=${arr[146]}
+library_inc_comment_tag=${arr[147]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
