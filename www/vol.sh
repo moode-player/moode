@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-07-09 TC moOde 6.6.0
+# 2020-MM-DD TC moOde 7.0.0
 #
 
-VER="5.2.0"
+VER="5.2.1"
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
@@ -64,7 +64,6 @@ readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
 VOLMUTE=${arr[1]}
 MPDMAX=${arr[2]}
-# cardnum 0 = i2s or onboard, cardnum 1 = usb
 
 REGEX='^[0-9]+$'
 
@@ -89,12 +88,14 @@ else
 			LEVEL=$(($VOLKNOB + $2))
 		fi
 	elif [[ $1 = "-dn" || $1 = "dn" ]]; then
-		# volume down step
 		if ! [[ $2 =~ $REGEX ]]; then
 			echo "VOLUME must only contain digits 0-9"
 			exit 1
 		else
 			LEVEL=$(($VOLKNOB - $2))
+			if (( $LEVEL < 0 )); then
+				LEVEL=0
+			fi
 		fi
 	else
 		LEVEL=$1
