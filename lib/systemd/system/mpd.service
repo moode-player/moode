@@ -20,9 +20,6 @@ LimitRTTIME=infinity
 # For io_uring
 LimitMEMLOCK=64M
 
-# AF_NETLINK is required by libsmbclient, or it will exit() .. *sigh*
-RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
-
 # Scheduling policy
 # real-time
 # - fifo, first in first out (FF in ps)
