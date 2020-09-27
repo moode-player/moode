@@ -44,8 +44,9 @@ const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 
 // For setTimout() in milliseconds
 const DEFAULT_TIMEOUT   = 250;
-const SEARCH_TIMEOUT    = 750;
 const CLRPLAY_TIMEOUT   = 500;
+const LAZYLOAD_TIMEOUT  = 500;
+const SEARCH_TIMEOUT    = 750;
 const RALBUM_TIMEOUT    = 1500;
 const ENGINE_TIMEOUT    = 3000;
 
@@ -1755,7 +1756,7 @@ function refreshTimeKnob() {
 					syncTimers();
 					if (UI.mobile) {
 						tt.val(GLOBAL.initTime * 10).trigger('change');
-					}					
+					}
 				}
 			}
             delta === 0 ? GLOBAL.initTime = GLOBAL.initTime + 0.5 : GLOBAL.initTime = GLOBAL.initTime + 0.1; // fast paint when radio station playing
@@ -3574,7 +3575,7 @@ function lazyLode(view) {
  				$(selector).lazyload({
  					container: $(container)
  				});
- 			}, DEFAULT_TIMEOUT);
+ 			}, LAZYLOAD_TIMEOUT);
         }
  	}
 }
