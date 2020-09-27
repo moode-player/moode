@@ -1748,10 +1748,9 @@ function refreshTimeKnob() {
         // Move these out of the timer
 		var tt = $('#timetrack');
 		var ti = $('#time');
-		playbar = $('#menu-bottom').css('display') == 'flex' ? true : false;
 
         UI.knob = setInterval(function() {
-			if (UI.mobile || playbar) {
+			if (UI.mobile || $('#menu-bottom').css('display') == 'flex') {
 				if (!timeSliderMove) {
 					syncTimers();
 					if (UI.mobile) {
@@ -3302,6 +3301,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 	$('#menu-top').css('height', '0');
 	$('#menu-top').css('backdrop-filter', '');
 	$('#menu-bottom, .viewswitch').css('display', 'flex');
+
     syncTimers();
 
 	if (currentView == 'tag') {
