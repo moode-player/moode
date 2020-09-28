@@ -721,8 +721,9 @@ function renderUI() {
                 $('#playbar-cover').html('<img src="' + 'images/default-cover-v6.png' + '">');
             }
     		// cover backdrop or bgimage
-    		if (SESSION.json['cover_backdrop'] == 'Yes' && MPD.json['coverurl'].indexOf('default-cover-v6') === -1) {
-    			$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
+    		if (SESSION.json['cover_backdrop'] == 'Yes') {
+                var backDropHTML = MPD.json['coverurl'].indexOf('default-cover-v6') === -1 ? '<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">' : '';
+    			$('#cover-backdrop').html(backDropHTML);
     			$('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
     			$('#cover-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
     		}
