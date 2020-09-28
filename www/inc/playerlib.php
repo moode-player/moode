@@ -2671,6 +2671,15 @@ function autoConfig($cfgfile) {
 				// call handler
 				$config['handler'] ($values);
 			}
+			// detect reuires with multiple keys which are no all present in provided configs
+			elseif( count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $available_configs))>= 1) {
+				$incompleteset = " [ ";
+				foreach ($config['requires'] as $config_require) {
+					$incompleteset = $incompleteset . " ". $config_require;
+				}
+				$incompleteset = $incompleteset . " ]";
+				autoCfgLog('autocfg: Warning incomplete set '. $incompleteset. ' detected.');
+			}
 		}
 
 		// check for unused but supplied autocfg settings
