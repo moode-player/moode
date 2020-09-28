@@ -2717,8 +2717,15 @@ function autoconfigExtract() {
 	; All param="value" pairs must be present.
 	; Set wlanssid= blank to start AP mode.
 	; Example: wlanssid=""
+	;
+	; Moode Release : %s
+	; Create date	: %s
+	;
 	; ##########################################
 	EOT;
+
+	$autoconfigstring = sprintf($autoconfigstring, getMoodeRel('verbose'), date('Y-m-d H:i:s'));
+
 	$configurationHandlers = autoConfigSettings(); // contains supported configuration items
 
 	foreach ($configurationHandlers as &$config) {
