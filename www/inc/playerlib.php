@@ -2512,7 +2512,7 @@ function cfgAudioScrobbler() {
 
 // returns the settings for reading/writing the autoConfig file
 function autoConfigSettings() {
-
+	$debug = true;
 	// handler is config item name is just setting the playSession
 	function setPlayerSession($values) {
 		playerSession('write', array_key_first($values), $values[array_key_first($values)]);
@@ -2564,8 +2564,8 @@ function autoConfigSettings() {
 
 		'I2S Device',
 		['requires' => ['i2sdevice'] , 'handler' => function($values) {
-				cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
-				playerSession('write', 'i2sdevice', $values['i2sdevice']);
+			cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
+			playerSession('write', 'i2sdevice', $values['i2sdevice']);
 		}],
 		'Renderers',
 		['requires' => ['btsvc'] , 'handler' => setPlayerSession],
@@ -2584,7 +2584,6 @@ function autoConfigSettings() {
 		['requires' => ['upnp_browser'] , 'handler' => setPlayerSession],
 
 		'Network (wlan0)',
-		//TODO: fix value for wlanssid "None (activates AP mode)", make it a empty string in the config
 		['requires' => ['wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'] , 'handler' => function($values) {
 				$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
 				$netcfg = sdbquery('select * from cfg_network', $dbh);
@@ -2617,7 +2616,7 @@ function autoConfigSettings() {
 				$dbh = cfgdb_connect();
 				$row = sdbquery("select * from cfg_network where iface='apd0'", $dbh)[0];
 				$result = $result."apdssid = \"".$row['wlanssid']."\"\n";
-				$result = $result."apdpwd = \"".""."\"\n";
+				$result = $result."apdpwd = \"".""."\"\n"; // keep empty
 				$result = $result."apdchan = \"".$row['wlan_channel']."\"\n";
 				return $result;
 			}],
@@ -2651,6 +2650,7 @@ function autoConfig($cfgfile) {
 
 	try {
 		$autocfg = parse_ini_file($cfgfile, false);
+
 		$available_configs = array_keys($autocfg);
 
 		autoCfgLog('autocfg: Configuration file parsed');
@@ -2665,7 +2665,7 @@ function autoConfig($cfgfile) {
 				autoCfgLog('autocfg: - '. $config);
 			}
 			// check if alrequired cfgkeys are present
-			elseif( !array_diff_key(array_flip($config['requires']), $available_configs) ) {
+			elseif( !array_diff_key(array_flip($config['requires']), $autocfg) ) {
 				// is so get copie all key/value sets
 				foreach ($config['requires'] as $config_name) {
 					$value = $autocfg[$config_name];
@@ -2677,10 +2677,13 @@ function autoConfig($cfgfile) {
 					unset($available_configs[$config_name]);
 				}
 				// call handler
-				$config['handler'] ($values);
+				if( !array_key_exists('cmd', $config) )
+					$config['handler'] ($values);
+				else
+					$config['handler'] ($values, $config['cmd']);
 			}
 			// detect reuires with multiple keys which are no all present in provided configs
-			elseif( count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $available_configs))>= 1) {
+			elseif( count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $autocfg))>= 1) {
 				$incompleteset = " [ ";
 				foreach ($config['requires'] as $config_require) {
 					$incompleteset = $incompleteset . " ". $config_require;
