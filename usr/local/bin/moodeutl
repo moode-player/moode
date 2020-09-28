@@ -108,6 +108,9 @@ switch ($option) {
 	case '-u':
 		check_station_urls();
 		break;
+	case '-x':
+		export_autoconfig($argv);
+		break;
 	case '--version':
 		echo VERSION . "\n";
 		break;
@@ -133,6 +136,7 @@ With no OPTION print the help text and exit.
  -t\t\tprint last 10 lines of moode log and wait
  -u\t\tcheck radio station urls for playability
  --version\tprint the program version
+ -x\t\texport autoconfig.ini
  --help\t\tprint this help text\n";
 		break;
 }
@@ -365,4 +369,10 @@ function check_station_urls() {
 		}
 		$line = strtok("\n");
 	}
+}
+
+function export_autoconfig($argv) {
+	$cfgfile = count($argv)==3 ? $argv[2] : sprintf("/home/pi/audiocfg-%s.ini",  date('ymd_His'));
+	echo "export autoconfig of current system to ".$cfgfile."\n";
+	echo shell_exec('/var/www/command/autocfggen.php > '.$cfgfile);
 }
