@@ -90,6 +90,7 @@
 							<div id="volbtns">
 								<button aria-label="Volume Up" id="volumeup" class="btn btn-cmd btn-volume">+</button>
 								<div aria-label="Volume Display" class="volume-display" href="#notarget"><div></div></div>
+								<div aria-label="Volume Display dB" class="volume-display-db"></div>
 								<button aria-label="Volume Down" id="volumedn" class="btn btn-cmd btn-volume">−</button>
 							</div>
 						</div>
@@ -1268,7 +1269,7 @@
 						<input id="extra-tags" class="input-xlarge input-height-x" type="text">
 						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-extra-tags" class="help-block hide">
-		                    	Enter any combination of genre, track, disc, year, composer, encoded or None for display under the cover art.
+		                    Enter any combination of genre, track, disc, year, composer, encoded or None for display under the cover art.
 	                    </span>
 	                </div>
 
@@ -1826,13 +1827,13 @@
 						Export the radio station SQL table, PLS files and station logos to the file named <b>"stations.zip"</b> in the default download directory of the client.
 					</div>
 				</div>
-				<label class="control-label">Import/export status:</label>
+				<label class="control-label">Status</label>
 				<div class="controls">
 					<div id="import-export-msg" class="help-block"></div>
 				</div>
 			</div>
 			<!-- SORT/GROUP OPTIONS -->
-			<span class="h5">Sort/Group Options</span>
+			<span class="h5">Sorting and Grouping</span>
 			<div class="control-group">
 				<label class="control-label" for="radioview-sort-tag">Sort tag</label>
 				<div class="controls">
@@ -1941,6 +1942,41 @@
 						<b>Hide all:&nbsp;</b> Set all other (non-moOde) stations to type Hidden except for Favorites.<br>
 						<b>Un-hide all:&nbsp;</b> Set all other (non-moOde) stations to type Regular except for Favorites.<br>
 						NOTE: Other stations are those that have been user added.
+					</span>
+				</div>
+			</div>
+			<!-- STREAM RECORDER -->
+			<span class="h5">Stream Recorder</span>
+			<div class="control-group">
+				<label class="control-label" for="recorder-status">Status</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="recorder-status" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Enabled</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Disabled</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Not installed</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-enabled" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-recorder-enabled" class="help-block hide">
+						Enable or disable the Stream Recorder feature.
+					</span>
+				</div>
+
+				<label class="control-label" for="recorder-storage">Recorder storage</label>
+				<div class="controls">
+					<input id="recorder-storage" class="input-xlarge input-height-x" type="text" placeholder="/mnt/SDCARD">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-storage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-recorder-storage" class="help-block hide">
+						Specifies the path where the Recordings folder is located. The folder will be automatically created if it doesn't already exist.
 					</span>
 				</div>
 			</div>

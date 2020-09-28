@@ -1170,6 +1170,8 @@ $('#radio-manager-btn').click(function(e) {
     $('#radioview-show-hide-moode span').text(showHide[0]);
     $('#radioview-show-hide-other span').text(showHide[1]);
     $('#import-export-msg').text('');
+    $('#recorder-status span').text(SESSION.json['recorder_status']);
+    $('#recorder-storage').val(SESSION.json['recorder_storage']);
     $('#radio-manager-modal').modal();
 });
 
@@ -1177,9 +1179,13 @@ $('#radio-manager-btn').click(function(e) {
 $('#btn-upd-radio-manager').click(function(e) {
     SESSION.json['radioview_sort_group'] = $('#radioview-sort-tag span').text() + ',' + $('#radioview-group-method span').text();
     SESSION.json['radioview_show_hide'] = $('#radioview-show-hide-moode span').text() + ',' + $('#radioview-show-hide-other span').text();
+    SESSION.json['recorder_status'] = $('#recorder-status span').text();
+    SESSION.json['recorder_storage'] = $('#recorder-storage').val();
     $.post('command/moode.php?cmd=updcfgsystem', {
         'radioview_sort_group': SESSION.json['radioview_sort_group'],
-        'radioview_show_hide': SESSION.json['radioview_show_hide']
+        'radioview_show_hide': SESSION.json['radioview_show_hide'],
+        'recorder_status': SESSION.json['recorder_status'],
+        'recorder_storage': SESSION.json['recorder_storage']
          }, function() {
              notify('settings_updated');
              setTimeout(function() {
