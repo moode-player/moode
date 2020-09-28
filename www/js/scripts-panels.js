@@ -281,6 +281,9 @@ jQuery(document).ready(function($) { 'use strict';
     	if (currentView.indexOf('playback') != -1) {
     		$('#playback-panel').addClass('active');
     		$(window).scrollTop(0); // make sure it's scrolled to top
+			/*setTimeout(function(){
+				lazyLode('playlist');
+			}, 500);*/
     		if (UI.mobile) {
     			$('#container-playlist').css('visibility','hidden');
     			$('#playback-controls').show();
@@ -301,12 +304,11 @@ jQuery(document).ready(function($) { 'use strict';
         // Radio view
     	if (currentView == 'radio') {
     		makeActive('.radio-view-btn','#radio-panel', currentView);
-
     		setTimeout(function() {
     			if (UI.radioPos >= 0) {
-    				customScroll('radio', UI.radioPos, 200);
+    				customScroll('radio', UI.radioPos, 0);
     			}
-    		}, DEFAULT_TIMEOUT);
+    		}, 250);
     	}
         // Folder view
     	else if (currentView == 'folder') {

@@ -1087,16 +1087,19 @@ function renderPlaylist() {
         }
 
 		// Render playlist
-        $('#playlist ul').html(output);
+		
+		SESSION.json['playlist_art'] ? $.when($('#playlist ul').html(output)).then(lazyLode('playlist')) : $('#playlist ul').html(output);
+       // $('#playlist ul').html(output);
         //$('#cv-playlist ul').html(output);
 
         if (output) {
-            if (option_show_playlistart) {
-    			lazyLode('playlist');
-                if ($('#cv-playlist').css('display') == 'block') {
-                    lazyLode('cv-playlist');
-                }
-    		}
+
+	        if (option_show_playlistart) {
+				//lazyLode('playlist');
+	            if ($('#cv-playlist').css('display') == 'block') {
+	                lazyLode('cv-playlist');
+	            }
+			}
 
             setTimeout(function() {
                 if ($('#playback-panel').hasClass('active')) {
@@ -1644,7 +1647,8 @@ function renderRadioView() {
     	}
 
         // Render the list
-    	$('ul.database-radio').html(output);
+    	//$('ul.database-radio').html(output);
+		$.when($('#radiocovers').html(output)).then(lazyLode('radio'))
     });
 }
 
@@ -1747,10 +1751,8 @@ function refreshTimeKnob() {
         // Move these out of the timer
 		var tt = $('#timetrack');
 		var ti = $('#time');
-		playbar = $('#menu-bottom').css('display') == 'flex' ? true : false;
-
         UI.knob = setInterval(function() {
-			if (UI.mobile || playbar) {
+			if (UI.mobile || coverView || currentView.indexOf('playback' == -1)) {
 				if (!timeSliderMove) {
 					syncTimers();
 					if (UI.mobile) {
@@ -1764,7 +1766,7 @@ function refreshTimeKnob() {
 					window.clearInterval(UI.knob)
 					UI.knobPainted = true;
 	            }
-           		ti.val(GLOBAL.initTime * 10).trigger('change');
+				ti.val(GLOBAL.initTime * 10).trigger('change');
 			}
         }, delta * 1000);
     }
@@ -2436,9 +2438,7 @@ $('#btn-appearance-update').click(function(e){
     // Covers and Thumbnails
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
     if (SESSION.json['library_hiresthm'] != $('#hires-thumbnails span').text()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {
-		thumbSizeChange = true;
-	}
+    if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {thumbSizeChange = true;}
 
     // CoverView
     if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
@@ -2535,6 +2535,8 @@ $('#btn-appearance-update').click(function(e){
 	}
 	if(thumbSizeChange){
 		getThumbHW();
+		if (currentView == 'album') lazyLode('album');
+		if (currentView == 'radio') lazyLode('radio');
 	}
 
     // Update database
@@ -3247,7 +3249,7 @@ function listLook(selector, list, searchText) {
 	if (searchText != '#') {
         if (list == 'radio') {
             $('#' + selector).each(function() {
-                var text = removeArticles($(this).children('span').text().toLowerCase());
+                var text = removeArticles($(this).children('div').text().toLowerCase());
                 if (text.substr(0, 1) == searchText) {return false;}
         		itemNum++;
         	});
@@ -3390,8 +3392,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 // Closes the menu and de-highlights the items
 $('#context-backdrop').click(function(e){
 	$('#context-backdrop').hide();
-	$('.context-menu').removeClass('open');
-	$('.context-menu-lib').removeClass('open');
+	$('.context-menu, .context-menu-lib').removeClass('open');
     if (currentView == 'folder' || currentView == 'radio') {
         //console.log(UI.dbPos[UI.dbPos[10]], UI.dbEntry[3]);
         $('#' + UI.dbEntry[3]).removeClass('active');
@@ -3415,11 +3416,10 @@ function syncTimers() {
     var a = $('#countdown-display').text();
     if (a != GLOBAL.lastTimeCount) { // Only update if time has changed
         if (UI.mobile) { // Only change when needed to save work
-            $('#m-countdown').text(a);
-            $('#playbar-mcount').text(a);
+            $('#m-countdown, #playbar-mcount').text(a);
         }
         else if (coverView || currentView.indexOf('playback') == -1) {
-            $('#playbar-countdown').text(a);
+            $('#playbar-countdown, #playbar-mcount').text(a);
             GLOBAL.initTime < 50 ? g = GLOBAL.initTime + 1 : g = GLOBAL.initTime - 1; // Adjust for thumb
             $('#playbar-timetrack').val(GLOBAL.initTime * 10); // min = 0, max = 1000
             $('#playbar-timeline .timeline-progress').css('width', g + '%');
@@ -3555,7 +3555,7 @@ function lazyLode(view) {
  			case 'album':
  				selector = 'img.lazy-albumview';
  				container = '#lib-albumcover';
-				 break;
+				break;
 		 	case 'playlist':
 				selector = 'img.lazy-playlistview';
 				container = '#playlist';
@@ -3567,11 +3567,9 @@ function lazyLode(view) {
  		}
 
         if (selector && container) {
- 			setTimeout(function(){
- 				$(selector).lazyload({
- 					container: $(container)
- 				});
- 			}, DEFAULT_TIMEOUT);
+			$(selector).lazyload({
+				container: $(container)
+			});
         }
  	}
 }
