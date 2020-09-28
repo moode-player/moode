@@ -129,7 +129,7 @@ for ($i = 0; $i < 4; $i++) {
 }
 workerLog('worker: Device raw: (0:' . $cards[0] . '|1:' . $cards[1]. '|2:' . $cards[2]. '|3:' . $cards[3]);
 workerLog('worker: Device i2s: (' . $_SESSION['i2sdevice'] . ')');
-workerLog('worker: Device mpd: (' . $mpd_device[0]['value'] . ':' . $_SESSION['adevname'] . ')');
+workerLog('worker: Device mpd: (' . $mpd_device[0]['value'] . '|' . $_SESSION['adevname'] . ')');
 workerLog('worker: Device ses: (' . $_SESSION['cardnum'] . '|' . $_SESSION['adevname'] . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . '%)');
 if ($_SESSION['i2sdevice'] != 'none' && $mpd_device[0]['value'] != '0') {
 	workerLog('worker: ERROR: Device raw/mpd card mismatch');
