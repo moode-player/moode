@@ -3063,6 +3063,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	// Cover hash
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
+		$current['mapped_db_vol'] = getMappedDbVol();
 	}
 
 	if ($current['file'] == null) {
@@ -3191,6 +3192,14 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	}
 
 	return $current;
+}
+
+function getMappedDbVol() {
+	session_start();
+	$cardnum = $_SESSION['cardnum'];
+	session_write_close();
+	$result = sysCmd('amixer -c ' . $cardnum . ' -M | ' . "awk -F\"[][]\" '/Front Left:/ {print $4; count++; if (count==1) exit}'");
+	return empty($result[0]) ? '' : explode('.', $result[0])[0] . 'dB';
 }
 
 function getCoverHash($file) {

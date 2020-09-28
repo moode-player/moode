@@ -615,6 +615,7 @@ function renderUIVol() {
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
     		$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text(SESSION.json['volknob']);
+            $('.volume-display-db').text(MPD.json['mapped_db_vol']);
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
     		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
@@ -670,6 +671,7 @@ function renderUI() {
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
     		$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text(SESSION.json['volknob']);
+            $('.volume-display-db').text(MPD.json['mapped_db_vol']);
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
     		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
