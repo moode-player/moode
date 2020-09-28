@@ -890,12 +890,12 @@ jQuery(document).ready(function($) { 'use strict';
     // Refresh the station list
 	$('#ra-refresh').click(function(e) {
 		mpdDbCmd('lsinfo_radio');
-        setTimeout(function() {
-            lazyLode('radio');
-        }, DEFAULT_TIMEOUT);
-        setTimeout(function() {
+        //setTimeout(function() {
+            //lazyLode('radio');
+			//}, DEFAULT_TIMEOUT);
+        //setTimeout(function() {
             $('#database-radio').scrollTo(0, 200);
-        }, DEFAULT_TIMEOUT);
+			//}, DEFAULT_TIMEOUT);
 
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)

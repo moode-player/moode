@@ -1088,8 +1088,8 @@ function renderPlaylist() {
 
 		// Render playlist
 		
-		SESSION.json['playlist_art'] ? $.when($('#playlist ul').html(output)).then(lazyLode('playlist')) : $('#playlist ul').html(output);
-       // $('#playlist ul').html(output);
+		SESSION.json['playlist_art'] ? $('#playlist ul').html(output, lazyLode('playlist')) : $('#playlist ul').html(output);
+        //$('#playlist ul').html(output);
         //$('#cv-playlist ul').html(output);
 
         if (output) {
@@ -1648,7 +1648,7 @@ function renderRadioView() {
 
         // Render the list
     	//$('ul.database-radio').html(output);
-		$.when($('#radiocovers').html(output)).then(lazyLode('radio'))
+		currentView == 'radio' ? $('#radiocovers').html(output, lazyLode('radio')) : $('#radiocovers').html(output);
     });
 }
 
@@ -3537,6 +3537,7 @@ function setLibMenuHeader () {
 }
 
 function lazyLode(view) {
+	console.log(view);
     // If browser does not support native lazy load then fall back to JQuery lazy load
     if (!GLOBAL.nativeLazyLoad) {
  		var container, selector;
@@ -3567,10 +3568,12 @@ function lazyLode(view) {
  		}
 
         if (selector && container) {
-			$(selector).lazyload({
-				container: $(container)
-			});
-        }
+			setTimeout(function(){
+				$(selector).lazyload({
+					container: $(container)
+				});				
+			}, DEFAULT_TIMEOUT);
+		}
  	}
 }
 

@@ -218,13 +218,13 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList .artist-name-art, #albumsList .album-year {vertical-align:top;line-height:normal;font-size:.85em;color:var(--textvariant);}
 #albumsList .album-year {margin-left:0;margin-left:.3em;}
 #library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
-#library-panel.limited .album-name, #library-panel.limited .artist-name, #library-panel.limited .album-year, #radio-panel.limited .station-name {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+#library-panel.limited .lib-entry, #radio-panel.limited .station-name {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .playlist li.active:before, .cv-playlist li.active:before {color:transparent !important;background:var(--npicon) no-repeat right;background-size:1em;}
 .playlist .pll1, .cv-playlist .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .playlist .pl-entry, .cv-playlist .pl-entry {padding:0px;}
-.playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.4em; margin-left: 1.2vmin !important; margin-right: 1.2vmin;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
+.playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.4em; margin-left: 1.2vmin!important; margin-right: 1.2vmin;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
 .database .db-entry {margin-left:2.5em;padding:1em 0;max-width:calc(100vw - 10px);overflow:hidden;}
 .database .db-song {padding:.5em 0;}
 .database .db-icon {display:block;float:left;height:19px;line-height:19px;width:1.875em;padding:0;color:inherit;}

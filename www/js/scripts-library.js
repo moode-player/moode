@@ -646,10 +646,10 @@ var renderAlbums = function() {
 	}
 
     // Output the lists
-	SESSION.json['library_tagview_covers'] ? $.when($('#albumsList').html(output)).then(lazyLode('tag')) : $('#albumsList').html(output);
-	$.when($('#albumcovers').html(output2)).then(lazyLode('album'));
-	//$('#albumsList').html(output);
-	//$('#albumcovers').html(output2);
+	//SESSION.json['library_tagview_covers'] == 'Yes' ? $.when($('#albumsList').html(output)).then(lazyLode('tag')) : $('#albumsList').html(output);
+	//$.when($('#albumcovers').html(output2)).then(lazyLode('album'));
+	$('#albumsList').html(output);
+	$('#albumcovers').html(output2);
 
 	// If only 1 album automatically highlight and display tracks
 	if (filteredAlbums.length == 1) {
