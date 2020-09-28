@@ -600,10 +600,11 @@ function renderUIVol() {
     	}
     	// Software or hardware volume
     	else {
-    		// Sync vol and mute to UPnP controller
+    		// Sync moOde's displayed volume to that on a UPnP control point app
+            // NOTE: This hack is necessary because upmpdcli set's MPD volume directly and does not use vol.sh
     		if (SESSION.json['feat_bitmask'] & FEAT_UPNPSYNC) {
     			// No renderers active
-    			if (SESSION.json['btactive'] == '0' && SESSION.json['airplayactv'] == '0' && SESSION.json['slsvc'] == '0') {
+    			if (SESSION.json['btactive'] == '0' && SESSION.json['airplayactv'] == '0' && SESSION.json['spotactive'] == '0' && SESSION.json['slsvc'] == '0') {
     				if ((SESSION.json['volknob'] != MPD.json['volume']) && SESSION.json['volmute'] == '0') {
     					SESSION.json['volknob'] = MPD.json['volume']
                         $.post('command/moode.php?cmd=updcfgsystem', {'volknob': SESSION.json['volknob']});
