@@ -2599,7 +2599,7 @@ function autoConfigSettings() {
 				$row = sdbquery("select * from cfg_network where iface='wlan0'", $dbh)[0];
 				$result="";
 				$result = $result."wlanssid = \"".$row['wlanssid']."\"\n";
-				$result = $result."wlanpwd = \"".$row['wlanpwdd']."\"\n";
+				$result = $result."wlanpwd = \"".""."\"\n"; // keep empty
 				$result = $result."wlansec = \"".$row['wlansec']."\"\n";
 				$result = $result."wlancountry = \"".$row['wlan_country']."\"\n";
 				return $result;
@@ -2614,7 +2614,12 @@ function autoConfigSettings() {
 				cfgdb_update('cfg_network', $dbh, 'apd0', $value);
 				cfgHostApd();
 			}, 'custom_write' => function($values) {
-				//TODO: implement
+				$dbh = cfgdb_connect();
+				$row = sdbquery("select * from cfg_network where iface='apd0'", $dbh)[0];
+				$result = $result."apdssid = \"".$row['wlanssid']."\"\n";
+				$result = $result."apdpwd = \"".""."\"\n";
+				$result = $result."apdchan = \"".$row['wlan_channel']."\"\n";
+				return $result;
 			}],
 
 		'Theme & Background',
