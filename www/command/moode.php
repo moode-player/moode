@@ -145,7 +145,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				$status = parseStatus(getMpdStatus($sock));
 				$resp = addItemToQueue($sock, $_POST['path']);
 				if ($_GET['cmd'] == 'play_item_next') {
-					$pos = $status['song'] + 1;
+					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
 					sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ' ' . $pos);
 					$resp = readMpdResp($sock);
 				}
@@ -201,7 +201,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				$status = parseStatus(getMpdStatus($sock));
 				$resp = addGroupToQueue($sock, $_POST['path']);
 				if ($_GET['cmd'] == 'play_group_next') {
-					$pos = $status['song'] + 1;
+					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength']; 
 					sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
 					$resp = readMpdResp($sock);
 				}
