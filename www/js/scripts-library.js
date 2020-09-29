@@ -506,10 +506,11 @@ function makeCoverUrl(filepath) {
 function clickedLibItem(event, item, currentFilter, renderFunc) {
     //console.log(event);
 	if (item == undefined) {
-		// all
+		// All
 		currentFilter.length = 0;
 	}
-	else if (event.ctrlKey) {
+    // metaKey is true when Command-click on Mac
+	else if (event.ctrlKey || event.metaKey) {
 		currentIndex = currentFilter.indexOf(item);
 		if (currentIndex >= 0) {
 			currentFilter.splice(currentIndex, 1);
@@ -531,7 +532,6 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 		    return parseInt(a.year) - parseInt(b.year);
 		});
 	}
-
 	renderFunc();
 }
 
@@ -826,15 +826,17 @@ var renderSongs = function(albumPos) {
 		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
 
         if (LIB.filters.artists.length > 0) {
+            var artistName = LIB.filters.artists.length == 1 ? LIB.filters.artists[0] : 'Multiple Artists Selected';
             $('#lib-coverart-img').html(
                 '<img class="lib-artistart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '>' +
                 '<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
-                LIB.filters.artists[0] + '</button>'
+                artistName + '</button>'
             );
             artist = '';
         }
         else if (LIB.filters.genres.length > 0) {
-            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + LIB.filters.genres[0] + '</button>');
+            var genreName = LIB.filters.genres.length == 1 ? LIB.filters.genres[0] : 'Multiple Genres Selected';
+            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + genreName + '</button>');
         }
         else {
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + 'Music Collection' + '</button>');
