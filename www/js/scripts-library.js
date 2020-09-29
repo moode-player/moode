@@ -818,7 +818,7 @@ var renderSongs = function(albumPos) {
 		}
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html(filteredSongs[0].year);
-		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
+		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
 		$('#lib-encoded-at').html(filteredSongs[0].encoded_at.split(',')[0]);
 	}
 	else {
@@ -842,7 +842,7 @@ var renderSongs = function(albumPos) {
 		$('#lib-albumname').html(album);
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html('');
-		$('#lib-numtracks').html(formatNumCommas(filteredAlbums.length) + ' albums<br>' + formatNumCommas(filteredSongs.length) + ((filteredSongs.length == 1) ? ' track<br>' : ' tracks<br>') + formatTotalTime(LIB.totalTime));
+		$('#lib-numtracks').html(formatNumCommas(filteredAlbums.length) + ' albums<br>' + formatNumCommas(filteredSongs.length) + ((filteredSongs.length == 1) ? ' track<br>' : ' tracks<br>') + formatLibTotalTime(LIB.totalTime));
 		$('#lib-encoded-at').html('');
 	}
 }
@@ -1368,3 +1368,37 @@ $('#context-menu-lib-disc a').click(function(e) {
 		notify($(this).data('cmd'));
 	}
 });
+
+// Format total time for all songs in library
+function formatLibTotalTime(seconds) {
+	var output, hours, minutes, hh, mm, ss;
+
+    if(isNaN(parseInt(seconds))) {
+    	output = '';
+    }
+	else {
+	    hours = ~~(seconds / 3600); // ~~ = faster Math.floor
+    	seconds %= 3600;
+    	minutes = ~~(seconds / 60);
+
+        hh = hours == 0 ? '' : (hours == 1 ? hours + ' hour' : hours + ' hours');
+        mm = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
+
+		if (hours > 0) {
+			if (minutes > 0) {
+				output = hh + ' ' + mm;
+			}
+            else {
+				output = hh;
+			}
+		}
+        else {
+			output = mm;
+		}
+    }
+    return formatNumCommas(output);
+}
+
+function formatNumCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

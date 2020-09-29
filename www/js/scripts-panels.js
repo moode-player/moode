@@ -498,7 +498,7 @@ jQuery(document).ready(function($) { 'use strict';
     			}
                 setTimeout(function() {
                     sendMpdCmd('seek ' + MPD.json['song'] + ' 0');
-                }, DEFAULT_TIMEOUT);                
+                }, DEFAULT_TIMEOUT);
             }
     		else {
                 // Radio station
@@ -609,11 +609,13 @@ jQuery(document).ready(function($) { 'use strict';
             $.post('command/moode.php?cmd=updcfgsystem', {'timecountup': SESSION.json['timecountup']});
             $.getJSON('command/moode.php?cmd=getmpdstatus', function(result) {
                 if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
-    				refreshTimer(parseInt(result['elapsed']), parseInt(MPD.json['time']), MPD.json['state']); // Count up
+                    // Count up
+    				updKnobStartFrom(parseInt(result['elapsed']), MPD.json['state']);
     				$('#total').html(formatSongTime(MPD.json['time']) + '<i class="fas fa-caret-up countdown-caret"></i>');
     			}
     			else {
-    				refreshTimer(parseInt(MPD.json['time'] - parseInt(result['elapsed'])), 0, MPD.json['state']); // count down
+                    // Count down
+    				updKnobStartFrom(parseInt(MPD.json['time'] - parseInt(result['elapsed'])), MPD.json['state']);
     				$('#total').html(formatSongTime(MPD.json['time']) + '<i class="fas fa-caret-down countdown-caret"></i>');
     			}
             });

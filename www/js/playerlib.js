@@ -572,13 +572,13 @@ function disableVolKnob() {
 // when last item in laylist finishes just update a few things, called from engineCmd()
 function resetPlayCtls() {
 	//console.log('resetPlayCtls():');
-	$('#m-total, #playbar-total, #playbar-mtotal').html(updTimeKnob('0'));
+	$('#m-total, #playbar-total, #playbar-mtotal').html(formatKnobTotal('0'));
 	$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
-	$('#total').html(updTimeKnob('0') + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
+	$('#total').html(formatKnobTotal('0') + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
 	$('.playlist li.active ').removeClass('active');
 
-	refreshTimeKnob();
-    refreshTimer(0, 0, MPD.json['state']);
+	updKnobAndTimeTrack();
+    updKnobStartFrom(0, MPD.json['state']);
 
 	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').html('00:00');
 }
@@ -697,11 +697,10 @@ function renderUI() {
     		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
 			document.body.style.setProperty('--npicon', npIconPaused);
         }
-    	//tt = updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0);
-    	$('#total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
+    	$('#total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
             (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>')));
-    	$('#m-total, #playbar-total').html(updTimeKnob(MPD.json['time'] ? MPD.json['time'] : 0));
-    	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + updTimeKnob(MPD.json['time']));
+    	$('#m-total, #playbar-total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0));
+    	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + formatKnobTotal(MPD.json['time']));
         $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #m-countdown, #playbar-total, #m-total').addClass('long-time') :
             $('#playbar-countdown, #m-countdown, #playbar-total, #m-total').removeClass('long-time');
 
@@ -845,10 +844,10 @@ function renderUI() {
     	// time knob and timeline
     	// count up or down, radio stations always have song time = 0
     	if (SESSION.json['timecountup'] === '1' || parseInt(MPD.json['time']) === 0) {
-    		refreshTimer(parseInt(MPD.json['elapsed']), parseInt(MPD.json['time']), MPD.json['state']);
+    		updKnobStartFrom(parseInt(MPD.json['elapsed']), MPD.json['state']);
     	}
     	else {
-    		refreshTimer(parseInt(MPD.json['time'] - parseInt(MPD.json['elapsed'])), 0, MPD.json['state']);
+    		updKnobStartFrom(parseInt(MPD.json['time'] - parseInt(MPD.json['elapsed'])), MPD.json['state']);
     	}
     	// set flag if song file and knob < 100% painted
     	// NOTE radio station time will always be 0
@@ -857,11 +856,11 @@ function renderUI() {
     	}
     	// update knob if paint < 100% complete
     	if ((MPD.json['state'] === 'play' || MPD.json['state'] === 'pause') && UI.knobPainted === false) {
-    		refreshTimeKnob();
+    		updKnobAndTimeTrack();
     	}
     	// clear knob when stop
     	if (MPD.json['state'] === 'stop') {
-    		refreshTimeKnob();
+    		updKnobAndTimeTrack();
     	}
 
         // Render the Queue
@@ -1653,25 +1652,25 @@ function renderRadioView() {
     });
 }
 
-// Update time knob
-function updTimeKnob(mpdTime) {
+// Return formatted total time and show/hide certain elements
+function formatKnobTotal(mpdTime) {
 	if (MPD.json['artist'] == 'Radio station' && typeof(MPD.json['duration']) === 'undefined') {
-		var str = '';
-		$('#total').html('').addClass('total-radio'); // radio station svg
+		var formattedTotalTime = '';
+		$('#total').html('').addClass('total-radio'); // Radio badge
 		$('#playbar-mtime').css('display', 'block');
 		$('#playbar-mtotal').hide();
 	}
 	else {
-		var str = formatSongTime(mpdTime);
-		$('#total').removeClass('total-radio'); // radio station svg
+		var formattedTotalTime = formatSongTime(mpdTime);
+		$('#total').removeClass('total-radio');
 		$('#playbar-mtime').css('display', '');
 		$('#playbar-mtotal').show();
 	}
-    return str;
+    return formattedTotalTime;
 }
 
-// Initialize the countdown timers
-function refreshTimer(startFrom, stopTo, state) {
+// Update knob startFrom time
+function updKnobStartFrom(startFrom, state) {
 	$('#countdown-display').countdown('destroy');
 
     if (state == 'play' || state == 'pause') {
@@ -1688,8 +1687,8 @@ function refreshTimer(startFrom, stopTo, state) {
     }
 }
 
-// Update time knob, time track
-function refreshTimeKnob() {
+// Update time knob and time track
+function updKnobAndTimeTrack() {
 	var delta;
     window.clearInterval(UI.knob)
     GLOBAL.initTime = parseInt(MPD.json['song_percent']);
@@ -1808,40 +1807,6 @@ function formatSongTime(seconds) {
     }
 
     return str;
-}
-
-// Format total time for all songs in library
-function formatTotalTime(seconds) {
-	var output, hours, minutes, hh, mm, ss;
-
-    if(isNaN(parseInt(seconds))) {
-    	output = '';
-    }
-	else {
-	    hours = ~~(seconds / 3600); // ~~ = faster Math.floor
-    	seconds %= 3600;
-    	minutes = ~~(seconds / 60);
-
-        hh = hours == 0 ? '' : (hours == 1 ? hours + ' hour' : hours + ' hours');
-        mm = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
-
-		if (hours > 0) {
-			if (minutes > 0) {
-				output = hh + ' ' + mm;
-			}
-            else {
-				output = hh;
-			}
-		}
-        else {
-			output = mm;
-		}
-    }
-    return formatNumCommas(output);
-}
-
-function formatNumCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function countdownRestart(startFrom) {
