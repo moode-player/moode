@@ -53,6 +53,12 @@
 
     <!-- Common JS -->
 	<!-- build:js js/lib.min.js defer -->
+
+	<!--removeIf(USEBUNDLE)-->
+	<script src="js/jquery-1.8.2.min.js" />
+	<script src="js/jquery-ui-1.10.0.custom.min.js" defer></script>
+	<!--endRemoveIf(USEBUNDLE)-->
+
 	<!-- BUNDLE_TAG
 	<script src="js/jquery-1.8.2.js" />
 	<script src="js/jquery-ui/jquery-ui.js" ></script>
@@ -112,7 +118,15 @@
 		<!--endRemoveIf(NOCONFIGSECTION)-->
 
 	<!--removeIf(GENINDEXDEV)-->
-    <?php } ?>
+	<?php }
+	    // INSTALL DISPLAY MESSAGES FUNCTION, IS ACTUALY CALLED AFTER onready by applicatio.js  |scripts-panels.js
+		if (isset($_SESSION['notify']['title']) && $_SESSION['notify']['title'] != '') {
+			ui_notify($_SESSION['notify']);
+			$_SESSION['notify']['title'] = '';
+			$_SESSION['notify']['msg'] = '';
+			$_SESSION['notify']['duration'] = '3';
+		}
+	?>
 	<!--endRemoveIf(GENINDEXDEV)-->
 
 	<!-- MOBILE APP ICONS -->

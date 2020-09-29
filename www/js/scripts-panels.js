@@ -22,6 +22,11 @@
  *
  */
 jQuery(document).ready(function($) { 'use strict';
+    // call $.pnotify if created by backend
+    if( window.ui_notify != undefined ) {
+        ui_notify();
+	}
+
     GLOBAL.scriptSection = 'panels';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
