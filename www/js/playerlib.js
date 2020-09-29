@@ -1686,16 +1686,6 @@ function refreshTimer(startFrom, stopTo, state) {
 			$('#countdown-display').countdown('pause');
 		}
     }
-	else if (state == 'stop') {
-		if (SESSION.json['timecountup'] == "1" || parseInt(MPD.json['time']) == 0) {
-			$('#countdown-display').countdown({since: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-    	}
-		else {
-			$('#countdown-display').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-	    }
-
-		$('#countdown-display').countdown('pause');
-    }
 }
 
 // Update time knob, time track
