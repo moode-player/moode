@@ -22,6 +22,10 @@
  *
  */
 jQuery(document).ready(function($){ 'use strict';
+    // Call $.pnotify if created by backend
+    if( window.ui_notify != undefined ) {
+        ui_notify();
+    }
     GLOBAL.scriptSection = 'configs';
 	$('#config-back').show();
 	$('#config-tabs').css('display', 'flex');
