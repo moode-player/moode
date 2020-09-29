@@ -1142,6 +1142,30 @@ $('#database-radio').on('click', 'img', function(e) {
     UI.dbEntry[3] = $(this).parents('li').attr('id');
     $(this).parents('li').addClass('active');
 
+    /*if (SESSION.json['library_instant_play'] != 'No action') {
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_item' : 'add_item_next';
+            mpdDbCmd(queueCmd, path);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_item' : 'play_item_next';
+            mpdDbCmd(queueCmd, path);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+            mpdDbCmd('clear_play_item', path);
+            notify('clear_play_item');
+        }
+    }*/
+
+    oneTouchItem(path);
+
+	setTimeout(function() {
+        customScroll('radio', UI.radioPos + 1, 200);
+	}, DEFAULT_TIMEOUT);
+});
+
+function oneTouchItem (path) {
     if (SESSION.json['library_instant_play'] != 'No action') {
         if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
             var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_item' : 'add_item_next';
@@ -1157,11 +1181,7 @@ $('#database-radio').on('click', 'img', function(e) {
             notify('clear_play_item');
         }
     }
-
-	setTimeout(function() {
-        customScroll('radio', UI.radioPos + 1, 200);
-	}, DEFAULT_TIMEOUT);
-});
+}
 
 // Radio manager dialog
 $('#radio-manager-btn').click(function(e) {
@@ -1285,7 +1305,10 @@ $('#context-menu-lib-item a').click(function(e) {
 	$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 	$('img.lib-coverart').removeClass('active');
 
-	if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
+    if ($(this).data('cmd') == 'one_touch_action') {
+        oneTouchItem(filteredSongs[UI.dbEntry[0]].file);
+	}
+	else if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
 		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
 		notify('add_item');
 	}
