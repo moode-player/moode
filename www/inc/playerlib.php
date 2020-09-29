@@ -1851,7 +1851,7 @@ function sourceMount($action, $id = '') {
 
 function ui_notify($notify) {
 	$script .= "<script>";
-	$script .= "jQuery(document).ready(function() {";
+	$script .= "docReady(function() {"; // this function is created in the footer.php script at the bottom
 	$script .= "$.pnotify.defaults.history = false;";
 	$script .= "$.pnotify({";
 	$script .= "title: '" . $notify['title'] . "',";
