@@ -2510,199 +2510,247 @@ function cfgAudioScrobbler() {
 	fclose($fp);
 }
 
+// returns the settings for reading/writing the autoConfig file
+function autoConfigSettings() {
+	$debug = true;
+	// handler is config item name is just setting the playSession
+	function setPlayerSession($values) {
+		playerSession('write', array_key_first($values), $values[array_key_first($values)]);
+	}
+
+	// handler is config item name is just setting the playSession and a syscmd call to util.sh
+	function setPlayerSessionAndSysCmd($values, $command ) {
+		sysCmd('/var/www/command/util.sh '.sprintf($command, $values[array_key_first($values)]) );
+		playerSession('write', array_key_first($values), $values[array_key_first($values)]);
+	}
+
+	// configuration of the autoconfig item handling
+	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
+	//            most item only have 1 autoconfig item, but network setting requires multiple to be present
+	// - handler for setting the config item
+	// - section_var - if autoconfig item name differs from session var, the name of the session var can be provided
+	// - command - argument for util.sh when setPlayerSessionAndSysCmd handler is used.
+	$configurationHandlers = [
+		'Names',
+		['requires' => ['browsertitle'] , 'handler' => setPlayerSession],
+		['requires' => ['hostname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name host "moode" "%s"'],
+		['requires' => ['bluetoothname'] , 'session_var' => 'btname', 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name bluetooth "Moode Bluetooth" "%s"'],
+		['requires' => ['airplayname'] , 'handler' => setPlayerSession],
+		['requires' => ['spotifyname'] , 'handler' => setPlayerSession],
+		['requires' => ['squeezelitename'] , 'handler' => function($values) {
+				$dbh = cfgdb_connect();
+				$result = sdbquery('update cfg_sl set value=' . "'" . $values['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
+				sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $values['squeezelitename'] . '"');
+			}, 'custom_write' => function($values) {
+				$dbh = cfgdb_connect();
+				$result = sdbquery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
+				return "squeezelitename = \"".$result."\"\n";
+			}],
+		['requires' => ['upnpname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name upnp "Moode UPNP" "%s"'],
+		['requires' => ['dlnaname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name dlna "Moode DLNA" "%s"'],
+
+		'System',
+		['requires' => ['timezone'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-timezone %s'],
+		['requires' => ['keyboard'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-keyboard %s'],
+		//TODO: decide use the same value as in the database or make Captalized ?then also required a custom writer?
+		// ['requires' => ['cpugov'] , 'handler' => function($values) {
+		// 		//TODO: use native of the caption one ? , is not the same as in session. give problems with extraction
+		// 		playerSession('write', 'cpugov', $values['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
+		//}],
+		['requires' => ['cpugov'] , 'handler' => setPlayerSession],
+		['requires' => ['hdmiport'] , 'handler' => setPlayerSession],
+		['requires' => ['eth0chk'] , 'handler' => setPlayerSession],
+		['requires' => ['localui'] , 'handler' => setPlayerSession],
+
+		'I2S Device',
+		['requires' => ['i2sdevice'] , 'handler' => function($values) {
+			cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
+			playerSession('write', 'i2sdevice', $values['i2sdevice']);
+		}],
+		'Renderers',
+		['requires' => ['btsvc'] , 'handler' => setPlayerSession],
+		['requires' => ['pairing_agent'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmafterbt'] , 'handler' => setPlayerSession],
+		['requires' => ['airplaysvc'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmafterapl'] , 'handler' => setPlayerSession],
+		['requires' => ['spotifysvc'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmafterspot'] , 'handler' => setPlayerSession],
+		['requires' => ['slsvc'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmaftersl'] , 'handler' => setPlayerSession],
+
+		'UPnP/DLNA',
+		['requires' => ['upnpsvc'] , 'handler' => setPlayerSession],
+		['requires' => ['dlnasvc'] , 'handler' => setPlayerSession],
+		['requires' => ['upnp_browser'] , 'handler' => setPlayerSession],
+
+		'Network (wlan0)',
+		['requires' => ['wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'] , 'handler' => function($values) {
+				$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
+				$netcfg = sdbquery('select * from cfg_network', $dbh);
+				$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
+					'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
+					'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+					'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
+				cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
+				cfgNetIfaces();
+			}, 'custom_write' => function($values) {
+				$dbh = cfgdb_connect();
+				$row = sdbquery("select * from cfg_network where iface='wlan0'", $dbh)[0];
+				$result="";
+				$result = $result."wlanssid = \"".$row['wlanssid']."\"\n";
+				$result = $result."wlanpwd = \"".""."\"\n"; // keep empty
+				$result = $result."wlansec = \"".$row['wlansec']."\"\n";
+				$result = $result."wlancountry = \"".$row['wlan_country']."\"\n";
+				return $result;
+			}],
+
+		'Network (apd0)',
+		['requires' => ['apdssid', 'apdpwd', 'apdchan'] , 'handler' => function($values) {
+				$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
+				$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
+					'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+					'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
+				cfgdb_update('cfg_network', $dbh, 'apd0', $value);
+				cfgHostApd();
+			}, 'custom_write' => function($values) {
+				$dbh = cfgdb_connect();
+				$row = sdbquery("select * from cfg_network where iface='apd0'", $dbh)[0];
+				$result = $result."apdssid = \"".$row['wlanssid']."\"\n";
+				$result = $result."apdpwd = \"".""."\"\n"; // keep empty
+				$result = $result."apdchan = \"".$row['wlan_channel']."\"\n";
+				return $result;
+			}],
+
+		'Theme & Background',
+		['requires' => ['themename'] , 'handler' => setPlayerSession],
+		['requires' => ['accent_color'] , 'handler' => setPlayerSession],
+		['requires' => ['alphablend'] , 'handler' => setPlayerSession],
+		['requires' => ['adaptive'] , 'handler' => setPlayerSession],
+		['requires' => ['cover_backdrop'] , 'handler' => setPlayerSession],
+		['requires' => ['cover_blur'] , 'handler' => setPlayerSession],
+		['requires' => ['cover_scale'] , 'handler' => setPlayerSession],
+
+		'Other',
+		['requires' => ['font_size'] , 'handler' => setPlayerSession],
+		['requires' => ['playhist'] , 'handler' => setPlayerSession],
+		['requires' => ['first_use_help'] , 'handler' => function($values) {
+			playerSession('write', 'first_use_help', ($values['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
+		}, 'custom_write' => function($values) {
+			$value = $SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
+			return "squeezelitename = \"".$value."\"\n";
+		}],
+	];
+
+	return $configurationHandlers;
+}
+
 // Auto-configure settings at worker startup
 function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Auto-configure initiated');
 
-	//$contents = file_get_contents($cfgfile);
-	$contents = str_replace("\r\n", "\n", file_get_contents($cfgfile));
-	$autocfg = array();
-	$line = strtok($contents, "\n");
+	try {
+		$autocfg = parse_ini_file($cfgfile, false);
 
-	while ($line) {
-		$firstchr = substr($line, 0, 1);
+		$available_configs = array_keys($autocfg);
 
-		if (!($firstchr == '#' || $firstchr == '[')) {
-			list ($element, $value) = explode("=", $line, 2);
-			$autocfg[$element] = $value;
+		autoCfgLog('autocfg: Configuration file parsed');
+		$configurationHandlers = autoConfigSettings(); // contains supported configuration items
+
+		$section = '';
+		foreach ($configurationHandlers as $config) {
+			$values = array();
+
+			// print new section header
+			if( is_string($config) ) {
+				autoCfgLog('autocfg: - '. $config);
+			}
+			// check if alrequired cfgkeys are present
+			elseif( !array_diff_key(array_flip($config['requires']), $autocfg) ) {
+				// is so get copie all key/value sets
+				foreach ($config['requires'] as $config_name) {
+					$value = $autocfg[$config_name];
+					// is config name differs from session var the session_var can be used
+					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
+					$values[$config_key] = $value;
+					autoCfgLog('autocfg: '. $config_name.': ' . $value);
+					// remove used autoconfig
+					unset($available_configs[$config_name]);
+				}
+				// call handler
+				if( !array_key_exists('cmd', $config) )
+					$config['handler'] ($values);
+				else
+					$config['handler'] ($values, $config['cmd']);
+			}
+			// detect reuires with multiple keys which are no all present in provided configs
+			elseif( count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $autocfg))>= 1) {
+				$incompleteset = " [ ";
+				foreach ($config['requires'] as $config_require) {
+					$incompleteset = $incompleteset . " ". $config_require;
+				}
+				$incompleteset = $incompleteset . " ]";
+				autoCfgLog('autocfg: Warning incomplete set '. $incompleteset. ' detected.');
+			}
 		}
 
-		$line = strtok("\n");
+		// check for unused but supplied autocfg settings
+		if( empty($available_configs) ) {
+			foreach ($available_configs as $config_name) {
+				autoCfgLog('autocfg: Warning: '. $config_name.': is unused, incomplete or wrong name.');
+			}
+		}
 	}
-
-	autoCfgLog('autocfg: Configuration file parsed');
-
-	//
-	autoCfgLog('autocfg: - Names');
-	//
-
-	sysCmd('/var/www/command/util.sh chg-name host "moode" ' . '"' . $autocfg['hostname'] . '"');
-	playerSession('write', 'hostname', $autocfg['hostname']);
-
-	playerSession('write', 'browsertitle', $autocfg['browsertitle']);
-
-	sysCmd('/var/www/command/util.sh chg-name bluetooth "Moode Bluetooth" ' . '"' . $autocfg['bluetoothname'] . '"');
-	playerSession('write', 'btname', $autocfg['bluetoothname']);
-
-	playerSession('write', 'airplayname', $autocfg['airplayname']);
-	playerSession('write', 'spotifyname', $autocfg['spotifyname']);
-
-	$dbh = cfgdb_connect();
-	$result = sdbquery('update cfg_sl set value=' . "'" . $autocfg['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
-	sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $autocfg['squeezelitename'] . '"');
-
-	sysCmd('/var/www/command/util.sh chg-name upnp "Moode UPNP" ' . '"' . $autocfg['upnpname'] . '"');
-	playerSession('write', 'upnpname', $autocfg['upnpname']);
-
-	sysCmd('/var/www/command/util.sh chg-name dlna "Moode DLNA" ' . '"' . $autocfg['dlnaname'] . '"');
-	playerSession('write', 'dlnaname', $autocfg['dlnaname']);
-
-	//sysCmd('/var/www/command/util.sh chg-name mpdzeroconf ' . "'" . '"Moode MPD"' . "'" . ' ' . "'" . '"' . $autocfg['mpdzeroconf'] . '"' . "'");
-	//cfgdb_update('cfg_mpd', cfgdb_connect(), 'zeroconf_name', $autocfg['mpdzeroconf']);
-
-	autoCfgLog('autocfg: Host name: ' . $autocfg['hostname']);
-	autoCfgLog('autocfg: Browser title: ' . $autocfg['browsertitle']);
-	autoCfgLog('autocfg: Bluetooth: ' . $autocfg['bluetoothname']);
-	autoCfgLog('autocfg: Airplay: ' . $autocfg['airplayname']);
-	autoCfgLog('autocfg: Spotify: ' . $autocfg['spotifyname']);
-	autoCfgLog('autocfg: Squeezelite: ' . $autocfg['squeezelitename']);
-	autoCfgLog('autocfg: UPnP Client: ' . $autocfg['upnpname']);
-	autoCfgLog('autocfg: DLNA: ' . $autocfg['dlnaname']);
-	//autoCfgLog('autocfg: MPD zeroconf: ' . $autocfg['mpdzeroconf']);
-
-	//
-	autoCfgLog('autocfg: - System');
-	//
-
-	sysCmd('/var/www/command/util.sh set-timezone ' . $autocfg['timezone']);
-	playerSession('write', 'timezone', $autocfg['timezone']);
-	sysCmd('/var/www/command/util.sh set-keyboard ' . $autocfg['keyboard']);
-	playerSession('write', 'keyboard', $autocfg['keyboard']);
-	playerSession('write', 'cpugov', $autocfg['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
-	playerSession('write', 'hdmiport', $autocfg['hdmiport']);
-	playerSession('write', 'eth0chk', $autocfg['eth0chk']);
-	playerSession('write', 'localui', $autocfg['localui']);
-
-	autoCfgLog('autocfg: Time zone: ' . $autocfg['timezone']);
-	autoCfgLog('autocfg: Keyboard: ' . $autocfg['keyboard']);
-	autoCfgLog('autocfg: CPU Governor: ' . $autocfg['cpugov']);
-	autoCfgLog('autocfg: HDMI port: ' . ($autocfg['hdmiport'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Wait for eth0 address: ' . ($autocfg['eth0chk'] == '0' ? 'No' : 'Yes'));
-	autoCfgLog('autocfg: Local UI: ' . ($autocfg['localui'] == '0' ? 'Off' : 'On'));
-
-	//
-	autoCfgLog('autocfg: - I2S Device');
-	//
-
-	cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $autocfg['i2sdevice']);
-	playerSession('write', 'i2sdevice', $autocfg['i2sdevice']);
-	autoCfgLog('autocfg: i2sdevice: ' . $autocfg['i2sdevice']);
-
-	//
-	autoCfgLog('autocfg: - Renderers');
-	//
-
-	playerSession('write', 'btsvc', $autocfg['btsvc']);
-	playerSession('write', 'pairing_agent', $autocfg['pairing_agent']);
-	playerSession('write', 'rsmafterbt', $autocfg['rsmafterbt'] == 'No' ? '0' : '1');
-	playerSession('write', 'airplaysvc', $autocfg['airplaysvc']);
-	playerSession('write', 'rsmafterapl', $autocfg['rsmafterapl']);
-	playerSession('write', 'spotifysvc', $autocfg['spotifysvc']);
-	playerSession('write', 'rsmafterspot', $autocfg['rsmafterspot']);
-	playerSession('write', 'slsvc', $autocfg['slsvc']);
-	playerSession('write', 'rsmaftersl', $autocfg['rsmaftersl']);
-
-	autoCfgLog('autocfg: Bluetooth: ' . ($autocfg['btsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Bluetooth pairing agent: ' . ($autocfg['pairing_agent'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Bluetooth MPD resume: ' . $autocfg['rsmafterbt']);
-	autoCfgLog('autocfg: Airplay: ' . ($autocfg['airplaysvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Airplay MPD resume: ' . $autocfg['rsmafterapl']);
-	autoCfgLog('autocfg: Spotify: ' . ($autocfg['spotifysvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Spotify MPD resume: ' . $autocfg['rsmafterspot']);
-	autoCfgLog('autocfg: Squeezlite: ' . ($autocfg['slsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Squeezlite MPD resume: ' . $autocfg['rsmaftersl']);
-
-	//
-	autoCfgLog('autocfg: - UPnP/DLNA');
-	//
-
-	playerSession('write', 'upnpsvc', $autocfg['upnpsvc']);
-	playerSession('write', 'dlnasvc', $autocfg['dlnasvc']);
-	playerSession('write', 'upnp_browser', $autocfg['upnp_browser']);
-
-	autoCfgLog('autocfg: UPnP Client: ' . ($autocfg['upnpsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: DLNA: ' . ($autocfg['dlnasvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: UPnP Browser: ' . ($autocfg['upnp_browser'] == '0' ? 'Off' : 'On'));
-
-	//
-	autoCfgLog('autocfg: - Network (wlan0)');
-	//
-
-	$psk = genWpaPSK($autocfg['wlanssid'], $autocfg['wlanpwd']);
-	$netcfg = sdbquery('select * from cfg_network', $dbh);
-	$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
-		'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
-		'wlanssid' => $autocfg['wlanssid'], 'wlansec' => $autocfg['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-		'wlan_country' => $autocfg['wlancountry'], 'wlan_channel' => '');
-	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
-	cfgNetIfaces();
-
-	autoCfgLog('autocfg: SSID: ' . $autocfg['wlanssid']);
-	autoCfgLog('autocfg: Security: ' . $autocfg['wlansec']);
-	autoCfgLog('autocfg: Password: ' . $autocfg['wlanpwd']);
-	autoCfgLog('autocfg: PSK: ' . $psk);
-	autoCfgLog('autocfg: Country: ' . $autocfg['wlancountry']);
-
-	//
-	autoCfgLog('autocfg: - Network (apd0)');
-	//
-
-	$psk = genWpaPSK($autocfg['apdssid'], $autocfg['apdpwd']);
-	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
-		'wlanssid' => $autocfg['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-		'wlan_country' => '', 'wlan_channel' => $autocfg['apdchan']);
-	cfgdb_update('cfg_network', $dbh, 'apd0', $value);
-	cfgHostApd();
-
-	autoCfgLog('autocfg: SSID: ' . $autocfg['apdssid']);
-	autoCfgLog('autocfg: Password: ' . $autocfg['apdpwd']);
-	autoCfgLog('autocfg: PSK: ' . $psk);
-	autoCfgLog('autocfg: Channel: ' . $autocfg['apdchan']);
-
-	//
-	autoCfgLog('autocfg: - Theme & Background');
-	//
-
-	playerSession('write', 'themename', $autocfg['themename']);
-	playerSession('write', 'accent_color', $autocfg['accentcolor']);
-	playerSession('write', 'alphablend', $autocfg['alphablend']);
-	playerSession('write', 'adaptive', $autocfg['adaptive']);
-	playerSession('write', 'cover_backdrop', $autocfg['cover_backdrop']);
-	playerSession('write', 'cover_blur', $autocfg['cover_blur']);
-	playerSession('write', 'cover_scale', $autocfg['cover_scale']);
-
-	autoCfgLog('autocfg: Theme name: ' . $autocfg['themename']);
-	autoCfgLog('autocfg: Accent color: ' . $autocfg['accentcolor']);
-	autoCfgLog('autocfg: Adaptive coloring: ' . $autocfg['adaptive']);
-	autoCfgLog('autocfg: Cover backdrop: ' . $autocfg['cover_backdrop']);
-	autoCfgLog('autocfg: Cover blur: ' . $autocfg['cover_blur']);
-	autoCfgLog('autocfg: Cover scale: ' . $autocfg['cover_scale']);
-
-	//
-	autoCfgLog('autocfg: - Other');
-	//
-
-	playerSession('write', 'font_size', $autocfg['font_size']);
-	playerSession('write', 'playhist', $autocfg['playhist']);
-	playerSession('write', 'first_use_help', ($autocfg['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
-
-	autoCfgLog('autocfg: Font size: ' . $autocfg['font_size']);
-	autoCfgLog('autocfg: Play history: ' . $autocfg['playhist']);
-	autoCfgLog('autocfg: first use help: ' . $autocfg['first_use_help']);
+	catch (Exception $e) {
+		autoCfgLog('autocfg: Caught exception: '.  $e->getMessage() );
+	}
 
 	sysCmd('rm ' . $cfgfile);
 	autoCfgLog('autocfg: Configuration file deleted');
 	autoCfgLog('autocfg: Auto-configure complete');
+}
+
+// generates an autoconfig file as string based on the current settings
+function autoconfigExtract() {
+	$autoconfigstring = <<<EOT
+	; #########################################
+	; Copy this file to /boot/moodecfg.ini
+	; It will be processed at startup and the
+	; system will automaticly Restart.
+	;
+	; All param="value" pairs must be present.
+	; Set wlanssid= blank to start AP mode.
+	; Example: wlanssid=""
+	;
+	; Moode Release : %s
+	; Create date	: %s
+	;
+	; ##########################################
+	EOT;
+
+	$autoconfigstring = sprintf($autoconfigstring, getMoodeRel('verbose'), date('Y-m-d H:i:s'));
+
+	$configurationHandlers = autoConfigSettings(); // contains supported configuration items
+
+	foreach ($configurationHandlers as &$config) {
+		$values = array();
+		// print new section header
+		if( is_string($config) ) {
+			$autoconfigstring = $autoconfigstring . "\n[". $config. "]\n";
+		} else {
+			if( !array_key_exists('custom_write', $config)) {
+				foreach ($config['requires'] as $config_name) {
+					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
+					if( array_key_exists($config_key, $_SESSION) ) {
+						$autoconfigstring = $autoconfigstring . $config_key. " = \"".$_SESSION[$config_key]."\"\r\n";
+					}
+				}
+			} else {
+				$autoconfigstring = $autoconfigstring . $config['custom_write']($config['requires']);
+			}
+		}
+	}
+
+	return $autoconfigstring;
 }
 
 function genWpaPSK($ssid, $passphrase) {
