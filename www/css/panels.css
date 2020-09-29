@@ -218,7 +218,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #albumsList .artist-name-art, #albumsList .album-year {vertical-align:top;line-height:normal;font-size:.85em;color:var(--textvariant);}
 #albumsList .album-year {margin-left:0;margin-left:.3em;}
 #library-panel.limited .artist-name-art, #library-panel.limited #albumcovers .artist-name {max-width:67%;}
-#library-panel.limited .lib-entry, #radio-panel.limited .station-name {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
+#library-panel.limited .lib-entry span, #library-panel.limited .album-name, #library-panel.limited .artist-name, #library-panel.limited .album-year, #radio-panel.limited .station-name {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
 .playlist li.active:before, .cv-playlist li.active:before {color:transparent !important;background:var(--npicon) no-repeat right;background-size:1em;}
@@ -370,7 +370,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #lib-content li {display:block;position:relative;cursor:pointer;line-height:1.25em;}
 #songsList {padding-bottom:calc(10em + env(safe-area-inset-bottom));margin:.5em .25em;width:calc(100% - var(--sbw));}
 /**/
-#lib-genre li, #lib-artist li/*, #lib-album li*/ {padding: 0.4em 0.5em;/*line-height:2em; /*margin-top:7px;*/}
+#lib-genre li, #lib-artist li/*, #lib-album li*/ {padding: 0.4em 0.5em;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;/*line-height:2em; /*margin-top:7px;*/}
 #lib-content #lib-file li {cursor:default;padding:.15em 0 .5em 0;}
 #lib-content #lib-file li:nth-child(odd) {background:rgba(128,128,128,0.1);}
 #lib-content #lib-file li:nth-child(odd).active {font-weight:600;}

@@ -1649,6 +1649,9 @@ function renderRadioView() {
         // Render the list
     	//$('ul.database-radio').html(output);
 		currentView == 'radio' ? $('#radiocovers').html(output, lazyLode('radio')) : $('#radiocovers').html(output);
+		//var element = document.getElementById('radiocovers');
+		//$.when(element.innerHTML = output).promise().done(function(){lazyLode('radio')});
+
     });
 }
 
@@ -1686,12 +1689,12 @@ function refreshTimer(startFrom, stopTo, state) {
 		}
     }
 	else if (state == 'stop') {
-		if (SESSION.json['timecountup'] == "1" || parseInt(MPD.json['time']) == 0) {
+		/*if (SESSION.json['timecountup'] == "1" || parseInt(MPD.json['time']) == 0) {
 			$('#countdown-display').countdown({since: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
     	}
 		else {
 			$('#countdown-display').countdown({until: 0, compact: true, format: 'hMS', layout: '{h<}{hn}{sep}{h>}{mnn}{sep}{snn}'});
-	    }
+	    }*/
 
 		$('#countdown-display').countdown('pause');
     }
@@ -1752,6 +1755,8 @@ function refreshTimeKnob() {
 		var tt = $('#timetrack');
 		var ti = $('#time');
         UI.knob = setInterval(function() {
+            delta === 0 ? GLOBAL.initTime = GLOBAL.initTime + 0.5 : GLOBAL.initTime = GLOBAL.initTime + 0.1; // fast paint when radio station playing
+			
 			if (UI.mobile || coverView || currentView.indexOf('playback' == -1)) {
 				if (!timeSliderMove) {
 					syncTimers();
@@ -1760,7 +1765,6 @@ function refreshTimeKnob() {
 					}					
 				}
 			}
-            delta === 0 ? GLOBAL.initTime = GLOBAL.initTime + 0.5 : GLOBAL.initTime = GLOBAL.initTime + 0.1; // fast paint when radio station playing
 			if (!UI.mobile) {
 	            if (delta === 0 && GLOBAL.initTime > 100) { // stops painting when radio (delta = 0) and knob fully painted
 					window.clearInterval(UI.knob)

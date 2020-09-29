@@ -138,12 +138,7 @@ jQuery(document).ready(function($) { 'use strict';
 
     	// only display transparency related theme options if alphablend is < 1
     	$('#alpha-blend').on('DOMSubtreeModified',function(){
-    		if ($('#alpha-blend span').text() < 1) {
-    			$('#cover-options').show();
-    		}
-            else {
-    			$('#cover-options').css('display', '');
-    		}
+    		$('#alpha-blend span').text() < 1 ? $('#cover-options').show() : $('#cover-options').css('display', '');
     	});
 
     	/*themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
