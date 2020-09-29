@@ -255,6 +255,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .btnlist:focus {outline:none;}
 .btnlist.pl-prevPage, .btnlist.db-prevPage, .btnlist.pl-firstPage, .btnlist.db-firstPage {padding:0 .3em;}
 .btnlist-top-db, .btnlist-top-ra {position:relative;background-color:rgba(128,128,128,.1);;color:var(--adapttext);border-radius:.25em;border:1px solid var(--btnshade);width:calc(100vw - 2.5em);height:2.1rem;padding:0 !important;margin:0 auto;}
+#searchResetRa {display:none;}
 #pl-filter, #lib-album-filter, #ra-filter {padding:0}
 #db-browse .dropdown {display:block;height:40px;line-height:40px;margin:0 20px 0 0;}
 #db-browse .dropdown-menu {background:transparent;border:none;border-radius:0px;box-shadow:none;list-style:none outside none;margin:0;/*min-width:100px;*/padding:0;border-top:1px solid #000;border-left:1px solid #000;border-right:1px solid #000;position:absolute;top:100%;z-index:1000;}
