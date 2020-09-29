@@ -491,15 +491,17 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.prev').click(function(e) {
         $.getJSON('command/moode.php?cmd=getmpdstatus', function(result) {
             if (parseInt(MPD.json['time']) > 0 && parseInt(result['elapsed']) > 0) {
+                // Song file
     			window.clearInterval(UI.knob);
-    			//UI.mobile ? refreshTimer(0, 0, 'stop') : refreshTimer(0, 0, 'stop');
-    			refreshTimer(0, 0, 'stop')
-    	        sendMpdCmd('seek ' + MPD.json['song'] + ' 0');
     			if (MPD.json['state'] != 'pause') {
     				sendMpdCmd('pause');
     			}
+                setTimeout(function() {
+                    sendMpdCmd('seek ' + MPD.json['song'] + ' 0');
+                }, DEFAULT_TIMEOUT);                
             }
     		else {
+                // Radio station
     			sendMpdCmd('previous');
     		}
     		return false;
