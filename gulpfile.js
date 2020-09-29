@@ -296,9 +296,10 @@ gulp.task('bundle', gulp.series([`cache`, `maps`],function (done) {
                           transformPath:fileNameToMin
                           // use add path the location with the min versions
                          ,searchPath: pkg.app.cache
-                         ,allowEmpty: true }))
+                         ,allowEmpty: true }, $.lazypipe().pipe($.sourcemaps.init, { loadMaps: true })))
         .pipe($.if(['**/*.min.js', '**/*.min.css'], $.header(banner, {pkg: pkg}) ))
         .pipe($.size({showFiles: true, total: true}))
+        .pipe($.sourcemaps.write('maps'))
         // don't write the patched html file
         .pipe($.if('!*.html', gulp.dest(pkg.app.dest)))
         .on('end', done);
