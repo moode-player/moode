@@ -22,7 +22,7 @@
  *
  */
 jQuery(document).ready(function($) { 'use strict';
-    // call $.pnotify if created by backend
+    // Call $.pnotify if created by backend
     if( window.ui_notify != undefined ) {
         ui_notify();
 	}
