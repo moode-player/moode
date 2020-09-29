@@ -1850,9 +1850,9 @@ function sourceMount($action, $id = '') {
 }
 
 function ui_notify($notify) {
-	$script .= "<script>";
-	$script .= "jQuery(document).ready(function() {";
-	$script .= "$.pnotify.defaults.history = false;";
+	$script .= "<script>\n";
+	$script .= "function ui_notify() {\n";
+	$script .= "$.pnotify.defaults.history = false;\n";
 	$script .= "$.pnotify({";
 	$script .= "title: '" . $notify['title'] . "',";
 	$script .= "text: '" . $notify['msg'] . "',";
@@ -1864,9 +1864,9 @@ function ui_notify($notify) {
 	else {
 		$script .= "delay: '3000',";
 	}
-	$script .= "opacity: 1.0});";
-	$script .= "});";
-	$script .= "</script>";
+	$script .= "opacity: 1.0});\n";
+	$script .= "}\n";
+	$script .= "</script>\n";
 
 	echo $script;
 }
