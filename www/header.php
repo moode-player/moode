@@ -19,16 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 -->
+<!--removeIf(GENINDEXDEV)-->
+
 <?php
     //workerLog('-- header.php');
     $return = session_start();
     //workerLog('session_start=' . (($return) ? 'TRUE' : 'FALSE'));
 ?>
-
+<!--endRemoveIf(GENINDEXDEV)-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,51 +39,95 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 
-	<!-- VERSIONED RESOURCES -->
-	<?php
-		// Common css
-		versioned_resource('css/bootstrap.min.css');
-		versioned_resource('css/bootstrap-select.min.css');
-		versioned_resource('css/flat-ui.min.css');
-		versioned_resource('css/jquery.pnotify.default.min.css');
-		versioned_resource('css/fontawesome-moode.min.css');
-		versioned_resource('css/panels.min.css');
-		versioned_resource('css/moode.min.css');
+    <!-- RESOURCES -->
+    <!-- Common CSS -->
+	<!-- build:css css/styles.min.css -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="css/flat-ui.min.css" rel="stylesheet">
+    <link href="css/jquery.pnotify.default.min.css" rel="stylesheet">
+    <link href="css/fontawesome-moode.min.css" rel="stylesheet">
+    <link href="css/panels.min.css" rel="stylesheet">
+    <link href="css/moode.min.css" rel="stylesheet">
+	<!-- endbuild -->
 
-		// Common js
-		versioned_script('js/bootstrap.min.js');
-		versioned_script('js/bootstrap-select.min.js');
-		versioned_script('js/jquery.pnotify.min.js');
-        versioned_script('js/notify.min.js');
-        versioned_script('js/playerlib-nomin.js');
-        versioned_script('js/playerlib.min.js');
-		versioned_script('js/links.min.js');
+    <!-- Common JS -->
+	<!-- build:js js/lib.min.js defer -->
 
-		// Playback / Library
-		if ($section == 'index') {
-			versioned_resource('css/jquery.countdown.min.css');
-			versioned_script('js/jquery.countdown.min.js');
-			versioned_script('js/jquery.scrollTo.min.js');
-			versioned_script('js/jquery.touchSwipe.min.js');
-			versioned_script('js/jquery.lazyload.min.js');
-			versioned_script('js/jquery.md5.min.js');
-			versioned_script('js/jquery.adaptive-backgrounds.min.js');
-			versioned_script('js/jquery.knob.min.js');
-			versioned_script('js/bootstrap-contextmenu.min.js');
-            versioned_script('js/scripts-library.min.js');
-            versioned_script('js/scripts-panels.min.js');
-		}
-		// Configs
-		else {
-			versioned_script('js/custom_checkbox_and_radio.min.js');
-			versioned_script('js/custom_radio.js');
-			versioned_script('js/jquery.tagsinput.min.js');
-			versioned_script('js/jquery.placeholder.min.js');
-			versioned_script('js/i18n/_messages.en.js', 'text/javascript');
-			versioned_script('js/application.min.js');
-			versioned_script('js/scripts-configs.min.js');
+	<!--removeIf(USEBUNDLE)-->
+	<script src="js/jquery-1.8.2.min.js" />
+	<script src="js/jquery-ui-1.10.0.custom.min.js" defer></script>
+	<!--endRemoveIf(USEBUNDLE)-->
+
+	<!-- BUNDLE_TAG
+	<script src="js/jquery-1.8.2.js" />
+	<script src="js/jquery-ui/jquery-ui.js" ></script>
+	<script src="js/jquery-ui/jquery.ui.core.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.widget.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.mouse.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.position.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.datepicker.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.slider.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.tooltip.js" defer></script>
+	<script src="js/jquery-ui/jquery.ui.effect.js" defer></script>
+	BUNDLE_TAG -->
+    <script src="js/bootstrap.min.js" defer></script>
+    <script src="js/bootstrap-select.min.js" defer></script>
+    <script src="js/jquery.pnotify.min.js" defer></script>
+    <script src="js/notify.min.js" defer></script>
+    <script src="js/playerlib-nomin.js" defer></script>
+    <script src="js/playerlib.min.js" defer></script>
+    <script src="js/links.min.js" defer></script>
+	<!-- endbuild -->
+
+    <!-- Playback / Library -->
+	<!--removeIf(GENINDEXDEV)-->
+    <?php if ($section == 'index') { ?>
+	<!--endRemoveIf(GENINDEXDEV)-->
+		<!-- build:css css/main.min.css -->
+        <link href="css/jquery.countdown.min.css" rel="stylesheet">
+		<!-- endbuild -->
+		<!-- build:js js/main.min.js defer -->
+        <script src="js/jquery.countdown.min.js" defer></script>
+        <script src="js/jquery.scrollTo.min.js" defer></script>
+        <script src="js/jquery.touchSwipe.min.js" defer></script>
+        <script src="js/jquery.lazyload.min.js" defer></script>
+        <script src="js/jquery.md5.min.js" defer></script>
+        <script src="js/jquery.adaptive-backgrounds.min.js" defer></script>
+        <script src="js/jquery.knob.min.js" defer></script>
+        <script src="js/bootstrap-contextmenu.min.js" defer></script>
+        <script src="js/scripts-library.min.js" defer></script>
+        <script src="js/scripts-panels.min.js" defer></script>
+		<!-- endbuild -->
+    <!-- Configs -->
+	<!--removeIf(GENINDEXDEV)-->
+    <?php } else { ?>
+	<!--endRemoveIf(GENINDEXDEV)-->
+		<!--removeIf(NOCONFIGSECTION)-->
+		<!-- build:js js/config.min.js defer -->
+		<!-- CONFIGBLOCKSECTION_BEGIN -->
+        <script src="js/custom_checkbox_and_radio.min.js" defer></script>
+        <script src="js/custom_radio.js" defer></script>
+        <script src="js/jquery.tagsinput.min.js" defer></script>
+        <script src="js/jquery.placeholder.min.js" defer></script>
+        <script src="js/i18n/_messages.en.js', 'text/javascript" defer></script>
+        <script src="js/application.min.js" defer></script>
+        <script src="js/scripts-configs.min.js" defer></script>
+		<!-- CONFIGBLOCKSECTION_END -->
+		<!-- endbuild -->
+		<!--endRemoveIf(NOCONFIGSECTION)-->
+
+	<!--removeIf(GENINDEXDEV)-->
+	<?php }
+	    // INSTALL DISPLAY MESSAGES FUNCTION, IS ACTUALY CALLED AFTER onready by applicatio.js  |scripts-panels.js
+		if (isset($_SESSION['notify']['title']) && $_SESSION['notify']['title'] != '') {
+			ui_notify($_SESSION['notify']);
+			$_SESSION['notify']['title'] = '';
+			$_SESSION['notify']['msg'] = '';
+			$_SESSION['notify']['duration'] = '3';
 		}
 	?>
+	<!--endRemoveIf(GENINDEXDEV)-->
 
 	<!-- MOBILE APP ICONS -->
 	<!-- Apple -->
@@ -97,6 +143,7 @@
 	<meta name="msapplication-TileColor" content="#da532c">
 </head>
 
+
 <body onorientationchange="javascript:location.reload(true); void 0;">
 	<!-- ALBUM COVER BACKDROP -->
 	<div aria-label="Album Cover Backdrop" id="cover-backdrop"></div>
@@ -105,6 +152,7 @@
 
     <!-- INPUT SOURCE INDICATOR -->
     <div id="inpsrc-indicator" class="inpsrc">
+        <div id="inpsrc-backdrop"></div>
         <div id="inpsrc-msg"></div>
     </div>
 
@@ -113,7 +161,7 @@
 		<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
 
 		<div id="config-back">
-			<a aria-label="Back" href="<?php echo $_SESSION['http_config_back'] ?>"><i class="far fa-arrow-left"></i></a>
+			<a aria-label="Back" href="<?php echo $_SESSION['config_back_link'] ?>"><i class="far fa-arrow-left"></i></a>
 		</div>
 
 		<div id="config-tabs" class="viewswitch-cfgs hide">
@@ -160,7 +208,7 @@
 	<div id="menu-bottom" class="btn-group btn-list ui-footer ui-bar-f ui-footer-fixed slidedown" data-position="fixed" data-role="footer" role="banner">
 		<div id="playbar">
 			<div aria-label="Cover" id="playbar-cover"></div>
-			<div aria-label="First use help" id="playbar-firstuse-help">Tap on the Playbar to switch to Playback <i class="fal fa-times-circle"></i></div>
+			<div aria-label="First use help" id="playbar-firstuse-help"><div></div></div>
             <div aria-label="Switch to Playback" id="playbar-switch"><div></div></div>
 			<div id="playbar-controls">
 				<button aria-label="Previous" class="btn btn-cmd prev"><i class="fas fa-step-backward"></i></button>
@@ -169,7 +217,10 @@
 			</div>
             <div id="playbar-title">
 				<div id="playbar-currentsong"></div>
-				<div id="playbar-currentalbum"></div>
+                <div>
+                    <span id="playbar-currentalbum"></span>
+                    <span id="playbar-hd-badge"></span>
+                </div>
 				<div id="playbar-mtime">
 					<div id="playbar-mcount"></div>
 					<div id="playbar-mtotal"></div>
@@ -187,20 +238,31 @@
 					<div id="playbar-total"></div>
 				</div>
 			</div>
-			<div id="playbar-radio"></div>
 			<div id="playbar-toggles">
 				<button aria-label="Context Menu" class="btn playback-context-menu" data-toggle="context" data-target="#context-menu-playback" class="btn btn-cmd"><i class="far fa-ellipsis-h"></i></button>
-                <button aria-label="Playlist" class="btn btn-cmd btn-toggle hide" id="cv-playlist-btn"><i class="fal fa-list"></i></button>
 				<button aria-label="Random" class="btn btn-cmd btn-toggle random" data-cmd="random"><i class="fal fa-random"></i></button>
 				<button aria-label="Random Album" class="btn btn-cmd ralbum hide"><i class="fal fa-dot-circle"></i></button>
+                <button aria-label="Queue" class="btn btn-cmd btn-toggle hide" id="cv-playlist-btn"><i class="fal fa-list"></i></button>
 				<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
-				<button aria-label="Volume" class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button>
+				<!--button aria-label="Volume" class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button-->
+                <button aria-label="Volume" id="playbar-volume-popup-btn" class="btn volume-popup-btn" data-toggle="modal"><i class="fas fa-volume-off"></i><span id="playbar-volume-level"></span></button>
 				<button aria-label="Consume" class="btn btn-cmd btn-toggle consume hide" id="playbar-consume" data-cmd="consume"><i class="fal fa-arrow-down"></i></button>
 				<button aria-label="Add To Favourites" class="btn btn-cmd addfav"><i class="fal fa-heart"></i></button>
 			</div>
 		</div>
 	</div>
+
     <!-- COVERVIEW PLAYLIST -->
     <div id="cv-playlist">
         <ul class="cv-playlist"></ul>
     </div>
+
+	<!-- Only included when generate index.html for developmed purpose -->
+	<!--=include templates/indextpl.html -->
+	<!--=include footer.php -->
+
+<!-- make wellformed html; correct unclosed body and html (normally done by footer ) -->
+<!-- GEN_DEV_INDEX_TAG
+	</body>
+</html>
+GEN_DEV_INDEX_TAG -->

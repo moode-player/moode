@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -70,23 +70,48 @@ if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
 	submitJob('mpdrestart', '', 'MPD restarted', '');
 }
 
-// auto-shuffle
+// Auto-shuffle
 if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashufflesvc']) {
 	$_SESSION['notify']['title'] = $_POST['ashufflesvc'] == 1 ? 'Auto-shuffle on' : 'Auto-shuffle off';
 	$_SESSION['notify']['duration'] = 3;
 	playerSession('write', 'ashufflesvc', $_POST['ashufflesvc']);
 
-	// turn off MPD random play so no conflict
+	// Turn off MPD random play so no conflict
 	$sock = openMpdSock('localhost', 6600);
 	sendMpdCmd($sock, 'random 0');
 	$resp = readMpdResp($sock);
 
-	// kill the service if indicated
+	// Kill the service if indicated
 	if ($_POST['ashufflesvc'] == 0) {
 		sysCmd('killall -s 9 ashuffle > /dev/null');
 		playerSession('write', 'ashuffle', '0');
 		sendMpdCmd($sock, 'consume 0');
 		$resp = readMpdResp($sock);
+	}
+}
+if (isset($_POST['update_ashuffle_mode']) && $_POST['ashuffle_mode'] != $_SESSION['ashuffle_mode']) {
+	playerSession('write', 'ashuffle_mode', $_POST['ashuffle_mode']);
+	if ($_SESSION['ashuffle'] == '1') {
+		$_SESSION['notify']['title'] = 'Mode updated, random turned off';
+		$_SESSION['notify']['duration'] = 3;
+		stopAutoShuffle();
+	}
+	else {
+		$_SESSION['notify']['title'] = 'Mode updated';
+		$_SESSION['notify']['duration'] = 3;
+	}
+}
+if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SESSION['ashuffle_filter']) {
+	$trim_filter = trim($_POST['ashuffle_filter']);
+	playerSession('write', 'ashuffle_filter', ($trim_filter == '' ? 'None' : $trim_filter));
+	if ($_SESSION['ashuffle'] == '1') {
+		$_SESSION['notify']['title'] = 'Filter updated, random turned off';
+		$_SESSION['notify']['duration'] = 3;
+		stopAutoShuffle();
+	}
+	else {
+		$_SESSION['notify']['title'] = 'Filter updated';
+		$_SESSION['notify']['duration'] = 3;
 	}
 }
 
@@ -235,7 +260,7 @@ if (isset($_POST['update_airplay_settings'])) {
 	}
 
 	if (isset($_POST['airplaysvc']) && $_POST['airplaysvc'] != $_SESSION['airplaysvc']) {
-		$title = $_POST['airplaysvc'] == 1 ? 'Airplay receiver on' : 'Airplay receiver off';
+		$title = $_POST['airplaysvc'] == 1 ? 'Airplay renderer on' : 'Airplay renderer off';
 		playerSession('write', 'airplaysvc', $_POST['airplaysvc']);
 	}
 
@@ -250,7 +275,7 @@ if (isset($_POST['update_rsmafterapl'])) {
 }
 // restart airplay
 if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSION['airplaysvc'] == '1') {
-	submitJob('airplaysvc', '', 'Airplay receiver restarted', '');
+	submitJob('airplaysvc', '', 'Airplay renderer restarted', '');
 }
 
 // SPOTIFY RENDERER
@@ -261,7 +286,7 @@ if (isset($_POST['update_spotify_settings'])) {
 	}
 
 	if (isset($_POST['spotifysvc']) && $_POST['spotifysvc'] != $_SESSION['spotifysvc']) {
-		$title = $_POST['spotifysvc'] == 1 ? 'Spotify receiver on' : 'Spotify receiver off';
+		$title = $_POST['spotifysvc'] == 1 ? 'Spotify renderer on' : 'Spotify renderer off';
 		playerSession('write', 'spotifysvc', $_POST['spotifysvc']);
 	}
 
@@ -276,7 +301,7 @@ if (isset($_POST['update_rsmafterspot'])) {
 }
 // restart spotify
 if (isset($_POST['spotifyrestart']) && $_POST['spotifyrestart'] == 1 && $_SESSION['spotifysvc'] == '1') {
-	submitJob('spotifysvc', '', 'Spotify receiver restarted', '');
+	submitJob('spotifysvc', '', 'Spotify renderer restarted', '');
 }
 // clear credential cache
 if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credentials'] == 1) {
@@ -376,7 +401,8 @@ if (isset($_POST['upnp_browser_restart']) && $_POST['upnp_browser_restart'] == 1
 
 // SERVICES
 
-// audio scrobbler
+// Audio scrobbler
+/* NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
 if (isset($_POST['update_mpdas'])) {
 	if (isset($_POST['mpdasuser']) && $_POST['mpdasuser'] != $_SESSION['mpdasuser']) {
 		$title = "Scrobbler credentials updated";
@@ -397,6 +423,7 @@ if (isset($_POST['update_mpdas'])) {
 		submitJob('mpdassvc', $_POST['mpdassvc'], $title, '');
 	}
 }
+*/
 
 session_write_close();
 
@@ -465,9 +492,12 @@ else {
 	$_select['mpdver'] .= "<option value=\"".$version."\" " . (($_SESSION['mpdver'] == $version) ? "selected" : "") . ">".$label."</option>\n";
 }
 
-// auto-shuffle
+// Auto-shuffle
 $_select['ashufflesvc1'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc1\" value=\"1\" " . (($_SESSION['ashufflesvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['ashufflesvc0'] .= "<input type=\"radio\" name=\"ashufflesvc\" id=\"toggleashufflesvc2\" value=\"0\" " . (($_SESSION['ashufflesvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$_select['ashuffle_mode'] .= "<option value=\"Track\" " . (($_SESSION['ashuffle_mode'] == 'Track') ? "selected" : "") . ">Track</option>\n";
+$_select['ashuffle_mode'] .= "<option value=\"Album\" " . (($_SESSION['ashuffle_mode'] == 'Album') ? "selected" : "") . ">Album</option>\n";
+$_ashuffle_filter = str_replace('"', '&quot;', $_SESSION['ashuffle_filter']);
 
 // autoplay after start
 $_select['autoplay1'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . ">\n";
@@ -618,11 +648,13 @@ $_select['upnp_browser0'] .= "<input type=\"radio\" name=\"upnp_browser\" id=\"t
 // SERVICES
 
 // MPD audio scrobbler
+/* NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
 $_feat_mpdas = $_SESSION['feat_bitmask'] & FEAT_MPDAS ? '' : 'hide';
 $_select['mpdassvc1'] .= "<input type=\"radio\" name=\"mpdassvc\" id=\"togglempdassvc1\" value=\"1\" " . (($_SESSION['mpdassvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['mpdassvc0'] .= "<input type=\"radio\" name=\"mpdassvc\" id=\"togglempdassvc2\" value=\"0\" " . (($_SESSION['mpdassvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['mpdasuser'] = $_SESSION['mpdasuser'];
 $_select['mpdaspwd'] = $_SESSION['mpdaspwd'];
+*/
 
 waitWorker(1, 'snd-config');
 

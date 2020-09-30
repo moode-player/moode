@@ -41,26 +41,40 @@
 
         <fieldset>
             <div class="control-group">
-				<legend>Audio device</legend>
-				<label class="control-label" for="device">Audio output</label>
+				<legend>Audio output</legend>
+				<label class="control-label" for="device">Output device</label>
 				<div class="controls">
 	                <select id="device" name="conf[device]" class="input-large">
 						$_mpd_select[device]
 	                </select>
 				</div>
             </div>
+			<div class="control-group">
+                <label class="control-label" for="dsd-usb">DSD support</label>
+                <div class="controls">
+					<select id="dsd-usb" name="conf[dop]" class="input-large">
+						$_mpd_select[dop]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-dsd-audio" class="help-block-configs help-block-margin hide">
+						<b>Native DSD:</b>&nbsp;If the audio device reports that it supports Native DSD then MPD will send the unaltered DSD botstream to the device otherwose MPD will perform DSD to PCM on-the-fly conversion.<br>
+						<b>DSD over PCM (DoP):</b>&nbsp;There is no way to detect if an audio device supports DoP so only enable this if you are certain that the device support it otherwise the encapsulated DSD botstream may cause loud or unpredictable distortion.
+                    </span>
+                </div>
+            </div>
 
             <div class="control-group">
-                <label class="control-label" for="mixer-type">Volume control</label>
+				<legend>Volume mixer</legend>
+                <label class="control-label" for="mixer-type">Mixer type</label>
                 <div class="controls">
                     <select id="mixer-type" name="conf[mixer_type]" class="input-large">
 						$_mpd_select[mixer_type]
                     </select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
-	                    <b>- Disabled (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.<br>
 						<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
-	                    <b>- Software:&nbsp;</b>Use MPD volume controller (32 bit float with dither).
+	                    <b>- Software:&nbsp;</b>Use MPD software volume routine (32 bit float with dither).<br>
+						<b>- Disabled (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.
 					</span>
 					<span class="help-block-configs help-block-margin">
 	                    The "Disabled" setting will result in 100% (0dB) volume output<br>
@@ -68,22 +82,6 @@
                 </div>
             </div>
 
-			<div class="control-group">
-                <label class="control-label" for="dsd-usb">DSD over PCM</label>
-                <div class="controls">
-					<select id="dsd-usb" name="conf[dop]" class="input-large">
-						$_mpd_select[dop]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-dsd-audio" class="help-block-configs help-block-margin hide">
-						<b>Native DSD is used automatically if supported in Linux/ALSA and the audio device.</b><br>
-						- Yes:&nbsp;DoP is used if native DSD support is not available.<br>
-						- No:&nbsp;DSD to PCM on-the-fly conversion is used if native DSD support is not available.
-                    </span>
-                </div>
-            </div>
-
-			<!-- Sample rate -->
 		    <div class="control-group">
 				<legend>SoX Resampling</legend>
 				<label class="control-label" for="audio-output-format">Sample rate</label>
@@ -93,8 +91,6 @@
                     </select>
                 </div>
 			</div>
-
-			<!-- Selective resample mode -->
 			<div class="$_selective_resampling_hide">
 				<div id="selective_resample" class="hide">
 					<div class="control-group">
@@ -113,8 +109,6 @@
 		            </div>
 				</div>
 			</div>
-
-			<!-- SoX quality -->
             <div class="control-group">
                 <label class="control-label" for="sox_quality">Quality</label>
                 <div class="controls">
@@ -135,7 +129,6 @@
 						</span>
 					</span>
                 </div>
-				<!-- Custom SoX recipe -->
 				<div class="$_sox_custom_recipe_hide">
 					<div id="sox_custom_recipe" class="hide" style="margin-top:.5em;">
 						<label class="control-label" for="sox_precision">Precision</label>
@@ -145,7 +138,7 @@
 		                    </select>
 							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_precision" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info_sox_precision" class="help-block-configs help-block-margin2 hide">
-								Number of bits used 16|20|24|28|32. Default is 20 which corresponds to the "High quality" quality setting.
+								Number of bits used. Default is 20 which corresponds to the "High quality" setting. The "Very high quality" setting uses 28 bit precision.
 							</span>
 						</div>
 		                <label class="control-label" for="sox_phase_response">Phase response</label>
@@ -153,7 +146,7 @@
 		                    <input class="input-large" type="number" id="sox_phase_response" name="conf[sox_phase_response]" value="$_mpd_select[sox_phase_response]" min="0" max="50">
 							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_phase_response" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info_sox_phase_response" class="help-block-configs help-block-margin2 hide">
-								Range is 0 (Linear phase) to 50 (Minimum phase). Default is 50.
+								Range is 0 to 50 where 0 = minimum phase, 25 = intermediate phase and 50 = linear phase. Default is 50.
 		                    </span>
 		                </div>
 		                <label class="control-label" for="sox_passband_end">Passband end</label>
@@ -161,7 +154,7 @@
 		                    <input class="input-large" type="number" id="sox_passband_end" name="conf[sox_passband_end]" value="$_mpd_select[sox_passband_end]" min="80" max="100" step="0.1">&nbsp;%
 							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_passband_end" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info_sox_passband_end" class="help-block-configs help-block-margin2 hide">
-								Original bandwidth of source used (80 to 100%). Default is 95%.
+								Original bandwidth of source used. Range is 80 to 100% where 100% represents the Nyquist frequency. Default is 95%.
 		                    </span>
 		                </div>
 		                <label class="control-label" for="sox_stopband_begin">Stopband begin</label>
@@ -169,7 +162,7 @@
 		                    <input class="input-large" type="number" id="sox_stopband_begin" name="conf[sox_stopband_begin]" value="$_mpd_select[sox_stopband_begin]" min="100" max="200" step="0.1">&nbsp;%
 							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_stopband_begin" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info_sox_stopband_begin" class="help-block-configs help-block-margin2 hide">
-								A percentage >= 100. Default is 100%.
+								A percentage greater than or equal to 100. Default is 100% which represents the Nyquist frequency.
 		                    </span>
 		                </div>
 		                <label class="control-label" for="sox_attenuation">Attenuation</label>
@@ -197,7 +190,6 @@
 					</div>
 				</div>
             </div>
-
             <div class="control-group">
                 <label class="control-label" for="sox-multithreading">Multithreading</label>
                 <div class="controls">
@@ -224,7 +216,6 @@
                    </span>
                 </div>
             </div>
-
 			<div class="control-group">
                 <label class="control-label" for="replaygain-preamp">ReplayGain preamp</label>
                 <div class="controls">
@@ -235,7 +226,6 @@
                     </span>
                 </div>
             </div>
-
 			<div class="control-group">
                 <label class="control-label" for="volume-normalization">Volume normalization</label>
                 <div class="controls">
@@ -257,22 +247,20 @@
                     <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4" max="64">&nbsp;MB
 					<a aria-label="Help" class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
-                    	Range is 4 to 64MB. Default size is 4MB.
+                    	Buffer for audio samples. Range is 4 to 64MB. Default size is 4MB.
                     </span>
                 </div>
 			</div>
-
 			<div class="control-group">
-				<label class="control-label" for="max_output_buffer_size">Max output buffer size</label>
+				<label class="control-label" for="max_output_buffer_size">Output buffer size</label>
                 <div class="controls">
                     <input class="input-large" type="number" id="max_output_buffer_size" name="conf[max_output_buffer_size]" value="$_mpd_select[max_output_buffer_size]" min="8" max="512">&nbsp;MB
 					<a aria-label="Help" class="info-toggle" data-cmd="info_max_output_buffer_size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_max_output_buffer_size" class="help-block-configs help-block-margin hide">
-                    	Range is 8 to 512MB. Default is 128MB.
+                    	Buffer for command output. Range is 8 to 512MB. Default is 128MB.
                     </span>
                 </div>
 			</div>
-
 			<div class="control-group">
 				<label class="control-label" for="max_playlist_length">Max playlist items</label>
                 <div class="controls">
@@ -283,7 +271,6 @@
                     </span>
                 </div>
             </div>
-
 			<div class="control-group">
 				<legend>Other options</legend>
                 <label class="control-label" for="log_level">Log level</label>

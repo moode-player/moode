@@ -27,6 +27,7 @@
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
 
+// Image to use when no cover found
 define('NOT_FOUND', '/var/www/images/notfound.jpg');
 
 //
@@ -41,7 +42,24 @@ $hires_thm = $_SESSION['library_hiresthm'];
 $pixel_ratio = floor($_SESSION['library_pixelratio']);
 session_write_close();
 
-// Automatic
+// Auto: Uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time).
+// NOTE: Manual should be used for Desktops
+/*
+Device		Physical	Pixel	Logical
+			Res (px) 	Ratio	Res (px)
+---------------------------------------------------
+iPhone 3g	320×480		1		320×480
+iPhone 4s	640×960		2		320×480
+iPhone 5	640×1136	2		320×568
+iPhone 6	750×1334	2		375×667
+iPad 2		768×1024	1		768×1024
+iPad 3		1536×2048	2		768×1024
+Samsung GS3	720×1280	2		360×640
+Samsung GS4	1080×1920	3		360×640
+iMac 27"	2560x1440	1		2560x1440
+iMac 27" R	5120x2880 	2		2560x1440
+*/
+
 if ($hires_thm == 'Auto') {
 	if ($pixel_ratio == 2) {
 		$thm_w = 200;
@@ -56,17 +74,18 @@ if ($hires_thm == 'Auto') {
 		$thm_q = 75;
 	}
 }
-// Manual
+// Manual: Use the specified resolution and quality factor.
 else {
-	$thm_w = substr($hires_thm, 0, 3); // only the numeric part ex: 100px
-	$thm_q = 75;
+	$hires_thm_wq = explode(',', $hires_thm);
+	$thm_w = substr($hires_thm_wq[0], 0, 3); // The numeric part ex: "400" from "400px"
+	$thm_q = $hires_thm_wq[1];
 }
 
-//workerLog('thmcache: $search_pri=' . $search_pri);
-//workerLog('thmcache: $hires_thm=' . $hires_thm);
-//workerLog('thmcache: $pixel_ratio=' . $pixel_ratio);
-//workerLog('thmcache: $thm_w=' . $thm_w);
-//workerLog('thmcache: $thm_q=' . $thm_q);
+workerLog('thmcache: Priority: ' . $search_pri);
+workerLog('thmcache: Res,Qual: ' . $hires_thm);
+workerLog('thmcache: Px ratio: ' . $pixel_ratio);
+workerLog('thmcache: Th width: ' . $thm_w);
+workerLog('thmcache: Thm qual: ' . $thm_q);
 
 // Ensure cache dir exists
 if (!file_exists(THMCACHE_DIR)) {
@@ -95,6 +114,8 @@ if (is_null($result) || substr($result, 0, 2) == 'OK') {
 // - Compare the containing dir paths for file (file_a) and file+1 (file_b)
 // - When they are different we create a thumb using file_a and dir_a
 $count = 0;
+$copied = 0;
+$resampled = 0;
 $line = strtok($result, "\n");
 while ($line) {
 	$file_a = explode(': ', $line, 2)[1];
@@ -107,7 +128,7 @@ while ($line) {
 
 	if ($dir_a != $dir_b) {
 		session_start();
-		$_SESSION['thmcache_status'] = 'Processing album ' . ++$count . ' ' . $dir_a;
+		$_SESSION['thmcache_status'] = 'Scanning folder ' . ++$count . ' ' . $dir_a;
 		session_write_close();
 
 		if (!file_exists(THMCACHE_DIR . md5($dir_a) . '.jpg')) {
@@ -117,9 +138,9 @@ while ($line) {
 }
 
 session_start();
-$_SESSION['thmcache_status'] = 'Done: '  . $count . ' album folders processed';
+$_SESSION['thmcache_status'] = 'Done: '  . $count . ' album folders scanned for images';
 session_write_close();
-workerLog('thmcache: Done: ' . $count . ' album dirs processed');
+workerLog('thmcache: Done: ' . $count . ' album folders scanned for images. ' . $copied . ' copied, ' . $resampled . ' resampled.');
 
 // Create thumbnail image
 function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
@@ -163,28 +184,73 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	$img_w = imagesx($image);
 	$img_h = imagesy($image);
 	// Thumbnail height
-	$thm_h = ($img_h / $img_w) * $thm_w;
+	$thm_h = round(($img_h / $img_w) * $thm_w);
 
+	// Copy or resample
+	if ($img_w * $img_h <= $thm_w * $thm_h) {
+		$resample = false;
+		$thm_h = $img_h;
+		$thm_w = $img_w;
+	}
+	else {
+		$resample = true;
+	}
+
+	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
-		workerLog('thmcache: error 1: ' . $file);
+		workerLog('thmcache: error 1a: imagecreatetruecolor()' . $file);
 		return;
 	}
-	if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-		workerLog('thmcache: error 2: ' . $file);
-		return;
+	if ($resample === true) {
+		//workerLog('resample: '. $file);
+		$GLOBALS['resampled']++;
+		if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
+			workerLog('thmcache: error 2a: imagecopyresampled()' . $file);
+			return;
+		}
 	}
-	if (imagedestroy($image) === false) {
-		workerLog('thmcache: error 3: ' . $file);
-		return;
+	else {
+		//workerLog('copy: '. $file);
+		$GLOBALS['copied']++;
+		if (imagecopy($thumb, $image, 0, 0, 0, 0, $img_w, $img_h) === false) {
+			workerLog('thmcache: error 2a: imagecopy()' . $file);
+			return;
+		}
 	}
 	if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thm_q) === false) {
-		workerLog('thmcache: error 4: ' . $file);
+		workerLog('thmcache: error 4a: imagejpeg()' . $file);
 		return;
 	}
 	if (imagedestroy($thumb) === false) {
-		workerLog('thmcache: error 5: ' . $file);
+		workerLog('thmcache: error 5a: imagedestroy()' . $file);
 		return;
 	}
+
+	// Small thumbnail
+	if (($thumb_sm = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
+		workerLog('thmcache: error 1b: imagecreatetruecolor()' . $file);
+		return;
+	}
+	if (imagecopyresampled($thumb_sm, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
+		workerLog('thmcache: error 2b: imagecopyresampled()' . $file);
+		return;
+	}
+	if (imagedestroy($image) === false) {
+		workerLog('thmcache: error 3b: imagedestroy()' . $file);
+		return;
+	}
+	if (imagejpeg($thumb_sm, THMCACHE_DIR . md5($dir) . '_sm.jpg', THM_SM_Q) === false) {
+		workerLog('thmcache: error 4b: imagejpeg()' . $file);
+		return;
+	}
+	if (imagedestroy($thumb_sm) === false) {
+		workerLog('thmcache: error 5b: imagedestroy()' . $file);
+		return;
+	}
+
+	// DEBUG
+	//$size = getimagesize(THMCACHE_DIR . md5($dir) . '.jpg');
+	//workerLog('I:' . $img_w . '|' . $img_h . ' T:' . $thm_w . '|' . $thm_h . ' A:' . $size[0] . '|' . $size[1] . '|' . $dir);
 }
 
 // Modified versions of coverart.php functions

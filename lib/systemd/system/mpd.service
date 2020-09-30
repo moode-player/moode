@@ -1,5 +1,5 @@
 #
-# 2019-04-12 TC moOde 5.0
+# 2020-MM-DD TC moOde 7.0.0
 #
 #
 
@@ -13,9 +13,12 @@ After=network.target sound.target
 # ps H -q `pidof -s mpd` -o 'pid,tid,cls,rtprio,comm'
 # NOTE: the RTPRIO col applies to real-time scheduler policies, the NI (nice) and PRI columns are for non real-time policies
 
-# r44d allow MPD to use real-time priority 50
-LimitRTPRIO=50
+#  Allow MPD to use real-time priority
+LimitRTPRIO=40
 LimitRTTIME=infinity
+
+# For io_uring
+LimitMEMLOCK=64M
 
 # Scheduling policy
 # real-time
@@ -34,7 +37,7 @@ CPUSchedulingPriority=43
 # scheduling priority adjustment
 # applies only to static scheduling policies
 # 0 = default, -20 = highest, 19 = lowest
-Nice=-10 
+Nice=-10
 
 # processor affinity bit mask
 # - empty string = reset bit mask

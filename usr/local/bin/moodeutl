@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-05-03 TC moOde 6.5.2
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
-define('VERSION', '1.5.0');
+define('VERSION', '1.5.1');
 define('SQLDB', '/var/local/www/db/moode-sqlite3.db');
 
 // Features availability bitmask
@@ -83,6 +83,9 @@ switch ($option) {
 	case '-D':
 		delete_session_var($argv);
 		break;
+	case '-e':
+		export_autoconfig($argv);
+		break;
 	case '-f':
 	case '-F':
 		audio_formats($option);
@@ -123,6 +126,7 @@ With no OPTION print the help text and exit.
  -A [add|rm N] \tupdate features availability
  -d\t\tdump session file (requires sudo)
  -D [var name] \tdelete session variable (requires sudo)
+ -e\t\texport autoconfig.ini
  -f\t\tprint supported audio formats
  -F\t\tprint full alsacap info
  -l\t\tprint moode log
@@ -204,12 +208,12 @@ function dump_session() {
 	session_start();
 	foreach ($_SESSION as $key => $value) {
 		// Radio stations
-		if (substr($key, 0, 5) == 'http:' || substr($key, 0, 6) == 'https:' || $key == 'zx reserved 499') {
-			echo $key . ', ' . $value['name'] . "\n";
+		if (substr($key, 0, 4) == 'http') {
+			echo $key . '|' . $value['name'] . '|' . $value['type'] . '|' . $value['bitrate'] . '|' . $value['format'] . "\n";
 		}
 		// Cfg_system, etc
 		else {
-			echo $key . ', ' . (is_array($value) ? 'Array' : $value) . "\n";
+			echo $key . '|' . (is_array($value) ? 'Array' : $value) . "\n";
 		}
 	}
 	session_write_close();
@@ -346,13 +350,14 @@ function tail_log() {
 
 function check_station_urls() {
 	error_reporting(E_ERROR | E_PARSE);
-	$results = shell_exec("sqlite3 " . SQLDB . " \"SELECT station, name FROM cfg_radio WHERE station!='DELETED'\"");
+	$results = shell_exec("sqlite3 " . SQLDB .
+		" \"SELECT station, name, broadcaster, bitrate FROM cfg_radio WHERE station not in ('DELETED', 'zx reserved 499')\"");
 	$line = strtok($results, "\n");
 	$count = 0;
 	while ($line) {
-		list($url, $name) = explode('|', $line);
-		// Skip BBC geo fenced stations and the reserved 499 row
-		if (strpos($name, '- 320K') === false && strpos($name, 'zx reserved 499') === false) {
+		list($url, $name, $broadcaster, $bitrate) = explode('|', $line);
+		// Skip BBC geo fenced stations
+		if (!($broadcaster == 'BBC' && $bitrate == '320')) {
 			$tmpfile = file_get_contents($url, FALSE, NULL, 0, 1024);
 			$playable = false === $tmpfile ? '?' : 'OK';
 			if ($tmpfile == false) {
@@ -364,4 +369,10 @@ function check_station_urls() {
 		}
 		$line = strtok("\n");
 	}
+}
+
+function export_autoconfig($argv) {
+	$cfgfile = count($argv)==3 ? $argv[2] : sprintf("/home/pi/autocfg-%s.ini",  date('ymd_His'));
+	echo "Export autoconfig of current system to ".$cfgfile."\n";
+	echo shell_exec('/var/www/command/autocfggen.php > '.$cfgfile);
 }

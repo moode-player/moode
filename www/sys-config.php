@@ -132,7 +132,7 @@ if (isset($_POST['update_cpugov'])) {
 }
 
 // Linux kernel
-if (isset($_POST['update_kernel_architecture'])) {
+if (isset($_POST['update_kernel_architecture']) && $_POST['kernel_architecture'] != $_SESSION['kernel_architecture']) {
 	submitJob('kernel_architecture', $_POST['kernel_architecture'], $_POST['kernel_architecture'] . ' kernel selected', 'Restart required');
 	playerSession('write', 'kernel_architecture', $_POST['kernel_architecture']);
 }

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -28,7 +28,7 @@ function formatExtraTagsString () {
     var elementDisplay, extraTagsDisplay = '';
     var extraTagsArray = SESSION.json['extra_tags'].replace(/ /g, '').split(','); // Strip out whitespace
 
-    //NOTE: composer may be = null, disc may be = 'Disc tag missing', encoded may be = 'Unknown'
+    // NOTE: composer may be = null, disc may be = 'Disc tag missing', encoded may be = 'Unknown'
     for (const element of extraTagsArray) {
         //console.log(element, MPD.json[element]);
         if (MPD.json[element] != null && MPD.json[element] != 'Disc tag missing' && MPD.json[element] != 'Unknown') {
@@ -61,7 +61,11 @@ function getParamOrValue (type, key) {
         // Font size factors
         ['Smaller',.35],['Small',.40],['Normal',.45],['Large',.55],['Larger',.65],['X-Large',.75],
         // Sample rate display options
-        ['No (searchable)',0],['HD only',1],['Text',2],['Badge',3],['No',9]
+        ['No (searchable)',0],['HD only',1],['Text',2],['Badge',3],['No',9],
+        // Radioview station types
+        ['Regular','r'],['Favorite','f'],['Hidden','h'],
+        // Thumbnail resolutiona
+        ['Auto','Auto'],['400px','400px,75'],['500px','500px,60'],['600px','600px,60']
     ]);
 
     if (type == 'value') {

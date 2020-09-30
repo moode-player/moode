@@ -87,7 +87,7 @@ else {
 	if ($hwparams['status'] == 'active' || $_SESSION['audioout'] == 'Bluetooth') {
 		// DSD: DoP, Native bitstream
 		if ($status['audio_sample_depth'] == 'dsd64') {
-			$encoded_at = 'DSD64, 1 bit, 2.822 Mbps Stereo';
+			$encoded_at = 'DSD64, 1 bit, 2.822 MHz Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 176.4 kHz, Stereo';
 				$decode_rate = '8.467 Mbps';
@@ -102,7 +102,7 @@ else {
 			}
 		}
 		else if ($status['audio_sample_depth'] == 'dsd128') {
-			$encoded_at = 'DSD128, 1 bit, 5.644 Mbps Stereo';
+			$encoded_at = 'DSD128, 1 bit, 5.644 MHz Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 352.8 kHz, Stereo';
 				$decode_rate = '16.934 Mbps';
@@ -117,7 +117,7 @@ else {
 			}
 		}
 		else if ($status['audio_sample_depth'] == 'dsd256') {
-			$encoded_at = 'DSD256, 1 bit, 11.288 Mbps Stereo';
+			$encoded_at = 'DSD256, 1 bit, 11.288 MHz Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 705.6 kHz, Stereo';
 				$decode_rate = '33.868 Mbps';
@@ -132,7 +132,7 @@ else {
 			}
 		}
 		else if ($status['audio_sample_depth'] == 'dsd512') {
-			$encoded_at = 'DSD512, 1 bit, 22.576 Mbps Stereo';
+			$encoded_at = 'DSD512, 1 bit, 22.576 MHz Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 1.411 MHz, Stereo';
 				$decode_rate = '67.736 Mbps';
@@ -187,7 +187,8 @@ if ($_SESSION['audioout'] == 'Bluetooth') {
 	$hwparams_calcrate = '1.411 Mbps';
 }
 elseif ($hwparams['status'] == 'active') {
-	$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
+	$pcm_rate = $hwparams['format'] == 'DSD bitstream' ?  '' : ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
+	$hwparams_format = $hwparams['format'] . $pcm_rate;
 	$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' Mbps';
 }
 else {
@@ -199,15 +200,15 @@ else {
 // DSP
 //
 
-// Volume control
+// Volume mixer
 if ($_SESSION['mpdmixer'] == 'hardware') {
-	$volume_ctl = 'Hardware (on-chip volume controller)';
+	$volume_mixer = 'Hardware (On-chip)';
 }
 elseif ($_SESSION['mpdmixer'] == 'software') {
-	$volume_ctl = 'Software (MPD 32-bit float with dither)';
+	$volume_mixer = 'Software (MPD)';
 }
 else {
-	$volume_ctl = 'Disabled (100% volume is output by MPD)';
+	$volume_mixer = 'Disabled (0dB output)';
 }
 
 // Renderers
@@ -233,7 +234,8 @@ if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSI
 else {
 	// Resampling
 	if ($cfg_mpd['audio_output_format'] == 'disabled') {
-		$resample_rate = '';
+		$resample_rate = 'off';
+		$selective_resample = 'off';
 		$resample_quality = 'off';
 	}
 	else {
@@ -343,15 +345,15 @@ else {
 // AUDIO DEVICE
 //
 
-$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['adevname']);
-// Not in table implies USB audio device
-if ($result === true) {
-	$devname = 'USB audio device (' . $_SESSION['adevname'] . ')';
-	$dacchip = '';
+$result = sdbquery("select * from cfg_audiodev where name='" . $_SESSION['adevname'] . "' or alt_name='" . $_SESSION['adevname'] . "'", $dbh);
+if ($result === true) { // Not in table
+	$devname = $_SESSION['adevname'];
+	$_chip_hide = 'hide';
 	$iface = 'USB';
 }
 else {
 	$devname = $_SESSION['adevname'];
+	$_chip_hide = '';
 	$dacchip = $result[0]['dacchip'];
 	$iface = $result[0]['iface'];
 }

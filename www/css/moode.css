@@ -15,7 +15,7 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-07-19 TC moOde 6.7.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 body {background-color:var(--themebg);}
@@ -35,7 +35,9 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .viewswitch-cfgs .active a {color:inherit;}
 #config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
-.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;}
+.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.25em;font-style:italic;color: #888;}
+.horiz-rule-radioview {border-bottom:1px solid var(--textvariant);font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:92%!important;padding-bottom:0!important;}
+.horiz-rule-appearance {width:48%;text-align:right;margin:.25em 0;font-size: 1.15em;font-style:italic;color:var(--textvariant);}
 .legend-configs {border:none;margin-bottom:.35em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* general */
@@ -112,7 +114,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .controls input {min-height:26px !important;}
 .modal .dropdown-menu.inner {background-color:var(--adaptmbg);color:var(--adapttext);}
 .modal .modal-dropdown-text {color:inherit;}
-.modal .bootstrap-select .btn, #appearance-modal input {border: 1px solid var(--textvariant);}
+.modal .bootstrap-select .btn, #appearance-modal input, #clockradio-modal input, #radio-manager-modal input, #editstation-modal input, #newstation-modal input {border: 1px solid var(--textvariant);}
 .modal .modal-footer {border-top: none;text-align:center;}
 .modal-footer .btn {border-radius:5rem;background-color:var(--btnshade4);margin:.2em 1em;width:10em;color:inherit;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}
@@ -163,11 +165,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.lib-entry-song {font-size:.95em;}
 	#lib-file {left:0%;width:100%;padding-left:0px;}
 
-	#tagview-text-cover {font-size:1rem;width:75px;height:75px;}
-	#lib-coverart-img {float:left;min-width:75px;width:75px;height:75px;margin:0;}
-	#lib-coverart-meta-area img {height:75px;width:75px;min-width:75px;max-width:75px;margin:.25em;}
+	#tagview-text-cover {font-size:1rem;width:75px;height:75px;padding:0;margin:.25em;}
+	#lib-coverart-img {float:left;min-width:75px;width:75px;height:75px;margin:.25em;position:relative;}
+	#lib-coverart-meta-area img {height:75px;width:75px;min-width:75px;max-width:75px;left:.25em;top:.25em;}
 	#lib-coverart-meta-area {float:left;width:100%;line-height:14px;}
-	#lib-meta-summary {width:calc(100% - 75px - .75em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
+	#lib-meta-summary {width:calc(100% - 75px - 1em);line-height:normal;font-size:.9em;margin:.5em 0;float:right;}
 
 	#songsList {margin:.25em !important;}
 	#lib-file .songname {overflow:hidden;float:left;width:calc(50% - 15px);height:auto;margin-left:5px;}
@@ -208,6 +210,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#mobile-time {display:block;}
 	.btn btn-cmd btn-toggle {font-size:.75em;}
 	img.coverart {width:50vh;height:auto;max-width:90vw;max-height:90vw;border:none;}
+	#playback-firstuse-help {height:50vh;width:50vh;max-height:90vw;max-width:90vw;left:50%;transform:translate(-50%);}
 	img.libart {width:90%;}
 	.modal-sm2 {min-width:80%;}
 	.form-horizontal .controls {margin-left:32.5%;}
@@ -215,6 +218,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.5rem;width:3.1rem;}
+	#playbar-hd-badge {margin-top:.6em;}
+	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
+	#playbar-volume-popup-btn {width:initial!important;}
 }
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
@@ -244,14 +250,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.playlist span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
 	.playlist span {margin-left:calc(3.8rem + 1vmin) !important;}
 	.playlist {padding:0 0 9rem 0;min-height:33vh;}
-	.playlist li:before {font-size:unset;}
+	/*.playlist li:before {width:1.75em!important;}*/
 	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;}
 	.ui-pnotify {top:40% !important;}
 	#lib-albumcover {left:0;}
 	/* ellipsis madness */
 	#artistsList li, #genresList li, #albumsList li {max-width:calc(50vw - 2.3rem);min-width:33vw;}
-	#albumcovers .lib-entry, .database-radio li {width:var(--mthumbcols);}
-	#albumcovers .lib-entry img, .database-radio img {max-height:calc(var(--mthumbcols) * .9);}
 	/* stuff */
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
@@ -276,7 +280,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:53vw;height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
-	#playbar-controls .btn {padding:.25em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}
+	#playbar-controls .btn {padding:.5em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}
 	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:.4em;height:unset;width:unset;top:unset;left:unset;transform:none;}
 	#playbar-toggles .btn {transition:none;border-radius:50%;padding:.5rem .7rem;margin-bottom:.5rem;width:unset;height:unset;line-height:11px;}
 	#playbar-timeline {display:none;}
@@ -309,7 +313,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#container-playlist {margin-top:.75em;height: calc(100% - 40px);}
 	.playlist li, .database li {padding-left:.5em;}
 	.playlist span {line-height:initial;}
-	.playlist .active {padding-left:.5em;}
+	/*.playlist .active {padding-left:.5em;}*/
 	#playlist .songtime {top: 0px;}
 	#timeknob, #volknob {margin:1em 0;}
 	#countdown-display{margin-top:-10px;}
@@ -360,8 +364,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#currentsong, #currentalbum {padding-top:.75em;font-size:1.1em;}
 }
 /* media queries */
-@media (max-height:640px) {
+@media (max-height:640px) and (orientation:portrait)  {
 	img.coverart {width:45vh;}
+	#playback-firstuse-help {height:45vh;width:45vh;}
 }
 /* iPhone5 portrait */
 @media (max-height:568px) and (max-width:320px) {
@@ -388,6 +393,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#lib-coverart-meta-area {width:18vw;}
+	#volcontrol, #volcontrol-2, #countdown {height:15vw;width:15vw;}
 }
 /* iPad landscape */
 @media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
@@ -405,6 +411,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbtns {margin:.25em 0;}
 	#playbar-title {font-size:1rem;}
 	img.coverart {width:55vh;}
+	#playback-firstuse-help {height:55vh;width:55vh;}
 }
 @media (min-height:443px) and (width:799px) { /* 443 = Square pixel AR, 479 = Default pixel AR */
 	.playlist .pll1 {font-size:1rem;}
@@ -413,6 +420,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbtns {margin:.25em 0;}
 	#playbar-title {font-size:1rem;}
 	img.coverart {width:55vh;}
+	#playback-firstuse-help {height:55vh;width:55vh;}
 }
 
 /* iPhone X */
@@ -459,6 +467,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #volzone {right:12.5%;top:59%;}
 	#playback-panel.newui #playback-cover {width:60vw;} /* 60% cover h/w */
 	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:60vw;max-height:60vw;}
+	#playback-panel.newui #playback-firstuse-help {height:60vw;width:60vw;}
 	#playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {width:60%;height:58%;}
 	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
 }
@@ -467,10 +476,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #volzone {top:61%;}
 	#playback-panel.newui #playback-cover {width:70vw;} /* 70% cover h/w */
 	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:70vw;max-height:70vw;}
+	#playback-panel.newui #playback-firstuse-help {height:70vw;width:70vw;}
 	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
 }
 @media (orientation: landscape) and (max-aspect-ratio:3/2){
 	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}
+	#playback-panel.newui #playback-firstuse-help {height:40vw;width:40vw;}
 	#playback-panel.newui #timezone, #playback-panel.newui #volzone {height:40vw;}
 }
 @media (height:834px) and (width:1194px) {
@@ -519,7 +530,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .set-button {margin: 0 4px 0 8px;} /* for system config page 'set' buttons */
 #quickhelp-special-buttons ul {list-style:none;margin-left:0;}
 #quickhelp-special-buttons p {margin-left:1.5em;}
-#quickhelp-special-buttons span, #quickhelp-active-elements span {margin-left:0;font-size:1em;font-weight:500;}
+#quickhelp-special-buttons span, #quickhelp-active-elements span, #quickhelp-queue-commands span {margin-left:0;font-size:1em;font-weight:500;}
 /* playback history log */
 #container-playhistory {padding-top:5px;padding-left: 5px;}
 ol.playhistory {margin-left:55px;}

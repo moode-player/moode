@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-09 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  * This is the @chris-rudmin rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
@@ -87,23 +87,58 @@ function renderLibrary(data) {
 	renderGenres();
 }
 
+// Rewritten by @Atair: Allow for track.genre as array of genre values
 function reduceGenres(acc, track) {
-	var genre = track.genre.toLowerCase();
-	if (!acc[genre]) {
-		acc[genre] = [];
-		acc[genre].genre = track.genre;
+	for (i = 0; i < track.genre.length; i++) {
+		var genre = track.genre[i].toLowerCase();
+		if (!acc[genre]) {
+			acc[genre] = [];
+			acc[genre].genre = track.genre[i];
+		}
+		acc[genre].push(track);
 	}
-	acc[genre].push(track);
 	return acc;
 }
 
+// Rewritten by @scripple
+// NOTE: This routine and associated marked code blocks provide a flexible way to populate the artist list in Tag view.
+// 1. library_tagview_artist = 'Artist': List all artists including those in compilation albums but retain any compilation
+// album grouping present in the Album Artist tag i.e. "Various Artists" will be in the list. Compilation albums listed
+// for a given clicked artist will show only the tracks belonging to the Artist. Clicking the Album will show all the
+// album's tracks vs just those for the given artist.
+// 2. library_tagview_artist = Album Artist: List all the Album Artists. If the album artist tag is empty then the Artist tag
+// will be used. Albums will be grouped by Album Artist. Compilation albums should therefore have the Album Artist tag
+// set to a consistent string for example "Various Artists" to be grouped correctly.
 function reduceArtists(acc, track) {
-	var artist = (track.album_artist || track.artist).toLowerCase();
-	if (!acc[artist]) {
-		acc[artist] = [];
-		acc[artist].artist = track.album_artist || track.artist;
+	if (track.album_artist) {
+		var album_artist = (track.album_artist).toLowerCase();
+		if (!acc[album_artist]) {
+			acc[album_artist] = [];
+			acc[album_artist].artist = track.album_artist;
+		}
+		acc[album_artist].push(track);
+		// ONLY ALBUM ARTIST SWITCH GOES HERE
+		// Set the sense according to how you define the variable
+		// The next if should evaluate to true if you ONLY want
+		// to use album_artist when set.  (old behavior)
+		if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
+			return acc;
+		}
 	}
-	acc[artist].push(track);
+    else {
+		// track.album_artist not set, define album_artist for comparison below
+		var album_artist = null;
+	}
+	if (track.artist) {
+		var artist = (track.artist).toLowerCase();
+		if (artist != album_artist) {
+			if (!acc[artist]) {
+				acc[artist] = [];
+				acc[artist].artist = track.artist;
+			}
+			acc[artist].push(track);
+		}
+	}
 	return acc;
 }
 
@@ -150,17 +185,19 @@ function groupLib(fullLib) {
 		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
 		var artist = findAlbumProp(albumTracks, 'artist');
 		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
-        //var year = SESSION.json['library_albumview_sort'] == 'Year' ? getYear(albumTracks) : '';
         var year = getYear(albumTracks);
 		return {
+            key: findAlbumProp(albumTracks, 'key'),
 			last_modified: getLastModified(albumTracks),
             year: year,
 			album: findAlbumProp(albumTracks, 'album'),
+            mb_albumid: findAlbumProp(albumTracks, 'mb_albumid'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
-			artist: albumArtist || artist,
+            artist: albumArtist || artist,
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
-            encoded_at: findAlbumProp(albumTracks, 'encoded_at')
+            encoded_at: findAlbumProp(albumTracks, 'encoded_at'),
+            comment: findAlbumProp(albumTracks, 'comment')
 		};
 	});
 
@@ -295,11 +332,15 @@ function groupLib(fullLib) {
 	}
 }
 
+// Rewritten by @Atair: Allow for item.genre as array of genre values
 function filterByGenre(item) {
-	var genre = item.genre.toLowerCase();
-	return LIB.filters.genres.find(function(genreFilter){
-		return genre === genreFilter.toLowerCase();
+	var genre = item.genre.map(function(g){return g.toLowerCase();});
+	result= LIB.filters.genres.find(function(genreFilter){
+		return genre.find(function(g){
+			return g == genreFilter.toLowerCase();
+		});
 	});
+	return result;
 }
 
 function filterByAllGenres(album) {
@@ -313,12 +354,7 @@ function filterByArtist(item) {
 	var album_artist = item.album_artist && item.album_artist.toLowerCase();
 	return LIB.filters.artists.find(function(artistFilter){
 		var artistFilterLower = artistFilter.toLowerCase();
-        if (LIB.filters.artists == SESSION.json['library_comp_id']) {
-            return artist === artistFilterLower || album_artist === artistFilterLower;
-        }
-        else if (album_artist != SESSION.json['library_comp_id'].toLowerCase()) {
-            return artist === artistFilterLower || album_artist === artistFilterLower;
-        }
+        return artist === artistFilterLower || album_artist === artistFilterLower;
 	});
 }
 
@@ -347,6 +383,22 @@ function filterArtists() {
 		songsfilteredByGenre = songsfilteredByGenre.filter(filterByGenre);
 	}
 	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
+    // @scripple: Add sort
+    // Natural ordering
+	try {
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        filteredArtists.sort(function(a, b) {
+            return collator.compare(removeArticles(a).toLowerCase(), removeArticles(b).toLowerCase());
+        });
+    }
+    // Fallback to Default ordering
+    catch (e) {
+        filteredArtists.sort(function(a, b) {
+             a = removeArticles(a).toLowerCase();
+             b = removeArticles(b).toLowerCase();
+             return a > b ? 1 : (a < b ? -1 : 0);
+        });
+    }
 }
 
 function filterAlbums() {
@@ -360,8 +412,11 @@ function filterAlbums() {
 	}
 	// Filter by artist
 	if (LIB.filters.artists.length) {
-		filteredAlbums = filteredAlbums.filter(filterByArtist);
-		filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
+        // @scripple:
+        var artistSongs = allSongs.filter(filterByArtist);
+ 		var songKeys = artistSongs.map(function(a) {return a.key;});
+ 		filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
+ 		filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
 	}
     // Filter by file last-updated timestamp
     if (LIB.recentlyAddedClicked) {
@@ -431,9 +486,9 @@ function removeArticles(string) {
 	return SESSION.json['library_ignore_articles'] != 'None' ? string.replace(GLOBAL.regExIgnoreArticles, '$2') : string;
 }
 
-// Generate album/artist key
+// Generate album@artist key
 function keyAlbum(obj) {
-	return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase();
+    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
 }
 
 // Return numeric song time
@@ -449,11 +504,13 @@ function makeCoverUrl(filepath) {
 
 // Default post-click handler for lib items
 function clickedLibItem(event, item, currentFilter, renderFunc) {
+    //console.log(event);
 	if (item == undefined) {
-		// all
+		// All
 		currentFilter.length = 0;
 	}
-	else if (event.ctrlKey) {
+    // metaKey is true when Command-click on Mac
+	else if (event.ctrlKey || event.metaKey) {
 		currentIndex = currentFilter.indexOf(item);
 		if (currentIndex >= 0) {
 			currentFilter.splice(currentIndex, 1);
@@ -475,7 +532,6 @@ function clickedLibItem(event, item, currentFilter, renderFunc) {
 		    return parseInt(a.year) - parseInt(b.year);
 		});
 	}
-
 	renderFunc();
 }
 
@@ -488,7 +544,9 @@ var renderGenres = function() {
 			+ '">' + allGenres[i] + '</li>';
 	}
 
-	$('#genresList').html(output);
+	var element = document.getElementById('genresList');
+	element.innerHTML = output;
+//	$('#genresList').html(output);
 	if (UI.libPos[0] == -2) {
 		$('#lib-genre').scrollTo(0, 200);
 	}
@@ -500,13 +558,15 @@ var renderArtists = function() {
 	var output = '';
 
 	for (var i = 0; i < filteredArtists.length; i++) {
-		// Add "|| filteredArtists.length = 1" to automatically highlight if only 1 artist in list
+		// NOTE: Add "|| filteredArtists.length = 1" to automatically highlight if only 1 artist in list
 		output += '<li class="lib-entry'
 			+ ((LIB.filters.artists.indexOf(filteredArtists[i]) >= 0 || filteredArtists.length == 1) ? ' active' : '')
 			+ '">' + filteredArtists[i] + '</li>';
 	}
 
-	$('#artistsList').html(output);
+	var element = document.getElementById('artistsList');
+	element.innerHTML = output;
+	//$('#artistsList').html(output);
 
 	if (UI.libPos[0] == -2) {
 		$('#lib-artist').scrollTo(0, 200);
@@ -527,11 +587,11 @@ var renderAlbums = function() {
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
-        var albumViewLazy = tagViewLazy;
+        var albumViewLazy = '<div class="thumbHW"><img loading="lazy" src="' ;
     }
     else {
     	var tagViewLazy = '<img class="lazy-tagview" data-original="';
-    	var albumViewLazy = '<img class="lazy-albumview" data-original="';
+    	var albumViewLazy = '<div class="thumbHW"><img class="lazy-albumview" data-original="';
     }
 
     // SESSION.json['library_encoded_at']
@@ -541,7 +601,7 @@ var renderAlbums = function() {
     var tagViewNvDiv = '';
     var albumViewNvDiv = '';
     var albumViewHdDiv = '';
-    var albumViewTxDiv= '';
+    var albumViewTxDiv = '';
     var albumViewBgDiv = '';
 
 	for (var i = 0; i < filteredAlbums.length; i++) {
@@ -550,16 +610,16 @@ var renderAlbums = function() {
 
         // filteredAlbums[i].encoded_at
         // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
-        if (encodedAtOption != 9) {
+        if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
-            var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="encoded-at-hdonly-tagview">HD</div>' : '';
-            var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
+            var tagViewHdDiv = encodedAtOption == 1 && filteredAlbums[i].encoded_at.split(',')[1] == 'h' ? '<div class="lib-encoded-at-hdonly-tagview">' + ALBUM_HD_BADGE_TEXT + '</div>' : '';
+            var tagViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbums[i].encoded_at.split(',')[0] + '</div>' : '';
             // Album view
             var encodedAt = filteredAlbumCovers[i].encoded_at.split(',');
-            var albumViewNvDiv = encodedAtOption <= 1 ? '<div class="encoded-at-notvisible">' + filteredAlbumCovers[i].encoded_at.split(',')[0] + '</div>' : '';
-            var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ? '<div class="encoded-at-hdonly">HD</div>' : '';
-            var albumViewTxDiv = encodedAtOption == 2 ? '<div class="encoded-at-text">' + encodedAt[0] + '</div>' : '';
-            var albumViewBgDiv = encodedAtOption == 3 ? '<div class="encoded-at-badge">' + encodedAt[0] + '</div>' : '';
+            var albumViewNvDiv = encodedAtOption <= 1 ? '<div class="lib-encoded-at-notvisible">' + filteredAlbumCovers[i].encoded_at.split(',')[0] + '</div>' : '';
+            var albumViewHdDiv = encodedAtOption == 1 && encodedAt[1] == 'h' ? '<div class="lib-encoded-at-hdonly">' + ALBUM_HD_BADGE_TEXT + '</div>' : '';
+            var albumViewTxDiv = encodedAtOption == 2 ? '<div class="lib-encoded-at-text">' + encodedAt[0] + '</div>' : '';
+            var albumViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + encodedAt[0] + '</div>' : '';
         }
 
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
@@ -579,8 +639,8 @@ var renderAlbums = function() {
         }
 
 		output2 += '<li class="lib-entry">'
-            + albumViewLazy + filteredAlbumCovers[i].imgurl + '">'
-            + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-all"></div>'
+            + albumViewLazy + filteredAlbumCovers[i].imgurl + '"></div>'
+            + '<div class="cover-menu" data-toggle="context" data-target="#context-menu-lib-album"></div>'
 			+ albumViewHdDiv
 			+ albumViewBgDiv
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
@@ -591,18 +651,23 @@ var renderAlbums = function() {
 	}
 
     // Output the lists
-	$('#albumsList').html(output);
-	$('#albumcovers').html(output2);
+	var element = document.getElementById('albumsList');
+	element.innerHTML = output;
+	var element = document.getElementById('albumcovers');
+	element.innerHTML = output2;
+	//$('#albumsList').html(output);
+	//$('#albumcovers').html(output2);
 
 	// If only 1 album automatically highlight and display tracks
 	if (filteredAlbums.length == 1) {
 	    $('#albumsList li').addClass('active');
 		LIB.albumClicked = true;
+        UI.libPos[0] = 0;
 	}
 
     // Set ellipsis text
 	if (SESSION.json["library_ellipsis_limited_text"] == "Yes") {
-		$('#library-panel').addClass('limited');
+		$('#library-panel, #radio-panel').addClass('limited');
 	}
 
 	// Headers clicked
@@ -643,10 +708,19 @@ var renderSongs = function(albumPos) {
     if (LIB.artistClicked == true || LIB.albumClicked == true) {
         // Order the songs according the the order of the albums
         var orderedSongs = [];
-        for (i = 0; i < filteredAlbums.length; i++) {
+        if (LIB.albumClicked == true) {
             for (j = 0; j < filteredSongs.length; j++) {
-                if (filteredSongs[j].album == filteredAlbums[i].album) {
+                if (filteredSongs[j].key == filteredAlbums[UI.libPos[0]].key) {
                     orderedSongs.push(filteredSongs[j]);
+                }
+            }
+        }
+        else {
+            for (i = 0; i < filteredAlbums.length; i++) {
+                for (j = 0; j < filteredSongs.length; j++) {
+                    if (filteredSongs[j].key == filteredAlbums[i].key) {
+                        orderedSongs.push(filteredSongs[j]);
+                    }
                 }
             }
         }
@@ -658,7 +732,7 @@ var renderSongs = function(albumPos) {
         var multiDisc = [];
         for (i = 0; i < filteredSongs.length; i++) {
             if (filteredSongs[i].album == lastAlbum && filteredSongs[i].disc != lastDisc) {
-                console.log('Multi-disc: ' + filteredSongs[i].album);
+                //console.log('Multi-disc: ' + filteredSongs[i].album);
                 multiDisc.push(filteredSongs[i].album);
             }
             lastAlbum = filteredSongs[i].album;
@@ -669,11 +743,18 @@ var renderSongs = function(albumPos) {
         lastAlbum = '';
         lastDisc = '';
 		for (i = 0; i < filteredSongs.length; i++) {
-			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0,4) : ' ';
+			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
+            if (SESSION.json['library_inc_comment_tag'] == 'Yes') {
+                var comment = filteredSongs[i].comment != '' ? ' (' + filteredSongs[i].comment + ')' : '';
+            }
+            else {
+                var comment = filteredSongs[i].mb_albumid != '0' ? ' (' + filteredSongs[i].mb_albumid.slice(0, 8) + ')' : '';
+            }
+            var album = filteredSongs[i].album + comment;
 
-            if (filteredSongs[i].album != lastAlbum) {
-                albumDiv = '<div class="lib-album-heading">' + filteredSongs[i].album + '</div>';
-                lastAlbum = filteredSongs[i].album;
+            if (album != lastAlbum) {
+                albumDiv = '<div class="lib-album-heading">' + album + '</div>';
+                lastAlbum = album;
             }
             else {
                 albumDiv = '';
@@ -714,8 +795,11 @@ var renderSongs = function(albumPos) {
 
 	$('#songsList').html(output);
 
-    // Display album name heading if more than 1 album for clicked artist
-	if (filteredAlbums.length > 1 && LIB.artistClicked == true && LIB.albumClicked == false) {
+    // Display album name heading:
+    // - if more than 1 album for clicked artist
+    // - if first song musicbrainz_albumid != '0'
+	if ((filteredAlbums.length > 1 && LIB.artistClicked == true && LIB.albumClicked == false) ||
+        filteredSongs[0].mb_albumid != '0') {
 		$('.lib-album-heading').css('display', 'block');
 	}
 
@@ -730,7 +814,7 @@ var renderSongs = function(albumPos) {
 
 	// Cover art and metadata for Tag and Album views
 	if (filteredAlbums.length == 1 || LIB.filters.albums.length || typeof(albumPos) !== 'undefined') {
-		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-all">' +
+		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' +
 			'<img class="lib-coverart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '></a>');
 		$('#lib-albumname').html(filteredSongs[0].album);
 
@@ -742,7 +826,7 @@ var renderSongs = function(albumPos) {
 		}
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html(filteredSongs[0].year);
-		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatTotalTime(LIB.totalTime));
+		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
 		$('#lib-encoded-at').html(filteredSongs[0].encoded_at.split(',')[0]);
 	}
 	else {
@@ -750,24 +834,30 @@ var renderSongs = function(albumPos) {
 		var artist = LIB.filters.genres.length ? LIB.filters.artists : '';
 
         if (LIB.filters.artists.length > 0) {
-            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-all">' + LIB.filters.artists[0] + '</button>');
+            var artistName = LIB.filters.artists.length == 1 ? LIB.filters.artists[0] : 'Multiple Artists Selected';
+            $('#lib-coverart-img').html(
+                '<img class="lib-artistart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '>' +
+                '<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
+                artistName + '</button>'
+            );
             artist = '';
         }
         else if (LIB.filters.genres.length > 0) {
-            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-all">' + LIB.filters.genres[0] + '</button>');
+            var genreName = LIB.filters.genres.length == 1 ? LIB.filters.genres[0] : 'Multiple Genres Selected';
+            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + genreName + '</button>');
         }
         else {
-            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-all">' + 'Music Collection' + '</button>');
+            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + 'Music Collection' + '</button>');
         }
 		$('#lib-albumname').html(album);
 		$('#lib-artistname').html(artist);
 		$('#lib-albumyear').html('');
-		$('#lib-numtracks').html(formatNumCommas(filteredAlbums.length) + ' albums<br>' + formatNumCommas(filteredSongs.length) + ((filteredSongs.length == 1) ? ' track<br>' : ' tracks<br>') + formatTotalTime(LIB.totalTime));
+		$('#lib-numtracks').html(formatNumCommas(filteredAlbums.length) + ' albums<br>' + formatNumCommas(filteredSongs.length) + ((filteredSongs.length == 1) ? ' track<br>' : ' tracks<br>') + formatLibTotalTime(LIB.totalTime));
 		$('#lib-encoded-at').html('');
 	}
 }
 
-// Cleck genre or menu header (reset all)
+// Click genre or menu header (reset all)
 $('#genreheader, #menu-header').on('click', function(e) {
 	LIB.filters.genres.length = 0;
 	LIB.filters.artists.length = 0;
@@ -778,6 +868,7 @@ $('#genreheader, #menu-header').on('click', function(e) {
         LIB.albumClicked = false;
 		$("#searchResetLib").hide();
 		showSearchResetLib = false;
+        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
 			GLOBAL.musicScope = 'all';
 		}
@@ -859,13 +950,51 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	var pos = $('#albumsList .lib-entry').index(this);
     LIB.albumClicked = true;
 	UI.libPos[0] = pos;
-	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
 	var albumobj = filteredAlbums[pos];
 	var album = filteredAlbums[pos].album;
+	// Store the active state before it gets set below
+    var alreadyActive = this.className.includes('active')
 	storeLibPos(UI.libPos);
 	$('#albumsList .lib-entry').removeClass('active');
 	$('#albumsList .lib-entry').eq(pos).addClass('active');
-	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
+	// If a compilation album is already selected (active) but for only a
+	// subset of the artists such that some tracks are not shown clicking
+	// the album will cause the full track list for the album to populate
+	// the song list.
+	// Clicking again will contract back to just the selected artists.
+    if (alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.artist)) {
+        var displayedArtists = filteredSongs.map(
+        	function getArtist(a) {
+        		return a.artist;
+        	}).filter( function unique(value, index, self) {
+        		return self.indexOf(value) === index;
+        	});
+		// Have to do this check because someone might have
+		// ctrl+clicked to select multiple artists which may
+		// or may not be on the same displayed albums.
+		// So we can't just use the count.
+		var expanded = false;
+		for(let a of displayedArtists) {
+			if(!LIB.filters.artists.includes(a)) {
+				expanded = true;
+				break;
+			}
+		}
+		if (expanded) {
+			filterSongs();
+			renderSongs()
+		}
+        else {
+			LIB.filters.artists.push(albumobj.artist);
+			filterSongs();
+			LIB.filters.artists.pop();
+			renderSongs()
+		}
+    }
+    else {
+		clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
+	}
 	$('#bottom-row').css('display', 'flex')
 	$('#lib-file').scrollTo(0, 200);
 	UI.libAlbum = album;
@@ -882,13 +1011,13 @@ $('#random-album').click(function(e) {
 		var itemSelector = '#albumsList .lib-entry';
 		var scrollSelector = 'albums';
 		UI.libPos[0] = pos;
-		UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
+		UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
 		var albumobj = filteredAlbums[pos];
 	}
 	else {
 		var itemSelector = '#albumcovers .lib-entry';
 		var scrollSelector = 'albumcovers';
-		UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
+		UI.libPos[0] = filteredAlbums.map(function(e) {return e.key;}).indexOf(filteredAlbumCovers[pos].key);
 		UI.libPos[1] = pos;
 		var albumobj = filteredAlbumCovers[pos];
 	}
@@ -910,7 +1039,7 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 	$('#tracklist-toggle').show();
 
-	UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
+	UI.libPos[0] = filteredAlbums.map(function(e) {return e.key;}).indexOf(filteredAlbumCovers[pos].key);
 	UI.libPos[1] = pos;
 	storeLibPos(UI.libPos);
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
@@ -927,7 +1056,7 @@ $('#albumcovers').on('click', 'img', function(e) {
 
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 
-	UI.libPos[0] = filteredAlbums.map(function(e) {return e.album;}).indexOf(filteredAlbumCovers[pos].album);
+	UI.libPos[0] = filteredAlbums.map(function(e) {return e.key;}).indexOf(filteredAlbumCovers[pos].key);
 	UI.libPos[1] = pos;
 	storeLibPos(UI.libPos);
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
@@ -941,93 +1070,165 @@ $('#albumcovers').on('click', 'img', function(e) {
 		files.push(filteredSongs[i].file);
 	}
 
-    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
-
-    var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'playall' : 'clrplayall';
-	mpdDbCmd(cmd, files);
-    notify(cmd, '');
+    if (SESSION.json['library_instant_play'] != 'No action') {
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
+            mpdDbCmd(queueCmd, files);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
+            mpdDbCmd(queueCmd, files);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+            mpdDbCmd('clear_play_group', files);
+            notify('clear_play_group');
+        }
+    }
 
 	// So tracks list doesn't open
 	return false;
 });
 
-// Random album instant play (button on Playback panel)
+// Random album instant play button on Playback
 $('.ralbum').click(function(e) {
-	$('.ralbum svg').attr('class', 'spin');
-	setTimeout(function() {
-		$('.ralbum svg').attr('class', '');
-	}, RALBUM_TIMEOUT);
-
-	var array = new Uint16Array(1);
-    LIB.albumClicked = true;
-	window.crypto.getRandomValues(array);
-	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
-
-    UI.libPos[0] = pos;
-	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.album;}).indexOf(filteredAlbums[pos].album);
-	var albumobj = filteredAlbums[pos];
-
-	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
-
-	var files = [];
-	for (var i in filteredSongs) {
-		files.push(filteredSongs[i].file);
-	}
-
-    if (SESSION.json['library_instant_play'] == 'Add/Play' || SESSION.json['library_instant_play'] == 'No action') {
-        mpdDbCmd('playall', files);
-    }
-    // Clear/play using add first followed by delete.
-    // We do this because clrplayall directly from the Playback panel results in missed ui and pl updates.
-    else {
-    	var endpos = $(".playlist li").length
-    	mpdDbCmd('addall', files);
+    if (SESSION.json['library_instant_play'] != 'No action') {
+    	$('.ralbum svg').attr('class', 'spin');
     	setTimeout(function() {
-    		endpos == 1 ? cmd = 'delplitem&range=0' : cmd = 'delplitem&range=0:' + endpos;
-            $.get('command/moode.php?cmd=' + cmd, function(){
-                sendMpdCmd('play 0');
-            });
-    	}, CLRPLAY_TIMEOUT);
+    		$('.ralbum svg').attr('class', '');
+    	}, RALBUM_TIMEOUT);
+
+    	var array = new Uint16Array(1);
+        LIB.albumClicked = true;
+    	window.crypto.getRandomValues(array);
+    	pos = Math.floor((array[0] / 65535) * filteredAlbums.length);
+
+        UI.libPos[0] = pos;
+    	UI.libPos[1] = filteredAlbumCovers.map(function(e) {return e.key;}).indexOf(filteredAlbums[pos].key);
+    	var albumobj = filteredAlbums[pos];
+
+    	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
+
+    	var files = [];
+    	for (var i in filteredSongs) {
+    		files.push(filteredSongs[i].file);
+    	}
+
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
+            mpdDbCmd(queueCmd, files);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
+            mpdDbCmd(queueCmd, files);
+        }
+        // Clear/play using add first followed by delete.
+        // We do this because clear_play_group directly from the Playback panel results in missed UI and Queue updates.
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+        	var endpos = $(".playlist li").length
+        	mpdDbCmd('add_group', files);
+        	setTimeout(function() {
+        		endpos == 1 ? cmd = 'delplitem&range=0' : cmd = 'delplitem&range=0:' + endpos;
+                $.get('command/moode.php?cmd=' + cmd, function(){
+                    sendMpdCmd('play 0');
+                });
+        	}, CLRPLAY_TIMEOUT);
+        }
     }
 });
 
-// click radio cover for instant play
+// Click radio cover for instant play
 $('#database-radio').on('click', 'img', function(e) {
-    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
-	var pos = $(this).parents('li').index();
+    var pos = $(this).parents('li').index();
 	var path = $(this).parents('li').data('path');
 
-    // Radio list view
-	if ($(this).parents().hasClass('db-radiofolder-icon')) {
-		UI.raFolderLevel[UI.raFolderLevel[4]] = $(this).parents('li').attr('id').replace('db-','');
-		++UI.raFolderLevel[4];
-		mpdDbCmd('lsinfo_radio', $(this).parents('li').data('path'));
-	}
-    // Radio cover view
-	else {
-		UI.radioPos = pos;
-		storeRadioPos(UI.radioPos)
+	UI.radioPos = pos;
+	storeRadioPos(UI.radioPos)
 
-        var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
-    	mpdDbCmd(cmd, path);
-        if (cmd != 'play') {
-            notify(cmd, '');
+    $('#' + UI.dbEntry[3]).removeClass('active');
+    UI.dbEntry[3] = $(this).parents('li').attr('id');
+    $(this).parents('li').addClass('active');
+
+    /*if (SESSION.json['library_instant_play'] != 'No action') {
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_item' : 'add_item_next';
+            mpdDbCmd(queueCmd, path);
+            notify(queueCmd);
         }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_item' : 'play_item_next';
+            mpdDbCmd(queueCmd, path);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+            mpdDbCmd('clear_play_item', path);
+            notify('clear_play_item');
+        }
+    }*/
 
-		setTimeout(function() {
-			customScroll('radio', UI.radioPos, 200);
-		}, SCROLLTO_TIMEOUT);
-	}
+    oneTouchItem(path);
 
-	// Needed ?
-	return false;
+	setTimeout(function() {
+        customScroll('radio', UI.radioPos + 1, 200);
+	}, DEFAULT_TIMEOUT);
 });
 
-// Radio manager
+function oneTouchItem (path) {
+    if (SESSION.json['library_instant_play'] != 'No action') {
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_item' : 'add_item_next';
+            mpdDbCmd(queueCmd, path);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_item' : 'play_item_next';
+            mpdDbCmd(queueCmd, path);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+            mpdDbCmd('clear_play_item', path);
+            notify('clear_play_item');
+        }
+    }
+}
+
+// Radio manager dialog
 $('#radio-manager-btn').click(function(e) {
+    var sortGroup = SESSION.json['radioview_sort_group'].split(',');
+    var showHide = SESSION.json['radioview_show_hide'].split(',');
+    $('#radioview-sort-tag span').text(sortGroup[0]);
+    $('#radioview-group-method span').text(sortGroup[1]);
+    $('#radioview-show-hide-moode span').text(showHide[0]);
+    $('#radioview-show-hide-other span').text(showHide[1]);
     $('#import-export-msg').text('');
+    $('#recorder-status span').text(SESSION.json['recorder_status']);
+    $('#recorder-storage').val(SESSION.json['recorder_storage']);
     $('#radio-manager-modal').modal();
 });
+
+// Update Radio manager
+$('#btn-upd-radio-manager').click(function(e) {
+    SESSION.json['radioview_sort_group'] = $('#radioview-sort-tag span').text() + ',' + $('#radioview-group-method span').text();
+    SESSION.json['radioview_show_hide'] = $('#radioview-show-hide-moode span').text() + ',' + $('#radioview-show-hide-other span').text();
+    SESSION.json['recorder_status'] = $('#recorder-status span').text();
+    SESSION.json['recorder_storage'] = $('#recorder-storage').val();
+    $.post('command/moode.php?cmd=updcfgsystem', {
+        'radioview_sort_group': SESSION.json['radioview_sort_group'],
+        'radioview_show_hide': SESSION.json['radioview_show_hide'],
+        'recorder_status': SESSION.json['recorder_status'],
+        'recorder_storage': SESSION.json['recorder_storage']
+         }, function() {
+             notify('settings_updated');
+             setTimeout(function() {
+                 $('#ra-refresh').click();
+         	}, DEFAULT_TIMEOUT);
+         }
+     );
+});
+
+// Import stations.zip file
+// NOTE: this function is handled in indextpl.html
+
+// Export to stations.zip file
 $('#export-stations').click(function(e) {
     $('#import-export-msg').text('Exporting...');
     e.preventDefault();
@@ -1035,29 +1236,6 @@ $('#export-stations').click(function(e) {
         window.location.href = '/imagesw/stations.zip';
         $('#import-export-msg').text('Export complete');
 	});
-});
-
-// Click radio list item for instant play
-$('#database-radio').on('click', '.db-entry', function(e) {
-    if (SESSION.json['library_instant_play'] == 'No action') {return false;}
-	var pos = $(this).parents('li').index();
-	var path = $(this).parents('li').data('path');
-
-	// set new pos
-	UI.radioPos = pos;
-	storeRadioPos(UI.radioPos)
-
-    var cmd = SESSION.json['library_instant_play'] == 'Add/Play' ? 'play' : 'clrplay';
-    mpdDbCmd(cmd, path);
-    if (cmd != 'play') {
-        notify(cmd, '');
-    }
-
-	setTimeout(function() {
-		customScroll('radio', UI.radioPos, 200);
-	}, SCROLLTO_TIMEOUT);
-
-	return false;
 });
 
 // Click lib coverart
@@ -1135,17 +1313,19 @@ $('#context-menu-lib-item a').click(function(e) {
 	$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 	$('img.lib-coverart').removeClass('active');
 
-	if ($(this).data('cmd') == 'add') {
-		mpdDbCmd('add', filteredSongs[UI.dbEntry[0]].file);
-		notify('add');
+    if ($(this).data('cmd') == 'one_touch_action') {
+        oneTouchItem(filteredSongs[UI.dbEntry[0]].file);
 	}
-	else if ($(this).data('cmd') == 'play') {
-		// See moode.php: We check to see if the file is already in the playlist and then just play it
-		mpdDbCmd('play', filteredSongs[UI.dbEntry[0]].file);
+	else if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
+		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
+		notify('add_item');
 	}
-	else if ($(this).data('cmd') == 'clrplay') {
-		mpdDbCmd('clrplay', filteredSongs[UI.dbEntry[0]].file);
-		notify('clrplay');
+	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
+		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
+	}
+	else if ($(this).data('cmd') == 'clear_play_item') {
+		mpdDbCmd('clear_play_item', filteredSongs[UI.dbEntry[0]].file);
+		notify('clear_play_item');
 		$('#pl-saveName').val(''); // Clear saved playlist name if any
 	}
     else if ($(this).data('cmd') == 'track_info_lib') {
@@ -1157,7 +1337,7 @@ $('#context-menu-lib-item a').click(function(e) {
 });
 
 // Click coverart context menu item
-$('#context-menu-lib-all a').click(function(e) {
+$('#context-menu-lib-album a').click(function(e) {
 	UI.dbEntry[0] = $.isNumeric(UI.dbEntry[0]) ? UI.dbEntry[0] : 0;
 	if (!$('.album-view-button').hasClass('active')) {
 		$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
@@ -1170,17 +1350,16 @@ $('#context-menu-lib-all a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-	if ($(this).data('cmd') == 'addall') {
-		mpdDbCmd('addall', files);
-		notify('add');
+	if ($(this).data('cmd') == 'add_group' || $(this).data('cmd') == 'add_group_next') {
+		mpdDbCmd($(this).data('cmd'), files);
+		notify($(this).data('cmd'));
 	}
-	else if ($(this).data('cmd') == 'playall') {
-		mpdDbCmd('playall', files);
-		notify('add');
+	else if ($(this).data('cmd') == 'play_group' || $(this).data('cmd') == 'play_group_next') {
+		mpdDbCmd($(this).data('cmd'), files);
 	}
-	else if ($(this).data('cmd') == 'clrplayall') {
-		mpdDbCmd('clrplayall', files);
-		notify('clrplay');
+	else if ($(this).data('cmd') == 'clear_play_group') {
+		mpdDbCmd('clear_play_group', files);
+		notify($(this).data('cmd'));
 	}
 	else if ($(this).data('cmd') == 'tracklist') {
 		if ($('#bottom-row').css('display') == 'none') {
@@ -1210,16 +1389,49 @@ $('#context-menu-lib-disc a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-	if ($(this).data('cmd') == 'addall') {
-		mpdDbCmd('addall', files);
-		notify('add');
+	if ($(this).data('cmd') == 'add_group') {
+		mpdDbCmd('add_group', files);
+		notify($(this).data('cmd'));
 	}
-	if ($(this).data('cmd') == 'playall') {
-		mpdDbCmd('playall', files);
-		notify('add');
+	if ($(this).data('cmd') == 'play_group') {
+		mpdDbCmd('play_group', files);
 	}
-	if ($(this).data('cmd') == 'clrplayall') {
-		mpdDbCmd('clrplayall', files);
-		notify('clrplay');
+	if ($(this).data('cmd') == 'clear_play_group') {
+		mpdDbCmd('clear_play_group', files);
+		notify($(this).data('cmd'));
 	}
 });
+
+// Format total time for all songs in library
+function formatLibTotalTime(seconds) {
+	var output, hours, minutes, hh, mm, ss;
+
+    if(isNaN(parseInt(seconds))) {
+    	output = '';
+    }
+	else {
+	    hours = ~~(seconds / 3600); // ~~ = faster Math.floor
+    	seconds %= 3600;
+    	minutes = ~~(seconds / 60);
+
+        hh = hours == 0 ? '' : (hours == 1 ? hours + ' hour' : hours + ' hours');
+        mm = minutes == 0 ? '' : (minutes == 1 ? minutes + ' min' : minutes + ' mins');
+
+		if (hours > 0) {
+			if (minutes > 0) {
+				output = hh + ' ' + mm;
+			}
+            else {
+				output = hh;
+			}
+		}
+        else {
+			output = mm;
+		}
+    }
+    return formatNumCommas(output);
+}
+
+function formatNumCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

@@ -19,15 +19,68 @@ New features
 
 - NEW: Selective resampling modes
 - NEW: Custom SoX resampling recipes
+- NEW: Radio view with sort/group and metadata
 - NEW: Resource limits in MPD Config
+- NEW: Auto-shuffle Album mode option
+- NEW: Option to display thumbnails in the Queue
+- NEW: Thumbnails displayed for albums in Folder view
+- NEW: Albums played directly if already in the Queue
+- NEW: Library support for tracks tagged with multiple genres
+- NEW: Library filters (Lossless, Lossy, Format or Directory)
+- NEW: Library option to select which tag for the Artist list
+- NEW: Option for Renderer backdrop (Cover or Backdrop image)
+- NEW: Add next, Play next by inserting after current item
+- NEW: Support up to 384K rate for DDDAC1794 NOS
 
 Updates
 
+- UPD: Bump to Linux kernel 5.4.61 build #1339
+- UPD: Bump to MPD 0.22.0
+- UPD: Bump to Auto-shuffle (ashuffle) 3.7.2
+- UPD: Bump to squeezelite 1.9.7-1270
+- UPD: Bump to librespot 0.1.3
+- UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
+- UPD: Add Genre to the Extra metadata Appearance option
+- UPD: Add Appearance option to include the comment tag
+- UPD: Add higher resolutions for thumbnail generator
+- UPD: Add "Update Library" to action list for Clock Radio
+- UPD: Add MUSICBRAINZ_ALBUMID as part of the album key
+- UPD: Add "Clear Library cache" to Library menu
+- UPD: Add place holder H/W for native lazyload
+- UPD: Add "Now Playing" EQ style icon to the Queue
+- UPD: Include Add next, Play next in list of "One touch actions"
+- UPD: Improve logging for Library update process
+- UPD: Extend HD badging to Playbar, CoverView amd Playback
+- UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
+- UPD: Show volume level on Playbar
+- UPD: Generate additional set of small thumbnails for lists
+- UPD: Honor "Resume MPD" setting when disconnecting a renderer
+- UPD: Only load CoverView Queue HTML when it's opened
+
+Radio stations
+
+- UPD: Radio Caroline playable URL
+- UPD: Soma FM - DEF CON Radio logo image
+- UPD: Update NME station URL's to 256 kbps MP3
+- DEL: Radio X London due to metadata issues
+- DEL: Megarock Radio due to failed stream link
 
 Bug fixes
 
+- FIX: Album key and cross-index for Tag and Album views
+- FIX: Track list show/hide not preserved when switching views
 - FIX: Manual entry of SSID not accepting embedded space
+- FIX: Graphic EQ curves are +6 alsaequal units too high
+- FIX: Listall.sh script not handling mixed case file extentions
+- FIX: Airplay and Spotify renderers started after BlueZ disconnect
+- FIX: Disabled volume knob processing scroll/swipe events
+- FIX: Regression causing Folder view, Advanced search to fail
+- FIX: Item highlight/de-highlight in all views
+- FIX: Radio Instant play not obeying the "No Action" option
+- FIX: Insufficient bottom padding on Library tracks list
+- FIX: Wrong Playlist width (mobile) when CV auto-display enabled
+- FIX: Library special year search partially broken
 
 ########################################################
 //

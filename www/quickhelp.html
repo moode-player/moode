@@ -16,21 +16,63 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 -->
 
 <h4>General</h4>
-<p>Switching between the Playback panel and the Library is accomplished by tapping on the album cover or on any open area of the Playbar.</p>
+<p>There are four main sections to moOde: Playback, Library, CoverView and Configuration.</p>
+<p>Switching between Playback and the Library is accomplished by tapping on the cover art in Playback or on any open area of the Playbar in the Library.</p>
+
+<h4>Playback</h4>
+<p>The Playback screen includes the play queue (Queue), volume and time knobs, playback controls, cover art and metadata.
 
 <h4>Library</h4>
 <p>The library provides Radio, Folder, Tag and Album views for browsing and selecting content and a Playbar for displaying song information and controlling playback.</p>
-<p>Options for configuring various aspects of the Library including sort order, recently added lookback and more are located in the Appearance dialog which is accessible via the Main Menu.</p>
+<p>Options for configuring various aspects of the Library including sort order, recently added and more are located in the Library section of the Appearance dialog which is accessible via the Main Menu.</p>
 <p>A special search feature is available in Tag and Album views that accepts a year or year range as the search criteria for example 1995 or 1995-1998. It's activated by pressing the enter key or if on a touch device keying in !r.</p>
 
+<h4>CoverView</h4>
+<p>The CoverView screen saver provides a large sized cover art image, a Playbar for controlling playback and several backdrop Options that can be selected in the CoverView section of the Appearance dialog.</p>
+
 <h4>Configuration</h4>
-<p>The Configuration screens are accessed via the Main Menu.</p>
+<p>The Configuration screens are accessed via the Main Menu and provide settings for the Library, Audio, Network and System.</p>
+
+<h4>Queue</h4>
+<p>The Queue is displayed in Playback and CoverView and contains all items to be played. It's populated primarily by selecting an item from the Library and then tapping one of the Queue commands listed on a context menu. It can also be populated automatically by Auto-shuffle. The Queue commands are listed below.</p>
+
+<div id="quickhelp-queue-commands">
+	<ul>
+		<li><span> Add | Play</span>
+			<p>The Add command adds the item to the end of the Queue. The Play command first checks to see if the item is already in the Queue and then plays the existing item otherwise it does the same as Add and then begins play.</p>
+		</li>
+		<li><span> Add next | Play next</span>
+			<p>The "Add next" command adds the item immediately after the currently playing or last played item. The "Play next" command first checks to see if the item is already in the Queue and then plays the existing item otherwise it does the same as "Add next" then begins play.</p>
+		</li>
+
+		<li><span> Clear/Add | Clear/Play</span>
+			<p>The Clear/Add command first clears the Queue then adds the item. The Clear/Play command does the same and then begins play.</p>
+		</li>
+	</ul>
+</div>
+
+
+<h4>Special Menu Items</h4>
+<p>Most menu items are self explanatory but several perform unique functions.</p>
+
+<div id="quickhelp-special-buttons">
+	<ul>
+		<li><i class="fas fa-forward sx"></i>
+			<span> Players</span>
+			<p>This item is located on the Main menu. It displays a list of other moOde players discovered on the network. Tapping a player opens it's WebUI.</p>
+		</li>
+		<li><i class="far fa-trash sx"></i>
+			<span> Clear Library cache</span>
+			<p>This item is located on the Library menu. It clears the Library tag cache file so it can be regenerated to match the contents of the MPD database. The cache file is used to reduce the time it takes to load the Library. Note that the cache file is automatically cleared when updating the library or regenerating the MPD database.</p>
+		</li>
+	</ul>
+</div>
 
 <h4>Special Buttons</h4>
 <p>Most buttons are self explanatory but several perform unique functions.</p>
@@ -43,15 +85,15 @@
 		</li>
 		<li><i class="far fa-random sx"></i>
 			<span> Random</span>
-			<p>Play random tracks from the Playlist (default) or the entire Music Library if Auto-shuffle is ON (see Audio Config).</p>
+			<p>Play randomly selected tracks from the Queue (default) or if Auto-shuffle is ON (see Audio Config) play randomly selected tracks or albums from the entire Music Library.</p>
 		</li>
 		<li><i class="far fa-arrow-down sx"></i>
 			<span> Consume</span>
-			<p>Remove the track from the Playlist after it finishes playing. Consume mode is automatically enabled when Auto-shuffle is ON.</p>
+			<p>Remove the track from the Queue after it finishes playing. Consume mode is automatically enabled when Auto-shuffle is ON.</p>
 		</li>
 		<li><i class="far fa-repeat sx"></i>
 			<span> Repeat</span>
-			<p>Repeat the Playlist or if Single is enabled then repeat the track.</p>
+			<p>Repeat the Queue or if Single is enabled then repeat the track.</p>
 		</li>
 		<li><i class="far fa-redo sx"></i>
 			<span> Single</span>
@@ -59,19 +101,19 @@
 		</li>
 		<li><i class="far fa-exchange-alt sx"></i>
 			<span> Last track</span>
-			<p>Toggle between the currently playing item and the previously played item.</p>
+			<p>Toggle between the currently playing item and the last played item.</p>
 		</li>
 		<li><i class="far fa-dot-circle sx"></i>
 			<span> Select random album</span>
-			<p>Select a random Album for review when in Tag or Album views.</p>
+			<p>Select a random Album for review when in Tag or Album view.</p>
 		</li>
 		<li><i class="far fa-asterisk sx"></i>
-			<span> Play random album</span>
-			<p>Instantly play a randomly selected album. This option performs Clear/Play or Add/Play depending on the Instant play action setting in Library options. If Instant play action is set to No action then this option defaults to Add/Play.</p>
+			<span> Play a random album</span>
+			<p>Randomly select an album from the Music Library and perform the action specified for the "One touch action" setting. This setting is in the Playback section of the Appearance dialog.</p>
 		</li>
 		<li><i class="far fa-heart sx"></i>
 			<span> Favorite</span>
-			<p>Add the currently selected track in the Playlist to the Favorites playlist. Playlists are listed in Library Folder view.</p>
+			<p>Add the currently selected track in the Queue to the Favorites playlist. Playlists are listed in Library Folder view.</p>
 		</li>
 	</ul>
 </div>
@@ -82,11 +124,11 @@
 </p>
 <div id="quickhelp-active-elements">
 	<ul>
-		<li><span> Instant Play</span>
-			<p>Tapping on the cover in Radio or Album views instantly plays the item by performing either a Clear/Play or Add/Play depending on the Instant play action setting in Library options. If the setting is Add/Play and the item is currently in the Playlist then it is played directly rather than adding a new duplicate item. There is also an option for No action.</p>
+		<li><span> One touch action</span>
+			<p>When tapping a cover in Library Radio or Album view, or tapping the "Play a random album" button in Playback, perform the action specified for the "One touch action" setting. This setting is in the Playback section of the Appearance dialog.</p>
 		</li>
 		<li><span> Renderer Active screens</span>
-			<p>Tapping on the title in the center of Bluetooth, Analog Input or S/PDIF Input Active will launch their respective Config screens which allow the input/output settings to be changed.</p>
+			<p>Tapping on the title in the center of Bluetooth, Analog Input or S/PDIF Input Active will launch their respective Configuration screens which allow the input/output settings to be changed.</p>
 		</li>
 		<li><span> Time knob</span>
 			<p>Tapping on the time while a song file is playing will toggle between counting the time up or down. Tapping or dragging the time ring moves forward or backward in the song.</p>
@@ -97,8 +139,8 @@
 		<li><span> Song title</span>
 			<p>Tapping the song title underneath the cover art in Playback launches a Google search in a separate Browser tab. On Smartphones it scrolls the Playlist to that item.</p>
 		</li>
-		<li><span> Radio station or Artist - Album</span>
-			<p>Tapping the Radio station name or the Artist - Album title underneath the cover art in Playback switches to Playbar in Radio or Tag view respectively. In tag view the artist filter is applied. In radio view the list is scrolled to the station.</p>
+		<li><span> Station or Artist/Album name</span>
+			<p>Tapping the Radio station name or the Artist - Album name underneath the cover art in Playback switches to Radio or Tag view respectively. In tag view the artist filter is applied. In radio view the list is scrolled to the station.</p>
 		</li>
 		<li><span> Swipe gestures</span>
 			<p>On Smartphones swiping up scrolls the Playlist into view and tapping on the Playbar cover returns to Playback. In the Library tag view swiping sideways shows/hides the Genres column.</p>

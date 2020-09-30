@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 
@@ -91,11 +91,33 @@ else {
 	workerLog('worker: Integrity check ('. $result .')');
 }
 
+// Ensure certain files exist and with the correct permissions
+if (!file_exists('/var/local/www/playhistory.log')) {
+	sysCmd('touch /var/local/www/playhistory.log');
+	// This sets the "Log initialized" header
+	sysCmd('/var/www/command/util.sh clear-playhistory');
+}
+sysCmd('touch ' . LIBCACHE_JSON);
+sysCmd('touch /var/local/www/sysinfo.txt');
+sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
+sysCmd('truncate /var/local/www/currentsong.txt --size 0');
+// Delete any tmp files left over from New/Edit radio station
+sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
+sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
+// Set permissions
+sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
+sysCmd('chmod 0777 /var/local/www/currentsong.txt');
+sysCmd('chmod 0777 ' . LIBCACHE_JSON);
+sysCmd('chmod 0777 /var/local/www/playhistory.log');
+sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
+sysCmd('chmod 0666 ' . MOODE_LOG);
+workerLog('worker: File check (OK)');
+
 // Load cfg_system into session
 playerSession('open', '', '');
 loadRadio();
 workerLog('worker: Session loaded');
-workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'on' : 'off') . ')');
+workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
 
 // Verify device configuration
 //$card0 = trim(file_get_contents('/proc/asound/card0/id'));
@@ -107,7 +129,7 @@ for ($i = 0; $i < 4; $i++) {
 }
 workerLog('worker: Device raw: (0:' . $cards[0] . '|1:' . $cards[1]. '|2:' . $cards[2]. '|3:' . $cards[3]);
 workerLog('worker: Device i2s: (' . $_SESSION['i2sdevice'] . ')');
-workerLog('worker: Device mpd: (' . $mpd_device[0]['value'] . ':' . $_SESSION['adevname'] . ')');
+workerLog('worker: Device mpd: (' . $mpd_device[0]['value'] . '|' . $_SESSION['adevname'] . ')');
 workerLog('worker: Device ses: (' . $_SESSION['cardnum'] . '|' . $_SESSION['adevname'] . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . '%)');
 if ($_SESSION['i2sdevice'] != 'none' && $mpd_device[0]['value'] != '0') {
 	workerLog('worker: ERROR: Device raw/mpd card mismatch');
@@ -173,27 +195,6 @@ workerLog('worker: ' . $msg);
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
 sysCmd($cmd . ' > /dev/null');
 workerLog('worker: HDMI port ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
-
-// Ensure certain files exist
-if (!file_exists('/var/local/www/currentsong.txt')) {sysCmd('touch /var/local/www/currentsong.txt');}
-if (!file_exists(LIBCACHE_JSON)) {sysCmd('touch ' . LIBCACHE_JSON);}
-if (!file_exists('/var/local/www/sysinfo.txt')) {sysCmd('touch /var/local/www/sysinfo.txt');}
-if (!file_exists(MOODE_LOG)) {sysCmd('touch ' . MOODE_LOG);}
-if (!file_exists(THMCACHE_DIR)) {sysCmd('mkdir ' . THMCACHE_DIR);}
-if (!file_exists('/var/local/www/playhistory.log')) {
-	sysCmd('touch /var/local/www/playhistory.log');
-	sysCmd('/var/www/command/util.sh clear-playhistory');
-}
-sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
-sysCmd('chmod 0777 /var/local/www/currentsong.txt');
-sysCmd('chmod 0777 ' . LIBCACHE_JSON);
-sysCmd('chmod 0777 /var/local/www/playhistory.log');
-sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
-sysCmd('chmod 0666 ' . MOODE_LOG);
-// Delete any tmp files left over from New/Edit radio station
-sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
-sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
-workerLog('worker: File check (OK)');
 
 //
 workerLog('worker: -- Network');
@@ -641,14 +642,7 @@ if ($_SESSION['autoplay'] == '1') {
 	workerLog('worker: Auto-play (On)');
 	if ($_SESSION['ashuffle'] == '1') {
 		workerLog('worker: Starting auto-shuffle');
-		if (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') {
-			$cmd = 'mpc search ' . $_SESSION['ashuffle_filter'] . ' | /usr/local/bin/ashuffle --queue_buffer 1 --file - > /dev/null 2>&1 &';
-		}
-		else {
-			$cmd = '/usr/local/bin/ashuffle --queue_buffer 1 > /dev/null 2>&1 &';
-		}
-
-		sysCmd($cmd);
+		startAutoShuffle();
 	}
 	else {
 		$status = parseStatus(getMpdStatus($sock));
@@ -738,10 +732,10 @@ phpSessionCheck();
 // NOTE: This is done near the end of startup because autoConfig() uses the wpa_passphrase utility which requires
 // sufficient kernel entropy in order to generate the PSK. If there is not enough entropy, wpa_passphrase returns
 // the input password instead of a PSK.
-if (file_exists('/boot/moodecfg.txt')) {
+if (file_exists('/boot/moodecfg.ini')) {
 	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 
-	autoConfig('/boot/moodecfg.txt');
+	autoConfig('/boot/moodecfg.ini');
 
 	sysCmd('sync');
 	autoCfgLog('autocfg: System restarted');
@@ -1102,16 +1096,16 @@ function chkClockRadio() {
 		// Action after stop
 		if ($_SESSION['clkradio_action'] != "None") {
 			if ($_SESSION['clkradio_action'] == 'Restart') {
-				$action = 'reboot';
-				$delay = 45; // To ensure that after reboot $curtime != clkradio_stop_time
+				sleep(45); // To ensure that after reboot $curtime != clkradio_stop_time
+				sysCmd('/var/local/www/commandw/restart.sh reboot');
 			}
 			elseif ($_SESSION['clkradio_action'] == 'Shutdown') {
-				$action = 'poweroff';
-				$delay = 0;
+				sysCmd('/var/local/www/commandw/restart.sh poweroff');
 			}
-
-			sleep($delay);
-			sysCmd('/var/local/www/commandw/restart.sh ' . $action);
+			elseif ($_SESSION['clkradio_action'] == 'Update Library') {
+				workerLog('update library');
+				submitJob('update_library', '', '', '');
+			}
 		}
 	}
 
@@ -1154,16 +1148,16 @@ function chkSleepTimer() {
 		// Action after stop
 		if ($_SESSION['clkradio_action'] != "None") {
 			if ($_SESSION['clkradio_action'] == 'Restart') {
-				$action = 'reboot';
-				$delay = 45; // To ensure that after reboot $curtime != clkradio_stop_time
+				sleep(45); // To ensure that after reboot $curtime != clkradio_stop_time
+				sysCmd('/var/local/www/commandw/restart.sh reboot');
 			}
 			elseif ($_SESSION['clkradio_action'] == 'Shutdown') {
-				$action = 'poweroff';
-				$delay = 0;
+				sysCmd('/var/local/www/commandw/restart.sh poweroff');
 			}
-
-			sleep($delay);
-			sysCmd('/var/local/www/commandw/restart.sh ' . $action);
+			elseif ($_SESSION['clkradio_action'] == 'Update Library') {
+				workerLog('update library');
+				submitJob('update_library', '', '', '');
+			}
 		}
 	}
 
@@ -1253,11 +1247,13 @@ function chkLibraryUpdate() {
 	//workerLog('chkLibraryUpdate');
 	$sock = openMpdSock('localhost', 6600);
 	$status = parseStatus(getMpdStatus($sock));
+	$stats = parseDelimFile(getMpdStats($sock), ': ');
 	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
 		sendEngCmd('libupd_done');
 		$GLOBALS['check_library_update'] = '0';
+		workerLog('mpdindex: Done: indexed ' . $stats['artists'] . ' artists, ' . $stats['albums'] . ' albums, ' .  $stats['songs'] . ' songs');
 		workerLog('worker: Job update_library done');
 	}
 }
@@ -1299,6 +1295,9 @@ function runQueuedJob() {
 	// No need to log screen saver resets
 	if ($_SESSION['w_queue'] != 'resetscnsaver') {
 		workerLog('worker: Job ' . $_SESSION['w_queue']);
+		if ($_SESSION['w_queue'] == 'update_library') {
+			workerLog('mpdindex: Start');
+		}
 	}
 
 	switch ($_SESSION['w_queue']) {
@@ -1318,11 +1317,10 @@ function runQueuedJob() {
 			sendMpdCmd($sock, $cmd);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-			// Launch thumbcache updater
+			// Start thumbcache updater
 			$result = sysCmd('pgrep -l thmcache.php');
 			if (strpos($result[0], 'thmcache.php') === false) {
 				sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
-				//workerLog('update_library, thmcache.php launched');
 			}
 			$GLOBALS['check_library_update'] = '1';
 			break;
@@ -1549,12 +1547,18 @@ function runQueuedJob() {
 			}
 			break;
 		case 'airplaysvc':
-			stopSps(); //r45b
+			stopSps();
 			if ($_SESSION['airplaysvc'] == 1) {startSps();}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
+				sysCmd('mpc play');
+			}
 			break;
 		case 'spotifysvc':
 			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterspot'] == 'Yes') {
+				sysCmd('mpc play');
+			}
 			break;
 		case 'spotify_clear_credentials':
 			sysCmd('rm /var/local/www/spotify_cache/credentials.json');
@@ -1577,6 +1581,9 @@ function runQueuedJob() {
 				playerSession('write', 'slactive', '0');
 				$GLOBALS['slactive'] = '0';
 				sendEngCmd('slactive0');
+			}
+			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmaftersl'] == 'Yes') {
+				sysCmd('mpc play');
 			}
 			break;
 		case 'slrestart':
@@ -1822,61 +1829,51 @@ function runQueuedJob() {
 				// thumbnail height
 				$thm_h = ($img_h / $img_w) * $thm_w;
 
+				// Standard thumbnail
 				if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
-					workerLog('setlogoimage: error 1: ' . $file);
+					workerLog('setlogoimage: error 1a: imagecreatetruecolor()' . $file);
 					break;
 				}
 				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-					workerLog('setlogoimage: error 2: ' . $file);
-					break;
-				}
-				if (imagedestroy($image) === false) {
-					workerLog('setlogoimage: error 3: ' . $file);
+					workerLog('setlogoimage: error 2a: imagecopyresampled()' . $file);
 					break;
 				}
 				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) === false) {
-					workerLog('setlogoimage: error 4: ' . $file);
+					workerLog('setlogoimage: error 4a: imagejpeg()' . $file);
 					break;
 				}
 				if (imagedestroy($thumb) === false) {
-					workerLog('setlogoimage: error 5: ' . $file);
+					workerLog('setlogoimage: error 5a: imagedestroy()' . $file);
+					break;
+				}
+
+				// Small thumbnail
+				if (($thumb = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
+					workerLog('setlogoimage: error 1b: imagecreatetruecolor()' . $file);
+					break;
+				}
+				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
+					workerLog('setlogoimage: error 2b: imagecopyresampled()' . $file);
+					break;
+				}
+				if (imagedestroy($image) === false) {
+					workerLog('setlogoimage: error 3b: imagedestroy()' . $file);
+					break;
+				}
+				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '_sm.jpg', THM_SM_Q) === false) {
+					workerLog('setlogoimage: error 4b: imagejpeg()' . $file);
+					break;
+				}
+				if (imagedestroy($thumb) === false) {
+					workerLog('setlogoimage: error 5b: imagedestroy()' . $file);
 					break;
 				}
 			}
 			break;
-		case 'import_stations':
-			if (false === ($zip_data = base64_decode($_SESSION['w_queueargs'], true))) {
-				workerLog('moode.php: import_stations base64_decode failed');
-			}
-			else {
-				$file = '/var/local/www/station_import.zip';
-				if (false === ($fh = fopen($file, 'w'))) {
-					workerLog('moode.php: file create failed on ' . $file);
-				}
-				else {
-					if (false === ($bytes_written = fwrite($fh, $zip_data))) {
-						workerLog('moode.php: file write failed on ' . $file);
-					}
-					else {
-						// Import station data
-						sysCmd('/var/www/command/import_stations.sh');
-						// Update MPD RADIO folder
-						$sock = openMpdSock('localhost', 6600);
-						sendMpdCmd($sock, 'update RADIO');
-						$resp = readMpdResp($sock);
-						closeMpdSock($sock);
-						$GLOBALS['check_library_update'] = '1';
-						// Update the session
-						loadRadio();
-					}
-					fclose($fh);
-				}
-			}
-			break;
-
 		// Other jobs
 		case 'reboot':
 		case 'poweroff':
+			$result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", cfgdb_connect());
 			resetApMode();
 			sysCmd('/var/local/www/commandw/restart.sh ' . $_SESSION['w_queue']);
 			break;

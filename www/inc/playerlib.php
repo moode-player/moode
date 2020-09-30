@@ -31,6 +31,7 @@ define('MPD_RESPONSE_ERR', 'ACK');
 define('MPD_RESPONSE_OK',  'OK');
 define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
 define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
+define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
 define('MOODE_LOG', '/var/log/moode.log');
 define('AUTOCFG_LOG', '/home/pi/autocfg.log');
 define('PORT_FILE', '/tmp/portfile');
@@ -41,6 +42,12 @@ define('SESSION_SAVE_PATH', '/var/local/php');
 define('TMP_STATION_PREFIX', '__tmp__');
 define('EXPORT_DIR', '/var/local/www/imagesw');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
+
+// Size and quality factor for small thumbs
+// Used in thmcache.php, worker.php
+define('THM_SM_W', '80');
+define('THM_SM_H', '80');
+define('THM_SM_Q', '75');
 
 error_reporting(E_ERROR);
 
@@ -86,6 +93,17 @@ const SOX_UPSAMPLE_ONLY_41K		= 1; // Upsample only 44.1K source rate
 const SOX_UPSAMPLE_ONLY_4148K	= 2; // Upsample only 44.1K and 48K source rates
 const SOX_ADHERE_BASE_FREQ		= 8; // Resample (adhere to base freq)
 
+// Album and Radio HD badge parameters
+// NOTE: These are mirrored in playerlib.js
+const ALBUM_HD_BADGE_TEXT 			= 'HD';
+const ALBUM_BIT_DEPTH_THRESHOLD 	= 16;
+const ALBUM_SAMPLE_RATE_THRESHOLD 	= 44100;
+const RADIO_HD_BADGE_TEXT 			= 'HiRes';
+const RADIO_BITRATE_THRESHOLD 		= 128;
+
+// Reserved root directory names
+$ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
+
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
 	$fh = fopen(MOODE_LOG, $mode);
@@ -112,23 +130,23 @@ function debugLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
-// Helper functions for html generation (pcasto)
-function versioned_resource($file, $type='stylesheet') {
+// Helper functions for html generation (@pcasto)
+// NOTE: These were used in header.php but as of the 7.0.0 release they are no longer used.
+function versioned_stylesheet($file, $type='stylesheet') {
 	echo '<link href="' . $file . '?v=' . $_SESSION['moode_release'] . '" rel="' . $type .'">' . "\n";
 }
 function versioned_script($file, $type='') {
 	echo '<script src="' . $file . '?v=' . $_SESSION['moode_release'] . '"' . ($type != '' ? ' type="' . $type . '"' . ' defer></script>' : ' defer></script>') . "\n";
 }
 
-// core mpd functions
+// Core MPD functions
 
 // AG from Moode 3 prototype
 // TC retry to improve robustness
 function openMpdSock($host, $port) {
 	for ($i = 0; $i < 6; $i++) {
 		if (false === ($sock = @stream_socket_client('tcp://' . $host . ':' . $port, $errorno, $errorstr, 30))) {
-			debugLog('openMpdSocket(): connection failed (' . ($i + 1) . ')');
-			debugLog('openMpdSocket(): errorno: ' . $errorno . ', ' . $errorstr);
+			debugLog('openMpdSocket(): error: connection failed (' . ($i + 1) . ') ' . $errorno . ', ' . $errorstr);
 		}
 		else {
 			$resp = readMpdResp($sock);
@@ -144,13 +162,10 @@ function openMpdSock($host, $port) {
 // TC rewrite to handle fgets() fail
 function readMpdResp($sock) {
 	$resp = '';
-	//debugLog('readMpdResponse(): reading response'); // comment these out to reduce log clutter
 
 	while (false !== ($str = fgets($sock, 1024)) && !feof($sock)) {
 		if (strncmp(MPD_RESPONSE_OK, $str, strlen(MPD_RESPONSE_OK)) == 0) {
 			$resp = $resp == '' ? $str : $resp;
-			//debugLog('readMpdResponse(): success $str=(' . explode("\n", $str)[0] . ')');
-			//debugLog('readMpdResponse(): success $resp[0]=(' . explode("\n", $resp)[0] . ')');
 			return $resp;
 		}
 
@@ -164,8 +179,8 @@ function readMpdResp($sock) {
 	}
 
 	if (!feof($sock)) {
-		debugLog('readMpdResponse(): error: fgets fail due to socket being timed out or PHP/MPD connection failure');
-		debugLog('readMpdResponse(): error: $resp[0]=(' . explode("\n", $resp)[0] . ')');
+		// Socket timed out or PHP/MPD connection failure
+		debugLog('readMpdResponse(): error: fgets failure (' . explode("\n", $resp)[0] . ')');
 	}
 
 	return $resp;
@@ -173,7 +188,6 @@ function readMpdResp($sock) {
 
 function closeMpdSock($sock) {
 	sendMpdCmd($sock, 'close');
-	//$resp = readMpdResp($sock);
 	fclose($sock);
 }
 
@@ -181,28 +195,27 @@ function sendMpdCmd($sock, $cmd) {
 	fputs($sock, $cmd . "\n");
 }
 
-function chainMpdCmds($sock, $cmds) {
+function chainMpdCmds($sock, $cmds, $delay = 0) {
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
         $resp = readMpdResp($sock);
+
+		if ($delay > 0) {
+			usleep($delay); // Microseconds
+		}
     }
-}
-
-function chainMpdCmdsDelay($sock, $cmds, $delay) {
-    sendMpdCmd($sock, $cmds[0]);
-    $resp = readMpdResp($sock);
-
-	usleep($delay); // microseconds 1000000 = 1 sec
-
-    sendMpdCmd($sock, $cmds[1]);
-    $resp = readMpdResp($sock);
 }
 
 function getMpdStatus($sock) {
 	sendMpdCmd($sock, 'status');
 	$status = readMpdResp($sock);
-
 	return $status;
+}
+
+function getMpdStats($sock) {
+	sendMpdCmd($sock, 'stats');
+	$stats = readMpdResp($sock);
+	return $stats;
 }
 
 // miscellaneous core functions
@@ -223,18 +236,17 @@ function echoTemplate($template) {
 function integrityCheck() {
 	$warning = false;
 
+	// Export device table
+	sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT * FROM cfg_audiodev WHERE drvoptions NOT IN ('slave', 'glb_mclk') AND chipoptions = ''\" > /tmp/cfg_audiodev.sql");
+	// Broom www root
+	sysCmd('find /var/www -type l -delete');
+
 	// Check database schema
 	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db .schema | grep ro_columns');
 	if (empty($result)) {
 		$_SESSION['ic_return_code'] = '1';
 		return false;
 	}
-
-	// Output static tables
-	$result = sysCmd("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT id,name,dacchip,iface,list,driver FROM cfg_audiodev WHERE drvoptions=''\" > /tmp/cfg_audiodev.sql");
-
-	// Broom www root
-	sysCmd('find /var/www -type l -delete');
 
 	// Check hash table
 	$result = cfgdb_read('cfg_hash', cfgdb_connect());
@@ -263,6 +275,13 @@ function integrityCheck() {
 				return false;
 			}
 		}
+	}
+
+	// Verify the row count
+	$count = sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT COUNT() FROM cfg_audiodev\"");
+	if ($count[0] != 77) {
+		$_SESSION['ic_return_code'] = '4';
+		return false;
 	}
 
 	return $warning === true ? 'passed with warnings' : 'passed';
@@ -339,16 +358,12 @@ function sockWrite($sock, $msg) {
 // Caching library loader
 function loadLibrary($sock) {
 	if (filesize(LIBCACHE_JSON) != 0) {
-		debugLog('loadLibrary(): Cache data returned to client, length (' . filesize(LIBCACHE_JSON) . ')');
 		return file_get_contents(LIBCACHE_JSON);
 	}
 	else {
-		debugLog('loadLibrary(): Generating flat list...');
 		$flat = genFlatList($sock);
 
 		if ($flat != '') {
-			debugLog('loadLibrary(): Flat list generated, size (' . sizeof($flat) . ')');
-			debugLog('loadLibrary(): Generating library...');
 			// Normal or UTF8 replace
 			if ($_SESSION['library_utf8rep'] == 'No') {
 				$json_lib = genLibrary($flat);
@@ -356,11 +371,9 @@ function loadLibrary($sock) {
 			else {
 				$json_lib = genLibraryUTF8Rep($flat);
 			}
-			debugLog('loadLibrary(): Cache data returned to client, length (' . strlen($json_lib) . ')');
 			return $json_lib;
 		}
 		else {
-			debugLog('loadLibrary(): Flat list empty');
 			return '';
 		}
 	}
@@ -390,13 +403,28 @@ function genFlatList($sock) {
 	// Get metadata
 	$resp = '';
 	foreach ($dirs as $dir) {
-		//workerLog('Directory: ' . $dir);
-		sendMpdCmd($sock, 'listallinfo "' . $dir . '"');
+		// NOTE: MPD must be compiled with libpcre++-dev to make use of PERL compatible regex
+		switch ($_SESSION['library_flatlist_filter']) {
+			case 'None':
+				$cmd = "search base \"" . $dir . "\"";
+				break;
+			case 'Lossless':
+				$cmd = "search \"((base '" . $dir . "') AND (file =~ '.flac|.aif|.wav|.dsf|.dff'))\"";
+				break;
+			case 'Lossy':
+				$cmd = "search \"((base '" . $dir . "') AND (file !~ '.flac|.aif|.wav|.dsf|.dff'))\"";
+				break;
+			case 'Format':
+			case 'Directory':
+				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
+				break;
+		}
+		sendMpdCmd($sock, $cmd);
 		$resp .= readMpdResp($sock);
 	}
 
 	//workerLog('genFlatList(): is_null($resp)= ' . (is_null($resp) === true ? 'true' : 'false') . ', substr($resp, 0, 2)= ' . substr($resp, 0, 2));
-	if (!is_null($resp) && substr($resp, 0, 2) != 'OK') {
+	if (!is_null($resp)) {
 		$lines = explode("\n", $resp);
 		$item = 0;
 		$flat = array();
@@ -406,13 +434,21 @@ function genFlatList($sock) {
 		for ($i = 0; $i < $linecount; $i++) {
 			list($element, $value) = explode(': ', $lines[$i], 2);
 
-			if ($element == 'file') {
+			if ($element == 'OK') {
+				// NOTE: Skip any ACK's
+			}
+			else if ($element == 'file') {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
-			// Exclude directories and playlists from listallinfo
-			elseif ($element == 'directory' || $element == 'playlist') {
-				++$i;
+			// @Atair: Gather possible multiple Genre values as array
+			elseif ($element == 'Genre') {
+				if ($flat[$item]['Genre']) {
+					array_push($flat[$item]['Genre'], $value);
+				}
+				else {
+					$flat[$item]['Genre'] = array($value);
+				}
 			}
 			else {
 				$flat[$item][$element] = $value;
@@ -431,8 +467,6 @@ function genLibrary($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		//$ext = getFileExt($flatData['file']);
-
 		$songData = array(
 			'file' => $flatData['file'],
 			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
@@ -444,26 +478,28 @@ function genLibrary($flat) {
 			'year' => getTrackYear($flatData),
 			'time' => $flatData['Time'],
 			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
-			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : 'Unknown'),
+			'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
+			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
 			'time_mmss' => songTime($flatData['Time']),
 			'last_modified' => $flatData['Last-Modified'],
-			//'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? getEncodedAt($flatData, 'default', false) :
-			//	getEncodedAt($flatData, 'default', true))
-			'encoded_at' => getEncodedAt($flatData, 'default', true)
+			'encoded_at' => getEncodedAt($flatData, 'default', true),
+			'comment' => (($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
 		);
 
 		array_push($lib, $songData);
 	}
 
-	$json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE);
-	debugLog('genLibrary(): $lib, size= ' . sizeof($lib));
-	debugLog('genLibrary(): $json_lib, length= ' . strlen($json_lib));
-	debugLog('genLibrary(): json_last_error()= ' . json_last_error_msg());
-
-	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
-		debugLog('genLibrary: create libcache.json failed');
+	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
+		workerLog('genLibrary(): error: json_encode($lib) failed');
 	}
+
+	if (false === (file_put_contents(LIBCACHE_JSON, $json_lib))) {
+		workerLog('genLibrary(): error: libcache.json file create failed');
+	}
+
 	//workerLog(print_r($lib, true));
+	//workerLog(print_r($json_lib, true));
+	//workerLog('genLibrary(): json_error_message(): ' . json_error_message());
 	return $json_lib;
 }
 
@@ -517,8 +553,6 @@ function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		//$ext = getFileExt($flatData['file']);
-
 		$songData = array(
 			'file' => utf8rep($flatData['file']),
 			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')),
@@ -530,22 +564,25 @@ function genLibraryUTF8Rep($flat) {
 			'year' => utf8rep(getTrackYear($flatData)),
 			'time' => utf8rep($flatData['Time']),
 			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : 'Unknown')),
+			'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
+			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
 			'time_mmss' => utf8rep(songTime($flatData['Time'])),
 			'last_modified' => $flatData['Last-Modified'],
-			//'encoded_at' => ($ext == 'dsf' || $ext == 'dff' ? utf8rep(getEncodedAt($flatData, 'default', false)) :
-			//	utf8rep(getEncodedAt($flatData, 'default', true)))
-			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true))
-
+			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
+			'comment' => utf8rep(($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
 		);
 
 		array_push($lib, $songData);
 	}
 
-	$json_lib = json_encode($lib);
-	if (file_put_contents(LIBCACHE_JSON, $json_lib) === false) {
-		debugLog('genLibrary: create libcache.json failed');
+	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
+		workerLog('genLibraryUTF8Rep(): error: json_encode($lib) failed');
 	}
+
+	if (false === (file_put_contents(LIBCACHE_JSON, $json_lib))) {
+		workerLog('genLibraryUTF8Rep(): error: libcache.json file create failed');
+	}
+
 	return $json_lib;
 }
 // UTF8 replace (@lazybat)
@@ -587,80 +624,52 @@ function clearLibCache() {
 	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
 }
 
-// add group of songs to playlist (library panel)
-function addallToPL($sock, $songs) {
-	$cmds = array();
+// Add group of song files to the Queue (Tag/Album view)
+function addGroupToQueue($sock, $songs) {
+	$mpd_cmds = array();
 
 	foreach ($songs as $song) {
-		$path = $song;
-		array_push($cmds, 'add "' . html_entity_decode($path) . '"');
+		array_push($mpd_cmds, 'add "' . html_entity_decode($song) . '"');
 	}
 
-	chainMpdCmds($sock, $cmds);
+	chainMpdCmds($sock, $mpd_cmds);
 }
 
-// add to playlist (from folder and radio panels)
-function addToPL($sock, $path) {
-	//workerLog($path);
+// Add one item (song file, playlist, radio station, directory) to the Queue
+function addItemToQueue($sock, $path) {
 	$ext = getFileExt($path);
+	$pl_extensions = array('m3u', 'pls', 'cue');
+	//workerLog($path . ' (' . $ext . ')');
 
-	// radio dir
-	if ($path == 'RADIO') {
-		sendMpdCmd($sock, 'listfiles RADIO');
-		$resp = readMpdResp($sock);
-
-		$files = array();
-		$line = strtok($resp, "\n");
-		$i = 0;
-
-		while ($line) {
-			list($param, $value) = explode(': ', $line, 2);
-			if ($param == 'file') {
-				$files[$i] = $value;
-				$i++;
-			}
-			$line = strtok("\n");
-		}
-
-		natcasesort($files);
-
-		foreach($files as $file) {
-			sendMpdCmd($sock, 'load "RADIO/' . $file . '"');
-			$resp = readMpdResp($sock);
-		}
-	}
-	// playlist
-	elseif ($ext == 'm3u' || $ext == 'pls' || $ext == 'cue' || (strpos($path, '/') === false && $path != 'NAS' && $path != 'SDCARD')) {
-		// radio stations
+	// Use load for saved playlist, cue sheet, radio station
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && !in_array($path, $ROOT_DIRECTORIES))) {
+		// Radio station special case
 		if (strpos($path, 'RADIO') !== false) {
-			// check for playlist as url
+			// Check for playlist as URL
 			$pls = file_get_contents(MPD_MUSICROOT . $path);
 			$url = parseDelimFile($pls, '=')['File1'];
-			$end = substr($url, -4);
-			if ($end == '.pls' || $end == '.m3u') {
+			$ext = substr($url, -4);
+			if ($ext == '.pls' || $ext == '.m3u') {
 				$path = $url;
 			}
 		}
 		sendMpdCmd($sock, 'load "' . html_entity_decode($path) . '"');
 	}
-	// file or dir
+	// Use add for song file or directory
 	else {
 		sendMpdCmd($sock, 'add "' . html_entity_decode($path) . '"');
 	}
 
-	$resp = readMpdResp($sock);
-	return $resp;
+	return readMpdResp($sock);
 }
 
-// get file extension
+// Get file extension
 function getFileExt($file) {
-	$pos = strrpos($file, '.');
-	$ext = substr($file, $pos + 1);
-
-	return strtolower($ext);
+	$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+	return $ext == '' ? 'no_extension_found' : $ext;
 }
 
-// parse delimited file
+// Parse delimited file
 function parseDelimFile($data, $delim) {
 	$array = array();
 	$line = strtok($data, "\n");
@@ -699,11 +708,11 @@ function delPLFile($sock, $plname) {
 	return $resp;
 }
 
-// search mpd database
+// Search mpd database
 function searchDB($sock, $querytype, $query = '') {
 	//workerLog($querytype . ', ' . $query);
 	switch ($querytype) {
-		// list a database path
+		// List a database path
 		case 'lsinfo':
 			if (!empty($query)){
 				sendMpdCmd($sock, 'lsinfo "' . html_entity_decode($query) . '"');
@@ -713,11 +722,11 @@ function searchDB($sock, $querytype, $query = '') {
 				sendMpdCmd($sock, 'lsinfo');
 				break;
 			}
-		// search all tags
+		// Search all tags
 		case 'any':
 			sendMpdCmd($sock, 'search any "' . html_entity_decode($query) . '"');
 			break;
-		// search specified tags
+		// Search specified tags
 		case 'specific':
 			sendMpdCmd($sock, 'search ' . html_entity_decode($query));
 			break;
@@ -727,7 +736,7 @@ function searchDB($sock, $querytype, $query = '') {
 	return parseList($resp);
 }
 
-// format mpd lsinfo output
+// Format searchDB output
 function parseList($resp) {
 	if (is_null($resp)) {
 		return NULL;
@@ -735,7 +744,6 @@ function parseList($resp) {
 	else {
 		$array = array();
 		$line = strtok($resp,"\n");
-		$file = '';
 		$idx = -1;
 
 		while ($line) {
@@ -743,27 +751,25 @@ function parseList($resp) {
 
 			if ($element == 'file') {
 				$idx++;
-				$file = $value;
-				$array[$idx]['file'] = $file;
-				$array[$idx]['fileext'] = getFileExt($file);
+				$array[$idx]['file'] = $value;
+				$array[$idx]['fileext'] = getFileExt($value);
 			}
 			else if ($element == 'directory') {
 				$idx++;
-				$diridx++; // record directory index for further processing
-				$file = $value;
-				$array[$idx]['directory'] = $file;
+				$diridx++; // Save directory index for further processing
+				$array[$idx]['directory'] = $value;
+				$cover_file = md5($value) . '_sm.jpg';
+				$array[$idx]['cover_url'] = file_exists(THMCACHE_DIR . $cover_file) ? '/imagesw/thmcache/' . $cover_file : '';
 			}
 			else if ($element == 'playlist') {
 				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
 					$idx++;
-					$file = $value;
-					$array[$idx]['file'] = $file;
-					$array[$idx]['fileext'] = getFileExt($file);
+					$array[$idx]['file'] = $value;
+					$array[$idx]['fileext'] = getFileExt($value);
 				}
 				else {
 					$idx++;
-					$file = $value;
-					$array[$idx]['playlist'] = $file;
+					$array[$idx]['playlist'] = $value;
 				}
 			}
 			else {
@@ -774,7 +780,7 @@ function parseList($resp) {
 			$line = strtok("\n");
 		}
 
-		// put dirs on top
+		// Put dirs on top
 		if (isset($diridx) && isset($array[0]['file']) ) {
 			$files = array_slice($array, 0, -$diridx);
             $dirs = array_slice($array, -$diridx);
@@ -794,7 +800,6 @@ function songTime($sec) {
 
 // Format MPD status output
 function parseStatus($resp) {
-
 	// This return probably needs a redo
 	if (is_null($resp)) {
 		return NULL;
@@ -915,7 +920,7 @@ function formatChan($channels) {
 // parse audio output hardware params
 function parseHwParams($resp) {
 	if (is_null($resp)) {
-		return 'Error, parseHwParams response is null';
+		return 'parseHwParams(): Response is null';
 	}
 	elseif ($resp != "closed\n" && $resp != "no setup\n") {
 		$array = array();
@@ -965,7 +970,7 @@ function parseCurrentSong($sock) {
 	$resp = readMpdResp($sock);
 
 	if (is_null($resp) ) {
-		return 'Error, parseCurrentSong response is null';
+		return 'parseCurrentSong(): Response is null';
 	}
 	else {
 		$array = array();
@@ -981,48 +986,48 @@ function parseCurrentSong($sock) {
 	}
 }
 
-// Parse MPD playlistfind output
-function parsePlaylistFind($sock, $path) {
-	sendMpdCmd($sock, 'playlistfind file "' . $path . '"');
+// Find a file or album in the Queue
+function findInQueue($sock, $tag, $search) {
+	sendMpdCmd($sock, 'playlistfind ' . $tag . ' "' . $search . '"');
 	$resp = readMpdResp($sock);
 
-	if (is_null($resp) ) {
-		return 'Error, parsePlaylistFind response is null';
+	if ($resp == "OK\n") {
+		return 'findInQueue(): ' . $tag . ' ' . $search . ' not found';
 	}
-	else {
-		$array = array();
-		$line = strtok($resp, "\n");
 
+	$array = array();
+	$line = strtok($resp, "\n");
+
+	// Return position
+	if ($tag == 'file') {
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
-			$array[$element] = $value;
+			if ($element == 'Pos') {
+				$array['Pos'] = $value;
+				break;
+			}
+
 			$line = strtok("\n");
 		}
-
-		return $array;
 	}
-}
-
-// Parse MPD listplaylist output
-function parseListPlaylist($sock, $path) {
-	sendMpdCmd($sock, 'listplaylist "' . $path . '"');
-	$resp = readMpdResp($sock);
-
-	if (is_null($resp) ) {
-		return 'Error, parseListPlaylist response is null';
-	}
-	else {
-		$array = array();
-		$line = strtok($resp, "\n");
-
+	// Return files and positions
+	else if ($tag == 'album') {
+		$i = 0;
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
-			$array[$element] = $value;
+			if ($element == 'file') {
+				$array[$i]['file'] = $value;
+			}
+			if ($element == 'Pos') {
+				$array[$i]['Pos'] = $value;
+				$i++;
+			}
+
 			$line = strtok("\n");
 		}
-
-		return $array;
 	}
+
+	return $array;
 }
 
 // parse cfg_mpd settings
@@ -1053,7 +1058,7 @@ function parseCfgMpd($dbh) {
 // parse radio station file
 function parseStationFile($resp) {
 	if (is_null($resp) ) {
-		return 'Error, parseStationFile response is null';
+		return 'parseStationFile(): Response is null';
 	}
 	else {
 		$array = array();
@@ -1072,7 +1077,7 @@ function parseStationFile($resp) {
 // parse play history log
 function parsePlayHist($resp) {
 	if (is_null($resp) ) {
-		return 'parsePlayHist(): parsePlayHist response is null';
+		return 'parsePlayHist(): Response is null';
 	}
 	else {
 		$array = array();
@@ -1276,184 +1281,7 @@ function phpSession($action, $param = '', $value = '') {
 	}
 }
 
-// TODO: new database management
-function dbConnect() {
-	if ($dbh = new PDO(SQLDB)) {
-		return $dbh;
-	}
-	else {
-		workerLog('dbConnect(): Connection failed');
-		return false;
-	}
-}
-
-function dbRead($table, $dbh, $param = '', $id = '') {
-	if(empty($param)) {
-		$querystr = 'SELECT * FROM ' . $table;
-	}
-	else if (!empty($id)) {
-		$querystr = "SELECT * FROM " . $table . " WHERE id='" . $id . "'";
-	}
-	else if ($param == 'mpdconf') {
-		$querystr = "SELECT param, value FROM cfg_mpd WHERE value!=''";
-	}
-	else if ($table == 'cfg_audiodev') {
-		$filter = $param == 'all' ? ' WHERE list="yes"' : ' WHERE name="' . $param . '" AND list="yes"';
-		$querystr = 'SELECT name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
-	}
-	else if ($table == 'cfg_theme') {
-		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
-	}
-	else if ($table == 'cfg_radio') {
-		$querystr = 'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
-	}
-	else {
-		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
-	}
-
-	if ($result = dbQuery($querystr, $dbh)) {
-		return $result;
-	}
-	else {
-		workerLog('dbRead(): Query failed or empty result set');
-		return false;
-	}
-}
-
-function dbUpdate($table, $dbh, $key = '', $value) {
-	switch ($table) {
-		case 'cfg_system':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' where param='" . $key . "'";
-			break;
-
-		case 'cfg_mpd':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' where param='" . $key . "'";
-			break;
-
-		case 'cfg_network':
-			// use escaped single quotes in ssid and pwd
-			$querystr = "UPDATE " . $table .
-				" SET method='" . $value['method'] .
-				"', ipaddr='" . $value['ipaddr'] .
-				"', netmask='" . $value['netmask'] .
-				"', gateway='" . $value['gateway'] .
-				"', pridns='" . $value['pridns'] .
-				"', secdns='" . $value['secdns'] .
-				"', wlanssid='" . str_replace("'", "''", $value['wlanssid']) .
-				"', wlansec='" . $value['wlansec'] .
-				"', wlanpwd='" . str_replace("'", "''", $value['wlanpwd']) .
-				"' WHERE iface='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-
-		case 'cfg_source':
-			$querystr = "UPDATE " . $table . " SET name='" . $value['name'] . "', type='" . $value['type'] . "', address='" . $value['address'] . "', remotedir='" . $value['remotedir'] . "', username='" . $value['username'] . "', password='" . $value['password'] . "', charset='" . $value['charset'] . "', rsize='" . $value['rsize'] . "', wsize='" . $value['wsize'] . "', options='" . $value['options'] . "', error='" . $value['error'] . "' WHERE id=" . $value['id'];
-			break;
-
-		case 'cfg_audiodev':
-			$querystr = "UPDATE " . $table . " SET chipoptions='" . $value . "' WHERE name='" . $key . "'";
-			break;
-
-		case 'cfg_radio':
-			$querystr = "UPDATE " . $table . " SET station='" . $value . "' WHERE name='" . $key . "'";
-			break;
-		case 'cfg_sl':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_airplay':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_spotify':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_upnp':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_eqfa4p':
-			$querystr = "UPDATE " . $table .
-				" SET master_gain='" . $value['master_gain'] .
-				"', band1_params='" . $value['band1_params'] .
-				"', band2_params='" . $value['band2_params'] .
-				"', band3_params='" . $value['band3_params'] .
-				"', band4_params='" . $value['band4_params'] .
-				"' WHERE curve_name='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-		case 'cfg_gpio':
-			$querystr = "UPDATE " . $table .
-				" SET enabled='" . $value['enabled'] .
-				"', pin='" . $value['pin'] .
-				"', command='" . trim($value['command']) .
-				"', param='" . $value['param'] .
-				"', value='" . $value['value'] .
-				"' WHERE id='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-	}
-
-	if (dbQuery($querystr, $dbh)) {
-		return true;
-	}
-	else {
-		workerLog('dbUpdate(): Query failed');
-		return false;
-	}
-}
-
-//function cfgdb_write($table, $dbh, $values) {
-function dbInsert($table, $dbh, $values) {
-	$querystr = "INSERT INTO " . $table . " VALUES (NULL, " . $values . ")"; // NULL causes the Id column to be set to the next number
-
-	if (dbQuery($querystr,$dbh)) {
-		return true;
-	}
-	else {
-		workerLog('dbInsert(): Query failed');
-		return false;
-	}
-}
-
-function dbDelete($table, $dbh, $id = '') {
-	$querystr = empty($id) ? 'DELETE FROM ' . $table : 'DELETE FROM ' . $table . ' WHERE id=' . $id;
-
-	if (dbQuery($querystr, $dbh)) {
-		return true;
-	}
-	else {
-		workerLog('dbDelete(): Query failed');
-		return false;
-	}
-}
-
-function dbQuery($querystr, $dbh) {
-	$query = $dbh->prepare($querystr);
-
-	if ($query->execute()) {
-		$result = array();
-		$i = 0;
-		foreach ($query as $value) {
-			$result[$i] = $value;
-			$i++;
-		}
-
-		// destroy the PDO connection object created by dbConnect()
-		// its also automatically destroyed when the script that created it ends
-		$dbh = null;
-
-		if (empty($result)) {
-			return true;
-		}
-		else {
-			return $result;
-		}
-	}
-	else {
-		workerLog('dbQuery(): Query failed (' . $querystr . ')');
-		return false;
-	}
-}
-
-// database management
+// Database management
 function cfgdb_connect() {
 	if ($dbh = new PDO(SQLDB)) {
 		return $dbh;
@@ -1476,13 +1304,14 @@ function cfgdb_read($table, $dbh, $param = '', $id = '') {
 	}
 	else if ($table == 'cfg_audiodev') {
 		$filter = $param == 'all' ? ' WHERE list="yes"' : ' WHERE name="' . $param . '" AND list="yes"';
-		$querystr = 'SELECT name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
+		$querystr = 'SELECT name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
 	}
 	else if ($table == 'cfg_theme') {
 		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
 	}
 	else if ($table == 'cfg_radio') {
-		$querystr = 'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
+		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("DELETED", "zx reserved 499")' :
+			'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
 	}
 	else {
 		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
@@ -1821,19 +1650,24 @@ function getMixerName($i2sdevice) {
 
 // Get device names assigned to each ALSA card
 function getDeviceNames () {
-	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB audio device
+	// Pi HDMI 1, HDMI 2 or Headphone jack, or a USB audio device
 	if ($_SESSION['i2sdevice'] == 'none') {
-		$pi_device_names = array('b1' => 'Pi HDMI 1', 'b2' => 'Pi HDMI 2', 'Headphones' => 'Pi Headphone jack');
 		for ($i = 0; $i < 4; $i++) {
 			$alsa_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 			$aplay_device_name = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
-			$devices[$i] = $pi_device_names[$alsa_id] != '' ? $pi_device_names[$alsa_id] : $aplay_device_name;
+			$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $alsa_id);
+			if ($result === true) { // Not in table
+				$devices[$i] = $aplay_device_name;
+			}
+			else {
+				$devices[$i] = $result[0]['alt_name'];
+			}
 			//workerLog('card' . $i . ' (' . $devices[$i] . ')');
 		}
 	}
 	// I2S audio device
 	else {
-		$devices[0] = trim(sysCmd("aplay -l | awk -F'[' '/card 0/{print $2}' | cut -d']' -f1")[0]);
+		$devices[0] = $_SESSION['i2sdevice'];
 	}
 
 	return $devices;
@@ -1965,7 +1799,7 @@ function sourceMount($action, $id = '') {
 				$return = empty($result) ? true : false;
 			}
 
-			debugLog('sourceMount(): result=(' . implode("\n", $result) . ')');
+			debugLog('sourceMount(): Command=(' . $mountstr . ')');
 			break;
 
 		case 'mountall':
@@ -2016,9 +1850,9 @@ function sourceMount($action, $id = '') {
 }
 
 function ui_notify($notify) {
-	$script .= "<script>";
-	$script .= "jQuery(document).ready(function() {";
-	$script .= "$.pnotify.defaults.history = false;";
+	$script .= "<script>\n";
+	$script .= "function ui_notify() {\n";
+	$script .= "$.pnotify.defaults.history = false;\n";
 	$script .= "$.pnotify({";
 	$script .= "title: '" . $notify['title'] . "',";
 	$script .= "text: '" . $notify['msg'] . "',";
@@ -2030,9 +1864,9 @@ function ui_notify($notify) {
 	else {
 		$script .= "delay: '3000',";
 	}
-	$script .= "opacity: 1.0});";
-	$script .= "});";
-	$script .= "</script>";
+	$script .= "opacity: 1.0});\n";
+	$script .= "}\n";
+	$script .= "</script>\n";
 
 	echo $script;
 }
@@ -2103,7 +1937,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 
 	// Special sectuon to handle calls from genLibrary() to populate the element "encoded_at"
 	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
-	// Returnesd string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
+	// Returned string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
 	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
 	if ($called_from_genlib) {
 		$mpd_format_tag = explode(':', $song_data['Format']);
@@ -2118,7 +1952,9 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 		}
 		// PCM or Multichannel PCM
 		else {
-			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > 16) || $mpd_format_tag[0] > 44100 ? ',h' : ',s';
+			// Workaround for wrong bit depth returned for ALAC encoded m4a files
+			$mpd_format_tag[1] = ($ext == 'm4a' && $mpd_format_tag[1] == '32') ? '24' : $mpd_format_tag[1];
+			$hd = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > ALBUM_BIT_DEPTH_THRESHOLD) || $mpd_format_tag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? ',h' : ',s';
 			$encoded_at = ($mpd_format_tag[1] == 'f' ? '' : $mpd_format_tag[1] . '/') . formatRate($mpd_format_tag[0]) . ' ' . strtoupper($ext) . $hd;
 		}
 	}
@@ -2133,7 +1969,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 	// DSD file
 	elseif ($ext == 'dsf' || $ext == 'dff') {
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"');
-		$encoded_at = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' Mbps');
+		$encoded_at = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' MHz');
 	}
 	// PCM file
 	else {
@@ -2148,7 +1984,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 
 		// Mediainfo
 		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $song_data['file'] . '"';
-		debugLog($cmd);
+		//workerLog($cmd);
 		$result = sysCmd($cmd);
 
 		$bitdepth = $result[0] == '' ? '?' : $result[0];
@@ -2177,7 +2013,7 @@ function stopSps () {
 }
 
 function startSps() {
-	// verbose logging
+	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
 		$logging = '-vv';
 		$logfile = '/var/log/shairport-sync.log';
@@ -2187,7 +2023,7 @@ function startSps() {
 		$logfile = '/dev/null';
 	}
 
-	// get device num
+	// Get device num
 	$array = sdbquery('select value from cfg_mpd where param="device"', cfgdb_connect());
 	$device = $array[0]['value'];
 
@@ -2204,13 +2040,12 @@ function startSps() {
 		$device = 'plughw:' . $array[0]['value'];
 	}
 
-	// interpolation param handled in config file
+	// Interpolation param handled in config file
 	$cmd = '/usr/local/bin/shairport-sync ' . $logging .
 		' -a "' . $_SESSION['airplayname'] . '" ' .
-		//'-w -B /var/local/www/commandw/spspre.sh -E /var/local/www/commandw/spspost.sh ' .
 		'-- -d ' . $device . ' > ' . $logfile . ' 2>&1 &';
 
-	debugLog('worker: (' . $cmd . ')');
+	debugLog('startSps(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
 
@@ -2257,9 +2092,9 @@ function startSpotify() {
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' . // audio file cache eats disk space
 		' --onevent /var/local/www/commandw/spotevent.sh' .
 		' > /dev/null 2>&1 &';
-		//' -v > /home/pi/librespot.txt 2>&1 &'; // r45a debug
+		//' -v > /home/pi/librespot.txt 2>&1 &'; // For debug
 
-	debugLog('worker: (' . $cmd . ')');
+	debugLog('startSpotify(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
 
@@ -2272,12 +2107,12 @@ function startBt() {
 	// we should have a MAC address
 	$result = sysCmd('ls /var/lib/bluetooth');
 	if ($result[0] == '') {
-		workerLog('worker: Bluetooth error, no MAC address');
+		workerLog('startBt(): Bluetooth error, no MAC address');
 	}
 	// initialize controller
 	else {
 		$result = sysCmd('/var/www/command/bt.sh -i');
-		//workerLog('worker: Bluetooth controller initialized');
+		//workerLog('startBt(): Bluetooth controller initialized');
 	}
 }
 
@@ -2294,6 +2129,26 @@ function startLcdUpdater() {
 // start gpio button handler
 function startGpioSvc() {
 	sysCmd('/var/www/command/gpio-buttons.py > /dev/null 2&1 &');
+}
+
+// Auto-shuffle random play
+function startAutoShuffle() {
+	$ashuffle_filter = (!empty($_SESSION['ashuffle_filter']) && $_SESSION['ashuffle_filter'] != 'None') ?
+		'mpc search ' . $_SESSION['ashuffle_filter'] . ' | ' : '';
+	$ashuffle_file = $ashuffle_filter != '' ? '--file -' : '';
+	$ashuffle_mode = $_SESSION['ashuffle_mode'] == 'Album' ? '--group-by album ' : '';
+	$result = sysCmd($ashuffle_filter . '/usr/local/bin/ashuffle --queue-buffer 1 ' . $ashuffle_mode . $ashuffle_file . ' > /dev/null 2>&1 &');
+}
+function stopAutoShuffle() {
+	sysCmd('killall -s 9 ashuffle > /dev/null');
+	playerSession('write', 'ashuffle', '0');
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('stopAutoShuffle(): MPD connect failed');
+		exit(0);
+	}
+	sendMpdCmd($sock, 'consume 0');
+	$resp = readMpdResp($sock);
+	closeMpdSock($sock);
 }
 
 // get upnp coverart url
@@ -2655,198 +2510,247 @@ function cfgAudioScrobbler() {
 	fclose($fp);
 }
 
+// returns the settings for reading/writing the autoConfig file
+function autoConfigSettings() {
+	$debug = true;
+	// handler is config item name is just setting the playSession
+	function setPlayerSession($values) {
+		playerSession('write', array_key_first($values), $values[array_key_first($values)]);
+	}
+
+	// handler is config item name is just setting the playSession and a syscmd call to util.sh
+	function setPlayerSessionAndSysCmd($values, $command ) {
+		sysCmd('/var/www/command/util.sh '.sprintf($command, $values[array_key_first($values)]) );
+		playerSession('write', array_key_first($values), $values[array_key_first($values)]);
+	}
+
+	// configuration of the autoconfig item handling
+	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
+	//            most item only have 1 autoconfig item, but network setting requires multiple to be present
+	// - handler for setting the config item
+	// - section_var - if autoconfig item name differs from session var, the name of the session var can be provided
+	// - command - argument for util.sh when setPlayerSessionAndSysCmd handler is used.
+	$configurationHandlers = [
+		'Names',
+		['requires' => ['browsertitle'] , 'handler' => setPlayerSession],
+		['requires' => ['hostname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name host "moode" "%s"'],
+		['requires' => ['bluetoothname'] , 'session_var' => 'btname', 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name bluetooth "Moode Bluetooth" "%s"'],
+		['requires' => ['airplayname'] , 'handler' => setPlayerSession],
+		['requires' => ['spotifyname'] , 'handler' => setPlayerSession],
+		['requires' => ['squeezelitename'] , 'handler' => function($values) {
+				$dbh = cfgdb_connect();
+				$result = sdbquery('update cfg_sl set value=' . "'" . $values['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
+				sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $values['squeezelitename'] . '"');
+			}, 'custom_write' => function($values) {
+				$dbh = cfgdb_connect();
+				$result = sdbquery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
+				return "squeezelitename = \"".$result."\"\n";
+			}],
+		['requires' => ['upnpname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name upnp "Moode UPNP" "%s"'],
+		['requires' => ['dlnaname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name dlna "Moode DLNA" "%s"'],
+
+		'System',
+		['requires' => ['timezone'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-timezone %s'],
+		['requires' => ['keyboard'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-keyboard %s'],
+		//TODO: decide use the same value as in the database or make Captalized ?then also required a custom writer?
+		// ['requires' => ['cpugov'] , 'handler' => function($values) {
+		// 		//TODO: use native of the caption one ? , is not the same as in session. give problems with extraction
+		// 		playerSession('write', 'cpugov', $values['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
+		//}],
+		['requires' => ['cpugov'] , 'handler' => setPlayerSession],
+		['requires' => ['hdmiport'] , 'handler' => setPlayerSession],
+		['requires' => ['eth0chk'] , 'handler' => setPlayerSession],
+		['requires' => ['localui'] , 'handler' => setPlayerSession],
+
+		'I2S Device',
+		['requires' => ['i2sdevice'] , 'handler' => function($values) {
+			cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
+			playerSession('write', 'i2sdevice', $values['i2sdevice']);
+		}],
+		'Renderers',
+		['requires' => ['btsvc'] , 'handler' => setPlayerSession],
+		['requires' => ['pairing_agent'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmafterbt'] , 'handler' => setPlayerSession],
+		['requires' => ['airplaysvc'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmafterapl'] , 'handler' => setPlayerSession],
+		['requires' => ['spotifysvc'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmafterspot'] , 'handler' => setPlayerSession],
+		['requires' => ['slsvc'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmaftersl'] , 'handler' => setPlayerSession],
+
+		'UPnP/DLNA',
+		['requires' => ['upnpsvc'] , 'handler' => setPlayerSession],
+		['requires' => ['dlnasvc'] , 'handler' => setPlayerSession],
+		['requires' => ['upnp_browser'] , 'handler' => setPlayerSession],
+
+		'Network (wlan0)',
+		['requires' => ['wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'] , 'handler' => function($values) {
+				$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
+				$netcfg = sdbquery('select * from cfg_network', $dbh);
+				$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
+					'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
+					'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+					'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
+				cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
+				cfgNetIfaces();
+			}, 'custom_write' => function($values) {
+				$dbh = cfgdb_connect();
+				$row = sdbquery("select * from cfg_network where iface='wlan0'", $dbh)[0];
+				$result="";
+				$result = $result."wlanssid = \"".$row['wlanssid']."\"\n";
+				$result = $result."wlanpwd = \"".""."\"\n"; // keep empty
+				$result = $result."wlansec = \"".$row['wlansec']."\"\n";
+				$result = $result."wlancountry = \"".$row['wlan_country']."\"\n";
+				return $result;
+			}],
+
+		'Network (apd0)',
+		['requires' => ['apdssid', 'apdpwd', 'apdchan'] , 'handler' => function($values) {
+				$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
+				$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
+					'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+					'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
+				cfgdb_update('cfg_network', $dbh, 'apd0', $value);
+				cfgHostApd();
+			}, 'custom_write' => function($values) {
+				$dbh = cfgdb_connect();
+				$row = sdbquery("select * from cfg_network where iface='apd0'", $dbh)[0];
+				$result = $result."apdssid = \"".$row['wlanssid']."\"\n";
+				$result = $result."apdpwd = \"".""."\"\n"; // keep empty
+				$result = $result."apdchan = \"".$row['wlan_channel']."\"\n";
+				return $result;
+			}],
+
+		'Theme & Background',
+		['requires' => ['themename'] , 'handler' => setPlayerSession],
+		['requires' => ['accent_color'] , 'handler' => setPlayerSession],
+		['requires' => ['alphablend'] , 'handler' => setPlayerSession],
+		['requires' => ['adaptive'] , 'handler' => setPlayerSession],
+		['requires' => ['cover_backdrop'] , 'handler' => setPlayerSession],
+		['requires' => ['cover_blur'] , 'handler' => setPlayerSession],
+		['requires' => ['cover_scale'] , 'handler' => setPlayerSession],
+
+		'Other',
+		['requires' => ['font_size'] , 'handler' => setPlayerSession],
+		['requires' => ['playhist'] , 'handler' => setPlayerSession],
+		['requires' => ['first_use_help'] , 'handler' => function($values) {
+			playerSession('write', 'first_use_help', ($values['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
+		}, 'custom_write' => function($values) {
+			$value = $SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
+			return "squeezelitename = \"".$value."\"\n";
+		}],
+	];
+
+	return $configurationHandlers;
+}
+
 // Auto-configure settings at worker startup
 function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Auto-configure initiated');
 
-	//$contents = file_get_contents($cfgfile);
-	$contents = str_replace("\r\n", "\n", file_get_contents($cfgfile));
-	$autocfg = array();
-	$line = strtok($contents, "\n");
+	try {
+		$autocfg = parse_ini_file($cfgfile, false);
 
-	while ($line) {
-		$firstchr = substr($line, 0, 1);
+		$available_configs = array_keys($autocfg);
 
-		if (!($firstchr == '#' || $firstchr == '[')) {
-			list ($element, $value) = explode("=", $line, 2);
-			$autocfg[$element] = $value;
+		autoCfgLog('autocfg: Configuration file parsed');
+		$configurationHandlers = autoConfigSettings(); // contains supported configuration items
+
+		$section = '';
+		foreach ($configurationHandlers as $config) {
+			$values = array();
+
+			// print new section header
+			if( is_string($config) ) {
+				autoCfgLog('autocfg: - '. $config);
+			}
+			// check if alrequired cfgkeys are present
+			elseif( !array_diff_key(array_flip($config['requires']), $autocfg) ) {
+				// is so get copie all key/value sets
+				foreach ($config['requires'] as $config_name) {
+					$value = $autocfg[$config_name];
+					// is config name differs from session var the session_var can be used
+					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
+					$values[$config_key] = $value;
+					autoCfgLog('autocfg: '. $config_name.': ' . $value);
+					// remove used autoconfig
+					unset($available_configs[$config_name]);
+				}
+				// call handler
+				if( !array_key_exists('cmd', $config) )
+					$config['handler'] ($values);
+				else
+					$config['handler'] ($values, $config['cmd']);
+			}
+			// detect reuires with multiple keys which are no all present in provided configs
+			elseif( count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $autocfg))>= 1) {
+				$incompleteset = " [ ";
+				foreach ($config['requires'] as $config_require) {
+					$incompleteset = $incompleteset . " ". $config_require;
+				}
+				$incompleteset = $incompleteset . " ]";
+				autoCfgLog('autocfg: Warning incomplete set '. $incompleteset. ' detected.');
+			}
 		}
 
-		$line = strtok("\n");
+		// check for unused but supplied autocfg settings
+		if( empty($available_configs) ) {
+			foreach ($available_configs as $config_name) {
+				autoCfgLog('autocfg: Warning: '. $config_name.': is unused, incomplete or wrong name.');
+			}
+		}
 	}
-
-	autoCfgLog('autocfg: Configuration file parsed');
-
-	//
-	autoCfgLog('autocfg: - Names');
-	//
-
-	sysCmd('/var/www/command/util.sh chg-name host "moode" ' . '"' . $autocfg['hostname'] . '"');
-	playerSession('write', 'hostname', $autocfg['hostname']);
-
-	playerSession('write', 'browsertitle', $autocfg['browsertitle']);
-
-	sysCmd('/var/www/command/util.sh chg-name bluetooth "Moode Bluetooth" ' . '"' . $autocfg['bluetoothname'] . '"');
-	playerSession('write', 'btname', $autocfg['bluetoothname']);
-
-	playerSession('write', 'airplayname', $autocfg['airplayname']);
-	playerSession('write', 'spotifyname', $autocfg['spotifyname']);
-
-	$dbh = cfgdb_connect();
-	$result = sdbquery('update cfg_sl set value=' . "'" . $autocfg['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
-	sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $autocfg['squeezelitename'] . '"');
-
-	sysCmd('/var/www/command/util.sh chg-name upnp "Moode UPNP" ' . '"' . $autocfg['upnpname'] . '"');
-	playerSession('write', 'upnpname', $autocfg['upnpname']);
-
-	sysCmd('/var/www/command/util.sh chg-name dlna "Moode DLNA" ' . '"' . $autocfg['dlnaname'] . '"');
-	playerSession('write', 'dlnaname', $autocfg['dlnaname']);
-
-	//sysCmd('/var/www/command/util.sh chg-name mpdzeroconf ' . "'" . '"Moode MPD"' . "'" . ' ' . "'" . '"' . $autocfg['mpdzeroconf'] . '"' . "'");
-	//cfgdb_update('cfg_mpd', cfgdb_connect(), 'zeroconf_name', $autocfg['mpdzeroconf']);
-
-	autoCfgLog('autocfg: Host name: ' . $autocfg['hostname']);
-	autoCfgLog('autocfg: Browser title: ' . $autocfg['browsertitle']);
-	autoCfgLog('autocfg: Bluetooth: ' . $autocfg['bluetoothname']);
-	autoCfgLog('autocfg: Airplay: ' . $autocfg['airplayname']);
-	autoCfgLog('autocfg: Spotify: ' . $autocfg['spotifyname']);
-	autoCfgLog('autocfg: Squeezelite: ' . $autocfg['squeezelitename']);
-	autoCfgLog('autocfg: UPnP Client: ' . $autocfg['upnpname']);
-	autoCfgLog('autocfg: DLNA: ' . $autocfg['dlnaname']);
-	//autoCfgLog('autocfg: MPD zeroconf: ' . $autocfg['mpdzeroconf']);
-
-	//
-	autoCfgLog('autocfg: - System');
-	//
-
-	sysCmd('/var/www/command/util.sh set-timezone ' . $autocfg['timezone']);
-	playerSession('write', 'timezone', $autocfg['timezone']);
-	sysCmd('/var/www/command/util.sh set-keyboard ' . $autocfg['keyboard']);
-	playerSession('write', 'keyboard', $autocfg['keyboard']);
-	playerSession('write', 'cpugov', $autocfg['cpugov'] == 'Performance' ? 'performance' : 'ondemand');
-	playerSession('write', 'eth0chk', $autocfg['eth0chk']);
-	playerSession('write', 'localui', $autocfg['localui']);
-
-	autoCfgLog('autocfg: Time zone: ' . $autocfg['timezone']);
-	autoCfgLog('autocfg: Keyboard: ' . $autocfg['keyboard']);
-	autoCfgLog('autocfg: CPU Governor: ' . $autocfg['cpugov']);
-	autoCfgLog('autocfg: Wait for eth0 address: ' . ($autocfg['eth0chk'] == '0' ? 'No' : 'Yes'));
-	autoCfgLog('autocfg: Local UI: ' . ($autocfg['localui'] == '0' ? 'Off' : 'On'));
-
-	//
-	autoCfgLog('autocfg: - Device');
-	//
-
-	cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $autocfg['i2sdevice']);
-	playerSession('write', 'i2sdevice', $autocfg['i2sdevice']);
-
-	autoCfgLog('autocfg: i2sdevice: ' . $autocfg['i2sdevice']);
-
-	//
-	autoCfgLog('autocfg: - Renderers');
-	//
-
-	playerSession('write', 'btsvc', $autocfg['btsvc']);
-	playerSession('write', 'pairing_agent', $autocfg['pairing_agent']);
-	playerSession('write', 'rsmafterbt', $autocfg['rsmafterbt'] == 'No' ? '0' : '1');
-	playerSession('write', 'airplaysvc', $autocfg['airplaysvc']);
-	playerSession('write', 'rsmafterapl', $autocfg['rsmafterapl']);
-	playerSession('write', 'spotifysvc', $autocfg['spotifysvc']);
-	playerSession('write', 'rsmafterspot', $autocfg['rsmafterspot']);
-	playerSession('write', 'slsvc', $autocfg['slsvc']);
-	playerSession('write', 'rsmaftersl', $autocfg['rsmaftersl']);
-
-	autoCfgLog('autocfg: Bluetooth: ' . ($autocfg['btsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Bluetooth pairing agent: ' . ($autocfg['pairing_agent'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Bluetooth resume: ' . $autocfg['rsmafterbt']);
-	autoCfgLog('autocfg: Airplay: ' . ($autocfg['airplaysvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Airplay resume: ' . $autocfg['rsmafterapl']);
-	autoCfgLog('autocfg: Spotify: ' . ($autocfg['spotifysvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Spotify resume: ' . $autocfg['rsmafterspot']);
-	autoCfgLog('autocfg: Squeezlite: ' . ($autocfg['slsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: Squeezlite resume: ' . $autocfg['rsmaftersl']);
-
-	//
-	autoCfgLog('autocfg: - UPnP/DLNA');
-	//
-
-	playerSession('write', 'upnpsvc', $autocfg['upnpsvc']);
-	playerSession('write', 'dlnasvc', $autocfg['dlnasvc']);
-	playerSession('write', 'upnp_browser', $autocfg['upnp_browser']);
-
-	autoCfgLog('autocfg: UPnP Client: ' . ($autocfg['upnpsvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: DLNA: ' . ($autocfg['dlnasvc'] == '0' ? 'Off' : 'On'));
-	autoCfgLog('autocfg: UPnP Browser: ' . ($autocfg['upnp_browser'] == '0' ? 'Off' : 'On'));
-
-	//
-	autoCfgLog('autocfg: - Network (wlan0)');
-	//
-
-	$psk = genWpaPSK($autocfg['wlanssid'], $autocfg['wlanpwd']);
-	$netcfg = sdbquery('select * from cfg_network', $dbh);
-	$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
-		'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
-		'wlanssid' => $autocfg['wlanssid'], 'wlansec' => $autocfg['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-		'wlan_country' => $autocfg['wlancountry'], 'wlan_channel' => '');
-	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
-	cfgNetIfaces();
-
-	autoCfgLog('autocfg: SSID: ' . $autocfg['wlanssid']);
-	autoCfgLog('autocfg: Security: ' . $autocfg['wlansec']);
-	autoCfgLog('autocfg: Password: ' . $autocfg['wlanpwd']);
-	autoCfgLog('autocfg: PSK: ' . $psk);
-	autoCfgLog('autocfg: Country: ' . $autocfg['wlancountry']);
-
-	//
-	autoCfgLog('autocfg: - Network (apd0)');
-	//
-
-	$psk = genWpaPSK($autocfg['apdssid'], $autocfg['apdpwd']);
-	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
-		'wlanssid' => $autocfg['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-		'wlan_country' => '', 'wlan_channel' => $autocfg['apdchan']);
-	cfgdb_update('cfg_network', $dbh, 'apd0', $value);
-	cfgHostApd();
-
-	autoCfgLog('autocfg: SSID: ' . $autocfg['apdssid']);
-	autoCfgLog('autocfg: Password: ' . $autocfg['apdpwd']);
-	autoCfgLog('autocfg: PSK: ' . $psk);
-	autoCfgLog('autocfg: Channel: ' . $autocfg['apdchan']);
-
-	//
-	autoCfgLog('autocfg: - Theme & Background');
-	//
-
-	playerSession('write', 'themename', $autocfg['themename']);
-	playerSession('write', 'accent_color', $autocfg['accentcolor']);
-	playerSession('write', 'alphablend', $autocfg['alphablend']);
-	playerSession('write', 'adaptive', $autocfg['adaptive']);
-	playerSession('write', 'cover_backdrop', $autocfg['cover_backdrop']);
-	playerSession('write', 'cover_blur', $autocfg['cover_blur']);
-	playerSession('write', 'cover_scale', $autocfg['cover_scale']);
-
-	autoCfgLog('autocfg: Theme name: ' . $autocfg['themename']);
-	autoCfgLog('autocfg: Accent color: ' . $autocfg['accentcolor']);
-	autoCfgLog('autocfg: Adapting coloring: ' . $autocfg['adaptive']);
-	autoCfgLog('autocfg: Cover backdrop: ' . $autocfg['cover_backdrop']);
-	autoCfgLog('autocfg: Cover blur: ' . $autocfg['cover_blur']);
-	autoCfgLog('autocfg: Cover scale: ' . $autocfg['cover_scale']);
-
-	//
-	autoCfgLog('autocfg: - Other');
-	//
-
-	playerSession('write', 'font_size', $autocfg['font_size']);
-	playerSession('write', 'playhist', $autocfg['playhist']);
-	playerSession('write', 'first_use_help', ($autocfg['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
-
-	autoCfgLog('autocfg: Font size: ' . $autocfg['font_size']);
-	autoCfgLog('autocfg: Play history: ' . $autocfg['playhist']);
-	autoCfgLog('autocfg: first use help: ' . $autocfg['first_use_help']);
+	catch (Exception $e) {
+		autoCfgLog('autocfg: Caught exception: '.  $e->getMessage() );
+	}
 
 	sysCmd('rm ' . $cfgfile);
 	autoCfgLog('autocfg: Configuration file deleted');
 	autoCfgLog('autocfg: Auto-configure complete');
+}
+
+// generates an autoconfig file as string based on the current settings
+function autoconfigExtract() {
+	$autoconfigstring = <<<EOT
+	; #########################################
+	; Copy this file to /boot/moodecfg.ini
+	; It will be processed at startup and the
+	; system will automaticly Restart.
+	;
+	; All param="value" pairs must be present.
+	; Set wlanssid= blank to start AP mode.
+	; Example: wlanssid=""
+	;
+	; Moode Release : %s
+	; Create date	: %s
+	;
+	; ##########################################
+	EOT;
+
+	$autoconfigstring = sprintf($autoconfigstring, getMoodeRel('verbose'), date('Y-m-d H:i:s'));
+
+	$configurationHandlers = autoConfigSettings(); // contains supported configuration items
+
+	foreach ($configurationHandlers as &$config) {
+		$values = array();
+		// print new section header
+		if( is_string($config) ) {
+			$autoconfigstring = $autoconfigstring . "\n[". $config. "]\n";
+		} else {
+			if( !array_key_exists('custom_write', $config)) {
+				foreach ($config['requires'] as $config_name) {
+					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
+					if( array_key_exists($config_key, $_SESSION) ) {
+						$autoconfigstring = $autoconfigstring . $config_key. " = \"".$_SESSION[$config_key]."\"\r\n";
+					}
+				}
+			} else {
+				$autoconfigstring = $autoconfigstring . $config['custom_write']($config['requires']);
+			}
+		}
+	}
+
+	return $autoconfigstring;
 }
 
 function genWpaPSK($ssid, $passphrase) {
@@ -2989,7 +2893,8 @@ function startSqueezeLite () {
 }
 
 function cfgI2sOverlay($i2sDevice) {
-	sysCmd('sed -i /dtoverlay/d ' . '/boot/config.txt'); // remove dtoverlays
+	 // Remove dtoverlays
+	sysCmd('sed -i /dtoverlay/d ' . '/boot/config.txt');
 
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
 	if ($i2sDevice == 'none') {
@@ -3005,11 +2910,27 @@ function cfgI2sOverlay($i2sDevice) {
 		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
 	}
 
-	// add these back in
+	// Add these back in
 	$cmd = $_SESSION['p3wifi'] == '0' ? 'echo dtoverlay=disable-wifi >> ' . '/boot/config.txt' : 'echo "#dtoverlay=disable-wifi" >> ' . '/boot/config.txt';
 	sysCmd($cmd);
 	$cmd = $_SESSION['p3bt'] == '0' ? 'echo dtoverlay=disable-bt >> ' . '/boot/config.txt' : 'echo "#dtoverlay=disable-bt" >> ' . '/boot/config.txt';
 	sysCmd($cmd);
+
+	// Enhanced drivers
+	$kernel_base = explode('-', $_SESSION['kernelver'])[0];
+	workerLog($kernel_base);
+	if ($i2sDevice == 'DDDAC1794 NOS (384K)') {
+		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v7+ /lib/modules/' . $kernel_base . '-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
+		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v7l+ /lib/modules/' . $kernel_base . '-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
+		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v8+ /lib/modules/' . $kernel_base . '-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
+		sysCmd('depmod');
+	}
+	elseif ($i2sDevice == 'DDDAC1794 NOS') {
+		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v7+ /lib/modules/' . $kernel_base . '-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
+		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v7l+ /lib/modules/' . $kernel_base . '-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
+		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v8+ /lib/modules/' . $kernel_base . '-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
+		sysCmd('depmod');
+	}
 }
 
 // pi3 wifi adapter enable/disable
@@ -3114,10 +3035,15 @@ function setAudioOut($audioout) {
 	}
 
 	// Renderers
-	stopSps();
-	stopSpotify();
-	startSps();
-	startSpotify();
+	if ($_SESSION['airplaysvc'] == '1') {
+		stopSps();
+		startSps();
+	}
+
+	if ($_SESSION['spotifysvc'] == '1') {
+		stopSpotify();
+		startSpotify();
+	}
 
 	// Other
 	setMpdHttpd();
@@ -3152,20 +3078,20 @@ function storeBackLink($section, $tpl) {
 	session_start();
 
 	if ($tpl == 'src-config.html') {
-		$_SESSION['http_config_back'] = '/lib-config.php';
+		$_SESSION['config_back_link'] = '/lib-config.php';
 	}
 	else if (in_array($section, $root_configs)) {
-		$_SESSION['http_config_back'] = '/index.php';
+		$_SESSION['config_back_link'] = '/index.php';
 	}
 	else if (stripos($_SERVER['HTTP_REFERER'], $section) === false) {
-		$_SESSION['http_config_back'] = $referer_link;
+		$_SESSION['config_back_link'] = $referer_link;
 	}
 	else {
 		//workerLog('storeBackLink(): else block');
 	}
 
 	session_write_close();
-	//workerLog('storeBackLink(): back=' . $_SESSION['http_config_back'] . ', $tpl=' . $tpl . ', $section=' . $section . ', $referer_link=' . $referer_link);
+	//workerLog('storeBackLink(): back=' . $_SESSION['config_back_link'] . ', $tpl=' . $tpl . ', $section=' . $section . ', $referer_link=' . $referer_link);
 }
 
 // Create enhanced metadata
@@ -3177,14 +3103,15 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$song = parseCurrentSong($sock);
 	$current['file'] = $song['file'];
 
-	// NOTE any of these might be '' null string
+	// NOTE: Any of these might be '' (empty)
+	$current['genre'] = $song['Genre'];
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
 	$current['composer'] = $song['Composer'];
 	// Cover hash
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
-		//workerLog('$current: cover hash: ' . $current['cover_art_hash']);
+		$current['mapped_db_vol'] = getMappedDbVol();
 	}
 
 	if ($current['file'] == null) {
@@ -3192,12 +3119,9 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		$current['title'] = '';
 		$current['album'] = '';
 		$current['coverurl'] = DEF_COVER;
-		debugLog('enhanceMetadata(): File is NULL');
+		debugLog('enhanceMetadata(): error: currentsong file is NULL');
 	}
 	else {
-		//workerLog('enhanceMetadata(): Caller=' . $caller);
-		//workerLog('enhanceMetadata(): current= ' . $current['file']);
-		//workerLog('enhanceMetadata(): session= ' . $_SESSION['currentfile']);
 		// Only do this code block once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
 			$current['encoded'] = getEncodedAt($song, 'default'); // encoded bit depth and sample rate
@@ -3209,51 +3133,53 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		else {
 			$current['encoded'] = $_SESSION['currentencoded'];
 		}
-		//debugLog('enhanceMetadata(): File=' . $current['file']);
-		//debugLog('enhanceMetadata(): Encoded=' . $current['encoded']);
+
+		// File extension
+		$ext = getFileExt($song['file']);
 
 		// iTunes aac or aiff file
-		$ext = getFileExt($song['file']);
 		if (isset($song['Name']) && ($ext == 'm4a' || $ext == 'aif' || $ext == 'aiff')) {
+			//workerLog('enhanceMetadata(): AAC or AIFF song file');
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name'];
 			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
-			//debugLog('enhanceMetadata(): iTunes AAC or AIFF file');
 		}
 		// Radio station
-		elseif (isset($song['Name']) || (substr($song['file'], 0, 4) == 'http' && /*!isset($song['Artist'])*/!isset($current['duration']))) {
-			debugLog('enhanceMetadata(): Radio station');
+		elseif (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
+			//workerLog('enhanceMetadata(): Radio station');
 			$current['artist'] = 'Radio station';
+			$current['hidef'] = ($_SESSION[$song['file']]['bitrate'] > 128 || $_SESSION[$song['file']]['format'] == 'FLAC') ? 'yes' : 'no';
 
 			if (!isset($song['Title']) || trim($song['Title']) == '') {
 				$current['title'] = 'Streaming source';
-				//$current['title'] = $song['file']; // URL
 			}
 			else {
 				// Use custom name for certain stations if needed
-				//$current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
+				// EX: $current['title'] = strpos($song['Title'], 'Radio Active FM') !== false ? $song['file'] : $song['Title'];
 				$current['title'] = $song['Title'];
 			}
 
 			if (isset($_SESSION[$song['file']])) {
-				// Use xmitted name for SOMA FM stations
+				// Use transmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
 				// Include original station name
 				$current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
-					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg"; // local logo image
+					// Local logo image
+					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg";
 				}
 				else {
-					$current['coverurl'] = $_SESSION[$song['file']]['logo']; // url logo image
+					// URL logo image
+					$current['coverurl'] = $_SESSION[$song['file']]['logo'];
 				}
-				# Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
+				# NOTE: Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
 				if (strpos($_SESSION[$song['file']]['name'], 'BBC') !== false && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
 					$current['bitrate'] = '320 kbps';
 				}
 			}
 			else {
-				// Not in radio station table, use xmitted name or 'unknown'
+				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
 				$current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
@@ -3281,16 +3207,34 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			else {
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
 			}
-			//$current['coverurl'] = substr($song['file'], 0, 4) == 'http' ? getUpnpCoverUrl() : '/coverart.php/' . rawurlencode($song['file']);
-			// In case 2 url's are returned
+			// In case 2 url's are returned, use the first
 			$current['coverurl'] = explode(',', $current['coverurl'])[0];
-			debugLog('enhanceMetadata(): coverurl: (' . $current['coverurl'] . ')');
 
 			if (substr($song['file'], 0, 4) == 'http') {
-				debugLog('enhanceMetadata(): UPnP url');
+				//workerLog('enhanceMetadata(): UPnP url');
 			}
 			else {
-				debugLog('enhanceMetadata(): Song file');
+				//workerLog('enhanceMetadata(): Song file');
+			}
+		}
+
+		// Determine badging
+		// NOTE: This is modeled after the code in getEncodedAt()
+		if (!(substr($song['file'], 0, 4) == 'http' && !isset($current['duration']))) { // Not a radio station
+			sendMpdCmd($sock, 'lsinfo "' . $song['file'] . '"');
+			$song_data = parseDelimFile(readMpdResp($sock), ': ');
+			$mpd_format_tag = explode(':', $song_data['Format']);
+			// Lossy
+			if ($ext == 'mp3' || ($mpd_format_tag[1] == 'f' && $mpd_format_tag[2] <= 2)) {
+				$current['hidef'] = 'no';
+			}
+			// DSD
+			elseif ($ext == 'dsf' || $ext == 'dff') {
+				$current['hidef'] = 'yes';
+			}
+			// PCM or Multichannel PCM
+			else {
+				$current['hidef'] = ($mpd_format_tag[1] != 'f' && $mpd_format_tag[1] > ALBUM_BIT_DEPTH_THRESHOLD) || $mpd_format_tag[0] > ALBUM_SAMPLE_RATE_THRESHOLD ? 'yes' : 'no';
 			}
 		}
 	}
@@ -3298,7 +3242,17 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	return $current;
 }
 
-//function getCoverHash($file, $ext) {
+function getMappedDbVol() {
+	session_start();
+	$cardnum = $_SESSION['cardnum'];
+	$alsa_mixer = '"' . $_SESSION['amixname'] . '"';
+	$mpd_mixer = $_SESSION['mpdmixer'];
+	session_write_close();
+	$result = sysCmd('amixer -c ' . $cardnum . ' sget ' . $alsa_mixer . ' | ' . "awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
+	$mapped_db_vol = explode('.', $result[0])[0];
+	return (empty($result[0]) || $mpd_mixer == 'software') ? '' : ($mapped_db_vol < -120 ? -120 : $mapped_db_vol) . 'dB';
+}
+
 function getCoverHash($file) {
 	set_include_path('/var/www/inc');
 	$ext = getFileExt($file);
@@ -3311,10 +3265,9 @@ function getCoverHash($file) {
 
 		$path = MPD_MUSICROOT . $file;
 		$hash = false;
-		//workerlog('getCoverHash(): path: ' . $path);
 
 		// file: embedded cover
-		if ($search_pri == 'Embedded cover') { // embedded first
+		if ($search_pri == 'Embedded cover') { // Embedded first
 			$hash = getHash($path);
 		}
 
@@ -3331,29 +3284,27 @@ function getCoverHash($file) {
 			}
 
 			if ($hash === false) {
-				if ($search_pri == 'Cover image file') { // embedded last
+				if ($search_pri == 'Cover image file') { // Embedded last
 					$hash = getHash($path);
 				}
 			}
 
 			if ($hash === false) {
-				// nothing found
+				// Nothing found
 				$hash = 'getCoverHash(): no cover found';
 			}
 		}
 	}
 	else {
-		//$hash = 'getCoverHash(): not a PCM file';
 		$hash = rand();
 	}
 
 	return $hash;
 }
 
-// modified versions of coverart.php functions
+// Modified versions of coverart.php functions
 // (C) 2015 Andreas Goetz
 function rtnHash($mime, $hash) {
-	//workerLog('getCoverHash(): rtnHash(): ' . $mime . ', ' . strlen($hash) . ' bytes');
 	switch ($mime) {
 		case "image/gif":
 		case "image/jpg":
@@ -3369,9 +3320,7 @@ function rtnHash($mime, $hash) {
 	return false;
 }
 function getHash($path) {
-	//workerLog('getCoverHash(): getHash(): ' . $path);
 	if (!file_exists($path)) {
-		//workerLog('getCoverHash(): getHash(): ' . $path . ' (does not exist)');
 		return false;
 	}
 
@@ -3379,7 +3328,7 @@ function getHash($path) {
 	$ext = pathinfo($path, PATHINFO_EXTENSION);
 
 	switch (strtolower($ext)) {
-		// image file
+		// Image file
 		case 'gif':
 		case 'jpg':
 		case 'jpeg':
@@ -3390,7 +3339,7 @@ function getHash($path) {
 			$hash = md5(file_get_contents($path, 1024) + $stat['size']);
 			break;
 
-		// embedded images
+		// Embedded images
 		case 'mp3':
 			require_once 'Zend/Media/Id3v2.php';
 			try {
@@ -3413,7 +3362,6 @@ function getHash($path) {
 
 				if ($flac->hasMetadataBlock(Zend_Media_Flac::PICTURE)) {
 					$picture = $flac->getPicture();
-					//workerLog('getCoverHash(): flac: getData(): length: ' . strlen($picture->getData()));
 					$hash = rtnHash($picture->getMimeType(), $picture->getData());
 				}
 			}
@@ -3447,8 +3395,7 @@ function getHash($path) {
 	return $hash;
 }
 function parseDir($path) {
-	//workerLog('getCoverHash(): parseDir(): ' . $path);
-	// default cover files
+	// Default cover files
 	$covers = array(
 		'Cover.jpg', 'cover.jpg', 'Cover.jpeg', 'cover.jpeg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff',
 		'Folder.jpg', 'folder.jpg', 'Folder.jpeg', 'folder.jpeg', 'Folder.png', 'folder.png', 'Folder.tif', 'folder.tif', 'Folder.tiff', 'folder.tiff'
@@ -3459,12 +3406,11 @@ function parseDir($path) {
 			break;
 		}
 	}
-	// all other image files
+	// All other image files
 	$extensions = array('jpg', 'jpeg', 'png', 'tif', 'tiff');
 	$path = str_replace('[', '\[', $path);
 	$path = str_replace(']', '\]', $path);
 	foreach (glob($path . '*') as $file) {
-		//workerLog('getCoverHash(): parseDir(): glob' . $file);
 		if (is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $extensions)) {
 			$result = getHash($file);
 			if ($result !== false) {
@@ -3480,15 +3426,14 @@ function parseDir($path) {
 function loadRadio() {
 	// Delete radio station session vars to purge any orphans
 	foreach ($_SESSION as $key => $value) {
-		if (substr($key, 0, 5) == 'http:') {
+		if (substr($key, 0, 4) == 'http') {
 			unset($_SESSION[$key]);
 		}
 	}
 	// Load cfg_radio into session
-	$result = cfgdb_read('cfg_radio', cfgdb_connect());
+	$result = cfgdb_read('cfg_radio', cfgdb_connect(), 'all');
 	foreach ($result as $row) {
-		if ($row['station'] != 'DELETED') {
-			$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
-		}
+		$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'],
+			'bitrate' => $row['bitrate'], 'format' => $row['format']);
 	}
 }

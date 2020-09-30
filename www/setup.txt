@@ -193,6 +193,7 @@ dlnaname=Moode DLNA
 timezone=America/Detroit
 keyboard=us
 cpugov=On-demand
+hdmiport=1
 eth0chk=1
 localui=0
 

@@ -9,7 +9,7 @@
 #  - Output is writen to /etc/mpd.conf
 #
 
-import datetime 
+import datetime
 from os import path
 import argparse
 
@@ -18,7 +18,7 @@ SECTION_BEGIN = "{"
 SECTION_END = "}"
 
 class InvalidLine(BaseException):
-    def __init__(self, msg): 
+    def __init__(self, msg):
         BaseException.__init__(self, msg)
 
 def get_section_type(section):
@@ -26,7 +26,7 @@ def get_section_type(section):
 
 def get_section_data(section):
     return section[get_section_type(section)]
-    
+
 def entry_to_string(entry):
     return "%s \"%s\"" %(entry[0],entry[1])
 
@@ -75,7 +75,7 @@ def read_mpd_conf(filename):
             if idx==-1:
                 raise InvalidLine("Invalid line nr %d: '%s'" %(linenr, linetxt))
             setting = linetxt.strip()[ : idx].strip()
-            value = linetxt.strip()[idx+2:-1].strip()
+            value = linetxt.strip()[idx+2:-1]
             dest.append( (setting, value))
         else:
             InvalidLine("Invalid line nr %d: '%s'" %(linenr, linetxt))
@@ -86,7 +86,7 @@ def write_mpd_conf(filename, conf):
     foutput = open(filename, 'w')
     foutput.write(to_text(conf))
     foutput.close()
-    
+
 def merge(sourcea, sourceb):
     output=[]
     for entry in sourcea:
@@ -94,11 +94,11 @@ def merge(sourcea, sourceb):
             output.append(entry)
         elif type(entry)==tuple:
             entryb = get_setting(entry[0], sourceb)
-            if entryb and entry_to_string(entry).strip() != entry_to_string(entryb).strip():
+            if entryb and entry_to_string(entry) != entry_to_string(entryb):
                 output.append("# setting '%s' is replaced by:\n" %entry_to_string(entry))
                 output.append(entryb)
                 sourceb.remove(entryb)
-            elif entryb and entry_to_string(entry).strip() == entry_to_string(entryb).strip():
+            elif entryb and entry_to_string(entry) == entry_to_string(entryb):
                 sourceb.remove(entryb)
                 output.append(entry)
             else:
@@ -139,7 +139,7 @@ def to_text(source, depth=0):
 
 def get_cmdline_arguments():
     parser = argparse.ArgumentParser(description='Merge MPD configuration files.')
-    parser.add_argument('nameconf1', 
+    parser.add_argument('nameconf1',
                    help='The name of the first configuration file. For example /etc/mpd.moode.conf.')
     parser.add_argument('nameconf2',
                    help='Name of th configuration file to merge in the first one. For example /etc/mpd.custom.conf.')
@@ -180,4 +180,4 @@ if __name__ == "__main__":
     if args.toscreen:
         print(to_text(output))
     if not args.dryrun:
-        write_mpd_conf(output_file, output)    
+        write_mpd_conf(output_file, output)

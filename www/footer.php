@@ -69,7 +69,7 @@
 			</ul>
 			<br>
 			<ul>
-				<li><a href="mpd-config.php" class="btn btn-small row2-btns">MPD options</a></li>
+				<li><a href="mpd-config.php" class="btn btn-small row2-btns">MPD settings</a></li>
 				<li><a href="eqp-config.php" class="btn btn-small row2-btns">Parametric EQ</a></li>
 				<li><a href="eqg-config.php" class="btn btn-small row2-btns">Graphic EQ</a></li>
 				<li class="context-menu"><a href="#notarget" class="btn btn-small row2-btns" data-cmd="setforclockradio-m">Clock radio</a></li>
@@ -171,22 +171,9 @@
 	<span class="reconnect-msg">System shut down</span>
 </div>
 
-<!-- DISPLAY MESSAGES -->
-<script src="js/jquery-1.8.2.min.js"></script>
-<script src="js/jquery-ui-1.10.0.custom.min.js"></script>
-
 <?php
-    if (isset($_SESSION['notify']['title']) && $_SESSION['notify']['title'] != '') {
-        ui_notify($_SESSION['notify']);
-        $_SESSION['notify']['title'] = '';
-        $_SESSION['notify']['msg'] = '';
-        $_SESSION['notify']['duration'] = '3';
-    }
-
     //workerLog('-- footer.php');
     $return = session_write_close();
-    //workerLog('session_write_close=' . (($return) ? 'TRUE' : 'FALSE'));
+	//workerLog('session_write_close=' . (($return) ? 'TRUE' : 'FALSE'));
+	echo "</body></html>";
 ?>
-
-</body>
-</html>
