@@ -2564,7 +2564,7 @@ function autoConfigSettings() {
 
 		'I2S Device',
 		['requires' => ['i2sdevice'] , 'handler' => function($values) {
-			cfgI2sOverlay($autocfg['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
+			cfgI2sOverlay($values['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
 			playerSession('write', 'i2sdevice', $values['i2sdevice']);
 		}],
 		'Renderers',
@@ -2585,6 +2585,7 @@ function autoConfigSettings() {
 
 		'Network (wlan0)',
 		['requires' => ['wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'] , 'handler' => function($values) {
+				$dbh = cfgdb_connect();
 				$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
 				$netcfg = sdbquery('select * from cfg_network', $dbh);
 				$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
@@ -2606,6 +2607,7 @@ function autoConfigSettings() {
 
 		'Network (apd0)',
 		['requires' => ['apdssid', 'apdpwd', 'apdchan'] , 'handler' => function($values) {
+				$dbh = cfgdb_connect();
 				$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
 				$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 					'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
