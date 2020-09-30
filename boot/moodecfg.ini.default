@@ -3,39 +3,36 @@
 ; It will be processed at startup and the
 ; system will automaticly Restart.
 ;
-; All param="value" pairs must be present.
-; Set wlanssid= blank to start AP mode.
-; Example: wlanssid=""
-;
-; Moode Release : 7.0.0 2020-MM-DD
-; Create date	: 2020-09-30 09:13:53
-;
+; All param = "value" pairs must be present.
+; Set wlanssid =  blank to start AP mode.
+; Example: wlanssid = ""
 ; ##########################################
-[Names]
-browsertitle = "moOde Player"
+
+[names]
 hostname = "moode"
-btname = "Moode Bluetooth"
+browsertitle = "moOde Player"
 airplayname = "Moode Airplay"
 spotifyname = "Moode Spotify"
+bluetoothname = "Moode Bluetooth"
 squeezelitename = "Moode"
 upnpname = "Moode UPNP"
 dlnaname = "Moode DLNA"
 
-[System]
+[system]
 timezone = "America/Detroit"
 keyboard = "us"
-cpugov = "ondemand"
+cpugov = "On-demand"
 hdmiport = "1"
 eth0chk = "1"
 localui = "0"
 
-[I2S Device]
-i2sdevice = "none"
+[device]
+i2sdevice = "None"
 
-[Renderers]
+[renderers]
 btsvc = "0"
 pairing_agent = "0"
-rsmafterbt = "0"
+rsmafterbt = "No"
 airplaysvc = "0"
 rsmafterapl = "No"
 spotifysvc = "0"
@@ -43,32 +40,30 @@ rsmafterspot = "No"
 slsvc = "0"
 rsmaftersl = "No"
 
-[UPnP/DLNA]
+[upnp/dlna]
 upnpsvc = "0"
 dlnasvc = "0"
 upnp_browser = "0"
 
-[Network (wlan0)]
-wlanssid = "None (activates AP mode)"
-wlanpwd = ""
+[network]
+wlanssid = "MySSID"
 wlansec = "wpa"
+wlanpwd = "MyPassword"
 wlancountry = "US"
-
-[Network (apd0)]
 apdssid = "Moode"
-apdpwd = ""
 apdchan = "6"
+apdpwd = "moodeaudio"
 
-[Theme & Background]
+[theme & background]
 themename = "Default"
-accent_color = "Emerald"
+accentcolor = "Emerald"
 alphablend = "1.0"
 adaptive = "No"
 cover_backdrop = "No"
 cover_blur = "20px"
 cover_scale = "1.25"
 
-[Other]
+[other]
 font_size = "Normal"
 playhist = "No"
-squeezelitename = "Yes"
+first_use_help = "Yes"
