@@ -83,6 +83,9 @@ switch ($option) {
 	case '-D':
 		delete_session_var($argv);
 		break;
+	case '-e':
+		export_autoconfig($argv);
+		break;
 	case '-f':
 	case '-F':
 		audio_formats($option);
@@ -108,9 +111,6 @@ switch ($option) {
 	case '-u':
 		check_station_urls();
 		break;
-	case '-x':
-		export_autoconfig($argv);
-		break;
 	case '--version':
 		echo VERSION . "\n";
 		break;
@@ -126,6 +126,7 @@ With no OPTION print the help text and exit.
  -A [add|rm N] \tupdate features availability
  -d\t\tdump session file (requires sudo)
  -D [var name] \tdelete session variable (requires sudo)
+ -e\t\texport autoconfig.ini
  -f\t\tprint supported audio formats
  -F\t\tprint full alsacap info
  -l\t\tprint moode log
@@ -136,7 +137,6 @@ With no OPTION print the help text and exit.
  -t\t\tprint last 10 lines of moode log and wait
  -u\t\tcheck radio station urls for playability
  --version\tprint the program version
- -x\t\texport autoconfig.ini
  --help\t\tprint this help text\n";
 		break;
 }
