@@ -3245,10 +3245,12 @@ function enhanceMetadata($current, $sock, $caller = '') {
 function getMappedDbVol() {
 	session_start();
 	$cardnum = $_SESSION['cardnum'];
+	$alsa_mixer = '"' . $_SESSION['amixname'] . '"';
 	$mpd_mixer = $_SESSION['mpdmixer'];
 	session_write_close();
-	$result = sysCmd('amixer -c ' . $cardnum . ' -M | ' . "awk -F\"[][]\" '/Front Left:/ {print $4; count++; if (count==1) exit}'");
-	return (empty($result[0]) || $mpd_mixer == 'software') ? '' : explode('.', $result[0])[0] . 'dB';
+	$result = sysCmd('amixer -c ' . $cardnum . ' sget ' . $alsa_mixer . ' | ' . "awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
+	$mapped_db_vol = explode('.', $result[0])[0];
+	return (empty($result[0]) || $mpd_mixer == 'software') ? '' : ($mapped_db_vol < -120 ? -120 : $mapped_db_vol) . 'dB';
 }
 
 function getCoverHash($file) {
