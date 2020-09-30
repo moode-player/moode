@@ -57,6 +57,7 @@ Updates
 - UPD: Generate additional set of small thumbnails for lists
 - UPD: Honor "Resume MPD" setting when disconnecting a renderer
 - UPD: Only load CoverView Queue HTML when it's opened
+- UPD: Auto-configure expanded to include most settings
 
 Radio stations
 
