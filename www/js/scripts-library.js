@@ -544,7 +544,9 @@ var renderGenres = function() {
 			+ '">' + allGenres[i] + '</li>';
 	}
 
-	$('#genresList').html(output);
+	var element = document.getElementById('genresList');
+	element.innerHTML = output;
+//	$('#genresList').html(output);
 	if (UI.libPos[0] == -2) {
 		$('#lib-genre').scrollTo(0, 200);
 	}
@@ -562,7 +564,9 @@ var renderArtists = function() {
 			+ '">' + filteredArtists[i] + '</li>';
 	}
 
-	$('#artistsList').html(output);
+	var element = document.getElementById('artistsList');
+	element.innerHTML = output;
+	//$('#artistsList').html(output);
 
 	if (UI.libPos[0] == -2) {
 		$('#lib-artist').scrollTo(0, 200);
@@ -647,8 +651,12 @@ var renderAlbums = function() {
 	}
 
     // Output the lists
-	$('#albumsList').html(output);
-	$('#albumcovers').html(output2);
+	var element = document.getElementById('albumsList');
+	element.innerHTML = output;
+	var element = document.getElementById('albumcovers');
+	element.innerHTML = output2;
+	//$('#albumsList').html(output);
+	//$('#albumcovers').html(output2);
 
 	// If only 1 album automatically highlight and display tracks
 	if (filteredAlbums.length == 1) {
