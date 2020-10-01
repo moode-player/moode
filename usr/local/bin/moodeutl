@@ -372,7 +372,7 @@ function check_station_urls() {
 }
 
 function export_autoconfig($argv) {
-	$cfgfile = count($argv)==3 ? $argv[2] : sprintf("/home/pi/autocfg-%s.ini",  date('ymd_His'));
+	$cfgfile = count($argv)==3 ? $argv[2] : sprintf("/home/pi/moodecfg-%s.ini",  date('ymd_His'));
 	echo "Export autoconfig of current system to ".$cfgfile."\n";
 	echo shell_exec('/var/www/command/autocfggen.php > '.$cfgfile);
 }
