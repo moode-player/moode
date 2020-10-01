@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-05-24 TC moOde 6.6.0
+ * 2020-MM-DD TC moOde 7.0.0
  */
 
 
@@ -50,6 +50,9 @@
  *             [--force]                 When --build is given, also perform a build and use {app.dest} as web root
  *  gulp deploy [--test]        - Deploys everything needed (inc php etc) {app.deploy}.
  *              [--force]                  With the option --test deploy to build/dist (app.dist).
+ *              [--all]           Also deploy moodeutl and the /var/local/www dir
+ *
+ *                                Deploy only copy/update, never removes files.
  *                                When used to real don't forget to sudo first
  *
  *  Default most task only update/use files that are changed (= is newer).  With force the files are also updated.
@@ -434,6 +437,20 @@ gulp.task('build', gulp.series( [`sass`, `genindexdev`, `genindex`, `bundle`, `a
     done();
 }));
 
+gulp.task('deploymoodeutl', function (done) {
+    return gulp.src([  pkg.app.src+'/../usr/local/bin/moodeutl' ])
+        .pipe($.size({showFiles: true, total: true}))
+        .pipe(gulp.dest(DEPLOY_LOCATION+'/../../usr/local/bin'))
+        .on('end', done);
+});
+
+gulp.task('deployvarlocalwww', function (done) {
+    return gulp.src([  pkg.app.src+'/../var/local/www/**' ])
+        .pipe($.size({showFiles: true, total: true}))
+        .pipe(gulp.dest(DEPLOY_LOCATION+'/../var/local/www'))
+        .on('end', done);
+});
+
 gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'minifyhtml'], function (done) {
     return gulp.src([  pkg.app.src+'/*.php'
                       ,pkg.app.src+'/command/**/*'
@@ -466,8 +483,8 @@ gulp.task('deployfront', function (done) {
         .on('end', done);
 });
 
-//gulp.task('deploy', gulp.series( [`build`, `deployfront`, `deployback`],function (done) {
-gulp.task('deploy', gulp.series( [`deployfront`, `deployback`], function (done) {
+var deployTasks = !mode.all() ? ['deployfront', 'deployback']: ['deployback', 'deployback', 'deploymoodeutl', 'deployvarlocalwww'];
+gulp.task('deploy', gulp.series( deployTasks, function (done) {
     done();
 }));
 
