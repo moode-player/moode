@@ -3252,7 +3252,7 @@ function getMappedDbVol() {
 	session_write_close();
 	$result = sysCmd('amixer -c ' . $cardnum . ' sget ' . $alsa_mixer . ' | ' . "awk -F\"[][]\" '/dB/ {print $4; count++; if (count==1) exit}'");
 	$mapped_db_vol = explode('.', $result[0])[0];
-	return (empty($result[0]) || $mpd_mixer == 'software') ? '' : ($mapped_db_vol < -120 ? -120 : $mapped_db_vol) . 'dB';
+	return (empty($result[0]) || $mpd_mixer == 'software') ? '' : ($mapped_db_vol < -127 ? -127 : $mapped_db_vol) . 'dB';
 }
 
 function getCoverHash($file) {
