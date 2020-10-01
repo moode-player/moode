@@ -2561,6 +2561,23 @@ function autoConfigSettings() {
 		['requires' => ['hdmiport'] , 'handler' => setPlayerSession],
 		['requires' => ['eth0chk'] , 'handler' => setPlayerSession],
 		['requires' => ['localui'] , 'handler' => setPlayerSession],
+		['requires' => ['p3wifi'] , 'handler' => function($values) {
+			ctlWifi($values['p3wifi']);
+			playerSession('write', 'p3wifi', $values['p3wifi']);
+		}],
+		['requires' => ['p3bt'] , 'handler' => function($values) {
+			ctlBt($values['p3bt']);
+			playerSession('write', 'p3bt', $values['p3bt']);
+		}],
+		['requires' => ['expandfs'] , 'handler' => function($values) {
+			if( in_array( strtolower($values['expandfs']), ["1", "yes", "true"]) ) {
+				sysCmd('/var/www/command/resizefs.sh start');
+			}
+		}, 'custom_write' => function($values) {
+			$result = sysCmd("df | grep root | awk '{print $2}'");
+			$expanded = $result[0] > 3500000 ? 1 : 0;
+			return sprintf("expandfs =\"%d\"\n", $expanded);
+		}],
 
 		'I2S Device',
 		['requires' => ['i2sdevice'] , 'handler' => function($values) {
@@ -2632,13 +2649,28 @@ function autoConfigSettings() {
 		['requires' => ['cover_blur'] , 'handler' => setPlayerSession],
 		['requires' => ['cover_scale'] , 'handler' => setPlayerSession],
 
+		['requires' => ['library_albumview_sort'] , 'handler' => setPlayerSession],
+		['requires' => ['library_covsearchpri'] , 'handler' => setPlayerSession],
+		['requires' => ['library_ellipsis_limited_text'] , 'handler' => setPlayerSession],
+		['requires' => ['library_encoded_at'] , 'handler' => setPlayerSession],
+		['requires' => ['library_flatlist_filter'] , 'handler' => setPlayerSession],
+		['requires' => ['library_flatlist_filter_str'] , 'handler' => setPlayerSession],
+		['requires' => ['library_hiresthm'] , 'handler' => setPlayerSession],
+		['requires' => ['library_ignore_articles'] , 'handler' => setPlayerSession],
+		['requires' => ['library_inc_comment_tag'] , 'handler' => setPlayerSession],
+		['requires' => ['library_instant_play'] , 'handler' => setPlayerSession],
+		['requires' => ['library_tagview_artist'] , 'handler' => setPlayerSession],
+		['requires' => ['library_tagview_covers'] , 'handler' => setPlayerSession],
+		['requires' => ['library_tagview_sort'] , 'handler' => setPlayerSession],
+		['requires' => ['playlist_art'] , 'handler' => setPlayerSession],
+
 		'Other',
 		['requires' => ['font_size'] , 'handler' => setPlayerSession],
 		['requires' => ['playhist'] , 'handler' => setPlayerSession],
 		['requires' => ['first_use_help'] , 'handler' => function($values) {
 			playerSession('write', 'first_use_help', ($values['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
 		}, 'custom_write' => function($values) {
-			$value = $SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
+			$value = $_SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
 			return "first_use_help = \"".$value."\"\n";
 		}],
 	];
