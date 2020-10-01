@@ -126,7 +126,7 @@ With no OPTION print the help text and exit.
  -A [add|rm N] \tupdate features availability
  -d\t\tdump session file (requires sudo)
  -D [var name] \tdelete session variable (requires sudo)
- -e\t\texport autoconfig.ini
+ -e\t\texport settings to moodecfg.ini
  -f\t\tprint supported audio formats
  -F\t\tprint full alsacap info
  -l\t\tprint moode log
@@ -373,6 +373,6 @@ function check_station_urls() {
 
 function export_autoconfig($argv) {
 	$cfgfile = count($argv)==3 ? $argv[2] : sprintf("/home/pi/moodecfg-%s.ini",  date('ymd_His'));
-	echo "Export autoconfig of current system to ".$cfgfile."\n";
+	echo "Export current moOde settings to ".$cfgfile."\n";
 	echo shell_exec('/var/www/command/autocfggen.php > '.$cfgfile);
 }
