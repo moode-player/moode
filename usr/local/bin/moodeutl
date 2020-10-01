@@ -373,6 +373,6 @@ function check_station_urls() {
 
 function export_autoconfig($argv) {
 	$cfgfile = count($argv)==3 ? $argv[2] : sprintf("/home/pi/moodecfg-%s.ini",  date('ymd_His'));
-	echo "Export current moOde settings to ".$cfgfile."\n";
+	echo "Current moOde settings exported to ".$cfgfile."\n";
 	echo shell_exec('/var/www/command/autocfggen.php > '.$cfgfile);
 }
