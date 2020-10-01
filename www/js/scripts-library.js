@@ -412,11 +412,17 @@ function filterAlbums() {
 	}
 	// Filter by artist
 	if (LIB.filters.artists.length) {
-        // @scripple:
-        var artistSongs = allSongs.filter(filterByArtist);
- 		var songKeys = artistSongs.map(function(a) {return a.key;});
- 		filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
- 		filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
+		// @scripple:
+		if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
+			filteredAlbums = filteredAlbums.filter(filterByArtist);
+			filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
+		}
+		else {
+			var artistSongs = allSongs.filter(filterByArtist);
+			var songKeys = artistSongs.map(function(a) {return a.key;});
+			filteredAlbums = filteredAlbums.filter(function(item){return songKeys.includes(keyAlbum(item));});
+			filteredAlbumCovers = filteredAlbumCovers.filter(function(item){return songKeys.includes(keyAlbum(item));});
+		}
 	}
     // Filter by file last-updated timestamp
     if (LIB.recentlyAddedClicked) {
