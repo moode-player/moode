@@ -2639,7 +2639,7 @@ function autoConfigSettings() {
 			playerSession('write', 'first_use_help', ($values['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
 		}, 'custom_write' => function($values) {
 			$value = $SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
-			return "squeezelitename = \"".$value."\"\n";
+			return "first_use_help = \"".$value."\"\n";
 		}],
 	];
 
