@@ -1071,10 +1071,10 @@ jQuery(document).ready(function($) { 'use strict';
     			}
 
                 if (currentView == 'tag') {
-    				lazyLode('tag');
+    				lazyLode('tag', true, true);
     			}
     			else {
-    				lazyLode('album');
+    				lazyLode('album', true, true);
     				$('#bottom-row').css('display', '');
                     $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
     			}

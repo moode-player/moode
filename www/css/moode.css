@@ -251,7 +251,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.playlist span {margin-left:calc(3.8rem + 1vmin) !important;}
 	.playlist {padding:0 0 9rem 0;min-height:33vh;}
 	/*.playlist li:before {width:1.75em!important;}*/
-	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;}
+	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;margin-left:1.25em!important;}
 	.ui-pnotify {top:40% !important;}
 	#lib-albumcover {left:0;}
 	/* ellipsis madness */
@@ -277,7 +277,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* playbar */
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;}
-	#playbar-title {text-align:left;top:0;margin-left:1.25rem;width:53vw;height:auto;position:relative;transform:none;font-size:1.3em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
+	#playbar-title {text-align:left;top:0;margin-left:1em;width:53vw;height:auto;position:relative;transform:none;font-size:1.4em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
 	#playbar-controls .btn {padding:.5em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}

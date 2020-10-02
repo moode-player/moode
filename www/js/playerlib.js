@@ -270,6 +270,7 @@ function engineMpd() {
 				}
 				// Render full UI
 				else {
+					if (MPD.json['date']) MPD.json['date'] = MPD.json['date'].slice(0,4); // should fix in php but...
 					renderUI();
 				}
 
@@ -720,7 +721,7 @@ function renderUI() {
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             }
             else {
-	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
+	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + '" data-adaptive-background="1" alt="Cover art not found"' + '>');
                 $('#playbar-cover').html('<img src="' + 'images/default-cover-v6.png' + '">');
             }
     		// cover backdrop or bgimage
@@ -1092,11 +1093,11 @@ function renderPlaylist() {
         }
 
 		// Render playlist
-        $('#playlist ul').html(output);
-        //$('#cv-playlist ul').html(output);
-
+		var element = document.getElementById('pl-list');
+		element.innerHTML = output;
+				  
         if (output) {
-            if (option_show_playlistart) {
+            if (option_show_playlistart && currentView.indexOf('playback') == 0) {
     			lazyLode('playlist');
                 if ($('#cv-playlist').css('display') == 'block') {
                     lazyLode('cv-playlist');
@@ -1649,7 +1650,10 @@ function renderRadioView() {
     	}
 
         // Render the list
-    	$('ul.database-radio').html(output);
+		var element = document.getElementById('radiocovers');
+		element.innerHTML = output;
+		if (currentView == 'radio') lazyLode('radio');
+		
     });
 }
 
@@ -3357,6 +3361,8 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
     if (coverView) {
         return;
     }
+	if (SESSION.json['playlist_art'] == 'Yes') lazyLode('playlist');
+		
 	if (currentView.indexOf('playback') == 0) {
         // Already in playback means mobile and view has scrolled, so scroll to top
 		$(window).scrollTop(0);
@@ -3450,17 +3456,16 @@ function makeActive (vswitch, panel, view) {
 	$('#content .tab-pane, .viewswitch button').removeClass('active');
 	$(vswitch + ',' + panel).addClass('active');
     $.post('command/moode.php?cmd=updcfgsystem', {'current_view': view});
-
 	currentView = view;
 	setColors();
 	setLibMenuHeader();
 	$('#viewswitch span.pane').hide();
 	switch (view) {
 		case 'radio':
-			lazyLode('radio');
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
 			$('#viewswitch .album-view-btn').removeClass('menu-separator');
 			$('.radio-view-btn .pane').show();
+			lazyLode('radio');
 			break;
 		case 'folder':
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
@@ -3468,7 +3473,6 @@ function makeActive (vswitch, panel, view) {
 			$('.folder-view-btn .pane').show();
 			break;
 		case 'album':
-			lazyLode('album');
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('.album-view-btn .pane').show();
@@ -3483,14 +3487,15 @@ function makeActive (vswitch, panel, view) {
                 $('#lib-albumcover').css('height', '100%');
                 $('#index-albumcovers').show();
             }
+			lazyLode('album');
 			break;
 		case 'tag':
-			lazyLode('tag');
 			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('.tag-view-btn .pane').show();
 			$('#library-panel').addClass('tag').removeClass('covers');
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
+			if (SESSION.json['library_tagview_covers']) lazyLode('tag');
 			break;
 	}
 	//const duration = performance.now() - startTime;
@@ -3544,10 +3549,12 @@ function setLibMenuHeader () {
 	$('#menu-header').text(headerText);
 }
 
-function lazyLode(view) {
+function lazyLode(view, skip, force) {
+	//console.log(view);
     // If browser does not support native lazy load then fall back to JQuery lazy load
     if (!GLOBAL.nativeLazyLoad) {
  		var container, selector;
+		skip = skip ? true : false; // skip_invisible
 
  		switch (view) {
  			case 'radio':
@@ -3558,13 +3565,15 @@ function lazyLode(view) {
  				if (SESSION.json['library_tagview_covers'] == 'Yes') {
      				selector = 'img.lazy-tagview';
      				container = '#lib-album';
+					//skip = true;
                 }
  				break;
  			case 'album':
  				selector = 'img.lazy-albumview';
  				container = '#lib-albumcover';
-				 break;
-		 	case 'playlist':
+				//skip = true;
+				break;
+		 	case 'playlist':				
 				selector = 'img.lazy-playlistview';
 				container = '#playlist';
 				break;
@@ -3573,13 +3582,17 @@ function lazyLode(view) {
 				container = '#cv-playlist';
 				break;
  		}
-
         if (selector && container) {
- 			setTimeout(function(){
- 				$(selector).lazyload({
- 					container: $(container)
- 				});
- 			}, LAZYLOAD_TIMEOUT);
+			
+			if ($(container + ' ' + selector).attr('src') && !force) {
+				return;
+			}
+			
+			$.ensure($(container + ' li')).then(
+				$(selector).lazyload({
+					container: $(container),
+					skip_invisible: skip
+				}));			
         }
  	}
 }
@@ -3648,3 +3661,17 @@ function getRootElementFontSize() {
     ).fontSize
   );
 }
+
+// jquery.ensure.js - https://stackoverflow.com/a/48191803 - Matheus Dal'Pizzol
+
+  $.ensure = function (selector) {
+    var promise = $.Deferred();
+    var interval = setInterval(function () {
+      if ($(selector)[0]) {
+        clearInterval(interval);
+        promise.resolve();
+      }
+    }, 1);
+    return promise;
+  };
+
