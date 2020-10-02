@@ -101,14 +101,18 @@ function reduceGenres(acc, track) {
 }
 
 // Rewritten by @scripple
-// NOTE: This routine and associated marked code blocks provide a flexible way to populate the artist list in Tag view.
-// 1. library_tagview_artist = 'Artist': List all artists including those in compilation albums but retain any compilation
-// album grouping present in the Album Artist tag i.e. "Various Artists" will be in the list. Compilation albums listed
-// for a given clicked artist will show only the tracks belonging to the Artist. Clicking the Album will show all the
-// album's tracks vs just those for the given artist.
-// 2. library_tagview_artist = Album Artist: List all the Album Artists. If the album artist tag is empty then the Artist tag
-// will be used. Albums will be grouped by Album Artist. Compilation albums should therefore have the Album Artist tag
-// set to a consistent string for example "Various Artists" to be grouped correctly.
+// NOTE: This routine and associated marked code blocks provide a flexible way to populate
+// the artist list in Tag view based on the value of the library_tagview_artist setting.
+// Artist
+// List all Artists. Compilation albums listed for a selected artist will show only the tracks
+// belonging to the Artist. Clicking the Album will toggle between showing all the album's
+// tracks and just those for the selected artist.
+// Album Artist
+// List all Album Artists. Compilation albums listed for a selected Album Artist will show only
+// the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all
+// the album's tracks and just those for the selected Album Artist.
+// Album Artist [strict]
+// The [strict] qualifier results in Compilation albums only being shown under Album Artist = "Various Artists".
 function reduceArtists(acc, track) {
 	if (track.album_artist) {
 		var album_artist = (track.album_artist).toLowerCase();
@@ -117,11 +121,8 @@ function reduceArtists(acc, track) {
 			acc[album_artist].artist = track.album_artist;
 		}
 		acc[album_artist].push(track);
-		// ONLY ALBUM ARTIST SWITCH GOES HERE
-		// Set the sense according to how you define the variable
-		// The next if should evaluate to true if you ONLY want
-		// to use album_artist when set.  (old behavior)
-		if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
+        // This conditional when true results in only the Album Artist being included (old 671 like behavior)
+		if (SESSION.json['library_tagview_artist'].substring(0, 12) == 'Album Artist') { // Covers library_tagview_artist = 'Album Artist [strict]'
 			return acc;
 		}
 	}
@@ -413,7 +414,7 @@ function filterAlbums() {
 	// Filter by artist
 	if (LIB.filters.artists.length) {
 		// @scripple:
-		if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
+		if (SESSION.json['library_tagview_artist'] == 'Album Artist [strict]') {
 			filteredAlbums = filteredAlbums.filter(filterByArtist);
 			filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
 		}
