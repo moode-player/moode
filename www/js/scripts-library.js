@@ -122,7 +122,7 @@ function reduceArtists(acc, track) {
 		}
 		acc[album_artist].push(track);
         // This conditional when true results in only the Album Artist being included (old 671 like behavior)
-		if (SESSION.json['library_tagview_artist'].substring(0, 12) == 'Album Artist') { // Covers library_tagview_artist = 'Album Artist [strict]'
+		if (SESSION.json['library_tagview_artist'] != 'Artist') { // Album Artist or Album Artist [strict]
 			return acc;
 		}
 	}
@@ -493,9 +493,23 @@ function removeArticles(string) {
 	return SESSION.json['library_ignore_articles'] != 'None' ? string.replace(GLOBAL.regExIgnoreArticles, '$2') : string;
 }
 
-// Generate album@artist key
+// Generate album key
 function keyAlbum(obj) {
-    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
+    //console.log(obj);
+    if (SESSION.json['pkgid_suffix'] == 'enable_key_by_path') {
+        // Key by path
+        if (typeof(obj.file) != 'undefined') {
+            var md5 = $.md5(obj.file.substring(0,obj.file.lastIndexOf('/')));
+        }
+        else if (typeof(obj.imgurl) != 'undefined') {
+            var md5 = obj.imgurl.substring(obj.imgurl.lastIndexOf('/') + 1, obj.imgurl.indexOf('.jpg'));
+        }
+        return obj.album.toLowerCase() + '@' + md5 + '@' + obj.mb_albumid;
+    }
+    else {
+        // Key by (album_artist || artist)
+        return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
+    }
 }
 
 // Return numeric song time
