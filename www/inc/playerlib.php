@@ -104,6 +104,9 @@ const RADIO_BITRATE_THRESHOLD 		= 128;
 // Reserved root directory names
 $ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
 
+// TEST: for evaluating genLibrary() performance when probing m4a files to determine whether the format is ALAC
+$PROBE_M4A = false;
+
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
 	$fh = fopen(MOODE_LOG, $mode);
@@ -404,18 +407,27 @@ function genFlatList($sock) {
 	$resp = '';
 	foreach ($dirs as $dir) {
 		// NOTE: MPD must be compiled with libpcre++-dev to make use of PERL compatible regex
+		// NOTE: Logic in genLibrary() determines whether M4A format is Lossless or Lossy
 		switch ($_SESSION['library_flatlist_filter']) {
 			case 'None':
 				$cmd = "search base \"" . $dir . "\"";
 				break;
 			case 'Lossless':
-				$cmd = "search \"((base '" . $dir . "') AND (file =~ '.flac|.aif|.wav|.dsf|.dff'))\"";
+				if ($_SESSION['pkgid_suffix'] == 'enable_m4a_probe') {
+					$cmd = "search \"((base '" . $dir . "') AND (file =~ 'm4a$|flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
+					$GLOBALS['PROBE_M4A'] = true;
+				}
+				else {
+					$cmd = "search \"((base '" . $dir . "') AND (file =~ 'flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
+				}
 				break;
 			case 'Lossy':
-				$cmd = "search \"((base '" . $dir . "') AND (file !~ '.flac|.aif|.wav|.dsf|.dff'))\"";
+				$cmd = "search \"((base '" . $dir . "') AND (file !~ 'flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
+				$GLOBALS['PROBE_M4A'] = true;
 				break;
 			case 'Format':
 			case 'Directory':
+				$GLOBALS['PROBE_M4A'] = ($_SESSION['library_flatlist_filter' == 'Format' && $_SESSION['library_flatlist_filter_str'] == '.m4a']) ? true : false;
 				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
 				break;
 		}
@@ -465,28 +477,50 @@ function genFlatList($sock) {
 // Generate library array (@chris-rudmin rewrite)
 function genLibrary($flat) {
 	$lib = array();
+	//workerLog($_SESSION['pkgid_suffix']);
+	//workerLog(print_r($GLOBALS['PROBE_M4A'], true));
 
 	foreach ($flat as $flatData) {
-		$songData = array(
-			'file' => $flatData['file'],
-			'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
-			'title' => ($flatData['Title'] ? $flatData['Title'] : 'Unknown Title'),
-			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
-			'artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist'),
-			'album_artist' => $flatData['AlbumArtist'],
-			'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
-			'year' => getTrackYear($flatData),
-			'time' => $flatData['Time'],
-			'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
-			'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
-			'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
-			'time_mmss' => songTime($flatData['Time']),
-			'last_modified' => $flatData['Last-Modified'],
-			'encoded_at' => getEncodedAt($flatData, 'default', true),
-			'comment' => (($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
-		);
+		// Post filter test for M4A container
+		if ($_SESSION['pkgid_suffix'] == 'enable_m4a_probe' && $GLOBALS['PROBE_M4A'] === true && getFileExt($flatData['file']) == 'm4a') {
+			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $flatData['file'] . '"');
+			if ($_SESSION['library_flatlist_filter'] == 'Lossless' && $result[3] == 'ALAC') {
+				$push = true;
+			}
+			elseif ($_SESSION['library_flatlist_filter'] == 'Lossy' && $result[3] != 'ALAC') {
+				$push = true;
+			}
+			else {
+				$push = false;
+			}
+			//workerLog(($push === true ? 'T|' : 'F|') . $result[3] . '|' . $flatData['file']);
+		}
+		else {
+			$push = true;
+		}
 
-		array_push($lib, $songData);
+		if ($push === true) {
+			$songData = array(
+				'file' => $flatData['file'],
+				'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
+				'title' => ($flatData['Title'] ? $flatData['Title'] : 'Unknown Title'),
+				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
+				'artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist'),
+				'album_artist' => $flatData['AlbumArtist'],
+				'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
+				'year' => getTrackYear($flatData),
+				'time' => $flatData['Time'],
+				'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
+				'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
+				'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
+				'time_mmss' => songTime($flatData['Time']),
+				'last_modified' => $flatData['Last-Modified'],
+				'encoded_at' => getEncodedAt($flatData, 'default', true),
+				'comment' => (($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
+			);
+
+			array_push($lib, $songData);
+		}
 	}
 
 	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
