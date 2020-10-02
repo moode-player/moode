@@ -2707,6 +2707,50 @@ function autoConfigSettings() {
 			$value = $_SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
 			return "first_use_help = \"".$value."\"\n";
 		}],
+
+		'sources',
+		// Sources are using the array construction of the ini reader
+		// source_name[0] = ...
+		['requires' => ['source_name',
+						'source_type',
+						'source_address',
+						'source_remotedir',
+						'source_username',
+						'source_password',
+						'source_charset',
+						'source_rsize',
+						'source_wsize',
+						'source_wsize',
+						'source_options'], 'handler' => function($values) {
+			$source_count = count($values['source_name']);
+			$keys = array_keys($values);
+
+			for($index =0; $index< $source_count; $index++) {
+				$mount = [ 'mount' => ['action' => 'add'] ];
+				foreach($keys as $key) {
+					$mount['mount'][substr($key, 7)] = $values[$key][$index];
+				}
+				sourceCfg($mount);
+			}
+		}, 'custom_write' => function($values) {
+			$dbh = cfgdb_connect();
+			$mounts = cfgdb_read('cfg_source', $dbh);
+			$stringformat = "source_%s[%d] = \"%s\"\n";
+			$source_export = "";
+			foreach ($mounts  as $index=>$mp) {
+				$source_export =  $source_export . sprintf($stringformat, 'name', $index, $mp['name']);
+				$source_export =  $source_export . sprintf($stringformat, 'type', $index, $mp['type']);
+				$source_export =  $source_export . sprintf($stringformat, 'address', $index, $mp['address']);
+				$source_export =  $source_export . sprintf($stringformat, 'remotedir', $index, $mp['remotedir']);
+				$source_export =  $source_export . sprintf($stringformat, 'username', $index, $mp['username']);
+				$source_export =  $source_export . sprintf($stringformat, 'password', $index, $mp['password']);
+				$source_export =  $source_export . sprintf($stringformat, 'charset', $index, $mp['charset']);
+				$source_export =  $source_export . sprintf($stringformat, 'rsize', $index, $mp['rsize']);
+				$source_export =  $source_export . sprintf($stringformat, 'wsize', $index, $mp['wsize']);
+				$source_export =  $source_export . sprintf($stringformat, 'options', $index, $mp['options']);
+				}
+			return $source_export;
+		}],
 	];
 
 	return $configurationHandlers;
@@ -2818,7 +2862,7 @@ function autoconfigExtract() {
 		}
 	}
 
-	return $autoconfigstring;
+	return $autoconfigstring."\n";
 }
 
 function genWpaPSK($ssid, $passphrase) {
