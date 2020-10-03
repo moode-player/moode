@@ -195,7 +195,8 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .database-radio {text-align:center;padding:0 0 14rem 0;}
 .playlist li, .cv-playlist li, .database li, .database-radio li {display:block;position:relative;margin:0;cursor:pointer;text-align:left;padding-left:.75em;}
 .playlist li:before, .cv-playlist li:before {float:left;width:2.9em;letter-spacing:-1px;text-align:right;line-height:normal;counter-increment:item;content:counter(item) ' ';font-size:1em;margin-top:2px;}
-.database-radio li {width:var(--thumbcols);text-align:center;font-size:.95em;font-weight:600;margin:0 .1em;display:inline-block;vertical-align:top;height:auto;padding:0 0 .5em 0;}
+.database-radio li {width:var(--thumbcols);text-align:center;font-size:.95em;margin:0 .1em;display:inline-block;vertical-align:top;height:auto;padding:0 0 .5em 0;}
+.station-name {font-weight:600;}
 .database li {margin-left:2px;margin-right:5px;padding:0;}
 /*.playlist li.active:before, .cv-playlist li.active:before {color:var(--accentxts);opacity:1;}*/
 .database span {display:block;font-weight:normal;color:inherit;opacity:.60;}
@@ -652,7 +653,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 /* Radio manager */
 .modal-button-style {display:inline-block;margin-bottom:.5em;/*margin-top:-1px*/}
 /* Radio view */
-.radioview-metadata-text {color:var(--textvariant);}
+.radioview-metadata-text {color:var(--textvariant);font-weight:500}
 /* First use help */
 #playback-firstuse-help, #playbar-firstuse-help {display:none;position:absolute;background:rgba(0,0,0,0.9);cursor:pointer;}
 #playback-firstuse-help:after, #playbar-firstuse-help:after {position:absolute;top:.75em;right:.75em;font-family:"Font Awesome 5 Pro";content:"\f057";color:var(--accentxts);font-size:1.75em;font-weight:100;}
