@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Sep 26 11:22:52 2020
+-- File generated with SQLiteStudio v3.1.0 on Fri Oct 2 19:56:08 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -200,6 +200,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (190, 'http://50.31.135.43:80/wwoz-hi.mp3', 'WWOZ New Orleans FM 90.7 - Various Artists', 'r', 'local', 'Jazz, Blues, Jazz, Latin, Cajun, Funk', 'WWOZ', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (191, 'http://streams.norbert.de:8000/zappa.aac', 'Zappa Stream Radio', 'r', 'local', 'Rock, Progressive Rock', 'Zappa Stream Radio', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (192, 'http://lb.zenfm.be/zenfm.mp3', 'Zen FM', 'r', 'local', 'Lounge', 'Zen FM', 'Dutch', 'Belgium', 'Europe', '192', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (193, 'http://wkcr.streamguys1.com:80/live', 'WKCR 89.9 FM', 'r', 'local', 'Jazz,Classical', 'WKCR (Columbia University)', 'English', 'United States', 'North America', '96', 'MP3', 'No', NULL, NULL);
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', 'No', '', '');
 
 -- Table: cfg_sl
@@ -390,6 +391,8 @@ INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'No'
 INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'All');
 INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', NULL);
 INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_inc_comment_tag', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not installed');
+INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

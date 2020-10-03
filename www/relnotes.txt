@@ -20,14 +20,14 @@ New features
 - NEW: Selective resampling modes
 - NEW: Custom SoX resampling recipes
 - NEW: Radio view with sort/group and metadata
+- NEW: Library support for tracks tagged with multiple genres
+- NEW: Library filters (Lossless, Lossy, Format or Directory)
+- NEW: Library option to select which tag for the Artist list
+- NEW: Albums played directly if already in the Queue
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Queue
 - NEW: Thumbnails displayed for albums in Folder view
-- NEW: Albums played directly if already in the Queue
-- NEW: Library support for tracks tagged with multiple genres
-- NEW: Library filters (Lossless, Lossy, Format or Directory)
-- NEW: Library option to select which tag for the Artist list
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
 - NEW: Add next, Play next by inserting after current item
 - NEW: Support up to 384K rate for DDDAC1794 NOS
@@ -61,6 +61,7 @@ Updates
 
 Radio stations
 
+- NEW: WKCR 89.9 FM (Columbia University)
 - UPD: Radio Caroline playable URL
 - UPD: Soma FM - DEF CON Radio logo image
 - UPD: Update NME station URL's to 256 kbps MP3
