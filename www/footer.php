@@ -173,7 +173,7 @@
 
 <?php
     //workerLog('-- footer.php');
-    $return = session_write_close();
-	//workerLog('session_write_close=' . (($return) ? 'TRUE' : 'FALSE'));
+    $return_val = session_write_close();
+	//workerLog('session_write_close=' . (($return_val) ? 'TRUE' : 'FALSE'));
 	echo "</body></html>";
 ?>

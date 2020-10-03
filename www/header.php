@@ -27,8 +27,8 @@
 
 <?php
     //workerLog('-- header.php');
-    $return = session_start();
-    //workerLog('session_start=' . (($return) ? 'TRUE' : 'FALSE'));
+    $return_val = session_start();
+    //workerLog('session_start=' . (($return_val) ? 'TRUE' : 'FALSE'));
 ?>
 <!--endRemoveIf(GENINDEXDEV)-->
 <!DOCTYPE html>
