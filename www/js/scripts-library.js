@@ -796,13 +796,12 @@ var renderSongs = function(albumPos) {
 
             output += albumDiv
                 + discDiv
-    			+ '<li id="lib-song-' + (i + 1) + '" class="clearfix">'
+                + '<li id="lib-song-' + (i + 1) + '" class="clearfix lib-track" data-toggle="context" data-target="#context-menu-lib-item">'
     			+ '<div class="lib-entry-song"><span class="songtrack' + highlight + '">' + filteredSongs[i].tracknum + '</span>'
     			+ '<span class="songname">' + filteredSongs[i].title + '</span>'
     			+ '<span class="songtime"> ' + filteredSongs[i].time_mmss + '</span>'
     			+ '<span class="songartist"> ' + filteredSongs[i].artist + composer
     			+ '<span class="songyear"> ' + songyear + '</span></div>'
-    			+ '<div class="lib-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-item"><i class="fas fa-ellipsis-h"></i></a></div>'
     			+ '</li>';
 
 			LIB.totalTime += parseSongTime(filteredSongs[i].time);
@@ -1167,25 +1166,11 @@ $('#database-radio').on('click', 'img', function(e) {
 	UI.radioPos = pos;
 	storeRadioPos(UI.radioPos)
 
-    $('#' + UI.dbEntry[3]).removeClass('active');
+    if (UI.dbEntry[3].substr(0, 3) == 'ra-') {
+        $('#' + UI.dbEntry[3]).removeClass('active');
+    }
     UI.dbEntry[3] = $(this).parents('li').attr('id');
     $(this).parents('li').addClass('active');
-
-    /*if (SESSION.json['library_instant_play'] != 'No action') {
-        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_item' : 'add_item_next';
-            mpdDbCmd(queueCmd, path);
-            notify(queueCmd);
-        }
-        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_item' : 'play_item_next';
-            mpdDbCmd(queueCmd, path);
-        }
-        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_item', path);
-            notify('clear_play_item');
-        }
-    }*/
 
     oneTouchItem(path);
 
@@ -1283,11 +1268,10 @@ $('#songsList').on('click', '.lib-disc', function(e) {
 });
 
 // Click lib track
-$('#songsList').on('click', '.lib-action', function(e) {
-    UI.dbEntry[0] = $('#songsList .lib-action').index(this); // Store pos for use in action menu item click
+$('#songsList').on('click', '.lib-track', function(e) {
+    UI.dbEntry[0] = $('#songsList .lib-track').index(this); // Store pos for use in action menu item click
 	$('#songsList li, #songsList .lib-disc a').removeClass('active');
-	$(this).parent().addClass('active');
-	$('img.lib-coverart').removeClass('active'); // Remove highlight
+    $(this).addClass('active');
 });
 
 // Playback ellipsis context menu

@@ -72,9 +72,11 @@ var UI = {
 	clientIP: '',
     dbPos: [0,0,0,0,0,0,0,0,0,0,0],
     dbEntry: ['', '', '', '', ''],
-	// [1]: and [2] used in bootstrap.contextmenu.js
-	// [3]: ui row num of song item so highlight can be removed after context menu action
-	// [4]: num playlist items for use by delete/move item modals
+	// [1]: Used in bootstrap.contextmenu.js
+    // [2]: Used in bootstrap.contextmenu.js
+	// [3]: UI row num of song item so highlight can be removed after context menu action
+	// [4]: Num playlist items for use by delete/move item modals
+    // [5]: Playname for clock radio
 	dbCmd: '',
 	// [0-3]: folder level
 	// [4]: master index
@@ -2087,7 +2089,7 @@ $('.context-menu a').click(function(e) {
 			UI.dbEntry[0] = '-1'; // for update
 		}
 		else {
-			$('#clockradio-playname').val(UI.dbEntry[3]); // called from context menu
+			$('#clockradio-playname').val(UI.dbEntry[5]); // Called from context menu
 		}
 
 		// parse start and end values

@@ -647,19 +647,19 @@ jQuery(document).ready(function($) { 'use strict';
 
 		// store posn for later use by action menu selection
         UI.dbEntry[0] = $('.playlist .pl-action').index(this);
-		// store clock radio play name in UI.dbEntry[3]
+		// store clock radio play name in UI.dbEntry[5]
 		if ($('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) == '<i') { // has icon (fa-microphone)
 			// radio station
 			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html();
 			var station = line2.substr((line2.indexOf('</i>') + 4));
-			UI.dbEntry[3] = station.trim();
+			UI.dbEntry[5] = station.trim();
 		}
 		else {
 			// song file
 			var title = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll1').html().trim();
 			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').text(); // artist - album
 			var artist = line2.substr(0, (line2.indexOf('-') - 1)); // strip off album
-			UI.dbEntry[3] = title + ', ' + artist;
+			UI.dbEntry[5] = title + ', ' + artist;
 		}
     });
 

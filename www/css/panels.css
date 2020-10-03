@@ -240,7 +240,6 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #lib-file .songcomposer {font-style:italic;}
 #lib-file .songtime {font-style:normal;margin-left:1em;float:left;display:table-cell;}
 #lib-file .songyear {font-style:normal;position:absolute;right:1em;float:right;display:table-cell;}
-.lib-track-highlight {font-weight:700;}
 #playlist .songtime {font-size:.8em;font-style:normal;font-weight:normal;word-break:normal;color:var(--textvariant);}
 .icon-root {color:inherit;}
 .playlist .pl-action, .cv-playlist .pl-action {float:right;padding:0;text-align:center;}
@@ -371,18 +370,17 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #lib-content li {display:block;position:relative;cursor:pointer;line-height:1.25em;}
 #songsList {padding-bottom:calc(10em + env(safe-area-inset-bottom));margin:.5em .25em;width:calc(100% - var(--sbw));}
 /**/
-#lib-genre li, #lib-artist li/*, #lib-album li*/ {padding: 0.4em 0.5em;/*line-height:2em; /*margin-top:7px;*/}
-#lib-content #lib-file li {cursor:default;padding:.15em 0 .5em 0;}
+#lib-genre li, #lib-artist li {padding: 0.4em 0.5em;}
+#lib-content #lib-file li {;padding:.15em 0 .5em 0;}
 #lib-content #lib-file li:nth-child(odd) {background:rgba(128,128,128,0.1);}
 #lib-content #lib-file li:nth-child(odd).active {font-weight:600;}
-#lib-content #lib-file li div:hover {background-color:transparent;}
 #lib-content li div.active {color:var(--accentxts);}
 #lib-content li.active, .albumslist .active, #radiocovers li.active {background-color:var(--accentxta);color:#eee;}
-.lib-entry {padding:0 .5em;margin:0 .1rem;/*margin-right:1.3rem;*/}
+.lib-entry {padding:0 .5em;margin:0 .1rem;}
 .lib-entry-song {margin-left:4px;padding-top:4px;line-height:normal;margin-right:26px;}
-.lib-action {position:absolute;top:50%;transform:translate(0%,-50%);}
-.lib-action .btn {font-size:.9em;line-height:normal;margin-top:.45em;padding-right:100vw;opacity:0} /* click whole line for menu */
-.lib-disc {margin:0;text-transform:uppercase;/*background-color:rgba(128,128,128,0.1);box-shadow:0 .04em .025em rgba(0,0,0,0.15);*/display:none;}
+.lib-track {cursor:pointer;}
+.lib-track-highlight {font-weight:700;}
+.lib-disc {margin:0;text-transform:uppercase;display:none;}
 .lib-disc a {font-size:.9em;opacity:.75;}
 .lib-album-heading {font-size:.9em;opacity:.75;padding:.75em;margin:0;text-transform:uppercase;background-color:rgba(128,128,128,0.1);box-shadow:0 .04em .025em rgba(0,0,0,0.15);display:none;}
 #songsList .lib-disc a.active {font-weight:700;color:unset;}
