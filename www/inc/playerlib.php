@@ -2558,6 +2558,26 @@ function autoConfigSettings() {
 		playerSession('write', array_key_first($values), $values[array_key_first($values)]);
 	}
 
+	function setCfgMpd($values) {
+		$dbh = cfgdb_connect();
+		$total_query ='';
+		foreach ($values  as $key=>$value) {
+			$query = sprintf('update cfg_mpd set value="%s" where param="%s"; ', $value,  $key);
+			$result = sdbquery($query, $dbh);
+		}
+	}
+
+	function getCfgMpd($values) {
+		$dbh = cfgdb_connect();
+		$result ='';
+		foreach ($values  as $key) {
+			$query = 'select param,value from cfg_mpd where param="'.$key.'"';
+			$rows = sdbquery($query, $dbh);
+			$result = $result . sprintf("%s = \"%s\"\n", $key, $rows[0]['value']);
+		}
+		return $result;
+	}
+
 	// configuration of the autoconfig item handling
 	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
 	//            most item only have 1 autoconfig item, but network setting requires multiple to be present
@@ -2618,6 +2638,21 @@ function autoConfigSettings() {
 			cfgI2sOverlay($values['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
 			playerSession('write', 'i2sdevice', $values['i2sdevice']);
 		}],
+
+		'MPD',
+		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['device'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['selective_resample_mode'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['sox_quality'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['sox_multithreading'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['sox_precision',
+						'sox_phase_response',
+						'sox_passband_end',
+						'sox_stopband_begin',
+						'sox_attenuation',
+						'sox_flags']
+		 , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+
 		'Renderers',
 		['requires' => ['btsvc'] , 'handler' => setPlayerSession],
 		['requires' => ['pairing_agent'] , 'handler' => setPlayerSession],
@@ -2816,7 +2851,7 @@ function autoConfig($cfgfile) {
 		autoCfgLog('autocfg: Caught exception: '.  $e->getMessage() );
 	}
 
-	sysCmd('rm ' . $cfgfile);
+ 	sysCmd('rm ' . $cfgfile);
 	autoCfgLog('autocfg: Configuration file deleted');
 	autoCfgLog('autocfg: Auto-configure complete');
 }
