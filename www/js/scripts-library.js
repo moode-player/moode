@@ -66,7 +66,7 @@ function loadLibrary() {
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
     if (currentView == 'tag' || currentView == 'album') {
-        notify('library_loading');
+        //notify('library_loading');
     }
 
 	$.post('command/moode.php?cmd=loadlib', function(data) {
