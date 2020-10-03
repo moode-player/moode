@@ -279,9 +279,9 @@ jQuery(document).ready(function($) { 'use strict';
     			$('#playback-controls').show();
     		}
             else {
-    			setTimeout(function() {
+    			//setTimeout(function() {
     		        customScroll('playlist', parseInt(MPD.json['song']));
-    			}, DEFAULT_TIMEOUT);
+					//}, DEFAULT_TIMEOUT);
     		}
     		$('#menu-bottom').hide();
     	}
@@ -295,11 +295,11 @@ jQuery(document).ready(function($) { 'use strict';
     	if (currentView == 'radio') {
     		makeActive('.radio-view-btn','#radio-panel', currentView);
 
-    		setTimeout(function() {
+    		/*setTimeout(function() {
     			if (UI.radioPos >= 0) {
     				customScroll('radio', UI.radioPos, 200);
     			}
-    		}, DEFAULT_TIMEOUT);
+			}, DEFAULT_TIMEOUT);*/
     	}
         // Folder view
     	else if (currentView == 'folder') {
@@ -311,34 +311,34 @@ jQuery(document).ready(function($) { 'use strict';
     		makeActive('.tag-view-btn','#library-panel', 'tag');
             SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
-            if (!GLOBAL.libRendered) {
-    			//loadLibrary();
-    		}
+            /*if (!GLOBAL.libRendered) { // lib rendered on page load
+    			loadLibrary();
+    		}*/
 
-    		setTimeout(function() {
+    		/*setTimeout(function() {
     			if (UI.libPos[0] >= 0) {
-    			    $('#albumsList .lib-entry').removeClass('active');
+    			    $('#albumsList .lib-entry').removeClass('active'); // none should be active on page load
     				$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
     				customScroll('albums', UI.libPos[0], 200);
     				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
     			}
-    		}, DEFAULT_TIMEOUT);
+				//}, DEFAULT_TIMEOUT);*/
     	}
     	// Album view
     	else if (currentView == 'album'){
     		makeActive('.album-view-btn','#library-panel', 'album');
 
-            if (!GLOBAL.libRendered) {
-    			//loadLibrary();
-    		}
+            /*if (!GLOBAL.libRendered) {
+    			loadLibrary();
+    		}*/
 
-    		setTimeout(function() {
+    		/*setTimeout(function() {
     			if (UI.libPos[1] >= 0) { // lib entry clicked or random album
     			    $('#albumcovers .lib-entry').removeClass('active');
     				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
-    				customScroll('albumcovers', UI.libPos[1], 0);
+    				customScroll('albumcovers', UI.libPos[1], 200);
     			}
-    		}, DEFAULT_TIMEOUT);
+				}, DEFAULT_TIMEOUT);*/
     	}
     });
 
@@ -349,11 +349,11 @@ jQuery(document).ready(function($) { 'use strict';
     // Radio view
 	$('.radio-view-btn').click(function(e){
         makeActive('.radio-view-btn','#radio-panel','radio');
-        setTimeout(function() {
+        /*setTimeout(function() {
 			if (UI.radioPos >= 0) {
                 customScroll('radio', UI.radioPos, 0);
 			}
-		}, DEFAULT_TIMEOUT);
+			}, DEFAULT_TIMEOUT);*/
 	});
     // Folder view
 	$('.folder-view-btn').click(function(e){
@@ -365,18 +365,18 @@ jQuery(document).ready(function($) { 'use strict';
 		makeActive('.tag-view-btn','#library-panel','tag');
         SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 
-		if (!GLOBAL.libRendered) {
+		/*if (!GLOBAL.libRendered) {
 			loadLibrary();
-		}
+		}*/
 
-		setTimeout(function() {
-			if (UI.libPos[0] >= 0) { // Lib entry clicked or random album
-			    $('#albumsList .lib-entry').removeClass('active');
+		//setTimeout(function() {
+		    $('#albumsList .lib-entry').removeClass('active');
+			/*if (UI.libPos[0] >= 0) { // Lib entry clicked or random album
 				$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
 				customScroll('albums', UI.libPos[0], 0);
-			}
-			else if (UI.libPos[0] == -2) { // Lib headers clicked
-			    $('#albumsList .lib-entry').removeClass('active');
+			}*/
+			if (UI.libPos[0] == -2) { // Lib headers clicked
+			    //$('#albumsList .lib-entry').removeClass('active');
 				$('#lib-album').scrollTo(0, 0);
 				$('#lib-artist').scrollTo(0, 0);
 				UI.libPos[0] = -1;
@@ -390,7 +390,7 @@ jQuery(document).ready(function($) { 'use strict';
 				UI.libPos[0] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, DEFAULT_TIMEOUT);
+			//}, DEFAULT_TIMEOUT);
 	});
     // Album view
 	$('.album-view-btn').click(function(e){
@@ -402,19 +402,19 @@ jQuery(document).ready(function($) { 'use strict';
 			loadLibrary();
 		}
 
-		setTimeout(function() {
-			if (UI.libPos[1] >= 0) { // Lib entry clicked or random album
-			    $('#albumcovers .lib-entry').removeClass('active');
+		//setTimeout(function() {
+		    $('#albumcovers .lib-entry').removeClass('active');
+			/*if (UI.libPos[1] >= 0) { // Lib entry clicked or random album
 				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
 				customScroll('albumcovers', UI.libPos[1], 0);
-			}
-			else if (UI.libPos[1] == -2 || UI.libPos[1] == -3) { // Lib headers clicked or search performed
-			    $('#albumcovers .lib-entry').removeClass('active');
+			}*/
+			if (UI.libPos[1] == -2 || UI.libPos[1] == -3) { // Lib headers clicked or search performed
+			   // $('#albumcovers .lib-entry').removeClass('active');
 				$('#lib-albumcover').scrollTo(0, 0);
 				UI.libPos[1] = -1;
 				storeLibPos(UI.libPos);
 			}
-		}, DEFAULT_TIMEOUT);
+			//}, DEFAULT_TIMEOUT);
 	});
 
     // Clear Library tag cache
@@ -762,10 +762,10 @@ jQuery(document).ready(function($) { 'use strict';
     		else {
     			$('#playback-switch').click();
     			$('.tag-view-btn').click();
-    			setTimeout(function() {
+    			//setTimeout(function() {
     				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
     				customScroll('artists', UI.libPos[2], 200);
-    			}, DEFAULT_TIMEOUT);
+					//}, DEFAULT_TIMEOUT);
     		}
         }
 	});
@@ -881,12 +881,12 @@ jQuery(document).ready(function($) { 'use strict';
     // Refresh the station list
 	$('#ra-refresh').click(function(e) {
 		mpdDbCmd('lsinfo_radio');
-        setTimeout(function() {
+        //setTimeout(function() {
             lazyLode('radio');
-        }, DEFAULT_TIMEOUT);
-        setTimeout(function() {
+			//}, DEFAULT_TIMEOUT);
+        //setTimeout(function() {
             $('#database-radio').scrollTo(0, 200);
-        }, DEFAULT_TIMEOUT);
+       // }, DEFAULT_TIMEOUT);
 
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)
@@ -1289,12 +1289,12 @@ jQuery(document).ready(function($) { 'use strict';
 
         if ($('#cv-playlist').css('display') == 'block') {
             $('#cv-playlist ul').html($('#playlist ul').html());
-            setTimeout(function() {
+            //setTimeout(function() {
                 if (SESSION.json['playlist_art'] == 'Yes') {
                     lazyLode('cv-playlist');
                 }
                 customScroll('cv-playlist', parseInt(MPD.json['song']));
-            }, DEFAULT_TIMEOUT);
+				//}, DEFAULT_TIMEOUT);
 
             GLOBAL.playbarPlaylistTimer = setTimeout(function() {
                 $('#cv-playlist ul').html('');
@@ -1345,13 +1345,13 @@ jQuery(document).ready(function($) { 'use strict';
             $('#lib-coverart-img').show();
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
             UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
-            setTimeout(function() {
+            //setTimeout(function() {
                 $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
                 if (SESSION.json['playlist_art'] == 'Yes') {
                     lazyLode('playlist');
                 }
                 customScroll('playlist', parseInt(MPD.json['song']));
-            }, DEFAULT_TIMEOUT);
+				//}, DEFAULT_TIMEOUT);
         }
         // Reset screen saver timeout global
         else if (SESSION.json['scnsaver_timeout'] != 'Never') {
