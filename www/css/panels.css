@@ -224,7 +224,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #library-panel.limited .lib-entry span, #radio-panel.limited .station-name span {text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .database .active {font-size:inherit;font-weight:700;}
 .playlist .active .pll1, .cv-playlist .active .pll1 {color:var(--accentxts);font-weight:700;}
-.playlist li.active:before, .cv-playlist li.active:before {color:transparent !important;background:var(--npicon) no-repeat right;background-size:1.25em;}
+.playlist li.active:before, .cv-playlist li.active:before, .lib-track-highlight {color:transparent!important;background:var(--npicon) no-repeat right;background-size:1.25em;}
 .playlist .pll1, .cv-playlist .pll1 {font-weight:400;opacity:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .playlist .pl-entry, .cv-playlist .pl-entry {padding:0px;}
 .playlist .pl-thumb, .cv-playlist .pl-thumb {float: left; width: 2.4em; margin-left: 1.2vmin!important; margin-right: 1.2vmin;border-radius:.2em;filter:brightness(80%);overflow:hidden;}
@@ -380,7 +380,6 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 .lib-entry {padding:0 .5em;margin:0 .1rem;}
 .lib-entry-song {margin-left:4px;padding-top:4px;line-height:normal;margin-right:26px;}
 .lib-track {cursor:pointer;}
-.lib-track-highlight {font-weight:700;}
 .lib-disc {margin:0;text-transform:uppercase;display:none;}
 .lib-disc a {font-size:.9em;opacity:.75;}
 .lib-album-heading {font-size:.9em;opacity:.75;padding:.75em;margin:0;text-transform:uppercase;background-color:rgba(128,128,128,0.1);box-shadow:0 .04em .025em rgba(0,0,0,0.15);display:none;}
