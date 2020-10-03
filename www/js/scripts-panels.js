@@ -69,7 +69,7 @@ jQuery(document).ready(function($) { 'use strict';
         GLOBAL.nativeLazyLoad = true;
     }
 
-	// load current cfg
+	// Load current cfg
     $.getJSON('command/moode.php?cmd=read_cfgs', function(result) {
     	SESSION.json = result['cfg_system'];
     	THEME.json = result['cfg_theme'];
@@ -83,8 +83,8 @@ jQuery(document).ready(function($) { 'use strict';
     	// Set currentView global
     	currentView = SESSION.json['current_view'];
 
-    	// mobile
-    	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
+    	// Detect mobile
+    	UI.mobile = $(window).width() < 480 ? true : false;
         //console.log('window: ' + $(window).width() + 'x' + $(window).height());
         //console.log('viewport: ' + window.innerWidth + 'x' + window.innerHeight);
 
@@ -96,7 +96,7 @@ jQuery(document).ready(function($) { 'use strict';
         mpdDbCmd('lsinfo', '');
         mpdDbCmd('lsinfo_radio');
 
-    	// radio
+    	// Radio
     	UI.radioPos = parseInt(SESSION.json['radio_pos']);
     	// library
     	var tmpStr = SESSION.json['lib_pos'].split(',');
@@ -108,7 +108,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#volume, #volume-2').attr('data-max', SESSION.json['volume_mpd_max']);
         GLOBAL.mpdMaxVolume = parseInt(SESSION.json['volume_mpd_max']);
 
-    	// set the font size
+    	// Set font size
     	setFontSize();
 
         // Show/hide first use help
@@ -116,25 +116,25 @@ jQuery(document).ready(function($) { 'use strict';
         if (firstUseHelp[0] == 'y') {$('#playback-firstuse-help').css('display', 'block');}
         if (firstUseHelp[1] == 'y') {$('#playbar-firstuse-help').css('display', 'block');}
 
-    	// compile the ignore articles regEx
+    	// Compile the ignore articles regEx
     	if (SESSION.json['library_ignore_articles'] != 'None') {
     		GLOBAL.regExIgnoreArticles = new RegExp('^(' + SESSION.json['library_ignore_articles'].split(',').join('|') + ') (.*)', 'gi');
     		//console.log (GLOBAL.regExIgnoreArticles);
     	}
 
-    	// touch device detection
+    	// Detect touch device
     	if (!('ontouchstart' in window || navigator.msMaxTouchPoints)) {
     		$('body').addClass('no-touch');
     	}
 
-    	// set theme
+    	// Set theme
     	themeColor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
     	themeBack = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + SESSION.json['alphablend'] +')';
     	themeMcolor = str2hex(THEME.json[SESSION.json['themename']]['tx_color']);
     	if (SESSION.json['adaptive'] == "No") {document.body.style.setProperty('--adaptmbg', themeBack);}
     	blurrr == true ? themeOp = .85 : themeOp = .95;
 
-    	// only display transparency related theme options if alphablend is < 1
+    	// Only display transparency related theme options if alphablend is < 1
     	$('#alpha-blend').on('DOMSubtreeModified',function(){
     		if ($('#alpha-blend span').text() < 1) {
     			$('#cover-options').show();
@@ -144,11 +144,8 @@ jQuery(document).ready(function($) { 'use strict';
     		}
     	});
 
-    	/*themeMback = 'rgba(' + THEME.json[SESSION.json['themename']]['bg_color'] + ',' + themeOp +')';
-    	tempcolor = splitColor($('.dropdown-menu').css('background-color'));*/
     	tempcolor = (THEME.json[SESSION.json['themename']]['mbg_color']).split(",")
     	themeMback = 'rgba(' + tempcolor[0] + ',' + tempcolor[1] + ',' + tempcolor[2] + ',' + themeOp + ')';
-
     	accentColor = themeToColors(SESSION.json['accent_color']);
     	document.body.style.setProperty('--themetext', themeMcolor);
     	adaptColor = themeColor;
@@ -176,10 +173,10 @@ jQuery(document).ready(function($) { 'use strict';
         });
         */
 
-        // setup pines notify
+        // Setup pines notify
         $.pnotify.defaults.history = false;
 
-    	// show button bars
+    	// Show button bars
     	if (!UI.mobile) {
     		$('#playbtns, #togglebtns').show();
     	}
@@ -209,7 +206,7 @@ jQuery(document).ready(function($) { 'use strict';
     		$('#ss-style, #ss-backdrop').css('display', '');
     	}
 
-     	// set clock radio icon state
+     	// Set clock radio icon state
     	if (SESSION.json['clkradio_mode'] == 'Clock Radio' || SESSION.json['clkradio_mode'] == 'Sleep Timer') {
     		$('#clockradio-icon').removeClass('clockradio-off')
     		$('#clockradio-icon').addClass('clockradio-on')
@@ -219,7 +216,7 @@ jQuery(document).ready(function($) { 'use strict';
     		$('#clockradio-icon').addClass('clockradio-off')
     	}
 
-    	// set volume control state
+    	// Set volume control state
     	if (SESSION.json['mpdmixer'] == 'disabled') {
     		disableVolKnob();
     		SESSION.json['volknob'] = '0';
@@ -275,7 +272,7 @@ jQuery(document).ready(function($) { 'use strict';
         // Reset active state
         $('#folder-panel, #radio-panel').removeClass('active');
 
-        // Full screen playback
+        // Playback
     	if (currentView.indexOf('playback') != -1) {
     		$('#playback-panel').addClass('active');
     		$(window).scrollTop(0); // make sure it's scrolled to top
@@ -284,13 +281,11 @@ jQuery(document).ready(function($) { 'use strict';
     			$('#playback-controls').show();
     		}
             else {
-    			//setTimeout(function() {
-    		        customScroll('playlist', parseInt(MPD.json['song']));
-					//}, DEFAULT_TIMEOUT);
+		        customScroll('playlist', parseInt(MPD.json['song']));
     		}
     		$('#menu-bottom').hide();
     	}
-        // Library with Playbar
+        // Library
     	else {
     		$('#menu-bottom, #viewswitch').css('display', 'flex');
     		$('#playback-switch').hide();
@@ -299,12 +294,6 @@ jQuery(document).ready(function($) { 'use strict';
         // Radio view
     	if (currentView == 'radio') {
     		makeActive('.radio-view-btn','#radio-panel', currentView);
-
-    		/*setTimeout(function() {
-    			if (UI.radioPos >= 0) {
-    				customScroll('radio', UI.radioPos, 200);
-    			}
-			}, DEFAULT_TIMEOUT);*/
     	}
         // Folder view
     	else if (currentView == 'folder') {
@@ -315,35 +304,10 @@ jQuery(document).ready(function($) { 'use strict';
     	else if (currentView == 'tag'){
     		makeActive('.tag-view-btn','#library-panel', 'tag');
             SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
-
-            /*if (!GLOBAL.libRendered) { // lib rendered on page load
-    			loadLibrary();
-    		}*/
-
-    		/*setTimeout(function() {
-    			if (UI.libPos[0] >= 0) {
-    			    $('#albumsList .lib-entry').removeClass('active'); // none should be active on page load
-    				$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
-    				customScroll('albums', UI.libPos[0], 200);
-    				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
-    			}
-				//}, DEFAULT_TIMEOUT);*/
     	}
     	// Album view
     	else if (currentView == 'album'){
     		makeActive('.album-view-btn','#library-panel', 'album');
-
-            /*if (!GLOBAL.libRendered) {
-    			loadLibrary();
-    		}*/
-
-    		/*setTimeout(function() {
-    			if (UI.libPos[1] >= 0) { // lib entry clicked or random album
-    			    $('#albumcovers .lib-entry').removeClass('active');
-    				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
-    				customScroll('albumcovers', UI.libPos[1], 200);
-    			}
-				}, DEFAULT_TIMEOUT);*/
     	}
     });
 
@@ -354,11 +318,6 @@ jQuery(document).ready(function($) { 'use strict';
     // Radio view
 	$('.radio-view-btn').click(function(e){
         makeActive('.radio-view-btn','#radio-panel','radio');
-        /*setTimeout(function() {
-			if (UI.radioPos >= 0) {
-                customScroll('radio', UI.radioPos, 0);
-			}
-			}, DEFAULT_TIMEOUT);*/
 	});
     // Folder view
 	$('.folder-view-btn').click(function(e){
@@ -369,33 +328,22 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.tag-view-btn').click(function(e){
 		makeActive('.tag-view-btn','#library-panel','tag');
         SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
+	    $('#albumsList .lib-entry').removeClass('active');
 
-		/*if (!GLOBAL.libRendered) {
-			loadLibrary();
-		}*/
-
-		//setTimeout(function() {
+		if (UI.libPos[0] == -2) { // Lib headers clicked
+			$('#lib-album').scrollTo(0, 0);
+			$('#lib-artist').scrollTo(0, 0);
+			UI.libPos[0] = -1;
+			storeLibPos(UI.libPos);
+		}
+		else if (UI.libPos[0] == -3) { // Lib search performed
 		    $('#albumsList .lib-entry').removeClass('active');
-			/*if (UI.libPos[0] >= 0) { // Lib entry clicked or random album
-				$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
-				customScroll('albums', UI.libPos[0], 0);
-			}*/
-			if (UI.libPos[0] == -2) { // Lib headers clicked
-			    //$('#albumsList .lib-entry').removeClass('active');
-				$('#lib-album').scrollTo(0, 0);
-				$('#lib-artist').scrollTo(0, 0);
-				UI.libPos[0] = -1;
-				storeLibPos(UI.libPos);
-			}
-			else if (UI.libPos[0] == -3) { // Lib search performed
-			    $('#albumsList .lib-entry').removeClass('active');
-				$('#lib-album').scrollTo(0, 0);
-				$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
-				$('#lib-albumname, #lib-artistname, #lib-albumyear, #lib-numtracks, #songsList').html('');
-				UI.libPos[0] = -1;
-				storeLibPos(UI.libPos);
-			}
-			//}, DEFAULT_TIMEOUT);
+			$('#lib-album').scrollTo(0, 0);
+			$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' + '<img class="lib-coverart" ' + 'src="' + UI.defCover + '"></a>');
+			$('#lib-albumname, #lib-artistname, #lib-albumyear, #lib-numtracks, #songsList').html('');
+			UI.libPos[0] = -1;
+			storeLibPos(UI.libPos);
+		}
 	});
     // Album view
 	$('.album-view-btn').click(function(e){
@@ -406,20 +354,12 @@ jQuery(document).ready(function($) { 'use strict';
 		if (!GLOBAL.libRendered) {
 			loadLibrary();
 		}
-
-		//setTimeout(function() {
-		    $('#albumcovers .lib-entry').removeClass('active');
-			/*if (UI.libPos[1] >= 0) { // Lib entry clicked or random album
-				$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
-				customScroll('albumcovers', UI.libPos[1], 0);
-			}*/
-			if (UI.libPos[1] == -2 || UI.libPos[1] == -3) { // Lib headers clicked or search performed
-			   // $('#albumcovers .lib-entry').removeClass('active');
-				$('#lib-albumcover').scrollTo(0, 0);
-				UI.libPos[1] = -1;
-				storeLibPos(UI.libPos);
-			}
-			//}, DEFAULT_TIMEOUT);
+	    $('#albumcovers .lib-entry').removeClass('active');
+		if (UI.libPos[1] == -2 || UI.libPos[1] == -3) { // Lib headers clicked or search performed
+			$('#lib-albumcover').scrollTo(0, 0);
+			UI.libPos[1] = -1;
+			storeLibPos(UI.libPos);
+		}
 	});
 
     // Clear Library tag cache
@@ -431,7 +371,7 @@ jQuery(document).ready(function($) { 'use strict';
         }, 2000);
 	});
 
-	// mute toggle
+	// Mute toggle
 	$('.volume-display').on('click', function(e) {
 		if (SESSION.json['mpdmixer'] == 'disabled') {
 			return false;
@@ -440,13 +380,11 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// Volume control popup btn for Playbar
-	//$('.volume-popup-btn').live('click', function(e) {
     $(document).on('click', '.volume-popup-btn', function(e) {
 		if ($('#volume-popup').css('display') == 'block') {
 			$('#volume-popup').modal('toggle');
 		}
 		else {
-			//$('.volume-display').css('margin-top', '-16px');
 			if (SESSION.json['mpdmixer'] == 'disabled') {
 				$('.volume-display').css('opacity', '.3');
 			}
@@ -454,16 +392,18 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
-	// playback button handlers
+	// Playback button handlers
 	$('.play').click(function(e) {
 		if (MPD.json['state'] == 'play') {
 			$('#countdown-display').countdown('pause');
 
 			if (MPD.json['file'].substr(0, 4).toLowerCase() == 'http') {
-				var cmd = MPD.json['artist'] == 'Radio station' ? 'stop' : 'pause'; // pause if for upnp url
+                // Pause if upnp url
+				var cmd = MPD.json['artist'] == 'Radio station' ? 'stop' : 'pause';
 			}
 			else {
-			    var cmd = 'pause'; // song file
+                // Song file
+			    var cmd = 'pause';
 			}
 		}
 		else if (MPD.json['state'] == 'pause') {
@@ -487,7 +427,6 @@ jQuery(document).ready(function($) { 'use strict';
 		sendMpdCmd(cmd);
 		return false;
 	});
-
 	$('.next').click(function(e) {
 		var cmd = $(".playlist li").length == (parseInt(MPD.json['song']) + 1).toString() ? 'play 0' : 'next';
 		sendMpdCmd(cmd);
@@ -527,7 +466,6 @@ jQuery(document).ready(function($) { 'use strict';
 		return false
 	});
 	$('.btn-toggle').click(function(e) {
-		//var id = $(this).attr('id');
 		var cmd = $(this).data('cmd');
 		var toggle = $(this).hasClass('btn-primary') ? '0' : '1';
 		if (cmd == 'random' && SESSION.json['ashufflesvc'] == '1') {
@@ -545,14 +483,14 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
-    // countdown time knob
+    // Countdown time knob
     $('.playbackknob').knob({
 		configure: {'fgColor':accentColor},
         inline: false,
 		change : function(value) {
             if (MPD.json['state'] != 'stop') {
 				window.clearInterval(UI.knob)
-				// update time display when changing slider
+				// Update time display when changing slider
 				var seekto = Math.floor((value * parseInt(MPD.json['time'])) / 1000);
 				if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
 					$('#countdown-display').html(formatSongTime(seekto)); // count up
@@ -565,7 +503,7 @@ jQuery(document).ready(function($) { 'use strict';
 				$('#time').val(0);
 			}
 
-			// repaint not needed
+			// Repaint not needed
 			UI.knobPainted = false;
         },
         release : function(value) {
@@ -607,7 +545,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.playbackknob, .volumeknob').trigger('configure',{"thickness":'.09'});
 	}
 
-	// toggle count up/down and direction icon, radio always counts up
+	// Toggle count up/down and direction icon, radio always counts up
 	$('#countdown-display, #m-countdown').click(function(e) {
 		if (MPD.json['artist'] != 'Radio station') {
 			SESSION.json['timecountup'] == '1' ? SESSION.json['timecountup'] = '0' : SESSION.json['timecountup'] = '1';
@@ -645,25 +583,25 @@ jQuery(document).ready(function($) { 'use strict';
     $('.playlist').on('click', '.pl-action', function(e) {
         GLOBAL.plActionClicked = true;
 
-		// store posn for later use by action menu selection
+		// Store posn for later use by action menu selection
         UI.dbEntry[0] = $('.playlist .pl-action').index(this);
-		// store clock radio play name in UI.dbEntry[5]
-		if ($('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) == '<i') { // has icon (fa-microphone)
-			// radio station
+		// Store clock radio play name in UI.dbEntry[5]
+		if ($('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) == '<i') { // Has icon (fa-microphone)
+			// Radio station
 			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html();
 			var station = line2.substr((line2.indexOf('</i>') + 4));
 			UI.dbEntry[5] = station.trim();
 		}
 		else {
-			// song file
+			// Song file
 			var title = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll1').html().trim();
-			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').text(); // artist - album
-			var artist = line2.substr(0, (line2.indexOf('-') - 1)); // strip off album
+			var line2 = $('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').text(); // Artist - album
+			var artist = line2.substr(0, (line2.indexOf('-') - 1)); // Strip off album
 			UI.dbEntry[5] = title + ', ' + artist;
 		}
     });
 
-	// save playlist
+	// Save playlist
     $('#pl-btnSave').click(function(e){
 		var plname = $('#pl-saveName').val();
 
@@ -683,7 +621,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#savepl-modal').on('shown.bs.modal', function(e) {
         $('#pl-saveName').focus();
     });
-	// set favorites
+	// Set favorites
     $('#pl-btnSetFav').click(function(e){
 		var favname = $('#pl-favName').val();
 
@@ -703,7 +641,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#setfav-modal').on('shown.bs.modal', function() {
         $('#pl-favName').focus();
     });
-	// add item to favorites
+	// Add item to favorites
     $('.addfav').click(function(e){
 		// pulse the btn
 		$('.addfav i').addClass('pulse');
@@ -713,7 +651,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('.addfav i').removeClass('pulse');
 		}, 1000);
 
-		// add current pl item to favorites playlist
+		// Add current pl item to favorites playlist
 		if (MPD.json['file'] != null) {
             $.get('command/moode.php?cmd=addfav&favitem=' + encodeURIComponent(MPD.json['file']));
 			notify('favadded');
@@ -771,10 +709,8 @@ jQuery(document).ready(function($) { 'use strict';
     		else {
     			$('#playback-switch').click();
     			$('.tag-view-btn').click();
-    			//setTimeout(function() {
-    				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
-    				customScroll('artists', UI.libPos[2], 200);
-					//}, DEFAULT_TIMEOUT);
+				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
+				customScroll('artists', UI.libPos[2], 200);
     		}
         }
 	});
@@ -890,13 +826,8 @@ jQuery(document).ready(function($) { 'use strict';
     // Refresh the station list
 	$('#ra-refresh').click(function(e) {
 		mpdDbCmd('lsinfo_radio');
-        //setTimeout(function() {
-            lazyLode('radio');
-			//}, DEFAULT_TIMEOUT);
-        //setTimeout(function() {
-            $('#database-radio').scrollTo(0, 200);
-       // }, DEFAULT_TIMEOUT);
-
+        lazyLode('radio');
+        $('#database-radio').scrollTo(0, 200);
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)
         $("#searchResetRa").hide();
@@ -1117,7 +1048,7 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 
-	// playback history search
+	// Playback history search
 	$('#ph-filter').keyup(function(e){
 		if (!showSearchResetPh) {
 			$('#searchResetPh').show();
@@ -1171,7 +1102,7 @@ jQuery(document).ready(function($) { 'use strict';
         $(this).parents('li').addClass('active');
 	});
 
-	// buttons on modals
+	// Buttons on modals
 	$('.btn-del-savedpl').click(function(e){
 		mpdDbCmd('delsavedpl', UI.dbEntry[0]);
 		notify('delsavedpl');
@@ -1234,7 +1165,7 @@ jQuery(document).ready(function($) { 'use strict';
         $.get('command/moode.php?cmd=' + cmd);
 
 	});
-	// speed btns on delete modal
+	// Speed btns on delete modal
 	$('#btn-delete-setpos-top').click(function(e){
 		$('#delete-plitem-begpos').val(1);
 		return false;
@@ -1249,12 +1180,12 @@ jQuery(document).ready(function($) { 'use strict';
 		var endpos = $('#move-plitem-endpos').val() - 1;
 		var newpos = $('#move-plitem-newpos').val() - 1;
 		// NOTE: format for single or multiple, endpos not inclusive so must be bumped for multiple
-		// move begpos newpos or move begpos:endpos newpos
+		// Move begpos newpos or move begpos:endpos newpos
 		begpos == endpos ? cmd = 'moveplitem&range=' + begpos + '&newpos=' + newpos : cmd = 'moveplitem&range=' + begpos + ':' + (endpos + 1) + '&newpos=' + newpos;
 		notify('move');
         $.get('command/moode.php?cmd=' + cmd);
 	});
-	// speed btns on move modal
+	// Speed btns on move modal
 	$('#btn-move-setpos-top').click(function(e){
 		$('#move-plitem-begpos').val(1);
 		return false;
@@ -1272,7 +1203,7 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 
-	// speed buttons on plaback history log
+	// Speed buttons on plaback history log
 	$('.ph-firstPage').click(function(e){
 		$('#container-playhistory').scrollTo(0 , 200);
 	});
@@ -1280,13 +1211,13 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#container-playhistory').scrollTo('100%', 200);
 	});
 
-	// playback panel context menu
+	// Playback panel context menu
 	$('.playback-context-menu').click(function(e) {
 		var color = $('.consume').hasClass('btn-primary') ? 'var(--accentxts)' : 'inherit';
 		$('#consume-menu-icon').css('color', color);
 	});
 
-	// playbar coverview btn
+	// Playbar coverview btn
 	$('.coverview').on('click', function(e) {
 		e.stopImmediatePropagation();
 		screenSaver('1');
@@ -1298,12 +1229,10 @@ jQuery(document).ready(function($) { 'use strict';
 
         if ($('#cv-playlist').css('display') == 'block') {
             $('#cv-playlist ul').html($('#playlist ul').html());
-            //setTimeout(function() {
-                if (SESSION.json['playlist_art'] == 'Yes') {
-                    lazyLode('cv-playlist');
-                }
-                customScroll('cv-playlist', parseInt(MPD.json['song']));
-				//}, DEFAULT_TIMEOUT);
+            if (SESSION.json['playlist_art'] == 'Yes') {
+                lazyLode('cv-playlist');
+            }
+            customScroll('cv-playlist', parseInt(MPD.json['song']));
 
             GLOBAL.playbarPlaylistTimer = setTimeout(function() {
                 $('#cv-playlist ul').html('');
@@ -1354,13 +1283,11 @@ jQuery(document).ready(function($) { 'use strict';
             $('#lib-coverart-img').show();
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
             UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
-            //setTimeout(function() {
-                $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
-                if (SESSION.json['playlist_art'] == 'Yes') {
-                    lazyLode('playlist');
-                }
-                customScroll('playlist', parseInt(MPD.json['song']));
-				//}, DEFAULT_TIMEOUT);
+            $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
+            if (SESSION.json['playlist_art'] == 'Yes') {
+                lazyLode('playlist');
+            }
+            customScroll('playlist', parseInt(MPD.json['song']));
         }
         // Reset screen saver timeout global
         else if (SESSION.json['scnsaver_timeout'] != 'Never') {
