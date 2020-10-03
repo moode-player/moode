@@ -2558,6 +2558,26 @@ function autoConfigSettings() {
 		playerSession('write', array_key_first($values), $values[array_key_first($values)]);
 	}
 
+	function setCfgMpd($values) {
+		$dbh = cfgdb_connect();
+		$total_query ='';
+		foreach ($values  as $key=>$value) {
+			$query = sprintf('update cfg_mpd set value="%s" where param="%s"; ', $value,  $key);
+			$result = sdbquery($query, $dbh);
+		}
+	}
+
+	function getCfgMpd($values) {
+		$dbh = cfgdb_connect();
+		$result ='';
+		foreach ($values  as $key) {
+			$query = 'select param,value from cfg_mpd where param="'.$key.'"';
+			$rows = sdbquery($query, $dbh);
+			$result = $result . sprintf("%s = \"%s\"\n", $key, $rows[0]['value']);
+		}
+		return $result;
+	}
+
 	// configuration of the autoconfig item handling
 	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
 	//            most item only have 1 autoconfig item, but network setting requires multiple to be present
@@ -2618,6 +2638,21 @@ function autoConfigSettings() {
 			cfgI2sOverlay($values['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
 			playerSession('write', 'i2sdevice', $values['i2sdevice']);
 		}],
+
+		'MPD',
+		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['device'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['selective_resample_mode'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['sox_quality'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['sox_multithreading'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['sox_precision',
+						'sox_phase_response',
+						'sox_passband_end',
+						'sox_stopband_begin',
+						'sox_attenuation',
+						'sox_flags']
+		 , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+
 		'Renderers',
 		['requires' => ['btsvc'] , 'handler' => setPlayerSession],
 		['requires' => ['pairing_agent'] , 'handler' => setPlayerSession],
@@ -2707,6 +2742,50 @@ function autoConfigSettings() {
 			$value = $_SESSION['first_use_help'] == 'n,n' ? "No" : "Yes";
 			return "first_use_help = \"".$value."\"\n";
 		}],
+
+		'sources',
+		// Sources are using the array construction of the ini reader
+		// source_name[0] = ...
+		['requires' => ['source_name',
+						'source_type',
+						'source_address',
+						'source_remotedir',
+						'source_username',
+						'source_password',
+						'source_charset',
+						'source_rsize',
+						'source_wsize',
+						'source_wsize',
+						'source_options'], 'handler' => function($values) {
+			$source_count = count($values['source_name']);
+			$keys = array_keys($values);
+
+			for($index =0; $index< $source_count; $index++) {
+				$mount = [ 'mount' => ['action' => 'add'] ];
+				foreach($keys as $key) {
+					$mount['mount'][substr($key, 7)] = $values[$key][$index];
+				}
+				sourceCfg($mount);
+			}
+		}, 'custom_write' => function($values) {
+			$dbh = cfgdb_connect();
+			$mounts = cfgdb_read('cfg_source', $dbh);
+			$stringformat = "source_%s[%d] = \"%s\"\n";
+			$source_export = "";
+			foreach ($mounts  as $index=>$mp) {
+				$source_export =  $source_export . sprintf($stringformat, 'name', $index, $mp['name']);
+				$source_export =  $source_export . sprintf($stringformat, 'type', $index, $mp['type']);
+				$source_export =  $source_export . sprintf($stringformat, 'address', $index, $mp['address']);
+				$source_export =  $source_export . sprintf($stringformat, 'remotedir', $index, $mp['remotedir']);
+				$source_export =  $source_export . sprintf($stringformat, 'username', $index, $mp['username']);
+				$source_export =  $source_export . sprintf($stringformat, 'password', $index, $mp['password']);
+				$source_export =  $source_export . sprintf($stringformat, 'charset', $index, $mp['charset']);
+				$source_export =  $source_export . sprintf($stringformat, 'rsize', $index, $mp['rsize']);
+				$source_export =  $source_export . sprintf($stringformat, 'wsize', $index, $mp['wsize']);
+				$source_export =  $source_export . sprintf($stringformat, 'options', $index, $mp['options']);
+				}
+			return $source_export;
+		}],
 	];
 
 	return $configurationHandlers;
@@ -2772,7 +2851,7 @@ function autoConfig($cfgfile) {
 		autoCfgLog('autocfg: Caught exception: '.  $e->getMessage() );
 	}
 
-	sysCmd('rm ' . $cfgfile);
+ 	sysCmd('rm ' . $cfgfile);
 	autoCfgLog('autocfg: Configuration file deleted');
 	autoCfgLog('autocfg: Auto-configure complete');
 }
@@ -2818,7 +2897,7 @@ function autoconfigExtract() {
 		}
 	}
 
-	return $autoconfigstring;
+	return $autoconfigstring."\n";
 }
 
 function genWpaPSK($ssid, $passphrase) {

@@ -90,6 +90,9 @@ switch ($option) {
 	case '-F':
 		audio_formats($option);
 		break;
+	case '-i':
+		import_autoconfig();
+		break;
 	case '-l':
 		moode_log();
 		break;
@@ -126,9 +129,10 @@ With no OPTION print the help text and exit.
  -A [add|rm N] \tupdate features availability
  -d\t\tdump session file (requires sudo)
  -D [var name] \tdelete session variable (requires sudo)
- -e\t\texport settings to moodecfg.ini
+ -e\t[filename]\texport settings to moodecfg.ini
  -f\t\tprint supported audio formats
  -F\t\tprint full alsacap info
+ -i\t\timport moodecfg.ini
  -l\t\tprint moode log
  -m\t\trun system monitor
  -q\t\tquery sql database
@@ -375,4 +379,9 @@ function export_autoconfig($argv) {
 	$cfgfile = count($argv)==3 ? $argv[2] : sprintf("/home/pi/moodecfg-%s.ini",  date('ymd_His'));
 	echo "Current moOde settings exported to ".$cfgfile."\n";
 	echo shell_exec('/var/www/command/autocfggen.php > '.$cfgfile);
+}
+
+function import_autoconfig() {
+	echo "Import moOde autoconfig settings\n";
+	echo shell_exec('sudo /var/www/command/autocfgimport.php');
 }
