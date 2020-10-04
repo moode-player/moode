@@ -32,12 +32,12 @@ CPUSchedulingPolicy=other
 
 # scheduling priority (only applies if using rr or fifo policies)
 # 1 = lowest, 99 = highest, limited by LimitRTPRIO
-CPUSchedulingPriority=43
+#CPUSchedulingPriority=43
 
 # scheduling priority adjustment
 # applies only to static scheduling policies
 # 0 = default, -20 = highest, 19 = lowest
-Nice=-10
+#Nice=-10
 
 # processor affinity bit mask
 # - empty string = reset bit mask
