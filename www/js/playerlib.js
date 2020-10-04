@@ -3253,16 +3253,13 @@ $('#coverart-url, #playback-switch').click(function(e){
 	}
 	else if (currentView == 'album') {
 		makeActive('.album-view-btn','#library-panel','album');
-		//setTimeout(function() {
-			if (UI.libPos[1] >= 0) {
-				//customScroll('albumcovers', UI.libPos[1], 0);
-                if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
-                    $('#bottom-row').css('display', 'flex')
-        			$('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
-        			$('#index-albumcovers').hide();
-                }
-			}
-			//}, DEFAULT_TIMEOUT);
+		if (UI.libPos[1] >= 0) {
+            if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
+                $('#bottom-row').css('display', 'flex')
+    			$('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
+    			$('#index-albumcovers').hide();
+            }
+		}
 
         if (!GLOBAL.libRendered) {
             loadLibrary();
