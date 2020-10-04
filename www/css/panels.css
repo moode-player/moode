@@ -122,7 +122,8 @@ html {background-color:inherit;}
 #volcontrol, #volcontrol-2 {margin:auto;height:17vw;width:17vw;}
 .volume-display {position:relative;font-size:2.5vw;color:var(--adapttext);font-weight:500;cursor:pointer;height:50%;}
 .volume-display div {position:relative;top:50%;transform:translate(0, -50%);min-height:33%;text-align:center;}
-.volume-display-db {position:absolute;top: 46%;left:105%;font-size:1vw;color:var(--adapttext);text-align:center;}
+.volume-display-db {position:absolute;top:50%;left:65%;z-index:0;font-size:.8em;transform:translate(0, -50%);}
+#volpad .volume-display-db {left:70%;}
 #volume, #volume-2 {display:none;} /* using .volume-display to overlay this element so it can be used as a mute toggle */
 #volzone, #timezone, #volbtns-2 {font-family:'SF Mono', 'Roboto Mono', monospace;} /* 'Letter Gothic Std', */
 #volbtns, #volbtns-2 {display:flex;position:absolute;transform:translate(-50%,-50%);top:50%;left:50%;height:70%;margin:0 auto;flex-direction:column;}
@@ -159,13 +160,13 @@ html {background-color:inherit;}
 .btnlist.btnlist-top.btnlist-top-pl {top:0px;top:env(safe-area-inset-top);width:35%;z-index:1004;display:none;}
 .btn.btn-primary.btn-small, .btn.btn-primary.btn-medium {background:rgba(128,128,128,0.2);margin-top:-4px;}
 #menu-top {line-height:2.75rem;padding-top:0;padding-top:env(safe-area-inset-top);height:0;z-index:1002;display:flex;}
-#menu-top .dropdown {top:0;top:calc(env(safe-area-inset-top) + 0);right:.75rem;position:absolute;}
-#menu-top .dropdown-menu {right:0;}
+#menu-top .dropdown {top:0;top:calc(env(safe-area-inset-top) + 0);right:0;position:absolute;}
+#menu-top .dropdown-menu {right:.75rem;}
 #menu-top .dropdown-menu > li > a i, #context-menus .dropdown-menu > li > a i {width:1.75em;display:inline-block;text-align:center;}
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:active, .dropdown-menu > li > a:focus {background-color:var(--accentxta);background-image:none;}
 #menu-top a:hover, #menu-top a:focus, #context-menus .dropdown-menu a:hover, #context-menus .dropdown-menu a:focus {text-decoration:none;outline:none;}
 #menu-top #config-back i {font-size:1.35rem;position:relative;top:1px;}
-#menu-settings {color:transparent;position:relative;bottom:.3rem;right:0;line-height:2.75rem;height:1.9rem;z-index:1001;padding:0 .75rem;border-radius:0;border-bottom:1px solid transparent;font-size:1.7rem;font-weight:500;margin-right:.1rem;}
+#menu-settings {color:transparent;position:relative;bottom:.3rem;right:0;line-height:2.75rem;height:1.9rem;z-index:1001;padding:0 1.5rem;border-radius:0;border-bottom:1px solid transparent;font-size:1.7rem;font-weight:500;margin-right:.1rem;}
 #mbrand, #mblur {font-weight:600;position:absolute;left:50%;top:-.25rem;}
 #mbrand {color:var(--adapttext);text-shadow: 0 0 0.25rem rgba(0,0,0,0.5);transform:translate(-50%);}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
@@ -395,7 +396,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 .controls.controls-tog {line-height:30px;}
 .form-horizontal .help-block {line-height:normal;margin-top:0px;padding-top:0px;margin-bottom:.5em;}
 /* album cover panel */
-#lib-albumcover {height:100%;width:100%;position:absolute;box-sizing:border-box;left:0%;top:2.75em;top:calc(env(safe-area-inset-top) + 2.75em);overflow:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+#lib-albumcover {height:100%;width:100%;position:fixed;box-sizing:border-box;left:0%;top:2.75rem;top:calc(env(safe-area-inset-top) + 2.75rem);overflow:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
 #albumcovers {text-align:center;margin:0;padding-bottom:12em;}
 #albumcovers .lib-entry, .database-radio .lib-entry {width:var(--thumbcols);text-align:center;display:inline-block;vertical-align:top;height:auto;font-size:.95em;padding:0 0 .4em 0;}
 #albumcovers .lib-entry img, .database-radio img {position:absolute;left:var(--thumbmargin);bottom:0;object-fit:contain;width:var(--thumbimagesize);max-height:var(--thumbimagesize);}
@@ -409,7 +410,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #radiocovers, #albumcovers {width:100%;margin-left:0;}
 #lib-genre ul, #lib-artist ul, #lib-album ul {width:calc(100% - (var(--sbw) + 1.17rem));margin:.25em 0;}
 /**/
-#random-album {position:absolute;top:env(safe-area-inset-top);left:7rem;line-height:2.75rem;height:2.75rem;transform:none;padding:.15em .5em 0 .5em;cursor:pointer;}
+#random-album {position:absolute;top:env(safe-area-inset-top);right:7rem;line-height:2.6rem;transform:none;padding:.15rem 2rem 0 2rem;cursor:pointer;}
 #random-album i {font-size:1.1rem;color:var(--adapttext);opacity:.35;}
 /* coverview screen saver */
 #screen-saver {color:#eee;text-shadow:0px 0px .25em rgba(0,0,0,0.3);height:100vh;width:100vw;cursor:pointer;text-align:center;}
