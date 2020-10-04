@@ -273,6 +273,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#volumeup-2, #volumedn-2 {height:4rem;margin:2rem 0;font-size:8.5vw;}
 	#volume-popup .volume-display {font-size:9.5vw}
 	#volume-pad {height:85vw;width:85vw;}
+	#volpad .volume-display-db {left:65%;font-size:1.5em;}
 	#menu-top .dropdown.open {background-color:transparent;border-radius:unset;box-shadow:none;backdrop-filter:none;padding-left:0}
 	/* playbar */
 	#playbar-div {display:block;}
@@ -427,7 +428,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 @media (width:375px) and (height:812px) {
 	.playlist {padding:0 0 8rem 0;min-height:35vh;}
 }
-/* iPhone XS Max */
+/* iPhone Max sizes */
 @media (width:414px) and (height:896px) {
 	.ui-pnotify {left:50%;top:25%;transform:translate(-50%, -50%);}
 	#playbar-toggles {right:calc(env(safe-area-inset-right) + 1rem);}

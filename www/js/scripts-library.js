@@ -65,15 +65,18 @@ if (!Object.values) {
 function loadLibrary() {
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
-    if (currentView == 'tag' || currentView == 'album') {
-        notify('library_loading');
-    }
+	var libpop = setTimeout(function(){
+	    if (currentView == 'tag' || currentView == 'album') {
+	        notify('library_loading');
+	    }		
+	}, 2000);
 
 	$.post('command/moode.php?cmd=loadlib', function(data) {
         $('#lib-content').show();
 		renderLibrary(data);
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
+		clearTimeout(libpop);
 
 	}, 'json');
 }
@@ -793,7 +796,8 @@ var renderSongs = function(albumPos) {
 		}
 	}
 
-	$('#songsList').html(output);
+	var element = document.getElementById('songsList');
+	element.innerHTML = output;
 
     // Display album name heading:
     // - if more than 1 album for clicked artist
@@ -1000,6 +1004,11 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 
 // Click random album button
 $('#random-album').click(function(e) {
+	
+	// remove old active classes...
+	$('#albumsList .lib-entry').eq(UI.libPos[0]).removeClass('active');
+	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
+	
 	var array = new Uint16Array(1);
     LIB.albumClicked = true;
 	window.crypto.getRandomValues(array);
@@ -1022,9 +1031,9 @@ $('#random-album').click(function(e) {
 
 	storeLibPos(UI.libPos);
 
-	$(itemSelector).removeClass('active');
+	//$(itemSelector).removeClass('active');
 	$(itemSelector).eq(pos).addClass('active');
-	customScroll(scrollSelector, pos, 200);
+	customScroll(scrollSelector, pos, 0);
 
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 });
@@ -1091,6 +1100,12 @@ $('#albumcovers').on('click', 'img', function(e) {
 // Random album instant play button on Playback
 $('.ralbum').click(function(e) {
     if (SESSION.json['library_instant_play'] != 'No action') {
+		
+		// remove old active classes...
+		$('#albumsList .lib-entry').eq(UI.libPos[0]).removeClass('active');
+		$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
+		
+		
     	$('.ralbum svg').attr('class', 'spin');
     	setTimeout(function() {
     		$('.ralbum svg').attr('class', '');
@@ -1133,6 +1148,16 @@ $('.ralbum').click(function(e) {
                 });
         	}, CLRPLAY_TIMEOUT);
         }
+		if (UI.libPos[1] >= 0 && currentView == 'album') {
+			customScroll('albumcovers', UI.libPos[1], 0);
+			$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
+		}
+		if (UI.libPos[0] >= 0 && currentView == 'tag') {
+			customScroll('albums', UI.libPos[0], 0);
+			$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
+			$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
+		}
+		storeLibPos(UI.libPos);
     }
 });
 
@@ -1340,7 +1365,7 @@ $('#context-menu-lib-album a').click(function(e) {
 		if ($('#bottom-row').css('display') == 'none') {
 			$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
 			$('#bottom-row').css('display', 'flex')
-			$('#lib-albumcover').css('height', 'calc(47% - 2em)'); // Was 1.75em
+			$('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
 			$('#index-albumcovers').hide();
 		}
 		else {

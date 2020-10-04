@@ -47,7 +47,7 @@ const DEFAULT_TIMEOUT   = 250;
 const CLRPLAY_TIMEOUT   = 500;
 const LAZYLOAD_TIMEOUT  = 500;
 const SEARCH_TIMEOUT    = 750;
-const RALBUM_TIMEOUT    = 1500;
+const RALBUM_TIMEOUT    = 500;
 const ENGINE_TIMEOUT    = 3000;
 
 // Album and Radio HD parameters
@@ -3333,7 +3333,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 				//customScroll('albumcovers', UI.libPos[1], 0);
                 if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                     $('#bottom-row').css('display', 'flex')
-        			$('#lib-albumcover').css('height', 'calc(47% - 2em)'); // Was 1.75em
+        			$('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
         			$('#index-albumcovers').hide();
                 }
 			}
@@ -3481,7 +3481,7 @@ function makeActive (vswitch, panel, view) {
 			$('#library-panel').addClass('covers').removeClass('tag');
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
-                $('#lib-albumcover').css('height', 'calc(47% - 2em)'); // Was 1.75em
+                $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
                 $('#index-albumcovers').hide();
             }
             else {
@@ -3573,7 +3573,7 @@ function lazyLode(view, skip, force) {
  			case 'album':
  				selector = 'img.lazy-albumview';
  				container = '#lib-albumcover';
-				skip = true;
+				//skip = true;
 				break;
 		 	case 'playlist':				
 				selector = 'img.lazy-playlistview';
