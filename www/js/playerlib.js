@@ -1735,6 +1735,7 @@ function updKnobAndTimeTrack() {
 	else {
 		if (UI.mobile) {
 			$('#timeline').show();
+            $('#playbar-mcount').text($('#countdown-display').text());
 		}
 		else {
 			$('#playbar-timeline').show();
