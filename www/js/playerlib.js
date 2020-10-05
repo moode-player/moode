@@ -678,7 +678,7 @@ function renderUI() {
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
     			$('.volume-display div, #inpsrc-preamp-volume').text('mute');
-                $('#playbar-volume-level').text('x');;
+                $('#playbar-volume-level').text('x');
     		}
     		else {
     			$('.volume-display div, #playbar-volume-level').text(SESSION.json['volknob']);
