@@ -44,6 +44,7 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Resize thumbs on window resize
 	$(window).bind('resize', function(e){
+		UI.mobile = $(window).width() <= 480 ? true : false;
 		getThumbHW();
 	});
 

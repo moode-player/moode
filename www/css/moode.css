@@ -394,7 +394,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#lib-coverart-meta-area {width:18vw;}
-	#volcontrol, #volcontrol-2, #countdown {height:15vw;width:15vw;}
+	#volcontrol, #countdown {height:15vw;width:15vw;}
 }
 /* iPad landscape */
 @media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
