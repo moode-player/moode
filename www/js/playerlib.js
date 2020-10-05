@@ -636,19 +636,7 @@ function renderUI() {
 	//console.log('renderUI()');
 	var searchStr, searchEngine;
 
-	// Highlight track in Library
-    if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
-        //console.log(filteredSongs.length, $('#songsList li').length);
-		for (i = 0; i < filteredSongs.length; i++) {
-			if (filteredSongs[i].title == MPD.json['title']) {
-				$('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
-				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-highlight');
-				break;
-			}
-		}
-	}
-
-    // load session vars (required for multi-client)
+    // Load session vars (required for multi-client)
     $.getJSON('command/moode.php?cmd=readcfgsystem', function(result) {
         if (result === false) {
             console.log('renderUI(): No data returned from readcfgsystem');
@@ -688,14 +676,33 @@ function renderUI() {
     	// Playback controls, Queue item highlight
         if (MPD.json['state'] == 'play') {
     		$('.play i').removeClass('fas fa-play').addClass('fas fa-pause');
-			document.body.style.setProperty('--npicon', npIcon);
+			//document.body.style.setProperty('--npicon', npIcon);
     		$('.playlist li.active, .cv-playlist li.active').removeClass('active');
+            $('.playlist li.paused, .cv-playlist li.paused').removeClass('paused');
             $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
             $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
+
+            // Highlight track in Library
+            if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
+                //console.log(filteredSongs.length, $('#songsList li').length);
+                $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
+        		for (i = 0; i < filteredSongs.length; i++) {
+        			if (filteredSongs[i].title == MPD.json['title']) {
+        				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-highlight');
+        				break;
+        			}
+        		}
+        	}
         }
     	else if (MPD.json['state'] == 'pause' || MPD.json['state'] == 'stop') {
     		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
-			document.body.style.setProperty('--npicon', npIconPaused);
+			//document.body.style.setProperty('--npicon', npIconPaused);
+            if (typeof(MPD.json['song']) != 'undefined') {
+                $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('paused');
+                $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('paused');
+            }
+
+            $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
         }
     	$('#total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
             (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>')));
