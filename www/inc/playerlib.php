@@ -483,17 +483,22 @@ function genLibrary($flat) {
 	foreach ($flat as $flatData) {
 		// Post filter test for M4A container
 		if ($_SESSION['pkgid_suffix'] == 'enable_m4a_probe' && $GLOBALS['PROBE_M4A'] === true && getFileExt($flatData['file']) == 'm4a') {
-			$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $flatData['file'] . '"');
-			if ($_SESSION['library_flatlist_filter'] == 'Lossless' && $result[3] == 'ALAC') {
+			//$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $flatData['file'] . '"');
+			//$result = sysCmd('grep alac ' . '"' . MPD_MUSICROOT . $flatData['file'] . '"');
+			$fh = fopen(MPD_MUSICROOT . $flatData['file'], "rb");
+			$alac_found = strpos(fread($fh, 512), 'alac');
+			fclose($fh);
+
+			if ($_SESSION['library_flatlist_filter'] == 'Lossless' && $alac_found !== false /*!empty($result)*/ /*$result[3] == 'ALAC'*/) {
 				$push = true;
 			}
-			elseif ($_SESSION['library_flatlist_filter'] == 'Lossy' && $result[3] != 'ALAC') {
+			elseif ($_SESSION['library_flatlist_filter'] == 'Lossy' && $alac_found === false /*empty($result)*/ /*$result[3] != 'ALAC'*/) {
 				$push = true;
 			}
 			else {
 				$push = false;
 			}
-			//workerLog(($push === true ? 'T|' : 'F|') . $result[3] . '|' . $flatData['file']);
+			workerLog(($push === true ? 'T|' : 'F|') . $flatData['file']);
 		}
 		else {
 			$push = true;
