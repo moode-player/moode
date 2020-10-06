@@ -122,8 +122,8 @@ html {background-color:inherit;}
 #volcontrol, #volcontrol-2 {margin:auto;height:17vw;width:17vw;}
 .volume-display {position:relative;font-size:2.5vw;color:var(--adapttext);font-weight:500;cursor:pointer;height:50%;}
 .volume-display div {position:relative;top:50%;transform:translate(0, -50%);min-height:33%;text-align:center;}
-.volume-display-db {position:absolute;top:50%;left:65%;z-index:0;font-size:.8em;transform:translate(0, -50%);}
-#volpad .volume-display-db {left:70%;font-size:1.1em;}
+.volume-display-db {position:absolute;top:50%;left:64%;z-index:0;font-size:.8em;transform:translate(0, -50%);}
+#volpad .volume-display-db {left:68%;font-size:1.1em;}
 #volume, #volume-2 {display:none;} /* using .volume-display to overlay this element so it can be used as a mute toggle */
 #volzone, #timezone, #volbtns-2 {font-family:'SF Mono', 'Roboto Mono', monospace;} /* 'Letter Gothic Std', */
 #volbtns, #volbtns-2 {display:flex;position:absolute;transform:translate(-50%,-50%);top:50%;left:50%;height:70%;margin:0 auto;flex-direction:column;}
