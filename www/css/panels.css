@@ -477,7 +477,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 .alphabits ul li {display:table-row !important;font-size:.8em;text-transform:uppercase;line-height:normal;font-weight:600;color:var(--textvariant);text-align:center;}
 /**/
 /* playback ellipsis context menu */
-#context-menu-playback .dropdown-menu {min-width:180px;white-space:nowrap;}
+#context-menu-playback .dropdown-menu {min-width:11.5rem;white-space:nowrap;}
 #menu-check-consume, #menu-check-repeat, #menu-check-single {display:none;float:right;color:var(--adapttext);line-height:2.75em;position:absolute;right:.5em;}
 /* active/inactive css element manip */
 #menu-header {position:absolute;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1.1rem;overflow:hidden;max-width:50%;text-overflow:ellipsis;white-space:nowrap;color:var(--adapttext);cursor:pointer;}
