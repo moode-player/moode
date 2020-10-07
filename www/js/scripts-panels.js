@@ -1212,12 +1212,6 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#container-playhistory').scrollTo('100%', 200);
 	});
 
-	// Playback panel context menu
-	$('.playback-context-menu').click(function(e) {
-		var color = $('.consume').hasClass('btn-primary') ? 'var(--accentxts)' : 'inherit';
-		$('#consume-menu-icon').css('color', color);
-	});
-
 	// Playbar coverview btn
 	$('.coverview').on('click', function(e) {
 		e.stopImmediatePropagation();

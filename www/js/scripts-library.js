@@ -500,7 +500,7 @@ function removeArticles(string) {
 function keyAlbum(obj) {
     //console.log(obj);
     if (SESSION.json['pkgid_suffix'] == 'enable_key_by_path') {
-        // Key by path
+        // Use path
         if (typeof(obj.file) != 'undefined') {
             var md5 = $.md5(obj.file.substring(0,obj.file.lastIndexOf('/')));
         }
@@ -510,7 +510,7 @@ function keyAlbum(obj) {
         return obj.album.toLowerCase() + '@' + md5 + '@' + obj.mb_albumid;
     }
     else {
-        // Key by (album_artist || artist)
+        // Use album_artist || artist
         return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
     }
 }
@@ -1067,6 +1067,7 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
 	$('#tracklist-toggle').show();
+    $('#one-touch-action-li').hide();
 
 	UI.libPos[0] = filteredAlbums.map(function(e) {return e.key;}).indexOf(filteredAlbumCovers[pos].key);
 	UI.libPos[1] = pos;
@@ -1222,6 +1223,24 @@ function oneTouchItem (path) {
     }
 }
 
+function oneTouchGroup (files) {
+    if (SESSION.json['library_instant_play'] != 'No action') {
+        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
+            mpdDbCmd(queueCmd, files);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
+            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
+            mpdDbCmd(queueCmd, files);
+        }
+        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+            mpdDbCmd('clear_play_item', files);
+            notify('clear_play_item');
+        }
+    }
+}
+
 // Radio manager dialog
 $('#radio-manager-btn').click(function(e) {
     var sortGroup = SESSION.json['radioview_sort_group'].split(',');
@@ -1275,6 +1294,7 @@ $('#lib-coverart-img').click(function(e) {
     $('#songsList li, #songsList .lib-disc a').removeClass('active');
 	$('img.lib-coverart').addClass('active'); // add highlight
 	$('#tracklist-toggle').hide();
+    $('#one-touch-action-li').show();
 });
 
 // Click Disc
@@ -1380,7 +1400,10 @@ $('#context-menu-lib-album a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-	if ($(this).data('cmd') == 'add_group' || $(this).data('cmd') == 'add_group_next') {
+    if ($(this).data('cmd') == 'one_touch_action') {
+        oneTouchGroup(files);
+	}
+	else if ($(this).data('cmd') == 'add_group' || $(this).data('cmd') == 'add_group_next') {
 		mpdDbCmd($(this).data('cmd'), files);
 		notify($(this).data('cmd'));
 	}
@@ -1419,7 +1442,10 @@ $('#context-menu-lib-disc a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-	if ($(this).data('cmd') == 'add_group') {
+    if ($(this).data('cmd') == 'one_touch_action') {
+        oneTouchGroup(files);
+	}
+	else if ($(this).data('cmd') == 'add_group') {
 		mpdDbCmd('add_group', files);
 		notify($(this).data('cmd'));
 	}

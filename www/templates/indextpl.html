@@ -39,7 +39,7 @@
 		</div>
 	</div>
 
-	<!-- PLAYBACK PANEL WITH INTEGRATED QUEUE -->
+	<!-- PLAYBACK WITH INTEGRATED QUEUE -->
 	<div id="playback-panel" class="tab-pane">
 		<div class="btnlist btnlist-top btnlist-top-pl">
 			<form id="pl-search" method="post" onSubmit="return false;">
@@ -164,12 +164,11 @@
     	</div>
 	</div>
 
-	<!-- LIBRARY PANEL -->
+	<!-- LIBRARY VIEWS -->
 	<div id="library-panel" class="tab-pane">
 		<div class="container-library">
 			<div id="lib-content">
 				<div id="content-position">
-				<div aria-label="Random Album" id="random-album"><i class="far fa-dot-circle"></i></div>
 					<!-- TAG VIEW -->
 					<div id="top-columns">
 						<div id="lib-genre-header" class="lib-genre-header-sm">
@@ -244,7 +243,7 @@
 		</div>
 	</div>
 
-	<!-- FOLDER PANEL -->
+	<!-- FOLDER VIEW -->
 	<div id="folder-panel" class="tab-pane">
 		<div id="container-browse">
 			<div aria-label="Back" class="btnlist btnlist-top btnlist-top-db">
@@ -270,7 +269,7 @@
 		</div>
 	</div>
 
-	<!-- RADIO PANEL -->
+	<!-- RADIO VIEW -->
 	<div id="radio-panel" class="tab-pane">
 		<div id="container-radio">
 			<div class="btnlist btnlist-top btnlist-top-ra">
@@ -452,6 +451,7 @@
 
 	<div id="context-menu-lib-album" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
+			<li id="one-touch-action-li" class="context-menu menu-separator"><a href="#notarget" data-cmd="one_touch_action"><i class="fal fa-forward sx"></i> One touch action</a></li>
 			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
@@ -463,6 +463,7 @@
 
 	<div id="context-menu-lib-disc" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
+			<li class="context-menu menu-separator"><a href="#notarget" data-cmd="one_touch_action"><i class="fal fa-forward sx"></i> One touch action</a></li>
 			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
@@ -495,6 +496,7 @@
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="save-playlist"><i class="fal fa-save sx"></i> Save playlist</a></li>
 			<li><a href="#notarget" data-cmd="set-favorites"><i class="fal fa-heart-circle sx"></i> Set favorites</a></li>
+			<li><a href="#notarget" id="addfav-li" class="addfav hide"><i class="fal fa-heart sx"></i> Add favorite</a></li>
 			<li><a href="#notarget" data-cmd="consume"><i class="fal fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="repeat"><i class="fal fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="single"><i class="fal fa-redo sx"></i> Single<span id="menu-check-single"><i class="fal fa-check"></i></span></a></li>

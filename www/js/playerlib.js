@@ -683,9 +683,8 @@ function renderUI() {
             $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
 
             // Highlight track in Library
+            $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
             if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
-                //console.log(filteredSongs.length, $('#songsList li').length);
-                $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
         		for (i = 0; i < filteredSongs.length; i++) {
         			if (filteredSongs[i].title == MPD.json['title']) {
         				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-highlight');
@@ -3310,7 +3309,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#folder-panel, #radio-panel, #library-panel').removeClass('active');
 		$('#playback-panel').addClass('active');
 		$('#playback-controls').css('display', '');
-
+        $('#addfav-li').hide();
 		if (UI.mobile) {
             // Make sure playlist is hidden and controls are showing
 			showMenuTopW = false;
@@ -3387,20 +3386,21 @@ function makeActive (vswitch, panel, view) {
 	$('#viewswitch span.pane').hide();
 	switch (view) {
 		case 'radio':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents, #addfav-li, #random-album').hide();
 			$('#viewswitch .album-view-btn').removeClass('menu-separator');
-			$('.radio-view-btn .pane').show();
+			$('.radio-view-btn .pane, #playbar-toggles .addfav').show();
 			lazyLode('radio');
 			break;
 		case 'folder':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').hide();
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents, #addfav-li, #random-album').hide();
 			$('#viewswitch .album-view-btn').removeClass('menu-separator');
-			$('.folder-view-btn .pane').show();
+			$('.folder-view-btn .pane, #playbar-toggles .addfav').show();
 			break;
 		case 'album':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents, #addfav-li, #random-album').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('.album-view-btn .pane').show();
+            $('#playbar-toggles .addfav').hide();
 			$('#library-panel').addClass('covers').removeClass('tag');
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
@@ -3415,9 +3415,10 @@ function makeActive (vswitch, panel, view) {
 			lazyLode('album');
 			break;
 		case 'tag':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents').show();
+			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents, #addfav-li, #random-album').show();
 			$('#viewswitch .album-view-btn').addClass('menu-separator');
 			$('.tag-view-btn .pane').show();
+            $('#playbar-toggles .addfav').hide();
 			$('#library-panel').addClass('tag').removeClass('covers');
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 			if (SESSION.json['library_tagview_covers']) lazyLode('tag');
