@@ -2619,6 +2619,7 @@ function autoConfigSettings() {
 		['requires' => ['cpugov'] , 'handler' => setPlayerSession],
 		['requires' => ['hdmiport'] , 'handler' => setPlayerSession],
 		['requires' => ['eth0chk'] , 'handler' => setPlayerSession],
+		['requires' => ['led_state'] , 'handler' => setPlayerSession],
 		['requires' => ['localui'] , 'handler' => setPlayerSession],
 		['requires' => ['p3wifi'] , 'handler' => function($values) {
 			ctlWifi($values['p3wifi']);
