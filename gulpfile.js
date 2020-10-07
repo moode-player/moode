@@ -493,9 +493,9 @@ var watchTasks = mode.build() ? ['build', 'browserSync']: ['sass', 'genindexdev'
 gulp.task('watch',  gulp.series( watchTasks, function (done){
     gulp.watch(pkg.app.src+'/scss/**/*.scss', gulp.series(triggerTasks));
     gulp.watch(pkg.app.src+'/css/**/*.css', gulp.series(triggerTasks));
-    gulp.watch(pkg.app.src+'/*.html', gulp.series(triggerTasks));
+    //gulp.watch(pkg.app.src+'/*.html', gulp.series(triggerTasks));
     gulp.watch(pkg.app.src+'/js/**/*.js', gulp.series(triggerTasks))
-    gulp.watch(pkg.app.src+'/../gulpfile.js',
-    gulp.watch(pkg.app.src+'/../package.json'));
+    //gulp.watch(pkg.app.src+'/../gulpfile.js',
+    //gulp.watch(pkg.app.src+'/../package.json'));
     done();
 }));
