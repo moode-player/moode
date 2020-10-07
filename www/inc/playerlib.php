@@ -359,6 +359,10 @@ function sockWrite($sock, $msg) {
 }
 
 // Caching library loader
+
+//$dataJsonString = file_get_contents(LIBCACHE_JSON); // reads as string
+//$data = json_decode($dataJsonString); // now it is an array again you parse at the usual way
+
 function loadLibrary($sock) {
 	if (filesize(LIBCACHE_JSON) != 0) {
 		return file_get_contents(LIBCACHE_JSON);
@@ -2530,8 +2534,9 @@ b0 3112	4B		1.2	2GB		Sony UK
 c0 3112	4B		1.2	4GB		Sony UK
 */
 
-// config audio scrobbler
-function cfgAudioScrobbler() {
+// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
+// Config audio scrobbler
+/*function cfgAudioScrobbler() {
 	$file = '/usr/local/etc/mpdasrc';
 	$fp = fopen($file, 'w');
 
@@ -2547,7 +2552,7 @@ function cfgAudioScrobbler() {
 
 	fwrite($fp, $data);
 	fclose($fp);
-}
+}*/
 
 // returns the settings for reading/writing the autoConfig file
 function autoConfigSettings() {
@@ -2870,9 +2875,9 @@ function autoconfigExtract() {
 	; It will be processed at startup and the
 	; system will automaticly Restart.
 	;
-	; All param="value" pairs must be present.
-	; Set wlanssid= blank to start AP mode.
-	; Example: wlanssid=""
+	; All param = "value" pairs must be present.
+	; Set wlanssid = blank to start AP mode.
+	; Example: wlanssid = ""
 	;
 	; Moode Release : %s
 	; Create date	: %s
@@ -2892,7 +2897,7 @@ function autoconfigExtract() {
 		} else {
 			if( !array_key_exists('custom_write', $config)) {
 				foreach ($config['requires'] as $config_name) {
-					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
+					$config_key = array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
 					if( array_key_exists($config_key, $_SESSION) ) {
 						$autoconfigstring = $autoconfigstring . $config_key. " = \"".$_SESSION[$config_key]."\"\r\n";
 					}
