@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 #
 #  Script to merge two mpd confs into one.
+#  (C) 2020 @bitlab (@bitkeeper Git)
+#
 #  If setting exists in both the second conf is leading
 #  Scripts:
 #  - First script is /etc/mpd.moode.conf

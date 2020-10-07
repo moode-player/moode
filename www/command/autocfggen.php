@@ -23,7 +23,8 @@
 
  /**
   * autocfggen exports the supported autoconfig settings to the screen.
-  * Don't use this file directly but use the moodeutl -x option
+  * Don't use this file directly but use the moodeutl -e option
+  * (C) 2020 @bitlab (@bitkeeper Git)
   */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
