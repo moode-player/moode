@@ -4,66 +4,115 @@
 ; system will automaticly Restart.
 ;
 ; All param = "value" pairs must be present.
-; Set wlanssid =  blank to start AP mode.
+; Set wlanssid = blank to start AP mode.
 ; Example: wlanssid = ""
+;
+; Moode Release : 7.0.0 2020-MM-DD
+; Create date	: 2020-10-07 14:17:18
+;
 ; ##########################################
+[Names]
+browsertitle = "RP3 Player"
+hostname = "rp3"
+btname = "RP3 Bluetooth"
+airplayname = "RP3 Airplay"
+spotifyname = "RP3 Spotify"
+squeezelitename = "RP3"
+upnpname = "RP3 UPNP"
+dlnaname = "RP3 DLNA"
 
-[names]
-hostname = "moode"
-browsertitle = "moOde Player"
-airplayname = "Moode Airplay"
-spotifyname = "Moode Spotify"
-bluetoothname = "Moode Bluetooth"
-squeezelitename = "Moode"
-upnpname = "Moode UPNP"
-dlnaname = "Moode DLNA"
-
-[system]
+[System]
 timezone = "America/Detroit"
 keyboard = "us"
-cpugov = "On-demand"
-hdmiport = "1"
-eth0chk = "1"
+cpugov = "ondemand"
+hdmiport = "0"
+eth0chk = "0"
+led_state = "1,1"
 localui = "0"
+p3wifi = "1"
+p3bt = "1"
+expandfs ="0"
 
-[device]
-i2sdevice = "None"
+[I2S Device]
+i2sdevice = "none"
 
-[renderers]
+[MPD]
+mixer_type = "hardware"
+device = "2"
+selective_resample_mode = "8"
+sox_quality = "high"
+sox_multithreading = "1"
+sox_precision = "20"
+sox_phase_response = "50"
+sox_passband_end = "95"
+sox_stopband_begin = "100"
+sox_attenuation = "0"
+sox_flags = "0"
+
+[Renderers]
 btsvc = "0"
 pairing_agent = "0"
-rsmafterbt = "No"
-airplaysvc = "0"
-rsmafterapl = "No"
+rsmafterbt = "0"
+airplaysvc = "1"
+rsmafterapl = "Yes"
 spotifysvc = "0"
 rsmafterspot = "No"
 slsvc = "0"
 rsmaftersl = "No"
 
-[upnp/dlna]
+[UPnP/DLNA]
 upnpsvc = "0"
 dlnasvc = "0"
 upnp_browser = "0"
 
-[network]
-wlanssid = "MySSID"
+[Network (wlan0)]
+wlanssid = "AirnetN5"
+wlanpwd = ""
 wlansec = "wpa"
-wlanpwd = "MyPassword"
 wlancountry = "US"
-apdssid = "Moode"
+
+[Network (apd0)]
+apdssid = "RP3"
+apdpwd = ""
 apdchan = "6"
-apdpwd = "moodeaudio"
 
-[theme & background]
-themename = "Default"
-accentcolor = "Emerald"
-alphablend = "1.0"
+[Theme & Background]
+themename = "Nightshade"
+accent_color = "Alizarin"
+alphablend = "0.75"
 adaptive = "No"
-cover_backdrop = "No"
-cover_blur = "20px"
+cover_backdrop = "Yes"
+cover_blur = "5px"
 cover_scale = "1.25"
+library_albumview_sort = "Artist/Year"
+library_covsearchpri = "Embedded cover"
+library_ellipsis_limited_text = "Yes"
+library_encoded_at = "1"
+library_flatlist_filter = "None"
+library_flatlist_filter_str = ""
+library_hiresthm = "600px,60"
+library_ignore_articles = "a,an,the"
+library_inc_comment_tag = "No"
+library_instant_play = "Play"
+library_tagview_artist = "Artist"
+library_tagview_covers = "Yes"
+library_tagview_sort = "Album/Year"
+playlist_art = "Yes"
 
-[other]
+[Other]
 font_size = "Normal"
 playhist = "No"
-first_use_help = "Yes"
+first_use_help = "No"
+
+[sources]
+source_name[0] = "FLAC"
+source_type[0] = "cifs"
+source_address[0] = "RT-N66U"
+source_remotedir[0] = "VFAT256/Audio/FLAC"
+source_username[0] = "Guest"
+source_password[0] = ""
+source_charset[0] = "utf8"
+source_rsize[0] = "61440"
+source_wsize[0] = "65536"
+source_options[0] = "vers=1.0,sec=ntlm,ro,dir_mode=0777,file_mode=0777"
+
