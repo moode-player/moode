@@ -3085,6 +3085,8 @@ $(window).on('scroll', function(e) {
 			$('#menu-bottom').show();
 			$('#menu-top').css('height', $('#menu-top').css('line-height'));
 			$('#menu-top').css('backdrop-filter', 'blur(20px)');
+            $('#playbar-toggles .addfav').show();
+            $('#addfav-li').hide();
 			showMenuTopW = true;
 		}
 		else if (UI.mobile && $(window).scrollTop() == '0' ) {
