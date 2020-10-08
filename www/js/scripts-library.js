@@ -871,7 +871,10 @@ var renderSongs = function(albumPos) {
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + genreName + '</button>');
         }
         else {
-            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + 'Music Collection' + '</button>');
+            var libFilter = SESSION.json['library_flatlist_filter'] == 'None' ? '' :
+                '<div id="lib-flatlist-filter"><i class="far fa-filter"></i> ' + SESSION.json['library_flatlist_filter'] + '</div>';
+            $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
+                'Music Collection' + libFilter + '</button>');
         }
 		$('#lib-albumname').html(album);
 		$('#lib-artistname').html(artist);

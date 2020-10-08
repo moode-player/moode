@@ -876,7 +876,7 @@
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Lossless</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Lossy</span></a></li>
 									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Format</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Directory</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Folder</span></a></li>
 								</ul>
 							</div>
 						</div>
@@ -887,7 +887,7 @@
 							<b>Lossless:</b>&nbsp;Include tracks whose format is any of .flac|.aif|.wav|.dsf|.dff<br>
 							<b>Lossy:</b>&nbsp;Include tracks whose format is not any of the Lossless formats.<br>
 							<b>Format:</b>&nbsp;Include tracks of a specific format. Example .mp3 (the dot must be present).<br>
-							<b>Directory:</b>&nbsp;Include tracks in a specific directory.<br>
+							<b>Folder:</b>&nbsp;Include tracks in a specific folder path.<br>
 	                    </span>
 	                </div>
 
@@ -897,7 +897,7 @@
 		                    <input id="library-flatlist-filter-str" class="input-xlarge input-height-x" type="text">
 							<a aria-label="Help" class="info-toggle" data-cmd="info-library-flatlist-filter-str" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-library-flatlist-filter-str" class="help-block hide">
-								Audio format or directory path used to filter the MPD database.
+								Audio format or folder path used to filter the MPD database.
 							</span>
 		                </div>
 					</div>
@@ -1835,7 +1835,7 @@
 					</div>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-export-stations" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-export-stations" class="help-block hide">
-						Export the radio station SQL table, PLS files and station logos to the file named <b>"stations.zip"</b> in the default download directory of the client.
+						Export the radio station SQL table, PLS files and station logos to the file named <b>"stations.zip"</b> in the default download folder of the client.
 					</div>
 				</div>
 				<label class="control-label">Status</label>

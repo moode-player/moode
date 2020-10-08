@@ -36,7 +36,7 @@ define('MOODE_LOG', '/var/log/moode.log');
 define('AUTOCFG_LOG', '/home/pi/autocfg.log');
 define('PORT_FILE', '/tmp/portfile');
 define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
-define('LIBCACHE_JSON', '/var/local/www/libcache.json');
+define('LIBCACHE_BASE', '/var/local/www/libcache');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
 define('TMP_STATION_PREFIX', '__tmp__');
@@ -103,9 +103,6 @@ const RADIO_BITRATE_THRESHOLD 		= 128;
 
 // Reserved root directory names
 $ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
-
-// TEST: for evaluating genLibrary() performance when probing m4a files to determine whether the format is ALAC
-$PROBE_M4A = false;
 
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
@@ -290,7 +287,7 @@ function integrityCheck() {
 	return $warning === true ? 'passed with warnings' : 'passed';
 }
 
-// socket routines for engine-cmd.php
+// Socket routines for engine-cmd.php
 function sendEngCmd ($cmd) {
 	//workerLog('sendEngCmd(): cmd: ' . $cmd);
 	//workerLog('sendEngCmd(): Reading in portfile');
@@ -359,15 +356,13 @@ function sockWrite($sock, $msg) {
 }
 
 // Caching library loader
-
-//$dataJsonString = file_get_contents(LIBCACHE_JSON); // reads as string
-//$data = json_decode($dataJsonString); // now it is an array again you parse at the usual way
-
 function loadLibrary($sock) {
-	if (filesize(LIBCACHE_JSON) != 0) {
-		return file_get_contents(LIBCACHE_JSON);
+	if (filesize(libcache_file()) != 0) {
+		workerLog('loadLibrary(): Return existing ' . libcache_file());
+		return file_get_contents(libcache_file());
 	}
 	else {
+		workerLog('loadLibrary(): Generate new ' . libcache_file());
 		$flat = genFlatList($sock);
 
 		if ($flat != '') {
@@ -417,21 +412,13 @@ function genFlatList($sock) {
 				$cmd = "search base \"" . $dir . "\"";
 				break;
 			case 'Lossless':
-				if ($_SESSION['pkgid_suffix'] == 'enable_m4a_probe') {
-					$cmd = "search \"((base '" . $dir . "') AND (file =~ 'm4a$|flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
-					$GLOBALS['PROBE_M4A'] = true;
-				}
-				else {
-					$cmd = "search \"((base '" . $dir . "') AND (file =~ 'flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
-				}
+				$cmd = "search \"((base '" . $dir . "') AND (file =~ 'm4a$|flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
 				break;
 			case 'Lossy':
 				$cmd = "search \"((base '" . $dir . "') AND (file !~ 'flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
-				$GLOBALS['PROBE_M4A'] = true;
 				break;
+			case 'Folder':
 			case 'Format':
-			case 'Directory':
-				$GLOBALS['PROBE_M4A'] = ($_SESSION['library_flatlist_filter' == 'Format' && $_SESSION['library_flatlist_filter_str'] == '.m4a']) ? true : false;
 				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
 				break;
 		}
@@ -485,24 +472,22 @@ function genLibrary($flat) {
 	//workerLog(print_r($GLOBALS['PROBE_M4A'], true));
 
 	foreach ($flat as $flatData) {
-		// Post filter test for M4A container
-		if ($_SESSION['pkgid_suffix'] == 'enable_m4a_probe' && $GLOBALS['PROBE_M4A'] === true && getFileExt($flatData['file']) == 'm4a') {
-			//$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $flatData['file'] . '"');
-			//$result = sysCmd('grep alac ' . '"' . MPD_MUSICROOT . $flatData['file'] . '"');
+		// Test M4A format when filtering by Lossless/Lossy
+		if (strpos($_SESSION['library_flatlist_filter'], 'Loss' !== false) && getFileExt($flatData['file']) == 'm4a') {
 			$fh = fopen(MPD_MUSICROOT . $flatData['file'], "rb");
 			$alac_found = strpos(fread($fh, 512), 'alac');
 			fclose($fh);
 
-			if ($_SESSION['library_flatlist_filter'] == 'Lossless' && $alac_found !== false /*!empty($result)*/ /*$result[3] == 'ALAC'*/) {
+			if ($_SESSION['library_flatlist_filter'] == 'Lossless' && $alac_found !== false) {
 				$push = true;
 			}
-			elseif ($_SESSION['library_flatlist_filter'] == 'Lossy' && $alac_found === false /*empty($result)*/ /*$result[3] != 'ALAC'*/) {
+			elseif ($_SESSION['library_flatlist_filter'] == 'Lossy' && $alac_found === false) {
 				$push = true;
 			}
 			else {
 				$push = false;
 			}
-			workerLog(($push === true ? 'T|' : 'F|') . $flatData['file']);
+			//workerLog(($push === true ? 'T|' : 'F|') . $flatData['file']);
 		}
 		else {
 			$push = true;
@@ -536,14 +521,19 @@ function genLibrary($flat) {
 		workerLog('genLibrary(): error: json_encode($lib) failed');
 	}
 
-	if (false === (file_put_contents(LIBCACHE_JSON, $json_lib))) {
-		workerLog('genLibrary(): error: libcache.json file create failed');
+	if (false === (file_put_contents(libcache_file(), $json_lib))) {
+		workerLog('genLibrary(): error: file create failed: ' . libcache_file());
 	}
 
 	//workerLog(print_r($lib, true));
 	//workerLog(print_r($json_lib, true));
 	//workerLog('genLibrary(): json_error_message(): ' . json_error_message());
 	return $json_lib;
+}
+
+function libcache_file() {
+	$suffix = $_SESSION['library_flatlist_filter'] == 'None' ? '_all.json' : '_' . strtolower($_SESSION['library_flatlist_filter'] . '.json');
+	return LIBCACHE_BASE . $suffix;
 }
 
 function json_error_message() {
@@ -591,39 +581,61 @@ JSON_ERROR_UTF16	Malformed UTF-16 characters, possibly incorrectly encoded	PHP 7
 */
 
 // Many Chinese songs and song directories have characters that are not UTF8 causing json_encode to fail which leaves the
-// libcache.json file empty. Replacing the non-UTF8 chars in the array before json_encode solves this problem (@lazybat).
+// libcache json file empty. Replacing the non-UTF8 chars in the array before json_encode solves this problem (@lazybat).
 function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	foreach ($flat as $flatData) {
-		$songData = array(
-			'file' => utf8rep($flatData['file']),
-			'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')),
-			'title' => utf8rep(($flatData['Title'] ? $flatData['Title'] : 'Unknown Title')),
-			'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
-			'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist')),
-			'album_artist' => utf8rep($flatData['AlbumArtist']),
-			'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
-			'year' => utf8rep(getTrackYear($flatData)),
-			'time' => utf8rep($flatData['Time']),
-			'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-			'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
-			'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
-			'time_mmss' => utf8rep(songTime($flatData['Time'])),
-			'last_modified' => $flatData['Last-Modified'],
-			'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
-			'comment' => utf8rep(($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
-		);
+		// Test M4A format when filtering by Lossless/Lossy
+		if (strpos($_SESSION['library_flatlist_filter'], 'Loss' !== false) && getFileExt($flatData['file']) == 'm4a') {
+			$fh = fopen(MPD_MUSICROOT . $flatData['file'], "rb");
+			$alac_found = strpos(fread($fh, 512), 'alac');
+			fclose($fh);
 
-		array_push($lib, $songData);
+			if ($_SESSION['library_flatlist_filter'] == 'Lossless' && $alac_found !== false) {
+				$push = true;
+			}
+			elseif ($_SESSION['library_flatlist_filter'] == 'Lossy' && $alac_found === false) {
+				$push = true;
+			}
+			else {
+				$push = false;
+			}
+		}
+		else {
+			$push = true;
+		}
+
+		if ($push === true) {
+			$songData = array(
+				'file' => utf8rep($flatData['file']),
+				'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')),
+				'title' => utf8rep(($flatData['Title'] ? $flatData['Title'] : 'Unknown Title')),
+				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
+				'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist')),
+				'album_artist' => utf8rep($flatData['AlbumArtist']),
+				'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
+				'year' => utf8rep(getTrackYear($flatData)),
+				'time' => utf8rep($flatData['Time']),
+				'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
+				'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
+				'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
+				'time_mmss' => utf8rep(songTime($flatData['Time'])),
+				'last_modified' => $flatData['Last-Modified'],
+				'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
+				'comment' => utf8rep(($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
+			);
+
+			array_push($lib, $songData);
+		}
 	}
 
 	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
 		workerLog('genLibraryUTF8Rep(): error: json_encode($lib) failed');
 	}
 
-	if (false === (file_put_contents(LIBCACHE_JSON, $json_lib))) {
-		workerLog('genLibraryUTF8Rep(): error: libcache.json file create failed');
+	if (false === (file_put_contents(libcache_file(), $json_lib))) {
+		workerLog('genLibraryUTF8Rep(): error: file create failed: ' . libcache_file());
 	}
 
 	return $json_lib;
@@ -662,8 +674,14 @@ function getTrackYear($trackData) {
     return $trackYear;
 }
 
-function clearLibCache() {
-	sysCmd('truncate ' . LIBCACHE_JSON . ' --size 0');
+function clearLibCacheAll() {
+	sysCmd('truncate ' . LIBCACHE_BASE . '_* --size 0');
+	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
+}
+
+function clearLibCacheFiltered() {
+	sysCmd('truncate ' . LIBCACHE_BASE . '_folder.json --size 0');
+	sysCmd('truncate ' . LIBCACHE_BASE . '_format.json --size 0');
 	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
 }
 

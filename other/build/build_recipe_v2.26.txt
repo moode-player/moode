@@ -524,6 +524,8 @@ sudo rm /etc/motd
 //
 ////////////////////////////////////////////////////////////////
 
+LIBCACHE_BASE=/var/local/www/libcache
+
 1. Application sources and configs
 
 # Ignore "no such file or directory" errors if they appear.
@@ -593,8 +595,12 @@ sudo chmod -R 0755 /usr/local/bin
 6. Initial permissions for certain files. These also get set during moOde Worker startup.
 sudo chmod 0777 /var/local/www/playhistory.log
 sudo chmod 0777 /var/local/www/currentsong.txt
-sudo touch /var/local/www/libcache.json
-sudo chmod 0777 /var/local/www/libcache.json
+sudo touch $LIBCACHE_BASE"_all.json"
+sudo touch $LIBCACHE_BASE"_folder.json"
+sudo touch $LIBCACHE_BASE"_format.json"
+sudo touch $LIBCACHE_BASE"_lossless.json"
+sudo touch $LIBCACHE_BASE"_lossy.json"
+sudo chmod 0777 $LIBCACHE_BASE"_*"
 
 7. Permission for the 010_moode file
 sudo chmod 0440 /etc/sudoers.d/010_moode

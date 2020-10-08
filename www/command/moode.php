@@ -201,7 +201,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				$status = parseStatus(getMpdStatus($sock));
 				$resp = addGroupToQueue($sock, $_POST['path']);
 				if ($_GET['cmd'] == 'play_group_next') {
-					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength']; 
+					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
 					sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
 					$resp = readMpdResp($sock);
 				}
@@ -722,8 +722,11 @@ else {
 			}
 			echo $msg;
 			break;
-		case 'clear_libcache':
-			clearLibCache();
+		case 'clear_libcache_all':
+			clearLibCacheAll();
+			break;
+		case 'clear_libcache_filtered':
+			clearLibCacheFiltered();
 			break;
 
 		// Return client IP address

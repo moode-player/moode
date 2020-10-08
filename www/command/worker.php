@@ -97,7 +97,11 @@ if (!file_exists('/var/local/www/playhistory.log')) {
 	// This sets the "Log initialized" header
 	sysCmd('/var/www/command/util.sh clear-playhistory');
 }
-sysCmd('touch ' . LIBCACHE_JSON);
+sysCmd('touch ' . LIBCACHE_BASE . '_all.json');
+sysCmd('touch ' . LIBCACHE_BASE . '_folder.json');
+sysCmd('touch ' . LIBCACHE_BASE . '_format.json');
+sysCmd('touch ' . LIBCACHE_BASE . '_lossless.json');
+sysCmd('touch ' . LIBCACHE_BASE . '_lossy.json');
 sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
 sysCmd('truncate /var/local/www/currentsong.txt --size 0');
@@ -107,7 +111,7 @@ sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . '*
 // Set permissions
 sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
 sysCmd('chmod 0777 /var/local/www/currentsong.txt');
-sysCmd('chmod 0777 ' . LIBCACHE_JSON);
+sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
 sysCmd('chmod 0777 /var/local/www/playhistory.log');
 sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 ' . MOODE_LOG);
@@ -1311,7 +1315,7 @@ function runQueuedJob() {
 
 		// Nenu, Update library, Context menu, Update this folder
 		case 'update_library':
-			clearLibCache();
+			clearLibCacheAll();
 			$sock = openMpdSock('localhost', 6600);
 			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . html_entity_decode($_SESSION['w_queueargs']) . '"';
 			sendMpdCmd($sock, $cmd);
@@ -1327,11 +1331,11 @@ function runQueuedJob() {
 
 		// lib-config jobs
 		case 'sourcecfg':
-			clearLibCache();
+			clearLibCacheAll();
 			sourceCfg($_SESSION['w_queueargs']);
 			break;
 		case 'regen_library':
-			clearLibCache();
+			clearLibCacheAll();
 			$sock = openMpdSock('localhost', 6600);
 			sendMpdCmd($sock, 'rescan');
 			$resp = readMpdResp($sock);

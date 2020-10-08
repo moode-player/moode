@@ -67,7 +67,7 @@ if (isset($_POST['remount_sources'])) {
 }
 // Clear library cache
 if (isset($_POST['clear_libcache'])) {
-	clearLibCache();
+	clearLibCacheAll();
 	$_SESSION['notify']['title'] = 'Library tag cache cleared';
 }
 // regenerate thumbnail cache

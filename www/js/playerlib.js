@@ -2033,7 +2033,7 @@ $('.context-menu a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'editradiostn') {
         $.post('command/moode.php?cmd=readstationfile', {'path': UI.dbEntry[0]}, function(result) {
-            var stationName = path.slice(path.lastIndexOf('/') + 1); // Trim 'RADIO/sub_directory/'
+            var stationName = path.slice(path.lastIndexOf('/') + 1); // Trim 'RADIO/'
             stationName = stationName.slice(0, stationName.lastIndexOf('.')); // Trim .pls
             GLOBAL.editStationId = result['id']; // This is to pass to the update station routine so it can uniquely identify the row
     		$('#edit-station-name').val(stationName);
@@ -2186,7 +2186,7 @@ $('.context-menu a').click(function(e) {
             $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
             $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
             $('#library-flatlist-filter span').text(SESSION.json['library_flatlist_filter']);
-            (SESSION.json['library_flatlist_filter'] == 'Format' || SESSION.json['library_flatlist_filter'] == 'Directory') ?
+            (SESSION.json['library_flatlist_filter'] == 'Format' || SESSION.json['library_flatlist_filter'] == 'Folder') ?
                 $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
                 $('#library-flatlist-filter-str').val(SESSION.json['library_flatlist_filter_str']);
             $('#recently-added span').text(getParamOrValue('param', SESSION.json['library_recently_added']));
@@ -2341,14 +2341,15 @@ $('#btn-appearance-update').click(function(e){
 	var accentColorChange = false;
 	var themeSettingsChange = false;
     var libraryOptionsChange = false;
-    var clearLibcacheReqd = false;
+    var clearLibcacheAllReqd = false;
+    var clearLibcacheFilteredReqd = false;
+    var reloadLibrary = false
     var regenThumbsReqd = false;
 	var scnSaverTimeoutChange = false;
 	var scnSaverStyleChange = false;
     var extraTagsChange = false;
     var playHistoryChange = false;
 	var fontSizeChange = false;
-    var encodedAtChange = false;
     var playlistArtChange = false;
 	var thumbSizeChange = false;
 
@@ -2379,16 +2380,16 @@ $('#btn-appearance-update').click(function(e){
     // Sorting and Filtering
     if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
     if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
-    if (SESSION.json['library_flatlist_filter'] != $('#library-flatlist-filter span').text()) {clearLibcacheReqd = true;}
-    if (SESSION.json['library_flatlist_filter_str'] != $('#library-flatlist-filter-str').val()) {clearLibcacheReqd = true;}
+    if (SESSION.json['library_flatlist_filter'] != $('#library-flatlist-filter span').text()) {reloadLibrary = true;}
+    if (SESSION.json['library_flatlist_filter_str'] != $('#library-flatlist-filter-str').val()) {clearLibcacheFilteredReqd = true;}
     if (SESSION.json['library_recently_added'] != getParamOrValue('value', $('#recently-added span').text())) {libraryOptionsChange = true;}
     if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;}
     // Metadata and Tags
     if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_inc_comment_tag'] != $('#library-inc-comment-tag span').text()) {clearLibcacheReqd = true;}
+    if (SESSION.json['library_inc_comment_tag'] != $('#library-inc-comment-tag span').text()) {clearLibcacheAllReqd = true;}
     // User Interface elements
-    if (SESSION.json['library_encoded_at'] != getParamOrValue('value', $('#show-encoded-at span').text())) {encodedAtChange = true;}
+    if (SESSION.json['library_encoded_at'] != getParamOrValue('value', $('#show-encoded-at span').text())) {reloadLibrary = true;}
     if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {
 		$('#show-genres-column span').text() == "Yes" ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 	}
@@ -2464,8 +2465,11 @@ $('#btn-appearance-update').click(function(e){
 	if (scnSaverTimeoutChange == true) {
         $.get('command/moode.php?cmd=resetscnsaver');
 	}
-    if (clearLibcacheReqd == true) {
-        $.get('command/moode.php?cmd=clear_libcache');
+    if (clearLibcacheAllReqd == true) {
+        $.get('command/moode.php?cmd=clear_libcache_all');
+	}
+    if (clearLibcacheFilteredReqd == true) {
+        $.get('command/moode.php?cmd=clear_libcache_filtered');
 	}
 	if (accentColorChange == true) {
 		accentColor = themeToColors(SESSION.json['accent_color']);
@@ -2552,14 +2556,15 @@ $('#btn-appearance-update').click(function(e){
             'appearance_modal_state': SESSION.json['appearance_modal_state']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheReqd ||
+            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange ||
+                clearLibcacheAllReqd || clearLibcacheFilteredReqd ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
             }
-            else if (encodedAtChange) {
+            else if (reloadLibrary) {
                 $('#ra-refresh').click();
                 loadLibrary();
             }
@@ -2573,8 +2578,9 @@ $('#btn-appearance-update').click(function(e){
     );
 });
 
+// Show/hide the filter string input
 $('#library-flatlist-filter span').on('DOMSubtreeModified',function(){
-    ($('#library-flatlist-filter span').text() == 'Format' || $('#library-flatlist-filter span').text() == 'Directory') ?
+    ($('#library-flatlist-filter span').text() == 'Format' || $('#library-flatlist-filter span').text() == 'Folder') ?
         $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
 });
 

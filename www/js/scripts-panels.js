@@ -365,7 +365,7 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Clear Library tag cache
 	$('.btn-clear-libcache').on('click', function(e) {
-        $.get('command/moode.php?cmd=clear_libcache');
+        $.get('command/moode.php?cmd=clear_libcache_all');
         notify('clear_libcache', 'Auto-refresh in 2 seconds');
         setTimeout(function() {
             location.reload(true);

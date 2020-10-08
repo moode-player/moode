@@ -665,3 +665,5 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 /* New/edit radio station modals */
 #new-station-format, #edit-station-format {text-transform:uppercase;}
 #import-export-msg {line-height:24px;color:var(--adapttext);}
+/* Library filter */
+#lib-flatlist-filter {font-size:.5em;}

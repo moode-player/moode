@@ -16,10 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-07-22 TC moOde 6.7.1
+# 2020-MM-DD TC moOde 7.0.0
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
+LIBCACHE_BASE=/var/local/www/libcache
 
 if [[ $1 = "set-timezone" ]]; then
 	timedatectl set-timezone "$2"
@@ -216,7 +217,7 @@ if [[ $1 = "smbadd" ]]; then
 		RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
 		if [[ $RESULT = "1" ]]; then
 			mpc update USB
-			truncate /var/local/www/libcache.json --size 0
+			truncate $LIBCACHE_BASE"_*" --size 0
 		fi
 	fi
 	exit
@@ -230,7 +231,7 @@ if [[ $1 = "smbrem" ]]; then
 	RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
 	if [[ $RESULT = "1" ]]; then
 		mpc update USB
-		truncate /var/local/www/libcache.json --size 0
+		truncate $LIBCACHE_BASE"_*" --size 0
 	fi
     exit
 fi
@@ -248,7 +249,7 @@ if [[ $1 = "smb_add" ]]; then
 		RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
 		if [[ $RESULT = "1" ]]; then
 			mpc update USB
-			truncate /var/local/www/libcache.json --size 0
+			truncate $LIBCACHE_BASE"_*" --size 0
 		fi
 	fi
 	exit
@@ -263,7 +264,7 @@ if [[ $1 = "smb_remove" ]]; then
 	RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
 	if [[ $RESULT = "1" ]]; then
 		mpc update USB
-		truncate /var/local/www/libcache.json --size 0
+		truncate $LIBCACHE_BASE"_*" --size 0
 	fi
     exit
 fi
