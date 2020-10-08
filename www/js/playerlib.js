@@ -932,7 +932,7 @@ function genSearchUrl (artist, title, album) {
 
 // Update active Queue item
 function updateActivePlItem() {
-	console.log('updateActivePlItem()');
+	//console.log('updateActivePlItem()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
         if (data) {
             for (i = 0; i < data.length; i++) {
