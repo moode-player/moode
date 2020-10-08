@@ -522,11 +522,11 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playback-switch div {background-color:transparent;height:.25rem;width:2rem;margin:1em auto;border-radius:1em;overflow:hidden;}
 #playbar {display:flex;align-items:center;height:4.8rem;position:absolute;bottom:0;width:100%;color:var(--adapttext);box-shadow: 0px -1px 3px rgba(0,0,0,0.1);} /* was 9.25vh*/
 #playbar-cover {height:4.8rem;width:4.8rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0) 100%);}
-#playbar-title {width:calc(50vw - 8.5rem);/* Was 5.5rem */;height:auto;position:absolute;font-size:.9em;left:50%;top:50%;transform:translate(-50%, -50%);text-align:center;/*padding-bottom:1rem;*/line-height:1.5em;cursor:pointer;}
+#playbar-title {overflow:hidden;text-overflow:ellipsis;width:calc(50vw - 8.5rem);/* Was 5.5rem */;height:auto;position:absolute;font-size:.9em;left:50%;top:50%;transform:translate(-50%, -50%);text-align:center;/*padding-bottom:1rem;*/line-height:1.5em;cursor:pointer;}
 #playbar-title a {padding:0;margin:0;display:unset;text-align:unset;font-size:.9rem;color:var(--adapttext) !important;}
 /*#playbar-title span {opacity:.55;}
 #playbar-title span:first-child {opacity:1.0;}*/
-#playbar-currentsong, #playbar-currentalbum {overflow:hidden;text-overflow:ellipsis;}
+/*#playbar-currentsong, #playbar-currentalbum {overflow:hidden;text-overflow:ellipsis;}*/
 #playbar-currentsong {font-weight:600;}
 #playbar-time, #playbar-total {font-size:.9rem;}
 #playbar-controls {position:absolute;left:.5rem;top:50%;transform:translate(0, -50%);opacity:1;}
