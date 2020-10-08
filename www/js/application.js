@@ -31,11 +31,6 @@ $(function () {
 });
 
 $(document).ready(function() {
-    // call $.pnotify is created by backend
-    if( window.ui_notify != undefined ) {
-        ui_notify();
-    }
-
     // Todo list
     $(".todo li").click(function() {
         $(this).toggleClass("todo-done");
