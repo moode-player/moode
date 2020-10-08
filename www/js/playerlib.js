@@ -700,7 +700,6 @@ function renderUI() {
                 $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('paused');
                 $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('paused');
             }
-
             $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
         }
     	$('#total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
@@ -874,7 +873,7 @@ function renderUI() {
         if (typeof(MPD.json['idle_timeout_event']) == 'undefined' ||
             MPD.json['idle_timeout_event'] == 'changed: playlist' ||
             GLOBAL.playlistChanged == true) {
-            renderPlaylist();
+            renderPlaylist(MPD.json['state']);
         }
         //
         else {
@@ -933,7 +932,7 @@ function genSearchUrl (artist, title, album) {
 
 // Update active Queue item
 function updateActivePlItem() {
-	//console.log('updateActivePlItem()');
+	console.log('updateActivePlItem()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
         if (data) {
             for (i = 0; i < data.length; i++) {
@@ -976,11 +975,12 @@ function updateActivePlItem() {
 }
 
 // Render the Playlist
-function renderPlaylist() {
+function renderPlaylist(state) {
 	//console.log('renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
 		var output = '';
         var playlistLazy = GLOBAL.nativeLazyLoad === true ? '<img loading="lazy" src=' : '<img class="lazy-playlistview" data-original=';
+        var paused = state != 'play' ? ' paused' : '';
 
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
@@ -989,10 +989,9 @@ function renderPlaylist() {
 		// Format playlist items
         if (data) {
             for (i = 0; i < data.length; i++) {
-
 	            // Item highlight
 	            if (i == parseInt(MPD.json['song'])) {
-	                output += '<li id="pl-' + (i + 1) + '" class="active pl-entry">';
+	                output += '<li id="pl-' + (i + 1) + '" class="active pl-entry' + paused + '">';
 	            }
 				else {
 	                output += '<li id="pl-' + (i + 1) + '" class="pl-entry">';
@@ -2498,7 +2497,7 @@ $('#btn-appearance-update').click(function(e){
 		setColors();
 	}
 	if(playlistArtChange == true) {
-		renderPlaylist();
+		renderPlaylist(MPD.json['state']);
 	}
 	if(thumbSizeChange){
 		getThumbHW();
@@ -3092,7 +3091,7 @@ $(window).on('scroll', function(e) {
 			$('#menu-top').css('height', $('#menu-top').css('line-height'));
 			$('#menu-top').css('backdrop-filter', 'blur(20px)');
             $('#playbar-toggles .addfav').show();
-            $('#addfav-li').hide();
+            $('#addfav-li, #random-album').hide();
 			showMenuTopW = true;
 		}
 		else if (UI.mobile && $(window).scrollTop() == '0' ) {
