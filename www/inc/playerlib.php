@@ -473,7 +473,7 @@ function genLibrary($flat) {
 
 	foreach ($flat as $flatData) {
 		// Test M4A format when filtering by Lossless/Lossy
-		if (strpos($_SESSION['library_flatlist_filter'], 'Loss' !== false) && getFileExt($flatData['file']) == 'm4a') {
+		if (strpos($_SESSION['library_flatlist_filter'], 'Loss') !== false && getFileExt($flatData['file']) == 'm4a') {
 			$fh = fopen(MPD_MUSICROOT . $flatData['file'], "rb");
 			$alac_found = strpos(fread($fh, 512), 'alac');
 			fclose($fh);
