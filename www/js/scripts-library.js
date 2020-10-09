@@ -1238,8 +1238,8 @@ function oneTouchGroup (files) {
             mpdDbCmd(queueCmd, files);
         }
         else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_item', files);
-            notify('clear_play_item');
+            mpdDbCmd('clear_play_group', files);
+            notify('clear_play_group');
         }
     }
 }
