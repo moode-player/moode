@@ -950,41 +950,30 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 
 		clearTimeout(searchTimer);
-        var filter = $(this).val().trim().toLowerCase();
+        var filter = $(this).val().trim();
 		var bang = filter.slice(filter.length - 2);
 
         // Search year or year range using filterLib()
-        if (e.key == 'Enter' || bang == '!r' || bang == '!f') {
+        if (e.key == 'Enter' || bang == '!r' || bang == '!f' || bang == '!p') {
             $('#lib-album-filter').blur();
             $('#viewswitch').click();
-            if (bang == '!r' || bang == '!f') {
+            if (bang == '!r' || bang == '!f' || bang == '!p') {
                 filter = filter.slice(0, filter.length - 2);
             }
 
-			if (bang == '!f') {
+			if (bang == '!p') {
+				filterhelp('Playlist', filter);
+				return;
+			}
+
+			else if (bang == '!f') {
+				filter = filter.toLowerCase();
 				if (!filter) {
-					SESSION.json['library_flatlist_filter'] = 'None';
-				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'None'});		
+					filterhelp('None');
 				} else if (filter == 'lossless'){
-					SESSION.json['library_flatlist_filter'] = 'Lossless';
-				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'Lossless'});		
+					filterhelp('Lossless');
 				} else {
-					SESSION.json['library_flatlist_filter'] = filter;
-				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'Any', 'library_flatlist_filter_str': filter});		
-				}
-		        $.get('command/moode.php?cmd=clear_libcache_filtered');
-			    LIB.recentlyAddedClicked = false;
-				LIB.filters.albums.length = 0;
-				LIB.filters.artists.length = 0;
-				LIB.filters.genres.length = 0;
-				LIB.filters.year.length = 0;
-				UI.libPos.fill(-2);
-				GLOBAL.libRendered = false;
-				GLOBAL.searchLib = '';
-                loadLibrary();
-				if (currentView == 'album') {
-                    $('#bottom-row').css('display', '');
-                    $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+					filterhelp('Any', filter);
 				}
 				return;
 			}
@@ -1077,6 +1066,27 @@ jQuery(document).ready(function($) { 'use strict';
 		document.getElementById("lib-album-filter").focus();
 		return false;
 	});
+
+	function filterhelp(filter, str) {
+		SESSION.json['library_flatlist_filter'] = filter;
+		var filter_str = str ? str : SESSION.json['library_flatlist_filter_str'];
+		console.log(filter, filter_str);
+		$.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filter, 'library_flatlist_filter_str': filter_str});	
+        $.get('command/moode.php?cmd=clear_libcache_filtered');
+	    LIB.recentlyAddedClicked = false;
+		LIB.filters.albums.length = 0;
+		LIB.filters.artists.length = 0;
+		LIB.filters.genres.length = 0;
+		LIB.filters.year.length = 0;
+		UI.libPos.fill(-2);
+		GLOBAL.libRendered = false;
+		GLOBAL.searchLib = '';
+        loadLibrary();
+		if (currentView == 'album') {
+            $('#bottom-row').css('display', '');
+            $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+		}
+	}
 
 	// Playback history search
 	$('#ph-filter').keyup(function(e){
