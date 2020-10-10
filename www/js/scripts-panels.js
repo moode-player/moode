@@ -963,8 +963,11 @@ jQuery(document).ready(function($) { 'use strict';
 
 			if (bang == '!f') {
 				if (!filter) {
-				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'None'});		
 					SESSION.json['library_flatlist_filter'] = 'None';
+				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'None'});		
+				} else if (filter == 'lossless'){
+					SESSION.json['library_flatlist_filter'] = 'Lossless';
+				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'Lossless'});		
 				} else {
 					SESSION.json['library_flatlist_filter'] = filter;
 				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'Any', 'library_flatlist_filter_str': filter});		
