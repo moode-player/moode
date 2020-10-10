@@ -572,8 +572,8 @@ function disableVolKnob() {
 
 // When last item in Queue finishes just update a few things, called from engineCmd()
 function resetPlayCtls() {
-	//console.log('resetPlayCtls():');
-	$('#m-total, #playbar-total, #playbar-mtotal').html(formatKnobTotal('0'));
+	console.log('resetPlayCtls():');
+	$('#m-total, #playbar-total, #playbar-mtotal').text(formatKnobTotal('0'));
 	$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
 	$('#total').html(formatKnobTotal('0') + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
 	$('.playlist li.active ').removeClass('active');
@@ -581,7 +581,7 @@ function resetPlayCtls() {
 	updKnobAndTimeTrack();
     updKnobStartFrom(0, MPD.json['state']);
 
-	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').html('00:00');
+	$('#countdown-display, #m-countdown, #playbar-countdown, #playbar-mcount').text('00:00');
 }
 
 function renderUIVol() {
@@ -1712,7 +1712,7 @@ function updKnobAndTimeTrack() {
 	if (MPD.json['state'] === 'stop') {
 	    $('#countdown-display').countdown('destroy');
 		if (UI.mobile) {
-			$('#m-total, #m-countdown, #playbar-mcount').html('00:00');
+			$('#m-total, #m-countdown, #playbar-mcount').text('00:00');
 			$('#playbar-mtotal').html('&nbsp;/&nbsp;00:00');
 		}
         else {
