@@ -3617,3 +3617,25 @@ $.ensure = function (selector) {
     return promise;
     clearInterval(interval);
 };
+
+function filterhelp(filter, str) {
+	SESSION.json['library_flatlist_filter'] = filter;
+	var filter_str = str ? str : SESSION.json['library_flatlist_filter_str'];
+	SESSION.json['library_flatlist_filter_str'] = filter_str;
+	console.log(filter, filter_str);
+	$.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filter, 'library_flatlist_filter_str': filter_str});	
+    $.get('command/moode.php?cmd=clear_libcache_filtered');
+    LIB.recentlyAddedClicked = false;
+	LIB.filters.albums.length = 0;
+	LIB.filters.artists.length = 0;
+	LIB.filters.genres.length = 0;
+	LIB.filters.year.length = 0;
+	UI.libPos.fill(-2);
+	GLOBAL.libRendered = false;
+	GLOBAL.searchLib = '';
+    loadLibrary();
+	if (currentView == 'album') {
+        $('#bottom-row').css('display', '');
+        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+	}
+}
