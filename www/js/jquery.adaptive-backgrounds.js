@@ -207,7 +207,7 @@
 
 				var getShadeAdjustment = function (color) {
 					//console.log('datacolor' + color);
-					if (color == 'rgb()'){color = 'rgb(0,0,0)';}
+					if (color == 'rgb()' || color == 'rgb(,,)'){color = 'rgb(0,0,0)';}
 					if (opts.shadeVariation == true) {
 						return getYIQ(color) <= 128 ? shadeRGBColor(color, opts.shadePercentage) : shadeRGBColor(color, -(opts.shadePercentage), opts.shadePercentage);
 					} else if (opts.shadeVariation == BLEND) {

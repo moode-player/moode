@@ -870,6 +870,7 @@ jQuery(document).ready(function($) { 'use strict';
 		clearTimeout(searchTimer);
 
 		var selector = this;
+		
 		searchTimer = setTimeout(function(){
 			var filter = $(selector).val().trim();
 			var count = 0;
@@ -949,16 +950,34 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 
 		clearTimeout(searchTimer);
-        var filter = $(this).val().trim();
+        var filter = $(this).val().trim().toLowerCase();
+		var bang = filter.slice(filter.length - 2);
 
         // Search year or year range using filterLib()
-        if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
+        if (e.key == 'Enter' || bang == '!r' || bang == '!f') {
             $('#lib-album-filter').blur();
             $('#viewswitch').click();
 
-            if (filter.slice(filter.length - 2) == '!r') {
+            if (bang == '!r' || bang == '!f') {
                 filter = filter.slice(0, filter.length - 2);
             }
+
+			if (bang == '!f') {
+				SESSION.json['library_flatlist_filter'] = filter;
+			    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'Any', 'library_flatlist_filter_str': filter});		
+		        $.get('command/moode.php?cmd=clear_libcache_filtered');
+			    LIB.recentlyAddedClicked = false;
+				LIB.filters.albums.length = 0;
+				UI.libPos.fill(-2);
+				GLOBAL.libRendered = false;
+				GLOBAL.searchLib = '';
+                loadLibrary();
+				if (currentView == 'album') {
+                    $('#bottom-row').css('display', '');
+                    $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+				}
+				return;
+			}
 
             LIB.filters.year = filter.split('-').map( Number ); // [year 1][year 2 if present]
 

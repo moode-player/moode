@@ -74,6 +74,7 @@ function loadLibrary() {
 	$.post('command/moode.php?cmd=loadlib', function(data) {
         $('#lib-content').show();
 		renderLibrary(data);
+		setLibMenuHeader();
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
 		clearTimeout(libpop);

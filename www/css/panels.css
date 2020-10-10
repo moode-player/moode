@@ -291,11 +291,12 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #searchResetLib {padding:.25em;position:relative;top:50%;transform:translate(0, -50%);font-size:1.2rem;}
 #viewswitch a {color:inherit;}
 .viewswitch div {display:flex;color:var(--adapttext);}
-.viewswitch .btn {position:relative;width:100%;line-height:normal;font-size:1.1rem;padding:.75rem 1rem;background-color:transparent;text-align:left;}
+.viewswitch .btn {position:relative;width:100%;line-height:2.75rem;font-size:1.1rem;font-family:inherit;padding:0 0.5rem;background-color:transparent;text-align:left;}
 .viewswitch .btn.active {color:inherit;}
 .viewswitch .btn:hover {background-color:var(--accentxta);}
 #viewswitch-search:hover {background-color:inherit;}
-.viewswitch .btn i {padding:0 .5rem 0 0;}
+.viewswitch .btn i {padding:0;width:1.75em;text-align:center;margin-right:.25rem;}
+.viewswitch .btn.no-icon {padding-left:1rem;}
 #current-tab {font-size:1.1rem;font-weight:600;height:2.75rem;line-height:2.75rem;}
 #current-tab i {font-size:.7rem;margin-left:2px;}
 .ui-pnotify {font-size:1.1rem;top:33%;left:50%;transform:translate(-50%, -50%);box-shadow:0px 2px 10px rgba(50, 50, 50, 0.5)}
@@ -477,8 +478,9 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 .alphabits ul li {display:table-row !important;font-size:.8em;text-transform:uppercase;line-height:normal;font-weight:600;color:var(--textvariant);text-align:center;}
 /**/
 /* playback ellipsis context menu */
-#context-menu-playback .dropdown-menu {min-width:11.5rem;white-space:nowrap;}
+#context-menu-playback .dropdown-menu {min-width:12.5rem;white-space:nowrap;}
 #menu-check-consume, #menu-check-repeat, #menu-check-single {display:none;float:right;color:var(--adapttext);line-height:2.75em;position:absolute;right:.5em;}
+.dropdown-menu i.fa-check {padding:0;margin:0;}
 /* active/inactive css element manip */
 #menu-header {position:absolute;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1.1rem;overflow:hidden;max-width:50%;text-overflow:ellipsis;white-space:nowrap;color:var(--adapttext);cursor:pointer;}
 #playback-panel #playback-controls {display:none;}
