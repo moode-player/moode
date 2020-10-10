@@ -957,14 +957,18 @@ jQuery(document).ready(function($) { 'use strict';
         if (e.key == 'Enter' || bang == '!r' || bang == '!f') {
             $('#lib-album-filter').blur();
             $('#viewswitch').click();
-
             if (bang == '!r' || bang == '!f') {
                 filter = filter.slice(0, filter.length - 2);
             }
 
 			if (bang == '!f') {
-				SESSION.json['library_flatlist_filter'] = filter;
-			    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'Any', 'library_flatlist_filter_str': filter});		
+				if (!filter) {
+				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'None'});		
+					SESSION.json['library_flatlist_filter'] = 'None';
+				} else {
+					SESSION.json['library_flatlist_filter'] = filter;
+				    $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': 'Any', 'library_flatlist_filter_str': filter});		
+				}
 		        $.get('command/moode.php?cmd=clear_libcache_filtered');
 			    LIB.recentlyAddedClicked = false;
 				LIB.filters.albums.length = 0;
@@ -978,7 +982,7 @@ jQuery(document).ready(function($) { 'use strict';
 				}
 				return;
 			}
-
+			
             LIB.filters.year = filter.split('-').map( Number ); // [year 1][year 2 if present]
 
             if (LIB.filters.year[0]) {

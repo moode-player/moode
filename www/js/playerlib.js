@@ -3499,7 +3499,7 @@ function lazyLode(view, skip, force) {
  				if (SESSION.json['library_tagview_covers'] == 'Yes') {
      				selector = 'img.lazy-tagview';
      				container = '#lib-album';
-					skip = true;
+					//skip = true;
                 }
  				break;
  			case 'album':
