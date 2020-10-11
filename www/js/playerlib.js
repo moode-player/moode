@@ -3440,7 +3440,7 @@ function makeActive (vswitch, panel, view) {
 
 // Set the text in the library menu header
 function setLibMenuHeader () {
-    var headerText = UI.mobile ? '' : 'Browse by ';
+    var headerText = (UI.mobile || currentView.indexOf('playback') != -1) ? '' : 'Browse by ';
 
 	if (currentView == 'radio') {
 		headerText += 'Radio Stations';
