@@ -423,10 +423,10 @@ function genFlatList($sock) {
 				break;
 			case 'Any':
 				$cmd = "search \"((base '" . $dir . "') AND (any contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
-				break;				
+				break;
 			case 'Playlist':
 				$cmd = 'listplaylistinfo "' . $_SESSION['library_flatlist_filter_str'] . '"';
-				break;				
+				break;
 
 		}
 		workerLog($cmd);
@@ -2560,8 +2560,8 @@ b0 3112	4B		1.2	2GB		Sony UK
 c0 3112	4B		1.2	4GB		Sony UK
 */
 
-// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
 // Config audio scrobbler
+// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
 /*function cfgAudioScrobbler() {
 	$file = '/usr/local/etc/mpdasrc';
 	$fp = fopen($file, 'w');

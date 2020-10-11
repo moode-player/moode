@@ -795,6 +795,8 @@ cp ./moode/other/ashuffle/ashuffle /usr/local/bin
 //
 // COMPONENT 3 - MPD Audio Scrobbler
 //
+// NOTE: This code is not maintained and apparently doesn't work with the new Last.FM protocol
+//
 ////////////////////////////////////////////////////////////////
 
 cd ~
