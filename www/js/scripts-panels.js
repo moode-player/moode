@@ -870,7 +870,7 @@ jQuery(document).ready(function($) { 'use strict';
 		clearTimeout(searchTimer);
 
 		var selector = this;
-		
+
 		searchTimer = setTimeout(function(){
 			var filter = $(selector).val().trim();
 			var count = 0;
@@ -977,7 +977,7 @@ jQuery(document).ready(function($) { 'use strict';
 				}
 				return;
 			}
-			
+
             LIB.filters.year = filter.split('-').map( Number ); // [year 1][year 2 if present]
 
             if (LIB.filters.year[0]) {
