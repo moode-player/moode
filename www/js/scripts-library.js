@@ -796,7 +796,7 @@ var renderSongs = function(albumPos) {
             }
 
 			var composer = filteredSongs[i].composer == 'Composer tag missing' ? '</span>' : '<br><span class="songcomposer">' + filteredSongs[i].composer + '</span></span>';
-			var highlight = filteredSongs[i].title == MPD.json['title'] ? ' lib-track-highlight' : '';
+			var highlight = (filteredSongs[i].title == MPD.json['title'] && MPD.json['state'] == 'play') ? ' lib-track-highlight' : '';
 
             output += albumDiv
                 + discDiv
