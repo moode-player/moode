@@ -1986,7 +1986,8 @@ $('.view-recents').click(function(e) {
 	storeLibPos(UI.libPos);
 	$("#searchResetLib").hide();
 	showSearchResetLib = false;
-	$('#menu-header').text('Recently Added (' + getParamOrValue('param', SESSION.json['library_recently_added']) + ')');
+	//$('#menu-header').text('Recently Added (' + getParamOrValue('param', SESSION.json['library_recently_added']) + ')');
+	setLibMenuHeader();
 });
 
 // Context menus and main menu
@@ -2185,7 +2186,7 @@ $('.context-menu a').click(function(e) {
             $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
             $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
             $('#library-flatlist-filter span').text(SESSION.json['library_flatlist_filter']);
-            (SESSION.json['library_flatlist_filter'] == 'Format' || SESSION.json['library_flatlist_filter'] == 'Folder') ?
+            (SESSION.json['library_flatlist_filter'] == 'Format' || SESSION.json['library_flatlist_filter'] == 'Folder' || SESSION.json['library_flatlist_filter'] == 'Any') ?
                 $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
                 $('#library-flatlist-filter-str').val(SESSION.json['library_flatlist_filter_str']);
             $('#recently-added span').text(getParamOrValue('param', SESSION.json['library_recently_added']));
@@ -2579,7 +2580,7 @@ $('#btn-appearance-update').click(function(e){
 
 // Show/hide the filter string input
 $('#library-flatlist-filter span').on('DOMSubtreeModified',function(){
-    ($('#library-flatlist-filter span').text() == 'Format' || $('#library-flatlist-filter span').text() == 'Folder') ?
+    ($('#library-flatlist-filter span').text() == 'Format' || $('#library-flatlist-filter span').text() == 'Folder' || $('#library-flatlist-filter span').text() == 'Any') ?
         $('#library-flatlist-filter-div').show() : $('#library-flatlist-filter-div').hide();
 });
 
@@ -3462,8 +3463,8 @@ function setLibMenuHeader () {
 
 			if (GLOBAL.musicScope == 'recent') {
 				$('.view-recents span').show();
-		        LIB.recentlyAddedClicked = true;
-				headerText = 'Recently Added (' + getParamOrValue('param', SESSION.json['library_recently_added']) + ')';
+		        LIB.recentlyAddedClicked = true;		
+				headerText = 'Added in last ' + getParamOrValue('param', SESSION.json['library_recently_added']).toLowerCase();
 			}
             else {
 				$('.view-all span').show();
@@ -3478,8 +3479,8 @@ function setLibMenuHeader () {
 			}
 		}
 	}
-
-	$('#menu-header').text(headerText);
+	var lib = SESSION.json['library_flatlist_filter'] == 'None' ? '' : SESSION.json['library_flatlist_filter'] == 'Any' ? SESSION.json['library_flatlist_filter_str'] : SESSION.json['library_flatlist_filter'];
+	$('#menu-header').text(SESSION.json['library_flatlist_filter'] == 'None' ? headerText : headerText + ' (' + lib + ')');
 }
 
 function lazyLode(view, skip, force) {
@@ -3498,7 +3499,7 @@ function lazyLode(view, skip, force) {
  				if (SESSION.json['library_tagview_covers'] == 'Yes') {
      				selector = 'img.lazy-tagview';
      				container = '#lib-album';
-					skip = true;
+					//skip = true;
                 }
  				break;
  			case 'album':
@@ -3616,3 +3617,25 @@ $.ensure = function (selector) {
     return promise;
     clearInterval(interval);
 };
+
+function filterhelp(filter, str) {
+	SESSION.json['library_flatlist_filter'] = filter;
+	var filter_str = str ? str : SESSION.json['library_flatlist_filter_str'];
+	SESSION.json['library_flatlist_filter_str'] = filter_str;
+	console.log(filter, filter_str);
+	$.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filter, 'library_flatlist_filter_str': filter_str});	
+    $.get('command/moode.php?cmd=clear_libcache_filtered');
+    LIB.recentlyAddedClicked = false;
+	LIB.filters.albums.length = 0;
+	LIB.filters.artists.length = 0;
+	LIB.filters.genres.length = 0;
+	LIB.filters.year.length = 0;
+	UI.libPos.fill(-2);
+	GLOBAL.libRendered = false;
+	GLOBAL.searchLib = '';
+    loadLibrary();
+	if (currentView == 'album') {
+        $('#bottom-row').css('display', '');
+        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+	}
+}

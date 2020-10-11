@@ -421,7 +421,15 @@ function genFlatList($sock) {
 			case 'Format':
 				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
 				break;
+			case 'Any':
+				$cmd = "search \"((base '" . $dir . "') AND (any contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
+				break;				
+			case 'Playlist':
+				$cmd = 'listplaylistinfo "' . $_SESSION['library_flatlist_filter_str'] . '"';
+				break;				
+
 		}
+		workerLog($cmd);
 		sendMpdCmd($sock, $cmd);
 		$resp .= readMpdResp($sock);
 	}

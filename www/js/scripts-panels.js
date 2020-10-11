@@ -870,6 +870,7 @@ jQuery(document).ready(function($) { 'use strict';
 		clearTimeout(searchTimer);
 
 		var selector = this;
+		
 		searchTimer = setTimeout(function(){
 			var filter = $(selector).val().trim();
 			var count = 0;
@@ -950,16 +951,33 @@ jQuery(document).ready(function($) { 'use strict';
 
 		clearTimeout(searchTimer);
         var filter = $(this).val().trim();
+		var bang = filter.slice(filter.length - 2);
 
         // Search year or year range using filterLib()
-        if (e.key == 'Enter' || filter.slice(filter.length - 2) == '!r') {
+        if (e.key == 'Enter' || bang == '!r' || bang == '!f' || bang == '!p') {
             $('#lib-album-filter').blur();
             $('#viewswitch').click();
-
-            if (filter.slice(filter.length - 2) == '!r') {
+            if (bang == '!r' || bang == '!f' || bang == '!p') {
                 filter = filter.slice(0, filter.length - 2);
             }
 
+			if (bang == '!p') {
+				filterhelp('Playlist', filter);
+				return;
+			}
+
+			else if (bang == '!f') {
+				filter = filter.toLowerCase();
+				if (!filter) {
+					filterhelp('None');
+				} else if (filter == 'lossless'){
+					filterhelp('Lossless');
+				} else {
+					filterhelp('Any', filter);
+				}
+				return;
+			}
+			
             LIB.filters.year = filter.split('-').map( Number ); // [year 1][year 2 if present]
 
             if (LIB.filters.year[0]) {

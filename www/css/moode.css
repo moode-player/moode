@@ -99,9 +99,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 .help-block, .help-inline {/*color:var(--textvariant);*/color:inherit;}
 .help-block-modal {margin:0 !important;}
 /* dropdown menus */
-#menu-top .dropdown-menu {min-width:14rem;} /* Make this one a bit wider */
+#menu-top .dropdown-menu, .viewswitch .dropdown-menu {min-width:14rem;} /* Make this one a bit wider */
 .dropdown-menu > li > a {line-height:2.75em;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1.1rem;white-space:nowrap;}
-.dropdown-menu {float:right;position:absolute;min-width:11.5rem;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;white-space:normal;}
+.dropdown-menu {float:right;position:absolute;min-width:12.5rem;left:auto;border:none;list-style:none outside none;background-color:var(--adaptmbg);box-shadow:0px 4px 10px rgba(0, 0, 0, 0.4);border-radius:.5em;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:1000;white-space:normal;}
 .dropdown-menu.open {padding:0;margin:0;}
 .bootstrap-select .dropdown-menu {background-color:transparent;}
 .btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.3);box-shadow:none;border-radius:4px;}
@@ -226,7 +226,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
 	/*.dropdown-menu {min-width:180px;}*/
-	.dropdown-menu > li > a {font-size:1.25rem;}
+	.dropdown-menu > li > a, .viewswitch .btn, #lib-album-search input {/*font-size:1.25rem;*/}
 	#playback-panel, #content {position:relative;}
 	.modal-body{max-height:calc(100vh - 13.5rem - env(safe-area-inset-bottom));padding:0 .5rem;}
 	.modal-footer .btn {width:40%;}
