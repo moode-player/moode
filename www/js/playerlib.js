@@ -853,6 +853,7 @@ function renderUI() {
     	else {
     		updKnobStartFrom(parseInt(MPD.json['time'] - parseInt(MPD.json['elapsed'])), MPD.json['state']);
     	}
+
     	// Set flag if song file and knob < 100% painted
     	// NOTE radio station time will always be 0
     	if (parseInt(MPD.json['time']) !== 0) {
@@ -1737,6 +1738,7 @@ function updKnobAndTimeTrack() {
 		}
 		else {
 			$('#playbar-timeline').show();
+            $('#playbar-countdown').text($('#countdown-display').text());
             $('#playbar-title').css('padding-bottom', '1rem');
 		}
 	}
@@ -3463,7 +3465,7 @@ function setLibMenuHeader () {
 
 			if (GLOBAL.musicScope == 'recent') {
 				$('.view-recents span').show();
-		        LIB.recentlyAddedClicked = true;		
+		        LIB.recentlyAddedClicked = true;
 				headerText = 'Added in last ' + getParamOrValue('param', SESSION.json['library_recently_added']).toLowerCase();
 			}
             else {
@@ -3623,7 +3625,7 @@ function filterhelp(filter, str) {
 	var filter_str = str ? str : SESSION.json['library_flatlist_filter_str'];
 	SESSION.json['library_flatlist_filter_str'] = filter_str;
 	console.log(filter, filter_str);
-	$.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filter, 'library_flatlist_filter_str': filter_str});	
+	$.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filter, 'library_flatlist_filter_str': filter_str});
     $.get('command/moode.php?cmd=clear_libcache_filtered');
     LIB.recentlyAddedClicked = false;
 	LIB.filters.albums.length = 0;
