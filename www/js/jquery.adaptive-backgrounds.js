@@ -11,6 +11,7 @@
  * 2019-05-30 TC moOde 5.3
  * - Add parseInt to getYiq()
  *
+ * 2020-MM-DD TC moOde 7.0.0
  */
 
 ;
