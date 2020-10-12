@@ -48,6 +48,8 @@ var filteredSongs = [];
 var filteredSongsDisc = [];
 var filteredAlbumCovers = [];
 
+//var mbdiediedie = true;
+
 // Shim for older Browsers that don't support Object.values
 if (!Object.values) {
     Object.defineProperty(Object, 'values', {
@@ -72,12 +74,12 @@ function loadLibrary() {
 	}, 2000);
 
 	$.post('command/moode.php?cmd=loadlib', function(data) {
+		clearTimeout(libpop);
         $('#lib-content').show();
 		renderLibrary(data);
-		setLibMenuHeader();
+		if (currentView == 'album' || currentView == 'tag') setLibMenuHeader();
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
-		clearTimeout(libpop);
 
 	}, 'json');
 }
@@ -511,6 +513,7 @@ function keyAlbum(obj) {
         return obj.album.toLowerCase() + '@' + md5 + '@' + obj.mb_albumid;
     }
     else {
+		//if (mbdiediedie) obj.mb_albumid = 0;
         // Use album_artist || artist
         return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
     }
