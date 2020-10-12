@@ -502,6 +502,7 @@ function removeArticles(string) {
 // Generate album key
 function keyAlbum(obj) {
  //if (mbdiediedie) obj.mb_albumid = 0;
+ //console.log(obj);
  return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
 }
 

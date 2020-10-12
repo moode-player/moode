@@ -3439,7 +3439,6 @@ function makeActive (vswitch, panel, view) {
 // Set the text in the library menu header
 function setLibMenuHeader () {
 	var headerText = (UI.mobile || currentView.indexOf('playback') != -1) ? '' : 'Browse by ';
-	var lib = '';
 	if (currentView == 'radio') {
 		headerText += 'Radio Stations';
 		if (GLOBAL.searchRadio) {
@@ -3478,9 +3477,9 @@ function setLibMenuHeader () {
 				headerText = 'Albums by ' + LIB.filters.artists[0];
 			}
 		}
-		lib = SESSION.json['library_flatlist_filter'] == 'None' ? '' : SESSION.json['library_flatlist_filter'] == 'Any' ? ' (' + SESSION.json['library_flatlist_filter_str'] + ')' : ' (' + SESSION.json['library_flatlist_filter'] + ')';
+		headerText += SESSION.json['library_flatlist_filter'] == 'None' ? '' : SESSION.json['library_flatlist_filter'] == 'Any' ? ' (' + SESSION.json['library_flatlist_filter_str'] + ')' : ' (' + SESSION.json['library_flatlist_filter'] + ')';
 	}
-	$('#menu-header').text(SESSION.json['library_flatlist_filter'] == 'None' ? headerText : headerText + lib);
+	$('#menu-header').text(SESSION.json['library_flatlist_filter'] == 'None' ? headerText : headerText);
 }
 
 function lazyLode(view, skip, force) {
