@@ -3438,7 +3438,7 @@ function makeActive (vswitch, panel, view) {
 
 // Set the text in the library menu header
 function setLibMenuHeader () {
-    var headerText = UI.mobile ? '' : 'Browse by ';
+	var headerText = (UI.mobile || currentView.indexOf('playback') != -1) ? '' : 'Browse by ';
 	var lib = '';
 	if (currentView == 'radio') {
 		headerText += 'Radio Stations';
@@ -3622,7 +3622,7 @@ function filterhelp(filter, str) {
 	clearTimeout(searchTimer);
 	SESSION.json['library_flatlist_filter'] = filter;
 	SESSION.json['library_flatlist_filter_str'] = str ? str : SESSION.json['library_flatlist_filter_str'];
-	//console.log(filter, SESSION.json['library_flatlist_filter_str']);
+	console.log(filter, SESSION.json['library_flatlist_filter_str']);
 	$.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filter, 'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str']});	
     $.get('command/moode.php?cmd=clear_libcache_filtered');
     LIB.recentlyAddedClicked = false;
