@@ -3480,9 +3480,9 @@ function setLibMenuHeader () {
 				headerText = 'Albums by ' + LIB.filters.artists[0];
 			}
 		}
+		headerText += SESSION.json['library_flatlist_filter'] == 'None' ? '' : SESSION.json['library_flatlist_filter'] == 'Any' ? ' (' + SESSION.json['library_flatlist_filter_str'] + ')' : ' (' + SESSION.json['library_flatlist_filter'] + ')';
 	}
-	var lib = SESSION.json['library_flatlist_filter'] == 'None' ? '' : SESSION.json['library_flatlist_filter'] == 'Any' ? SESSION.json['library_flatlist_filter_str'] : SESSION.json['library_flatlist_filter'];
-	$('#menu-header').text(SESSION.json['library_flatlist_filter'] == 'None' ? headerText : headerText + ' (' + lib + ')');
+	$('#menu-header').text(SESSION.json['library_flatlist_filter'] == 'None' ? headerText : headerText);
 }
 
 function lazyLode(view, skip, force) {
@@ -3621,11 +3621,11 @@ $.ensure = function (selector) {
 };
 
 function filterhelp(filter, str) {
+	clearTimeout(searchTimer);
 	SESSION.json['library_flatlist_filter'] = filter;
-	var filter_str = str ? str : SESSION.json['library_flatlist_filter_str'];
-	SESSION.json['library_flatlist_filter_str'] = filter_str;
-	console.log(filter, filter_str);
-	$.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filter, 'library_flatlist_filter_str': filter_str});
+	SESSION.json['library_flatlist_filter_str'] = str ? str : SESSION.json['library_flatlist_filter_str'];
+	console.log(filter, SESSION.json['library_flatlist_filter_str']);
+	$.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filter, 'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str']});
     $.get('command/moode.php?cmd=clear_libcache_filtered');
     LIB.recentlyAddedClicked = false;
 	LIB.filters.albums.length = 0;

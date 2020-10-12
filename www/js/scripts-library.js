@@ -48,6 +48,8 @@ var filteredSongs = [];
 var filteredSongsDisc = [];
 var filteredAlbumCovers = [];
 
+//var mbdiediedie = true;
+
 // Shim for older Browsers that don't support Object.values
 if (!Object.values) {
     Object.defineProperty(Object, 'values', {
@@ -72,12 +74,12 @@ function loadLibrary() {
 	}, 2000);
 
 	$.post('command/moode.php?cmd=loadlib', function(data) {
+		clearTimeout(libpop);
         $('#lib-content').show();
 		renderLibrary(data);
-		setLibMenuHeader();
+		if (currentView == 'album' || currentView == 'tag') setLibMenuHeader();
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
-		clearTimeout(libpop);
 
 	}, 'json');
 }
