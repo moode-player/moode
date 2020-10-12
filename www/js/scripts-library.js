@@ -500,20 +500,7 @@ function removeArticles(string) {
 // Generate album key
 function keyAlbum(obj) {
     //console.log(obj);
-    if (SESSION.json['pkgid_suffix'] == 'enable_key_by_path') {
-        // Use path
-        if (typeof(obj.file) != 'undefined') {
-            var md5 = $.md5(obj.file.substring(0,obj.file.lastIndexOf('/')));
-        }
-        else if (typeof(obj.imgurl) != 'undefined') {
-            var md5 = obj.imgurl.substring(obj.imgurl.lastIndexOf('/') + 1, obj.imgurl.indexOf('.jpg'));
-        }
-        return obj.album.toLowerCase() + '@' + md5 + '@' + obj.mb_albumid;
-    }
-    else {
-        // Use album_artist || artist
-        return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
-    }
+    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
 }
 
 // Return numeric song time
