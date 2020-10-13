@@ -776,11 +776,16 @@ var renderSongs = function(albumPos) {
 
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
-            if (miscLibOptions[0] == 'Yes') { // Include comment tag
+
+            // Optionally append either comment or albumid to the album header
+            if (miscLibOptions[0] == 'Yes') { // Comment tag included
                 var comment = filteredSongs[i].comment != '' ? ' (' + filteredSongs[i].comment + ')' : '';
             }
-            else if (miscLibOptions[1] == 'Yes') { // Include mbrz albumid tag{
+            else if (miscLibOptions[1] == 'Yes') { // MBRZ albumid tag included
                 var comment = filteredSongs[i].mb_albumid != '0' ? ' (' + filteredSongs[i].mb_albumid.slice(0, 8) + ')' : '';
+            }
+            else {
+                var comment = '';
             }
             var album = filteredSongs[i].album + comment;
 
