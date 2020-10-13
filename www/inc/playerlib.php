@@ -476,8 +476,12 @@ function genFlatList($sock) {
 // Generate library array (@chris-rudmin rewrite)
 function genLibrary($flat) {
 	$lib = array();
-	//workerLog($_SESSION['pkgid_suffix']);
-	//workerLog(print_r($GLOBALS['PROBE_M4A'], true));
+
+	// Break out misc lib options
+	// [0] = include comment tag Yes/No
+	// [1] = include mbrz albumid Yes/No
+	// [2] = folder path albumkey Yes/No
+	$misc_options = explode(',', $_SESSION['library_misc_options']);
 
 	foreach ($flat as $flatData) {
 		// Test M4A format when filtering by Lossless/Lossy
@@ -513,12 +517,12 @@ function genLibrary($flat) {
 				'year' => getTrackYear($flatData),
 				'time' => $flatData['Time'],
 				'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
-				'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
 				'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => songTime($flatData['Time']),
 				'last_modified' => $flatData['Last-Modified'],
 				'encoded_at' => getEncodedAt($flatData, 'default', true),
-				'comment' => (($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
+				'comment' => (($flatData['Comment'] && $misc_options[0] == 'Yes') ? $flatData['Comment'] : ''),
+				'mb_albumid' => (($flatData['MUSICBRAINZ_ALBUMID'] && $misc_options[1] == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0')
 			);
 
 			array_push($lib, $songData);
@@ -626,12 +630,12 @@ function genLibraryUTF8Rep($flat) {
 				'year' => utf8rep(getTrackYear($flatData)),
 				'time' => utf8rep($flatData['Time']),
 				'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-				'mb_albumid' => ($flatData['MUSICBRAINZ_ALBUMID'] ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'),
 				'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => utf8rep(songTime($flatData['Time'])),
 				'last_modified' => $flatData['Last-Modified'],
 				'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
-				'comment' => utf8rep(($flatData['Comment'] && $_SESSION['library_inc_comment_tag'] == 'Yes') ? $flatData['Comment'] : '')
+				'comment' => utf8rep((($flatData['Comment'] && $misc_options[0] == 'Yes') ? $flatData['Comment'] : '')),
+				'mb_albumid' => utf8rep((($flatData['MUSICBRAINZ_ALBUMID'] && $misc_options[1] == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'))
 			);
 
 			array_push($lib, $songData);
@@ -2763,7 +2767,7 @@ function autoConfigSettings() {
 		['requires' => ['library_flatlist_filter_str'] , 'handler' => setPlayerSession],
 		['requires' => ['library_hiresthm'] , 'handler' => setPlayerSession],
 		['requires' => ['library_ignore_articles'] , 'handler' => setPlayerSession],
-		['requires' => ['library_inc_comment_tag'] , 'handler' => setPlayerSession],
+		['requires' => ['library_misc_options'] , 'handler' => setPlayerSession],
 		['requires' => ['library_instant_play'] , 'handler' => setPlayerSession],
 		['requires' => ['library_tagview_artist'] , 'handler' => setPlayerSession],
 		['requires' => ['library_tagview_covers'] , 'handler' => setPlayerSession],

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sun Oct 4 17:25:33 2020
+-- File generated with SQLiteStudio v3.1.0 on Mon Oct 12 16:20:59 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -388,9 +388,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (142, 'ashuffle_mode', 'Track')
 INSERT INTO cfg_system (id, param, value) VALUES (143, 'radioview_sort_group', 'Name,No grouping');
 INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'No action,No action');
 INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'All');
-INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', NULL);
-INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_inc_comment_tag', 'No');
+INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'None');
+INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', '');
+INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,No,No');
 INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not installed');
 INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
 

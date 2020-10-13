@@ -48,7 +48,7 @@ var filteredSongs = [];
 var filteredSongsDisc = [];
 var filteredAlbumCovers = [];
 
-//var mbdiediedie = true;
+var miscLibOptions = [];
 
 // Shim for older Browsers that don't support Object.values
 if (!Object.values) {
@@ -67,6 +67,10 @@ if (!Object.values) {
 function loadLibrary() {
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
+
+    // Break out misc lib options
+    miscLibOptions = getMiscLibOptions();
+
 	var libpop = setTimeout(function(){
 	    if (currentView == 'tag' || currentView == 'album') {
 	        notify('library_loading');
@@ -502,7 +506,20 @@ function removeArticles(string) {
 // Generate album key
 function keyAlbum(obj) {
     //console.log(obj);
-    return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
+    if (miscLibOptions[2] == 'Yes') { // Folder path albumkey
+        // Use folder path
+        if (typeof(obj.file) != 'undefined') {
+            var md5 = $.md5(obj.file.substring(0,obj.file.lastIndexOf('/')));
+        }
+        else if (typeof(obj.imgurl) != 'undefined') {
+            var md5 = obj.imgurl.substring(obj.imgurl.lastIndexOf('/') + 1, obj.imgurl.indexOf('.jpg'));
+        }
+        return obj.album.toLowerCase() + '@' + md5 + '@' + obj.mb_albumid;
+    }
+    else {
+        // Use album_artist || artist
+        return obj.album.toLowerCase() + '@' + (obj.album_artist || obj.artist).toLowerCase() + '@' + obj.mb_albumid;
+    }
 }
 
 // Return numeric song time
@@ -756,12 +773,13 @@ var renderSongs = function(albumPos) {
         // Render the song list
         lastAlbum = '';
         lastDisc = '';
+
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
-            if (SESSION.json['library_inc_comment_tag'] == 'Yes') {
+            if (miscLibOptions[0] == 'Yes') { // Include comment tag
                 var comment = filteredSongs[i].comment != '' ? ' (' + filteredSongs[i].comment + ')' : '';
             }
-            else {
+            else if (miscLibOptions[1] == 'Yes') { // Include mbrz albumid tag{
                 var comment = filteredSongs[i].mb_albumid != '0' ? ' (' + filteredSongs[i].mb_albumid.slice(0, 8) + ')' : '';
             }
             var album = filteredSongs[i].album + comment;

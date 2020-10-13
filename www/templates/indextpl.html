@@ -1005,8 +1005,53 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-library-inc-comment-tag" class="help-block hide">
- 		                    This tag is currently used in the Library to display some identifying text to differentiate albums that have the same name but different MUSICBRAINZ_ALBUMID values.<br>
-							<b>NOTE:</b>&nbsp;Including the comment tag will impact the performance of the Library.
+ 		                    This tag is used to display some identifying text to differentiate albums that have the same name but different MUSICBRAINZ_ALBUMID values.<br>
+							<b>NOTE:</b>&nbsp;Including this tag may impact the performance of the Library.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="library-inc-mbrz-albumid">Include MBRZ albumid</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-inc-mbrz-albumid" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-mbrz-albumid-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-mbrz-albumid-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
+ 		                    This tag is appended to the album key to differentiate albums that have the same name.<br>
+							<b>NOTE:</b>&nbsp;Including this tag may impact the performance of the Library.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="library-folder-path-albumkey">Folder path albumkey</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-folder-path-albumkey" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-folder-path-albumkey-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-folder-path-albumkey-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-folder-path-albumkey" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-folder-path-albumkey" class="help-block hide">
+							The path to the album folder is used as the album key to differentiate albums.<br>
  	                    </span>
  	                </div>
 

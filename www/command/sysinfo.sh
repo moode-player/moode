@@ -184,7 +184,9 @@ APPEARANCE_SETTINGS() {
 	echo -e "\n- Metadata and Tags\c"
 	echo -e "\nTag view artist\t\t= $library_tagview_artist\c"
 	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
-	echo -e "\nInclude comment tag\t= $library_inc_comment_tag\c"
+	echo -e "\nInclude comment tag\t= $include_comment_tag\c"
+	echo -e "\nInclude MBRZ albumid\t= $include_mbrz_albumid\c"
+	echo -e "\nFolder path albumkey\t= $folder_path_albumkey\c"
 	echo -e "\n- UI elements\c"
 	echo -e "\nShow sample rate\t= $library_encoded_at\c"
 	echo -e "\nShow tagview genres\t= $library_show_genres\c"
@@ -208,8 +210,10 @@ APPEARANCE_SETTINGS() {
 
 RADIO_MANAGER_SETTINGS() {
 	echo -e "R A D I O   M A N A G E R   S E T T I N G S"
-	echo -e "\nRadioview sort/group\t= $radioview_sort_group\c"
-	echo -e "\nRadioview show/hide\t= $radioview_show_hide\n"
+	echo -e "\nSort tag\t\t= $rv_sort_tag\c"
+	echo -e "\nGroup method\t\t= $rv_group_method\c"
+	echo -e "\nShow moOde stations\t= $rv_show_moode\c"
+	echo -e "\nShow other stations\t= $rv_show_other\n"
 }
 
 MPD_SETTINGS() {
@@ -691,11 +695,18 @@ first_use_help=${arr[139]}
 playlist_art=${arr[140]}
 ashuffle_mode=${arr[141]}
 radioview_sort_group=${arr[142]}
+rv_sort_tag=$(awk -F"," '{print $1}' <<< $radioview_sort_group)
+rv_group_method=$(awk -F"," '{print $2}' <<< $radioview_sort_group)
 radioview_show_hide=${arr[143]}
+rv_show_moode=$(awk -F"," '{print $1}' <<< $radioview_show_hide)
+rv_show_other=$(awk -F"," '{print $2}' <<< $radioview_show_hide)
 renderer_backdrop=${arr[144]}
 library_flatlist_filter=${arr[145]}
 library_flatlist_filter_str=${arr[146]}
-library_inc_comment_tag=${arr[147]}
+library_misc_options=${arr[147]}
+include_comment_tag=$(awk -F"," '{print $1}' <<< $library_misc_options)
+include_mbrz_albumid=$(awk -F"," '{print $2}' <<< $library_misc_options)
+folder_path_albumkey=$(awk -F"," '{print $3}' <<< $library_misc_options)
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

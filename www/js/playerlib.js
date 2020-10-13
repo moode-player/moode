@@ -2136,6 +2136,9 @@ $('.context-menu a').click(function(e) {
     else if ($(this).data('cmd') == 'appearance') {
 		bgImgChange = false;
 
+        // Break out misc lib options
+        var miscLibOptions = getMiscLibOptions();
+
 		// Set up disclosures
 		var temp = SESSION.json['appearance_modal_state'].split(',');
 		for (var x = 0; x < 5; x++) {
@@ -2196,7 +2199,9 @@ $('.context-menu a').click(function(e) {
             // Metadata and Tags
             $('#tag-view-artist span').text(SESSION.json['library_tagview_artist']);
             $('#ignore-articles').val(SESSION.json['library_ignore_articles']);
-            $('#library-inc-comment-tag span').text(SESSION.json['library_inc_comment_tag']);
+            $('#library-inc-comment-tag span').text(miscLibOptions[0]);
+            $('#library-inc-mbrz-albumid span').text(miscLibOptions[1]);
+            $('#library-folder-path-albumkey span').text(miscLibOptions[2]);
             // User Interface elements
             $('#show-encoded-at span').text(getParamOrValue('param', SESSION.json['library_encoded_at']));
             $('#show-genres-column span').text(SESSION.json['library_show_genres']);
@@ -2258,6 +2263,14 @@ $('.context-menu a').click(function(e) {
 		$('#' + UI.dbEntry[3]).removeClass('active');
 	}
 });
+
+// Return misc lib options
+function getMiscLibOptions () {
+    // [0] = include comment tag Yes/No
+    // [1] = include mbrz albumid Yes/No
+    // [2] = folder path albumkey Yes/No
+    return SESSION.json['library_misc_options'].split(',');
+}
 
 // Update clock radio settings
 $('#btn-clockradio-update').click(function(e){
@@ -2355,6 +2368,9 @@ $('#btn-appearance-update').click(function(e){
     var playlistArtChange = false;
 	var thumbSizeChange = false;
 
+    // Break out misc lib options
+    var miscLibOptions = getMiscLibOptions();
+
 	// Set open/closed state for accordion headers
 	var temp = [0,0,0,0,0];
 	for (var x = 0; x < 5; x++) {
@@ -2389,7 +2405,9 @@ $('#btn-appearance-update').click(function(e){
     // Metadata and Tags
     if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}
-    if (SESSION.json['library_inc_comment_tag'] != $('#library-inc-comment-tag span').text()) {clearLibcacheAllReqd = true;}
+    if (miscLibOptions[0] != $('#library-inc-comment-tag span').text()) {clearLibcacheAllReqd = true;}
+    if (miscLibOptions[1] != $('#library-inc-mbrz-albumid span').text()) {clearLibcacheAllReqd = true;}
+    if (miscLibOptions[2] != $('#library-folder-path-albumkey span').text()) {libraryOptionsChange = true;}
     // User Interface elements
     if (SESSION.json['library_encoded_at'] != getParamOrValue('value', $('#show-encoded-at span').text())) {reloadLibrary = true;}
     if (SESSION.json['library_show_genres'] != $('#show-genres-column span').text()) {
@@ -2440,7 +2458,10 @@ $('#btn-appearance-update').click(function(e){
     // Metadata and Tags
     SESSION.json['library_tagview_artist'] = $('#tag-view-artist span').text();
     SESSION.json['library_ignore_articles'] = $('#ignore-articles').val().trim();
-    SESSION.json['library_inc_comment_tag'] = $('#library-inc-comment-tag span').text();
+    SESSION.json['library_misc_options'] =
+        $('#library-inc-comment-tag span').text() + ',' +
+        $('#library-inc-mbrz-albumid span').text() + ',' +
+        $('#library-folder-path-albumkey span').text();
     // User Interface elements
     SESSION.json['library_encoded_at'] = getParamOrValue('value', $('#show-encoded-at span').text());
     SESSION.json['library_show_genres'] = $('#show-genres-column span').text();
@@ -2534,7 +2555,7 @@ $('#btn-appearance-update').click(function(e){
             // Metadata and Tags
             'library_tagview_artist': SESSION.json['library_tagview_artist'],
             'library_ignore_articles': SESSION.json['library_ignore_articles'],
-            'library_inc_comment_tag': SESSION.json['library_inc_comment_tag'],
+            'library_misc_options': SESSION.json['library_misc_options'],
             // User Interface elements
             'library_encoded_at': SESSION.json['library_encoded_at'],
             'library_show_genres': SESSION.json['library_show_genres'],
