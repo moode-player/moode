@@ -294,6 +294,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .viewswitch .btn {position:relative;width:100%;line-height:2.75rem;font-size:1.1rem;font-family:inherit;padding:0 0.5rem;background-color:transparent;text-align:left;}
 .viewswitch .btn.active {color:inherit;}
 .viewswitch .btn:hover {background-color:var(--accentxta);}
+.viewswitch .btn.filter-clear {display:none;}
 #viewswitch-search:hover {background-color:inherit;}
 .viewswitch .btn i {padding:0;width:1.75em;text-align:center;margin-right:.25rem;}
 .viewswitch .btn.no-icon {padding-left:1rem;}

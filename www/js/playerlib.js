@@ -3503,7 +3503,7 @@ function setLibMenuHeader () {
 		}
 		headerText += SESSION.json['library_flatlist_filter'] == 'None' ? '' : SESSION.json['library_flatlist_filter'] == 'Any' ? ' (' + SESSION.json['library_flatlist_filter_str'] + ')' : ' (' + SESSION.json['library_flatlist_filter'] + ')';
 	}
-	$('#menu-header').text(SESSION.json['library_flatlist_filter'] == 'None' ? headerText : headerText);
+	$('#menu-header').text(headerText);
 }
 
 function lazyLode(view, skip, force) {
@@ -3642,7 +3642,9 @@ $.ensure = function (selector) {
 };
 
 function filterhelp(filter, str) {
-	clearTimeout(searchTimer);
+	if (filter != 'None') $('#viewswitch .filter-clear').show();
+	$('#searchResetLib').hide();
+	showSearchResetLib = false;
 	SESSION.json['library_flatlist_filter'] = filter;
 	SESSION.json['library_flatlist_filter_str'] = str ? str : SESSION.json['library_flatlist_filter_str'];
 	console.log(filter, SESSION.json['library_flatlist_filter_str']);
