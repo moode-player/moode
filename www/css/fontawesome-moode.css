@@ -409,6 +409,9 @@ readers do not read off random characters that represent icons */
 .fa-tv:before {
   content: "\f26c"; }
 
+.fa-undo:before {
+  content: "\f0e2"; }
+
 .fa-volume-off:before {
   content: "\f026"; }
 

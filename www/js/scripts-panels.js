@@ -84,6 +84,9 @@ jQuery(document).ready(function($) { 'use strict';
     	// Set currentView global
     	currentView = SESSION.json['current_view'];
 
+		// Unhide Clear Filter if filter active
+		if (SESSION.json['library_flatlist_filter'] != 'None') $('#viewswitch .filter-clear').show();
+		
     	// Detect mobile
     	UI.mobile = $(window).width() < 480 ? true : false;
         //console.log('window: ' + $(window).width() + 'x' + $(window).height());
@@ -361,6 +364,10 @@ jQuery(document).ready(function($) { 'use strict';
 			UI.libPos[1] = -1;
 			storeLibPos(UI.libPos);
 		}
+	});
+	$('#viewswitch .filter-clear').on('click', function(e){
+		filterhelp('None');
+		$('#viewswitch .filter-clear').hide();
 	});
 
     // Clear Library tag cache
@@ -968,9 +975,10 @@ jQuery(document).ready(function($) { 'use strict';
 
 			else if (bang == '!f') {
 				filter = filter.toLowerCase();
-				if (!filter) {
+				/*if (!filter) {
 					filterhelp('None');
-				} else if (filter == 'lossless'){
+				}*/
+				if (filter == 'lossless'){
 					filterhelp('Lossless');
 				} else {
 					filterhelp('Any', filter);
@@ -1024,7 +1032,7 @@ jQuery(document).ready(function($) { 'use strict';
     			});
 
     			var s = (count == 1) ? '' : 's';
-    			if (filter != '') {
+    			if (filter != '' && !bang) {
     				$('#menu-header').text((+count) + ' albums found');
     				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
     			}
