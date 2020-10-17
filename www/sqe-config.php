@@ -32,7 +32,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($key == 'AUDIODEVICE') {
 			$value = $_SESSION['cardnum'];
 		}
-		cfgdb_update('cfg_sl', $dbh, $key, $value);
+		cfgdb_update('cfg_sl', $dbh, $key, SQLite3::escapeString($value));
 	}
 
 	// update conf file
@@ -66,7 +66,7 @@ $_sl_select['task_priority'] = $cfg_sl['TASKPRIORITY'];
 $_sl_select['audio_codecs'] = $cfg_sl['CODECS'];
 
 // other options
-$_sl_select['other_options'] = $cfg_sl['OTHEROPTIONS'];
+$_sl_select['other_options'] = htmlentities($cfg_sl['OTHEROPTIONS']);
 
 waitWorker(1, 'sqe_config');
 
