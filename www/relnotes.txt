@@ -17,12 +17,14 @@
 
 New features
 
-- NEW: Selective resampling modes
-- NEW: Custom SoX resampling recipes
+- NEW: Selective resampling and Custom SoX recipes
 - NEW: Radio view with sort/group and metadata
+- NEW: Library performance improvements
+- NEW: Library search filters
 - NEW: Library support for tracks tagged with multiple genres
-- NEW: Library filters (Lossless, Lossy, Format or Directory)
 - NEW: Library option to select which tag for the Artist list
+- NEW: Library option to use folder path and/or MUSICBRAINZ_ALBUMID as album key
+- NEW: Add Appearance option to include the comment tag
 - NEW: Albums played directly if already in the Queue
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode option
@@ -30,7 +32,7 @@ New features
 - NEW: Thumbnails displayed for albums in Folder view
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
 - NEW: Add next, Play next by inserting after current item
-- NEW: Support up to 384K rate for DDDAC1794 NOS
+- NEW: Support for up to 384K rate for DDDAC1794 NOS
 
 Updates
 
@@ -42,18 +44,15 @@ Updates
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 - UPD: Add Genre to the Extra metadata Appearance option
-- UPD: Add Appearance option to include the comment tag
 - UPD: Add higher resolutions for thumbnail generator
 - UPD: Add "Update Library" to action list for Clock Radio
-- UPD: Add MUSICBRAINZ_ALBUMID as part of the album key
-- UPD: Add "Clear Library cache" to Library menu
 - UPD: Add place holder H/W for native lazyload
-- UPD: Add "Now Playing" EQ style icon to the Queue
+- UPD: Add "Now Playing" EQ style icon to the Queue and Library
 - UPD: Include Add next, Play next in list of "One touch actions"
 - UPD: Improve logging for Library update process
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
 - UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
-- UPD: Show volume level on Playbar
+- UPD: Show volume level on the Playbar
 - UPD: Generate additional set of small thumbnails for lists
 - UPD: Honor "Resume MPD" setting when disconnecting a renderer
 - UPD: Only load CoverView Queue HTML when it's opened

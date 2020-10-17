@@ -144,14 +144,15 @@
 	<!-- LIBRARY VIEWSWITCH MENU -->
 	<div id="viewswitch" class="viewswitch hide">
 		<div class="dropdown">
-			<a aria-label="Tabs" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
+			<a aria-label="Library menu" class="dropdown-toggle" id="current-tab" role="button" data-toggle="dropdown" data-target="#" href="#notarget">Library<i class="fas fa-chevron-down"></i></a>
 			<ul class="dropdown-menu context-menu" role="menu">
-				<button aria-label="Search" id="viewswitch-search" class="viewswearch btn menu-separator">
+				<button aria-label="Quisk search" id="viewswitch-search" class="viewswearch btn menu-separator">
 					<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
-						<input id="lib-album-filter" type="text" value="" placeholder="search albums">
+						<input id="lib-album-filter" type="text" value="" placeholder="search">
 					</form>
 					<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
 				</button>
+				<button aria-label="Advanced Search" class="btn adv-search-btn menu-separator hide" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i> Advanced search</button>
 				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
@@ -294,17 +295,18 @@
 	</div>
 </div>
 
-<!-- ADVANCED SEARCH (FOLDER VIEW) -->
+<!-- ADVANCED SEARCH -->
 <div id="dbsearch-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="dbsearch-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3>Advanced search</h3>
-		<a aria-label="Reset" href="#notarget" id="db-search-reset">RESET</a>&nbsp;search fields
 	</div>
 	<div class="modal-body" id="container-dbsearch">
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
-				<h5>Search all tags</h5>
+				<span class="h5"><a aria-label="Reset" href="#notarget" id="db-search-reset">CLEAR</a>&nbsp;search fields</span>
+				<br>
+				<span class="h5">Search all tags</span>
 				<div class="control-group">
 	                <label class="control-label" for="dbsearch-alltags">Search string</label>
 	                <div class="controls">
@@ -315,7 +317,7 @@
 	                    </span>
 	                </div>
 	            </div>
-				<h5>Search specific tags</h5>
+				<span class="h5">Search specific tags</span>
 				<div class="control-group">
 	                <label class="control-label" for="dbsearch-genre">Genre</label>
 	                <div class="controls">
@@ -363,9 +365,21 @@
 	                </div>
 	            </div>
 				<div class="control-group">
+	                <label class="control-label" for="dbsearch-composer">Conductor</label>
+	                <div class="controls">
+	                    <input id="dbsearch-conductor" class="input-xlarge" type="text" name="dbsearch_conductor" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
 	                <label class="control-label" for="dbsearch-performer">Performer</label>
 	                <div class="controls">
 	                    <input id="dbsearch-performer" class="input-xlarge" type="text" name="dbsearch_performer" value="">
+	                </div>
+	            </div>
+				<div class="control-group">
+	                <label class="control-label" for="dbsearch-performer">Work</label>
+	                <div class="controls">
+	                    <input id="dbsearch-work" class="input-xlarge" type="text" name="dbsearch_work" value="">
 	                </div>
 	            </div>
 				<div class="control-group">
@@ -385,7 +399,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Submit" class="btn btn-primary" id="db-search-submit" data-dismiss="modal">Search</button>
+		<button aria-label="Submit" class="btn btn-primary" id="db-search-submit" data-dismiss="modal">Submit</button>
 	</div>
 </div>
 
@@ -859,48 +873,6 @@
 	                        NOTE: When sorted by Year if not all tracks in the album have the same Year tag then the latest year will be used. If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
 						</span>
 	                </div>
-
-					<label class="control-label" for="library-flatlist-filter">Library filter</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-flatlist-filter" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">None</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Lossless</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Lossy</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Format</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Folder</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-flatlist-filter-sel"><span class="text">Any</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-library-flatlist-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-library-flatlist-filter" class="help-block hide">
-	                    	This feature filters the MPD database as part of generating the Library.<br>
-							<b>None:</b>&nbsp;Include all tracks in the collection.<br>
-							<b>Lossless:</b>&nbsp;Include tracks whose format is any of .flac|.aif|.wav|.dsf|.dff<br>
-							<b>Lossy:</b>&nbsp;Include tracks whose format is not any of the Lossless formats.<br>
-							<b>Format:</b>&nbsp;Include tracks of a specific format. Example .mp3 (the dot must be present).<br>
-							<b>Folder:</b>&nbsp;Include tracks in a specific folder path.<br>
-	                    </span>
-	                </div>
-
-					<div id="library-flatlist-filter-div">
-						<label class="control-label" for="library-flatlist-filter-str">Filter string</label>
-		                <div class="controls">
-		                    <input id="library-flatlist-filter-str" class="input-xlarge input-height-x" type="text">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-library-flatlist-filter-str" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-library-flatlist-filter-str" class="help-block hide">
-								Audio format or folder path used to filter the MPD database.
-							</span>
-		                </div>
-					</div>
 
 					<label class="control-label" for="recently-added">Recently added filter</label>
  	                <div class="controls">

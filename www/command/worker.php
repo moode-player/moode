@@ -102,6 +102,7 @@ sysCmd('touch ' . LIBCACHE_BASE . '_folder.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_format.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossless.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossy.json');
+sysCmd('touch ' . LIBCACHE_BASE . '_tag.json');
 sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
 sysCmd('truncate /var/local/www/currentsong.txt --size 0');

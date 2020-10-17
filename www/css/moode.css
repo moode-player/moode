@@ -530,9 +530,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 .clockradio-off-m {color:#7f8c8d;font-size:16.5px;}
 .info-toggle {text-decoration:none;margin-left:5px;font-size:18px;line-height:normal;}
 .set-button {margin: 0 4px 0 8px;} /* for system config page 'set' buttons */
-#quickhelp-special-buttons ul {list-style:none;margin-left:0;}
-#quickhelp-special-buttons p {margin-left:1.5em;}
-#quickhelp-special-buttons span, #quickhelp-active-elements span, #quickhelp-queue-commands span {margin-left:0;font-size:1em;font-weight:500;}
+#quickhelp-icon-lists ul {list-style:none;margin-left:0;}
+#quickhelp-icon-lists p {margin-left:1.5em;}
+#quickhelp-icon-lists span, #quickhelp-bullet-list span {margin-left:0;font-size:1em;font-weight:500;}
 /* playback history log */
 #container-playhistory {padding-top:5px;padding-left: 5px;}
 ol.playhistory {margin-left:55px;}

@@ -110,7 +110,7 @@
         <script src="js/custom_radio.js" defer></script>
         <script src="js/jquery.tagsinput.min.js" defer></script>
         <script src="js/jquery.placeholder.min.js" defer></script>
-        <script src="js/i18n/_messages.en.js', 'text/javascript" defer></script>
+        <script src="js/i18n/_messages.en.js" defer></script>
         <script src="js/application.min.js" defer></script>
         <script src="js/scripts-configs.min.js" defer></script>
 		<!-- CONFIGBLOCKSECTION_END -->

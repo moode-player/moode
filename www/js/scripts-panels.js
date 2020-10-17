@@ -243,8 +243,18 @@ jQuery(document).ready(function($) { 'use strict';
         $('#tagview-header-text').text('Albums' +
             ((SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') ?
             '' : ' by ' + SESSION.json['library_tagview_sort']));
-
-
+        //@Atair: Set artists column heading in tag view
+        switch(SESSION.json['library_tagview_artist']) {
+            case 'Artist':
+                $("#artistheader > div").html("ARTISTS")
+                break;
+            case 'Album Artist':
+                $("#artistheader > div").html("ALBUM ARTISTS +")
+                break;
+            case 'Album Artist [strict]':
+                $("#artistheader > div").html("ALBUM ARTISTS")
+                break;
+        }
         // Hide alphabits index if indicated
         if (SESSION.json['library_albumview_sort'] == 'Year') {
             $('#index-albums, #index-albumcovers').hide();
@@ -363,7 +373,9 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
-    // Clear Library tag cache
+
+    // Clear all the libcache files
+    // NOTE: This is a dev option for convenience. Unhide it in indextpl.html.
 	$('.btn-clear-libcache').on('click', function(e) {
         $.get('command/moode.php?cmd=clear_libcache_all');
         notify('clear_libcache', 'Auto-refresh in 2 seconds');
@@ -773,26 +785,40 @@ jQuery(document).ready(function($) { 'use strict';
 		var searchStr = '';
 		if ($('#dbsearch-alltags').val() != '') {
 			searchStr = $('#dbsearch-alltags').val().trim();
-			$.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
+            if (currentView == 'folder') {
+                $.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
+            }
+            else if (currentView == 'tag' || currentView == 'album') {
+                searchStr = "(any contains '" + searchStr + "')";
+                applyLibFilter('tags', searchStr);
+            }
 		}
 		else {
-			searchStr += $('#dbsearch-genre').val() == '' ? '' : 'genre "' + $('#dbsearch-genre').val().trim() + '"'
-			searchStr += $('#dbsearch-artist').val() == '' ? '' : ' artist "' + $('#dbsearch-artist').val().trim() + '"'
-			searchStr += $('#dbsearch-album').val() == '' ? '' : ' album "' + $('#dbsearch-album').val().trim() + '"'
-			searchStr += $('#dbsearch-title').val() == '' ? '' : ' title "' + $('#dbsearch-title').val().trim() + '"'
-			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : ' albumartist "' + $('#dbsearch-albumartist').val().trim() + '"'
-			searchStr += $('#dbsearch-date').val() == '' ? '' : ' date "' + $('#dbsearch-date').val().trim() + '"'
-			searchStr += $('#dbsearch-composer').val() == '' ? '' : ' composer "' + $('#dbsearch-composer').val().trim() + '"'
-			searchStr += $('#dbsearch-performer').val() == '' ? '' : ' performer "' + $('#dbsearch-performer').val().trim() + '"'
-			searchStr += $('#dbsearch-comment').val() == '' ? '' : ' comment "' + $('#dbsearch-comment').val().trim() + '"'
-			searchStr += $('#dbsearch-file').val() == '' ? '' : ' file "' + $('#dbsearch-file').val().trim() + '"'
+			searchStr += $('#dbsearch-genre').val() == '' ? '' : " AND (genre contains '" + $('#dbsearch-genre').val().trim() + "')";
+			searchStr += $('#dbsearch-artist').val() == '' ? '' : " AND (artist contains '" + $('#dbsearch-artist').val().trim() + "')";
+			searchStr += $('#dbsearch-album').val() == '' ? '' : " AND (album contains '" + $('#dbsearch-album').val().trim() + "')";
+			searchStr += $('#dbsearch-title').val() == '' ? '' : " AND (title contains '" + $('#dbsearch-title').val().trim() + "')";
+			searchStr += $('#dbsearch-albumartist').val() == '' ? '' : " AND (albumartist contains '" + $('#dbsearch-albumartist').val().trim() + "')";
+			searchStr += $('#dbsearch-date').val() == '' ? '' : " AND (date contains '" + $('#dbsearch-date').val().trim() + "')";
+			searchStr += $('#dbsearch-composer').val() == '' ? '' : " AND (composer contains '" + $('#dbsearch-composer').val().trim() + "')";
+            searchStr += $('#dbsearch-conductor').val() == '' ? '' : " AND (conductor contains '" + $('#dbsearch-conductor').val().trim() + "')";
+			searchStr += $('#dbsearch-performer').val() == '' ? '' : " AND (performer contains '" + $('#dbsearch-performer').val().trim() + "')";
+            searchStr += $('#dbsearch-work').val() == '' ? '' : " AND (work contains '" + $('#dbsearch-work').val().trim() + "')";
+			searchStr += $('#dbsearch-comment').val() == '' ? '' : " AND (comment contains '" + $('#dbsearch-comment').val().trim() + "')";
+			searchStr += $('#dbsearch-file').val() == '' ? '' : " AND (file contains '" + $('#dbsearch-file').val().trim() + "')";
 			if (searchStr != '') {
-				$.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
+                searchStr = searchStr.slice(5);
+                if (currentView == 'folder') {
+                    $.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
+                }
+                else if (currentView == 'tag' || currentView == 'album') {
+                    applyLibFilter('tags', searchStr);
+                }
 			}
 		}
 	});
 	$('#db-search-reset').click(function(e) {
-		$('#dbsearch-alltags, #dbsearch-genre, #dbsearch-artist, #dbsearch-album, #dbsearch-title, #dbsearch-albumartist, #dbsearch-date, #dbsearch-composer, #dbsearch-performer, #dbsearch-comment, #dbsearch-file').val('');
+		$('#dbsearch-alltags, #dbsearch-genre, #dbsearch-artist, #dbsearch-album, #dbsearch-title, #dbsearch-albumartist, #dbsearch-date, #dbsearch-composer, #dbsearch-conductor, #dbsearch-performer, #dbsearch-comment, #dbsearch-file').val('');
 		$('#dbsearch-alltags').focus();
 	});
 	$('#dbsearch-modal').on('shown.bs.modal', function() {
@@ -939,8 +965,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.playlist li').css('display', 'block');
 	});
 
-    // library search
-    // NOTE: This performs either a special year or year range search or a typedown search
+    // Library search
 	$('#lib-album-filter').keyup(function(e){
 		e.preventDefault();
 
@@ -949,103 +974,32 @@ jQuery(document).ready(function($) { 'use strict';
 			showSearchResetLib = true;
 		}
 
-		clearTimeout(searchTimer);
-        var filter = $(this).val().trim();
-		var bang = filter.slice(filter.length - 2);
-
-        // Search year or year range using filterLib()
-        if (e.key == 'Enter' || bang == '!r' || bang == '!f' || bang == '!p') {
+        if (e.key == 'Enter') {
             $('#lib-album-filter').blur();
-            $('#viewswitch').click();
-            if (bang == '!r' || bang == '!f' || bang == '!p') {
-                filter = filter.slice(0, filter.length - 2);
+
+            // Parse search string
+            var searchStr = $(this).val().trim().toLowerCase();
+            var filter = splitStringAtFirstSpace(searchStr);
+            if (filter.length == 1) {
+                filter[1] = '';
             }
 
-			if (bang == '!p') {
-				filterhelp('Playlist', filter);
-				return;
-			}
-
-			else if (bang == '!f') {
-				filter = filter.toLowerCase();
-				if (!filter) {
-					filterhelp('None');
-				} else if (filter == 'lossless'){
-					filterhelp('Lossless');
-				} else {
-					filterhelp('Any', filter);
-				}
-				return;
-			}
-
-            LIB.filters.year = filter.split('-').map( Number ); // [year 1][year 2 if present]
-
-            if (LIB.filters.year[0]) {
-			    LIB.recentlyAddedClicked = false;
-				LIB.filters.albums.length = 0;
-				$('#menu-header').text('Albums from ' + LIB.filters.year[0] + (LIB.filters.year[1] ? ' to ' + LIB.filters.year[1] : ''));
-				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
-				$('.view-recents span').hide();
-				$('.view-all span').hide();
-				UI.libPos.fill(-2);
-				filterLib();
-			    renderAlbums();
-				if (currentView == 'album') {
-                    $('#bottom-row').css('display', '');
-                    $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
-				}
-			}
-			else {
-				LIB.filters.year = '';
-			}
-        }
-        // Search using typedown
-        else {
-    		searchTimer = setTimeout(function(){
-    			var count = 0;
-
-    			$('.albumslist li').each(function() {
-    				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
-    					$(this).hide();
-    				}
-    				else {
-    					$(this).show();
-    					count++;
-    				}
-    			});
-
-    			$('.albumcovers li').each(function() {
-    				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
-    					$(this).hide();
-    				}
-    				else {
-    					$(this).show();
-    				}
-    			});
-
-    			var s = (count == 1) ? '' : 's';
-    			if (filter != '') {
-    				$('#menu-header').text((+count) + ' albums found');
-    				GLOBAL.searchLib = $('#menu-header').text(); // Save for #menu-header
-    			}
-
-                if (currentView == 'tag') {
-    				lazyLode('tag', true, true);
-    			}
-    			else {
-    				lazyLode('album', true, true);
-    				$('#bottom-row').css('display', '');
-                    $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
-    			}
-
-    		    $('#albumcovers .lib-entry').removeClass('active');
-    		    $('#albumsList .lib-entry').removeClass('active');
-    			$('#lib-albumcover').css('height', '100%');
-    			UI.libPos.fill(-3);
-    		}, DEFAULT_TIMEOUT);
+            // Apply filter
+            if (GLOBAL.allFilters.includes(filter[0])) {
+                if (GLOBAL.twoArgFilters.includes(filter[0])) {
+                    applyLibFilter(filter[0], filter[1]);
+                }
+                else {
+                    applyLibFilter(filter[0]);
+                }
+            }
+            // Default to filterType = any
+            else {
+                applyLibFilter('any', filter[0] + (filter[1] ? ' ' + filter[1] : ''));
+            }
         }
 
-        if (filter == '') {
+        if (searchStr == '') {
             $('#searchResetLib').hide();
             showSearchResetLib = false;
             $('#searchResetLib').click();

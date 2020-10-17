@@ -21,7 +21,7 @@
  *
  * 2020-07-22 TC moOde 7.0.0
  *
- * This includes the @chris-rudmin rewrite of the GenLibrary() function
+ * This includes the @chris-rudmin 2019-08-08 rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
  * Refer to https://github.com/moode-player/moode/pull/16 for more info.
  *
@@ -358,13 +358,12 @@ function sockWrite($sock, $msg) {
 // Caching library loader
 function loadLibrary($sock) {
 	if (filesize(libcache_file()) != 0) {
-		workerLog('loadLibrary(): Return existing ' . libcache_file());
+		//workerLog('loadLibrary(): Return existing ' . libcache_file());
 		return file_get_contents(libcache_file());
 	}
 	else {
-		workerLog('loadLibrary(): Generate new ' . libcache_file());
+		//workerLog('loadLibrary(): Generate new ' . libcache_file());
 		$flat = genFlatList($sock);
-
 		if ($flat != '') {
 			// Normal or UTF8 replace
 			if ($_SESSION['library_utf8rep'] == 'No') {
@@ -408,28 +407,45 @@ function genFlatList($sock) {
 		// NOTE: MPD must be compiled with libpcre++-dev to make use of PERL compatible regex
 		// NOTE: Logic in genLibrary() determines whether M4A format is Lossless or Lossy
 		switch ($_SESSION['library_flatlist_filter']) {
-			case 'None':
+			// Return entire library
+			case 'all':
+			// Filter entire library by Year or Year range
+			case 'year':
+				// NOTE: The year filter is in genLibrary()
 				$cmd = "search base \"" . $dir . "\"";
 				break;
-			case 'Lossless':
-				$cmd = "search \"((base '" . $dir . "') AND (file =~ 'm4a$|flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
+			// Advanced search dialog
+			case 'tags':
+				$cmd = "search \"((base '" . $dir . "') AND (" . $_SESSION['library_flatlist_filter_str'] . "))\"";
 				break;
-			case 'Lossy':
-				$cmd = "search \"((base '" . $dir . "') AND (file !~ 'flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
+			// Filter on any tag or a specific tag containing the string
+			case 'album':
+			case 'any':
+			case 'artist':
+			case 'composer':
+			case 'conductor':
+			case 'genre':
+			case 'label':
+			case 'performer':
+			case 'title':
+			case 'work':
+				$tag = strtolower($_SESSION['library_flatlist_filter']);
+				$cmd = "search \"((base '" . $dir . "') AND (" . $tag . " contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
 				break;
-			case 'Folder':
-			case 'Format':
+			// Filter on file path or extension
+			// NOTE: Lossless and Lossy have an additional m4a probe in genLibrary()
+			case 'folder':
+			case 'format':
 				$cmd = "search \"((base '" . $dir . "') AND (file contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
 				break;
-			case 'Any':
-				$cmd = "search \"((base '" . $dir . "') AND (any contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
+			case 'lossless':
+				$cmd = "search \"((base '" . $dir . "') AND (file =~ 'm4a$|flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
 				break;
-			case 'Playlist':
-				$cmd = 'listplaylistinfo "' . $_SESSION['library_flatlist_filter_str'] . '"';
+			case 'lossy':
+				$cmd = "search \"((base '" . $dir . "') AND (file !~ 'flac$|aif$|aiff$|wav$|dsf$|dff$'))\"";
 				break;
-
 		}
-		workerLog($cmd);
+		//workerLog($cmd);
 		sendMpdCmd($sock, $cmd);
 		$resp .= readMpdResp($sock);
 	}
@@ -473,7 +489,7 @@ function genFlatList($sock) {
 	}
 }
 
-// Generate library array (@chris-rudmin rewrite)
+// Generate library array (@chris-rudmin 2019-08-08 rewrite)
 function genLibrary($flat) {
 	$lib = array();
 
@@ -481,19 +497,28 @@ function genLibrary($flat) {
 	// [0] = include comment tag Yes/No
 	// [1] = include mbrz albumid Yes/No
 	// [2] = folder path albumkey Yes/No
+	// NOTE: lets build the album key here instead of in the JS
 	$misc_options = explode(',', $_SESSION['library_misc_options']);
 
+	// Setup date range filter
+	if ($_SESSION['library_flatlist_filter'] == 'year') {
+		$filter_year = explode('-', $_SESSION['library_flatlist_filter_str']);
+		if (!isset($filter_year[1])) {
+	 		$filter_year[1] = $filter_year[0];
+		}
+	}
+
 	foreach ($flat as $flatData) {
-		// Test M4A format when filtering by Lossless/Lossy
-		if (strpos($_SESSION['library_flatlist_filter'], 'Loss') !== false && getFileExt($flatData['file']) == 'm4a') {
+		// M4A probe for ALAC when filtering by Lossless/Lossy
+		if (strpos($_SESSION['library_flatlist_filter'], 'loss') !== false && getFileExt($flatData['file']) == 'm4a') {
 			$fh = fopen(MPD_MUSICROOT . $flatData['file'], "rb");
 			$alac_found = strpos(fread($fh, 512), 'alac');
 			fclose($fh);
 
-			if ($_SESSION['library_flatlist_filter'] == 'Lossless' && $alac_found !== false) {
+			if ($_SESSION['library_flatlist_filter'] == 'lossless' && $alac_found !== false) {
 				$push = true;
 			}
-			elseif ($_SESSION['library_flatlist_filter'] == 'Lossy' && $alac_found === false) {
+			elseif ($_SESSION['library_flatlist_filter'] == 'lossy' && $alac_found === false) {
 				$push = true;
 			}
 			else {
@@ -505,6 +530,12 @@ function genLibrary($flat) {
 			$push = true;
 		}
 
+		// Date range filter
+		if ($_SESSION['library_flatlist_filter'] == 'year') {
+			$track_year = getTrackYear($flatData);
+			$push = ($track_year >= $filter_year[0] && $track_year <= $filter_year[1]) ? true : false;
+		}
+
 		if ($push === true) {
 			$songData = array(
 				'file' => $flatData['file'],
@@ -514,6 +545,7 @@ function genLibrary($flat) {
 				'artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist'),
 				'album_artist' => $flatData['AlbumArtist'],
 				'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
+				'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
 				'year' => getTrackYear($flatData),
 				'time' => $flatData['Time'],
 				'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
@@ -529,12 +561,26 @@ function genLibrary($flat) {
 		}
 	}
 
+	// No filter results or empty MPD database
+	if (count($lib) == 1 && empty($lib[0]['file'])) {
+		$lib[0]['file'] = '';
+		$lib[0]['title'] = '';
+		$lib[0]['artist'] = '';
+		$lib[0]['album'] = 'Nothing found';
+		$lib[0]['album_artist'] = '';
+		$lib[0]['genre'] = array('');
+		$lib[0]['time_mmss'] = '';
+		$lib[0]['encoded_at'] = '0';
+		//workerLog('genLibrary(): No filter results or empty MPD database');
+		//workerLog(print_r($lib ,true));
+	}
+
 	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
-		workerLog('genLibrary(): error: json_encode($lib) failed');
+		workerLog('genLibrary(): Error: json_encode($lib) failed');
 	}
 
 	if (false === (file_put_contents(libcache_file(), $json_lib))) {
-		workerLog('genLibrary(): error: file create failed: ' . libcache_file());
+		workerLog('genLibrary(): Error: file create failed: ' . libcache_file());
 	}
 
 	//workerLog(print_r($lib, true));
@@ -544,7 +590,30 @@ function genLibrary($flat) {
 }
 
 function libcache_file() {
-	$suffix = $_SESSION['library_flatlist_filter'] == 'None' ? '_all.json' : '_' . strtolower($_SESSION['library_flatlist_filter'] . '.json');
+	switch ($_SESSION['library_flatlist_filter']) {
+		case 'all':
+		case 'folder':
+		case 'format':
+		case 'lossless':
+		case 'lossy':
+			$suffix = '_' . strtolower($_SESSION['library_flatlist_filter']) . '.json';
+			break;
+		case 'album':
+		case 'any':
+		case 'artist':
+		case 'composer':
+		case 'conductor':
+		case 'genre':
+		case 'label':
+		case 'performer':
+		case 'tags':
+		case 'title':
+		case 'work':
+		case 'year':
+			$suffix = '_tag.json';
+			break;
+	}
+
 	return LIBCACHE_BASE . $suffix;
 }
 
@@ -597,25 +666,47 @@ JSON_ERROR_UTF16	Malformed UTF-16 characters, possibly incorrectly encoded	PHP 7
 function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
+	// Break out misc lib options
+	// [0] = include comment tag Yes/No
+	// [1] = include mbrz albumid Yes/No
+	// [2] = folder path albumkey Yes/No
+	// NOTE: lets build the album key here instead of in the JS
+	$misc_options = explode(',', $_SESSION['library_misc_options']);
+
+	// Setup date range filter
+	if ($_SESSION['library_flatlist_filter'] == 'year') {
+		$filter_year = explode('-', $_SESSION['library_flatlist_filter_str']);
+		if (!isset($filter_year[1])) {
+	 		$filter_year[1] = $filter_year[0];
+		}
+	}
+
 	foreach ($flat as $flatData) {
-		// Test M4A format when filtering by Lossless/Lossy
-		if (strpos($_SESSION['library_flatlist_filter'], 'Loss' !== false) && getFileExt($flatData['file']) == 'm4a') {
+		// M4A probe for ALAC when filtering by Lossless/Lossy
+		if (strpos($_SESSION['library_flatlist_filter'], 'loss') !== false && getFileExt($flatData['file']) == 'm4a') {
 			$fh = fopen(MPD_MUSICROOT . $flatData['file'], "rb");
 			$alac_found = strpos(fread($fh, 512), 'alac');
 			fclose($fh);
 
-			if ($_SESSION['library_flatlist_filter'] == 'Lossless' && $alac_found !== false) {
+			if ($_SESSION['library_flatlist_filter'] == 'lossless' && $alac_found !== false) {
 				$push = true;
 			}
-			elseif ($_SESSION['library_flatlist_filter'] == 'Lossy' && $alac_found === false) {
+			elseif ($_SESSION['library_flatlist_filter'] == 'lossy' && $alac_found === false) {
 				$push = true;
 			}
 			else {
 				$push = false;
 			}
+			//workerLog(($push === true ? 'T|' : 'F|') . $flatData['file']);
 		}
 		else {
 			$push = true;
+		}
+
+		// Date range filter
+		if ($_SESSION['library_flatlist_filter'] == 'year') {
+			$track_year = getTrackYear($flatData);
+			$push = ($track_year >= $filter_year[0] && $track_year <= $filter_year[1]) ? true : false;
 		}
 
 		if ($push === true) {
@@ -627,6 +718,7 @@ function genLibraryUTF8Rep($flat) {
 				'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist')),
 				'album_artist' => utf8rep($flatData['AlbumArtist']),
 				'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
+				'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
 				'year' => utf8rep(getTrackYear($flatData)),
 				'time' => utf8rep($flatData['Time']),
 				'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
@@ -640,6 +732,20 @@ function genLibraryUTF8Rep($flat) {
 
 			array_push($lib, $songData);
 		}
+	}
+
+	// No filter results or empty MPD database
+	if (count($lib) == 1 && empty($lib[0]['file'])) {
+		$lib[0]['file'] = '';
+		$lib[0]['title'] = '';
+		$lib[0]['artist'] = '';
+		$lib[0]['album'] = 'Nothing found';
+		$lib[0]['album_artist'] = '';
+		$lib[0]['genre'] = array('');
+		$lib[0]['time_mmss'] = '';
+		$lib[0]['encoded_at'] = '0';
+		//workerLog('genLibrary(): No filter results or empty MPD database');
+		//workerLog(print_r($lib ,true));
 	}
 
 	if (false === ($json_lib = json_encode($lib, JSON_INVALID_UTF8_SUBSTITUTE))) {
@@ -694,6 +800,7 @@ function clearLibCacheAll() {
 function clearLibCacheFiltered() {
 	sysCmd('truncate ' . LIBCACHE_BASE . '_folder.json --size 0');
 	sysCmd('truncate ' . LIBCACHE_BASE . '_format.json --size 0');
+	sysCmd('truncate ' . LIBCACHE_BASE . '_tag.json --size 0');
 	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
 }
 
@@ -801,7 +908,7 @@ function searchDB($sock, $querytype, $query = '') {
 			break;
 		// Search specified tags
 		case 'specific':
-			sendMpdCmd($sock, 'search ' . html_entity_decode($query));
+			sendMpdCmd($sock, 'search "(' . html_entity_decode($query) . ')"');
 			break;
 	}
 
@@ -1397,7 +1504,7 @@ function cfgdb_read($table, $dbh, $param = '', $id = '') {
 function cfgdb_update($table, $dbh, $key = '', $value) {
 	switch ($table) {
 		case 'cfg_system':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' where param='" . $key . "'";
+			$querystr = "UPDATE " . $table . " SET value='" . SQLite3::escapeString($value) . "' where param='" . $key . "'";
 			break;
 
 		case 'cfg_mpd':

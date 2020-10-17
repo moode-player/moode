@@ -20,7 +20,7 @@
  *
  * 2020-MM-DD TC moOde 7.0.0
  *
- * This is the @chris-rudmin rewrite of the library group/filter routines
+ * This is the @chris-rudmin  2019-08-08 rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
  * Refer to https://github.com/moode-player/moode/pull/16 for more info.
  *
@@ -193,7 +193,8 @@ function groupLib(fullLib) {
 
 	allAlbums = Object.values(allSongs.reduce(reduceAlbums, {})).map(function(albumTracks){
 		var file = findAlbumProp(albumTracks, 'file');
-		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
+		//ORIG var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
+        var md5 = typeof(file) == 'undefined' ? 0 : $.md5(file.substring(0,file.lastIndexOf('/')));
 		var artist = findAlbumProp(albumTracks, 'artist');
 		var albumArtist = findAlbumProp(albumTracks, 'album_artist');
         var year = getYear(albumTracks);
@@ -506,6 +507,12 @@ function removeArticles(string) {
 // Generate album key
 function keyAlbum(obj) {
     //console.log(obj);
+
+    // To handle no filter results
+    if (obj.album == 'Nothing found') {
+        return;
+    }
+
     if (miscLibOptions[2] == 'Yes') { // Folder path albumkey
         // Use folder path
         if (typeof(obj.file) != 'undefined') {
@@ -639,7 +646,7 @@ var renderAlbums = function() {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
         filteredAlbumCovers[i].year ? albumViewYear = '(' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
 
-        // filteredAlbums[i].encoded_at
+        // encoded_at:
         // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
         if (encodedAtOption && encodedAtOption != 9) {
             // Tag view
@@ -653,12 +660,13 @@ var renderAlbums = function() {
             var albumViewBgDiv = encodedAtOption == 3 ? '<div class="lib-encoded-at-badge">' + encodedAt[0] + '</div>' : '';
         }
 
+        // NOTE: To handle no filter results we want artist to be '' for display
 		if (SESSION.json['library_tagview_covers'] == 'Yes') {
 			output += '<li class="lib-entry">'
                 + tagViewLazy + filteredAlbums[i].imgurl + '">'
                 + tagViewHdDiv
                 + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album + '</span>'
-                + '<span class="artist-name-art">' + filteredAlbums[i].artist + '</span>'
+                + '<span class="artist-name-art">' + (filteredAlbums[i].artist ? filteredAlbums[i].artist : '') + '</span>'
                 + '<span class="album-year">' + tagViewYear + '</span></div>'
                 + tagViewNvDiv
                 + '</li>';
@@ -666,7 +674,7 @@ var renderAlbums = function() {
 		else {
 			output += '<li class="lib-entry no-tagview-covers">'
                 + '<span class="album-name">' + filteredAlbums[i].album
-                + '</span><span class="artist-name-art">' + filteredAlbums[i].artist + '</span><span class="album-year">' + tagViewYear + '</span></li>'
+                + '</span><span class="artist-name-art">' + (filteredAlbums[i].artist ? filteredAlbums[i].artist : '') + '</span><span class="album-year">' + tagViewYear + '</span></li>'
         }
 
 		output2 += '<li class="lib-entry">'
@@ -675,7 +683,7 @@ var renderAlbums = function() {
 			+ albumViewHdDiv
 			+ albumViewBgDiv
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
-            + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].artist + '</span><span class="album-year">' + albumViewYear + '</span></div>'
+            + '<div class="artyear"><span class="artist-name">' + (filteredAlbumCovers[i].artist ? filteredAlbumCovers[i].artist : '') + '</span><span class="album-year">' + albumViewYear + '</span></div>'
             + albumViewTxDiv
             + albumViewNvDiv
             + '</li>';
@@ -845,10 +853,6 @@ var renderSongs = function(albumPos) {
 		$('.lib-disc').css('display', 'block');
 	}
 
-	//console.log('filteredSongs[0].file=' + filteredSongs[0].file);
-	//console.log('LIB.filters.albums=(' + LIB.filters.albums + ')');
-	//console.log('pos=(' + albumPos + ')')
-
 	// Cover art and metadata for Tag and Album views
 	if (filteredAlbums.length == 1 || LIB.filters.albums.length || typeof(albumPos) !== 'undefined') {
 		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' +
@@ -861,10 +865,15 @@ var renderSongs = function(albumPos) {
 		else {
 			artist = filteredSongs[0].album_artist || filteredSongs[0].artist;
 		}
-		$('#lib-artistname').html(artist);
-		$('#lib-albumyear').html(filteredSongs[0].year);
-		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
-		$('#lib-encoded-at').html(filteredSongs[0].encoded_at.split(',')[0]);
+        if (filteredSongs[0].album == 'Nothing found') {
+            $('#lib-artistname, #lib-albumyear, #lib-numtracks, #lib-encoded-at').html('');
+        }
+        else {
+            $('#lib-artistname').html(artist);
+    		$('#lib-albumyear').html(filteredSongs[0].year);
+    		$('#lib-numtracks').html(filteredSongs.length + ((filteredSongs.length == 1) ? ' track, ' : ' tracks, ') + formatLibTotalTime(LIB.totalTime));
+    		$('#lib-encoded-at').html(filteredSongs[0].encoded_at.split(',')[0]);
+        }
 	}
 	else {
 		var album = LIB.filters.genres.length ? LIB.filters.genres : (LIB.filters.artists.length ? LIB.filters.artists : 'Music Library');
@@ -884,8 +893,22 @@ var renderSongs = function(albumPos) {
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + genreName + '</button>');
         }
         else {
-            var libFilter = SESSION.json['library_flatlist_filter'] == 'None' ? '' :
-                '<div id="lib-flatlist-filter"><i class="far fa-filter"></i> ' + SESSION.json['library_flatlist_filter'] + '</div>';
+            var libFilter = '';
+            if (SESSION.json['library_flatlist_filter'] != 'all') {
+                libFilter = '<div id="lib-flatlist-filter"><i class="far fa-filter"></i> ';
+
+                if (SESSION.json['library_flatlist_filter'] == 'tags') {
+                    libFilter += 'Tag filtered</div>';
+                }
+                else {
+                    libFilter += SESSION.json['library_flatlist_filter'].charAt(0).toUpperCase()
+                    + SESSION.json['library_flatlist_filter'].slice(1)
+                    + (SESSION.json['library_flatlist_filter'].indexOf('loss') == -1 ? ': ' : '')
+                    + SESSION.json['library_flatlist_filter_str']
+                    + '</div>';
+                }
+            }
+
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
                 'Music Collection' + libFilter + '</button>');
         }
