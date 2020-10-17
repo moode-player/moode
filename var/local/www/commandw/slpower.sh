@@ -49,7 +49,9 @@ if [[ $WRKREADY == "1" ]]; then
 		/usr/bin/mpc stop > /dev/null
 		sleep 1
 		$(sqlite3 $SQLDB "update cfg_system set value='1' where param='slactive'")
-		if [[ $ALSAVOLUME != "none" ]]; then
+		# See if -V hardware mixer is present in OTHEROPTIONS
+		VOPT=$(sqlite3 $SQLDB "select * from cfg_sl where value like '%-V%'")
+		if [[ $ALSAVOLUME != "none" && $VOPT == "" ]]; then
 			/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi
 	else
