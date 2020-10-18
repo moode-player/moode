@@ -781,6 +781,7 @@ jQuery(document).ready(function($) { 'use strict';
 			mpdDbCmd(UI.dbCmd, UI.path);
 		}
 	});
+
 	$('#db-search-submit').click(function(e) {
 		var searchStr = '';
 		if ($('#dbsearch-alltags').val() != '') {
@@ -969,12 +970,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#lib-album-filter').keyup(function(e){
 		e.preventDefault();
 
-		if (!showSearchResetLib) {
-			$('#searchResetLib').show();
-			showSearchResetLib = true;
-		}
-
-        if (e.key == 'Enter') {
+        if (e.key == 'Enter' && $('#lib-album-filter').val().length > 0) {
             $('#lib-album-filter').blur();
 
             // Parse search string
@@ -998,25 +994,16 @@ jQuery(document).ready(function($) { 'use strict';
                 applyLibFilter('any', filter[0] + (filter[1] ? ' ' + filter[1] : ''));
             }
         }
-
-        if (searchStr == '') {
-            $('#searchResetLib').hide();
-            showSearchResetLib = false;
-            $('#searchResetLib').click();
-        }
 	});
 
 	$('#searchResetLib').click(function(e) {
 		e.preventDefault();
-		GLOBAL.searchLib = '';
-		setLibMenuHeader();
-		LIB.filters.albums.length = 0;
-        LIB.filters.year = '';
-		UI.libPos.fill(-2);
-		storeLibPos(UI.libPos);
-	    clickedLibItem(undefined, undefined, LIB.filters.albums, renderAlbums);
-		$("#searchResetLib").hide();
-		showSearchResetLib = false;
+
+        $('#lib-album-filter').val('');
+        if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
+            applyLibFilter('full_lib');
+        }
+
 		document.getElementById("lib-album-filter").focus();
 		return false;
 	});

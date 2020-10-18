@@ -20,7 +20,7 @@
  *
  * 2020-MM-DD TC moOde 7.0.0
  *
- * This is the @chris-rudmin  2019-08-08 rewrite of the library group/filter routines
+ * This is the @chris-rudmin 2019-08-08 rewrite of the library group/filter routines
  * including modifications to all dependant functions and event handlers.
  * Refer to https://github.com/moode-player/moode/pull/16 for more info.
  *
@@ -33,7 +33,7 @@ var LIB = {
     totalTime: 0,
     totalSongs: 0,
     artistClicked: '',
-    filters: {artists: [], genres: [], albums: [], year: []}
+    filters: {artists: [], genres: [], albums: [],}
 };
 
 var allGenres = [];
@@ -383,11 +383,6 @@ function filterSongsByDate(item) {
     return LIB.currentDate.getTime() - itemDateObj.getTime() <= parseInt(SESSION.json['library_recently_added']);
 }
 
-function filterByYear(item) {
-	item.year == LIB.filters.year[0] ? a = true : item.year >= LIB.filters.year[0] && item.year <= LIB.filters.year[1] ? a = true : a = false;
-	return a;
-}
-
 function filterArtists() {
 	// Filter artists by genre
 	var songsfilteredByGenre = allSongs;
@@ -465,11 +460,6 @@ function filterAlbums() {
             });
         }
     }
-	// Filter by year(s)
-	if (LIB.filters.year.length) {
-		filteredAlbums = filteredAlbums.filter(filterByYear);
-		filteredAlbumCovers = filteredAlbumCovers.filter(filterByYear);
-	}
 }
 
 function filterSongs() {
@@ -487,9 +477,6 @@ function filterSongs() {
     if (LIB.recentlyAddedClicked) {
         filteredSongs = filteredSongs.filter(filterSongsByDate);
     }
-	if (LIB.filters.year.length) {
-		filteredSongs = filteredSongs.filter(filterByYear);
-	}
 }
 
 function filterLib() {
@@ -619,9 +606,6 @@ var renderAlbums = function() {
 	var activeFlag = '';
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
-
-    // Clear search filter and results
-	$('#lib-album-filter').val('');
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
@@ -867,6 +851,7 @@ var renderSongs = function(albumPos) {
 		}
         if (filteredSongs[0].album == 'Nothing found') {
             $('#lib-artistname, #lib-albumyear, #lib-numtracks, #lib-encoded-at').html('');
+            $('#lib-coverart-img a').attr('data-target', '#');
         }
         else {
             $('#lib-artistname').html(artist);
@@ -894,7 +879,7 @@ var renderSongs = function(albumPos) {
         }
         else {
             var libFilter = '';
-            if (SESSION.json['library_flatlist_filter'] != 'all') {
+            if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
                 libFilter = '<div id="lib-flatlist-filter"><i class="far fa-filter"></i> ';
 
                 if (SESSION.json['library_flatlist_filter'] == 'tags') {
@@ -903,7 +888,7 @@ var renderSongs = function(albumPos) {
                 else {
                     libFilter += SESSION.json['library_flatlist_filter'].charAt(0).toUpperCase()
                     + SESSION.json['library_flatlist_filter'].slice(1)
-                    + (SESSION.json['library_flatlist_filter'].indexOf('loss') == -1 ? ': ' : '')
+                    + (SESSION.json['library_flatlist_filter'].indexOf('loss') == -1 ? ' ' : '')
                     + SESSION.json['library_flatlist_filter_str']
                     + '</div>';
                 }
@@ -925,17 +910,13 @@ $('#genreheader, #menu-header').on('click', function(e) {
 	LIB.filters.genres.length = 0;
 	LIB.filters.artists.length = 0;
 	LIB.filters.albums.length = 0;
-	LIB.filters.year.length = 0;
 	if (currentView == 'tag' || currentView == 'album') {
 		LIB.artistClicked = false;
         LIB.albumClicked = false;
-		$("#searchResetLib").hide();
-		showSearchResetLib = false;
         $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
-		if (GLOBAL.musicScope == 'recent' && !GLOBAL.searchLib) { // if recently added and not search reset to all
+		if (GLOBAL.musicScope == 'recent') {
 			GLOBAL.musicScope = 'all';
 		}
-		GLOBAL.searchLib = '';
 		if (currentView == 'album') {
 			$('#albumcovers .lib-entry').removeClass('active');
 			$('#bottom-row').css('display', '');
@@ -962,8 +943,6 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
-	$("#searchResetLib").hide();
-	showSearchResetLib = false;
     setLibMenuHeader();
 });
 
@@ -975,8 +954,6 @@ $('#albumheader').on('click', '.lib-heading', function(e) {
     UI.libPos[1] = -2;
 	clickedLibItem(e, undefined, LIB.filters.albums, renderAlbums);
 	storeLibPos(UI.libPos);
-	$("#searchResetLib").hide();
-	showSearchResetLib = false;
 });
 
 // Click genre

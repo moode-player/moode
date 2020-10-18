@@ -150,7 +150,7 @@
 					<form id="lib-album-search" style="display:flex" method="post" onSubmit="return false;">
 						<input id="lib-album-filter" type="text" value="" placeholder="search">
 					</form>
-					<span aria-label="Reset" id="searchResetLib" class="hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
+					<span aria-label="Reset" id="searchResetLib" type="reset" value="reset"><i class="fal fa-times-circle"></i></span>
 				</button>
 				<button aria-label="Advanced Search" class="btn adv-search-btn menu-separator hide" href="#dbsearch-modal" data-toggle="modal"><i class="far fa-search"></i> Advanced search</button>
 				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio<span class="pane"><i class="fal fa-check"></i></span></button>
@@ -389,7 +389,7 @@
 	                </div>
 	            </div>
 				<div class="control-group">
-	                <label class="control-label" for="dbsearch-file">File name</label>
+	                <label class="control-label" for="dbsearch-file">File path</label>
 	                <div class="controls">
 	                    <input id="dbsearch-file" class="input-xlarge" type="text" name="dbsearch_file" value="">
 	                </div>
@@ -507,7 +507,7 @@
 
 	<div id="context-menu-playback" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="save-playlist"><i class="fal fa-save sx"></i> Save playlist</a></li>
+			<li><a href="#notarget" data-cmd="save-playlist"><i class="fal fa-save sx"></i> Save to playlist</a></li>
 			<li><a href="#notarget" data-cmd="set-favorites"><i class="fal fa-heart-circle sx"></i> Set favorites</a></li>
 			<li><a href="#notarget" id="addfav-li" class="addfav hide"><i class="fal fa-heart sx"></i> Add favorite</a></li>
 			<li><a href="#notarget" data-cmd="consume"><i class="fal fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fal fa-check"></i></span></a></li>

@@ -31,21 +31,24 @@
 <h4>Library</h4>
 <p>The library provides Radio, Folder, Tag and Album views for browsing and selecting content and a Playbar for displaying song information and controlling playback. Options for configuring various aspects of the Library including sort order, recently added and more are located in the Library section of the Appearance dialog.</p>
 <h4>Searching the Library</h4>
-<p>Powerful search features are available in Tag and Album view that allow the Library to be filtered based on entered text, tag value pairs or special, predefined filters. These are entered in the search field which is on the Library menu. There is also an Advanced search dialog that enables multiple tag value pairs to be be submitted.</p>
+<p>Powerful search features are available in Tag and Album view that allow the Library to be filtered based on entered text, tag value pairs or special, predefined filters. These are entered in the search field on the Library menu. There is also an Advanced search dialog that enables multiple tag value pairs to be submitted.</p>
 
 <div id="quickhelp-bullet-list">
 	<ul>
-		<li><span> Genreral</span>
-			<p>Searches are performed using tag "contains" search_string and are not case sensative.</p>
-		</li>
-		<li><span> The Any keyword</span>
-			<p>The Any keyword performs a search of all tags using an OR relationship. An Any search is automatically invoked when text is entered into the search field that does not match any of the defined tags or predefined filters. It can also be invoked by entering Any [search string].</p>
+		<li><span> General</span>
+			<p>Searches are not case sensitive and partial matches are considered valid.</p>
 		</li>
 		<li><span> Tag value pairs</span>
-			<p>The following tags are supported: Genre, Artist, Album, Title, Album Artist, Date, Composer, Conductor, Performer, Work, Comment and File,.</p>
+			<p>The following tags are supported: Any, Genre, Artist, Album, Title, Album Artist, Date, Composer, Conductor, Performer, Work, Comment and File.</p>
+			<p>Examples: genre rock | artist frank sinatra | artist mcartney | any zeppelin</p>
+		</li>
+		<li><span> The Any tag</span>
+			<p>The Any tag performs a search of all tags using an OR relationship. An Any search is automatically invoked when the first word of text entered in the search field does not match any of the tag or predefined filter names.</p>
+			<p>Examples: yellow submarine | all that you can't leave behind | frank sinatra | 1962</p>
 		</li>
 		<li><span> Predefined filters</span>
-			<p>The following pre-defined filters are supported: All, Lossless, Lossy, Format [.ext], Folder [/path] and Year [yyyy] or [yyyy-yyyy].</p>
+			<p>The following predefined filters are available: Lossless, Lossy, Format [.ext], Folder [path] and Year [yyyy] or [yyyy-yyyy].</p>
+			<p>Examples: lossy | format .dsf | folder u2/achtung baby | year 1962 | year 1994-1998</p>
 		</li>
 	</ul>
 </div>

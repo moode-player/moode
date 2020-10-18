@@ -407,8 +407,8 @@ function genFlatList($sock) {
 		// NOTE: MPD must be compiled with libpcre++-dev to make use of PERL compatible regex
 		// NOTE: Logic in genLibrary() determines whether M4A format is Lossless or Lossy
 		switch ($_SESSION['library_flatlist_filter']) {
-			// Return entire library
-			case 'all':
+			// Return full library
+			case 'full_lib':
 			// Filter entire library by Year or Year range
 			case 'year':
 				// NOTE: The year filter is in genLibrary()
@@ -424,6 +424,7 @@ function genFlatList($sock) {
 			case 'artist':
 			case 'composer':
 			case 'conductor':
+			case 'file':
 			case 'genre':
 			case 'label':
 			case 'performer':
@@ -591,7 +592,9 @@ function genLibrary($flat) {
 
 function libcache_file() {
 	switch ($_SESSION['library_flatlist_filter']) {
-		case 'all':
+		case 'full_lib':
+			$suffix = '_all.json';
+			break;
 		case 'folder':
 		case 'format':
 		case 'lossless':
@@ -603,6 +606,7 @@ function libcache_file() {
 		case 'artist':
 		case 'composer':
 		case 'conductor':
+		case 'file':		
 		case 'genre':
 		case 'label':
 		case 'performer':
