@@ -959,6 +959,8 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Library search
 	$('#lib-album-filter').keyup(function(e){
+        e.preventDefault();
+
         if (e.key == 'Enter' && $('#lib-album-filter').val().length > 0) {
             $('#lib-album-filter').blur();
 
