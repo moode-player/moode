@@ -462,6 +462,7 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'minifyhtml'],
                       ,'!'+pkg.app.src+'/templates/indextpl.html'
                       ,'!'+pkg.app.src+'/header.php'
                       ,'!'+pkg.app.src+'/footer.min.php'
+                      ,pkg.app.src+'/css/shellinabox*.css'
                       ],
                       {base: pkg.app.src})
         // optional headers fields can be update and or added:
