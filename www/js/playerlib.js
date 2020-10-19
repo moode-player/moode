@@ -3479,21 +3479,21 @@ function setLibMenuHeader () {
 	        LIB.recentlyAddedClicked = false;
 		}
 
+        // Set the header text
         if (LIB.filters.genres.length) {
 			headerText = 'Browse ' + LIB.filters.genres[0];
 		}
 		if (LIB.filters.artists.length) {
 			headerText = 'Albums by ' + LIB.filters.artists[0];
 		}
-
         if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
             if (SESSION.json['library_flatlist_filter'] == 'tags') {
-                headerText += ' (Tag filtered)';
+                headerText = 'Filtered by Advanced search';
             }
             else {
-                headerText += ' ('
+                headerText = 'Filtered by '
                 + SESSION.json['library_flatlist_filter'].charAt(0).toUpperCase() + SESSION.json['library_flatlist_filter'].slice(1)
-                + (SESSION.json['library_flatlist_filter'].indexOf('loss') == -1 ? ' ' : '')
+                + (SESSION.json['library_flatlist_filter'].indexOf('loss') == -1 ? ': (' : '')
                 + SESSION.json['library_flatlist_filter_str'] + ')';
             }
         }

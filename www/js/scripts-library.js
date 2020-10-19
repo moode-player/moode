@@ -879,22 +879,12 @@ var renderSongs = function(albumPos) {
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' + genreName + '</button>');
         }
         else {
-            var libFilter = '';
             if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
-                libFilter = '<div id="lib-flatlist-filter"><i class="far fa-filter"></i> ';
-
-                if (SESSION.json['library_flatlist_filter'] == 'tags') {
-                    libFilter += 'Tag filtered</div>';
-                }
-                else {
-                    libFilter += SESSION.json['library_flatlist_filter'].charAt(0).toUpperCase()
-                    + SESSION.json['library_flatlist_filter'].slice(1)
-                    + (SESSION.json['library_flatlist_filter'].indexOf('loss') == -1 ? ' ' : '')
-                    + SESSION.json['library_flatlist_filter_str']
-                    + '</div>';
-                }
+                var libFilter = '<div id="lib-flatlist-filter"><i class="far fa-filter"></i> Filtered</div>';
+            }    
+            else {
+                var libFilter = '';
             }
-
             $('#lib-coverart-img').html('<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
                 'Music Collection' + libFilter + '</button>');
         }
