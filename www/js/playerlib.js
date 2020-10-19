@@ -3395,8 +3395,10 @@ function makeActive (vswitch, panel, view) {
 	setLibMenuHeader();
 	$('#viewswitch span.pane').hide();
 
-    if ((view == 'tag' || view == 'album') && SESSION.json['library_flatlist_filter'] != 'full_lib') {
-        $('#lib-album-filter').val(SESSION.json['library_flatlist_filter'] + ' ' + SESSION.json['library_flatlist_filter_str']);
+    if (view == 'tag' || view == 'album') {
+        if (SESSION.json['library_flatlist_filter'] != 'full_lib' && SESSION.json['library_flatlist_filter'] != 'tags') {
+            $('#lib-album-filter').val(SESSION.json['library_flatlist_filter'] + ' ' + SESSION.json['library_flatlist_filter_str']);
+        }
     }
 
 	switch (view) {
