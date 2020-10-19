@@ -959,8 +959,6 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Library search
 	$('#lib-album-filter').keyup(function(e){
-		e.preventDefault();
-
         if (e.key == 'Enter' && $('#lib-album-filter').val().length > 0) {
             $('#lib-album-filter').blur();
 
@@ -984,19 +982,17 @@ jQuery(document).ready(function($) { 'use strict';
             else {
                 applyLibFilter('any', filter[0] + (filter[1] ? ' ' + filter[1] : ''));
             }
+
+            // Close menu
+            $('#viewswitch').click();
         }
 	});
 
 	$('#searchResetLib').click(function(e) {
-		e.preventDefault();
-
         $('#lib-album-filter').val('');
         if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
             applyLibFilter('full_lib');
         }
-
-		document.getElementById("lib-album-filter").focus();
-		return false;
 	});
 
 	// Playback history search
