@@ -852,7 +852,7 @@ var renderSongs = function(albumPos) {
 		}
         if (filteredSongs[0].album == 'Nothing found') {
             $('#lib-artistname, #lib-albumyear, #lib-numtracks, #lib-encoded-at').html('');
-            $('#lib-coverart-img a').attr('data-target', '#');
+            $('#lib-coverart-img a, .cover-menu').attr('data-target', '#');
         }
         else {
             $('#lib-artistname').html(artist);
