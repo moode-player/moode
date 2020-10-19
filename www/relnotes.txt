@@ -24,7 +24,7 @@ New features
 - NEW: Library support for tracks tagged with multiple genres
 - NEW: Library option to select which tag for the Artist list
 - NEW: Library option to use folder path and/or MUSICBRAINZ_ALBUMID as album key
-- NEW: Add Appearance option to include the comment tag
+- NEW: Library option to include the comment tag
 - NEW: Albums played directly if already in the Queue
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode option
@@ -57,6 +57,7 @@ Updates
 - UPD: Honor "Resume MPD" setting when disconnecting a renderer
 - UPD: Only load CoverView Queue HTML when it's opened
 - UPD: Auto-configure expanded to include most settings
+- UPD: Remove Google Play Music service (discontinued)
 
 Radio stations
 
