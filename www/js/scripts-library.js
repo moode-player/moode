@@ -113,16 +113,17 @@ function reduceGenres(acc, track) {
 // Rewritten by @scripple
 // NOTE: This routine and associated marked code blocks provide a flexible way to populate
 // the artist list in Tag view based on the value of the library_tagview_artist setting.
-// Artist
+// Artist:
 // List all Artists. Compilation albums listed for a selected artist will show only the tracks
 // belonging to the Artist. Clicking the Album will toggle between showing all the album's
 // tracks and just those for the selected artist.
-// Album Artist
+// Album Artist:
+// List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists"
+// or any other string that was used to identify compilation albums. This is the old 671 behavior.
+// Album Artist +
 // List all Album Artists. Compilation albums listed for a selected Album Artist will show only
 // the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all
 // the album's tracks and just those for the selected Album Artist.
-// Album Artist [strict]
-// The [strict] qualifier results in Compilation albums only being shown under Album Artist = "Various Artists".
 function reduceArtists(acc, track) {
 	if (track.album_artist) {
 		var album_artist = (track.album_artist).toLowerCase();
@@ -131,8 +132,7 @@ function reduceArtists(acc, track) {
 			acc[album_artist].artist = track.album_artist;
 		}
 		acc[album_artist].push(track);
-        // This conditional when true results in only the Album Artist being included (old 671 like behavior)
-		if (SESSION.json['library_tagview_artist'] != 'Artist') { // Album Artist or Album Artist [strict]
+		if (SESSION.json['library_tagview_artist'] != 'Artist') { // Album Artist or Album Artist +
 			return acc;
 		}
 	}
@@ -420,10 +420,11 @@ function filterAlbums() {
 	// Filter by artist
 	if (LIB.filters.artists.length) {
 		// @scripple:
-		if (SESSION.json['library_tagview_artist'] == 'Album Artist [strict]') {
+		if (SESSION.json['library_tagview_artist'] == 'Album Artist') {
 			filteredAlbums = filteredAlbums.filter(filterByArtist);
 			filteredAlbumCovers = filteredAlbumCovers.filter(filterByArtist);
 		}
+        // Artist or Album Artist +
 		else {
 			var artistSongs = allSongs.filter(filterByArtist);
 			var songKeys = artistSongs.map(function(a) {return a.key;});

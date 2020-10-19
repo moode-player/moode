@@ -243,18 +243,9 @@ jQuery(document).ready(function($) { 'use strict';
         $('#tagview-header-text').text('Albums' +
             ((SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') ?
             '' : ' by ' + SESSION.json['library_tagview_sort']));
-        //@Atair: Set artists column heading in tag view
-        switch(SESSION.json['library_tagview_artist']) {
-            case 'Artist':
-                $("#artistheader > div").html("ARTISTS")
-                break;
-            case 'Album Artist':
-                $("#artistheader > div").html("ALBUM ARTISTS +")
-                break;
-            case 'Album Artist [strict]':
-                $("#artistheader > div").html("ALBUM ARTISTS")
-                break;
-        }
+        // Artists column header
+        $('#artistheader > div').html(SESSION.json['library_tagview_artist'] == 'Album Artist +' ? 'Album Artists +' :
+            SESSION.json['library_tagview_artist'] + 's');
         // Hide alphabits index if indicated
         if (SESSION.json['library_albumview_sort'] == 'Year') {
             $('#index-albums, #index-albumcovers').hide();
