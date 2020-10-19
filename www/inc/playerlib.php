@@ -418,7 +418,7 @@ function genFlatList($sock) {
 			case 'tags':
 				$cmd = "search \"((base '" . $dir . "') AND (" . $_SESSION['library_flatlist_filter_str'] . "))\"";
 				break;
-			// Filter on any tag or a specific tag containing the string
+			// Filter on specific tag containing the string or if string is empty perform an 'any' filter
 			case 'album':
 			case 'any':
 			case 'artist':
@@ -430,8 +430,9 @@ function genFlatList($sock) {
 			case 'performer':
 			case 'title':
 			case 'work':
-				$tag = strtolower($_SESSION['library_flatlist_filter']);
-				$cmd = "search \"((base '" . $dir . "') AND (" . $tag . " contains '" . $_SESSION['library_flatlist_filter_str'] . "'))\"";
+				$tag = empty($_SESSION['library_flatlist_filter_str']) ? 'any' : $_SESSION['library_flatlist_filter'];
+				$str = empty($_SESSION['library_flatlist_filter_str']) ? $_SESSION['library_flatlist_filter'] : $_SESSION['library_flatlist_filter_str'];
+				$cmd = "search \"((base '" . $dir . "') AND (" . $tag . " contains '" . $str . "'))\"";
 				break;
 			// Filter on file path or extension
 			// NOTE: Lossless and Lossy have an additional m4a probe in genLibrary()
@@ -606,7 +607,7 @@ function libcache_file() {
 		case 'artist':
 		case 'composer':
 		case 'conductor':
-		case 'file':		
+		case 'file':
 		case 'genre':
 		case 'label':
 		case 'performer':
