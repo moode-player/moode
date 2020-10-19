@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 -->
@@ -126,66 +126,6 @@
 				</div>
 			</div>
 		</fieldset>
-
-		<div class="$_gmusicapi_msg">
-			<legend>Google Play</legend>
-			<p>
-				The Google Music feature is enabled but the API must be manually installed.<br>
-				Run the command "sudo pip install gmusicapi" from an ssh session.
-			</p>
-		</div>
-
-		<div class="$_feat_gmusicapi">
-			<fieldset>
-				<legend>Google Play</legend>
-				<div class="control-group">
-					<label class="control-label" for="gmusicuser">Userid</label>
-					<div class="controls">
-						<input class="input-large" type="text" id="gmusicuser" name="config[gmusicuser]" value="$_select[gmusicuser]">
-						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicuser" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_gmusicuser" class="help-block-configs help-block-margin hide">
-							Your Google Music login name (Gmail address).<br>
-	                    </span>
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="gmusicpass">Password</label>
-					<div class="controls">
-						<input class="input-large" type="password" pattern="[^'\u0022]+" id="gmusicpass" name="config[gmusicpass]" value="$_select[gmusicpass]">
-						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<a class="show-hide-password" href="#notarget" data-id="gmusicpass"><i class="fal fa-eye"></i></a>
-						<span id="info_gmusicpass" class="help-block-configs help-block-margin hide">
-							The password for your Google Music account. NOTE: Single and double quotes are not allowed.<br>
-	                    </span>
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="gmusicquality">Stream quality</label>
-					<div class="controls">
-						<select id="gmusicquality" class="input-large" name="config[gmusicquality]">
-							$_select[gmusicquality]
-						</select>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicquality" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_gmusicquality" class="help-block-configs help-block-margin hide">
-							Stream quality: 320K, 160K or 128K (MP3).<br>
-	                    </span>
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="gmusicdeviceid">Music device id</label>
-					<div class="controls">
-						<input class="input-large" type="text" id="gmusicdeviceid" name="config[gmusicdeviceid]" value="$_select[gmusicdeviceid]">
-						<a aria-label="Help" class="info-toggle" data-cmd="info_gmusicdeviceid" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info_gmusicdeviceid" class="help-block-configs help-block-margin hide">
-							Music device id. Your system MAC address will be used by default, but this will count against the maximum count of registered devices for this account. You can optionally set this value to the device ID from a phone or tablet on which you also use Google Play Music.<br>
-	                    </span>
-					</div>
-				</div>
-			</fieldset>
-		</div>
 	</form>
 </div>
 </div>

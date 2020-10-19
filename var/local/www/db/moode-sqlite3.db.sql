@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sun Oct 18 15:51:19 2020
+-- File generated with SQLiteStudio v3.1.0 on Mon Oct 19 18:29:11 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -221,11 +221,7 @@ INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'low');
 INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
 INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
 INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '5');
-INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'gmusicuser', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'gmusicpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'gmusicquality', 'low');
-INSERT INTO cfg_upnp (id, param, value) VALUES (10, 'gmusicdeviceid', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (11, 'checkcontentformat', 'Yes');
+INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'checkcontentformat', 'Yes');
 
 -- Table: cfg_source
 CREATE TABLE cfg_source (
