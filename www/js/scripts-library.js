@@ -81,7 +81,7 @@ function loadLibrary() {
 		clearTimeout(libpop);
         $('#lib-content').show();
 		renderLibrary(data);
-		if (currentView == 'album' || currentView == 'tag') setLibMenuHeader();
+		if (currentView == 'album' || currentView == 'tag') setLibMenuAndHeader();
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
 
@@ -881,7 +881,7 @@ var renderSongs = function(albumPos) {
         else {
             if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
                 var libFilter = '<div id="lib-flatlist-filter"><i class="far fa-filter"></i> Filtered</div>';
-            }    
+            }
             else {
                 var libFilter = '';
             }
@@ -913,12 +913,12 @@ $('#genreheader, #menu-header').on('click', function(e) {
 			$('#bottom-row').css('display', '');
 			$('#lib-albumcover').css('height', '100%');
 		}
-		setLibMenuHeader();
+		setLibMenuAndHeader();
 	}
 	if (currentView == 'radio') {
 		GLOBAL.searchRadio = '';
 		$('#searchResetRa').click();
-		setLibMenuHeader();
+		setLibMenuAndHeader();
 	}
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
@@ -934,7 +934,7 @@ $('#artistheader').on('click', '.lib-heading', function(e) {
 	UI.libPos.fill(-2);
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, undefined, LIB.filters.artists, renderArtists);
-    setLibMenuHeader();
+    setLibMenuAndHeader();
 });
 
 // Click album or album cover header
@@ -957,7 +957,7 @@ $('#genresList').on('click', '.lib-entry', function(e) {
 	UI.libPos[0] = -1;
 	storeLibPos(UI.libPos);
 	clickedLibItem(e, allGenres[pos], LIB.filters.genres, renderGenres);
-    setLibMenuHeader();
+    setLibMenuAndHeader();
 });
 
 // Click artist
@@ -973,7 +973,7 @@ $('#artistsList').on('click', '.lib-entry', function(e) {
 	if (UI.mobile) {
 		$('#top-columns').animate({left: '-50%'}, 200);
 	}
-	setLibMenuHeader();
+	setLibMenuAndHeader();
 });
 
 // Click album

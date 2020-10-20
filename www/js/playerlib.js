@@ -136,7 +136,6 @@ var GLOBAL = {
     twoArgFilters: ['album', 'any', 'artist', 'composer', 'conductor', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
     allFilters: []
 };
-
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
 
 // Live timeline
@@ -1965,7 +1964,7 @@ $('.view-all').click(function(e) {
     renderAlbums();
 
 	storeLibPos(UI.libPos);
-	setLibMenuHeader();
+	setLibMenuAndHeader();
 });
 // 'Recently added' menu item
 $('.view-recents').click(function(e) {
@@ -1984,7 +1983,7 @@ $('.view-recents').click(function(e) {
     //$('#lib-album ul > li').css('transform', 'rotate(-180deg)');
 
 	storeLibPos(UI.libPos);
-	setLibMenuHeader();
+	setLibMenuAndHeader();
 });
 
 // Context menus and main menu
@@ -3392,7 +3391,7 @@ function makeActive (vswitch, panel, view) {
     $.post('command/moode.php?cmd=updcfgsystem', {'current_view': view});
 	currentView = view;
 	setColors();
-	setLibMenuHeader();
+	setLibMenuAndHeader();
 	$('#viewswitch span.pane').hide();
 
     if (view == 'tag' || view == 'album') {
@@ -3448,8 +3447,8 @@ function makeActive (vswitch, panel, view) {
     //console.log(duration + 'ms');
 }
 
-// Set the text in the library menu header
-function setLibMenuHeader () {
+// Set the Library menu and header
+function setLibMenuAndHeader () {
     var headerText = (UI.mobile || currentView.indexOf('playback') != -1) ? '' : 'Browse by ';
 
 	if (currentView == 'radio') {
@@ -3487,14 +3486,22 @@ function setLibMenuHeader () {
 			headerText = 'Albums by ' + LIB.filters.artists[0];
 		}
         if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
+            var filterCapitilized = SESSION.json['library_flatlist_filter'].charAt(0).toUpperCase() + SESSION.json['library_flatlist_filter'].slice(1);
+            // Advanced search
             if (SESSION.json['library_flatlist_filter'] == 'tags') {
                 headerText = 'Filtered by Advanced search';
             }
+            // Lossless or Lossy
+            else if (GLOBAL.oneArgFilters.includes(SESSION.json['library_flatlist_filter'])) {
+                headerText = 'Filtered by (' + filterCapitilized + ')';
+            }
+            // Two arg filter with emoty second arg
+            else if (GLOBAL.twoArgFilters.includes(SESSION.json['library_flatlist_filter']) && SESSION.json['library_flatlist_filter_str'] == '') {
+                headerText = 'Filtered by Any: (' + filterCapitilized + ')';
+            }
+            // Two arg filter with second arg
             else {
-                headerText = 'Filtered by '
-                + SESSION.json['library_flatlist_filter'].charAt(0).toUpperCase() + SESSION.json['library_flatlist_filter'].slice(1)
-                + (SESSION.json['library_flatlist_filter'].indexOf('loss') == -1 ? ': (' : '')
-                + SESSION.json['library_flatlist_filter_str'] + ')';
+                headerText = 'Filtered by '+ filterCapitilized + ': (' + SESSION.json['library_flatlist_filter_str'] + ')';
             }
         }
 	}
