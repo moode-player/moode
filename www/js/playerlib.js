@@ -3214,7 +3214,7 @@ function listLook(selector, list, searchText) {
         else if (list == 'radio_headers') {
             $('#' + selector).each(function() {
                 var text = $(this).hasClass('horiz-rule-radioview') ? removeArticles($(this).text().toLowerCase()) : '';
-                if (text.substr(0, 1) == searchText) {return false;}
+                if (text != 'favorites' && text.substr(0, 1) == searchText) {return false;}
         		itemNum++;
         	});
         }
