@@ -27,7 +27,7 @@
 # mainly in playback/library mode. The limit will be exceeded when doing a lot of page refreshes which can
 # easily occur when spending time doing initial configuration (the Config pages). Restarting PHP when the
 # limit is exceeded should not have any adverse effect.
-FPM_LIMIT=20
+FPM_LIMIT=30
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_ACTIVE=$(pgrep -c -x mpd)
