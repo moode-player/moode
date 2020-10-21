@@ -3418,7 +3418,7 @@ function makeActive (vswitch, panel, view) {
 			$('.album-view-btn .pane').show();
             $('#playbar-toggles .addfav').hide();
 			$('#library-panel').addClass('covers').removeClass('tag');
-            $('#searchResetLib').show();
+            SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
                 $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
@@ -3437,7 +3437,7 @@ function makeActive (vswitch, panel, view) {
 			$('.tag-view-btn .pane').show();
             $('#playbar-toggles .addfav').hide();
 			$('#library-panel').addClass('tag').removeClass('covers');
-            $('#searchResetLib').show();
+            SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             $('#index-albumcovers').hide();
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 			if (SESSION.json['library_tagview_covers']) lazyLode('tag');

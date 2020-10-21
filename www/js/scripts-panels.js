@@ -960,6 +960,7 @@ jQuery(document).ready(function($) { 'use strict';
     // Library search
 	$('#lib-album-filter').keyup(function(e){
         e.preventDefault();
+        $('#lib-album-filter').val().length > 0 ? $('#searchResetLib').show() : $('#searchResetLib').hide();
 
         if (e.key == 'Enter' && $('#lib-album-filter').val().length > 0) {
             $('#lib-album-filter').blur();
@@ -992,6 +993,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	$('#searchResetLib').click(function(e) {
         $('#lib-album-filter').val('');
+        $('#searchResetLib').hide();
         if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
             applyLibFilter('full_lib');
         }
