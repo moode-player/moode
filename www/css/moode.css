@@ -37,7 +37,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
 .horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.25em;font-style:italic;color: #888;}
 .horiz-rule-radioview {border-bottom:1px solid var(--textvariant);font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:92%!important;padding-bottom:0!important;}
-.horiz-rule-appearance {width:48%;text-align:right;margin:.25em 0;font-size: 1.15em;font-style:italic;color:var(--textvariant);}
+.horiz-rule-preferences {width:48%;text-align:right;margin:.25em 0;font-size: 1.15em;font-style:italic;color:var(--textvariant);}
 .legend-configs {border:none;margin-bottom:.35em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* general */
@@ -115,7 +115,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .controls input {min-height:26px !important;}
 .modal .dropdown-menu.inner {background-color:var(--adaptmbg);color:var(--adapttext);}
 .modal .modal-dropdown-text {color:inherit;}
-.modal .bootstrap-select .btn, #appearance-modal input, #clockradio-modal input, #radio-manager-modal input, #editstation-modal input, #newstation-modal input {border: 1px solid var(--textvariant);}
+.modal .bootstrap-select .btn, #preferences-modal input, #clockradio-modal input, #radio-manager-modal input, #editstation-modal input, #newstation-modal input {border: 1px solid var(--textvariant);}
 .modal .modal-footer {border-top: none;text-align:center;}
 .modal-footer .btn {border-radius:5rem;background-color:var(--btnshade4);margin:.2em 1em;width:10em;color:inherit;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}

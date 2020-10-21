@@ -326,9 +326,9 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 .modal .h5 {text-transform:uppercase;font-size:1em;margin-top:0px;margin-bottom:1em;font-weight:600;position:relative;text-align:right;display:inline-block;width:48%;}
 .dtclose, .dtopen {font-weight:600;font-size:1.2em;}
 .accordian:hover {cursor:pointer;}
-#appearance-modal div.accordian .control-group {display:none;margin-bottom:1em;}
-#appearance-modal div.accordian.active .control-group {display:block;}
-#appearance-modal div.accordian .dtopen {display:none;}
+#preferences-modal div.accordian .control-group {display:none;margin-bottom:1em;}
+#preferences-modal div.accordian.active .control-group {display:block;}
+#preference-modal div.accordian .dtopen {display:none;}
 .bgimglabel {margin-top:5px;} /* gross but what r u gonna do */
 .modal label, .modal .controls {font-size:1em;}
 .control-label {margin-bottom:0px;font-size:inherit;}

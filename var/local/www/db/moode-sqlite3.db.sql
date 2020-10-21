@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Oct 19 18:29:11 2020
+-- File generated with SQLiteStudio v3.1.0 on Wed Oct 21 09:27:53 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -372,7 +372,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (130, 'led_state', '1,1');
 INSERT INTO cfg_system (id, param, value) VALUES (131, 'library_tagview_covers', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (132, 'library_tagview_sort', 'Artist');
 INSERT INTO cfg_system (id, param, value) VALUES (133, 'library_ellipsis_limited_text', 'No');
-INSERT INTO cfg_system (id, param, value) VALUES (134, 'appearance_modal_state', '1,0,0,0,0');
+INSERT INTO cfg_system (id, param, value) VALUES (134, 'preferences_modal_state', '1,0,0,0,0');
 INSERT INTO cfg_system (id, param, value) VALUES (135, 'font_size', 'Normal');
 INSERT INTO cfg_system (id, param, value) VALUES (136, 'volume_step_limit', '10');
 INSERT INTO cfg_system (id, param, value) VALUES (137, 'volume_mpd_max', '100');
