@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-04-24 TC moOde 6.5.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 -->
@@ -45,7 +45,6 @@
                 </span>
 			</p>
 
-			<p></p>
 			<legend>Music Database</legend>
 			<p>
 				<a href="#regen-mpddb" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">Music library</span></a>
@@ -62,20 +61,6 @@
                 </span>
 			</p>
 
-			<p>
-				<a href="#regen-thmcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">Album cover thumbnail cache</span></a>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info-regen-thmcache" class="help-block-configs help-block-margin hide">
-					Regenerate the thumbnail cache by first deleting it before adding covers.
-                </span>
-			</p>
-
-			<p>
-				<a id="view-thmcache-status" href="#notarget"><button class="btn btn-medium btn-primary">VIEW STATUS</button></a><span id="thmcache-status" class="config-label">$_thmcache_status</span>
-			</p>
-
-			<p></p>
-
 			<div class="toggle">
 				<label class="toggle-radio" for="toggle_usb_auto_updatedb1">YES</label>
 				$_select[usb_auto_updatedb1]
@@ -88,6 +73,21 @@
 			<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em;">
 				Automatically update the MPD database on USB insert or remove.
             </span>
+
+			<p></p>
+			<legend>Thumbnail Generator</legend>
+			<p>
+				<a href="#regen-thmcache" data-toggle="modal"><button class="btn btn-medium btn-primary">Regenerate</button><span class="config-label">Album cover thumbnail cache</span></a>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-regen-thmcache" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-regen-thmcache" class="help-block-configs help-block-margin hide">
+					Regenerate the thumbnail cache by first deleting it before adding covers.
+                </span>
+			</p>
+
+			<p>
+				<a id="view-thmcache-status" href="#notarget"><button class="btn btn-medium btn-primary">VIEW STATUS</button></a><span id="thmcache-status" class="config-label">$_thmcache_status</span>
+			</p>
+			<p></p>
 		</form>
 	</div>
 </div>
