@@ -2126,20 +2126,20 @@ $('.context-menu a').click(function(e) {
 
 	// MAIN MENU
 
-    // Appearance settings
-    else if ($(this).data('cmd') == 'appearance') {
+    // Preferences
+    else if ($(this).data('cmd') == 'preferences') {
 		bgImgChange = false;
 
         // Break out misc lib options
         var miscLibOptions = getMiscLibOptions();
 
 		// Set up disclosures
-		var temp = SESSION.json['appearance_modal_state'].split(',');
+		var temp = SESSION.json['preferences_modal_state'].split(',');
 		for (var x = 0; x < 5; x++) {
 			if (temp[x] == '1') {
-				$('#appearance-modal div.control-group').eq(x).show();
-				$('#appearance-modal .accordian .dtopen').eq(x).show();
-				$('#appearance-modal .accordian .dtclose').eq(x).hide();
+				$('#preferences-modal div.control-group').eq(x).show();
+				$('#preferences-modal .accordian .dtopen').eq(x).show();
+				$('#preferences-modal .accordian .dtclose').eq(x).hide();
 			}
 		}
 
@@ -2211,7 +2211,7 @@ $('.context-menu a').click(function(e) {
     		$('#play-history-enabled span').text(SESSION.json['playhist']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
 
-            $('#appearance-modal').modal();
+            $('#preferences-modal').modal();
         }, 'json');
     }
 
@@ -2340,8 +2340,8 @@ function updateClockRadioCfgSys() {
     );
 }
 
-// Update appearance options
-$('#btn-appearance-update').click(function(e){
+// Update preferences
+$('#btn-preferences-update').click(function(e){
 	// Detect certain changes
 	var accentColorChange = false;
 	var themeSettingsChange = false;
@@ -2364,11 +2364,11 @@ $('#btn-appearance-update').click(function(e){
 	// Set open/closed state for accordion headers
 	var temp = [0,0,0,0,0];
 	for (var x = 0; x < 5; x++) {
-		if ($('#appearance-modal div.control-group').eq(x).css('display') == 'block') {
+		if ($('#preferences-modal div.control-group').eq(x).css('display') == 'block') {
 			temp[x] = 1;
 		}
 	}
-	SESSION.json['appearance_modal_state'] = temp[0] + ',' + temp[1] + ',' + temp[2] + ',' + temp[3] + ',' + temp[4];
+	SESSION.json['preferences_modal_state'] = temp[0] + ',' + temp[1] + ',' + temp[2] + ',' + temp[3] + ',' + temp[4];
 
 	// Theme and backgrounds
 	if (SESSION.json['themename'] != $('#theme-name span').text()) {themeSettingsChange = true;}
@@ -2560,7 +2560,7 @@ $('#btn-appearance-update').click(function(e){
             'extra_tags': SESSION.json['extra_tags'],
 
             // Internal
-            'appearance_modal_state': SESSION.json['appearance_modal_state']
+            'preferences_modal_state': SESSION.json['preferences_modal_state']
         },
         function() {
             if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange ||
@@ -3352,7 +3352,7 @@ $('#context-backdrop').click(function(e){
     }
 });
 
-$('#appearance-modal .h5').click(function(e) {
+$('#preferences-modal .h5').click(function(e) {
 	$(this).parent().children('div.control-group').slideToggle(100);
 	$(this).parent().children('.dtclose, .dtopen').toggle();
 });
@@ -3418,7 +3418,7 @@ function makeActive (vswitch, panel, view) {
 			$('.album-view-btn .pane').show();
             $('#playbar-toggles .addfav').hide();
 			$('#library-panel').addClass('covers').removeClass('tag');
-            $('#searchResetLib').show();
+            SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
                 $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
@@ -3437,7 +3437,7 @@ function makeActive (vswitch, panel, view) {
 			$('.tag-view-btn .pane').show();
             $('#playbar-toggles .addfav').hide();
 			$('#library-panel').addClass('tag').removeClass('covers');
-            $('#searchResetLib').show();
+            SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             $('#index-albumcovers').hide();
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 			if (SESSION.json['library_tagview_covers']) lazyLode('tag');

@@ -518,17 +518,17 @@
 	</div>
 </div>
 
-<!-- APPEARANCE -->
-<div id="appearance-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="appearance-modal-label" aria-hidden="true">
+<!-- PREFERENCES -->
+<div id="preferences-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="preferences-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="appearance-modal-label">Appearance</h3>
+		<h3 id="preferences-modal-label">Preferences</h3>
 	</div>
-	<div class="modal-body" id="container-appearance">
+	<div class="modal-body" id="container-preferences">
 		<form class="form-horizontal" action="" method="">
 
-			<!-- THEME & BACKGROUND -->
-			<div class="accordian"><span class="h5">Theme & background</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
+			<!-- APPEARANCE -->
+			<div class="accordian"><span class="h5">Appearance</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
    	                <label class="control-label" for="theme-name">Theme</label>
 	                <div class="controls">
@@ -733,11 +733,119 @@
 		                    </span>
 		                </div>
 					</div>
+
+					<label class="control-label" for="renderer-backdrop">Renderer backdrop</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="renderer-backdrop" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-backdrop-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-backdrop-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-renderer-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-renderer-backdrop" class="help-block hide">
+							Display the Image or Cover backdrop instead of the semi-transparent dark overlay when a renderer is playing.
+						</span>
+					</div>
+
+					<label class="control-label" for="font-size">Font size</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="font-size" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Smaller</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Small</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Normal</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Large</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Larger</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">X-Large</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-font-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-font-size" class="help-block hide">
+							Set the size of the font used.
+						</span>
+					</div>
 				</div>
 			</div>
 
 			<!-- PLAYBACK -->
 			<div class="accordian"><span class="h5">Playback</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
+				<div class="control-group">
+					<label class="control-label" for="playlist-art-enabled">Show Queue thumbs</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="playlist-art-enabled" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-playlist-art" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-playlist-art" class="help-block hide">
+							Shows thumbnail images for songs and radio stations in the Queue.<br>
+							NOTE: Showing thumbnails may impact performance.
+						</span>
+					</div>
+
+					<label class="control-label" for="extra-tags">Show extra metadata</label>
+	                <div class="controls">
+						<input id="extra-tags" class="input-xlarge input-height-x" type="text">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-extra-tags" class="help-block hide">
+		                    Display under the cover art any combination of genre, track, disc, year, composer, encoded or None.
+	                    </span>
+	                </div>
+
+   	                <label class="control-label" for="play-history-enabled">Playback history log</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="play-history-enabled" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-play-history" class="help-block hide">
+	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
+	                    </span>
+					</div>
+
+				</div>
+			</div>
+
+			<!-- LIBRARY (STANDARD SETTINGS)-->
+			<div class="accordian"><span class="h5">Library</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
 					<label class="control-label" for="instant-play-action">One touch action</label>
 	                <div class="controls">
@@ -765,57 +873,6 @@
 	                    </span>
 	                </div>
 
-					<label class="control-label" for="playlist-art-enabled">Show Queue thumbs</label>
-					<div class="controls">
-						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="playlist-art-enabled" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="playlist-art-enabled-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-playlist-art" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-playlist-art" class="help-block hide">
-							Shows thumbnail images for songs and radio stations in the Queue.<br>
-							NOTE: Showing thumbnails may impact performance.
-						</span>
-					</div>
-
-					<label class="control-label" for="renderer-backdrop">Renderer backdrop</label>
-					<div class="controls">
-						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="renderer-backdrop" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-backdrop-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="renderer-backdrop-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-renderer-backdrop" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-renderer-backdrop" class="help-block hide">
-							Display the image or cover backdrop specified in the Theme and Background section or display the default, semi-transparent dark overlay.
-						</span>
-					</div>
-				</div>
-			</div>
-
-			<!-- LIBRARY -->
-			<div class="accordian"><span class="h5">Library</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
-				<div class="control-group">
-					<div class="horiz-rule-appearance">Sorting and Filtering</div>
 					<label class="control-label" for="albumview-sort-order">Albumview sort order</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium">
@@ -899,135 +956,6 @@
  	                    </span>
  	                </div>
 
-					<label class="control-label" for="utf8-char-filter">UTF8 character filter</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="utf8-char-filter" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-utf8-char-filter" class="help-block hide">
-							Many Chinese songs and song directories have characters that are not UTF8 encoded causing the Library loader to fail. Replacing the non-UTF8 characters with a UTF8 compliant character solves this problem.<br>
-							NOTE: setting this to Yes may impact the performance of the Library loader.
- 	                    </span>
- 	                </div>
-
-					<div class="horiz-rule-appearance">Metadata and Tags</div>
-					<label class="control-label" for="tag-view-artist">Tag view artist</label>
-	                <div class="controls">
-						<div class="btn-group bootstrap-select select-medium2">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="tag-view-artist" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist +</span></a></li>
-								</ul>
-							</div>
- 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-tag-view-artist" class="help-block hide">
-							Select which tag is used to populate the Artist list in Tag view.<br>
-							<b>Artist:</b>&nbsp;List all Artists. Compilation albums listed for a selected artist will show only the tracks belonging to the Artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected artist.<br>
-							<b>Album Artist:</b>&nbsp;List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
-							<b>Album Artist +:</b>&nbsp;List all Album Artists. Compilation albums listed for a selected Album Artist will show only the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected Album Artist.<br>
-						</span>
-	                </div>
-
-					<label class="control-label" for="ignore-articles">Ignore articles</label>
-	                <div class="controls">
-	                    <input id="ignore-articles" class="input-xlarge input-height-x" type="text">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-ignore-articles" class="help-block hide">
-							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed.<br>
-							NOTE: A blank list will result in "None" and will effectively disable the option.
-						</span>
-	                </div>
-
-					<label class="control-label" for="library-inc-comment-tag">Include comment tag</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-inc-comment-tag" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-library-inc-comment-tag" class="help-block hide">
- 		                    This tag is used to display some identifying text to differentiate albums that have the same name but different MUSICBRAINZ_ALBUMID values.<br>
-							<b>NOTE:</b>&nbsp;Including this tag may impact the performance of the Library.
- 	                    </span>
- 	                </div>
-
-					<label class="control-label" for="library-inc-mbrz-albumid">Include MBRZ albumid</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-inc-mbrz-albumid" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-mbrz-albumid-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-mbrz-albumid-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
- 		                    This tag is appended to the album key to differentiate albums that have the same name.<br>
-							<b>NOTE:</b>&nbsp;Including this tag may impact the performance of the Library.
- 	                    </span>
- 	                </div>
-
-					<label class="control-label" for="library-folder-path-albumkey">Folder path albumkey</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-folder-path-albumkey" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-folder-path-albumkey-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-folder-path-albumkey-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-folder-path-albumkey" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-folder-path-albumkey" class="help-block hide">
-							The path to the album folder is used as the album key to differentiate albums.<br>
- 	                    </span>
- 	                </div>
-
-					<div class="horiz-rule-appearance">UI elements</div>
 					<label class="control-label" for="show-encoded-at">Show sample rate</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-medium">
@@ -1053,73 +981,6 @@
  	                    </span>
  	                </div>
 
-					<label class="control-label" for="show-genres-column">Show genres column</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="show-genres-column" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-show-genres-column" class="help-block hide">
-	                    	Show the Genres column in Library Tag view.
-	                    </span>
-	                </div>
-
-					<label class="control-label" for="show-tagview-covers">Show tagview covers</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="show-tagview-covers" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-show-tagview-covers" class="help-block hide">
- 		                    Show covers in the Album column of Library Tag view.
- 	                    </span>
- 	                </div>
-
-					<label class="control-label" for="ellipsis-limited-text">Ellipsis limited text</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="ellipsis-limited-text" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-ellipsis-limited-text" class="help-block hide">
- 		                    Display ellipsis limited text underneath the cover in Album view for a more compact look.
- 	                    </span>
- 	                </div>
-
-					<div class="horiz-rule-appearance">Covers and Thumbs</div>
 					<label class="control-label" for="cover-search-priority">Cover search priority</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-medium">
@@ -1194,6 +1055,204 @@
 				</div>
 			</div>
 
+			<!-- LIBRARY (ADVANCED)-->
+			<div class="accordian"><span class="h5">Library (Advanced)</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
+				<div class="control-group">
+					<label class="control-label" for="tag-view-artist">Tag view artist</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium2">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tag-view-artist" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-artist-sel"><span class="text">Album Artist +</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-artist" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-tag-view-artist" class="help-block hide">
+							Select which tag is used to populate the Artist list in Tag view.<br>
+							<b>Artist:</b>&nbsp;List all Artists. Compilation albums listed for a selected artist will show only the tracks belonging to the Artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected artist.<br>
+							<b>Album Artist:</b>&nbsp;List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists" or any other string that was used to identify compilation albums.<br>
+							<b>Album Artist +:</b>&nbsp;List all Album Artists. Compilation albums listed for a selected Album Artist will show only the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all the album's tracks and just those for the selected Album Artist.<br>
+						</span>
+	                </div>
+
+					<label class="control-label" for="library-inc-comment-tag">Include comment tag</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-inc-comment-tag" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-comment-tag-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-library-inc-comment-tag" class="help-block hide">
+ 		                    This tag is used to display some identifying text to differentiate albums that have the same name but different MUSICBRAINZ_ALBUMID values.<br>
+							<b>NOTE:</b>&nbsp;Including this tag may impact the performance of the Library.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="library-inc-mbrz-albumid">Include MBRZ albumid</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-inc-mbrz-albumid" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-mbrz-albumid-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-mbrz-albumid-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
+ 		                    This tag is appended to the album key to differentiate albums that have the same name.<br>
+							<b>NOTE:</b>&nbsp;Including this tag may impact the performance of the Library.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="library-folder-path-albumkey">Folder path albumkey</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-folder-path-albumkey" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-folder-path-albumkey-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-folder-path-albumkey-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-folder-path-albumkey" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-folder-path-albumkey" class="help-block hide">
+							The path to the album folder is used as the album key to differentiate albums.<br>
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="ignore-articles">Ignore articles</label>
+	                <div class="controls">
+	                    <input id="ignore-articles" class="input-xlarge input-height-x" type="text">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-ignore-articles" class="help-block hide">
+							Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed.<br>
+							NOTE: A blank list will result in "None" and will effectively disable the option.
+						</span>
+	                </div>
+
+					<label class="control-label" for="show-genres-column">Show genres column</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-genres-column" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-genres-column-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-show-genres-column" class="help-block hide">
+	                    	Show the Genres column in Library Tag view.
+	                    </span>
+	                </div>
+
+					<label class="control-label" for="show-tagview-covers">Show tagview covers</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-tagview-covers" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-tagview-covers-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-show-tagview-covers" class="help-block hide">
+ 		                    Show covers in the Album column of Library Tag view.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="ellipsis-limited-text">Ellipsis limited text</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="ellipsis-limited-text" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="ellipsis-limited-text-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-ellipsis-limited-text" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-ellipsis-limited-text" class="help-block hide">
+ 		                    Display ellipsis limited text underneath the cover in Album view for a more compact look.
+ 	                    </span>
+ 	                </div>
+
+					<label class="control-label" for="utf8-char-filter">UTF8 character filter</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="utf8-char-filter" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="utf8-char-filter-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-utf8-char-filter" class="help-block hide">
+							Many Chinese songs and song directories have characters that are not UTF8 encoded causing the Library loader to fail. Replacing the non-UTF8 characters with a UTF8 compliant character solves this problem.<br>
+							NOTE: setting this to Yes may impact the performance of the Library.
+ 	                    </span>
+ 	                </div>
+				</div>
+			</div>
+
 			<!-- COVERVIEW -->
 			<div class="accordian"><span class="h5">CoverView</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
 				<div class="control-group">
@@ -1250,80 +1309,17 @@
 							<b>Animated:</b> Color change overlay.<br>
 							<b>Theme:</b> Theme color overlay.<br>
 							<b>Gradient (Linear):</b> Gradient overlay, top to bottom.<br>
-				context-menu-lib-albumal):</b> Gradient overlay, center to edge.<br>
+							<b>Gradient (Radial):</b> Gradient overlay, center to edge.<br>
 							<b>Pure Black:</b> Solid black overlay.
 	                    </span>
 	                </div>
-				</div>
-			</div>
-
-			<!-- OTHER -->
-			<div class="accordian"><span class="h5">Other</span><span class="dtclose">&nbsp;&#x25b8;</span><span class="dtopen">&nbsp;&#x25be;</span>
-				<div class="control-group">
-   	                <label class="control-label" for="font-size">Font size</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select select-medium">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="font-size" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Smaller</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Small</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Normal</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Large</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">Larger</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="font-size-sel"><span class="text">X-Large</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-font-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-font-size" class="help-block hide">
-		                    Set the size of the font used.
-	                    </span>
-	                </div>
-
-   	                <label class="control-label" for="extra-tags">Extra metadata</label>
-	                <div class="controls">
-						<input id="extra-tags" class="input-xlarge input-height-x" type="text">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-extra-tags" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-extra-tags" class="help-block hide">
-		                    Enter any combination of genre, track, disc, year, composer, encoded or None for display under the cover art.
-	                    </span>
-	                </div>
-
-   	                <label class="control-label" for="play-history-enabled">Playback history</label>
-	                <div class="controls">
-   						<div class="btn-group bootstrap-select bootstrap-select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="play-history-enabled" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="play-history-enabled-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
-						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-play-history" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-play-history" class="help-block hide">
-	                    	Log each song played to the playback history log. Songs in the log can be clicked to launch a Google search. The log can be cleared from System config.
-	                    </span>
-					</div>
-
 				</div>
 			</div>
 		</form>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" id="btn-appearance-update" class="btn btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-preferences-update" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
