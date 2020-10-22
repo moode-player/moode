@@ -409,9 +409,10 @@ function genFlatList($sock) {
 		switch ($_SESSION['library_flatlist_filter']) {
 			// Return full library
 			case 'full_lib':
-			// Filter entire library by Year or Year range
+			// These filters are in genLibrary()
+			case 'encoded':
+			case 'hdonly':
 			case 'year':
-				// NOTE: The year filter is in genLibrary()
 				$cmd = "search base \"" . $dir . "\"";
 				break;
 			// Advanced search dialog
@@ -537,6 +538,18 @@ function genLibrary($flat) {
 			$push = ($track_year >= $filter_year[0] && $track_year <= $filter_year[1]) ? true : false;
 		}
 
+		// Encoded or HD filter
+		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
+			$encoded_at = getEncodedAt($flatData, 'default', true);
+
+			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
+				$push = strpos($encoded_at, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
+			}
+			else {
+				$push = strpos($encoded_at, 'h', -1) !== false ? true : false;
+			}
+		}
+
 		if ($push === true) {
 			$songData = array(
 				'file' => $flatData['file'],
@@ -597,6 +610,7 @@ function libcache_file() {
 			break;
 		case 'folder':
 		case 'format':
+		case 'hdonly':
 		case 'lossless':
 		case 'lossy':
 			$suffix = '_' . strtolower($_SESSION['library_flatlist_filter']) . '.json';
@@ -606,11 +620,12 @@ function libcache_file() {
 		case 'artist':
 		case 'composer':
 		case 'conductor':
+		case 'encoded':
 		case 'file':
 		case 'genre':
 		case 'label':
 		case 'performer':
-		case 'tags':
+		case 'tags': // Indicates filter was submitted via Adv search
 		case 'title':
 		case 'work':
 		case 'year':
@@ -710,6 +725,18 @@ function genLibraryUTF8Rep($flat) {
 		if ($_SESSION['library_flatlist_filter'] == 'year') {
 			$track_year = getTrackYear($flatData);
 			$push = ($track_year >= $filter_year[0] && $track_year <= $filter_year[1]) ? true : false;
+		}
+
+		// Encoded or HD filter
+		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
+			$encoded_at = getEncodedAt($flatData, 'default', true);
+
+			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
+				$push = strpos($encoded_at, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
+			}
+			else {
+				$push = strpos($encoded_at, 'h', -1) !== false ? true : false;
+			}
 		}
 
 		if ($push === true) {
@@ -2120,7 +2147,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 
 	// Special sectuon to handle calls from genLibrary() to populate the element "encoded_at"
 	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
-	// Returned string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
+	// Returned string for PCM is "bits/rate format,flag" and for DSD it's "DSD rate,h"
 	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
 	if ($called_from_genlib) {
 		$mpd_format_tag = explode(':', $song_data['Format']);

@@ -132,8 +132,8 @@ var GLOBAL = {
     nativeLazyLoad: false,
     playlistChanged: false,
 	initTime: 0,
-    oneArgFilters: ['full_lib', 'lossless', 'lossy'],
-    twoArgFilters: ['album', 'any', 'artist', 'composer', 'conductor', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
+    oneArgFilters: ['full_lib', 'hdonly', 'lossless', 'lossy'],
+    twoArgFilters: ['album', 'any', 'artist', 'composer', 'conductor', 'encoded', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
     allFilters: []
 };
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
