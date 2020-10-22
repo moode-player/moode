@@ -1084,6 +1084,31 @@
 						</span>
 	                </div>
 
+					<label class="control-label" for="library-album-key">Album key</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium2">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="library-album-key" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist (Default)</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">Album@Artist@AlbumID</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-album-key-sel"><span class="text">FolderPath@AlbumID</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
+ 		                    Determine how albums of the same name will be differentated.<br>
+							<b>NOTE:</b>&nbsp;AlbumID is the musicbrainz_albumid tag. Including this tag may impact the performance of the Library.
+ 	                    </span>
+ 	                </div>
+
 					<label class="control-label" for="library-inc-comment-tag">Include comment tag</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-mini">
@@ -1107,30 +1132,7 @@
  	                    </span>
  	                </div>
 
-					<label class="control-label" for="library-inc-mbrz-albumid">Include MBRZ albumid</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-inc-mbrz-albumid" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-mbrz-albumid-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-inc-mbrz-albumid-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
- 		                    This tag is appended to the album key to differentiate albums that have the same name.<br>
-							<b>NOTE:</b>&nbsp;Including this tag may impact the performance of the Library.
- 	                    </span>
- 	                </div>
-
-					<label class="control-label" for="library-folder-path-albumkey">Folder path albumkey</label>
+					<!--label class="control-label" for="library-folder-path-albumkey">Folder path albumkey</label>
  	                <div class="controls">
 						<div class="btn-group bootstrap-select select-mini">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1150,7 +1152,7 @@
  						<span id="info-folder-path-albumkey" class="help-block hide">
 							The path to the album folder is used as the album key to differentiate albums.<br>
  	                    </span>
- 	                </div>
+ 	                </div-->
 
 					<label class="control-label" for="ignore-articles">Ignore articles</label>
 	                <div class="controls">

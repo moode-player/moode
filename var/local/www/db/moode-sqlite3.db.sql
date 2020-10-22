@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Oct 21 09:27:53 2020
+-- File generated with SQLiteStudio v3.1.0 on Wed Oct 21 18:44:04 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -386,7 +386,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (144, 'radioview_show_hide', 'N
 INSERT INTO cfg_system (id, param, value) VALUES (145, 'renderer_backdrop', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (146, 'library_flatlist_filter', 'full_lib');
 INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_str', '');
-INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,No,No');
+INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,Album@Artist (Default)');
 INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not installed');
 INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
 

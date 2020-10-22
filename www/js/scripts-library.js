@@ -68,8 +68,10 @@ function loadLibrary() {
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
 
-    // Break out misc lib options
+    // Convert misc lib option[2] to Yes/No equivalents
     miscLibOptions = getMiscLibOptions();
+    miscLibOptions[2] = miscLibOptions[1].indexOf('FolderPath') != -1 ? 'Yes' : 'No';
+    miscLibOptions[1] = miscLibOptions[1].indexOf('AlbumID') != -1 ? 'Yes' : 'No';
 
 	var libpop = setTimeout(function(){
 	    if (currentView == 'tag' || currentView == 'album') {

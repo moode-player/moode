@@ -496,11 +496,10 @@ function genLibrary($flat) {
 	$lib = array();
 
 	// Break out misc lib options
-	// [0] = include comment tag Yes/No
-	// [1] = include mbrz albumid Yes/No
-	// [2] = folder path albumkey Yes/No
-	// NOTE: lets build the album key here instead of in the JS
-	$misc_options = explode(',', $_SESSION['library_misc_options']);
+	// [0] = Include comment tag: Yes | No
+	// [1] = Album Key: Album@Artist (Default) | Album@Artist@AlbumID | FolderPath | FolderPath@AlbumID
+	$inc_comment_tag = explode(',', $_SESSION['library_misc_options'])[0];
+	$inc_mbrz_albumid = strpos(explode(',', $_SESSION['library_misc_options'])[1], 'AlbumID') !== false ? 'Yes' : 'No';
 
 	// Setup date range filter
 	if ($_SESSION['library_flatlist_filter'] == 'year') {
@@ -555,8 +554,8 @@ function genLibrary($flat) {
 				'time_mmss' => songTime($flatData['Time']),
 				'last_modified' => $flatData['Last-Modified'],
 				'encoded_at' => getEncodedAt($flatData, 'default', true),
-				'comment' => (($flatData['Comment'] && $misc_options[0] == 'Yes') ? $flatData['Comment'] : ''),
-				'mb_albumid' => (($flatData['MUSICBRAINZ_ALBUMID'] && $misc_options[1] == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0')
+				'comment' => (($flatData['Comment'] && $inc_comment_tag == 'Yes') ? $flatData['Comment'] : ''),
+				'mb_albumid' => (($flatData['MUSICBRAINZ_ALBUMID'] && $inc_mbrz_albumid == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0')
 			);
 
 			array_push($lib, $songData);
@@ -672,11 +671,10 @@ function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	// Break out misc lib options
-	// [0] = include comment tag Yes/No
-	// [1] = include mbrz albumid Yes/No
-	// [2] = folder path albumkey Yes/No
-	// NOTE: lets build the album key here instead of in the JS
-	$misc_options = explode(',', $_SESSION['library_misc_options']);
+	// [0] = Include comment tag: Yes | No
+	// [1] = Album Key: Album@Artist (Default) | Album@Artist@AlbumID | FolderPath | FolderPath@AlbumID
+	$inc_comment_tag = explode(',', $_SESSION['library_misc_options'])[0];
+	$inc_mbrz_albumid = strpos(explode(',', $_SESSION['library_misc_options'])[1], 'AlbumID') !== false ? 'Yes' : 'No';
 
 	// Setup date range filter
 	if ($_SESSION['library_flatlist_filter'] == 'year') {
@@ -731,8 +729,8 @@ function genLibraryUTF8Rep($flat) {
 				'time_mmss' => utf8rep(songTime($flatData['Time'])),
 				'last_modified' => $flatData['Last-Modified'],
 				'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
-				'comment' => utf8rep((($flatData['Comment'] && $misc_options[0] == 'Yes') ? $flatData['Comment'] : '')),
-				'mb_albumid' => utf8rep((($flatData['MUSICBRAINZ_ALBUMID'] && $misc_options[1] == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'))
+				'comment' => utf8rep((($flatData['Comment'] && $inc_comment_tag == 'Yes') ? $flatData['Comment'] : '')),
+				'mb_albumid' => utf8rep((($flatData['MUSICBRAINZ_ALBUMID'] && $inc_mbrz_albumid == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'))
 			);
 
 			array_push($lib, $songData);
