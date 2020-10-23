@@ -958,8 +958,13 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
     // Library search
-	$('#lib-album-filter').keyup(function(e){
-        e.preventDefault();
+    // NOTE: The keydown event was added to work around an issue where Firefox steals the Enter key and keyup never happens.
+    $('#lib-album-filter').on('keydown keyup', function(e){
+        //console.log(e);
+        if (e.type == 'keyup') {
+            e.preventDefault();
+        }
+
         $('#lib-album-filter').val().length > 0 ? $('#searchResetLib').show() : $('#searchResetLib').hide();
 
         if (e.key == 'Enter' && $('#lib-album-filter').val().length > 0) {
