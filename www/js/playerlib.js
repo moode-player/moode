@@ -133,7 +133,7 @@ var GLOBAL = {
     playlistChanged: false,
 	initTime: 0,
     oneArgFilters: ['full_lib', 'hdonly', 'lossless', 'lossy'],
-    twoArgFilters: ['album', 'any', 'artist', 'composer', 'conductor', 'encoded', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
+    twoArgFilters: ['album', 'albumartist', 'any', 'artist', 'composer', 'conductor', 'encoded', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
     allFilters: []
 };
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);

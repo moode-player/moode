@@ -421,6 +421,7 @@ function genFlatList($sock) {
 				break;
 			// Filter on specific tag containing the string or if string is empty perform an 'any' filter
 			case 'album':
+			case 'albumartist':
 			case 'any':
 			case 'artist':
 			case 'composer':
