@@ -562,7 +562,6 @@ if ($_crossfeed_set_disabled == '') {
 // parametric equalizer
 $eqp12 = Eqp12(cfgdb_connect());
 $presets = $eqp12->getPresets();
-print_r($presets);
 $array = array();
 $array[0] = 'Off';
 $curveList = $_eqfa4p_set_disabled == '' ? array_replace($array, $presets) : $array;
