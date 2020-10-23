@@ -21,6 +21,7 @@
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
+require_once dirname(__FILE__) . '/inc/eqp.php';
 
 playerSession('open', '' ,'');
 
@@ -196,10 +197,16 @@ if (isset($_POST['crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed'])
 }
 
 // parametric eq
-if (isset($_POST['eqfa4p']) && $_POST['eqfa4p'] != $_SESSION['eqfa4p']) {
+if (isset($_POST['eqp']) && $_POST['eqp'] != $_SESSION['eqfa4p']) {
 	// pass old,new curve name to worker job
-	playerSession('write', 'eqfa4p', $_POST['eqfa4p']);
-	submitJob('eqfa4p', $_SESSION['eqfa4p'] . ',' . $_POST['eqfa4p'], 'Parametric EQ ' . ($_POST['eqfa4p'] == 'Off' ? 'off' : 'on'), 'MPD restarted');
+	$eqp12 = Eqp12(cfgdb_connect());
+	$currentActive = $eqp12->getActivePresetIndex();
+	$newActive = intval($_POST['eqp']);
+	$eqp12->setActivePresetIndex($newActive);
+	unset($eqp12);
+
+	playerSession('write', 'eqfa4p', $newActive == 0 ? "Off": "On");
+	submitJob('eqp', $currentActive .','. $newActive, 'Parametric EQ ' . ($newActive == 0 ? 'off' : 'on'), 'MPD restarted');
 }
 
 // graphic eq
@@ -553,15 +560,18 @@ if ($_crossfeed_set_disabled == '') {
 }
 
 // parametric equalizer
-$result = sdbquery('SELECT curve_name FROM cfg_eqfa4p', cfgdb_connect());
+$eqp12 = Eqp12(cfgdb_connect());
+$presets = $eqp12->getPresets();
+print_r($presets);
 $array = array();
-$array[0]['curve_name'] = 'Off';
-$curveList = $_eqfa4p_set_disabled == '' ? array_merge($array, $result) : $array;
-foreach ($curveList as $curve) {
-	$curveName = $curve['curve_name'];
-	$selected = ($_SESSION['eqfa4p'] == $curve['curve_name']) ? 'selected' : '';
-	$_select['eqfa4p'] .= sprintf('<option value="%s" %s>%s</option>\n', $curve['curve_name'], $selected, $curveName);
+$array[0] = 'Off';
+$curveList = $_eqfa4p_set_disabled == '' ? array_replace($array, $presets) : $array;
+$curve_selected_id = $eqp12->getActivePresetIndex();
+foreach ($curveList as $key=>$curveName) {
+	$selected = ($key == $curve_selected_id) ? 'selected' : '';
+	$_select['eqp'] .= sprintf('<option value="%s" %s>%s</option>\n', $key, $selected, $curveName);
 }
+unset($eqp12);
 
 // graphic equalizer
 $result = sdbquery('SELECT curve_name FROM cfg_eqalsa', cfgdb_connect());

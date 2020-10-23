@@ -1750,7 +1750,7 @@ function updMpdConf($i2sdevice) {
 	$names = array (
 		"name \"ALSA default\"\n" . "device \"hw:" . $device . ",0\"\n",
 		"name \"ALSA crossfeed\"\n" . "device \"crossfeed\"\n",
-		"name \"ALSA parametric eq\"\n" . "device \"eqfa4p\"\n",
+		"name \"ALSA parametric eq\"\n" . "device \"eqfa12p\"\n",
 		"name \"ALSA graphic eq\"\n" . "device \"alsaequal\"\n",
 		"name \"ALSA polarity inversion\"\n" . "device \"invpolarity\"\n"
 		);

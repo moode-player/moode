@@ -25,6 +25,7 @@
  */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
+require_once dirname(__FILE__) . '/../inc/eqp.php';
 
 //
 // STARTUP SEQUENCE
@@ -1455,25 +1456,27 @@ function runQueuedJob() {
 			updMpdConf($_SESSION['i2sdevice']);
 			sysCmd('systemctl restart mpd');
 			break;
-		case 'eqfa4p':
-			// Old,new curve name
+		case 'eqp':
+			// Old,new curve id
 			$setting = explode(',', $_SESSION['w_queueargs']);
-
-			if ($setting[1] == 'Off') {
+			$prev = intval($setting[0]);
+			$curr = intval($setting[1]);
+			if ($curr == 0) {
 				sysCmd('mpc stop');
 				sysCmd('mpc enable only 1');
+				workerLog('worker: eqp off ');
 			}
 			else {
 				// Check old curve name and stop playback if eq being turned on for first time
-				if ($setting[0] == 'Off') {
+				if ($prev == 0) {
 					sysCmd('mpc stop');
 				}
-
-				$result = sdbquery("SELECT * FROM cfg_eqfa4p WHERE curve_name='" . $setting[1] . "'", $GLOBALS['dbh']);
-				$params = $result[0]['band1_params'] . '  ' . $result[0]['band2_params'] . '  ' . $result[0]['band3_params'] . '  ' . $result[0]['band4_params'] . '  ' . $result[0]['master_gain'];
-
-				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $params . ' ]" ' . ALSA_PLUGIN_PATH . '/eqfa4p.conf');
-				sysCmd('mpc enable only 3');
+				$eqp12 = Eqp12(cfgdb_connect());
+				$config = $eqp12->getpreset($curr);
+				$eqp12->applyConfig($config);
+				unset($eqp12);
+				sysCmd("mpc enable only 3");
+				workerLog('worker: eqp on ');
 			}
 
 			setMpdHttpd();

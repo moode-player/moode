@@ -52,9 +52,8 @@ class Eqp {
     private $table = "";
     private $alsa_file ="";
 
-    function __construct($db, $table, $bands, $configfile)
-    {
-        $this->dbh = $db;
+    function __construct($db, $table, $bands, $configfile) {
+        $this->dbh = &$db;
         $this->band_count = $bands;
         $this->table = $table;
         $this->alsa_file = $configfile;
@@ -148,18 +147,23 @@ class Eqp {
     function getActivePresetIndex() {
         $querystr = 'SELECT id from '.$this->table.' WHERE active=1;';
         $result = sdbquery($querystr, $this->dbh);
-        return count($result)==1 ? $result[0]['id']: NULL;
+        return count($result)==1 ? $result[0]['id']: 0;
     }
 
     function setActivePresetIndex($index) {
-        $currentActiveIndex =$this->getActivePresetIndex($db);
-        if( $currentActiveIndex) {
-            $querystr = "UPDATE ".$this->table." SET active = 0 WHERE id = ".$currentActiveIndex.";";
+        $querystr = "UPDATE ".$this->table." SET active = 0 WHERE active = 1;";
+        $result = sdbquery($querystr, $this->dbh);
+
+        // $currentActiveIndex =$this->getActivePresetIndex($db);
+        // if( $currentActiveIndex) {
+        //     $querystr = "UPDATE ".$this->table." SET active = 0 WHERE id = ".$currentActiveIndex.";";
+        //     $querystr = "UPDATE ".$this->table." SET active = 0 WHERE id = ".$currentActiveIndex.";";
+        //     $result = sdbquery($querystr, $this->dbh);
+        // }
+        if($index >= 1 ) {
+            $querystr = "UPDATE ".$this->table." SET active = 1 WHERE id = ".$index.";";
             $result = sdbquery($querystr, $this->dbh);
         }
-
-        $querystr = "UPDATE ".$this->table." SET active = 1 WHERE id = ".$index.";";
-        $result = sdbquery($querystr, $this->dbh);
     }
 
 }
@@ -167,7 +171,7 @@ class Eqp {
 
 // if php isn't used as include run buildin tests for development diagnostics
 function test() {
-    $dbh = cfgdb_connect();
+    $dbh = &cfgdb_connect();
     $eqp12 = Eqp12($dbh);
 
     print("get config for preset 1:\n");
@@ -205,6 +209,8 @@ function test() {
     print("\nupdate config file:\n");
     $config['bands'][11]['gain'] =-3.1;
     $eqp12->applyConfig($config);
+
+    unset($eqp12);
 }
 
 

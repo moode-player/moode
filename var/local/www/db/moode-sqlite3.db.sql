@@ -610,9 +610,9 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/etc/rc.local', '
 CREATE TABLE cfg_eqfa4p (id INTEGER PRIMARY KEY, curve_name CHAR (32), master_gain CHAR (32), band1_params CHAR (32), band2_params CHAR (32), band3_params CHAR (32), band4_params CHAR (32));
 INSERT INTO cfg_eqfa4p (id, curve_name, master_gain, band1_params, band2_params, band3_params, band4_params) VALUES (1, 'Default curve', '0', '1 20 1 0', '1 180 1 0', '1 2000 1 0', '1 11700 1 0');
 
--- Table: cfg_eqfa3x4p
-CREATE TABLE cfg_eqfa3x4p (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands integer);
-INSERT INTO cfg_eqfa3x4p (id, curve_name, settings, active) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  1 0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 1);
+-- Table: cfg_eqp12
+CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands integer);
+INSERT INTO cfg_eqp12 (id, curve_name, settings, active) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  1 0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 1);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
