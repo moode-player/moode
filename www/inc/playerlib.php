@@ -409,9 +409,10 @@ function genFlatList($sock) {
 		switch ($_SESSION['library_flatlist_filter']) {
 			// Return full library
 			case 'full_lib':
-			// Filter entire library by Year or Year range
+			// These filters are in genLibrary()
+			case 'encoded':
+			case 'hdonly':
 			case 'year':
-				// NOTE: The year filter is in genLibrary()
 				$cmd = "search base \"" . $dir . "\"";
 				break;
 			// Advanced search dialog
@@ -420,6 +421,7 @@ function genFlatList($sock) {
 				break;
 			// Filter on specific tag containing the string or if string is empty perform an 'any' filter
 			case 'album':
+			case 'albumartist':
 			case 'any':
 			case 'artist':
 			case 'composer':
@@ -496,11 +498,10 @@ function genLibrary($flat) {
 	$lib = array();
 
 	// Break out misc lib options
-	// [0] = include comment tag Yes/No
-	// [1] = include mbrz albumid Yes/No
-	// [2] = folder path albumkey Yes/No
-	// NOTE: lets build the album key here instead of in the JS
-	$misc_options = explode(',', $_SESSION['library_misc_options']);
+	// [0] = Include comment tag: Yes | No
+	// [1] = Album Key: Album@Artist (Default) | Album@Artist@AlbumID | FolderPath | FolderPath@AlbumID
+	$inc_comment_tag = explode(',', $_SESSION['library_misc_options'])[0];
+	$inc_mbrz_albumid = strpos(explode(',', $_SESSION['library_misc_options'])[1], 'AlbumID') !== false ? 'Yes' : 'No';
 
 	// Setup date range filter
 	if ($_SESSION['library_flatlist_filter'] == 'year') {
@@ -538,6 +539,18 @@ function genLibrary($flat) {
 			$push = ($track_year >= $filter_year[0] && $track_year <= $filter_year[1]) ? true : false;
 		}
 
+		// Encoded or HD filter
+		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
+			$encoded_at = getEncodedAt($flatData, 'default', true);
+
+			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
+				$push = strpos($encoded_at, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
+			}
+			else {
+				$push = strpos($encoded_at, 'h', -1) !== false ? true : false;
+			}
+		}
+
 		if ($push === true) {
 			$songData = array(
 				'file' => $flatData['file'],
@@ -555,8 +568,8 @@ function genLibrary($flat) {
 				'time_mmss' => songTime($flatData['Time']),
 				'last_modified' => $flatData['Last-Modified'],
 				'encoded_at' => getEncodedAt($flatData, 'default', true),
-				'comment' => (($flatData['Comment'] && $misc_options[0] == 'Yes') ? $flatData['Comment'] : ''),
-				'mb_albumid' => (($flatData['MUSICBRAINZ_ALBUMID'] && $misc_options[1] == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0')
+				'comment' => (($flatData['Comment'] && $inc_comment_tag == 'Yes') ? $flatData['Comment'] : ''),
+				'mb_albumid' => (($flatData['MUSICBRAINZ_ALBUMID'] && $inc_mbrz_albumid == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0')
 			);
 
 			array_push($lib, $songData);
@@ -598,6 +611,7 @@ function libcache_file() {
 			break;
 		case 'folder':
 		case 'format':
+		case 'hdonly':
 		case 'lossless':
 		case 'lossy':
 			$suffix = '_' . strtolower($_SESSION['library_flatlist_filter']) . '.json';
@@ -607,11 +621,12 @@ function libcache_file() {
 		case 'artist':
 		case 'composer':
 		case 'conductor':
+		case 'encoded':
 		case 'file':
 		case 'genre':
 		case 'label':
 		case 'performer':
-		case 'tags':
+		case 'tags': // Indicates filter was submitted via Adv search
 		case 'title':
 		case 'work':
 		case 'year':
@@ -672,11 +687,10 @@ function genLibraryUTF8Rep($flat) {
 	$lib = array();
 
 	// Break out misc lib options
-	// [0] = include comment tag Yes/No
-	// [1] = include mbrz albumid Yes/No
-	// [2] = folder path albumkey Yes/No
-	// NOTE: lets build the album key here instead of in the JS
-	$misc_options = explode(',', $_SESSION['library_misc_options']);
+	// [0] = Include comment tag: Yes | No
+	// [1] = Album Key: Album@Artist (Default) | Album@Artist@AlbumID | FolderPath | FolderPath@AlbumID
+	$inc_comment_tag = explode(',', $_SESSION['library_misc_options'])[0];
+	$inc_mbrz_albumid = strpos(explode(',', $_SESSION['library_misc_options'])[1], 'AlbumID') !== false ? 'Yes' : 'No';
 
 	// Setup date range filter
 	if ($_SESSION['library_flatlist_filter'] == 'year') {
@@ -714,6 +728,18 @@ function genLibraryUTF8Rep($flat) {
 			$push = ($track_year >= $filter_year[0] && $track_year <= $filter_year[1]) ? true : false;
 		}
 
+		// Encoded or HD filter
+		if ($_SESSION['library_flatlist_filter'] == 'encoded' || $_SESSION['library_flatlist_filter'] == 'hdonly') {
+			$encoded_at = getEncodedAt($flatData, 'default', true);
+
+			if ($_SESSION['library_flatlist_filter'] == 'encoded') {
+				$push = strpos($encoded_at, $_SESSION['library_flatlist_filter_str']) !== false ? true : false;
+			}
+			else {
+				$push = strpos($encoded_at, 'h', -1) !== false ? true : false;
+			}
+		}
+
 		if ($push === true) {
 			$songData = array(
 				'file' => utf8rep($flatData['file']),
@@ -731,8 +757,8 @@ function genLibraryUTF8Rep($flat) {
 				'time_mmss' => utf8rep(songTime($flatData['Time'])),
 				'last_modified' => $flatData['Last-Modified'],
 				'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
-				'comment' => utf8rep((($flatData['Comment'] && $misc_options[0] == 'Yes') ? $flatData['Comment'] : '')),
-				'mb_albumid' => utf8rep((($flatData['MUSICBRAINZ_ALBUMID'] && $misc_options[1] == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'))
+				'comment' => utf8rep((($flatData['Comment'] && $inc_comment_tag == 'Yes') ? $flatData['Comment'] : '')),
+				'mb_albumid' => utf8rep((($flatData['MUSICBRAINZ_ALBUMID'] && $inc_mbrz_albumid == 'Yes') ? $flatData['MUSICBRAINZ_ALBUMID'] : '0'))
 			);
 
 			array_push($lib, $songData);
@@ -2122,7 +2148,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 
 	// Special sectuon to handle calls from genLibrary() to populate the element "encoded_at"
 	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
-	// Returned string is "bits/rate format,flag" for PCM and "DSD rate,h" for DSD
+	// Returned string for PCM is "bits/rate format,flag" and for DSD it's "DSD rate,h"
 	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
 	if ($called_from_genlib) {
 		$mpd_format_tag = explode(':', $song_data['Format']);

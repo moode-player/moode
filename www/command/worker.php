@@ -101,6 +101,7 @@ if (!file_exists('/var/local/www/playhistory.log')) {
 sysCmd('touch ' . LIBCACHE_BASE . '_all.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_folder.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_format.json');
+sysCmd('touch ' . LIBCACHE_BASE . '_hdonly.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossless.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossy.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_tag.json');
