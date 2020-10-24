@@ -100,8 +100,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 .help-block-modal {margin:0 !important;}
 /* dropdown menus */
 #menu-top .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
-#current-tab, #menu-header {font-size:1.15rem;}
-.dropdown-menu > li > a, .viewswitch .btn {text-align:left;line-height:2.75rem;width:100%;margin:0;padding:0 .5rem;background:none;color:var(--adapttext);font-size:1.1em;font-family:system-ui, "Avenir Next", "Lato";white-space:nowrap;border-radius:0;}
+#current-tab, #menu-header {font-size:1em;}
+.dropdown-menu > li > a, .viewswitch .btn {text-align:left;line-height:2.75rem;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1em;font-family:system-ui, "Avenir Next", "Lato";white-space:nowrap;border-radius:0;}
 /*body.no-touch .dropdown-menu > li > a {font-size:1rem;line-height:2em}*/
 .dropdown-menu > li:last-child a, .viewswitch .btn:last-child {padding-bottom:.35em;}
 .dropdown-menu > li:first-child a, .viewswitch .btn:first-child {padding-top:.35em;}
@@ -221,7 +221,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
-	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.5rem;width:3.1rem;}
+	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.2rem;width:3.1rem;}
 	#playbar-hd-badge {margin-top:.6em;}
 	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
 	#playbar-volume-popup-btn {width:initial!important;}
@@ -231,7 +231,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/*.dropdown-menu {min-width:180px;}*/
 	#menu-top .dropdown-menu, .viewswitch .dropdown-menu {min-width:16rem;} /* Make this one a bit wider */
 	#context-menu-playback .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
-	.dropdown-menu > li > a, .viewswitch .btn, #lib-album-search input {font-size:1.25rem;line-height:2.75em;}
+	#lib-album-search input, #current-tab, #menu-header {font-size:1.11rem;}
+	.dropdown-menu > li > a, .viewswitch .btn, #lib-album-search input {font-size:1.11rem;line-height:2.75em;}
 	#playback-panel, #content {position:relative;}
 	.modal-body{padding:0 .5rem;max-height:80vh;}
 	.modal-footer .btn {width:40%;}
