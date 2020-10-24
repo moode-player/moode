@@ -2630,14 +2630,16 @@ function getHdwrRev() {
 		// Custom Pi-4B v1.2 codes to identify RAM size
 		'a112' => 'Pi-4B 1GB v1.2',
 		'b112' => 'Pi-4B 2GB v1.2',
-		'c112' => 'Pi-4B 4GB v1.2'
+		'c112' => 'Pi-4B 4GB v1.2',
+		// Custom Pi-4B v1.4 codes to identify RAM size
+		'd114' => 'Pi-4B 8GB v1.4'
 	);
 
 	$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
 
 	// Pi-4B
 	// Custom codes to identify the models by RAM size
- 	if ($revnum[0] == '3111' || $revnum[0] == '3112') {
+ 	if ($revnum[0] == '3111' || $revnum[0] == '3112' || $revnum[0] == '3114') {
 		$prefix = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,0,2)}' . "'" . ' /proc/cpuinfo');
 		$revnum[0] = $prefix[0] . substr($revnum[0], 1, 3);
 	}
@@ -2700,6 +2702,7 @@ c0 3111	4B		1.1	4GB		Sony UK
 a0 3112	4B		1.2	1GB		Sony UK
 b0 3112	4B		1.2	2GB		Sony UK
 c0 3112	4B		1.2	4GB		Sony UK
+d0 3114	4B		1.4	8GB		Sony UK
 */
 
 // Config audio scrobbler
