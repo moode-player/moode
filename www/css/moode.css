@@ -126,7 +126,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal.fade.in {transition:none;}
 /* stuff */
 .btn-group.bootstrap-select.bootstrap-select-mini {width:5.5rem;}
-#info-toggle-bgimage {position:absolute;margin-left:5px;margin-top:2px;}
+#info-toggle-bgimage {/*position:absolute;*/margin-left:5px;margin-top:2px;}
 /* clock radio */
 .checkbox-grp {margin:.35em 0 .85em 0;}
 .checkbox-ctl {margin:.25em 0 .5em .25em !important;}
