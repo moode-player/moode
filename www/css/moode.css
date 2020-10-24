@@ -386,11 +386,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 @media (max-height:568px) and (max-width:320px) {
 	#extra-tags {display:none;}
 	#currentsong {padding-top:.5em}
-	/*#context-menu-playback .dropdown-menu {min-width:150px;}*/
 	.playlist {font-size:1.2em;}
 	.playlist li:before {width:1.75em;}
 	.playlist span {margin-left:calc(2.75rem + 1vmin);}
-	#playbar-title {width:calc(60vw - 6rem);}
 	.bootstrap-select.select-medium:not([class*="span"]) {width:140px;}
 }
 /* iPhone5 landscape */
