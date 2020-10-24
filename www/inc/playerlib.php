@@ -2631,6 +2631,8 @@ function getHdwrRev() {
 		'a112' => 'Pi-4B 1GB v1.2',
 		'b112' => 'Pi-4B 2GB v1.2',
 		'c112' => 'Pi-4B 4GB v1.2',
+		// Generic Pi-4B v1.4 code
+		'3114' => 'Pi-4B 8GB v1.4'
 		// Custom Pi-4B v1.4 codes to identify RAM size
 		'd114' => 'Pi-4B 8GB v1.4'
 	);
