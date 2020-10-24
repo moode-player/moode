@@ -3434,7 +3434,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
 	$current['composer'] = $song['Composer'];
-	// Cover hash
+	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
 		$current['mapped_db_vol'] = getMappedDbVol();

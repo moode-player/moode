@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Oct 21 18:44:04 2020
+-- File generated with SQLiteStudio v3.1.0 on Sat Oct 24 06:47:33 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -389,6 +389,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (147, 'library_flatlist_filter_
 INSERT INTO cfg_system (id, param, value) VALUES (148, 'library_misc_options', 'No,Album@Artist (Default)');
 INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not installed');
 INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
+INSERT INTO cfg_system (id, param, value) VALUES (151, 'volume_db_display', '0');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

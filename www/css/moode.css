@@ -35,7 +35,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .viewswitch-cfgs .active a {color:inherit;}
 #config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
-.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.25em;font-style:italic;color: #888;}
+.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.15em;font-style:italic;color: #888;}
 .horiz-rule-radioview {border-bottom:1px solid var(--textvariant);font-size:1.5em!important;font-style:italic;color:var(--textvariant);text-align:left!important;width:92%!important;padding-bottom:0!important;}
 .horiz-rule-preferences {width:48%;text-align:right;margin:.25em 0;font-size: 1.15em;font-style:italic;color:var(--textvariant);}
 .legend-configs {border:none;margin-bottom:.35em;}
