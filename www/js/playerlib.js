@@ -719,7 +719,7 @@ function renderUI() {
             // Original for Playback
      		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
             // Thumbnail for Playbar
-            if (MPD.json['file'] && !RegExp('/tidal/').test(MPD.json['file'])) {
+            if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
                     '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
@@ -727,7 +727,7 @@ function renderUI() {
             }
             else {
 	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + '" data-adaptive-background="1" alt="Cover art not found"' + '>');
-                $('#playbar-cover').html('<img src="' + 'images/default-cover-v6.png' + '">');
+                $('#playbar-cover').html('<img src="images/default-cover-v6.svg">');
             }
     		// Cover backdrop or bgimage
     		if (SESSION.json['cover_backdrop'] == 'Yes') {
@@ -1060,7 +1060,7 @@ function renderPlaylist(state) {
 				}
 				// Song file or upnp url
 				else {
-					var thumb = RegExp('/tidal/').test(data[i].file) ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
+					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
 					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"' + thumb + '"/></span>' : '';
 					//output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
 	                // Line 1 title
@@ -2137,9 +2137,7 @@ $('.context-menu a').click(function(e) {
 		var temp = SESSION.json['preferences_modal_state'].split(',');
 		for (var x = 0; x < 5; x++) {
 			if (temp[x] == '1') {
-				$('#preferences-modal div.control-group').eq(x).show();
-				$('#preferences-modal .accordian .dtopen').eq(x).show();
-				$('#preferences-modal .accordian .dtclose').eq(x).hide();
+				$('#preferences-modal .accordian').eq(x).addClass('active');
 			}
 		}
 
@@ -3329,8 +3327,7 @@ $('#context-backdrop').click(function(e){
 });
 
 $('#preferences-modal .h5').click(function(e) {
-	$(this).parent().children('div.control-group').slideToggle(100);
-	$(this).parent().children('.dtclose, .dtopen').toggle();
+	$(this).parent('div.accordian').toggleClass('active');
 });
 
 // Synchronize times to/from playbar so we don't have to keep countdown timers running which = ugly idle perf
@@ -3473,11 +3470,11 @@ function setLibMenuAndHeader () {
             }
             // Two arg filter with emoty second arg
             else if (GLOBAL.twoArgFilters.includes(SESSION.json['library_flatlist_filter']) && SESSION.json['library_flatlist_filter_str'] == '') {
-                headerText = 'Filtered by Any: (' + filterCapitilized + ')';
+                headerText = 'Filtered by Any: ' + filterCapitilized;
             }
             // Two arg filter with second arg
             else {
-                headerText = 'Filtered by '+ filterCapitilized + ': (' + SESSION.json['library_flatlist_filter_str'] + ')';
+                headerText = 'Filtered by '+ filterCapitilized + ': ' + SESSION.json['library_flatlist_filter_str'];
             }
         }
 	}
