@@ -208,15 +208,17 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 
 // Parametric eq
 if (isset($_POST['eqfa4p']) && $_POST['eqfa4p'] != $_SESSION['eqfa4p']) {
-	// pass old,new curve name to worker job
+	// Pass old,new curve name to worker job
+	$old_curve = $_SESSION['eqfa4p'];
 	playerSession('write', 'eqfa4p', $_POST['eqfa4p']);
-	submitJob('eqfa4p', $_SESSION['eqfa4p'] . ',' . $_POST['eqfa4p'], 'Parametric EQ ' . ($_POST['eqfa4p'] == 'Off' ? 'off' : 'on'), 'MPD restarted');
+	submitJob('eqfa4p', $old_curve . ',' . $_POST['eqfa4p'], 'Parametric EQ ' . ($_POST['eqfa4p'] == 'Off' ? 'off' : 'on'), 'MPD restarted');
 }
 // Graphic eq
 if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
-	// pass old,new curve name to worker job
+	// Pass old,new curve name to worker job
+	$old_curve = $_SESSION['alsaequal'];
 	playerSession('write', 'alsaequal', $_POST['alsaequal']);
-	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Graphic EQ ' . ($_POST['alsaequal'] == 'Off' ? 'off' : 'on'), '');
+	submitJob('alsaequal', $old_curve . ',' . $_POST['alsaequal'], 'Graphic EQ ' . ($_POST['alsaequal'] == 'Off' ? 'off' : 'on'), '');
 }
 
 // AUDIO RENDERERS
