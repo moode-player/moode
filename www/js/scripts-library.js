@@ -765,9 +765,6 @@ var renderSongs = function(albumPos) {
 	var discDiv = '';
 	LIB.totalTime = 0;
 	
-	// Sort songs correctly even when the tracks of an album have different album_artists (works with folderpath key)
-	filteredSongs.sort((a,b)=>{return a.tracknum - b.tracknum}).sort((a,b)=>{return a.disc - b.disc});
-
     if (LIB.artistClicked == true || LIB.albumClicked == true) {
         // Order the songs according the the order of the albums
         var orderedSongs = [];
@@ -1049,6 +1046,8 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 				albumArtists.forEach(artist => (!LIB.filters.artists.includes(artist) && LIB.filters.artists.push(artist)));
 				filterSongs();
 				LIB.filters.artists = LIB.filters.artists.slice(0,n);
+				// Sort songs correctly even when the tracks of an album have different album_artists
+				filteredSongs.sort((a,b)=>{return a.tracknum - b.tracknum}).sort((a,b)=>{return a.disc - b.disc});
 				renderSongs();
 			} else {
 				filterSongs();
