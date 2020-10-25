@@ -997,12 +997,20 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	$('#searchResetLib').click(function(e) {
+		e.preventDefault();
+		document.getElementById("lib-album-filter").focus();
+        $('#lib-album-filter').val('');
+        $('#searchResetLib').hide();
+		return false;
+	});
+
+/*	$('#searchResetLib').click(function(e) {
         $('#lib-album-filter').val('');
         $('#searchResetLib').hide();
         if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
             applyLibFilter('full_lib');
         }
-	});
+	});*/
 
 	// Playback history search
 	$('#ph-filter').keyup(function(e){
