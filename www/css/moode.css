@@ -198,7 +198,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#maddfav i {font-size:1.1em;}
 	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
 	#pl-search, #lib-album-search, #pl-save, #ra-search {margin-left: 0px;}
-	.database li {margin-left:2px;margin-right:5px;}
+	/*.database li {margin-left:2px;margin-right:5px;}*/
 	/* display:flex & playback stuff */
 	.no-fluid {flex-direction:column-reverse;}
 	.covers {padding:0;margin:0;}
@@ -228,11 +228,14 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
+	#content.fancy #container-playlist {-webkit-mask-image:unset;}
+	.database .db-entry {margin-left:3.5em;padding:1em 0;font-size:1.1em;}
+	.database .db-action {font-size:1.3em;}
 	/*.dropdown-menu {min-width:180px;}*/
 	#menu-top .dropdown-menu, .viewswitch .dropdown-menu {min-width:16rem;} /* Make this one a bit wider */
 	#context-menu-playback .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
-	#lib-album-search input, #current-tab, #menu-header {font-size:1.11rem;}
-	.dropdown-menu > li > a, .viewswitch .btn, #lib-album-search input {font-size:1.11rem;line-height:2.75em;}
+	#lib-album-search input, #lib-album-search input, #current-tab, #menu-header {font-size:1.11rem;}
+	.dropdown-menu > li > a, .viewswitch .btn {font-size:1.16rem;line-height:2.75em;}
 	#playback-panel, #content {position:relative;}
 	.modal-body{padding:0 .5rem;max-height:80vh;}
 	.modal-footer .btn {width:40%;}
@@ -287,7 +290,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* playbar */
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;}
-	#playbar-title {text-align:left;top:0;margin-left:1em;width:67vw;height:auto;position:relative;transform:none;font-size:1.4em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
+	#playbar-title {text-align:left;top:0;margin-left:1em;width:67vw;height:auto;position:relative;transform:none;font-size:1.5em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
 	#playbar-controls .btn {padding:.5em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}
