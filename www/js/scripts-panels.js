@@ -730,13 +730,30 @@ jQuery(document).ready(function($) { 'use strict';
 			mpdDbCmd(cmd, $(this).parent().data('path'));
 		}
 	});
+	
+    // play album item on click/tap
+	$('.database').on('click', '.db-album', function(e) {
+    	var files = [];
+		for (var i = $(this).parent().index() + 1; i < $('#folderlist li').length; i++) {
+			if ($('#folderlist li').eq(i).children('div').hasClass('db-song')) {
+				files.push($('#folderlist li').eq(i).attr('data-path'));
+			} else {
+				break;
+			}
+		}
+        var cmd = SESSION.json['library_instant_play'] == 'Clear/Play' ? 'clear_play_group' : 'play_group';
+		mpdDbCmd(cmd, files);
+		notify(cmd);
+	});
+	
     // Folder view context menu click
-	$('.database').on('click', '.db-action', function(e) {
+	$('.database').on('click', '.db-action, .db-song', function(e) {
         //console.log('Folder menu click');
+		$('#db-' + UI.dbPos[UI.dbPos[10]].toString()).removeClass('active');
 		UI.dbEntry[0] = $(this).parent().attr('data-path');
 		UI.dbEntry[3] = $(this).parent().attr('id'); // Used in .context-menu a click handler to remove highlight
 		$('#db-search-results').css('font-weight', 'normal');
-		$('.database li').removeClass('active');
+		//$('.database li').removeClass('active');
 		$(this).parent().addClass('active');
 	});
 	$('#db-back').click(function(e) {
