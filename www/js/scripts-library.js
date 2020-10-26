@@ -934,12 +934,18 @@ var renderSongs = function(albumPos) {
 
 // Click genre or menu header (reset all)
 $('#genreheader, #menu-header').on('click', function(e) {
-	LIB.filters.genres.length = 0;
-	LIB.filters.artists.length = 0;
-	LIB.filters.albums.length = 0;
-	if (currentView == 'tag' || currentView == 'album') {
+    if (SESSION.json['library_flatlist_filter'] != 'full_lib' && $(e.target).parent('#genreheader').length == 0 && GLOBAL.musicScope == 'all') {
+		applyLibFilter('full_lib');
+		return;
+	}
+	else if (currentView == 'tag' || currentView == 'album') {
+		LIB.filters.genres.length = 0;
+		LIB.filters.artists.length = 0;
+		LIB.filters.albums.length = 0;
 		LIB.artistClicked = false;
         LIB.albumClicked = false;
+		$("#searchResetLib").hide();
+		showSearchResetLib = false;
         $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
 		if (GLOBAL.musicScope == 'recent') {
 			GLOBAL.musicScope = 'all';
@@ -951,7 +957,7 @@ $('#genreheader, #menu-header').on('click', function(e) {
 		}
 		setLibMenuAndHeader();
 	}
-	if (currentView == 'radio') {
+	else if (currentView == 'radio') {
 		GLOBAL.searchRadio = '';
 		$('#searchResetRa').click();
 		setLibMenuAndHeader();
