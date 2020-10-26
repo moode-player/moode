@@ -1246,28 +1246,24 @@ function renderFolderView(data, path, searchstr) {
 	var output = '';
 	var element = document.getElementById('folderlist');
 	element.innerHTML = '';
-	console.log(data);
+
 	for (i = 0; i < data.length; i++) {
 		if (data[i].file && data[i > 1 ? i - 1 : 0].Album != data[i].Album || data[i].file && i == 0 && data[i].Album) { // new album not playlist but ugh
 			output += '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">'
 			output += '<div class="db-icon db-action">';
 			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
 		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg' + '"></img></a></div>';
-			output += '<div class="db-entry db-album"><div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
+            // ORIG output += '<div class="db-entry db-album"><div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
+            output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">';
+            output += '<div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
 		}
        	 	output += formatFolderViewEntries(output, data, path, i);
-		
+
 	}
 	element.innerHTML = output;
-	
 
-	// Scroll and highlight
-    // NOTE: Don't highlight if at root or only 1 item in list
 	if (currentView == 'folder') {
 		customScroll('folder', UI.dbPos[UI.dbPos[10]], 100);
-		/*if (path != '' && UI.dbPos[UI.dbPos[10]] > 1) {
-			$('#db-' + UI.dbPos[UI.dbPos[10]].toString()).addClass('active');
-		}*/
 	}
 }
 // Format entries for Folder view
@@ -1351,15 +1347,18 @@ function formatFolderViewEntries(output, data, path, i) {
 		output = '<li id="db-' + (i + 1) + '" data-path="';
 		output += data[i].directory;
 		//console.log(("USB/Music".match(/\//g) || []).length); //logs 3
+        /* ORIG
 		if ( (data[i].directory.match(/\//g) || []).length == 1) {
 			data[i].cover_url = UI.defCover;
 		}
+        */
 		if (path == '') { // At the root
             output += '"><div class="db-icon db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder"><i class="fas fa-hdd icon-root"></i></a></div><div class="db-entry db-folder db-browse"><div>';
 		}
 		else {
             output += '"><div class="db-icon db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-            output += data[i].cover_url != '' ? '<img src="' + data[i].cover_url + '">' : '<i class="fas fa-folder"></i>';
+            // ORIG output += data[i].cover_url != '' ? '<img src="' + data[i].cover_url + '">' : '<i class="fas fa-folder"></i>';
+            output += '<i class="fas fa-folder"></i>';
             output += '</a></div>';
             output += '<div class="db-entry db-folder db-browse"><div>'
 		}
@@ -3553,7 +3552,7 @@ function lazyLode(view, skip, force) {
 				}
 				if (UI.radioPos >= 0 && currentView == 'radio') {customScroll('radio', UI.radioPos, 0);}
 			});
-       }
+        }
  	}
 }
 

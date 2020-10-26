@@ -730,10 +730,19 @@ jQuery(document).ready(function($) { 'use strict';
 			mpdDbCmd(cmd, $(this).parent().data('path'));
 		}
 	});
-	
-    // play album item on click/tap
+
+    /* ORIG
+    // Play album item on click/tap (One touch play)
 	$('.database').on('click', '.db-album', function(e) {
-    	var files = [];
+        // Folder: Alternative 1 (Like other parts of Folder view)
+        var cmd = SESSION.json['library_instant_play'] == 'Clear/Play' ? 'clear_play_item' : 'play_item';
+		mpdDbCmd(cmd, $(this).parent().attr('data-path'));
+        if (cmd == 'clear_play_item') {
+            notify(cmd);
+        }
+
+        // Group: Alternative 2 (like Tag/Album view)
+        var files = [];
 		for (var i = $(this).parent().index() + 1; i < $('#folderlist li').length; i++) {
 			if ($('#folderlist li').eq(i).children('div').hasClass('db-song')) {
 				files.push($('#folderlist li').eq(i).attr('data-path'));
@@ -743,11 +752,14 @@ jQuery(document).ready(function($) { 'use strict';
 		}
         var cmd = SESSION.json['library_instant_play'] == 'Clear/Play' ? 'clear_play_group' : 'play_group';
 		mpdDbCmd(cmd, files);
-		notify(cmd);
+        if (cmd == 'clear_play_item') {
+            notify(cmd);
+        }
 	});
-	
+    */
+
     // Folder view context menu click
-	$('.database').on('click', '.db-action, .db-song', function(e) {
+	$('.database').on('click', '.db-action, .db-album, .db-song', function(e) {
         //console.log('Folder menu click');
 		$('#db-' + UI.dbPos[UI.dbPos[10]].toString()).removeClass('active');
 		UI.dbEntry[0] = $(this).parent().attr('data-path');
@@ -785,9 +797,11 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 	$('#db-refresh').click(function(e) {
 		UI.dbCmd = UI.dbCmd != 'lsinfo' && UI.dbCmd != 'listsavedpl' ? 'lsinfo' : UI.dbCmd;
+        UI.dbPos[UI.dbPos[10]] = 0;
 		if (UI.dbCmd == 'lsinfo' || UI.dbCmd == 'listsavedpl') {
 			mpdDbCmd(UI.dbCmd, UI.path);
 		}
+        //console.log(UI.dbCmd, UI.path);
 	});
 
 	$('#db-search-submit').click(function(e) {
@@ -840,7 +854,9 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#db-search-results').css('font-weight', 'bold');
 		dbFilterResults = [];
 		$('.database li').each(function() {
-			dbFilterResults.push($(this).attr('data-path'));
+            if ($(this).children('div').hasClass('db-song')) {
+                dbFilterResults.push($(this).attr('data-path'));
+            }
 		});
 	});
 	$('#context-menu-db-search-results a').click(function(e) {
