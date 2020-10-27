@@ -613,7 +613,7 @@ INSERT INTO cfg_eqfa4p (id, curve_name, master_gain, band1_params, band2_params,
 
 -- Table: cfg_eqp12
 CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands integer);
-INSERT INTO cfg_eqp12 (id, curve_name, settings, active) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  1 0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0);
+INSERT INTO cfg_eqp12 (id, curve_name, settings, active) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
