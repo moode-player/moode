@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/playerlib.php';
 
 // factory for a Eqp wrapper for the 12 bands Eqfa12p.conf
 function Eqp12($dbh)  {
-    return New Eqp($dbh, 'cfg_eqfa3x4p', 12, 'eqfa12p.conf');
+    return New Eqp($dbh, 'cfg_eqp12', 12, 'eqfa12p.conf');
 }
 
 // It could also be reused to manage the settings of the 4 bands variant
