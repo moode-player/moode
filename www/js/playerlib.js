@@ -1255,7 +1255,7 @@ function renderFolderView(data, path, searchstr) {
 		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg' + '"></img></a></div>';
             // ORIG output += '<div class="db-entry db-album"><div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>'; // For onetouch search scripts-panels for .db-album
             output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">'; // Lets try a context menu instead of onetouch
-            output += '<div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
+            output += '<div>' + /*data[i].Artist + ' - ' +*/ data[i].Album + '</div></div></li>';
 		}
 
     	if (path == '' && typeof(data[i].file) != 'undefined') {
@@ -1994,24 +1994,39 @@ $('.context-menu a').click(function(e) {
 
 	// CONTEXT MENUS
 
-	if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
-		mpdDbCmd($(this).data('cmd'), path);
-		notify($(this).data('cmd'));
-	}
-	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
-		mpdDbCmd($(this).data('cmd'), path);
-	}
-	else if ($(this).data('cmd') == 'clear_add_item' || $(this).data('cmd') == 'clear_play_item') {
-		mpdDbCmd($(this).data('cmd'), path);
-		notify($(this).data('cmd'));
-		// If its a playlist, preload the saved playlist name
-		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD') {
+    // Add/play, add/play next, clear add/play
+    if ($(this).data('cmd').indexOf('_item') != -1) {
+        if ($('#db-search-results').text() == '') {
+            mpdDbCmd($(this).data('cmd'), path);
+        }
+        // Folder view search results
+        else {
+            var files = [];
+            $('#folderlist li').each(function() {
+                if ($(this).data('path').indexOf(path) != -1) {
+                    files.push($(this).data('path'));
+                }
+        	});
+
+            if (files.length > 1) {
+                files = files.slice(1);
+            }
+
+            mpdDbCmd($(this).data('cmd').replace('_item', '_group'), files);
+        }
+
+        if ($(this).data('cmd').indexOf('add_') != -1) {
+            notify($(this).data('cmd'));
+        }
+
+        // If its a playlist, preload the saved playlist name
+		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD' && path != 'USB') {
 			$('#pl-saveName').val(path);
 		}
 		else {
 			$('#pl-saveName').val('');
 		}
-	}
+    }
     else if ($(this).data('cmd') == 'update_folder') {
         submitLibraryUpdate(path);
 	}
