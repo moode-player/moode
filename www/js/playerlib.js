@@ -1249,7 +1249,7 @@ function renderFolderView(data, path, searchstr) {
 
 	for (i = 0; i < data.length; i++) {
 		if (data[i].file && data[i > 1 ? i - 1 : 0].Album != data[i].Album || data[i].file && i == 0 && data[i].Album) { // new album not playlist but ugh
-			output += '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">'
+			output = '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">'
 			output += '<div class="db-icon db-action">';
 			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
 		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg' + '"></img></a></div>';
@@ -1257,116 +1257,109 @@ function renderFolderView(data, path, searchstr) {
             output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">';
             output += '<div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
 		}
-       	 	output += formatFolderViewEntries(output, data, path, i);
 
+    	if (path == '' && typeof(data[i].file) != 'undefined') {
+    		var pos = data[i].file.lastIndexOf('/');
+            path = pos == -1 ? '' : data[i].file.slice(0, pos);
+    	}
+
+    	if (typeof data[i].file != 'undefined') {
+    		// For CUE sheet and future extensions
+    		var fileExt = data[i].file.substr(data[i].file.lastIndexOf('.') + 1).toLowerCase();
+
+    		// Song files
+    		if (typeof data[i].Title != 'undefined') {
+    			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">'
+    			output += '<div class="db-icon db-song db-action">'; // Hack to enable entire line click for context menu
+    			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
+                output += '<i class="fas fa-music db-browse db-browse-icon"></i></a></div>';
+    			output += '<div class="db-entry db-song" data-toggle="context" data-target="#context-menu-folder-item"><div>' + data[i].Title + ' <span class="songtime">' + data[i].TimeMMSS + '</span></div>';
+    			//output += ' <span>' + data[i].Artist + ' - ' + data[i].Album + '</span></div></li>';
+    		}
+    		// Saved Playlist items
+            // NOTE: File extensions are removed except for url's
+    		else {
+    			output += '<li id="db-' + (i + 1) + '" data-path="';
+    			var filename = '';
+    			if (data[i].file.substr(0,4) == 'http') {
+    				filename = data[i].file;
+    			}
+    			else {
+    				cutpos = data[i].file.lastIndexOf('.');
+    	            if (cutpos !=-1) {
+    	            	filename = data[i].file.slice(0,cutpos);
+    				}
+    	        }
+    			output += data[i].file;
+
+    			// CUE sheet
+                var itemType = '';
+    			if (fileExt == 'cue') {
+    				output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item"><i class="fas fa-list-ul icon-root db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
+    				itemType = 'CUE sheet';
+    			}
+    			// Different icon for song file vs radio station in saved playlist
+    			else {
+    				if (data[i].file.substr(0,4) == 'http') {
+    					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item"><i class="fas fa-microphone db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
+    					itemType = typeof(RADIO.json[data[i].file]) === 'undefined' ? 'Radio station' : RADIO.json[data[i].file]['name'];
+    				}
+                    else {
+    					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item"><i class="fas fa-music db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
+    					itemType = 'Song file';
+    				}
+    			}
+    			output += filename.replace(path + '/', '');
+    			output += ' <span>';
+    			output += itemType;
+    			output += '</span></div></li>';
+    		}
+    	}
+    	// Saved playlists
+    	else if (typeof data[i].playlist != 'undefined') {
+    		// Skip .wv (WavPack) files, apparently they can contain embedded playlist
+    		if (data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase() == 'wv') {
+    			output += '';
+    		}
+    		else {
+    			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
+    			output += '<div class="db-icon db-action">';
+    			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-root">';
+    			output += '<i class="fas fa-list-ul icon-root"></i></a></div>';
+    			output += '<div class="db-entry db-savedplaylist db-browse"><div>' + data[i].playlist;
+    			output += '</div></div></li>';
+    		}
+    	}
+    	// Directories
+    	else {
+    		output += '<li id="db-' + (i + 1) + '" data-path="';
+    		output += data[i].directory;
+    		//console.log(("USB/Music".match(/\//g) || []).length); //logs 3
+            /* ORIG
+    		if ( (data[i].directory.match(/\//g) || []).length == 1) {
+    			data[i].cover_url = UI.defCover;
+    		}
+            */
+    		if (path == '') { // At the root
+                output += '"><div class="db-icon db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder"><i class="fas fa-hdd icon-root"></i></a></div><div class="db-entry db-folder db-browse"><div>';
+    		}
+    		else {
+                output += '"><div class="db-icon db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
+                // ORIG output += data[i].cover_url != '' ? '<img src="' + data[i].cover_url + '">' : '<i class="fas fa-folder"></i>';
+                output += '<i class="fas fa-folder"></i>';
+                output += '</a></div>';
+                output += '<div class="db-entry db-folder db-browse"><div>'
+    		}
+    		output += data[i].directory.replace(path + '/', '');
+    		output += '</div></div></li>';
+    	}
 	}
+
 	element.innerHTML = output;
 
 	if (currentView == 'folder') {
 		customScroll('folder', UI.dbPos[UI.dbPos[10]], 100);
 	}
-}
-// Format entries for Folder view
-function formatFolderViewEntries(output, data, path, i) {
-	//var output = '';
-
-	if (path == '' && typeof(data[i].file) != 'undefined') {
-		var pos = data[i].file.lastIndexOf('/');
-        path = pos == -1 ? '' : data[i].file.slice(0, pos);
-	}
-
-	if (typeof data[i].file != 'undefined') {
-		// For CUE sheet and future extensions
-		var fileExt = data[i].file.substr(data[i].file.lastIndexOf('.') + 1).toLowerCase();
-
-		// Song files
-		if (typeof data[i].Title != 'undefined') {
-			output = '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">'
-			output += '<div class="db-icon db-song db-action">'; // Hack to enable entire line click for context menu
-			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
-            output += '<i class="fas fa-music db-browse db-browse-icon"></i></a></div>';
-			output += '<div class="db-entry db-song" data-toggle="context" data-target="#context-menu-folder-item"><div>' + data[i].Title + ' <span class="songtime">' + data[i].TimeMMSS + '</span></div>';
-			//output += ' <span>' + data[i].Artist + ' - ' + data[i].Album + '</span></div></li>';
-		}
-		// Saved Playlist items
-        // NOTE: File extensions are removed except for url's
-		else {
-			output = '<li id="db-' + (i + 1) + '" data-path="';
-			var filename = '';
-			if (data[i].file.substr(0,4) == 'http') {
-				filename = data[i].file;
-			}
-			else {
-				cutpos = data[i].file.lastIndexOf('.');
-	            if (cutpos !=-1) {
-	            	filename = data[i].file.slice(0,cutpos);
-				}
-	        }
-			output += data[i].file;
-
-			// CUE sheet
-            var itemType = '';
-			if (fileExt == 'cue') {
-				output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item"><i class="fas fa-list-ul icon-root db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
-				itemType = 'CUE sheet';
-			}
-			// Different icon for song file vs radio station in saved playlist
-			else {
-				if (data[i].file.substr(0,4) == 'http') {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item"><i class="fas fa-microphone db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
-					itemType = typeof(RADIO.json[data[i].file]) === 'undefined' ? 'Radio station' : RADIO.json[data[i].file]['name'];
-				}
-                else {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item"><i class="fas fa-music db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
-					itemType = 'Song file';
-				}
-			}
-			output += filename.replace(path + '/', '');
-			output += ' <span>';
-			output += itemType;
-			output += '</span></div></li>';
-		}
-	}
-	// Saved playlists
-	else if (typeof data[i].playlist != 'undefined') {
-		// Skip .wv (WavPack) files, apparently they can contain embedded playlist
-		if (data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase() == 'wv') {
-			output = '';
-		}
-		else {
-			output = '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
-			output += '<div class="db-icon db-action">';
-			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-root">';
-			output += '<i class="fas fa-list-ul icon-root"></i></a></div>';
-			output += '<div class="db-entry db-savedplaylist db-browse"><div>' + data[i].playlist;
-			output += '</div></div></li>';
-		}
-	}
-	// Directories
-	else {
-		output = '<li id="db-' + (i + 1) + '" data-path="';
-		output += data[i].directory;
-		//console.log(("USB/Music".match(/\//g) || []).length); //logs 3
-        /* ORIG
-		if ( (data[i].directory.match(/\//g) || []).length == 1) {
-			data[i].cover_url = UI.defCover;
-		}
-        */
-		if (path == '') { // At the root
-            output += '"><div class="db-icon db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder"><i class="fas fa-hdd icon-root"></i></a></div><div class="db-entry db-folder db-browse"><div>';
-		}
-		else {
-            output += '"><div class="db-icon db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-            // ORIG output += data[i].cover_url != '' ? '<img src="' + data[i].cover_url + '">' : '<i class="fas fa-folder"></i>';
-            output += '<i class="fas fa-folder"></i>';
-            output += '</a></div>';
-            output += '<div class="db-entry db-folder db-browse"><div>'
-		}
-		output += data[i].directory.replace(path + '/', '');
-		output += '</div></div></li>';
-	}
-
-	return output;
 }
 
 // Render Radio view
