@@ -209,7 +209,7 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 
 
 // parametric eq
-if (isset($_POST['eqp']) && $_POST['eqp'] != $_SESSION['eqfa4p']) {
+if (isset($_POST['eqp']) && ($_POST['eqp']? "On": "Off") != $_SESSION['eqfa4p']) {
 	// pass old,new curve name to worker job
 	$eqp12 = Eqp12(cfgdb_connect());
 	$currentActive = $eqp12->getActivePresetIndex();
