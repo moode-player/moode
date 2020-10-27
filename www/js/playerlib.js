@@ -1248,13 +1248,13 @@ function renderFolderView(data, path, searchstr) {
 	element.innerHTML = '';
 
 	for (i = 0; i < data.length; i++) {
-		if (data[i].file && data[i > 1 ? i - 1 : 0].Album != data[i].Album || data[i].file && i == 0 && data[i].Album) { // new album not playlist but ugh
-			output = '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">'
+		if (data[i].file && data[i > 1 ? i - 1 : 0].Album != data[i].Album || data[i].file && i == 0 && data[i].Album) { // New album not playlist but ugh
+			output += '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">'
 			output += '<div class="db-icon db-action">';
 			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
 		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg' + '"></img></a></div>';
-            // ORIG output += '<div class="db-entry db-album"><div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
-            output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">';
+            // ORIG output += '<div class="db-entry db-album"><div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>'; // For onetouch search scripts-panels for .db-album
+            output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">'; // Lets try a context menu instead of onetouch
             output += '<div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
 		}
 
@@ -1272,9 +1272,8 @@ function renderFolderView(data, path, searchstr) {
     			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">'
     			output += '<div class="db-icon db-song db-action">'; // Hack to enable entire line click for context menu
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
-                output += '<i class="fas fa-music db-browse db-browse-icon"></i></a></div>';
+                output += data[i].Track + '</a></div>';
     			output += '<div class="db-entry db-song" data-toggle="context" data-target="#context-menu-folder-item"><div>' + data[i].Title + ' <span class="songtime">' + data[i].TimeMMSS + '</span></div>';
-    			//output += ' <span>' + data[i].Artist + ' - ' + data[i].Album + '</span></div></li>';
     		}
     		// Saved Playlist items
             // NOTE: File extensions are removed except for url's
@@ -1334,19 +1333,12 @@ function renderFolderView(data, path, searchstr) {
     	else {
     		output += '<li id="db-' + (i + 1) + '" data-path="';
     		output += data[i].directory;
-    		//console.log(("USB/Music".match(/\//g) || []).length); //logs 3
-            /* ORIG
-    		if ( (data[i].directory.match(/\//g) || []).length == 1) {
-    			data[i].cover_url = UI.defCover;
-    		}
-            */
     		if (path == '') { // At the root
                 output += '"><div class="db-icon db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder"><i class="fas fa-hdd icon-root"></i></a></div><div class="db-entry db-folder db-browse"><div>';
     		}
     		else {
                 output += '"><div class="db-icon db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-                // ORIG output += data[i].cover_url != '' ? '<img src="' + data[i].cover_url + '">' : '<i class="fas fa-folder"></i>';
-                output += '<i class="fas fa-folder"></i>';
+                output += data[i].cover_url != '' ? '<img src="' + data[i].cover_url + '">' : '<i class="fas fa-folder"></i>';
                 output += '</a></div>';
                 output += '<div class="db-entry db-folder db-browse"><div>'
     		}
