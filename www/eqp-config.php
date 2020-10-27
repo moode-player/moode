@@ -46,7 +46,7 @@ function postData2Config($data, $bands) {
 // apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// format individual band params
-	$curve_id = intval($_POST['curve_name']);
+	$curve_id = intval($_POST['curve_id']);
 	$config = postData2Config($_POST, 12);
 	$eqp12->setpreset($curve_id, NULL, $config);
 	// // add or update
