@@ -25,6 +25,7 @@ New features
 - NEW: Library option to select which tag for the Artist list
 - NEW: Library option to use folder path and/or MUSICBRAINZ_ALBUMID as album key
 - NEW: Library option to include the comment tag
+- NEW: Enhanced Folder view
 - NEW: Albums played directly if already in the Queue
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode option
