@@ -20,7 +20,7 @@ New features
 - NEW: Selective resampling and Custom SoX recipes
 - NEW: Radio view with sort/group and metadata
 - NEW: Library performance improvements
-- NEW: Library search filters
+- NEW: Library filtering engine
 - NEW: Library support for tracks tagged with multiple genres
 - NEW: Library option to select which tag for the Artist list
 - NEW: Library option to use folder path and/or MUSICBRAINZ_ALBUMID as album key
@@ -53,6 +53,7 @@ Updates
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
 - UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
 - UPD: Show volume level on the Playbar
+- UPD: Option to show mapped dB volume in the knob
 - UPD: Generate additional set of small thumbnails for lists
 - UPD: Honor "Resume MPD" setting when disconnecting a renderer
 - UPD: Only load CoverView Queue HTML when it's opened

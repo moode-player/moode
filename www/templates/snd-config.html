@@ -201,6 +201,24 @@
 				</div>
 			</div>
 			<div class="control-group">
+				<label class="control-label">Display dB volume</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_volume_db_display2">ON</label>
+						$_select[volume_db_display1]
+						<label class="toggle-radio" for="toggle_volume_db_display1">OFF</label>
+						$_select[volume_db_display0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_volume_db_display" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_volume_db_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info_volume_db_display" class="help-block-configs help-block-margin2 hide">
+						Display dB volume next to the 0-100 level in the volume knob.
+                    </span>
+				</div>
+			</div>
+			<div class="control-group">
 				<label class="control-label">USB volume knob</label>
 				<div class="controls">
 					<div class="toggle">

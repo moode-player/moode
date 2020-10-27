@@ -1458,64 +1458,55 @@ function runQueuedJob() {
 			sysCmd('systemctl restart mpd');
 			break;
 		case 'eqp':
-			// Old,new curve id
-			$setting = explode(',', $_SESSION['w_queueargs']);
-			$prev = intval($setting[0]);
-			$curr = intval($setting[1]);
-			if ($curr == 0) {
-				sysCmd('mpc stop');
-				sysCmd('mpc enable only 1');
-				workerLog('worker: eqp off ');
-			}
-			else {
-				// Check old curve name and stop playback if eq being turned on for first time
-				if ($prev == 0) {
-					sysCmd('mpc stop');
-				}
-				$eqp12 = Eqp12(cfgdb_connect());
-				$config = $eqp12->getpreset($curr);
-				$eqp12->applyConfig($config);
-				unset($eqp12);
-				sysCmd("mpc enable only 3");
-				workerLog('worker: eqp on ');
-			}
-
-			setMpdHttpd();
-			sysCmd('systemctl restart mpd');
-			// Restart airplay and spotify
-			stopSps();
-			if ($_SESSION['airplaysvc'] == 1) {startSps();}
-			stopSpotify();
-			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
-			break;
 		case 'alsaequal':
-			// Old,new curve name
-			$setting = explode(',', $_SESSION['w_queueargs']);
+			// Old,New curve name (alsaequal)/id (eqp)
+			$queueargs = explode(',', $_SESSION['w_queueargs']);
+			// Current play state
+			$playing = sysCmd('mpc status | grep "\[playing\]"');
+			sysCmd('mpc stop');
 
-			if ($setting[1] == 'Off') {
-				sysCmd('mpc stop');
+			//   alsaequal                   eqp
+			if ($queueargs[1] == 'Off' or $queueargs[1] =='0') {
 				sysCmd('mpc enable only 1');
+				workerLog('worker: '.$_SESSION['w_queue'].' off ');
 			}
 			else {
-				// Check old curve name and stop playback if eq being turned on for first time
-				if ($setting[0] == 'Off') {
-					sysCmd('mpc stop');
+				if ($_SESSION['w_queue'] == 'eqp') {
+					$curr = intval($setting[1]);
+					$eqp12 = Eqp12(cfgdb_connect());
+					$config = $eqp12->getpreset($curr);
+					$eqp12->applyConfig($config);
+					unset($eqp12);
+					sysCmd("mpc enable only 3");
 				}
-
-				$result = sdbquery("SELECT curve_values FROM cfg_eqalsa WHERE curve_name='" . $setting[1] . "'", $GLOBALS['dbh']);
-				$curve = explode(',', $result[0]['curve_values']);
-				foreach ($curve as $key => $value) {
-					sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
+				else {
+					// Alsaequal
+					$result = sdbquery("SELECT curve_values FROM cfg_eqalsa WHERE curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
+					$curve = explode(',', $result[0]['curve_values']);
+					foreach ($curve as $key => $value) {
+						sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
+					}
+					sysCmd('mpc enable only 4');
 				}
-				sysCmd('mpc enable only 4');
+				workerLog('worker: '.$_SESSION['w_queue'].' on ');
 			}
+
+			if (!empty($playing)) {
+				sysCmd('mpc play');
+			}
+
+			// Reenable HTTP server if indicated
 			setMpdHttpd();
-			sysCmd('systemctl restart mpd');
-			// Restart airplay and spotify
+
+			// Restart Airplay and Spotify
 			stopSps();
-			if ($_SESSION['airplaysvc'] == 1) {startSps();}
+			if ($_SESSION['airplaysvc'] == 1) {
+				startSps();
+			}
 			stopSpotify();
-			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
+			if ($_SESSION['spotifysvc'] == 1) {
+				startSpotify();
+			}
 			break;
 		// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
 		/*case 'mpdassvc':

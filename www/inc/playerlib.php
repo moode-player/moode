@@ -472,13 +472,39 @@ function genFlatList($sock) {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
-			// @Atair: Gather possible multiple Genre values as array
+			// @Atair: Gather possible multiple Genre, Artist, and Performer values as array
 			elseif ($element == 'Genre') {
 				if ($flat[$item]['Genre']) {
 					array_push($flat[$item]['Genre'], $value);
 				}
 				else {
 					$flat[$item]['Genre'] = array($value);
+				}
+			}
+			elseif ($element == 'Artist') {
+				if ($flat[$item]['Artist']) {
+					array_push($flat[$item]['Artist'], $value);
+				}
+				else {
+					$flat[$item]['Artist'] = array($value);
+				}
+			}
+			//@Atair: add performers to artists
+			elseif ($element == 'Performer') {
+				if ($flat[$item]['Artist']) {
+					array_push($flat[$item]['Artist'], $value);
+				}
+				else {
+					$flat[$item]['Artist'] = array($value);
+				}
+			}
+			//@Atair: add conductor to artists
+			elseif ($element == 'Conductor') {
+				if ($flat[$item]['Artist']) {
+					array_push($flat[$item]['Artist'], $value);
+				}
+				else {
+					$flat[$item]['Artist'] = array($value);
 				}
 			}
 			else {
@@ -557,8 +583,14 @@ function genLibrary($flat) {
 				'tracknum' => ($flatData['Track'] ? $flatData['Track'] : ''),
 				'title' => ($flatData['Title'] ? $flatData['Title'] : 'Unknown Title'),
 				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
-				'artist' => ($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist'),
-				'album_artist' => $flatData['AlbumArtist'],
+				//@Atair:
+				// 1. artist can safely be empty, because it is no longed used as substitute for missing album_artist
+				// 2. album_artist shall never be empty, otherwise the sort routines in scripts-library.js complain,
+				//    because they expect artist as string and not as array in album_artist || artist constructs
+				// 3. When AlbumArtist is not defined and artist contains a single value, it is assumed that Artist should be a surrogate for ALbumArtist.
+				//    otherwise, when Artist is an array of two and more values or empty, the AlbumArtist is set to 'Unknown' (this is regarded as bad tagging)
+				'artist' => ($flatData['Artist'] ? $flatData['Artist'] : array()), //@Atair: array is expected in scripts-library.js even when empty
+				'album_artist' => ($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist')),
 				'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
 				'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
 				'year' => getTrackYear($flatData),
@@ -580,7 +612,7 @@ function genLibrary($flat) {
 	if (count($lib) == 1 && empty($lib[0]['file'])) {
 		$lib[0]['file'] = '';
 		$lib[0]['title'] = '';
-		$lib[0]['artist'] = '';
+		$lib[0]['artist'] = array('');
 		$lib[0]['album'] = 'Nothing found';
 		$lib[0]['album_artist'] = '';
 		$lib[0]['genre'] = array('');
@@ -746,14 +778,19 @@ function genLibraryUTF8Rep($flat) {
 				'tracknum' => utf8rep(($flatData['Track'] ? $flatData['Track'] : '')),
 				'title' => utf8rep(($flatData['Title'] ? $flatData['Title'] : 'Unknown Title')),
 				'disc' => ($flatData['Disc'] ? $flatData['Disc'] : '1'),
-				'artist' => utf8rep(($flatData['Artist'] ? $flatData['Artist'] : 'Unknown Artist')),
-				'album_artist' => utf8rep($flatData['AlbumArtist']),
+				'artist' => utf8repArray(($flatData['Artist'] ? $flatData['Artist'] : array())), //@Atair: array is expected in scripts-library.js even when empty
+				//@Atair:
+				// 1. album_artist shall never be empty, otherwise the sort routines in scripts-library.js complain,
+				//    because they expect artist as string and not as array in album_artist || artist constructs
+				// 2. When AlbumArtist is not defined and artist contains a single value, it is assumed that Artist should be a surrogate for ALbumArtist.
+				//    otherwise, when Artist is an array of two and more values or empty, the AlbumArtist is set to 'Unknown' (this is regarded as bad tagging)
+				'album_artist' => utf8rep(($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist'))),
 				'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
 				'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
 				'year' => utf8rep(getTrackYear($flatData)),
 				'time' => utf8rep($flatData['Time']),
 				'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
-				'genre' => utf8rep(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
+				'genre' => utf8repArray(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => utf8rep(songTime($flatData['Time'])),
 				'last_modified' => $flatData['Last-Modified'],
 				'encoded_at' => utf8rep(getEncodedAt($flatData, 'default', true)),
@@ -769,7 +806,7 @@ function genLibraryUTF8Rep($flat) {
 	if (count($lib) == 1 && empty($lib[0]['file'])) {
 		$lib[0]['file'] = '';
 		$lib[0]['title'] = '';
-		$lib[0]['artist'] = '';
+		$lib[0]['artist'] = array('');
 		$lib[0]['album'] = 'Nothing found';
 		$lib[0]['album_artist'] = '';
 		$lib[0]['genre'] = array('');
@@ -789,6 +826,15 @@ function genLibraryUTF8Rep($flat) {
 
 	return $json_lib;
 }
+
+//@Atair: utf8rep for arrays
+function utf8repArray($some_array) {
+	for ($i=0; $i<count($some_array); $i++) {
+		$some_array[$i] = utf8rep($some_array[$i]);
+	}
+	return $some_array;
+}
+
 // UTF8 replace (@lazybat)
 function utf8rep($some_string) {
 	// Reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ? (@lazybat)
@@ -2630,14 +2676,18 @@ function getHdwrRev() {
 		// Custom Pi-4B v1.2 codes to identify RAM size
 		'a112' => 'Pi-4B 1GB v1.2',
 		'b112' => 'Pi-4B 2GB v1.2',
-		'c112' => 'Pi-4B 4GB v1.2'
+		'c112' => 'Pi-4B 4GB v1.2',
+		// Generic Pi-4B v1.4 code
+		'3114' => 'Pi-4B 8GB v1.4',
+		// Custom Pi-4B v1.4 codes to identify RAM size
+		'd114' => 'Pi-4B 8GB v1.4'
 	);
 
 	$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
 
 	// Pi-4B
 	// Custom codes to identify the models by RAM size
- 	if ($revnum[0] == '3111' || $revnum[0] == '3112') {
+ 	if ($revnum[0] == '3111' || $revnum[0] == '3112' || $revnum[0] == '3114') {
 		$prefix = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,0,2)}' . "'" . ' /proc/cpuinfo');
 		$revnum[0] = $prefix[0] . substr($revnum[0], 1, 3);
 	}
@@ -2700,6 +2750,7 @@ c0 3111	4B		1.1	4GB		Sony UK
 a0 3112	4B		1.2	1GB		Sony UK
 b0 3112	4B		1.2	2GB		Sony UK
 c0 3112	4B		1.2	4GB		Sony UK
+d0 3114	4B		1.4	8GB		Sony UK
 */
 
 // Config audio scrobbler
@@ -3434,7 +3485,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
 	$current['composer'] = $song['Composer'];
-	// Cover hash
+	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
 		$current['mapped_db_vol'] = getMappedDbVol();

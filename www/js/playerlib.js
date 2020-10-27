@@ -618,7 +618,7 @@ function renderUIVol() {
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
     		$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text(SESSION.json['volknob']);
-            $('.volume-display-db').text(MPD.json['mapped_db_vol']);
+            $('.volume-display-db').text(SESSION.json['volume_db_display'] == '1' ? MPD.json['mapped_db_vol'] : '');
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
     		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
@@ -661,7 +661,7 @@ function renderUI() {
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
     		$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text(SESSION.json['volknob']);
-            $('.volume-display-db').text(MPD.json['mapped_db_vol']);
+            $('.volume-display-db').text(SESSION.json['volume_db_display'] == '1' ? MPD.json['mapped_db_vol'] : '');
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
     		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
@@ -719,7 +719,7 @@ function renderUI() {
             // Original for Playback
      		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
             // Thumbnail for Playbar
-            if (MPD.json['file'] && !RegExp('/tidal/').test(MPD.json['file'])) {
+            if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
                     '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
@@ -727,7 +727,7 @@ function renderUI() {
             }
             else {
 	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + '" data-adaptive-background="1" alt="Cover art not found"' + '>');
-                $('#playbar-cover').html('<img src="' + 'images/default-cover-v6.png' + '">');
+                $('#playbar-cover').html('<img src="images/default-cover-v6.svg">');
             }
     		// Cover backdrop or bgimage
     		if (SESSION.json['cover_backdrop'] == 'Yes') {
@@ -1060,7 +1060,7 @@ function renderPlaylist(state) {
 				}
 				// Song file or upnp url
 				else {
-					var thumb = RegExp('/tidal/').test(data[i].file) ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
+					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
 					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"' + thumb + '"/></span>' : '';
 					//output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
 	                // Line 1 title
@@ -1243,23 +1243,32 @@ function renderFolderView(data, path, searchstr) {
 	}
 
 	// Output the list
-    $('ul.database').html('');
-	for (i = 0; i < data.length; i++) {
-        $('ul.database').append(formatFolderViewEntries(data, path, i))
-	}
+	var output = '';
+	var element = document.getElementById('folderlist');
+	element.innerHTML = '';
 
-	// Scroll and highlight
-    // NOTE: Don't highlight if at root or only 1 item in list
+	for (i = 0; i < data.length; i++) {
+		if (data[i].file && data[i > 1 ? i - 1 : 0].Album != data[i].Album || data[i].file && i == 0 && data[i].Album) { // new album not playlist but ugh
+			output += '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">'
+			output += '<div class="db-icon db-action">';
+			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
+		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg' + '"></img></a></div>';
+            // ORIG output += '<div class="db-entry db-album"><div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
+            output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">';
+            output += '<div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>';
+		}
+       	 	output += formatFolderViewEntries(output, data, path, i);
+
+	}
+	element.innerHTML = output;
+
 	if (currentView == 'folder') {
 		customScroll('folder', UI.dbPos[UI.dbPos[10]], 100);
-		if (path != '' && UI.dbPos[UI.dbPos[10]] > 1) {
-			$('#db-' + UI.dbPos[UI.dbPos[10]].toString()).addClass('active');
-		}
 	}
 }
 // Format entries for Folder view
-function formatFolderViewEntries(data, path, i) {
-	var output = '';
+function formatFolderViewEntries(output, data, path, i) {
+	//var output = '';
 
 	if (path == '' && typeof(data[i].file) != 'undefined') {
 		var pos = data[i].file.lastIndexOf('/');
@@ -1275,9 +1284,9 @@ function formatFolderViewEntries(data, path, i) {
 			output = '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">'
 			output += '<div class="db-icon db-song db-action">'; // Hack to enable entire line click for context menu
 			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
-            output += '<i class="fas fa-music sx db-browse db-browse-icon"></i></a></div>';
-			output += '<div class="db-entry db-song">' + data[i].Title + ' <em class="songtime">' + data[i].TimeMMSS + '</em>';
-			output += ' <span>' + data[i].Artist + ' - ' + data[i].Album + '</span></div></li>';
+            output += '<i class="fas fa-music db-browse db-browse-icon"></i></a></div>';
+			output += '<div class="db-entry db-song" data-toggle="context" data-target="#context-menu-folder-item"><div>' + data[i].Title + ' <span class="songtime">' + data[i].TimeMMSS + '</span></div>';
+			//output += ' <span>' + data[i].Artist + ' - ' + data[i].Album + '</span></div></li>';
 		}
 		// Saved Playlist items
         // NOTE: File extensions are removed except for url's
@@ -1298,17 +1307,17 @@ function formatFolderViewEntries(data, path, i) {
 			// CUE sheet
             var itemType = '';
 			if (fileExt == 'cue') {
-				output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item"><i class="fas fa-list-ul icon-root sx db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
+				output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item"><i class="fas fa-list-ul icon-root db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
 				itemType = 'CUE sheet';
 			}
 			// Different icon for song file vs radio station in saved playlist
 			else {
 				if (data[i].file.substr(0,4) == 'http') {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-microphone sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item"><i class="fas fa-microphone db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
 					itemType = typeof(RADIO.json[data[i].file]) === 'undefined' ? 'Radio station' : RADIO.json[data[i].file]['name'];
 				}
                 else {
-					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item" style="width:100vw;height:2em;"><i class="fas fa-music sx db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse">';
+					output += '"><div class="db-icon db-song db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-item"><i class="fas fa-music db-browse db-browse-icon"></i></a></div><div class="db-entry db-song db-browse" data-toggle="context" data-target="#context-menu-savedpl-item">';
 					itemType = 'Song file';
 				}
 			}
@@ -1328,26 +1337,33 @@ function formatFolderViewEntries(data, path, i) {
 			output = '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
 			output += '<div class="db-icon db-action">';
 			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-savedpl-root">';
-			output += '<i class="fas fa-list-ul icon-root sx"></i></a></div>';
-			output += '<div class="db-entry db-savedplaylist db-browse">' + data[i].playlist;
-			output += '</div></li>';
+			output += '<i class="fas fa-list-ul icon-root"></i></a></div>';
+			output += '<div class="db-entry db-savedplaylist db-browse"><div>' + data[i].playlist;
+			output += '</div></div></li>';
 		}
 	}
 	// Directories
 	else {
 		output = '<li id="db-' + (i + 1) + '" data-path="';
 		output += data[i].directory;
+		//console.log(("USB/Music".match(/\//g) || []).length); //logs 3
+        /* ORIG
+		if ( (data[i].directory.match(/\//g) || []).length == 1) {
+			data[i].cover_url = UI.defCover;
+		}
+        */
 		if (path == '') { // At the root
-            output += '"><div class="db-icon db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder"><i class="fas fa-hdd icon-root sx"></i></a></div><div class="db-entry db-folder db-browse">';
+            output += '"><div class="db-icon db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder"><i class="fas fa-hdd icon-root"></i></a></div><div class="db-entry db-folder db-browse"><div>';
 		}
 		else {
             output += '"><div class="db-icon db-browse db-action"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-            output += data[i].cover_url != '' ? '<img src="' + data[i].cover_url + '">' : '<i class="fas fa-folder sx"></i>';
+            // ORIG output += data[i].cover_url != '' ? '<img src="' + data[i].cover_url + '">' : '<i class="fas fa-folder"></i>';
+            output += '<i class="fas fa-folder"></i>';
             output += '</a></div>';
-            output += '<div class="db-entry db-folder db-browse">'
+            output += '<div class="db-entry db-folder db-browse"><div>'
 		}
 		output += data[i].directory.replace(path + '/', '');
-		output += '</div></li>';
+		output += '</div></div></li>';
 	}
 
 	return output;
@@ -2137,9 +2153,7 @@ $('.context-menu a').click(function(e) {
 		var temp = SESSION.json['preferences_modal_state'].split(',');
 		for (var x = 0; x < 5; x++) {
 			if (temp[x] == '1') {
-				$('#preferences-modal div.control-group').eq(x).show();
-				$('#preferences-modal .accordian .dtopen').eq(x).show();
-				$('#preferences-modal .accordian .dtclose').eq(x).hide();
+				$('#preferences-modal .accordian').eq(x).addClass('active');
 			}
 		}
 
@@ -2942,6 +2956,7 @@ function str2hex(tempcolor) {
 function dbFastSearch() {
 	$('#dbsearch-alltags').val($('#dbfs').val());
 	$('#db-search-submit').click();
+	$('#dbfs').blur();
 	return false;
 }
 
@@ -2966,7 +2981,7 @@ function btnbarfix(temp1,temp2) {
 	document.body.style.setProperty('--btnshade2', tempcolor);
 	tempcolor = rgbaToRgb(.3, '1.0', temprgba, temprgb); // textvariant
 	document.body.style.setProperty('--textvariant', tempcolor);
-	tempcolor = rgbaToRgb(.6, '.7', temprgba, temprgb); // textvariant
+	tempcolor = rgbaToRgb(.65 - tempx, '.15', temprgba, temprgb);
 	document.body.style.setProperty('--btnshade3', tempcolor);
 	document.body.style.setProperty('--btnshade4', getYIQ(temp1) > 127 ? 'rgba(32,32,32,0.10)' : 'rgba(208,208,208,0.17)');
 	$('#content').hasClass('visacc') ? op = .95 : op = .9;
@@ -3329,8 +3344,7 @@ $('#context-backdrop').click(function(e){
 });
 
 $('#preferences-modal .h5').click(function(e) {
-	$(this).parent().children('div.control-group').slideToggle(100);
-	$(this).parent().children('.dtclose, .dtopen').toggle();
+	$(this).parent('div.accordian').toggleClass('active');
 });
 
 // Synchronize times to/from playbar so we don't have to keep countdown timers running which = ugly idle perf
@@ -3473,11 +3487,11 @@ function setLibMenuAndHeader () {
             }
             // Two arg filter with emoty second arg
             else if (GLOBAL.twoArgFilters.includes(SESSION.json['library_flatlist_filter']) && SESSION.json['library_flatlist_filter_str'] == '') {
-                headerText = 'Filtered by Any: (' + filterCapitilized + ')';
+                headerText = 'Filtered by Any: ' + filterCapitilized;
             }
             // Two arg filter with second arg
             else {
-                headerText = 'Filtered by '+ filterCapitilized + ': (' + SESSION.json['library_flatlist_filter_str'] + ')';
+                headerText = 'Filtered by '+ filterCapitilized + ': ' + SESSION.json['library_flatlist_filter_str'];
             }
         }
 	}
@@ -3538,7 +3552,7 @@ function lazyLode(view, skip, force) {
 				}
 				if (UI.radioPos >= 0 && currentView == 'radio') {customScroll('radio', UI.radioPos, 0);}
 			});
-       }
+        }
  	}
 }
 
