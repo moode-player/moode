@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Oct 28 15:55:23 2020
+-- File generated with SQLiteStudio v3.1.0 on Wed Oct 28 17:06:31 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -312,7 +312,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
 INSERT INTO cfg_system (id, param, value) VALUES (72, 'shellinabox', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (73, 'alsaequal', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (74, 'eqfa4p', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (74, 'eqfa12p', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (75, 'p3wifi', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (76, 'p3bt', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');

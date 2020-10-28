@@ -89,7 +89,7 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 	$_SESSION['notify']['title'] = 'Playing curve';
 }
 
-workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
+//workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
 // add, remove, change, refresh
 
 if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
