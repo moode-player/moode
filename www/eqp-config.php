@@ -49,6 +49,19 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$curve_id = intval($_POST['curve_id']);
 	$config = postData2Config($_POST, 12);
 	$eqp12->setpreset($curve_id, NULL, $config);
+
+	if($curve_id == $eqp12->getActivePresetIndex() ) {
+		$eqp12->applyConfig($config);
+		sysCmd('systemctl restart mpd');
+		// // wait for mpd to start accepting connections
+		$sock = openMpdSock('localhost', 6600);
+		// initiate play
+		sendMpdCmd($sock, 'stop');
+		$resp = readMpdResp($sock);
+		sendMpdCmd($sock, 'play');
+		$resp = readMpdResp($sock);
+		closeMpdSock($sock);
+	}
 	// // add or update
 	$_SESSION['notify']['title'] = 'Curve updated';
 	// 	$_SESSION['notify']['title'] = 'New curve added';
