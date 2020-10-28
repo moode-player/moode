@@ -1,0 +1,7 @@
+==============================================================
+Install prebuilt CAPS binary containing eqfa12p
+==============================================================
+
+sudo ./dev.sh
+sudo cp /mnt/moode-player/GitHub/moode/other/bitlab/caps/caps.so /usr/lib/ladspa/
+sudo cp /mnt/moode-player/GitHub/moode/other/bitlab/caps/caps.rdf /usr/share/ladspa/rdf/

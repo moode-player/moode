@@ -109,7 +109,7 @@ jQuery(document).ready(function($){ 'use strict';
 	// EQ configs
 	$('#eqp-curve-name').change(function() {
 		//console.log('http://' + location.host + 'eqp-config.php?curve=' + $(this).val());
-		location.assign('http://' + location.host + '/eqp-config.php?curve=' + $(this).val());
+		location.assign('http://' + location.host + location.pathname +'?curve=' + $(this).val());
 	});
 	$('#eqg-curve-name').change(function() {
 		//console.log('http://' + location.host + 'eqg-config.php?curve=' + $(this).val());

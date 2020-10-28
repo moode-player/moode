@@ -25,6 +25,7 @@ New features
 - NEW: Library option to select which tag for the Artist list
 - NEW: Library option to use folder path and/or MUSICBRAINZ_ALBUMID as album key
 - NEW: Library option to include the comment tag
+- NEW: Enhanced Folder view
 - NEW: Albums played directly if already in the Queue
 - NEW: Resource limits in MPD Config
 - NEW: Auto-shuffle Album mode option
@@ -33,6 +34,7 @@ New features
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
 - NEW: Add next, Play next by inserting after current item
 - NEW: Support for up to 384K rate for DDDAC1794 NOS
+- NEW: 12-band Parametric EQ for AutoEQ headphone equalizing
 
 Updates
 

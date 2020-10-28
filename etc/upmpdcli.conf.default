@@ -28,7 +28,7 @@ friendlyname = Moode UPNP
 # <var name="logfilename" type="fn"><brief>Log file
 # name.</brief><descr>Defaults to stderr. This can also be specified as -d
 # logfilename.</descr></var>
-#logfilename = 
+#logfilename =
 
 # <var name="loglevel" type="int" values="0 5 2"><brief>Log
 # level.</brief><descr>Can also be specified as -l loglevel.</descr></var>
@@ -105,25 +105,6 @@ loglevel = 0
 # your subscription allows it.</descr></var>
 #qobuzformatid = 5
 
-# <grouptitle>Google Music streaming service parameters</grouptitle>
-
-# <var name="gmusicuser" type="string"><brief>Google Music user name.</brief>
-# <descr>Your Google Music login name (probably a gmail address).</descr></var>
-#gmusicuser = me@gmail.com
-# <var name="gmusicpass" type="string"><brief>Google Music password.</brief>
-# <descr>The password for your Google Music account.</descr></var>
-#gmusicpass = agoodpassword
-# <var name="gmusicquality" type="cstr" "values="hi med low">
-# <brief>Google Music stream quality.</brief> <descr>'hi' for mp3/320, 'med'
-# for mp3/160, 'low' for mp3/128.</descr></var>
-#gmusicquality = med
-# <var name="gmusicdeviceid" type="string"> <brief>Google Music device
-# id.</brief> <descr>Your system MAC address will be used by default, but
-# this will count against the maximum count of registered devices for this
-# account.  You can set the gmusicdeviceid value to the device ID from a
-# phone or tablet on which you also use Google Play Music.</descr></var>
-#gmusicdeviceid =
-
 # <grouptitle>Local Media Server parameters</grouptitle>
 
 # <var name="uprcluser" type="string"><brief>Bogus user name variable.</brief>
@@ -151,7 +132,7 @@ loglevel = 0
 # to translate real path to ones relative to the HTTP server doc tree. It
 # also performs a form of access control. If this is not set, uprcl will
 # use a null translation for each of the uprclmediadirs
-# entries.</descr></var> 
+# entries.</descr></var>
 #uprclpaths =
 
 # <var name="uprclconfdir" type="dfn"><brief>Recoll index
@@ -197,17 +178,17 @@ uprclautostart = 1
 # use for UPnP.</brief><descr>libupnp/pupnp only supports communicating on
 # a single interface and will use the first found, this allows forcing the
 # use of another interface.</descr></var>
-#upnpiface = 
+#upnpiface =
 
-# <var name="upnpip" type="string"><brief>IP address to use for UPnP, 
+# <var name="upnpip" type="string"><brief>IP address to use for UPnP,
 # alternative to using an interface name.</brief></var>
-#upnpip = 
+#upnpip =
 
 # <var name="upnpport" type="int" values="0 65635 49152"><brief>Port number
 # used for UPnP.</brief><descr>libupnp/pupnp defaults to using the first
 # free port after 49152. Note that clients do not need to know about the
 # value, which is automatically discovered.</descr></var>
-#upnpport = 
+#upnpport =
 
 # <grouptitle>Audio control hooks</grouptitle>
 
@@ -238,7 +219,7 @@ uprclautostart = 1
 # set and read the volume through scripts. If set, the calls to MPD to set
 # and read the volume will be replaced by executions of 'onvolumechange'
 # and 'getexternalvolume'</descr></var>
-#externalvolumecontrol = 
+#externalvolumecontrol =
 
 # <var name="getexternalvolume" type="fn"><brief>Command to run for reading
 # the sound volume.</brief><descr>The command should write a 0-100 numeric
@@ -344,7 +325,7 @@ ohproductroom = Moode UPNP
 # <var name="sclogfilename" type="fn"><brief>Log file name for sc2mpd (default
 # stderr)</brief><descr>The value *must not* be the same as the one used
 # for upmpdcli (except if empty).</descr></var>
-#sclogfilename = 
+#sclogfilename =
 
 # <var name="scloglevel" type="int" values="0 5 2"><brief>Log verbosity for
 # sc2mpd.</brief></var>
@@ -371,7 +352,7 @@ ohproductroom = Moode UPNP
 
 # <var name="sccvttype" type="cstr" values="SRC_SINC_FASTEST
 # SRC_SINC_BEST_QUALITY SRC_SINC_MEDIUM_QUALITY SRC_ZERO_ORDER_HOLD
-# SRC_LINEAR"><brief>sc2mpd resampling method.</brief><descr> 
+# SRC_LINEAR"><brief>sc2mpd resampling method.</brief><descr>
 # Only used for scplaymethod=alsa. sc2mpd uses libsamplerate. The default
 # method is SRC_SINC_FASTEST and a Rasberry Pi 1 is fast enough to use it.
 # Possible values: SRC_SINC_BEST_QUALITY, SRC_SINC_MEDIUM_QUALITY,
@@ -387,7 +368,7 @@ ohproductroom = Moode UPNP
 # <var name="sc2mpd" type="string"><brief>Path to
 # sc2mpd.</brief><descr>Only useful if it is not in /usr/bin and the
 # location is not in the $PATH for the init scripts.</descr></var>
-#sc2mpd = 
+#sc2mpd =
 
 # <grouptitle>Songcast Sender parameters</grouptitle>
 
