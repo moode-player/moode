@@ -964,22 +964,6 @@ cd ~
 sudo rm -rf ./libupnpp-samples-master
 sudo rm ./libupnpp-samples-master.zip
 
-# IS THIS PATCH STILL NEEDED?
-
-6. Patch for upmpdcli gmusic plugin
-sudo cp ./moode/other/upmpdcli/session.py /usr/share/upmpdcli/cdplugins/gmusic
-
-////////////////////////////////////////////////////////////////
-//
-// COMPONENT 7 - Optionally install gmusicapi
-//
-////////////////////////////////////////////////////////////////
-
-NOTE: This component enables access to Google Play Music service via UPnP renderer.
-      If its not installed, the Google Play section in UPnP config screen will not be present.
-
-sudo pip install gmusicapi
-
 ////////////////////////////////////////////////////////////////
 //
 // COMPONENT 8 - Local UI display
