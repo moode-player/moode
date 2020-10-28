@@ -51,6 +51,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$eqp12->setpreset($curve_id, NULL, $config);
 
 	if($curve_id == $eqp12->getActivePresetIndex() ) {
+		$playing = sysCmd('mpc status | grep "\[playing\]"');
 		$eqp12->applyConfig($config);
 		sysCmd('systemctl restart mpd');
 		// // wait for mpd to start accepting connections
@@ -58,7 +59,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		// initiate play
 		sendMpdCmd($sock, 'stop');
 		$resp = readMpdResp($sock);
-		sendMpdCmd($sock, 'play');
+		if (!empty($playing)) {
+			sendMpdCmd($sock, 'play');
+		}
 		$resp = readMpdResp($sock);
 		closeMpdSock($sock);
 	}
