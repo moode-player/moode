@@ -7,6 +7,8 @@
 # - Bump to r700 sources
 # - Bump to Linux kernel 5.4.61 build #1339
 # - Stop auth.log spam
+# - Remove references to discontinued Google Play Music service
+# - Add CAPS 12-band parametric EQ
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
@@ -610,10 +612,11 @@ sudo reboot
 
 ////////////////////////////////////////////////////////////////
 //
-// STEP 9 - Alsaequal
+// STEP 9 - Alsaequal and EqFa12p
 //
 ////////////////////////////////////////////////////////////////
 
+# Alsaequal
 NOTE: The amixer command below will generate the alsaequal bin file.
 
 sudo amixer -D alsaequal > /dev/null
@@ -624,6 +627,16 @@ sudo chown mpd:audio /usr/local/bin/alsaequal.bin
 #sudo rm /usr/share/alsa/alsa.conf.d/equal.conf
 # buster
 sudo rm /etc/alsa/alsa.conf.d/equal.conf
+
+# EqFa12p
+sudo cp ./moode/other/bitlab/caps/caps-features-eqfa12p_12_band_parametric_eq.zip ./
+sudo unzip -q ./caps-features-eqfa12p_12_band_parametric_eq.zip
+cd ./caps-features-eqfa12p_12_band_parametric_eq
+sudo ./configure.py
+sudo make
+sudo make install
+cd ..
+sudo rm -rf ./caps-features-eqfa12p_12_band_parametric_eq*
 
 mpc enable only 1
 

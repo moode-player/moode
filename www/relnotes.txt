@@ -34,6 +34,7 @@ New features
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
 - NEW: Add next, Play next by inserting after current item
 - NEW: Support for up to 384K rate for DDDAC1794 NOS
+- NEW: 12-band Parametric EQ for AutoEQ headphone equalizing
 
 Updates
 

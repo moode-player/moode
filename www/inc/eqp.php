@@ -3,8 +3,7 @@
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
- * tsunamp player ui (C) 2013 Andrea Coiutti & Simone De Gregori
- * http://www.tsunamp.com
+ * (C) 2020 @bitlab (@bitkeeper Git)
  *
  * This Program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 7.0.0
- *
- * This includes the @chris-rudmin 2019-08-08 rewrite of the GenLibrary() function
- * to support the new Library renderer /var/www/js/scripts-library.js
- * Refer to https://github.com/moode-player/moode/pull/16 for more info.
+ * 2020-MM-DD TC moOde 7.0.0
  *
  */
 require_once dirname(__FILE__) . '/playerlib.php';

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 7.0.0
+ * 2020-MM-DD TC moOde 7.0.0
  *
  * This includes the @chris-rudmin 2019-08-08 rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -1629,6 +1629,7 @@ function cfgdb_update($table, $dbh, $key = '', $value) {
 		case 'cfg_upnp':
 			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
 			break;
+		/* DELETE
 		case 'cfg_eqfa4p':
 			$querystr = "UPDATE " . $table .
 				" SET master_gain='" . $value['master_gain'] .
@@ -1639,6 +1640,7 @@ function cfgdb_update($table, $dbh, $key = '', $value) {
 				"' WHERE curve_name='" . $key . "'";
 			//workerLog('cfgdb_update: ' . $querystr);
 			break;
+		*/
 		case 'cfg_gpio':
 			$querystr = "UPDATE " . $table .
 				" SET enabled='" . $value['enabled'] .
@@ -1868,7 +1870,7 @@ function updMpdConf($i2sdevice) {
 
 	// Update confs with device num (cardnum)
 	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa4p.conf');
+	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
 	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
 	sysCmd("sed -i '/pcm \"hw/c\ \t\tpcm \"hw:" . $device . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
 	sysCmd("sed -i '/card/c\ \t    card " . $device . "' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
@@ -2290,8 +2292,8 @@ function startSps() {
 	elseif ($_SESSION['alsaequal'] != 'Off') {
 		$device = 'alsaequal';
 	}
-	elseif ($_SESSION['eqfa4p'] != 'Off') {
-		$device = 'eqfa4p';
+	elseif ($_SESSION['eqfa12p'] != 'Off') {
+		$device = 'eqfa12p';
 	}
 	else {
 		$device = 'plughw:' . $array[0]['value'];
@@ -2328,8 +2330,8 @@ function startSpotify() {
 	elseif ($_SESSION['alsaequal'] != 'Off') {
 		$device = 'alsaequal';
 	}
-	elseif ($_SESSION['eqfa4p'] != 'Off') {
-		$device = 'eqfa4p';
+	elseif ($_SESSION['eqfa12p'] != 'Off') {
+		$device = 'eqfa12p';
 	}
 	else {
 		$device = 'plughw:' . $_SESSION['cardnum'];
@@ -3183,7 +3185,7 @@ function configMpdOutputs() {
 	if ($_SESSION['crossfeed'] != 'Off') {
 		$output = '2';
 	}
-	elseif ($_SESSION['eqfa4p'] != 'Off') {
+	elseif ($_SESSION['eqfa12p'] != 'Off') {
 		$output = '3';
 	}
 	elseif ($_SESSION['alsaequal'] != 'Off') {
@@ -3383,7 +3385,7 @@ function setAudioOut($audioout) {
 		if ($_SESSION['crossfeed'] != 'Off') {
 			$output = '2';
 		}
-		elseif ($_SESSION['eqfa4p'] != 'Off') {
+		elseif ($_SESSION['eqfa12p'] != 'Off') {
 			$output = '3';
 		}
 		elseif ($_SESSION['alsaequal'] != 'Off') {
