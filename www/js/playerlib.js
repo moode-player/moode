@@ -3054,17 +3054,13 @@ function setColors() {
 	}
 }
 
-// Graphic eq
+// Graphic EQ
 function updEqgFreq(selector, value) {
     $(selector).html(value);
 }
-// Parametric eq
+// Parametric EQ
 function updEqpMasterGain(selector, value) {
     $(selector).html(value + ' dB');
-}
-function updEqpFreq(selector1, selector2, value) {
-    $(selector1).html(value + ' Hz');
-    $(selector2).val(value);
 }
 function updEqpMasterGainSlider(selector) {
     var step = selector == 'master-gain-up' ? 0.1 : -0.1;
