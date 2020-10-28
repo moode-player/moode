@@ -25,6 +25,7 @@
  */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
+require_once dirname(__FILE__) . '/../inc/eqp.php';
 
 //
 // STARTUP SEQUENCE
@@ -1456,23 +1457,27 @@ function runQueuedJob() {
 			updMpdConf($_SESSION['i2sdevice']);
 			sysCmd('systemctl restart mpd');
 			break;
-		case 'eqfa4p':
+		case 'eqp':
 		case 'alsaequal':
-			// Old,New curve name
+			// Old,New curve name (alsaequal)/id (eqp)
 			$queueargs = explode(',', $_SESSION['w_queueargs']);
 			// Current play state
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
 
-			if ($queueargs[1] == 'Off') {
+			//   alsaequal                   eqp
+			if ($queueargs[1] == 'Off' or $queueargs[1] =='0') {
 				sysCmd('mpc enable only 1');
+				workerLog('worker: '.$_SESSION['w_queue'].' off ');
 			}
 			else {
-				if ($_SESSION['w_queue'] == 'eqfa4p') {
-					$result = sdbquery("SELECT * FROM cfg_eqfa4p WHERE curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
-					$params = $result[0]['band1_params'] . '  ' . $result[0]['band2_params'] . '  ' . $result[0]['band3_params'] . '  ' . $result[0]['band4_params'] . '  ' . $result[0]['master_gain'];
-					sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $params . ' ]" ' . ALSA_PLUGIN_PATH . '/eqfa4p.conf');
-					sysCmd('mpc enable only 3');
+				if ($_SESSION['w_queue'] == 'eqp') {
+					$curr = intval($setting[1]);
+					$eqp12 = Eqp12(cfgdb_connect());
+					$config = $eqp12->getpreset($curr);
+					$eqp12->applyConfig($config);
+					unset($eqp12);
+					sysCmd("mpc enable only 3");
 				}
 				else {
 					// Alsaequal
@@ -1483,6 +1488,7 @@ function runQueuedJob() {
 					}
 					sysCmd('mpc enable only 4');
 				}
+				workerLog('worker: '.$_SESSION['w_queue'].' on ');
 			}
 
 			if (!empty($playing)) {
