@@ -2790,14 +2790,14 @@ function autoConfigSettings() {
 		$dbh = cfgdb_connect();
 		$result ='';
 		foreach ($values  as $key) {
-			$query = 'select param,value from cfg_mpd where param="'.$key.'"';
+			$query = 'select param,value from cfg_mpd where param="' . $key . '"';
 			$rows = sdbquery($query, $dbh);
 			$result = $result . sprintf("%s = \"%s\"\n", $key, $rows[0]['value']);
 		}
 		return $result;
 	}
 
-	// configuration of the autoconfig item handling
+	// Configuration of the autoconfig item handling
 	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
 	//            most item only have 1 autoconfig item, but network setting requires multiple to be present
 	// - handler for setting the config item
@@ -2904,10 +2904,10 @@ function autoConfigSettings() {
 				$dbh = cfgdb_connect();
 				$row = sdbquery("select * from cfg_network where iface='wlan0'", $dbh)[0];
 				$result="";
-				$result = $result."wlanssid = \"".$row['wlanssid']."\"\n";
-				$result = $result."wlanpwd = \"".""."\"\n"; // keep empty
-				$result = $result."wlansec = \"".$row['wlansec']."\"\n";
-				$result = $result."wlancountry = \"".$row['wlan_country']."\"\n";
+				$result = $result."wlanssid = \"" . $row['wlanssid'] . "\"\n";
+				$result = $result."wlanpwd = \"" . "" . "\"\n"; // keep empty
+				$result = $result."wlansec = \"" . $row['wlansec'] . "\"\n";
+				$result = $result."wlancountry = \"" . $row['wlan_country'] . "\"\n";
 				return $result;
 			}],
 
@@ -2923,13 +2923,14 @@ function autoConfigSettings() {
 			}, 'custom_write' => function($values) {
 				$dbh = cfgdb_connect();
 				$row = sdbquery("select * from cfg_network where iface='apd0'", $dbh)[0];
-				$result = $result."apdssid = \"".$row['wlanssid']."\"\n";
-				$result = $result."apdpwd = \"".""."\"\n"; // keep empty
-				$result = $result."apdchan = \"".$row['wlan_channel']."\"\n";
+				$result = $result . "apdssid = \"" . $row['wlanssid'] . "\"\n";
+				$result = $result . "apdpwd = \"" . "" . "\"\n"; // keep empty
+				$result = $result . "apdchan = \"" . $row['wlan_channel'] . "\"\n";
 				return $result;
 			}],
 
-		'Theme & Background',
+		'Preferences',
+		'Appearance',
 		['requires' => ['themename'] , 'handler' => setPlayerSession],
 		['requires' => ['accent_color'] , 'handler' => setPlayerSession],
 		['requires' => ['alphablend'] , 'handler' => setPlayerSession],
@@ -2937,25 +2938,33 @@ function autoConfigSettings() {
 		['requires' => ['cover_backdrop'] , 'handler' => setPlayerSession],
 		['requires' => ['cover_blur'] , 'handler' => setPlayerSession],
 		['requires' => ['cover_scale'] , 'handler' => setPlayerSession],
-
-		['requires' => ['library_albumview_sort'] , 'handler' => setPlayerSession],
-		['requires' => ['library_covsearchpri'] , 'handler' => setPlayerSession],
-		['requires' => ['library_ellipsis_limited_text'] , 'handler' => setPlayerSession],
-		['requires' => ['library_encoded_at'] , 'handler' => setPlayerSession],
-		['requires' => ['library_flatlist_filter'] , 'handler' => setPlayerSession],
-		['requires' => ['library_flatlist_filter_str'] , 'handler' => setPlayerSession],
-		['requires' => ['library_hiresthm'] , 'handler' => setPlayerSession],
-		['requires' => ['library_ignore_articles'] , 'handler' => setPlayerSession],
-		['requires' => ['library_misc_options'] , 'handler' => setPlayerSession],
-		['requires' => ['library_instant_play'] , 'handler' => setPlayerSession],
-		['requires' => ['library_tagview_artist'] , 'handler' => setPlayerSession],
-		['requires' => ['library_tagview_covers'] , 'handler' => setPlayerSession],
-		['requires' => ['library_tagview_sort'] , 'handler' => setPlayerSession],
-		['requires' => ['playlist_art'] , 'handler' => setPlayerSession],
-
-		'Other',
 		['requires' => ['font_size'] , 'handler' => setPlayerSession],
+
+		'Playback',
+		['requires' => ['playlist_art'] , 'handler' => setPlayerSession],
+		['requires' => ['extra_tags'] , 'handler' => setPlayerSession],
 		['requires' => ['playhist'] , 'handler' => setPlayerSession],
+
+		'Library',
+		['requires' => ['library_instant_play'] , 'handler' => setPlayerSession],
+		['requires' => ['library_albumview_sort'] , 'handler' => setPlayerSession],
+		['requires' => ['library_tagview_sort'] , 'handler' => setPlayerSession],
+		['requires' => ['library_recently_added'] , 'handler' => setPlayerSession],
+		['requires' => ['library_encoded_at'] , 'handler' => setPlayerSession],
+		['requires' => ['library_covsearchpri'] , 'handler' => setPlayerSession],
+		['requires' => ['library_hiresthm'] , 'handler' => setPlayerSession],
+		['requires' => ['library_thumbnail_columns'] , 'handler' => setPlayerSession],
+
+		'Library (Advanced)',
+		['requires' => ['library_tagview_artist'] , 'handler' => setPlayerSession],
+		['requires' => ['library_misc_options'] , 'handler' => setPlayerSession],
+		['requires' => ['library_ignore_articles'] , 'handler' => setPlayerSession],
+		['requires' => ['library_show_genres'] , 'handler' => setPlayerSession],
+		['requires' => ['library_tagview_covers'] , 'handler' => setPlayerSession],
+		['requires' => ['library_ellipsis_limited_text'] , 'handler' => setPlayerSession],
+		['requires' => ['library_utf8rep'] , 'handler' => setPlayerSession],
+
+		'Internal',
 		['requires' => ['first_use_help'] , 'handler' => function($values) {
 			playerSession('write', 'first_use_help', ($values['first_use_help'] == 'Yes' ? 'y,y' : 'n,n'));
 		}, 'custom_write' => function($values) {
@@ -2963,7 +2972,7 @@ function autoConfigSettings() {
 			return "first_use_help = \"".$value."\"\n";
 		}],
 
-		'sources',
+		'Sources',
 		// Sources are using the array construction of the ini reader
 		// source_name[0] = ...
 		['requires' => ['source_name',
@@ -3027,29 +3036,29 @@ function autoConfig($cfgfile) {
 		foreach ($configurationHandlers as $config) {
 			$values = array();
 
-			// print new section header
+			// Print new section header
 			if( is_string($config) ) {
 				autoCfgLog('autocfg: - '. $config);
 			}
-			// check if alrequired cfgkeys are present
+			// Check if all required cfgkeys are present
 			elseif( !array_diff_key(array_flip($config['requires']), $autocfg) ) {
-				// is so get copie all key/value sets
+				// Copy all key/value sets
 				foreach ($config['requires'] as $config_name) {
 					$value = $autocfg[$config_name];
-					// is config name differs from session var the session_var can be used
+					// If config name differs from session var the session_var can be used
 					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
 					$values[$config_key] = $value;
 					autoCfgLog('autocfg: '. $config_name.': ' . $value);
-					// remove used autoconfig
+					// Remove used autoconfig
 					unset($available_configs[$config_name]);
 				}
-				// call handler
+				// Call handler
 				if( !array_key_exists('cmd', $config) )
 					$config['handler'] ($values);
 				else
 					$config['handler'] ($values, $config['cmd']);
 			}
-			// detect reuires with multiple keys which are no all present in provided configs
+			// Detect reuires with multiple keys which are no all present in provided configs
 			elseif( count($config['requires']) >= 2 and count(array_diff_key(array_flip($config['requires']), $autocfg))>= 1) {
 				$incompleteset = " [ ";
 				foreach ($config['requires'] as $config_require) {
@@ -3060,7 +3069,7 @@ function autoConfig($cfgfile) {
 			}
 		}
 
-		// check for unused but supplied autocfg settings
+		// Check for unused but supplied autocfg settings
 		if( empty($available_configs) ) {
 			foreach ($available_configs as $config_name) {
 				autoCfgLog('autocfg: Warning: '. $config_name.': is unused, incomplete or wrong name.');
@@ -3076,7 +3085,7 @@ function autoConfig($cfgfile) {
 	autoCfgLog('autocfg: Auto-configure complete');
 }
 
-// generates an autoconfig file as string based on the current settings
+// Generates an autoconfig file as string based on the current settings
 function autoconfigExtract() {
 	$autoconfigstring = <<<EOT
 	; #########################################
@@ -3096,19 +3105,19 @@ function autoconfigExtract() {
 
 	$autoconfigstring = sprintf($autoconfigstring, getMoodeRel('verbose'), date('Y-m-d H:i:s'));
 
-	$configurationHandlers = autoConfigSettings(); // contains supported configuration items
+	$configurationHandlers = autoConfigSettings(); // Contains supported configuration items
 
 	foreach ($configurationHandlers as &$config) {
 		$values = array();
-		// print new section header
+		// Print new section header
 		if( is_string($config) ) {
-			$autoconfigstring = $autoconfigstring . "\n[". $config. "]\n";
+			$autoconfigstring = $autoconfigstring . "\n[" . $config. "]\n";
 		} else {
 			if( !array_key_exists('custom_write', $config)) {
 				foreach ($config['requires'] as $config_name) {
 					$config_key = array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
 					if( array_key_exists($config_key, $_SESSION) ) {
-						$autoconfigstring = $autoconfigstring . $config_key. " = \"".$_SESSION[$config_key]."\"\r\n";
+						$autoconfigstring = $autoconfigstring . $config_key. " = \"" . $_SESSION[$config_key] . "\"\r\n";
 					}
 				}
 			} else {
@@ -3117,7 +3126,7 @@ function autoconfigExtract() {
 		}
 	}
 
-	return $autoconfigstring."\n";
+	return $autoconfigstring . "\n";
 }
 
 function genWpaPSK($ssid, $passphrase) {
