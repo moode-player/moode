@@ -54,16 +54,13 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$playing = sysCmd('mpc status | grep "\[playing\]"');
 		$eqp12->applyConfig($config);
 		sysCmd('systemctl restart mpd');
-		// // wait for mpd to start accepting connections
+		// // // wait for mpd to start accepting connections
 		$sock = openMpdSock('localhost', 6600);
-		// initiate play
-		sendMpdCmd($sock, 'stop');
-		$resp = readMpdResp($sock);
-		if (!empty($playing)) {
-			sendMpdCmd($sock, 'play');
-		}
-		$resp = readMpdResp($sock);
 		closeMpdSock($sock);
+		// // initiate play
+		if (!empty($playing)) {
+			sysCmd('mpc play');
+		}
 	}
 	// // add or update
 	$_SESSION['notify']['title'] = 'Curve updated';
