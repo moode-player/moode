@@ -43,9 +43,9 @@ function postData2Config($data, $bands) {
 	$config['master_gain']= (float)$data['master_gain'];
 	return $config;
 }
-// apply setting changes
+// Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
-	// format individual band params
+	// Format individual band params
 	$curve_id = intval($_POST['curve_id']);
 	$config = postData2Config($_POST, 12);
 	$eqp12->setpreset($curve_id, NULL, $config);
@@ -54,44 +54,38 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$playing = sysCmd('mpc status | grep "\[playing\]"');
 		$eqp12->applyConfig($config);
 		sysCmd('systemctl restart mpd');
-		// // wait for mpd to start accepting connections
+		// Wait for mpd to start accepting connections
 		$sock = openMpdSock('localhost', 6600);
-		// initiate play
-		sendMpdCmd($sock, 'stop');
-		$resp = readMpdResp($sock);
-		if (!empty($playing)) {
-			sendMpdCmd($sock, 'play');
-		}
-		$resp = readMpdResp($sock);
 		closeMpdSock($sock);
+		// Initiate play
+		if (!empty($playing)) {
+			sysCmd('mpc play');
+		}
 	}
-	// // add or update
+	// Add or update
 	$_SESSION['notify']['title'] = 'Curve updated';
-	// 	$_SESSION['notify']['title'] = 'New curve added';
 }
 
-// play/test curve
+// Play/test curve
 if (isset($_POST['play']) && $_POST['play'] == '1') {
 	$config = postData2Config($_POST, 12);
 	$eqp12->applyConfig($config);
 	sysCmd('systemctl restart mpd');
-	// // wait for mpd to start accepting connections
+	// Wait for mpd to start accepting connections
 	$sock = openMpdSock('localhost', 6600);
-	// initiate play
+	// Initiate play
 	sendMpdCmd($sock, 'stop');
 	$resp = readMpdResp($sock);
 	sendMpdCmd($sock, 'play');
 	$resp = readMpdResp($sock);
 	closeMpdSock($sock);
 
-	// playerSession('write', 'eqfa4p', $_POST['curve_name']);
 	$curve_config = $config;
 	$_SESSION['notify']['title'] = 'Playing curve';
 }
 
-workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
-// add, remove, change, refresh
-
+//workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
+// Add, remove, change, refresh
 if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
 	$new_curve_id = $eqp12->setpreset(NULL, $_POST['new-curvename'], $eqp12->getpreset($eqp12->getActivePresetIndex())  );
 	if( $new_curve_id) {
@@ -111,13 +105,12 @@ elseif (isset($_GET['curve'])) {
 	$_selected_curve_id = $_GET['curve'];
 }
 else {
-	//$_search_curve = $_SESSION['eqfa4p'] == 'Off' ? 'Default curve' : $_SESSION['eqfa4p'];
 	$_selected_curve_id = $eqp12->getActivePresetIndex();
 }
 
 session_write_close();
 
-// // load curve list
+// Load curve list
 if(!$_selected_curve_id) {
 	$_selected_curve_id = 1;
 }
@@ -131,13 +124,13 @@ foreach ($curveList as $curve_id=>$curve_name) {
 	}
 }
 
-// set control states
+// Set control states
 $_disable_play = $_SESSION['eqfa4p'] == 'Off' ? 'disabled' : '';
 
 $_disable_rm = $_selected_curve_id == 1 ? 'disabled' : '';
 $_disable_rm_msg = $_selected_curve_id == 1 ? 'The Default curve cannot be removed' : '';
 
-//load curve params
+// Load curve params
 if( !$curve_config) {
 	$curve_config = $eqp12->getpreset($_selected_curve_id);
 }

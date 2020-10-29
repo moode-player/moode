@@ -18,49 +18,51 @@
 New features
 
 - NEW: Selective resampling and Custom SoX recipes
+- NEW: 12-band Parametric EQ for AutoEQ headphone equalizing
 - NEW: Radio view with sort/group and metadata
+- NEW: Enhanced Folder view with cover art and advanced search
 - NEW: Library performance improvements
-- NEW: Library filtering engine
-- NEW: Library support for tracks tagged with multiple genres
-- NEW: Library option to select which tag for the Artist list
-- NEW: Library option to use folder path and/or MUSICBRAINZ_ALBUMID as album key
+- NEW: Library advanced filtering engine
+- NEW: Library option to select the tag used to populate the Artist list
+- NEW: Library option for the key used to differentiate albums
 - NEW: Library option to include the comment tag
-- NEW: Enhanced Folder view
+- NEW: Library support for tracks tagged with multiple genres
 - NEW: Albums played directly if already in the Queue
-- NEW: Resource limits in MPD Config
+- NEW: MPD config resource allocation options for buffers, playlist
 - NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Queue
-- NEW: Thumbnails displayed for albums in Folder view
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
 - NEW: Add next, Play next by inserting after current item
 - NEW: Support for up to 384K rate for DDDAC1794 NOS
-- NEW: 12-band Parametric EQ for AutoEQ headphone equalizing
 
 Updates
 
 - UPD: Bump to Linux kernel 5.4.61 build #1339
 - UPD: Bump to MPD 0.22.0
-- UPD: Bump to Auto-shuffle (ashuffle) 3.7.2
+- UPD: Bump to Auto-shuffle (ashuffle) 3.10.0
 - UPD: Bump to squeezelite 1.9.7-1270
 - UPD: Bump to librespot 0.1.3
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
+- UPD: Remove Google Play Music service (discontinued)
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
-- UPD: Add Genre to the Extra metadata Appearance option
+
 - UPD: Add higher resolutions for thumbnail generator
 - UPD: Add "Update Library" to action list for Clock Radio
-- UPD: Add place holder H/W for native lazyload
+- UPD: Add place holder height/width for native lazyload
+
 - UPD: Add "Now Playing" EQ style icon to the Queue and Library
-- UPD: Include Add next, Play next in list of "One touch actions"
-- UPD: Improve logging for Library update process
 - UPD: Extend HD badging to Playbar, CoverView amd Playback
-- UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
+- UPD: Add Genre to the Extra metadata Appearance option
 - UPD: Show volume level on the Playbar
 - UPD: Option to show mapped dB volume in the knob
 - UPD: Generate additional set of small thumbnails for lists
+
+- UPD: Include Add next, Play next in list of "One touch actions"
+- UPD: Improve logging for Library update process
+- UPD: Report 24 bit if ALAC encoded m4a reports 32 bit
 - UPD: Honor "Resume MPD" setting when disconnecting a renderer
 - UPD: Only load CoverView Queue HTML when it's opened
 - UPD: Auto-configure expanded to include most settings
-- UPD: Remove Google Play Music service (discontinued)
 
 Radio stations
 

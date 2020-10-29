@@ -442,13 +442,6 @@ else {
 }
 */
 
-/* DELETE
-// android 'add to home'
-$result = sysCmd('grep "add2home_off" /var/www/header.php');
-$_select['add2home1'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd2home1\" value=\"1\" " . ((empty($result[0])) ? "checked=\"checked\"" : "") . ">\n";
-$_select['add2home0'] .= "<input type=\"radio\" name=\"add2home\" id=\"toggleadd2home2\" value=\"0\" " . ((!empty($result[0])) ? "checked=\"checked\"" : "") . ">\n";
-*/
-
 // expand root file system
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
 $_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs2\" value=\"0\" " . "checked=\"checked\"".">\n";

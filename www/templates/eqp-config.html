@@ -63,13 +63,11 @@
 
 		<fieldset>
 			<div id="equalizer" class="sliderbank">
-				<div id="hslide1">
-					<div>Master Gain</div>
-					<button id="master-gain-up" class="btn" href="#notarget">+</button>
-					<input id="master-gain-slider" class="hslide2" type="range" min="-24" max="24" step=".1" name="master_gain" value="$_select[master_gain]" oninput="updEqpMasterGain('#master-gain', this.value)">
-					<button id="master-gain-dn" class="btn" href="#notarget">-</button>
-					<div id="master-gain">$_select[master_gain] dB</div>
-				</div>
+				<div>Master Gain</div>
+				<button id="master-gain-dn" class="btn" href="#notarget">-</button>
+				<input id="master-gain-slider" class="hslide2" type="range" min="-24" max="24" step=".1" name="master_gain" value="$_select[master_gain]" oninput="updEqpMasterGain('#master-gain', this.value)">
+				<button id="master-gain-up" class="btn" href="#notarget">+</button>
+				<div id="master-gain">$_select[master_gain] dB</div>
 
 				<div class="equ-input-ctls">
 					<div class="eqp-col1"></div>

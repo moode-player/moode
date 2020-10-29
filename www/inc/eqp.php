@@ -24,7 +24,7 @@
 require_once dirname(__FILE__) . '/playerlib.php';
 
 
-// factory for a Eqp wrapper for the 12 bands Eqfa12p.conf
+// Factory for a Eqp wrapper for the 12 bands Eqfa12p.conf
 function Eqp12($dbh)  {
     return New Eqp($dbh, 'cfg_eqp12', 12, 'eqfa12p.conf');
 }
@@ -57,9 +57,6 @@ class Eqp {
     function applyConfig($config) {
         $configstr = $this->config2string($config);
         sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $configstr . ' ]" ' . ALSA_PLUGIN_PATH .'/'. $this->alsa_file);
-        // to really enable it two additional steps are required:
-        // - in mpd config eqfa12p should be use instead as of eqfa4p for eqp
-        // - sysCmd('mpc enable only 3');
     }
 
     function string2config($string) {
@@ -74,7 +71,8 @@ class Eqp {
             $config['bands'][$key]['frequency'] = $value[1];
             $config['bands'][$key]['bandwidth'] = $value[2];
             $config['bands'][$key]['gain'] = $value[3];
-        } else {
+        }
+        else {
             $config['master_gain'] = $value[0];
         }
 
@@ -107,16 +105,16 @@ class Eqp {
     function setpreset($index, $name, $config) {
         if (count($config['bands']) == $this->band_count ) {
             $settingsStr = $this->config2string($config);
-            $querystr ="";
+            $querystr = "";
             if($index) {
-                $querystr = "UPDATE ".$this->table." SET settings = '".$settingsStr."' WHERE id = ".$index.";";
+                $querystr = "UPDATE " . $this->table . " SET settings = '" . $settingsStr . "' WHERE id = " . $index . ";";
             }
             else {
-                $querystr ="INSERT INTO ".$this->table." (curve_name, settings, active) VALUES ('".$name."', '".$settingsStr."', 0);";
+                $querystr ="INSERT INTO " . $this->table . " (curve_name, settings, active) VALUES ('" . $name . "', '" . $settingsStr . "', 0);";
             }
             $result = sdbquery($querystr, $this->dbh);
 
-            $querystr = 'SELECT id from '.$this->table.' where curve_name = "'.$name.'" limit 1;';
+            $querystr = 'SELECT id from ' . $this->table . ' where curve_name = "' . $name . '" limit 1;';
             $result = sdbquery($querystr, $this->dbh);
             return count($result)==1 ? $result[0]['id']: NULL;
         }
@@ -124,13 +122,13 @@ class Eqp {
 
     function unsetpreset($index) {
         if($index) {
-            $querystr = "DELETE FROM ".$this->table." WHERE id = ".$index.";";
+            $querystr = "DELETE FROM " . $this->table . " WHERE id = " . $index . ";";
             $result = sdbquery($querystr, $this->dbh);
         }
     }
 
     function getPresets() {
-        $querystr = 'SELECT id, curve_name from '.$this->table.';';
+        $querystr = 'SELECT id, curve_name from ' . $this->table . ';';
         $result = sdbquery($querystr, $this->dbh);
         $presets = [];
         foreach($result as $preset_row) {
@@ -140,23 +138,17 @@ class Eqp {
     }
 
     function getActivePresetIndex() {
-        $querystr = 'SELECT id from '.$this->table.' WHERE active=1;';
+        $querystr = 'SELECT id from ' . $this->table . ' WHERE active=1;';
         $result = sdbquery($querystr, $this->dbh);
         return count($result)==1 ? $result[0]['id']: 0;
     }
 
     function setActivePresetIndex($index) {
-        $querystr = "UPDATE ".$this->table." SET active = 0 WHERE active = 1;";
+        $querystr = "UPDATE " . $this->table . " SET active = 0 WHERE active = 1;";
         $result = sdbquery($querystr, $this->dbh);
 
-        // $currentActiveIndex =$this->getActivePresetIndex($db);
-        // if( $currentActiveIndex) {
-        //     $querystr = "UPDATE ".$this->table." SET active = 0 WHERE id = ".$currentActiveIndex.";";
-        //     $querystr = "UPDATE ".$this->table." SET active = 0 WHERE id = ".$currentActiveIndex.";";
-        //     $result = sdbquery($querystr, $this->dbh);
-        // }
         if($index >= 1 ) {
-            $querystr = "UPDATE ".$this->table." SET active = 1 WHERE id = ".$index.";";
+            $querystr = "UPDATE " . $this->table . " SET active = 1 WHERE id = " . $index . ";";
             $result = sdbquery($querystr, $this->dbh);
         }
     }
