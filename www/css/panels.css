@@ -462,19 +462,10 @@ body.no-touch .cover-menu {opacity:0;}
 #equalizer {background-color:#333;margin-top:1em;padding:1em 1em 1em .5em;text-align:center;}
 #eqp-input-ctls {opacity:.5;font-size:.9em}
 #master-gain {margin-bottom:1em;}
-/*#master-gain-slider {height:6.5em;}*/
-#hslide1 {width:100%;margin:0 auto;}
-#master-gain-up, #master-gain-dn {display:inline-block;margin-top:.4em;font-size:1.25em;font-family:'SF Mono','Roboto Mono',monospace;}
-#master-gain-up {float:right}
-#master-gain-dn {float:left}
-input[type="range"].hslide2 {height:2em;-webkit-appearance: slider-horizontal;margin:.5em 0;}
+#master-gain-up, #master-gain-dn {display:inline-block;margin-bottom:.25em;font-size:1.25em;font-family:'SF Mono','Roboto Mono',monospace;}
+input[type="range"].hslide2 {width:12em;height:2em;-webkit-appearance: slider-horizontal;margin:.5em 0;}
 input[type='range'].hslide2::-webkit-slider-thumb {background:#fff;background-image:'';height:1.25em;width:1.25em;}
-/* ORIG 4 band parametric EQ
-.vslide1 {width:18%;display:inline-block;}
-.vslide1 div, .vslide3 div {text-align:center;opacity:.5;font-size:.9em;}
-.eqp-label {text-align:center;margin:.75em 0 1em 6em;opacity:.5;font-size:.9em;font-style:italic;}
-*/
-/* Graphic EQ */
+/* 10-band Graphic EQ */
 .eqg-label {text-align:center;margin:.75em 0 1em .75em;opacity:.5;font-size:.9em;font-style:italic;}
 input[type="range"].vslide2 {height:10em;width:2.5em;-webkit-appearance: slider-vertical;margin:.5em 0;}
 input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-image:'';height:1.25em;width:1.25em;}
