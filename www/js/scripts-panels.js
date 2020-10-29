@@ -135,15 +135,32 @@ jQuery(document).ready(function($) { 'use strict';
     	if (SESSION.json['adaptive'] == "No") {document.body.style.setProperty('--adaptmbg', themeBack);}
     	blurrr == true ? themeOp = .85 : themeOp = .95;
 
+
+		function mutate(mutations) {
+		  mutations.forEach(function(mutation) {
+      		$('#alpha-blend span').text() < 1 ? $('#cover-options').show() : $('#cover-options').css('display', '');
+  		  });
+		}
+
+		jQuery(document).ready(function() {
+
+		  var target = document.querySelector('#alpha-blend span')
+		  var observer = new MutationObserver( mutate );
+		  var config = { characterData: true, attributes: false, childList: true, subtree: false };
+
+		  observer.observe(target, config);
+		});
+
+
     	// Only display transparency related theme options if alphablend is < 1
-    	$('#alpha-blend').on('DOMSubtreeModified',function(){
+    	/*$('#alpha-blend').on('DOMSubtreeModified',function(){
     		if ($('#alpha-blend span').text() < 1) {
     			$('#cover-options').show();
     		}
             else {
     			$('#cover-options').css('display', '');
     		}
-    	});
+    	});*/
 
     	tempcolor = (THEME.json[SESSION.json['themename']]['mbg_color']).split(",")
     	themeMback = 'rgba(' + tempcolor[0] + ',' + tempcolor[1] + ',' + tempcolor[2] + ',' + themeOp + ')';
