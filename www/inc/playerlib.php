@@ -1629,18 +1629,6 @@ function cfgdb_update($table, $dbh, $key = '', $value) {
 		case 'cfg_upnp':
 			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
 			break;
-		/* DELETE
-		case 'cfg_eqfa4p':
-			$querystr = "UPDATE " . $table .
-				" SET master_gain='" . $value['master_gain'] .
-				"', band1_params='" . $value['band1_params'] .
-				"', band2_params='" . $value['band2_params'] .
-				"', band3_params='" . $value['band3_params'] .
-				"', band4_params='" . $value['band4_params'] .
-				"' WHERE curve_name='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-		*/
 		case 'cfg_gpio':
 			$querystr = "UPDATE " . $table .
 				" SET enabled='" . $value['enabled'] .
