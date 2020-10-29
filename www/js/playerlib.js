@@ -30,7 +30,7 @@ const FEAT_MPDAS        = 8;        // y MPD audio scrobbler
 const FEAT_SQUEEZELITE  = 16;       // y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;       // y UPnP client for MPD
 const FEAT_SQSHCHK      = 64;       //   Require squashfs for software update
-const FEAT_RESERVED1    = 128;      // y Reserved for future use
+const FEAT_GMUSICAPI    = 128;      // y Google Play music service
 const FEAT_LOCALUI      = 256;      // y Local display
 const FEAT_INPSOURCE    = 512;      // y Input source select
 const FEAT_UPNPSYNC     = 1024;     //   UPnP volume sync
@@ -756,20 +756,35 @@ function renderUI() {
     		}
     	}
 
-    	// Extra metadata displayed under the cover
+    	// Extra metadata to be displayed
+	
+	var extraTagsArray = [];
+        // if (SESSION.json['extra_tags'].toLowerCase() != 'none' && SESSION.json['extra_tags'] != '') {
+		extraTagsArray = SESSION.json['extra_tags'].replace(/ /g, '').split(',');
+	// }
+	var song = [];
+	if (/* extraTagsArray.length && */ MPD.json['file'] && MPD.json['artist'] != 'Radio station') {
+		var song = allSongs.filter(song=>{return song.file == MPD.json['file'];})[0];
+		var genres = extraTagsArray.includes('genre') && song.genre.length ? ' • ' + song.genre.join(' | ') : '';
+		var artists =extraTagsArray.includes('artist') && song.artist.length ? song.artist.join(' | ') : '';
+		var discAndTrack = (extraTagsArray.includes('disc') && MPD.json['disc'] && MPD.json['disc'] != 'Disc tag missing' ? MPD.json['disc'] + '.' : '') + (extraTagsArray.includes('track') && MPD.json['track'] ? MPD.json['track'] + '&nbsp;&nbsp&nbsp;': '');
+		var composer = (extraTagsArray.includes('composer') && MPD.json['composer'] ? MPD.json['composer'] + ' • ' : '');
+		var date = (extraTagsArray.includes('date') && MPD.json['date'] ? '&nbsp;&nbsp;[' + MPD.json['date'] + ']' : '');
+	}
+
     	if (MPD.json['state'] === 'stop') {
     		$('#extra-tags-display').html('Not playing');
     	}
-        else if (SESSION.json['extra_tags'].toLowerCase() == 'none' || SESSION.json['extra_tags'] == '') {
+        else if (!extraTagsArray.length) {
             $('#extra-tags-display').html('');
         }
         else if (MPD.json['artist'] == 'Radio station') {
     		$('#extra-tags-display').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
     	}
     	else {
-            var extraTagsDisplay = '';
-            extraTagsDisplay = formatExtraTagsString();
-            extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) : $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
+            var encodedAndGenre = (extraTagsArray.includes('encoded') && MPD.json['encoded'] ? MPD.json['encoded'] : MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
+	    encodedAndGenre = encodedAndGenre + (extraTagsArray.includes('genre') ? genres : '');
+            $('#extra-tags-display').html(encodedAndGenre);
     	}
 
         // HD badge text
@@ -778,7 +793,8 @@ function renderUI() {
 
     	// Default metadata
         if (MPD.json['album']) {
-            $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
+            $('#currentalbum').html(MPD.json['album']);
+            $('#currentalbumdate').html(MPD.json['artist'] != 'Radio station' ? date : '');
             // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
                 (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
@@ -788,14 +804,22 @@ function renderUI() {
             $('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
         }
 
+	$('#songcomposer').html(' ');
+	$('#songartists').html(' ');
     	// Song title
     	if (MPD.json['title'] === 'Streaming source' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
     		$('#currentsong').html(MPD.json['title']);
-    	}
+	}
     	// Add search url, see corresponding code in renderPlaylist()
-    	else {
+    	else if (MPD.json['artist'] == 'Radio station') {
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
     	}
+    	else {
+    		$('#currentsong').html('<span id="currentsongnum">' + discAndTrack + '</span>' + genSearchUrl(song.artist.join('+'), MPD.json['title'], MPD.json['album']));
+    		$('#songcomposer').html(composer);
+    		$('#songartists').html(artists);
+    	}
+
     	$('#playbar-currentsong, #ss-currentsong').html(MPD.json['title']);
     	// Store songid for last track (toggle song)
         //console.log('UI.currentSongId: ' + UI.currentSongId, 'MPD.json[songid]: ' + MPD.json['songid']);
@@ -3054,13 +3078,17 @@ function setColors() {
 	}
 }
 
-// Graphic EQ
+// Graphic eq
 function updEqgFreq(selector, value) {
     $(selector).html(value);
 }
-// Parametric EQ
+// Parametric eq
 function updEqpMasterGain(selector, value) {
     $(selector).html(value + ' dB');
+}
+function updEqpFreq(selector1, selector2, value) {
+    $(selector1).html(value + ' Hz');
+    $(selector2).val(value);
 }
 function updEqpMasterGainSlider(selector) {
     var step = selector == 'master-gain-up' ? 0.1 : -0.1;
