@@ -28,7 +28,7 @@ New features
 - NEW: Library option to include the comment tag
 - NEW: Library support for tracks tagged with multiple genres
 - NEW: Albums played directly if already in the Queue
-- NEW: MPD config resource allocation options for buffers, playlist 
+- NEW: MPD config resource allocation options for buffers, playlist
 - NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Queue
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
@@ -39,7 +39,7 @@ Updates
 
 - UPD: Bump to Linux kernel 5.4.61 build #1339
 - UPD: Bump to MPD 0.22.0
-- UPD: Bump to Auto-shuffle (ashuffle) 3.7.2
+- UPD: Bump to Auto-shuffle (ashuffle) 3.10.0
 - UPD: Bump to squeezelite 1.9.7-1270
 - UPD: Bump to librespot 0.1.3
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
