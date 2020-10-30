@@ -36,7 +36,7 @@ function postData2Config($data, $bands) {
 		$bandconfig =[];
 		$bandconfig['enabled'] = $data['band' . $i . '_enabled'] ;
         $bandconfig['frequency'] =  $data['band' . $i . '_freq'];
-        $bandconfig['bandwidth'] = (float)$data['band' . $i . '_q'];
+        $bandconfig['q'] = (float)$data['band' . $i . '_q'];
 		$bandconfig['gain'] =(float)$data['band' . $i . '_gain'];
 		array_push($config['bands'],$bandconfig);
 	}
@@ -142,7 +142,7 @@ foreach($curve_config['bands'] as $band_key=>$band_config) {
 	$_select['band' . $i . '_enabled'] .= sprintf('<option value="%s"%s>%s</option>\n', '1', $band_config['enabled'] == 1 ? 'selected' : '', 'Yes');
 	$_select['band' . $i . '_enabled'] .= sprintf('<option value="%s"%s>%s</option>\n', '0', $band_config['enabled'] == 0 ? 'selected' : '', 'No');
 	$_select['band' . $i . '_freq'] = $band_config['frequency'];
-	$_select['band' . $i . '_q'] = $band_config['bandwidth'];
+	$_select['band' . $i . '_q'] = $band_config['q'];
 	$_select['band' . $i . '_gain'] = $band_config['gain'];
 }
 
