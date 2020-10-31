@@ -341,7 +341,6 @@ jQuery(document).ready(function($) { 'use strict';
     // Folder view
 	$('.folder-view-btn').click(function(e){
 		makeActive('.folder-view-btn','#folder-panel','folder');
-		mpdDbCmd('lsinfo', '');
 	});
     // Tag view
 	$('.tag-view-btn').click(function(e){
