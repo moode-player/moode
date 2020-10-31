@@ -489,7 +489,7 @@ function genFlatList($sock) {
 					$flat[$item]['Artist'] = array($value);
 				}
 			}
-			//@Atair: add performers to artists
+			// @Atair: add performers to artists
 			elseif ($element == 'Performer') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);
@@ -498,7 +498,7 @@ function genFlatList($sock) {
 					$flat[$item]['Artist'] = array($value);
 				}
 			}
-			//@Atair: add conductor to artists
+			// @Atair: add conductor to artists
 			elseif ($element == 'Conductor') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);
