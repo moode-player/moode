@@ -212,7 +212,7 @@ function groupLib(fullLib) {
 			mb_albumid: findAlbumProp(albumTracks, 'mb_albumid'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
-			//@Atair: albumArtist is always defined due to provisions in playerlib.php
+			// @Atair: albumArtist is always defined due to provisions in playerlib.php
 			//        so it is not necessary to evaluate artist
 			album_artist: findAlbumProp(albumTracks, 'album_artist'),
 
@@ -241,7 +241,7 @@ function groupLib(fullLib) {
                 });
                 break;
             case 'Artist':
-		// @Atair: Sort by album_artist
+                // @Atair: Sort by album_artist
                 allAlbumCovers.sort(function(a, b) {
                     return (collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
         		});
@@ -267,7 +267,7 @@ function groupLib(fullLib) {
                 });
                 break;
             case 'Artist':
-		// @Atair: 'artist' is here actually album_artist due the way allAlbums were defined above.
+                // @Atair: 'artist' is here actually album_artist due the way allAlbums were defined above.
                 allAlbums.sort(function(a, b) {
     				return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
     			});
@@ -418,7 +418,7 @@ function filterArtists() {
 	filteredArtists = Object.values(songsfilteredByGenre.reduce(reduceArtists, {})).map(function(group){ return group.artist; });
 	// @scripple: Add sort
 	// Natural ordering
-	//@Atair: flatten out artist arrays
+	// @Atair: flatten out artist arrays
 	var filteredArtistsFlat = [];
 	filteredArtists.forEach((a)=>{filteredArtistsFlat=filteredArtistsFlat.concat(a)});
 	filteredArtists = filteredArtistsFlat.slice();
@@ -459,7 +459,7 @@ function filterAlbums() {
 		//         when Folderpath album key is set and
 		//         an album contains tracks with different album_artists (which all appear in the artists column),
 		//         the album would not be displayed for either album_artist when being clicked.
-         	//         The else case might be more expensive, but does  basically the same job as the if clause, 
+         	//         The else case might be more expensive, but does  basically the same job as the if clause,
          	//         but for all artists
 		else { */
 			var artistSongs = allSongs.filter(filterByArtist);
@@ -687,7 +687,7 @@ var renderAlbums = function() {
                 + tagViewLazy + filteredAlbums[i].imgurl + '">'
                 + tagViewHdDiv
                 + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album + '</span>'
-                + '<span class="artist-name-art">' + filteredAlbums[i].album_artist + '</span>' //@Atair: Should be album_artist
+                + '<span class="artist-name-art">' + filteredAlbums[i].album_artist + '</span>' // @Atair: Should be album_artist
                 + '<span class="album-year">' + tagViewYear + '</span></div>'
                 + tagViewNvDiv
                 + '</li>';
@@ -695,7 +695,7 @@ var renderAlbums = function() {
 		else {
 			output += '<li class="lib-entry no-tagview-covers">'
                 + '<span class="album-name">' + filteredAlbums[i].album
-                + '</span><span class="artist-name-art">' + filteredAlbums[i].album_artist + '</span><span class="album-year">' + tagViewYear + '</span></li>'  //@Atair: Should be album_artist
+                + '</span><span class="artist-name-art">' + filteredAlbums[i].album_artist + '</span><span class="album-year">' + tagViewYear + '</span></li>'  // @Atair: Should be album_artist
         }
 
 		output2 += '<li class="lib-entry">'
@@ -764,7 +764,7 @@ var renderSongs = function(albumPos) {
     var albumDiv = '';
 	var discDiv = '';
 	LIB.totalTime = 0;
-	
+
     if (LIB.artistClicked == true || LIB.albumClicked == true) {
         // Order the songs according the the order of the albums
         var orderedSongs = [];
@@ -784,6 +784,14 @@ var renderSongs = function(albumPos) {
                 }
             }
         }
+
+        // Sort by album key, disc, tracknum
+        // NOTE: This is mainly a CYA for badly tagged tracks
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+		orderedSongs.sort(function(a, b) {
+			return (collator.compare(a['key'], b['key']) || collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
+		});
+
         filteredSongs = orderedSongs;
 
         // Flag multi-disc albums
@@ -845,7 +853,7 @@ var renderSongs = function(albumPos) {
     			+ '<div class="lib-entry-song"><span class="songtrack' + highlight + '">' + filteredSongs[i].tracknum + '</span>'
     			+ '<span class="songname">' + filteredSongs[i].title + '</span>'
     			+ '<span class="songtime"> ' + filteredSongs[i].time_mmss + '</span>'
-    			+ '<span class="songartist"> ' + filteredSongs[i].artist.join(', ') + composer //@Atair: Show all artists
+    			+ '<span class="songartist"> ' + filteredSongs[i].artist.join(', ') + composer // @Atair: Show all artists
     			+ '<span class="songyear"> ' + songyear + '</span></div>'
     			+ '</li>';
 
@@ -881,10 +889,10 @@ var renderSongs = function(albumPos) {
 		$('#lib-albumname').html(filteredSongs[0].album);
 
 		if (albumPos && !UI.libPos[0]) {
-			artist = filteredAlbums[UI.libPos[0]].album_artist; //@Atair: album_artist !
+			artist = filteredAlbums[UI.libPos[0]].album_artist; // @Atair: album_artist !
 		}
 		else {
-			artist = filteredSongs[0].album_artist; //@Atair: album_artist !
+			artist = filteredSongs[0].album_artist; // @Atair: album_artist !
 		}
         if (filteredSongs[0].album == 'Nothing found') {
             $('#lib-artistname, #lib-albumyear, #lib-numtracks, #lib-encoded-at').html('');
@@ -1060,7 +1068,7 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 				renderSongs();
 			}
 		} else {
-			//@Atair: Allow for arrays of multiple artists 
+			// @Atair: Allow for arrays of multiple artists
 			var displayedArtists = filteredSongs.map(
 				function getArtist(a) {
 					return a.artist;
@@ -1070,10 +1078,10 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 			// or may not be on the same displayed albums.
 			// So we can't just use the count.
 			var expanded = false;
-			//@Atair: flatten out arrays
+			// @Atair: flatten out arrays
 			var filteredArtistsFlat = [];
 			LIB.filters.artists.forEach((a)=>{filteredArtistsFlat=filteredArtistsFlat.concat(a)});
-			//@Atair: check whether tracks' set of artists and set of filtered artists are disjunct ==> track list is expanded
+			// @Atair: check whether tracks' set of artists and set of filtered artists are disjunct ==> track list is expanded
 			for(let trackArtists of displayedArtists) {
 				var intersection = 0;
 				for(let filteredArtist of filteredArtistsFlat) {
