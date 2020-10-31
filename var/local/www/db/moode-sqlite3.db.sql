@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Oct 28 17:06:31 2020
+-- File generated with SQLiteStudio v3.1.0 on Sat Oct 31 06:24:37 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -276,7 +276,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (35, 'alsavolume', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'PCM');
 INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
-INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'genre,track,disc,date,composer,encoded');
+INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'genre,track,disc,date,albumartist,composer,conductor,encoded');
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
