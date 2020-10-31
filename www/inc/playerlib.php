@@ -1221,7 +1221,7 @@ function parseHwParams($resp) {
 	return $array;
 }
 
-// parse mpd currentsong output
+// Parse MPD currentsong output
 function parseCurrentSong($sock) {
 	sendMpdCmd($sock, 'currentsong');
 	$resp = readMpdResp($sock);
