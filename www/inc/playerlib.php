@@ -1235,10 +1235,27 @@ function parseCurrentSong($sock) {
 
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
-			$array[$element] = $value;
+
+			// These tags can have multiple occurances so lets accumulate them as a delimited string
+			if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+				$array[$element] .= $value . '; ';
+			}
+			// All other tags
+			else {
+				$array[$element] = $value;
+			}
+
 			$line = strtok("\n");
 		}
 
+		// Strip off trailing delimiter
+		foreach($array as $key => $value) {
+			if ($key == 'Genre' || $key == 'Artist' || $key == 'Conductor' || $key == 'Performer') {
+				$array[$key] = rtrim($array[$key], '; ');
+			}
+		}
+
+		//workerLog(print_r($array, true));
 		return $array;
 	}
 }
@@ -3484,6 +3501,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
 	$current['composer'] = $song['Composer'];
+	$current['conductor'] = $song['Conductor'];
+	$current['performer'] = $song['Performer'];
 	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
