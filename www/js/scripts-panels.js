@@ -1288,9 +1288,12 @@ jQuery(document).ready(function($) { 'use strict';
             $('#cv-playlist ul').html('');
             $('#cv-playlist').hide();
             $('#lib-coverart-img').show();
+
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
             UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
-            $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
+            setTimeout(function() {
+                $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
+            }, DEFAULT_TIMEOUT);
             if (SESSION.json['playlist_art'] == 'Yes') {
                 lazyLode('playlist');
             }
