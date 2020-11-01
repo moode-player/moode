@@ -1272,6 +1272,15 @@ jQuery(document).ready(function($) { 'use strict';
         $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help']});
     });
 
+    // Track info for Playback
+    $('#extra-tags-display').click(function(e) {
+        $.post('command/moode.php?cmd=track_info', {'path': MPD.json['file']}, function(result) {
+            //var content = beautify(result);
+            $('#track-info-text').html(result);
+            $('#track-info-modal').modal();
+        }, 'json');
+    });
+
     // CoverView screen saver reset
     $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
         //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');

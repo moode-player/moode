@@ -98,7 +98,7 @@ html {background-color:inherit;}
 /* main ui */
 .playback-controls {display:none;position:absolute;top:0;left:50%;width:184px;margin:-1px 0 0 -92px;text-align:center;z-index:9;}
 #currentsong, #currentalbum, #format-bitrate, #elapsed, #countdown-display {display:block;}
-#extra-tags-display {font-size:1rem;color:var(--textvariant);padding-top:.5em;text-align:center;display:block;}
+#extra-tags-display {font-size:1rem;color:var(--textvariant);padding-top:.5em;text-align:center;display:block;cursor:pointer;}
 #currentsong {font-size:1.35em;padding-top:1.65rem;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
 #currentalbum {font-size:1.25em;padding-top:1.65rem;cursor:pointer;font-weight:500;}
 #currentalbum-div {display:inline-flex;}
