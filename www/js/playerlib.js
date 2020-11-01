@@ -3528,10 +3528,10 @@ function lazyLode(view, skip, force) {
         if (selector && container) {
 			if (!$(container + ' ' + selector).attr('src') || force) {
 				$.ensure(container + ' li').then(function(){
-						$(container + ' ' + selector).lazyload({
-							container: $(container),
-							skip_invisible: skip
-						});
+					$(container + ' ' + selector).lazyload({
+						container: $(container),
+						skip_invisible: skip
+					});
 					if (UI.libPos[1] >= 0 && currentView == 'album') {
 						customScroll('albumcovers', UI.libPos[1], 0);
 						$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
@@ -3541,9 +3541,11 @@ function lazyLode(view, skip, force) {
 						$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
 	    				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
 					}
-					if (UI.radioPos >= 0 && currentView == 'radio') {customScroll('radio', UI.radioPos, 0);}
+					if (UI.radioPos >= 0 && currentView == 'radio') {
+                        customScroll('radio', UI.radioPos, 0);
+                    }
 				});
-	        }		
+	        }
 		}
  	}
 	//const duration = performance.now() - startTime;
