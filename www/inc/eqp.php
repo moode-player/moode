@@ -88,7 +88,7 @@ class Eqp {
 
             // use bw instead of q in output string
             if($tobw == True) {
-                $bw = sprintf("%0.3f", $this->q2bw($bandconfig['frequency'],  $bandconfig['q'])/2.0);
+                $bw = sprintf("%0.3f", $this->q2bw($bandconfig['frequency'],  $bandconfig['q']));
             }
             foreach($bandconfig as $param=>$value) {
                 if($tobw == True && $param == 'q') {
@@ -165,20 +165,28 @@ class Eqp {
     }
 
     /**
-     * Calculated the bw based on f center and q factor.
-     * This is not the bw for eqfa yet, it should be devided by 2.
+     * Calculated the bw for EqFa based on f center and q factor.
+     *
+     * If for analyzing also the f of the -3dB points are required the following is needed:
+     *
+     *  $a = (2.0 * $q**2.0 + 1)/ (2.0* $q**2.0);
+     *  $b = sqrt( ( ((2.0* $q**2.0+1)/$q**2)**2) /4 -1 );
+     *  $y1 = $a + $b;
+     *  $y2 = $a - $b;
+     *
+     *  $fl = sqrt(($frequency**2)/$y1);
+     *  $fh = $y1* $fl;
+     *
+     *  $fd = $fh- $fl;
+     *  $bw = $fd /$frequency;
+     *
      */
     function q2bw($frequency, $q) {
-        $a = (2.0 * $q**2.0 + 1)/ (2.0* $q**2.0);
-        $b = sqrt( ( ((2.0* $q**2.0+1)/$q**2)**2) /4 -1 );
-        $y1 = $a + $b;
-        $y2 = $a - $b;
 
-        $fl = sqrt(($frequency**2)/$y1);
-        $fh = $y1* $fl;
-
-        $fd = $fh- $fl;
-        $bw = $fd /$frequency;
+        // From Q the bandwidth can easly be calculated,
+        // only if you need more like the f of the -3db points
+        // you need the math below:
+        $bw = 0.5/$q;
         return $bw;
     }
 }
