@@ -296,12 +296,9 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 #viewswitch-search {height:2.25rem;padding:1.5rem 0 1.5rem 1rem !important;display:none;}
 #viewswitch .view-all, #viewswitch .view-recents {display:none;}
 
-#viewswitch.lib #viewswitch .view-all, #viewswitch.lib #viewswitch .view-recents, #viewswitch.lib #viewswitch .adv-searchbtn, #viewswitch.lib .view-all, #viewswitch-lib .view-recents, #viewswitch-lib #viewswitch-search {display:block;}
-#viewswitch.lib .view-all, #viewswitch.lib .view-recents, #viewswitch.lib #viewswitch-search {display:block;}
-#viewswitch.lib .album-view.btn {border-bottom: 1px solid rgba(128,128,128,0.2);}
-
-#viewswitch.va .album-view-btn .pane {display:block;}
-#viewswitch.vt .tag-view-btn .pane {display:block;}
+#viewswitch.va .view-all, #viewswitch.va .view-recents, #viewswitch.va .adv-searchbtn, #viewswitch.va #viewswitch-search, #viewswitch.va .album-view-btn .pane {display:block;}
+#viewswitch.vt .view-all, #viewswitch.vt .view-recents, #viewswitch.vt .adv-searchbtn, #viewswitch.vt #viewswitch-search, #viewswitch.vt .tag-view-btn .pane {display:block;}
+#viewswitch.va .album-view-btn, #viewswitch.vt .album-view-btn {border-bottom: 1px solid rgba(128,128,128,0.2);}
 #viewswitch.vr .radio-view-btn .pane {display:block;}
 #viewswitch.vf .folder-view-btn .pane {display:block;}
 

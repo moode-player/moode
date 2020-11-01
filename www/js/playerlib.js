@@ -3304,8 +3304,6 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#menu-header').text('');
 		$('#container-playlist').css('visibility','');
 		$('#menu-bottom, .viewswitch').css('display', 'none');
-		$('#folder-panel, #radio-panel, #library-panel').removeClass('active');
-		$('#playback-panel').addClass('active');
 		$('#playback-controls').css('display', '');
         $('#addfav-li').hide();
 		if (UI.mobile) {
@@ -3319,6 +3317,8 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
         else {
 			customScroll('playlist', parseInt(MPD.json['song']), 0);
 		}
+		$('#folder-panel, #radio-panel, #library-panel').removeClass('active');
+		$('#playback-panel').addClass('active');
 	}
 });
 
@@ -3374,7 +3374,7 @@ function makeActive (vswitch, panel, view) {
 	}
 
 	$('#content .tab-pane, .viewswitch button').removeClass('active');
-	$('#viewswitch').removeClass('lib oth vr vf vt va');
+	$('#viewswitch').removeClass('vr vf vt va');
     $.post('command/moode.php?cmd=updcfgsystem', {'current_view': view});
 	currentView = view;
 	setColors();
@@ -3387,16 +3387,16 @@ function makeActive (vswitch, panel, view) {
 
 	switch (view) {
 		case 'radio':
-			$('#viewswitch').addClass('oth vr');
+			$('#viewswitch').addClass('vr');
 			$('#playbar-toggles .addfav').show();
 			lazyLode('radio');
 			break;
 		case 'folder':
-			$('#viewswitch').addClass('oth vf');
+			$('#viewswitch').addClass('vf');
 			$('#playbar-toggles .addfav').show();
 			break;
 		case 'album':
-			$('#viewswitch').addClass('lib va');
+			$('#viewswitch').addClass('va');
             $('#playbar-toggles .addfav').hide();
 			$('#library-panel').addClass('covers').removeClass('tag');
             //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
@@ -3413,7 +3413,7 @@ function makeActive (vswitch, panel, view) {
 			lazyLode('album');
 			break;
 		case 'tag':
-			$('#viewswitch').addClass('lib vt');
+			$('#viewswitch').addClass('vt');
             $('#playbar-toggles .addfav').hide();
 			$('#library-panel').addClass('tag').removeClass('covers');
             //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
@@ -3422,10 +3422,10 @@ function makeActive (vswitch, panel, view) {
 			if (SESSION.json['library_tagview_covers']) lazyLode('tag');
 			break;
 	}
-	//const duration = performance.now() - startTime;
-    //console.log(duration + 'ms');
 	setLibMenuAndHeader();
 	$(vswitch + ',' + panel).addClass('active');
+	//const duration = performance.now() - startTime;
+    //console.log(duration + 'ms');
 }
 
 // Set the Library menu and header
@@ -3491,6 +3491,7 @@ function setLibMenuAndHeader () {
 }
 
 function lazyLode(view, skip, force) {
+    //const startTime = performance.now();
 	//console.log(view);
     // If browser does not support native lazy load then fall back to JQuery lazy load
     if (!GLOBAL.nativeLazyLoad) {
@@ -3525,26 +3526,28 @@ function lazyLode(view, skip, force) {
  		}
 
         if (selector && container) {
-			$.ensure(container + ' li').then(function(){
-				if (!$(container + ' ' + selector).attr('src') || force) {
-					$(container + ' ' + selector).lazyload({
-						container: $(container),
-						skip_invisible: skip
-					});
-				}
-				if (UI.libPos[1] >= 0 && currentView == 'album') {
-					customScroll('albumcovers', UI.libPos[1], 0);
-					$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
-				}
-				if (UI.libPos[0] >= 0 && currentView == 'tag') {
-					customScroll('albums', UI.libPos[0], 0);
-					$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
-    				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
-				}
-				if (UI.radioPos >= 0 && currentView == 'radio') {customScroll('radio', UI.radioPos, 0);}
-			});
-        }
+			if (!$(container + ' ' + selector).attr('src') || force) {
+				$.ensure(container + ' li').then(function(){
+						$(container + ' ' + selector).lazyload({
+							container: $(container),
+							skip_invisible: skip
+						});
+					if (UI.libPos[1] >= 0 && currentView == 'album') {
+						customScroll('albumcovers', UI.libPos[1], 0);
+						$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
+					}
+					if (UI.libPos[0] >= 0 && currentView == 'tag') {
+						customScroll('albums', UI.libPos[0], 0);
+						$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
+	    				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
+					}
+					if (UI.radioPos >= 0 && currentView == 'radio') {customScroll('radio', UI.radioPos, 0);}
+				});
+	        }		
+		}
  	}
+	//const duration = performance.now() - startTime;
+    //console.log(duration + 'ms');
 }
 
 function setFontSize() {
@@ -3614,6 +3617,7 @@ function getRootElementFontSize() {
 
 // jquery.ensure.js - https://stackoverflow.com/a/48191803 - Matheus Dal'Pizzol
 $.ensure = function (selector) {
+    //const startTime = performance.now();
     var promise = $.Deferred();
     var interval = setInterval(function () {
         if ($(selector)[0]) {
@@ -3621,8 +3625,9 @@ $.ensure = function (selector) {
             promise.resolve();
         }
     }, 1);
+	//const duration = performance.now() - startTime;
+    //console.log(duration + 'ms');
     return promise;
-    clearInterval(interval);
 };
 
 function applyLibFilter(filterType, filterStr = '') {
