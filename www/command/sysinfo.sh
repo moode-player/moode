@@ -150,7 +150,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nPolarity inversion\t= $invert_polarity\c"
 	echo -e "\nCrossfeed\t\t= $crossfeed\c"
 	echo -e "\nCrossfade\t\t= $mpdcrossfade\c"
-	echo -e "\nParametric EQ\t\t= $eqfa4p\c"
+	echo -e "\nParametric EQ\t\t= $eqfa12p\c"
 	echo -e "\nGraphic EQ\t\t= $alsaequal\c"
 	echo -e "\nMPD httpd\t\t= $mpd_httpd\n"
 }
@@ -595,7 +595,7 @@ RESERVED_69=${arr[68]}
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
 alsaequal=${arr[72]}
-eqfa4p=${arr[73]}
+eqfa12p=${arr[73]}
 rev=$(echo $hdwrrev | cut -c 4)
 if [[ $rev = "3" || $rev = "4" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
 	[[ "${arr[74]}" = "1" ]] && piwifi="On" || piwifi="Off"
@@ -719,9 +719,9 @@ apdchan=$(echo ${arr[2]} | cut -f 14 -d "|")
 if [[ $alsaequal != "Off" ]]; then
 	airplay_device="alsaequal"
 	spotify_device="alsaequal"
-elif [[ $eqfa4p != "Off" ]]; then
-	airplay_device="eqfa4p"
-	spotify_device="eqfa4p"
+elif [[ $eqfa12p != "Off" ]]; then
+	airplay_device="eqfa12p"
+	spotify_device="eqfa12p"
 else
 	airplay_device="hw:"$cardnum
 	spotify_device="plughw:"$cardnum

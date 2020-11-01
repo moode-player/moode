@@ -29,11 +29,6 @@ function Eqp12($dbh)  {
     return New Eqp($dbh, 'cfg_eqp12', 12, 'eqfa12p.conf');
 }
 
-// It could also be reused to manage the settings of the 4 bands variant
-// function Eqp4($dbh)  {
-//     return New Eqp($dbh, 'cfg_eqfa4p', 12, 'eqfa4p.conf');
-// }
-
 /**
  *
  * Wrapper class to manage the settings of X bands CAPS parametric Eq.
@@ -106,7 +101,7 @@ class Eqp {
     }
 
     function getpreset($index) {
-        $querystr = 'SELECT settings from '.$this->table.' where id = '.$index.';';
+        $querystr = 'SELECT settings from ' . $this->table . ' where id = '. $index . ';';
 
         $result = sdbquery($querystr, $this->dbh);
         $config = $this->string2config($result[0]['settings']);
@@ -230,7 +225,7 @@ function test() {
     print_r($eqp12->getPresets());
 
     print("\nupdate config file:\n");
-    $config['bands'][11]['gain'] =-3.1;
+    $config['bands'][11]['gain'] = -3.1;
     $eqp12->applyConfig($config);
 
     print( $eqp12->q2bw(1000, 4.0) . "\n");

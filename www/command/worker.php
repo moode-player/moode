@@ -1457,38 +1457,39 @@ function runQueuedJob() {
 			updMpdConf($_SESSION['i2sdevice']);
 			sysCmd('systemctl restart mpd');
 			break;
-		case 'eqp':
+		case 'eqfa12p':
 		case 'alsaequal':
-			// Old,New curve name (alsaequal)/id (eqp)
+			// Old,New curve name
 			$queueargs = explode(',', $_SESSION['w_queueargs']);
 			// Current play state
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
 
-			//   alsaequal                   eqp
-			if ($queueargs[1] == 'Off' or $queueargs[1] =='0') {
-				sysCmd('mpc enable only 1');
-				workerLog('worker: '.$_SESSION['w_queue'].' off ');
-			}
-			else {
-				if ($_SESSION['w_queue'] == 'eqp') {
-					$curr = intval($setting[1]);
-					$eqp12 = Eqp12(cfgdb_connect());
-					$config = $eqp12->getpreset($curr);
-					$eqp12->applyConfig($config);
-					unset($eqp12);
-					sysCmd("mpc enable only 3");
+			if ($_SESSION['w_queue'] == 'eqfa12p') {
+				if ($_SESSION['eqfa12p'] == 'Off') {
+					sysCmd('mpc enable only 1');
 				}
 				else {
-					// Alsaequal
-					$result = sdbquery("SELECT curve_values FROM cfg_eqalsa WHERE curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
+					$curr = intval($queueargs[1]);
+					$eqfa12p = Eqp12(cfgdb_connect());
+					$config = $eqfa12p->getpreset($curr);
+					$eqfa12p->applyConfig($config);
+					unset($eqfa12p);
+					sysCmd("mpc enable only 3");
+				}
+			}
+			else {
+				if ($_SESSION['alsaequal'] == 'Off') {
+					sysCmd('mpc enable only 1');
+				}
+				else {
+					$result = sdbquery("select curve_values from cfg_eqalsa where curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
 					$curve = explode(',', $result[0]['curve_values']);
 					foreach ($curve as $key => $value) {
 						sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
 					}
 					sysCmd('mpc enable only 4');
 				}
-				workerLog('worker: '.$_SESSION['w_queue'].' on ');
 			}
 
 			if (!empty($playing)) {
@@ -1508,8 +1509,8 @@ function runQueuedJob() {
 				startSpotify();
 			}
 			break;
-		// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
 		/*case 'mpdassvc':
+			// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
 			sysCmd('killall -s 9 mpdas > /dev/null');
 			cfgAudioScrobbler();
 			if ($_SESSION['w_queueargs'] == 1) {

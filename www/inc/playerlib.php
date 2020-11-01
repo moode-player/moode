@@ -1236,24 +1236,27 @@ function parseCurrentSong($sock) {
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
 
+			// NOTE: Let's save this for future use
 			// These tags can have multiple occurances so lets accumulate them as a delimited string
-			if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+			/*if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
 				$array[$element] .= $value . '; ';
 			}
 			// All other tags
 			else {
 				$array[$element] = $value;
-			}
+			}*/
 
+			$array[$element] = $value;
 			$line = strtok("\n");
 		}
 
+		// NOTE: Let's save this for future use
 		// Strip off trailing delimiter
-		foreach($array as $key => $value) {
+		/*foreach($array as $key => $value) {
 			if ($key == 'Genre' || $key == 'Artist' || $key == 'Conductor' || $key == 'Performer') {
 				$array[$key] = rtrim($array[$key], '; ');
 			}
-		}
+		}*/
 
 		//workerLog(print_r($array, true));
 		return $array;
