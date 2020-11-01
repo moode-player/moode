@@ -899,7 +899,7 @@ function addItemToQueue($sock, $path) {
 	//workerLog($path . ' (' . $ext . ')');
 
 	// Use load for saved playlist, cue sheet, radio station
-	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && !in_array($path, $ROOT_DIRECTORIES))) {
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $ROOT_DIRECTORIES) === false)) {
 		// Radio station special case
 		if (strpos($path, 'RADIO') !== false) {
 			// Check for playlist as URL
