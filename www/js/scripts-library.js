@@ -1046,7 +1046,7 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 	// the song list.
 	// Clicking again will contract back to just the selected artists.
 
-    if (alreadyActive && LIB.filters.artists.length && !LIB.filters.artists.includes(albumobj.album_artist)) {
+    if (alreadyActive && LIB.filters.artists.length) {
 		// In case of folder path key it is easier to check expanded state by # of songs.
 		// Also more than one album_artist per album can be rendered correctly then.
 		if (miscLibOptions[2] == 'Yes') { // folder path key true
@@ -1067,7 +1067,7 @@ $('#albumsList').on('click', '.lib-entry', function(e) {
 				filterSongs();
 				renderSongs();
 			}
-		} else {
+		} else if (!LIB.filters.artists.includes(albumobj.album_artist)) {
 			// @Atair: Allow for arrays of multiple artists
 			var displayedArtists = filteredSongs.map(
 				function getArtist(a) {
