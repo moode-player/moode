@@ -472,7 +472,7 @@ function genFlatList($sock) {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
-			// @Atair: Gather possible multiple Genre, Artist, and Performer values as array
+			// @Atair: Gather possible multiple Genre, Artist, Performer and Conductor values as array
 			elseif ($element == 'Genre') {
 				if ($flat[$item]['Genre']) {
 					array_push($flat[$item]['Genre'], $value);
@@ -940,14 +940,47 @@ function parseDelimFile($data, $delim) {
 	return $array;
 }
 
-// get playist
+// Get playist
 function getPLInfo($sock) {
 	sendMpdCmd($sock, 'playlistinfo');
 	$resp = readMpdResp($sock);
 
-	$pl = parseList($resp);
+	if (is_null($resp)) {
+		return NULL;
+	}
+	else {
+		$array = array();
+		$line = strtok($resp,"\n");
+		$idx = -1;
 
-	return $pl;
+		while ($line) {
+			list ($element, $value) = explode(': ', $line, 2);
+
+			if ($element == 'file') {
+				$idx++;
+				$array[$idx]['file'] = $value;
+				$array[$idx]['fileext'] = getFileExt($value);
+				$array[$idx]['TimeMMSS'] = songTime($array[$idx]['Time']);
+			}
+			else {
+				// TEST
+				// Return only the first of multiple occurrences of the following tags
+				if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+					if (!isset($array[$idx][$element])) {
+						$array[$idx][$element] = $value;
+					}
+				}
+				// All other tags
+				else {
+					$array[$idx][$element] = $value;
+				}
+			}
+
+			$line = strtok("\n");
+		}
+	}
+
+	return $array;
 }
 
 // list contents of saved playlist
@@ -1246,7 +1279,19 @@ function parseCurrentSong($sock) {
 				$array[$element] = $value;
 			}*/
 
-			$array[$element] = $value;
+			// TEST
+			// Return only the first of multiple occurrences of the following tags
+			if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+				if (!isset($array[$element])) {
+					$array[$element] = $value;
+				}
+			}
+			// All other tags
+			else {
+				$array[$element] = $value;
+			}
+
+			//ORIG $array[$element] = $value;
 			$line = strtok("\n");
 		}
 
