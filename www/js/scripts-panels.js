@@ -341,7 +341,6 @@ jQuery(document).ready(function($) { 'use strict';
     // Folder view
 	$('.folder-view-btn').click(function(e){
 		makeActive('.folder-view-btn','#folder-panel','folder');
-		mpdDbCmd('lsinfo', '');
 	});
     // Tag view
 	$('.tag-view-btn').click(function(e){
@@ -1273,6 +1272,15 @@ jQuery(document).ready(function($) { 'use strict';
         $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help']});
     });
 
+    // Track info for Playback
+    $('#extra-tags-display').click(function(e) {
+        $.post('command/moode.php?cmd=track_info', {'path': MPD.json['file']}, function(result) {
+            //var content = beautify(result);
+            $('#track-info-text').html(result);
+            $('#track-info-modal').modal();
+        }, 'json');
+    });
+
     // CoverView screen saver reset
     $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
         //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
@@ -1289,9 +1297,12 @@ jQuery(document).ready(function($) { 'use strict';
             $('#cv-playlist ul').html('');
             $('#cv-playlist').hide();
             $('#lib-coverart-img').show();
+
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
             UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
-            $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
+            setTimeout(function() {
+                $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
+            }, DEFAULT_TIMEOUT);
             if (SESSION.json['playlist_art'] == 'Yes') {
                 lazyLode('playlist');
             }

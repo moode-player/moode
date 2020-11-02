@@ -207,18 +207,18 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 
 // EQUALIZERS
 
-$eqp12 = Eqp12(cfgdb_connect());
-// parametric eq
-if (isset($_POST['eqp']) && (($_POST['eqp']? "On": "Off") != $_SESSION['eqfa4p'] || $_POST['eqp'] != $eqp12->getActivePresetIndex() )) {
-	// pass old,new curve name to worker job
-	$currentActive = $eqp12->getActivePresetIndex();
-	$newActive = intval($_POST['eqp']);
-	$eqp12->setActivePresetIndex($newActive);
+// Parametric eq
+$eqfa12p = Eqp12(cfgdb_connect());
+if (isset($_POST['eqfa12p']) && (($_POST['eqfa12p'] ? "On" : "Off") != $_SESSION['eqfa12p'] || $_POST['eqfa12p'] != $eqfa12p->getActivePresetIndex())) {
+	// Pass old,new curve name to worker job
+	$currentActive = $eqfa12p->getActivePresetIndex();
+	$newActive = intval($_POST['eqfa12p']);
+	$eqfa12p->setActivePresetIndex($newActive);
 
-	playerSession('write', 'eqfa4p', $newActive == 0 ? "Off": "On");
-	submitJob('eqp', $currentActive .','. $newActive, 'Parametric EQ ' . ($newActive == 0 ? 'off' : 'on'), 'MPD restarted');
+	playerSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
+	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Parametric EQ ' . ($newActive == 0 ? 'off' : 'on'), 'MPD restarted');
 }
-unset($eqp12);
+unset($eqfa12p);
 
 // Graphic eq
 if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
@@ -530,11 +530,11 @@ $_select['rotaryenc0'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggler
 $_select['rotenc_params'] = $_SESSION['rotenc_params'];
 // Crossfade
 $_mpdcrossfade = $_SESSION['mpdcrossfade'];
-// NOTE: Only one of polarity inversion, crossfeed, alsaequal or eqfa4p can be on
-$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa4p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa4p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-$_eqfa4p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-$_alsaequal_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa4p'] != 'Off') ? 'disabled' : '';
+// NOTE: Only one of polarity inversion, crossfeed, alsaequal or eqfa12p can be on
+$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+$_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+$_alsaequal_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off') ? 'disabled' : '';
 // Polarity invrsion
 $_select['invert_polarity1'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['invert_polarity0'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . ">\n";
@@ -557,17 +557,17 @@ $_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_ht
 // EQUALIZERS
 
 // parametric equalizer
-$eqp12 = Eqp12(cfgdb_connect());
-$presets = $eqp12->getPresets();
+$eqfa12p = Eqp12(cfgdb_connect());
+$presets = $eqfa12p->getPresets();
 $array = array();
 $array[0] = 'Off';
-$curveList = $_eqfa4p_set_disabled == '' ? array_replace($array, $presets) : $array;
-$curve_selected_id = $eqp12->getActivePresetIndex();
+$curveList = $_eqfa12p_set_disabled == '' ? array_replace($array, $presets) : $array;
+$curve_selected_id = $eqfa12p->getActivePresetIndex();
 foreach ($curveList as $key=>$curveName) {
 	$selected = ($key == $curve_selected_id) ? 'selected' : '';
-	$_select['eqp'] .= sprintf('<option value="%s" %s>%s</option>\n', $key, $selected, $curveName);
+	$_select['eqfa12p'] .= sprintf('<option value="%s" %s>%s</option>\n', $key, $selected, $curveName);
 }
-unset($eqp12);
+unset($eqfa12p);
 
 // Graphic equalizer
 $result = sdbquery('SELECT curve_name FROM cfg_eqalsa', cfgdb_connect());

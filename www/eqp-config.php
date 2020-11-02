@@ -36,7 +36,7 @@ function postData2Config($data, $bands) {
 		$bandconfig =[];
 		$bandconfig['enabled'] = $data['band' . $i . '_enabled'] ;
         $bandconfig['frequency'] =  $data['band' . $i . '_freq'];
-        $bandconfig['bandwidth'] = (float)$data['band' . $i . '_q'];
+        $bandconfig['q'] = (float)$data['band' . $i . '_q'];
 		$bandconfig['gain'] =(float)$data['band' . $i . '_gain'];
 		array_push($config['bands'],$bandconfig);
 	}
@@ -87,15 +87,15 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 //workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
 // Add, remove, change, refresh
 if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
-	$new_curve_id = $eqp12->setpreset(NULL, $_POST['new-curvename'], $eqp12->getpreset($eqp12->getActivePresetIndex())  );
-	if( $new_curve_id) {
+	$new_curve_id = $eqp12->setpreset(NULL, $_POST['new-curvename'], $eqp12->getpreset($eqp12->getActivePresetIndex()));
+	if ( $new_curve_id) {
 		$_selected_curve_id = $new_curve_id;
 		$_SESSION['notify']['title'] = 'New curve added';
 	}
 }
 elseif (isset($_POST['rmcurve'])) {
 	$current_id = $_GET['curve'];
-	if( $current_id!=1 ) {
+	if( $current_id != 1 ) {
 		$eqp12->unsetpreset($current_id);
 		$_selected_curve_id = 1;
 		$_SESSION['notify']['title'] = 'Curve removed';
@@ -125,7 +125,7 @@ foreach ($curveList as $curve_id=>$curve_name) {
 }
 
 // Set control states
-$_disable_play = $_SESSION['eqfa4p'] == 'Off' ? 'disabled' : '';
+$_disable_play = $_SESSION['eqfa12p'] == 'Off' ? 'disabled' : '';
 
 $_disable_rm = $_selected_curve_id == 1 ? 'disabled' : '';
 $_disable_rm_msg = $_selected_curve_id == 1 ? 'The Default curve cannot be removed' : '';
@@ -142,7 +142,7 @@ foreach($curve_config['bands'] as $band_key=>$band_config) {
 	$_select['band' . $i . '_enabled'] .= sprintf('<option value="%s"%s>%s</option>\n', '1', $band_config['enabled'] == 1 ? 'selected' : '', 'Yes');
 	$_select['band' . $i . '_enabled'] .= sprintf('<option value="%s"%s>%s</option>\n', '0', $band_config['enabled'] == 0 ? 'selected' : '', 'No');
 	$_select['band' . $i . '_freq'] = $band_config['frequency'];
-	$_select['band' . $i . '_q'] = $band_config['bandwidth'];
+	$_select['band' . $i . '_q'] = $band_config['q'];
 	$_select['band' . $i . '_gain'] = $band_config['gain'];
 }
 

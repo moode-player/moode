@@ -23,12 +23,12 @@ New features
 - NEW: Enhanced Folder view with cover art and advanced search
 - NEW: Library performance improvements
 - NEW: Library advanced filtering engine
-- NEW: Library option to select the tag used to populate the Artist list
+- NEW: Library option to select tag used to populate the Artist list
 - NEW: Library option for the key used to differentiate albums
 - NEW: Library option to include the comment tag
-- NEW: Library support for tracks tagged with multiple genres
+- NEW: Library support for multiple occurrences of certain tags
 - NEW: Albums played directly if already in the Queue
-- NEW: MPD config resource allocation options for buffers, playlist
+- NEW: MPD resource allocation options for buffers, playlist
 - NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Queue
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)

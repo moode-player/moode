@@ -29,11 +29,6 @@ function Eqp12($dbh)  {
     return New Eqp($dbh, 'cfg_eqp12', 12, 'eqfa12p.conf');
 }
 
-// It could also be reused to manage the settings of the 4 bands variant
-// function Eqp4($dbh)  {
-//     return New Eqp($dbh, 'cfg_eqfa4p', 12, 'eqfa4p.conf');
-// }
-
 /**
  *
  * Wrapper class to manage the settings of X bands CAPS parametric Eq.
@@ -55,7 +50,7 @@ class Eqp {
     }
 
     function applyConfig($config) {
-        $configstr = $this->config2string($config);
+        $configstr = $this->config2string($config, True); // force to use bw instead of q
         sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $configstr . ' ]" ' . ALSA_PLUGIN_PATH .'/'. $this->alsa_file);
     }
 
@@ -64,28 +59,39 @@ class Eqp {
         $config['bands']=[];
         $parts = explode('  ', $string);
         foreach($parts as $key=>$value) {
-        $value = explode(' ', $value);
-        if( count($value) >1 ) {
-            $config['bands'][$key]=[];
-            $config['bands'][$key]['enabled'] = $value[0];
-            $config['bands'][$key]['frequency'] = $value[1];
-            $config['bands'][$key]['bandwidth'] = $value[2];
-            $config['bands'][$key]['gain'] = $value[3];
-        }
-        else {
-            $config['master_gain'] = $value[0];
-        }
+            $value = explode(' ', $value);
+            if( count($value) >1 ) {
+                $config['bands'][$key]=[];
+                $config['bands'][$key]['enabled'] = $value[0];
+                $config['bands'][$key]['frequency'] = $value[1];
+                $config['bands'][$key]['q'] = $value[2];
+                $config['bands'][$key]['gain'] = $value[3];
+            }
+            else {
+                $config['master_gain'] = $value[0];
+            }
 
         }
         return $config;
     }
 
-    function config2string($config) {
+    function config2string($config, $tobw=False) {
         $text ='';
         foreach($config['bands'] as $key=>$bandconfig) {
             $bandconfigtext = "";
+            $bw = 0;
+
+            // use bw instead of q in output string
+            if($tobw == True) {
+                $bw = sprintf("%0.3f", $this->q2bw($bandconfig['frequency'],  $bandconfig['q']));
+            }
             foreach($bandconfig as $param=>$value) {
-                $bandconfigtext = $bandconfigtext . $value . " ";
+                if($tobw == True && $param == 'q') {
+                    $bandconfigtext = $bandconfigtext . $bw . " ";
+                }
+                else {
+                    $bandconfigtext = $bandconfigtext . $value . " ";
+                }
             }
             $text = $text . $bandconfigtext . " ";
         }
@@ -95,7 +101,7 @@ class Eqp {
     }
 
     function getpreset($index) {
-        $querystr = 'SELECT settings from '.$this->table.' where id = '.$index.';';
+        $querystr = 'SELECT settings from ' . $this->table . ' where id = '. $index . ';';
 
         $result = sdbquery($querystr, $this->dbh);
         $config = $this->string2config($result[0]['settings']);
@@ -153,6 +159,31 @@ class Eqp {
         }
     }
 
+    /**
+     * Calculated the bw for EqFa based on f center and q factor.
+     *
+     * If for analyzing also the f of the -3dB points are required the following is needed:
+     *
+     *  $a = (2.0 * $q**2.0 + 1)/ (2.0* $q**2.0);
+     *  $b = sqrt( ( ((2.0* $q**2.0+1)/$q**2)**2) /4 -1 );
+     *  $y1 = $a + $b;
+     *  $y2 = $a - $b;
+     *
+     *  $fl = sqrt(($frequency**2)/$y1);
+     *  $fh = $y1* $fl;
+     *
+     *  $fd = $fh- $fl;
+     *  $bw = $fd /$frequency;
+     *
+     */
+    function q2bw($frequency, $q) {
+
+        // From Q the bandwidth can easly be calculated,
+        // only if you need more like the f of the -3db points
+        // you need the math below:
+        $bw = 0.5/$q;
+        return $bw;
+    }
 }
 
 
@@ -194,8 +225,22 @@ function test() {
     print_r($eqp12->getPresets());
 
     print("\nupdate config file:\n");
-    $config['bands'][11]['gain'] =-3.1;
+    $config['bands'][11]['gain'] = -3.1;
     $eqp12->applyConfig($config);
+
+    print( $eqp12->q2bw(1000, 4.0) . "\n");
+    print( $eqp12->q2bw(1000, 8.0) . "\n");
+    print( $eqp12->q2bw(1000, 1.0) . "\n");
+
+    $string = "1 1000 1 6  0 20 1 3  0 4000 1 8  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  -6";
+
+    $config = $eqp12->string2config($string);
+    print_r($config);
+
+    $string = $eqp12->config2string($config);
+    print($string."\n");
+    $string = $eqp12->config2string($config, True);
+    print($string."\n");
 
     unset($eqp12);
 }

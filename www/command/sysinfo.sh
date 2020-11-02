@@ -103,6 +103,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nMax ALSA volume\t\t= $alsavolume_max\c"
 	echo -e "\nMax MPD volume\t\t= $volume_mpd_max\c"
 	echo -e "\nVolume step limit\t= $volume_step_limit\c"
+	echo -e "\nDisplay dB volume\t= $volume_db_display\c"
 	echo -e "\nAudio source\t\t= $audioin\c"
 	echo -e "\nOutput device\t\t= $audioout\c"
 	echo -e "\nResume MPD\t\t= $rsmafterinp\c"
@@ -149,14 +150,14 @@ AUDIO_PARAMETERS() {
 	echo -e "\nPolarity inversion\t= $invert_polarity\c"
 	echo -e "\nCrossfeed\t\t= $crossfeed\c"
 	echo -e "\nCrossfade\t\t= $mpdcrossfade\c"
-	echo -e "\nParametric EQ\t\t= $eqfa4p\c"
+	echo -e "\nParametric EQ\t\t= $eqfa12p\c"
 	echo -e "\nGraphic EQ\t\t= $alsaequal\c"
 	echo -e "\nMPD httpd\t\t= $mpd_httpd\n"
 }
 
 APPEARANCE_SETTINGS() {
-	echo -e "A P P E A R A N C E   S E T T I N G S"
-	echo -e "\nTheme and background\c"
+	echo -e "P R E F E R E N C E S"
+	echo -e "\nAppearance\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nTheme\t\t\t= $themename\c"
 	echo -e "\nAccent color\t\t= $accentcolor\c"
@@ -167,45 +168,40 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nCover backdrop\t\t= $cover_backdrop\c"
 	echo -e "\nCover blur\t\t= $cover_blur\c"
 	echo -e "\nCover scale\t\t= $cover_scale\c"
+	echo -e "\nRenderer backdrop\t= $renderer_backdrop\c"
+	echo -e "\nFont size\t\t= $font_size\c"
 	echo -e "\n\nPlayback\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nOne touch action\t= $library_instant_play\c"
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
-	echo -e "\nRenderer backdrop\t= $renderer_backdrop\c"
+	echo -e "\nShow extra metadata\t= $xtagdisp\c"
+	echo -e "\nPlayback history log\t= $playhist\c"
 	echo -e "\n\nLibrary\c"
 	echo -e "\n----------------------\c"
-	echo -e "\n- Sorting and Filtering\c"
+	echo -e "\nOne touch action\t= $library_instant_play\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
-	echo -e "\nLibrary filter\t\t= by $library_flatlist_filter\c"
-	echo -e "\nLibrary filter str\t= by $library_flatlist_filter_str\c"
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
-	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
-	echo -e "\n- Metadata and Tags\c"
-	echo -e "\nTag view artist\t\t= $library_tagview_artist\c"
-	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
-	echo -e "\nInclude comment tag\t= $include_comment_tag\c"
-	echo -e "\nInclude MBRZ albumid\t= $include_mbrz_albumid\c"
-	echo -e "\nFolder path albumkey\t= $folder_path_albumkey\c"
-	echo -e "\n- UI elements\c"
 	echo -e "\nShow sample rate\t= $library_encoded_at\c"
-	echo -e "\nShow tagview genres\t= $library_show_genres\c"
-	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
-	echo -e "\nEllipsis limited text\t= $library_ellipsis_limited_text\c"
-	echo -e "\n- Covers and Thumbs\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
 	echo -e "\nPixel ratio\t\t= $library_pixelratio\c"
 	echo -e "\nThumbnail resolution\t= $library_hiresthm\c"
 	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
+	echo -e "\n\nLibrary (Advanced)\c"
+	echo -e "\n----------------------\c"
+	echo -e "\nTag view artist\t\t= $library_tagview_artist\c"
+	echo -e "\nAlbum key\t\t= $album_key\c"
+	echo -e "\nInclude comment tag\t= $include_comment_tag\c"
+	echo -e "\nLibrary filter\t\t= $library_flatlist_filter\c"
+	echo -e "\nLibrary filter str\t= $library_flatlist_filter_str\c"
+	echo -e "\nIgnore articles\t\t= $ignore_articles\c"
+	echo -e "\nShow tagview genres\t= $library_show_genres\c"
+	echo -e "\nShow tagview covers\t= $library_tagview_covers\c"
+	echo -e "\nEllipsis limited text\t= $library_ellipsis_limited_text\c"
+	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nAutomatic display\t= $scnsaver_timeout\c"
-	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
-	echo -e "\n\nOther\c"
-	echo -e "\n----------------------\c"
-	echo -e "\nFont size\t\t= $font_size\c"
-	echo -e "\nExtra metadata\t\t= $xtagdisp\c"
-	echo -e "\nPlayback history\t= $playhist\n"
+	echo -e "\nBackdrop style\t\t= $scnsaver_style\n"
 }
 
 RADIO_MANAGER_SETTINGS() {
@@ -599,7 +595,7 @@ RESERVED_69=${arr[68]}
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
 alsaequal=${arr[72]}
-eqfa4p=${arr[73]}
+eqfa12p=${arr[73]}
 rev=$(echo $hdwrrev | cut -c 4)
 if [[ $rev = "3" || $rev = "4" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
 	[[ "${arr[74]}" = "1" ]] && piwifi="On" || piwifi="Off"
@@ -705,8 +701,10 @@ library_flatlist_filter=${arr[145]}
 library_flatlist_filter_str=${arr[146]}
 library_misc_options=${arr[147]}
 include_comment_tag=$(awk -F"," '{print $1}' <<< $library_misc_options)
-include_mbrz_albumid=$(awk -F"," '{print $2}' <<< $library_misc_options)
-folder_path_albumkey=$(awk -F"," '{print $3}' <<< $library_misc_options)
+album_key=$(awk -F"," '{print $2}' <<< $library_misc_options)
+recorder_status=${arr[148]}
+recorder_storage=${arr[149]}
+[[ "${arr[150]}" = "1" ]] && volume_db_display="On" || volume_db_display="Off"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
@@ -721,9 +719,9 @@ apdchan=$(echo ${arr[2]} | cut -f 14 -d "|")
 if [[ $alsaequal != "Off" ]]; then
 	airplay_device="alsaequal"
 	spotify_device="alsaequal"
-elif [[ $eqfa4p != "Off" ]]; then
-	airplay_device="eqfa4p"
-	spotify_device="eqfa4p"
+elif [[ $eqfa12p != "Off" ]]; then
+	airplay_device="eqfa12p"
+	spotify_device="eqfa12p"
 else
 	airplay_device="hw:"$cardnum
 	spotify_device="plughw:"$cardnum

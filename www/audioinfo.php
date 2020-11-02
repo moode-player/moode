@@ -222,7 +222,7 @@ if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSI
 	$vol_normalize = 'n/a';
 
 	if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1') {
-		$peq = $_SESSION['eqfa4p'] == 'Off' ? 'off' : $_SESSION['eqfa4p'];
+		$peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
 	}
 	else {
@@ -281,7 +281,7 @@ else {
 		$crossfeed = 'off';
 	}
 	// Equalizers
-	$peq = $_SESSION['eqfa4p'] == 'Off' ? 'off' : $_SESSION['eqfa4p'];
+	$peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 	$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
 	// Replaygain and volume normalization
 	$replaygain = $cfg_mpd['replaygain'];

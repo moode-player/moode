@@ -778,10 +778,16 @@ function renderUI() {
 
     	// Default metadata
         if (MPD.json['album']) {
-            $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
+            // ORIG $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
             // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
+            //$('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
+            //    (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
+
+            // TEST: display just the artist instead of artist - album
+            $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist']);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
-                (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
+                (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist']);
+
 			MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
         else {
@@ -1008,8 +1014,8 @@ function renderPlaylist(state) {
 					// Line 2 artist, album
 					output += '<span class="pll2">'; // for clock radio
 					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
-					output += ' - ';
-					output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
+					//output += ' - ';
+					//output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
 				}
 				// Radio station
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
@@ -1086,8 +1092,8 @@ function renderPlaylist(state) {
 					// Line 2 artist, album
 					output += '<span class="pll2">';
 					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
-					output += ' - ';
-					output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
+					//output += ' - ';
+					//output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
 				}
 
                 output += '</span></div></li>';
@@ -1737,7 +1743,7 @@ function updKnobAndTimeTrack() {
 	else {
 		if (UI.mobile) {
 			$('#timeline').show();
-            $('#playbar-mcount').text($('#countdown-display').text());
+            $('#playbar-mcount, #m-countdown').text($('#countdown-display').text());
 		}
 		else {
 			$('#playbar-timeline').show();
@@ -1754,14 +1760,16 @@ function updKnobAndTimeTrack() {
         UI.knob = setInterval(function() {
 			if (UI.mobile || $('#menu-bottom').css('display') == 'flex') {
 				if (!timeSliderMove) {
+
 					syncTimers();
+
 					if (UI.mobile) {
 						tt.val(GLOBAL.initTime * 10).trigger('change');
 					}
 				}
 			}
             delta === 0 ? GLOBAL.initTime = GLOBAL.initTime + 0.5 : GLOBAL.initTime = GLOBAL.initTime + 0.1; // fast paint when radio station playing
-			if (!UI.mobile) {
+			if (!UI.mobile && $('#menu-bottom').css('display') != 'flex') {
 	            if (delta === 0 && GLOBAL.initTime > 100) { // stops painting when radio (delta = 0) and knob fully painted
 					window.clearInterval(UI.knob)
 					UI.knobPainted = true;
@@ -3302,8 +3310,6 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#menu-header').text('');
 		$('#container-playlist').css('visibility','');
 		$('#menu-bottom, .viewswitch').css('display', 'none');
-		$('#folder-panel, #radio-panel, #library-panel').removeClass('active');
-		$('#playback-panel').addClass('active');
 		$('#playback-controls').css('display', '');
         $('#addfav-li').hide();
 		if (UI.mobile) {
@@ -3317,6 +3323,8 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
         else {
 			customScroll('playlist', parseInt(MPD.json['song']), 0);
 		}
+		$('#folder-panel, #radio-panel, #library-panel').removeClass('active');
+		$('#playback-panel').addClass('active');
 	}
 });
 
@@ -3348,8 +3356,7 @@ function syncTimers() {
     var a = $('#countdown-display').text();
     if (a != GLOBAL.lastTimeCount) { // Only update if time has changed
         if (UI.mobile) { // Only change when needed to save work
-            $('#m-countdown').text(a);
-            $('#playbar-mcount').text(a);
+            $('#m-countdown, #playbar-mcount').text(a);
         }
         else if (coverView || currentView.indexOf('playback') == -1) {
             $('#playbar-countdown').text(a);
@@ -3373,38 +3380,35 @@ function makeActive (vswitch, panel, view) {
 	}
 
 	$('#content .tab-pane, .viewswitch button').removeClass('active');
-	$(vswitch + ',' + panel).addClass('active');
+	$('#viewswitch').removeClass('vr vf vt va');
     $.post('command/moode.php?cmd=updcfgsystem', {'current_view': view});
 	currentView = view;
 	setColors();
-	setLibMenuAndHeader();
-	$('#viewswitch span.pane').hide();
 
-    if (view == 'tag' || view == 'album') {
+    /*if (view == 'tag' || view == 'album') {
         if (SESSION.json['library_flatlist_filter'] != 'full_lib' && SESSION.json['library_flatlist_filter'] != 'tags') {
             $('#lib-album-filter').val(SESSION.json['library_flatlist_filter'] + ' ' + SESSION.json['library_flatlist_filter_str']);
         }
-    }
+    }*/
 
 	switch (view) {
 		case 'radio':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents, #viewswitch .adv-search-btn, #addfav-li, #random-album').hide();
-			$('#viewswitch .album-view-btn').removeClass('menu-separator');
-			$('.radio-view-btn .pane, #playbar-toggles .addfav').show();
+			$('#viewswitch').addClass('vr');
+			$('#playbar-toggles .addfav').show();
+            $('.adv-search-btn').hide();
 			lazyLode('radio');
 			break;
 		case 'folder':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents, #viewswitch .adv-search-btn, #addfav-li, #random-album').hide();
-			$('#viewswitch .album-view-btn').removeClass('menu-separator');
-			$('.folder-view-btn .pane, #playbar-toggles .addfav').show();
+			$('#viewswitch').addClass('vf');
+			$('#playbar-toggles .addfav').show();
+            $('.adv-search-btn').hide();
 			break;
 		case 'album':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents, #viewswitch .adv-search-btn, #addfav-li, #random-album').show();
-			$('#viewswitch .album-view-btn').addClass('menu-separator');
-			$('.album-view-btn .pane').show();
+			$('#viewswitch').addClass('va');
             $('#playbar-toggles .addfav').hide();
+            $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
-            SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
+            //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
                 $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
@@ -3418,17 +3422,18 @@ function makeActive (vswitch, panel, view) {
 			lazyLode('album');
 			break;
 		case 'tag':
-			$('#viewswitch-search, #viewswitch .view-all, #viewswitch .view-recents, #viewswitch .adv-search-btn, #addfav-li, #random-album').show();
-			$('#viewswitch .album-view-btn').addClass('menu-separator');
-			$('.tag-view-btn .pane').show();
+			$('#viewswitch').addClass('vt');
             $('#playbar-toggles .addfav').hide();
+            $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('tag').removeClass('covers');
-            SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
+            //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             $('#index-albumcovers').hide();
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 			if (SESSION.json['library_tagview_covers']) lazyLode('tag');
 			break;
 	}
+	setLibMenuAndHeader();
+	$(vswitch + ',' + panel).addClass('active');
 	//const duration = performance.now() - startTime;
     //console.log(duration + 'ms');
 }
@@ -3496,6 +3501,7 @@ function setLibMenuAndHeader () {
 }
 
 function lazyLode(view, skip, force) {
+    //const startTime = performance.now();
 	//console.log(view);
     // If browser does not support native lazy load then fall back to JQuery lazy load
     if (!GLOBAL.nativeLazyLoad) {
@@ -3530,26 +3536,30 @@ function lazyLode(view, skip, force) {
  		}
 
         if (selector && container) {
-			$.ensure(container + ' li').then(function(){
-				if (!$(container + ' ' + selector).attr('src') || force) {
+			if (!$(container + ' ' + selector).attr('src') || force) {
+				$.ensure(container + ' li').then(function(){
 					$(container + ' ' + selector).lazyload({
 						container: $(container),
 						skip_invisible: skip
 					});
-				}
-				if (UI.libPos[1] >= 0 && currentView == 'album') {
-					customScroll('albumcovers', UI.libPos[1], 0);
-					$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
-				}
-				if (UI.libPos[0] >= 0 && currentView == 'tag') {
-					customScroll('albums', UI.libPos[0], 0);
-					$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
-    				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
-				}
-				if (UI.radioPos >= 0 && currentView == 'radio') {customScroll('radio', UI.radioPos, 0);}
-			});
-        }
+					if (UI.libPos[1] >= 0 && currentView == 'album') {
+						customScroll('albumcovers', UI.libPos[1], 0);
+						$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
+					}
+					if (UI.libPos[0] >= 0 && currentView == 'tag') {
+						customScroll('albums', UI.libPos[0], 0);
+						$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
+	    				$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
+					}
+					if (UI.radioPos >= 0 && currentView == 'radio') {
+                        customScroll('radio', UI.radioPos, 0);
+                    }
+				});
+	        }
+		}
  	}
+	//const duration = performance.now() - startTime;
+    //console.log(duration + 'ms');
 }
 
 function setFontSize() {
@@ -3619,6 +3629,7 @@ function getRootElementFontSize() {
 
 // jquery.ensure.js - https://stackoverflow.com/a/48191803 - Matheus Dal'Pizzol
 $.ensure = function (selector) {
+    //const startTime = performance.now();
     var promise = $.Deferred();
     var interval = setInterval(function () {
         if ($(selector)[0]) {
@@ -3626,8 +3637,9 @@ $.ensure = function (selector) {
             promise.resolve();
         }
     }, 1);
+	//const duration = performance.now() - startTime;
+    //console.log(duration + 'ms');
     return promise;
-    clearInterval(interval);
 };
 
 function applyLibFilter(filterType, filterStr = '') {
