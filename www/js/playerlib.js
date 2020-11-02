@@ -778,10 +778,16 @@ function renderUI() {
 
     	// Default metadata
         if (MPD.json['album']) {
-            $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
+            // ORIG $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
             // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
+            //$('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
+            //    (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
+
+            // TEST: display just the artist instead of artist - album
+            $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist']);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
-                (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
+                (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist']);
+
 			MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
         else {
@@ -1008,8 +1014,8 @@ function renderPlaylist(state) {
 					// Line 2 artist, album
 					output += '<span class="pll2">'; // for clock radio
 					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
-					output += ' - ';
-					output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
+					//output += ' - ';
+					//output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
 				}
 				// Radio station
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
@@ -1086,8 +1092,8 @@ function renderPlaylist(state) {
 					// Line 2 artist, album
 					output += '<span class="pll2">';
 					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
-					output += ' - ';
-					output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
+					//output += ' - ';
+					//output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
 				}
 
                 output += '</span></div></li>';
@@ -3389,15 +3395,18 @@ function makeActive (vswitch, panel, view) {
 		case 'radio':
 			$('#viewswitch').addClass('vr');
 			$('#playbar-toggles .addfav').show();
+            $('.adv-search-btn').hide();
 			lazyLode('radio');
 			break;
 		case 'folder':
 			$('#viewswitch').addClass('vf');
 			$('#playbar-toggles .addfav').show();
+            $('.adv-search-btn').hide();
 			break;
 		case 'album':
 			$('#viewswitch').addClass('va');
             $('#playbar-toggles .addfav').hide();
+            $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
             //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
@@ -3415,6 +3424,7 @@ function makeActive (vswitch, panel, view) {
 		case 'tag':
 			$('#viewswitch').addClass('vt');
             $('#playbar-toggles .addfav').hide();
+            $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('tag').removeClass('covers');
             //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             $('#index-albumcovers').hide();
