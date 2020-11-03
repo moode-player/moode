@@ -35,6 +35,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$queueargs = $_POST['conf']['device'] == $_SESSION['cardnum'] ? '' : 'devicechg';
 
 	// Update sql table
+	if ($_POST['conf']['audio_output_format']  == 'disabled') {
+		$_POST['conf']['selective_resample_mode'] = '0';
+	}
+
 	foreach ($_POST['conf'] as $key => $value) {
 		if ($key == 'audio_buffer_size' || $key == 'max_output_buffer_size') {
 			$value = $value * 1024; // Convert from MB to KB
