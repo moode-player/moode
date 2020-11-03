@@ -964,7 +964,7 @@ function getPLInfo($sock) {
 			}
 			else {
 				// Return only the first of multiple occurrences of the following tags
-				if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+				if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
 					if (!isset($array[$idx][$element])) {
 						$array[$idx][$element] = $value;
 					}
@@ -1279,7 +1279,7 @@ function parseCurrentSong($sock) {
 			}*/
 
 			// Return only the first of multiple occurrences of the following tags
-			if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+			if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
 				if (!isset($array[$element])) {
 					$array[$element] = $value;
 				}
@@ -3548,6 +3548,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['composer'] = $song['Composer'];
 	$current['conductor'] = $song['Conductor'];
 	$current['performer'] = $song['Performer'];
+	$current['albumartist'] = $song['AlbumArtist'];
 	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);

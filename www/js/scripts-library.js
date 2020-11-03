@@ -670,10 +670,10 @@ var renderSongs = function(albumPos) {
 
     // Sort by album key, disc, tracknum
     // NOTE: This is mainly a CYA for badly tagged tracks
-    /*var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+    var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
     filteredSongs.sort(function(a, b) {
         return (collator.compare(a['key'], b['key']) || collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
-    });*/
+    });
 
     if (LIB.artistClicked == true || LIB.albumClicked == true) {
         // Order the songs according the the order of the albums

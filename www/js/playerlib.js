@@ -778,7 +778,8 @@ function renderUI() {
 
     	// Default metadata
         if (MPD.json['album']) {
-            $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist']);
+            $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ?
+                MPD.json['album'] : (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']));
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
                 (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist']);
 
@@ -981,6 +982,7 @@ function updateActivePlItem() {
 function renderPlaylist(state) {
 	//console.log('renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
+        //console.log(data);
 		var output = '';
         var playlistLazy = GLOBAL.nativeLazyLoad === true ? '<img loading="lazy" src=' : '<img class="lazy-playlistview" data-original=';
         var paused = state != 'play' ? ' paused' : '';
@@ -1084,7 +1086,7 @@ function renderPlaylist(state) {
 					}
 					// Line 2 artist, album
 					output += '<span class="pll2">';
-					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
+					output += (typeof(data[i].Artist) === 'undefined') ? data[i].AlbumArtist : data[i].Artist;
 				}
 
                 output += '</span></div></li>';
