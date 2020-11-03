@@ -963,7 +963,6 @@ function getPLInfo($sock) {
 				$array[$idx]['TimeMMSS'] = songTime($array[$idx]['Time']);
 			}
 			else {
-				// TEST
 				// Return only the first of multiple occurrences of the following tags
 				if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
 					if (!isset($array[$idx][$element])) {
@@ -1279,7 +1278,6 @@ function parseCurrentSong($sock) {
 				$array[$element] = $value;
 			}*/
 
-			// TEST
 			// Return only the first of multiple occurrences of the following tags
 			if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
 				if (!isset($array[$element])) {
@@ -1291,7 +1289,6 @@ function parseCurrentSong($sock) {
 				$array[$element] = $value;
 			}
 
-			//ORIG $array[$element] = $value;
 			$line = strtok("\n");
 		}
 
