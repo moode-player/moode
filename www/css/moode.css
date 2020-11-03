@@ -411,13 +411,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#volcontrol, #countdown {height:15vw;width:15vw;}
 }
 /* iPad landscape */
-@media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
+/*@media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
 	#ss-currentsong {font-size:1.4em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.15em;}
 	#playback-panel {font-size:1.1em;}
 	#folder-panel, #library-panel, #radio-panel {font-size:1.2em;}
-	/*#playbar-title {font-size:1.1rem;}*/
-}
+}*/
 /* Pi 7" Touch */
 @media (min-height:553px) and (width:998px) { /* 553 = Square pixel AR, 598 = Default pixel AR */
 	.playlist .pll1 {font-size:1rem;}
