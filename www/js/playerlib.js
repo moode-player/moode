@@ -716,9 +716,9 @@ function renderUI() {
     	// Compare new to current to prevent unnecessary image reloads
     	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
     		//console.log(MPD.json['coverurl']);
-            // Original for Playback
+            // Standard cover for Playback
      		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
-            // Thumbnail for Playbar
+            // Thumbnail cover for Playbar
             if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
@@ -778,12 +778,6 @@ function renderUI() {
 
     	// Default metadata
         if (MPD.json['album']) {
-            // ORIG $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
-            // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
-            //$('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
-            //    (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
-
-            // TEST: display just the artist instead of artist - album
             $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist']);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
                 (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist']);
@@ -1068,7 +1062,6 @@ function renderPlaylist(state) {
 				else {
 					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
 					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"' + thumb + '"/></span>' : '';
-					//output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -1092,8 +1085,6 @@ function renderPlaylist(state) {
 					// Line 2 artist, album
 					output += '<span class="pll2">';
 					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
-					//output += ' - ';
-					//output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
 				}
 
                 output += '</span></div></li>';
@@ -1261,7 +1252,7 @@ function renderFolderView(data, path, searchstr) {
 		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg' + '"></img></a></div>';
             // ORIG output += '<div class="db-entry db-album"><div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>'; // For onetouch search scripts-panels for .db-album
             output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">'; // Lets try a context menu instead of onetouch
-            output += '<div>' + /*data[i].Artist + ' - ' +*/ data[i].Album + '</div></div></li>';
+            output += '<div>' + data[i].Album + '</div></div></li>';
 		}
 
     	if (path == '' && typeof(data[i].file) != 'undefined') {
