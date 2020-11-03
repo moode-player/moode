@@ -1191,37 +1191,18 @@ function renderFolderView(data, path, searchstr) {
 	// Sort directories and playlists
     // NOTE: Files are left in the order they appear in the MPD database and not sorted
     // Natural ordering
-	try {
-		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-		if (typeof(dirs[0]) != 'undefined') {
-			dirs.sort(function(a, b) {
-				a = a.directory.lastIndexOf('/') == -1 ? removeArticles(a.directory) : removeArticles(a.directory.substr(a.directory.lastIndexOf('/') + 1));
-				b = b.directory.lastIndexOf('/') == -1 ? removeArticles(b.directory) : removeArticles(b.directory.substr(b.directory.lastIndexOf('/') + 1));
-				return collator.compare(a, b);
-			});
-		}
-		if (typeof(playlists[0]) != 'undefined') {
-			playlists.sort(function(a, b) {
-				return collator.compare(removeArticles(a.playlist), removeArticles(b.playlist));
-			});
-		}
+	var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+	if (typeof(dirs[0]) != 'undefined') {
+		dirs.sort(function(a, b) {
+			a = a.directory.lastIndexOf('/') == -1 ? removeArticles(a.directory) : removeArticles(a.directory.substr(a.directory.lastIndexOf('/') + 1));
+			b = b.directory.lastIndexOf('/') == -1 ? removeArticles(b.directory) : removeArticles(b.directory.substr(b.directory.lastIndexOf('/') + 1));
+			return collator.compare(a, b);
+		});
 	}
-    // Fallback to default ordering
-	catch (e) {
-		if (typeof(dirs[0]) != 'undefined') {
-			dirs.sort(function(a, b) {
-				a = a.directory.lastIndexOf('/') == -1 ? removeArticles(a.directory.toLowerCase()) : removeArticles(a.directory.substr(a.directory.lastIndexOf('/') + 1).toLowerCase());
-				b = b.directory.lastIndexOf('/') == -1 ? removeArticles(b.directory.toLowerCase()) : removeArticles(b.directory.substr(b.directory.lastIndexOf('/') + 1).toLowerCase());
-				return a > b ? 1 : (a < b ? -1 : 0);
-			});
-		}
-		if (typeof(playlists[0]) != 'undefined') {
-			playlists.sort(function(a, b) {
-				a = removeArticles(a.playlist.toLowerCase());
-				b = removeArticles(b.playlist.toLowerCase());
-				return a > b ? 1 : (a < b ? -1 : 0);
-			});
-		}
+	if (typeof(playlists[0]) != 'undefined') {
+		playlists.sort(function(a, b) {
+			return collator.compare(removeArticles(a.playlist), removeArticles(b.playlist));
+		});
 	}
 
 	// Merge back together
@@ -1444,98 +1425,47 @@ function renderRadioView() {
 
         // Sorts
         // All non-hidden stations
-        try {
-    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            allNonHiddenStations.sort(function(a, b) {
-                if (sortTag == 'name') {
-                    return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
-                }
-                else if (sortTag == 'genre') {
-                    return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
-                }
-                else {
-                    return collator.compare(a[sortTag], b[sortTag]);
-                }
-            });
-        }
-        catch (e) {
-            allNonHiddenStations.sort(function(a, b) {
-                if (sortTag == 'name') {
-                    a = removeArticles(a[sortTag]), b = removeArticles(b[sortTag]);
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                }
-                else if (sortTag == 'genre') {
-                    a = removeArticles(a[sortTag].split(', ')[0]), b = removeArticles(b[sortTag].split(', ')[0]);
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                }
-                else {
-                    return collator.compare(a[sortTag], b[sortTag]);
-                }
-            });
-        }
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        allNonHiddenStations.sort(function(a, b) {
+            if (sortTag == 'name') {
+                return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
+            }
+            else if (sortTag == 'genre') {
+                return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
+            }
+            else {
+                return collator.compare(a[sortTag], b[sortTag]);
+            }
+        });
+
         // Regular stations
-        try {
-    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            regularStations.sort(function(a, b) {
-                if (sortTag == 'name') {
-                    return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
-                }
-                else if (sortTag == 'genre') {
-                    return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
-                }
-                else {
-                    return collator.compare(a[sortTag], b[sortTag]);
-                }
-            });
-        }
-        catch (e) {
-            regularStations.sort(function(a, b) {
-                if (sortTag == 'name') {
-                    a = removeArticles(a[sortTag]), b = removeArticles(b[sortTag]);
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                }
-                else if (sortTag == 'genre') {
-                    a = removeArticles(a[sortTag].split(', ')[0]), b = removeArticles(b[sortTag].split(', ')[0]);
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                }
-                else {
-                    return collator.compare(a[sortTag], b[sortTag]);
-                }
-            });
-        }
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        regularStations.sort(function(a, b) {
+            if (sortTag == 'name') {
+                return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
+            }
+            else if (sortTag == 'genre') {
+                return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
+            }
+            else {
+                return collator.compare(a[sortTag], b[sortTag]);
+            }
+        });
+
         // Favorite stations
-        try {
-    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            favoriteStations.sort(function(a, b) {
-                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
-            });
-        }
-        catch (e) {
-            favoriteStations.sort(function(a, b) {
-                a = removeArticles(a['name']), b = removeArticles(b['name']);
-                return a > b ? 1 : (a < b ? -1 : 0);
-            });
-        }
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        favoriteStations.sort(function(a, b) {
+            return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
+        });
+
         // Hidden stations
-        try {
-    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            hiddenMoodeStations.sort(function(a, b) {
-                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
-            });
-            hiddenOtherStations.sort(function(a, b) {
-                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
-            });
-        }
-        catch (e) {
-            hiddenOtherStations.sort(function(a, b) {
-                a = removeArticles(a['name']), b = removeArticles(b['name']);
-                return a > b ? 1 : (a < b ? -1 : 0);
-            });
-            hiddenOtherStations.sort(function(a, b) {
-                a = removeArticles(a['name']), b = removeArticles(b['name']);
-                return a > b ? 1 : (a < b ? -1 : 0);
-            });
-        }
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        hiddenMoodeStations.sort(function(a, b) {
+            return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
+        });
+        hiddenOtherStations.sort(function(a, b) {
+            return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
+        });
 
         // Set filtered list
         if (showHideMoodeStations == 'Show hidden') {

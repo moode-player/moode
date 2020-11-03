@@ -228,134 +228,60 @@ function groupLib(fullLib) {
 	// @Atair: Sorting by artist makes no sense when a song has multiple artists. Due to code in playerlib.php album_artist is never empty anyway,
 	//         so it is safe to change the constructs like a['album_artist'] || a['artist'] just to a['album_artist'].
 	//         and sort by album_artist only
-	try {
-		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-		allSongs.sort(function(a, b) {
-			return collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist']));
-		});
+	var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+	allSongs.sort(function(a, b) {
+		return collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist']));
+	});
 
-        switch (SESSION.json['library_albumview_sort']) {
-            case 'Album':
-                allAlbumCovers.sort(function(a, b) {
-                    return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
-                });
-                break;
-            case 'Artist':
-                // @Atair: Sort by album_artist
-                allAlbumCovers.sort(function(a, b) {
-                    return (collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
-        		});
-                break;
-            case 'Artist/Year':
-                allAlbumCovers.sort(function(a, b) {
-                    return (collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist'])) || collator.compare(a['year'],b['year']));
-                });
-                break;
+    switch (SESSION.json['library_albumview_sort']) {
+        case 'Album':
+            allAlbumCovers.sort(function(a, b) {
+                return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
+            });
+            break;
+        case 'Artist':
+            // @Atair: Sort by album_artist
+            allAlbumCovers.sort(function(a, b) {
+                return (collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+    		});
+            break;
+        case 'Artist/Year':
+            allAlbumCovers.sort(function(a, b) {
+                return (collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist'])) || collator.compare(a['year'],b['year']));
+            });
+            break;
 
-            case 'Year':
-                allAlbumCovers.sort(function(a, b) {
-                    return (collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
-                });
-                break;
-        }
+        case 'Year':
+            allAlbumCovers.sort(function(a, b) {
+                return (collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+            });
+            break;
+    }
 
-        switch (SESSION.json['library_tagview_sort']) {
-            case 'Album':
-            case 'Album/Year':
-                allAlbums.sort(function(a, b) {
-                    return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
-                });
-                break;
-            case 'Artist':
-                // @Atair: 'artist' is here actually album_artist due the way allAlbums were defined above.
-                allAlbums.sort(function(a, b) {
-    				return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
-    			});
-                break;
-            case 'Artist/Year':
-                allAlbums.sort(function(a, b) {
-                    return (collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist'])) || collator.compare(a['year'],b['year']));
-                });
-                break;
-            case 'Year':
-                allAlbums.sort(function(a, b) {
-                    return (collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
-                });
-                break;
-        }
-	}
-    // Fallback to default ordering
-	catch (e) {
-		allSongs.sort(function(a, b) {
-			a = removeArticles((a['album_artist']).toLowerCase());
-			b = removeArticles((b['album_artist']).toLowerCase());
-			return a > b ? 1 : (a < b ? -1 : 0);
-		});
-
-        switch (SESSION.json['library_albumview_sort']) {
-            case 'Album':
-                allAlbumCovers.sort(function(a, b) {
-                    a = removeArticles(a['album'].toLowerCase());
-        			b = removeArticles(b['album'].toLowerCase());
-        			return a > b ? 1 : (a < b ? -1 : 0);
-        		});
-                break;
-            case 'Artist':
-                allAlbumCovers.sort(function(a, b) {
-        			var x1 = removeArticles(a['album_artist']).toLowerCase(), x2 = removeArticles(b['album_artist']).toLowerCase();
-        			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
-        			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-        		});
-                break;
-            case 'Artist/Year':
-                allAlbumCovers.sort(function(a, b) {
-                    var x1 = removeArticles(a['album_artist']).toLowerCase(), x2 = removeArticles(b['album_artist']).toLowerCase();
-                    var y1 = a['year'], y2 = b['year'];
-                    return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-                });
-                break;
-
-            case 'Year':
-                allAlbumCovers.sort(function(a, b) {
-         			var x1 = a['year'], x2 = b['year'];
-         			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
-         			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-         		});
-                break;
-        }
-
-        switch (SESSION.json['library_tagview_sort']) {
-            case 'Album':
-            case 'Album/Year':
-                allAlbums.sort(function(a, b) {
-                    a = removeArticles(a['album'].toLowerCase());
-        			b = removeArticles(b['album'].toLowerCase());
-        			return a > b ? 1 : (a < b ? -1 : 0);
-        		});
-                break;
-            case 'Artist':
-                allAlbums.sort(function(a, b) {
-        			var x1 = removeArticles(a['album_artist']).toLowerCase(), x2 = removeArticles(b['album_artist']).toLowerCase();
-        			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
-        			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-        		});
-                break;
-            case 'Artist/Year':
-                allAlbums.sort(function(a, b) {
-        			var x1 = removeArticles(a['album_artist']).toLowerCase(), x2 = removeArticles(b['album_artist']).toLowerCase();
-        			var y1 = a['year'], y2 = b['year'];
-        			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-        		});
-                break;
-            case 'Year':
-                allAlbums.sort(function(a, b) {
-        			var x1 = a['year'], x2 = b['year'];
-        			var y1 = removeArticles(a['album']).toLowerCase(), y2 = removeArticles(b['album']).toLowerCase();
-        			return x1 > x2 ? 1 : (x1 < x2 ? -1 : (y1 > y2 ? 1 : (y1 < y2 ? -1 : 0)));
-        		});
-                break;
-        }
-	}
+    switch (SESSION.json['library_tagview_sort']) {
+        case 'Album':
+        case 'Album/Year':
+            allAlbums.sort(function(a, b) {
+                return collator.compare(removeArticles(a['album']), removeArticles(b['album']));
+            });
+            break;
+        case 'Artist':
+            // @Atair: 'artist' is here actually album_artist due the way allAlbums were defined above.
+            allAlbums.sort(function(a, b) {
+				return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+			});
+            break;
+        case 'Artist/Year':
+            allAlbums.sort(function(a, b) {
+                return (collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist'])) || collator.compare(a['year'],b['year']));
+            });
+            break;
+        case 'Year':
+            allAlbums.sort(function(a, b) {
+                return (collator.compare(a['year'], b['year']) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+            });
+            break;
+    }
 }
 
 // Rewritten by @Atair: Allow for item.genre as array of genre values
@@ -422,20 +348,11 @@ function filterArtists() {
 	var filteredArtistsFlat = [];
 	filteredArtists.forEach((a)=>{filteredArtistsFlat=filteredArtistsFlat.concat(a)});
 	filteredArtists = filteredArtistsFlat.slice();
-	try {
-		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-		filteredArtists.sort(function(a, b) {
-			return collator.compare(removeArticles(a).toLowerCase(), removeArticles(b).toLowerCase());
-		});
-	}
-	// Fallback to Default ordering
-	catch (e) {
-		filteredArtists.sort(function(a, b) {
-			a = removeArticles(a).toLowerCase();
-			b = removeArticles(b).toLowerCase();
-			return a > b ? 1 : (a < b ? -1 : 0);
-		});
-	}
+
+	var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+	filteredArtists.sort(function(a, b) {
+		return collator.compare(removeArticles(a).toLowerCase(), removeArticles(b).toLowerCase());
+	});
 }
 
 function filterAlbums() {
@@ -475,27 +392,13 @@ function filterAlbums() {
         filteredAlbumCovers = filteredAlbumCovers.filter(filterAlbumsByDate);
 
         // Sort descending
-        try {
-            var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            filteredAlbums.sort(function(a, b) {
-                return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
-            });
-            filteredAlbumCovers.sort(function(a, b) {
-                return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
-            });
-        }
-        catch (e) {
-            filteredAlbums.sort(function(a, b) {
-                a = a['last_modified'].getTime();
-                b = b['last_modified'].getTime();
-                return b > a ? 1 : (b < a ? -1 : 0);
-            });
-            filteredAlbumCovers.sort(function(a, b) {
-                a = a['last_modified'].getTime();
-                b = b['last_modified'].getTime();
-                return b > a ? 1 : (b < a ? -1 : 0);
-            });
-        }
+        var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        filteredAlbums.sort(function(a, b) {
+            return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
+        });
+        filteredAlbumCovers.sort(function(a, b) {
+            return collator.compare(b['last_modified'].getTime(), a['last_modified'].getTime());
+        });
     }
 }
 
@@ -765,6 +668,13 @@ var renderSongs = function(albumPos) {
 	var discDiv = '';
 	LIB.totalTime = 0;
 
+    // Sort by album key, disc, tracknum
+    // NOTE: This is mainly a CYA for badly tagged tracks
+    /*var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+    filteredSongs.sort(function(a, b) {
+        return (collator.compare(a['key'], b['key']) || collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
+    });*/
+
     if (LIB.artistClicked == true || LIB.albumClicked == true) {
         // Order the songs according the the order of the albums
         var orderedSongs = [];
@@ -784,15 +694,6 @@ var renderSongs = function(albumPos) {
                 }
             }
         }
-
-        /* DELETE: This breaks the user's selected sort order for the albums list
-        // Sort by album key, disc, tracknum
-        // NOTE: This is mainly a CYA for badly tagged tracks
-		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-		orderedSongs.sort(function(a, b) {
-			return (collator.compare(a['key'], b['key']) || collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
-		});
-        */
 
         filteredSongs = orderedSongs;
 
