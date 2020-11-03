@@ -785,12 +785,14 @@ var renderSongs = function(albumPos) {
             }
         }
 
+        /* DELETE: This breaks the user's selected sort order for the albums list
         // Sort by album key, disc, tracknum
         // NOTE: This is mainly a CYA for badly tagged tracks
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 		orderedSongs.sort(function(a, b) {
 			return (collator.compare(a['key'], b['key']) || collator.compare(a['disc'], b['disc']) || collator.compare(a['tracknum'], b['tracknum']));
 		});
+        */
 
         filteredSongs = orderedSongs;
 
