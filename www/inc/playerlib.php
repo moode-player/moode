@@ -986,8 +986,13 @@ function parseTrackInfo($resp) {
 
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
-			$idx++;
-			$array[$idx][$element] = $value;
+			if ($element != 'duration') {
+				if ($element == 'Time') {
+					$value = songTime($value);
+				}
+				$idx++;
+				$array[$idx][$element] = $value;
+			}
 			$line = strtok("\n");
 		}
 	}
@@ -1094,7 +1099,9 @@ function parseList($resp) {
 }
 
 function songTime($sec) {
-	return gmdate("i:s", $secs);
+	$mins = sprintf('%02d', floor($sec / 60));
+	$secs = sprintf(':%02d', (int) $sec % 60);
+	return $mins . $secs;
 }
 
 // Format MPD status output
