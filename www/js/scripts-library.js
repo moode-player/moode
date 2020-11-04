@@ -277,7 +277,7 @@ function groupLib(fullLib) {
         case 'Artist':
             // @Atair: 'artist' is here actually album_artist due the way allAlbums were defined above.
             allAlbums.sort(function(a, b) {
-				return (collator.compare(removeArticles(a['artist']), removeArticles(b['artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
+				return (collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist'])) || collator.compare(removeArticles(a['album']), removeArticles(b['album'])));
 			});
             break;
         case 'Artist/Year':
