@@ -1274,11 +1274,12 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Track info for Playback
     $('#extra-tags-display').click(function(e) {
-        $.post('command/moode.php?cmd=track_info', {'path': MPD.json['file']}, function(result) {
-            //var content = beautify(result);
-            $('#track-info-text').html(result);
-            $('#track-info-modal').modal();
-        }, 'json');
+        if (MPD.json['artist'] != 'Radio station') {
+            $.post('command/moode.php?cmd=track_info', {'path': MPD.json['file']}, function(result) {
+                $('#track-info-text').html(result);
+                $('#track-info-modal').modal();
+            }, 'json');
+        }
     });
 
     // CoverView screen saver reset
