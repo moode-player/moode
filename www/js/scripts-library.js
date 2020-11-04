@@ -187,6 +187,15 @@ function getYear(albumTracks){
 	return Math.max.apply(null, allYear);
 }
 
+function getAlbumArtist(albumTracks){
+    var allAlbumArtists = [];
+    allAlbumArtists = albumTracks.reduce(function(acc,track){
+        !acc.includes(track.album_artist) && acc.push(track.album_artist);
+        return acc;
+    },[]);
+    return allAlbumArtists.length == 1 ? allAlbumArtists[0] : "Various";
+}
+
 function groupLib(fullLib) {
 	allSongs = fullLib.map(function(track){
 		var modifiedTrack = track;
@@ -214,8 +223,8 @@ function groupLib(fullLib) {
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
 			// @Atair: albumArtist is always defined due to provisions in playerlib.php
 			//        so it is not necessary to evaluate artist
-			album_artist: findAlbumProp(albumTracks, 'album_artist'),
-
+			album_artist: getAlbumArtist(albumTracks),
+            //album_artist: findAlbumProp(albumTracks, 'album_artist'),
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
 			encoded_at: findAlbumProp(albumTracks, 'encoded_at'),
 			comment: findAlbumProp(albumTracks, 'comment')
