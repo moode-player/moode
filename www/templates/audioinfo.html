@@ -21,112 +21,103 @@
  */
 -->
 <div id="container-audioinfo">
-	<div>
-		<strong>Input / Output</strong>
-		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:8.5em;">
-			<tr>
-				<td style="text-align:right;">Source:&nbsp;</td>
-				<td style="text-align:left;">$file</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Encoded at:&nbsp;</td>
-				<td style="text-align:left;">$encoded_at</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Decoded to:&nbsp;</td>
-				<td style="text-align:left;">$decoded_to$decode_rate</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Destination:&nbsp;</td>
-				<td style="text-align:left;">$output_destination</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Output rate:&nbsp;</td>
-				<td style="text-align:left;">$hwparams_format$hwparams_calcrate</td>
-			</tr>
-		</table>
+	<div class="audioinfo">
+		<div class="h5">Input / Output</div>
+		<li>
+			<span class="left">Source</span>
+			<span class="right">$file</span>
+		</li>
+		<li>
+			<span class="left">Encoded at</span>
+			<span class="right">$encoded_at</span>
+		</li>
+		<li>
+			<span class="left">Decoded to</span>
+			<span class="right">$decoded_to$decode_rate</span>
+		</li>
+		<li>
+			<span class="left">Destination</span>
+			<span class="right">$output_destination</span>
+		</li>
+		<li>
+			<span class="left">Output rate</span>
+			<span class="right">$hwparams_format$hwparams_calcrate</span>
+		</li>
 
-		<strong>DSP operations</strong>
-		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:8.5em;">
-			<tr>
-				<td style="text-align:right;">Resample rate:&nbsp;</td>
-				<td style="text-align:left;">$resample_rate</td>
-			</tr>
-			<tr class="$_selective_resampling_hide">
-				<td style="text-align:right;">Selective rate:&nbsp;</td>
-				<td style="text-align:left;">$selective_resample</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Rsample quality:&nbsp;</td>
-				<td style="text-align:left;">$resample_quality</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Polarity inv:&nbsp;</td>
-				<td style="text-align:left;">$polarity_inv</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Crossfade:&nbsp;</td>
-				<td style="text-align:left;">$crossfade</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Crossfeed:&nbsp;</td>
-				<td style="text-align:left;">$crossfeed</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Parametric EQ:&nbsp;</td>
-				<td style="text-align:left;">$peq</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Graphic EQ:&nbsp;</td>
-				<td style="text-align:left;">$geq</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Replaygain:&nbsp;</td>
-				<td style="text-align:left;">$replaygain</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Normalize vol:&nbsp;</td>
-				<td style="text-align:left;">$vol_normalize</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Chip options:&nbsp;</td>
-				<td style="text-align:left;">$chip_options</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Volume mixer:&nbsp;</td>
-				<td style="text-align:left;">$volume_mixer</td>
-			</tr>
-		</table>
+		<div class="h5">DSP operations</div>
+		<li>
+			<span class="left">Resample rate</span>
+			<span class="right">$resample_rate</span>
+		</li>
+		<li class="$_selective_resampling_hide">
+			<span class="left">Selective rate</span>
+			<span class="right">$selective_resample</span>
+		</li>
+		<li>
+			<span class="left">Rsample quality</span>
+			<span class="right">$resample_quality</span>
+		</li>
+		<li>
+			<span class="left">Polarity inv</span>
+			<span class="right">$polarity_inv</span>
+		</li>
+		<li>
+			<span class="left">Crossfade</span>
+			<span class="right">$crossfade</span>
+		</li>
+		<li>
+			<span class="left">Crossfeed</span>
+			<span class="right">$crossfeed</span>
+		</li>
+		<li>
+			<span class="left">Parametric EQ</span>
+			<span class="right">$peq</span>
+		</li>
+		<li>
+			<span class="left">Graphic EQ</span>
+			<span class="right">$geq</span>
+		</li>
+		<li>
+			<span class="left">Replaygain</span>
+			<span class="right">$replaygain</span>
+		</li>
+		<li>
+			<span class="left">Normalize vol</span>
+			<span class="right">$vol_normalize</span>
+		</li>
+		<li>
+			<span class="left">Chip options</span>
+			<span class="right">$chip_options</span>
+		</li>
+		<li>
+			<span class="left">Volume mixer</span>
+			<span class="right">$volume_mixer</span>
+		</li>
 
-		<strong>Audio Device</strong>
-		<table style="table-layout:fixed; border-collapse:collapse; width:100%;">
-			<col span="1" style="width:8.5em;">
-			<tr>
-				<td style="text-align:right;">Device:&nbsp;</td>
-				<td style="text-align:left;">$devname</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Mixer name:&nbsp;</td>
-				<td style="text-align:left;">$mixer_name</td>
-			</tr>
-			<tr class="$_chip_hide">
-				<td style="text-align:right;">Chip:&nbsp;</td>
-				<td style="text-align:left;">$dacchip</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Interface:&nbsp;</td>
-				<td style="text-align:left;">$iface</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Formats:&nbsp;</td>
-				<td style="text-align:left;">$audio_formats</td>
-			</tr>
-			<tr>
-				<td style="text-align:right;">Platform:&nbsp;</td>
-				<td style="text-align:left;">$hdwr_rev</td>
-			</tr>
-		</table>
+	<div class="h5">Audio Device</div>
+		<li>
+			<span class="left">Device</span>
+			<span class="right">$devname</span>
+		</li>
+		<li>
+			<span class="left">Mixer name</span>
+			<span class="right">$mixer_name</span>
+		</li>
+		<li class="$_chip_hide">
+			<span class="left">Chip</span>
+			<span class="right">$dacchip</span>
+		</li>
+		<li>
+			<span class="left">Interface</span>
+			<span class="right">$iface</span>
+		</li>
+		<li>
+			<span class="left">Formats</span>
+			<span class="right">$audio_formats</span>
+		</li>
+		<li>
+			<span class="left">Platform</span>
+			<span class="right">$hdwr_rev</span>
+		</li>
 	</div>
 </div>
