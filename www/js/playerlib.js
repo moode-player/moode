@@ -1966,8 +1966,7 @@ $('.context-menu a').click(function(e) {
 	}
     else if ($(this).data('cmd') == 'track_info_folder') {
         $.post('command/moode.php?cmd=track_info', {'path': path}, function(result) {
-            $('#track-info-text').html(result);
-            $('#track-info-modal').modal();
+            trackInfoModal(result);
         }, 'json');
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
@@ -3610,4 +3609,14 @@ function splitStringAtFirstSpace (str) {
     }
 
     return strArray;
+}
+
+function trackInfoModal(result) {
+    var lines = '';
+    for (i = 0; i < result.length; i++) {
+        var key = Object.keys(result[i]);
+        lines += '<li><span class="left">' + key + '</span><span class="right">' + result[i][key] + '</span></li>';
+    }
+    $('#track-info-lines').html(lines);
+    $('#track-info-modal').modal();
 }

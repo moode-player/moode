@@ -1478,13 +1478,15 @@
 </div>
 
 <!-- TRACK INFO -->
-<div id="track-info-modal" class="modal modal-xs hide" tabindex="-1" role="dialog" aria-labelledby="track-info-modal-label" aria-hidden="true">
+<div id="track-info-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="track-info-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="track-info-modal-label">Track information</h3>
 	</div>
 	<div class="modal-body">
-		<pre id="track-info-text"></pre>
+		<div class="container-iteminfo">
+			<div id="track-info-lines"></div>
+		</div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn singleton" data-dismiss="modal" aria-hidden="true">Cancel</button>

@@ -357,9 +357,6 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 hr {border-color:#333;border-width:1px 0 0;}
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {background:inherit;border:1px solid rgba(128,128,128,0.5);color:inherit;padding-top:2px;padding-bottom:2px;margin-bottom:5px;border-radius:4px;-webkit-appearance:none;-moz-appearance:none;font-size:1rem;}
 .btn .caret {border-top-color:initial;}
-#container-audioinfo tbody {vertical-align:top;}
-#container-audioinfo table {margin: .75em 0 1em 0;}
-#container-audioinfo strong {font-weight:600;text-transform:uppercase;}
 legend {border-color:-moz-use-text-color -moz-use-text-color #34495E;color:inherit;font-weight:600;}
 code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-load {color:#ddd;font-size:18px;font-weight:bold;margin-left:-72px;position:absolute;top:50%;left:50%;}
@@ -698,9 +695,9 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 /* Library filter */
 #lib-flatlist-filter {font-size:.5em;}
 /* Audio info */
-#container-audioinfo li {list-style:none;line-height:normal;padding:.25rem .5rem;overflow:auto;}
-#container-audioinfo .h5 {margin:.6rem 0 .4rem 0;width:unset;}
-#container-audioinfo .h5:first-child{margin:0 0 .4rem 0;}
-#container-audioinfo .left {float:left;width:33%;}
-#container-audioinfo .right {float:right;width:67%;}
-#container-audioinfo .ralign {float:right;width:67%;text-align:right}
+.container-iteminfo li {list-style:none;line-height:normal;padding:.25rem .5rem;overflow:auto;}
+.container-iteminfo .h5 {margin:.6rem 0 .4rem 0;width:unset;}
+.container-iteminfo .h5:first-child{margin:0 0 .4rem 0;}
+.container-iteminfo .left {float:left;width:33%;}
+.container-iteminfo .right {float:right;width:67%;}
+.container-iteminfo .ralign {float:right;width:67%;text-align:right}

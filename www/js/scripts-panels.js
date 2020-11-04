@@ -136,19 +136,17 @@ jQuery(document).ready(function($) { 'use strict';
     	blurrr == true ? themeOp = .85 : themeOp = .95;
 
 
-		function mutate(mutations) {
-		  mutations.forEach(function(mutation) {
-      		$('#alpha-blend span').text() < 1 ? $('#cover-options').show() : $('#cover-options').css('display', '');
-  		  });
-		}
+        function mutate(mutations) {
+            mutations.forEach(function(mutation) {
+                $('#alpha-blend span').text() < 1 ? $('#cover-options').show() : $('#cover-options').css('display', '');
+            });
+        }
 
 		jQuery(document).ready(function() {
-
-		  var target = document.querySelector('#alpha-blend span')
-		  var observer = new MutationObserver( mutate );
-		  var config = { characterData: true, attributes: false, childList: true, subtree: false };
-
-		  observer.observe(target, config);
+            var target = document.querySelector('#alpha-blend span')
+            var observer = new MutationObserver( mutate );
+            var config = { characterData: true, attributes: false, childList: true, subtree: false };
+            observer.observe(target, config);
 		});
 
 
@@ -1276,8 +1274,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#extra-tags-display').click(function(e) {
         if (MPD.json['artist'] != 'Radio station') {
             $.post('command/moode.php?cmd=track_info', {'path': MPD.json['file']}, function(result) {
-                $('#track-info-text').html(result);
-                $('#track-info-modal').modal();
+                trackInfoModal(result);
             }, 'json');
         }
     });

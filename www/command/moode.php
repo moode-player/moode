@@ -172,7 +172,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			break;
 		case 'track_info':
 			sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');
-			echo json_encode(readMpdResp($sock));
+			echo json_encode(parseTrackInfo(readMpdResp($sock)));
 			break;
 
 		// Queue commands for a group of songs: Genre, Artist or Albums in Tag/Album view

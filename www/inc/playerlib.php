@@ -982,6 +982,27 @@ function getPLInfo($sock) {
 	return $array;
 }
 
+// Parse track info
+function parseTrackInfo($resp) {
+	if (is_null($resp)) {
+		return NULL;
+	}
+	else {
+		$array = array();
+		$line = strtok($resp,"\n");
+		$idx = -1;
+
+		while ($line) {
+			list ($element, $value) = explode(': ', $line, 2);
+			$idx++;
+			$array[$idx][$element] = $value;
+			$line = strtok("\n");
+		}
+	}
+
+	return $array;
+}
+
 // list contents of saved playlist
 function listSavedPL($sock, $plname) {
 	sendMpdCmd($sock, 'listplaylist "' . $plname . '"');
