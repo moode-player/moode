@@ -142,11 +142,11 @@ $patch_id = explode('_p0x', $_SESSION['mpdver'])[1];
 if ($patch_id & PATCH_SELECTIVE_RESAMPLING) {
 	$_selective_resampling_hide = '';
 	$_mpd_select['selective_resample_mode'] .= "<option value=\"0\" " . (($mpdconf['selective_resample_mode'] == '0') ? "selected" : "") . " >Disabled</option>\n";
-	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ALL . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ALL) ? "selected" : "") . " >Upsample if source < target rate</option>\n";
+	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ALL . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ALL) ? "selected" : "") . " >Upsample if source &lt; target rate</option>\n";
 	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_41K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_41K) ? "selected" : "") . " >Upsample only 44.1K source rate</option>\n";
 	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_UPSAMPLE_ONLY_4148K . "\" " . (($mpdconf['selective_resample_mode'] == SOX_UPSAMPLE_ONLY_4148K) ? "selected" : "") . " >Upsample only 44.1K and 48K source rates</option>\n";
 	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . SOX_ADHERE_BASE_FREQ . "\" " . (($mpdconf['selective_resample_mode'] == SOX_ADHERE_BASE_FREQ) ? "selected" : "") . " >Resample (adhere to base freq)</option>\n";
-	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) . "\" " . (($mpdconf['selective_resample_mode'] == (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ)) ? "selected" : "") . " >Upsample if source < target rate (adhere to base freq)</option>\n";
+	$_mpd_select['selective_resample_mode'] .= "<option value=\"" . (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) . "\" " . (($mpdconf['selective_resample_mode'] == (SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ)) ? "selected" : "") . " >Upsample if source &lt; target rate (adhere to base freq)</option>\n";
 }
 else {
 	$_selective_resampling_hide = 'hide';
