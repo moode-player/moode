@@ -780,8 +780,10 @@ function renderUI() {
         if (MPD.json['album']) {
             $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ?
                 MPD.json['album'] : (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']));
+
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
-                (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist']);
+                (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) :
+                (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']));
 
 			MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
