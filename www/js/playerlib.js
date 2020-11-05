@@ -3307,11 +3307,11 @@ function makeActive (vswitch, panel, view) {
 	currentView = view;
 	setColors();
 
-    /*if (view == 'tag' || view == 'album') {
-        if (SESSION.json['library_flatlist_filter'] != 'full_lib' && SESSION.json['library_flatlist_filter'] != 'tags') {
-            $('#lib-album-filter').val(SESSION.json['library_flatlist_filter'] + ' ' + SESSION.json['library_flatlist_filter_str']);
+    if (view == 'tag' || view == 'album') {
+        if ($('#lib-album-filter').val() != '') {
+            $('#searchResetLib').show();
         }
-    }*/
+    }
 
 	switch (view) {
 		case 'radio':
@@ -3330,7 +3330,6 @@ function makeActive (vswitch, panel, view) {
             $('#playbar-toggles .addfav').hide();
             $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
-            //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
                 $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
@@ -3348,7 +3347,6 @@ function makeActive (vswitch, panel, view) {
             $('#playbar-toggles .addfav').hide();
             $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('tag').removeClass('covers');
-            //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             $('#index-albumcovers').hide();
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 			if (SESSION.json['library_tagview_covers']) lazyLode('tag');

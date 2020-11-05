@@ -864,9 +864,14 @@ $('#genreheader, #menu-header').on('click', function(e) {
 		LIB.filters.albums.length = 0;
 		LIB.artistClicked = false;
         LIB.albumClicked = false;
-		$("#searchResetLib").hide();
-		showSearchResetLib = false;
         $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+        if ($('#lib-album-filter').val() != '') {
+            $('#searchResetLib').show();
+        }
+        else {
+            $("#searchResetLib").hide();
+    		showSearchResetLib = false;
+        }
 		if (GLOBAL.musicScope == 'recent') {
 			GLOBAL.musicScope = 'all';
 		}
