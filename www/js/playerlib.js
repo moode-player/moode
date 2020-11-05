@@ -3617,9 +3617,11 @@ function itemInfoModal(cmd, result) {
     var lines = '';
     for (i = 0; i < result.length; i++) {
         var key = Object.keys(result[i]);
-        lines += '<li><span class="left">' + key + '</span><span class="right">' + result[i][key] + '</span></li>';
+        if (typeof(result[i][key]) != 'undefined') {
+            lines += '<li><span class="left">' + key + '</span><span class="right">' + result[i][key] + '</span></li>';
+        }
     }
-    $('#item-info-modal-label').text(cmd == 'station_info' ? 'Station information' : 'Song information');
+    $('#item-info-modal-label').text(cmd == 'station_info' ? 'Station information' : 'Track information');
     $('#item-info-lines').html(lines);
     $('#item-info-modal').modal();
 }

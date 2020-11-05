@@ -998,49 +998,85 @@ function parseStationInfo($path) {
 
 // Parse track info
 function parseTrackInfo($resp) {
+	/* Layout
+	0  Artists
+	1  Album artist
+	2  Composer
+	3  Conductor
+	4  Genres
+	5  Album
+	6  Disc
+	7  Track
+	8  Title
+	9  Date
+	10 Time
+	*/
+
 	if (is_null($resp)) {
 		return NULL;
 	}
 	else {
 		$array = array();
-		$line = strtok($resp,"\n");
-		$idx = -1;
+		$line = strtok($resp, "\n");
+
+		for ($i = 0; $i < 11; $i++) {
+			$array[$i] = '';
+		}
 
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
-			if ($element != 'duration') {
-				if ($element == 'file') {
-					$element = 'File psth';
-				}
-				else if ($element == 'Time') {
-					$element = 'Song duration';
-					$value = songTime($value);
-				}
-				else if ($element == 'Format') {
-					$element = 'Audio format';
-				}
-				else if ($element == 'AlbumArtist') {
-					$element = 'Album artist';
-				}
 
-				$idx++;
-				$array[$idx][$element] = $value;
+			switch ($element) {
+				// Not needed
+				case 'duration':
+				case 'file':
+				case 'Last-Modified':
+				case 'Format':
+					break;
+				// All others
+				case 'Artist':
+				case 'Performer':
+					$artists .= $value . ', ';
+					break;
+				case 'AlbumArtist':
+					$array[1] = array('Album artist' => $value);
+					break;
+				case 'Composer':
+					$array[2] = array($element => $value);
+					break;
+				case 'Conductor':
+					$array[3] = array($element => $value);
+					break;
+				case 'Genre':
+					$genres .= $value . ', ';
+					break;
+				case 'Album':
+					$array[5] = array($element => $value);
+					break;
+				case 'Disc':
+					$array[6] = array($element => $value);
+					break;
+				case 'Track':
+					$array[7] = array($element => $value);
+					break;
+				case 'Title':
+					$array[8] = array($element => $value);
+					break;
+				case 'Date':
+					$array[9] = array($element => $value);
+					break;
+				case 'Time':
+					$array[10] = array($element => songTime($value));
+					break;
 			}
+
 			$line = strtok("\n");
 		}
-	}
 
-	/* Layout
-	Artists
-	- Artists
-	- Performers
-	Album artist
-	Composer
-	Cnductor
-	Genres
-	Album title (Date)
-	Disc#, Track# - Title
-	*/
+		// Strip off trailing delimiter
+		$array[0] = array('Artists' => rtrim($artists, ', '));
+		$array[4] = array('Genres' => rtrim($genres, ', '));
+	}
 
 	//workerLog(print_r($array, true));
 	return $array;
