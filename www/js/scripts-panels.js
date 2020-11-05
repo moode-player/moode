@@ -1273,7 +1273,7 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Track info for Playback
     $('#extra-tags-display').click(function(e) {
-        if (MPD.json['playlistlength'] != '0') {
+        if ($('#currentsong').html() != '') {
             var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
             $.post('command/moode.php?cmd=' + cmd, {'path': MPD.json['file']}, function(result) {
                 itemInfoModal(cmd, result);
