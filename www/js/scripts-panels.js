@@ -725,9 +725,10 @@ jQuery(document).ready(function($) { 'use strict';
     		}
     		// Song file
     		else {
+                var thisText = $(this).text().indexOf('...') != -1 ? $(this).text().slice(0, -3) : $(this).text();
     			$('#playback-switch').click();
     			$('.tag-view-btn').click();
-				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
+				$('#artistsList .lib-entry').filter(function() {return $(this).text() == thisText/*MPD.json['artist']*/;}).click();
 				customScroll('artists', UI.libPos[2], 200);
     		}
         }
