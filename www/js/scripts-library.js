@@ -1382,7 +1382,7 @@ $('#context-menu-lib-item a').click(function(e) {
 	}
     else if ($(this).data('cmd') == 'track_info_lib') {
         $.post('command/moode.php?cmd=track_info', {'path': filteredSongs[UI.dbEntry[0]].file}, function(result) {
-            trackInfoModal(result);
+            itemInfoModal('track_info', result);
         }, 'json');
 	}
 });

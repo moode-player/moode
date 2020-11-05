@@ -1272,9 +1272,10 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Track info for Playback
     $('#extra-tags-display').click(function(e) {
-        if (MPD.json['artist'] != 'Radio station') {
-            $.post('command/moode.php?cmd=track_info', {'path': MPD.json['file']}, function(result) {
-                trackInfoModal(result);
+        if (MPD.json['playlistlength'] != '0') {
+            var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
+            $.post('command/moode.php?cmd=' + cmd, {'path': MPD.json['file']}, function(result) {
+                itemInfoModal(cmd, result);
             }, 'json');
         }
     });

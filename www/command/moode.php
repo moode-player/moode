@@ -36,7 +36,7 @@ $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_add_item', 'clear_play_item',
 	'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_add_group', 'clear_play_group');
 $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
-	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'track_info');
+	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'station_info', 'track_info');
 $turn_consume_off = false;
 
 // Jobs sent to worker.php
@@ -169,6 +169,9 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				sendMpdCmd($sock, 'play');
 				$resp = readMpdResp($sock);
 			}
+			break;
+		case 'station_info':
+			echo json_encode(parseStationInfo($_POST['path']));
 			break;
 		case 'track_info':
 			sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');

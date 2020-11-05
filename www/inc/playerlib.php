@@ -891,7 +891,7 @@ function addItemToQueue($sock, $path) {
 	//workerLog($path . ' (' . $ext . ')');
 
 	// Use load for saved playlist, cue sheet, radio station
-	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $ROOT_DIRECTORIES) === false)) {
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $GLOBALS['ROOT_DIRECTORIES']) === false)) {
 		// Radio station special case
 		if (strpos($path, 'RADIO') !== false) {
 			// Check for playlist as URL
@@ -974,6 +974,28 @@ function getPLInfo($sock) {
 	return $array;
 }
 
+// Parse station info
+function parseStationInfo($path) {
+	//workerLog($path);
+	$array = array();
+	$result = sdbquery("select * from cfg_radio where station='" . SQLite3::escapeString($path) . "'", cfgdb_connect());
+
+	$array[0] = array('Station name' => $result[0]['name']);
+	$array[1] = array('Playable URL' => $result[0]['station']);
+	$array[2] = array('Type' => $result[0]['type'] == 'f' ? 'Favorite' : ($result[0]['type'] == 'r' ? 'Regular' : 'Hidden'));
+	$array[3] = array('Genre' => $result[0]['genre']);
+	$array[4] = array('Broadcaster' => $result[0]['broadcaster']);
+	$array[5] = array('Language' => $result[0]['language']);
+	$array[6] = array('Country' => $result[0]['country']);
+	$array[7] = array('Region' => $result[0]['region']);
+	$array[8] = array('Bitrate' => $result[0]['bitrate']);
+	$array[9] = array('Audio format' => $result[0]['format']);
+	$array[10] = array('Geo fenced' => $result[0]['geo_fenced']);
+
+	//workerLog(print_r($array, true));
+	return $array;
+}
+
 // Parse track info
 function parseTrackInfo($resp) {
 	if (is_null($resp)) {
@@ -987,9 +1009,20 @@ function parseTrackInfo($resp) {
 		while ($line) {
 			list ($element, $value) = explode(': ', $line, 2);
 			if ($element != 'duration') {
-				if ($element == 'Time') {
+				if ($element == 'file') {
+					$element = 'File psth';
+				}
+				else if ($element == 'Time') {
+					$element = 'Song duration';
 					$value = songTime($value);
 				}
+				else if ($element == 'Format') {
+					$element = 'Audio format';
+				}
+				else if ($element == 'AlbumArtist') {
+					$element = 'Album artist';
+				}
+
 				$idx++;
 				$array[$idx][$element] = $value;
 			}
@@ -997,6 +1030,7 @@ function parseTrackInfo($resp) {
 		}
 	}
 
+	//workerLog(print_r($array, true));
 	return $array;
 }
 
