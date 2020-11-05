@@ -1030,6 +1030,18 @@ function parseTrackInfo($resp) {
 		}
 	}
 
+	/* Layout
+	Artists
+	- Artists
+	- Performers
+	Album artist
+	Composer
+	Cnductor
+	Genres
+	Album title (Date)
+	Disc#, Track# - Title
+	*/
+
 	//workerLog(print_r($array, true));
 	return $array;
 }
@@ -1309,6 +1321,8 @@ function parseCurrentSong($sock) {
 	sendMpdCmd($sock, 'currentsong');
 	$resp = readMpdResp($sock);
 
+	$artist_count = 0;
+
 	if (is_null($resp) ) {
 		return 'parseCurrentSong(): Response is null';
 	}
@@ -1334,6 +1348,10 @@ function parseCurrentSong($sock) {
 				if (!isset($array[$element])) {
 					$array[$element] = $value;
 				}
+				// Tally the number of "artists"
+				if ($element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+					$artist_count++;
+				}
 			}
 			// All other tags
 			else {
@@ -1350,6 +1368,8 @@ function parseCurrentSong($sock) {
 				$array[$key] = rtrim($array[$key], '; ');
 			}
 		}*/
+
+		$array['artist_count'] = $artist_count;
 
 		//workerLog(print_r($array, true));
 		return $array;
@@ -3580,6 +3600,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['conductor'] = $song['Conductor'];
 	$current['performer'] = $song['Performer'];
 	$current['albumartist'] = $song['AlbumArtist'];
+	$current['artist_count'] = $song['artist_count'];
 	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
