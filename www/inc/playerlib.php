@@ -1018,8 +1018,9 @@ function parseTrackInfo($resp) {
 	else {
 		$array = array();
 		$line = strtok($resp, "\n");
+		$num_lines = 11;
 
-		for ($i = 0; $i < 11; $i++) {
+		for ($i = 0; $i < $num_lines; $i++) {
 			$array[$i] = '';
 		}
 
@@ -1066,7 +1067,7 @@ function parseTrackInfo($resp) {
 					$array[9] = array($element => $value);
 					break;
 				case 'Time':
-					$array[10] = array($element => songTime($value));
+					$array[10] = array('Duration' => songTime($value));
 					break;
 			}
 
