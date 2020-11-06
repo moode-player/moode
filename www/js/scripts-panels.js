@@ -721,6 +721,7 @@ jQuery(document).ready(function($) { 'use strict';
                 setTimeout(function() {
                     $('#ra-' + (UI.radioPos - headerCount)).addClass('active');
                     UI.dbEntry[3] = 'ra-' + (UI.radioPos - headerCount);
+                    customScroll('radio', UI.radioPos, 200);
                 }, DEFAULT_TIMEOUT);
     		}
     		// Song file
