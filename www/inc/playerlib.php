@@ -3694,7 +3694,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				// Use transmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
 				// Include original station name
-				$current['station_name'] = $_SESSION[$song['file']]['name'];
+				// DEPRECATE $current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
 					// Local logo image
 					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg";
@@ -3711,7 +3711,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			else {
 				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
-				$current['station_name'] = $current['album'];
+				// DEPRECATE $current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
 			}
 		}

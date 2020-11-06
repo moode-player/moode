@@ -97,11 +97,11 @@ html {background-color:inherit;}
 .configure-renderer:hover, .disconnect-renderer:hover {background-color:var(--btnshade4);} /* Mask hover effect */
 /* main ui */
 .playback-controls {display:none;position:absolute;top:0;left:50%;width:184px;margin:-1px 0 0 -92px;text-align:center;z-index:9;}
-#currentsong, #currentalbum, #format-bitrate, #elapsed, #countdown-display {display:block;}
+#currentsong, #currentalbum, #currentartist, #format-bitrate, #elapsed, #countdown-display {display:block;}
 #extra-tags-display {font-size:1rem;color:var(--textvariant);padding-top:.5em;text-align:center;display:block;cursor:pointer;}
 #currentsong {font-size:1.35em;padding-top:1.65rem;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
-#currentalbum {font-size:1.25em;padding-top:1.65rem;cursor:pointer;font-weight:500;}
-#currentalbum-div {display:inline-flex;}
+#currentalbum, #currentartist {font-size:1.25em;padding-top:1.65rem;cursor:pointer;font-weight:500;}
+#currentalbum-div, #currentartist-div {display:inline-flex;}
 #playlist-position, #format-bitrate {color:inherit;opacity:.55;}
 .container-playback {padding:0px;color:inherit;margin-top:env(safe-area-inset-top);}
 .no-fluid {display:flex;flex-direction:row;}
@@ -676,7 +676,7 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .lib-encoded-at-hdonly-tagview {position:absolute;padding:.05rem .2em 0 .3em;line-height:1.2em;left:2.8rem;bottom:1em;color:gold;background:#000;border:1px solid gold;border-radius:10%;font-size:.39em;font-style:normal;font-weight:600;}
 #playbar-hd-badge {filter:brightness(90%);display:none;position:absolute;line-height:1.2em;margin:.2em 0 0 1em;padding:.1em .2em 0 .3em;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;}
 #ss-hd-badge {filter:brightness(90%);display:none;position:absolute;line-height:1.2em;margin:.3rem 0 0 1em;padding:.1em .2em 0 .3em;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;}
-#playback-hd-badge {filter:brightness(90%);display:none;position:relative;height:1.2em;top:1.75rem;margin:0 0 0 1em;padding:.1em .2em 0 .3em;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;}
+.playback-hd-badge {filter:brightness(90%);display:none;position:relative;height:1.2em;top:1.75rem;margin:0 0 0 1em;padding:.1em .2em 0 .3em;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;}
 /* Radio manager */
 .modal-button-style {display:inline-block;/*margin-bottom:.5em;margin-top:-1px*/}
 /* Radio view */

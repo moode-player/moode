@@ -693,7 +693,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// Click on artist or station name in playback
-	$('#currentalbum').click(function(e) {
+	$('#currentartist').click(function(e) {
         if (!$('#playback-panel').hasClass('cv')) {
             // Radio station
     		if (MPD.json['artist'] == 'Radio station') {

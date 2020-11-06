@@ -202,14 +202,15 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* display:flex & playback stuff */
 	.no-fluid {flex-direction:column-reverse;}
 	.covers {padding:0;margin:0;}
-	/*#togglebtns {margin:4rem 1.5rem 0rem 1.5rem;padding:0;}*/
+	#playbtns {margin:0;}
+	#togglebtns {padding:0;}
 	#togglebtns .btn-group {display:inline-flex;}
 	#togglebtns .btn-group .btn {transition:none;font-size:1.2rem;margin:.5rem 1.25rem 1.75rem 1.25rem;padding:0 .5rem;height:2.5em;width:2.5em;/*color:var(--textvariant);*/}
 	#togglebtns .btn-group .btn i {min-width:1.25rem;}
 	#playbtns, #togglebtns/*, .volume-popup-btn-*/ {display:block;}
 	.coverview {display:none;}
-	#currentsong {font-size:1.5em;font-weight:bold;}
-	#currentalbum {font-size:1.35em;margin-bottom:1.5em;}
+	#currentsong {font-size:1.5em;font-weight:bold;padding-top:0}
+	#currentalbum {font-size:1.35em;margin-bottom:1.25em;}
 	#timeline {display:block;width:74vw;}
 	#mobile-time {display:block;}
 	.btn btn-cmd btn-toggle {font-size:.75em;}
@@ -225,6 +226,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-hd-badge {margin-top:.6em;}
 	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
 	#playbar-volume-popup-btn {width:initial!important;}
+	#extra-tags-display {display:none;}
 }
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
@@ -387,8 +389,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 /* iPhone5 portrait */
 @media (max-height:568px) and (max-width:320px) {
-	#extra-tags {display:none;}
-	#currentsong {padding-top:.5em}
 	.playlist {font-size:1.2em;}
 	.playlist li:before {width:1.75em;}
 	.playlist span {margin-left:calc(2.75rem + 1vmin);}
