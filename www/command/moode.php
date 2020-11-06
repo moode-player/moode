@@ -356,7 +356,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 					// Add new row, NULL causes Id column to be set to next number
 					// NOTE: $values have to be in column order
 					$values =
-						"'"	. $_POST['path']['url'] . "'," .
+						"'"	. SQLite3::escapeString($_POST['path']['url']) . "'," .
 						"'" . SQLite3::escapeString($_POST['path']['name']) . "'," .
 						"'"	. $_POST['path']['type'] . "'," .
 						"'"	. 'local' . "'," .
@@ -385,7 +385,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 
 				if ($return_msg == 'OK') {
 					$columns =
-					"station='" . $_POST['path']['url'] . "'," .
+					"station='" . SQLite3::escapeString($_POST['path']['url']) . "'," .
 					"name='" . SQLite3::escapeString($_POST['path']['name']) . "'," .
 					"type='" . $_POST['path']['type'] . "'," .
 					"logo='local'," .
