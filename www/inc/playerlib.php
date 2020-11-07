@@ -1009,7 +1009,8 @@ function parseTrackInfo($resp) {
 	7  Track
 	8  Title
 	9  Date
-	10 Time
+	10 Duration
+	11 Audio format
 	*/
 
 	if (is_null($resp)) {
@@ -1018,7 +1019,7 @@ function parseTrackInfo($resp) {
 	else {
 		$array = array();
 		$line = strtok($resp, "\n");
-		$num_lines = 11;
+		$num_lines = 12;
 
 		for ($i = 0; $i < $num_lines; $i++) {
 			$array[$i] = '';
@@ -1028,13 +1029,15 @@ function parseTrackInfo($resp) {
 			list ($element, $value) = explode(': ', $line, 2);
 
 			switch ($element) {
-				// Not needed
+				// Not needed for display
 				case 'duration':
-				case 'file':
 				case 'Last-Modified':
 				case 'Format':
 					break;
 				// All others
+				case 'file':
+					$file = $value;
+					break;
 				case 'Artist':
 				case 'Performer':
 					$artists .= $value . ', ';
@@ -1077,6 +1080,9 @@ function parseTrackInfo($resp) {
 		// Strip off trailing delimiter
 		$array[0] = array('Artists' => rtrim($artists, ', '));
 		$array[4] = array('Genres' => rtrim($genres, ', '));
+
+		// Add audio format
+		$array[11] = array('Audio format' => getEncodedAt(array('file' => $file), 'default'));
 	}
 
 	//workerLog(print_r($array, true));
