@@ -2000,6 +2000,14 @@ $('.context-menu a').click(function(e) {
             itemInfoModal('track_info', result);
         }, 'json');
 	}
+    else if ($(this).data('cmd') == 'track_info_playback') {
+        if ($('#currentsong').html() != '') {
+            var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
+            $.post('command/moode.php?cmd=' + cmd, {'path': MPD.json['file']}, function(result) {
+                itemInfoModal(cmd, result);
+            }, 'json');
+        }
+	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
 		$('#savedpl-path').html(path);
 		$('#deletesavedpl-modal').modal();
