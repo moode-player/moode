@@ -688,7 +688,7 @@ function renderUI() {
             $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
             if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
         		for (i = 0; i < filteredSongs.length; i++) {
-        			if (filteredSongs[i].title == MPD.json['title']) {
+        			if (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album']) {
         				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-highlight');
         				break;
         			}
