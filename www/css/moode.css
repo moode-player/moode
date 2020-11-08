@@ -212,7 +212,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbtns, #togglebtns/*, .volume-popup-btn-*/ {display:block;}
 	.coverview {display:none;}
 	#currentsong {font-size:1.5em;font-weight:bold;}
-	#currentalbum, #currentartist {font-size:1.35em;margin-bottom:1.25em;}
+	#currentalbum {font-size:1.35em;}
+	#currentartist {font-size:1.35em;margin-bottom:1.35em;}
 	#timeline {display:block;width:74vw;}
 	#mobile-time {display:block;}
 	.btn btn-cmd btn-toggle {font-size:.75em;}
