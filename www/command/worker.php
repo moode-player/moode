@@ -1466,7 +1466,7 @@ function runQueuedJob() {
 			sysCmd('mpc stop');
 
 			if ($_SESSION['w_queue'] == 'eqfa12p') {
-				if ($_SESSION['eqfa12p'] == '0') {
+				if ($_SESSION['eqfa12p'] == 'Off') {
 					sysCmd('mpc enable only 1');
 				}
 				else {
