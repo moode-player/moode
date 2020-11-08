@@ -226,7 +226,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-hd-badge {margin-top:.6em;}
 	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
 	#playbar-volume-popup-btn {width:initial!important;}
-	#extra-tags-display {display:none;}
+	/*#extra-tags-display {display:none;}*/
 }
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
