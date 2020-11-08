@@ -209,7 +209,13 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 
 // Parametric eq
 $eqfa12p = Eqp12(cfgdb_connect());
-if (isset($_POST['eqfa12p']) && (($_POST['eqfa12p'] ? "On" : "Off") != $_SESSION['eqfa12p'] || $_POST['eqfa12p'] != $eqfa12p->getActivePresetIndex())) {
+/**
+ *  $_POST['eqfa12p'] - value of 0 (no eqp used) or greater (selected curve id, not name).
+ *  $_SESSION['eqfa12p'] - is On or Off
+ *  $eqfa12p->getActivePresetIndex() - the active selected preset
+ */
+if (isset($_POST['eqfa12p']) &&
+  ((intval($_POST['eqfa12p']) ? "On" : "Off") != $_SESSION['eqfa12p'] ||  intval($_POST['eqfa12p']) != $eqfa12p->getActivePresetIndex()) ) {
 	// Pass old,new curve name to worker job
 	$currentActive = $eqfa12p->getActivePresetIndex();
 	$newActive = intval($_POST['eqfa12p']);
