@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Nov 2 21:32:42 2020
+-- File generated with SQLiteStudio v3.1.0 on Sat Nov 7 16:05:33 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -276,7 +276,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (35, 'alsavolume', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'PCM');
 INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
-INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'genre,track,disc,date,albumartist,composer,conductor,performer,encoded');
+INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'album,genre,track,disc,date,composer,conductor,performer,encoded');
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
@@ -312,7 +312,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
 INSERT INTO cfg_system (id, param, value) VALUES (72, 'shellinabox', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (73, 'alsaequal', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (74, 'eqfa12p', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (74, 'eqfa12p', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (75, 'p3wifi', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (76, 'p3bt', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');

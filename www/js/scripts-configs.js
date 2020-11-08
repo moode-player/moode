@@ -116,6 +116,9 @@ jQuery(document).ready(function($){ 'use strict';
 		location.assign('http://' + location.host + '/eqg-config.php?curve=' + $(this).val());
 	});
     $('#master-gain-up, #master-gain-dn').on('mousedown mouseup click', function(e) {
+        //e.stopPropagation();
+        e.preventDefault();
+
     	if (e.type == 'mousedown') {
     		var selector = $(this).attr('id');
     	    eqGainUpdInterval = setInterval(function() {
