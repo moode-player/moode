@@ -639,6 +639,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#savepl-modal').on('shown.bs.modal', function(e) {
         $('#pl-saveName').focus();
     });
+	
 	// Set favorites
     $('#pl-btnSetFav').click(function(e){
 		var favname = $('#pl-favName').val();
@@ -1276,12 +1277,18 @@ jQuery(document).ready(function($) { 'use strict';
     $('#extra-tags-display').click(function(e) {
         if ($('#currentsong').html() != '') {
             var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
-            $.post('command/moode.php?cmd=' + cmd, {'path': MPD.json['file']}, function(result) {
-                itemInfoModal(cmd, result);
-            }, 'json');
+            audioinfo(cmd, MPD.json['file']);
         }
     });
+	
+	$('#audioinfo-track').live('click', function(e) {
+		$('#audioinfo-modal').removeClass('hardware').addClass('track');
+	});
 
+	$('#audioinfo-hardware').live('click', function(e) {
+		$('#audioinfo-modal').removeClass('track').addClass('hardware');
+	});
+	
     // CoverView screen saver reset
     $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
         //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');

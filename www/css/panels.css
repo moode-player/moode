@@ -96,7 +96,7 @@ html {background-color:inherit;}
 .configure-renderer, .disconnect-renderer {font-size:.7em!important;cursor:pointer;border-radius:5rem;background-color:var(--btnshade4);margin-top:1em;width:10em;color:inherit;}
 .configure-renderer:hover, .disconnect-renderer:hover {background-color:var(--btnshade4);} /* Mask hover effect */
 /* main ui */
-.playback-controls {display:none;position:absolute;top:0;left:50%;width:184px;margin:-1px 0 0 -92px;text-align:center;z-index:9;}
+/*.playback-controls {display:none;position:absolute;top:0;left:50%;width:184px;margin:-1px 0 0 -92px;text-align:center;z-index:9;}*/
 #currentsong, #currentalbum, #currentartist, #format-bitrate, #elapsed, #countdown-display {display:block;}
 #extra-tags-display {font-size:1rem;color:var(--textvariant);padding-top:.5em;text-align:center;display:block;cursor:pointer;}
 #currentsong {font-size:1.35em;padding-top:1.65rem;font-weight:bold;color:var(--accentxts);word-wrap:break-word;cursor:pointer;}
@@ -180,7 +180,7 @@ html {background-color:inherit;}
 a.btn-cmd {width:18px;}
 .btn2 {color:inherit;display:inline-block;}
 .btn-cmd:focus {outline:none;}
-img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(32, 32, 32, 0.25);width:100%;height:100%;cursor:pointer;}
+img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(32, 32, 32, 0.25);width:100%;height:100%;cursor:pointer;max-width:66vh;}
 .covers {padding:.75em 1em 0 1em}
 #coverart-url {position:relative;}
 #container-browse {width:100%;padding:0;top:2.75rem;top:calc(2.75rem + env(safe-area-inset-top));overflow:hidden;position:absolute;}
@@ -695,9 +695,14 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 /* Library filter */
 #lib-flatlist-filter {font-size:.5em;}
 /* Audio info */
-.container-iteminfo li {list-style:none;line-height:normal;padding:.25rem .5rem;overflow:auto;}
-.container-iteminfo .h5 {margin:.6rem 0 .4rem 0;width:unset;}
-.container-iteminfo .h5:first-child{margin:0 0 .4rem 0;}
-.container-iteminfo .left {float:left;width:33%;}
-.container-iteminfo .right {float:right;width:67%;}
-.container-iteminfo .ralign {float:right;width:67%;text-align:right}
+.container-iteminfo li {list-style:none;line-height:normal;padding:.5rem;overflow:auto;}
+.container-iteminfo .h5 {margin:.6rem 0 .4rem 0;width:unset!important;}
+.container-iteminfo .left {float:left;color:var(--textvariant);font-weight:500;width:30%;}
+.container-iteminfo .right {float:right;width:70%;}
+.container-iteminfo .ralign {float:right;width:70%;text-align:right}
+.container-iteminfo .off, .container-iteminfo .None {display:none;}
+#audioinfo, #trackinfo {display:none;}
+#audioinfo-modal.hardware #audioinfo {display:block;}
+#audioinfo-modal.track #trackinfo {display:block;}
+#audioinfo-modal.hardware #audioinfo-hardware, #audioinfo-modal.track #audioinfo-track {background-color:var(--btnshade4);}
+#trackinfo li:nth-child(odd) {background-color:rgba(128,128,128,.05);}

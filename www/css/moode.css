@@ -25,14 +25,16 @@ a:focus {color:var(--accentxts);} /* fixes blue outline on control after closing
 a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-tabs {position:absolute;top:0;top:env(safe-area-inset-top);color:inherit;display:flex;z-index:1001;line-height:normal;font-size:inherit;height:2.75em;align-items:center;display:none;}
 #config-tabs a {font-size:.9rem;color:#ddd;display:inline-flex;}
-#config-tabs .btn {padding: .35rem .6rem;}
+#config-tabs .btn {padding: .35rem .6rem;border-right:1px solid rgba(128,128,128,.35)}
+#config-tabs .btn:last-child, #config-tabs .btn.active {border:none;}
 .viewswitch-cfgs {position:absolute;top:0;top:env(safe-area-inset-top);left:50%;box-sizing:border-box;background-color:transparent;color:inherit;display:none;z-index:1001;line-height:normal;font-size:inherit;transform:translate(-50%, 0%);height:2.75em;align-items:center;}
-.viewswitch-cfgs .btn {position:relative;align-items:center;border-radius:0px;width:50%;/*height:65%;*/line-height:normal;font-size:1rem;padding:.35rem 1rem;color:inherit;border-top:1px solid var(--btnbarcolor);border-bottom:1px solid var(--btnbarcolor);border-right:1px solid var(--btnbarcolor);background: var(--btnshade3);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
-.viewswitch-cfgs .btn:first-child {border-top-left-radius:.25em;border-bottom-left-radius:.25em;border-left:1px solid var(--btnbarcolor);}
-.viewswitch-cfgs .btn:last-child {border-top-right-radius:.25em;border-bottom-right-radius:.25em;border-right:1px solid var(--btnbarcolor);border-left:none !important;}
-.viewswitch-cfgs .btn.active {background:rgba(128,128,128,.35);border:1px solid transparent;color:inherit;}
+.viewswitch-cfgs .btn {position:relative;align-items:center;border-radius:0px;width:50%;/*height:65%;*/line-height:normal;font-size:1rem;padding:.35rem 1rem;color:inherit;border:none;background: var(--btnshade3);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.viewswitch-cfgs .btn:first-child {border-top-left-radius:.25em;border-bottom-left-radius:.25em;}
+.viewswitch-cfgs .btn:last-child {border-top-right-radius:.25em;border-bottom-right-radius:.25em;}
+.viewswitch-cfgs .btn.active {background:rgba(128,128,128,.35);color:inherit;}
 .viewswitch-cfgs a {color:var(--btnbarcolor);box-sizing:border-box;}
 .viewswitch-cfgs .active a {color:inherit;}
+#audioinfo-tabs {display:flex;position:relative;width:25em;max-width:50%;margin-bottom:1em;}
 #config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
 #config-back a {color:#ddd;font-size:1.35rem;margin-right:.5em}
 .horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size: 1.15em;font-style:italic;color: #888;}
@@ -211,6 +213,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.coverview {display:none;}
 	#currentsong {font-size:1.5em;font-weight:bold;}
 	#currentalbum {font-size:1.35em;}
+	#currentartist {font-size:1.35em;margin-bottom:1.35em;}
 	#timeline {display:block;width:74vw;}
 	#mobile-time {display:block;}
 	.btn btn-cmd btn-toggle {font-size:.75em;}
@@ -239,7 +242,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#lib-album-search input, #lib-album-search input, #current-tab, #menu-header {font-size:1.11rem;}
 	.dropdown-menu > li > a, .viewswitch .btn {font-size:1.16rem;line-height:2.75em;}
 	#playback-panel, #content {position:relative;}
-	.modal-body{padding:0 .5rem;max-height:80vh;}
+	.modal-body{padding:0 .75rem;max-height:80vh;}
 	.modal-footer .btn {width:40%;}
 	.modal .h5 {width:42%;}
 	.modal-body .form-horizontal .control-label {width:42%;}

@@ -1996,16 +1996,12 @@ $('.context-menu a').click(function(e) {
         submitLibraryUpdate();
 	}
     else if ($(this).data('cmd') == 'track_info_folder') {
-        $.post('command/moode.php?cmd=track_info', {'path': path}, function(result) {
-            itemInfoModal('track_info', result);
-        }, 'json');
+        audioinfo('track_info', path);
 	}
     else if ($(this).data('cmd') == 'track_info_playback') {
         if ($('#currentsong').html() != '') {
             var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
-            $.post('command/moode.php?cmd=' + cmd, {'path': MPD.json['file']}, function(result) {
-                itemInfoModal(cmd, result);
-            }, 'json');
+            audioinfo(cmd, MPD.json['file']);
         }
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
@@ -2954,7 +2950,7 @@ function btnbarfix(temp1,temp2) {
 	document.body.style.setProperty('--btnshade3', tempcolor);
 	document.body.style.setProperty('--btnshade4', getYIQ(temp1) > 127 ? 'rgba(32,32,32,0.10)' : 'rgba(208,208,208,0.17)');
 	$('#content').hasClass('visacc') ? op = .95 : op = .9;
-	document.body.style.setProperty('--modalbkdr', rgbaToRgb(.95, op, temprgba, temprgb));
+	document.body.style.setProperty('--modalbkdr', rgbaToRgb(.95, .95, temprgba, temprgb));
 	if ($('#content').hasClass('visacc')) {
 		(currentView.indexOf('playback') == -1 || SESSION.json['adaptive'] == 'No') ? UI.accenta = themeMcolor : UI.accenta = adaptMcolor;
 	}
@@ -3648,15 +3644,33 @@ function splitStringAtFirstSpace (str) {
     return strArray;
 }
 
-function itemInfoModal(cmd, result) {
+// for menu item in header.php
+function audiohardware() {
+    var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
+    audioinfo(cmd, MPD.json['file'], 'hardware');
+}
+// track/audio info - cmd = type of dialog, path = song file, dialog for m menu audio info
+function audioinfo(cmd, path, dialog){
+	$('#audioinfo-modal .modal-body').load('audioinfo.php', function(){
+	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(result) {
+			itemInfoModal('trackdata', result);
+			if (dialog != 'hardware') dialog = 'track';
+			cmd == 'station_info' ? $('#audioinfo-track').text('Station') : $('#audioinfo-track').text('Track');
+			$('#audioinfo-modal').removeClass('track hardware');
+			$('#audioinfo-modal').addClass(dialog);
+			$('#audioinfo-modal').modal('show');		
+	    }, 'json');
+	});
+}
+
+// construct track list - id = element, result = data object
+function itemInfoModal(id, result) {
     var lines = '';
-    for (i = 0; i < result.length; i++) {
-        var key = Object.keys(result[i]);
-        if (typeof(result[i][key]) != 'undefined') {
-            lines += '<li><span class="left">' + key + '</span><span class="right">' + result[i][key] + '</span></li>';
-        }
-    }
-    $('#item-info-modal-label').text(cmd == 'station_info' ? 'Station information' : 'Track information');
-    $('#item-info-lines').html(lines);
-    $('#item-info-modal').modal();
+	    for (i = 0; i < result.length; i++) {
+	        var key = Object.keys(result[i]);
+	        if (typeof(result[i][key]) != 'undefined') {
+	            lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
+	        }
+	    }		
+    document.getElementById(id).innerHTML = lines;
 }
