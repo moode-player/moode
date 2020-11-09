@@ -180,7 +180,7 @@ html {background-color:inherit;}
 a.btn-cmd {width:18px;}
 .btn2 {color:inherit;display:inline-block;}
 .btn-cmd:focus {outline:none;}
-img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(32, 32, 32, 0.25);width:100%;height:100%;cursor:pointer;max-width:66vh;}
+img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(32, 32, 32, 0.25);width:100%;height:100%;cursor:pointer;/*max-width:66vh;*/}
 .covers {padding:.75em 1em 0 1em}
 #coverart-url {position:relative;}
 #container-browse {width:100%;padding:0;top:2.75rem;top:calc(2.75rem + env(safe-area-inset-top));overflow:hidden;position:absolute;}
