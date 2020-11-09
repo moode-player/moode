@@ -5,7 +5,7 @@
 # moOde 7.0.0 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r700 sources
-# - Bump to Linux kernel 5.4.61 build #1339
+# - Bump to Linux kernel x.y.z build #nnnn
 # - Stop auth.log spam
 # - Remove references to discontinued Google Play Music service
 # - Add CAPS 12-band parametric EQ
@@ -668,9 +668,9 @@ sudo reboot
 //
 ////////////////////////////////////////////////////////////////
 
-KERNEL=5.4.73
-BUILD=#1360
-echo "y" | sudo PRUNE_MODULES=1 rpi-update e8ddac7cd34b179efd702d4dc1efd0ccf44559b9
+KERNEL=5.4.75
+BUILD=#1367
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 1c29cd3b22307264979fbb383883004edcc2e2a3
 
 
 KERNEL=5.4.61
