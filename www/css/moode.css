@@ -143,6 +143,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 @media (orientation:portrait) {
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
 	#ss-coverart-url img {width:80vw;}
+	body.cv #playbar-timeline {width:15%}
 }
 @media (max-width:769px) {
 	body {padding-left: 0px;padding-right: 0px;}
