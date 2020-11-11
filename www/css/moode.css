@@ -139,11 +139,13 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* update package txt ol */
 #update-pkg-ol {font-family:courier new;}
 #update-pkg-ol li {line-height:1em;}
+
 /* media queries */
 @media (orientation:portrait) {
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
 	#ss-coverart-url img {width:80vw;}
-	body.cv #playbar-timeline {width:15%}
+	body.cv #playbar-timeline {width:30%}
+	body.cv #playbar-toggles .btn {margin:0 .25rem}
 }
 @media (max-width:769px) {
 	body {padding-left: 0px;padding-right: 0px;}

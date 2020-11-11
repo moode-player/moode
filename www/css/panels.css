@@ -443,7 +443,7 @@ body.cv #playbar {box-shadow:none;color:#eee;}
 body.cv #playbar-title {font-size:1.4em;/*top:-25%;transform:translate(-50%, -50%);padding-bottom:0;*/}
 body.cv #playbar-currentsong, body.cv #playbar-currentalbum {display:none;padding-bottom:.5em;}
 body.cv #ss-currentsong, body.cv #ss-currentalbum {font-size:1.4em;}
-body.cv #playbar-timeline {top:50%;width:40%;transform:translate(-50%, -50%);}
+body.cv #playbar-timeline {top:50%;width:35%;transform:translate(-50%, -50%);}
 body.cv #screen-saver/*, body.cv #menu-bottom*/ {display:block !important;}
 body.cv #cv-playlist-btn {display:block;}
 body.cv #addfav-li {display:none;}
