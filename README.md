@@ -17,4 +17,4 @@ RaspiOS: https://www.raspbian.org/RaspbianRepository<br/>
 Moode OS Builder: https://github.com/moode-player/mosbuild<br/>
 moodeaudio.org: http://moodeaudio.org<br/>
 moOde Twitter feed: http://twitter.com/MoodeAudio</br>
-moOde Forum http://moodeaudio.org/Forum
+moOde Forum http://moodeaudio.org/forum
