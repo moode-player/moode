@@ -40,7 +40,7 @@
 	</div>
 
 	<!-- PLAYBACK WITH INTEGRATED QUEUE -->
-	<div id="playback-panel" class="tab-pane">
+	<div id="playback-panel">
 		<div class="btnlist btnlist-top btnlist-top-pl">
 			<form id="pl-search" method="post" onSubmit="return false;">
 				<div class="input-append">
@@ -116,15 +116,15 @@
 						<div id="playback-firstuse-help"><div></div></div>
 						<div aria-label="Cover Art" id="coverart-url"></div>
 						<div id="timeline">
-							<div class="timeline-bg"></div>
-							<div class="timeline-progress"></div>
-							<div class="timeline-thm">
-								<input aria-label="Time" id="timetrack" type="range" min="0" max="1000" value="0" step="1">
+							<div aria-label="Countdown" id="m-countdown"></div>
+							<div id="progress">
+								<div class="timeline-bg"></div>
+								<div class="timeline-progress"></div>
+								<div class="timeline-thm">
+									<input aria-label="Time" id="timetrack" type="range" min="0" max="1000" value="0" step="1">
+								</div>
 							</div>
-							<div id="mobile-time">
-								<div aria-label="Countdown" id="m-countdown"></div>
-								<div aria-label="Total" id="m-total"></div>
-							</div>
+							<div aria-label="Total" id="m-total"></div>
 						</div>
 
 						<div id="songsand">
@@ -169,7 +169,7 @@
 	</div>
 
 	<!-- LIBRARY VIEWS -->
-	<div id="library-panel" class="tab-pane">
+	<div id="library-panel">
 		<div class="container-library">
 			<div id="lib-content">
 				<div id="content-position">
@@ -240,7 +240,7 @@
 	</div>
 
 	<!-- FOLDER VIEW -->
-	<div id="folder-panel" class="tab-pane">
+	<div id="folder-panel">
 		<div id="container-browse">
 			<div aria-label="Back" class="btnlist btnlist-top btnlist-top-db">
 				<button id="db-back" class="btn"><i class="far fa-arrow-left"></i></button>
@@ -264,7 +264,7 @@
 	</div>
 
 	<!-- RADIO VIEW -->
-	<div id="radio-panel" class="tab-pane">
+	<div id="radio-panel">
 		<div id="container-radio">
 			<div class="btnlist btnlist-top btnlist-top-ra">
 				<button aria-label="Radio Manager" id="radio-manager-btn" class="btn"><i class="fas fa-cog"></i></button>

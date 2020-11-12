@@ -581,7 +581,7 @@
             return ret;
         };
 
-        this.listen = function () {
+        /*this.listen = function () {
             // bind MouseWheel
             var s = this,
                 mw = function (e) {
@@ -668,7 +668,7 @@
 
             this.$c.bind("mousewheel DOMMouseScroll", mw);
             this.$.bind("mousewheel DOMMouseScroll", mw)
-        };
+        };*/
 
         this.init = function () {
 

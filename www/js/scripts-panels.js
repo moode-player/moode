@@ -28,9 +28,6 @@ jQuery(document).ready(function($) { 'use strict';
 	}
 
     GLOBAL.scriptSection = 'panels';
-	$('#config-back').hide();
-	$('#config-tabs').css('display', 'none');
-	$('#menu-bottom').css('display', 'flex');
 
     // NOTE: This is a workaround for the time knob progress slider not updating correctly when the window is hidden
     document.addEventListener("visibilitychange", visChange);
@@ -135,7 +132,6 @@ jQuery(document).ready(function($) { 'use strict';
     	if (SESSION.json['adaptive'] == "No") {document.body.style.setProperty('--adaptmbg', themeBack);}
     	blurrr == true ? themeOp = .85 : themeOp = .95;
 
-
         function mutate(mutations) {
             mutations.forEach(function(mutation) {
                 $('#alpha-blend span').text() < 1 ? $('#cover-options').show() : $('#cover-options').css('display', '');
@@ -149,28 +145,16 @@ jQuery(document).ready(function($) { 'use strict';
             observer.observe(target, config);
 		});
 
-
-    	// Only display transparency related theme options if alphablend is < 1
-    	/*$('#alpha-blend').on('DOMSubtreeModified',function(){
-    		if ($('#alpha-blend span').text() < 1) {
-    			$('#cover-options').show();
-    		}
-            else {
-    			$('#cover-options').css('display', '');
-    		}
-    	});*/
-
     	tempcolor = (THEME.json[SESSION.json['themename']]['mbg_color']).split(",")
     	themeMback = 'rgba(' + tempcolor[0] + ',' + tempcolor[1] + ',' + tempcolor[2] + ',' + themeOp + ')';
     	accentColor = themeToColors(SESSION.json['accent_color']);
     	document.body.style.setProperty('--themetext', themeMcolor);
     	adaptColor = themeColor;
     	adaptBack = themeBack;
-    	adaptMhalf = themeMback;
+    	adaptShade = themeMback;
     	adaptMcolor = themeMcolor;
     	adaptMback = themeMback;
     	tempback = themeMback;
-    	abFound = false;
     	showMenuTopW = false
     	showMenuTopR = false
     	setColors();
@@ -191,11 +175,6 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Setup pines notify
         $.pnotify.defaults.history = false;
-
-    	// Show button bars
-    	if (!UI.mobile) {
-    		$('#playbtns, #togglebtns').show();
-    	}
 
     	// Screen saver backdrop style
     	if (SESSION.json['scnsaver_style'] == 'Animated') {
@@ -286,45 +265,32 @@ jQuery(document).ready(function($) { 'use strict';
         // ACTIVE VIEW
         //
 
-        // Reset active state
-        $('#folder-panel, #radio-panel').removeClass('active');
-
         // Playback
     	if (currentView.indexOf('playback') != -1) {
-    		$('#playback-panel').addClass('active');
     		$(window).scrollTop(0); // make sure it's scrolled to top
-    		if (UI.mobile) {
-    			$('#container-playlist').css('visibility','hidden');
-    			$('#playback-controls').show();
-    		}
-            else {
+    		if (!UI.mobile) {
 		        customScroll('playlist', parseInt(MPD.json['song']));
     		}
-    		$('#menu-bottom').hide();
-    	}
-        // Library
-    	else {
-    		$('#menu-bottom, #viewswitch').css('display', 'flex');
-    		$('#playback-switch').hide();
+			$(document.body).addClass('playback');		
     	}
 
         // Radio view
     	if (currentView == 'radio') {
-    		makeActive('.radio-view-btn','#radio-panel', currentView);
+    		makeActive(currentView);
     	}
         // Folder view
     	else if (currentView == 'folder') {
-    		makeActive('.folder-view-btn','#folder-panel', 'folder');
+    		makeActive('folder');
     		mpdDbCmd('lsinfo', '');
     	}
         // Tag view
     	else if (currentView == 'tag'){
-    		makeActive('.tag-view-btn','#library-panel', 'tag');
+    		makeActive('tag');
             SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
     	}
     	// Album view
     	else if (currentView == 'album'){
-    		makeActive('.album-view-btn','#library-panel', 'album');
+    		makeActive('album');
     	}
     });
 
@@ -334,15 +300,15 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Radio view
 	$('.radio-view-btn').click(function(e){
-        makeActive('.radio-view-btn','#radio-panel','radio');
+        makeActive('radio');
 	});
     // Folder view
 	$('.folder-view-btn').click(function(e){
-		makeActive('.folder-view-btn','#folder-panel','folder');
+		makeActive('folder');
 	});
     // Tag view
 	$('.tag-view-btn').click(function(e){
-		makeActive('.tag-view-btn','#library-panel','tag');
+		makeActive('tag');
         SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 	    $('#albumsList .lib-entry').removeClass('active');
 
@@ -365,7 +331,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.album-view-btn').click(function(e){
 		$('#library-panel').addClass('covers').removeClass('tag');
 		GLOBAL.lazyCovers = false;
-		makeActive('.album-view-btn','#library-panel','album');
+		makeActive('album');
 
 		if (!GLOBAL.libRendered) {
 			loadLibrary();
@@ -713,7 +679,7 @@ jQuery(document).ready(function($) { 'use strict';
                 currentView = 'playback,radio';
     			$('#playback-switch').click();
 
-                if (!$('.radio-view-btn').hasClass('active')) {
+                if (currentView != 'radio') {
     				$('.radio-view-btn').click();
     			}
 
@@ -1236,20 +1202,17 @@ jQuery(document).ready(function($) { 'use strict';
         $('#cv-playlist').toggle();
 
         if ($('#cv-playlist').css('display') == 'block') {
-            $('#cv-playlist ul').html($('#playlist ul').html());
             if (SESSION.json['playlist_art'] == 'Yes') {
                 lazyLode('cv-playlist');
             }
             customScroll('cv-playlist', parseInt(MPD.json['song']));
 
             GLOBAL.playbarPlaylistTimer = setTimeout(function() {
-                $('#cv-playlist ul').html('');
                 $('#cv-playlist').hide();
             }, 20000);
         }
         else {
             e.preventDefault();
-            $('#cv-playlist ul').html('');
             window.clearTimeout(GLOBAL.playbarPlaylistTimer);
         }
 	});
@@ -1297,24 +1260,27 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         if (coverView) {
-			$('body').removeClass('cv');
+            $('#cv-playlist ul').html('');
+            $('#cv-playlist').css('display', '');
 			coverView = false;
-            setColors();
+			$('body').removeClass('cv', function(){
+	            setColors();
+				if (!UI.mobile && currentView.indexOf('playback') != -1) {
+		            customScroll('playlist', parseInt(MPD.json['song']));
+				}
+			});
 
             // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
-            $('#cv-playlist ul').html('');
-            $('#cv-playlist').hide();
-            $('#lib-coverart-img').show();
+            //$('#lib-coverart-img').show();
 
             // TEST: Fixes Queue sometimes not being visable after returning from CoverView
-            UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
+            /*UI.mobile ? $('#playback-queue').css('width', '99.9%') : $('#playback-queue').css('width', '38.1%');
             setTimeout(function() {
                 $('#playback-queue').css('width', ''); // TEST: Restore correct width to force Queue visable
-            }, DEFAULT_TIMEOUT);
-            if (SESSION.json['playlist_art'] == 'Yes') {
+            }, DEFAULT_TIMEOUT);*/
+            /*if (SESSION.json['playlist_art'] == 'Yes') {
                 lazyLode('playlist');
-            }
-            customScroll('playlist', parseInt(MPD.json['song']));
+            }*/
         }
         // Reset screen saver timeout global
         else if (SESSION.json['scnsaver_timeout'] != 'Never') {

@@ -81,12 +81,11 @@ function loadLibrary() {
 
 	$.post('command/moode.php?cmd=loadlib', function(data) {
 		clearTimeout(libpop);
-        $('#lib-content').show();
-		renderLibrary(data);
 		if (currentView == 'album' || currentView == 'tag') setLibMenuAndHeader();
+        $('#lib-content').css('display', 'block');
+		renderLibrary(data);
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
-
 	}, 'json');
 }
 
@@ -645,7 +644,7 @@ var renderAlbums = function() {
 	// Headers clicked
 	if (UI.libPos[0] == -2) {
 		// only scroll the visible list
-		if ($('.tag-view-btn').hasClass('active')) {
+		if (currentView == 'tag') {
 			$('#lib-album').scrollTo(0, 200);
 		}
 		else {
@@ -654,12 +653,12 @@ var renderAlbums = function() {
 	}
 
 	// Start lazy load
-	if ($('.album-view-btn').hasClass('active')) {
+	if (currentView == 'album') {
 		$('img.lazy-albumview').lazyload({
 			container: $('#lib-albumcover')
 		});
 	}
-	else if ($('.tag-view-btn').hasClass('active') && SESSION.json['library_tagview_covers'] == 'Yes') {
+	else if (currentView == 'tag' && SESSION.json['library_tagview_covers'] == 'Yes') {
 		$('img.lazy-tagview').lazyload({
 		    container: $('#lib-album')
 		});
@@ -1393,7 +1392,7 @@ $('#context-menu-lib-item a').click(function(e) {
 // Click coverart context menu item
 $('#context-menu-lib-album a').click(function(e) {
 	UI.dbEntry[0] = $.isNumeric(UI.dbEntry[0]) ? UI.dbEntry[0] : 0;
-	if (!$('.album-view-button').hasClass('active')) {
+	if (currentView != 'album') {
 		$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 		$('img.lib-coverart').removeClass('active');
 	}
