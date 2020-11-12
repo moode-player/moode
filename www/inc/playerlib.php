@@ -3447,22 +3447,6 @@ function cfgI2sOverlay($i2sDevice) {
 	sysCmd($cmd);
 	$cmd = $_SESSION['p3bt'] == '0' ? 'echo dtoverlay=disable-bt >> ' . '/boot/config.txt' : 'echo "#dtoverlay=disable-bt" >> ' . '/boot/config.txt';
 	sysCmd($cmd);
-
-	// Enhanced drivers
-	$kernel_base = explode('-', $_SESSION['kernelver'])[0];
-	workerLog($kernel_base);
-	if ($i2sDevice == 'DDDAC1794 NOS (384K)') {
-		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v7+ /lib/modules/' . $kernel_base . '-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v7l+ /lib/modules/' . $kernel_base . '-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v8+ /lib/modules/' . $kernel_base . '-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('depmod');
-	}
-	elseif ($i2sDevice == 'DDDAC1794 NOS') {
-		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v7+ /lib/modules/' . $kernel_base . '-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v7l+ /lib/modules/' . $kernel_base . '-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v8+ /lib/modules/' . $kernel_base . '-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('depmod');
-	}
 }
 
 // pi3 wifi adapter enable/disable
