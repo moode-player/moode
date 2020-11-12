@@ -3476,13 +3476,13 @@ function lazyLode(view) {
 	       	} else {
 				if (UI.libPos[1] >= 0 && currentView == 'album') {
 					setTimeout(function(){
-						$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
 						customScroll('albumcovers', UI.libPos[1], 0);
+						$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
 					}, 250);
 				}
 				if (UI.libPos[0] >= 0 && currentView == 'tag') {
-					customScroll('albums', UI.libPos[0], 0);
 					setTimeout(function(){
+						customScroll('albums', UI.libPos[0], 0);
 						$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
 						$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
 					}, 250);
