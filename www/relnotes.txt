@@ -37,7 +37,7 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 5.4.61 build #1339
+- UPD: Bump to Linux kernel 5.4.75 build #1367
 - UPD: Bump to MPD 0.22.2
 - UPD: Bump to Auto-shuffle (ashuffle) 3.10.0
 - UPD: Bump to squeezelite 1.9.7-1270
@@ -63,6 +63,11 @@ Updates
 - UPD: Honor "Resume MPD" setting when disconnecting a renderer
 - UPD: Only load CoverView Queue HTML when it's opened
 - UPD: Auto-configure expanded to include most settings
+
+Audio devices
+
+- NEW: Allo Boss 2 DAC
+- NEW: EWCG Discrete R2R DAC
 
 Radio stations
 
