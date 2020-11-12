@@ -5,7 +5,7 @@
 # moOde 7.0.0 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r700 sources
-# - Bump to Linux kernel x.y.z build #nnnn
+# - Bump to Linux kernel 5.4.75 build #1367
 # - Stop auth.log spam
 # - Remove references to discontinued Google Play Music service
 # - Add CAPS 12-band parametric EQ
@@ -672,37 +672,40 @@ KERNEL=5.4.75
 BUILD=#1367
 echo "y" | sudo PRUNE_MODULES=1 rpi-update 1c29cd3b22307264979fbb383883004edcc2e2a3
 
-
-KERNEL=5.4.61
-BUILD=#1339
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 039088f7d929b0d1cc49e8d2012df0652f908518
-
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
 sudo apt-get clean
 
-# Install Edimax EW-7811Un fix (IS THIS NEEDED ANYMORE ?)
-#sudo mv /etc/modprobe.d/blacklist-rtl8192cu.conf /etc/modprobe.d/blacklist-rtl8192cu.conf.delete
-
 # Install drivers for Allo USBridge Signature
 
-# 32-bit
 # WiFi driver (Comfast CF-912AC, MrEngman stock)
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.conf /etc/modprobe.d/
-sudo chmod 0644 /lib/modules/$KERNEL"-v7+"/kernel/drivers/net/wireless/8812au.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/8812au.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless/8812au.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/8812au.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/drivers/net/wireless/8812au.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/8812au.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless/8812au.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/8812au.conf /etc/modprobe.d/
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless/8812au.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/drivers/net/wireless/8812au.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless/8812au.ko
 sudo chmod 0644 /etc/modprobe.d/*.conf
 # Eth/USB driver v2.0.0 (Allo enhanced)
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/ax88179_178a.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb
-sudo depmod $KERNEL-v7+
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/ax88179_178a.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/ax88179_178a.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/ax88179_178a.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb/ax88179_178a.ko
 
-# 64-bit
-# NOTE uses same /etc/modprobe.d/8812au.conf as 32-bit driver
-# WiFi driver (Comfast CF-912AC, MrEngman stock)
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v8+/8812au.ko /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless
-sudo chmod 0644 /lib/modules/$KERNEL"-v8+"/kernel/drivers/net/wireless/8812au.ko
-# Eth/USB driver v2.0.0 (Allo enhanced)
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v8+/ax88179_178a.ko /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb
+# Install @bitlab enhanced pcm1794a 384K codec
+
+sudo cp ./moode/other/bitlab/pcm1794a/$KERNEL/snd-soc-pcm1794a.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo cp ./moode/other/bitlab/pcm1794a/$KERNEL/snd-soc-pcm1794a.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo cp ./moode/other/bitlab/pcm1794a/$KERNEL/snd-soc-pcm1794a.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+
+sudo depmod $KERNEL-v7+
+sudo depmod $KERNEL-v7l+
 sudo depmod $KERNEL-v8+
 
 # SR7
