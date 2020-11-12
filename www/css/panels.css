@@ -130,7 +130,7 @@ html {background-color:inherit;}
 #volumedn, #volumedn-2, #volumeup, #volumeup-2 {font-size:2.5vw;font-weight:400;margin:0 auto;padding:.25rem 1rem;height:33%;color:var(--adapttext);}
 #songsand {width:98%;margin:0 auto;}
 #volume-popup {display:none;height:100vh;width:100vw;background-color:var(--modalbkdr);}
-#volpad {position:fixed;top:calc(50% - 2.75rem - env(safe-area-inset-bottom));left:50%;width:30%;transform:translate(-50%, -50%);z-index:10001;}
+#volpad {position:fixed;top:calc(50% - 2.75rem - env(safe-area-inset-bottom));left:50%;/*width:30%;*/transform:translate(-50%, -50%);z-index:10001;}
 #volume-popup .modal-footer {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 5vh);width:inherit;border:none;}
 #volume-popup .modal-footer button {width:20%;color:var(--adapttext);left:50%;transform:translate(-50%);position:fixed;font-size:1.2rem;z-index:10001;}
 #volcontrol-2, #inpsrctick {height:25vw;width:25vw;padding:2em;}
