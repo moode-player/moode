@@ -39,11 +39,6 @@ if [[ $1 = "chg-name" ]]; then
 		sed -i "s/$3/$4/" /etc/hosts
 	fi
 
-	# DELETE
-	#if [[ $2 = "browsertitle" ]]; then
-	#	sed -i "s/<title>$3/<title>$4/" /var/www/header.php
-	#fi
-
 	if [[ $2 = "squeezelite" ]]; then
 		sed -i "s/PLAYERNAME=$3/PLAYERNAME=$4/" /etc/squeezelite.conf
 	fi
