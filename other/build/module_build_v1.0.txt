@@ -1,0 +1,257 @@
+////////////////////////////////////////////////////////////////
+//
+// MODULE BUILD RECIPE v1.0
+// Based on @bitlab build plan.
+//
+// NOTE: Expand the file system on the build machine
+//
+////////////////////////////////////////////////////////////////
+
+----------------------------------------------------------------
+// 1. SETUP ENVIRONMENT
+//
+----------------------------------------------------------------
+
+KERNEL_VER=5.4.75
+KERNEL_BUILD=1367
+KERNEL_RPI_UPDATE_HASH=1c29cd3b22307264979fbb383883004edcc2e2a3
+KERNEL_SRC_HASH=`curl https://raw.githubusercontent.com/Hexxeh/rpi-firmware/$KERNEL_RPI_UPDATE_HASH/git_hash`
+MOODE_OTHER=/mnt/moode-player/GitHub/moode/other
+
+# Do this if 64-bit tooling is already installed
+export PATH=$PATH:/opt/aarch64/bin/
+
+----------------------------------------------------------------
+// 2. INSTALL SPECIFIC KERNEL VIA RPI-UPDATE
+//
+// NOTE: Skip this step if already running the given kernel
+----------------------------------------------------------------
+
+sudo echo "y" | sudo PRUNE_MODULES=1 rpi-update $KERNEL_RPI_UPDATE_HASH
+
+sudo rm -rf /lib/modules.bak
+sudo rm -rf /boot.bak
+sudo apt-get clean
+
+sudo reboot
+
+----------------------------------------------------------------
+// 3. INSTALL BUILD TOOLING
+//
+// NOTE: Skip this step if build tooling is already installed
+----------------------------------------------------------------
+
+# 32-bit
+
+sudo apt -y install git bc bison flex libssl-dev make
+sudo wget https://raw.githubusercontent.com/RPi-Distro/rpi-source/master/rpi-source -O /usr/local/bin/rpi-source
+sudo chmod +x /usr/local/bin/rpi-source
+
+# 64-bit
+
+sudo ./dev.sh
+cd /
+sudo cp /mnt/moode-player/components/kernel_build/aarch64-toolchain.tgz ./
+sudo tar -xzf aarch64-toolchain.tgz
+sudo rm ./aarch64-toolchain.tgz
+export PATH=$PATH:/opt/aarch64/bin/
+cd ~
+
+----------------------------------------------------------------
+// 4. INSTALL KERNEL SOURCES MATCHING THE RUNNING KERNEL
+//
+// NOTE: Accept default if rpi-source prompts at the end
+----------------------------------------------------------------
+
+cd ~
+rpi-source -q --tag-update
+rpi-source
+
+----------------------------------------------------------------
+// 5. INSTALL MODULE SOURCES, HEADERS, AND PATCH FILES
+//
+----------------------------------------------------------------
+
+sudo ./dev.sh
+cd ~/linux
+
+# Allo ASIX Eth/USB driver
+# NOTE: Compile for -v7+, -v8+
+cp $MOODE_OTHER/allo/usbridge_sig/$KERNEL_VER/ax88179_178a.c drivers/net/usb/
+cp $MOODE_OTHER/allo/usbridge_sig/$KERNEL_VER/ax88179_178a.h drivers/net/usb/
+
+# Bitlab PCM1974a 384k codec
+# NOTE: Compile for -v7+, v7l+, -v8+
+cp $MOODE_OTHER/bitlab/pcm1794a/$KERNEL_VER/pcm1794a_384k.patch ./
+patch -p1 < ./pcm1794a_384k.patch
+
+----------------------------------------------------------------
+// 6. CONFIGURE FOR ARCHITECTURE
+//
+// NOTE: Start with v7+ then repeat for other architectures
+----------------------------------------------------------------
+
+Module.symvers	  Pi-0|1|CM   32-bit  -v7 (NOTE: Not compiling for this arch)
+Module7.symvers	  Pi-2|3|CM3  32-bit  -v7+
+Module7l.symvers  Pi-4	      32-bit  -v7l+
+Module8.symvers	  All ARM7    64-bit  -v8+
+
+# Select one
+MODULE_SYMVERS=Module7.symvers
+KERNEL_REL=v7+
+#MODULE_SYMVERS=Module7l.symvers
+#KERNEL_REL=v7l+
+#MODULE_SYMVERS=Module8.symvers
+#KERNEL_REL=v8+
+
+# Install correct Module.symvers file
+wget https://raw.githubusercontent.com/Hexxeh/rpi-firmware/$KERNEL_RPI_UPDATE_HASH/$MODULE_SYMVERS
+cp $MODULE_SYMVERS Module.symvers
+cat Module.symvers | grep module_layout
+
+# This is so the modules get the correct vermagic string
+sed -i /CONFIG_LOCALVERSION=/c\CONFIG_LOCALVERSION="-v7+" .config
+#sed -i /CONFIG_LOCALVERSION=/c\CONFIG_LOCALVERSION="-v7l+" .config
+#sed -i /CONFIG_LOCALVERSION=/c\CONFIG_LOCALVERSION="-v8+" .config
+cat .config | grep LOCALVERSION=
+
+# I'm not sure what this is for ?
+echo $KERNEL_VER-$KERNEL_REL > include/config/kernel.release
+cat include/config/kernel.release
+echo "#define UTS_RELEASE \"$KERNEL_VER-$KERNEL_REL\"" > include/generated/utsrelease.h
+cat include/generated/utsrelease.h
+
+----------------------------------------------------------------
+// 7a. COMPILE 32-bit MODULES
+//
+----------------------------------------------------------------
+
+cd ~/linux
+
+# NOTE: These commands don't appear to be needed for 32-bit compiles
+#make prepare
+#make modules_prepare
+
+# Allo ASIX Eth/USB driver
+make -j4 M=drivers/net/usb modules
+
+# Bitlab PCM1974a 384k codec
+make -j4 M=sound/soc/codecs
+
+----------------------------------------------------------------
+// 7b. COMPILE 64-BIT MODULES
+//
+----------------------------------------------------------------
+
+# NOTE: Assume step 6 already done
+
+# Specify the correct configuration file:
+# Pi2/3 being used for compiles
+#make ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu- bcmrpi3_defconfig
+# Pi4 being used for compiles
+make ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu- bcm2711_defconfig
+
+# Prepare the modules
+make prepare ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu-
+make modules_prepare ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu-
+
+# Build the modules
+make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- M=drivers/net/usb modules
+make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- M=sound/soc/codecs modules
+
+----------------------------------------------------------------
+8. VERIFY MODULE LAYOUT MATCH
+
+----------------------------------------------------------------
+
+# Allo ASIX Eth/USB driver
+cat Module.symvers | grep module_layout
+modprobe --dump-modversions drivers/net/usb/ax88179_178a.ko | grep module_layout
+modinfo drivers/net/usb/ax88179_178a.ko
+
+# Bitlab PCM1974a 384k codec
+cat Module.symvers | grep module_layout
+modprobe --dump-modversions sound/soc/codecs/snd-soc-pcm1794a.ko | grep module_layout
+modinfo sound/soc/codecs/snd-soc-pcm1794a.ko
+
+----------------------------------------------------------------
+9. COPY DRIVER TO MOODE SOURCE TREE
+
+----------------------------------------------------------------
+
+sudo cp drivers/net/usb/ax88179_178a.ko /mnt/SDCARD/ax88179_178a.ko-$KERNEL_REL
+sudo cp sound/soc/codecs/snd-soc-pcm1794a.ko /mnt/SDCARD/snd-soc-pcm1794a.ko-$KERNEL_REL
+ls -l /mnt/SDCARD/
+
+# NOTE: Move files to other/... using Mac Finder
+
+----------------------------------------------------------------
+// RETURN TO STEP 6. CONFIGURE FOR ARCHITECTURE
+//
+// OR
+//
+// CLEANUP
+----------------------------------------------------------------
+
+cd ~
+sudo rm -rf ./linux*
+
+----------------------------------------------------------------
+A. USEFUL UTILITIES
+
+----------------------------------------------------------------
+
+sudo modprobe configs
+zcat /proc/config.gz | grep PREEMPT
+
+lsmod
+modinfo ax88179_178a
+modprobe --dump-modversions /lib/modules/5.4.75-v7+/kernel/drivers/net/usb/ax88179_178a.ko | grep module_layout
+
+
+----------------------------------------------------------------
+B. OPTIONALLY COMPILE ENTIRE KERNEL
+
+----------------------------------------------------------------
+
+cd ~/linux
+make prepare
+make modules_prepare
+make -j4 zImage
+make -j4 modules
+make -j4 dtbs
+
+----------------------------------------------------------------
+C. INSTALL KERNEL
+
+----------------------------------------------------------------
+
+sudo make modules_install
+sudo cp arch/arm/boot/dts/*.dtb /boot/
+sudo cp arch/arm/boot/dts/overlays/*.dtb* /boot/overlays/
+sudo cp arch/arm/boot/dts/overlays/README /boot/overlays/
+sudo cp arch/arm/boot/zImage /boot/$KERNEL.img
+
+----------------------------------------------------------------
+D. KERNEL CONFIGS PER ARCHITECTURE
+
+----------------------------------------------------------------
+
+cd ~/linux
+
+# Pi 1, Pi Zero, Pi Zero W, and Compute Module default build configuration
+KERNEL=kernel
+make bcmrpi_defconfig
+
+# Pi 2, Pi 3, Pi 3+, and Compute Module 3 default build configuration
+KERNEL=kernel7
+make bcm2709_defconfig
+
+# Raspberry Pi 4
+KERNEL=kernel7l
+make bcm2711_defconfig
+
+----------------------------------------------------------------
+// END
+//
+----------------------------------------------------------------
