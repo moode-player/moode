@@ -438,160 +438,83 @@ INSERT INTO cfg_airplay (id, param, value) VALUES (9, 'audio_backend_buffer_desi
 
 -- Table: cfg_audiodev
 CREATE TABLE cfg_audiodev (id INTEGER PRIMARY KEY, name CHAR (64), alt_name CHAR (64), dacchip CHAR (64), chipoptions CHAR (64), iface CHAR (32), list CHAR (10), driver CHAR (64), drvoptions CHAR (64));
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (1, 'Allo Boss DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (2, 'Allo Boss 2 DAC', '', 'Cirrus Logic CS43198', '', 'I2S', 'yes', 'allo-boss2-dac-audio', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (3, 'Allo DigiOne', '', 'Cirrus Logic WM8805', '', 'I2S', 'yes', 'allo-digione', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (4, 'Allo DigiOne Signature', '', 'Cirrus Logic WM8805', '', 'I2S', 'yes', 'allo-digione', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (5, 'Allo Katana DAC', '', 'ESS Sabre ES9038Q2M', 'Apodizing Fast Roll-off Filter,Bypass,on', 'I2S', 'yes', 'allo-katana-dac-audio', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (6, 'Allo MiniBoss DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (7, 'Allo Piano 2.1 Hi-Fi DAC', '', 'Burr Brown PCM5142', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-piano-dac-plus-pcm512x-audio', 'glb_mclk
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (8, 'Allo Piano Hi-Fi DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-piano-dac-pcm512x-audio', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (9, 'Audiophonics ES9018 DAC', '', 'ESS Sabre ES9018 K2M', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (10, 'Audiophonics ES9023 DAC', '', 'ESS Sabre ES9023', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (11, 'Audiophonics ES9028/9038 DAC', '', 'ESS Sabre ES9028/9038 Q2M', 'brick wall,I2S', 'I2S', 'yes', 'i-sabre-q2m', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (12, 'Audiophonics ES9028/9038 DAC (Pre 2019)', '', 'ESS Sabre ES9028/9038 Q2M', 'brick wall,I2S', 'I2S', 'yes', 'i-sabre-q2m', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (13, 'Audiophonics PCM5102 DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (14, 'Audiophonics PCM5122 DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (15, 'Audiophonics TDA1387 DAC', '', 'Philips TDA1387', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (16, 'Buffalo I', '', 'ESS Sabre ES9008', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (17, 'Buffalo II/IIIse', '', 'ESS Sabre ES9018', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (18, 'DDDAC1794 NOS', '', 'Burr Brown PCM1794', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (19, 'DDDAC1794 NOS (384K)', '', 'Burr Brown PCM1794', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (20, 'Denafrips Pontus R2R DAC (I2S)', '', 'Altera MAX II CPLD', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (21, 'DIAL-DAC', '', 'Burr Brown PCM1793', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (22, 'Dion Audio LOCO', '', 'Burr Brown PCM5242 DAC, TPA3118 AMP', '', 'I2S', 'yes', 'dionaudio-loco', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (23, 'Dion Audio LOCO V2', '', 'Burr Brown PCM5242 DAC, TPA3118 AMP', '', 'I2S', 'yes', 'dionaudio-loco-v2', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (24, 'DIYINHK ES9023 DAC', '', 'ESS Sabre ES9023', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (25, 'Durio Sound PRO', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (26, 'EWCG Discrete R2R DAC', '', 'Altera Max II CPLD', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (27, 'G2 Labs BerryNOS Red', '', 'Philips TDA1543', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (28, 'Generic-1 I2S (hifiberry-dac)', '', 'ESS Sabre ES90xx, Burr Brown PCM5102', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (29, 'Generic-2 I2S (rpi-dac)', '', 'ESS Sabre ES9018, Burr Brown PCM1794', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (30, 'HIFI DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (31, 'HIFI DAC+', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (32, 'HIFI Digi', '', 'Wolfson WM8804G', '', 'I2S', 'yes', 'hifiberry-digi', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (33, 'HIFI Digi+', '', 'Wolfson WM8804G', '', 'I2S', 'yes', 'hifiberry-digi', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (34, 'HiFiBerry Amp(Amp+)', '', 'Burr Brown TAS5713', '', 'I2S', 'yes', 'hifiberry-amp', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (35, 'HiFiBerry Amp2', '', 'Burr Brown TAS5756M', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (36, 'HiFiBerry Beocreate', '', 'Burr Brown PCM4104 DAC, TPA3128 Amp, Analog Devices ADAU1451 DSP', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (37, 'HiFiBerry DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (38, 'HiFiBerry DAC/DAC+ Zero', '', 'Burr Brown PCM5101A', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (39, 'HiFiBerry DAC+', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (40, 'HiFiBerry DAC+ ADC', '', 'Burr Brown PCM5122, PCM1861 ADC', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplusadc', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (41, 'HiFiBerry DAC+ DSP', '', 'Burr Brown PCM5102A, Analog Devices ADAU1451 DSP', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (42, 'HiFiBerry DAC+ Light', '', 'ESS Sabre ES9023', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (43, 'HiFiBerry DAC+ Pro', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (44, 'HiFiBerry Digi(Digi+)', '', 'Cirrus Logic WM8804', '', 'I2S', 'yes', 'hifiberry-digi', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (45, 'HiFiBerry Digi+ Pro', '', 'Cirrus Logic WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (46, 'HiFiBerry MiniAmp', '', 'Burr Brown PCM5101A, Diodes PAM8403', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (47, 'Hifimediy ES9023', '', 'ESS Sabre ES9023', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (48, 'IanFIFO II', '', 'Altera Max II CPLD', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (49, 'IQaudIO Pi-AMP+', '', 'Burr Brown TPA3118', '', 'I2S', 'yes', 'iqaudio-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (50, 'IQaudIO Pi-DAC', '', 'Burr Brown PCM5122', '', 'I2S', 'yes', 'iqaudio-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (51, 'IQaudIO Pi-DAC PRO', '', 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (52, 'IQaudIO Pi-DAC+', '', 'Burr Brown PCM5122', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (53, 'IQaudIO Pi-DACZero', '', 'Burr Brown PCM5122', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (54, 'IQaudIO Pi-Digi+', '', 'Wolfson WM8804', '', 'I2S', 'yes', 'iqaudio-digi-wm8804-audio', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (55, 'IQaudIO Pi-DigiAMP+', '', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (56, 'JustBoom AMP HAT(Zero)', '', 'Burr Brown TAS5756', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'justboom-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (57, 'JustBoom DAC HAT(Zero)', '', 'Burr Brown PCM5122 (PCM5121)', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'justboom-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (58, 'JustBoom Digi HAT(Zero)', '', 'Wolfson WM8804G', '', 'I2S', 'yes', 'justboom-digi', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (59, 'Lucid Labs Raspberry Pi DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (60, 'Mamboberry HiFi DAC+', '', 'ESS Sabre ES9032', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (61, 'Mamboberry LS DAC+', '', 'ESS Sabre ES9023p', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (62, 'MERUS(tm) Amp piHAT ZW', '', 'Infineon MA12070P', 'PMF0', 'I2S', 'yes', 'merus-amp', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (63, 'Pi2Design 502DAC', '', 'Burr Brown PCM5122, Wolfson WM8804', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (64, 'Pi2Design 502DAC PRO', '', 'Burr Brown PCM1792, Wolfson WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (65, 'Pi2Design 503HTA Hybrid Tube Amp', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (66, 'Pimoroni pHAT DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (67, 'PlainAMP', '', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (68, 'PlainDAC', '', 'Burr Brown PCM5100', '', 'I2S', 'yes', 'hifiberry-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (69, 'PlainDAC+', '', 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (70, 'PlainDSP', '', 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (71, 'RaspyPlay4', '', 'Burr Brown PCM5122', '', 'I2S', 'yes', 'iqaudio-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (72, 'RPi-DAC', '', 'Burr Brown PCM1794A', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (73, 'Soekris DAM1021/1121 (I2S)', '', 'FPGA based', '', 'I2S', 'yes', 'rpi-dac', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (74, 'Suptronics x400', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (200, 'b1', 'Pi HDMI 1', 'Broadcom SoC', '', 'SOC', 'yes', '', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (201, 'b2', 'Pi HDMI 2', 'Broadcom SoC', '', 'SOC', 'yes', '', '
-');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (202, 'Headphones', 'Pi Headphone jack', 'Broadcom SoC', '', 'SOC', 'yes', '', '
-');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (1, 'Allo Boss DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (2, 'Allo Boss 2 DAC', '', 'Cirrus Logic CS43198', '', 'I2S', 'yes', 'allo-boss2-dac-audio', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (3, 'Allo DigiOne', '', 'Cirrus Logic WM8805', '', 'I2S', 'yes', 'allo-digione', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (4, 'Allo DigiOne Signature', '', 'Cirrus Logic WM8805', '', 'I2S', 'yes', 'allo-digione', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (5, 'Allo Katana DAC', '', 'ESS Sabre ES9038Q2M', 'Apodizing Fast Roll-off Filter,Bypass,on', 'I2S', 'yes', 'allo-katana-dac-audio', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (6, 'Allo MiniBoss DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (7, 'Allo Piano 2.1 Hi-Fi DAC', '', 'Burr Brown PCM5142', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-piano-dac-plus-pcm512x-audio', 'glb_mclk');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (8, 'Allo Piano Hi-Fi DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-piano-dac-pcm512x-audio', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (9, 'Audiophonics ES9018 DAC', '', 'ESS Sabre ES9018 K2M', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (10, 'Audiophonics ES9023 DAC', '', 'ESS Sabre ES9023', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (11, 'Audiophonics ES9028/9038 DAC', '', 'ESS Sabre ES9028/9038 Q2M', 'brick wall,I2S', 'I2S', 'yes', 'i-sabre-q2m', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (12, 'Audiophonics ES9028/9038 DAC (Pre 2019)', '', 'ESS Sabre ES9028/9038 Q2M', 'brick wall,I2S', 'I2S', 'yes', 'i-sabre-q2m', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (13, 'Audiophonics PCM5102 DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (14, 'Audiophonics PCM5122 DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (15, 'Audiophonics TDA1387 DAC', '', 'Philips TDA1387', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (16, 'Buffalo I', '', 'ESS Sabre ES9008', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (17, 'Buffalo II/IIIse', '', 'ESS Sabre ES9018', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (18, 'DDDAC1794 NOS', '', 'Burr Brown PCM1794', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (19, 'DDDAC1794 NOS (384K)', '', 'Burr Brown PCM1794', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (20, 'Denafrips Pontus R2R DAC (I2S)', '', 'Altera MAX II CPLD', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (21, 'DIAL-DAC', '', 'Burr Brown PCM1793', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (22, 'Dion Audio LOCO', '', 'Burr Brown PCM5242 DAC, TPA3118 AMP', '', 'I2S', 'yes', 'dionaudio-loco', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (23, 'Dion Audio LOCO V2', '', 'Burr Brown PCM5242 DAC, TPA3118 AMP', '', 'I2S', 'yes', 'dionaudio-loco-v2', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (24, 'DIYINHK ES9023 DAC', '', 'ESS Sabre ES9023', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (25, 'Durio Sound PRO', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (26, 'EWCG Discrete R2R DAC', '', 'Altera Max II CPLD', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (27, 'G2 Labs BerryNOS Red', '', 'Philips TDA1543', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (28, 'Generic-1 I2S (hifiberry-dac)', '', 'ESS Sabre ES90xx, Burr Brown PCM5102', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (29, 'Generic-2 I2S (rpi-dac)', '', 'ESS Sabre ES9018, Burr Brown PCM1794', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (30, 'HIFI DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (31, 'HIFI DAC+', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (32, 'HIFI Digi', '', 'Wolfson WM8804G', '', 'I2S', 'yes', 'hifiberry-digi', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (33, 'HIFI Digi+', '', 'Wolfson WM8804G', '', 'I2S', 'yes', 'hifiberry-digi', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (34, 'HiFiBerry Amp(Amp+)', '', 'Burr Brown TAS5713', '', 'I2S', 'yes', 'hifiberry-amp', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (35, 'HiFiBerry Amp2', '', 'Burr Brown TAS5756M', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (36, 'HiFiBerry Beocreate', '', 'Burr Brown PCM4104 DAC, TPA3128 Amp, Analog Devices ADAU1451 DSP', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (37, 'HiFiBerry DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (38, 'HiFiBerry DAC/DAC+ Zero', '', 'Burr Brown PCM5101A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (39, 'HiFiBerry DAC+', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (40, 'HiFiBerry DAC+ ADC', '', 'Burr Brown PCM5122, PCM1861 ADC', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplusadc', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (41, 'HiFiBerry DAC+ DSP', '', 'Burr Brown PCM5102A, Analog Devices ADAU1451 DSP', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (42, 'HiFiBerry DAC+ Light', '', 'ESS Sabre ES9023', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (43, 'HiFiBerry DAC+ Pro', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (44, 'HiFiBerry Digi(Digi+)', '', 'Cirrus Logic WM8804', '', 'I2S', 'yes', 'hifiberry-digi', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (45, 'HiFiBerry Digi+ Pro', '', 'Cirrus Logic WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (46, 'HiFiBerry MiniAmp', '', 'Burr Brown PCM5101A, Diodes PAM8403', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (47, 'Hifimediy ES9023', '', 'ESS Sabre ES9023', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (48, 'IanFIFO II', '', 'Altera Max II CPLD', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (49, 'IQaudIO Pi-AMP+', '', 'Burr Brown TPA3118', '', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (50, 'IQaudIO Pi-DAC', '', 'Burr Brown PCM5122', '', 'I2S', 'yes', 'iqaudio-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (51, 'IQaudIO Pi-DAC PRO', '', 'Burr Brown PCM5242', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (52, 'IQaudIO Pi-DAC+', '', 'Burr Brown PCM5122', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (53, 'IQaudIO Pi-DACZero', '', 'Burr Brown PCM5122', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (54, 'IQaudIO Pi-Digi+', '', 'Wolfson WM8804', '', 'I2S', 'yes', 'iqaudio-digi-wm8804-audio', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (55, 'IQaudIO Pi-DigiAMP+', '', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (56, 'JustBoom AMP HAT(Zero)', '', 'Burr Brown TAS5756', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'justboom-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (57, 'JustBoom DAC HAT(Zero)', '', 'Burr Brown PCM5122 (PCM5121)', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'justboom-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (58, 'JustBoom Digi HAT(Zero)', '', 'Wolfson WM8804G', '', 'I2S', 'yes', 'justboom-digi', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (59, 'Lucid Labs Raspberry Pi DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (60, 'Mamboberry HiFi DAC+', '', 'ESS Sabre ES9032', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (61, 'Mamboberry LS DAC+', '', 'ESS Sabre ES9023p', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (62, 'MERUS(tm) Amp piHAT ZW', '', 'Infineon MA12070P', 'PMF0', 'I2S', 'yes', 'merus-amp', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (63, 'Pi2Design 502DAC', '', 'Burr Brown PCM5122, Wolfson WM8804', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (64, 'Pi2Design 502DAC PRO', '', 'Burr Brown PCM1792, Wolfson WM8804', '', 'I2S', 'yes', 'hifiberry-digi-pro', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (65, 'Pi2Design 503HTA Hybrid Tube Amp', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (66, 'Pimoroni pHAT DAC', '', 'Burr Brown PCM5102A', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (67, 'PlainAMP', '', 'Burr Brown TAS5756', '100,100,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (68, 'PlainDAC', '', 'Burr Brown PCM5100', '', 'I2S', 'yes', 'hifiberry-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (69, 'PlainDAC+', '', 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (70, 'PlainDSP', '', 'Burr Brown PCM5121', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'hifiberry-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (71, 'RaspyPlay4', '', 'Burr Brown PCM5122', '', 'I2S', 'yes', 'iqaudio-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (72, 'RPi-DAC', '', 'Burr Brown PCM1794A', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (73, 'Soekris DAM1021/1121 (I2S)', '', 'FPGA based', '', 'I2S', 'yes', 'rpi-dac', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (74, 'Suptronics x400', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'iqaudio-dacplus', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (200, 'b1', 'Pi HDMI 1', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (201, 'b2', 'Pi HDMI 2', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (202, 'Headphones', 'Pi Headphone jack', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', '', 'USB', 'yes', '', '');
 
 -- Table: cfg_mpd
