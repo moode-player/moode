@@ -4,7 +4,7 @@ hdmi_drive=2
 hdmi_blanking=1
 hdmi_force_edid_audio=1
 hdmi_force_hotplug=1
-hdmi_group=1
+hdmi_group=0
 dtparam=i2c_arm=on
 dtparam=i2s=on
 dtparam=audio=on
