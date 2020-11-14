@@ -1,0 +1,34 @@
+//////////////////////////////////////////////////////
+//
+// Install drivers for Allo USBridge Signature
+//
+//////////////////////////////////////////////////////
+
+sudo ./dev.sh
+KERNEL=5.4.61
+BASE_PATH=/mnt/moode-player/GitHub/moode/other/allo
+#BASE_PATH=/media/VFAT4/allo
+
+# WiFi driver (Comfast CF-912AC, MrEngman stock)
+sudo cp $BASE_PATH/usbridge_sig/$KERNEL/8812au.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless/8812au.ko
+#sudo cp $BASE_PATH/usbridge_sig/$KERNEL/8812au.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/drivers/net/wireless/8812au.ko
+sudo cp $BASE_PATH/usbridge_sig/$KERNEL/8812au.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless/8812au.ko
+sudo cp $BASE_PATH/usbridge_sig/$KERNEL/8812au.conf /etc/modprobe.d/
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless/8812au.ko
+#sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/drivers/net/wireless/8812au.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless/8812au.ko
+sudo chmod 0644 /etc/modprobe.d/*.conf
+
+# Eth/USB driver v2.0.0 (Allo enhanced)
+sudo cp $BASE_PATH/usbridge_sig/$KERNEL/ax88179_178a.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb/ax88179_178a.ko
+#sudo cp $BASE_PATH/usbridge_sig/$KERNEL/ax88179_178a.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo cp $BASE_PATH/usbridge_sig/$KERNEL/ax88179_178a.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb/ax88179_178a.ko
+#sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb/ax88179_178a.ko
+
+sudo depmod $KERNEL-v7+
+#sudo depmod $KERNEL-v7l+
+sudo depmod $KERNEL-v8+
+
+
