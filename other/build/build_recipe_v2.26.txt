@@ -89,13 +89,14 @@ sudo timedatectl set-timezone "America/Detroit"
 4. Download moOde application sources and configs.
 
 //
-// NOTE: We download the Sources here in order to extract resizefs.sh and config.txt files.
+// NOTE: We download the Sources here in order to extract resizefs.sh and other files.
 //
 
 cd ~
 wget http://moodeaudio.org/downloads/prod/moode-r700.zip
 unzip -p -q ./moode-r700.zip moode/www/command/resizefs.sh > ./resizefs.sh
 unzip -p -q ./moode-r700.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r700.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -103,8 +104,10 @@ sudo chmod 0755 ./resizefs.sh
 sudo sed -i "/PART_END=/c\PART_END=+3500M" ./resizefs.sh
 sudo ./resizefs.sh start
 sudo cp ./config.txt.default /boot/config.txt
+sudo cp ./moodecfg.ini.default /boot/
 sudo rm ./resizefs.sh
 sudo rm ./config.txt.default
+sudo rm ./moodecfg.ini.default
 
 # SR1
 sudo reboot
