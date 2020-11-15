@@ -28,7 +28,7 @@ set_include_path('/var/www/inc');
 require_once 'playerlib.php';
 
 // Image to use when no cover found
-define('NOT_FOUND', '/var/www/images/notfound.jpg');
+define('NOT_FOUND_JPG', '/var/www/images/notfound.jpg');
 
 //
 // MAIN
@@ -113,9 +113,10 @@ if (is_null($result) || substr($result, 0, 2) == 'OK') {
 // Generate thumbnails
 // - Compare the containing dir paths for file (file_a) and file+1 (file_b)
 // - When they are different we create a thumb using file_a and dir_a
-$count = 0;
-$copied = 0;
-$resampled = 0;
+$folder_cnt = 0;	// Folder count
+$new_thms = 0;		// Number of new thumbs created
+$cached_thms = 0;	// Number of thumbs that already exist in the cache
+
 $line = strtok($result, "\n");
 while ($line) {
 	$file_a = explode(': ', $line, 2)[1];
@@ -128,19 +129,23 @@ while ($line) {
 
 	if ($dir_a != $dir_b) {
 		session_start();
-		$_SESSION['thmcache_status'] = 'Scanning folder ' . ++$count . ' ' . $dir_a;
+		$_SESSION['thmcache_status'] = 'Scanning folder ' . ++$folder_cnt . ' ' . $dir_a;
 		session_write_close();
 
 		if (!file_exists(THMCACHE_DIR . md5($dir_a) . '.jpg')) {
 			createThumb($file_a, $dir_a, $search_pri, $thm_w, $thm_q);
 		}
+		else {
+			$cached_thms++;
+		}
 	}
 }
 
+$msg = 'Done: ' . $folder_cnt . ' folders scanned, ' . $new_thms . ' new thumbs, ' . $cached_thms . ' cached thumbs.';
 session_start();
-$_SESSION['thmcache_status'] = 'Done: '  . $count . ' album folders scanned for images';
+$_SESSION['thmcache_status'] = $msg;
 session_write_close();
-workerLog('thmcache: Done: ' . $count . ' album folders scanned for images. ' . $copied . ' copied, ' . $resampled . ' resampled.');
+workerLog('thmcache: ' . $msg);
 
 // Create thumbnail image
 function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
@@ -167,7 +172,10 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 
 		if ($img_str === false) {
 			// Nothing found
-			$img_str = NOT_FOUND;
+			$img_str = NOT_FOUND_JPG;
+		}
+		else {
+			$GLOBALS['new_thms']++;
 		}
 	}
 
@@ -203,7 +211,6 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	}
 	if ($resample === true) {
 		//workerLog('resample: '. $file);
-		$GLOBALS['resampled']++;
 		if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
 			workerLog('thmcache: error 2a: imagecopyresampled()' . $file);
 			return;
@@ -211,7 +218,6 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	}
 	else {
 		//workerLog('copy: '. $file);
-		$GLOBALS['copied']++;
 		if (imagecopy($thumb, $image, 0, 0, 0, 0, $img_w, $img_h) === false) {
 			workerLog('thmcache: error 2a: imagecopy()' . $file);
 			return;
