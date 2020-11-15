@@ -22,8 +22,6 @@
  */
 
  /**
-  * autocfggen exports the supported autoconfig settings to the screen.
-  * Don't use this file directly but use the moodeutl -x option
   * (C) 2020 @bitlab (@bitkeeper Git)
   */
 
@@ -34,12 +32,12 @@ playerSession('open', '' ,'');
 if (file_exists('/boot/moodecfg.ini')) {
 	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 	autoConfig('/boot/moodecfg.ini');
-  sysCmd('sync');
-  session_write_close();
+	sysCmd('sync');
+	session_write_close();
 }
 else {
-  autoCfgLog('autocfg: no file "/boot/moodecfg.ini" to import\n');
-  print("no file \"/boot/moodecfg.ini\" to import\n");
+	autoCfgLog('autocfg: no file "/boot/moodecfg.ini" to import\n');
+	print("no file \"/boot/moodecfg.ini\" to import\n");
 }
 
 ?>
