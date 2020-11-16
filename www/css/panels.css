@@ -706,3 +706,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #audioinfo-modal.track #trackinfo {display:block;}
 #audioinfo-modal.hardware #audioinfo-hardware, #audioinfo-modal.track #audioinfo-track {background-color:var(--btnshade4);}
 #trackinfo li:nth-child(odd) {background-color:rgba(128,128,128,.05);}
+.controls-select {margin-bottom:5px;}
