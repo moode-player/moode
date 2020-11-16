@@ -2358,7 +2358,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 	$encoded_at = 'NULL';
 	$ext = getFileExt($song_data['file']);
 
-	// Special sectuon to handle calls from genLibrary() to populate the element "encoded_at"
+	// Special section to handle calls from genLibrary() to populate the element "encoded_at"
 	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
 	// Returned string for PCM is "bits/rate format,flag" and for DSD it's "DSD rate,h"
 	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
