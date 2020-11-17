@@ -93,24 +93,24 @@ var UI = {
 	thumbHW: '0px'
 };
 
-// mpd state and metadata
+// MPD state and metadata
 var MPD = {
 	json: 0
 };
 
-// session vars (cfg_system table)
+// Session vars (cfg_system table)
 var SESSION = {
 	json: 0
 };
-// radio stations (cfg_radio table)
+// Radio stations (cfg_radio table)
 var RADIO = {
 	json: 0
 };
-// themes (cfg_theme table)
+// Themes (cfg_theme table)
 var THEME = {
 	json: 0
 };
-// networks (cfg_network table)
+// Networks (cfg_network table)
 var NETWORK = {
 	json: 0
 };
@@ -3658,7 +3658,7 @@ function audioinfo(cmd, path, dialog){
 			cmd == 'station_info' ? $('#audioinfo-track').text('Station') : $('#audioinfo-track').text('Track');
 			$('#audioinfo-modal').removeClass('track hardware');
 			$('#audioinfo-modal').addClass(dialog);
-			$('#audioinfo-modal').modal('show');		
+			$('#audioinfo-modal').modal('show');
 	    }, 'json');
 	});
 }
@@ -3671,6 +3671,6 @@ function itemInfoModal(id, result) {
 	        if (typeof(result[i][key]) != 'undefined') {
 	            lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
 	        }
-	    }		
+	    }
     document.getElementById(id).innerHTML = lines;
 }
