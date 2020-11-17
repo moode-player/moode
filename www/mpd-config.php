@@ -110,10 +110,12 @@ $format = explode(':', $mpdconf['audio_output_format']);
 $_mpd_select['sox_enabled'] .= "<option value=\"Yes\" " . (($mpdconf['audio_output_format'] != 'disabled') ? "selected" : "") . " >Yes</option>\n";
 $_mpd_select['sox_enabled'] .= "<option value=\"No\" " . (($mpdconf['audio_output_format'] == 'disabled') ? "selected" : "") . " >No</option>\n";
 // Bit depth
+$_mpd_select['sox_bit_depth'] .= "<option value=\"*\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[1] == '*') ? "selected" : "") . " >Any</option>\n";
 $_mpd_select['sox_bit_depth'] .= "<option value=\"16\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[1] == '16') ? "selected" : "") . " >16</option>\n";
 $_mpd_select['sox_bit_depth'] .= "<option value=\"24\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[1] == '24') ? "selected" : "") . " >24</option>\n";
 $_mpd_select['sox_bit_depth'] .= "<option value=\"32\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[1] == '32') ? "selected" : "") . " >32</option>\n";
 // Sample rate
+$_mpd_select['sox_sample_rate'] .= "<option value=\"*\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[0] == '*') ? "selected" : "") . " >Any</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"44100\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[0] == '44100') ? "selected" : "") . " >44.1</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"48000\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[0] == '48000') ? "selected" : "") . " >48</option>\n";
 $_mpd_select['sox_sample_rate'] .= "<option value=\"88200\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[0] == '88200') ? "selected" : "") . " >88.2</option>\n";
@@ -127,6 +129,7 @@ $_mpd_select['sox_sample_rate'] .= "<option value=\"768000\" " . (($mpdconf['aud
 // Channels
 $_mpd_select['sox_channels'] .= "<option value=\"2\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[2] == '2') ? "selected" : "") . " >Stereo</option>\n";
 $_mpd_select['sox_channels'] .= "<option value=\"1\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[2] == '1') ? "selected" : "") . " >Mono</option>\n";
+$_mpd_select['sox_channels'] .= "<option value=\"*\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[2] == '*') ? "selected" : "") . " >*</option>\n";
 
 // Selective resample mode
 $patch_id = explode('_p0x', $_SESSION['mpdver'])[1];
