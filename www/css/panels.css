@@ -192,7 +192,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 
 #playlist, #database, #database-radio {padding:0;background:none;}
 .playlist, .cv-playlist, .database, .database-radio {display:block;margin:0;padding:0;list-style:none;counter-reset:item;word-break: break-word;}
-.database {padding:0 0 12rem 0;width:100%;overflow-x:hidden;position:relative;margin:0;top:.5em;}
+.database {padding:0 0 12rem 0;width:100%;overflow-x:hidden;/*position:relative;*/margin:0;top:.5em;}
 .playlist .cv-playlist {padding:0 1em 4em 0;}
 #database-radio {height:calc(100vh - 2.75em);}
 .database-radio {text-align:center;padding:0 0 14rem 0;}
