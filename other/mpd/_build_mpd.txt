@@ -44,6 +44,7 @@ sudo patch -p1 < ~/mpd-0.$VERSION.x_soxr_customrecipe.patch
 sudo patch -p1 < ~/mpd_0.$VERSION.xx_selective_resample_mode.patch
 sudo cp meson.build meson.build.orig
 sudo sed -i "/version: '0/s/',/$PATCH_ID',/" ./meson.build
+
 VERSION=22
 cd ~/mpd-0.22.2
 # NOTE: patch not needed since being accepted into master branch 
