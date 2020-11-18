@@ -44,8 +44,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			$status = parseStatus(getMpdStatus($sock));
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
-				$cmds = array('pause', 'play');
-				chainMpdCmds($sock, $cmds, 1000000);
+				chainMpdCmds($sock, array('pause', 'play'));
 			}
 		}
 
@@ -84,8 +83,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			$status = parseStatus(getMpdStatus($sock));
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
-				$cmds = array('pause', 'play');
-				chainMpdCmds($sock, $cmds, 1000000);
+				chainMpdCmds($sock, array('pause', 'play'));
 			}
 		}
 
@@ -107,8 +105,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			$status = parseStatus(getMpdStatus($sock));
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
-				$cmds = array('pause', 'play');
-				chainMpdCmds($sock, $cmds, 1000000);
+				chainMpdCmds($sock, array('pause', 'play'));
 			}
 		}
 

@@ -1166,27 +1166,10 @@ $('.ralbum').click(function(e) {
             var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
             mpdDbCmd(queueCmd, files);
         }
-        // Clear/play using add first followed by delete.
-        // We do this because clear_play_group directly from the Playback panel results in missed UI and Queue updates.
         else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
-        	var endpos = $(".playlist li").length
-        	mpdDbCmd('add_group', files);
-        	setTimeout(function() {
-        		endpos == 1 ? cmd = 'delplitem&range=0' : cmd = 'delplitem&range=0:' + endpos;
-                $.get('command/moode.php?cmd=' + cmd, function(){
-                    sendMpdCmd('play 0');
-                });
-        	}, CLRPLAY_TIMEOUT);
+            mpdDbCmd('clear_play_group', files);
         }
-		if (UI.libPos[1] >= 0 && currentView == 'album') {
-			customScroll('albumcovers', UI.libPos[1], 0);
-			$('#albumcovers .lib-entry').eq(UI.libPos[1]).addClass('active');
-		}
-		if (UI.libPos[0] >= 0 && currentView == 'tag') {
-			customScroll('albums', UI.libPos[0], 0);
-			$('#albumsList .lib-entry').eq(UI.libPos[0]).addClass('active');
-			$('#albumsList .lib-entry').eq(UI.libPos[0]).click();
-		}
+
 		storeLibPos(UI.libPos);
     }
 });

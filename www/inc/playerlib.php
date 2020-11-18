@@ -187,15 +187,14 @@ function sendMpdCmd($sock, $cmd) {
 	fputs($sock, $cmd . "\n");
 }
 
-function chainMpdCmds($sock, $cmds, $delay = 0) {
+function chainMpdCmds($sock, $cmds) {
+	workerLog(print_r($cmds, true));
+    sendMpdCmd($sock, 'command_list_begin');
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
-        $resp = readMpdResp($sock);
-
-		if ($delay > 0) {
-			usleep($delay); // Microseconds
-		}
     }
+    sendMpdCmd($sock, 'command_list_end');
+    $resp = readMpdResp($sock);
 }
 
 function getMpdStatus($sock) {
@@ -210,7 +209,7 @@ function getMpdStats($sock) {
 	return $stats;
 }
 
-// miscellaneous core functions
+// Miscellaneous core functions
 
 function sysCmd($cmd) {
 	exec('sudo ' . $cmd . " 2>&1", $output);
@@ -873,19 +872,8 @@ function clearLibCacheFiltered() {
 	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
 }
 
-// Add group of song files to the Queue (Tag/Album view)
-function addGroupToQueue($sock, $songs) {
-	$mpd_cmds = array();
-
-	foreach ($songs as $song) {
-		array_push($mpd_cmds, 'add "' . html_entity_decode($song) . '"');
-	}
-
-	chainMpdCmds($sock, $mpd_cmds);
-}
-
 // Add one item (song file, playlist, radio station, directory) to the Queue
-function addItemToQueue($sock, $path) {
+function ___addItemToQueue($sock, $path) {
 	$ext = getFileExt($path);
 	$pl_extensions = array('m3u', 'pls', 'cue');
 	//workerLog($path . ' (' . $ext . ')');
@@ -910,6 +898,45 @@ function addItemToQueue($sock, $path) {
 	}
 
 	return readMpdResp($sock);
+}
+
+// Add one item (song file, playlist, radio station, directory) to the Queue
+function addItemToQueue($path) {
+	$ext = getFileExt($path);
+	$pl_extensions = array('m3u', 'pls', 'cue');
+	//workerLog($path . ' (' . $ext . ')');
+
+	// Use load for saved playlist, cue sheet, radio station
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $GLOBALS['ROOT_DIRECTORIES']) === false)) {
+		// Radio station special case
+		if (strpos($path, 'RADIO') !== false) {
+			// Check for playlist as URL
+			$pls = file_get_contents(MPD_MUSICROOT . $path);
+			$url = parseDelimFile($pls, '=')['File1'];
+			$ext = substr($url, -4);
+			if ($ext == '.pls' || $ext == '.m3u') {
+				$path = $url;
+			}
+		}
+		$cmd = 'load';
+	}
+	// Use add for song file or directory
+	else {
+		$cmd = 'add';
+	}
+
+	return $cmd . ' "' . html_entity_decode($path) . '"';
+}
+
+// Add group of song files to the Queue (Tag/Album view)
+function addGroupToQueue($songs) {
+	$cmds = array();
+
+	foreach ($songs as $song) {
+		array_push($cmds, 'add "' . html_entity_decode($song) . '"');
+	}
+
+	return $cmds;
 }
 
 // Get file extension
