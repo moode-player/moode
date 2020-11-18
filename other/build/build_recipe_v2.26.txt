@@ -6,6 +6,7 @@
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r700 sources
 # - Bump to Linux kernel 5.4.77 build #1371
+# - Bump to MPD 0.22.3
 # - Stop auth.log spam
 # - Remove references to discontinued Google Play Music service
 # - Add CAPS 12-band parametric EQ
@@ -386,15 +387,15 @@ sudo tar xfz ./boost_1.68_libraries.tar.gz
 sudo rm ./boost_*.gz
 cd ~
 
-3. Download MPD 0.22.2 sources and prep for compile.
+3. Download MPD 0.22.3 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.22.2 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.22.3 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.22.2.tar.xz
-sudo tar xf mpd-0.22.2.tar.xz
-cd mpd-0.22.2
+sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.22.3.tar.xz
+sudo tar xf mpd-0.22.3.tar.xz
+cd mpd-0.22.3
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
