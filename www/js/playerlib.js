@@ -3352,13 +3352,13 @@ function makeActive (vswitch, panel, view) {
 		case 'radio':
 			$('#viewswitch').addClass('vr');
 			$('#playbar-toggles .addfav').show();
-            $('.adv-search-btn').hide();
+            $('#random-album, .adv-search-btn').hide();
 			lazyLode('radio');
 			break;
 		case 'folder':
 			$('#viewswitch').addClass('vf');
 			$('#playbar-toggles .addfav').show();
-            $('.adv-search-btn').hide();
+            $('#random-album, .adv-search-btn').hide();
 			break;
 		case 'album':
 			$('#viewswitch').addClass('va');
