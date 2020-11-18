@@ -37,7 +37,7 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 5.4.75 build #1367
+- UPD: Bump to Linux kernel 5.4.77 build #1371
 - UPD: Bump to MPD 0.22.2
 - UPD: Bump to Auto-shuffle (ashuffle) 3.10.0
 - UPD: Bump to squeezelite 1.9.7-1270

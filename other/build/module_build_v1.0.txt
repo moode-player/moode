@@ -12,9 +12,9 @@
 //
 ----------------------------------------------------------------
 
-KERNEL_VER=5.4.75
-KERNEL_BUILD=1367
-KERNEL_RPI_UPDATE_HASH=1c29cd3b22307264979fbb383883004edcc2e2a3
+KERNEL_VER=5.4.77
+KERNEL_BUILD=1371
+KERNEL_RPI_UPDATE_HASH=cc9ff6c7d1b9be5465c24c75941b049f94a6bd32
 KERNEL_SRC_HASH=`curl https://raw.githubusercontent.com/Hexxeh/rpi-firmware/$KERNEL_RPI_UPDATE_HASH/git_hash`
 MOODE_OTHER=/mnt/moode-player/GitHub/moode/other
 
@@ -206,8 +206,14 @@ zcat /proc/config.gz | grep PREEMPT
 
 lsmod
 modinfo ax88179_178a
-modprobe --dump-modversions /lib/modules/5.4.75-v7+/kernel/drivers/net/usb/ax88179_178a.ko | grep module_layout
+KERNEL=5.4.77-v7+
+modprobe --dump-modversions /lib/modules/$KERNEL/kernel/drivers/net/usb/ax88179_178a.ko | grep module_layout
 
+Linux sources matching the rpi-update kernel
+Ex: 5.4.77
+KERNEL_RPI_UPDATE_HASH=cc9ff6c7d1b9be5465c24c75941b049f94a6bd32
+echo `curl https://raw.githubusercontent.com/Hexxeh/rpi-firmware/$KERNEL_RPI_UPDATE_HASH/git_hash`
+https://github.com/raspberrypi/linux/tree/b8681a08ba16b15cc9f010bef2a24ffac0b054d1
 
 ----------------------------------------------------------------
 B. OPTIONALLY COMPILE ENTIRE KERNEL
