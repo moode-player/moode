@@ -454,7 +454,7 @@ body.cv #playbar-toggles .addfav {display:block!important;}
 #searchResetRa {display:none;}
 #splash {height:100vh;width:100vw;z-index:11111;position:fixed;background:rgba(32,32,32,0.95);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;}
 #splash div {position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);font-size:10vw;font-weight:200;letter-spacing:-.06em;opacity:0;transition:1s;}
-.cover-menu {position:absolute;float:right;;height:5rem;width:5rem;background-size:2rem 2rem;background-repeat:no-repeat;background-position:.75rem 2.4rem;transform:translate(.75rem, -5.5rem);background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42"><circle cx="21" cy="21" r="20" style="fill:%23ddd" opacity=".5"/><circle cx="11.5" cy="21" r="3" style="fill:%23333"/><circle cx="30.5" cy="21" r="3" style="fill:%23333"/><circle cx="21" cy="21" r="3" style="fill:%23333"/></svg>')}
+.cover-menu {position:absolute;float:right;;height:5rem;width:5rem;background-size:2rem 2rem;background-repeat:no-repeat;background-position:.75rem 2.4rem;transform:translate(.75rem, -5.5rem);background-image:url('../images/dots.png')}
 body.no-touch .cover-menu {opacity:0;}
 #radiocovers li:hover .cover-menu, #albumcovers li:hover .cover-menu {opacity:1;}
 #playback-toolbar {display:none;z-index:1003;transform:translate(-50%, -50%);top:2%;top:calc(env(safe-area-inset-top) + 2%);left:50%;position:fixed;color:var(--adapttext);border-radius:0 0 .5em .5em;background-color:inherit;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);box-shadow:0px 0px 10px rgba(0, 0, 0, 0.40);}
