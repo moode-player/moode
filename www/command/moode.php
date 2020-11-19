@@ -36,7 +36,7 @@ $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_add_item', 'clear_play_item',
 	'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_add_group', 'clear_play_group');
 $other_mpd_cmds = array('updvolume' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
-	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'track_info');
+	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'station_info', 'track_info');
 $turn_consume_off = false;
 
 // Jobs sent to worker.php
@@ -110,7 +110,6 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 		sysCmd('killall -s 9 ashuffle > /dev/null');
 		$turn_consume_off = true; // Also turn off Consume mode
 	}
-
 	//workerLog($_GET['cmd'] . '|' . $_POST['path']);
 	switch ($_GET['cmd']) {
 		case 'updvolume':
@@ -124,11 +123,11 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 		case 'add_item':
 		case 'add_item_next':
 			$status = parseStatus(getMpdStatus($sock));
-			$resp = addItemToQueue($sock, $_POST['path']);
+			$cmds = array(addItemToQueue($_POST['path']));
 			if ($_GET['cmd'] == 'add_item_next') {
-				sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ' ' . ($status['song'] + 1));
-				$resp = readMpdResp($sock);
+				array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . ($status['song'] + 1));
 			}
+			chainMpdCmds($sock, $cmds);
 			break;
 		case 'play_item':
 		case 'play_item_next':
@@ -143,47 +142,37 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			// Otherwise play the item after adding it to the Queue
 			else {
 				$status = parseStatus(getMpdStatus($sock));
-				$resp = addItemToQueue($sock, $_POST['path']);
+				$cmds = array(addItemToQueue($_POST['path']));
 				if ($_GET['cmd'] == 'play_item_next') {
 					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
-					sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ' ' . $pos);
-					$resp = readMpdResp($sock);
+					array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . $pos);
 				}
 				else {
 					$pos = $status['playlistlength'];
 				}
-				usleep(500000); // NOTE: This brief delay allows the WebUI some time to process and display the Queue
-				sendMpdCmd($sock, 'play ' . $pos);
-				$resp = readMpdResp($sock);
+				array_push($cmds, 'play ' . $pos);
+				chainMpdCmds($sock, $cmds);
 			}
 			break;
 		case 'clear_add_item':
 		case 'clear_play_item':
-			sendMpdCmd($sock,'clear');
-			$resp = readMpdResp($sock);
-
-			addItemToQueue($sock, $_POST['path']);
-			playerSession('write', 'toggle_song', '0');
-
+			$cmds = array('clear');
+			array_push($cmds, addItemToQueue($_POST['path']));
 			if ($_GET['cmd'] == 'clear_play_item') {
-				sendMpdCmd($sock, 'play');
-				$resp = readMpdResp($sock);
+				array_push($cmds, 'play');
 			}
-			break;
-		case 'track_info':
-			sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');
-			echo json_encode(readMpdResp($sock));
-			break;
-
+			chainMpdCmds($sock, $cmds);
+			playerSession('write', 'toggle_song', '0');
+		    break;
 		// Queue commands for a group of songs: Genre, Artist or Albums in Tag/Album view
 		case 'add_group':
 		case 'add_group_next':
 			$status = parseStatus(getMpdStatus($sock));
-			$resp = addGroupToQueue($sock, $_POST['path']);
+			$cmds = addGroupToQueue($_POST['path']);
 			if ($_GET['cmd'] == 'add_group_next') {
-				sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
-				$resp = readMpdResp($sock);
+				array_push($cmds, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
 			}
+			chainMpdCmds($sock, $cmds);
 			break;
         case 'play_group':
 		case 'play_group_next':
@@ -195,38 +184,43 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			$last = count($_POST['path']) - 1;
 			if ($_POST['path'][0] == $result[0]['file'] && $_POST['path'][$last] == $result[$last]['file']) {
 				$pos = $result[0]['Pos'];
+				sendMpdCmd($sock, 'play ' . $pos);
+				$resp = readMpdResp($sock);
 			}
 			// Otherwise play the group after adding it to the Queue
 			else {
 				$status = parseStatus(getMpdStatus($sock));
-				$resp = addGroupToQueue($sock, $_POST['path']);
+				$cmds = addGroupToQueue($_POST['path']);
 				if ($_GET['cmd'] == 'play_group_next') {
 					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
-					sendMpdCmd($sock, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
-					$resp = readMpdResp($sock);
+					array_push($cmds, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
 				}
 				else {
 					$pos = $status['playlistlength'];
 				}
+				array_push($cmds, 'play ' . $pos);
+				chainMpdCmds($sock, $cmds);
 			}
 
-			usleep(500000); // NOTE: This brief delay allows the WebUI some time to process and display the Queue
-			sendMpdCmd($sock, 'play ' . $pos);
-			$resp = readMpdResp($sock);
 			playerSession('write', 'toggle_song', $pos);
 			break;
 		case 'clear_add_group':
         case 'clear_play_group':
-			sendMpdCmd($sock,'clear');
-			$resp = readMpdResp($sock);
-
-        	addGroupToQueue($sock, $_POST['path']);
-			playerSession('write', 'toggle_song', '0');
+			$cmds = array_merge(array('clear'), addGroupToQueue($_POST['path']));
 
 			if ($_GET['cmd'] == 'clear_play_group') {
-				sendMpdCmd($sock, 'play'); // Defaults to pos 0
-				$resp = readMpdResp($sock);
+				array_push($cmds, 'play'); // Defaults to pos 0
 			}
+
+			chainMpdCmds($sock, $cmds);
+			playerSession('write', 'toggle_song', '0');
+			break;
+		case 'station_info':
+			echo json_encode(parseStationInfo($_POST['path']));
+			break;
+		case 'track_info':
+			sendMpdCmd($sock,'lsinfo "' . $_POST['path'] .'"');
+			echo json_encode(parseTrackInfo(readMpdResp($sock)));
 			break;
 		case 'getmpdstatus':
 			echo json_encode(parseStatus(getMpdStatus($sock)));
@@ -353,7 +347,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 					// Add new row, NULL causes Id column to be set to next number
 					// NOTE: $values have to be in column order
 					$values =
-						"'"	. $_POST['path']['url'] . "'," .
+						"'"	. SQLite3::escapeString($_POST['path']['url']) . "'," .
 						"'" . SQLite3::escapeString($_POST['path']['name']) . "'," .
 						"'"	. $_POST['path']['type'] . "'," .
 						"'"	. 'local' . "'," .
@@ -382,7 +376,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 
 				if ($return_msg == 'OK') {
 					$columns =
-					"station='" . $_POST['path']['url'] . "'," .
+					"station='" . SQLite3::escapeString($_POST['path']['url']) . "'," .
 					"name='" . SQLite3::escapeString($_POST['path']['name']) . "'," .
 					"type='" . $_POST['path']['type'] . "'," .
 					"logo='local'," .

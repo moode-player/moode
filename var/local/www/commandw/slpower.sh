@@ -37,10 +37,19 @@ fi
 
 if [[ $WRKREADY == "1" ]]; then
 	echo Worker ready
+	# See if -V hardware mixer is present in OTHEROPTIONS
+	VOPT=$(sqlite3 $SQLDB "select * from cfg_sl where value like '%-V%'")
 	if [[ $1 = "0" ]] ; then
 		echo Power off
 		$(sqlite3 $SQLDB "update cfg_system set value='0' where param='slactive'")
-		/var/www/vol.sh -restore
+		if [[ $VOPT != "" ]] ; then
+			ALSAVOL=$(/var/www/command/util.sh get-alsavol "`/var/www/command/util.sh get-mixername| sed 's/[()]/"/g'`")
+			if [[ $ALSAVOL == "0%" ]] ; then
+				/var/www/vol.sh -restore
+			fi
+		else
+			/var/www/vol.sh -restore
+		fi
 		if [[ $RSMAFTERSL == "Yes" ]]; then
 			/usr/bin/mpc play > /dev/null
 		fi
@@ -49,8 +58,6 @@ if [[ $WRKREADY == "1" ]]; then
 		/usr/bin/mpc stop > /dev/null
 		sleep 1
 		$(sqlite3 $SQLDB "update cfg_system set value='1' where param='slactive'")
-		# See if -V hardware mixer is present in OTHEROPTIONS
-		VOPT=$(sqlite3 $SQLDB "select * from cfg_sl where value like '%-V%'")
 		if [[ $ALSAVOLUME != "none" && $VOPT == "" ]]; then
 			/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi

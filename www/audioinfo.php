@@ -214,20 +214,20 @@ else {
 // Renderers
 if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $_SESSION['inpactive'] == '1' || $btactive === true) {
 	$resample_rate = '';
-	$resample_quality = 'n/a';
-	$polarity_inv = 'n/a';
-	$crossfade = 'n/a';
-	$crossfeed = 'n/a';
-	$replaygain = 'n/a';
-	$vol_normalize = 'n/a';
+	$resample_quality = 'off';
+	$polarity_inv = 'off';
+	$crossfade = 'off';
+	$crossfeed = 'off';
+	$replaygain = 'off';
+	$vol_normalize = 'off';
 
 	if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1') {
 		$peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
 	}
 	else {
-		$peq = 'n/a';
-		$geq = 'n/a';
+		$peq = 'off';
+		$geq = 'off';
 	}
 }
 // MPD
@@ -242,11 +242,11 @@ else {
 		$resample_rate = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
 		$patch_id = explode('_p0x', $_SESSION['mpdver'])[1];
 		$resample_modes = array('0' => 'disabled',
-			SOX_UPSAMPLE_ALL => 'Upsample if source < target rate',
-			SOX_UPSAMPLE_ONLY_41K => 'Upsample only 44.1K source rate',
-			SOX_UPSAMPLE_ONLY_4148K => 'Upsample only 44.1K and 48K source rates',
-			SOX_ADHERE_BASE_FREQ => 'Resample (adhere to base freq)',
-			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'Upsample if source < target rate (adhere to base freq)'
+			SOX_UPSAMPLE_ALL => 'source > target rate',
+			SOX_UPSAMPLE_ONLY_41K => 'only 44.1K source rate',
+			SOX_UPSAMPLE_ONLY_4148K => 'only 44.1K and 48K source rates',
+			SOX_ADHERE_BASE_FREQ => 'resample (adhere to base freq)',
+			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'source > target rate (adhere to base freq)'
 		);
 		if ($patch_id & PATCH_SELECTIVE_RESAMPLING) {
 			$_selective_resampling_hide = '';

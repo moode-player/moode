@@ -31,7 +31,7 @@ index bcba497ba..03380f12c 100644
  			: ReplayGainMode::OFF;
  	});
 +
-+	const unsigned selective_resample_mode =  
++	const unsigned selective_resample_mode =
 +			config.GetUnsigned(ConfigOption::SELECTIVE_RESAMPLE_MODE, 0);
 +	if(selective_resample_mode > 0 && configured_audio_format == AudioFormat::Undefined() ) {
 +		FormatWarning(config_domain, "Missing audio_format, without selective_resample_mode is deactivated.");
@@ -40,7 +40,7 @@ index bcba497ba..03380f12c 100644
 +	}
 +	partition.pc.SetSelectiveResampleMode( config.GetUnsigned(ConfigOption::SELECTIVE_RESAMPLE_MODE, 0) );
  }
- 
+
  inline void
 diff --git a/src/config/Option.hxx b/src/config/Option.hxx
 index f4e52a593..094bf01d7 100644
@@ -50,10 +50,10 @@ index f4e52a593..094bf01d7 100644
  	DESPOTIFY_USER,
  	DESPOTIFY_PASSWORD,
  	DESPOTIFY_HIGH_BITRATE,
-+	SELECTIVE_RESAMPLE_MODE,	
++	SELECTIVE_RESAMPLE_MODE,
  	MAX
  };
- 
+
 diff --git a/src/config/Templates.cxx b/src/config/Templates.cxx
 index e54f03212..7cb88318e 100644
 --- a/src/config/Templates.cxx
@@ -64,7 +64,7 @@ index e54f03212..7cb88318e 100644
  	{ "despotify_high_bitrate", false, true },
 +	{ "selective_resample_mode" }
  };
- 
+
  static constexpr unsigned n_config_param_templates =
 diff --git a/src/decoder/Control.cxx b/src/decoder/Control.cxx
 index 50ba4f0d3..47e56dcdb 100644
@@ -82,15 +82,15 @@ index 50ba4f0d3..47e56dcdb 100644
  	 configured_audio_format(_configured_audio_format),
 +	 selective_resample_mode(_selective_resample_mode),
  	 replay_gain_config(_replay_gain_config) {}
- 
+
  DecoderControl::~DecoderControl() noexcept
 @@ -50,7 +52,7 @@ DecoderControl::SetReady(const AudioFormat audio_format,
  	assert(audio_format.IsValid());
- 
+
  	in_audio_format = audio_format;
 -	out_audio_format = audio_format.WithMask(configured_audio_format);
 +	out_audio_format = audio_format.WithMask(configured_audio_format, selective_resample_mode);
- 
+
  	seekable = _seekable;
  	total_time = _duration;
 diff --git a/src/decoder/Control.hxx b/src/decoder/Control.hxx
@@ -100,12 +100,12 @@ index 7bdf1809f..82614b63d 100644
 @@ -170,6 +170,8 @@ public:
  	const ReplayGainConfig replay_gain_config;
  	ReplayGainMode replay_gain_mode = ReplayGainMode::OFF;
- 
+
 +	const unsigned selective_resample_mode;
 +
  	float replay_gain_db = 0;
  	float replay_gain_prev_db = 0;
- 
+
 @@ -184,6 +186,7 @@ public:
  	DecoderControl(Mutex &_mutex, Cond &_client_cond,
  		       InputCacheManager *_input_cache,
@@ -113,19 +113,19 @@ index 7bdf1809f..82614b63d 100644
 +		       const unsigned selective_resample_mode,
  		       const ReplayGainConfig &_replay_gain_config) noexcept;
  	~DecoderControl() noexcept;
- 
+
 diff --git a/src/pcm/AudioFormat.cxx b/src/pcm/AudioFormat.cxx
 index 3006bf159..94d407848 100644
 --- a/src/pcm/AudioFormat.cxx
 +++ b/src/pcm/AudioFormat.cxx
 @@ -23,15 +23,103 @@
  #include <cassert>
- 
+
  #include <stdio.h>
 +#include <map>
 +
 +static const std::map<unsigned, unsigned> lut48to44 = {
-+		{768000, 706500 },
++		{768000, 705600 },
 +		{384000, 352800 },
 +		{192000, 176400 },
 +	 	 {96000,  88200 },
@@ -133,7 +133,7 @@ index 3006bf159..94d407848 100644
 +};
 +
 +static const std::map<unsigned, unsigned> lut44to48 = {
-+		{706500, 384000 },
++		{705600, 384000 },
 +		{352800, 192000 },
 +	 	{176400,  96000 },
 +		 {88200,  48000 }
@@ -157,7 +157,7 @@ index 3006bf159..94d407848 100644
 + * selective_resample_mode:
 + * 0 - up/down sample to match requisted sample rate (regular behaviour)
 + * 1 - only upsample
-+ * 2 - only upsample below 88.2 
++ * 2 - only upsample below 88.2
 + * 3 - up/down sample to match requisted sample rate, adhere base clock (even diverder)
 + * 4 - only upsample,  adhere base clock (even diverder)
 + * 5 - only upsample below 88.2, adhere base clock (even diverder)
@@ -171,7 +171,7 @@ index 3006bf159..94d407848 100644
 +	const bool adhere_base_clock = (selective_resample_mode & ADHERE_BASE_CLOCK) == ADHERE_BASE_CLOCK;
 +	bool resample = false;
 +	unsigned out_sample_rate = source_rate;
-+	
++
 +	if( target_rate ) {
 +		switch(selective_resample_mode & UPSAMPLE_MASK) {
 +			case UPSAMPLE_ALL:
@@ -179,23 +179,23 @@ index 3006bf159..94d407848 100644
 +				break;
 +			case UPSAMPLE_ONLY_44:
 +				resample = source_rate == 44100;
-+				break;		
++				break;
 +			case  UPSAMPLE_ONLY_48:
 +				resample = source_rate < 88200;
-+				break;		
++				break;
 +			default:
 +				resample = true;
 +		}
 +
 +		if( resample ) {
-+			if( adhere_base_clock && 
-+				source_rate % 44100 == 0 && 
-+				target_rate % 48000 == 0 && 
++			if( adhere_base_clock &&
++				source_rate % 44100 == 0 &&
++				target_rate % 48000 == 0 &&
 +				lut44to48.find(target_rate) != lut48to44.end() ) {
 +				out_sample_rate = lut48to44.find(target_rate)->second;
-+			} else if( adhere_base_clock && 
-+				source_rate % 48000 == 0 && 
-+				target_rate % 44100 == 0 && 
++			} else if( adhere_base_clock &&
++				source_rate % 48000 == 0 &&
++				target_rate % 44100 == 0 &&
 +				lut44to48.find(target_rate) != lut44to48.end() ) {
 +				out_sample_rate = lut44to48.find(target_rate)->second;
 +			} else {
@@ -206,14 +206,14 @@ index 3006bf159..94d407848 100644
 +
 +    return out_sample_rate;
 +}
- 
+
  void
 -AudioFormat::ApplyMask(AudioFormat mask) noexcept
 +AudioFormat::ApplyMask(AudioFormat mask, unsigned selective_resample_mode) noexcept
  {
  	assert(IsValid());
  	assert(mask.IsMaskValid());
- 
+
 -	if (mask.sample_rate != 0)
 -		sample_rate = mask.sample_rate;
 +	if (mask.sample_rate != 0) {
@@ -222,7 +222,7 @@ index 3006bf159..94d407848 100644
 +		else
 +			sample_rate = mask.sample_rate;
 +	}
- 
+
  	if (mask.format != SampleFormat::UNDEFINED)
  		format = mask.format;
 diff --git a/src/pcm/AudioFormat.hxx b/src/pcm/AudioFormat.hxx
@@ -232,10 +232,10 @@ index 237853df1..848395b2e 100644
 @@ -122,12 +122,12 @@ struct AudioFormat {
  		return !(*this == other);
  	}
- 
+
 -	void ApplyMask(AudioFormat mask) noexcept;
 +	void ApplyMask(AudioFormat mask, unsigned selective_resample_mode = 0) noexcept;
- 
+
  	gcc_pure
 -	AudioFormat WithMask(AudioFormat mask) const noexcept {
 +	AudioFormat WithMask(AudioFormat mask, unsigned selective_resample_mode = 0) const noexcept {
@@ -244,7 +244,7 @@ index 237853df1..848395b2e 100644
 +		result.ApplyMask(mask, selective_resample_mode);
  		return result;
  	}
- 
+
 diff --git a/src/player/Control.cxx b/src/player/Control.cxx
 index 593af3331..7a1659486 100644
 --- a/src/player/Control.cxx
@@ -258,24 +258,24 @@ index 593af3331..7a1659486 100644
 +	 selective_resample_mode(0)
  {
  }
- 
+
 diff --git a/src/player/Control.hxx b/src/player/Control.hxx
 index f5cc7ea3d..120fd96e4 100644
 --- a/src/player/Control.hxx
 +++ b/src/player/Control.hxx
 @@ -231,6 +231,8 @@ class PlayerControl final : public AudioOutputClient {
- 
+
  	const ReplayGainConfig replay_gain_config;
- 
+
 +	unsigned selective_resample_mode;
 +
  	FloatDuration total_play_time = FloatDuration::zero();
- 
+
  public:
 @@ -321,6 +323,10 @@ public:
  		replay_gain_mode = _mode;
  	}
- 
+
 +	void SetSelectiveResampleMode(unsigned mode) noexcept {
 +		selective_resample_mode = mode;
 +	}
@@ -294,4 +294,3 @@ index e53c5832a..7e1e60734 100644
 +			  selective_resample_mode,
  			  replay_gain_config);
  	dc.StartThread();
- 

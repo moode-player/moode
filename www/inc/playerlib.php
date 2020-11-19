@@ -130,14 +130,6 @@ function debugLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
-// Helper functions for html generation (@pcasto)
-// NOTE: These were used in header.php but as of the 7.0.0 release they are no longer used.
-function versioned_stylesheet($file, $type='stylesheet') {
-	echo '<link href="' . $file . '?v=' . $_SESSION['moode_release'] . '" rel="' . $type .'">' . "\n";
-}
-function versioned_script($file, $type='') {
-	echo '<script src="' . $file . '?v=' . $_SESSION['moode_release'] . '"' . ($type != '' ? ' type="' . $type . '"' . ' defer></script>' : ' defer></script>') . "\n";
-}
 
 // Core MPD functions
 
@@ -195,15 +187,14 @@ function sendMpdCmd($sock, $cmd) {
 	fputs($sock, $cmd . "\n");
 }
 
-function chainMpdCmds($sock, $cmds, $delay = 0) {
+function chainMpdCmds($sock, $cmds) {
+	workerLog(print_r($cmds, true));
+    sendMpdCmd($sock, 'command_list_begin');
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
-        $resp = readMpdResp($sock);
-
-		if ($delay > 0) {
-			usleep($delay); // Microseconds
-		}
     }
+    sendMpdCmd($sock, 'command_list_end');
+    $resp = readMpdResp($sock);
 }
 
 function getMpdStatus($sock) {
@@ -218,7 +209,7 @@ function getMpdStats($sock) {
 	return $stats;
 }
 
-// miscellaneous core functions
+// Miscellaneous core functions
 
 function sysCmd($cmd) {
 	exec('sudo ' . $cmd . " 2>&1", $output);
@@ -279,7 +270,7 @@ function integrityCheck() {
 
 	// Verify the row count
 	$count = sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT COUNT() FROM cfg_audiodev\"");
-	if ($count[0] != 77) {
+	if ($count[0] != 78) {
 		$_SESSION['ic_return_code'] = '4';
 		return false;
 	}
@@ -881,25 +872,14 @@ function clearLibCacheFiltered() {
 	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
 }
 
-// Add group of song files to the Queue (Tag/Album view)
-function addGroupToQueue($sock, $songs) {
-	$mpd_cmds = array();
-
-	foreach ($songs as $song) {
-		array_push($mpd_cmds, 'add "' . html_entity_decode($song) . '"');
-	}
-
-	chainMpdCmds($sock, $mpd_cmds);
-}
-
 // Add one item (song file, playlist, radio station, directory) to the Queue
-function addItemToQueue($sock, $path) {
+function ___addItemToQueue($sock, $path) {
 	$ext = getFileExt($path);
 	$pl_extensions = array('m3u', 'pls', 'cue');
 	//workerLog($path . ' (' . $ext . ')');
 
 	// Use load for saved playlist, cue sheet, radio station
-	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $ROOT_DIRECTORIES) === false)) {
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $GLOBALS['ROOT_DIRECTORIES']) === false)) {
 		// Radio station special case
 		if (strpos($path, 'RADIO') !== false) {
 			// Check for playlist as URL
@@ -918,6 +898,45 @@ function addItemToQueue($sock, $path) {
 	}
 
 	return readMpdResp($sock);
+}
+
+// Add one item (song file, playlist, radio station, directory) to the Queue
+function addItemToQueue($path) {
+	$ext = getFileExt($path);
+	$pl_extensions = array('m3u', 'pls', 'cue');
+	//workerLog($path . ' (' . $ext . ')');
+
+	// Use load for saved playlist, cue sheet, radio station
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $GLOBALS['ROOT_DIRECTORIES']) === false)) {
+		// Radio station special case
+		if (strpos($path, 'RADIO') !== false) {
+			// Check for playlist as URL
+			$pls = file_get_contents(MPD_MUSICROOT . $path);
+			$url = parseDelimFile($pls, '=')['File1'];
+			$ext = substr($url, -4);
+			if ($ext == '.pls' || $ext == '.m3u') {
+				$path = $url;
+			}
+		}
+		$cmd = 'load';
+	}
+	// Use add for song file or directory
+	else {
+		$cmd = 'add';
+	}
+
+	return $cmd . ' "' . html_entity_decode($path) . '"';
+}
+
+// Add group of song files to the Queue (Tag/Album view)
+function addGroupToQueue($songs) {
+	$cmds = array();
+
+	foreach ($songs as $song) {
+		array_push($cmds, 'add "' . html_entity_decode($song) . '"');
+	}
+
+	return $cmds;
 }
 
 // Get file extension
@@ -963,9 +982,8 @@ function getPLInfo($sock) {
 				$array[$idx]['TimeMMSS'] = songTime($array[$idx]['Time']);
 			}
 			else {
-				// TEST
 				// Return only the first of multiple occurrences of the following tags
-				if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+				if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
 					if (!isset($array[$idx][$element])) {
 						$array[$idx][$element] = $value;
 					}
@@ -980,6 +998,121 @@ function getPLInfo($sock) {
 		}
 	}
 
+	return $array;
+}
+
+// Parse station info
+function parseStationInfo($path) {
+	//workerLog($path);
+	$array = array();
+	$result = sdbquery("select * from cfg_radio where station='" . SQLite3::escapeString($path) . "'", cfgdb_connect());
+
+	$array[0] = array('Station name' => $result[0]['name']);
+	$array[1] = array('Playable URL' => $result[0]['station']);
+	$array[2] = array('Type' => $result[0]['type'] == 'f' ? 'Favorite' : ($result[0]['type'] == 'r' ? 'Regular' : 'Hidden'));
+	$array[3] = array('Genre' => $result[0]['genre']);
+	$array[4] = array('Broadcaster' => $result[0]['broadcaster']);
+	$array[5] = array('Language' => $result[0]['language']);
+	$array[6] = array('Country' => $result[0]['country']);
+	$array[7] = array('Region' => $result[0]['region']);
+	$array[8] = array('Bitrate' => $result[0]['bitrate']);
+	$array[9] = array('Audio format' => $result[0]['format']);
+	$array[10] = array('Geo fenced' => $result[0]['geo_fenced']);
+
+	//workerLog(print_r($array, true));
+	return $array;
+}
+
+// Parse track info
+function parseTrackInfo($resp) {
+	/* Layout
+	0  Artists
+	1  Album artist
+	2  Composer
+	3  Conductor
+	4  Genres
+	5  Album
+	6  Disc
+	7  Track
+	8  Title
+	9  Date
+	10 Duration
+	11 Audio format
+	*/
+
+	if (is_null($resp)) {
+		return NULL;
+	}
+	else {
+		$array = array();
+		$line = strtok($resp, "\n");
+		$num_lines = 12;
+
+		for ($i = 0; $i < $num_lines; $i++) {
+			$array[$i] = '';
+		}
+
+		while ($line) {
+			list ($element, $value) = explode(': ', $line, 2);
+
+			switch ($element) {
+				// Not needed for display
+				case 'duration':
+				case 'Last-Modified':
+				case 'Format':
+					break;
+				// All others
+				case 'file':
+					$file = $value;
+					break;
+				case 'Artist':
+				case 'Performer':
+					$artists .= $value . ', ';
+					break;
+				case 'AlbumArtist':
+					$array[1] = array('Album artist' => $value);
+					break;
+				case 'Composer':
+					$array[2] = array($element => $value);
+					break;
+				case 'Conductor':
+					$array[3] = array($element => $value);
+					break;
+				case 'Genre':
+					$genres .= $value . ', ';
+					break;
+				case 'Album':
+					$array[5] = array($element => $value);
+					break;
+				case 'Disc':
+					$array[6] = array($element => $value);
+					break;
+				case 'Track':
+					$array[7] = array($element => $value);
+					break;
+				case 'Title':
+					$array[8] = array($element => $value);
+					break;
+				case 'Date':
+					$array[9] = array($element => $value);
+					break;
+				case 'Time':
+					$array[10] = array('Duration' => songTime($value));
+					break;
+			}
+
+			$line = strtok("\n");
+		}
+
+		// Strip off trailing delimiter
+		$array[0] = array('Artists' => rtrim($artists, ', '));
+		$array[4] = array('Genres' => rtrim($genres, ', '));
+
+		// Add audio format
+		$array[11] = array('Audio format' => getEncodedAt(array('file' => $file), 'default'));
+	}
+
+	//workerLog(print_r($array, true));
 	return $array;
 }
 
@@ -1084,7 +1217,6 @@ function parseList($resp) {
 function songTime($sec) {
 	$mins = sprintf('%02d', floor($sec / 60));
 	$secs = sprintf(':%02d', (int) $sec % 60);
-
 	return $mins . $secs;
 }
 
@@ -1259,6 +1391,8 @@ function parseCurrentSong($sock) {
 	sendMpdCmd($sock, 'currentsong');
 	$resp = readMpdResp($sock);
 
+	$artist_count = 0;
+
 	if (is_null($resp) ) {
 		return 'parseCurrentSong(): Response is null';
 	}
@@ -1279,11 +1413,14 @@ function parseCurrentSong($sock) {
 				$array[$element] = $value;
 			}*/
 
-			// TEST
 			// Return only the first of multiple occurrences of the following tags
-			if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+			if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
 				if (!isset($array[$element])) {
 					$array[$element] = $value;
+				}
+				// Tally the number of "artists"
+				if ($element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
+					$artist_count++;
 				}
 			}
 			// All other tags
@@ -1291,7 +1428,6 @@ function parseCurrentSong($sock) {
 				$array[$element] = $value;
 			}
 
-			//ORIG $array[$element] = $value;
 			$line = strtok("\n");
 		}
 
@@ -1302,6 +1438,8 @@ function parseCurrentSong($sock) {
 				$array[$key] = rtrim($array[$key], '; ');
 			}
 		}*/
+
+		$array['artist_count'] = $artist_count;
 
 		//workerLog(print_r($array, true));
 		return $array;
@@ -2247,7 +2385,7 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 	$encoded_at = 'NULL';
 	$ext = getFileExt($song_data['file']);
 
-	// Special sectuon to handle calls from genLibrary() to populate the element "encoded_at"
+	// Special section to handle calls from genLibrary() to populate the element "encoded_at"
 	// Uses the MPD Format tag (rate:bits:channels) for PCM and mediainfo for DSD
 	// Returned string for PCM is "bits/rate format,flag" and for DSD it's "DSD rate,h"
 	// Flags: l (lossy), s (standard definition), h (high definition: bits >16 || rate > 44.1 || DSD)
@@ -2808,26 +2946,6 @@ c0 3112	4B		1.2	4GB		Sony UK
 d0 3114	4B		1.4	8GB		Sony UK
 */
 
-// Config audio scrobbler
-// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
-/*function cfgAudioScrobbler() {
-	$file = '/usr/local/etc/mpdasrc';
-	$fp = fopen($file, 'w');
-
-	$data  = "#########################################\n";
-	$data .= "# This file is automatically generated by\n";
-	$data .= "# the player System configuration page. \n";
-	$data .= "#########################################\n\n";
-
-	$data .= "username = " . $_SESSION['mpdasuser'] . "\n";
-	$data .= "password = " . (empty($_SESSION['mpdaspwd']) ? '' : $_SESSION['mpdaspwd']) . "\n";
-	$data .= "runas = mpd\n";
-	$data .= "debug = 0\n";
-
-	fwrite($fp, $data);
-	fclose($fp);
-}*/
-
 // returns the settings for reading/writing the autoConfig file
 function autoConfigSettings() {
 	$debug = true;
@@ -3356,22 +3474,6 @@ function cfgI2sOverlay($i2sDevice) {
 	sysCmd($cmd);
 	$cmd = $_SESSION['p3bt'] == '0' ? 'echo dtoverlay=disable-bt >> ' . '/boot/config.txt' : 'echo "#dtoverlay=disable-bt" >> ' . '/boot/config.txt';
 	sysCmd($cmd);
-
-	// Enhanced drivers
-	$kernel_base = explode('-', $_SESSION['kernelver'])[0];
-	workerLog($kernel_base);
-	if ($i2sDevice == 'DDDAC1794 NOS (384K)') {
-		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v7+ /lib/modules/' . $kernel_base . '-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v7l+ /lib/modules/' . $kernel_base . '-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('cp /var/local/www/modules/pcm1794a/enhanced/snd-soc-pcm1794a.ko-v8+ /lib/modules/' . $kernel_base . '-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('depmod');
-	}
-	elseif ($i2sDevice == 'DDDAC1794 NOS') {
-		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v7+ /lib/modules/' . $kernel_base . '-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v7l+ /lib/modules/' . $kernel_base . '-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('cp /var/local/www/modules/pcm1794a/standard/snd-soc-pcm1794a.ko-v8+ /lib/modules/' . $kernel_base . '-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko');
-		sysCmd('depmod');
-	}
 }
 
 // pi3 wifi adapter enable/disable
@@ -3551,6 +3653,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['composer'] = $song['Composer'];
 	$current['conductor'] = $song['Conductor'];
 	$current['performer'] = $song['Performer'];
+	$current['albumartist'] = $song['AlbumArtist'];
+	$current['artist_count'] = $song['artist_count'];
 	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
@@ -3607,7 +3711,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				// Use transmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
 				// Include original station name
-				$current['station_name'] = $_SESSION[$song['file']]['name'];
+				// DEPRECATE $current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
 					// Local logo image
 					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg";
@@ -3624,7 +3728,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			else {
 				// Not in radio station table, use transmitted name or 'Unknown'
 				$current['album'] = isset($song['Name']) ? $song['Name'] : 'Unknown station';
-				$current['station_name'] = $current['album'];
+				// DEPRECATE $current['station_name'] = $current['album'];
 				$current['coverurl'] = DEF_RADIO_COVER;
 			}
 		}

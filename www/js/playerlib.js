@@ -93,24 +93,24 @@ var UI = {
 	thumbHW: '0px'
 };
 
-// mpd state and metadata
+// MPD state and metadata
 var MPD = {
 	json: 0
 };
 
-// session vars (cfg_system table)
+// Session vars (cfg_system table)
 var SESSION = {
 	json: 0
 };
-// radio stations (cfg_radio table)
+// Radio stations (cfg_radio table)
 var RADIO = {
 	json: 0
 };
-// themes (cfg_theme table)
+// Themes (cfg_theme table)
 var THEME = {
 	json: 0
 };
-// networks (cfg_network table)
+// Networks (cfg_network table)
 var NETWORK = {
 	json: 0
 };
@@ -688,7 +688,7 @@ function renderUI() {
             $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
             if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
         		for (i = 0; i < filteredSongs.length; i++) {
-        			if (filteredSongs[i].title == MPD.json['title']) {
+        			if (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album']) {
         				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-highlight');
         				break;
         			}
@@ -716,9 +716,9 @@ function renderUI() {
     	// Compare new to current to prevent unnecessary image reloads
     	if (MPD.json['file'] !== UI.currentFile && MPD.json['cover_art_hash'] !== UI.currentHash) {
     		//console.log(MPD.json['coverurl']);
-            // Original for Playback
+            // Standard cover for Playback
      		$('#coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'data-adaptive-background="1" alt="Cover art not found"' + '>');
-            // Thumbnail for Playbar
+            // Thumbnail cover for Playbar
             if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
@@ -774,37 +774,58 @@ function renderUI() {
 
         // HD badge text
         var hdBadgeText = MPD.json['artist'] == 'Radio station' ? RADIO_HD_BADGE_TEXT : ALBUM_HD_BADGE_TEXT;
-        $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(hdBadgeText);
+        $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(hdBadgeText);
 
-    	// Default metadata
-        if (MPD.json['album']) {
-            // ORIG $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist'] + ' - ' + MPD.json['album']);
-            // For Soma FM station where we want use the short name from cfg_radio in Playbar and Coverview
-            //$('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
-            //    (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist'] + ' - ' + MPD.json['album']);
+        // Multiple artists indicator
+        var moreArtists = parseInt(MPD.json['artist_count']) > 1 ? '...' : '';
 
-            // TEST: display just the artist instead of artist - album
-            $('#currentalbum').html(MPD.json['artist'] == 'Radio station' ? MPD.json['album'] : MPD.json['artist']);
-            $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['artist'] == 'Radio station' ?
-                (MPD.json['file'].indexOf('somafm') != -1 ? RADIO.json[MPD.json['file']]['name'] : MPD.json['album']) : MPD.json['artist']);
+        // Default metadata
+        // For radio stations
+        // - #currentalbum = ''
+        // - #currentsong = MPD.json['title']
+        // - #currentartist = MPD.json['album']
+        if (MPD.json['artist'] == 'Radio station') {
+            // Playback
+            $('#currentalbum-div').hide();
+            $('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
+            $('#currentartist').html(MPD.json['album']);
+            // Playbar
+            $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['file'].indexOf('somafm') != -1 ?
+                RADIO.json[MPD.json['file']]['name'] : MPD.json['album']);
+            $('#playbar-currentsong, #ss-currentsong').html(MPD.json['title']);
+        }
+        // For albums
+        // - #currentalbum = MPD.json['album']
+        // - #currentsong = MPD.json['title']
+        // - #currentartist = MPD.jpsn['artist']
+        else {
+            // Playback
+            $('#currentalbum-div').show();
+            $('#currentalbum').html(MPD.json['album']);
+    		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
+            $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtists);
+            // Playbar
+            $('#playbar-currentsong, #ss-currentsong').html(MPD.json['title']);
+            $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
+        }
 
-			MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9' ? $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').show() : $('#playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
+        // Show/hide HD badge
+        if (MPD.json['hidef'] == 'yes' && SESSION.json['library_encoded_at'] && SESSION.json['library_encoded_at'] != '9') {
+            if (MPD.json['artist'] == 'Radio station') {
+                $('#currentartist-div span.playback-hd-badge').show();
+            }
+            else {
+                $('#currentartist-div span.playback-hd-badge').hide();
+                $('#currentalbum-div span.playback-hd-badge').show();
+            }
+
+            $('#playbar-hd-badge, #ss-hd-badge').show();
         }
         else {
-            $('#currentalbum, #playbar-currentalbum, #ss-currentalbum').html('');
+            $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').hide();
         }
 
-    	// Song title
-    	if (MPD.json['title'] === 'Streaming source' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
-    		$('#currentsong').html(MPD.json['title']);
-    	}
-    	// Add search url, see corresponding code in renderPlaylist()
-    	else {
-    		$('#currentsong').html(genSearchUrl(MPD.json['artist'], MPD.json['title'], MPD.json['album']));
-    	}
-    	$('#playbar-currentsong, #ss-currentsong').html(MPD.json['title']);
-    	// Store songid for last track (toggle song)
-        //console.log('UI.currentSongId: ' + UI.currentSongId, 'MPD.json[songid]: ' + MPD.json['songid']);
+        // Store songid for last track (toggle song)
     	if (UI.currentSongId != MPD.json['songid']) {
     		toggleSongId = UI.currentSongId == 'blank' ? SESSION.json['toggle_songid'] : UI.currentSongId;
             $.post('command/moode.php?cmd=updcfgsystem', {'toggle_songid': toggleSongId});
@@ -925,18 +946,23 @@ function renderUI() {
 
 // Generate search url
 function genSearchUrl (artist, title, album) {
-	var searchEngine = 'http://www.google.com/search?q=';
+    if (title == 'Streaming source' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
+        var returnStr = MPD.json['title'];
+    }
+    else {
+        if (typeof(artist) === 'undefined' || artist === 'Radio station') {
+    		var searchStr = title.replace(/-/g, ' ');
+    		searchStr = searchStr.replace(/&/g, ' ');
+    		searchStr = searchStr.replace(/\s+/g, '+');
+    	}
+    	else {
+    		searchStr = artist + '+' + album;
+    	}
 
-	if (typeof(artist) === 'undefined' || artist === 'Radio station') {
-		var searchStr = title.replace(/-/g, ' ');
-		searchStr = searchStr.replace(/&/g, ' ');
-		searchStr = searchStr.replace(/\s+/g, '+');
-	}
-	else {
-		searchStr = artist + '+' + album;
-	}
-
-	return '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
+        var searchEngine = 'http://www.google.com/search?q=';
+    	var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
+    }
+    return returnStr;
 }
 
 // Update active Queue item
@@ -987,6 +1013,7 @@ function updateActivePlItem() {
 function renderPlaylist(state) {
 	//console.log('renderPlaylist()');
     $.getJSON('command/moode.php?cmd=playlist', function(data) {
+        //console.log(data);
 		var output = '';
         var playlistLazy = GLOBAL.nativeLazyLoad === true ? '<img loading="lazy" src=' : '<img class="lazy-playlistview" data-original=';
         var paused = state != 'play' ? ' paused' : '';
@@ -1068,7 +1095,6 @@ function renderPlaylist(state) {
 				else {
 					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
 					output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"' + thumb + '"/></span>' : '';
-					//output += option_show_playlistart ? '<span class="pl-thumb">' + playlistLazy + '"imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="pl-action" data-toggle="context" data-target="#context-menu-playlist-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -1091,9 +1117,7 @@ function renderPlaylist(state) {
 					}
 					// Line 2 artist, album
 					output += '<span class="pll2">';
-					output += (typeof(data[i].Artist) === 'undefined') ? 'Unknown artist' : data[i].Artist;
-					//output += ' - ';
-					//output += (typeof(data[i].Album) === 'undefined') ?  'Unknown album' : data[i].Album;
+					output += (typeof(data[i].Artist) === 'undefined') ? data[i].AlbumArtist : data[i].Artist;
 				}
 
                 output += '</span></div></li>';
@@ -1200,37 +1224,18 @@ function renderFolderView(data, path, searchstr) {
 	// Sort directories and playlists
     // NOTE: Files are left in the order they appear in the MPD database and not sorted
     // Natural ordering
-	try {
-		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-		if (typeof(dirs[0]) != 'undefined') {
-			dirs.sort(function(a, b) {
-				a = a.directory.lastIndexOf('/') == -1 ? removeArticles(a.directory) : removeArticles(a.directory.substr(a.directory.lastIndexOf('/') + 1));
-				b = b.directory.lastIndexOf('/') == -1 ? removeArticles(b.directory) : removeArticles(b.directory.substr(b.directory.lastIndexOf('/') + 1));
-				return collator.compare(a, b);
-			});
-		}
-		if (typeof(playlists[0]) != 'undefined') {
-			playlists.sort(function(a, b) {
-				return collator.compare(removeArticles(a.playlist), removeArticles(b.playlist));
-			});
-		}
+	var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+	if (typeof(dirs[0]) != 'undefined') {
+		dirs.sort(function(a, b) {
+			a = a.directory.lastIndexOf('/') == -1 ? removeArticles(a.directory) : removeArticles(a.directory.substr(a.directory.lastIndexOf('/') + 1));
+			b = b.directory.lastIndexOf('/') == -1 ? removeArticles(b.directory) : removeArticles(b.directory.substr(b.directory.lastIndexOf('/') + 1));
+			return collator.compare(a, b);
+		});
 	}
-    // Fallback to default ordering
-	catch (e) {
-		if (typeof(dirs[0]) != 'undefined') {
-			dirs.sort(function(a, b) {
-				a = a.directory.lastIndexOf('/') == -1 ? removeArticles(a.directory.toLowerCase()) : removeArticles(a.directory.substr(a.directory.lastIndexOf('/') + 1).toLowerCase());
-				b = b.directory.lastIndexOf('/') == -1 ? removeArticles(b.directory.toLowerCase()) : removeArticles(b.directory.substr(b.directory.lastIndexOf('/') + 1).toLowerCase());
-				return a > b ? 1 : (a < b ? -1 : 0);
-			});
-		}
-		if (typeof(playlists[0]) != 'undefined') {
-			playlists.sort(function(a, b) {
-				a = removeArticles(a.playlist.toLowerCase());
-				b = removeArticles(b.playlist.toLowerCase());
-				return a > b ? 1 : (a < b ? -1 : 0);
-			});
-		}
+	if (typeof(playlists[0]) != 'undefined') {
+		playlists.sort(function(a, b) {
+			return collator.compare(removeArticles(a.playlist), removeArticles(b.playlist));
+		});
 	}
 
 	// Merge back together
@@ -1261,7 +1266,7 @@ function renderFolderView(data, path, searchstr) {
 		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg' + '"></img></a></div>';
             // ORIG output += '<div class="db-entry db-album"><div>' + data[i].Artist + ' - ' + data[i].Album + '</div></div></li>'; // For onetouch search scripts-panels for .db-album
             output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">'; // Lets try a context menu instead of onetouch
-            output += '<div>' + /*data[i].Artist + ' - ' +*/ data[i].Album + '</div></div></li>';
+            output += '<div>' + data[i].Album + '</div></div></li>';
 		}
 
     	if (path == '' && typeof(data[i].file) != 'undefined') {
@@ -1453,98 +1458,47 @@ function renderRadioView() {
 
         // Sorts
         // All non-hidden stations
-        try {
-    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            allNonHiddenStations.sort(function(a, b) {
-                if (sortTag == 'name') {
-                    return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
-                }
-                else if (sortTag == 'genre') {
-                    return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
-                }
-                else {
-                    return collator.compare(a[sortTag], b[sortTag]);
-                }
-            });
-        }
-        catch (e) {
-            allNonHiddenStations.sort(function(a, b) {
-                if (sortTag == 'name') {
-                    a = removeArticles(a[sortTag]), b = removeArticles(b[sortTag]);
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                }
-                else if (sortTag == 'genre') {
-                    a = removeArticles(a[sortTag].split(', ')[0]), b = removeArticles(b[sortTag].split(', ')[0]);
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                }
-                else {
-                    return collator.compare(a[sortTag], b[sortTag]);
-                }
-            });
-        }
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        allNonHiddenStations.sort(function(a, b) {
+            if (sortTag == 'name') {
+                return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
+            }
+            else if (sortTag == 'genre') {
+                return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
+            }
+            else {
+                return collator.compare(a[sortTag], b[sortTag]);
+            }
+        });
+
         // Regular stations
-        try {
-    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            regularStations.sort(function(a, b) {
-                if (sortTag == 'name') {
-                    return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
-                }
-                else if (sortTag == 'genre') {
-                    return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
-                }
-                else {
-                    return collator.compare(a[sortTag], b[sortTag]);
-                }
-            });
-        }
-        catch (e) {
-            regularStations.sort(function(a, b) {
-                if (sortTag == 'name') {
-                    a = removeArticles(a[sortTag]), b = removeArticles(b[sortTag]);
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                }
-                else if (sortTag == 'genre') {
-                    a = removeArticles(a[sortTag].split(', ')[0]), b = removeArticles(b[sortTag].split(', ')[0]);
-                    return a > b ? 1 : (a < b ? -1 : 0);
-                }
-                else {
-                    return collator.compare(a[sortTag], b[sortTag]);
-                }
-            });
-        }
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        regularStations.sort(function(a, b) {
+            if (sortTag == 'name') {
+                return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
+            }
+            else if (sortTag == 'genre') {
+                return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
+            }
+            else {
+                return collator.compare(a[sortTag], b[sortTag]);
+            }
+        });
+
         // Favorite stations
-        try {
-    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            favoriteStations.sort(function(a, b) {
-                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
-            });
-        }
-        catch (e) {
-            favoriteStations.sort(function(a, b) {
-                a = removeArticles(a['name']), b = removeArticles(b['name']);
-                return a > b ? 1 : (a < b ? -1 : 0);
-            });
-        }
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        favoriteStations.sort(function(a, b) {
+            return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
+        });
+
         // Hidden stations
-        try {
-    		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-            hiddenMoodeStations.sort(function(a, b) {
-                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
-            });
-            hiddenOtherStations.sort(function(a, b) {
-                return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
-            });
-        }
-        catch (e) {
-            hiddenOtherStations.sort(function(a, b) {
-                a = removeArticles(a['name']), b = removeArticles(b['name']);
-                return a > b ? 1 : (a < b ? -1 : 0);
-            });
-            hiddenOtherStations.sort(function(a, b) {
-                a = removeArticles(a['name']), b = removeArticles(b['name']);
-                return a > b ? 1 : (a < b ? -1 : 0);
-            });
-        }
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        hiddenMoodeStations.sort(function(a, b) {
+            return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
+        });
+        hiddenOtherStations.sort(function(a, b) {
+            return collator.compare(removeArticles(a['name']), removeArticles(b['name']));
+        });
 
         // Set filtered list
         if (showHideMoodeStations == 'Show hidden') {
@@ -2042,10 +1996,13 @@ $('.context-menu a').click(function(e) {
         submitLibraryUpdate();
 	}
     else if ($(this).data('cmd') == 'track_info_folder') {
-        $.post('command/moode.php?cmd=track_info', {'path': path}, function(result) {
-            $('#track-info-text').html(result);
-            $('#track-info-modal').modal();
-        }, 'json');
+        audioinfo('track_info', path);
+	}
+    else if ($(this).data('cmd') == 'track_info_playback') {
+        if ($('#currentsong').html() != '') {
+            var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
+            audioinfo(cmd, MPD.json['file']);
+        }
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
 		$('#savedpl-path').html(path);
@@ -2993,7 +2950,7 @@ function btnbarfix(temp1,temp2) {
 	document.body.style.setProperty('--btnshade3', tempcolor);
 	document.body.style.setProperty('--btnshade4', getYIQ(temp1) > 127 ? 'rgba(32,32,32,0.10)' : 'rgba(208,208,208,0.17)');
 	$('#content').hasClass('visacc') ? op = .95 : op = .9;
-	document.body.style.setProperty('--modalbkdr', rgbaToRgb(.95, op, temprgba, temprgb));
+	document.body.style.setProperty('--modalbkdr', rgbaToRgb(.95, .95, temprgba, temprgb));
 	if ($('#content').hasClass('visacc')) {
 		(currentView.indexOf('playback') == -1 || SESSION.json['adaptive'] == 'No') ? UI.accenta = themeMcolor : UI.accenta = adaptMcolor;
 	}
@@ -3385,30 +3342,29 @@ function makeActive (vswitch, panel, view) {
 	currentView = view;
 	setColors();
 
-    /*if (view == 'tag' || view == 'album') {
-        if (SESSION.json['library_flatlist_filter'] != 'full_lib' && SESSION.json['library_flatlist_filter'] != 'tags') {
-            $('#lib-album-filter').val(SESSION.json['library_flatlist_filter'] + ' ' + SESSION.json['library_flatlist_filter_str']);
+    if (view == 'tag' || view == 'album') {
+        if ($('#lib-album-filter').val() != '') {
+            $('#searchResetLib').show();
         }
-    }*/
+    }
 
 	switch (view) {
 		case 'radio':
 			$('#viewswitch').addClass('vr');
 			$('#playbar-toggles .addfav').show();
-            $('.adv-search-btn').hide();
+            $('#random-album, .adv-search-btn').hide();
 			lazyLode('radio');
 			break;
 		case 'folder':
 			$('#viewswitch').addClass('vf');
 			$('#playbar-toggles .addfav').show();
-            $('.adv-search-btn').hide();
+            $('#random-album, .adv-search-btn').hide();
 			break;
 		case 'album':
 			$('#viewswitch').addClass('va');
             $('#playbar-toggles .addfav').hide();
             $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
-            //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
                 $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
@@ -3426,7 +3382,6 @@ function makeActive (vswitch, panel, view) {
             $('#playbar-toggles .addfav').hide();
             $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('tag').removeClass('covers');
-            //SESSION.json['library_flatlist_filter'] == 'full_lib' ? $('#searchResetLib').hide() : $('#searchResetLib').show();
             $('#index-albumcovers').hide();
 			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
 			if (SESSION.json['library_tagview_covers']) lazyLode('tag');
@@ -3687,4 +3642,35 @@ function splitStringAtFirstSpace (str) {
     }
 
     return strArray;
+}
+
+// for menu item in header.php
+function audiohardware() {
+    var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
+    audioinfo(cmd, MPD.json['file'], 'hardware');
+}
+// track/audio info - cmd = type of dialog, path = song file, dialog for m menu audio info
+function audioinfo(cmd, path, dialog){
+	$('#audioinfo-modal .modal-body').load('audioinfo.php', function(){
+	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(result) {
+			itemInfoModal('trackdata', result);
+			if (dialog != 'hardware') dialog = 'track';
+			cmd == 'station_info' ? $('#audioinfo-track').text('Station') : $('#audioinfo-track').text('Track');
+			$('#audioinfo-modal').removeClass('track hardware');
+			$('#audioinfo-modal').addClass(dialog);
+			$('#audioinfo-modal').modal('show');
+	    }, 'json');
+	});
+}
+
+// construct track list - id = element, result = data object
+function itemInfoModal(id, result) {
+    var lines = '';
+	    for (i = 0; i < result.length; i++) {
+	        var key = Object.keys(result[i]);
+	        if (typeof(result[i][key]) != 'undefined') {
+	            lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
+	        }
+	    }
+    document.getElementById(id).innerHTML = lines;
 }

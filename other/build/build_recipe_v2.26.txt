@@ -5,10 +5,12 @@
 # moOde 7.0.0 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
 # - Bump to r700 sources
-# - Bump to Linux kernel 5.4.61 build #1339
+# - Bump to Linux kernel 5.4.77 build #1371
+# - Bump to MPD 0.22.3
 # - Stop auth.log spam
 # - Remove references to discontinued Google Play Music service
 # - Add CAPS 12-band parametric EQ
+# - Add pcm1794a codec (384K patched)
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
@@ -89,13 +91,14 @@ sudo timedatectl set-timezone "America/Detroit"
 4. Download moOde application sources and configs.
 
 //
-// NOTE: We download the Sources here in order to extract resizefs.sh and config.txt files.
+// NOTE: We download the Sources here in order to extract resizefs.sh and other files.
 //
 
 cd ~
 wget http://moodeaudio.org/downloads/prod/moode-r700.zip
 unzip -p -q ./moode-r700.zip moode/www/command/resizefs.sh > ./resizefs.sh
 unzip -p -q ./moode-r700.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r700.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -103,8 +106,10 @@ sudo chmod 0755 ./resizefs.sh
 sudo sed -i "/PART_END=/c\PART_END=+3500M" ./resizefs.sh
 sudo ./resizefs.sh start
 sudo cp ./config.txt.default /boot/config.txt
+sudo cp ./moodecfg.ini.default /boot/
 sudo rm ./resizefs.sh
 sudo rm ./config.txt.default
+sudo rm ./moodecfg.ini.default
 
 # SR1
 sudo reboot
@@ -382,15 +387,15 @@ sudo tar xfz ./boost_1.68_libraries.tar.gz
 sudo rm ./boost_*.gz
 cd ~
 
-3. Download MPD 0.21.24 sources and prep for compile.
+3. Download MPD 0.22.3 sources and prep for compile.
 
 # Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.21.24 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.22.3 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.21/mpd-0.21.24.tar.xz
-sudo tar xf mpd-0.21.24.tar.xz
-cd mpd-0.21.24
+sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.22.3.tar.xz
+sudo tar xf mpd-0.22.3.tar.xz
+cd mpd-0.22.3
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
@@ -449,7 +454,7 @@ output/release
 sudo ninja -C output/release
 sudo ninja -C output/release install
 cd ~
-sudo rm -rf ./mpd-0.21*
+sudo rm -rf ./mpd-0.22*
 
 sudo apt-get clean
 sudo apt-get -y autoremove
@@ -672,32 +677,48 @@ KERNEL=5.4.61
 BUILD=#1339
 echo "y" | sudo PRUNE_MODULES=1 rpi-update 039088f7d929b0d1cc49e8d2012df0652f908518
 
+KERNEL=5.4.75
+BUILD=#1367
+echo "y" | sudo PRUNE_MODULES=1 rpi-update 1c29cd3b22307264979fbb383883004edcc2e2a3
+
+KERNEL=5.4.77
+BUILD=#1371
+echo "y" | sudo PRUNE_MODULES=1 rpi-update cc9ff6c7d1b9be5465c24c75941b049f94a6bd32
+
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
 sudo apt-get clean
 
-# Install Edimax EW-7811Un fix (IS THIS NEEDED ANYMORE ?)
-#sudo mv /etc/modprobe.d/blacklist-rtl8192cu.conf /etc/modprobe.d/blacklist-rtl8192cu.conf.delete
-
 # Install drivers for Allo USBridge Signature
 
-# 32-bit
 # WiFi driver (Comfast CF-912AC, MrEngman stock)
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/8812au.conf /etc/modprobe.d/
-sudo chmod 0644 /lib/modules/$KERNEL"-v7+"/kernel/drivers/net/wireless/8812au.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/8812au.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless/8812au.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/8812au.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/drivers/net/wireless/8812au.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/8812au.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless/8812au.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/8812au.conf /etc/modprobe.d/
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/drivers/net/wireless/8812au.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/drivers/net/wireless/8812au.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless/8812au.ko
 sudo chmod 0644 /etc/modprobe.d/*.conf
 # Eth/USB driver v2.0.0 (Allo enhanced)
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v7+/ax88179_178a.ko /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb
-sudo depmod $KERNEL-v7+
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/ax88179_178a.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/ax88179_178a.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo cp ./moode/other/allo/usbridge_sig/$KERNEL/ax88179_178a.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/drivers/net/usb/ax88179_178a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb/ax88179_178a.ko
 
-# 64-bit
-# NOTE uses same /etc/modprobe.d/8812au.conf as 32-bit driver
-# WiFi driver (Comfast CF-912AC, MrEngman stock)
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v8+/8812au.ko /lib/modules/$KERNEL-v8+/kernel/drivers/net/wireless
-sudo chmod 0644 /lib/modules/$KERNEL"-v8+"/kernel/drivers/net/wireless/8812au.ko
-# Eth/USB driver v2.0.0 (Allo enhanced)
-sudo cp ./moode/other/allo/usbridge_sig/$KERNEL-v8+/ax88179_178a.ko /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb
+# Install @bitlab enhanced pcm1794a 384K codec
+
+sudo cp ./moode/other/bitlab/pcm1794a/$KERNEL/snd-soc-pcm1794a.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo cp ./moode/other/bitlab/pcm1794a/$KERNEL/snd-soc-pcm1794a.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo cp ./moode/other/bitlab/pcm1794a/$KERNEL/snd-soc-pcm1794a.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
+
+sudo depmod $KERNEL-v7+
+sudo depmod $KERNEL-v7l+
 sudo depmod $KERNEL-v8+
 
 # SR7

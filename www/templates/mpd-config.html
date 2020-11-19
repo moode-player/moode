@@ -84,10 +84,28 @@
 
 		    <div class="control-group">
 				<legend>SoX Resampling</legend>
-				<label class="control-label" for="audio-output-format">Sample rate</label>
+				<label class="control-label" for="sox-enabled">Enabled</label>
+                <div class="controls controls-select">
+                    <select id="sox-enabled" name="sox_enabled" class="input-large">
+						$_mpd_select[sox_enabled]
+                    </select>
+                </div>
+				<label class="control-label" for="sox-bit-depth">Bit depth</label>
+                <div class="controls controls-select">
+                    <select id="sox-bit-depth" name="sox_bit_depth" class="input-large">
+						$_mpd_select[sox_bit_depth]
+                    </select>
+                </div>
+				<label class="control-label" for="sox-sample-rate">Sample rate (kHz)</label>
+                <div class="controls controls-select">
+                    <select id="sox-sample-rate" name="sox_sample_rate" class="input-large">
+						$_mpd_select[sox_sample_rate]
+                    </select>
+                </div>
+				<label class="control-label" for="sox-channels">Channels</label>
                 <div class="controls">
-                    <select id="audio-output-format" name="conf[audio_output_format]" class="input-large">
-						$_mpd_select[audio_output_format]
+                    <select id="sox-channels" name="sox_channels" class="input-large">
+						$_mpd_select[sox_channels]
                     </select>
                 </div>
 			</div>
@@ -132,7 +150,7 @@
 				<div class="$_sox_custom_recipe_hide">
 					<div id="sox_custom_recipe" class="hide" style="margin-top:.5em;">
 						<label class="control-label" for="sox_precision">Precision</label>
-		                <div class="controls">
+		                <div class="controls controls-select">
 		                    <select id="sox_precision" name="conf[sox_precision]" class="input-large">
 								$_mpd_select[sox_precision]
 		                    </select>
@@ -183,7 +201,7 @@
 								01 ROLLOFF_MEDIUM 0.35 dB<br>
 								02 ROLLOFF_NONE For Chebyshev bandwidth.<br>
 								08 HI_PREC_CLOCK Increase "irrational" ratio accuracy.<br>
-								16 DOUBLE_PRECISION Use DP calcs even if precision <= 20<br>
+								16 DOUBLE_PRECISION Use DP calcs even if precision &lt;= 20<br>
 								32 SOXR_VR Variable-rate resampling.
 		                    </span>
 		                </div>

@@ -209,12 +209,11 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 
 // Parametric eq
 $eqfa12p = Eqp12(cfgdb_connect());
-if (isset($_POST['eqfa12p']) && (($_POST['eqfa12p'] ? "On" : "Off") != $_SESSION['eqfa12p'] || $_POST['eqfa12p'] != $eqfa12p->getActivePresetIndex())) {
+if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $_SESSION['eqfa12p'] || intval($_POST['eqfa12p']) != $eqfa12p->getActivePresetIndex())) {
 	// Pass old,new curve name to worker job
 	$currentActive = $eqfa12p->getActivePresetIndex();
 	$newActive = intval($_POST['eqfa12p']);
 	$eqfa12p->setActivePresetIndex($newActive);
-
 	playerSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
 	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Parametric EQ ' . ($newActive == 0 ? 'off' : 'on'), 'MPD restarted');
 }

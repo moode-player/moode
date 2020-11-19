@@ -136,19 +136,17 @@ jQuery(document).ready(function($) { 'use strict';
     	blurrr == true ? themeOp = .85 : themeOp = .95;
 
 
-		function mutate(mutations) {
-		  mutations.forEach(function(mutation) {
-      		$('#alpha-blend span').text() < 1 ? $('#cover-options').show() : $('#cover-options').css('display', '');
-  		  });
-		}
+        function mutate(mutations) {
+            mutations.forEach(function(mutation) {
+                $('#alpha-blend span').text() < 1 ? $('#cover-options').show() : $('#cover-options').css('display', '');
+            });
+        }
 
 		jQuery(document).ready(function() {
-
-		  var target = document.querySelector('#alpha-blend span')
-		  var observer = new MutationObserver( mutate );
-		  var config = { characterData: true, attributes: false, childList: true, subtree: false };
-
-		  observer.observe(target, config);
+            var target = document.querySelector('#alpha-blend span')
+            var observer = new MutationObserver( mutate );
+            var config = { characterData: true, attributes: false, childList: true, subtree: false };
+            observer.observe(target, config);
 		});
 
 
@@ -641,6 +639,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#savepl-modal').on('shown.bs.modal', function(e) {
         $('#pl-saveName').focus();
     });
+	
 	// Set favorites
     $('#pl-btnSetFav').click(function(e){
 		var favname = $('#pl-favName').val();
@@ -695,7 +694,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// Click on artist or station name in playback
-	$('#currentalbum').click(function(e) {
+	$('#currentartist').click(function(e) {
         if (!$('#playback-panel').hasClass('cv')) {
             // Radio station
     		if (MPD.json['artist'] == 'Radio station') {
@@ -723,13 +722,15 @@ jQuery(document).ready(function($) { 'use strict';
                 setTimeout(function() {
                     $('#ra-' + (UI.radioPos - headerCount)).addClass('active');
                     UI.dbEntry[3] = 'ra-' + (UI.radioPos - headerCount);
+                    customScroll('radio', UI.radioPos, 200);
                 }, DEFAULT_TIMEOUT);
     		}
     		// Song file
     		else {
+                var thisText = $(this).text().indexOf('...') != -1 ? $(this).text().slice(0, -3) : $(this).text();
     			$('#playback-switch').click();
     			$('.tag-view-btn').click();
-				$('#artistsList .lib-entry').filter(function() {return $(this).text() == MPD.json['artist'];}).click();
+				$('#artistsList .lib-entry').filter(function() {return $(this).text() == thisText/*MPD.json['artist']*/;}).click();
 				customScroll('artists', UI.libPos[2], 200);
     		}
         }
@@ -1274,13 +1275,20 @@ jQuery(document).ready(function($) { 'use strict';
 
     // Track info for Playback
     $('#extra-tags-display').click(function(e) {
-        $.post('command/moode.php?cmd=track_info', {'path': MPD.json['file']}, function(result) {
-            //var content = beautify(result);
-            $('#track-info-text').html(result);
-            $('#track-info-modal').modal();
-        }, 'json');
+        if ($('#currentsong').html() != '') {
+            var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
+            audioinfo(cmd, MPD.json['file']);
+        }
     });
+	
+	$('#audioinfo-track').live('click', function(e) {
+		$('#audioinfo-modal').removeClass('hardware').addClass('track');
+	});
 
+	$('#audioinfo-hardware').live('click', function(e) {
+		$('#audioinfo-modal').removeClass('track').addClass('hardware');
+	});
+	
     // CoverView screen saver reset
     $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
         //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');

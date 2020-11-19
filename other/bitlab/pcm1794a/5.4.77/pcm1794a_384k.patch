@@ -1,0 +1,11 @@
+--- a/sound/soc/codecs/pcm1794a.c
++++ b/sound/soc/codecs/pcm1794a.c
+@@ -26,7 +26,7 @@
+ 	.playback = {
+ 		.channels_min = 2,
+ 		.channels_max = 2,
+-		.rates = SNDRV_PCM_RATE_8000_192000,
++		.rates = SNDRV_PCM_RATE_8000_384000,
+ 		.formats = SNDRV_PCM_FMTBIT_S16_LE |
+ 			   SNDRV_PCM_FMTBIT_S24_LE
+ 	},

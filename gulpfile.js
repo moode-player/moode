@@ -447,7 +447,7 @@ gulp.task('deploymoodeutl', function (done) {
 gulp.task('deployvarlocalwww', function (done) {
     return gulp.src([  pkg.app.src+'/../var/local/www/**' ])
         .pipe($.size({showFiles: true, total: true}))
-        .pipe(gulp.dest(DEPLOY_LOCATION+'/../var/local/www'))
+        .pipe(gulp.dest(DEPLOY_LOCATION+'/../local/www'))
         .on('end', done);
 });
 
