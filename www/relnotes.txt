@@ -28,7 +28,8 @@ New features
 - NEW: Library option to include the comment tag
 - NEW: Library support for multiple occurrences of certain tags
 - NEW: Albums played directly if already in the Queue
-- NEW: MPD resource allocation options for buffers, playlist
+- NEW: MPD Config support for SoX 705.6/768 kHz rates
+- NEW: MPD Config resource allocation options for buffers, playlist
 - NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Queue
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
