@@ -23,7 +23,7 @@ New features
 - NEW: Enhanced Folder view with cover art and advanced search
 - NEW: Library performance improvements
 - NEW: Library advanced filtering engine
-- NEW: Library option to select tag used to populate the Artist list
+- NEW: Library Artist list includes Performers, Conductors, Album Artists
 - NEW: Library option for the key used to differentiate albums
 - NEW: Library option to include the comment tag
 - NEW: Library support for multiple occurrences of certain tags
@@ -39,24 +39,23 @@ Updates
 
 - UPD: Bump to Linux kernel 5.4.77 build #1371
 - UPD: Bump to MPD 0.22.3
-- UPD: Bump to Auto-shuffle (ashuffle) 3.10.0
-- UPD: Bump to squeezelite 1.9.7-1270
+- UPD: Bump to bluez-alsa 3.0.0 w/SBC XQ
 - UPD: Bump to librespot 0.1.3
-- UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
-- UPD: Remove Google Play Music service (discontinued)
-- UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
-
+- UPD: Bump to squeezelite 1.9.7-1270
+- UPD: Bump to upmpdcli 1.5.0
+- UPD: Bump to Auto-shuffle (ashuffle) 3.10.0
 - UPD: Add higher resolutions for thumbnail generator
 - UPD: Add "Update Library" to action list for Clock Radio
 - UPD: Add place holder height/width for native lazyload
-
 - UPD: Add "Now Playing" EQ style icon to the Queue and Library
-- UPD: Extend HD badging to Playbar, CoverView amd Playback
-- UPD: Add Genre to the Extra metadata Appearance option
+- UPD: Add HD badging to Playbar, CoverView amd Playback
+- UPD: Add more tags to the Extra metadata Appearance option
+- UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
+- UPD: Remove Google Play Music service from upmpdcli (discontinued)
+- UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
 - UPD: Show volume level on the Playbar
 - UPD: Option to show mapped dB volume in the knob
 - UPD: Generate additional set of small thumbnails for lists
-
 - UPD: Include Add next, Play next in list of "One touch actions"
 - UPD: Improve logging for Library update process
 - UPD: Report 24 bit if ALAC encoded m4a reports 32 bit

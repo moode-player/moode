@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Nov 12 16:11:08 2020
+-- File generated with SQLiteStudio v3.1.0 on Fri Nov 20 07:42:58 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -217,10 +217,10 @@ INSERT INTO cfg_sl (id, param, value) VALUES (7, 'OTHEROPTIONS', '-W -D 500 -R E
 CREATE TABLE cfg_upnp (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_upnp (id, param, value) VALUES (1, 'tidaluser', '');
 INSERT INTO cfg_upnp (id, param, value) VALUES (2, 'tidalpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'low');
+INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'lossless');
 INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
 INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
-INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '5');
+INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '7');
 INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'checkcontentformat', 'Yes');
 
 -- Table: cfg_source
@@ -603,7 +603,7 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/p
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', 'd9f65519e484de1cf5240ead12bdde46', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '14fbb975e40490f249c7af70ec5c7ac3', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '6b8d59ba6edcfbcca5316a320f48aa83', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '5e53efb08d5a222830f96952f356fd9b', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'ce394e0c9fb2972d8eb0ec31ac4fd22e', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', 'e43068c89c0878541524ce84d671f4f9', 'warning');
