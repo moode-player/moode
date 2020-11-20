@@ -188,7 +188,6 @@ function sendMpdCmd($sock, $cmd) {
 }
 
 function chainMpdCmds($sock, $cmds) {
-	workerLog(print_r($cmds, true));
     sendMpdCmd($sock, 'command_list_begin');
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
