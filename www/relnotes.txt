@@ -71,10 +71,13 @@ Audio devices
 
 Radio stations
 
+- NEW: Naim Classical
+- NEW: Naim Jazz
 - NEW: WKCR 89.9 FM (Columbia University)
+- UPD: Naim Radio playable URL
 - UPD: Radio Caroline playable URL
 - UPD: Soma FM - DEF CON Radio logo image
-- UPD: Update NME station URL's to 256 kbps MP3
+- UPD: NME station URL's to 256 kbps MP3
 - DEL: Radio X London due to metadata issues
 - DEL: Megarock Radio due to failed stream link
 
