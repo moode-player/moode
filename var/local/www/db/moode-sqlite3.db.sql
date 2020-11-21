@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Nov 21 10:38:05 2020
+-- File generated with SQLiteStudio v3.1.0 on Sat Nov 21 11:37:47 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -201,8 +201,8 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (191, 'http://streams.norbert.de:8000/zappa.aac', 'Zappa Stream Radio', 'r', 'local', 'Rock, Progressive Rock', 'Zappa Stream Radio', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (192, 'http://lb.zenfm.be/zenfm.mp3', 'Zen FM', 'r', 'local', 'Lounge', 'Zen FM', 'Dutch', 'Belgium', 'Europe', '192', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (193, 'http://wkcr.streamguys1.com:80/live', 'WKCR 89.9 FM', 'r', 'local', 'Jazz,Classical', 'WKCR (Columbia University)', 'English', 'United States', 'North America', '96', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (194, 'http://mscp3.live-streams.nl:8250/class-high.aac', 'Naim Classical', 'r', 'local', 'Classical', 'Naim', 'English', 'United Kingdom', 'Europe', '320', 'AAC', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (195, 'http://mscp3.live-streams.nl:8340/jazz-high.aac', 'Naim Jazz', 'r', 'local', 'Jazz', 'Naim', 'English', 'United Kingdom', 'Europe', '320', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (227, 'http://mscp3.live-streams.nl:8250/class-high.aac', 'Naim Classical', 'r', 'local', 'Classical', 'Naim', 'English', 'United Kingdom', 'Europe', '320', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (228, 'http://mscp3.live-streams.nl:8340/jazz-high.aac', 'Naim Jazz', 'r', 'local', 'Jazz', 'Naim', 'English', 'United Kingdom', 'Europe', '320', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', 'No', '', '');
 
 -- Table: cfg_sl
