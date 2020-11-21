@@ -71,6 +71,7 @@ Audio devices
 
 Radio stations
 
+- NEW: FluxFM station group
 - NEW: Naim Classical
 - NEW: Naim Jazz
 - NEW: WKCR 89.9 FM (Columbia University)
