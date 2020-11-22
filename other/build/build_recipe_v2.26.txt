@@ -8,7 +8,7 @@
 # - Bump to Linux kernel 5.4.77 build #1371
 # - Bump to MPD 0.22.3
 # - Bump to bluez-alsa 3.0.0
-# - Bump to upmpdcli 1.5.0
+# - Bump to upmpdcli 1.5.1
 # - Bump to librespot-dev-6a4bc83
 # - Stop auth.log spam
 # - Remove references to discontinued Google Play Music service
@@ -963,17 +963,17 @@ sudo make install
 cd ~
 sudo rm -rf ./libupnpp-0.20.0*
 
-4. Upmpdcli 1.5.0
+4. Upmpdcli 1.5.1
 
-sudo cp ./moode/other/upmpdcli/upmpdcli-1.5.0.tar.gz ./
-sudo tar xfz ./upmpdcli-1.5.0.tar.gz
-cd upmpdcli-1.5.0
+sudo cp ./moode/other/upmpdcli/upmpdcli-1.5.1.tar.gz ./
+sudo tar xfz ./upmpdcli-1.5.1.tar.gz
+cd upmpdcli-1.5.1
 sudo ./autogen.sh
 sudo ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
 sudo make -j4
 sudo make install
 cd ~
-sudo rm -rf ./upmpdcli-1.5.0*
+sudo rm -rf ./upmpdcli-1.5.1*
 
 sudo useradd upmpdcli
 sudo cp /mnt/moode-player/GitHub/moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
