@@ -7,6 +7,7 @@
 # - Bump to r700 sources
 # - Bump to Linux kernel 5.4.77 build #1371
 # - Bump to MPD 0.22.3
+# - Bump to MPC 0.33
 # - Bump to bluez-alsa 3.0.0
 # - Bump to upmpdcli 1.5.1
 # - Bump to librespot-dev-6a4bc83
@@ -329,7 +330,7 @@ sudo cp ./moode/other/rotenc/rotenc.py /usr/local/bin/rotenc
 
 ////////////////////////////////////////////////////////////////
 //
-// STEP 6 - Compile and install MPD 0.21.x series
+// STEP 6 - Compile and install MPD and MPC
 //
 ////////////////////////////////////////////////////////////////
 
@@ -451,7 +452,7 @@ sudo meson configure \
 -Dqobuz=disabled
 output/release
 
-5. Compile and install.
+5. Compile and install MPD
 
 sudo ninja -C output/release
 sudo ninja -C output/release install
@@ -460,6 +461,23 @@ sudo rm -rf ./mpd-0.22*
 
 sudo apt-get clean
 sudo apt-get -y autoremove
+
+6. Compile and install MPC
+
+sudo cp ./moode/other/mpd/mpc-0.33.tar.xz ./
+sudo tar xf ./mpc-0.33.tar.xz
+
+# Compile
+cd mpc-0.33
+sudo meson . output
+sudo ninja -C output
+
+# Install binary
+sudo cp output/mpc /usr/bin/
+
+# Cleanup
+cd ~
+sudo rm -rf ./mpc-0.33*
 
 # SR4
 sudo reboot

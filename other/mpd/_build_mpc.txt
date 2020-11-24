@@ -1,0 +1,28 @@
+
+
+/////////////////////////////////////////////
+//
+// BUILD MPC
+//
+/////////////////////////////////////////////
+
+sudo ./dev.sh
+MPC_REL=mpc-0.33.tar.xz
+MPC_DIR=mpc-0.33
+
+# Get sources
+sudo cp /mnt/moode-player/GitHub/moode/other/mpd/$MPC_REL ./
+sudo tar xf ./$MPC_REL
+
+# Compile MPC
+cd $MPC_DIR
+sudo meson . output
+sudo ninja -C output
+
+# Install binary
+sudo cp output/mpc /usr/bin/
+
+# Cleanup
+cd ~
+sudo rm -rf ./$MPC_DIR*
+
