@@ -40,6 +40,7 @@ Updates
 
 - UPD: Bump to Linux kernel 5.4.77 build #1371
 - UPD: Bump to MPD 0.22.3
+- UPD: Bump to MPC 0.33
 - UPD: Bump to bluez-alsa 3.0.0 w/SBC XQ
 - UPD: Bump to librespot-dev-6a4bc83
 - UPD: Bump to squeezelite 1.9.7-1270
@@ -71,9 +72,15 @@ Audio devices
 
 Radio stations
 
+- NEW: Bayern 2
+- NEW: BR-Klassik
+- NEW: Classic FM
 - NEW: FluxFM station group
 - NEW: Naim Classical
 - NEW: Naim Jazz
+- NEW: Scala Radio
+- NEW: SWR 2
+- NEW: WDR 3
 - NEW: WKCR 89.9 FM (Columbia University)
 - UPD: Naim Radio playable URL
 - UPD: Radio Caroline playable URL
