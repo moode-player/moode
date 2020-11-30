@@ -93,24 +93,24 @@ var UI = {
 	thumbHW: '0px'
 };
 
-// MPD state and metadata
+// mpd state and metadata
 var MPD = {
 	json: 0
 };
 
-// Session vars (cfg_system table)
+// session vars (cfg_system table)
 var SESSION = {
 	json: 0
 };
-// Radio stations (cfg_radio table)
+// radio stations (cfg_radio table)
 var RADIO = {
 	json: 0
 };
-// Themes (cfg_theme table)
+// themes (cfg_theme table)
 var THEME = {
 	json: 0
 };
-// Networks (cfg_network table)
+// networks (cfg_network table)
 var NETWORK = {
 	json: 0
 };
@@ -959,7 +959,34 @@ function genSearchUrl (artist, title, album) {
     		searchStr = artist + '+' + album;
     	}
 
-        var searchEngine = 'http://www.google.com/search?q=';
+        var searchEngine = '';
+	switch (SESSION.json['search_site']) {
+		case 'Google':
+			searchEngine = 'http://www.google.com/search?q=';
+			break;
+		case 'Bing':
+			searchEngine = 'http://www.bing.com/search?q=';
+			break;
+		case 'DuckDuckGo':
+			searchEngine = 'http://www.duckduckgo.com/?q=';
+			break;
+		case 'Yahoo':
+			searchEngine = 'http://search.yahoo.com/search?p=';
+			break;
+		case 'Ecosia':
+			searchEngine = 'http://www.ecosia.org/search?q=';
+			break;
+		case 'Startpage':
+			searchEngine = 'http://www.startpage.com/do/search?q=';
+			break;
+		case 'Musicbrainz':
+			searchEngine = 'http://www.musicbrainz.org/taglookup?';
+			searchStr = 'tag-lookup.artist=' + artist + '&tag-lookup.release=' + album;
+			break;
+		case 'Discogs':
+			searchEngine = 'http://www.discogs.com/search/?q=';
+			break;
+	}
     	var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
     }
     return returnStr;
@@ -1553,12 +1580,9 @@ function renderRadioView() {
             }
 
             // Metadata div's
-            var bitrateDiv = (sortTag == 'bitrate' || sortTag == 'format') ? '<div class="radioview-metadata-text">' + data[i].bitrate + 'K ' + data[i].format + '</div>' : '';
-            var broadcasterDiv = (sortTag == 'broadcaster' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].broadcaster + '</div>' : '';
-            var countryDiv = sortTag == 'region' ? '<div class="radioview-metadata-text">' + data[i].country + '</div>' : '';
-            var countryDiv = (sortTag == 'country' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].country + '</div>' : '';
-            var languageDiv = (sortTag == 'language' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].language + '</div>' : '';
             var subGenreDiv = sortTag == 'genre' ? '<div class="radioview-metadata-text">' + data[i].genre.substr(data[i].genre.indexOf(', ') + 1) + '</div>' : '';
+            var countryDiv = sortTag == 'region' ? '<div class="radioview-metadata-text">' + data[i].country + '</div>' : '';
+            var bitrateDiv = (sortTag == 'bitrate' || sortTag == 'format') ? '<div class="radioview-metadata-text">' + data[i].bitrate + 'K ' + data[i].format + '</div>' : '';
 
             // Output Favorites first
             if (groupMethod == 'Favorites first' && data[i].type == 'f') {
@@ -1605,11 +1629,9 @@ function renderRadioView() {
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
             output += '<span class="station-name">' + data[i].name + '</span>';
-            output += broadcasterDiv;
-            output += countryDiv;
-            output += languageDiv;
             output += subGenreDiv;
-            
+            output += countryDiv;
+            output += bitrateDiv;
             //output += radioViewTxDiv;
             output += radioViewNvDiv;
             output += '</li>';
@@ -2185,6 +2207,8 @@ $('.context-menu a').click(function(e) {
             $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
             $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
             $('#utf8-char-filter span').text(SESSION.json['library_utf8rep']);
+            // @Atair
+            $('#search_site span').text(SESSION.json['search_site']);
 
     		// CoverView
             $('#scnsaver-timeout span').text(getParamOrValue('param', SESSION.json['scnsaver_timeout']));
@@ -2387,6 +2411,8 @@ $('#btn-preferences-update').click(function(e){
 		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel, #radio-panel').addClass('limited') : $('#library-panel, #radio-panel').removeClass('limited');
 	}
     if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;}
+    // @Atair
+    if (SESSION.json['search_site'] != $('#search_site span').text()) {libraryOptionsChange = true;}
 
     // CoverView
     if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
@@ -2426,6 +2452,8 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
     SESSION.json['library_utf8rep'] = $('#utf8-char-filter span').text();
+    // @Atair
+    SESSION.json['search_site'] = $('#search_site span').text();
 
     // CoverView
     SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
@@ -2514,6 +2542,8 @@ $('#btn-preferences-update').click(function(e){
             'library_tagview_covers': SESSION.json['library_tagview_covers'],
             'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
             'library_utf8rep': SESSION.json['library_utf8rep'],
+	    // @Atair
+            'search_site': SESSION.json['search_site'],
 
             // CoverView
             'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
@@ -3357,13 +3387,13 @@ function makeActive (vswitch, panel, view) {
 		case 'radio':
 			$('#viewswitch').addClass('vr');
 			$('#playbar-toggles .addfav').show();
-            $('#random-album, .adv-search-btn').hide();
+            $('.adv-search-btn').hide();
 			lazyLode('radio');
 			break;
 		case 'folder':
 			$('#viewswitch').addClass('vf');
 			$('#playbar-toggles .addfav').show();
-            $('#random-album, .adv-search-btn').hide();
+            $('.adv-search-btn').hide();
 			break;
 		case 'album':
 			$('#viewswitch').addClass('va');
@@ -3663,7 +3693,7 @@ function audioinfo(cmd, path, dialog){
 			cmd == 'station_info' ? $('#audioinfo-track').text('Station') : $('#audioinfo-track').text('Track');
 			$('#audioinfo-modal').removeClass('track hardware');
 			$('#audioinfo-modal').addClass(dialog);
-			$('#audioinfo-modal').modal('show');
+			$('#audioinfo-modal').modal('show');		
 	    }, 'json');
 	});
 }
@@ -3676,6 +3706,6 @@ function itemInfoModal(id, result) {
 	        if (typeof(result[i][key]) != 'undefined') {
 	            lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
 	        }
-	    }
+	    }		
     document.getElementById(id).innerHTML = lines;
 }
