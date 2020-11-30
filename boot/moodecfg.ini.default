@@ -39,6 +39,7 @@ i2sdevice = "none"
 [MPD]
 mixer_type = "software"
 device = "1"
+audio_output_format = "disabled"
 selective_resample_mode = "0"
 sox_quality = "high"
 sox_multithreading = "1"
@@ -116,4 +117,3 @@ library_utf8rep = "No"
 first_use_help = "Yes"
 
 [Sources]
-

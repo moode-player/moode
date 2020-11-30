@@ -229,7 +229,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
 	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.2rem;width:3.1rem;}
-	#playbar-hd-badge {margin-top:.6em;}
+	#playbar-hd-badge {/*margin-top:.6em;*/display:none!important;}
+	#playbar-currentalbum {display:block;} /* so ellipsis works */
 	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
 	#playbar-volume-popup-btn {width:initial!important;}
 	/*#extra-tags-display {display:none;}*/
@@ -301,7 +302,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-title {text-align:left;top:0;margin-left:1em;width:67vw;height:auto;position:relative;transform:none;font-size:1.5em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
-	#playbar-controls .btn {padding:.5em;font-size:2.5rem;-webkit-tap-highlight-color:transparent;}
+	#playbar-controls .btn {padding:.5em;font-size:2.25rem;-webkit-tap-highlight-color:transparent;}
 	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:.4em;height:unset;width:unset;top:unset;left:unset;transform:none;}
 	#playbar-toggles .btn {transition:none;border-radius:50%;padding:1rem .7rem;margin-bottom:0;width:unset;height:unset;line-height:11px;}
 	#playbar-timeline {display:none;}

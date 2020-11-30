@@ -115,7 +115,7 @@ sed -i /CONFIG_LOCALVERSION=/c\CONFIG_LOCALVERSION="-v7+" .config
 #sed -i /CONFIG_LOCALVERSION=/c\CONFIG_LOCALVERSION="-v8+" .config
 cat .config | grep LOCALVERSION=
 
-# I'm not sure what this is for ?
+# Sets the correct release identifier
 echo $KERNEL_VER-$KERNEL_REL > include/config/kernel.release
 cat include/config/kernel.release
 echo "#define UTS_RELEASE \"$KERNEL_VER-$KERNEL_REL\"" > include/generated/utsrelease.h
@@ -128,7 +128,9 @@ cat include/generated/utsrelease.h
 
 cd ~/linux
 
-# NOTE: These commands don't appear to be needed for 32-bit compiles
+# NOTE: These commands are not needed when starting with the 32-bit compiles because
+# they are apparently done automatically by the rpi-source commands in step 4. They
+# would need to be run if starting with the 64-bit compile.
 #make prepare
 #make modules_prepare
 

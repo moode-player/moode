@@ -129,7 +129,6 @@ $_mpd_select['sox_sample_rate'] .= "<option value=\"768000\" " . (($mpdconf['aud
 // Channels
 $_mpd_select['sox_channels'] .= "<option value=\"2\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[2] == '2') ? "selected" : "") . " >Stereo</option>\n";
 $_mpd_select['sox_channels'] .= "<option value=\"1\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[2] == '1') ? "selected" : "") . " >Mono</option>\n";
-$_mpd_select['sox_channels'] .= "<option value=\"*\" " . (($mpdconf['audio_output_format'] != 'disabled' && $format[2] == '*') ? "selected" : "") . " >*</option>\n";
 
 // Selective resample mode
 $patch_id = explode('_p0x', $_SESSION['mpdver'])[1];

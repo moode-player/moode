@@ -188,7 +188,6 @@ function sendMpdCmd($sock, $cmd) {
 }
 
 function chainMpdCmds($sock, $cmds) {
-	workerLog(print_r($cmds, true));
     sendMpdCmd($sock, 'command_list_begin');
     foreach ($cmds as $cmd) {
         sendMpdCmd($sock, $cmd);
@@ -3045,6 +3044,7 @@ function autoConfigSettings() {
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['device'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['audio_output_format'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['selective_resample_mode'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['sox_quality'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['sox_multithreading'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],

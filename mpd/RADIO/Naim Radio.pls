@@ -1,6 +1,6 @@
 [playlist]
 NumberOfEntries=1
-File1=http://37.130.228.60:8090/
+File1=http://mscp3.live-streams.nl:8360/high.aac
 Title1=Naim Radio
 NumberOfEntries=1
 Length1=-1

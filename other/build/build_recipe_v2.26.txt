@@ -7,6 +7,10 @@
 # - Bump to r700 sources
 # - Bump to Linux kernel 5.4.77 build #1371
 # - Bump to MPD 0.22.3
+# - Bump to MPC 0.33
+# - Bump to bluez-alsa 3.0.0
+# - Bump to upmpdcli 1.5.1
+# - Bump to librespot-dev-6a4bc83
 # - Stop auth.log spam
 # - Remove references to discontinued Google Play Music service
 # - Add CAPS 12-band parametric EQ
@@ -238,11 +242,10 @@ sudo rm -rf /usr/lib/bluetooth
 # Create symlink for new bluetoothd
 sudo ln -s /usr/libexec/bluetooth/bluetoothd /usr/sbin/bluetoothd
 
-# Compile bluez-alsa 2.1.0-49ad348
-# 2020-04-15 commit 49ad348808a15485aa7cb2df0a4d13654cc0cee3
-sudo cp ./moode/other/bluetooth/bluez-alsa-master-2.1.0-49ad348.zip ./
-sudo unzip -q bluez-alsa-master-2.1.0-49ad348.zip
-cd bluez-alsa-master
+# Compile bluez-alsa 3.0.0
+sudo cp ./moode/other/bluetooth/bluez-alsa-3.0.0.zip ./
+sudo unzip -q bluez-alsa-3.0.0.zip
+cd bluez-alsa-3.0.0
 # NOTE: Ignore warnings from autoreconf and configure
 sudo autoreconf --install
 sudo mkdir build
@@ -251,7 +254,7 @@ sudo ../configure --disable-hcitop --with-alsaplugindir=/usr/lib/arm-linux-gnuea
 sudo make
 sudo make install
 cd ../..
-sudo rm -rf bluez-alsa-master*
+sudo rm -rf bluez-alsa-3.0.0
 
 3. Services are started by moOde Worker so lets disable them here.
 
@@ -327,7 +330,7 @@ sudo cp ./moode/other/rotenc/rotenc.py /usr/local/bin/rotenc
 
 ////////////////////////////////////////////////////////////////
 //
-// STEP 6 - Compile and install MPD 0.21.x series
+// STEP 6 - Compile and install MPD and MPC
 //
 ////////////////////////////////////////////////////////////////
 
@@ -449,7 +452,7 @@ sudo meson configure \
 -Dqobuz=disabled
 output/release
 
-5. Compile and install.
+5. Compile and install MPD
 
 sudo ninja -C output/release
 sudo ninja -C output/release install
@@ -458,6 +461,23 @@ sudo rm -rf ./mpd-0.22*
 
 sudo apt-get clean
 sudo apt-get -y autoremove
+
+6. Compile and install MPC
+
+sudo cp ./moode/other/mpd/mpc-0.33.tar.xz ./
+sudo tar xf ./mpc-0.33.tar.xz
+
+# Compile
+cd mpc-0.33
+sudo meson . output
+sudo ninja -C output
+
+# Install binary
+sudo cp output/mpc /usr/bin/
+
+# Cleanup
+cd ~
+sudo rm -rf ./mpc-0.33*
 
 # SR4
 sudo reboot
@@ -672,14 +692,6 @@ sudo reboot
 // STEP 11 - Optionally install updated Linux Kernel
 //
 ////////////////////////////////////////////////////////////////
-
-KERNEL=5.4.61
-BUILD=#1339
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 039088f7d929b0d1cc49e8d2012df0652f908518
-
-KERNEL=5.4.75
-BUILD=#1367
-echo "y" | sudo PRUNE_MODULES=1 rpi-update 1c29cd3b22307264979fbb383883004edcc2e2a3
 
 KERNEL=5.4.77
 BUILD=#1371
@@ -906,9 +918,9 @@ sudo apt-get -y install portaudio19-dev
 
 # Compile librespot
 source $HOME/.cargo/env
-sudo cp ./moode/other/librespot/librespot-0.1.3.zip ./
-unzip -q ./librespot-0.1.3.zip
-cd ./librespot-0.1.3
+sudo cp ./moode/other/librespot/librespot-dev-6a4bc83.zip ./
+unzip -q ./librespot-dev-6a4bc83.zip
+cd ./librespot-dev
 RUSTFLAGS=-Ccodegen-units=1 cargo build --release --features alsa-backend
 
 # Copy binary
@@ -944,47 +956,46 @@ sudo rm -rf ./squeezelite*
 sudo apt-get -y install libmicrohttpd-dev libexpat1-dev \
 libxml2-dev libxslt1-dev libjsoncpp-dev python-requests python-pip
 
-2. Libnpupnp 4.0.6
+2. Libnpupnp 4.0.14
+
+sudo ./dev.sh
 
 cd ~
-sudo cp ./moode/other/upmpdcli/libnpupnp-4.0.6.tar.gz ./
-sudo tar xfz ./libnpupnp-4.0.6.tar.gz
-cd libnpupnp-4.0.6
+sudo cp ./moode/other/upmpdcli/libnpupnp-4.0.14.tar.gz ./
+sudo tar xfz ./libnpupnp-4.0.14.tar.gz
+cd libnpupnp-4.0.14
 ./configure --prefix=/usr --sysconfdir=/etc
-sudo make
+sudo make -j4
 sudo make install
 cd ~
-sudo rm -rf ./libnpupnp-4.0.6
-sudo rm libnpupnp-4.0.6.tar.gz
+sudo rm -rf ./libnpupnp-4.0.14*
 
-3. Libupnpp 0.19.1
+3. Libupnpp 0.20.0
 
-sudo cp ./moode/other/upmpdcli/libupnpp-0.19.1.tar.gz ./
-sudo tar xfz ./libupnpp-0.19.1.tar.gz
-cd libupnpp-0.19.1
+sudo cp ./moode/other/upmpdcli/libupnpp-0.20.0.tar.gz ./
+sudo tar xfz ./libupnpp-0.20.0.tar.gz
+cd libupnpp-0.20.0
 ./configure --prefix=/usr --sysconfdir=/etc
-sudo make
+sudo make -j4
 sudo make install
 cd ~
-sudo rm -rf ./libupnpp-0.19.1
-sudo rm libupnpp-0.19.1.tar.gz
+sudo rm -rf ./libupnpp-0.20.0*
 
-4. Upmpdcli 1.4.12-7ea91f5d
+4. Upmpdcli 1.5.1
 
-sudo cp ./moode/other/upmpdcli/upmpdcli-1.4.12-master-7ea91f5d.tar.gz ./
-sudo tar xfz ./upmpdcli-1.4.12-master-7ea91f5d.tar.gz
-cd upmpdcli-master
+sudo cp ./moode/other/upmpdcli/upmpdcli-1.5.1.tar.gz ./
+sudo tar xfz ./upmpdcli-1.5.1.tar.gz
+cd upmpdcli-1.5.1
 sudo ./autogen.sh
 sudo ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
-sudo make
+sudo make -j4
 sudo make install
 cd ~
-sudo rm -rf ./upmpdcli-master
-sudo rm upmpdcli-1.4.12-master-7ea91f5d.tar.gz
+sudo rm -rf ./upmpdcli-1.5.1*
 
 sudo useradd upmpdcli
-sudo cp ./moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
-sudo cp ./moode/etc/upmpdcli.conf /etc
+sudo cp /mnt/moode-player/GitHub/moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
+sudo cp /mnt/moode-player/GitHub/moode/etc/upmpdcli.conf /etc
 sudo chmod 0644 /etc/upmpdcli.conf
 sudo systemctl daemon-reload
 sudo systemctl disable upmpdcli
@@ -998,11 +1009,10 @@ sudo unzip -q ./libupnpp-samples-master.zip
 cd ./libupnpp-samples-master
 sudo ./autogen.sh
 sudo ./configure
-sudo make
+sudo make -j4
 sudo make install
 cd ~
-sudo rm -rf ./libupnpp-samples-master
-sudo rm ./libupnpp-samples-master.zip
+sudo rm -rf ./libupnpp-samples-master*
 
 ////////////////////////////////////////////////////////////////
 //
