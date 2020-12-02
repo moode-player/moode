@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Nov 24 08:03:44 2020
+-- File generated with SQLiteStudio v3.1.0 on Sun Nov 29 13:49:03 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -346,7 +346,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (77, 'cardnum', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (78, 'btsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (79, 'btname', 'Moode Bluetooth');
 INSERT INTO cfg_system (id, param, value) VALUES (80, 'btmulti', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '31679');
+INSERT INTO cfg_system (id, param, value) VALUES (81, 'feat_bitmask', '31671');
 INSERT INTO cfg_system (id, param, value) VALUES (82, 'library_recently_added', '2592000000');
 INSERT INTO cfg_system (id, param, value) VALUES (83, 'btactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (84, 'touchscn', '1');
