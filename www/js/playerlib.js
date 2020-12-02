@@ -2247,7 +2247,7 @@ $('#btn-clockradio-update').click(function(e){
 
 	SESSION.json['clkradio_mode'] = $('#clockradio-mode span').text();
     SESSION.json['clkradio_name'] = $('#clockradio-playname').val();
-s
+
 	$('#clockradio-starttime-hh').val().length == 1 ? startHH = '0' + $('#clockradio-starttime-hh').val() : startHH = $('#clockradio-starttime-hh').val();
 	$('#clockradio-starttime-mm').val().length == 1 ? startMM = '0' + $('#clockradio-starttime-mm').val() : startMM = $('#clockradio-starttime-mm').val();
 	$('#clockradio-stoptime-hh').val().length == 1 ? stopHH = '0' + $('#clockradio-stoptime-hh').val() : stopHH = $('#clockradio-stoptime-hh').val();
