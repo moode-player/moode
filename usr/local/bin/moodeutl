@@ -27,11 +27,12 @@ define('SQLDB', '/var/local/www/db/moode-sqlite3.db');
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
 // sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='feat_bitmask'"
-// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='31679' WHERE param='feat_bitmask'"
+// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='31671' WHERE param='feat_bitmask'"
 const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
 const FEAT_AIRPLAY		= 2;		// y Airplay renderer
 const FEAT_MINIDLNA 	= 4;		// y DLNA server
-const FEAT_MPDAS		= 8; 		// y MPD audio scrobbler
+//const FEAT_MPDAS		= 8; 		// y MPD audio scrobbler (DEPRECATED)
+const FEAT_RECORDER		= 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
 const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
@@ -45,13 +46,14 @@ const FEAT_DJMOUNT		= 8192;		// y UPnP media browser
 const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 //						-------
-//						  31679
+//						  31671
 
 $features = array(
 	FEAT_KERNEL => 'Kernel architecture',
 	FEAT_AIRPLAY =>	'Airplay renderer',
 	FEAT_MINIDLNA => 'DLNA server',
-	FEAT_MPDAS => 'MPD audio scrobbler',
+	//FEAT_MPDAS => 'MPD audio scrobbler', (DEPRECATED)
+	FEAT_RECORDER => 'Stream recorder',
 	FEAT_SQUEEZELITE => 'Squeezelite renderer',
 	FEAT_UPMPDCLI => 'UPnP client for MPD',
 	FEAT_SQSHCHK => 'Require squashfs for software update',

@@ -26,7 +26,8 @@
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
 const FEAT_AIRPLAY      = 2;        // y Airplay renderer
 const FEAT_MINIDLNA     = 4;        // y DLNA server
-const FEAT_MPDAS        = 8;        // y MPD audio scrobbler
+//const FEAT_MPDAS        = 8;      // y MPD audio scrobbler (DEPRECATED)
+const FEAT_RECORDER     = 8;        //   Stream recorder
 const FEAT_SQUEEZELITE  = 16;       // y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;       // y UPnP client for MPD
 const FEAT_SQSHCHK      = 64;       //   Require squashfs for software update
@@ -40,7 +41,7 @@ const FEAT_DJMOUNT      = 8192;     // y UPnP media browser
 const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 //                      -------
-//                        31679
+//                        31671
 
 // For setTimout() in milliseconds
 const DEFAULT_TIMEOUT   = 250;
@@ -1609,7 +1610,7 @@ function renderRadioView() {
             output += countryDiv;
             output += languageDiv;
             output += subGenreDiv;
-            
+
             //output += radioViewTxDiv;
             output += radioViewNvDiv;
             output += '</li>';
@@ -2243,10 +2244,10 @@ function getMiscLibOptions () {
 // Update clock radio settings
 $('#btn-clockradio-update').click(function(e){
     var startHH, startMM, startDays, stopHH, stopMM, stopDays;
-s
+
 	SESSION.json['clkradio_mode'] = $('#clockradio-mode span').text();
     SESSION.json['clkradio_name'] = $('#clockradio-playname').val();
-
+s
 	$('#clockradio-starttime-hh').val().length == 1 ? startHH = '0' + $('#clockradio-starttime-hh').val() : startHH = $('#clockradio-starttime-hh').val();
 	$('#clockradio-starttime-mm').val().length == 1 ? startMM = '0' + $('#clockradio-starttime-mm').val() : startMM = $('#clockradio-starttime-mm').val();
 	$('#clockradio-stoptime-hh').val().length == 1 ? stopHH = '0' + $('#clockradio-stoptime-hh').val() : stopHH = $('#clockradio-stoptime-hh').val();

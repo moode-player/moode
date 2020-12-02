@@ -1240,29 +1240,113 @@ $('#radio-manager-btn').click(function(e) {
     $('#radioview-show-hide-moode span').text(showHide[0]);
     $('#radioview-show-hide-other span').text(showHide[1]);
     $('#import-export-msg').text('');
-    $('#recorder-status span').text(SESSION.json['recorder_status']);
-    $('#recorder-storage').val(SESSION.json['recorder_storage']);
-    $('#radio-manager-modal').modal();
+
+    if (SESSION.json['feat_bitmask'] & FEAT_RECORDER) {
+        if (SESSION.json['recorder_status'] == 'Not installed') {
+            var recorderStatusList =
+            '<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Not installed</span></a></li>' +
+            '<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Install recorder</span></a></li>'
+        }
+        else {
+            var recorderStatusList =
+            '<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">On</span></a></li>' +
+            '<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Off</span></a></li>'
+        }
+        $('#recorder-status-list').html(recorderStatusList);
+        $('#recorder-status span').text(SESSION.json['recorder_status']);
+        $.getJSON('command/recorder_cmd.php?cmd=recorder_storage_paths', function(recorderStoragePaths) {
+            $('#recorder-storage-list').html(recorderStoragePaths);
+            $('#recorder-storage span').text(SESSION.json['recorder_storage']);
+        });
+        $('#radio-manager-modal').modal();
+    }
+    else {
+        $('#radio-manager-modal').modal();
+    }
 });
 
 // Update Radio manager
 $('#btn-upd-radio-manager').click(function(e) {
     SESSION.json['radioview_sort_group'] = $('#radioview-sort-tag span').text() + ',' + $('#radioview-group-method span').text();
     SESSION.json['radioview_show_hide'] = $('#radioview-show-hide-moode span').text() + ',' + $('#radioview-show-hide-other span').text();
-    SESSION.json['recorder_status'] = $('#recorder-status span').text();
-    SESSION.json['recorder_storage'] = $('#recorder-storage').val();
+
+    if (SESSION.json['feat_bitmask'] & FEAT_RECORDER) {
+        var recorderStatus = $('#recorder-status span').text();
+        var recorderStatusChange = SESSION.json['recorder_status'] != recorderStatus;
+        var recorderStorageChange = SESSION.json['recorder_storage'] != $('#recorder-storage span').text() ? true : false;
+        SESSION.json['recorder_status'] = ($('#recorder-status span').text() == 'Install recorder' || recorderStorageChange === true) ? 'Off' : $('#recorder-status span').text();
+        SESSION.json['recorder_storage'] = $('#recorder-storage span').text();
+    }
+
     $.post('command/moode.php?cmd=updcfgsystem', {
         'radioview_sort_group': SESSION.json['radioview_sort_group'],
         'radioview_show_hide': SESSION.json['radioview_show_hide'],
         'recorder_status': SESSION.json['recorder_status'],
         'recorder_storage': SESSION.json['recorder_storage']
          }, function() {
-             notify('settings_updated');
-             setTimeout(function() {
-                 $('#ra-refresh').click();
-         	}, DEFAULT_TIMEOUT);
-         }
-     );
+            setTimeout(function() {
+                $('#ra-refresh').click();
+            }, DEFAULT_TIMEOUT);
+
+            if (recorderStatus == 'Install recorder') {
+                $.ajax({
+            		type: 'GET',
+            		url: 'command/recorder_cmd.php?cmd=recorder_install',
+                    dataType: 'json',
+            		async: true,
+            		cache: false,
+            		success: function(msg_key) {
+                        if (msg_key == 'recorder_installed') {
+                            $('#stream-recorder-options').show();
+                            $('#context-menu-stream-recorder').show();
+                        }
+                        notify(msg_key);
+            		},
+            		error: function() {
+                        // A 404 on recorder_cmd.php so we revert to 'not installed'
+                        SESSION.json['recorder_status'] = 'Not installed';
+                        $.post('command/moode.php?cmd=updcfgsystem', {'recorder_status': 'Not installed'});
+                        notify('recorder_plugin_na');
+            		}
+            	});
+            }
+            else if (recorderStorageChange === true) {
+                $.post('command/recorder_cmd.php?cmd=recorder_storage_change');
+                $('.playback-context-menu i').removeClass('recorder-on');
+                $('#menu-check-recorder').css('display', 'none');
+                notify('settings_updated');
+            }
+            else if (recorderStatusChange && (recorderStatus == 'On' || recorderStatus == 'Off')) {
+                $.post('command/recorder_cmd.php?cmd=recorder_on_off');
+                if (recorderStatus == 'On') {
+                    $('.playback-context-menu i').addClass('recorder-on');
+                    $('#menu-check-recorder').css('display', 'inline');
+
+                }
+                else {
+                    $('.playback-context-menu i').removeClass('recorder-on');
+                    $('#menu-check-recorder').css('display', 'none');
+                }
+                notify('settings_updated');
+            }
+            else if ($('#delete-recordings span').text() == 'Yes') {
+                $('#delete-recordings span').text('No');
+                $.post('command/recorder_cmd.php?cmd=recorder_delete_files', function() {
+                    notify('recorder_deleted', 'Updating library...');
+                });
+            }
+            else if ($('#tag-recordings span').text() == 'Yes') {
+                notify('recorder_tagging');
+                $('#tag-recordings span').text('No');
+                $.post('command/recorder_cmd.php?cmd=recorder_tag_files', function () {
+                    notify('recorder_tagged', 'Updating library...');
+                });
+            }
+            else {
+                notify('settings_updated');
+            }
+        }
+    );
 });
 
 // Import stations.zip file
@@ -1315,16 +1399,16 @@ $('#context-menu-playback a').click(function(e) {
 	if ($(this).data('cmd') == 'save-playlist') {
 		$('#savepl-modal').modal();
 	}
-	if ($(this).data('cmd') == 'set-favorites') {
+	else if ($(this).data('cmd') == 'set-favorites') {
         $.getJSON('command/moode.php?cmd=getfavname', function(favname) {
             $('#pl-favName').val(favname);
             $('#setfav-modal').modal();
         });
 	}
-	if ($(this).data('cmd') == 'toggle-song') {
+	else if ($(this).data('cmd') == 'toggle-song') {
         sendMpdCmd('playid ' + toggleSongId);
 	}
-	if ($(this).data('cmd') == 'consume') {
+	else if ($(this).data('cmd') == 'consume') {
 		// Menu item
 		$('#menu-check-consume').toggle();
 		// Button
@@ -1332,19 +1416,35 @@ $('#context-menu-playback a').click(function(e) {
 		$('.consume').toggleClass('btn-primary');
 		sendMpdCmd('consume ' + toggle);
 	}
-	if ($(this).data('cmd') == 'repeat') {
+	else if ($(this).data('cmd') == 'repeat') {
 		$('#menu-check-repeat').toggle();
 
 		var toggle = $('.repeat').hasClass('btn-primary') ? '0' : '1';
 		$('.repeat').toggleClass('btn-primary');
 		sendMpdCmd('repeat ' + toggle);
 	}
-	if ($(this).data('cmd') == 'single') {
+	else if ($(this).data('cmd') == 'single') {
 		$('#menu-check-single').toggle();
 
 		var toggle = $('.single').hasClass('btn-primary') ? '0' : '1';
 		$('.single').toggleClass('btn-primary');
 		sendMpdCmd('single ' + toggle);
+	}
+    else if ($(this).data('cmd') == 'stream-recorder') {
+		$('#menu-check-recorder').toggle();
+
+        if ($('#menu-check-recorder').css('display') == 'block') {
+            SESSION.json['recorder_status'] = 'On';
+            $('.playback-context-menu i').addClass('recorder-on');
+        }
+        else {
+            SESSION.json['recorder_status'] = 'Off';
+            $('.playback-context-menu i').removeClass('recorder-on');
+        }
+
+        $.post('command/moode.php?cmd=updcfgsystem', {'recorder_status': SESSION.json['recorder_status']}, function() {
+            $.post('command/recorder_cmd.php?cmd=recorder_on_off');
+        });
 	}
 });
 

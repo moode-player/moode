@@ -208,8 +208,15 @@ RADIO_MANAGER_SETTINGS() {
 	echo -e "R A D I O   M A N A G E R   S E T T I N G S"
 	echo -e "\nSort tag\t\t= $rv_sort_tag\c"
 	echo -e "\nGroup method\t\t= $rv_group_method\c"
-	echo -e "\nShow moOde stations\t= $rv_show_moode\c"
-	echo -e "\nShow other stations\t= $rv_show_other\n"
+	if [ $(($feat_bitmask & $FEAT_RECORDER)) -ne 0 ]; then
+		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
+		echo -e "\nShow other stations\t= $rv_show_other\c"
+		echo -e "\nRecorder status\t\t= $rv_recorder_status\c"
+		echo -e "\nShow other stations\t= $rv_recorder_storage\n"
+	else
+		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
+		echo -e "\nShow other stations\t= $rv_show_other\n"
+	fi
 }
 
 MPD_SETTINGS() {
@@ -329,6 +336,7 @@ MOODE_LOG() {
 # Features availability bitmask
 FEAT_AIRPLAY=2
 FEAT_MINIDLNA=4
+FEAT_RECORDER=8
 FEAT_SQUEEZELITE=16
 FEAT_UPMPDCLI=32
 FEAT_LOCALUI=256
@@ -702,8 +710,8 @@ library_flatlist_filter_str=${arr[146]}
 library_misc_options=${arr[147]}
 include_comment_tag=$(awk -F"," '{print $1}' <<< $library_misc_options)
 album_key=$(awk -F"," '{print $2}' <<< $library_misc_options)
-recorder_status=${arr[148]}
-recorder_storage=${arr[149]}
+rv_recorder_status=${arr[148]}
+rv_recorder_storage=${arr[149]}
 [[ "${arr[150]}" = "1" ]] && volume_db_display="On" || volume_db_display="Off"
 
 # Network settings
