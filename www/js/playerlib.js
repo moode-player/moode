@@ -991,7 +991,11 @@ function genSearchUrl (artist, title, album) {
 			searchStr = artist;
 			break;
 	}
-    	var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
+    	if SESSION.json['search_site'] != 'Disabled' {
+		var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
+	} else {
+		var returnStr =  title;
+	}
     }
     return returnStr;
 }
