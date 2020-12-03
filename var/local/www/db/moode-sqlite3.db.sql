@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Dec 2 19:13:49 2020
+-- File generated with SQLiteStudio v3.1.0 on Wed Dec 2 22:21:53 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -579,7 +579,7 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (28, 'replaygain_preamp', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (29, 'replay_gain_handler', 'software');
 INSERT INTO cfg_mpd (id, param, value) VALUES (30, 'volume_normalization', 'no');
 INSERT INTO cfg_mpd (id, param, value) VALUES (31, 'audio_buffer_size', '4096');
-INSERT INTO cfg_mpd (id, param, value) VALUES (32, 'buffer_before_play', 'DEPRECATED');
+INSERT INTO cfg_mpd (id, param, value) VALUES (32, 'input_cache', 'Disabled');
 INSERT INTO cfg_mpd (id, param, value) VALUES (33, 'max_output_buffer_size', '131072');
 INSERT INTO cfg_mpd (id, param, value) VALUES (34, 'auto_resample', 'yes');
 INSERT INTO cfg_mpd (id, param, value) VALUES (35, 'auto_channels', 'yes');
