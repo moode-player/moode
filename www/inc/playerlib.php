@@ -1770,7 +1770,7 @@ function cfgdb_read($table, $dbh, $param = '', $id = '') {
 		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
 	}
 	else if ($table == 'cfg_radio') {
-		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("DELETED", "zx reserved 499")' :
+		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("OFFLINE", "zx reserved 499")' :
 			'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
 	}
 	else {
