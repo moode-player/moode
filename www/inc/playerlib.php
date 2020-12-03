@@ -54,11 +54,12 @@ error_reporting(E_ERROR);
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
 // sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='feat_bitmask'"
-// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='31679' WHERE param='feat_bitmask'"
+// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='31671' WHERE param='feat_bitmask'"
 const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
 const FEAT_AIRPLAY		= 2;		// y Airplay renderer
 const FEAT_MINIDLNA 	= 4;		// y DLNA server
-const FEAT_MPDAS		= 8; 		// y MPD audio scrobbler
+//const FEAT_MPDAS		= 8; 		// y MPD audio scrobbler (DEPRECATED)
+const FEAT_RECORDER		= 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
 const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
@@ -72,7 +73,7 @@ const FEAT_DJMOUNT		= 8192;		// y UPnP media browser
 const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 //						-------
-//						  31679
+//						  31671
 
 // Mirror for footer.php
 $FEAT_INPSOURCE 	= 512;
@@ -1924,6 +1925,9 @@ function updMpdConf($i2sdevice) {
 			case 'dop':
 				$dop = $cfg['value'];
 				break;
+			case 'input_cache':
+				$input_cache = $cfg['value'];
+				break;
 			case 'audio_output_format':
 				$data .= $cfg['value'] == 'disabled' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
@@ -1935,11 +1939,6 @@ function updMpdConf($i2sdevice) {
 				break;
 			case 'replay_gain_handler':
 				$replay_gain_handler = $cfg['value'];
-				break;
-			case 'buffer_before_play':
-				// DEPRECATED in > 0.20.y MPD
-				// Param needs to be deleted from cfg_mpd at some point
-				$data .=  '';
 				break;
 			case 'auto_resample':
 				$auto_resample = $cfg['value'];
@@ -1995,6 +1994,13 @@ function updMpdConf($i2sdevice) {
 	$data .= "plugin \"curl\"\n";
 	$data .= "}\n\n";
 
+	// Input cache
+	if ($input_cache != 'Disabled') {
+		$data .= "input_cache {\n";
+		$data .= "size \"" . $input_cache . "\"\n";
+		$data .= "}\n\n";
+	}
+
 	// Resampler
 	$data .= "resampler {\n";
 	$data .= "plugin \"soxr\"\n";
@@ -2047,12 +2053,18 @@ function updMpdConf($i2sdevice) {
 	$data .= "always_on \"yes\"\n";
 	$data .= "}\n\n";
 
+	// Stream recorder (output 8)
+	if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
+		include '/var/www/inc/recorder_mpd.php';
+	}
+
 	if ($_SESSION['feat_bitmask'] & FEAT_DEVTWEAKS) {
 		$fh = fopen('/etc/mpd.moode.conf', 'w');
 		fwrite($fh, $data);
 		fclose($fh);
 		sysCmd("/var/www/command/mpdconfmerge.py /etc/mpd.moode.conf /etc/mpd.custom.conf");
-	}else {
+	}
+	else {
 		$fh = fopen('/etc/mpd.conf', 'w');
 		fwrite($fh, $data);
 		fclose($fh);

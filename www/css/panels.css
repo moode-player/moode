@@ -143,9 +143,8 @@ html {background-color:inherit;}
 #current-bgimage {max-height:calc(1.5rem + 6px);overflow:hidden;max-width:50px;margin:5px 0 0 5px;position:absolute;display:inline-block;border-radius:3px;}
 #countdown {margin:0 auto;height:17vw;width:17vw;}
 #countdown div {margin:0 auto;} /* needed to center the knob */
-.countdown-caret {margin-left:2px;color:var(--accentxts);}
 #countdown-display {position:absolute;top:46%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:2.4vw;font-weight:500;cursor:pointer;}
-#total {position:absolute;top:62%;left:50%;transform:translate(-50%);margin-left:.4em;font-size:1.5vw;}
+#total {position:absolute;top:62%;left:50%;transform:translate(-50%);font-size:1.5vw;}
 .total-radio {background-image:var(--radiobadge);background-position:center center;background-size:100%;background-repeat:no-repeat;width:22%;height:20px;margin-left:0 !important;}
 #playbtns, #playbtns .btn-group {font-size:1em;margin:1em 0;}
 #playbtns .btn {/*font-size:2rem;*/font-size:2.8vw;padding:1.25rem;}
@@ -500,7 +499,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 /**/
 /* playback ellipsis context menu */
 /*#context-menu-playback .dropdown-menu {min-width:15rem;white-space:nowrap;}*/
-#menu-check-consume, #menu-check-repeat, #menu-check-single {display:none;position:absolute;right:.45rem;}
+#menu-check-consume, #menu-check-repeat, #menu-check-single, #menu-check-recorder {display:none;position:absolute;right:.45rem;}
 .dropdown-menu i.fa-check {padding:0;margin:0;}
 /* active/inactive css element manip */
 #menu-header {position:absolute;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1.1rem;overflow:hidden;max-width:50%;text-overflow:ellipsis;white-space:nowrap;color:var(--adapttext);cursor:pointer;}
@@ -707,3 +706,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #audioinfo-modal.hardware #audioinfo-hardware, #audioinfo-modal.track #audioinfo-track {background-color:var(--btnshade4);}
 #trackinfo li:nth-child(odd) {background-color:rgba(128,128,128,.05);}
 .controls-select {margin-bottom:5px;}
+.recorder-on {border-bottom: 2px solid var(--accentxts);}

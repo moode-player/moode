@@ -208,8 +208,15 @@ RADIO_MANAGER_SETTINGS() {
 	echo -e "R A D I O   M A N A G E R   S E T T I N G S"
 	echo -e "\nSort tag\t\t= $rv_sort_tag\c"
 	echo -e "\nGroup method\t\t= $rv_group_method\c"
-	echo -e "\nShow moOde stations\t= $rv_show_moode\c"
-	echo -e "\nShow other stations\t= $rv_show_other\n"
+	if [ $(($feat_bitmask & $FEAT_RECORDER)) -ne 0 ]; then
+		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
+		echo -e "\nShow other stations\t= $rv_show_other\c"
+		echo -e "\nRecorder status\t\t= $rv_recorder_status\c"
+		echo -e "\nShow other stations\t= $rv_recorder_storage\n"
+	else
+		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
+		echo -e "\nShow other stations\t= $rv_show_other\n"
+	fi
 }
 
 MPD_SETTINGS() {
@@ -239,7 +246,8 @@ MPD_SETTINGS() {
 	echo -e "\nVolume normalization\t= $volume_normalization\c"
 	echo -e "\nAudio buffer\t\t= $audio_buffer_size (MB)\c"
 	echo -e "\nOutput buffer size\t= $max_output_buffer_size (MB)\c"
-	echo -e "\nMax playlist items\t= $max_playlist_length\n"
+	echo -e "\nMax playlist items\t= $max_playlist_length\c"
+	echo -e "\nInput cache\t\t= $input_cache\n"
 	#echo -e "\nALSA auto-resample\t= $auto_resample\c"
 	#echo -e "\nALSA auto-channels\t= $auto_channels\c"
 	#echo -e "\nALSA auto-format\t= $auto_format\c"
@@ -329,6 +337,7 @@ MOODE_LOG() {
 # Features availability bitmask
 FEAT_AIRPLAY=2
 FEAT_MINIDLNA=4
+FEAT_RECORDER=8
 FEAT_SQUEEZELITE=16
 FEAT_UPMPDCLI=32
 FEAT_LOCALUI=256
@@ -451,6 +460,7 @@ RESULT=$(sqlite3 $SQLDB "select value from cfg_mpd where param in (
 'replaygain_preamp',
 'volume_normalization',
 'audio_buffer_size',
+'input_cache',
 'max_output_buffer_size',
 'auto_resample',
 'auto_channels',
@@ -477,25 +487,26 @@ replaygain=${arr[6]}
 replaygain_preamp=${arr[7]}
 volume_normalization=${arr[8]}
 audio_buffer_size=$((${arr[9]}/1024))
-max_output_buffer_size=$((${arr[10]}/1024))
-auto_resample=${arr[11]}
-auto_channels=${arr[12]}
-auto_format=${arr[13]}
-buffer_time=${arr[14]}
-period_time=${arr[15]}
-[[ "${arr[16]}" = "0" ]] && selective_resample_mode="disabled"
-[[ "${arr[16]}" = "$SOX_UPSAMPLE_ALL" ]] && selective_resample_mode="Upsample if source < target rate"
-[[ "${arr[16]}" = "$SOX_UPSAMPLE_ONLY_41K" ]] && selective_resample_mode="Upsample only 44.1K source rate"
-[[ "${arr[16]}" = "$SOX_UPSAMPLE_ONLY_4148K" ]] && selective_resample_mode="Upsample only 44.1K and 48K source rates"
-[[ "${arr[16]}" = "$SOX_ADHERE_BASE_FREQ" ]] && selective_resample_mode="Resample (adhere to base freq)"
-[[ "${arr[16]}" = "$(($SOX_UPSAMPLE_ALL + $SOX_ADHERE_BASE_FREQ))" ]] && selective_resample_mode="Upsample if source < target rate (adhere to base freq)"
-sox_precision=${arr[17]}
-sox_phase_response=${arr[18]}
-sox_passband_end=${arr[19]}
-sox_stopband_begin=${arr[20]}
-sox_attenuation=${arr[21]}
-sox_flags=${arr[22]}
-max_playlist_length=${arr[23]}
+input_cache=${arr[10]}
+max_output_buffer_size=$((${arr[11]}/1024))
+auto_resample=${arr[12]}
+auto_channels=${arr[13]}
+auto_format=${arr[14]}
+buffer_time=${arr[15]}
+period_time=${arr[16]}
+[[ "${arr[17]}" = "0" ]] && selective_resample_mode="disabled"
+[[ "${arr[17]}" = "$SOX_UPSAMPLE_ALL" ]] && selective_resample_mode="Upsample if source < target rate"
+[[ "${arr[17]}" = "$SOX_UPSAMPLE_ONLY_41K" ]] && selective_resample_mode="Upsample only 44.1K source rate"
+[[ "${arr[17]}" = "$SOX_UPSAMPLE_ONLY_4148K" ]] && selective_resample_mode="Upsample only 44.1K and 48K source rates"
+[[ "${arr[17]}" = "$SOX_ADHERE_BASE_FREQ" ]] && selective_resample_mode="Resample (adhere to base freq)"
+[[ "${arr[17]}" = "$(($SOX_UPSAMPLE_ALL + $SOX_ADHERE_BASE_FREQ))" ]] && selective_resample_mode="Upsample if source < target rate (adhere to base freq)"
+sox_precision=${arr[18]}
+sox_phase_response=${arr[19]}
+sox_passband_end=${arr[20]}
+sox_stopband_begin=${arr[21]}
+sox_attenuation=${arr[22]}
+sox_flags=${arr[23]}
+max_playlist_length=${arr[24]}
 
 # Spotify settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_spotify")
@@ -702,8 +713,8 @@ library_flatlist_filter_str=${arr[146]}
 library_misc_options=${arr[147]}
 include_comment_tag=$(awk -F"," '{print $1}' <<< $library_misc_options)
 album_key=$(awk -F"," '{print $2}' <<< $library_misc_options)
-recorder_status=${arr[148]}
-recorder_storage=${arr[149]}
+rv_recorder_status=${arr[148]}
+rv_recorder_storage=${arr[149]}
 [[ "${arr[150]}" = "1" ]] && volume_db_display="On" || volume_db_display="Off"
 
 # Network settings

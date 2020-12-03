@@ -30,11 +30,13 @@ New features
 - NEW: Albums played directly if already in the Queue
 - NEW: MPD Config support for SoX 705.6/768 kHz rates
 - NEW: MPD Config resource allocation options for buffers, playlist
+- NEW: MPD input cache option
 - NEW: Auto-shuffle Album mode option
 - NEW: Option to display thumbnails in the Queue
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
 - NEW: Add next, Play next by inserting after current item
 - NEW: Support for up to 384K rate for DDDAC1794 NOS
+- NEW: Moodeutl options for Export/Import all settings
 
 Updates
 

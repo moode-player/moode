@@ -528,7 +528,7 @@ else {
 	workerLog('worker: UPnP browser (n/a)');
 }
 
-// Start audio scrobbler
+// Start audio scrobbler (DEPRECATED)
 // NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
 /*if ($_SESSION['feat_bitmask'] & FEAT_MPDAS) {
 	workerLog('worker: Audio scrobbler (available)');
@@ -551,6 +551,18 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 }
 else {
 	workerLog('worker: GPIO button handler (n/a)');
+}
+
+// Start stream recorder
+if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
+	workerLog('worker: Stream recorder (available)');
+	if ($_SESSION['recorder_status'] == 'On') {
+		sysCmd('mpc enable 8');
+		workerLog('worker: Stream recorder (started)');
+	}
+}
+else {
+	workerLog('worker: Stream recorder (n/a)');
 }
 
 //

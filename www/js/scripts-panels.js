@@ -266,6 +266,23 @@ jQuery(document).ready(function($) { 'use strict';
             $('#index-albums, #index-albumcovers').hide();
         }
 
+        // Stream Recorder
+        if (SESSION.json['feat_bitmask'] & FEAT_RECORDER) {
+            $('#radio-manager-stream-recorder').show();
+            if (SESSION.json['recorder_status'] != 'Not installed') {
+                $('#stream-recorder-options').show();
+                $('#context-menu-stream-recorder').show();
+                if (SESSION.json['recorder_status'] == 'On') {
+                    $('.playback-context-menu i').addClass('recorder-on');
+                    $('#menu-check-recorder').css('display', 'inline');
+                }
+                else {
+                    $('.playback-context-menu i').removeClass('recorder-on');
+                    $('#menu-check-recorder').css('display', 'none');
+                }
+            }
+        }
+
     	// Load swipe handler for top columns in library (mobile)
     	if (UI.mobile && SESSION.json['library_show_genres'] == 'Yes') {
     		$(function() {
@@ -572,13 +589,12 @@ jQuery(document).ready(function($) { 'use strict';
                 if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
                     // Count up
     				updKnobStartFrom(parseInt(result['elapsed']), MPD.json['state']);
-    				$('#total').html(formatSongTime(MPD.json['time']) + '<i class="fas fa-caret-up countdown-caret"></i>');
     			}
     			else {
                     // Count down
     				updKnobStartFrom(parseInt(MPD.json['time'] - parseInt(result['elapsed'])), MPD.json['state']);
-    				$('#total').html(formatSongTime(MPD.json['time']) + '<i class="fas fa-caret-down countdown-caret"></i>');
     			}
+                $('#total').html(formatSongTime(MPD.json['time']));
             });
 		}
     });
@@ -639,7 +655,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#savepl-modal').on('shown.bs.modal', function(e) {
         $('#pl-saveName').focus();
     });
-	
+
 	// Set favorites
     $('#pl-btnSetFav').click(function(e){
 		var favname = $('#pl-favName').val();
@@ -1280,7 +1296,7 @@ jQuery(document).ready(function($) { 'use strict';
             audioinfo(cmd, MPD.json['file']);
         }
     });
-	
+
 	$('#audioinfo-track').live('click', function(e) {
 		$('#audioinfo-modal').removeClass('hardware').addClass('track');
 	});
@@ -1288,7 +1304,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#audioinfo-hardware').live('click', function(e) {
 		$('#audioinfo-modal').removeClass('track').addClass('hardware');
 	});
-	
+
     // CoverView screen saver reset
     $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
         //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
