@@ -1925,6 +1925,9 @@ function updMpdConf($i2sdevice) {
 			case 'dop':
 				$dop = $cfg['value'];
 				break;
+			case 'input_cache':
+				$input_cache = $cfg['value'];
+				break;
 			case 'audio_output_format':
 				$data .= $cfg['value'] == 'disabled' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
@@ -1936,11 +1939,6 @@ function updMpdConf($i2sdevice) {
 				break;
 			case 'replay_gain_handler':
 				$replay_gain_handler = $cfg['value'];
-				break;
-			case 'buffer_before_play':
-				// DEPRECATED in > 0.20.y MPD
-				// Param needs to be deleted from cfg_mpd at some point
-				$data .=  '';
 				break;
 			case 'auto_resample':
 				$auto_resample = $cfg['value'];
@@ -1995,6 +1993,13 @@ function updMpdConf($i2sdevice) {
 	$data .= "input {\n";
 	$data .= "plugin \"curl\"\n";
 	$data .= "}\n\n";
+
+	// Input cache
+	if ($input_cache != 'Disabled') {
+		$data .= "input_cache {\n";
+		$data .= "size \"" . $input_cache . "\"\n";
+		$data .= "}\n\n";
+	}
 
 	// Resampler
 	$data .= "resampler {\n";

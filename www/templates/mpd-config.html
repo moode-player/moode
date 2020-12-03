@@ -290,6 +290,19 @@
                 </div>
             </div>
 			<div class="control-group">
+				<label class="control-label" for="input_cache">Input cache</label>
+				<div class="controls">
+					<select id="input_cache" name="conf[input_cache]" class="input-large">
+						$_mpd_select[input_cache]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-input-cache" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-input-cache" class="help-block-configs help-block-margin hide">
+						The input cache prefetches queued song files into memory before they are going to be played. If the cache grows larger than the specified size, older files will be evicted.
+				   </span>
+				</div>
+			</div>
+
+			<div class="control-group">
 				<legend>Other options</legend>
                 <label class="control-label" for="log_level">Log level</label>
                 <div class="controls">

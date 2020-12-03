@@ -191,6 +191,12 @@ $_mpd_select['volume_normalization'] .= "<option value=\"no\" " . (($mpdconf['vo
 $_mpd_select['audio_buffer_size'] = $mpdconf['audio_buffer_size'] / 1024; // Convert these from KB to MB
 $_mpd_select['max_output_buffer_size'] = $mpdconf['max_output_buffer_size'] / 1024;
 $_mpd_select['max_playlist_length'] = $mpdconf['max_playlist_length'];
+$_mpd_select['input_cache'] .= "<option value=\"Disabled\" " . (($mpdconf['input_cache'] == 'Disabled') ? "selected" : "") . " >Disabled</option>\n";
+$_mpd_select['input_cache'] .= "<option value=\"128 MB\" " . (($mpdconf['input_cache'] == '128 MB') ? "selected" : "") . " >128 MB</option>\n";
+$_mpd_select['input_cache'] .= "<option value=\"256 MB\" " . (($mpdconf['input_cache'] == '256 MB') ? "selected" : "") . " >256 MB</option>\n";
+$_mpd_select['input_cache'] .= "<option value=\"512 MB\" " . (($mpdconf['input_cache'] == '512 MB') ? "selected" : "") . " >512 MB</option>\n";
+$_mpd_select['input_cache'] .= "<option value=\"1 GB\" " . (($mpdconf['input_cache'] == '1 GB') ? "selected" : "") . " >1 GB</option>\n";
+$_mpd_select['input_cache'] .= "<option value=\"2 GB\" " . (($mpdconf['input_cache'] == '2 GB') ? "selected" : "") . " >2 GB</option>\n";
 
 // Log level
 $_mpd_select['log_level'] .= "<option value=\"default\" " . (($mpdconf['log_level'] == 'default') ? "selected" : "") . " >Default</option>\n";
