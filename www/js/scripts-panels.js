@@ -589,13 +589,12 @@ jQuery(document).ready(function($) { 'use strict';
                 if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
                     // Count up
     				updKnobStartFrom(parseInt(result['elapsed']), MPD.json['state']);
-    				$('#total').html(formatSongTime(MPD.json['time']) + '<i class="fas fa-caret-up countdown-caret"></i>');
     			}
     			else {
                     // Count down
     				updKnobStartFrom(parseInt(MPD.json['time'] - parseInt(result['elapsed'])), MPD.json['state']);
-    				$('#total').html(formatSongTime(MPD.json['time']) + '<i class="fas fa-caret-down countdown-caret"></i>');
     			}
+                $('#total').html(formatSongTime(MPD.json['time']));
             });
 		}
     });

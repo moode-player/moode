@@ -578,7 +578,7 @@ function resetPlayCtls() {
 	console.log('resetPlayCtls():');
 	$('#m-total, #playbar-total, #playbar-mtotal').text(formatKnobTotal('0'));
 	$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
-	$('#total').html(formatKnobTotal('0') + (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>'));
+	$('#total').html(formatKnobTotal('0'));
 	$('.playlist li.active ').removeClass('active');
 
 	updKnobAndTimeTrack();
@@ -705,8 +705,7 @@ function renderUI() {
             }
             $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
         }
-    	$('#total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0) + (MPD.json['artist'] == 'Radio station' ? '' :
-            (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0 ? '<i class="fas fa-caret-up countdown-caret"></i>' : '<i class="fas fa-caret-down countdown-caret"></i>')));
+    	$('#total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0));
     	$('#m-total, #playbar-total').html(formatKnobTotal(MPD.json['time'] ? MPD.json['time'] : 0));
     	$('#playbar-mtotal').html('&nbsp;/&nbsp;' + formatKnobTotal(MPD.json['time']));
         $('#playbar-total').text().length > 5 ? $('#playbar-countdown, #m-countdown, #playbar-total, #m-total').addClass('long-time') :

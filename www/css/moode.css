@@ -339,7 +339,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playlist .songtime {top: 0px;}
 	#timeknob, #volknob {margin:1em 0;}
 	#countdown-display{margin-top:-10px;}
-	.countdown-caret {font-size:.9em;margin-left:2px;}
 	/* NOTE: These settings cause 1/2 sized knobs on Pi Touch
 	#countdown {height:75%;width:75%;margin:0 auto;padding-bottom:5px;}
 	#volcontrol {height:75%;width:75%;margin:0 auto;}
