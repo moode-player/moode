@@ -3053,6 +3053,12 @@ function autoConfigSettings() {
 			playerSession('write', 'i2sdevice', $values['i2sdevice']);
 		}],
 
+		'Sound',
+		['requires' => ['crossfeed'] , 'handler' => setPlayerSession],
+		['requires' => ['invert_polarity'] , 'handler' => setPlayerSession],
+		['requires' => ['alsaequal'] , 'handler' => setPlayerSession],
+		['requires' => ['eqfa12p'] , 'handler' => setPlayerSession],
+
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['device'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
@@ -3210,6 +3216,24 @@ function autoConfigSettings() {
 				}
 			return $source_export;
 		}],
+
+		'EQP',
+		['requires' => [ 'eqp12_curve_name',
+						 'eqp12_settings',
+						 'eqp12_active'], 'handler' => function($values) {
+			require_once dirname(__FILE__) . '/eqp.php';
+			$dbh = cfgdb_connect();
+			$eqp = Eqp12($dbh);
+			$eqp->import($values);
+
+		}, 'custom_write' => function($values) {
+			require_once dirname(__FILE__) . '/eqp.php';
+			$dbh = cfgdb_connect();
+			$eqp = Eqp12($dbh);
+			$eqp_export = $eqp->export();
+			return $eqp_export ;
+		}]
+
 	];
 
 	return $configurationHandlers;
