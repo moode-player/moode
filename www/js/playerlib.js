@@ -991,7 +991,7 @@ function genSearchUrl (artist, title, album) {
 			searchStr = artist;
 			break;
 	}
-    	if SESSION.json['search_site'] != 'Disabled' {
+    	if (SESSION.json['search_site'] != 'Disabled') {
 		var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
 	} else {
 		var returnStr =  title;
