@@ -8,7 +8,7 @@
 ; Example: wlanssid = ""
 ;
 ; Moode Release : 7.0.0 2020-MM-DD
-; Create date	: 2020-11-15 15:34:14
+; Create date   : 2020-12-04 17:38:42
 ;
 ; ##########################################
 [Names]
@@ -35,6 +35,12 @@ expandfs ="0"
 
 [I2S Device]
 i2sdevice = "none"
+
+[Sound]
+crossfeed = "Off"
+invert_polarity = "0"
+alsaequal = "Off"
+eqfa12p = "Off"
 
 [MPD]
 mixer_type = "software"
@@ -117,3 +123,8 @@ library_utf8rep = "No"
 first_use_help = "Yes"
 
 [Sources]
+
+[EQP]
+eqp12_curve_name[0] = "Default curve"
+eqp12_settings[0] = "0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0"
+eqp12_active[0] = "No"
