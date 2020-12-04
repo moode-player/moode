@@ -174,6 +174,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\n----------------------\c"
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
 	echo -e "\nShow extra metadata\t= $xtagdisp\c"
+	echo -e "\nSearch site\t\t= $search_site\c"
 	echo -e "\nPlayback history log\t= $playhist\c"
 	echo -e "\n\nLibrary\c"
 	echo -e "\n----------------------\c"
@@ -716,6 +717,7 @@ album_key=$(awk -F"," '{print $2}' <<< $library_misc_options)
 rv_recorder_status=${arr[148]}
 rv_recorder_storage=${arr[149]}
 [[ "${arr[150]}" = "1" ]] && volume_db_display="On" || volume_db_display="Off"
+search_site=${arr[151]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

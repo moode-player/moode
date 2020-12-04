@@ -946,57 +946,75 @@ function renderUI() {
 
 // Generate search url
 function genSearchUrl (artist, title, album) {
-    if (title == 'Streaming source' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
+    // Search disabled by user
+    if (SESSION.json['search_site'] == 'Disabled') {
+        var returnStr = title;
+    }
+    // Title has no searchable info or mobile
+    else if (title == 'Streaming source' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
         var returnStr = MPD.json['title'];
     }
+    // Title has info
     else {
+        // Radio station
         if (typeof(artist) === 'undefined' || artist === 'Radio station') {
     		var searchStr = title.replace(/-/g, ' ');
     		searchStr = searchStr.replace(/&/g, ' ');
     		searchStr = searchStr.replace(/\s+/g, '+');
     	}
+        // Song file
     	else {
-    		searchStr = artist + '+' + album;
+    		var searchStr = artist + '+' + album;
     	}
 
-        var searchEngine = '';
-	switch (SESSION.json['search_site']) {
-		case 'Google':
-			searchEngine = 'http://www.google.com/search?q=';
-			break;
-		case 'Bing':
-			searchEngine = 'http://www.bing.com/search?q=';
-			break;
-		case 'DuckDuckGo':
-			searchEngine = 'http://www.duckduckgo.com/?q=';
-			break;
-		case 'Yahoo':
-			searchEngine = 'http://search.yahoo.com/search?p=';
-			break;
-		case 'Ecosia':
-			searchEngine = 'http://www.ecosia.org/search?q=';
-			break;
-		case 'Startpage':
-			searchEngine = 'http://www.startpage.com/do/search?q=';
-			break;
-		case 'Musicbrainz':
-			searchEngine = 'http://www.musicbrainz.org/taglookup?';
-			searchStr = 'tag-lookup.artist=' + artist + '&tag-lookup.release=' + album;
-			break;
-		case 'Discogs':
-			searchEngine = 'http://www.discogs.com/search/?q=';
-			break;
-		case 'Wikipedia':
-			searchEngine = 'http://www.wikipedia.org/wiki/';
-			searchStr = artist;
-			break;
-	}
-    	if SESSION.json['search_site'] != 'Disabled' {
-		var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
-	} else {
-		var returnStr =  title;
-	}
+        // Search engine
+    	switch (SESSION.json['search_site']) {
+    		case 'Bing':
+    			var searchEngine = 'http://www.bing.com/search?q=';
+    			break;
+            case 'Discogs':
+    			var searchEngine = 'http://www.discogs.com/search/?q=';
+    			break;
+    		case 'DuckDuckGo':
+    			var searchEngine = 'http://www.duckduckgo.com/?q=';
+    			break;
+    		case 'Ecosia':
+    			var searchEngine = 'http://www.ecosia.org/search?q=';
+    			break;
+            case 'Google':
+    			var searchEngine = 'http://www.google.com/search?q=';
+    			break;
+    		case 'MusicBrainz':
+    			var searchEngine = 'http://www.musicbrainz.org/taglookup?';
+                // Override default search str
+                if (typeof(artist) === 'undefined' || artist === 'Radio station') {
+                    searchStr = 'tag-lookup.artist=' + title.split(' - ')[0].replace(/&/g, ' '); // Artist
+                }
+                else {
+                    searchStr = 'tag-lookup.artist=' + artist + '&tag-lookup.release=' + album;
+                }
+    			break;
+            case 'Startpage':
+    			var searchEngine = 'http://www.startpage.com/do/search?q=';
+    			break;
+    		case 'Wikipedia':
+                var searchEngine = 'http://www.wikipedia.org/wiki/';
+                // Override default search str
+                if (typeof(artist) === 'undefined' || artist === 'Radio station') {
+                    searchStr = title.split(' - ')[0].replace(/&/g, ' '); // Artist
+                }
+                else {
+                    searchStr = artist;
+                }
+    			break;
+            case 'Yahoo':
+    			var searchEngine = 'http://search.yahoo.com/search?p=';
+    			break;
+    	}
+
+        var returnStr =  '<a id="coverart-link" href=' + '"' + searchEngine + searchStr + '"' + ' target="_blank">'+ title + '</a>';
     }
+
     return returnStr;
 }
 
@@ -2200,6 +2218,8 @@ $('.context-menu a').click(function(e) {
             $('#playlist-art-enabled span').text(SESSION.json['playlist_art']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
             $('#play-history-enabled span').text(SESSION.json['playhist']);
+            // @Atair
+            $('#search_site span').text(SESSION.json['search_site']);
 
             // Library
             $('#instant-play-action span').text(SESSION.json['library_instant_play']);
@@ -2220,8 +2240,6 @@ $('.context-menu a').click(function(e) {
             $('#show-tagview-covers span').text(SESSION.json['library_tagview_covers']);
             $('#ellipsis-limited-text span').text(SESSION.json['library_ellipsis_limited_text']);
             $('#utf8-char-filter span').text(SESSION.json['library_utf8rep']);
-            // @Atair
-            $('#search_site span').text(SESSION.json['search_site']);
 
     		// CoverView
             $('#scnsaver-timeout span').text(getParamOrValue('param', SESSION.json['scnsaver_timeout']));
@@ -2445,6 +2463,7 @@ $('#btn-preferences-update').click(function(e){
     // Playback
     SESSION.json['playlist_art'] = $('#playlist-art-enabled span').text();
     SESSION.json['extra_tags'] = $('#extra-tags').val();
+    SESSION.json['search_site'] = $('#search_site span').text(); // @Atair
     SESSION.json['playhist'] = $('#play-history-enabled span').text();
 
     // Library
@@ -2465,8 +2484,6 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_tagview_covers'] = $('#show-tagview-covers span').text();
     SESSION.json['library_ellipsis_limited_text'] = $('#ellipsis-limited-text span').text();
     SESSION.json['library_utf8rep'] = $('#utf8-char-filter span').text();
-    // @Atair
-    SESSION.json['search_site'] = $('#search_site span').text();
 
     // CoverView
     SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
@@ -2535,6 +2552,7 @@ $('#btn-preferences-update').click(function(e){
             // Playback
             'playlist_art': SESSION.json['playlist_art'],
             'extra_tags': SESSION.json['extra_tags'],
+            'search_site': SESSION.json['search_site'], // @Atair
             'playhist': SESSION.json['playhist'],
 
             // Library
@@ -2555,8 +2573,6 @@ $('#btn-preferences-update').click(function(e){
             'library_tagview_covers': SESSION.json['library_tagview_covers'],
             'library_ellipsis_limited_text': SESSION.json['library_ellipsis_limited_text'],
             'library_utf8rep': SESSION.json['library_utf8rep'],
-	    // @Atair
-            'search_site': SESSION.json['search_site'],
 
             // CoverView
             'scnsaver_timeout': SESSION.json['scnsaver_timeout'],

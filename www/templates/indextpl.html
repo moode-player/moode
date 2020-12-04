@@ -817,6 +817,37 @@
 	                    </span>
 	                </div>
 
+					<label class="control-label" for="search_site">Search site</label>
+ 	                <div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-medium2">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="search_site" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Disabled</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Bing</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Discogs</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">DuckDuckGo</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Ecosia</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Google</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">MusicBrainz</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Startpage</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Wikipedia</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Yahoo</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-search_site" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<span id="info-search_site" class="help-block hide">
+							By clicking the current track title in player view you can launch an internet search with the selected site.<br>
+							A combination of artist and album is searched. Wikipedia search is restricted to artist only.
+ 	                    </span>
+ 	                </div>
+
    	                <label class="control-label" for="play-history-enabled">Playback history log</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select bootstrap-select-mini">
@@ -1134,28 +1165,6 @@
  	                    </span>
  	                </div>
 
-					<!--label class="control-label" for="library-folder-path-albumkey">Folder path albumkey</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select select-mini">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="library-folder-path-albumkey" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-folder-path-albumkey-sel"><span class="text">Yes</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="library-folder-path-albumkey-sel"><span class="text">No</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-folder-path-albumkey" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-folder-path-albumkey" class="help-block hide">
-							The path to the album folder is used as the album key to differentiate albums.<br>
- 	                    </span>
- 	                </div-->
-
 					<label class="control-label" for="ignore-articles">Ignore articles</label>
 	                <div class="controls">
 	                    <input id="ignore-articles" class="input-xlarge input-height-x" type="text">
@@ -1254,38 +1263,7 @@
 							NOTE: setting this to Yes may impact the performance of the Library.
  	                    </span>
  	                </div>
-                    
-					<label class="control-label" for="search_site">Search Website</label>
- 	                <div class="controls">
-						<div class="btn-group bootstrap-select bootstrap-select-medium2">
-							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="search_site" class="filter-option pull-left">
-									<span></span>
-								</div>&nbsp;
-								<div class="caret"></div>
-							</button>
-							<div class="dropdown-menu open">
-								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Google</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Bing</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">DuckDuckGo</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Ecosia</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Yahoo</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Startpage</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Musicbrainz</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Discogs</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Wikipedia</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="search_site-sel"><span class="text">Disabled</span></a></li>
-								</ul>
-							</div>
- 						</div>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info-search_site" href="#notarget"><i class="fas fa-info-circle"></i></a>
- 						<span id="info-search_site" class="help-block hide">
-							By clicking the current track title in player view you can launch an internet search with the selected site.<br>
-							A combination of artist and album is searched. Wikipedia search is restricted to artist only.
- 	                    </span>
- 	                </div>
-                    
+
 				</div>
 				</div>
 			</div>
