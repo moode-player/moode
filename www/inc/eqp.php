@@ -51,7 +51,7 @@ class Eqp {
 
     function applyConfig($config) {
         $configstr = $this->config2string($config, True); // force to use bw instead of q
-        sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $configstr . ' ]" ' . ALSA_PLUGIN_PATH .'/'. $this->alsa_file);
+        sysCmd('sudo sed -i "/controls/c\ \t\t\tcontrols [ ' . $configstr . ' ]" ' . ALSA_PLUGIN_PATH .'/'. $this->alsa_file);
     }
 
     function string2config($string) {
@@ -183,6 +183,50 @@ class Eqp {
         // you need the math below:
         $bw = 0.5/$q;
         return $bw;
+    }
+
+    /**
+     * Provide import functionality for autocfg
+     */
+    function import($values) {
+        $curve_count = count($values['eqp12_curve_name']);
+        $keys = array_keys($values);
+
+        for($index =0; $index< $curve_count; $index++) {
+            $curve_name = $values['eqp12_curve_name'][$index];
+            $curve_settings = $values['eqp12_settings'][$index];
+            $curve_active = $values['eqp12_active'][$index];
+
+            $querystr = 'SELECT id from ' . $this->table . ' where curve_name = "' . $curve_name . '" limit 1;';
+            $result = sdbquery($querystr, $this->dbh);
+            // check if curve if all ready present,in that case an update will be done
+            $curve_curr_id = count($result)==1 ? $result[0]['id']: NULL;
+
+            $config = $this->string2config($curve_settings);
+            $curve_id = $this->setpreset($curve_curr_id , $curve_name, $config);
+            if( in_array( strtolower($curve_active), ["1", "yes", "true", "on"]) ) {
+                $this->applyConfig($config);
+                $this->setActivePresetIndex($curve_id);
+            }
+        }
+    }
+
+    /**
+     * Provide export functionality for autocfg
+     */
+    function export() {
+        $querystr = 'SELECT id, curve_name, settings, active from ' . $this->table . ';';
+        $result = sdbquery($querystr, $this->dbh);
+
+        $eqp_export ='';
+        $stringformat = "eqp12_%s[%d] = \"%s\"\n";
+        foreach($result as $index=>$preset_row) {
+            $eqp_export =  $eqp_export . sprintf($stringformat, 'curve_name', $index, $preset_row['curve_name']);
+            $eqp_export =  $eqp_export . sprintf($stringformat, 'settings', $index, $preset_row['settings']);
+            $eqp_export =  $eqp_export . sprintf($stringformat, 'active', $index, $preset_row['active'] == 1 ? 'Yes': 'No');
+        }
+
+        return $eqp_export;
     }
 }
 
