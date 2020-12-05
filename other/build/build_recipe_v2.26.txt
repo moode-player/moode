@@ -3,7 +3,7 @@
 # Build Recipe v2.26 2020-MM-DD
 #
 # moOde 7.0.0 2020-MM-DD
-# - Based on RaspiOS Buster Lite 2020-05-27 (10.4)
+# - Based on RaspiOS Buster Lite 2020-12-02
 # - Bump to r700 sources
 # - Bump to Linux kernel 5.4.77 build #1371
 # - Bump to MPD 0.22.3
@@ -35,14 +35,14 @@
 //
 ////////////////////////////////////////////////////////////////
 
-1. Download Raspberry Pi OS Lite 2020-05-27 (Buster)
-wget http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-05-28/2020-05-27-raspios-buster-lite-armhf.zip
-sudo unzip -q 2020-05-27-raspios-buster-lite-armhf.zip
-sudo rm 2020-05-27-raspios-buster-lite-armhf.zip
+1. Download Raspberry Pi OS Lite 2020-12-04 (Buster)
+wget http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-12-04/2020-12-02-raspios-buster-armhf-lite.zip
+sudo unzip -q 2020-12-02-raspios-buster-armhf-lite.zip
+sudo rm 2020-12-02-raspios-buster-armhf-lite.zip
 
 2. Mount the boot and root partitions
 LOOPDEV=$(sudo losetup -f)
-sudo losetup -P $LOOPDEV 2020-05-27-raspios-buster-lite-armhf.img
+sudo losetup -P $LOOPDEV 2020-12-02-raspios-buster-armhf-lite.img
 sudo mkdir /mnt/p1
 sudo mkdir /mnt/p2
 sudo mount -t vfat "$LOOPDEV"p1 /mnt/p1
@@ -847,21 +847,11 @@ cp ./moode/other/ashuffle/ashuffle-3.10.0-armv6h-linux-gnueabihf /usr/local/bin/
 
 ////////////////////////////////////////////////////////////////
 //
-// COMPONENT 3 - MPD Audio Scrobbler
-//
-// NOTE: This code is not maintained and apparently doesn't work with the new Last.FM protocol
+// COMPONENT 3 - Reserved for future use
 //
 ////////////////////////////////////////////////////////////////
 
 #cd ~
-#sudo git clone https://github.com/hrkfdn/mpdas
-#cd mpdas
-#sudo make
-#sudo cp ./mpdas /usr/local/bin
-#cd ~
-#sudo rm -rf ./mpdas
-#sudo cp ./moode/usr/local/etc/mpdasrc.default /usr/local/etc/mpdasrc
-#sudo chmod 0755 /usr/local/etc/mpdasrc
 
 ////////////////////////////////////////////////////////////////
 //
