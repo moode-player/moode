@@ -23,6 +23,7 @@
  */
 require_once dirname(__FILE__) . '/playerlib.php';
 
+
 // Factory for a Eqp wrapper for the 12 bands Eqfa12p.conf
 function Eqp12($dbh)  {
     return New Eqp($dbh, 'cfg_eqp12', 12, 'eqfa12p.conf');
@@ -121,7 +122,7 @@ class Eqp {
 
             $querystr = 'SELECT id from ' . $this->table . ' where curve_name = "' . $name . '" limit 1;';
             $result = sdbquery($querystr, $this->dbh);
-            return $result !== true ? $result[0]['id']: NULL;
+            return count($result)==1 ? $result[0]['id']: NULL;
         }
     }
 
@@ -145,7 +146,7 @@ class Eqp {
     function getActivePresetIndex() {
         $querystr = 'SELECT id from ' . $this->table . ' WHERE active=1;';
         $result = sdbquery($querystr, $this->dbh);
-        return $result !== true ? $result[0]['id']: 1; // NOTE: true = no results, array = results, false = query bombed
+        return count($result)==1 ? $result[0]['id']: 0;
     }
 
     function setActivePresetIndex($index) {
@@ -199,7 +200,7 @@ class Eqp {
             $querystr = 'SELECT id from ' . $this->table . ' where curve_name = "' . $curve_name . '" limit 1;';
             $result = sdbquery($querystr, $this->dbh);
             // check if curve if all ready present,in that case an update will be done
-            $curve_curr_id = $result !== true ? $result[0]['id']: NULL;
+            $curve_curr_id = count($result)==1 ? $result[0]['id']: NULL;
 
             $config = $this->string2config($curve_settings);
             $curve_id = $this->setpreset($curve_curr_id , $curve_name, $config);
