@@ -88,7 +88,7 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 // Add, remove, change, refresh
 if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
 	$new_curve_id = $eqp12->setpreset(NULL, $_POST['new-curvename'], $eqp12->getpreset($eqp12->getActivePresetIndex()));
-	if ( $new_curve_id) {
+	if ($new_curve_id) {
 		$_selected_curve_id = $new_curve_id;
 		$_SESSION['notify']['title'] = 'New curve added';
 	}

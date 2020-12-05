@@ -210,9 +210,11 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 // Parametric eq
 $eqfa12p = Eqp12(cfgdb_connect());
 if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $_SESSION['eqfa12p'] || intval($_POST['eqfa12p']) != $eqfa12p->getActivePresetIndex())) {
+	workerLog($_POST['eqfa12p'] . '|' . intval($_POST['eqfa12p']) . '|' . $_SESSION['eqfa12p'] . '|' . $eqfa12p->getActivePresetIndex());
 	// Pass old,new curve name to worker job
 	$currentActive = $eqfa12p->getActivePresetIndex();
 	$newActive = intval($_POST['eqfa12p']);
+	workerLog($currentActive . '|' . $newActive);
 	$eqfa12p->setActivePresetIndex($newActive);
 	playerSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
 	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Parametric EQ ' . ($newActive == 0 ? 'off' : 'on'), 'MPD restarted');
@@ -555,13 +557,12 @@ $_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_ht
 
 // EQUALIZERS
 
-// parametric equalizer
+// Parametric equalizer
 $eqfa12p = Eqp12(cfgdb_connect());
 $presets = $eqfa12p->getPresets();
-$array = array();
-$array[0] = 'Off';
+$array = array('Off');
 $curveList = $_eqfa12p_set_disabled == '' ? array_replace($array, $presets) : $array;
-$curve_selected_id = $eqfa12p->getActivePresetIndex();
+$curve_selected_id = $_SESSION['eqfa12p'] == 'Off' ? 0 : $eqfa12p->getActivePresetIndex();
 foreach ($curveList as $key=>$curveName) {
 	$selected = ($key == $curve_selected_id) ? 'selected' : '';
 	$_select['eqfa12p'] .= sprintf('<option value="%s" %s>%s</option>\n', $key, $selected, $curveName);
