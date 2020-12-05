@@ -3,10 +3,10 @@
 # Build Recipe v2.26 2020-MM-DD
 #
 # moOde 7.0.0 2020-MM-DD
-# - Based on RaspiOS Buster Lite 2020-12-02
+# - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
 # - Bump to r700 sources
 # - Bump to Linux kernel 5.4.77 build #1371
-# - Bump to MPD 0.22.3
+# - Bump to MPD 0.22.3_p0x3
 # - Bump to MPC 0.33
 # - Bump to bluez-alsa 3.0.0
 # - Bump to upmpdcli 1.5.1
@@ -391,9 +391,11 @@ sudo rm ./boost_*.gz
 cd ~
 
 3. Download MPD 0.22.3 sources and prep for compile.
+NOTE: Compiling from sources in this recipe does not include the patch for Selective Resampling.
+      The instructions for the patch build are in ./moode/other/mpd/_build_mpd.txt
 
-# Optionally install pre-compiled binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.22.3 /usr/local/bin/mpd
+# OPTIONALLY install pre-compiled patched binary and skip to STEP 7
+sudo cp ./moode/other/mpd/mpd-0.22.3_p0x3 /usr/local/bin/mpd
 sudo reboot
 
 sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.22.3.tar.xz
