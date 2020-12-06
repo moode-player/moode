@@ -1489,6 +1489,10 @@ function runQueuedJob() {
 					unset($eqfa12p);
 					sysCmd("mpc enable only 3");
 				}
+				sysCmd('systemctl restart mpd');
+				// Wait for mpd to start accepting connections
+				$sock = openMpdSock('localhost', 6600);
+				closeMpdSock($sock);
 			}
 			else {
 				if ($_SESSION['alsaequal'] == 'Off') {
