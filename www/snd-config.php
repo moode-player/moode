@@ -215,7 +215,7 @@ if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $
 	$newActive = intval($_POST['eqfa12p']);
 	$eqfa12p->setActivePresetIndex($newActive);
 	playerSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
-	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Parametric EQ ' . ($newActive == 0 ? 'off' : 'on'), 'MPD restarted');
+	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Parametric EQ updated', 'MPD restarted');
 }
 unset($eqfa12p);
 
@@ -223,7 +223,7 @@ unset($eqfa12p);
 if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
 	// Pass old,new curve name to worker job
 	playerSession('write', 'alsaequal', $_POST['alsaequal']);
-	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Graphic EQ ' . ($_POST['alsaequal'] == 'Off' ? 'off' : 'on'), '');
+	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Graphic EQ updated', '');
 }
 
 // AUDIO RENDERERS
