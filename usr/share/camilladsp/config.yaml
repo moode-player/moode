@@ -1,0 +1,16 @@
+
+devices:
+  samplerate: 44100
+  chunksize: 1024
+  queuelimit: 1
+  capture:
+    type: File
+    channels: 2
+    filename: "/dev/stdin"
+    format: S16LE
+    extra_samples: 8192
+  playback:
+    type: Alsa
+    channels: 2
+    device: "hw:2,0"
+    format: S32LE
