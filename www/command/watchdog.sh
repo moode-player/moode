@@ -31,7 +31,6 @@ FPM_LIMIT=30
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_ACTIVE=$(pgrep -c -x mpd)
-SPOT_ACTIVE=$(pgrep -c -x librespot)
 HW_PARAMS_LAST=""
 SQL_DB=/var/local/www/db/moode-sqlite3.db
 SESSION_DIR=/var/local/php
@@ -64,51 +63,27 @@ while true; do
 		systemctl start mpd
 	fi
 
-	# Librespot
-	RESULT=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='spotifysvc'")
-	if [[ $RESULT = "1" ]]; then
-		if [[ $SPOT_ACTIVE = 0 ]]; then
-			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-			LOG_MSG=" watchdog: Error: LIBRESPOT restarted (check syslog for errors)"
-			echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
-			/var/www/command/restart-renderer.php -spotify
-		fi
-	fi
-
-	# Audio output
+	# Wake display on play
 	CARD_NUM=$(sqlite3 $SQL_DB "SELECT value FROM cfg_mpd WHERE param='device'")
 	HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
 	TIME_STAMP=$(date +'%Y%m%d %H%M%S')
 	if [[ $HW_PARAMS = "closed" ]]; then
 		LOG_MSG=" watchdog: Info: Audio output is (closed)"
+		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 	else
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
 		LOG_MSG=" watchdog: Info: Audio output is (in use)"
-		# Wake display on play
 		WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
+		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 		if [[ $WAKE_DISPLAY = "1" ]]; then
 			export DISPLAY=:0
 			xset s reset > /dev/null 2>&1
-		fi
-	fi
-	#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
-
-	# Wlan0
-	ETH0_IP_ADDR=$(ifconfig eth0 | grep "inet ")
-	if [[ $ETH0_IP_ADDR = "" ]]; then
-		WLAN0_IP_ADDR=$(ifconfig wlan0 | grep "inet ")
-		if [[ $WLAN0_IP_ADDR = "" ]]; then
-			wpa_cli -i wlan0 scan > /dev/null 2>&1
-			ip --force link set wlan0 up > /dev/null 2>&1
-			TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-			echo $TIME_STAMP" watchdog: Error: Wlan0 down attempting reset" >> /var/log/moode.log
 		fi
 	fi
 
 	sleep 6
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 	MPD_ACTIVE=$(pgrep -c -x mpd)
-	SPOT_ACTIVE=$(pgrep -c -x librespot)
 	HW_PARAMS_LAST=$HW_PARAMS
 
 done > /dev/null 2>&1 &
