@@ -30,10 +30,12 @@
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 			<a href="#rm-curve" data-toggle="modal" class="$_hide_remove"><button class="btn btn-medium btn-primary">Remove</button></a>
+  		    <a data-toggle="modal" href="#new-curvename"><button class="btn btn-medium btn-primary">New</button></a>
 			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				SAVE: Add new curve or update existing curve with new parameters.<br>
+				SAVE: Update existing curve with new parameters.<br>
 				REMOVE: Delete the selected curve.<br>
+				NEW: Create copy of current with new name.<br>
             </span>
 		</legend>
 
@@ -56,9 +58,6 @@
 				- Q: 0.06 to 8 (higher values correspond to increasing resonance)<br>
 				- Gain: -24 to 24 dB<br>
             </span>
-			<div class="help-block-margin">
-				<a data-toggle="modal" href="#new-curvename"><button class="btn btn-medium btn-primary">Enter</button></a> New curve name<br>
-			</div>
 		</fieldset>
 
 		<fieldset>
