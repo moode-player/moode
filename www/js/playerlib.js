@@ -26,7 +26,6 @@
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
 const FEAT_AIRPLAY      = 2;        // y Airplay renderer
 const FEAT_MINIDLNA     = 4;        // y DLNA server
-//const FEAT_MPDAS        = 8;      // y MPD audio scrobbler (DEPRECATED)
 const FEAT_RECORDER     = 8;        //   Stream recorder
 const FEAT_SQUEEZELITE  = 16;       // y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;       // y UPnP client for MPD

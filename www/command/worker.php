@@ -528,19 +528,6 @@ else {
 	workerLog('worker: UPnP browser (n/a)');
 }
 
-// Start audio scrobbler (DEPRECATED)
-// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
-/*if ($_SESSION['feat_bitmask'] & FEAT_MPDAS) {
-	workerLog('worker: Audio scrobbler (available)');
-	if (isset($_SESSION['mpdassvc']) && $_SESSION['mpdassvc'] == 1) {
-		sysCmd('/usr/local/bin/mpdas > /dev/null 2>&1 &');
-		workerLog('worker: Audio scrobbler (started)');
-	}
-}
-else {
-	workerLog('worker: Audio scrobbler (n/a)');
-}*/
-
 // Start gpio button handler
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	workerLog('worker: GPIO button handler (available)');
@@ -1525,14 +1512,6 @@ function runQueuedJob() {
 				startSpotify();
 			}
 			break;
-		/*case 'mpdassvc':
-			// NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
-			sysCmd('killall -s 9 mpdas > /dev/null');
-			cfgAudioScrobbler();
-			if ($_SESSION['w_queueargs'] == 1) {
-				sysCmd('/usr/local/bin/mpdas > /dev/null 2>&1 &');
-			}
-			break;*/
 		case 'mpdcrossfade':
 			sysCmd('mpc crossfade ' . $_SESSION['w_queueargs']);
 			break;

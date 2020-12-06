@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sun Dec 6 12:40:08 2020
+-- File generated with SQLiteStudio v3.1.0 on Sun Dec 6 14:34:38 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -321,9 +321,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (50, 'airplayactv', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (51, 'debuglog', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (54, 'mpdassvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (55, 'mpdaspwd', '');
-INSERT INTO cfg_system (id, param, value) VALUES (56, 'mpdasuser', '');
+INSERT INTO cfg_system (id, param, value) VALUES (54, 'AVAILABLE', '');
+INSERT INTO cfg_system (id, param, value) VALUES (55, 'AVAILABLE', '');
+INSERT INTO cfg_system (id, param, value) VALUES (56, 'AVAILABLE', '');
 INSERT INTO cfg_system (id, param, value) VALUES (57, 'uac2fix', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
 INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');

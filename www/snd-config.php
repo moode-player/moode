@@ -409,33 +409,6 @@ if (isset($_POST['upnp_browser_restart']) && $_POST['upnp_browser_restart'] == 1
 	submitJob('upnp_browser', '', 'UPnP browser restarted', '');
 }
 
-// SERVICES
-
-// Audio scrobbler
-
-/* NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
-if (isset($_POST['update_mpdas'])) {
-	if (isset($_POST['mpdasuser']) && $_POST['mpdasuser'] != $_SESSION['mpdasuser']) {
-		$title = "Scrobbler credentials updated";
-		playerSession('write', 'mpdasuser', $_POST['mpdasuser']);
-	}
-
-	if (isset($_POST['mpdaspwd']) && $_POST['mpdaspwd'] != $_SESSION['mpdaspwd']) {
-		$title = "Scrobbler credentials updated";
-		playerSession('write', 'mpdaspwd', $_POST['mpdaspwd']);
-	}
-
-	if (isset($_POST['mpdassvc']) && $_POST['mpdassvc'] != $_SESSION['mpdassvc']) {
-		$title = $_POST['mpdassvc'] == 1 ? 'Audio Scrobbler on' : 'Audio Scrobbler off';
-		playerSession('write', 'mpdassvc', $_POST['mpdassvc']);
-	}
-
-	if (isset($title)) {
-		submitJob('mpdassvc', $_POST['mpdassvc'], $title, '');
-	}
-}
-*/
-
 session_write_close();
 
 // I2S AUDIO DEVICE
@@ -644,17 +617,6 @@ $_SESSION['upnp_browser'] == '1' ? $_djmount_btn_disable = '' : $_djmount_btn_di
 $_SESSION['upnp_browser'] == '1' ? $_djmount_link_disable = '' : $_djmount_link_disable = 'onclick="return false;"';
 $_select['upnp_browser1'] .= "<input type=\"radio\" name=\"upnp_browser\" id=\"toggle_upnp_browser1\" value=\"1\" " . (($_SESSION['upnp_browser'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['upnp_browser0'] .= "<input type=\"radio\" name=\"upnp_browser\" id=\"toggle_upnp_browser2\" value=\"0\" " . (($_SESSION['upnp_browser'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-
-// SERVICES
-
-// MPD audio scrobbler
-/* NOTE: MPDAS is not being maintained and its apparently failing with the new Last.FM protocol
-$_feat_mpdas = $_SESSION['feat_bitmask'] & FEAT_MPDAS ? '' : 'hide';
-$_select['mpdassvc1'] .= "<input type=\"radio\" name=\"mpdassvc\" id=\"togglempdassvc1\" value=\"1\" " . (($_SESSION['mpdassvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['mpdassvc0'] .= "<input type=\"radio\" name=\"mpdassvc\" id=\"togglempdassvc2\" value=\"0\" " . (($_SESSION['mpdassvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['mpdasuser'] = $_SESSION['mpdasuser'];
-$_select['mpdaspwd'] = $_SESSION['mpdaspwd'];
-*/
 
 waitWorker(1, 'snd-config');
 

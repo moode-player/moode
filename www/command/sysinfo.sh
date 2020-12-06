@@ -587,9 +587,9 @@ airplayactv=${arr[49]}
 [[ "${arr[50]}" = "1" ]] && debuglog="On" || debuglog="Off"
 [[ "${arr[51]}" = "1" ]] && ashufflesvc="On" || ashufflesvc="Off"
 ashuffle=${arr[52]}
-mpdassvc=${arr[53]}
-mpdaspwd=${arr[54]}
-mpdasuser=${arr[55]}
+AVAILABLE1=${arr[53]}
+AVAILABLE2=${arr[54]}
+AVAILABLE3=${arr[55]}
 [[ "${arr[56]}" = "1" ]] && uac2fix="On" || uac2fix="Off"
 keyboard=${arr[57]}
 [[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
