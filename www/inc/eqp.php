@@ -122,7 +122,7 @@ class Eqp {
 
             $querystr = 'SELECT id from ' . $this->table . ' where curve_name = "' . $name . '" limit 1;';
             $result = sdbquery($querystr, $this->dbh);
-            return count($result)==1 ? $result[0]['id']: NULL;
+            return (is_array($result) and count($result)==1) ? $result[0]['id']: NULL;
         }
     }
 
@@ -146,7 +146,7 @@ class Eqp {
     function getActivePresetIndex() {
         $querystr = 'SELECT id from ' . $this->table . ' WHERE active=1;';
         $result = sdbquery($querystr, $this->dbh);
-        return count($result)==1 ? $result[0]['id']: 0;
+        return (is_array($result) and count($result)==1) ? $result[0]['id']: 0;
     }
 
     function setActivePresetIndex($index) {
@@ -285,6 +285,19 @@ function test() {
     print($string."\n");
     $string = $eqp12->config2string($config, True);
     print($string."\n");
+
+    $eqp12->setActivePresetIndex(0);
+    print($eqp12->getActivePresetIndex());
+    print("\n");
+    $eqp12->setActivePresetIndex(1);
+    print($eqp12->getActivePresetIndex());
+    print("\n");
+    $eqp12->setActivePresetIndex(0);
+
+    $config = $eqp12->getpreset(1);
+    $new_preset_id = $eqp12->setpreset(NULL, "test", $config);
+    print($new_preset_id );
+    print("\n");
 
     unset($eqp12);
 }
