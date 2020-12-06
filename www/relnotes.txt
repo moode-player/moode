@@ -57,6 +57,7 @@ Updates
 - UPD: Remove unused MPD plugins soundcloud, tidal, qobuz
 - UPD: Remove Google Play Music service from upmpdcli (discontinued)
 - UPD: Remove Ethernet port fix for Pi-3B+ due to ethtool fail
+- UPD: Remove MPDAS unmaintained and fail with new Last.FM proocol
 - UPD: Show volume level on the Playbar
 - UPD: Option to show mapped dB volume in the knob
 - UPD: Generate additional set of small thumbnails for lists
