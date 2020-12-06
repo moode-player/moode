@@ -28,6 +28,7 @@ $dbh = cfgdb_connect();
 $eqp12 = Eqp12($dbh);
 
 $curve_config = NULL;
+$_selected_curve_id = NULL;
 
 function postData2Config($data, $bands) {
 	$config = [];
@@ -49,6 +50,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$curve_id = intval($_POST['curve_id']);
 	$config = postData2Config($_POST, 12);
 	$eqp12->setpreset($curve_id, NULL, $config);
+	$_selected_curve_id = $curve_id;
 
 	if($curve_id == $eqp12->getActivePresetIndex() ) {
 		$playing = sysCmd('mpc status | grep "\[playing\]"');
@@ -86,14 +88,14 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 
 //workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
 // Add, remove, change, refresh
-if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
-	$new_curve_id = $eqp12->setpreset(NULL, $_POST['new-curvename'], $eqp12->getpreset($eqp12->getActivePresetIndex()));
+if (isset($_GET['curve']) && isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
+	$new_curve_id = $eqp12->setpreset(NULL, $_POST['new-curvename'], $eqp12->getpreset($_GET['curve']));
 	if ( $new_curve_id) {
 		$_selected_curve_id = $new_curve_id;
 		$_SESSION['notify']['title'] = 'New curve added';
 	}
 }
-elseif (isset($_POST['rmcurve'])) {
+elseif (isset($_GET['curve']) && isset($_POST['rmcurve'])) {
 	$current_id = $_GET['curve'];
 	if( $current_id != 1 ) {
 		$eqp12->unsetpreset($current_id);
@@ -101,10 +103,10 @@ elseif (isset($_POST['rmcurve'])) {
 		$_SESSION['notify']['title'] = 'Curve removed';
 	}
 }
-elseif (isset($_GET['curve'])) {
+elseif ($_selected_curve_id == NULL and isset($_GET['curve'])) {
 	$_selected_curve_id = $_GET['curve'];
 }
-else {
+elseif ($_selected_curve_id == NULL) {
 	$_selected_curve_id = $eqp12->getActivePresetIndex();
 }
 
