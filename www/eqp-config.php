@@ -45,7 +45,7 @@ function postData2Config($data, $bands) {
 	return $config;
 }
 // Apply setting changes
-if (isset($_POST['save']) && $_POST['save'] == '1') {
+if (isset($_POST['curve_id']) && isset($_POST['save']) && $_POST['save'] == '1') {
 	// Format individual band params
 	$curve_id = intval($_POST['curve_id']);
 	$config = postData2Config($_POST, 12);
@@ -88,17 +88,17 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 
 //workerLog('newcurvename=(' . $_POST['newcurvename'] . '), rmcurve=(' . $_POST['rmcurve'] . '), curve=(' .  $_GET['curve'] . ')');
 // Add, remove, change, refresh
-if (isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
-	$selected_curve = isset($_GET['curve']) ? $_GET['curve'] : 1;
-	$new_curve_id = $eqp12->setpreset(NULL, $_POST['new-curvename'], $eqp12->getpreset($selected_curve));
+if (isset($_POST['curve_id']) && isset($_POST['newcurvename']) && $_POST['newcurvename'] == '1') {
+	$curve_id = intval($_POST['curve_id']);
+	$new_curve_id = $eqp12->setpreset(NULL, $_POST['new-curvename'], $eqp12->getpreset($curve_id ));
 	if ( $new_curve_id) {
 		$_selected_curve_id = $new_curve_id;
 		$_SESSION['notify']['title'] = 'New curve added';
 	}
 }
-elseif ( isset($_POST['rmcurve'])) {
-	$current_id = isset($_GET['curve']) ? $_GET['curve'] : 1;
-	if( $current_id != 1 ) {
+elseif ( isset($_POST['curve_id']) && isset($_POST['rmcurve'])) {
+	$current_id = intval($_POST['curve_id']);
+	if( $current_id && $current_id != 1 ) {
 		$eqp12->unsetpreset($current_id);
 		$_selected_curve_id = 1;
 		$_SESSION['notify']['title'] = 'Curve removed';
