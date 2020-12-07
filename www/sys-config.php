@@ -201,16 +201,6 @@ if (isset($_POST['update_uac2fix'])) {
 	}
 }
 
-/* DEPRECATE: See worker.php comments
-// eth port fix
-if (isset($_POST['update_eth_port_fix'])) {
-	if (isset($_POST['eth_port_fix']) && $_POST['eth_port_fix'] != $_SESSION['eth_port_fix']) {
-		$_SESSION['notify']['title'] = $_POST['eth_port_fix'] == 1 ? 'Ethernet port fix on' : 'Ethernet port fix off';
-		$_SESSION['notify']['msg'] = 'Restart required';
-		playerSession('write', 'eth_port_fix', $_POST['eth_port_fix']);
-	}
-}
-*/
 // expand root file system
 if (isset($_POST['update_expand_rootfs'])) {
 	submitJob('expandrootfs', '', 'File system expanded', 'Restart required', 30);
