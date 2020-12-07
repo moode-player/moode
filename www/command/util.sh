@@ -66,25 +66,20 @@ if [[ $1 = "chg-name" ]]; then
 	exit
 fi
 
-# NOTE may need a redo for the new card numbering scheme involving HDMI
-# card 0 = i2s or onboard, card 1 = usb
-# save alsa state after set-alsavol to support hotplug for card 1 USB audio device
+# NOTE: i2s device is always at card 0, otherwise 0:HDMI-1 | [1:Headphones | 2:USB] or 1:HDMI-2 [2:Headphones | 3:USB]
 if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
-	#TMP=$(cat /proc/asound/card1/id 2>/dev/null)
-	#if [[ $TMP = "" ]]; then CARD_NUM=0; else CARD_NUM=1; fi
-
 	# Use configured card number
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 
 	if [[ $1 = "get-alsavol" ]]; then
-		# add quotes to sget $2 so mixer names with embedded spaces are parsed
+		# Enclose $2 in quotes so mixer names with embedded spaces are parsed
 		awk -F"[][]" '/%/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "$2")
 		exit
 	else
-		# set-alsavol
+		# Set-alsavol
 		amixer -c $CARD_NUM sset "$2" "$3%" >/dev/null
 
-		# store alsa state if card 1 to preverve volume in case hotplug
+		# Store alsa state if card 1 to preverve volume in case hotplug
 		if [[ $CARD_NUM -eq 1 ]]; then
 			alsactl store 1
 		fi
@@ -96,7 +91,6 @@ fi
 # Get alsa mixer name
 if [[ $1 = "get-mixername" ]]; then
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
-	#awk -F"'" '/Simple mixer control/{print "(" $2 ")";}' <(amixer -c $CARD_NUM)
 	amixer -c $CARD_NUM | awk 'BEGIN{FS="\n"; RS="Simple mixer control"} $0 ~ "pvolume" {print $1}' | awk -F"'" '{print "(" $2 ")";}'
 	exit
 fi
