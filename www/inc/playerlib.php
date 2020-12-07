@@ -2100,9 +2100,15 @@ function getMixerName($i2sdevice) {
 	elseif ($i2sdevice == 'Allo Katana DAC' || ($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
 		$mixername = 'Master';
 	}
-	// I2S default
+	// I2S no mixer or default mixer
 	else {
-		$mixername = 'Digital';
+		$result = sysCmd('/var/www/command/util.sh get-mixername');
+		if ($result[0] == '') {
+			$mixername = 'none';
+		}
+		else {
+			$mixername = 'Digital';
+		}
 	}
 
 	return $mixername;

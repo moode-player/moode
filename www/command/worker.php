@@ -126,31 +126,55 @@ loadRadio();
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
 
-// Verify device configuration
-//$card0 = trim(file_get_contents('/proc/asound/card0/id'));
-//$card1 = trim(file_get_contents('/proc/asound/card1/id'));
+//
+workerLog('worker: -- Device');
+//
+
+// Verify audio device configuration
 $mpd_device = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
 for ($i = 0; $i < 4; $i++) {
 	$card_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 	$cards[$i] = empty($card_id) ? 'empty' : $card_id;
 }
-workerLog('worker: Device raw: (0:' . $cards[0] . '|1:' . $cards[1]. '|2:' . $cards[2]. '|3:' . $cards[3]);
-workerLog('worker: Device i2s: (' . $_SESSION['i2sdevice'] . ')');
-workerLog('worker: Device mpd: (' . $mpd_device[0]['value'] . '|' . $_SESSION['adevname'] . ')');
-workerLog('worker: Device ses: (' . $_SESSION['cardnum'] . '|' . $_SESSION['adevname'] . '|' . $_SESSION['amixname'] . '|' . $_SESSION['alsavolume'] . '%)');
+workerLog('worker: ALSA cards: (0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
+workerLog('worker: Configured: (' . $mpd_device[0]['value'] . ':' . $_SESSION['adevname'] . ' | mixer:(' . $_SESSION['amixname'] . ') | alsavol:' . $_SESSION['alsavolume'] . ')');
+
+// Card number mismatch may occur after switching from USB to I2S device and vis versa
+$card_mismatch = false;
 if ($_SESSION['i2sdevice'] != 'none' && $mpd_device[0]['value'] != '0') {
-	workerLog('worker: ERROR: Device raw/mpd card mismatch');
+	$card_mismatch = true;
+	workerLog('worker: WARNING: Mismatch between ALSA card and MPD configured card');
+}
+elseif ($_SESSION['i2sdevice'] == 'none' && $cards[$mpd_device[0]['value']] == 'empty') {
+	$card_mismatch = true;
+	workerLog('worker: WARNING: No device found at configured MPD card' . $mpd_device[0]['value']);
+}
+// Reconfigure back to card 0 (On-board or I2S device)
+if ($card_mismatch === true) {
+	sdbquery("UPDATE cfg_mpd SET value='0' WHERE param='device'", $dbh);
+	sdbquery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", $dbh);
+	playerSession('write', 'cardnum', '0');
+	playerSession('write', 'mpdmixer', 'software');
+	playerSession('write', 'autoplay', '0');
+
+	$amixname = getMixerName($_SESSION['i2sdevice']);
+	if ($mixername == 'none') {
+		playerSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
+		playerSession('write', 'amixname', 'none');
+	}
+	workerLog('worker: UPDATE: Reconfigured MPD card number to 0');
 }
 
 // Zero out ALSA volume
-if ($_SESSION['alsavolume'] != 'none') {
-	$amixname = getMixerName($_SESSION['i2sdevice']);
+$amixname = getMixerName($_SESSION['i2sdevice']);
+workerLog('worker: ALSA mixer actual (' . $amixname . ')');
+if ($amixname != 'none') {
 	sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $amixname . '"' . ' 0');
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $amixname . '"');
-	workerLog('worker: ALSA ' . $amixname . ' volume set to (' . $result[0] . ')');
+	workerLog('worker: ALSA ' . trim($amixname) . ' volume set to (' . $result[0] . ')');
 }
 else {
-	workerLog('worker: ALSA ' . $amixname . ' volume (None)');
+	workerLog('worker: ALSA volume (none)');
 }
 
 //
@@ -350,7 +374,7 @@ workerLog('worker: MPD volume control (' . $_SESSION['mpdmixer'] . ')');
 // Check for presence of hardware volume controller
 $result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
 if (substr($result[0], 0, 6 ) == 'amixer') {
-	playerSession('write', 'alsavolume', 'none'); // hardware volume controller not detected
+	playerSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
 	workerLog('worker: Hdwr volume controller not detected');
 }
 else {
@@ -638,7 +662,7 @@ sysCmd('/var/www/vol.sh ' . $volume);
 workerLog('worker: MPD volume level (' . $volume . ') restored');
 if ($_SESSION['alsavolume'] != 'none') {
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	workerLog('worker: ALSA ' . $_SESSION['amixname'] . ' volume (' . $result[0] . ')');
+	workerLog('worker: ALSA ' . trim($_SESSION['amixname']) . ' volume (' . $result[0] . ')');
 }
 else {
 	workerLog('worker: ALSA volume level (None)');
