@@ -8,7 +8,7 @@
 ; Example: wlanssid = ""
 ;
 ; Moode Release : 7.0.0 2020-MM-DD
-; Create date   : 2020-12-04 17:38:42
+; Create date	: 2020-12-08 09:08:15
 ;
 ; ##########################################
 [Names]
@@ -97,7 +97,7 @@ font_size = "Normal"
 
 [Playback]
 playlist_art = "Yes"
-extra_tags = "track,date,albumartist,composer,encoded"
+extra_tags = "album,genre,track,disc,date,composer,conductor,performer,encoded"
 playhist = "No"
 
 [Library]
@@ -105,7 +105,7 @@ library_instant_play = "Play"
 library_albumview_sort = "Artist"
 library_tagview_sort = "Artist"
 library_recently_added = "2592000000"
-library_encoded_at = "1"
+library_encoded_at = "9"
 library_covsearchpri = "Embedded cover"
 library_hiresthm = "Auto"
 library_thumbnail_columns = "6/2 (Default)"
@@ -120,7 +120,7 @@ library_ellipsis_limited_text = "No"
 library_utf8rep = "No"
 
 [Internal]
-first_use_help = "Yes"
+first_use_help = "No"
 
 [Sources]
 
