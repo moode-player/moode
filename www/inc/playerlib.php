@@ -3000,13 +3000,13 @@ function autoConfigSettings() {
 	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
 	//            most item only have 1 autoconfig item, but network setting requires multiple to be present
 	// - handler for setting the config item
-	// - section_var - if autoconfig item name differs from session var, the name of the session var can be provided
+	// - session_var - if autoconfig item name differs from session var, the name of the session var can be provided
 	// - command - argument for util.sh when setPlayerSessionAndSysCmd handler is used.
 	$configurationHandlers = [
 		'Names',
 		['requires' => ['browsertitle'] , 'handler' => setPlayerSession],
 		['requires' => ['hostname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name host "moode" "%s"'],
-		['requires' => ['bluetoothname'] , 'session_var' => 'btname', 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name bluetooth "Moode Bluetooth" "%s"'],
+		['requires' => ['btname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name bluetooth "Moode Bluetooth" "%s"'],
 		['requires' => ['airplayname'] , 'handler' => setPlayerSession],
 		['requires' => ['spotifyname'] , 'handler' => setPlayerSession],
 		['requires' => ['squeezelitename'] , 'handler' => function($values) {
