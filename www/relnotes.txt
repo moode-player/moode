@@ -40,6 +40,7 @@ New features
 
 Updates
 
+- UPD: Bump to RaspiOS 10.6
 - UPD: Bump to Linux kernel 5.4.77 build #1371
 - UPD: Bump to MPD 0.22.3
 - UPD: Bump to MPC 0.33
