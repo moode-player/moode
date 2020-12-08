@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Dec 8 16:11:26 2020
+-- File generated with SQLiteStudio v3.1.0 on Tue Dec 8 17:47:02 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -228,7 +228,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (218, 'http://icecast1.wrpi.org:8000/mp3-128.mp3', 'WRPI 91.5 FM Troy', 'r', 'local', 'Eclectic', 'Rensselaer Polytechnic Institute', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (219, 'http://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_CLASSICAL.mp3', 'WRTI Philadelphia 90.1 - Classical', 'r', 'local', 'Classical', 'Temple University', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (220, 'http://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_JAZZ.mp3', 'WRTI Philadelphia 90.1 - Jazz', 'r', 'local', 'Jazz', 'Temple University', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (221, 'http://50.31.135.43:80/wwoz-hi.mp3', 'WWOZ New Orleans FM 90.7 - Various Artists', 'r', 'local', 'Jazz, Blues, Jazz, Latin, Cajun, Funk', 'WWOZ', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (221, 'https://www.wwoz.org/listen/hi', 'WWOZ New Orleans FM 90.7 - Various Artists', 'r', 'local', 'Jazz, Blues, Jazz, Latin, Cajun, Funk', 'WWOZ', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (222, 'http://streams.norbert.de:8000/zappa.aac', 'Zappa Stream Radio', 'r', 'local', 'Rock, Progressive Rock', 'Zappa Stream Radio', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (223, 'http://lb.zenfm.be/zenfm.mp3', 'Zen FM', 'r', 'local', 'Lounge', 'Zen FM', 'Dutch', 'Belgium', 'Europe', '192', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');

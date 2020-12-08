@@ -90,6 +90,7 @@ Radio stations
 - UPD: Naim Radio playable URL
 - UPD: RadioActive FM 88.6 playable URL
 - UPD: Radio Caroline playable URL
+- UPD: WWOZ playable URL
 - UPD: Soma FM - DEF CON Radio logo image
 - UPD: NME station URL's to 256 kbps MP3
 - DEL: Radio X London due to metadata issues
