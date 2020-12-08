@@ -420,18 +420,6 @@ else {
 $_select['uac2fix1'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix1\" value=\"1\" " . (($_SESSION['uac2fix'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix2\" value=\"0\" " . (($_SESSION['uac2fix'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-/* DEPRECATE: See worker.php comments
-// eth port fix
-if (substr($_SESSION['hdwrrev'], 0, 6) == 'Pi-3B+') { // 3B+ only
-	$_eth_port_fix_hide = '';
-	$_select['eth_port_fix1'] = "<input type=\"radio\" name=\"eth_port_fix\" id=\"toggle_eth_port_fix0\" value=\"1\" " . (($_SESSION['eth_port_fix'] == '1') ? "checked=\"checked\"" : "") . ">\n";
-	$_select['eth_port_fix0'] = "<input type=\"radio\" name=\"eth_port_fix\" id=\"toggle_eth_port_fix1\" value=\"0\" " . (($_SESSION['eth_port_fix'] == '0') ? "checked=\"checked\"" : "") . ">\n";
-}
-else {
-	$_eth_port_fix_hide = 'hide';
-}
-*/
-
 // expand root file system
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
 $_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs2\" value=\"0\" " . "checked=\"checked\"".">\n";

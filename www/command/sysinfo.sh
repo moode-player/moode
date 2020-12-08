@@ -65,9 +65,9 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nHDMI output\t\t= $HDMI\c"
 	echo -e "\nLED state\t\t= $led_state\c"
 	echo -e "\nEth addr wait\t\t= $eth0chk\c"
+	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
 	echo -e "\nMax USB current\t\t= $maxusbcurrent\c"
 	echo -e "\nUSB (UAC2) fix\t\t= $uac2fix\c"
-	echo -e "\nPi-3B+ eth fix\t\t= $eth_port_fix\c"
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
 	echo -e "\n\c"
 	echo -e "\nPHP-FPM version\t\t= $PHPVER\c"
@@ -587,9 +587,9 @@ airplayactv=${arr[49]}
 [[ "${arr[50]}" = "1" ]] && debuglog="On" || debuglog="Off"
 [[ "${arr[51]}" = "1" ]] && ashufflesvc="On" || ashufflesvc="Off"
 ashuffle=${arr[52]}
-AVAILABLE1=${arr[53]}
-AVAILABLE2=${arr[54]}
-AVAILABLE3=${arr[55]}
+AVAILABLE_53=${arr[53]}
+AVAILABLE_54=${arr[54]}
+AVAILABLE_55=${arr[55]}
 [[ "${arr[56]}" = "1" ]] && uac2fix="On" || uac2fix="Off"
 keyboard=${arr[57]}
 [[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
@@ -602,7 +602,7 @@ pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
 [[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
-RESERVED_69=${arr[68]}
+usb_auto_mounter=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}
 [[ "${arr[71]}" = "1" ]] && shellinabox="On" || shellinabox="Off"
@@ -661,7 +661,7 @@ library_pixelratio=${arr[106]}
 cover_backdrop=${arr[108]}
 cover_blur=${arr[109]}
 cover_scale=${arr[110]}
-[[ "${arr[111]}" = "1" ]] && eth_port_fix="On" || eth_port_fix="Off"
+AVAILABLE_111=${arr[111]}
 library_tagview_artist=${arr[112]}
 scnsaver_style=${arr[113]}
 ashuffle_filter=${arr[114]}
