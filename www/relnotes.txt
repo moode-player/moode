@@ -79,6 +79,7 @@ Radio stations
 - NEW: BR-Klassik
 - NEW: Classic FM
 - NEW: FluxFM station group
+- NEW: Kanal K
 - NEW: Naim Classical
 - NEW: Naim Jazz
 - NEW: Scala Radio
