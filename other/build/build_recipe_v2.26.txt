@@ -639,7 +639,7 @@ sudo reboot
 
 ////////////////////////////////////////////////////////////////
 //
-// STEP 9 - Alsaequal and EqFa12p
+// STEP 9a - Alsaequal and EqFa12p
 //
 ////////////////////////////////////////////////////////////////
 
@@ -666,6 +666,43 @@ cd ..
 sudo rm -rf ./caps-features-eqfa12p_12_band_parametric_eq*
 
 mpc enable only 1
+
+////////////////////////////////////////////////////////////////
+//
+// STEP 9b - Camilladsp and alsa_cdsp
+// (see readme.txt in other/camilladsp for more info)
+////////////////////////////////////////////////////////////////
+
+# 9b.1a Camilladsp build + install from source
+# when question ask choose 1
+sudo curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# logout / login to update env (or do it manually)
+sudo tar -xzf ./moode/other/camilladsp/v0.4.0.tar.gz
+cd camilladsp-0.4.0
+sudo RUSTFLAGS='-C target-feature=+neon -C target-cpu=native' cargo build --release --no-default-features --features alsa-backend --features websocket
+sudo cp target/release/camilladsp /usr/local/bin/
+
+# 9b.1b Camilladsp install prebuild
+# sudo cp .moode/other/camilladsp/camilladsp /usr/local/bin/
+# sudo chmod a+x /usr/local/bin/camilladsp
+
+# 9b.2a Alsa_cdsp build + install from source
+sudo mkdir alsa_cdsp
+sudo tar -xzf ./moode/other/alsa_dscp/alsa_cdsp-*.tgz --directory ./alsa_cdsp
+cd alsa_cdsp
+sudo make
+sudo make install
+sudo cd rm -rf ./alsa_cdsp
+
+# 9b.2b Alsa_cdsp install prebuild
+# sudo install -m 644 ./moode/other/alsa_dscp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`
+
+# 9b.3 Setup camilladsp config structure
+sudo mkdir /usr/share/camilladsp
+sudo mkdir /usr/share/camilladsp/configs
+sudo mkdir /usr/share/camilladsp/coeffs
+sudo cp ~moode/usr/share/camilladsp/*.yaml /usr/share/camilladsp
+sudo chmod -R 777 /usr/share/camilladsp
 
 ////////////////////////////////////////////////////////////////
 //
