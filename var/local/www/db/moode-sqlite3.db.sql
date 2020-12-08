@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Dec 8 07:17:13 2020
+-- File generated with SQLiteStudio v3.1.0 on Tue Dec 8 08:27:06 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -147,7 +147,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (137, 'http://stream.srg-ssr.ch/m/rsc_de/aacp_96', 'Radio Swiss Classic', 'r', 'local', 'Classical', 'Swiss Broadcasting Corporation', 'German', 'Switzerland', 'Europe', '96', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (138, 'http://stream.srg-ssr.ch/m/rsj/aacp_96', 'Radio Swiss Jazz', 'r', 'local', 'Jazz', 'Swiss Broadcasting Corporation', 'German', 'Switzerland', 'Europe', '96', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (139, 'http://stream.srg-ssr.ch/m/rsp/aacp_96', 'Radio Swiss Pop', 'r', 'local', 'Pop', 'Swiss Broadcasting Corporation', 'German', 'Switzerland', 'Europe', '96', 'AAC', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (140, 'http://stream.radioactive.fm', 'RadioActive FM 88.6', 'r', 'local', 'Alternative', 'Radio Active', 'English', 'New Zealand', 'Asia', '192', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (140, 'https://streaming.radio.co/s6ef1e80ce/listen', 'RadioActive FM 88.6', 'r', 'local', 'Alternative', 'Radio Active', 'English', 'New Zealand', 'Asia', '192', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (141, 'http://stream.resonance.fm:8000/resonance', 'Resonance Radio 104.4 FM', 'r', 'local', 'Eclectic', 'Resonance Radio', 'English', 'United Kingdom', 'Europe', '192', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (142, 'http://rootslegacy.fr:8080/;listen.mp3', 'Roots Legacy Radio - Dub UK & Roots Reggae', 'r', 'local', 'Dub, Dub UK, Roots Reggae', 'Roots Legacy Radio', 'English', 'France', 'Europe', '256', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, reserved1, reserved2) VALUES (143, 'http://stream.srg-ssr.ch/m/retedue/mp3_128', 'RSI - Rete Due', 'r', 'local', 'Classical, Music, Culture', 'RSI', 'Italian', 'Switzerland', 'Europe', '128', 'MP3', 'No', '', '');
