@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-MM-DD TC moOde 7.0.0
+# 2020-12-09 TC moOde 7.0.0
 #
 
 # This limit is designed to moderate PHP resource usage and should be around 2X higher (based on my experience)
