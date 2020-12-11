@@ -250,10 +250,8 @@ function integrityCheck() {
 		// Check file hash
 		if (md5(file_get_contents($row['param'])) !== $row['value']) {
 			if ($row['action'] === 'exit') {
-				// $_SESSION['ic_return_code'] = '3';
-				// return false;
-				workerLog('worker: Integrity check (' . $row['action'] . ': ' . basename($row['param']) . ')');
-				$warning = true;
+				$_SESSION['ic_return_code'] = '3';
+				return false;
 			}
 			elseif ($row['action'] === 'warning') {
 				workerLog('worker: Integrity check (' . $row['action'] . ': ' . basename($row['param']) . ')');
