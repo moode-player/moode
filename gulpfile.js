@@ -402,6 +402,25 @@ gulp.task('patchfooter', function (done) {
         .on('end', done);
 });
 
+gulp.task('patchindex', function (done) {
+    return gulp.src(pkg.app.src+'/index.php')
+        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
+        .pipe($.replace(/indextpl[.]html/g, "indextpl.min.html"))
+        .pipe($.replace(/footer[.]php/g, "footer.min.php"))
+        .pipe($.size({showFiles: true, total: false}))
+        .pipe(gulp.dest(DEPLOY_LOCATION))
+        .on('end', done);
+});
+
+gulp.task('patchconfigs', function (done) {
+    return gulp.src(pkg.app.src+'/*-config.php')
+        .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
+        .pipe($.replace(/footer[.]php/g, "footer.min.php"))
+        .pipe($.size({showFiles: true, total: false}))
+        .pipe(gulp.dest(DEPLOY_LOCATION))
+        .on('end', done);
+});
+
 gulp.task('minifyhtml', function (done) {
     return gulp.src(pkg.app.src+'/templates/indextpl.html')
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
@@ -451,17 +470,21 @@ gulp.task('deployvarlocalwww', function (done) {
         .on('end', done);
 });
 
-gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'minifyhtml'], function (done) {
+gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 'patchconfigs', 'minifyhtml'], function (done) {
     return gulp.src([  pkg.app.src+'/*.php'
                       ,pkg.app.src+'/command/**/*'
                       ,pkg.app.src+'/inc/**/*'
                       ,pkg.app.src+'/templates/**/*'
                       ,pkg.app.src+'/*'
+                      // exclude generated content:
                       ,'!'+pkg.app.src+'/index.html'
                       ,'!'+pkg.app.src+'/templates/indextpl.min.html'
                       ,'!'+pkg.app.src+'/templates/indextpl.html'
                       ,'!'+pkg.app.src+'/header.php'
+                      ,'!'+pkg.app.src+'/footer.php'
                       ,'!'+pkg.app.src+'/footer.min.php'
+                      ,'!'+pkg.app.src+'/index.php'
+                      ,'!'+pkg.app.src+'/*-config.php'
                       ,pkg.app.src+'/css/shellinabox*.css'
                       ],
                       {base: pkg.app.src})

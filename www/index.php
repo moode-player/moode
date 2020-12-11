@@ -30,7 +30,7 @@ session_write_close();
 
 $section = basename(__FILE__, '.php');
 
-$tpl = "indextpl.min.html";
+$tpl = "indextpl.html";
 include('header.php');
 eval("echoTemplate(\"".getTemplate("/var/www/templates/$tpl")."\");");
-include('footer.min.php');
+include('footer.php');

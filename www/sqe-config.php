@@ -76,4 +76,4 @@ storeBackLink($section, $tpl);
 
 include('header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
-include('footer.min.php');
+include('footer.php');
