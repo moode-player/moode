@@ -3390,13 +3390,13 @@ function getPkgId () {
 function getMoodeRel($options = '') {
 	// Verbose: major.minor.patch yyyy-mm-dd
 	if ($options === 'verbose') {
-		$result = sysCmd("awk '/Release: /{print $2 \" \" $3;}' /var/www/footer.php | cut -d\"<\" -f 1"); // Remove trailing </li
+		$result = sysCmd("moodeutl --mooderel | tr -d '\n'");
 		return $result[0];
 	}
 	// Compact: rNNN
 	else {
-		$result = sysCmd("awk '/Release: /{print $2;}' /var/www/footer.php | cut -d\"<\" -f 1");
-		$str = 'r' . str_replace('.', '', $result[0]);
+		$result = sysCmd("moodeutl --mooderel | tr -d '\n'");
+		$str = 'r' . str_replace('.', '', explode(' ', $result[0])[0]);
 		return $str;
 	}
 }

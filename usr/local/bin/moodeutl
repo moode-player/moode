@@ -114,6 +114,10 @@ switch ($option) {
 	case '-u':
 		check_station_urls();
 		break;
+	case '--mooderel':
+		$file = file_get_contents('/var/www/footer.min.php');
+		echo substr($file, strpos($file, 'Release: ') + 9, 16) . "\n";
+		break;
 	case '--version':
 		echo VERSION . "\n";
 		break;
@@ -140,6 +144,7 @@ With no OPTION print the help text and exit.
  -s\t\tprint system info
  -t\t\tprint last 10 lines of moode log and wait
  -u\t\tcheck radio station urls for playability
+ --mooderel\tprint moOde release
  --version\tprint the program version
  --help\t\tprint this help text\n";
 		break;
