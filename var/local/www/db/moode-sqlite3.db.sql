@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Dec 9 16:31:03 2020
+-- File generated with SQLiteStudio v3.1.0 on Fri Dec 11 11:23:17 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -636,9 +636,12 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/p
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', 'af0f359120b6b61a00808f69b62e5af7', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '0db8c8884ae08d745ef0d1bf474f6e00', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'a5e0f0d4f2c56c353516fbaa6441619a', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/js/playerlib.js', 'ec50de1e9c0a2df51500125f1f2b4827', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'f42df0a6158371f8ad108851e8861eba', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/css/main.min.css', '3e9f8ccc76f247b400edd4d3fb951c8b', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/var/www/js/config.min.js', '80e07bb6490aa319cf159e319afcad51', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (13, '/var/www/js/lib.min.js', 'd722d418dfd08201c63a73b973ce4385', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (14, '/var/www/js/main.min.js', '634bca3f7842deb110878510cb43336c', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (15, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
 
 -- Table: cfg_eqp12
 CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands INTEGER);
