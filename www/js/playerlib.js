@@ -776,7 +776,7 @@ function renderUI() {
         $('.playback-hd-badge, #playbar-hd-badge, #ss-hd-badge').text(hdBadgeText);
 
         // Multiple artists indicator
-        var moreArtists = parseInt(MPD.json['artist_count']) > 1 ? '...' : '';
+        var moreArtistsEllipsis = parseInt(MPD.json['artist_count']) > 1 ? '...' : '';
 
         // Default metadata
         // For radio stations
@@ -802,9 +802,10 @@ function renderUI() {
             $('#currentalbum-div').show();
             $('#currentalbum').html(MPD.json['album']);
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
-            $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtists);
+            $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtistsEllipsis);
             // Playbar
-            $('#playbar-currentsong, #ss-currentsong').html(MPD.json['title']);
+            $('#playbar-currentsong, #ss-currentsong').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] :
+                MPD.json['artist']) + moreArtistsEllipsis + ' - ' + MPD.json['title']);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
         }
 
