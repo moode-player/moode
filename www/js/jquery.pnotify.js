@@ -45,9 +45,9 @@
 				success_icon: "icon-ok-sign",
 				error: "alert-error",
 				error_icon: "icon-warning-sign",
-				closer: "icon-remove",
-				pin_up: "icon-pause",
-				pin_down: "icon-play",
+				closer: "fas fa-times",
+				pin_up: "fas fa-pause",
+				pin_down: "fas fa-play",
 				hi_menu: "well",
 				hi_btn: "btn",
 				hi_btnhov: "",
@@ -873,9 +873,9 @@
 		// Display a pull down menu to redisplay previous notices, and place the notice in the history.
 		history: true,
 		// Width of the notice.
-		width: "300px",
+		width: "20em",
 		// Minimum height of the notice. It will expand to fit content.
-		min_height: "16px",
+		min_height: "1em",
 		// Type of the notice. "notice", "info", "success", or "error".
 		type: "notice",
 		// Set icon to true to use the default icon for the selected style/type, false for no icon, or a string for your own icon class.
