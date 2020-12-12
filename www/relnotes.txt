@@ -47,7 +47,7 @@ Updates
 - UPD: Bump to bluez-alsa 3.0.0 w/SBC XQ
 - UPD: Bump to librespot-dev-6a4bc83
 - UPD: Bump to squeezelite 1.9.7-1270
-- UPD: Bump to upmpdcli 1.5.0
+- UPD: Bump to upmpdcli 1.5.1
 - UPD: Bump to Auto-shuffle (ashuffle) 3.10.0
 - UPD: Add higher resolutions for thumbnail generator
 - UPD: Add "Update Library" to action list for Clock Radio
