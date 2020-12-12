@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Dec 11 11:23:17 2020
+-- File generated with SQLiteStudio v3.1.0 on Sat Dec 12 16:42:16 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -637,10 +637,10 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', 'af0f359120b6b61a00808f69b62e5af7', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '0db8c8884ae08d745ef0d1bf474f6e00', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'f42df0a6158371f8ad108851e8861eba', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/css/main.min.css', '3e9f8ccc76f247b400edd4d3fb951c8b', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/var/www/js/config.min.js', '80e07bb6490aa319cf159e319afcad51', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (13, '/var/www/js/lib.min.js', 'd722d418dfd08201c63a73b973ce4385', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (14, '/var/www/js/main.min.js', '634bca3f7842deb110878510cb43336c', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/css/main.min.css', '1f38ec11ff165baa85bbdcd1c456e92c', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/var/www/js/config.min.js', 'bb5cd726b9e69b127c67e98aed0211e1', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (13, '/var/www/js/lib.min.js', '792e5afea63c90090cbe248e3c26f93f', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (14, '/var/www/js/main.min.js', '609e7113b400f68f9e4f51e9b83f1d15', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (15, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
 
 -- Table: cfg_eqp12
