@@ -34,8 +34,9 @@ New features
 - NEW: Option to display thumbnails in the Queue
 - NEW: Option for Renderer backdrop (Cover or Backdrop image)
 - NEW: Option to choose the search site used for Artist, Album lookup
-- NEW: Add next, Play next by inserting after current item
+- NEW: Context menu items for Add next, Play next
 - NEW: Support for up to 384K rate for DDDAC1794 NOS
+- NEW: CamillaDSP and cdsp modules for testing
 - NEW: Moodeutl options for Export/Import all settings
 
 Updates

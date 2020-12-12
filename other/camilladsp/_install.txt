@@ -1,0 +1,4 @@
+
+sudo cp /mnt/moode-player/GitHub/moode/other/camilladsp/camilladsp /usr/local/bin/
+sudo chmod a+x /usr/local/bin/camilladsp
+

@@ -15,6 +15,7 @@
 # - Remove references to discontinued Google Play Music service
 # - Add CAPS 12-band parametric EQ
 # - Add pcm1794a codec (384K patched)
+# - Add camillaDSP and cdsp for testing
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
@@ -670,7 +671,8 @@ mpc enable only 1
 ////////////////////////////////////////////////////////////////
 //
 // STEP 9b - Camilladsp and alsa_cdsp
-// (see readme.txt in other/camilladsp for more info)
+// NOTE: See readme.txt in other/camilladsp for more info
+//
 ////////////////////////////////////////////////////////////////
 
 # 9b.1a Camilladsp build + install from source
