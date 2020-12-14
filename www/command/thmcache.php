@@ -141,7 +141,7 @@ while ($line) {
 	}
 }
 
-$msg = 'Done: ' . $folder_cnt . ' folders scanned, ' . $new_thms . ' new thumbs, ' . $cached_thms . ' cached thumbs.';
+$msg = 'Done: ' . $folder_cnt . ' folders scanned, ' . $new_thms . ' thumbs created, ' . $cached_thms . ' already in cache.';
 session_start();
 $_SESSION['thmcache_status'] = $msg;
 session_write_close();
@@ -173,9 +173,6 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 		if ($img_str === false) {
 			// Nothing found
 			$img_str = NOT_FOUND_JPG;
-		}
-		else {
-			$GLOBALS['new_thms']++;
 		}
 	}
 
@@ -226,6 +223,9 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thm_q) === false) {
 		workerLog('thmcache: error 4a: imagejpeg()' . $file);
 		return;
+	}
+	else {
+		$GLOBALS['new_thms']++;
 	}
 	if (imagedestroy($thumb) === false) {
 		workerLog('thmcache: error 5a: imagedestroy()' . $file);
