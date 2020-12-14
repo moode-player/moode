@@ -1025,18 +1025,19 @@ function parseStationInfo($path) {
 // Parse track info
 function parseTrackInfo($resp) {
 	/* Layout
-	0  Artists
-	1  Album artist
-	2  Composer
-	3  Conductor
-	4  Genres
-	5  Album
-	6  Disc
-	7  Track
-	8  Title
-	9  Date
-	10 Duration
-	11 Audio format
+	0  File path
+	1  Artists
+	2  Album artist
+	3  Composer
+	4  Conductor
+	5  Genres
+	6  Album
+	7  Disc
+	8  Track
+	9  Title
+	10 Date
+	11 Duration
+	12 Audio format
 	*/
 
 	if (is_null($resp)) {
@@ -1045,7 +1046,7 @@ function parseTrackInfo($resp) {
 	else {
 		$array = array();
 		$line = strtok($resp, "\n");
-		$num_lines = 12;
+		$num_lines = 13;
 
 		for ($i = 0; $i < $num_lines; $i++) {
 			$array[$i] = '';
@@ -1069,34 +1070,34 @@ function parseTrackInfo($resp) {
 					$artists .= $value . ', ';
 					break;
 				case 'AlbumArtist':
-					$array[1] = array('Album artist' => $value);
+					$array[2] = array('Album artist' => $value);
 					break;
 				case 'Composer':
-					$array[2] = array($element => $value);
+					$array[3] = array($element => $value);
 					break;
 				case 'Conductor':
-					$array[3] = array($element => $value);
+					$array[4] = array($element => $value);
 					break;
 				case 'Genre':
 					$genres .= $value . ', ';
 					break;
 				case 'Album':
-					$array[5] = array($element => $value);
-					break;
-				case 'Disc':
 					$array[6] = array($element => $value);
 					break;
-				case 'Track':
+				case 'Disc':
 					$array[7] = array($element => $value);
 					break;
-				case 'Title':
+				case 'Track':
 					$array[8] = array($element => $value);
 					break;
-				case 'Date':
+				case 'Title':
 					$array[9] = array($element => $value);
 					break;
+				case 'Date':
+					$array[10] = array($element => $value);
+					break;
 				case 'Time':
-					$array[10] = array('Duration' => songTime($value));
+					$array[11] = array('Duration' => songTime($value));
 					break;
 			}
 
@@ -1104,11 +1105,12 @@ function parseTrackInfo($resp) {
 		}
 
 		// Strip off trailing delimiter
-		$array[0] = array('Artists' => rtrim($artists, ', '));
-		$array[4] = array('Genres' => rtrim($genres, ', '));
+		$array[0] = array('File path' => $file);
+		$array[1] = array('Artists' => rtrim($artists, ', '));
+		$array[5] = array('Genres' => rtrim($genres, ', '));
 
 		// Add audio format
-		$array[11] = array('Audio format' => getEncodedAt(array('file' => $file), 'default'));
+		$array[12] = array('Audio format' => getEncodedAt(array('file' => $file), 'default'));
 	}
 
 	//workerLog(print_r($array, true));
