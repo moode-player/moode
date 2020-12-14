@@ -25,7 +25,7 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
-// apply setting changes
+// Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_upnp', $dbh, $key, $value);
@@ -38,13 +38,13 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 	}
 
-	// restart if indicated
+	// Restart if indicated
 	submitJob('upnpsvc', '', 'Changes saved', ($_SESSION['upnpsvc'] == '1' ? 'UPnP renderer restarted' : ''));
 }
 
 session_write_close();
 
-// load settings
+// Load settings
 $result = cfgdb_read('cfg_upnp', $dbh);
 $cfg_upnp = array();
 
@@ -55,6 +55,10 @@ foreach ($result as $row) {
 // GENERAL
 $_select['checkcontentformat'] .= "<option value=\"1\" " . (($cfg_upnp['checkcontentformat'] == '1') ? "selected" : "") . ">Yes</option>\n";
 $_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfg_upnp['checkcontentformat'] == '0') ? "selected" : "") . ">No</option>\n";
+$_select['upnpav'] .= "<option value=\"1\" " . (($cfg_upnp['upnpav'] == '1') ? "selected" : "") . ">Yes</option>\n";
+$_select['upnpav'] .= "<option value=\"0\" " . (($cfg_upnp['upnpav'] == '0') ? "selected" : "") . ">No</option>\n";
+$_select['openhome'] .= "<option value=\"1\" " . (($cfg_upnp['openhome'] == '1') ? "selected" : "") . ">Yes</option>\n";
+$_select['openhome'] .= "<option value=\"0\" " . (($cfg_upnp['openhome'] == '0') ? "selected" : "") . ">No</option>\n";
 
 // TIDAL
 $_select['tidaluser'] = $cfg_upnp['tidaluser'];

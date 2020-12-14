@@ -36,6 +36,31 @@
 		<fieldset>
 			<legend>General</legend>
 			<div class="control-group">
+				<label class="control-label" for="upnpav">UPnP A/V services</label>
+				<div class="controls">
+					<select id="upnpav" class="input-large" name="config[upnpav]">
+						$_select[upnpav]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_upnpav" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_upnpav" class="help-block-configs help-block-margin hide">
+						Enable UPnP A/V services.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="openhome">OpenHome services</label>
+				<div class="controls">
+					<select id="openhome" class="input-large" name="config[openhome]">
+						$_select[openhome]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_openhome" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_openhome" class="help-block-configs help-block-margin hide">
+						Enable OpenHome services.
+                    </span>
+				</div>
+			</div>
+			<div class="control-group">
 				<label class="control-label" for="checkcontentformat">Check content format</label>
 				<div class="controls">
 					<select id="checkcontentformat" class="input-large" name="config[checkcontentformat]">

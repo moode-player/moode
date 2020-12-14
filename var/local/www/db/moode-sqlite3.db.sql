@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Dec 12 16:42:16 2020
+-- File generated with SQLiteStudio v3.1.0 on Sun Dec 13 13:39:40 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -251,7 +251,9 @@ INSERT INTO cfg_upnp (id, param, value) VALUES (3, 'tidalquality', 'lossless');
 INSERT INTO cfg_upnp (id, param, value) VALUES (4, 'qobuzuser', '');
 INSERT INTO cfg_upnp (id, param, value) VALUES (5, 'qobuzpass', '');
 INSERT INTO cfg_upnp (id, param, value) VALUES (6, 'qobuzformatid', '7');
-INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'checkcontentformat', 'Yes');
+INSERT INTO cfg_upnp (id, param, value) VALUES (7, 'checkcontentformat', '1');
+INSERT INTO cfg_upnp (id, param, value) VALUES (8, 'upnpav', '1');
+INSERT INTO cfg_upnp (id, param, value) VALUES (9, 'openhome', '0');
 
 -- Table: cfg_source
 CREATE TABLE cfg_source (
