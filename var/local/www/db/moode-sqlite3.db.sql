@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Dec 15 06:49:43 2020
+-- File generated with SQLiteStudio v3.1.0 on Tue Dec 15 08:53:30 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -383,7 +383,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (109, 'cover_backdrop', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (110, 'cover_blur', '20px');
 INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');
 INSERT INTO cfg_system (id, param, value) VALUES (112, 'AVAILABLE', '');
-INSERT INTO cfg_system (id, param, value) VALUES (113, 'library_tagview_artist', 'Album Artist');
+INSERT INTO cfg_system (id, param, value) VALUES (113, 'library_tagview_artist', 'Artist');
 INSERT INTO cfg_system (id, param, value) VALUES (114, 'scnsaver_style', 'Gradient (Linear)');
 INSERT INTO cfg_system (id, param, value) VALUES (115, 'ashuffle_filter', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (116, 'mpd_httpd', '0');
