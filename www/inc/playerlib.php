@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-09 TC moOde 7.0.0
+ * 2020-12-15 TC moOde 7.0.0
  *
  * This includes the @chris-rudmin 2019-08-08 rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
