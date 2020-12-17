@@ -2099,7 +2099,8 @@ function getMixerName($i2sdevice) {
 	elseif ($i2sdevice == 'HiFiBerry DAC+ DSP') {
 		$mixername = 'DSPVolume';
 	}
-	elseif ($i2sdevice == 'Allo Katana DAC' || ($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
+	elseif ($i2sdevice == 'Allo Katana DAC' || $i2sdevice == 'Allo Boss 2 DAC' ||
+		($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
 		$mixername = 'Master';
 	}
 	// I2S no mixer or default mixer
