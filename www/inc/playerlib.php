@@ -3082,6 +3082,19 @@ function autoConfigSettings() {
 						'sox_flags']
 		 , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 
+
+		['requires' => ['dop'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+
+		['requires' => ['replaygain'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['replaygain_preamp'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['volume_normalization'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+
+		['requires' => ['audio_buffer_size'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['max_output_buffer_size'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['max_playlist_length'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['input_cache'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['log_level'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+
 		'Renderers',
 		['requires' => ['btsvc'] , 'handler' => setPlayerSession],
 		['requires' => ['pairing_agent'] , 'handler' => setPlayerSession],
