@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
+ * 2020-MM-DD TC moOde 7.0.1
  *
  * This includes the @chris-rudmin 2019-08-08 rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
@@ -2864,7 +2864,10 @@ function getHdwrRev() {
 		// Generic Pi-4B v1.4 code
 		'3114' => 'Pi-4B 8GB v1.4',
 		// Custom Pi-4B v1.4 codes to identify RAM size
-		'd114' => 'Pi-4B 8GB v1.4'
+		'c114' => 'Pi-4B 4GB v1.4',
+		'd114' => 'Pi-4B 8GB v1.4',
+		// Generic Pi-400 v1.0 code
+		'3130' => 'Pi-4B 8GB v1.4'
 	);
 
 	$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
@@ -2934,7 +2937,9 @@ c0 3111	4B		1.1	4GB		Sony UK
 a0 3112	4B		1.2	1GB		Sony UK
 b0 3112	4B		1.2	2GB		Sony UK
 c0 3112	4B		1.2	4GB		Sony UK
+c0 3114	4B		1.4	4GB		Sony UK
 d0 3114	4B		1.4	8GB		Sony UK
+c0 3130 400		1.0 4GB		Sony UK
 */
 
 // returns the settings for reading/writing the autoConfig file
@@ -3642,7 +3647,7 @@ function reconfMpdVolume($mixertype) {
 	updMpdConf($_SESSION['i2sdevice']);
 }
 
-// store back link for configs
+// Store back link for configs
 function storeBackLink($section, $tpl) {
 	$root_configs = array('lib-config', 'snd-config', 'net-config', 'sys-config');
 	$referer_link = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
