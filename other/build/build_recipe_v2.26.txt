@@ -697,7 +697,7 @@ sudo make install
 sudo cd rm -rf ./alsa_cdsp
 
 # 9b.2b Alsa_cdsp install prebuild
-# sudo install -m 644 ./moode/other/alsa_dscp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`
+# sudo install -m 644 ./moode/other/alsa_cdsp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`/alsa-lib/
 
 # 9b.3 Setup camilladsp config structure
 sudo mkdir /usr/share/camilladsp

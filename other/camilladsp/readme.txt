@@ -65,7 +65,7 @@ make
 sudo make install
 
 # If installing a prebuild lib use:
-# sudo install -m 644 libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`
+# sudo install -m 644 libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`/alsa-lib/
 
 # =================================================================
 # Prepare use of camilladsp
