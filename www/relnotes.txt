@@ -11,6 +11,19 @@
 
 ########################################################
 //
+// 2020-MM-DD TC moOde 7.0.1
+//
+########################################################
+
+Bug fixes
+
+- FIX: Missing MPD auto-config params
+- FIX: Wrong install location for libasound_module_pcm_cdsp.so
+- FIX: Leading space in playable URL for KCMP station
+- FIX: 32-bit ASIX driver for Allo USBridge SIG
+
+########################################################
+//
 // 2020-12-15 TC moOde 7.0.0
 //
 ########################################################
