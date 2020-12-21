@@ -1,21 +1,10 @@
 ################################################################
 #
-# Build Recipe v2.26 2020-12-15
+# Build Recipe v2.27 2020-MM-DD
 #
-# moOde 7.0.0 2020-12-15
+# moOde 7.0.1 2020-MM-DD
 # - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
-# - Bump to r700 sources
 # - Bump to Linux kernel 5.4.77 build #1371
-# - Bump to MPD 0.22.3_p0x3
-# - Bump to MPC 0.33
-# - Bump to bluez-alsa 3.0.0
-# - Bump to upmpdcli 1.5.1
-# - Bump to librespot-dev-6a4bc83
-# - Stop auth.log spam
-# - Remove references to discontinued Google Play Music service
-# - Add CAPS 12-band parametric EQ
-# - Add pcm1794a codec (384K patched)
-# - Add camillaDSP and cdsp for testing
 #
 # - NOTE: Image prep and build is Linux and Ethernet only
 #
@@ -100,10 +89,10 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r700.zip
-unzip -p -q ./moode-r700.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r700.zip moode/boot/config.txt.default > ./config.txt.default
-unzip -p -q ./moode-r700.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
+wget http://moodeaudio.org/downloads/prod/moode-r701.zip
+unzip -p -q ./moode-r701.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r701.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r701.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -126,8 +115,8 @@ sudo reboot
 ////////////////////////////////////////////////////////////////
 
 1. Unzip moOde release
-unzip -o -q ./moode-r700.zip
-rm -f ./moode-r700.zip
+unzip -o -q ./moode-r701.zip
+rm -f ./moode-r701.zip
 
 2. Basic optimizations
 
