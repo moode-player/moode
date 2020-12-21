@@ -872,34 +872,6 @@ function clearLibCacheFiltered() {
 }
 
 // Add one item (song file, playlist, radio station, directory) to the Queue
-function ___addItemToQueue($sock, $path) {
-	$ext = getFileExt($path);
-	$pl_extensions = array('m3u', 'pls', 'cue');
-	//workerLog($path . ' (' . $ext . ')');
-
-	// Use load for saved playlist, cue sheet, radio station
-	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $GLOBALS['ROOT_DIRECTORIES']) === false)) {
-		// Radio station special case
-		if (strpos($path, 'RADIO') !== false) {
-			// Check for playlist as URL
-			$pls = file_get_contents(MPD_MUSICROOT . $path);
-			$url = parseDelimFile($pls, '=')['File1'];
-			$ext = substr($url, -4);
-			if ($ext == '.pls' || $ext == '.m3u') {
-				$path = $url;
-			}
-		}
-		sendMpdCmd($sock, 'load "' . html_entity_decode($path) . '"');
-	}
-	// Use add for song file or directory
-	else {
-		sendMpdCmd($sock, 'add "' . html_entity_decode($path) . '"');
-	}
-
-	return readMpdResp($sock);
-}
-
-// Add one item (song file, playlist, radio station, directory) to the Queue
 function addItemToQueue($path) {
 	$ext = getFileExt($path);
 	$pl_extensions = array('m3u', 'pls', 'cue');
