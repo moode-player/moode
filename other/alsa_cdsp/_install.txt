@@ -1,2 +1,2 @@
 
-sudo install -m 644 /mnt/moode-player/GitHub/moode/other/alsa_cdsp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`
+sudo install -m 644 /mnt/moode-player/GitHub/moode/other/alsa_cdsp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`/alsa-lib/
