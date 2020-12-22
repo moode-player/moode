@@ -20,6 +20,7 @@ Bug fixes
 - FIX: Missing MPD auto-config params
 - FIX: Wrong install location for libasound_module_pcm_cdsp.so
 - FIX: Leading space in playable URL for KCMP station
+- FIX: SSID input field validation too strict
 - FIX: 32-bit ASIX driver for Allo USBridge SIG
 
 ########################################################

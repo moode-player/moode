@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2020-MM-DD TC moOde 7.0.1
  *
  */
 
@@ -153,14 +153,14 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 else {
 	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1') {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None (activates AP mode)', '', 'None (activates AP mode)');
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', $_POST['wlan0otherssid']);
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', htmlentities($_POST['wlan0otherssid']));
 	}
 	else if ($netcfg[1]['wlanssid'] == 'None (activates AP mode)') {
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $netcfg[1]['wlanssid'], 'selected', $netcfg[1]['wlanssid']);
 	}
 	else {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None (activates AP mode)', '', 'None (activates AP mode)');
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $netcfg[1]['wlanssid'], 'selected', $netcfg[1]['wlanssid']);
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $netcfg[1]['wlanssid'], 'selected', htmlentities($netcfg[1]['wlanssid']));
 	}
 }
 $_wlan0sec .= "<option value=\"wpa\"" . ($netcfg[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
