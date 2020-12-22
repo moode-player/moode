@@ -1297,11 +1297,11 @@ jQuery(document).ready(function($) { 'use strict';
         }
     });
 
-	$('#audioinfo-track').live('click', function(e) {
+    // Audio info / Track info
+    $(document).on('click', '#audioinfo-track', function(e) {
 		$('#audioinfo-modal').removeClass('hardware').addClass('track');
 	});
-
-	$('#audioinfo-hardware').live('click', function(e) {
+    $(document).on('click', '#audioinfo-hardware', function(e) {
 		$('#audioinfo-modal').removeClass('track').addClass('hardware');
 	});
 
