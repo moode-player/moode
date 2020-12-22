@@ -3708,14 +3708,15 @@ function splitStringAtFirstSpace (str) {
     return strArray;
 }
 
-// for menu item in header.php
+// For menu item in header.php
 function audiohardware() {
     var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
     audioinfo(cmd, MPD.json['file'], 'hardware');
 }
-// track/audio info - cmd = type of dialog, path = song file, dialog for m menu audio info
+// Track/audio info - cmd = type of dialog, path = song file, dialog for m menu audio info
 function audioinfo(cmd, path, dialog){
 	$('#audioinfo-modal .modal-body').load('audioinfo.php', function(){
+        GLOBAL.scriptSection == 'configs' ? $('#audioinfo-tabs').css('display', 'none') : $('#audioinfo-tabs').css('display', 'flex');
 	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(result) {
 			itemInfoModal('trackdata', result);
 			if (dialog != 'hardware') dialog = 'track';
