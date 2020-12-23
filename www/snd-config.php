@@ -226,6 +226,12 @@ if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal'])
 	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Graphic EQ updated', '');
 }
 
+// CamillaDSP
+if (isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp']) {
+	playerSession('write', 'camilladsp', $_POST['camilladsp']);
+    submitJob('camilladsp', $_POST['camilladsp'], 'CamillaDSP ' . $_POST['camilladsp'], '');
+}
+
 // AUDIO RENDERERS
 
 // Bluetooth renderer
@@ -503,11 +509,13 @@ $_select['rotenc_params'] = $_SESSION['rotenc_params'];
 // Crossfade
 $_mpdcrossfade = $_SESSION['mpdcrossfade'];
 // NOTE: Only one of polarity inversion, crossfeed, alsaequal or eqfa12p can be on
-$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-$_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
-$_alsaequal_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off') ? 'disabled' : '';
-// Polarity invrsion
+$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+$_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+$_alsaequal_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
+$_camilladsp_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+
+// Polarity inversion
 $_select['invert_polarity1'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity1\" value=\"1\" " . (($_SESSION['invert_polarity'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['invert_polarity0'] .= "<input type=\"radio\" name=\"invert_polarity\" id=\"toggle_invert_polarity2\" value=\"0\" " . (($_SESSION['invert_polarity'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 // Crossfeed
@@ -550,6 +558,58 @@ foreach ($curveList as $curve) {
 	$curveName = $curve['curve_name'];
 	$selected = ($_SESSION['alsaequal'] == $curve['curve_name']) ? 'selected' : '';
 	$_select['alsaequal'] .= sprintf('<option value="%s" %s>%s</option>\n', $curve['curve_name'], $selected, $curveName);
+}
+
+// CamillaDSP
+$_select['camilladsp'] .= "<option value=\"off\" " . (($_SESSION['camilladsp'] == 'off' || $_SESSION['camilladsp'] == '') ? "selected" : "") . ">Off</option>\n";
+if ($_camilladsp_set_disabled == '') {
+    $_select['camilladsp'] .= "<option value=\"on\" " . (($_SESSION['camilladsp'] == 'on') ? "selected" : "") . ">On</option>\n";
+}
+//Get current output hardware device
+$result = sdbquery("SELECT param, value FROM cfg_mpd WHERE param = 'device'", cfgdb_connect());
+$current_sound_device_number = $result[0]['value'];
+
+$alsa_to_camilla_sample_formats = array( // ALSA sample formats with corresponding CamillaDSP sample formats
+    'FLOAT64_LE' => 'FLOAT64LE',
+    'FLOAT_LE' => 'FLOAT32LE',
+    'S32_LE' => 'S32LE',
+    'S24_3LE' => 'S24LE3',
+    'S24_LE' => 'S24LE',
+    'S16_LE' => 'S16LE');
+
+//Get best available output sample format
+$available_alsa_sample_formats_from_sound_card_as_string = sysCmd('moodeutl -f')[0]; //Sound card sample formats from ALSA
+$available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
+$sound_device_type = 'plughw'; // In case the sound card does not support any of the CamillaDSP sample formats, let ALSA handle the conversion
+$sound_device_sample_format = 'S32LE';
+foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
+    if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
+        $sound_device_sample_format = $cdsp_format;
+        $sound_device_type = 'hw';
+        break;
+    }
+}
+$sound_device_supported_sample_formats = '';
+foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
+    if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
+        $sound_device_supported_sample_formats .= $cdsp_format . ' ';
+    }
+}
+
+//Check, if the config file is valid
+$camilladsp_config_check_output = array();
+$camilladsp_config_check_exit_code = "test";
+exec (
+    "/usr/local/bin/camilladsp -c /home/pi/camilladsp.yml",
+    $camilladsp_config_check_output,
+    $camilladsp_config_check_exit_code);
+$camilladsp_config_check_output = implode('<br>', $camilladsp_config_check_output);
+if(!file_exists ("/home/pi/camilladsp.yml")) {
+    $camilladsp_config_check = "<span style='color: red'>&#10007;</span> Config file <code>/home/pi/camilladsp.yml</code> NOT found.";
+} elseif($camilladsp_config_check_exit_code == '0') {
+    $camilladsp_config_check = "<span style='color: green'>&check;</span> " . $camilladsp_config_check_output;
+} else {
+    $camilladsp_config_check = "<span style='color: red'>&#10007;</span> " . $camilladsp_config_check_output;
 }
 
 // AUDIO RENDERERS

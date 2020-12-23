@@ -224,10 +224,12 @@ if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSI
 	if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1') {
 		$peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
+        $camilladsp = $_SESSION['camilladsp'];
 	}
 	else {
 		$peq = 'off';
 		$geq = 'off';
+        $camilladsp = 'off';
 	}
 }
 // MPD
@@ -283,6 +285,7 @@ else {
 	// Equalizers
 	$peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 	$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
+    $camilladsp = $_SESSION['camilladsp'];
 	// Replaygain and volume normalization
 	$replaygain = $cfg_mpd['replaygain'];
 	$vol_normalize = $cfg_mpd['volume_normalization'] == 'no' ? 'off' : $cfg_mpd['volume_normalization'];
