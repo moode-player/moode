@@ -18,10 +18,11 @@
 Bug fixes
 
 - FIX: Missing MPD auto-config params
-- FIX: Wrong install location for libasound_module_pcm_cdsp.so
+- FIX: Wrong install location for ALSA cdsp plugin
 - FIX: Leading space in playable URL for KCMP station
 - FIX: SSID input field validation too strict
 - FIX: Tabs showing on Audio info when launched from Configs
+- FIX: Add revision code for Pi-4B 4GB 1.4
 - FIX: 32-bit ASIX driver for Allo USBridge SIG
 
 ########################################################
