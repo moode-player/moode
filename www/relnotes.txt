@@ -15,6 +15,10 @@
 //
 ########################################################
 
+Updates
+
+- UPD: Bump to upmpdcli 1.5.5
+
 Bug fixes
 
 - FIX: Wrong PHP version in localui.service and build recipe

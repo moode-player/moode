@@ -990,28 +990,28 @@ sudo make install
 cd ~
 sudo rm -rf ./libnpupnp-4.0.14*
 
-3. Libupnpp 0.20.0
+3. Libupnpp 0.20.1
 
-sudo cp ./moode/other/upmpdcli/libupnpp-0.20.0.tar.gz ./
-sudo tar xfz ./libupnpp-0.20.0.tar.gz
-cd libupnpp-0.20.0
+sudo cp ./moode/other/upmpdcli/libupnpp-0.20.1.tar.gz ./
+sudo tar xfz ./libupnpp-0.20.1.tar.gz
+cd libupnpp-0.20.1
 ./configure --prefix=/usr --sysconfdir=/etc
 sudo make -j4
 sudo make install
 cd ~
-sudo rm -rf ./libupnpp-0.20.0*
+sudo rm -rf ./libupnpp-0.20.1*
 
-4. Upmpdcli 1.5.1
+4. Upmpdcli 1.5.5
 
-sudo cp ./moode/other/upmpdcli/upmpdcli-1.5.1.tar.gz ./
-sudo tar xfz ./upmpdcli-1.5.1.tar.gz
-cd upmpdcli-1.5.1
+sudo cp ./moode/other/upmpdcli/upmpdcli-1.5.5.tar.gz ./
+sudo tar xfz ./upmpdcli-1.5.5.tar.gz
+cd upmpdcli-1.5.5
 sudo ./autogen.sh
 sudo ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
 sudo make -j4
 sudo make install
 cd ~
-sudo rm -rf ./upmpdcli-1.5.1*
+sudo rm -rf ./upmpdcli-1.5.5*
 
 sudo useradd upmpdcli
 sudo cp /mnt/moode-player/GitHub/moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
