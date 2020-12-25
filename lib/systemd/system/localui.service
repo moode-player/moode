@@ -1,11 +1,11 @@
 #
-# 2019-04-12 TC moOde 5.0
+# 2021-MM-DD TC moOde 7.1.0
 #
 #
 
 [Unit]
 Description=Start Chromium Browser
-After=nginx.service php7.0-fpm.service mpd.service
+After=nginx.service php7.3-fpm.service mpd.service
 
 [Service]
 Type=simple
@@ -17,4 +17,3 @@ User=pi
 
 [Install]
 WantedBy=multi-user.target
-
