@@ -2026,7 +2026,16 @@ function updMpdConf($i2sdevice) {
 	$data .= "always_on \"yes\"\n";
 	$data .= "}\n\n";
 
-	// Stream recorder (output 8)
+    // CamillaDSP ALSA Plugin (output 8)
+    $data .= "audio_output {\n";
+    $data .= "type \"alsa\"\n";
+    $data .= "name \"ALSA CamillaDSP Plugin\"\n";
+    $data .= "device \"camilladsp\"\n";
+    $data .= "always_on \"no\"\n";
+    $data .= "dop \"no\"\n";
+    $data .= "}\n\n";
+
+	// Stream recorder (output 9)
 	if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
 		include '/var/www/inc/recorder_mpd.php';
 	}
@@ -2477,6 +2486,9 @@ function startSps() {
 	elseif ($_SESSION['eqfa12p'] != 'Off') {
 		$device = 'eqfa12p';
 	}
+	elseif ($_SESSION['camilladsp'] != 'off') {
+		$device = 'camilladsp';
+	}
 	else {
 		$device = 'plughw:' . $array[0]['value'];
 	}
@@ -2515,6 +2527,9 @@ function startSpotify() {
 	elseif ($_SESSION['eqfa12p'] != 'Off') {
 		$device = 'eqfa12p';
 	}
+    elseif ($_SESSION['camilladsp'] != 'off') {
+        $device = 'camilladsp';
+    }
 	else {
 		$device = 'plughw:' . $_SESSION['cardnum'];
 	}
@@ -3407,6 +3422,9 @@ function configMpdOutputs() {
 	elseif ($_SESSION['alsaequal'] != 'Off') {
 		$output = '4';
 	}
+    elseif ($_SESSION['camilladsp'] != 'off') {
+        $output = '8';
+    }
 	elseif ($_SESSION['invert_polarity'] == '1') {
 		$output = '5';
 	}

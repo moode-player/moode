@@ -668,8 +668,8 @@ mpc enable only 1
 # when question ask choose 1
 sudo curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # logout / login to update env (or do it manually)
-sudo tar -xzf ./moode/other/camilladsp/v0.4.0.tar.gz
-cd camilladsp-0.4.0
+sudo tar -xzf ./moode/other/camilladsp/camilladsp-0.5.0-beta2.tar.gz
+cd camilladsp-0.5.0-beta2
 sudo RUSTFLAGS='-C target-feature=+neon -C target-cpu=native' cargo build --release --no-default-features --features alsa-backend --features websocket
 sudo cp target/release/camilladsp /usr/local/bin/
 
@@ -687,13 +687,6 @@ sudo cd rm -rf ./alsa_cdsp
 
 # 9b.2b Alsa_cdsp install prebuild
 # sudo install -m 644 ./moode/other/alsa_cdsp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`/alsa-lib/
-
-# 9b.3 Setup camilladsp config structure
-sudo mkdir /usr/share/camilladsp
-sudo mkdir /usr/share/camilladsp/configs
-sudo mkdir /usr/share/camilladsp/coeffs
-sudo cp ~moode/usr/share/camilladsp/*.yaml /usr/share/camilladsp
-sudo chmod -R 777 /usr/share/camilladsp
 
 ////////////////////////////////////////////////////////////////
 //

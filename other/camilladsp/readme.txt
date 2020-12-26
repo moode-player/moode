@@ -8,9 +8,9 @@
 # - camilladsp          - camilla executable
 # - alsa_cdsp			- alsa driver for sending audio to camilla (it also starts/stops camilla)
 # The four only when you want to run also the camillagui:
-# - pycamilladsp        - python packge
-# - pycamilladsp-plot   - python packge
-# - camillagui-backend  - pyhon app
+# - pycamilladsp        - python package
+# - pycamilladsp-plot   - python package
+# - camillagui-backend  - python app
 # - camillagui          - react web app
 # The camillagui build are described in an other buildplan/
 #
@@ -37,7 +37,9 @@ git clone https://github.com/HEnquist/camilladsp.git
 cd camilladsp
 
 # if don't want to work on head, checkout the wanted release like:
-#git checkout -b v0.4.0 tags/v0.4.0
+# git checkout -b v0.4.0 tags/v0.4.0
+# However, currently only the head has all the features required for moOde.
+# The next stable release will probably be v0.5.0
 
 # Step 3: Build it
 #
@@ -67,35 +69,20 @@ sudo make install
 # If installing a prebuild lib use:
 # sudo install -m 644 libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`/alsa-lib/
 
-# =================================================================
-# Prepare use of camilladsp
+# ------------------------------------------------------
 
-# sudo cp ~/moode/etc/alsa/conf.d/camilladsp.conf /etc/alsa/conf.default
+# Prepare use of camilladsp
+# sudo cp ~/moode/etc/alsa/conf.d/camilladsp.conf /etc/alsa/conf.d
+
+# Set CamillaDSP to "on" in Menu > Configure > Audio > Equalizers > CamillaDSP
+# and follow the instructions in the info box.
+
+# =================================================================
+
+# This is is only necessary, if you plan to use camillagui-backend:
 # sudo mkdir /usr/share/camilladsp
 # sudo mkdir /usr/share/camilladsp/configs
 # sudo mkdir /usr/share/camilladsp/coeffs
-# sudo cp ~moode/usr/share/camilladsp/config.yaml /usr/share/camilladsp
-# sudo cp ~moode/usr/share/camilladsp/config.out.yaml /usr/share/camilladsp
 # sudo chmod -R 777 /usr/share/camilladsp
-
-
-# As long as not integrated in moOde, we will reuse the Graphical EQ as output o MPD:
-
-# 1 use custom mpd conf mergge
-# place a file /etc/mpd.custom.conf with the following content
-# audio_output {
-# type "alsa"
-# name "ALSA graphic eq"
-# device "camilladsp"
-# }
-# enable dev tweaks for custom mpd conf merge
-# moodeutl -A add 32768
-
-# 2 update the camilladsp config to use the correct device (if you want it the same as moode is using):
-# update the /usr/share/camilladsp/*.yaml files to use the same playback device as
-# in /etc/alsa/conf.d/alsaequal.conf.
-
-# enable graphic eq in moode config to activate camilladsp
-
 
 

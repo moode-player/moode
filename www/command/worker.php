@@ -568,7 +568,7 @@ else {
 if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
 	workerLog('worker: Stream recorder (available)');
 	if ($_SESSION['recorder_status'] == 'On') {
-		sysCmd('mpc enable 8');
+		sysCmd('mpc enable 9');
 		workerLog('worker: Stream recorder (started)');
 	}
 }
@@ -1471,6 +1471,15 @@ function runQueuedJob() {
 			updMpdConf($_SESSION['i2sdevice']);
 			sysCmd('systemctl restart mpd');
 			break;
+        case 'camilladsp':
+            sysCmd('mpc stop');
+            if ($_SESSION['w_queueargs'] == 'off') {
+                sysCmd('mpc enable only 1');
+            } else if ($_SESSION['w_queueargs'] == 'on') {
+                sysCmd('mpc enable only 8');
+            }
+            setMpdHttpd();
+            break;
 		case 'eqfa12p':
 		case 'alsaequal':
 			// Old,New curve name

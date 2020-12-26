@@ -84,3 +84,11 @@ name "ALSA bluetooth"
 device "btstream"
 mixer_type "software"
 }
+
+audio_output {
+type "alsa"
+name "ALSA CamillaDSP Plugin"
+device "camilladsp"
+always_on "no"
+dop "no"
+}
