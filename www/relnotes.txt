@@ -17,7 +17,7 @@
 
 New features
 
-- NEW: CamillaDSP integration (via ALSA cdsp plugin)
+- NEW: CamillaDSP WebUI integration
 
 Updates
 

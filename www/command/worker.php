@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
+ * 2021-MM-DD TC moOde 7.1.0
  *
  */
 
@@ -1475,7 +1475,8 @@ function runQueuedJob() {
             sysCmd('mpc stop');
             if ($_SESSION['w_queueargs'] == 'off') {
                 sysCmd('mpc enable only 1');
-            } else if ($_SESSION['w_queueargs'] == 'on') {
+            }
+			else if ($_SESSION['w_queueargs'] == 'on') {
                 sysCmd('mpc enable only 8');
             }
             setMpdHttpd();

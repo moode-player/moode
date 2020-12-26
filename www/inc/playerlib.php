@@ -2029,7 +2029,7 @@ function updMpdConf($i2sdevice) {
     // CamillaDSP ALSA Plugin (output 8)
     $data .= "audio_output {\n";
     $data .= "type \"alsa\"\n";
-    $data .= "name \"ALSA CamillaDSP Plugin\"\n";
+    $data .= "name \"ALSA CamillaDSP\"\n";
     $data .= "device \"camilladsp\"\n";
     $data .= "always_on \"no\"\n";
     $data .= "dop \"no\"\n";

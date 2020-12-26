@@ -87,7 +87,7 @@ mixer_type "software"
 
 audio_output {
 type "alsa"
-name "ALSA CamillaDSP Plugin"
+name "ALSA CamillaDSP"
 device "camilladsp"
 always_on "no"
 dop "no"
