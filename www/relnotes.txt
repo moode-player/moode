@@ -29,6 +29,7 @@ Bug fixes
 
 - FIX: Wrong PHP version in localui.service and build recipe
 - FIX: Add revision code for Pi-4B 2GB 1.4
+- FIX: Squeezelite binary crashes on ARM6
 
 ########################################################
 //
