@@ -24,53 +24,10 @@
 -->
 <div class="container">
 	<div class="container2">
-	<h1 class="snd-config">Audio Config</h1>
+	<h1 class="cdsp-config">Configuration</h1>
 	<span class="help-block-configs help-block-margin">
-		Note: This block should be part of the audio-config.php equalizers section.<br>
+		Version:&nbsp;  $_select[version].<br>
 	</span>
-	<form class="form-horizontal" action="" method="post">
-		<legend class="legend-configs">
-			<!---
-				As long as it isn't part of the snd-config, use save button instead of set button per settings.
-				Doesn't like te set buttons anyway.
-			-->
-			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
-
-			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				Update Camilla configuration and restart Camilla if required.<br>
-            </span>
-		</legend>
-
-		<fieldset>
-			<legend>Equalizers</legend>
-			<div class="control-group">
-				<label class="control-label" for="cdsp">Camilla DSP</label>
-				<div class="controls">
-					<select id="cdsp-setting-mode" class="input-large" name="cdsp-mode" >
-						$_select[cdsp_mode]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-cdspmode" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-cdspmode" class="help-block-configs help-block-margin legend-info-help hide">
-						Off - don't use Camilla DSP<br/>
-						Custom - custom alsa_cdsp configuration is used, don't touch any alsa_cdsp or camilla configuration.<br/>
-						Else use the selected Camilla DSP  configuration file.  
-					</span>
-
-					<div style="margin-top:.5em">
-						<a href="cdsp-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Camilla Settings<br>
-					</div>
-					<span class="help-block-configs help-block-margin">
-						Note: This should open cdspc-config.php, when block above is moved to the correct location.<br>
-					</span>				
-				</div>
-			</div>
-
-
-		</fieldset>
-	</form>
-
-	<h1 class="cdsp-config">Camilla DSP</h1>
 	<form class="form-horizontal" action="" method="post" >
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
@@ -82,13 +39,24 @@
 
 		<fieldset>
 			<legend>General</legend>
-			<span class="help-block-configs help-block-margin">
-				Version:&nbsp;  $_select[version].<br>
-			</span>
 
 			<div class="control-group">
-				
-				<label class="control-label">Set device</label>
+				<label class="control-label" for="cdsp-setting-mode">Configuration</label>
+				<div class="controls">
+					<select id="cdsp-setting-mode" class="input-large" name="cdsp-mode" >
+						$_select[cdsp_mode]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-cdspmode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-cdspmode" class="help-block-configs help-block-margin legend-info-help hide">
+						Off - don't use Camilla DSP<br/>
+						Custom - custom alsa_cdsp configuration is used, don't touch any alsa_cdsp or camilla configuration.<br/>
+						Else use the selected Camilla DSP  configuration file.
+					</span>
+				</div>
+
+
+
+				<label class="control-label" >Set device</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggle-cdsp-playbackdevice2">YES</label>
@@ -100,7 +68,6 @@
 					  <a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-playbackdevice" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-cdsp-playbackdevice" class="help-block-configs help-block-margin legend-info-help hide">
-						When is  activa
 						When set to Yes, moOde will set the playback device for camilla. When set to No custom playback devices can be used.<br>
 					</span>
 
@@ -115,7 +82,7 @@
 				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary">Remove</button></a>
 				<div class="modal-button-style">
 					<label for="pipelineconfig" id="choose-pipeline-cfg" class="btn btn-primary btn-medium">Import</label>
-					<input type="file" id="pipelineconfig" accept=".yaml" name="pipelineconfig" style="display:none" onchange="$('#btn-import-pipeline').click();" >
+					<input type="file" id="pipelineconfig" accept=".yml" name="pipelineconfig" style="display:none" onchange="$('#btn-import-pipeline').click();" >
 					<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
 				</div>
 				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
@@ -130,9 +97,13 @@
 			<div class="control-group">
 				<label class="control-label" for="cdsp-configs">Pipeline</label>
 				<div class="controls">
-					<select id="cdsp-configs" class="input-large" name="cdsp-config" onchange="$('#config_remove_id').val($('#cdsp-configs :selected').val() );">
+					<select id="cdsp-configs" class="input-large" name="cdsp-config" onchange="$('#config_remove_id').val($('#cdsp-configs :selected').val() ); $('#cdsp_check_msg').html('');">
 						$_select[cdsp_configs]
 					</select>
+					<br/>
+					<div id="cdsp_check_msg">
+					$checkMsg
+					</div>
 				</div>
 
 			</div>
@@ -168,6 +139,8 @@
 		</fieldset>
 
 	</form>
+	<!-- disabled while the camilla webgui isn't include in moode -->
+	<!--
 	<form class="form-horizontal" action="" method="post" >
 		<fieldset>
 			<legend>Pipeline Editor</legend>
@@ -178,6 +151,7 @@
 			</div>
 		</fieldset>
 	</form>
+	-->
 </div>
 </div>
 

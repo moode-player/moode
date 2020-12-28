@@ -22,8 +22,10 @@
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 require_once dirname(__FILE__) . '/inc/eqp.php';
+require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 playerSession('open', '' ,'');
+$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum']);
 
 // I2S AUDIO DEVICE
 
@@ -229,6 +231,11 @@ if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal'])
 // CamillaDSP
 if (isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp']) {
 	playerSession('write', 'camilladsp', $_POST['camilladsp']);
+	$cdsp->selectConfig($_POST['camilladsp']);
+	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+		print("fix playback device to " . $_SESSION['cardnum']);
+		$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+	}
     submitJob('camilladsp', $_POST['camilladsp'], 'CamillaDSP ' . $_POST['camilladsp'], '');
 }
 
@@ -561,10 +568,12 @@ foreach ($curveList as $curve) {
 }
 
 // CamillaDSP
-$_select['camilladsp'] .= "<option value=\"off\" " . (($_SESSION['camilladsp'] == 'off' || $_SESSION['camilladsp'] == '') ? "selected" : "") . ">Off</option>\n";
-if ($_camilladsp_set_disabled == '') {
-    $_select['camilladsp'] .= "<option value=\"on\" " . (($_SESSION['camilladsp'] == 'on') ? "selected" : "") . ">On</option>\n";
+$configs = $cdsp->getAvailableConfigs();
+foreach ($configs as $config_file=>$config_name) {
+	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
+	$_select['camilladsp'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
 }
+
 //Get current output hardware device
 $result = sdbquery("SELECT param, value FROM cfg_mpd WHERE param = 'device'", cfgdb_connect());
 $current_sound_device_number = $result[0]['value'];
@@ -597,19 +606,16 @@ foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
 }
 
 //Check, if the config file is valid
-$camilladsp_config_check_output = array();
-$camilladsp_config_check_exit_code = "test";
-exec (
-    "/usr/local/bin/camilladsp -c /home/pi/camilladsp.yml",
-    $camilladsp_config_check_output,
-    $camilladsp_config_check_exit_code);
-$camilladsp_config_check_output = implode('<br>', $camilladsp_config_check_output);
-if(!file_exists ("/home/pi/camilladsp.yml")) {
-    $camilladsp_config_check = "<span style='color: red'>&#10007;</span> Config file <code>/home/pi/camilladsp.yml</code> NOT found.";
-} elseif($camilladsp_config_check_exit_code == '0') {
-    $camilladsp_config_check = "<span style='color: green'>&check;</span> " . $camilladsp_config_check_output;
-} else {
-    $camilladsp_config_check = "<span style='color: red'>&#10007;</span> " . $camilladsp_config_check_output;
+if( $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {
+	$camilladsp_config_check_result = $cdsp->checkConfigFile($_SESSION['camilladsp']);
+	$camilladsp_config_check_output = implode('<br>', $camilladsp_config_check_result['msg']);
+	if( $camilladsp_config_check_result['valid'] == CDSP_CHECK_NOTFOUND) {
+		$camilladsp_config_check = "<span style='color: red'>&#10007;</span> ".$camilladsp_config_check_output;
+	} elseif( $camilladsp_config_check_result['valid'] == CDSP_CHECK_VALID) {
+		$camilladsp_config_check = "<span style='color: green'>&check;</span> " . $camilladsp_config_check_output;
+	} else {
+		$camilladsp_config_check = "<span style='color: red'>&#10007;</span> " . $camilladsp_config_check_output;
+	}
 }
 
 // AUDIO RENDERERS

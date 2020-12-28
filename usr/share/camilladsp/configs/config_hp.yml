@@ -1,0 +1,50 @@
+
+devices:
+  samplerate: 44100
+  chunksize: 1024
+  queuelimit: 1
+  capture:
+    type: File
+    channels: 2
+    filename: "/dev/stdin"
+    format: S16LE
+  playback:
+    type: Alsa
+    channels: 2
+    device: "hw:2,0"
+    format: S32LE
+filters:
+    hp_5k:
+      type: Biquad
+      parameters:
+        type: Highpass
+        freq: 500
+        q: 0.5
+mixers:
+  stereo:
+    channels:
+      in: 2
+      out: 2
+    mapping:
+      - dest: 0
+        sources:
+          - channel: 0
+            gain: -3
+            inverted: false
+      - dest: 1
+        sources:
+          - channel: 1
+            gain: -3
+            inverted: false
+pipeline:
+  - type: Mixer
+    name: stereo
+  - type: Filter
+    channel: 0
+    names:
+      - hp_5k
+  - type: Filter
+    channel: 1
+    names:
+      - hp_5k
+

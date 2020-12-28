@@ -5,15 +5,14 @@
 
 require_once dirname(__FILE__) . '/playerlib.php';
 
-// camilladsp config
-// camilladsp mode off|cdsp|???  cdsp use camilla cmd line options for audio format,
-// config  custom |...configs...  custom make no change to the assigned config file, else assign the selected config file
-// assign playback device yes|no  patch camilla config to use the playback device selected with moOde.
-
+const CDSP_CHECK_VALID = 1;
+const CDSP_CHECK_INVALID = 0;
+const CDSP_CHECK_NOTFOUND = -1;
 class CamillaDsp {
 
-    private $ALSA_CDSP_CONFIG = '/etc/alsa/conf.d/camilladsp.test.conf';
+    private $ALSA_CDSP_CONFIG = '/etc/alsa/conf.d/camilladsp.conf';
     private $CAMILA_CONFIG_DIR = '/usr/share/camilladsp';
+    private $CAMILA_EXE = '/usr/local/bin/camilladsp';
     private $device = NULL;
     // private $mode = 'cdsp';
     private $configfile = NULL;
@@ -27,7 +26,7 @@ class CamillaDsp {
      * Set in camilladsp config file the playback device to use
      */
     function setPlaybackDevice($device) {
-        if( $this->configfile != NULL && $this->configfile != 'Off' && $this->configfile != 'custom') {
+        if( $this->configfile != NULL && $this->configfile != 'off' && $this->configfile != 'custom') {
             $this->device = $device;
             sysCmd("sudo sed -i -s '/device/s/hw:[0-9]/hw:" . $device . "/g' " . $this->getCurrentConfigFileName() );
         }
@@ -37,10 +36,12 @@ class CamillaDsp {
      * Set in the alsa_cdsp config the camilladsp config file to use
      */
     function selectConfig($configname) {
-        if($configName != 'custom' && $configName != 'Off') {
+        if($configName != 'custom' && $configName != 'off') {
             $configfilename = $this->CAMILA_CONFIG_DIR . '/configs/' . str_replace ('/', '\/', $configname);
-            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*[.]yaml\\\"/\\\"" . $configfilename . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
+            $configfilename = str_replace ('/', '\/', $configfilename);
+            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
         }
+        $this->configfile = $configname;
     }
 
     function getConfigsLocationsFileName() {
@@ -63,11 +64,22 @@ class CamillaDsp {
      * return NULL when config is correct else an array with error messages.
      */
     function checkConfigFile($configname) {
-        $result = syscmd("camilladsp -c " . $this->CAMILA_CONFIG_DIR . '/configs/' . $configname);
+        $configFullPath = $this->CAMILA_CONFIG_DIR . '/configs/' . $configname;
 
-        if(count($result) ==0 ) {
-            $result = NULL;
+        $output = array();
+        $exitcode = -1;
+        if( file_exists($configFullPath)) {
+            $cmd = $this->CAMILA_EXE . " -c " . $configFullPath;
+            exec($cmd, $output, $exitcode);
+            $exitcode = $exitcode == 0 ? 1 : 0;
+
+        }else {
+            $output[] = 'Config file "' . $configFullPath. '" NOT found';
         }
+        $result = [];
+        $result['valid'] = $exitcode;
+        $result['msg'] =  $output;
+
         return $result;
     }
 
@@ -82,10 +94,10 @@ class CamillaDsp {
         $configs = [];
         // If extended moode is used, return also Off and custom as selectors
         if( $extended == True ) {
-            $configs['Off'] = 'Off'; // don't use camilla
+            $configs['off'] = 'Off'; // don't use camilla
             $configs['custom'] = 'Custom'; // custom configuration setup used
         }
-        foreach (glob($this->CAMILA_CONFIG_DIR . '/configs/*.yaml') as $filename) {
+        foreach (glob($this->CAMILA_CONFIG_DIR . '/configs/*.yml') as $filename) {
             $fileParts = pathinfo($filename);
             $configs[$fileParts['basename']] = $fileParts['filename'];
         }
@@ -110,7 +122,7 @@ class CamillaDsp {
         } else {
             $version = "Error: Unable to detect version of Camilla DSP.";
         }
-        return $version;       
+        return $version;
     }
 
     function backup() {
@@ -121,31 +133,35 @@ class CamillaDsp {
 
 }
 
-function test() {
-    $cdsp = New CamillaDsp('config.good.yaml', "5");
+function test_cdsp() {
+    $cdsp = New CamillaDsp('config.good.yml', "5");
 
     // print($cdsp->getCurrentConfigFileName() . "\n");
-    // $cdsp->setPlaybackDevice(4);
-    // $cdsp->setConfig("/foo/bar.yaml");
+    $cdsp->setPlaybackDevice(4);
+    // $cdsp->selectConfig("config_foobar.yml");
     print("\n");
-    print($cdsp->checkConfigFile("config.good.yaml"));
+    print_r($cdsp->checkConfigFile("config.good.yml"));
     print("\n");
-    print_r($cdsp->checkConfigFile("config.bad.yaml"));
+    print_r($cdsp->checkConfigFile("config.bad.yml"));
+    print("\n");
+    print_r($cdsp->checkConfigFile("config.doesnt_exist.yml"));
 
     // print_r($cdsp->availableConfigs() );
-    // print(count($cdsp->checkConfigFile("config.good.yaml")));
+    // print(count($cdsp->checkConfigFile("config.good.yml")));
 
-    // if( count($cdsp->checkConfigFile("config.bad.yaml")) > 0) {
-    //     print("config bad \n");
-    // }
-    // else {
-    //     print("config ok \n");
-    // }
+    print_r($cdsp->checkConfigFile("config.good.yml"));
+    print(gettype($cdsp->checkConfigFile("config.good.yml")['valid']));
+    if( $cdsp->checkConfigFile("config.good.yml")['valid'] == 1) {
+        print("config ok \n");
+    }
+    else {
+        print("config bad \n");
+    }
     print($cdsp->version());
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
-    test();
+    test_cdsp();
 }
 
 ?>

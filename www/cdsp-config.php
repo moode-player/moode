@@ -24,8 +24,8 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 playerSession('open', '' ,'');
-$cdsp = new CamillaDsp($_SESSION['camilla'], $_SESSION['cardnum']);
-
+$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum']);
+$checkMsg = '';
 /**
  * Post parameter processing
  */
@@ -33,11 +33,12 @@ $cdsp = new CamillaDsp($_SESSION['camilla'], $_SESSION['cardnum']);
 // Check
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	if (isset($_POST['cdsp-mode'])) {
-		playerSession('write', 'camilla', $_POST['cdsp-mode']);
+		playerSession('write', 'camilladsp', $_POST['cdsp-mode']);
 		$cdsp->selectConfig($_POST['cdsp-mode']);
 		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
+		submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $_POST['cdsp-mode'], '');
 		//todo: update active configuration if needed
 	}
 
@@ -53,20 +54,22 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 // Check
 else if (isset($_POST['cdsp-config']) && isset($_POST['check']) && $_POST['check'] == '1') {
-	$result = $cdsp->checkConfigFile($_POST['cdsp-config']);
+	$checkResult = $cdsp->checkConfigFile($_POST['cdsp-config']);
 
-	if($result == NULL) {
+	if($checkResult['valid'] == True) {
 		$_SESSION['notify']['title'] =   htmlentities('Pipeline configuration \"' . $_POST['cdsp-config'] . '\" is valid');
 	}else {
 		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $_POST['cdsp-config'] . '\" is NOT valid');
-
-		$message = '';
-		foreach ($result as $line) {
-			$message .= htmlentities($line). '<br/>';
-		}
-		$_SESSION['notify']['msg'] = $message;
 	}
 
+	$checkMsgRaw = implode('<br>', $checkResult['msg']);
+	if( $checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
+		$checkMsg = "<span style='color: red'>&#10007;</span> ".$checkMsgRaw;
+	} elseif( $checkResult['valid'] == CDSP_CHECK_VALID) {
+		$checkMsg = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
+	} else {
+		$checkMsg = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
+	}
 }
 // Import (Upload)
 else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['import'] == '1') {
@@ -121,7 +124,7 @@ else if (isset($_POST['cdsp-coeffs']) && isset($_POST['remove']) && $_POST['remo
 
 $configs = $cdsp->getAvailableConfigs();
 foreach ($configs as $config_file=>$config_name) {
-	$selected = ($_SESSION['camilla'] == $config_file) ? 'selected' : '';
+	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
 	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
 	if ($selected == 'selected') {
 	// 	$_selected_mode = $config_file;
@@ -131,7 +134,7 @@ foreach ($configs as $config_file=>$config_name) {
 $configs = $cdsp->getAvailableConfigsRaw();
 $_selected = NULL;
 foreach ($configs as $config_file=>$config_name) {
-	$selected = ($_POST['cdsp_config'] == $config_file || (isset($_POST['cdsp_config']) == false && $_selected == NULL) ) ? 'selected' : '';
+	$selected = ($_POST['cdsp-config'] == $config_file || (isset($_POST['cdsp-config']) == false && $_selected == NULL) ) ? 'selected' : '';
 	$_select['cdsp_configs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
 	if ($selected == 'selected') {
 		$_selected = $selected;

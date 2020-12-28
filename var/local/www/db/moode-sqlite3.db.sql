@@ -548,7 +548,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (51, 'debuglog', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (54, 'camilladsp', 'off');
-INSERT INTO cfg_system (id, param, value) VALUES (55, 'AVAILABLE', '');
+INSERT INTO cfg_system (id, param, value) VALUES (55, 'cdsp_fix_playback', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (56, 'AVAILABLE', '');
 INSERT INTO cfg_system (id, param, value) VALUES (57, 'uac2fix', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
@@ -646,8 +646,6 @@ INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not i
 INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
 INSERT INTO cfg_system (id, param, value) VALUES (151, 'volume_db_display', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (152, 'search_site', 'Google');
-INSERT INTO cfg_system (id, param, value) VALUES (153, 'camilla', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (154, 'cdsp_fix_playback', 'Yes');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
