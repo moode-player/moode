@@ -2534,7 +2534,6 @@ function startSpotify() {
 		$device = 'plughw:' . $_SESSION['cardnum'];
 	}
 
-	$linear_volume = $cfg_spotify['volume_curve'] == 'Linear' ? ' --linear-volume' : '';
 	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ? ' --enable-volume-normalisation --normalisation-pregain ' .  $cfg_spotify['normalization_pregain'] : '';
 	$autoplay = $cfg_spotify['autoplay'] == 'Yes' ? ' --autoplay' : '';
 
@@ -2542,7 +2541,7 @@ function startSpotify() {
 		' --name "' . $_SESSION['spotifyname'] . '"' .
 		' --bitrate ' . $cfg_spotify['bitrate'] .
 		' --initial-volume ' . $cfg_spotify['initial_volume'] .
-		$linear_volume .
+		' --volume-ctrl ' . $cfg_spotify['volume_curve'] .
 		$volume_normalization .
 		$autoplay .
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' . // audio file cache eats disk space
