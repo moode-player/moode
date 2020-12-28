@@ -233,7 +233,6 @@ if (isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp
 	playerSession('write', 'camilladsp', $_POST['camilladsp']);
 	$cdsp->selectConfig($_POST['camilladsp']);
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-		print("fix playback device to " . $_SESSION['cardnum']);
 		$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 	}
     submitJob('camilladsp', $_POST['camilladsp'], 'CamillaDSP ' . $_POST['camilladsp'], '');
