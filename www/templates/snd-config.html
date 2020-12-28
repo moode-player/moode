@@ -409,8 +409,8 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_camilladsp" value="novalue" $_camilladsp_set_disabled>Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-camilladsp" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-camilladsp" class="help-block-configs help-block-margin hide">
-						In order for CamillaDSP to work, you need to upload a CamillaDSP configuration file to <code>/home/pi/camilladsp.yml</code><br>
-						Additional filter files can also be placed in <code>/home/pi/</code> and referenced from the config via filename or relative path.<br>
+						In order for CamillaDSP to work, you need to choose a configuration file.
+						Configuration can be upload at the CamillaDSP configuration page.<br>
 						Changes to the configuration are effective immediately after pausing/stopping playback.<br>
 						Information on how to create CamillaDSP configuration files can be found on the
 						<a href="https://github.com/HEnquist/camilladsp">CamillaDSP homepage</a>.<br>
@@ -435,7 +435,7 @@ devices:
   playback:
     type: Alsa
     channels: 2
-    device: "$sound_device_type:$current_sound_device_number"  # correct value is only shown, when playback is stopped
+    device: "$sound_device_type:$current_sound_device_number"  # is default automatically updated when configuration is choosen.
     format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats # correct value is only shown, when playback is stopped
 </span></code><br>
                     </div>

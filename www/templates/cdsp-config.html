@@ -50,7 +50,7 @@
 					<span id="info-cdspmode" class="help-block-configs help-block-margin legend-info-help hide">
 						Off - don't use Camilla DSP<br/>
 						Custom - custom alsa_cdsp configuration is used, don't touch any alsa_cdsp or camilla configuration.<br/>
-						Else use the selected Camilla DSP  configuration file.
+						Else use the selected Camilla DSP configuration file. This one will be assigned to alsa_cdsp.
 					</span>
 				</div>
 
@@ -68,7 +68,9 @@
 					  <a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-playbackdevice" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-cdsp-playbackdevice" class="help-block-configs help-block-margin legend-info-help hide">
-						When set to Yes, moOde will set the playback device for camilla. When set to No custom playback devices can be used.<br>
+						Automatic set correctplayback device for the CamillaDSP configuration.<br/>
+						Disable if you want to used an other play back device then the default of moOde,<br/>
+						for example if you want to create a multi channel crossover.<br>
 					</span>
 
 				</div>
@@ -89,7 +91,10 @@
 				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="check" value="1">Check</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="info-configuration-actions" class="help-block hide">
-					Todo: usefull help message.
+					Remove: delete the selected configuation file.<br/>
+					Import: upload a configuration file, existing ones are overwritten.<br/>
+					Down: download the selected configuation file.<br/>
+					Check: check if the configuration is a valid CamillaDSP configuration.<br/>
 				</div>
 			</div>
 
@@ -123,8 +128,10 @@
 				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="info-convolution-actions" class="help-block hide">
-					Todo: usefull help message.
-				</div>
+						Remove: delete the selected convolution  file.<br/>
+						Import: upload a convolution  file, existing ones are overwritten.<br/>
+						Down: download the selected convolution  file.<br/>
+ 			    </div>
 			</div>
 
 			<legend>Convolution Files</legend>
