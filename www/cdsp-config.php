@@ -163,22 +163,16 @@ $current_sound_device_number = $_SESSION['cardnum'];
 $alsa_to_camilla_sample_formats = $cdsp->alsaToCamillaSampleFormatLut();
 
 //Get best available output sample format
-$available_alsa_sample_formats_from_sound_card_as_string = sysCmd('moodeutl -f')[0]; //Sound card sample formats from ALSA
-$available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
-$sound_device_type = 'plughw'; // In case the sound card does not support any of the CamillaDSP sample formats, let ALSA handle the conversion
-$sound_device_sample_format = 'S32LE';
-foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
-    if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
-        $sound_device_sample_format = $cdsp_format;
-        $sound_device_type = 'hw';
-        break;
-    }
-}
+$supported_soundformats = $cdsp->detectSupportedSoundFormats();
+
 $sound_device_supported_sample_formats = '';
-foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
-    if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
-        $sound_device_supported_sample_formats .= $cdsp_format . ' ';
-    }
+foreach ($supported_soundformats as $cdsp_format) {
+	$sound_device_supported_sample_formats .= $cdsp_format . ' ';
+}
+
+if(count($supported_soundformats) >= 1) {
+	$sound_device_sample_format = $supported_soundformats[0];
+	$sound_device_type = 'hw';
 }
 
 session_write_close();

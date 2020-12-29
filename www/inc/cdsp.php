@@ -48,7 +48,12 @@ class CamillaDsp {
     function setPlaybackDevice($device) {
         if( $this->configfile != NULL && $this->configfile != 'off' && $this->configfile != 'custom') {
             $this->device = $device;
+            $supportedFormats = $this->detectSupportedSoundFormats();
+            $useFormat = count($supportedFormats) >= 1 ?  $supportedFormats[0] : 'S32LExxx';
+
             sysCmd("sudo sed -i -s '/device/s/hw:[0-9]/hw:" . $device . "/g' " . $this->getCurrentConfigFileName() );
+
+            sysCmd("sudo sed -i -s '/format/s/[:][ ].*/: " . $useFormat . "/g' " . $this->getCurrentConfigFileName() );
         }
     }
 
@@ -62,6 +67,19 @@ class CamillaDsp {
             syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
         }
         $this->configfile = $configname;
+    }
+
+    function detectSupportedSoundFormats() {
+        $available_alsa_sample_formats_from_sound_card_as_string = sysCmd('moodeutl -f')[0]; //Sound card sample formats from ALSA
+        $available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
+        $sound_device_supported_sample_formats = array();
+        foreach ($this->alsaToCamillaSampleFormatLut() as $alsa_format => $cdsp_format) {
+           if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
+                $sound_device_supported_sample_formats[] = $cdsp_format;
+           }
+        }
+
+        return $sound_device_supported_sample_formats;
     }
 
     function getConfigsLocationsFileName() {
@@ -177,10 +195,10 @@ class CamillaDsp {
 }
 
 function test_cdsp() {
-    $cdsp = New CamillaDsp('config.good.yml', "5");
+    $cdsp = New CamillaDsp('config_foobar.yaml', "5");
 
     // print($cdsp->getCurrentConfigFileName() . "\n");
-    $cdsp->setPlaybackDevice(4);
+    //$cdsp->setPlaybackDevice(4);
     // $cdsp->selectConfig("config_foobar.yml");
     print("\n");
     print_r($cdsp->checkConfigFile("config.good.yml"));
@@ -201,6 +219,11 @@ function test_cdsp() {
         print("config bad \n");
     }
     print($cdsp->version());
+
+    print_r($cdsp->detectSupportedSoundFormats());
+
+
+    $cdsp->setPlaybackDevice(7);
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
