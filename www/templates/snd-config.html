@@ -435,7 +435,8 @@ devices:
   playback:
     type: Alsa
     channels: 2
-    device: "$sound_device_type:$current_sound_device_number"  # is default automatically updated when configuration is choosen.
+    device: "$sound_device_type:$current_sound_device_number"  # correct value is only shown, when playback is stopped
+                                                                                                          # by default, this is automatically updated when configuration is choosen.
     format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats # correct value is only shown, when playback is stopped
 </span></code><br>
                     </div>
