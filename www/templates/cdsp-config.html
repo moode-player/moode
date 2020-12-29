@@ -1,0 +1,238 @@
+<!--
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * (C) 2020 @bitlab (@bitkeeper Git)
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2020-MM-DD TC moOde 7.x.x
+ *
+ */
+-->
+<div class="container">
+	<div class="container2">
+	<h1 class="cdsp-config">Configuration</h1>
+	<span class="help-block-configs help-block-margin">
+		Version:&nbsp;  $_select[version].<br>
+	</span>
+	<form class="form-horizontal" action="" method="post" >
+    	<legend class="legend-configs">
+			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
+			<a aria-label="Help" class="info-toggle" data-cmd="info-config-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
+			<span id="info-config-buttons" class="help-block-configs help-block-margin legend-info-help hide">
+				Update Camilla configuration and restart Camilla if required.<br>
+            </span>
+		</legend>
+
+		<fieldset>
+			<legend>General</legend>
+
+			<div class="control-group">
+				<label class="control-label" for="cdsp-setting-mode">Configuration</label>
+				<div class="controls">
+					<select id="cdsp-setting-mode" class="input-large" name="cdsp-mode" >
+						$_select[cdsp_mode]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-cdspmode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-cdspmode" class="help-block-configs help-block-margin legend-info-help hide">
+						Off - don't use Camilla DSP<br/>
+						Custom - custom alsa_cdsp configuration is used, don't touch any alsa_cdsp or camilla configuration.<br/>
+						Else use the selected Camilla DSP configuration file. This one will be assigned to alsa_cdsp.
+					</span>
+				</div>
+
+
+
+				<label class="control-label" >Set device</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-cdsp-playbackdevice2">YES</label>
+						$_select[cdsp_patch_playback_device1]
+						<label class="toggle-radio" for="toggle-cdsp-playbackdevice1">NO</label>
+						$_select[cdsp_patch_playback_device0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					  <a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-playbackdevice" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-cdsp-playbackdevice" class="help-block-configs help-block-margin legend-info-help hide">
+						Automatic set correct playback device and format for the CamillaDSP configuration.<br/>
+						Disable if you want to used an other play back device then the default of moOde,<br/>
+						for example if you want to create a multi channel crossover.<br>
+					</span>
+
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+		<fieldset>
+			<div>
+				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary">Remove</button></a>
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
+				<div class="modal-button-style">
+					<label for="pipelineconfig" id="choose-pipeline-cfg" class="btn btn-primary btn-medium">Upload new</label>
+					<input type="file" id="pipelineconfig" accept=".yml" name="pipelineconfig" style="display:none" onchange="$('#btn-import-pipeline').click();" >
+					<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
+				</div>
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="check" value="1">Check</button>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<div id="info-configuration-actions" class="help-block-configs help-block-margin hide">
+					Remove: delete the selected configuation file.<br/>
+					Download: download the selected configuation file.<br/>
+					Upload new: upload a configuration file, existing ones are overwritten.<br/>
+					Check: check if the selected configuration is a valid CamillaDSP configuration.<br/><br/>
+
+					Changes to the configuration are effective immediately after pausing/stopping playback.<br>
+					Information on how to create CamillaDSP configuration files can be found on the
+					<a href="https://github.com/HEnquist/camilladsp">CamillaDSP homepage</a>.<br>
+					<br>
+					If CamillaDSP can't play audio, errors will be reported to <code>/var/log/mpd/log</code><br>
+					In case this is due to channel counts or sampling rates which are not supported by your DAC,<br>
+					you can either handle this in CamillaDSP with mixers or resamplers<br>
+					or change the formats which are passed to CamillaDSP in <code>/etc/alsa/conf.d/camilladsp.conf</code><br>
+					If this file is erroneous, <code>/var/log/moode.log</code> and <code>/var/log/syslog</code> may also provide hints.
+					<br>
+					With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
+<code><span style="white-space: pre;">
+	devices:
+	samplerate: 44100  # irrelevant if resampling is disabled - then it will be overridden with the incoming sample rate
+	chunksize: 1024
+	queuelimit: 2  # increasing this introduces significant latency when stopping playback or changing songs
+				   # e.g.: samplerate=44100, chunksize=1024, queuelimit=44 => latency ~ 1s
+	capture:
+	  type: Stdin
+	  channels: 2  # irrelevant - will always be overridden (currently always 2)
+	  format: S32LE  # irrelevant - will always be overridden with the incoming sample format
+	playback:
+	  type: Alsa
+	  channels: 2
+	  device: "$sound_device_type:$current_sound_device_number"  # by default, this is automatically updated when configuration is choosen. (correct value is only shown, when playback is stopped.)																									  #
+	  format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats # correct value is only shown, when playback is stopped
+</span></code><br><br/>
+					Any reference to a convolution file should be relative like <code>../coeffs/yourfile.wav</code>
+				</div>
+			</div>
+
+			<legend>Pipeline Configurations</legend>
+			<div class="control-group">
+				<label class="control-label" for="cdsp-configs">Pipeline</label>
+				<div class="controls">
+					<select id="cdsp-configs" class="input-large" name="cdsp-config" onchange="$('#config_remove_id').val($('#cdsp-configs :selected').val() ); $('#cdsp_check_msg').html('');">
+						$_select[cdsp_configs]
+					</select>
+					<br/>
+					<div id="cdsp_check_msg">
+					$checkMsg
+					</div>
+				</div>
+
+			</div>
+		</fieldset>
+	</form>
+
+	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+		<fieldset>
+			<!-- ids and names aren't correct: (copy of above now)-->
+			<div>
+				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary">Remove</button></a>
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
+				<div class="modal-button-style">
+					<label for="coeffsfile" id="choose-coeff-cfg" class="btn btn-primary btn-medium">Upload new</label>
+					<input type="file" id="coeffsfile" accept=".wav,.txt,.csv" name="coeffsfile" style="display:none" onchange="$('#btn-import-coeff').click();" >
+					<button id="btn-import-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
+				</div>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<div id="info-convolution-actions" class="help-block-configs help-block-margin legend-info-help hide">
+						Remove: delete the selected convolution file.<br/>
+						Download: download the selected convolution file.<br/>
+						Upload new: upload a convolution file, existing ones are overwritten.<br/>
+ 			    </div>
+			</div>
+
+			<legend>Convolution Files</legend>
+			<div class="control-group">
+				<label class="control-label" for="cdsp-coeffs">Coeffs</label>
+				<div class="controls">
+					<select id="cdsp-coeffs" class="input-large" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );">
+						$_select[cdsp_coeffs]
+					</select>
+				</div>
+			</div>
+		</fieldset>
+
+	</form>
+	<!-- disabled while the camilla webgui isn't include in moode -->
+	<!--
+	<form class="form-horizontal" action="" method="post" >
+		<fieldset>
+			<legend>Pipeline Editor</legend>
+			<div class="control-group">
+				<div style="margin-top:.5em">
+					<a href="cdsp-configeditor.php"><button class="btn btn-medium btn-primary">Open</button></a>&nbsp;Camilla DSP Pipeline Editor<br>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+	-->
+</div>
+</div>
+
+<!-- TODO: set selected from javascript -->
+<form class="form-horizontal" method="post">
+	<div id="remove-pipeline" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-pipeline-label" aria-hidden="true">
+		<input id="config_remove_id" type="hidden" name="cdsp-config" value="$_selected_configuration"/>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove Pipeline</h3>
+		</div>
+
+		<div class="modal-body">
+			<h4 id="removepipeline">$_selected_pipeline</h4>
+			<span class="help-block" style="margin-bottom:5px;">
+				$_disable_rm_msg
+			</span>
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="remove" value="1" $_disable_rm>Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="remove-coeff" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-coeff-label" aria-hidden="true">
+		<!-- TODO:set correct selected-->
+		<input id="coeff_remove_id" type="hidden" name="cdsp-coeffs" value="$_selected_configuration"/>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Remove Coeff</h3>
+		</div>
+
+		<div class="modal-body">
+			<h4 id="removecoeff">$_selected_pipeline</h4>
+			<span class="help-block" style="margin-bottom:5px;">
+				$_disable_rm_msg
+			</span>
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="remove" value="1" $_disable_rm>Yes</button>
+		</div>
+	</div>
+</form>
