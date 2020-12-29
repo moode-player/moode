@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-22 TC moOde 6.7.1
+ * 2021-MM-DD TC moOde 7.1.0
  *
  */
 
@@ -52,8 +52,9 @@ $_select['bitrate'] .= "<option value=\"320\" " . (($cfg_spotify['bitrate'] == '
 // initial volume
 $_select['initial_volume'] = $cfg_spotify['initial_volume'];
 // volume curve
-$_select['volume_curve'] .= "<option value=\"Linear\" " . (($cfg_spotify['volume_curve'] == 'Linear') ? "selected" : "") . ">Linear</option>\n";
-$_select['volume_curve'] .= "<option value=\"Logarithmic\" " . (($cfg_spotify['volume_curve'] == 'Logarithmic') ? "selected" : "") . ">Logarithmic</option>\n";
+$_select['volume_curve'] .= "<option value=\"linear\" " . (($cfg_spotify['volume_curve'] == 'linear') ? "selected" : "") . ">Linear</option>\n";
+$_select['volume_curve'] .= "<option value=\"log\" " . (($cfg_spotify['volume_curve'] == 'log') ? "selected" : "") . ">Logarithmic</option>\n";
+$_select['volume_curve'] .= "<option value=\"fixed\" " . (($cfg_spotify['volume_curve'] == 'fixed') ? "selected" : "") . ">Fixed</option>\n";
 // volume normalization
 $_select['volume_normalization'] .= "<option value=\"Yes\" " . (($cfg_spotify['volume_normalization'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['volume_normalization'] .= "<option value=\"No\" " . (($cfg_spotify['volume_normalization'] == 'No') ? "selected" : "") . ">No</option>\n";

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Dec 26 13:57:42 2020
+-- File generated with SQLiteStudio v3.1.0 on Mon Dec 28 09:12:46 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -669,7 +669,7 @@ INSERT INTO cfg_theme (id, theme_name, tx_color, bg_color, mbg_color) VALUES (15
 CREATE TABLE cfg_spotify (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '160');
 INSERT INTO cfg_spotify (id, param, value) VALUES (2, 'initial_volume', '0');
-INSERT INTO cfg_spotify (id, param, value) VALUES (3, 'volume_curve', 'Logarithmic');
+INSERT INTO cfg_spotify (id, param, value) VALUES (3, 'volume_curve', 'log');
 INSERT INTO cfg_spotify (id, param, value) VALUES (4, 'volume_normalization', 'No');
 INSERT INTO cfg_spotify (id, param, value) VALUES (5, 'normalization_pregain', '0');
 INSERT INTO cfg_spotify (id, param, value) VALUES (6, 'autoplay', 'No');

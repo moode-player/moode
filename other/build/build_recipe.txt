@@ -950,9 +950,9 @@ sudo rm -rf librespot*
 ////////////////////////////////////////////////////////////////
 
 sudo cp ./moode/other/squeezelite/squeezelite-1.9.7-1270.zip ./
-sudo -q unzip ./squeezelite-1.9.7-1270.zip
+sudo unzip -q ./squeezelite-1.9.7-1270.zip
 cd ./squeezelite-master/
-sudo sed -i '/OPTS/c\OPTS = -DRESAMPLE -DDSD -DGPIO -DRPI -DLINKALL -I./include -I/usr/local/include -s -O3 -march=native -mcpu=native -mfloat-abi=hard -mfpu=vfp' ./Makefile.rpi
+sudo sed -i '/OPTS/c\OPTS = -DRESAMPLE -DDSD -DGPIO -DRPI -DLINKALL -I./include -I/usr/local/include -s -O3 -march=armv6 -mfloat-abi=hard -mfpu=vfp' ./Makefile.rpi
 sudo make --makefile=Makefile.rpi
 sudo cp ./squeezelite /usr/local/bin/
 cd ~
