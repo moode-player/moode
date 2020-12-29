@@ -410,45 +410,14 @@
 					<a aria-label="Help" class="info-toggle" data-cmd="info-camilladsp" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-camilladsp" class="help-block-configs help-block-margin hide">
 						In order for CamillaDSP to work, you need to choose a configuration file.
-						Configuration can be uploaded at the CamillaDSP configuration page.<br>
-						Changes to the configuration are effective immediately after pausing/stopping playback.<br>
-						Information on how to create CamillaDSP configuration files can be found on the
-						<a href="https://github.com/HEnquist/camilladsp">CamillaDSP homepage</a>.<br>
-						<br>
-						If CamillaDSP can't play audio, errors will be reported to <code>/var/log/mpd/log</code><br>
-						In case this is due to channel counts or sampling rates which are not supported by your DAC,<br>
-						you can either handle this in CamillaDSP with mixers or resamplers<br>
-						or change the formats which are passed to CamillaDSP in <code>/etc/alsa/conf.d/camilladsp.conf</code><br>
-						If this file is erroneous, <code>/var/log/moode.log</code> and <code>/var/log/syslog</code> may also provide hints.
-						<br>
-						With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
-<code><span style="white-space: pre;">
-devices:
-  samplerate: 44100  # irrelevant if resampling is disabled - then it will be overridden with the incoming sample rate
-  chunksize: 1024
-  queuelimit: 2  # increasing this introduces significant latency when stopping playback or changing songs
-                 # e.g.: samplerate=44100, chunksize=1024, queuelimit=44 => latency ~ 1s
-  capture:
-    type: Stdin
-    channels: 2  # irrelevant - will always be overridden (currently always 2)
-    format: S32LE  # irrelevant - will always be overridden with the incoming sample format
-  playback:
-    type: Alsa
-    channels: 2
-    device: "$sound_device_type:$current_sound_device_number"  # correct value is only shown, when playback is stopped
-                                                                                                          # by default, this is automatically updated when configuration is choosen.
-    format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats # correct value is only shown, when playback is stopped
-</span></code><br>
+						Configurations can be managed at the CamillaDSP settings page.<br>
                     </div>
 					<div>
 						$camilladsp_config_check
 					</div>
 					<div style="margin-top:.5em">
-						<a href="cdsp-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;&nbsp;Camilla Settings<br>
+						<a href="cdsp-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;&nbsp;CamillaDSP Settings<br>
 					</div>
-					<span class="help-block-configs help-block-margin">
-						NOTE: If active, the audio output is set in the CamillaDSP config and the moOde setting "Audio output" in "MPD Config" is ignored.
-                    </span>
 				</div>
 			</div>
 

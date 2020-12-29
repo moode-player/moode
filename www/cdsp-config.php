@@ -126,9 +126,6 @@ $configs = $cdsp->getAvailableConfigs();
 foreach ($configs as $config_file=>$config_name) {
 	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
 	$_select['cdsp_mode'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
-	if ($selected == 'selected') {
-	// 	$_selected_mode = $config_file;
-	}
 }
 
 $configs = $cdsp->getAvailableConfigsRaw();
@@ -149,7 +146,6 @@ foreach ($configs as $config_file=>$config_name) {
 	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
 	if ($selected == 'selected') {
 		$_selected_coeff = $config_file;
-		// $_selected_configuration = $config_file;
 	}
 }
 
@@ -158,6 +154,32 @@ $_select['cdsp_patch_playback_device1'] .= "<input type=\"radio\" name=\"cdsp_pl
 $_select['cdsp_patch_playback_device0'] .= "<input type=\"radio\" name=\"cdsp_playbackdevice\" id=\"toggle-cdsp-playbackdevice2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
 
 $_select['version'] = $cdsp->version();
+
+
+// Extract settings needed to show camilladsp configuration template:
+
+//Get current output hardware device
+$current_sound_device_number = $_SESSION['cardnum'];
+$alsa_to_camilla_sample_formats = $cdsp->alsaToCamillaSampleFormatLut();
+
+//Get best available output sample format
+$available_alsa_sample_formats_from_sound_card_as_string = sysCmd('moodeutl -f')[0]; //Sound card sample formats from ALSA
+$available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
+$sound_device_type = 'plughw'; // In case the sound card does not support any of the CamillaDSP sample formats, let ALSA handle the conversion
+$sound_device_sample_format = 'S32LE';
+foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
+    if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
+        $sound_device_sample_format = $cdsp_format;
+        $sound_device_type = 'hw';
+        break;
+    }
+}
+$sound_device_supported_sample_formats = '';
+foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
+    if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
+        $sound_device_supported_sample_formats .= $cdsp_format . ' ';
+    }
+}
 
 session_write_close();
 

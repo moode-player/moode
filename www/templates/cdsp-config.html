@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
+ * 2020-MM-DD TC moOde 7.x.x
  *
  */
 -->
@@ -82,19 +82,48 @@
 		<fieldset>
 			<div>
 				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary">Remove</button></a>
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
 				<div class="modal-button-style">
-					<label for="pipelineconfig" id="choose-pipeline-cfg" class="btn btn-primary btn-medium">Import</label>
+					<label for="pipelineconfig" id="choose-pipeline-cfg" class="btn btn-primary btn-medium">Upload new</label>
 					<input type="file" id="pipelineconfig" accept=".yml" name="pipelineconfig" style="display:none" onchange="$('#btn-import-pipeline').click();" >
 					<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
 				</div>
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
 				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="check" value="1">Check</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<div id="info-configuration-actions" class="help-block hide">
+				<div id="info-configuration-actions" class="help-block-configs help-block-margin hide">
 					Remove: delete the selected configuation file.<br/>
-					Import: upload a configuration file, existing ones are overwritten.<br/>
 					Download: download the selected configuation file.<br/>
-					Check: check if the configuration is a valid CamillaDSP configuration.<br/>
+					Upload new: upload a configuration file, existing ones are overwritten.<br/>
+					Check: check if the selected configuration is a valid CamillaDSP configuration.<br/><br/>
+
+					Changes to the configuration are effective immediately after pausing/stopping playback.<br>
+					Information on how to create CamillaDSP configuration files can be found on the
+					<a href="https://github.com/HEnquist/camilladsp">CamillaDSP homepage</a>.<br>
+					<br>
+					If CamillaDSP can't play audio, errors will be reported to <code>/var/log/mpd/log</code><br>
+					In case this is due to channel counts or sampling rates which are not supported by your DAC,<br>
+					you can either handle this in CamillaDSP with mixers or resamplers<br>
+					or change the formats which are passed to CamillaDSP in <code>/etc/alsa/conf.d/camilladsp.conf</code><br>
+					If this file is erroneous, <code>/var/log/moode.log</code> and <code>/var/log/syslog</code> may also provide hints.
+					<br>
+					With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
+<code><span style="white-space: pre;">
+	devices:
+	samplerate: 44100  # irrelevant if resampling is disabled - then it will be overridden with the incoming sample rate
+	chunksize: 1024
+	queuelimit: 2  # increasing this introduces significant latency when stopping playback or changing songs
+				   # e.g.: samplerate=44100, chunksize=1024, queuelimit=44 => latency ~ 1s
+	capture:
+	  type: Stdin
+	  channels: 2  # irrelevant - will always be overridden (currently always 2)
+	  format: S32LE  # irrelevant - will always be overridden with the incoming sample format
+	playback:
+	  type: Alsa
+	  channels: 2
+	  device: "$sound_device_type:$current_sound_device_number"  # by default, this is automatically updated when configuration is choosen. (correct value is only shown, when playback is stopped.)																									  #
+	  format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats # correct value is only shown, when playback is stopped
+</span></code><br><br/>
+					Any reference to a convolution file should be relative like <code>../coeffs/yourfile.wav</code>
 				</div>
 			</div>
 
@@ -120,17 +149,17 @@
 			<!-- ids and names aren't correct: (copy of above now)-->
 			<div>
 				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary">Remove</button></a>
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
 				<div class="modal-button-style">
-					<label for="coeffsfile" id="choose-coeff-cfg" class="btn btn-primary btn-medium">Import</label>
+					<label for="coeffsfile" id="choose-coeff-cfg" class="btn btn-primary btn-medium">Upload new</label>
 					<input type="file" id="coeffsfile" accept=".wav,.txt,.csv" name="coeffsfile" style="display:none" onchange="$('#btn-import-coeff').click();" >
 					<button id="btn-import-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
 				</div>
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<div id="info-convolution-actions" class="help-block hide">
-						Remove: delete the selected convolution  file.<br/>
-						Import: upload a convolution  file, existing ones are overwritten.<br/>
-						Download: download the selected convolution  file.<br/>
+				<div id="info-convolution-actions" class="help-block-configs help-block-margin legend-info-help hide">
+						Remove: delete the selected convolution file.<br/>
+						Download: download the selected convolution file.<br/>
+						Upload new: upload a convolution file, existing ones are overwritten.<br/>
  			    </div>
 			</div>
 

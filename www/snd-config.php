@@ -573,37 +573,6 @@ foreach ($configs as $config_file=>$config_name) {
 	$_select['camilladsp'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
 }
 
-//Get current output hardware device
-$result = sdbquery("SELECT param, value FROM cfg_mpd WHERE param = 'device'", cfgdb_connect());
-$current_sound_device_number = $result[0]['value'];
-
-$alsa_to_camilla_sample_formats = array( // ALSA sample formats with corresponding CamillaDSP sample formats
-    'FLOAT64_LE' => 'FLOAT64LE',
-    'FLOAT_LE' => 'FLOAT32LE',
-    'S32_LE' => 'S32LE',
-    'S24_3LE' => 'S24LE3',
-    'S24_LE' => 'S24LE',
-    'S16_LE' => 'S16LE');
-
-//Get best available output sample format
-$available_alsa_sample_formats_from_sound_card_as_string = sysCmd('moodeutl -f')[0]; //Sound card sample formats from ALSA
-$available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
-$sound_device_type = 'plughw'; // In case the sound card does not support any of the CamillaDSP sample formats, let ALSA handle the conversion
-$sound_device_sample_format = 'S32LE';
-foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
-    if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
-        $sound_device_sample_format = $cdsp_format;
-        $sound_device_type = 'hw';
-        break;
-    }
-}
-$sound_device_supported_sample_formats = '';
-foreach ($alsa_to_camilla_sample_formats as $alsa_format => $cdsp_format) {
-    if (in_array($alsa_format, $available_alsa_sample_formats_from_sound_card)) {
-        $sound_device_supported_sample_formats .= $cdsp_format . ' ';
-    }
-}
-
 //Check, if the config file is valid
 if( $_SESSION['camilladsp'] != 'off' && $_SESSION['camilladsp'] != 'custom') {
 	$camilladsp_config_check_result = $cdsp->checkConfigFile($_SESSION['camilladsp']);

@@ -1,5 +1,26 @@
 <?php
 /**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2021-MM-DD TC moOde 7.x.x
+ *
+ */
+
+/**
  * Wrapper for functionality related to the use of CamillaDSP with moOde
  */
 
@@ -11,10 +32,9 @@ const CDSP_CHECK_NOTFOUND = -1;
 class CamillaDsp {
 
     private $ALSA_CDSP_CONFIG = '/etc/alsa/conf.d/camilladsp.conf';
-    private $CAMILA_CONFIG_DIR = '/usr/share/camilladsp';
-    private $CAMILA_EXE = '/usr/local/bin/camilladsp';
+    private $CAMILLA_CONFIG_DIR = '/usr/share/camilladsp';
+    private $CAMILLA_EXE = '/usr/local/bin/camilladsp';
     private $device = NULL;
-    // private $mode = 'cdsp';
     private $configfile = NULL;
 
     function __construct ($configfile, $device = NULL) {
@@ -37,7 +57,7 @@ class CamillaDsp {
      */
     function selectConfig($configname) {
         if($configName != 'custom' && $configName != 'off') {
-            $configfilename = $this->CAMILA_CONFIG_DIR . '/configs/' . str_replace ('/', '\/', $configname);
+            $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . str_replace ('/', '\/', $configname);
             $configfilename = str_replace ('/', '\/', $configfilename);
             syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
         }
@@ -45,18 +65,18 @@ class CamillaDsp {
     }
 
     function getConfigsLocationsFileName() {
-        return  $this->CAMILA_CONFIG_DIR . '/configs/';
+        return  $this->CAMILLA_CONFIG_DIR . '/configs/';
     }
 
     function getCoeffsLocation() {
-        return  $this->CAMILA_CONFIG_DIR . '/coeffs/';
+        return  $this->CAMILLA_CONFIG_DIR . '/coeffs/';
     }
 
     /**
      * Get the filename of the camilladsp config file to use
      */
     function getCurrentConfigFileName() {
-        return $this->CAMILA_CONFIG_DIR . '/configs/' . $this->configfile;
+        return $this->CAMILLA_CONFIG_DIR . '/configs/' . $this->configfile;
     }
 
     /**
@@ -64,12 +84,12 @@ class CamillaDsp {
      * return NULL when config is correct else an array with error messages.
      */
     function checkConfigFile($configname) {
-        $configFullPath = $this->CAMILA_CONFIG_DIR . '/configs/' . $configname;
+        $configFullPath = $this->CAMILLA_CONFIG_DIR . '/configs/' . $configname;
 
         $output = array();
         $exitcode = -1;
         if( file_exists($configFullPath)) {
-            $cmd = $this->CAMILA_EXE . " -c " . $configFullPath;
+            $cmd = $this->CAMILLA_EXE . " -c " . $configFullPath;
             exec($cmd, $output, $exitcode);
             $exitcode = $exitcode == 0 ? 1 : 0;
 
@@ -90,6 +110,9 @@ class CamillaDsp {
         return $this->getAvailableConfigs(False);
     }
 
+    /**
+     * Returns list  available options for the camilladsp setting, including the Off and Custom
+     */
     function getAvailableConfigs($extended = True) {
         $configs = [];
         // If extended moode is used, return also Off and custom as selectors
@@ -97,22 +120,28 @@ class CamillaDsp {
             $configs['off'] = 'Off'; // don't use camilla
             $configs['custom'] = 'Custom'; // custom configuration setup used
         }
-        foreach (glob($this->CAMILA_CONFIG_DIR . '/configs/*.yml') as $filename) {
+        foreach (glob($this->CAMILLA_CONFIG_DIR . '/configs/*.yml') as $filename) {
             $fileParts = pathinfo($filename);
             $configs[$fileParts['basename']] = $fileParts['filename'];
         }
         return $configs;
     }
 
+    /**
+     * Get list available coeffs for convolution
+     */
     function getAvailableCoeffs() {
         $configs = [];
-        foreach (glob($this->CAMILA_CONFIG_DIR . '/coeffs/*.*') as $filename) {
+        foreach (glob($this->CAMILLA_CONFIG_DIR . '/coeffs/*.*') as $filename) {
             $fileParts = pathinfo($filename);
             $configs[$fileParts['basename']] = $fileParts['filename'];
         }
         return $configs;
     }
 
+    /**
+     * Returns the version of the used CamillaDSP
+     */
     function version() {
         $version  = NULL;
         $result = syscmd("camilladsp --version ");
@@ -125,6 +154,20 @@ class CamillaDsp {
         return $version;
     }
 
+    /**
+     * ALSA sample formats with corresponding CamillaDSP sample formats
+     */
+    function alsaToCamillaSampleFormatLut() {
+        return array(
+            'FLOAT64_LE' => 'FLOAT64LE',
+            'FLOAT_LE' => 'FLOAT32LE',
+            'S32_LE' => 'S32LE',
+            'S24_3LE' => 'S24LE3',
+            'S24_LE' => 'S24LE',
+            'S16_LE' => 'S16LE');
+    }
+
+    // placeholders for autoconfig support, empty for now
     function backup() {
     }
 
