@@ -20,8 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2021-MM-DD TC moOde 7.1.0
- *
  */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
@@ -257,6 +255,12 @@ $wlan0ip = '';
 $wlan0 = sysCmd('ip addr list | grep wlan0');
 if (!empty($wlan0[0])) {
 	workerLog('worker: wlan0 exists');
+
+	$model = substr($_SESSION['hdwrrev'], 3, 1);
+	if ($model == '3' || $model == '4') {
+		sysCmd('/sbin/iwconfig wlan0 power off');
+		workerLog('worker: pi integrated wlan0 power save disabled');
+	}
 
 	$result = sdbquery('SELECT * FROM cfg_network', $dbh);
 	workerLog('worker: wifi country (' . $result[1]['wlan_country'] . ')');
