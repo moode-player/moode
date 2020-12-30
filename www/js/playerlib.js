@@ -2271,7 +2271,13 @@ $('.context-menu a').click(function(e) {
 		$('#quickhelp').load('quickhelp.html');
         $('#quickhelp-modal').modal();
     }
-
+    //Song-lyrics
+    else if ($(this).data('cmd') == 'song-lyrics') {
+      $('#lyrics').load('./templates/lyrics.html');
+      $('#lyrics-modal').modal();
+      $('#lyrics').load('lyrics.php');
+  //  $('#lyrics').load('lyrics.php',function(e){$('#lyrics-modal').modal('show');});
+    }
     // About
     else if ($(this).data('cmd') == 'aboutmoode') {
 		$('#sys-raspbian-ver').text(SESSION.json['raspbianver']);

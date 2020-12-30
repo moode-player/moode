@@ -1406,7 +1406,10 @@ $('#context-menu-playback a').click(function(e) {
         });
 	}
   else if ($(this).data('cmd') == 'song-lyrics') {
-  $('#lyrics').load('lyrics.php',function(e){$('#lyrics-modal').modal('show');});
+    $('#lyrics').load('./templates/lyrics.html');
+    $('#lyrics-modal').modal();
+    $('#lyrics').load('lyrics.php');
+//  $('#lyrics').load('lyrics.php',function(e){$('#lyrics-modal').modal('show');});
   }
 	else if ($(this).data('cmd') == 'toggle-song') {
         sendMpdCmd('playid ' + toggleSongId);
