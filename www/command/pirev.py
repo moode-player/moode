@@ -1,28 +1,26 @@
 #!/usr/bin/python3
 #
-#	moOde audio player (C) 2014 Tim Curtis
+# moOde audio player (C) 2014 Tim Curtis
 #
-#   (C) 2020 @bitlab (@bitkeeper Git)
-#	http://moodeaudio.org
+# (C) 2020 @bitlab (@bitkeeper Git)
+# http://moodeaudio.org
 #
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License version 2 as
-#   published by the Free Software Foundation.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
 #
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#   You should have received a copy of the GNU General Public License
-#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-#	2021-MM-DD TC moOde 7.1.0
+# Show Pi revision code information
 #
-#  Show Pi revision code information
-#
-#  Revision code information taken from:
-#  https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
+# Revision code information taken from:
+# https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
 #
 
 import argparse
