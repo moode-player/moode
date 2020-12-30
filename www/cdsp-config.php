@@ -75,6 +75,12 @@ else if (isset($_POST['cdsp-config']) && isset($_POST['check']) && $_POST['check
 else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['import'] == '1') {
 	$configFileName = $cdsp->getConfigsLocationsFileName() . $_FILES["pipelineconfig"]["name"];
 	move_uploaded_file($_FILES["pipelineconfig"]["tmp_name"], $configFileName);
+
+	if( $_SESSION['camilladsp'] == $_FILES["pipelineconfig"]["name"] ) { // if upload active config, fix it
+		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+		}
+	}
 	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["pipelineconfig"]["name"] . '\" completed');
 }
 // Export (Download)
