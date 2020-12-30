@@ -124,7 +124,14 @@ else if (isset($_POST['cdsp-coeffs']) && isset($_POST['remove']) && $_POST['remo
 	unlink($configFileName);
 	$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $_POST['cdsp-coeffs'] . '\" completed');
 }
+else if (isset($_POST['cdsp-coeffs']) && isset($_POST['info']) && $_POST['info'] == '1') {
+	$coeffInfo = $cdsp->coeffInfo($_POST['cdsp-coeffs']);
 
+	$coeffInfoHtml ='Mediainfo:<br/>';
+	foreach ($coeffInfo as  $param=>$value) {
+		$coeffInfoHtml .= ''. $param . ' = ' . $value. '<br/>';
+	}
+}
 /**
  * Generate data for html templating
  */
@@ -150,7 +157,7 @@ $configs = $cdsp->getAvailableCoeffs();
 $_selected_coeff = NULL;
 foreach ($configs as $config_file=>$config_name) {
 	$selected = ($_POST['cdsp-coeffs'] == $config_file || (isset($_POST['cdsp-coeffs']) == false && $_selected_coeff == NULL) ) ? 'selected' : '';
-	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
+	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_file);
 	if ($selected == 'selected') {
 		$_selected_coeff = $config_file;
 	}

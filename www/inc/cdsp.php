@@ -158,6 +158,38 @@ class CamillaDsp {
     }
 
     /**
+     * Provide coeff info
+     */
+    function coeffInfo($coefffile) {
+        $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
+        $jsonString = syscmd("mediainfo --Output=JSON " . $fileName);
+        $mediaDataObj = json_decode(implode($jsonString));
+
+        $ext = $mediaDataObj->{'media'}->{'track'}[0]->{'FileExtension'};
+        $siz = $mediaDataObj->{'media'}->{'track'}[0]->{'FileSize'};
+        $rate =$mediaDataObj->{'media'}->{'track'}[1]->{'SamplingRate'};
+        $bits =$mediaDataObj->{'media'}->{'track'}[1]->{'BitDepth'};
+        $ch = $mediaDataObj->{'media'}->{'track'}[1]->{'Channels'};
+        $format =$mediaDataObj->{'media'}->{'track'}[1]->{'Format'};
+
+        $mediaInfo = Array();
+        if($ext)
+            $mediaInfo['extension'] = $ext;
+        if($format)
+            $mediaInfo['format'] = $format;
+        if($rate)
+            $mediaInfo['samplerate'] = $rate/1000.0 . ' kHz';
+        if($bits)
+            $mediaInfo['bitdepth'] = $bits . ' bits';
+        if($ch)
+            $mediaInfo['channels'] = $ch;
+        if($siz != NULL)
+            $mediaInfo['size'] = sprintf('%.1f kB', $siz/1024.0) ;
+
+        return $mediaInfo;
+    }
+
+    /**
      * Returns the version of the used CamillaDSP
      */
     function version() {
@@ -223,7 +255,18 @@ function test_cdsp() {
     print_r($cdsp->detectSupportedSoundFormats());
 
 
-    $cdsp->setPlaybackDevice(7);
+    // $cdsp->setPlaybackDevice(7);
+
+    // print_r($cdsp->coeffinfo('Sennheiser_HD800S.wav'));
+    $res = $cdsp->coeffInfo('Sennheiser_HD800S.wav');
+    print_r($res);
+//    print_r($res->{'media'}->{'track'}[0]->{'Format'});
+
+    // print($res['media']['track'][1]['BitDepth']);
+
+    $res = $cdsp->coeffInfo('test1.txt');
+    print_r($res);
+
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
