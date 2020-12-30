@@ -90,9 +90,16 @@ else if (isset($_POST['cdsp-config']) && isset($_POST['export']) && $_POST['expo
 }
 // Remove
 else if (isset($_POST['cdsp-config']) && isset($_POST['remove']) && $_POST['remove'] == '1') {
-	$configFileName = $cdsp->getConfigsLocationsFileName() . $_POST['cdsp-config'];
-	unlink($configFileName);
-	$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $_POST['cdsp-config'] . '\" completed');
+
+	if( $_SESSION['camilladsp'] != $_POST['cdsp-config'] ) { // can't remove active config
+		$configFileName = $cdsp->getConfigsLocationsFileName() . $_POST['cdsp-config'];
+		unlink($configFileName);
+		$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $_POST['cdsp-config'] . '\" completed');
+	}
+	else {
+		$_SESSION['notify']['title'] = htmlentities('Cannot remove active configuration \"' . $_POST['cdsp-config'] . '\"');
+	}
+
 }
 // Import (Upload)
 else if (isset($_FILES['coeffsfile']) && isset($_POST['import']) && $_POST['import'] == '1') {
