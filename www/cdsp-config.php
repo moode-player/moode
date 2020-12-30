@@ -25,12 +25,13 @@ require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 playerSession('open', '' ,'');
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum']);
-$checkMsg = '';
+$selectedConfig = isset($_POST['cdsp-config']) ? $_POST['cdsp-config']: NULL;
+
 /**
  * Post parameter processing
  */
 
-// Check
+// Save
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	if (isset($_POST['cdsp-mode'])) {
 		playerSession('write', 'camilladsp', $_POST['cdsp-mode']);
@@ -53,59 +54,52 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 }
 
 // Check
-else if (isset($_POST['cdsp-config']) && isset($_POST['check']) && $_POST['check'] == '1') {
-	$checkResult = $cdsp->checkConfigFile($_POST['cdsp-config']);
+else if ($selectedConfig && isset($_POST['check']) && $_POST['check'] == '1') {
+	$checkResult = $cdsp->checkConfigFile($selectedConfig);
 
 	if($checkResult['valid'] == True) {
-		$_SESSION['notify']['title'] =   htmlentities('Pipeline configuration \"' . $_POST['cdsp-config'] . '\" is valid');
+		$_SESSION['notify']['title'] =   htmlentities('Pipeline configuration \"' . $selectedConfig . '\" is valid');
 	}else {
-		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $_POST['cdsp-config'] . '\" is NOT valid');
-	}
-
-	$checkMsgRaw = implode('<br>', $checkResult['msg']);
-	if( $checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
-		$checkMsg = "<span style='color: red'>&#10007;</span> ".$checkMsgRaw;
-	} elseif( $checkResult['valid'] == CDSP_CHECK_VALID) {
-		$checkMsg = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
-	} else {
-		$checkMsg = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
+		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $selectedConfig . '\" is NOT valid');
 	}
 }
 // Import (Upload)
 else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['import'] == '1') {
-	$configFileName = $cdsp->getConfigsLocationsFileName() . $_FILES["pipelineconfig"]["name"];
+	$configFileBaseName = $_FILES["pipelineconfig"]["name"];
+	$configFileName = $cdsp->getConfigsLocationsFileName() . $configFileBaseName;
 	move_uploaded_file($_FILES["pipelineconfig"]["tmp_name"], $configFileName);
 
-	if( $_SESSION['camilladsp'] == $_FILES["pipelineconfig"]["name"] ) { // if upload active config, fix it
+	if( $_SESSION['camilladsp'] == $configFileBaseName ) { // if upload active config, fix it
 		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
 	}
-	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["pipelineconfig"]["name"] . '\" completed');
+	$selectedConfig = $configFileBaseName;
+	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $configFileBaseName . '\" completed');
 }
 // Export (Download)
-else if (isset($_POST['cdsp-config']) && isset($_POST['export']) && $_POST['export'] == '1') {
-	$configFileName = $cdsp->getConfigsLocationsFileName() . $_POST['cdsp-config'];
+else if ($selectedConfig && isset($_POST['export']) && $_POST['export'] == '1') {
+	$configFileName = $cdsp->getConfigsLocationsFileName() . $selectedConfig;
 
 	header("Content-Description: File Transfer");
 	header("Content-Type: application/yaml");
-	header("Content-Disposition: attachment; filename=\"". $_POST['cdsp-config'] ."\"");
+	header("Content-Disposition: attachment; filename=\"". $selectedConfig ."\"");
 
 	readfile ($configFileName);
  	exit();
 }
 // Remove
-else if (isset($_POST['cdsp-config']) && isset($_POST['remove']) && $_POST['remove'] == '1') {
+else if ($selectedConfig && isset($_POST['remove']) && $_POST['remove'] == '1') {
 
-	if( $_SESSION['camilladsp'] != $_POST['cdsp-config'] ) { // can't remove active config
-		$configFileName = $cdsp->getConfigsLocationsFileName() . $_POST['cdsp-config'];
+	if( $_SESSION['camilladsp'] != $selectedConfig ) { // can't remove active config
+		$configFileName = $cdsp->getConfigsLocationsFileName() . $selectedConfig;
 		unlink($configFileName);
-		$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $_POST['cdsp-config'] . '\" completed');
+		$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $selectedConfig . '\" completed');
+		$selectedConfig = NULL;
 	}
 	else {
-		$_SESSION['notify']['title'] = htmlentities('Cannot remove active configuration \"' . $_POST['cdsp-config'] . '\"');
+		$_SESSION['notify']['title'] = htmlentities('Cannot remove active configuration \"' . $selectedConfig . '\"');
 	}
-
 }
 // Import (Upload)
 else if (isset($_FILES['coeffsfile']) && isset($_POST['import']) && $_POST['import'] == '1') {
@@ -144,11 +138,11 @@ foreach ($configs as $config_file=>$config_name) {
 $configs = $cdsp->getAvailableConfigsRaw();
 $_selected = NULL;
 foreach ($configs as $config_file=>$config_name) {
-	$selected = ($_POST['cdsp-config'] == $config_file || (isset($_POST['cdsp-config']) == false && $_selected == NULL) ) ? 'selected' : '';
+	$selected = ($selectedConfig == $config_file || ($selectedConfig == NULL && $_selected == NULL) ) ? 'selected' : '';
 	$_select['cdsp_configs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_name);
 	if ($selected == 'selected') {
 		$_selected = $selected;
-		$_selected_configuration = $config_file;
+		$selectedConfig = $config_file;
 	}
 }
 
@@ -162,7 +156,6 @@ foreach ($configs as $config_file=>$config_name) {
 	}
 }
 
-$_select['cdsp_selected_configuration'] = $_selected_configuration;
 $_select['cdsp_patch_playback_device1'] .= "<input type=\"radio\" name=\"cdsp_playbackdevice\" id=\"toggle-cdsp-playbackdevice1\" value=\"1\" " . (($_SESSION['cdsp_fix_playback'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
 $_select['cdsp_patch_playback_device0'] .= "<input type=\"radio\" name=\"cdsp_playbackdevice\" id=\"toggle-cdsp-playbackdevice2\" value=\"0\" " . (($_SESSION['cdsp_fix_playback'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
 
@@ -186,6 +179,21 @@ foreach ($supported_soundformats as $cdsp_format) {
 if(count($supported_soundformats) >= 1) {
 	$sound_device_sample_format = $supported_soundformats[0];
 	$sound_device_type = 'hw';
+}
+
+$checkMsg = '';
+if( $selectedConfig) {
+	if(isset($checkResult) == false) {
+		$checkResult = $cdsp->checkConfigFile($selectedConfig);
+	}
+	$checkMsgRaw = implode('<br>', $checkResult['msg']);
+	if( $checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
+		$checkMsg = "<span style='color: red'>&#10007;</span> ".$checkMsgRaw;
+	} elseif( $checkResult['valid'] == CDSP_CHECK_VALID) {
+		$checkMsg = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
+	} else {
+		$checkMsg = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
+	}
 }
 
 session_write_close();
