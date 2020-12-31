@@ -34,6 +34,11 @@ MPD_ACTIVE=$(pgrep -c -x mpd)
 HW_PARAMS_LAST=""
 SQL_DB=/var/local/www/db/moode-sqlite3.db
 SESSION_DIR=/var/local/php
+
+while [ ! $(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='sessionid'") ]; do
+        sleep 1
+done
+
 SESSION_FILE=$SESSION_DIR/sess_$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='sessionid'")
 
 while true; do
