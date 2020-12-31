@@ -772,13 +772,10 @@ if (file_exists('/boot/moodecfg.ini')) {
 }
 
 // Start watchdog monitor
+$result = sdbquery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
 sysCmd('/var/www/command/watchdog.sh > /dev/null 2>&1 &');
 workerLog('worker: Watchdog started');
-
-//
 workerLog('worker: Ready');
-$result = sdbquery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
-//
 
 //
 // BEGIN WORKER JOB LOOP
