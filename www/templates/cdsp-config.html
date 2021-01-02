@@ -131,9 +131,10 @@
 			<div class="control-group">
 				<label class="control-label" for="cdsp-configs">Pipeline</label>
 				<div class="controls">
-					<select id="cdsp-configs" class="input-large" name="cdsp-config" onchange="$('#config_remove_id').val($('#cdsp-configs :selected').val() ); $('#cdsp_check_msg').html('');">
+				    <select id="cdsp-configs" class="input-large" name="cdsp-config" onchange="$('#btn-automatic-check').click();">
 						$_select[cdsp_configs]
 					</select>
+					<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="checkauto" value="1"  style="display:none" ></button>
 					<br/>
 					<div id="cdsp_check_msg">
 					$checkMsg
@@ -155,23 +156,29 @@
 					<input type="file" id="coeffsfile" accept=".wav,.txt,.csv" name="coeffsfile" style="display:none" onchange="$('#btn-import-coeff').click();" >
 					<button id="btn-import-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
 				</div>
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="info" value="1">Info</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="info-convolution-actions" class="help-block-configs help-block-margin legend-info-help hide">
 						Remove: delete the selected convolution file.<br/>
 						Download: download the selected convolution file.<br/>
 						Upload new: upload a convolution file, existing ones are overwritten.<br/>
+						Info: provide mediainfo about the convolution file.<br/>
  			    </div>
 			</div>
 
 			<legend>Convolution Files</legend>
 			<div class="control-group">
 				<label class="control-label" for="cdsp-coeffs">Coeffs</label>
-				<div class="controls">
-					<select id="cdsp-coeffs" class="input-large" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );">
+				<div class="controls" >
+					<select id="cdsp-coeffs" class="input-xxlarge" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );$('#coeff-info').html('');">
 						$_select[cdsp_coeffs]
 					</select>
+					<div id="coeff-info" >
+						$coeffInfoHtml
+					</div>
 				</div>
 			</div>
+
 		</fieldset>
 
 	</form>
@@ -194,7 +201,7 @@
 <!-- TODO: set selected from javascript -->
 <form class="form-horizontal" method="post">
 	<div id="remove-pipeline" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-pipeline-label" aria-hidden="true">
-		<input id="config_remove_id" type="hidden" name="cdsp-config" value="$_selected_configuration"/>
+		<input id="config_remove_id" type="hidden" name="cdsp-config" value="$selectedConfig"/>
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Remove Pipeline</h3>
@@ -217,7 +224,7 @@
 <form class="form-horizontal" method="post">
 	<div id="remove-coeff" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-coeff-label" aria-hidden="true">
 		<!-- TODO:set correct selected-->
-		<input id="coeff_remove_id" type="hidden" name="cdsp-coeffs" value="$_selected_configuration"/>
+		<input id="coeff_remove_id" type="hidden" name="cdsp-coeffs" value="$_selected_coeff"/>
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3>Remove Coeff</h3>
