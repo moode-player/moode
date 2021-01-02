@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 jQuery(document).ready(function($) { 'use strict';
     // Call $.pnotify if created by backend
@@ -1069,14 +1067,6 @@ jQuery(document).ready(function($) { 'use strict';
         $('#searchResetLib').hide();
 		return false;
 	});
-
-/*	$('#searchResetLib').click(function(e) {
-        $('#lib-album-filter').val('');
-        $('#searchResetLib').hide();
-        if (SESSION.json['library_flatlist_filter'] != 'full_lib') {
-            applyLibFilter('full_lib');
-        }
-	});*/
 
 	// Playback history search
 	$('#ph-filter').keyup(function(e){
