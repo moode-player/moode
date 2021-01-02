@@ -24,26 +24,28 @@
 #
 
 import argparse
+import subprocess
+import sys
 
 OLD_REVISION_CODES = {
-# code  mod   rev    mem      manufacure
-0x002: ["B", "1.0", "256MB", "Egoman"],
-0x003: ["B", "1.0", "256MB", "Egoman"],
-0x004: ["B", "2.0", "256MB", "Sony UK"],
-0x005: ["B", "2.0", "256MB", "Qisda"],
-0x006: ["B", "2.0", "256MB", "Egoman"],
-0x007: ["A", "2.0", "256MB", "Egoman"],
-0x008: ["A", "2.0", "256MB", "Sony UK"],
-0x009: ["A", "2.0", "256MB", "Qisda"],
-0x00d: ["B", "2.0", "512MB", "Egoman"],
-0x00e: ["B", "2.0", "512MB", "Sony UK"],
-0x00f: ["B", "2.0", "512MB", "Egoman"],
-0x010: ["B+", "1.2", "512MB", "Sony UK"],
-0x011: ["CM1", "1.0", "512MB", "Sony UK"],
-0x012: ["A+", "1.1", "256MB", "Sony UK"],
-0x013: ["B+", "1.2", "512MB", "Embest"],
-0x014: ["CM1", "1.0", "512MB", "Embest"],
-0x015: ["A+", "1.1", "256MB/512MB", "Embest"],
+    # code  mod   rev    mem      manufacturer
+    0x002: ["B", "1.0", "256MB", "Egoman"],
+    0x003: ["B", "1.0", "256MB", "Egoman"],
+    0x004: ["B", "2.0", "256MB", "Sony UK"],
+    0x005: ["B", "2.0", "256MB", "Qisda"],
+    0x006: ["B", "2.0", "256MB", "Egoman"],
+    0x007: ["A", "2.0", "256MB", "Egoman"],
+    0x008: ["A", "2.0", "256MB", "Sony UK"],
+    0x009: ["A", "2.0", "256MB", "Qisda"],
+    0x00d: ["B", "2.0", "512MB", "Egoman"],
+    0x00e: ["B", "2.0", "512MB", "Sony UK"],
+    0x00f: ["B", "2.0", "512MB", "Egoman"],
+    0x010: ["B+", "1.2", "512MB", "Sony UK"],
+    0x011: ["CM1", "1.0", "512MB", "Sony UK"],
+    0x012: ["A+", "1.1", "256MB", "Sony UK"],
+    0x013: ["B+", "1.2", "512MB", "Embest"],
+    0x014: ["CM1", "1.0", "512MB", "Embest"],
+    0x015: ["A+", "1.1", "256MB/512MB", "Embest"]
 }
 
 PI_TYPES = {
@@ -91,17 +93,40 @@ PI_MAN = {
     4: "Embest",
     5: "Stadium"
 }
+
 def decode_new_style_code(code):
     # Mask: NOQuuuWuFMMMCCCCPPPPTTTTTTTTRRRR
     new_style = (code>>23)&0x1 == 1 # new/old style F
 
     if new_style == True:
+        try:
+            type = PI_TYPES[(code>>4)&0xff] # model TTTTTTTT
+        except KeyError:
+            type = "Unknown Pi model"
+        try:
+            mem = PI_MEM[(code>>20)&0x7] # mem MMM
+        except KeyError:
+            mem = "?GB"
+        try:
+            man = PI_MAN[(code>>16)&0xf] # manufacture CCCC
+        except KeyError:
+            man = "Unknown manufacturer"
+        try:
+            proc = PI_PROC[(code>>12)&0xf] # proc PPPP
+        except KeyError:
+            proc = "Unknown processor"
+
+        if type == "Unknown Pi model":
+            rev = "?.?"
+        else:
+            rev = "1.%d" %(code&0xf) # rev RRRR
+
         rev_info = {
-            "type": PI_TYPES[(code>>4)&0xff], # model TTTTTTTT
-            "rev": "1.%d" %(code&0xf), # rev RRRR
-            "mem": PI_MEM[(code>>20)&0x7], # mem MMM
-            "man": PI_MAN[(code>>16)&0xf], # manufacture CCCC
-            "proc": PI_PROC[(code>>12)&0xf] # proc PPPP
+            "type": type,
+            "rev": rev,
+            "mem": mem,
+            "man": man,
+            "proc": proc
         }
     else:
         old_rev = OLD_REVISION_CODES[code&0x17]
@@ -116,32 +141,40 @@ def decode_new_style_code(code):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Show Raspberry Pi revision information.')
-    parser.add_argument('-t', '--type', action='store_true', help='show type')
-    parser.add_argument('-r', '--rev', action='store_true', help='show revision')
-    parser.add_argument('-m', '--mem', action='store_true', help='show memory')
-    parser.add_argument('-b', '--man', action='store_true', help='show manufacturer')
-    parser.add_argument('-p', '--proc', action='store_true', help='show processor')
-    parser.add_argument('-c', '--rcode', action='store_true', help='show revision code')
-    parser.add_argument('-a', '--all', action='store_true', help='show all')
-    parser.add_argument('code', help='revision code (like a02082 or 0xa02082)')
+    parser = argparse.ArgumentParser(description='Print Pi revision code information. If [code] is not present then the code for this Pi is used.')
+    parser.add_argument('-t', '--type', action='store_true', help='Print model type')
+    parser.add_argument('-r', '--rev', action='store_true', help='Print model revision')
+    parser.add_argument('-m', '--mem', action='store_true', help='Print memory')
+    parser.add_argument('-b', '--man', action='store_true', help='Print manufacturer')
+    parser.add_argument('-p', '--proc', action='store_true', help='Print processor')
+    parser.add_argument('-c', '--rcode', action='store_true', help='Print revision code')
+    parser.add_argument('-a', '--all', action='store_true', help='Print all')
+    parser.add_argument('code', nargs='?', help='Revision code (like a02082 or 0xa02082)')
     args = parser.parse_args()
 
-    code = int( args.code if "0x" == args.code[:2] else "0x" + args.code, 16)
+    if not len(sys.argv) > 1:
+        args.all = True
+
+    if args.code:
+        code = int(args.code if "0x" == args.code[:2] else "0x" + args.code, 16)
+    else:
+        cmd = "vcgencmd otp_dump | awk -F: '/^30:/{print substr($2,3)}'"
+        code = int("0x" + subprocess.run(cmd, shell=True, text=True, capture_output=True).stdout.rstrip(), 16)
+
     rev_info = decode_new_style_code(code)
 
     info_text = ''
-    if args.rcode or args.all:
+    if args.rcode or args.all or args.code:
         info_text += hex(code) + "\t"
-    if args.type or args.all:
+    if args.type or args.all or args.code:
         info_text += rev_info['type'] + "\t"
-    if args.rev or args.all:
+    if args.rev or args.all or args.code:
         info_text += rev_info['rev'] + "\t"
-    if args.mem or args.all:
+    if args.mem or args.all or args.code:
         info_text += rev_info['mem'] + "\t"
-    if args.man or args.all:
+    if args.man or args.all or args.code:
         info_text += rev_info['man'] + "\t"
-    if args.proc or args.all:
+    if args.proc or args.all or args.code:
         info_text += rev_info['proc'] + "\t"
     info_text = info_text.strip()
 
