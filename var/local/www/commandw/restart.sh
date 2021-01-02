@@ -19,6 +19,9 @@
 # 2019-04-12 TC moOde 5.0
 #
 
+# scripts directory
+sdir="$(dirname $0)"
+
 if [[ -z $1 ]]; then
 	echo "args are reboot, poweroff"
 	exit 0
@@ -27,13 +30,21 @@ fi
 if [[ $1 = "reboot" ]]; then
 	mpc stop
 	systemctl stop nginx
-	reboot
+	if [[ -x "${sdir}/custom_reboot.sh" ]]; then
+		"${sdir}/custom_reboot.sh"
+	else
+		reboot
+	fi
 fi
 
 if [[ $1 = "poweroff" ]]; then
 	mpc stop
 	systemctl stop nginx
-	poweroff
+	if [[ -x "${sdir}/custom_poweroff.sh" ]]; then
+		"${sdir}/custom_poweroff.sh"
+	else
+		poweroff
+	fi
 fi
 
 echo "args are reboot, poweroff"
