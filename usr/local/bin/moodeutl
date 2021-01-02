@@ -118,6 +118,9 @@ switch ($option) {
 		$file = file_get_contents('/var/www/footer.min.php');
 		echo substr($file, strpos($file, 'Release: ') + 9, 16) . "\n";
 		break;
+	case '--revision':
+		echo shell_exec('/var/www/command/pirev.py');
+		break;
 	case '--version':
 		echo VERSION . "\n";
 		break;
@@ -129,24 +132,25 @@ Moode utility programs
 
 With no OPTION print the help text and exit.
 
- -a\t\tprint features availability
- -A [add|rm N] \tupdate features availability
- -d\t\tdump session file (requires sudo)
- -D [var name] \tdelete session variable (requires sudo)
- -e [filename]\texport settings to moodecfg.ini
- -f\t\tprint supported audio formats
- -F\t\tprint full alsacap info
- -i\t\timport moodecfg.ini
- -l\t\tprint moode log
- -m\t\trun system monitor
- -q\t\tquery sql database
- -r\t\trestart servers
- -s\t\tprint system info
- -t\t\tprint last 10 lines of moode log and wait
- -u\t\tcheck radio station urls for playability
- --mooderel\tprint moOde release
- --version\tprint the program version
- --help\t\tprint this help text\n";
+ -a\t\tPrint features availability
+ -A [add|rm N] \tUpdate features availability
+ -d\t\tDump session file (requires sudo)
+ -D [var name] \tDelete session variable (requires sudo)
+ -e [filename]\tExport settings to moodecfg.ini
+ -i\t\tImport moodecfg.ini
+ -f\t\tPrint supported audio formats
+ -F\t\tPrint full alsacap info
+ -l\t\tPrint moode log
+ -m\t\tRun system monitor
+ -q\t\tQuery sql database
+ -r\t\tRestart servers
+ -s\t\tPrint system info
+ -t\t\tPrint last 10 lines of moode log and wait
+ -u\t\tCheck radio station urls for playability
+ --mooderel\tPrint moOde release
+ --revision\tPrint the hardware revision
+ --version\tPrint the program version
+ --help\t\tPrint this help text\n";
 		break;
 }
 
