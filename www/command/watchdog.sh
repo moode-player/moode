@@ -19,8 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-12-15 TC moOde 7.0.0
-#
 
 # This limit is designed to moderate PHP resource usage and should be around 2X higher (based on my experience)
 # than the typical number of fpm child workers that are spawned when there are two connected clients operating
@@ -33,8 +31,6 @@ FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_ACTIVE=$(pgrep -c -x mpd)
 HW_PARAMS_LAST=""
 SQL_DB=/var/local/www/db/moode-sqlite3.db
-SESSION_DIR=/var/local/php
-SESSION_FILE=$SESSION_DIR/sess_$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='sessionid'")
 
 while true; do
 	# PHP-FPM
@@ -43,16 +39,6 @@ while true; do
 		LOG_MSG=" watchdog: Info: Reducing PHP fpm worker pool"
 		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 		systemctl restart php7.3-fpm
-	fi
-
-	# PHP session permissions
-	PERMS=$(ls -l $SESSION_FILE | awk '{print $1 "," $3 "," $4;}')
-	if [[ $PERMS != "-rw-rw-rw-,www-data,www-data" ]]; then
-		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		LOG_MSG=" watchdog: Error: PHP session permissions (reapplied)"
-		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
-		chown www-data:www-data $SESSION_FILE
-		chmod 0666 $SESSION_FILE
 	fi
 
 	# MPD
