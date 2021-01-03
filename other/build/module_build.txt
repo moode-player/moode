@@ -109,17 +109,16 @@ wget https://raw.githubusercontent.com/Hexxeh/rpi-firmware/$KERNEL_RPI_UPDATE_HA
 cp $MODULE_SYMVERS Module.symvers
 cat Module.symvers | grep module_layout
 
-# This is so the modules get the correct vermagic string
-sed -i /CONFIG_LOCALVERSION=/c\CONFIG_LOCALVERSION="-v7+" .config
-#sed -i /CONFIG_LOCALVERSION=/c\CONFIG_LOCALVERSION="-v7l+" .config
-#sed -i /CONFIG_LOCALVERSION=/c\CONFIG_LOCALVERSION="-v8+" .config
-cat .config | grep LOCALVERSION=
+# create defaults configs:
+# bcmrpi_defconfig: Pi 1, Pi Zero, Pi Zero W, and Compute Module default build configuration
+# bcm2709_defconfig: Pi 2, Pi 3, Pi 3+, and Compute Module 3 default build configuration
+# bcm2711_defconfig: Raspberry Pi 4
 
-# Sets the correct release identifier
-echo $KERNEL_VER-$KERNEL_REL > include/config/kernel.release
-cat include/config/kernel.release
-echo "#define UTS_RELEASE \"$KERNEL_VER-$KERNEL_REL\"" > include/generated/utsrelease.h
-cat include/generated/utsrelease.h
+# select one
+#make bcmrpi_defconfig
+make bcm2709_defconfig
+#make bcm2711_defconfig
+
 
 ----------------------------------------------------------------
 // 7a. COMPILE 32-bit MODULES
@@ -130,9 +129,9 @@ cd ~/linux
 
 # NOTE: These commands are not needed when starting with the 32-bit compiles because
 # they are apparently done automatically by the rpi-source commands in step 4. They
-# would need to be run if starting with the 64-bit compile.
-#make prepare
-#make modules_prepare
+# would need to be run if starting with the 64-bit compile or a different arch then the default.
+make prepare
+make modules_prepare
 
 # Allo ASIX Eth/USB driver
 make -j4 M=drivers/net/usb modules
