@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////
 //
-// MODULE BUILD RECIPE v1.0
+// MODULE BUILD RECIPE v1.1
 // Based on @bitlab build plan.
 //
 // NOTE: Expand the file system on the build machine
@@ -17,8 +17,6 @@ KERNEL_BUILD=1371
 KERNEL_RPI_UPDATE_HASH=cc9ff6c7d1b9be5465c24c75941b049f94a6bd32
 KERNEL_SRC_HASH=`curl https://raw.githubusercontent.com/Hexxeh/rpi-firmware/$KERNEL_RPI_UPDATE_HASH/git_hash`
 MOODE_OTHER=/mnt/moode-player/GitHub/moode/other
-
-# Do this if 64-bit tooling is already installed
 export PATH=$PATH:/opt/aarch64/bin/
 
 ----------------------------------------------------------------
@@ -27,7 +25,7 @@ export PATH=$PATH:/opt/aarch64/bin/
 // NOTE: Skip this step if already running the given kernel
 ----------------------------------------------------------------
 
-sudo echo "y" | sudo PRUNE_MODULES=1 rpi-update $KERNEL_RPI_UPDATE_HASH
+echo "y" | sudo PRUNE_MODULES=1 rpi-update $KERNEL_RPI_UPDATE_HASH
 
 sudo rm -rf /lib/modules.bak
 sudo rm -rf /boot.bak
@@ -109,39 +107,31 @@ wget https://raw.githubusercontent.com/Hexxeh/rpi-firmware/$KERNEL_RPI_UPDATE_HA
 cp $MODULE_SYMVERS Module.symvers
 cat Module.symvers | grep module_layout
 
-# create defaults configs:
+# Create default target config
 # bcmrpi_defconfig: Pi 1, Pi Zero, Pi Zero W, and Compute Module default build configuration
 # bcm2709_defconfig: Pi 2, Pi 3, Pi 3+, and Compute Module 3 default build configuration
 # bcm2711_defconfig: Raspberry Pi 4
 
-# select one
+# Select one (32-bit)
 #make bcmrpi_defconfig
 make bcm2709_defconfig
 #make bcm2711_defconfig
 
-
 ----------------------------------------------------------------
 // 7a. COMPILE 32-bit MODULES
-//
+// - Allo ASIX Eth/USB driver
+// - Bitlab PCM1974a 384k codec
 ----------------------------------------------------------------
 
-cd ~/linux
-
-# NOTE: These commands are not needed when starting with the 32-bit compiles because
-# they are apparently done automatically by the rpi-source commands in step 4. They
-# would need to be run if starting with the 64-bit compile or a different arch then the default.
 make prepare
 make modules_prepare
-
-# Allo ASIX Eth/USB driver
 make -j4 M=drivers/net/usb modules
-
-# Bitlab PCM1974a 384k codec
-make -j4 M=sound/soc/codecs
+make -j4 M=sound/soc/codecs modules
 
 ----------------------------------------------------------------
 // 7b. COMPILE 64-BIT MODULES
-//
+// - Allo ASIX Eth/USB driver
+// - Bitlab PCM1974a 384k codec
 ----------------------------------------------------------------
 
 # NOTE: Assume step 6 already done
@@ -152,11 +142,8 @@ make -j4 M=sound/soc/codecs
 # Pi4 being used for compiles
 make ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu- bcm2711_defconfig
 
-# Prepare the modules
 make prepare ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu-
 make modules_prepare ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu-
-
-# Build the modules
 make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- M=drivers/net/usb modules
 make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- M=sound/soc/codecs modules
 
