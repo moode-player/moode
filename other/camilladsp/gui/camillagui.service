@@ -1,0 +1,11 @@
+[Unit]
+Description=CamillaDSP GUI
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /opt/camillagui/main.py
+
+[Install]
+WantedBy=multi-user.target
+
