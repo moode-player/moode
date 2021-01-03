@@ -30,5 +30,4 @@ sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/drivers/net/usb/ax88179_178a.ko
 sudo depmod $KERNEL-v7+
 sudo depmod $KERNEL-v7l+
 sudo depmod $KERNEL-v8+
-
-
+sync
