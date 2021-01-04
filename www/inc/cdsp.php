@@ -29,6 +29,11 @@ require_once dirname(__FILE__) . '/playerlib.php';
 const CDSP_CHECK_VALID = 1;
 const CDSP_CHECK_INVALID = 0;
 const CDSP_CHECK_NOTFOUND = -1;
+
+const CGUI_CHECK_ACTIVE = 0;
+const CGUI_CHECK_INACTIVE = 3;
+const CGUI_CHECK_ERROR = -2;
+const CGUI_CHECK_NOTFOUND = -1;
 class CamillaDsp {
 
     private $ALSA_CDSP_CONFIG = '/etc/alsa/conf.d/camilladsp.conf';
@@ -217,6 +222,25 @@ class CamillaDsp {
             'S16_LE' => 'S16LE');
     }
 
+    function getCamillaGuiStatus() {
+        $output = array();
+        $exitcode = CGUI_CHECK_NOTFOUND;
+        if( file_exists('/etc/systemd/system/camillagui.service')) {
+            $cmd = 'systemctl status camillagui';
+            exec($cmd, $output, $exitcode);
+        }
+
+        return $exitcode;
+    }
+
+    function changeCamillaStatus($enable) {
+        if($enable) {
+            syscmd("sudo systemctl start camillagui");
+        }else {
+            syscmd("sudo systemctl stop camillagui");
+        }
+    }
+
     // placeholders for autoconfig support, empty for now
     function backup() {
     }
@@ -266,6 +290,12 @@ function test_cdsp() {
 
     $res = $cdsp->coeffInfo('test1.txt');
     print_r($res);
+        $cdsp->changeCamillaStatus(0);
+        print_r( $cdsp->getCamillaGuiStatus() );
+        print("\n");
+        $cdsp->changeCamillaStatus(1);
+        print_r( $cdsp->getCamillaGuiStatus() );
+        print("\n");
 
 }
 
