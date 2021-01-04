@@ -182,23 +182,49 @@ devices:
 		</fieldset>
 
 	</form>
-	<!-- disabled while the camilla webgui isn't include in moode -->
-	<!--
+
 	<form class="form-horizontal" action="" method="post" >
 		<fieldset>
-			<legend>Pipeline Editor</legend>
+			<legend>Camilla GUI - Pipeline Editor</legend>
+			<span id="info-camillagui-notfound" class="help-block-configs help-block-margin legend-info-help">
+				<i>The use of the CamillaGUI is high experimental in moOde. The CamillaGUI runs standalone from moOde.</i><br/>
+			</span>
 			<div class="control-group">
+				<span id="info-camillagui-notfound" class="help-block-configs help-block-margin legend-info-help $_camillagui_notfound_show" >
+					<span style='color: red'>&#10007;</span> Service not found. Maybe Camillagui isn't installed.
+				</span>
+				<span id="info-camillagui-problems" class="help-block-configs help-block-margin legend-info-help $_camillagui_status_problems">
+					<span style='color: red'>&#10007;</span> Unknown problem with camillagui.
+				</span>
+
+				<label class="control-label" >Status</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-camillagui2">ON</label>
+						$_select[camillagui1]
+						<label class="toggle-radio" for="toggle-camillagui1">OFF</label>
+						$_select[camillagui0]
+					</div>
+
+					<a aria-label="Help" class="info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-camillagui" class="help-block-configs help-block-margin legend-info-help hide">
+						Show the current status of the camillagui. On press the status will be toggled.
+						To save resources after a reboot the camillagui is disabled again.
+					</span>
+
+					<button id="btn-updat-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillagui" value="1" style="display:none"/>
+				</div>
+
 				<div style="margin-top:.5em">
-					<a href="cdsp-configeditor.php"><button class="btn btn-medium btn-primary">Open</button></a>&nbsp;Camilla DSP Pipeline Editor<br>
+					<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary" $_open_camillagui_disabled >Open</button></a>&nbsp;Camilla DSP Pipeline Editor<br>
 				</div>
 			</div>
 		</fieldset>
 	</form>
-	-->
+
 </div>
 </div>
 
-<!-- TODO: set selected from javascript -->
 <form class="form-horizontal" method="post">
 	<div id="remove-pipeline" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-pipeline-label" aria-hidden="true">
 		<input id="config_remove_id" type="hidden" name="cdsp-config" value="$selectedConfig"/>
@@ -223,7 +249,6 @@ devices:
 
 <form class="form-horizontal" method="post">
 	<div id="remove-coeff" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-coeff-label" aria-hidden="true">
-		<!-- TODO:set correct selected-->
 		<input id="coeff_remove_id" type="hidden" name="cdsp-coeffs" value="$_selected_coeff"/>
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

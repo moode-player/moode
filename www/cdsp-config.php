@@ -132,6 +132,11 @@ else if (isset($_POST['cdsp-coeffs']) && isset($_POST['info']) && $_POST['info']
 		$coeffInfoHtml .= ''. $param . ' = ' . $value. '<br/>';
 	}
 }
+// camillagui status toggle
+else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) && $_POST['updatecamillagui'] == '1') {
+ 	$cdsp->changeCamillaStatus($_POST['camillaguistatus']);
+}
+
 /**
  * Generate data for html templating
  */
@@ -203,6 +208,13 @@ if( $selectedConfig) {
 	}
 }
 
+$camillaGuiStatus = $cdsp->getCamillaGuiStatus();
+$camillaGuiClickHandler = " onchange=\"$('#btn-updat-camilla-gui').click();\"";
+$_select['camillagui1'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui1\" value=\"1\" " . (($camillaGuiStatus == CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
+$_select['camillagui0'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui2\" value=\"0\" " . (($camillaGuiStatus != CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
+$_open_camillagui_disabled = $camillaGuiStatus == CGUI_CHECK_ACTIVE ? '': 'disabled';
+$_camillagui_notfound_show = $camillaGuiStatus == CGUI_CHECK_NOTFOUND ? '': 'hide';
+$_camillagui_status_problems = $camillaGuiStatus == CGUI_CHECK_ACTIVE || $camillaGuiStatus == CGUI_CHECK_INACTIVE || $camillaGuiStatus == CGUI_CHECK_NOTFOUND? 'hide': '';
 session_write_close();
 
 waitWorker(1, 'cdsp-config');

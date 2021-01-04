@@ -70,6 +70,7 @@
 				<li><a href="mpd-config.php" class="btn btn-small row2-btns">MPD settings</a></li>
 				<li><a href="eqp-config.php" class="btn btn-small row2-btns">Parametric EQ</a></li>
 				<li><a href="eqg-config.php" class="btn btn-small row2-btns">Graphic EQ</a></li>
+				<li><a href="cdsp-config.php" class="btn btn-small row2-btns">CamillaDSP</a></li>
 				<li class="context-menu"><a href="#notarget" class="btn btn-small row2-btns" data-cmd="setforclockradio-m">Clock radio</a></li>
 				<?php if ($_SESSION['feat_bitmask'] & $FEAT_INPSOURCE) { ?>
 					<li><a href="inp-config.php" class="btn btn-small row2-btns">Input source</a></li>
