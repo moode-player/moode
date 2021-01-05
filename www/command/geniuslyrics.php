@@ -191,16 +191,26 @@ if($TITLE!="" && $ARTIST!=""){
 //      $songlyrics=str_replace("[","<br />[",$songlyrics);
       echo $artistFound.' - '.$songFound;
       echo $songlyrics;
+      echo "<p><a target='_blank' href='".$song_url."'>".$song_url."</a></p>";
     }
     else{
-      echo "cannot parse the lyricspage<br />";
+      echo "<br /><br />cannot parse the lyrics-page<br />";
       echo "<a target='_blank' href='".$song_url."'>".$song_url."</a>";
     };
   }
-  else{echo "no lyrics found..." . chr(10);};
-
-//
+  else{
+    if($result[0]=="401"){
+      echo "401 Unauthorized<br /><br />please check Your client accesstoken!<br /><br />";
+    }
+    else{
+    	echo "<br /><br />Sorry, no lyrics found...<br /><br />";
+    };
+  }
 }
-else{echo "please start playback..." . chr(10);}
+else{
+  echo("<br /><br />not enough information provided for a specific lyrics-query...<br />");
+  if($TITLE==""){echo ("(Title missing)");}
+  if($ARTIST==""){echo ("(Artist missing)");}
+};
 
 ?>

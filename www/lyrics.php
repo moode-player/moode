@@ -22,18 +22,6 @@
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-//$file = '/var/local/www/lyrics.txt';
-//sysCmd('php /var/www/command/geniuslyrics_v3.php > ' . $file);
-
-
-$cmd = 'php /var/www/command/geniuslyrics.php';
-
-passthru('sudo ' . $cmd, $text);
-
-//$fh = fopen($file, 'r');
-//$text = fread($fh, filesize($file));
-//fclose($fh);
-
-//$tpl = 'lyrics.html';
-//eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
-echo $text;
+$cmd = 'php ' . dirname(__FILE__) . '/command/geniuslyrics.php';
+$result = shell_exec($cmd);
+echo $result;

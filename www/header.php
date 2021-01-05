@@ -178,7 +178,6 @@
 					<li><a href="blu-config.php"><i class="fas fa-wifi sx"></i> BlueZ</a></li>
 					<li><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fas fa-forward sx"></i> Players</a></li>
                     <li><a href="javascript:audiohardware()"><i class="fas fa-music sx"></i> Audio info</a></li>
-          <li class="context-menu"><a href="#notarget" data-cmd="song-lyrics"><i class="fas fa-bars sx"></i> Song lyrics</a></li>
 					<li id="playhistory-hide" class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fas fa-book sx"></i> Play history</a></li>
 					<li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fas fa-info sx"></i> Quick help</a></li>
 					<li class="context-menu menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
