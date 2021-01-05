@@ -18,13 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-MM-DD TC moOde 7.x.x
- *
  */
 -->
 <div class="container">
 	<div class="container2">
-	<h1 class="cdsp-config">Configuration</h1>
+	<h1 class="cdsp-config">CamillaDSP Config</h1>
 	<span class="help-block-configs help-block-margin">
 		Version:&nbsp;  $_select[version].<br>
 	</span>
@@ -33,7 +31,7 @@
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
 			<a aria-label="Help" class="info-toggle" data-cmd="info-config-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-config-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				Update Camilla configuration and restart Camilla if required.<br>
+				Update CamillaDSP configuration and restart CamillaDSP if required.<br>
             </span>
 		</legend>
 
@@ -48,9 +46,9 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-cdspmode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-cdspmode" class="help-block-configs help-block-margin legend-info-help hide">
-						Off - don't use Camilla DSP<br/>
-						Custom - custom alsa_cdsp configuration is used, don't touch any alsa_cdsp or camilla configuration.<br/>
-						Else use the selected Camilla DSP configuration file. This one will be assigned to alsa_cdsp.
+						Off - don't use CamillaDSP<br/>
+						Custom - custom alsa_cdsp configuration is used, don't touch any alsa_cdsp or CamillaDSP configuration.<br/>
+						Else use the selected CamillaDSP configuration file. This one will be assigned to alsa_cdsp.
 					</span>
 				</div>
 
@@ -68,9 +66,8 @@
 					  <a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-playbackdevice" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-cdsp-playbackdevice" class="help-block-configs help-block-margin legend-info-help hide">
-						Automatic set correct playback device and format for the CamillaDSP configuration.<br/>
-						Disable if you want to used an other play back device then the default of moOde,<br/>
-						for example if you want to create a multi channel crossover.<br>
+						Automaticly set correct playback device and format for the CamillaDSP configuration.<br/>
+						Disable if you want to use another play back device then the default of moOde for example if you want to create a multi channel crossover.
 					</span>
 
 				</div>
@@ -162,7 +159,7 @@ devices:
 						Remove: delete the selected convolution file.<br/>
 						Download: download the selected convolution file.<br/>
 						Upload new: upload a convolution file, existing ones are overwritten.<br/>
-						Info: provide mediainfo about the convolution file.<br/>
+						Info: provide mediainfo about the convolution file.
  			    </div>
 			</div>
 
@@ -185,16 +182,16 @@ devices:
 
 	<form class="form-horizontal" action="" method="post" >
 		<fieldset>
-			<legend>Camilla GUI - Pipeline Editor</legend>
+			<legend>CamillaDSP Pipeline Editor</legend>
 			<span id="info-camillagui-notfound" class="help-block-configs help-block-margin legend-info-help">
-				<i>The use of the CamillaGUI is high experimental in moOde. The CamillaGUI runs standalone from moOde.</i><br/>
+				The Pipeline editor is experimental and runs standalone from moOde.
 			</span>
 			<div class="control-group">
 				<span id="info-camillagui-notfound" class="help-block-configs help-block-margin legend-info-help $_camillagui_notfound_show" >
-					<span style='color: red'>&#10007;</span> Service not found. Maybe Camillagui isn't installed.
+					<span style='color: red'>&#10007;</span> Pipeline editor not found or not installed.
 				</span>
 				<span id="info-camillagui-problems" class="help-block-configs help-block-margin legend-info-help $_camillagui_status_problems">
-					<span style='color: red'>&#10007;</span> Unknown problem with camillagui.
+					<span style='color: red'>&#10007;</span> Unknown problem with Pipeline editor.
 				</span>
 
 				<label class="control-label" >Status</label>
@@ -208,8 +205,8 @@ devices:
 
 					<a aria-label="Help" class="info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-camillagui" class="help-block-configs help-block-margin legend-info-help hide">
-						Show the current status of the camillagui. On press the status will be toggled.
-						To save resources after a reboot the camillagui is disabled again.
+						Show the current status of the Pipeline editor.<br>
+						To save resources after a reboot the Pipeline editor is disabled.
 					</span>
 
 					<button id="btn-updat-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillagui" value="1" style="display:none"/>
@@ -252,7 +249,7 @@ devices:
 		<input id="coeff_remove_id" type="hidden" name="cdsp-coeffs" value="$_selected_coeff"/>
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Remove Coeff</h3>
+			<h3>Remove Coefficients</h3>
 		</div>
 
 		<div class="modal-body">
