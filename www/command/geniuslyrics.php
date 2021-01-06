@@ -1,14 +1,23 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 $ClientAccessToken = '<<<GENIUS.COM --- CLIENT ACCESS TOKEN>>>';
-$ARTIST_=shell_exec('mpc --format %artist% | head -n 1');
-$ARTIST_=str_replace("\n","",$ARTIST_);
-$ARTIST=str_replace(" ","+",$ARTIST_);
-
-$TITLE_=shell_exec('mpc --format %title% | head -n 1');
-$TITLE_=str_replace("\n","",$TITLE_);
-$TITLE=str_replace(" ","+",$TITLE_);
-
+if(isset($_REQUEST['artist'])){
+  $ARTIST=$_REQUEST['artist'];
+}
+else{
+  $ARTIST_=shell_exec('mpc --format %artist% | head -n 1');
+  $ARTIST_=str_replace("\n","",$ARTIST_);
+  $ARTIST=str_replace(" ","+",$ARTIST_);
+}
+if(isset($_REQUEST['title'])){
+  $TITLE=$_REQUEST['title'];
+}
+else{
+  $TITLE_=shell_exec('mpc --format %title% | head -n 1');
+  $TITLE_=str_replace("\n","",$TITLE_);
+  $TITLE=str_replace(" ","+",$TITLE_);
+}
+//******************************************************************************
 function http_request($url, $opt=array()) {
 /**
  * Makes a remote HTTP request and returns the response.
@@ -141,7 +150,7 @@ function http_request($url, $opt=array()) {
   }
   return array($status, $headers, $response);
 }
-
+//******************************************************************************
 if($TITLE!="" && $ARTIST!=""){
   $result = (http_request('https://api.genius.com/search', array(
    'method'       => 'GET',
@@ -158,7 +167,7 @@ if($TITLE!="" && $ARTIST!=""){
   $song_api_path="";
   $song_url="";
   foreach($val as $hit){
-    if(stripos ($hit["result"]["primary_artist"]["name"],$ARTIST_)!==False){
+    if(stripos ($hit["result"]["primary_artist"]["name"],$ARTIST)!==False){
         //print('found' . chr(10));
         $artistFound=$hit["result"]["primary_artist"]["name"];
         $songFound=$hit["result"]["title"];

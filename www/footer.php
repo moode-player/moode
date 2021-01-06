@@ -145,7 +145,7 @@
 		<h3 id="lyrics-modal-label">Lyrics</h3>
 	</div>
 	<div class="modal-body">
-		<div id="lyrics"></div>
+		<div id="lyrics" style="margin: auto; width: 70%;"></div>
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>

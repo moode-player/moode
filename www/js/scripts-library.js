@@ -1581,9 +1581,27 @@ function formatLibTotalTime(seconds) {
 function formatNumCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-
-function lyricsQuery() {
-  $('#lyrics').load('./templates/lyrics.html');
-  $('#lyrics-modal').modal();
-  $('#lyrics').load('lyrics.php');
+//*******************SONG LYRICS************************************************
+//uglify doesn't like the default values for the parameters... if your compressor complains about them, cut the default values, compress and then paste them back in the .min file!
+function lyricsQuery(songtitle = MPD.json['title'], songartist = MPD.json['artist']) {
+  if(songtitle!=""&&songartist!=""&!songartist.includes("Unknown artist")) {
+    $('#lyrics').load('./templates/lyrics.html #lyrics-loading');
+    $('#lyrics-modal').modal();
+    $('#lyrics').load('./command/geniuslyrics.php', {'title':songtitle,'artist':songartist});
+  }
+  else {
+    $('#lyrics').load('./templates/lyrics.html #lyrics-missingparms', function() {
+      document.lyricsQuery["formArtist"].value = (songartist=="") ? "MISSING" : songartist;
+      document.lyricsQuery["formTitle"].value = (songtitle=="") ? "MISSING" : songtitle;
+    });
+    $('#lyrics-modal').modal();
+  }
 }
+
+
+function lyricsForm() {
+  songartist=document.lyricsQuery["formArtist"].value;
+  songtitle=document.lyricsQuery["formTitle"].value;
+  lyricsQuery(songtitle,songartist);
+}
+//******************************************************************************
