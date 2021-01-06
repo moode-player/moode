@@ -25,7 +25,7 @@ require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 playerSession('open', '' ,'');
 
-$_camillagui_url = 'http://'. $_SERVER['HTTP_HOST'] . ':5000';
+$_camillagui_url = 'http://'. $_SERVER['HTTP_HOST'] . ':15000';
 session_write_close();
 
 waitWorker(1, 'cdsp-configeditor');
