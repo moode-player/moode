@@ -1,16 +1,20 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 $ClientAccessToken = '<<<GENIUS.COM --- CLIENT ACCESS TOKEN>>>';
-if(isset($_REQUEST['artist'])){
-  $ARTIST=$_REQUEST['artist'];
+
+if(count($argv)>1){
+  parse_str(implode('&', array_slice($argv, 1)), $_GET);
+}
+if(isset($_GET['artist'])){
+  $ARTIST=$_GET['artist'];
 }
 else{
   $ARTIST_=shell_exec('mpc --format %artist% | head -n 1');
   $ARTIST_=str_replace("\n","",$ARTIST_);
   $ARTIST=str_replace(" ","+",$ARTIST_);
 }
-if(isset($_REQUEST['title'])){
-  $TITLE=$_REQUEST['title'];
+if(isset($_GET['title'])){
+  $TITLE=$_GET['title'];
 }
 else{
   $TITLE_=shell_exec('mpc --format %title% | head -n 1');

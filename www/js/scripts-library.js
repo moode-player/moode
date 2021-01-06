@@ -1587,10 +1587,15 @@ function lyricsQuery(songtitle = MPD.json['title'], songartist = MPD.json['artis
   if(songtitle!=""&&songartist!=""&!songartist.includes("Unknown artist")) {
     $('#lyrics').load('./templates/lyrics.html #lyrics-loading');
     $('#lyrics-modal').modal();
-    $('#lyrics').load('./command/geniuslyrics.php', {'title':songtitle,'artist':songartist});
-  }
+    $('#lyrics').load('lyrics.php', {'title':songtitle,'artist':songartist}, function() {
+      $('#lyrics-form').load('./templates/lyrics.html #lyricsForm', function() {
+        document.lyricsQuery["formArtist"].value = songartist;
+        document.lyricsQuery["formTitle"].value = songtitle;
+      });
+  });}
   else {
-    $('#lyrics').load('./templates/lyrics.html #lyrics-missingparms', function() {
+    $('#lyrics').load('./templates/lyrics.html #lyrics-missingparms');
+    $('#lyrics-form').load('./templates/lyrics.html #lyricsForm', function() {
       document.lyricsQuery["formArtist"].value = (songartist=="") ? "MISSING" : songartist;
       document.lyricsQuery["formTitle"].value = (songtitle=="") ? "MISSING" : songtitle;
     });
