@@ -24,20 +24,19 @@
 	<div class="container2">
 	<h1 class="cdsp-config">CamillaDSP Config</h1>
 	<span class="help-block-configs help-block-margin">
-		Version:&nbsp;  $_select[version].<br>
+		Version:&nbsp;$_select[version]<br>
 	</span>
 	<form class="form-horizontal" action="" method="post" >
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
 			<a aria-label="Help" class="info-toggle" data-cmd="info-config-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-config-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				Update CamillaDSP configuration and restart CamillaDSP if required.<br>
+				Update the configuration and restart CamillaDSP if required.<br>
             </span>
 		</legend>
 
 		<fieldset>
 			<legend>General</legend>
-
 			<div class="control-group">
 				<label class="control-label" for="cdsp-setting-mode">Configuration</label>
 				<div class="controls">
@@ -46,15 +45,13 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-cdspmode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-cdspmode" class="help-block-configs help-block-margin legend-info-help hide">
-						Off - don't use CamillaDSP<br/>
-						Custom - custom alsa_cdsp configuration is used, don't touch any alsa_cdsp or CamillaDSP configuration.<br/>
-						Else use the selected CamillaDSP configuration file. This one will be assigned to alsa_cdsp.
+						<b>Off:&nbsp;</b>Don't use CamillaDSP.<br/>
+						<b>Custom:&nbsp;</b>Use a custom alsa_cdsp configuration.<br>
+						<b>Listed:&nbsp;</b>Use one of the listed configuration files.
 					</span>
 				</div>
-
-
-
-				<label class="control-label" >Set device</label>
+				<br>
+				<label class="control-label">Default device</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggle-cdsp-playbackdevice2">YES</label>
@@ -66,65 +63,17 @@
 					  <a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-playbackdevice" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-cdsp-playbackdevice" class="help-block-configs help-block-margin legend-info-help hide">
-						Automaticly set correct playback device and format for the CamillaDSP configuration.<br/>
-						Disable if you want to use another play back device then the default of moOde for example if you want to create a multi channel crossover.
+						<b>Yes:&nbsp;</b>Use the moOde defined audio device and format for the configuration.<br/>
+						<b>No:&nbsp;</b>Use an audio device thats different from the moOde defined device for example if you want to create a multi-channel crossover.
 					</span>
-
 				</div>
 			</div>
-
 		</fieldset>
 	</form>
+
 	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
 		<fieldset>
-			<div>
-				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary">Remove</button></a>
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
-				<div class="modal-button-style">
-					<label for="pipelineconfig" id="choose-pipeline-cfg" class="btn btn-primary btn-medium">Upload new</label>
-					<input type="file" id="pipelineconfig" accept=".yml" name="pipelineconfig" style="display:none" onchange="$('#btn-import-pipeline').click();" >
-					<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
-				</div>
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="check" value="1">Check</button>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<div id="info-configuration-actions" class="help-block-configs help-block-margin hide">
-					Remove: delete the selected configuation file.<br/>
-					Download: download the selected configuation file.<br/>
-					Upload new: upload a configuration file, existing ones are overwritten.<br/>
-					Check: check if the selected configuration is a valid CamillaDSP configuration.<br/><br/>
-
-					Changes to the configuration are effective immediately after pausing/stopping playback.<br>
-					Information on how to create CamillaDSP configuration files can be found on the
-					<a href="https://github.com/HEnquist/camilladsp">CamillaDSP homepage</a>.<br>
-					<br>
-					If CamillaDSP can't play audio, errors will be reported to <code>/var/log/mpd/log</code><br>
-					In case this is due to channel counts or sampling rates which are not supported by your DAC,<br>
-					you can either handle this in CamillaDSP with mixers or resamplers<br>
-					or change the formats which are passed to CamillaDSP in <code>/etc/alsa/conf.d/camilladsp.conf</code><br>
-					If this file is erroneous, <code>/var/log/moode.log</code> and <code>/var/log/syslog</code> may also provide hints.<br>
-					<br>
-					With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
-<code><span style="white-space: pre;">
-devices:
-  samplerate: 44100  # irrelevant if resampling is disabled - then it will be overridden with the incoming sample rate
-  chunksize: 4096 # increase, if buffer underruns occur when using higher samplerates (e.g. to 8192, 16384, 32768, 65536, ...)
-  queuelimit: 1  # increasing this introduces significant latency when stopping playback or changing songs
-                 # e.g.: samplerate=44100, chunksize=1024, queuelimit=44 => latency ~ 1s
-  capture:
-    type: Stdin
-    channels: 2  # irrelevant - will always be overridden (currently always 2)
-    format: S32LE  # irrelevant - will always be overridden with the incoming sample format
-  playback:
-    type: Alsa
-    channels: 2
-    device: "$sound_device_type:$current_sound_device_number"  # by default, this is automatically updated when configuration is choosen. (correct value is only shown, when playback is stopped.)																									  #
-    format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats (correct value is only shown, when playback is stopped)
-</span></code><br><br/>
-					Any reference to a convolution file should be relative like <code>../coeffs/yourfile.wav</code>
-				</div>
-			</div>
-
-			<legend>Pipeline Configurations</legend>
+			<legend>Pipeline configuration</legend>
 			<div class="control-group">
 				<label class="control-label" for="cdsp-configs">Pipeline</label>
 				<div class="controls">
@@ -137,35 +86,64 @@ devices:
 					$checkMsg
 					</div>
 				</div>
+			</div>
 
+			<div class="control-group">
+				<div class="controls">
+					<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary">Delete</button></a>
+					<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
+					<div class="modal-button-style">
+						<label for="pipelineconfig" id="choose-pipeline-cfg" class="btn btn-primary btn-medium">Upload</label>
+						<input type="file" id="pipelineconfig" accept=".yml" name="pipelineconfig" style="display:none" onchange="$('#btn-import-pipeline').click();" >
+						<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
+					</div>
+					<button class="btn btn-medium btn-primary btn-submit" type="submit" name="check" value="1">Check</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div id="info-configuration-actions" class="help-block-configs help-block-margin hide">
+						<b>Delete:&nbsp;</b>Delete the selected configuation file.<br/>
+						<b>Download:&nbsp;</b>Download the selected configuation file.<br/>
+						<b>Upload:&nbsp;</b>Upload a new configuration file. If file already exists it will be overwritten.<br/>
+						<b>Check:&nbsp;</b>Check if the selected configuration is a valid CamillaDSP configuration.<br/><br/>
+
+						Changes to the configuration are effective immediately after pausing/stopping playback.<br>
+						Information on how to create CamillaDSP configuration files can be found on the
+						<a href="https://github.com/HEnquist/camilladsp">CamillaDSP homepage</a>.<br>
+						<br>
+						If CamillaDSP can't play audio, errors will be reported to the MPD log <code>/var/log/mpd/log</code><br>
+						In case this is due to channel counts or sampling rates which are not supported by your DAC,<br>
+						you can either handle this in CamillaDSP with mixers or resamplers<br>
+						or change the formats which are passed to CamillaDSP in <code>/etc/alsa/conf.d/camilladsp.conf</code><br>
+						If this file is erroneous, <code>/var/log/moode.log</code> and <code>/var/log/syslog</code> may also provide hints.<br>
+						<br>
+						With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
+	<code><span style="white-space: pre;">
+	devices:
+	  samplerate: 44100  # irrelevant if resampling is disabled - then it will be overridden with the incoming sample rate
+	  chunksize: 4096 # increase, if buffer underruns occur when using higher samplerates (e.g. to 8192, 16384, 32768, 65536, ...)
+	  queuelimit: 1  # increasing this introduces significant latency when stopping playback or changing songs
+	                 # e.g.: samplerate=44100, chunksize=1024, queuelimit=44 => latency ~ 1s
+	  capture:
+	    type: Stdin
+	    channels: 2  # irrelevant - will always be overridden (currently always 2)
+	    format: S32LE  # irrelevant - will always be overridden with the incoming sample format
+	  playback:
+	    type: Alsa
+	    channels: 2
+	    device: "$sound_device_type:$current_sound_device_number"  # by default, this is automatically updated when configuration is choosen. (correct value is only shown, when playback is stopped.)																									  #
+	    format: $sound_device_sample_format  # supported formats are: $sound_device_supported_sample_formats (correct value is only shown, when playback is stopped)
+	</span></code><br><br/>
+						Any reference to a convolution file should be relative like <code>../coeffs/yourfile.wav</code>
+					</div>
+				</div>
 			</div>
 		</fieldset>
 	</form>
 
 	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
 		<fieldset>
-			<!-- ids and names aren't correct: (copy of above now)-->
-			<div>
-				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary">Remove</button></a>
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
-				<div class="modal-button-style">
-					<label for="coeffsfile" id="choose-coeff-cfg" class="btn btn-primary btn-medium">Upload new</label>
-					<input type="file" id="coeffsfile" accept=".wav,.txt,.csv" name="coeffsfile" style="display:none" onchange="$('#btn-import-coeff').click();" >
-					<button id="btn-import-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
-				</div>
-				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="info" value="1">Info</button>
-				<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<div id="info-convolution-actions" class="help-block-configs help-block-margin legend-info-help hide">
-						Remove: delete the selected convolution file.<br/>
-						Download: download the selected convolution file.<br/>
-						Upload new: upload a convolution file, existing ones are overwritten.<br/>
-						Info: provide mediainfo about the convolution file.
- 			    </div>
-			</div>
-
-			<legend>Convolution Files</legend>
+			<legend>Convolution file</legend>
 			<div class="control-group">
-				<label class="control-label" for="cdsp-coeffs">Coeffs</label>
+				<label class="control-label" for="cdsp-coeffs">Impulse response</label>
 				<div class="controls" >
 					<select id="cdsp-coeffs" class="input-xxlarge" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );$('#coeff-info').html('');">
 						$_select[cdsp_coeffs]
@@ -176,16 +154,33 @@ devices:
 				</div>
 			</div>
 
+			<!-- ids and names aren't correct: (copy of above now)-->
+			<div class="control-group">
+				<div class="controls">
+					<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary">Delete</button></a>
+					<button class="btn btn-medium btn-primary btn-submit" type="submit" name="export" value="1">Download</button>
+					<div class="modal-button-style">
+						<label for="coeffsfile" id="choose-coeff-cfg" class="btn btn-primary btn-medium">Upload new</label>
+						<input type="file" id="coeffsfile" accept=".wav,.txt,.csv" name="coeffsfile" style="display:none" onchange="$('#btn-import-coeff').click();" >
+						<button id="btn-import-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
+					</div>
+					<button class="btn btn-medium btn-primary btn-submit" type="submit" name="info" value="1">Info</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div id="info-convolution-actions" class="help-block-configs help-block-margin legend-info-help hide">
+							<b>Delete:&nbsp;</b>Delete the selected convolution file.<br/>
+							<b>Download:&nbsp;</b>Download the selected convolution file.<br/>
+							<b>Upload:&nbsp;</b>Upload a convolution file, existing ones are overwritten.<br/>
+							<b>Info:&nbsp;</b>Show information about the convolution file.
+	 			    </div>
+				</div>
+			</div>
 		</fieldset>
-
 	</form>
 
 	<form class="form-horizontal" action="" method="post" >
 		<fieldset>
-			<legend>Pipeline Editor</legend>
-			<span id="info-camillagui-notfound" class="help-block-configs help-block-margin legend-info-help">
-				The Pipeline editor is experimental and runs standalone from moOde.
-			</span>
+			<legend>Pipeline editor</legend>
+			<p>NOTE: The Pipeline editor is experimental and runs standalone from moOde.</p>
 			<div class="control-group">
 				<span id="info-camillagui-notfound" class="help-block-configs help-block-margin legend-info-help $_camillagui_notfound_show" >
 					<span style='color: red'>&#10007;</span> Pipeline editor not found or not installed.
@@ -205,15 +200,17 @@ devices:
 
 					<a aria-label="Help" class="info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-camillagui" class="help-block-configs help-block-margin legend-info-help hide">
-						Show the current status of the Pipeline editor.<br>
-						To save resources after a reboot the Pipeline editor is disabled.
+						Show the current On/Off status of the Pipeline editor.<br>
+						To conserve system resources after a reboot the Pipeline editor is automatically turned off.
 					</span>
 
 					<button id="btn-updat-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillagui" value="1" style="display:none"/>
 				</div>
 
-				<div style="margin-top:.5em">
-					<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary" $_open_camillagui_disabled >Open</button></a>&nbsp;Pipeline editor<br>
+				<div class="controls">
+					<div style="margin-top:.5em">
+						<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary" $_open_camillagui_disabled>Open</button></a>&nbsp;Pipeline editor<br>
+					</div>
 				</div>
 			</div>
 		</fieldset>
