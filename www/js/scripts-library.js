@@ -1584,6 +1584,7 @@ function formatNumCommas(x) {
 //*******************SONG LYRICS************************************************
 //uglify doesn't like the default values for the parameters... if your compressor complains about them, cut the default values, compress and then paste them back in the .min file!
 function lyricsQuery(songtitle = MPD.json['title'], songartist = MPD.json['artist']) {
+  $('#lyrics-form').empty();
   if(songtitle!=""&&songartist!=""&!songartist.includes("Unknown artist")) {
     $('#lyrics').load('./templates/lyrics.html #lyrics-loading');
     $('#lyrics-modal').modal();
