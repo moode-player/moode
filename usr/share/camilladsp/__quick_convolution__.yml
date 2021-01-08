@@ -1,0 +1,62 @@
+
+devices:
+  samplerate: 44100
+  chunksize: 2048
+  queuelimit: 1
+  capture:
+    type: File
+    channels: 2
+    filename: "/dev/stdin"
+    format: S16LE
+  playback:
+    type: Alsa
+    channels: 2
+    device: "hw:0,0"
+    format: S16LE
+filters:
+    mastergain:
+        type: Gain
+        parameters:
+            gain: __IR_GAIN__
+    ir_left:
+      type: Conv
+      parameters:
+        type: File
+        filename: __IR_LEFT__
+        format: __IR_FORMAT__
+    ir_right:
+      type: Conv
+      parameters:
+        type: File
+        filename: __IR_RIGHT__
+        format: __IR_FORMAT__
+mixers:
+  stereo:
+    channels:
+      in: 2
+      out: 2
+    mapping:
+      - dest: 0
+        sources:
+          - channel: 0
+            gain: 0
+            inverted: false
+      - dest: 1
+        sources:
+          - channel: 1
+            gain: 0
+            inverted: false
+pipeline:
+  - type: Mixer
+    name: stereo
+  - type: Filter
+    channel: 0
+    names:
+      - mastergain
+      - ir_left
+  - type: Filter
+    channel: 1
+    names:
+      - mastergain
+      - ir_right
+

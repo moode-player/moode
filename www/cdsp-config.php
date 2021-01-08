@@ -24,7 +24,7 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 playerSession('open', '' ,'');
-$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum']);
+$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 $selectedConfig = isset($_POST['cdsp-config']) ? $_POST['cdsp-config']: NULL;
 
 /**
@@ -33,14 +33,24 @@ $selectedConfig = isset($_POST['cdsp-config']) ? $_POST['cdsp-config']: NULL;
 
 // Save
 if (isset($_POST['save']) && $_POST['save'] == '1') {
+	if( isset($_POST['cdsp_basiccon_gain']) && isset($_POST['cdsp_basicconv_left']) && isset($_POST['cdsp_basicconv_right'])) {
+		$gain = $_POST['cdsp_basiccon_gain'];
+		$convL = $_POST['cdsp_basicconv_left'];
+		$convR = $_POST['cdsp_basicconv_right'];
+		$convT = $_POST['cdsp_basicconv_type'];
+
+		$cfg = $gain . ';' . $convL . ';' . $convR . ';' . $convT;
+		$cdsp->setQuickConvolutionConfig( $cdsp->stringToQuickConvolutionConfig($cfg) );
+		playerSession('write', 'camilladsp_quickconv', $cfg);
+	}
+
 	if (isset($_POST['cdsp-mode'])) {
 		playerSession('write', 'camilladsp', $_POST['cdsp-mode']);
 		$cdsp->selectConfig($_POST['cdsp-mode']);
 		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
-		submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $_POST['cdsp-mode'], '');
-		//todo: update active configuration if needed
+		submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
 	}
 
 	if (isset($_POST['cdsp_playbackdevice'])) {
@@ -49,7 +59,6 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		   $cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
-		//todo: implement update configuration with device if needed
 	}
 }
 
@@ -57,10 +66,11 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 else if ($selectedConfig && isset($_POST['check']) && $_POST['check'] == '1') {
 	$checkResult = $cdsp->checkConfigFile($selectedConfig);
 
+	$selectedConfigLabel = $cdsp->getConfigLabel( $selectedConfig );
 	if($checkResult['valid'] == True) {
-		$_SESSION['notify']['title'] =   htmlentities('Pipeline configuration \"' . $selectedConfig . '\" is valid');
+		$_SESSION['notify']['title'] =   htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is valid');
 	}else {
-		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $selectedConfig . '\" is NOT valid');
+		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is NOT valid');
 	}
 }
 // Import (Upload)
@@ -174,6 +184,30 @@ $_select['cdsp_patch_playback_device0'] .= "<input type=\"radio\" name=\"cdsp_pl
 $_select['version'] = $cdsp->version();
 
 
+if( $_SESSION['camilladsp_quickcon'] ) {
+	$quickConvConfig =$cdsp->stringToQuickConvolutionConfig($_SESSION['camilladsp_quickconv']);
+	$_quickconv_gain_value = $quickConvConfig['gain'];
+	$quickconv_left_value = $quickConvConfig['irl'];
+	$quickconv_right_value = $quickConvConfig['irr'];
+	$quickconv_ir_type_value = $quickConvConfig['irtype'];
+}
+
+foreach ($configs as $config_file=>$config_name) {
+	$selected = ($quickconv_left_value == $config_file ) ? 'selected' : '';
+	$_select['cdsp_quickconv_irl'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_file);
+}
+
+foreach ($configs as $config_file=>$config_name) {
+	$selected = ($quickconv_right_value == $config_file ) ? 'selected' : '';
+	$_select['cdsp_quickconv_irr'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_file);
+}
+
+foreach ($cdsp->impulseResponseType() as $ir_type) {
+	$selected = ($quickconv_ir_type_value == $ir_type ) ? 'selected' : '';
+	$_select['cdsp_quickconv_irtype'] .= sprintf("<option value='%s' %s>%s</option>\n", $ir_type, $selected, $ir_type);
+}
+
+
 // Extract settings needed to show camilladsp configuration template:
 
 //Get current output hardware device
@@ -193,19 +227,30 @@ if(count($supported_soundformats) >= 1) {
 	$sound_device_type = 'hw';
 }
 
+function checkResultToHtml($checkResult) {
+	$message = '';
+	$checkMsgRaw = implode('<br>', $checkResult['msg']);
+	if( $checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
+		$message = "<span style='color: red'>&#10007;</span> ".$checkMsgRaw;
+	} elseif( $checkResult['valid'] == CDSP_CHECK_VALID) {
+		$message = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
+	} else {
+		$message = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
+	}
+	return $message;
+}
+
 $checkMsg = '';
+$checkMsgQuickConvolution = '';
 if( $selectedConfig) {
 	if(isset($checkResult) == false) {
 		$checkResult = $cdsp->checkConfigFile($selectedConfig);
 	}
-	$checkMsgRaw = implode('<br>', $checkResult['msg']);
-	if( $checkResult['valid'] == CDSP_CHECK_NOTFOUND) {
-		$checkMsg = "<span style='color: red'>&#10007;</span> ".$checkMsgRaw;
-	} elseif( $checkResult['valid'] == CDSP_CHECK_VALID) {
-		$checkMsg = "<span style='color: green'>&check;</span> " . $checkMsgRaw;
-	} else {
-		$checkMsg = "<span style='color: red'>&#10007;</span> " . $checkMsgRaw;
-	}
+	$checkMsg = checkResultToHtml($checkResult );
+}
+
+if ( $cdsp->isQuickConvolutionActive() ) {
+	$checkMsgQuickConvolution = checkResultToHtml( $cdsp->checkConfigFile( $cdsp->getConfig() ) );
 }
 
 $camillaGuiStatus = $cdsp->getCamillaGuiStatus();

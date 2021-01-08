@@ -25,7 +25,7 @@ require_once dirname(__FILE__) . '/inc/eqp.php';
 require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 playerSession('open', '' ,'');
-$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum']);
+$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 
 // I2S AUDIO DEVICE
 
@@ -235,7 +235,8 @@ if (isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 	}
-    submitJob('camilladsp', $_POST['camilladsp'], 'CamillaDSP ' . $_POST['camilladsp'], '');
+	//TODO: deal with Quick Convolution
+    submitJob('camilladsp', $_POST['camilladsp'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
 }
 
 // AUDIO RENDERERS

@@ -39,10 +39,12 @@ class CamillaDsp {
     private $CAMILLA_EXE = '/usr/local/bin/camilladsp';
     private $device = NULL;
     private $configfile = NULL;
+    private $quickConvolutionConfig = ";;;";
 
-    function __construct ($configfile, $device = NULL) {
+    function __construct ($configfile, $device = NULL, $quickconvfg) {
         $this->configfile =$configfile;
         $this->device = $device;
+        $this->quickConvolutionConfig = $this->stringToQuickConvolutionConfig($quickconvfg);
     }
 
     /**
@@ -54,9 +56,31 @@ class CamillaDsp {
             $supportedFormats = $this->detectSupportedSoundFormats();
             $useFormat = count($supportedFormats) >= 1 ?  $supportedFormats[0] : 'S32LE';
 
-            sysCmd("sudo sed -i -s '/device/s/hw:[0-9]/hw:" . $device . "/g' " . $this->getCurrentConfigFileName() );
+            // sysCmd("sudo sed -i -s '/device/s/hw:[0-9]/hw:" . $device . "/g' " . $this->getCurrentConfigFileName() );
 
-            sysCmd("sudo sed -i -s '/format/s/[:][ ].*/: " . $useFormat . "/g' " . $this->getCurrentConfigFileName() );
+            $camillaConfigDict = file_get_contents( $this->getCurrentConfigFileName() );
+
+            $formatCount = 0;
+            $hwCount = 0;
+            $fhandle = fopen($this->getCurrentConfigFileName(), "r");
+            $lines = array();
+            if($fhandle) {
+                while (!feof($fhandle ) ) {
+                    $line = fgets($fhandle);
+                    // print($line);
+                    if ($formatCount<2 && strpos($line, 'format: ') !== false) {
+                        $lines[] = explode(":", $line)[0] . ": ".$useFormat ."\n";
+                        $formatCount++;
+                    }else if ($hwCount<1 && strpos($line, 'device: ') !== false) {
+                        $lines[] = explode(":", $line)[0] . ": \"hw:" . $device . ",0\"\n";
+                        $hwCount++;
+                    }else {
+                        $lines[] = $line;
+                    }
+                }
+                fclose($fhandle);
+                file_put_contents($this->getCurrentConfigFileName(), $lines);
+            }
         }
     }
 
@@ -64,12 +88,69 @@ class CamillaDsp {
      * Set in the alsa_cdsp config the camilladsp config file to use
      */
     function selectConfig($configname) {
-        if($configName != 'custom' && $configName != 'off') {
+        if($configname != 'custom' && $configname != 'off' ) {
             $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . str_replace ('/', '\/', $configname);
             $configfilename = str_replace ('/', '\/', $configfilename);
             syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
         }
+        if( $configname == '__quick_convolution__.yml' ) {
+            $this->writeQuickConvolutionConfig();
+        }
         $this->configfile = $configname;
+    }
+
+    function getConfig() {
+        return $this->configfile;
+    }
+
+    /**
+     *
+     */
+    function stringToQuickConvolutionConfig($quickConvConfig) {
+        $config= ";;;";
+        if($quickConvConfig) {
+            $parts = explode(';', $quickConvConfig);
+            if( count($parts) == 4 ) {
+                $config = array( "gain" => $parts[0],
+                                "irl" => $parts[1],
+                                "irr" => $parts[2],
+                                "irtype" => $parts[3]);
+            }
+        }
+        return $config;
+    }
+
+    function setQuickConvolutionConfig($quickConvConfig) {
+         $this->quickConvolutionConfig = $quickConvConfig;
+    }
+
+    function getQuickConvolutionConfig() {
+        return $this->configfile = $this->quickConvolutionConfig;
+    }
+
+    function isQuickConvolutionActive() {
+        return $this->configfile == '__quick_convolution__.yml';
+    }
+
+
+    function writeQuickConvolutionConfig() {
+        $templateFile = $this->CAMILLA_CONFIG_DIR . '/__quick_convolution__.yml';
+        $configFile = $this->CAMILLA_CONFIG_DIR . '/configs/__quick_convolution__.yml';
+        $lines = file_get_contents($templateFile);
+
+        $search = array('__IR_GAIN__',
+                        '__IR_LEFT__',
+                        '__IR_RIGHT__',
+                        '__IR_FORMAT__');
+
+        $replaceWith = array(   $this->quickConvolutionConfig['gain'],
+                                '../coeffs/' . $this->quickConvolutionConfig['irl'],
+                                '../coeffs/' . $this->quickConvolutionConfig['irr'],
+                                $this->quickConvolutionConfig['irtype'] );
+
+        $newLines = str_replace( $search, $replaceWith, $lines );
+
+        file_put_contents ( $configFile, $newLines) ;
     }
 
     function detectSupportedSoundFormats() {
@@ -140,10 +221,13 @@ class CamillaDsp {
         if( $extended == True ) {
             $configs['off'] = 'Off'; // don't use camilla
             $configs['custom'] = 'Custom'; // custom configuration setup used
+            $configs['__quick_convolution__.yml'] = 'Quick convolution filter'; // custom configuration setup used
         }
         foreach (glob($this->CAMILLA_CONFIG_DIR . '/configs/*.yml') as $filename) {
-            $fileParts = pathinfo($filename);
-            $configs[$fileParts['basename']] = $fileParts['filename'];
+                $fileParts = pathinfo($filename);
+                if($fileParts['basename'] != "__quick_convolution__.yml") {
+                    $configs[$fileParts['basename']] = $fileParts['filename'];
+                }
         }
         return $configs;
     }
@@ -192,6 +276,11 @@ class CamillaDsp {
         return $mediaInfo;
     }
 
+    function getConfigLabel($configname) {
+        $selectedConfigLabel = ($configname != '__quick_convolution__.yml') ? $configname : 'Quick convolution filter';
+        return $selectedConfigLabel;
+    }
+
     /**
      * Returns the version of the used CamillaDSP
      */
@@ -218,6 +307,18 @@ class CamillaDsp {
             'S24_3LE' => 'S24LE3',
             'S24_LE' => 'S24LE',
             'S16_LE' => 'S16LE');
+    }
+
+    function impulseResponseType() {
+        return array(
+           'TEXT',
+           'FLOAT64LE',
+           'FLOATLE',
+           'S32LE',
+           'S243LE',
+           'S24LE',
+           'S16LE'
+        );
     }
 
     function getCamillaGuiStatus() {
@@ -249,30 +350,33 @@ class CamillaDsp {
 }
 
 function test_cdsp() {
-    $cdsp = New CamillaDsp('config_foobar.yaml', "5");
+    // $cdsp = New CamillaDsp('config_foobar.yaml', "5", "-9;test2.txt;test3.txt;S24_3LE");
+    $cdsp = New CamillaDsp('config_conv.yml', "5", "-9;test2.txt;test3.txt;S24_3LE");
+
+
 
     // print($cdsp->getCurrentConfigFileName() . "\n");
     //$cdsp->setPlaybackDevice(4);
     // $cdsp->selectConfig("config_foobar.yml");
-    print("\n");
-    print_r($cdsp->checkConfigFile("config.good.yml"));
-    print("\n");
-    print_r($cdsp->checkConfigFile("config.bad.yml"));
-    print("\n");
-    print_r($cdsp->checkConfigFile("config.doesnt_exist.yml"));
+    // print("\n");
+    // print_r($cdsp->checkConfigFile("config.good.yml"));
+    // print("\n");
+    // print_r($cdsp->checkConfigFile("config.bad.yml"));
+    // print("\n");
+    // print_r($cdsp->checkConfigFile("config.doesnt_exist.yml"));
 
     // print_r($cdsp->availableConfigs() );
     // print(count($cdsp->checkConfigFile("config.good.yml")));
 
-    print_r($cdsp->checkConfigFile("config.good.yml"));
-    print(gettype($cdsp->checkConfigFile("config.good.yml")['valid']));
-    if( $cdsp->checkConfigFile("config.good.yml")['valid'] == 1) {
-        print("config ok \n");
-    }
-    else {
-        print("config bad \n");
-    }
-    print($cdsp->version());
+    // print_r($cdsp->checkConfigFile("config.good.yml"));
+    // print(gettype($cdsp->checkConfigFile("config.good.yml")['valid']));
+    // if( $cdsp->checkConfigFile("config.good.yml")['valid'] == 1) {
+    //     print("config ok \n");
+    // }
+    // else {
+    //     print("config bad \n");
+    // }
+    // print($cdsp->version());
 
     print_r($cdsp->detectSupportedSoundFormats());
 

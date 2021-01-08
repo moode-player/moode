@@ -69,6 +69,45 @@
 				</div>
 			</div>
 		</fieldset>
+
+		<fieldset>
+			<!-- TODO: add help-->
+			<legend>Quick convolution filter</legend>
+			<span class="help-block-configs help-block-margin">
+				Create quick a basic convolution filter without creating an Camilla DSP configuration file.<br/>
+			</span>
+			<div class="control-group">
+
+				<label class="control-label" for="cdsp-basiccon-gain">Gain</label>
+				<div class="controls">
+					<input class="input-large" type="number" maxlength="3" min="-40" max="20" step="0.1" id="cdsp-basiccon-gain" name="cdsp_basiccon_gain" value="$_quickconv_gain_value">&nbsp;dB
+				</div>
+
+				<label class="control-label" for="cdsp-basiccon-left">IR Left</label>
+				<div class="controls">
+				    <select id="cdsp-basiccon-left" class="input-large" name="cdsp_basicconv_left" >
+						$_select[cdsp_quickconv_irl]
+					</select>
+				</div>
+
+				<label class="control-label" for="cdsp-basiccon-right">IR Right</label>
+				<div class="controls">
+				    <select id="cdsp-basiccon-right" class="input-large" name="cdsp_basicconv_right" >
+						$_select[cdsp_quickconv_irr]
+					</select>
+				</div>
+
+				<label class="control-label" for="cdsp-basiccon-right">IR Type</label>
+				<div class="controls">
+				    <select id="cdsp-basiccon-type" class="input-large" name="cdsp_basicconv_type" >
+						$_select[cdsp_quickconv_irtype]
+					</select>
+					<div id="cdsp_check_msg_quic_convolution">
+						$checkMsgQuickConvolution
+					</div>
+				</div>
+			</div>
+		</fieldset>
 	</form>
 
 	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
