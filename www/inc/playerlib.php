@@ -19,8 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2021-MM-DD TC moOde 7.1.0
- *
  * This includes the @chris-rudmin 2019-08-08 rewrite of the GenLibrary() function
  * to support the new Library renderer /var/www/js/scripts-library.js
  * Refer to https://github.com/moode-player/moode/pull/16 for more info.
@@ -1010,7 +1008,6 @@ function parseTrackInfo($resp) {
 	10 Date
 	11 Duration
 	12 Audio format
-	13 Comment
 	*/
 
 	if (is_null($resp)) {
@@ -1019,7 +1016,7 @@ function parseTrackInfo($resp) {
 	else {
 		$array = array();
 		$line = strtok($resp, "\n");
-		$num_lines = 14;
+		$num_lines = 13;
 
 		for ($i = 0; $i < $num_lines; $i++) {
 			$array[$i] = '';
@@ -1071,9 +1068,6 @@ function parseTrackInfo($resp) {
 					break;
 				case 'Time':
 					$array[11] = array('Duration' => songTime($value));
-					break;
-				case 'Comment':
-					$array[13] = array($element => $value);
 					break;
 			}
 
@@ -2829,138 +2823,25 @@ function getHostIp() {
 	return $hostip;
 }
 
-// return hardware revision
+// Return hardware revision
 function getHdwrRev() {
-	$revname = array(
-		'0000' => 'OrangePiPC',
-		'0002' => 'Pi-1B 256MB',
-		'0003' => 'Pi-1B 256MB',
-		'0004' => 'Pi-1B 256MB',
-		'0005' => 'Pi-1B 256MB',
-		'0006' => 'Pi-1B 256MB',
-		'0007' => 'Pi-1A 256MB',
-		'0008' => 'Pi-1A 256MB',
-		'0009' => 'Pi-1A 256MB',
-		'000d' => 'Pi-1B 512MB',
-		'000e' => 'Pi-1B 512MB',
-		'000f' => 'Pi-1B 512MB',
-		'0010' => 'Pi-1B+ 512MB',
-		'0011' => 'Pi-CM1 512MB',
-		'0012' => 'Pi-1A+ 256MB',
-		'0013' => 'Pi-1B+ 512MB',
-		'0014' => 'Pi-CM1 512MB',
-		'0015' => 'Pi-1A+ 256/512MB',
-		'0021' => 'Pi-1A+ 512MB v1.1',
-		'0032' => 'Pi-1B+ 512MB v1.2',
-		'0092' => 'Pi-Zero 512MB v1.2',
-		'0093' => 'Pi-Zero 512MB v1.3',
-		'00c1' => 'Pi-Zero W 512MB v1.1',
-		'1040' => 'Pi-2B 1GB v1.0',
-		'1041' => 'Pi-2B 1GB v1.1',
-		'1041' => 'Pi-2B 1GB v1.1',
-		'2042' => 'Pi-2B 1GB v1.2',
-		'2082' => 'Pi-3B 1GB v1.2',
-		'20a0' => 'Pi-CM3 1GB v1.0',
-		'20d3' => 'Pi-3B+ 1GB v1.3',
-		'20e0' => 'Pi-3A+ 512 MB v1.0',
-		// Generic CM3+ code
-		'2100' => 'Pi-CM3+ 1GB v1.0',
-		// Artificial code For Allo USBridge Signature (CM3+ based PCB)
-		'210a' => 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]',
-		// Generic Pi-4B v1.1 code
-		'3111' => 'Pi-4B 1/2/4GB v1.1',
-		// Custom Pi-4B v1.1 codes to identify RAM size
-		'a111' => 'Pi-4B 1GB v1.1',
-		'b111' => 'Pi-4B 2GB v1.1',
-		'c111' => 'Pi-4B 4GB v1.1',
-		// Generic Pi-4B v1.2 code
-		'3112' => 'Pi-4B 4GB v1.2',
-		// Custom Pi-4B v1.2 codes to identify RAM size
-		'a112' => 'Pi-4B 1GB v1.2',
-		'b112' => 'Pi-4B 2GB v1.2',
-		'c112' => 'Pi-4B 4GB v1.2',
-		// Generic Pi-4B v1.4 code
-		'3114' => 'Pi-4B 8GB v1.4',
-		// Custom Pi-4B v1.4 codes to identify RAM size
-		'b114' => 'Pi-4B 2GB v1.4',
-		'c114' => 'Pi-4B 4GB v1.4',
-		'd114' => 'Pi-4B 8GB v1.4',
-		// Generic Pi-400 v1.0 code
-		'3130' => 'Pi-4B 8GB v1.4'
-	);
+	$array = explode("\t", sysCmd('/var/www/command/pirev.py')[0]);
+	$model = $array[1];
+	$model_rev = $array[2];
+	$mem = $array[3];
 
-	$revnum = sysCmd('vcgencmd otp_dump | awk -F: ' . "'" . '/^30:/{print substr($2,5)}' . "'");
-
-	// Pi-4B
-	// Custom codes to identify the models by RAM size
- 	if ($revnum[0] == '3111' || $revnum[0] == '3112' || $revnum[0] == '3114') {
-		$prefix = sysCmd('awk ' . "'" . '{if ($1=="Revision") print substr($3,0,2)}' . "'" . ' /proc/cpuinfo');
-		$revnum[0] = $prefix[0] . substr($revnum[0], 1, 3);
+	if ($model == 'CM3+') {
+		$hdwr_rev = 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]';
 	}
-	// Pi-CM3+
-	elseif ($revnum[0] == '2100') {
- 		// Chip ID for Texas Instruments, Inc. TUSB8041 4-Port Hub
- 		$chip_id = sysCmd('lsusb | grep "0451:8142"');
-		if (!empty(chip_id[0])) {
-			// Allo USBridge Signature
-			$revnum[0] =  '210a';
-		}
-
+	elseif ($model == 'CM4') {
+		$hdwr_rev = 'Allo USBridge SIG 2 [CM4]';
+	}
+	else {
+		$hdwr_rev = 'Pi-' . $model . ' ' . $model_rev . ' ' . $mem;
 	}
 
-	return array_key_exists($revnum[0], $revname) ? $revname[$revnum[0]] : 'Unknown Pi-model';
+	return $hdwr_rev;
 }
-
-/*
-Old style revision codes
-0002	B		1.0	256 MB	Egoman
-0003	B		1.0	256 MB	Egoman
-0004	B		2.0	256 MB	Sony UK
-0005	B		2.0	256 MB	Qisda
-0006	B		2.0	256 MB	Egoman
-0007	A		2.0	256 MB	Egoman
-0008	A		2.0	256 MB	Sony UK
-0009	A		2.0	256 MB	Qisda
-000d	B		2.0	512 MB	Egoman
-000e	B		2.0	512 MB	Sony UK
-000f	B		2.0	512 MB	Egoman
-0010	B+		1.0	512 MB	Sony UK
-0011	CM1		1.0	512 MB	Sony UK
-0012	A+		1.1	256 MB	Sony UK
-0013	B+		1.2	512 MB	Embest
-0014	CM1		1.0	512 MB	Embest
-0015	A+		1.1	256 MB / 512 MB	Embest
-New style revision codes
-90 0021	A+		1.1	512 MB	Sony UK
-90 0032	B+		1.2	512 MB	Sony UK
-90 0092	Zero	1.2	512 MB	Sony UK
-90 0093	Zero	1.3	512 MB	Sony UK
-90 00c1	Zero W	1.1	512 MB	Sony UK
-90 20e0	3A+		1.0	512 MB	Sony UK
-92 0093	Zero	1.3	512 MB	Embest
-a0 1040	2B		1.0	1 GB	Sony UK
-a0 1041	2B		1.1	1 GB	Sony UK
-a0 2082	3B		1.2	1 GB	Sony UK
-a0 20a0	CM3		1.0	1 GB	Sony UK
-a0 20d3	3B+		1.3	1 GB	Sony UK
-a0 2100	CM3+	1.0	1 GB	Sony UK
-a2 1041	2B		1.1	1 GB	Embest
-a2 2042	2B		1.2	1 GB	Embest (with BCM2837)
-a2 2082	3B		1.2	1 GB	Embest
-a2 20a0	CM3		1.0	1 GB	Embest
-a3 2082	3B		1.2	1 GB	Sony Japan
-a5 2082	3B		1.2	1 GB	Stadium
-a0 3111	4B		1.1	1GB		Sony UK
-b0 3111	4B		1.1	2GB		Sony UK
-c0 3111	4B		1.1	4GB		Sony UK
-a0 3112	4B		1.2	1GB		Sony UK
-b0 3112	4B		1.2	2GB		Sony UK
-c0 3112	4B		1.2	4GB		Sony UK
-b0 3114	4B		1.4	2GB		Sony UK
-c0 3114	4B		1.4	4GB		Sony UK
-d0 3114	4B		1.4	8GB		Sony UK
-c0 3130 400		1.0 4GB		Sony UK
-*/
 
 // returns the settings for reading/writing the autoConfig file
 function autoConfigSettings() {
