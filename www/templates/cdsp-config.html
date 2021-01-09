@@ -75,7 +75,6 @@
 			<!-- TODO: add help-->
 			<legend>Quick convolution filter</legend>
 			<div class="control-group">
-
 				<label class="control-label" for="cdsp-basiccon-gain">Gain</label>
 				<div class="controls">
 					<input class="input-large" type="number" maxlength="3" min="-40" max="20" step="0.1" id="cdsp-basiccon-gain" name="cdsp_basiccon_gain" value="$_quickconv_gain_value">&nbsp;dB
@@ -83,8 +82,8 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-gain" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span  id="info-cdsp-qc-gain" class="help-block-configs help-block-margin legend-info-help hide">
-						With the gain clipping can be prevent. Reducing the gain requires a negative value.<br/>
-						You can open the Camilla GUI below, to analyze if the signal is clipping or show frequency curve of the filter.<br/>
+						Adjusting the Gain can help prevent clipping. The range is -40dB to 20dB.<br/>
+						You can open the Pipeline editor below to analyze if the signal is clipping or show frequency curve of the filter.
 					</span>
 				</div>
 
@@ -98,7 +97,7 @@
 					</div>
 					<span  id="info-cdsp-qc-left" class="help-block-configs help-block-margin legend-info-help hide">
 						Select an impulse response to use for the convolution.<br/>
-						New impulse reponses can be add in the section convolution file.<br/>
+						New impulse reponses can be added in the Convolution file section.
 					</span>
 				</div>
 
@@ -112,7 +111,7 @@
 					</div>
 					<span  id="info-cdsp-qc-right" class="help-block-configs help-block-margin legend-info-help hide">
 						Select an impulse response to use for the convolution.<br/>
-						New impulse reponses can be add in the section convolution file.<br/>
+						New impulse reponses can be added in the Convolution file section.
 					</span>
 				</div>
 
@@ -125,8 +124,8 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span  id="info-cdsp-qc-type" class="help-block-configs help-block-margin legend-info-help hide">
-						Set the type of the selected impulse response files. Below in the convolution file section you can show information about a specific impulse response file<br/>
-						See <a href="https://github.com/HEnquist/camilladsp#fir">camilladsp</a> for more information.<br/>
+						Set the type of the selected impulse response file. Info about a specific impulse response file is available in the Convolution file section.<br/>
+						See <a href="https://github.com/HEnquist/camilladsp#fir">CamillaDSP</a> for project information.
 					</span>
 					<div id="cdsp_check_msg_quic_convolution">
 						$checkMsgQuickConvolution
@@ -281,8 +280,7 @@
 						<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary" $_open_camillagui_disabled>Open</button></a>&nbsp;Pipeline editor<br>
 					</div>
 					<span class="help-block-configs help-block-margin">
-						NOTE:Without music playing CammilaDSP will not be active. To use the editor effective <br>
-						ensure music is playing before opening the editor.<br>
+						NOTE: Ensure music is playing before opening the editor.<br>
 					</span>
 
 				</div>
