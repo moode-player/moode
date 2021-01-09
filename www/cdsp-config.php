@@ -146,6 +146,14 @@ else if (isset($_POST['cdsp-coeffs']) && isset($_POST['info']) && $_POST['info']
 else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) && $_POST['updatecamillagui'] == '1') {
  	$cdsp->changeCamillaStatus($_POST['camillaguistatus']);
 }
+else if (isset($_GET['plotpipeline']) ) {
+	$cmd = dirname($_SERVER["SCRIPT_FILENAME"]) . '/command/camillaplotpipeline.py ' . $cdsp->getConfigsLocationsFileName() . '/' . $_GET['plotpipeline'];
+	$output = sysCmd($cmd);
+
+	header("Content-Type: image/svg+xml");
+	echo implode($output);
+	exit(0);
+}
 
 /**
  * Generate data for html templating

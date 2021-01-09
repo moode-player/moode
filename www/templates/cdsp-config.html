@@ -163,12 +163,14 @@
 						<button id="btn-import-pipeline" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
 					</div>
 					<button class="btn btn-medium btn-primary btn-submit" type="submit" name="check" value="1">Check</button>
+					<a data-toggle="modal" href="#show-pipeline"><button class="btn btn-medium btn-primary">Show</button></a>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-configuration-actions" class="help-block-configs help-block-margin hide">
 						<b>Delete:&nbsp;</b>Delete the selected configuation file.<br/>
 						<b>Download:&nbsp;</b>Download the selected configuation file.<br/>
 						<b>Upload:&nbsp;</b>Upload a new configuration file. If file already exists it will be overwritten.<br/>
 						<b>Check:&nbsp;</b>Check if the selected configuration is a valid CamillaDSP configuration.<br/><br/>
+						<b>Show:&nbsp;</b>Show an image of the selected configuration.<br/><br/>
 
 						Changes to the configuration are effective immediately after pausing/stopping playback.<br>
 						Information on how to create CamillaDSP configuration files can be found on the
@@ -263,7 +265,9 @@
 						$_select[camillagui0]
 					</div>
 
-					<a aria-label="Help" class="info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					  <a aria-label="Help" class="info-toggle" data-cmd="info-camillagui" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				    </div>
 					<span id="info-camillagui" class="help-block-configs help-block-margin legend-info-help hide">
 						Show the current On/Off status of the Pipeline editor.<br>
 						To conserve system resources after a reboot the Pipeline editor is automatically turned off.
@@ -276,6 +280,11 @@
 					<div style="margin-top:.5em">
 						<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary" $_open_camillagui_disabled>Open</button></a>&nbsp;Pipeline editor<br>
 					</div>
+					<span class="help-block-configs help-block-margin">
+						NOTE:Without music playing CammilaDSP will not be active. To use the editor effective <br>
+						ensure music is playing before opening the editor.<br>
+					</span>
+
 				</div>
 			</div>
 		</fieldset>
@@ -324,6 +333,25 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="remove" value="1" $_disable_rm>Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="show-pipeline" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="show-pipeline-label" aria-hidden="true">
+		<input id="config_remove_id" type="hidden" name="cdsp-config" value="$selectedConfig"/>
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>Pipeline $selectedConfig Plot</h3>
+		</div>
+
+
+		<div class="modal-body">
+			<img src="/cdsp-config.php?plotpipeline=$selectedConfig" />
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 		</div>
 	</div>
 </form>
