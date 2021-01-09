@@ -47,6 +47,7 @@
 					<span id="info-cdspmode" class="help-block-configs help-block-margin legend-info-help hide">
 						<b>Off:&nbsp;</b>Don't use CamillaDSP.<br/>
 						<b>Custom:&nbsp;</b>Use a custom alsa_cdsp configuration.<br>
+						<b>Quick convolution filter:&nbsp;</b>Use a quick configuration for setting up a basic convolution filter with a gain. No need to provide a configuration file.<br>
 						<b>Listed:&nbsp;</b>Use one of the listed configuration files.
 					</span>
 				</div>
@@ -73,14 +74,18 @@
 		<fieldset>
 			<!-- TODO: add help-->
 			<legend>Quick convolution filter</legend>
-			<span class="help-block-configs help-block-margin">
-				Create quick a basic convolution filter without creating an Camilla DSP configuration file.<br/>
-			</span>
 			<div class="control-group">
 
 				<label class="control-label" for="cdsp-basiccon-gain">Gain</label>
 				<div class="controls">
 					<input class="input-large" type="number" maxlength="3" min="-40" max="20" step="0.1" id="cdsp-basiccon-gain" name="cdsp_basiccon_gain" value="$_quickconv_gain_value">&nbsp;dB
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-gain" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span  id="info-cdsp-qc-gain" class="help-block-configs help-block-margin legend-info-help hide">
+						With the gain clipping can be prevent. Reducing the gain requires a negative value.<br/>
+						You can open the Camilla GUI below, to analyze if the signal is clipping or show frequency curve of the filter.<br/>
+					</span>
 				</div>
 
 				<label class="control-label" for="cdsp-basiccon-left">IR Left</label>
@@ -88,6 +93,13 @@
 				    <select id="cdsp-basiccon-left" class="input-large" name="cdsp_basicconv_left" >
 						$_select[cdsp_quickconv_irl]
 					</select>
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-left" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span  id="info-cdsp-qc-left" class="help-block-configs help-block-margin legend-info-help hide">
+						Select an impulse response to use for the convolution.<br/>
+						New impulse reponses can be add in the section convolution file.<br/>
+					</span>
 				</div>
 
 				<label class="control-label" for="cdsp-basiccon-right">IR Right</label>
@@ -95,13 +107,27 @@
 				    <select id="cdsp-basiccon-right" class="input-large" name="cdsp_basicconv_right" >
 						$_select[cdsp_quickconv_irr]
 					</select>
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-right" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span  id="info-cdsp-qc-right" class="help-block-configs help-block-margin legend-info-help hide">
+						Select an impulse response to use for the convolution.<br/>
+						New impulse reponses can be add in the section convolution file.<br/>
+					</span>
 				</div>
 
-				<label class="control-label" for="cdsp-basiccon-right">IR Type</label>
+				<label class="control-label" for="cdsp-basiccon-type">IR Type</label>
 				<div class="controls">
 				    <select id="cdsp-basiccon-type" class="input-large" name="cdsp_basicconv_type" >
 						$_select[cdsp_quickconv_irtype]
 					</select>
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span  id="info-cdsp-qc-type" class="help-block-configs help-block-margin legend-info-help hide">
+						Set the type of the selected impulse response files. Below in the convolution file section you can show information about a specific impulse response file<br/>
+						See <a href="https://github.com/HEnquist/camilladsp#fir">camilladsp</a> for more information.<br/>
+					</span>
 					<div id="cdsp_check_msg_quic_convolution">
 						$checkMsgQuickConvolution
 					</div>
