@@ -137,7 +137,7 @@ else if (isset($_POST['cdsp-coeffs']) && isset($_POST['remove']) && $_POST['remo
 else if (isset($_POST['cdsp-coeffs']) && isset($_POST['info']) && $_POST['info'] == '1') {
 	$coeffInfo = $cdsp->coeffInfo($_POST['cdsp-coeffs']);
 
-	$coeffInfoHtml ='Mediainfo:<br/>';
+	$coeffInfoHtml ='Info:<br/>';
 	foreach ($coeffInfo as  $param=>$value) {
 		$coeffInfoHtml .= ''. $param . ' = ' . $value. '<br/>';
 	}
@@ -192,7 +192,7 @@ $_select['cdsp_patch_playback_device0'] .= "<input type=\"radio\" name=\"cdsp_pl
 $_select['version'] = $cdsp->version();
 
 
-if( $_SESSION['camilladsp_quickcon'] ) {
+if( $_SESSION['camilladsp_quickconv'] ) {
 	$quickConvConfig =$cdsp->stringToQuickConvolutionConfig($_SESSION['camilladsp_quickconv']);
 	$_quickconv_gain_value = $quickConvConfig['gain'];
 	$quickconv_left_value = $quickConvConfig['irl'];
