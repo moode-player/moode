@@ -137,6 +137,21 @@
 	</div>
 </div>
 
+<!-- Lyrics -->
+<div id="lyrics-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="lyrics-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="lyrics-modal-label">Lyrics</h3>
+	</div>
+	<div class="modal-body">
+		<div id="lyrics" style="margin: auto; width: 70%;"></div>
+		<div id="lyrics-form" style="margin: auto; width: 70%;"></div>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Close" class="btn singleton" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
 <!-- POWER -->
 <div id="power-modal" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="power-modal-label" aria-hidden="true">
 	<div class="modal-header">

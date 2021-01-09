@@ -1,0 +1,39 @@
+<!--
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * (C) 2020 Stephanowicz
+ * https://github.com/Stephanowicz
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * 2020-MM-DD TC moOde 7.0.0
+ *
+ */
+-->
+ <div id="lyrics-loading" style="position: relative;text-align: center;top: 50px;margin-bottom: 150px;">searching lyrics...
+  <div aria-label="lyricsloading"><svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='-10 -20 64 64' stroke='#fff'><g fill='none' fill-rule='evenodd'><g transform='translate(3 3)' stroke-width='4'><circle stroke-opacity='.35' cx='18' cy='18' r='18'/><path d='M36 18c0-9.94-8.06-18-18-18'><animateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='1s' repeatCount='indefinite'/></path></g></g></svg></div>
+</div>
+<div id="lyrics-missingparms" style="position: relative;text-align: center;top: 50px;margin-bottom: 150px;">
+  There are not enough parameters to start a specific query!<br />
+  You may modify them here and try again:<br /><br />
+</div>
+<div id="lyricsForm" style="position: relative;text-align: left; margin-left:20%; top: 50px;margin-bottom: 150px;">
+  <form name="lyricsQuery" method="post" action="javascript:lyricsForm()">
+    <input size="30" type="text" name="formArtist">&nbsp;Artist <br />
+    <input size="30" type="text" name="formTitle">&nbsp;Title <br /><br />
+    <input type="submit">
+  </form>
+</div>
