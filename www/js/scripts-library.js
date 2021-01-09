@@ -1405,6 +1405,9 @@ $('#context-menu-playback a').click(function(e) {
             $('#setfav-modal').modal();
         });
 	}
+  else if ($(this).data('cmd') == 'song-lyrics') {
+    lyricsQuery();
+  }
 	else if ($(this).data('cmd') == 'toggle-song') {
         sendMpdCmd('playid ' + toggleSongId);
 	}
@@ -1578,3 +1581,32 @@ function formatLibTotalTime(seconds) {
 function formatNumCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+//*******************SONG LYRICS************************************************
+//uglify doesn't like the default values for the parameters... if your compressor complains about them, cut the default values, compress and then paste them back in the .min file!
+function lyricsQuery(songtitle = MPD.json['title'], songartist = MPD.json['artist']) {
+  $('#lyrics-form').empty();
+  if(songtitle!=""&&songartist!=""&!songartist.includes("Unknown artist")) {
+    $('#lyrics').load('./templates/lyrics.html #lyrics-loading');
+    $('#lyrics-modal').modal();
+    $('#lyrics').load('lyrics.php', {'title':songtitle,'artist':songartist}, function() {
+      $('#lyrics-form').load('./templates/lyrics.html #lyricsForm', function() {
+        document.lyricsQuery["formArtist"].value = songartist;
+        document.lyricsQuery["formTitle"].value = songtitle;
+      });
+  });}
+  else {
+    $('#lyrics').load('./templates/lyrics.html #lyrics-missingparms');
+    $('#lyrics-form').load('./templates/lyrics.html #lyricsForm', function() {
+      document.lyricsQuery["formArtist"].value = (songartist=="") ? "MISSING" : songartist;
+      document.lyricsQuery["formTitle"].value = (songtitle=="") ? "MISSING" : songtitle;
+    });
+    $('#lyrics-modal').modal();
+  }
+}
+function lyricsForm() {
+  songartist=document.lyricsQuery["formArtist"].value;
+  songtitle=document.lyricsQuery["formTitle"].value;
+  lyricsQuery(songtitle,songartist);
+}
+//******************************************************************************
