@@ -2881,7 +2881,6 @@ function autoConfigSettings() {
 	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
 	//            most item only have 1 autoconfig item, but network setting requires multiple to be present
 	// - handler for setting the config item
-	// - session_var - if autoconfig item name differs from session var, the name of the session var can be provided
 	// - command - argument for util.sh when setPlayerSessionAndSysCmd handler is used.
 	$configurationHandlers = [
 		'Names',
@@ -3160,19 +3159,28 @@ function autoConfig($cfgfile) {
 			}
 			// Check if all required cfgkeys are present
 			elseif( !array_diff_key(array_flip($config['requires']), $autocfg) ) {
+				// create dict key/value of required settings
+				$values = array_intersect_key( $autocfg, array_flip($config['requires']) );
+				// only get dict key/value of optionals that are present
+				$optionals = array_intersect_key( $autocfg, array_flip($config['optionals']) );
+
+				$combiner_requires_optional_keys = array_merge($config['requires'],
+													array_key_exists('optionals', $config) ? array_keys($optionals): [] );
 				// Copy all key/value sets
-				foreach ($config['requires'] as $config_name) {
+				foreach ($combiner_requires_optional_keys as $config_name) {
 					$value = $autocfg[$config_name];
-					// If config name differs from session var the session_var can be used
-					$config_key =  array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
-					$values[$config_key] = $value;
 					autoCfgLog('autocfg: '. $config_name.': ' . $value);
 					// Remove used autoconfig
 					unset($available_configs[$config_name]);
+					unset($autocfg[$config_name]);
 				}
 				// Call handler
 				if( !array_key_exists('cmd', $config) )
-					$config['handler'] ($values);
+					if( array_key_exists( 'optionals', $config) ) {
+						$config['handler'] ($values, $optionals);
+					}else{
+						$config['handler'] ($values);
+					}
 				else
 					$config['handler'] ($values, $config['cmd']);
 			}
@@ -3239,7 +3247,9 @@ function autoconfigExtract() {
 					}
 				}
 			} else {
-				$autoconfigstring = $autoconfigstring . $config['custom_write']($config['requires']);
+				$autoconfigstring = $autoconfigstring . $config['custom_write'](
+					              array_merge($config['requires'],
+					              array_key_exists('optionals', $config) ? array_keys($optionals): []  ) );
 			}
 		}
 	}
