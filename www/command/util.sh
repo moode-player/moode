@@ -79,7 +79,7 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 		# Set-alsavol
 		AMIXNAME=$(sqlite3 $SQLDB "select value from cfg_system where param='amixname'")
 		MIXER_TYPE=$(sqlite3 $SQLDB "select value from cfg_mpd where param='mixer_type'")
-		if [[ $3 = "100" && ( $AMIXNAME = "HDMI" || $AMIXNAME = "Headphone" ) && ( $MIXER_TYPE = "software" || $MIXER_TYPE = "disabled" ) ]]; then
+		if [[ $3 = "100" && $AMIXNAME = "HDMI" && ( $MIXER_TYPE = "software" || $MIXER_TYPE = "disabled" ) ]]; then
 			LEVEL="0dB"
 		else
 			LEVEL="$3%"

@@ -25,7 +25,7 @@ Updates
 - UPD: Bump to CamillaDSP 0.5.0-beta2
 - UPD: Bump to ALSA cdsp (commit e941420)
 - UPD: Disable power save for integrated WiFi
-- UPD: Set correct 0dB level for Headphone/HDMI
+- UPD: Set correct 0dB level for HDMI
 
 Bug fixes
 
