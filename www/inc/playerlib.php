@@ -2988,47 +2988,73 @@ function autoConfigSettings() {
 		['requires' => ['dlnasvc'] , 'handler' => setPlayerSession],
 		['requires' => ['upnp_browser'] , 'handler' => setPlayerSession],
 
+		'Network (eth0)',
+		['requires' => ['ethmethod', 'ethipaddr', 'ethnetmask', 'ethgateway', 'ethpridns', 'ethsecdns'], 'handler' => function($values) {
+			$dbh = cfgdb_connect();
+			$netcfg = sdbquery('select * from cfg_network', $dbh);
+			$value = array('method' => $netcfg[0]['method'], 'ipaddr' => $netcfg[0]['ipaddr'], 'netmask' => $netcfg[0]['netmask'],
+				'gateway' => $netcfg[0]['gateway'], 'pridns' => $netcfg[0]['pridns'], 'secdns' => $netcfg[0]['secdns']);
+			cfgdb_update('cfg_network', $dbh, 'eth0', $value);
+			cfgNetIfaces();
+		}, 'custom_write' => function($values) {
+			$dbh = cfgdb_connect();
+			$row = sdbquery("select * from cfg_network where iface='eth0'", $dbh)[0];
+			$result="";
+			$result = $result."ethmethod = \"" . $row['method'] . "\"\n";
+			$result = $result."ethipaddr = \"" . $row['ipaddr'] . "\"\n";
+			$result = $result."ethnetmask = \"" . $row['netmask'] . "\"\n";
+			$result = $result."ethgateway = \"" . $row['gateway'] . "\"\n";
+			$result = $result."ethpridns = \"" . $row['pridns'] . "\"\n";
+			$result = $result."ethsecdns = \"" . $row['secdns'] . "\"\n";
+			return $result;
+		}],
+
 		'Network (wlan0)',
-		['requires' => ['wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'] , 'handler' => function($values) {
-				$dbh = cfgdb_connect();
-				$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
-				$netcfg = sdbquery('select * from cfg_network', $dbh);
-				$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
-					'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
-					'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-					'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
-				cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
-				cfgNetIfaces();
-			}, 'custom_write' => function($values) {
-				$dbh = cfgdb_connect();
-				$row = sdbquery("select * from cfg_network where iface='wlan0'", $dbh)[0];
-				$result="";
-				$result = $result."wlanssid = \"" . $row['wlanssid'] . "\"\n";
-				$result = $result."wlanpwd = \"" . "" . "\"\n"; // keep empty
-				$result = $result."wlansec = \"" . $row['wlansec'] . "\"\n";
-				$result = $result."wlancountry = \"" . $row['wlan_country'] . "\"\n";
-				return $result;
-			}],
+		['requires' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns',
+			'wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'] , 'handler' => function($values) {
+			$dbh = cfgdb_connect();
+			$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
+			$netcfg = sdbquery('select * from cfg_network', $dbh);
+			$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
+				'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
+				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+				'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
+			cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
+			cfgNetIfaces();
+		}, 'custom_write' => function($values) {
+			$dbh = cfgdb_connect();
+			$row = sdbquery("select * from cfg_network where iface='wlan0'", $dbh)[0];
+			$result="";
+			$result = $result."wlanmethod = \"" . $row['method'] . "\"\n";
+			$result = $result."wlanipaddr = \"" . $row['ipaddr'] . "\"\n";
+			$result = $result."wlannetmask = \"" . $row['netmask'] . "\"\n";
+			$result = $result."wlangateway = \"" . $row['gateway'] . "\"\n";
+			$result = $result."wlanpridns = \"" . $row['pridns'] . "\"\n";
+			$result = $result."wlansecdns = \"" . $row['secdns'] . "\"\n";
+			$result = $result."wlanssid = \"" . $row['wlanssid'] . "\"\n";
+			$result = $result."wlanpwd = \"" . "" . "\"\n"; // keep empty
+			$result = $result."wlansec = \"" . $row['wlansec'] . "\"\n";
+			return $result;
+		}],
 
 		'Network (apd0)',
 		['requires' => ['apdssid', 'apdpwd', 'apdchan'] , 'handler' => function($values) {
-				$dbh = cfgdb_connect();
-				$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
-				$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
-					'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-					'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
-				cfgdb_update('cfg_network', $dbh, 'apd0', $value);
-				cfgHostApd();
-			}, 'custom_write' => function($values) {
-				$dbh = cfgdb_connect();
-				$row = sdbquery("select * from cfg_network where iface='apd0'", $dbh)[0];
-				$result = $result . "apdssid = \"" . $row['wlanssid'] . "\"\n";
-				$result = $result . "apdpwd = \"" . "" . "\"\n"; // keep empty
-				$result = $result . "apdchan = \"" . $row['wlan_channel'] . "\"\n";
-				return $result;
-			}],
+			$dbh = cfgdb_connect();
+			$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
+			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
+				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+				'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
+			cfgdb_update('cfg_network', $dbh, 'apd0', $value);
+			cfgHostApd();
+		}, 'custom_write' => function($values) {
+			$dbh = cfgdb_connect();
+			$row = sdbquery("select * from cfg_network where iface='apd0'", $dbh)[0];
+			$result = $result . "apdssid = \"" . $row['wlanssid'] . "\"\n";
+			$result = $result . "apdpwd = \"" . "" . "\"\n"; // keep empty
+			$result = $result . "apdchan = \"" . $row['wlan_channel'] . "\"\n";
+			return $result;
+		}],
 
-		'Preferences',
 		'Appearance',
 		['requires' => ['themename'] , 'handler' => setPlayerSession],
 		['requires' => ['accent_color'] , 'handler' => setPlayerSession],
