@@ -454,8 +454,8 @@ $_chip_link_disable = !empty($result[0]['chipoptions']) ? '' : 'onclick="return 
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max = '';
 	$_alsavolume_max_readonly = 'readonly';
-	$_alsavolume_hide = 'hide'; // Hides the SET button
-	$_alsavolume_msg = "<span class=\"help-block-configs help-block-margin\">Hardware volume controller not detected</span>";
+	$_alsavolume_max_hide = 'hide'; // Hides the SET button
+	$_alsavolume_max_msg = "<span class=\"help-block-configs help-block-margin\">Hardware volume controller not detected</span>";
 }
 else {
 	$_alsavolume_max = $_SESSION['alsavolume_max'];

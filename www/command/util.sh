@@ -66,25 +66,48 @@ if [[ $1 = "chg-name" ]]; then
 	exit
 fi
 
+set_alsavol() # Parameters: CardNumber MixerName Volume
+{
+  amixer -c $1 sset $2 -- $3 >/dev/null ## with -- values like -10dB can be set without error
+
+  # Store alsa state if card 1 to preserve volume in case hotplug
+  if [[ $1 -eq 1 ]]; then
+    alsactl store 1
+  fi
+}
+
 # NOTE: i2s device is always at card 0, otherwise 0:HDMI-1 | [1:Headphones | 2:USB] or 1:HDMI-2 [2:Headphones | 3:USB]
-if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
+if [[ $1 = "get-alsavol" || $1 = "get-alsavol-db" || $1 = "set-alsavol" || $1 = "set-alsavol-db" || $1 = "set-alsavol-to-max" ]]; then
 	# Use configured card number
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 
 	if [[ $1 = "get-alsavol" ]]; then
-		# Enclose $2 in quotes so mixer names with embedded spaces are parsed
 		awk -F"[][]" '/%/ {print $2; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "$2")
 		exit
+  elif [[ $1 = "get-alsavol-db" ]]; then
+    awk -F"[][]" '/%/ {print $4; count++; if (count==1) exit}' <(amixer -c $CARD_NUM sget "$2")
+    exit
+  elif [[ $1 = "set-alsavol-db" ]]; then
+    set_alsavol $CARD_NUM "$2" "$3dB"
+    exit
+  elif [[ $1 = "set-alsavol" ]]; then
+	  set_alsavol $CARD_NUM "$2" "$3%"
+    exit
 	else
-		# Set-alsavol
-		amixer -c $CARD_NUM sset "$2" "$3%" >/dev/null
-
-		# Store alsa state if card 1 to preverve volume in case hotplug
-		if [[ $CARD_NUM -eq 1 ]]; then
-			alsactl store 1
-		fi
-
-		exit
+		# Set-alsavol-to-max
+    RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param in ('alsavolume_max', 'amixname')")
+    readarray -t arr <<<"$RESULT"
+    ALSAVOLUME_MAX=${arr[0]}
+    AMIXNAME=${arr[1]}
+    CARD_ID=$(cat /proc/asound/card${CARD_NUM}/id)
+    # For HDMI1/HDMI2 100% volume is equal to +4dB which leads to distortions, so set volume to 0dB instead
+    if [[ ($CARD_ID = "b1" || $CARD_ID = "b2") && $ALSAVOLUME_MAX = 100 ]]; then
+      VOLUME="0dB"
+    else
+      VOLUME="${ALSAVOLUME_MAX}%"
+    fi
+    set_alsavol $CARD_NUM "$AMIXNAME" "$VOLUME"
+    exit
 	fi
 fi
 

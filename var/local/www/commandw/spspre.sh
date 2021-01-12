@@ -21,12 +21,10 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='inpactive'")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param in ('alsavolume', 'inpactive')")
 readarray -t arr <<<"$RESULT"
-ALSAVOLUME_MAX=${arr[0]}
-ALSAVOLUME=${arr[1]}
-AMIXNAME=${arr[2]}
-INPACTIVE=${arr[3]}
+ALSAVOLUME=${arr[0]}
+INPACTIVE=${arr[1]}
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
@@ -40,5 +38,5 @@ sleep 1
 $(sqlite3 $SQLDB "update cfg_system set value='1' where param='airplayactv'")
 
 if [[ $ALSAVOLUME != "none" ]]; then
-	/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+	/var/www/command/util.sh set-alsavol-to-max
 fi

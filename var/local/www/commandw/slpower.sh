@@ -21,15 +21,13 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='rsmaftersl' or param='wrkready' or param='inpactive'")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param in ('alsavolume', 'rsmaftersl', 'wrkready', 'inpactive')")
 # friendly names
 readarray -t arr <<<"$RESULT"
-ALSAVOLUME_MAX=${arr[0]}
-ALSAVOLUME=${arr[1]}
-AMIXNAME=${arr[2]}
-RSMAFTERSL=${arr[3]}
-WRKREADY=${arr[4]}
-INPACTIVE=${arr[5]}
+ALSAVOLUME=${arr[0]}
+RSMAFTERSL=${arr[1]}
+WRKREADY=${arr[2]}
+INPACTIVE=${arr[3]}
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
@@ -59,7 +57,7 @@ if [[ $WRKREADY == "1" ]]; then
 		sleep 1
 		$(sqlite3 $SQLDB "update cfg_system set value='1' where param='slactive'")
 		if [[ $ALSAVOLUME != "none" && $VOPT == "" ]]; then
-			/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+			/var/www/command/util.sh set-alsavol-to-max
 		fi
 	else
 		# Value 2 is returned

@@ -3545,7 +3545,7 @@ function reconfMpdVolume($mixertype) {
 	playerSession('write', 'mpdmixer', $mixertype);
 	// Reset hardware volume to 0dB if indicated
 	if (($mixertype == 'software' || $mixertype == 'disabled') && $_SESSION['alsavolume'] != 'none') {
-		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+		sysCmd('/var/www/command/util.sh set-alsavol-to-max');
 	}
 	// Update /etc/mpd.conf
 	updMpdConf($_SESSION['i2sdevice']);

@@ -72,7 +72,8 @@
 					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>
 					<!--a aria-label="Help" class="info-toggle" data-cmd="info-alsavolume_max" href="#notarget"><i class="fas fa-info-circle"></i></a-->
 					<span id="info-alsavolume_max" class="help-block-configs help-block-margin">
-						This volume level is used to set 0dB when MPD volume control is set to Software or Disabled, or when any of the Audio Renderers are active.
+						This volume level is used to set 0dB (max volume) when MPD volume control is set to Software or Disabled, or when any of the Audio Renderers are active.<br>
+						To prevent clipping, for HDMI and Headphone outputs 100% volume is set to 0dB instead of the +4dB default on these outputs. All other values are passed through untouched.
 					</span>
 					$_alsavolume_max_msg
 				</div>

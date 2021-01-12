@@ -657,7 +657,7 @@ else {
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
 if ($_SESSION['alsavolume'] != 'none') {
 	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') {
-		$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+		$result = sysCmd('/var/www/command/util.sh set-alsavol-to-max');
 	}
 }
 
@@ -893,7 +893,7 @@ function chkBtActive() {
 			playerSession('write', 'btactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 			if ($_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+				sysCmd('/var/www/command/util.sh set-alsavol-to-max');
 			}
 		}
 		sendEngCmd('btactive1'); // Placing here enables each conected device to be printed to the indicator overlay
@@ -1389,7 +1389,7 @@ function runQueuedJob() {
 
 			// Reset hardware volume to 0dB (100) if indicated
 			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') && $_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+				sysCmd('/var/www/command/util.sh set-alsavol-to-max');
 			}
 
 			// Restart mpd and pick up conf changes
@@ -1600,7 +1600,7 @@ function runQueuedJob() {
 			if ($_SESSION['slsvc'] == '1') {
 				sysCmd('mpc stop');
 				if ($_SESSION['alsavolume'] != 'none') {
-					sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+					sysCmd('/var/www/command/util.sh set-alsavol-to-max');
 				}
 				cfgSqueezelite();
 				startSqueezeLite();

@@ -21,14 +21,12 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterspot' or param='inpactive'")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param in ('alsavolume', 'mpdmixer', 'rsmafterspot', 'inpactive')")
 readarray -t arr <<<"$RESULT"
-ALSAVOLUME_MAX=${arr[0]}
-ALSAVOLUME=${arr[1]}
-AMIXNAME=${arr[2]}
-MPDMIXER=${arr[3]}
-RSMAFTERSPOT=${arr[4]}
-INPACTIVE=${arr[5]}
+ALSAVOLUME=${arr[0]}
+MPDMIXER=${arr[1]}
+RSMAFTERSPOT=${arr[2]}
+INPACTIVE=${arr[3]}
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
@@ -43,7 +41,7 @@ if [[ $PLAYER_EVENT == "start" ]]; then
 	$(sqlite3 $SQLDB "update cfg_system set value='1' where param='spotactive'")
 
 	if [[ $ALSAVOLUME != "none" ]]; then
-		/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+		/var/www/command/util.sh set-alsavol-to-max
 	fi
 fi
 
@@ -53,7 +51,7 @@ if [[ $PLAYER_EVENT == "stop" ]]; then
 	# Restore 0dB hardware volume when mpd configured as below
 	if [[ $MPDMIXER == "software" || $MPDMIXER == "disabled" ]]; then
 		if [[ $ALSAVOLUME != "none" ]]; then
-			/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+			/var/www/command/util.sh set-alsavol-to-max
 		fi
 	fi
 
