@@ -27,7 +27,6 @@ jQuery(document).ready(function($){ 'use strict';
         ui_notify();
     }
     GLOBAL.scriptSection = 'configs';
-	$('#config-back').show();
 	$('#config-tabs').css('display', 'flex');
 	$('#menu-bottom').css('display', 'none');
 	$('#configure .row2-btns').hide();
@@ -43,6 +42,7 @@ jQuery(document).ready(function($){ 'use strict';
     	THEME.json = result['cfg_theme'];
         NETWORK.json = result['cfg_network'];
 
+        $('#config-back').show();
     	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
     	setFontSize();
 
