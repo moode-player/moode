@@ -77,12 +77,14 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 		exit
 	else
 		# Set-alsavol
-		amixer -c $CARD_NUM sset "$2" "$3%" >/dev/null
-
-		# Store alsa state if card 1 to preverve volume in case hotplug
-		if [[ $CARD_NUM -eq 1 ]]; then
-			alsactl store 1
+		AMIXNAME=$(sqlite3 $SQLDB "select value from cfg_system where param='amixname'")
+		MIXER_TYPE=$(sqlite3 $SQLDB "select value from cfg_mpd where param='mixer_type'")
+		if [[ $3 = "100" && ( $AMIXNAME = "HDMI" || $AMIXNAME = "Headphone" ) && ( $MIXER_TYPE = "software" || $MIXER_TYPE = "disabled" ) ]]; then
+			LEVEL="0dB"
+		else
+			LEVEL="$3%"
 		fi
+		amixer -c $CARD_NUM sset "$2" $LEVEL >/dev/null
 
 		exit
 	fi
