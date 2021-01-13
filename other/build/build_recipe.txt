@@ -996,15 +996,15 @@ sudo rm -rf ./libupnpp-0.20.1*
 
 4. Upmpdcli 1.5.5
 
-sudo cp ./moode/other/upmpdcli/upmpdcli-1.5.5.tar.gz ./
-sudo tar xfz ./upmpdcli-1.5.5.tar.gz
-cd upmpdcli-1.5.5
+sudo cp ./moode/other/upmpdcli/upmpdcli-1.5.8.tar.gz ./
+sudo tar xfz ./upmpdcli-1.5.8.tar.gz
+cd upmpdcli-1.5.8
 sudo ./autogen.sh
 sudo ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
 sudo make -j4
 sudo make install
 cd ~
-sudo rm -rf ./upmpdcli-1.5.5*
+sudo rm -rf ./upmpdcli-1.5.8*
 
 sudo useradd upmpdcli
 sudo cp /mnt/moode-player/GitHub/moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
@@ -1013,19 +1013,9 @@ sudo chmod 0644 /etc/upmpdcli.conf
 sudo systemctl daemon-reload
 sudo systemctl disable upmpdcli
 
-5. upexplorer
+5. python3-libupnpp
 
-NOTE: This also installs a bunch of other utils
-
-sudo cp ./moode/other/upmpdcli/libupnpp-samples-master.zip ./
-sudo unzip -q ./libupnpp-samples-master.zip
-cd ./libupnpp-samples-master
-sudo ./autogen.sh
-sudo ./configure
-sudo make -j4
-sudo make install
-cd ~
-sudo rm -rf ./libupnpp-samples-master*
+This is a placeholder
 
 ////////////////////////////////////////////////////////////////
 //
