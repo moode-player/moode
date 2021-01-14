@@ -1,6 +1,6 @@
 {
   "name": "moOde",
-  "version": "7.0.0b1",
+  "version": "7.1.0",
   "description": "moOde audio player",
   "author": "Tim Curtis",
   "main": "index.js",
@@ -34,6 +34,11 @@
   "server": {
     "proxy": "http://moode.test"
   },
+  "remote": {
+    "host": "yourmoodedevice",
+    "user": "pi",
+    "password": "moodeaudio"
+  },
   "devDependencies": {
     "autoprefixer": "^9.8.0",
     "browser-sync": "^2.26.7",
@@ -57,8 +62,10 @@
     "gulp-rename": "^2.0.0",
     "gulp-replace": "^1.0.0",
     "gulp-replace-task": "^0.11.0",
+    "gulp-scp3": "0.0.4",
     "gulp-size": "^3.0.0",
     "gulp-sourcemaps": "^2.6.5",
+    "gulp-ssh": "^0.7.0",
     "gulp-uglify-es": "^2.0.0",
     "gulp-useref": "^4.0.1",
     "http-proxy-middleware": "^1.0.4",
