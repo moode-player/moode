@@ -166,12 +166,23 @@ const REPLACEMENT_PATTERNS= [
     }
   ];
 
+// used for remote deployment
+var gulpSSH = new $.ssh({
+    ignoreErrors: false,
+    sshConfig: {
+        host: pkg.remote.host,
+        port: 22,
+        username: pkg.remote.user,
+        password: pkg.remote.password
+      }
+});
+
 // configure the gulp mode options
-const mode = $.mode( {  modes: ["build", "development", "test", "all", "force"],
+const mode = $.mode( {  modes: ["build", "development", "test", "all", "force", "remote"],
                         default: "development",
                         verbose: false});
 
-const DEPLOY_LOCATION = mode.test() ? pkg.app.dist: pkg.app.deploy;
+const DEPLOY_LOCATION = (mode.test() || mode.remote() ) ? pkg.app.dist: pkg.app.deploy;
 
 /***************************************************************************
  * GULP TASKS START HERE
@@ -491,7 +502,7 @@ gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 
         // optional headers fields can be update and or added:
         //.pipe( $.replaceTask({ patterns: REPLACEMENT_PATTERNS }))
         //.pipe($.if('*.html', $.header(banner_html, {pkg: pkg}) ))
-        .pipe($.if(!mode.test(), $.chown('root','root')))
+        .pipe($.if(!(mode.test()||mode.remote()), $.chown('root','root')))
         .pipe($.if(!mode.force(), $.newer( { dest: DEPLOY_LOCATION})))
         //.pipe($.size({showFiles: true, total: true}))
         .pipe($.if('*.html', $.replaceTask({ patterns: REPLACEMENT_PATTERNS})))
@@ -506,7 +517,48 @@ gulp.task('deployfront', function (done) {
         .on('end', done);
 });
 
-var deployTasks = !mode.all() ? ['deployfront', 'deployback']: ['deployback', 'deployback', 'deploymoodeutl', 'deployvarlocalwww'];
+/**
+ * upload pkg.app.dist to a temp dir on target device
+ */
+gulp.task('upload2remote', function (done) {
+    return gulp.src(pkg.app.dist+'/**/*')
+    .pipe($.scp3({
+        host: pkg.remote.host,
+        username: pkg.remote.user,
+        password: pkg.remote.password,
+        dest: '/home/pi/www.deploy'}))
+    .on('error', function(err) {
+        console.log(err);
+    })
+    .on('end', done);
+})
+
+/**
+ * Move temp dir on target device to /var/www and activate it
+ */
+
+gulp.task('deploy2remote', function (done) {
+    return gulpSSH
+        .exec(['sudo rm -rf /var/www.prev',
+               'sudo mv /var/www/ /var/www.prev',
+               'sudo mv /home/pi/www.deploy /var/www',
+               'sudo chmod -R +x /var/www/command/*',
+               // required if uploaded from windows
+               process.platform === "win32" ? 'find /var/www/command/* -exec /usr/bin/dos2unix {} \\; 2>/dev/null': 'echo',
+               '/usr/local/bin/moodeutl -r'
+                ], {filePath: 'commands.log'})
+        //.pipe(gulp.dest('logs'))
+        .on('end', done);
+})
+
+var deployTasks = ['deployfront', 'deployback'];
+if ( mode.remote() == true ) {
+    deployTasks = ['deployfront', 'deployback', 'upload2remote', 'deploy2remote'];
+}
+else if (mode.all() ==true ){
+    deployTasks = ['deployback', 'deployback', 'deploymoodeutl', 'deployvarlocalwww'];
+}
+
 gulp.task('deploy', gulp.series( deployTasks, function (done) {
     done();
 }));

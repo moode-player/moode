@@ -15,3 +15,4 @@ __MACOSX
 /build
 /node_modules
 /www/index.html
+/logs
