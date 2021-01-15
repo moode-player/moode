@@ -1742,12 +1742,11 @@ function cfgdb_read($table, $dbh, $param = '', $id = '') {
 	}
 	else if ($table == 'cfg_radio') {
 		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("OFFLINE", "zx reserved 499")' :
-			'SELECT station, name, logo FROM ' . $table . ' WHERE station="' . $param . '"';
+			'SELECT station, name, logo, home_page FROM ' . $table . ' WHERE station="' . $param . '"';
 	}
 	else {
 		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
 	}
-
 	$result = sdbquery($querystr, $dbh);
 	return $result;
 }
@@ -3955,6 +3954,6 @@ function loadRadio() {
 	$result = cfgdb_read('cfg_radio', cfgdb_connect(), 'all');
 	foreach ($result as $row) {
 		$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'],
-			'bitrate' => $row['bitrate'], 'format' => $row['format']);
+			'bitrate' => $row['bitrate'], 'format' => $row['format'], 'home_page' => $row['home_page']);
 	}
 }

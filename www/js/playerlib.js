@@ -951,8 +951,17 @@ function genSearchUrl (artist, title, album) {
         var returnStr = title;
     }
     // Title has no searchable info or mobile
-    else if (title == 'Streaming source' || MPD.json['coverurl'] === UI.defCover || UI.mobile) {
+    else if (MPD.json['coverurl'] === UI.defCover || UI.mobile) {
         var returnStr = MPD.json['title'];
+    }
+    // Station does not transmit title
+    else if (title == 'Streaming source') {
+        if (RADIO.json[MPD.json['file']]['home_page'] != '') {
+            var returnStr =  '<a id="coverart-link" href=' + '"' + RADIO.json[MPD.json['file']]['home_page'] + '"' + ' target="_blank">'+ title + '</a>';
+        }
+        else {
+            returnStr = title;
+        }
     }
     // Title has info
     else {
@@ -2080,13 +2089,13 @@ $('.context-menu a').click(function(e) {
             $('#edit-station-type span').text(getParamOrValue('param', result['type']));
             $('#edit-station-genre').val(result['genre']);
             $('#edit-station-broadcaster').val(result['broadcaster']);
+            $('#edit-station-home-page').val(result['home_page']);
             $('#edit-station-language').val(result['language']);
             $('#edit-station-country').val(result['country']);
             $('#edit-station-region').val(result['region']);
             $('#edit-station-bitrate').val(result['bitrate']);
             $('#edit-station-format').val(result['format']);
             $('#edit-station-geo-fenced span').text(result['geo_fenced']);
-            //$('#edit-station-reserved1').val(result['reserved1']);
             //$('#edit-station-reserved2').val(result['reserved2']);
 
     		$('#editstation-modal').modal();

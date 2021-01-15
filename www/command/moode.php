@@ -349,7 +349,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 						"'" . $_POST['path']['bitrate'] . "'," .
 						"'" . $_POST['path']['format'] . "'," .
 						"'" . $_POST['path']['geo_fenced'] . "'," .
-						"'" . $_POST['path']['reserved1'] . "'," .
+						"'" . SQLite3::escapeString($_POST['path']['home_page']) . "'," .
 						"'" . $_POST['path']['reserved2'] . "'";
 					$result = sdbquery('insert into cfg_radio values (NULL,' . $values . ')', $dbh);
 				}
@@ -378,8 +378,8 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 					"bitrate='" . $_POST['path']['bitrate'] . "'," .
 					"format='" . $_POST['path']['format'] . "'," .
 					"geo_fenced='" . $_POST['path']['geo_fenced'] . "'," .
-					"reserved1='" . $_POST['path']['reserved0'] . "'," .
-					"reserved2='" . $_POST['path']['reserved0'] . "'";
+					"home_page='" . SQLite3::escapeString($_POST['path']['home_page']) . "'," .
+					"reserved2='" . $_POST['path']['reserved2'] . "'";
 					$result = sdbquery('UPDATE cfg_radio SET ' . $columns . ' WHERE id=' . $_POST['path']['id'], $dbh);
 				}
 				echo json_encode($return_msg);
@@ -525,7 +525,7 @@ else {
 				$result = cfgdb_read('cfg_radio', $dbh, 'all');
 				$array_cfg_radio = array();
 				foreach ($result as $row) {
-					$array_cfg_radio[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo']);
+					$array_cfg_radio[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'], 'home_page' => $row['home_page']);
 				}
 				$data['cfg_radio'] = $array_cfg_radio;
 			}
@@ -643,7 +643,7 @@ else {
 			$array = array('id' => $result[0]['id'], 'station' => $result[0]['station'], 'name' => $result[0]['name'], 'type' => $result[0]['type'],
 			 	'logo' =>  $result[0]['logo'], 'genre' => $result[0]['genre'], 'broadcaster' => $result[0]['broadcaster'], 'language' => $result[0]['language'],
 				'country' => $result[0]['country'], 'region' => $result[0]['region'], 'bitrate' => $result[0]['bitrate'], 'format' => $result[0]['format'],
-			 	'geo_fenced' => $result[0]['geo_fenced'], 'reserved1' => $result[0]['reserved1'], 'reserved2' => $result[0]['reserved2']);
+			 	'geo_fenced' => $result[0]['geo_fenced'], 'home_page' => $result[0]['home_page'], 'reserved2' => $result[0]['reserved2']);
 			echo json_encode($array);
 			break;
 		// Remove background image

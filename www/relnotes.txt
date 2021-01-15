@@ -26,6 +26,7 @@ Updates
 - UPD: Bump to ALSA cdsp (commit e941420)
 - UPD: Disable power save for integrated WiFi
 - UPD: Set correct 0dB level for HDMI
+- UPD: Open station home page for "Streaming source"
 
 Bug fixes
 

@@ -927,13 +927,13 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-station-type span').text('Regular');
         $('#new-station-genre').val('');
         $('#new-station-broadcaster').val('');
+        $('#new-station-home-page').val('');
         $('#new-station-language').val('');
         $('#new-station-country').val('');
         $('#new-station-region').val('');
         $('#new-station-bitrate').val('');
         $('#new-station-format').val('');
         $('#new-station-geo-fenced span').text('No');
-        //$('#new-station-reserved1').val('');
         //$('#new-station-reserved2').val('');
 
 		$('#newstation-modal').modal();
@@ -1144,7 +1144,7 @@ jQuery(document).ready(function($) { 'use strict';
                 'bitrate': $('#new-station-bitrate').val(),
                 'format': $('#new-station-format').val(),
                 'geo_fenced': $('#new-station-geo-fenced span').text(),
-                'reserved1': 'NULL',
+                'home_page': $('#new-station-home-page').val(),
                 'reserved2': 'NULL'
             });
 		}
@@ -1167,7 +1167,7 @@ jQuery(document).ready(function($) { 'use strict';
                 'bitrate': $('#edit-station-bitrate').val(),
                 'format': $('#edit-station-format').val(),
                 'geo_fenced': $('#edit-station-geo-fenced span').text(),
-                'reserved1': 'NULL',
+                'home_page': $('#edit-station-home-page').val(),
                 'reserved2': 'NULL'
             });
 		}
