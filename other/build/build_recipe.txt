@@ -1007,15 +1007,22 @@ cd ~
 sudo rm -rf ./upmpdcli-1.5.8*
 
 sudo useradd upmpdcli
-sudo cp /mnt/moode-player/GitHub/moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
-sudo cp /mnt/moode-player/GitHub/moode/etc/upmpdcli.conf /etc
+sudo cp ./moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
+sudo cp ./moode/etc/upmpdcli.conf /etc
 sudo chmod 0644 /etc/upmpdcli.conf
 sudo systemctl daemon-reload
 sudo systemctl disable upmpdcli
 
 5. python3-libupnpp
 
-This is a placeholder
+cp ./moode/other/upmpdcli/libupnpp-bindings-0.20.1.tar.gz ./
+tar xfz libupnpp-bindings-0.20.1.tar.gz
+cd libupnpp-bindings-0.20.1
+./configure --prefix=/usr PYTHON_VERSION=3
+make
+sudo make install
+cd ~
+rm -rf ./libupnpp-bindings-0.20.1
 
 ////////////////////////////////////////////////////////////////
 //
