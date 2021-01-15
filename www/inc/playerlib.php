@@ -2956,6 +2956,10 @@ function autoConfigSettings() {
 				$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 			}
 		}],
+		['requires' => ['volume_step_limit'] , 'handler' => setPlayerSession],
+		['requires' => ['volume_mpd_max'] , 'handler' => setPlayerSession],
+		['requires' => ['volume_db_display'] , 'handler' => setPlayerSession],
+
 
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
