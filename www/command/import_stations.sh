@@ -46,10 +46,10 @@ if [ $? -ne 0 ] ; then
     exit 1
 fi
 
-# Check the schema
-sqlite3 /var/local/www/db/moode-sqlite3.db ".schema cfg_radio" > /var/local/www/db/cfg_radio.schema
-diff -q /var/local/www/db/cfg_radio.schema /tmp/var/local/www/db/cfg_radio.schema
+# Check for 7 series schema
+RESULT=$(fgrep geo_fenced /tmp/var/local/www/db/cfg_radio.schema)
 if [ $? -ne 0 ] ; then
+    # Cancel import if not 7 series
     LOG_MSG="Schema mismatch, import cancelled"
     log_errors
     cleanup_temp_files
