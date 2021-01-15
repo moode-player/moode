@@ -2943,6 +2943,17 @@ function autoConfigSettings() {
 		['requires' => ['invert_polarity'] , 'handler' => setPlayerSession],
 		['requires' => ['alsaequal'] , 'handler' => setPlayerSession],
 		['requires' => ['eqfa12p'] , 'handler' => setPlayerSession],
+		['requires' => ['camilladsp_quickconv'] , 'handler' => setPlayerSession],
+		['requires' => ['cdsp_fix_playback'] , 'handler' => setPlayerSession],
+		['requires' => ['camilladsp'], 'handler' => function($values) {
+			playerSession('write', 'camilladsp', $values['camilladsp']);
+
+			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+			$cdsp->selectConfig($_SESSION['camilladsp']);
+			if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+				$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+			}
+		}],
 
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
