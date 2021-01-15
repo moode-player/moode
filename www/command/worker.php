@@ -458,6 +458,7 @@ workerLog('worker: ' . $result[6]); // MPD httpd
 workerLog('worker: ' . $result[7]); // CamillaDSP
 // MPD crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
+sendMpdCmd($sock, 'crossfade ' . $_SESSION['mpdcrossfade']);
 
 //
 workerLog('worker: -- Feature availability');

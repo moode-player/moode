@@ -2939,6 +2939,7 @@ function autoConfigSettings() {
 		}],
 
 		'Sound',
+		['requires' => ['mpdcrossfade'] , 'handler' => setPlayerSession],
 		['requires' => ['crossfeed'] , 'handler' => setPlayerSession],
 		['requires' => ['invert_polarity'] , 'handler' => setPlayerSession],
 		['requires' => ['alsaequal'] , 'handler' => setPlayerSession],
