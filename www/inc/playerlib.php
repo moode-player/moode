@@ -3109,6 +3109,7 @@ function autoConfigSettings() {
 		}],
 
 		'Sources',
+		['requires' => ['usb_auto_updatedb'] , 'handler' => setPlayerSession],
 		// Sources are using the array construction of the ini reader
 		// source_name[0] = ...
 		['requires' => ['source_name',
