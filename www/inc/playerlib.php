@@ -2960,6 +2960,9 @@ function autoConfigSettings() {
 		['requires' => ['volume_mpd_max'] , 'handler' => setPlayerSession],
 		['requires' => ['volume_db_display'] , 'handler' => setPlayerSession],
 
+		['requires' => ['ashufflesvc'] , 'handler' => setPlayerSession],
+		['requires' => ['ashuffle_mode'] , 'handler' => setPlayerSession],
+		['requires' => ['ashuffle_filter'] , 'handler' => setPlayerSession],
 
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
