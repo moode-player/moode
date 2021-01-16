@@ -2603,9 +2603,9 @@ function stopAutoShuffle() {
 	closeMpdSock($sock);
 }
 
-// get upnp coverart url
+// Get upnp coverart url
 function getUpnpCoverUrl() {
-	$result = sysCmd('upexplorer --album-art "' . $_SESSION['upnpname'] . '"');
+	$result = sysCmd('/var/www/command/upnp_albumart.py "' . $_SESSION['upnpname'] . '"');
 	return $result[0];
 }
 
