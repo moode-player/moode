@@ -2938,10 +2938,30 @@ function autoConfigSettings() {
 		}],
 
 		'Sound',
+		['requires' => ['autoplay'] , 'handler' => setPlayerSession],
+		['requires' => ['mpdcrossfade'] , 'handler' => setPlayerSession],
 		['requires' => ['crossfeed'] , 'handler' => setPlayerSession],
 		['requires' => ['invert_polarity'] , 'handler' => setPlayerSession],
 		['requires' => ['alsaequal'] , 'handler' => setPlayerSession],
 		['requires' => ['eqfa12p'] , 'handler' => setPlayerSession],
+		['requires' => ['camilladsp_quickconv'] , 'handler' => setPlayerSession],
+		['requires' => ['cdsp_fix_playback'] , 'handler' => setPlayerSession],
+		['requires' => ['camilladsp'], 'handler' => function($values) {
+			playerSession('write', 'camilladsp', $values['camilladsp']);
+
+			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+			$cdsp->selectConfig($_SESSION['camilladsp']);
+			if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+				$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+			}
+		}],
+		['requires' => ['volume_step_limit'] , 'handler' => setPlayerSession],
+		['requires' => ['volume_mpd_max'] , 'handler' => setPlayerSession],
+		['requires' => ['volume_db_display'] , 'handler' => setPlayerSession],
+
+		['requires' => ['ashufflesvc'] , 'handler' => setPlayerSession],
+		['requires' => ['ashuffle_mode'] , 'handler' => setPlayerSession],
+		['requires' => ['ashuffle_filter'] , 'handler' => setPlayerSession],
 
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
@@ -3097,6 +3117,7 @@ function autoConfigSettings() {
 		}],
 
 		'Sources',
+		['requires' => ['usb_auto_updatedb'] , 'handler' => setPlayerSession],
 		// Sources are using the array construction of the ini reader
 		// source_name[0] = ...
 		['requires' => ['source_name',

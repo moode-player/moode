@@ -24,6 +24,7 @@
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 require_once dirname(__FILE__) . '/../inc/eqp.php';
+require_once dirname(__FILE__) . '/../inc/cdsp.php';
 
 //
 // STARTUP SEQUENCE
@@ -420,6 +421,14 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 workerLog('worker: Reset renderer active flags');
 $result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='airplayactv' OR param='spotactive' OR param='slactive' OR param='inpactive'", $dbh);
 
+// CamillaDSP
+$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+$cdsp->selectConfig($_SESSION['camilladsp']);
+if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+	$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+}
+workerLog('worker: CamillaDSP ('.$_SESSION['camilladsp'].')');
+
 //
 workerLog('worker: -- MPD');
 //
@@ -446,8 +455,10 @@ workerLog('worker: ' . $result[3]); // ALSA graphic eq
 workerLog('worker: ' . $result[4]); // ALSA polarity inversion
 workerLog('worker: ' . $result[5]); // ALSA bluetooth
 workerLog('worker: ' . $result[6]); // MPD httpd
+workerLog('worker: ' . $result[7]); // CamillaDSP
 // MPD crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
+sendMpdCmd($sock, 'crossfade ' . $_SESSION['mpdcrossfade']);
 
 //
 workerLog('worker: -- Feature availability');
@@ -1476,7 +1487,13 @@ function runQueuedJob() {
 			sysCmd('systemctl restart mpd');
 			break;
         case 'camilladsp':
-            sysCmd('mpc stop');
+			sysCmd('mpc stop');
+			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+			$cdsp->selectConfig($_SESSION['camilladsp']);
+			if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+				$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+			}
+
             if ($_SESSION['w_queueargs'] == 'off') {
                 sysCmd('mpc enable only 1');
             }
