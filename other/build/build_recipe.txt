@@ -1015,14 +1015,14 @@ sudo systemctl disable upmpdcli
 
 5. python3-libupnpp
 
-cp ./moode/other/upmpdcli/libupnpp-bindings-0.20.1.tar.gz ./
-tar xfz libupnpp-bindings-0.20.1.tar.gz
+sudo cp ./moode/other/upmpdcli/libupnpp-bindings-0.20.1.tar.gz ./
+sudo tar xfz libupnpp-bindings-0.20.1.tar.gz
 cd libupnpp-bindings-0.20.1
-./configure --prefix=/usr PYTHON_VERSION=3
-make
+sudo ./configure --prefix=/usr PYTHON_VERSION=3
+sudo make
 sudo make install
 cd ~
-rm -rf ./libupnpp-bindings-0.20.1
+sudo rm -rf ./libupnpp-bindings-0.20.1
 
 ////////////////////////////////////////////////////////////////
 //
