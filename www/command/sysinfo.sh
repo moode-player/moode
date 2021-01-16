@@ -152,6 +152,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nCrossfade\t\t= $mpdcrossfade\c"
 	echo -e "\nParametric EQ\t\t= $eqfa12p\c"
 	echo -e "\nGraphic EQ\t\t= $alsaequal\c"
+	echo -e "\nCamillaDSP\t\t= $camilladsp\c"
 	echo -e "\nMPD httpd\t\t= $mpd_httpd\n"
 }
 
@@ -587,9 +588,9 @@ airplayactv=${arr[49]}
 [[ "${arr[50]}" = "1" ]] && debuglog="On" || debuglog="Off"
 [[ "${arr[51]}" = "1" ]] && ashufflesvc="On" || ashufflesvc="Off"
 ashuffle=${arr[52]}
-AVAILABLE_53=${arr[53]}
-AVAILABLE_54=${arr[54]}
-AVAILABLE_55=${arr[55]}
+camilladsp=${arr[53]}
+cdsp_fix_playback=${arr[54]}
+camilladsp_quickconv=${arr[55]}
 [[ "${arr[56]}" = "1" ]] && uac2fix="On" || uac2fix="Off"
 keyboard=${arr[57]}
 [[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
