@@ -4,15 +4,18 @@
 #
 # Retrieve the album art URI from an openhome or UPnP/AV renderer.
 #
+# 2021-01-16 Tim Curtis:
+# - Change 0S._exit() to sys.exit()
+# - Remove import os
+#
 
 import sys
-import os
 import upnpp
 
 def usage():
     prog = os.path.basename(__file__)
     debug("Usage: %s devname" % prog)
-    os._exit(1)
+    sys,exit(1)
 
 
 def artFromMeta(metadata):
@@ -22,7 +25,7 @@ def artFromMeta(metadata):
         dirobj = dirc.m_items[0]
         if "upnp:albumArtURI" in dirobj.m_props:
             print("%s" % dirobj.m_props["upnp:albumArtURI"])
-            os._exit(0)
+            sys.exit(0)
 
 
 def artFromOHInfo(service):
@@ -40,7 +43,7 @@ def artFromAVTransport(service):
     retdata = upnpp.runaction(service, "GetPositionInfo", ["0"])
     if retdata and "TrackMetaData" in retdata:
         artFromMeta(retdata["TrackMetaData"])
-    
+
 
 if len(sys.argv) != 2:
     usage()
@@ -56,5 +59,4 @@ service = upnpp.findTypedService(devname, "AVTransport", True)
 if service:
     artFromAVTransport(service)
 
-os._exit(0)
-    
+sys.exit(0)
