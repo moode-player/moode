@@ -6,10 +6,10 @@
 #
 # 2021-01-16 Tim Curtis:
 # - Change 0S._exit() to sys.exit()
-# - Remove import os
 #
 
 import sys
+import os
 import upnpp
 
 def usage():
