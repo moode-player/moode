@@ -1022,7 +1022,7 @@ sudo ./configure --prefix=/usr PYTHON_VERSION=3
 sudo make
 sudo make install
 cd ~
-sudo rm -rf ./libupnpp-bindings-0.20.1
+sudo rm -rf ./libupnpp-bindings-0.20.1*
 
 ////////////////////////////////////////////////////////////////
 //
