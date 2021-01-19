@@ -336,7 +336,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_edit_server_hide = '';
 				$_userid_pwd_hide = '';
 				$_advanced_options_hide = '';
-				$_options = 'vers=1.0,ro,dir_mode=0777,file_mode=0777';
+				$_options = 'ro,dir_mode=0777,file_mode=0777';
 			}
 			elseif ($_POST['mounttype'] == 'nfs') {
 				$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
@@ -363,7 +363,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 			$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
 			$_protocol .= "<option value=\"nfs\">NFS</option>\n";
 			$_protocol .= "<option value=\"upnp\">UPnP</option>\n";
-			$_options = 'vers=1.0,ro,dir_mode=0777,file_mode=0777';
+			$_options = 'ro,dir_mode=0777,file_mode=0777';
 		}
 
 		$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : ' '; // space for select
