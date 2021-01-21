@@ -753,6 +753,30 @@ function renderUI() {
     		else {
     			setColors();
     		}
+        $('#albumthumbs').empty();
+        if (MPD.json['file'] && MPD.json['file'].length > 4) { //&& MPD.json['file'].slice(-4) == 'flac') {
+          	var xhttp;
+          	xhttp = new XMLHttpRequest();
+          	xhttp.onreadystatechange = function() {
+          		if (this.readyState == 4 && this.status == 200) {
+          			imgArray = JSON.parse(this.responseText);
+          			if(Array.isArray(imgArray) && imgArray.length > 0) {
+                  var iIndex = 0;
+                  $('#albumart-modal').load('./templates/albumart.html', function() {
+                    imgArray.forEach(function(item) {
+                        document.getElementById('albumthumbs').innerHTML += '<img width="50px" id="thumb' + iIndex + '" src="' + item + '"</img><br />';
+                        document.getElementById('dots').innerHTML += '<span class="dot" onclick="nextImage('+iIndex+')"></span>';
+                        iIndex++;
+                    });
+                    document.getElementById('coverart-url').setAttribute("style", "display:contents;");
+                    $('#albumthumbs').click(function(event) {resetActive();i=event.target.id.slice(-1); $('#slider').attr('src',imgArray[i]); $('#albumart-modal').modal();curIndex=(parseInt(i)+1);document.getElementsByClassName("dot")[i].className += " dotactive"; });
+                  });
+          			}
+          		}
+          	};
+          	xhttp.open("GET", "getImageID3.php", true);
+          	xhttp.send();
+        }
     	}
 
     	// Extra metadata displayed under the cover
