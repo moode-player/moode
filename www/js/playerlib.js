@@ -2065,6 +2065,36 @@ $('.context-menu a').click(function(e) {
     else if ($(this).data('cmd') == 'track_info_folder') {
         audioinfo('track_info', path);
 	}
+  else if ($(this).data('cmd') == 'track_browse_to_folder') {
+    var filepath=MPD.json['file'];
+    if (filepath && MPD.json['artist'] != 'Radio station') {
+  		var dirDepth = 0;
+  		filepath = filepath.slice(0,filepath.lastIndexOf("/"));
+  		dirDepth = filepath.split("/").length - 1;
+  		UI.dbPos[10] = dirDepth;
+  		UI.dbEntry[3]='db-1';
+  		mpdDbCmd('lsinfo', filepath);
+    	currentView = 'playback,folder';
+    	$('#coverart-url').click();
+    }
+  }
+  else if ($(this).data('cmd') == 'pl_browse_to_folder') {
+    var filepath="";
+    if ($('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) != '<i') { // Has icon (fa-microphone)
+      $.getJSON('command/moode.php?cmd=getplitemfile&songpos=' + UI.dbEntry[0], function(result) {
+       	if (result!="") {
+       		var dirDepth = 0;
+       		filepath = result.slice(0,result.lastIndexOf("/"));
+       		dirDepth = filepath.split("/").length - 1;
+       		UI.dbPos[10] = dirDepth;
+       		UI.dbEntry[3]='db-1';
+       		mpdDbCmd('lsinfo', filepath);
+       	}
+      });
+     	currentView = 'playback,folder';
+     	$('#coverart-url').click();
+     }
+  }
     else if ($(this).data('cmd') == 'track_info_playback') {
         if ($('#currentsong').html() != '') {
             var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
