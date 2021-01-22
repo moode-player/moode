@@ -2211,10 +2211,10 @@ function sourceMount($action, $id = '') {
 			if ($mp[0]['type'] != 'upnp') {
 				if ($mp[0]['type'] == 'cifs') {
 					$options = $mp[0]['options'];
-					if(strpos($options, 'vers=') == False) {
+					if(strpos($options, 'vers=') === false) {
 						$version = detectCifsProtocol($mp[0]['address']);
-						if($verssion) {
-							$options = 'vers=' . $version. ','.$options;
+						if($version) {
+							$options = 'vers=' . $version . ',' . $options;
 						}
 					}
 					$mountstr = "mount -t cifs \"//" . $mp[0]['address'] . "/" . $mp[0]['remotedir'] . "\" -o username=\"" . $mp[0]['username'] . "\",password=\"" . $mp[0]['password'] . "\",rsize=" . $mp[0]['rsize'] . ",wsize=" . $mp[0]['wsize'] . ",iocharset=" . $mp[0]['charset'] . "," . $options . " \"/mnt/NAS/" . $mp[0]['name'] . "\"";
