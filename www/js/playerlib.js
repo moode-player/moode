@@ -2065,7 +2065,21 @@ $('.context-menu a').click(function(e) {
     else if ($(this).data('cmd') == 'track_info_folder') {
         audioinfo('track_info', path);
 	}
-    else if ($(this).data('cmd') == 'track_info_playback') {
+  else if ($(this).data('cmd') == 'track_info_pl') {
+      var cmd = '';
+      if ($('#pl-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) == '<i') { // Has icon (fa-microphone)
+        cmd = 'station_info';
+      }
+      else {
+        cmd = 'track_info';
+      }
+      $.getJSON('command/moode.php?cmd=getplitemfile&songpos=' + UI.dbEntry[0], function(result) {
+     	if (result!="") {
+        audioinfo(cmd, result);
+      }
+    });
+  }
+  else if ($(this).data('cmd') == 'track_info_playback') {
         if ($('#currentsong').html() != '') {
             var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
             audioinfo(cmd, MPD.json['file']);
