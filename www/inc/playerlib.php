@@ -2307,10 +2307,10 @@ function sourceMount($action, $id = '') {
  * Detect highest available suported cifs protocol of source
  */
 function detectCifsProtocol($host) {
-	$output=sysCmd("nmap " . $host . " -p 139 --script smb-protocols |grep \|");
-	$parts = explode('  ',end($output));
+	$output = sysCmd("nmap " . $host . " -p 139 --script smb-protocols |grep \|");
+	$parts = explode('  ', end($output));
 	$version = NULL;
-	if( count($parts)>=2 )  {
+	if (count($parts) >= 2)  {
 		$version = trim($parts[2]);
 		$CIFVERSIONLUT = Array( "2.02" => "2.0",
 								"2.10" => "2.1",
@@ -2318,11 +2318,13 @@ function detectCifsProtocol($host) {
 								"3.02" => "3.0.2",
 								"3.11" => "3.1.1"
 								);
-		if( strpos( $version, 'SMBv1') ) {
+		if (strpos($version, 'SMBv1')) {
 			$version = '1.0';
-		} else if( array_key_exists( $version, $CIFVERSIONLUT ) ) {
+		}
+		else if (array_key_exists($version, $CIFVERSIONLUT)) {
 			$version = $CIFVERSIONLUT[$version];
-		} else {
+		}
+		else {
 			$version = NULL;
 		}
 	}
