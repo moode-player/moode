@@ -28,6 +28,7 @@ Updates
 - UPD: Disable power save for integrated WiFi
 - UPD: Set correct 0dB level for HDMI
 - UPD: Open station home page for "Streaming source"
+- UPD: Automatically detect SMB protocol version
 
 Bug fixes
 
