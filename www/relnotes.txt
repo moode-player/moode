@@ -19,6 +19,7 @@ New features
 
 - NEW: CamillaDSP WebUI integration
 - NEW: Python based UPnP cover art utility
+- NEW: Add Track info to Queue item context menu
 
 Updates
 
