@@ -1497,7 +1497,7 @@ function runQueuedJob() {
             if ($_SESSION['w_queueargs'] == 'off') {
                 sysCmd('mpc enable only 1');
             }
-			else if ($_SESSION['w_queueargs'] == 'on') {
+			else {
                 sysCmd('mpc enable only 8');
 			}
 			sysCmd('systemctl restart mpd');
