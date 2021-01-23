@@ -111,6 +111,11 @@ else if ($selectedConfig && isset($_POST['remove']) && $_POST['remove'] == '1') 
 		$_SESSION['notify']['title'] = htmlentities('Cannot remove active configuration \"' . $selectedConfig . '\"');
 	}
 }
+// Copy pipeline
+else if ($selectedConfig && isset($_POST['copypipeline']) && $_POST['copypipeline'] == '1') {
+	$cdsp->copyConfig($selectedConfig, $_POST['new-pipelinename'] . '.yml');
+	$selectedConfig = $_POST['new-pipelinename'] . '.yml';
+}
 // Import (Upload)
 else if (isset($_FILES['coeffsfile']) && isset($_POST['import']) && $_POST['import'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffsfile"]["name"];

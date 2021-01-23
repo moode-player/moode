@@ -155,6 +155,10 @@ class CamillaDsp {
         file_put_contents ( $configFile, $newLines) ;
     }
 
+    function copyConfig($source, $destination) {
+        copy($this->CAMILLA_CONFIG_DIR . '/configs/' . $source , $this->CAMILLA_CONFIG_DIR . '/configs/' . $destination);
+    }
+
     function detectSupportedSoundFormats() {
         $available_alsa_sample_formats_from_sound_card_as_string = sysCmd('moodeutl -f')[0]; //Sound card sample formats from ALSA
         $available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
@@ -401,6 +405,7 @@ function test_cdsp() {
         print_r( $cdsp->getCamillaGuiStatus() );
         print("\n");
 
+    //$cdsp->copyConfig('config_hp.yml', 'fliepflap.yml');
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
