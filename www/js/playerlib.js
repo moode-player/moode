@@ -530,6 +530,12 @@ function screenSaver(cmd) {
         $('#lib-coverart-img').hide();
 
 		coverView = true;
+    //multiple albumcover images
+    if(document.getElementsByClassName("coverview_art_dot") != null){
+      resetActiveCoverViewDots();
+      document.getElementsByClassName("coverview_art_dot")[0].className += " dotactive";
+      curCoverViewIndex = 0;
+    }
 	}
 }
 
@@ -753,30 +759,7 @@ function renderUI() {
     		else {
     			setColors();
     		}
-        $('#albumthumbs').empty();
-        if (MPD.json['file'] && MPD.json['file'].length > 4) { //&& MPD.json['file'].slice(-4) == 'flac') {
-          	var xhttp;
-          	xhttp = new XMLHttpRequest();
-          	xhttp.onreadystatechange = function() {
-          		if (this.readyState == 4 && this.status == 200) {
-          			imgArray = JSON.parse(this.responseText);
-          			if(Array.isArray(imgArray) && imgArray.length > 0) {
-                  var iIndex = 0;
-                  $('#albumart-modal').load('./templates/albumart.html', function() {
-                    imgArray.forEach(function(item) {
-                        document.getElementById('albumthumbs').innerHTML += '<img width="50px" id="thumb' + iIndex + '" src="' + item + '"</img><br />';
-                        document.getElementById('dots').innerHTML += '<span class="dot" onclick="nextImage('+iIndex+')"></span>';
-                        iIndex++;
-                    });
-                    document.getElementById('coverart-url').setAttribute("style", "display:contents;");
-                    $('#albumthumbs').click(function(event) {resetActive();i=event.target.id.slice(-1); $('#slider').attr('src',imgArray[i]); $('#albumart-modal').modal();curIndex=(parseInt(i)+1);document.getElementsByClassName("dot")[i].className += " dotactive"; });
-                  });
-          			}
-          		}
-          	};
-          	xhttp.open("GET", "getImageID3.php", true);
-          	xhttp.send();
-        }
+        multiAlbumArt();
     	}
 
     	// Extra metadata displayed under the cover
@@ -3771,4 +3754,45 @@ function itemInfoModal(id, result) {
 	        }
 	    }
     document.getElementById(id).innerHTML = lines;
+}
+
+//**********      multiple albumart images      ********************************
+function multiAlbumArt() {
+  $('#albumthumbs').empty();
+  $('#cover_art_dots').empty();
+  $('#coverview_art_dots').empty();
+  $('#coverart-url').css('display', '');
+  $('#coverart-url').children()[0].setAttribute("style", "height:100%;width:100%;");
+  if (MPD.json['file'] && MPD.json['file'].length > 4) { //&& MPD.json['file'].slice(-4) == 'flac') {
+      var xhttp;
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          imgArray = JSON.parse(this.responseText);
+          if(Array.isArray(imgArray) && imgArray.length > 1) {
+            var iIndex = 0;
+            $('#albumart-modal').load('./templates/albumart.html', function() {
+              imgArray.forEach(function(item) {
+                  document.getElementById('albumthumbs').innerHTML += '<img width="50px" id="thumb' + iIndex + '" src="' + item + '"</img><br />';
+                  document.getElementById('cover_art_dots').innerHTML +=  '<span class="cover_art_dot" onclick="nextCoverImage('+iIndex+')"></span>';
+                  document.getElementById('coverview_art_dots').innerHTML +=  '<span class="coverview_art_dot" onclick="(function(){event.stopPropagation();event.preventDefault();nextCoverViewImage('+iIndex+'); return false;})();return false;"></span>';
+                  document.getElementById('dots').innerHTML += '<span class="dot" onclick="nextSlideImage('+iIndex+')"></span>';
+                  iIndex++;
+              });
+              $('#coverart-url').css('display', 'contents');
+              $('#coverart-url').children()[0].setAttribute("style", "height:80%;width:80%;");
+              $('#albumthumbs').click(function(event) {resetActiveSlideDots();i=event.target.id.slice(-1); $('#slider').attr('src',imgArray[i]); $('#albumart-modal').modal();curSlideIndex=(parseInt(i)+1);document.getElementsByClassName("dot")[i].className += " dotactive"; });
+              document.getElementById('cover_art_dots').innerHTML += '<img id="expandcover" src="/images/expand.svg"/>';
+              document.getElementById('coverview_art_dots').innerHTML += '<img id="expandcoverview" src="/images/expand.svg"/>';
+              $('#expandcover').click(function(event) {resetActiveSlideDots();$('#slider').attr('src',imgArray[curCoverIndex == 0?0:curCoverIndex-1]); $('#albumart-modal').modal();curSlideIndex= curCoverIndex == 0?1:curCoverIndex;document.getElementsByClassName("dot")[curCoverIndex == 0?0:curCoverIndex-1].className += " dotactive"; });
+              $('#expandcoverview').click(function(event) {event.stopPropagation();event.preventDefault();resetActiveSlideDots();$('#slider').attr('src',imgArray[curCoverViewIndex == 0?0:curCoverViewIndex-1]); $('#albumart-modal').modal();curSlideIndex= curCoverViewIndex == 0?1:curCoverViewIndex;document.getElementsByClassName("dot")[curCoverViewIndex == 0?0:curCoverViewIndex-1].className += " dotactive"; });
+              document.getElementsByClassName("cover_art_dot")[0].className += " dotactive";
+              document.getElementsByClassName("coverview_art_dot")[0].className += " dotactive";
+            });
+          }
+        }
+      };
+      xhttp.open("GET", "getImageID3.php", true);
+      xhttp.send();
+  }
 }

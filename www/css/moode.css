@@ -562,21 +562,45 @@ ol.playhistory {margin-left:55px;}
 #ph-filter-results {line-height:28px;font-size:14px;font-style:italic;}
 #ph-search {margin-bottom:8px;}
 #ph-search input {width:145px;margin:0;padding: 2px 0 2px 10px;border-top-right-radius:0px;border-bottom-right-radius:0px;}
-/* Albumart.html */
-#slider{opacity:1;transition:opacity 0.25s;}
+
+/* Multiple albumart images */
+@media (max-width:780px) {
+	#albumthumbs {display: none;}
+}
+#slider{opacity:1;transition:opacity 0.2s;}
 #slider.fadeOut{opacity:0;}
-.dot {
+img.coverart{opacity:1;transition:opacity 0.2s;}
+img.coverart.fadeOut{opacity:0;}
+.dot, .cover_art_dot, .coverview_art_dot{
 cursor: pointer;
-height: 15px;
-width: 15px;
-margin: 0 2px;
-background-color: #999999;
+height: 9px;
+width: 9px;
+margin: 4px 5px 0px 0px;
+background-color: #777;
 border-radius: 50%;
 display: inline-block;
-transition: background-color 0.3s ease;
+transition: background-color 0.2s ease;
 }
-.dotactive, .dot:hover {
-background-color: #111111;
+.dotactive {
+background-color: #ccc;
+}
+.dot:hover, .cover_art_dot:hover, .coverview_art_dot:hover {
+background-color: #ddd;
+}
+#expandcover, #expandcoverview {
+	margin-left: 20px;
+	margin-top: -3px;
+	height:11px;
+	/*vertical-align: baseline;*/
+	cursor: pointer;
+}
+#albumthumbs img {
+	cursor: pointer;
+	padding-bottom: 5px;
+	padding-right: 5px;
+}
+#albumart-modal {
+	min-width: 90vw;
 }
 
 /* Use custom scroll bars for desktop monitors */

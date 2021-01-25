@@ -26,28 +26,77 @@
 <div id="albumart-modal-dialog" class="modal-dialog modal-dialog-centered" style="margin-top: 0px; margin-left: auto; margin-right: auto; margin-bottom: 0px;">
 		<div id="albumart-modal-body" class="modal-body text-center" style="max-height:100vh">
 			<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-			<div id="fullImg"><img id="slider" onclick="nextImage()" style="height:95vh" src=" "</img></div>
+			<div id="fullImg"><img id="slider" onclick="nextSlideImage()" style="object-fit:contain;height:95vh" src=" "</img></div>
 			<div id="dots" style="text-align:center"></div>
 		</div>
 </div>
 
 <script type="text/javascript">
-curIndex = 0;
-document.getElementById('slider').src = imgArray[curIndex];
-function nextImage(imgIndex=curIndex) {
-		curIndex=imgIndex;
+curSlideIndex = 0;
+curCoverIndex = 0;
+curCoverViewIndex = 0;
+document.getElementById('slider').src = imgArray[curSlideIndex];
+function nextSlideImage(imgIndex=curSlideIndex) {
+		curSlideIndex=imgIndex;
+		if (curSlideIndex >= imgArray.length) {
+			 curSlideIndex = 0;
+			 imgIndex = 0;
+		 }
     document.getElementById('slider').className += "fadeOut";
     setTimeout(function() {
         document.getElementById('slider').src = imgArray[imgIndex];
         document.getElementById('slider').className = "";
-				resetActive();
+				resetActiveSlideDots();
 				document.getElementsByClassName("dot")[imgIndex].className += " dotactive";
     },250);
-    curIndex++;
-    if (curIndex >= imgArray.length) { curIndex = 0; }
+    curSlideIndex++;
 }
-function resetActive() {
+function nextCoverImage(imgIndex=curCoverIndex) {
+		curCoverIndex=imgIndex;
+		if (curCoverIndex >= imgArray.length) {
+			 curCoverIndex = 0;
+			 imgIndex = 0;
+		 }
+		 $('#coverart-url').children()[0].classList.add("fadeOut");
+
+		 setTimeout(function() {
+			 	$('#coverart-url').children()[0].src = imgArray[imgIndex];
+			 	$('#coverart-url').children()[0].classList.remove("fadeOut");
+				resetActiveCoverDots();
+				document.getElementsByClassName("cover_art_dot")[imgIndex].className += " dotactive";
+    },250);
+    curCoverIndex++;
+}
+function nextCoverViewImage(imgIndex=curCoverViewIndex) {
+		curCoverViewIndex=imgIndex;
+		if (curCoverViewIndex >= imgArray.length) {
+			 curCoverViewIndex = 0;
+			 imgIndex = 0;
+		 }
+		 $('#ss-coverart-url').children()[0].classList.add("fadeOut");
+
+		 setTimeout(function() {
+			 	$('#ss-coverart-url').children()[0].src = imgArray[imgIndex];
+			 	$('#ss-coverart-url').children()[0].classList.remove("fadeOut");
+				resetActiveCoverViewDots();
+				document.getElementsByClassName("coverview_art_dot")[imgIndex].className += " dotactive";
+    },250);
+    curCoverViewIndex++;
+}
+function resetActiveSlideDots() {
 	var dots = document.getElementsByClassName("dot");
+	for (i = 0; i < dots.length; i++) {
+			dots[i].className = dots[i].className.replace(" dotactive", "");
+	}
+}
+function resetActiveCoverDots() {
+	var dots = document.getElementsByClassName("cover_art_dot");
+	for (i = 0; i < dots.length; i++) {
+			dots[i].className = dots[i].className.replace(" dotactive", "");
+	}
+}
+function resetActiveCoverViewDots() {
+	var dots = document.getElementsByClassName("coverview_art_dot");
 	for (i = 0; i < dots.length; i++) {
 			dots[i].className = dots[i].className.replace(" dotactive", "");
 	}
