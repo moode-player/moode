@@ -20,8 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 
 set_include_path('/var/www/inc');
@@ -179,9 +177,10 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	// Image file path, convert image to string
 	if (strlen($img_str) < 256) {
 		$img_str = file_get_contents($img_str);
+		//workerlog('thmcache: image file: ' . $dir);
 	}
 	else {
-		//workerlog('thmcache: embedded image');
+		//workerlog('thmcache: embedded image: ' . $file);
 	}
 
 	$image = imagecreatefromstring($img_str);
@@ -200,6 +199,10 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	else {
 		$resample = true;
 	}
+
+	// DEBUG
+	// This is to help identify images that may be corrupt i.e., no width and/or height reported
+	//workerLog('Width: (' . $img_w . ') Height: (' . $img_h . ') Path: ' .$path);
 
 	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
@@ -256,7 +259,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 
 	// DEBUG
 	//$size = getimagesize(THMCACHE_DIR . md5($dir) . '.jpg');
-	//workerLog('I:' . $img_w . '|' . $img_h . ' T:' . $thm_w . '|' . $thm_h . ' A:' . $size[0] . '|' . $size[1] . '|' . $dir);
+	//workerLog('I:' . $img_w . '|' . $img_h . ' T:' . $thm_w . '|' . $thm_h . ' A:' . $size[0] . '|' . $size[1] . '|' . $dir . '|' . md5($dir));
 }
 
 // Modified versions of coverart.php functions
