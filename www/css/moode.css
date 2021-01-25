@@ -57,7 +57,7 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .modal-footer{padding:1.5rem 0;margin:0;text-align:center;background-color:transparent;box-shadow:none;border:none;}
 .modal-footer:before,.modal-footer:after{display:table;content:"";line-height:0;}
 .modal-footer:after{clear:both;}
-.modal-footer .btn+.btn{margin-left:0px;margin-bottom:0;/*float:right;*/}
+.modal-footer .btn+.btn{margin-left:0px;margin-bottom:.2em;margin-top:.2em;}
 .modal-footer .btn-group .btn+.btn{margin-left:-1px;}
 .modal-footer .btn-block+.btn-block{margin-left:0;}
 .modal-footer .btn{padding:.75rem 0;width:calc(50% - 2px);margin-left:0px;font-size:1.2em;} /* 6.4.1 larger font size */

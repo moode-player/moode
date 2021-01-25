@@ -217,8 +217,8 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#mounttype').val($(this).val()); // hidden input on manual server entry
 		if ($(this).val() == 'cifs') {
 			$('#userid-password').show();
-			$('#options').val('vers=1.0,sec=ntlm,ro,dir_mode=0777,file_mode=0777');
-			$('#info-mount-flags').html('vers=2.0 or 3.0 may be needed and/or sec=ntlm removed depending on what the NAS requires.');
+			$('#options').val('ro,dir_mode=0777,file_mode=0777');
+			$('#info-mount-flags').html('vers=2.0 or 3.0 may be needed and/or sec=ntlm/ntlmssp removed depending on what the NAS requires.');
 			$('#scan-btn').show();
 			$('#edit-server').show();
 			$('#advanced-options').show();

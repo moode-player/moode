@@ -1486,7 +1486,8 @@ function runQueuedJob() {
 			updMpdConf($_SESSION['i2sdevice']);
 			sysCmd('systemctl restart mpd');
 			break;
-        case 'camilladsp':
+		case 'camilladsp':
+			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
 			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 			$cdsp->selectConfig($_SESSION['camilladsp']);
@@ -1497,14 +1498,19 @@ function runQueuedJob() {
             if ($_SESSION['w_queueargs'] == 'off') {
                 sysCmd('mpc enable only 1');
             }
-			else if ($_SESSION['w_queueargs'] == 'on') {
-                sysCmd('mpc enable only 8');
+			else {
+				sysCmd('mpc enable only 8');
+
+				sysCmd('systemctl restart mpd');
+				// Wait for mpd to start accepting connections
+				$sock = openMpdSock('localhost', 6600);
+				closeMpdSock($sock);
+				setMpdHttpd();
 			}
-			sysCmd('systemctl restart mpd');
-			// Wait for mpd to start accepting connections
-			$sock = openMpdSock('localhost', 6600);
-			closeMpdSock($sock);
-            setMpdHttpd();
+
+			if (!empty($playing)) {
+				sysCmd('mpc play');
+			}
             break;
 		case 'eqfa12p':
 		case 'alsaequal':

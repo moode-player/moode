@@ -4,3 +4,5 @@ camilla_port: 1234
 port: 15000
 config_dir: "/usr/share/camilladsp/configs"
 coeff_dir: "/usr/share/camilladsp/coeffs"
+working_config: "/usr/share/camilladsp/working_config.yml"
+save_working_config: true

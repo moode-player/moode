@@ -19,15 +19,18 @@ New features
 
 - NEW: CamillaDSP WebUI integration
 - NEW: Python based UPnP cover art utility
+- NEW: Add Track info to Queue item context menu
 
 Updates
 
+- UPD: Bump to MPD 0.22.4
 - UPD: Bump to CamillaDSP 0.5.0-beta2
 - UPD: Bump to ALSA cdsp (commit e941420)
 - UPD: Bump to upmpdcli 1.5.8
 - UPD: Disable power save for integrated WiFi
 - UPD: Set correct 0dB level for HDMI
 - UPD: Open station home page for "Streaming source"
+- UPD: Automatically detect SMB protocol version
 
 Bug fixes
 

@@ -37,6 +37,7 @@ class CamillaDsp {
     private $ALSA_CDSP_CONFIG = '/etc/alsa/conf.d/camilladsp.conf';
     private $CAMILLA_CONFIG_DIR = '/usr/share/camilladsp';
     private $CAMILLA_EXE = '/usr/local/bin/camilladsp';
+    private $CAMILLAGUI_WORKING_CONGIG = '/usr/share/camilladsp/working_config.yml';
     private $device = NULL;
     private $configfile = NULL;
     private $quickConvolutionConfig = ";;;";
@@ -92,6 +93,7 @@ class CamillaDsp {
             $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . str_replace ('/', '\/', $configname);
             $configfilename = str_replace ('/', '\/', $configfilename);
             syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
+            syscmd("sudo ln -s -f " . $configfilename . " " . $this->CAMILLAGUI_WORKING_CONGIG);
         }
         if( $configname == '__quick_convolution__.yml' ) {
             $this->writeQuickConvolutionConfig();
@@ -151,6 +153,10 @@ class CamillaDsp {
         $newLines = str_replace( $search, $replaceWith, $lines );
 
         file_put_contents ( $configFile, $newLines) ;
+    }
+
+    function copyConfig($source, $destination) {
+        copy($this->CAMILLA_CONFIG_DIR . '/configs/' . $source , $this->CAMILLA_CONFIG_DIR . '/configs/' . $destination);
     }
 
     function detectSupportedSoundFormats() {
@@ -399,6 +405,7 @@ function test_cdsp() {
         print_r( $cdsp->getCamillaGuiStatus() );
         print("\n");
 
+    //$cdsp->copyConfig('config_hp.yml', 'fliepflap.yml');
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {

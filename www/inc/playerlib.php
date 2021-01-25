@@ -2210,7 +2210,14 @@ function sourceMount($action, $id = '') {
 			// cifs and nfs
 			if ($mp[0]['type'] != 'upnp') {
 				if ($mp[0]['type'] == 'cifs') {
-					$mountstr = "mount -t cifs \"//" . $mp[0]['address'] . "/" . $mp[0]['remotedir'] . "\" -o username=\"" . $mp[0]['username'] . "\",password=\"" . $mp[0]['password'] . "\",rsize=" . $mp[0]['rsize'] . ",wsize=" . $mp[0]['wsize'] . ",iocharset=" . $mp[0]['charset'] . "," . $mp[0]['options'] . " \"/mnt/NAS/" . $mp[0]['name'] . "\"";
+					$options = $mp[0]['options'];
+					if(strpos($options, 'vers=') === false) {
+						$version = detectCifsProtocol($mp[0]['address']);
+						if($version) {
+							$options = 'vers=' . $version . ',' . $options;
+						}
+					}
+					$mountstr = "mount -t cifs \"//" . $mp[0]['address'] . "/" . $mp[0]['remotedir'] . "\" -o username=\"" . $mp[0]['username'] . "\",password=\"" . $mp[0]['password'] . "\",rsize=" . $mp[0]['rsize'] . ",wsize=" . $mp[0]['wsize'] . ",iocharset=" . $mp[0]['charset'] . "," . $options . " \"/mnt/NAS/" . $mp[0]['name'] . "\"";
 				}
 				else {
 					$mountstr = "mount -t nfs -o " . $mp[0]['options'] . " \"" . $mp[0]['address'] . ":/" . $mp[0]['remotedir'] . "\" \"/mnt/NAS/" . $mp[0]['name'] . "\"";
@@ -2294,6 +2301,35 @@ function sourceMount($action, $id = '') {
 
 	// returns true/false for 'mount' or a log message for 'mountall' and 'unmountall'
 	return $return;
+}
+
+/**
+ * Detect highest available suported cifs protocol of source
+ */
+function detectCifsProtocol($host) {
+	$output = sysCmd("nmap " . $host . " -p 139 --script smb-protocols |grep \|");
+	$parts = explode('  ', end($output));
+	$version = NULL;
+	if (count($parts) >= 2)  {
+		$version = trim($parts[2]);
+		$CIFVERSIONLUT = Array( "2.02" => "2.0",
+								"2.10" => "2.1",
+								"3.00" => "3.0",
+								"3.02" => "3.0.2",
+								"3.11" => "3.1.1"
+								);
+		if (strpos($version, 'SMBv1')) {
+			$version = '1.0';
+		}
+		else if (array_key_exists($version, $CIFVERSIONLUT)) {
+			$version = $CIFVERSIONLUT[$version];
+		}
+		else {
+			$version = NULL;
+		}
+	}
+
+	return $version;
 }
 
 function ui_notify($notify) {
