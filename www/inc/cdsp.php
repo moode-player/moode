@@ -346,6 +346,23 @@ class CamillaDsp {
         }
     }
 
+    function getGuiExpertMode() {
+        return file_exists('/opt/camillagui/config/gui-config.yml') == false;
+    }
+
+    function setGuiExpertMode($mode) {
+        if( $mode == true
+           && file_exists('/opt/camillagui/config/gui-config.yml')
+           && file_exists('/opt/camillagui/config/gui-config.yml.disabled') == false ) {
+            syscmd("sudo mv /opt/camillagui/config/gui-config.yml /opt/camillagui/config/gui-config.yml.disabled");
+        }
+        else if( $mode == false
+                 && file_exists('/opt/camillagui/config/gui-config.yml.disabled')
+                 && file_exists('/opt/camillagui/config/gui-config.yml') == false ) {
+            syscmd("sudo mv /opt/camillagui/config/gui-config.yml.disabled /opt/camillagui/config/gui-config.yml");
+        }
+    }
+
     // placeholders for autoconfig support, empty for now
     function backup() {
     }
@@ -406,6 +423,9 @@ function test_cdsp() {
         print("\n");
 
     //$cdsp->copyConfig('config_hp.yml', 'fliepflap.yml');
+
+    //$cdsp->setGuiExpertMode(true);
+    //$cdsp->setGuiExpertMode(false);
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {

@@ -151,6 +151,9 @@ else if (isset($_POST['cdsp-coeffs']) && isset($_POST['info']) && $_POST['info']
 else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) && $_POST['updatecamillagui'] == '1') {
  	$cdsp->changeCamillaStatus($_POST['camillaguistatus']);
 }
+else if (isset($_POST['camillaguiexpertstatus']) && isset($_POST['updatecamillaguiexpert']) && $_POST['updatecamillaguiexpert'] == '1') {
+	$cdsp->setGuiExpertMode($_POST['camillaguiexpertstatus'] == '1');
+}
 else if (isset($_GET['plotpipeline']) ) {
 	$cmd = dirname($_SERVER["SCRIPT_FILENAME"]) . '/command/camillaplotpipeline.py ' . $cdsp->getConfigsLocationsFileName() . '/' . $_GET['plotpipeline'];
 	$output = sysCmd($cmd);
@@ -158,7 +161,10 @@ else if (isset($_GET['plotpipeline']) ) {
 	header("Content-Type: image/svg+xml");
 	echo implode($output);
 	exit(0);
+
 }
+
+
 
 /**
  * Generate data for html templating
@@ -268,8 +274,13 @@ if ( $cdsp->isQuickConvolutionActive() ) {
 
 $camillaGuiStatus = $cdsp->getCamillaGuiStatus();
 $camillaGuiClickHandler = " onchange=\"$('#btn-updat-camilla-gui').click();\"";
+$camillaGuiExpertClickHandler = " onchange=\"$('#btn-updat-camilla-gui-expert').click();\"";
 $_select['camillagui1'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui1\" value=\"1\" " . (($camillaGuiStatus == CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
 $_select['camillagui0'] .= "<input type=\"radio\" name=\"camillaguistatus\" id=\"toggle-camillagui2\" value=\"0\" " . (($camillaGuiStatus != CGUI_CHECK_ACTIVE) ? "checked=\"checked\"" : $camillaGuiClickHandler) . " >\n";
+$_select['camillaguiexpert1'] .= "<input type=\"radio\" name=\"camillaguiexpertstatus\" id=\"toggle-camillaguiexpert1\" value=\"1\" " . (($cdsp->getGuiExpertMode() == true) ? "checked=\"checked\"" : $camillaGuiExpertClickHandler) . " >\n";
+$_select['camillaguiexpert0'] .= "<input type=\"radio\" name=\"camillaguiexpertstatus\" id=\"toggle-camillaguiexpert2\" value=\"0\" " . (($cdsp->getGuiExpertMode() != true) ? "checked=\"checked\"" : $camillaGuiExpertClickHandler) . " >\n";
+
+
 $_open_camillagui_disabled = $camillaGuiStatus == CGUI_CHECK_ACTIVE ? '': 'disabled';
 $_camillagui_notfound_show = $camillaGuiStatus == CGUI_CHECK_NOTFOUND ? '': 'hide';
 $_camillagui_status_problems = $camillaGuiStatus == CGUI_CHECK_ACTIVE || $camillaGuiStatus == CGUI_CHECK_INACTIVE || $camillaGuiStatus == CGUI_CHECK_NOTFOUND? 'hide': '';

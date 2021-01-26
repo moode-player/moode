@@ -277,6 +277,26 @@
 					<button id="btn-updat-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillagui" value="1" style="display:none"/>
 				</div>
 
+				<label class="control-label" >Expert mode</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-camillaguiexpert2">ON</label>
+						$_select[camillaguiexpert1]
+						<label class="toggle-radio" for="toggle-camillaguiexpert1">OFF</label>
+						$_select[camillaguiexpert0]
+					</div>
+
+					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					  <a aria-label="Help" class="info-toggle" data-cmd="info-camillaguiexpert" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				    </div>
+					<span id="info-camillaguiexpert" class="help-block-configs help-block-margin legend-info-help hide">
+						Show settings like playback and capture device settings.<br>
+						Only required for custom setups.
+					</span>
+
+					<button id="btn-updat-camilla-gui-expert" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillaguiexpert" value="1" style="display:none"/>
+				</div>
+
 				<div class="controls">
 					<div style="margin-top:.5em">
 						<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary" $_open_camillagui_disabled>Open</button></a>&nbsp;Pipeline editor<br>
