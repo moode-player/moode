@@ -134,7 +134,8 @@ var GLOBAL = {
 	initTime: 0,
     oneArgFilters: ['full_lib', 'hdonly', 'lossless', 'lossy'],
     twoArgFilters: ['album', 'albumartist', 'any', 'artist', 'composer', 'conductor', 'encoded', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
-    allFilters: []
+    allFilters: [],
+    sbw: 0
 };
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
 
