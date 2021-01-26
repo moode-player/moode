@@ -19,6 +19,7 @@ sudo mkdir -p /opt
 sudo unzip -o camillagui-v$CAMILLAGUI_VER.zip -d /opt/camillagui
 
 sudo cp camillagui.yml /opt/camillagui/config
+sudo cp gui-config.yml /opt/camillagui/config
 sudo cp camillagui.service /etc/systemd/system
 
 # Don't start it, start it when needed from the moode config pages

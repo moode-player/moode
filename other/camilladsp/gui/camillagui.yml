@@ -6,3 +6,5 @@ config_dir: "/usr/share/camilladsp/configs"
 coeff_dir: "/usr/share/camilladsp/coeffs"
 working_config: "/usr/share/camilladsp/working_config.yml"
 save_working_config: true
+backup_camilla_path: ""
+backup_camilla_port: 1235
