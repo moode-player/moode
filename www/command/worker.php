@@ -396,7 +396,7 @@ else {
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$dualmode = sysCmd('/var/www/command/util.sh get-piano-dualmode');
 	$submode = sysCmd('/var/www/command/util.sh get-piano-submode');
-	// determine output mode
+	// Determine output mode
 	if ($dualmode[0] != 'None') {
 		$outputmode = $dualmode[0];
 	}
@@ -427,7 +427,7 @@ $cdsp->selectConfig($_SESSION['camilladsp']);
 if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 	$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 }
-workerLog('worker: CamillaDSP ('.$_SESSION['camilladsp'].')');
+workerLog('worker: CamillaDSP (' . $_SESSION['camilladsp'] . ')');
 
 //
 workerLog('worker: -- MPD');
