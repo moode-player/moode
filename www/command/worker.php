@@ -1470,8 +1470,15 @@ function runQueuedJob() {
 			}
 			else {
 				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
+				sysCmd('alsactl restore');
 				sysCmd('mpc enable only 2');
 			}
+
+			if ($_SESSION['spotifysvc'] == 1) {
+				sysCmd('killall librespot');
+				startSpotify();
+			}
+
 			setMpdHttpd();
 			break;
 		case 'mpd_httpd':
