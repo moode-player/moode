@@ -31,6 +31,7 @@ Updates
 - UPD: Set correct 0dB level for HDMI
 - UPD: Open station home page for "Streaming source"
 - UPD: Automatically detect SMB protocol version
+- UPD: Improve crossfeed settings and a Linkwitz setting
 
 Bug fixes
 
