@@ -2516,6 +2516,9 @@ function startSps() {
 	elseif ($_SESSION['alsaequal'] != 'Off') {
 		$device = 'alsaequal';
 	}
+	elseif ($_SESSION['crossfeed'] != 'Off') {
+		$device = 'crossfeed';
+	}
 	elseif ($_SESSION['eqfa12p'] != 'Off') {
 		$device = 'eqfa12p';
 	}

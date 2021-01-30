@@ -1470,11 +1470,15 @@ function runQueuedJob() {
 				sysCmd('mpc enable only 2');
 			}
 
+			// Restart Airplay and Spotify
+			stopSps();
+			if ($_SESSION['airplaysvc'] == 1) {
+				startSps();
+			}
+			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {
-				sysCmd('killall librespot');
 				startSpotify();
 			}
-
 			setMpdHttpd();
 			break;
 		case 'mpd_httpd':
