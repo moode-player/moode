@@ -179,16 +179,7 @@ if [[ $1 = "clear-history" ]]; then
 	exit
 fi
 
-# card 0 = i2s or onboard, card 1 = usb
-if [[ $1 = "unmute-default" ]]; then
-    amixer scontrols | sed -e 's/^Simple mixer control//' | while read line; do
-        amixer -c 0 sset "$line" unmute;
-        amixer -c 1 sset "$line" unmute;
-        done
-    exit
-fi
-
-# unmute IQaudIO Pi-AMP+, Pi-DigiAMP+
+# Unmute IQaudIO Pi-AMP+, Pi-DigiAMP+
 if [[ $1 = "unmute-pi-ampplus" || $1 = "unmute-pi-digiampplus" ]]; then
 	echo "22" >/sys/class/gpio/export
 	echo "out" >/sys/class/gpio/gpio22/direction

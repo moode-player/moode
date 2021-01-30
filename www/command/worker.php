@@ -339,7 +339,7 @@ workerLog('worker: -- Audio');
 updMpdConf($_SESSION['i2sdevice']);
 workerLog('worker: MPD conf updated');
 
-// Ensure audio output is unmuted
+// Ensure audio output is unmuted for these devices
 if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 	sysCmd('/var/www/command/util.sh unmute-pi-ampplus');
 	workerLog('worker: IQaudIO Pi-AMP+ unmuted');
@@ -347,10 +347,6 @@ if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
 	sysCmd('/var/www/command/util.sh unmute-pi-digiampplus');
 	workerLog('worker: IQaudIO Pi-DigiAMP+ unmuted');
-}
-else {
-	sysCmd('/var/www/command/util.sh unmute-default');
-	workerLog('worker: ALSA outputs unmuted');
 }
 
 // Log audio device info
