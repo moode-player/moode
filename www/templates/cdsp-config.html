@@ -23,15 +23,19 @@
 <div class="container">
 	<div class="container2">
 	<h1 class="cdsp-config">CamillaDSP Config</h1>
-	<span class="help-block-configs help-block-margin">
+	<p>
 		Version:&nbsp;$_select[version]<br>
-	</span>
+	</p>
 	<form class="form-horizontal" action="" method="post" >
     	<legend class="legend-configs">
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1" $_save_disabled>Save</button>
 			<a aria-label="Help" class="info-toggle" data-cmd="info-config-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-config-buttons" class="help-block-configs help-block-margin legend-info-help hide">
 				Update the configuration and restart CamillaDSP if required.<br>
+				Contributors:<br>
+				- @HenrikEnquist - CamillaDSP & GUI<br>
+				- @seashell - CamillaDSP ALSA interface driver (cdsp_alsa)<br>
+				- @JWahle & @bitlab - Integration into moOde
             </span>
 		</legend>
 
