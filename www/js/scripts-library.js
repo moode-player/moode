@@ -1463,6 +1463,11 @@ $('#context-menu-lib-item a').click(function(e) {
 	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
 		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
 	}
+    else if ($(this).data('cmd') == 'clear_add_item') {
+		mpdDbCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
+		notify('clear_add_item');
+		$('#pl-saveName').val(''); // Clear saved playlist name if any
+	}
 	else if ($(this).data('cmd') == 'clear_play_item') {
 		mpdDbCmd('clear_play_item', filteredSongs[UI.dbEntry[0]].file);
 		notify('clear_play_item');
@@ -1496,6 +1501,10 @@ $('#context-menu-lib-album a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'play_group' || $(this).data('cmd') == 'play_group_next') {
 		mpdDbCmd($(this).data('cmd'), files);
+	}
+    else if ($(this).data('cmd') == 'clear_add_group') {
+		mpdDbCmd('clear_add_group', files);
+		notify($(this).data('cmd'));
 	}
 	else if ($(this).data('cmd') == 'clear_play_group') {
 		mpdDbCmd('clear_play_group', files);
