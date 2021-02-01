@@ -234,7 +234,7 @@ function engineMpd() {
 		async: true,
 		cache: false,
 		success: function(data) {
-			//debugLog('engineMpd(): success branch: data=(' + data + ')');
+			debugLog('engineMpd(): success branch: data=(' + data + ')');
 
 			// Always have valid json
 			try {
