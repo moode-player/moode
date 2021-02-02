@@ -401,7 +401,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	}
 	// Used in mpdcfg job and index.php
 	$_SESSION['piano_dualmode'] = $dualmode[0];
-	workerLog('worker: Piano output mode (' . $outputmode . ')');
+	workerLog('worker: Piano 2.1 output mode (' . $outputmode . ')');
 
 	// Workaround: bump one of the channels to initialize volume
 	sysCmd('amixer -c0 sset "Digital" 0');
@@ -411,6 +411,11 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 		sysCmd('amixer -c0 sset "Digital" 100%');
 	}
 	workerLog('worker: Piano 2.1 initialized');
+}
+// NOTE: Start Allo Boss2 OLED display
+if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+	sysCmd('systemctl start boss2oled');
+	workerLog('worker: Boss 2 OLED started');
 }
 
 // Reset renderer active flags

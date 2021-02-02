@@ -1065,6 +1065,29 @@ sudo rm -rf ./piano-firmware-master
 
 ////////////////////////////////////////////////////////////////
 //
+// COMPONENT 10 - Allo Boss 2 OLED display
+//
+////////////////////////////////////////////////////////////////
+
+cd ~
+echo "Install Python libs"
+sudo apt-get -y install python-smbus python-pil
+sudo apt-get clean
+echo "Install Display driver"
+sudo cp ./moode/other/allo/boss2/boss2_oled.tar.gz /opt/
+cd /opt/
+sudo tar -xzf ./boss2_oled.tar.gz
+sudo rm ./boss2_oled.tar.gz
+cd ~
+echo "Install Systemd unit"
+sudo cp /mnt/moode-player/GitHub/moode/lib/systemd/system/boss2oled.service /lib/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl disable boss2oled.service
+echo "Install Etc modules"
+sudo cp /mnt/moode-player/GitHub/moode/etc/modules /etc/modules
+
+////////////////////////////////////////////////////////////////
+//
 // FINAL - Clean up
 //
 ////////////////////////////////////////////////////////////////

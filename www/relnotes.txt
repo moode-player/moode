@@ -19,7 +19,11 @@ New features
 
 - NEW: CamillaDSP WebUI integration
 - NEW: Python based UPnP cover art utility
-- NEW: Add Track info to Queue item context menu
+- NEW: Add "Track info" to Queue item context menu
+
+Audio devices
+
+- NEW: Allo Boss 2 w/OLED display
 
 Updates
 
