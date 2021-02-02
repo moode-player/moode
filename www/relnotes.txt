@@ -19,7 +19,7 @@ New features
 
 - NEW: CamillaDSP WebUI integration
 - NEW: Python based UPnP cover art utility
-- NEW: Add "Track info" to Queue item context menu
+- NEW: Add "Track info" to Queue context menu
 
 Audio devices
 
@@ -45,8 +45,7 @@ Bug fixes
 - FIX: Squeezelite binary crashes on ARM6
 - FIX: Librespot volume curve option
 - FIX: Order of excution for starting watchdog
-- FIX: Crossfeed has no effect on Airplay renderer
-- FIX: Crossfeed has no effect on Spotify renderer
+- FIX: Airplay, Spotify not able to output to Crossfeed DSP
 
 ########################################################
 //
