@@ -3488,9 +3488,10 @@ function startSqueezeLite () {
 }
 
 function cfgI2sOverlay($i2sDevice) {
+	sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt'); // Removes the line after dtparam=audio=off
+
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
 	if ($i2sDevice == 'none') {
-		sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt'); // Removes the line after dtparam=audio=off
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" /boot/config.txt');
 
 		// NOTE: Allo Boss 2 OLED display I2C
@@ -3499,7 +3500,7 @@ function cfgI2sOverlay($i2sDevice) {
 	// I2S audio device
 	else {
 		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sDevice);
-		sysCmd('sed -i "s/dtparam=audio=on/dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . '/" /boot/config.txt');
+		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . '" /boot/config.txt');
 		playerSession('write', 'cardnum', '0');
 		playerSession('write', 'adevname', $result[0]['name']);
 		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
