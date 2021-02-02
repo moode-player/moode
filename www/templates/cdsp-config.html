@@ -187,7 +187,9 @@
 						or change the formats which are passed to CamillaDSP in <code>/etc/alsa/conf.d/camilladsp.conf</code><br>
 						If this file is erroneous, <code>/var/log/moode.log</code> and <code>/var/log/syslog</code> may also provide hints.<br>
 						<br>
-						With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
+						To create new configurations you have two choices:<br>
+						The easy start by copying an existing configuration and start the camillagui (at the bottom of this page).<br>
+						Or brew your own configuration file in text editor.	With the currently selected sound device, this is the minimal config, that you need to get any sound through CamillaDSP:<br>
 	<code><span style="white-space: pre;">
 	devices:
 	  samplerate: 44100  # irrelevant if resampling is disabled - then it will be overridden with the incoming sample rate
@@ -252,7 +254,6 @@
 	<form class="form-horizontal" action="" method="post" >
 		<fieldset>
 			<legend>Pipeline editor</legend>
-			<p>NOTE: The Pipeline editor is experimental and runs standalone from moOde.</p>
 			<div class="control-group">
 				<span id="info-camillagui-notfound" class="help-block-configs help-block-margin legend-info-help $_camillagui_notfound_show" >
 					<span style='color: red'>&#10007;</span> Pipeline editor not found or not installed.
@@ -306,7 +307,7 @@
 						<a href="cdsp-configeditor.php" target="camillagui"><button class="btn btn-medium btn-primary" $_open_camillagui_disabled>Open</button></a>&nbsp;Pipeline editor<br>
 					</div>
 					<span class="help-block-configs help-block-margin">
-						NOTE: Ensure music is playing before opening the editor.<br>
+						This will open the webinterface of camilladsp. With it you can create your configurations.<br>
 					</span>
 
 				</div>
