@@ -3509,6 +3509,9 @@ function cfgI2sOverlay($i2sDevice) {
 		if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
 			sysCmd('sed -i "s/^#i2c-dev/i2c-dev/" /etc/modules');
 		}
+		else {
+			sysCmd('sed -i "s/^i2c-dev/#i2c-dev/" /etc/modules');			
+		}
 	}
 }
 
