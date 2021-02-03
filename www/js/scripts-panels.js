@@ -1283,7 +1283,7 @@ jQuery(document).ready(function($) { 'use strict';
     $('#extra-tags-display').click(function(e) {
         if ($('#currentsong').html() != '') {
             var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
-            audioinfo(cmd, MPD.json['file']);
+            audioInfo(cmd, MPD.json['file']);
         }
     });
 

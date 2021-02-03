@@ -2064,7 +2064,7 @@ $('.context-menu a').click(function(e) {
         submitLibraryUpdate();
 	}
     else if ($(this).data('cmd') == 'track_info_folder') {
-        audioinfo('track_info', path);
+        audioInfo('track_info', path);
 	}
   else if ($(this).data('cmd') == 'track_info_pl') {
       var cmd = '';
@@ -2076,14 +2076,14 @@ $('.context-menu a').click(function(e) {
       }
       $.getJSON('command/moode.php?cmd=getplitemfile&songpos=' + UI.dbEntry[0], function(result) {
      	if (result!="") {
-        audioinfo(cmd, result);
+        audioInfo(cmd, result);
       }
     });
   }
   else if ($(this).data('cmd') == 'track_info_playback') {
         if ($('#currentsong').html() != '') {
             var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
-            audioinfo(cmd, MPD.json['file']);
+            audioInfo(cmd, MPD.json['file']);
         }
 	}
 	else if ($(this).data('cmd') == 'delsavedpl') {
@@ -3733,12 +3733,12 @@ function splitStringAtFirstSpace (str) {
 }
 
 // For menu item in header.php
-function audiohardware() {
+function audioHardware() {
     var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
-    audioinfo(cmd, MPD.json['file'], 'hardware');
+    audioInfo(cmd, MPD.json['file'], 'hardware');
 }
 // Track/Audio info: cmd = type of dialog, path = song file, dialog for m menu Audio info
-function audioinfo(cmd, path, dialog){
+function audioInfo(cmd, path, dialog){
 	$('#audioinfo-modal .modal-body').load('audioinfo.php', function(){
         GLOBAL.scriptSection == 'configs' ? $('#audioinfo-tabs').css('display', 'none') : $('#audioinfo-tabs').css('display', 'flex');
 	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(result) {

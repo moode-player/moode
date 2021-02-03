@@ -1474,7 +1474,7 @@ $('#context-menu-lib-item a').click(function(e) {
 		$('#pl-saveName').val(''); // Clear saved playlist name if any
 	}
     else if ($(this).data('cmd') == 'track_info_lib') {
-        audioinfo('track_info', filteredSongs[UI.dbEntry[0]].file);
+        audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
 	}
 });
 
