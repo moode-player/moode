@@ -3737,7 +3737,7 @@ function audiohardware() {
     var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
     audioinfo(cmd, MPD.json['file'], 'hardware');
 }
-// Track/audio info - cmd = type of dialog, path = song file, dialog for m menu audio info
+// Track/Audio info: cmd = type of dialog, path = song file, dialog for m menu Audio info
 function audioinfo(cmd, path, dialog){
 	$('#audioinfo-modal .modal-body').load('audioinfo.php', function(){
         GLOBAL.scriptSection == 'configs' ? $('#audioinfo-tabs').css('display', 'none') : $('#audioinfo-tabs').css('display', 'flex');
@@ -3752,14 +3752,21 @@ function audioinfo(cmd, path, dialog){
 	});
 }
 
-// construct track list - id = element, result = data object
+// Construct track list: id = element, result = data object
 function itemInfoModal(id, result) {
     var lines = '';
-	    for (i = 0; i < result.length; i++) {
-	        var key = Object.keys(result[i]);
-	        if (typeof(result[i][key]) != 'undefined') {
-	            lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
-	        }
-	    }
+
+    for (i = 0; i < result.length; i++) {
+        var key = Object.keys(result[i]);
+        if (typeof(result[i][key]) != 'undefined') {
+            if (key != 'Comment') {
+                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
+            }
+            else {
+                lines += '<li><span class="left">' + key + '</span><br><span>' + result[i][key] + '</span></li>';
+            }
+        }
+    }
+
     document.getElementById(id).innerHTML = lines;
 }

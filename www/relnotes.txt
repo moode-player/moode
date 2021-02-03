@@ -19,6 +19,7 @@ New features
 
 - NEW: CamillaDSP WebUI integration
 - NEW: Add "Track info" to Queue context menu
+- NEW: Add Comment tag to "Track info" dialog
 
 Audio devices
 
