@@ -37,6 +37,7 @@ Updates
 - UPD: Automatically detect SMB protocol version
 - UPD: Improve crossfeed settings and a Linkwitz setting
 - UPD: Include Clear/Add on Lbrary context menus
+- UPD: Include cover/logo in Audio info
 
 Bug fixes
 
