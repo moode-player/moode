@@ -35,7 +35,7 @@ Updates
 - UPD: Set correct 0dB level for HDMI
 - UPD: Open station home page for "Streaming source"
 - UPD: Automatically detect SMB protocol version
-- UPD: Improve crossfeed settings and a Linkwitz setting
+- UPD: Improve Crossfeed settings and a Linkwitz setting
 - UPD: Include Clear/Add on Lbrary context menus
 - UPD: Include cover/logo in Audio info
 
