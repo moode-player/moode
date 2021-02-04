@@ -3742,7 +3742,7 @@ function audioInfo(cmd, path, dialog){
 	$('#audioinfo-modal .modal-body').load('audioinfo.php', function(){
         GLOBAL.scriptSection == 'configs' ? $('#audioinfo-tabs').css('display', 'none') : $('#audioinfo-tabs').css('display', 'flex');
 	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(result) {
-			itemInfoModal('trackdata', result);
+			itemInfoModal('trackdata', result, path);
 			if (dialog != 'hardware') dialog = 'track';
 			cmd == 'station_info' ? $('#audioinfo-track').text('Station') : $('#audioinfo-track').text('Track');
 			$('#audioinfo-modal').removeClass('track hardware');
@@ -3752,14 +3752,17 @@ function audioInfo(cmd, path, dialog){
 	});
 }
 
-// Construct track list: id = element, result = data object
+// Item metadata: id = div id in audioinfo.html, result = metadata
 function itemInfoModal(id, result) {
     var lines = '';
 
     for (i = 0; i < result.length; i++) {
         var key = Object.keys(result[i]);
         if (typeof(result[i][key]) != 'undefined') {
-            if (key != 'Comment') {
+            if (key == 'Covers' || key == 'Logo') {
+                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + '<img src="' + result[i][key] + '" style="width:60px;"' + '</span></li>';
+            }
+            else if (key != 'Comment') {
                 lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
             }
             else {

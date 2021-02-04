@@ -40,6 +40,9 @@ define('SESSION_SAVE_PATH', '/var/local/php');
 define('TMP_STATION_PREFIX', '__tmp__');
 define('EXPORT_DIR', '/var/local/www/imagesw');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
+define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
+define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
+define('DEF_COVER', 'images/default-cover-v6.svg');
 
 // Size and quality factor for small thumbs
 // Used in thmcache.php, worker.php
@@ -976,17 +979,18 @@ function parseStationInfo($path) {
 	$array = array();
 	$result = sdbquery("select * from cfg_radio where station='" . SQLite3::escapeString($path) . "'", cfgdb_connect());
 
-	$array[0] = array('Station name' => $result[0]['name']);
-	$array[1] = array('Playable URL' => $result[0]['station']);
-	$array[2] = array('Type' => $result[0]['type'] == 'f' ? 'Favorite' : ($result[0]['type'] == 'r' ? 'Regular' : 'Hidden'));
-	$array[3] = array('Genre' => $result[0]['genre']);
-	$array[4] = array('Broadcaster' => $result[0]['broadcaster']);
-	$array[5] = array('Language' => $result[0]['language']);
-	$array[6] = array('Country' => $result[0]['country']);
-	$array[7] = array('Region' => $result[0]['region']);
-	$array[8] = array('Bitrate' => $result[0]['bitrate']);
-	$array[9] = array('Audio format' => $result[0]['format']);
-	$array[10] = array('Geo fenced' => $result[0]['geo_fenced']);
+	$array[0] = array('Logo' => LOGO_ROOT_DIR . $result[0]['name'] . '.jpg');
+	$array[1] = array('Station name' => $result[0]['name']);
+	$array[2] = array('Playable URL' => $result[0]['station']);
+	$array[3] = array('Type' => $result[0]['type'] == 'f' ? 'Favorite' : ($result[0]['type'] == 'r' ? 'Regular' : 'Hidden'));
+	$array[4] = array('Genre' => $result[0]['genre']);
+	$array[5] = array('Broadcaster' => $result[0]['broadcaster']);
+	$array[6] = array('Language' => $result[0]['language']);
+	$array[7] = array('Country' => $result[0]['country']);
+	$array[8] = array('Region' => $result[0]['region']);
+	$array[9] = array('Bitrate' => $result[0]['bitrate']);
+	$array[10] = array('Audio format' => $result[0]['format']);
+	$array[11] = array('Geo fenced' => $result[0]['geo_fenced']);
 
 	//workerLog(print_r($array, true));
 	return $array;
@@ -995,20 +999,21 @@ function parseStationInfo($path) {
 // Parse track info
 function parseTrackInfo($resp) {
 	/* Layout
-	0  File path
-	1  Artists
-	2  Album artist
-	3  Composer
-	4  Conductor
-	5  Genres
-	6  Album
-	7  Disc
-	8  Track
-	9  Title
-	10 Date
-	11 Duration
-	12 Audio format
-	13 Comment
+	0  Cover url
+	1  File path
+	2  Artists
+	3  Album artist
+	4  Composer
+	5  Conductor
+	6  Genres
+	7  Album
+	8  Disc
+	9  Track
+	10  Title
+	11 Date
+	12 Duration
+	13 Audio format
+	14 Comment
 	*/
 
 	if (is_null($resp)) {
@@ -1035,43 +1040,46 @@ function parseTrackInfo($resp) {
 				// All others
 				case 'file':
 					$file = $value;
+					$cover_file = md5(dirname($file)) . '.jpg';
+					$cover_url = file_exists(THMCACHE_DIR . $cover_file) ? '/imagesw/thmcache/' . $cover_file : '/var/www/images/notfound.jpg';
+					$array[0] = array('Covers' => $cover_url);
 					break;
 				case 'Artist':
 				case 'Performer':
 					$artists .= $value . ', ';
 					break;
 				case 'AlbumArtist':
-					$array[2] = array('Album artist' => $value);
+					$array[3] = array('Album artist' => $value);
 					break;
 				case 'Composer':
-					$array[3] = array($element => $value);
+					$array[4] = array($element => $value);
 					break;
 				case 'Conductor':
-					$array[4] = array($element => $value);
+					$array[5] = array($element => $value);
 					break;
 				case 'Genre':
 					$genres .= $value . ', ';
 					break;
 				case 'Album':
-					$array[6] = array($element => $value);
-					break;
-				case 'Disc':
 					$array[7] = array($element => $value);
 					break;
-				case 'Track':
+				case 'Disc':
 					$array[8] = array($element => $value);
 					break;
-				case 'Title':
+				case 'Track':
 					$array[9] = array($element => $value);
 					break;
-				case 'Date':
+				case 'Title':
 					$array[10] = array($element => $value);
 					break;
+				case 'Date':
+					$array[11] = array($element => $value);
+					break;
 				case 'Time':
-					$array[11] = array('Duration' => songTime($value));
+					$array[12] = array('Duration' => songTime($value));
 					break;
 				case 'Comment':
-					$array[13] = array($element => $value);
+					$array[14] = array($element => $value);
 					break;
 			}
 
@@ -1079,12 +1087,12 @@ function parseTrackInfo($resp) {
 		}
 
 		// Strip off trailing delimiter
-		$array[0] = array('File path' => $file);
-		$array[1] = array('Artists' => rtrim($artists, ', '));
-		$array[5] = array('Genres' => rtrim($genres, ', '));
+		$array[1] = array('File path' => $file);
+		$array[2] = array('Artists' => rtrim($artists, ', '));
+		$array[6] = array('Genres' => rtrim($genres, ', '));
 
 		// Add audio format
-		$array[12] = array('Audio format' => getEncodedAt(array('file' => $file), 'default'));
+		$array[13] = array('Audio format' => getEncodedAt(array('file' => $file), 'default'));
 	}
 
 	//workerLog(print_r($array, true));
@@ -3682,10 +3690,6 @@ function storeBackLink($section, $tpl) {
 
 // Create enhanced metadata
 function enhanceMetadata($current, $sock, $caller = '') {
-	define(LOGO_ROOT_DIR, 'imagesw/radio-logos/');
-	define(DEF_RADIO_COVER, 'images/default-cover-v6.svg');
-	define(DEF_COVER, 'images/default-cover-v6.svg');
-
 	$song = parseCurrentSong($sock);
 	$current['file'] = $song['file'];
 
