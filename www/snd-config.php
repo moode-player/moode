@@ -390,7 +390,7 @@ if (isset($_POST['update_dlna_settings'])) {
 	}
 	if (isset($_POST['dlnasvc']) && $_POST['dlnasvc'] != $_SESSION['dlnasvc']) {
 		$title = $_POST['dlnasvc'] == 1 ? 'DLNA server on' : 'DLNA server off';
-		$msg = $_POST['dlnasvc'] == 1 ? 'DB rebuild initiated' : '';
+		$msg = $_POST['dlnasvc'] == 1 ? 'Database rebuild initiated' : '';
 		playerSession('write', 'dlnasvc', $_POST['dlnasvc']);
 	}
 	if (isset($title)) {
@@ -400,11 +400,11 @@ if (isset($_POST['update_dlna_settings'])) {
 // Rebuild DLNA db
 if (isset($_POST['rebuild_dlnadb'])) {
 	if ($_SESSION['dlnasvc'] == 1) {
-		submitJob('dlnarebuild', '', 'DB rebuild initiated', '');
+		submitJob('dlnarebuild', '', 'Database rebuild initiated', '');
 	}
 	else {
 		$_SESSION['notify']['title'] = 'Turn DLNA server on';
-		$_SESSION['notify']['msg'] = 'DB rebuild will initiate';
+		$_SESSION['notify']['msg'] = 'Database rebuild will initiate';
 	}
 }
 // UPnP browser

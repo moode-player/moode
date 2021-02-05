@@ -547,7 +547,7 @@ else {
 	workerLog('worker: UPnP renderer (n/a)');
 }
 
-// start minidlna
+// Start minidlna
 if ($_SESSION['feat_bitmask'] & FEAT_MINIDLNA) {
 	workerLog('worker: DLNA server (available)');
 	if (isset($_SESSION['dlnasvc']) && $_SESSION['dlnasvc'] == 1) {
