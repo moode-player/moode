@@ -2739,21 +2739,27 @@ function importStationPkg(files) {
 		return;
 	}
 
-    $('#import-export-msg').text('Importing...');
-	objUrl = (URL || webkitURL).createObjectURL(files[0]);
-	URL.revokeObjectURL(objUrl);
-	var reader = new FileReader();
-	reader.onload = function(e) {
-		var dataURL = reader.result;
-		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
-        // For zip files its data:application/zip;base64,
-		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=import_stations', {'blob': data}, function(result) {
+	$('#import-export-msg').text('Importing...');
+	var formData = new FormData();
+	formData.append("stationbackupfile", files[0])
+	$.ajax({
+        url: 'command/moode.php?cmd=import_stations',
+        type: 'post',
+        dataType: "multipart/form-data",
+		data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data, status)
+        {
             $('#import-export-msg').text(result);
             $('#import-station-pkg').val('');
-        });
-	}
-	reader.readAsDataURL(files[0]);
+        },
+        error: function (xhr, desc, err)
+        {
+            $('#import-export-msg').text(xhr.responseText);
+            $('#import-station-pkg').val('');
+        }
+	});
 }
 
 function setClkRadioCtls(ctlValue) {

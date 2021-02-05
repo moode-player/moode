@@ -662,46 +662,40 @@ else {
 			syscmd('rm /var/local/www/db/cfg_radio.schema');
 			break;
 		case 'import_stations':
-			if (false === ($zip_data = base64_decode($_POST['blob'], true))) {
-				workerLog('worker: import_stations: base64_decode failed');
-				$msg = 'Error: base64 decode failed';
+			if (isset($_FILES['stationbackupfile'] ) == false ) {
+				workerLog('worker: import_stations: no file present');
+				$msg = 'Error: no stationbackupfile found post data';
 			}
 			else {
 				$file = '/var/local/www/station_import.zip';
+				unlink($file);
 				sysCmd('touch ' . $file);
 				sysCmd('chmod 0777 ' . $file);
-				if (false === ($fh = fopen($file, 'w'))) {
+				move_uploaded_file($_FILES["stationbackupfile"]["tmp_name"], $file);
+				if (false === file_exists ($file)) {
 					workerLog('worker: import_stations: file open failed on ' . $file);
 					$msg = 'Error: file open failed';
 				}
 				else {
-					if (false === ($bytes_written = fwrite($fh, $zip_data))) {
-						workerLog('worker: import_stations: file write failed on ' . $file);
-						$msg = 'Error: file write failed';
+					// Import station data from zip
+					$result = sysCmd('/var/www/command/import_stations.sh');
+					if (!empty($result[0])) {
+						$msg = file_get_contents('/tmp/station_import_error.txt');
+						str_replace("\"", '', $msg);
 					}
 					else {
-						// Import station data from zip
-						$result = sysCmd('/var/www/command/import_stations.sh');
-						if (!empty($result[0])) {
-							$msg = file_get_contents('/tmp/station_import_error.txt');
-							str_replace("\"", '', $msg);
-						}
-						else {
-							$msg = 'Import complete';
-							// Update MPD database
-							$GLOBALS['check_library_update'] = '1';
-							$sock = openMpdSock('localhost', 6600);
-							sendMpdCmd($sock, 'update RADIO');
-							$resp = readMpdResp($sock);
-							closeMpdSock($sock);
-							// Update .pls file permissions
-							sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
-							// Update the session
-							loadRadio();
-						}
-
+						$msg = 'Import complete';
+						// Update MPD database
+						$GLOBALS['check_library_update'] = '1';
+						$sock = openMpdSock('localhost', 6600);
+						sendMpdCmd($sock, 'update RADIO');
+						$resp = readMpdResp($sock);
+						closeMpdSock($sock);
+						// Update .pls file permissions
+						sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
+						// Update the session
+						loadRadio();
 					}
-					fclose($fh);
 				}
 			}
 			echo $msg;
