@@ -30,7 +30,7 @@ const FEAT_RECORDER     = 8;        //   Stream recorder
 const FEAT_SQUEEZELITE  = 16;       // y Squeezelite renderer
 const FEAT_UPMPDCLI     = 32;       // y UPnP client for MPD
 const FEAT_SQSHCHK      = 64;       //   Require squashfs for software update
-const FEAT_RESERVED1    = 128;      // y Reserved for future use
+const FEAT_ROONBRIDGE	= 128;		// y RoonBridge renderer
 const FEAT_LOCALUI      = 256;      // y Local display
 const FEAT_INPSOURCE    = 512;      // y Input source select
 const FEAT_UPNPSYNC     = 1024;     //   UPnP volume sync
@@ -430,6 +430,10 @@ function engineCmd() {
                 case 'slactive1':
                 case 'slactive0':
     				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><button class="btn disconnect-renderer" data-job="slsvc">turn off</button>');
+                    break;
+                case 'rbactive1':
+                case 'rbactive0':
+    				inpSrcIndicator(cmd[0], 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbsvc">turn off</button>');
                     break;
                 case 'scnactive1':
     				screenSaver(cmd[0]);

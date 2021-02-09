@@ -17,7 +17,8 @@
 
 New features
 
-- NEW: CamillaDSP WebUI integration
+- NEW: CamillaDSP including Pipeline Editor
+- NEW: RoonBridge renderer (requires user install)
 
 Audio devices
 
@@ -30,6 +31,7 @@ Updates
 - UPD: Bump to ALSA cdsp (commit e941420)
 - UPD: Bump to upmpdcli 1.5.8 w/updated coverart util
 - UPD: Bump to miniDLNA 1.3.0
+- UPD: Bump to moodeutl 1.5.2
 - UPD: Add Clear/Add to Lbrary context menus
 - UPD: Add Track info to Queue context menu
 - UPD: Add Comment tag to "Track info" dialog

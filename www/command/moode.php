@@ -74,12 +74,15 @@ elseif ($_GET['cmd'] == 'setlogoimage') {
 	}
 }
 elseif ($_GET['cmd'] == 'disconnect-renderer') {
-	if ($_POST['job'] == 'slsvc') {
+	// Squeezelite and RoonBridge by default hog the audio output so they need to be turned off in order to released it
+	if ($_POST['job'] == 'slsvc' || $_POST['job'] == 'rbsvc') {
 		session_start();
-		playerSession('write', 'slsvc', '0');
+		playerSession('write', $_POST['job'], '0');
 		session_write_close();
 	}
-	// Pass 'disconnect-renderer' string as a queue arg and then test for it in worker so that MPD play can be resumed.
+
+	// Airplay and Spotify are session based and so they can simply be restarted to effect a disconnect
+	// NOTE: Pass 'disconnect-renderer' string as a queue arg and then test for it in worker so that MPD play can be resumed if indicated
 	if (submitJob($_POST['job'], $_GET['cmd'], '', '')) {
 		echo json_encode('job submitted');
 	}
@@ -495,6 +498,8 @@ else {
 				$array_cfg_system[$row['param']] = $row['value'];
 			}
 			 // Add extra vars
+			$array_cfg_system['kernelver'] = $_SESSION['kernelver'];
+			$array_cfg_system['procarch'] = $_SESSION['procarch'];			 
 			$array_cfg_system['raspbianver'] = $_SESSION['raspbianver'];
 			$array_cfg_system['ipaddress'] = $_SESSION['ipaddress'];
 			$array_cfg_system['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';

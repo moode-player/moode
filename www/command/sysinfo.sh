@@ -30,7 +30,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "S Y S T E M   P A R A M E T E R S"
 	echo -e "\nmoOde release\t\t= $moode_rel\c"
 	echo -e "\nRaspiOS\t\t\t= $RASPIOS_VER\c"
-	echo -e "\nLinux kernel\t\t= $kernelver\c"
+	echo -e "\nLinux kernel\t\t= $KERNEL_VER\c"
 	echo -e "\nPlatform\t\t= $hdwrrev\c"
 	echo -e "\nArchitecture\t\t= $ARCH ($kernel_architecture)\c"
 	echo -e "\nSystem uptime\t\t= $UPTIME\c"
@@ -126,6 +126,9 @@ AUDIO_PARAMETERS() {
 	fi
 	if [ $(($feat_bitmask & $FEAT_SQUEEZELITE)) -ne 0 ]; then
 		echo -e "\nSqueezelite\t\t= $slsvc\c"
+	fi
+	if [ $(($feat_bitmask & $FEAT_ROONBRIDGE)) -ne 0 ]; then
+		echo -e "\nRoonBridge\t\t= $rbsvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_UPMPDCLI)) -ne 0 ]; then
 		echo -e "\nUPnP client\t\t= $upnpsvc\c"
@@ -311,6 +314,15 @@ RENDERER_SETTINGS() {
 		echo -e "Resume MPD\t\t= $rsmaftersl\n"
 	fi
 
+	if [ $(($feat_bitmask & $FEAT_ROONBRIDGE)) -ne 0 ]; then
+		if [[ -f /opt/RoonBridge/start.sh ]]; then
+			RBVER="$(awk 'FNR==2 {print $0}' /opt/RoonBridge/Bridge/VERSION)"
+			echo -e "R O O N B R D G E   S E T T I N G S"
+			echo -e "\nVersion\t\t\t= $RBVER\c"
+ 	 		echo -e "\nResume MPD\t\t= $rsmafterrb\n"
+		fi
+	fi
+
 	if [ $(($feat_bitmask & $FEAT_LOCALUI)) -ne 0 ]; then
 		echo -e "L O C A L   D I S P L A Y   S E T T I N G S"
 		echo -e "\nLocal UI display\t= $localui\c"
@@ -342,6 +354,7 @@ FEAT_MINIDLNA=4
 FEAT_RECORDER=8
 FEAT_SQUEEZELITE=16
 FEAT_UPMPDCLI=32
+FEAT_ROONBRIDGE=128
 FEAT_LOCALUI=256
 FEAT_SPOTIFY=2048
 FEAT_GPIO=4096
@@ -364,7 +377,7 @@ SOX_ADHERE_BASE_FREQ=8		# Resample (adhere to base freq)
 
 HOSTNAME=`uname -n`
 RASPIOS_VER=`cat /etc/debian_version`
-#KERNEL=`uname -r`
+KERNEL_VER=`uname -r`" "`uname -v | cut -d" " -f 1`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
 ARCH=`uname -m`
@@ -548,10 +561,14 @@ dlnaname=${arr[7]}
 [[ "${arr[11]}" = "1" ]] && maxusbcurrent="On" || maxusbcurrent="Off"
 [[ "${arr[12]}" = "1" ]] && rotaryenc="On" || rotaryenc="Off"
 [[ "${arr[13]}" = "1" ]] && autoplay="On" || autoplay="Off"
-kernelver=${arr[14]}
+if [[ -f "/opt/RoonBridge/start.sh" ]]; then
+	[[ "${arr[14]}" = "1" ]] && rbsvc="On" || rbsvc="Off"
+else
+	rbsvc="Not installed"
+fi
 mpdver=${arr[15]}
 patch_id=$(echo $mpdver | awk -F"_p0x" '{print $2}')
-procarch=${arr[16]}
+rbactive=${arr[16]}
 adevname=${arr[17]}
 clkradio_mode=${arr[18]}
 clkradio_item=${arr[19]}
@@ -662,7 +679,7 @@ library_pixelratio=${arr[106]}
 cover_backdrop=${arr[108]}
 cover_blur=${arr[109]}
 cover_scale=${arr[110]}
-AVAILABLE_111=${arr[111]}
+rsmafterrb=${arr[111]}
 library_tagview_artist=${arr[112]}
 scnsaver_style=${arr[113]}
 ashuffle_filter=${arr[114]}

@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-05-30 TC moOde 5.3
- *
  */
 
 set_include_path('/var/www/inc');
@@ -27,14 +25,20 @@ require_once 'playerlib.php';
 $option = isset($argv[1]) ? $argv[1] : '';
 
 switch ($option) {
-	case '-bluetooth':
+	case '--bluetooth':
 		restart_bluetooth();
 		break;
-	case '-airplay':
+	case '--airplay':
 		restart_airplay();
 		break;
-	case '-spotify':
+	case '--spotify':
 		restart_spotify();
+		break;
+	case '--squeezelite':
+		restart_squeezelite();
+		break;
+	case '--roonbridge':
+		restart_roonbridge();
 		break;
 	default:
 		echo
@@ -43,9 +47,11 @@ Moode renderer restarter
 
 With no OPTION print the help text and exit.
 
- -bluetooth\t\trestart bluetooth
- -airplay\t\trestart airplay
- -spotify\t\trestart spotify connect\n";
+ --bluetooth\t\tRestart bluetooth
+ --airplay\t\tRestart airplay
+ --spotify\t\tRestart spotify
+ --squeezelite\tRestart squeezelite
+ --roonbridge\t\tRestart roonbridge\n";
 		break;
 }
 
@@ -73,8 +79,8 @@ function restart_bluetooth() {
 function restart_airplay() {
 	session_id(playerSession('getsessionid'));
 	session_start();
-	stopSps();
-	startSps();
+	stopAirplay();
+	startAirplay();
 	session_write_close();
 }
 
@@ -83,5 +89,22 @@ function restart_spotify() {
 	session_start();
 	stopSpotify();
 	startSpotify();
+	session_write_close();
+}
+
+function restart_squeezelite() {
+	session_id(playerSession('getsessionid'));
+	session_start();
+	stopSqueezelite();
+	playerSession('write', 'rsmaftersl', 'No');
+	startSqueezelite();
+	session_write_close();
+}
+
+function restart_roonbridge() {
+	session_id(playerSession('getsessionid'));
+	session_start();
+	stopRoonBridge();
+	startRoonBridge();
 	session_write_close();
 }

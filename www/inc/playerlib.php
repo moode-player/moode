@@ -63,7 +63,7 @@ const FEAT_RECORDER		= 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
 const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
-const FEAT_RESERVED1	= 128;		// y Reserved for future use
+const FEAT_ROONBRIDGE	= 128;		// y RoonBridge renderer
 const FEAT_LOCALUI		= 256;		// y Local display
 const FEAT_INPSOURCE	= 512;		// y Input source select
 const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
@@ -2498,16 +2498,26 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 	return $encoded_at;
 }
 
-function stopSps () {
-	sysCmd('killall shairport-sync');
-	sysCmd('/var/www/vol.sh -restore');
-	// reset to inactive
-	playerSession('write', 'airplayactv', '0');
-	$GLOBALS['aplactive'] = '0';
-	sendEngCmd('aplactive0');
+// Bluetooth
+function startBt() {
+	sysCmd('systemctl start hciuart');
+	sysCmd('systemctl start bluetooth');
+	sysCmd('systemctl start bluealsa');
+
+	// We should have a MAC address
+	$result = sysCmd('ls /var/lib/bluetooth');
+	if ($result[0] == '') {
+		workerLog('startBt(): Bluetooth error, no MAC address');
+	}
+	// Initialize controller
+	else {
+		$result = sysCmd('/var/www/command/bt.sh -i');
+		//workerLog('startBt(): Bluetooth controller initialized');
+	}
 }
 
-function startSps() {
+// Airplay
+function  startAirplay() {
 	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
 		$logging = '-vv';
@@ -2546,19 +2556,19 @@ function startSps() {
 		' -a "' . $_SESSION['airplayname'] . '" ' .
 		'-- -d ' . $device . ' > ' . $logfile . ' 2>&1 &';
 
-	debugLog('startSps(): (' . $cmd . ')');
+	debugLog(' startAirplay(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
-
-function stopSpotify() {
-	sysCmd('killall librespot');
+function stopAirplay () {
+	sysCmd('killall shairport-sync');
 	sysCmd('/var/www/vol.sh -restore');
-	// reset to inactive
-	playerSession('write', 'spotactive', '0');
-	$GLOBALS['spotactive'] = '0';
-	sendEngCmd('spotactive0');
+	// Reset to inactive
+	playerSession('write', 'airplayactv', '0');
+	$GLOBALS['aplactive'] = '0';
+	sendEngCmd('aplactive0');
 }
 
+// Spotify
 function startSpotify() {
 	$result = cfgdb_read('cfg_spotify', cfgdb_connect());
 	$cfg_spotify = array();
@@ -2603,36 +2613,86 @@ function startSpotify() {
 	debugLog('startSpotify(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
-
-// start bluetooth
-function startBt() {
-	sysCmd('systemctl start hciuart');
-	sysCmd('systemctl start bluetooth');
-	sysCmd('systemctl start bluealsa');
-
-	// we should have a MAC address
-	$result = sysCmd('ls /var/lib/bluetooth');
-	if ($result[0] == '') {
-		workerLog('startBt(): Bluetooth error, no MAC address');
-	}
-	// initialize controller
-	else {
-		$result = sysCmd('/var/www/command/bt.sh -i');
-		//workerLog('startBt(): Bluetooth controller initialized');
-	}
+function stopSpotify() {
+	sysCmd('killall librespot');
+	sysCmd('/var/www/vol.sh -restore');
+	// Reset to inactive
+	playerSession('write', 'spotactive', '0');
+	$GLOBALS['spotactive'] = '0';
+	sendEngCmd('spotactive0');
 }
 
-// start dlna server
+// Squeezelite
+function startSqueezeLite() {
+	sysCmd('mpc stop');
+
+	if ($_SESSION['alsavolume'] != 'none') {
+		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+	}
+	sysCmd('systemctl start squeezelite');
+}
+function stopSqueezeLite() {
+	sysCmd('systemctl stop squeezelite');
+	sysCmd('/var/www/vol.sh -restore');
+	// Reset to inactive
+	playerSession('write', 'slactive', '0');
+	$GLOBALS['slactive'] = '0';
+	sendEngCmd('slactive0');
+}
+function cfgSqueezelite() {
+	// Update sql table with current MPD device num
+	$dbh = cfgdb_connect();
+	$array = sdbquery('select value from cfg_mpd where param="device"', $dbh);
+	cfgdb_update('cfg_sl', $dbh, 'AUDIODEVICE', $array[0]['value']);
+
+	// Load settings
+	$result = cfgdb_read('cfg_sl', $dbh);
+
+	// Generate config file output
+	foreach ($result as $row) {
+		if ($row['param'] == 'AUDIODEVICE') {
+			$data .= $row['param'] . '="hw:' . $row['value'] . ',0"' . "\n";
+		}
+		else {
+			$data .= $row['param'] . '=' . $row['value'] . "\n";
+		}
+	}
+
+	// Write config file
+	$fh = fopen('/etc/squeezelite.conf', 'w');
+	fwrite($fh, $data);
+	fclose($fh);
+}
+
+// RoonBridge
+function startRoonBridge() {
+	sysCmd('mpc stop');
+	if ($_SESSION['alsavolume'] != 'none') {
+		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+	}
+	sysCmd('systemctl start roonbridge');
+}
+function stopRoonBridge () {
+	sysCmd('mpc stop');
+	sysCmd('systemctl stop roonbridge');
+	sysCmd('/var/www/vol.sh -restore');
+	// Reset to inactive
+	playerSession('write', 'rbactive', '0');
+	$GLOBALS['rbactive'] = '0';
+	sendEngCmd('rbactive0');
+}
+
+// DLNA server
 function startMiniDlna() {
 	sysCmd('systemctl start minidlna');
 }
 
-// start lcd updater
+// LCD updater
 function startLcdUpdater() {
 	sysCmd('/var/www/command/lcdup.sh');
 }
 
-// start gpio button handler
+// GPIO button handler
 function startGpioSvc() {
 	sysCmd('/var/www/command/gpio-buttons.py > /dev/null 2&1 &');
 }
@@ -3460,45 +3520,6 @@ function parseMpdOutputs($resp) {
 	return $array;
 }
 
-// config squeezelite
-function cfgSqueezelite() {
-	// update sql table with current MPD device num
-	$dbh = cfgdb_connect();
-	$array = sdbquery('select value from cfg_mpd where param="device"', $dbh);
-	cfgdb_update('cfg_sl', $dbh, 'AUDIODEVICE', $array[0]['value']);
-
-	// load settings
-	$result = cfgdb_read('cfg_sl', $dbh);
-
-	// generate config file output
-	foreach ($result as $row) {
-		if ($row['param'] == 'AUDIODEVICE') {
-			$data .= $row['param'] . '="hw:' . $row['value'] . ',0"' . "\n";
-		}
-		else {
-			$data .= $row['param'] . '=' . $row['value'] . "\n";
-		}
-	}
-
-	// write config file
-	$fh = fopen('/etc/squeezelite.conf', 'w');
-	fwrite($fh, $data);
-	fclose($fh);
-}
-
-// start squeezelite
-function startSqueezeLite () {
-	sysCmd('killall -s 9 squeezelite');
-	$result = sysCmd('pgrep -l squeezelite');
-	$count = 10;
-	while ($result[0] && $count > 0) {
-		sleep(1);
-		$result = sysCmd('pgrep -l squeezelite');
-		--$count;
-	}
-	sysCmd('systemctl start squeezelite');
-}
-
 function cfgI2sOverlay($i2sDevice) {
 	sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt'); // Removes the line after dtparam=audio=off
 
@@ -3630,8 +3651,8 @@ function setAudioOut($audioout) {
 
 	// Renderers
 	if ($_SESSION['airplaysvc'] == '1') {
-		stopSps();
-		startSps();
+		stopAirplay();
+		 startAirplay();
 	}
 
 	if ($_SESSION['spotifysvc'] == '1') {

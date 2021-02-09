@@ -17,11 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 
-define('VERSION', '1.5.1');
+define('VERSION', '1.5.2');
 define('SQLDB', '/var/local/www/db/moode-sqlite3.db');
 
 // Features availability bitmask
@@ -35,7 +33,7 @@ const FEAT_RECORDER		= 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer
 const FEAT_UPMPDCLI 	= 32;		// y UPnP client for MPD
 const FEAT_SQSHCHK		= 64;		// 	 Require squashfs for software update
-const FEAT_RESERVED1	= 128;		// y Reserved for future use
+const FEAT_ROONBRIDGE	= 128;		// y RoonBridge renderer
 const FEAT_LOCALUI		= 256;		// y Local display
 const FEAT_INPSOURCE	= 512;		// y Input source select
 const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
@@ -55,7 +53,7 @@ $features = array(
 	FEAT_SQUEEZELITE => 'Squeezelite renderer',
 	FEAT_UPMPDCLI => 'UPnP client for MPD',
 	FEAT_SQSHCHK => 'Require squashfs for software update',
-	FEAT_RESERVED1 => 'Reserved for future use',
+	FEAT_ROONBRIDGE => 'RoonBridge renderer',
 	FEAT_LOCALUI => 'Local display',
 	FEAT_INPSOURCE => 'Input source select',
 	FEAT_UPNPSYNC => 'UPnP volume sync',
@@ -105,6 +103,9 @@ switch ($option) {
 	case '-r':
 		restart_servers();
 		break;
+	case '-R':
+		restart_renderer($argv);
+		break;
 	case '-s':
 		system_info();
 		break;
@@ -144,6 +145,8 @@ With no OPTION print the help text and exit.
  -m\t\tRun system monitor
  -q\t\tQuery sql database
  -r\t\tRestart servers
+ -R\t\tRestart renderer [--name]
+ \t\t[bluetooth | airplay | spotify | squeezelite | roonbridge]
  -s\t\tPrint system info
  -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
@@ -332,6 +335,32 @@ function restart_servers() {
 	exec('sudo systemctl stop mpd');
 	exec('sudo /var/www/command/worker.php');
 	echo "Servers restarted\n";
+}
+
+function restart_renderer($argv) {
+	$renderers = array('--bluetooth' => 'btsvc', '--airplay' => 'airplaysvc', '--spotify' => 'spotifysvc',
+		'--squeezelite' => 'slsvc', '--roonbridge' => 'rbsvc');
+
+	if (!isset($argv[2])) {
+		echo 'Missing 2nd argument [renderer name]' . "\n";
+		return;
+	}
+	else if (array_key_exists($argv[2], $renderers)) {
+		$svc_name = $renderers[$argv[2]];
+		$svc_on = trim(shell_exec("sqlite3 " .  SQLDB . " \"SELECT value FROM cfg_system WHERE param='" . $svc_name . "'\""));
+		if ($svc_on == '0') {
+			echo 'Renderer is not currently on' . "\n";
+			return;
+		}
+	}
+	else {
+		echo 'Invalid renderer name' . "\n";
+		echo 'Valid names are: --bluetooth, --airplay, --spotify, --squeezelite, --roonbridge' . "\n";
+		return;
+	}
+
+	sysCmd('/var/www/command/restart-renderer.php ' . $argv[2]);
+	echo 'Renderer restarted' . "\n";
 }
 
 function system_info() {

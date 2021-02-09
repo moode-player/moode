@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-11-24 TC moOde 6.4.0
-#
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
@@ -51,6 +49,7 @@ if [[ $WRKREADY == "1" ]]; then
 			/var/www/vol.sh -restore
 		fi
 		if [[ $RSMAFTERSL == "Yes" ]]; then
+			echo Resume MPD
 			/usr/bin/mpc play > /dev/null
 		fi
 	elif [[ $1 = "1" ]] ; then

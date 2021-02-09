@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Jan 14 17:24:59 2021
+-- File generated with SQLiteStudio v3.1.0 on Tue Feb 9 08:15:47 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -285,9 +285,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (11, 'dlnasvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (12, 'maxusbcurrent', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (13, 'rotaryenc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (14, 'autoplay', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (15, 'kernelver', '');
+INSERT INTO cfg_system (id, param, value) VALUES (15, 'rbsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (16, 'mpdver', '');
-INSERT INTO cfg_system (id, param, value) VALUES (17, 'procarch', 'armv7l');
+INSERT INTO cfg_system (id, param, value) VALUES (17, 'rbactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (18, 'adevname', 'On-board audio device');
 INSERT INTO cfg_system (id, param, value) VALUES (19, 'clkradio_mode', 'Disabled');
 INSERT INTO cfg_system (id, param, value) VALUES (20, 'clkradio_item', '0');
@@ -382,7 +382,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (108, 'usb_auto_updatedb', '0')
 INSERT INTO cfg_system (id, param, value) VALUES (109, 'cover_backdrop', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (110, 'cover_blur', '20px');
 INSERT INTO cfg_system (id, param, value) VALUES (111, 'cover_scale', '1.25');
-INSERT INTO cfg_system (id, param, value) VALUES (112, 'AVAILABLE', '');
+INSERT INTO cfg_system (id, param, value) VALUES (112, 'rsmafterrb', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (113, 'library_tagview_artist', 'Artist');
 INSERT INTO cfg_system (id, param, value) VALUES (114, 'scnsaver_style', 'Gradient (Linear)');
 INSERT INTO cfg_system (id, param, value) VALUES (115, 'ashuffle_filter', 'None');

@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2021-MM-DD TC moOde 7.1.0
- *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -347,6 +345,9 @@ if (isset($_POST['update_sl_settings'])) {
 		playerSession('write', 'slsvc', $_POST['slsvc']);
 	}
 	if (isset($title)) {
+		if ($_POST['slsvc'] == 0) {
+			playerSession('write', 'rsmaftersl', 'No');
+		}
 		submitJob('slsvc', '', $title, '');
 	}
 }
@@ -357,7 +358,30 @@ if (isset($_POST['update_rsmaftersl'])) {
 }
 // Restart
 if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
+	playerSession('write', 'rsmaftersl', 'No');
 	submitJob('slrestart', '', 'Squeezelite restarted', '');
+}
+
+// RoonBridge renderer
+
+// Service
+if (isset($_POST['update_rb_settings'])) {
+	if (isset($_POST['rbsvc']) && $_POST['rbsvc'] != $_SESSION['rbsvc']) {
+		$title = $_POST['rbsvc'] == 1 ? 'RoonBridge renderer on' : 'RoonBridge renderer off';
+		playerSession('write', 'rbsvc', $_POST['rbsvc']);
+	}
+	if (isset($title)) {
+		submitJob('rbsvc', '', $title, '');
+	}
+}
+// Resume MPD
+if (isset($_POST['update_rsmafterrb'])) {
+	playerSession('write', 'rsmafterrb', $_POST['rsmafterrb']);
+	$_SESSION['notify']['title'] = 'Setting updated';
+}
+// Restart
+if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
+	submitJob('rbrestart', '', 'RoonBridge restarted', '');
 }
 
 // UPnP/DLNA
@@ -623,12 +647,29 @@ $_select['rsmafterspot'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterspot
 $_select['rsmafterspot'] .= "<option value=\"No\" " . (($_SESSION['rsmafterspot'] == 'No') ? "selected" : "") . ">No</option>\n";
 // Squeezelite renderer
 $_feat_squeezelite = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? '' : 'hide';
+$_SESSION['slsvc'] == '1' ? $_rb_svcbtn_disable = 'disabled' : $_rb_svcbtn_disable = '';
 $_SESSION['slsvc'] == '1' ? $_sl_btn_disable = '' : $_sl_btn_disable = 'disabled';
 $_SESSION['slsvc'] == '1' ? $_sl_link_disable = '' : $_sl_link_disable = 'onclick="return false;"';
 $_select['slsvc1'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggleslsvc1\" value=\"1\" " . (($_SESSION['slsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['slsvc0'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggleslsvc2\" value=\"0\" " . (($_SESSION['slsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['rsmaftersl'] .= "<option value=\"Yes\" " . (($_SESSION['rsmaftersl'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['rsmaftersl'] .= "<option value=\"No\" " . (($_SESSION['rsmaftersl'] == 'No') ? "selected" : "") . ">No</option>\n";
+// RoonBridge renderer
+if (($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) && $_SESSION['roonbridge_installed'] == 'yes') {
+	$_roonbridge_install_msg = '';
+	$_feat_roonbridge = '';
+	$_SESSION['rbsvc'] == '1' ? $_sl_svcbtn_disable = 'disabled' : $_sl_svcbtn_disable = '';
+	$_SESSION['rbsvc'] == '1' ? $_rb_btn_disable = '' : $_rb_btn_disable = 'disabled';
+	$_SESSION['rbsvc'] == '1' ? $_rb_link_disable = '' : $_rb_link_disable = 'onclick="return false;"';
+	$_select['rbsvc1'] .= "<input type=\"radio\" name=\"rbsvc\" id=\"togglerbsvc1\" value=\"1\" " . (($_SESSION['rbsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['rbsvc0'] .= "<input type=\"radio\" name=\"rbsvc\" id=\"togglerbsvc2\" value=\"0\" " . (($_SESSION['rbsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+	$_select['rsmafterrb'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterrb'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+	$_select['rsmafterrb'] .= "<option value=\"No\" " . (($_SESSION['rsmafterrb'] == 'No') ? "selected" : "") . ">No</option>\n";
+}
+else {
+	$_roonbridge_install_msg = "<div style=\"margin:-1em 0 1em 0;\">This component is provided by the manufacturer. Visit their website for installation instructions.</div>";
+	$_feat_roonbridge = 'hide';
+}
 
 // UPnP/DLNA
 
