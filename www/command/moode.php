@@ -660,11 +660,7 @@ else {
 			echo json_encode(parsePlayHist(shell_exec('cat /var/local/www/playhistory.log')));
 			break;
 		case 'export_stations':
-			syscmd('sqlite3 /var/local/www/db/moode-sqlite3.db -csv "select * from cfg_radio" > /var/local/www/db/cfg_radio.csv');
-			syscmd('sqlite3 /var/local/www/db/moode-sqlite3.db ".schema cfg_radio" > /var/local/www/db/cfg_radio.schema');
-			sysCmd('zip -q -r ' . EXPORT_DIR . '/stations.zip /var/lib/mpd/music/RADIO/* /var/local/www/imagesw/radio-logos/* /var/local/www/db/cfg_radio.csv /var/local/www/db/cfg_radio.schema');
-			syscmd('rm /var/local/www/db/cfg_radio.csv');
-			syscmd('rm /var/local/www/db/cfg_radio.schema');
+			syscmd('/var/www/command/stationmanager.py --scope all --export ' . EXPORT_DIR . '/stations.zip');
 			break;
 		case 'import_stations':
 			if (isset($_FILES['stationbackupfile'] ) == false ) {
@@ -683,9 +679,12 @@ else {
 				}
 				else {
 					// Import station data from zip
-					$result = sysCmd('/var/www/command/import_stations.sh');
-					if (!empty($result[0])) {
-						$msg = file_get_contents('/tmp/station_import_error.txt');
+					$output = array();
+					$exitcode = -1;
+					$cmd = 'sudo /var/www/command/stationmanager.py --scope all --how clear --import ' . $file;
+					exec($cmd, $output, $exitcode);
+					if($exitcode!=0) {
+						$msg= implode("\n", $output);
 						str_replace("\"", '', $msg);
 					}
 					else {
