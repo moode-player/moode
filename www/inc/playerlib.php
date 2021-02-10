@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * This includes the @chris-rudmin 2019-08-08 rewrite of the GenLibrary() function
- * to support the new Library renderer /var/www/js/scripts-library.js
+ * This is based on the @chris-rudmin 2019-08-08 rewrite of the GenLibrary()
+ * function to support the new Library renderer /var/www/js/scripts-library.js
  * Refer to https://github.com/moode-player/moode/pull/16 for more info.
  *
  */
@@ -510,7 +510,7 @@ function genFlatList($sock) {
 	}
 }
 
-// Generate library array (@chris-rudmin 2019-08-08 rewrite)
+// Generate library array (based on @chris-rudmin 2019-08-08 rewrite)
 function genLibrary($flat) {
 	$lib = array();
 

@@ -18,10 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
- * This is the @chris-rudmin 2019-08-08 rewrite of the library group/filter routines
- * including modifications to all dependant functions and event handlers.
+ * This is based on the @chris-rudmin 2019-08-08 rewrite of the library group/filter
+ * routines including modifications to all dependant functions and event handlers.
  * Refer to https://github.com/moode-player/moode/pull/16 for more info.
  *
  */
@@ -1122,9 +1120,6 @@ $('#albumcovers').on('click', 'img', function(e) {
             notify('clear_play_group');
         }
     }
-
-	// So tracks list doesn't open
-	return false;
 });
 
 // Random album instant play button on Playback
