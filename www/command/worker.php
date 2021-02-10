@@ -1019,8 +1019,8 @@ function chkSlActive() {
 }
 
 function chkRbActive() {
-	$result = sysCmd('pgrep -l mono-sgen');
-	if (strpos($result[0], 'mono-sgen') !== false) {
+	$result = sysCmd('pgrep -c mono-sgen');
+	if ($result[0] > 0) {
 		// do this section only once
 		if ($GLOBALS['rbactive'] == '0') {
 			$GLOBALS['rbactive'] = '1';
