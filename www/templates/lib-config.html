@@ -73,6 +73,20 @@
 			<span id="info-usbautoupdate" class="help-block-configs" style="margin-top:-.35em;">
 				Automatically update the MPD database on USB insert or remove.
             </span>
+			<p/>
+
+			<div class="toggle">
+				<label class="toggle-radio" for="toggle_cuefiles_ignore1">YES</label>
+				$_select[cuefiles_ignore1]
+				<label class="toggle-radio" for="toggle_cuefiles_ignore0">NO</label>
+				$_select[cuefiles_ignore0]
+			</div>
+			<div style="display: inline-block; vertical-align: top; margin-top: 5px;">
+				<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_cuefiles_ignore" value="novalue">Set</button>
+			</div>
+			<span id="info-cuefiles-ignore" class="help-block-configs" style="margin-top:-.35em;">
+				Ignore CUE files. Prevent duplicate tracks entries. Requires update of the library.
+            </span>
 
 			<p></p>
 			<legend>Thumbnail Generator</legend>

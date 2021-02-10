@@ -3232,6 +3232,8 @@ function autoConfigSettings() {
 
 		'Sources',
 		['requires' => ['usb_auto_updatedb'] , 'handler' => setPlayerSession],
+		['requires' => ['cuefiles_ignore'] , 'handler' => setPlayerSession],
+
 		// Sources are using the array construction of the ini reader
 		// source_name[0] = ...
 		['requires' => ['source_name',
@@ -4050,5 +4052,26 @@ function loadRadio() {
 	foreach ($result as $row) {
 		$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'],
 			'bitrate' => $row['bitrate'], 'format' => $row['format'], 'home_page' => $row['home_page']);
+	}
+}
+
+function setCuefilesIgnore($ignore) {
+//TODO: implemented if and call from startup
+	$file = MPD_MUSICROOT . '.mpdignore';
+	if(is_file($file) == false  ) {
+		if( $ignore == 1) {
+			sysCmd('touch "' . $file . '"');
+			sysCmd('chmod 777 "' . $file . '"');
+			sysCmd('chown root:root "' . $file . '"');
+			sysCmd('echo "**/*.cue" >> ' . $file);
+		}
+	}else {
+		if( sysCmd('cat ' . $file . ' | grep cue') ) {
+			if($ignore == 0) {
+				sysCmd("sed -i '/^\*\*\/\*\.cue/d' " . $file );
+			}
+		}else if($ignore == "1") {
+			sysCmd('echo "**/*.cue" >> ' . $file);
+		}
 	}
 }

@@ -647,6 +647,8 @@ workerLog('worker: NAS and UPnP sources (' . $result . ')');
 //
 workerLog('worker: -- Miscellaneous');
 //
+setCuefilesIgnore($_SESSION['cuefiles_ignore']);
+workerLog('worker: MPD ignore cuefiles (' . $_SESSION['cuefiles_ignore'] . ')');
 
 // Start rotary encoder
 if (isset($_SESSION['rotaryenc']) && $_SESSION['rotaryenc'] == 1) {

@@ -52,6 +52,15 @@ if (isset($_POST['update_usb_auto_updatedb'])) {
 		playerSession('write', 'usb_auto_updatedb', $_POST['usb_auto_updatedb']);
 	}
 }
+// ignore cuefiles on library scan
+if (isset($_POST['update_cuefiles_ignore'])) {
+	if (isset($_POST['cuefiles_ignore']) && $_POST['cuefiles_ignore'] != $_SESSION['cuefiles_ignore']) {
+		$_SESSION['notify']['title'] = $_POST['cuefiles_ignore'] == '1' ? 'MPD ignore CUE files' : 'MPD ignore CUE files';
+		$_SESSION['notify']['duration'] = 3;
+		playerSession('write', 'cuefiles_ignore', $_POST['cuefiles_ignore']);
+		setCuefilesIgnore($_SESSION['cuefiles_ignore']);
+	}
+}
 // re-mount nas sources
 if (isset($_POST['remount_sources'])) {
 	$result = cfgdb_read('cfg_source', $dbh);
@@ -274,6 +283,10 @@ if (!isset($_GET['cmd'])) {
 	// auto-updatedb on usb insert/remove
 	$_select['usb_auto_updatedb1'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb0\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 	$_select['usb_auto_updatedb0'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb1\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+
+	// ignore cuefiles on lbirary scan
+	$_select['cuefiles_ignore1'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle_cuefiles_ignore0\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+	$_select['cuefiles_ignore0'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle_cuefiles_ignore1\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 
 	// thumbcache status
 	$_thmcache_status = $_SESSION['thmcache_status'];
