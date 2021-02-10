@@ -65,6 +65,12 @@ elseif ($_SESSION['slactive'] == '1') {
 	$decoded_to = 'Unknown, ';
 	$decode_rate = 'VBR';
 }
+elseif ($_SESSION['rbactive'] == '1') {
+	$file = 'RoonBridge stream';
+	$encoded_at = 'Unknown';
+	$decoded_to = 'Unknown, ';
+	$decode_rate = 'VBR';
+}
 elseif ($btactive === true && $_SESSION['audioout'] == 'Local') {
 	$file = 'Bluetooth stream';
 	$encoded_at = 'Unknown';
