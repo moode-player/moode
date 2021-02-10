@@ -2563,7 +2563,7 @@ function stopAirplay () {
 	sysCmd('killall shairport-sync');
 	sysCmd('/var/www/vol.sh -restore');
 	// Reset to inactive
-	playerSession('write', 'airplayactv', '0');
+	playerSession('write', 'aplactive', '0');
 	$GLOBALS['aplactive'] = '0';
 	sendEngCmd('aplactive0');
 }

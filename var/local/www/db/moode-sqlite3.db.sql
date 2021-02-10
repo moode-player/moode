@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Feb 9 08:15:47 2021
+-- File generated with SQLiteStudio v3.1.0 on Wed Feb 10 10:42:44 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -320,7 +320,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '50000
 INSERT INTO cfg_system (id, param, value) VALUES (47, 'upnp_browser', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_instant_play', 'Play');
 INSERT INTO cfg_system (id, param, value) VALUES (49, 'radio_pos', '-1');
-INSERT INTO cfg_system (id, param, value) VALUES (50, 'airplayactv', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (50, 'aplactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (51, 'debuglog', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');

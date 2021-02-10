@@ -37,7 +37,7 @@ fi
 # Allow time for ui update
 sleep 1
 
-$(sqlite3 $SQLDB "update cfg_system set value='1' where param='airplayactv'")
+$(sqlite3 $SQLDB "update cfg_system set value='1' where param='aplactive'")
 
 if [[ $ALSAVOLUME != "none" ]]; then
 	/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX

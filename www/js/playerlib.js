@@ -612,7 +612,7 @@ function renderUIVol() {
             // NOTE: This hack is necessary because upmpdcli set's MPD volume directly and does not use vol.sh
     		if (SESSION.json['feat_bitmask'] & FEAT_UPNPSYNC) {
     			// No renderers active
-    			if (SESSION.json['btactive'] == '0' && SESSION.json['airplayactv'] == '0' && SESSION.json['spotactive'] == '0' && SESSION.json['slsvc'] == '0') {
+    			if (SESSION.json['btactive'] == '0' && SESSION.json['aplactive'] == '0' && SESSION.json['spotactive'] == '0' && SESSION.json['slsvc'] == '0') {
     				if ((SESSION.json['volknob'] != MPD.json['volume']) && SESSION.json['volmute'] == '0') {
     					SESSION.json['volknob'] = MPD.json['volume']
                         $.post('command/moode.php?cmd=updcfgsystem', {'volknob': SESSION.json['volknob']});
@@ -927,7 +927,7 @@ function renderUI() {
     		inpSrcIndicator('btactive1', 'Bluetooth Active' + '<br><a class="btn configure-renderer" href="blu-config.php">BlueZ Config</a>');
      	}
     	// Airplay renderer
-    	if (SESSION.json['airplayactv'] == '1') {
+    	if (SESSION.json['aplactive'] == '1') {
     		inpSrcIndicator('aplactive1', 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>');
     	}
     	// Spotify renderer

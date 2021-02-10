@@ -614,8 +614,8 @@ hdwrrev=${arr[43]}
 bluez_pcm_buffer=${arr[45]}
 [[ "${arr[46]}" = "1" ]] && upnp_browser="On" || upnp_browser="Off"
 library_instant_play=${arr[47]}
-airplaymeta=${arr[48]}
-airplayactv=${arr[49]}
+radiopos=${arr[48]}
+aplactive=${arr[49]}
 [[ "${arr[50]}" = "1" ]] && debuglog="On" || debuglog="Off"
 [[ "${arr[51]}" = "1" ]] && ashufflesvc="On" || ashufflesvc="Off"
 ashuffle=${arr[52]}

@@ -47,7 +47,7 @@ $btactive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 // IMPUT
 //
 
-if ($_SESSION['airplayactv'] == '1') {
+if ($_SESSION['aplactive'] == '1') {
 	$file = 'Airplay stream';
 	$encoded_at = 'Unknown';
 	$decoded_to = '16 bit, 44.1 kHz, Stereo, ';
@@ -212,7 +212,7 @@ else {
 }
 
 // Renderers
-if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $_SESSION['inpactive'] == '1' || $btactive === true) {
+if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $_SESSION['inpactive'] == '1' || $btactive === true) {
 	$resample_rate = '';
 	$resample_quality = 'off';
 	$polarity_inv = 'off';
@@ -221,7 +221,7 @@ if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSI
 	$replaygain = 'off';
 	$vol_normalize = 'off';
 
-	if ($_SESSION['airplayactv'] == '1' || $_SESSION['spotactive'] == '1') {
+	if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1') {
 		$peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
         $camilladsp = $_SESSION['camilladsp'];

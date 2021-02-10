@@ -21,7 +21,7 @@
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-$(sqlite3 $SQLDB "update cfg_system set value='0' where param='airplayactv'")
+$(sqlite3 $SQLDB "update cfg_system set value='0' where param='aplactive'")
 
 RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterapl' or param='inpactive'")
 readarray -t arr <<<"$RESULT"

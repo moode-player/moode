@@ -432,7 +432,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
 
 // Reset renderer active flags
 workerLog('worker: Reset renderer active flags');
-$result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='airplayactv'
+$result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR param='aplactive'
 	OR param='spotactive' OR param='slactive' OR param='rbactive' OR param='inpactive'", $dbh);
 
 // CamillaDSP
@@ -558,7 +558,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) {
 		}
 	}
 	else {
-		workerLog('worker: RoonBridge renderer (not installed)');		
+		workerLog('worker: RoonBridge renderer (not installed)');
 	}
 }
 else {
@@ -960,7 +960,7 @@ function chkBtActive() {
 
 function chkAplActive() {
 	// Get directly from sql since external spspre.sh and spspost.sh scripts don't update the session
-	$result = sdbquery("SELECT value FROM cfg_system WHERE param='airplayactv'", $GLOBALS['dbh']);
+	$result = sdbquery("SELECT value FROM cfg_system WHERE param='aplactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
 		// do this section only once
 		if ($GLOBALS['aplactive'] == '0') {
