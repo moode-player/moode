@@ -37,12 +37,13 @@ Updates
 - UPD: Add Track info to Queue context menu
 - UPD: Add Comment tag to "Track info" dialog
 - UPD: Add Cover/logo to Audio info
-- UPD: Add Under-volt/throttled state to System info 
+- UPD: Add Throttled state to System info
 - UPD: Disable power save for integrated WiFi
 - UPD: Set correct 0dB level for HDMI
 - UPD: Open station home page for "Streaming source"
 - UPD: Automatically detect SMB protocol version
 - UPD: Improve Crossfeed settings and a Linkwitz setting
+- UPD: Selectively add/remove dtoverlay audio lines
 
 Bug fixes
 
