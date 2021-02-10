@@ -1,20 +1,32 @@
 #!/usr/bin/python3
 #
-#  Script to for managing moOde radio stations
-#  (C) 2020 @bitlab (@bitkeeper Git),
-#  License: GPL3
+# Script to for managing moOde radio stations
+# (C) 2020 @bitlab (@bitkeeper Git),
 #
-#  Features:
-#  - Cmd help with --help
-#  - Backup
-#  - Import
-#  - Compare
-#  - Clear (all due not used command required backup as argument)
-#  - Support older version and newer version of moOde. Missing db fields are set to ''. Unsupported fields are ignored.
-#  - Can set scope for command to all, moode or other station
-#  - On import merge of clear first. With merge stations are matched on name, not content
-#  - If not present in backup it can regenerate thumbs
-#  - Exit code 0 when no problems occured
+# This Program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# This Program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Features:
+# - Cmd help with --help
+# - Backup
+# - Import
+# - Compare
+# - Clear (all due not used command required backup as argument)
+# - Support older version and newer version of moOde. Missing db fields are set to ''. Unsupported fields are ignored.
+# - Can set scope for command to all, moode or other station
+# - On import merge of clear first. With merge stations are matched on name, not content
+# - If not present in backup it can regenerate thumbs
+# - Exit code 0 when no problems occured
 #
 
 import argparse
@@ -77,13 +89,13 @@ Version=2"""
         if os.path.exists(self.db_file):
             try:
                 self.conn = sqlite3.connect(self.db_file)
-                print('moOde database location is \'{}\''.format(self.db_file) )
+                print('SQL database location is \'{}\''.format(self.db_file) )
             except Error as e:
-                print('ERROR: problems opening moOde database at \'{}\''.format(self.db_file) )
+                print('ERROR: Could not open SQL database at \'{}\''.format(self.db_file) )
                 print(e)
                 return_code = 5
         else:
-            print('ERROR: moOde database not found at \'{}\''.format(self.db_file) )
+            print('ERROR: SQL database not found at \'{}\''.format(self.db_file) )
             return_code = 4
 
         for radio_logo_path in StationManager.RADIO_LOGO_PATHS:
@@ -92,28 +104,28 @@ Version=2"""
                 break
 
         if self.radio_logos_path != None:
-            print('Radio logos location is \'{}\''.format(self.radio_logos_path ))
+            print('Station logos location is \'{}\''.format(self.radio_logos_path ))
             if os.path.isdir(os.path.join(self.radio_logos_path, 'thumbs')) == False:
-                print('ERROR: Couldn\'t find thumbs for radio logos at \'{}\''.format(os.path.join(self.radio_logos_path, 'thumbs')) )
+                print('ERROR: Could not find station logo thumbs at \'{}\''.format(os.path.join(self.radio_logos_path, 'thumbs')) )
                 return_code = 2
         else:
             return_code = 1
-            print('ERROR: Could locate radio logos tried {}'.format(", ".join(StationManager.RADIO_LOGO_PATHS) ))
+            print('ERROR: Could not find station logos, tried {}'.format(", ".join(StationManager.RADIO_LOGO_PATHS) ))
 
         if os.path.isdir(StationManager.RADIO_PLS_PATH):
-            print('MPD Radio playlists location is \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+            print('Station pls file location is \'{}\''.format(StationManager.RADIO_PLS_PATH) )
         else:
             return_code = 3
-            print('ERROR: MPD Radio playlists at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+            print('ERROR: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
 
         self.db_ver = 7 if 'geo_fenced' in self.get_fields() else 6
 
         if check_backup:
             if os.path.exists(self.backup_file) == False:
                 return_code = 6
-                print('ERROR: moOde Backup file \'{}\' not found.'.format(self.backup_file) )
+                print('ERROR: Station backup file \'{}\' not found.'.format(self.backup_file) )
             else:
-                print('Using moOde backup file \'{}\'.'.format(self.backup_file) )
+                print('Using Station backup file \'{}\'.'.format(self.backup_file) )
 
             with ZipFile(self.backup_file, 'r') as backup:
                 try:
@@ -121,12 +133,12 @@ Version=2"""
                 except KeyError:
                     try:
                         info = backup.getinfo('var/local/www/db/cfg_radio.csv')
-                        print('WARNING: backup is old format.')
+                        print('WARNING: Station backup is an old format')
                         self.backup_is_legacy_format = True
                         self.archive_images_location = StationManager.ARCHIVE_PATH_IMAGES_LEGACY
                     except KeyError:
                         return_code = 12
-                        print('ERROR: provided backup file \'{}\' is not a moOde radio station backup file (wrong format).'.format(self.backup_file))
+                        print('ERROR: Station backup file \'{}\' is not a valid format'.format(self.backup_file))
 
         return return_code
 
@@ -140,7 +152,7 @@ Version=2"""
 
     def get_fields(self):
         """
-            Get available the field names of cfg_radio table
+            Get available field names of cfg_radio table
             returns string list with field names
         """
         cursor = self.conn.execute('select * from cfg_radio')
@@ -151,7 +163,7 @@ Version=2"""
     def get_stations(self, scope, station_type = None):
         """
             Get all radio station data for the given scope
-            returns list with a dictionary objects per radio-station. the keys are the database fields
+            returns list with a dictionary objects per radio-station. The keys are the database fields.
         """
         stations = []
         cursor = self.conn.execute('select * from cfg_radio where id!=499{} {}'.format(self.get_scope_selector(scope), ' and station!="OFFLINE" and station!="DELETED"') ) # ignore the separator between system and other stations
@@ -200,14 +212,14 @@ Version=2"""
             if path.exists(image_filename):
                 backup.write(image_filename, 'radio-logos/'+station['name']+'.jpg')
             else:
-                print('warning: artwork not found for \' %s\'' %(image_filename) )
+                print('WARNING: Station logo not found for \' %s\'' %(image_filename) )
 
             if path.exists(image_filename_thumb):
                 backup.write(image_filename_thumb, 'radio-logos/thumbs/'+station['name']+'.jpg')
                 if path.exists(image_filename_thumb_sm):
                     backup.write(image_filename_thumb_sm, 'radio-logos/thumbs/'+station['name']+'_sm.jpg')
             else:
-                print('warning: thumb artwork not found for \' %s\'' %(image_filename) )
+                print('WARNING: Station logo thumb not found for \' %s\'' %(image_filename) )
 
 
     def filter_stations(self, stations, scope, station_type = None):
@@ -242,7 +254,7 @@ Version=2"""
 
         # if source and target are both 7 or both 6 no need to do something
         if target_ver7 != source_ver7:
-            print('WARNING: Source and Target differs, correcting used types.')
+            print('WARNING: Source and target differ, correcting used types')
             for station in data['stations']:
                 if target_ver7:
                     station['type'] = 'r'
@@ -330,7 +342,7 @@ Version=2"""
             os.system('chmod 777 {}/*.jpg'.format(self.radio_logos_path) )
             os.system('chmod 777 {}/thumbs/*.jpg'.format(self.radio_logos_path) )
 
-            print('Imported {} radio stations.'.format(len(stations_to_import)))
+            print('Imported {} radio stations'.format(len(stations_to_import)))
 
 
     def create_query_station_to_db(self, station, fields_db):
@@ -367,7 +379,7 @@ Version=2"""
                 with open(os.path.join(self.radio_logos_path, 'thumbs', '{}.jpg'.format(name)), 'wb') as image_file:
                     image_file.write( backup.read(os.path.join(self.archive_images_location, 'thumbs', '{}.jpg'.format(name)) ) )
             except KeyError:
-                print("Warning: not thumb for '{}' present, generating one".format(name))
+                print("WARNING: Missing station logo thumb for '{}', generating one".format(name))
                 os.system('ffmpeg -v 20 -y -i "{}" -s 200x200 "{}"'.format(os.path.join(self.radio_logos_path, '{}.jpg'.format(name))
                                                                         ,os.path.join(self.radio_logos_path, 'thumbs', '{}.jpg'.format(name)) ) )
 
@@ -376,17 +388,17 @@ Version=2"""
                     image_file.write( backup.read(os.path.join(self.archive_images_location, 'thumbs', '{}_sm.jpg'.format(name)) ) )
             except KeyError:
                 if self.db_ver >= 7:
-                    print("Warning: not small thumb for '{}' present, generating one".format(name))
+                    print("WARNING: Missing station logo thumb for '{}', generating one".format(name))
                     os.system('ffmpeg -v 20 -y -i "{}" -s 80x80 "{}"'.format(os.path.join(self.radio_logos_path, '{}.jpg'.format(name))
                                                                         ,os.path.join(self.radio_logos_path, 'thumbs', '{}_sm.jpg'.format(name)) ) )
 
 
         except KeyError as e:
-            print("Error: no artwork for '{}' present".format(name))
+            print("ERROR: Missing station logo '{}'".format(name))
 
 
     def clear_stations(self, scope):
-        print('clear stations for scope \'{}\''.format(scope))
+        print('Clear stations for scope \'{}\''.format(scope))
 
         stations = self.get_stations(scope)
 
@@ -431,20 +443,20 @@ Version=2"""
 
             # First check the data schema
             if colnames_db == colnames_bu:
-                print('Data schema : ok')
+                print('SQL database schema: ok')
             else:
                 missing_bu_fields = list(set(colnames_db) - set(colnames_bu))
                 additional_bu_fields = list(set(colnames_bu) - set(colnames_db))
-                print('Data schema : differs')
+                print('SQL database schema: differs')
                 # print('Data schema between database and backup differs!')
                 if len(additional_bu_fields) >= 1:
-                    print('\tBackup is missing the following fields:')
+                    print('\tStation backup is missing the following fields:')
                     for field in missing_bu_fields:
                         print('\t- {}'.format(field))
 
                 if len(additional_bu_fields) >= 1:
                     # print('\tDatabase is missing the following fields:')
-                    print('\tBackup had the following additional fields:')
+                    print('\tStation backup had the following additional fields:')
                     for field in additional_bu_fields:
                         print('\t- {}'.format(field))
 
@@ -459,9 +471,9 @@ Version=2"""
             # print(missing_stations_db)
 
             if stations_db_map.keys() == stations_bu_map.keys():
-                print('Stations : ok')
+                print('Stations: ok')
             else:
-                print('Stations : differs')
+                print('Stations: differ')
                 if len(missing_stations_db ) >= 1:
                     print('\tStations only in backup:')
                     for station in missing_stations_db:
@@ -469,7 +481,7 @@ Version=2"""
 
                 if len(additional_stations_db) >= 1:
                     # print('\tDatabase is missing the following fields:')
-                    print('\tStations only in database:')
+                    print('\tStations only in SQL table:')
                     for station in additional_stations_db :
                         print('\t- \'{}\''.format(station))
 
@@ -509,7 +521,7 @@ def get_cmdline_arguments():
     epilog = 'Root privileges required for import or clear.'
     parser = argparse.ArgumentParser(description = 'Manages import and export of moOde radiostations.', epilog = epilog)
     parser.add_argument('backupfile',  nargs = '?', default = None,
-                   help = 'Filename of the backupfile. Required by the import, export and compare.')
+                   help = 'Filename of the station backup. Required by the import, export and compare.')
 
     parser.add_argument('--version', action='version', version='%(prog)s {}'.format(VERSION))
     group = parser.add_mutually_exclusive_group( required = True)
@@ -523,26 +535,26 @@ def get_cmdline_arguments():
 
     group.add_argument('--clear', dest = 'do_clear', action = 'store_const',
                    const = sum,
-                   help = 'Clear radio stations. This will delete database, images and pls files of the selected stations by the scope.')
+                   help = 'Clear radio stations. This will delete the contents of the SQL table, logo images and pls files of the selected stations within the specified scope.')
 
     group.add_argument('--compare', dest = 'do_diff', action = 'store_const',
                    const = sum,
-                   help = 'Show difference between database and backup.')
+                   help = 'Show difference between SQL table and station backup.')
 
     parser.add_argument('--scope', dest = 'scope',
                    choices = ['all', 'moode', 'other'], default = 'other',
-                   help = 'Indicate to which stations to apply the action. (default other)')
+                   help = 'Indicate to which stations the specified action applies. (default: other)')
 
     parser.add_argument('--type', dest = 'station_type',
                    choices = ['favorite', 'regular', 'hidden', 'nothidden'], default = None,
-                   help = 'Indicates the type of stations should takenin account(only applies to export).')
+                   help = 'Indicate the type of station to export.')
 
     parser.add_argument('--how', dest = 'how',
                    choices = ['clear', 'merge'], default = 'merge',
-                   help = 'On import clear stations before action or merge and add. (default merge)')
+                   help = 'On import, clear stations before action or merge and add. (default: merge)')
 
     parser.add_argument('--db', default = '/var/local/www/db/moode-sqlite3.db',
-                   help = 'File name of the database. Default uses the standard moOde db.')
+                   help = 'File name of the SQL database. (default: /var/local/www/db/moode-sqlite3.db')
 
 
     args = parser.parse_args()
@@ -556,10 +568,10 @@ if __name__ == "__main__":
 
     if args.do_import or args.do_clear:
         if os.geteuid() != 0:
-            print("ERROR: root privileges are required for import or clear, consider running it with sudo")
+            print("ERROR: Root privileges are required for import or clear, run with sudo.")
             exit(10)
     if args.backupfile == None and (args.do_import or args.do_export or args.do_diff):
-        print("ERROR: No backupfile provided. Required for import, export and compare.")
+        print("ERROR: No station backup file provided. Required for import, export and compare.")
         exit(11)
 
 
