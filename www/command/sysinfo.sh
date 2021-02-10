@@ -58,6 +58,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nMemory free\t\t= $MEMFREE MB\c"
 	echo -e "\nMemory used\t\t= $MEMUSED MB\c"
 	echo -e "\nSoC temperature\t\t= $TEMP\c"
+	echo -e "\nThrottled bitmask\t= $THROTTLED_BITMASK\c"
+	echo -e "\nThrottled text\t\t= $THROTTLED_TEXT\c"
 	echo -e "\n\c"
 	echo -e "\nCPU governor\t\t= $GOV\c"
 	echo -e "\nOnboard WiFi\t\t= $piwifi\c"
@@ -433,6 +435,18 @@ else
 fi
 
 TEMP=`awk '{printf "%3.1f\302\260C\n", $1/1000}' /sys/class/thermal/thermal_zone0/temp`
+THROTTLED_BITMASK=`vcgencmd get_throttled | cut -d"=" -f2`
+THROTTLED_TEXT=""
+if [[ $THROTTLED_BITMASK == "0x0" ]]; then THROTTLED_TEXT="No throttling has occured"; fi
+if (( ($THROTTLED_BITMASK & 0x1) )); then THROTTLED_TEXT="Under-voltage detected, "; fi
+if (( ($THROTTLED_BITMASK & 0x2) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Arm frequency capped, "; fi
+if (( ($THROTTLED_BITMASK & 0x4) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Currently throttled, "; fi
+if (( ($THROTTLED_BITMASK & 0x8) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Soft temperature limit active, "; fi
+if (( ($THROTTLED_BITMASK & 0x10000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Under-voltage has occurred, "; fi
+if (( ($THROTTLED_BITMASK & 0x20000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Arm frequency capping has occurred, "; fi
+if (( ($THROTTLED_BITMASK & 0x40000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Throttling has occurred, "; fi
+if (( ($THROTTLED_BITMASK & 0x80000) )); then THROTTLED_TEXT=$THROTTLED_TEXT"Soft temperature limit has occurred"; fi
+THROTTLED_TEXT=${THROTTLED_TEXT%, }
 SDFREQ=$(grep "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print $3/1000000}')
 PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)

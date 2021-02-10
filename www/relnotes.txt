@@ -19,6 +19,7 @@ New features
 
 - NEW: CamillaDSP including Pipeline Editor
 - NEW: RoonBridge renderer (requires user install)
+- NEW: Radio station utility for import/export/manage
 
 Audio devices
 
@@ -35,7 +36,8 @@ Updates
 - UPD: Add Clear/Add to Lbrary context menus
 - UPD: Add Track info to Queue context menu
 - UPD: Add Comment tag to "Track info" dialog
-- UPD: Add cover/logo to Audio info
+- UPD: Add Cover/logo to Audio info
+- UPD: Add Under-volt/throttled state to System info 
 - UPD: Disable power save for integrated WiFi
 - UPD: Set correct 0dB level for HDMI
 - UPD: Open station home page for "Streaming source"
