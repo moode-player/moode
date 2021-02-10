@@ -1,14 +1,27 @@
 #!/usr/bin/python3
 #
-#  Script to merge two mpd confs into one.
-#  (C) 2020 @bitlab (@bitkeeper Git)
+# Script to merge two mpd confs into one.
+# (C) 2020 @bitlab (@bitkeeper Git)
 #
-#  If setting exists in both the second conf is leading
-#  Scripts:
-#  - First script is /etc/mpd.moode.conf
-#  - Second script is /etc/mpd.custom.conf
-#  Output:
-#  - Output is writen to /etc/mpd.conf
+# This Program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# This Program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# If setting exists in both the second conf is leading
+# Scripts:
+# - First script is /etc/mpd.moode.conf
+# - Second script is /etc/mpd.custom.conf
+# Output:
+# - Output is writen to /etc/mpd.conf
 #
 
 import datetime
