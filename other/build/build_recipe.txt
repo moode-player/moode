@@ -97,7 +97,7 @@ unzip -p -q ./moode-r710.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.de
 5. Expand the root partition to 3.5GB.
 
 sudo chmod 0755 ./resizefs.sh
-sudo sed -i "/PART_END=/c\PART_END=+3500M" ./resizefs.sh
+sudo sed -i "/PART_END=/c\PART_END=+4000M" ./resizefs.sh
 sudo ./resizefs.sh start
 sudo cp ./config.txt.default /boot/config.txt
 sudo cp ./moodecfg.ini.default /boot/

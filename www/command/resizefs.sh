@@ -3,10 +3,6 @@
 #
 # See LICENSE file for copyright and license details
 
-#
-# 2019-04-12 TC moOde 5.0
-#
-
 if [[ -z $1 ]]; then
 	echo "resizefs: missing arg <start>"
 	exit
@@ -58,7 +54,7 @@ if [ "$PART_NUM" = "$ROOT_PART" ]; then
 	exit 0
 fi
 
-# NOTE: the NOOBS partition layout confuses parted. For now, let's only 
+# NOTE: the NOOBS partition layout confuses parted. For now, let's only
 # agree to work with a sufficiently simple partition layout
 if [ "$PART_NUM" -ne 2 ]; then
 	echo "Your partition layout is not currently supported by this tool. You are probably using NOOBS, in which case your root filesystem is already expanded anyway." 20 60 2
@@ -130,4 +126,3 @@ echo "PART_NUM "$PART_NUM
 echo "LAST_PART_NUM "$LAST_PART_NUM
 echo "PART_START "$PART_START
 echo "PART_END "$PART_END
-
