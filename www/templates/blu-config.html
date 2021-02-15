@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
- *
  */
 -->
 <div class="container">
@@ -35,13 +33,13 @@
 			<span id="info_btcmd" class="help-block-configs hide">
 				Select a command to submit to the Bluetooth controller.
 	        </span>
-			<span class="help-block-configs $_bt_msg_hide" style="margin-bottom:.5em;">
-				Turn on Bluetooth in Audio config then select a command to submit to the Bluetooth controller.
+			<span class="help-block-configs $_bt_msg_hide">
+				Turn on Bluetooth in Audio Config then select a command to submit to the Bluetooth controller.
 	        </span>
 		</fieldset>
 
 		<fieldset>
-			<div style="background-color: #333; font-size: small; line-height: 18px; padding: 10px; margin-right: 40px; margin-bottom: 4px; font-family: Courier New">
+			<div style="background-color: #333; font-size: small; line-height: 18px; padding: 10px; margin: .45em 3em .5em 0; font-family: Courier New">
 				$_cmd_output
 			</div>
 
@@ -79,7 +77,7 @@
 	            </span>
 			</div>
 
-			<div class="$_hide_ctl[chg_audioout]">
+			<div class="$_hide_ctl[chg_audioout]" style="margin-top:.5em;">
 				<select id="audioout" class="select-large" name="audioout">
 					$_select[audioout]
 				</select>
