@@ -94,9 +94,9 @@ class CamillaDsp {
                 $this->writeQuickConvolutionConfig();
             }
 
-            $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . str_replace ('/', '\/', $configname);
-            $configfilename = str_replace ('/', '\/', $configfilename);
-            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
+            $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . $configname;
+            $configfilename_escaped = str_replace ('/', '\/', $configfilename);
+            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename_escaped . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
             if(is_file($configfilename)) {
                 syscmd("sudo ln -s -f \"" . $configfilename . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
             }
