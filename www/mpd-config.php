@@ -19,8 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -31,7 +29,7 @@ $dbh = cfgdb_connect();
 
 // Save changes to /etc/mpd.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
-	// Restart shairport-sync if device num has changed
+	// Airplay and Spotify will be restarted if device num has changed
 	$queueargs = $_POST['conf']['device'] == $_SESSION['cardnum'] ? '' : 'devicechg';
 
 	// Add audio_output_format
@@ -51,20 +49,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		sysCmd('/var/www/vol.sh 0');
 	}
 
-	// Update the mixertype for audioout -> local
-	playerSession('write', 'mpdmixer_local', $_POST['conf']['mixer_type']);
+	$title = 'Changes saved';
+	$message = 'MPD restarted';
+	$duration = 3;
 
-	// Update /etc/mpd.conf
-	if ($queueargs == 'devicechg') {
-		$title = 'Audio output has changed';
-		$message = 'Restart required';
-		$duration = 10;
-	}
-	else {
-		$title = 'Changes saved';
-		$message = 'MPD restarted';
-		$duration = 3;
-	}
 	submitJob('mpdcfg', $queueargs, $title, $message, $duration);
 }
 
@@ -91,17 +79,19 @@ if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdcon
 if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
 if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($mpdconf['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}
 if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($mpdconf['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
-
-// Volume control
-if ($_SESSION['alsavolume'] != 'none') {
-	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($mpdconf['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
-}
-$_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"disabled\" " . (($mpdconf['mixer_type'] == 'disabled') ? "selected" : "") . ">Disabled (0dB output)</option>\n";
+$cards = getAlsaCards();
+$_device_error = ($_SESSION['i2sdevice'] == 'none' && $cards[$mpdconf['device']] == 'empty') ? 'Device turned off or disconected' : '';
 
 // DSD support
 $_mpd_select['dop'] .= "<option value=\"no\" " . (($mpdconf['dop'] == 'no') ? "selected" : "") . " >Native DSD (Default)</option>\n";
 $_mpd_select['dop'] .= "<option value=\"yes\" " . (($mpdconf['dop'] == 'yes') ? "selected" : "") . " >DSD over PCM (DoP)</option>\n";
+
+// Volume control
+if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
+	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($mpdconf['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
+}
+$_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"disabled\" " . (($mpdconf['mixer_type'] == 'disabled') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
 
 // SoX resampling
 $format = array('','','');

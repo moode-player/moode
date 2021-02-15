@@ -44,6 +44,10 @@ Updates
 - UPD: Automatically detect SMB protocol version
 - UPD: Improve Crossfeed settings and a Linkwitz setting
 - UPD: Selectively add/remove dtoverlay audio lines
+- UPD: Change MPD volume terminology from "Disabled" to "Fixed"
+- UPD: Allow changing betw HDMI, Headphone and USB w/o reboot
+- UPD: Persist configured USB device in MPD Config
+- UPD: Show msg in MPD Config if USB device off or disconnected
 
 Bug fixes
 

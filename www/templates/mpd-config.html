@@ -45,6 +45,7 @@
 	                <select id="device" name="conf[device]" class="input-large">
 						$_mpd_select[device]
 	                </select>
+					<span><em>&nbsp;$_device_error</em></span>
 				</div>
             </div>
 			<div class="control-group">
@@ -72,10 +73,10 @@
 					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
 						<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
 	                    <b>- Software:&nbsp;</b>Use MPD software volume routine (32 bit float with dither).<br>
-						<b>- Disabled (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.
+						<b>- Fixed (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.
 					</span>
 					<span class="help-block-configs help-block-margin">
-	                    The "Disabled" setting will result in 100% (0dB) volume output<br>
+	                    NOTE: The "Fixed" setting will default to 100% (0dB) volume output. The actual fixed value can be set in Audio Config by adjusting "Max ALSA volume".
 					</span>
                 </div>
             </div>

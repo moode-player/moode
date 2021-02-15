@@ -142,53 +142,31 @@ workerLog('worker: -- Device');
 //
 
 // Verify audio device configuration
-$mpd_device = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
-for ($i = 0; $i < 4; $i++) {
-	$card_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-	$cards[$i] = empty($card_id) ? 'empty' : $card_id;
-}
+$mpddev = sdbquery("SELECT value FROM cfg_mpd WHERE param='device'", $dbh);
+$cards = getAlsaCards();
 workerLog('worker: ALSA cards: (0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' . $cards[2]. ' | 3:' . $cards[3]);
-workerLog('worker: Configured: (' . $mpd_device[0]['value'] . ':' . $_SESSION['adevname'] . ' | mixer:(' . $_SESSION['amixname'] . ') | alsavol:' . $_SESSION['alsavolume'] . ')');
+workerLog('worker: MPD config: (' . $mpddev[0]['value'] . ':' . $_SESSION['adevname'] . ' | mixer:(' . $_SESSION['amixname'] . ') | card:' . $mpddev[0]['value'] . ')');
 
-// Card number mismatch may occur after switching from USB to I2S device and vis versa
-$card_mismatch = false;
-if ($_SESSION['i2sdevice'] != 'none' && $mpd_device[0]['value'] != '0') {
-	$card_mismatch = true;
-	workerLog('worker: WARNING: Mismatch between ALSA card and MPD configured card');
-}
-elseif ($_SESSION['i2sdevice'] == 'none' && $cards[$mpd_device[0]['value']] == 'empty') {
-	$card_mismatch = true;
-	workerLog('worker: WARNING: No device found at configured MPD card' . $mpd_device[0]['value']);
-}
-// Reconfigure back to card 0 (On-board or I2S device)
-if ($card_mismatch === true) {
-	sdbquery("UPDATE cfg_mpd SET value='0' WHERE param='device'", $dbh);
-	sdbquery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", $dbh);
-	playerSession('write', 'cardnum', '0');
-	playerSession('write', 'mpdmixer', 'software');
-	playerSession('write', 'autoplay', '0');
-
-	$amixname = getMixerName($_SESSION['i2sdevice']);
-	if ($mixername == 'none') {
-		playerSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
-		playerSession('write', 'amixname', 'none');
-	}
-	workerLog('worker: UPDATE: Reconfigured MPD card number to 0');
+// Check for device not found
+if ($_SESSION['i2sdevice'] == 'none' && $cards[$mpddev[0]['value']] == 'empty') {
+	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpddev[0]['value']);
 }
 
 // Zero out ALSA volume
 $amixname = getMixerName($_SESSION['i2sdevice']);
-workerLog('worker: ALSA mixer actual (' . $amixname . ')');
-if ($amixname != 'none') {
-	sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $amixname . '"' . ' 0');
-	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $amixname . '"');
-	workerLog('worker: ALSA ' . trim($amixname) . ' volume set to (' . $result[0] . ')');
-}
-else {
-	sdbquery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", $dbh);
-	playerSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
-	playerSession('write', 'amixname', 'none');
-	workerLog('worker: ALSA volume (none)');
+if ($amixname != 'Invalid card number.') {
+	workerLog('worker: ALSA mixer actual (' . $amixname . ')');
+	if ($amixname != 'none') {
+		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $amixname . '"' . ' 0');
+		$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $amixname . '"');
+		workerLog('worker: ALSA ' . trim($amixname) . ' volume set to (' . $result[0] . ')');
+	}
+	else {
+		sdbquery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", $dbh);
+		playerSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
+		playerSession('write', 'amixname', 'none');
+		workerLog('worker: ALSA volume (none)');
+	}
 }
 
 //
@@ -272,7 +250,7 @@ if (!empty($wlan0[0])) {
 	$model = substr($_SESSION['hdwrrev'], 3, 1);
 	if ($model == '3' || $model == '4') {
 		sysCmd('/sbin/iwconfig wlan0 power off');
-		workerLog('worker: pi integrated wlan0 power save disabled');
+		workerLog('worker: Pi integrated wlan0 power save disabled');
 	}
 
 	$result = sdbquery('SELECT * FROM cfg_network', $dbh);
@@ -348,8 +326,10 @@ workerLog('worker: -- Audio');
 //
 
 // Update MPD config
-updMpdConf($_SESSION['i2sdevice']);
-workerLog('worker: MPD conf updated');
+if ($_SESSION['i2sdevice'] != 'none') {
+	updMpdConf($_SESSION['i2sdevice']);
+	workerLog('worker: MPD conf updated');
+}
 
 // Ensure audio output is unmuted for these devices
 if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
@@ -383,7 +363,7 @@ else {
 }
 
 // Store alsa mixer name for use by util.sh get/set-alsavol and vol.sh
-playerSession('write', 'amixname', getMixerName($_SESSION['i2sdevice']));
+//playerSession('write', 'amixname', getMixerName($_SESSION['i2sdevice']));
 workerLog('worker: ALSA mixer name (' . $_SESSION['amixname'] . ')');
 workerLog('worker: MPD volume control (' . $_SESSION['mpdmixer'] . ')');
 
@@ -419,7 +399,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	sysCmd('amixer -c0 sset "Digital" 0');
 	sysCmd('speaker-test -c 2 -s 2 -r 48000 -F S16_LE -X -f 24000 -t sine -l 1');
 	// Reset Main vol back to 100% (0dB) if indicated
-	if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') && $_SESSION['piano_dualmode'] != 'None') {
+	if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['piano_dualmode'] != 'None') {
 		sysCmd('amixer -c0 sset "Digital" 100%');
 	}
 	workerLog('worker: Piano 2.1 initialized');
@@ -448,8 +428,6 @@ workerLog('worker: -- MPD');
 //
 
 // Start MPD
-#updMpdConf($_SESSION['i2sdevice']);
-#workerLog('worker: MPD conf updated');
 sysCmd("systemctl start mpd");
 workerLog('worker: MPD started');
 $sock = openMpdSock('localhost', 6600);
@@ -459,7 +437,7 @@ workerLog('worker: Configure MPD outputs');
 $mpdoutput = configMpdOutputs();
 sysCmd('mpc enable only ' . $mpdoutput);
 setMpdHttpd();
-// Report mpd outputs
+// Report MPD outputs
 sendMpdCmd($sock, 'outputs');
 $result = parseMpdOutputs(readMpdResp($sock));
 workerLog('worker: ' . $result[0]); // ALSA default
@@ -696,25 +674,30 @@ else {
 	workerLog('worker: LED1 (' . ($led1_brightness == '0' ? 'Off' : 'On') . ')');
 }
 
-// Since we initially set alsa volume to 0 at the beginning of startup it must be reset
-if ($_SESSION['alsavolume'] != 'none') {
-	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') {
-		$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
-	}
-}
-
 // Restore MPD volume level
 workerLog('worker: Saved MPD vol level (' . $_SESSION['volknob_mpd'] . ')');
 workerLog('worker: Preamp volume level (' . $_SESSION['volknob_preamp'] . ')');
-$volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-sysCmd('/var/www/vol.sh ' . $volume);
-workerLog('worker: MPD volume level (' . $volume . ') restored');
-if ($_SESSION['alsavolume'] != 'none') {
-	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	workerLog('worker: ALSA ' . trim($_SESSION['amixname']) . ' volume (' . $result[0] . ')');
+if ($_SESSION['card_error'] == '') {
+	// Since we initially set alsa volume to 0 at the beginning of startup it must be reset
+	if ($_SESSION['alsavolume'] != 'none') {
+		if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') {
+			$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+		}
+	}
+
+	$volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+	sysCmd('/var/www/vol.sh ' . $volume);
+	workerLog('worker: MPD volume level (' . $volume . ') restored');
+	if ($_SESSION['alsavolume'] != 'none') {
+		$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
+		workerLog('worker: ALSA ' . trim($_SESSION['amixname']) . ' volume (' . $result[0] . ')');
+	}
+	else {
+		workerLog('worker: ALSA volume level (None)');
+	}
 }
 else {
-	workerLog('worker: ALSA volume level (None)');
+	workerLog('worker: ALSA volume (' . $_SESSION['card_error'] . ')');
 }
 
 // Auto-play: start auto-shuffle random play or play last played item
@@ -1455,7 +1438,7 @@ function runQueuedJob() {
 			updMpdConf($_SESSION['i2sdevice']);
 
 			// Reset hardware volume to 0dB (100) if indicated
-			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') && $_SESSION['alsavolume'] != 'none') {
+			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['alsavolume'] != 'none') {
 				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 			}
 
@@ -1473,7 +1456,7 @@ function runQueuedJob() {
 			if ($_SESSION['w_queueargs'] == 'devicechg') {
 				if ($_SESSION['airplaysvc'] == 1) {
 					sysCmd('killall shairport-sync');
-					 startAirplay();
+					startAirplay();
 				}
 				if ($_SESSION['spotifysvc'] == 1) {
 					sysCmd('killall librespot');
@@ -1489,7 +1472,7 @@ function runQueuedJob() {
 			cfgI2sOverlay($_SESSION['w_queueargs']);
 			break;
 		case 'alsavolume_max':
-			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'disabled') && $_SESSION['alsavolume'] != 'none') {
+			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['alsavolume'] != 'none') {
 				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['w_queueargs']);
 			}
 			break;

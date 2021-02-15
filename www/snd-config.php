@@ -29,10 +29,12 @@ $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION[
 
 // Device
 if (isset($_POST['update_i2s_device'])) {
-	if (isset($_POST['i2sdevice'])) {
+	if (isset($_POST['i2sdevice']) && $_POST['i2sdevice'] != $_SESSION['i2sdevice']) {
 		playerSession('write', 'i2sdevice', $_POST['i2sdevice']);
 		$title = 'I2S audio device updated';
-		$msg = '<b>Restart required</b><br>After restarting edit chip options and/or driver options';
+		$msg = $_POST['i2sdevice'] == 'none' ?
+			'<b>Restart required</b><br>After restart: Edit MPD settings, select an Audio output and then SAVE.' :
+			'<b>Restart required</b><br>After restart: edit chip options and/or driver options';
 
 		submitJob('i2sdevice', $_POST['i2sdevice'], $title, $msg, 30);
 	}
@@ -568,7 +570,7 @@ $_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_ht
 
 // EQUALIZERS
 
-// parametric equalizer
+// Parametric equalizer
 $eqfa12p = Eqp12(cfgdb_connect());
 $presets = $eqfa12p->getPresets();
 $array = array();

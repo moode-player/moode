@@ -514,7 +514,7 @@ function inpSrcIndicator(cmd, msgText) {
 	if (cmd.slice(-1) == '1') {
 		$('#inpsrc-indicator').css('display', 'block');
 		$('#inpsrc-msg').html(msgText);
-		$('#inpsrc-preamp-volume').text(SESSION.json['mpdmixer'] == 'disabled' ? '0dB' : SESSION.json['volknob']);
+		$('#inpsrc-preamp-volume').text(SESSION.json['mpdmixer'] == 'none' ? '0dB' : SESSION.json['volknob']);
 	}
 	else {
 		$('#inpsrc-msg').html('');
@@ -563,7 +563,7 @@ function hideReconnect() {
 	UI.hideReconnect = false;
 }
 
-// Disable volume knob for mpdmixer == disabled (0dB)
+// Disable volume knob for mpdmixer == none (0dB)
 function disableVolKnob() {
 	SESSION.json['volmute'] == '1';
     $('#volumedn, #volumeup, #volumedn-2, #volumeup-2').prop('disabled', true);
@@ -602,8 +602,8 @@ function renderUIVol() {
             SESSION.json = result;
         }
 
-    	// Disabled volume, 0dB output
-    	if (SESSION.json['mpdmixer'] == 'disabled') {
+    	// Fixed volume (0dB output)
+    	if (SESSION.json['mpdmixer'] == 'none') {
     		disableVolKnob();
     	}
     	// Software or hardware volume
@@ -653,8 +653,8 @@ function renderUI() {
             SESSION.json = result;
         }
 
-    	// Disabled volume, 0dB output
-    	if (SESSION.json['mpdmixer'] == 'disabled') {
+    	// Fixed volume (0dB output)
+    	if (SESSION.json['mpdmixer'] == 'none') {
     		disableVolKnob();
     	}
     	// Software or hardware volume
