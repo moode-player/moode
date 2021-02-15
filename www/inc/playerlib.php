@@ -3125,8 +3125,8 @@ function autoConfigSettings() {
 		['requires' => ['ethmethod', 'ethipaddr', 'ethnetmask', 'ethgateway', 'ethpridns', 'ethsecdns'], 'handler' => function($values) {
 			$dbh = cfgdb_connect();
 			$netcfg = sdbquery('select * from cfg_network', $dbh);
-			$value = array('method' => $netcfg[0]['method'], 'ipaddr' => $netcfg[0]['ipaddr'], 'netmask' => $netcfg[0]['netmask'],
-				'gateway' => $netcfg[0]['gateway'], 'pridns' => $netcfg[0]['pridns'], 'secdns' => $netcfg[0]['secdns']);
+			$value = array('method' => $values['ethmethod'], 'ipaddr' => $values['ethipaddr'], 'netmask' => $values['ethnetmask'],
+				'gateway' => $values['ethgateway'], 'pridns' => $values['ethpridns'], 'secdns' => $values['ethsecdns']);
 			cfgdb_update('cfg_network', $dbh, 'eth0', $value);
 			cfgNetIfaces();
 		}, 'custom_write' => function($values) {
