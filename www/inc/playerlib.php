@@ -4086,15 +4086,15 @@ function setCuefilesIgnore($ignore) {
 			sysCmd('touch "' . $file . '"');
 			sysCmd('chmod 777 "' . $file . '"');
 			sysCmd('chown root:root "' . $file . '"');
-			sysCmd('echo "**/*.cue" >> ' . $file);
+			sysCmd('echo "*.cue" >> ' . $file);
 		}
 	}else {
 		if( sysCmd('cat ' . $file . ' | grep cue') ) {
 			if($ignore == 0) {
-				sysCmd("sed -i '/^\*\*\/\*\.cue/d' " . $file );
+				sysCmd("sed -i '/^\*\.cue/d' " . $file );
 			}
 		}else if($ignore == "1") {
-			sysCmd('echo "**/*.cue" >> ' . $file);
+			sysCmd('echo "*.cue" >> ' . $file);
 		}
 	}
 }
