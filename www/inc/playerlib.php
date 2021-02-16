@@ -4098,3 +4098,12 @@ function setCuefilesIgnore($ignore) {
 		}
 	}
 }
+
+// Get ALSA card ID's
+function getAlsaCards() {
+	for ($i = 0; $i < 4; $i++) {
+		$card_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
+		$cards[$i] = empty($card_id) ? 'empty' : $card_id;
+	}
+	return $cards;
+}
