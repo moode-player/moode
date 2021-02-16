@@ -469,9 +469,8 @@ else {
 
 // Start bluetooth controller and pairing agent
 if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
-	workerLog('worker: Bluetooth (available)');
 	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
-		workerLog('worker: Bluetooth (started)');
+		$started = ': started';
 		startBt();
 
 		if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
@@ -479,6 +478,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 			sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
 		}
 	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: Bluetooth (available' . $started . ')');
 }
 else {
 	workerLog('worker: Bluetooth (n/a)');
@@ -486,11 +489,14 @@ else {
 
 // Start airplay renderer
 if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
-	workerLog('worker: Airplay renderer (available)');
 	if (isset($_SESSION['airplaysvc']) && $_SESSION['airplaysvc'] == 1) {
+		$started = ': started';
 		startAirplay();
-		workerLog('worker: Airplay renderer (started)');
 	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: Airplay renderer (available' . $started . ')');
 }
 else {
 	workerLog('worker: Airplay renderer (n/a)');
@@ -498,11 +504,14 @@ else {
 
 // Start Spotify renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SPOTIFY) {
-	workerLog('worker: Spotify renderer (available)');
 	if (isset($_SESSION['spotifysvc']) && $_SESSION['spotifysvc'] == 1) {
+		$started = ': started';
 		startSpotify();
-		workerLog('worker: Spotify renderer (started)');
 	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: Spotify renderer (available' . $started . ')');
 }
 else {
 	workerLog('worker: Spotify renderer (n/a)');
@@ -510,12 +519,15 @@ else {
 
 // Start Squeezelite renderer
 if ($_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE) {
-	workerLog('worker: Squeezelite renderer (available)');
 	if (isset($_SESSION['slsvc']) && $_SESSION['slsvc'] == 1) {
+		$started = ': started';
 		cfgSqueezelite();
 		startSqueezeLite();
-		workerLog('worker: Squeezelite renderer (started)');
 	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: Squeezelite (available' . $started . ')');
 }
 else {
 	workerLog('worker: Squeezelite renderer (n/a)');
@@ -523,12 +535,16 @@ else {
 
 // Start RroonBridge renderer
 if ($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) {
-	workerLog('worker: RoonBridge renderer (available)');
 	if ($_SESSION['roonbridge_installed'] == 'yes') {
 		if (isset($_SESSION['roonbridge_svc']) && $_SESSION['roonbridge_svc'] == 1) {
+			$started = ': started';
 			startRoonBridge();
 			workerLog('worker: RoonBridge renderer (started)');
 		}
+		else {
+			$started = '';
+		}
+		workerLog('worker: RoonBridge renderer (available' . $started . ')');
 	}
 	else {
 		workerLog('worker: RoonBridge renderer (not installed)');
@@ -540,11 +556,14 @@ else {
 
 // Start UPnP renderer
 if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
-	workerLog('worker: UPnP renderer (available)');
 	if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
+		$started = ': started';
 		sysCmd('systemctl start upmpdcli');
-		workerLog('worker: UPnP renderer (started)');
 	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: UPnP renderer (available' . $started . ')');
 }
 else {
 	workerLog('worker: UPnP renderer (n/a)');
@@ -552,11 +571,14 @@ else {
 
 // Start miniDLNA
 if ($_SESSION['feat_bitmask'] & FEAT_MINIDLNA) {
-	workerLog('worker: DLNA server (available)');
 	if (isset($_SESSION['dlnasvc']) && $_SESSION['dlnasvc'] == 1) {
+		$started = ': started';
 		startMiniDlna();
-		workerLog('worker: DLNA server (started)');
 	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: DLNA server (available' . $started . ')');
 }
 else {
 	workerLog('worker: DLNA Server (n/a)');
@@ -564,11 +586,14 @@ else {
 
 // Start UPnP browser
 if ($_SESSION['feat_bitmask'] & FEAT_DJMOUNT) {
-	workerLog('worker: UPnP browser (available)');
 	if (isset($_SESSION['upnp_browser']) && $_SESSION['upnp_browser'] == 1) {
+		$started = ': started';
 		sysCmd('djmount -o allow_other,nonempty,iocharset=utf-8 /mnt/UPNP');
-		workerLog('worker: UPnP browser (started)');
 	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: UPnP browser (available' . $started . ')');
 }
 else {
 	workerLog('worker: UPnP browser (n/a)');
@@ -576,11 +601,14 @@ else {
 
 // Start GPIO button handler
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
-	workerLog('worker: GPIO button handler (available)');
 	if (isset($_SESSION['gpio_svc']) && $_SESSION['gpio_svc'] == 1) {
+		$started = ': started';
 		startGpioSvc();
-		workerLog('worker: GPIO button handler (started)');
 	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: GPIO button handler (available' . $started . ')');
 }
 else {
 	workerLog('worker: GPIO button handler (n/a)');
@@ -588,11 +616,14 @@ else {
 
 // Start stream recorder
 if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
-	workerLog('worker: Stream recorder (available)');
 	if ($_SESSION['recorder_status'] == 'On') {
+		$started = ': started';
 		sysCmd('mpc enable "' . STREAM_RECORDER . '"');
-		workerLog('worker: Stream recorder (started)');
 	}
+	else {
+		$started = '';		
+	}
+	workerLog('worker: Stream recorder (available' . $started . ')');
 }
 else {
 	workerLog('worker: Stream recorder (n/a)');
