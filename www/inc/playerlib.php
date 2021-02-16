@@ -102,6 +102,17 @@ const ALBUM_SAMPLE_RATE_THRESHOLD 	= 44100;
 const RADIO_HD_BADGE_TEXT 			= 'HiRes';
 const RADIO_BITRATE_THRESHOLD 		= 128;
 
+// MPD output names
+const ALSA_DEFAULT			= 'ALSA Default';
+const ALSA_CROSSFEED		= 'ALSA Crossfeed';
+const ALSA_PARAMETRIC_EQ	= 'ALSA Parametric EQ';
+const ALSA_GRAPHIC_EQ		= 'ALSA Graphic EQ';
+const ALSA_POLARITY_INV		= 'ALSA Polarity Inv';
+const ALSA_CAMILLADSP		= 'ALSA CamillaDSP';
+const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
+const HTTP_SERVER			= 'HTTP Server';
+const STREAM_RECORDER		= 'Stream Recorder';
+
 // Reserved root directory names
 $ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
 
@@ -2012,13 +2023,14 @@ function updMpdConf($i2sdevice) {
 	}
 	$data .= "}\n\n";
 
-	// ALSA local (outputs 1 - 5)
+	// ALSA local outputs
 	$names = array (
-		"name \"ALSA default\"\n" . "device \"hw:" . $device . ",0\"\n",
-		"name \"ALSA crossfeed\"\n" . "device \"crossfeed\"\n",
-		"name \"ALSA parametric eq\"\n" . "device \"eqfa12p\"\n",
-		"name \"ALSA graphic eq\"\n" . "device \"alsaequal\"\n",
-		"name \"ALSA polarity inversion\"\n" . "device \"invpolarity\"\n"
+		"name \"" . ALSA_DEFAULT . "\"\n" . "device \"hw:" . $device . ",0\"\n",
+		"name \"" . ALSA_CROSSFEED . "\"\n" . "device \"crossfeed\"\n",
+		"name \"" . ALSA_PARAMETRIC_EQ . "\"\n" . "device \"eqfa12p\"\n",
+		"name \"" . ALSA_GRAPHIC_EQ . "\"\n" . "device \"alsaequal\"\n",
+		"name \"" . ALSA_POLARITY_INV . "\"\n" . "device \"invpolarity\"\n",
+		"name \"" . ALSA_CAMILLADSP . "\"\n" . "device \"camilladsp\"\n"
 		);
 	foreach ($names as $name) {
 		$data .= "audio_output {\n";
@@ -2030,18 +2042,18 @@ function updMpdConf($i2sdevice) {
 		$data .= "}\n\n";
 	}
 
-	// ALSA bluetooth (output 6)
+	// ALSA bluetooth
 	$data .= "audio_output {\n";
 	$data .= "type \"alsa\"\n";
-	$data .= "name \"ALSA bluetooth\"\n";
+	$data .= "name \"" . ALSA_BLUETOOTH . "\"\n";
 	$data .= "device \"btstream\"\n";
 	$data .= "mixer_type \"software\"\n";
 	$data .= "}\n\n";
 
-	// MPD httpd (output 7)
+	// HTTP server
 	$data .= "audio_output {\n";
 	$data .= "type \"httpd\"\n";
-	$data .= "name \"HTTP stream\"\n";
+	$data .= "name \"" . HTTP_SERVER . "\"\n";
 	$data .= "port \"" . $_SESSION['mpd_httpd_port'] . "\"\n";
 	$data .= "encoder \"" . $_SESSION['mpd_httpd_encoder'] . "\"\n";
 	$data .= $_SESSION['mpd_httpd_encoder'] == 'flac' ? "compression \"0\"\n" : "bitrate \"320\"\n";
@@ -2049,16 +2061,7 @@ function updMpdConf($i2sdevice) {
 	$data .= "always_on \"yes\"\n";
 	$data .= "}\n\n";
 
-    // CamillaDSP ALSA Plugin (output 8)
-    $data .= "audio_output {\n";
-    $data .= "type \"alsa\"\n";
-    $data .= "name \"ALSA CamillaDSP\"\n";
-    $data .= "device \"camilladsp\"\n";
-    $data .= "always_on \"no\"\n";
-    $data .= "dop \"no\"\n";
-    $data .= "}\n\n";
-
-	// Stream recorder (output 9)
+	// Stream recorder
 	if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
 		include '/var/www/inc/recorder_mpd.php';
 	}
@@ -3484,31 +3487,31 @@ function getMoodeRel($options = '') {
 // ensure valid mpd output config
 function configMpdOutputs() {
 	if ($_SESSION['crossfeed'] != 'Off') {
-		$output = '2';
+		$output = ALSA_CROSSFEED;
 	}
 	elseif ($_SESSION['eqfa12p'] != 'Off') {
-		$output = '3';
+		$output = ALSA_PARAMETRIC_EQ;
 	}
 	elseif ($_SESSION['alsaequal'] != 'Off') {
-		$output = '4';
+		$output = ALSA_GRAPHIC_EQ;
 	}
-    elseif ($_SESSION['camilladsp'] != 'off') {
-        $output = '8';
-    }
 	elseif ($_SESSION['invert_polarity'] == '1') {
-		$output = '5';
+		$output = ALSA_POLARITY_INV;
 	}
+	elseif ($_SESSION['camilladsp'] != 'off') {
+        $output = ALSA_CAMILLADSP;
+    }
 	elseif ($_SESSION['audioout'] == 'Bluetooth') {
-		$output = '6';
+		$output = ALSA_BLUETOOTH;
 	}
 	else {
-		$output = '1'; // ALSA default
+		$output = ALSA_DEFAULT;
 	}
 
 	return $output;
 }
 
-// parse result of mpd outputs cmd
+// Parse result of mpd outputs cmd
 function parseMpdOutputs($resp) {
 	$array = array();
 	$line = strtok($resp, "\n");
@@ -3635,34 +3638,37 @@ function setAudioOut($audioout) {
 		sysCmd('mpc stop');
 
 		if ($_SESSION['crossfeed'] != 'Off') {
-			$output = '2';
+			$output = ALSA_CROSSFEED;
 		}
 		elseif ($_SESSION['eqfa12p'] != 'Off') {
-			$output = '3';
+			$output = ALSA_PARAMETRIC_EQ;
 		}
 		elseif ($_SESSION['alsaequal'] != 'Off') {
-			$output = '4';
+			$output = ALSA_GRAPHIC_EQ;
 		}
 		elseif ($_SESSION['invert_polarity'] != '0') {
-			$output = '5';
+			$output = ALSA_POLARITY_INV;
 		}
+		elseif ($_SESSION['camilladsp'] != 'off') {
+	        $output = ALSA_CAMILLADSP;
+	    }
 		else {
-			$output = '1';
+			$output = ALSA_DEFAULT;
 		}
 
-		sysCmd('mpc enable only ' . $output);
+		sysCmd('mpc enable only "' . $output . '"');
 	}
-	else if ($audioout == 'Bluetooth') {
+	elseif ($audioout == 'Bluetooth') {
 		if ($_SESSION['mpdmixer'] == 'none') {
 			reconfMpdVolume('software');
 			playerSession('write', 'mpdmixer_local', 'none');
 		}
 
-		playerSession('write', 'btactive', '0'); // dismiss the input source overlay
+		playerSession('write', 'btactive', '0');
 		sendEngCmd('btactive0');
 		sysCmd('/var/www/vol.sh -restore');
 		sysCmd('mpc stop');
-		sysCmd('mpc enable only 6'); // ALSA bluetooth output
+		sysCmd('mpc enable only "' . ALSA_BLUETOOTH .'"');
 	}
 
 	// Renderers
@@ -3681,12 +3687,10 @@ function setAudioOut($audioout) {
 	sysCmd('systemctl restart mpd');
 }
 
-// set mpd httpd on/off
+// Turn MPD HTTP server on/off
 function setMpdHttpd () {
-	$cmd = $_SESSION['mpd_httpd'] == '1' ? 'mpc enable 7' : 'mpc disable 7';
+	$cmd = $_SESSION['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
 	sysCmd($cmd);
-	//$result = sysCmd($cmd);
-	//workerLog('$result=(' . $result[0]);
 }
 
 // Reconfigure MPD volume

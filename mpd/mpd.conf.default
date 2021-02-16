@@ -48,7 +48,7 @@ threads "1"
 
 audio_output {
 type "alsa"
-name "ALSA default"
+name "ALSA Default"
 device "hw:0,0"
 mixer_type "software"
 dop "no"
@@ -56,7 +56,7 @@ dop "no"
 
 audio_output {
 type "alsa"
-name "ALSA crossfeed"
+name "ALSA Crossfeed"
 device "crossfeed"
 mixer_type "software"
 dop "no"
@@ -64,7 +64,7 @@ dop "no"
 
 audio_output {
 type "alsa"
-name "ALSA parametric eq"
+name "ALSA Parametric EQ"
 device "eqfa12p"
 mixer_type "software"
 dop "no"
@@ -72,7 +72,7 @@ dop "no"
 
 audio_output {
 type "alsa"
-name "ALSA graphic eq"
+name "ALSA Graphic EQ"
 device "alsaequal"
 mixer_type "software"
 dop "no"
@@ -80,7 +80,23 @@ dop "no"
 
 audio_output {
 type "alsa"
-name "ALSA bluetooth"
+name "ALSA Polarity Inv"
+device "invpolarity"
+mixer_type "software"
+dop "no"
+}
+
+audio_output {
+type "alsa"
+name "ALSA CamillaDSP"
+device "camilladsp"
+mixer_type "software"
+dop "no"
+}
+
+audio_output {
+type "alsa"
+name "ALSA Bluetooth"
 device "btstream"
 mixer_type "software"
 }
@@ -91,4 +107,14 @@ name "ALSA CamillaDSP"
 device "camilladsp"
 always_on "no"
 dop "no"
+}
+
+audio_output {
+type "httpd"
+name "HTTP Server"
+port "8000"
+encoder "lame"
+bitrate "320"
+tags "yes"
+always_on "yes"
 }

@@ -435,19 +435,14 @@ workerLog($sock === false ? 'worker: MPD connection refused' : 'worker: MPD acce
 // Ensure valid mpd output config
 workerLog('worker: Configure MPD outputs');
 $mpdoutput = configMpdOutputs();
-sysCmd('mpc enable only ' . $mpdoutput);
+sysCmd('mpc enable only "' . $mpdoutput .'"');
 setMpdHttpd();
 // Report MPD outputs
 sendMpdCmd($sock, 'outputs');
-$result = parseMpdOutputs(readMpdResp($sock));
-workerLog('worker: ' . $result[0]); // ALSA default
-workerLog('worker: ' . $result[1]); // ALSA crossfeed
-workerLog('worker: ' . $result[2]); // ALSA parametric eq
-workerLog('worker: ' . $result[3]); // ALSA graphic eq
-workerLog('worker: ' . $result[4]); // ALSA polarity inversion
-workerLog('worker: ' . $result[5]); // ALSA bluetooth
-workerLog('worker: ' . $result[6]); // MPD httpd
-workerLog('worker: ' . $result[7]); // CamillaDSP
+$outputs = parseMpdOutputs(readMpdResp($sock));
+foreach ($outputs as $output) {
+	workerLog('worker: ' . $output);
+}
 // MPD crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
 sendMpdCmd($sock, 'crossfade ' . $_SESSION['mpdcrossfade']);
@@ -595,7 +590,7 @@ else {
 if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] != 'Not installed') {
 	workerLog('worker: Stream recorder (available)');
 	if ($_SESSION['recorder_status'] == 'On') {
-		sysCmd('mpc enable 9');
+		sysCmd('mpc enable "' . STREAM_RECORDER . '"');
 		workerLog('worker: Stream recorder (started)');
 	}
 }
@@ -1497,7 +1492,7 @@ function runQueuedJob() {
 			break;
 		case 'invert_polarity':
 			sysCmd('mpc stop');
-			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable only 5' : 'mpc enable only 1';
+			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable only "' . ALSA_POLARITY_INV . '"' : 'mpc enable only "' . ALSA_DEFAULT . '"';
 			sysCmd($cmd);
 			setMpdHttpd();
 			break;
@@ -1505,12 +1500,12 @@ function runQueuedJob() {
 			sysCmd('mpc stop');
 
 			if ($_SESSION['w_queueargs'] == 'Off') {
-				sysCmd('mpc enable only 1');
+				sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
 			}
 			else {
 				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 				sysCmd('alsactl restore');
-				sysCmd('mpc enable only 2');
+				sysCmd('mpc enable only "' . ALSA_CROSSFEED . '"');
 			}
 
 			// Restart Airplay and Spotify
@@ -1525,7 +1520,7 @@ function runQueuedJob() {
 			setMpdHttpd();
 			break;
 		case 'mpd_httpd':
-			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable 7' : 'mpc disable 7';
+			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
 			sysCmd($cmd);
 			break;
 		case 'mpd_httpd_port':
@@ -1546,10 +1541,10 @@ function runQueuedJob() {
 			}
 
             if ($_SESSION['w_queueargs'] == 'off') {
-                sysCmd('mpc enable only 1');
+                sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
             }
 			else {
-				sysCmd('mpc enable only 8');
+				sysCmd('mpc enable only "' . ALSA_CAMILLADSP . '"');
 
 				sysCmd('systemctl restart mpd');
 				// Wait for mpd to start accepting connections
@@ -1572,7 +1567,7 @@ function runQueuedJob() {
 
 			if ($_SESSION['w_queue'] == 'eqfa12p') {
 				if ($_SESSION['eqfa12p'] == 'Off') {
-					sysCmd('mpc enable only 1');
+					sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
 				}
 				else {
 					$curr = intval($queueargs[1]);
@@ -1580,7 +1575,7 @@ function runQueuedJob() {
 					$config = $eqfa12p->getpreset($curr);
 					$eqfa12p->applyConfig($config);
 					unset($eqfa12p);
-					sysCmd("mpc enable only 3");
+					sysCmd('mpc enable only "' . ALSA_PARAMETRIC_EQ . '"');
 				}
 				sysCmd('systemctl restart mpd');
 				// Wait for mpd to start accepting connections
@@ -1589,7 +1584,7 @@ function runQueuedJob() {
 			}
 			else {
 				if ($_SESSION['alsaequal'] == 'Off') {
-					sysCmd('mpc enable only 1');
+					sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
 				}
 				else {
 					$result = sdbquery("select curve_values from cfg_eqalsa where curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
@@ -1597,7 +1592,7 @@ function runQueuedJob() {
 					foreach ($curve as $key => $value) {
 						sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
 					}
-					sysCmd('mpc enable only 4');
+					sysCmd('mpc enable only "' . ALSA_GRAPHIC_EQ . '"');
 				}
 			}
 
