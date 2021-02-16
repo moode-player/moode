@@ -446,6 +446,9 @@ foreach ($outputs as $output) {
 // MPD crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
 sendMpdCmd($sock, 'crossfade ' . $_SESSION['mpdcrossfade']);
+// Ignore CUE files
+setCuefilesIgnore($_SESSION['cuefiles_ignore']);
+workerLog('worker: MPD ignore CUE files (' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no') . ')');
 
 //
 workerLog('worker: -- Feature availability');
@@ -621,7 +624,7 @@ if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] 
 		sysCmd('mpc enable "' . STREAM_RECORDER . '"');
 	}
 	else {
-		$started = '';		
+		$started = '';
 	}
 	workerLog('worker: Stream recorder (available' . $started . ')');
 }
@@ -651,8 +654,6 @@ workerLog('worker: NAS and UPnP sources (' . $result . ')');
 //
 workerLog('worker: -- Miscellaneous');
 //
-setCuefilesIgnore($_SESSION['cuefiles_ignore']);
-workerLog('worker: MPD ignore cuefiles (' . $_SESSION['cuefiles_ignore'] . ')');
 
 // Start rotary encoder
 if (isset($_SESSION['rotaryenc']) && $_SESSION['rotaryenc'] == 1) {
