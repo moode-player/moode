@@ -423,6 +423,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (149, 'recorder_status', 'Not i
 INSERT INTO cfg_system (id, param, value) VALUES (150, 'recorder_storage', '/mnt/SDCARD');
 INSERT INTO cfg_system (id, param, value) VALUES (151, 'volume_db_display', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (152, 'search_site', 'Google');
+INSERT INTO cfg_system (id, param, value) VALUES (153, 'cuefiles_ignore', '1');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

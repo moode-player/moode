@@ -3251,6 +3251,8 @@ function autoConfigSettings() {
 
 		'Sources',
 		['requires' => ['usb_auto_updatedb'] , 'handler' => setPlayerSession],
+		['requires' => ['cuefiles_ignore'] , 'handler' => setPlayerSession],
+
 		// Sources are using the array construction of the ini reader
 		// source_name[0] = ...
 		['requires' => ['source_name',
@@ -4075,11 +4077,24 @@ function loadRadio() {
 			'bitrate' => $row['bitrate'], 'format' => $row['format'], 'home_page' => $row['home_page']);
 	}
 }
-// Get ALSA card ID's
-function getAlsaCards() {
-	for ($i = 0; $i < 4; $i++) {
-		$card_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
-		$cards[$i] = empty($card_id) ? 'empty' : $card_id;
+
+function setCuefilesIgnore($ignore) {
+//TODO: implemented if and call from startup
+	$file = MPD_MUSICROOT . '.mpdignore';
+	if(is_file($file) == false  ) {
+		if( $ignore == 1) {
+			sysCmd('touch "' . $file . '"');
+			sysCmd('chmod 777 "' . $file . '"');
+			sysCmd('chown root:root "' . $file . '"');
+			sysCmd('echo "**/*.cue" >> ' . $file);
+		}
+	}else {
+		if( sysCmd('cat ' . $file . ' | grep cue') ) {
+			if($ignore == 0) {
+				sysCmd("sed -i '/^\*\*\/\*\.cue/d' " . $file );
+			}
+		}else if($ignore == "1") {
+			sysCmd('echo "**/*.cue" >> ' . $file);
+		}
 	}
-	return $cards;
 }
