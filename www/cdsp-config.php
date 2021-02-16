@@ -116,13 +116,13 @@ else if ($selectedConfig && isset($_POST['copypipeline']) && $_POST['copypipelin
 	$cdsp->copyConfig($selectedConfig, $_POST['new-pipelinename'] . '.yml');
 	$selectedConfig = $_POST['new-pipelinename'] . '.yml';
 }
-// Import (Upload)
+// Coeffs import (Upload)
 else if (isset($_FILES['coeffsfile']) && isset($_POST['import']) && $_POST['import'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffsfile"]["name"];
 	move_uploaded_file($_FILES["coeffsfile"]["tmp_name"], $configFileName);
 	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["coeffsfile"]["name"] . '\" completed');
 }
-// Export (Download)
+// Coeffs export (Download)
 else if (isset($_POST['cdsp-coeffs']) && isset($_POST['export']) && $_POST['export'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $_POST['cdsp-coeffs'];
 
@@ -133,7 +133,7 @@ else if (isset($_POST['cdsp-coeffs']) && isset($_POST['export']) && $_POST['expo
 	readfile ($configFileName);
  	exit();
 }
-// Remove
+// Coeffs remove
 else if (isset($_POST['cdsp-coeffs']) && isset($_POST['remove']) && $_POST['remove'] == '1') {
 	$configFileName = $cdsp->getCoeffsLocation() . $_POST['cdsp-coeffs'];
 	unlink($configFileName);
@@ -154,15 +154,7 @@ else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) 
 else if (isset($_POST['camillaguiexpertstatus']) && isset($_POST['updatecamillaguiexpert']) && $_POST['updatecamillaguiexpert'] == '1') {
 	$cdsp->setGuiExpertMode($_POST['camillaguiexpertstatus'] == '1');
 }
-else if (isset($_GET['plotpipeline']) ) {
-	$cmd = dirname($_SERVER["SCRIPT_FILENAME"]) . '/command/camillaplotpipeline.py ' . $cdsp->getConfigsLocationsFileName() . '/' . $_GET['plotpipeline'];
-	$output = sysCmd($cmd);
 
-	header("Content-Type: image/svg+xml");
-	echo implode($output);
-	exit(0);
-
-}
 
 
 

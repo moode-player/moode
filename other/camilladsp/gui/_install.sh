@@ -7,7 +7,7 @@
 
 CAMILLAGUI_VER=0.6.0_233bac3a30c4d60f3ebbd2ceb54267d082ed018d
 PYCAMILLADSP_VER=0.5.0
-PYCAMILLADSP_PLOT_VER=0.4.3
+PYCAMILLADSP_PLOT_VER=0.4.5
 
 sudo pip3 install aiohttp
 sudo pip3 install camilladsp-$PYCAMILLADSP_VER-py3-none-any.whl

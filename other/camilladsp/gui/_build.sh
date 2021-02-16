@@ -7,7 +7,7 @@
 
 CAMILLAGUI_VER=v0.6.0
 PYCAMILLADSP_VER=v0.5.0
-PYCAMILLADSP_PLOT_VER=v0.4.3
+PYCAMILLADSP_PLOT_VER=v0.4.5
 
 mkdir camilladsp.dev
 cd camilladsp.dev

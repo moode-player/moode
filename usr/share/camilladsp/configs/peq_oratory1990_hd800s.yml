@@ -1,0 +1,148 @@
+devices:
+  adjust_period: 10
+  capture:
+    channels: 2
+    extra_samples: 0
+    filename: /dev/stdin
+    format: S32LE
+    read_bytes: 0
+    skip_bytes: 0
+    type: File
+  capture_samplerate: 0
+  chunksize: 1024
+  enable_rate_adjust: false
+  enable_resampling: false
+  playback:
+    channels: 2
+    device: "hw:2,0"
+    format: S32LE
+    type: Alsa
+  queuelimit: 1
+  resampler_type: BalancedAsync
+  samplerate: 44100
+  silence_threshold: 0
+  silence_timeout: 0
+  target_level: 0
+filters:
+  peqgain:
+    type: Gain
+    parameters:
+      gain: -4.0
+      inverted: false
+  band_01:
+    type: Biquad
+    parameters:
+      type: Lowshelf
+      freq: 115
+      slope: 1.0
+      gain: 4.0
+  band_02:
+    type: Biquad
+    parameters:
+      type: Peaking
+      freq: 220
+      q: 0.35
+      gain: -4.9
+  band_03:
+    type: Biquad
+    parameters:
+      type: Peaking
+      freq: 380
+      q: 2.0
+      gain: 0.6
+  band_04:
+    type: Biquad
+    parameters:
+      type: Peaking
+      freq: 1000
+      q: 2.0
+      gain: -1.2
+  band_05:
+    type: Biquad
+    parameters:
+      type: Peaking
+      freq: 2800
+      q: 3.0
+      gain: -1.5
+  band_06:
+    type: Biquad
+    parameters:
+      type: Peaking
+      freq: 3340
+      q: 4.0
+      gain: 1.9
+  band_07:
+    type: Biquad
+    parameters:
+      type: Peaking
+      freq: 4000
+      q: 6.0
+      gain: -2.1
+  band_08:
+    type: Biquad
+    parameters:
+      type: Peaking
+      freq: 5430
+      q: 6.0
+      gain: -5.1
+  band_09:
+    type: Biquad
+    parameters:
+      type: Peaking
+      freq: 6150
+      q: 9.0
+      gain: -2.3
+  band_10:
+    type: Biquad
+    parameters:
+      type: Highshelf
+      freq: 7000
+      slope: 1.0
+      gain: -6.0
+mixers:
+  stereo:
+    channels:
+      in: 2
+      out: 2
+    mapping:
+    - dest: 0
+      sources:
+      - channel: 0
+        gain: 0
+        inverted: false
+    - dest: 1
+      sources:
+      - channel: 1
+        gain: 0
+        inverted: false
+pipeline:
+- type: Mixer
+  name: stereo
+- type: Filter
+  channel: 0
+  names:
+  - peqgain
+  - band_01
+  - band_02
+  - band_03
+  - band_04
+  - band_05
+  - band_06
+  - band_07
+  - band_08
+  - band_09
+  - band_10
+- type: Filter
+  channel: 1
+  names:
+  - peqgain
+  - band_01
+  - band_02
+  - band_03
+  - band_04
+  - band_05
+  - band_06
+  - band_07
+  - band_08
+  - band_09
+  - band_10

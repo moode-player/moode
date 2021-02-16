@@ -1,13 +1,13 @@
 
 devices:
   samplerate: 44100
-  chunksize: 1024
+  chunksize: 2048
   queuelimit: 1
   capture:
     type: File
     channels: 2
     filename: "/dev/stdin"
-    format: S16LE
+    format: S32LE
   playback:
     type: Alsa
     channels: 2
@@ -17,12 +17,18 @@ filters:
     mastergain:
         type: Gain
         parameters:
-            gain: -5.1
-    exampl_conv:
+            gain: -3
+    ir_left:
       type: Conv
       parameters:
         type: File
-        filename: ../coeffs/Sennheiser_HD800S.wav
+        filename: ../coeffs/Sennheiser HD 800 S minimum phase 44100Hz.wav
+        format: S16LE
+    ir_right:
+      type: Conv
+      parameters:
+        type: File
+        filename: ../coeffs/Sennheiser HD 800 S minimum phase 44100Hz.wav
         format: S16LE
 mixers:
   stereo:
@@ -47,10 +53,10 @@ pipeline:
     channel: 0
     names:
       - mastergain
-      - exampl_conv
+      - ir_left
   - type: Filter
     channel: 1
     names:
       - mastergain
-      - exampl_conv
+      - ir_right
 

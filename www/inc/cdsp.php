@@ -89,14 +89,17 @@ class CamillaDsp {
      * Set in the alsa_cdsp config the camilladsp config file to use
      */
     function selectConfig($configname) {
-        if($configname != 'custom' && $configname != 'off' ) {
-            $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . str_replace ('/', '\/', $configname);
-            $configfilename = str_replace ('/', '\/', $configfilename);
-            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
-            syscmd("sudo ln -s -f " . $configfilename . " " . $this->CAMILLAGUI_WORKING_CONGIG);
-        }
-        if( $configname == '__quick_convolution__.yml' ) {
-            $this->writeQuickConvolutionConfig();
+        if($configname != 'custom' && $configname != 'off' && $configname != '') {
+            if( $configname == '__quick_convolution__.yml' ) {
+                $this->writeQuickConvolutionConfig();
+            }
+
+            $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . $configname;
+            $configfilename_escaped = str_replace ('/', '\/', $configfilename);
+            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename_escaped . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
+            if(is_file($configfilename)) {
+                syscmd("sudo ln -s -f \"" . $configfilename . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
+            }
         }
         $this->configfile = $configname;
     }
@@ -197,7 +200,7 @@ class CamillaDsp {
         $output = array();
         $exitcode = -1;
         if( file_exists($configFullPath)) {
-            $cmd = $this->CAMILLA_EXE . " -c " . $configFullPath;
+            $cmd = $this->CAMILLA_EXE . " -c \"" . $configFullPath . "\"";
             exec($cmd, $output, $exitcode);
             $exitcode = $exitcode == 0 ? 1 : 0;
 
@@ -255,7 +258,7 @@ class CamillaDsp {
      */
     function coeffInfo($coefffile) {
         $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
-        $jsonString = syscmd("mediainfo --Output=JSON " . $fileName);
+        $jsonString = syscmd("mediainfo --Output=JSON \"" . $fileName . "\"");
         $mediaDataObj = json_decode(implode($jsonString));
 
         $ext = $mediaDataObj->{'media'}->{'track'}[0]->{'FileExtension'};
