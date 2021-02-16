@@ -3715,6 +3715,9 @@ function storeBackLink($section, $tpl) {
 	if ($tpl == 'src-config.html') {
 		$_SESSION['config_back_link'] = '/lib-config.php';
 	}
+	if ($tpl == 'cdsp-config.html') {
+		$_SESSION['config_back_link'] = '/snd-config.php';
+	}
 	else if (in_array($section, $root_configs)) {
 		$_SESSION['config_back_link'] = '/index.php';
 	}
