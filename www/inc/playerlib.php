@@ -2965,9 +2965,6 @@ function getHdwrRev() {
 	if ($model == 'CM3+') {
 		$hdwr_rev = 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]';
 	}
-	elseif ($model == 'CM4') {
-		$hdwr_rev = 'Allo USBridge SIG 2 [CM4]';
-	}
 	else {
 		$hdwr_rev = 'Pi-' . $model . ' ' . $model_rev . ' ' . $mem;
 	}
