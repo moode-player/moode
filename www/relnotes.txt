@@ -48,6 +48,7 @@ Updates
 - UPD: Allow changing betw HDMI, Headphone and USB w/o reboot
 - UPD: Persist configured USB device in MPD Config
 - UPD: Show msg in MPD Config if USB device off or disconnected
+- UPD: Library Config option to ignore CUE files
 
 Bug fixes
 

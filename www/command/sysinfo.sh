@@ -19,8 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-12-15 TC moOde 7.0.0
-#
 
 # check for sudo
 [[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
@@ -158,7 +156,8 @@ AUDIO_PARAMETERS() {
 	echo -e "\nParametric EQ\t\t= $eqfa12p\c"
 	echo -e "\nGraphic EQ\t\t= $alsaequal\c"
 	echo -e "\nCamillaDSP\t\t= $camilladsp\c"
-	echo -e "\nMPD httpd\t\t= $mpd_httpd\n"
+	echo -e "\nMPD httpd\t\t= $mpd_httpd\c"
+	echo -e "\nIgnore CUE files\t= $cuefiles_ignore\n"
 }
 
 APPEARANCE_SETTINGS() {
@@ -750,6 +749,7 @@ rv_recorder_status=${arr[148]}
 rv_recorder_storage=${arr[149]}
 [[ "${arr[150]}" = "1" ]] && volume_db_display="On" || volume_db_display="Off"
 search_site=${arr[151]}
+[[ "${arr[152]}" = "1" ]] && cuefiles_ignore="Yes" || cuefiles_ignore="No"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
