@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2021-MM-DD TC moOde 7.1.0
- *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -367,7 +365,7 @@ else {
 	$iface = $result[0]['iface'];
 }
 $mixer_name = $_SESSION['amixname'];
-$audio_formats = $_SESSION['audio_formats'];
+$audio_formats = sysCmd('moodeutl -f')[0];
 $hdwr_rev = $_SESSION['hdwrrev'];
 
 $tpl = 'audioinfo.html';
