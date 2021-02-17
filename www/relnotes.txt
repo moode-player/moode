@@ -20,6 +20,7 @@ New features
 - NEW: CamillaDSP including Pipeline Editor
 - NEW: RoonBridge renderer (requires user install)
 - NEW: Radio station utility for import/export/manage
+- NEW: Support for Pi CM4
 
 Audio devices
 
@@ -49,11 +50,11 @@ Updates
 - UPD: Persist configured USB device in MPD Config
 - UPD: Show msg in MPD Config if USB device off or disconnected
 - UPD: Library Config option to ignore CUE files
+- UPD: Decode Pi revision from bitmask instead of from table
 
 Bug fixes
 
 - FIX: Wrong PHP version in localui.service and build recipe
-- FIX: Add revision code for Pi-4B 2GB 1.4
 - FIX: Squeezelite binary crashes on ARM6
 - FIX: Librespot volume curve option
 - FIX: Order of excution for starting watchdog
