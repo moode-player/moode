@@ -37,6 +37,7 @@ from os import path
 from zipfile import ZipFile
 import sys
 import csv
+import re
 
 VERSION = "1.0"
 
@@ -275,20 +276,41 @@ Version=2"""
         data = {}
 
         fields  = []
-        with backup.open('var/local/www/db/cfg_radio.schema', 'r') as schema:
-            text = schema.readline().decode()
-            text = text[text.find("(")+1:]
-            fields_raw = text.split(',')
-            for field_raw in fields_raw:
-                fields.append(field_raw.strip().split(' ')[0])
+        try:
+            with backup.open('var/local/www/db/cfg_radio.schema', 'r') as schema:
+                text = schema.readline().decode()
+                text = text[text.find("(")+1:]
+                fields_raw = text.split(',')
+                for field_raw in fields_raw:
+                    fields.append(field_raw.strip().split(' ')[0])
+                data['fields'] = fields
+        except KeyError:
+            print("WARNING: no schema information, guessing moOde 6.7.1 station backup format")
+            fields = ['id',
+                    'station',
+                    'name',
+                    'type',
+                    'logo',
+                    'genre',
+                    'broadcaster',
+                    'language',
+                    'country',
+                    'region',
+                    'bitrate',
+                    'format']
             data['fields'] = fields
+
 
         stations = []
 
         with backup.open('var/local/www/db/cfg_radio.csv', 'r') as csvf:
             for line_raw in csvf:
                 line = line_raw.decode().strip()
-                field_values = text.split(',')
+                field_values = re.findall(r'(?:[^\s,"]|"(?:\\.|[^"])*")+', line)
+                if len(field_values)!= len(fields):
+                    print("Error: number of values ({}) doesn't match the schema({}).".format(len(field_values),len(fields)) )
+                    exit(12)
+
 
                 station = {}
                 for field_values in csv.reader([line], skipinitialspace=True):
