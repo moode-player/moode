@@ -442,7 +442,6 @@ workerLog('worker: MPD started');
 $sock = openMpdSock('localhost', 6600);
 workerLog($sock === false ? 'worker: MPD connection refused' : 'worker: MPD accepting connections');
 // Ensure valid mpd output config
-workerLog('worker: Configure MPD outputs');
 $mpdoutput = configMpdOutputs();
 sysCmd('mpc enable only "' . $mpdoutput .'"');
 setMpdHttpd();
