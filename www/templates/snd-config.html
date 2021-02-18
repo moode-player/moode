@@ -67,12 +67,11 @@
 				<label class="control-label" for="alsavolume_max">Max ALSA volume</label>
 				<div class="controls">
 					<input class="input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">&nbsp;%
-					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>$_alsavolume_max_msg
 					<span id="info-alsavolume_max" class="help-block-configs help-block-margin">
-						This volume level is used to set 0dB when MPD volume control is set to Software or Fixed, or when any of the Audio Renderers are active.
-						NOTE: The HDMI port will correctly be set to 0dB instead of +4dB at 100%.
+						Establish 0dB when MPD volume control is set to Software or Fixed, or when any Renderers are active.<br>
+						NOTE: The HDMI port will be correctly set to 0dB instead of +4dB at 100%.
 					</span>
-					$_alsavolume_max_msg
 				</div>
 			</div>
 		</fieldset>
