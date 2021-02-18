@@ -956,7 +956,7 @@ function chkBtActive() {
 
 	$result = sysCmd('pgrep -l bluealsa-aplay');
 	if (strpos($result[0], 'bluealsa-aplay') !== false) {
-		// do this section only once
+		// Do this section only once
 		if ($_SESSION['btactive'] == '0') {
 			playerSession('write', 'btactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
@@ -967,7 +967,7 @@ function chkBtActive() {
 		sendEngCmd('btactive1'); // Placing here enables each conected device to be printed to the indicator overlay
 	}
 	else {
-		// do this section only once
+		// Do this section only once
 		if ($_SESSION['btactive'] == '1') {
 			playerSession('write', 'btactive', '0');
 			sendEngCmd('btactive0');
@@ -983,7 +983,7 @@ function chkAplActive() {
 	// Get directly from sql since external spspre.sh and spspost.sh scripts don't update the session
 	$result = sdbquery("SELECT value FROM cfg_system WHERE param='aplactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
-		// do this section only once
+		// D this section only once
 		if ($GLOBALS['aplactive'] == '0') {
 			$GLOBALS['aplactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
@@ -1042,18 +1042,28 @@ function chkSlActive() {
 function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
-		// do this section only once
-		if ($GLOBALS['rbactive'] == '0') {
-			$GLOBALS['rbactive'] = '1';
-			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
-			sendEngCmd('rbactive1');
+		$rnd_not_playing = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
+			&& $GLOBALS['slactive'] == '0' && $GLOBALS['inpactive'] == '0');
+		$mpd_not_playing = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
+		$alsa_out_active = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
+		//workerLog('rnp:' . ($rnd_not_playing ? 'T' : 'F') . '|' . 'mnp:' . ($mpd_not_playing ? 'T' : 'F') . '|' . 'aoa:' . ($alsa_out_active ? 'T' : 'F'));
+		if ($rnd_not_playing && $mpd_not_playing && $alsa_out_active) {
+			// Do this section only once
+			if ($GLOBALS['rbactive'] == '0') {
+				$GLOBALS['rbactive'] = '1';
+				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+				sendEngCmd('rbactive1');
+			}
 		}
-	}
-	else {
-		// Do this section only once
-		if ($GLOBALS['rbactive'] == '1') {
-			$GLOBALS['rbactive'] = '0';
-			sendEngCmd('rbactive0');
+		else {
+			// Do this section only once
+			if ($GLOBALS['rbactive'] == '1') {
+				$GLOBALS['rbactive'] = '0';
+				sendEngCmd('rbactive0');
+				if ($_SESSION['rsmafterrb'] == 'Yes') {
+					sysCmd('mpc play');
+				}
+			}
 		}
 	}
 }
