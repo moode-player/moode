@@ -119,6 +119,13 @@ sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 ' . MOODE_LOG);
 workerLog('worker: File check (OK)');
 
+// Prune old session vars
+sysCmd('moodeutl -D airplayactv');
+sysCmd('moodeutl -D AVAILABLE');
+sysCmd('moodeutl -D eth_port_fix');
+sysCmd('moodeutl -D card_error');
+workerLog('worker: Session vacuumed');
+
 // Load cfg_system into session
 playerSession('open', '', '');
 loadRadio();
