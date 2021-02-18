@@ -125,16 +125,25 @@ loadRadio();
 workerLog('worker: Session loaded');
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
 
-// Ensure certain 3rd party systemd services are disabled so they can be started on-demand in this daemon
+// Reconfigure certain 3rd party installs
 // RoonBridge
+// NOTE: Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
 if (file_exists('/opt/RoonBridge/start.sh') === true) {
 	$_SESSION['roonbridge_installed'] = 'yes';
 	if (empty(sysCmd('systemctl status roonbridge | grep "disabled;"')[0])) {
 		sysCmd('systemctl disable roonbridge');
+		workerLog('worker: RoonBridge systemd unit set to disabled');
 	}
 }
 else {
 	$_SESSION['roonbridge_installed'] = 'no';
+}
+// Allo Boss 2 OLED
+// NOTE: Their installer adds lines to rc.local which are not needed because we start/stop it via systemd unit
+if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
+	sleep(1); // Allow rc.local script time to exit
+	sysCmd('sed -i /boss2/d /etc/rc.local');
+	workerLog('worker: Allo Boss2 rc.local lines removed');
 }
 
 //
