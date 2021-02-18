@@ -714,27 +714,22 @@ else {
 // Restore MPD volume level
 workerLog('worker: Saved MPD vol level (' . $_SESSION['volknob_mpd'] . ')');
 workerLog('worker: Preamp volume level (' . $_SESSION['volknob_preamp'] . ')');
-if ($_SESSION['card_error'] == '') {
-	// Since we initially set alsa volume to 0 at the beginning of startup it must be reset
-	if ($_SESSION['alsavolume'] != 'none') {
-		if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') {
-			$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
-		}
-	}
-
-	$volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
-	sysCmd('/var/www/vol.sh ' . $volume);
-	workerLog('worker: MPD volume level (' . $volume . ') restored');
-	if ($_SESSION['alsavolume'] != 'none') {
-		$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-		workerLog('worker: ALSA ' . trim($_SESSION['amixname']) . ' volume (' . $result[0] . ')');
-	}
-	else {
-		workerLog('worker: ALSA volume level (None)');
+// Since we initially set alsa volume to 0 at the beginning of startup it must be reset
+if ($_SESSION['alsavolume'] != 'none') {
+	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') {
+		$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
 }
+
+$volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
+sysCmd('/var/www/vol.sh ' . $volume);
+workerLog('worker: MPD volume level (' . $volume . ') restored');
+if ($_SESSION['alsavolume'] != 'none') {
+	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
+	workerLog('worker: ALSA ' . trim($_SESSION['amixname']) . ' volume (' . $result[0] . ')');
+}
 else {
-	workerLog('worker: ALSA volume (' . $_SESSION['card_error'] . ')');
+	workerLog('worker: ALSA volume level (None)');
 }
 
 // Auto-play: start auto-shuffle random play or play last played item
