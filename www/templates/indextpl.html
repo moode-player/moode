@@ -19,8 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 -->
 
@@ -513,7 +511,7 @@
 			<li><a href="#notarget" data-cmd="consume"><i class="fal fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="repeat"><i class="fal fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="single"><i class="fal fa-redo sx"></i> Single<span id="menu-check-single"><i class="fal fa-check"></i></span></a></li>
-			<li id="context-menu-stream-recorder" class="hide"><a href="#notarget" data-cmd="stream-recorder"><i class="fal fa-video sx"></i> Stream recorder<span id="menu-check-recorder"><i class="fal fa-check"></i></span></a></li>
+			<li id="context-menu-stream-recorder" class="hide"><a href="#notarget" data-cmd="stream-recorder"><i class="fal fa-video sx"></i> Record stream<span id="menu-check-recorder"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="track_info_playback"><i class="fal fa-music sx"></i> Audio info</a></li>
 			<li><a href="#notarget" data-cmd="toggle-song"><i class="fal fa-exchange-alt sx"></i> Last track</a></li>
 		</ul>
@@ -2046,7 +2044,7 @@
 							<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-storage" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-recorder-storage" class="help-block hide">
 								Specify the path where the "Recordings" folder is located. The folder will automatically be created if it doesn't already exist at the path.<br>
-								NOTE: Only ext4 and ExFAT formats are allowed.
+								NOTE: Only ext4 format is allowed for the partition containing the Recordings folder.
 							</span>
 						</div>
 
