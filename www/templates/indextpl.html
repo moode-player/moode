@@ -2048,6 +2048,33 @@
 							</span>
 						</div>
 
+						<label class="control-label" for="tag-recordings">Tag recordings</label>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="tag-recordings" class="filter-option pull-left">
+										<span>No</span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul class="dropdown-menu custom-select inner" role="menu">
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-recordings-sel"><span class="text">No</span></a></li>
+										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-recordings-sel"><span class="text">Yes</span></a></li>
+									</ul>
+								</div>
+							</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-tag-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-tag-recordings" class="help-block hide">
+								Tag all new files in the "Recordings" folder. Files that have already been tagged are skipped. The tags that are writtem are listed below.<br>
+								- <b>Genre:</b> Recordings<br>
+								- <b>Artist:</b> Artist<br>
+								- <b>AlbumArtist:</b> Recorded Radio<br>
+								- <b>Album:</b> Recorded YYYY-MM-DD<br>
+								- <b>Title:</b> Title
+							</span>
+						</div>
+
 						<label class="control-label" for="delete-recordings">Delete recordings</label>
 						<div class="controls">
 							<div class="btn-group bootstrap-select select-medium">
@@ -2067,33 +2094,6 @@
 							<a aria-label="Help" class="info-toggle" data-cmd="info-delete-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-delete-recordings" class="help-block hide">
 								Delete all files in the "Recordings" folder.
-							</span>
-						</div>
-
-						<label class="control-label" for="tag-recordings">Tag recordings</label>
-						<div class="controls">
-							<div class="btn-group bootstrap-select select-medium">
-								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-									<div id="tag-recordings" class="filter-option pull-left">
-										<span>No</span>
-									</div>&nbsp;
-									<div class="caret"></div>
-								</button>
-								<div class="dropdown-menu open">
-									<ul class="dropdown-menu custom-select inner" role="menu">
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-recordings-sel"><span class="text">No</span></a></li>
-										<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-recordings-sel"><span class="text">Yes</span></a></li>
-									</ul>
-								</div>
-							</div>
-							<a aria-label="Help" class="info-toggle" data-cmd="info-tag-recordings" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-tag-recordings" class="help-block hide">
-								Tag all files in the "Recordings" folder.<br>
-								- Genre: Recordings<br>
-								- Artist: Artist<br>
-								- AlbumArtist: Recorded Radio<br>
-								- Album: Recorded YYYY-MM-DD<br>
-								- Title: Title
 							</span>
 						</div>
 
