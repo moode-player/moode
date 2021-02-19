@@ -76,7 +76,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Display viewport size for debugging by re-using the pkgid_suffix col. It's normaly used to test in-place update packages.
         if (SESSION.json['pkgid_suffix'] == 'viewport') {
-            notify('viewport', window.innerWidth + 'x' + window.innerHeight, 10000);
+            notify('viewport', window.innerWidth + 'x' + window.innerHeight, '10_seconds');
         }
 
     	// Set currentView global

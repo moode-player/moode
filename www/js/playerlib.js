@@ -1246,7 +1246,7 @@ function mpdDbCmd(cmd, path) {
         cmd == 'newstation' ? notify('creating_station') : notify('updating_station');
         $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(return_msg) {
             RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
-            return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, 5000);
+            return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, '5_seconds');
             $('#ra-refresh').click();
         }, 'json');
 	}
@@ -2624,7 +2624,7 @@ $('#btn-preferences-update').click(function(e){
                 loadLibrary();
             }
             else if (regenThumbsReqd) {
-                notify('regen_thumbs', 'Thumbnails must be regenerated after changing this setting', 5000);
+                notify('regen_thumbs', 'Thumbnails must be regenerated after changing this setting', '5_seconds');
             }
             else {
                 notify('settings_updated');
@@ -2797,13 +2797,13 @@ $('body').on('click', '.dropdown-menu .custom-select a', function(e) {
 
 $('#system-restart').click(function(e) {
 	UI.restart = 'restart';
-	notify('restart', '', 8000);
+	notify('restart', '', '5_seconds');
     $.get('command/moode.php?cmd=reboot');
 });
 
 $('#system-shutdown').click(function(e) {
 	UI.restart = 'shutdown';
-    notify('shutdown', '', 8000);
+    notify('shutdown', '', '5_seconds');
     $.get('command/moode.php?cmd=poweroff');
 });
 
