@@ -424,7 +424,7 @@ $_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2f
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
 $_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs2\" value=\"0\" " . "checked=\"checked\"".">\n";
 $result = sysCmd("df | grep root | awk '{print $2}'");
-$_expandrootfs_msg = $result[0] > 3500000 ? 'File system has been expanded' : 'File system has not been expanded yet';
+$_expandrootfs_msg = $result[0] > 5000000 ? 'File system has been expanded' : 'File system has not been expanded yet';
 
 // USB boot
 $model = substr($_SESSION['hdwrrev'], 3, 1);
