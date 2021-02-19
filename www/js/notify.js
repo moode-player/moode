@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 
 function notify(cmd, msg, duration) {
@@ -76,8 +74,18 @@ function notify(cmd, msg, duration) {
     }
 
     if (typeof duration == 'undefined') {
-        duration = 2000;
+        duration = 2000; // Default 2 seconds
     }
+    else if (duration == '5_seconds') {
+        duration = 5000;
+    }
+    else if (duration == '10_seconds') {
+        duration = 10000;
+    }
+    else if (duration == 'infinite') {
+        duration = 86400000; // 24 hours
+    }
+
 	// override and combine title and message on one line
 	if (cmd == 'update') {
 		msg = 'Path: ' + msg;
