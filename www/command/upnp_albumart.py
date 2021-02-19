@@ -15,7 +15,7 @@ import upnpp
 def usage():
     prog = os.path.basename(__file__)
     debug("Usage: %s devname" % prog)
-    sys,exit(1)
+    sys.exit(1)
 
 
 def artFromMeta(metadata):
