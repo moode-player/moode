@@ -89,6 +89,7 @@ else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['
 		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
+		$cdsp->reloadConfig();
 	}
 	$selectedConfig = $configFileBaseName;
 	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $configFileBaseName . '\" completed');
