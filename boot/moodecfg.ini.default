@@ -1,14 +1,14 @@
 ; #########################################
 ; Copy this file to /boot/moodecfg.ini
 ; It will be processed at startup and the
-; system will automaticly Restart.
+; system will automatically Restart.
 ;
 ; All param = "value" pairs must be present.
 ; Set wlanssid = blank to start AP mode.
 ; Example: wlanssid = ""
 ;
-; Moode Release : 7.0.0 2020-12-15
-; Create date	: 2020-12-08 09:33:28
+; Moode Release : 7.1.0 2021-MM-DD
+; Create date	: 2021-02-20 09:44:06
 ;
 ; ##########################################
 [Names]
@@ -31,20 +31,31 @@ led_state = "1,1"
 localui = "0"
 p3wifi = "1"
 p3bt = "1"
-expandfs ="0"
+expandfs ="1"
 
 [I2S Device]
 i2sdevice = "none"
 
 [Sound]
+autoplay = "0"
+mpdcrossfade = "0"
 crossfeed = "Off"
 invert_polarity = "0"
 alsaequal = "Off"
 eqfa12p = "Off"
+camilladsp_quickconv = "-12;Sennheiser_HD800S.wav;Sennheiser_HD800S.wav;S16LE"
+cdsp_fix_playback = "Yes"
+camilladsp = "off"
+volume_step_limit = "10"
+volume_mpd_max = "100"
+volume_db_display = "0"
+ashufflesvc = "0"
+ashuffle_mode = "Track"
+ashuffle_filter = "None"
 
 [MPD]
 mixer_type = "software"
-device = "1"
+device = "0"
 audio_output_format = "disabled"
 selective_resample_mode = "0"
 sox_quality = "high"
@@ -55,6 +66,15 @@ sox_passband_end = "95"
 sox_stopband_begin = "100"
 sox_attenuation = "0"
 sox_flags = "0"
+dop = "no"
+replaygain = "off"
+replaygain_preamp = "0"
+volume_normalization = "no"
+audio_buffer_size = "4096"
+max_output_buffer_size = "131072"
+max_playlist_length = "16384"
+input_cache = "Disabled"
+log_level = "default"
 
 [Renderers]
 btsvc = "0"
@@ -72,18 +92,29 @@ upnpsvc = "0"
 dlnasvc = "0"
 upnp_browser = "0"
 
+[Network (eth0)]
+ethmethod = "dhcp"
+ethipaddr = ""
+ethnetmask = ""
+ethgateway = ""
+ethpridns = ""
+ethsecdns = ""
+
 [Network (wlan0)]
+wlanmethod = "dhcp"
+wlanipaddr = ""
+wlannetmask = ""
+wlangateway = ""
+wlanpridns = ""
+wlansecdns = ""
 wlanssid = "None (activates AP mode)"
 wlanpwd = ""
 wlansec = "wpa"
-wlancountry = "US"
 
 [Network (apd0)]
 apdssid = "Moode"
 apdpwd = ""
 apdchan = "6"
-
-[Preferences]
 
 [Appearance]
 themename = "Default"
@@ -111,7 +142,7 @@ library_hiresthm = "Auto"
 library_thumbnail_columns = "6/2 (Default)"
 
 [Library (Advanced)]
-library_tagview_artist = "Album Artist"
+library_tagview_artist = "Artist"
 library_misc_options = "No,Album@Artist (Default)"
 library_ignore_articles = "a,an,the"
 library_show_genres = "Yes"
@@ -120,9 +151,11 @@ library_ellipsis_limited_text = "No"
 library_utf8rep = "No"
 
 [Internal]
-first_use_help = "No"
+first_use_help = "Yes"
 
 [Sources]
+usb_auto_updatedb = "0"
+cuefiles_ignore = "1"
 
 [EQP]
 eqp12_curve_name[0] = "Default curve"

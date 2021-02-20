@@ -3404,7 +3404,7 @@ function autoconfigExtract() {
 	; #########################################
 	; Copy this file to /boot/moodecfg.ini
 	; It will be processed at startup and the
-	; system will automaticly Restart.
+	; system will automatically Restart.
 	;
 	; All param = "value" pairs must be present.
 	; Set wlanssid = blank to start AP mode.
@@ -3423,20 +3423,22 @@ function autoconfigExtract() {
 	foreach ($configurationHandlers as &$config) {
 		$values = array();
 		// Print new section header
-		if( is_string($config) ) {
+		if(is_string($config)) {
 			$autoconfigstring = $autoconfigstring . "\n[" . $config. "]\n";
-		} else {
-			if( !array_key_exists('custom_write', $config)) {
+		}
+		else {
+			if(!array_key_exists('custom_write', $config)) {
 				foreach ($config['requires'] as $config_name) {
 					$config_key = array_key_exists('session_var', $config) ? $config['session_var'] : $config_name;
-					if( array_key_exists($config_key, $_SESSION) ) {
-						$autoconfigstring = $autoconfigstring . $config_key. " = \"" . $_SESSION[$config_key] . "\"\r\n";
+					if(array_key_exists($config_key, $_SESSION)) {
+						$autoconfigstring = $autoconfigstring . $config_key. " = \"" . $_SESSION[$config_key] . "\"\n";
 					}
 				}
-			} else {
+			}
+			else {
 				$autoconfigstring = $autoconfigstring . $config['custom_write'](
-					              array_merge($config['requires'],
-					              array_key_exists('optionals', $config) ? array_keys($optionals): []  ) );
+					array_merge($config['requires'],
+					array_key_exists('optionals', $config) ? array_keys($optionals) : []));
 			}
 		}
 	}
