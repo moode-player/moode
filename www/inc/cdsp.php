@@ -68,7 +68,6 @@ class CamillaDsp {
             if($fhandle) {
                 while (!feof($fhandle ) ) {
                     $line = fgets($fhandle);
-                    // print($line);
                     if ($formatCount<2 && strpos($line, 'format: ') !== false) {
                         $lines[] = explode(":", $line)[0] . ": ".$useFormat ."\n";
                         $formatCount++;
@@ -96,12 +95,21 @@ class CamillaDsp {
 
             $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . $configname;
             $configfilename_escaped = str_replace ('/', '\/', $configfilename);
-            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename_escaped . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
             if(is_file($configfilename)) {
                 syscmd("sudo ln -s -f \"" . $configfilename . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
             }
+            $configfilename_escaped = str_replace ('/', '\/', $this->CAMILLAGUI_WORKING_CONGIG);
+            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename_escaped . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
+
         }
+
         $this->configfile = $configname;
+    }
+
+    function reloadConfig() {
+        if( $this->configfile!= 'off') {
+            syscmd('sudo killall -s SIGHUP camilladsp');
+        }
     }
 
     function getConfig() {
@@ -155,7 +163,9 @@ class CamillaDsp {
 
         $newLines = str_replace( $search, $replaceWith, $lines );
 
-        file_put_contents ( $configFile, $newLines) ;
+        file_put_contents ( $configFile .'.tmp', $newLines) ;
+        sysCmd('sudo mv "' . $configFile . '.tmp" "' . $configFile . '"' );
+        sysCmd('sudo chmod a+rw "' . $configFile . '"' );
     }
 
     function copyConfig($source, $destination) {
