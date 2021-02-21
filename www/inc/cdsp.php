@@ -334,7 +334,7 @@ class CamillaDsp {
            'FLOAT64LE',
            'FLOATLE',
            'S32LE',
-           'S243LE',
+           'S24LE3',
            'S24LE',
            'S16LE'
         );
