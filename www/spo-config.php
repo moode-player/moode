@@ -58,7 +58,7 @@ $_select['volume_curve'] .= "<option value=\"fixed\" " . (($cfg_spotify['volume_
 // volume normalization
 $_select['volume_normalization'] .= "<option value=\"Yes\" " . (($cfg_spotify['volume_normalization'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['volume_normalization'] .= "<option value=\"No\" " . (($cfg_spotify['volume_normalization'] == 'No') ? "selected" : "") . ">No</option>\n";
-// ormalization pregain
+// normalization pregain
 $_select['normalization_pregain'] = $cfg_spotify['normalization_pregain'];
 // Autoplay
 $_select['autoplay'] .= "<option value=\"Yes\" " . (($cfg_spotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";

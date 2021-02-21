@@ -449,7 +449,7 @@ INSERT INTO cfg_spotify (id, param, value) VALUES (1, 'bitrate', '160');
 INSERT INTO cfg_spotify (id, param, value) VALUES (2, 'initial_volume', '0');
 INSERT INTO cfg_spotify (id, param, value) VALUES (3, 'volume_curve', 'log');
 INSERT INTO cfg_spotify (id, param, value) VALUES (4, 'volume_normalization', 'No');
-INSERT INTO cfg_spotify (id, param, value) VALUES (5, 'normalization_pregain', '0');
+INSERT INTO cfg_spotify (id, param, value) VALUES (5, 'normalization_pregain', '3');
 INSERT INTO cfg_spotify (id, param, value) VALUES (6, 'autoplay', 'No');
 
 -- Table: cfg_network
