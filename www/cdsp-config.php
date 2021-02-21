@@ -45,12 +45,18 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	if (isset($_POST['cdsp-mode'])) {
+		$currentMode = $_SESSION['camilladsp'];
 		playerSession('write', 'camilladsp', $_POST['cdsp-mode']);
 		$cdsp->selectConfig($_POST['cdsp-mode']);
 		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
-		submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
+
+		if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+			submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
+		} else {
+			$cdsp->reloadConfig();
+		}
 	}
 
 	if (isset($_POST['cdsp_playbackdevice'])) {
@@ -83,6 +89,7 @@ else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['
 		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
+		$cdsp->reloadConfig();
 	}
 	$selectedConfig = $configFileBaseName;
 	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $configFileBaseName . '\" completed');
