@@ -1245,7 +1245,8 @@ $('#radio-manager-btn').click(function(e) {
         else {
             var recorderStatusList =
             '<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">On</span></a></li>' +
-            '<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Off</span></a></li>'
+            '<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Off</span></a></li>' +
+            '<li class="modal-dropdown-text"><a href="#notarget" data-cmd="recorder-status-sel"><span class="text">Uninstall recorder</span></a></li>'
         }
         $('#recorder-status-list').html(recorderStatusList);
         $('#recorder-status span').text(SESSION.json['recorder_status']);
@@ -1279,10 +1280,6 @@ $('#btn-upd-radio-manager').click(function(e) {
         'recorder_status': SESSION.json['recorder_status'],
         'recorder_storage': SESSION.json['recorder_storage']
          }, function() {
-            setTimeout(function() {
-                $('#ra-refresh').click();
-            }, DEFAULT_TIMEOUT);
-
             if (recorderStatus == 'Install recorder') {
                 $.ajax({
             		type: 'GET',
@@ -1292,10 +1289,13 @@ $('#btn-upd-radio-manager').click(function(e) {
             		cache: false,
             		success: function(msg_key) {
                         if (msg_key == 'recorder_installed') {
-                            $('#stream-recorder-options').show();
-                            $('#context-menu-stream-recorder').show();
+                            $('#stream-recorder-options, #context-menu-stream-recorder').show();
+                            $.post('command/moode.php?cmd=updcfgsystem', {'recorder_storage': '/mnt/SDCARD'});
+                            notify(msg_key, '', '5_seconds');
                         }
-                        notify(msg_key);
+                        else {
+                            notify(msg_key);
+                        }
             		},
             		error: function() {
                         // A 404 on recorder_cmd.php so we revert to 'not installed'
@@ -1304,6 +1304,11 @@ $('#btn-upd-radio-manager').click(function(e) {
                         notify('recorder_plugin_na');
             		}
             	});
+            }
+            else if (recorderStatus == 'Uninstall recorder') {
+                $.post('command/recorder_cmd.php?cmd=recorder_uninstall');
+                $('#stream-recorder-options, #context-menu-stream-recorder').hide();
+                notify('recorder_uninstalled', '', '5_seconds');
             }
             else if (recorderStorageChange === true) {
                 $.post('command/recorder_cmd.php?cmd=recorder_storage_change');
@@ -1340,6 +1345,9 @@ $('#btn-upd-radio-manager').click(function(e) {
             }
             else {
                 notify('settings_updated');
+                setTimeout(function() {
+                    $('#ra-refresh').click();
+                }, DEFAULT_TIMEOUT);                
             }
         }
     );
