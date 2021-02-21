@@ -254,13 +254,13 @@ function delete_session_var($argv) {
 }
 
 function audio_formats($option) {
-	$card_num = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
-	$audio_output = trim(shell_exec('cat /proc/asound/card0/pcm0p/sub0/hw_params | grep closed'));
+	$cardnum = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
+	$audio_output = trim(shell_exec('cat /proc/asound/card' . $cardnum . '/pcm0p/sub0/hw_params | grep closed'));
 
 	if ($audio_output == 'closed') {
 		// Just formats for the configured device
 		if ($option == '-f') {
-			$result = shell_exec('alsacap -C ' . $card_num . ' -D 0 2>&1 | grep "Sample formats:"');
+			$result = shell_exec('alsacap -C ' . $cardnum . ' -D 0 2>&1 | grep "Sample formats:"');
 			if (!empty($result)) {
 				echo explode(': ', $result)[1];
 			}
@@ -268,7 +268,7 @@ function audio_formats($option) {
 				echo "Unable to detect formats\n";
 			}
 		}
-		// Full info
+		// Full info: $option == '-F'
 		else {
 			$result = shell_exec('alsacap 2>&1');
 			echo $result;
