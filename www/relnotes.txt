@@ -60,6 +60,7 @@ Bug fixes
 - FIX: Order of excution for starting watchdog
 - FIX: Airplay, Spotify not able to output to Crossfeed DSP
 - FIX: Back link not working in CamillaDSP Config screen
+- FIX: Wrong cardnum being used in moodeutl to get hw_params
 
 ########################################################
 //
