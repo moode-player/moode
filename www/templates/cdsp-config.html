@@ -211,13 +211,14 @@
 		</fieldset>
 	</form>
 
-	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+	<form class="form-horizontal" action="#conv_file" method="post" enctype="multipart/form-data">
+		<a id="conv_file"></a>
 		<fieldset>
-			<legend>Convolution file</legend>
+			<legend><a href="#conv_file"></a>Convolution file</legend>
 			<div class="control-group">
 				<label class="control-label" for="cdsp-coeffs">Impulse response</label>
 				<div class="controls" >
-					<select id="cdsp-coeffs" class="input-xxlarge" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );$('#coeff-info').html('');$('#btn-check-coeff').click();">
+					     <select id="cdsp-coeffs" class="input-xxlarge" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );$('#btn-check-coeff').click();">
 						$_select[cdsp_coeffs]
 					</select>
 					<div id="coeff-info" >
@@ -248,7 +249,8 @@
 		</fieldset>
 	</form>
 
-	<form class="form-horizontal" action="" method="post" >
+	<form class="form-horizontal" action="#pipeline_editor" method="post" >
+		<a id="pipeline_editor"></a>
 		<fieldset>
 			<legend>Pipeline editor</legend>
 			<div class="control-group">
