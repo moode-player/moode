@@ -1254,6 +1254,9 @@ $('#radio-manager-btn').click(function(e) {
             $('#recorder-storage-list').html(recorderStoragePaths);
             $('#recorder-storage span').text(SESSION.json['recorder_storage']);
         });
+        $.getJSON('command/recorder_cmd.php?cmd=recorder_untagged_file_count', function(recorderUntaggedFileCount) {
+            $('#untagged-file-count').text('There are ' + recorderUntaggedFileCount + ' untagged recordings');
+        });
         $('#radio-manager-modal').modal();
     }
     else {
@@ -1347,7 +1350,7 @@ $('#btn-upd-radio-manager').click(function(e) {
                 notify('settings_updated');
                 setTimeout(function() {
                     $('#ra-refresh').click();
-                }, DEFAULT_TIMEOUT);                
+                }, DEFAULT_TIMEOUT);
             }
         }
     );
