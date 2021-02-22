@@ -26,7 +26,7 @@ require_once dirname(__FILE__) . '/inc/cdsp.php';
 playerSession('open', '' ,'');
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 $selectedConfig = isset($_POST['cdsp-config']) ? $_POST['cdsp-config']: NULL;
-
+$selected_coeff = isset($_POST['cdsp-coeffs']) ? $_POST['cdsp-coeffs']: NULL;
 /**
  * Post parameter processing
  */
@@ -128,31 +128,30 @@ else if (isset($_FILES['coeffsfile']) && isset($_POST['import']) && $_POST['impo
 	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffsfile"]["name"];
 	move_uploaded_file($_FILES["coeffsfile"]["tmp_name"], $configFileName);
 	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["coeffsfile"]["name"] . '\" completed');
+
+	$selected_coeff = $_FILES["coeffsfile"]["name"];
 }
 // Coeffs export (Download)
-else if (isset($_POST['cdsp-coeffs']) && isset($_POST['export']) && $_POST['export'] == '1') {
-	$configFileName = $cdsp->getCoeffsLocation() . $_POST['cdsp-coeffs'];
+else if ($selected_coeff && isset($_POST['export']) && $_POST['export'] == '1') {
+	$configFileName = $cdsp->getCoeffsLocation() . $selected_coeff;
 
 	header("Content-Description: File Transfer");
 	header("Content-Type: application/binary");
-	header("Content-Disposition: attachment; filename=\"". $_POST['cdsp-coeffs'] ."\"");
+	header("Content-Disposition: attachment; filename=\"". $selected_coeff ."\"");
 
 	readfile ($configFileName);
  	exit();
 }
 // Coeffs remove
-else if (isset($_POST['cdsp-coeffs']) && isset($_POST['remove']) && $_POST['remove'] == '1') {
-	$configFileName = $cdsp->getCoeffsLocation() . $_POST['cdsp-coeffs'];
+else if ($selected_coeff && isset($_POST['remove']) && $_POST['remove'] == '1') {
+	$configFileName = $cdsp->getCoeffsLocation() . $selected_coeff;
 	unlink($configFileName);
-	$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $_POST['cdsp-coeffs'] . '\" completed');
+	$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $selected_coeff . '\" completed');
+	$selected_coeff = NULL;
 }
-else if (isset($_POST['cdsp-coeffs']) && isset($_POST['info']) && $_POST['info'] == '1') {
-	$coeffInfo = $cdsp->coeffInfo($_POST['cdsp-coeffs']);
+else if ($selected_coeff && isset($_POST['info']) && $_POST['info'] == '1') {
+// no implementation required, just a placeholder
 
-	$coeffInfoHtml ='Info:<br/>';
-	foreach ($coeffInfo as  $param=>$value) {
-		$coeffInfoHtml .= ''. $param . ' = ' . $value. '<br/>';
-	}
 }
 // camillagui status toggle
 else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) && $_POST['updatecamillagui'] == '1') {
@@ -189,10 +188,24 @@ foreach ($configs as $config_file=>$config_name) {
 $configs = $cdsp->getAvailableCoeffs();
 $_selected_coeff = NULL;
 foreach ($configs as $config_file=>$config_name) {
-	$selected = ($_POST['cdsp-coeffs'] == $config_file || (isset($_POST['cdsp-coeffs']) == false && $_selected_coeff == NULL) ) ? 'selected' : '';
+	$selected = ($selected_coeff == $config_file || ($selected_coeff == NULL && $_selected_coeff == NULL) ) ? 'selected' : '';
 	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_file);
 	if ($selected == 'selected') {
 		$_selected_coeff = $config_file;
+	}
+}
+
+if( $_selected_coeff ) {
+	$coeffInfo = $cdsp->coeffInfo($_selected_coeff);
+	$coeffInfoHtml = 'Info:<br/>';
+	foreach ($coeffInfo as  $param=>$value) {
+
+		if($param == 'channels' && $value != 1) {
+			$coeffInfoHtml .= "<span style='color: red'>&#10007;</span> " . $param . ' = ' . $value ." (WARNING: CamillaDSP can only handle files with 1 channel)<br/>";
+
+		} else {
+			$coeffInfoHtml .= ''. $param . ' = ' . $value . '<br/>';
+		}
 	}
 }
 
