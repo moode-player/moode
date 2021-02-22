@@ -288,7 +288,7 @@ class CamillaDsp {
         if($bits)
             $mediaInfo['bitdepth'] = $bits . ' bits';
         if($ch)
-            $mediaInfo['channels'] = $ch;
+            $mediaInfo['channels'] = intval($ch);
         if($siz != NULL)
             $mediaInfo['size'] = sprintf('%.1f kB', $siz/1024.0) ;
 
@@ -373,6 +373,30 @@ class CamillaDsp {
                  && file_exists('/opt/camillagui/config/gui-config.yml.disabled')
                  && file_exists('/opt/camillagui/config/gui-config.yml') == false ) {
             syscmd("sudo mv /opt/camillagui/config/gui-config.yml.disabled /opt/camillagui/config/gui-config.yml");
+        }
+    }
+
+    function splitWaveFile($coefffile) {
+        $info = $this->coeffInfo($coefffile);
+
+        if( isset($info['extension']) && isset($info['channels']) && strtolower($info['extension']) == 'wav' && $info['channels'] == 2 )
+        {
+            $path_parts = pathinfo($coefffile);
+            $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
+            $fileNameL = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_L.' . $path_parts['extension'];
+            $fileNameR = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_R.' . $path_parts['extension'];
+            $cmd = 'ffmpeg -v 30 -i "' . $fileName .'" -map_channel 0.0.0 ' . $fileNameL .' -map_channel 0.0.1 ' . $fileNameR;
+            exec($cmd . " 2>&1", $output);
+            if( file_exists($fileNameL) && file_exists($fileNameR)) {
+                unlink($fileName);
+                return NULL;
+            }
+            else {
+                return $output;
+            }
+        }
+        else {
+            return ['File is not a stereo wave file.'];
         }
     }
 
