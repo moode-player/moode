@@ -217,7 +217,7 @@
 			<div class="control-group">
 				<label class="control-label" for="cdsp-coeffs">Impulse response</label>
 				<div class="controls" >
-					<select id="cdsp-coeffs" class="input-xxlarge" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );$('#coeff-info').html('');">
+					<select id="cdsp-coeffs" class="input-xxlarge" name="cdsp-coeffs" onchange="$('#coeff_remove_id').val($('#cdsp-coeffs :selected').val() );$('#coeff-info').html('');$('#btn-check-coeff').click();">
 						$_select[cdsp_coeffs]
 					</select>
 					<div id="coeff-info" >
@@ -236,13 +236,12 @@
 						<input type="file" id="coeffsfile" accept=".wav,.txt,.csv" name="coeffsfile" style="display:none" onchange="$('#btn-import-coeff').click();" >
 						<button id="btn-import-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
 					</div>&nbsp;&nbsp;
-					<button class="btn btn-medium btn-primary btn-submit" type="submit" name="info" value="1">Info</button>
+					<button id="btn-check-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="info" value="1" style="display:none" >Info</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-convolution-actions" class="help-block-configs help-block-margin legend-info-help hide">
 							<b>Delete:&nbsp;</b>Delete the selected convolution file.<br/>
 							<b>Download:&nbsp;</b>Download the selected convolution file.<br/>
 							<b>Upload:&nbsp;</b>Upload a convolution file, existing ones are overwritten.<br/>
-							<b>Info:&nbsp;</b>Show information about the convolution file.
 	 			    </div>
 				</div>
 			</div>
