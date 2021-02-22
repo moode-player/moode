@@ -128,6 +128,8 @@ else if (isset($_FILES['coeffsfile']) && isset($_POST['import']) && $_POST['impo
 	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffsfile"]["name"];
 	move_uploaded_file($_FILES["coeffsfile"]["tmp_name"], $configFileName);
 	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["coeffsfile"]["name"] . '\" completed');
+
+	$selected_coeff = $_FILES["coeffsfile"]["name"];
 }
 // Coeffs export (Download)
 else if ($selected_coeff && isset($_POST['export']) && $_POST['export'] == '1') {
@@ -145,14 +147,11 @@ else if ($selected_coeff && isset($_POST['remove']) && $_POST['remove'] == '1') 
 	$configFileName = $cdsp->getCoeffsLocation() . $selected_coeff;
 	unlink($configFileName);
 	$_SESSION['notify']['title'] = htmlentities('Remove configuration \"' . $selected_coeff . '\" completed');
+	$selected_coeff = NULL;
 }
 else if ($selected_coeff && isset($_POST['info']) && $_POST['info'] == '1') {
-	$coeffInfo = $cdsp->coeffInfo($selected_coeff);
+// no implementation required, just a placeholder
 
-	$coeffInfoHtml ='Info:<br/>';
-	foreach ($coeffInfo as  $param=>$value) {
-		$coeffInfoHtml .= ''. $param . ' = ' . $value. '<br/>';
-	}
 }
 // camillagui status toggle
 else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) && $_POST['updatecamillagui'] == '1') {
@@ -193,6 +192,20 @@ foreach ($configs as $config_file=>$config_name) {
 	$_select['cdsp_coeffs'] .= sprintf("<option value='%s' %s>%s</option>\n", $config_file, $selected, $config_file);
 	if ($selected == 'selected') {
 		$_selected_coeff = $config_file;
+	}
+}
+
+if( $_selected_coeff ) {
+	$coeffInfo = $cdsp->coeffInfo($_selected_coeff);
+	$coeffInfoHtml = 'Info:<br/>';
+	foreach ($coeffInfo as  $param=>$value) {
+
+		if($param == 'channels' && $value != 1) {
+			$coeffInfoHtml .= "<span style='color: red'>&#10007;</span> " . $param . ' = ' . $value ." (WARNING: CamillaDSP can only handle files with 1 channel)<br/>";
+
+		} else {
+			$coeffInfoHtml .= ''. $param . ' = ' . $value . '<br/>';
+		}
 	}
 }
 
