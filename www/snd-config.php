@@ -546,7 +546,7 @@ $_select['rotaryenc0'] .= "<input type=\"radio\" name=\"rotaryenc\" id=\"toggler
 $_select['rotenc_params'] = $_SESSION['rotenc_params'];
 // Crossfade
 $_mpdcrossfade = $_SESSION['mpdcrossfade'];
-// NOTE: Only one of polarity inversion, crossfeed, alsaequal or eqfa12p can be on
+// NOTE: Only one of the DSP'can be on
 $_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 $_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 $_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
