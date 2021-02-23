@@ -2073,6 +2073,26 @@
 								- <b>Album:</b> Recorded YYYY-MM-DD<br>
 								- <b>Title:</b> Title
 							</span>
+						</div>
+
+						<label class="control-label" for="recorder-album-tag">Album tag</label>
+						<div class="controls">
+							<div class="btn-group bootstrap-select select-medium">
+								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+									<div id="recorder-album-tag" class="filter-option pull-left">
+										<span></span>
+									</div>&nbsp;
+									<div class="caret"></div>
+								</button>
+								<div class="dropdown-menu open">
+									<ul id="recorder-album-tag-list" class="dropdown-menu custom-select inner" role="menu">
+									</ul>
+								</div>
+							</div>
+							<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-album-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-recorder-album-tag" class="help-block hide">
+								<span id="selected-album-tag"></span>
+							</span>
 							<span id="untagged-file-count" class="help-block"></span>
 						</div>
 

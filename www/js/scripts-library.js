@@ -1254,6 +1254,11 @@ $('#radio-manager-btn').click(function(e) {
             $('#recorder-storage-list').html(recorderStoragePaths);
             $('#recorder-storage span').text(SESSION.json['recorder_storage']);
         });
+        $.getJSON('command/recorder_cmd.php?cmd=recorder_album_tag_list', function(recorderAlbumTagList) {
+            $('#recorder-album-tag-list').html(recorderAlbumTagList);
+            $('#recorder-album-tag span').text(SESSION.json['recorder_album_tag']);
+            $('#selected-album-tag').text(SESSION.json['recorder_album_tag']);
+        });
         $.getJSON('command/recorder_cmd.php?cmd=recorder_untagged_file_count', function(recorderUntaggedFileCount) {
             $('#untagged-file-count').text('There are ' + recorderUntaggedFileCount + ' untagged recordings');
         });
@@ -1275,13 +1280,15 @@ $('#btn-upd-radio-manager').click(function(e) {
         var recorderStorageChange = SESSION.json['recorder_storage'] != $('#recorder-storage span').text() ? true : false;
         SESSION.json['recorder_status'] = ($('#recorder-status span').text() == 'Install recorder' || recorderStorageChange === true) ? 'Off' : $('#recorder-status span').text();
         SESSION.json['recorder_storage'] = $('#recorder-storage span').text();
+        SESSION.json['recorder_album_tag'] = $('#recorder-album-tag span').text();
     }
 
     $.post('command/moode.php?cmd=updcfgsystem', {
         'radioview_sort_group': SESSION.json['radioview_sort_group'],
         'radioview_show_hide': SESSION.json['radioview_show_hide'],
         'recorder_status': SESSION.json['recorder_status'],
-        'recorder_storage': SESSION.json['recorder_storage']
+        'recorder_storage': SESSION.json['recorder_storage'],
+        'recorder_album_tag': SESSION.json['recorder_album_tag']
          }, function() {
             if (recorderStatus == 'Install recorder') {
                 $.ajax({

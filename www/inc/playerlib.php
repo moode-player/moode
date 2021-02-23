@@ -113,6 +113,9 @@ const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
 const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
 
+// Other constants
+const RECORDER_DEFAULT_ALBUM_TAG	= 'Recorded YYYY-MM-DD';
+
 // Reserved root directory names
 $ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
 
