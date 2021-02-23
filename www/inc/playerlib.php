@@ -1925,7 +1925,7 @@ function updMpdConf($i2sdevice) {
 				$data .= $cfg['value'] == 'disabled' ? '' : $cfg['param'] . " \"" . $cfg['value'] . "\"\n";
 				break;
 			case 'sox_quality':
-				$sox_quality = ($cfg['value'] == 'custom' && ($patch_id & PATCH_SOX_CUSTOM_RECIPE)) ? $cfg['value'] : 'high';
+				$sox_quality = $cfg['value'];
 				break;
 			case 'sox_multithreading':
 				$sox_multithreading = $cfg['value'];
