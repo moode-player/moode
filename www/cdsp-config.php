@@ -153,6 +153,16 @@ else if ($selected_coeff && isset($_POST['info']) && $_POST['info'] == '1') {
 // no implementation required, just a placeholder
 
 }
+else if ($selected_coeff && isset($_POST['split']) && $_POST['split'] == '1') {
+ 	$result = $cdsp->splitWaveFile($selected_coeff);
+	 if($result == NULL) {
+		$_SESSION['notify']['title'] =   htmlentities('Split wave file \"' . $selected_coeff . '\" is succesfull.');
+	}else {
+		$_SESSION['notify']['title'] = htmlentities('Split wave file \"' . $selected_coeff . '\" has failed');
+		$_SESSION['notify']['msg'] = htmlentities(implode('<br>', $result));
+	}
+}
+
 // camillagui status toggle
 else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) && $_POST['updatecamillagui'] == '1') {
  	$cdsp->changeCamillaStatus($_POST['camillaguistatus']);
@@ -195,6 +205,7 @@ foreach ($configs as $config_file=>$config_name) {
 	}
 }
 
+$btn_conv_style = 'style="display: none;"';
 if( $_selected_coeff ) {
 	$coeffInfo = $cdsp->coeffInfo($_selected_coeff);
 	$coeffInfoHtml = 'Info:<br/>';
@@ -202,7 +213,7 @@ if( $_selected_coeff ) {
 
 		if($param == 'channels' && $value != 1) {
 			$coeffInfoHtml .= "<span style='color: red'>&#10007;</span> " . $param . ' = ' . $value ." (WARNING: CamillaDSP can only handle files with 1 channel)<br/>";
-
+			$btn_conv_style = ""; //unhide
 		} else {
 			$coeffInfoHtml .= ''. $param . ' = ' . $value . '<br/>';
 		}
