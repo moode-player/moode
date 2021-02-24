@@ -1,0 +1,30 @@
+
+devices:
+  samplerate: 44100
+  chunksize: 2048
+  queuelimit: 1
+  capture:
+    type: File
+    channels: 2
+    filename: "/dev/stdin"
+    format: S16LE
+  playback:
+    type: Alsa
+    channels: 2
+    device: "hw:0,0"
+    format: S16LE
+filters:
+    mastergain:
+        type: Gain
+        parameters:
+            gain: 0
+pipeline:
+  - type: Filter
+    channel: 0
+    names:
+      - mastergain
+  - type: Filter
+    channel: 1
+    names:
+      - mastergain
+

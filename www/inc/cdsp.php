@@ -173,6 +173,10 @@ class CamillaDsp {
         copy($this->CAMILLA_CONFIG_DIR . '/configs/' . $source , $this->CAMILLA_CONFIG_DIR . '/configs/' . $destination);
     }
 
+    function newConfig($configname) {
+        copy($this->CAMILLA_CONFIG_DIR . '/__config_template__.yml' , $this->CAMILLA_CONFIG_DIR . '/configs/' . $configname);
+    }
+
     function detectSupportedSoundFormats() {
         $available_alsa_sample_formats_from_sound_card_as_string = sysCmd('moodeutl -f')[0]; //Sound card sample formats from ALSA
         $available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
