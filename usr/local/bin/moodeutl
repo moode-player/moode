@@ -274,8 +274,18 @@ function audio_formats($option) {
 			echo $result;
 		}
 	}
-	else {
+	else if($option == '-F') {
 		echo "Audio device busy\n" ;
+		echo shell_exec('cat /proc/asound/card' . $cardnum . '/stream0');
+	}
+	else {
+		$audio_format = trim(shell_exec('cat /proc/asound/card' . $cardnum . '/stream0 | grep Format:'));
+		if (!empty($audio_format)) {
+			echo explode(': ', $audio_format)[1] . "\n";
+		}
+		else {
+			echo "Unable to detect formats\n";
+		}
 	}
 }
 
