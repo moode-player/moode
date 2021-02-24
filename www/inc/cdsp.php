@@ -107,7 +107,8 @@ class CamillaDsp {
     }
 
     function reloadConfig() {
-        if( $this->configfile!= 'off') {
+        if( $this->configfile != 'off') {
+            $this->patchRelConvPath($this->getConfig());
             syscmd('sudo killall -s SIGHUP camilladsp');
         }
     }
@@ -170,6 +171,10 @@ class CamillaDsp {
 
     function copyConfig($source, $destination) {
         copy($this->CAMILLA_CONFIG_DIR . '/configs/' . $source , $this->CAMILLA_CONFIG_DIR . '/configs/' . $destination);
+    }
+
+    function newConfig($configname) {
+        copy($this->CAMILLA_CONFIG_DIR . '/__config_template__.yml' , $this->CAMILLA_CONFIG_DIR . '/configs/' . $configname);
     }
 
     function detectSupportedSoundFormats() {
@@ -398,6 +403,29 @@ class CamillaDsp {
         else {
             return ['File is not a stereo wave file.'];
         }
+    }
+
+    /**
+     * CamillaGUI requires absolute path names, convert rel coeff files to absolute
+     */
+    function patchRelConvPath($config) {
+        if( $config != NULL && $config != 'off' && $config != 'custom') {
+            $configfile =  $this->getConfigsLocationsFileName() . $config;
+            if( file_exists($configfile)) {
+                $coeffsdir  = str_replace ('/', '\/', $this->CAMILLA_CONFIG_DIR . '/coeffs' );
+                $cmd = "sed -i -s 's/[.][.]\/coeffs/" . $coeffsdir. "/g' " . $configfile;
+                return $this->userCmd($cmd);
+            }
+            else {
+                return 99;
+            }
+        }
+        return 0;
+    }
+
+    function userCmd($cmd) {
+        exec($cmd, $output, $exitcode);
+        return $exitcode;
     }
 
     // placeholders for autoconfig support, empty for now

@@ -90,6 +90,8 @@ else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['
 			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
 		$cdsp->reloadConfig();
+	} else {
+		$cdsp->patchRelConvPath($configFileBaseName);
 	}
 	$selectedConfig = $configFileBaseName;
 	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $configFileBaseName . '\" completed');
@@ -118,6 +120,12 @@ else if ($selectedConfig && isset($_POST['remove']) && $_POST['remove'] == '1') 
 		$_SESSION['notify']['title'] = htmlentities('Cannot remove active configuration \"' . $selectedConfig . '\"');
 	}
 }
+// New pipeline
+else if (isset($_POST['newpipeline']) && $_POST['newpipeline'] == '1') {
+	$cdsp->newConfig($_POST['new-pipelinename'] . '.yml');
+	$selectedConfig = $_POST['new-pipelinename'] . '.yml';
+}
+
 // Copy pipeline
 else if ($selectedConfig && isset($_POST['copypipeline']) && $_POST['copypipeline'] == '1') {
 	$cdsp->copyConfig($selectedConfig, $_POST['new-pipelinename'] . '.yml');
