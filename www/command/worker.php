@@ -137,8 +137,9 @@ workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OF
 // NOTE: Their installer sets the systemd unit to enabled but we need it disabled because we start/stop it via System Config setting
 if (file_exists('/opt/RoonBridge/start.sh') === true) {
 	$_SESSION['roonbridge_installed'] = 'yes';
-	if (empty(sysCmd('systemctl status roonbridge | grep "disabled;"')[0])) {
+	if (sysCmd('systemctl is-enabled roonbridge')[0] == 'enabled') {
 		sysCmd('systemctl disable roonbridge');
+		sysCmd('systemctl stop roonbridge');
 		workerLog('worker: RoonBridge systemd unit set to disabled');
 	}
 }
@@ -554,10 +555,9 @@ else {
 // Start RroonBridge renderer
 if ($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) {
 	if ($_SESSION['roonbridge_installed'] == 'yes') {
-		if (isset($_SESSION['roonbridge_svc']) && $_SESSION['roonbridge_svc'] == 1) {
+		if (isset($_SESSION['rbsvc']) && $_SESSION['rbsvc'] == 1) {
 			$started = ': started';
 			startRoonBridge();
-			workerLog('worker: RoonBridge renderer (started)');
 		}
 		else {
 			$started = '';
@@ -1052,6 +1052,7 @@ function chkRbActive() {
 			// Do this section only once
 			if ($GLOBALS['rbactive'] == '0') {
 				$GLOBALS['rbactive'] = '1';
+				playerSession('write', 'rbactive', '1');
 				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 				sendEngCmd('rbactive1');
 			}
@@ -1060,6 +1061,7 @@ function chkRbActive() {
 			// Do this section only once
 			if ($GLOBALS['rbactive'] == '1') {
 				$GLOBALS['rbactive'] = '0';
+				playerSession('write', 'rbactive', '0');
 				sendEngCmd('rbactive0');
 				if ($_SESSION['rsmafterrb'] == 'Yes') {
 					sysCmd('mpc play');
