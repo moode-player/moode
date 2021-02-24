@@ -268,24 +268,24 @@ function audio_formats($option) {
 				echo "Unable to detect formats\n";
 			}
 		}
-		// Full info: $option == '-F'
+		// $option == '-F': full info for all devices
 		else {
 			$result = shell_exec('alsacap 2>&1');
 			echo $result;
 		}
 	}
-	else if($option == '-F') {
-		echo "Audio device busy\n" ;
-		echo shell_exec('cat /proc/asound/card' . $cardnum . '/stream0');
-	}
 	else {
-		$audio_format = trim(shell_exec('cat /proc/asound/card' . $cardnum . '/stream0 | grep Format:'));
-		if (!empty($audio_format)) {
-			echo explode(': ', $audio_format)[1] . "\n";
+		if (posix_getuid() != 0){
+			echo "This option requires sudo if the device is in use\n";
+			return;
 		}
-		else {
-			echo "Unable to detect formats\n";
-		}
+
+		$session_id = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+		session_id($session_id);
+		session_start();
+		$formats = $_SESSION['audio_formats'];
+		session_write_close();
+		echo $formats . "\n";
 	}
 }
 

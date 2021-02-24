@@ -100,6 +100,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nInterface\t\t= $iface\c"
 	echo -e "\nMixer name\t\t= $volmixer\c"
 	echo -e "\nHardware mixer\t\t= $hwvol\c"
+	echo -e "\nSupported formats\t= $supported_formats\c"
 	echo -e "\nMax ALSA volume\t\t= $alsavolume_max\c"
 	echo -e "\nMax MPD volume\t\t= $volume_mpd_max\c"
 	echo -e "\nVolume step limit\t= $volume_step_limit\c"
@@ -461,6 +462,9 @@ RPI_GPIO_VER=$(grep -iRl "RPi.GPIO-" /usr/local/lib/python3.7/dist-packages/ | a
 
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"
+
+# Supported audio formats for the configured device
+supported_formats=$(moodeutl -f);
 
 # Moode SQL data
 SQLDB=/var/local/www/db/moode-sqlite3.db

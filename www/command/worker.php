@@ -1488,6 +1488,9 @@ function runQueuedJob() {
 			// Update config file
 			updMpdConf($_SESSION['i2sdevice']);
 
+			// Get audio formats
+			$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
+
 			// Reset hardware volume to 0dB (100) if indicated
 			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['alsavolume'] != 'none') {
 				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);

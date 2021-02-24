@@ -365,7 +365,7 @@ else {
 	$iface = $result[0]['iface'];
 }
 $mixer_name = $_SESSION['amixname'];
-$audio_formats = sysCmd('moodeutl -f')[0];
+$audio_formats = $_SESSION['audio_formats'];
 $hdwr_rev = $_SESSION['hdwrrev'];
 
 $tpl = 'audioinfo.html';
