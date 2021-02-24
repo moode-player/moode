@@ -90,6 +90,8 @@ else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['
 			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 		}
 		$cdsp->reloadConfig();
+	} else {
+		$cdsp->patchRelConvPath($configFileBaseName);
 	}
 	$selectedConfig = $configFileBaseName;
 	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $configFileBaseName . '\" completed');
