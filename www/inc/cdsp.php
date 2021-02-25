@@ -46,6 +46,12 @@ class CamillaDsp {
         $this->configfile =$configfile;
         $this->device = $device;
         $this->quickConvolutionConfig = $this->stringToQuickConvolutionConfig($quickconvfg);
+
+        // Little bit dirty trick:
+        // nginx, camillagui and cdsp not all run as the same user but required
+        // write rights to the same files.
+        // print('chmod -R 666 '. $this->CAMILLA_CONFIG_DIR.'/configs; chmod 666 '. $this->$CAMILLA_CONFIG_DIR.'/coefss/*');
+        sysCmd('chmod 666 '.$this->CAMILLA_CONFIG_DIR.'/configs/*; chmod 666 '.  $this->$CAMILLA_CONFIG_DIR.'/coeffs/*');
     }
 
     /**
