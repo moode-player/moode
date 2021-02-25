@@ -926,9 +926,9 @@ sudo apt-get -y install portaudio19-dev
 
 # Compile librespot
 source $HOME/.cargo/env
-sudo cp ./moode/other/librespot/librespot-dev-6a4bc83.zip ./
-unzip -q ./librespot-dev-6a4bc83.zip
-cd ./librespot-dev
+sudo cp ./moode/other/librespot/librespot-0.1.6.zip ./
+unzip -q ./librespot-0.1.6.zip
+cd ./librespot-0.1.6
 RUSTFLAGS=-Ccodegen-units=1 cargo build --release --features alsa-backend
 
 # Copy binary
