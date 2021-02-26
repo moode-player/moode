@@ -941,7 +941,7 @@ function renderUI() {
     	}
         // RoonBridge renderer
     	if (SESSION.json['rbactive'] == '1') {
-    		inpSrcIndicator('rbactive1', 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="slsvc">disconnect</button>');
+    		inpSrcIndicator('rbactive1', 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbsvc">disconnect</button>');
     	}
 
     	// MPD database update
