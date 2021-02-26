@@ -181,13 +181,7 @@ class CamillaDsp {
     }
 
     function detectSupportedSoundFormats() {
-        $session_id = trim(shell_exec("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
-        session_id($session_id);
-        session_start();
-        $supported_formats = $_SESSION['audio_formats'];
-        session_write_close();
-
-        $available_alsa_sample_formats_from_sound_card_as_string = $supported_formats; //Sound card sample formats from ALSA
+        $available_alsa_sample_formats_from_sound_card_as_string = $_SESSION['audio_formats']; //Sound card sample formats from ALSA
         $available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
         $sound_device_supported_sample_formats = array();
         foreach ($this->alsaToCamillaSampleFormatLut() as $alsa_format => $cdsp_format) {
