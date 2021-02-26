@@ -399,7 +399,7 @@ class CamillaDsp {
             $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
             $fileNameL = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_L.' . $path_parts['extension'];
             $fileNameR = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_R.' . $path_parts['extension'];
-            $cmd = 'ffmpeg -v 30 -i "' . $fileName .'" -map_channel 0.0.0 ' . $fileNameL .' -map_channel 0.0.1 ' . $fileNameR;
+            $cmd = 'ffmpeg -v 30 -i "' . $fileName .'" -map_channel 0.0.0 "' . $fileNameL .'" -map_channel 0.0.1 "' . $fileNameR.'"';
             exec($cmd . " 2>&1", $output);
             if( file_exists($fileNameL) && file_exists($fileNameR)) {
                 unlink($fileName);
