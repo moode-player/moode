@@ -326,7 +326,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (54, 'camilladsp', 'off');
 INSERT INTO cfg_system (id, param, value) VALUES (55, 'cdsp_fix_playback', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '-12;Sennheiser_HD800S.wav;Sennheiser_HD800S.wav;S16LE');
+INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '-22.5;Sennheiser_HD800S_L.wav;Sennheiser_HD800S_R.wav;S16LE');
 INSERT INTO cfg_system (id, param, value) VALUES (57, 'uac2fix', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
 INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');
