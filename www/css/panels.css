@@ -18,8 +18,6 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 
 html, body {background-attachment:fixed;background-size:cover;height:100%;color:#eee;font-family:"Avenir Next", "Lato";font-size:calc(0.45em + 1vmin);padding:0;cursor:default;
@@ -706,3 +704,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 #trackinfo li:nth-child(odd) {background-color:rgba(128,128,128,.05);}
 .controls-select {margin-bottom:5px;}
 .recorder-on {border-bottom: 2px solid var(--accentxts);}
+#selected-album-tag {margin-left:.25em;font-style:italic;}

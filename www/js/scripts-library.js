@@ -1260,7 +1260,7 @@ $('#radio-manager-btn').click(function(e) {
             $('#selected-album-tag').text(SESSION.json['recorder_album_tag']);
         });
         $.getJSON('command/recorder_cmd.php?cmd=recorder_untagged_file_count', function(recorderUntaggedFileCount) {
-            $('#untagged-file-count').text('There are ' + recorderUntaggedFileCount + ' untagged recordings');
+            $('#untagged-file-count').text(recorderUntaggedFileCount);
         });
         $('#radio-manager-modal').modal();
     }

@@ -2048,7 +2048,7 @@
 							</span>
 						</div>
 
-						<label class="control-label" for="tag-recordings">Tag recordings</label>
+						<label class="control-label" for="tag-recordings">Tag <span id="untagged-file-count"></span> recordings</label>
 						<div class="controls">
 							<div class="btn-group bootstrap-select select-medium">
 								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -2070,7 +2070,7 @@
 								- <b>Genre:</b> Recordings<br>
 								- <b>Artist:</b> Artist<br>
 								- <b>AlbumArtist:</b> Recorded Radio<br>
-								- <b>Album:</b> Recorded YYYY-MM-DD<br>
+								- <b>Album:</b> Station name or Recorded [date]<br>
 								- <b>Title:</b> Title
 							</span>
 						</div>
@@ -2091,9 +2091,9 @@
 							</div>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-recorder-album-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-recorder-album-tag" class="help-block hide">
-								<span id="selected-album-tag"></span>
+								Select the name to be used to populate the Album tag.
 							</span>
-							<span id="untagged-file-count" class="help-block"></span>
+							<span id="selected-album-tag" class="help-block"></span>
 						</div>
 
 						<label class="control-label" for="delete-recordings">Delete recordings</label>
