@@ -438,6 +438,7 @@ $cdsp->selectConfig($_SESSION['camilladsp']);
 if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 	$cdsp->setPlaybackDevice($_SESSION['cardnum']);
 }
+unset($cdsp);
 workerLog('worker: CamillaDSP (' . $_SESSION['camilladsp'] . ')');
 
 //
@@ -1593,24 +1594,15 @@ function runQueuedJob() {
 		case 'camilladsp':
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
-			$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
-			$cdsp->selectConfig($_SESSION['camilladsp']);
-			if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-				$cdsp->setPlaybackDevice($_SESSION['cardnum']);
-			}
-
             if ($_SESSION['w_queueargs'] == 'off') {
                 sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
             }
 			else {
 				sysCmd('mpc enable only "' . ALSA_CAMILLADSP . '"');
-
-				sysCmd('systemctl restart mpd');
-				// Wait for mpd to start accepting connections
-				$sock = openMpdSock('localhost', 6600);
-				closeMpdSock($sock);
-				setMpdHttpd();
 			}
+
+			$sock = openMpdSock('localhost', 6600);
+			closeMpdSock($sock);
 
 			if (!empty($playing)) {
 				sysCmd('mpc play');

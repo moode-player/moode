@@ -17,18 +17,18 @@ filters:
     mastergain:
         type: Gain
         parameters:
-            gain: -3
+            gain: -15
     ir_left:
       type: Conv
       parameters:
         type: File
-        filename: ../coeffs/Sennheiser HD 800 S minimum phase 44100Hz.wav
+        filename: ../coeffs/Sennheiser HD 800 S minimum phase 44100Hz_L.wav
         format: S16LE
     ir_right:
       type: Conv
       parameters:
         type: File
-        filename: ../coeffs/Sennheiser HD 800 S minimum phase 44100Hz.wav
+        filename: ../coeffs/Sennheiser HD 800 S minimum phase 44100Hz_R.wav
         format: S16LE
 mixers:
   stereo:

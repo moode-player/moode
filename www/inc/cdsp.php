@@ -104,9 +104,6 @@ class CamillaDsp {
             if(is_file($configfilename)) {
                 syscmd("sudo ln -s -f \"" . $configfilename . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
             }
-            $configfilename_escaped = str_replace ('/', '\/', $this->CAMILLAGUI_WORKING_CONGIG);
-            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename_escaped . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
-
         }
 
         $this->configfile = $configname;
@@ -184,13 +181,7 @@ class CamillaDsp {
     }
 
     function detectSupportedSoundFormats() {
-        $session_id = trim(shell_exec("sqlite3 /var/local/www/db/moode-sqlite3.db \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
-        session_id($session_id);
-        session_start();
-        $supported_formats = $_SESSION['audio_formats'];
-        session_write_close();
-
-        $available_alsa_sample_formats_from_sound_card_as_string = $supported_formats; //Sound card sample formats from ALSA
+        $available_alsa_sample_formats_from_sound_card_as_string = $_SESSION['audio_formats']; //Sound card sample formats from ALSA
         $available_alsa_sample_formats_from_sound_card = explode (', ', $available_alsa_sample_formats_from_sound_card_as_string);
         $sound_device_supported_sample_formats = array();
         foreach ($this->alsaToCamillaSampleFormatLut() as $alsa_format => $cdsp_format) {
@@ -402,7 +393,7 @@ class CamillaDsp {
             $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
             $fileNameL = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_L.' . $path_parts['extension'];
             $fileNameR = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_R.' . $path_parts['extension'];
-            $cmd = 'ffmpeg -v 30 -i "' . $fileName .'" -map_channel 0.0.0 ' . $fileNameL .' -map_channel 0.0.1 ' . $fileNameR;
+            $cmd = 'ffmpeg -v 30 -i "' . $fileName .'" -map_channel 0.0.0 "' . $fileNameL .'" -map_channel 0.0.1 "' . $fileNameR.'"';
             exec($cmd . " 2>&1", $output);
             if( file_exists($fileNameL) && file_exists($fileNameR)) {
                 unlink($fileName);
