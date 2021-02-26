@@ -104,9 +104,6 @@ class CamillaDsp {
             if(is_file($configfilename)) {
                 syscmd("sudo ln -s -f \"" . $configfilename . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
             }
-            $configfilename_escaped = str_replace ('/', '\/', $this->CAMILLAGUI_WORKING_CONGIG);
-            syscmd("sudo sed -i -s '/[ ]config_out/s/\\\".*\\\"/\\\"" . $configfilename_escaped . "\\\"/g' " . $this->ALSA_CDSP_CONFIG );
-
         }
 
         $this->configfile = $configname;
