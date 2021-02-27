@@ -433,7 +433,7 @@ function engineCmd() {
                     break;
                 case 'rbactive1':
                 case 'rbactive0':
-    				inpSrcIndicator(cmd[0], 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbsvc">disconnect</button>');
+    				inpSrcIndicator(cmd[0], 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbrestart">disconnect</button>');
                     break;
                 case 'scnactive1':
     				screenSaver(cmd[0]);
@@ -941,7 +941,7 @@ function renderUI() {
     	}
         // RoonBridge renderer
     	if (SESSION.json['rbactive'] == '1') {
-    		inpSrcIndicator('rbactive1', 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbsvc">disconnect</button>');
+    		inpSrcIndicator('rbactive1', 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbrestart">disconnect</button>');
     	}
 
     	// MPD database update
