@@ -389,18 +389,28 @@ class CamillaDsp {
 
         if( isset($info['extension']) && isset($info['channels']) && strtolower($info['extension']) == 'wav' && $info['channels'] == 2 )
         {
-            $path_parts = pathinfo($coefffile);
-            $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
-            $fileNameL = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_L.' . $path_parts['extension'];
-            $fileNameR = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_R.' . $path_parts['extension'];
-            $cmd = 'ffmpeg -v 30 -i "' . $fileName .'" -map_channel 0.0.0 "' . $fileNameL .'" -map_channel 0.0.1 "' . $fileNameR.'"';
-            exec($cmd . " 2>&1", $output);
-            if( file_exists($fileNameL) && file_exists($fileNameR)) {
-                unlink($fileName);
-                return NULL;
+            $sox_path = '/usr/bin/sox';
+            if(file_exists($sox_path)) {
+                $path_parts = pathinfo($coefffile);
+                $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
+                $fileNameL = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_L.' . $path_parts['extension'];
+                $fileNameR = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_R.' . $path_parts['extension'];
+
+                unlink($fileNameL);
+                unlink($fileNameR);
+                $cmd = $sox_path .' "' . $fileName . '" "' . $fileNameL. '" remix 1; '.$sox_path .' "' . $fileName . '" "' . $fileNameR. '" remix 2; ';
+                print($cmd);
+                exec($cmd . " 2>&1", $output);
+                if( file_exists($fileNameL) && file_exists($fileNameR)) {
+                    unlink($fileName);
+                    return NULL;
+                }
+                else {
+                    return $output;
+                }
             }
             else {
-                return $output;
+                return ['Sox not found (please install sox)'];
             }
         }
         else {
