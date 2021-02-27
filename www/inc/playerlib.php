@@ -2689,9 +2689,6 @@ function cfgSqueezelite() {
 // RoonBridge
 function startRoonBridge() {
 	sysCmd('mpc stop');
-	if ($_SESSION['alsavolume'] != 'none') {
-		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
-	}
 	sysCmd('systemctl start roonbridge');
 }
 function stopRoonBridge () {

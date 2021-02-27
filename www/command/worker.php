@@ -1064,6 +1064,7 @@ function chkRbActive() {
 				$GLOBALS['rbactive'] = '0';
 				playerSession('write', 'rbactive', '0');
 				sendEngCmd('rbactive0');
+				sysCmd('/var/www/vol.sh -restore');
 				if ($_SESSION['rsmafterrb'] == 'Yes') {
 					sysCmd('mpc play');
 				}
