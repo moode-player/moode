@@ -1758,6 +1758,7 @@ function runQueuedJob() {
 			}
 			break;
 		case 'rbrestart':
+			sysCmd('mpc stop');
 			sysCmd('systemctl stop roonbridge');
 			if ($_SESSION['rbsvc'] == '1') {
 				startRoonBridge();

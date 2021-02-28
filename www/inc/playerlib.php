@@ -2692,7 +2692,6 @@ function startRoonBridge() {
 	sysCmd('systemctl start roonbridge');
 }
 function stopRoonBridge () {
-	sysCmd('mpc stop');
 	sysCmd('systemctl stop roonbridge');
 	sysCmd('/var/www/vol.sh -restore');
 	// Reset to inactive
