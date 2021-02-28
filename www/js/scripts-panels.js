@@ -1261,10 +1261,9 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// Disconnect active renderer
-	//$('.disconnect-renderer').live('click', function(e) {
     $(document).on('click', '.disconnect-renderer', function(e) {
-		var job = $(this).data('job');
-        $.post('command/moode.php?cmd=disconnect-renderer', {'job':job});
+		notify('renderer_disconnect', '', '3_seconds');
+        $.post('command/moode.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
 	});
 
     // First use help

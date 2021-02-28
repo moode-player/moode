@@ -65,6 +65,7 @@ function notify(cmd, msg, duration) {
 		favadded: 'Favorite has been added',
 		nofavtoadd: 'Nothing to add',
 		mpderror: 'MPD error',
+        renderer_disconnect: 'Disconnecting...',
 		restart: 'Restarting...',
 		shutdown: 'Shutting down...',
         viewport: 'Viewport'
@@ -76,6 +77,9 @@ function notify(cmd, msg, duration) {
 
     if (typeof duration == 'undefined') {
         duration = 2000; // Default 2 seconds
+    }
+    else if (duration == '3_seconds') {
+        duration = 3000;
     }
     else if (duration == '5_seconds') {
         duration = 5000;
