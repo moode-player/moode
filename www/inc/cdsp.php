@@ -112,7 +112,14 @@ class CamillaDsp {
     function reloadConfig() {
         if( $this->configfile != 'off') {
             $this->patchRelConvPath($this->getConfig());
-            syscmd('sudo killall -s SIGHUP camilladsp');
+
+            // Due a issue with cdsp, don't send SIGHUP if cdsp is started with the -w flag.
+            // (see https://github.com/HEnquist/camilladsp/issues/96)
+            $cmd = 'sudo ps -elf |grep camilladsp| grep "\-w"';
+            exec($cmd, $output, $exitcode);
+            if( $exitcode != 0 ) {
+                syscmd('sudo killall -s SIGHUP camilladsp');
+            }
         }
     }
 
