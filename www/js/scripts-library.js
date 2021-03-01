@@ -132,7 +132,7 @@ function reduceArtists(acc, track) {
 			acc[album_artist].artist = track.album_artist;
 		}
 		acc[album_artist].push(track);
-		if (SESSION.json['library_tagview_artist'] != 'Artist') { // Album Artist or Album Artist +
+		if (SESSION.json['library_tagview_artist'].includes('Album Artist')) { // Album Artist or Album Artist +
 			return acc;
 		}
 	}

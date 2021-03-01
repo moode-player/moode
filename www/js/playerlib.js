@@ -2413,7 +2413,6 @@ $('#btn-preferences-update').click(function(e){
 	var themeSettingsChange = false;
     var libraryOptionsChange = false;
     var clearLibcacheAllReqd = false;
-    var clearLibcacheFilteredReqd = false;
     var reloadLibrary = false
     var regenThumbsReqd = false;
 	var scnSaverTimeoutChange = false;
@@ -2463,7 +2462,13 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {thumbSizeChange = true;}
 
     // Library (Advanced)
-    if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {
+        libraryOptionsChange = true;
+        // Changing from/to Artist +
+        if (SESSION.json['library_tagview_artist'] == 'Artist +' || $('#tag-view-artist span').text() == 'Artist +') {
+            clearLibcacheAllReqd = true;
+        }
+    }
     if (miscLibOptions[1] != $('#library-album-key span').text()) {clearLibcacheAllReqd = true;}
     if (miscLibOptions[0] != $('#library-inc-comment-tag span').text()) {clearLibcacheAllReqd = true;}
     if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}
@@ -2531,9 +2536,6 @@ $('#btn-preferences-update').click(function(e){
 	}
     if (clearLibcacheAllReqd == true) {
         $.get('command/moode.php?cmd=clear_libcache_all');
-	}
-    if (clearLibcacheFilteredReqd == true) {
-        $.get('command/moode.php?cmd=clear_libcache_filtered');
 	}
 	if (accentColorChange == true) {
 		accentColor = themeToColors(SESSION.json['accent_color']);
@@ -2615,8 +2617,7 @@ $('#btn-preferences-update').click(function(e){
             'preferences_modal_state': SESSION.json['preferences_modal_state']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange ||
-                clearLibcacheAllReqd || clearLibcacheFilteredReqd ||
+            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
                 setTimeout(function() {
@@ -3705,7 +3706,7 @@ function applyLibFilter(filterType, filterStr = '') {
     SESSION.json['library_flatlist_filter'] = filterType;
     SESSION.json['library_flatlist_filter_str'] = filterStr;
 
-    // Clear filtered libcache files (_folder, _format, _tag, _year)
+    // Clear filtered libcache files (_folder, _format, _tag)
     $.get('command/moode.php?cmd=clear_libcache_filtered', function() {
         // Apply new filter
         $.post('command/moode.php?cmd=updcfgsystem', {'library_flatlist_filter': filterType, 'library_flatlist_filter_str': SESSION.json['library_flatlist_filter_str']}, function() {

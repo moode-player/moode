@@ -257,7 +257,8 @@ jQuery(document).ready(function($) { 'use strict';
             ((SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') ?
             '' : ' by ' + SESSION.json['library_tagview_sort']));
         // Artists column header
-        $('#artistheader > div').html(SESSION.json['library_tagview_artist'] == 'Album Artist +' ? 'Album Artists +' :
+        $('#artistheader > div').html(SESSION.json['library_tagview_artist'].includes('+') ?
+            SESSION.json['library_tagview_artist'].slice(0, -2) + 's+' :
             SESSION.json['library_tagview_artist'] + 's');
         // Hide alphabits index if indicated
         if (SESSION.json['library_albumview_sort'] == 'Year') {

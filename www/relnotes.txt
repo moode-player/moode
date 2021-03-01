@@ -53,6 +53,7 @@ Updates
 - UPD: Library Config option to ignore CUE files
 - UPD: Decode Pi revision from bitmask instead of from table
 - UPD: Allow negative pregain for Spotify renderer
+- UPD: Add option fo include Composers in Tag view Artist list
 
 Bug fixes
 

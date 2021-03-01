@@ -512,6 +512,15 @@ function genFlatList($sock) {
 					$flat[$item]['Artist'] = array($value);
 				}
 			}
+			// @Tim Curtis: add composer to artists
+			elseif ($element == 'Composer' && $_SESSION['library_tagview_artist'] == 'Artist +') {
+				if ($flat[$item]['Artist']) {
+					array_push($flat[$item]['Artist'], $value);
+				}
+				else {
+					$flat[$item]['Artist'] = array($value);
+				}
+			}
 			else {
 				$flat[$item][$element] = $value;
 			}
@@ -1023,7 +1032,7 @@ function parseTrackInfo($resp) {
 	7  Album
 	8  Disc
 	9  Track
-	10  Title
+	10 Title
 	11 Date
 	12 Duration
 	13 Audio format
