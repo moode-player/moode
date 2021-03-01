@@ -51,7 +51,7 @@ class CamillaDsp {
         // nginx, camillagui and cdsp not all run as the same user but required
         // write rights to the same files.
         // print('chmod -R 666 '. $this->CAMILLA_CONFIG_DIR.'/configs; chmod 666 '. $this->$CAMILLA_CONFIG_DIR.'/coefss/*');
-        sysCmd('chmod 666 '.$this->CAMILLA_CONFIG_DIR.'/configs/*; chmod 666 '.  $this->$CAMILLA_CONFIG_DIR.'/coeffs/*');
+        $this->fixFileRights();
     }
 
     /**
@@ -274,7 +274,7 @@ class CamillaDsp {
     /**
      * Provide coeff info
      */
-    function coeffInfo($coefffile) {
+    function coeffInfo($coefffile, $raw = False) {
         $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
         $jsonString = syscmd("mediainfo --Output=JSON \"" . $fileName . "\"");
         $mediaDataObj = json_decode(implode($jsonString));
@@ -292,13 +292,13 @@ class CamillaDsp {
         if($format)
             $mediaInfo['format'] = $format;
         if($rate)
-            $mediaInfo['samplerate'] = $rate/1000.0 . ' kHz';
+            $mediaInfo['samplerate'] = $raw ? intval($rate) : $rate/1000.0 . ' kHz';
         if($bits)
-            $mediaInfo['bitdepth'] = $bits . ' bits';
+            $mediaInfo['bitdepth'] = $raw ? intval($bits) : $bits . ' bits';
         if($ch)
             $mediaInfo['channels'] = intval($ch);
         if($siz != NULL)
-            $mediaInfo['size'] = sprintf('%.1f kB', $siz/1024.0) ;
+            $mediaInfo['size'] = $raw ? intval(siz) : sprintf('%.1f kB', $siz/1024.0) ;
 
         return $mediaInfo;
     }
@@ -384,39 +384,62 @@ class CamillaDsp {
         }
     }
 
-    function splitWaveFile($coefffile) {
-        $info = $this->coeffInfo($coefffile);
+    function convertWaveFile($coefffile) {
+        $info = $this->coeffInfo($coefffile, TRUE);
 
-        if( isset($info['extension']) && isset($info['channels']) && strtolower($info['extension']) == 'wav' && $info['channels'] == 2 )
-        {
+        if( isset($info['extension']) && isset($info['channels']) && strtolower($info['extension']) == 'wav' ) {
             $sox_path = '/usr/bin/sox';
             if(file_exists($sox_path)) {
                 $path_parts = pathinfo($coefffile);
                 $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
-                $fileNameL = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_L.' . $path_parts['extension'];
-                $fileNameR = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $path_parts['filename'] . '_R.' . $path_parts['extension'];
 
-                unlink($fileNameL);
-                unlink($fileNameR);
-                $cmd = $sox_path .' "' . $fileName . '" "' . $fileNameL. '" remix 1; '.$sox_path .' "' . $fileName . '" "' . $fileNameR. '" remix 2; ';
-                print($cmd);
-                exec($cmd . " 2>&1", $output);
-                if( file_exists($fileNameL) && file_exists($fileNameR)) {
-                    unlink($fileName);
-                    return NULL;
+                $fileNameRaw = sprintf('%s/coeffs/%s_%dHz_32b.raw', $this->CAMILLA_CONFIG_DIR , $path_parts['filename'], $info['samplerate']);
+                $fileNameRawL = sprintf('%s/coeffs/%s_L_%dHz_32b.raw', $this->CAMILLA_CONFIG_DIR , $path_parts['filename'], $info['samplerate']);
+                $fileNameRawR = sprintf('%s/coeffs/%s_R_%dHz_32b.raw', $this->CAMILLA_CONFIG_DIR , $path_parts['filename'], $info['samplerate']);
+
+                $cmds = [];
+                if( $info['channels'] == 1 ) {
+                    unlink($fileNameRaw);
+                    $cmd = $sox_path .' "' . $fileName . '" -b 32 "' . $fileNameRaw. '"';
+
+                    print($cmd);
+                    exec($cmd . " 2>&1", $output);
+                    if( file_exists($fileNameRaw) ) {
+                        unlink($fileName);
+                        $this->fixFileRights();
+                        return NULL;
+                    }
+                    else {
+                        $output[] = 'Could not find generated files.';
+                        return $output;
+                    }
+                }else{
+                    unlink($fileNameRawL);
+                    unlink($fileNameRawR);
+                    $cmd = $sox_path .' "' . $fileName . '"  -b 32 "' . $fileNameRawL. '" remix 1 ; '. $sox_path .' "' . $fileName . '"  -b 32 "' . $fileNameRawR. '" remix 2';
+                    exec($cmd . " 2>&1", $output);
+                    if( file_exists($fileNameRawL) && file_exists($fileNameRawR)) {
+                        unlink($fileName);
+                        $this->fixFileRights();
+                        return NULL;
+                    }
+                    else {
+                        $output[] = 'Could not find generated files.';
+                        return $output;
+                    }
                 }
-                else {
-                    return $output;
-                }
+
             }
             else {
                 return ['Sox not found (please install sox)'];
             }
         }
         else {
-            return ['File is not a stereo wave file.'];
+            return ['File is not a (stereo) wave file.'];
         }
+
     }
+
 
     /**
      * CamillaGUI requires absolute path names, convert rel coeff files to absolute
@@ -436,6 +459,9 @@ class CamillaDsp {
         return 0;
     }
 
+    function fixFileRights() {
+        sysCmd('chmod 666 '.$this->CAMILLA_CONFIG_DIR.'/configs/*; sudo chmod 666 '.  $this->CAMILLA_CONFIG_DIR.'/coeffs/*');
+    }
     function userCmd($cmd) {
         exec($cmd, $output, $exitcode);
         return $exitcode;
@@ -491,19 +517,27 @@ function test_cdsp() {
 
     // print($res['media']['track'][1]['BitDepth']);
 
-    $res = $cdsp->coeffInfo('test1.txt');
-    print_r($res);
-        $cdsp->changeCamillaStatus(0);
-        print_r( $cdsp->getCamillaGuiStatus() );
-        print("\n");
-        $cdsp->changeCamillaStatus(1);
-        print_r( $cdsp->getCamillaGuiStatus() );
-        print("\n");
+    // $res = $cdsp->coeffInfo('test1.txt');
+    // print_r($res);
+    //     $cdsp->changeCamillaStatus(0);
+    //     print_r( $cdsp->getCamillaGuiStatus() );
+    //     print("\n");
+    //     $cdsp->changeCamillaStatus(1);
+    //     print_r( $cdsp->getCamillaGuiStatus() );
+    //     print("\n");
 
     //$cdsp->copyConfig('config_hp.yml', 'fliepflap.yml');
 
     //$cdsp->setGuiExpertMode(true);
     //$cdsp->setGuiExpertMode(false);
+    // $cdsp->convertWave2Raw('BRIR_R02_P1_E0_A30_L.wav');
+
+
+
+    // print_r($cdsp->convertWaveFile('test_samplerate_44100Hz.wav'));
+    print_r($cdsp->convertWaveFile('Sennheiser_HD800S_L.wav'));
+    // print_r($cdsp->convertWaveFile('BRIR_R02_P1_E0_A30C_44100Hz_24b.raw'));
+
 }
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
