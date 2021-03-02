@@ -423,8 +423,8 @@ $_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2f
 // expand root file system
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
 $_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs2\" value=\"0\" " . "checked=\"checked\"".">\n";
-$result = sysCmd("df | grep root | awk '{print $2}'");
-$_expandrootfs_msg = $result[0] > 5000000 ? 'File system has been expanded' : 'File system has not been expanded yet';
+$result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
+$_expandrootfs_msg = $result[0] > ROOTFS_SIZE ? 'File system has been expanded' : 'File system has not been expanded yet';
 
 // USB boot
 $model = substr($_SESSION['hdwrrev'], 3, 1);

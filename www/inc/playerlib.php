@@ -43,6 +43,7 @@ define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
 define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
 define('DEF_COVER', 'images/default-cover-v6.svg');
+define('ROOTFS_SIZE', '4194304000'); // Bytes
 
 // Size and quality factor for small thumbs
 // Used in thmcache.php, worker.php
@@ -3064,8 +3065,8 @@ function autoConfigSettings() {
 				sysCmd('/var/www/command/resizefs.sh start');
 			}
 		}, 'custom_write' => function($values) {
-			$result = sysCmd("df | grep root | awk '{print $2}'");
-			$expanded = $result[0] > 3500000 ? 1 : 0;
+			$result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
+			$expanded = $result[0] > ROOTFS_SIZE ? 1 : 0;
 			return sprintf("expandfs =\"%d\"\n", $expanded);
 		}],
 
