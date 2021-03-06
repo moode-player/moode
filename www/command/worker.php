@@ -179,7 +179,6 @@ if ($amixname != 'Invalid card number.') {
 		workerLog('worker: ALSA ' . trim($amixname) . ' volume set to (' . $result[0] . ')');
 	}
 	else {
-		sdbquery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", $dbh);
 		playerSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
 		playerSession('write', 'amixname', 'none');
 		workerLog('worker: ALSA volume (none)');
