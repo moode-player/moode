@@ -229,7 +229,7 @@ if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal'])
 }
 
 // CamillaDSP
-if (isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp']) {
+if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp']) {
 	$currentMode = $_SESSION['camilladsp'];
 	playerSession('write', 'camilladsp', $_POST['camilladsp']);
 	$cdsp->selectConfig($_POST['camilladsp']);
@@ -238,7 +238,7 @@ if (isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp
 	}
 
     if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-		submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
+		submitJob('camilladsp', $_POST['camilladsp'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
 	} else {
 		$cdsp->reloadConfig();
 	}
