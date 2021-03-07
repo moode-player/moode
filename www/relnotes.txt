@@ -18,9 +18,9 @@
 New features
 
 - NEW: CamillaDSP including Pipeline Editor
-- NEW: RoonBridge renderer (requires user install)
+- NEW: RoonBridge renderer mgt (requires user install)
 - NEW: Radio station utility for import/export/manage
-- NEW: Support for Pi CM4
+- NEW: Automatic support for new Pi models
 
 Audio devices
 
@@ -35,10 +35,10 @@ Updates
 - UPD: Bump to miniDLNA 1.3.0
 - UPD: Bump to librespot 0.1.6
 - UPD: Bump to moodeutl 1.5.2
-- UPD: Add Clear/Add to Lbrary context menus
+- UPD: Add Clear/Add to Library context menus
 - UPD: Add Track info to Queue context menu
-- UPD: Add Comment tag to "Track info" dialog
-- UPD: Add Cover/logo to Audio info
+- UPD: Add Comment tag to Track info dialog
+- UPD: Add Cover/logo to Track/Station info
 - UPD: Add Throttled state to System info
 - UPD: Disable power save for integrated WiFi
 - UPD: Set correct 0dB level for HDMI
