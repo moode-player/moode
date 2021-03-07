@@ -97,6 +97,9 @@ switch ($option) {
 	case '-m':
 		system_monitor();
 		break;
+	case '-o':
+		list_audio_overlays();
+		break;
 	case '-q':
 		sql_query($argv);
 		break;
@@ -143,6 +146,7 @@ With no OPTION print the help text and exit.
  -F\t\tPrint full alsacap info
  -l\t\tPrint moode log
  -m\t\tRun system monitor
+ -o\t\tList audio overlays
  -q\t\tQuery sql database
  -r\t\tRestart servers
  -R\t\tRestart renderer [--name]
@@ -432,4 +436,16 @@ function export_autoconfig($argv) {
 function import_autoconfig() {
 	echo "Import moOde autoconfig settings\n";
 	echo shell_exec('sudo /var/www/command/autocfgimport.php');
+}
+
+function list_audio_overlays () {
+	$dir = '/boot/overlays/';
+	$files = scandir($dir);
+
+	foreach ($files as $file) {
+		$contents = file_get_contents($dir . $file);
+		if (strpos($contents, 'sound-dai-cells') !== false) {
+			echo $file . "\n";
+		}
+	}
 }
