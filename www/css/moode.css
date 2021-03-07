@@ -592,3 +592,13 @@ ol.playhistory {margin-left:55px;}
 	   scrollbar-color: auto;
    }
 }
+
+/* Existing input width selectors doesn't work, because override by bootstrap-select. Add !important to prevent that*/
+@media (min-width:650px) {
+	.input-xlarge{width:270px !important;}
+}
+.input-xxlarge {
+	width:90% !important;
+	max-width: 750px !important;
+}
+
