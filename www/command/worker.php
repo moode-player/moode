@@ -360,14 +360,18 @@ else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
 // Log audio device info
 workerLog('worker: ALSA card number (' . $_SESSION['cardnum'] . ')');
 if ($_SESSION['i2sdevice'] == 'none') {
-	workerLog('worker: Audio output (' . getDeviceNames()[$_SESSION['cardnum']] . ')');
+	workerLog('worker: MPD audio output (' . getDeviceNames()[$_SESSION['cardnum']] . ')');
 }
 else {
-	workerLog('worker: Audio output (' . $_SESSION['i2sdevice'] . ')');
+	workerLog('worker: MPD audio output (' . $_SESSION['i2sdevice'] . ')');
 }
-
-$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
-workerLog('worker: Audio formats (' . $_SESSION['audio_formats'] . ')');
+if ($cards[$mpddev[0]['value']] == 'empty') {
+	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpddev[0]['value']);	
+}
+else {
+	$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
+	workerLog('worker: Audio formats (' . $_SESSION['audio_formats'] . ')');
+}
 
 // Might need this at some point
 $device_name = getDeviceNames()[$_SESSION['cardnum']];
