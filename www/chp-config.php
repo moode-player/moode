@@ -16,8 +16,6 @@
  * Refer to the link below for a copy of the GNU General Public License.
  * http://www.gnu.org/licenses/
  *
- * 2020-07-22 TC moOde 6.7.1
- *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -26,7 +24,7 @@ playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 $sock = openMpdSock('localhost', 6600);
 
-// apply setting changes
+// Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 
@@ -38,7 +36,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
 
-		// see if filter change submitted
+		// See if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[2] != $_POST['config']['digfilter']) {
 			//workerLog('digfilter changed');
 			$status = parseStatus(getMpdStatus($sock));
@@ -48,7 +46,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			}
 		}
 
-		// update chip options
+		// Update chip options
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
 
@@ -78,7 +76,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
 
-		// see if filter change submitted
+		// See if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['katana_osf']) {
 			$status = parseStatus(getMpdStatus($sock));
 			// restart playback to make filter change effective
@@ -87,7 +85,37 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			}
 		}
 
-		// update chip options
+		// Update chip options
+		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$_SESSION['notify']['title'] = 'Changes saved';
+	}
+
+	// Allo Boss 2 Cirrus Logic CS43198 chip
+	if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+		$chipoptions = $_POST['config']['boss2_deemphasis_filter'] . ',' . $_POST['config']['boss2_filter_speed'] . ',' . $_POST['config']['boss2_highpass_filter'] . ',' .
+			$_POST['config']['boss2_nonosf_emulate'] . ',' . $_POST['config']['boss2_phase_compensation'] . ',' . $_POST['config']['boss2_hv_enable'];
+		$chiptype = 'cirrus_logic_cS43198_boss2';
+
+		// amixer cmds
+		cfgChipOptions($chipoptions, $chiptype);
+
+		// See if changes submitted
+		$cfgoptions = explode(',', $result[0]['chipoptions']);
+		if ($cfgoptions[0] != $_POST['config']['boss2_deemphasis_filter'] || $cfgoptions[1] != $_POST['config']['boss2_filter_speed'] ||
+			$cfgoptions[2] != $_POST['config']['boss2_highpass_filter'] || $cfgoptions[3] != $_POST['config']['boss2_nonosf_emulate'] ||
+			$cfgoptions[4] != $_POST['config']['boss2_phase_compensation'] || $cfgoptions[5] != $_POST['config']['boss2_hv_enable']) {
+			$status = parseStatus(getMpdStatus($sock));
+			// Restart playback to make changes effective
+			if ($status['state'] === 'play') {
+				chainMpdCmds($sock, array('pause', 'play'));
+			}
+		}
+
+		// NOTE: this volume is automatically sync'd with master volume in worker.php event loop
+		// Update DoP volume
+		//sysCmd('amixer -c 0 sset Digital ' . $_POST['config']['boss2_dop_volume'] . '%');
+
+		// Update chip options
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
 	}
@@ -100,7 +128,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
 
-		// see if filter change submitted
+		// See if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['audiophonics_q2m_osf']) {
 			$status = parseStatus(getMpdStatus($sock));
 			// restart playback to make filter change effective
@@ -109,7 +137,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			}
 		}
 
-		// update chip options
+		// Update chip options
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Chip options updated';
 	}
@@ -122,7 +150,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		// amixer cmds
 		cfgChipOptions($chipoptions, $chiptype);
 
-		// update chip options
+		// Update chip options
 		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
 	}
@@ -240,6 +268,43 @@ if ($_SESSION['i2sdevice'] == 'Allo Katana DAC') {
 }
 else {
 	$_allo_katana_hide = 'hide';
+}
+
+// Allo Boss 2 DAC
+if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+	$_allo_boss2_hide = '';
+
+	// Chip options
+	$boss2_deemphasis_filter = $array[0];
+	$boss2_filter_speed = $array[1];
+	$boss2_highpass_filter = $array[2];
+	$boss2_nonosf_emulate = $array[3];
+	$boss2_phase_compensation = $array[4];
+	$boss2_hv_enable = $array[5];
+	// NOTE: this volume is automatically sync'd with master volume in worker.php event loop
+	//$boss2_dop_volume = rtrim(sysCmd('/var/www/command/util.sh get-alsavol Digital')[0], '%');
+
+	// De-emphasis filter
+	$_select['boss2_deemphasis_filter'] .= "<option value=\"on\" " . (($boss2_deemphasis_filter == 'on') ? "selected" : "") . ">On</option>\n";
+	$_select['boss2_deemphasis_filter'] .= "<option value=\"off\" " . (($boss2_deemphasis_filter == 'off') ? "selected" : "") . ">Off</option>\n";
+	// Filter speed
+	$_select['boss2_filter_speed'] .= "<option value=\"Slow\" " . (($boss2_filter_speed == 'Slow') ? "selected" : "") . ">Slow</option>\n";
+	$_select['boss2_filter_speed'] .= "<option value=\"Fast\" " . (($boss2_filter_speed == 'Fast') ? "selected" : "") . ">Fast</option>\n";
+	// High pass filter
+	$_select['boss2_highpass_filter'] .= "<option value=\"on\" " . (($boss2_highpass_filter == 'on') ? "selected" : "") . ">On</option>\n";
+	$_select['boss2_highpass_filter'] .= "<option value=\"off\" " . (($boss2_highpass_filter == 'off') ? "selected" : "") . ">Off</option>\n";
+	// Non-oversampling emulation
+	$_select['boss2_nonosf_emulate'] .= "<option value=\"on\" " . (($boss2_nonosf_emulate == 'on') ? "selected" : "") . ">On</option>\n";
+	$_select['boss2_nonosf_emulate'] .= "<option value=\"off\" " . (($boss2_nonosf_emulate == 'off') ? "selected" : "") . ">Off</option>\n";
+	// Phase compensation
+	$_select['boss2_phase_compensation'] .= "<option value=\"on\" " . (($boss2_phase_compensation == 'on') ? "selected" : "") . ">On</option>\n";
+	$_select['boss2_phase_compensation'] .= "<option value=\"off\" " . (($boss2_phase_compensation == 'off') ? "selected" : "") . ">Off</option>\n";
+	// Analog output voltage
+	$_select['boss2_hv_enable'] .= "<option value=\"off\" " . (($boss2_hv_enable == 'off') ? "selected" : "") . ">1.7 vrms</option>\n";
+	$_select['boss2_hv_enable'] .= "<option value=\"on\" " . (($boss2_hv_enable == 'on') ? "selected" : "") . ">2.0 vrms</option>\n";
+}
+else {
+	$_allo_boss2_hide = 'hide';
 }
 
 // Audiophonics ES9028/38 Q2M DAC

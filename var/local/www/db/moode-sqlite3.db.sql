@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Feb 22 11:33:03 2021
+-- File generated with SQLiteStudio v3.1.0 on Tue Mar 9 17:25:41 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -100,7 +100,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (90, 'http://mediaserv38.live-streams.nl:8027/live', 'Hi On Line - World', 'r', 'local', 'World Music', 'Hi.Fine', 'English', 'Netherlands', 'Europe', '320', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (91, 'http://edge-baueral-01-cr.sharp-stream.com/jazzhigh.aac', 'Jazz FM', 'r', 'local', 'Jazz, Blues. Soul', 'Bauer Planet Radio', 'English', 'United Kingdom', 'Europe', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (92, 'http://live.wostreaming.net/direct/ppm-jazz24aac256-ibc1', 'Jazz24', 'r', 'local', 'Jazz', 'Jazz24.org', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (93, 'http://cristina.torontocast.com:8007/mp3-320', 'JB Radio2 (320K)', 'r', 'local', 'Alternative, Rock, Eclectic', 'JB Radio', 'English', 'Canada', 'North America', '320', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (93, 'OFFLINE', 'JB Radio2 (320K)', 'r', 'local', 'Alternative, Rock, Eclectic', 'JB Radio', 'English', 'Canada', 'North America', '320', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (94, 'http://stream.kanalk.ch:80', 'Kanal K', 'r', 'local', 'Alternative', 'Regionalradio Aargaudio AG', 'German', 'Switzerland', 'Europe', '160', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (95, 'http://current.stream.publicradio.org/kcmp.mp3', 'KCMP 89.3 FM - The Current', 'r', 'local', 'Alternative', 'PBS', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (96, 'http://kdhx-ice.streamguys1.com:80/live', 'KDHX 88.1 FM St. Louis', 'r', 'local', 'Alternative', 'KDHX', 'English', 'United States', 'North America', '320', 'MP3', 'No', '', '');
@@ -326,7 +326,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (54, 'camilladsp', 'off');
 INSERT INTO cfg_system (id, param, value) VALUES (55, 'cdsp_fix_playback', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '0;Sennheiser_HD800S_L_44100Hz_32b.raw;Sennheiser_HD800S_R_44100Hz_32b.raw;S32LE');
+INSERT INTO cfg_system (id, param, value) VALUES (56, 'camilladsp_quickconv', '0;Sennheiser_HD800S_L_44100Hz_32b.raw;Sennheiser_HD800S_R_44100Hz_32b.raw;S32LE''');
 INSERT INTO cfg_system (id, param, value) VALUES (57, 'uac2fix', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (58, 'keyboard', 'us');
 INSERT INTO cfg_system (id, param, value) VALUES (59, 'localui', '0');
@@ -474,7 +474,7 @@ INSERT INTO cfg_airplay (id, param, value) VALUES (9, 'audio_backend_buffer_desi
 -- Table: cfg_audiodev
 CREATE TABLE cfg_audiodev (id INTEGER PRIMARY KEY, name CHAR (64), alt_name CHAR (64), dacchip CHAR (64), chipoptions CHAR (64), iface CHAR (32), list CHAR (10), driver CHAR (64), drvoptions CHAR (64));
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (1, 'Allo Boss DAC', '', 'Burr Brown PCM5122', '100,0,FIR interpolation with de-emphasis', 'I2S', 'yes', 'allo-boss-dac-pcm512x-audio', 'slave');
-INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (2, 'Allo Boss 2 DAC', '', 'Cirrus Logic CS43198', '', 'I2S', 'yes', 'allo-boss2-dac-audio', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (2, 'Allo Boss 2 DAC', '', 'Cirrus Logic CS43198', 'off,Fast,on,off,off,off', 'I2S', 'yes', 'allo-boss2-dac-audio', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (3, 'Allo DigiOne', '', 'Cirrus Logic WM8805', '', 'I2S', 'yes', 'allo-digione', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (4, 'Allo DigiOne Signature', '', 'Cirrus Logic WM8805', '', 'I2S', 'yes', 'allo-digione', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (5, 'Allo Katana DAC', '', 'ESS Sabre ES9038Q2M', 'Apodizing Fast Roll-off Filter,Bypass,on', 'I2S', 'yes', 'allo-katana-dac-audio', '');
@@ -638,7 +638,7 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/p
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', 'd9f65519e484de1cf5240ead12bdde46', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', 'af0f359120b6b61a00808f69b62e5af7', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '1ec1097f6762664101c974526eadaec9', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', 'c84e3e21f92d6447d72d68735b235562', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', '1652d28f984571707fdab0629ce627ee', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/css/main.min.css', '9a6890a45b40aef84c05a95d6a4439c6', 'warning');

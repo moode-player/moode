@@ -366,7 +366,7 @@ else {
 	workerLog('worker: MPD audio output (' . $_SESSION['i2sdevice'] . ')');
 }
 if ($cards[$mpddev[0]['value']] == 'empty') {
-	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpddev[0]['value']);	
+	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpddev[0]['value']);
 }
 else {
 	$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
@@ -879,6 +879,9 @@ while (true) {
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
 		chkInpActive();
 	}
+	if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+		updBoss2DopVolume();
+	}
 	if ($_SESSION['extmeta'] == '1') {
 		updExtMetaFile();
 	}
@@ -1096,6 +1099,11 @@ function chkInpActive() {
 			sendEngCmd('inpactive0');
 		}
 	}
+}
+
+function updBoss2DopVolume () {
+	$mastervol = sysCmd('/var/www/command/util.sh get-alsavol Master')[0];
+	sysCmd('amixer -c 0 sset Digital ' . $mastervol);
 }
 
 function updExtMetaFile() {

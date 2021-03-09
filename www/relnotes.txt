@@ -24,7 +24,7 @@ New features
 
 Audio devices
 
-- NEW: Allo Boss 2 w/OLED display
+- NEW: Allo Boss 2 w/OLED display and chip options
 
 Updates
 

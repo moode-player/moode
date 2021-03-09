@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-07-19 TC moOde 6.7.0
- *
  */
 -->
 <div class="container">
@@ -165,6 +163,91 @@
 			</fieldset>
 		</div>
 
+		<div class="$_allo_boss2_hide">
+			<h4>Allo Boss 2 DAC</h4>
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label" for="boss2_deemphasis_filter">De-emphasis filter</label>
+					<div class="controls">
+						<select id="boss2_deemphasis_filter" class="input-large" name="config[boss2_deemphasis_filter]">
+							$_select[boss2_deemphasis_filter]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							Default: Off
+	                    </span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="boss2_filter_speed">Filter speed</label>
+					<div class="controls">
+						<select id="boss2_filter_speed" class="input-large" name="config[boss2_filter_speed]">
+							$_select[boss2_filter_speed]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							Default: Fast
+	                    </span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="boss2_highpass_filter">High pass filter</label>
+					<div class="controls">
+						<select id="boss2_highpass_filter" class="input-large" name="config[boss2_highpass_filter]">
+							$_select[boss2_highpass_filter]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							Default: On
+	                    </span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="boss2_nonosf_emulate">Non-oversample emulate</label>
+					<div class="controls">
+						<select id="boss2_nonosf_emulate" class="input-large" name="config[boss2_nonosf_emulate]">
+							$_select[boss2_nonosf_emulate]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							Default: Off
+	                    </span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="boss2_phase_compensation">Phase compensation</label>
+					<div class="controls">
+						<select id="boss2_phase_compensation" class="input-large" name="config[boss2_phase_compensation]">
+							$_select[boss2_phase_compensation]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							Default: Off
+	                    </span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="boss2_hv_enable">HV enable</label>
+					<div class="controls">
+						<select id="boss2_hv_enable" class="input-large" name="config[boss2_hv_enable]">
+							$_select[boss2_hv_enable]
+						</select>
+						<span class="help-block-configs help-block-margin">
+							Analog output voltage.<br>
+							Default: 1.7 vrms
+	                    </span>
+					</div>
+				</div>
+				<!-- NOTE: this volume is automatically sync'd with master volume in worker.php event loop
+				<div class="control-group">
+					<label class="control-label" for="boss2_dop_volume">DoP volume</label>
+					<div class="controls">
+						<input class="input-mini" type="number" maxlength="3" min="0" max="100" id="subwvol" name="config[boss2_dop_volume]" value="$boss2_dop_volume"> %
+						<span class="help-block-configs help-block-margin">
+							Volume range: 0 - 100%.
+	                    </span>
+					</div>
+				</div-->
+			</fieldset>
+		</div>
+
 		<div class="$_audiophonics_q2m_hide">
 			<h4>$_audiophonics_q2m_device_name</h4>
 			<fieldset>
@@ -212,6 +295,7 @@
 				</div>
 			</fieldset>
 		</div>
+
 	</form>
 </div>
 </div>

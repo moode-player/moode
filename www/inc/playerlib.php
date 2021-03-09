@@ -2767,6 +2767,15 @@ function cfgChipOptions($chipoptions, $chiptype) {
 		sysCmd('amixer -c 0 sset "Deemphasis" ' . $array[1]);
 		sysCmd('amixer -c 0 sset "DoP" ' . $array[2]);
 	}
+	// Allo Boss2:
+	else if ($chiptype == 'cirrus_logic_cS43198_boss2') {
+		sysCmd('amixer -c 0 sset "PCM De-emphasis Filter" ' . $array[0]);
+		sysCmd('amixer -c 0 sset "PCM Filter Speed" ' . $array[1]);
+		sysCmd('amixer -c 0 sset "PCM High-pass Filter" ' . $array[2]);
+		sysCmd('amixer -c 0 sset "PCM Nonoversample Emulate" ' . $array[3]);
+		sysCmd('amixer -c 0 sset "PCM Phase Compensation" ' . $array[4]);
+		sysCmd('amixer -c 0 sset "HV_Enable" ' . $array[5]);
+	}
 	// Audiophonics ES9028/9038 Q2M: Oversampling filter, input select
 	else if ($chiptype == 'ess_sabre_audiophonics_q2m') {
 		sysCmd('amixer -c 0 sset "FIR Filter Type" ' . '"' . $array[0] . '"');
