@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 jQuery(document).ready(function($){ 'use strict';
     // Call $.pnotify if created by backend
@@ -281,7 +279,12 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#sox_custom_recipe').show();
 	}
 
-    // info button (i) show/hide toggle
+    // Sysinfo notification
+    $('#sysinfo-menu-item').click(function(e) {
+        notify('gathering_info', '', '3_seconds');
+    });
+
+    // Info button (i) show/hide toggle
     $('.info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');
 		if ($(spanId).hasClass('hide')) {

@@ -1331,6 +1331,11 @@ jQuery(document).ready(function($) { 'use strict';
         }
     });
 
+    // Players notification
+    $('#players-menu-item').click(function(e) {
+        notify('discovering_players', '', '3_seconds');
+    });
+
 	// Info button (i) show/hide toggle
 	$('.info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');
