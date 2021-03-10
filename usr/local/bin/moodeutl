@@ -22,6 +22,9 @@
 define('VERSION', '1.5.2');
 define('SQLDB', '/var/local/www/db/moode-sqlite3.db');
 
+// Suppress warning messages
+error_reporting(E_ERROR | E_PARSE);
+
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
 // sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='feat_bitmask'"
@@ -116,7 +119,8 @@ switch ($option) {
 		tail_log();
 		break;
 	case '-u':
-		check_station_urls();
+	case '-U':
+		check_station_urls($argv);
 		break;
 	case '--mooderel':
 		$file = file_get_contents('/var/www/footer.min.php');
@@ -154,6 +158,7 @@ With no OPTION print the help text and exit.
  -s\t\tPrint system info
  -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
+ -U\t\tCheck station urls, list only unplayable
  --mooderel\tPrint moOde release
  --revision\tPrint the hardware revision
  --version\tPrint the program version
@@ -259,37 +264,43 @@ function delete_session_var($argv) {
 
 function audio_formats($option) {
 	$cardnum = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
-	$audio_output = trim(shell_exec('cat /proc/asound/card' . $cardnum . '/pcm0p/sub0/hw_params | grep closed'));
 
-	if ($audio_output == 'closed') {
-		// Just formats for the configured device
-		if ($option == '-f') {
-			$result = shell_exec('alsacap -C ' . $cardnum . ' -D 0 2>&1 | grep "Sample formats:"');
-			if (!empty($result)) {
-				echo explode(': ', $result)[1];
-			}
-			else {
-				echo "Unable to detect formats\n";
-			}
-		}
-		// $option == '-F': full info for all devices
-		else {
-			$result = shell_exec('alsacap 2>&1');
-			echo $result;
-		}
+	if (empty(trim(file_get_contents('/proc/asound/card' . $cardnum . '/id')))) {
+		echo 'No device found at MPD configured card ' . $cardnum . "\n";
 	}
 	else {
-		if (posix_getuid() != 0){
-			echo "This option requires sudo if the device is in use\n";
-			return;
-		}
+		$audio_output = trim(shell_exec('cat /proc/asound/card' . $cardnum . '/pcm0p/sub0/hw_params | grep closed'));
 
-		$session_id = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
-		session_id($session_id);
-		session_start();
-		$formats = $_SESSION['audio_formats'];
-		session_write_close();
-		echo $formats . "\n";
+		if ($audio_output == 'closed') {
+			// Just formats for the configured device
+			if ($option == '-f') {
+				$result = shell_exec('alsacap -C ' . $cardnum . ' -D 0 2>&1 | grep "Sample formats:"');
+				if (!empty($result)) {
+					echo explode(': ', $result)[1];
+				}
+				else {
+					echo "Unable to detect formats\n";
+				}
+			}
+			// $option == '-F': full info for all devices
+			else {
+				$result = shell_exec('alsacap 2>&1');
+				echo $result;
+			}
+		}
+		else {
+			if (posix_getuid() != 0){
+				echo "This option requires sudo if the device is in use\n";
+				return;
+			}
+
+			$session_id = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+			session_id($session_id);
+			session_start();
+			$formats = $_SESSION['audio_formats'];
+			session_write_close();
+			echo $formats . "\n";
+		}
 	}
 }
 
@@ -404,23 +415,24 @@ function tail_log() {
 	}
 }
 
-function check_station_urls() {
+function check_station_urls($argv) {
 	error_reporting(E_ERROR | E_PARSE);
 	$results = shell_exec("sqlite3 " . SQLDB .
-		" \"SELECT station, name, broadcaster, bitrate FROM cfg_radio WHERE station not in ('DELETED', 'zx reserved 499')\"");
+		" \"SELECT id, station, name, geo_fenced FROM cfg_radio WHERE station not in ('OFFLINE', 'zx reserved 499')\"");
 	$line = strtok($results, "\n");
-	$count = 0;
+	echo "Checking...\n";
+	echo 'Id' . "\t" . 'URL' . "\t" . 'Station' . "\n";
 	while ($line) {
-		list($url, $name, $broadcaster, $bitrate) = explode('|', $line);
-		// Skip BBC geo fenced stations
-		if (!($broadcaster == 'BBC' && $bitrate == '320')) {
+		list($id, $url, $name, $geo_fenced) = explode('|', $line);
+		// Skip BBC and any other geo-fenced stations
+		if ($geo_fenced == 'No') {
 			$tmpfile = file_get_contents($url, FALSE, NULL, 0, 1024);
 			$playable = false === $tmpfile ? '?' : 'OK';
 			if ($tmpfile == false) {
-				echo ++$count . "\t" . '?' . "\t" . $name . ' | ' . $url . "\n";
+				echo $id . "\t" . '?' . "\t" . $name . ' | ' . $url . "\n";
 			}
-			else {
-				echo ++$count . "\t" . 'OK' . "\t" . $name . "\n";
+			elseif ($argv[1] == '-u') {
+				echo $id . "\t" . 'OK' . "\t" . $name . "\n";
 			}
 		}
 		$line = strtok("\n");
