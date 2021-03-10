@@ -44,27 +44,25 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		playerSession('write', 'camilladsp_quickconv', $cfg);
 	}
 
+	if (isset($_POST['cdsp_playbackdevice'])) {
+		$patchPlaybackDevice = $_POST['cdsp_playbackdevice'];
+		playerSession('write', 'cdsp_fix_playback', $patchPlaybackDevice == "1" ? "Yes" : "No");
+	}
+
 	if (isset($_POST['cdsp-mode'])) {
 		$currentMode = $_SESSION['camilladsp'];
 		playerSession('write', 'camilladsp', $_POST['cdsp-mode']);
 		$cdsp->selectConfig($_POST['cdsp-mode']);
-		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
-		}
-
-		if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-			submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
-		} else {
-			$cdsp->reloadConfig();
-		}
 	}
 
-	if (isset($_POST['cdsp_playbackdevice'])) {
-		$patchPlaybackDevice = $_POST['cdsp_playbackdevice'];
-		playerSession('write', 'cdsp_fix_playback', $patchPlaybackDevice == "1" ? "Yes" : "No");
-		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-		   $cdsp->setPlaybackDevice($_SESSION['cardnum']);
-		}
+	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+		$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+	}
+
+	if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+		submitJob('camilladsp', $_POST['cdsp-mode'], 'CamillaDSP ' . $cdsp->getConfigLabel($_POST['cdsp-mode']), '');
+	} else {
+		$cdsp->reloadConfig();
 	}
 }
 

@@ -24,6 +24,7 @@
 
 require_once dirname(__FILE__) . '/playerlib.php';
 
+
 const CDSP_CHECK_VALID = 1;
 const CDSP_CHECK_INVALID = 0;
 const CDSP_CHECK_NOTFOUND = -1;
@@ -63,30 +64,17 @@ class CamillaDsp {
             $supportedFormats = $this->detectSupportedSoundFormats();
             $useFormat = count($supportedFormats) >= 1 ?  $supportedFormats[0] : 'S32LE';
 
-            // sysCmd("sudo sed -i -s '/device/s/hw:[0-9]/hw:" . $device . "/g' " . $this->getCurrentConfigFileName() );
+            $yml_cfg = yaml_parse_file( $this->getCurrentConfigFileName() );
+            $yml_cfg['devices']['capture'] = Array( 'type' => 'File',
+                                                    'channels' => 2,
+                                                    'filename' => '/dev/stdin',
+                                                    'format' => $useFormat);
+            $yml_cfg['devices']['playback'] = Array( 'type' => 'Alsa',
+                                                'channels' => 2,
+                                                'device' => "hw:" . $device . ",0",
+                                                'format' => $useFormat);
 
-            $camillaConfigDict = file_get_contents( $this->getCurrentConfigFileName() );
-
-            $formatCount = 0;
-            $hwCount = 0;
-            $fhandle = fopen($this->getCurrentConfigFileName(), "r");
-            $lines = array();
-            if($fhandle) {
-                while (!feof($fhandle ) ) {
-                    $line = fgets($fhandle);
-                    if ($formatCount<2 && strpos($line, 'format: ') !== false) {
-                        $lines[] = explode(":", $line)[0] . ": ".$useFormat ."\n";
-                        $formatCount++;
-                    }else if ($hwCount<1 && strpos($line, 'device: ') !== false) {
-                        $lines[] = explode(":", $line)[0] . ": \"hw:" . $device . ",0\"\n";
-                        $hwCount++;
-                    }else {
-                        $lines[] = $line;
-                    }
-                }
-                fclose($fhandle);
-                file_put_contents($this->getCurrentConfigFileName(), $lines);
-            }
+            yaml_emit_file($this->getCurrentConfigFileName(), $yml_cfg);
         }
     }
 
@@ -478,12 +466,12 @@ class CamillaDsp {
 
 function test_cdsp() {
     // $cdsp = New CamillaDsp('config_foobar.yaml', "5", "-9;test2.txt;test3.txt;S24_3LE");
-    $cdsp = New CamillaDsp('config_conv.yml', "5", "-9;test2.txt;test3.txt;S24_3LE");
+    $cdsp = New CamillaDsp('flat.yml', "2", "-9;test2.txt;test3.txt;S24_3LE");
 
 
 
     // print($cdsp->getCurrentConfigFileName() . "\n");
-    //$cdsp->setPlaybackDevice(4);
+//    $cdsp->setPlaybackDevice(4);
     // $cdsp->selectConfig("config_foobar.yml");
     // print("\n");
     // print_r($cdsp->checkConfigFile("config.good.yml"));
@@ -505,14 +493,14 @@ function test_cdsp() {
     // }
     // print($cdsp->version());
 
-    print_r($cdsp->detectSupportedSoundFormats());
+   print_r($cdsp->detectSupportedSoundFormats());
 
 
     // $cdsp->setPlaybackDevice(7);
 
     // print_r($cdsp->coeffinfo('Sennheiser_HD800S.wav'));
-    $res = $cdsp->coeffInfo('Sennheiser_HD800S.wav');
-    print_r($res);
+    //$res = $cdsp->coeffInfo('Sennheiser_HD800S.wav');
+    //print_r($res);
 //    print_r($res->{'media'}->{'track'}[0]->{'Format'});
 
     // print($res['media']['track'][1]['BitDepth']);
@@ -535,13 +523,16 @@ function test_cdsp() {
 
 
     // print_r($cdsp->convertWaveFile('test_samplerate_44100Hz.wav'));
-    print_r($cdsp->convertWaveFile('Sennheiser_HD800S_L.wav'));
+    // print_r($cdsp->convertWaveFile('Sennheiser_HD800S_L.wav'));
     // print_r($cdsp->convertWaveFile('BRIR_R02_P1_E0_A30C_44100Hz_24b.raw'));
-
+    $cdsp->setPlaybackDevice(2);
 }
+
+
 
 if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
     test_cdsp();
 }
+
 
 ?>
