@@ -426,6 +426,10 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 }
 // NOTE: Start Allo Boss2 OLED display
 if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+	// Ensure module loadad before starting OLED driver
+	sysCmd('sed -i "s/^#i2c-dev/i2c-dev/" /etc/modules');
+	sysCmd('modprobe i2c-dev');
+
 	sysCmd('systemctl start boss2oled');
 	workerLog('worker: Boss 2 OLED started');
 }
