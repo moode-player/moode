@@ -701,23 +701,21 @@ workerLog('worker: USB auto-mounter (' . $_SESSION['usb_auto_mounter'] . ')');
 // LED states
 if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
-	$led0_brightness = explode(',', $_SESSION['led_state'])[0] == '0' ? '1' : '0';
-	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
-	sysCmd('echo ' . $led0_brightness . ' | sudo tee /sys/class/leds/led0/brightness > /dev/null 2>&1');
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
 	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
 	workerLog('worker: LED1 (sysclass does not exist)');
 }
 elseif ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
 	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
-	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
 	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
 	workerLog('worker: LED1 (sysclass does not exist)');
 }
 else {
-	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
 	$led1_brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
-	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
-	sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null 2>&1');
+	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
 	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
 	workerLog('worker: LED1 (' . ($led1_brightness == '0' ? 'Off' : 'On') . ')');
 }
@@ -1860,18 +1858,16 @@ function runQueuedJob() {
 		case 'actled': // LED0
 			if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 				$led0_trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
-				$led0_brightness = $_SESSION['w_queueargs'] == '0' ? '1' : '0';
-				sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
-				sysCmd('echo ' . $led0_brightness . ' | sudo tee /sys/class/leds/led0/brightness > /dev/null 2>&1');
+				sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
 			}
 			else {
 				$led0_trigger = $_SESSION['w_queueargs'] == '0' ? 'none' : 'mmc0';
-				sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null 2>&1');
+				sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
 			}
 			break;
 		case 'pwrled': // LED1
 			$led1_brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
-			sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null 2>&1');
+			sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
 			break;
 		case 'maxusbcurrent':
 			$cmd = $_SESSION['w_queueargs'] == 1 ? 'echo max_usb_current=1 >> ' . '/boot/config.txt' : 'sed -i /max_usb_current/d ' . '/boot/config.txt';
