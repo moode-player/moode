@@ -389,7 +389,7 @@ function restart_renderer($argv) {
 }
 
 function system_info() {
-	echo "Generating info...\n";
+	echo "Gathering info...\n";
 	echo shell_exec('sudo /var/www/command/sysinfo.sh');
 }
 
