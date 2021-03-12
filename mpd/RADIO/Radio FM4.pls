@@ -1,5 +1,5 @@
 [playlist]
-File1=http://mp3stream1.apasf.apa.at:8000
+File1=https://orf-live.ors-shoutcast.at/fm4-q2a
 Title1=Radio FM4
 NumberOfEntries=1
 Length1=-1

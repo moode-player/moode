@@ -26,6 +26,17 @@ Audio devices
 
 - NEW: Allo Boss 2 w/OLED display and chip options
 
+Radio stations
+
+- UPD: Radio FM4
+- UPD: Resonance Radio 104.4 FM
+- UPD: WEMU Ypsilanti FM 89.1 - Jazz
+- UPD: WQED Pittsburgh 89.3 - Classical
+- DEL: JB Radio2 (320K)
+- DEL: RadioActive FM 88.6
+- DEL: smooth Chill
+- DEL: UCFM 87.8 - Canberra's Alternative
+
 Updates
 
 - UPD: Bump to MPD 0.22.6
