@@ -77,6 +77,7 @@ Bug fixes
 - FIX: Wrong cardnum being used in moodeutl to get hw_params
 - FIX: SoX resampling quality always set to High
 - FIX: LED control for P-Zero
+- FIX: Auto-play receives empty songid during startup 
 
 ########################################################
 //

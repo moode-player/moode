@@ -470,6 +470,7 @@ foreach ($outputs as $output) {
 // MPD crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
 sendMpdCmd($sock, 'crossfade ' . $_SESSION['mpdcrossfade']);
+$resp = readMpdResp($sock);
 // Ignore CUE files
 setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 workerLog('worker: MPD ignore CUE files (' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no') . ')');
@@ -754,6 +755,7 @@ if ($_SESSION['autoplay'] == '1') {
 	}
 	else {
 		$status = parseStatus(getMpdStatus($sock));
+		//workerLog(print_r($status, true));
 		sendMpdCmd($sock, 'playid ' . $status['songid']);
 		$resp = readMpdResp($sock);
 		workerLog('worker: Auto-playing id (' . $status['songid'] . ')');
