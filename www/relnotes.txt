@@ -30,6 +30,7 @@ Radio stations
 
 - UPD: Radio FM4
 - UPD: Resonance Radio 104.4 FM
+- UPD: The Jazz Groove
 - UPD: WEMU Ypsilanti FM 89.1 - Jazz
 - UPD: WQED Pittsburgh 89.3 - Classical
 - DEL: JB Radio2 (320K)
@@ -77,7 +78,8 @@ Bug fixes
 - FIX: Wrong cardnum being used in moodeutl to get hw_params
 - FIX: SoX resampling quality always set to High
 - FIX: LED control for P-Zero
-- FIX: Auto-play receives empty songid during startup 
+- FIX: Auto-play receives empty songid during startup
+- FIX: Fields too wide in new/edit station and adv search modals
 
 ########################################################
 //

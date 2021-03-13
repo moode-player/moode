@@ -1,5 +1,5 @@
 [playlist]
-File1=http://aac-64.streamthejazzgroove.com:80/stream
+File1=http://west-aac-64.streamthejazzgroove.com/stream
 Title1=The Jazz Groove
 NumberOfEntries=1
 Length1=-1
