@@ -5,7 +5,7 @@
 # bitlab 2021
 #
 
-CAMILLAGUI_VER=0.6.0_6b90f71a20f0f1c47b2a8b3d23d517e110436e72
+CAMILLAGUI_VER=0.6.0_8d722c1573927cfe1071cc0cf0602933992e04d6
 PYCAMILLADSP_VER=0.5.0
 PYCAMILLADSP_PLOT_VER=0.4.5
 
@@ -28,5 +28,3 @@ sudo cp camillagui.service /etc/systemd/system
 # Don't start it, start it when needed from the moode config pages
 #sudo systemctl enable camillagui
 #sudo systemctl start camillagui
-
-
