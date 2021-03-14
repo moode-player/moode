@@ -33,6 +33,14 @@ p3wifi = "1"
 p3bt = "1"
 expandfs ="1"
 
+[Mqtt]
+mqtthost = "192.168.178.1"
+mqttport = "1883"
+mqttclient = ""
+mqttuser = ""
+mqttpassword = ""
+mqtttopic = "moOdePlayer"
+
 [I2S Device]
 i2sdevice = "none"
 
