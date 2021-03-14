@@ -17,6 +17,9 @@ sudo pip3 install numpy matplotlib
 sudo pip3 install camilladsp_plot-$PYCAMILLADSP_PLOT_VER-py3-none-any.whl
 sudo mkdir -p /opt
 sudo unzip -o camillagui-v$CAMILLAGUI_VER.zip -d /opt/camillagui
+# Customized style sheet for moOde (https://github.com/HEnquist/camillagui branch moOde-style )
+# wget https://raw.githubusercontent.com/HEnquist/camillagui/moOde-style/public/css-variables.css
+sudo cp css-variables.css /opt/camillagui/build/css-variables.css
 
 sudo cp camillagui.yml /opt/camillagui/config
 sudo cp gui-config.yml /opt/camillagui/config

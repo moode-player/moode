@@ -1,0 +1,171 @@
+/* Dark skin. */
+.css-variables-disabled {
+
+    /*
+      Styling is only supported using the following CSS variables.
+      They will be maintained in a backwards-compatible manner as good as possible.
+      It is technically possible to add any valid CSS to this file,
+      but there are no guarantees with respect to backwards-compatibility.
+
+      Variable types:
+      - variables ending with -color: any valid CSS color
+      - variables ending with -border: any value valid for the CSS border shorthand property (e.g. 1px solid red)
+      - border-radius: any positive CSS length/percentage
+      - variables ending with -opacity: any positive CSS float value (e.g. 0.5)
+    */
+
+    /* General */
+    --background-color: #202020;
+    --text-color: #ddd;
+    --error-text-color: #dc4646;
+    --error-field-background-color: var(--error-text-color);
+    --success-text-color: #46c846;
+    --neutral-text-color: #bbb;
+    --border-radius: 5px;
+
+    /* Buttons */
+    --button-icon-color: var(--text-color);
+    --button-add-icon-color: var(--success-text-color);
+    --button-remove-icon-color: var(--error-text-color);
+    --button-text-color: var(--text-color);
+    --button-background-color: #333;
+    --button-border: 2px solid rgb(70, 70, 70);
+    --hovered-button-background-color: #444;
+    --hovered-button-border: 2px solid #bbb;
+    --active-button-background-color: #555;
+    --active-button-border: 2px solid #ddd;
+    --disabled-button-opacity: 0.4;
+    --disabled-button-background-color: var(--button-background-color);
+    --disabled-button-border: var(--button-border);
+    --highlighted-button-background-color: #242;
+    --highlighted-button-border: 2px solid #4b4;
+
+    /* Boxes */
+    --box-border-width: 2px;
+    --box-border-color: rgb(70, 70, 70);
+    --box-border: var(--box-border-width) solid var(--box-border-color);
+
+    /* Inputs */
+    --input-border: 2px solid rgba(70, 70, 70, 0.5);
+    --focused-input-border: 2px solid var(--success-text-color);
+
+    /* Filter plot */
+    --axes-color: #555;
+    --gain-color: #4646f0;
+    --phase-color: var(--error-text-color);
+    --impulse-color: var(--success-text-color);
+
+    /* Pipeline plot */
+    --arrow-color: var(--axes-color);
+    --frame-background-color: #333;
+    --block-background-color: rgb(200, 200, 200);
+    --block-text-color: rgb(16, 10, 90);
+}
+
+/*
+    Bright skin (black/white)
+    Rename to .css-variables to enable
+*/
+.css-variables-disabled {
+
+    /* General */
+    --background-color: white;
+    --text-color: black;
+    --error-text-color: #f00;
+    --error-field-background-color: var(--error-text-color);
+    --success-text-color: #0c0;
+    --neutral-text-color: #bbb;
+    --border-radius: 5px;
+
+    /* Buttons */
+    --button-icon-color: var(--text-color);
+    --button-add-icon-color: var(--success-text-color);
+    --button-remove-icon-color: var(--error-text-color);
+    --button-text-color: var(--text-color);
+    --button-background-color: #f3f3f3;
+    --button-border: 1px inset #9090B0;
+    --hovered-button-background-color: #ddd;
+    --hovered-button-border: var(--button-border);
+    --active-button-background-color: #aaa;
+    --active-button-border: var(--button-border);
+    --disabled-button-opacity: 1.0;
+    --disabled-button-background-color: #aaa;
+    --disabled-button-border: var(--button-border);
+    --highlighted-button-background-color: #cfc;
+    --highlighted-button-border: var(--button-border);
+
+    /* Boxes */
+    --box-border-width: 1px;
+    --box-border-color: #9090B0;
+    --box-border: var(--box-border-width) solid var(--box-border-color);
+
+    /* Inputs */
+    --input-border: 1px solid #9090B0;
+    --focused-input-border: 2px solid #9292f6;
+
+    /* Filter plot */
+    --axes-color: #555;
+    --gain-color: rgba(0,0,220,1);
+    --phase-color: rgba(0,220,0,1);
+    --impulse-color: rgba(220,0,0,1);
+
+    /* Pipeline plot */
+    --arrow-color: var(--text-color);
+    --frame-background-color: rgb(180, 180, 180);
+    --block-background-color: rgb(233, 233, 233);
+    --block-text-color: rgb(16, 10, 90);
+}
+
+/* moOde Style */
+.css-variables {
+
+    /* moOde specific */
+    --accent-color: #27ae60;
+
+    /* General */
+    --background-color: #202020;
+    --text-color: #ddd;
+    --error-text-color: #c0392b;
+    --error-field-background-color: var(--error-text-color);
+    --success-text-color: #27ae60;
+    --neutral-text-color: #bbb;
+    --border-radius: 5px;
+
+    /* Buttons */
+    --button-icon-color: var(--text-color);
+    --button-add-icon-color: var(--success-text-color);
+    --button-remove-icon-color: var(--error-text-color);
+    --button-text-color: var(--accent-color);
+    --button-background-color: rgba(128,128,128,.2);
+    --button-border: 1px solid var(--background-color);
+    --hovered-button-background-color: var(--button-background-color);
+    --hovered-button-border: var(--button-border);
+    --active-button-background-color: var(--button-background-color);
+    --active-button-border: var(--button-border);
+    --disabled-button-opacity: 0.65;
+    --disabled-button-background-color: var(--button-background-color);
+    --disabled-button-border: var(--button-border);
+    --highlighted-button-background-color: var(--button-background-color);
+    --highlighted-button-border: 1px solid var(--accent-color);
+
+    /* Boxes */
+    --box-border-width: 1px;
+    --box-border-color: #999;
+    --box-border: var(--box-border-width) solid var(--box-border-color);
+
+    /* Inputs */
+    --input-border: 1px solid rgba(128,128,128,.5);
+    --focused-input-border: 1px solid var(--accent-color);
+
+    /* Dialogs */
+    --axes-color: #555;
+    --gain-color: #3980b9;
+    --phase-color: #27ae60;
+    --impulse-color: #c0392b;
+
+    /* Pipeline plot */
+    --arrow-color: var(--axes-color);
+    --frame-background-color: #333;
+    --block-background-color: rgb(200, 200, 200);
+    --block-text-color: rgb(16, 10, 90);
+}
