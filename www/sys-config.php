@@ -517,6 +517,29 @@ else {
 	$_ssh_link_disable = 'onclick="return false;"';
 }
 
+// MQTT BROKER
+if (isset($_POST['update_mqtt'])) {
+	if (isset($_POST['mqtthost']) && $_POST['mqtthost'] != $_SESSION['mqtthost']) {
+		playerSession('write', 'mqtthost', $_POST['mqtthost']);
+	}
+
+	if (isset($_POST['mqttport']) && $_POST['mqttport'] != $_SESSION['mqttport']) {
+		playerSession('write', 'mqttport', $_POST['mqttport']);
+	}
+	if (isset($_POST['mqttclient']) && $_POST['mqttclient'] != $_SESSION['mqttclient']) {
+		playerSession('write', 'mqttclient', $_POST['mqttclient']);
+	}
+	if (isset($_POST['mqttuser']) && $_POST['mqttuser'] != $_SESSION['mqttuser']) {
+		playerSession('write', 'mqttuser', $_POST['mqttuser']);
+	}
+	if (isset($_POST['mqttpassword']) && $_POST['mqttpassword'] != $_SESSION['mqttpassword']) {
+		playerSession('write', 'mqttpassword', $_POST['mqttpassword']);
+	}
+	if (isset($_POST['mqtttopic']) && $_POST['mqtttopic'] != $_SESSION['mqtttopic']) {
+		playerSession('write', 'mqtttopic', $_POST['mqtttopic']);
+	}
+}
+
 // MAINTENANCE
 
 // debug logging
