@@ -1,6 +1,6 @@
 ################################################################
 #
-# Build Recipe v2.29 2021-03-15
+# Build Recipe v2.28 2021-03-15
 #
 # moOde 7.1.0 2021-03-15
 # - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
@@ -339,6 +339,7 @@ sudo chown -R mpd:audio /var/log/mpd
 sudo cp ./moode/mpd/mpd.conf.default /etc/mpd.conf
 sudo chown mpd:audio /etc/mpd.conf
 sudo chmod 0666 /etc/mpd.conf
+echo "*.cue" >/var/lib/mpd/music/.mpdignore
 
 2. Install MPD dev libs.
 
