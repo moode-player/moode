@@ -861,7 +861,7 @@ sudo rm -rf minidlna*
 ////////////////////////////////////////////////////////////////
 
 cd ~
-cp ./moode/other/ashuffle/ashuffle-3.10.0-armv6h-linux-gnueabihf /usr/local/bin/ashuffle
+cp ./moode/other/ashuffle/ashuffle-3.11.1-armv6h-linux-gnueabihf /usr/local/bin/ashuffle
 
 ////////////////////////////////////////////////////////////////
 //

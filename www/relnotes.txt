@@ -42,10 +42,12 @@ Updates
 
 - UPD: Bump to MPD 0.22.6
 - UPD: Bump to CamillaDSP 0.5.0-beta4
+- UPD: Bump to CamillaGUI 0.6.0
 - UPD: Bump to ALSA cdsp (commit e941420)
 - UPD: Bump to upmpdcli 1.5.8 w/updated coverart util
 - UPD: Bump to miniDLNA 1.3.0
 - UPD: Bump to librespot 0.1.6
+- UPD: Bump to ashuffle 3.11.1
 - UPD: Bump to moodeutl 1.5.2
 - UPD: Add Clear/Add to Library context menus
 - UPD: Add Track info to Queue context menu
@@ -80,6 +82,7 @@ Bug fixes
 - FIX: LED control for P-Zero
 - FIX: Auto-play receives empty songid during startup
 - FIX: Fields too wide in new/edit station and adv search modals
+- FIX: Fix spaces not handled in Squeezelite $PLAYERNAME var
 
 ########################################################
 //
