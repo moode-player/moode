@@ -83,6 +83,7 @@ Bug fixes
 - FIX: Auto-play receives empty songid during startup
 - FIX: Fields too wide in new/edit station and adv search modals
 - FIX: Fix spaces not handled in Squeezelite $PLAYERNAME var
+- FIX: Auto-shuffle reverts to track mode after library update
 
 ########################################################
 //
