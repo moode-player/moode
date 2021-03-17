@@ -73,6 +73,7 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 .bootstrap-select.select-medium2:not([class*="span"]) {width:180px;}
 .bootstrap-select.select-large:not([class*="span"]) {width:250px;}
 .bootstrap-select.select-large2:not([class*="span"]) {width: 282px;}
+.bootstrap-select.select-large3:not([class*="span"]) {width: 350px;}
 /* stuff */
 #playback-queue {width:38%;}
 #playback-cover {padding:0;width:38%;}
@@ -601,4 +602,3 @@ ol.playhistory {margin-left:55px;}
 	width:90% !important;
 	max-width: 750px !important;
 }
-
