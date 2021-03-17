@@ -248,11 +248,11 @@ else {
 		$resample_rate = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
 		$patch_id = explode('_p0x', $_SESSION['mpdver'])[1];
 		$resample_modes = array('0' => 'disabled',
-			SOX_UPSAMPLE_ALL => 'source > target rate',
+			SOX_UPSAMPLE_ALL => 'source < target rate',
 			SOX_UPSAMPLE_ONLY_41K => 'only 44.1K source rate',
 			SOX_UPSAMPLE_ONLY_4148K => 'only 44.1K and 48K source rates',
 			SOX_ADHERE_BASE_FREQ => 'resample (adhere to base freq)',
-			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'source > target rate (adhere to base freq)'
+			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'source < target rate (adhere to base freq)'
 		);
 		if ($patch_id & PATCH_SELECTIVE_RESAMPLING) {
 			$_selective_resampling_hide = '';
