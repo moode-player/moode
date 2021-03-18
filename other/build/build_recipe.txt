@@ -560,7 +560,7 @@ sudo mv /home/pi/xinitrc.default /home/pi/.xinitrc
 sudo cp -r ./moode/lib/* /lib
 sudo cp -r ./moode/usr/* /usr
 sudo cp -r ./moode/var/* /var
-sudo cp -r ./moode/www/* /var/www
+sudo cp -r ./moode/build/distr/var/www/* /var/www
 
 sudo chmod 0755 /home/pi/*.sh
 sudo chmod 0755 /home/pi/*.php
@@ -659,21 +659,21 @@ mpc enable only 1
 
 ////////////////////////////////////////////////////////////////
 //
-// STEP 9b - Camilladsp and alsa_cdsp
+// STEP 9b - CamillaDSP, CamillaGUI and alsa_cdsp
 // NOTE: See readme.txt in other/camilladsp for more info
 //
 ////////////////////////////////////////////////////////////////
 
-# 9b.1a Camilladsp build + install from source
+# 9b.1a CamillaDSP build + install from source
 # when question ask choose 1
 sudo curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # logout / login to update env (or do it manually)
-sudo tar -xzf ./moode/other/camilladsp/camilladsp-0.5.0-beta2.tar.gz
-cd camilladsp-0.5.0-beta2
+sudo tar -xzf ./moode/other/camilladsp/camilladsp-0.5.0-beta4.tar.gz
+cd camilladsp-0.5.0-beta4
 sudo RUSTFLAGS='-C target-feature=+neon -C target-cpu=native' cargo build --release --no-default-features --features alsa-backend --features websocket
 sudo cp target/release/camilladsp /usr/local/bin/
 
-# 9b.1b Camilladsp install prebuild
+# 9b.1b CamillaDSP install prebuild
 # sudo cp .moode/other/camilladsp/camilladsp /usr/local/bin/
 # sudo chmod a+x /usr/local/bin/camilladsp
 
@@ -687,6 +687,13 @@ sudo cd rm -rf ./alsa_cdsp
 
 # 9b.2b Alsa_cdsp install prebuild
 # sudo install -m 644 ./moode/other/alsa_cdsp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`/alsa-lib/
+
+# 9b.3a CamillaGUI
+sudo cp -r ./moode/other/camilladsp/gui/ ./
+cd ./gui
+sudo ./_install.sh
+cd ..
+sudo rm -rf ./gui
 
 ////////////////////////////////////////////////////////////////
 //
