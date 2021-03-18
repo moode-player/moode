@@ -3210,6 +3210,7 @@ function autoConfigSettings() {
 			$result = $result."wlanssid = \"" . $row['wlanssid'] . "\"\n";
 			$result = $result."wlanpwd = \"" . "" . "\"\n"; // keep empty
 			$result = $result."wlansec = \"" . $row['wlansec'] . "\"\n";
+			$result = $result."wlancountry = \"" . $row['wlan_country'] . "\"\n";
 			return $result;
 		}],
 
