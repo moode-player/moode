@@ -474,10 +474,14 @@ function genFlatList($sock) {
 			if ($element == 'OK') {
 				// NOTE: Skip any ACK's
 			}
-			else if ($element == 'file') {
+			elseif ($element == 'file') {
 				$item = count($flat);
 				$flat[$item][$element] = $value;
 			}
+
+			// TODO: Change the following section to allow just populating $flat[$item]['Artist'] with Composers
+			// This assumes the "Artist +" options either gets changed to "Composers" or "Composers" is added to library_tagview_artist.
+
 			// @Atair: Gather possible multiple Genre, Artist, Performer and Conductor values as array
 			elseif ($element == 'Genre') {
 				if ($flat[$item]['Genre']) {
