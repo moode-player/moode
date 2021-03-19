@@ -8,7 +8,7 @@
 ; Example: wlanssid = ""
 ;
 ; Moode Release : 7.1.0 2021-03-15
-; Create date	: 2021-02-20 09:44:06
+; Create date	: 2021-03-19 07:21:05
 ;
 ; ##########################################
 [Names]
@@ -31,7 +31,7 @@ led_state = "1,1"
 localui = "0"
 p3wifi = "1"
 p3bt = "1"
-expandfs ="1"
+expandfs ="0"
 
 [I2S Device]
 i2sdevice = "none"
@@ -43,7 +43,7 @@ crossfeed = "Off"
 invert_polarity = "0"
 alsaequal = "Off"
 eqfa12p = "Off"
-camilladsp_quickconv = "-12;Sennheiser_HD800S.wav;Sennheiser_HD800S.wav;S16LE"
+camilladsp_quickconv = "0;Sennheiser_HD800S_L_44100Hz_32b.raw;Sennheiser_HD800S_R_44100Hz_32b.raw;S32LE"
 cdsp_fix_playback = "Yes"
 camilladsp = "off"
 volume_step_limit = "10"
@@ -110,6 +110,7 @@ wlansecdns = ""
 wlanssid = "None (activates AP mode)"
 wlanpwd = ""
 wlansec = "wpa"
+wlancountry = "US"
 
 [Network (apd0)]
 apdssid = "Moode"
