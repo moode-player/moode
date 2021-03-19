@@ -15,6 +15,10 @@
 //
 ########################################################
 
+Updates
+
+UPD: Show Quick Convolution filter friendly name in Audio info
+
 Bug fixes
 
 - FIX: Wlan_country param missing from auto-config export
