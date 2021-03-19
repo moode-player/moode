@@ -19,6 +19,7 @@
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
+require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 if (false === ($sock = openMpdSock('localhost', 6600))) {
 	$msg = 'audioinfo: Connection to MPD failed';
@@ -29,6 +30,17 @@ else {
 	playerSession('open', '' ,'');
 	$dbh = cfgdb_connect();
 	session_write_close();
+}
+
+function getCamillaDspConfigName($config) {
+	$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+	$configs = $cdsp->getAvailableConfigs( True);
+	$configLabel = $config;
+	if(array_key_exists($config, $configs) ) {
+		$configLabel = $configs[$config];
+	}
+
+	return $configLabel;
 }
 
 // hardware params
@@ -228,7 +240,7 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 	if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1') {
 		$peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 		$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
-        $camilladsp = $_SESSION['camilladsp'];
+        $camilladsp = getCamillaDspConfigName($_SESSION['camilladsp']);
 	}
 	else {
 		$peq = 'off';
@@ -289,7 +301,7 @@ else {
 	// Equalizers
 	$peq = $_SESSION['eqfa12p'] == 'Off' ? 'off' : $_SESSION['eqfa12p'];
 	$geq = $_SESSION['alsaequal'] == 'Off' ? 'off' : $_SESSION['alsaequal'];
-    $camilladsp = $_SESSION['camilladsp'];
+    $camilladsp = getCamillaDspConfigName($_SESSION['camilladsp']);
 	// Replaygain and volume normalization
 	$replaygain = $cfg_mpd['replaygain'];
 	$vol_normalize = $cfg_mpd['volume_normalization'] == 'no' ? 'off' : $cfg_mpd['volume_normalization'];
