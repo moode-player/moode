@@ -479,9 +479,6 @@ function genFlatList($sock) {
 				$flat[$item][$element] = $value;
 			}
 
-			// TODO: Change the following section to allow just populating $flat[$item]['Artist'] with Composers
-			// This assumes the "Artist +" options either gets changed to "Composers" or "Composers" is added to library_tagview_artist.
-
 			// @Atair: Gather possible multiple Genre, Artist, Performer and Conductor values as array
 			elseif ($element == 'Genre') {
 				if ($flat[$item]['Genre']) {
@@ -507,6 +504,8 @@ function genFlatList($sock) {
 				else {
 					$flat[$item]['Artist'] = array($value);
 				}
+				// NOTE: Uncomment this if Performer is included in output of GenLibrary()
+				//$flat[$item][$element] = $value;
 			}
 			// @Atair: add conductor to artists
 			elseif ($element == 'Conductor') {
@@ -516,15 +515,8 @@ function genFlatList($sock) {
 				else {
 					$flat[$item]['Artist'] = array($value);
 				}
-			}
-			// @Tim Curtis: add composer to artists
-			elseif ($element == 'Composer' && $_SESSION['library_tagview_artist'] == 'Artist +') {
-				if ($flat[$item]['Artist']) {
-					array_push($flat[$item]['Artist'], $value);
-				}
-				else {
-					$flat[$item]['Artist'] = array($value);
-				}
+				// NOTE: Uncomment this if Conductor is included in output of GenLibrary()
+				//$flat[$item][$element] = $value;
 			}
 			else {
 				$flat[$item][$element] = $value;
@@ -611,7 +603,8 @@ function genLibrary($flat) {
 				'artist' => ($flatData['Artist'] ? $flatData['Artist'] : array()), //@Atair: array is expected in scripts-library.js even when empty
 				'album_artist' => ($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist')),
 				'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
-				'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
+				//'performer' => ($flatData['Performer'] ? $flatData['Performer'] : 'Performer tag missing'),
+				//'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
 				'year' => getTrackYear($flatData),
 				'time' => $flatData['Time'],
 				'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
@@ -805,7 +798,8 @@ function genLibraryUTF8Rep($flat) {
 				//    otherwise, when Artist is an array of two and more values or empty, the AlbumArtist is set to 'Unknown' (this is regarded as bad tagging)
 				'album_artist' => utf8rep(($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist'))),
 				'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
-				'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
+				//'performer' => utf8rep(($flatData['Performer'] ? $flatData['Performer'] : 'Performer tag missing')),
+				//'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
 				'year' => utf8rep(getTrackYear($flatData)),
 				'time' => utf8rep($flatData['Time']),
 				'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),

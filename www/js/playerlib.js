@@ -2462,13 +2462,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {thumbSizeChange = true;}
 
     // Library (Advanced)
-    if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {
-        libraryOptionsChange = true;
-        // Changing from/to Artist +
-        if (SESSION.json['library_tagview_artist'] == 'Artist +' || $('#tag-view-artist span').text() == 'Artist +') {
-            clearLibcacheAllReqd = true;
-        }
-    }
+    if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {libraryOptionsChange = true;}
     if (miscLibOptions[1] != $('#library-album-key span').text()) {clearLibcacheAllReqd = true;}
     if (miscLibOptions[0] != $('#library-inc-comment-tag span').text()) {clearLibcacheAllReqd = true;}
     if (SESSION.json['library_ignore_articles'] != $('#ignore-articles').val()) {libraryOptionsChange = true;}
