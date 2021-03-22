@@ -91,10 +91,8 @@ function notify(cmd, msg, duration) {
         duration = 86400000; // 24 hours
     }
 
-	// override and combine title and message on one line
-	if (cmd == 'update') {
-		msg = 'Path: ' + msg;
-	}
+    // Close previous message if any
+    $('.ui-pnotify-closer').click();
 
     //var icon = cmd == 'needplname' || cmd == 'needssid' ? 'fas fa-info-circle' : 'fas fa-check';
 	var icon = '';
