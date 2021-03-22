@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Mar 19 18:48:33 2021
+-- File generated with SQLiteStudio v3.1.0 on Sun Mar 21 17:53:49 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -221,7 +221,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (211, 'https://playerservices.streamtheworld.com/api/livestream-redirect/WEMUFM.mp3', 'WEMU Ypsilanti FM 89.1 - Jazz', 'r', 'local', 'Jazz', 'WEMU', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (212, 'http://stream.wfmt.com/main', 'WFMT Chicago 98.7 - Classical', 'r', 'local', 'Classical', 'WYMT', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (213, 'http://stream0.wfmu.org/freeform-best-available', 'WFMU 91.1 FM', 'r', 'local', 'Classical', 'WFMU', 'English', 'United States', 'North America', '256', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (214, 'http://wkcr.streamguys1.com:80/live', 'WKCR 89.9 FM', 'r', 'local', 'Jazz,Classical', 'WKCR (Columbia University)', 'English', 'United States', 'North America', '96', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (214, 'http://wkcr.streamguys1.com:80/live', 'WKCR 89.9 FM', 'r', 'local', 'Jazz, Classical', 'WKCR (Columbia University)', 'English', 'United States', 'North America', '96', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (215, 'http://ice-1.streamhoster.com/lv_wqed--893', 'WQED Pittsburgh 89.3 - Classical', 'r', 'local', 'Classical', 'WQED', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (216, 'http://stream.wqxr.org/wqxr', 'WQXR New York - Classical Music', 'r', 'local', 'Classical', 'New York Public Radio', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (217, 'http://q2stream.wqxr.org/q2', 'WQXR Q2 - Living Music, Living Composers', 'r', 'local', 'Classical', 'New York Public Radio', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
