@@ -1630,7 +1630,7 @@ function renderRadioView() {
             var countryDiv = sortTag == 'region' ? '<div class="radioview-metadata-text">' + data[i].country + '</div>' : '';
             var countryDiv = (sortTag == 'country' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].country + '</div>' : '';
             var languageDiv = (sortTag == 'language' && groupMethod == 'No grouping') ? '<div class="radioview-metadata-text">' + data[i].language + '</div>' : '';
-            var subGenreDiv = sortTag == 'genre' ? '<div class="radioview-metadata-text">' + data[i].genre.substr(data[i].genre.indexOf(', ') + 1) + '</div>' : '';
+            var genreDiv = sortTag == 'genre' ? '<div class="radioview-metadata-text">' + data[i].genre + '</div>' : '';
 
             // Output Favorites first
             if (groupMethod == 'Favorites first' && data[i].type == 'f') {
@@ -1680,7 +1680,7 @@ function renderRadioView() {
             output += broadcasterDiv;
             output += countryDiv;
             output += languageDiv;
-            output += subGenreDiv;
+            output += genreDiv;
 
             //output += radioViewTxDiv;
             output += radioViewNvDiv;

@@ -30,6 +30,7 @@ Bug fixes
 
 - FIX: Wlan_country param missing from auto-config export
 - FIX: Wrong squeezelite compile in release image
+- FIX: Genre data for several radio stations
 
 ########################################################
 //
