@@ -25,6 +25,7 @@ Updates
 
 UPD: Show Quick Convolution filter friendly name in Audio info
 UPD: Revert the "Artist +" library option (not useful)
+UPD: Boss2 OLED display script 
 
 Bug fixes
 

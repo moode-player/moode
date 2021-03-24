@@ -1,0 +1,123 @@
+BOSS2 OLED application runs on Python 2.x 
+This application using for displaying status
+and controlling Allo boss2 amixer controls
+volume settings
+Filter settings
+RMS voltage control
+
+
+Tested on Below OS Images
+roPieee, roPieee XL ,Moode , Dietpi , Volumio, Max2play
+
+
+Note : Host name set as default to install the boss2 oled display, 
+if any change in hostname will not execute the ./install_boss2_oled.sh
+After completing the installation set host name as per user choice.
+
+
+
+Steps for Installation
+----------------------
+
+copy tar file to location /opt/
+
+Loging as root user either using sudo or password
+
+download boss2_oled.tar.gz from the link using wget or scp
+
+	
+	cd /opt/
+	wget http://3.230.113.73:9011/Allocom/Boss2/boss2_oled.tar.gz
+	tar -xzvf boss2_oled.tar.gz
+	cd boss2_oled
+	./install_boss2_oled.sh 
+
+Automatically downloads and installing  required packages for respective OS and reboots.
+every reboot starts boss2_oled display , checks the Boss2 sound device on startup, if no boss2 hardware application exit. 
+
+
+Other OS 
+--------
+if Python2 not installed install manually
+required packages after installing python2
+apt-get -y update
+apt-get install python2
+apt-get -y install python2-rpi.gpio ( if doesnt work install pip and then run pip2 install RPi.GPIO==0.7.0)
+apt-get -y install python2-pip
+apt-get -y install python2-smbus (if does not work then run pip2 install smbus)
+apt-get -y install python2-pil          or       apt-get -y install python2-pillow
+
+enable i2c manually or check $i2cdetect -y 1 working
+
+
+
+Disable the startup service steps on each OS:
+---------------------------------------------
+on executing ./install_boss2_oled.sh  will install the required packages and
+add the startup service to start on every reboot.For any reason need to
+manually disable it on startup follow below steps
+
+ropieee  : ssh enable on GUI ,  ssh login  username : root password : ropieee
+-----------------------------------------------------------------------------
+for disabling the boss2 oled application execute below command on ssh login
+$systemctl disable ropieee-boss2-oled.service
+$reboot
+
+To start agin the service execute below command and reboot.
+$systemctl enable ropieee-boss2-oled.service
+$reboot
+
+Dietpi :  ssh login username : root password : dietpi
+-----------------------------------------------------
+for disabling the boss2 oled application execute below command on ssh login.
+
+$systemctl disable boss2oled.service
+$reboot
+
+To start agin the service execute below command and reboot.
+$systemctl enable boss2oled.service
+$reboot
+
+Moode : ssh login username : pi password : moodeaudio, $sudo su
+---------------------------------------------------------------
+for disabling start up service follow below steps
+
+$nano /etc/rc.local
+
+either delete or comment the below  2 lines
+boss2flag=1
+sudo python /opt/boss2_oled/boss2_oled.py &
+
+Volumio ssh login username : volumio password : volumio, $su password : volumio
+-------------------------------------------------------------------------------
+for disabling start up service follow below steps
+
+$nano /etc/rc.local
+
+either delete or comment the below  2 lines
+boss2flag=1
+sudo python /opt/boss2_oled/boss2_oled.py &
+
+Max2Play ssh login : pi password : max2play, $sudo su
+-----------------------------------------------------
+for disabling start up service follow below steps
+
+$nano /etc/rc.local
+
+either delete or comment the below  2 lines
+boss2flag=1
+sudo python /opt/boss2_oled/boss2_oled.py &
+
+
+-------------------------********************************----------------------------------
+
+                                        END OF FILE
+
+
+---------------------------******************************----------------------------------
+
+
+
+
+
+
