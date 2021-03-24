@@ -24,7 +24,7 @@ Radio stations
 Updates
 
 UPD: Show Quick Convolution filter friendly name in Audio info
-UPD: Revert the "Artist +" library option
+UPD: Revert the "Artist +" library option (not useful)
 
 Bug fixes
 
