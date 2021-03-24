@@ -175,12 +175,11 @@ else if (isset($_POST['camillaguiexpertstatus']) && isset($_POST['updatecamillag
 	$cdsp->setGuiExpertMode($_POST['camillaguiexpertstatus'] == '1');
 }
 
-
-
-
 /**
  * Generate data for html templating
  */
+
+$_save_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
 
 $configs = $cdsp->getAvailableConfigs();
 foreach ($configs as $config_file=>$config_name) {
