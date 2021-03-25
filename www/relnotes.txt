@@ -19,13 +19,14 @@ Radio stations
 
 - NEW: ByteFM
 - UPD: Ancient FM - Mediaeval and Renaissance Music
+- UPD: BBC 128K stations
 - UPD: WKCR 89.9 FM
 
 Updates
 
 UPD: Show Quick Convolution filter friendly name in Audio info
 UPD: Revert the "Artist +" library option (not useful)
-UPD: Boss2 OLED display script 
+UPD: Allo Boss2 OLED display script
 
 Bug fixes
 

@@ -1,6 +1,5 @@
 [playlist]
-File1=http://bbcmedia.ic.llnwd.net/stream/bbcmedia_6music_mf_p
-Title1=BBC Radio 6 Music
+File1=http://stream.live.vc.bbcmedia.co.uk/bbc_6music
 NumberOfEntries=1
 Length1=-1
 Version=2
