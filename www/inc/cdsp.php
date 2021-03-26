@@ -273,12 +273,18 @@ class CamillaDsp {
         $bits =$mediaDataObj->{'media'}->{'track'}[1]->{'BitDepth'};
         $ch = $mediaDataObj->{'media'}->{'track'}[1]->{'Channels'};
         $format =$mediaDataObj->{'media'}->{'track'}[1]->{'Format'};
+        $encodingP =$mediaDataObj->{'media'}->{'track'}[1]->{'Format_Profile'};
+        $encodingS =$mediaDataObj->{'media'}->{'track'}[1]->{'Format_Settings_Sign'};
 
         $mediaInfo = Array();
         if($ext)
             $mediaInfo['extension'] = $ext;
         if($format)
             $mediaInfo['format'] = $format;
+        if($encodingP)
+            $mediaInfo['encoding'] = $encodingP;
+        elseif($encodingS)
+            $mediaInfo['encoding'] = $encodingS;
         if($rate)
             $mediaInfo['samplerate'] = $raw ? intval($rate) : $rate/1000.0 . ' kHz';
         if($bits)
@@ -525,7 +531,7 @@ function test_cdsp() {
     // print_r($cdsp->convertWaveFile('test_samplerate_44100Hz.wav'));
     // print_r($cdsp->convertWaveFile('Sennheiser_HD800S_L.wav'));
     // print_r($cdsp->convertWaveFile('BRIR_R02_P1_E0_A30C_44100Hz_24b.raw'));
-    $cdsp->setPlaybackDevice(2);
+    // $cdsp->setPlaybackDevice(2);
 }
 
 
