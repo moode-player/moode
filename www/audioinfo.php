@@ -224,11 +224,13 @@ elseif ($_SESSION['mpdmixer'] == 'software') {
 	$volume_mixer = 'Software (MPD)';
 }
 else {
-	$volume_mixer = 'Disabled (0dB output)';
+	$volume_mixer = 'Fixed (0dB output)';
 }
 
 // Renderers
-if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' || $_SESSION['inpactive'] == '1' || $btactive === true) {
+// Class 'off' hides the item
+if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' ||
+	$_SESSION['inpactive'] == '1' || $_SESSION['rbactive'] == '1' || $btactive === true) {
 	$resample_rate = '';
 	$resample_quality = 'off';
 	$polarity_inv = 'off';
@@ -252,9 +254,9 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 else {
 	// Resampling
 	if ($cfg_mpd['audio_output_format'] == 'disabled') {
-		$resample_rate = 'off';
-		$selective_resample = 'off';
-		$resample_quality = 'off';
+		$resample_rate = 'Off';
+		$selective_resample = 'Off';
+		$resample_quality = 'Off';
 	}
 	else {
 		$resample_rate = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
@@ -287,7 +289,8 @@ else {
 		}
 	}
 	// Polarity inversion
-	$polarity_inv = $_SESSION['invert_polarity'] == '0' ? 'off' : 'on';
+	// Class 'off' hides the item
+	$polarity_inv = $_SESSION['invert_polarity'] == '0' ? 'off' : 'On';
 	// MPD Crossfade
 	$crossfade = $_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' seconds';
 	// Crossfeed

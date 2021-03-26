@@ -35,6 +35,7 @@ Bug fixes
 - FIX: Wrong squeezelite compile in release image
 - FIX: Genre data for several radio stations
 - FIX: CamillaDSP save not disabled when other DSP active
+- FIX: Capitalization and terminology in Audio info 
 
 ########################################################
 //
