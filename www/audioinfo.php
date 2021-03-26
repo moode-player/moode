@@ -368,7 +368,7 @@ $result = sdbquery("select * from cfg_audiodev where name='" . $_SESSION['adevna
 if ($result === true) { // Not in table
 	$devname = $_SESSION['adevname'];
 	$_chip_hide = 'hide';
-	$iface = 'USB';
+	$iface = $_SESSION['i2soverlay'] == 'None' ? 'USB' : 'I2S';
 }
 else {
 	$devname = $_SESSION['adevname'];

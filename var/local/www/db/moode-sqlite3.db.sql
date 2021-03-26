@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Mar 25 07:04:07 2021
+-- File generated with SQLiteStudio v3.1.0 on Thu Mar 25 14:10:19 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -314,7 +314,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (42, 'extmeta', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (43, 'maint_interval', '10800');
+INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (44, 'hdwrrev', 'Pi-3B 1GB');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');

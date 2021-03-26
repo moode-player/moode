@@ -11,7 +11,7 @@
 
 ########################################################
 //
-// 2021-MM-DD TC moOde 7.x.y
+// 2021-MM-DD TC moOde 7.2.0
 //
 ########################################################
 
@@ -27,6 +27,7 @@ Updates
 UPD: Show Quick Convolution filter friendly name in Audio info
 UPD: Revert the "Artist +" library option (not useful)
 UPD: Allo Boss2 OLED display script
+UPD: Enhance I2S device options
 
 Bug fixes
 
