@@ -96,19 +96,6 @@
 		<div class="horiz-rule-light">General</div>
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="mpdver">MPD version</label>
-				<div class="controls">
-					<select id="mpdver" class="input-large" name="mpdver">
-						$_select[mpdver]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdver" value="novalue">Set</button>
-					<span class="help-block-configs help-block-margin">
-						Various MPD versions may be offered for testing and experimentation purposes.<br>
-						NOTE: The MPD database may be regenerated after changing versions. Watch for the progress spinner.
-					</span>
-				</div>
-			</div>
-			<div class="control-group">
 				<label class="control-label">MPD settings</label>
 				<div class="controls">
 					<a href="mpd-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit</button></a>
@@ -134,6 +121,19 @@
 						Start auto-shuffle random play if it was previously active or play last played item.
                     </span>
 				</div>
+				<div class="control-group">
+					<label class="control-label" for="mpdver">MPD version</label>
+					<div class="controls">
+						<select id="mpdver" class="input-large" name="mpdver">
+							$_select[mpdver]
+						</select>
+						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdver" value="novalue">Set</button>
+						<span class="help-block-configs help-block-margin">
+							Various MPD versions may be offered for testing and experimentation purposes.<br>
+							NOTE: The MPD database may be regenerated after changing versions. Watch for the progress spinner.
+						</span>
+					</div>
+				</div>				
 			</div>
 
 			<div class="horiz-rule-light">Auto-shuffle</div>
