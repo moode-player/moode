@@ -1918,7 +1918,7 @@ function updMpdConf($i2sdevice) {
 		switch ($cfg['param']) {
 			// Code block or other params
 			case 'device':
-				$device = $cfg['value'];
+				$cardnum = $cfg['value'];
 				break;
 			case 'dop':
 				$dop = $cfg['value'];
@@ -1985,11 +1985,11 @@ function updMpdConf($i2sdevice) {
 	}
 
 	// Store in session
-	playerSession('write', 'cardnum', $device);
+	playerSession('write', 'cardnum', $cardnum);
 	playerSession('write', 'mpdmixer', $mixertype);
 	playerSession('write', 'mpdmixer_local', $mixertype);
 	playerSession('write', 'amixname', getMixerName($i2sdevice));
-	$adevname = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$device] :
+	$adevname = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$cardnum] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
 	playerSession('write', 'adevname', $adevname);
 	$hwmixer = $mixertype == 'hardware' ? getMixerName($i2sdevice) : '';
@@ -2000,7 +2000,7 @@ function updMpdConf($i2sdevice) {
 	}
 	else {
 		$result[0] = str_replace('%', '', $result[0]);
-		playerSession('write', 'alsavolume', $result[0]); // volume level
+		playerSession('write', 'alsavolume', $result[0]); // Volume level
 	}
 
 	// Input
@@ -2038,7 +2038,7 @@ function updMpdConf($i2sdevice) {
 
 	// ALSA local outputs
 	$names = array (
-		"name \"" . ALSA_DEFAULT . "\"\n" . "device \"hw:" . $device . ",0\"\n",
+		"name \"" . ALSA_DEFAULT . "\"\n" . "device \"hw:" . $cardnum . ",0\"\n",
 		"name \"" . ALSA_CROSSFEED . "\"\n" . "device \"crossfeed\"\n",
 		"name \"" . ALSA_PARAMETRIC_EQ . "\"\n" . "device \"eqfa12p\"\n",
 		"name \"" . ALSA_GRAPHIC_EQ . "\"\n" . "device \"alsaequal\"\n",
@@ -2050,7 +2050,7 @@ function updMpdConf($i2sdevice) {
 		$data .= "type \"alsa\"\n";
 		$data .= $name;
 		$data .= "mixer_type \"" . $mixertype . "\"\n";
-		$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $device . "\"\n" . "mixer_index \"0\"\n" : '';
+		$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $cardnum . "\"\n" . "mixer_index \"0\"\n" : '';
 		$data .= "dop \"" . $dop . "\"\n";
 		$data .= "}\n\n";
 	}
@@ -2091,13 +2091,13 @@ function updMpdConf($i2sdevice) {
 		fclose($fh);
 	}
 
-	// Update confs with device num (cardnum)
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
-	sysCmd("sed -i '/pcm \"hw/c\ \t\tpcm \"hw:" . $device . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
-	sysCmd("sed -i '/card/c\ \t    card " . $device . "' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
-	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $device . ",0' /etc/bluealsaaplay.conf");
+	// Update confs with card number
+	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
+	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
+	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
+	sysCmd("sed -i '/pcm \"hw/c\ \t\tpcm \"hw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
+	sysCmd("sed -i '/card/c\ \t    card " . $cardnum . "' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $cardnum . ",0' /etc/bluealsaaplay.conf");
 }
 
 // Return mixer name
