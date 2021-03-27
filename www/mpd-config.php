@@ -80,7 +80,7 @@ if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdcon
 if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($mpdconf['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}
 if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($mpdconf['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
 $cards = getAlsaCards();
-$_device_error = ($_SESSION['i2sdevice'] == 'none' && $cards[$mpdconf['device']] == 'empty') ? 'Device turned off or disconected' : '';
+$_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdconf['device']] == 'empty') ? 'Device turned off or disconected' : '';
 
 // DSD support
 $_mpd_select['dop'] .= "<option value=\"no\" " . (($mpdconf['dop'] == 'no') ? "selected" : "") . " >Native DSD (Default)</option>\n";

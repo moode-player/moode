@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Mar 25 14:10:19 2021
+-- File generated with SQLiteStudio v3.1.0 on Fri Mar 26 16:50:41 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -274,7 +274,7 @@ wsize INT(4)
 CREATE TABLE cfg_system (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_system (id, param, value) VALUES (1, 'sessionid', 'ho7vk67sqrjua8sme0pqhsjgdq');
 INSERT INTO cfg_system (id, param, value) VALUES (2, 'timezone', 'America/Detroit');
-INSERT INTO cfg_system (id, param, value) VALUES (3, 'i2sdevice', 'none');
+INSERT INTO cfg_system (id, param, value) VALUES (3, 'i2sdevice', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (4, 'hostname', 'moode');
 INSERT INTO cfg_system (id, param, value) VALUES (5, 'browsertitle', 'moOde Player');
 INSERT INTO cfg_system (id, param, value) VALUES (6, 'airplayname', 'Moode Airplay');

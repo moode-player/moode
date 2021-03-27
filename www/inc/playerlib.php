@@ -1989,8 +1989,8 @@ function updMpdConf($i2sdevice) {
 	playerSession('write', 'mpdmixer', $mixertype);
 	playerSession('write', 'mpdmixer_local', $mixertype);
 	playerSession('write', 'amixname', getMixerName($i2sdevice));
-	$adevname = ($_SESSION['i2sdevice'] == 'none' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$device] :
-		($_SESSION['i2sdevice'] != 'none' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
+	$adevname = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$device] :
+		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
 	playerSession('write', 'adevname', $adevname);
 	$hwmixer = $mixertype == 'hardware' ? getMixerName($i2sdevice) : '';
 
@@ -2104,11 +2104,12 @@ function updMpdConf($i2sdevice) {
 function getMixerName($i2sdevice) {
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
 	// NOTE: If a device does not define a mixer name then "PCM" will be assigned
-	if ($i2sdevice == 'none' && $_SESSION['i2soverlay'] == 'None') {
+	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		$mixername = $result[0] == '' ? 'PCM' : str_replace(array('(', ')'), '', $result[0]);
 	}
-	// I2S exceptions
+	// I2S devices
+	// NOTE: Non-default mixer names
 	elseif ($i2sdevice == 'HiFiBerry Amp(Amp+)') {
 		$mixername = 'Channels';
 	}
@@ -2119,14 +2120,15 @@ function getMixerName($i2sdevice) {
 		($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
 		$mixername = 'Master';
 	}
-	// I2S no mixer or default mixer
+	// No mixer or default mixer
 	else {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		if ($result[0] == '') {
 			$mixername = 'none';
 		}
 		else {
-			$mixername = 'Digital';
+			//$mixername = 'Digital';
+			$mixername = str_replace(array('(', ')'), '', $result[0]);
 		}
 	}
 
@@ -2136,7 +2138,7 @@ function getMixerName($i2sdevice) {
 // Get device names assigned to each ALSA card
 function getDeviceNames () {
 	// Pi HDMI 1, HDMI 2 or Headphone jack, or a USB audio device
-	if ($_SESSION['i2sdevice'] == 'none' && $_SESSION['i2soverlay'] == 'None') {
+	if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		for ($i = 0; $i < 4; $i++) {
 			$alsa_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 			//workerLog('alsa_id (' . $alsa_id . ')');
@@ -2158,7 +2160,7 @@ function getDeviceNames () {
 	}
 	// I2S audio device
 	else {
-		$devices[0] = $_SESSION['i2sdevice'] != 'none' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay'];
+		$devices[0] = $_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay'];
 	}
 
 	return $devices;
@@ -3574,14 +3576,14 @@ function cfgI2sOverlay($i2sdevice) {
 	sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt'); // Removes the line after dtparam=audio=off
 
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
-	if ($i2sdevice == 'none' && $_SESSION['i2soverlay'] == 'None') {
+	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" /boot/config.txt');
 
 		// NOTE: Allo Boss 2 OLED display I2C
 		sysCmd('sed -i "s/^i2c-dev/#i2c-dev/" /etc/modules');
 	}
 	// Named I2S device
-	elseif ($i2sdevice != 'none') {
+	elseif ($i2sdevice != 'None') {
 		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sdevice);
 		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . '" /boot/config.txt');
 		playerSession('write', 'cardnum', '0');
