@@ -2120,15 +2120,14 @@ function getMixerName($i2sdevice) {
 		($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
 		$mixername = 'Master';
 	}
-	// No mixer or default mixer
+	// No mixer or default mixer name
 	else {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		if ($result[0] == '') {
 			$mixername = 'none';
 		}
 		else {
-			//$mixername = 'Digital';
-			$mixername = str_replace(array('(', ')'), '', $result[0]);
+			$mixername = 'Digital';
 		}
 	}
 
