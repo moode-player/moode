@@ -441,12 +441,13 @@
 						- Delete the original wav file afterwards.<br/>
 						<br/>
 						Output file names:<br/>
-						The samplerate and bitrat are added to the filename:<br/>
+						The samplerate and bitdepth are added to the filename:<br/>
 						foobar.wav becomes foobar_44100Hz_16b.raw.<br/>
 						If the source was a stereo file the output becomes:
 						<br/>foobar_L_44100Hz_16b.raw and  foobar_R_44100Hz_16b.raw<br/>
+						If output is floating-point a 'f' will be added after the bitdepth (only supported for FLOATLE && FLOAT64LE).<br/>
 						<br/>
-						Note: due a problem with 24bit conv files with csdp, for the moment all wave ir files are converted to 32bit.<br/>
+						Note: When the source isn't a supported bitdepth/encoding combination, the output will be converted to 24b signed integer (= S24LE3).<br/>
 					</span>
 				</div>
 			</div>

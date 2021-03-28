@@ -378,23 +378,45 @@ class CamillaDsp {
         }
     }
 
+    function _waveConvertOptions($bitdeph, $encoding) {
+        // standard supported raw formats
+        $conversion_table = [ 'f' =>
+                              [ 64 => [64, 'floating-point'],
+                                32 => [32, 'floating-point'] ],
+                              'i' =>
+                              [ 32 => [32, 'signed-integer'],
+                                24 => [24, 'signed-integer'] ,
+                                16 => [16, 'signed-integer'] ]
+                            ];
+
+        // chekc if the src wav is a support dest raw format
+        if( array_key_exists($encoding, $conversion_table) && array_key_exists($bitdeph, $conversion_table[$encoding])) {
+            return $conversion_table[$encoding][$bitdeph];
+        }
+        // else just convert it to 32b signed format
+        return [32, 'signed-integer'];
+    }
+
     function convertWaveFile($coefffile) {
         $info = $this->coeffInfo($coefffile, TRUE);
 
         if( isset($info['extension']) && isset($info['channels']) && strtolower($info['extension']) == 'wav' ) {
             $sox_path = '/usr/bin/sox';
             if(file_exists($sox_path)) {
+                $bitdepth = intval(explode(" ", $info['bitdepth'])[0]);
+                $coding = strtolower($info['encoding'][0]) =='f' ? 'f': 'i';
+                $sox_options = $this->_waveConvertOptions($bitdepth, $coding);
+                $sox_options_str =  sprintf(' -b %d -e %s ', $sox_options[0], $sox_options[1] );
+
                 $path_parts = pathinfo($coefffile);
                 $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
 
-                $fileNameRaw = sprintf('%s/coeffs/%s_%dHz_32b.raw', $this->CAMILLA_CONFIG_DIR , $path_parts['filename'], $info['samplerate']);
-                $fileNameRawL = sprintf('%s/coeffs/%s_L_%dHz_32b.raw', $this->CAMILLA_CONFIG_DIR , $path_parts['filename'], $info['samplerate']);
-                $fileNameRawR = sprintf('%s/coeffs/%s_R_%dHz_32b.raw', $this->CAMILLA_CONFIG_DIR , $path_parts['filename'], $info['samplerate']);
-
+                $fileNameRawBase = sprintf('%s/coeffs/%s_%%s%dHz_%db%s.raw', $this->CAMILLA_CONFIG_DIR , $path_parts['filename'], $info['samplerate'], $bitdepth, $coding == 'f'? 'f': '') ;
                 $cmds = [];
                 if( $info['channels'] == 1 ) {
+                    $fileNameRaw = sprintf($fileNameRawBase, '');
                     unlink($fileNameRaw);
-                    $cmd = $sox_path .' "' . $fileName . '" -b 32 "' . $fileNameRaw. '"';
+                    $cmd = $sox_path .' "' . $fileName . '"' . $sox_options_str . '"' . $fileNameRaw. '"';
 
                     print($cmd);
                     exec($cmd . " 2>&1", $output);
@@ -408,9 +430,15 @@ class CamillaDsp {
                         return $output;
                     }
                 }else{
+                    $fileNameRawL = sprintf($fileNameRawBase, 'L_');
+                    $fileNameRawR = sprintf($fileNameRawBase, 'R_');
+
+                    print($fileNameRawL);
+
                     unlink($fileNameRawL);
                     unlink($fileNameRawR);
-                    $cmd = $sox_path .' "' . $fileName . '"  -b 32 "' . $fileNameRawL. '" remix 1 ; '. $sox_path .' "' . $fileName . '"  -b 32 "' . $fileNameRawR. '" remix 2';
+                    $cmd = $sox_path .' "' . $fileName . '"' . $sox_options_str . '"' . $fileNameRawL. '" remix 1 ; '. $sox_path .' "' . $fileName . '"' . $sox_options_str . '"' . $fileNameRawR. '" remix 2';
+                    print($cmd);
                     exec($cmd . " 2>&1", $output);
                     if( file_exists($fileNameRawL) && file_exists($fileNameRawR)) {
                         unlink($fileName);
