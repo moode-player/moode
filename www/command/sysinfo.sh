@@ -87,7 +87,11 @@ AUDIO_PARAMETERS() {
 
 	RESULT=$(sqlite3 $SQLDB "select iface from cfg_audiodev where name='$adevname' or alt_name='$adevname'")
 	if [[ $RESULT = "" ]]; then
-		iface="USB"
+		if [[ $i2soverlay = "None" ]]; then
+			iface="USB"
+		else
+			iface="I2S"
+		fi
 	else
 		iface=$RESULT
 	fi
@@ -614,7 +618,7 @@ rsmafterapl=${arr[38]}
 lcdup=${arr[39]}
 library_show_genres=${arr[40]}
 extmeta=${arr[41]}
-maint_interval=${arr[42]}
+i2soverlay=${arr[42]}
 hdwrrev=${arr[43]}
 [[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
 bluez_pcm_buffer=${arr[45]}

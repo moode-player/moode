@@ -11,7 +11,7 @@
 
 ########################################################
 //
-// 2021-MM-DD TC moOde 7.x.y
+// 2021-MM-DD TC moOde 7.2.0
 //
 ########################################################
 
@@ -19,14 +19,23 @@ Radio stations
 
 - NEW: ByteFM
 - UPD: Ancient FM - Mediaeval and Renaissance Music
+- UPD: BBC 128K stations
+- UPD: WKCR 89.9 FM
 
 Updates
 
 UPD: Show Quick Convolution filter friendly name in Audio info
+UPD: Revert the "Artist +" library option (not useful)
+UPD: Allo Boss2 OLED display script
+UPD: Enhance I2S configuration to support more devices
 
 Bug fixes
 
 - FIX: Wlan_country param missing from auto-config export
+- FIX: Wrong squeezelite compile in release image
+- FIX: Genre data for several radio stations
+- FIX: CamillaDSP save not disabled when other DSP active
+- FIX: Capitalization and terminology in Audio info
 
 ########################################################
 //

@@ -102,14 +102,6 @@ mixer_type "software"
 }
 
 audio_output {
-type "alsa"
-name "ALSA CamillaDSP"
-device "camilladsp"
-always_on "no"
-dop "no"
-}
-
-audio_output {
 type "httpd"
 name "HTTP Server"
 port "8000"

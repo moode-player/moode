@@ -165,7 +165,7 @@ workerLog('worker: ALSA cards: (0:' . $cards[0] . ' | 1:' . $cards[1]. ' | 2:' .
 workerLog('worker: MPD config: (' . $mpddev[0]['value'] . ':' . $_SESSION['adevname'] . ' | mixer:(' . $_SESSION['amixname'] . ') | card:' . $mpddev[0]['value'] . ')');
 
 // Check for device not found
-if ($_SESSION['i2sdevice'] == 'none' && $cards[$mpddev[0]['value']] == 'empty') {
+if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpddev[0]['value']] == 'empty') {
 	workerLog('worker: WARNING: No device found at MPD configured card ' . $mpddev[0]['value']);
 }
 
@@ -342,7 +342,7 @@ workerLog('worker: -- Audio');
 //
 
 // Update MPD config
-if ($_SESSION['i2sdevice'] != 'none') {
+if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
 	updMpdConf($_SESSION['i2sdevice']);
 	workerLog('worker: MPD conf updated');
 }
@@ -359,7 +359,7 @@ else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
 
 // Log audio device info
 workerLog('worker: ALSA card number (' . $_SESSION['cardnum'] . ')');
-if ($_SESSION['i2sdevice'] == 'none') {
+if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
 	workerLog('worker: MPD audio output (' . getDeviceNames()[$_SESSION['cardnum']] . ')');
 }
 else {
@@ -375,7 +375,8 @@ else {
 
 // Might need this at some point
 $device_name = getDeviceNames()[$_SESSION['cardnum']];
-if ($_SESSION['i2sdevice'] == 'none' && $device_name != 'Headphone jack' && $device_name != 'HDMI-1' && $device_name != 'HDMI-2') {
+if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
+	$device_name != 'Headphone jack' && $device_name != 'HDMI-1' && $device_name != 'HDMI-2') {
 	$usb_audio = true;
 }
 else {
@@ -484,7 +485,8 @@ if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 	workerLog('worker: Source select (available)');
 	$audio_source = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
 	workerLog('worker: Source select (source: ' . $audio_source . ')');
-	$audio_output = $_SESSION['i2sdevice'] == 'none' ? getDeviceNames()[$_SESSION['cardnum']] : $_SESSION['i2sdevice'];
+	$audio_output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$_SESSION['cardnum']] :
+		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
 	workerLog('worker: Source select (output: ' . $audio_output . ')');
 
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
@@ -802,9 +804,9 @@ $check_library_update = '0';
 $check_library_regen = 0;
 
 // Maintenance task
+$_SESSION['maint_interval'] = 10800;
 $maint_interval = $_SESSION['maint_interval'];
-$maint_interval_formatted = $maint_interval == 3600 ? '1 hr' : ($maint_interval < 3600 ? ($maint_interval / 60) . ' mins' : ($maint_interval / 3600) . ' hrs');
-workerLog('worker: Maintenance interval (' . $maint_interval_formatted . ')');
+workerLog('worker: Maintenance interval (3 hours)');
 
 // Screen saver
 $scnactive = '0';

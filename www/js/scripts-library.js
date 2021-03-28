@@ -1349,7 +1349,6 @@ $('#btn-upd-radio-manager').click(function(e) {
                 notify('recorder_tagging', 'Wait until completion message appears', 'infinite');
                 $('#tag-recordings span').text('No');
                 $.post('command/recorder_cmd.php?cmd=recorder_tag_files', function () {
-                    $('.ui-pnotify-closer').click(); // Close previous message
                     notify('recorder_tagged', 'Updating library...', '5_seconds');
                 });
             }

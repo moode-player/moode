@@ -1,5 +1,5 @@
 [playlist]
-File1=http://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio1_mf_p
+File1=http://stream.live.vc.bbcmedia.co.uk/bbc_radio_one
 Title1=BBC Radio 1
 NumberOfEntries=1
 Length1=-1

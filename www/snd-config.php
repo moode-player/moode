@@ -27,16 +27,28 @@ $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION[
 
 // I2S AUDIO DEVICE
 
-// Device
+// Named device
 if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice']) && $_POST['i2sdevice'] != $_SESSION['i2sdevice']) {
 		playerSession('write', 'i2sdevice', $_POST['i2sdevice']);
-		$title = 'I2S audio device updated';
-		$msg = $_POST['i2sdevice'] == 'none' ?
+		$title = 'I2S device updated';
+		$msg = $_POST['i2sdevice'] == 'None' ?
 			'<b>Restart required</b><br>After restart: Edit MPD settings, select an Audio output and then SAVE.' :
 			'<b>Restart required</b><br>After restart: edit chip options and/or driver options';
 
 		submitJob('i2sdevice', $_POST['i2sdevice'], $title, $msg, 30);
+	}
+}
+// Device overlay
+if (isset($_POST['update_i2s_overlay'])) {
+	if (isset($_POST['i2soverlay']) && $_POST['i2soverlay'] != $_SESSION['i2soverlay']) {
+		playerSession('write', 'i2soverlay', $_POST['i2soverlay']);
+		$title = 'I2S overlay updated';
+		$msg = $_POST['i2soverlay'] == 'None' ?
+			'<b>Restart required</b><br>After restart: Edit MPD settings, select an Audio output and then SAVE.' :
+			'<b>Restart required</b>';
+
+		submitJob('i2sdevice', 'None', $title, $msg, 30);
 	}
 }
 // Driver options
@@ -457,28 +469,40 @@ session_write_close();
 
 // I2S AUDIO DEVICE
 
-// Device
+// Named devices
 $result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", cfgdb_connect());
 $array = array();
-$array[0]['name'] = 'none';
-$dacList = array_merge($array, $result);
-foreach ($dacList as $dac) {
-	$dacName = ($dac['name'] == 'none') ? 'None' : $dac['name'];
+$array[0]['name'] = 'None';
+$dac_list = array_merge($array, $result);
+foreach ($dac_list as $dac) {
 	$selected = ($_SESSION['i2sdevice'] == $dac['name']) ? ' selected' : '';
-	$_i2s['i2sdevice'] .= sprintf('<option value="%s"%s>%s</option>\n', $dac['name'], $selected, $dacName);
+	$_i2s['i2sdevice'] .= sprintf('<option value="%s"%s>%s</option>\n', $dac['name'], $selected, $dac['name']);
+}
+// DT overlays
+$overlay_list = sysCmd('moodeutl -o');
+array_unshift($overlay_list, 'None');
+foreach ($overlay_list as $overlay) {
+	$overlay_name = ($overlay == 'None') ? $overlay : substr($overlay, 0, -5); // Strip .dtbo extension
+	$selected = ($_SESSION['i2soverlay'] == $overlay_name) ? ' selected' : '';
+	$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
 }
 // Driver options
 $result = sdbquery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
-if (!empty($result[0]['drvoptions'])) {
+if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None') {
 	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
 	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
+	$_driveropt_btn_disable = '';
 }
 else {
 	$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
+	$_driveropt_btn_disable = 'disabled';
 }
 // Chip/device options
-$_chip_btn_disable = !empty($result[0]['chipoptions']) ? '' : 'disabled';
-$_chip_link_disable = !empty($result[0]['chipoptions']) ? '' : 'onclick="return false;"';
+$_chip_btn_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None') ? '' : 'disabled';
+$_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None') ? '' : 'onclick="return false;"';
+// Named device vs DT overlay
+$_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
+$_i2soverlay_btn_disable = $_SESSION['i2sdevice'] == 'None' ? '' : 'disabled';
 
 // ALSA VOLUME
 

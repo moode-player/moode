@@ -479,9 +479,6 @@ function genFlatList($sock) {
 				$flat[$item][$element] = $value;
 			}
 
-			// TODO: Change the following section to allow just populating $flat[$item]['Artist'] with Composers
-			// This assumes the "Artist +" options either gets changed to "Composers" or "Composers" is added to library_tagview_artist.
-
 			// @Atair: Gather possible multiple Genre, Artist, Performer and Conductor values as array
 			elseif ($element == 'Genre') {
 				if ($flat[$item]['Genre']) {
@@ -507,6 +504,8 @@ function genFlatList($sock) {
 				else {
 					$flat[$item]['Artist'] = array($value);
 				}
+				// NOTE: Uncomment this if Performer is included in output of GenLibrary()
+				//$flat[$item][$element] = $value;
 			}
 			// @Atair: add conductor to artists
 			elseif ($element == 'Conductor') {
@@ -516,15 +515,8 @@ function genFlatList($sock) {
 				else {
 					$flat[$item]['Artist'] = array($value);
 				}
-			}
-			// @Tim Curtis: add composer to artists
-			elseif ($element == 'Composer' && $_SESSION['library_tagview_artist'] == 'Artist +') {
-				if ($flat[$item]['Artist']) {
-					array_push($flat[$item]['Artist'], $value);
-				}
-				else {
-					$flat[$item]['Artist'] = array($value);
-				}
+				// NOTE: Uncomment this if Conductor is included in output of GenLibrary()
+				//$flat[$item][$element] = $value;
 			}
 			else {
 				$flat[$item][$element] = $value;
@@ -611,7 +603,8 @@ function genLibrary($flat) {
 				'artist' => ($flatData['Artist'] ? $flatData['Artist'] : array()), //@Atair: array is expected in scripts-library.js even when empty
 				'album_artist' => ($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist')),
 				'composer' => ($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing'),
-				'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
+				//'performer' => ($flatData['Performer'] ? $flatData['Performer'] : 'Performer tag missing'),
+				//'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
 				'year' => getTrackYear($flatData),
 				'time' => $flatData['Time'],
 				'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
@@ -805,7 +798,8 @@ function genLibraryUTF8Rep($flat) {
 				//    otherwise, when Artist is an array of two and more values or empty, the AlbumArtist is set to 'Unknown' (this is regarded as bad tagging)
 				'album_artist' => utf8rep(($flatData['AlbumArtist'] ? $flatData['AlbumArtist'] : (count($flatData['Artist']) == 1 ? $flatData['Artist'][0] : 'Unknown AlbumArtist'))),
 				'composer' => utf8rep(($flatData['Composer'] ? $flatData['Composer'] : 'Composer tag missing')),
-				'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
+				//'performer' => utf8rep(($flatData['Performer'] ? $flatData['Performer'] : 'Performer tag missing')),
+				//'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
 				'year' => utf8rep(getTrackYear($flatData)),
 				'time' => utf8rep($flatData['Time']),
 				'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
@@ -1924,7 +1918,7 @@ function updMpdConf($i2sdevice) {
 		switch ($cfg['param']) {
 			// Code block or other params
 			case 'device':
-				$device = $cfg['value'];
+				$cardnum = $cfg['value'];
 				break;
 			case 'dop':
 				$dop = $cfg['value'];
@@ -1991,11 +1985,13 @@ function updMpdConf($i2sdevice) {
 	}
 
 	// Store in session
-	playerSession('write', 'cardnum', $device);
+	playerSession('write', 'cardnum', $cardnum);
 	playerSession('write', 'mpdmixer', $mixertype);
 	playerSession('write', 'mpdmixer_local', $mixertype);
 	playerSession('write', 'amixname', getMixerName($i2sdevice));
-	playerSession('write', 'adevname', ($_SESSION['i2sdevice'] == 'none' ? getDeviceNames()[$device] : $_SESSION['i2sdevice']));
+	$adevname = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$cardnum] :
+		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
+	playerSession('write', 'adevname', $adevname);
 	$hwmixer = $mixertype == 'hardware' ? getMixerName($i2sdevice) : '';
 
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
@@ -2004,7 +2000,7 @@ function updMpdConf($i2sdevice) {
 	}
 	else {
 		$result[0] = str_replace('%', '', $result[0]);
-		playerSession('write', 'alsavolume', $result[0]); // volume level
+		playerSession('write', 'alsavolume', $result[0]); // Volume level
 	}
 
 	// Input
@@ -2042,7 +2038,7 @@ function updMpdConf($i2sdevice) {
 
 	// ALSA local outputs
 	$names = array (
-		"name \"" . ALSA_DEFAULT . "\"\n" . "device \"hw:" . $device . ",0\"\n",
+		"name \"" . ALSA_DEFAULT . "\"\n" . "device \"hw:" . $cardnum . ",0\"\n",
 		"name \"" . ALSA_CROSSFEED . "\"\n" . "device \"crossfeed\"\n",
 		"name \"" . ALSA_PARAMETRIC_EQ . "\"\n" . "device \"eqfa12p\"\n",
 		"name \"" . ALSA_GRAPHIC_EQ . "\"\n" . "device \"alsaequal\"\n",
@@ -2054,7 +2050,7 @@ function updMpdConf($i2sdevice) {
 		$data .= "type \"alsa\"\n";
 		$data .= $name;
 		$data .= "mixer_type \"" . $mixertype . "\"\n";
-		$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $device . "\"\n" . "mixer_index \"0\"\n" : '';
+		$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $cardnum . "\"\n" . "mixer_index \"0\"\n" : '';
 		$data .= "dop \"" . $dop . "\"\n";
 		$data .= "}\n\n";
 	}
@@ -2095,24 +2091,25 @@ function updMpdConf($i2sdevice) {
 		fclose($fh);
 	}
 
-	// Update confs with device num (cardnum)
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $device . ",0\";' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
-	sysCmd("sed -i '/pcm \"hw/c\ \t\tpcm \"hw:" . $device . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
-	sysCmd("sed -i '/card/c\ \t    card " . $device . "' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
-	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $device . ",0' /etc/bluealsaaplay.conf");
+	// Update confs with card number
+	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
+	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
+	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
+	sysCmd("sed -i '/pcm \"hw/c\ \t\tpcm \"hw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
+	sysCmd("sed -i '/card/c\ \t    card " . $cardnum . "' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $cardnum . ",0' /etc/bluealsaaplay.conf");
 }
 
 // Return mixer name
 function getMixerName($i2sdevice) {
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
 	// NOTE: If a device does not define a mixer name then "PCM" will be assigned
-	if ($i2sdevice == 'none') {
+	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		$mixername = $result[0] == '' ? 'PCM' : str_replace(array('(', ')'), '', $result[0]);
 	}
-	// I2S exceptions
+	// I2S devices
+	// NOTE: Non-default mixer names
 	elseif ($i2sdevice == 'HiFiBerry Amp(Amp+)') {
 		$mixername = 'Channels';
 	}
@@ -2123,7 +2120,7 @@ function getMixerName($i2sdevice) {
 		($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
 		$mixername = 'Master';
 	}
-	// I2S no mixer or default mixer
+	// No mixer or default mixer name
 	else {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		if ($result[0] == '') {
@@ -2140,7 +2137,7 @@ function getMixerName($i2sdevice) {
 // Get device names assigned to each ALSA card
 function getDeviceNames () {
 	// Pi HDMI 1, HDMI 2 or Headphone jack, or a USB audio device
-	if ($_SESSION['i2sdevice'] == 'none') {
+	if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		for ($i = 0; $i < 4; $i++) {
 			$alsa_id = trim(file_get_contents('/proc/asound/card' . $i . '/id'));
 			//workerLog('alsa_id (' . $alsa_id . ')');
@@ -2162,7 +2159,7 @@ function getDeviceNames () {
 	}
 	// I2S audio device
 	else {
-		$devices[0] = $_SESSION['i2sdevice'];
+		$devices[0] = $_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay'];
 	}
 
 	return $devices;
@@ -3084,9 +3081,10 @@ function autoConfigSettings() {
 		}],
 
 		'I2S Device',
-		['requires' => ['i2sdevice'] , 'handler' => function($values) {
-			cfgI2sOverlay($values['i2sdevice'] == "None" ? 'none' : $values['i2sdevice']);
+		['requires' => ['i2sdevice', 'i2soverlay'] , 'handler' => function($values) {
 			playerSession('write', 'i2sdevice', $values['i2sdevice']);
+			playerSession('write', 'i2soverlay', $values['i2soverlay']);
+			cfgI2sOverlay($values['i2sdevice']);
 		}],
 
 		'Sound',
@@ -3181,8 +3179,8 @@ function autoConfigSettings() {
 		}],
 
 		'Network (wlan0)',
-		['requires' => ['wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'],
-		 'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns'],
+		['requires' => ['wlanssid', 'wlanpwd', 'wlansec'],
+		 'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns', 'wlancountry'],
 			  'handler' => function($values) {
 			$dbh = cfgdb_connect();
 			$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
@@ -3190,7 +3188,7 @@ function autoConfigSettings() {
 			$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
 				'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
 				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-				'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
+				'wlan_channel' => '');
 
 			if( key_exists('wlanmethod', $values) ) { $value['method'] = $values['wlanmethod']; }
 			if( key_exists('wlanipaddr', $values) ) { $value['ipaddr'] = $values['wlanipaddr']; }
@@ -3198,6 +3196,7 @@ function autoConfigSettings() {
 			if( key_exists('wlangateway', $values) ) { $value['gateway'] = $values['wlangateway']; }
 			if( key_exists('wlanpridns', $values) ) { $value['pridns'] = $values['wlanpridns']; }
 			if( key_exists('wlansecdns', $values) ) { $value['secdns'] = $values['wlansecdns']; }
+			if( key_exists('wlancountry', $values) ) { $value['wlan_country'] = $values['wlancountry']; }
 
 			cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 			cfgNetIfaces();
@@ -3572,19 +3571,19 @@ function parseMpdOutputs($resp) {
 	return $array;
 }
 
-function cfgI2sOverlay($i2sDevice) {
+function cfgI2sOverlay($i2sdevice) {
 	sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt'); // Removes the line after dtparam=audio=off
 
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
-	if ($i2sDevice == 'none') {
+	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" /boot/config.txt');
 
 		// NOTE: Allo Boss 2 OLED display I2C
 		sysCmd('sed -i "s/^i2c-dev/#i2c-dev/" /etc/modules');
 	}
-	// I2S audio device
-	else {
-		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sDevice);
+	// Named I2S device
+	elseif ($i2sdevice != 'None') {
+		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sdevice);
 		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . '" /boot/config.txt');
 		playerSession('write', 'cardnum', '0');
 		playerSession('write', 'adevname', $result[0]['name']);
@@ -3597,6 +3596,16 @@ function cfgI2sOverlay($i2sDevice) {
 		else {
 			sysCmd('sed -i "s/^i2c-dev/#i2c-dev/" /etc/modules');
 		}
+	}
+	// DT overlay
+	else {
+		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $_SESSION['i2soverlay'] . '" /boot/config.txt');
+		playerSession('write', 'cardnum', '0');
+		playerSession('write', 'adevname', $_SESSION['i2soverlay']);
+		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
+
+		// NOTE: Allo Boss 2 OLED display I2C
+		sysCmd('sed -i "s/^i2c-dev/#i2c-dev/" /etc/modules');
 	}
 }
 

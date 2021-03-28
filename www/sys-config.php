@@ -77,7 +77,7 @@ if (isset($_POST['install_update'])) {
 			$_SESSION['notify']['duration'] = 20;
 		}
 		else {
-			submitJob('installupd', '', 'Software update installed', 'Restart required', 60);
+			submitJob('installupd', '', 'Software update installed', 'Restart required', 60000); // Keep message displayed
 			$_available_upd = 'Software is up to date<br>';
 		}
 	}

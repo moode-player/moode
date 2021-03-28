@@ -24,17 +24,28 @@
 
 	<form class="form-horizontal" method="post">
 		<legend>I2S Audio Device</legend>
+		<p>
+			Named devices provide descriptive information and may also provide configurable driver and/or chip options accessible from the UI. Device Tree (DT) overlays provide an I2S interface for a device but without integrated UI access to any driver or chip options. Contact the device manufacturer for information on which overlay to use.
+		</p><br>
+
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="i2sdevice">Device</label>
-				<div class="controls">
+				<label class="control-label" for="i2sdevice">Named device</label>
+				<div class="controls controls-select">
 					<select id="i2sdevice" class="input-large" name="i2sdevice">
 						$_i2s[i2sdevice]
 					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit btn-submit" type="submit" name="update_i2s_device" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit btn-submit" type="submit" name="update_i2s_device" value="novalue" $_i2sdevice_btn_disable>Set</button>
+				</div>
+				<label class="control-label" for="i2soverlay">or DT overlay</label>
+				<div class="controls">
+					<select id="i2soverlay" class="input-xlarge" name="i2soverlay">
+						$_i2s[i2soverlay]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit btn-submit" type="submit" name="update_i2s_overlay" value="novalue" $_i2soverlay_btn_disable>Set</button>
 					<span class="help-block-configs help-block-margin">
-						NOTE: Set this to "None" if using a USB audio device, Pi HDMI or Pi Headphone jack.<br>
-						Auto-play will be turned off as part of updating this setting.<br>
+						NOTE: Set both to "None" if using a USB audio device, Pi HDMI or Pi Headphone jack.<br>
+						Auto-play will be turned off as part of updating this setting.
                     </span>
 				</div>
 			</div>
@@ -45,7 +56,7 @@
 					<select id="drvoptions" class="input-large" name="drvoptions">
 						$_select[drvoptions]
 					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_drvoptions" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_drvoptions" value="novalue" $_driveropt_btn_disable>Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-drvoptions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-drvoptions" class="help-block-configs help-block-margin hide">
 						<b>slave:</b> If enabled, Boss and MiniBOSS DAC operate in slave mode required by Kali.<br>
@@ -55,8 +66,9 @@
 			</div>
 
 			<div class="control-group">
+				<label class="control-label" for="drvoptions">Chip options</label>
 				<div class="controls">
-					<a href="chp-config.php" $_chip_link_disable><button class="btn btn-primary btn-medium" $_chip_btn_disable>Edit</button></a>&nbsp;Chip/Device options
+					<a href="chp-config.php" $_chip_link_disable><button class="btn btn-primary btn-medium" style="margin-top:.1em;" $_chip_btn_disable>Edit</button></a>
 				</div>
 			</div>
 		</fieldset>
@@ -84,19 +96,6 @@
 		<div class="horiz-rule-light">General</div>
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="mpdver">MPD version</label>
-				<div class="controls">
-					<select id="mpdver" class="input-large" name="mpdver">
-						$_select[mpdver]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdver" value="novalue">Set</button>
-					<span class="help-block-configs help-block-margin">
-						Various MPD versions may be offered for testing and experimentation purposes.<br>
-						NOTE: The MPD database may be regenerated after changing versions. Watch for the progress spinner.
-					</span>
-				</div>
-			</div>
-			<div class="control-group">
 				<label class="control-label">MPD settings</label>
 				<div class="controls">
 					<a href="mpd-config.php"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Edit</button></a>
@@ -122,6 +121,19 @@
 						Start auto-shuffle random play if it was previously active or play last played item.
                     </span>
 				</div>
+				<div class="control-group">
+					<label class="control-label" for="mpdver">MPD version</label>
+					<div class="controls">
+						<select id="mpdver" class="input-large" name="mpdver">
+							$_select[mpdver]
+						</select>
+						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdver" value="novalue">Set</button>
+						<span class="help-block-configs help-block-margin">
+							Various MPD versions may be offered for testing and experimentation purposes.<br>
+							NOTE: The MPD database may be regenerated after changing versions. Watch for the progress spinner.
+						</span>
+					</div>
+				</div>				
 			</div>
 
 			<div class="horiz-rule-light">Auto-shuffle</div>
