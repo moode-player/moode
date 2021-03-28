@@ -3081,9 +3081,11 @@ function autoConfigSettings() {
 		}],
 
 		'I2S Device',
-		['requires' => ['i2sdevice', 'i2soverlay'] , 'handler' => function($values) {
-			playerSession('write', 'i2sdevice', $values['i2sdevice']);
+		['requires' => ['i2soverlay'] , 'handler' => function($values) {
 			playerSession('write', 'i2soverlay', $values['i2soverlay']);
+		}],
+		['requires' => ['i2sdevice'] , 'handler' => function($values) {
+			playerSession('write', 'i2sdevice', $values['i2sdevice'] == 'none' ? 'None': $values['i2soverlay']);
 			cfgI2sOverlay($values['i2sdevice']);
 		}],
 
