@@ -89,6 +89,7 @@ class CamillaDsp {
 
             $configfilename = $this->CAMILLA_CONFIG_DIR . '/configs/' . $configname;
             $configfilename_escaped = str_replace ('/', '\/', $configfilename);
+            $this->patchRelConvPath($configname);
             if(is_file($configfilename)) {
                 syscmd("sudo ln -s -f \"" . $configfilename . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
             }
@@ -99,7 +100,6 @@ class CamillaDsp {
 
     function reloadConfig() {
         if( $this->configfile != 'off') {
-            $this->patchRelConvPath($this->getConfig());
             syscmd('sudo killall -s SIGHUP camilladsp');
         }
     }
