@@ -44,7 +44,7 @@
 			<div class="control-group">
 				<label class="control-label" for="cdsp-setting-mode">Configuration</label>
 				<div class="controls">
-					<select id="cdsp-setting-mode" class="input-xxlarge" name="cdsp-mode" >
+					<select id="cdsp-setting-mode" class="input-xxlarge" name="cdsp-mode" $_camilladsp_set_disabled>
 						$_select[cdsp_mode]
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-cdspmode" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -53,6 +53,9 @@
 						<b>Custom:&nbsp;</b>Use a custom alsa_cdsp configuration.<br>
 						<b>Quick convolution filter:&nbsp;</b>Use a quick configuration for setting up a basic convolution filter with a gain. No need to provide a configuration file.<br>
 						<b>Listed:&nbsp;</b>Use one of the listed configuration files.
+					</span>
+					<span class="help-block-configs help-block-margin $_camilladsp_set_disabled_message">
+						Before you can use CamillaDSP, please first disable other DSP and EQ options in the audio config.<br>
 					</span>
 				</div>
 				<br>

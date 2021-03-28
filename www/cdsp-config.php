@@ -182,6 +182,9 @@ else if (isset($_POST['camillaguiexpertstatus']) && isset($_POST['updatecamillag
  * Generate data for html templating
  */
 
+$_camilladsp_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? 'disabled' : '';
+$_camilladsp_set_disabled_message = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off') ? '' : 'hide';
+
 $configs = $cdsp->getAvailableConfigs();
 foreach ($configs as $config_file=>$config_name) {
 	$selected = ($_SESSION['camilladsp'] == $config_file) ? 'selected' : '';
