@@ -369,16 +369,15 @@ else {
 
 $result = sdbquery("select * from cfg_audiodev where name='" . $_SESSION['adevname'] . "' or alt_name='" . $_SESSION['adevname'] . "'", $dbh);
 if ($result === true) { // Not in table
-	$devname = $_SESSION['adevname'];
 	$_chip_hide = 'hide';
 	$iface = $_SESSION['i2soverlay'] == 'None' ? 'USB' : 'I2S';
 }
 else {
-	$devname = $_SESSION['adevname'];
 	$_chip_hide = '';
 	$dacchip = $result[0]['dacchip'];
 	$iface = $result[0]['iface'];
 }
+$devname = $_SESSION['adevname'];
 $mixer_name = $_SESSION['amixname'];
 $audio_formats = $_SESSION['audio_formats'];
 $hdwr_rev = $_SESSION['hdwrrev'];
