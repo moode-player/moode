@@ -73,10 +73,10 @@
 			</div>
 		</fieldset>
 
-		<legend>ALSA Volume</legend>
+		<legend>ALSA Options</legend>
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="alsavolume_max">Max ALSA volume</label>
+				<label class="control-label" for="alsavolume_max">ALSA max volume</label>
 				<div class="controls">
 					<input class="input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">&nbsp;%
 					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>$_alsavolume_max_msg
@@ -84,6 +84,26 @@
 						Establish 0dB when MPD volume control is set to Software or Fixed, or when any Renderers are active.<br>
 						NOTE: The HDMI port will be correctly set to 0dB instead of +4dB at 100%.
 					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">ALSA loopback</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_alsa_loopback2">ON</label>
+						$_select[alsa_loopback1]
+						<label class="toggle-radio" for="toggle_alsa_loopback1">OFF</label>
+						$_select[alsa_loopback0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-alsa-loopback" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info-alsa-loopback" class="help-block-configs help-block-margin2 hide">
+						Turn on the ALSA loopback device.<br>
+						NOTE: PCM data can be accessed by reading device "hw:Loopback,1,0"
+                    </span>
 				</div>
 			</div>
 		</fieldset>
@@ -133,7 +153,7 @@
 							NOTE: The MPD database may be regenerated after changing versions. Watch for the progress spinner.
 						</span>
 					</div>
-				</div>				
+				</div>
 			</div>
 
 			<div class="horiz-rule-light">Auto-shuffle</div>

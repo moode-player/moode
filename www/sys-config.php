@@ -192,6 +192,7 @@ if (isset($_POST['maxusbcurrent']) && $_POST['maxusbcurrent'] != $_SESSION['maxu
 	playerSession('write', 'maxusbcurrent', $_POST['maxusbcurrent']);
 }
 
+/* DROP
 // uac2 fix
 if (isset($_POST['update_uac2fix'])) {
 	if (isset($_POST['uac2fix']) && $_POST['uac2fix'] != $_SESSION['uac2fix']) {
@@ -200,6 +201,7 @@ if (isset($_POST['update_uac2fix'])) {
 		playerSession('write', 'uac2fix', $_POST['uac2fix']);
 	}
 }
+*/
 
 // expand root file system
 if (isset($_POST['update_expand_rootfs'])) {
@@ -416,9 +418,11 @@ else {
 	$_maxcurrent_hide = 'hide';
 }
 
+/* DROP
 // usb (uac2) fix
 $_select['uac2fix1'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix1\" value=\"1\" " . (($_SESSION['uac2fix'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix2\" value=\"0\" " . (($_SESSION['uac2fix'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+*/
 
 // expand root file system
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";

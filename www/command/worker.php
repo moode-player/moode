@@ -155,7 +155,7 @@ if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
 }
 
 //
-workerLog('worker: -- Device');
+workerLog('worker: -- Audio debug');
 //
 
 // Verify audio device configuration
@@ -338,7 +338,7 @@ else {
 }
 
 //
-workerLog('worker: -- Audio');
+workerLog('worker: -- Audio config');
 //
 
 // Update MPD config
@@ -425,6 +425,16 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	}
 	workerLog('worker: Piano 2.1 initialized');
 }
+
+// Start ALSA loopback
+if ($_SESSION['alsa_loopback'] == 'On') {
+	sysCmd('modprobe snd-aloop');
+}
+else {
+	sysCmd('modprobe -r snd-aloop');
+}
+workerLog('worker: ALSA loopback (' . $_SESSION['alsa_loopback'] . ')');
+
 // NOTE: Start Allo Boss2 OLED display
 if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
 	// Ensure module loadad before starting OLED driver
@@ -450,7 +460,7 @@ unset($cdsp);
 workerLog('worker: CamillaDSP (' . $_SESSION['camilladsp'] . ')');
 
 //
-workerLog('worker: -- MPD');
+workerLog('worker: -- MPD startup');
 //
 
 // Start MPD
@@ -678,7 +688,7 @@ $result = sourceMount('mountall');
 workerLog('worker: NAS and UPnP sources (' . $result . ')');
 
 //
-workerLog('worker: -- Miscellaneous');
+workerLog('worker: -- Other');
 //
 
 // Start rotary encoder
@@ -1549,6 +1559,38 @@ function runQueuedJob() {
 				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['w_queueargs']);
 			}
 			break;
+		case 'alsa_loopback':
+			$playing = sysCmd('mpc status | grep "\[playing\]"');
+			sysCmd('mpc stop');
+
+			if ($_SESSION['w_queueargs'] == 'On') {
+				sysCmd("sed -i 's/_audioout__/_audioout/' /etc/asound.conf");
+				sysCmd('modprobe snd-aloop');
+			}
+			else {
+				sysCmd("sed -i 's/_audioout/_audioout__/' /etc/asound.conf");
+				sysCmd('modprobe -r snd-aloop');
+			}
+
+			// Restart MPD
+			sysCmd('systemctl restart mpd');
+			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
+			closeMpdSock($sock);
+			if (!empty($playing)) {
+				sysCmd('mpc play');
+			}
+			// Restart Airplay and Spotify if indicated
+			stopAirplay();
+			if ($_SESSION['airplaysvc'] == 1) {
+				 startAirplay();
+			}
+			stopSpotify();
+			if ($_SESSION['spotifysvc'] == 1) {
+				startSpotify();
+			}
+			// Reenable HTTP server if indicated
+			setMpdHttpd();
+			break;
 		case 'rotaryenc':
 			sysCmd('systemctl stop rotenc');
 			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/usr/local/bin/rotenc ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
@@ -1568,35 +1610,6 @@ function runQueuedJob() {
 				sysCmd('systemctl disable triggerhappy');
 			}
 			break;
-		case 'invert_polarity':
-			sysCmd('mpc stop');
-			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable only "' . ALSA_POLARITY_INV . '"' : 'mpc enable only "' . ALSA_DEFAULT . '"';
-			sysCmd($cmd);
-			setMpdHttpd();
-			break;
-		case 'crossfeed':
-			sysCmd('mpc stop');
-
-			if ($_SESSION['w_queueargs'] == 'Off') {
-				sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
-			}
-			else {
-				sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
-				sysCmd('alsactl restore');
-				sysCmd('mpc enable only "' . ALSA_CROSSFEED . '"');
-			}
-
-			// Restart Airplay and Spotify
-			stopAirplay();
-			if ($_SESSION['airplaysvc'] == 1) {
-				 startAirplay();
-			}
-			stopSpotify();
-			if ($_SESSION['spotifysvc'] == 1) {
-				startSpotify();
-			}
-			setMpdHttpd();
-			break;
 		case 'mpd_httpd':
 			$cmd = $_SESSION['w_queueargs'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
 			sysCmd($cmd);
@@ -1609,70 +1622,63 @@ function runQueuedJob() {
 			updMpdConf($_SESSION['i2sdevice']);
 			sysCmd('systemctl restart mpd');
 			break;
+		// ALSA DSP's
+		case 'invert_polarity':
+		case 'crossfeed':
+		case 'eqfa12p':
+		case 'alsaequal':
 		case 'camilladsp':
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
-            if ($_SESSION['w_queueargs'] == 'off') {
-                sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
-            }
-			else {
-				sysCmd('mpc enable only "' . ALSA_CAMILLADSP . '"');
+
+			if ($_SESSION['w_queue'] == 'invert_polarity') {
+				$output = $_SESSION['w_queueargs'] == '1' ? "\"invpolarity\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 			}
-
-			$sock = openMpdSock('localhost', 6600);
-			closeMpdSock($sock);
-
-			if (!empty($playing)) {
-				sysCmd('mpc play');
-			}
-            break;
-		case 'eqfa12p':
-		case 'alsaequal':
-			// Old,New curve name
-			$queueargs = explode(',', $_SESSION['w_queueargs']);
-			// Current play state
-			$playing = sysCmd('mpc status | grep "\[playing\]"');
-			sysCmd('mpc stop');
-
-			if ($_SESSION['w_queue'] == 'eqfa12p') {
-				if ($_SESSION['eqfa12p'] == 'Off') {
-					sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
+			elseif ($_SESSION['w_queue'] == 'crossfeed') {
+				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+				if ($_SESSION['w_queueargs'] != 'Off') {
+					sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 				}
-				else {
+			}
+			elseif ($_SESSION['w_queue'] == 'eqfa12p') {
+				$queueargs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
+				if ($_SESSION['eqfa12p'] != 'Off') {
 					$curr = intval($queueargs[1]);
 					$eqfa12p = Eqp12(cfgdb_connect());
 					$config = $eqfa12p->getpreset($curr);
 					$eqfa12p->applyConfig($config);
 					unset($eqfa12p);
-					sysCmd('mpc enable only "' . ALSA_PARAMETRIC_EQ . '"');
 				}
-				sysCmd('systemctl restart mpd');
-				// Wait for mpd to start accepting connections
-				$sock = openMpdSock('localhost', 6600);
-				closeMpdSock($sock);
+				$output = $_SESSION['eqfa12p'] != 'Off' ? "\"eqfa12p\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 			}
-			else {
-				if ($_SESSION['alsaequal'] == 'Off') {
-					sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
-				}
-				else {
+			elseif ($_SESSION['w_queue'] == 'alsaequal') {
+				$queueargs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
+				if ($_SESSION['alsaequal'] != 'Off') {
 					$result = sdbquery("select curve_values from cfg_eqalsa where curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
 					$curve = explode(',', $result[0]['curve_values']);
 					foreach ($curve as $key => $value) {
 						sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
 					}
-					sysCmd('mpc enable only "' . ALSA_GRAPHIC_EQ . '"');
 				}
+				$output = $_SESSION['alsaequal'] != 'Off' ? "\"alsaequal\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+			}
+			elseif ($_SESSION['w_queue'] == 'camilladsp') {
+				$output = $_SESSION['w_queueargs'] != 'off' ? "\"camilladsp\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 			}
 
+			// Restart MPD
+			sysCmd('systemctl restart mpd');
+			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
+			closeMpdSock($sock);
 			if (!empty($playing)) {
 				sysCmd('mpc play');
 			}
-
-			// Reenable HTTP server if indicated
-			setMpdHttpd();
-
-			// Restart Airplay and Spotify
+			// Restart Airplay and Spotify if indicated
 			stopAirplay();
 			if ($_SESSION['airplaysvc'] == 1) {
 				 startAirplay();
@@ -1681,6 +1687,8 @@ function runQueuedJob() {
 			if ($_SESSION['spotifysvc'] == 1) {
 				startSpotify();
 			}
+			// Reenable HTTP server if indicated
+			setMpdHttpd();
 			break;
 		case 'mpdcrossfade':
 			sysCmd('mpc crossfade ' . $_SESSION['w_queueargs']);
@@ -1881,10 +1889,12 @@ function runQueuedJob() {
 			$cmd = $_SESSION['w_queueargs'] == 1 ? 'echo max_usb_current=1 >> ' . '/boot/config.txt' : 'sed -i /max_usb_current/d ' . '/boot/config.txt';
 			sysCmd($cmd);
 			break;
+		/* DROP
 		case 'uac2fix':
 			$cmd = $_SESSION['w_queueargs'] == 1 ? 'sed -i "s/dwc_otg.lpm_enable=0/dwc_otg.lpm_enable=0 dwc_otg.fiq_fsm_mask=0x3/" /boot/cmdline.txt' : 'sed -i "s/ dwc_otg.fiq_fsm_mask=0x3//" /boot/cmdline.txt';
 			sysCmd($cmd);
 			break;
+		*/
 		case 'expandrootfs':
 			sysCmd('/var/www/command/resizefs.sh start');
 			break;

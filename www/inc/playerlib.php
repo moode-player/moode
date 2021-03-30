@@ -105,11 +105,6 @@ const RADIO_BITRATE_THRESHOLD 		= 128;
 
 // MPD output names
 const ALSA_DEFAULT			= 'ALSA Default';
-const ALSA_CROSSFEED		= 'ALSA Crossfeed';
-const ALSA_PARAMETRIC_EQ	= 'ALSA Parametric EQ';
-const ALSA_GRAPHIC_EQ		= 'ALSA Graphic EQ';
-const ALSA_POLARITY_INV		= 'ALSA Polarity Inv';
-const ALSA_CAMILLADSP		= 'ALSA CamillaDSP';
 const ALSA_BLUETOOTH		= 'ALSA Bluetooth';
 const HTTP_SERVER			= 'HTTP Server';
 const STREAM_RECORDER		= 'Stream Recorder';
@@ -2036,24 +2031,15 @@ function updMpdConf($i2sdevice) {
 	}
 	$data .= "}\n\n";
 
-	// ALSA local outputs
-	$names = array (
-		"name \"" . ALSA_DEFAULT . "\"\n" . "device \"hw:" . $cardnum . ",0\"\n",
-		"name \"" . ALSA_CROSSFEED . "\"\n" . "device \"crossfeed\"\n",
-		"name \"" . ALSA_PARAMETRIC_EQ . "\"\n" . "device \"eqfa12p\"\n",
-		"name \"" . ALSA_GRAPHIC_EQ . "\"\n" . "device \"alsaequal\"\n",
-		"name \"" . ALSA_POLARITY_INV . "\"\n" . "device \"invpolarity\"\n",
-		"name \"" . ALSA_CAMILLADSP . "\"\n" . "device \"camilladsp\"\n"
-		);
-	foreach ($names as $name) {
-		$data .= "audio_output {\n";
-		$data .= "type \"alsa\"\n";
-		$data .= $name;
-		$data .= "mixer_type \"" . $mixertype . "\"\n";
-		$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $cardnum . "\"\n" . "mixer_index \"0\"\n" : '';
-		$data .= "dop \"" . $dop . "\"\n";
-		$data .= "}\n\n";
-	}
+	// ALSA Default
+	$data .= "audio_output {\n";
+	$data .= "type \"alsa\"\n";
+	$data .= "name \"" . ALSA_DEFAULT . "\"\n";
+	$data .= "device \"_audioout\"\n";
+	$data .= "mixer_type \"" . $mixertype . "\"\n";
+	$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $cardnum . "\"\n" . "mixer_index \"0\"\n" : '';
+	$data .= "dop \"" . $dop . "\"\n";
+	$data .= "}\n\n";
 
 	// ALSA bluetooth
 	$data .= "audio_output {\n";
@@ -2550,7 +2536,7 @@ function startBt() {
 }
 
 // Airplay
-function  startAirplay() {
+function startAirplay() {
 	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
 		$logging = '-vv';
@@ -2568,20 +2554,8 @@ function  startAirplay() {
 	if ($_SESSION['audioout'] == 'Bluetooth') {
 		$device = 'btstream';
 	}
-	elseif ($_SESSION['alsaequal'] != 'Off') {
-		$device = 'alsaequal';
-	}
-	elseif ($_SESSION['crossfeed'] != 'Off') {
-		$device = 'crossfeed';
-	}
-	elseif ($_SESSION['eqfa12p'] != 'Off') {
-		$device = 'eqfa12p';
-	}
-	elseif ($_SESSION['camilladsp'] != 'off') {
-		$device = 'camilladsp';
-	}
 	else {
-		$device = 'plughw:' . $array[0]['value'];
+		$device = '_audioout';
 	}
 
 	// Interpolation param handled in config file
@@ -2612,20 +2586,8 @@ function startSpotify() {
 	if ($_SESSION['audioout'] == 'Bluetooth') {
 		$device = 'btstream';
 	}
-	elseif ($_SESSION['alsaequal'] != 'Off') {
-		$device = 'alsaequal';
-	}
-	elseif ($_SESSION['crossfeed'] != 'Off') {
-		$device = 'crossfeed';
-	}
-	elseif ($_SESSION['eqfa12p'] != 'Off') {
-		$device = 'eqfa12p';
-	}
-    elseif ($_SESSION['camilladsp'] != 'off') {
-        $device = 'camilladsp';
-    }
 	else {
-		$device = 'plughw:' . $_SESSION['cardnum'];
+		$device = '_audioout';
 	}
 
 	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ? ' --enable-volume-normalisation --normalisation-pregain ' .  $cfg_spotify['normalization_pregain'] : '';
@@ -3518,24 +3480,9 @@ function getMoodeRel($options = '') {
 	}
 }
 
-// ensure valid mpd output config
+// Ensure valid mpd output config
 function configMpdOutputs() {
-	if ($_SESSION['crossfeed'] != 'Off') {
-		$output = ALSA_CROSSFEED;
-	}
-	elseif ($_SESSION['eqfa12p'] != 'Off') {
-		$output = ALSA_PARAMETRIC_EQ;
-	}
-	elseif ($_SESSION['alsaequal'] != 'Off') {
-		$output = ALSA_GRAPHIC_EQ;
-	}
-	elseif ($_SESSION['invert_polarity'] == '1') {
-		$output = ALSA_POLARITY_INV;
-	}
-	elseif ($_SESSION['camilladsp'] != 'off') {
-        $output = ALSA_CAMILLADSP;
-    }
-	elseif ($_SESSION['audioout'] == 'Bluetooth') {
+	if ($_SESSION['audioout'] == 'Bluetooth') {
 		$output = ALSA_BLUETOOTH;
 	}
 	else {
@@ -3680,27 +3627,7 @@ function setAudioOut($audioout) {
 		reconfMpdVolume($_SESSION['mpdmixer_local']);
 		sysCmd('/var/www/vol.sh -restore');
 		sysCmd('mpc stop');
-
-		if ($_SESSION['crossfeed'] != 'Off') {
-			$output = ALSA_CROSSFEED;
-		}
-		elseif ($_SESSION['eqfa12p'] != 'Off') {
-			$output = ALSA_PARAMETRIC_EQ;
-		}
-		elseif ($_SESSION['alsaequal'] != 'Off') {
-			$output = ALSA_GRAPHIC_EQ;
-		}
-		elseif ($_SESSION['invert_polarity'] != '0') {
-			$output = ALSA_POLARITY_INV;
-		}
-		elseif ($_SESSION['camilladsp'] != 'off') {
-	        $output = ALSA_CAMILLADSP;
-	    }
-		else {
-			$output = ALSA_DEFAULT;
-		}
-
-		sysCmd('mpc enable only "' . $output . '"');
+		sysCmd('mpc enable only "' . ALSA_DEFAULT . '"');
 	}
 	elseif ($audioout == 'Bluetooth') {
 		if ($_SESSION['mpdmixer'] == 'none') {
@@ -3718,7 +3645,7 @@ function setAudioOut($audioout) {
 	// Renderers
 	if ($_SESSION['airplaysvc'] == '1') {
 		stopAirplay();
-		 startAirplay();
+		startAirplay();
 	}
 
 	if ($_SESSION['spotifysvc'] == '1') {

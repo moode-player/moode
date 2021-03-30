@@ -63,13 +63,20 @@ if (isset($_POST['update_drvoptions'])) {
 	}
 }
 
-// ALSA VOLUME
+// ALSA OPTIONS
 
-// Max ALSA volume
+// ALSA max volume
 if (isset($_POST['update_alsavolume_max'])) {
 	if (isset($_POST['alsavolume_max'])) {
-		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'Max ALSA volume updated', '');
+		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'ALSA max volume updated', '');
 		playerSession('write', 'alsavolume_max', $_POST['alsavolume_max']);
+	}
+}
+// ALSA loopback device
+if (isset($_POST['update_alsa_loopback'])) {
+	if (isset($_POST['alsa_loopback'])) {
+		submitJob('alsa_loopback', $_POST['alsa_loopback'], 'ALSA loopback ' . $_POST['alsa_loopback'], '');
+		playerSession('write', 'alsa_loopback', $_POST['alsa_loopback']);
 	}
 }
 
@@ -504,9 +511,9 @@ $_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverla
 $_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
 $_i2soverlay_btn_disable = $_SESSION['i2sdevice'] == 'None' ? '' : 'disabled';
 
-// ALSA VOLUME
+// ALSA OPTIONS
 
-// Max ALSA volume
+// ALSA max volume
 if ($_SESSION['alsavolume'] == 'none') {
 	$_alsavolume_max = '';
 	$_alsavolume_max_readonly = 'readonly';
@@ -519,6 +526,9 @@ else {
 	$_alsavolume_max_hide = '';
 	$_alsavolume_max_msg = '';
 }
+// ALSA loopback device
+$_select['alsa_loopback1'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+$_select['alsa_loopback0'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 
 // MPD OPTIONS
 

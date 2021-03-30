@@ -67,7 +67,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nEth addr wait\t\t= $eth0chk\c"
 	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
 	echo -e "\nMax USB current\t\t= $maxusbcurrent\c"
-	echo -e "\nUSB (UAC2) fix\t\t= $uac2fix\c"
+	# DROP echo -e "\nUSB (UAC2) fix\t\t= $uac2fix\c"
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
 	echo -e "\n\c"
 	echo -e "\nPHP-FPM version\t\t= $PHPVER\c"
@@ -105,8 +105,9 @@ AUDIO_PARAMETERS() {
 	echo -e "\nMixer name\t\t= $volmixer\c"
 	echo -e "\nHardware mixer\t\t= $hwvol\c"
 	echo -e "\nSupported formats\t= $supported_formats\c"
-	echo -e "\nMax ALSA volume\t\t= $alsavolume_max\c"
-	echo -e "\nMax MPD volume\t\t= $volume_mpd_max\c"
+	echo -e "\nALSA max volume\t\t= $alsavolume_max\c"
+	echo -e "\nALSA loopback\t\t= $alsa_loopback\c"
+	echo -e "\nMPD max volume\t\t= $volume_mpd_max\c"
 	echo -e "\nVolume step limit\t= $volume_step_limit\c"
 	echo -e "\nDisplay dB volume\t= $volume_db_display\c"
 	echo -e "\nAudio source\t\t= $audioin\c"
@@ -632,7 +633,7 @@ ashuffle=${arr[52]}
 camilladsp=${arr[53]}
 cdsp_fix_playback=${arr[54]}
 camilladsp_quickconv=${arr[55]}
-[[ "${arr[56]}" = "1" ]] && uac2fix="On" || uac2fix="Off"
+alsa_loopback=${arr[56]}
 keyboard=${arr[57]}
 [[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
 toggle_song=${arr[59]}
