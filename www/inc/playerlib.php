@@ -3526,9 +3526,6 @@ function cfgI2sOverlay($i2sdevice) {
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
 	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" /boot/config.txt');
-
-		// NOTE: Allo Boss 2 OLED display I2C
-		sysCmd('sed -i "s/^i2c-dev/#i2c-dev/" /etc/modules');
 	}
 	// Named I2S device
 	elseif ($i2sdevice != 'None') {
@@ -3537,14 +3534,6 @@ function cfgI2sOverlay($i2sdevice) {
 		playerSession('write', 'cardnum', '0');
 		playerSession('write', 'adevname', $result[0]['name']);
 		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
-
-		// NOTE: Allo Boss 2 OLED display I2C
-		if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
-			sysCmd('sed -i "s/^#i2c-dev/i2c-dev/" /etc/modules');
-		}
-		else {
-			sysCmd('sed -i "s/^i2c-dev/#i2c-dev/" /etc/modules');
-		}
 	}
 	// DT overlay
 	else {
@@ -3552,9 +3541,6 @@ function cfgI2sOverlay($i2sdevice) {
 		playerSession('write', 'cardnum', '0');
 		playerSession('write', 'adevname', $_SESSION['i2soverlay']);
 		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
-
-		// NOTE: Allo Boss 2 OLED display I2C
-		sysCmd('sed -i "s/^i2c-dev/#i2c-dev/" /etc/modules');
 	}
 }
 

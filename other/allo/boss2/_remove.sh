@@ -10,6 +10,3 @@ sudo rm -rf /opt/boss2_oled
 echo "Remove Systemd unit"
 sudo rm /lib/systemd/system/boss2oled.service
 sudo systemctl daemon-reload
-echo "Remove Etc modules i2c_dev"
-sudo sed -i '/# Allo Boss2 OLED display/d' /etc/modules
-sudo sed -i '/i2c-dev/d' /etc/modules

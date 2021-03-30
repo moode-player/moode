@@ -30,11 +30,11 @@ Updates
 
 - UPD: Show Quick Convolution filter friendly name in Audio info
 - UPD: Revert the "Artist +" library option (not useful)
-- UPD: Allo Boss2 OLED display script
+- UPD: Allo Boss2 OLED display script and startup
 - UPD: Enhance I2S configuration to support more devices
 - UPD: CamillaDSP: Show encoding of wave file
 - UPD: CamillaDSP: Improved wave file converter
-- UPD: Drop UAC2 fix (not applicable to recent Linux USB audio driver)
+- UPD: Drop UAC2 fix (not relevant anymore)
 
 Bug fixes
 

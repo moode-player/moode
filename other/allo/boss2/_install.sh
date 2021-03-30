@@ -16,5 +16,3 @@ echo "Install Systemd unit"
 sudo cp /mnt/moode-player/GitHub/moode/lib/systemd/system/boss2oled.service /lib/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl disable boss2oled.service
-echo "Install Etc modules"
-sudo cp /mnt/moode-player/GitHub/moode/etc/modules /etc/modules
