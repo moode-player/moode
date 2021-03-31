@@ -34,7 +34,7 @@ Updates
 - UPD: Enhance I2S configuration to support more devices
 - UPD: CamillaDSP: Show encoding of wave file
 - UPD: CamillaDSP: Improved wave file converter
-- UPD: Drop UAC2 fix (not relevant anymore)
+- UPD: Drop UAC2 fix (not applicable anymore)
 
 Bug fixes
 
