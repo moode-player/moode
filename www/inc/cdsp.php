@@ -569,9 +569,6 @@ function test_cdsp() {
     // print_r($cdsp->convertWaveFile('test_samplerate_44100Hz.wav'));
     // print_r($cdsp->convertWaveFile('Sennheiser_HD800S_L.wav'));
     // print_r($cdsp->convertWaveFile('BRIR_R02_P1_E0_A30C_44100Hz_24b.raw'));
-<<<<<<< HEAD
-    // $cdsp->setPlaybackDevice(2);
-=======
 //    $cdsp->setPlaybackDevice(2);
 
 // $fileIn = "/tmp/flat.in.yml";
@@ -589,7 +586,6 @@ function test_cdsp() {
 // }
 
 // yaml_emit_file($fileOut, $yml_cfg);
->>>>>>> [CamillaDSP] Workarround bug in yaml parser
 }
 
 
