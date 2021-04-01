@@ -46,6 +46,7 @@ Bug fixes
 - FIX: CamillaDSP: Config dropdown not disabled when other DSP active
 - FIX: CamillaDSP: Relative paths on first use of config
 - FIX: CamillaDSP: Wave file converter doesn't support floats
+- FIX: CamillaDSP: Work around bug in yaml parser
 - FIX: Typo in sysinfo output for throttled state
 
 ########################################################
