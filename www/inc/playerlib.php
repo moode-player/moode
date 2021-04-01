@@ -3054,7 +3054,7 @@ function autoConfigSettings() {
 			playerSession('write', 'i2soverlay', $values['i2soverlay']);
 		}],
 		['requires' => ['i2sdevice'] , 'handler' => function($values) {
-			playerSession('write', 'i2sdevice', $values['i2sdevice'] == 'none' ? 'None': $values['i2soverlay']);
+			playerSession('write', 'i2sdevice', $values['i2sdevice'] == 'none' ? 'None': $values['i2sdevice']);
 			cfgI2sOverlay($values['i2sdevice']);
 		}],
 
