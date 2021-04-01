@@ -74,6 +74,16 @@ class CamillaDsp {
                                                 'device' => "hw:" . $device . ",0",
                                                 'format' => $useFormat);
 
+            // patch issue where yaml parser to an empty [], which would break the cdsp config
+            if(key_exists('filters', $yml_cfg) && count(array_keys ($yml_cfg['filters'] ) )==0 ) {
+                unset($yml_cfg['filters']);
+            }
+            if(key_exists('mixers', $yml_cfg) && count(array_keys ($yml_cfg['mixers'] ) )==0 ) {
+                unset($yml_cfg['mixers']);
+            }
+            if(key_exists('pipeline', $yml_cfg) && count($yml_cfg['pipeline']  )==0 ) {
+                unset($yml_cfg['mixers']);
+            }
             yaml_emit_file($this->getCurrentConfigFileName(), $yml_cfg);
         }
     }
@@ -559,7 +569,27 @@ function test_cdsp() {
     // print_r($cdsp->convertWaveFile('test_samplerate_44100Hz.wav'));
     // print_r($cdsp->convertWaveFile('Sennheiser_HD800S_L.wav'));
     // print_r($cdsp->convertWaveFile('BRIR_R02_P1_E0_A30C_44100Hz_24b.raw'));
+<<<<<<< HEAD
     // $cdsp->setPlaybackDevice(2);
+=======
+//    $cdsp->setPlaybackDevice(2);
+
+// $fileIn = "/tmp/flat.in.yml";
+// $fileOut = "/tmp/flat.out.yml";
+// $yml_cfg = yaml_parse_file( $fileIn  );
+
+// if(key_exists('filters', $yml_cfg) && count(array_keys ($yml_cfg['filters'] ) )==0 ) {
+//     unset($yml_cfg['filters']);
+// }
+// if(key_exists('mixers', $yml_cfg) && count(array_keys ($yml_cfg['mixers'] ) )==0 ) {
+//     unset($yml_cfg['mixers']);
+// }
+// if(key_exists('pipeline', $yml_cfg) && count(array_keys ($yml_cfg['pipeline'] ) )==0 ) {
+//     unset($yml_cfg['mixers']);
+// }
+
+// yaml_emit_file($fileOut, $yml_cfg);
+>>>>>>> [CamillaDSP] Workarround bug in yaml parser
 }
 
 
