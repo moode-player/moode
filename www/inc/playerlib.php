@@ -3151,8 +3151,8 @@ function autoConfigSettings() {
 		}],
 
 		'Network (wlan0)',
-		['requires' => ['wlanssid', 'wlanpwd', 'wlansec'],
-		 'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns', 'wlancountry'],
+		['requires' => ['wlanssid', 'wlanpwd', 'wlansec', 'wlancountry'],
+		 'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns'],
 			  'handler' => function($values) {
 			$dbh = cfgdb_connect();
 			$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
@@ -3160,7 +3160,7 @@ function autoConfigSettings() {
 			$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
 				'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
 				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-				'wlan_channel' => '');
+				'wlan_country' => $values['wlancountry'], 'wlan_channel' => '');
 
 			if( key_exists('wlanmethod', $values) ) { $value['method'] = $values['wlanmethod']; }
 			if( key_exists('wlanipaddr', $values) ) { $value['ipaddr'] = $values['wlanipaddr']; }
@@ -3168,7 +3168,6 @@ function autoConfigSettings() {
 			if( key_exists('wlangateway', $values) ) { $value['gateway'] = $values['wlangateway']; }
 			if( key_exists('wlanpridns', $values) ) { $value['pridns'] = $values['wlanpridns']; }
 			if( key_exists('wlansecdns', $values) ) { $value['secdns'] = $values['wlansecdns']; }
-			if( key_exists('wlancountry', $values) ) { $value['wlan_country'] = $values['wlancountry']; }
 
 			cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 			cfgNetIfaces();
