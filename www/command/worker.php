@@ -263,12 +263,6 @@ $wlan0 = sysCmd('ip addr list | grep wlan0');
 if (!empty($wlan0[0])) {
 	workerLog('worker: wlan0 exists');
 
-	$model = substr($_SESSION['hdwrrev'], 3, 1);
-	if ($model == '3' || $model == '4') {
-		sysCmd('/sbin/iwconfig wlan0 power off');
-		workerLog('worker: Pi integrated wlan0 power save disabled');
-	}
-
 	$result = sdbquery('SELECT * FROM cfg_network', $dbh);
 	workerLog('worker: wifi country (' . $result[1]['wlan_country'] . ')');
 
@@ -320,6 +314,12 @@ if (!empty($wlan0[0])) {
 
 	// Reset dhcpcd.conf in case a hard reboot or poweroff occurs
 	resetApMode();
+
+	$model = substr($_SESSION['hdwrrev'], 3, 1);
+	if ($model == '3' || $model == '4') {
+		sysCmd('/sbin/iwconfig wlan0 power off');
+		workerLog('worker: Pi integrated wlan0 power save disabled');
+	}
 }
 else {
 	workerLog('worker: wlan0 does not exist' . ($_SESSION['wifibt'] == '0' ? ' (off)' : ''));
