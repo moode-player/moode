@@ -1561,11 +1561,11 @@ function runQueuedJob() {
 			sysCmd('mpc stop');
 
 			if ($_SESSION['w_queueargs'] == 'On') {
-				sysCmd("sed -i 's/_audioout__/_audioout/' /etc/asound.conf");
+				sysCmd("sed -i '0,/_audioout__ {/s//_audioout {/' /etc/alsa/conf.d/_sndaloop.conf");
 				sysCmd('modprobe snd-aloop');
 			}
 			else {
-				sysCmd("sed -i 's/_audioout/_audioout__/' /etc/asound.conf");
+				sysCmd("sed -i '0,/_audioout {/s//_audioout__ {/' /etc/alsa/conf.d/_sndaloop.conf");
 				sysCmd('modprobe -r snd-aloop');
 			}
 
