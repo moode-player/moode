@@ -12,6 +12,9 @@ import sys
 import os
 import upnpp
 
+def debug(x):
+    print("%s" % x, file = sys.stderr)
+
 def usage():
     prog = os.path.basename(__file__)
     debug("Usage: %s devname" % prog)
