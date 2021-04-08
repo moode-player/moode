@@ -75,6 +75,9 @@ if (isset($_POST['update_alsavolume_max'])) {
 // ALSA loopback device
 if (isset($_POST['update_alsa_loopback'])) {
 	if (isset($_POST['alsa_loopback']) && $_POST['alsa_loopback'] != $_SESSION['alsa_loopback']) {
+
+		// TODO: Check to see if module is in use
+
 		submitJob('alsa_loopback', $_POST['alsa_loopback'], 'ALSA loopback ' . $_POST['alsa_loopback'], '');
 		playerSession('write', 'alsa_loopback', $_POST['alsa_loopback']);
 	}
