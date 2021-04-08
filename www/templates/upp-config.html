@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 -->
 <div class="container">
@@ -35,6 +33,19 @@
 
 		<fieldset>
 			<legend>General</legend>
+			<div class="control-group">
+				<label class="control-label" for="upnpav">UPnP service type</label>
+				<div class="controls">
+					<select id="svctype" class="input-large" name="config[svctype]">
+						$_select[svctype]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_svctype" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_svctype" class="help-block-configs help-block-margin hide">
+						Select either UPnP-A/V or OpenHome service.
+                    </span>
+				</div>
+			</div>
+			<!-- DROP
 			<div class="control-group">
 				<label class="control-label" for="upnpav">UPnP A/V services</label>
 				<div class="controls">
@@ -60,6 +71,7 @@
                     </span>
 				</div>
 			</div>
+			-->
 			<div class="control-group">
 				<label class="control-label" for="checkcontentformat">Check content format</label>
 				<div class="controls">
@@ -74,6 +86,7 @@
 			</div>
 		</fieldset>
 
+		<!-- DROP
 		<fieldset>
 			<legend>TIDAL</legend>
 			<div class="control-group">
@@ -151,6 +164,7 @@
 				</div>
 			</div>
 		</fieldset>
+		-->
 	</form>
 </div>
 </div>

@@ -594,7 +594,7 @@ else {
 if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
 	if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
 		$started = ': started';
-		sysCmd('systemctl start upmpdcli');
+		startUPnP();
 	}
 	else {
 		$started = '';
@@ -1790,7 +1790,9 @@ function runQueuedJob() {
 		case 'upnpsvc':
 			sysCmd('/var/www/command/util.sh chg-name upnp ' . $_SESSION['w_queueargs']);
 			sysCmd('systemctl stop upmpdcli');
-			if ($_SESSION['upnpsvc'] == 1) {sysCmd('systemctl start upmpdcli');}
+			if ($_SESSION['upnpsvc'] == 1) {
+				startUPnP();
+			}
 			break;
 		case 'minidlna':
 			sysCmd('/var/www/command/util.sh chg-name dlna ' . $_SESSION['w_queueargs']);

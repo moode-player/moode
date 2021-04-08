@@ -2715,10 +2715,17 @@ function stopAutoShuffle() {
 	closeMpdSock($sock);
 }
 
-// Get upnp coverart url
+// Start UPnP service and set service type session var used in getUpnpCoverUrl()
+function startUPnP() {
+	$result = sdbquery("SELECT value FROM cfg_upnp WHERE param='upnpav'", cfgdb_connect());
+	$_SESSION['upnp_svctype'] = $result[0]['value'] == '1' ? '-UPnP/AV' : '';
+	sysCmd('systemctl start upmpdcli');
+}
+// Get UPnP coverart url
 function getUpnpCoverUrl() {
-	$result = sysCmd('/var/www/command/upnp_albumart.py "' . $_SESSION['upnpname'] . '"');
-	return $result[0];
+	$result = sysCmd('/var/www/command/upnp_albumart.py "' . $_SESSION['upnpname'] . $_SESSION['upnp_svctype'] . '"');
+	// If multiple url's are returned, use the first
+	return rawurlencode(explode(',', $result[0])[0]);
 }
 
 // Configure chip options
@@ -3802,8 +3809,6 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			else {
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
 			}
-			// In case 2 url's are returned, use the first
-			$current['coverurl'] = explode(',', $current['coverurl'])[0];
 
 			if (substr($song['file'], 0, 4) == 'http') {
 				//workerLog('enhanceMetadata(): UPnP url');

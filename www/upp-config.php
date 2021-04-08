@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -27,6 +25,11 @@ $dbh = cfgdb_connect();
 
 // Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
+	// Set service params
+	$_POST['config']['upnpav'] = $_POST['config']['svctype'] == 'upnpav' ? '1' : '0';
+	$_POST['config']['openhome'] = $_POST['config']['svctype'] == 'openhome' ? '1' : '0';
+
+	// Update sql table and conf file
 	foreach ($_POST['config'] as $key => $value) {
 		cfgdb_update('cfg_upnp', $dbh, $key, $value);
 
@@ -55,11 +58,17 @@ foreach ($result as $row) {
 // GENERAL
 $_select['checkcontentformat'] .= "<option value=\"1\" " . (($cfg_upnp['checkcontentformat'] == '1') ? "selected" : "") . ">Yes</option>\n";
 $_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfg_upnp['checkcontentformat'] == '0') ? "selected" : "") . ">No</option>\n";
+$_select['svctype'] .= "<option value=\"upnpav\" " . (($cfg_upnp['upnpav'] == '1') ? "selected" : "") . ">UPnP-A/V</option>\n";
+$_select['svctype'] .= "<option value=\"openhome\" " . (($cfg_upnp['openhome'] == '1') ? "selected" : "") . ">OpenHome</option>\n";
+
+/* DROP
 $_select['upnpav'] .= "<option value=\"1\" " . (($cfg_upnp['upnpav'] == '1') ? "selected" : "") . ">Yes</option>\n";
 $_select['upnpav'] .= "<option value=\"0\" " . (($cfg_upnp['upnpav'] == '0') ? "selected" : "") . ">No</option>\n";
 $_select['openhome'] .= "<option value=\"1\" " . (($cfg_upnp['openhome'] == '1') ? "selected" : "") . ">Yes</option>\n";
 $_select['openhome'] .= "<option value=\"0\" " . (($cfg_upnp['openhome'] == '0') ? "selected" : "") . ">No</option>\n";
+*/
 
+/* DROP
 // TIDAL
 $_select['tidaluser'] = $cfg_upnp['tidaluser'];
 $_select['tidalpass'] = $cfg_upnp['tidalpass'];
@@ -73,7 +82,7 @@ $_select['qobuzpass'] = $cfg_upnp['qobuzpass'];
 $_select['qobuzformatid'] .= "<option value=\"7\" " . (($cfg_upnp['qobuzformatid'] == '7') ? "selected" : "") . ">FLAC (up to 96K)</option>\n";
 $_select['qobuzformatid'] .= "<option value=\"27\" " . (($cfg_upnp['qobuzformatid'] == '27') ? "selected" : "") . ">FLAC (up to 192K)</option>\n";
 $_select['qobuzformatid'] .= "<option value=\"5\" " . (($cfg_upnp['qobuzformatid'] == '5') ? "selected" : "") . ">MP3 (320K)</option>\n";
-
+*/
 waitWorker(1, 'upp-config');
 
 $tpl = "upp-config.html";
