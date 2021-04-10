@@ -53,7 +53,7 @@ if len(sys.argv) != 2:
 devname = sys.argv[1]
 
 log = upnpp.Logger_getTheLog("stderr")
-log.setLogLevel(2)
+log.setLogLevel(0)
 
 service = upnpp.findTypedService(devname, "Info", True)
 if service:
