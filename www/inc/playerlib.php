@@ -2725,7 +2725,7 @@ function startUPnP() {
 function getUpnpCoverUrl() {
 	$result = sysCmd('/var/www/command/upnp_albumart.py "' . $_SESSION['upnpname'] . $_SESSION['upnp_svctype'] . '"');
 	// If multiple url's are returned, use the first
-	return rawurlencode(explode(',', $result[0])[0]);
+	return explode(',', $result[0])[0];
 }
 
 // Configure chip options
