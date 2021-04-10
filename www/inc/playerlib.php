@@ -3001,6 +3001,31 @@ function autoConfigSettings() {
 		return $result;
 	}
 
+	// can not be directly called as handler, but as shorthand with in handler
+	function setDbParams($dbtable, $values, $prefix = '') {
+		$dbh = cfgdb_connect();
+		$total_query ='';
+		foreach ($values  as $key=>$value) {
+			$param =  strlen($prefix)>0 ? str_replace($prefix,"", $key) : $key ;
+			cfgdb_update($dbtable, $dbh, $param, $value);
+		}
+	}
+
+	// can not be directly called as handler, but as shorthand with in handler
+	function getDbParams($dbtable, $values, $prefix = '') {
+		$dbh = cfgdb_connect();
+		$result ='';
+		foreach ($values  as $key) {
+			$param =  strlen($prefix)>0 ? str_replace($prefix,"", $key) : $key ;
+			$query = 'select param,value from '.$dbtable.' where param="' . $param . '"';
+			$rows = sdbquery($query, $dbh);
+			if($rows) {
+				$result = $result . sprintf("%s = \"%s\"\n", $key, $rows[0]['value']);
+			}
+		}
+		return $result;
+	}
+
 	// Configuration of the autoconfig item handling
 	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
 	//            most item only have 1 autoconfig item, but network setting requires multiple to be present
@@ -3122,11 +3147,35 @@ function autoConfigSettings() {
 		['requires' => ['rsmafterspot'] , 'handler' => setPlayerSession],
 		['requires' => ['slsvc'] , 'handler' => setPlayerSession],
 		['requires' => ['rsmaftersl'] , 'handler' => setPlayerSession],
+		['requires' => ['rsmafterbt'] , 'handler' => setPlayerSession],
+		['requires' => ['btmulti'] , 'handler' => setPlayerSession],
 
 		'UPnP/DLNA',
 		['requires' => ['upnpsvc'] , 'handler' => setPlayerSession],
 		['requires' => ['dlnasvc'] , 'handler' => setPlayerSession],
 		['requires' => ['upnp_browser'] , 'handler' => setPlayerSession],
+		['requires' => ['upnpav'] ,  'handler' => function($values) {
+			setDbParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getDbParams('cfg_upnp', $values);
+		}],
+		['requires' => ['openhome'] ,  'handler' => function($values) {
+			setDbParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getDbParams('cfg_upnp', $values);
+		}],
+		['requires' => ['checkcontentformat'] ,  'handler' => function($values) {
+			setDbParams('cfg_upnp', $values);
+		}, 'custom_write' => function($values) {
+			return getDbParams('cfg_upnp', $values);
+		}],
+
+		'Spotify',
+		['requires' => ['spot_bitrate','spot_initial_volume','spot_volume_curve','spot_volume_normalization','spot_normalization_pregain','spot_autoplay'] ,  'handler' => function($values) {
+			setDbParams('cfg_spotify', $values, 'spot_');
+		}, 'custom_write' => function($values) {
+			return getDbParams('cfg_spotify', $values, 'spot_');
+		}],
 
 		'Network (eth0)',
 		['requires' => ['ethmethod', 'ethipaddr', 'ethnetmask', 'ethgateway', 'ethpridns', 'ethsecdns'], 'handler' => function($values) {
