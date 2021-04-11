@@ -6,7 +6,9 @@
 #
 # 2021-01-16 Tim Curtis:
 # - Change 0S._exit() to sys.exit()
-#
+# 2021-04-11 Marcel van de Weert
+# - Escape album art url path
+# - To speedup lookup provide type of system with mode(auto|upnpav|openhome) cmd arg
 
 import sys
 import os
@@ -18,7 +20,7 @@ def debug(x):
 
 def usage():
     prog = os.path.basename(__file__)
-    debug("Usage: %s devname" % prog)
+    debug("Usage: %s devname [mode]" % prog)
     sys.exit(1)
 
 
@@ -51,19 +53,24 @@ def artFromAVTransport(service):
         artFromMeta(retdata["TrackMetaData"])
 
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 2 and len(sys.argv) != 3:
     usage()
 devname = sys.argv[1]
+mode = 'auto'
+if len(sys.argv) == 3:
+    mode = sys.argv[2]
 
 log = upnpp.Logger_getTheLog("stderr")
 log.setLogLevel(0)
 
-service = upnpp.findTypedService(devname, "Info", True)
-if service:
-    artFromOHInfo(service)
-service = upnpp.findTypedService(devname, "AVTransport", True)
-if service:
-    artFromAVTransport(service)
+if mode == "auto" or mode == 'openhome':
+    service = upnpp.findTypedService(devname, "Info", True)
+    if service:
+        artFromOHInfo(service)
+if mode == "auto" or mode == 'upnpav':
+    service = upnpp.findTypedService(devname, "AVTransport", True)
+    if service:
+        artFromAVTransport(service)
 
 sys.exit(0)
 
