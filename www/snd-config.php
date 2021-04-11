@@ -76,10 +76,23 @@ if (isset($_POST['update_alsavolume_max'])) {
 if (isset($_POST['update_alsa_loopback'])) {
 	if (isset($_POST['alsa_loopback']) && $_POST['alsa_loopback'] != $_SESSION['alsa_loopback']) {
 
-		// TODO: Check to see if module is in use
-
-		submitJob('alsa_loopback', $_POST['alsa_loopback'], 'ALSA loopback ' . $_POST['alsa_loopback'], '');
-		playerSession('write', 'alsa_loopback', $_POST['alsa_loopback']);
+		// Check to see if module is in use
+		if ($_POST['alsa_loopback'] == 'Off') {
+			$result = sysCmd('sudo modprobe -r snd-aloop');
+			if (!empty($result)) {
+				$_SESSION['notify']['title'] = 'Unable to turn off';
+				$_SESSION['notify']['msg'] = 'ALSA loopback is in use';
+				$_SESSION['notify']['duration'] = 5;
+			}
+			else {
+				submitJob('alsa_loopback', 'Off', 'ALSA loopback Off', '');
+				playerSession('write', 'alsa_loopback', 'Off');
+			}
+		}
+		else {
+			submitJob('alsa_loopback', 'On', 'ALSA loopback On', '');
+			playerSession('write', 'alsa_loopback', 'On');
+		}
 	}
 }
 
