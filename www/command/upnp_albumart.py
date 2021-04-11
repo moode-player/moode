@@ -11,6 +11,7 @@
 import sys
 import os
 import upnpp
+import urllib.parse
 
 def debug(x):
     print("%s" % x, file = sys.stderr)
@@ -27,7 +28,9 @@ def artFromMeta(metadata):
     if dirc.m_items.size():
         dirobj = dirc.m_items[0]
         if "upnp:albumArtURI" in dirobj.m_props:
-            print("%s" % dirobj.m_props["upnp:albumArtURI"])
+            o = urllib.parse.urlsplit(dirobj.m_props["upnp:albumArtURI"])
+            url_escaped = urllib.parse.ParseResult(o.scheme, o.netloc, urllib.parse.quote(o.path), "", "", "").geturl()
+            print("%s" % url_escaped)
             sys.exit(0)
 
 
@@ -63,3 +66,4 @@ if service:
     artFromAVTransport(service)
 
 sys.exit(0)
+
