@@ -45,6 +45,7 @@ if [[ $1 = "chg-name" ]]; then
 
 	if [[ $2 = "upnp" ]]; then
 		sed -i "s/friendlyname = $3/friendlyname = $4/" /etc/upmpdcli.conf
+		sed -i "s/avfriendlyname = $3/avfriendlyname = $4/" /etc/upmpdcli.conf
 		sed -i "s/ohproductroom = $3/ohproductroom = $4/" /etc/upmpdcli.conf
 	fi
 
