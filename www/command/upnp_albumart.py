@@ -30,9 +30,14 @@ def artFromMeta(metadata):
     if dirc.m_items.size():
         dirobj = dirc.m_items[0]
         if "upnp:albumArtURI" in dirobj.m_props:
-            o = urllib.parse.urlsplit(dirobj.m_props["upnp:albumArtURI"])
-            url_escaped = urllib.parse.ParseResult(o.scheme, o.netloc, urllib.parse.quote(o.path), "", "", "").geturl()
-            print("%s" % url_escaped)
+            url_orig = dirobj.m_props["upnp:albumArtURI"]
+            urls = url_orig.split(', http')
+            for idx, url in enumerate(urls):
+                if idx > 0:
+                    urls[idx] = "http{}".format(url)
+                o = urllib.parse.urlsplit(urls[idx])
+                url_escaped = urllib.parse.ParseResult(o.scheme, o.netloc, urllib.parse.quote(o.path), "", "", "").geturl()
+                print("%s" % url_escaped)
             sys.exit(0)
 
 
