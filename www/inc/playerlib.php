@@ -2723,7 +2723,8 @@ function startUPnP() {
 }
 // Get UPnP coverart url
 function getUpnpCoverUrl() {
-	$result = sysCmd('/var/www/command/upnp_albumart.py "' . $_SESSION['upnpname'] . $_SESSION['upnp_svctype'] . '"');
+	$mode = sdbquery("SELECT value FROM cfg_upnp WHERE param='upnpav'", cfgdb_connect())[0]['value'] == 1 ? 'upnpav' : 'openhome';
+	$result = sysCmd('/var/www/command/upnp_albumart.py "' . $_SESSION['upnpname'] . $_SESSION['upnp_svctype'] . '" '. $mode);
 	// If multiple url's are returned, use the first
 	return explode(',', $result[0])[0];
 }
