@@ -100,8 +100,10 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-alsa-loopback" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
+					<span class="help-block-configs help-block-margin2">
+						Turn on the ALSA Loopback device. Max sample rate is 192 kHz.
+                    </span>
 					<span id="info-alsa-loopback" class="help-block-configs help-block-margin2 hide">
-						Turn on the ALSA Loopback device. Max sample rate is 192 kHz.<br>
 						Raw PCM data can be accessed by reading the device "hw:Loopback,1,0"<br>
 						NOTE: See /etc/alsa/conf.d/_audioout.conf, _deviceout.conf and _sndaloop.conf
                     </span>
