@@ -35,6 +35,7 @@ Updates
 - UPD: CamillaDSP: Show encoding of wave file
 - UPD: CamillaDSP: Improved wave file converter
 - UPD: Drop UAC2 fix (not applicable anymore)
+- UPD: Drop UPnP Tidal/Qobuz from Config (doesn't work anymore)
 
 Bug fixes
 
@@ -48,6 +49,7 @@ Bug fixes
 - FIX: CamillaDSP: Wave file converter doesn't support floats
 - FIX: CamillaDSP: Work around bug in yaml parser
 - FIX: Typo in sysinfo output for throttled state
+- FIX: Several issues with UPnP config and cover art
 
 ########################################################
 //
