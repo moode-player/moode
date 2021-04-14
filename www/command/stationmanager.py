@@ -354,9 +354,12 @@ Version=2"""
             station_queries = []
             for station in stations_to_import:
                 print('Import {}'.format(station['name']))
-                self.generate_station_pls(station['name'], station['station'])
-                self.generate_station_logo(station['name'], backup)
-                self.create_query_station_to_db(station, fields_db)
+                try:
+                    self.generate_station_pls(station['name'], station['station'])
+                    self.generate_station_logo(station['name'], backup)
+                    self.create_query_station_to_db(station, fields_db)
+                except Exception as e:
+                    print("Error on import: {}".format(e))
 
             self.conn.commit()
 
