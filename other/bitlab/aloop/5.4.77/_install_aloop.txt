@@ -1,0 +1,21 @@
+//////////////////////////////////////////////////////
+//
+// Install @bitlab enhanced aloop driver
+//
+//////////////////////////////////////////////////////
+
+sudo ./dev.sh
+KERNEL=5.4.77
+BASE_PATH=/mnt/moode-player/GitHub/moode/other/bitlab
+#BASE_PATH=/media/VFAT4/bitlab
+
+sudo cp $BASE_PATH/aloop/$KERNEL/snd-aloop.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/sound/drivers/snd-aloop.ko
+sudo cp $BASE_PATH/aloop/$KERNEL/snd-soc-aloop.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/sound/drivers/snd-aloop.ko
+sudo cp $BASE_PATH/aloop/$KERNEL/snd-soc-aloop.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/sound/drivers/snd-aloop.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/sound/drivers/snd-aloop.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/sound/drivers/snd-aloop.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/sound/drivers/snd-aloop.ko
+sudo depmod $KERNEL-v7+
+sudo depmod $KERNEL-v7l+
+sudo depmod $KERNEL-v8+
+sync

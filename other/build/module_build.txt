@@ -83,6 +83,11 @@ cp $MOODE_OTHER/allo/usbridge_sig/$KERNEL_VER/ax88179_178a.h drivers/net/usb/
 cp $MOODE_OTHER/bitlab/pcm1794a/$KERNEL_VER/pcm1794a_384k.patch ./
 patch -p1 < ./pcm1794a_384k.patch
 
+# Bitlab aloop 384k driver
+# NOTE: Compile for -v7+, v7l+, -v8+
+cp $MOODE_OTHER/bitlab/aloop/$KERNEL_VER/aloop_384k.patch ./
+patch -p1 < ./aloop_384k.patch
+
 ----------------------------------------------------------------
 // 6. CONFIGURE FOR ARCHITECTURE
 //
@@ -121,17 +126,20 @@ make bcm2709_defconfig
 // 7a. COMPILE 32-bit MODULES
 // - Allo ASIX Eth/USB driver
 // - Bitlab PCM1974a 384k codec
+// - Bitlab aloop 384K driver
 ----------------------------------------------------------------
 
 make prepare
 make modules_prepare
 make -j4 M=drivers/net/usb modules
 make -j4 M=sound/soc/codecs modules
+make -j4 M=sound/drivers modules
 
 ----------------------------------------------------------------
 // 7b. COMPILE 64-BIT MODULES
 // - Allo ASIX Eth/USB driver
 // - Bitlab PCM1974a 384k codec
+// - Bitlab aloop 384K driver
 ----------------------------------------------------------------
 
 # NOTE: Assume step 6 already done
@@ -146,6 +154,7 @@ make prepare ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu-
 make modules_prepare ARCH=arm64 CROSS_COMPILE=/opt/aarch64/bin/aarch64-linux-gnu-
 make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- M=drivers/net/usb modules
 make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- M=sound/soc/codecs modules
+make -j4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- M=sound/drivers modules
 
 ----------------------------------------------------------------
 8. VERIFY MODULE LAYOUT MATCH
@@ -162,6 +171,12 @@ cat Module.symvers | grep module_layout
 modprobe --dump-modversions sound/soc/codecs/snd-soc-pcm1794a.ko | grep module_layout
 modinfo sound/soc/codecs/snd-soc-pcm1794a.ko
 
+# Bitlab aloop 384K driver
+cat Module.symvers | grep module_layout
+modprobe --dump-modversions sound/drivers/snd-aloop.ko | grep module_layout
+modinfo sound/drivers/snd-aloop.ko
+
+
 ----------------------------------------------------------------
 9. COPY DRIVER TO MOODE SOURCE TREE
 
@@ -169,6 +184,7 @@ modinfo sound/soc/codecs/snd-soc-pcm1794a.ko
 
 sudo cp drivers/net/usb/ax88179_178a.ko /mnt/SDCARD/ax88179_178a.ko-$KERNEL_REL
 sudo cp sound/soc/codecs/snd-soc-pcm1794a.ko /mnt/SDCARD/snd-soc-pcm1794a.ko-$KERNEL_REL
+sudo cp sound/drivers/snd-aloop.ko /mnt/SDCARD/snd-aloop.ko-$KERNEL_REL
 ls -l /mnt/SDCARD/
 
 # NOTE: Move files to other/... using Mac Finder
