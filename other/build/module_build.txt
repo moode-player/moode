@@ -176,7 +176,6 @@ cat Module.symvers | grep module_layout
 modprobe --dump-modversions sound/drivers/snd-aloop.ko | grep module_layout
 modinfo sound/drivers/snd-aloop.ko
 
-
 ----------------------------------------------------------------
 9. COPY DRIVER TO MOODE SOURCE TREE
 
