@@ -18,6 +18,7 @@
 New features
 
 - NEW: ALSA routing and loopback option
+- NEW: ALSA loopback driver 384K support
 
 Radio stations
 
