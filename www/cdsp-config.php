@@ -314,6 +314,36 @@ $_select['camillaguiexpert0'] .= "<input type=\"radio\" name=\"camillaguiexperts
 $_open_camillagui_disabled = $camillaGuiStatus == CGUI_CHECK_ACTIVE ? '': 'disabled';
 $_camillagui_notfound_show = $camillaGuiStatus == CGUI_CHECK_NOTFOUND ? '': 'hide';
 $_camillagui_status_problems = $camillaGuiStatus == CGUI_CHECK_ACTIVE || $camillaGuiStatus == CGUI_CHECK_INACTIVE || $camillaGuiStatus == CGUI_CHECK_NOTFOUND? 'hide': '';
+
+// The extension mechanism is intended for dynamic adding function plugins for generating CamillaDSP configurations
+$extensions_config = '/var/local/www/cdsp_extensions.json';
+$extensions_html = '';
+if(file_exists($extensions_config)) {
+	$_cdsp_extensions_show = '';
+	$extensions = json_decode(file_get_contents($extensions_config), true);
+
+	$extension_template ='
+	<label class="control-label">%s</label>
+	<div class="controls">
+		<a href="%s"><button class="btn btn-primary btn-medium" style="margin-top:0px;">Open</button></a>
+		<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+			<a aria-label="Help" class="info-toggle" data-cmd="info-%s" href="#notarget"><i class="fas fa-info-circle"></i></a>
+		</div>
+		<span id="info-%s" class="help-block-configs help-block-margin legend-info-help hide">
+			%s<br>
+		</span>
+	</div>
+	<br/>';
+
+	foreach ($extensions as $extension) {
+		$extensions_html .= sprintf($extension_template ,  $extension['title'], $extension['url'], $extension['label'], $extension['label'],  'help help'); // $extension['help']);
+		$extensions_html .= "\n";
+	}
+
+}else {
+	$_cdsp_extensions_show = 'hide';
+}
+
 session_write_close();
 
 waitWorker(1, 'cdsp-config');
