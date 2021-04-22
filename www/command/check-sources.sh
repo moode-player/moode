@@ -19,7 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-XX-YY TC moOde 6.6.0
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
@@ -36,7 +35,8 @@ function switchLED() {
 }
 
 function checkMount() {
-	/bin/mountpoint -q "${1}"
+	#/bin/mountpoint -q "${1}"
+	timeout 1 /bin/mountpoint -q "${1}"
 	echo $?
 }
 
