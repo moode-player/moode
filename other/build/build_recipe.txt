@@ -759,6 +759,15 @@ sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/sound/soc/codecs/snd-soc-pcm1794
 sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
 sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/sound/soc/codecs/snd-soc-pcm1794a.ko
 
+# Install @bitlab enhanced aloop 384K driver
+
+sudo cp ./moode/other/bitlab/aloop/$KERNEL/snd-aloop.ko-v7+ /lib/modules/$KERNEL-v7+/kernel/sound/drivers/snd-aloop.ko
+sudo cp ./moode/other/bitlab/aloop/$KERNEL/snd-aloop.ko-v7l+ /lib/modules/$KERNEL-v7l+/kernel/sound/drivers/snd-aloop.ko
+sudo cp ./moode/other/bitlab/aloop/$KERNEL/snd-aloop.ko-v8+ /lib/modules/$KERNEL-v8+/kernel/sound/drivers/snd-aloop.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7+/kernel/sound/drivers/snd-aloop.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v7l+/kernel/sound/drivers/snd-aloop.ko
+sudo chmod 0644 /lib/modules/$KERNEL-v8+/kernel/sound/drivers/snd-aloop.ko
+
 sudo depmod $KERNEL-v7+
 sudo depmod $KERNEL-v7l+
 sudo depmod $KERNEL-v8+
