@@ -89,10 +89,10 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r710.zip
-unzip -p -q ./moode-r710.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r710.zip moode/boot/config.txt.default > ./config.txt.default
-unzip -p -q ./moode-r710.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
+wget http://moodeaudio.org/downloads/prod/moode-r720.zip
+unzip -p -q ./moode-r720.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r720.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r720.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -115,8 +115,8 @@ sudo reboot
 ////////////////////////////////////////////////////////////////
 
 1. Unzip moOde release
-unzip -o -q ./moode-r710.zip
-rm -f ./moode-r710.zip
+unzip -o -q ./moode-r720.zip
+rm -f ./moode-r720.zip
 
 2. Basic optimizations
 
