@@ -342,6 +342,7 @@ workerLog('worker: -- Audio config');
 //
 
 // Update MPD config
+// NOTE: Only do this for I2S (non-hotplug devices)
 if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
 	updMpdConf($_SESSION['i2sdevice']);
 	workerLog('worker: MPD conf updated');
@@ -498,6 +499,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
 		setAudioIn($_SESSION['audioin']);
+	}
+	else {
+		// Reset saved MPD volume
+		playerSession('write', 'volknob_mpd', '0');
 	}
 }
 else {
