@@ -11,6 +11,23 @@
 
 ########################################################
 //
+// 2021-MM-DD TC moOde 7.2.1
+//
+########################################################
+
+Updates
+
+- UPD: Bump to shairport-sync 3.3.8
+- UPD: Use ALSA auto bit depth conversion if needed
+- UPD: Improve help text on Audio Config
+
+Bug fixes
+
+- FIX: Input source volknob_mpd not being reset
+- FIX: Typo in .xinitrc param enable-features
+
+########################################################
+//
 // 2021-04-24 TC moOde 7.2.0
 //
 ########################################################
