@@ -2081,7 +2081,7 @@ function updMpdConf($i2sdevice) {
 	// Update _deviceout.conf to hw:N,0 if no DSP is active
 	if ($_SESSION['invert_polarity'] == '0' && $_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' &&
 		$_SESSION['alsaequal'] == 'Off' && $_SESSION['camilladsp'] == 'off') {
-		sysCmd("sed -i '/slave.pcm/c\slave.pcm \"hw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+		sysCmd("sed -i '/slave.pcm/c\slave.pcm \"plughw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 	}
 
 	// Update DSP and BT confs with cardnum
