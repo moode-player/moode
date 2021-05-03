@@ -31,4 +31,4 @@ SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"
 
 # Launch chromium browser
 # --disk-cache-dir=/dev/null
-chromium-browser --app=http://localhost/ --window-size=$SCREENSIZE --window-position=0,0 --no-first-run -enable-features=OverlayScrollbar --disable-infobars --disable-session-crashed-bubble
+chromium-browser --app=http://localhost/ --window-size=$SCREENSIZE --window-position=0,0 --no-first-run --enable-features=OverlayScrollbar --disable-infobars --disable-session-crashed-bubble
