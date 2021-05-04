@@ -602,7 +602,7 @@ function genLibrary($flat) {
 				//'conductor' => ($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing'),
 				'year' => getTrackYear($flatData),
 				'time' => $flatData['Time'],
-				'album' => ($flatData['Album'] ? $flatData['Album'] : 'Unknown Album'),
+				'album' => ($flatData['Album'] ? htmlspecialchars($flatData['Album']) : 'Unknown Album'),
 				'genre' => ($flatData['Genre'] ? $flatData['Genre'] : array('Unknown')), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => songTime($flatData['Time']),
 				'last_modified' => $flatData['Last-Modified'],
@@ -797,7 +797,7 @@ function genLibraryUTF8Rep($flat) {
 				//'conductor' => utf8rep(($flatData['Conductor'] ? $flatData['Conductor'] : 'Conductor tag missing')),
 				'year' => utf8rep(getTrackYear($flatData)),
 				'time' => utf8rep($flatData['Time']),
-				'album' => utf8rep(($flatData['Album'] ? $flatData['Album'] : 'Unknown Album')),
+				'album' => utf8rep(($flatData['Album'] ? htmlspecialchars($flatData['Album']) : 'Unknown Album')),
 				'genre' => utf8repArray(($flatData['Genre'] ? $flatData['Genre'] : array('Unknown'))), // @Atair: 'Unknown' genre has to be an array
 				'time_mmss' => utf8rep(songTime($flatData['Time'])),
 				'last_modified' => $flatData['Last-Modified'],
@@ -1078,7 +1078,7 @@ function parseTrackInfo($resp) {
 					$genres .= $value . ', ';
 					break;
 				case 'Album':
-					$array[7] = array($element => $value);
+					$array[7] = array($element => htmlspecialchars($value));
 					break;
 				case 'Disc':
 					$array[8] = array($element => $value);
@@ -1196,7 +1196,7 @@ function parseList($resp) {
 				}
 			}
 			else {
-				$array[$idx][$element] = $value;
+				$array[$idx][$element] = htmlspecialchars($value);
 				$array[$idx]['TimeMMSS'] = songTime($array[$idx]['Time']);
 			}
 
@@ -3792,7 +3792,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			//workerLog('enhanceMetadata(): AAC or AIFF song file');
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name'];
-			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
+			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album']) : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
 		}
 		// Radio station
@@ -3839,7 +3839,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		else {
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = isset($song['Title']) ? $song['Title'] : pathinfo(basename($song['file']), PATHINFO_FILENAME);
-			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
+			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album']) : 'Unknown album';
 			$current['disc'] = isset($song['Disc']) ? $song['Disc'] : 'Disc tag missing';
 			if (substr($song['file'], 0, 4) == 'http') {
 				// Podcast
