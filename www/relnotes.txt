@@ -27,6 +27,7 @@ Bug fixes
 - FIX: Typo in .xinitrc param enable-features
 - FIX: Album tag not processed for HTML entities
 - FIX: Paths > 256 bytes not handled by thmcache
+- FIX: Wrong rate shown in Audioinfo for DSD256 and higher
 
 ########################################################
 //

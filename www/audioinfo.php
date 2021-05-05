@@ -163,7 +163,7 @@ else {
 			}
 		}
 		else if ($status['audio_sample_depth'] == 'dsd1024') {
-			$encoded_at = 'DSD1024, 1 bit, 90.304 Mbps Stereo';
+			$encoded_at = 'DSD1024, 1 bit, 45.152 Mbps Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
 				$decoded_to = 'DoP 24 bit 2.822 MHz, Stereo';
 				$decode_rate = '135.472 Mbps';
