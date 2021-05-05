@@ -175,7 +175,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	}
 
 	// Image file path, convert image to string
-	if (strlen($img_str) < 256) {
+	if (strlen($img_str) < 512) {
 		$img_str = file_get_contents($img_str);
 		//workerlog('thmcache: image file: ' . $dir);
 	}
