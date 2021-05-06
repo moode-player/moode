@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.29 2021-04-24
+# Build Recipe v2.30 2021-05-06
 #
-# moOde 7.x.y 2021-04-24
+# moOde 7.2.1 2021-05-06
 # - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
 # - Bump to Linux kernel 5.4.77 build #1371
 #
@@ -89,10 +89,10 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r720.zip
-unzip -p -q ./moode-r720.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r720.zip moode/boot/config.txt.default > ./config.txt.default
-unzip -p -q ./moode-r720.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
+wget http://moodeaudio.org/downloads/prod/moode-r721.zip
+unzip -p -q ./moode-r721.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r721.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r721.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -115,8 +115,8 @@ sudo reboot
 ////////////////////////////////////////////////////////////////
 
 1. Unzip moOde release
-unzip -o -q ./moode-r720.zip
-rm -f ./moode-r720.zip
+unzip -o -q ./moode-r721.zip
+rm -f ./moode-r721.zip
 
 2. Basic optimizations
 
