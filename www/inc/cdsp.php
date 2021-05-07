@@ -499,6 +499,21 @@ class CamillaDsp {
         return $exitcode;
     }
 
+    function getLogLevel() {
+        $res=sysCmd("cat " . $this->ALSA_CDSP_CONFIG . "| grep -e '#[ ]*-v'");
+        $level =  (count($res)==0 ) ? 'verbose' : 'default';
+        return $level;
+    }
+
+    function setLogLevel($level) {
+        if( $level == 'verbose') {
+            sysCmd('sed -i "s/#[ ]*-v/         -v/g" ' . $this->ALSA_CDSP_CONFIG);
+        }
+        else {
+            sysCmd('sed -i "s/^[ ]*-v/#        -v/g" ' . $this->ALSA_CDSP_CONFIG);
+        }
+    }
+
     // placeholders for autoconfig support, empty for now
     function backup() {
     }
@@ -586,6 +601,12 @@ function test_cdsp() {
 // }
 
 // yaml_emit_file($fileOut, $yml_cfg);
+    print($cdsp->getLogLevel() );
+    // $cdsp->setLogLevel('verbose');
+    $cdsp->setLogLevel('default');
+
+    print($cdsp->getLogLevel() );
+
 }
 
 

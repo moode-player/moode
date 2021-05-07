@@ -75,6 +75,16 @@
 						<b>No:&nbsp;</b>Use an audio device thats different from the moOde defined device for example if you want to create a multi-channel crossover.
 					</span>
 				</div>
+                <label class="control-label" for="log_level">Log level</label>
+                <div class="controls">
+					<select id="log_level" name="log_level" class="input-large">
+						$_cdsp_log_level
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-log_level" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-log_level" class="help-block-configs help-block-margin hide">
+						Control the amount of detail of CamillaDSP in the MPD log (/var/log/mpd/log).
+                   </span>
+                </div>
 			</div>
 		</fieldset>
 
