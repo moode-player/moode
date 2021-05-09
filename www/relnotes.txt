@@ -11,13 +11,14 @@
 
 ########################################################
 //
-// 2021-MM-DD TC moOde 7.2.2
+// 2021-MM-DD TC moOde 7.3.0
 //
 ########################################################
 
 Updates
 
 - UPD: Add verbose debug option to CamillaDSP
+- UPD: Bump to librespot 0.2.0
 
 Bug fixes
 
