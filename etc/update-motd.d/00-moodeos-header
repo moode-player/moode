@@ -1,8 +1,10 @@
 #!/bin/bash
 
 MOODE_RELEASE=$(moodeutl --mooderel | tr -d '\n')
+HDWRREV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='hdwrrev'")
 KERNEL_ARCH=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='kernel_architecture'")
 echo RaspiOS $(cat /etc/debian_version) \| $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\)
+echo Hardware: $HDWRREV
 
 echo "
                       ____     __        ____
