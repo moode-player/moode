@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.30 2021-05-06
+# Build Recipe v2.31 2021-MM-DD
 #
-# moOde 7.2.1 2021-05-06
+# moOde 7.3.0 2021-MM-DD
 # - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
 # - Bump to Linux kernel 5.4.77 build #1371
 #
@@ -89,10 +89,10 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r721.zip
-unzip -p -q ./moode-r721.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r721.zip moode/boot/config.txt.default > ./config.txt.default
-unzip -p -q ./moode-r721.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
+wget http://moodeaudio.org/downloads/prod/moode-r730.zip
+unzip -p -q ./moode-r730.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r730.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r730.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -115,8 +115,8 @@ sudo reboot
 ////////////////////////////////////////////////////////////////
 
 1. Unzip moOde release
-unzip -o -q ./moode-r721.zip
-rm -f ./moode-r721.zip
+unzip -o -q ./moode-r730.zip
+rm -f ./moode-r730.zip
 
 2. Basic optimizations
 
@@ -936,15 +936,20 @@ rustup self uninstall
 #    modify PATH variable: yes
 # When prompted this time through, enter the number 1 to choose '1) Proceed with installation (default)'
 
+# Host tripple
+arm-unknown-linux-gnueabihf
+
 cd ~
+# Needed to avoid OOM error when unpacking rustc
+export RUSTUP_UNPACK_RAM=20000000
 curl https://sh.rustup.rs -sSf | sh
 sudo apt-get -y install portaudio19-dev
 
 # Compile librespot
 source $HOME/.cargo/env
-sudo cp ./moode/other/librespot/librespot-0.1.6.zip ./
-unzip -q ./librespot-0.1.6.zip
-cd ./librespot-0.1.6
+sudo cp ./moode/other/librespot/librespot-0.2.0.zip ./
+unzip -q ./librespot-0.2.0.zip
+cd ./librespot-0.2.0
 RUSTFLAGS=-Ccodegen-units=1 cargo build --release --features alsa-backend
 
 # Copy binary
