@@ -2598,7 +2598,19 @@ function startSpotify() {
 		$device = '_audioout';
 	}
 
-	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ? ' --enable-volume-normalisation --normalisation-pregain ' .  $cfg_spotify['normalization_pregain'] : '';
+	// Volume normalization options
+	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ?
+		' --enable-volume-normalisation ' .
+		' --normalisation-method ' . $cfg_spotify['normalization_method'] .
+		' --normalisation-gain-type ' . $cfg_spotify['normalization_gain_type'] .
+		' --normalisation-pregain ' .  $cfg_spotify['normalization_pregain'] .
+		' --normalisation-threshold ' . $cfg_spotify['normalization_threshold'] .
+		' --normalisation-attack ' . $cfg_spotify['normalization_attack'] .
+		' --normalisation-release ' . $cfg_spotify['normalization_release'] .
+		' --normalisation-knee ' . $cfg_spotify['normalization_knee']
+		: '';
+
+	// Autoplay after playlist ends
 	$autoplay = $cfg_spotify['autoplay'] == 'Yes' ? ' --autoplay' : '';
 
 	$cmd = 'librespot' .

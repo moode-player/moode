@@ -53,12 +53,18 @@ $_select['initial_volume'] = $cfg_spotify['initial_volume'];
 $_select['volume_curve'] .= "<option value=\"linear\" " . (($cfg_spotify['volume_curve'] == 'linear') ? "selected" : "") . ">Linear</option>\n";
 $_select['volume_curve'] .= "<option value=\"log\" " . (($cfg_spotify['volume_curve'] == 'log') ? "selected" : "") . ">Logarithmic</option>\n";
 $_select['volume_curve'] .= "<option value=\"fixed\" " . (($cfg_spotify['volume_curve'] == 'fixed') ? "selected" : "") . ">Fixed</option>\n";
-// volume normalization
+// volume normalization options
 $_select['volume_normalization'] .= "<option value=\"Yes\" " . (($cfg_spotify['volume_normalization'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['volume_normalization'] .= "<option value=\"No\" " . (($cfg_spotify['volume_normalization'] == 'No') ? "selected" : "") . ">No</option>\n";
-// normalization pregain
+$_select['normalization_method'] .= "<option value=\"dynamic\" " . (($cfg_spotify['normalization_method'] == 'dynamic') ? "selected" : "") . ">Dynamic</option>\n";
+$_select['normalization_method'] .= "<option value=\"basic\" " . (($cfg_spotify['normalization_method'] == 'basic') ? "selected" : "") . ">Basic</option>\n";
+$_select['normalization_gain_type'] .= "<option value=\"album\" " . (($cfg_spotify['normalization_gain_type'] == 'album') ? "selected" : "") . ">Album</option>\n";
+$_select['normalization_gain_type'] .= "<option value=\"track\" " . (($cfg_spotify['normalization_gain_type'] == 'track') ? "selected" : "") . ">Track</option>\n";
 $_select['normalization_pregain'] = $cfg_spotify['normalization_pregain'];
-// Autoplay
+$_select['normalization_threshold'] = $cfg_spotify['normalization_threshold'];
+$_select['normalization_attack'] = $cfg_spotify['normalization_attack'];
+$_select['normalization_release'] = $cfg_spotify['normalization_release'];
+$_select['normalization_knee'] = $cfg_spotify['normalization_knee'];
 $_select['autoplay'] .= "<option value=\"Yes\" " . (($cfg_spotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['autoplay'] .= "<option value=\"No\" " . (($cfg_spotify['autoplay'] == 'No') ? "selected" : "") . ">No</option>\n";
 

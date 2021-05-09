@@ -15,10 +15,14 @@
 //
 ########################################################
 
+New features
+
+- NEW: Volume normalization options for librespot
+
 Updates
 
-- UPD: Add verbose debug option to CamillaDSP
 - UPD: Bump to librespot 0.2.0
+- UPD: Add verbose debug option to CamillaDSP
 
 Bug fixes
 

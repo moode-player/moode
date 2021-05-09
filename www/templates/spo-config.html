@@ -27,7 +27,7 @@
 			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				SAVE: Update Spotify configuration and restart Spotify renderer.<br>
+				SAVE: Update Spotify configuration and restart Spotify renderer.
             </span>
 		</legend>
 
@@ -41,18 +41,7 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_bitrate" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_bitrate" class="help-block-configs help-block-margin hide">
-						Default is 160 kHz.<br>
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="initial_volume">Initial volume</label>
-				<div class="controls">
-					<input class="input-large" type="number" min="0" max="100" id="initial_volume" name="config[initial_volume]" value="$_select[initial_volume]"> (%)
-					<a aria-label="Help" class="info-toggle" data-cmd="info_initial_volume" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_initial_volume" class="help-block-configs help-block-margin hide">
-						Initial volume once connected [0-100].<br>
+						Specify the bit rate. Default is 160 kHz.
                     </span>
 				</div>
 			</div>
@@ -65,31 +54,91 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_curve" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_volume_curve" class="help-block-configs help-block-margin hide">
-						Logarithmic, linear or fixed volume scaling. Default is Logarithmic.<br>
+						Logarithmic, linear or fixed volume scaling. Default is Logarithmic.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="initial_volume">Initial volume</label>
+				<div class="controls">
+					<input class="input-large" type="number" min="0" max="100" id="initial_volume" name="config[initial_volume]" value="$_select[initial_volume]"> (%)
+					<a aria-label="Help" class="info-toggle" data-cmd="info_initial_volume" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_initial_volume" class="help-block-configs help-block-margin hide">
+						Initial volume once connected [0-100].
                     </span>
 				</div>
 			</div>
 
 			<div class="control-group">
 				<label class="control-label" for="volume_normalization">Volume normalization</label>
-				<div class="controls">
+				<div class="controls controls-select">
 					<select id="volume_normalization" class="input-large" name="config[volume_normalization]">
 						$_select[volume_normalization]
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_normalization" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_volume_normalization" class="help-block-configs help-block-margin hide">
-						Adjusts the volume of all songs played so that they sound as though they are of equal loudness.<br>
+						Adjusts the volume of all songs played so that they sound as though they are of equal loudness.
 					</span>
 				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="normalization_pregain">Normalization pre-gain</label>
+				<label class="control-label" for="normalization_method">Method</label>
+				<div class="controls controls-select">
+					<select id="normalization_method" class="input-large" name="config[normalization_method]">
+						$_select[normalization_method]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_normalization_method" class="help-block-configs help-block-margin hide">
+						Specify the normalisation method to use. Default is Dynamic.
+					</span>
+				</div>
+				<label class="control-label" for="normalization_gain_type">Gain type</label>
+				<div class="controls controls-select">
+					<select id="normalization_gain_type" class="input-large" name="config[normalization_gain_type]">
+						$_select[normalization_gain_type]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_gain_type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_normalization_gain_type" class="help-block-configs help-block-margin hide">
+						Specify the normalisation gain type to use. Default is Album.
+					</span>
+				</div>
+				<label class="control-label" for="normalization_pregain">Pre-gain</label>
 				<div class="controls">
 					<input class="input-large" type="number" min="-10" max="10" id="normalization_pregain" name="config[normalization_pregain]" value="$_select[normalization_pregain]"> (dB)
 					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_pregain" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_normalization_pregain" class="help-block-configs help-block-margin hide">
-						Volume boost in dB [-10-10].<br>
+						Volume boost in dB [-10 to 10].
+                    </span>
+				</div>
+				<label class="control-label" for="normalization_threshold">Threshold</label>
+				<div class="controls">
+					<input class="input-large" type="number" step=".1" id="normalization_threshold" name="config[normalization_threshold]" value="$_select[normalization_threshold]">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_threshold" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_normalization_threshold" class="help-block-configs help-block-margin hide">
+						Threshold (dBFS) to prevent clipping. Default is -1.0.
+                    </span>
+				</div>
+				<label class="control-label" for="normalization_attack">Attack</label>
+				<div class="controls">
+					<input class="input-large" type="number" id="normalization_attack" name="config[normalization_attack]" value="$_select[normalization_attack]"> (ms)
+					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_attack" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_normalization_attack" class="help-block-configs help-block-margin hide">
+						Attack time (ms) in which the dynamic limiter is reducing gain. Default is 5.
+                    </span>
+				</div>
+				<label class="control-label" for="normalization_release">Release</label>
+				<div class="controls">
+					<input class="input-large" type="number" id="normalization_release" name="config[normalization_release]" value="$_select[normalization_release]"> (ms)
+					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_release" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_normalization_release" class="help-block-configs help-block-margin hide">
+						Release or decay time (ms) in which the dynamic limiter is restoring gain. Default is 100.
+                    </span>
+				</div>
+				<label class="control-label" for="normalization_knee">Knee</label>
+				<div class="controls">
+					<input class="input-large" type="number" step=".1" id="normalization_knee" name="config[normalization_knee]" value="$_select[normalization_knee]">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_knee" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_normalization_knee" class="help-block-configs help-block-margin hide">
+						Knee steepness of the dynamic limiter. Default is 1.0.
                     </span>
 				</div>
 			</div>
