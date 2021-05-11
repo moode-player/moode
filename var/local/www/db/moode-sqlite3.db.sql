@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sun May 9 08:41:53 2021
+-- File generated with SQLiteStudio v3.1.0 on Tue May 11 16:56:05 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -426,6 +426,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (151, 'volume_db_display', '0')
 INSERT INTO cfg_system (id, param, value) VALUES (152, 'search_site', 'Google');
 INSERT INTO cfg_system (id, param, value) VALUES (153, 'cuefiles_ignore', '1');
 INSERT INTO cfg_system (id, param, value) VALUES (154, 'recorder_album_tag', 'Recorded YYYY-MM-DD');
+INSERT INTO cfg_system (id, param, value) VALUES (155, 'inplace_upd_applied', '0');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

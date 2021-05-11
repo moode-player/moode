@@ -41,9 +41,11 @@ chmod -R 0755 update
 update/install.sh
 
 if [ $? -ne 0 ] ; then
+	$(sqlite3 $SQLDB "update cfg_system set value='0' where param='inplace_upd_applied'")
 	messageLog "Update cancelled"
 else
 	wget -q $URL/update-$1.txt -O update-$1.txt
+	$(sqlite3 $SQLDB "update cfg_system set value='1' where param='inplace_upd_applied'")
 	messageLog "Update installed, restart required"
 fi
 

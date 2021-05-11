@@ -3675,6 +3675,8 @@ function setAudioIn($input_source) {
 }
 
 // Set MPD and renderer audio output
+// TODO: Replace MPD output switching with sed of _deviceout.conf
+// NOTE: This also requires changes in updMpdConf()
 function setAudioOut($audioout) {
 	// MPD
 	if ($audioout == 'Local') {

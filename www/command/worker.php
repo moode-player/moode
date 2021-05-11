@@ -342,10 +342,15 @@ workerLog('worker: -- Audio config');
 //
 
 // Update MPD config
-// NOTE: Only do this for I2S (non-hotplug devices)
-if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
+// NOTE: Only do this for I2S (non-hotplug devices) or if in-place update applied
+if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None' || $_SESSION['inplace_upd_applied'] == '1') {
 	updMpdConf($_SESSION['i2sdevice']);
 	workerLog('worker: MPD conf updated');
+
+	// Reset the flag
+	if ($_SESSION['inplace_upd_applied'] == '1') {
+		playerSession('write', 'inplace_upd_applied', '0');
+	}
 }
 
 // Ensure audio output is unmuted for these devices
