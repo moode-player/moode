@@ -105,8 +105,8 @@ sysCmd('touch ' . LIBCACHE_BASE . '_lossless.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_lossy.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_tag.json');
 sysCmd('touch /var/local/www/sysinfo.txt');
+sysCmd('touch /var/local/www/currentsong.txt');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
-sysCmd('truncate /var/local/www/currentsong.txt --size 0');
 // Delete any tmp files left over from New/Edit radio station
 sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
 sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
@@ -1159,7 +1159,7 @@ function updExtMetaFile() {
 		}
 		elseif ($GLOBALS['rbactive'] == '1') {
 			$renderer = 'Roonbridge Active';
-		}		
+		}
 		elseif ($GLOBALS['inpactive'] == '1') {
 			$renderer = $_SESSION['audioin'] .' Input Active';
 		}
