@@ -1169,11 +1169,12 @@ function updExtMetaFile() {
 		// Write file only if something has changed
 		if ($filemeta['file'] != $renderer && $hwparams_calcrate != '0 bps') {
 			//workerLog('writing file');
-			$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');
+			$fh = fopen('/tmp/currentsong.txt', 'w');
 			$data = 'file=' . $renderer . "\n";
 			$data .= 'outrate=' . $hwparams_format . $hwparams_calcrate . "\n"; ;
 			fwrite($fh, $data);
 			fclose($fh);
+			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
 		}
 	}
 	else {
@@ -1190,7 +1191,7 @@ function updExtMetaFile() {
 		if ($current['title'] != $filemeta['title'] || $current['album'] != $filemeta['album'] || $_SESSION['volknob'] != $filemeta['volume'] ||
 			$_SESSION['volmute'] != $filemeta['mute'] || $current['state'] != $filemeta['state'] || $filemeta['outrate'] != $hwparams_format . $hwparams_calcrate) {
 			//workerLog('writing file');
-			$fh = fopen('/var/local/www/currentsong.txt', 'w') or exit('file open failed on /var/local/www/currentsong.txt');
+			$fh = fopen('/tmp/currentsong.txt', 'w');
 			// Default
 			$data = 'file=' . $current['file'] . "\n";
 			$data .= 'artist=' . $current['artist'] . "\n";
@@ -1210,6 +1211,7 @@ function updExtMetaFile() {
 			$data .= 'state=' . $current['state'] . "\n";
 			fwrite($fh, $data);
 			fclose($fh);
+			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
 		}
 	}
 }
