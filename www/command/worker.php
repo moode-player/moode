@@ -1157,6 +1157,9 @@ function updExtMetaFile() {
 		elseif ($GLOBALS['slactive'] == '1') {
 			$renderer = 'Squeezelite Active';
 		}
+		elseif ($GLOBALS['rbactive'] == '1') {
+			$renderer = 'Roonbridge Active';
+		}		
 		elseif ($GLOBALS['inpactive'] == '1') {
 			$renderer = $_SESSION['audioin'] .' Input Active';
 		}
