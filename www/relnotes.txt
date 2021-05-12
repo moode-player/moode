@@ -23,10 +23,13 @@ Updates
 
 - UPD: Bump to librespot 0.2.0
 - UPD: Add verbose debug option to CamillaDSP
+- UPD: Run updMpdConf() after in-place update
+- UPD: Improve method for updating currentsong.txt
 
 Bug fixes
 
-- FIX:
+- FIX: Missing "Roonbridge Active" in currentsong.txt
+- FIX: Currentsong.txt truncated at startup
 
 ########################################################
 //
