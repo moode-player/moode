@@ -218,16 +218,7 @@ if( $_selected_coeff ) {
 	$coeffInfo = $cdsp->coeffInfo($_selected_coeff);
 	$coeffInfoHtml = 'Info:<br/>';
 	foreach ($coeffInfo as  $param=>$value) {
-
-		if($param == 'channels' && $value != 1) {
-			$coeffInfoHtml .= "<span style='color: red'>&#10007;</span> " . $param . ' = ' . $value ." (WARNING: CamillaDSP can only handle files with 1 channel)<br/>";
-			$btn_conv_style = ""; //unhide
-		} elseif ($param == 'extension' && $value == 'wav') {
-			$coeffInfoHtml .= "<span style='color: red'>&#10007;</span> " . $param . ' = ' . $value ." (WARNING: CamillaDSP doesn't support WAV files, convert to raw or skip header bytes in config)<br/>";
-			$btn_conv_style = ""; //unhide
-		}else {
-			$coeffInfoHtml .= ''. $param . ' = ' . $value . '<br/>';
-		}
+		$coeffInfoHtml .= ''. $param . ' = ' . $value . '<br/>';
 	}
 }
 

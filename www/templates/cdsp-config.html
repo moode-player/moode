@@ -89,7 +89,6 @@
 		</fieldset>
 
 		<fieldset>
-			<!-- TODO: add help-->
 			<legend>Quick convolution filter</legend>
 			<div class="control-group">
 				<label class="control-label" for="cdsp-basiccon-gain">Gain</label>
@@ -141,7 +140,7 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span  id="info-cdsp-qc-type" class="help-block-configs help-block-margin legend-info-help hide">
-						Set the type of the selected impulse response file. Info about a specific impulse response file is available in the Convolution file section.<br/>
+						Set the type of the selected impulse response file. For wave files just select WAVE. Info about a specific impulse response file is available in the Convolution file section.<br/>
 						See <a href="https://github.com/HEnquist/camilladsp#fir">CamillaDSP</a> for project information.
 					</span>
 					<div id="cdsp_check_msg_quic_convolution">
@@ -452,8 +451,7 @@
 				<label class="control-label" >What does convert</label>
 				<div class="controls">
 					<span id="info-convertwav" class="help-block-configs help-block-margin legend-info-help">
-						CamillaDSP does not support using WAVE files directly. You can use the mono WAVE as RAW file by skipping the WAVE header, or convert it to RAW format.<br/>
-						Stereo WAVE files needs to be split first into two mono files.<br/>
+						Starting with CamillaDSP 0.5.1 full support for wave files is present. No need to split anymore.<br/>
 						<br/>
 						Both the stereo file splitting(if required) and converting to RAW files are done by this WAVE file converter.<br/>
 						After a succesfull convertion the original WAVE file is deleted.<br/>

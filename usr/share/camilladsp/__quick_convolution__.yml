@@ -1,7 +1,7 @@
 
 devices:
   samplerate: 44100
-  chunksize: 2048
+  chunksize: 4096
   queuelimit: 1
   capture:
     type: File
@@ -21,15 +21,15 @@ filters:
     ir_left:
       type: Conv
       parameters:
-        type: File
+        type: __IR_TYPE__
         filename: __IR_LEFT__
-        format: __IR_FORMAT__
+        __IR_PARAMS_L__
     ir_right:
       type: Conv
       parameters:
-        type: File
+        type: __IR_TYPE__
         filename: __IR_RIGHT__
-        format: __IR_FORMAT__
+        __IR_PARAMS_R__
 mixers:
   stereo:
     channels:

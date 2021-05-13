@@ -155,14 +155,37 @@ class CamillaDsp {
         $lines = file_get_contents($templateFile);
 
         $search = array('__IR_GAIN__',
+                        '__IR_TYPE__',
                         '__IR_LEFT__',
                         '__IR_RIGHT__',
-                        '__IR_FORMAT__');
+                        '__IR_PARAMS_L__',
+                        '__IR_PARAMS_R__');
+
+        $parameters_left = '';
+        $parameters_right = '';
+        $ir_type = 'Raw';
+        if($this->quickConvolutionConfig['irtype'] == 'WAVE') {
+            $info =$this->coeffInfo($this->quickConvolutionConfig['irr'], true);
+            $ir_type = 'Wav';
+            $parameters_left = 'channel: 0';
+            $parameters_right = $parameters_left;
+            // if stereo file and lfeft uses the same as right assume to use the second channel to right
+            if( $info['channels'] == 2 && $this->quickConvolutionConfig['irl'] == $this->quickConvolutionConfig['irr']) {
+                $parameters_right = 'channel: 1';
+            }
+        }
+        else {
+            $parameters_left = 'format: ' . $this->quickConvolutionConfig['irtype'];
+            $parameters_right = $parameters_left;
+        }
 
         $replaceWith = array(   $this->quickConvolutionConfig['gain'],
+                                $ir_type,
                                 '../coeffs/' . $this->quickConvolutionConfig['irl'],
                                 '../coeffs/' . $this->quickConvolutionConfig['irr'],
-                                $this->quickConvolutionConfig['irtype'] );
+                                $parameters_left,
+                                $parameters_right);
+
 
         $newLines = str_replace( $search, $replaceWith, $lines );
 
@@ -343,6 +366,7 @@ class CamillaDsp {
 
     function impulseResponseType() {
         return array(
+           'WAVE',
            'TEXT',
            'FLOAT64LE',
            'FLOATLE',
@@ -528,6 +552,8 @@ function test_cdsp() {
     // $cdsp = New CamillaDsp('config_foobar.yaml', "5", "-9;test2.txt;test3.txt;S24_3LE");
     $cdsp = New CamillaDsp('flat.yml', "2", "-9;test2.txt;test3.txt;S24_3LE");
 
+    //$cdsp = New CamillaDsp('flat.yml', "2", "-9;Cor1S44.wav;Cor1S44.wav;WAVE");
+
 
 
     // print($cdsp->getCurrentConfigFileName() . "\n");
@@ -602,11 +628,13 @@ function test_cdsp() {
 // }
 
 // yaml_emit_file($fileOut, $yml_cfg);
-    print($cdsp->getLogLevel() );
-    // $cdsp->setLogLevel('verbose');
-    $cdsp->setLogLevel('default');
+    // print($cdsp->getLogLevel() );
+    // // $cdsp->setLogLevel('verbose');
+    // $cdsp->setLogLevel('default');
 
-    print($cdsp->getLogLevel() );
+    // print($cdsp->getLogLevel() );
+
+    //$cdsp->writeQuickConvolutionConfig();
 
 }
 
