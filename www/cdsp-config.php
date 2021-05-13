@@ -159,16 +159,6 @@ else if ($selected_coeff && isset($_POST['remove']) && $_POST['remove'] == '1') 
 }
 else if ($selected_coeff && isset($_POST['info']) && $_POST['info'] == '1') {
 // no implementation required, just a placeholder
-
-}
-else if ($selected_coeff && isset($_POST['convertcoeff']) && $_POST['convertcoeff'] == '1') {
-	$result = $cdsp->convertWaveFile($selected_coeff);
-	if($result == NULL) {
-	   $_SESSION['notify']['title'] =   htmlentities('Split wave file \"' . $selected_coeff . '\" is succesfull.');
-   }else {
-	   $_SESSION['notify']['title'] = htmlentities('Split wave file \"' . $selected_coeff . '\" has failed');
-	   $_SESSION['notify']['msg'] = htmlentities(implode('<br>', $result));
-   }
 }
 
 // camillagui status toggle

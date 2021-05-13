@@ -140,7 +140,7 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-cdsp-qc-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span  id="info-cdsp-qc-type" class="help-block-configs help-block-margin legend-info-help hide">
-						Set the type of the selected impulse response file. For wave files just select WAVE. Info about a specific impulse response file is available in the Convolution file section.<br/>
+						Set the type of the selected impulse response file. For wave files just select WAVE, not need to convert to RAW. Info about a specific impulse response file is available in the Convolution file section.<br/>
 						See <a href="https://github.com/HEnquist/camilladsp#fir">CamillaDSP</a> for project information.
 					</span>
 					<div id="cdsp_check_msg_quic_convolution">
@@ -253,14 +253,12 @@
 						<button id="btn-import-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="import" value="1"  style="display:none"/>
 					</div>&nbsp;&nbsp;
 					<button id="btn-check-coeff" class="btn btn-medium btn-primary btn-submit" type="submit" name="info" value="1" style="display:none" >Info</button>
-					<a data-toggle="modal" href="#convert_coeff" $btn_conv_style><button class="btn btn-medium btn-primary"   >Convert</button></a>&nbsp;&nbsp;
 
 					<a aria-label="Help" class="info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-convolution-actions" class="help-block-configs help-block-margin legend-info-help hide">
 							<b>Delete:&nbsp;</b>Delete the selected convolution file.<br/>
 							<b>Download:&nbsp;</b>Download the selected convolution file.<br/>
 							<b>Upload:&nbsp;</b>Upload a convolution file, existing ones are overwritten.<br/>
-							<b>Convert:&nbsp;</b>Split stereo files and convert to RAW. Press convert for more information.<br/>
 	 			    </div>
 				</div>
 			</div>
@@ -433,50 +431,6 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="newpipeline" value="1">Ok</button>
-		</div>
-	</div>
-</form>
-
-<form class="form-horizontal" action="#conv_file" method="post">
-	<div id="convert_coeff" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="convert_coeff-label" aria-hidden="true">
-		<input id="convert_coeff_id" type="hidden" name="cdsp-coeffs" value="$_selected_coeff"/>
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Convert convolution WAVE file</h3>
-			<h3>$_selected_coeff</h3>
-		</div>
-
-		<div class="modal-body">
-			<div class="control-group">
-				<label class="control-label" >What does convert</label>
-				<div class="controls">
-					<span id="info-convertwav" class="help-block-configs help-block-margin legend-info-help">
-						Starting with CamillaDSP 0.5.1 full support for wave files is present. No need to split anymore.<br/>
-						<br/>
-						Both the stereo file splitting(if required) and converting to RAW files are done by this WAVE file converter.<br/>
-						After a succesfull convertion the original WAVE file is deleted.<br/>
-						<br/>
-						The convert function will:<br/>
-						- If wave is a stereo file, split it in two mono files<br/>
-						- Convert the mono file(s) to raw format.<br/>
-						- Delete the original wav file afterwards.<br/>
-						<br/>
-						Output file names:<br/>
-						The samplerate and bitdepth are added to the filename:<br/>
-						foobar.wav becomes foobar_44100Hz_16b.raw.<br/>
-						If the source was a stereo file the output becomes:
-						<br/>foobar_L_44100Hz_16b.raw and  foobar_R_44100Hz_16b.raw<br/>
-						If output is floating-point a 'f' will be added after the bitdepth (only supported for FLOATLE && FLOAT64LE).<br/>
-						<br/>
-						Note: When the source isn't a supported bitdepth/encoding combination, the output will be converted to 24b signed integer (= S24LE3).<br/>
-					</span>
-				</div>
-			</div>
-		</div>
-
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="convertcoeff" value="1">Convert</button>
 		</div>
 	</div>
 </form>
