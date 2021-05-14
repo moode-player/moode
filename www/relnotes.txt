@@ -50,6 +50,7 @@ Bug fixes
 - FIX: Album tag not processed for HTML entities
 - FIX: Paths > 256 chars not handled by thmcache
 - FIX: Wrong rate shown in Audioinfo for DSD256 and higher
+- FIX: Airplay, Spotify renderers crash when ALSA Loopback On
 
 ########################################################
 //
