@@ -34,7 +34,7 @@ if [[ $INPACTIVE == '1' ]]; then
 	exit 1
 fi
 
-if [[ $PLAYER_EVENT == "start" ]]; then
+if [[ $PLAYER_EVENT == "started" ]]; then
 	/usr/bin/mpc stop > /dev/null
 
 	# Allow time for ui update
@@ -47,7 +47,7 @@ if [[ $PLAYER_EVENT == "start" ]]; then
 	fi
 fi
 
-if [[ $PLAYER_EVENT == "stop" ]]; then
+if [[ $PLAYER_EVENT == "stopped" ]]; then
 	$(sqlite3 $SQLDB "update cfg_system set value='0' where param='spotactive'")
 
 	# Restore 0dB hardware volume when mpd configured as below
