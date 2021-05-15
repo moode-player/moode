@@ -1,0 +1,13 @@
+diff --git a/setup.py b/setup.py
+index 5af23ed..518a4e3 100644
+--- a/setup.py
++++ b/setup.py
+@@ -15,7 +15,7 @@ setuptools.setup(
+     packages=setuptools.find_packages(),
+     python_requires=">=3",
+     package_data={'camilladsp_plot': ['schemas/*.json']},
+-    install_requires=["PyYAML", "jsonschema"],
++    install_requires=["PyYAML", "jsonschema>=3.2"],
+     entry_points = {
+         'console_scripts': ['plotcamillaconf=camilladsp_plot.plotcamillaconf:main'],
+     }
