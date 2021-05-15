@@ -1644,11 +1644,11 @@ function runQueuedJob() {
 			sysCmd('mpc stop');
 
 			if ($_SESSION['w_queue'] == 'invert_polarity') {
-				$output = $_SESSION['w_queueargs'] == '1' ? "\"invpolarity\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				$output = $_SESSION['w_queueargs'] == '1' ? "\"invpolarity\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 			}
 			elseif ($_SESSION['w_queue'] == 'crossfeed') {
-				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 				if ($_SESSION['w_queueargs'] != 'Off') {
 					sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
@@ -1663,7 +1663,7 @@ function runQueuedJob() {
 					$eqfa12p->applyConfig($config);
 					unset($eqfa12p);
 				}
-				$output = $_SESSION['eqfa12p'] != 'Off' ? "\"eqfa12p\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				$output = $_SESSION['eqfa12p'] != 'Off' ? "\"eqfa12p\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 			}
 			elseif ($_SESSION['w_queue'] == 'alsaequal') {
@@ -1675,11 +1675,11 @@ function runQueuedJob() {
 						sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
 					}
 				}
-				$output = $_SESSION['alsaequal'] != 'Off' ? "\"alsaequal\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				$output = $_SESSION['alsaequal'] != 'Off' ? "\"alsaequal\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 			}
 			elseif ($_SESSION['w_queue'] == 'camilladsp') {
-				$output = $_SESSION['w_queueargs'] != 'off' ? "\"camilladsp\"" : "\"hw:" . $_SESSION['cardnum'] . ",0\"";
+				$output = $_SESSION['w_queueargs'] != 'off' ? "\"camilladsp\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 			}
 
