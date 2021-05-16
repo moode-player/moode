@@ -51,7 +51,7 @@ class Eqp {
 
     function applyConfig($config) {
         $configstr = $this->config2string($config, True); // force to use bw instead of q
-        sysCmd('sudo sed -i "/controls/c\ \t\t\tcontrols [ ' . $configstr . ' ]" ' . ALSA_PLUGIN_PATH .'/'. $this->alsa_file);
+        sysCmd('sudo sed -i "/controls/c\controls [ ' . $configstr . ' ]" ' . ALSA_PLUGIN_PATH .'/'. $this->alsa_file);
     }
 
     function string2config($string) {

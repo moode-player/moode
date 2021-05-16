@@ -2079,18 +2079,18 @@ function updMpdConf($i2sdevice) {
 		fclose($fh);
 	}
 
-	// Update _deviceout.conf to hw:N,0 if no DSP is active
+	// Update _deviceout.conf to plughw:N,0 if no DSP is active
 	if ($_SESSION['invert_polarity'] == '0' && $_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' &&
 		$_SESSION['alsaequal'] == 'Off' && $_SESSION['camilladsp'] == 'off') {
 		sysCmd("sed -i '/slave.pcm/c\slave.pcm \"plughw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 	}
 
 	// Update DSP and BT confs with cardnum
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
-	sysCmd("sed -i '/slave.pcm \"plughw/c\ \tslave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
-	sysCmd("sed -i '/pcm \"hw/c\ \t\tpcm \"hw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
-	sysCmd("sed -i '/card/c\ \t    card " . $cardnum . "' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
+	sysCmd("sed -i '/slave.pcm \"plughw/c\slave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
+	sysCmd("sed -i '/slave.pcm \"plughw/c\slave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
+	sysCmd("sed -i '/slave.pcm \"plughw/c\slave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
+	sysCmd("sed -i '/pcm \"plughw/c\pcm \"plughw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
+	sysCmd("sed -i '/card/c\card " . $cardnum . "' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $cardnum . ",0' /etc/bluealsaaplay.conf");
 }
 

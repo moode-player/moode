@@ -1651,7 +1651,7 @@ function runQueuedJob() {
 				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
 				if ($_SESSION['w_queueargs'] != 'Off') {
-					sysCmd('sed -i "/controls/c\ \t\t\tcontrols [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
+					sysCmd('sed -i "/controls/c\controls [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 				}
 			}
 			elseif ($_SESSION['w_queue'] == 'eqfa12p') {
