@@ -6,6 +6,7 @@
 # This build recipe will generate python and deb packages output.
 #
 # (C) bitkeeper 2021 http://moodeaudio.org
+# License: GPLv3
 #
 ################################################################
 
@@ -35,7 +36,6 @@ sudo apt-get install build-essential fakeroot devscripts
 
 # deps for creating deb with fpm
 # https://fpm.readthedocs.io/en/latest/index.html
-
 RUBY_VER=`ruby --version`
 if [[ $? -gt 0 ]]
 then
@@ -47,6 +47,14 @@ if [[ $? -gt 0 ]]
 then
 	sudo gem install --no-document fpm
 fi
+
+# deps building the react app
+NPM_VER=`npm --version`
+if [[ $? -gt 0 ]]
+then
+	sudo apt-get install npm
+fi
+
 
 # Install cargo + rust tools
 # Required for camilladsp
@@ -131,6 +139,7 @@ cd camillagui-backend
 # if already cloned:
 # git fetch --all
 git checkout -b v$CAMILLAGUI_BACKEND_VER v$CAMILLAGUI_BACKEND_VER
+patch -p1 < $MOODE_WORK/other/camilladsp/gui/camillagui_backend_hide_files.patch
 
 # setup a directory structure for the files which should end up in the deb file:
 rm -rf package
@@ -145,7 +154,19 @@ cp $MOODE_WORK/other/camilladsp/gui/gui-config.yml package/opt/camillagui/config
 cp $MOODE_WORK/other/camilladsp/gui/camillagui.service package/etc/systemd/system
 
 # build a deb files based on the directory structure
-fpm -s dir -t deb -n camillagui -v 0.7.0 --license GPLv3 --category sound -S moode --iteration 1_moode1 --deb-priority optional --url https://github.com/HEnquist/camilladsp -m moodeaudio.org --description 'CamillaGUI is a web-based GUI for CamillaDSP.' --pre-install $MOODE_WORK/other/camilladsp/gui/deb_preinstall.sh package/opt/camillagui/.=/opt/camillagui package/etc/=/etc/.
+fpm -s dir -t deb -n camillagui -v 0.7.0 \
+--license GPLv3 \
+--category sound \
+-S moode \
+--iteration 1moode1 \
+--deb-priority optional \
+--url https://github.com/HEnquist/camilladsp \
+-m moodeaudio.org \
+--description 'CamillaGUI is a web-based GUI for CamillaDSP.' \
+--pre-install $MOODE_WORK/other/camilladsp/gui/deb_preinstall.sh \
+--before-remove $MOODE_WORK/other/camilladsp/gui/deb_beforeremove.sh \
+package/opt/camillagui/.=/opt/camillagui \
+package/etc/=/etc/.
 
 cp camillagui_$CAMILLAGUI_BACKEND_VER*.deb $MOODE_WORK/other/camilladsp/gui
 cd..

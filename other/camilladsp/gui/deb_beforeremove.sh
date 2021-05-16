@@ -1,7 +1,7 @@
 #!/bin/bash
 ################################################################
 #
-# camillagui deb pre install script
+# camillagui deb after remove script
 #
 # This build recipe will generate python and deb packages output.
 #
@@ -10,6 +10,7 @@
 #
 ################################################################
 
+
 # Stop a possible already old running unpacked camillagui
 sudo systemctl status camillagui > /dev/null
 if [[ $? -eq 0 ]]; then
@@ -17,15 +18,5 @@ if [[ $? -eq 0 ]]; then
 	sudo systemctl stop camillagui
 fi
 
-# Cleanup  a possible already old unpacked camillagui
-FILE=/opt/camillagui/main.py
-if [[ -f "$FILE" ]]; then
-  echo "Remove old unpacked version of camillagui"
-  sudo rm -rf /opt/camillagui
-fi
-
-# instead of agp-get use pip because of newer version
-sudo pip3 list | grep aiohttp
-if [[ $? -gt 0 ]]; then
-  sudo pip3 install -U aiohttp>=3.7
-fi
+sudo rm -rf /opt/camillagui/backend/__pycache__
+sudo rm -f /opt/camillagui/config/gui-config.yml.disabled
