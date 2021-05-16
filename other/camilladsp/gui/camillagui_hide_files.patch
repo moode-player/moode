@@ -9,7 +9,7 @@ index 90b5b2f..a368297 100644
 +    hide_file_manager: boolean
      coeff_dir: string
  }
- 
+
 @@ -12,6 +13,7 @@ export function defaultGuiConfig(): GuiConfig {
          hide_silence: false,
          hide_capture_device: false,
@@ -28,7 +28,7 @@ index 45f51e0..0a43b29 100644
            <Tab>Mixers {errors({path: ['mixers'], includeChildren: true}) && <ErrorIcon/>}</Tab>
            <Tab>Pipeline {errors({path: ['pipeline'], includeChildren: true}) && <ErrorIcon/>}</Tab>
 -          <Tab>Files</Tab>
-+          {this.state.guiConfig.hide_file_manager==false &&
++          {this.state.guiConfig.hide_file_manager===false &&
 +          <Tab>Files</Tab>}
          </TabList>
          <TabPanel>
@@ -37,7 +37,7 @@ index 45f51e0..0a43b29 100644
            />
          </TabPanel>
          <TabPanel>
-+          {this.state.guiConfig.hide_file_manager==false &&
++          {this.state.guiConfig.hide_file_manager===false &&
            <Files
                currentConfigFile={this.state.currentConfigFile}
                config={this.state.config}

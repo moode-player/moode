@@ -14,7 +14,7 @@
 #export CDSP_WORK=~/moode.dev/camilladsp.dev
 
 export MOODE_WORK=`pwd`/../..
-export CDSP_WORK=$MOODE_WORK/camilladsp.dev
+export CDSP_WORK=./camilladsp.dev
 
 CAMILLADSP_VER=0.5.1
 PYCAMILLADSP_VER=0.5.0
@@ -55,7 +55,6 @@ then
 	sudo apt-get install npm
 fi
 
-
 # Install cargo + rust tools
 # Required for camilladsp
 CARGO_VER=`cargo --version`
@@ -80,8 +79,6 @@ then
 else
 	echo "cargo-deb: already installed"
 fi
-
-exit 0
 
 # ---------------------------------------------------------------
 # 1. pycamilladsp
@@ -111,7 +108,6 @@ git checkout -b v$PYCAMILLADSP_PLOT_VER v$PYCAMILLADSP_PLOT_VER
 patch -p1 setup.py < $MOODE_WORK/other/camilladsp/gui/camilladsp_plot_jsonschema_dep.patch
 python3 ./setup.py bdist_wheel
 cp dist/camilladsp_plot-$PYCAMILLADSP_PLOT_VER-py3-none-any.whl $MOODE_WORK/other/camilladsp/gui
-v0.5.1
 cd ..
 
 # ---------------------------------------------------------------
@@ -169,7 +165,7 @@ package/opt/camillagui/.=/opt/camillagui \
 package/etc/=/etc/.
 
 cp camillagui_$CAMILLAGUI_BACKEND_VER*.deb $MOODE_WORK/other/camilladsp/gui
-cd..
+cd ..
 
 # ---------------------------------------------------------------
 # 5. camilladsp
