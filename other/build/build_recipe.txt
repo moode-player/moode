@@ -664,18 +664,25 @@ mpc enable only 1
 //
 ////////////////////////////////////////////////////////////////
 
-# 9b.1a CamillaDSP build + install from source
+# 9b.1a CamillaDSP + GUI build + install from source
+CURR_DIR=`pwd`
+cd ../camilladsp
+# build distritibutables
+# this step is interactive:
 # when question ask choose 1
-sudo curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-# logout / login to update env (or do it manually)
-sudo tar -xzf ./moode/other/camilladsp/camilladsp-0.5.0-beta4.tar.gz
-cd camilladsp-0.5.0-beta4
-sudo RUSTFLAGS='-C target-feature=+neon -C target-cpu=native' cargo build --release --no-default-features --features alsa-backend --features websocket
-sudo cp target/release/camilladsp /usr/local/bin/
+# if asked to  logout / login to update env (or do it manually) and run script again
+bash ./buildplan_camilladsp.txt
+# install distritibutables
+bash ./_install.txt
+rm -rf camilladsp.dev
+cd $CURR_DIR
 
-# 9b.1b CamillaDSP install prebuild
-# sudo cp .moode/other/camilladsp/camilladsp /usr/local/bin/
-# sudo chmod a+x /usr/local/bin/camilladsp
+# 9b.1b CamillaDSP + GUI install prebuild
+CURR_DIR=`pwd`
+cd ../camilladsp
+# install distritibutables
+bash ./_install.txt
+cd $CURR_DIR
 
 # 9b.2a Alsa_cdsp build + install from source
 sudo mkdir alsa_cdsp
@@ -688,12 +695,6 @@ sudo cd rm -rf ./alsa_cdsp
 # 9b.2b Alsa_cdsp install prebuild
 # sudo install -m 644 ./moode/other/alsa_cdsp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`/alsa-lib/
 
-# 9b.3a CamillaGUI
-sudo cp -r ./moode/other/camilladsp/gui/ ./
-cd ./gui
-sudo ./_install.sh
-cd ..
-sudo rm -rf ./gui
 
 ////////////////////////////////////////////////////////////////
 //
