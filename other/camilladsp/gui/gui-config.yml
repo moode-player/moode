@@ -2,3 +2,4 @@ hide_capture_samplerate: true
 hide_silence: true
 hide_capture_device: true
 hide_playback_device: true
+hide_file_manager: true

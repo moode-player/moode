@@ -1,0 +1,49 @@
+diff --git a/src/guiconfig.ts b/src/guiconfig.ts
+index 90b5b2f..a368297 100644
+--- a/src/guiconfig.ts
++++ b/src/guiconfig.ts
+@@ -3,6 +3,7 @@ export interface GuiConfig {
+     hide_silence: boolean
+     hide_capture_device: boolean
+     hide_playback_device: boolean
++    hide_file_manager: boolean
+     coeff_dir: string
+ }
+
+@@ -12,6 +13,7 @@ export function defaultGuiConfig(): GuiConfig {
+         hide_silence: false,
+         hide_capture_device: false,
+         hide_playback_device: false,
++        hide_file_manager: false,
+         coeff_dir: ''
+     }
+ }
+\ No newline at end of file
+diff --git a/src/index.tsx b/src/index.tsx
+index 45f51e0..0a43b29 100644
+--- a/src/index.tsx
++++ b/src/index.tsx
+@@ -101,7 +101,8 @@ class CamillaConfig extends React.Component<
+           <Tab>Filters {errors({path: ['filters'], includeChildren: true}) && <ErrorIcon/>}</Tab>
+           <Tab>Mixers {errors({path: ['mixers'], includeChildren: true}) && <ErrorIcon/>}</Tab>
+           <Tab>Pipeline {errors({path: ['pipeline'], includeChildren: true}) && <ErrorIcon/>}</Tab>
+-          <Tab>Files</Tab>
++          {this.state.guiConfig.hide_file_manager===false &&
++          <Tab>Files</Tab>}
+         </TabList>
+         <TabPanel>
+           <DevicesTab
+@@ -136,11 +137,12 @@ class CamillaConfig extends React.Component<
+           />
+         </TabPanel>
+         <TabPanel>
++          {this.state.guiConfig.hide_file_manager===false &&
+           <Files
+               currentConfigFile={this.state.currentConfigFile}
+               config={this.state.config}
+               setCurrentConfig={this.setCurrentConfig}
+-          />
++          />}
+         </TabPanel>
+       </Tabs>
+     </div>

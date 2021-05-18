@@ -1,0 +1,27 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 0915142..77b9a2b 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -3,6 +3,8 @@ name = "camilladsp"
+ version = "0.5.1"
+ authors = ["Henrik Enquist <henrik.enquist@gmail.com>"]
+ description = "A flexible tool for processing audio"
++readme = "README.md"
++license-file = "LICENSE.txt"
+ 
+ [features]
+ default = ["alsa-backend", "pulse-backend", "websocket"]
+@@ -67,3 +69,12 @@ criterion = "0.3"
+ [[bench]]
+ name = "filters"
+ harness = false
++
++[package.metadata.deb]
++#license-file = ["LICENSE.txt", "0"]
++revision = "moode1"
++assets = [
++    ["target/release/camilladsp", "usr/local/bin/", "755"],
++    ["README.md", "usr/share/doc/camilladsp/README.md", "644"],
++]
++changelog = "CHANGELOG.md"
+\ No newline at end of file
