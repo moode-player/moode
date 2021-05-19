@@ -2616,6 +2616,7 @@ function startSpotify() {
 	$cmd = 'librespot' .
 		' --name "' . $_SESSION['spotifyname'] . '"' .
 		' --bitrate ' . $cfg_spotify['bitrate'] .
+		' --format ' . $cfg_spotify['format'] .
 		' --initial-volume ' . $cfg_spotify['initial_volume'] .
 		' --volume-ctrl ' . $cfg_spotify['volume_curve'] .
 		$volume_normalization .

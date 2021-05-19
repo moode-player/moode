@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue May 11 16:56:05 2021
+-- File generated with SQLiteStudio v3.1.0 on Wed May 19 08:37:27 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -460,6 +460,7 @@ INSERT INTO cfg_spotify (id, param, value) VALUES (9, 'normalization_threshold',
 INSERT INTO cfg_spotify (id, param, value) VALUES (10, 'normalization_attack', '5');
 INSERT INTO cfg_spotify (id, param, value) VALUES (11, 'normalization_release', '100');
 INSERT INTO cfg_spotify (id, param, value) VALUES (12, 'normalization_knee', '1');
+INSERT INTO cfg_spotify (id, param, value) VALUES (13, 'format', 'S16');
 
 -- Table: cfg_network
 CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3));
