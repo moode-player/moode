@@ -667,12 +667,12 @@ mpc enable only 1
 # 9b.1a CamillaDSP + GUI build + install from source
 CURR_DIR=`pwd`
 cd ../camilladsp
-# build distritibutables
+# build distributables
 # this step is interactive:
 # when question ask choose 1
 # if asked to  logout / login to update env (or do it manually) and run script again
 bash ./buildplan_camilladsp.txt
-# install distritibutables
+# install distributables
 bash ./_install.txt
 rm -rf camilladsp.dev
 cd $CURR_DIR
@@ -680,7 +680,7 @@ cd $CURR_DIR
 # 9b.1b CamillaDSP + GUI install prebuild
 CURR_DIR=`pwd`
 cd ../camilladsp
-# install distritibutables
+# install distributables
 bash ./_install.txt
 cd $CURR_DIR
 
