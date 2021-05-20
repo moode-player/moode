@@ -1,0 +1,16 @@
+################################################################
+#
+# Update Pi's
+#
+################################################################
+
+# Step 1
+sudo ./dev.sh
+sudo cp -r /mnt/moode-player/GitHub/moode/other/camilladsp/ ./
+cd ./camilladsp/
+sudo bash _install.txt
+
+# Step 2
+cd ~/
+sudo rm -rf ./camilladsp
+sudo cp -r /mnt/moode-player/GitHub/moode/usr/share/camilladsp/ /usr/share/
