@@ -689,17 +689,7 @@ function renderUI() {
             $('.playlist li.paused, .cv-playlist li.paused').removeClass('paused');
             $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
             $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('active');
-
-            // Highlight track in Library
-            $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
-            if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
-        		for (i = 0; i < filteredSongs.length; i++) {
-        			if (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album']) {
-        				$('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-highlight');
-        				break;
-        			}
-        		}
-        	}
+            setNpIcon();
         }
     	else if (MPD.json['state'] == 'pause' || MPD.json['state'] == 'stop') {
     		$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
@@ -1089,6 +1079,7 @@ function renderPlaylist(state) {
 		var output = '';
         var playlistLazy = GLOBAL.nativeLazyLoad === true ? '<img loading="lazy" src=' : '<img class="lazy-playlistview" data-original=';
         var paused = state != 'play' ? ' paused' : '';
+        var npIcon = SESSION.json['show_npicon'] == 'Yes' ? '' : ' no-npicon';
 
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
@@ -1099,7 +1090,7 @@ function renderPlaylist(state) {
             for (i = 0; i < data.length; i++) {
 	            // Item highlight
 	            if (i == parseInt(MPD.json['song'])) {
-	                output += '<li id="pl-' + (i + 1) + '" class="active pl-entry' + paused + '">';
+	                output += '<li id="pl-' + (i + 1) + '" class="active pl-entry' + paused + npIcon + '">';
 	            }
 				else {
 	                output += '<li id="pl-' + (i + 1) + '" class="pl-entry">';
@@ -2249,6 +2240,7 @@ $('.context-menu a').click(function(e) {
 
             // Playback
             $('#playlist-art-enabled span').text(SESSION.json['playlist_art']);
+            $('#show-npicon span').text(SESSION.json['show_npicon']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
             $('#play-history-enabled span').text(SESSION.json['playhist']);
             // @Atair
@@ -2421,6 +2413,7 @@ $('#btn-preferences-update').click(function(e){
     var playHistoryChange = false;
 	var fontSizeChange = false;
     var playlistArtChange = false;
+    var showNpIconChange = false;
 	var thumbSizeChange = false;
 
     // Break out misc lib options
@@ -2448,6 +2441,7 @@ $('#btn-preferences-update').click(function(e){
 
     // Playback
     if (SESSION.json['playlist_art'] != $('#playlist-art-enabled span').text()) {playlistArtChange = true;}
+    if (SESSION.json['show_npicon'] != $('#show-npicon span').text()) {showNpIconChange = true;}
     if (SESSION.json['extra_tags'] != $('#extra-tags').val()) {extraTagsChange = true;}
     if (SESSION.json['playhist'] != $('#play-history-enabled span').text()) {playHistoryChange = true;}
 
@@ -2494,6 +2488,7 @@ $('#btn-preferences-update').click(function(e){
 
     // Playback
     SESSION.json['playlist_art'] = $('#playlist-art-enabled span').text();
+    SESSION.json['show_npicon'] = $('#show-npicon span').text();
     SESSION.json['extra_tags'] = $('#extra-tags').val();
     SESSION.json['search_site'] = $('#search_site span').text(); // @Atair
     SESSION.json['playhist'] = $('#play-history-enabled span').text();
@@ -2557,10 +2552,15 @@ $('#btn-preferences-update').click(function(e){
 
 		setColors();
 	}
-	if(playlistArtChange == true) {
+	if (playlistArtChange == true) {
 		renderPlaylist(MPD.json['state']);
 	}
-	if(thumbSizeChange){
+
+    if (showNpIconChange == true) {
+        setNpIcon();
+    }
+
+	if (thumbSizeChange){
 		getThumbHW();
 	}
 
@@ -2580,6 +2580,7 @@ $('#btn-preferences-update').click(function(e){
 
             // Playback
             'playlist_art': SESSION.json['playlist_art'],
+            'show_npicon': SESSION.json['show_npicon'],
             'extra_tags': SESSION.json['extra_tags'],
             'search_site': SESSION.json['search_site'], // @Atair
             'playhist': SESSION.json['playhist'],
@@ -3782,4 +3783,31 @@ function itemInfoModal(id, result) {
     }
 
     document.getElementById(id).innerHTML = lines;
+}
+
+// Now-playing icon
+function setNpIcon() {
+    if (SESSION.json['show_npicon'] == 'Yes') {
+        if (typeof(MPD.json['song']) != 'undefined') {
+            $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').removeClass('no-npicon');
+            $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').removeClass('no-npicon');
+        }
+        // Highlight track in Library
+        $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
+        if (MPD.json['artist'] != 'Radio station' && $('#songsList li').length > 0) {
+            for (i = 0; i < filteredSongs.length; i++) {
+                if (filteredSongs[i].title == MPD.json['title'] && filteredSongs[i].album == MPD.json['album']) {
+                    $('#lib-song-' + (i + 1) + ' .lib-entry-song .songtrack').addClass('lib-track-highlight');
+                    break;
+                }
+            }
+        }
+    }
+    else {
+        if (typeof(MPD.json['song']) != 'undefined') {
+            $('.playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('no-npicon');
+            $('.cv-playlist li:nth-child(' + (parseInt(MPD.json['song']) + 1) + ')').addClass('no-npicon');
+        }
+        $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
+    }
 }

@@ -26,6 +26,7 @@ Updates
 - UPD: Add verbose debug option to CamillaDSP
 - UPD: Run updMpdConf() after in-place update
 - UPD: Improve method for updating currentsong.txt
+- UPD: Option to turn off Now-playing (EQ bars) icon
 
 Bug fixes
 
