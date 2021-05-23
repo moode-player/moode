@@ -184,6 +184,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\n\nPlayback\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
+	echo -e "\nShow Now-playing icon\t= $show_npicon\c"
 	echo -e "\nShow extra metadata\t= $xtagdisp\c"
 	echo -e "\nSearch site\t\t= $search_site\c"
 	echo -e "\nPlayback history log\t= $playhist\c"
@@ -762,6 +763,9 @@ rv_recorder_storage=${arr[149]}
 [[ "${arr[150]}" = "1" ]] && volume_db_display="On" || volume_db_display="Off"
 search_site=${arr[151]}
 [[ "${arr[152]}" = "1" ]] && cuefiles_ignore="Yes" || cuefiles_ignore="No"
+recorder_album_tag=${arr[153]}
+inplace_upd_applied=${arr[154]}
+show_npicon=${arr[155]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
