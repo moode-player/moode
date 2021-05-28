@@ -380,17 +380,17 @@ sudo tar xfz ./boost_1.68_libraries.tar.gz
 sudo rm ./boost_*.gz
 cd ~
 
-3. Download MPD 0.22.4 sources and prep for compile.
+3. Download MPD 0.22.8 sources and prep for compile.
 NOTE: Compiling from sources in this recipe does not include the patch for Selective Resampling.
       The instructions for the patch build are in ./moode/other/mpd/_build_mpd.txt
 
 # OPTIONALLY install pre-compiled patched binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.22.4_p0x3 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.22.8_p0x3 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.22.4.tar.xz
-sudo tar xf mpd-0.22.4.tar.xz
-cd mpd-0.22.4
+sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.22.8.tar.xz
+sudo tar xf mpd-0.22.8.tar.xz
+cd mpd-0.22.8
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
