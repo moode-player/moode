@@ -67,7 +67,7 @@ if (isset($_POST['rm_paired_device']) && $_POST['rm_paired_device'] == '1') {
 if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 	// update MAC address
 	if ($_POST['audioout'] == 'Bluetooth') {
-		sysCmd("sed -i '/device/c\ \t\tdevice \"" . $_POST['paired_device'] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+		sysCmd("sed -i '/device/c\device \"" . $_POST['paired_device'] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 	}
 	// Update MPD output
 	playerSession('write', 'audioout', $_POST['audioout']);
@@ -83,7 +83,7 @@ if (isset($_POST['chg_audioout']) && $_POST['chg_audioout'] == '1') {
 	// Update MAC address
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
 		$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
-		sysCmd("sed -i '/device/c\ \t\tdevice \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+		sysCmd("sed -i '/device/c\device \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 	}
 	// Update MPD output
 	playerSession('write', 'audioout', $_POST['audioout']);

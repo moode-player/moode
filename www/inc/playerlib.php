@@ -2047,7 +2047,8 @@ function updMpdConf($i2sdevice) {
 	$data .= "audio_output {\n";
 	$data .= "type \"alsa\"\n";
 	$data .= "name \"" . ALSA_BLUETOOTH . "\"\n";
-	$data .= "device \"btstream\"\n";
+	//$data .= "device \"btstream\"\n";
+	$data .= "device \"_audioout\"\n";
 	$data .= "mixer_type \"software\"\n";
 	$data .= "}\n\n";
 
@@ -2080,10 +2081,14 @@ function updMpdConf($i2sdevice) {
 	}
 
 	// Update _deviceout.conf to plughw:N,0 if no DSP is active
-	if ($_SESSION['invert_polarity'] == '0' && $_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' &&
+	// NOTE: && $_SESSION['audioout'] == 'Local'
+	/*if ($_SESSION['invert_polarity'] == '0' && $_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' &&
 		$_SESSION['alsaequal'] == 'Off' && $_SESSION['camilladsp'] == 'off') {
 		sysCmd("sed -i '/slave.pcm/c\slave.pcm \"plughw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
-	}
+	}*/
+
+	// Update _deviceout.conf
+	updDeviceOut($cardnum);
 
 	// Update DSP and BT confs with cardnum
 	sysCmd("sed -i '/slave.pcm \"plughw/c\slave.pcm \"plughw:" . $cardnum . ",0\";' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
@@ -3676,8 +3681,6 @@ function setAudioIn($input_source) {
 }
 
 // Set MPD and renderer audio output
-// TODO: Replace MPD output switching with sed of _deviceout.conf
-// NOTE: This also requires changes in updMpdConf()
 function setAudioOut($audioout) {
 	// MPD
 	if ($audioout == 'Local') {
@@ -3699,7 +3702,10 @@ function setAudioOut($audioout) {
 		sysCmd('mpc enable only "' . ALSA_BLUETOOTH .'"');
 	}
 
-	// Renderers
+	// Update _deviceout.conf
+	updDeviceOut($_SESSION['cardnum']);
+
+	// Restart renderers if indicated
 	if ($_SESSION['airplaysvc'] == '1') {
 		stopAirplay();
 		startAirplay();
@@ -3710,8 +3716,10 @@ function setAudioOut($audioout) {
 		startSpotify();
 	}
 
-	// Other
+	// Set HTTP server state
 	setMpdHttpd();
+
+	// Restart MPD
 	sysCmd('systemctl restart mpd');
 }
 
@@ -4132,4 +4140,35 @@ function getAlsaCards() {
 		$cards[$i] = empty($card_id) ? 'empty' : $card_id;
 	}
 	return $cards;
+}
+
+// Update _deviceout.conf
+function updDeviceOut($cardnum) {
+	// Local out
+	if ($_SESSION['audioout'] == 'Local') {
+		// DSP
+		if ($_SESSION['invert_polarity'] != '0') {
+			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"invpolarity\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+		}
+		elseif ($_SESSION['crossfeed'] != 'Off') {
+			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"crossfeed\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+		}
+		elseif ($_SESSION['eqfa12p'] != 'Off') {
+			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"eqfa12p\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+		}
+		elseif ($_SESSION['alsaequal'] != 'Off') {
+			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"alsaequal\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+		}
+		elseif ($_SESSION['camilladsp'] != 'off') {
+			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"camilladsp\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+		}
+		// No DSP
+		else {
+			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"plughw:" . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+		}
+	}
+	// Bluetooth out
+	else {
+		sysCmd("sed -i '/slave.pcm/c\slave.pcm \"btstream\"' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+	}
 }
