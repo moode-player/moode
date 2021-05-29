@@ -443,7 +443,6 @@ workerLog('worker: ALSA loopback (' . $_SESSION['alsa_loopback'] . ')');
 
 // Start Allo Boss2 OLED display
 if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
-	sysCmd('modprobe i2c-dev');
 	sysCmd('systemctl start boss2oled');
 	workerLog('worker: Boss 2 OLED started');
 }
