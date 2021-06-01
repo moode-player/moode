@@ -17,7 +17,7 @@ if [[ ! -f "$FILE" ]]; then
 fi
 
 sudo pip3 install numpy matplotlib
-sudo pip3 install ./gui/camilladsp-0.5.0-py3-none-any.whl ./gui/camilladsp_plot-0.5.2-py3-none-any.whl
-sudo apt-get install ./gui/camillagui_0.7.0-1moode1_armhf.deb
-sudo apt-get install ./camilladsp_0.5.1-moode1_armhf.deb
+sudo pip3 install ./gui/camilladsp-0.5.0-py3-none-any.whl ./gui/camilladsp_plot-0.5.3-py3-none-any.whl
+sudo apt-get install ./gui/camillagui_0.7.1-1moode1_armhf.deb
+sudo apt-get install ./camilladsp_0.5.2-moode1_armhf.deb
 sudo chmod -R a+rw /usr/share/camilladsp
