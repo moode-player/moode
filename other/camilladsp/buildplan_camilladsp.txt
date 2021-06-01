@@ -16,11 +16,11 @@
 export MOODE_WORK=`pwd`/../..
 export CDSP_WORK=./camilladsp.dev
 
-CAMILLADSP_VER=0.5.1
+CAMILLADSP_VER=0.5.2
 PYCAMILLADSP_VER=0.5.0
-PYCAMILLADSP_PLOT_VER=0.5.2
-CAMILLAGUI_VER=0.4.0
-CAMILLAGUI_BACKEND_VER=0.7.0
+PYCAMILLADSP_PLOT_VER=0.5.3
+CAMILLAGUI_VER=0.4.1
+CAMILLAGUI_BACKEND_VER=0.7.1
 
 mkdir -p $CDSP_WORK
 cd $CDSP_WORK
@@ -150,7 +150,7 @@ cp $MOODE_WORK/other/camilladsp/gui/gui-config.yml package/opt/camillagui/config
 cp $MOODE_WORK/other/camilladsp/gui/camillagui.service package/etc/systemd/system
 
 # build a deb files based on the directory structure
-fpm -s dir -t deb -n camillagui -v 0.7.0 \
+fpm -s dir -t deb -n camillagui -v $CAMILLAGUI_BACKEND_VER \
 --license GPLv3 \
 --category sound \
 -S moode \

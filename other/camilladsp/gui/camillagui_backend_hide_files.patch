@@ -6,7 +6,7 @@ index aed51e6..9e03c28 100644
      "hide_silence": False,
      "hide_capture_device": False,
      "hide_playback_device": False,
-+    "hide_file_manager": True
++    "hide_file_manager": False
  }
- 
+
  def get_config(path):
