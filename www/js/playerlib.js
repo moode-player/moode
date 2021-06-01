@@ -3773,11 +3773,16 @@ function itemInfoModal(id, result) {
             if (key == 'Covers' || key == 'Logo') {
                 lines += '<li><span class="left">' + key + '</span><span class="ralign">' + '<img src="' + result[i][key] + '" style="width:60px;"' + '</span></li>';
             }
-            else if (key != 'Comment') {
-                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
+            else if (key == 'Home page') {
+                if (result[i][key].length > 0) {
+                    lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
+                }
+            }
+            else if (key == 'Comment') {
+                lines += '<li><span class="left">' + key + '</span><br><span>' + result[i][key] + '</span></li>';
             }
             else {
-                lines += '<li><span class="left">' + key + '</span><br><span>' + result[i][key] + '</span></li>';
+                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
             }
         }
     }

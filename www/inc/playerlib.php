@@ -1002,12 +1002,13 @@ function parseStationInfo($path) {
 	$array[3] = array('Type' => $result[0]['type'] == 'f' ? 'Favorite' : ($result[0]['type'] == 'r' ? 'Regular' : 'Hidden'));
 	$array[4] = array('Genre' => $result[0]['genre']);
 	$array[5] = array('Broadcaster' => $result[0]['broadcaster']);
-	$array[6] = array('Language' => $result[0]['language']);
-	$array[7] = array('Country' => $result[0]['country']);
-	$array[8] = array('Region' => $result[0]['region']);
-	$array[9] = array('Bitrate' => $result[0]['bitrate']);
-	$array[10] = array('Audio format' => $result[0]['format']);
-	$array[11] = array('Geo fenced' => $result[0]['geo_fenced']);
+	$array[6] = array('Home page' => $result[0]['home_page']);
+	$array[7] = array('Language' => $result[0]['language']);
+	$array[8] = array('Country' => $result[0]['country']);
+	$array[9] = array('Region' => $result[0]['region']);
+	$array[10] = array('Bitrate' => $result[0]['bitrate']);
+	$array[11] = array('Audio format' => $result[0]['format']);
+	$array[12] = array('Geo fenced' => $result[0]['geo_fenced']);
 
 	//workerLog(print_r($array, true));
 	return $array;

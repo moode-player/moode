@@ -38,6 +38,7 @@ Bug fixes
 - FIX: Currentsong.txt truncated at startup
 - FIX: Airplay, Spotify renderers crash when ALSA Loopback On
 - FIX: DSP confs break when audioout set to Bluetooth
+- FIX: Station Home page field not in Audio info
 
 ########################################################
 //
