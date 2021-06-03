@@ -28,6 +28,7 @@ Updates
 - UPD: Run updMpdConf() after in-place update
 - UPD: Improve method for updating currentsong.txt
 - UPD: Option to turn off Now-playing (EQ bars) icon
+- UPD: Option to turn off CoverView Playbar
 - UPD: Enable rpi-cirrus-wm5102.dtbo to show in DT overlay list
 - UPD: Route Bluetooth through unified ALSA framework
 - UPD: Load i2c-dev at boot time via /etc/modules
@@ -39,6 +40,7 @@ Bug fixes
 - FIX: Airplay, Spotify renderers crash when ALSA Loopback On
 - FIX: DSP confs break when audioout set to Bluetooth
 - FIX: Station Home page field not in Audio info
+- FIX: Wlan0 power save not disabled during startup for Pi-Zero W
 
 ########################################################
 //
