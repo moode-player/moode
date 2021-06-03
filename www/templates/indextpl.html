@@ -836,6 +836,28 @@
 						</span>
 					</div>
 
+					<label class="control-label" for="show-cvpb">Show CoverView playbar</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select bootstrap-select-mini">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="show-cvpb" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-cvpb-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="show-cvpb-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-show-cvpb" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-show-cvpb" class="help-block hide">
+							Shows the Playbar when in CoverView.<br>
+						</span>
+					</div>
+
 					<label class="control-label" for="extra-tags">Show extra metadata</label>
 	                <div class="controls">
 						<input id="extra-tags" class="input-medium" type="text">

@@ -529,7 +529,10 @@ function screenSaver(cmd) {
 	}
 	else if (cmd.slice(-1) == '1') {
 		$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
-        $('body').addClass('cv');
+        $('body').addClass('cv')
+        if (SESSION.json['show_cvpb'] == 'Yes') {
+            $('body').addClass('cvpb');
+        }
 
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
@@ -2241,6 +2244,7 @@ $('.context-menu a').click(function(e) {
             // Playback
             $('#playlist-art-enabled span').text(SESSION.json['playlist_art']);
             $('#show-npicon span').text(SESSION.json['show_npicon']);
+            $('#show-cvpb span').text(SESSION.json['show_cvpb']);
     		$('#extra-tags').val(SESSION.json['extra_tags']);
             $('#play-history-enabled span').text(SESSION.json['playhist']);
             // @Atair
@@ -2489,6 +2493,7 @@ $('#btn-preferences-update').click(function(e){
     // Playback
     SESSION.json['playlist_art'] = $('#playlist-art-enabled span').text();
     SESSION.json['show_npicon'] = $('#show-npicon span').text();
+    SESSION.json['show_cvpb'] = $('#show-cvpb span').text();
     SESSION.json['extra_tags'] = $('#extra-tags').val();
     SESSION.json['search_site'] = $('#search_site span').text(); // @Atair
     SESSION.json['playhist'] = $('#play-history-enabled span').text();
@@ -2581,6 +2586,7 @@ $('#btn-preferences-update').click(function(e){
             // Playback
             'playlist_art': SESSION.json['playlist_art'],
             'show_npicon': SESSION.json['show_npicon'],
+            'show_cvpb': SESSION.json['show_cvpb'],
             'extra_tags': SESSION.json['extra_tags'],
             'search_site': SESSION.json['search_site'], // @Atair
             'playhist': SESSION.json['playhist'],

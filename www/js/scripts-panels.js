@@ -1304,6 +1304,10 @@ jQuery(document).ready(function($) { 'use strict';
 
         if (coverView) {
 			$('body').removeClass('cv');
+            if (SESSION.json['show_cvpb'] == 'Yes') {
+                $('body').removeClass('cvpb');
+            }
+
 			coverView = false;
             setColors();
 

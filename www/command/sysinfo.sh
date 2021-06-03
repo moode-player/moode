@@ -185,6 +185,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\n----------------------\c"
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
 	echo -e "\nShow Now-playing icon\t= $show_npicon\c"
+	echo -e "\nShow CoverView playbar\t= $show_cvpb\c"
 	echo -e "\nShow extra metadata\t= $xtagdisp\c"
 	echo -e "\nSearch site\t\t= $search_site\c"
 	echo -e "\nPlayback history log\t= $playhist\c"
@@ -766,6 +767,7 @@ search_site=${arr[151]}
 recorder_album_tag=${arr[153]}
 inplace_upd_applied=${arr[154]}
 show_npicon=${arr[155]}
+show_cvpb=${arr[156]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
