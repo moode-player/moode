@@ -316,7 +316,7 @@ if (!empty($wlan0[0])) {
 	resetApMode();
 
 	$model = substr($_SESSION['hdwrrev'], 3, 1);
-	if ($model == '3' || $model == '4') {
+	if ($model == '3' || $model == '4' || substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 		sysCmd('/sbin/iwconfig wlan0 power off');
 		workerLog('worker: Pi integrated wlan0 power save disabled');
 	}
