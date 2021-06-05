@@ -28,6 +28,7 @@ fpm -s dir -t deb -n mpd_libcurl3-gnutls -v $CURL_VER \
 -S moode \
 --iteration 1moode1 \
 --deb-priority optional \
+--deb-no-default-config-files \
 --url http://curl.haxx.se \
 -m ghedo@debian.org \
 --description 'Easy-to-use client-side URL transfer library (GnuTLS flavour). This special package to sideload the version that works with MPD curl plugin' \
