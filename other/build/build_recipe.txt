@@ -467,6 +467,13 @@ sudo ninja -C output
 # Install binary
 sudo cp output/mpc /usr/bin/
 
+7. Install updated libcurl3 (Fixes instability in this lib shipped in RaspiOS Buster)
+sudo cp -r /mnt/moode-player/GitHub/moode/other/libcurl3-gnutls/ ./
+cd ./libcurl3-gnutls/
+./install.sh
+cd ~
+sudo rm -rf libcurl3-gnutls/
+
 # Cleanup
 cd ~
 sudo rm -rf ./mpc-0.33*
