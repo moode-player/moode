@@ -552,6 +552,13 @@ else {
 			echo json_encode($array);
 			break;
 		case 'updcfgsystem':
+			// Update theme meta tag in header.php
+			if (isset($_POST['themename']) && $_POST['themename'] != $_SESSION['themename']) {
+				$result = cfgdb_read('cfg_theme', $dbh, $_POST['themename']);
+				workerLog(print_r($_SESSION['themename'] . '|' . $_POST['themename'] . '|' . $result[0]['bg_color'], true));
+				sysCmd("sed -i '/<meta name=\"theme-color\" content=/c\ \t<meta name=\"theme-color\" content=" . "\"rgb(" . $result[0]['bg_color'] . ")\">'" . ' /var/www/header.php');
+			}
+
 			foreach (array_keys($_POST) as $var) {
 				playerSession('write', $var, $_POST[$var]);
 			}

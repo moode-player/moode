@@ -32,6 +32,7 @@ Updates
 - UPD: Enable rpi-cirrus-wm5102.dtbo to show in DT overlay list
 - UPD: Route Bluetooth through unified ALSA framework
 - UPD: Load i2c-dev at boot time via /etc/modules
+- UPD: Set theme-color meta element in header to Theme color
 
 Bug fixes
 
