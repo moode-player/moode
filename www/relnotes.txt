@@ -42,6 +42,7 @@ Bug fixes
 - FIX: DSP confs break when audioout set to Bluetooth
 - FIX: Station Home page field not in Audio info
 - FIX: Wlan0 power save not disabled during startup for Pi-Zero W
+- FIX: Instability in libcurl3 shipped with RaspiOS Buster
 
 ########################################################
 //
