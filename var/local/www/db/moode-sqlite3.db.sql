@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Jun 3 07:50:13 2021
+-- File generated with SQLiteStudio v3.1.0 on Mon Jun 7 09:22:56 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -289,7 +289,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (14, 'autoplay', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (15, 'rbsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (16, 'mpdver', '');
 INSERT INTO cfg_system (id, param, value) VALUES (17, 'rbactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (18, 'adevname', 'On-board audio device');
+INSERT INTO cfg_system (id, param, value) VALUES (18, 'adevname', 'Pi HDMI 1');
 INSERT INTO cfg_system (id, param, value) VALUES (19, 'clkradio_mode', 'Disabled');
 INSERT INTO cfg_system (id, param, value) VALUES (20, 'clkradio_item', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (21, 'clkradio_name', '');
@@ -307,7 +307,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (32, 'volknob', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (33, 'volmute', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
 INSERT INTO cfg_system (id, param, value) VALUES (35, 'alsavolume', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'PCM');
+INSERT INTO cfg_system (id, param, value) VALUES (36, 'amixname', 'HDMI');
 INSERT INTO cfg_system (id, param, value) VALUES (37, 'mpdmixer', 'software');
 INSERT INTO cfg_system (id, param, value) VALUES (38, 'extra_tags', 'album,genre,track,disc,date,composer,conductor,performer,encoded');
 INSERT INTO cfg_system (id, param, value) VALUES (39, 'rsmafterapl', 'No');
@@ -315,7 +315,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (40, 'lcdup', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (41, 'library_show_genres', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (42, 'extmeta', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
-INSERT INTO cfg_system (id, param, value) VALUES (44, 'hdwrrev', 'Pi-3B 1GB');
+INSERT INTO cfg_system (id, param, value) VALUES (44, 'hdwrrev', '');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
 INSERT INTO cfg_system (id, param, value) VALUES (47, 'upnp_browser', '0');
