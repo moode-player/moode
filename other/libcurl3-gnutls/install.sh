@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 #
 # Instaal Recipe for special version of libcurl3-gnutls to be side loaded with MPD
 #
