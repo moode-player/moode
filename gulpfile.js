@@ -556,7 +556,7 @@ if ( mode.remote() == true ) {
     deployTasks = ['deployfront', 'deployback', 'upload2remote', 'deploy2remote'];
 }
 else if (mode.all() ==true ){
-    deployTasks = ['deployback', 'deployback', 'deploymoodeutl', 'deployvarlocalwww'];
+    deployTasks = ['deployfront', 'deployback', 'deploymoodeutl', 'deployvarlocalwww'];
 }
 
 gulp.task('deploy', gulp.series( deployTasks, function (done) {
