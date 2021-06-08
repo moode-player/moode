@@ -3190,8 +3190,11 @@ function autoConfigSettings() {
 		}],
 
 		'Spotify',
-		['requires' => ['spot_bitrate','spot_initial_volume','spot_volume_curve','spot_volume_normalization','spot_normalization_pregain','spot_autoplay'] ,  'handler' => function($values) {
-			setDbParams('cfg_spotify', $values, 'spot_');
+		['requires' => ['spot_bitrate','spot_initial_volume','spot_volume_curve','spot_volume_normalization','spot_normalization_pregain','spot_autoplay'] ,
+		 'optionals' => ['normalization_method', 'normalization_gain_type', 'normalization_threshold', 'normalization_attack', 'normalization_release',  'normalization_knee', 'format'],
+		 'handler' => function($values, $optionals) {
+			$mergedValues = array_merge($values, $optionals);
+			setDbParams('cfg_spotify', $mergedValues, 'spot_');
 		}, 'custom_write' => function($values) {
 			return getDbParams('cfg_spotify', $values, 'spot_');
 		}],
@@ -3501,7 +3504,7 @@ function autoconfigExtract() {
 			else {
 				$autoconfigstring = $autoconfigstring . $config['custom_write'](
 					array_merge($config['requires'],
-					array_key_exists('optionals', $config) ? array_keys($optionals) : []));
+					array_key_exists('optionals', $config) ? $config['optionals'] : []));
 			}
 		}
 	}
