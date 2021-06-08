@@ -3288,6 +3288,8 @@ function autoConfigSettings() {
 		['requires' => ['playlist_art'] , 'handler' => setPlayerSession],
 		['requires' => ['extra_tags'] , 'handler' => setPlayerSession],
 		['requires' => ['playhist'] , 'handler' => setPlayerSession],
+		['requires' => ['show_npicon'] , 'handler' => setPlayerSession],
+		['requires' => ['show_cvpb'] , 'handler' => setPlayerSession],
 
 		'Library',
 		['requires' => ['library_instant_play'] , 'handler' => setPlayerSession],
