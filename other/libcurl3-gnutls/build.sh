@@ -15,12 +15,12 @@
 CURL_VER=7.74.0
 CURL_PKG_VER=$CURL_VER-1.2~bpo10+1
 CURL_DEST=libcurl3-gnutls_7.74.0
+CURL_BASE_PKG=http://ftp.nl.debian.org/debian/pool/main/c/curl/libcurl3-gnutls_${CURL_PKG_VER}_armhf.deb
 mkdir -p build/etc/systemd/system/mpd.service.d
 mkdir -p build/opt
-wget http://ftp.nl.debian.org/debian/pool/main/c/curl/libcurl3-gnutls_${CURL_PKG_VER}_armhf.deb
+wget $CURL_BASE_PKG
 dpkg-deb -x libcurl3-gnutls_${CURL_PKG_VER}_armhf.deb build/opt/${CURL_DEST}
 cp -p override.conf build/etc/systemd/system/mpd.service.d/override.conf
-
 
 fpm -s dir -t deb -n mpd_libcurl3-gnutls -v $CURL_VER \
 --license GPLv3 \
