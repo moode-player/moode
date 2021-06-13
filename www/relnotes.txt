@@ -43,6 +43,7 @@ Bug fixes
 - FIX: Station Home page field not in Audio info
 - FIX: Wlan0 power save not disabled during startup for Pi-Zero W
 - FIX: Instability in libcurl3 shipped with RaspiOS Buster
+- FIX: Permissions on shairport-sync debug log
 
 ########################################################
 //

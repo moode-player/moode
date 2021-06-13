@@ -106,6 +106,7 @@ sysCmd('touch ' . LIBCACHE_BASE . '_lossy.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_tag.json');
 sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('touch /var/local/www/currentsong.txt');
+sysCmd('touch /var/log/shairport-sync.log');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
 // Delete any tmp files left over from New/Edit radio station
 sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
@@ -117,6 +118,7 @@ sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
 sysCmd('chmod 0777 /var/local/www/playhistory.log');
 sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
 sysCmd('chmod 0666 ' . MOODE_LOG);
+sysCmd('chmod 0666 /var/log/shairport-sync.log');
 workerLog('worker: File check (OK)');
 
 // Prune old session vars
