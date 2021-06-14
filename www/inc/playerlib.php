@@ -2553,7 +2553,7 @@ function startBt() {
 function startAirplay() {
 	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
-		$logging = '-vv';
+		$logging = '-vvu';
 		$logfile = '/var/log/shairport-sync.log';
 	}
 	else {
