@@ -45,6 +45,7 @@ Bug fixes
 - FIX: Instability in libcurl3 shipped with RaspiOS Buster
 - FIX: Permissions on shairport-sync debug log
 - FIX: Missing -u option in shairport-sync logging
+- FIX: Back link when CamillaDSP called from Configure
 
 ########################################################
 //
