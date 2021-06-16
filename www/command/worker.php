@@ -1646,11 +1646,13 @@ function runQueuedJob() {
 
 			if ($_SESSION['w_queue'] == 'invert_polarity') {
 				$output = $_SESSION['w_queueargs'] == '1' ? "\"invpolarity\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
-				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 			}
 			elseif ($_SESSION['w_queue'] == 'crossfeed') {
 				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
-				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 				if ($_SESSION['w_queueargs'] != 'Off') {
 					sysCmd('sed -i "/controls/c\controls [ ' . $_SESSION['w_queueargs'] . ' ]" ' . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 				}
@@ -1665,7 +1667,8 @@ function runQueuedJob() {
 					unset($eqfa12p);
 				}
 				$output = $_SESSION['eqfa12p'] != 'Off' ? "\"eqfa12p\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
-				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 			}
 			elseif ($_SESSION['w_queue'] == 'alsaequal') {
 				$queueargs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
@@ -1677,11 +1680,15 @@ function runQueuedJob() {
 					}
 				}
 				$output = $_SESSION['alsaequal'] != 'Off' ? "\"alsaequal\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
-				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 			}
 			elseif ($_SESSION['w_queue'] == 'camilladsp') {
 				$output = $_SESSION['w_queueargs'] != 'off' ? "\"camilladsp\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
-				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_deviceout.conf');
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
+				// NOTE: Not needed since the config is updated when its loaded by cdsp-config
+				//sysCmd("sed -i '/device:/c\    device: \"plughw:" . $_SESSION['cardnum'] . ",0\"' " . '/usr/share/camilladsp/working_config.yml');
 			}
 
 			// Restart MPD
