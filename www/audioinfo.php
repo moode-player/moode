@@ -211,6 +211,7 @@ else {
 	$hwparams_format = '';
 	$hwparams_calcrate = '0 bps';
 }
+$alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback'];
 
 //
 // DSP
