@@ -352,9 +352,10 @@ if ($_SESSION['feat_bitmask'] & FEAT_KERNEL) {
 	$_feat_kernel = '';
 	$_select['kernel_architecture'] .= "<option value=\"32-bit\" " . (($_SESSION['kernel_architecture'] == '32-bit') ? "selected" : "") . ">32-bit</option>\n";
 	$model = substr($_SESSION['hdwrrev'], 3, 1);
+	$cmmodel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
 	$name = $_SESSION['hdwrrev'];
 	// Pi-2B rev 1.2, Allo USBridge SIG, Pi-3B/B+/A+, Pi-4B
-	if ($name == 'Pi-2B 1GB v1.2' || $model == '3' || $model == '4' || $name == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
+	if ($name == 'Pi-2B 1.2 1GB' || $model == '3' || $model == '4' || $name == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
 		$_select['kernel_architecture'] .= "<option value=\"64-bit\" " . (($_SESSION['kernel_architecture'] == '64-bit') ? "selected" : "") . ">64-bit (Experimental)</option>\n";
 	}
 }
@@ -370,7 +371,7 @@ $_select['usb_auto_mounter'] .= "<option value=\"devmon\" " . (($_SESSION['usb_a
 $model = substr($_SESSION['hdwrrev'], 3, 1);
 $name = $_SESSION['hdwrrev'];
 // Pi-Zero W, Pi-3B/B+/A+, Pi-4B
-if ($name == 'Pi-Zero W 512MB v1.1' || $model == '3' || $model == '4') {
+if ($name == 'Pi-Zero W 1.1 512MB' || $model == '3' || $model == '4') {
 	$_wifibt_hide = '';
 	$_select['p3wifi1'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['p3wifi0'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi2\" value=\"0\" " . (($_SESSION['p3wifi'] == 0) ? "checked=\"checked\"" : "") . ">\n";

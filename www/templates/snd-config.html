@@ -444,14 +444,25 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_camilladsp" value="novalue" $_camilladsp_set_disabled>Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-camilladsp" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<div id="info-camilladsp" class="help-block-configs help-block-margin hide">
-						In order for CamillaDSP to work, you need to choose a configuration file.
+						CamillaDSP is a general purpose tool for routing and filtering sound. It can be used for example for building crossovers for active speakers, or for performing room correction. CamillaDSP was written by Henrik Enquist and integrated into moOde by @bitlab.<br>
+						Feature summary:<br>
+						- IIR filters (BiQuad)<br>
+						- FIR filters (Convolution via FFT)<br>
+						- Built-in sample rate converter<br>
+						- Filters can be chained freely<br>
+						- Flexible routing<br>
+						- Simple YAML configuration<br>
+						- All calculations done with 64-bit floats<br>
+						- ARM Neon 64-bit instruction set is used<br>
+						- Pipeline editor with expert mode
+						<br>
 						Configurations can be managed at the CamillaDSP settings page.<br>
                     </div>
 					<div>
 						$camilladsp_config_check
 					</div>
 					<div style="margin-top:.5em">
-						<a href="cdsp-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;&nbsp;CamillaDSP settings<br>
+						<a href="cdsp-config.php"><button class="btn btn-medium btn-primary" $_camilladsp_set_disabled>Edit</button></a>&nbsp;&nbsp;CamillaDSP settings<br>
 					</div>
 				</div>
 			</div>
