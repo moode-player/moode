@@ -24,6 +24,7 @@ Updates
 - UPD: Bump to MPD 0.22.8
 - UPD: Bump to librespot 0.2.0
 - UPD: Bump to CamillaDSP 0.5.3, GUI 0.4.1, Backend 0.7.1, Plot 0.5.3
+- UPD: Simplify unified ALSA framework
 - UPD: Add verbose debug option to CamillaDSP
 - UPD: Run updMpdConf() after in-place update
 - UPD: Improve method for updating currentsong.txt
@@ -45,7 +46,8 @@ Bug fixes
 - FIX: Instability in libcurl3 shipped with RaspiOS Buster
 - FIX: Permissions on shairport-sync debug log
 - FIX: Missing -u option in shairport-sync logging
-- FIX: Back link when CamillaDSP called from Configure
+- FIX: CamillaDSP and 64-bit kernel showing for 32-bit only Pi's
+- FIX: WiFi/BT options missing from System config for Zero W
 
 ########################################################
 //
