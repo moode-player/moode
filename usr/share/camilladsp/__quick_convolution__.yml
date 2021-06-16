@@ -1,4 +1,3 @@
-
 devices:
   samplerate: 44100
   chunksize: 4096
@@ -11,7 +10,7 @@ devices:
   playback:
     type: Alsa
     channels: 2
-    device: "hw:0,0"
+    device: "plughw:0,0"
     format: S16LE
 filters:
     mastergain:
@@ -59,4 +58,4 @@ pipeline:
     names:
       - mastergain
       - ir_right
-
+      

@@ -1,4 +1,3 @@
-
 devices:
   samplerate: 44100
   chunksize: 4096
@@ -27,4 +26,4 @@ pipeline:
     channel: 1
     names:
       - mastergain
-
+      

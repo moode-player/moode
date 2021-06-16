@@ -11,7 +11,7 @@ devices:
   playback:
     type: Alsa
     channels: 2
-    device: "hw:2,0"
+    device: "plughw:0,0"
     format: S32LE
 filters:
     mastergain:
@@ -59,4 +59,4 @@ pipeline:
     names:
       - mastergain
       - ir_right
-
+      
