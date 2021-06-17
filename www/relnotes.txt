@@ -24,7 +24,7 @@ Updates
 - UPD: Bump to MPD 0.22.8
 - UPD: Bump to librespot 0.2.0
 - UPD: Bump to CamillaDSP 0.5.3, GUI 0.4.1, Backend 0.7.1, Plot 0.5.3
-- UPD: Simplify unified ALSA framework
+- UPD: Simplify ALSA framework
 - UPD: Add verbose debug option to CamillaDSP
 - UPD: Run updMpdConf() after in-place update
 - UPD: Improve method for updating currentsong.txt
