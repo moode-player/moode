@@ -88,6 +88,23 @@
 			</div>
 
 			<div class="control-group">
+				<label class="control-label" for="alsa_output_mode">ALSA output mode</label>
+				<div class="controls">
+					<select id="alsa_output_mode" class="input-large" name="alsa_output_mode">
+						$_select[alsa_output_mode]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_alsa_output_mode" value="novalue">Set</button>
+					<span class="help-block-configs help-block-margin">
+						<b>Default</b> Perform automatic conversions if needed (typically bit-depth 0-padding)<br>
+						- Enables a mechanism for creating a Loopback device.<br>
+						<b>Direct</b> No automatic conversions are performed. The audio device must support the format being output for playback to occur.<br>
+						- Loopback is not supported in Direct mode.<br>
+						- Direct mode is supported by MPD, Bluetooth (inbound), Airplay and Spotify.
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
 				<label class="control-label">ALSA loopback</label>
 				<div class="controls">
 					<div class="toggle">
@@ -98,14 +115,10 @@
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-alsa-loopback" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span class="help-block-configs help-block-margin2">
-						Turn on the ALSA Loopback device. Max sample rate is 384 kHz.
-                    </span>
-					<span id="info-alsa-loopback" class="help-block-configs help-block-margin2 hide">
-						Raw PCM data can be accessed by reading the device "hw:Loopback,1,0"<br>
-						NOTE: See /etc/alsa/conf.d/_audioout.conf, _deviceout.conf and _sndaloop.conf
+						The ALSA Loopback device provides a copy of the PCM stream being output to the audio device. The copy can be accessed by reading "hw:Loopback,1,0".<br>
+						NOTE: Max sample rate is 384 kHz.
                     </span>
 				</div>
 			</div>
