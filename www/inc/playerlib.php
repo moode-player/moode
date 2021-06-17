@@ -2034,7 +2034,7 @@ function updMpdConf($i2sdevice) {
 	$data .= "}\n\n";
 
 	// ALSA default
-	// NOTE: Pipeline is MPD -> [_audioout || MPD_DSP -> _audioout] -> _deviceout -> [device || ALSA_DSP -> device]
+	// NOTE: Chain is MPD -> [_audioout || MPD_DSP -> _audioout] -> [plughw || ALSA_DSP -> plughw] -> audio device 
 	$data .= "audio_output {\n";
 	$data .= "type \"alsa\"\n";
 	$data .= "name \"" . ALSA_DEFAULT . "\"\n";
