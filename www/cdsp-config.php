@@ -54,7 +54,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-		$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
 	if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
@@ -87,7 +87,7 @@ else if (isset($_FILES['pipelineconfig']) && isset($_POST['import']) && $_POST['
 
 	if( $_SESSION['camilladsp'] == $configFileBaseName ) { // if upload active config, fix it
 		if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-			$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+			$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 		}
 		$cdsp->reloadConfig();
 	} else {

@@ -458,7 +458,7 @@ $result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='btactive' OR pa
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 $cdsp->selectConfig($_SESSION['camilladsp']);
 if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-	$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+	$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 }
 unset($cdsp);
 workerLog('worker: CamillaDSP (' . $_SESSION['camilladsp'] . ')');
