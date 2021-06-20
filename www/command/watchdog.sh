@@ -53,14 +53,14 @@ while true; do
 	CARD_NUM=$(sqlite3 $SQL_DB "SELECT value FROM cfg_mpd WHERE param='device'")
 	HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
 	TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-	if [[ $HW_PARAMS = "closed" ]]; then
-		LOG_MSG=" watchdog: Info: Audio output is (closed)"
+	if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
+		LOG_MSG=" watchdog: Info: Audio output is closed or device disconnected"
 		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
 	else
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		LOG_MSG=" watchdog: Info: Audio output is (in use)"
-		WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
+		LOG_MSG=" watchdog: Info: Audio output is in use"
 		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+		WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
 		if [[ $WAKE_DISPLAY = "1" ]]; then
 			export DISPLAY=:0
 			xset s reset > /dev/null 2>&1
