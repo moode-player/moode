@@ -17,6 +17,7 @@
 
 New features
 
+- NEW: ALSA output modes including Default (pkughw) and Direct (hw)
 - NEW: Volume normalization and format options for librespot
 
 Updates
@@ -31,9 +32,10 @@ Updates
 - UPD: Option to turn off Now-playing (EQ bars) icon
 - UPD: Option to turn off CoverView Playbar
 - UPD: Enable rpi-cirrus-wm5102.dtbo to show in DT overlay list
-- UPD: Route Bluetooth through unified ALSA framework
+- UPD: Route Bluetooth through ALSA framework
 - UPD: Load i2c-dev at boot time via /etc/modules
 - UPD: Set theme-color meta element in header to Theme color
+- UPD: Add Output chain and Loopback state to Audio info
 
 Bug fixes
 
@@ -48,6 +50,7 @@ Bug fixes
 - FIX: Missing -u option in shairport-sync logging
 - FIX: CamillaDSP and 64-bit kernel showing for 32-bit only Pi's
 - FIX: WiFi/BT options missing from System config for Zero W
+- FIX: Display wakes when USB DAC disconnected if Wake on play ON
 
 ########################################################
 //
