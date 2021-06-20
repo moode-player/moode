@@ -74,6 +74,10 @@
 		</fieldset>
 
 		<legend>ALSA Options</legend>
+		<p>
+			Advanced Linux Sound Architecture (ALSA) is a software framework and part of the Linux kernel that provides an application programming interface (API) for sound card device drivers and audio applications.
+		</p><br>
+
 		<fieldset>
 			<div class="control-group">
 				<label class="control-label" for="alsavolume_max">ALSA max volume</label>
@@ -93,13 +97,16 @@
 					<select id="alsa_output_mode" class="input-large" name="alsa_output_mode">
 						$_select[alsa_output_mode]
 					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_alsa_output_mode" value="novalue">Set</button>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_alsa_output_mode" value="novalue" $_alsa_output_mode_disable>Set</button>
 					<span class="help-block-configs help-block-margin">
-						<b>Default</b> Perform automatic conversions if needed (typically bit-depth 0-padding)<br>
-						- Enables a mechanism for creating a Loopback device.<br>
-						<b>Direct</b> No automatic conversions are performed. The audio device must support the format being output for playback to occur.<br>
-						- Loopback is not supported in Direct mode.<br>
-						- Direct mode is supported by MPD, Bluetooth (inbound), Airplay and Spotify.
+						<b>Default (plughw)</b><br>
+						Perform automatic conversions if needed for example 0-pad the bit depth to a width supported by the audio device.<br>
+						Enable a mechanism for creating a Loopback device that provudes a copy of the PCM stream.<br>
+						<b>Direct (hw)</b><br>
+						No automatic conversions are performed. The audio device must support the output format or playback will not occur.<br>
+						Supported by MPD, Bluetooth (inbound), Airplay and Spotify renderers and CamillaDSP.<br>
+						NOTE: Loopback is not supported in Direct mode.<br>
+						NOTE: Crossfeed, Parametric EQ and Graphic EQ output using plughw.
 					</span>
 				</div>
 			</div>
@@ -114,7 +121,7 @@
 						$_select[alsa_loopback0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue">Set</button>
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
 					</div>
 					<span class="help-block-configs help-block-margin2">
 						The ALSA Loopback device provides a copy of the PCM stream being output to the audio device. The copy can be accessed by reading "hw:Loopback,1,0".<br>
@@ -409,7 +416,7 @@
 		<legend>Equalizers</legend>
 		<p>
 			The Equalizers process audio output from MPD and from the Airplay and Spotify renderers.<br>
-			NOTE: The Equalizers, Crossfeed, and Polarity inversion are mutually exclusive options. Enabling one will disable the SET button on the other
+			NOTE: The Equalizers, Crossfeed, and Polarity inversion are mutually exclusive options. Enabling one will disable the SET button on the other.
 		</p><br>
 		<fieldset>
 			<div class="control-group">

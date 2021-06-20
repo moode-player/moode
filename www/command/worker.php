@@ -409,6 +409,19 @@ else {
 	workerLog('worker: Max ALSA volume (' . $_SESSION['alsavolume_max'] . '%)');
 }
 
+// Report ALSA output mode
+$alsa_output_mode = $_SESSION['alsa_output_mode'] == 'plughw' ? 'Default: plughw' : 'Direct: hw';
+workerLog('worker: ALSA output mode (' . $alsa_output_mode . ')');
+
+// Start ALSA loopback
+if ($_SESSION['alsa_loopback'] == 'On') {
+	sysCmd('modprobe snd-aloop');
+}
+else {
+	sysCmd('modprobe -r snd-aloop');
+}
+workerLog('worker: ALSA loopback (' . $_SESSION['alsa_loopback'] . ')');
+
 // Configure Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$dualmode = sysCmd('/var/www/command/util.sh get-piano-dualmode');
@@ -433,15 +446,6 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	}
 	workerLog('worker: Piano 2.1 initialized');
 }
-
-// Start ALSA loopback
-if ($_SESSION['alsa_loopback'] == 'On') {
-	sysCmd('modprobe snd-aloop');
-}
-else {
-	sysCmd('modprobe -r snd-aloop');
-}
-workerLog('worker: ALSA loopback (' . $_SESSION['alsa_loopback'] . ')');
 
 // Start Allo Boss2 OLED display
 if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
@@ -1572,17 +1576,27 @@ function runQueuedJob() {
 				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['w_queueargs']);
 			}
 			break;
+		case 'alsa_output_mode':
 		case 'alsa_loopback':
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
 
-			if ($_SESSION['w_queueargs'] == 'On') {
-				sysCmd("sed -i '0,/_audioout__ {/s//_audioout {/' /etc/alsa/conf.d/_sndaloop.conf");
-				sysCmd('modprobe snd-aloop');
+			if ($_SESSION['w_queue'] == 'alsa_output_mode') {
+				// Update ALSA and BT confs
+				// NOTE: w_queueargs contains $old_output_mode or ''
+				updAudioOutAndBtOutConfs($_SESSION['cardnum']);
+				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['w_queueargs']);
 			}
 			else {
-				sysCmd("sed -i '0,/_audioout {/s//_audioout__ {/' /etc/alsa/conf.d/_sndaloop.conf");
-				sysCmd('modprobe -r snd-aloop');
+				// ALSA loopback
+				if ($_SESSION['w_queueargs'] == 'On') {
+					sysCmd("sed -i '0,/_audioout__ {/s//_audioout {/' /etc/alsa/conf.d/_sndaloop.conf");
+					sysCmd('modprobe snd-aloop');
+				}
+				else {
+					sysCmd("sed -i '0,/_audioout {/s//_audioout__ {/' /etc/alsa/conf.d/_sndaloop.conf");
+					sysCmd('modprobe -r snd-aloop');
+				}
 			}
 
 			// Restart MPD
@@ -1636,21 +1650,34 @@ function runQueuedJob() {
 			sysCmd('systemctl restart mpd');
 			break;
 		// ALSA DSP's
-		case 'invert_polarity':
-		case 'crossfeed':
-		case 'eqfa12p':
 		case 'alsaequal':
 		case 'camilladsp':
+		case 'crossfeed':
+		case 'eqfa12p':
+		case 'invpolarity':
 			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
 
-			if ($_SESSION['w_queue'] == 'invert_polarity') {
-				$output = $_SESSION['w_queueargs'] == '1' ? "\"invpolarity\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
+			if ($_SESSION['w_queue'] == 'alsaequal') {
+				$queueargs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
+				if ($_SESSION['alsaequal'] != 'Off') {
+					$result = sdbquery("select curve_values from cfg_eqalsa where curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
+					$curve = explode(',', $result[0]['curve_values']);
+					foreach ($curve as $key => $value) {
+						sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
+					}
+				}
+				$output = $_SESSION['alsaequal'] != 'Off' ? "\"alsaequal\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
+				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
+			}
+			elseif ($_SESSION['w_queue'] == 'camilladsp') {
+				$output = $_SESSION['w_queueargs'] != 'off' ? "\"camilladsp\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 			}
 			elseif ($_SESSION['w_queue'] == 'crossfeed') {
-				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
+				$output = $_SESSION['w_queueargs'] != 'Off' ? "\"crossfeed\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 				if ($_SESSION['w_queueargs'] != 'Off') {
@@ -1666,29 +1693,14 @@ function runQueuedJob() {
 					$eqfa12p->applyConfig($config);
 					unset($eqfa12p);
 				}
-				$output = $_SESSION['eqfa12p'] != 'Off' ? "\"eqfa12p\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
+				$output = $_SESSION['eqfa12p'] != 'Off' ? "\"eqfa12p\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 			}
-			elseif ($_SESSION['w_queue'] == 'alsaequal') {
-				$queueargs = explode(',', $_SESSION['w_queueargs']); // Split out old,new curve names
-				if ($_SESSION['alsaequal'] != 'Off') {
-					$result = sdbquery("select curve_values from cfg_eqalsa where curve_name='" . $queueargs[1] . "'", $GLOBALS['dbh']);
-					$curve = explode(',', $result[0]['curve_values']);
-					foreach ($curve as $key => $value) {
-						sysCmd('amixer -D alsaequal cset numid=' . ($key + 1) . ' ' . $value);
-					}
-				}
-				$output = $_SESSION['alsaequal'] != 'Off' ? "\"alsaequal\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
+			elseif ($_SESSION['w_queue'] == 'invpolarity') {
+				$output = $_SESSION['w_queueargs'] == '1' ? "\"invpolarity\"" : "\"" . $_SESSION['alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ",0\"";
 				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
 				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
-			}
-			elseif ($_SESSION['w_queue'] == 'camilladsp') {
-				$output = $_SESSION['w_queueargs'] != 'off' ? "\"camilladsp\"" : "\"plughw:" . $_SESSION['cardnum'] . ",0\"";
-				sysCmd("sed -i '/slave.pcm/c\slave.pcm " . $output . "' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
-				sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm " . $output . " }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
-				// NOTE: Not needed since the config is updated when its loaded by cdsp-config
-				//sysCmd("sed -i '/device:/c\    device: \"plughw:" . $_SESSION['cardnum'] . ",0\"' " . '/usr/share/camilladsp/working_config.yml');
 			}
 
 			// Restart MPD
@@ -1739,7 +1751,7 @@ function runQueuedJob() {
 				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=btaplay_dmix' /etc/bluealsaaplay.conf");
 			}
 			else {
-				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=plughw:" . $_SESSION['cardnum'] . ",0' /etc/bluealsaaplay.conf");
+				sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_SESSION['alsa_output_mode'] . ":" . $_SESSION['cardnum'] . ",0' /etc/bluealsaaplay.conf");
 			}
 			break;
 		case 'airplaysvc':

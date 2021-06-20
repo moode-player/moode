@@ -38,12 +38,16 @@
 				<span class="right">$decoded_to$decode_rate</span>
 			</li>
 			<li>
-				<span class="left">Destination</span>
-				<span class="right">$output_destination</span>
-			</li>
-			<li>
 				<span class="left">Output rate</span>
 				<span class="right">$hwparams_format$hwparams_calcrate</span>
+			</li>
+			<li>
+				<span class="left">Output mode</span>
+				<span class="right">ALSA $alsa_output_mode</span>
+			</li>
+			<li>
+				<span class="left">Output chain</span>
+				<span class="right">$alsa_output_chain</span>
 			</li>
 			<li class="$alsa_loopback">
 				<span class="left">Loopback</span>
@@ -59,12 +63,12 @@
 				<span class="left">Selective rate</span>
 				<span class="right">$selective_resample</span>
 			</li>
-			<li>
+			<li class="$resample_quality">
 				<span class="left">Resample quality</span>
 				<span class="right">$resample_quality</span>
 			</li>
 			<li class="$polarity_inv">
-				<span class="left">Polarity inv</span>
+				<span class="left">Polarity invert</span>
 				<span class="right">$polarity_inv</span>
 			</li>
 			<li class="$crossfade">

@@ -100,8 +100,8 @@ else {
 	$encoded_at = getEncodedAt($song, 'verbose');
 	$status = parseStatus(getMpdStatus($sock));
 
-	if ($hwparams['status'] == 'active' || $_SESSION['audioout'] == 'Bluetooth') {
-		// DSD: DoP, Native bitstream
+	if ($hwparams['status'] == 'active' || ($_SESSION['audioout'] == 'Bluetooth' && $status['state'] == 'play')) {
+		// DSD: Native bitstream, DoP or DSD to PMC on-the-fly conversion
 		if ($status['audio_sample_depth'] == 'dsd64') {
 			$encoded_at = 'DSD64, 1 bit, 2.822 MHz Stereo';
 			if ($cfg_mpd['dop'] == 'yes') {
@@ -177,7 +177,6 @@ else {
 				$decode_rate = $hwparams['calcrate'] . ' Mbps';
 			}
 		}
-
 		// PCM
 		else {
 			$decoded_to = $status['audio_sample_depth'] . ' bit, ' . $status['audio_sample_rate'];
@@ -189,7 +188,7 @@ else {
 	}
 	else {
 		$decoded_to = '';
-		$decode_rate = '0 bps';
+		$decode_rate = 'Not playing';
 	}
 }
 
@@ -197,8 +196,7 @@ else {
 // OUTPUT
 //
 
-$output_destination = $_SESSION['audioout'];
-if ($_SESSION['audioout'] == 'Bluetooth') {
+if ($_SESSION['audioout'] == 'Bluetooth' && $status['state'] == 'play') {
 	$hwparams_format = '16 bit, 44.1 kHz, Stereo, ';
 	$hwparams_calcrate = '1.411 Mbps';
 }
@@ -209,9 +207,68 @@ elseif ($hwparams['status'] == 'active') {
 }
 else {
 	$hwparams_format = '';
-	$hwparams_calcrate = '0 bps';
+	$hwparams_calcrate = 'Not playing';
 }
-$alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback'];
+// Output chain
+// Renderer
+if ($_SESSION['slactive'] == '1') {
+	$renderer = 'Squeezelite';
+}
+elseif ($_SESSION['rbactive'] == '1') {
+	$renderer = 'Roonbridge';
+}
+elseif ($_SESSION['aplactive'] == '1') {
+	$renderer = 'Airplay';
+}
+elseif ($_SESSION['spotactive'] == '1') {
+	$renderer = 'Spotify';
+}
+elseif ($btactive === true) {
+	$renderer = 'Bluetooth';
+}
+else {
+	$renderer = 'MPD';
+}
+// DSP
+if ($_SESSION['invert_polarity'] == '1') {
+	$dsp = 'Invpolarity';
+	$output_mode = $_SESSION['alsa_output_mode'];
+}
+elseif ($_SESSION['crossfeed'] != 'Off') {
+	$dsp = 'Crossfeed';
+	$output_mode = 'plughw';
+}
+elseif ($_SESSION['eqfa12p'] != 'Off') {
+	$dsp = 'Paranetric EQ';
+	$output_mode = 'plughw';
+}
+elseif ($_SESSION['alsaequal'] != 'Off') {
+	$dsp = 'Graphic EQ';
+	$output_mode = 'plughw';
+}
+elseif (getCamillaDspConfigName($_SESSION['camilladsp']) != 'Off') {
+	$dsp = 'CamillaDSP';
+	$output_mode = $_SESSION['alsa_output_mode'];
+}
+else {
+	$dsp = '';
+	$output_mode = $_SESSION['alsa_output_mode'];
+}
+
+if ($_SESSION['audioout'] == 'Bluetooth') {
+	$alsa_output_chain = 'MPD -> Bluetooth stream -> Bluetooth speaker';
+}
+elseif ($renderer == 'Squeezelite' || $renderer == 'Roonbridge') {
+	$alsa_output_chain = $renderer;
+}
+elseif ($dsp != '') {
+	$alsa_output_chain = $renderer . ' -> ' . $dsp . ' -> ' . $output_mode . ' -> Device';
+}
+else {
+	$alsa_output_chain = $renderer . ' -> ' . $output_mode . ' -> Device';
+}
+$alsa_output_mode = $_SESSION['alsa_output_mode'] == 'plughw' ? 'Default (plughw)' : 'Direct (hw)';
+$alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback']; // NOTE: 'off' is a class that hides the element
 
 //
 // DSP
@@ -231,7 +288,7 @@ else {
 // Renderers
 // Class 'off' hides the item
 if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION['slactive'] == '1' ||
-	$_SESSION['inpactive'] == '1' || $_SESSION['rbactive'] == '1' || $btactive === true) {
+	$_SESSION['inpactive'] == '1' || $_SESSION['rbactive'] == '1' || $btactive === true || $_SESSION['audioout'] == 'Bluetooth') {
 	$resample_rate = '';
 	$resample_quality = 'off';
 	$polarity_inv = 'off';
@@ -290,7 +347,7 @@ else {
 		}
 	}
 	// Polarity inversion
-	// Class 'off' hides the item
+	// NOTE: 'off' is a class that hides the element
 	$polarity_inv = $_SESSION['invert_polarity'] == '0' ? 'off' : 'On';
 	// MPD Crossfade
 	$crossfade = $_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' seconds';
@@ -310,7 +367,7 @@ else {
 	$replaygain = $cfg_mpd['replaygain'];
 	$vol_normalize = $cfg_mpd['volume_normalization'] == 'no' ? 'off' : $cfg_mpd['volume_normalization'];
 }
-// chip options
+// Chip options
 $result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 $array = explode(',', $result[0]['chipoptions']);
 
@@ -322,13 +379,13 @@ if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchi
 	$chip_options = $digfilter . ', Gain=' . $analoggain . ', Boost=' . $analogboost;
 }
 elseif ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
-	// get current settings
+	// Get current settings
 	$dualmode = sysCmd('/var/www/command/util.sh get-piano-dualmode');
 	$submode = sysCmd('/var/www/command/util.sh get-piano-submode');
 	$subvol = sysCmd('/var/www/command/util.sh get-piano-subvol');
 	$lowpass = sysCmd('/var/www/command/util.sh get-piano-lowpass');
 
-	// determine output mode
+	// Determine output mode
 	if ($dualmode[0] != 'None') {
 		$outputmode = $dualmode[0];
 		$sub_vol = '';

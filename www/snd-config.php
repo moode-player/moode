@@ -72,6 +72,16 @@ if (isset($_POST['update_alsavolume_max'])) {
 		playerSession('write', 'alsavolume_max', $_POST['alsavolume_max']);
 	}
 }
+// ALSA output mode
+if (isset($_POST['update_alsa_output_mode'])) {
+	if (isset($_POST['alsa_output_mode']) && $_POST['alsa_output_mode'] != $_SESSION['alsa_output_mode']) {
+		$old_output_mode = $_SESSION['alsa_output_mode'];
+		$new_output_mode = $_POST['alsa_output_mode'];
+		// NOTE: Update session first for functions used in job
+		playerSession('write', 'alsa_output_mode', $new_output_mode);
+		submitJob('alsa_output_mode', $old_output_mode, 'ALSA output mode updated', '');
+	}
+}
 // ALSA loopback device
 if (isset($_POST['update_alsa_loopback'])) {
 	if (isset($_POST['alsa_loopback']) && $_POST['alsa_loopback'] != $_SESSION['alsa_loopback']) {
@@ -219,7 +229,7 @@ if (isset($_POST['crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed'])
 // Polarity inversion
 if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SESSION['invert_polarity']) {
 	$title = $_POST['invert_polarity'] == 1 ? 'Polarity inversion on' : 'Polarity inversion off';
-	submitJob('invert_polarity', $_POST['invert_polarity'], $title, '');
+	submitJob('invpolarity', $_POST['invert_polarity'], $title, '');
 	playerSession('write', 'invert_polarity', $_POST['invert_polarity']);
 }
 
@@ -542,6 +552,11 @@ else {
 	$_alsavolume_max_hide = '';
 	$_alsavolume_max_msg = '';
 }
+$_alsa_output_mode_disable = $_SESSION['alsa_loopback'] == 'Off' ? '' : 'disabled';
+$_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
+// ALSA output mode
+$_select['alsa_output_mode'] .= "<option value=\"plughw\" " . (($_SESSION['alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
+$_select['alsa_output_mode'] .= "<option value=\"hw\" " . (($_SESSION['alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
 // ALSA loopback device
 $_select['alsa_loopback1'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['alsa_loopback0'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";

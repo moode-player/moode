@@ -106,6 +106,7 @@ AUDIO_PARAMETERS() {
 	echo -e "\nHardware mixer\t\t= $hwvol\c"
 	echo -e "\nSupported formats\t= $supported_formats\c"
 	echo -e "\nALSA max volume\t\t= $alsavolume_max\c"
+	echo -e "\nALSA output mode\t= $alsa_output_mode\c"
 	echo -e "\nALSA loopback\t\t= $alsa_loopback\c"
 	echo -e "\nMPD max volume\t\t= $volume_mpd_max\c"
 	echo -e "\nVolume step limit\t= $volume_step_limit\c"
@@ -768,6 +769,7 @@ recorder_album_tag=${arr[153]}
 inplace_upd_applied=${arr[154]}
 show_npicon=${arr[155]}
 show_cvpb=${arr[156]}
+[[ "${arr[157]}" = "plughw" ]] && alsa_output_mode="Default" || alsa_output_mode="Direct"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
