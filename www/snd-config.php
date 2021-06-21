@@ -279,7 +279,7 @@ if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST[
 	playerSession('write', 'camilladsp', $_POST['camilladsp']);
 	$cdsp->selectConfig($_POST['camilladsp']);
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-		$cdsp->setPlaybackDevice($_SESSION['cardnum']);
+		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 	}
 
     if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {

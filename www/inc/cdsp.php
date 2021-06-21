@@ -40,7 +40,6 @@ class CamillaDsp {
     private $CAMILLA_EXE = '/usr/local/bin/camilladsp';
     private $CAMILLAGUI_WORKING_CONGIG = '/usr/share/camilladsp/working_config.yml';
     private $device = NULL;
-    private $deviceType = 'plughw';
     private $configfile = NULL;
     private $quickConvolutionConfig = ";;;";
 
@@ -59,7 +58,7 @@ class CamillaDsp {
     /**
      * Set in camilladsp config file the playback device to use
      */
-    function setPlaybackDevice($device) {
+    function setPlaybackDevice($device, $deviceType = "plughw") {
         if( $this->configfile != NULL && $this->configfile != 'off' && $this->configfile != 'custom') {
             $this->device = $device;
             $supportedFormats = $this->detectSupportedSoundFormats();
@@ -72,7 +71,7 @@ class CamillaDsp {
                                                     'format' => $useFormat);
             $yml_cfg['devices']['playback'] = Array( 'type' => 'Alsa',
                                                 'channels' => 2,
-                                                'device' => $this->deviceType . ":" . $device . ",0",
+                                                'device' => $deviceType . ":" . $device . ",0",
                                                 'format' => $useFormat);
 
             // patch issue where yaml parser to an empty [], which would break the cdsp config
