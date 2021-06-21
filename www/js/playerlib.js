@@ -448,6 +448,11 @@ function engineCmd() {
                 case 'set_logo_image0':
     				$('.busy-spinner').hide();
                     break;
+                case 'refresh_screen':
+                    setTimeout(function() {
+                        location.reload(true);
+                    }, DEFAULT_TIMEOUT);
+                    break;
             }
 
 			engineCmd();

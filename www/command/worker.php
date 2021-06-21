@@ -1529,12 +1529,13 @@ function runQueuedJob() {
 			sysCmd('systemctl restart mpd');
 			break;
 		case 'mpdcfg':
+			$playing = sysCmd('mpc status | grep "\[playing\]"');
 			sysCmd('mpc stop');
 
 			// Update config file
 			updMpdConf($_SESSION['i2sdevice']);
 
-			// Get audio formats
+			// Store audio formats
 			$_SESSION['audio_formats'] = sysCmd('moodeutl -f')[0];
 
 			// Reset hardware volume to 0dB (100) if indicated
@@ -1542,18 +1543,38 @@ function runQueuedJob() {
 				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 			}
 
-			// Restart mpd and pick up conf changes
-			sysCmd('systemctl restart mpd');
+			// Parse quereargs: [0] = device number changed 1/0, [1] = mixer change 'fixed', 'hardware', 'software', 0
+			$queue_args = explode(',', $_SESSION['w_queueargs']);
+			$device_chg = $queue_args[0];
+			$mixer_chg = $queue_args[1];
 
-			// Wait for mpd to start accepting connections
-			$sock = openMpdSock('localhost', 6600);
+			// Restart MPD
+			sysCmd('systemctl restart mpd');
+			$sock = openMpdSock('localhost', 6600); // Ensure MPD ready to accept connections
 			closeMpdSock($sock);
 
-			// Set knob and MPD/hardware volume to 0
-			sysCmd('/var/www/vol.sh 0');
+			// Mixer changed to Fixed (0dB)
+			if ($mixer_chg == 'fixed') {
+				sysCmd('/var/www/vol.sh 0');
+				sendEngCmd('refresh_screen');
+			}
+			// Mixer changed from Fixed (0dB)
+			elseif ($mixer_chg == 'software' || $mixer_chg == 'hardware') {
+				sysCmd('/var/www/vol.sh restore');
+				sendEngCmd('refresh_screen');
+			}
+			// $mixer_chg == 0 (No change or change between hardware and software)
+			else {
+				sysCmd('/var/www/vol.sh restore');
+			}
 
-			// Restart renderers if device num changed
-			if ($_SESSION['w_queueargs'] == 'devicechg') {
+			// Was playing and mixer type not changed to Fixed (0dB) start play
+			if (!empty($playing) && $mixer_chg != 'fixed') {
+				sysCmd('mpc play');
+			}
+
+			// Restart renderers if device (cardnum) changed
+			if ($device_chg == true) {
 				if ($_SESSION['airplaysvc'] == 1) {
 					sysCmd('killall shairport-sync');
 					startAirplay();
@@ -1563,12 +1584,17 @@ function runQueuedJob() {
 					startSpotify();
 				}
 			}
+
+			// DEBUG:
+			$alsa_vol = $_SESSION['alsavolume'] == 'none' ? 'none' : sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0];
+			$playing = !empty(sysCmd('mpc status | grep "\[playing\]"')) ? 'playing' : 'paused';
+			workerLog('worker: Job mpdcfg: devchg|mixchg (' . $device_chg . '|' . $mixer_chg . '), alsavol (' . $alsa_vol . '), playstate (' . $playing . ')');
 			break;
 
 		// snd-config jobs
 		case 'i2sdevice':
 			sysCmd('/var/www/vol.sh 0'); // Set knob and MPD/hardware volume to 0
-			playerSession('write', 'autoplay', '0'); // to prevent play before MPD setting applied
+			playerSession('write', 'autoplay', '0'); // Prevent play before MPD setting applied
 			cfgI2sOverlay($_SESSION['w_queueargs']);
 			break;
 		case 'alsavolume_max':

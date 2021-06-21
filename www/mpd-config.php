@@ -29,8 +29,32 @@ $dbh = cfgdb_connect();
 
 // Save changes to /etc/mpd.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
-	// Airplay and Spotify will be restarted if device num has changed
-	$queueargs = $_POST['conf']['device'] == $_SESSION['cardnum'] ? '' : 'devicechg';
+	// Detect mixer change
+	$post_mpdmixer = $_POST['conf']['mixer_type'] == 'disabled' ? 'none' : $_POST['conf']['mixer_type'];
+	if ($post_mpdmixer != $_SESSION['mpdmixer']) {
+		// Changing to Fixed (0dB)
+		if ($_POST['conf']['mixer_type'] == 'disabled') {
+			$mixer_chg = 'fixed';
+		}
+		// Changing from Fixed (0dB)
+		elseif ($_SESSION['mpdmixer'] == 'none') {
+			$mixer_chg = $_POST['conf']['mixer_type'];
+		}
+		// Change between hardware and software
+		else {
+			$mixer_chg = 0;
+		}
+	}
+	// No change
+	else {
+		$mixer_chg = 0;
+	}
+
+	// Airplay and Spotify will be restarted if device (cardnum) has changed
+	$device_chg = $_POST['conf']['device'] != $_SESSION['cardnum'] ? 1 : 0;
+
+	// Format queue args
+	$queue_args = $device_chg . ',' . $mixer_chg;
 
 	// Add audio_output_format
 	$_POST['conf']['audio_output_format'] = $_POST['sox_enabled'] == 'No' ? 'disabled' : $_POST['sox_sample_rate'] . ':' . $_POST['sox_bit_depth'] . ':' . $_POST['sox_channels'];
@@ -44,16 +68,11 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		cfgdb_update('cfg_mpd', $dbh, $key, $value);
 	}
 
-	// Set 0 volume for mixer type disabled
-	if ($_POST['conf']['mixer_type'] == 'disabled') {
-		sysCmd('/var/www/vol.sh 0');
-	}
-
 	$title = 'Changes saved';
 	$message = 'MPD restarted';
 	$duration = 3;
 
-	submitJob('mpdcfg', $queueargs, $title, $message, $duration);
+	submitJob('mpdcfg', $queue_args, $title, $message, $duration);
 }
 
 // Load settings

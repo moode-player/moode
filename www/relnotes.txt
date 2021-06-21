@@ -36,6 +36,7 @@ Updates
 - UPD: Load i2c-dev at boot time via /etc/modules
 - UPD: Set theme-color meta element in header to Theme color
 - UPD: Add Output chain and Loopback state to Audio info
+- UPD: Improve how MPD Config changes are processed
 
 Bug fixes
 
