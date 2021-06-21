@@ -25,7 +25,9 @@
 	<form class="form-horizontal" method="post">
 		<legend>I2S Audio Device</legend>
 		<p>
-			Named devices provide descriptive information and may also provide configurable driver and/or chip options accessible from the UI. Device Tree (DT) overlays provide an I2S interface for a device but without integrated UI access to any driver or chip options. Contact the device manufacturer for information on which overlay to use.
+			Named devices provide descriptive information and may also provide configurable driver and/or chip options accessible from the UI.
+			Device Tree (DT) overlays provide an I2S interface for a device but without integrated UI access to any driver or chip options.
+			Contact the device manufacturer for information on which overlay to use.
 		</p><br>
 
 		<fieldset>
@@ -133,8 +135,8 @@
 
 		<legend>MPD Options</legend>
 		<p>
-			Music Player Daemon (MPD) is the core audio server and playback engine in moOde.
-			MPD settings including Audio output, Volume mixer, SoX resampling and others can be configured via the EDIT button.
+			Music Player Daemon (MPD) is a flexible, powerful, server-side application for playing music and is the primary audio application in moOde.
+			MPD settings are configured via the EDIT button. They include Audio output, Volume mixer, SoX resampling and others.
 		</p><br>
 		<div class="horiz-rule-light">General</div>
 		<fieldset>
@@ -147,6 +149,21 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="mpdver">MPD version</label>
+				<div class="controls">
+					<select id="mpdver" class="input-large" name="mpdver">
+						$_select[mpdver]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdver" value="novalue">Set</button>
+					<span class="help-block-configs help-block-margin">
+						Various MPD versions may be offered for testing and experimentation purposes.<br>
+						NOTE: The MPD database may be regenerated after changing versions. Watch for the progress spinner.
+					</span>
+				</div>
+			</div>
+
 			<div class="control-group">
 				<label class="control-label">Autoplay after start</label>
 				<div class="controls">
@@ -163,19 +180,6 @@
 					<span id="info-autoplay" class="help-block-configs help-block-margin2 hide">
 						Start auto-shuffle random play if it was previously active or play last played item.
                     </span>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="mpdver">MPD version</label>
-					<div class="controls">
-						<select id="mpdver" class="input-large" name="mpdver">
-							$_select[mpdver]
-						</select>
-						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpdver" value="novalue">Set</button>
-						<span class="help-block-configs help-block-margin">
-							Various MPD versions may be offered for testing and experimentation purposes.<br>
-							NOTE: The MPD database may be regenerated after changing versions. Watch for the progress spinner.
-						</span>
-					</div>
 				</div>
 			</div>
 
@@ -415,8 +419,8 @@
 
 		<legend>Equalizers</legend>
 		<p>
-			The Equalizers process audio output from MPD and from the Airplay and Spotify renderers.<br>
-			NOTE: The Equalizers, Crossfeed, and Polarity inversion are mutually exclusive options. Enabling one will disable the SET button on the other.
+			The Equalizers are supported by MPD and the Airplay and Spotify renderers.<br>
+			NOTE: The Equalizers, Crossfeed, and Polarity inversion are mutually exclusive. Enabling one will disable the SET button on the others.
 		</p><br>
 		<fieldset>
 			<div class="control-group">
@@ -493,7 +497,7 @@
 
 		<legend>Audio Renderers</legend>
 		<p>
-			The audio renderers are playback applications that are separate from MPD.
+			The audio renderers are playback applications separate from MPD.
 			When a client connects to one of the renderers MPD will stop and the renderer will begin playback.
 			When the client stops or disconnects MPD can resume playback depending on the "Resume MPD" setting.
 		</p><br>
@@ -749,6 +753,10 @@
 		<!-- UPNP/DLNA, AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
 
 		<legend>UPnP/DLNA</legend>
+		<p>
+			These applications allow moOde to function as a UPnP media renderer, media server and a browser for remote media servers.
+		</p><br>
+
 		<fieldset>
 			<div class="control-group $_feat_upmpdcli">
 				<label class="control-label" for="upnpname">UPnP Client for MPD</label>
