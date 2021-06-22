@@ -225,7 +225,7 @@ RADIO_MANAGER_SETTINGS() {
 		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
 		echo -e "\nShow other stations\t= $rv_show_other\c"
 		echo -e "\nRecorder status\t\t= $rv_recorder_status\c"
-		echo -e "\nShow other stations\t= $rv_recorder_storage\n"
+		echo -e "\nRecorder storage\t= $rv_recorder_storage\n"
 	else
 		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
 		echo -e "\nShow other stations\t= $rv_show_other\n"
