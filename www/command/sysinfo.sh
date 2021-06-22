@@ -67,7 +67,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nEth addr wait\t\t= $eth0chk\c"
 	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
 	echo -e "\nMax USB current\t\t= $maxusbcurrent\c"
-	# DROP echo -e "\nUSB (UAC2) fix\t\t= $uac2fix\c"
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
 	echo -e "\n\c"
 	echo -e "\nPHP-FPM version\t\t= $PHPVER\c"

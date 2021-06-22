@@ -190,30 +190,19 @@ if (isset($_POST['maxusbcurrent']) && $_POST['maxusbcurrent'] != $_SESSION['maxu
 	playerSession('write', 'maxusbcurrent', $_POST['maxusbcurrent']);
 }
 
-/* DROP
-// uac2 fix
-if (isset($_POST['update_uac2fix'])) {
-	if (isset($_POST['uac2fix']) && $_POST['uac2fix'] != $_SESSION['uac2fix']) {
-		$title = $_POST['uac2fix'] == 1 ? 'USB(UAC2) fix on' : 'USB(UAC2) fix off';
-		submitJob('uac2fix', $_POST['uac2fix'], $title, 'Restart required');
-		playerSession('write', 'uac2fix', $_POST['uac2fix']);
-	}
-}
-*/
-
-// expand root file system
+// Expand root file system
 if (isset($_POST['update_expand_rootfs'])) {
 	submitJob('expandrootfs', '', 'File system expanded', 'Restart required', 30);
 }
 
-// enable usb boot
+// Enable usb boot
 if (isset($_POST['update_usbboot'])) {
 	submitJob('usbboot', '', 'USB boot enabled', 'Restart required', 30);
 }
 
 // LOCAL DISPLAY
 
-// local UI display
+// Local UI display
 if (isset($_POST['update_localui'])) {
     if (isset($_POST['localui']) && $_POST['localui'] != $_SESSION['localui']) {
 		$title = $_POST['localui'] == 1 ? 'Local UI display on' : 'Local UI display off';
@@ -222,7 +211,7 @@ if (isset($_POST['update_localui'])) {
     }
 }
 
-// touch screen capability
+// Touch screen capability
 if (isset($_POST['update_touchscn'])) {
     if (isset($_POST['touchscn']) && $_POST['touchscn'] != $_SESSION['touchscn']) {
         submitJob('touchscn', $_POST['touchscn'], 'Setting updated', 'Local display restarted');
@@ -230,7 +219,7 @@ if (isset($_POST['update_touchscn'])) {
     }
 }
 
-// screen blank timeout
+// Screen blank timeout
 if (isset($_POST['update_scnblank'])) {
     if (isset($_POST['scnblank']) && $_POST['scnblank'] != $_SESSION['scnblank']) {
         submitJob('scnblank', $_POST['scnblank'], 'Setting updated', 'Local display restarted');
@@ -262,7 +251,7 @@ if (isset($_POST['update_pixel_aspect_ratio'])) {
     }
 }
 
-// screen rotation
+// Screen rotation
 if (isset($_POST['update_scnrotate'])) {
     if (isset($_POST['scnrotate']) && $_POST['scnrotate'] != $_SESSION['scnrotate']) {
 		submitJob('scnrotate', $_POST['scnrotate'], 'Setting updated', 'Restart required');
@@ -270,21 +259,21 @@ if (isset($_POST['update_scnrotate'])) {
     }
 }
 
-// browser cache
+// Browser cache
 if (isset($_POST['update_clear_browser_cache'])) {
 	submitJob('clearbrcache', '', 'Cache cleared', 'Refresh Browser on LocalUI');
 }
 
 // LOCAL SERVICES
 
-// metadata for external apps
+// Metadata for external apps
 if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
 	$_SESSION['notify']['title'] = $_POST['extmeta'] == 1 ? 'Metadata file on' : 'Metadata file off';
 	$_SESSION['notify']['duration'] = 3;
 	playerSession('write', 'extmeta', $_POST['extmeta']);
 }
 
-// lcd updater
+// LCD updater
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
 		$title = $_POST['lcdup'] == 1 ? 'LCD update engine on' : 'LCD update engine off';
@@ -294,14 +283,14 @@ if (isset($_POST['update_lcdup'])) {
 	}
 }
 
-// gpio
+// GPIO
 if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_svc']) {
 	$title = $_POST['gpio_svc'] == 1 ? 'GPIO button handler on' : 'GPIO button handler off';
 	playerSession('write', 'gpio_svc', $_POST['gpio_svc']);
 	submitJob('gpio_svc', $_POST['gpio_svc'], $title, '');
 }
 
-// shellinabox
+// Shellinabox
 if (isset($_POST['shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
 	$title = $_POST['shellinabox'] == 1 ? 'SSH server on' : 'SSH server off';
 	playerSession('write', 'shellinabox', $_POST['shellinabox']);
@@ -310,22 +299,22 @@ if (isset($_POST['shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellina
 
 // MAINTENANCE
 
-// clear system logs
+// Clear system logs
 if (isset($_POST['update_clear_syslogs'])) {
 	submitJob('clearsyslogs', '', 'System logs cleared', '');
 }
 
-// clear play history log
+// Clear play history log
 if (isset($_POST['update_clear_playhistory'])) {
 	submitJob('clearplayhistory', '', 'Playback history cleared', '');
 }
 
-// compact sqlite database
+// Compact sqlite database
 if (isset($_POST['update_compactdb'])) {
 	submitJob('compactdb', '', 'SQlite DB compacted', '');
 }
 
-// debug logging
+// Debug logging
 if (isset($_POST['debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
 	$_SESSION['notify']['title'] = $_POST['debuglog'] == 1 ? 'Debug logging on' : 'Debug logging off';
 	$_SESSION['notify']['duration'] = 3;
@@ -417,13 +406,7 @@ else {
 	$_maxcurrent_hide = 'hide';
 }
 
-/* DROP
-// usb (uac2) fix
-$_select['uac2fix1'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix1\" value=\"1\" " . (($_SESSION['uac2fix'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['uac2fix0'] .= "<input type=\"radio\" name=\"uac2fix\" id=\"toggleuac2fix2\" value=\"0\" " . (($_SESSION['uac2fix'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-*/
-
-// expand root file system
+// Expand root file system
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
 $_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs2\" value=\"0\" " . "checked=\"checked\"".">\n";
 $result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
@@ -446,13 +429,13 @@ else {
 
 // LOCAL DISPLAY
 
-// local UI display
+// Local UI display
 if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_feat_localui = '';
 	$_select['localui1'] .= "<input type=\"radio\" name=\"localui\" id=\"togglelocalui1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['localui0'] .= "<input type=\"radio\" name=\"localui\" id=\"togglelocalui2\" value=\"0\" " . (($_SESSION['localui'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-	// touch capability
+	// Touch capability
 	$_select['touchscn1'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggletouchscn1\" value=\"1\" " . (($_SESSION['touchscn'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['touchscn0'] .= "<input type=\"radio\" name=\"touchscn\" id=\"toggletouchscn2\" value=\"0\" " . (($_SESSION['touchscn'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
@@ -460,7 +443,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['wake_display1'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle_wake_display1\" value=\"1\" " . (($_SESSION['wake_display'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['wake_display0'] .= "<input type=\"radio\" name=\"wake_display\" id=\"toggle_wake_display2\" value=\"0\" " . (($_SESSION['wake_display'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-	// screen blank
+	// Screen blank
 	$_select['scnblank'] .= "<option value=\"off\" " . (($_SESSION['scnblank'] == 'off') ? "selected" : "") . ">Never</option>\n";
 	$_select['scnblank'] .= "<option value=\"10\" " . (($_SESSION['scnblank'] == '10') ? "selected" : "") . ">10 Secs</option>\n";
 	$_select['scnblank'] .= "<option value=\"20\" " . (($_SESSION['scnblank'] == '20') ? "selected" : "") . ">20 Secs</option>\n";
@@ -480,7 +463,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_select['pixel_aspect_ratio'] .= "<option value=\"Default\" " . (($_SESSION['pixel_aspect_ratio'] == 'Default') ? "selected" : "") . ">Default</option>\n";
 	$_select['pixel_aspect_ratio'] .= "<option value=\"Square\" " . (($_SESSION['pixel_aspect_ratio'] == 'Square') ? "selected" : "") . ">Square</option>\n";
 
-	// screen rotate
+	// Screen rotate
 	$_select['scnrotate'] .= "<option value=\"0\" " . (($_SESSION['scnrotate'] == '0') ? "selected" : "") . ">0 Deg</option>\n";
 	$_select['scnrotate'] .= "<option value=\"180\" " . (($_SESSION['scnrotate'] == '180') ? "selected" : "") . ">180 Deg</option>\n";
 }
@@ -490,15 +473,15 @@ else {
 
 // LOCAL SERVICES
 
-// metadata file
+// Metadata file
 $_select['extmeta1'] .= "<input type=\"radio\" name=\"extmeta\" id=\"toggleextmeta1\" value=\"1\" " . (($_SESSION['extmeta'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['extmeta0'] .= "<input type=\"radio\" name=\"extmeta\" id=\"toggleextmeta2\" value=\"0\" " . (($_SESSION['extmeta'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-// lcd updater
+// LCD updater
 $_select['lcdup1'] .= "<input type=\"radio\" name=\"lcdup\" id=\"togglelcdup1\" value=\"1\" " . (($_SESSION['lcdup'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['lcdup0'] .= "<input type=\"radio\" name=\"lcdup\" id=\"togglelcdup2\" value=\"0\" " . (($_SESSION['lcdup'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
-// gpio
+// GPIO
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	$_feat_gpio = '';
 	$_select['gpio_svc1'] .= "<input type=\"radio\" name=\"gpio_svc\" id=\"toggle_gpio_svc1\" value=\"1\" " . (($_SESSION['gpio_svc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
@@ -507,7 +490,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 else {
 	$_feat_gpio = 'hide';
 }
-// shellinabox
+// Shellinabox
 $_select['shellinabox1'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggleshellinabox1\" value=\"1\" " . (($_SESSION['shellinabox'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['shellinabox0'] .= "<input type=\"radio\" name=\"shellinabox\" id=\"toggleshellinabox2\" value=\"0\" " . (($_SESSION['shellinabox'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['hostip'] = getHostIp();
@@ -522,7 +505,7 @@ else {
 
 // MAINTENANCE
 
-// debug logging
+// Debug logging
 $_select['debuglog1'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggledebuglog1\" value=\"1\" " . (($_SESSION['debuglog'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['debuglog0'] .= "<input type=\"radio\" name=\"debuglog\" id=\"toggledebuglog2\" value=\"0\" " . (($_SESSION['debuglog'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 

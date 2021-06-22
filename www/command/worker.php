@@ -1949,12 +1949,6 @@ function runQueuedJob() {
 			$cmd = $_SESSION['w_queueargs'] == 1 ? 'echo max_usb_current=1 >> ' . '/boot/config.txt' : 'sed -i /max_usb_current/d ' . '/boot/config.txt';
 			sysCmd($cmd);
 			break;
-		/* DROP
-		case 'uac2fix':
-			$cmd = $_SESSION['w_queueargs'] == 1 ? 'sed -i "s/dwc_otg.lpm_enable=0/dwc_otg.lpm_enable=0 dwc_otg.fiq_fsm_mask=0x3/" /boot/cmdline.txt' : 'sed -i "s/ dwc_otg.fiq_fsm_mask=0x3//" /boot/cmdline.txt';
-			sysCmd($cmd);
-			break;
-		*/
 		case 'expandrootfs':
 			sysCmd('/var/www/command/resizefs.sh start');
 			break;
