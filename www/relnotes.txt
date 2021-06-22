@@ -17,7 +17,7 @@
 
 New features
 
-- NEW: ALSA output modes including Default (pkughw) and Direct (hw)
+- NEW: ALSA output modes including Default (plughw) and Direct (hw)
 - NEW: Volume normalization and format options for librespot
 
 Updates
