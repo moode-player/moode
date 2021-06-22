@@ -1,8 +1,8 @@
 ################################################################
 #
-# Build Recipe v2.31 2021-06-07
+# Build Recipe v2.31 2021-06-22
 #
-# moOde 7.3.0 2021-06-07
+# moOde 7.3.0 2021-06-22
 # - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
 # - Bump to Linux kernel 5.4.77 build #1371
 #
