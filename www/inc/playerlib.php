@@ -4183,6 +4183,11 @@ function updDspAndBtInConfs($cardnum, $old_output_mode = '') {
 	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
 	sysCmd("sed -i '/pcm \"" . $alsa_output_mode . "/c\pcm \"" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
+	$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode'] );
+	}
+
 	// Bluetooth confs (incoming connections)
 	sysCmd("sed -i '/slave.pcm \"" . $alsa_output_mode . "/c\slave.pcm \"" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0' /etc/bluealsaaplay.conf");
