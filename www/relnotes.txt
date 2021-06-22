@@ -37,6 +37,7 @@ Updates
 - UPD: Set theme-color meta element in header to Theme color
 - UPD: Add Output chain and Loopback state to Audio info
 - UPD: Improve how MPD Config changes are processed
+- UPD: Drop Max USB current (not applicable anymore)
 
 Bug fixes
 

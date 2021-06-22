@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Jun 19 16:20:51 2021
+-- File generated with SQLiteStudio v3.1.0 on Tue Jun 22 07:21:08 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -283,7 +283,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (8, 'dlnaname', 'Moode DLNA');
 INSERT INTO cfg_system (id, param, value) VALUES (9, 'airplaysvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (10, 'upnpsvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (11, 'dlnasvc', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (12, 'maxusbcurrent', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (12, 'alsa_output_mode', 'plughw');
 INSERT INTO cfg_system (id, param, value) VALUES (13, 'rotaryenc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (14, 'autoplay', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (15, 'rbsvc', '0');
@@ -429,7 +429,6 @@ INSERT INTO cfg_system (id, param, value) VALUES (154, 'recorder_album_tag', 'Re
 INSERT INTO cfg_system (id, param, value) VALUES (155, 'inplace_upd_applied', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (156, 'show_npicon', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (157, 'show_cvpb', 'Yes');
-INSERT INTO cfg_system (id, param, value) VALUES (168, 'alsa_output_mode', 'plughw');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

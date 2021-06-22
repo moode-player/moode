@@ -66,7 +66,6 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nLED state\t\t= $led_state\c"
 	echo -e "\nEth addr wait\t\t= $eth0chk\c"
 	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
-	echo -e "\nMax USB current\t\t= $maxusbcurrent\c"
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
 	echo -e "\n\c"
 	echo -e "\nPHP-FPM version\t\t= $PHPVER\c"
@@ -585,7 +584,7 @@ dlnaname=${arr[7]}
 [[ "${arr[8]}" = "1" ]] && airplaysvc="On" || airplaysvc="Off"
 [[ "${arr[9]}" = "1" ]] && upnpsvc="On" || upnpsvc="Off"
 [[ "${arr[10]}" = "1" ]] && dlnasvc="On" || dlnasvc="Off"
-[[ "${arr[11]}" = "1" ]] && maxusbcurrent="On" || maxusbcurrent="Off"
+[[ "${arr[11]}" = "plughw" ]] && alsa_output_mode="Default (plughw)" || alsa_output_mode="Direct (hw)"
 [[ "${arr[12]}" = "1" ]] && rotaryenc="On" || rotaryenc="Off"
 [[ "${arr[13]}" = "1" ]] && autoplay="On" || autoplay="Off"
 if [[ -f "/opt/RoonBridge/start.sh" ]]; then
@@ -768,7 +767,6 @@ recorder_album_tag=${arr[153]}
 inplace_upd_applied=${arr[154]}
 show_npicon=${arr[155]}
 show_cvpb=${arr[156]}
-[[ "${arr[157]}" = "plughw" ]] && alsa_output_mode="Default" || alsa_output_mode="Direct"
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

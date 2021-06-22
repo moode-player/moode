@@ -183,13 +183,6 @@ if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	playerSession('write', 'eth0chk', $_POST['eth0chk']);
 }
 
-// set USB curent to 2X (1200 mA)
-if (isset($_POST['maxusbcurrent']) && $_POST['maxusbcurrent'] != $_SESSION['maxusbcurrent']) {
-	$title = $_POST['maxusbcurrent'] == 1 ? 'USB current 2x on' : 'USB current 2x off';
-	submitJob('maxusbcurrent', $_POST['maxusbcurrent'], $title, 'Restart required');
-	playerSession('write', 'maxusbcurrent', $_POST['maxusbcurrent']);
-}
-
 // Expand root file system
 if (isset($_POST['update_expand_rootfs'])) {
 	submitJob('expandrootfs', '', 'File system expanded', 'Restart required', 30);
@@ -393,18 +386,6 @@ else {
 // eth0 check
 $_select['eth0chk1'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['eth0chk0'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-
-// Max usb current 2x (1200 mA)
-$model = substr($_SESSION['hdwrrev'], 3, 1);
-// Pi-1A/A+, Pi-1B/B+, Pi-2B
-if ($model == '1' || $model == '2') {
-	$_maxcurrent_hide = '';
-	$_select['maxusbcurrent1'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent1\" value=\"1\" " . (($_SESSION['maxusbcurrent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['maxusbcurrent0'] .= "<input type=\"radio\" name=\"maxusbcurrent\" id=\"togglemaxusbcurrent2\" value=\"0\" " . (($_SESSION['maxusbcurrent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-}
-else {
-	$_maxcurrent_hide = 'hide';
-}
 
 // Expand root file system
 $_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
