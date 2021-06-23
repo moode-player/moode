@@ -21,6 +21,7 @@
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
+require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 playerSession('open', '' ,'');
 
