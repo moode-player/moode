@@ -4189,6 +4189,6 @@ function updDspAndBtInConfs($cardnum, $old_output_mode = '') {
 	}
 
 	// Bluetooth confs (incoming connections)
-	sysCmd("sed -i '/slave.pcm \"" . $alsa_output_mode . "/c\slave.pcm \"" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
+	sysCmd("sed -i '/pcm \"" . $alsa_output_mode . "/c\pcm \"" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0' /etc/bluealsaaplay.conf");
 }
