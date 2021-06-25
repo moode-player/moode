@@ -38,6 +38,7 @@ Updates
 - UPD: Add Output chain and Loopback state to Audio info
 - UPD: Improve how MPD Config changes are processed
 - UPD: Drop Max USB current (not applicable anymore)
+- UPD: BlueZ Config when change to Local, disconnect device
 
 Bug fixes
 
@@ -53,6 +54,7 @@ Bug fixes
 - FIX: CamillaDSP and 64-bit kernel showing for 32-bit only Pi's
 - FIX: WiFi/BT options missing from System config for Zero W
 - FIX: Display wakes when USB DAC disconnected if Wake on play ON
+- FIX: CamillaDSP Config back link handling
 
 ########################################################
 //
