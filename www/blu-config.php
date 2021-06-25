@@ -66,7 +66,7 @@ if (isset($_POST['rm_paired_device']) && $_POST['rm_paired_device'] == '1') {
 
 // Connect to device
 if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
-	// update MAC address
+	// Update MAC address
 	if ($_POST['audioout'] == 'Bluetooth') {
 		sysCmd("sed -i '/device/c\device \"" . $_POST['paired_device'] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 	}
@@ -80,22 +80,33 @@ if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 }
 
 // Change MPD audio output
-if (isset($_POST['chg_audioout']) && $_POST['chg_audioout'] == '1') {
-	// Update MAC address
+if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
+	// Change to Bluetooth out, update MAC address
 	if ($_POST['audioout'] == 'Bluetooth' && (isset($_POST['paired_device']) || isset($_POST['connected_device']))) {
 		$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
 		sysCmd("sed -i '/device/c\device \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
+		// Update MPD output
+		playerSession('write', 'audioout', $_POST['audioout']);
+		setAudioOut($_POST['audioout']);
 	}
-	// Update MPD output
-	playerSession('write', 'audioout', $_POST['audioout']);
-	setAudioOut($_POST['audioout']);
+	// Change to local out, disconnect device
+	else {
+		// Update MPD output
+		playerSession('write', 'audioout', $_POST['audioout']);
+		setAudioOut($_POST['audioout']);
+		// Disconnect
+		sysCmd('/var/www/command/bt.sh -d ' . '"' . $_POST['connected_device'] . '"');
+		$cmd = '-p';
+		sleep(1);
+	}
 }
 
 // Disconnect paired device
 if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 	// Update MPD output
-	playerSession('write', 'audioout', $_POST['audioout']);
-	setAudioOut($_POST['audioout']);
+	$audioout = $_SESSION['audioout'] == 'Bluetooth') ? 'Local' : 'Bluetooth';
+	playerSession('write', 'audioout', $audioout);
+	setAudioOut($audioout);
 	// Disconnect
 	sysCmd('/var/www/command/bt.sh -d ' . '"' . $_POST['connected_device'] . '"');
 	$cmd = '-p';

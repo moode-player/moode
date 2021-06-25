@@ -50,8 +50,10 @@
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="connectto_device" value="1">Connect</button>
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="rm_paired_device" value="1">Remove</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info_rm_paired_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info_rm_paired_device" class="help-block-configs hide">
-					Connect or remove a paired device.
+				<!--span id="info_rm_paired_device" class="help-block-configs hide"-->
+				<span id="info_rm_paired_device" class="help-block-configs">
+					Connect or remove a paired device.<br>
+					NOTE: Connecting or Removing will automatically Change to the selected MPD audio output.
 	            </span>
 			</div>
 
@@ -61,8 +63,10 @@
 				</select>
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="disconnect_device" value="1">Disconnect</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info_disconnect_device" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info_disconnect_device" class="help-block-configs hide">
-					Disconnect the currently connected device.
+				<!--span id="info_disconnect_device" class="help-block-configs hide"-->
+				<span id="info_disconnect_device" class="help-block-configs">
+					Disconnect the currently connected device.<br>
+					NOTE: Disconnecting will automatically Change to the selected MPD audio output.
 	            </span>
 			</div>
 
@@ -83,11 +87,11 @@
 				</select>
 				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="chg_audioout" value="1">Change</button>
 				<a aria-label="Help" class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info_audioout" class="help-block-configs hide">
+				<span id="info_audioout" class="help-block-configs">
 					Send MPD audio output to the Local audio device or over a Bluetooth connection to another audio device.
 	            </span>
 				<span class="help-block-configs $_ao_msg_hide">
-					Connect, Remove and Disconnect will also automatically change to the selected MPD audio output.
+					NOTE: Changing from Bluetooth output to Local output will automatically Disconnect the device.
 	            </span>
 			</div>
 
