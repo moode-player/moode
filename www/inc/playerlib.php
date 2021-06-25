@@ -3743,8 +3743,17 @@ function storeBackLink($section, $tpl) {
 	if ($tpl == 'src-config.html') {
 		$_SESSION['config_back_link'] = '/lib-config.php';
 	}
+
 	if ($tpl == 'cdsp-config.html') {
-		$_SESSION['config_back_link'] = '/snd-config.php';
+		if ($referer_link == '/index.php') {
+			$_SESSION['cdsp_from_link'] = '/index.php';
+		}
+		elseif ($referer_link == '/snd-config.php') {
+			$_SESSION['cdsp_from_link'] = '/snd-config.php';
+		}
+
+		//$_SESSION['config_back_link'] = '/snd-config.php';
+		$_SESSION['config_back_link'] = $_SESSION['cdsp_from_link'];
 	}
 	else if (in_array($section, $root_configs)) {
 		$_SESSION['config_back_link'] = '/index.php';
