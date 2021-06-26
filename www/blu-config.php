@@ -104,7 +104,7 @@ if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']
 // Disconnect paired device
 if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 	// Update MPD output
-	$audioout = $_SESSION['audioout'] == 'Bluetooth') ? 'Local' : 'Bluetooth';
+	$audioout = $_SESSION['audioout'] == 'Bluetooth' ? 'Local' : 'Bluetooth';
 	playerSession('write', 'audioout', $audioout);
 	setAudioOut($audioout);
 	// Disconnect
