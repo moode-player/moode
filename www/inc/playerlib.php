@@ -280,7 +280,7 @@ function integrityCheck() {
 
 	// Verify the row count
 	$count = sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT COUNT() FROM cfg_audiodev\"");
-	if ($count[0] != 78) {
+	if ($count[0] != 79) {
 		$_SESSION['ic_return_code'] = '4';
 		return false;
 	}
@@ -2501,8 +2501,18 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 		//workerLog($cmd);
 		$result = sysCmd($cmd);
 
-		$bitdepth = $result[0] == '' ? '?' : $result[0];
-		$samplerate = $result[1] == '' ? '?' : $result[1];
+		// NOTE: Exception handling for rare case where medoainfo returns blank bit depth or sample rate
+		// Use MPD lsinfo
+		if ($result[0] == '' || $result[1] == '') {
+			$mpd_encoded_at = getMpdEncodedAt($song_data['file']);
+			$bitdepth = $mpd_encoded_at[1];
+			$samplerate = $mpd_encoded_at[0];
+		}
+		// Use mediainfo
+		else {
+			$bitdepth = $result[0];
+			$samplerate = $result[1];
+		}
 		$channels = $result[2];
 		$format = $result[3];
 
@@ -2515,6 +2525,19 @@ function getEncodedAt($song_data, $display_format, $called_from_genlib = false) 
 	}
 
 	return $encoded_at;
+}
+// Get MPD format tag (rate:bits:channels)
+function getMpdEncodedAt($file) {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('getMpdEncodedAt(): Connection to MPD failed');
+		$mpd_encoded_at = array('', '', '');
+	}
+
+	sendMpdCmd($sock, 'lsinfo "' . $file . '"');
+	$song_data = parseDelimFile(readMpdResp($sock), ': ');
+	$mpd_encoded_at = explode(':', $song_data['Format']);
+
+	return $mpd_encoded_at;
 }
 
 // Bluetooth
