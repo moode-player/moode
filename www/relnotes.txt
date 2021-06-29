@@ -11,6 +11,17 @@
 
 ########################################################
 //
+// 2021-MM-DD TC moOde 7.4.0
+//
+########################################################
+
+Bug fixes
+
+- FIX: Typo in MPD Config message regarding disconnected device
+- FIX: Fallback to encoded_at rate from MPD database if mediainfo reports blank rate
+
+########################################################
+//
 // 2021-06-25 TC moOde 7.3.0
 //
 ########################################################
