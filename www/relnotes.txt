@@ -19,6 +19,7 @@ Bug fixes
 
 - FIX: Typo in MPD Config message regarding disconnected device
 - FIX: Fallback to encoded_at rate from MPD database if mediainfo reports blank rate
+- FIX: CoverView Playbar show/hide not working when launched from Library
 
 ########################################################
 //

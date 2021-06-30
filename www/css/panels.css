@@ -168,7 +168,7 @@ html {background-color:inherit;}
 #mbrand {color:var(--adapttext);text-shadow: 0 0 0.25rem rgba(0,0,0,0.5);transform:translate(-50%);}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
-#menu-bottom {display:flex;bottom:.2rem;bottom:calc(env(safe-area-inset-bottom) + .2rem);width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+#menu-bottom {/*display:flex;*/bottom:.2rem;bottom:calc(env(safe-area-inset-bottom) + .2rem);width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 #menu-bottom ul {display:flex;margin:0;width:100%;}
 #playback-panel {padding:2.75em 0 0 0;min-height:calc(100vh - 2.75em);position:relative;}
 #content {position:fixed;height:inherit;width:100vw;min-height:100vh;overflow:hidden;font-size:var(--pbfont);color:var(--adapttext);background-color:var(--adaptbg);}
@@ -433,6 +433,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #ss-currentsong, #ss-currentalbum-div {margin-top:1em;}
 .ss-backdrop {min-width:100vw;min-height:100vh;max-width:unset;transform:translate(-50%, -50%);background-position:center center;position:relative;top:50vh;left:50vw;}
 .ss-coverart {position:fixed;top:1.5em;width:100%;}
+body.cv #menu-bottom {display:none!important;}
 body.cvpb #menu-bottom {display:flex !important;background-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;}
 body.cv #menu-top, body.cv #viewswitch, body.cv #playbar-toggles .coverview, body.cv #playbar-cover, body.cv #playbar-hd-badge {display:none !important;}
 body.cv #content .tab-pane.active {visibility:hidden !important;}
