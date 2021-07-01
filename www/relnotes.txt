@@ -15,6 +15,10 @@
 //
 ########################################################
 
+Updates
+
+- UPD: Add "okto research dac8 Stereo" to device table
+
 Bug fixes
 
 - FIX: Typo in MPD Config message regarding disconnected device

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Jun 26 06:56:29 2021
+-- File generated with SQLiteStudio v3.1.0 on Thu Jul 1 08:53:06 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -562,6 +562,7 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (201, 'b2', 'Pi HDMI 2', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (202, 'Headphones', 'Pi Headphone jack', 'Broadcom SoC', '', 'SOC', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', '', 'USB', 'yes', '', '');
+INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (301, 'DAC8STEREO', 'okto research dac8 Stereo', 'ESS Sabre ES9028PRO', '', 'USB', 'yes', '', '');
 
 -- Table: cfg_mpd
 CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
@@ -649,7 +650,7 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/p
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', 'd9f65519e484de1cf5240ead12bdde46', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', '1ec1097f6762664101c974526eadaec9', 'exit');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', 'ad8fa459c4044dc2704fcf898be75f26', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', 'e9dddcd7ded69ec95c3a09bb5a5c1459', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'f728c2069e32eb2439ff977c2f8e8908', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/css/main.min.css', '9a6890a45b40aef84c05a95d6a4439c6', 'warning');
