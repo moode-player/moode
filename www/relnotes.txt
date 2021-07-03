@@ -19,6 +19,16 @@ Updates
 
 - UPD: Add "okto research dac8 Stereo" to device table
 
+Radio stations
+
+- NEW: Organ Experience
+- NEW: SmoothLounge Global
+- UPD: 4ZZZ FM 102.1 - Alternative 
+- UPD: SmoothJazz Global
+- UPD: OrganLive.com
+- UPD: Positively Baroque
+- UPD: Maschinengeist Radio (OFFLINE)
+
 Bug fixes
 
 - FIX: Typo in MPD Config message regarding disconnected device
