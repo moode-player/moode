@@ -388,7 +388,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #songsList {padding-bottom:5.3rem;margin:.5em .25em;width:calc(100% - var(--sbw));}
 /**/
 #lib-genre li, #lib-artist li {padding: 0.4em 0.5em;}
-#lib-content #lib-file li {;padding:.75em 0 .85em 0;}
+#lib-content #lib-file li {padding:.75em 0 .85em 0;}
 #lib-content #lib-file li:nth-child(odd) {background:rgba(128,128,128,0.1);}
 #lib-content #lib-file li:nth-child(odd).active {background:var(--accentxta);}
 #lib-content li div.active {color:var(--accentxts);}
