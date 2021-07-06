@@ -83,20 +83,23 @@ Version=2"""
         # used for detecting major scheme break corrections
         self.db_ver = None
 
-    def check_env(self, check_backup = False) :
+    def check_env(self, check_backup = False, verbose = True) :
         return_code = 0
         self.radio_logos_path = None
 
         if os.path.exists(self.db_file):
             try:
                 self.conn = sqlite3.connect(self.db_file)
-                print('SQL database location is \'{}\''.format(self.db_file) )
+                if verbose:
+                    print('SQL database location is \'{}\''.format(self.db_file) )
             except Error as e:
-                print('ERROR: Could not open SQL database at \'{}\''.format(self.db_file) )
-                print(e)
+                if verbose:
+                    print('ERROR: Could not open SQL database at \'{}\''.format(self.db_file) )
+                    print(e)
                 return_code = 5
         else:
-            print('ERROR: SQL database not found at \'{}\''.format(self.db_file) )
+            if verbose:
+                print('ERROR: SQL database not found at \'{}\''.format(self.db_file) )
             return_code = 4
 
         for radio_logo_path in StationManager.RADIO_LOGO_PATHS:
@@ -105,40 +108,56 @@ Version=2"""
                 break
 
         if self.radio_logos_path != None:
-            print('Station logos location is \'{}\''.format(self.radio_logos_path ))
+            if verbose:
+                print('Station logos location is \'{}\''.format(self.radio_logos_path ))
             if os.path.isdir(os.path.join(self.radio_logos_path, 'thumbs')) == False:
-                print('ERROR: Could not find station logo thumbs at \'{}\''.format(os.path.join(self.radio_logos_path, 'thumbs')) )
+                if verbose:
+                    print('ERROR: Could not find station logo thumbs at \'{}\''.format(os.path.join(self.radio_logos_path, 'thumbs')) )
                 return_code = 2
         else:
             return_code = 1
-            print('ERROR: Could not find station logos, tried {}'.format(", ".join(StationManager.RADIO_LOGO_PATHS) ))
+            if verbose:
+                print('ERROR: Could not find station logos, tried {}'.format(", ".join(StationManager.RADIO_LOGO_PATHS) ))
 
         if os.path.isdir(StationManager.RADIO_PLS_PATH):
-            print('Station pls file location is \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+            if verbose:
+                print('Station pls file location is \'{}\''.format(StationManager.RADIO_PLS_PATH) )
         else:
             return_code = 3
-            print('ERROR: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+            if verbose:
+                print('ERROR: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
 
         self.db_ver = 7 if 'geo_fenced' in self.get_fields() else 6
 
         if check_backup:
-            if os.path.exists(self.backup_file) == False:
-                return_code = 6
+            return_code = check_backup(return_code)
+
+        return return_code
+
+
+    def check_backup(self, code =0, verbose = True ):
+        return_code = code
+        if os.path.exists(self.backup_file) == False:
+            return_code = 6
+            if verbose:
                 print('ERROR: Station backup file \'{}\' not found.'.format(self.backup_file) )
-            else:
+        else:
+            if verbose:
                 print('Using Station backup file \'{}\'.'.format(self.backup_file) )
 
-            with ZipFile(self.backup_file, 'r') as backup:
+        with ZipFile(self.backup_file, 'r') as backup:
+            try:
+                info = backup.getinfo('station_data.json')
+            except KeyError:
                 try:
-                    info = backup.getinfo('station_data.json')
-                except KeyError:
-                    try:
-                        info = backup.getinfo('var/local/www/db/cfg_radio.csv')
+                    info = backup.getinfo('var/local/www/db/cfg_radio.csv')
+                    if verbose:
                         print('WARNING: Station backup is an old format')
-                        self.backup_is_legacy_format = True
-                        self.archive_images_location = StationManager.ARCHIVE_PATH_IMAGES_LEGACY
-                    except KeyError:
-                        return_code = 12
+                    self.backup_is_legacy_format = True
+                    self.archive_images_location = StationManager.ARCHIVE_PATH_IMAGES_LEGACY
+                except KeyError:
+                    return_code = 12
+                    if verbose:
                         print('ERROR: Station backup file \'{}\' is not a valid format'.format(self.backup_file))
 
         return return_code
