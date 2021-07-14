@@ -84,6 +84,8 @@ class BackupManager(StationManager):
                 if script_file and os.path.exists(script_file):
                     print('add script to backup')
                     backup.write(script_file, 'script')
+                if os.path.exists('/var/local/www/imagesw/bgimage.jpg'):
+                    backup.write('/var/local/www/imagesw/bgimage.jpg', 'bgimage.jpg')
 
             # backup camilladsp configurations
             if BackupManager.OPT_CDSP in what:
@@ -120,6 +122,8 @@ class BackupManager(StationManager):
                     backup.extract('moodecfg.ini', BackupManager.MOODECFGINI_RESTORE_PATH)
                 except KeyError:
                     print("backup doesn't contain moode configuration file.")
+                if 'bgimage.jpg' in backup.namelist():
+                    backup.extract('bgimage.jpg', '/var/local/www/imagesw/bgimage.jpg');
 
             # restore camilladsp configs
             if BackupManager.OPT_CDSP in what:
