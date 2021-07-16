@@ -3348,6 +3348,16 @@ function autoConfigSettings() {
 						'source_wsize',
 						'source_wsize',
 						'source_options'], 'handler' => function($values) {
+
+			// remove existing mounts
+			$dbh = cfgdb_connect();
+			$existing_mounts = cfgdb_read('cfg_source', $dbh);
+			foreach ($existing_mounts  as $mount) {
+				$mount['action'] = 'delete';
+				sourceCfg($mount);
+			}
+
+			// add new ones from import
 			$source_count = count($values['source_name']);
 			$keys = array_keys($values);
 
