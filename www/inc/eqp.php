@@ -192,6 +192,9 @@ class Eqp {
         $curve_count = count($values['eqp12_curve_name']);
         $keys = array_keys($values);
 
+        $querystr = 'DELETE FROM '. $this->table . ';';
+        $result = sdbquery($querystr, $this->dbh);
+
         for($index =0; $index< $curve_count; $index++) {
             $curve_name = $values['eqp12_curve_name'][$index];
             $curve_settings = $values['eqp12_settings'][$index];
