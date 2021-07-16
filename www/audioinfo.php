@@ -239,7 +239,7 @@ elseif ($_SESSION['crossfeed'] != 'Off') {
 	$output_mode = 'plughw';
 }
 elseif ($_SESSION['eqfa12p'] != 'Off') {
-	$dsp = 'Paranetric EQ';
+	$dsp = 'Parametric EQ';
 	$output_mode = 'plughw';
 }
 elseif ($_SESSION['alsaequal'] != 'Off') {
