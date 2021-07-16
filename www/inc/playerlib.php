@@ -3468,6 +3468,22 @@ function autoConfig($cfgfile) {
 			}
 		}
 
+		$script_key = 'script';
+		if(  array_key_exists($script_key, $autocfg) ) {
+			autoCfgLog('autocfg: '. $script_key.':'. $script);
+			$script = $autocfg[$script_key];
+
+			if (file_exists($script)) {
+				$output = sysCmd($script);
+				foreach ($output  as $line) {
+					autoCfgLog($line);
+				}
+			}else {
+				autoCfgLog('autocfg: Error script not found!');
+			}
+			unset($autocfg[$script_key]);
+		}
+
 		// Check for unused but supplied autocfg settings
 		if( empty($available_configs) ) {
 			foreach ($available_configs as $config_name) {
