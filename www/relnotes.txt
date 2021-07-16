@@ -23,7 +23,7 @@ Radio stations
 
 - NEW: Organ Experience
 - NEW: SmoothLounge Global
-- UPD: 4ZZZ FM 102.1 - Alternative 
+- UPD: 4ZZZ FM 102.1 - Alternative
 - UPD: SmoothJazz Global
 - UPD: OrganLive.com
 - UPD: Positively Baroque
@@ -34,6 +34,8 @@ Bug fixes
 - FIX: Typo in MPD Config message regarding disconnected device
 - FIX: Fallback to encoded_at rate from MPD database if mediainfo reports blank rate
 - FIX: CoverView Playbar show/hide not working when launched from Library
+- FIX: Typo in cdsp 32b float format (FLOATLE should be FLOAT32LE)
+- FIX: Various auto-config bugs
 
 ########################################################
 //
