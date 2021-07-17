@@ -55,7 +55,7 @@ class BackupManager(StationManager):
     def __init__(self, db_file, backup_file):
          super().__init__(db_file, backup_file)
 
-    def do_backup(self, what, script_file):
+    def do_backup(self, what, script_file, wlanpwd):
 
         scope = None
         if BackupManager.OPT_RS_OTHER in what and BackupManager.OPT_RS_SYS in what:
@@ -65,9 +65,11 @@ class BackupManager(StationManager):
         elif BackupManager.OPT_RS_SYS in what:
             scope = 'moode'
 
+        zipmode = 'w'
         if scope:
+            # the stationmanager already creates a zipfile, so make the zipmode append
             self.do_export(scope, None)
-
+            zipmode = 'a'
 
         if BackupManager.OPT_CFG in what:
             system('moodeutl -e ' + BackupManager.MOODECFGINI_TMP )
@@ -75,8 +77,10 @@ class BackupManager(StationManager):
                 with open(BackupManager.MOODECFGINI_TMP, 'a') as fp:
                     fp.write('[Users]\n')
                     fp.write('script = "'+path.join('/boot','script')+'"\n')
+            if wlanpwd:
+                system ('sed -i "s/wlanpwd = .*/wlanpwd = \\"{}\\"/g" {}'.format(wlanpwd, BackupManager.MOODECFGINI_TMP))
 
-        with ZipFile(self.backup_file, 'a') as backup:
+        with ZipFile(self.backup_file, zipmode) as backup:
             # backup moodecfg.ini
             if BackupManager.OPT_CFG in what:
                 if os.path.exists(BackupManager.MOODECFGINI_TMP):
@@ -201,6 +205,9 @@ def get_cmdline_arguments():
     parser.add_argument('--script', dest = 'script', default = None,
                    help = 'Add script file to the backup (is executed when config is restored)')
 
+    parser.add_argument('--wlanpwd', dest = 'wlanpwd', default = None,
+                   help = 'When creating a backup, supply a password for wifi access (applied when restoring the backup)')
+
     args = parser.parse_args()
     return args
 
@@ -225,7 +232,7 @@ if __name__ == "__main__":
 
     if check_result == 0:
         if args.do_backup:
-             mgnr.do_backup(args.what, args.script)
+             mgnr.do_backup(args.what, args.script, args.wlanpwd)
         elif args.do_restore:
              mgnr.do_restore(args.what)
         elif args.do_info:
