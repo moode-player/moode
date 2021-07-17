@@ -3062,21 +3062,22 @@ function autoConfigSettings() {
 	$configurationHandlers = [
 		'Names',
 		['requires' => ['browsertitle'] , 'handler' => setPlayerSession],
-		['requires' => ['hostname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name host "moode" "%s"'],
-		['requires' => ['btname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name bluetooth "Moode Bluetooth" "%s"'],
+		['requires' => ['hostname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name host "' . $_SESSION['hostname'] . '" "%s"'],
+		['requires' => ['btname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name bluetooth "' . $_SESSION['btname'] . '" "%s"'],
 		['requires' => ['airplayname'] , 'handler' => setPlayerSession],
 		['requires' => ['spotifyname'] , 'handler' => setPlayerSession],
 		['requires' => ['squeezelitename'] , 'handler' => function($values) {
 				$dbh = cfgdb_connect();
+				$currentName= sdbquery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
 				$result = sdbquery('update cfg_sl set value=' . "'" . $values['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
-				sysCmd('/var/www/command/util.sh chg-name squeezelite "Moode" ' . '"' . $values['squeezelitename'] . '"');
+				sysCmd('/var/www/command/util.sh chg-name squeezelite "' . $currentName . '" ' . '"' . $values['squeezelitename'] . '"');
 			}, 'custom_write' => function($values) {
 				$dbh = cfgdb_connect();
 				$result = sdbquery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
 				return "squeezelitename = \"".$result."\"\n";
 			}],
-		['requires' => ['upnpname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name upnp "Moode UPNP" "%s"'],
-		['requires' => ['dlnaname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name dlna "Moode DLNA" "%s"'],
+		['requires' => ['upnpname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name upnp "' . $_SESSION['upnpname'] . '" "%s"'],
+		['requires' => ['dlnaname'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'chg-name dlna "' . $_SESSION['dlnaname'] . '" "%s"'],
 
 		'System',
 		['requires' => ['timezone'] , 'handler' => setPlayerSessionAndSysCmd, 'cmd' => 'set-timezone %s'],
@@ -3347,6 +3348,16 @@ function autoConfigSettings() {
 						'source_wsize',
 						'source_wsize',
 						'source_options'], 'handler' => function($values) {
+
+			// remove existing mounts
+			$dbh = cfgdb_connect();
+			$existing_mounts = cfgdb_read('cfg_source', $dbh);
+			foreach ($existing_mounts  as $mount) {
+				$mount['action'] = 'delete';
+				sourceCfg($mount);
+			}
+
+			// add new ones from import
 			$source_count = count($values['source_name']);
 			$keys = array_keys($values);
 
@@ -3455,6 +3466,22 @@ function autoConfig($cfgfile) {
 				$incompleteset = $incompleteset . " ]";
 				autoCfgLog('autocfg: Warning incomplete set '. $incompleteset. ' detected.');
 			}
+		}
+
+		$script_key = 'script';
+		if(  array_key_exists($script_key, $autocfg) ) {
+			autoCfgLog('autocfg: '. $script_key.':'. $script);
+			$script = $autocfg[$script_key];
+
+			if (file_exists($script)) {
+				$output = sysCmd($script);
+				foreach ($output  as $line) {
+					autoCfgLog($line);
+				}
+			}else {
+				autoCfgLog('autocfg: Error script not found!');
+			}
+			unset($autocfg[$script_key]);
 		}
 
 		// Check for unused but supplied autocfg settings

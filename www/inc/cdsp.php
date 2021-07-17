@@ -368,7 +368,7 @@ class CamillaDsp {
            'WAVE',
            'TEXT',
            'FLOAT64LE',
-           'FLOATLE',
+           'FLOAT32LE',
            'S32LE',
            'S24LE3',
            'S24LE',
