@@ -92,6 +92,7 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 fi
 
 # Get alsa mixer name
+# TODO: Use something other than parenthesis as delimiter (see playerlib.php getMixerName())
 if [[ $1 = "get-mixername" ]]; then
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 	amixer -c $CARD_NUM | awk 'BEGIN{FS="\n"; RS="Simple mixer control"} $0 ~ "pvolume" {print $1}' | awk -F"'" '{print "(" $2 ")";}'
