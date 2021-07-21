@@ -2087,6 +2087,7 @@ function updMpdConf($i2sdevice) {
 }
 
 // Return mixer name
+// TODO: Use something other than parenthesis as delimiter (see util.sh)
 function getMixerName($i2sdevice) {
 	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
 	// NOTE: If a device does not define a mixer name then "PCM" will be assigned
