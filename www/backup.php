@@ -46,6 +46,10 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 		$backupOptions = '--what ' . $backupOptions . ' ';
 	}
 
+	if( isset($_POST['backup_wlan0pwd']) && $_POST['backup_wlan0pwd']  ) {
+		$backupOptions .= '--wlanpwd ' .$_POST['backup_wlan0pwd'] .' ';
+	}
+
 	$tempBackupFileName = '/tmp/backup.zip';
 	sysCmd('sudo -u pi /var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
 	// print('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
