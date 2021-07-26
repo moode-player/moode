@@ -30,25 +30,25 @@ playerSession('open', '' ,'');
 if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 	$backupOptions = '';
 	if( isset($_POST['backup_system']) && $_POST['backup_system'] == '1' ) {
-		$backupOptions .= $backupOptions ? ',config' : 'config';
+		$backupOptions .= $backupOptions ? ' config' : 'config';
 	}
 	if( isset($_POST['backup_camilladsp']) && $_POST['backup_camilladsp'] == '1' ) {
-		$backupOptions .= $backupOptions ? ',cdsp' : 'cdsp';
+		$backupOptions .= $backupOptions ? ' cdsp' : 'cdsp';
 	}
 	if( isset($_POST['backup_radiostations_moode']) && $_POST['backup_radiostations_moode'] == '1' ) {
-		$backupOptions .= $backupOptions ? ',r_sys' : 'r_sys';
+		$backupOptions .= $backupOptions ? ' r_sys' : 'r_sys';
 	}
 	if( isset($_POST['backup_radiostations_other']) && $_POST['backup_radiostations_other'] == '1' ) {
-		$backupOptions .= $backupOptions ? ',r_other' : 'r_other';
+		$backupOptions .= $backupOptions ? ' r_other' : 'r_other';
 	}
 
 	if($backupOptions) {
-		$backupOptions = '--what=' . $backupOptions . ' ';
+		$backupOptions = '--what ' . $backupOptions . ' ';
 	}
 
 	$tempBackupFileName = '/tmp/backup.zip';
-	sysCmd('/var/www/backupmananger.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
-	// print('/var/www/backupmananger.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
+	sysCmd('sudo -u pi /var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
+	// print('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
 
 	// create name for backup file in browser
 	$dt = new DateTime('NOW');
