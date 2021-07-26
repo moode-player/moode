@@ -50,6 +50,12 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 		$backupOptions .= '--wlanpwd ' .$_POST['backup_wlan0pwd'] .' ';
 	}
 
+	if( isset($_FILES['backup_scriptfile']) ) {
+		move_uploaded_file($_FILES["backup_scriptfile"]["tmp_name"], '/tmp/script');
+		//TODO: test if file exists
+		$backupOptions .= '--script /tmp/script ';
+	}
+
 	$tempBackupFileName = '/tmp/backup.zip';
 	sysCmd('sudo -u pi /var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
 	// print('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . $tempBackupFileName);

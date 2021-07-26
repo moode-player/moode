@@ -23,7 +23,7 @@
 <div class="container">
 	<div class="container2">
 		<h1 class="cdsp-config">System Backup/Restore</h1>
-		<form class="form-horizontal" action="" method="post" id="backup" $_backup_visible >
+		<form class="form-horizontal" action="" method="post" id="backup" enctype="multipart/form-data" $_backup_visible >
 
 			<fieldset>
 				<legend>Backup</legend>
@@ -84,8 +84,7 @@
 					<div class="controls">
 						<div class="modal-button-style">
 							<label for="backup_scriptfile" id="choose-backup_scriptfile" class="btn btn-primary btn-medium">Select</label>
-							<input type="file" id="backup_scriptfile" accept=".wav,.txt,.raw,.csv" name="backup_scriptfile" style="display:none" onchange="$('#btn-backup_scriptfile').click();" disabled>
-							<button id="btn-backup_scriptfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="backup_scriptfile" value="1"  style="display:none" disabled/>
+							<input type="file" id="backup_scriptfile" accept=".*,*.*,*" name="backup_scriptfile" style="display:none" >
 						</div>&nbsp;&nbsp;
 						<a aria-label="Help" class="info-toggle" data-cmd="info-backup_scriptfile" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<div id="info-backup_scriptfile" class="help-block-configs help-block-margin legend-info-help hide">
