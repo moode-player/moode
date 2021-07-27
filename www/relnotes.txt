@@ -35,6 +35,7 @@ Bug fixes
 - FIX: Fallback to encoded_at rate from MPD database if mediainfo reports blank rate
 - FIX: CoverView Playbar show/hide not working when launched from Library
 - FIX: Typo in cdsp 32b float format (FLOATLE should be FLOAT32LE)
+- FIX: BlueZ audioout being set to Bluetooth on Disconnect
 - FIX: Various auto-config bugs
 
 ########################################################
