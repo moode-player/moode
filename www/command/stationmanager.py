@@ -130,7 +130,7 @@ Version=2"""
         self.db_ver = 7 if 'geo_fenced' in self.get_fields() else 6
 
         if check_backup:
-            return_code = check_backup(return_code)
+            return_code = self.check_backup(return_code)
 
         return return_code
 
