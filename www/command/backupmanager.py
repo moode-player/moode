@@ -163,15 +163,21 @@ class BackupManager(StationManager):
                 cdspPresent = len( names) >= 1
 
 
-
+        content = []
         if configPresent:
             print('config')
+            content.append('config')
         if rs_sys_present:
             print('r_sys')
+            content.append('r_sys')
         if rs_other_present:
             print('r_other')
+            content.append('r_other')
         if cdspPresent:
             print('cdsp')
+            content.append('cdsp')
+
+        return content
 
 
 def get_cmdline_arguments():
@@ -183,8 +189,8 @@ def get_cmdline_arguments():
     parser.add_argument('--version', action='version', version='%(prog)s {}'.format(BackupManager.VERSION))
 
     parser.add_argument('--what', dest = 'what', nargs="+",
-                   choices = ['config', 'cdsp', 'r_sys', 'r_other'], default = ['config','cdsp', 'r_other'] ,
-                   help = 'Indicate what to backup/restore. (default: config cdsp r_other)')
+                   choices = ['config', 'cdsp', 'r_sys', 'r_other'], default = None ,
+                   help = 'Indicate what to backup/restore. (default for backup: config cdsp r_other, default on restore: auto detect content)')
 
     group = parser.add_mutually_exclusive_group( required = True)
     group.add_argument('--backup', dest = 'do_backup', action = 'store_const',
@@ -225,16 +231,24 @@ if __name__ == "__main__":
         print("ERROR: No moOde backup file provided. Required for backup or restore.")
         exit(11)
 
+    what =  ['config','cdsp', 'r_other']
+    if args.what:
+        what = arg.what
+
+    if args.do_restore and args.what == None:
+        print('backup content:')
+        what = mgnr.do_info()
+        print()
+
     check_result = 0
     if args.do_restore or args.do_backup:
         check_result = mgnr.check_env(args.do_restore, True)
 
-
     if check_result == 0:
         if args.do_backup:
-             mgnr.do_backup(args.what, args.script, args.wlanpwd)
+             mgnr.do_backup(what, args.script, args.wlanpwd)
         elif args.do_restore:
-             mgnr.do_restore(args.what)
+             mgnr.do_restore(what)
         elif args.do_info:
              mgnr.do_info()
 
