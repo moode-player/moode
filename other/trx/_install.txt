@@ -1,0 +1,167 @@
+////////////////////////////////////////////////////////////
+
+# trx: Realtime audio over IP
+
+////////////////////////////////////////////////////////////
+
+(C) Copyright 2020 Mark Hills <mark@xwax.org>
+
+See the COPYING file for licensing terms.
+
+This software is distributed from the following URL:
+
+  http://www.pogo.org.uk/~mark/trx/
+
+trx is a simple toolset for broadcasting live audio. It is based on
+the Opus codec <http://www.opus-codec.org/> and sends and receives
+encoded audio over IP networks.
+
+It can be used for point-to-point audio links or multicast,
+eg. private transmitter links or audio distribution. In contrast to
+traditional streaming, high quality wideband audio (such as music) can
+be sent with low-latency and fast recovery from dropouts.
+
+With quality audio hardware and wired ethernet, a total latency of no
+more than a few milliseconds is possible.
+
+DETAILS
+
+Features include:
+
+- Very simple to set up
+- Low latency with fast recovery from dropouts
+- Full control over latency and buffers
+- Supports IPv4 and IPv6, including multicast
+
+Unlike TCP streaming such as Icecast, trx uses RTP/UDP with handling of dropped packets and network congestion that is more appropriate to live or realtime audio. Much of this comes courtesy of the brilliant Opus audio codec. The result is an incredibly graceful handling of network loss or dropouts.
+
+It is intended for use over closed or private IP networks. It can be used over the public internet, but you are warned that it has no built-in security or authentication of the received audio. If you do not already have a private network you may wish to use an appropriate tunnel or IPsec.
+
+trx is based on the following software/libraries:
+
+- ALSA (Linux)
+- Opus codec
+- lib oRTP: packaged with most Linux distributions
+
+////////////////////////////////////////////////////////////
+
+# Compile TRX
+
+////////////////////////////////////////////////////////////
+
+sudo apt-get -y install libopus-dev
+
+# Internal
+sudo ./dev.sh
+sudo cp /mnt/moode-player/components/trx/trx-0.5.tar.gz ./
+
+# From repo
+wget https://github.com/moode-player/moode/tree/develop/other/trx/trx-0.5.tar.gz
+sudo tar xfz ./trx-0.5.tar.gz
+cd trx-0.5
+sudo make
+
+# Copies tx and rx binaries to /usr/local/bin/
+sudo make install
+
+# Cleanup
+cd ..
+sudo rm -rf trx-0.5*
+
+////////////////////////////////////////////////////////////
+
+# Testing
+
+# NOTE: Receiver volume is controlled via Hardware volume thus
+the receiving device must support Hardware volume controller
+otherwise volume will be fixed at 100% (0dB).
+
+Receiver volume can be set by moOde knob, alsamixer or amixer
+
+////////////////////////////////////////////////////////////
+
+# /etc/alsa/conf.d/trx_send.conf
+# Use 16/48K for OPUS codec
+pcm.trx_send {
+type plug
+slave {
+pcm "plughw:Loopback,1,0"
+rate 48000
+format S16_LE
+channels 2
+}
+}
+
+# Transmit
+sudo tx -d trx_send -h <REMOTE_HOST> -m 32
+
+# Receive
+sudo rx -d <LOCAL_DEVICE> -m 32
+
+# Verbose
+-v 2
+
+# Background
+> /dev/null 2>&1 &
+
+////////////////////////////////////////////////////////////
+
+# TX HELP
+
+////////////////////////////////////////////////////////////
+
+pi@rp2:~ $ tx -h
+trx (C) Copyright 2020 Mark Hills <mark@xwax.org>
+tx: option requires an argument -- 'h'
+Usage: tx [<parameters>]
+Real-time audio transmitter over IP
+
+Audio device (ALSA) parameters:
+  -d <dev>    Device name (default 'default')
+  -m <ms>     Buffer time (default 16 milliseconds)
+
+Network parameters:
+  -h <addr>   IP address to send to (default ::)
+  -p <port>   UDP port number (default 1350)
+
+Encoding parameters:
+  -r <rate>   Sample rate (default 48000Hz)
+  -c <n>      Number of channels (default 2)
+  -f <n>      Frame size (default 960 samples, see below)
+  -b <kbps>   Bitrate (approx., default 128)
+
+Program parameters:
+  -v <n>      Verbosity level (default 1)
+  -D <file>   Run as a daemon, writing process ID to the given file
+
+Allowed frame sizes (-f) are defined by the Opus codec. For example,
+at 48000Hz the permitted values are 120, 240, 480 or 960.
+
+////////////////////////////////////////////////////////////
+
+# RX HELP
+
+////////////////////////////////////////////////////////////
+
+pi@rp2:~ $ rx -h
+trx (C) Copyright 2020 Mark Hills <mark@xwax.org>
+rx: option requires an argument -- 'h'
+Usage: rx [<parameters>]
+Real-time audio receiver over IP
+
+Audio device (ALSA) parameters:
+  -d <dev>    Device name (default 'default')
+  -m <ms>     Buffer time (default 16 milliseconds)
+
+Network parameters:
+  -h <addr>   IP address to listen on (default ::)
+  -p <port>   UDP port number (default 1350)
+  -j <ms>     Jitter buffer (default 16 milliseconds)
+
+Encoding parameters (must match sender):
+  -r <rate>   Sample rate (default 48000Hz)
+  -c <n>      Number of channels (default 2)
+
+Program parameters:
+  -v <n>      Verbosity level (default 1)
+  -D <file>   Run as a daemon, writing process ID to the given file
