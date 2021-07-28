@@ -93,10 +93,10 @@ channels 2
 }
 
 # Transmit
-sudo tx -d trx_send -h <REMOTE_HOST> -m 32
+sudo tx -d trx_send -h 239.0.0.1 -m 32
 
 # Receive
-sudo rx -d <LOCAL_DEVICE> -m 32
+sudo rx -d <LOCAL_DEVICE> 239.0.0.1 -m 32 -j 32
 
 # Verbose
 -v 2
