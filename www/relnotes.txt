@@ -15,6 +15,10 @@
 //
 ########################################################
 
+New features
+
+- Backup/restore manager
+
 Updates
 
 - UPD: Add "okto research dac8 Stereo" to device table
