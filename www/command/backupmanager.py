@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
     what =  ['config','cdsp', 'r_other']
     if args.what:
-        what = arg.what
+        what = args.what
 
     if args.do_restore and args.what == None:
         print('backup content:')
