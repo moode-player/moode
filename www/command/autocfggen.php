@@ -29,8 +29,13 @@
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
-playerSession('open', '' ,'');
-session_write_close();
+$_SESSION = [];
+$dbh  = cfgdb_connect();
+$params = cfgdb_read('cfg_system', $dbh);
+
+foreach ($params as $row) {
+  $_SESSION[$row['param']] = $row['value'];
+}
 
 print(autoconfigExtract());
 ?>
