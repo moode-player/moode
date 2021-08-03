@@ -22,11 +22,19 @@
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
+define('TMP_BACKUP_ZIP', '/tmp/backup.zip');
+define('TMP_MOODECFG_INI', '/tmp/moodecfg.ini');
+define('TMP_RESTORE_ZIP', '/tmp/restore.zip');
+define('TMP_SCRIPT_FILE', '/tmp/script');
+define('BACKUP_FILE_PREFIX', 'backup_');
+
 playerSession('open', '' ,'');
 
 /**
  * Post parameter processing
  */
+
+// Backup
 if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 	$backupOptions = '';
 	if( isset($_POST['backup_system']) && $_POST['backup_system'] == '1' ) {
@@ -36,7 +44,7 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 		$backupOptions .= $backupOptions ? ' cdsp' : 'cdsp';
 	}
 	if( isset($_POST['backup_radiostations_moode']) && $_POST['backup_radiostations_moode'] == '1' ) {
-		$backupOptions .= $backupOptions ? ' r_sys' : 'r_sys';
+		$backupOptions .= $backupOptions ? ' r_moode' : 'r_moode';
 	}
 	if( isset($_POST['backup_radiostations_other']) && $_POST['backup_radiostations_other'] == '1' ) {
 		$backupOptions .= $backupOptions ? ' r_other' : 'r_other';
@@ -47,74 +55,93 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 	}
 
 	if( isset($_POST['backup_wlan0pwd']) && $_POST['backup_wlan0pwd']  ) {
-		$backupOptions .= '--wlanpwd ' .$_POST['backup_wlan0pwd'] .' ';
+		$backupOptions .= '--wlanpwd ' . $_POST['backup_wlan0pwd'] . ' ';
 	}
 
-	if( isset($_FILES['backup_scriptfile']) ) {
-		move_uploaded_file($_FILES["backup_scriptfile"]["tmp_name"], '/tmp/script');
-		//TODO: test if file exists
-		$backupOptions .= '--script /tmp/script ';
+	if (file_exists(TMP_SCRIPT_FILE)) {
+		$backupOptions .= '--script ' . TMP_SCRIPT_FILE . ' ';
+		sysCmd('chown pi:pi ' . TMP_SCRIPT_FILE);
 	}
 
-	$tempBackupFileName = '/tmp/backup.zip';
-	sysCmd('sudo -u pi /var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
-	// print('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . $tempBackupFileName);
+	// Generate backup zip
+	sysCmd('-u pi /var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
+	//workerLog('Options: ' . $backupOptions);
 
-	// create name for backup file in browser
+	// Create name for backup file in browser
 	$dt = new DateTime('NOW');
-	$backupFileName = 'moode_'. $_SESSION['hostname'].'_'. $dt->format('ymd_Hi').'.zip';
+	$backupFileName = BACKUP_FILE_PREFIX . $_SESSION['hostname'].'_'. $dt->format('ymd_Hi').'.zip';
 
 	header("Content-Description: File Transfer");
 	header("Content-type: application/octet-stream");
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Disposition: attachment; filename=" . $backupFileName);
-	header("Content-length: " . filesize($tempBackupFileName));
+	header("Content-length: " . filesize(TMP_BACKUP_ZIP));
 	header("Pragma: no-cache");
 	header("Expires: 0");
-	readfile ($tempBackupFileName);
-
-	// remove leftovers after backup
-	unlink($tempBackupFileName);
+	readfile (TMP_BACKUP_ZIP);
+	//unlink(TMP_BACKUP_ZIP); // NOTE: This does not delete the file
 	exit();
 }
+// Restore
 else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
-	if( isset($_FILES['restore_backupfile']) ) {
+	if (file_exists(TMP_RESTORE_ZIP)) {
 		$restoreOptions = '';
+
 		if( isset($_POST['restore_system']) && $_POST['restore_system'] == '1' ) {
-			$restoreOptions .= $restoreOptions ? ',config' : 'config';
+			$restoreOptions .= $restoreOptions ? ' config' : 'config';
 		}
 		if( isset($_POST['restore_camilladsp']) && $_POST['restore_camilladsp'] == '1' ) {
-			$restoreOptions .= $restoreOptions ? ',cdsp' : 'cdsp';
+			$restoreOptions .= $restoreOptions ? ' cdsp' : 'cdsp';
 		}
 		if( isset($_POST['restore_radiostations_moode']) && $_POST['restore_radiostations_moode'] == '1' ) {
-			$restoreOptions .= $restoreOptions ? ',r_sys' : 'r_sys';
+			$restoreOptions .= $restoreOptions ? ' r_moode' : 'r_moode';
 		}
 		if( isset($_POST['restore_radiostations_other']) && $_POST['restore_radiostations_other'] == '1' ) {
-			$restoreOptions .= $restoreOptions ? ',r_other' : 'r_other';
+			$restoreOptions .= $restoreOptions ? ' r_other' : 'r_other';
 		}
 
 		if($restoreOptions) {
-			$restoreOptions = '--what=' . $restoreOptions . ' ';
+			$restoreOptions = '--what ' . $restoreOptions . ' ';
 		}
 
-		$tempBackupFileName = '/tmp/restore.zip';
-		$configFileBaseName = $_FILES["restore_backupfile"]["name"];
+		// NOTE: Comment this and the reboot out to test the other parts of the restore process
+		sysCmd('/var/www/command/backupmananger.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
+		// TODO: Maybe reset file rights?
+		//workerLog('/var/www/command/backupmananger.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 
-		// move_uploaded_file($_FILES["restore_backupfile"]["tmp_name"], '/tmp/'.$configFileBaseName);
-		move_uploaded_file($_FILES["restore_backupfile"]["tmp_name"], $tempBackupFileName);
+		sysCmd('rm ' . TMP_RESTORE_ZIP);
 
-		// print('/var/www/backupmananger.py ' . $restoreOptions . '--restore ' . $tempBackupFileName);
-		sysCmd('/var/www/backupmananger.py ' . $restoreOptions . '--restore ' . $tempBackupFileName);
+		// Automatically reboot
+		$_SESSION['notify']['title'] = 'Restore complete';
+		$_SESSION['notify']['msg'] = "System will reboot in 5 seconds.";
+		$_SESSION['notify']['duration'] = 5;
 
-		//TODO: maybe reset file rights?
-
-		unlink($tempBackupFileName);
 		sysCmd('reboot');
 	}
 	else {
-		print('no file');
+		$_imported_backupfile = 'No file selected';
+		$_SESSION['notify']['title'] = 'Select a backup file';
+		$_SESSION['notify']['duration'] = 3;
 	}
 }
+else if (isset($_POST['import_backupfile'])) {
+	$_imported_backupfile = 'Uploaded: <i>' . $_FILES['restore_backupfile']['name'] . '</i>';
+	rename($_FILES['restore_backupfile']['tmp_name'], TMP_RESTORE_ZIP);
+	// NOTE: File stat is 0600/-rw-------, www-data:www-data
+	//workerLog('Imported backup: ' . print_r($_FILES['restore_backupfile'], true));
+}
+else if (isset($_POST['import_scriptfile'])) {
+	$_imported_scriptfile = 'Uploaded: <i>' . $_FILES['backup_scriptfile']['name'] . '</i>';
+	rename($_FILES['backup_scriptfile']['tmp_name'], TMP_SCRIPT_FILE);
+	// NOTE: File stat is 0600/-rw-------, www-data:www-data
+	//workerLog('Imported script: ' . print_r($_FILES['backup_scriptfile'], true));
+}
+else {
+	$_imported_backupfile = 'No file selected';
+	$_imported_scriptfile = 'No file selected';
+}
+
+session_write_close();
 
 /**
  * Generate data for html templating
@@ -140,24 +167,25 @@ function genToggleButton($id, $value, $disabled) {
 	]);
 }
 
-$_backup_visible = (!(isset($_GET['action']) && $_GET['action'] == 'restore')) ? '': 'hidden';
-$_restore_visible = (isset($_GET['action']) && $_GET['action'] == 'restore') ? '': 'hidden';
-
-
-// toggle buttons for backup
-$_togglebtn_backup_system = genToggleButton('backup_system', True, True);
-$_togglebtn_backup_camilladsp = genToggleButton('backup_camilladsp', True, True);
-$_togglebtn_backup_radiostations_moode = genToggleButton('backup_radiostations_moode', False, True);
-$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, True);
-
-// toggle buttons for restore
-$_togglebtn_restore_system = genToggleButton('restore_system', True, True);
-$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', True, True);
-$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', False, True);
-$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', True, True);
-
-
-session_write_close();
+// Backup toggles
+if (isset($_GET['action']) && $_GET['action'] == 'backup') {
+	$_restore_hidden = 'hidden';
+	$_togglebtn_backup_system = genToggleButton('backup_system', True, True);
+	$_togglebtn_backup_camilladsp = genToggleButton('backup_camilladsp', True, True);
+	$_togglebtn_backup_radiostations_moode = genToggleButton('backup_radiostations_moode', True, True);
+	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, True);
+}
+// Restore toggles
+elseif (isset($_GET['action']) && $_GET['action'] == 'restore') {
+	$_backup_hidden = 'hidden';
+	$backupOptions = array();
+	$backupOptions = file_exists(TMP_RESTORE_ZIP) ? sysCmd('/var/www/command/backupmanager.py --info ' . TMP_RESTORE_ZIP) : $backupOptions;
+	//workerLog(print_r($backupOptions, true));
+	$_togglebtn_restore_system = genToggleButton('restore_system', in_array('config', $backupOptions), True);
+	$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', in_array('cdsp', $backupOptions), True);
+	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), True);
+	$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', in_array('r_other', $backupOptions), True);
+}
 
 waitWorker(1, 'backup');
 

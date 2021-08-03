@@ -854,16 +854,15 @@ session_write_close();
 // Check permissions on the session file
 phpSessionCheck();
 
-
 // Auto restore backup if present
 // Do it just before autocfg so an autocfg always overrules backup settings
 $restoreBackup = false;
 if (file_exists('/boot/moodebackup.zip')) {
 	$restore_log = '/home/pi/backup_restore.log';
-	sysCmd('/var/www/command/backupmanager.py --restore /boot/moodebackup.zip > '.$restore_log);
-	unlink('/boot/moodebackup.zip');
+	sysCmd('/var/www/command/backupmanager.py --restore /boot/moodebackup.zip > ' . $restore_log);
+	sysCmd('rm /boot/moodebackup.zip');
 	sysCmd('sync');
-	$restoreBackup = true; // delay reboot incase autocfg is also present
+	$restoreBackup = true; // Don't reboot here in case autocfg is also present
 }
 // Auto-configure if indicated
 // NOTE: This is done near the end of startup because autoConfig() uses the wpa_passphrase utility which requires
@@ -877,7 +876,8 @@ if (file_exists('/boot/moodecfg.ini')) {
 	sysCmd('sync');
 	autoCfgLog('autocfg: System restarted');
 	sysCmd('reboot');
-} else if($restoreBackup) {
+}
+else if ($restoreBackup) {
 	sysCmd('reboot');
 }
 

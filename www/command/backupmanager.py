@@ -25,6 +25,10 @@
 #
 import argparse
 
+# TC
+import logging
+import datetime
+
 from os import system, path, walk
 import os
 from zipfile import ZipFile
@@ -40,7 +44,7 @@ class BackupManager(StationManager):
 
     OPT_CFG = 'config'
     OPT_CDSP = 'cdsp'
-    OPT_RS_SYS ='r_sys'
+    OPT_RS_MOODE ='r_moode'
     OPT_RS_OTHER = 'r_other'
 
     # for real
@@ -57,11 +61,11 @@ class BackupManager(StationManager):
     def do_backup(self, what, script_file, wlanpwd):
 
         scope = None
-        if BackupManager.OPT_RS_OTHER in what and BackupManager.OPT_RS_SYS in what:
+        if BackupManager.OPT_RS_OTHER in what and BackupManager.OPT_RS_MOODE in what:
             scope = 'all'
         elif BackupManager.OPT_RS_OTHER in what:
             scope = 'other'
-        elif BackupManager.OPT_RS_SYS in what:
+        elif BackupManager.OPT_RS_MOODE in what:
             scope = 'moode'
 
         zipmode = 'w'
@@ -71,7 +75,8 @@ class BackupManager(StationManager):
             zipmode = 'a'
 
         if BackupManager.OPT_CFG in what:
-            system('moodeutl -e ' + BackupManager.MOODECFGINI_TMP )
+            system('moodeutl -e ' + BackupManager.MOODECFGINI_TMP)
+
             if script_file and os.path.exists(script_file):
                 with open(BackupManager.MOODECFGINI_TMP, 'a') as fp:
                     fp.write('[Users]\n')
@@ -85,7 +90,7 @@ class BackupManager(StationManager):
                 if os.path.exists(BackupManager.MOODECFGINI_TMP):
                     backup.write(BackupManager.MOODECFGINI_TMP, 'moodecfg.ini')
                 if script_file and os.path.exists(script_file):
-                    print('add script to backup')
+                    print('Add script to backup')
                     backup.write(script_file, 'script')
                 if os.path.exists('/var/local/www/imagesw/bgimage.jpg'):
                     backup.write('/var/local/www/imagesw/bgimage.jpg', 'bgimage.jpg')
@@ -94,12 +99,12 @@ class BackupManager(StationManager):
             if BackupManager.OPT_CDSP in what:
                 if path.exists(BackupManager.CDSPCFG_BASE ):
                     if path.exists(path.join(BackupManager.CDSPCFG_BASE, 'configs')):
-                        print('backup camilladsp configs')
+                        print('Backup camilladsp configs')
                         for fpath, subdirs, files in walk(path.join(BackupManager.CDSPCFG_BASE, 'configs')):
                             for name in files:
                                 backup.write(path.join(fpath, name), path.join('camilladsp', 'configs', name))
                     if path.exists(path.join(BackupManager.CDSPCFG_BASE, 'coeffs')):
-                        print('backup camilladsp coeffs')
+                        print('Backup camilladsp coeffs')
                         for fpath, subdirs, files in walk(path.join(BackupManager.CDSPCFG_BASE, 'coeffs')):
                             for name in files:
                                 backup.write(path.join(fpath, name), path.join('camilladsp', 'coeffs', name))
@@ -107,11 +112,11 @@ class BackupManager(StationManager):
     def do_restore(self, what):
         # restore radio stations
         scope = None
-        if BackupManager.OPT_RS_OTHER in what and BackupManager.OPT_RS_SYS in what:
+        if BackupManager.OPT_RS_OTHER in what and BackupManager.OPT_RS_MOODE in what:
             scope = 'all'
         elif BackupManager.OPT_RS_OTHER in what:
             scope = 'other'
-        elif BackupManager.OPT_RS_SYS in what:
+        elif BackupManager.OPT_RS_MOODE in what:
             scope = 'moode'
 
         if scope:
@@ -121,10 +126,10 @@ class BackupManager(StationManager):
             # restore moodecfg.ini
             if BackupManager.OPT_CFG in what:
                 try:
-                    print('restore moodecfg.ini (requires reboot afterwards!)')
+                    print('Restore moodecfg.ini (requires reboot afterwards!)')
                     backup.extract('moodecfg.ini', BackupManager.MOODECFGINI_RESTORE_PATH)
                 except KeyError:
-                    print("backup doesn't contain moode configuration file.")
+                    print("Backup doesn't contain moode configuration file.")
                 if 'bgimage.jpg' in backup.namelist():
                     backup.extract('bgimage.jpg', '/var/local/www/imagesw/bgimage.jpg');
 
@@ -132,13 +137,13 @@ class BackupManager(StationManager):
             if BackupManager.OPT_CDSP in what:
                 names = [ name  for name in backup.namelist() if 'camilladsp/' in name]
                 if len(names) >= 0:
-                    print('restore camilladsp config')
+                    print('Restore camilladsp config')
                     backup.extractall (BackupManager.CDSPCFG_RESTORE_BASE, names)
 
     def do_info(self):
         configPresent = False
         cdspPresent = False
-        rs_sys_present = False
+        rs_moode_present = False
         rs_other_present = False
 
 
@@ -150,7 +155,7 @@ class BackupManager(StationManager):
             with ZipFile(self.backup_file, 'r') as backup:
                 if rsPresent:
                     data = self.get_stations_from_backup(backup)
-                    rs_sys_present = len(self.filter_stations(data['stations'], 'moode')) >= 1
+                    rs_moode_present = len(self.filter_stations(data['stations'], 'moode')) >= 1
                     rs_other_present = len(self.filter_stations(data['stations'], 'other')) >= 1
                 try:
                     info=backup.getinfo('moodecfg.ini')
@@ -166,9 +171,9 @@ class BackupManager(StationManager):
         if configPresent:
             print('config')
             content.append('config')
-        if rs_sys_present:
-            print('r_sys')
-            content.append('r_sys')
+        if rs_moode_present:
+            print('r_moode')
+            content.append('r_moode')
         if rs_other_present:
             print('r_other')
             content.append('r_other')
@@ -180,35 +185,35 @@ class BackupManager(StationManager):
 
 
 def get_cmdline_arguments():
-    epilog = 'Root privileges required for restore.'
-    parser = argparse.ArgumentParser(description = 'Manages backup and restore of moOde configuration.', epilog = epilog)
+    epilog = 'Root privileges required for restore'
+    parser = argparse.ArgumentParser(description = 'Manages backup and restore of moOde system', epilog = epilog)
     parser.add_argument('backupfile',  default = None,
-                   help = 'Filename of the moode backup.')
+                   help = 'Filename of the backup')
 
     parser.add_argument('--version', action='version', version='%(prog)s {}'.format(BackupManager.VERSION))
 
     parser.add_argument('--what', dest = 'what', nargs="+",
-                   choices = ['config', 'cdsp', 'r_sys', 'r_other'], default = None ,
-                   help = 'Indicate what to backup/restore. (default for backup: config cdsp r_other, default on restore: auto detect content)')
+                   choices = ['config', 'cdsp', 'r_moode', 'r_other'], default = None ,
+                   help = 'Indicate what to backup/restore (default for backup: config cdsp r_other, default on restore: auto detect content)')
 
     group = parser.add_mutually_exclusive_group( required = True)
     group.add_argument('--backup', dest = 'do_backup', action = 'store_const',
                    const = sum,
-                   help = 'Create backup.')
+                   help = 'Create backup')
 
     group.add_argument('--restore', dest = 'do_restore', action = 'store_const',
                    const = sum,
-                   help = 'Restore backup.')
+                   help = 'Restore backup')
 
     group.add_argument('--info', dest='do_info',  action = 'store_const',  const=sum,
-                   help = "show information what is included in the backup (detect available 'what')")
+                   help = "Show which were used to create the backup")
 
 
     parser.add_argument('--db', default = '/var/local/www/db/moode-sqlite3.db',
                    help = 'File name of the SQL database. (default: /var/local/www/db/moode-sqlite3.db')
 
     parser.add_argument('--script', dest = 'script', default = None,
-                   help = 'Add script file to the backup (is executed when config is restored)')
+                   help = 'Add script file to the backup (executed when restoring the backup)')
 
     parser.add_argument('--wlanpwd', dest = 'wlanpwd', default = None,
                    help = 'When creating a backup, supply a password for wifi access (applied when restoring the backup)')
@@ -218,24 +223,27 @@ def get_cmdline_arguments():
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='/tmp/py.log', level=logging.DEBUG)
+    #logging.debug('Start')
+
     args = get_cmdline_arguments()
 
     mgnr = BackupManager (args.db, args.backupfile)
 
     if args.do_restore:
         if os.geteuid() != 0:
-            print("ERROR: Root privileges are required for a backup restore, run with sudo.")
+            print("ERROR: Root privileges are required for restore, run with sudo.")
             exit(10)
     if args.backupfile == None and (args.do_backup or args.do_restore):
-        print("ERROR: No moOde backup file provided. Required for backup or restore.")
+        print("ERROR: No backup file specified. Required for backup or restore.")
         exit(11)
 
     what =  ['config','cdsp', 'r_other']
     if args.what:
-        what = arg.what
+        what = args.what
 
     if args.do_restore and args.what == None:
-        print('backup content:')
+        print('Backup content:')
         what = mgnr.do_info()
         print()
 

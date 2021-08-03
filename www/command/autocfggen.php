@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 
  /**
@@ -29,8 +27,11 @@
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
-playerSession('open', '' ,'');
-session_write_close();
+$_SESSION = [];
+$params = cfgdb_read('cfg_system', cfgdb_connect());
+foreach ($params as $row) {
+    $_SESSION[$row['param']] = $row['value'];
+}
 
 print(autoconfigExtract());
 ?>
