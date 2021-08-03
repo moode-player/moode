@@ -93,16 +93,16 @@ channels 2
 }
 
 # Transmit
-sudo tx -d trx_send -h 239.0.0.1 -m 32
+sudo tx -d trx_send -h 239.0.0.1 -m 32 2>/dev/null &
 
 # Receive
-sudo rx -d <LOCAL_DEVICE> 239.0.0.1 -m 32 -j 32
+sudo rx -d <LOCAL_DEVICE> -h 239.0.0.1 -m 32 -j 32 2>/dev/null &
 
 # Verbose
 -v 2
 
 # Background
-> /dev/null 2>&1 &
+2>/dev/null &
 
 ////////////////////////////////////////////////////////////
 
