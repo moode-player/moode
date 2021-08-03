@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 -->
 <div class="container">
@@ -111,8 +109,7 @@
 						$_select[usb_auto_mounter]
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_usb_auto_mounter" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_usb_auto_mounter" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span class="help-block-configs help-block-margin" style="margin-top: 0px; padding-top: 0px;">
+					<span class="help-block-configs help-block-margin">
 						For ARM6 platforms (Pi-1B, Zero/w, etc) select <b>Devmon</b>, otherwise select <b>Udisks-glue (Default)</b>.
 					</span>
 				</div>
@@ -132,7 +129,7 @@
 							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_p3wifi" value="novalue">Set</button>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-p3wifi" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
-						<span id="info-p3wifi" class="help-block-configs help-block-margin hide">
+						<span id="info-p3wifi" class="help-block-configs help-block-margin2 hide">
 							The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
 	                    </span>
 					</div>
@@ -151,7 +148,7 @@
 							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_p3bt" value="novalue">Set</button>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-p3bt" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
-						<span id="info-p3bt" class="help-block-configs help-block-margin hide">
+						<span id="info-p3bt" class="help-block-configs help-block-margin2 hide">
 							The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
 	                    </span>
 					</div>
@@ -171,7 +168,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_hdmiport" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-hdmiport" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-hdmiport" class="help-block-configs help-block-margin hide">
+					<span id="info-hdmiport" class="help-block-configs help-block-margin2 hide">
 						Leaving the HDMI port ON uses +25 mA and lengthens boot time.<br>
                     </span>
 				</div>
@@ -190,7 +187,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_actled" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-actled" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-actled" class="help-block-configs help-block-margin hide">
+					<span id="info-actled" class="help-block-configs help-block-margin2 hide">
 						LED0 default trigger is SDCard (mmc0) activity.
                     </span>
 				</div>
@@ -210,7 +207,7 @@
 							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_pwrled" value="novalue">Set</button>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-pwrled" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
-						<span id="info-pwrled" class="help-block-configs help-block-margin hide">
+						<span id="info-pwrled" class="help-block-configs help-block-margin2 hide">
 							LED1 default trigger is default-on for Power.
 	                    </span>
 					</div>
@@ -229,11 +226,11 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span class="help-block-configs help-block-margin" style="margin-top: 0px; padding-top: 0px;">
+					<span class="help-block-configs help-block-margin2" style="margin-top: 0px; padding-top: 0px;">
 						CAUTION: Only turn this OFF if running a WiFi-only configuration.<br>
 						Leave this setting ON if connected via Ethernet cable.
 					</span>
-					<span id="info-eth0chk" class="help-block-configs help-block-margin hide">
+					<span id="info-eth0chk" class="help-block-configs help-block-margin2 hide">
 						Wait up to 9 secs for an IP address to be assigned to eth0.<br>
                     </span>
 				</div>
@@ -290,7 +287,7 @@
 		                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-localui" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
-						<span id="info-localui" class="help-block-configs help-block-margin hide">
+						<span id="info-localui" class="help-block-configs help-block-margin2 hide">
 							Display moOde UI on locally attached display.<br>
 	                    </span>
 	                </div>
@@ -309,7 +306,7 @@
 		                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_touchscn" value="novalue">Set</button>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
-						<span id="info-touchscn" class="help-block-configs help-block-margin hide">
+						<span id="info-touchscn" class="help-block-configs help-block-margin2 hide">
 							This prevents the cursor from showing on the display or Touch screen<br>
 	                    </span>
 	                </div>
@@ -338,7 +335,7 @@
 		                    <button class="btn btn-primary btn-small btn-submit" type="submit" name="update_wake_display" value="novalue">Set</button>
 							<a aria-label="Help" class="info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
-						<span id="info_wake_display" class="help-block-configs help-block-margin hide">
+						<span id="info_wake_display" class="help-block-configs help-block-margin2 hide">
 							Wake the display when audio starts playing.
 	                    </span>
 	                </div>
@@ -408,7 +405,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_extmeta" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-extmeta" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-extmeta" class="help-block-configs help-block-margin hide">
+					<span id="info-extmeta" class="help-block-configs help-block-margin2 hide">
 						Maintain enhanced metadata in /var/local/www/currentsong.txt file<br>
 						for consumption by external applications.<br>
                     </span>
@@ -431,7 +428,7 @@
 					<span class="help-block-configs">
 						The LCD update engine runs lcdup.py script whenever UI state changes.<br>
 					</span>
-					<span id="info-lcdup" class="help-block-configs help-block-margin hide">
+					<span id="info-lcdup" class="help-block-configs help-block-margin2 hide">
 						A stub lcdup.py script is located in /var/local/www/commandw.
                     </span>
 				</div>
@@ -451,7 +448,7 @@
 							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_gpio_svc" value="novalue">Set</button>
 							<a aria-label="Help" class="info-toggle" data-cmd="info_gpio_svc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						</div>
-						<span id="info_gpio_svc" class="help-block-configs help-block-margin hide">
+						<span id="info_gpio_svc" class="help-block-configs help-block-margin2 hide">
 							Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.<br>
 	                    </span>
 						<div class="help-block-margin">
@@ -474,7 +471,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_shellinabox" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-shellinabox" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-shellinabox" class="help-block-configs help-block-margin hide">
+					<span id="info-shellinabox" class="help-block-configs help-block-margin2 hide">
 						Web based SSH terminal server using Shellinabox by Markus Gutschk and Luka Krajger.<br>
                     </span>
 					<div class="help-block-margin">
@@ -484,7 +481,32 @@
 			</div>
 		</fieldset>
 
-		<legend>Maintenance</legend>
+		<legend>Backup/Restore</legend>
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label">Backup system</label>
+				<div class="controls">
+					<a href="backup.php?action=backup"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Backup</button></a>
+					<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-backup-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-backup-system" class="help-block-configs help-block-margin hide">
+						Backup settings, radio stations and CamillaDSP configs.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Restore system</label>
+				<div class="controls">
+					<a href="backup.php?action=restore"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Restore</button></a>
+					<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-restore-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-restore-system" class="help-block-configs help-block-margin hide">
+						Restore settings, radio stations and CamillaDSP configs.
+                    </span>
+				</div>
+			</div>
+		</fieldset>
+
+		<legend>System Maintenance</legend>
 		<fieldset>
 			<div class="control-group">
 				<label class="control-label">Playback history</label>
@@ -532,7 +554,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_debuglog" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-debuglog" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-debuglog" class="help-block-configs help-block-margin hide">
+					<span id="info-debuglog" class="help-block-configs help-block-margin2 hide">
 						Increase the level of detail in moode log.<br>
                     </span>
 				</div>
