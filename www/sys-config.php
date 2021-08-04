@@ -316,6 +316,9 @@ if (isset($_POST['debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
 
 session_write_close();
 
+// Clean out any temp file leftovers from Backup/Restore screens
+sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/script');
+
 // GENERAL
 
 $_timezone['timezone'] = buildTimezoneSelect($_SESSION['timezone']);

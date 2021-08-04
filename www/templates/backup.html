@@ -49,8 +49,9 @@
 							$_imported_scriptfile
 						</div>
 					</div>
-					<br>
+				</div>
 
+				<div class="control-group">
 					<label class="control-label">Configuration settings</label>
 					<div class="controls">
 						$_togglebtn_backup_system
@@ -84,7 +85,9 @@
 							Backup user added radio stations.
 						</span>
 					</div>
+				</div>	
 
+				<div class="control-group">
 					<label class="control-label" for="wlan0pwd">WiFi password</label>
 					<div class="controls">
 						<input class="input-large" type="password" pattern=".{8,64}" id="backup_wlan0pwd" name="backup_wlan0pwd" value="$_wlan0pwd" >
@@ -149,7 +152,20 @@
 							Restore user added radio stations.
 						</span>
 					</div>
+				</div>
 
+				<div class="control-group">
+					<label class="control-label">Reset options</label>
+					<div class="controls">
+						<button class="btn btn-medium btn-primary btn-submit" type="submit" name="reset_options" form="restore" value="1">Reset</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-reset-options" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-reset-options" class="help-block-configs help-block-margin hide">
+							Clear uploaded files from the temp directory and reset the option buttons to No.
+						</span>
+					</div>
+				</div>
+
+				<div class="control-group">
 					<label class="control-label">Backup file</label>
 					<div class="controls">
 						<div class="modal-button-style" style="margin-top:.5em;">
@@ -158,15 +174,15 @@
 							<button id="btn-import-backupfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_backupfile" value="1"  style="display:none"/>
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-backupfile" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<div id="info-backupfile" class="help-block-configs help-block-margin hide">
+						<span id="info-backupfile" class="help-block-configs help-block-margin hide">
 							Select and upload a backup file that will be used for the restore process.
-						</div>
+						</span>
 						<div class="help-block-configs help-block-margin">
 							$_imported_backupfile
 						</div>
 					</div>
 					<br><br>
-					
+
 					<div class="controls">
 						<button class="btn btn-medium btn-primary btn-submit" type="submit" name="restore_start" form="restore" value="1">Start Restore</button>
 						<div id="info-start-restore" class="help-block-configs help-block-margin">

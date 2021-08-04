@@ -136,6 +136,12 @@ else if (isset($_POST['import_scriptfile'])) {
 	// NOTE: File stat is 0600/-rw-------, www-data:www-data
 	//workerLog('Imported script: ' . print_r($_FILES['backup_scriptfile'], true));
 }
+else if (isset($_POST['reset_options'])) {
+	sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/script');
+	$_imported_backupfile = 'No file selected';
+	$_SESSION['notify']['title'] = 'Options have been reset';
+	$_SESSION['notify']['duration'] = 3;
+}
 else {
 	$_imported_backupfile = 'No file selected';
 	$_imported_scriptfile = 'No file selected';
@@ -176,7 +182,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, True);
 }
 // Restore toggles
-elseif (isset($_GET['action']) && $_GET['action'] == 'restore') {
+else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
 	$_backup_hidden = 'hidden';
 	$backupOptions = array();
 	$backupOptions = file_exists(TMP_RESTORE_ZIP) ? sysCmd('/var/www/command/backupmanager.py --info ' . TMP_RESTORE_ZIP) : $backupOptions;
