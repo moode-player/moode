@@ -22,6 +22,7 @@ New features
 Updates
 
 - UPD: Add "okto research dac8 Stereo" to device table
+- UPD: Bump to pycamilladsp 0.5.1
 
 Radio stations
 
@@ -40,6 +41,7 @@ Bug fixes
 - FIX: CoverView Playbar show/hide not working when launched from Library
 - FIX: Typo in cdsp 32b float format (FLOATLE should be FLOAT32LE)
 - FIX: BlueZ audioout being set to Bluetooth on Disconnect
+- FIX: Web socket get_mute() not working in pycamilladsp.py
 - FIX: Various auto-config bugs
 
 ########################################################
