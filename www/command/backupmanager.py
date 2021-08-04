@@ -223,7 +223,7 @@ def get_cmdline_arguments():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='/tmp/py.log', level=logging.DEBUG)
+    #logging.basicConfig(filename='/tmp/py.log', level=logging.DEBUG)
     #logging.debug('Start')
 
     args = get_cmdline_arguments()
