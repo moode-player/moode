@@ -113,10 +113,11 @@ else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
 
 		// Automatically reboot
 		$_SESSION['notify']['title'] = 'Restore complete';
-		$_SESSION['notify']['msg'] = "System will reboot in 5 seconds.";
+		$_SESSION['notify']['msg'] = "";
 		$_SESSION['notify']['duration'] = 5;
 
 		if( empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') ) {
+			$_SESSION['notify']['msg'] = "System will reboot in 5 seconds.";
 			sysCmd('reboot');
 		}
 	}
