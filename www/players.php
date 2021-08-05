@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-11-24 TC moOde 6.4.0
- *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
@@ -38,7 +36,7 @@ while ($line) {
 	$line = strtok("\n");
 }
 
-// check for no players found
+// Check for no players found
 if (empty(trim($_players))) {
 	$_players = '<li style="font-size:large">No other players found</li>';
 }
