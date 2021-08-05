@@ -85,7 +85,7 @@
 							Backup user added radio stations.
 						</span>
 					</div>
-				</div>	
+				</div>
 
 				<div class="control-group">
 					<label class="control-label" for="wlan0pwd">WiFi password</label>
@@ -155,17 +155,6 @@
 				</div>
 
 				<div class="control-group">
-					<label class="control-label">Reset options</label>
-					<div class="controls">
-						<button class="btn btn-medium btn-primary btn-submit" type="submit" name="reset_options" form="restore" value="1">Reset</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-reset-options" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-reset-options" class="help-block-configs help-block-margin hide">
-							Clear uploaded files from the temp directory and reset the option buttons to No.
-						</span>
-					</div>
-				</div>
-
-				<div class="control-group">
 					<label class="control-label">Backup file</label>
 					<div class="controls">
 						<div class="modal-button-style" style="margin-top:.5em;">
@@ -173,9 +162,11 @@
 							<input type="file" id="restore_backupfile" accept=".zip" name="restore_backupfile" style="display:none" onchange="$('#btn-import-backupfile').click();">
 							<button id="btn-import-backupfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_backupfile" value="1"  style="display:none"/>
 						</div>
+						<button class="btn btn-medium btn-primary btn-submit" type="submit" name="reset_options" form="restore" value="1">Reset</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-backupfile" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-backupfile" class="help-block-configs help-block-margin hide">
-							Select and upload a backup file that will be used for the restore process.
+							Select - Select and upload a backup file that will be used for the restore process.<br/>
+							Reset  - Clear uploaded files from the temp directory and reset the option buttons to No.
 						</span>
 						<div class="help-block-configs help-block-margin">
 							$_imported_backupfile
