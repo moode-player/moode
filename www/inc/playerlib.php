@@ -3138,6 +3138,8 @@ function autoConfigSettings() {
 		['requires' => ['ashufflesvc'] , 'handler' => setPlayerSession],
 		['requires' => ['ashuffle_mode'] , 'handler' => setPlayerSession],
 		['requires' => ['ashuffle_filter'] , 'handler' => setPlayerSession],
+		['requires' => ['alsa_output_mode'] , 'handler' => setPlayerSession],
+		['requires' => ['alsa_loopback'] , 'handler' => setPlayerSession],
 
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
