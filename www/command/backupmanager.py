@@ -89,6 +89,7 @@ class BackupManager(StationManager):
             if BackupManager.OPT_CFG in what:
                 if os.path.exists(BackupManager.MOODECFGINI_TMP):
                     backup.write(BackupManager.MOODECFGINI_TMP, 'moodecfg.ini')
+                    os.remove(BackupManager.MOODECFGINI_TMP)
                 if script_file and os.path.exists(script_file):
                     print('Add script to backup')
                     backup.write(script_file, 'script')

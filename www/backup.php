@@ -64,7 +64,7 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 	}
 
 	// Generate backup zip
-	sysCmd('-u pi /var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
+	sysCmd('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
 	//workerLog('Options: ' . $backupOptions);
 
 	// Create name for backup file in browser
@@ -79,7 +79,7 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 	header("Pragma: no-cache");
 	header("Expires: 0");
 	readfile (TMP_BACKUP_ZIP);
-	//unlink(TMP_BACKUP_ZIP); // NOTE: This does not delete the file
+	sysCmd('rm ' . TMP_BACKUP_ZIP);
 	exit();
 }
 // Restore
@@ -116,7 +116,9 @@ else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
 		$_SESSION['notify']['msg'] = "System will reboot in 5 seconds.";
 		$_SESSION['notify']['duration'] = 5;
 
-		sysCmd('reboot');
+		if( empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') ) {
+			sysCmd('reboot');
+		}
 	}
 	else {
 		$_imported_backupfile = 'No file selected';
@@ -156,7 +158,7 @@ session_write_close();
  // Helper method to generate html code for toggle button
 function genToggleButton($id, $value, $disabled) {
 	$template = '
-	<div class="toggle">
+	<div class="toggle" %disable_style>
 		<label class="toggle-radio" for="toggle_%id2">YES</label>
 		<input type="radio" name="%id" id="toggle_%id1" value="1" %checked1>
 		<label class="toggle-radio" for="toggle_%id1">NO</label>
@@ -169,7 +171,9 @@ function genToggleButton($id, $value, $disabled) {
 	return strtr($template , [
 		'%id' => $id,
 		' %checked1' => ($value == True ? 'checked="checked"': ''),
-		' %checked0' => ($value != True ? 'checked="checked"': '')
+		' %checked0' => ($value != True ? 'checked="checked"': ''),
+		'%disable_style' => ($disabled == True ? 'style="pointer-events:none;"': '')
+
 	]);
 }
 
@@ -187,10 +191,11 @@ else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
 	$backupOptions = array();
 	$backupOptions = file_exists(TMP_RESTORE_ZIP) ? sysCmd('/var/www/command/backupmanager.py --info ' . TMP_RESTORE_ZIP) : $backupOptions;
 	//workerLog(print_r($backupOptions, true));
-	$_togglebtn_restore_system = genToggleButton('restore_system', in_array('config', $backupOptions), True);
-	$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', in_array('cdsp', $backupOptions), True);
-	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), True);
-	$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', in_array('r_other', $backupOptions), True);
+	$_togglebtn_restore_system = genToggleButton('restore_system', in_array('config', $backupOptions), !in_array('config', $backupOptions));
+	$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', in_array('cdsp', $backupOptions), !in_array('cdsp', $backupOptions));
+	$_togglebtn_restore_radiostations_moode = genToggleButton('restore_radiostations_moode', in_array('r_moode', $backupOptions), !in_array('r_moode', $backupOptions));
+	$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', in_array('r_other', $backupOptions), !in_array('r_other', $backupOptions));
+	print_r($backupOptions);
 }
 
 waitWorker(1, 'backup');
