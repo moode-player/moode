@@ -2722,7 +2722,7 @@ function startLcdUpdater() {
 
 // GPIO button handler
 function startGpioSvc() {
-	sysCmd('/var/www/command/gpio-buttons.py > /dev/null 2&1 &');
+	sysCmd('/var/www/command/gpio-buttons.py > /dev/null &');
 }
 
 // Auto-shuffle random play
