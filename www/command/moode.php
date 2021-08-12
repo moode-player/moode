@@ -74,10 +74,15 @@ elseif ($_GET['cmd'] == 'setlogoimage') {
 	}
 }
 elseif ($_GET['cmd'] == 'disconnect-renderer') {
-	// Squeezelite by default hog the audio output so needs to be turned off in order to released it
+	// Squeezelite and rx hog the audio output so needs to be turned off in order to released it
 	if ($_POST['job'] == 'slsvc') {
 		session_start();
 		playerSession('write', $_POST['job'], '0');
+		session_write_close();
+	}
+	if ($_POST['job'] == 'multiroom_rx') {
+		session_start();
+		playerSession('write', $_POST['job'], 'Off');
 		session_write_close();
 	}
 
@@ -106,9 +111,25 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 	//workerLog($_GET['cmd'] . '|' . $_POST['path']);
 	switch ($_GET['cmd']) {
 		case 'updvolume':
+			$voldiff = $_SESSION['volknob'] - $_POST['volknob'];
+			$volcmd = $voldiff < 0 ? '-up ' . abs($voldiff) : '-dn ' . $voldiff;
+			workerLog('vol=' . $_POST['volknob']);
+
 			playerSession('write', 'volknob', $_POST['volknob']);
 			sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
 			$resp = readMpdResp($sock);
+
+			// Update remote MPD volumes
+			if ($_SESSION['multiroom_tx'] == 'On') { // && post volknob != session volknob #######
+				$ip_addresses = explode(', ', $_SESSION['rx_addresses']);
+				$count = count($ip_addresses);
+				for ($i = 0; $i < $count; $i++) {
+					if (file_get_contents('http://' . $ip_addresses[$i] . '/command/?cmd=vol.sh ' . $volcmd) === false) {
+						workerLog('moode.php: remote volume failed: ' . $ip_addresses[$i]);
+					}
+				}
+			}
+
 			echo json_encode('OK');
 			break;
 

@@ -30,7 +30,13 @@ $_players = '';
 while ($line) {
 	list($host, $ipaddr) = explode(",", $line);
 	if (strtolower($host) != $thishost) {
-		$_players .= sprintf('<li><a href="http://%s" class="btn btn-large" style="margin-bottom: 5px;"><i class="fas fa-sitemap" style="font-size: 24px;"></i><br>%s</a></li>', $ipaddr, $host);
+		$result = file_get_contents('http://' . $ipaddr . '/command/?cmd=multiroom.sh');
+		$multiroom_rx_indicator = $result == 'active' ? '<i class="players-rx-indicator fas fa-forward"></i>' : '';
+		$_players .= sprintf('
+			<li><a href="http://%s" class="btn btn-large">
+			<i class="fas fa-sitemap"></i>
+			<br>%s%s
+			</a></li>', $ipaddr, $host, $multiroom_rx_indicator);
 	}
 
 	$line = strtok("\n");

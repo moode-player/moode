@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Jul 3 10:22:50 2021
+-- File generated with SQLiteStudio v3.1.0 on Sat Aug 7 09:54:48 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -429,6 +429,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (154, 'recorder_album_tag', 'Re
 INSERT INTO cfg_system (id, param, value) VALUES (155, 'inplace_upd_applied', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (156, 'show_npicon', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (157, 'show_cvpb', 'Yes');
+INSERT INTO cfg_system (id, param, value) VALUES (158, 'multiroom_tx', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (159, 'multiroom_rx', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (160, 'rxactive', '0');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
@@ -564,6 +567,42 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (300, 'Revolution', 'Allo Revolution DAC', 'ESS Sabre ES9038Q2M', '', 'USB', 'yes', '', '');
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (301, 'DAC8STEREO', 'okto research dac8 Stereo', 'ESS Sabre ES9028PRO', '', 'USB', 'yes', '', '');
 
+-- Table: cfg_multiroom
+CREATE TABLE cfg_multiroom (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
+INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (2, 'tx_host', '239.0.0.1');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (3, 'tx_port', '1350');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (4, 'tx_sample_rate', '48000');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (5, 'tx_channels', '2');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (6, 'tx_frame_size', '960');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (7, 'tx_bitrate', '128');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (8, 'rx_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (9, 'rx_host', '239.0.0.1');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'rx_port', '1350');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'rx_jitter_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'rx_sample_rate', '48000');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'rx_channels', '2');
+
+-- Table: cfg_eqalsa
+CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (1, 'Flat', '60,60,60,60,60,60,60,60,60,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (2, 'Lo Boost', '60,72,60,60,60,60,60,60,60,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (3, 'Lo Boost Plus', '68,78,68,60,60,60,60,60,60,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (4, 'Hi Boost', '60,60,60,60,60,60,60,60,72,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (5, 'Hi Boost Plus', '60,60,60,60,60,60,60,68,78,68');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (6, 'Hi-Lo Boost', '60,72,60,60,60,60,60,60,72,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (7, 'Hi-Lo Boost Plus', '68,78,68,60,60,60,60,68,78,68');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (8, 'Midrange Suppress', '60,60,60,60,39,39,60,60,60,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (9, 'Shallow V', '60,68,60,54,44,44,54,60,68,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (10, 'Classic V', '60,72,60,60,39,39,60,60,72,60');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (11, 'Classic V Plus', '68,78,68,60,39,39,60,68,78,68');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (12, 'Vinyl Touch', '60,66,62,61,60,60,60,54,48,68');
+INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (13, 'Vinyl Touch Plus', '60,68,64,60,60,60,60,46,41,68');
+
+-- Table: cfg_eqp12
+CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands INTEGER);
+INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0, NULL);
+
 -- Table: cfg_mpd
 CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
 INSERT INTO cfg_mpd (id, param, value) VALUES (1, 'music_directory', '/var/lib/mpd/music');
@@ -613,22 +652,6 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (44, 'sox_attenuation', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384');
 
--- Table: cfg_eqalsa
-CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (1, 'Flat', '60,60,60,60,60,60,60,60,60,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (2, 'Lo Boost', '60,72,60,60,60,60,60,60,60,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (3, 'Lo Boost Plus', '68,78,68,60,60,60,60,60,60,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (4, 'Hi Boost', '60,60,60,60,60,60,60,60,72,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (5, 'Hi Boost Plus', '60,60,60,60,60,60,60,68,78,68');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (6, 'Hi-Lo Boost', '60,72,60,60,60,60,60,60,72,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (7, 'Hi-Lo Boost Plus', '68,78,68,60,60,60,60,68,78,68');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (8, 'Midrange Suppress', '60,60,60,60,39,39,60,60,60,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (9, 'Shallow V', '60,68,60,54,44,44,54,60,68,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (10, 'Classic V', '60,72,60,60,39,39,60,60,72,60');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (11, 'Classic V Plus', '68,78,68,60,39,39,60,68,78,68');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (12, 'Vinyl Touch', '60,66,62,61,60,60,60,54,48,68');
-INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (13, 'Vinyl Touch Plus', '60,68,64,60,60,60,60,46,41,68');
-
 -- Table: cfg_gpio
 CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32));
 INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
@@ -658,10 +681,6 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/var/www/js/confi
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (13, '/var/www/js/lib.min.js', 'd059ee9a57d60eee42a52390013642ff', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (14, '/var/www/js/main.min.js', '2f1cbc6bd3e1754d58b34811e2755145', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (15, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
-
--- Table: cfg_eqp12
-CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands INTEGER);
-INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0, NULL);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

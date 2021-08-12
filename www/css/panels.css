@@ -90,7 +90,7 @@ html {background-color:inherit;}
 #inpsrc-msg {padding:0;margin:0;transform:translate(-50%, -50%);top:50%;left:50%;position:fixed;width:100%;}
 #inpsrc-msg a {color:#eee;}
 #inpsrc-msg i {font-size:1.5em;}
-#inpsrc-preamp-volume {font-size:.7em !important;}
+#inpsrc-preamp-volume, #multiroom-receiver-volume {font-size:.7em !important;}
 .configure-renderer, .disconnect-renderer {font-size:.7em!important;cursor:pointer;border-radius:5rem;background-color:var(--btnshade4);margin-top:1em;width:10em;color:inherit;}
 .configure-renderer:hover, .disconnect-renderer:hover {background-color:var(--btnshade4);} /* Mask hover effect */
 /* main ui */
@@ -707,3 +707,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .controls-select {margin-bottom:5px;}
 .recorder-on {border-bottom: 2px solid var(--accentxts);}
 #selected-album-tag {margin-left:.25em;font-style:italic;}
+#multiroom-sender {position:absolute;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1em;color:var(--textvariant);}

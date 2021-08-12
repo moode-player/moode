@@ -66,6 +66,7 @@ function notify(cmd, msg, duration) {
 		nofavtoadd: 'Nothing to add',
 		mpderror: 'MPD error',
         renderer_disconnect: 'Disconnecting...',
+        renderer_turnoff: 'Turning off...',
 		restart: 'Restarting...',
 		shutdown: 'Shutting down...',
         viewport: 'Viewport'

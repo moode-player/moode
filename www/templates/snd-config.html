@@ -82,9 +82,9 @@
 
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="alsavolume_max">ALSA max volume</label>
+				<label class="control-label" for="alsavolume_max">ALSA max volume (%)</label>
 				<div class="controls">
-					<input class="input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">&nbsp;%
+					<input class="input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">
 					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>$_alsavolume_max_msg
 					<span id="info-alsavolume_max" class="help-block-configs help-block-margin">
 						Establish 0dB when MPD volume control is set to Software or Fixed, or when any Renderers are active.<br>
@@ -203,8 +203,7 @@
 						having two tracks enables MPD Crossfade to be used. NOTE: Auto-shuffle replaces MPD random play as the method for the 'Random' button.
                     </span>
 				</div>
-			</div>
-			<div class="control-group">
+
 				<label class="control-label" for="ashuffle_mode">Mode</label>
 				<div class="controls">
 					<select id="ashuffle_mode" class="input-large" name="ashuffle_mode">
@@ -274,8 +273,7 @@
 						Display dB volume next to the 0-100 level in the volume knob.
                     </span>
 				</div>
-			</div>
-			<div class="control-group">
+
 				<label class="control-label">USB volume knob</label>
 				<div class="controls">
 					<div class="toggle">
@@ -293,8 +291,7 @@
 						Refer to /etc/triggerhappy/triggers.d/media.conf for key/event mappings.
                     </span>
 				</div>
-			</div>
-			<div class="control-group">
+
 				<label class="control-label">Rotary encoder</label>
 				<div class="controls">
 					<div class="toggle">
@@ -390,8 +387,7 @@
 						Provide MPD output as an HTTP stream on the designated port.<br>
                     </span>
 				</div>
-			</div>
-			<div class="control-group">
+
 				<label class="control-label" for="mpd-httpd-port">Port</label>
 				<div class="controls">
                     <input class="input-large" type="number" maxlength="4" min="8000" max="9000" id="mpd-httpd-port" name="mpd_httpd_port" value="$_mpd_httpd_port" required>
@@ -410,7 +406,7 @@
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_mpd_httpd_encoder" value="novalue">Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-mpd-httpd-encoder" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mpd-httpd-encoder" class="help-block-configs help-block-margin2 hide">
+					<span id="info-mpd-httpd-encoder" class="help-block-configs help-block-margin hide">
 						Encode the stream using either FLAC at compression level 0 (fastest, least compression) or LAME (MP3) at 320 kbps.
 					</span>
 				</div>
@@ -493,7 +489,7 @@
 
 		</fieldset>
 
-		<!-- RENDERERS, AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
+		<!-- RENDERERS: AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
 
 		<legend>Audio Renderers</legend>
 		<p>
@@ -750,7 +746,7 @@
 			</div>
 		</fieldset>
 
-		<!-- UPNP/DLNA, AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
+		<!-- UPNP/DLNA: AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
 
 		<legend>UPnP/DLNA</legend>
 		<p>

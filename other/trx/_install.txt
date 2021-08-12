@@ -93,16 +93,32 @@ channels 2
 }
 
 # Transmit
-sudo tx -d trx_send -h 239.0.0.1 -m 32 2>/dev/null &
+sudo tx -d trx_send -h 239.0.0.1 -m 32 >/dev/null 2>&1 &
 
 # Receive
-sudo rx -d <LOCAL_DEVICE> -h 239.0.0.1 -m 32 -j 32 2>/dev/null &
+sudo rx -d plughw:0,0 -h 239.0.0.1 -m 32 -j 32 >/dev/null 2>&1 &
 
 # Verbose
 -v 2
 
 # Background
-2>/dev/null &
+>/dev/null 2>&1 &
+
+////////////////////////////////////////////////////////////
+
+# Devices
+
+////////////////////////////////////////////////////////////
+
+# HW_PARAMS
+cat /proc/asound/Loopback/pcm0p/sub0/hw_params
+cat /proc/asound/Loopback/pcm1c/sub0/hw_params
+CARD=0
+cat /proc/asound/card$CARD/pcm0p/sub0/hw_params
+
+# Dummy pcm device
+sudo modprobe snd-dummy
+aplay -l | awk
 
 ////////////////////////////////////////////////////////////
 

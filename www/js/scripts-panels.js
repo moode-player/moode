@@ -317,6 +317,8 @@ jQuery(document).ready(function($) { 'use strict';
 		        customScroll('playlist', parseInt(MPD.json['song']));
     		}
     		$('#menu-bottom').hide();
+            SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
+
     	}
         // Library
     	else {
@@ -1264,6 +1266,11 @@ jQuery(document).ready(function($) { 'use strict';
 	// Disconnect active renderer
     $(document).on('click', '.disconnect-renderer', function(e) {
 		notify('renderer_disconnect', '', '3_seconds');
+        $.post('command/moode.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
+	});
+    // Turn off active renderer
+    $(document).on('click', '.turnoff-renderer', function(e) {
+		notify('renderer_turnoff', '', '3_seconds');
         $.post('command/moode.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
 	});
 

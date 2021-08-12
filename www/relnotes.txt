@@ -17,12 +17,14 @@
 
 New features
 
+- Multiroom audio
 - Backup/restore manager
 
 Updates
 
-- UPD: Add "okto research dac8 Stereo" to device table
+- UPD: Bump to MPD 0.22.10
 - UPD: Bump to pycamilladsp 0.5.1
+- UPD: Add "okto research dac8 Stereo" to device table
 
 Radio stations
 

@@ -605,6 +605,32 @@ else {
 	workerLog('worker: RoonBridge renderer (n/a)');
 }
 
+// Start Multiroom audio
+if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
+	// Sender
+	if (isset($_SESSION['multiroom_tx']) && $_SESSION['multiroom_tx'] == 'On') {
+		$started = ': started';
+		loadSndDummy();		
+		startMultiroomSender();
+	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: Multiroom sender (available' . $started . ')');
+	// Receiver
+	if (isset($_SESSION['multiroom_rx']) && $_SESSION['multiroom_rx'] == 'On') {
+		$started = ': started';
+		startMultiroomReceiver();
+	}
+	else {
+		$started = '';
+	}
+	workerLog('worker: Multiroom receiver (available' . $started . ')');
+}
+else {
+	workerLog('worker: Multiroom audio (n/a)');
+}
+
 // Start UPnP renderer
 if ($_SESSION['feat_bitmask'] & FEAT_UPMPDCLI) {
 	if (isset($_SESSION['upnpsvc']) && $_SESSION['upnpsvc'] == 1) {
@@ -819,6 +845,7 @@ $aplactive = '0';
 $spotactive = '0';
 $slactive = '0';
 $rbactive = '0';
+$rxactive = '0';
 $inpactive = '0';
 
 // Library update, MPD database regen
@@ -917,6 +944,9 @@ while (true) {
 	if ($_SESSION['rbsvc'] == '1') {
 		chkRbActive();
 	}
+	if ($_SESSION['multiroom_rx'] == 'On') {
+		chkRxActive();
+	}
 	if ($_SESSION['i2sdevice'] == 'HiFiBerry DAC+ ADC' || strpos($_SESSION['i2sdevice'], 'Audiophonics ES9028/9038 DAC') !== -1) {
 		chkInpActive();
 	}
@@ -955,7 +985,8 @@ while (true) {
 function chkScnSaver() {
 	// Activate if timeout is set and no other overlay is active
 	if ($GLOBALS['scnsaver_timeout'] != 'Never' && $_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0'
-		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0' && $GLOBALS['inpactive'] == '0') {
+		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0'
+		&& $GLOBALS['rxactive'] == '0' && $GLOBALS['inpactive'] == '0') {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - 3;
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
@@ -1092,7 +1123,7 @@ function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
 		$rnd_not_playing = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
-			&& $GLOBALS['slactive'] == '0' && $GLOBALS['inpactive'] == '0');
+			&& $GLOBALS['slactive'] == '0' && $GLOBALS['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
 		$mpd_not_playing = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
 		$alsa_out_active = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
 		//workerLog('rnp:' . ($rnd_not_playing ? 'T' : 'F') . '|' . 'mnp:' . ($mpd_not_playing ? 'T' : 'F') . '|' . 'aoa:' . ($alsa_out_active ? 'T' : 'F'));
@@ -1116,6 +1147,27 @@ function chkRbActive() {
 					sysCmd('mpc play');
 				}
 			}
+		}
+	}
+}
+
+// Multiroom receiver
+function chkRxActive() {
+	$result = sysCmd('pgrep -c rx');
+	if ($result[0] > 0) {
+		$rnd_not_playing = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
+			&& $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0' && $GLOBALS['inpactive'] == '0');
+		$mpd_not_playing = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
+		$alsa_out_active = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
+		//workerLog('rnp:' . ($rnd_not_playing ? 'T' : 'F') . '|' . 'mnp:' . ($mpd_not_playing ? 'T' : 'F') . '|' . 'aoa:' . ($alsa_out_active ? 'T' : 'F'));
+		if ($rnd_not_playing && $mpd_not_playing && $alsa_out_active) {
+			// Do this section only once
+			if ($GLOBALS['rxactive'] == '0') {
+				$GLOBALS['rxactive'] = '1';
+				playerSession('write', 'rxactive', '1');
+				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
+			}
+			sendEngCmd('rxactive1');
 		}
 	}
 }
@@ -1858,6 +1910,48 @@ function runQueuedJob() {
 			sysCmd('systemctl stop roonbridge');
 			if ($_SESSION['rbsvc'] == '1') {
 				startRoonBridge();
+			}
+			break;
+
+		case 'multiroom_tx':
+			if ($_SESSION['multiroom_tx'] == 'On') {
+				// Reconfigure to dummy sound driver
+				$cardnum = loadSndDummy();
+				updAudioOutAndBtOutConfs($cardnum);
+				updDspAndBtInConfs($cardnum);
+				sysCmd('systemctl restart mpd');
+
+				startMultiroomSender();
+			}
+			else {
+				stopMultiroomSender();
+
+				// Reconfigure to real sound driver
+				unloadSndDummy();
+				updAudioOutAndBtOutConfs($_SESSION['cardnum']);
+				updDspAndBtInConfs($_SESSION['cardnum']);
+				sysCmd('systemctl restart mpd');
+			}
+			break;
+		case 'multiroom_tx_restart':
+			stopMultiroomSender();
+			if ($_SESSION['multiroom_tx'] == 'On') {
+				startMultiroomSender();
+			}
+			break;
+		case 'multiroom_rx':
+			if ($_SESSION['multiroom_rx'] == 'On') {
+				sysCmd('mpc stop');
+				startMultiroomReceiver();
+			}
+			else {
+				stopMultiroomReceiver();
+			}
+			break;
+		case 'multiroom_rx_restart':
+			stopMultiroomReceiver();
+			if ($_SESSION['multiroom_rx'] == 'On') {
+				startMultiroomReceiver();
 			}
 			break;
 

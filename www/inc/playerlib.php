@@ -73,11 +73,13 @@ const FEAT_GPIO 		= 4096;		// y GPIO button handler
 const FEAT_DJMOUNT		= 8192;		// y UPnP media browser
 const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
+const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
-//						  31671
+//						  97207
 
-// Mirror for footer.php
+// Mirror for footer.php Configure buttons
 $FEAT_INPSOURCE 	= 512;
+$FEAT_MULTIROOM 	= 65536;
 
 // MPD patch availability bitmask
 // NOTE: Updates must also be made to matching code blocks in sysinfo.sh
@@ -4253,4 +4255,44 @@ function updDspAndBtInConfs($cardnum, $old_output_mode = '') {
 	// Bluetooth confs (incoming connections)
 	sysCmd("sed -i '/pcm \"" . $alsa_output_mode . "/c\pcm \"" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0' /etc/bluealsaaplay.conf");
+}
+
+// Multiroom audio
+function startMultiroomSender() {
+	$params = cfgdb_read('cfg_multiroom', cfgdb_connect());
+	foreach ($params as $row) {
+	    $_cfg_multiroom[$row['param']] = $row['value'];
+	}
+	$cmd = 'tx -d trx_send -h ' . $_cfg_multiroom['tx_host'] . ' -m ' . $_cfg_multiroom['tx_bfr'] . '  >/dev/null 2>&1 &';
+	$result = shell_exec($cmd);
+	//workerLog($cmd);
+}
+function startMultiroomReceiver() {
+	$params = cfgdb_read('cfg_multiroom', cfgdb_connect());
+	foreach ($params as $row) {
+	    $_cfg_multiroom[$row['param']] = $row['value'];
+	}
+	// TODO: test -d _audioout
+	$cmd = 'rx -d plughw:' . $_SESSION['cardnum'] . ',0 -h ' . $_cfg_multiroom['rx_host'] . ' -m ' . $_cfg_multiroom['rx_bfr'] . ' -j ' .
+		$_cfg_multiroom['rx_jitter_bfr'] . ' >/dev/null 2>&1 &';
+	$result = shell_exec($cmd);
+	//workerLog($cmd);
+}
+function stopMultiroomSender() {
+	sysCmd('killall tx');
+}
+function stopMultiroomReceiver() {
+	sysCmd('killall rx');
+	playerSession('write', 'rxactive', '0');
+	$GLOBALS['rxactive'] = '0';
+	sendEngCmd('rxactive0');
+}
+function loadSndDummy () {
+	// Load driver and return card number
+	sysCmd('modprobe snd-dummy');
+	$result = sysCmd("cat /proc/asound/Dummy/pcm0p/info | awk -F': ' '/card/{print $2}'");
+	return $result[0];
+}
+function unloadSndDummy () {
+	sysCmd('sudo modprobe -r snd-dummy');
 }

@@ -39,8 +39,9 @@ const FEAT_GPIO         = 4096;     // y GPIO button handler
 const FEAT_DJMOUNT      = 8192;     // y UPnP media browser
 const FEAT_BLUETOOTH    = 16384;    // y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
-//                      -------
-//                        31671
+const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
+//						-------
+//						  97207
 
 // For setTimout() in milliseconds
 const DEFAULT_TIMEOUT   = 250;
@@ -429,11 +430,18 @@ function engineCmd() {
                     break;
                 case 'slactive1':
                 case 'slactive0':
-    				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><button class="btn disconnect-renderer" data-job="slsvc">turn off</button>');
+    				inpSrcIndicator(cmd[0], 'Squeezelite Active' + '<br><button class="btn turnoff-renderer" data-job="slsvc">turn off</button>');
                     break;
                 case 'rbactive1':
                 case 'rbactive0':
     				inpSrcIndicator(cmd[0], 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbrestart">disconnect</button>');
+                    break;
+                case 'rxactive1':
+                case 'rxactive0':
+                    inpSrcIndicator(cmd[0],
+                        'Multiroom Receiver Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span>' +
+                        '<br><button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button>'
+                    );
                     break;
                 case 'scnactive1':
     				screenSaver(cmd[0]);
@@ -520,6 +528,8 @@ function inpSrcIndicator(cmd, msgText) {
 		$('#inpsrc-indicator').css('display', 'block');
 		$('#inpsrc-msg').html(msgText);
 		$('#inpsrc-preamp-volume').text(SESSION.json['mpdmixer'] == 'none' ? '0dB' : SESSION.json['volknob']);
+        $('#multiroom-receiver-volume').text(SESSION.json['volmute'] == '1' ? 'mute' :
+            (SESSION.json['mpdmixer'] == 'none' ? '0dB' : SESSION.json['volknob']));
 	}
 	else {
 		$('#inpsrc-msg').html('');
@@ -576,7 +586,7 @@ function disableVolKnob() {
 	SESSION.json['volmute'] == '1';
     $('#volumedn, #volumeup, #volumedn-2, #volumeup-2').prop('disabled', true);
     $('#volumeup, #volumedn, #volumedn-2, #volumeup-2, .volume-display').css('opacity', '.3');
-	$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text('0dB');
+	$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, #playbar-volume-level').text('0dB');
 	$('.volume-display').css('cursor', 'unset');
     $('.volume-popup-btn').hide();
 	if (UI.mobile) {
@@ -631,14 +641,14 @@ function renderUIVol() {
 
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
-    		$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text(SESSION.json['volknob']);
+    		$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, #playbar-volume-level').text(SESSION.json['volknob']);
             $('.volume-display-db').text(SESSION.json['volume_db_display'] == '1' ? MPD.json['mapped_db_vol'] : '');
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
     		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
-    			$('.volume-display div, #inpsrc-preamp-volume').text('mute');
+    			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('mute');
                 $('#playbar-volume-level').text('x');
     		}
     		else {
@@ -674,14 +684,14 @@ function renderUI() {
 
     		// Update volume knobs
     		$('#volume').val(SESSION.json['volknob']).trigger('change');
-    		$('.volume-display div, #inpsrc-preamp-volume, #playbar-volume-level').text(SESSION.json['volknob']);
+    		$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume, #playbar-volume-level').text(SESSION.json['volknob']);
             $('.volume-display-db').text(SESSION.json['volume_db_display'] == '1' ? MPD.json['mapped_db_vol'] : '');
     		$('#volume-2').val(SESSION.json['volknob']).trigger('change');
     		$('#mvol-progress').css('width', SESSION.json['volknob'] + '%');
 
     	   	// Update mute state
     		if (SESSION.json['volmute'] == '1') {
-    			$('.volume-display div, #inpsrc-preamp-volume').text('mute');
+    			$('.volume-display div, #inpsrc-preamp-volume, #multiroom-receiver-volume').text('mute');
                 $('#playbar-volume-level').text('x');
     		}
     		else {
@@ -1865,7 +1875,7 @@ function setVolume(level, event) {
     level = parseInt(level);
 	level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
 	level = level < 0 ? 0 : level;
-    //console.log(level, event);
+    console.log(level, event);
 
 	// Unmuted, set volume (incl 0 vol)
 	if (SESSION.json['volmute'] == '0') {
@@ -1877,7 +1887,10 @@ function setVolume(level, event) {
 	else {
 		if (level == 0 && event == 'mute')	{
 			sendMpdCmd('setvol 0');
-			//console.log('setvol 0');
+			console.log('setvol 0 | mute');
+            if (SESSION.json['multiroom_tx'] == 'On') {
+                // TODO: Send mute to moode.phop
+            }
 		}
 		else {
 			// Vol up/dn btns pressed, just store the volume for display
@@ -2053,6 +2066,7 @@ $('.context-menu a').click(function(e) {
             mpdDbCmd($(this).data('cmd').replace('_item', '_group'), files);
         }
 
+        // TODO: This generates a console error on page refresh
         if ($(this).data('cmd').indexOf('add_') != -1) {
             notify($(this).data('cmd'));
         }
@@ -3319,6 +3333,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 	$('#menu-top').css('height', '0');
 	$('#menu-top').css('backdrop-filter', '');
 	$('#menu-bottom, .viewswitch').css('display', 'flex');
+    $('#multiroom-sender').hide();
 
     syncTimers();
 
@@ -3379,6 +3394,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#menu-bottom, .viewswitch').css('display', 'none');
 		$('#playback-controls').css('display', '');
         $('#addfav-li').hide();
+        SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
 		if (UI.mobile) {
             // Make sure playlist is hidden and controls are showing
 			showMenuTopW = false;

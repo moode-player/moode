@@ -1,0 +1,164 @@
+<!--
+/**
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+-->
+<div class="container">
+<div class="container2">
+	<h1 class="snd-config">Multiroom Config</h1>
+
+	<p>
+		A multiroom audio configuration consists of a Sender and one or more Receivers. The Sender should be a dedicated moOde system configured to output to the integrated Headphone jack or HDMI port but not connected to speakers or headphones.
+		It functions solely as a Music Server that Sends its audio output to one or more multiroom Receivers.
+	</p>
+
+	<form class="form-horizontal" method="post">
+		<legend>Sender</legend>
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label">Sender daemon</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_multiroom_tx2">ON</label>
+						$_select[multiroom_tx1]
+						<label class="toggle-radio" for="toggle_multiroom_tx1">OFF</label>
+						$_select[multiroom_tx0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_multiroom_tx" value="novalue" $_multiroom_tx_disable>Set</button>
+					</div>
+					<span id="info_multiroom_tx" class="help-block-configs help-block-margin2">
+						NOTE: The Sender requires ALSA Loopback to be ON.
+                    </span>
+				</div>
+
+				<label class="control-label" for="multiroom_tx_bfr">Send buffer (ms)</label>
+				<div class="controls">
+					<select id="multiroom_tx_bfr" class="select-medium" name="multiroom_tx_bfr">
+						$_select[multiroom_tx_bfr]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_bfr" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_tx_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_multiroom_tx_bfr" class="help-block-configs help-block-margin hide">
+						The length of the send buffer in milliseconds.
+					</span>
+					<div style="margin-top:1.5em">
+						<a data-toggle="modal" href="#restart-tx" $_tx_restart_link_disable><button class="btn btn-medium btn-primary" $_tx_restart_btn_disable>Restart</button></a>&nbsp;Sender
+					</div>
+				</div>
+
+				<div class="controls">
+					<div style="margin-top:1.5em">
+						<button class="btn btn-primary btn-medium btn-submit" type="submit" name="multiroom_tx_scan" value="novalue">Scan</button>&nbsp;for Receivers
+					</div>
+					<div class="help-block-configs help-block-margin">
+						NOTE: A scan must be run to enable master volume control for Receivers.
+					</div>
+					<div class="help-block-configs help-block-margin">
+						$_rx_hostnames
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<legend>Receiver</legend>
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label">Receiver daemon</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_multiroom_rx2">ON</label>
+						$_select[multiroom_rx1]
+						<label class="toggle-radio" for="toggle_multiroom_rx1">OFF</label>
+						$_select[multiroom_rx0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_multiroom_rx" value="novalue" $_multiroom_rx_disable>Set</button>
+					</div>
+					<span id="info_multiroom_rx" class="help-block-configs help-block-margin2">
+						NOTE: The Receiver requires an audio device that supports Hardware volume.
+					</span>
+				</div>
+
+				<label class="control-label" for="multiroom_rx_bfr">Receive buffer (ms)</label>
+				<div class="controls">
+					<select id="multiroom_rx_bfr" class="select-medium" name="multiroom_rx_bfr">
+						$_select[multiroom_rx_bfr]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_bfr" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_multiroom_rx_bfr" class="help-block-configs help-block-margin hide">
+						The length of the receive buffer in milliseconds.
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="multiroom_rx_jitter_bfr">Jitter buffer (ms)</label>
+				<div class="controls">
+					<select id="multiroom_rx_jitter_bfr" class="select-medium" name="multiroom_rx_jitter_bfr">
+						$_select[multiroom_rx_jitter_bfr]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_jitter_bfr" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_jitter_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_multiroom_rx_jitter_bfr" class="help-block-configs help-block-margin hide">
+						The length of the jitter buffer in milliseconds.
+					</span>
+					<div style="margin-top:1.5em">
+						<a data-toggle="modal" href="#restart-rx" $_rx_restart_link_disable><button class="btn btn-medium btn-primary" $_rx_restart_btn_disable>Restart</button></a>&nbsp;Receiver
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+</div>
+
+<form class="form-horizontal" method="post">
+	<div id="restart-tx" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="restart-tx-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		</div>
+
+		<div class="modal-body">
+			<h6>Restart Sender</h6>
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="multiroom_tx_restart" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="restart-rx" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="restart-rx-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		</div>
+
+		<div class="modal-body">
+			<h6>Restart Receiver</h6>
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="multiroom_rx_restart" value="1">Yes</button>
+		</div>
+	</div>
+</form>

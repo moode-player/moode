@@ -45,8 +45,9 @@ const FEAT_GPIO 		= 4096;		// y GPIO button handler
 const FEAT_DJMOUNT		= 8192;		// y UPnP media browser
 const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
+const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
-//						  31671
+//						  97207
 
 $features = array(
 	FEAT_KERNEL => 'Kernel architecture',
@@ -64,7 +65,8 @@ $features = array(
 	FEAT_GPIO => 'GPIO button handler',
 	FEAT_DJMOUNT => 'UPnP media browser',
 	FEAT_BLUETOOTH => 'Bluetooth renderer',
-	FEAT_DEVTWEAKS	=> 'Developer tweaks'
+	FEAT_DEVTWEAKS	=> 'Developer tweaks',
+	FEAT_MULTIROOM	=> 'Multiroom audio'
 );
 
 $feat_bitmask = trim(shell_exec("sqlite3 " .  SQLDB . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));

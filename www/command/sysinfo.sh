@@ -144,6 +144,10 @@ AUDIO_PARAMETERS() {
 	if [ $(($feat_bitmask & $FEAT_GPIO)) -ne 0 ]; then
 		echo -e "\nGPIO button handler\t= $gpio_svc\c"
 	fi
+	if [ $(($feat_bitmask & $FEAT_MULTIROOM)) -ne 0 ]; then
+		echo -e "\nMultiroom sender\t= $multiroom_tx\c"
+		echo -e "\nMultiroom receiver\t= $multiroom_rx\c"
+	fi
 	if [ $(($feat_bitmask & $FEAT_DJMOUNT)) -ne 0 ]; then
 		echo -e "\nUPnP browser\t\t= $upnp_browser\c"
 	fi
@@ -368,6 +372,7 @@ FEAT_SPOTIFY=2048
 FEAT_GPIO=4096
 FEAT_DJMOUNT=8192
 FEAT_BLUETOOTH=16384
+FEAT_MULTIROOM=65536
 
 # MPD patch availability bitmask
 PATCH_SELECTIVE_RESAMPLING=1 # Selective resampling options
@@ -767,6 +772,9 @@ recorder_album_tag=${arr[153]}
 inplace_upd_applied=${arr[154]}
 show_npicon=${arr[155]}
 show_cvpb=${arr[156]}
+multiroom_tx=${arr[157]}
+multiroom_rx=${arr[158]}
+rxactive=${arr[159]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

@@ -19,8 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-08-08 TC moOde 6.0.0
- *
  */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
@@ -46,6 +44,10 @@ elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') 
 		elseif (stripos($_GET['cmd'], 'libupd-submit.php') !== false) {
 			$result = sysCmd('/var/www/' . $_GET['cmd']);
 			echo 'Library update submitted';
+        }
+		elseif (stripos($_GET['cmd'], 'multiroom.sh') !== false) {
+			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
+			echo $result[0];
         }
         else {
             echo 'Unknown command';
