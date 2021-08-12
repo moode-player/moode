@@ -82,7 +82,7 @@
 
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="alsavolume_max">ALSA max volume (%)</label>
+				<label class="control-label" for="alsavolume_max">Max volume (%)</label>
 				<div class="controls">
 					<input class="input-large" $_alsavolume_max_readonly type="number" maxlength="3" min="0" max="100" id="alsavolume_max" name="alsavolume_max" value="$_alsavolume_max">
 					<button class="btn btn-primary btn-small set-button btn-submit status-msg $_alsavolume_max_hide" type="submit" name="update_alsavolume_max" value="novalue">Set</button>$_alsavolume_max_msg
@@ -94,7 +94,7 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="alsa_output_mode">ALSA output mode</label>
+				<label class="control-label" for="alsa_output_mode">Output mode</label>
 				<div class="controls">
 					<select id="alsa_output_mode" class="input-large" name="alsa_output_mode">
 						$_select[alsa_output_mode]
@@ -114,7 +114,7 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label">ALSA loopback</label>
+				<label class="control-label">Loopback</label>
 				<div class="controls">
 					<div class="toggle">
 						<label class="toggle-radio" for="toggle_alsa_loopback2">ON</label>
@@ -126,8 +126,19 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
 					</div>
 					<span class="help-block-configs help-block-margin2">
-						The ALSA Loopback device provides a copy of the PCM stream being output to the audio device. The copy can be accessed by reading "hw:Loopback,1,0".<br>
+						The Loopback device provides a copy of the PCM stream being output to the audio device. The copy can be accessed by reading "hw:Loopback,1,0".<br>
 						NOTE: Max sample rate is 384 kHz.
+                    </span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Multiroom</label>
+				<div class="controls">
+					<a href="trx-config.php"><button class="btn btn-primary btn-medium" $_multiroom_config_disable>Configure</button></a>
+					<span class="help-block-configs help-block-margin">
+						Set up multiroom audio sender and receivers.<br>
+						NOTE: Requires Loopback to be ON.
                     </span>
 				</div>
 			</div>
