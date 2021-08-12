@@ -214,9 +214,8 @@ function sendVolCmd(type, cmd, data, async) {
 		cache: false,
 		data: data,
 		success: function(result) {
+            // Omit the try/catch to enable improved volume knob behavior
 			obj = JSON.parse(result);
-			// Omit the try/catch to enable improved volume knob behavior
-			// See moode.php case 'updvolume' for explanation
 		},
 		error: function() {
 			//debugLog('sendVolCmd(): ' + cmd + ' no data returned');
@@ -1875,21 +1874,20 @@ function setVolume(level, event) {
     level = parseInt(level);
 	level = level > GLOBAL.mpdMaxVolume ? GLOBAL.mpdMaxVolume : level;
 	level = level < 0 ? 0 : level;
-    console.log(level, event);
+    //console.log(level, event);
 
 	// Unmuted, set volume (incl 0 vol)
 	if (SESSION.json['volmute'] == '0') {
 		SESSION.json['volknob'] = level.toString();
-		// Update sql value and issue mpd setvol in one round trip
-		sendVolCmd('POST', 'updvolume', {'volknob': SESSION.json['volknob']}, true); // Async
+		sendVolCmd('POST', 'updvolume', {'volknob': SESSION.json['volknob'], 'event': event}, true); // Async
     }
 	// Muted
 	else {
 		if (level == 0 && event == 'mute')	{
 			sendMpdCmd('setvol 0');
-			console.log('setvol 0 | mute');
+			//console.log('setvol 0 | mute');
             if (SESSION.json['multiroom_tx'] == 'On') {
-                // TODO: Send mute to moode.phop
+                sendVolCmd('POST', 'mutetxvol', '', true); // Async
             }
 		}
 		else {
