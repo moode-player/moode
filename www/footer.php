@@ -76,7 +76,7 @@
 					<li><a href="inp-config.php" class="btn btn-small row2-btns">Input source</a></li>
 				<?php } ?>
 				<?php if ($_SESSION['feat_bitmask'] & $FEAT_MULTIROOM) { ?>
-					<li><a href="trx-config.php" class="btn btn-small row2-btns">Multiroom audio</a></li>
+					<li><a href="trx-config.php" class="btn btn-small row2-btns">Multiroom</a></li>
 				<?php } ?>
 			</ul>
 		</div>

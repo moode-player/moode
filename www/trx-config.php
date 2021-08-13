@@ -41,7 +41,7 @@ if (isset($_POST['update_multiroom_tx_bfr'])) {
 if (isset($_POST['multiroom_tx_restart'])) {
 	submitJob('multiroom_tx_restart', '', 'Sender restarted', '');
 }
-if (isset($_POST['multiroom_tx_scan'])) {
+if (isset($_POST['multiroom_tx_discover'])) {
 	$array = sdbquery("SELECT value FROM cfg_system WHERE param='hostname'", cfgdb_connect());
 	$thishost = strtolower($array[0]['value']);
 
@@ -76,8 +76,9 @@ if (isset($_POST['multiroom_tx_scan'])) {
 		$_SESSION['notify']['title'] = $_SESSION['rx_hostnames'];
 	}
 	else {
-		$_SESSION['notify']['title'] = 'Scan complete';
 		$_SESSION['rx_hostnames'] = 'Found: ' . $_SESSION['rx_hostnames'];
+		$_SESSION['notify']['title'] = 'Discover complete';
+		$_SESSION['notify']['msg'] = $_SESSION['rx_hostnames'];
 	}
 }
 if (isset($_POST['update_multiroom_initvol'])) {

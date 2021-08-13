@@ -367,6 +367,12 @@ readers do not read off random characters that represent icons */
 .fa-repeat:before {
   content: "\f363"; }
 
+.fa-rss:before {
+  content: "\f09e"; }
+
+.fa-rss-square:before {
+  content: "\f143"; }
+
 .fa-save:before {
   content: "\f0c7"; }
 

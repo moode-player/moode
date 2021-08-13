@@ -31,7 +31,7 @@ while ($line) {
 	list($host, $ipaddr) = explode(",", $line);
 	if (strtolower($host) != $thishost) {
 		$result = file_get_contents('http://' . $ipaddr . '/command/?cmd=multiroom.sh');
-		$multiroom_rx_indicator = $result == 'active' ? '<i class="players-rx-indicator fas fa-forward"></i>' : '';
+		$multiroom_rx_indicator = $result == 'active' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
 		$_players .= sprintf('
 			<li><a href="http://%s" class="btn btn-large">
 			<i class="fas fa-sitemap"></i>
