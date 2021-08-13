@@ -74,13 +74,29 @@
 	</ul>
 </div>
 
+<h4>Multiroom audio</h4>
+<p>A multiroom audio configuration consists of a Sender and one or more Receivers. The Sender should be a dedicated moOde system configured to output to the integrated Headphone jack or HDMI port but not connected to speakers or headphones. It functions solely as a Music Server that Sends its audio output to one or more multiroom Receivers.</p>
+<div id="quickhelp-bullet-list">
+	<ul>
+		<li><span> Discovery and Addressing</span>
+			<p>Discovery of Receivers relies on Multicast DNS (avahi on Linux). Addressing for the audio distribution protocol relies on IP Multicast using a default address of 239.0.0.1.</p>
+		</li>
+		<li><span> Master volume</span>
+			<p>The Sender system volume knob provides master volume control for the Receivers.</p>
+		</li>
+		<li><span> Receiver volume</span>
+			<p>Volume can be set individually for each Receiver by accessing its WebUI via the&nbsp;<i class="fas fa-forward sx"></i>Players menu item.</p>
+		</li>
+	</ul>
+</div>
+
 <h4>Special Menu Items</h4>
 <p>Most menu items are self explanatory but several perform unique functions.</p>
 <div id="quickhelp-icon-list">
 	<ul>
 		<li><i class="fas fa-forward sx"></i>
 			<span> Players</span>
-			<p>This item is located on the Main menu. It displays a list of other moOde players discovered on the network. Tapping a player opens it's WebUI.</p>
+			<p>This item is located on the Main menu. It displays a list of other moOde players discovered on the network. Tapping a player opens it's WebUI. If a player is functioning as a Multiroom Receiver the icon&nbsp;<i class="fas fa-forward sx"></i>will appear next to its name.</p>
 		</li>
 		<li><i class="far fa-music sx"></i>
 			<span> Audio info</span>
