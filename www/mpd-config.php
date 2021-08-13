@@ -40,7 +40,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		elseif ($_SESSION['mpdmixer'] == 'none') {
 			$mixer_chg = $_POST['conf']['mixer_type'];
 		}
-		// Change between hardware and software
+		// Change between hardware, software or null moxer
 		else {
 			$mixer_chg = 0;
 		}
@@ -111,6 +111,7 @@ if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
 }
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"disabled\" " . (($mpdconf['mixer_type'] == 'disabled') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($mpdconf['mixer_type'] == 'null') ? "selected" : "") . ">Null</option>\n";
 
 // SoX resampling
 $format = array('','','');
