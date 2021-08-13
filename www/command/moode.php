@@ -118,7 +118,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
 			$resp = readMpdResp($sock);
 
-			// Update remote MPD volumes
+			// Update Receiver MPD volumes
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				$voldiff = $session_volknob - $_POST['volknob'];
 
@@ -132,28 +132,16 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 					$tx_volcmd = $voldiff < 0 ? '-up ' . abs($voldiff) : '-dn ' . $voldiff;
 				}
 
-				$ip_addresses = explode(', ', $_SESSION['rx_addresses']);
-				$count = count($ip_addresses);
-				for ($i = 0; $i < $count; $i++) {
-					if (file_get_contents('http://' . $ip_addresses[$i] . '/command/?cmd=vol.sh ' . $tx_volcmd) === false) {
-						workerLog('moode.php: remote volume cmd (' . $tx_volcmd . ') failed: ' . $ip_addresses[$i]);
-					}
-				}
+				updReceiverVol($tx_volcmd);
 			}
 
 			echo json_encode('OK');
 			break;
 
 		case 'mutetxvol':
-			// Mute remote MPD volumes
-			$ip_addresses = explode(', ', $_SESSION['rx_addresses']);
-			$count = count($ip_addresses);
-			for ($i = 0; $i < $count; $i++) {
-				if (file_get_contents('http://' . $ip_addresses[$i] . '/command/?cmd=vol.sh -mute') === false) {
-					workerLog('moode.php: remote mute failed: ' . $ip_addresses[$i]);
-				}
-			}
-
+			// Mute Receiver MPD volumes
+			updReceiverVol('-mute');
+			
 			echo json_encode('OK');
 			break;
 

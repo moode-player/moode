@@ -610,7 +610,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) {
 	// Sender
 	if (isset($_SESSION['multiroom_tx']) && $_SESSION['multiroom_tx'] == 'On') {
 		$started = ': started';
-		loadSndDummy();		
+		loadSndDummy();
 		startMultiroomSender();
 	}
 	else {
@@ -1953,6 +1953,11 @@ function runQueuedJob() {
 			if ($_SESSION['multiroom_rx'] == 'On') {
 				startMultiroomReceiver();
 			}
+			break;
+		case 'multiroom_initvol':
+			$level = $_SESSION['w_queueargs'];
+			sysCmd('/var/www/vol.sh ' . $level); // Sender
+			updReceiverVol($level); // Receivers
 			break;
 
 		case 'upnpsvc':

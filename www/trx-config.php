@@ -80,6 +80,10 @@ if (isset($_POST['multiroom_tx_scan'])) {
 		$_SESSION['rx_hostnames'] = 'Found: ' . $_SESSION['rx_hostnames'];
 	}
 }
+if (isset($_POST['update_multiroom_initvol'])) {
+	$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_initvol'] . "' " . "WHERE param='initial_volume'", cfgdb_connect());
+	submitJob('multiroom_initvol', $_POST['multiroom_initvol'], 'Volume levels initialized', '');
+}
 
 // Receiver
 if (isset($_POST['update_multiroom_rx'])) {
@@ -116,12 +120,12 @@ foreach ($params as $row) {
 
 $_feat_multiroom = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 $_multiroom_tx_disable = $_SESSION['alsa_loopback'] == 'Off' ? 'disabled' : '';
-$_multiroom_rx_disable = $_SESSION['alsavolume'] == 'none' ? 'disabled' : ''; // NOTE: Also test for $_SESSION['alsa_loopback'] == 'On' ???
+$_multiroom_rx_disable = $_SESSION['alsavolume'] == 'none' ? 'disabled' : '';
 $_tx_restart_btn_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'disabled' : '';
 $_rx_restart_btn_disable = $_SESSION['multiroom_rx'] == 'Off' ? 'disabled' : '';
 $_tx_restart_link_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'onclick="return false;"' : '';
 $_rx_restart_link_disable = $_SESSION['multiroom_rx'] == 'Off' ? 'onclick="return false;"' : '';
-
+$_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
 // Sender
 $_select['multiroom_tx1'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle_multiroom_tx1\" value=\"On\" " . (($_SESSION['multiroom_tx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_tx0'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle_multiroom_tx2\" value=\"Off\" " . (($_SESSION['multiroom_tx'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
@@ -129,6 +133,7 @@ $_select['multiroom_tx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['tx_
 $_select['multiroom_tx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['tx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['tx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['tx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
+$_multiroom_initvol = $_cfg_multiroom['initial_volume'];
 $_rx_hostnames = $_SESSION['rx_hostnames'];
 
 // Receiver

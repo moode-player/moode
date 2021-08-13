@@ -4267,6 +4267,9 @@ function startMultiroomSender() {
 	$result = shell_exec($cmd);
 	//workerLog($cmd);
 }
+function stopMultiroomSender() {
+	sysCmd('killall tx');
+}
 function startMultiroomReceiver() {
 	$params = cfgdb_read('cfg_multiroom', cfgdb_connect());
 	foreach ($params as $row) {
@@ -4278,14 +4281,20 @@ function startMultiroomReceiver() {
 	$result = shell_exec($cmd);
 	//workerLog($cmd);
 }
-function stopMultiroomSender() {
-	sysCmd('killall tx');
-}
 function stopMultiroomReceiver() {
 	sysCmd('killall rx');
 	playerSession('write', 'rxactive', '0');
 	$GLOBALS['rxactive'] = '0';
 	sendEngCmd('rxactive0');
+}
+function updReceiverVol ($cmd) {
+	$ip_addresses = explode(', ', $_SESSION['rx_addresses']);
+	$count = count($ip_addresses);
+	for ($i = 0; $i < $count; $i++) {
+		if (file_get_contents('http://' . $ip_addresses[$i] . '/command/?cmd=vol.sh ' . $cmd) === false) {
+			workerLog('moode.php: remote volume cmd (' . $cmd . ') failed: ' . $ip_addresses[$i]);
+		}
+	}
 }
 function loadSndDummy () {
 	// Load driver and return card number

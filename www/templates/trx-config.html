@@ -57,7 +57,22 @@
 					<span id="info_multiroom_tx_bfr" class="help-block-configs help-block-margin hide">
 						The length of the send buffer in milliseconds.
 					</span>
-					<div style="margin-top:1.5em">
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="multiroom_initvol">Initial volume</label>
+				<div class="controls">
+					<input class="input-small" type="number" maxlength="3" min="0" max="100" name="multiroom_initvol" value="$_multiroom_initvol">
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_initvol" value="novalue" $_multiroom_initvol_disable>Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_initvol" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_multiroom_initvol" class="help-block-configs help-block-margin hide">
+						Sets the initial volume for Sender and Receivers.
+					</span>
+				</div>
+
+				<div class="controls">
+					<div style="margin-top:1em">
 						<a data-toggle="modal" href="#restart-tx" $_tx_restart_link_disable><button class="btn btn-medium btn-primary" $_tx_restart_btn_disable>Restart</button></a>&nbsp;Sender
 					</div>
 				</div>

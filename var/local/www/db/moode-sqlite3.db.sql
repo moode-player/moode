@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Aug 7 09:54:48 2021
+-- File generated with SQLiteStudio v3.1.0 on Fri Aug 13 07:28:58 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -582,6 +582,7 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'rx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'rx_jitter_bfr', '32');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'rx_sample_rate', '48000');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'rx_channels', '2');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'initial_volume', '0');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
