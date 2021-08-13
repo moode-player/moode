@@ -54,7 +54,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nRoot available\t\t= $ROOTAVAIL\c"
 	echo -e "\nRoot expand\t\t= $FSEXPAND\c"
 	echo -e "\nMemory total\t\t= $MEM_TOTAL MB\c"
-	echo -e "\nMemory free\t\t= $MEM_FREE MB\c"
+	echo -e "\nMemory free\t\t= $MEM_AVAIL MB\c"
 	echo -e "\nMemory used\t\t= $MEM_USED MB\c"
 	echo -e "\nSoC temperature\t\t= $TEMP\c"
 	echo -e "\nThrottled bitmask\t= $THROTTLED_BITMASK\c"
@@ -398,6 +398,13 @@ KERNEL_VER=`uname -r`" "`uname -v | cut -d" " -f 1`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
 ARCH=`uname -m`
+
+# Similar to moodeutl
+MEM_TOTAL=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+MEM_AVAIL=$(grep MemAvailable /proc/meminfo | awk '{print $2}')             
+MEM_TOTAL=$(( $MEM_TOTAL / 1000 ))
+MEM_AVAIL=$(( $MEM_AVAIL / 1000 ))
+MEM_USED=$(( $MEM_TOTAL - $MEM_AVAIL ))
 
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
