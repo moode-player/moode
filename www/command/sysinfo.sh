@@ -53,8 +53,9 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nRoot used\t\t= $ROOTUSED\c"
 	echo -e "\nRoot available\t\t= $ROOTAVAIL\c"
 	echo -e "\nRoot expand\t\t= $FSEXPAND\c"
-	echo -e "\nMemory free\t\t= $MEMFREE MB\c"
-	echo -e "\nMemory used\t\t= $MEMUSED MB\c"
+	echo -e "\nMemory total\t\t= $MEM_TOTAL MB\c"
+	echo -e "\nMemory free\t\t= $MEM_FREE MB\c"
+	echo -e "\nMemory used\t\t= $MEM_USED MB\c"
 	echo -e "\nSoC temperature\t\t= $TEMP\c"
 	echo -e "\nThrottled bitmask\t= $THROTTLED_BITMASK\c"
 	echo -e "\nThrottled text\t\t= $THROTTLED_TEXT\c"
@@ -397,8 +398,6 @@ KERNEL_VER=`uname -r`" "`uname -v | cut -d" " -f 1`
 SOC=`cat /proc/device-tree/compatible | tr '\0' ' ' | awk -F, '{print $NF}'`
 CORES=`grep -c ^processor /proc/cpuinfo`
 ARCH=`uname -m`
-MEMUSED=`free -m | grep "Mem" | awk {'print $3'}`
-MEMFREE=`free -m | grep "Mem" | awk {'print $4'}`
 
 if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] ; then
 	GOV=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`
