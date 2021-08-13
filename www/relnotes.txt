@@ -25,6 +25,8 @@ Updates
 - UPD: Bump to MPD 0.22.10
 - UPD: Bump to pycamilladsp 0.5.1
 - UPD: Add "okto research dac8 Stereo" to device table
+- UPD: Improve memory reporting in System info
+- UPD: Add ooption for Null mixer to MPD Config
 
 Radio stations
 
@@ -45,6 +47,7 @@ Bug fixes
 - FIX: BlueZ audioout being set to Bluetooth on Disconnect
 - FIX: Web socket get_mute() not working in pycamilladsp.py
 - FIX: Various auto-config bugs
+- FIX: Console error from Menu, Refresh
 
 ########################################################
 //
