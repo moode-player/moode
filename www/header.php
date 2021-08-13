@@ -179,7 +179,7 @@
                     <li><a href="javascript:audioHardware()"><i class="fas fa-music sx"></i> Audio info</a></li>
 					<li id="playhistory-hide" class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fas fa-book sx"></i> Play history</a></li>
 					<li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fas fa-info sx"></i> Quick help</a></li>
-					<li class="context-menu menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
+					<li class="menu-separator"><a href="javascript:location.reload(true); void 0"><i class="fas fa-redo sx"></i> Refresh</a></li>
 					<li><a href="#power-modal" data-toggle="modal"><i class="fas fa-power-off sx"></i> Power</a></li>
 				<?php } else { ?>
 					<li class="context-menu menu-separator"><a href="#configure-modal" data-toggle="modal"><i class="fas fa-cog sx"></i> Configure</a></li>
