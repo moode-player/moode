@@ -439,7 +439,7 @@ function engineCmd() {
                 case 'rxactive0':
                     inpSrcIndicator(cmd[0],
                         'Multiroom Receiver Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span>' +
-                        '<br><button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button>'
+                        '<br><button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button><br><a class="btn configure-renderer" href="trx-config.php">configure</a>'
                     );
                     break;
                 case 'scnactive1':

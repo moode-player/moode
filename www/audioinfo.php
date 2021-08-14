@@ -258,6 +258,12 @@ else {
 if ($_SESSION['audioout'] == 'Bluetooth') {
 	$alsa_output_chain = 'MPD -> Bluetooth stream -> Bluetooth speaker';
 }
+elseif ($_SESSION['multiroom_tx'] == 'On') {
+	$alsa_output_chain = $renderer . ' -> Sender -> Receiver(s)';
+}
+elseif ($_SESSION['multiroom_rx'] == 'On') {
+	$alsa_output_chain = 'Receiver -> Device';
+}
 elseif ($renderer == 'Squeezelite' || $renderer == 'Roonbridge') {
 	$alsa_output_chain = $renderer;
 }
