@@ -48,6 +48,7 @@ Bug fixes
 - FIX: Web socket get_mute() not working in pycamilladsp.py
 - FIX: Various auto-config bugs
 - FIX: Console error from Menu, Refresh
+- FIX: Margin issue on Clock Radio text and controls
 
 ########################################################
 //
