@@ -115,6 +115,22 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 
 	echo json_encode($rx_status);
 }
+elseif ($_GET['cmd'] == 'set_rx_status') {
+	$item = $_POST['item'];
+	$rx_addresses = explode(', ', $_SESSION['rx_addresses']);
+
+	if (isset($_POST['onoff'])) {
+		$result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=trx-status.php -rx ' . $_POST['onoff']);
+	}
+	elseif (isset($_POST['volume'])) {
+		$result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh ' . $_POST['volume']);
+	}
+	elseif (isset($_POST['mute'])) {
+		$result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh -mute'); // Toggles mute
+	}
+
+	echo json_encode('OK');
+}
 // Commands sent to MPD
 elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other_mpd_cmds)) {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {

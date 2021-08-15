@@ -2223,11 +2223,11 @@ $('.context-menu a').click(function(e) {
                         var rxStatusParts = rxStatus[i].split(','); // host,rx,OnOff,volume_1/0,mute_1/0
                         var rxMuteIcon = rxStatusParts[4] == '1' ? 'fa-volume-mute' : 'fa-volume-up';
                         var rxChecked = rxStatusParts[2] == 'On' ? 'checked' : '';
-                        // Host
-                        output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '">' + rxStatusParts[0] + '</label>';
+                        // Receiver hostname
+                        output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '-onoff">' + rxStatusParts[0] + '</label>';
                         output += '<div class="controls">';
                         // Receiver On/Off
-                        output += '<input id="multiroom-rx-' + item + '" class="checkbox-ctl" type="checkbox" ' + rxChecked + '>';
+                        output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl multiroom-modal-onoff" type="checkbox" data-item="' + item + '" ' + rxChecked + '>';
                         // Volume
                         output += '<input id="multiroom-rx-' + item + '-vol" class="input-mini input-height-x multiroom-modal-vol" type="number" maxlength="3" min="0" max="100" value="' + rxStatusParts[3] + '">';
                         output += '<div class="modal-button-style multiroom-modal-btn">';

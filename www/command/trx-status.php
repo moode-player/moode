@@ -28,7 +28,12 @@ session_start();
 
 switch ($option) {
 	case '-rx':
-		$status = rx_status();
+		if (isset($argv[2])) {
+			rx_onoff($argv[2]);
+		}
+		else {
+			$status = rx_status();
+		}
 		break;
 	case '-tx':
 		$status = tx_status();
@@ -44,6 +49,11 @@ switch ($option) {
 session_write_close();
 echo $status;
 exit(0);
+
+function rx_onoff($onoff) {
+	playerSession('write', 'multiroom_rx', $onoff);
+	$onoff == 'On' ? startMultiroomReceiver() : stopMultiroomReceiver();
+}
 
 function rx_status() {
 	return 'rx' . ',' . $_SESSION['multiroom_rx'] . ',' . $_SESSION['volknob'] . ',' . $_SESSION['volmute'];

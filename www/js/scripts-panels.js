@@ -1347,13 +1347,24 @@ jQuery(document).ready(function($) { 'use strict';
         notify('discovering_players', '', '3_seconds');
     });
 
-    // Multiroom Receiver mute button
+    // Multiroom Receiver control
+    $(document).on('click', '.multiroom-modal-onoff', function(e) {
+        var item = $(this).data('item');
+        var onoff = $('#multiroom-rx-' + item + '-onoff').prop('checked') === true ? 'On' : 'Off';
+        $.post('command/moode.php?cmd=set_rx_status', {'onoff': onoff, 'item': item}, function(result) {}, 'json');
+    });
+    $(document).on('click', '.multiroom-modal-vol', function(e) {
+        var item = $(this).data('item');
+        var volume = $('#multiroom-rx-' + item + '-vol').val();
+        $.post('command/moode.php?cmd=set_rx_status', {'volume': volume, 'item': item}, function(result) {}, 'json');
+    });
     $(document).on('click', '.multiroom-modal-mute', function(e) {
         var item = $(this).data('item');
         var iconClass = $('#multiroom-rx-' + item + '-mute i').hasClass('fa-volume-up') ? 'fa-volume-mute' : 'fa-volume-up';
+        var mute = iconClass =='fa-volume-mute' ? 'Muted' : 'Unmuted';
         $('#multiroom-rx-' + item + '-mute').html('<i class="fas ' + iconClass + '"></i>');
+        $.post('command/moode.php?cmd=set_rx_status', {'mute': mute, 'item': item}, function(result) {}, 'json');
     });
-    // TODO: Add handlers for On/Off and Volume
 
 	// Info button (i) show/hide toggle
 	$('.info-toggle').click(function(e) {
