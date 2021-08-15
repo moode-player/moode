@@ -139,6 +139,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 /* forms */
 .modal-body .form-horizontal .controls {margin-left:52%;margin-bottom:.5rem;}
 .modal-body .form-horizontal .control-label {width:48%;text-align:right;margin-top:0;}
+/* Multiroom modal */
+.modal .multiroom-modal-host {font-size:1.25em;font-weight:normal;text-transform:uppercase;margin-top:.25em!important;}
+.modal .multiroom-modal-btn {margin-left:.5em!important;}
+.modal .multiroom-modal-vol {margin-top:0!important;}
+.modal .multiroom-modal-mute {margin-top:0!important;}
+
 /* update package txt ol */
 #update-pkg-ol {font-family:courier new;}
 #update-pkg-ol li {line-height:1em;}

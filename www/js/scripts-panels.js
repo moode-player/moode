@@ -1347,6 +1347,14 @@ jQuery(document).ready(function($) { 'use strict';
         notify('discovering_players', '', '3_seconds');
     });
 
+    // Multiroom Receiver mute button
+    $(document).on('click', '.multiroom-modal-mute', function(e) {
+        var item = $(this).data('item');
+        var iconClass = $('#multiroom-rx-' + item + '-mute i').hasClass('fa-volume-up') ? 'fa-volume-mute' : 'fa-volume-up';
+        $('#multiroom-rx-' + item + '-mute').html('<i class="fas ' + iconClass + '"></i>');
+    });
+    // TODO: Add handlers for On/Off and Volume
+
 	// Info button (i) show/hide toggle
 	$('.info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');

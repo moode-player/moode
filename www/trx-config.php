@@ -45,24 +45,16 @@ if (isset($_POST['multiroom_tx_discover'])) {
 	$array = sdbquery("SELECT value FROM cfg_system WHERE param='hostname'", cfgdb_connect());
 	$thishost = strtolower($array[0]['value']);
 
-	$result = shell_exec("avahi-browse -a -t -r -p | awk -F '[;.]' '/IPv4/ && /moOde/ && /audio/ && /player/ && /=/ {print $7\",\"$9\".\"$10\".\"$11\".\"$12}' | sort");
-	$line = strtok($result, "\n");
-	$_players = '';
-
 	$_SESSION['rx_hostnames'] = '';
 	$_SESSION['rx_addresses'] = '';
+
+	$result = shell_exec("avahi-browse -a -t -r -p | awk -F '[;.]' '/IPv4/ && /moOde/ && /audio/ && /player/ && /=/ {print $7\",\"$9\".\"$10\".\"$11\".\"$12}' | sort");
+	$line = strtok($result, "\n");
 	while ($line) {
-		list($host, $ipaddr) = explode(",", $line);
+		list($host, $ipaddr) = explode(',', $line);
 		if (strtolower($host) != $thishost) {
-			$result = file_get_contents('http://' . $ipaddr . '/command/?cmd=multiroom.sh');
-			if ($result == 'active') {
-				$_SESSION['rx_hostnames'] .= $host . ', ';
-				$_SESSION['rx_addresses'] .= $ipaddr . ', ';
-			}
-			else {
-				$_SESSION['rx_hostnames'] .= '';
-				$_SESSION['rx_addresses'] .= '';
-			}
+			$_SESSION['rx_hostnames'] .= $host . ', ';
+			$_SESSION['rx_addresses'] .= $ipaddr . ', ';
 		}
 
 		$line = strtok("\n");
@@ -76,9 +68,8 @@ if (isset($_POST['multiroom_tx_discover'])) {
 		$_SESSION['notify']['title'] = $_SESSION['rx_hostnames'];
 	}
 	else {
-		$_SESSION['rx_hostnames'] = 'Found: ' . $_SESSION['rx_hostnames'];
 		$_SESSION['notify']['title'] = 'Discover complete';
-		$_SESSION['notify']['msg'] = $_SESSION['rx_hostnames'];
+		$_SESSION['notify']['msg'] = 'Found: ' . $_SESSION['rx_hostnames'];
 	}
 }
 if (isset($_POST['update_multiroom_initvol'])) {
@@ -135,7 +126,7 @@ $_select['multiroom_tx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['tx_
 $_select['multiroom_tx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['tx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['tx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
 $_multiroom_initvol = $_cfg_multiroom['initial_volume'];
-$_rx_hostnames = $_SESSION['rx_hostnames'];
+$_rx_hostnames = $_SESSION['rx_hostnames'] != 'No receivers found' ? 'Found: ' . $_SESSION['rx_hostnames'] : $_SESSION['rx_hostnames'];
 
 // Receiver
 $_select['multiroom_rx1'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"toggle_multiroom_rx1\" value=\"On\" " . (($_SESSION['multiroom_rx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";

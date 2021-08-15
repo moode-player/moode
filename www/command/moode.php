@@ -95,6 +95,26 @@ elseif ($_GET['cmd'] == 'disconnect-renderer') {
 		echo json_encode('worker busy');
 	}
 }
+// Multiroom receiver status
+elseif ($_GET['cmd'] == 'get_rx_status') {
+	if ($_SESSION['rx_hostnames'] == 'No receivers found') {
+		$rx_status = 'No receivers found';
+	}
+	else {
+		$rx_hostnames = explode(', ', $_SESSION['rx_hostnames']);
+		$rx_addresses = explode(', ', $_SESSION['rx_addresses']);
+
+		$count = count($rx_hostnames);
+		for ($i = 0; $i < $count; $i++) {
+			$result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx');
+			$rx_status .= $rx_hostnames[$i] . ',' . $result . ':';
+		}
+
+		$rx_status = rtrim($rx_status, ':');
+	}
+
+	echo json_encode($rx_status);
+}
 // Commands sent to MPD
 elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other_mpd_cmds)) {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
@@ -141,7 +161,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 		case 'mutetxvol':
 			// Mute Receiver MPD volumes
 			updReceiverVol('-mute');
-			
+
 			echo json_encode('OK');
 			break;
 
@@ -536,6 +556,8 @@ else {
 			$array_cfg_system['raspbianver'] = $_SESSION['raspbianver'];
 			$array_cfg_system['ipaddress'] = $_SESSION['ipaddress'];
 			$array_cfg_system['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
+			$array_cfg_system['rx_hostnames'] = $_SESSION['rx_hostnames'];
+			$array_cfg_system['rx_addresses'] = $_SESSION['rx_addresses'];
 			$data['cfg_system'] = $array_cfg_system;
 
 			// Theme settings
@@ -581,6 +603,8 @@ else {
 			$array['raspbianver'] = $_SESSION['raspbianver'];
 			$array['ipaddress'] = $_SESSION['ipaddress'];
 			$array['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
+			$array['rx_hostnames'] = $_SESSION['rx_hostnames'];
+			$array['rx_addresses'] = $_SESSION['rx_addresses'];
 
 			echo json_encode($array);
 			break;

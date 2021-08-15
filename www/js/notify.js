@@ -61,6 +61,8 @@ function notify(cmd, msg, duration) {
 		settings_updated: 'Settings updated',
 		gathering_info: 'Gathering info...',
         discovering_players: 'Discovering players...',
+        querying_receivers: 'Querying receivers...',
+        no_receivers_found: 'No receivers found',
 		favset: 'Name has been set',
 		favadded: 'Favorite has been added',
 		nofavtoadd: 'Nothing to add',

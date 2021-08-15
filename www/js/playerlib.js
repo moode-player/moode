@@ -2206,6 +2206,46 @@ $('.context-menu a').click(function(e) {
 
         $('#clockradio-modal').modal();
     }
+    else if ($(this).data('cmd') == 'multiroom-rx-modal') {
+        if (SESSION.json['rx_hostnames'] == 'No receivers found') {
+            notify('no_receivers_found', '', '3_seconds');
+        }
+        else {
+            notify('querying_receivers', '', '3_seconds');
+            $.post('command/moode.php?cmd=get_rx_status', function(result) {
+                //console.log(result);
+                if (result != 'No receivers found') {
+                    var output = '';
+                    var rxStatus = result.split(':');
+                    var count = rxStatus.length;
+                    for (var i = 0; i < count; i++) {
+                        var item = i.toString();
+                        var rxStatusParts = rxStatus[i].split(','); // host,rx,OnOff,volume_1/0,mute_1/0
+                        var rxMuteIcon = rxStatusParts[4] == '1' ? 'fa-volume-mute' : 'fa-volume-up';
+                        var rxChecked = rxStatusParts[2] == 'On' ? 'checked' : '';
+                        // Host
+                        output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '">' + rxStatusParts[0] + '</label>';
+                        output += '<div class="controls">';
+                        // Receiver On/Off
+                        output += '<input id="multiroom-rx-' + item + '" class="checkbox-ctl" type="checkbox" ' + rxChecked + '>';
+                        // Volume
+                        output += '<input id="multiroom-rx-' + item + '-vol" class="input-mini input-height-x multiroom-modal-vol" type="number" maxlength="3" min="0" max="100" value="' + rxStatusParts[3] + '">';
+                        output += '<div class="modal-button-style multiroom-modal-btn">';
+                        output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item + '">Vol</button>';
+                        output += '</div>';
+                        // Mute toggle
+                        output += '<div class="modal-button-style multiroom-modal-btn">';
+                        output += '<button id="multiroom-rx-' + item + '-mute" class="btn btn-primary btn-small multiroom-modal-mute" data-item="' + item + '"><i class="fas ' + rxMuteIcon + '"></i></button>';
+                        output += '</div>';
+                        output += '</div>';
+                    }
+
+                    $('#multiroom-rx-modal-receivers').html(output);
+                    $('#multiroom-rx-modal').modal();
+                }
+            }, 'json');
+        }
+	}
 
 	// MAIN MENU
 

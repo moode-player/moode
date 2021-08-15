@@ -45,7 +45,7 @@ elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') 
 			$result = sysCmd('/var/www/' . $_GET['cmd']);
 			echo 'Library update submitted';
         }
-		elseif (stripos($_GET['cmd'], 'multiroom.sh') !== false) {
+		elseif (stripos($_GET['cmd'], 'trx-status.php') !== false) {
 			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
 			echo $result[0];
         }

@@ -30,8 +30,9 @@ $_players = '';
 while ($line) {
 	list($host, $ipaddr) = explode(",", $line);
 	if (strtolower($host) != $thishost) {
-		$result = file_get_contents('http://' . $ipaddr . '/command/?cmd=multiroom.sh');
-		$multiroom_rx_indicator = $result == 'active' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
+		$result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx');
+		$rx_status = explode(',', $result);
+		$multiroom_rx_indicator = $rx_status[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
 		$_players .= sprintf('
 			<li><a href="http://%s" class="btn btn-large">
 			<i class="fas fa-sitemap"></i>
