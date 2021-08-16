@@ -4275,7 +4275,7 @@ function startMultiroomReceiver() {
 	foreach ($params as $row) {
 	    $_cfg_multiroom[$row['param']] = $row['value'];
 	}
-	// TODO: test -d _audioout
+	
 	$cmd = 'rx -d plughw:' . $_SESSION['cardnum'] . ',0 -h ' . $_cfg_multiroom['rx_host'] . ' -m ' . $_cfg_multiroom['rx_bfr'] . ' -j ' .
 		$_cfg_multiroom['rx_jitter_bfr'] . ' >/dev/null 2>&1 &';
 	$result = shell_exec($cmd);
