@@ -2208,10 +2208,10 @@ $('.context-menu a').click(function(e) {
     }
     else if ($(this).data('cmd') == 'multiroom-rx-modal') {
         if (SESSION.json['rx_hostnames'] == 'No receivers found') {
-            notify('no_receivers_found', '', '3_seconds');
+            notify('no_receivers_found');
         }
         else {
-            notify('querying_receivers', '', '3_seconds');
+            notify('querying_receivers');
             $.post('command/moode.php?cmd=get_rx_status', function(result) {
                 //console.log(result);
                 if (result != 'No receivers found') {

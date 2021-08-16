@@ -68,7 +68,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 		$_SESSION['notify']['title'] = $_SESSION['rx_hostnames'];
 	}
 	else {
-		$_SESSION['notify']['title'] = 'Discover complete';
+		$_SESSION['notify']['title'] = 'Discovery complete';
 		$_SESSION['notify']['msg'] = 'Found: ' . $_SESSION['rx_hostnames'];
 	}
 }
