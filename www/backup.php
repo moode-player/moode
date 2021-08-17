@@ -181,10 +181,10 @@ function genToggleButton($id, $value, $disabled) {
 // Backup toggles
 if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_restore_hidden = 'hidden';
-	$_togglebtn_backup_system = genToggleButton('backup_system', True, True);
-	$_togglebtn_backup_camilladsp = genToggleButton('backup_camilladsp', True, True);
-	$_togglebtn_backup_radiostations_moode = genToggleButton('backup_radiostations_moode', True, True);
-	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, True);
+	$_togglebtn_backup_system = genToggleButton('backup_system', True, False);
+	$_togglebtn_backup_camilladsp = genToggleButton('backup_camilladsp', True, False);
+	$_togglebtn_backup_radiostations_moode = genToggleButton('backup_radiostations_moode', True, False);
+	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, False);
 }
 // Restore toggles
 else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
