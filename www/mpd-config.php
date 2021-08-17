@@ -83,7 +83,7 @@ foreach ($result as $row) {
 	$mpdconf[$row['param']] = $row['value'];
 }
 
-if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On') {
+if ($_SESSION['audioout'] == 'Bluetooth' || $_SESSION['multiroom_tx'] == 'On' || $_SESSION['multiroom_rx'] == 'On') {
 	$_save_disabled = 'disabled';
 	$_hide_msg = '';
 }
