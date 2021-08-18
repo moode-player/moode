@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Aug 13 07:28:58 2021
+-- File generated with SQLiteStudio v3.1.0 on Wed Aug 18 16:29:34 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -319,7 +319,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (44, 'hdwrrev', '');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
 INSERT INTO cfg_system (id, param, value) VALUES (47, 'upnp_browser', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_instant_play', 'Play');
+INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_onetouch_album', 'Play');
 INSERT INTO cfg_system (id, param, value) VALUES (49, 'radio_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (50, 'aplactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (51, 'debuglog', '0');
@@ -432,6 +432,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (157, 'show_cvpb', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (158, 'multiroom_tx', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (159, 'multiroom_rx', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (160, 'rxactive', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (161, 'library_onetouch_radio', 'Play');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

@@ -195,7 +195,8 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nPlayback history log\t= $playhist\c"
 	echo -e "\n\nLibrary\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nOne touch action\t= $library_instant_play\c"
+	echo -e "\nOne touch album\t\t= $library_onetouch_album\c"
+	echo -e "\nOne touch radio\t\t= $library_onetouch_radio\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
@@ -636,7 +637,7 @@ hdwrrev=${arr[43]}
 [[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
 bluez_pcm_buffer=${arr[45]}
 [[ "${arr[46]}" = "1" ]] && upnp_browser="On" || upnp_browser="Off"
-library_instant_play=${arr[47]}
+library_onetouch_album=${arr[47]}
 radiopos=${arr[48]}
 aplactive=${arr[49]}
 [[ "${arr[50]}" = "1" ]] && debuglog="On" || debuglog="Off"
@@ -781,6 +782,7 @@ show_cvpb=${arr[156]}
 multiroom_tx=${arr[157]}
 multiroom_rx=${arr[158]}
 rxactive=${arr[159]}
+library_onetouch_radio=${arr[160]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

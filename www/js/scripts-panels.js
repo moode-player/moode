@@ -765,6 +765,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
+    // NOTE: Dead code
     /* ORIG
     // Play album item on click/tap (One touch play)
 	$('.database').on('click', '.db-album', function(e) {

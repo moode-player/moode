@@ -27,6 +27,8 @@ Updates
 - UPD: Add "okto research dac8 Stereo" to device table
 - UPD: Improve memory reporting in System info
 - UPD: Add ooption for Null mixer to MPD Config
+- UPD: Add Show tracks option to One touch album
+- UPD: Separate One touch options for Album and Radio
 
 Radio stations
 

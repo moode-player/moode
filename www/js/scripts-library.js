@@ -1084,9 +1084,10 @@ $('#albumcovers').on('click', '.cover-menu', function(e) {
 	clickedLibItem(e, keyAlbum(albumobj), LIB.filters.albums, renderSongs);
 });
 
-// Click album cover for instant play
+// Click album cover
 $('#albumcovers').on('click', 'img', function(e) {
 	var pos = $(this).parents('li').index();
+    var posChange = pos != UI.libPos[1] ? true : false;
     LIB.albumClicked = true;
 
 	$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
@@ -1105,31 +1106,31 @@ $('#albumcovers').on('click', 'img', function(e) {
 		files.push(filteredSongs[i].file);
 	}
 
-    if (SESSION.json['library_instant_play'] != 'No action') {
-        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
+    if (SESSION.json['library_onetouch_album'] != 'No action') {
+        if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
+            var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
             mpdDbCmd(queueCmd, files);
             notify(queueCmd);
         }
-        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
+        else if (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Play next') {
+            var queueCmd = SESSION.json['library_onetouch_album'] == 'Play' ? 'play_group' : 'play_group_next';
             mpdDbCmd(queueCmd, files);
         }
-        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+        else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
             mpdDbCmd('clear_play_group', files);
             notify('clear_play_group');
+        }
+        else if (SESSION.json['library_onetouch_album'] == 'Show tracks') {
+            showHideTracks(posChange);
         }
     }
 });
 
 // Random album instant play button on Playback
 $('.ralbum').click(function(e) {
-    if (SESSION.json['library_instant_play'] != 'No action') {
-
-		// remove old active classes...
+    if (SESSION.json['library_onetouch_album'] != 'No action') {
 		$('#albumsList .lib-entry').eq(UI.libPos[0]).removeClass('active');
 		$('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
-
 
     	$('.ralbum svg').attr('class', 'spin');
     	setTimeout(function() {
@@ -1152,16 +1153,19 @@ $('.ralbum').click(function(e) {
     		files.push(filteredSongs[i].file);
     	}
 
-        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
+        if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
+            var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
             mpdDbCmd(queueCmd, files);
             notify(queueCmd);
         }
-        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
+        // NOTE: Show tracks for Album view = Play for this button
+        else if (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Play next' ||
+            SESSION.json['library_onetouch_album'] == 'Show tracks') {
+            var queueCmd = (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Show tracks') ?
+                'play_group' : 'play_group_next';
             mpdDbCmd(queueCmd, files);
         }
-        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+        else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
             mpdDbCmd('clear_play_group', files);
         }
 
@@ -1169,7 +1173,7 @@ $('.ralbum').click(function(e) {
     }
 });
 
-// Click radio cover for instant play
+// Click radio station
 $('#database-radio').on('click', 'img', function(e) {
     var pos = $(this).parents('li').index();
 	var path = $(this).parents('li').data('path');
@@ -1183,32 +1187,49 @@ $('#database-radio').on('click', 'img', function(e) {
     UI.dbEntry[3] = $(this).parents('li').attr('id');
     $(this).parents('li').addClass('active');
 
-    oneTouchItem(path);
+    if (SESSION.json['library_onetouch_radio'] != 'No action') {
+        if (SESSION.json['library_onetouch_radio'] == 'Add' || SESSION.json['library_onetouch_radio'] == 'Add next') {
+            var queueCmd = SESSION.json['library_onetouch_radio'] == 'Add' ? 'add_item' : 'add_item_next';
+            mpdDbCmd(queueCmd, path);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_onetouch_radio'] == 'Play' || SESSION.json['library_onetouch_radio'] == 'Play next') {
+            var queueCmd = SESSION.json['library_onetouch_radio'] == 'Play' ? 'play_item' : 'play_item_next';
+            mpdDbCmd(queueCmd, path);
+        }
+        else if (SESSION.json['library_onetouch_radio'] == 'Clear/Play') {
+            mpdDbCmd('clear_play_item', path);
+            notify('clear_play_item');
+        }
+    }
 
 	setTimeout(function() {
         customScroll('radio', UI.radioPos + 1, 200);
 	}, DEFAULT_TIMEOUT);
 });
 
-function oneTouchItem (path) {
-    if (SESSION.json['library_instant_play'] != 'No action') {
-        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_item' : 'add_item_next';
+// NOTE: Dead code
+// One touch action for Radio station or track
+/*function oneTouchItem (path) {
+    if (SESSION.json['library_onetouch_radio'] != 'No action') {
+        if (SESSION.json['library_onetouch_radio'] == 'Add' || SESSION.json['library_onetouch_radio'] == 'Add next') {
+            var queueCmd = SESSION.json['library_onetouch_radio'] == 'Add' ? 'add_item' : 'add_item_next';
             mpdDbCmd(queueCmd, path);
             notify(queueCmd);
         }
-        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_item' : 'play_item_next';
+        else if (SESSION.json['library_onetouch_radio'] == 'Play' || SESSION.json['library_onetouch_radio'] == 'Play next') {
+            var queueCmd = SESSION.json['library_onetouch_radio'] == 'Play' ? 'play_item' : 'play_item_next';
             mpdDbCmd(queueCmd, path);
         }
-        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
+        else if (SESSION.json['library_onetouch_radio'] == 'Clear/Play') {
             mpdDbCmd('clear_play_item', path);
             notify('clear_play_item');
         }
     }
-}
-
-function oneTouchGroup (files) {
+}*/
+// NOTE: Dead code
+// This was ment for 'one_touch_action' as a context menu item for Tag/Album view
+/*function oneTouchGroup (files) {
     if (SESSION.json['library_instant_play'] != 'No action') {
         if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
             var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
@@ -1224,7 +1245,7 @@ function oneTouchGroup (files) {
             notify('clear_play_group');
         }
     }
-}
+}*/
 
 // Radio manager dialog
 $('#radio-manager-btn').click(function(e) {
@@ -1466,10 +1487,11 @@ $('#context-menu-lib-item a').click(function(e) {
 	$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 	$('img.lib-coverart').removeClass('active');
 
-    if ($(this).data('cmd') == 'one_touch_action') {
+    // NOTE: Dead code
+    /*if ($(this).data('cmd') == 'one_touch_action') {
         oneTouchItem(filteredSongs[UI.dbEntry[0]].file);
-	}
-	else if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
+	}*/
+	if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
 		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
 		notify('add_item');
 	}
@@ -1505,7 +1527,7 @@ $('#context-menu-lib-album a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-    if ($(this).data('cmd') == 'one_touch_action') {
+    if ($(this).data('cmd') == 'one_touch_action') { // NOTE: Dead code
         oneTouchGroup(files);
 	}
 	else if ($(this).data('cmd') == 'add_group' || $(this).data('cmd') == 'add_group_next') {
@@ -1524,7 +1546,8 @@ $('#context-menu-lib-album a').click(function(e) {
 		notify($(this).data('cmd'));
 	}
 	else if ($(this).data('cmd') == 'tracklist') {
-        // TODO: Make this a function and add a one-touch-action named "Show tracklist"
+        showHideTracks(false);
+        /* NOTE: Dead code
 		if ($('#bottom-row').css('display') == 'none') {
 			$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
 			$('#bottom-row').css('display', 'flex')
@@ -1539,6 +1562,7 @@ $('#context-menu-lib-album a').click(function(e) {
 		}
 
 		customScroll('albumcovers', UI.libPos[1], 200);
+        */
 	}
 });
 
@@ -1552,7 +1576,7 @@ $('#context-menu-lib-disc a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-    if ($(this).data('cmd') == 'one_touch_action') {
+    if ($(this).data('cmd') == 'one_touch_action') { // NOTE: Dead code
         oneTouchGroup(files);
 	}
 	else if ($(this).data('cmd') == 'add_group') {
@@ -1600,4 +1624,29 @@ function formatLibTotalTime(seconds) {
 
 function formatNumCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function showHideTracks(posChange) {
+    // Always show
+    if (posChange === true) {
+        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
+        $('#bottom-row').css('display', 'flex')
+        $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
+        $('#index-albumcovers').hide();
+    }
+    // Toggle
+    else if ($('#bottom-row').css('display') == 'none') {
+        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
+        $('#bottom-row').css('display', 'flex')
+        $('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
+        $('#index-albumcovers').hide();
+    }
+    else {
+        $('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
+        $('#bottom-row').css('display', '')
+        $('#lib-albumcover').css('height', '100%');
+        $('#index-albumcovers').show();
+    }
+
+    customScroll('albumcovers', UI.libPos[1], 200);
 }

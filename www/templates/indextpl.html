@@ -445,7 +445,7 @@
 
 	<div id="context-menu-lib-item" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<!--li class="context-menu menu-separator"><a href="#notarget" data-cmd="one_touch_action"><i class="fal fa-forward sx"></i> One touch action</a></li-->
+			<!--NOTE: Dead code li class="context-menu menu-separator"><a href="#notarget" data-cmd="one_touch_action"><i class="fal fa-forward sx"></i> One touch action</a></li-->
 			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
@@ -458,7 +458,7 @@
 
 	<div id="context-menu-lib-album" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<!--li id="one-touch-action-li" class="context-menu menu-separator"><a href="#notarget" data-cmd="one_touch_action"><i class="fal fa-forward sx"></i> One touch action</a></li-->
+			<!--NOTE: Dead code li id="one-touch-action-li" class="context-menu menu-separator"><a href="#notarget" data-cmd="one_touch_action"><i class="fal fa-forward sx"></i> One touch action</a></li-->
 			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
@@ -471,7 +471,7 @@
 
 	<div id="context-menu-lib-disc" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
-			<!--li class="context-menu menu-separator"><a href="#notarget" data-cmd="one_touch_action"><i class="fal fa-forward sx"></i> One touch action</a></li-->
+			<!--NOTE: Dead code li class="context-menu menu-separator"><a href="#notarget" data-cmd="one_touch_action"><i class="fal fa-forward sx"></i> One touch action</a></li-->
 			<li><a href="#notarget" data-cmd="add_group"><i class="fal fa-plus sx"></i> Add</a></li>
 			<li><a href="#notarget" data-cmd="play_group"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
@@ -929,29 +929,58 @@
 			<div class="accordian"><span class="h5">Library</span>
 				<div class="kontrol">
 					<div class="control-group">
-					<label class="control-label" for="instant-play-action">One touch action</label>
+
+					<label class="control-label" for="onetouch_album">One touch album</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
-								<div id="instant-play-action" class="filter-option pull-left">
+								<div id="onetouch_album" class="filter-option pull-left">
 									<span></span>
 								</div>&nbsp;
 								<div class="caret"></div>
 							</button>
 							<div class="dropdown-menu open">
 								<ul class="dropdown-menu custom-select inner" role="menu">
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">No action</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Add</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Play</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Add next</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Play next</span></a></li>
-									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="instant-play-action-sel"><span class="text">Clear/Play</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_album-sel"><span class="text">No action</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_album-sel"><span class="text">Show tracks</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_album-sel"><span class="text">Add</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_album-sel"><span class="text">Play</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_album-sel"><span class="text">Add next</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_album-sel"><span class="text">Play next</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_album-sel"><span class="text">Clear/Play</span></a></li>
 								</ul>
 							</div>
 						</div>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-instant-play-action" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-instant-play-action" class="help-block hide">
-	                    	Specify an action to be performed when tapping a cover in Library Radio or Album view, or tapping the random Album button in Playback.
+						<a aria-label="Help" class="info-toggle" data-cmd="info_onetouch_album" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info_onetouch_album" class="help-block hide">
+	                    	Specify an action to be performed when tapping a cover in Album view.
+	                    </span>
+	                </div>
+
+					<label class="control-label" for="onetouch_radio">One touch radio</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="onetouch_radio" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_radio-sel"><span class="text">No action</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_radio-sel"><span class="text">Show tracks</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_radio-sel"><span class="text">Add</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_radio-sel"><span class="text">Play</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_radio-sel"><span class="text">Add next</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_radio-sel"><span class="text">Play next</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="onetouch_radio-sel"><span class="text">Clear/Play</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_onetouch_radio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info_onetouch_radio" class="help-block hide">
+	                    	Specify an action to be performed when tapping a cover in Radio view.
 	                    </span>
 	                </div>
 
