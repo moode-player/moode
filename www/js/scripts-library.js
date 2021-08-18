@@ -1208,45 +1208,6 @@ $('#database-radio').on('click', 'img', function(e) {
 	}, DEFAULT_TIMEOUT);
 });
 
-// NOTE: Dead code
-// One touch action for Radio station or track
-/*function oneTouchItem (path) {
-    if (SESSION.json['library_onetouch_radio'] != 'No action') {
-        if (SESSION.json['library_onetouch_radio'] == 'Add' || SESSION.json['library_onetouch_radio'] == 'Add next') {
-            var queueCmd = SESSION.json['library_onetouch_radio'] == 'Add' ? 'add_item' : 'add_item_next';
-            mpdDbCmd(queueCmd, path);
-            notify(queueCmd);
-        }
-        else if (SESSION.json['library_onetouch_radio'] == 'Play' || SESSION.json['library_onetouch_radio'] == 'Play next') {
-            var queueCmd = SESSION.json['library_onetouch_radio'] == 'Play' ? 'play_item' : 'play_item_next';
-            mpdDbCmd(queueCmd, path);
-        }
-        else if (SESSION.json['library_onetouch_radio'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_item', path);
-            notify('clear_play_item');
-        }
-    }
-}*/
-// NOTE: Dead code
-// This was ment for 'one_touch_action' as a context menu item for Tag/Album view
-/*function oneTouchGroup (files) {
-    if (SESSION.json['library_instant_play'] != 'No action') {
-        if (SESSION.json['library_instant_play'] == 'Add' || SESSION.json['library_instant_play'] == 'Add next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Add' ? 'add_group' : 'add_group_next';
-            mpdDbCmd(queueCmd, files);
-            notify(queueCmd);
-        }
-        else if (SESSION.json['library_instant_play'] == 'Play' || SESSION.json['library_instant_play'] == 'Play next') {
-            var queueCmd = SESSION.json['library_instant_play'] == 'Play' ? 'play_group' : 'play_group_next';
-            mpdDbCmd(queueCmd, files);
-        }
-        else if (SESSION.json['library_instant_play'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_group', files);
-            notify('clear_play_group');
-        }
-    }
-}*/
-
 // Radio manager dialog
 $('#radio-manager-btn').click(function(e) {
     var sortGroup = SESSION.json['radioview_sort_group'].split(',');
@@ -1487,10 +1448,6 @@ $('#context-menu-lib-item a').click(function(e) {
 	$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 	$('img.lib-coverart').removeClass('active');
 
-    // NOTE: Dead code
-    /*if ($(this).data('cmd') == 'one_touch_action') {
-        oneTouchItem(filteredSongs[UI.dbEntry[0]].file);
-	}*/
 	if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
 		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
 		notify('add_item');
@@ -1527,10 +1484,7 @@ $('#context-menu-lib-album a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-    if ($(this).data('cmd') == 'one_touch_action') { // NOTE: Dead code
-        oneTouchGroup(files);
-	}
-	else if ($(this).data('cmd') == 'add_group' || $(this).data('cmd') == 'add_group_next') {
+	if ($(this).data('cmd') == 'add_group' || $(this).data('cmd') == 'add_group_next') {
 		mpdDbCmd($(this).data('cmd'), files);
 		notify($(this).data('cmd'));
 	}
@@ -1547,22 +1501,6 @@ $('#context-menu-lib-album a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'tracklist') {
         showHideTracks(false);
-        /* NOTE: Dead code
-		if ($('#bottom-row').css('display') == 'none') {
-			$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
-			$('#bottom-row').css('display', 'flex')
-			$('#lib-albumcover').css('height', 'calc(50% - env(safe-area-inset-top) - 2.75rem)'); // Was 1.75em
-			$('#index-albumcovers').hide();
-		}
-		else {
-			$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Show tracks');
-			$('#bottom-row').css('display', '')
-			$('#lib-albumcover').css('height', '100%');
-			$('#index-albumcovers').show();
-		}
-
-		customScroll('albumcovers', UI.libPos[1], 200);
-        */
 	}
 });
 
@@ -1576,10 +1514,7 @@ $('#context-menu-lib-disc a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-    if ($(this).data('cmd') == 'one_touch_action') { // NOTE: Dead code
-        oneTouchGroup(files);
-	}
-	else if ($(this).data('cmd') == 'add_group') {
+	if ($(this).data('cmd') == 'add_group') {
 		mpdDbCmd('add_group', files);
 		notify($(this).data('cmd'));
 	}

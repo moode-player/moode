@@ -765,34 +765,6 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
-    // NOTE: Dead code
-    /* ORIG
-    // Play album item on click/tap (One touch play)
-	$('.database').on('click', '.db-album', function(e) {
-        // Folder: Alternative 1 (Like other parts of Folder view)
-        var cmd = SESSION.json['library_instant_play'] == 'Clear/Play' ? 'clear_play_item' : 'play_item';
-		mpdDbCmd(cmd, $(this).parent().attr('data-path'));
-        if (cmd == 'clear_play_item') {
-            notify(cmd);
-        }
-
-        // Group: Alternative 2 (like Tag/Album view)
-        var files = [];
-		for (var i = $(this).parent().index() + 1; i < $('#folderlist li').length; i++) {
-			if ($('#folderlist li').eq(i).children('div').hasClass('db-song')) {
-				files.push($('#folderlist li').eq(i).attr('data-path'));
-			} else {
-				break;
-			}
-		}
-        var cmd = SESSION.json['library_instant_play'] == 'Clear/Play' ? 'clear_play_group' : 'play_group';
-		mpdDbCmd(cmd, files);
-        if (cmd == 'clear_play_item') {
-            notify(cmd);
-        }
-	});
-    */
-
     // Folder view context menu click
 	$('.database').on('click', '.db-action, .db-album, .db-song', function(e) {
         //console.log('Folder menu click');
