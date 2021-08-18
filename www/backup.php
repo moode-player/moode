@@ -104,22 +104,19 @@ else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
 			$restoreOptions = '--what ' . $restoreOptions . ' ';
 		}
 
-		// NOTE: Comment this and the reboot out to test the other parts of the restore process
+		// TODO: Maybe reset file rights after backupmanager.py ?
 		sysCmd('/var/www/command/backupmananger.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
-		// TODO: Maybe reset file rights?
-		//workerLog('/var/www/command/backupmananger.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
-
 		sysCmd('rm ' . TMP_RESTORE_ZIP);
 
 		// Automatically reboot
-		$_SESSION['notify']['title'] = 'Restore complete';
-		$_SESSION['notify']['msg'] = "";
-		$_SESSION['notify']['duration'] = 5;
-
 		if( empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') ) {
-			$_SESSION['notify']['msg'] = "System will reboot in 5 seconds.";
-			sysCmd('reboot');
+			submitJob('reboot', '', 'Restore complete', 'System rebooting...');
 		}
+
+		// DEBUG:
+		//$_SESSION['notify']['title'] = 'DEBUG';
+		//$_SESSION['notify']['msg'] = $restoreOptions;
+		//$_SESSION['notify']['duration'] = 10;
 	}
 	else {
 		$_imported_backupfile = 'No file selected';
