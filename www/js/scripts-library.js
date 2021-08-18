@@ -1524,6 +1524,7 @@ $('#context-menu-lib-album a').click(function(e) {
 		notify($(this).data('cmd'));
 	}
 	else if ($(this).data('cmd') == 'tracklist') {
+        // TODO: Make this a function and add a one-touch-action named "Show tracklist"
 		if ($('#bottom-row').css('display') == 'none') {
 			$('#tracklist-toggle').html('<i class="fal fa-list sx"></i> Hide tracks');
 			$('#bottom-row').css('display', 'flex')
