@@ -3140,8 +3140,14 @@ function autoConfigSettings() {
 		['requires' => ['ashufflesvc'] , 'handler' => setPlayerSession],
 		['requires' => ['ashuffle_mode'] , 'handler' => setPlayerSession],
 		['requires' => ['ashuffle_filter'] , 'handler' => setPlayerSession],
+
+		// TODO: These two settings update the ALSA confs and so will need to run some code
 		['requires' => ['alsa_output_mode'] , 'handler' => setPlayerSession],
 		['requires' => ['alsa_loopback'] , 'handler' => setPlayerSession],
+
+		'Multiroom'.
+		['requires' => ['multiroom_tx'] , 'handler' => setPlayerSession],
+		['requires' => ['multiroom_rx'] , 'handler' => setPlayerSession],
 
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
@@ -3310,7 +3316,8 @@ function autoConfigSettings() {
 		['requires' => ['show_cvpb'] , 'handler' => setPlayerSession],
 
 		'Library',
-		['requires' => ['library_instant_play'] , 'handler' => setPlayerSession],
+		['requires' => ['library_onetouch_album'] , 'handler' => setPlayerSession],
+		['requires' => ['library_onetouch_radio'] , 'handler' => setPlayerSession],
 		['requires' => ['library_albumview_sort'] , 'handler' => setPlayerSession],
 		['requires' => ['library_tagview_sort'] , 'handler' => setPlayerSession],
 		['requires' => ['library_recently_added'] , 'handler' => setPlayerSession],
@@ -4275,7 +4282,7 @@ function startMultiroomReceiver() {
 	foreach ($params as $row) {
 	    $_cfg_multiroom[$row['param']] = $row['value'];
 	}
-	
+
 	$cmd = 'rx -d plughw:' . $_SESSION['cardnum'] . ',0 -h ' . $_cfg_multiroom['rx_host'] . ' -m ' . $_cfg_multiroom['rx_bfr'] . ' -j ' .
 		$_cfg_multiroom['rx_jitter_bfr'] . ' >/dev/null 2>&1 &';
 	$result = shell_exec($cmd);
