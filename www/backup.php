@@ -105,7 +105,7 @@ else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
 		}
 
 		// TODO: Maybe reset file rights after backupmanager.py ?
-		sysCmd('/var/www/command/backupmananger.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
+		sysCmd('/var/www/command/backupmanager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 		sysCmd('rm ' . TMP_RESTORE_ZIP);
 
 		// Automatically reboot
