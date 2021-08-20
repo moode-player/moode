@@ -3141,14 +3141,6 @@ function autoConfigSettings() {
 		['requires' => ['ashuffle_mode'] , 'handler' => setPlayerSession],
 		['requires' => ['ashuffle_filter'] , 'handler' => setPlayerSession],
 
-		// TODO: These two settings update the ALSA confs and so will need to run some code
-		['requires' => ['alsa_output_mode'] , 'handler' => setPlayerSession],
-		['requires' => ['alsa_loopback'] , 'handler' => setPlayerSession],
-
-		'Multiroom'.
-		['requires' => ['multiroom_tx'] , 'handler' => setPlayerSession],
-		['requires' => ['multiroom_rx'] , 'handler' => setPlayerSession],
-
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['device'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
@@ -3219,6 +3211,14 @@ function autoConfigSettings() {
 		}, 'custom_write' => function($values) {
 			return getDbParams('cfg_spotify', $values, 'spot_');
 		}],
+
+		'Multiroom',
+		['requires' => ['multiroom_tx'] , 'handler' => setPlayerSession],
+		['requires' => ['multiroom_rx'] , 'handler' => setPlayerSession],
+
+		'ALSA',
+		['requires' => ['alsa_output_mode'] , 'handler' => setPlayerSession],
+		['requires' => ['alsa_loopback'] , 'handler' => setPlayerSession],
 
 		'Network (eth0)',
 		['requires' => ['ethmethod', 'ethipaddr', 'ethnetmask', 'ethgateway', 'ethpridns', 'ethsecdns'], 'handler' => function($values) {
