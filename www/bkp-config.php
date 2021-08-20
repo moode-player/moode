@@ -195,9 +195,9 @@ else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
 	$_togglebtn_restore_radiostations_other = genToggleButton('restore_radiostations_other', in_array('r_other', $backupOptions), !in_array('r_other', $backupOptions));
 }
 
-waitWorker(1, 'backup');
+waitWorker(1, 'bkp-config');
 
-$tpl = "backup.html";
+$tpl = "bkp-config.html";
 $section = basename(__FILE__, '.php');
 storeBackLink($section, $tpl);
 
