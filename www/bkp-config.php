@@ -112,6 +112,11 @@ else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
 		if( empty($restoreOptions) || (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') ) {
 			submitJob('reboot', '', 'Restore complete', 'System rebooting...');
 		}
+		else {
+			$_SESSION['notify']['title'] = 'Restore complete';
+			$_SESSION['notify']['msg'] = '';
+			$_SESSION['notify']['duration'] = 5;
+		}
 
 		// DEBUG:
 		//$_SESSION['notify']['title'] = 'DEBUG';
