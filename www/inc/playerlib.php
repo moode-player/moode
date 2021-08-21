@@ -4295,11 +4295,20 @@ function stopMultiroomReceiver() {
 	sendEngCmd('rxactive0');
 }
 function updReceiverVol ($cmd) {
+	$ip_hostnames = explode(', ', $_SESSION['rx_hostnames']);
 	$ip_addresses = explode(', ', $_SESSION['rx_addresses']);
 	$count = count($ip_addresses);
 	for ($i = 0; $i < $count; $i++) {
-		if (file_get_contents('http://' . $ip_addresses[$i] . '/command/?cmd=vol.sh ' . $cmd) === false) {
-			workerLog('moode.php: remote volume cmd (' . $cmd . ') failed: ' . $ip_addresses[$i]);
+		if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -rx'))) {
+			workerLog('updReceiverVol(): get_rx_status failed: ' . $ip_hostnames[$i]);
+		}
+		else {
+			$rx_status_parts = explode(',', $result); // rx,OnOff,volume,mute_1/0
+			if ($rx_status_parts[1] == 'On') {
+				if (false === (file_get_contents('http://' . $ip_addresses[$i] . '/command/?cmd=vol.sh ' . $cmd))) {
+					workerLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $ip_hostnames[$i]);
+				}
+			}
 		}
 	}
 }

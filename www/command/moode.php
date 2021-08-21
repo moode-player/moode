@@ -106,8 +106,12 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 
 		$count = count($rx_hostnames);
 		for ($i = 0; $i < $count; $i++) {
-			$result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx');
-			$rx_status .= $rx_hostnames[$i] . ',' . $result . ':';
+			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx'))) { // rx,OnOff,volume,mute_1/0
+				workerLog('moode.php: get_rx_status failed: ' . $rx_hostnames[$i]);
+			}
+			else {
+				$rx_status .= $rx_hostnames[$i] . ',' . $result . ':';
+			}
 		}
 
 		$rx_status = rtrim($rx_status, ':');
@@ -117,16 +121,23 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 }
 elseif ($_GET['cmd'] == 'set_rx_status') {
 	$item = $_POST['item'];
+	$rx_hostnames = explode(', ', $_SESSION['rx_hostnames']);
 	$rx_addresses = explode(', ', $_SESSION['rx_addresses']);
 
 	if (isset($_POST['onoff'])) {
-		$result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=trx-status.php -rx ' . $_POST['onoff']);
+		if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=trx-status.php -rx ' . $_POST['onoff']))) {
+			workerLog('moode.php: set_rx_status onoff failed: ' . $rx_hostnames[$item]);
+		}
 	}
 	elseif (isset($_POST['volume'])) {
-		$result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh ' . $_POST['volume']);
+		if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh ' . $_POST['volume']))) {
+			workerLog('moode.php: set_rx_status volume failed: ' . $rx_hostnames[$item]);
+		}
 	}
 	elseif (isset($_POST['mute'])) {
-		$result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh -mute'); // Toggles mute
+		if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh  -mute'))) { // Toggle mute
+			workerLog('moode.php: set_rx_status mute failed: ' . $rx_hostnames[$item]);
+		}
 	}
 
 	echo json_encode('OK');
