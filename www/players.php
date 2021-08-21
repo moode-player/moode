@@ -30,14 +30,24 @@ $_players = '';
 while ($line) {
 	list($host, $ipaddr) = explode(",", $line);
 	if (strtolower($host) != $thishost) {
-		$result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx');
-		$rx_status = explode(',', $result);
-		$multiroom_rx_indicator = $rx_status[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
-		$_players .= sprintf('
-			<li><a href="http://%s" class="btn btn-large">
-			<i class="fas fa-sitemap"></i>
-			<br>%s%s
-			</a></li>', $ipaddr, $host, $multiroom_rx_indicator);
+		if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx'))) {
+			workerLog('players.php: get_rx_status failed: ' . $host);
+		}
+		else {
+			if ($result != 'Unknown command') {  // r740 or higher host
+				$rx_status = explode(',', $result); // rx,OnOff,volume,mute_1/0
+				$multiroom_rx_indicator = $rx_status[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
+			}
+			else {
+				$multiroom_rx_indicator = '';
+			}
+
+			$_players .= sprintf('
+				<li><a href="http://%s" class="btn btn-large">
+				<i class="fas fa-sitemap"></i>
+				<br>%s%s
+				</a></li>', $ipaddr, $host, $multiroom_rx_indicator);
+		}
 	}
 
 	$line = strtok("\n");

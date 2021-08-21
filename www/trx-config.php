@@ -53,8 +53,15 @@ if (isset($_POST['multiroom_tx_discover'])) {
 	while ($line) {
 		list($host, $ipaddr) = explode(',', $line);
 		if (strtolower($host) != $thishost) {
-			$_SESSION['rx_hostnames'] .= $host . ', ';
-			$_SESSION['rx_addresses'] .= $ipaddr . ', ';
+			if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx'))) {
+				workerLog('trx-config.php: get_rx_status failed: ' . $host);
+			}
+			else {
+				if ($result != 'Unknown command') { // r740 or higher host
+					$_SESSION['rx_hostnames'] .= $host . ', ';
+					$_SESSION['rx_addresses'] .= $ipaddr . ', ';
+				}
+			}
 		}
 
 		$line = strtok("\n");
