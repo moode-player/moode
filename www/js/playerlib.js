@@ -2220,7 +2220,7 @@ $('.context-menu a').click(function(e) {
                     var count = rxStatus.length;
                     for (var i = 0; i < count; i++) {
                         var item = i.toString();
-                        var rxStatusParts = rxStatus[i].split(','); // host,rx,OnOff,volume_1/0,mute_1/0
+                        var rxStatusParts = rxStatus[i].split(','); // rx,OnOff,volume,mute_1/0
                         var rxMuteIcon = rxStatusParts[4] == '1' ? 'fa-volume-mute' : 'fa-volume-up';
                         var rxChecked = rxStatusParts[2] == 'On' ? 'checked' : '';
                         // Receiver hostname
