@@ -176,9 +176,6 @@
                     <li class="context-menu"><a href="#notarget" data-cmd="update_library"><i class="fas fa-sync sx"></i> Update library</a></li>
 					<li><a href="blu-config.php"><i class="fas fa-wifi sx"></i> BlueZ</a></li>
 					<li id="players-menu-item"><a href="javascript:$('#players-modal .modal-body').load('players.php',function(e){$('#players-modal').modal('show');}); void 0"><i class="fas fa-forward sx"></i> Players</a></li>
-                    <?php if ($_SESSION['feat_bitmask'] & $FEAT_MULTIROOM) { ?>
-                        <li><a href="trx-config.php"><i class="fas fa-rss sx"></i> Multiroom</a></li>
-    				<?php } ?>
                     <li><a href="javascript:audioHardware()"><i class="fas fa-music sx"></i> Audio info</a></li>
 					<li id="playhistory-hide" class="context-menu"><a href="#notarget" data-cmd="viewplayhistory"><i class="fas fa-book sx"></i> Play history</a></li>
 					<li class="context-menu"><a href="#notarget" data-cmd="quickhelp"><i class="fas fa-info sx"></i> Quick help</a></li>
