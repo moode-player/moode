@@ -344,16 +344,21 @@ workerLog('worker: -- Audio config');
 //
 
 // Update MPD config
-// NOTE: Only do this for I2S (non-hotplug devices) or if in-place update applied
-if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None' || $_SESSION['inplace_upd_applied'] == '1') {
-	updMpdConf($_SESSION['i2sdevice']);
-	workerLog('worker: MPD conf updated');
-
-	// Reset the flag
-	if ($_SESSION['inplace_upd_applied'] == '1') {
+if ($_SESSION['multiroom_tx'] == 'Off') {
+	// NOTE: Only do this for I2S (non-hotplug devices) or if in-place update applied
+	if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None' || $_SESSION['inplace_upd_applied'] == '1') {
+		updMpdConf($_SESSION['i2sdevice']);
+		$mpd_conf_upd_msg = 'MPD conf updated';
 		playerSession('write', 'inplace_upd_applied', '0');
 	}
+	else {
+		$mpd_conf_upd_msg = 'MPD conf update skipped';
+	}
 }
+else {
+	$mpd_conf_upd_msg = 'MPD conf update skipped';
+}
+workerLog('worker: ' . $mpd_conf_upd_msg);
 
 // Ensure audio output is unmuted for these devices
 if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
@@ -1675,8 +1680,8 @@ function runQueuedJob() {
 			if ($_SESSION['w_queue'] == 'alsa_output_mode') {
 				// Update ALSA and BT confs
 				// NOTE: w_queueargs contains $old_output_mode or ''
-				updAudioOutAndBtOutConfs($_SESSION['cardnum']);
-				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['w_queueargs']);
+				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode'], $_SESSION['w_queueargs']);
 			}
 			else {
 				// ALSA loopback
@@ -1917,19 +1922,18 @@ function runQueuedJob() {
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				// Reconfigure to dummy sound driver
 				$cardnum = loadSndDummy();
-				updAudioOutAndBtOutConfs($cardnum);
-				updDspAndBtInConfs($cardnum);
+				updAudioOutAndBtOutConfs($cardnum, 'hw');
+				updDspAndBtInConfs($cardnum, 'hw');
 				sysCmd('systemctl restart mpd');
 
 				startMultiroomSender();
 			}
 			else {
 				stopMultiroomSender();
-
 				// Reconfigure to real sound driver
 				unloadSndDummy();
-				updAudioOutAndBtOutConfs($_SESSION['cardnum']);
-				updDspAndBtInConfs($_SESSION['cardnum']);
+				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				sysCmd('systemctl restart mpd');
 			}
 			break;

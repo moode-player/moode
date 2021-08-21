@@ -502,40 +502,50 @@ session_write_close();
 
 // I2S AUDIO DEVICE
 
-// Named devices
-$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", cfgdb_connect());
-$array = array();
-$array[0]['name'] = 'None';
-$dac_list = array_merge($array, $result);
-foreach ($dac_list as $dac) {
-	$selected = ($_SESSION['i2sdevice'] == $dac['name']) ? ' selected' : '';
-	$_i2s['i2sdevice'] .= sprintf('<option value="%s"%s>%s</option>\n', $dac['name'], $selected, $dac['name']);
-}
-// DT overlays
-$overlay_list = sysCmd('moodeutl -o');
-array_unshift($overlay_list, 'None');
-foreach ($overlay_list as $overlay) {
-	$overlay_name = ($overlay == 'None') ? $overlay : substr($overlay, 0, -5); // Strip .dtbo extension
-	$selected = ($_SESSION['i2soverlay'] == $overlay_name) ? ' selected' : '';
-	$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
-}
-// Driver options
-$result = sdbquery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
-if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None') {
-	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
-	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
-	$_driveropt_btn_disable = '';
+if ($_SESSION['multiroom_tx'] == 'Off') {
+	// Named devices
+	$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", cfgdb_connect());
+	$array = array();
+	$array[0]['name'] = 'None';
+	$dac_list = array_merge($array, $result);
+	foreach ($dac_list as $dac) {
+		$selected = ($_SESSION['i2sdevice'] == $dac['name']) ? ' selected' : '';
+		$_i2s['i2sdevice'] .= sprintf('<option value="%s"%s>%s</option>\n', $dac['name'], $selected, $dac['name']);
+	}
+	// DT overlays
+	$overlay_list = sysCmd('moodeutl -o');
+	array_unshift($overlay_list, 'None');
+	foreach ($overlay_list as $overlay) {
+		$overlay_name = ($overlay == 'None') ? $overlay : substr($overlay, 0, -5); // Strip .dtbo extension
+		$selected = ($_SESSION['i2soverlay'] == $overlay_name) ? ' selected' : '';
+		$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
+	}
+	// Driver options
+	$result = sdbquery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
+	if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None') {
+		$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
+		$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
+		$_driveropt_btn_disable = '';
+	}
+	else {
+		$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
+		$_driveropt_btn_disable = 'disabled';
+	}
+	// Chip/device options
+	$_chip_btn_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None') ? '' : 'disabled';
+	$_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None') ? '' : 'onclick="return false;"';
+	// Named device vs DT overlay
+	$_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
+	$_i2soverlay_btn_disable = $_SESSION['i2sdevice'] == 'None' ? '' : 'disabled';
 }
 else {
-	$_select['drvoptions'] .= "<option value=\"none\" selected>None available</option>\n";
+	// NOTE: Don't allow any device changes while Multiroom Sender is on
 	$_driveropt_btn_disable = 'disabled';
+	$_chip_btn_disable = 'disabled';
+	$_chip_link_disable = 'onclick="return false;"';
+	$_i2sdevice_btn_disable = 'disabled';
+	$_i2soverlay_btn_disable = 'disabled';
 }
-// Chip/device options
-$_chip_btn_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None') ? '' : 'disabled';
-$_chip_link_disable = (!empty($result[0]['chipoptions']) && $_SESSION['i2soverlay'] == 'None') ? '' : 'onclick="return false;"';
-// Named device vs DT overlay
-$_i2sdevice_btn_disable = $_SESSION['i2soverlay'] == 'None' ? '' : 'disabled';
-$_i2soverlay_btn_disable = $_SESSION['i2sdevice'] == 'None' ? '' : 'disabled';
 
 // ALSA OPTIONS
 

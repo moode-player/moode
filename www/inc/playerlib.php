@@ -2084,8 +2084,8 @@ function updMpdConf($i2sdevice) {
 	}
 
 	// Update ALSA and BT confs
-	updAudioOutAndBtOutConfs($cardnum);
-	updDspAndBtInConfs($cardnum);
+	updAudioOutAndBtOutConfs($cardnum, $_SESSION['alsa_output_mode']);
+	updDspAndBtInConfs($cardnum, $_SESSION['alsa_output_mode']);
 }
 
 // Return mixer name
@@ -4206,7 +4206,7 @@ function getAlsaCards() {
 }
 
 // Update ALSA audio out and Bt out confs
-function updAudioOutAndBtOutConfs($cardnum) {
+function updAudioOutAndBtOutConfs($cardnum, $output_mode) {
 	// Local out
 	if ($_SESSION['audioout'] == 'Local') {
 		// With DSP
@@ -4232,8 +4232,8 @@ function updAudioOutAndBtOutConfs($cardnum) {
 		}
 		// No DSP
 		else {
-			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
-			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \""  . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
+			sysCmd("sed -i '/slave.pcm/c\slave.pcm \"" . $output_mode . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/_audioout.conf');
+			sysCmd("sed -i '/a { channels 2 pcm/c\a { channels 2 pcm \""  . $output_mode . ':' . $cardnum . ",0\" }' " . ALSA_PLUGIN_PATH . '/_sndaloop.conf');
 		}
 	}
 	// Bluetooth out
@@ -4244,24 +4244,24 @@ function updAudioOutAndBtOutConfs($cardnum) {
 }
 
 // Update ALSA DSP and BT in confs
-function updDspAndBtInConfs($cardnum, $old_output_mode = '') {
+function updDspAndBtInConfs($cardnum, $new_output_mode, $old_output_mode = '') {
 	// NOTE: This is done because the function can be called to change either the cardnum or the output mode
-	$alsa_output_mode = empty($old_output_mode) ? $_SESSION['alsa_output_mode'] : $old_output_mode;
+	$old_output_mode = empty($old_output_mode) ? $_SESSION['alsa_output_mode'] : $old_output_mode;
 
 	// ALSA DSP confs
-	// NOTE: Crossfeed, eqfa12p and alsaequa only work with 'plughw' output mode
+	// NOTE: Crossfeed, eqfa12p and alsaequal only work with 'plughw' output mode
 	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/alsaequal.conf');
 	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/crossfeed.conf');
 	sysCmd("sed -i '/slave.pcm \"" . 'plughw' . "/c\slave.pcm \"" . 'plughw' . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/eqfa12p.conf');
-	sysCmd("sed -i '/pcm \"" . $alsa_output_mode . "/c\pcm \"" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
+	sysCmd("sed -i '/pcm \"" . $old_output_mode . "/c\pcm \"" . $new_output_mode . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/invpolarity.conf');
 	$cdsp = new CamillaDsp($_SESSION['camilladsp'], $cardnum, $_SESSION['camilladsp_quickconv']);
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
-		$cdsp->setPlaybackDevice($cardnum, $_SESSION['alsa_output_mode'] );
+		$cdsp->setPlaybackDevice($cardnum, $new_output_mode);
 	}
 
 	// Bluetooth confs (incoming connections)
-	sysCmd("sed -i '/pcm \"" . $alsa_output_mode . "/c\pcm \"" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
-	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $_SESSION['alsa_output_mode'] . ':' . $cardnum . ",0' /etc/bluealsaaplay.conf");
+	sysCmd("sed -i '/pcm \"" . $old_output_mode . "/c\pcm \"" . $new_output_mode . ':' . $cardnum . ",0\"' " . ALSA_PLUGIN_PATH . '/20-bluealsa-dmix.conf');
+	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $new_output_mode . ':' . $cardnum . ",0' /etc/bluealsaaplay.conf");
 }
 
 // Multiroom audio
