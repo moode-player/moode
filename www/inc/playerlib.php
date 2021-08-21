@@ -3202,6 +3202,14 @@ function autoConfigSettings() {
 			return getDbParams('cfg_upnp', $values);
 		}],
 
+		'Airplay',
+		['requires' => ['interpolation', 'output_format', 'output_rate', 'allow_session_interruption', 'session_timeout', 'audio_backend_latency_offset_in_seconds', 'audio_backend_buffer_desired_length_in_seconds'],
+		'handler' => function($values) {
+			setDbParams('cfg_airplay', $values);
+		}, 'custom_write' => function($values) {
+			return getDbParams('cfg_airplay', $values);
+		}],
+
 		'Spotify',
 		['requires' => ['spot_bitrate','spot_initial_volume','spot_volume_curve','spot_volume_normalization','spot_normalization_pregain','spot_autoplay'] ,
 		 'optionals' => ['normalization_method', 'normalization_gain_type', 'normalization_threshold', 'normalization_attack', 'normalization_release',  'normalization_knee', 'format'],
