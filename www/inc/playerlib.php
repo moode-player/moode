@@ -3203,26 +3203,41 @@ function autoConfigSettings() {
 		}],
 
 		'Airplay',
-		['requires' => ['interpolation', 'output_format', 'output_rate', 'allow_session_interruption', 'session_timeout', 'audio_backend_latency_offset_in_seconds', 'audio_backend_buffer_desired_length_in_seconds'],
+		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate', 'airplay_allow_session_interruption', 'airplay_session_timeout', 'airplay_audio_backend_latency_offset_in_seconds', 'airplay_audio_backend_buffer_desired_length_in_seconds'],
 		'handler' => function($values) {
-			setDbParams('cfg_airplay', $values);
+			setDbParams('cfg_airplay', $values, 'airplay_');
 		}, 'custom_write' => function($values) {
-			return getDbParams('cfg_airplay', $values);
+			return getDbParams('cfg_airplay', $values, 'airplay_');
+		}],
+
+		'Squeezelite',
+		['requires' => ['squeezelite_PLAYERNAME', 'squeezelite_AUDIODEVICE', 'squeezelite_ALSAPARAMS', 'squeezelite_OUTPUTBUFFERS', 'squeezelite_TASKPRIORITY', 'squeezelite_CODECS', 'squeezelite_OTHEROPTIONS'],
+		'handler' => function($values) {
+			setDbParams('cfg_sl', $values, 'squeezelite_');
+		}, 'custom_write' => function($values) {
+			return getDbParams('cfg_sl', $values, 'squeezelite_');
 		}],
 
 		'Spotify',
-		['requires' => ['spot_bitrate','spot_initial_volume','spot_volume_curve','spot_volume_normalization','spot_normalization_pregain','spot_autoplay'] ,
-		 'optionals' => ['normalization_method', 'normalization_gain_type', 'normalization_threshold', 'normalization_attack', 'normalization_release',  'normalization_knee', 'format'],
+		['requires' => ['spotify_bitrate','spotify_initial_volume','spotify_volume_curve','spotify_volume_normalization','spotify_normalization_pregain','spotify_autoplay'] ,
+		 'optionals' => ['spotify_normalization_method', 'spotify_normalization_gain_type', 'spotify_normalization_threshold', 'spotify_normalization_attack', 'spotify_normalization_release',  'spotify_normalization_knee', 'spotify_format'],
 		 'handler' => function($values, $optionals) {
 			$mergedValues = array_merge($values, $optionals);
-			setDbParams('cfg_spotify', $mergedValues, 'spot_');
+			setDbParams('cfg_spotify', $mergedValues, 'spotify_');
 		}, 'custom_write' => function($values) {
-			return getDbParams('cfg_spotify', $values, 'spot_');
+			return getDbParams('cfg_spotify', $values, 'spotify_');
 		}],
 
 		'Multiroom',
 		['requires' => ['multiroom_tx'] , 'handler' => setPlayerSession],
 		['requires' => ['multiroom_rx'] , 'handler' => setPlayerSession],
+		['requires' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels', 'multiroom_tx_frame_size', 'multiroom_tx_bitrate',
+						'multiroom_rx_bfr', 'multiroom_rx_host', 'multiroom_rx_port', 'multiroom_rx_jitter_bfr', 'multiroom_rx_sample_rate', 'multiroom_rx_channels', 'multiroom_initial_volume'],
+		'handler' => function($values) {
+			setDbParams('cfg_multiroom', $values, 'multiroom_');
+		}, 'custom_write' => function($values) {
+			return getDbParams('cfg_multiroom', $values, 'multiroom_');
+		}],
 
 		'ALSA',
 		['requires' => ['alsa_output_mode'] , 'handler' => setPlayerSession],
