@@ -572,7 +572,6 @@ $_select['alsa_loopback0'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\
 
 // Multiroom configure
 $_multiroom_feat_enable = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
-$_multiroom_config_disable = $_SESSION['alsa_loopback'] == 'On' ? '' : 'disabled';
 
 // MPD OPTIONS
 
