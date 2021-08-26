@@ -59,7 +59,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 			else {
 				if ($result != 'Unknown command') { // r740 or higher host
 					$_SESSION['rx_hostnames'] .= $host . ', ';
-					$_SESSION['rx_addresses'] .= $ipaddr . ', ';
+					$_SESSION['rx_addresses'] .= $ipaddr . ' ';
 				}
 			}
 		}
@@ -67,7 +67,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 		$line = strtok("\n");
 	}
 	$_SESSION['rx_hostnames'] = rtrim($_SESSION['rx_hostnames'], ', ');
-	$_SESSION['rx_addresses'] = rtrim($_SESSION['rx_addresses'], ', ');
+	$_SESSION['rx_addresses'] = rtrim($_SESSION['rx_addresses'], ' ');
 
 	// Check for no receivers found
 	if (empty(trim($_SESSION['rx_hostnames']))) {
