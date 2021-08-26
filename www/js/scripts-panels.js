@@ -231,7 +231,7 @@ jQuery(document).ready(function($) { 'use strict';
     	}
 
     	// Set volume control state
-    	if (SESSION.json['mpdmixer'] == 'disabled') {
+    	if (SESSION.json['mpdmixer'] == 'none') {
     		disableVolKnob();
     		SESSION.json['volknob'] = '0';
     		SESSION.json['volmute'] = '0';
@@ -409,7 +409,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// Mute toggle
 	$('.volume-display').on('click', function(e) {
-		if (SESSION.json['mpdmixer'] == 'disabled') {
+		if (SESSION.json['mpdmixer'] == 'none') {
 			return false;
 		}
 		volMuteSwitch();
@@ -421,7 +421,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('#volume-popup').modal('toggle');
 		}
 		else {
-			if (SESSION.json['mpdmixer'] == 'disabled') {
+			if (SESSION.json['mpdmixer'] == 'none') {
 				$('.volume-display').css('opacity', '.3');
 			}
 			$('#volume-popup').modal();
