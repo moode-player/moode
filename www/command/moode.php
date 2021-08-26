@@ -102,9 +102,9 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 	}
 	else {
 		$rx_hostnames = explode(', ', $_SESSION['rx_hostnames']);
-		$rx_addresses = explode(', ', $_SESSION['rx_addresses']);
+		$rx_addresses = explode(' ', $_SESSION['rx_addresses']);
 
-		$count = count($rx_hostnames);
+		$count = count($rx_addresses);
 		for ($i = 0; $i < $count; $i++) {
 			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx'))) { // rx,OnOff,volume,mute_1/0
 				workerLog('moode.php: get_rx_status failed: ' . $rx_hostnames[$i]);
@@ -122,21 +122,27 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 elseif ($_GET['cmd'] == 'set_rx_status') {
 	$item = $_POST['item'];
 	$rx_hostnames = explode(', ', $_SESSION['rx_hostnames']);
-	$rx_addresses = explode(', ', $_SESSION['rx_addresses']);
+	$rx_addresses = explode(' ', $_SESSION['rx_addresses']);
 
 	if (isset($_POST['onoff'])) {
 		if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=trx-status.php -rx ' . $_POST['onoff']))) {
-			workerLog('moode.php: set_rx_status onoff failed: ' . $rx_hostnames[$item]);
+			if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=trx-status.php -rx ' . $_POST['onoff']))) {
+				workerLog('moode.php: set_rx_status onoff failed: ' . $rx_hostnames[$item]);
+			}
 		}
 	}
 	elseif (isset($_POST['volume'])) {
 		if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh ' . $_POST['volume']))) {
-			workerLog('moode.php: set_rx_status volume failed: ' . $rx_hostnames[$item]);
+			if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh ' . $_POST['volume']))) {
+				workerLog('moode.php: set_rx_status volume failed: ' . $rx_hostnames[$item]);
+			}
 		}
 	}
-	elseif (isset($_POST['mute'])) {
-		if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh  -mute'))) { // Toggle mute
-			workerLog('moode.php: set_rx_status mute failed: ' . $rx_hostnames[$item]);
+	elseif (isset($_POST['mute'])) { // Toggle mute
+		if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh  -mute'))) {
+			if (false === ($result = file_get_contents('http://' . $rx_addresses[$item] . '/command/?cmd=vol.sh  -mute'))) {
+				workerLog('moode.php: set_rx_status mute failed: ' . $rx_hostnames[$item]);
+			}
 		}
 	}
 
