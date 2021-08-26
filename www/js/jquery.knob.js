@@ -296,7 +296,7 @@
 
         this._touch = function (e) {
 
-            if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+            if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'none') {
 				return false;
 			}
 
@@ -353,7 +353,7 @@
 
         this._mouse = function (e) {
 
-            if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+            if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'none') {
 				return false;
 			}
 
@@ -550,7 +550,7 @@
         this.xy2val = function (x, y) {
 
 			if (this.$div.parent().hasClass('volume-step-limiter')) {
-				if (SESSION.json['mpdmixer'] == 'disabled') {
+				if (SESSION.json['mpdmixer'] == 'none') {
                     return false;
                 }
 				if (SESSION.json['volmute'] == '1') {
@@ -586,7 +586,7 @@
             var s = this,
                 mw = function (e) {
 
-                    if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'disabled') {
+                    if (s.$div.parent().hasClass('volume-step-limiter') && SESSION.json['mpdmixer'] == 'none') {
         				return false;
         			}
 
