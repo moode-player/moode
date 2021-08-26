@@ -421,11 +421,13 @@ function engineCmd() {
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
-    				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>');
+                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
+    				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
                     break;
                 case 'spotactive1':
                 case 'spotactive0':
-    				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>');
+                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
+    				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>' + receiversBtn);
                     break;
                 case 'slactive1':
                 case 'slactive0':
@@ -438,8 +440,11 @@ function engineCmd() {
                 case 'rxactive1':
                 case 'rxactive0':
                     inpSrcIndicator(cmd[0],
-                        'Multiroom Receiver Active: <button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span>' +
-                        '<br><button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button><br><a class="btn configure-renderer" href="trx-config.php">configure</a>'
+                        //'Multiroom Receiver Active: ' +
+                        //'<button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span><br>' +
+                        'Multiroom Receiver Active<br>' +
+                        '<button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button><br>' +
+                        '<a class="btn configure-renderer" href="trx-config.php">configure</a>'
                     );
                     break;
                 case 'scnactive1':
@@ -936,11 +941,13 @@ function renderUI() {
      	}
     	// Airplay renderer
     	if (SESSION.json['aplactive'] == '1') {
+            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
     		inpSrcIndicator('aplactive1', 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>');
     	}
     	// Spotify renderer
     	if (SESSION.json['spotactive'] == '1') {
-    		inpSrcIndicator('spotactive1', 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>');
+            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
+            inpSrcIndicator('spotactive1', 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>' + receiversBtn);
     	}
     	// Squeezelite renderer
     	if (SESSION.json['slactive'] == '1') {
@@ -949,6 +956,16 @@ function renderUI() {
         // RoonBridge renderer
     	if (SESSION.json['rbactive'] == '1') {
     		inpSrcIndicator('rbactive1', 'RoonBridge Active' + '<br><button class="btn disconnect-renderer" data-job="rbrestart">disconnect</button>');
+    	}
+        // Multiroom receiver
+    	if (SESSION.json['rxactive'] == '1') {
+            inpSrcIndicator('rxactive1',
+                //'Multiroom Receiver Active: ' +
+                //'<button class="btn volume-popup-btn" data-toggle="modal"><i class="fal fa-volume-up"></i></button><span id="multiroom-receiver-volume"></span><br>' +
+                'Multiroom Receiver Active<br>' +
+                '<button class="btn turnoff-renderer" data-job="multiroom_rx">turn off</button><br>' +
+                '<a class="btn configure-renderer" href="trx-config.php">configure</a>'
+            )
     	}
 
     	// MPD database update
@@ -2037,7 +2054,7 @@ $('.view-recents').click(function(e) {
 });
 
 // Context menus and main menu
-$('.context-menu a').click(function(e) {
+$(document).on('click', '.context-menu a', function(e) {
     var path = UI.dbEntry[0]; // File path or item num
     //console.log($(this).data('cmd'));
 
@@ -2206,37 +2223,51 @@ $('.context-menu a').click(function(e) {
 
         $('#clockradio-modal').modal();
     }
-    else if ($(this).data('cmd') == 'multiroom-rx-modal') {
+    else if ($(this).data('cmd') == 'multiroom-rx-modal' || $(this).data('cmd') == 'multiroom-rx-modal-limited') {
         if (SESSION.json['rx_hostnames'] == 'No receivers found') {
             notify('no_receivers_found');
         }
         else {
-            notify('querying_receivers');
+            notify('querying_receivers', '', 'infinite');
+
+            var modalType = $(this).data('cmd') == 'multiroom-rx-modal' ? 'full' : 'limited';
             $.post('command/moode.php?cmd=get_rx_status', function(result) {
                 //console.log(result);
+                $('.ui-pnotify-closer').click();
                 if (result != 'No receivers found') {
                     var output = '';
                     var rxStatus = result.split(':');
                     var count = rxStatus.length;
                     for (var i = 0; i < count; i++) {
                         var item = i.toString();
-                        var rxStatusParts = rxStatus[i].split(','); // rx,OnOff,volume,mute_1/0
+                        var rxStatusParts = rxStatus[i].split(','); // host,rx,OnOff,volume,mute_1/0
                         var rxMuteIcon = rxStatusParts[4] == '1' ? 'fa-volume-mute' : 'fa-volume-up';
                         var rxChecked = rxStatusParts[2] == 'On' ? 'checked' : '';
                         // Receiver hostname
                         output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '-onoff">' + rxStatusParts[0] + '</label>';
                         output += '<div class="controls">';
                         // Receiver On/Off
-                        output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl multiroom-modal-onoff" type="checkbox" data-item="' + item + '" ' + rxChecked + '>';
-                        // Volume
-                        output += '<input id="multiroom-rx-' + item + '-vol" class="input-mini input-height-x multiroom-modal-vol" type="number" maxlength="3" min="0" max="100" value="' + rxStatusParts[3] + '">';
-                        output += '<div class="modal-button-style multiroom-modal-btn">';
-                        output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item + '">Vol</button>';
-                        output += '</div>';
-                        // Mute toggle
-                        output += '<div class="modal-button-style multiroom-modal-btn">';
-                        output += '<button id="multiroom-rx-' + item + '-mute" class="btn btn-primary btn-small multiroom-modal-mute" data-item="' + item + '"><i class="fas ' + rxMuteIcon + '"></i></button>';
-                        output += '</div>';
+                        var topMargin = modalType == 'full' ? 'multiroom-modal-onoff' : 'multiroom-modal-onoff-xtra';
+                        output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl ' + topMargin + '" type="checkbox" data-item="' + item + '" ' + rxChecked + '>';
+
+                        if (modalType == 'full') {
+                            // Volume
+                            if (rxStatusParts[3] == '0dB') {
+                                output += '<input id="multiroom-rx-' + item + '-vol" class="input-mini input-height-x multiroom-modal-vol" type="text" value="0dB" readonly>';
+                                var disabled = ' disabled';
+                            }
+                            else {
+                                output += '<input id="multiroom-rx-' + item + '-vol" class="input-mini input-height-x multiroom-modal-vol" type="number" maxlength="3" min="0" max="100" value="' + rxStatusParts[3] + '">';
+                                var disabled = '';
+                            }
+                            output += '<div class="modal-button-style multiroom-modal-btn">';
+                            output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item + '"' + disabled + '>Vol</button>';
+                            output += '</div>';
+                            // Mute toggle
+                            output += '<div class="modal-button-style multiroom-modal-btn">';
+                            output += '<button id="multiroom-rx-' + item + '-mute" class="btn btn-primary btn-small multiroom-modal-mute" data-item="' + item + '"' + disabled + '><i class="fas ' + rxMuteIcon + '"></i></button>';
+                            output += '</div>';
+                        }
                         output += '</div>';
                     }
 
