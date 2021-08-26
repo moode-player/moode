@@ -16,15 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-12-15 TC moOde 7.0.0
-#
 
-VER="5.2.1"
+VER="7.4.0"
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 if [[ -z $1 ]]; then
-	echo $(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE id='32'")
+	echo $(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='volknob'")
 	exit 0
 fi
 
@@ -51,7 +49,7 @@ if [[ $1 = "--version" ]]; then
 fi
 
 # Get config settings
-RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE id IN  ('32', '33', 137)")
+RESULT=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param IN ('volknob', 'volmute', 'mpdmixer', 'volume_mpd_max')")
 
 # Check for empty result due to "Database locked" error
 if [[ $RESULT = "" ]]; then
@@ -63,18 +61,24 @@ fi
 readarray -t arr <<<"$RESULT"
 VOLKNOB=${arr[0]}
 VOLMUTE=${arr[1]}
-MPDMAX=${arr[2]}
+MPDMIXER=${arr[2]}
+VOLUME_MPD_MAX=${arr[3]}
+
+# For MPD mixer type Fixed (0dB) we just exit
+if [[ $MPDMIXER = "none" ]]; then
+	exit 0
+fi
 
 REGEX='^[0-9]+$'
 
 # Parse OPTIONS
 if [[ $1 = "-mute" || $1 = "mute" ]]; then
 	if [[ $VOLMUTE = "1" ]]; then
-		sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE id='33'"
+		sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='volmute'"
 		VOLMUTE=0
 		LEVEL=$VOLKNOB
 	else
-		sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE id='33'"
+		sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='volmute'"
 		VOLMUTE=1
 	fi
 else
@@ -108,8 +112,8 @@ else
 	fi
 
 	# Limit check
-	if (( $LEVEL > $MPDMAX )); then
-		LEVEL=$MPDMAX
+	if (( $LEVEL > $VOLUME_MPD_MAX )); then
+		LEVEL=$VOLUME_MPD_MAX
 	fi
 
 	# Range check
@@ -120,7 +124,7 @@ else
 	fi
 
 	# Update knob level
-	sqlite3 $SQLDB "UPDATE cfg_system SET value=$LEVEL WHERE id='32'"
+	sqlite3 $SQLDB "UPDATE cfg_system SET value=$LEVEL WHERE param='volknob'"
 fi
 
 # Mute if indicated
