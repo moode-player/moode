@@ -51,6 +51,7 @@ Bug fixes
 - FIX: Various auto-config bugs
 - FIX: Console error from Menu, Refresh
 - FIX: Margin issue on Clock Radio text and controls
+- FIX: JQuery.knob testing for old MPD mixer_type "disabled"
 
 ########################################################
 //
