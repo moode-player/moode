@@ -2594,7 +2594,15 @@ function startAirplay() {
 }
 function stopAirplay () {
 	sysCmd('killall shairport-sync');
+
+	// Local
 	sysCmd('/var/www/vol.sh -restore');
+
+	// Multiroom receivers
+	if ($_SESSION['multiroom_tx'] == "On" ) {
+		updReceiverVol('-restore');
+	}
+
 	// Reset to inactive
 	playerSession('write', 'aplactive', '0');
 	$GLOBALS['aplactive'] = '0';
@@ -2649,7 +2657,15 @@ function startSpotify() {
 }
 function stopSpotify() {
 	sysCmd('killall librespot');
+
+	// Local
 	sysCmd('/var/www/vol.sh -restore');
+
+	// Multiroom receivers
+	if ($_SESSION['multiroom_tx'] == "On" ) {
+		updReceiverVol('-restore');
+	}
+
 	// Reset to inactive
 	playerSession('write', 'spotactive', '0');
 	$GLOBALS['spotactive'] = '0';
@@ -4319,7 +4335,7 @@ function stopMultiroomReceiver() {
 }
 function updReceiverVol ($cmd) {
 	$ip_hostnames = explode(', ', $_SESSION['rx_hostnames']);
-	$ip_addresses = explode(', ', $_SESSION['rx_addresses']);
+	$ip_addresses = explode(' ', $_SESSION['rx_addresses']);
 	$count = count($ip_addresses);
 	for ($i = 0; $i < $count; $i++) {
 		if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -rx'))) {
