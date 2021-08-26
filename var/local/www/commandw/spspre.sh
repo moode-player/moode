@@ -16,17 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2019-11-24 TC moOde 6.4.0
-#
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='inpactive'")
+RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='inpactive' or param='multiroom_tx'")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
 ALSAVOLUME=${arr[1]}
 AMIXNAME=${arr[2]}
 INPACTIVE=${arr[3]}
+MULTIROOM_TX=${arr[4]}
+RX_ADDRESSES=$(sudo moodeutl -d | grep rx_addresses | cut -d'|' -f2)
 
 if [[ $INPACTIVE == '1' ]]; then
 	exit 1
@@ -39,6 +39,20 @@ sleep 1
 
 $(sqlite3 $SQLDB "update cfg_system set value='1' where param='aplactive'")
 
+# Local
 if [[ $ALSAVOLUME != "none" ]]; then
 	/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+fi
+
+# Multiroom receivers
+if [[ $MULTIROOM_TX == "On" ]]; then
+	for IP_ADDR in $RX_ADDRESSES; do
+		RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-status.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
+		if [[ $RESULT != "" ]]; then
+			RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-status.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
+			if [[ $RESULT != "" ]]; then
+				echo echo $(date +%F" "%T)"spspre.sh trx-status.php -set-alsavol failed: $IP_ADDR" >> /home/pi/renderer_error.log
+			fi
+		fi
+	done
 fi
