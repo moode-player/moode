@@ -30,6 +30,7 @@ switch ($option) {
 	case '-rx':
 		if (isset($argv[2])) {
 			rx_onoff($argv[2]);
+			$status = '';
 		}
 		else {
 			$status = rx_status();
@@ -41,13 +42,26 @@ switch ($option) {
 	case '-all':
 		$status = all_status();
 		break;
+	case '-set-alsavol':
+		if (isset($argv[2])) {
+			if ($_SESSION['multiroom_rx'] == 'On') {
+				set_alsavol($argv[2]);
+			}
+			$status = '';
+		}
+		else {
+			$status = 'Missing arg';
+		}
+		break;
 	default:
 		$status = 'Missing arg';
 		break;
 }
 
 session_write_close();
-echo $status;
+if ($status != '') {
+	echo $status;
+}
 exit(0);
 
 function rx_onoff($onoff) {
@@ -56,13 +70,19 @@ function rx_onoff($onoff) {
 }
 
 function rx_status() {
-	return 'rx' . ',' . $_SESSION['multiroom_rx'] . ',' . $_SESSION['volknob'] . ',' . $_SESSION['volmute'];
+	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : $_SESSION['volknob'];
+	return 'rx' . ',' . $_SESSION['multiroom_rx'] . ',' . $volume . ',' . $_SESSION['volmute'];
 }
 
 function tx_status() {
-	return 'tx' . ',' . $_SESSION['multiroom_tx'] . ',' . $_SESSION['volknob'] . ',' . $_SESSION['volmute'];
+	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : $_SESSION['volknob'];
+	return 'tx' . ',' . $_SESSION['multiroom_tx'] . ',' . $volume . ',' . $_SESSION['volmute'];
 }
 
 function all_status() {
 	return rx_status() . ',' . tx_status();
+}
+
+function set_alsavol($vol) {
+	sysCmd('/var/www/command/util.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $vol);
 }
