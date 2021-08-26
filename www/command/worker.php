@@ -1852,7 +1852,10 @@ function runQueuedJob() {
 			break;
 		case 'airplaysvc':
 			stopAirplay();
-			if ($_SESSION['airplaysvc'] == 1) { startAirplay();}
+			if ($_SESSION['airplaysvc'] == 1) {
+				startAirplay();
+			}
+
 			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
 				sysCmd('mpc play');
 			}
