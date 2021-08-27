@@ -1940,6 +1940,13 @@ function runQueuedJob() {
 		case 'multiroom_rx':
 			if ($_SESSION['multiroom_rx'] == 'On') {
 				sysCmd('mpc stop');
+
+				// TODO: Automatically turn off session based renderers?
+				//playerSession('write', 'airplaysvc', '0');
+				//stopAirplay();
+				//playerSession('write', 'spotifysvc', '0');
+				//stopSpotify();
+
 				startMultiroomReceiver();
 			}
 			else {
