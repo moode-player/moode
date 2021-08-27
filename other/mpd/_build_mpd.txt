@@ -8,7 +8,7 @@
 
 sudo ./dev.sh
 PATCH_ID=""
-MPD_REL=mpd-0.22.10.tar.xz
+MPD_REL=mpd-0.22.11.tar.xz
 MPD_GIT=mpd-VER~git-YYYYMMDD-COMMIT.zip
 
 # Get sources
@@ -34,7 +34,7 @@ PATCH_ID=_p0x$(($SELECTIVE_RESAMPLING + $SOX_CUSTOM_RECIPE))
 sudo cp /mnt/moode-player/GitHub/moode/other/mpd/_patches/*.patch ./
 
 VERSION=22
-cd ~/mpd-0.22.10
+cd ~/mpd-0.22.11
 # NOTE: patch not needed since being accepted into master branch 
 ##sudo patch -p1 < ~/mpd-0.$VERSION.x_soxr_customrecipe.patch
 sudo patch -p1 < ~/mpd_0.$VERSION.xx_selective_resample_mode.patch
@@ -46,7 +46,7 @@ sudo sed -i "/version: '0/s/',/$PATCH_ID',/" ./meson.build
 #////////////////////////////////////////////
 
 # Compile Rel versiuon
-cd ~/mpd-0.22.10
+cd ~/mpd-0.22.11
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 sudo meson configure -Dalsa=enabled -Dbzip2=enabled -Dcurl=enabled -Ddatabase=true -Ddsd=true -Dffmpeg=enabled -Dfaad=enabled -Dflac=enabled -Dhttpd=true -Did3tag=enabled -Dlame=enabled -Dlibmpdclient=enabled -Dmad=enabled -Dmpg123=enabled -Dpipe=true -Drecorder=true -Dshout=enabled -Dsoxr=enabled -Dvorbis=enabled -Dwave_encoder=true -Dwavpack=enabled -Dzeroconf=avahi -Dpcre=enabled -Dzzip=enabled -Dao=disabled -Daudiofile=disabled -Ddbus=disabled -Dexpat=disabled -Dfluidsynth=disabled -Dgme=disabled -Dipv6=disabled -Djack=disabled -Dlibsamplerate=disabled -Dnfs=disabled -Doss=disabled -Dpulse=disabled -Dsidplay=disabled -Dsmbclient=disabled -Dsndfile=disabled -Dsqlite=disabled -Dudisks=disabled -Dupnp=disabled -Dwildmidi=disabled -Dsoundcloud=disabled -Dtidal=disabled -Dqobuz=disabled output/release
 sudo ninja -C output/release
@@ -55,9 +55,9 @@ sudo ninja -C output/release
 #// Install binaries
 #////////////////////////////////////////////
 
-cd ~/mpd-0.22.10
-sudo cp output/release/mpd /mnt/SDCARD/mpd-0.22.10$PATCH_ID
-sudo cp output/release/mpd /var/local/www/mpd_versions/mpd-0.22.10$PATCH_ID
+cd ~/mpd-0.22.11
+sudo cp output/release/mpd /mnt/SDCARD/mpd-0.22.11$PATCH_ID
+sudo cp output/release/mpd /var/local/www/mpd_versions/mpd-0.22.11$PATCH_ID
 
 sudo nano /var/local/www/mpd_versions.conf
 
