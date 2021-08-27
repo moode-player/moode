@@ -1171,8 +1171,8 @@ function chkRxActive() {
 				$GLOBALS['rxactive'] = '1';
 				playerSession('write', 'rxactive', '1');
 				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
+				sendEngCmd('rxactive1');
 			}
-			sendEngCmd('rxactive1');
 		}
 	}
 }
