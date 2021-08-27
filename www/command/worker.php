@@ -850,7 +850,6 @@ $aplactive = '0';
 $spotactive = '0';
 $slactive = '0';
 $rbactive = '0';
-$rxactive = '0';
 $inpactive = '0';
 
 // Library update, MPD database regen
@@ -991,7 +990,7 @@ function chkScnSaver() {
 	// Activate if timeout is set and no other overlay is active
 	if ($GLOBALS['scnsaver_timeout'] != 'Never' && $_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0'
 		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0'
-		&& $GLOBALS['rxactive'] == '0' && $GLOBALS['inpactive'] == '0') {
+		&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0') {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - 3;
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
@@ -1128,7 +1127,7 @@ function chkRbActive() {
 	$result = sysCmd('pgrep -c mono-sgen');
 	if ($result[0] > 0) {
 		$rnd_not_playing = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
-			&& $GLOBALS['slactive'] == '0' && $GLOBALS['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
+			&& $GLOBALS['slactive'] == '0' && $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0');
 		$mpd_not_playing = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
 		$alsa_out_active = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
 		//workerLog('rnp:' . ($rnd_not_playing ? 'T' : 'F') . '|' . 'mnp:' . ($mpd_not_playing ? 'T' : 'F') . '|' . 'aoa:' . ($alsa_out_active ? 'T' : 'F'));
@@ -1160,19 +1159,11 @@ function chkRbActive() {
 function chkRxActive() {
 	$result = sysCmd('pgrep -c rx');
 	if ($result[0] > 0) {
-		$rnd_not_playing = ($_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0' && $GLOBALS['spotactive'] == '0'
-			&& $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0' && $GLOBALS['inpactive'] == '0');
-		$mpd_not_playing = empty(sysCmd('mpc status | grep playing')[0]) ? true : false;
-		$alsa_out_active = sysCmd('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params')[0] == 'closed' ? false : true;
-		//workerLog('rnp:' . ($rnd_not_playing ? 'T' : 'F') . '|' . 'mnp:' . ($mpd_not_playing ? 'T' : 'F') . '|' . 'aoa:' . ($alsa_out_active ? 'T' : 'F'));
-		if ($rnd_not_playing && $mpd_not_playing && $alsa_out_active) {
-			// Do this section only once
-			if ($GLOBALS['rxactive'] == '0') {
-				$GLOBALS['rxactive'] = '1';
-				playerSession('write', 'rxactive', '1');
-				$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
-				sendEngCmd('rxactive1');
-			}
+		// Do this section only once
+		if ($_SESSION['rxactive'] == '0') {
+			playerSession('write', 'rxactive', '1');
+			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // Reset timeout
+			sendEngCmd('rxactive1');
 		}
 	}
 }

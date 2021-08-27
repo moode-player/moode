@@ -4330,7 +4330,6 @@ function startMultiroomReceiver() {
 function stopMultiroomReceiver() {
 	sysCmd('killall rx');
 	playerSession('write', 'rxactive', '0');
-	$GLOBALS['rxactive'] = '0';
 	sendEngCmd('rxactive0');
 }
 function updReceiverVol ($cmd) {
