@@ -16,11 +16,11 @@
 export MOODE_WORK=`pwd`/../..
 export CDSP_WORK=./camilladsp.dev
 
-CAMILLADSP_VER=0.5.2
-PYCAMILLADSP_VER=0.5.1
-PYCAMILLADSP_PLOT_VER=0.5.3
-CAMILLAGUI_VER=0.4.1
-CAMILLAGUI_BACKEND_VER=0.7.1
+CAMILLADSP_VER=0.6.1
+PYCAMILLADSP_VER=0.6.0
+PYCAMILLADSP_PLOT_VER=0.6.0
+CAMILLAGUI_VER=0.6.0
+CAMILLAGUI_BACKEND_VER=0.8.0
 
 mkdir -p $CDSP_WORK
 cd $CDSP_WORK
@@ -65,8 +65,9 @@ then
 	echo "Choose option 1 when asked !"
 	# Requires log of and log in after install
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-	echo "logout and in again and restart script!"
-	exit 1
+	#echo "logout and in again and restart script!"
+	#exit 1
+	source $HOME/.cargo/env
  else
   echo "cargo: already installed"
 fi
