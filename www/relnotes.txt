@@ -22,8 +22,8 @@ New features
 
 Updates
 
-- UPD: Bump to MPD 0.22.10
-- UPD: Bump to pycamilladsp 0.5.1
+- UPD: Bump to MPD 0.22.11
+- UPD: Bump to CamillaDSP 0.6.1
 - UPD: Add "okto research dac8 Stereo" to device table
 - UPD: Improve memory reporting in System info
 - UPD: Add ooption for Null mixer to MPD Config
