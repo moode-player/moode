@@ -32,6 +32,27 @@ if (isset($_POST['update_multiroom_tx'])) {
 		submitJob('multiroom_tx', '', $title, '');
 	}
 }
+if (isset($_POST['update_alsa_loopback'])) {
+	if (isset($_POST['alsa_loopback']) && $_POST['alsa_loopback'] != $_SESSION['alsa_loopback']) {
+		// Check to see if module is in use
+		if ($_POST['alsa_loopback'] == 'Off') {
+			$result = sysCmd('sudo modprobe -r snd-aloop');
+			if (!empty($result)) {
+				$_SESSION['notify']['title'] = 'Unable to turn off';
+				$_SESSION['notify']['msg'] = 'Loopback is in use';
+				$_SESSION['notify']['duration'] = 5;
+			}
+			else {
+				submitJob('alsa_loopback', 'Off', 'Loopback Off', '');
+				playerSession('write', 'alsa_loopback', 'Off');
+			}
+		}
+		else {
+			submitJob('alsa_loopback', 'On', 'Loopback On', '');
+			playerSession('write', 'alsa_loopback', 'On');
+		}
+	}
+}
 if (isset($_POST['update_multiroom_tx_bfr'])) {
 	if (isset($_POST['multiroom_tx_bfr']) && $_POST['multiroom_tx_bfr'] != $_cfg_multiroom['tx_bfr']) {
 		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_bfr'] . "' " . "WHERE param='tx_bfr'", cfgdb_connect());
@@ -128,10 +149,15 @@ $_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
 // Sender
 $_select['multiroom_tx1'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle_multiroom_tx1\" value=\"On\" " . (($_SESSION['multiroom_tx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_tx0'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle_multiroom_tx2\" value=\"Off\" " . (($_SESSION['multiroom_tx'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
+$_select['alsa_loopback1'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+$_select['alsa_loopback0'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['tx_bfr'] == '16') ? "selected" : "") . ">16 (Default)</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['tx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['tx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['tx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
+$_select['multiroom_tx_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['tx_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
+$_select['multiroom_tx_bfr'] .= "<option value=\"128\" " . (($_cfg_multiroom['tx_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
 $_multiroom_initvol = $_cfg_multiroom['initial_volume'];
 $_rx_hostnames = $_SESSION['rx_hostnames'] != 'No receivers found' ? 'Found: ' . $_SESSION['rx_hostnames'] : $_SESSION['rx_hostnames'];
 
@@ -142,10 +168,14 @@ $_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['rx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['rx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
+$_select['multiroom_rx_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['rx_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
+$_select['multiroom_rx_bfr'] .= "<option value=\"128\" " . (($_cfg_multiroom['rx_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '16') ? "selected" : "") . ">16 (Default)</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
+$_select['multiroom_rx_jitter_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
+$_select['multiroom_rx_jitter_bfr'] .= "<option value=\"128\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
 
 waitWorker(1, 'trx-config');
 

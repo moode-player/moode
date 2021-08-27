@@ -47,6 +47,24 @@
                     </span>
 				</div>
 
+				<div class="control-group">
+					<label class="control-label">Loopback</label>
+					<div class="controls">
+						<div class="toggle">
+							<label class="toggle-radio" for="toggle_alsa_loopback2">ON</label>
+							$_select[alsa_loopback1]
+							<label class="toggle-radio" for="toggle_alsa_loopback1">OFF</label>
+							$_select[alsa_loopback0]
+						</div>
+						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
+						</div>
+						<span class="help-block-configs help-block-margin2">
+							The Loopback device provides a copy of the PCM stream being output to the Sender daemon.
+	                    </span>
+					</div>
+				</div>
+
 				<label class="control-label" for="multiroom_tx_bfr">Send buffer (ms)</label>
 				<div class="controls">
 					<select id="multiroom_tx_bfr" class="select-medium" name="multiroom_tx_bfr">
