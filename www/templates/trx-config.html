@@ -47,22 +47,20 @@
                     </span>
 				</div>
 
-				<div class="control-group">
-					<label class="control-label">Loopback</label>
-					<div class="controls">
-						<div class="toggle">
-							<label class="toggle-radio" for="toggle_alsa_loopback2">ON</label>
-							$_select[alsa_loopback1]
-							<label class="toggle-radio" for="toggle_alsa_loopback1">OFF</label>
-							$_select[alsa_loopback0]
-						</div>
-						<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-							<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
-						</div>
-						<span class="help-block-configs help-block-margin2">
-							The Loopback device provides a copy of the PCM stream being output to the Sender daemon.
-	                    </span>
+				<label class="control-label">Loopback</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_alsa_loopback2">ON</label>
+						$_select[alsa_loopback1]
+						<label class="toggle-radio" for="toggle_alsa_loopback1">OFF</label>
+						$_select[alsa_loopback0]
 					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
+					</div>
+					<span class="help-block-configs help-block-margin2">
+						The Loopback device provides a copy of the PCM stream being output to the Sender daemon.
+                    </span>
 				</div>
 
 				<label class="control-label" for="multiroom_tx_bfr">Send buffer (ms)</label>
@@ -125,6 +123,23 @@
 					</div>
 					<span id="info_multiroom_rx" class="help-block-configs help-block-margin2">
 						NOTE: The Receiver requires an audio device that supports Hardware volume.
+					</span>
+				</div>
+
+				<label class="control-label">Master volume opt-in</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle_multiroom_rx_mastervol_opt_in2">YES</label>
+						$_select[multiroom_rx_mastervol_opt_in1]
+						<label class="toggle-radio" for="toggle_multiroom_rx_mastervol_opt_in1">NO</label>
+						$_select[multiroom_rx_mastervol_opt_in0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_multiroom_rx_mastervol_opt_in" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_mastervol_opt_in" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span id="info_multiroom_rx_mastervol_opt_in" class="help-block-configs help-block-margin2 hide">
+						Specify whether this Receiver accepts changes made by the Sender master volume control.
 					</span>
 				</div>
 

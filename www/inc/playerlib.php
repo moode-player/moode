@@ -4341,8 +4341,8 @@ function updReceiverVol ($cmd) {
 			workerLog('updReceiverVol(): get_rx_status failed: ' . $ip_hostnames[$i]);
 		}
 		else {
-			$rx_status_parts = explode(',', $result); // rx,OnOff,volume,mute_1/0
-			if ($rx_status_parts[1] == 'On') {
+			$rx_status_parts = explode(',', $result); // rx,OnOff,volume,mute_1/0,mastervol_opt_in_1/0
+			if ($rx_status_parts[4] == '1') {
 				if (false === (file_get_contents('http://' . $ip_addresses[$i] . '/command/?cmd=vol.sh ' . $cmd))) {
 					workerLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $ip_hostnames[$i]);
 				}

@@ -113,6 +113,12 @@ if (isset($_POST['update_multiroom_rx'])) {
 		submitJob('multiroom_rx', '', $title, '');
 	}
 }
+if (isset($_POST['update_multiroom_rx_mastervol_opt_in'])) {
+	if (isset($_POST['multiroom_rx_mastervol_opt_in']) && $_POST['multiroom_rx_mastervol_opt_in'] != $_cfg_multiroom['rx_mastervol_opt_in']) {
+		$_SESSION['notify']['title'] = 'Master volume opt-in ' . ($_POST['multiroom_rx_mastervol_opt_in'] == '1' ? 'Yes' : 'No');
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_mastervol_opt_in'] . "' " . "WHERE param='rx_mastervol_opt_in'", cfgdb_connect());
+	}
+}
 if (isset($_POST['update_multiroom_rx_bfr'])) {
 	if (isset($_POST['multiroom_rx_bfr']) && $_POST['multiroom_rx_bfr'] != $_cfg_multiroom['rx_bfr']) {
 		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_bfr'] . "' " . "WHERE param='rx_bfr'", cfgdb_connect());
@@ -164,6 +170,8 @@ $_rx_hostnames = $_SESSION['rx_hostnames'] != 'No receivers found' ? 'Found: ' .
 // Receiver
 $_select['multiroom_rx1'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"toggle_multiroom_rx1\" value=\"On\" " . (($_SESSION['multiroom_rx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx0'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"toggle_multiroom_rx2\" value=\"Off\" " . (($_SESSION['multiroom_rx'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$_select['multiroom_rx_mastervol_opt_in1'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle_multiroom_rx_mastervol_opt_in1\" value=\"1\" " . (($_cfg_multiroom['rx_mastervol_opt_in'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+$_select['multiroom_rx_mastervol_opt_in0'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle_multiroom_rx_mastervol_opt_in2\" value=\"0\" " . (($_cfg_multiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_bfr'] == '16') ? "selected" : "") . ">16 (Default)</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['rx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";

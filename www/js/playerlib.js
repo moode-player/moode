@@ -942,7 +942,7 @@ function renderUI() {
     	// Airplay renderer
     	if (SESSION.json['aplactive'] == '1') {
             var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
-    		inpSrcIndicator('aplactive1', 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>');
+    		inpSrcIndicator('aplactive1', 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
     	}
     	// Spotify renderer
     	if (SESSION.json['spotactive'] == '1') {
@@ -2240,9 +2240,10 @@ $(document).on('click', '.context-menu a', function(e) {
                     var count = rxStatus.length;
                     for (var i = 0; i < count; i++) {
                         var item = i.toString();
-                        var rxStatusParts = rxStatus[i].split(','); // host,rx,OnOff,volume,mute_1/0
+                        var rxStatusParts = rxStatus[i].split(','); // host,rx,OnOff,volume,mute_1/0,mastervol_opt_in_1/0
                         var rxMuteIcon = rxStatusParts[4] == '1' ? 'fa-volume-mute' : 'fa-volume-up';
                         var rxChecked = rxStatusParts[2] == 'On' ? 'checked' : '';
+                        var rxMasterVolOptIn = rxStatusParts[5] == '0' ? '&nbsp;' : '<sup>*</sup>';
                         // Receiver hostname
                         output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '-onoff">' + rxStatusParts[0] + '</label>';
                         output += '<div class="controls">';
@@ -2261,7 +2262,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                 var disabled = '';
                             }
                             output += '<div class="modal-button-style multiroom-modal-btn">';
-                            output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item + '"' + disabled + '>Vol</button>';
+                            output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item + '"' + disabled + '>Vol' + rxMasterVolOptIn + '</button>';
                             output += '</div>';
                             // Mute toggle
                             output += '<div class="modal-button-style multiroom-modal-btn">';

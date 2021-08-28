@@ -42,6 +42,7 @@ switch ($option) {
 	case '-all':
 		$status = all_status();
 		break;
+	// This is used to set rx to 0dB when Airplay or Spotify connects to Sender
 	case '-set-alsavol':
 		if (isset($argv[2])) {
 			if ($_SESSION['multiroom_rx'] == 'On') {
@@ -59,6 +60,7 @@ switch ($option) {
 }
 
 session_write_close();
+
 if ($status != '') {
 	echo $status;
 }
@@ -70,8 +72,9 @@ function rx_onoff($onoff) {
 }
 
 function rx_status() {
+	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", cfgdb_connect());
 	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : $_SESSION['volknob'];
-	return 'rx' . ',' . $_SESSION['multiroom_rx'] . ',' . $volume . ',' . $_SESSION['volmute'];
+	return 'rx' . ',' . $_SESSION['multiroom_rx'] . ',' . $volume . ',' . $_SESSION['volmute'] . ',' . $result[0]['value'];
 }
 
 function tx_status() {

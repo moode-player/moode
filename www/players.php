@@ -35,7 +35,7 @@ while ($line) {
 		}
 		else {
 			if ($result != 'Unknown command') {  // r740 or higher host
-				$rx_status = explode(',', $result); // rx,OnOff,volume,mute_1/0
+				$rx_status = explode(',', $result); // rx,OnOff,volume,mute_1/0,mastervol_opt_in_1/0
 				$multiroom_rx_indicator = $rx_status[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
 			}
 			else {
