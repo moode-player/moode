@@ -24,6 +24,7 @@ require_once dirname(__FILE__) . '/inc/cdsp.php';
 
 playerSession('open', '' ,'');
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+$dbh = cfgdb_connect();
 
 // I2S AUDIO DEVICE
 
@@ -54,11 +55,11 @@ if (isset($_POST['update_i2s_overlay'])) {
 // Driver options
 if (isset($_POST['update_drvoptions'])) {
 	if (isset($_POST['drvoptions']) && $_POST['drvoptions'] != 'none') {
-		$result = sdbquery("SELECT driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
+		$result = sdbquery("SELECT driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 		$driver = explode(',', $result[0]['driver']);
 		$driverupd = $_POST['drvoptions'] == 'Enabled' ? $driver[0] . ',' . $result[0]['drvoptions'] : $driver[0];
 
-		$result = sdbquery("UPDATE cfg_audiodev SET driver='" . $driverupd . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_audiodev SET driver='" . $driverupd . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 		submitJob('i2sdevice', $_SESSION['i2sdevice'], 'Driver options updated', 'Restart required');
 	}
 }
@@ -255,7 +256,7 @@ if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSI
 // EQUALIZERS
 
 // Parametric eq
-$eqfa12p = Eqp12(cfgdb_connect());
+$eqfa12p = Eqp12($dbh);
 if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $_SESSION['eqfa12p'] || intval($_POST['eqfa12p']) != $eqfa12p->getActivePresetIndex())) {
 	// Pass old,new curve name to worker job
 	$currentActive = $eqfa12p->getActivePresetIndex();
@@ -503,7 +504,7 @@ session_write_close();
 // I2S AUDIO DEVICE
 
 // Named devices
-$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", cfgdb_connect());
+$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
 $array = array();
 $array[0]['name'] = 'None';
 $dac_list = array_merge($array, $result);
@@ -516,11 +517,19 @@ $overlay_list = sysCmd('moodeutl -o');
 array_unshift($overlay_list, 'None');
 foreach ($overlay_list as $overlay) {
 	$overlay_name = ($overlay == 'None') ? $overlay : substr($overlay, 0, -5); // Strip .dtbo extension
+
+	// NOTE: This can be used to filter the list
+	/*$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes' AND driver='" . $overlay_name . "'", $dbh);
+	if ($result === true || $overlay_name == 'None') { // true = query executed but returnes no results
+		$selected = ($_SESSION['i2soverlay'] == $overlay_name) ? ' selected' : '';
+		$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
+	}*/
+
 	$selected = ($_SESSION['i2soverlay'] == $overlay_name) ? ' selected' : '';
 	$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
 }
 // Driver options
-$result = sdbquery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", cfgdb_connect());
+$result = sdbquery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None') {
 	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
 	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
@@ -675,7 +684,7 @@ $_select['mpd_httpd_encoder'] .= "<option value=\"lame\" " . (($_SESSION['mpd_ht
 // EQUALIZERS
 
 // Parametric equalizer
-$eqfa12p = Eqp12(cfgdb_connect());
+$eqfa12p = Eqp12($dbh);
 $presets = $eqfa12p->getPresets();
 $array = array();
 $array[0] = 'Off';
@@ -688,7 +697,7 @@ foreach ($curveList as $key=>$curveName) {
 unset($eqfa12p);
 
 // Graphic equalizer
-$result = sdbquery('SELECT curve_name FROM cfg_eqalsa', cfgdb_connect());
+$result = sdbquery('SELECT curve_name FROM cfg_eqalsa', $dbh);
 $array = array();
 $array[0]['curve_name'] = 'Off';
 $curveList = $_alsaequal_set_disabled == '' ? array_merge($array, $result) : $array;
