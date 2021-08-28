@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Aug 18 16:29:34 2021
+-- File generated with SQLiteStudio v3.1.0 on Sat Aug 28 11:01:55 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -577,13 +577,21 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (4, 'tx_sample_rate', '48000
 INSERT INTO cfg_multiroom (id, param, value) VALUES (5, 'tx_channels', '2');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (6, 'tx_frame_size', '960');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (7, 'tx_bitrate', '128');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (8, 'rx_bfr', '32');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (9, 'rx_host', '239.0.0.1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'rx_port', '1350');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'rx_jitter_bfr', '32');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'rx_sample_rate', '48000');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'rx_channels', '2');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'initial_volume', '0');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (8, 'RESERVED_8', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (9, 'RESERVED_9', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'RESERVED_10', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'RESERVED_11', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'rx_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'rx_host', '239.0.0.1');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_port', '1350');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_sample_rate', '48000');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_channels', '2');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_jitter_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (18, 'rx_mastervol_opt_in', '0');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (19, 'RESERVED_19', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (20, 'RESERVED_20', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (21, 'RESERVED_21', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (22, 'initial_volume', '0');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
