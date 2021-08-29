@@ -1328,7 +1328,7 @@ jQuery(document).ready(function($) { 'use strict';
     });
     $(document).on('click', '.multiroom-modal-vol', function(e) {
         var item = $(this).data('item');
-        var volume = $('#multiroom-rx-' + item + '-vol').val();
+        var volume = $('#multiroom-rx-' + item + '-vol').text();
         $.post('command/moode.php?cmd=set_rx_status', {'volume': volume, 'item': item}, function(result) {}, 'json');
     });
     $(document).on('click', '.multiroom-modal-mute', function(e) {

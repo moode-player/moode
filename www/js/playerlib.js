@@ -2243,7 +2243,9 @@ $(document).on('click', '.context-menu a', function(e) {
                         var rxStatusParts = rxStatus[i].split(','); // host,rx,OnOff,volume,mute_1/0,mastervol_opt_in_1/0
                         var rxMuteIcon = rxStatusParts[4] == '1' ? 'fa-volume-mute' : 'fa-volume-up';
                         var rxChecked = rxStatusParts[2] == 'On' ? 'checked' : '';
-                        var rxMasterVolOptIn = rxStatusParts[5] == '0' ? '&nbsp;' : '<sup>*</sup>';
+                        var rxMasterVolOptIn = rxStatusParts[5] == '0' ? '' : '<i class="fal fa-dot-circle"></i>';
+
+                        output += '<div class="control-group">';
                         // Receiver hostname
                         output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '-onoff">' + rxStatusParts[0] + '</label>';
                         output += '<div class="controls">';
@@ -2253,22 +2255,30 @@ $(document).on('click', '.context-menu a', function(e) {
 
                         if (modalType == 'full') {
                             // Volume
-                            if (rxStatusParts[3] == '0dB') {
-                                output += '<input id="multiroom-rx-' + item + '-vol" class="input-mini input-height-x multiroom-modal-vol" type="text" value="0dB" readonly>';
-                                var disabled = ' disabled';
-                            }
-                            else {
-                                output += '<input id="multiroom-rx-' + item + '-vol" class="input-mini input-height-x multiroom-modal-vol" type="number" maxlength="3" min="0" max="100" value="' + rxStatusParts[3] + '">';
-                                var disabled = '';
-                            }
+                            var disabled = rxStatusParts[3] == '0dB' ? ' disabled' : '';
+
                             output += '<div class="modal-button-style multiroom-modal-btn">';
-                            output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item + '"' + disabled + '>Vol' + rxMasterVolOptIn + '</button>';
+                            output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item +
+                                '"' + disabled + '>' + rxStatusParts[3] + '</button>';
                             output += '</div>';
                             // Mute toggle
                             output += '<div class="modal-button-style multiroom-modal-btn">';
-                            output += '<button id="multiroom-rx-' + item + '-mute" class="btn btn-primary btn-small multiroom-modal-mute" data-item="' + item + '"' + disabled + '><i class="fas ' + rxMuteIcon + '"></i></button>';
+                            output += '<button id="multiroom-rx-' + item + '-mute" class="btn btn-primary btn-small multiroom-modal-mute" data-item="' + item +
+                                '"' + disabled + '><i class="fas ' + rxMuteIcon + '"></i></button>';
+                            output += '</div>';
+                            // Master volume opt-in indicator
+                            output += '<div class="modal-button-style multiroom-modal-btn">';
+                            output += rxMasterVolOptIn;
+                            output += '</div>';
+                            output += '</div>';
+                            // Volume slider
+                            output += '<div class="controls">';
+                            output += '<input id="multiroom-rx-' + item + '-vol-slider" class="hslide2" type="range" min="0" max="' + SESSION.json['volume_mpd_max'] +
+                                '" step="1" name="multiroom-rx-' + item + '-vol-slider" value="' + rxStatusParts[3] +
+                                '" oninput="updateRxVolDisplay(this.id, this.value)"' + disabled + '>';
                             output += '</div>';
                         }
+                        output += '</div>';
                         output += '</div>';
                     }
 
@@ -3916,4 +3926,10 @@ function setNpIcon() {
         }
         $('#songsList .lib-entry-song .songtrack').removeClass('lib-track-highlight');
     }
+}
+
+// Receivers modal
+function updateRxVolDisplay(selector, value) {
+    selector = selector.slice(0, -7); // Remove '-slider' leaving ...-vol
+    $('#' + selector).text(value);
 }

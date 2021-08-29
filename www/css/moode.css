@@ -144,7 +144,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .multiroom-modal-onoff {margin-right:1em!important;}
 .modal .multiroom-modal-onoff-xtra {margin-right:1em!important;margin-top:.5em!important;}
 .modal .multiroom-modal-btn {margin-left:.5em!important;}
-.modal .multiroom-modal-vol {margin-top:0!important;}
+.modal .multiroom-modal-vol {margin-top:0!important;text-transform:none!important;width:3.25em!important;}
 .modal .multiroom-modal-mute {margin-top:0!important;}
 
 /* update package txt ol */
