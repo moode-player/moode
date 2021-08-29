@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Aug 28 11:01:55 2021
+-- File generated with SQLiteStudio v3.1.0 on Sun Aug 29 08:23:32 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -570,7 +570,7 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 
 -- Table: cfg_multiroom
 CREATE TABLE cfg_multiroom (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
-INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (1, 'tx_bfr', '64');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (2, 'tx_host', '239.0.0.1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (3, 'tx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (4, 'tx_sample_rate', '48000');
