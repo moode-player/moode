@@ -158,7 +158,7 @@ $_select['multiroom_tx0'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"t
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
 $_select['alsa_loopback1'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['alsa_loopback0'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
-$_select['multiroom_tx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['tx_bfr'] == '16') ? "selected" : "") . ">16 (Default)</option>\n";
+$_select['multiroom_tx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['tx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['tx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['tx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['tx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
@@ -172,13 +172,13 @@ $_select['multiroom_rx1'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"t
 $_select['multiroom_rx0'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"toggle_multiroom_rx2\" value=\"Off\" " . (($_SESSION['multiroom_rx'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx_mastervol_opt_in1'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle_multiroom_rx_mastervol_opt_in1\" value=\"1\" " . (($_cfg_multiroom['rx_mastervol_opt_in'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx_mastervol_opt_in0'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle_multiroom_rx_mastervol_opt_in2\" value=\"0\" " . (($_cfg_multiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . ">\n";
-$_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_bfr'] == '16') ? "selected" : "") . ">16 (Default)</option>\n";
+$_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['rx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['rx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['rx_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"128\" " . (($_cfg_multiroom['rx_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
-$_select['multiroom_rx_jitter_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '16') ? "selected" : "") . ">16 (Default)</option>\n";
+$_select['multiroom_rx_jitter_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
