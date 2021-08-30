@@ -40,7 +40,7 @@ then
 fi
 
 # clean non packages versions of the upnp subsystem, if needed
-../clean_upnp_subsystem.sh
+./clean_upnp_subsystem.sh
 
 sudo apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
 ./libnpupnp1_$VER_LIBNPUPNP-1~ppaPPAVERS~SERIES1_armhf.deb \
@@ -54,4 +54,3 @@ then
   echo "start upmpdcli"
   sudo systemctl start upmpdcli.service
 fi
-
