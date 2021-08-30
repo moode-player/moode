@@ -1330,6 +1330,10 @@ jQuery(document).ready(function($) { 'use strict';
         var item = $(this).data('item');
         var volume = $('#multiroom-rx-' + item + '-vol').text();
         $.post('command/moode.php?cmd=set_rx_status', {'volume': volume, 'item': item}, function(result) {}, 'json');
+        $('#multiroom-rx-' + item + '-vol').html("<div class='busy-spinner-btn'>" + GLOBAL.busySpinnerSVG + "</div>");
+        setTimeout(function() {
+            $('#multiroom-rx-' + item + '-vol').text(volume);
+        }, 1000);
     });
     $(document).on('click', '.multiroom-modal-mute', function(e) {
         var item = $(this).data('item');
