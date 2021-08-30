@@ -781,6 +781,11 @@ else {
 }
 
 // Restore MPD volume level
+$input_switch_devices = array('HiFiBerry DAC+ ADC', 'Audiophonics ES9028/9038 DAC', 'Audiophonics ES9028/9038 DAC (Pre 2019)');
+if (!in_array($_SESSION['i2sdevice'], $input_switch_devices)) {
+	playerSession('write', 'volknob_mpd', '0');
+	playerSession('write', 'volknob_preamp', '0');
+}
 workerLog('worker: Saved MPD vol level (' . $_SESSION['volknob_mpd'] . ')');
 workerLog('worker: Preamp volume level (' . $_SESSION['volknob_preamp'] . ')');
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
@@ -789,7 +794,6 @@ if ($_SESSION['alsavolume'] != 'none') {
 		$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
 }
-
 $volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
 sysCmd('/var/www/vol.sh ' . $volume);
 workerLog('worker: MPD volume level (' . $volume . ') restored');
