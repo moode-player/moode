@@ -399,7 +399,7 @@ else {
 // Store alsa mixer name for use by util.sh get/set-alsavol and vol.sh
 //playerSession('write', 'amixname', getMixerName($_SESSION['i2sdevice']));
 workerLog('worker: ALSA mixer name (' . $_SESSION['amixname'] . ')');
-workerLog('worker: MPD volume control (' . $_SESSION['mpdmixer'] . ')');
+workerLog('worker: MPD mixer type (' . ($_SESSION['mpdmixer'] == 'none' ? 'fixed 0dB' : $_SESSION['mpdmixer']) . ')');
 
 // Check for presence of hardware volume controller
 $result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
