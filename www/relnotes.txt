@@ -53,6 +53,7 @@ Bug fixes
 - FIX: Console error from Menu, Refresh
 - FIX: Margin issue on Clock Radio text and controls
 - FIX: Testing for old MPD mixer_type "disabled" in several modules
+- FIX: Parsing issue with mixer names containing embedded parenthesis
 
 ########################################################
 //
