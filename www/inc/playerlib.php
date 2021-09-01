@@ -2091,11 +2091,18 @@ function updMpdConf($i2sdevice) {
 // Return mixer name
 // TODO: Use something other than parenthesis as delimiter (see util.sh)
 function getMixerName($i2sdevice) {
-	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
+	// USB device or Pi HDMI-1/2 or Headphone jack
 	// NOTE: If a device does not define a mixer name then "PCM" will be assigned
 	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
-		$mixername = $result[0] == '' ? 'PCM' : str_replace(array('(', ')'), '', $result[0]);
+		if ($result[0] == '') {
+			$mixername = 'PCM';
+		}
+		else {
+			// Strip off outer parenthessis delimiters. See get-mixername section in util.sh
+			$mixername = ltrim($result[0], '(');
+			$mixername = rtrim($mixername, ')');
+		}
 	}
 	// I2S devices
 	// NOTE: Non-default mixer names
