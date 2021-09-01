@@ -66,7 +66,7 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 
 	# Local
 	# Restore 0dB hardware volume when mpd configured as below
-	if [[ $MPDMIXER == "software" || $MPDMIXER == "disabled" ]]; then
+	if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 		if [[ $ALSAVOLUME != "none" ]]; then
 			/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi

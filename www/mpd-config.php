@@ -30,10 +30,9 @@ $dbh = cfgdb_connect();
 // Save changes to /etc/mpd.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Detect mixer change
-	$post_mpdmixer = $_POST['conf']['mixer_type'] == 'disabled' ? 'none' : $_POST['conf']['mixer_type'];
-	if ($post_mpdmixer != $_SESSION['mpdmixer']) {
+	if ($_POST['conf']['mixer_type'] != $_SESSION['mpdmixer']) {
 		// Changing to Fixed (0dB)
-		if ($_POST['conf']['mixer_type'] == 'disabled') {
+		if ($_POST['conf']['mixer_type'] == 'none') {
 			$mixer_chg = 'fixed';
 		}
 		// Changing from Fixed (0dB)
@@ -110,7 +109,7 @@ if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($mpdconf['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
 }
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"disabled\" " . (($mpdconf['mixer_type'] == 'disabled') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
+$_mpd_select['mixer_type'] .= "<option value=\"none\" " . (($mpdconf['mixer_type'] == 'none') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($mpdconf['mixer_type'] == 'null') ? "selected" : "") . ">Null</option>\n";
 
 // SoX resampling

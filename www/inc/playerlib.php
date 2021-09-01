@@ -1923,7 +1923,7 @@ function updMpdConf($i2sdevice) {
 				$dop = $cfg['value'];
 				break;
 			case 'mixer_type':
-				$mixertype = $cfg['value'] == 'disabled' ? 'none' : $cfg['value'];
+				$mixertype = $cfg['value'];
 				break;
 			case 'input_cache':
 				$input_cache = $cfg['value'];

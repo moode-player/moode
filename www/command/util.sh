@@ -80,7 +80,7 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 		# Set-alsavol
 		AMIXNAME=$(sqlite3 $SQLDB "select value from cfg_system where param='amixname'")
 		MIXER_TYPE=$(sqlite3 $SQLDB "select value from cfg_mpd where param='mixer_type'")
-		if [[ $3 = "100" && $AMIXNAME = "HDMI" && ( $MIXER_TYPE = "software" || $MIXER_TYPE = "disabled" ) ]]; then
+		if [[ $3 = "100" && $AMIXNAME = "HDMI" && ( $MIXER_TYPE = "software" || $MIXER_TYPE = "none" ) ]]; then
 			LEVEL="0dB"
 		else
 			LEVEL="$3%"
@@ -92,7 +92,8 @@ if [[ $1 = "get-alsavol" || $1 = "set-alsavol" ]]; then
 fi
 
 # Get alsa mixer name
-# TODO: Use something other than parenthesis as delimiter (see playerlib.php getMixerName())
+# NOTE: Parenthesis are used as the delimiter to ensure we can see mixer names that contain a trailing space
+# NOTE: See function getMixerName() in playerlib.php where delimiters are stripped off
 if [[ $1 = "get-mixername" ]]; then
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 	amixer -c $CARD_NUM | awk 'BEGIN{FS="\n"; RS="Simple mixer control"} $0 ~ "pvolume" {print $1}' | awk -F"'" '{print "(" $2 ")";}'
