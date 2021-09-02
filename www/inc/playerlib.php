@@ -4318,7 +4318,7 @@ function startMultiroomSender() {
 	}
 	$cmd = 'tx -d trx_send -h ' . $_cfg_multiroom['tx_host'] . ' -m ' . $_cfg_multiroom['tx_bfr'] . '  >/dev/null 2>&1 &';
 	$result = shell_exec($cmd);
-	//workerLog($cmd);
+	debugLog($cmd);
 }
 function stopMultiroomSender() {
 	sysCmd('killall tx');
@@ -4332,7 +4332,7 @@ function startMultiroomReceiver() {
 	$cmd = 'rx -d plughw:' . $_SESSION['cardnum'] . ',0 -h ' . $_cfg_multiroom['rx_host'] . ' -m ' . $_cfg_multiroom['rx_bfr'] . ' -j ' .
 		$_cfg_multiroom['rx_jitter_bfr'] . ' >/dev/null 2>&1 &';
 	$result = shell_exec($cmd);
-	//workerLog($cmd);
+	debugLog($cmd);
 }
 function stopMultiroomReceiver() {
 	sysCmd('killall rx');
