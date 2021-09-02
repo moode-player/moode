@@ -380,17 +380,17 @@ sudo tar xfz ./boost_1.68_libraries.tar.gz
 sudo rm ./boost_*.gz
 cd ~
 
-3. Download MPD 0.22.8 sources and prep for compile.
+3. Download MPD 0.22.11 sources and prep for compile.
 NOTE: Compiling from sources in this recipe does not include the patch for Selective Resampling.
       The instructions for the patch build are in ./moode/other/mpd/_build_mpd.txt
 
 # OPTIONALLY install pre-compiled patched binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.22.8_p0x3 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.22.11_p0x3 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.22.8.tar.xz
-sudo tar xf mpd-0.22.8.tar.xz
-cd mpd-0.22.8
+sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.22.11.tar.xz
+sudo tar xf mpd-0.22.11.tar.xz
+cd mpd-0.22.11
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
@@ -702,7 +702,6 @@ sudo cd rm -rf ./alsa_cdsp
 # 9b.2b Alsa_cdsp install prebuild
 # sudo install -m 644 ./moode/other/alsa_cdsp/libasound_module_pcm_cdsp.so `pkg-config --variable=libdir alsa`/alsa-lib/
 
-
 ////////////////////////////////////////////////////////////////
 //
 // STEP 10 - Optionally squash /var/www
@@ -993,60 +992,25 @@ sudo rm -rf ./squeezelite*
 sudo apt-get -y install libmicrohttpd-dev libexpat1-dev \
 libxml2-dev libxslt1-dev libjsoncpp-dev python-requests python-pip
 
-2. Libnpupnp 4.0.14
+2. Build
 
+# Copy build directory
 sudo ./dev.sh
-
 cd ~
-sudo cp ./moode/other/upmpdcli/libnpupnp-4.0.14.tar.gz ./
-sudo tar xfz ./libnpupnp-4.0.14.tar.gz
-cd libnpupnp-4.0.14
-./configure --prefix=/usr --sysconfdir=/etc
-sudo make -j4
-sudo make install
+sudo cp -r ./moode/other/upmpdcli/ ./
+
+# Make the packages
+cd ./upmpdcli/
+sudo ./build_upnp.sh
+
+# Install the packages
+sudo ./install_upnp.sh
+
+# Cleanup
 cd ~
-sudo rm -rf ./libnpupnp-4.0.14*
+sudo rm -rf ./upmpdcli
 
-3. Libupnpp 0.20.1
 
-sudo cp ./moode/other/upmpdcli/libupnpp-0.20.1.tar.gz ./
-sudo tar xfz ./libupnpp-0.20.1.tar.gz
-cd libupnpp-0.20.1
-./configure --prefix=/usr --sysconfdir=/etc
-sudo make -j4
-sudo make install
-cd ~
-sudo rm -rf ./libupnpp-0.20.1*
-
-4. Upmpdcli 1.5.8
-
-sudo cp ./moode/other/upmpdcli/upmpdcli-1.5.8.tar.gz ./
-sudo tar xfz ./upmpdcli-1.5.8.tar.gz
-cd upmpdcli-1.5.8
-sudo ./autogen.sh
-sudo ./configure --prefix=/usr --sysconfdir=/etc --disable-spotify
-sudo make -j4
-sudo make install
-cd ~
-sudo rm -rf ./upmpdcli-1.5.8*
-
-sudo useradd upmpdcli
-sudo cp ./moode/lib/systemd/system/upmpdcli.service /lib/systemd/system
-sudo cp ./moode/etc/upmpdcli.conf /etc
-sudo chmod 0644 /etc/upmpdcli.conf
-sudo systemctl daemon-reload
-sudo systemctl disable upmpdcli
-
-5. python3-libupnpp
-
-sudo cp ./moode/other/upmpdcli/libupnpp-bindings-0.20.1.tar.gz ./
-sudo tar xfz libupnpp-bindings-0.20.1.tar.gz
-cd libupnpp-bindings-0.20.1
-sudo ./configure --prefix=/usr PYTHON_VERSION=3
-sudo make
-sudo make install
-cd ~
-sudo rm -rf ./libupnpp-bindings-0.20.1*
 
 ////////////////////////////////////////////////////////////////
 //
