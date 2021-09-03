@@ -43,7 +43,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_multiroom_tx" value="novalue" $_multiroom_tx_disable>Set</button>
 					</div>
 					<span id="info_multiroom_tx" class="help-block-configs help-block-margin2">
-						NOTE: The Sender requires ALSA Loopback to be ON.
+						The Sender requires ALSA Loopback to be ON and all DSP's in Audio Config to be OFF.
                     </span>
 				</div>
 
@@ -59,7 +59,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
 					</div>
 					<span class="help-block-configs help-block-margin2">
-						The Loopback device provides a copy of the PCM stream being output to the Sender daemon.
+						The Loopback device provides a copy of the PCM stream for the Sender daemon.
                     </span>
 				</div>
 
@@ -98,7 +98,7 @@
 						<button class="btn btn-primary btn-medium btn-submit" type="submit" name="multiroom_tx_discover" value="novalue">Discover</button>&nbsp;Receivers
 					</div>
 					<div class="help-block-configs help-block-margin">
-						NOTE: Discover must be run to enable master volume control for Receivers.
+						Discover must be run to enable Master volume control for Receivers.
 					</div>
 					<div class="help-block-configs help-block-margin">
 						$_rx_hostnames
@@ -122,7 +122,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_multiroom_rx" value="novalue" $_multiroom_rx_disable>Set</button>
 					</div>
 					<span id="info_multiroom_rx" class="help-block-configs help-block-margin2">
-						NOTE: The Receiver requires an audio device that supports Hardware volume.
+						The Receiver requires an audio device that supports Hardware volume.
 					</span>
 				</div>
 
@@ -138,8 +138,8 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_multiroom_rx_mastervol_opt_in" value="novalue">Set</button>
 					</div>
 					<span id="info_multiroom_rx_mastervol_opt_in" class="help-block-configs help-block-margin2">
-						Specify whether this Receiver accepts changes made by the Sender master volume control.<br>
-						NOTE: On the Receivers&nbsp;<i class="fas fa-rss"></i>&nbsp;screen a volume knob icon &nbsp;<i class="fal fa-dot-circle"></i>&nbsp; will appear for those that have opted in.
+						Specify whether the Receiver accepts changes made by the Sender volume control.<br>
+						NOTE: On the Receivers&nbsp;<i class="fas fa-rss"></i>&nbsp;screen a volume knob icon&nbsp;<i class="fal fa-dot-circle"></i>&nbsp;will appear for those that have opted in.
 					</span>
 				</div>
 
