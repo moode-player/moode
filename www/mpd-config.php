@@ -58,6 +58,11 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	// Add audio_output_format
 	$_POST['conf']['audio_output_format'] = $_POST['sox_enabled'] == 'No' ? 'disabled' : $_POST['sox_sample_rate'] . ':' . $_POST['sox_bit_depth'] . ':' . $_POST['sox_channels'];
 
+	// Set selective_resample_mode
+	if ($_POST['sox_enabled'] == 'No') {
+		$_POST['conf']['selective_resample_mode'] = '0';
+	}
+
 	// Update sql table
 	foreach ($_POST['conf'] as $key => $value) {
 		if ($key == 'audio_buffer_size' || $key == 'max_output_buffer_size') {
