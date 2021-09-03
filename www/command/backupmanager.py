@@ -132,7 +132,9 @@ class BackupManager(StationManager):
                 except KeyError:
                     print("Backup doesn't contain moode configuration file.")
                 if 'bgimage.jpg' in backup.namelist():
-                    backup.extract('bgimage.jpg', '/var/local/www/imagesw/bgimage.jpg');
+                    print('Restore bgimage.jpg')
+                    backup.extract('bgimage.jpg', '/var/local/www/imagesw');
+                    system('chmod a+r /var/local/www/imagesw/bgimage.jpg');
 
             # restore camilladsp configs
             if BackupManager.OPT_CDSP in what:
