@@ -370,9 +370,16 @@ function engineMpdLite() {
 			}
 			// Error of some sort
 			else {
-				setTimeout(function() {
+				setTimeout(function(data) {
 					// Client connects before mpd started by worker, various other network issues
 					debugLog('engineMpdLite(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
+
+                    // TEST: Show reconnect overlay when on configs
+                    if (data['statusText'] == 'error' && data['readyState'] == 0) {
+    			        renderReconnect();
+    				}
+    				MPD.json['state'] = 'reconnect';
+
 					engineMpdLite();
 				}, ENGINE_TIMEOUT);
 			}
