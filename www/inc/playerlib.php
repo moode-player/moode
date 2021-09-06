@@ -4344,15 +4344,10 @@ function updReceiverVol ($cmd) {
 	$ip_addresses = explode(' ', $_SESSION['rx_addresses']);
 	$count = count($ip_addresses);
 	for ($i = 0; $i < $count; $i++) {
-		if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -rx'))) {
-			workerLog('updReceiverVol(): get_rx_status failed: ' . $ip_hostnames[$i]);
-		}
-		else {
-			$rx_status_parts = explode(',', $result); // rx,OnOff,volume,mute_1/0,mastervol_opt_in_1/0
-			if ($rx_status_parts[4] == '1') {
-				if (false === (file_get_contents('http://' . $ip_addresses[$i] . '/command/?cmd=vol.sh ' . $cmd))) {
-					workerLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $ip_hostnames[$i]);
-				}
+		// NOTE: set-mpdvol checks to see if Receiver opted in for Master volume
+		if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
+			if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
+				workerLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $ip_hostnames[$i]);
 			}
 		}
 	}
