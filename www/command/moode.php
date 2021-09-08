@@ -106,7 +106,8 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 
 		$count = count($rx_addresses);
 		for ($i = 0; $i < $count; $i++) {
-			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx'))) { // rx,OnOff,volume,mute_1/0,mastervol_opt_in_1/0
+			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx'))) { // rx,On/Off/Unknown,volume,mute_1/0,mastervol_opt_in_1/0
+				$rx_status .= $rx_hostnames[$i] . ',rx,Unknown,?,?,?:';
 				workerLog('moode.php: get_rx_status failed: ' . $rx_hostnames[$i]);
 			}
 			else {
