@@ -23,7 +23,7 @@ New features
 Updates
 
 - UPD: Bump to MPD 0.22.11
-- UPD: Bump to CamillaDSP 0.6.1
+- UPD: Bump to CamillaDSP 0.6.3
 - UPD: Bump to upmpdcli 1.5.11
 - UPD: Add "okto research dac8 Stereo" to device table
 - UPD: Improve memory reporting in System info
@@ -54,7 +54,7 @@ Bug fixes
 - FIX: Margin issue on Clock Radio text and controls
 - FIX: Testing for old MPD mixer_type "disabled" in several modules
 - FIX: Parsing issue with mixer names containing embedded parenthesis
-- FIX: Selective_resample_mode param present in mpd.conf when SoX is off 
+- FIX: Selective_resample_mode param present in mpd.conf when SoX is off
 
 ########################################################
 //
