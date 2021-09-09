@@ -19,5 +19,5 @@ fi
 sudo pip3 install numpy matplotlib
 sudo pip3 install ./gui/camilladsp-0.6.0-py3-none-any.whl ./gui/camilladsp_plot-0.6.0-py3-none-any.whl
 sudo apt-get install ./gui/camillagui_0.8.0-1moode1_armhf.deb
-sudo apt-get install ./camilladsp_0.6.1-moode1_armhf.deb
+sudo apt-get install ./camilladsp_0.6.3-moode1_armhf.deb
 sudo chmod -R a+rw /usr/share/camilladsp
