@@ -2270,7 +2270,7 @@ $(document).on('click', '.context-menu a', function(e) {
                             output += '<div class="controls">';
                             // Receiver On/Off
                             var topMargin = modalType == 'full' ? 'multiroom-modal-onoff' : 'multiroom-modal-onoff-xtra';
-                            output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl ' + topMargin + '" type="checkbox" data-item="' + item + '" ' + rxChecked + '>';
+                            output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl multiroom-modal-onoff ' + topMargin + '" type="checkbox" data-item="' + item + '" ' + rxChecked + '>';
 
                             if (modalType == 'full') {
                                 // Volume
