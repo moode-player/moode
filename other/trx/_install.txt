@@ -51,22 +51,18 @@ trx is based on the following software/libraries:
 
 sudo apt-get -y install libopus-dev
 
-# Internal
+# moOde modified sources
 sudo ./dev.sh
-sudo cp /mnt/moode-player/components/trx/trx-0.5.tar.gz ./
-
-# From repo
-wget https://github.com/moode-player/moode/tree/develop/other/trx/trx-0.5.tar.gz
-sudo tar xfz ./trx-0.5.tar.gz
+sudo cp -r /mnt/moode-player/GitHub/moode/other/trx/trx-0.5/ ./
 cd trx-0.5
 sudo make
 
-# Copies tx and rx binaries to /usr/local/bin/
+# Copy tx and rx binaries to /usr/local/bin/
 sudo make install
 
 # Cleanup
 cd ..
-sudo rm -rf trx-0.5*
+sudo rm -rf trx*
 
 ////////////////////////////////////////////////////////////
 
@@ -76,12 +72,18 @@ sudo rm -rf trx-0.5*
 the receiving device must support Hardware volume controller
 otherwise volume will be fixed at 100% (0dB).
 
-Receiver volume can be set by moOde knob, alsamixer or amixer
-
 ////////////////////////////////////////////////////////////
 
-# /etc/alsa/conf.d/trx_send.conf
-# Use 16/48K for OPUS codec
+#
+# TRX Sender
+#
+# Speex converter types:
+#
+# - speexrate_best      Use quality 10 (equivalent to SRC_SINC_BEST_QUALITY)
+# - speexrate_medium    Use quality 5 (equivalent to SRC_SINC_MEDIUM_QUALITY)
+# - speexrate           Use quality 3 (equivalent to SRC_SINC_FASTEST)
+#
+
 pcm.trx_send {
 type plug
 slave {
@@ -90,19 +92,22 @@ rate 48000
 format S16_LE
 channels 2
 }
+rate_converter "speexrate_medium"
 }
 
 # Transmit
-sudo tx -d trx_send -h 239.0.0.1 -m 32 >/dev/null 2>&1 &
+sudo tx -d trx_send -h 239.0.0.1 -p 1350 -m 128 -R 45
 
 # Receive
-sudo rx -d plughw:0,0 -h 239.0.0.1 -m 32 -j 32 >/dev/null 2>&1 &
+sudo rx -d plughw:0,0 -h 239.0.0.1 -p 1350 -m 32 -j 32 -R 45
 
 # Verbose
 -v 2
 
 # Background
->/dev/null 2>&1 &
+
+-D /tmp/txpid
+-D /tmp/rxpid
 
 ////////////////////////////////////////////////////////////
 
@@ -122,62 +127,9 @@ aplay -l | awk
 
 ////////////////////////////////////////////////////////////
 
-# TX HELP
+# Appendix
 
 ////////////////////////////////////////////////////////////
 
-pi@rp2:~ $ tx -h
-trx (C) Copyright 2020 Mark Hills <mark@xwax.org>
-tx: option requires an argument -- 'h'
-Usage: tx [<parameters>]
-Real-time audio transmitter over IP
-
-Audio device (ALSA) parameters:
-  -d <dev>    Device name (default 'default')
-  -m <ms>     Buffer time (default 16 milliseconds)
-
-Network parameters:
-  -h <addr>   IP address to send to (default ::)
-  -p <port>   UDP port number (default 1350)
-
-Encoding parameters:
-  -r <rate>   Sample rate (default 48000Hz)
-  -c <n>      Number of channels (default 2)
-  -f <n>      Frame size (default 960 samples, see below)
-  -b <kbps>   Bitrate (approx., default 128)
-
-Program parameters:
-  -v <n>      Verbosity level (default 1)
-  -D <file>   Run as a daemon, writing process ID to the given file
-
-Allowed frame sizes (-f) are defined by the Opus codec. For example,
-at 48000Hz the permitted values are 120, 240, 480 or 960.
-
-////////////////////////////////////////////////////////////
-
-# RX HELP
-
-////////////////////////////////////////////////////////////
-
-pi@rp2:~ $ rx -h
-trx (C) Copyright 2020 Mark Hills <mark@xwax.org>
-rx: option requires an argument -- 'h'
-Usage: rx [<parameters>]
-Real-time audio receiver over IP
-
-Audio device (ALSA) parameters:
-  -d <dev>    Device name (default 'default')
-  -m <ms>     Buffer time (default 16 milliseconds)
-
-Network parameters:
-  -h <addr>   IP address to listen on (default ::)
-  -p <port>   UDP port number (default 1350)
-  -j <ms>     Jitter buffer (default 16 milliseconds)
-
-Encoding parameters (must match sender):
-  -r <rate>   Sample rate (default 48000Hz)
-  -c <n>      Number of channels (default 2)
-
-Program parameters:
-  -v <n>      Verbosity level (default 1)
-  -D <file>   Run as a daemon, writing process ID to the given file
+# Original from moOde repo
+wget https://github.com/moode-player/moode/tree/develop/other/trx/_original/trx-0.5.tar.gz

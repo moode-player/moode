@@ -59,6 +59,12 @@ if (isset($_POST['update_multiroom_tx_bfr'])) {
 		submitJob('multiroom_tx_restart', '', 'Send buffer updated', '');
 	}
 }
+if (isset($_POST['update_multiroom_tx_rtprio'])) {
+	if (isset($_POST['multiroom_tx_rtprio']) && $_POST['multiroom_tx_rtprio'] != $_cfg_multiroom['tx_rtprio']) {
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_rtprio'] . "' " . "WHERE param='tx_rtprio'", cfgdb_connect());
+		submitJob('multiroom_tx_restart', '', 'Realtime priority updated', '');
+	}
+}
 if (isset($_POST['multiroom_tx_restart'])) {
 	submitJob('multiroom_tx_restart', '', 'Sender restarted', '');
 }
@@ -131,6 +137,12 @@ if (isset($_POST['update_multiroom_rx_jitter_bfr'])) {
 		submitJob('multiroom_rx_restart', '', 'Jitter buffer updated', '');
 	}
 }
+if (isset($_POST['update_multiroom_rx_rtprio'])) {
+	if (isset($_POST['multiroom_rx_rtprio']) && $_POST['multiroom_rx_rtprio'] != $_cfg_multiroom['rx_rtprio']) {
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_rtprio'] . "' " . "WHERE param='rx_rtprio'", cfgdb_connect());
+		submitJob('multiroom_rx_restart', '', 'Realtime priority updated', '');
+	}
+}
 if (isset($_POST['multiroom_rx_restart'])) {
 	submitJob('multiroom_rx_restart', '', 'Receiver restarted', '');
 }
@@ -168,6 +180,7 @@ $_select['multiroom_tx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['tx_
 $_select['multiroom_tx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['tx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['tx_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"128\" " . (($_cfg_multiroom['tx_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
+$_multiroom_tx_rtprio = $_cfg_multiroom['tx_rtprio'];
 $_multiroom_initvol = $_cfg_multiroom['initial_volume'];
 $_rx_hostnames = $_SESSION['rx_hostnames'] != 'No receivers found' ? 'Found: ' . $_SESSION['rx_hostnames'] : $_SESSION['rx_hostnames'];
 
@@ -188,6 +201,7 @@ $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"48\" " . (($_cfg_multiro
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"128\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
+$_multiroom_rx_rtprio = $_cfg_multiroom['rx_rtprio'];
 
 waitWorker(1, 'trx-config');
 

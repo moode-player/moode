@@ -71,7 +71,20 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_bfr" value="novalue">Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_tx_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_multiroom_tx_bfr" class="help-block-configs help-block-margin hide">
-						The length of the send buffer in milliseconds.
+						The length of the Sender ALSA buffer in milliseconds.
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="multiroom_tx_rtprio">Realtime priority</label>
+				<div class="controls">
+					<input class="input-small" type="number" maxlength="3" min="1" max="99" name="multiroom_tx_rtprio" value="$_multiroom_tx_rtprio">
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_rtprio" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_tx_rtprio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_multiroom_tx_rtprio" class="help-block-configs help-block-margin hide">
+						Specify the realtime process priority for the Sender daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>
+						NOTE: Scheduler policy is FIFO and default priority is 45.
 					</span>
 				</div>
 			</div>
@@ -151,7 +164,7 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_bfr" value="novalue">Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_multiroom_rx_bfr" class="help-block-configs help-block-margin hide">
-						The length of the receive buffer in milliseconds.
+						The length of the Receiver ALSA buffer in milliseconds.
 					</span>
 				</div>
 			</div>
@@ -165,7 +178,20 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_jitter_bfr" value="novalue">Set</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_jitter_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_multiroom_rx_jitter_bfr" class="help-block-configs help-block-margin hide">
-						The length of the jitter buffer in milliseconds.
+						The length of the RTP jitter compensation buffer in milliseconds.
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="multiroom_rx_rtprio">Realtime priority</label>
+				<div class="controls">
+					<input class="input-small" type="number" maxlength="2" min="1" max="99" name="multiroom_rx_rtprio" value="$_multiroom_rx_rtprio">
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_rtprio" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_rtprio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_multiroom_rx_rtprio" class="help-block-configs help-block-margin hide">
+						Specify the realtime process priority for the Receiver daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>
+						NOTE: Scheduler policy is FIFO and default priority is 45.
 					</span>
 					<div style="margin-top:1.5em">
 						<a data-toggle="modal" href="#restart-rx" $_rx_restart_link_disable><button class="btn btn-medium btn-primary" $_rx_restart_btn_disable>Restart</button></a>&nbsp;Receiver

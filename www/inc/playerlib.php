@@ -4316,7 +4316,8 @@ function startMultiroomSender() {
 	foreach ($params as $row) {
 	    $_cfg_multiroom[$row['param']] = $row['value'];
 	}
-	$cmd = 'tx -d trx_send -h ' . $_cfg_multiroom['tx_host'] . ' -m ' . $_cfg_multiroom['tx_bfr'] . '  >/dev/null 2>&1 &';
+	$cmd = 'tx -d trx_send -h ' . $_cfg_multiroom['tx_host'] . ' -p ' . $_cfg_multiroom['tx_port'] . ' -m ' . $_cfg_multiroom['tx_bfr'] .
+		' -R ' . $_cfg_multiroom['tx_rtprio'] . ' -D /tmp/txpid  >/dev/null';
 	$result = shell_exec($cmd);
 	debugLog($cmd);
 }
@@ -4329,8 +4330,8 @@ function startMultiroomReceiver() {
 	    $_cfg_multiroom[$row['param']] = $row['value'];
 	}
 
-	$cmd = 'rx -d plughw:' . $_SESSION['cardnum'] . ',0 -h ' . $_cfg_multiroom['rx_host'] . ' -m ' . $_cfg_multiroom['rx_bfr'] . ' -j ' .
-		$_cfg_multiroom['rx_jitter_bfr'] . ' >/dev/null 2>&1 &';
+	$cmd = 'rx -d plughw:' . $_SESSION['cardnum'] . ',0 -h ' . $_cfg_multiroom['rx_host'] . ' -p ' . $_cfg_multiroom['rx_port'] . ' -m ' . $_cfg_multiroom['rx_bfr'] .
+		' -j ' . $_cfg_multiroom['rx_jitter_bfr'] . ' -R ' . $_cfg_multiroom['rx_rtprio'] . ' -D /tmp/rxpid  >/dev/null';
 	$result = shell_exec($cmd);
 	debugLog($cmd);
 }
