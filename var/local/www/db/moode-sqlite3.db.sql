@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Sep 11 12:45:13 2021
+-- File generated with SQLiteStudio v3.1.0 on Sun Sep 12 13:55:36 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -581,7 +581,7 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (8, 'tx_rtprio', '45');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (9, 'RESERVED_9', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'RESERVED_10', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'RESERVED_11', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'rx_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'rx_bfr', '64');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'rx_host', '239.0.0.1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_sample_rate', '48000');
