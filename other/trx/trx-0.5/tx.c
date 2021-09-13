@@ -164,7 +164,8 @@ static void usage(FILE *fd)
 		DEFAULT_RTPRIO);
 
 	fprintf(fd, "\nAllowed frame sizes (-f) are defined by the Opus codec. For example,\n"
-		"at 48000 Hz the permitted values are 120, 240, 480 or 960.\n");
+		"at 48000 Hz the permitted values are 120, 240, 480, 960, 1920 or 2880 which\n"
+		"correspond to 2.5, 7.5, 10, 20, 40 or 60 milliseconds respectively.\n");
 }
 
 int main(int argc, char *argv[])
