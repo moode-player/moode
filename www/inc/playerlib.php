@@ -4317,7 +4317,7 @@ function startMultiroomSender() {
 	    $_cfg_multiroom[$row['param']] = $row['value'];
 	}
 	$cmd = 'tx -d trx_send -h ' . $_cfg_multiroom['tx_host'] . ' -p ' . $_cfg_multiroom['tx_port'] . ' -m ' . $_cfg_multiroom['tx_bfr'] .
-		' -R ' . $_cfg_multiroom['tx_rtprio'] . ' -D /tmp/txpid  >/dev/null';
+		' -f ' . $_cfg_multiroom['tx_frame_size'] . ' -R ' . $_cfg_multiroom['tx_rtprio'] . ' -D /tmp/txpid  >/dev/null';
 	$result = shell_exec($cmd);
 	debugLog($cmd);
 }
