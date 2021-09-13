@@ -16,7 +16,7 @@
  * MA 02110-1301, USA.
  *
  * 2021-09-11   Tim Curtis <tim@moodeaudio.org>
- * - Add -R <prio> arg for passing priority in go_realtime()
+ * - Modifications and enhancements to support integration into moOde audio player
  */
 
 #include <netdb.h>
@@ -162,6 +162,7 @@ static void usage(FILE *fd)
 	fprintf(fd, "  -D <file>   Run as a daemon, writing process ID to the given file\n");
 	fprintf(fd, "  -R <prio>   Realtime priority (default %d)\n",
 		DEFAULT_RTPRIO);
+	fprintf(fd, "  -H          Print program help\n");
 
 	fprintf(fd, "\nAllowed frame sizes (-f) are defined by the Opus codec. For example,\n"
 		"at 48000 Hz the permitted values are 120, 240, 480, 960, 1920 or 2880 which\n"
@@ -189,12 +190,12 @@ int main(int argc, char *argv[])
 		port = DEFAULT_PORT,
 		rtprio = DEFAULT_RTPRIO;
 
-	fputs(COPYRIGHT "\n", stderr);
+	fputs(COPYRIGHT "\n" VERSION "\n\n", stderr);
 
 	for (;;) {
 		int c;
 
-		c = getopt(argc, argv, "b:c:d:f:h:m:p:r:v:D:R:");
+		c = getopt(argc, argv, "b:c:d:f:h:m:p:r:v:D:R:H");
 		if (c == -1)
 			break;
 
@@ -232,10 +233,19 @@ int main(int argc, char *argv[])
 		case 'R':
 			rtprio = atoi(optarg);
 			break;
+		case 'H':
+			usage(stderr);
+			return -1;
 		default:
 			usage(stderr);
 			return -1;
 		}
+	}
+
+	/* No options present on cmd line */
+	if (optind == 1) {
+		usage(stderr);
+		return -1;
 	}
 
 	encoder = opus_encoder_create(rate, channels, OPUS_APPLICATION_AUDIO,
