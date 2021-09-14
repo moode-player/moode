@@ -42,9 +42,6 @@
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_multiroom_tx" value="novalue" $_multiroom_tx_disable>Set</button>
 					</div>
-					<span id="info_multiroom_tx" class="help-block-configs help-block-margin2">
-						The Sender requires ALSA Loopback to be ON and all DSP's in Audio Config to be OFF.
-                    </span>
 				</div>
 
 				<label class="control-label">Loopback</label>
@@ -58,64 +55,70 @@
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_alsa_loopback" value="novalue" $_alsa_loopback_disable>Set</button>
 					</div>
-					<span class="help-block-configs help-block-margin2">
-						The Loopback device provides a copy of the PCM stream for the Sender daemon.
+					<span id="info_multiroom_tx" class="help-block-configs help-block-margin2">
+						The Sender requires ALSA Loopback to be ON and all DSP's in Audio Config to be OFF.
                     </span>
 				</div>
 
-				<label class="control-label" for="multiroom_tx_bfr">Send buffer (ms)</label>
-				<div class="controls">
-					<select id="multiroom_tx_bfr" class="select-medium" name="multiroom_tx_bfr">
-						$_select[multiroom_tx_bfr]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_bfr" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_tx_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_multiroom_tx_bfr" class="help-block-configs help-block-margin hide">
-						The length of the Sender ALSA buffer in milliseconds.
-					</span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="multiroom_tx_rtprio">Realtime priority</label>
-				<div class="controls">
-					<input class="input-small" type="number" maxlength="3" min="1" max="99" name="multiroom_tx_rtprio" value="$_multiroom_tx_rtprio">
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_rtprio" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_tx_rtprio" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_multiroom_tx_rtprio" class="help-block-configs help-block-margin hide">
-						Specify the realtime process priority for the Sender daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>
-						NOTE: Scheduler policy is FIFO and default priority is 45.
-					</span>
-				</div>
-			</div>
-
-			<div class="control-group">
 				<label class="control-label" for="multiroom_initvol">Initial volume</label>
 				<div class="controls">
 					<input class="input-small" type="number" maxlength="3" min="0" max="100" name="multiroom_initvol" value="$_multiroom_initvol">
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_initvol" value="novalue" $_multiroom_initvol_disable>Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_initvol" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_multiroom_initvol" class="help-block-configs help-block-margin hide">
+					<span id="info_multiroom_initvol" class="help-block-configs help-block-margin">
 						Sets the initial volume for Sender and Receivers.
 					</span>
 				</div>
+			</div>
 
+			<div class="control-group">
 				<div class="controls">
-					<div style="margin-top:1em">
-						<a data-toggle="modal" href="#restart-tx" $_tx_restart_link_disable><button class="btn btn-medium btn-primary" $_tx_restart_btn_disable>Restart</button></a>&nbsp;Sender
-					</div>
+					<a data-toggle="modal" href="#restart-tx" $_tx_restart_link_disable><button class="btn btn-medium btn-primary" $_tx_restart_btn_disable>Restart</button></a>&nbsp;Sender
 				</div>
 
 				<div class="controls">
 					<div style="margin-top:1.5em">
 						<button class="btn btn-primary btn-medium btn-submit" type="submit" name="multiroom_tx_discover" value="novalue">Discover</button>&nbsp;Receivers
 					</div>
-					<div class="help-block-configs help-block-margin">
-						Discover must be run to generate the list of Receivers.
-					</div>
 					<div class="help-block-configs help-block-margin" style="font-style:italic">
 						$_rx_hostnames
 					</div>
+				</div>
+			</div>
+
+			<div class="control-group">
+			<label id="multiroom_tx_adv_options_label" class="control-label">$_SESSION[tx_adv_toggle]</label>
+			</div>
+			<div id="multiroom_tx_adv_options" class="control-group $_tx_adv_options_hide">
+				<label class="control-label" for="multiroom_tx_bfr">ALSA buffer (ms)</label>
+				<div class="controls controls-select">
+					<select id="multiroom_tx_bfr" class="select-medium" name="multiroom_tx_bfr">
+						$_select[multiroom_tx_bfr]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_bfr" value="novalue">Set</button>
+					<span id="info_multiroom_tx_bfr" class="help-block-configs help-block-margin">
+						Length of the ALSA buffer in milliseconds.
+					</span>
+				</div>
+
+				<label class="control-label" for="multiroom_tx_frame_size">OPUS frame size (ms)</label>
+				<div class="controls controls-select">
+					<select id="multiroom_tx_frame_size" class="select-medium" name="multiroom_tx_frame_size">
+						$_select[multiroom_tx_frame_size]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_frame_size" value="novalue">Set</button>
+					<span id="info_multiroom_tx_frame_size" class="help-block-configs help-block-margin">
+						Length of PCM data in milliseconds to be encoded into an OPUS frame.
+					</span>
+				</div>
+
+				<label class="control-label" for="multiroom_tx_rtprio">Realtime priority</label>
+				<div class="controls controls-select">
+					<input class="input-small" type="number" maxlength="3" min="1" max="99" name="multiroom_tx_rtprio" value="$_multiroom_tx_rtprio">
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_rtprio" value="novalue">Set</button>
+					<span id="info_multiroom_tx_rtprio" class="help-block-configs help-block-margin">
+						Realtime process priority for the Sender daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>
+						NOTE: Scheduler policy is FIFO and default priority is 45.
+					</span>
 				</div>
 			</div>
 		</fieldset>
@@ -154,48 +157,47 @@
 						Specify whether the Receiver accepts changes made by the Sender volume control.<br>
 						NOTE: On the Receivers&nbsp;<i class="fas fa-rss"></i>&nbsp;screen a volume knob icon&nbsp;<i class="fal fa-dot-circle"></i>&nbsp;will appear for those that have opted in.
 					</span>
-				</div>
 
-				<label class="control-label" for="multiroom_rx_bfr">Receive buffer (ms)</label>
-				<div class="controls">
+					<div style="margin-top:1em">
+						<a data-toggle="modal" href="#restart-rx" $_rx_restart_link_disable><button class="btn btn-medium btn-primary" $_rx_restart_btn_disable>Restart</button></a>&nbsp;Receiver
+					</div>
+				</div>
+			</div>
+
+			<div class="control-group">
+			<label id="multiroom_rx_adv_options_label" class="control-label">$_SESSION[rx_adv_toggle]</label>
+			</div>
+			<div id="multiroom_rx_adv_options" class="control-group $_rx_adv_options_hide">
+				<label class="control-label" for="multiroom_rx_bfr">ALSA buffer (ms)</label>
+				<div class="controls controls-select">
 					<select id="multiroom_rx_bfr" class="select-medium" name="multiroom_rx_bfr">
 						$_select[multiroom_rx_bfr]
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_bfr" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_multiroom_rx_bfr" class="help-block-configs help-block-margin hide">
-						The length of the Receiver ALSA buffer in milliseconds.
+					<span id="info_multiroom_rx_bfr" class="help-block-configs help-block-margin">
+						Length of the ALSA buffer in milliseconds.
 					</span>
 				</div>
-			</div>
 
-			<div class="control-group">
-				<label class="control-label" for="multiroom_rx_jitter_bfr">Jitter buffer (ms)</label>
-				<div class="controls">
+				<label class="control-label" for="multiroom_rx_jitter_bfr">RTP jitter buffer (ms)</label>
+				<div class="controls controls-select">
 					<select id="multiroom_rx_jitter_bfr" class="select-medium" name="multiroom_rx_jitter_bfr">
 						$_select[multiroom_rx_jitter_bfr]
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_jitter_bfr" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_jitter_bfr" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_multiroom_rx_jitter_bfr" class="help-block-configs help-block-margin hide">
-						The length of the RTP jitter compensation buffer in milliseconds.
+					<span id="info_multiroom_rx_jitter_bfr" class="help-block-configs help-block-margin">
+						Length of the RTP jitter compensation buffer in milliseconds.
 					</span>
 				</div>
-			</div>
 
-			<div class="control-group">
 				<label class="control-label" for="multiroom_rx_rtprio">Realtime priority</label>
-				<div class="controls">
+				<div class="controls controls-select">
 					<input class="input-small" type="number" maxlength="2" min="1" max="99" name="multiroom_rx_rtprio" value="$_multiroom_rx_rtprio">
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_rtprio" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_rtprio" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_multiroom_rx_rtprio" class="help-block-configs help-block-margin hide">
-						Specify the realtime process priority for the Receiver daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>
+					<span id="info_multiroom_rx_rtprio" class="help-block-configs help-block-margin">
+						Realtime process priority for the Receiver daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>
 						NOTE: Scheduler policy is FIFO and default priority is 45.
 					</span>
-					<div style="margin-top:1.5em">
-						<a data-toggle="modal" href="#restart-rx" $_rx_restart_link_disable><button class="btn btn-medium btn-primary" $_rx_restart_btn_disable>Restart</button></a>&nbsp;Receiver
-					</div>
 				</div>
 			</div>
 		</fieldset>

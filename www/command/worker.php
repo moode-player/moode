@@ -201,6 +201,10 @@ $_SESSION['procarch'] = strtok(shell_exec('uname -m'),"\n");
 $_SESSION['raspbianver'] = $result[0];
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
+// TRX Config advanced options toggle
+$_SESSION['tx_adv_toggle'] = 'Advanced (&plus;)';
+$_SESSION['rx_adv_toggle'] = 'Advanced (&plus;)';
+
 // Log platform data
 workerLog('worker: Host     (' . $_SESSION['hostname'] . ')');
 workerLog('worker: moOde    (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd

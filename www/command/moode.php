@@ -36,7 +36,8 @@ $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_add_item', 'clear_play_item',
 	'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_add_group', 'clear_play_group');
 $other_mpd_cmds = array('updvolume' , 'mutetxvol' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
-	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'station_info', 'track_info');
+	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'station_info', 'track_info',
+	'upd_tx_adv_toggle', 'upd_rx_adv_toggle');
 $turn_consume_off = false;
 
 // Jobs sent to worker.php
@@ -807,6 +808,13 @@ else {
 			break;
 		case 'clear_libcache_filtered':
 			clearLibCacheFiltered();
+			break;
+		case 'tx_adv_toggle':
+		case 'rx_adv_toggle':
+			//workerLog($_GET['cmd'] . '|' . $_POST['adv_toggle']);
+			session_start();
+			$_SESSION[$_GET['cmd']] = $_POST['adv_toggle'];
+			session_write_close();
 			break;
 
 		// Return client IP address

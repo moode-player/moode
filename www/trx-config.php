@@ -53,17 +53,9 @@ if (isset($_POST['update_alsa_loopback'])) {
 		}
 	}
 }
-if (isset($_POST['update_multiroom_tx_bfr'])) {
-	if (isset($_POST['multiroom_tx_bfr']) && $_POST['multiroom_tx_bfr'] != $_cfg_multiroom['tx_bfr']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_bfr'] . "' " . "WHERE param='tx_bfr'", cfgdb_connect());
-		submitJob('multiroom_tx_restart', '', 'Send buffer updated', '');
-	}
-}
-if (isset($_POST['update_multiroom_tx_rtprio'])) {
-	if (isset($_POST['multiroom_tx_rtprio']) && $_POST['multiroom_tx_rtprio'] != $_cfg_multiroom['tx_rtprio']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_rtprio'] . "' " . "WHERE param='tx_rtprio'", cfgdb_connect());
-		submitJob('multiroom_tx_restart', '', 'Realtime priority updated', '');
-	}
+if (isset($_POST['update_multiroom_initvol'])) {
+	$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_initvol'] . "' " . "WHERE param='initial_volume'", cfgdb_connect());
+	submitJob('multiroom_initvol', $_POST['multiroom_initvol'], 'Volume levels initialized', '');
 }
 if (isset($_POST['multiroom_tx_restart'])) {
 	submitJob('multiroom_tx_restart', '', 'Sender restarted', '');
@@ -106,9 +98,23 @@ if (isset($_POST['multiroom_tx_discover'])) {
 		$_SESSION['notify']['msg'] = 'Found: ' . $_SESSION['rx_hostnames'];
 	}
 }
-if (isset($_POST['update_multiroom_initvol'])) {
-	$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_initvol'] . "' " . "WHERE param='initial_volume'", cfgdb_connect());
-	submitJob('multiroom_initvol', $_POST['multiroom_initvol'], 'Volume levels initialized', '');
+if (isset($_POST['update_multiroom_tx_bfr'])) {
+	if (isset($_POST['multiroom_tx_bfr']) && $_POST['multiroom_tx_bfr'] != $_cfg_multiroom['tx_bfr']) {
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_bfr'] . "' " . "WHERE param='tx_bfr'", cfgdb_connect());
+		submitJob('multiroom_tx_restart', '', 'ALSA buffer updated', 'Sender restarted');
+	}
+}
+if (isset($_POST['update_multiroom_tx_frame_size'])) {
+	if (isset($_POST['multiroom_tx_frame_size']) && $_POST['multiroom_tx_frame_size'] != $_cfg_multiroom['tx_frame_size']) {
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_frame_size'] . "' " . "WHERE param='tx_frame_size'", cfgdb_connect());
+		submitJob('multiroom_tx_restart', '', 'OPUS frame size updated', 'Sender restarted');
+	}
+}
+if (isset($_POST['update_multiroom_tx_rtprio'])) {
+	if (isset($_POST['multiroom_tx_rtprio']) && $_POST['multiroom_tx_rtprio'] != $_cfg_multiroom['tx_rtprio']) {
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_rtprio'] . "' " . "WHERE param='tx_rtprio'", cfgdb_connect());
+		submitJob('multiroom_tx_restart', '', 'Realtime priority updated', 'Sender restarted');
+	}
 }
 
 // Receiver
@@ -125,26 +131,26 @@ if (isset($_POST['update_multiroom_rx_mastervol_opt_in'])) {
 		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_mastervol_opt_in'] . "' " . "WHERE param='rx_mastervol_opt_in'", cfgdb_connect());
 	}
 }
+if (isset($_POST['multiroom_rx_restart'])) {
+	submitJob('multiroom_rx_restart', '', 'Receiver restarted', '');
+}
 if (isset($_POST['update_multiroom_rx_bfr'])) {
 	if (isset($_POST['multiroom_rx_bfr']) && $_POST['multiroom_rx_bfr'] != $_cfg_multiroom['rx_bfr']) {
 		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_bfr'] . "' " . "WHERE param='rx_bfr'", cfgdb_connect());
-		submitJob('multiroom_rx_restart', '', 'Receive buffer updated', '');
+		submitJob('multiroom_rx_restart', '', 'ALSA buffer updated', 'Receiver restarted');
 	}
 }
 if (isset($_POST['update_multiroom_rx_jitter_bfr'])) {
 	if (isset($_POST['multiroom_rx_jitter_bfr']) && $_POST['multiroom_rx_jitter_bfr'] != $_cfg_multiroom['rx_jitter_bfr']) {
 		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_jitter_bfr'] . "' " . "WHERE param='rx_jitter_bfr'", cfgdb_connect());
-		submitJob('multiroom_rx_restart', '', 'Jitter buffer updated', '');
+		submitJob('multiroom_rx_restart', '', 'RTP Jitter buffer updated', 'Receiver restarted');
 	}
 }
 if (isset($_POST['update_multiroom_rx_rtprio'])) {
 	if (isset($_POST['multiroom_rx_rtprio']) && $_POST['multiroom_rx_rtprio'] != $_cfg_multiroom['rx_rtprio']) {
 		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_rtprio'] . "' " . "WHERE param='rx_rtprio'", cfgdb_connect());
-		submitJob('multiroom_rx_restart', '', 'Realtime priority updated', '');
+		submitJob('multiroom_rx_restart', '', 'Realtime priority updated', 'Receiver restarted');
 	}
-}
-if (isset($_POST['multiroom_rx_restart'])) {
-	submitJob('multiroom_rx_restart', '', 'Receiver restarted', '');
 }
 
 session_write_close();
@@ -167,6 +173,8 @@ $_rx_restart_btn_disable = $_SESSION['multiroom_rx'] == 'Off' ? 'disabled' : '';
 $_tx_restart_link_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'onclick="return false;"' : '';
 $_rx_restart_link_disable = $_SESSION['multiroom_rx'] == 'Off' ? 'onclick="return false;"' : '';
 $_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
+$_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Advanced (&minus;)' ? '' : 'hide';
+$_rx_adv_options_hide = $_SESSION['rx_adv_toggle'] == 'Advanced (&minus;)' ? '' : 'hide';
 
 // Sender
 $_select['multiroom_tx1'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle_multiroom_tx1\" value=\"On\" " . (($_SESSION['multiroom_tx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
@@ -174,15 +182,21 @@ $_select['multiroom_tx0'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"t
 $_alsa_loopback_disable = $_SESSION['alsa_output_mode'] == 'plughw' ? '' : 'disabled';
 $_select['alsa_loopback1'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback1\" value=\"On\" " . (($_SESSION['alsa_loopback'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['alsa_loopback0'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$_multiroom_initvol = $_cfg_multiroom['initial_volume'];
+$_rx_hostnames = $_SESSION['rx_hostnames'] != 'No receivers found' ? 'Found: ' . $_SESSION['rx_hostnames'] : $_SESSION['rx_hostnames'];
 $_select['multiroom_tx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['tx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['tx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['tx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
-$_select['multiroom_tx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['tx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
+$_select['multiroom_tx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['tx_bfr'] == '64') ? "selected" : "") . ">64 (Default)</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['tx_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"128\" " . (($_cfg_multiroom['tx_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
+$_select['multiroom_tx_frame_size'] .= "<option value=\"120\" " . (($_cfg_multiroom['tx_frame_size'] == '120') ? "selected" : "") . ">2.5</option>\n";
+$_select['multiroom_tx_frame_size'] .= "<option value=\"240\" " . (($_cfg_multiroom['tx_frame_size'] == '240') ? "selected" : "") . ">7.5</option>\n";
+$_select['multiroom_tx_frame_size'] .= "<option value=\"480\" " . (($_cfg_multiroom['tx_frame_size'] == '480') ? "selected" : "") . ">10</option>\n";
+$_select['multiroom_tx_frame_size'] .= "<option value=\"960\" " . (($_cfg_multiroom['tx_frame_size'] == '960') ? "selected" : "") . ">20</option>\n";
+$_select['multiroom_tx_frame_size'] .= "<option value=\"1920\" " . (($_cfg_multiroom['tx_frame_size'] == '1920') ? "selected" : "") . ">40 (Default)</option>\n";
+$_select['multiroom_tx_frame_size'] .= "<option value=\"2880\" " . (($_cfg_multiroom['tx_frame_size'] == '2880') ? "selected" : "") . ">60</option>\n";
 $_multiroom_tx_rtprio = $_cfg_multiroom['tx_rtprio'];
-$_multiroom_initvol = $_cfg_multiroom['initial_volume'];
-$_rx_hostnames = $_SESSION['rx_hostnames'] != 'No receivers found' ? 'Found: ' . $_SESSION['rx_hostnames'] : $_SESSION['rx_hostnames'];
 
 // Receiver
 $_select['multiroom_rx1'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"toggle_multiroom_rx1\" value=\"On\" " . (($_SESSION['multiroom_rx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
@@ -192,11 +206,11 @@ $_select['multiroom_rx_mastervol_opt_in0'] .= "<input type=\"radio\" name=\"mult
 $_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['rx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
-$_select['multiroom_rx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['rx_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
+$_select['multiroom_rx_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['rx_bfr'] == '64') ? "selected" : "") . ">64 (Default)</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['rx_bfr'] == '96') ? "selected" : "") . ">96</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"128\" " . (($_cfg_multiroom['rx_bfr'] == '128') ? "selected" : "") . ">128</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
-$_select['multiroom_rx_jitter_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
+$_select['multiroom_rx_jitter_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '32') ? "selected" : "") . ">32 (Default)</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"64\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '64') ? "selected" : "") . ">64</option>\n";
 $_select['multiroom_rx_jitter_bfr'] .= "<option value=\"96\" " . (($_cfg_multiroom['rx_jitter_bfr'] == '96') ? "selected" : "") . ">96</option>\n";

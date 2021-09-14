@@ -284,6 +284,20 @@ jQuery(document).ready(function($){ 'use strict';
         notify('gathering_info', '', '3_seconds');
     });
 
+    // Multiroom adv options show/hide
+    $('#multiroom_tx_adv_options_label').click(function(e) {
+        $('#multiroom_tx_adv_options').toggleClass('hide');
+        var labelText = $('#multiroom_tx_adv_options_label').html() == 'Advanced (+)' ? 'Advanced (&minus;)' : 'Advanced (&plus;)'
+        $('#multiroom_tx_adv_options_label').html(labelText);
+        $.post('command/moode.php?cmd=tx_adv_toggle', {'adv_toggle': labelText});
+    });
+    $('#multiroom_rx_adv_options_label').click(function(e) {
+        $('#multiroom_rx_adv_options').toggleClass('hide');
+        var labelText = $('#multiroom_rx_adv_options_label').html() == 'Advanced (+)' ? 'Advanced (&minus;)' : 'Advanced (&plus;)'
+        $('#multiroom_rx_adv_options_label').html(labelText);
+        $.post('command/moode.php?cmd=rx_adv_toggle', {'adv_toggle': labelText});
+    });
+
     // Info button (i) show/hide toggle
     $('.info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');
