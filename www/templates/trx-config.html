@@ -100,14 +100,14 @@
 					</span>
 				</div>
 
-				<label class="control-label" for="multiroom_tx_frame_size">OPUS frame size (ms)</label>
+				<label class="control-label" for="multiroom_tx_frame_size">Opus frame size (ms)</label>
 				<div class="controls controls-select">
 					<select id="multiroom_tx_frame_size" class="select-medium" name="multiroom_tx_frame_size">
 						$_select[multiroom_tx_frame_size]
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_frame_size" value="novalue">Set</button>
 					<span id="info_multiroom_tx_frame_size" class="help-block-configs help-block-margin">
-						Length of PCM data in milliseconds to be encoded into an OPUS frame.
+						Length of PCM data in milliseconds to be encoded into an Opus frame.
 					</span>
 				</div>
 
@@ -187,6 +187,17 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_jitter_bfr" value="novalue">Set</button>
 					<span id="info_multiroom_rx_jitter_bfr" class="help-block-configs help-block-margin">
 						Length of the RTP jitter compensation buffer in milliseconds.
+					</span>
+				</div>
+
+				<label class="control-label" for="multiroom_rx_frame_size">Opus frame size (ms)</label>
+				<div class="controls controls-select">
+					<select id="multiroom_rx_frame_size" class="select-medium" name="multiroom_rx_frame_size">
+						$_select[multiroom_rx_frame_size]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_frame_size" value="novalue">Set</button>
+					<span id="info_multiroom_rx_frame_size" class="help-block-configs help-block-margin">
+						Length of PCM data in milliseconds to be decoded from an Opus frame.
 					</span>
 				</div>
 

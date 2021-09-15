@@ -4331,7 +4331,7 @@ function startMultiroomReceiver() {
 	}
 
 	$cmd = 'rx -d plughw:' . $_SESSION['cardnum'] . ',0 -h ' . $_cfg_multiroom['rx_host'] . ' -p ' . $_cfg_multiroom['rx_port'] . ' -m ' . $_cfg_multiroom['rx_bfr'] .
-		' -j ' . $_cfg_multiroom['rx_jitter_bfr'] . ' -R ' . $_cfg_multiroom['rx_rtprio'] . ' -D /tmp/rxpid  >/dev/null';
+		' -j ' . $_cfg_multiroom['rx_jitter_bfr'] . ' -f ' . $_cfg_multiroom['rx_frame_size'] . ' -R ' . $_cfg_multiroom['rx_rtprio'] . ' -D /tmp/rxpid  >/dev/null';
 	$result = shell_exec($cmd);
 	debugLog($cmd);
 }

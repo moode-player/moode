@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Sep 13 09:26:39 2021
+-- File generated with SQLiteStudio v3.1.0 on Wed Sep 15 15:36:15 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -587,10 +587,10 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_port', '1350');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_sample_rate', '48000');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_channels', '2');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_jitter_bfr', '32');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (18, 'rx_mastervol_opt_in', '0');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (18, 'rx_frame_size', '1920');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (19, 'rx_rtprio', '45');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (20, 'RESERVED_20', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (21, 'RESERVED_21', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (21, 'rx_mastervol_opt_in', '0');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (22, 'initial_volume', '0');
 
 -- Table: cfg_eqalsa

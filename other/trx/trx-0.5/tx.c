@@ -147,11 +147,11 @@ static void usage(FILE *fd)
 		DEFAULT_PORT);
 
 	fprintf(fd, "\nEncoding parameters:\n");
-	fprintf(fd, "  -r <rate>   Sample rate (default %d Hz)\n",
+	fprintf(fd, "  -r <rate>   Sample rate (default %d Hz, see (1) below.)\n",
 		DEFAULT_RATE);
 	fprintf(fd, "  -c <n>      Number of channels (default %d)\n",
 		DEFAULT_CHANNELS);
-	fprintf(fd, "  -f <n>      Frame size (default %d samples, see below)\n",
+	fprintf(fd, "  -f <n>      Frame size (default %d samples, see (2) below)\n",
 		DEFAULT_FRAME);
 	fprintf(fd, "  -b <kbps>   Bitrate (approx., default %d)\n",
 		DEFAULT_BITRATE);
@@ -164,7 +164,9 @@ static void usage(FILE *fd)
 		DEFAULT_RTPRIO);
 	fprintf(fd, "  -H          Print program help\n");
 
-	fprintf(fd, "\nAllowed frame sizes (-f) are defined by the Opus codec. For example,\n"
+	fprintf(fd, "\n(1) Sampling rate (-r) of the input signal (Hz) This must be one\n"
+	 	"of 8000, 12000, 16000, 24000, or 48000.\n"
+		"\n(2) Allowed frame sizes (-f) are defined by the Opus codec. For example,\n"
 		"at 48000 Hz the permitted values are 120, 240, 480, 960, 1920 or 2880 which\n"
 		"correspond to 2.5, 7.5, 10, 20, 40 or 60 milliseconds respectively.\n");
 }
