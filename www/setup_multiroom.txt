@@ -1,0 +1,79 @@
+########################################################
+#
+# Setup Guide for Multiroom Audio
+#
+# These instructions are designed for initial configuration
+# of a moOde Multiroom Audio system.
+#
+# Updated: 2021-09-16
+#
+# (C) Tim Curtis 2021 http://moodeaudio.org
+#
+#########################################################
+
+OVERVIEW
+
+A multiroom audio system consists of a Sender and one or more Receivers. The Sender should be a dedicated moOde player configured to output to the integrated Headphone jack or HDMI port but not connected to speakers or headphones. It functions solely as a Music Server that Sends its audio output to one or more multiroom Receivers.
+
+
+diagram goes here...
+
+
+RECEIVER CONFIGURATION
+
+The Receiver player application is separate from MPD and the Audio Renderers and thus ...
+
+Audio Configuration (Menu, Configure, Audio)
+
+1. Configure the audio device
+2. Set ALSA Loopback to "OFF"
+3. EDIT MPD settings 
+4. Set MPD Audio output appropriately to generate the correct ALSA card number 
+5. Set SoX Resampling Enabled to "No"
+6. Set the following DSP's to "Off"
+   - Crossfeed
+   - Polarity inversion
+   - Graphic EQ
+   - Parametric EQ
+   - CamillaDSP
+7. Set all Audio Renderers to "Off"
+8. Set DLNA server to "Off"
+
+
+SENDER CONFIGURATION
+
+The Sender computer should be one of the multi-core ARM7 Pi's for example Pi-3A+, Pi-3B+ or Pi-4. The network connection should be Ethernet (preferred) or 5 GHz WiFi. 
+
+Audio Configuration (Menu, Configure, Audio)
+
+1. Set ALSA Output mode to "Default (plughw)"
+2. Set ALSA Loopback to "ON"
+3. EDIT MPD settings
+4. Set MPD Audio output to "HDMI 1"
+5. Set SoX Resampling Enabled to "No"
+6. Set the following DSP's to "Off"
+   - Crossfeed
+   - Polarity inversion
+   - Graphic EQ
+   - Parametric EQ
+   - CamillaDSP
+7. Set the following Audio Renderers to "Off"
+   - Bluetooth
+   - Squeezelite
+   - RoonBridge
+8. Set DLNA server to "Off"
+
+Sender Configuration (Menu, Configure, Multiroom)
+
+1. Set Sender daemon to "ON"
+3, Set Initial volume for the receivers.
+
+NETWORKING AND AUDIO FORMAT
+
+Networking
+
+The performance of the system depends on having low latency, high throughput networking and hosts. Discovery of Receivers relies on Multicast DNS. Addressing for the audio distribution protocol relies on IP Multicast using a default address of 239.0.0.1.
+
+Audio format
+
+The system uses 16 bit 48 kHz PCM format encoded using the OPUS CODEC. Resampling if needed is handled by ALSA using the Speex converter.

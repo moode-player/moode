@@ -53,8 +53,8 @@ sudo apt-get -y install libopus-dev
 
 # moOde modified sources
 sudo ./dev.sh
-sudo cp -r /mnt/moode-player/GitHub/moode/other/trx/trx-0.5/ ./
-cd trx-0.5
+sudo cp -r /mnt/moode-player/GitHub/moode/other/trx/trx-0.6.0/ ./
+cd trx-0.6.0
 sudo make
 
 # Copy tx and rx binaries to /usr/local/bin/

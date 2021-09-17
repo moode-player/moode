@@ -34,105 +34,128 @@
 
 static unsigned int verbose = DEFAULT_VERBOSE;
 
-static RtpSession* create_rtp_send(const char *addr_desc, const int port)
+static void timestamp_jump(RtpSession *session, void *a, void *b, void *c)
+{
+	if (verbose > 1)
+		fputc('|', stderr);
+	rtp_session_resync(session);
+}
+
+static RtpSession* create_rtp_recv(const char *addr_desc, const int port,
+		unsigned int jitter)
 {
 	RtpSession *session;
 
-	session = rtp_session_new(RTP_SESSION_SENDONLY);
-	assert(session != NULL);
-
-	rtp_session_set_scheduling_mode(session, 0);
-	rtp_session_set_blocking_mode(session, 0);
+	session = rtp_session_new(RTP_SESSION_RECVONLY);
+	rtp_session_set_scheduling_mode(session, FALSE);
+	rtp_session_set_blocking_mode(session, FALSE);
+	rtp_session_set_local_addr(session, addr_desc, port, -1);
 	rtp_session_set_connected_mode(session, FALSE);
-	if (rtp_session_set_remote_addr(session, addr_desc, port) != 0)
-		abort();
+	rtp_session_enable_adaptive_jitter_compensation(session, TRUE);
+	rtp_session_set_jitter_compensation(session, jitter); /* ms */
+	rtp_session_set_time_jump_limit(session, jitter * 16); /* ms */
 	if (rtp_session_set_payload_type(session, 0) != 0)
 		abort();
-	if (rtp_session_set_multicast_ttl(session, 16) != 0)
+	if (rtp_session_signal_connect(session, "timestamp_jump",
+					timestamp_jump, 0) != 0)
+	{
 		abort();
-	if (rtp_session_set_dscp(session, 40) != 0)
-		abort();
+	}
+
+	/*
+	 * oRTP in RECVONLY mode attempts to send RTCP packets and
+	 * segfaults (v4.3.0 tested)
+	 *
+	 * https://stackoverflow.com/questions/43591690/receiving-rtcp-issues-within-ortp-library
+	 */
+
+	rtp_session_enable_rtcp(session, FALSE);
 
 	return session;
 }
 
-static int send_one_frame(snd_pcm_t *snd,
-		const unsigned int channels,
-		const snd_pcm_uframes_t samples,
-		OpusEncoder *encoder,
-		const size_t bytes_per_frame,
-		const unsigned int ts_per_frame,
-		RtpSession *session)
+static int play_one_frame(void *packet,
+		size_t len,
+		const snd_pcm_sframes_t frame,
+		OpusDecoder *decoder,
+		snd_pcm_t *snd,
+		const unsigned int channels)
 {
+	int r;
 	int16_t *pcm;
-	void *packet;
-	ssize_t z;
+	/* NOTE: For moOde implementation samples (frame_size) is a command line arg with default of DEFAULT_FRAME */
+	/*snd_pcm_sframes_t f, samples = 1920;*/
 	snd_pcm_sframes_t f;
-	static unsigned int ts = 0;
 
-	pcm = alloca(sizeof(*pcm) * samples * channels);
-	packet = alloca(bytes_per_frame);
+	pcm = alloca(sizeof(*pcm) * frame * channels);
 
-	f = snd_pcm_readi(snd, pcm, samples);
+	if (packet == NULL) {
+		r = opus_decode(decoder, NULL, 0, pcm, frame, 1);
+	} else {
+		r = opus_decode(decoder, packet, len, pcm, frame, 0);
+	}
+	if (r < 0) {
+		fprintf(stderr, "opus_decode: %s\n", opus_strerror(r));
+		return -1;
+	}
+
+	f = snd_pcm_writei(snd, pcm, r);
 	if (f < 0) {
-		if (f == -ESTRPIPE)
-			ts = 0;
-
 		f = snd_pcm_recover(snd, f, 0);
 		if (f < 0) {
-			aerror("snd_pcm_readi", f);
+			aerror("snd_pcm_writei", f);
 			return -1;
 		}
 		return 0;
 	}
+	if (f < r)
+		fprintf(stderr, "Short write %ld\n", f);
 
-	/* Opus encoder requires a complete frame, so if we xrun
-	 * mid-frame then we discard the incomplete audio. The next
-	 * read will catch the error condition and recover */
-
-	if (f < samples) {
-		fprintf(stderr, "Short read, %ld\n", f);
-		return 0;
-	}
-
-	z = opus_encode(encoder, pcm, samples, packet, bytes_per_frame);
-	if (z < 0) {
-		fprintf(stderr, "opus_encode_float: %s\n", opus_strerror(z));
-		return -1;
-	}
-
-	rtp_session_send_with_ts(session, packet, z, ts);
-	ts += ts_per_frame;
-
-	return 0;
+	return r;
 }
 
-static int run_tx(snd_pcm_t *snd,
+static int run_rx(RtpSession *session,
+		OpusDecoder *decoder,
+		snd_pcm_t *snd,
+		const unsigned int frame,
 		const unsigned int channels,
-		const snd_pcm_uframes_t frame,
-		OpusEncoder *encoder,
-		const size_t bytes_per_frame,
-		const unsigned int ts_per_frame,
-		RtpSession *session)
+		const unsigned int rate)
 {
-	for (;;) {
-		int r;
+	int ts = 0;
 
-		r = send_one_frame(snd, channels, frame,
-				encoder, bytes_per_frame, ts_per_frame,
-				session);
+	for (;;) {
+		int r, have_more;
+		char buf[65536]; /* Was 32768 */
+		void *packet;
+
+		r = rtp_session_recv_with_ts(session, (uint8_t*)buf,
+				sizeof(buf), ts, &have_more);
+		assert(r >= 0);
+		assert(have_more == 0);
+		if (r == 0) {
+			packet = NULL;
+			if (verbose > 1)
+				fputc('#', stderr);
+		} else {
+			packet = buf;
+			if (verbose > 1)
+				fputc('.', stderr);
+		}
+
+		r = play_one_frame(packet, r, frame, decoder, snd, channels);
 		if (r == -1)
 			return -1;
 
-		if (verbose > 1)
-			fputc('>', stderr);
+		/* Follow the RFC, payload 0 has 8kHz reference rate */
+
+		ts += r * 8000 / rate;
 	}
 }
 
 static void usage(FILE *fd)
 {
-	fprintf(fd, "Usage: tx [<parameters>]\n"
-		"Real-time audio transmitter over IP\n");
+	fprintf(fd, "Usage: rx [<parameters>]\n"
+		"Real-time audio receiver over IP\n");
 
 	fprintf(fd, "\nAudio device (ALSA) parameters:\n");
 	fprintf(fd, "  -d <dev>    Device name (default '%s')\n",
@@ -141,20 +164,20 @@ static void usage(FILE *fd)
 		DEFAULT_BUFFER);
 
 	fprintf(fd, "\nNetwork parameters:\n");
-	fprintf(fd, "  -h <addr>   IP address to send to (default %s)\n",
+	fprintf(fd, "  -h <addr>   IP address to listen on (default %s)\n",
 		DEFAULT_ADDR);
 	fprintf(fd, "  -p <port>   UDP port number (default %d)\n",
 		DEFAULT_PORT);
+	fprintf(fd, "  -j <ms>     Jitter buffer (default %d milliseconds)\n",
+		DEFAULT_JITTER);
 
-	fprintf(fd, "\nEncoding parameters:\n");
-	fprintf(fd, "  -r <rate>   Sample rate (default %d Hz, see (1) below.)\n",
+	fprintf(fd, "\nEncoding parameters (must match sender):\n");
+	fprintf(fd, "  -r <rate>   Sample rate (default %d Hz)\n",
 		DEFAULT_RATE);
 	fprintf(fd, "  -c <n>      Number of channels (default %d)\n",
 		DEFAULT_CHANNELS);
-	fprintf(fd, "  -f <n>      Frame size (default %d samples, see (2) below)\n",
+	fprintf(fd, "  -f <n>      Frame size (default %d samples, see (1) below)\n",
 		DEFAULT_FRAME);
-	fprintf(fd, "  -b <kbps>   Bitrate (approx., default %d)\n",
-		DEFAULT_BITRATE);
 
 	fprintf(fd, "\nProgram parameters:\n");
 	fprintf(fd, "  -v <n>      Verbosity level (default %d)\n",
@@ -164,9 +187,7 @@ static void usage(FILE *fd)
 		DEFAULT_RTPRIO);
 	fprintf(fd, "  -H          Print program help\n");
 
-	fprintf(fd, "\n(1) Sampling rate (-r) of the input signal (Hz) This must be one\n"
-	 	"of 8000, 12000, 16000, 24000, or 48000.\n"
-		"\n(2) Allowed frame sizes (-f) are defined by the Opus codec. For example,\n"
+	fprintf(fd, "\n(1) Allowed frame sizes (-f) are defined by the Opus codec. For example,\n"
 		"at 48000 Hz the permitted values are 120, 240, 480, 960, 1920 or 2880 which\n"
 		"correspond to 2.5, 7.5, 10, 20, 40 or 60 milliseconds respectively.\n");
 }
@@ -174,10 +195,8 @@ static void usage(FILE *fd)
 int main(int argc, char *argv[])
 {
 	int r, error;
-	size_t bytes_per_frame;
-	unsigned int ts_per_frame;
 	snd_pcm_t *snd;
-	OpusEncoder *encoder;
+	OpusDecoder *decoder;
 	RtpSession *session;
 
 	/* command-line options */
@@ -186,25 +205,22 @@ int main(int argc, char *argv[])
 		*pid = NULL;
 	unsigned int buffer = DEFAULT_BUFFER,
 		rate = DEFAULT_RATE,
-		channels = DEFAULT_CHANNELS,
 		frame = DEFAULT_FRAME,
-		kbps = DEFAULT_BITRATE,
+		jitter = DEFAULT_JITTER,
+		channels = DEFAULT_CHANNELS,
 		port = DEFAULT_PORT,
 		rtprio = DEFAULT_RTPRIO;
 
-	fputs(COPYRIGHT "\n" VERSION "\n\n", stderr);
+	fputs(VERSION "\n" COPYRIGHT "\n\n", stderr);
 
 	for (;;) {
 		int c;
 
-		c = getopt(argc, argv, "b:c:d:f:h:m:p:r:v:D:R:H");
+		c = getopt(argc, argv, "c:d:f:h:j:m:p:r:v:D:R:H");
 		if (c == -1)
 			break;
 
 		switch (c) {
-		case 'b':
-			kbps = atoi(optarg);
-			break;
 		case 'c':
 			channels = atoi(optarg);
 			break;
@@ -216,6 +232,9 @@ int main(int argc, char *argv[])
 			break;
 		case 'h':
 			addr = optarg;
+			break;
+		case 'j':
+			jitter = atoi(optarg);
 			break;
 		case 'm':
 			buffer = atoi(optarg);
@@ -250,27 +269,19 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	encoder = opus_encoder_create(rate, channels, OPUS_APPLICATION_AUDIO,
-				&error);
-	if (encoder == NULL) {
-		fprintf(stderr, "opus_encoder_create: %s\n",
+	decoder = opus_decoder_create(rate, channels, &error);
+	if (decoder == NULL) {
+		fprintf(stderr, "opus_decoder_create: %s\n",
 			opus_strerror(error));
 		return -1;
 	}
 
-	bytes_per_frame = kbps * 1024 * frame / rate / 8;
-
-	/* Follow the RFC, payload 0 has 8kHz reference rate */
-
-	ts_per_frame = frame * 8000 / rate;
-
 	ortp_init();
 	ortp_scheduler_init();
-	ortp_set_log_level_mask(NULL, ORTP_WARNING|ORTP_ERROR);
-	session = create_rtp_send(addr, port);
+	session = create_rtp_recv(addr, port, jitter);
 	assert(session != NULL);
 
-	r = snd_pcm_open(&snd, device, SND_PCM_STREAM_CAPTURE, 0);
+	r = snd_pcm_open(&snd, device, SND_PCM_STREAM_PLAYBACK, 0);
 	if (r < 0) {
 		aerror("snd_pcm_open", r);
 		return -1;
@@ -284,8 +295,7 @@ int main(int argc, char *argv[])
 		go_daemon(pid);
 
 	go_realtime(rtprio);
-	r = run_tx(snd, channels, frame, encoder, bytes_per_frame,
-		ts_per_frame, session);
+	r = run_rx(session, decoder, snd, frame, channels, rate);
 
 	if (snd_pcm_close(snd) < 0)
 		abort();
@@ -294,7 +304,7 @@ int main(int argc, char *argv[])
 	ortp_exit();
 	ortp_global_stats_display();
 
-	opus_encoder_destroy(encoder);
+	opus_decoder_destroy(decoder);
 
 	return r;
 }
