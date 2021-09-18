@@ -92,22 +92,24 @@ rate 48000
 format S16_LE
 channels 2
 }
-rate_converter "speexrate_medium"
+rate_converter "speexrate"
 }
 
 # Transmit
-sudo tx -d trx_send -h 239.0.0.1 -p 1350 -m 128 -R 45
-
+sudo tx -d trx_send -h 239.0.0.1 -p 1350 -m 128 -f 1920 -R 45
 # Receive
-sudo rx -d plughw:0,0 -h 239.0.0.1 -p 1350 -m 32 -j 32 -R 45
+sudo rx -d plughw:0,0 -h 239.0.0.1 -p 1350 -m 64 -j 32 -f 1920 -R 45
 
 # Verbose
 -v 2
 
 # Background
-
 -D /tmp/txpid
 -D /tmp/rxpid
+
+# Process status
+ps H -q `pidof -s tx` -o 'pid,tid,cls,rtprio,comm,cmd'
+ps H -q `pidof -s rx` -o 'pid,tid,cls,rtprio,comm,cmd'
 
 ////////////////////////////////////////////////////////////
 
