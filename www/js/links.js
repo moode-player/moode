@@ -35,6 +35,7 @@ $(document).on('click', 'a', function(event) {
 			this.id == 'dlnasvc-link' ||
 			this.className == 'moode-about-link' ||
 			this.className == 'playhistory-link' ||
+			this.className == 'multiroom-setup-link' ||
 			// input dropdowns on config pages
 			(this.className == 'active' && $(this).attr('tabindex') == 0)) {
 
