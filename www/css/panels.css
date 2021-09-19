@@ -54,7 +54,7 @@ html, body {background-attachment:fixed;background-size:cover;height:100%;color:
 	--npicon: url('../images/4band-npicon/audiow.svg');
 }
 
-.btn, .lib-entry, .dropdown, #menu-header, div#playbar-title, #coverart-url {-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-user-select: none;-webkit-touch-callout: none;}
+.btn, .lib-entry, .dropdown, #menu-header, #menu-cdsp, div#playbar-title, #coverart-url {-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-user-select: none;-webkit-touch-callout: none;}
 .btn:active {color:var(--textvariant);} /* this needs to be a separate rule */
 
 html {background-color:inherit;}
@@ -314,6 +314,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 .viewswitch .btn.no-icon {padding-left:1rem;}
 #current-tab {font-size:1.1rem;font-weight:600;height:2.75rem;line-height:2.75rem;}
 #current-tab i {font-size:.7rem;margin-left:2px;}
+#menu-dsp {font-size:.7rem;margin-left:2px;}
 .ui-pnotify {font-size:1.1rem;top:33%;left:50%;transform:translate(-50%, -50%);box-shadow:0px 2px 10px rgba(50, 50, 50, 0.5)}
 .ui-pnotify .ui-pnotify-shadow {-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
 .ui-pnotify-container {background-position:0 0;padding:2em;backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);height: 100%;margin: 0;border-radius:.75em;}

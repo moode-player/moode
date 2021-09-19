@@ -105,7 +105,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .help-block-modal {margin:0 !important;}
 /* dropdown menus */
 #menu-top .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
-#current-tab, #menu-header {font-size:1em;}
+#current-tab, #menu-header, #menu-cdsp {font-size:1em;}
 .dropdown-menu > li > a, .viewswitch .btn {text-align:left;line-height:2.75rem;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1em;font-family:system-ui, "Avenir Next", "Lato";white-space:nowrap;border-radius:0;}
 /*body.no-touch .dropdown-menu > li > a {font-size:1rem;line-height:2em}*/
 .dropdown-menu > li:last-child a, .viewswitch .btn:last-child {padding-bottom:.35em;}
@@ -254,7 +254,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/*.dropdown-menu {min-width:180px;}*/
 	#menu-top .dropdown-menu, .viewswitch .dropdown-menu {min-width:16rem;} /* Make this one a bit wider */
 	#context-menu-playback .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
-	#lib-album-search input, #lib-album-search input, #current-tab, #menu-header {font-size:1.11rem;}
+	#lib-album-search input, #lib-album-search input, #current-tab, #menu-header, #menu-cdsp {font-size:1.11rem;}
 	.dropdown-menu > li > a, .viewswitch .btn {font-size:1.16rem;line-height:2.75em;}
 	#playback-panel, #content {position:relative;}
 	.modal-body{padding:0 .75rem;max-height:80vh;}

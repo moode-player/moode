@@ -174,10 +174,11 @@
 				$select_config_label = $cdsp_configs[$_SESSION['camilladsp']];
 		?>
 		<div class="dropdown" id="dropdown-cdsp">
-			<a aria-label="Menu" class="dropdown-toggle btn" id="menu-cdsp" role="button" data-toggle="dropdown" data-target="#" href="#notarget">
+			<a aria-label="Menu" style="display:none;" class="dropdown-toggle btn" id="menu-cdsp" role="button" data-toggle="dropdown" data-target="#" href="#notarget">
 				<?php
-				echo '<div id="mcdsp">' . $select_config_label . '</div>';
+				echo $select_config_label;
 				?>
+				<i class="fas fa-chevron-down"></i>
 			</a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings_x">
 					<?php

@@ -1727,6 +1727,7 @@ function renderRadioView() {
 		element.innerHTML = output;
 		if (currentView == 'radio') lazyLode('radio');
 
+		if (currentView.indexOf('playback') != -1 ) $('#menu-cdsp').show();
     });
 }
 
@@ -2320,7 +2321,7 @@ $(document).on('click', '.context-menu a', function(e) {
 			cache: false,
 			data: {'cdspconfig': selected_config } ,
 			success: function(result) {
-				$('#mcdsp').html(selected_label);
+				$('#menu-cdsp').html(selected_label+'<i class="fas fa-chevron-down"></i>');
 				$("a[data-cdspconfig] .fa-check").attr('class', 'fal'); // reset active indicator in list
 				$("a[data-cdspconfig='"+selected_config+"'] .fal").attr('class', 'fal fa-check'); // set active indicator in list
 			},
@@ -3459,7 +3460,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 	$('#menu-top').css('backdrop-filter', '');
 	$('#menu-bottom, .viewswitch').css('display', 'flex');
     $('#multiroom-sender').hide();
-
+	$('#menu-cdsp').hide();
     syncTimers();
 
 	if (currentView == 'tag') {
@@ -3520,6 +3521,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#playback-controls').css('display', '');
         $('#addfav-li').hide();
         SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
+		$('#menu-cdsp').show();
 		if (UI.mobile) {
             // Make sure playlist is hidden and controls are showing
 			showMenuTopW = false;
