@@ -182,8 +182,8 @@
 			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings_x">
 					<?php
 					foreach ($cdsp_configs as $config_file=>$config_name) {
-						$fa_selected = ($_SESSION['camilladsp'] == $config_file) ? 'fa-volume-up ' : '';
-						echo '<li class="context-menu"><a href="#notarget" data-cmd="camilladsp_config" data-cdspconfig="'.$config_file.'" data-cdsplabel="'.$config_name.'"><i class="fas ' . $fa_selected . 'sx"></i>'.$config_name.'</a></li>';
+						$fa_selected = ($_SESSION['camilladsp'] == $config_file) ? 'fa-check' : '';
+						echo '<li class="context-menu"><a href="#notarget" data-cmd="camilladsp_config" data-cdspconfig="'.$config_file.'" data-cdsplabel="'.$config_name.'"><i class="fal ' . $fa_selected . '"></i>'.$config_name.'</a></li>';
 					}
 					?>
 			</ul>

@@ -2321,8 +2321,8 @@ $(document).on('click', '.context-menu a', function(e) {
 			data: {'cdspconfig': selected_config } ,
 			success: function(result) {
 				$('#mcdsp').html(selected_label);
-				$(".fa-volume-up").attr('class', 'fas sx'); // reset active indicator in list
-				$("a[data-cdspconfig='"+selected_config+"'] .fas").attr('class', 'fas fa-volume-up sx'); // set active indicator in list
+				$("a[data-cdspconfig] .fa-check").attr('class', 'fal'); // reset active indicator in list
+				$("a[data-cdspconfig='"+selected_config+"'] .fal").attr('class', 'fal fa-check'); // set active indicator in list
 			},
 			error: function() {
 				debugLog('camilladsp_setconfig "' + $(this).data('cdspconfig') + '" failed');
