@@ -2,22 +2,29 @@
 #
 # Setup Guide for Multiroom Audio
 #
-# These instructions are designed for initial configuration
+# These instructions are designed for basic configuration
 # of a moOde Multiroom Audio system.
 #
-# Updated: 2021-09-16
+# Version: 1.0 2021-09-16
 #
 # (C) Tim Curtis 2021 http://moodeaudio.org
 #
 #########################################################
+
+PREFACE
+
+This initial release of moOde Multiroom audio is designed for casual or background
+music usage scenarios. There is no support in this release for "audiophile" features
+including uncompressed PCM format, rates > 48 kHz, DSP or sender/receiver clock
+correction. These features may however appear in future versions.
 
 OVERVIEW
 
 A moOde multiroom audio system consists of a Sender and one or more Receivers. The
 Sender should be a dedicated moOde player configured to output to the integrated
 HDMI port or optionally the Headphone jack but not connected to any speakers or
-headphones. It functions solely as a Music Server that Sends its audio output to one
-or more multiroom Receivers.
+headphones. It functions solely as a Music Server that Sends its audio output to
+one or more multiroom Receivers.
 
 
 BLOCK DIAGRAM
@@ -60,7 +67,7 @@ from MPD and the Audio Renderers and thus the Receiver configuration should be
 dedicated although it's not absolutely required. A Receiver can have Airplay and
 Spotify renderers running in the background but there is no coordination between
 them and the Receiver player. Initiating a Spotify or Airplay connection while the
-Receiver player is ON will result in audio output errors.
+Receiver player is ON will result in audio output conflicts and errors.
 
 A) Audio Configuration (Menu, Configure, Audio)
 
@@ -79,6 +86,12 @@ A) Audio Configuration (Menu, Configure, Audio)
 8. Set all Audio Renderers to "Off"
 9. Set DLNA server to "Off"
 
+B) Multiroom Configuration (Menu, Configure, Multiroom)
+Or optionally Multiroom CONFIGURE while still on Audio Config screen.
+
+1. Set the Receiver daemon to ON
+2. Optionally set Master volume opt-in to YES. This allows Receiver volume to be
+controlled by the volume knob in Sender Playback view.
 
 SENDER CONFIGURATION
 
@@ -104,24 +117,37 @@ A) Audio Configuration (Menu, Configure, Audio)
    - Bluetooth
    - Squeezelite
    - RoonBridge
-8. Set DLNA server to "Off"
+8. Optionally turn on Airplay and/or Spotify renderers
+9. Set DLNA server to "Off"
 
-Sender Configuration (Menu, Configure, Multiroom)
+B) Sender Configuration (Menu, Configure, Multiroom)
 
-1. Set Sender daemon to "ON"
-3, Set Initial volume for the Receivers.
-
+1. DISCOVER Receivers. This is necessary to generate the list of Receiver hosts
+and their IP addresses. This must be done initially and whenever hosts are added
+or removed from the configuration.
+2. Set Sender daemon to "ON"
+3. Optionally set Initial volume for the Receivers. This action simply sets
+each Receiver's volume to an initial level for convenience.
+4. In Playback view the Sender icon will appear at the top middle. Click this
+icon to open the Receivers panel which lists each discovered Receiver, its volume
+and mute state. Receiver volume can be adjusted via the slider followed by
+clicking on the volume button. Mute state can be toggled by clicking on the
+mute button.
 
 NETWORKING AND AUDIO FORMAT
 
-Networking
+A) Networking
 
 The performance of the system depends on having low latency, high throughput
-networking and hosts. Discovery of Receivers relies on Multicast DNS. Addressing
-for the audio distribution protocol relies on IP Multicast using a default
-address of 239.0.0.1
+networking and hosts. If any hosts are connected via WiFi then interference
+in the WiFi band can result in degraded performance and audio dropouts.
 
-Audio format
+1. Discovery of Receivers relies on Multicast DNS (mDNS)
+2. Addressing for the audio distribution protocol relies on IP Multicast using a
+default address of 239.0.0.1 and port 1350
 
-The system uses 16 bit 48 kHz PCM format encoded using the OPUS CODEC. Resampling
-if needed is handled by ALSA using the Speex converter.
+B) Audio format
+
+1. Audio is converted to 16 bit 48 kHz PCM format and encoded using the Opus
+CODEC. Resampling if needed is handled by ALSA using the Speex converter.
+2. Encoded Opus frames are transmitted over the network using RTP over UDP
