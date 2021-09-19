@@ -129,8 +129,8 @@ or removed from the configuration.
 3. Optionally set Initial volume for the Receivers. This action simply sets
 each Receiver's volume to an initial level for convenience.
 4. In Playback view the Sender icon will appear at the top middle. Click this
-icon to open the Receivers panel which lists each discovered Receiver, its volume
-and mute state. Receiver volume can be adjusted via the slider followed by
+icon to open the Receivers panel which lists each Receiver, its On/Off state,
+volume and mute state. Receiver volume can be adjusted via the slider followed by
 clicking on the volume button. Mute state can be toggled by clicking on the
 mute button.
 
