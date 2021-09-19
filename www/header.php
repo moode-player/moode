@@ -164,7 +164,35 @@
 
 		<div id="menu-header"></div>
         <div id="multiroom-sender" class="context-menu"><a class="btn" href="#notarget" data-cmd="multiroom-rx-modal"><i class="fas fa-rss"></i></a></div>
-        <div aria-label="Busy" class="busy-spinner"><svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42' stroke='#fff'><g fill='none' fill-rule='evenodd'><g transform='translate(3 3)' stroke-width='4'><circle stroke-opacity='.35' cx='18' cy='18' r='18'/><path d='M36 18c0-9.94-8.06-18-18-18'><animateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='1s' repeatCount='indefinite'/></path></g></g></svg></div>
+
+
+		<?php
+			if ($section == 'index' && $_SESSION['camilladsp'] != "off") {
+				require_once dirname(__FILE__) . '/inc/cdsp.php';
+				$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+				$cdsp_configs = $cdsp->getAvailableConfigs();
+				$select_config_label = $cdsp_configs[$_SESSION['camilladsp']];
+		?>
+		<div class="dropdown" id="dropdown-cdsp">
+			<a aria-label="Menu" class="dropdown-toggle btn" id="menu-cdsp" role="button" data-toggle="dropdown" data-target="#" href="#notarget">
+				<?php
+				echo '<div id="mcdsp">' . $select_config_label . '</div>';
+				?>
+			</a>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="menu-settings_x">
+					<?php
+					foreach ($cdsp_configs as $config_file=>$config_name) {
+						$fa_selected = ($_SESSION['camilladsp'] == $config_file) ? 'fa-volume-up ' : '';
+						echo '<li class="context-menu"><a href="#notarget" data-cmd="camilladsp_config" data-cdspconfig="'.$config_file.'" data-cdsplabel="'.$config_name.'"><i class="fas ' . $fa_selected . 'sx"></i>'.$config_name.'</a></li>';
+					}
+					?>
+			</ul>
+		</div>
+		<?php
+			}
+		?>
+
+		<div aria-label="Busy" class="busy-spinner"><svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42' stroke='#fff'><g fill='none' fill-rule='evenodd'><g transform='translate(3 3)' stroke-width='4'><circle stroke-opacity='.35' cx='18' cy='18' r='18'/><path d='M36 18c0-9.94-8.06-18-18-18'><animateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='1s' repeatCount='indefinite'/></path></g></g></svg></div>
 
 		<!-- MAIN MENU -->
 		<div class="dropdown">
