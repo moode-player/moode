@@ -822,6 +822,29 @@ else {
 		case 'clientip':
 			echo json_encode($_SERVER['REMOTE_ADDR']);
 			break;
+
+		case 'camilladsp_setconfig':
+			if ( isset($_POST['cdspconfig']) ) {
+				require_once dirname(__FILE__) . '/../inc/cdsp.php';
+				$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+				$currentMode = $_SESSION['camilladsp'];
+				$newMode = $_POST['cdspconfig'];
+				playerSession('write', 'camilladsp', $newMode);
+				$cdsp->selectConfig($newMode);
+				if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+					$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+				}
+
+				if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
+					submitJob('camilladsp', $newMode, 'CamillaDSP ' . $cdsp->getConfigLabel($newMode), '');
+				} else {
+					$cdsp->reloadConfig();
+				}
+			}
+			else {
+				$msg = 'Error: missing camilladsp config name';
+			}
+			break;
 	}
 }
 

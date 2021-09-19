@@ -2308,6 +2308,27 @@ $(document).on('click', '.context-menu a', function(e) {
             }, 'json');
         }
 	}
+	else if ($(this).data('cmd') == 'camilladsp_config') {
+		console.log("selected camilladsp config "+ $(this).data('cdspconfig'));
+		var selected_config = $(this).data('cdspconfig'),
+		    selected_label = $(this).data('cdsplabel');
+
+		$.ajax({
+			type: 'POST',
+			url: 'command/moode.php?cmd=camilladsp_setconfig',
+			async: true,
+			cache: false,
+			data: {'cdspconfig': selected_config } ,
+			success: function(result) {
+				$('#mcdsp').html(selected_label);
+				$(".fa-volume-up").attr('class', 'fas sx'); // reset active indicator in list
+				$("a[data-cdspconfig='"+selected_config+"'] .fas").attr('class', 'fas fa-volume-up sx'); // set active indicator in list
+			},
+			error: function() {
+				debugLog('camilladsp_setconfig "' + $(this).data('cdspconfig') + '" failed');
+			}
+		});
+	}
 
 	// MAIN MENU
 
