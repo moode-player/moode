@@ -385,6 +385,9 @@ readers do not read off random characters that represent icons */
 .fa-sitemap:before {
   content: "\f0e8"; }
 
+.fa-sliders-v-square:before {
+  content: "\f3f2"; }
+
 .fa-spinner:before {
   content: "\f110"; }
 

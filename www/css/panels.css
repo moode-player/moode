@@ -167,8 +167,10 @@ html {background-color:inherit;}
 #mbrand, #mblur {font-weight:600;position:absolute;left:50%;top:-.25rem;}
 #mbrand {color:var(--adapttext);text-shadow: 0 0 0.25rem rgba(0,0,0,0.5);transform:translate(-50%);}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
-#dropdown-cdsp {right: 4em !important;}
+#dropdown-cdsp-btn {right:3.5em !important;} /* Was 4em */
+#dropdown-cdsp-menu {min-width:20rem !important;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
+.dropdown-cdsp-line {padding-left:1em;}
 #menu-bottom {/*display:flex;*/bottom:.2rem;bottom:calc(env(safe-area-inset-bottom) + .2rem);width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 #menu-bottom ul {display:flex;margin:0;width:100%;}
 #playback-panel {padding:2.75em 0 0 0;min-height:calc(100vh - 2.75em);position:relative;}
@@ -500,6 +502,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 /* playback ellipsis context menu */
 /*#context-menu-playback .dropdown-menu {min-width:15rem;white-space:nowrap;}*/
 #menu-check-consume, #menu-check-repeat, #menu-check-single, #menu-check-recorder {display:none;position:absolute;right:.45rem;}
+#menu-check-cdsp {display:inline;position:absolute;right:.45rem;}
 .dropdown-menu i.fa-check {padding:0;margin:0;}
 /* active/inactive css element manip */
 #menu-header {position:absolute;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1.1rem;overflow:hidden;max-width:50%;text-overflow:ellipsis;white-space:nowrap;color:var(--adapttext);cursor:pointer;}
@@ -710,3 +713,4 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .recorder-on {border-bottom: 2px solid var(--accentxts);}
 #selected-album-tag {margin-left:.25em;font-style:italic;}
 #multiroom-sender {position:absolute;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1em;color:var(--textvariant);}
+#menu-cdsp {color:var(--adapttext);}

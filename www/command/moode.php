@@ -24,7 +24,7 @@ require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
 //workerLog('moode.php: cmd=(' . $_GET['cmd'] . ')');
 if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
-	workerLog('moode.php: error: $_GET cmd is empty or missing');
+	workerLog('moode.php: Error: $_GET cmd is empty or missing');
 	exit(0);
 }
 
@@ -824,25 +824,30 @@ else {
 			break;
 
 		case 'camilladsp_setconfig':
-			if ( isset($_POST['cdspconfig']) ) {
+			if (isset($_POST['cdspconfig'])) {
 				require_once dirname(__FILE__) . '/../inc/cdsp.php';
 				$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 				$currentMode = $_SESSION['camilladsp'];
 				$newMode = $_POST['cdspconfig'];
+
+				session_start();
 				playerSession('write', 'camilladsp', $newMode);
+				session_write_close();
+
 				$cdsp->selectConfig($newMode);
-				if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
+				if ($_SESSION['cdsp_fix_playback'] == 'Yes') {
 					$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				}
 
-				if ( $_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
-					submitJob('camilladsp', $newMode, 'CamillaDSP ' . $cdsp->getConfigLabel($newMode), '');
-				} else {
+				if ($_SESSION['camilladsp'] != $currentMode) {
+					submitJob('camilladsp', $newMode, '', '');
+				}
+				else {
 					$cdsp->reloadConfig();
 				}
 			}
 			else {
-				$msg = 'Error: missing camilladsp config name';
+				workerLog('moode.php Error: missing camilladsp config name');
 			}
 			break;
 	}

@@ -2309,23 +2309,34 @@ $(document).on('click', '.context-menu a', function(e) {
         }
 	}
 	else if ($(this).data('cmd') == 'camilladsp_config') {
-		console.log("selected camilladsp config "+ $(this).data('cdspconfig'));
-		var selected_config = $(this).data('cdspconfig'),
-		    selected_label = $(this).data('cdsplabel');
+		//console.log("selected camilladsp config "+ $(this).data('cdspconfig'));
+        notify('update_cdsp_cfg', '', 'infinite');
+		var selected_config = $(this).data('cdspconfig');
 
 		$.ajax({
 			type: 'POST',
 			url: 'command/moode.php?cmd=camilladsp_setconfig',
 			async: true,
 			cache: false,
-			data: {'cdspconfig': selected_config } ,
+			data: {'cdspconfig': selected_config},
 			success: function(result) {
-				$('#mcdsp').html(selected_label);
-				$(".fa-volume-up").attr('class', 'fas sx'); // reset active indicator in list
-				$("a[data-cdspconfig='"+selected_config+"'] .fas").attr('class', 'fas fa-volume-up sx'); // set active indicator in list
+                if (selected_config == 'off') {
+                    $('#dropdown-cdsp-btn').hide();
+                }
+                else {
+                    $('.dropdown-cdsp-line span').remove();
+                    var selectedHTML = $('a[data-cdspconfig="' + selected_config + '"]').html();
+                    $('a[data-cdspconfig="' + selected_config + '"]').html(selectedHTML + '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>');
+                }
+
+                // Allow time for worker job to complete
+                setTimeout(function() {
+                    notify('update_cdsp_ok');
+                }, 3500);
 			},
 			error: function() {
-				debugLog('camilladsp_setconfig "' + $(this).data('cdspconfig') + '" failed');
+                $('.ui-pnotify-closer').click();
+                notify('update_cdsp_err', selected_config, '5_seconds');
 			}
 		});
 	}
