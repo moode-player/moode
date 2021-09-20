@@ -17,9 +17,9 @@
 
 New features
 
-- Multiroom audio
-- CamillaDSP Quick Select
-- Backup/restore manager
+- NEW: Multiroom audio
+- NEW: CamillaDSP Quick Select
+- NEW: Backup/restore manager
 
 Updates
 
