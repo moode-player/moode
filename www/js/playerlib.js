@@ -2308,10 +2308,17 @@ $(document).on('click', '.context-menu a', function(e) {
             }, 'json');
         }
 	}
-	else if ($(this).data('cmd') == 'camilladsp_config') {
+    else if ($(this).data('cmd') == 'camilladsp_config') {
 		//console.log("selected camilladsp config "+ $(this).data('cdspconfig'));
-        notify('update_cdsp_cfg', '', 'infinite');
 		var selected_config = $(this).data('cdspconfig');
+        if (selected_config != SESSION.json['camilladsp'] && (selected_config == 'off' || SESSION.json['camilladsp'] == 'off')) {
+            var notifyOK = true;
+            notify('update_cdsp', '', 'infinite');
+        }
+        else {
+            notify('update_cdsp_ok', '');
+            var notifyOK = false;
+        }
 
 		$.ajax({
 			type: 'POST',
@@ -2320,23 +2327,18 @@ $(document).on('click', '.context-menu a', function(e) {
 			cache: false,
 			data: {'cdspconfig': selected_config},
 			success: function(result) {
-				$('.dropdown-cdsp-line span').remove();
-				var selectedHTML = $('a[data-cdspconfig="' + selected_config + '"]').html();
-				$('a[data-cdspconfig="' + selected_config + '"]').html(selectedHTML + '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>');
+                $('.dropdown-cdsp-line span').remove();
+                var selectedHTML = $('a[data-cdspconfig="' + selected_config + '"]').html();
+                $('a[data-cdspconfig="' + selected_config + '"]').html(selectedHTML + '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>');
 
-				if (selected_config != 'off') {
-					// change is already executed when getting the response
-					$('.ui-pnotify-closer').click();
-				}
-				else {
-					// Allow time for worker job to complete
-                	setTimeout(function() {
-                    	notify('update_cdsp_ok');
-                	}, 3500);
-				}
+                // Allow time for worker job to complete
+                if (notifyOK) {
+                    setTimeout(function() {
+                        notify('update_cdsp_ok');
+                    }, 3500);
+                }
 			},
 			error: function() {
-                $('.ui-pnotify-closer').click();
                 notify('update_cdsp_err', selected_config, '5_seconds');
 			}
 		});
