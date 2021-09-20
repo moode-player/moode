@@ -2320,14 +2320,9 @@ $(document).on('click', '.context-menu a', function(e) {
 			cache: false,
 			data: {'cdspconfig': selected_config},
 			success: function(result) {
-                if (selected_config == 'off') {
-                    $('#dropdown-cdsp-btn').hide();
-                }
-                else {
-                    $('.dropdown-cdsp-line span').remove();
-                    var selectedHTML = $('a[data-cdspconfig="' + selected_config + '"]').html();
-                    $('a[data-cdspconfig="' + selected_config + '"]').html(selectedHTML + '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>');
-                }
+				$('.dropdown-cdsp-line span').remove();
+				var selectedHTML = $('a[data-cdspconfig="' + selected_config + '"]').html();
+				$('a[data-cdspconfig="' + selected_config + '"]').html(selectedHTML + '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>');
 
                 // Allow time for worker job to complete
                 setTimeout(function() {
