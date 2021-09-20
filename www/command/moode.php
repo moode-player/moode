@@ -839,7 +839,7 @@ else {
 					$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				}
 
-				if ($_SESSION['camilladsp'] != $currentMode) {
+				if ($_SESSION['camilladsp'] != $currentMode && ( $_SESSION['camilladsp'] == 'off' || $currentMode == 'off')) {
 					submitJob('camilladsp', $newMode, '', '');
 				}
 				else {
