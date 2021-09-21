@@ -14,7 +14,7 @@
 PREFACE
 
 This initial release of moOde Multiroom audio is designed for casual or background
-music usage scenarios. There is no support in this release for "audiophile" features
+music usage scenarios. There is no support in this release for audiophile features
 including uncompressed PCM format, rates > 48 kHz, DSP or sender/receiver clock
 correction. These features may however appear in future versions.
 
@@ -36,7 +36,7 @@ BLOCK DIAGRAM
              | Ethernet                        |
              |                                 |
          +-------+                             |
-         |       | Pi-4, 3B+, 3A+              | Ethernet and/or WiFi 5GHz
+         |       | Pi-4 or 3B+                 | Ethernet and/or WiFi 5GHz
          | Sendr | Music Sources               |
          |       | Spotify, Airplay            |
          +-------+                             |
@@ -87,11 +87,11 @@ A) Audio Configuration (Menu, Configure, Audio)
 9. Set DLNA server to "Off"
 
 B) Multiroom Configuration (Menu, Configure, Multiroom)
-Or optionally Multiroom CONFIGURE while still on Audio Config screen.
+   Optionally Multiroom CONFIGURE while still on Audio Config screen.
 
 1. Set the Receiver daemon to ON
 2. Optionally set Master volume opt-in to YES. This allows Receiver volume to be
-controlled by the volume knob in Sender Playback view.
+controlled by the volume knob in Playback or Playbar view of the Sender.
 
 SENDER CONFIGURATION
 
