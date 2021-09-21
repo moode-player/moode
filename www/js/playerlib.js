@@ -2309,14 +2309,13 @@ $(document).on('click', '.context-menu a', function(e) {
         }
 	}
     else if ($(this).data('cmd') == 'camilladsp_config') {
-		//console.log("selected camilladsp config "+ $(this).data('cdspconfig'));
 		var selected_config = $(this).data('cdspconfig');
+
         if (selected_config != SESSION.json['camilladsp'] && (selected_config == 'off' || SESSION.json['camilladsp'] == 'off')) {
             var notifyOK = true;
             notify('update_cdsp', '', 'infinite');
         }
         else {
-            notify('update_cdsp_ok', '');
             var notifyOK = false;
         }
 
