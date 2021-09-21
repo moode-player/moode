@@ -26,7 +26,6 @@ HDMI port or optionally the Headphone jack but not connected to any speakers or
 headphones. It functions solely as a Music Server that Sends its audio output to
 one or more multiroom Receivers.
 
-
 BLOCK DIAGRAM
 
         +---------+
@@ -58,7 +57,6 @@ BLOCK DIAGRAM
                        | . |                 | . |                 | . |
                        | O |                 | O |                 | O |
                        +---+                 +---+                 +---+
-
 
 RECEIVER CONFIGURATION
 
@@ -151,3 +149,18 @@ B) Audio format
 1. Audio is converted to 16 bit 48 kHz PCM format and encoded using the Opus
 CODEC. Resampling if needed is handled by ALSA using the Speex converter.
 2. Encoded Opus frames are transmitted over the network using RTP over UDP
+
+SPOTIFY AND AIRPLAY
+
+Playing Spotify or Airplay through the Sender sets the Receiver hardware
+volume to 100% (0dB). Overall volume is controlled by the Spotify or Airplay
+client.
+
+USAGE NOTES
+
+1. Spotify and Airplay support is a work-in-progress (WIP) for this initial
+   release. Airplay generally works well with few audio glitches but Spotify
+   can be glitchy.
+2. The crowded, interference prone 2.4 GHz WiFi band is to be avoided.
+3. ARM6 single-core Pi's including Pi-1B and Pi-Zero have not been tested as
+   either Sender or Receiver and so YMMV.
