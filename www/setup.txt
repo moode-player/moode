@@ -1,22 +1,18 @@
-########################################################
+################################################################################
 #
-# Setup Guide for moOde audio player
+#  Setup Guide for moOde audio player
 #
-# These instructions are designed for initial configuration
-# of moOde audio player. Additional configuration help is
-# provided within the player via the (i) information buttons.
+#  These instructions are designed for an initial configuration of moOde audio
+#  player. Additional configuration help is provided within the player via Menu,
+#  Quick help and the (i) information buttons.
 #
-# Updated: 2020-11-15
+#  Version: 1.1 2021-09-22
 #
-# (C) Tim Curtis 2017 http://moodeaudio.org
+#  (C) Tim Curtis 2017 http://moodeaudio.org
 #
-#########################################################
+################################################################################
 
-////////////////////////////////////////////////////////
-//
-// GENERAL INFORMATION
-//
-////////////////////////////////////////////////////////
+GENERAL INFORMATION
 
 NOTE: Use http://moode, moode.local or IP address, whichever works on your network.
 Typically Android OS will only work with IP address.
@@ -52,208 +48,187 @@ IMAGE WRITING UTILITIES
 
 https://www.raspberrypi.org/documentation/installation/installing-images/
 
-////////////////////////////////////////////////////////
-//
-// PLAYER SETUP AND CONFIGURATON
-//
-////////////////////////////////////////////////////////
+PLAYER SETUP AND CONFIGURATON
 
- 1. INITIAL SETUP
-    a) Insert boot SD card or USB drive
-    b) Connect USB or I2S audio device
-    c) Connect USB storage devices
-    - Ethernet mode
-    a) Insert ethernet cable
-    b) Power on
-    c) http://moode
-    - Access Point (AP) mode
-    a) Insert WiFi adapter that supports AP mode
-    b) Power on
-    c) Join network SSID=Moode, pwd=moodeaudio
-    d) http://moode.local or http://172.24.1.1
+1. INITIAL SETUP
+   a) Insert boot SD card or USB drive
+   b) Connect USB or I2S audio device
+   c) Connect USB storage devices
+   - Ethernet mode
+   a) Insert ethernet cable
+   b) Power on
+   c) http://moode
+   - Access Point (AP) mode
+   a) Insert WiFi adapter that supports AP mode
+   b) Power on
+   c) Join network SSID=Moode, pwd=moodeaudio
+   d) http://moode.local or http://172.24.1.1
 
- 2. AUDIO DEVICE SETUP
-    - USB DEVICE
-	a) Menu, Configure, Audio
-    b) Select "None" for I2S audio device then SET
-    c) Restart
-    d) Menu, Configure, Audio
-    e) EDIT MPD config
-    f) Leave Volume control set to "Software"
-    g) Set Audio output to the name of the USB audio device
-    h) SAVE
-    i) Restart
+2. AUDIO DEVICE SETUP
+   - USB DEVICE
+   a) Menu, Configure, Audio
+   b) Select "None" for I2S audio device then SET
+   c) Restart
+   d) Menu, Configure, Audio
+   e) EDIT MPD config
+   f) Leave Volume control set to "Software"
+   g) Set Audio output to the name of the USB audio device
+   h) SAVE
+   i) Restart
 
-    - I2S DEVICE
-    a) Menu, Configure, Audio
-    b) Select an I2S audio device then SET
-    c) Restart
-    d) Menu, Configure, Audio
-    e) EDIT MPD config
-    f) Leave Volume control set to "Software"
-    g) Verify Audio output is set to the name of the I2S audio device
-    h) SAVE
+   - I2S DEVICE
+   a) Menu, Configure, Audio
+   b) Select an I2S audio device then SET
+   c) Restart
+   d) Menu, Configure, Audio
+   e) EDIT MPD config
+   f) Leave Volume control set to "Software"
+   g) Verify Audio output is set to the name of the I2S audio device
+   h) SAVE
 
- 3. TIME ZONE
-    a) Menu, Configure, System
-    b) Select appropriate timezone then SET
+3. TIME ZONE
+   a) Menu, Configure, System
+   b) Select appropriate timezone then SET
 
- 4. ADD SOURCE(S) CONTAINING MUSIC FILES
-    - USB STORAGE DEVICES
-    a) Insert USB storage device
-    b) Menu, Update library
-    c) Wait for completion (no spinner)
-    - SDCARD STORAGE DEVICES
-    a) Menu, Update library
-    b) Wait for completion (no spinner)
-    - NAS DEVICE
-    a) Menu, Configure, Library
-    b) CREATE Music source
-    c) After SAVE, return to Playback or Library
-    d) Menu, Update library
-    e) Wait for completion (no spinner)
-    - MUSIC DATABASE UTILITIES
-    a) Menu, Configure, Library
-    b) Various utilities will be listed in the Music Library section
+4. ADD SOURCE(S) CONTAINING MUSIC FILES
+   - USB STORAGE DEVICES
+   a) Insert USB storage device
+   b) Menu, Update library
+   c) Wait for completion (no spinner)
+   - SDCARD STORAGE DEVICES
+   a) Menu, Update library
+   b) Wait for completion (no spinner)
+   - NAS DEVICE
+   a) Menu, Configure, Library
+   b) CREATE Music source
+   c) After SAVE, return to Playback or Library
+   d) Menu, Update library
+   e) Wait for completion (no spinner)
+   - MUSIC DATABASE UTILITIES
+   a) Menu, Configure, Library
+   b) Various utilities will be listed in the Music Library section
 
- 5. VERIFY AUDIO PLAYBACK
-    - Ethernet mode
-    a) http://moode
-    b) Play one of the radio stations
-    - AP mode
-    a) http://moode.local
-    b) Browse, SDCARD, Stereo Test
-    c) Menu for "LR Channel And Phase" track
-    d) Play
+5. VERIFY AUDIO PLAYBACK
+   - Ethernet mode
+   a) http://moode
+   b) Play one of the radio stations
+   - AP mode
+   a) http://moode.local
+   b) Browse, SDCARD, Stereo Test
+   c) Menu for "LR Channel And Phase" track
+   d) Play
 
- At this point a FULLY OPERATIONAL PLAYER exists.
+At this point a FULLY OPERATIONAL PLAYER exists.
 
-////////////////////////////////////////////////////////
-//
-// CUSTOM CONFIGS
-//
-// Customize the player by using any of the following
-// procedures.
-//
-////////////////////////////////////////////////////////
+CUSTOM CONFIGURATIONS
 
- 1. CONFIGURE FOR WIFI CONNECTION
-    - Ethernet mode
-    a) Leave eth cable connected
-    b) Insert wifi adapter (while Pi running)
-    c) http://moode
-    d) Menu, Configure, Network
-    e) Configure a wifi connection
-    f) Menu, Power, Shutdown
-    g) Unplug eth cable
-    h) Power on
-    - Access Point (AP) mode
-    a) Join network SSID=Moode, pwd=moodeaudio
-    b) http://moode.local
-    c) Menu, Configure, Network
-    d) Configure a wifi connection
-    e) Menu, Power, Restart
+Customize the player by using any of the following procedures.
 
- 2. CHANGE HOST AND SERVICE NAMES
-    a) Menu, Configure, System (and Audio)
-    b) SET after entering appropriate value in each name field
-    c) Restart is required if changing Host name
+1. CONFIGURE FOR WIFI CONNECTION
+   - Ethernet mode
+   a) Leave eth cable connected
+   b) Insert wifi adapter (while Pi running)
+   c) http://moode
+   d) Menu, Configure, Network
+   e) Configure a wifi connection
+   f) Menu, Power, Shutdown
+   g) Unplug eth cable
+   h) Power on
+   - Access Point (AP) mode
+   a) Join network SSID=Moode, pwd=moodeaudio
+   b) http://moode.local
+   c) Menu, Configure, Network
+   d) Configure a wifi connection
+   e) Menu, Power, Restart
 
- 3. AUTO-CONFIGURE AT BOOT
+2. CHANGE HOST AND SERVICE NAMES
+   a) Menu, Configure, System (and Audio)
+   b) SET after entering appropriate value in each name field
+   c) Restart is required if changing Host name
 
-    NOTE: This works only on a fresh image that has never been booted!
+3. AUTO-CONFIGURE AT BOOT
 
-    a) Mount the SDCard which will make the boot partition accessible
-    b) Copy the file /boot/moodecfg.ini.default to your PC, Mac or Linux client
-    c) Rename it to moodecfg.ini
-    d) Edit the settings as needed
-    e) Copy moodecfg.ini to /boot/
-    f) Insert SD Card in Pi and power up
-    g) Join AP SSID if using AP mode, then http://hostname.local or http://172.24.1.1
+   NOTE: This works only on a fresh image that has never been booted!
 
-////////////////////////////////////////////////////////
-//
-// AFTER PLAYER SETUP
-//
-// Follow these instructions for making certain types
-// of changes
-//
-////////////////////////////////////////////////////////
+   a) Mount the SDCard which will make the boot partition accessible
+   b) Copy the file /boot/moodecfg.ini.default to your PC, Mac or Linux client
+   c) Rename it to moodecfg.ini
+   d) Edit the settings as needed
+   e) Copy moodecfg.ini to /boot/
+   f) Insert SD Card in Pi and power up
+   g) Join AP SSID if using AP mode, then http://hostname.local or http://172.24.1.1
 
- 1. Switching from USB to I2S audio device
-    a) Unplug USB audio device
-    b) Menu, Power, Shutdown
-    c) Install I2S audio device
-    d) Power on
-    e) Menu, Configure, Audio
-    f) Select appropriate I2S audio device then SET
-    g) Menu, Power, Restart
-    h) Menu, Configure, Audio, EDIT MPD config
-    i) Verify Audio output is set to "I2S audio device"
-    j) SAVE
+AFTER PLAYER SETUP
 
- 2. Switching from I2S to USB audio device
-    a) Menu, Configure, Audio
-    b) Select "None" for I2S audio device then SET
-    c) Menu, Power, Shutdown
-    d) Optionally unplug I2S audio device
-    e) Plug in USB audio device
-    f) Power on
-    g) Menu, Configure, Audio,  EDIT MPD config
-    h) Set Device type to "USB audio device"
-    i) SAVE
-    j) Menu, Power, Restart
+Follow these instructions for making certain types of changes.
 
- 3. Switching from WiFi back to Ethernet
-    a) Plug in Ethernet cable
-    b) Menu, Configure, Network
-    c) RESET network configuration to defaults
-    d) Menu, Power, Shutdown
-    e) Remove WiFi adapter
-    f) Power on
+1. Switching from USB to I2S audio device
+   a) Unplug USB audio device
+   b) Menu, Power, Shutdown
+   c) Install I2S audio device
+   d) Power on
+   e) Menu, Configure, Audio
+   f) Select appropriate I2S audio device then SET
+   g) Menu, Power, Restart
+   h) Menu, Configure, Audio, EDIT MPD config
+   i) Verify Audio output is set to "I2S audio device"
+   j) SAVE
 
-////////////////////////////////////////////////////////
-//
-// Command API
-//
-// Below are a list of commands that can be submitted to
-// moOde via http or ssh
-//
-////////////////////////////////////////////////////////
+2. Switching from I2S to USB audio device
+   a) Menu, Configure, Audio
+   b) Select "None" for I2S audio device then SET
+   c) Menu, Power, Shutdown
+   d) Optionally unplug I2S audio device
+   e) Plug in USB audio device
+   f) Power on
+   g) Menu, Configure, Audio,  EDIT MPD config
+   h) Set Device type to "USB audio device"
+   i) SAVE
+   j) Menu, Power, Restart
+
+3. Switching from WiFi back to Ethernet
+   a) Plug in Ethernet cable
+   b) Menu, Configure, Network
+   c) RESET network configuration to defaults
+   d) Menu, Power, Shutdown
+   e) Remove WiFi adapter
+   f) Power on
+
+COMMAND API
+
+Below are a list of commands that can be submitted to moOde via http or ssh.
 
 1. Base URL is http://moode/command/?cmd=
 2. MPD commands that are listed in MPC help
 3. Volume commands that are listed in /var/www/vol.sh --help
-4. Library update via the command libupd-submit
+4. Library update via the command libupd-submit.php
 
 HTTP examples:
 
-// MPD
+# MPD
 http://moode/command/?cmd=stop
 http://moode/command/?cmd=play
 
-// Volume
+# Volume
 http://moode/command/?cmd=vol.sh up 2
 http://moode/command/?cmd=vol.sh mute
 
-// Library update
+# Library update
 http://moode/command/?cmd=libupd-submit.php
 
 SSH examples:
 
-// MPD
+# MPD
 mpc stop
 mpc play
 
-// Volume
+# Volume
 /var/www/vol.sh up 2
 /var/www/vol.sh mute
 
-// Library update
+# Library update
 sudo /var/www/libupd-submit.php
 
-////////////////////////////////////////////////////////
-//
-// END
-//
-////////////////////////////////////////////////////////
+################################################################################
+#  Post questions regarding this guide to http://moodeaudio.org/forum
+################################################################################
