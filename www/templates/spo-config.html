@@ -73,9 +73,9 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="initial_volume">Initial volume</label>
+				<label class="control-label" for="initial_volume">Initial volume (%)</label>
 				<div class="controls">
-					<input class="input-large" type="number" min="0" max="100" id="initial_volume" name="config[initial_volume]" value="$_select[initial_volume]"> (%)
+					<input class="input-large" type="number" min="0" max="100" id="initial_volume" name="config[initial_volume]" value="$_select[initial_volume]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_initial_volume" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_initial_volume" class="help-block-configs help-block-margin hide">
 						Initial volume once connected [0-100].
@@ -114,9 +114,9 @@
 						Specify the normalisation gain type to use. Default is Album.
 					</span>
 				</div>
-				<label class="control-label" for="normalization_pregain">Pre-gain</label>
+				<label class="control-label" for="normalization_pregain">Pre-gain (dB)</label>
 				<div class="controls">
-					<input class="input-large" type="number" min="-10" max="10" id="normalization_pregain" name="config[normalization_pregain]" value="$_select[normalization_pregain]"> (dB)
+					<input class="input-large" type="number" min="-10" max="10" id="normalization_pregain" name="config[normalization_pregain]" value="$_select[normalization_pregain]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_pregain" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_normalization_pregain" class="help-block-configs help-block-margin2 hide">
 						Volume boost in dB [-10 to 10].
@@ -130,17 +130,17 @@
 						Threshold (dBFS) to prevent clipping. Default is -1.0.
                     </span>
 				</div>
-				<label class="control-label" for="normalization_attack">Attack</label>
+				<label class="control-label" for="normalization_attack">Attack (ms)</label>
 				<div class="controls">
-					<input class="input-large" type="number" min="1" id="normalization_attack" name="config[normalization_attack]" value="$_select[normalization_attack]"> (ms)
+					<input class="input-large" type="number" min="1" id="normalization_attack" name="config[normalization_attack]" value="$_select[normalization_attack]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_attack" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_normalization_attack" class="help-block-configs help-block-margin2 hide">
 						Attack time (ms) in which the dynamic limiter is reducing gain. Default is 5.
                     </span>
 				</div>
-				<label class="control-label" for="normalization_release">Release</label>
+				<label class="control-label" for="normalization_release">Release (ms)</label>
 				<div class="controls">
-					<input class="input-large" type="number" min="1" id="normalization_release" name="config[normalization_release]" value="$_select[normalization_release]"> (ms)
+					<input class="input-large" type="number" min="1" id="normalization_release" name="config[normalization_release]" value="$_select[normalization_release]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_release" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_normalization_release" class="help-block-configs help-block-margin2 hide">
 						Release or decay time (ms) in which the dynamic limiter is restoring gain. Default is 100.
