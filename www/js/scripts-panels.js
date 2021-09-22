@@ -282,6 +282,11 @@ jQuery(document).ready(function($) { 'use strict';
             }
         }
 
+        // Multiroom Sender
+        if (SESSION.json['multiroom_tx'] == 'On') {
+            $('#context-menu-multiroom-sender').show();
+        }
+
     	// Load swipe handler for top columns in library (mobile)
     	if (UI.mobile && SESSION.json['library_show_genres'] == 'Yes') {
     		$(function() {
