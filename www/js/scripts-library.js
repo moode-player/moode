@@ -44,6 +44,7 @@ var filteredArtists = [];
 var filteredAlbums = [];
 var filteredSongs = [];
 var filteredSongsDisc = [];
+var filteredSongsAlbum = [];
 var filteredAlbumCovers = [];
 
 var miscLibOptions = [];
@@ -737,7 +738,7 @@ var renderSongs = function(albumPos) {
             var album = filteredSongs[i].album + comment;
 
             if (album != lastAlbum) {
-                albumDiv = '<div class="lib-album-heading">' + album + '</div>';
+                albumDiv = '<div class="lib-album-heading"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-album-heading">' + album + '</a></div>';
                 lastAlbum = album;
             }
             else {
@@ -1381,6 +1382,21 @@ $('#songsList').on('click', '.lib-disc', function(e) {
 	//console.log('filteredSongsDisc= ' + JSON.stringify(filteredSongsDisc));
 });
 
+// Click Album heading
+$('#songsList').on('click', '.lib-album-heading', function(e) {
+	$('img.lib-coverart, #songsList li, #songsList .lib-disc a').removeClass('active'); // Remove highlight
+	var albumName = $(this).text();
+	//$('#lib-disc-' + discNum + ' a').addClass('active');
+
+	filteredSongsAlbum.length = 0;
+	for (var i in filteredSongs) {
+		if (filteredSongs[i].album == albumName) {
+			filteredSongsAlbum.push(filteredSongs[i]);
+		}
+	}
+	//console.log('filteredSongsAlbum= ' + JSON.stringify(filteredSongsAlbum));
+});
+
 // Click lib track
 $('#songsList').on('click', '.lib-track', function(e) {
     UI.dbEntry[0] = $('#songsList .lib-track').index(this); // Store pos for use in action menu item click
@@ -1511,6 +1527,29 @@ $('#context-menu-lib-disc a').click(function(e) {
 	var files = [];
 	for (var i in filteredSongsDisc) {
 		files.push(filteredSongsDisc[i].file);
+	}
+	//console.log('files= ' + JSON.stringify(files));
+
+	if ($(this).data('cmd') == 'add_group') {
+		mpdDbCmd('add_group', files);
+		notify($(this).data('cmd'));
+	}
+	if ($(this).data('cmd') == 'play_group') {
+		mpdDbCmd('play_group', files);
+	}
+	if ($(this).data('cmd') == 'clear_play_group') {
+		mpdDbCmd('clear_play_group', files);
+		notify($(this).data('cmd'));
+	}
+});
+
+// Click Album heading context menu item
+$('#context-menu-lib-album-heading a').click(function(e) {
+	//$('#songsList .lib-disc a').removeClass('active');
+
+	var files = [];
+	for (var i in filteredSongsAlbum) {
+		files.push(filteredSongsAlbum[i].file);
 	}
 	//console.log('files= ' + JSON.stringify(files));
 

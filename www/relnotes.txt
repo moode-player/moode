@@ -30,6 +30,7 @@ Updates
 - UPD: Improve memory reporting in System info
 - UPD: Add option for Null mixer to MPD Config
 - UPD: Add Show tracks option to One touch album
+- UPD: Add Album header context menu in tracks list
 - UPD: Separate One touch options for Album and Radio
 
 Radio stations
