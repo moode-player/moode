@@ -6,7 +6,7 @@
 #  Multiroom Audio system. Additional configuration help is provided within the
 #  player via Menu, Quick help and the (i) information buttons.
 #
-#  Version: 1.0 2021-09-22
+#  Version: 1.0 2021-09-24
 #
 #  (C) Tim Curtis 2021 http://moodeaudio.org
 #
@@ -26,7 +26,7 @@ A moOde multiroom audio system consists of a Sender and Receivers. The Sender
 should be a dedicated moOde player configured to output to the integrated HDMI
 port or optionally the Headphone jack but not connected to any speakers or
 headphones. It functions solely as a Music Server that Sends its audio output to
-one or more Receivers.
+one or more Receivers. NOTE: There can only be one Sender on the network.
 
 BLOCK DIAGRAM
 
@@ -72,19 +72,19 @@ the Receiver player is ON will result in audio output conflicts and errors.
 A) Audio Configuration (Menu, Configure, Audio)
 
 1. Configure the audio device
-2. Set I2S audio device appropriately
-3. Set ALSA Loopback to "OFF"
-4. EDIT MPD settings
-5. Set MPD Audio output appropriately
-6. Set SoX Resampling Enabled to "No"
-7. Set the following DSP's to "Off"
+   - Set I2S audio device appropriately
+   - Set ALSA Loopback to "OFF"
+2. EDIT MPD settings
+   - Set MPD Audio output appropriately
+   - Set SoX Resampling Enabled to "No"
+3. Set the following DSP's to "Off"
    - Crossfeed
    - Polarity inversion
    - Graphic EQ
    - Parametric EQ
    - CamillaDSP
-8. Set all Audio Renderers to "Off"
-9. Set DLNA server to "Off"
+4. Set all Audio Renderers to "Off"
+5. Set DLNA server to "Off"
 
 B) Multiroom Configuration (Menu, Configure, Multiroom)
    Optionally Multiroom CONFIGURE while still on Audio Config screen.
@@ -105,20 +105,21 @@ A) Audio Configuration (Menu, Configure, Audio)
 1. Set ALSA Output mode to "Default (plughw)"
 2. Set ALSA Loopback to "ON"
 3. EDIT MPD settings
-4. Set MPD Audio output to "HDMI 1"
-5. Set SoX Resampling Enabled to "No"
-6. Set the following DSP's to "Off"
+   - Set MPD Audio output to "HDMI 1"
+   - Set Mixer type to "Hardware"
+   - Set SoX Resampling Enabled to "No"
+4. Set the following DSP's to "Off"
    - Crossfeed
    - Polarity inversion
    - Graphic EQ
    - Parametric EQ
    - CamillaDSP
-7. Set the following Audio Renderers to "Off"
+5. Set the following Audio Renderers to "Off"
    - Bluetooth
    - Squeezelite
    - RoonBridge
-8. Optionally turn on Airplay and/or Spotify renderers
-9. Set DLNA server to "Off"
+6. Optionally turn on Airplay and/or Spotify renderers
+7. Set DLNA server to "Off"
 
 B) Sender Configuration (Menu, Configure, Multiroom)
 
