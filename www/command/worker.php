@@ -356,7 +356,7 @@ if ($_SESSION['multiroom_tx'] == 'Off') {
 		playerSession('write', 'inplace_upd_applied', '0');
 	}
 	else {
-		$mpd_conf_upd_msg = 'MPD conf update skipped (USB device)' :
+		$mpd_conf_upd_msg = 'MPD conf update skipped (USB device)';
 	}
 }
 else {
