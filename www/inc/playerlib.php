@@ -3164,6 +3164,10 @@ function autoConfigSettings() {
 		['requires' => ['ashuffle_mode'] , 'handler' => setPlayerSession],
 		['requires' => ['ashuffle_filter'] , 'handler' => setPlayerSession],
 
+		['requires' => ['mpd_httpd'] , 'handler' => setPlayerSession],
+		['requires' => ['mpd_httpd_port'] , 'handler' => setPlayerSession],
+		['requires' => ['mpd_httpd_encoder'] , 'handler' => setPlayerSession],
+
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['device'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
@@ -3380,6 +3384,10 @@ function autoConfigSettings() {
 		['requires' => ['library_tagview_covers'] , 'handler' => setPlayerSession],
 		['requires' => ['library_ellipsis_limited_text'] , 'handler' => setPlayerSession],
 		['requires' => ['library_utf8rep'] , 'handler' => setPlayerSession],
+
+		'CoverView',
+		['requires' => ['scnsaver_style'] , 'handler' => setPlayerSession],
+		['requires' => ['scnsaver_timeout'] , 'handler' => setPlayerSession],
 
 		'Internal',
 		['requires' => ['first_use_help'] , 'handler' => function($values) {
