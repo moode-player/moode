@@ -296,7 +296,7 @@ function sendEngCmd ($cmd) {
 	//workerLog('sendEngCmd(): Reading in portfile');
 	if (false === ($ports = file(PORT_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES))) {
 		// this case is ok and occurs if UI has never been started
-		workerLog('sendEngCmd(): File open failed, UI has never been started');
+		workerLog('sendEngCmd(): File open failed, UI has never been opened in Browser');
 	}
 	else {
 		//workerLog('sendEngCmd(): Connecting to each of ' . count($ports) . ' port(s)');
