@@ -3164,9 +3164,11 @@ function autoConfigSettings() {
 		['requires' => ['ashuffle_mode'] , 'handler' => setPlayerSession],
 		['requires' => ['ashuffle_filter'] , 'handler' => setPlayerSession],
 
-		['requires' => ['mpd_httpd'] , 'handler' => setPlayerSession],
-		['requires' => ['mpd_httpd_port'] , 'handler' => setPlayerSession],
-		['requires' => ['mpd_httpd_encoder'] , 'handler' => setPlayerSession],
+		['requires' => ['mpd_httpd'] , 'handler' => function($values) {
+			$cmd = $values['mpd_httpd'] == '1' ? 'mpc enable "' . HTTP_SERVER . '"' : 'mpc disable "' . HTTP_SERVER . '"';
+			sysCmd($cmd);
+			playerSession('write', 'mpd_httpd', $values['mpd_httpd']);
+		}],
 
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
