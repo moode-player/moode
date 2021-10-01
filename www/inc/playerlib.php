@@ -3803,7 +3803,7 @@ function setAudioOut($audioout) {
 	}
 
 	// Update audio out and BT out confs
-	updAudioOutAndBtOutConfs($_SESSION['cardnum']);
+	updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 
 	// Restart renderers if indicated
 	if ($_SESSION['airplaysvc'] == '1') {
