@@ -22,6 +22,7 @@ New features
 Updates
 
 - UPD: Improve some workerLog messages
+- UPD: Add message regarding djmount unmaintained
 
 Radio stations
 
@@ -31,6 +32,7 @@ Radio stations
 Bug fixes
 
 - FIX: UPnP Browser restart set to wrong modal link
+- FIX: Missing param in function called by setAudioOut()
 
 ################################################################################
 #
