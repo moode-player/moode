@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Sep 24 07:14:59 2021
+-- File generated with SQLiteStudio v3.1.0 on Sat Oct 2 07:51:34 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -684,12 +684,12 @@ INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/p
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', 'ad8fa459c4044dc2704fcf898be75f26', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '82034c8d64f95f148b35dd03dff66721', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', '3bafb9bd05eecf6a1ce2102c1b425bcc', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '6519a71b6e4edf053da110b3d1d7e1f7', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', '576ccf03dc72e4088dc8baa6375a3e29', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/css/main.min.css', '9a6890a45b40aef84c05a95d6a4439c6', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/var/www/js/config.min.js', 'ba6d523ae88762a66d15bdeabd226184', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (13, '/var/www/js/lib.min.js', 'd35b65355c4f06f491b85573021d86ab', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (14, '/var/www/js/main.min.js', '7063682f02dc9ba200881886e88e70a9', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/var/www/js/config.min.js', '61ba893359bc5351b5ce4d991ac0549a', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (13, '/var/www/js/lib.min.js', 'e51ac7250d7a076a2749e192b9ba1f64', 'warning');
+INSERT INTO cfg_hash (id, param, value, "action") VALUES (14, '/var/www/js/main.min.js', 'e96edc46ae82e9b0f70516a643d04725', 'warning');
 INSERT INTO cfg_hash (id, param, value, "action") VALUES (15, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
 
 COMMIT TRANSACTION;
