@@ -11,28 +11,19 @@
 
 ################################################################################
 #
-# 2021-MM-DD TC moOde 7.5.0
+# 2021-10-02 TC moOde 7.4.1
 #
 ################################################################################
-
-New features
-
-- NEW:
 
 Updates
 
 - UPD: Improve some workerLog messages
 - UPD: Add message regarding djmount unmaintained
 
-Radio stations
-
-- NEW:
-- UPD:
-
 Bug fixes
 
+- FIX: BlueZ Config crashes connecting to Bluetooth speaker
 - FIX: UPnP Browser restart set to wrong modal link
-- FIX: Missing param in function called by setAudioOut()
 
 ################################################################################
 #
