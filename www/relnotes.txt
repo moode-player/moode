@@ -19,6 +19,7 @@ Updates
 
 - UPD: Improve some workerLog messages
 - UPD: Add message regarding djmount unmaintained
+- UPD: Add MPD httpd and CoverView settings to Backup/Restore
 
 Bug fixes
 
