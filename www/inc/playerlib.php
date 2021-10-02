@@ -3169,6 +3169,8 @@ function autoConfigSettings() {
 			sysCmd($cmd);
 			playerSession('write', 'mpd_httpd', $values['mpd_httpd']);
 		}],
+		['requires' => ['mpd_httpd_port'] , 'handler' => setPlayerSession],
+		['requires' => ['mpd_httpd_encoder'] , 'handler' => setPlayerSession],
 
 		'MPD',
 		['requires' => ['mixer_type'] , 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
