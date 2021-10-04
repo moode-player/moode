@@ -34,14 +34,14 @@
 		<fieldset>
 	    	<legend>Settings</legend>
 			<div class="control-group">
-				<label class="control-label" for="bitrate">Bit rate</label>
+				<label class="control-label" for="bitrate">Bitrate (kbps)</label>
 				<div class="controls">
 					<select id="bitrate" class="input-large" name="config[bitrate]">
 						$_select[bitrate]
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_bitrate" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_bitrate" class="help-block-configs help-block-margin hide">
-						Specify the bit rate. Default is 160 kHz.
+						Specify the bitrate. Default is 160 kbps.
                     </span>
 				</div>
 			</div>
@@ -57,17 +57,35 @@
 						Specify the format. Default is S16 (Signed 16 bit)
                     </span>
 				</div>
+				<label class="control-label" for="dither">Dithering</label>
+				<div class="controls">
+					<select id="dither" class="input-large" name="config[dither]">
+						$_select[dither]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_dither" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_dither" class="help-block-configs help-block-margin hide">
+						Automatic, Gaussian, triangular, or high passed dithering. Default is Automatic depending on the format.
+                    </span>
+				</div>
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="volume_curve">Volume scaling</label>
+				<label class="control-label" for="volume_curve">Volume control</label>
 				<div class="controls">
 					<select id="volume_curve" class="input-large" name="config[volume_curve]">
 						$_select[volume_curve]
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_curve" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_volume_curve" class="help-block-configs help-block-margin hide">
-						Logarithmic, linear or fixed volume scaling. Default is Logarithmic.
+						Logarithmic, cubic, linear or fixed volume scaling. Default is Logarithmic.
+                    </span>
+				</div>
+				<label class="control-label" for="volume_range">Volume range (dB)</label>
+				<div class="controls">
+					<input class="input-large" type="number" min="0" max="120" id="volume_range" name="config[volume_range]" value="$_select[volume_range]">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_volume_range" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_volume_range" class="help-block-configs help-block-margin hide">
+						Range of the volume control. Keep empty (default) to query from hardware or fall back to 60 dB otherwise.
                     </span>
 				</div>
 			</div>
@@ -78,7 +96,7 @@
 					<input class="input-large" type="number" min="0" max="100" id="initial_volume" name="config[initial_volume]" value="$_select[initial_volume]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_initial_volume" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_initial_volume" class="help-block-configs help-block-margin hide">
-						Initial volume once connected [0-100].
+						Initial volume once connected [0-100]. Keep empty (default) to query current volume from hardware or fall back to 50 otherwise.
                     </span>
 				</div>
 			</div>
@@ -111,7 +129,7 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_gain_type" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_normalization_gain_type" class="help-block-configs help-block-margin hide">
-						Specify the normalisation gain type to use. Default is Album.
+						Specify the normalisation gain type to use. Default is Automatic.
 					</span>
 				</div>
 				<label class="control-label" for="normalization_pregain">Pre-gain (dB)</label>
@@ -119,15 +137,15 @@
 					<input class="input-large" type="number" min="-10" max="10" id="normalization_pregain" name="config[normalization_pregain]" value="$_select[normalization_pregain]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_pregain" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_normalization_pregain" class="help-block-configs help-block-margin2 hide">
-						Volume boost in dB [-10 to 10].
+						Volume boost in dB [-10 to 10]. Default is 0.
                     </span>
 				</div>
-				<label class="control-label" for="normalization_threshold">Threshold</label>
+				<label class="control-label" for="normalization_threshold">Threshold (dBFS)</label>
 				<div class="controls">
 					<input class="input-large" type="number" step=".1" id="normalization_threshold" name="config[normalization_threshold]" value="$_select[normalization_threshold]">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_normalization_threshold" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_normalization_threshold" class="help-block-configs help-block-margin2 hide">
-						Threshold (dBFS) to prevent clipping. Default is -1.0.
+						Threshold (dBFS) to prevent clipping. Default is -2.0.
                     </span>
 				</div>
 				<label class="control-label" for="normalization_attack">Attack (ms)</label>
