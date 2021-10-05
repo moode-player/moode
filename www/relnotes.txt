@@ -21,7 +21,7 @@ New features
 
 Updates
 
-- UPD:
+- UPD: Add alsa_output_mode option for Multiroom Receiver
 
 Radio stations
 

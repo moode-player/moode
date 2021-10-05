@@ -157,6 +157,21 @@
 						Specify whether the Receiver accepts changes made by the Sender volume control.<br>
 						NOTE: On the Receivers&nbsp;<i class="fas fa-rss"></i>&nbsp;screen a volume knob icon&nbsp;<i class="fal fa-dot-circle"></i>&nbsp;will appear for those that have opted in.
 					</span>
+				</div>
+
+				<label class="control-label" for="multiroom_rx_alsa_output_mode">ALSA output mode</label>
+				<div class="controls controls-select">
+					<select id="multiroom_rx_alsa_output_mode" class="select-medium" name="multiroom_rx_alsa_output_mode">
+						$_select[multiroom_rx_alsa_output_mode]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_alsa_output_mode" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_alsa_output_mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_multiroom_rx_alsa_output_mode" class="help-block-configs help-block-margin hide">
+						<b>Default (plughw)</b><br>
+						Perform automatic conversions if needed for example 0-pad the bit depth to a width supported by the audio device.<br>
+						<b>Direct (hw)</b><br>
+						No automatic conversions are performed. The audio device must support the output format or playback will not occur.<br>
+					</span>
 
 					<div style="margin-top:1em">
 						<a data-toggle="modal" href="#restart-rx" $_rx_restart_link_disable><button class="btn btn-medium btn-primary" $_rx_restart_btn_disable>Restart</button></a>&nbsp;Receiver

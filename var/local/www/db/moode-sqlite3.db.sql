@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Oct 2 07:51:34 2021
+-- File generated with SQLiteStudio v3.1.0 on Tue Oct 5 11:44:53 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -581,17 +581,24 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (8, 'tx_rtprio', '45');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (9, 'RESERVED_9', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (10, 'RESERVED_10', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (11, 'RESERVED_11', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'rx_bfr', '64');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'rx_host', '239.0.0.1');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_port', '1350');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_sample_rate', '48000');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_channels', '2');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_jitter_bfr', '32');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (18, 'rx_frame_size', '1920');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (19, 'rx_rtprio', '45');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (20, 'RESERVED_20', '');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (21, 'rx_mastervol_opt_in', '0');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (22, 'initial_volume', '0');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (12, 'RESERVED_12', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (13, 'RESERVED_13', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (14, 'rx_bfr', '64');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (15, 'rx_host', '239.0.0.1');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (16, 'rx_port', '1350');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (17, 'rx_sample_rate', '48000');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (18, 'rx_channels', '2');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (19, 'rx_jitter_bfr', '32');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (20, 'rx_frame_size', '1920');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (21, 'rx_rtprio', '45');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (22, 'RESERVED_22', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (23, 'RESERVED_23', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (24, 'RESERVED_24', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (25, 'RESERVED_25', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (26, 'RESERVED_26', '');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (27, 'rx_alsa_output_mode', 'plughw');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (28, 'rx_mastervol_opt_in', '0');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (29, 'initial_volume', '0');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
