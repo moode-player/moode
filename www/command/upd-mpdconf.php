@@ -21,6 +21,7 @@
 
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
+require_once 'cdsp.php';
 
 session_id(playerSession('getsessionid'));
 session_start();
