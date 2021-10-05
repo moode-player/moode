@@ -2635,10 +2635,7 @@ function startSpotify() {
 	$dither = empty($cfg_spotify['dither']) ? '' : ' --dither ' . $cfg_spotify['dither'];
 
 	// Initial volume
-	$initial_volume = empty($cfg_spotify['initial_volume']) ? '' : ' --initial-volume ' . $cfg_spotify['initial_volume'];
-
-	// Autoplay after playlist ends
-	$volume_range = empty($cfg_spotify['volume_range']) ? '' : ' --volume-range ' . $cfg_spotify['volume_range'];
+	$initial_volume = $cfg_spotify['initial_volume'] == "-1" ? '' : ' --initial-volume ' . $cfg_spotify['initial_volume'];
 
 	// Volume normalization options
 	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ?
@@ -2659,10 +2656,10 @@ function startSpotify() {
 		' --name "' . $_SESSION['spotifyname'] . '"' .
 		' --bitrate ' . $cfg_spotify['bitrate'] .
 		' --format ' . $cfg_spotify['format'] .
-        $dither .
-        $initial_volume .
+		$dither .
+		$initial_volume .
 		' --volume-ctrl ' . $cfg_spotify['volume_curve'] .
-        $volume_range .
+		' --volume-range ' . $cfg_spotify['volume_range'] .
 		$volume_normalization .
 		$autoplay .
 		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' . // audio file cache eats disk space
