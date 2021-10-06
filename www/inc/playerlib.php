@@ -2624,20 +2624,12 @@ function startSpotify() {
 		$cfg_spotify[$row['param']] = $row['value'];
 	}
 
-	if ($_SESSION['audioout'] == 'Bluetooth') {
-		$device = 'btstream';
-	}
-	else {
-		$device = '_audioout';
-	}
+	// Local or Bluetooth output
+	$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream';
 
-	// Dithering options
+	// Options
 	$dither = empty($cfg_spotify['dither']) ? '' : ' --dither ' . $cfg_spotify['dither'];
-
-	// Initial volume
 	$initial_volume = $cfg_spotify['initial_volume'] == "-1" ? '' : ' --initial-volume ' . $cfg_spotify['initial_volume'];
-
-	// Volume normalization options
 	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ?
 		' --enable-volume-normalisation ' .
 		' --normalisation-method ' . $cfg_spotify['normalization_method'] .
@@ -2648,21 +2640,21 @@ function startSpotify() {
 		' --normalisation-release ' . $cfg_spotify['normalization_release'] .
 		' --normalisation-knee ' . $cfg_spotify['normalization_knee']
 		: '';
-
-	// Autoplay after playlist ends
 	$autoplay = $cfg_spotify['autoplay'] == 'Yes' ? ' --autoplay' : '';
 
+ 	// NOTE: We use --disable-audio-cache because the audio file cache eats disk space.
 	$cmd = 'librespot' .
 		' --name "' . $_SESSION['spotifyname'] . '"' .
 		' --bitrate ' . $cfg_spotify['bitrate'] .
 		' --format ' . $cfg_spotify['format'] .
 		$dither .
+		' --mixer softvol' .
 		$initial_volume .
 		' --volume-ctrl ' . $cfg_spotify['volume_curve'] .
 		' --volume-range ' . $cfg_spotify['volume_range'] .
 		$volume_normalization .
 		$autoplay .
-		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' . // audio file cache eats disk space
+		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' .
 		' --onevent /var/local/www/commandw/spotevent.sh' .
 		' > /dev/null 2>&1 &';
 		//' -v > /home/pi/librespot.txt 2>&1 &'; // For debug

@@ -22,7 +22,8 @@ New features
 Updates
 
 - UPD: Bump to librespot 0.3.0
-- UPD: Add alsa_output_mode option for Multiroom Receiver
+- UPD: Improve Spotify Config
+- UPD: Add alsa_output_mode option to Multiroom Receiver config
 
 Radio stations
 
