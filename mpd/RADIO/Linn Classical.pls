@@ -1,5 +1,5 @@
 [playlist]
-File1=http://89.16.185.174:8004/stream
+File1=http://radio.linn.co.uk:8004/autodj
 Title1=Linn Classical
 NumberOfEntries=1
 Length1=-1
