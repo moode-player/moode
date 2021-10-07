@@ -28,7 +28,11 @@ Updates
 Radio stations
 
 - NEW:
-- UPD:
+- UPD: Bayern 2
+- UPD: BR-Klassik
+- UPD: Linn Classical
+- UPD: Linn Jazz
+- UPD: Linn Radios
 
 Bug fixes
 
