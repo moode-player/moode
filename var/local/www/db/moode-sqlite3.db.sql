@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Oct 7 15:50:59 2021
+-- File generated with SQLiteStudio v3.1.0 on Sat Oct 9 06:01:14 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -98,7 +98,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (88, 'http://mediaserv30.live-streams.nl:8086/live', 'Hi On Line - Pop (320K)', 'r', 'local', 'Pop', 'Hi.Fine', 'English', 'Netherlands', 'Europe', '320', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (89, 'http://mscp2.live-streams.nl:8100/flac.flac', 'Hi On Line - Pop (FLAC)', 'r', 'local', 'Pop', 'Hi.Fine', 'English', 'Netherlands', 'Europe', '1411', 'FLAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (90, 'http://mediaserv38.live-streams.nl:8027/live', 'Hi On Line - World', 'r', 'local', 'World Music', 'Hi.Fine', 'English', 'Netherlands', 'Europe', '320', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (91, 'http://edge-baueral-01-cr.sharp-stream.com/jazzhigh.aac', 'Jazz FM', 'r', 'local', 'Jazz, Blues. Soul', 'Bauer Planet Radio', 'English', 'United Kingdom', 'Europe', '128', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (91, 'https://stream-al.planetradio.co.uk/jazzhigh.aac', 'Jazz FM', 'r', 'local', 'Jazz, Blues. Soul', 'Bauer Planet Radio', 'English', 'United Kingdom', 'Europe', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (92, 'http://live.wostreaming.net/direct/ppm-jazz24aac256-ibc1', 'Jazz24', 'r', 'local', 'Jazz', 'Jazz24.org', 'English', 'United States', 'North America', '256', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (93, 'OFFLINE', 'JB Radio2 (320K)', 'r', 'local', 'Alternative, Rock, Eclectic', 'JB Radio', 'English', 'Canada', 'North America', '320', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (94, 'http://stream.kanalk.ch:80', 'Kanal K', 'r', 'local', 'Alternative', 'Regionalradio Aargaudio AG', 'German', 'Switzerland', 'Europe', '160', 'MP3', 'No', '', '');

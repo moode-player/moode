@@ -30,6 +30,7 @@ Radio stations
 - NEW:
 - UPD: Bayern 2
 - UPD: BR-Klassik
+- UPD: Jazz FM
 - UPD: Linn Classical
 - UPD: Linn Jazz
 - UPD: Linn Radios

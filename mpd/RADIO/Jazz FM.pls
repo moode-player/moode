@@ -1,5 +1,5 @@
 [playlist]
-File1=http://edge-baueral-01-cr.sharp-stream.com/jazzhigh.aac
+File1=https://stream-al.planetradio.co.uk/jazzhigh.aac
 Title1=Jazz FM
 NumberOfEntries=1
 Length1=-1
