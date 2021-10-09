@@ -329,6 +329,7 @@ $_select['browsertitle'] = $_SESSION['browsertitle'];
 // SYSTEM MODIFICATIONS
 
 // CPU governor
+$_select['cpugov'] .= "<option value=\"powersave\" " . (($_SESSION['cpugov'] == 'powersave') ? "selected" : "") . ">PowerSave</option>\n";
 $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
 
