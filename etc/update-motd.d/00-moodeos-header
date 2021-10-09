@@ -3,8 +3,10 @@
 MOODE_RELEASE=$(moodeutl --mooderel | tr -d '\n')
 HDWRREV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='hdwrrev'")
 KERNEL_ARCH=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='kernel_architecture'")
+AUDIO_DEV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='adevname'")
+
 echo RaspiOS $(cat /etc/debian_version) \| $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\)
-echo Hardware: $HDWRREV
+echo Raspberry $HDWRREV \| Audio: $AUDIO_DEV
 
 echo "
                       ____     __        ____
@@ -19,7 +21,8 @@ echo "
 
 The programs included with moOde are free software; the
 exact distribution terms for each program are described
-in the individual files in /usr/share/doc/*/copyright.
-Moode comes with absolutely no warranties expressed or
-implied, or any other guarantees.
+in the individual files in /usr/share/doc/*/copyright or
+in the moOde source files. moOde comes with absolutely
+no warranties either expressed or implied, or any other
+such guarantees.
 "
