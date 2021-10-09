@@ -3307,7 +3307,7 @@ $(window).on('scroll', function(e) {
 			$('#menu-top').css('height', $('#menu-top').css('line-height'));
 			$('#menu-top').css('backdrop-filter', 'blur(20px)');
             $('#playbar-toggles .addfav').show();
-            $('#addfav-li, #random-album').hide();
+            $('#random-album').hide();
 			showMenuTopW = true;
 		}
 		else if (UI.mobile && $(window).scrollTop() == '0' ) {
@@ -3531,7 +3531,6 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#container-playlist').css('visibility','');
 		$('#menu-bottom, .viewswitch').css('display', 'none');
 		$('#playback-controls').css('display', '');
-        $('#addfav-li').hide();
         SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
 		if (UI.mobile) {
             // Make sure playlist is hidden and controls are showing

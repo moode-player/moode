@@ -37,7 +37,7 @@ Radio stations
 
 Bug fixes
 
-- FIX:
+- FIX: Addfav visible on context menu
 
 ################################################################################
 #
