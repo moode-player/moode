@@ -119,6 +119,12 @@ if (isset($_POST['update_multiroom_tx_rtprio'])) {
 		submitJob('multiroom_tx_restart', '', 'Realtime priority updated', $msg);
 	}
 }
+if (isset($_POST['update_multiroom_tx_query_timeout'])) {
+	if (isset($_POST['multiroom_tx_query_timeout']) && $_POST['multiroom_tx_query_timeout'] != $_cfg_multiroom['multiroom_tx_query_timeout']) {
+		$_SESSION['notify']['title'] = 'Query timeout updated';
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_query_timeout'] . "' " . "WHERE param='tx_query_timeout'", cfgdb_connect());
+	}
+}
 
 // Receiver
 if (isset($_POST['update_multiroom_rx'])) {
@@ -217,6 +223,7 @@ $_select['multiroom_tx_frame_size'] .= "<option value=\"960\" " . (($_cfg_multir
 $_select['multiroom_tx_frame_size'] .= "<option value=\"1920\" " . (($_cfg_multiroom['tx_frame_size'] == '1920') ? "selected" : "") . ">40 (Default)</option>\n";
 //$_select['multiroom_tx_frame_size'] .= "<option value=\"2880\" " . (($_cfg_multiroom['tx_frame_size'] == '2880') ? "selected" : "") . ">60</option>\n";
 $_multiroom_tx_rtprio = $_cfg_multiroom['tx_rtprio'];
+$_multiroom_tx_query_timeout = $_cfg_multiroom['tx_query_timeout'];
 
 // Receiver
 $_select['multiroom_rx1'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"toggle_multiroom_rx1\" value=\"On\" " . (($_SESSION['multiroom_rx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";

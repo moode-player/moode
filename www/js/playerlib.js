@@ -2255,7 +2255,7 @@ $(document).on('click', '.context-menu a', function(e) {
                             // Receiver hostname
                             output += '<label class="control-label multiroom-modal-host">' + rxStatusParts[0] + '</label>';
                             output += '<div class="controls">';
-                            output += '<div style="font-style:italic;margin-top:.25em;">Receiver status is unknown</div>';
+                            output += '<div style="font-style:italic;margin-top:.25em;">Receiver offline</div>';
                             output += '</div>';
                             output += '</div>';
                         }

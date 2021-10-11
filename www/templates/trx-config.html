@@ -120,6 +120,16 @@
 						NOTE: Scheduler policy is FIFO and default priority is 45.
 					</span>
 				</div>
+
+				<label class="control-label" for="multiroom_tx_query_timeout">Query timeout</label>
+				<div class="controls controls-select">
+					<input class="input-small" type="number" maxlength="1" min="1" max="3" name="multiroom_tx_query_timeout" value="$_multiroom_tx_query_timeout">
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_query_timeout" value="novalue">Set</button>
+					<span id="info_multiroom_tx_query_timeout" class="help-block-configs help-block-margin">
+						Maximum number of seconds to wait per Receiver when quering for Receivers.<br>
+						Range is 1-3 seconds. Default is 1 second.<br>
+					</span>
+				</div>
 			</div>
 		</fieldset>
 
