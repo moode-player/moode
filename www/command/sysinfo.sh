@@ -65,7 +65,8 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nOnboard BT\t\t= $pibt\c"
 	echo -e "\nHDMI output\t\t= $HDMI\c"
 	echo -e "\nLED state\t\t= $led_state\c"
-	echo -e "\nEth addr wait\t\t= $eth0chk\c"
+	echo -e "\nIP addr timeout\t\t= $ipaddr_timeout (secs)\c"
+	echo -e "\nEthernet check\t\t= $eth0chk\c"
 	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
 	echo -e "\n\c"
@@ -640,7 +641,7 @@ bluez_pcm_buffer=${arr[45]}
 library_onetouch_album=${arr[47]}
 radiopos=${arr[48]}
 aplactive=${arr[49]}
-[[ "${arr[50]}" = "1" ]] && debuglog="On" || debuglog="Off"
+ipaddr_timeout=${arr[50]}
 [[ "${arr[51]}" = "1" ]] && ashufflesvc="On" || ashufflesvc="Off"
 ashuffle=${arr[52]}
 camilladsp=${arr[53]}
@@ -657,7 +658,7 @@ cpugov=${arr[62]}
 pkgid_suffix=${arr[64]}
 lib_pos=${arr[65]}
 [[ "${arr[66]}" = "0" ]] && mpdcrossfade="Off" || mpdcrossfade=${arr[66]}
-[[ "${arr[67]}" = "1" ]] && eth0chk="On" || eth0chk="Off"
+[[ "${arr[67]}" = "1" ]] && eth0chk="Yes" || eth0chk="No"
 usb_auto_mounter=${arr[68]}
 [[ "${arr[69]}" = "1" ]] && rsmafterbt="Yes" || rsmafterbt="No"
 rotenc_params=${arr[70]}

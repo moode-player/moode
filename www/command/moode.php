@@ -589,7 +589,9 @@ else {
 			foreach ($result as $row) {
 				$array_cfg_system[$row['param']] = $row['value'];
 			}
-			 // Add extra vars
+
+			// Add extra vars
+			$array_cfg_system['debuglog'] = $_SESSION['debuglog'];
 			$array_cfg_system['kernelver'] = $_SESSION['kernelver'];
 			$array_cfg_system['procarch'] = $_SESSION['procarch'];
 			$array_cfg_system['raspbianver'] = $_SESSION['raspbianver'];

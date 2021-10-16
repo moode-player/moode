@@ -141,14 +141,14 @@ if (isset($_POST['update_usb_auto_mounter'])) {
 	playerSession('write', 'usb_auto_mounter', $_POST['usb_auto_mounter']);
 }
 
-// integrated WiFi adapter
+// Integrated WiFi adapter
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
 	$title = $_POST['p3wifi'] == 1 ? 'WiFi adapter on' : 'WiFi adapter off';
 	submitJob('p3wifi', $_POST['p3wifi'], $title, 'Restart required');
 	playerSession('write', 'p3wifi', $_POST['p3wifi']);
 }
 
-// integrated Bluetooth adapter
+// Integrated Bluetooth adapter
 if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
 	$title = $_POST['p3bt'] == 1 ? 'Bluetooth adapter on' : 'Bluetooth adapter off';
 	submitJob('p3bt', $_POST['p3bt'], $title, 'Restart required');
@@ -176,10 +176,16 @@ if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION
 	playerSession('write', 'led_state', explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled']);
 }
 
-// eth0 check
+
+// IP address timeout
+if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESSION['ipaddr_timeout']) {
+	$_SESSION['notify']['title'] = 'IP address timeout updated';
+	playerSession('write', 'ipaddr_timeout', $_POST['ipaddr_timeout']);
+}
+
+// Ethernet adapter IP check
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
-	$_SESSION['notify']['title'] = $_POST['eth0chk'] == 1 ? 'Eth0 IP check on' : 'Eth0 IP check off';
-	$_SESSION['notify']['msg'] = 'Restart required';
+	$_SESSION['notify']['title'] = 'Ethernet adapter check updated';
 	playerSession('write', 'eth0chk', $_POST['eth0chk']);
 }
 
@@ -309,9 +315,9 @@ if (isset($_POST['update_compactdb'])) {
 
 // Debug logging
 if (isset($_POST['debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
+	$_SESSION['debuglog'] = $_POST['debuglog'];
 	$_SESSION['notify']['title'] = $_POST['debuglog'] == 1 ? 'Debug logging on' : 'Debug logging off';
 	$_SESSION['notify']['duration'] = 3;
-	playerSession('write', 'debuglog', $_POST['debuglog']);
 }
 
 session_write_close();
@@ -386,6 +392,16 @@ else {
 	$_select['pwrled1'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle_pwrled1\" value=\"1\" " . (($pwrled == '1') ? "checked=\"checked\"" : "") . ">\n";
 	$_select['pwrled0'] .= "<input type=\"radio\" name=\"pwrled\" id=\"toggle_pwrled2\" value=\"0\" " . (($pwrled == '0') ? "checked=\"checked\"" : "") . ">\n";
 }
+
+// IP address timeout
+$_select['ipaddr_timeout'] .= "<option value=\"10\" " . (($_SESSION['ipaddr_timeout'] == '10') ? "selected" : "") . ">10</option>\n";
+$_select['ipaddr_timeout'] .= "<option value=\"20\" " . (($_SESSION['ipaddr_timeout'] == '20') ? "selected" : "") . ">20</option>\n";
+$_select['ipaddr_timeout'] .= "<option value=\"30\" " . (($_SESSION['ipaddr_timeout'] == '30') ? "selected" : "") . ">30</option>\n";
+$_select['ipaddr_timeout'] .= "<option value=\"60\" " . (($_SESSION['ipaddr_timeout'] == '60') ? "selected" : "") . ">60</option>\n";
+$_select['ipaddr_timeout'] .= "<option value=\"90\" " . (($_SESSION['ipaddr_timeout'] == '90') ? "selected" : "") . ">90 (Default)</option>\n";
+$_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_timeout'] == '120') ? "selected" : "") . ">120</option>\n";
+$_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_timeout'] == '120') ? "selected" : "") . ">180</option>\n";
+
 // eth0 check
 $_select['eth0chk1'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['eth0chk0'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . ">\n";

@@ -244,14 +244,17 @@ workerLog('worker: HDMI port ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
 //
 workerLog('worker: -- Network');
 //
+// IP address check timeout
+workerLog('worker: IP address check timeout (' . $_SESSION['ipaddr_timeout'] . ' secs)');
 
 // Check ETH0
 $eth0 = sysCmd('ip addr list | grep eth0');
 if (!empty($eth0)) {
-	workerLog('worker: eth0 exists');
-	// Wait for address (default), setting is on system config
+	workerLog('worker: eth0 adapter exists');
+	// Test Ethernet IP if indicated
+	workerLog('worker: eth0 IP address check (' . ($_SESSION['eth0chk'] == '1' ? 'Yes' : 'No') . ')');
 	if ($_SESSION['eth0chk'] == '1') {
-		$eth0ip = waitForIpAddr('eth0', 5);
+		$eth0ip = waitForIpAddr('eth0', $_SESSION['ipaddr_timeout']);
 	}
 	else {
 		$eth0ip = sysCmd("ip addr list eth0 | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
@@ -259,7 +262,7 @@ if (!empty($eth0)) {
 }
 else {
 	$eth0ip = '';
-	workerLog('worker: eth0 does not exist');
+	workerLog('worker: eth0 adapter does not exist');
 }
 !empty($eth0ip[0]) ? log_network_info('eth0') : workerLog('worker: eth0 address not assigned');
 
@@ -267,7 +270,7 @@ else {
 $wlan0ip = '';
 $wlan0 = sysCmd('ip addr list | grep wlan0');
 if (!empty($wlan0[0])) {
-	workerLog('worker: wlan0 exists');
+	workerLog('worker: wlan0 adapter exists');
 
 	$result = sdbquery('SELECT * FROM cfg_network', $dbh);
 	workerLog('worker: wifi country (' . $result[1]['wlan_country'] . ')');
@@ -297,7 +300,7 @@ if (!empty($wlan0[0])) {
 
 	// Wait for ip address
 	if ($_SESSION['apactivated'] == true || $ssidblank == false) {
-		$wlan0ip = waitForIpAddr('wlan0', 5);
+		$wlan0ip = waitForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
 		// Case: ssid blank, ap mode activated
 		// Case: ssid exists, ap mode fall back if no ip address after trying ssid
 		if ($ssidblank == false) {
@@ -307,7 +310,7 @@ if (!empty($wlan0[0])) {
 					workerLog('worker: wlan0 AP mode started');
 					$_SESSION['apactivated'] = true;
 					activateApMode();
-					$wlan0ip = waitForIpAddr('wlan0', 3);
+					$wlan0ip = waitForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
 				}
 				else {
 					workerLog('worker: eth0 address exists so AP mode not started');
@@ -328,7 +331,7 @@ if (!empty($wlan0[0])) {
 	}
 }
 else {
-	workerLog('worker: wlan0 does not exist' . ($_SESSION['wifibt'] == '0' ? ' (off)' : ''));
+	workerLog('worker: wlan0 adapter does not exist' . ($_SESSION['wifibt'] == '0' ? ' (off)' : ''));
 	$_SESSION['apactivated'] = false;
 }
 // Store ipaddress, prefer wlan0 address

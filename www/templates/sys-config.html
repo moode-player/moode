@@ -213,13 +213,28 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="control-group">
-				<label class="control-label">Wait for eth0 address</label>
+				<label class="control-label" for="ipaddr_timeout">IP addr timeout (secs)</label>
+				<div class="controls">
+					<select id="ipaddr_timeout" class="input-large" name="ipaddr_timeout">
+						$_select[ipaddr_timeout]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue">Set</button>
+					<span class="help-block-configs help-block-margin">
+						Wait for up to the specified number of seconds for an IP address to be assigned to an adapter.<br>
+					    NOTE: If no IP address has been assigned AP mode will be automatically started providing both Ethernet and WiFi are not both active.
+					</span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Wait for Ethernet addr</label>
 				<div class="controls">
 					<div class="toggle">
-						<label class="toggle-radio" for="toggleeth0chk2">ON</label>
+						<label class="toggle-radio" for="toggleeth0chk2">YES</label>
 						$_select[eth0chk1]
-						<label class="toggle-radio" for="toggleeth0chk1">OFF</label>
+						<label class="toggle-radio" for="toggleeth0chk1">NO</label>
 						$_select[eth0chk0]
 					</div>
 					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
@@ -227,11 +242,10 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span class="help-block-configs help-block-margin2" style="margin-top: 0px; padding-top: 0px;">
-						CAUTION: Only turn this OFF if running a WiFi-only configuration.<br>
-						Leave this setting ON if connected via Ethernet cable.
+						Wait for up to "IP addr timeout" seconds for an address to be assigned to the Ethernet adapter.
 					</span>
-					<span id="info-eth0chk" class="help-block-configs help-block-margin2 hide">
-						Wait up to 9 secs for an IP address to be assigned to eth0.<br>
+					<span id="info-eth0chk" class="help-block-configs help-block-margin hide">
+						Set this to YES if connected via Ethernet cable and NO if running a WiFi-only configuration. Setting to NO will skip the IP address check for the Ethernet adapter and shorten boot time.
                     </span>
 				</div>
 			</div>

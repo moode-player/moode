@@ -15,16 +15,13 @@
 #
 ################################################################################
 
-New features
-
-- NEW:
-
 Updates
 
 - UPD: Bump to librespot 0.3.0
 - UPD: Improve Spotify Config
 - UPD: Add ALSA output mode to Multiroom Receiver config
 - UPD: Add query timeout to Multiroom Sender config
+- UPD: Add IP addr timeout to System config
 
 Radio stations
 

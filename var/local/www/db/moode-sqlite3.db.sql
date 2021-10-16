@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Oct 11 16:56:35 2021
+-- File generated with SQLiteStudio v3.1.0 on Fri Oct 15 17:39:27 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -322,7 +322,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (47, 'upnp_browser', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_onetouch_album', 'Play');
 INSERT INTO cfg_system (id, param, value) VALUES (49, 'radio_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (50, 'aplactive', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (51, 'debuglog', '0');
+INSERT INTO cfg_system (id, param, value) VALUES (51, 'ipaddr_timeout', '90');
 INSERT INTO cfg_system (id, param, value) VALUES (52, 'ashufflesvc', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (53, 'ashuffle', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (54, 'camilladsp', 'off');

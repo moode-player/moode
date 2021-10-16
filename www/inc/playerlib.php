@@ -2089,7 +2089,6 @@ function updMpdConf($i2sdevice) {
 }
 
 // Return mixer name
-// TODO: Use something other than parenthesis as delimiter (see util.sh)
 function getMixerName($i2sdevice) {
 	// USB device or Pi HDMI-1/2 or Headphone jack
 	// NOTE: If a device does not define a mixer name then "PCM" will be assigned
@@ -2960,7 +2959,23 @@ function resetApMode() {
 	sysCmd('sed -i "$ a#AP mode\n#interface wlan0\n#static ip_address=172.24.1.1/24\n#nohook wpa_supplicant" /etc/dhcpcd.conf');
 }
 
-function waitForIpAddr($iface, $maxloops = 3, $sleeptime = 3000000) {
+// Wait up to timeout seconds for IP address to be assigned to the interface
+function waitForIpAddr($iface, $timeout_secs, $sleep_time = 2) {
+	$max_loops = $timeout_secs / $sleep_time;
+	for ($i = 0; $i < $max_loops; $i++) {
+		$ipaddr = sysCmd('ip addr list ' . $iface . " | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
+		if (!empty($ipaddr[0])) {
+			break;
+		}
+		else {
+			workerLog('worker: ' . $iface .' wait '. $i . ' for IP address');
+			sleep($sleep_time);
+		}
+	}
+
+	return $ipaddr;
+}
+function ___waitForIpAddr($iface, $maxloops = 3, $sleeptime = 3000000) {
 	for ($i = 0; $i < $maxloops; $i++) {
 		$ipaddr = sysCmd('ip addr list ' . $iface . " | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 		if (!empty($ipaddr[0])) {
