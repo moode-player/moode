@@ -17,7 +17,9 @@
 
 Updates
 
+- UPD: Bump to MPD 0.23.1
 - UPD: Bump to librespot 0.3.0
+- UPD: Bump to Meson 0.59.2
 - UPD: Improve Spotify Config
 - UPD: Add ALSA output mode to Multiroom Receiver config
 - UPD: Add query timeout to Multiroom Sender config
