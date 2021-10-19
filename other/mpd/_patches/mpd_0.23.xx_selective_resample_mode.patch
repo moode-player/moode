@@ -34,9 +34,9 @@ index bcba497ba..03380f12c 100644
 +	const unsigned selective_resample_mode =
 +			config.GetUnsigned(ConfigOption::SELECTIVE_RESAMPLE_MODE, 0);
 +	if(selective_resample_mode > 0 && configured_audio_format == AudioFormat::Undefined() ) {
-+		FormatWarning(config_domain, "Missing audio_format, without selective_resample_mode is deactivated.");
++		FmtWarning(config_domain, "Missing audio_format, without selective_resample_mode is deactivated.");
 +	} else if (selective_resample_mode > 0 && configured_audio_format.sample_rate % 48000 !=0 ) {
-+		FormatWarning(config_domain, "For selective_resample_mode the used audio_format should be a multiply of 48kHz.");
++		FmtWarning(config_domain, "For selective_resample_mode the used audio_format should be a multiply of 48kHz.");
 +	}
 +	partition.pc.SetSelectiveResampleMode( config.GetUnsigned(ConfigOption::SELECTIVE_RESAMPLE_MODE, 0) );
  }
