@@ -23,8 +23,6 @@
  * rotenc <poll_interval> <accel_factor> <volume_step> <pin_a> <pin_b> <print_debug 1|2>
  * rotenc 100 2 3 23 24 1
  *
- * 2019-10-02 TC moOde 6.3.0
- *
  */
 
 #include <stdio.h>

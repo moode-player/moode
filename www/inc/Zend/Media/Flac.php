@@ -44,11 +44,6 @@ require_once 'Zend/Io/Reader.php';
  * @version    $Id: Flac.php 251 2011-06-13 15:41:51Z svollbehr $
  */
 
-/**
- * 2019-04-12 TC moOde 5.0
- *
- */
-
 final class Zend_Media_Flac
 {
     /** The streaminfo metadata block */

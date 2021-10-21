@@ -11,8 +11,6 @@
  *
  * Version:  1.9.7
  *
- * 2020-12-15 TC moOde 7.0.0
- *
  */
 
 (function($, window, document, undefined) {

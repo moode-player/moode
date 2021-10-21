@@ -32,8 +32,6 @@
 # It performs bluetooth controller initialization and provides management of bluetooth sources
 # All related data files will reside under /var/lib/bluetooth
 #
-# 2019-04-12 TC moOde 5.0
-#
 
 REV=1.5
 

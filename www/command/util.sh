@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# 2020-12-15 TC moOde 7.0.0
-#
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
 LIBCACHE_BASE=/var/local/www/libcache

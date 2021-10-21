@@ -1,8 +1,3 @@
-#
-# 2020-12-15 TC moOde 7.0.0
-#
-#
-
 [Unit]
 Description=Music Player Daemon
 After=network.target sound.target

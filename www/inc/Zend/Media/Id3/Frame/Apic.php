@@ -15,7 +15,7 @@
  * @category   Zend
  * @package    Zend_Media
  * @subpackage ID3
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Apic.php 241 2011-06-11 16:46:52Z svollbehr $
  */
@@ -38,14 +38,9 @@ require_once 'Zend/Media/Id3/Encoding.php';
  * @subpackage ID3
  * @author     Sven Vollbehr <sven@vollbehr.eu>
  * @author     Ryan Butterfield <buttza@gmail.com>
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Apic.php 241 2011-06-11 16:46:52Z svollbehr $
- */
-
-/**
- * 2019-04-12 TC moOde 5.0
- *
  */
 
 final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
@@ -116,7 +111,7 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
 		$fh = fopen('/var/log/moode.log', 'a');
 		fwrite($fh, date('Ymd His ') . $msg . "\n");
 		fclose($fh);*/
-        
+
         switch ($encoding) {
             case self::UTF16:
                 // break intentionally omitted
@@ -125,7 +120,7 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
                     $this->_explodeString16
                         ($this->_reader->read($this->_reader->getSize()), 2);*/
 
-				// r44a 
+				// r44a
 				if ($options['hash_only'] === true) {
 	                list ($this->_description, $this->_imageData) = $this->_explodeString16($this->_reader->read(2048), 2); // r45a more data for hash
 					$this->_imageData = md5($this->_imageData);
@@ -198,9 +193,9 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
      *
      * @return string
      */
-    public function getMimeType() 
+    public function getMimeType()
     {
-        return $this->_mimeType; 
+        return $this->_mimeType;
     }
 
     /**
@@ -208,9 +203,9 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
      *
      * @param string $mimeType The MIME type.
      */
-    public function setMimeType($mimeType) 
+    public function setMimeType($mimeType)
     {
-        $this->_mimeType = $mimeType; 
+        $this->_mimeType = $mimeType;
     }
 
     /**
@@ -218,9 +213,9 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
      *
      * @return integer
      */
-    public function getImageType() 
+    public function getImageType()
     {
-        return $this->_imageType; 
+        return $this->_imageType;
     }
 
     /**
@@ -228,9 +223,9 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
      *
      * @param integer $imageType The image type code.
      */
-    public function setImageType($imageType) 
+    public function setImageType($imageType)
     {
-        $this->_imageType = $imageType; 
+        $this->_imageType = $imageType;
     }
 
     /**
@@ -238,9 +233,9 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
      *
      * @return string
      */
-    public function getDescription() 
+    public function getDescription()
     {
-        return $this->_description; 
+        return $this->_description;
     }
 
     /**
@@ -262,9 +257,9 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
      *
      * @return string
      */
-    public function getImageData() 
+    public function getImageData()
     {
-        return $this->_imageData; 
+        return $this->_imageData;
     }
 
     /**
@@ -284,9 +279,9 @@ final class Zend_Media_Id3_Frame_Apic extends Zend_Media_Id3_Frame
      *
      * @return integer
      */
-    public function getImageSize() 
+    public function getImageSize()
     {
-        return $this->_imageSize; 
+        return $this->_imageSize;
     }
 
     /**

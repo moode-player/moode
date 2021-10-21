@@ -42,11 +42,6 @@ require_once 'Zend/Media/Flac/MetadataBlock.php';
  * @version    $Id: Picture.php 241 2011-06-11 16:46:52Z svollbehr $
  */
 
-/**
- * 2019-04-12 TC moOde 5.0
- *
- */
-
 final class Zend_Media_Flac_MetadataBlock_Picture extends Zend_Media_Flac_MetadataBlock
 {
     /**

@@ -41,11 +41,6 @@ require_once 'Zend/Media/Flac/MetadataBlock.php';
  * @version    $Id: Application.php 241 2011-06-11 16:46:52Z svollbehr $
  */
 
-/**
- * 2019-05-07 TC moOde 5.2
- * add private var declarations
- */
-
 final class Zend_Media_Flac_MetadataBlock_Application extends Zend_Media_Flac_MetadataBlock
 {
     /** @var integer */
@@ -66,7 +61,7 @@ final class Zend_Media_Flac_MetadataBlock_Application extends Zend_Media_Flac_Me
         $this->_identifier = $this->_reader->readUInt32BE();
         $this->_data = $this->_reader->read($this->getSize() - 4);
     }
-    
+
     /**
      * Returns the application identifier.
      *
@@ -76,7 +71,7 @@ final class Zend_Media_Flac_MetadataBlock_Application extends Zend_Media_Flac_Me
     {
         return $this->_identifier;
     }
-    
+
     /**
      * Returns the application data.
      *

@@ -5,10 +5,8 @@
  * Copyright 2013 bootstrap-select
  * Licensed under the MIT license
  *
- * 2019-04-12 TC moOde 5.0
- *
  */
- 
+
 .bootstrap-select.btn-group,
 .bootstrap-select.btn-group[class*="span"] {
     float: none;

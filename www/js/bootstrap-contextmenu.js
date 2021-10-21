@@ -10,12 +10,6 @@
  *
  * Twitter Bootstrap (http://twitter.github.com/bootstrap).
  *
- *	TC Moode Audio Player, http://moodeaudio.org
- *	- UI.dbEntry[] from original player code
- * 2018-07-11 TC moOde 4.2
- * - enhance positioning
- * 2020-04-24 TC moOde 6.5.0
- * - @swizzle context menu backdrop
  */
 
 /* =========================================================

@@ -52,11 +52,6 @@ require_once 'Zend/Media/Id3/Header.php';
  * @version    $Id: Id3v2.php 273 2012-08-21 17:22:52Z svollbehr $
  */
 
-/**
- * 2018-10-19 TC moOde 4.3 update
- * - add debug code for hash_only option
- */
-
 final class Zend_Media_Id3v2 extends Zend_Media_Id3_Object
 {
     /** @var Zend_Media_Id3_Header */

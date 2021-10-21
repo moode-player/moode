@@ -27,14 +27,9 @@
  * @category   Zend
  * @package    Zend_Media
  * @subpackage ISO14496
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Ilst.php 177 2010-03-09 13:13:34Z svollbehr $
- */
-
-/**
- * 2019-04-12 TC moOde 5.0
- *
  */
 
 /**#@+ @ignore */
@@ -77,7 +72,7 @@ require_once 'Zend/Media/Iso14496/Box.php';
  * @package    Zend_Media
  * @subpackage ISO14496
  * @author     Sven Vollbehr <sven@vollbehr.eu>
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Ilst.php 177 2010-03-09 13:13:34Z svollbehr $
  * @since      iTunes/iPod specific
@@ -137,7 +132,7 @@ final class Zend_Media_Iso14496_Box_Ilst extends Zend_Media_Iso14496_Box
  * @package    Zend_Media
  * @subpackage ISO14496
  * @author     Sven Vollbehr <sven@vollbehr.eu>
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Ilst.php 177 2010-03-09 13:13:34Z svollbehr $
  * @since      iTunes/iPod specific
@@ -178,7 +173,7 @@ require_once 'Zend/Media/Iso14496/FullBox.php';
  * @package    Zend_Media
  * @subpackage ISO14496
  * @author     Sven Vollbehr <sven@vollbehr.eu>
- * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com) 
+ * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Ilst.php 177 2010-03-09 13:13:34Z svollbehr $
  * @since      iTunes/iPod specific
@@ -268,9 +263,9 @@ final class Zend_Media_Iso14496_Box_Data extends Zend_Media_Iso14496_FullBox
      *
      * @return mixed
      */
-    public function getValue() 
+    public function getValue()
     {
-        return $this->_value; 
+        return $this->_value;
     }
 
     /**

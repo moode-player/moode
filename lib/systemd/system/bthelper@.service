@@ -1,7 +1,3 @@
-#
-# 2020-07-09 TC moOde 6.6.0
-#
-#
 [Unit]
 Description=Raspberry Pi bluetooth helper
 Requires=bluetooth.service

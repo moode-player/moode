@@ -15,8 +15,6 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-#	2019-08-08 TC moOde 6.0.0
-#
 
 with open("/var/local/www/currentsong.txt") as file1:
     with open("/home/pi/lcd.txt", "w") as file2:

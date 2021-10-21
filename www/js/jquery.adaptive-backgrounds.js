@@ -1,19 +1,5 @@
 /*! jshint debug: true, expr: true */
 
-/* 2018-07-11 TC moOde 4.2
- * - css vars, other css for newui v2
- * - adj method for dominance
- * - clean up tabbing
- * 2018-09-27 TC moOde 4.3
- * - minor fixes
- * 2018-12-09 TC moOde 4.4
- * - improvements for btnBarFix()
- * 2019-05-30 TC moOde 5.3
- * - Add parseInt to getYiq()
- *
- * 2020-12-15 TC moOde 7.0.0
- */
-
 ;
 (function ($) {
 	/* Constants & defaults. */

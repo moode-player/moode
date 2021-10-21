@@ -14,8 +14,6 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-#	2019-04-12 TC moOde 5.0
-#
 
 from __future__ import absolute_import, print_function, unicode_literals
 
@@ -154,7 +152,7 @@ if __name__ == '__main__':
                     raise
             else:
                 break
-                
+
         manager = dbus.Interface(obj, "org.bluez.AgentManager1")
 
         manager.RegisterAgent(AGENT_PATH, "NoInputNoOutput")

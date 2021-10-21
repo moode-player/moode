@@ -1,8 +1,3 @@
-#
-# 2019-04-12 TC moOde 5.0
-#
-#
-
 [Unit]
 Description=Bluetooth service
 Documentation=man:bluetoothd(8)

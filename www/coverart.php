@@ -19,13 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2015-10-30: AG initial version
  * - script looks for flac, mp3 or m4a embedded art, Folder, folder, Cover, cover png/jpg/jpeg files, or any other image file.
  * - call via /coverart.php/some/local/file/name
  * - make sure client is configured to hand cover requests to /coverart.php or setup an nginx catch-all rule:
  * - try_files $uri $uri/ /coverart.php;
- *
- * 2019-04-12 TC moOde 5.0
  *
  */
 

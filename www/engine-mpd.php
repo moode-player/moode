@@ -19,8 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * 2019-MM-DD TC moOde 7.0.0
- *
  */
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
