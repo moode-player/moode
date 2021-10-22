@@ -820,7 +820,7 @@ function renderUI() {
         // For albums
         // - #currentalbum = MPD.json['album']
         // - #currentsong = MPD.json['title']
-        // - #currentartist = MPD.jpsn['artist']
+        // - #currentartist = MPD.json['artist']
         else {
             // Playback
             $('#currentalbum-div').show();
