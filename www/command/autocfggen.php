@@ -26,6 +26,7 @@
   */
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
+require_once dirname(__FILE__) . '/../inc/autocfg.php';
 
 $_SESSION = [];
 $params = cfgdb_read('cfg_system', cfgdb_connect());
