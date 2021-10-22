@@ -7,8 +7,8 @@
 ; Set wlanssid = blank to start AP mode.
 ; Example: wlanssid = ""
 ;
-; Moode Release : 7.2.0 2021-04-24
-; Create date	: 2021-04-02 16:21:35
+; Moode Release : 7.5.0 2021-MM-DD
+; Create date	: 2021-10-22 09:21:06
 ;
 ; ##########################################
 [Names]
@@ -53,6 +53,9 @@ volume_db_display = "0"
 ashufflesvc = "0"
 ashuffle_mode = "Track"
 ashuffle_filter = "None"
+mpd_httpd = "0"
+mpd_httpd_port = "8000"
+mpd_httpd_encoder = "lame"
 
 [MPD]
 mixer_type = "software"
@@ -87,11 +90,77 @@ spotifysvc = "0"
 rsmafterspot = "No"
 slsvc = "0"
 rsmaftersl = "No"
+rsmafterbt = "0"
+btmulti = "0"
 
 [UPnP/DLNA]
 upnpsvc = "0"
 dlnasvc = "0"
 upnp_browser = "0"
+upnpav = "1"
+openhome = "0"
+checkcontentformat = "1"
+
+[Airplay]
+airplay_interpolation = "soxr"
+airplay_output_format = "S16"
+airplay_output_rate = "44100"
+airplay_allow_session_interruption = "no"
+airplay_session_timeout = "120"
+airplay_audio_backend_latency_offset_in_seconds = "0.0"
+airplay_audio_backend_buffer_desired_length_in_seconds = "0.2"
+
+[Squeezelite]
+squeezelite_PLAYERNAME = "Moode"
+squeezelite_AUDIODEVICE = "0"
+squeezelite_ALSAPARAMS = "80:4::1"
+squeezelite_OUTPUTBUFFERS = "40000:100000"
+squeezelite_TASKPRIORITY = "45"
+squeezelite_CODECS = "flac,pcm,mp3,ogg,aac,alac,dsd"
+squeezelite_OTHEROPTIONS = "-W -D 500 -R E -S /var/local/www/commandw/slpower.sh"
+
+[Spotify]
+spotify_bitrate = "160"
+spotify_initial_volume = "0"
+spotify_volume_curve = "log"
+spotify_volume_normalization = "No"
+spotify_normalization_pregain = "0"
+spotify_autoplay = "No"
+spotify_normalization_method = "dynamic"
+spotify_normalization_gain_type = "auto"
+spotify_normalization_threshold = "-2"
+spotify_normalization_attack = "5"
+spotify_normalization_release = "100"
+spotify_normalization_knee = "1"
+spotify_format = "S16"
+
+[Multiroom]
+multiroom_tx = "Off"
+multiroom_rx = "Off"
+multiroom_tx_bfr = "64"
+multiroom_tx_host = "239.0.0.1"
+multiroom_tx_port = "1350"
+multiroom_tx_sample_rate = "48000"
+multiroom_tx_channels = "2"
+multiroom_tx_frame_size = "1920"
+multiroom_tx_bitrate = "128"
+multiroom_tx_rtprio = "45"
+multiroom_tx_query_timeout = "1"
+multiroom_rx_bfr = "64"
+multiroom_rx_host = "239.0.0.1"
+multiroom_rx_port = "1350"
+multiroom_rx_sample_rate = "48000"
+multiroom_rx_channels = "2"
+multiroom_rx_jitter_bfr = "32"
+multiroom_rx_frame_size = "1920"
+multiroom_rx_rtprio = "45"
+multiroom_rx_alsa_output_mode = "plughw"
+multiroom_rx_mastervol_opt_in = "0"
+multiroom_initial_volume = "0"
+
+[ALSA]
+alsa_output_mode = "plughw"
+alsa_loopback = "Off"
 
 [Network (eth0)]
 ethmethod = "dhcp"
@@ -132,9 +201,12 @@ font_size = "Normal"
 playlist_art = "Yes"
 extra_tags = "album,genre,track,disc,date,composer,conductor,performer,encoded"
 playhist = "No"
+show_npicon = "Yes"
+show_cvpb = "Yes"
 
 [Library]
-library_instant_play = "Play"
+library_onetouch_album = "Play"
+library_onetouch_radio = "Play"
 library_albumview_sort = "Artist"
 library_tagview_sort = "Artist"
 library_recently_added = "2592000000"
@@ -152,6 +224,10 @@ library_tagview_covers = "Yes"
 library_ellipsis_limited_text = "No"
 library_utf8rep = "No"
 
+[CoverView]
+scnsaver_style = "Gradient (Linear)"
+scnsaver_timeout = "Never"
+
 [Internal]
 first_use_help = "Yes"
 
@@ -163,4 +239,32 @@ cuefiles_ignore = "1"
 eqp12_curve_name[0] = "Default curve"
 eqp12_settings[0] = "0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0"
 eqp12_active[0] = "No"
+
+[EQG]
+eqg_curve_name[0] = "Flat"
+eqg_curve_values[0] = "60,60,60,60,60,60,60,60,60,60"
+eqg_curve_name[1] = "Lo Boost"
+eqg_curve_values[1] = "60,72,60,60,60,60,60,60,60,60"
+eqg_curve_name[2] = "Lo Boost Plus"
+eqg_curve_values[2] = "68,78,68,60,60,60,60,60,60,60"
+eqg_curve_name[3] = "Hi Boost"
+eqg_curve_values[3] = "60,60,60,60,60,60,60,60,72,60"
+eqg_curve_name[4] = "Hi Boost Plus"
+eqg_curve_values[4] = "60,60,60,60,60,60,60,68,78,68"
+eqg_curve_name[5] = "Hi-Lo Boost"
+eqg_curve_values[5] = "60,72,60,60,60,60,60,60,72,60"
+eqg_curve_name[6] = "Hi-Lo Boost Plus"
+eqg_curve_values[6] = "68,78,68,60,60,60,60,68,78,68"
+eqg_curve_name[7] = "Midrange Suppress"
+eqg_curve_values[7] = "60,60,60,60,39,39,60,60,60,60"
+eqg_curve_name[8] = "Shallow V"
+eqg_curve_values[8] = "60,68,60,54,44,44,54,60,68,60"
+eqg_curve_name[9] = "Classic V"
+eqg_curve_values[9] = "60,72,60,60,39,39,60,60,72,60"
+eqg_curve_name[10] = "Classic V Plus"
+eqg_curve_values[10] = "68,78,68,60,39,39,60,68,78,68"
+eqg_curve_name[11] = "Vinyl Touch"
+eqg_curve_values[11] = "60,66,62,61,60,60,60,54,48,68"
+eqg_curve_name[12] = "Vinyl Touch Plus"
+eqg_curve_values[12] = "60,68,64,60,60,60,60,46,41,68"
 
