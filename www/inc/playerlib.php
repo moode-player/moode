@@ -3488,6 +3488,33 @@ function autoConfigSettings() {
 			$eqp = Eqp12($dbh);
 			$eqp_export = $eqp->export();
 			return $eqp_export ;
+		}],
+
+		'EQG',
+		['requires' => [ 'eqg_curve_name',
+						 'eqg_curve_values'], 'handler' => function($values) {
+			$dbh = cfgdb_connect();
+			$curve_count = count($values['eqg_curve_name']);
+
+			$querystr = 'DELETE FROM cfg_eqalsa;';
+			$result = sdbquery($querystr, $dbh);
+
+			for($index =0; $index< $curve_count; $index++) {
+				$curve_name = $values['eqg_curve_name'][$index];
+				$curve_values = $values['eqg_curve_values'][$index];
+				$querystr ="INSERT INTO cfg_eqalsa (curve_name, curve_values) VALUES ('" . $curve_name . "', '" . $curve_values . "');";
+				$result = sdbquery($querystr, $dbh);
+			}
+		}, 'custom_write' => function($values) {
+			$dbh = cfgdb_connect();
+			$mounts = cfgdb_read('cfg_eqalsa', $dbh);
+			$stringformat = "eqg_%s[%d] = \"%s\"\n";
+			$eqg_export = "";
+			foreach ($mounts  as $index=>$mp) {
+				$eqg_export =  $eqg_export . sprintf($stringformat, 'curve_name', $index, $mp['curve_name']);
+				$eqg_export =  $eqg_export . sprintf($stringformat, 'curve_values', $index, $mp['curve_values']);
+				}
+			return $eqg_export;
 		}]
 
 	];
