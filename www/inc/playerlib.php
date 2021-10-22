@@ -3277,8 +3277,8 @@ function autoConfigSettings() {
 		'Multiroom',
 		['requires' => ['multiroom_tx'] , 'handler' => setPlayerSession],
 		['requires' => ['multiroom_rx'] , 'handler' => setPlayerSession],
-		['requires' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels', 'multiroom_tx_frame_size', 'multiroom_tx_bitrate',
-						'multiroom_rx_bfr', 'multiroom_rx_host', 'multiroom_rx_port', 'multiroom_rx_jitter_bfr', 'multiroom_rx_sample_rate', 'multiroom_rx_channels', 'multiroom_initial_volume'],
+		['requires' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels', 'multiroom_tx_frame_size', 'multiroom_tx_bitrate', 'multiroom_tx_rtprio', 'multiroom_tx_query_timeout',
+						'multiroom_rx_bfr', 'multiroom_rx_host', 'multiroom_rx_port', 'multiroom_rx_sample_rate', 'multiroom_rx_channels', 'multiroom_rx_jitter_bfr', 'multiroom_rx_frame_size', 'multiroom_rx_rtprio', 'multiroom_rx_alsa_output_mode', 'multiroom_rx_mastervol_opt_in', 'multiroom_initial_volume'],
 		'handler' => function($values) {
 			setDbParams('cfg_multiroom', $values, 'multiroom_');
 		}, 'custom_write' => function($values) {
