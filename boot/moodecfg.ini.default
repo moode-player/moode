@@ -8,7 +8,7 @@
 ; Example: wlanssid = ""
 ;
 ; Moode Release : 7.5.0 2021-MM-DD
-; Create date	: 2021-10-22 09:21:06
+; Create date	: 2021-10-23 09:22:26
 ;
 ; ##########################################
 [Names]
@@ -137,26 +137,6 @@ spotify_format = "S16"
 [Multiroom]
 multiroom_tx = "Off"
 multiroom_rx = "Off"
-multiroom_tx_bfr = "64"
-multiroom_tx_host = "239.0.0.1"
-multiroom_tx_port = "1350"
-multiroom_tx_sample_rate = "48000"
-multiroom_tx_channels = "2"
-multiroom_tx_frame_size = "1920"
-multiroom_tx_bitrate = "128"
-multiroom_tx_rtprio = "45"
-multiroom_tx_query_timeout = "1"
-multiroom_rx_bfr = "64"
-multiroom_rx_host = "239.0.0.1"
-multiroom_rx_port = "1350"
-multiroom_rx_sample_rate = "48000"
-multiroom_rx_channels = "2"
-multiroom_rx_jitter_bfr = "32"
-multiroom_rx_frame_size = "1920"
-multiroom_rx_rtprio = "45"
-multiroom_rx_alsa_output_mode = "plughw"
-multiroom_rx_mastervol_opt_in = "0"
-multiroom_initial_volume = "0"
 
 [ALSA]
 alsa_output_mode = "plughw"
