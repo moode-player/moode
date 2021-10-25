@@ -813,8 +813,8 @@ else {
 		case 'clear_libcache_filtered':
 			clearLibCacheFiltered();
 			break;
-		case 'tx_adv_toggle':
-		case 'rx_adv_toggle':
+		case 'upd_tx_adv_toggle':
+		case 'upd_rx_adv_toggle':
 			//workerLog($_GET['cmd'] . '|' . $_POST['adv_toggle']);
 			session_start();
 			$_SESSION[$_GET['cmd']] = $_POST['adv_toggle'];
