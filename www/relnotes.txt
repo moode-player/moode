@@ -18,12 +18,14 @@
 Updates
 
 - UPD: Bump to MPD 0.23.2
-- UPD: Bump to librespot 0.3.0
+- UPD: Bump to librespot 0.3.1
 - UPD: Bump to Meson 0.59.2
-- UPD: Improve Spotify Config
 - UPD: Add ALSA output mode to Multiroom Receiver config
 - UPD: Add query timeout to Multiroom Sender config
 - UPD: Add IP addr timeout to System config
+- UPD: Improve Spotify Config
+- UPD: Improve help text on System Config
+- UPD: Improve validation for Receiver volume config
 
 Radio stations
 
@@ -37,7 +39,8 @@ Radio stations
 
 Bug fixes
 
-- FIX: Addfav visible on context menu
+- FIX: Item "Add favorites" visible on context menu
+- FIX: Advanced options toggle broken on Multiroom Config
 
 ################################################################################
 #
