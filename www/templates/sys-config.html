@@ -222,8 +222,8 @@
 					</select>
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_ipaddr_timeout" value="novalue">Set</button>
 					<span class="help-block-configs help-block-margin">
-						Wait for up to the specified number of seconds for an IP address to be assigned to an adapter.<br>
-					    NOTE: If no IP address has been assigned AP mode will be automatically started providing both Ethernet and WiFi are not both active.
+						Wait for up to the specified number of seconds for an IP address to be assigned to an adapter during moOde startup.<br>
+					    NOTE: AP mode will be started if the WLAN adapter has not been assigned an IP address providing an IP address has not also been assigned to the Ethernet adapter.
 					</span>
 				</div>
 			</div>
@@ -241,12 +241,10 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_eth0chk" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-eth0chk" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span class="help-block-configs help-block-margin2" style="margin-top: 0px; padding-top: 0px;">
+					<span class="help-block-configs help-block-margin" style="margin-top: -10px; padding-top: 0px;">
 						Wait for up to "IP addr timeout" seconds for an address to be assigned to the Ethernet adapter.
+						NOTE: Set to NO if running a WiFi-only configuration. Setting to NO will skip the IP address check for the Ethernet adapter and shorten boot time.
 					</span>
-					<span id="info-eth0chk" class="help-block-configs help-block-margin hide">
-						Set this to YES if connected via Ethernet cable and NO if running a WiFi-only configuration. Setting to NO will skip the IP address check for the Ethernet adapter and shorten boot time.
-                    </span>
 				</div>
 			</div>
 
@@ -439,7 +437,7 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span class="help-block-configs">
+					<span class="help-block-configs help-block-margin" style="margin-top: -10px; padding-top: 0px;">
 						The LCD update engine runs lcdup.py script whenever UI state changes.<br>
 					</span>
 					<span id="info-lcdup" class="help-block-configs help-block-margin2 hide">
