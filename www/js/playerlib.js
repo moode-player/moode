@@ -2259,6 +2259,7 @@ $(document).on('click', '.context-menu a', function(e) {
                         }
                         else {
                             var rxChecked = rxStatusParts[2] == 'On' ? 'checked' : '';
+                            var rxCheckedDisable = rxStatusParts[3] == '?' ? ' disabled' : '';
                             var rxMuteIcon = rxStatusParts[4] == '1' ? 'fa-volume-mute' : 'fa-volume-up';
                             var rxMasterVolOptIn = rxStatusParts[5] == '0' ? '' : '<i class="fal fa-dot-circle"></i>';
 
@@ -2268,20 +2269,20 @@ $(document).on('click', '.context-menu a', function(e) {
                             output += '<div class="controls">';
                             // Receiver On/Off
                             var topMargin = modalType == 'full' ? 'multiroom-modal-onoff' : 'multiroom-modal-onoff-xtra';
-                            output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl multiroom-modal-onoff ' + topMargin + '" type="checkbox" data-item="' + item + '" ' + rxChecked + '>';
+                            output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl multiroom-modal-onoff ' + topMargin + '" type="checkbox" data-item="' + item + '" ' + rxChecked + rxCheckedDisable + '>';
 
                             if (modalType == 'full') {
                                 // Volume
-                                var disabled = rxStatusParts[3] == '0dB' ? ' disabled' : '';
+                                var volDisabled = (rxStatusParts[3] == '0dB' || rxStatusParts[3] == '?') ? ' disabled' : '';
 
                                 output += '<div class="modal-button-style multiroom-modal-btn">';
                                 output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item +
-                                    '"' + disabled + '>' + rxStatusParts[3] + '</button>';
+                                    '"' + volDisabled + '>' + rxStatusParts[3] + '</button>';
                                 output += '</div>';
                                 // Mute toggle
                                 output += '<div class="modal-button-style multiroom-modal-btn">';
                                 output += '<button id="multiroom-rx-' + item + '-mute" class="btn btn-primary btn-small multiroom-modal-mute" data-item="' + item +
-                                    '"' + disabled + '><i class="fas ' + rxMuteIcon + '"></i></button>';
+                                    '"' + volDisabled + '><i class="fas ' + rxMuteIcon + '"></i></button>';
                                 output += '</div>';
                                 // Master volume opt-in indicator
                                 output += '<div class="modal-button-style multiroom-modal-btn">';
@@ -2292,7 +2293,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                 output += '<div class="controls">';
                                 output += '<input id="multiroom-rx-' + item + '-vol-slider" class="hslide2" type="range" min="0" max="' + SESSION.json['volume_mpd_max'] +
                                     '" step="1" name="multiroom-rx-' + item + '-vol-slider" value="' + rxStatusParts[3] +
-                                    '" oninput="updateRxVolDisplay(this.id, this.value)"' + disabled + '>';
+                                    '" oninput="updateRxVolDisplay(this.id, this.value)"' + volDisabled + '>';
                                 output += '</div>';
                             }
                             output += '</div>';

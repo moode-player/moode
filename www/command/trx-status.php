@@ -74,13 +74,15 @@ if ($status != '') {
 exit(0);
 
 function rx_onoff($onoff) {
-	playerSession('write', 'multiroom_rx', $onoff);
-	$onoff == 'On' ? startMultiroomReceiver() : stopMultiroomReceiver();
+	if ($_SESSION['mpdmixer'] == 'hardware' || $_SESSION['mpdmixer'] == 'none') {
+		playerSession('write', 'multiroom_rx', $onoff);
+		$onoff == 'On' ? startMultiroomReceiver() : stopMultiroomReceiver();
+	}
 }
 
 function rx_status() {
 	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", cfgdb_connect());
-	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : $_SESSION['volknob'];
+	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : ($_SESSION['mpdmixer'] == 'software' ? '?' : $_SESSION['volknob']);
 	// rx,On/Off/Unknown,volume,mute_1/0,mastervol_opt_in_1/0
 	return 'rx' . ',' . $_SESSION['multiroom_rx'] . ',' . $volume . ',' . $_SESSION['volmute'] . ',' . $result[0]['value'];
 }

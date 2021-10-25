@@ -193,7 +193,7 @@ $_feat_multiroom = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 $_dsp_on = ($_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' && $_SESSION['alsaequal'] == 'Off' &&
 	$_SESSION['camilladsp'] == 'off' && $_SESSION['invert_polarity'] == '0') ? false : true;
 $_multiroom_tx_disable = ($_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == true) ? 'disabled' : '';
-$_multiroom_rx_disable = $_SESSION['alsavolume'] == 'none' ? 'disabled' : '';
+$_multiroom_rx_disable = ($_SESSION['alsavolume'] == 'none' || $_SESSION['mpdmixer'] == 'software') ? 'disabled' : '';
 $_tx_restart_btn_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'disabled' : '';
 $_rx_restart_btn_disable = $_SESSION['multiroom_rx'] == 'Off' ? 'disabled' : '';
 $_tx_restart_link_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'onclick="return false;"' : '';
