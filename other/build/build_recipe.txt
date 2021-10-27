@@ -4,7 +4,7 @@
 #
 #  moOde 7.5.0 2021-MM-DD
 #  - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
-#  - Bump to Linux kernel 5.4.77 build #1371
+#  - Based on Linux kernel 5.4.77 build #1371
 #
 #  - NOTE: Image prep and build is Linux and Ethernet only
 #
