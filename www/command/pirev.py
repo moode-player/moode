@@ -65,6 +65,7 @@ PI_TYPES = {
     0xf: "Internal",
     0x10: "CM3+",
     0x11: "4B",
+    0x12: "Zero 2 W",
     0x13: "400",
     0x14: "CM4"
 }
