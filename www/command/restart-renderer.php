@@ -68,7 +68,7 @@ function restart_bluetooth() {
 	playerSession('write', 'btactive', '0');
 	// dismiss active screen
 	sendEngCmd('btactive0');
-	$GLOBALS['btactive'] = '0';
+	$GLOBALS['btactive'] = '0'; // TODO: Delete line because $btactive is not defined in this script or playerlib.php
 	session_write_close();
 
 	// restore MPD volume and start bluetooth
