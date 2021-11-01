@@ -49,6 +49,10 @@ elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') 
 			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
 			echo $result[0];
         }
+		elseif (stripos($_GET['cmd'], 'coverview.php') !== false) {
+			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
+			echo $result[0];
+        }
         else {
             echo 'Unknown command';
         }

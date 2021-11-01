@@ -263,6 +263,13 @@ if (isset($_POST['update_clear_browser_cache'])) {
 	submitJob('clearbrcache', '', 'Cache cleared', 'Refresh Browser on LocalUI');
 }
 
+// CoverView show/hide
+if (isset($_POST['update_coverview_toggle'])) {
+	$_SESSION['coverview_toggle'] = $_SESSION['coverview_toggle'] == '-off' ? '-on' : '-off';
+	$result = sysCmd('/var/www/command/coverview.php ' . $_SESSION['coverview_toggle']);
+	$_SESSION['notify']['title'] = $result[0];
+}
+
 // LOCAL SERVICES
 
 // Metadata for external apps

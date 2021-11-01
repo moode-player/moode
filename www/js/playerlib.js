@@ -454,6 +454,7 @@ function engineCmd() {
                     );
                     break;
                 case 'scnactive1':
+                case 'scnactive0':
     				screenSaver(cmd[0]);
                     break;
                 case 'libupd_done':
@@ -552,6 +553,7 @@ function screenSaver(cmd) {
 	if ($('#inpsrc-indicator').css('display') == 'block' || UI.mobile) {
 		return;
 	}
+    // Show
 	else if (cmd.slice(-1) == '1') {
 		$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
         $('body').addClass('cv')
@@ -564,6 +566,10 @@ function screenSaver(cmd) {
 
 		coverView = true;
 	}
+    // Hide
+    else if (cmd.slice(-1) == '0') {
+        $('#screen-saver').click();
+    }
 }
 
 // reconnect/reboot/restart
