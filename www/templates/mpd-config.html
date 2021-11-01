@@ -61,6 +61,18 @@
                     </span>
                 </div>
             </div>
+			<div class="control-group">
+                <label class="control-label" for="dsd-usb">Silence before stop</label>
+                <div class="controls">
+					<select id="dsd-usb" name="conf[stop_dsd_silence]" class="input-large">
+						$_mpd_select[stop_dsd_silence]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_stop_dsd_silence" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_stop_dsd_silence" class="help-block-configs help-block-margin hide">
+						When playing Native DSD or DoP silence is played before manually stopping playback (“stop” or “pause”). This is a workaround for some audio devices that emit noise when stopping DSD playback.
+					</span>
+                </div>
+            </div>
 
             <div class="control-group">
 				<legend>Volume mixer</legend>

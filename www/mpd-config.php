@@ -109,6 +109,10 @@ $_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] ==
 $_mpd_select['dop'] .= "<option value=\"no\" " . (($mpdconf['dop'] == 'no') ? "selected" : "") . " >Native DSD (Default)</option>\n";
 $_mpd_select['dop'] .= "<option value=\"yes\" " . (($mpdconf['dop'] == 'yes') ? "selected" : "") . " >DSD over PCM (DoP)</option>\n";
 
+// DSD silence before stop
+$_mpd_select['stop_dsd_silence'] .= "<option value=\"yes\" " . (($mpdconf['stop_dsd_silence'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
+$_mpd_select['stop_dsd_silence'] .= "<option value=\"no\" " . (($mpdconf['stop_dsd_silence'] == 'no') ? "selected" : "") . " >No</option>\n";
+
 // Volume control
 if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($mpdconf['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";

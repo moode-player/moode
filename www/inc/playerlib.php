@@ -1922,6 +1922,9 @@ function updMpdConf($i2sdevice) {
 			case 'dop':
 				$dop = $cfg['value'];
 				break;
+			case 'stop_dsd_silence':
+				$stop_dsd_silence = $cfg['value'];
+				break;
 			case 'mixer_type':
 				$mixertype = $cfg['value'];
 				break;
@@ -2044,6 +2047,7 @@ function updMpdConf($i2sdevice) {
 	$data .= "mixer_type \"" . $mixertype . "\"\n";
 	$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $cardnum . "\"\n" . "mixer_index \"0\"\n" : '';
 	$data .= "dop \"" . $dop . "\"\n";
+	$data .= "stop_dsd_silence \"" . $stop_dsd_silence . "\"\n";
 	$data .= "}\n\n";
 
 	// ALSA bluetooth

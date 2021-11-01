@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Oct 21 08:19:34 2021
+-- File generated with SQLiteStudio v3.1.0 on Mon Nov 1 07:16:07 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -670,6 +670,7 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (43, 'sox_stopband_begin', '100');
 INSERT INTO cfg_mpd (id, param, value) VALUES (44, 'sox_attenuation', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (45, 'sox_flags', '0');
 INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384');
+INSERT INTO cfg_mpd (id, param, value) VALUES (47, 'stop_dsd_silence', 'no');
 
 -- Table: cfg_gpio
 CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32));
