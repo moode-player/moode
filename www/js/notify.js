@@ -63,6 +63,7 @@ function notify(cmd, msg, duration) {
         discovering_players: 'Discovering players...',
         querying_receivers: 'Querying receivers...',
         no_receivers_found: 'No receivers found',
+        all_receivers_disabled: 'All receivers are disabled',
 		favset: 'Name has been set',
 		favadded: 'Favorite has been added',
 		nofavtoadd: 'Nothing to add',

@@ -22,8 +22,6 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '' ,'');
 
-// MULTIROOM AUDIO
-
 // Sender
 if (isset($_POST['update_multiroom_tx'])) {
 	if (isset($_POST['multiroom_tx']) && $_POST['multiroom_tx'] != $_SESSION['multiroom_tx']) {
@@ -181,8 +179,6 @@ if (isset($_POST['update_multiroom_rx_rtprio'])) {
 
 session_write_close();
 
-// MULTIROOM AUDIO
-
 $params = cfgdb_read('cfg_multiroom', cfgdb_connect());
 foreach ($params as $row) {
     $_cfg_multiroom[$row['param']] = $row['value'];
@@ -193,13 +189,13 @@ $_feat_multiroom = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hide';
 $_dsp_on = ($_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' && $_SESSION['alsaequal'] == 'Off' &&
 	$_SESSION['camilladsp'] == 'off' && $_SESSION['invert_polarity'] == '0') ? false : true;
 $_multiroom_tx_disable = ($_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == true) ? 'disabled' : '';
-$_multiroom_rx_disable = ($_SESSION['alsavolume'] == 'none' || $_SESSION['mpdmixer'] == 'software') ? 'disabled' : '';
 $_tx_restart_btn_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'disabled' : '';
-$_rx_restart_btn_disable = $_SESSION['multiroom_rx'] == 'Off' ? 'disabled' : '';
 $_tx_restart_link_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'onclick="return false;"' : '';
-$_rx_restart_link_disable = $_SESSION['multiroom_rx'] == 'Off' ? 'onclick="return false;"' : '';
-$_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
 $_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Advanced (&minus;)' ? '' : 'hide';
+$_multiroom_rx_disable = ($_SESSION['alsavolume'] == 'none' || $_SESSION['mpdmixer'] == 'software') ? 'disabled' : '';
+$_rx_restart_btn_disable = $_SESSION['multiroom_rx'] != 'On' ? 'disabled' : '';
+$_rx_restart_link_disable = $_SESSION['multiroom_rx'] != 'On' ? 'onclick="return false;"' : '';
+$_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
 $_rx_adv_options_hide = $_SESSION['rx_adv_toggle'] == 'Advanced (&minus;)' ? '' : 'hide';
 
 // Sender
@@ -226,8 +222,9 @@ $_multiroom_tx_rtprio = $_cfg_multiroom['tx_rtprio'];
 $_multiroom_tx_query_timeout = $_cfg_multiroom['tx_query_timeout'];
 
 // Receiver
-$_select['multiroom_rx1'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"toggle_multiroom_rx1\" value=\"On\" " . (($_SESSION['multiroom_rx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['multiroom_rx0'] .= "<input type=\"radio\" name=\"multiroom_rx\" id=\"toggle_multiroom_rx2\" value=\"Off\" " . (($_SESSION['multiroom_rx'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$_select['multiroom_rx'] .= "<option value=\"Disabled\" " . (($_SESSION['multiroom_rx'] == 'Disabled') ? "selected" : "") . ">Disabled</option>\n";
+$_select['multiroom_rx'] .= "<option value=\"On\" " . (($_SESSION['multiroom_rx'] == 'On') ? "selected" : "") . ">On</option>\n";
+$_select['multiroom_rx'] .= "<option value=\"Off\" " . (($_SESSION['multiroom_rx'] == 'Off') ? "selected" : "") . ">Off</option>\n";
 $_select['multiroom_rx_mastervol_opt_in1'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle_multiroom_rx_mastervol_opt_in1\" value=\"1\" " . (($_cfg_multiroom['rx_mastervol_opt_in'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx_mastervol_opt_in0'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle_multiroom_rx_mastervol_opt_in2\" value=\"0\" " . (($_cfg_multiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($_cfg_multiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";

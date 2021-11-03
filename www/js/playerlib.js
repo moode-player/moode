@@ -2246,20 +2246,27 @@ $(document).on('click', '.context-menu a', function(e) {
             $.post('command/moode.php?cmd=get_rx_status', function(result) {
                 //console.log(result);
                 $('.ui-pnotify-closer').click();
-                if (result != 'No receivers found') {
+                if (result == 'All receivers are disabled') {
+                    notify('all_receivers_disabled');
+                }
+                else if (result != 'No receivers found') {
                     var output = '';
                     var rxStatus = result.split(':');
                     var count = rxStatus.length;
                     for (var i = 0; i < count; i++) {
                         var item = i.toString();
-                        var rxStatusParts = rxStatus[i].split(','); // host,rx,On/Off/Unknown,volume,mute_1/0,mastervol_opt_in_1/0
+                        // host,rx,On/Off/Disabled/Unknown,volume,mute_1/0,mastervol_opt_in_1/0
+                        var rxStatusParts = rxStatus[i].split(',');
 
-                        if (rxStatusParts[2] == 'Unknown') {
-                            output += '<div class="control-group" style="margin-bottom:3em;">';
-                            // Receiver hostname
+                        if (rxStatusParts[2] == 'Unknown' || rxStatusParts[2] == 'Disabled') {
+                            var lineHide = rxStatusParts[2] == 'Disabled' ? ' hide' : '';
+                            output += '<div class="control-group' + lineHide + '" style="margin-bottom:3em;">';
+                            // Hostname
                             output += '<label class="control-label multiroom-modal-host">' + rxStatusParts[0] + '</label>';
+                            // Status
+                            var statusMsg = rxStatusParts[2] == 'Unknown' ? 'Receiver offline' : 'Receiver disabled';
                             output += '<div class="controls">';
-                            output += '<div style="font-style:italic;margin-top:.25em;">Receiver offline</div>';
+                            output += '<div style="font-style:italic;margin-top:.25em;">' + statusMsg + '</div>';
                             output += '</div>';
                             output += '</div>';
                         }
@@ -2274,8 +2281,8 @@ $(document).on('click', '.context-menu a', function(e) {
                             output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '-onoff">' + rxStatusParts[0] + '</label>';
                             output += '<div class="controls">';
                             // Receiver On/Off
-                            var topMargin = modalType == 'full' ? 'multiroom-modal-onoff' : 'multiroom-modal-onoff-xtra';
-                            output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl multiroom-modal-onoff ' + topMargin + '" type="checkbox" data-item="' + item + '" ' + rxChecked + rxCheckedDisable + '>';
+                            var topMargin = modalType != 'full' ? ' multiroom-modal-onoff-xtra' : '';
+                            output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl multiroom-modal-onoff' + topMargin + '" type="checkbox" data-item="' + item + '" ' + rxChecked + rxCheckedDisable + '>';
 
                             if (modalType == 'full') {
                                 // Volume

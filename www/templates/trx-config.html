@@ -136,20 +136,19 @@
 		<legend>Receiver</legend>
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label">Receiver daemon</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_multiroom_rx2">ON</label>
-						$_select[multiroom_rx1]
-						<label class="toggle-radio" for="toggle_multiroom_rx1">OFF</label>
-						$_select[multiroom_rx0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_multiroom_rx" value="novalue" $_multiroom_rx_disable>Set</button>
-					</div>
-					<span id="info_multiroom_rx" class="help-block-configs help-block-margin2">
+				<label class="control-label" for="multiroom_rx">Receiver daemon</label>
+				<div class="controls controls-select">
+					<select id="multiroom_rx" class="select-medium" name="multiroom_rx">
+						$_select[multiroom_rx]
+					</select>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx" value="novalue" $_multiroom_rx_disable>Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span class="help-block-configs help-block-margin">
 						The Receiver requires an audio device that supports Hardware volume.<br>
-						NOTE: Mixer type must be set to Hardware or Fixed (0dB) in MPD Config.
+						NOTE: Mixer type must be set to Hardware or Fixed (0dB) in MPD Config.<br>
+					</span>
+					<span id="info_multiroom_rx" class="help-block-configs help-block-margin hide">
+						Disabling the Receiver hides it from the Receivers&nbsp;<i class="fas fa-rss"></i>&nbsp;screen and prevents it from being turned On.
 					</span>
 				</div>
 

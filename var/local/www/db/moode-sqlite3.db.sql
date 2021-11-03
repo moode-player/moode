@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Nov 1 07:16:07 2021
+-- File generated with SQLiteStudio v3.1.0 on Tue Nov 2 08:03:11 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -430,7 +430,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (155, 'inplace_upd_applied', '0
 INSERT INTO cfg_system (id, param, value) VALUES (156, 'show_npicon', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (157, 'show_cvpb', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (158, 'multiroom_tx', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (159, 'multiroom_rx', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (159, 'multiroom_rx', 'Disabled');
 INSERT INTO cfg_system (id, param, value) VALUES (160, 'rxactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (161, 'library_onetouch_radio', 'Play');
 
