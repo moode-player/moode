@@ -1114,18 +1114,18 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 		else {
 			mpdDbCmd('newstation', {
-                'name': $('#new-station-name').val(),
-                'url': $('#new-station-url').val(),
+                'name': $('#new-station-name').val().trim(),
+                'url': $('#new-station-url').val().trim(),
                 'type': getParamOrValue('value', $('#new-station-type span').text()),
-                'genre': $('#new-station-genre').val(),
-                'broadcaster': $('#new-station-broadcaster').val(),
-                'language': $('#new-station-language').val(),
-                'country': $('#new-station-country').val(),
-                'region': $('#new-station-region').val(),
-                'bitrate': $('#new-station-bitrate').val(),
-                'format': $('#new-station-format').val(),
+                'genre': $('#new-station-genre').val().trim(),
+                'broadcaster': $('#new-station-broadcaster').val().trim(),
+                'language': $('#new-station-language').val().trim(),
+                'country': $('#new-station-country').val().trim(),
+                'region': $('#new-station-region').val().trim(),
+                'bitrate': $('#new-station-bitrate').val().trim(),
+                'format': $('#new-station-format').val().trim(),
                 'geo_fenced': $('#new-station-geo-fenced span').text(),
-                'home_page': $('#new-station-home-page').val(),
+                'home_page': $('#new-station-home-page').val().trim(),
                 'reserved2': 'NULL'
             });
 		}
@@ -1137,18 +1137,18 @@ jQuery(document).ready(function($) { 'use strict';
 		else {
             mpdDbCmd('updstation', {
                 'id': GLOBAL.editStationId,
-                'name': $('#edit-station-name').val(),
-                'url': $('#edit-station-url').val(),
+                'name': $('#edit-station-name').val().trim(),
+                'url': $('#edit-station-url').val().trim(),
                 'type': getParamOrValue('value', $('#edit-station-type span').text()),
-                'genre': $('#edit-station-genre').val(),
-                'broadcaster': $('#edit-station-broadcaster').val(),
-                'language': $('#edit-station-language').val(),
-                'country': $('#edit-station-country').val(),
-                'region': $('#edit-station-region').val(),
-                'bitrate': $('#edit-station-bitrate').val(),
-                'format': $('#edit-station-format').val(),
+                'genre': $('#edit-station-genre').val().trim(),
+                'broadcaster': $('#edit-station-broadcaster').val().trim(),
+                'language': $('#edit-station-language').val().trim(),
+                'country': $('#edit-station-country').val().trim(),
+                'region': $('#edit-station-region').val().trim(),
+                'bitrate': $('#edit-station-bitrate').val().trim(),
+                'format': $('#edit-station-format').val().trim(),
                 'geo_fenced': $('#edit-station-geo-fenced span').text(),
-                'home_page': $('#edit-station-home-page').val(),
+                'home_page': $('#edit-station-home-page').val().trim(),
                 'reserved2': 'NULL'
             });
 		}
