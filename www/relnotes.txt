@@ -33,16 +33,20 @@ Updates
 - UPD: Improve Spotify Config
 - UPD: Improve help text on System Config
 - UPD: Improve validation for Receiver volume config
+- UPD: Trim strings when creating/updating radio station
 
 Radio stations
 
+- NEW: PRM - Prog Rock & Metal
 - UPD: Bayern 2
 - UPD: BR-Klassik
 - UPD: Jazz FM
 - UPD: JB Radio 2
 - UPD: Linn Classical
 - UPD: Linn Jazz
-- UPD: Linn Radios
+- UPD: Linn Radio
+- UPD: Soma FM - Metal Detector
+- UPD: Zen FM
 
 Bug fixes
 
