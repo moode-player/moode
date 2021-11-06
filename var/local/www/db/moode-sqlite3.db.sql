@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Nov 4 09:55:09 2021
+-- File generated with SQLiteStudio v3.1.0 on Sat Nov 6 07:08:48 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -340,7 +340,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (64, 'pairing_agent', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (65, 'pkgid_suffix', '');
 INSERT INTO cfg_system (id, param, value) VALUES (66, 'lib_pos', '-1,-1,-1');
 INSERT INTO cfg_system (id, param, value) VALUES (67, 'mpdcrossfade', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (68, 'eth0chk', '1');
+INSERT INTO cfg_system (id, param, value) VALUES (68, 'eth0chk', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (69, 'usb_auto_mounter', 'udisks-glue');
 INSERT INTO cfg_system (id, param, value) VALUES (70, 'rsmafterbt', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (71, 'rotenc_params', '100 2 3 23 24');
