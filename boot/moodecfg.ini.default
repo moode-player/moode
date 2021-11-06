@@ -7,8 +7,8 @@
 ; Set wlanssid = blank to start AP mode.
 ; Example: wlanssid = ""
 ;
-; Moode Release : 7.5.0 2021-MM-DD
-; Create date	: 2021-11-05 15:43:02
+; Moode Release : 7.5.0 2021-11-06
+; Create date	: 2021-11-06 08:02:38
 ;
 ; ##########################################
 
@@ -28,7 +28,7 @@ keyboard = "us"
 cpugov = "ondemand"
 hdmiport = "1"
 ipaddr_timeout = "90"
-eth0chk = "1"
+eth0chk = "0"
 led_state = "1,1"
 localui = "0"
 p3wifi = "1"
