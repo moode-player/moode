@@ -167,7 +167,7 @@ function autoConfigSettings() {
 		'ALSA',
 		['requires' => ['alsa_output_mode'], 'handler' => setPlayerSession],
 		['requires' => ['alsa_loopback'], 'handler' => function($values) {
-			playerSession('write', 'i2sdevice', $values['alsa_loopback']);
+			playerSession('write', 'alsa_loopback', $values['alsa_loopback']);
 			$values['alsa_loopback'] == 'On' ? sysCmd("sed -i '0,/_audioout__ {/s//_audioout {/' /etc/alsa/conf.d/_sndaloop.conf") :
 				sysCmd("sed -i '0,/_audioout {/s//_audioout__ {/' /etc/alsa/conf.d/_sndaloop.conf");
 		}],
