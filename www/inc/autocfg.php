@@ -127,12 +127,7 @@ function autoConfigSettings() {
 		//}],
 		['requires' => ['cpugov'], 'handler' => setPlayerSession],
 		['requires' => ['hdmiport'], 'handler' => setPlayerSession],
-		['requires' => [], 'optionals' => ['ipaddr_timeout'],
-			'handler' => function($optionals) {
-				playerSession('write', 'ipaddr_timeout', $optionals['ipaddr_timeout']);
-			}, 'custom_write' => function($optionals) {
-				return getDbParams('cfg_system', $optionals);
-		}],
+		['requires' => ['ipaddr_timeout'], 'handler' => setPlayerSession],
 		['requires' => ['eth0chk'], 'handler' => setPlayerSession],
 		['requires' => ['led_state'], 'handler' => setPlayerSession],
 		['requires' => ['localui'], 'handler' => setPlayerSession],
@@ -175,15 +170,14 @@ function autoConfigSettings() {
 		'Multiroom',
 		['requires' => ['multiroom_tx'], 'handler' => setPlayerSession],
 		['requires' => ['multiroom_rx'], 'handler' => setPlayerSession],
-		['requires' => [],
-		 'optionals' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels',
+		['requires' => ['multiroom_tx_bfr', 'multiroom_tx_host', 'multiroom_tx_port', 'multiroom_tx_sample_rate', 'multiroom_tx_channels',
 			'multiroom_tx_frame_size', 'multiroom_tx_bitrate', 'multiroom_tx_rtprio', 'multiroom_tx_query_timeout',
 			'multiroom_rx_bfr', 'multiroom_rx_host', 'multiroom_rx_port', 'multiroom_rx_sample_rate', 'multiroom_rx_channels', 'multiroom_rx_jitter_bfr',
 			'multiroom_rx_frame_size', 'multiroom_rx_rtprio', 'multiroom_rx_alsa_output_mode', 'multiroom_rx_mastervol_opt_in', 'multiroom_initial_volume'],
 			'handler' => function($optionals) {
 				setDbParams('cfg_multiroom', $optionals, 'multiroom_');
 			}, 'custom_write' => function($optionals) {
-				return getDbParams('cfg_multiroom', $optionals, 'multiroom_');
+				return getDbParams('cfg_multiroom', $optionals, 'multiroom_');				
 		}],
 
 		'MPD',
@@ -204,12 +198,7 @@ function autoConfigSettings() {
 		['requires' => ['max_playlist_length'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['input_cache'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['log_level'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
-		['requires' => [], 'optionals' => ['stop_dsd_silence'],
-			'handler' => function($optionals) {
-				setDbParams('cfg_mpd', $optionals);
-			}, 'custom_write' => function($optionals) {
-				return getDbParams('cfg_mpd', $optionals);
-		}],
+		['requires' => ['stop_dsd_silence'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['autoplay'], 'handler' => setPlayerSession],
 		['requires' => ['mpdcrossfade'], 'handler' => setPlayerSession],
 		['requires' => ['crossfeed'], 'handler' => setPlayerSession],
@@ -284,22 +273,12 @@ function autoConfigSettings() {
 		['requires' => ['rsmafterspot'], 'handler' => setPlayerSession],
 		['requires' => ['slsvc'], 'handler' => setPlayerSession],
 		['requires' => ['rsmaftersl'], 'handler' => setPlayerSession],
-		['requires' => [], 'optionals' => ['rbsvc', 'rsmafterrb'],
-			'handler' => function($optionals) {
-				playerSession('write', 'rbsvc', $optionals['rbsvc']);
-				playerSession('write', 'rsmafterrb', $optionals['rsmafterrb']);
-			}, 'custom_write' => function($optionals) {
-				return getDbParams('cfg_system', $optionals);
-		}],
+		['requires' => ['rbsvc'], 'handler' => setPlayerSession],
+		['requires' => ['rsmafterrb'], 'handler' => setPlayerSession],
 
 		'Bluetooth',
-		['requires' => [], 'optionals' => ['bluez_pcm_buffer', 'audioout'],
-			'handler' => function($optionals) {
-				playerSession('write', 'bluez_pcm_buffer', $optionals['bluez_pcm_buffer']);
-				playerSession('write', 'audioout', $optionals['audioout']);
-			}, 'custom_write' => function($optionals) {
-				return getDbParams('cfg_system', $optionals);
-		}],
+		['requires' => ['bluez_pcm_buffer'], 'handler' => setPlayerSession],
+		['requires' => ['audioout'], 'handler' => setPlayerSession],
 
 		'Airplay',
 		['requires' => ['airplay_interpolation', 'airplay_output_format', 'airplay_output_rate', 'airplay_allow_session_interruption',
