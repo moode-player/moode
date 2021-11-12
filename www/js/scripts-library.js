@@ -764,7 +764,13 @@ var renderSongs = function(albumPos) {
     			+ '<div class="lib-entry-song"><span class="songtrack' + highlight + '">' + filteredSongs[i].tracknum + '</span>'
     			+ '<span class="songname">' + filteredSongs[i].title + '</span>'
     			+ '<span class="songtime"> ' + filteredSongs[i].time_mmss + '</span>'
-    			+ '<span class="songartist"> ' + filteredSongs[i].artist.join(', ') + composer // @Atair: Show all artists
+
+                /*
+                // TEST: Composers in artist list (see playerlib.php function genFlatList())
+    			+ '<span class="songartist"> ' + filteredSongs[i].artist.filter(artist => artist.substr(0, 4) != '[c] ').join(', ') + composer // @Atair: Show all artists
+                */
+
+                + '<span class="songartist"> ' + filteredSongs[i].artist.join(', ') + composer // @Atair: Show all artists
     			+ '<span class="songyear"> ' + songyear + '</span></div>'
     			+ '</li>';
 

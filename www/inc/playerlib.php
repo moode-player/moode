@@ -485,6 +485,27 @@ function genFlatList($sock) {
 					$flat[$item]['Genre'] = array($value);
 				}
 			}
+			/*
+			// TEST: Use genre or composer for genres column (comment out code block above to test)
+			elseif ($element == 'Genre' && $_SESSION['tag_view_genres'] == 'Genres') {
+				if ($flat[$item]['Genre']) {
+					array_push($flat[$item]['Genre'], $value);
+				}
+				else {
+					$flat[$item]['Genre'] = array($value);
+				}
+			}
+			elseif ($element == 'Composer' && $_SESSION['tag_view_genres'] == 'Composers') {
+				if ($flat[$item]['Genre']) {
+					array_push($flat[$item]['Genre'], $value);
+				}
+				else {
+					$flat[$item]['Genre'] = array($value);
+				}
+				// NOTE: Uncomment this if Composer is included in output of GenLibrary()
+				$flat[$item][$element] = $value;
+			}
+			*/
 			elseif ($element == 'Artist') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);
@@ -493,7 +514,7 @@ function genFlatList($sock) {
 					$flat[$item]['Artist'] = array($value);
 				}
 			}
-			// @Atair: add performers to artists
+			// @Atair: Add performers to artists
 			elseif ($element == 'Performer') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);
@@ -504,7 +525,7 @@ function genFlatList($sock) {
 				// NOTE: Uncomment this if Performer is included in output of GenLibrary()
 				//$flat[$item][$element] = $value;
 			}
-			// @Atair: add conductor to artists
+			// @Atair: Add conductor to artists
 			elseif ($element == 'Conductor') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);
@@ -515,6 +536,19 @@ function genFlatList($sock) {
 				// NOTE: Uncomment this if Conductor is included in output of GenLibrary()
 				//$flat[$item][$element] = $value;
 			}
+			/*
+			// TEST: Add composer to artists
+			elseif ($element == 'Composer') {
+				if ($flat[$item]['Artist']) {
+					array_push($flat[$item]['Artist'], '[c] ' . $value);
+				}
+				else {
+					$flat[$item]['Artist'] = array('[c] ' . $value);
+				}
+				// NOTE: Uncomment this if Composer is included in output of GenLibrary()
+				$flat[$item][$element] = $value;
+			}
+			*/
 			else {
 				$flat[$item][$element] = $value;
 			}
