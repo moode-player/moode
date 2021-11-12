@@ -2427,6 +2427,7 @@ $(document).on('click', '.context-menu a', function(e) {
             $('#thumbnail-columns span').text(SESSION.json['library_thumbnail_columns']);
 
             // Library (Advanced)
+            $('#tag-view-genre span').text(SESSION.json['library_tagview_genre']);
             $('#tag-view-artist span').text(SESSION.json['library_tagview_artist']);
             $('#library-album-key span').text(miscLibOptions[1]);
             $('#library-inc-comment-tag span').text(miscLibOptions[0]);
@@ -2627,6 +2628,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_thumbnail_columns'] != $('#thumbnail-columns span').text()) {thumbSizeChange = true;}
 
     // Library (Advanced)
+    if (SESSION.json['library_tagview_genre'] != $('#tag-view-genre span').text()) {clearLibcacheAllReqd = true;}
     if (SESSION.json['library_tagview_artist'] != $('#tag-view-artist span').text()) {libraryOptionsChange = true;}
     if (miscLibOptions[1] != $('#library-album-key span').text()) {clearLibcacheAllReqd = true;}
     if (miscLibOptions[0] != $('#library-inc-comment-tag span').text()) {clearLibcacheAllReqd = true;}
@@ -2677,6 +2679,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_thumbnail_columns'] = $('#thumbnail-columns span').text();
 
     // Library (Advanced)
+    SESSION.json['library_tagview_genre'] = $('#tag-view-genre span').text();
     SESSION.json['library_tagview_artist'] = $('#tag-view-artist span').text();
     SESSION.json['library_misc_options'] = $('#library-inc-comment-tag span').text() + ',' + $('#library-album-key span').text();
     SESSION.json['library_ignore_articles'] = $('#ignore-articles').val().trim();
@@ -2771,6 +2774,7 @@ $('#btn-preferences-update').click(function(e){
             'library_thumbnail_columns': SESSION.json['library_thumbnail_columns'],
 
             // Library (Advanced)
+            'library_tagview_genre': SESSION.json['library_tagview_genre'],
             'library_tagview_artist': SESSION.json['library_tagview_artist'],
             'library_misc_options': SESSION.json['library_misc_options'],
             'library_ignore_articles': SESSION.json['library_ignore_articles'],

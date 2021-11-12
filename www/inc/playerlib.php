@@ -477,6 +477,7 @@ function genFlatList($sock) {
 			}
 
 			// @Atair: Gather possible multiple Genre, Artist, Performer and Conductor values as array
+			/*
 			elseif ($element == 'Genre') {
 				if ($flat[$item]['Genre']) {
 					array_push($flat[$item]['Genre'], $value);
@@ -485,27 +486,30 @@ function genFlatList($sock) {
 					$flat[$item]['Genre'] = array($value);
 				}
 			}
-			/*
+			*/
 			// TEST: Use genre or composer for genres column (comment out code block above to test)
-			elseif ($element == 'Genre' && $_SESSION['tag_view_genres'] == 'Genres') {
-				if ($flat[$item]['Genre']) {
-					array_push($flat[$item]['Genre'], $value);
-				}
-				else {
-					$flat[$item]['Genre'] = array($value);
+			elseif ($element == 'Genre') {
+				if ($_SESSION['library_tagview_genre'] == 'Genres') {
+					if ($flat[$item]['Genre']) {
+						array_push($flat[$item]['Genre'], $value);
+					}
+					else {
+						$flat[$item]['Genre'] = array($value);
+					}
 				}
 			}
-			elseif ($element == 'Composer' && $_SESSION['tag_view_genres'] == 'Composers') {
-				if ($flat[$item]['Genre']) {
-					array_push($flat[$item]['Genre'], $value);
-				}
-				else {
-					$flat[$item]['Genre'] = array($value);
+			elseif ($element == 'Composer') {
+ 				if ($_SESSION['library_tagview_genre'] == 'Composers') {
+					if ($flat[$item]['Genre']) {
+						array_push($flat[$item]['Genre'], $value);
+					}
+					else {
+						$flat[$item]['Genre'] = array($value);
+					}					
 				}
 				// NOTE: Uncomment this if Composer is included in output of GenLibrary()
 				$flat[$item][$element] = $value;
 			}
-			*/
 			elseif ($element == 'Artist') {
 				if ($flat[$item]['Artist']) {
 					array_push($flat[$item]['Artist'], $value);

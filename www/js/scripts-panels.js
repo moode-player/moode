@@ -253,6 +253,7 @@ jQuery(document).ready(function($) { 'use strict';
         }
 
         // Tag view header text
+        $('#genreheader > div').html(SESSION.json['library_tagview_genre']);
         $('#tagview-header-text').text('Albums' +
             ((SESSION.json['library_tagview_sort'] == 'Album' || SESSION.json['library_tagview_sort'] == 'Album/Year') ?
             '' : ' by ' + SESSION.json['library_tagview_sort']));

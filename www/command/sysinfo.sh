@@ -208,6 +208,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nThumbnail columns\t= $library_thumbnail_columns\c"
 	echo -e "\n\nLibrary (Advanced)\c"
 	echo -e "\n----------------------\c"
+	echo -e "\nTag view genre\t\t= $library_tagview_genres\c"
 	echo -e "\nTag view artist\t\t= $library_tagview_artist\c"
 	echo -e "\nAlbum key\t\t= $album_key\c"
 	echo -e "\nInclude comment tag\t= $include_comment_tag\c"
@@ -784,6 +785,7 @@ multiroom_tx=${arr[157]}
 multiroom_rx=${arr[158]}
 rxactive=${arr[159]}
 library_onetouch_radio=${arr[160]}
+library_tagview_genres=${arr[161]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

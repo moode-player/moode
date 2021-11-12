@@ -435,6 +435,7 @@ function autoConfigSettings() {
 		['requires' => ['library_thumbnail_columns'], 'handler' => setPlayerSession],
 
 		'Library (Advanced)',
+		['requires' => ['library_tagview_genre'], 'handler' => setPlayerSession],
 		['requires' => ['library_tagview_artist'], 'handler' => setPlayerSession],
 		['requires' => ['library_misc_options'], 'handler' => setPlayerSession],
 		['requires' => ['library_ignore_articles'], 'handler' => setPlayerSession],

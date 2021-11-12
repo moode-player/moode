@@ -1178,6 +1178,29 @@
 			<div class="accordian"><span class="h5">Library (Advanced)</span>
 				<div class="kontrol">
 					<div class="control-group">
+					<label class="control-label" for="tag-view-genre">Tag view genre</label>
+	                <div class="controls">
+						<div class="btn-group bootstrap-select select-medium2">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="tag-view-genre" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Genres</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="tag-view-genre-sel"><span class="text">Composers</span></a></li>
+								</ul>
+							</div>
+ 						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-tag-view-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-tag-view-genre" class="help-block hide">
+							Select whether to populate the first column in Tag view with Genres (default) or with Composers.
+						</span>
+	                </div>
+
+					<div class="control-group">
 					<label class="control-label" for="tag-view-artist">Tag view artist</label>
 	                <div class="controls">
 						<div class="btn-group bootstrap-select select-medium2">
