@@ -21,7 +21,7 @@ New features
 
 Updates
 
-- UPD:
+- UPD: Bump to pycamilladsp-plot 0.6.2
 
 Radio stations
 
