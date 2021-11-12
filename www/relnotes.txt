@@ -22,6 +22,7 @@ New features
 Updates
 
 - UPD: Bump to pycamilladsp-plot 0.6.2
+- UPD: Option for genres or composers in Tag view Genres list
 
 Radio stations
 
