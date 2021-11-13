@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Fri Nov 12 10:07:51 2021
+-- File generated with SQLiteStudio v3.1.0 on Fri Nov 12 17:17:35 2021
 --
 -- Text encoding used: UTF-8
 --
@@ -233,6 +233,9 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (223, 'https://22653.live.streamtheworld.com/TOPZEN.mp3', 'Zen FM', 'r', 'local', 'Lounge', 'Zen FM', 'Dutch', 'Belgium', 'Europe', '192', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (224, 'https://bytefm-ice-edge-1106-fra-eco-cdn.cast.addradio.de/bytefm/main/high/stream.mp3', 'ByteFM', 'r', 'local', 'Eclectic', 'Alsterradio', 'German', 'Germany', 'Europe', '192', 'MP3', 'No', 'https://www.byte.fm/', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (225, 'http://shoutcastunlimited.com:8512', 'PRM - Prog Rock & Metal', 'r', 'local', 'Progressive Rock, Metal', 'Will Mangold', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (226, 'https://sverigesradio.se/topsy/direkt/132-hi-aac', 'P1', 'r', 'local', 'News, Culture', 'Sveriges Radio', 'Swedish', 'Sweden', 'Europe', '192', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (227, 'https://http-live.sr.se/p2musik-aac-320', 'P2', 'r', 'local', 'Classical, Jazz', 'Sveriges Radio', 'Swedish', 'Sweden', 'Europe', '320', 'AAC', NULL, '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (228, 'https://sverigesradio.se/topsy/direkt/164-hi-aac', 'P3', 'r', 'local', 'Pop, Culture', 'Sveriges Radio', 'Swedish', 'Sweden', 'Europe', '192', 'AAC', NULL, '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
 -- Table: cfg_sl
