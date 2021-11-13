@@ -91,10 +91,10 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r741.zip
-unzip -p -q ./moode-r741.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r741.zip moode/boot/config.txt.default > ./config.txt.default
-unzip -p -q ./moode-r741.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
+wget http://moodeaudio.org/downloads/prod/moode-r750.zip
+unzip -p -q ./moode-r750.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r750.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r750.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -119,8 +119,8 @@ sudo reboot
 
 
 1. Unzip moOde release
-unzip -o -q ./moode-r741.zip
-rm -f ./moode-r741.zip
+unzip -o -q ./moode-r750.zip
+rm -f ./moode-r750.zip
 
 2. Basic optimizations
 
@@ -170,7 +170,7 @@ sudo rm -rf meson-0.55.0*
 sudo cp ./moode/other/mediainfo/mediainfo-18.12 /usr/local/bin/mediainfo
 
 # alsacap
-sudo cp ./moode/other/alsacap/alssacap /usr/local/bin
+sudo cp ./moode/other/alsacap/alsacap /usr/local/bin
 
 # udisks-glue libs
 sudo apt-get -y install libatasmart4 libdbus-glib-1-2 libgudev-1.0-0 \
