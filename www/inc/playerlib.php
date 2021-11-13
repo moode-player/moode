@@ -505,7 +505,7 @@ function genFlatList($sock) {
 					}
 					else {
 						$flat[$item]['Genre'] = array($value);
-					}					
+					}
 				}
 				// NOTE: Uncomment this if Composer is included in output of GenLibrary()
 				$flat[$item][$element] = $value;
@@ -3422,11 +3422,11 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				// DEPRECATE $current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
 					// Local logo image
-					$current['coverurl'] = LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . ".jpg";
+					$current['coverurl'] = rawurlencode(LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . '.jpg');
 				}
 				else {
 					// URL logo image
-					$current['coverurl'] = $_SESSION[$song['file']]['logo'];
+					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
 				# NOTE: Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
 				if (strpos($_SESSION[$song['file']]['name'], 'BBC') !== false && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {

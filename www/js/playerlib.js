@@ -750,7 +750,7 @@ function renderUI() {
             // Thumbnail cover for Playbar
             if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
-                    encodeURIComponent(MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs')) :
+                    MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs') :
                     '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             }
@@ -1710,7 +1710,7 @@ function renderRadioView() {
             // Construct station entries
             var imgUrl = data[i].logo == 'local' ? 'imagesw/radio-logos/thumbs/' + data[i].name + '.jpg' : data[i].logo;
     		output += '<li id="ra-' + (i + 1) + '" data-path="' + 'RADIO/' + data[i].name + '.pls';
-    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + imgUrl  + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
+    		output += '"><div class="db-icon db-song db-browse db-action">' + radioViewLazy + encodeURIComponent(imgUrl) + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-radio-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += radioViewHdDiv;
 			output += radioViewBgDiv;
             output += '<span class="station-name">' + data[i].name + '</span>';
