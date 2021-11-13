@@ -159,12 +159,12 @@ sudo apt-get -y install rpi-update php-fpm nginx sqlite3 php-sqlite3 php7.3-gd m
     cmake dos2unix php-yaml sox flac nmap libtool-bin
 
 # meson
-sudo cp ./moode/other/meson-ninja/meson-0.55.0.tar.gz ./
-sudo tar xfz /meson-0.55.0.tar.gz
-cd meson-0.55.0
+sudo cp ./moode/other/meson-ninja/meson-0.59.2.tar.gz ./
+sudo tar xfz /meson-0.59.2.tar.gz
+cd meson-0.59.2
 sudo python3 setup.py install
 cd ~
-sudo rm -rf meson-0.55.0*
+sudo rm -rf meson*
 
 # mediainfo
 sudo cp ./moode/other/mediainfo/mediainfo-18.12 /usr/local/bin/mediainfo
@@ -398,7 +398,7 @@ NOTE: Compiling from sources in this recipe does not include the patch for Selec
 sudo cp ./moode/other/mpd/mpd-0.23.3_p0x3 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.22/mpd-0.23.3.tar.xz
+sudo wget http://www.musicpd.org/download/mpd/0.23/mpd-0.23.3.tar.xz
 sudo tar xf mpd-0.23.3.tar.xz
 cd mpd-0.23.3
 sudo meson . output/release --buildtype=release -Db_ndebug=true
