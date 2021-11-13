@@ -43,13 +43,14 @@ function getCamillaDspConfigName($config) {
 	return $configLabel;
 }
 
-// hardware params
-$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
+// Hardware params
+$cardnum = $_SESSION['multiroom_tx'] == 'On' ? array_search('Dummy', getAlsaCards()) : $_SESSION['cardnum'];
+$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $cardnum . '/pcm0p/sub0/hw_params'));
 
-// cfg_mpd settings
+// Cfg_mpd settings
 $cfg_mpd = parseCfgMpd($dbh);
 
-// bluetooth
+// Bluetooth active
 $result = sysCmd('pgrep -l bluealsa-aplay');
 $btactive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 
@@ -92,7 +93,7 @@ else {
 	$file = $song['file'];
 
 	// Krishna Simonese: if current file is a UPNP/DLNA url, replace *20 with space
-	// NOTE normaly URI would be encoded %20 but ? is changing it to *20
+	// NOTE Normally URI would be encoded %20 but ? is changing it to *20
 	if ( substr( $file, 0, 4) == 'http' ) {
 		$file = str_replace( '*20', ' ', $file );
 	}
@@ -229,7 +230,7 @@ elseif ($btactive === true) {
 else {
 	$renderer = 'MPD';
 }
-// DSP
+// DSP abd output mode
 if ($_SESSION['invert_polarity'] == '1') {
 	$dsp = 'Invpolarity';
 	$output_mode = $_SESSION['alsa_output_mode'];
@@ -254,7 +255,7 @@ else {
 	$dsp = '';
 	$output_mode = $_SESSION['alsa_output_mode'];
 }
-
+// Combine parts
 if ($_SESSION['audioout'] == 'Bluetooth') {
 	$alsa_output_chain = 'MPD -> Bluetooth stream -> Bluetooth speaker';
 }
@@ -273,7 +274,9 @@ elseif ($dsp != '') {
 else {
 	$alsa_output_chain = $renderer . ' -> ' . $output_mode . ' -> Device';
 }
-$alsa_output_mode = $_SESSION['alsa_output_mode'] == 'plughw' ? 'Default (plughw)' : 'Direct (hw)';
+
+// ALSA Output mode and Loopback
+$alsa_output_mode = $_SESSION['multiroom_tx'] == 'On' ? 'Loopback (hw)' : ($_SESSION['alsa_output_mode'] == 'plughw' ? 'Default (plughw)' : 'Direct (hw)');
 $alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_loopback']; // NOTE: 'off' is a class that hides the element
 
 //
