@@ -15,10 +15,6 @@
 #
 ################################################################################
 
-New features
-
-- NEW:
-
 Updates
 
 - UPD: Bump to pycamilladsp-plot 0.6.2
@@ -30,11 +26,12 @@ Radio stations
 - NEW: P1 (News, Culture)
 - NEW: P2 (Classical, Jazz)
 - NEW: P3 (Pop, Culture)
-- UPD:
 
 Bug fixes
 
 - FIX: URL encoding for radio station logos
+- FIX: LCD updater exiting after one iteration
+- FIX: Help text margin on System config
 
 ################################################################################
 #
