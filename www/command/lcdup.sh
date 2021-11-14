@@ -19,6 +19,7 @@
 
 eval "/var/local/www/commandw/lcdup.py"
 
-while inotifywait -e close_write /var/local/www/currentsong.txt; do
+while true; do
+	inotifywait -e close_write /var/local/www/currentsong.txt
 	eval "/var/local/www/commandw/lcdup.py"
 done > /dev/null 2>&1 &

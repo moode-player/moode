@@ -2127,7 +2127,13 @@ function runQueuedJob() {
 			sysCmd('/var/www/command/util.sh set-keyboard ' . $_SESSION['w_queueargs']);
 			break;
 		case 'lcdup':
-			$_SESSION['w_queueargs'] == 1 ? startLcdUpdater() : sysCmd('killall inotifywait > /dev/null 2>&1 &');
+			if ($_SESSION['w_queueargs'] == 1) {
+				startLcdUpdater();
+			}
+			else {
+				sysCmd('killall lcdup.sh > /dev/null 2>&1');
+ 				sysCmd('killall inotifywait > /dev/null 2>&1');					
+			}
 			break;
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio-buttons.py');
