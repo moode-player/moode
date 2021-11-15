@@ -1,8 +1,8 @@
 ################################################################################
 #
-#  Build Recipe v2.34 2021-11-09
+#  Build Recipe v2.35 2021-MM-DD
 #
-#  moOde 7.5.0 2021-11-09
+#  moOde 7.6.0 2021-MM-DD
 #  - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
 #  - Based on Linux kernel 5.4.77 build #1371
 #
@@ -91,10 +91,10 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r750.zip
-unzip -p -q ./moode-r750.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r750.zip moode/boot/config.txt.default > ./config.txt.default
-unzip -p -q ./moode-r750.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
+wget http://moodeaudio.org/downloads/prod/moode-r760.zip
+unzip -p -q ./moode-r760.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r760.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r760.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -119,8 +119,8 @@ sudo reboot
 
 
 1. Unzip moOde release
-unzip -o -q ./moode-r750.zip
-rm -f ./moode-r750.zip
+unzip -o -q ./moode-r760.zip
+rm -f ./moode-r760.zip
 
 2. Basic optimizations
 
@@ -390,17 +390,17 @@ sudo tar xfz ./boost_1.68_libraries.tar.gz
 sudo rm ./boost_*.gz
 cd ~
 
-3. Download MPD 0.23.3 sources and prep for compile.
+3. Download MPD 0.23.4 sources and prep for compile.
 NOTE: Compiling from sources in this recipe does not include the patch for Selective Resampling.
       The instructions for the patch build are in ./moode/other/mpd/_build_mpd.txt
 
 # OPTIONALLY install pre-compiled patched binary and skip to STEP 7
-sudo cp ./moode/other/mpd/mpd-0.23.3_p0x3 /usr/local/bin/mpd
+sudo cp ./moode/other/mpd/mpd-0.23.4_p0x3 /usr/local/bin/mpd
 sudo reboot
 
-sudo wget http://www.musicpd.org/download/mpd/0.23/mpd-0.23.3.tar.xz
-sudo tar xf mpd-0.23.3.tar.xz
-cd mpd-0.23.3
+sudo wget http://www.musicpd.org/download/mpd/0.23/mpd-0.23.4.tar.xz
+sudo tar xf mpd-0.23.4.tar.xz
+cd mpd-0.23.4
 sudo meson . output/release --buildtype=release -Db_ndebug=true
 
 4. Configure compile options.
