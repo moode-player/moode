@@ -17,8 +17,10 @@
 
 Updates
 
+- UPD: Bump to MPD 0.23.4
 - UPD: Bump to pycamilladsp-plot 0.6.2
-- UPD: Option for genres or composers in Tag view Genres list
+- UPD: Add MPD Config option for Thesycon DSD workaround
+- UPD: Add Pref option to set Tag view Genres to Genres or Composers
 - UPD: Show Audio info decode/output rates for Multiroom Sender
 
 Radio stations
