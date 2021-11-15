@@ -97,6 +97,7 @@ else {
 }
 
 // Audio output
+// Device
 $dev = getDeviceNames();
 if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
 if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
@@ -104,15 +105,6 @@ if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($mpdcon
 if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($mpdconf['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
 $cards = getAlsaCards();
 $_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdconf['device']] == 'empty') ? 'Device turned off or disconnected' : '';
-
-// DSD support
-$_mpd_select['dop'] .= "<option value=\"no\" " . (($mpdconf['dop'] == 'no') ? "selected" : "") . " >Native DSD (Default)</option>\n";
-$_mpd_select['dop'] .= "<option value=\"yes\" " . (($mpdconf['dop'] == 'yes') ? "selected" : "") . " >DSD over PCM (DoP)</option>\n";
-
-// DSD silence before stop
-$_mpd_select['stop_dsd_silence'] .= "<option value=\"yes\" " . (($mpdconf['stop_dsd_silence'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
-$_mpd_select['stop_dsd_silence'] .= "<option value=\"no\" " . (($mpdconf['stop_dsd_silence'] == 'no') ? "selected" : "") . " >No</option>\n";
-
 // Volume control
 if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
 	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($mpdconf['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
@@ -120,6 +112,17 @@ if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"none\" " . (($mpdconf['mixer_type'] == 'none') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($mpdconf['mixer_type'] == 'null') ? "selected" : "") . ">Null</option>\n";
+
+// DSD support
+// Format
+$_mpd_select['dop'] .= "<option value=\"no\" " . (($mpdconf['dop'] == 'no') ? "selected" : "") . " >Native DSD (Default)</option>\n";
+$_mpd_select['dop'] .= "<option value=\"yes\" " . (($mpdconf['dop'] == 'yes') ? "selected" : "") . " >DSD over PCM (DoP)</option>\n";
+// DSD silence before stop
+$_mpd_select['stop_dsd_silence'] .= "<option value=\"yes\" " . (($mpdconf['stop_dsd_silence'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
+$_mpd_select['stop_dsd_silence'] .= "<option value=\"no\" " . (($mpdconf['stop_dsd_silence'] == 'no') ? "selected" : "") . " >No</option>\n";
+// Thesycon DSD workaround
+$_mpd_select['thesycon_dsd_workaround'] .= "<option value=\"yes\" " . (($mpdconf['thesycon_dsd_workaround'] == 'yes') ? "selected" : "") . " >Yes</option>\n";
+$_mpd_select['thesycon_dsd_workaround'] .= "<option value=\"no\" " . (($mpdconf['thesycon_dsd_workaround'] == 'no') ? "selected" : "") . " >No</option>\n";
 
 // SoX resampling
 $format = array('','','');

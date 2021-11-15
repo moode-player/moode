@@ -199,6 +199,7 @@ function autoConfigSettings() {
 		['requires' => ['input_cache'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['log_level'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['stop_dsd_silence'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
+		['requires' => ['thesycon_dsd_workaround'], 'handler' => setCfgMpd, 'custom_write' => getCfgMpd],
 		['requires' => ['autoplay'], 'handler' => setPlayerSession],
 		['requires' => ['mpdcrossfade'], 'handler' => setPlayerSession],
 		['requires' => ['crossfeed'], 'handler' => setPlayerSession],

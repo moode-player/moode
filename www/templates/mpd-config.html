@@ -47,36 +47,10 @@
 	                </select>
 					<span><em>&nbsp;$_device_error</em></span>
 				</div>
-            </div>
-			<div class="control-group">
-                <label class="control-label" for="dsd-usb">DSD support</label>
-                <div class="controls">
-					<select id="dsd-usb" name="conf[dop]" class="input-large">
-						$_mpd_select[dop]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-dsd-audio" class="help-block-configs help-block-margin hide">
-						<b>Native DSD:</b>&nbsp;If the audio device reports that it supports Native DSD then MPD will send the unaltered DSD bitstream to the device otherwose MPD will perform DSD to PCM on-the-fly conversion.<br>
-						<b>DSD over PCM (DoP):</b>&nbsp;There is no way to detect if an audio device supports DoP so only enable this if you are certain that the device support it otherwise the encapsulated DSD bitstream may cause loud or unpredictable distortion.
-                    </span>
-                </div>
-            </div>
-			<div class="control-group">
-                <label class="control-label" for="dsd-usb">Silence before stop</label>
-                <div class="controls">
-					<select id="dsd-usb" name="conf[stop_dsd_silence]" class="input-large">
-						$_mpd_select[stop_dsd_silence]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_stop_dsd_silence" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_stop_dsd_silence" class="help-block-configs help-block-margin hide">
-						When playing Native DSD or DoP silence is played before manually stopping playback (“stop” or “pause”). This is a workaround for some audio devices that emit noise when stopping DSD playback.
-					</span>
-                </div>
-            </div>
+			</div>
 
-            <div class="control-group">
-				<legend>Volume mixer</legend>
-                <label class="control-label" for="mixer-type">Mixer type</label>
+			<div class="control-group">
+				<label class="control-label" for="mixer-type">Volume type</label>
                 <div class="controls">
                     <select id="mixer-type" name="conf[mixer_type]" class="input-large">
 						$_mpd_select[mixer_type]
@@ -90,6 +64,47 @@
 					<span class="help-block-configs help-block-margin">
 						<b>CAUTION:</b> Set volume to a low level before changing this option.<br>
 						NOTE: Fixed (0dB) will output 100% volume level. The actual fixed level can be set in Audio Config by adjusting Max ALSA volume.
+					</span>
+                </div>
+            </div>
+
+			<div class="control-group">
+				<legend>DSD support</legend>
+                <label class="control-label" for="dsd-usb">Format</label>
+                <div class="controls">
+					<select id="dsd-usb" name="conf[dop]" class="input-large">
+						$_mpd_select[dop]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-dsd-audio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-dsd-audio" class="help-block-configs help-block-margin hide">
+						<b>Native DSD:</b>&nbsp;If the audio device reports that it supports Native DSD then MPD will send the unaltered DSD bitstream to the device otherwose MPD will perform DSD to PCM on-the-fly conversion.<br>
+						<b>DSD over PCM (DoP):</b>&nbsp;There is no way to detect if an audio device supports DoP so only enable this if you are certain that the device support it otherwise the encapsulated DSD bitstream may cause loud or unpredictable distortion.
+                    </span>
+                </div>
+			</div>
+
+			<div class="control-group">
+                <label class="control-label" for="stop_dsd_silence">Silence before stop</label>
+                <div class="controls">
+					<select id="stop_dsd_silence" name="conf[stop_dsd_silence]" class="input-large">
+						$_mpd_select[stop_dsd_silence]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_stop_dsd_silence" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_stop_dsd_silence" class="help-block-configs help-block-margin hide">
+						Play silence before manually stopping or pausing DSD/DoP playback. This is a workaround for some audio devices that emit noise when stopping DSD/DoP playback.
+					</span>
+                </div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="thesycon_dsd_workaround">Thesycon workaround</label>
+                <div class="controls">
+					<select id="thesycon_dsd_workaround" name="conf[thesycon_dsd_workaround]" class="input-large">
+						$_mpd_select[thesycon_dsd_workaround]
+					</select>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_thesycon_dsd_workaround" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_thesycon_dsd_workaround" class="help-block-configs help-block-margin hide">
+						Enable a workaround for a bug in Thesycon USB audio receivers. On these devices playing DSD512 or PCM causes all subsequent attempts to play other DSD rates to fail which can be fixed by briefly playing PCM at 44.1 kHz.
 					</span>
                 </div>
             </div>
