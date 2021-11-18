@@ -28,6 +28,9 @@ Radio stations
 - NEW: P1 (News, Culture)
 - NEW: P2 (Classical, Jazz)
 - NEW: P3 (Pop, Culture)
+- NEW: Radio 357
+- NEW: Radio Nowy Swiat
+- NEW: RCO Live
 
 Bug fixes
 
