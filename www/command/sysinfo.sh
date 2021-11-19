@@ -243,7 +243,7 @@ RADIO_MANAGER_SETTINGS() {
 MPD_SETTINGS() {
 	echo -e "M P D   S E T T I N G S"
 	echo -e "\nVersion\t\t\t= $mpdver\c"
-	echo -e "\nVolume mixer\t\t= $mixer_type\c"
+	echo -e "\nVolume type\t\t= $mixer_type\c"
 	echo -e "\nALSA device\t\t= hw:$device\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
 	if [ $(($patch_id & $PATCH_SELECTIVE_RESAMPLING)) -ne 0 ]; then
