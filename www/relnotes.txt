@@ -22,6 +22,8 @@ Updates
 - UPD: Add MPD Config option for Thesycon DSD workaround
 - UPD: Add Pref option to set Tag view Genres to Genres or Composers
 - UPD: Show Audio info decode/output rates for Multiroom Sender
+- UPD: Remove MPD versions option on Audio Config (not used anymore)
+- UPD: Add test for volume type "null" to Audio info
 
 Radio stations
 
