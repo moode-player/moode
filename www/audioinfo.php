@@ -283,15 +283,21 @@ $alsa_loopback = $_SESSION['alsa_loopback'] == 'Off' ? 'off' : $_SESSION['alsa_l
 // DSP
 //
 
-// Volume mixer
+// Volume type
 if ($_SESSION['mpdmixer'] == 'hardware') {
 	$volume_mixer = 'Hardware (On-chip)';
 }
 elseif ($_SESSION['mpdmixer'] == 'software') {
 	$volume_mixer = 'Software (MPD)';
 }
-else {
+elseif ($_SESSION['mpdmixer'] == 'none') {
 	$volume_mixer = 'Fixed (0dB output)';
+}
+elseif ($_SESSION['mpdmixer'] == 'null') {
+	$volume_mixer = 'Null (External control)';
+}
+else {
+	$volume_mixer = 'ERROR: Unknow MPD volume type';
 }
 
 // Renderers
