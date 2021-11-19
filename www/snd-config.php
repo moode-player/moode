@@ -111,11 +111,6 @@ if (isset($_POST['update_alsa_loopback'])) {
 
 // General
 
-// MPD version
-if (isset($_POST['update_mpdver']) && $_POST['mpdver'] != $_SESSION['mpdver']) {
-	playerSession('write', 'mpdver', $_POST['mpdver']);
-	submitJob('mpdver', $_POST['mpdver'], 'MPD ' . $_POST['mpdver'] . ' installed', 'Database rebuild started...');
-}
 // Restart mpd
 if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
 	submitJob('mpdrestart', '', 'MPD restarted', '');
@@ -584,27 +579,6 @@ $_multiroom_feat_enable = $_SESSION['feat_bitmask'] & FEAT_MULTIROOM ? '' : 'hid
 
 // MPD OPTIONS
 
-// MPD version
-$fhandle = fopen(MPD_VERSIONS_CONF, "r");
-if($fhandle) {
-	while (!feof($fhandle ) ) {
-		$line = fgets($fhandle);
-		if (strpos($line, '#') !== 0) {
-			$parts = explode(";", $line);
-			if(count($parts) === 2) {
-				$version = trim($parts[0]);
-				$label = trim($parts[1]);
-				$_select['mpdver'] .= "<option value=\"".$version."\" " . (($_SESSION['mpdver'] == $version) ? "selected" : "") . ">".$label."</option>\n";
-			}
-		}
-	}
-	fclose($fhandle);
-}
-else {
-	$version = $_SESSION['mpdver'];
-	$label = $_SESSION['mpdver'];
-	$_select['mpdver'] .= "<option value=\"".$version."\" " . (($_SESSION['mpdver'] == $version) ? "selected" : "") . ">".$label."</option>\n";
-}
 // Autoplay after start
 $_select['autoplay1'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay1\" value=\"1\" " . (($_SESSION['autoplay'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['autoplay0'] .= "<input type=\"radio\" name=\"autoplay\" id=\"toggleautoplay2\" value=\"0\" " . (($_SESSION['autoplay'] == 0) ? "checked=\"checked\"" : "") . ">\n";
