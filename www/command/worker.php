@@ -2025,13 +2025,6 @@ function runQueuedJob() {
 		case 'hostname':
 			sysCmd('/var/www/command/util.sh chg-name host ' . $_SESSION['w_queueargs']);
 			break;
-		case 'mpdver':
-			sysCmd('mpc stop');
-			sysCmd('cp /var/local/www/mpd_versions/mpd-' . $_SESSION['w_queueargs'] . ' /home/pi');
-			sysCmd('mv /home/pi/mpd-' . $_SESSION['w_queueargs'] . ' /usr/local/bin/mpd');
-			updMpdConf($_SESSION['i2sdevice']);
-			sysCmd('systemctl restart mpd');
-			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
 			break;
@@ -2132,7 +2125,7 @@ function runQueuedJob() {
 			}
 			else {
 				sysCmd('killall lcdup.sh > /dev/null 2>&1');
- 				sysCmd('killall inotifywait > /dev/null 2>&1');					
+ 				sysCmd('killall inotifywait > /dev/null 2>&1');
 			}
 			break;
 		case 'gpio_svc':
