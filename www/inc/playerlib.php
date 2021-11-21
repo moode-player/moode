@@ -2136,38 +2136,44 @@ function updMpdConf($i2sdevice) {
 
 // Return mixer name
 function getMixerName($i2sdevice) {
-	// USB device or Pi HDMI-1/2 or Headphone jack
-	// NOTE: If a device does not define a mixer name then "PCM" will be assigned
+	// USB devices, Pi HDMI-1/2 or Headphone jack
 	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		if ($result[0] == '') {
+			// Mixer name not defined => Use default mixer name "PCM"
 			$mixername = 'PCM';
 		}
 		else {
-			// Strip off outer parenthessis delimiters. See get-mixername section in util.sh
+			// Mixer name defined => Use actual mixer name
+			// Strip off delimiters added by util.sh get-mixername
 			$mixername = ltrim($result[0], '(');
 			$mixername = rtrim($mixername, ')');
 		}
 	}
 	// I2S devices
-	// NOTE: Non-default mixer names
+	// Mixer name exceptions
 	elseif ($i2sdevice == 'HiFiBerry Amp(Amp+)') {
 		$mixername = 'Channels';
 	}
 	elseif ($i2sdevice == 'HiFiBerry DAC+ DSP') {
 		$mixername = 'DSPVolume';
 	}
+	elseif ($_SESSION['i2soverlay'] == 'hifiberry-dacplushd') {
+		$mixername = 'DAC';
+	}
 	elseif ($i2sdevice == 'Allo Katana DAC' || $i2sdevice == 'Allo Boss 2 DAC' ||
 		($i2sdevice == 'Allo Piano 2.1 Hi-Fi DAC' && $_SESSION['piano_dualmode'] != 'None')) {
 		$mixername = 'Master';
 	}
-	// No mixer or default mixer name
+	// No mixer defined or use default mixer name "Digital"
 	else {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		if ($result[0] == '') {
+			// Mixer name not defined => no actual mixer exists
 			$mixername = 'none';
 		}
 		else {
+			// Mixer name defined => use default mixer name "Digital"
 			$mixername = 'Digital';
 		}
 	}
