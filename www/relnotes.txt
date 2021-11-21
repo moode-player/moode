@@ -24,6 +24,7 @@ Updates
 - UPD: Show Audio info decode/output rates for Multiroom Sender
 - UPD: Remove MPD versions option on Audio Config (not used anymore)
 - UPD: Add test for volume type "null" to Audio info
+- UPD: Add mixer name exception for hifiberry dac2hd
 
 Radio stations
 
