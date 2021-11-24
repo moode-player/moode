@@ -1,8 +1,8 @@
 ################################################################################
 #
-#  Build Recipe v2.35 2021-11-20
+#  Build Recipe v2.36 2021-MM-DD
 #
-#  moOde 7.6.0 2021-11-20
+#  moOde 7.6.1 2021-MM-DD
 #  - Based on RaspiOS Buster Lite 2020-12-02 (10.6)
 #  - Based on Linux kernel 5.4.77 build #1371
 #
@@ -91,10 +91,10 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r760.zip
-unzip -p -q ./moode-r760.zip moode/www/command/resizefs.sh > ./resizefs.sh
-unzip -p -q ./moode-r760.zip moode/boot/config.txt.default > ./config.txt.default
-unzip -p -q ./moode-r760.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
+wget http://moodeaudio.org/downloads/prod/moode-r761.zip
+unzip -p -q ./moode-r761.zip moode/www/command/resizefs.sh > ./resizefs.sh
+unzip -p -q ./moode-r761.zip moode/boot/config.txt.default > ./config.txt.default
+unzip -p -q ./moode-r761.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
 
 5. Expand the root partition to 3.5GB.
 
@@ -119,8 +119,8 @@ sudo reboot
 
 
 1. Unzip moOde release
-unzip -o -q ./moode-r760.zip
-rm -f ./moode-r760.zip
+unzip -o -q ./moode-r761.zip
+rm -f ./moode-r761.zip
 
 2. Basic optimizations
 
