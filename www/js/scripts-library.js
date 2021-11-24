@@ -519,7 +519,6 @@ var renderGenres = function() {
 
 	var element = document.getElementById('genresList');
 	element.innerHTML = output;
-//	$('#genresList').html(output);
 	if (UI.libPos[0] == -2) {
 		$('#lib-genre').scrollTo(0, 200);
 	}
@@ -539,7 +538,6 @@ var renderArtists = function() {
 
 	var element = document.getElementById('artistsList');
 	element.innerHTML = output;
-	//$('#artistsList').html(output);
 
 	if (UI.libPos[0] == -2) {
 		$('#lib-artist').scrollTo(0, 200);
@@ -626,8 +624,6 @@ var renderAlbums = function() {
 	element.innerHTML = output;
 	var element = document.getElementById('albumcovers');
 	element.innerHTML = output2;
-	//$('#albumsList').html(output);
-	//$('#albumcovers').html(output2);
 
 	// If only 1 album automatically highlight and display tracks
 	if (filteredAlbums.length == 1) {
@@ -1392,7 +1388,6 @@ $('#songsList').on('click', '.lib-disc', function(e) {
 $('#songsList').on('click', '.lib-album-heading', function(e) {
 	$('img.lib-coverart, #songsList li, #songsList .lib-disc a').removeClass('active'); // Remove highlight
 	var albumName = $(this).text();
-	//$('#lib-disc-' + discNum + ' a').addClass('active');
 
 	filteredSongsAlbum.length = 0;
 	for (var i in filteredSongs) {
@@ -1551,8 +1546,6 @@ $('#context-menu-lib-disc a').click(function(e) {
 
 // Click Album heading context menu item
 $('#context-menu-lib-album-heading a').click(function(e) {
-	//$('#songsList .lib-disc a').removeClass('active');
-
 	var files = [];
 	for (var i in filteredSongsAlbum) {
 		files.push(filteredSongsAlbum[i].file);
