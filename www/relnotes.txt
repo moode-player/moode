@@ -15,9 +15,15 @@
 #
 ################################################################################
 
+Radio stations
+
+- NEW: CDNX
+- NEW: Dandelion Radio
+- NEW: KCSM
+
 Bug fixes
 
-- FIX: Missing div in indextpl.html
+- FIX: Extra div in indextpl.html
 
 ################################################################################
 #
