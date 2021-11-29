@@ -16,9 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+if [[ $PLAYER_EVENT != "started" ]] && [[ $PLAYER_EVENT != "stopped" ]]; then
+	#echo "Exit: "$PLAYER_EVENT >> /home/pi/spotevent.log
+	exit 0
+fi
+#echo "Event: "$PLAYER_EVENT >> /home/pi/spotevent.log
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
-
 RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='alsavolume_max' or param='alsavolume' or param='amixname' or param='mpdmixer' or param='rsmafterspot' or param='inpactive' or param='multiroom_tx'")
 readarray -t arr <<<"$RESULT"
 ALSAVOLUME_MAX=${arr[0]}
