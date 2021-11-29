@@ -24,6 +24,7 @@ Radio stations
 Bug fixes
 
 - FIX: Extra div in indextpl.html
+- FIX: Event filtering in spotevent script
 
 ################################################################################
 #
