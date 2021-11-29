@@ -2631,12 +2631,6 @@ function startAirplay() {
 		$logfile = '/dev/null';
 	}
 
-	/* DELETE
-	// Get device num
-	$array = sdbquery('select value from cfg_mpd where param="device"', cfgdb_connect());
-	$device = $array[0]['value'];
-	*/
-	
 	if ($_SESSION['audioout'] == 'Bluetooth') {
 		$device = 'btstream';
 	}
