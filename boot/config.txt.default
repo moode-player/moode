@@ -1,3 +1,6 @@
+[cm4]
+otg_mode=1
+[all]
 disable_splash=1
 disable_overscan=1
 hdmi_drive=2
