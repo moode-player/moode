@@ -2671,8 +2671,9 @@ function startSpotify() {
 		$cfg_spotify[$row['param']] = $row['value'];
 	}
 
-	// Local or Bluetooth output
-	$device = $_SESSION['audioout'] == 'Local' ? '_audioout' : 'btstream';
+	// Output device
+	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
+	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
 
 	// Options
 	$dither = empty($cfg_spotify['dither']) ? '' : ' --dither ' . $cfg_spotify['dither'];
