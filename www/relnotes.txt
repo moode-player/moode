@@ -15,6 +15,10 @@
 #
 ################################################################################
 
+Updates
+
+- UPD: Add otg_mode=1 option for CM4 to /boot/config.txt
+
 Radio stations
 
 - NEW: CDNX
@@ -24,7 +28,8 @@ Radio stations
 Bug fixes
 
 - FIX: Extra div in indextpl.html
-- FIX: Event filtering in spotevent script
+- FIX: Event filtering in librespot event script
+- FIX: Multiroom ALSA config for Librespot
 
 ################################################################################
 #
