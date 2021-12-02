@@ -62,7 +62,7 @@
 
 				<label class="control-label" for="multiroom_initvol">Initial volume</label>
 				<div class="controls">
-					<input class="input-small" type="number" maxlength="3" min="0" max="100" name="multiroom_initvol" value="$_multiroom_initvol">
+					<input id="multiroom_initvol" class="input-small" type="number" maxlength="3" min="0" max="100" name="multiroom_initvol" value="$_multiroom_initvol">
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_initvol" value="novalue" $_multiroom_initvol_disable>Set</button>
 					<span id="info_multiroom_initvol" class="help-block-configs help-block-margin">
 						Sets the initial volume for Sender and Receivers.
@@ -71,10 +71,11 @@
 			</div>
 
 			<div class="control-group">
+				<!-- RESTART BTN -->
 				<div class="controls">
 					<a data-toggle="modal" href="#restart-tx" $_tx_restart_link_disable><button class="btn btn-medium btn-primary" $_tx_restart_btn_disable>Restart</button></a>&nbsp;Sender
 				</div>
-
+				<!-- DISCOVER BTN -->
 				<div class="controls">
 					<div style="margin-top:1.5em">
 						<button class="btn btn-primary btn-medium btn-submit" type="submit" name="multiroom_tx_discover" value="novalue">Discover</button>&nbsp;Receivers
@@ -113,7 +114,7 @@
 
 				<label class="control-label" for="multiroom_tx_rtprio">Realtime priority</label>
 				<div class="controls controls-select">
-					<input class="input-small" type="number" maxlength="3" min="1" max="99" name="multiroom_tx_rtprio" value="$_multiroom_tx_rtprio">
+					<input id="multiroom_tx_rtprio" class="input-small" type="number" maxlength="3" min="1" max="99" name="multiroom_tx_rtprio" value="$_multiroom_tx_rtprio">
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_rtprio" value="novalue">Set</button>
 					<span id="info_multiroom_tx_rtprio" class="help-block-configs help-block-margin">
 						Realtime process priority for the Sender daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>
@@ -123,7 +124,7 @@
 
 				<label class="control-label" for="multiroom_tx_query_timeout">Query timeout</label>
 				<div class="controls controls-select">
-					<input class="input-small" type="number" maxlength="1" min="1" max="3" name="multiroom_tx_query_timeout" value="$_multiroom_tx_query_timeout">
+					<input id="multiroom_tx_query_timeout" class="input-small" type="number" maxlength="1" min="1" max="3" name="multiroom_tx_query_timeout" value="$_multiroom_tx_query_timeout">
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_tx_query_timeout" value="novalue">Set</button>
 					<span id="info_multiroom_tx_query_timeout" class="help-block-configs help-block-margin">
 						Maximum number of seconds to wait per Receiver when quering for Receivers.<br>
@@ -170,7 +171,7 @@
 				</div>
 
 				<label class="control-label" for="multiroom_rx_alsa_output_mode">ALSA output mode</label>
-				<div class="controls controls-select">
+				<div class="controls controls-select" style="margin-bottom:1em;">
 					<select id="multiroom_rx_alsa_output_mode" class="select-medium" name="multiroom_rx_alsa_output_mode">
 						$_select[multiroom_rx_alsa_output_mode]
 					</select>
@@ -182,7 +183,17 @@
 						<b>Direct (hw)</b><br>
 						No automatic conversions are performed. The audio device must support the output format or playback will not occur.<br>
 					</span>
+				</div>
 
+				<label class="control-label" for="multiroom_rx_alsavol">ALSA volume (%)</label>
+				<div class="controls">
+					<input id="multiroom_rx_alsavol" class="input-small" type="number" maxlength="3" min="0" max="100" name="multiroom_rx_alsavol" value="$_multiroom_rx_alsavol">
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_alsavol" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info_multiroom_rx_alsavol" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_multiroom_rx_alsavol" class="help-block-configs help-block-margin hide">
+						ALSA volume should be 100% (0dB) when Airplay or Spotify renderer is playing on the Sender.
+					</span>
+					<!-- RESTART BTN -->
 					<div style="margin-top:1em">
 						<a data-toggle="modal" href="#restart-rx" $_rx_restart_link_disable><button class="btn btn-medium btn-primary" $_rx_restart_btn_disable>Restart</button></a>&nbsp;Receiver
 					</div>
@@ -228,7 +239,7 @@
 
 				<label class="control-label" for="multiroom_rx_rtprio">Realtime priority</label>
 				<div class="controls controls-select">
-					<input class="input-small" type="number" maxlength="2" min="1" max="99" name="multiroom_rx_rtprio" value="$_multiroom_rx_rtprio">
+					<input id="multiroom_rx_rtprio" class="input-small" type="number" maxlength="2" min="1" max="99" name="multiroom_rx_rtprio" value="$_multiroom_rx_rtprio">
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_rx_rtprio" value="novalue">Set</button>
 					<span id="info_multiroom_rx_rtprio" class="help-block-configs help-block-margin">
 						Realtime process priority for the Receiver daemon. Priorities range from 1 - 99 where higher priority preempts lower priority.<br>

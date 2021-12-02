@@ -145,6 +145,12 @@ if (isset($_POST['update_multiroom_rx_alsa_output_mode'])) {
 		submitJob('multiroom_rx_restart', '', 'ALSA output mode updated', $msg);
 	}
 }
+if (isset($_POST['update_multiroom_rx_alsavol'])) {
+	if (isset($_POST['multiroom_rx_alsavol'])) {
+		$_SESSION['notify']['title'] = 'ALSA volume updated';
+		sysCmd('/var/www/command/util.sh set-alsavol ' . $_SESSION['amixname'] . ' ' . $_POST['multiroom_rx_alsavol']);
+	}
+}
 if (isset($_POST['multiroom_rx_restart'])) {
 	submitJob('multiroom_rx_restart', '', 'Receiver restarted', '');
 }
@@ -206,6 +212,7 @@ $_select['alsa_loopback1'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\
 $_select['alsa_loopback0'] .= "<input type=\"radio\" name=\"alsa_loopback\" id=\"toggle_alsa_loopback2\" value=\"Off\" " . (($_SESSION['alsa_loopback'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 $_multiroom_initvol = $_cfg_multiroom['initial_volume'];
 $_rx_hostnames = $_SESSION['rx_hostnames'] != 'No receivers found' ? 'Found: ' . $_SESSION['rx_hostnames'] : $_SESSION['rx_hostnames'];
+// Advanced options
 $_select['multiroom_tx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['tx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['tx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_tx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['tx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
@@ -229,6 +236,8 @@ $_select['multiroom_rx_mastervol_opt_in1'] .= "<input type=\"radio\" name=\"mult
 $_select['multiroom_rx_mastervol_opt_in0'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle_multiroom_rx_mastervol_opt_in2\" value=\"0\" " . (($_cfg_multiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($_cfg_multiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"hw\" " . (($_cfg_multiroom['rx_alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
+$_multiroom_rx_alsavol = rtrim(sysCmd('/var/www/command/util.sh get-alsavol ' . $_SESSION['amixname'])[0], '%');
+// Advanced options
 $_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"48\" " . (($_cfg_multiroom['rx_bfr'] == '48') ? "selected" : "") . ">48</option>\n";
