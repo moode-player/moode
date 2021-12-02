@@ -18,6 +18,7 @@
 Updates
 
 - UPD: Add otg_mode=1 option for CM4 to /boot/config.txt
+- UPD: Add ALSA volume input field to Receiver Config
 
 Radio stations
 
@@ -29,7 +30,7 @@ Bug fixes
 
 - FIX: Extra div in indextpl.html
 - FIX: Event filtering in librespot event script
-- FIX: Multiroom ALSA config for Librespot
+- FIX: Multiroom ALSA config for librespot
 
 ################################################################################
 #
