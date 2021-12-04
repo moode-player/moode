@@ -667,7 +667,7 @@ rotenc_params=${arr[70]}
 alsaequal=${arr[72]}
 eqfa12p=${arr[73]}
 rev=$(echo $hdwrrev | cut -c 4)
-if [[ $rev = "3" || $rev = "4" || $hdwrrev = "Pi-Zero W 512MB v1.1" ]]; then
+if [[ $rev = "3" || $rev = "4" || $rev = "Z" ]]; then
 	[[ "${arr[74]}" = "1" ]] && piwifi="On" || piwifi="Off"
 	[[ "${arr[75]}" = "1" ]] && pibt="On" || pibt="Off"
 else
