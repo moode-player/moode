@@ -71,7 +71,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 		list($host, $ipaddr) = explode(',', $line);
 		if (strtolower($host) != $thishost) {
 			if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx'))) {
-				workerLog('trx-config.php: get_rx_status failed: ' . $host);
+				debugLog('trx-config.php: get_rx_status failed: ' . $host);
 			}
 			else {
 				if ($result != 'Unknown command') { // r740 or higher host

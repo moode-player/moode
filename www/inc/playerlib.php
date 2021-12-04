@@ -3828,7 +3828,7 @@ function updReceiverVol ($cmd) {
 		// NOTE: set-mpdvol checks to see if Receiver opted in for Master volume
 		if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
 			if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
-				workerLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $ip_hostnames[$i]);
+				debugLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $ip_hostnames[$i]);
 			}
 		}
 	}

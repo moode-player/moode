@@ -31,7 +31,7 @@ while ($line) {
 	list($host, $ipaddr) = explode(",", $line);
 	if (strtolower($host) != $thishost) {
 		if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx'))) {
-			workerLog('players.php: get_rx_status failed: ' . $host);
+			debugLog('players.php: get_rx_status failed: ' . $host);
 		}
 		else {
 			if ($result != 'Unknown command') {  // r740 or higher host
