@@ -31,6 +31,7 @@ Bug fixes
 - FIX: Extra div in indextpl.html
 - FIX: Event filtering in librespot event script
 - FIX: Multiroom ALSA config for librespot
+- FIX: System info not reporting WiFi/Bt adapters for Zero 2 W
 
 ################################################################################
 #
