@@ -294,7 +294,7 @@ function autoConfigSettings() {
 		['requires' => ['spotify_bitrate', 'spotify_initial_volume', 'spotify_volume_curve', 'spotify_volume_normalization', 'spotify_normalization_pregain',
 			'spotify_autoplay'],
 			'optionals' => ['spotify_normalization_method', 'spotify_normalization_gain_type', 'spotify_normalization_threshold','spotify_normalization_attack',
-			'spotify_normalization_release', 'spotify_normalization_knee', 'spotify_format', 'spotify_dither', 'spotify_volume_range'],
+			'spotify_normalization_release', 'spotify_normalization_knee', 'spotify_format', 'spotify_dither', 'spotify_volume_range', 'spotify_username', 'spotify_password'],
 			'handler' => function($values, $optionals) {
 				$mergedValues = array_merge($values, $optionals);
 				setDbParams('cfg_spotify', $mergedValues, 'spotify_');

@@ -2689,10 +2689,18 @@ function startSpotify() {
 		' --normalisation-knee ' . $cfg_spotify['normalization_knee']
 		: '';
 	$autoplay = $cfg_spotify['autoplay'] == 'Yes' ? ' --autoplay' : '';
+	
+	if (!empty($cfg_spotify['username']) && !empty($cfg_spotify['password'])) {
+		$credentials = ' --username ' . $cfg_spotify['username'] . ' --password ' . $cfg_spotify['password'];
+	} else {
+		$credentials = ''; // Could use ternary operator, but this seems easier to read
+	}
+	// End of Options
 
- 	// NOTE: We use --disable-audio-cache because the audio file cache eats disk space.
+	// Build command arguments. NOTE: We use --disable-audio-cache because the audio file cache eats disk space.
 	$cmd = 'librespot' .
 		' --name "' . $_SESSION['spotifyname'] . '"' .
+		$credentials .
 		' --bitrate ' . $cfg_spotify['bitrate'] .
 		' --format ' . $cfg_spotify['format'] .
 		$dither .

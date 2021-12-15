@@ -82,6 +82,9 @@ $_select['normalization_threshold'] = $cfg_spotify['normalization_threshold'];
 $_select['normalization_attack'] = $cfg_spotify['normalization_attack'];
 $_select['normalization_release'] = $cfg_spotify['normalization_release'];
 $_select['normalization_knee'] = $cfg_spotify['normalization_knee'];
+// Login credentials
+$_select['username'] = $cfg_spotify['username'];
+$_select['password'] = $cfg_spotify['password'];
 // Autoplay after playlist completes
 $_select['autoplay'] .= "<option value=\"Yes\" " . (($cfg_spotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['autoplay'] .= "<option value=\"No\" " . (($cfg_spotify['autoplay'] == 'No') ? "selected" : "") . ">No</option>\n";

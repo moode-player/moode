@@ -155,6 +155,23 @@
 			</div>
 
 			<div class="control-group">
+				<label class="control-label" for="username">Username</label>
+				<div class="controls">
+					<input class="input-large" type="text" id="username" name="config[username]" value="$_select[username]">
+					<a aria-label="Help" class="info-toggle" data-cmd="info_username" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info_username" class="help-block-configs help-block-margin hide">
+						Your Spotify credentials; this helps with "local discovery" and can enable remote playback. (For facebook-based login, set a <a href="https://www.spotify.com/account/set-device-password/" target="_blank">device password</a>)
+                    </span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="password">Password</label>
+				<div class="controls">
+					<input class="input-large" type="password" name="config[password]" value="$_select[password]">
+				</div>
+			</div>
+
+			<div class="control-group">
 				<label class="control-label" for="autoplay">Autoplay</label>
 				<div class="controls">
 					<select id="autoplay" class="input-large" name="config[autoplay]">

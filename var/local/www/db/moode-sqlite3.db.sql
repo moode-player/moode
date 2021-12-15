@@ -477,6 +477,8 @@ INSERT INTO cfg_spotify (id, param, value) VALUES (12, 'normalization_knee', '1'
 INSERT INTO cfg_spotify (id, param, value) VALUES (13, 'format', 'S16');
 INSERT INTO cfg_spotify (id, param, value) VALUES (14, 'dither', '');
 INSERT INTO cfg_spotify (id, param, value) VALUES (15, 'volume_range', '60');
+INSERT INTO cfg_spotify (id, param, value) VALUES (16, 'username', '');
+INSERT INTO cfg_spotify (id, param, value) VALUES (17, 'password', '');
 
 -- Table: cfg_network
 CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3));

@@ -187,6 +187,8 @@ spotify_normalization_knee = "1"
 spotify_format = "S16"
 spotify_dither = ""
 spotify_volume_range = "60"
+spotify_username = ""
+spotify_password = ""
 
 [Squeezelite]
 squeezelite_PLAYERNAME = "Moode"
