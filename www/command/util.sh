@@ -145,7 +145,7 @@ if [[ $1 = "clear-syslogs" ]]; then
 	truncate /var/log/mpd/log --size 0
 	truncate /var/log/nginx/access.log --size 0
 	truncate /var/log/nginx/error.log --size 0
-	truncate /var/log/php7.3-fpm.log --size 0
+	truncate /var/log/php7.4-fpm.log --size 0
 	truncate /var/log/php_errors.log --size 0
 	truncate /var/log/regen_ssh_keys.log --size 0
 	truncate /var/log/samba/log.nmbd --size 0

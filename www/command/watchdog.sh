@@ -38,7 +38,7 @@ while true; do
 		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
 		LOG_MSG=" watchdog: Info: Reducing PHP fpm worker pool"
 		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
-		systemctl restart php7.3-fpm
+		systemctl restart php7.4-fpm
 	fi
 
 	# MPD

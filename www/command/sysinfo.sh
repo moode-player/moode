@@ -442,7 +442,7 @@ ROOTSIZE="$(df -h | grep /dev/root | awk '{print $2}')"
 ROOTUSED="$(df | grep /dev/root | awk '{print $5}')"
 ROOTAVAIL="$(df -h | grep /dev/root | awk '{print $4}')"
 
-/opt/vc/bin/tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
+tvservice -s | grep -q "off" && HDMI="Off" || HDMI="On"
 
 NOW=$(date +"%Y-%m-%d %T")
 UPTIME="$(uptime -p)"
