@@ -357,7 +357,7 @@ function restart_servers() {
 	exec('sudo killall worker.php');
 	exec('sudo killall watchdog.sh');
 	exec('sudo rm /run/worker.pid');
-	exec('sudo systemctl restart php7.3-fpm');
+	exec('sudo systemctl restart php7.4-fpm');
 	exec('sudo systemctl restart nginx');
 	exec('sudo systemctl stop mpd');
 	exec('sudo /var/www/command/worker.php');
