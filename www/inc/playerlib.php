@@ -1695,7 +1695,6 @@ function playerSession($action, $var = '', $value = '') {
 function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
 	$session_file = SESSION_SAVE_PATH . '/sess_' . $_SESSION['sessionid'];
 
-	// NOTE: There is also a check in watchdog.sh
 	for ($i = 0; $i < $max_loops; $i++) {
 		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
