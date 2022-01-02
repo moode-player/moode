@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Dec 20 18:36:15 2021
+-- File generated with SQLiteStudio v3.1.0 on Sun Jan 2 13:45:28 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -626,9 +626,17 @@ INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (11, 'Classic V Plu
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (12, 'Vinyl Touch', '60,66,62,61,60,60,60,54,48,68');
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (13, 'Vinyl Touch Plus', '60,68,64,60,60,60,60,46,41,68');
 
--- Table: cfg_eqp12
-CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands INTEGER);
-INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0, NULL);
+-- Table: cfg_gpio
+CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32));
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
 
 -- Table: cfg_mpd
 CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
@@ -681,35 +689,9 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384
 INSERT INTO cfg_mpd (id, param, value) VALUES (47, 'stop_dsd_silence', 'no');
 INSERT INTO cfg_mpd (id, param, value) VALUES (48, 'thesycon_dsd_workaround', 'no');
 
--- Table: cfg_gpio
-CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32));
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
-
--- Table: cfg_hash
-CREATE TABLE cfg_hash (id INTEGER PRIMARY KEY, param CHAR (64), value CHAR (64), "action" CHAR (32));
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '390ed3c2876a41cbe45479a709470410', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (2, '/etc/nginx/fastcgi_params', '3f637c789945a0818b2bcf48885708e5', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '57ffe914e3f46b4afab54299bc98d6c1', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/php-fpm.conf', '8d60ea0c8a646382b1dda59393d1d90b', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', 'd9f65519e484de1cf5240ead12bdde46', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', 'ad8fa459c4044dc2704fcf898be75f26', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '8eeedf652d69acf1ae6bbd6ad9cc6f8a', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', '0f720f2230b9e25be60a60d2f82143ec', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/css/main.min.css', '9a6890a45b40aef84c05a95d6a4439c6', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/var/www/js/config.min.js', '9fd16bc1973daa9eab7d464e8b0de85f', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (13, '/var/www/js/lib.min.js', 'b70bf024cdf2f10da19fcd5453fef8e5', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (14, '/var/www/js/main.min.js', '68417f55a120c14bd7cef57d337f32f8', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (15, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
+-- Table: cfg_eqp12
+CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands INTEGER);
+INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0, NULL);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

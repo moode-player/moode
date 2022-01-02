@@ -81,19 +81,6 @@ pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
 
-// TODO: Remove this for 8 series
-// Ensure critical files are factory default
-//$result = integrityCheck();
-$result = 'passed';
-if ($result === false) {
-	workerLog('worker: Integrity check (failed:' . $_SESSION['ic_return_code'] . ')');
-	workerLog('worker: Exited');
-	exit;
-}
-else {
-	workerLog('worker: Integrity check ('. $result .')');
-}
-
 // Ensure certain files exist and with the correct permissions
 if (!file_exists('/var/local/www/playhistory.log')) {
 	sysCmd('touch /var/local/www/playhistory.log');
