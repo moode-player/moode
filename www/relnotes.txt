@@ -15,7 +15,27 @@
 #
 ################################################################################
 
-TBD
+New features
+
+- NEW:
+
+Radio stations
+
+- NEW: DR P1
+- NEW: DR P2
+- NEW: DR P3
+- NEW: DR P4
+- UPD: DR P6 Beat
+- UPD: DR P8 Jazz
+
+Updates
+
+- UPD: Ignore articles when sorting Composers in Tag View
+- UPD: Restrict DF to local file systems in moodeutl -m
+
+Bug fixes
+
+- FIX: Parsing nameserver from resolv.conf
 
 ################################################################################
 #
