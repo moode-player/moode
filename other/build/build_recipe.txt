@@ -91,7 +91,7 @@ sudo timedatectl set-timezone "America/Detroit"
 //
 
 cd ~
-wget http://moodeaudio.org/downloads/prod/moode-r761.zip
+wget http://moodeaudio.org/downloads/src/moode-r761.zip
 unzip -p -q ./moode-r761.zip moode/www/command/resizefs.sh > ./resizefs.sh
 unzip -p -q ./moode-r761.zip moode/boot/config.txt.default > ./config.txt.default
 unzip -p -q ./moode-r761.zip moode/boot/moodecfg.ini.default > ./moodecfg.ini.default
