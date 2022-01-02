@@ -185,7 +185,7 @@ if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESS
 
 // Ethernet adapter IP check
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
-	$_SESSION['notify']['title'] = 'Ethernet adapter check updated';
+	$_SESSION['notify']['title'] = 'Ethernet address wait updated';
 	playerSession('write', 'eth0chk', $_POST['eth0chk']);
 }
 
