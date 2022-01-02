@@ -203,7 +203,10 @@ function groupLib(fullLib) {
 	});
 
 	allGenres = Object.values(allSongs.reduce(reduceGenres, {})).map(function(group){ return group.genre; });
-	allGenres.sort();
+    var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+    allGenres.sort(function(a, b) {
+        return collator.compare(removeArticles(a), removeArticles(b));
+    });
 
 	allAlbums = Object.values(allSongs.reduce(reduceAlbums, {})).map(function(albumTracks){
 		var file = findAlbumProp(albumTracks, 'file');
@@ -236,7 +239,6 @@ function groupLib(fullLib) {
 	// @Atair: Sorting by artist makes no sense when a song has multiple artists. Due to code in playerlib.php album_artist is never empty anyway,
 	//         so it is safe to change the constructs like a['album_artist'] || a['artist'] just to a['album_artist'].
 	//         and sort by album_artist only
-	var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 	allSongs.sort(function(a, b) {
 		return collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist']));
 	});
