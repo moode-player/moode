@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 #	Bluetooth conenection agent (C) 2019 @kaymes
 #
