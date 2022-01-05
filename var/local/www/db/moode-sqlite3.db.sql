@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Nov 25 11:37:00 2021
+-- File generated with SQLiteStudio v3.1.0 on Mon Jan 3 14:01:40 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -46,8 +46,8 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (36, 'https://wz4web.scahw.com.au/live/4buddha_32.stream/playlist.m3u8', 'Buddha Radio', 'r', 'local', 'Chill Out', 'Buddah', 'English', 'Australia', 'Asia', '32', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (37, 'http://media-ice.musicradio.com/ClassicFMMP3', 'Classic FM', 'r', 'local', 'Classical', 'Global Radio', 'English', 'United Kingdom', 'Europe', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (38, 'http://icecast6.play.cz/croddur-256.mp3', 'Czech Radio Classical', 'r', 'local', 'Classical', 'ČRo D-Dur', 'Czech', 'Czech Republic', 'Europe', '256', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (39, 'http://live-icy.gss.dr.dk:8000/A/A29H.mp3', 'DR P6 Beat', 'r', 'local', 'Alternative, Alt Rock, Rock', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (40, 'http://live-icy.gss.dr.dk:8000/A/A22H.mp3', 'DR P8 Jazz', 'r', 'local', 'Jazz', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (39, 'http://live-icy.dr.dk/A/A29H.mp3', 'DR P6 Beat', 'r', 'local', 'Alternative, Alt Rock, Rock', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (40, 'http://live-icy.dr.dk/A/A22H.mp3', 'DR P8 Jazz', 'r', 'local', 'Jazz', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (41, 'http://81.92.238.33:80', 'Eldoradio', 'r', 'local', 'Pop, Top 40, Chart', 'Eldoradio', 'Luxembourgish', 'Luxembourg', 'Europe', '256', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (42, 'http://streams.fluxfm.de/live/mp3-320/audio/', 'FluxFM', 'r', 'local', 'News, Various Genres', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (43, 'http://streams.fluxfm.de/60er/mp3-320/streams.fluxfm.de/', 'FluxFM - 60s', 'r', 'local', '60s', 'FluxFM', 'German', 'Germany', 'Europe', '320', 'MP3', 'No', '', '');
@@ -200,7 +200,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (190, 'https://live-cdn.sr.se/pool2/p2musik/p2musik.isml/p2musik-audio=192000.m3u8', 'Swedish Classic Radio', 'r', 'local', 'Classical, Contemporary, Jazz, Folk', 'Sveriges Radio', 'Dutch', 'Netherlands', 'Europe', '192', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (191, 'http://158.69.74.203:80/', 'SwissGroove', 'r', 'local', 'Jazz, Funk, Soul, World, Latin, Lounge, Nu Grooves', 'SwissGroove', 'English', 'Switzerland', 'Europe', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (192, 'http://swr-swr2-live.cast.addradio.de/swr/swr2/live/mp3/256/stream.mp3', 'SWR 2', 'r', 'local', 'Classical, Jazz', 'Südwestdeutscher Rundfunk', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (193, 'http://west-aac-64.streamthejazzgroove.com', 'The Jazz Groove', 'r', 'local', 'Jazz', 'The Jazz Groove', 'English', 'United States', 'North America', '64', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (193, 'http://west-aac-64.streamthejazzgroove.com/stream', 'The Jazz Groove', 'r', 'local', 'Jazz', 'The Jazz Groove', 'English', 'United States', 'North America', '64', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (194, 'http://live-radio01.mediahubaustralia.com/2TJW/mp3/', 'Triple J', 'r', 'local', 'Alternative', 'ABC', 'English', 'Australia', 'Asia', '96', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (195, 'http://live-radio01.mediahubaustralia.com/UNEW/mp3/', 'Triple J Unearthed', 'r', 'local', 'Alternative, Indie', 'ABC', 'English', 'Australia', 'Asia', '96', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (196, 'https://ice.cr1.streamzilla.xlcdn.com:8000/sz=RCOLiveWebradio=mp3-192', 'RCO Live', 'r', 'local', 'Classical', 'RCO', 'Dutch', 'Netherlands', 'Europe', '192', 'MP3', 'No', '', '');
@@ -239,6 +239,10 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (229, 'http://ice5.securenetsystems.net/KCSM', 'KCSM', 'r', 'local', 'Jazz', 'KCSM FM', 'English', 'United States', 'North America', '64', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (230, 'http://msmn7.co:8018/stream', 'CDNX', 'r', 'local', 'Alternative', 'Camden Market', 'English', 'United Kingdom', 'Europe', '256', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (231, 'http://stream.dandelionradio.com:9414', 'Dandelion Radio', 'r', 'local', 'Alternative', 'Dandelion Radio', 'English', 'United Kingdom', 'Europe', '128', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (232, 'http://live-icy.dr.dk/A/A03H.mp3', 'DR P1', 'r', 'local', 'News, Talk', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (233, 'http://live-icy.dr.dk/A/A04H.mp3', 'DR P2', 'r', 'local', 'Eclectic, Music, Culture', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (234, 'http://live-icy.dr.dk/A/A05H.mp3', 'DR P3', 'r', 'local', 'Pop, Rock', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (235, 'http://live-icy.dr.dk/A/A08H.mp3', 'DR P4', 'r', 'local', 'Music, News', 'DR', 'Danish', 'Denmark', 'Europe', '192', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
 -- Table: cfg_sl
@@ -626,9 +630,17 @@ INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (11, 'Classic V Plu
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (12, 'Vinyl Touch', '60,66,62,61,60,60,60,54,48,68');
 INSERT INTO cfg_eqalsa (id, curve_name, curve_values) VALUES (13, 'Vinyl Touch Plus', '60,68,64,60,60,60,60,46,41,68');
 
--- Table: cfg_eqp12
-CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands INTEGER);
-INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0, NULL);
+-- Table: cfg_gpio
+CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32));
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
+INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
 
 -- Table: cfg_mpd
 CREATE TABLE cfg_mpd (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));
@@ -681,35 +693,9 @@ INSERT INTO cfg_mpd (id, param, value) VALUES (46, 'max_playlist_length', '16384
 INSERT INTO cfg_mpd (id, param, value) VALUES (47, 'stop_dsd_silence', 'no');
 INSERT INTO cfg_mpd (id, param, value) VALUES (48, 'thesycon_dsd_workaround', 'no');
 
--- Table: cfg_gpio
-CREATE TABLE cfg_gpio (id INTEGER PRIMARY KEY, pin CHAR (2), enabled CHAR (1), command CHAR (64), param CHAR (32), value CHAR (32));
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (1, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (2, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (3, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (4, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (5, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (6, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (7, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (8, '2', '0', NULL, NULL, NULL);
-INSERT INTO cfg_gpio (id, pin, enabled, command, param, value) VALUES (99, NULL, NULL, NULL, 'bounce_time', '1000');
-
--- Table: cfg_hash
-CREATE TABLE cfg_hash (id INTEGER PRIMARY KEY, param CHAR (64), value CHAR (64), "action" CHAR (32));
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (1, '/etc/nginx/nginx.conf', '390ed3c2876a41cbe45479a709470410', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (2, '/etc/nginx/fastcgi_params', '3f637c789945a0818b2bcf48885708e5', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (3, '/etc/php/7.3/cli/php.ini', '57ffe914e3f46b4afab54299bc98d6c1', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (4, '/etc/php/7.3/fpm/php-fpm.conf', '8d60ea0c8a646382b1dda59393d1d90b', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (5, '/etc/php/7.3/fpm/php.ini', 'd9f65519e484de1cf5240ead12bdde46', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (6, '/etc/php/7.3/fpm/pool.d/www.conf', '6897189fd65da48338901f0c22eaa497', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (7, '/etc/php/7.3/mods-available/opcache.ini', '561a03862bb902fa39ca0b6358eaf320', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (8, '/tmp/cfg_audiodev.sql', 'ad8fa459c4044dc2704fcf898be75f26', 'exit');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (9, '/var/www/command/worker.php', '8eeedf652d69acf1ae6bbd6ad9cc6f8a', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (10, '/var/www/inc/playerlib.php', 'a2f4e41c5babca19d3a1ca5f09c068a4', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (11, '/var/www/css/main.min.css', '9a6890a45b40aef84c05a95d6a4439c6', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (12, '/var/www/js/config.min.js', '9fd16bc1973daa9eab7d464e8b0de85f', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (13, '/var/www/js/lib.min.js', '80ab3662a5881531bcefd6d91e44156f', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (14, '/var/www/js/main.min.js', '7ea9b3e317c4638f5d294f5587f05b19', 'warning');
-INSERT INTO cfg_hash (id, param, value, "action") VALUES (15, '/etc/rc.local', '6c7a7e39b81ea1ac97d0615a20616110', 'ignore');
+-- Table: cfg_eqp12
+CREATE TABLE cfg_eqp12 (id INTEGER PRIMARY KEY, curve_name CHAR (32), settings TEXT, active BOOLEAN, bands INTEGER);
+INSERT INTO cfg_eqp12 (id, curve_name, settings, active, bands) VALUES (1, 'Default curve', '0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0 20 1 0  0', 0, NULL);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

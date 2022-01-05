@@ -339,8 +339,8 @@ function system_monitor() {
 		$mem_util = number_format(100 * (1 - ($mem_avail / $mem_total)), 0, '.', '');
 
 		// Disk
-		$disk_used = exec("df -h | awk 'FNR==2 {print $5}'");
-		$disk_free = exec("df -h | grep /dev/root | awk '{print $4}'");
+		$disk_used = exec("df -h -l | awk 'FNR==2 {print $5}'");
+		$disk_free = exec("df -h -l | grep /dev/root | awk '{print $4}'");
 
 		// PHP FPM pool count
 		$fpm_pool = exec('pgrep -c -f "php-fpm: pool www"');

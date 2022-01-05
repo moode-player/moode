@@ -5,15 +5,15 @@ HDWR_REV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_sys
 KERNEL_ARCH=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='kernel_architecture'")
 AUDIO_DEV=$(sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='adevname'")
 
-echo RaspiOS: $(cat /etc/debian_version) \| $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\)
-echo PiModel: $HDWR_REV
-echo AudioDev: $AUDIO_DEV
+echo Linux: $(cat /etc/debian_version) \| $(uname -r) $(uname -v | awk '{print $1}') \| $(uname -m) \($KERNEL_ARCH\)
+echo Raspi: $HDWR_REV
+echo Audio: $AUDIO_DEV
 
 echo "
-                      ____     __        ____
-          __ _  ___  / __ \___/ /__     /_  /
-         /  ' \/ _ \/ /_/ / _  / -_)     / /
-        /_/_/_/\___/\____/\_,_/\__/     /_/
+                      ____     __      ___
+          __ _  ___  / __ \___/ /__   ( _ )
+         /  ' \/ _ \/ /_/ / _  / -_) / _  |
+        /_/_/_/\___/\____/\_,_/\__/  \___/
 
                  moOde audio player
               Release $MOODE_RELEASE

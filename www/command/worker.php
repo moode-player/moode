@@ -81,17 +81,6 @@ pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
 
-// Ensure critical files are factory default
-$result = integrityCheck();
-if ($result === false) {
-	workerLog('worker: Integrity check (failed:' . $_SESSION['ic_return_code'] . ')');
-	workerLog('worker: Exited');
-	exit;
-}
-else {
-	workerLog('worker: Integrity check ('. $result .')');
-}
-
 // Ensure certain files exist and with the correct permissions
 if (!file_exists('/var/local/www/playhistory.log')) {
 	sysCmd('touch /var/local/www/playhistory.log');
@@ -241,16 +230,15 @@ workerLog('worker: HDMI port ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
 //
 workerLog('worker: -- Network');
 //
-// IP address check timeout
-workerLog('worker: IP address check timeout (' . $_SESSION['ipaddr_timeout'] . ' secs)');
 
 // Check ETH0
 $eth0 = sysCmd('ip addr list | grep eth0');
 if (!empty($eth0)) {
 	workerLog('worker: eth0 adapter exists');
 	// Test Ethernet IP if indicated
-	workerLog('worker: eth0 IP address check (' . ($_SESSION['eth0chk'] == '1' ? 'Yes' : 'No') . ')');
+	workerLog('worker: eth0 wait for IP address (' . ($_SESSION['eth0chk'] == '1' ? 'Yes' : 'No') . ')');
 	if ($_SESSION['eth0chk'] == '1') {
+		workerLog('worker: IP address wait timeout (' . $_SESSION['ipaddr_timeout'] . ' secs)');
 		$eth0ip = waitForIpAddr('eth0', $_SESSION['ipaddr_timeout']);
 	}
 	else {
@@ -874,7 +862,7 @@ $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
 workerLog('worker: Screen saver activation (' . $_SESSION['scnsaver_timeout'] . ')');
 
-// CoverView show/hide toggle (used in System Config, LocalUI section)
+// CoverView show/hide toggle (used in System Config, Local Display section)
 $_SESSION['coverview_toggle'] = '-off';
 
 // TRX Config advanced options toggle
@@ -1526,10 +1514,10 @@ function log_network_info($interface) {
 	workerLog('worker: IP addr (' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $2}'")[0] . ')');
 	workerLog('worker: Netmask (' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $4}'")[0] . ')');
 	workerLog('worker: Gateway (' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0] . ')');
-	$line3 = sysCmd("cat /etc/resolv.conf | awk 'NR==3 {print $2}'")[0]; // nameserver
-	$line2 = sysCmd("cat /etc/resolv.conf | awk 'NR==2 {print $2}'")[0]; // domain
+	$line3 = sysCmd("cat /etc/resolv.conf | awk '/^nameserver/ {print $2; exit}'")[0]; // First nameserver entry of possibly many
+	$line2 = sysCmd("cat /etc/resolv.conf | awk '/^domain/ {print $2; exit}'")[0]; // First domain entry of possibly many
 	$primary_dns = !empty($line3) ? $line3 : $line2;
-	$domain_name = !empty($line3) ? $line2 : 'None';
+	$domain_name = !empty($line3) ? $line2 : 'None found';
 	workerLog('worker: Pri DNS (' . $primary_dns . ')');
 	workerLog('worker: Domain  (' . $domain_name . ')');
 }

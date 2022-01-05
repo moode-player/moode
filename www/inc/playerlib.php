@@ -236,60 +236,6 @@ function echoTemplate($template) {
 	echo $template;
 }
 
-function integrityCheck() {
-	$warning = false;
-
-	// Export device table
-	sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT * FROM cfg_audiodev WHERE drvoptions NOT IN ('slave', 'glb_mclk') AND chipoptions = ''\" > /tmp/cfg_audiodev.sql");
-	// Broom www root
-	sysCmd('find /var/www -type l -delete');
-
-	// Check database schema
-	$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db .schema | grep ro_columns');
-	if (empty($result)) {
-		$_SESSION['ic_return_code'] = '1';
-		return false;
-	}
-
-	// Check hash table
-	$result = cfgdb_read('cfg_hash', cfgdb_connect());
-	foreach ($result as $row) {
-		// Check mapped action
-		if ($row['id'] < 9 && $row['action'] !== 'exit') {
-			$_SESSION['ic_return_code'] = '2';
-			return false;
-		}
-
-		// Check file hash
-		if (md5(file_get_contents($row['param'])) !== $row['value']) {
-			if ($row['action'] === 'exit') {
-				$_SESSION['ic_return_code'] = '3';
-				return false;
-			}
-			elseif ($row['action'] === 'warning') {
-				workerLog('worker: Integrity check (' . $row['action'] . ': ' . basename($row['param']) . ')');
-				$warning = true;
-			}
-			elseif ($row['action'] === 'ignore') {
-				// NOP
-			}
-			else {
-				$_SESSION['ic_return_code'] = '9';
-				return false;
-			}
-		}
-	}
-
-	// Verify the row count
-	$count = sysCmd('sqlite3 ' . SQLDB_PATH . " \"SELECT COUNT() FROM cfg_audiodev\"");
-	if ($count[0] != 79) {
-		$_SESSION['ic_return_code'] = '4';
-		return false;
-	}
-
-	return $warning === true ? 'passed with warnings' : 'passed';
-}
-
 // Socket routines for engine-cmd.php
 function sendEngCmd ($cmd) {
 	//workerLog('sendEngCmd(): cmd: ' . $cmd);
@@ -1695,7 +1641,6 @@ function playerSession($action, $var = '', $value = '') {
 function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
 	$session_file = SESSION_SAVE_PATH . '/sess_' . $_SESSION['sessionid'];
 
-	// NOTE: There is also a check in watchdog.sh
 	for ($i = 0; $i < $max_loops; $i++) {
 		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
 
