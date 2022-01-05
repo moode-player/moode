@@ -246,19 +246,15 @@ MPD_SETTINGS() {
 	echo -e "\nVolume type\t\t= $mixer_type\c"
 	echo -e "\nALSA device\t\t= hw:$device\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
-	if [ $(($patch_id & $PATCH_SELECTIVE_RESAMPLING)) -ne 0 ]; then
-		echo -e "\nSelective resampling\t= $selective_resample_mode\c"
-	fi
+	echo -e "\nSelective resampling\t= $selective_resample_mode\c"
 	echo -e "\nSoX quality\t\t= $sox_quality\c"
-	if [ $(($patch_id & $PATCH_SOX_CUSTOM_RECIPE)) -ne 0 ]; then
-		if [[ $sox_quality = "custom" ]]; then
-			echo -e "\nPrecision\t\t= $sox_precision\c"
-			echo -e "\nPhase response\t\t= $sox_phase_response\c"
-			echo -e "\nPassband end\t\t= $sox_passband_end\c"
-			echo -e "\nStopband begin\t\t= $sox_stopband_begin\c"
-			echo -e "\nAttenuation\t\t= $sox_attenuation\c"
-			echo -e "\nFlags\t\t\t= $sox_flags\c"
-		fi
+	if [[ $sox_quality = "custom" ]]; then
+		echo -e "\nPrecision\t\t= $sox_precision\c"
+		echo -e "\nPhase response\t\t= $sox_phase_response\c"
+		echo -e "\nPassband end\t\t= $sox_passband_end\c"
+		echo -e "\nStopband begin\t\t= $sox_stopband_begin\c"
+		echo -e "\nAttenuation\t\t= $sox_attenuation\c"
+		echo -e "\nFlags\t\t\t= $sox_flags\c"
 	fi
 	echo -e "\nSoX multithreading\t= $sox_multithreading\c"
 	echo -e "\nDSD over PCM (DoP)\t= $dop\c"
@@ -481,8 +477,7 @@ if [ "$BAVER" = "" ]; then
 fi
 HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
 WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
-RPI_GPIO_VER=$(grep -iRl "RPi.GPIO-" /usr/local/lib/python3.7/dist-packages/ | awk -F "." '{print $3 "." $4 "." $5}' | cut -f 2 -d "-")
-
+RPI_GPIO_VER=$(dpkg -s python3-rpi.gpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"
 
@@ -607,7 +602,6 @@ else
 	rbsvc="Not installed"
 fi
 mpdver=${arr[15]}
-patch_id=$(echo $mpdver | awk -F"_p0x" '{print $2}')
 rbactive=${arr[16]}
 adevname=${arr[17]}
 clkradio_mode=${arr[18]}
