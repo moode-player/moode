@@ -96,7 +96,10 @@ elseif ($_GET['cmd'] == 'disconnect-renderer') {
 }
 // Multiroom receiver status
 elseif ($_GET['cmd'] == 'get_rx_status') {
-	if ($_SESSION['rx_hostnames'] == 'No receivers found') {
+	if (!isset($_SESSION['rx_hostnames'])) {
+		$rx_status = 'Discovery has not been run';
+	}
+	elseif ($_SESSION['rx_hostnames'] == 'No receivers found') {
 		$rx_status = 'No receivers found';
 	}
 	else {

@@ -35,6 +35,7 @@ Updates
 - UPD: Improve scan for Samba shares
 - UPD: Deprecate 64-bit kernel option
 - UPD: Exclude Dummy from MPD Output device list
+- UPD: Handle case where Receiver Discovery has not been run
 
 Bug fixes
 

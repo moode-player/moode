@@ -2249,6 +2249,9 @@ $(document).on('click', '.context-menu a', function(e) {
                 if (result == 'All receivers are disabled') {
                     notify('all_receivers_disabled');
                 }
+                else if (result == 'Discovery has not been run') {
+                    notify('run_receiver_discovery');
+                }
                 else if (result != 'No receivers found') {
                     var output = '';
                     var rxStatus = result.split(':');
