@@ -60,7 +60,7 @@ if (isset($_POST['update_cuefiles_ignore'])) {
 	}
 }
 // Re-mount nas sources
-if isset($_POST['remount_sources'])) {
+if (isset($_POST['remount_sources'])) {
 	$result = cfgdb_read('cfg_source', $dbh);
 	if ($result === true) {
 		$_SESSION['notify']['title'] = 'No sources configured';
@@ -182,27 +182,16 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 	$_GET['id'] = $_SESSION['src_mpid'];
 	// Samba
 	if ($_POST['mount']['type'] == 'cifs') {
+		$nmblookup_result = sysCmd("nmblookup -S -T '*' | grep '*<00>' | cut -f 1 -d '*'");
+		sort($nmblookup_result, SORT_NATURAL | SORT_FLAG_CASE);
+		foreach ($nmblookup_result as $nmblookup_line) {
+			$nmblookup_part = explode(', ', $nmblookup_line); // [0] = host.domain, [1] = IP address
 
-		// Scan for SMB resources
-		$result = sysCmd('smbtree -N -b');
-		// Sort and parse scan results
-		sort($result, SORT_NATURAL | SORT_FLAG_CASE);
-		foreach ($result as $line) {
-			if (strpos(strtolower($line), 'ipc$') === false && strpos($line, 'WORKGROUP') === false) {
-				// Flatten the results
-				$line = preg_replace('/\s\s+/', ',', $line);
-				$line = str_replace('\\', '/', $line);
-				$line = str_replace('//', '', $line);
-				$line = preg_replace('/^./', '', $line);
-				$line = str_replace("\t", '', $line);
-				// Load dropdown
-				$srv = explode(',', $line, 2);
-				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $srv[0], '', $srv[0]);
-				// Load dropdown (filter out lines containing just the server name)
-				/*if (strpos($line, '/') !== false) {
-					$srv = explode(',', $line, 2);
-					$_address .= sprintf('<option value="%s" %s>%s</option>\n', $srv[0], '', $srv[0]);
-				}*/
+			$smbclient_result = sysCmd("smbclient -N -g -L " . trim($nmblookup_part[1]) . " | grep Disk | cut -f 2 -d '|'");
+			sort($smbclient_result, SORT_NATURAL | SORT_FLAG_CASE);
+			$host = strtoupper(explode('.', $nmblookup_part[0])[0] );
+			foreach ($smbclient_result as $share) {
+				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $host . '/' .$share, '', $host . '/' .$share);
 			}
 		}
 	}
