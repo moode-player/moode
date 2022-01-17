@@ -34,6 +34,7 @@ Updates
 - UPD: Restrict DF to local file systems in moodeutl -m
 - UPD: Improve scan for Samba shares
 - UPD: Deprecate 64-bit kernel option
+- UPD: Exclude Dummy from MPD Output device list
 
 Bug fixes
 

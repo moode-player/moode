@@ -2136,7 +2136,7 @@ function getDeviceNames () {
 			if (empty($alsa_id)) {
 				$devices[$i] = $i == $_SESSION['cardnum'] ? $_SESSION['adevname'] : '';
 			}
-			elseif ($alsa_id != 'Loopback') {
+			elseif ($alsa_id != 'Loopback' && $alsa_id != 'Dummy') {
 				$aplay_device_name = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
 				$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $alsa_id);
 				if ($result === true) { // Not in table
