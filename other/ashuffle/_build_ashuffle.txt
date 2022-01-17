@@ -12,7 +12,7 @@ sudo apt-get install cmake
 
 sudo git clone https://github.com/joshkunz/ashuffle.git
 cd ashuffle
-sudo git checkout v3.11.1
+sudo git checkout v3.13.2
 sudo git submodule update --init --recursive
 sudo meson -Dbuildtype=release build
 sudo ninja -C build install
