@@ -129,11 +129,13 @@ if (isset($_POST['update_cpugov'])) {
 	playerSession('write', 'cpugov', $_POST['cpugov']);
 }
 
+/* DEPRECATE
 // Linux kernel
 if (isset($_POST['update_kernel_architecture']) && $_POST['kernel_architecture'] != $_SESSION['kernel_architecture']) {
 	submitJob('kernel_architecture', $_POST['kernel_architecture'], $_POST['kernel_architecture'] . ' kernel selected', 'Restart required');
 	playerSession('write', 'kernel_architecture', $_POST['kernel_architecture']);
 }
+*/
 
 // USB auto-mounter
 if (isset($_POST['update_usb_auto_mounter'])) {

@@ -33,6 +33,7 @@ Updates
 - UPD: Ignore articles when sorting Composers in Tag View
 - UPD: Restrict DF to local file systems in moodeutl -m
 - UPD: Improve scan for Samba shares
+- UPD: Deprecate 64-bit kernel option
 
 Bug fixes
 
