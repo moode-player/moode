@@ -33,16 +33,16 @@ else {
 	$dbh = cfgdb_connect();
 }
 
-// for save/remove actions
+// For save/remove actions
 $initiateLibraryUpd = false;
 
 // LIB CONFIG POSTS
 
-// rescan mpd database
+// Rescan mpd database
 if (isset($_POST['regen_library'])) {
 	submitJob('regen_library', '', 'Regenerating library...', 'Stay on this screen until the progress spinner is cleared');
 }
-// auto-update mpd db on usb insert or remove
+// Auto-update mpd db on usb insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
 	if (isset($_POST['usb_auto_updatedb']) && $_POST['usb_auto_updatedb'] != $_SESSION['usb_auto_updatedb']) {
 		$_SESSION['notify']['title'] = $_POST['usb_auto_updatedb'] == '1' ? 'MPD auto-update on' : 'MPD auto-update off';
@@ -50,7 +50,7 @@ if (isset($_POST['update_usb_auto_updatedb'])) {
 		playerSession('write', 'usb_auto_updatedb', $_POST['usb_auto_updatedb']);
 	}
 }
-// ignore cuefiles on library scan
+// Ignore cuefiles on library scan
 if (isset($_POST['update_cuefiles_ignore'])) {
 	if (isset($_POST['cuefiles_ignore']) && $_POST['cuefiles_ignore'] != $_SESSION['cuefiles_ignore']) {
 		$_SESSION['notify']['title'] = $_POST['cuefiles_ignore'] == '1' ? 'MPD ignore CUE files' : 'MPD ignore CUE files';
@@ -59,8 +59,8 @@ if (isset($_POST['update_cuefiles_ignore'])) {
 		setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 	}
 }
-// re-mount nas sources
-if (isset($_POST['remount_sources'])) {
+// Re-mount nas sources
+if isset($_POST['remount_sources'])) {
 	$result = cfgdb_read('cfg_source', $dbh);
 	if ($result === true) {
 		$_SESSION['notify']['title'] = 'No sources configured';
@@ -77,7 +77,7 @@ if (isset($_POST['clear_libcache'])) {
 	clearLibCacheAll();
 	$_SESSION['notify']['title'] = 'Library tag cache cleared';
 }
-// regenerate thumbnail cache
+// Regenerate thumbnail cache
 if (isset($_POST['regen_thmcache'])) {
 	$result = sysCmd('pgrep -l thmcache.php');
 	if (strpos($result[0], 'thmcache.php') !== false) {
@@ -91,14 +91,14 @@ if (isset($_POST['regen_thmcache'])) {
 
 // SOURCE CONFIG POSTS
 
-// remove source
+// Remove source
 if (isset($_POST['delete']) && $_POST['delete'] == 1) {
 	$initiateLibraryUpd = true;
 	$_POST['mount']['action'] = 'delete';
 	$_POST['mount']['id'] = $_SESSION['src_mpid'];
 	submitJob('sourcecfg', $_POST, '', '');
 }
-// save source
+// Save source
 if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// validate
 	$id = sdbquery("SELECT id from cfg_source WHERE name='" . $_POST['mount']['name'] . "'", $dbh);
@@ -107,22 +107,22 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	$_POST['mount']['address'] = $address[0];
 	$_POST['mount']['remotedir'] = $address[1];
 
-	// server
+	// Server
 	if (empty(trim($_POST['mount']['address']))) {
 		$_SESSION['notify']['title'] = 'Path cannot be blank';
 		$_SESSION['notify']['duration'] = 5;
 	}
-	// share
+	// Share
 	elseif ($_POST['mount']['type'] != 'upnp' && empty(trim($_POST['mount']['remotedir']))) {
 		$_SESSION['notify']['title'] = 'Share cannot be blank';
 		$_SESSION['notify']['duration'] = 5;
 	}
-	// userid
+	// Userid
 	elseif ($_POST['mount']['type'] == 'cifs' && empty(trim($_POST['mount']['username']))) {
 		$_SESSION['notify']['title'] = 'Userid cannot be blank';
 		$_SESSION['notify']['duration'] = 5;
 	}
-	// name
+	// Name
 	elseif ($_POST['mount']['action'] == 'add' && !empty($id[0])) {
 		$_SESSION['notify']['title'] = 'Name already exists';
 		$_SESSION['notify']['duration'] = 5;
@@ -131,10 +131,10 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$_SESSION['notify']['title'] = 'Name cannot be blank';
 		$_SESSION['notify']['duration'] = 5;
 	}
-	// ok so save
+	// Ok so save
 	else {
 		$initiateLibraryUpd = true;
-		// cifs and nfs defaults if blank
+		// CIFS and NFS defaults if blank
 		if ($_POST['mount']['type'] != 'upnp') {
 			if (empty(trim($_POST['mount']['rsize']))) {$_POST['mount']['rsize'] = 61440;}
 			if (empty(trim($_POST['mount']['wsize']))) {$_POST['mount']['wsize'] = 65536;}
@@ -147,7 +147,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 				}
 			}
 		}
-		// upnp
+		// UPnP
 		else {
 			//$_POST['mount']['remotedir'] = '';
 			$_POST['mount']['username'] = '';
@@ -158,8 +158,8 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 			$_POST['mount']['options'] = '';
 		}
 		// $array['mount']['key'] must be in column order for subsequent table insert
-		// table cols = id, name, type, address, remotedir, username, password, charset, rsize, wsize, options, error
-		// new id is auto generated, action = add, edit, delete
+		// Table cols = id, name, type, address, remotedir, username, password, charset, rsize, wsize, options, error
+		// New id is auto generated, action = add, edit, delete
 		$array['mount']['action'] = $_POST['mount']['action'];
 		$array['mount']['id'] = $_POST['mount']['id'];
 		$array['mount']['name'] = $_POST['mount']['name'];
@@ -176,28 +176,29 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		submitJob('sourcecfg', $array, '', '');
 	}
 }
-// scanner
+// Scanner
 if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 	$_GET['cmd'] = $_SESSION['src_action'];
 	$_GET['id'] = $_SESSION['src_mpid'];
-	// samba
+	// Samba
 	if ($_POST['mount']['type'] == 'cifs') {
-		// scan for smb resources
+
+		// Scan for SMB resources
 		$result = sysCmd('smbtree -N -b');
-		// sort and parse scan results
+		// Sort and parse scan results
 		sort($result, SORT_NATURAL | SORT_FLAG_CASE);
 		foreach ($result as $line) {
 			if (strpos(strtolower($line), 'ipc$') === false && strpos($line, 'WORKGROUP') === false) {
-				// flatten the results
+				// Flatten the results
 				$line = preg_replace('/\s\s+/', ',', $line);
 				$line = str_replace('\\', '/', $line);
 				$line = str_replace('//', '', $line);
 				$line = preg_replace('/^./', '', $line);
 				$line = str_replace("\t", '', $line);
-				// load dropdown
+				// Load dropdown
 				$srv = explode(',', $line, 2);
 				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $srv[0], '', $srv[0]);
-				// load dropdown (filter out lines containing just the server name)
+				// Load dropdown (filter out lines containing just the server name)
 				/*if (strpos($line, '/') !== false) {
 					$srv = explode(',', $line, 2);
 					$_address .= sprintf('<option value="%s" %s>%s</option>\n', $srv[0], '', $srv[0]);
@@ -205,7 +206,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 			}
 		}
 	}
-	// upnp
+	// UPnP
 	elseif ($_POST['mount']['type'] == 'upnp') {
 		$path = trim($_POST['mount']['address']);
 
@@ -231,7 +232,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 		}
 	}
 }
-// manual entry
+// Manual entry
 if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
 	$_GET['cmd'] = $_SESSION['src_action'];
 	$_GET['id'] = $_SESSION['src_mpid'];
@@ -255,22 +256,22 @@ if ($initiateLibraryUpd == true) {
 if (!isset($_GET['cmd'])) {
 	$tpl = "lib-config.html";
 
-	// display list of music sources if any
+	// Display list of music sources if any
 	$mounts = cfgdb_read('cfg_source', $dbh);
 	foreach ($mounts as $mp) {
-		// upnp
+		// UPnP
 		if ($mp['type'] == 'upnp') {
 			$result = sysCmd('"/var/lib/mpd/music/' . $mp['address'] . '"');
 			$icon = $result[0] != '' ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
 		}
-		// cifs and nfs
+		// CIFS and NFS
 		else {
 			$icon = mountExists($mp['name']) ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
 		}
 		$_mounts .= "<p><a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width:240px;background-color:#333;text-align:left;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
 	}
 
-	// messages
+	// Messages
 	if ($mounts === true) {
 		$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">None configured</p><p></p>';
 	}
@@ -278,15 +279,15 @@ if (!isset($_GET['cmd'])) {
 		$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">Query failed</p>';
 	}
 
-	// auto-updatedb on usb insert/remove
+	// Auto-updatedb on usb insert/remove
 	$_select['usb_auto_updatedb1'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb0\" value=\"1\" " . (($_SESSION['usb_auto_updatedb'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 	$_select['usb_auto_updatedb0'] = "<input type=\"radio\" name=\"usb_auto_updatedb\" id=\"toggle_usb_auto_updatedb1\" value=\"0\" " . (($_SESSION['usb_auto_updatedb'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 
-	// ignore cuefiles on lbirary scan
+	// Ignore cuefiles on lbirary scan
 	$_select['cuefiles_ignore1'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle_cuefiles_ignore0\" value=\"1\" " . (($_SESSION['cuefiles_ignore'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 	$_select['cuefiles_ignore0'] = "<input type=\"radio\" name=\"cuefiles_ignore\" id=\"toggle_cuefiles_ignore1\" value=\"0\" " . (($_SESSION['cuefiles_ignore'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 
-	// thumbcache status
+	// Thumbcache status
 	$_thmcache_status = $_SESSION['thmcache_status'];
 }
 
@@ -294,7 +295,7 @@ if (!isset($_GET['cmd'])) {
 if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 	$tpl = 'src-config.html';
 
-	// edit
+	// Edit
 	if (isset($_GET['id']) && !empty($_GET['id'])) {
 		$_id = $_GET['id'];
 		$mounts = cfgdb_read('cfg_source',$dbh);
@@ -332,12 +333,12 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 		$_SESSION['src_mpid'] = $_id;
 		session_write_close();
 	}
-	// create
+	// Create
 	elseif ($_GET['cmd'] == 'add') {
 		$_hide_remove = 'hide';
 		$_hide_error = 'hide';
 
-		// manual server entry/edit for cifs and nfs
+		// Manual server entry/edit for cifs and nfs
 		if (isset($_POST['nas_manualserver'])) {
 			if ($_POST['mounttype'] == 'cifs' || empty($_POST['mounttype'])) {
 				$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
@@ -360,7 +361,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_options = 'ro,nolock';
 			}
 		}
-		// upnp
+		// UPnP
 		elseif ($_POST['mount']['type'] == 'upnp') {
 			$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
 			$_protocol .= "<option value=\"nfs\">NFS</option>\n";
@@ -369,7 +370,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 			$_userid_pwd_hide = 'hide';
 			$_advanced_options_hide = 'hide';
 		}
-		// cifs and nfs
+		// CIFS and NFS
 		else {
 			$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
 			$_protocol .= "<option value=\"nfs\">NFS</option>\n";
