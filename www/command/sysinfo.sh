@@ -74,7 +74,7 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nNGINX version\t\t= $NGINXVER\c"
 	echo -e "\nSQLite3 version\t\t= $SQLITEVER\c"
 	echo -e "\nHostapd version\t\t= $HOSTAPDVER\c"
-	echo -e "\nWiringPi version\t= $WIRINGPI_VER\c"
+	#echo -e "\nWiringPi version\t= $WIRINGPI_VER\c"
 	echo -e "\nRPi.GPIO version\t= $RPI_GPIO_VER\n"
 }
 
@@ -244,7 +244,6 @@ MPD_SETTINGS() {
 	echo -e "M P D   S E T T I N G S"
 	echo -e "\nVersion\t\t\t= $mpdver\c"
 	echo -e "\nVolume type\t\t= $mixer_type\c"
-	echo -e "\nALSA device\t\t= hw:$device\c"
 	echo -e "\nSoX resampling\t\t= $audio_output_format\c"
 	echo -e "\nSelective resampling\t= $selective_resample_mode\c"
 	echo -e "\nSoX quality\t\t= $sox_quality\c"
@@ -286,7 +285,6 @@ RENDERER_SETTINGS() {
 		echo -e "A I R P L A Y   S E T T I N G S"
 		echo -e "\nVersion\t\t\t= $SPSVER\c"
 		echo -e "\nFriendly name\t\t= $airplayname\c"
-		echo -e "\nALSA device\t\t= $airplay_device\c"
 		echo -e "\nInterpolation\t\t= $interpolation\c"
 		echo -e "\nOutput bit depth\t= $output_format\c"
 		echo -e "\nOutput sample rate\t= $output_rate\c"
@@ -298,16 +296,25 @@ RENDERER_SETTINGS() {
 	fi
 
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
-		SPOTDEV="$(aplay -L | grep -w default)"
+		SPOTVER="$(librespot --version | awk -F" " '{print $2}')"
 		echo -e "S P O T I F Y   S E T T I N G S"
+		echo -e "\nVersion\t\t\t= $SPOTVER\c"
 		echo -e "\nFriendly name\t\t= $spotifyname\c"
-		echo -e "\nALSA device\t\t= $spotify_device\c"
-		echo -e "\nBit rate\t\t= $bitrate\c"
-		echo -e "\nInitial volume\t\t= $initial_volume\c"
-		echo -e "\nVolume curve\t\t= $volume_curve\c"
-		echo -e "\nVolume normalization\t= $volume_normalization\c"
-		echo -e "\nNormalization pregain\t= $normalization_pregain\c"
-		echo -e "\nAutoplay\t\t= $spotify_autoplay\c"
+		echo -e "\nBitrate (kbps)\t\t= $spot_bitrate\c"
+		echo -e "\nFormat\t\t\t= $spot_format\c"
+		echo -e "\nDither\t\t\t= $spot_dither\c"
+		echo -e "\nVolume curve\t\t= $spot_volume_curve\c"
+		echo -e "\nVolume range (dB)\t= $spot_volume_range\c"
+		echo -e "\nInitial volume (%)\t= $spot_initial_volume\c"
+		echo -e "\nVolume normalization\t= $spot_volume_normalization\c"
+		echo -e "\nMethod\t\t\t= $spot_normalization_method\c"
+		echo -e "\nGain type\t\t= $spot_normalization_gain_type\c"
+		echo -e "\nPregain (dB)\t\t= $spot_normalization_pregain\c"
+		echo -e "\nThreshold (dBFS)\t= $spot_normalization_threshold\c"
+		echo -e "\nAttack (ms)\t\t= $spot_normalization_attack\c"
+		echo -e "\nRelease (ms)\t\t= $spot_normalization_release\c"
+		echo -e "\nKnee\t\t\t= $spot_normalization_knee\c"
+		echo -e "\nAutoplay\t\t= $spot_autoplay\c"
 		echo -e "\nResume MPD\t\t= $rsmafterspot\n"
 	fi
 
@@ -476,7 +483,7 @@ if [ "$BAVER" = "" ]; then
 	BAVER="Turn BT on for version info"
 fi
 HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
-WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
+#WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
 RPI_GPIO_VER=$(dpkg -s python3-rpi.gpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"
@@ -561,12 +568,21 @@ max_playlist_length=${arr[24]}
 # Spotify settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_spotify")
 readarray -t arr <<<"$RESULT"
-bitrate=${arr[0]}
-initial_volume=${arr[1]}
-volume_curve=${arr[2]}
-volume_normalization=${arr[3]}
-normalization_pregain=${arr[4]}
-spotify_autoplay=${arr[5]}
+spot_bitrate=${arr[0]}
+spot_initial_volume=${arr[1]}
+spot_volume_curve=${arr[2]}
+spot_volume_normalization=${arr[3]}
+spot_normalization_pregain=${arr[4]}
+spot_autoplay=${arr[5]}
+spot_normalization_method=${arr[6]}
+spot_normalization_gain_type=${arr[7]}
+spot_normalization_threshold=${arr[8]}
+spot_normalization_attack=${arr[9]}
+spot_normalization_release=${arr[10]}
+spot_normalization_knee=${arr[11]}
+spot_format=${arr[12]}
+[[ "${arr[13]}" = "" ]] && spot_dither="Automatic (Default)" || spot_dither=${arr[13]}
+spot_volume_range=${arr[14]}
 
 # Squeezelite settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_sl")
@@ -790,18 +806,7 @@ wlancountry=$(echo ${arr[1]} | cut -f 13 -d "|")
 apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
 apdchan=$(echo ${arr[2]} | cut -f 14 -d "|")
 
-# Renderers
-if [[ $alsaequal != "Off" ]]; then
-	airplay_device="alsaequal"
-	spotify_device="alsaequal"
-elif [[ $eqfa12p != "Off" ]]; then
-	airplay_device="eqfa12p"
-	spotify_device="eqfa12p"
-else
-	airplay_device="hw:"$cardnum
-	spotify_device="plughw:"$cardnum
-fi
-
+# Misc settings
 MODEL=${hdwrrev:0:5}
 if [ $MODEL = Pi-3B ]; then
 	TMP="$(vcgencmd otp_dump | grep 17:)"
