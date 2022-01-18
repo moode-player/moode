@@ -36,6 +36,7 @@ Updates
 - UPD: Deprecate 64-bit kernel option
 - UPD: Exclude Dummy from MPD Output device list
 - UPD: Handle case where Receiver Discovery has not been run
+- UPD: Improvements to System info
 
 Bug fixes
 
