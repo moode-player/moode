@@ -3768,6 +3768,12 @@ function stopMultiroomReceiver() {
 function updReceiverVol ($cmd) {
 	$ip_hostnames = explode(', ', $_SESSION['rx_hostnames']);
 	$ip_addresses = explode(' ', $_SESSION['rx_addresses']);
+
+	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", cfgdb_connect());
+	$timeout = $result[0]['value'];
+	$options = array('http'=>array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
+	$context = stream_context_create($options);
+
 	$count = count($ip_addresses);
 	for ($i = 0; $i < $count; $i++) {
 		// NOTE: set-mpdvol checks to see if Receiver opted in for Master volume
