@@ -14,8 +14,8 @@
 
 PREFACE
 
-This initial release of moOde Multiroom audio is designed for listening in a
-casual or background setting. There is no support in this release for audiophile
+This release of moOde Multiroom audio is designed for listening in a casual
+or background setting. There is no support in this release for audiophile
 features including uncompressed PCM format, rates greater than 48 kHz, DSP or
 clock correction between Sender and Receiver. These features may however appear
 in future versions of the feature.
@@ -145,7 +145,8 @@ in the WiFi band can result in degraded performance and audio dropouts.
 
 1. Discovery of Receivers relies on Multicast DNS (mDNS)
 2. Addressing for the audio distribution protocol relies on IP Multicast using
-   a default address of 239.0.0.1 and port 1350
+   a default address of 239.0.0.1 and port 1350, and on IGMP Snooping. Be sure
+   that both IP Multicast and IGMP Snooping are enabled in the Router.
 
 B) Audio format
 
