@@ -143,7 +143,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	// MERUS Amp HAT ZW chip
-	if ($_SESSION['i2sdevice'] == 'MERUS Amp HAT ZW') {
+	if ($_SESSION['i2sdevice'] == 'MERUS(tm) Amp piHAT ZW') {
 		$chipoptions = $_POST['config']['merus_ma12070p_pmp'];
 		$chiptype = 'merus_ma12070p';
 
