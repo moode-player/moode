@@ -6,7 +6,7 @@
 #  Multiroom Audio system. Additional configuration help is provided within the
 #  player via Menu, Quick help and the (i) information buttons.
 #
-#  Version: 1.0 2021-09-24
+#  Version: 1.1 2022-01-20
 #
 #  (C) Tim Curtis 2021 http://moodeaudio.org
 #
