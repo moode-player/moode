@@ -29,6 +29,7 @@ $dbh = cfgdb_connect();
 
 // Save changes to /etc/mpd.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
+	/* DELETE
 	// Detect mixer change
 	if ($_POST['conf']['mixer_type'] != $_SESSION['mpdmixer']) {
 		// Changing to Fixed (0dB)
@@ -51,9 +52,9 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 	// Airplay and Spotify will be restarted if device (cardnum) has changed
 	$device_chg = $_POST['conf']['device'] != $_SESSION['cardnum'] ? 1 : 0;
-
 	// Format queue args
 	$queue_args = $device_chg . ',' . $mixer_chg;
+	*/
 
 	// Add audio_output_format
 	$_POST['conf']['audio_output_format'] = $_POST['sox_enabled'] == 'No' ? 'disabled' : $_POST['sox_sample_rate'] . ':' . $_POST['sox_bit_depth'] . ':' . $_POST['sox_channels'];
@@ -63,7 +64,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		$_POST['conf']['selective_resample_mode'] = '0';
 	}
 
-	// Update sql table
+	// Update SQL table
 	foreach ($_POST['conf'] as $key => $value) {
 		if ($key == 'audio_buffer_size' || $key == 'max_output_buffer_size') {
 			$value = $value * 1024; // Convert from MB to KB
@@ -72,11 +73,11 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		cfgdb_update('cfg_mpd', $dbh, $key, $value);
 	}
 
-	$title = 'Changes saved';
-	$message = 'MPD restarted';
-	$duration = 3;
-
-	submitJob('mpdcfg', $queue_args, $title, $message, $duration);
+	// No device or mixer changes (moved to snd-config.php)
+	$mixer_chg = 0;
+	$mixer_chg = 0;
+	$queue_args = $device_chg . ',' . $mixer_chg;
+	submitJob('mpdcfg', $queue_args, 'Changes saved', 'MPD restarted');
 }
 
 // Load settings
@@ -96,6 +97,7 @@ else {
 	$_hide_msg = 'hide';
 }
 
+/* Moved to snd-config.php
 // Audio output
 // Device
 $dev = getDeviceNames();
@@ -112,7 +114,7 @@ if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
 $_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"none\" " . (($mpdconf['mixer_type'] == 'none') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($mpdconf['mixer_type'] == 'null') ? "selected" : "") . ">Null (External control)</option>\n";
-
+*/
 // DSD support
 // Format
 $_mpd_select['dop'] .= "<option value=\"no\" " . (($mpdconf['dop'] == 'no') ? "selected" : "") . " >Native DSD (Default)</option>\n";

@@ -1623,7 +1623,7 @@ function runQueuedJob() {
 				sendEngCmd('refresh_screen');
 			}
 			// Mixer changed from Fixed (0dB)
-			elseif ($mixer_chg == 'software' || $mixer_chg == 'hardware') {
+			elseif ($mixer_chg == 'software' || $mixer_chg == 'hardware' || $mixer_chg == 'null') {
 				sysCmd('/var/www/vol.sh restore');
 				sendEngCmd('refresh_screen');
 			}

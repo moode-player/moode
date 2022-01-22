@@ -23,16 +23,47 @@
 	<h1 class="snd-config">Audio Config</h1>
 
 	<form class="form-horizontal" method="post">
-		<legend>I2S Audio Device</legend>
+		<legend>Audio output</legend>
 		<p>
-			Named devices provide descriptive information and may also provide configurable driver and/or chip options accessible from the UI.
-			Device Tree (DT) overlays provide an I2S interface for a device but without integrated UI access to any driver or chip options.
-			Contact the device manufacturer for information on which overlay to use.
+			Audio output devices include the Raspberry Pi integrated HDMI and Headphone audio ports, I2S HAT audio devices and USB audio devices.
+			Note that these settings cannot be changed when BlueZ audio output is set to Bluetooth or when Multiroom Sender or Receiver are On.
 		</p><br>
 
 		<fieldset>
 			<div class="control-group">
-				<label class="control-label" for="i2sdevice">Named device</label>
+				<!--legend>Audio output</legend-->
+				<label class="control-label" for="output_device">Output device</label>
+				<div class="controls">
+	                <select id="output_device" name="output_device" class="input-large">
+						$_mpd_select[device]
+	                </select>
+					<button class="btn btn-primary btn-small set-button btn-submit btn-submit" type="submit" name="update_output_device" value="novalue" $_output_device_btn_disabled>Set</button>
+					<span><em>&nbsp;$_device_error</em></span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="mixer_type">Volume type</label>
+                <div class="controls">
+                    <select id="mixer_type" name="mixer_type" class="input-large">
+						$_mpd_select[mixer_type]
+                    </select>
+					<button class="btn btn-primary btn-small set-button btn-submit btn-submit" type="submit" name="update_volume_type" value="novalue" $_volume_type_btn_disabled>Set</button>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
+						<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
+	                    <b>- Software:&nbsp;</b>Use MPD software volume routine (32 bit float with dither).<br>
+						<b>- Fixed (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.
+					</span>
+					<span class="help-block-configs help-block-margin">
+						<b>CAUTION:</b> Set volume to a low level before changing this option.<br>
+						NOTE: Fixed (0dB) will output 100% volume level. The actual fixed level can be set by adjusting Max ALSA volume.
+					</span>
+                </div>
+            </div>
+
+			<div class="control-group">
+				<label class="control-label" for="i2sdevice">Named I2S device</label>
 				<div class="controls controls-select">
 					<select id="i2sdevice" class="input-large" name="i2sdevice">
 						$_i2s[i2sdevice]

@@ -2151,7 +2151,9 @@ function getDeviceNames () {
 	}
 	// I2S audio device
 	else {
-		$devices[0] = $_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay'];
+		//$devices[0] = $_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay'];
+		$devices[0] = 'I2S audio device';
+
 	}
 
 	return $devices;
