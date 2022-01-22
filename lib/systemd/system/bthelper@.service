@@ -1,9 +1,0 @@
-[Unit]
-Description=Raspberry Pi bluetooth helper
-Requires=bluetooth.service
-After=bluetooth.service
-
-[Service]
-Type=simple
-ExecStartPre=/bin/sleep 2
-ExecStart=/usr/bin/bthelper %I
