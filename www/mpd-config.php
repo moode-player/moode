@@ -29,33 +29,6 @@ $dbh = cfgdb_connect();
 
 // Save changes to /etc/mpd.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
-	/* DELETE
-	// Detect mixer change
-	if ($_POST['conf']['mixer_type'] != $_SESSION['mpdmixer']) {
-		// Changing to Fixed (0dB)
-		if ($_POST['conf']['mixer_type'] == 'none') {
-			$mixer_chg = 'fixed';
-		}
-		// Changing from Fixed (0dB)
-		elseif ($_SESSION['mpdmixer'] == 'none') {
-			$mixer_chg = $_POST['conf']['mixer_type'];
-		}
-		// Change between hardware, software or null moxer
-		else {
-			$mixer_chg = 0;
-		}
-	}
-	// No change
-	else {
-		$mixer_chg = 0;
-	}
-
-	// Airplay and Spotify will be restarted if device (cardnum) has changed
-	$device_chg = $_POST['conf']['device'] != $_SESSION['cardnum'] ? 1 : 0;
-	// Format queue args
-	$queue_args = $device_chg . ',' . $mixer_chg;
-	*/
-
 	// Add audio_output_format
 	$_POST['conf']['audio_output_format'] = $_POST['sox_enabled'] == 'No' ? 'disabled' : $_POST['sox_sample_rate'] . ':' . $_POST['sox_bit_depth'] . ':' . $_POST['sox_channels'];
 
@@ -97,24 +70,6 @@ else {
 	$_hide_msg = 'hide';
 }
 
-/* Moved to snd-config.php
-// Audio output
-// Device
-$dev = getDeviceNames();
-if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
-if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
-if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($mpdconf['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}
-if ($dev[3] != '') {$_mpd_select['device'] .= "<option value=\"3\" " . (($mpdconf['device'] == '3') ? "selected" : "") . " >$dev[3]</option>\n";}
-$cards = getAlsaCards();
-$_device_error = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $cards[$mpdconf['device']] == 'empty') ? 'Device turned off or disconnected' : '';
-// Volume control
-if ($_SESSION['alsavolume'] != 'none' || $mpdconf['mixer_type'] == 'hardware') {
-	$_mpd_select['mixer_type'] .= "<option value=\"hardware\" " . (($mpdconf['mixer_type'] == 'hardware') ? "selected" : "") . ">Hardware</option>\n";
-}
-$_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_type'] == 'software') ? "selected" : "") . ">Software</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"none\" " . (($mpdconf['mixer_type'] == 'none') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
-$_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($mpdconf['mixer_type'] == 'null') ? "selected" : "") . ">Null (External control)</option>\n";
-*/
 // DSD support
 // Format
 $_mpd_select['dop'] .= "<option value=\"no\" " . (($mpdconf['dop'] == 'no') ? "selected" : "") . " >Native DSD (Default)</option>\n";
