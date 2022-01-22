@@ -21,10 +21,7 @@ New features
 
 Radio stations
 
-- NEW: DR P1
-- NEW: DR P2
-- NEW: DR P3
-- NEW: DR P4
+- NEW: DR P1, P2, P3, P4
 - UPD: DR P6 Beat
 - UPD: DR P8 Jazz
 
@@ -33,14 +30,19 @@ Updates
 - UPD: Ignore articles when sorting Composers in Tag View
 - UPD: Restrict DF to local file systems in moodeutl -m
 - UPD: Improve scan for Samba shares
-- UPD: Deprecate 64-bit kernel option
 - UPD: Exclude Dummy from MPD Output device list
 - UPD: Handle case where Receiver Discovery has not been run
-- UPD: Improvements to System info
+- UPD: Move MPD audio output and volume type to Audio Config
+- UPD: Add librespot normalization settings to System info
+- UPD: Add reference to enable IGMP Snooping in Multiroom Setup
+- UPD: Remove 64-bit kernel option
 
 Bug fixes
 
 - FIX: Parsing nameserver from resolv.conf
+- FIX: tx_query_timeout not being applied in updReceiverVol()
+- FIX: Mixer name not being quoted in rx config
+- FIX: Merus chip options not being saved
 
 ################################################################################
 #
