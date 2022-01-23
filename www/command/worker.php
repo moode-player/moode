@@ -335,28 +335,21 @@ else {
 workerLog('worker: -- Audio config');
 //
 
-$ignoreUpdateMpdDevice = False; // when true ignore update device, only generate mpd conf
 // Update MPD config
 if ($_SESSION['multiroom_tx'] == 'Off') {
 	// NOTE: Only do this for I2S (non-hotplug devices) or if in-place update applied
 	if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None' || $_SESSION['inplace_upd_applied'] == '1') {
-		$ignoreUpdateMpdDevice = False;
+		updMpdConf($_SESSION['i2sdevice']);
 		$mpd_conf_upd_msg = 'MPD conf updated';
 		playerSession('write', 'inplace_upd_applied', '0');
 	}
 	else {
-		$ignoreUpdateMpdDevice = True;
-		updMpdConf($_SESSION['i2sdevice'], True);
-		$mpd_conf_upd_msg = 'MPD conf updated, device update skipped (USB device)';
+		$mpd_conf_upd_msg = 'MPD conf update skipped (USB device)';
 	}
 }
 else {
 	$mpd_conf_upd_msg = 'MPD conf update skipped (Tx On)';
-	$ignoreUpdateMpdDevice = True;
 }
-updMpdConf($_SESSION['i2sdevice'], $updateMpdDevice);
-
-
 workerLog('worker: ' . $mpd_conf_upd_msg);
 
 // Ensure audio output is unmuted for these devices
