@@ -17,7 +17,8 @@
 
 New features
 
-- NEW:
+- NEW: Raspberry Pi OS 11.2 (Bullseye)
+- NEW: Linux kernel 5.10.92 #1514
 
 Radio stations
 
@@ -26,7 +27,7 @@ Radio stations
 - UPD: DR P8 Jazz
 
 Updates
-
+- UPD: Bump to MPD 0.23.5
 - UPD: Ignore articles when sorting Composers in Tag View
 - UPD: Restrict DF to local file systems in moodeutl -m
 - UPD: Improve scan for Samba shares
