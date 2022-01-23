@@ -1887,7 +1887,7 @@ function sdbquery($querystr, $dbh) {
 	}
 }
 
-function updMpdConf($i2sdevice) {
+function updMpdConf($i2sdevice, $ignoreNotFoundDevice = False) {
 	$mpdcfg = sdbquery("SELECT param, value FROM cfg_mpd WHERE value!=''", cfgdb_connect());
 	$patch_id = explode('_p0x', $_SESSION['mpdver'])[1];
 
@@ -1979,7 +1979,11 @@ function updMpdConf($i2sdevice) {
 	playerSession('write', 'amixname', getMixerName($i2sdevice));
 	$adevname = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$cardnum] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
-	playerSession('write', 'adevname', $adevname);
+
+	if ( $adevname != '' || $ignoreNotFoundDevice == False ) {
+		playerSession('write', 'adevname', $adevname);
+	}
+
 	$hwmixer = $mixertype == 'hardware' ? getMixerName($i2sdevice) : '';
 
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
