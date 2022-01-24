@@ -337,16 +337,20 @@ workerLog('worker: -- Audio config');
 
 // Update MPD config
 if ($_SESSION['multiroom_tx'] == 'Off') {
-	// NOTE: Only do this for I2S (non-hotplug devices) or if in-place update applied
-	if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None' || $_SESSION['inplace_upd_applied'] == '1') {
+	// Update for I2S devices, Pi HDMI, Pi Headohone or if in-place update was applied
+	if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None' ||
+		strpos($_SESSION['adevname'], 'Pi HDMI') !== false || strpos($_SESSION['adevname'], 'Pi Headphone') !== false ||
+		$_SESSION['inplace_upd_applied'] == '1') {
 		updMpdConf($_SESSION['i2sdevice']);
 		$mpd_conf_upd_msg = 'MPD conf updated';
 		playerSession('write', 'inplace_upd_applied', '0');
 	}
+	// Skip update otherwise USB mixer name is not preserved if device unplugged or turned off
 	else {
 		$mpd_conf_upd_msg = 'MPD conf update skipped (USB device)';
 	}
 }
+// Skip update otherwise Multiroom Sender ALSA config gets reverted
 else {
 	$mpd_conf_upd_msg = 'MPD conf update skipped (Tx On)';
 }
