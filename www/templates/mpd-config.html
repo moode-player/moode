@@ -38,36 +38,6 @@
 		</legend>
 
         <fieldset>
-            <!--div class="control-group">
-				<legend>Audio output</legend>
-				<label class="control-label" for="device">Output device</label>
-				<div class="controls">
-	                <select id="device" name="conf[device]" class="input-large">
-						$_mpd_select[device]
-	                </select>
-					<span><em>&nbsp;$_device_error</em></span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="mixer-type">Volume type</label>
-                <div class="controls">
-                    <select id="mixer-type" name="conf[mixer_type]" class="input-large">
-						$_mpd_select[mixer_type]
-                    </select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-mixer-type" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-mixer-type" class="help-block-configs help-block-margin hide">
-						<b>- Hardware:&nbsp;</b>Use audio device on-board volume controller.<br>
-	                    <b>- Software:&nbsp;</b>Use MPD software volume routine (32 bit float with dither).<br>
-						<b>- Fixed (0dB output):&nbsp;</b>Assumes external analog or digital volume controller is used.
-					</span>
-					<span class="help-block-configs help-block-margin">
-						<b>CAUTION:</b> Set volume to a low level before changing this option.<br>
-						NOTE: Fixed (0dB) will output 100% volume level. The actual fixed level can be set in Audio Config by adjusting Max ALSA volume.
-					</span>
-                </div>
-            </div-->
-
 			<div class="control-group">
 				<legend>DSD support</legend>
                 <label class="control-label" for="dsd-usb">Format</label>
@@ -123,11 +93,11 @@
 						$_mpd_select[sox_bit_depth]
                     </select>
                 </div>
-				<label class="control-label" for="sox-sample-rate">Sample rate</label>
+				<label class="control-label" for="sox-sample-rate">Sample rate (kHz)</label>
                 <div class="controls controls-select">
                     <select id="sox-sample-rate" name="sox_sample_rate" class="input-large">
 						$_mpd_select[sox_sample_rate]
-                    </select> kHz
+                    </select>
                 </div>
 				<label class="control-label" for="sox-channels">Channels</label>
                 <div class="controls">
@@ -194,25 +164,25 @@
 								Range is 0 to 50 where 0 = minimum phase, 25 = intermediate phase and 50 = linear phase. Default is 50.
 		                    </span>
 		                </div>
-		                <label class="control-label" for="sox_passband_end">Passband end</label>
+		                <label class="control-label" for="sox_passband_end">Passband end (%)</label>
 		                <div class="controls">
-		                    <input class="input-large" type="number" id="sox_passband_end" name="conf[sox_passband_end]" value="$_mpd_select[sox_passband_end]" min="80" max="100" step="0.1">&nbsp;%
+		                    <input class="input-large" type="number" id="sox_passband_end" name="conf[sox_passband_end]" value="$_mpd_select[sox_passband_end]" min="80" max="100" step="0.1">
 							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_passband_end" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info_sox_passband_end" class="help-block-configs help-block-margin2 hide">
 								Original bandwidth of source used. Range is 80 to 100% where 100% represents the Nyquist frequency. Default is 95%.
 		                    </span>
 		                </div>
-		                <label class="control-label" for="sox_stopband_begin">Stopband begin</label>
+		                <label class="control-label" for="sox_stopband_begin">Stopband begin (%)</label>
 		                <div class="controls">
-		                    <input class="input-large" type="number" id="sox_stopband_begin" name="conf[sox_stopband_begin]" value="$_mpd_select[sox_stopband_begin]" min="100" max="200" step="0.1">&nbsp;%
+		                    <input class="input-large" type="number" id="sox_stopband_begin" name="conf[sox_stopband_begin]" value="$_mpd_select[sox_stopband_begin]" min="100" max="200" step="0.1">
 							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_stopband_begin" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info_sox_stopband_begin" class="help-block-configs help-block-margin2 hide">
 								A percentage greater than or equal to 100. Default is 100% which represents the Nyquist frequency.
 		                    </span>
 		                </div>
-		                <label class="control-label" for="sox_attenuation">Attenuation</label>
+		                <label class="control-label" for="sox_attenuation">Attenuation (dB)</label>
 		                <div class="controls">
-		                    <input class="input-large" type="number" id="sox_attenuation" name="conf[sox_attenuation]" value="$_mpd_select[sox_attenuation]" min="0" max="24" step="0.1">&nbsp;dB
+		                    <input class="input-large" type="number" id="sox_attenuation" name="conf[sox_attenuation]" value="$_mpd_select[sox_attenuation]" min="0" max="24" step="0.1">
 							<a aria-label="Help" class="info-toggle" data-cmd="info_sox_attenuation" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info_sox_attenuation" class="help-block-configs help-block-margin2 hide">
 								Reduce the amplitude of the source to prevent clipping. Range is 0 to 24dB. Default is 0dB.
@@ -287,9 +257,9 @@
 
             <div class="control-group">
 				<legend>Resource allocation</legend>
-                <label class="control-label" for="audio-buffer-size">Audio buffer size</label>
+                <label class="control-label" for="audio-buffer-size">Audio buffer size (MB)</label>
                 <div class="controls">
-                    <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4" max="64">&nbsp;MB
+                    <input class="input-large" type="number" id="audio-buffer-size" name="conf[audio_buffer_size]" value="$_mpd_select[audio_buffer_size]" min="4" max="64">
 					<a aria-label="Help" class="info-toggle" data-cmd="info-audio-buffer-size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-audio-buffer-size" class="help-block-configs help-block-margin hide">
                     	Buffer for audio samples. Range is 4 to 64MB. Default size is 4MB.
@@ -297,9 +267,9 @@
                 </div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="max_output_buffer_size">Output buffer size</label>
+				<label class="control-label" for="max_output_buffer_size">Output buffer size (MB)</label>
                 <div class="controls">
-                    <input class="input-large" type="number" id="max_output_buffer_size" name="conf[max_output_buffer_size]" value="$_mpd_select[max_output_buffer_size]" min="8" max="512">&nbsp;MB
+                    <input class="input-large" type="number" id="max_output_buffer_size" name="conf[max_output_buffer_size]" value="$_mpd_select[max_output_buffer_size]" min="8" max="512">
 					<a aria-label="Help" class="info-toggle" data-cmd="info_max_output_buffer_size" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info_max_output_buffer_size" class="help-block-configs help-block-margin hide">
                     	Buffer for command output. Range is 8 to 512MB. Default is 128MB.
