@@ -335,25 +335,44 @@ else {
 workerLog('worker: -- Audio config');
 //
 
-// Update MPD config
-if ($_SESSION['multiroom_tx'] == 'Off') {
-	// Update for I2S devices, Pi HDMI, Pi Headohone or if in-place update was applied
-	if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None' ||
-		strpos($_SESSION['adevname'], 'Pi HDMI') !== false || strpos($_SESSION['adevname'], 'Pi Headphone') !== false ||
-		$_SESSION['inplace_upd_applied'] == '1') {
-		updMpdConf($_SESSION['i2sdevice']);
-		$mpd_conf_upd_msg = 'MPD conf updated';
-		playerSession('write', 'inplace_upd_applied', '0');
-	}
-	// Skip update otherwise USB mixer name is not preserved if device unplugged or turned off
-	else {
-		$mpd_conf_upd_msg = 'MPD conf update skipped (USB device)';
-	}
+$updateMpdConf == False;
+
+if ( !file_exists('/etc/mpd.conf') ) {
+	$updateMpdConf = True;
+	$mpd_conf_upd_msg = 'MPD conf is missing, generate it';
 }
-// Skip update otherwise Multiroom Sender ALSA config gets reverted
 else {
-	$mpd_conf_upd_msg = 'MPD conf update skipped (Tx On)';
+	switch ( playbackDestinationType() ) {
+		case PlaybackDestinationType.TX:
+			// Skip update otherwise Multiroom Sender ALSA config gets reverted
+			$mpd_conf_upd_msg = 'MPD conf update skipped (Tx On)';
+			break;
+		case PlaybackDestinationType.USB:
+			if( $_SESSION['inplace_upd_applied'] != '1' ) {
+				// Skip update otherwise USB mixer name is not preserved if device unplugged or turned off
+				$mpd_conf_upd_msg = 'MPD conf update skipped (USB device)';
+			}
+			else {
+				$mpd_conf_upd_msg = 'MPD conf update (USB device)';
+				$updateMpdConf = True;
+			}
+			break;
+		case PlaybackDestinationType.LOCAL:
+		case PlaybackDestinationType.I2S:
+			$updateMpdConf = True;
+			$mpd_conf_upd_msg = 'MPD conf updated';
+			break;
+		default:
+			$mpd_conf_upd_msg = 'MPD conf update error: unknown playback destination type';
+			break;
+	}
 }
+
+if ( $updateMpdConf == True ) {
+	updMpdConf($_SESSION['i2sdevice']);
+	playerSession('write', 'inplace_upd_applied', '0');
+}
+
 workerLog('worker: ' . $mpd_conf_upd_msg);
 
 // Ensure audio output is unmuted for these devices
