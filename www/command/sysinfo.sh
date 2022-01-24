@@ -381,10 +381,6 @@ FEAT_DJMOUNT=8192
 FEAT_BLUETOOTH=16384
 FEAT_MULTIROOM=65536
 
-# MPD patch availability bitmask
-PATCH_SELECTIVE_RESAMPLING=1 # Selective resampling options
-PATCH_SOX_CUSTOM_RECIPE=2	 # Custom SoX resampling recipes
-
 # Selective resampling bitmask
 SOX_UPSAMPLE_ALL=3			# Upsample if source < target rate
 SOX_UPSAMPLE_ONLY_41K=1		# Upsample only 44.1K source rate

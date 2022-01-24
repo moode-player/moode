@@ -333,7 +333,6 @@ else {
 	}
 	else {
 		$resample_rate = $cfg_mpd['audio_output_depth'] . ' bit, ' . $cfg_mpd['audio_output_rate'] . ' kHz, ' . $cfg_mpd['audio_output_chan'];
-		$patch_id = explode('_p0x', $_SESSION['mpdver'])[1];
 		$resample_modes = array('0' => 'disabled',
 			SOX_UPSAMPLE_ALL => 'source < target rate',
 			SOX_UPSAMPLE_ONLY_41K => 'only 44.1K source rate',
@@ -341,24 +340,17 @@ else {
 			SOX_ADHERE_BASE_FREQ => 'resample (adhere to base freq)',
 			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'source < target rate (adhere to base freq)'
 		);
-		if ($patch_id & PATCH_SELECTIVE_RESAMPLING) {
-			$_selective_resampling_hide = '';
-			$selective_resample = $resample_modes[$cfg_mpd['selective_resample_mode']];
-		}
-		else {
-			$_selective_resampling_hide = 'hide';
-		}
+		$_selective_resampling_hide = '';
+		$selective_resample = $resample_modes[$cfg_mpd['selective_resample_mode']];
 		$resample_quality = $cfg_mpd['sox_quality'];
-		if ($patch_id & PATCH_SOX_CUSTOM_RECIPE) {
-			if ($cfg_mpd['sox_quality'] == 'custom') {
-				$resample_quality .= ' [' .
-				'p=' . $cfg_mpd['sox_precision'] .
-				' | r=' . $cfg_mpd['sox_phase_response'] .
-				' | e=' . $cfg_mpd['sox_passband_end'] .
-				' | b=' . $cfg_mpd['sox_stopband_begin'] .
-				' | a=' . $cfg_mpd['sox_attenuation'] .
-				' | f=' . $cfg_mpd['sox_flags'] . ']';
-			}
+		if ($cfg_mpd['sox_quality'] == 'custom') {
+			$resample_quality .= ' [' .
+			'p=' . $cfg_mpd['sox_precision'] .
+			' | r=' . $cfg_mpd['sox_phase_response'] .
+			' | e=' . $cfg_mpd['sox_passband_end'] .
+			' | b=' . $cfg_mpd['sox_stopband_begin'] .
+			' | a=' . $cfg_mpd['sox_attenuation'] .
+			' | f=' . $cfg_mpd['sox_flags'] . ']';
 		}
 	}
 	// Polarity inversion
