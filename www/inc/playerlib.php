@@ -3783,3 +3783,25 @@ function loadSndDummy () {
 function unloadSndDummy () {
 	sysCmd('sudo modprobe -r snd-dummy');
 }
+class PlaybackDestinationType
+{
+    public const LOCAL = 1;
+    public const I2S   = 2;
+    public const USB   = 3;
+    public const TX    = 4;
+}
+
+function playbackDestinationType() {
+	$localDecvices = array('Pi HDMI', 'Pi Headphone');
+	$playbackDestType = PlaybackDestinationType.USB;
+	if ($_SESSION['multiroom_tx'] !== 'Off') {
+		$playbackDestType = PlaybackDestinationType.TX;
+	}
+	else if($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
+		$playbackDestType = PlaybackDestinationType.I2S;
+	}else if(in_array($_SESSION['adevname'], $localDecvices) ) {
+		$playbackDestType = PlaybackDestinationType.LOCAL;
+	}
+
+	return $playbackDestType;
+}
