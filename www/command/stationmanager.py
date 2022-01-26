@@ -551,6 +551,13 @@ Version=2"""
                     settings_differs.append(field)
         return settings_differs
 
+    def regenerate_pls(self):
+        # stations = self.get_stations(scope, station_type)
+        stations = self.get_stations(scope='all', station_type=None)
+        for station in stations:
+            self.generate_station_pls(station['name'], station['station'])
+        print('(Re)generated %d stations pls files' %len(stations))
+
     def escape(self, value):
         escape_chars = {"'": "''", "\"": "\\\""}
         for ch in escape_chars.keys():
@@ -584,6 +591,10 @@ def get_cmdline_arguments():
     group.add_argument('--compare', dest = 'do_diff', action = 'store_const',
                    const = sum,
                    help = 'Show difference between SQL table and station backup.')
+
+    group.add_argument('--regeneratepls', dest = 'do_genpls', action = 'store_const',
+                   const = sum,
+                   help = 'Regenerate the radio .pls files from db.')
 
     parser.add_argument('--scope', dest = 'scope',
                    choices = ['all', 'moode', 'other'], default = 'other',
@@ -630,5 +641,8 @@ if __name__ == "__main__":
             mgnr.do_diff(args.scope)
         elif args.do_clear:
             mgnr.clear_stations(args.scope)
+        elif args.do_genpls:
+            mgnr.regenerate_pls()
+
 
     exit(check_result)
