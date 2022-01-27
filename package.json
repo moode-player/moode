@@ -17,7 +17,7 @@
     "src": "www",
     "cache": "build/cache",
     "dest": "build/develop",
-    "dist": "build/distr/var/www",
+    "dist": "build/dist/var/www",
     "deploy": "/var/www",
     "appmain": [
       "js/xscripts-library.min.js",
