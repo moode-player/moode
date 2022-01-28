@@ -1,11 +1,9 @@
 [Unit]
-Description=BlueAlsa-Aplay
+Description=Bluealsa-aplay
 Requires=bluetooth.service bluealsa.service
 
 [Service]
 Type=simple
-#User=pi
-#Group=audio
 EnvironmentFile=-/etc/bluealsaaplay.conf
 ExecStart=/usr/bin/bluealsa-aplay --profile-a2dp --pcm-buffer-time=${BUFFERTIME} -D $AUDIODEV %I
 

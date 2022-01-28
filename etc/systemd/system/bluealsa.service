@@ -1,9 +1,5 @@
-# NOTE:
-# - add profiles required by latest bluez-alsa build
-# - remove User=bluealsa, Group=Audio since they don't appear to be needed
-
 [Unit]
-Description=BluezAlsa proxy
+Description=Bluealsa proxy
 Requires=bluetooth.service
 After=bluetooth.service
 

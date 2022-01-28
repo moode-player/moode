@@ -1,9 +1,9 @@
-ACTION=="add", KERNEL=="input[0-9]*", SUBSYSTEM=="input", ATTR{name}=="*:*:*:*:*:*", GOTO="bt_add"
+ACTION=="add", KERNEL=="input[0-9]*", SUBSYSTEM=="input", ATTR{phys}=="*:*:*:*:*:*", GOTO="bt_add"
 ACTION=="remove", KERNEL=="input[0-9]*", SUBSYSTEM=="input", DEVPATH=="/devices/virtual/input/*" GOTO="bt_remove"
 GOTO="bt_end"
 
 LABEL="bt_add"
-RUN+="/bin/systemctl restart mpd"
+RUN+="/usr/bin/systemctl restart mpd"
 RUN+="/usr/local/bin/a2dp-autoconnect"
 GOTO="bt_end"
 

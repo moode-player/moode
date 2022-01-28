@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-BTMAC=${NAME//\"/}
+BTMAC=${PHYS//\"/}
 if [[ $ACTION = "add" ]]; then
         sudo systemctl start bluealsa-aplay@$BTMAC
 elif [[ $ACTION = "remove" ]]; then
