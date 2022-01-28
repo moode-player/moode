@@ -1,5 +1,10 @@
 [cm4]
 otg_mode=1
+
+[pi4]
+hdmi_force_hotplug:0=1
+hdmi_force_hotplug:1=1
+
 [all]
 disable_splash=1
 disable_overscan=1
