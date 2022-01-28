@@ -47,7 +47,7 @@ while($sockres = socket_accept($sock)) {
 	//workerLog('engineCmd(): Waiting for command...');
 	$data = socket_read($sockres, 1024);
 
-	// trim some chrs in case we connect via telnet for testing
+	// Trim some chrs in case we connect via telnet for testing
 	$cmd = str_replace(array("\r\n","\r","\n"), '', $data);
 	//workerLog('engineCmd(): Received cmd: ' . $cmd);
 	break;
@@ -59,9 +59,9 @@ socket_close($sock);
 //workerLog('engineCmd(): Updating portfile (remove ' . $port . ')');
 sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
 
-// special cmd handling
+// Special cmd handling
 
-// get names of connected bluetooth devices
+// Get names of connected bluetooth devices
 if ($cmd == 'btactive1') {
 	$result = sysCmd('/var/www/command/bt.sh -c');
 	$cmd .= ',';
