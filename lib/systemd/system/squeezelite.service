@@ -37,7 +37,7 @@ Nice=-10
 
 # Launch params
 EnvironmentFile=-/etc/squeezelite.conf
-ExecStart=/usr/local/bin/squeezelite -n ${PLAYERNAME} -o $AUDIODEVICE -a ${ALSAPARAMS} -b ${OUTPUTBUFFERS} -p $TASKPRIORITY -c $CODECS $OTHEROPTIONS
+ExecStart=/usr/bin/squeezelite -n ${PLAYERNAME} -o $AUDIODEVICE -a ${ALSAPARAMS} -b ${OUTPUTBUFFERS} -p $TASKPRIORITY -c $CODECS $OTHEROPTIONS
 
 [Install]
 WantedBy=multi-user.target

@@ -2574,7 +2574,7 @@ function startAirplay() {
 	}
 
 	// Interpolation param handled in config file
-	$cmd = '/usr/local/bin/shairport-sync ' . $logging .
+	$cmd = '/usr/bin/shairport-sync ' . $logging .
 		' -a "' . $_SESSION['airplayname'] . '" ' .
 		'-- -d ' . $device . ' > ' . $logfile . ' 2>&1 &';
 
