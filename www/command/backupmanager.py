@@ -44,12 +44,14 @@ class BackupManager(StationManager):
 
     OPT_CFG = 'config'
     OPT_CDSP = 'cdsp'
+    OPT_PL ='playlists'
     OPT_RS_MOODE ='r_moode'
     OPT_RS_OTHER = 'r_other'
 
     # for real
     MOODECFGINI_RESTORE_PATH = '/boot'
     CDSPCFG_RESTORE_BASE = '/usr/share'
+    PLAYLIST_PATH = '/var/lib/mpd'
 
     # for test
     # MOODECFGINI_RESTORE_PATH = '/tmp'
@@ -109,6 +111,12 @@ class BackupManager(StationManager):
                         for fpath, subdirs, files in walk(path.join(BackupManager.CDSPCFG_BASE, 'coeffs')):
                             for name in files:
                                 backup.write(path.join(fpath, name), path.join('camilladsp', 'coeffs', name))
+            if BackupManager.OPT_PL in what:
+                if path.exists(BackupManager.PLAYLIST_PATH):
+                    print('Backup playlists')
+                    for fpath, subdirs, files in walk(path.join(BackupManager.PLAYLIST_PATH, 'playlists')):
+                        for name in files:
+                            backup.write(path.join(fpath, name), path.join('playlists', name))
 
     def do_restore(self, what):
         # restore radio stations
@@ -133,8 +141,8 @@ class BackupManager(StationManager):
                     print("Backup doesn't contain moode configuration file.")
                 if 'bgimage.jpg' in backup.namelist():
                     print('Restore bgimage.jpg')
-                    backup.extract('bgimage.jpg', '/var/local/www/imagesw');
-                    system('chmod a+r /var/local/www/imagesw/bgimage.jpg');
+                    backup.extract('bgimage.jpg', '/var/local/www/imagesw')
+                    system('chmod a+r /var/local/www/imagesw/bgimage.jpg')
 
             # restore camilladsp configs
             if BackupManager.OPT_CDSP in what:
@@ -142,6 +150,12 @@ class BackupManager(StationManager):
                 if len(names) >= 0:
                     print('Restore camilladsp config')
                     backup.extractall (BackupManager.CDSPCFG_RESTORE_BASE, names)
+
+            if BackupManager.OPT_PL in what:
+                names = [ name  for name in backup.namelist() if 'playlists/' in name  and not 'Default Playlist.m3u' in name ]
+                if len(names) >= 0:
+                    print('Restore playlist')
+                    backup.extractall (BackupManager.PLAYLIST_PATH, names)
 
     def do_info(self):
         configPresent = False
@@ -196,8 +210,8 @@ def get_cmdline_arguments():
     parser.add_argument('--version', action='version', version='%(prog)s {}'.format(BackupManager.VERSION))
 
     parser.add_argument('--what', dest = 'what', nargs="+",
-                   choices = ['config', 'cdsp', 'r_moode', 'r_other'], default = None ,
-                   help = 'Indicate what to backup/restore (default for backup: config cdsp r_other, default on restore: auto detect content)')
+                   choices = ['config', 'cdsp', 'playlists', 'r_moode', 'r_other'], default = None ,
+                   help = 'Indicate what to backup/restore (default for backup: config cdsp playlists, r_other, default on restore: auto detect content)')
 
     group = parser.add_mutually_exclusive_group( required = True)
     group.add_argument('--backup', dest = 'do_backup', action = 'store_const',
@@ -241,7 +255,7 @@ if __name__ == "__main__":
         print("ERROR: No backup file specified. Required for backup or restore.")
         exit(11)
 
-    what =  ['config','cdsp', 'r_other']
+    what =  ['config','cdsp', 'playlists', 'r_other']
     if args.what:
         what = args.what
 
