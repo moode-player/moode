@@ -5,7 +5,7 @@ Requires=bluetooth.service bluealsa.service
 [Service]
 Type=simple
 EnvironmentFile=-/etc/bluealsaaplay.conf
-ExecStart=/usr/bin/bluealsa-aplay --profile-a2dp --pcm-buffer-time=${BUFFERTIME} -D $AUDIODEV %I
+ExecStart=/usr/bin/bluealsa-aplay --profile-a2dp --pcm-buffer-time=${BUFFERTIME} -D $AUDIODEV
 
 [Install]
 WantedBy=multi-user.target
