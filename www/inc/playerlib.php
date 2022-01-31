@@ -2739,7 +2739,7 @@ function startAutoShuffle() {
 		'mpc search ' . $_SESSION['ashuffle_filter'] . ' | ' : '';
 	$ashuffle_file = $ashuffle_filter != '' ? '--file -' : '';
 	$ashuffle_mode = $_SESSION['ashuffle_mode'] == 'Album' ? '--group-by album ' : '';
-	$result = sysCmd($ashuffle_filter . '/usr/local/bin/ashuffle --queue-buffer 1 ' . $ashuffle_mode . $ashuffle_file . ' > /dev/null 2>&1 &');
+	$result = sysCmd($ashuffle_filter . '/usr/bin/ashuffle --queue-buffer 1 ' . $ashuffle_mode . $ashuffle_file . ' > /dev/null 2>&1 &');
 }
 function stopAutoShuffle() {
 	sysCmd('killall -s 9 ashuffle > /dev/null');
