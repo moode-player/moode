@@ -273,8 +273,10 @@ MPD_SETTINGS() {
 RENDERER_SETTINGS() {
 	if [ $(($feat_bitmask & $FEAT_BLUETOOTH)) -ne 0 ]; then
 		echo -e "B L U E T O O T H   S E T T I N G S"
-		echo -e "\nBluetooth ver\t\t= $BTVER\c"
-		echo -e "\nBluealsa ver\t\t= $BAVER\c"
+		echo -e "\nVersion\t\t\t= $BLUETOOTH_VER\c"
+		echo -e "\nBluealsa\t\t= $BLUEALSA_VER\c"
+		echo -e "\nPairing agent\t\t= $PARING_AGENT_VER\c"
+		echo -e "\nPi-Bluetooth\t\t= $PI_BLUETOOTH_VER\c"
 		echo -e "\nSpeaker sharing\t\t= $btmulti\c"
 		echo -e "\nResume MPD\t\t= $rsmafterbt\c"
 		echo -e "\nPCM buffer time\t\t= $bluez_pcm_buffer ($micro_symbol)\n"
@@ -473,14 +475,15 @@ SDFREQ=$(grep "actual clock" /sys/kernel/debug/mmc0/ios | awk ' {print $3/100000
 PHPVER=$(php -v 2>&1 | awk -F "-" 'NR==1{ print $1 }' | cut -f 2 -d " ")
 NGINXVER=$(nginx -v 2>&1 | awk '{ print  $3 }' | cut -c7-)
 SQLITEVER=$(sqlite3 -version | awk '{ print  $1 }')
-BTVER=$(bluetoothd -v)
-BAVER=$(bluealsa -V 2> /dev/null)
-if [ "$BAVER" = "" ]; then
-	BAVER="Turn BT on for version info"
-fi
 HOSTAPDVER=$(hostapd -v 2>&1 | awk 'NR==1 { print  $2 }' | cut -c2-)
 #WIRINGPI_VER=$(gpio -v 2>&1 | awk 'NR==1 { print  $3 }')
 RPI_GPIO_VER=$(dpkg -s python3-rpi.gpio 2>&1| grep Version| sed -r 's/^Version[:] (.*)-.*$/\1/')
+
+BLUETOOTH_VER=$(bluetoothd -v)
+BLUEALSA_VER=$(bluealsa -V 2> /dev/null)
+PARING_AGENT_VER="1.0.0"
+PI_BLUETOOTH_VER=$(dpkg -l | grep pi-bluetooth | awk '{print $3}')
+
 # Moode release
 moode_rel="$(moodeutl --mooderel | tr -d '\n')"
 
