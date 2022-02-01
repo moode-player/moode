@@ -3736,7 +3736,7 @@ function startMultiroomSender() {
 	debugLog($cmd);
 }
 function stopMultiroomSender() {
-	sysCmd('killall tx');
+	sysCmd('killall trx-tx');
 }
 function startMultiroomReceiver() {
 	$params = cfgdb_read('cfg_multiroom', cfgdb_connect());
@@ -3751,7 +3751,7 @@ function startMultiroomReceiver() {
 	debugLog($cmd);
 }
 function stopMultiroomReceiver() {
-	sysCmd('killall rx');
+	sysCmd('killall trx-rx');
 	playerSession('write', 'rxactive', '0');
 	sendEngCmd('rxactive0');
 }
