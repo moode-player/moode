@@ -1121,10 +1121,6 @@ $('#albumcovers').on('click', 'img', function(e) {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Play' ? 'play_group' : 'play_group_next';
             mpdDbCmd(queueCmd, files);
         }
-        else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_group', files);
-            notify('clear_play_group');
-        }
         else if (SESSION.json['library_onetouch_album'] == 'Show tracks') {
             showHideTracks(posChange);
         }
@@ -1170,9 +1166,6 @@ $('.ralbum').click(function(e) {
                 'play_group' : 'play_group_next';
             mpdDbCmd(queueCmd, files);
         }
-        else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_group', files);
-        }
 
 		storeLibPos(UI.libPos);
     }
@@ -1201,10 +1194,6 @@ $('#database-radio').on('click', 'img', function(e) {
         else if (SESSION.json['library_onetouch_radio'] == 'Play' || SESSION.json['library_onetouch_radio'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_radio'] == 'Play' ? 'play_item' : 'play_item_next';
             mpdDbCmd(queueCmd, path);
-        }
-        else if (SESSION.json['library_onetouch_radio'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_item', path);
-            notify('clear_play_item');
         }
     }
 
@@ -1460,6 +1449,10 @@ $('#context-menu-playback a').click(function(e) {
             $.post('command/recorder_cmd.php?cmd=recorder_on_off');
         });
 	}
+    else if ($(this).data('cmd') == 'clear') {
+		sendMpdCmd('clear');
+        $('#pl-saveName').val(''); // Clear saved playlist name if any
+	}
 });
 
 // Click tracks context menu item
@@ -1473,16 +1466,6 @@ $('#context-menu-lib-item a').click(function(e) {
 	}
 	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
 		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
-	}
-    else if ($(this).data('cmd') == 'clear_add_item') {
-		mpdDbCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
-		notify('clear_add_item');
-		$('#pl-saveName').val(''); // Clear saved playlist name if any
-	}
-	else if ($(this).data('cmd') == 'clear_play_item') {
-		mpdDbCmd('clear_play_item', filteredSongs[UI.dbEntry[0]].file);
-		notify('clear_play_item');
-		$('#pl-saveName').val(''); // Clear saved playlist name if any
 	}
     else if ($(this).data('cmd') == 'track_info_lib') {
         audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
@@ -1510,14 +1493,6 @@ $('#context-menu-lib-album a').click(function(e) {
 	else if ($(this).data('cmd') == 'play_group' || $(this).data('cmd') == 'play_group_next') {
 		mpdDbCmd($(this).data('cmd'), files);
 	}
-    else if ($(this).data('cmd') == 'clear_add_group') {
-		mpdDbCmd('clear_add_group', files);
-		notify($(this).data('cmd'));
-	}
-	else if ($(this).data('cmd') == 'clear_play_group') {
-		mpdDbCmd('clear_play_group', files);
-		notify($(this).data('cmd'));
-	}
 	else if ($(this).data('cmd') == 'tracklist') {
         showHideTracks(false);
 	}
@@ -1540,10 +1515,6 @@ $('#context-menu-lib-disc a').click(function(e) {
 	if ($(this).data('cmd') == 'play_group') {
 		mpdDbCmd('play_group', files);
 	}
-	if ($(this).data('cmd') == 'clear_play_group') {
-		mpdDbCmd('clear_play_group', files);
-		notify($(this).data('cmd'));
-	}
 });
 
 // Click Album heading context menu item
@@ -1560,10 +1531,6 @@ $('#context-menu-lib-album-heading a').click(function(e) {
 	}
 	if ($(this).data('cmd') == 'play_group') {
 		mpdDbCmd('play_group', files);
-	}
-	if ($(this).data('cmd') == 'clear_play_group') {
-		mpdDbCmd('clear_play_group', files);
-		notify($(this).data('cmd'));
 	}
 });
 

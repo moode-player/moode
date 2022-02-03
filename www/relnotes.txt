@@ -36,6 +36,7 @@ Updates
 - UPD: Ignore articles when sorting Composers in Tag View
 - UPD: Improve scan for Samba shares
 - UPD: Handle case where Receiver Discovery has not been run
+- UPD: Add "Clear queue" to Playbar/Playback contenxt menu
 - UPD: Add librespot normalization settings to System info
 - UPD: Add reference to enable IGMP Snooping in Multiroom Setup
 - UPD: Exclude Dummy from MPD Output device list
