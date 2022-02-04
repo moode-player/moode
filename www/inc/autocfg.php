@@ -144,7 +144,8 @@ function autoConfigSettings() {
 				sysCmd('/var/www/command/resizefs.sh start');
 			}
 		}, 'custom_write' => function($values) {
-			$result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
+			$root_dev = sysCmd('findmnt / -o source -n');
+			$result = sysCmd('lsblk -o size -nb ' . $root_dev[0]);
 			$expanded = $result[0] > ROOTFS_SIZE ? 1 : 0;
 			return sprintf("expandfs =\"%d\"\n", $expanded);
 		}],
