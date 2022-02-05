@@ -3111,9 +3111,11 @@ function parseMpdOutputs($resp) {
 function cfgI2sOverlay($i2sdevice) {
 	sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt'); // Removes the line after dtparam=audio=off
 
-	// Pi HDMI-1, HDMI-2 or Headphone jack, or a USB device
+	// Reset to Pi HDMI-1
 	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" /boot/config.txt');
+		# This will trigger an MPD conf update during startup and set all the device params correctly
+		playerSession('write', 'adevname', 'Pi HDMI 1');
 	}
 	// Named I2S device
 	elseif ($i2sdevice != 'None') {
@@ -3794,16 +3796,18 @@ class PlaybackDestinationType
 
 function playbackDestinationType() {
 	$localDecvices = array('Pi HDMI 1', 'Pi HDMI 2', 'Pi Headphone jack');
-	$playbackDestType = PlaybackDestinationType.USB;
 
 	if ($_SESSION['multiroom_tx'] !== 'Off') {
 		$playbackDestType = PlaybackDestinationType.TX;
 	}
-	else if($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
+	else if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
 		$playbackDestType = PlaybackDestinationType.I2S;
 	}
 	else if (in_array($_SESSION['adevname'], $localDecvices) ) {
 		$playbackDestType = PlaybackDestinationType.LOCAL;
+	}
+	else {
+		$playbackDestType = PlaybackDestinationType.USB;
 	}
 
 	return $playbackDestType;

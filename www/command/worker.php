@@ -352,7 +352,7 @@ else {
 				$mpd_conf_upd_msg = 'MPD conf update skipped (USB device)';
 			}
 			else {
-				$mpd_conf_upd_msg = 'MPD conf update (USB device)';
+				$mpd_conf_upd_msg = 'MPD conf updated (USB device + In-place update)';
 				$updateMpdConf = True;
 			}
 			break;
