@@ -31,14 +31,15 @@ Updates
 - UPD: Bump to Ashuffle 3.12.8
 - UPD: Bump to Squeezelite 1.9.8-1317
 - UPD: Bump to Pi-Bluetooth 0.1.18
-- UPD: Use Bluetooth controller mode "dual"
-- UPD: Move MPD audio output and volume type to Audio Config
+- UPD: Use Bluetooth controller mode "dual" (BR/EDR and LE)
+- UPD: Move MPD Audio output and Volume type to Audio Config
 - UPD: Ignore articles when sorting Composers in Tag View
 - UPD: Improve scan for Samba shares
 - UPD: Handle case where Receiver Discovery has not been run
 - UPD: Add "Clear queue" to Playbar/Playback contenxt menu
 - UPD: Add librespot normalization settings to System info
 - UPD: Add reference to enable IGMP Snooping in Multiroom Setup
+- UPD: Add accent colors Berry, BlueLED, Moss and Lipstick
 - UPD: Exclude Dummy from MPD Output device list
 - UPD: Restrict DF to local file systems in moodeutl -m
 - UPD: Remove 64-bit kernel option
