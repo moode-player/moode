@@ -219,8 +219,7 @@ else {
 	workerLog('worker: USB boot not available');
 }
 // File system expansion status
-$root_dev = sysCmd('findmnt / -o source -n');
-$result = sysCmd('lsblk -o size -nb ' . $root_dev[0]);
+$result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
 $msg = $result[0] > ROOTFS_SIZE ? 'File system expanded' : 'File system not expanded yet';
 workerLog('worker: ' . $msg);
 // Turn on/off hdmi port

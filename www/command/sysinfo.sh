@@ -432,8 +432,7 @@ fi
 if [ "$WLAN0MAC" = "" ]; then
 	WLAN0MAC="no adapter"
 fi
-ROOT_DEV=$(findmnt / -o source -n)
-TMP="$(lsblk -o size -nb $ROOT_DEV)"
+TMP="$(lsblk -o size -nb /dev/disk/by-label/rootfs)"
 if [[ $TMP -gt $ROOTFS_SIZE ]]; then
 	FSEXPAND="expanded"
 else
