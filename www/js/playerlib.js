@@ -3360,8 +3360,14 @@ function themeToColors(accentColor) {
 		case 'Amethyst':
 			var ac1 = '#8e44ad', ac2 = 'rgba(142,68,173,0.71)';
 			break;
-		case 'Bluejeans':
+		case 'Berry':
+			var ac1 = '#B53471', ac2 = 'rgba(181,52,113,0.71)';
+			break;
+        case 'Bluejeans':
 			var ac1 = '#1a439c', ac2 = 'rgba(26,67,156,0.71)';
+			break;
+        case 'BlueLED':
+			var ac1 = '#0652DD', ac2 = 'rgba(6,82,221,0.71)';
 			break;
 		case 'Carrot':
 			var ac1 = '#d35400', ac2 = 'rgba(211,84,0,0.71)';
@@ -3380,6 +3386,12 @@ function themeToColors(accentColor) {
 			break;
 		case 'Lavender':
 			var ac1 = '#876dc6', ac2 = 'rgba(135,109,198,0.71)';
+			break;
+        case 'Lipstick':
+			var ac1 = '#eb2f06', ac2 = 'rgba(235,47,6,0.71)';
+			break;
+        case 'Moss':
+			var ac1 = '#218c74', ac2 = 'rgba(33,140,116,0.71)';
 			break;
 		case 'River':
 			var ac1 = '#2980b9', ac2 = 'rgba(41,128,185,0.71)';
