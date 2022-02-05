@@ -183,12 +183,11 @@ workerLog('worker: -- System');
 
 // Store platform data
 playerSession('write', 'hdwrrev', getHdwrRev());
-$mpdver = explode(" ", strtok(shell_exec('mpd -V | grep "Music Player Daemon"'),"\n"));
-playerSession('write', 'mpdver', $mpdver[3]);
-$result = sysCmd('cat /etc/debian_version');
+playerSession('write', 'mpdver', explode(" ", strtok(shell_exec('mpd -V | grep "Music Player Daemon"'),"\n"))[3]);
+playerSession('write', 'kernel_architecture', strtok(shell_exec('uname -m'),"\n") == 'aarch64' ? '64-bit' : '32-bit');
 $_SESSION['kernelver'] = strtok(shell_exec('uname -r'),"\n") . ' ' . strtok(shell_exec("uname -v | awk '{print $1}'"),"\n");
 $_SESSION['procarch'] = strtok(shell_exec('uname -m'),"\n");
-$_SESSION['raspbianver'] = $result[0];
+$_SESSION['raspbianver'] = sysCmd('cat /etc/debian_version')[0];
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
 // Log platform data
@@ -197,7 +196,7 @@ workerLog('worker: moOde    (' . getMoodeRel('verbose') . ')'); // major.minor.p
 workerLog('worker: RaspiOS  (' . $_SESSION['raspbianver'] . ')');
 workerLog('worker: Kernel   (' . $_SESSION['kernelver'] . ')');
 workerLog('worker: Platform (' . $_SESSION['hdwrrev'] . ')');
-workerLog('worker: ARM arch (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] .' kernel)');
+workerLog('worker: ARM arch (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] . ')');
 workerLog('worker: MPD ver  (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU gov  (' . $_SESSION['cpugov'] . ')');
 
@@ -2038,10 +2037,6 @@ function runQueuedJob() {
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
-			break;
-		case 'kernel_architecture':
-			$cmd = $_SESSION['w_queueargs'] == '32-bit' ? 'sed -i /arm_64bit/d ' . '/boot/config.txt' : 'echo arm_64bit=1 >> ' . '/boot/config.txt';
-			sysCmd($cmd);
 			break;
 		case 'usb_auto_mounter':
 			if ($_SESSION['w_queueargs'] == 'udisks-glue') {

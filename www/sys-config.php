@@ -129,14 +129,6 @@ if (isset($_POST['update_cpugov'])) {
 	playerSession('write', 'cpugov', $_POST['cpugov']);
 }
 
-/* DEPRECATE
-// Linux kernel
-if (isset($_POST['update_kernel_architecture']) && $_POST['kernel_architecture'] != $_SESSION['kernel_architecture']) {
-	submitJob('kernel_architecture', $_POST['kernel_architecture'], $_POST['kernel_architecture'] . ' kernel selected', 'Restart required');
-	playerSession('write', 'kernel_architecture', $_POST['kernel_architecture']);
-}
-*/
-
 // USB auto-mounter
 if (isset($_POST['update_usb_auto_mounter'])) {
 	submitJob('usb_auto_mounter', $_POST['usb_auto_mounter'], 'USB auto-mounter updated', 'Restart required');
@@ -346,22 +338,6 @@ $_select['browsertitle'] = $_SESSION['browsertitle'];
 // CPU governor
 $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";
 $_select['cpugov'] .= "<option value=\"performance\" " . (($_SESSION['cpugov'] == 'performance') ? "selected" : "") . ">Performance</option>\n";
-
-// Linux kernel
-if ($_SESSION['feat_bitmask'] & FEAT_KERNEL) {
-	$_feat_kernel = '';
-	$_select['kernel_architecture'] .= "<option value=\"32-bit\" " . (($_SESSION['kernel_architecture'] == '32-bit') ? "selected" : "") . ">32-bit</option>\n";
-	$model = substr($_SESSION['hdwrrev'], 3, 1);
-	$cmmodel = substr($_SESSION['hdwrrev'], 3, 3); // Generic Pi-CM3+, Pi-CM4 for future use
-	$name = $_SESSION['hdwrrev'];
-	// Pi-2B rev 1.2, Allo USBridge SIG, Pi-3B/B+/A+, Pi-4B
-	if ($name == 'Pi-2B 1.2 1GB' || $model == '3' || $model == '4' || $name == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]') {
-		$_select['kernel_architecture'] .= "<option value=\"64-bit\" " . (($_SESSION['kernel_architecture'] == '64-bit') ? "selected" : "") . ">64-bit (Experimental)</option>\n";
-	}
-}
-else {
-	$_feat_kernel = 'hide';
-}
 
 // USB auto-mounter
 $_select['usb_auto_mounter'] .= "<option value=\"udisks-glue\" " . (($_SESSION['usb_auto_mounter'] == 'udisks-glue') ? "selected" : "") . ">Udisks-glue (Default)</option>\n";
