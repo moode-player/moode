@@ -350,12 +350,12 @@ Version=2"""
 
     def do_import(self, scope, how):
         if os.path.isdir(StationManager.RADIO_PLS_PATH):
-            if verbose:
-                print('Station pls file location is \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+            # if verbose:
+            # print('Station pls file location is \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+            pass
         else:
             return_code = 3
-            if verbose:
-                print('ERROR: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+            print('ERROR: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
 
         print('import')
         with ZipFile(self.backup_file, 'r') as backup:
