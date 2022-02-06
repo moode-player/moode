@@ -266,7 +266,7 @@ if __name__ == "__main__":
 
     check_result = 0
     if args.do_restore or args.do_backup:
-        check_result = mgnr.check_env(args.do_restore, True)
+        check_result = mgnr.check_env(args.do_restore, None, True)
 
     if check_result == 0:
         if args.do_backup:

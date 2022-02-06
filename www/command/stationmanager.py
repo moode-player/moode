@@ -83,9 +83,12 @@ Version=2"""
         # used for detecting major scheme break corrections
         self.db_ver = None
 
-    def check_env(self, check_backup = False, verbose = True) :
+    def check_env(self, check_backup = False, logopath = None, verbose = True) :
         return_code = 0
         self.radio_logos_path = None
+        radio_logos_paths = StationManager.RADIO_LOGO_PATHS
+        if logopath != None:  # Use custom location
+            radio_logos_paths = [logopath]
 
         if os.path.exists(self.db_file):
             try:
@@ -102,7 +105,7 @@ Version=2"""
                 print('ERROR: SQL database not found at \'{}\''.format(self.db_file) )
             return_code = 4
 
-        for radio_logo_path in StationManager.RADIO_LOGO_PATHS:
+        for radio_logo_path in radio_logos_paths:
             if os.path.isdir(radio_logo_path):
                 self.radio_logos_path = radio_logo_path
                 break
@@ -117,15 +120,7 @@ Version=2"""
         else:
             return_code = 1
             if verbose:
-                print('ERROR: Could not find station logos, tried {}'.format(", ".join(StationManager.RADIO_LOGO_PATHS) ))
-
-        if os.path.isdir(StationManager.RADIO_PLS_PATH):
-            if verbose:
-                print('Station pls file location is \'{}\''.format(StationManager.RADIO_PLS_PATH) )
-        else:
-            return_code = 3
-            if verbose:
-                print('ERROR: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+                print('ERROR: Could not find station logos, tried {}'.format(", ".join(radio_logos_paths) ))
 
         self.db_ver = 7 if 'geo_fenced' in self.get_fields() else 6
 
@@ -354,6 +349,14 @@ Version=2"""
         return data
 
     def do_import(self, scope, how):
+        if os.path.isdir(StationManager.RADIO_PLS_PATH):
+            if verbose:
+                print('Station pls file location is \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+        else:
+            return_code = 3
+            if verbose:
+                print('ERROR: Could not find station pls files at \'{}\''.format(StationManager.RADIO_PLS_PATH) )
+
         print('import')
         with ZipFile(self.backup_file, 'r') as backup:
             data = self.get_stations_from_backup(backup)
@@ -611,6 +614,8 @@ def get_cmdline_arguments():
     parser.add_argument('--db', default = '/var/local/www/db/moode-sqlite3.db',
                    help = 'File name of the SQL database. (default: /var/local/www/db/moode-sqlite3.db')
 
+    parser.add_argument('--logopath', default = None,
+                   help = 'Location of the radio logos. (default: /var/local/www/imagesw/radio-logo')
 
     args = parser.parse_args()
     return args
@@ -630,7 +635,7 @@ if __name__ == "__main__":
         exit(11)
 
 
-    check_result = mgnr.check_env(args.do_import or args.do_diff)
+    check_result = mgnr.check_env(args.do_import or args.do_diff, args.logopath)
 
     if check_result == 0:
         if args.do_import:
