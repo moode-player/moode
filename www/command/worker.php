@@ -221,7 +221,7 @@ if ($model == '3') { // 3B, B+, A+
 }
 elseif ($model == '4') { // 4, 400
 	$bootloader_min_date = new DateTime("Sep 3 2020");
-	$bootloader_actual_date = new DateTime(sysCmd("vcgencmd bootloader_version | awk 'NR==1 {print $1" " $2" " $3}'")[0]);
+	$bootloader_actual_date = new DateTime(sysCmd("vcgencmd bootloader_version | awk 'NR==1 {print $1\" \" $2\" \" $3}'")[0]);
 	if ($bootloader_actual_date >= $bootloader_min_date) {
 		$msg = 'enabled';
 	}
