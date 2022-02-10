@@ -805,10 +805,20 @@ apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
 apdchan=$(echo ${arr[2]} | cut -f 14 -d "|")
 
 # Misc settings
-MODEL=${hdwrrev:0:5}
-if [ $MODEL = Pi-3B ]; then
+MODEL=${hdwrrev:3:1}
+if [ $MODEL = 3 ]; then
 	TMP="$(vcgencmd otp_dump | grep 17:)"
 	if [ "$TMP" = "17:3020000a" ]; then
+		USBBOOT="enabled"
+	else
+		USBBOOT="not enabled"
+	fi
+elif [ $MODEL = 4 ]; then
+	BOOTLOADER_MIN_DATE=20200903
+	TMP=$(vcgencmd bootloader_version | awk 'NR==1 {print $1" " $2" " $3}')
+	BOOTLOADER_ACTUAL_DATE=$(date -d"$TMP" +%Y%m%d        )
+	let DIFF=($(date +%s -d $BOOTLOADER_ACTUAL_DATE)-$(date +%s -d $BOOTLOADER_MIN_DATE))/86400
+	if (("$DIFF" >= "0")); then
 		USBBOOT="enabled"
 	else
 		USBBOOT="not enabled"

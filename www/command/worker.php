@@ -200,14 +200,24 @@ workerLog('worker: ARM arch (' . $_SESSION['procarch'] . ', ' . $_SESSION['kerne
 workerLog('worker: MPD ver  (' . $_SESSION['mpdver'] . ')');
 workerLog('worker: CPU gov  (' . $_SESSION['cpugov'] . ')');
 
-// Boot device config
+// USB boot
 $model = substr($_SESSION['hdwrrev'], 3, 1);
-// 3B/B+/A+, NOTE: 4B USB boot not avail as of 2019-07-13
-if ($model == '3' /*|| $model == '4'*/) {
+if ($model == '3') { // 3B, B+, A+
 	$result = sysCmd('vcgencmd otp_dump | grep 17:');
 	if ($result[0] == '17:3020000a') {
-		$msg = 'USB boot enabled';
 		sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
+		$msg = 'USB boot enabled';
+	}
+	else {
+		$msg = 'USB boot not enabled yet';
+	}
+	workerLog('worker: ' . $msg);
+}
+elseif ($model == '4') { // 4, 400
+	$bootloader_min_date = new DateTime("Sep 3 2020");
+	$bootloader_actual_date = new DateTime(sysCmd("vcgencmd bootloader_version | awk 'NR==1 {print $1" " $2" " $3}'")[0]);
+	if ($bootloader_actual_date >= $bootloader_min_date) {
+		$msg = 'USB boot enabled';
 	}
 	else {
 		$msg = 'USB boot not enabled yet';
@@ -217,10 +227,12 @@ if ($model == '3' /*|| $model == '4'*/) {
 else {
 	workerLog('worker: USB boot not available');
 }
+
 // File system expansion status
 $result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
 $msg = $result[0] > ROOTFS_SIZE ? 'File system expanded' : 'File system not expanded yet';
 workerLog('worker: ' . $msg);
+
 // Turn on/off hdmi port
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
 sysCmd($cmd . ' > /dev/null');
@@ -2077,7 +2089,7 @@ function runQueuedJob() {
 			sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
 			break;
 		case 'usbboot':
-			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // remove first to prevent duplicate adds
+			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // Remove first to prevent duplicate adds
 			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
 			break;
 		case 'localui':

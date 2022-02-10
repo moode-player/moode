@@ -388,8 +388,7 @@ $_select['eth0chk0'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0c
 
 // USB boot
 $model = substr($_SESSION['hdwrrev'], 3, 1);
-// Pi-3B/B+/A+, NOTE: Pi-4B USB boot not avail as of 2019-07-13
-if ($model == '3' /*|| $model == '4'*/) {
+if ($model == '3') { // Pi-3B, B+, A+
 	$_usbboot_hide = '';
 	$_select['usbboot1'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot1\" value=\"1\" " . ">\n";
 	$_select['usbboot0'] .= "<input type=\"radio\" name=\"usbboot\" id=\"toggleusbboot2\" value=\"0\" " . "checked=\"checked\"".">\n";
@@ -398,6 +397,7 @@ if ($model == '3' /*|| $model == '4'*/) {
 
 }
 else {
+	// NOTE: USB boot is enabled by default for pi 4, 400 with Sep 3 2020 or later boot loader 
 	$_usbboot_hide = 'hide';
 }
 
