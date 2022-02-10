@@ -183,11 +183,6 @@ if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
 	playerSession('write', 'eth0chk', $_POST['eth0chk']);
 }
 
-// Expand root file system
-if (isset($_POST['update_expand_rootfs'])) {
-	submitJob('expandrootfs', '', 'File system expanded', 'Restart required', 30);
-}
-
 // Enable usb boot
 if (isset($_POST['update_usbboot'])) {
 	submitJob('usbboot', '', 'USB boot enabled', 'Restart required', 30);
@@ -390,12 +385,6 @@ $_select['ipaddr_timeout'] .= "<option value=\"120\" " . (($_SESSION['ipaddr_tim
 // eth0 check
 $_select['eth0chk1'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk1\" value=\"1\" " . (($_SESSION['eth0chk'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['eth0chk0'] .= "<input type=\"radio\" name=\"eth0chk\" id=\"toggleeth0chk2\" value=\"0\" " . (($_SESSION['eth0chk'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-
-// Expand root file system
-$_select['expandrootfs1'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs1\" value=\"1\" " . ">\n";
-$_select['expandrootfs0'] .= "<input type=\"radio\" name=\"expandrootfs\" id=\"toggleexpandrootfs2\" value=\"0\" " . "checked=\"checked\"".">\n";
-$result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
-$_expandrootfs_msg = $result[0] > ROOTFS_SIZE ? 'File system has been expanded' : 'File system has not been expanded yet';
 
 // USB boot
 $model = substr($_SESSION['hdwrrev'], 3, 1);

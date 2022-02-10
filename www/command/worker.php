@@ -2076,9 +2076,6 @@ function runQueuedJob() {
 			$led1_brightness = $_SESSION['w_queueargs'] == '0' ? '0' : '255';
 			sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
 			break;
-		case 'expandrootfs':
-			sysCmd('/var/www/command/resizefs.sh start');
-			break;
 		case 'usbboot':
 			sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt'); // remove first to prevent duplicate adds
 			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');

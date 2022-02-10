@@ -139,15 +139,6 @@ function autoConfigSettings() {
 			ctlBt($values['p3bt']);
 			playerSession('write', 'p3bt', $values['p3bt']);
 		}],
-		['requires' => ['expandfs'], 'handler' => function($values) {
-			if (in_array( strtolower($values['expandfs']), ["1", "yes", "true"]) ) {
-				sysCmd('/var/www/command/resizefs.sh start');
-			}
-		}, 'custom_write' => function($values) {
-			$result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
-			$expanded = $result[0] > ROOTFS_SIZE ? 1 : 0;
-			return sprintf("expandfs =\"%d\"\n", $expanded);
-		}],
 
 		'I2S Device',
 		['requires' => ['i2soverlay'], 'handler' => function($values) {
