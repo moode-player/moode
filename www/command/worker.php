@@ -33,10 +33,12 @@ require_once dirname(__FILE__) . '/../inc/cdsp.php';
 
 sysCmd('truncate ' . MOODE_LOG . ' --size 0');
 $dbh = cfgdb_connect();
-
-//
-workerLog('worker: -- Start');
 $result = sdbquery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", $dbh);
+$moode_series = substr(getMoodeRel(), 1, 1); // rNNN format
+//
+workerLog('worker: --');
+workerLog('worker: -- Start moOde ' . $moode_series .  ' series');
+workerLog('worker: --');
 //
 
 // Daemonize ourselves
@@ -147,7 +149,9 @@ if (!empty(sysCmd('grep "boss2" /etc/rc.local')[0])) {
 }
 
 //
+workerLog('worker: --');
 workerLog('worker: -- Audio debug');
+workerLog('worker: --');
 //
 
 // Verify audio device configuration
@@ -178,7 +182,9 @@ if ($amixname != 'Invalid card number.') {
 }
 
 //
+workerLog('worker: --');
 workerLog('worker: -- System');
+workerLog('worker: --');
 //
 
 // Store platform data
@@ -191,14 +197,14 @@ $_SESSION['raspbianver'] = sysCmd('cat /etc/debian_version')[0];
 $_SESSION['moode_release'] = getMoodeRel(); // rNNN format
 
 // Log platform data
-workerLog('worker: Host     (' . $_SESSION['hostname'] . ')');
-workerLog('worker: moOde    (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
-workerLog('worker: RaspiOS  (' . $_SESSION['raspbianver'] . ')');
-workerLog('worker: Kernel   (' . $_SESSION['kernelver'] . ')');
-workerLog('worker: Platform (' . $_SESSION['hdwrrev'] . ')');
-workerLog('worker: ARM arch (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] . ')');
-workerLog('worker: MPD ver  (' . $_SESSION['mpdver'] . ')');
-workerLog('worker: CPU gov  (' . $_SESSION['cpugov'] . ')');
+workerLog('worker: Host      (' . $_SESSION['hostname'] . ')');
+workerLog('worker: moOde     (' . getMoodeRel('verbose') . ')'); // major.minor.patch yyyy-mm-dd
+workerLog('worker: RaspiOS   (' . $_SESSION['raspbianver'] . ')');
+workerLog('worker: Kernel    (' . $_SESSION['kernelver'] . ')');
+workerLog('worker: Platform  (' . $_SESSION['hdwrrev'] . ')');
+workerLog('worker: ARM arch  (' . $_SESSION['procarch'] . ', ' . $_SESSION['kernel_architecture'] . ')');
+workerLog('worker: MPD ver   (' . $_SESSION['mpdver'] . ')');
+workerLog('worker: CPU gov   (' . $_SESSION['cpugov'] . ')');
 
 // USB boot
 $model = substr($_SESSION['hdwrrev'], 3, 1);
@@ -206,40 +212,64 @@ if ($model == '3') { // 3B, B+, A+
 	$result = sysCmd('vcgencmd otp_dump | grep 17:');
 	if ($result[0] == '17:3020000a') {
 		sysCmd('sed -i /program_usb_boot_mode/d ' . '/boot/config.txt');
-		$msg = 'USB boot enabled';
+		$msg = 'enabled';
 	}
 	else {
-		$msg = 'USB boot not enabled yet';
+		$msg = 'not enabled yet';
 	}
-	workerLog('worker: ' . $msg);
+	workerLog('worker: USB boot  (' . $msg .')');
 }
 elseif ($model == '4') { // 4, 400
 	$bootloader_min_date = new DateTime("Sep 3 2020");
 	$bootloader_actual_date = new DateTime(sysCmd("vcgencmd bootloader_version | awk 'NR==1 {print $1" " $2" " $3}'")[0]);
 	if ($bootloader_actual_date >= $bootloader_min_date) {
-		$msg = 'USB boot enabled';
+		$msg = 'enabled';
 	}
 	else {
-		$msg = 'USB boot not enabled yet';
+		$msg = 'not enabled yet';
 	}
-	workerLog('worker: ' . $msg);
+	workerLog('worker: USB boot  (' . $msg .')');
 }
 else {
-	workerLog('worker: USB boot not available');
+	workerLog('worker: USB boot  (not available)');
 }
 
 // File system expansion status
 $result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
-$msg = $result[0] > ROOTFS_SIZE ? 'File system expanded' : 'File system not expanded yet';
+$msg = $result[0] > ROOTFS_SIZE ? 'File sys  (expanded)' : 'File sys  (not expanded yet)';
 workerLog('worker: ' . $msg);
 
 // Turn on/off hdmi port
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
 sysCmd($cmd . ' > /dev/null');
-workerLog('worker: HDMI port ' . ($_SESSION['hdmiport'] == '1' ? 'on' : 'off'));
+workerLog('worker: HDMI port (' . ($_SESSION['hdmiport'] == '1' ? 'On)' : 'Off)'));
+
+// LED states
+if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
+	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
+	workerLog('worker: Sys LED0  (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
+	workerLog('worker: Sys LED1  (sysclass does not exist)');
+}
+elseif ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
+	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
+	workerLog('worker: Sys LED0  (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
+	workerLog('worker: Sys LED1  (sysclass does not exist)');
+}
+else {
+	$led1_brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
+	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
+	sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
+	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
+	workerLog('worker: Sys LED0  (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
+	workerLog('worker: Sys LED1  (' . ($led1_brightness == '0' ? 'Off' : 'On') . ')');
+}
 
 //
+workerLog('worker: --');
 workerLog('worker: -- Network');
+workerLog('worker: --');
 //
 
 // Check ETH0
@@ -320,10 +350,11 @@ if (!empty($wlan0[0])) {
 	// Reset dhcpcd.conf in case a hard reboot or poweroff occurs
 	resetApMode();
 
+	// Disable power save for integrated adapter
 	$model = substr($_SESSION['hdwrrev'], 3, 1);
 	if ($model == '3' || $model == '4' || substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 		sysCmd('/sbin/iwconfig wlan0 power off');
-		workerLog('worker: Pi integrated wlan0 power save disabled');
+		workerLog('worker: Pi wlan0 power save disabled');
 	}
 }
 else {
@@ -343,7 +374,9 @@ else {
 }
 
 //
+workerLog('worker: --');
 workerLog('worker: -- Audio config');
+workerLog('worker: --');
 //
 
 $updateMpdConf == False;
@@ -499,7 +532,9 @@ unset($cdsp);
 workerLog('worker: CamillaDSP (' . $_SESSION['camilladsp'] . ')');
 
 //
+workerLog('worker: --');
 workerLog('worker: -- MPD startup');
+workerLog('worker: --');
 //
 
 // Start MPD
@@ -526,7 +561,9 @@ setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 workerLog('worker: MPD ignore CUE files (' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no') . ')');
 
 //
+workerLog('worker: --');
 workerLog('worker: -- Feature availability');
+workerLog('worker: --');
 //
 
 // Configure audio source
@@ -738,7 +775,9 @@ else {
 }
 
 //
+workerLog('worker: --');
 workerLog('worker: -- Music sources');
+workerLog('worker: --');
 //
 
 // List USB sources
@@ -757,7 +796,9 @@ $result = sourceMount('mountall');
 workerLog('worker: NAS and UPnP sources (' . $result . ')');
 
 //
+workerLog('worker: --');
 workerLog('worker: -- Other');
+workerLog('worker: --');
 //
 
 // Start rotary encoder
@@ -783,28 +824,6 @@ if (isset($_SESSION['shellinabox']) && $_SESSION['shellinabox'] == 1) {
 
 // USB auto-mounter
 workerLog('worker: USB auto-mounter (' . $_SESSION['usb_auto_mounter'] . ')');
-
-// LED states
-if (substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
-	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
-	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
-	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
-	workerLog('worker: LED1 (sysclass does not exist)');
-}
-elseif ($_SESSION['hdwrrev'] == 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]' || substr($_SESSION['hdwrrev'], 3, 1) == '1') {
-	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
-	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
-	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
-	workerLog('worker: LED1 (sysclass does not exist)');
-}
-else {
-	$led1_brightness = explode(',', $_SESSION['led_state'])[1] == '0' ? '0' : '255';
-	$led0_trigger = explode(',', $_SESSION['led_state'])[0] == '0' ? 'none' : 'mmc0';
-	sysCmd('echo ' . $led1_brightness . ' | sudo tee /sys/class/leds/led1/brightness > /dev/null');
-	sysCmd('echo ' . $led0_trigger . ' | sudo tee /sys/class/leds/led0/trigger > /dev/null');
-	workerLog('worker: LED0 (' . ($led0_trigger == 'none' ? 'Off' : 'On') . ')');
-	workerLog('worker: LED1 (' . ($led1_brightness == '0' ? 'Off' : 'On') . ')');
-}
 
 // Restore MPD volume level
 $input_switch_devices = array('HiFiBerry DAC+ ADC', 'Audiophonics ES9028/9038 DAC', 'Audiophonics ES9028/9038 DAC (Pre 2019)');
