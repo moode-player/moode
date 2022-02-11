@@ -234,12 +234,24 @@ else {
 	workerLog('worker: USB boot  (not available)');
 }
 
-// File system expansion status
+// Rootfs auto-expansion
 $result = sysCmd('lsblk -o size -nb /dev/disk/by-label/rootfs');
-$msg = $result[0] > ROOTFS_SIZE ? 'File sys  (expanded)' : 'File sys  (not expanded yet)';
-workerLog('worker: ' . $msg);
+if ($result[0] > ROOTFS_SIZE) { // 3.5GB for moOde 8 series
+	workerLog('worker: File sys  (expanded)');
+}
+elseif (file_exists('/boot/autoexpand')) {
+	sysCmd('rm /boot/autoexpand');
+	// NOTE: During image prep init_resize.sh gets altered to create a 3.5GB root so lets revert it back to default
+	// NOTE: This may change when we convert to making images with pi-gen
+	sysCmd('sed -i "s/TARGET_END=.*/TARGET_END=\$((ROOT_DEV_SIZE - 1))/" /usr/lib/raspi-config/init_resize.sh');
+	sysCmd('/var/www/command/resizefs.sh start');
+	sysCmd('reboot');
+}
+else {
+	workerLog('worker: File sys  (not expanded)');
+}
 
-// Turn on/off hdmi port
+// Turn on/off HDMI port
 $cmd = $_SESSION['hdmiport'] == '1' ? 'tvservice -p' : 'tvservice -o';
 sysCmd($cmd . ' > /dev/null');
 workerLog('worker: HDMI port (' . ($_SESSION['hdmiport'] == '1' ? 'On)' : 'Off)'));
