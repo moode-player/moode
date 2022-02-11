@@ -284,14 +284,14 @@ workerLog('worker: -- Network');
 workerLog('worker: --');
 //
 
-// Check ETH0
+// Check eth0
 $eth0 = sysCmd('ip addr list | grep eth0');
 if (!empty($eth0)) {
 	workerLog('worker: eth0 adapter exists');
-	// Test Ethernet IP if indicated
-	workerLog('worker: eth0 wait for IP address (' . ($_SESSION['eth0chk'] == '1' ? 'Yes' : 'No') . ')');
+	// Wait for IP address if indicated
+	workerLog('worker: eth0 wait for address (' . ($_SESSION['eth0chk'] == '1' ? 'Yes' : 'No') . ')');
 	if ($_SESSION['eth0chk'] == '1') {
-		workerLog('worker: IP address wait timeout (' . $_SESSION['ipaddr_timeout'] . ' secs)');
+		workerLog('worker: eth0 address wait (' . $_SESSION['ipaddr_timeout'] . ' secs)');
 		$eth0ip = waitForIpAddr('eth0', $_SESSION['ipaddr_timeout']);
 	}
 	else {
@@ -304,14 +304,14 @@ else {
 }
 !empty($eth0ip[0]) ? log_network_info('eth0') : workerLog('worker: eth0 address not assigned');
 
-// Check WLAN0
+// Check wlan0
 $wlan0ip = '';
 $wlan0 = sysCmd('ip addr list | grep wlan0');
 if (!empty($wlan0[0])) {
 	workerLog('worker: wlan0 adapter exists');
 
 	$result = sdbquery('SELECT * FROM cfg_network', $dbh);
-	workerLog('worker: wifi country (' . $result[1]['wlan_country'] . ')');
+	workerLog('worker: wlan0 country (' . $result[1]['wlan_country'] . ')');
 
 	 // Case: no ssid
 	if (empty($result[1]['wlanssid']) || $result[1]['wlanssid'] == 'None (activates AP mode)') {
@@ -325,7 +325,7 @@ if (!empty($wlan0[0])) {
 		}
 		// Case: eth0 addr exists
 		else {
-			workerLog('worker: eth0 addr exists, AP mode not started');
+			workerLog('worker: wlan0 AP mode not started (eth0 active)');
 			$_SESSION['apactivated'] = false;
 		}
 	}
@@ -351,7 +351,7 @@ if (!empty($wlan0[0])) {
 					$wlan0ip = waitForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
 				}
 				else {
-					workerLog('worker: eth0 address exists so AP mode not started');
+					workerLog('worker: wlan0 AP mode not started (eth0 active)');
 					$_SESSION['apactivated'] = false;
 				}
 			}
@@ -366,7 +366,7 @@ if (!empty($wlan0[0])) {
 	$model = substr($_SESSION['hdwrrev'], 3, 1);
 	if ($model == '3' || $model == '4' || substr($_SESSION['hdwrrev'], 0, 7) == 'Pi-Zero') {
 		sysCmd('/sbin/iwconfig wlan0 power off');
-		workerLog('worker: Pi wlan0 power save disabled');
+		workerLog('worker: wlan0 power save disabled');
 	}
 }
 else {
