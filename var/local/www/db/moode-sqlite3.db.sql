@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Jan 17 11:04:10 2022
+-- File generated with SQLiteStudio v3.1.0 on Fri Feb 11 14:10:10 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -313,7 +313,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (27, 'phistsong', '');
 INSERT INTO cfg_system (id, param, value) VALUES (28, 'library_utf8rep', 'No');
 INSERT INTO cfg_system (id, param, value) VALUES (29, 'current_view', 'playback,folder');
 INSERT INTO cfg_system (id, param, value) VALUES (30, 'timecountup', '0');
-INSERT INTO cfg_system (id, param, value) VALUES (31, 'accent_color', 'Emerald');
+INSERT INTO cfg_system (id, param, value) VALUES (31, 'accent_color', 'Carrot');
 INSERT INTO cfg_system (id, param, value) VALUES (32, 'volknob', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (33, 'volmute', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (34, 'alsavolume_max', '100');
