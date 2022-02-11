@@ -42,6 +42,8 @@ Updates
 - UPD: Add accent colors Berry, BlueLED, Moss and Lipstick
 - UPD: Exclude Dummy from MPD Output device list
 - UPD: Restrict DF to local file systems in moodeutl -m
+- UPD: SSH login banner indicates how to set new password
+- UPD: Auto-expand rootfs to size of media at boot
 - UPD: Remove 64-bit kernel option
 
 Bug fixes
