@@ -1900,7 +1900,7 @@ function updMpdConf($i2sdevice) {
 				$thesycon_dsd_workaround = $cfg['value'];
 				break;
 			case 'mixer_type':
-				$mixertype = $cfg['value'];
+				$mixer_type = $cfg['value'];
 				break;
 			case 'input_cache':
 				$input_cache = $cfg['value'];
@@ -1960,24 +1960,23 @@ function updMpdConf($i2sdevice) {
 		}
 	}
 
-	// Store in session
+	// ALSA card number
 	playerSession('write', 'cardnum', $cardnum);
-	playerSession('write', 'mpdmixer', $mixertype);
-	playerSession('write', 'mpdmixer_local', $mixertype);
+	// ALSA mixer name
 	playerSession('write', 'amixname', getMixerName($i2sdevice));
+	// Hardware volume
+	playerSession('write', 'alsavolume', getALSAVolume($_SESSION['amixname']));
+	if ($_SESSION['alsavolume'] == 'none' && $mixer_type == 'hardware') {
+		$mixer_type = 'software';
+		$result = sdbquery("UPDATE cfg_mpd, SET value='software' WHERE param='mixer_type'", cfgdb_connect());
+	}
+	// MPD mixer_type (Hardware, Software, Fixed (0dB, Null))
+	playerSession('write', 'mpdmixer', $mixer_type);
+	playerSession('write', 'mpdmixer_local', $mixer_type);
+	// Audio device friendly name
 	$adevname = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$cardnum] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
 	playerSession('write', 'adevname', $adevname);
-	$hwmixer = $mixertype == 'hardware' ? getMixerName($i2sdevice) : '';
-
-	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
-	if (substr($result[0], 0, 6 ) == 'amixer') {
-		playerSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
-	}
-	else {
-		$result[0] = str_replace('%', '', $result[0]);
-		playerSession('write', 'alsavolume', $result[0]); // Volume level
-	}
 
 	// Input
 	$data .= "max_connections \"128\"\n";
@@ -2018,8 +2017,8 @@ function updMpdConf($i2sdevice) {
 	$data .= "type \"alsa\"\n";
 	$data .= "name \"" . ALSA_DEFAULT . "\"\n";
 	$data .= "device \"_audioout\"\n";
-	$data .= "mixer_type \"" . $mixertype . "\"\n";
-	$data .= $mixertype == 'hardware' ? "mixer_control \"" . $hwmixer . "\"\n" . "mixer_device \"hw:" . $cardnum . "\"\n" . "mixer_index \"0\"\n" : '';
+	$data .= "mixer_type \"" . $mixer_type . "\"\n";
+	$data .= $mixer_type == 'hardware' ? "mixer_control \"" . $_SESSION['amixname'] . "\"\n" . "mixer_device \"hw:" . $cardnum . "\"\n" . "mixer_index \"0\"\n" : '';
 	$data .= "dop \"" . $dop . "\"\n";
 	$data .= "stop_dsd_silence \"" . $stop_dsd_silence . "\"\n";
 	$data .= "thesycon_dsd_workaround \"" . $thesycon_dsd_workaround . "\"\n";
@@ -2073,7 +2072,7 @@ function getMixerName($i2sdevice) {
 	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		$result = sysCmd('/var/www/command/util.sh get-mixername');
 		if ($result[0] == '') {
-			// Mixer name not defined => Use default mixer name "PCM"
+			// Mixer name not found => Use default mixer name "PCM"
 			$mixername = 'PCM';
 		}
 		else {
@@ -2112,6 +2111,24 @@ function getMixerName($i2sdevice) {
 	}
 
 	return $mixername;
+}
+
+// Get ALSA (Hardware) volume
+function getALSAVolume($amixname) {
+	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $amixname . '"');
+	if (substr($result[0], 0, 6 ) == 'amixer') {
+		$alsa_volume = 'none';
+		if ($mixer_type == 'hardware') {
+			$mixer_type = 'software';
+			$result = sdbquery("UPDATE cfg_mpd, SET value='software' WHERE param='mixer_type'", cfgdb_connect());
+		}
+	}
+	else {
+		$alsa_volume = str_replace('%', '', $result[0]);
+		playerSession('write', 'alsavolume', $alsa_volume);
+	}
+
+	return $alsa_volume;
 }
 
 // Get device names assigned to each ALSA card
