@@ -43,7 +43,6 @@ if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSIO
 	// Submit job
 	$queue_args = $device_chg . ',' . $mixer_chg;
 	submitJob('mpdcfg', $queue_args, 'Output device updated', 'MPD restarted');
-
 }
 
 // Volume type
