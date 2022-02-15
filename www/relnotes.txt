@@ -3,9 +3,9 @@
 #  RELEASE NOTES
 #
 #  These release notes reflect the content contained in the official release of
-#  moOde audio player from http:#moodeaudio.org
+#  moOde audio player from the moOde audio player project.
 #
-#  (C) Tim Curtis 2014 http:#moodeaudio.org
+#  (C) Tim Curtis 2014 http://moodeaudio.org
 #
 ################################################################################
 
