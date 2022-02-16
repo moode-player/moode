@@ -31,8 +31,8 @@ $dbh = cfgdb_connect();
 session_write_close();
 
 $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
-$playqueue_cmds = array('add_item', 'play_item', 'add_item_next', 'play_item_next', 'clear_add_item', 'clear_play_item',
-	'add_group', 'play_group', 'add_group_next', 'play_group_next', 'clear_add_group', 'clear_play_group');
+$playqueue_cmds = array('add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
+	'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next'/*, 'clear_add_group'*/);
 $other_mpd_cmds = array('updvolume' , 'mutetxvol' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
 	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'station_info', 'track_info',
 	'upd_tx_adv_toggle', 'upd_rx_adv_toggle');
@@ -241,7 +241,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				chainMpdCmds($sock, $cmds);
 			}
 			break;
-		case 'clear_add_item':
+		/*case 'clear_add_item':*/
 		case 'clear_play_item':
 			$cmds = array('clear');
 			array_push($cmds, addItemToQueue($_POST['path']));
@@ -291,7 +291,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 
 			playerSession('write', 'toggle_song', $pos);
 			break;
-		case 'clear_add_group':
+		/*case 'clear_add_group':*/
         case 'clear_play_group':
 			$cmds = array_merge(array('clear'), addGroupToQueue($_POST['path']));
 
