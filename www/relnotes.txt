@@ -39,6 +39,7 @@ Updates
 - UPD: Add librespot normalization settings to System info
 - UPD: Add reference to enable IGMP Snooping in Multiroom Setup
 - UPD: Add accent colors Berry, BlueLED, Moss and Lipstick
+- UPD: Add "Clear queue" to Playbar/Playback context menus
 - UPD: Exclude Dummy from MPD Output device list
 - UPD: Restrict DF to local file systems in moodeutl -m
 - UPD: SSH login banner indicates how to set new password

@@ -1444,6 +1444,10 @@ $('#context-menu-playback a').click(function(e) {
 		$('.single').toggleClass('btn-primary');
 		sendMpdCmd('single ' + toggle);
 	}
+    else if ($(this).data('cmd') == 'clear') {
+		sendMpdCmd('clear');
+        $('#pl-saveName').val(''); // Clear saved playlist name if any
+	}    
     else if ($(this).data('cmd') == 'stream-recorder') {
 		$('#menu-check-recorder').toggle();
 
