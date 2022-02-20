@@ -18,7 +18,7 @@
 New features
 
 - NEW: Raspberry Pi OS 11.2 (Bullseye)
-- NEW: Linux kernel 5.10.92 #1514
+- NEW: Linux kernel 5.15.23 #1525
 
 Radio stations
 
