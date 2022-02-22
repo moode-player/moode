@@ -390,7 +390,7 @@ SOX_UPSAMPLE_ONLY_4148K=2	# Upsample only 44.1K and 48K source rates
 SOX_ADHERE_BASE_FREQ=8		# Resample (adhere to base freq)
 
 # Rootfs size in bytes (3.5GB)
-ROOTFS_SIZE=3670016000
+DEV_ROOTFS_SIZE=3670016000
 
 #
 # Gather data
@@ -433,7 +433,7 @@ if [ "$WLAN0MAC" = "" ]; then
 	WLAN0MAC="no adapter"
 fi
 TMP="$(lsblk -o size -nb /dev/disk/by-label/rootfs)"
-if [[ $TMP -gt $ROOTFS_SIZE ]]; then
+if [[ $TMP -gt $DEV_ROOTFS_SIZE ]]; then
 	FSEXPAND="expanded"
 else
 	FSEXPAND="not expanded"

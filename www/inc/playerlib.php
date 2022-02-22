@@ -43,7 +43,7 @@ define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
 define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
 define('DEF_COVER', 'images/default-cover-v6.svg');
-define('ROOTFS_SIZE', '3670016000'); // Bytes (3.5GB)
+define('DEV_ROOTFS_SIZE', '3670016000'); // Bytes (3.5GB)
 
 // Size and quality factor for small thumbs
 // Used in thmcache.php, worker.php
