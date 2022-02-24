@@ -2118,14 +2118,9 @@ function getALSAVolume($amixname) {
 	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $amixname . '"');
 	if (substr($result[0], 0, 6 ) == 'amixer') {
 		$alsa_volume = 'none';
-		if ($mixer_type == 'hardware') {
-			$mixer_type = 'software';
-			$result = sdbquery("UPDATE cfg_mpd, SET value='software' WHERE param='mixer_type'", cfgdb_connect());
-		}
 	}
 	else {
 		$alsa_volume = str_replace('%', '', $result[0]);
-		playerSession('write', 'alsavolume', $alsa_volume);
 	}
 
 	return $alsa_volume;
