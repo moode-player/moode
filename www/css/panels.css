@@ -705,9 +705,9 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .container-iteminfo .ralign {float:right;width:70%;text-align:right}
 .container-iteminfo .off, .container-iteminfo .None {display:none;}
 #audioinfo, #trackinfo {display:none;}
-#audioinfo-modal.hardware #audioinfo {display:block;}
+#audioinfo-modal.playback #audioinfo {display:block;}
 #audioinfo-modal.track #trackinfo {display:block;}
-#audioinfo-modal.hardware #audioinfo-hardware, #audioinfo-modal.track #audioinfo-track {background-color:var(--btnshade4);}
+#audioinfo-modal.playback #audioinfo-playback, #audioinfo-modal.track #audioinfo-track {background-color:var(--btnshade4);}
 #trackinfo li:nth-child(odd) {background-color:rgba(128,128,128,.05);}
 .controls-select {margin-bottom:5px;}
 .recorder-on {border-bottom: 2px solid var(--accentxts);}

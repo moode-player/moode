@@ -3939,9 +3939,9 @@ function splitStringAtFirstSpace (str) {
 }
 
 // For menu item in header.php
-function audioHardware() {
+function audioPlayback() {
     var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
-    audioInfo(cmd, MPD.json['file'], 'hardware');
+    audioInfo(cmd, MPD.json['file'], 'playback');
 }
 // Track/Audio info: cmd = type of dialog, path = song file, dialog for m menu Audio info
 function audioInfo(cmd, path, dialog){
@@ -3949,9 +3949,9 @@ function audioInfo(cmd, path, dialog){
         GLOBAL.scriptSection == 'configs' ? $('#audioinfo-tabs').css('display', 'none') : $('#audioinfo-tabs').css('display', 'flex');
 	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(result) {
 			itemInfoModal('trackdata', result, path);
-			if (dialog != 'hardware') dialog = 'track';
+			if (dialog != 'playback') dialog = 'track';
 			cmd == 'station_info' ? $('#audioinfo-track').text('Station') : $('#audioinfo-track').text('Track');
-			$('#audioinfo-modal').removeClass('track hardware');
+			$('#audioinfo-modal').removeClass('track playback');
 			$('#audioinfo-modal').addClass(dialog);
 			$('#audioinfo-modal').modal('show');
 	    }, 'json');

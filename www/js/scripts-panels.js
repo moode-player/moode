@@ -1273,12 +1273,12 @@ jQuery(document).ready(function($) { 'use strict';
         }
     });
 
-    // Audio info / Track info
+    // Audio info Track/Playback
     $(document).on('click', '#audioinfo-track', function(e) {
-		$('#audioinfo-modal').removeClass('hardware').addClass('track');
+		$('#audioinfo-modal').removeClass('playback').addClass('track');
 	});
-    $(document).on('click', '#audioinfo-hardware', function(e) {
-		$('#audioinfo-modal').removeClass('track').addClass('hardware');
+    $(document).on('click', '#audioinfo-playback', function(e) {
+		$('#audioinfo-modal').removeClass('track').addClass('playback');
 	});
 
     // CoverView screen saver reset
