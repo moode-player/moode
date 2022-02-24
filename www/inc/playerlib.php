@@ -1968,7 +1968,7 @@ function updMpdConf($i2sdevice) {
 	playerSession('write', 'alsavolume', getALSAVolume($_SESSION['amixname']));
 	if ($_SESSION['alsavolume'] == 'none' && $mixer_type == 'hardware') {
 		$mixer_type = 'software';
-		$result = sdbquery("UPDATE cfg_mpd, SET value='software' WHERE param='mixer_type'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", cfgdb_connect());
 	}
 	// MPD mixer_type (Hardware, Software, Fixed (0dB, Null))
 	playerSession('write', 'mpdmixer', $mixer_type);
