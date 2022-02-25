@@ -146,8 +146,8 @@ With no OPTION print the help text and exit.
  -A [add|rm N] \tUpdate features availability
  -d\t\tDump session file (requires sudo)
  -D [var name] \tDelete session variable (requires sudo)
- -e [filename]\tExport settings to moodecfg.ini
- -i\t\tImport moodecfg.ini
+ -e [filename]\tExport settings to [filename] or ./moodecfg-<timestamp>.ini
+ -i\t\tImport /boot/moodecfg.ini
  -f\t\tPrint supported audio formats
  -F\t\tPrint full alsacap info
  -l\t\tPrint moode log
