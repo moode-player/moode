@@ -25,6 +25,7 @@ Radio stations
 - NEW: DR P1, P2, P3, P4
 - UPD: DR P6 Beat
 - UPD: DR P8 Jazz
+- DEL: Swedish Classic Radio
 
 Updates
 - UPD: Bump to MPD 0.23.5
