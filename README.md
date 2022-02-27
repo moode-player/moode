@@ -4,7 +4,9 @@ Moode Audio Player is a derivative of the wonderful WebUI audio player client fo
 
 moOde provides a beautifully designed and responsive user interface, an extensive set of Audiophile-grade features and an active Forum that provides top notch troubleshooting, interesting discussion on a variety of audio topics and an International user community of audio enthusiasts.
 
-Take a moment to consider making a donation via PayPal. The financial support helps our project remain active so we can continue to provide great software to the wonderful Raspberry Pi audio community.
+### Help support the project
+
+Take a moment to consider making a donation via PayPal. The financial support helps the project remain active providing great audio software to the Raspberry Pi audio community.
 
 [![button](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=45YWLFLZ5V7P4)
 
@@ -15,11 +17,22 @@ Tim Curtis © 2014
 [Contributors: ./www/CONTRIBS.html](./www/CONTRIBS.html)<br/>
 
 
-## Other Resources
+### Additional Resources
+
+#### Image and Package build repos
+
+Image builder: https://github.com/moode-player/imgbuild<br/>
+Package builder: https://github.com/moode-player/pkgbuild<br/>
+Package sources: https://github.com/moode-player/pkgsource<br/>
+
+#### moOde on the Web
+
+Website: https://moodeaudio.org<br/>
+Twitter: https://twitter.com/MoodeAudio</br>
+Forum: https://moodeaudio.org/forum<br>
+diyAudio: https://www.diyaudio.com/community/forums/pc-based.120/
+
+#### Raspberry Pi
+
 Raspberry Pi: https://github.com/raspberrypi<br/>
 RaspiOS: https://www.raspbian.org/RaspbianRepository<br/>
-moOde Image Builder: https://github.com/moode-player/imgbuild<br/>
-moOde Package Builder: https://github.com/moode-player/pkgbuild<br/>
-moodeaudio.org: http://moodeaudio.org<br/>
-moOde Twitter feed: http://twitter.com/MoodeAudio</br>
-moOde Forum http://moodeaudio.org/forum
