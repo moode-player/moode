@@ -20,18 +20,30 @@
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-$array = sdbquery("SELECT value FROM cfg_system WHERE param='hostname'", cfgdb_connect());
-$thishost = strtolower($array[0]['value']);
+$dbh = cfgdb_connect();
 
-$result = shell_exec("avahi-browse -a -t -r -p | awk -F '[;.]' '/IPv4/ && /moOde/ && /audio/ && /player/ && /=/ {print $7\",\"$9\".\"$10\".\"$11\".\"$12}' | sort");
-$line = strtok($result, "\n");
+$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", $dbh);
+$timeout = $result[0]['value'];
+$options = array('http'=>array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
+$context = stream_context_create($options);
+
+$array = sdbquery("SELECT value FROM cfg_system WHERE param='hostname'", $dbh);
+$this_host = strtolower($array[0]['value']);
+
+// Scan the network
+$subnet = sysCmd('hostname -I | cut -d "." -f 1,2,3')[0];
+$scan_results = sysCmd('nmap -sn ' . $subnet . '.0/24 -exclude ' . $subnet . '.1 | grep "Nmap scan report for " | cut -d " " -f 5,6');
+
+// Parse the results
 $_players = '';
+foreach ($scan_results as $line) {
+	list($host, $ipaddr) = explode(' ', $line);
+	$host = strtolower(explode('.', $host)[0]);
+	$ipaddr = trim($ipaddr, '()');
 
-while ($line) {
-	list($host, $ipaddr) = explode(",", $line);
-	if (strtolower($host) != $thishost) {
-		if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx'))) {
-			debugLog('players.php: get_rx_status failed: ' . $host);
+	if ($host != $this_host && !empty($ipaddr)) {
+		if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx', false, $context))) {
+			debugLog('trx-config.php: get_rx_status failed: ' . $host);
 		}
 		else {
 			if ($result != 'Unknown command') {  // r740 or higher host
@@ -49,8 +61,6 @@ while ($line) {
 				</a></li>', $ipaddr, $host, $multiroom_rx_indicator);
 		}
 	}
-
-	$line = strtok("\n");
 }
 
 // Check for no players found

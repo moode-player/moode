@@ -22,6 +22,8 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '' ,'');
 
+$dbh = cfgdb_connect();
+
 // Sender
 if (isset($_POST['update_multiroom_tx'])) {
 	if (isset($_POST['multiroom_tx']) && $_POST['multiroom_tx'] != $_SESSION['multiroom_tx']) {
@@ -52,25 +54,35 @@ if (isset($_POST['update_alsa_loopback'])) {
 	}
 }
 if (isset($_POST['update_multiroom_initvol'])) {
-	$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_initvol'] . "' " . "WHERE param='initial_volume'", cfgdb_connect());
+	$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_initvol'] . "' " . "WHERE param='initial_volume'", $dbh);
 	submitJob('multiroom_initvol', $_POST['multiroom_initvol'], 'Volume levels initialized', '');
 }
 if (isset($_POST['multiroom_tx_restart'])) {
 	submitJob('multiroom_tx_restart', '', 'Sender restarted', '');
 }
 if (isset($_POST['multiroom_tx_discover'])) {
-	$array = sdbquery("SELECT value FROM cfg_system WHERE param='hostname'", cfgdb_connect());
-	$thishost = strtolower($array[0]['value']);
+	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", $dbh);
+	$timeout = $result[0]['value'];
+	$options = array('http'=>array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
+	$context = stream_context_create($options);
 
+	$array = sdbquery("SELECT value FROM cfg_system WHERE param='hostname'", $dbh);
+	$this_host = strtolower($array[0]['value']);
+
+	// Scan the network
+	$subnet = sysCmd('hostname -I | cut -d "." -f 1,2,3')[0];
+	$scan_results = sysCmd('nmap -sn ' . $subnet . '.0/24 -exclude ' . $subnet . '.1 | grep "Nmap scan report for " | cut -d " " -f 5,6');
+
+	// Parse the results
 	$_SESSION['rx_hostnames'] = '';
 	$_SESSION['rx_addresses'] = '';
+	foreach ($scan_results as $line) {
+		list($host, $ipaddr) = explode(' ', $line);
+		$host = strtolower(explode('.', $host)[0]);
+		$ipaddr = trim($ipaddr, '()');
 
-	$result = shell_exec("avahi-browse -a -t -r -p | awk -F '[;.]' '/IPv4/ && /moOde/ && /audio/ && /player/ && /=/ {print $7\",\"$9\".\"$10\".\"$11\".\"$12}' | sort");
-	$line = strtok($result, "\n");
-	while ($line) {
-		list($host, $ipaddr) = explode(',', $line);
-		if (strtolower($host) != $thishost) {
-			if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx'))) {
+		if ($host != $this_host && !empty($ipaddr)) {
+			if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx', false, $context))) {
 				debugLog('trx-config.php: get_rx_status failed: ' . $host);
 			}
 			else {
@@ -80,8 +92,6 @@ if (isset($_POST['multiroom_tx_discover'])) {
 				}
 			}
 		}
-
-		$line = strtok("\n");
 	}
 	$_SESSION['rx_hostnames'] = rtrim($_SESSION['rx_hostnames'], ', ');
 	$_SESSION['rx_addresses'] = rtrim($_SESSION['rx_addresses'], ' ');
@@ -98,21 +108,21 @@ if (isset($_POST['multiroom_tx_discover'])) {
 }
 if (isset($_POST['update_multiroom_tx_bfr'])) {
 	if (isset($_POST['multiroom_tx_bfr']) && $_POST['multiroom_tx_bfr'] != $_cfg_multiroom['tx_bfr']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_bfr'] . "' " . "WHERE param='tx_bfr'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_bfr'] . "' " . "WHERE param='tx_bfr'", $dbh);
 		$msg = $_SESSION['multiroom_tx'] == 'On' ? 'Sender restarted' : '';
 		submitJob('multiroom_tx_restart', '', 'ALSA buffer updated', $msg);
 	}
 }
 if (isset($_POST['update_multiroom_tx_frame_size'])) {
 	if (isset($_POST['multiroom_tx_frame_size']) && $_POST['multiroom_tx_frame_size'] != $_cfg_multiroom['tx_frame_size']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_frame_size'] . "' " . "WHERE param='tx_frame_size'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_frame_size'] . "' " . "WHERE param='tx_frame_size'", $dbh);
 		$msg = $_SESSION['multiroom_tx'] == 'On' ? 'Sender restarted' : '';
 		submitJob('multiroom_tx_restart', '', 'Opus frame size updated', $msg);
 	}
 }
 if (isset($_POST['update_multiroom_tx_rtprio'])) {
 	if (isset($_POST['multiroom_tx_rtprio']) && $_POST['multiroom_tx_rtprio'] != $_cfg_multiroom['tx_rtprio']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_rtprio'] . "' " . "WHERE param='tx_rtprio'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_rtprio'] . "' " . "WHERE param='tx_rtprio'", $dbh);
 		$msg = $_SESSION['multiroom_tx'] == 'On' ? 'Sender restarted' : '';
 		submitJob('multiroom_tx_restart', '', 'Realtime priority updated', $msg);
 	}
@@ -120,7 +130,7 @@ if (isset($_POST['update_multiroom_tx_rtprio'])) {
 if (isset($_POST['update_multiroom_tx_query_timeout'])) {
 	if (isset($_POST['multiroom_tx_query_timeout']) && $_POST['multiroom_tx_query_timeout'] != $_cfg_multiroom['multiroom_tx_query_timeout']) {
 		$_SESSION['notify']['title'] = 'Query timeout updated';
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_query_timeout'] . "' " . "WHERE param='tx_query_timeout'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_tx_query_timeout'] . "' " . "WHERE param='tx_query_timeout'", $dbh);
 	}
 }
 
@@ -135,12 +145,12 @@ if (isset($_POST['update_multiroom_rx'])) {
 if (isset($_POST['update_multiroom_rx_mastervol_opt_in'])) {
 	if (isset($_POST['multiroom_rx_mastervol_opt_in']) && $_POST['multiroom_rx_mastervol_opt_in'] != $_cfg_multiroom['rx_mastervol_opt_in']) {
 		$_SESSION['notify']['title'] = 'Master volume opt-in ' . ($_POST['multiroom_rx_mastervol_opt_in'] == '1' ? 'Yes' : 'No');
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_mastervol_opt_in'] . "' " . "WHERE param='rx_mastervol_opt_in'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_mastervol_opt_in'] . "' " . "WHERE param='rx_mastervol_opt_in'", $dbh);
 	}
 }
 if (isset($_POST['update_multiroom_rx_alsa_output_mode'])) {
 	if (isset($_POST['multiroom_rx_alsa_output_mode']) && $_POST['multiroom_rx_alsa_output_mode'] != $_cfg_multiroom['rx_alsa_output_mode']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_alsa_output_mode'] . "' " . "WHERE param='rx_alsa_output_mode'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_alsa_output_mode'] . "' " . "WHERE param='rx_alsa_output_mode'", $dbh);
 		$msg = $_SESSION['multiroom_rx'] == 'On' ? 'Receiver restarted' : '';
 		submitJob('multiroom_rx_restart', '', 'ALSA output mode updated', $msg);
 	}
@@ -156,28 +166,28 @@ if (isset($_POST['multiroom_rx_restart'])) {
 }
 if (isset($_POST['update_multiroom_rx_bfr'])) {
 	if (isset($_POST['multiroom_rx_bfr']) && $_POST['multiroom_rx_bfr'] != $_cfg_multiroom['rx_bfr']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_bfr'] . "' " . "WHERE param='rx_bfr'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_bfr'] . "' " . "WHERE param='rx_bfr'", $dbh);
 		$msg = $_SESSION['multiroom_rx'] == 'On' ? 'Receiver restarted' : '';
 		submitJob('multiroom_rx_restart', '', 'ALSA buffer updated', $msg);
 	}
 }
 if (isset($_POST['update_multiroom_rx_jitter_bfr'])) {
 	if (isset($_POST['multiroom_rx_jitter_bfr']) && $_POST['multiroom_rx_jitter_bfr'] != $_cfg_multiroom['rx_jitter_bfr']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_jitter_bfr'] . "' " . "WHERE param='rx_jitter_bfr'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_jitter_bfr'] . "' " . "WHERE param='rx_jitter_bfr'", $dbh);
 		$msg = $_SESSION['multiroom_rx'] == 'On' ? 'Receiver restarted' : '';
 		submitJob('multiroom_rx_restart', '', 'RTP Jitter buffer updated', $msg);
 	}
 }
 if (isset($_POST['update_multiroom_rx_frame_size'])) {
 	if (isset($_POST['multiroom_rx_frame_size']) && $_POST['multiroom_rx_frame_size'] != $_cfg_multiroom['rx_frame_size']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_frame_size'] . "' " . "WHERE param='rx_frame_size'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_frame_size'] . "' " . "WHERE param='rx_frame_size'", $dbh);
 		$msg = $_SESSION['multiroom_rx'] == 'On' ? 'Receiver restarted' : '';
 		submitJob('multiroom_rx_restart', '', 'Opus frame size updated', $msg);
 	}
 }
 if (isset($_POST['update_multiroom_rx_rtprio'])) {
 	if (isset($_POST['multiroom_rx_rtprio']) && $_POST['multiroom_rx_rtprio'] != $_cfg_multiroom['rx_rtprio']) {
-		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_rtprio'] . "' " . "WHERE param='rx_rtprio'", cfgdb_connect());
+		$result = sdbquery("UPDATE cfg_multiroom SET value='" . $_POST['multiroom_rx_rtprio'] . "' " . "WHERE param='rx_rtprio'", $dbh);
 		$msg = $_SESSION['multiroom_rx'] == 'On' ? 'Receiver restarted' : '';
 		submitJob('multiroom_rx_restart', '', 'Realtime priority updated', $msg);
 	}
@@ -185,7 +195,7 @@ if (isset($_POST['update_multiroom_rx_rtprio'])) {
 
 session_write_close();
 
-$params = cfgdb_read('cfg_multiroom', cfgdb_connect());
+$params = cfgdb_read('cfg_multiroom', $dbh);
 foreach ($params as $row) {
     $_cfg_multiroom[$row['param']] = $row['value'];
 }

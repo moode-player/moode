@@ -36,6 +36,7 @@ Updates
 - UPD: Move MPD Audio output and Volume type to Audio Config
 - UPD: Ignore articles when sorting Composers in Tag View
 - UPD: Improve scan for Samba shares
+- UPD: Improve scan for players/receivers
 - UPD: Handle case where Receiver Discovery has not been run
 - UPD: Add librespot normalization settings to System info
 - UPD: Add reference to enable IGMP Snooping in Multiroom Setup

@@ -1321,9 +1321,9 @@ jQuery(document).ready(function($) { 'use strict';
         }
     });
 
-    // Players notification
+    // Players >>
     $('#players-menu-item').click(function(e) {
-        notify('discovering_players', '', '3_seconds');
+        notify('discovering_players', '', '5_seconds');
     });
 
     // Multiroom Receiver control

@@ -397,7 +397,7 @@ if ($model == '3') { // Pi-3B, B+, A+
 
 }
 else {
-	// NOTE: USB boot is enabled by default for pi 4, 400 with Sep 3 2020 or later boot loader 
+	// NOTE: USB boot is enabled by default for pi 4, 400 with Sep 3 2020 or later boot loader
 	$_usbboot_hide = 'hide';
 }
 
