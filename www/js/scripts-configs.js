@@ -29,12 +29,12 @@ jQuery(document).ready(function($){ 'use strict';
 	$('#menu-bottom').css('display', 'none');
 	$('#configure .row2-btns').hide();
 
-	// compensate for Android popup kbd changing the viewport, also for notch phones
+	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
 	// store device pixel ratio
     $.post('command/moode.php?cmd=updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
 
-	// load current cfg
+	// Load current cfg
     $.getJSON('command/moode.php?cmd=read_cfgs_no_radio', function(result) {
     	SESSION.json = result['cfg_system'];
     	THEME.json = result['cfg_theme'];
@@ -76,7 +76,7 @@ jQuery(document).ready(function($){ 'use strict';
     		$('#sys-config-btn').addClass('active');
     	}
 
-        // setup pines notify
+        // Setup pines notify
         $.pnotify.defaults.history = false;
 
     	// Connect to server engines
@@ -92,14 +92,14 @@ jQuery(document).ready(function($){ 'use strict';
 	// EVENT HANDLERS
 	//
 
-	// back button on header
+	//Bback button on header
 	$('#config-back a').click(function() {
 		if ($(this).attr('href') == '/index.php') {
 			$('#config-tabs').hide();
 		}
 	});
 
-	// display spinner when form submitted
+	// Display spinner when form submitted
 	$('.btn-submit').click(function() {
 		$('.busy-spinner').show();
 	});
@@ -134,14 +134,14 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#new-curvename-input').focus();
 	});
 
-	// network config show static on page load/reload
+	// Network config show static on page load/reload
 	if ($('#eth0-method').length && $('#eth0-method').val() == 'static') {
 		$('#eth0-static').show();
 	}
 	if ($('#wlan0-method').length && $('#wlan0-method').val() == 'static') {
 		$('#wlan0-static').show();
 	}
-	// show/hide static
+	// Show/hide static
 	$('#eth0-method').change(function() {
 		if ($(this).val() == 'static') {
 			$('#eth0-static').show();
@@ -165,7 +165,7 @@ jQuery(document).ready(function($){ 'use strict';
             $('#wlan0-static').hide();
         }
 	});
-	// wlan0 ssid
+	// wlan0 SSID
 	$('#manual-ssid').on('shown.bs.modal', function() {
 		$('#wlan0otherssid').focus();
 	});
@@ -188,7 +188,7 @@ jQuery(document).ready(function($){ 'use strict';
             }
 		}
 	});
-    // apd0 ssid
+    // apd0 SSID
     $('#apdssid').on('input', function() {
         //console.log(NETWORK.json['apd0']['wlanssid'], NETWORK.json['apd0']['wlan_psk']);
         if ($('#apdssid').val() == NETWORK.json['apd0']['wlanssid']) {
@@ -207,12 +207,12 @@ jQuery(document).ready(function($){ 'use strict';
         }
     });
 
-	// music source protocols (type)
+	// Music source protocols
 	if ($('#type').length) {
-		$('#mounttype').val($('#type').val()); // hidden input on manual server entry
+		$('#mounttype').val($('#type').val()); // Hidden input on manual server entry
 	}
 	$('#type').change(function() {
-		$('#mounttype').val($(this).val()); // hidden input on manual server entry
+		$('#mounttype').val($(this).val()); // Hidden input on manual server entry
 		if ($(this).val() == 'cifs') {
 			$('#userid-password').show();
 			$('#options').val('ro,dir_mode=0777,file_mode=0777');
@@ -237,7 +237,7 @@ jQuery(document).ready(function($){ 'use strict';
 		}
 	});
 
-	// nas config pre-load manual server entry
+	// NAS config pre-load manual server entry
 	$('#manual-server').on('shown.bs.modal', function() {
 		$('#manualserver').focus();
 	});
@@ -245,7 +245,7 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#manualserver').val($('#address').val().trim());
 	});
 
-	// view thmcache status
+	// View thmcache status
     $('#view-thmcache-status').click(function(e) {
         $.getJSON('command/moode.php?cmd=thmcachestatus', function(result) {
             $('#thmcache-status').html(result);
