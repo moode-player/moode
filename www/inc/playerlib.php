@@ -3824,3 +3824,11 @@ function playbackDestinationType() {
 
 	return $playbackDestType;
 }
+
+// Returns the specified timeout for use in file_get_contents($url) calls
+function getStreamTimeout() {
+	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", cfgdb_connect());
+	$timeout = $result[0]['value'];
+	$options = array('http'=>array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
+	return stream_context_create($options);
+}
