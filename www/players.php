@@ -22,36 +22,36 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 $dbh = cfgdb_connect();
 
-$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", $dbh);
-$timeout = $result[0]['value'];
-$options = array('http'=>array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
-$context = stream_context_create($options);
+// Scan the network for hosts with open port 6600 (MPD)
+$this_ipaddr = sysCmd('hostname -I')[0];
+$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
+$scan_results = sysCmd('nmap -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+$port_6600_hosts = sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2,3');
 
-$array = sdbquery("SELECT value FROM cfg_system WHERE param='hostname'", $dbh);
-$this_host = strtolower($array[0]['value']);
-
-// Scan the network
-$subnet = sysCmd('hostname -I | cut -d "." -f 1,2,3')[0];
-$scan_results = sysCmd('nmap -sn ' . $subnet . '.0/24 -exclude ' . $subnet . '.1 | grep "Nmap scan report for " | cut -d " " -f 5,6');
-
-// Parse the results
 $_players = '';
-foreach ($scan_results as $line) {
-	list($host, $ipaddr) = explode(' ', $line);
-	$host = strtolower(explode('.', $host)[0]);
-	$ipaddr = trim($ipaddr, '()');
+$timeout = getStreamTimeout();
+foreach ($port_6600_hosts as $line) {
+	list($ipaddr, $host) = explode(' ', $line);
 
-	if ($host != $this_host && !empty($ipaddr)) {
-		if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx', false, $context))) {
+	if ($ipaddr != $this_ipaddr) {
+		if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
 			debugLog('trx-config.php: get_rx_status failed: ' . $host);
 		}
 		else {
 			if ($result != 'Unknown command') {  // r740 or higher host
-				$rx_status = explode(',', $result); // rx,On/Off/Unknown,volume,mute_1/0,mastervol_opt_in_1/0
+				$rx_status = explode(',', $result); // rx,On/Off/Unknown,volume,mute_1/0,mastervol_opt_in_1/0,hostname
 				$multiroom_rx_indicator = $rx_status[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
+				$host = $rx_status[5];
 			}
 			else {
 				$multiroom_rx_indicator = '';
+				if ($host == '()') {
+					$host = $ipaddr;
+				}
+				else {
+					$host = trim($host, '()');
+					$host = strtolower(explode('.', $host)[0]); // Just the host part of host.bla.bla.bla
+				}
 			}
 
 			$_players .= sprintf('
