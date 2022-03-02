@@ -106,14 +106,11 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 		$rx_hostnames = explode(', ', $_SESSION['rx_hostnames']);
 		$rx_addresses = explode(' ', $_SESSION['rx_addresses']);
 
-		$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", $dbh);
-		$timeout = $result[0]['value'];
-		$options = array('http'=>array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
-		$context = stream_context_create($options);
+		$timeout = getStreamTimeout();
 		$count = count($rx_addresses);
 		for ($i = 0; $i < $count; $i++) {
-			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx', false, $context))) {
-				// rx,On/Off/Disabled/Unknown,volume,mute_1/0,mastervol_opt_in_1/0
+			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
+				// rx,On/Off/Disabled/Unknown,volume,mute_1/0,mastervol_opt_in_1/0,hostname
 				$rx_status .= $rx_hostnames[$i] . ',rx,Unknown,?,?,?:';
 				debugLog('moode.php: get_rx_status failed: ' . $rx_hostnames[$i]);
 			}
