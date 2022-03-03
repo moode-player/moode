@@ -3368,7 +3368,7 @@ function themeToColors(accentColor) {
 			var ac1 = '#1a439c', ac2 = 'rgba(26,67,156,0.71)';
 			break;
         case 'BlueLED':
-			var ac1 = '#0652DD', ac2 = 'rgba(6,82,221,0.71)';
+			var ac1 = '#005AFD', ac2 = 'rgba(0,90,253,0.71)';
 			break;
 		case 'Carrot':
 			var ac1 = '#d35400', ac2 = 'rgba(211,84,0,0.71)';

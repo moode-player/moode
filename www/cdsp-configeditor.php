@@ -36,7 +36,7 @@ storeBackLink($section, $tpl);
 const ACCENT_LOOKUP = Array('Amethyst' => '#8e44ad',
                         'Berry' => '#B53471',
                         'Bluejeans' => '#1a439c',
-                        'BlueLED' => '#0652DD',
+                        'BlueLED' => '#005AFD',
                         'Carrot' => '#d35400',
                         'Emerald' => '#27ae60',
                         'Fallenleaf' => '#cb8c3e',
