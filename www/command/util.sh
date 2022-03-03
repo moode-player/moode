@@ -263,7 +263,7 @@ fi
 # clear chrome browser cache
 if [[ $1 = "clearbrcache" ]]; then
 	rm -rf /home/pi/.cache/chromium
-	# this will delete installed extensions like xontab kbdchr
-	#rm -rf /home/pi/.config/chromium/Default
+	# NOTE: This deletes any 3rd party extensions like xontab but it more effectively clears cache corruption
+	rm -rf /home/pi/.config/chromium/Default
     exit
 fi
