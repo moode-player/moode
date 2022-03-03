@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Feb 26 12:49:32 2022
+-- File generated with SQLiteStudio v3.1.0 on Thu Mar 3 06:42:45 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -197,7 +197,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (187, 'http://ice1.somafm.com/thistle-128-aac', 'Soma FM - ThistleRadio', 'r', 'local', 'Folk, Celtic, Roots Music', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (188, 'http://ice1.somafm.com/u80s-128-aac', 'Soma FM - Underground 80s', 'r', 'local', 'Pop, 80''s, Synth-Pop, New Wave', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (189, 'http://subfm.radioca.st/Sub.FM', 'SUB.FM - Where Bass Matters', 'r', 'local', 'Dub, Dubstep, Garage, Grime, Deep House, Techno, Juke, Jungle Trap', 'SUB.FM', 'English', 'United Kingdom', 'Europe', '192', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (190, 'DELETED', 'Swedish Classic Radio', 'r', 'local', 'Classical, Contemporary, Jazz, Folk', 'Sveriges Radio', 'Dutch', 'Netherlands', 'Europe', '192', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (190, 'OFFLINE', 'Swedish Classic Radio', 'r', 'local', 'Classical, Contemporary, Jazz, Folk', 'Sveriges Radio', 'Dutch', 'Netherlands', 'Europe', '192', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (191, 'http://158.69.74.203:80/', 'SwissGroove', 'r', 'local', 'Jazz, Funk, Soul, World, Latin, Lounge, Nu Grooves', 'SwissGroove', 'English', 'Switzerland', 'Europe', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (192, 'http://swr-swr2-live.cast.addradio.de/swr/swr2/live/mp3/256/stream.mp3', 'SWR 2', 'r', 'local', 'Classical, Jazz', 'Südwestdeutscher Rundfunk', 'German', 'Germany', 'Europe', '256', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (193, 'http://west-aac-64.streamthejazzgroove.com/stream', 'The Jazz Groove', 'r', 'local', 'Jazz', 'The Jazz Groove', 'English', 'United States', 'North America', '64', 'AAC', 'No', '', '');
