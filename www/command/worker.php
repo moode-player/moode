@@ -513,7 +513,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 }
 
 // Start Allo Boss2 OLED display
-if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
+if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists('/boot/noboss2oled')) {
 	sysCmd('systemctl start boss2oled');
 	workerLog('worker: Boss 2 OLED started');
 }
