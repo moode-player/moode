@@ -191,7 +191,7 @@ match_max 100000
 spawn bluetoothctl
 expect "*# "
 send "pair $DEVICE\r"
-expect -exact "Attempting to pair with $DEVICE\r"
+expect "Attempting to pair with $DEVICE\r"
 expect "*# "
 sleep 5
 send "quit\r"
