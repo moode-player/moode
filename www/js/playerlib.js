@@ -2258,7 +2258,9 @@ $(document).on('click', '.context-menu a', function(e) {
                     var count = rxStatus.length;
                     for (var i = 0; i < count; i++) {
                         var item = i.toString();
-                        // host,rx,On/Off/Disabled/Unknown,volume,mute_1/0,mastervol_opt_in_1/0
+                        // TODO: Update code after change to using hostname at end of string
+                        // OLD: host, rx, On/Off/Disabled/Unknown, volume,v olume,mute_1/0, mastervol_opt_in_1/0
+                        // NEW: rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0, mastervol_opt_in_1/0, hostname
                         var rxStatusParts = rxStatus[i].split(',');
 
                         if (rxStatusParts[2] == 'Unknown' || rxStatusParts[2] == 'Disabled') {

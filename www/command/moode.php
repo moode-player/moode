@@ -110,7 +110,11 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 		$count = count($rx_addresses);
 		for ($i = 0; $i < $count; $i++) {
 			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
-				// rx,On/Off/Disabled/Unknown,volume,mute_1/0,mastervol_opt_in_1/0,hostname
+				// TODO: Comment the use of $rx_hostnames[$i] vs hostname
+				//       They will be same cos Discover populates $_SESSION['rx_hostnames'] with $_SESSION['hostname'])
+				// TODO: Comment the use of ':' to delimit the parts
+				// TODO: Tack hostname onto the end instead of the beginning
+				// rx, On/Off/Disabled/Unknown, volume, mute_1/0, mastervol_opt_in_1/0, hostname
 				$rx_status .= $rx_hostnames[$i] . ',rx,Unknown,?,?,?:';
 				debugLog('moode.php: get_rx_status failed: ' . $rx_hostnames[$i]);
 			}

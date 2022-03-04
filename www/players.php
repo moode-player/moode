@@ -26,6 +26,7 @@ $dbh = cfgdb_connect();
 $this_ipaddr = sysCmd('hostname -I')[0];
 $subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
 $scan_results = sysCmd('nmap -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+// TODO: We don't need colume 3 (host) cos we are using $host = $rx_status[5];
 $port_6600_hosts = sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2,3');
 
 $_players = '';
@@ -39,11 +40,13 @@ foreach ($port_6600_hosts as $line) {
 		}
 		else {
 			if ($result != 'Unknown command') {  // r740 or higher host
-				$rx_status = explode(',', $result); // rx,On/Off/Unknown,volume,mute_1/0,mastervol_opt_in_1/0,hostname
+				$rx_status = explode(',', $result);
+				// rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0, mastervol_opt_in_1/0, hostname
 				$multiroom_rx_indicator = $rx_status[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
 				$host = $rx_status[5];
 			}
 			else {
+				// TODO:
 				$multiroom_rx_indicator = '';
 				if ($host == '()') {
 					$host = $ipaddr;

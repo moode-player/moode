@@ -3770,6 +3770,7 @@ function stopMultiroomReceiver() {
 	sendEngCmd('rxactive0');
 }
 function updReceiverVol ($cmd) {
+	// TODO: Improve var names use $rx_hostnames, $rx_addresses
 	$ip_hostnames = explode(', ', $_SESSION['rx_hostnames']);
 	$ip_addresses = explode(' ', $_SESSION['rx_addresses']);
 

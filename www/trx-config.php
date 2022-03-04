@@ -74,11 +74,14 @@ if (isset($_POST['multiroom_tx_discover'])) {
 	foreach ($port_6600_hosts as $ipaddr) {
 		if ($ipaddr != $this_ipaddr) {
 			if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
+				// TODO: Replace $host with $ipaddr
 				debugLog('trx-config.php: get_rx_status failed: ' . $host);
 			}
 			else {
 				if ($result != 'Unknown command') { // r740 or higher host
-					$rx_status = explode(',', $result); // rx,On/Off/Unknown,volume,mute_1/0,mastervol_opt_in_1/0,hostname
+					// TODO: Exclude host if status = 'Disabled'?
+					$rx_status = explode(',', $result);
+					// rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0 mastervol_opt_in_1/0, hostname
 					$_SESSION['rx_hostnames'] .= $rx_status[5] . ', ';
 					$_SESSION['rx_addresses'] .= $ipaddr . ' ';
 				}
