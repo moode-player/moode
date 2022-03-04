@@ -2246,56 +2246,58 @@ $(document).on('click', '.context-menu a', function(e) {
             $.post('command/moode.php?cmd=get_rx_status', function(result) {
                 //console.log(result);
                 $('.ui-pnotify-closer').click();
-                if (result == 'All receivers are disabled') {
-                    notify('all_receivers_disabled');
-                }
-                else if (result == 'Discovery has not been run') {
+
+                if (result == 'Discovery has not been run') {
                     notify('run_receiver_discovery');
                 }
-                else if (result != 'No receivers found') {
+                else if (result == 'No receivers found') {
+                    notify('no_receivers_found');
+                }
+                else {
                     var output = '';
                     var rxStatus = result.split(':');
                     var count = rxStatus.length;
                     for (var i = 0; i < count; i++) {
                         var item = i.toString();
-                        // TODO: Update code after change to using hostname at end of string
-                        // OLD: host, rx, On/Off/Disabled/Unknown, volume,v olume,mute_1/0, mastervol_opt_in_1/0
-                        // NEW: rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0, mastervol_opt_in_1/0, hostname
                         var rxStatusParts = rxStatus[i].split(',');
+                        // 0: rx
+                        // 1: On/Off/Disabled/Unknown
+                        // 2: volume
+                        // 3: volume,mute_1/0
+                        // 4: mastervol_opt_in_1/0
+                        // 5: hostname
 
-                        if (rxStatusParts[2] == 'Unknown' || rxStatusParts[2] == 'Disabled') {
-                            var lineHide = rxStatusParts[2] == 'Disabled' ? ' hide' : '';
-                            output += '<div class="control-group' + lineHide + '" style="margin-bottom:3em;">';
+                        if (rxStatusParts[1] == 'Unknown' || rxStatusParts[1] == 'Disabled') {
+                            output += '<div class="control-group" style="margin-bottom:3em;">';
                             // Hostname
-                            output += '<label class="control-label multiroom-modal-host">' + rxStatusParts[0] + '</label>';
+                            output += '<label class="control-label multiroom-modal-host">' + rxStatusParts[5] + '</label>';
                             // Status
-                            var statusMsg = rxStatusParts[2] == 'Unknown' ? 'Receiver offline' : 'Receiver disabled';
+                            var statusMsg = rxStatusParts[1] == 'Unknown' ? 'Receiver offline' : 'Receiver disabled';
                             output += '<div class="controls">';
                             output += '<div style="font-style:italic;margin-top:.25em;">' + statusMsg + '</div>';
                             output += '</div>';
                             output += '</div>';
                         }
                         else {
-                            var rxChecked = rxStatusParts[2] == 'On' ? 'checked' : '';
-                            var rxCheckedDisable = rxStatusParts[3] == '?' ? ' disabled' : '';
-                            var rxMuteIcon = rxStatusParts[4] == '1' ? 'fa-volume-mute' : 'fa-volume-up';
-                            var rxMasterVolOptIn = rxStatusParts[5] == '0' ? '' : '<i class="fal fa-dot-circle"></i>';
+                            var rxChecked = rxStatusParts[1] == 'On' ? 'checked' : ''; // Status
+                            var rxCheckedDisable = rxStatusParts[2] == '?' ? ' disabled' : ''; // Volume
+                            var rxMuteIcon = rxStatusParts[3] == '1' ? 'fa-volume-mute' : 'fa-volume-up'; // Mute
+                            var rxMasterVolOptIn = rxStatusParts[4] == '0' ? '' : '<i class="fal fa-dot-circle"></i>'; // Master vol opt-in
 
                             output += '<div class="control-group">';
                             // Receiver hostname
-                            output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '-onoff">' + rxStatusParts[0] + '</label>';
+                            output += '<label class="control-label multiroom-modal-host" for="multiroom-rx-' + item + '-onoff">' + rxStatusParts[5] + '</label>';
                             output += '<div class="controls">';
-                            // Receiver On/Off
+                            // Receiver On/Off checkbox
                             var topMargin = modalType != 'full' ? ' multiroom-modal-onoff-xtra' : '';
                             output += '<input id="multiroom-rx-' + item + '-onoff" class="checkbox-ctl multiroom-modal-onoff' + topMargin + '" type="checkbox" data-item="' + item + '" ' + rxChecked + rxCheckedDisable + '>';
 
                             if (modalType == 'full') {
                                 // Volume
-                                var volDisabled = (rxStatusParts[3] == '0dB' || rxStatusParts[3] == '?') ? ' disabled' : '';
-
+                                var volDisabled = (rxStatusParts[2] == '0dB' || rxStatusParts[2] == '?') ? ' disabled' : '';
                                 output += '<div class="modal-button-style multiroom-modal-btn">';
                                 output += '<button id="multiroom-rx-' + item + '-vol" class="btn btn-primary btn-small multiroom-modal-vol" data-item="' + item +
-                                    '"' + volDisabled + '>' + rxStatusParts[3] + '</button>';
+                                    '"' + volDisabled + '>' + rxStatusParts[2] + '</button>';
                                 output += '</div>';
                                 // Mute toggle
                                 output += '<div class="modal-button-style multiroom-modal-btn">';
@@ -2310,7 +2312,7 @@ $(document).on('click', '.context-menu a', function(e) {
                                 // Volume slider
                                 output += '<div class="controls">';
                                 output += '<input id="multiroom-rx-' + item + '-vol-slider" class="hslide2" type="range" min="0" max="' + SESSION.json['volume_mpd_max'] +
-                                    '" step="1" name="multiroom-rx-' + item + '-vol-slider" value="' + rxStatusParts[3] +
+                                    '" step="1" name="multiroom-rx-' + item + '-vol-slider" value="' + rxStatusParts[2] +
                                     '" oninput="updateRxVolDisplay(this.id, this.value)"' + volDisabled + '>';
                                 output += '</div>';
                             }

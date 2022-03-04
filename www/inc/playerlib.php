@@ -2578,12 +2578,9 @@ function startAirplay() {
 		$logfile = '/dev/null';
 	}
 
-	if ($_SESSION['audioout'] == 'Bluetooth') {
-		$device = 'btstream';
-	}
-	else {
-		$device = '_audioout';
-	}
+	// Output device
+	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
+	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
 
 	// Interpolation param handled in config file
 	$cmd = '/usr/bin/shairport-sync ' . $logging .
@@ -3770,16 +3767,15 @@ function stopMultiroomReceiver() {
 	sendEngCmd('rxactive0');
 }
 function updReceiverVol ($cmd) {
-	// TODO: Improve var names use $rx_hostnames, $rx_addresses
-	$ip_hostnames = explode(', ', $_SESSION['rx_hostnames']);
-	$ip_addresses = explode(' ', $_SESSION['rx_addresses']);
+	$rx_hostnames = explode(', ', $_SESSION['rx_hostnames']);
+	$rx_addresses = explode(' ', $_SESSION['rx_addresses']);
 
-	$count = count($ip_addresses);
+	$count = count($rx_addresses);
 	for ($i = 0; $i < $count; $i++) {
 		// NOTE: set-mpdvol checks to see if Receiver opted in for Master volume
-		if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
-			if (false === ($result = file_get_contents('http://' . $ip_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
-				debugLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $ip_hostnames[$i]);
+		if (false === ($result = file_get_contents('http://' . $rx_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
+			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
+				debugLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $rx_hostnames[$i]);
 			}
 		}
 	}
@@ -3827,4 +3823,12 @@ function getStreamTimeout() {
 	$timeout = $result[0]['value'];
 	$options = array('http'=>array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
 	return stream_context_create($options);
+}
+
+// Scan the network for hosts with open port 6600 (MPD)
+function scanForMPDHosts() {
+	$this_ipaddr = sysCmd('hostname -I')[0];
+	$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
+	$scan_results = sysCmd('nmap -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+	return sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2');
 }

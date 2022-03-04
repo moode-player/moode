@@ -62,10 +62,7 @@ if (isset($_POST['multiroom_tx_restart'])) {
 }
 if (isset($_POST['multiroom_tx_discover'])) {
 	// Scan the network for hosts with open port 6600 (MPD)
-	$this_ipaddr = sysCmd('hostname -I')[0];
-	$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
-	$scan_results = sysCmd('nmap -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
-	$port_6600_hosts = sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2');
+	$port_6600_hosts = scanForMPDHosts();
 
 	// Parse the results
 	$_SESSION['rx_hostnames'] = '';
@@ -74,16 +71,18 @@ if (isset($_POST['multiroom_tx_discover'])) {
 	foreach ($port_6600_hosts as $ipaddr) {
 		if ($ipaddr != $this_ipaddr) {
 			if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
-				// TODO: Replace $host with $ipaddr
-				debugLog('trx-config.php: get_rx_status failed: ' . $host);
+				debugLog('trx-config.php: get_rx_status failed: ' . $ipaddr);
 			}
 			else {
 				if ($result != 'Unknown command') { // r740 or higher host
-					// TODO: Exclude host if status = 'Disabled'?
 					$rx_status = explode(',', $result);
-					// rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0 mastervol_opt_in_1/0, hostname
-					$_SESSION['rx_hostnames'] .= $rx_status[5] . ', ';
-					$_SESSION['rx_addresses'] .= $ipaddr . ' ';
+					// rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0, mastervol_opt_in_1/0, hostname
+					// NOTE: Only include hosts with status = On/Off
+					if ($rx_status[1] == 'On' || $rx_status[1] == 'Off') {
+						// r800 status will have a 6th element (hostname) otherwise sub in ip address
+						$_SESSION['rx_hostnames'] .= (count($rx_status) > 5 ? $rx_status[5] : $ipaddr) . ', ';
+						$_SESSION['rx_addresses'] .= $ipaddr . ' ';
+					}
 				}
 			}
 		}

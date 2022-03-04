@@ -23,38 +23,27 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 $dbh = cfgdb_connect();
 
 // Scan the network for hosts with open port 6600 (MPD)
-$this_ipaddr = sysCmd('hostname -I')[0];
-$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
-$scan_results = sysCmd('nmap -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
-// TODO: We don't need colume 3 (host) cos we are using $host = $rx_status[5];
-$port_6600_hosts = sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2,3');
+$port_6600_hosts = scanForMPDHosts();
 
+// Parse the results
 $_players = '';
 $timeout = getStreamTimeout();
-foreach ($port_6600_hosts as $line) {
-	list($ipaddr, $host) = explode(' ', $line);
-
+foreach ($port_6600_hosts as $ipaddr) {
 	if ($ipaddr != $this_ipaddr) {
 		if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
-			debugLog('trx-config.php: get_rx_status failed: ' . $host);
+			debugLog('trx-config.php: get_rx_status failed: ' . $ipaddr);
 		}
 		else {
 			if ($result != 'Unknown command') {  // r740 or higher host
 				$rx_status = explode(',', $result);
 				// rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0, mastervol_opt_in_1/0, hostname
 				$multiroom_rx_indicator = $rx_status[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
-				$host = $rx_status[5];
+				// r800 status will have a 6th element (hostname) otherwise sub in ip address
+				$host = count($rx_status) > 5 ? $rx_status[5] : $ipaddr;
 			}
 			else {
-				// TODO:
 				$multiroom_rx_indicator = '';
-				if ($host == '()') {
-					$host = $ipaddr;
-				}
-				else {
-					$host = trim($host, '()');
-					$host = strtolower(explode('.', $host)[0]); // Just the host part of host.bla.bla.bla
-				}
+				$host = $ipaddr;
 			}
 
 			$_players .= sprintf('

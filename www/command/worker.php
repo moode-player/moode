@@ -1750,16 +1750,16 @@ function runQueuedJob() {
 			if (!empty($playing)) {
 				sysCmd('mpc play');
 			}
-			// Restart Airplay and Spotify if indicated
-			stopAirplay();
+			// Restart renderers
 			if ($_SESSION['airplaysvc'] == 1) {
-				 startAirplay();
+				stopAirplay();
+				startAirplay();
 			}
-			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {
+				stopSpotify();
 				startSpotify();
 			}
-			// Reenable HTTP server if indicated
+			// Reenable HTTP server
 			setMpdHttpd();
 			break;
 		case 'rotaryenc':
@@ -1854,16 +1854,16 @@ function runQueuedJob() {
 			if (!empty($playing)) {
 				sysCmd('mpc play');
 			}
-			// Restart Airplay and Spotify if indicated
-			stopAirplay();
+			// Restart renderers
 			if ($_SESSION['airplaysvc'] == 1) {
-				 startAirplay();
+				stopAirplay();
+				startAirplay();
 			}
-			stopSpotify();
 			if ($_SESSION['spotifysvc'] == 1) {
+				stopSpotify();
 				startSpotify();
 			}
-			// Reenable HTTP server if indicated
+			// Reenable HTTP server
 			setMpdHttpd();
 			break;
 		case 'mpdcrossfade':
@@ -1921,7 +1921,9 @@ function runQueuedJob() {
 		case 'spotify_clear_credentials':
 			sysCmd('rm /var/local/www/spotify_cache/credentials.json');
 			stopSpotify();
-			if ($_SESSION['spotifysvc'] == 1) {startSpotify();}
+			if ($_SESSION['spotifysvc'] == 1) {
+				startSpotify();
+			}
 			break;
 		case 'slsvc':
 			if ($_SESSION['slsvc'] == '1') {
@@ -1971,8 +1973,8 @@ function runQueuedJob() {
 
 		case 'multiroom_tx':
 			if ($_SESSION['multiroom_tx'] == 'On') {
-				// Reconfigure to dummy sound driver
-				$cardnum = loadSndDummy();
+				$cardnum = loadSndDummy(); // Reconfigure to dummy sound driver
+
 				updAudioOutAndBtOutConfs($cardnum, 'hw');
 				updDspAndBtInConfs($cardnum, 'hw');
 				sysCmd('systemctl restart mpd');
@@ -1981,11 +1983,22 @@ function runQueuedJob() {
 			}
 			else {
 				stopMultiroomSender();
-				// Reconfigure to real sound driver
-				unloadSndDummy();
+				unloadSndDummy(); // Reconfigure back to real sound driver
+
 				updAudioOutAndBtOutConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
 				updDspAndBtInConfs($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
+
 				sysCmd('systemctl restart mpd');
+			}
+
+			// Restart renderers
+			if ($_SESSION['airplaysvc'] == 1) {
+				stopAirplay();
+				startAirplay();
+			}
+			if ($_SESSION['spotifysvc'] == 1) {
+				stopSpotify();
+				startSpotify();
 			}
 			break;
 		case 'multiroom_tx_restart':
@@ -1998,11 +2011,11 @@ function runQueuedJob() {
 			if ($_SESSION['multiroom_rx'] == 'On') {
 				sysCmd('mpc stop');
 
-				// TODO: Automatically turn off session based renderers?
-				//playerSession('write', 'airplaysvc', '0');
+				// TODO: Turn off session based renderers?
 				//stopAirplay();
-				//playerSession('write', 'spotifysvc', '0');
 				//stopSpotify();
+				//playerSession('write', 'airplaysvc', '0');
+				//playerSession('write', 'spotifysvc', '0');
 
 				startMultiroomReceiver();
 			}

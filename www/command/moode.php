@@ -95,6 +95,7 @@ elseif ($_GET['cmd'] == 'disconnect-renderer') {
 	}
 }
 // Multiroom receiver status
+// NOTE: This is called from playerlib.js: multiroom-rx-modal
 elseif ($_GET['cmd'] == 'get_rx_status') {
 	if (!isset($_SESSION['rx_hostnames'])) {
 		$rx_status = 'Discovery has not been run';
@@ -106,24 +107,21 @@ elseif ($_GET['cmd'] == 'get_rx_status') {
 		$rx_hostnames = explode(', ', $_SESSION['rx_hostnames']);
 		$rx_addresses = explode(' ', $_SESSION['rx_addresses']);
 
+		$rx_status = '';
 		$timeout = getStreamTimeout();
 		$count = count($rx_addresses);
 		for ($i = 0; $i < $count; $i++) {
 			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i] . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
-				// TODO: Comment the use of $rx_hostnames[$i] vs hostname
-				//       They will be same cos Discover populates $_SESSION['rx_hostnames'] with $_SESSION['hostname'])
-				// TODO: Comment the use of ':' to delimit the parts
-				// TODO: Tack hostname onto the end instead of the beginning
-				// rx, On/Off/Disabled/Unknown, volume, mute_1/0, mastervol_opt_in_1/0, hostname
-				$rx_status .= $rx_hostnames[$i] . ',rx,Unknown,?,?,?:';
+				$rx_status .= 'rx,Unknown,?,?,?,' . $rx_hostnames[$i] . ':';
 				debugLog('moode.php: get_rx_status failed: ' . $rx_hostnames[$i]);
 			}
 			else {
-				$rx_status .= $rx_hostnames[$i] . ',' . $result . ':';
+				// rx, On/Off/Disabled/Unknown, volume, mute_1/0, mastervol_opt_in_1/0, hostname
+				$rx_status .= $result . ',' . $rx_hostnames[$i] . ':';
 			}
 		}
 
-		$rx_status = empty($rx_status) ? 'All receivers are disabled' : rtrim($rx_status, ':');
+		$rx_status = empty($rx_status) ? 'No receivers found' : rtrim($rx_status, ':');
 	}
 
 	echo json_encode($rx_status);
