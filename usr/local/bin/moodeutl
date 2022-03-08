@@ -19,11 +19,33 @@
  *
  */
 
-define('VERSION', '1.5.2');
-define('SQLDB', '/var/local/www/db/moode-sqlite3.db');
+define('VERSION', '1.6.0');
 
 // Suppress warning messages
 error_reporting(E_ERROR | E_PARSE);
+
+// ** From playerlib.php
+define('MPD_RESPONSE_ERR', 'ACK');
+define('MPD_RESPONSE_OK',  'OK');
+define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
+define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
+define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
+define('MOODE_LOG', '/var/log/moode.log');
+define('AUTOCFG_LOG', '/home/pi/autocfg.log');
+define('MPD_LOG', '/var/log/mpd/log');
+define('PORT_FILE', '/tmp/portfile');
+define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
+define('LIBCACHE_BASE', '/var/local/www/libcache');
+define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
+define('SESSION_SAVE_PATH', '/var/local/php');
+define('TMP_STATION_PREFIX', '__tmp__');
+define('EXPORT_DIR', '/tmp');
+define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
+define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
+define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
+define('DEF_COVER', 'images/default-cover-v6.svg');
+define('DEV_ROOTFS_SIZE', '3670016000'); // Bytes (3.5GB)
+define('LOW_DISKSPACE_LIMIT', '524288'); // Bytes (512MB)
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
@@ -48,6 +70,7 @@ const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
 //						  97207
+// ** End
 
 $features = array(
 	FEAT_KERNEL => 'Kernel architecture',
@@ -69,7 +92,7 @@ $features = array(
 	FEAT_MULTIROOM	=> 'Multiroom audio'
 );
 
-$feat_bitmask = trim(shell_exec("sqlite3 " .  SQLDB . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));
+$feat_bitmask = trim(shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='feat_bitmask'\""));
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
@@ -124,6 +147,9 @@ switch ($option) {
 	case '-U':
 		check_station_urls($argv);
 		break;
+	case '--mpdlog':
+		mpd_log();
+		break;
 	case '--mooderel':
 		$file = file_get_contents('/var/www/footer.min.php');
 		echo substr($file, strpos($file, 'Release: ') + 9, 16) . "\n";
@@ -161,6 +187,7 @@ With no OPTION print the help text and exit.
  -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
+ --mpdlog\tPrint MPD log
  --mooderel\tPrint moOde release
  --revision\tPrint the hardware revision
  --version\tPrint the program version
@@ -218,7 +245,7 @@ function update_features($features, $feat_bitmask, $argv) {
 	}
 	else {
 		$new_bitmask = $argv[2] == 'add' ? $bitmask + $arg3 : $bitmask - $arg3;
-		shell_exec("sqlite3 " .  SQLDB . " \"UPDATE cfg_system set value='" . $new_bitmask . "' WHERE param='feat_bitmask'\"");
+		shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='" . $new_bitmask . "' WHERE param='feat_bitmask'\"");
 		echo 'Old bitmask ' . $feat_bitmask . "\n";
 		echo 'New bitmask ' . $new_bitmask . "\n";
 	}
@@ -230,7 +257,7 @@ function dump_session() {
 		return;
 	}
 
-	$session_id = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+	$session_id = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
 	session_id($session_id);
 	session_start();
 	foreach ($_SESSION as $key => $value) {
@@ -257,7 +284,7 @@ function delete_session_var($argv) {
 		return;
 	}
 
-	$session_id = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+	$session_id = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
 	session_id($session_id);
 	session_start();
 	unset($_SESSION[$argv[2]]);
@@ -265,7 +292,7 @@ function delete_session_var($argv) {
 }
 
 function audio_formats($option) {
-	$cardnum = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
+	$cardnum = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_mpd WHERE param='device'\""));
 
 	if (empty(trim(file_get_contents('/proc/asound/card' . $cardnum . '/id')))) {
 		echo 'No device found at MPD configured card ' . $cardnum . "\n";
@@ -296,7 +323,7 @@ function audio_formats($option) {
 				return;
 			}
 
-			$session_id = trim(shell_exec("sqlite3 " . SQLDB . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+			$session_id = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
 			session_id($session_id);
 			session_start();
 			$formats = $_SESSION['audio_formats'];
@@ -307,7 +334,7 @@ function audio_formats($option) {
 }
 
 function moode_log() {
-	echo shell_exec('cat /var/log/moode.log');
+	echo shell_exec('cat ' . MOODE_LOG);
 }
 
 function system_monitor() {
@@ -350,7 +377,7 @@ function system_monitor() {
 }
 
 function sql_query($argv) {
-	echo shell_exec("sqlite3 " . SQLDB . " \"" . $argv[2] . "\"");
+	echo shell_exec("sqlite3 " . SQLDB_PATH . " \"" . $argv[2] . "\"");
 }
 
 function restart_servers() {
@@ -360,6 +387,7 @@ function restart_servers() {
 	exec('sudo systemctl restart php7.4-fpm');
 	exec('sudo systemctl restart nginx');
 	exec('sudo systemctl stop mpd');
+	exec('sudo systemctl stop localui');
 	exec('sudo /var/www/command/worker.php');
 	echo "Servers restarted\n";
 }
@@ -374,7 +402,7 @@ function restart_renderer($argv) {
 	}
 	else if (array_key_exists($argv[2], $renderers)) {
 		$svc_name = $renderers[$argv[2]];
-		$svc_on = trim(shell_exec("sqlite3 " .  SQLDB . " \"SELECT value FROM cfg_system WHERE param='" . $svc_name . "'\""));
+		$svc_on = trim(shell_exec("sqlite3 " .  SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='" . $svc_name . "'\""));
 		if ($svc_on == '0') {
 			echo 'Renderer is not currently on' . "\n";
 			return;
@@ -396,17 +424,16 @@ function system_info() {
 }
 
 function tail_log() {
-	$file = '/var/log/moode.log';
-	$size = filesize($file) - 1024;
+	$size = filesize(MOODE_LOG) - 1024;
 	while (true) {
 		clearstatcache();
-		$current_size = filesize($file);
+		$current_size = filesize(MOODE_LOG);
 		if ($size == $current_size) {
 			sleep(1);
 		    continue;
 		}
 
-		$fh = fopen($file, "r");
+		$fh = fopen(MOODE_LOG, "r");
 		fseek($fh, $size);
 
 		while ($d = fgets($fh)) {
@@ -462,4 +489,8 @@ function list_audio_overlays () {
 			echo $file . "\n";
 		}
 	}
+}
+
+function mpd_log() {
+	echo shell_exec('cat ' . MPD_LOG);
 }
