@@ -350,6 +350,16 @@ jQuery(document).ready(function($) { 'use strict';
     	else if (currentView == 'album'){
     		makeActive('.album-view-btn','#library-panel', 'album');
     	}
+
+        // CoverView
+        var userAgent = navigator.userAgent;
+        var chromium = userAgent.indexOf('X11; CrOS armv');
+        //$('#debug_text').html(userAgent + '<br>' + chromium);
+        if (SESSION.json['localui'] == '1' && SESSION.json['toggle_coverview'] == '-on' && chromium !== -1) {
+            setTimeout(function() {
+                screenSaver('scnactive1');
+            }, 2000);
+        }
     });
 
 	//

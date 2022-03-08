@@ -199,6 +199,11 @@ if (isset($_POST['update_localui'])) {
     }
 }
 
+// Local UI restart
+if (isset($_POST['update_restart_localui'])) {
+	submitJob('localui_restart', '', 'Local UI restarted');
+}
+
 // Touch screen capability
 if (isset($_POST['update_touchscn'])) {
     if (isset($_POST['touchscn']) && $_POST['touchscn'] != $_SESSION['touchscn']) {
@@ -247,16 +252,12 @@ if (isset($_POST['update_scnrotate'])) {
     }
 }
 
-// Browser cache
-if (isset($_POST['update_clear_browser_cache'])) {
-	submitJob('clearbrcache', '', 'Cache cleared', 'Refresh Browser on LocalUI');
-}
-
-// CoverView show/hide
-if (isset($_POST['update_coverview_toggle'])) {
-	$_SESSION['coverview_toggle'] = $_SESSION['coverview_toggle'] == '-off' ? '-on' : '-off';
-	$result = sysCmd('/var/www/command/coverview.php ' . $_SESSION['coverview_toggle']);
+// CoverView on/off
+if (isset($_POST['update_toggle_coverview'])) {
+	$toggle_coverview = $_SESSION['toggle_coverview'] == '-off' ? '-on' : '-off';
+	$result = sysCmd('/var/www/command/coverview.php ' . $toggle_coverview);
 	$_SESSION['notify']['title'] = $result[0];
+	playerSession('write', 'toggle_coverview', $toggle_coverview);
 }
 
 // LOCAL SERVICES
@@ -406,6 +407,15 @@ else {
 // Local UI display
 if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 	$_feat_localui = '';
+	if ($_SESSION['localui'] == '1') {
+		$_localui_btn_disable = '';
+		$_localui_link_disable = '';
+	}
+	else {
+		$_localui_btn_disable = 'disabled';
+		$_localui_link_disable = 'onclick="return false;"';
+	}
+
 	$_select['localui1'] .= "<input type=\"radio\" name=\"localui\" id=\"togglelocalui1\" value=\"1\" " . (($_SESSION['localui'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['localui0'] .= "<input type=\"radio\" name=\"localui\" id=\"togglelocalui2\" value=\"0\" " . (($_SESSION['localui'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 

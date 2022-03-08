@@ -26,6 +26,14 @@ xset s 600
 # Capture screen size
 SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"
 
+# Clear browser cache
+$(/var/www/command/util.sh clearbrcache)
+
 # Launch chromium browser
-# --disk-cache-dir=/dev/null
-chromium-browser --app=http://localhost/ --window-size=$SCREENSIZE --window-position=0,0 --no-first-run --enable-features=OverlayScrollbar --disable-infobars --disable-session-crashed-bubble
+chromium-browser --app="http://localhost/" \
+--window-size="$SCREENSIZE" \
+--window-position="0,0" \
+--enable-features="OverlayScrollbar" \
+--no-first-run \
+--disable-infobars \
+--disable-session-crashed-bubble

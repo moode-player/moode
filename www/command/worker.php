@@ -513,7 +513,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 }
 
 // Start Allo Boss2 OLED display
-if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists('/boot/noboss2oled')) {
+if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC' && !file_exists('/home/pi/boss2oled_no_load')) {
 	sysCmd('systemctl start boss2oled');
 	workerLog('worker: Boss 2 OLED started');
 }
@@ -907,17 +907,16 @@ $check_library_update = '0';
 $check_library_regen = 0;
 
 // Maintenance task
-$_SESSION['maint_interval'] = 10800;
 $maint_interval = $_SESSION['maint_interval'];
-workerLog('worker: Maintenance interval (3 hours)');
+workerLog('worker: Maintenance interval (' . ($maint_interval / 60) . ' minutes)');
 
 // Screen saver
 $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
 workerLog('worker: Screen saver activation (' . $_SESSION['scnsaver_timeout'] . ')');
 
-// CoverView show/hide toggle (used in System Config, Local Display section)
-$_SESSION['coverview_toggle'] = '-off';
+// CoverView on/off toggle (used in System Config, Local Display section)
+playerSession('write', 'toggle_coverview', '-off');
 
 // TRX Config advanced options toggle
 $_SESSION['tx_adv_toggle'] = 'Advanced (&plus;)';
@@ -1061,30 +1060,38 @@ function chkScnSaver() {
 
 function chkMaintenance() {
 	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - 3;
+
 	if ($GLOBALS['maint_interval'] <= 0) {
 		// Clear logs
 		$result = sysCmd('/var/www/command/util.sh "clear-syslogs"');
 		if (!empty($result)) {
-			workerLog('Maintenance: Problem clearing logs');
+			workerLog('Maintenance: Warning: Problem clearing system logs');
 		}
 
 		// Compact SQLite database
 		$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
 		if (!empty($result)) {
-			workerLog('Maintenance: Problem compacting SQLite database');
+			workerLog('Maintenance: Warning: Problem compacting SQLite database');
 		}
 
-		// Prune temp or intermediate resources
-		sysCmd('find /var/www -type l -delete');
-		sysCmd('rm /var/local/www/imagesw/stations.zip > /dev/null 2>&1');
+		// Purge temp or unwanted resources
+		sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
+		sysCmd('rm ' . EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Possible leftover temp file created by Radio Manager export
 
-		// Check for low disk soace
-		$free_space = sysCmd("df | grep /dev/root | awk '{print $4}'");
-		if ($free_space[0] < 512000) {
-			workerLog('Maintenance: Free disk space < 512M required for in-place updates');
+		// LocalUI browser
+		// NOTE: This is a workaround for a chromium-browser bug that causes 100% memory utilization after ~3 hours
+		if ($_SESSION['localui'] == '1' && !file_exists('/home/pi/localui_no_maint')) {
+			if (file_exists('home/pi/localui_refresh')) {
+				sendEngCmd('refresh_screen');
+			}
+			else {
+				sysCmd('systemctl restart localui');
+			}
 		}
 
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
+
+		// Uncomment for testing
 		//workerLog('worker: Maintenance completed');
 	}
 }
@@ -2126,7 +2133,11 @@ function runQueuedJob() {
 			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
 			break;
 		case 'localui':
-			sysCmd('sudo systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'start' : 'stop') . ' localui');
+			sysCmd('systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'start' : 'stop') . ' localui');
+			break;
+		case 'localui_restart':
+			playerSession('write', 'toggle_coverview', '-off');
+			sysCmd('systemctl restart localui');
 			break;
 		case 'touchscn':
 			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
