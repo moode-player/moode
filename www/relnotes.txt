@@ -25,24 +25,26 @@ Radio stations
 - NEW: DR P1, P2, P3, P4
 - UPD: DR P6 Beat
 - UPD: DR P8 Jazz
-- DEL: Swedish Classic Radio
+- DEL: Swedish Classic Radio (replaced by DR P2)
 
 Updates
+
 - UPD: Bump to MPD 0.23.5
 - UPD: Bump to Ashuffle 3.12.8
 - UPD: Bump to Squeezelite 1.9.8-1317
 - UPD: Bump to Pi-Bluetooth 0.1.18
-- UPD: Use Bluetooth controller mode "dual" (BR/EDR and LE)
-- UPD: Move MPD Audio output and Volume type to Audio Config
-- UPD: Ignore articles when sorting Composers in Tag View
 - UPD: Improve scan for Samba shares
 - UPD: Improve scan for players/receivers
-- UPD: Improve chromium-browser cache clear
-- UPD: Handle case where Receiver Discovery has not been run
+- UPD: Improve multiroom audio feature
+- UPD: Improve localui feature
 - UPD: Add librespot normalization settings to System info
-- UPD: Add reference to enable IGMP Snooping in Multiroom Setup
+- UPD: Add note to enable IGMP Snooping in Multiroom Setup guide
 - UPD: Add accent colors Berry, BlueLED, Moss and Lipstick
 - UPD: Add "Clear queue" to Playbar/Playback context menus
+- UPD: Add options to moodeutl to print MPD log
+- UPD: Move MPD Audio output and Volume type to Audio Config
+- UPD: Use Bluetooth controller mode "dual" (BR/EDR and LE)
+- UPD: Ignore articles when sorting Composers in Tag View
 - UPD: Remove seldom used Clear/Add from context menus
 - UPD: Exclude Dummy from MPD Output device list
 - UPD: Restrict DF to local file systems in moodeutl -m
