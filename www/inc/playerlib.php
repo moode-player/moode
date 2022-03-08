@@ -32,18 +32,20 @@ define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
 define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
 define('MOODE_LOG', '/var/log/moode.log');
 define('AUTOCFG_LOG', '/home/pi/autocfg.log');
+define('MPD_LOG', '/var/log/mpd/log');
 define('PORT_FILE', '/tmp/portfile');
 define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
 define('LIBCACHE_BASE', '/var/local/www/libcache');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
 define('TMP_STATION_PREFIX', '__tmp__');
-define('EXPORT_DIR', '/var/local/www/imagesw');
+define('EXPORT_DIR', '/tmp');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
 define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
 define('DEF_COVER', 'images/default-cover-v6.svg');
 define('DEV_ROOTFS_SIZE', '3670016000'); // Bytes (3.5GB)
+define('LOW_DISKSPACE_LIMIT', '524288'); // Bytes (512MB)
 
 // Size and quality factor for small thumbs
 // Used in thmcache.php, worker.php
