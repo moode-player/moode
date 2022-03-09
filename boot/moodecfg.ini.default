@@ -7,8 +7,8 @@
 ; Set wlanssid = blank to start AP mode.
 ; Example: wlanssid = ""
 ;
-; Moode Release : 7.5.0 2021-11-09
-; Create date	: 2021-11-09 08:02:38
+; Moode Release : 8.0.0 2022-03-09
+; Create date	: 2022-03-09 14:30:51
 ;
 ; ##########################################
 
@@ -33,7 +33,6 @@ led_state = "1,1"
 localui = "0"
 p3wifi = "1"
 p3bt = "1"
-expandfs ="0"
 
 [I2S Device]
 i2soverlay = "None"
@@ -53,14 +52,15 @@ multiroom_tx_sample_rate = "48000"
 multiroom_tx_channels = "2"
 multiroom_tx_frame_size = "1920"
 multiroom_tx_bitrate = "128"
-multiroom_tx_rtprio = "45"
-multiroom_tx_query_timeout = "1"
 multiroom_rx_bfr = "64"
 multiroom_rx_host = "239.0.0.1"
 multiroom_rx_port = "1350"
+multiroom_rx_jitter_bfr = "32"
 multiroom_rx_sample_rate = "48000"
 multiroom_rx_channels = "2"
-multiroom_rx_jitter_bfr = "32"
+multiroom_initial_volume = "0"
+multiroom_tx_rtprio = "45"
+multiroom_tx_query_timeout = "1"
 multiroom_rx_frame_size = "1920"
 multiroom_rx_rtprio = "45"
 multiroom_rx_alsa_output_mode = "plughw"
@@ -68,7 +68,7 @@ multiroom_rx_mastervol_opt_in = "0"
 multiroom_initial_volume = "0"
 
 [MPD]
-mixer_type = "software"
+mixer_type = "hardware"
 device = "0"
 audio_output_format = "disabled"
 selective_resample_mode = "0"
@@ -90,6 +90,7 @@ max_playlist_length = "16384"
 input_cache = "Disabled"
 log_level = "default"
 stop_dsd_silence = "no"
+thesycon_dsd_workaround = "no"
 autoplay = "0"
 mpdcrossfade = "0"
 crossfeed = "Off"
@@ -107,7 +108,7 @@ mpd_httpd_encoder = "lame"
 [DSP]
 alsaequal = "Off"
 eqfa12p = "Off"
-camilladsp_quickconv = "0;Sennheiser_HD800S_L_44100Hz_32b.raw;Sennheiser_HD800S_R_44100Hz_32b.raw;S32LE"
+camilladsp_quickconv = "0;Sennheiser_HD800S_L_44100Hz_32b.raw;Sennheiser_HD800S_R_44100Hz_32b.raw;S32LE'"
 cdsp_fix_playback = "Yes"
 camilladsp = "off"
 
@@ -232,7 +233,7 @@ apdchan = "6"
 
 [Appearance]
 themename = "Default"
-accent_color = "Emerald"
+accent_color = "Carrot"
 alphablend = "1.0"
 adaptive = "No"
 cover_backdrop = "No"
@@ -259,6 +260,7 @@ library_hiresthm = "Auto"
 library_thumbnail_columns = "6/2 (Default)"
 
 [Library (Advanced)]
+library_tagview_genre = "Genres"
 library_tagview_artist = "Artist"
 library_misc_options = "No,Album@Artist (Default)"
 library_ignore_articles = "a,an,the"
