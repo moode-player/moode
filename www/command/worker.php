@@ -120,10 +120,15 @@ sysCmd('moodeutl -D eth_port_fix');
 sysCmd('moodeutl -D card_error');
 workerLog('worker: Session vacuumed');
 
-// Load cfg_system into session
+// Load cfg_system and cfg_radio into session
 playerSession('open', '', '');
 loadRadio();
 workerLog('worker: Session loaded');
+
+// Establish debuglog session var
+if (!isset($_SESSION['debuglog'])) {
+	$_SESSION['debuglog'] = '0';
+}
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
 
 // Reconfigure certain 3rd party installs
