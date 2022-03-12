@@ -33,6 +33,7 @@ Updates
 - UPD: Bump to Ashuffle 3.12.8
 - UPD: Bump to Squeezelite 1.9.8-1317
 - UPD: Bump to Pi-Bluetooth 0.1.18
+- UPD: Bump to alsa-cdsp 1.1.0
 - UPD: Improve scan for Samba shares
 - UPD: Improve scan for players/receivers
 - UPD: Improve multiroom audio feature
