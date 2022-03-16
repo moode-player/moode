@@ -1081,7 +1081,7 @@ function chkMaintenance() {
 
 		// Purge temp or unwanted resources
 		sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
-		sysCmd('rm ' . EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Possible leftover temp file created by Radio Manager export
+		sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Possible leftover temp file created by Radio Manager export
 
 		// LocalUI browser
 		// NOTE: This is a workaround for a chromium-browser bug that causes 100% memory utilization after ~3 hours

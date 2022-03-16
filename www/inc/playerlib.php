@@ -39,7 +39,7 @@ define('LIBCACHE_BASE', '/var/local/www/libcache');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
 define('TMP_STATION_PREFIX', '__tmp__');
-define('EXPORT_DIR', '/tmp');
+define('STATION_EXPORT_DIR', '/var/www');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
 define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');

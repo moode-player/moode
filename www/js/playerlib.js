@@ -56,6 +56,9 @@ const ALBUM_SAMPLE_RATE_THRESHOLD   = 44100;
 const RADIO_HD_BADGE_TEXT           = 'HiRes';
 const RADIO_BITRATE_THRESHOLD       = 128;
 
+// For legacy Radio Manager station export
+const STATION_EXPORT_DIR = '/'; // var/www
+
 var UI = {
     knob: null,
     path: '',

@@ -1357,7 +1357,7 @@ $('#export-stations').click(function(e) {
     $('#import-export-msg').text('Exporting...');
     e.preventDefault();
     $.post('command/moode.php?cmd=export_stations', function() {
-        window.location.href = '/imagesw/stations.zip';
+        window.location.href = STATION_EXPORT_DIR + 'stations.zip';
         $('#import-export-msg').text('Export complete');
 	});
 });
