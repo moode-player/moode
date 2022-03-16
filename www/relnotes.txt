@@ -11,6 +11,21 @@
 
 ################################################################################
 #
+# 2022-MM-DD TC moOde 8.0.1
+#
+################################################################################
+
+Updates
+
+- UPD: Add notice to Radio Manager that Import/Export has been deprecated 
+
+Bug fixes
+
+- FIX: Missing id 499 row in cfg_radio table
+- FIX: Wrong export directory for radio manager station export
+
+################################################################################
+#
 # 2022-03-12 TC moOde 8.0.0
 #
 ################################################################################
