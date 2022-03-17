@@ -2902,6 +2902,9 @@ function cfgNetIfaces() {
 	}
 	fwrite($fp, $data);
 	fclose($fp);
+
+	// Set regulatory domain
+	sysCmd('iw reg set "' . $result[1]['wlan_country'] . '" >/dev/null 2>&1');
 }
 
 // configure hostapd conf
