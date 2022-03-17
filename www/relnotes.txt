@@ -17,7 +17,9 @@
 
 Updates
 
-- UPD: Add notice to Radio Manager that Import/Export has been deprecated 
+- UPD: Bump to Linux kernel 5.15.28 build
+- UPD: Add notice to Radio Manager that Import/Export has been deprecated
+- UPD: Set regulatory domain as part of WiFi config
 
 Bug fixes
 
