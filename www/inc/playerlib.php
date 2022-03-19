@@ -1384,7 +1384,7 @@ function parseCurrentSong($sock) {
 			list ($element, $value) = explode(": ", $line, 2);
 
 			// NOTE: Let's save this for future use
-			// These tags can have multiple occurances so lets accumulate them as a delimited string
+			// These tags can have multiple occurrences so let's accumulate them as a delimited string
 			/*if ($element == 'Genre' || $element == 'Artist' || $element == 'Conductor' || $element == 'Performer') {
 				$array[$element] .= $value . '; ';
 			}
