@@ -11,13 +11,28 @@
 
 ################################################################################
 #
+# 2022-MM-DD TC moOde 8.0.2
+#
+################################################################################
+
+Updates
+
+- UPD: Change station.zip eport path to /var/local/www/imagesw
+
+Bug fixes
+
+- FIX: Bad path in moodeutl for the -u/-U "check station URL" options
+- FIX: Remove enclosing quotes from iconpath in upmpdcli.conf 
+
+################################################################################
+#
 # 2022-03-17 TC moOde 8.0.1
 #
 ################################################################################
 
 Updates
 
-- UPD: Bump to Linux kernel 5.15.28 build
+- UPD: Bump to Linux kernel 5.15.28 build #1532
 - UPD: Add notice to Radio Manager that Import/Export has been deprecated
 - UPD: Set regulatory domain as part of WiFi config
 
