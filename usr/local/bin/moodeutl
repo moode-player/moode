@@ -446,7 +446,7 @@ function tail_log() {
 
 function check_station_urls($argv) {
 	error_reporting(E_ERROR | E_PARSE);
-	$results = shell_exec("sqlite3 " . SQLDB .
+	$results = shell_exec("sqlite3 " . SQLDB_PATH .
 		" \"SELECT id, station, name, geo_fenced FROM cfg_radio WHERE station not in ('OFFLINE', 'zx reserved 499')\"");
 	$line = strtok($results, "\n");
 	echo "Checking...\n";
