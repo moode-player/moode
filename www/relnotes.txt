@@ -17,12 +17,13 @@
 
 Updates
 
-- UPD: Change station.zip eport path to /var/local/www/imagesw
+- UPD: Change station.zip export path to /var/local/www/imagesw
 
 Bug fixes
 
 - FIX: Bad path in moodeutl for the -u/-U "check station URL" options
-- FIX: Remove enclosing quotes from iconpath in upmpdcli.conf 
+- FIX: Remove enclosing quotes from iconpath in upmpdcli.conf
+- FIX: Help text spelling errors
 
 ################################################################################
 #
