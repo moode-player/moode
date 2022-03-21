@@ -18,10 +18,12 @@
 Updates
 
 - UPD: Change station.zip export path to /var/local/www/imagesw
+- UPD: Add force_eeprom_read=0 to /boot/config.txt for all Hifiberry cards
 
 Bug fixes
 
 - FIX: Bad path in moodeutl for the -u/-U "check station URL" options
+- FIX: Expected scan on/off responses in bt.sh SCAN() function
 - FIX: Remove enclosing quotes from iconpath in upmpdcli.conf
 - FIX: Help text spelling errors
 
