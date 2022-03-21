@@ -67,12 +67,12 @@ set timeout -1
 match_max 100000
 spawn bluetoothctl
 expect "*# "
-send -- "scan on\r"
-expect -exact "scan on\r"
+send "scan on\r"
+expect "Discovery started\r"
 expect "*# "
 sleep $SCANPERIOD
 send "scan off\r"
-expect -exact "scan off\r"
+expect "Discovery stopped\r"
 expect "*# "
 send "quit\r"
 expect eof
@@ -211,7 +211,7 @@ match_max 100000
 spawn bluetoothctl
 expect "*# "
 send "connect $DEVICE\r"
-expect -exact "Attempting to connect to $DEVICE\r"
+expect "Attempting to connect to $DEVICE\r"
 expect "*# "
 sleep 5
 send "quit\r"
@@ -223,7 +223,7 @@ echo "** Device $DEVICE connected"
 
 # print help to terminal
 HELP_TERM() {
-	echo "** BlueMoode version $REV"
+	echo "** bt.sh version $REV"
 	echo "**"
 	echo "** Usage: bt.sh [OPTION]"
 	echo "** -i initialize/reset controller"
