@@ -3123,7 +3123,14 @@ function parseMpdOutputs($resp) {
 }
 
 function cfgI2sOverlay($i2sdevice) {
-	sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt'); // Removes the line after dtparam=audio=off
+	// Removes the line after dtparam=audio=off which would be a dtoverlay=audio_overlay line
+	sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt');
+	// Remove the force_eeprom_read=0 line (it will only exist for hifiberry dtoverlays
+	sysCmd('sed -i "/force_eeprom_read=0/d" /boot/config.txt');
+
+	// Add force_eeprom_read=0 for all hifiberry cards
+	$force_eeprom_read_0 = (stripos($i2sdevice, 'hifiberry') !== false || stripos($_SESSION['i2soverlay'], 'hifiberry') !== false) ?
+		'\nforce_eeprom_read=0' : '';
 
 	// Reset to Pi HDMI-1
 	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
@@ -3134,14 +3141,14 @@ function cfgI2sOverlay($i2sdevice) {
 	// Named I2S device
 	elseif ($i2sdevice != 'None') {
 		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sdevice);
-		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . '" /boot/config.txt');
+		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . $force_eeprom_read_0 . '" /boot/config.txt');
 		playerSession('write', 'cardnum', '0');
 		playerSession('write', 'adevname', $result[0]['name']);
 		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
 	}
 	// DT overlay
 	else {
-		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $_SESSION['i2soverlay'] . '" /boot/config.txt');
+		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $_SESSION['i2soverlay'] . $force_eeprom_read_0 . '" /boot/config.txt');
 		playerSession('write', 'cardnum', '0');
 		playerSession('write', 'adevname', $_SESSION['i2soverlay']);
 		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
