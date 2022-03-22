@@ -39,7 +39,7 @@ import sys
 import csv
 import re
 
-VERSION = "1.0"
+VERSION = "1.1"
 
 class StationManager:
 
@@ -364,14 +364,20 @@ Version=2"""
             stations_bu = self.filter_stations(data['stations'], scope)
             stations_db = self.get_stations(scope)
 
+            stations_db_delete = None
+            if 'stations_deleted' in data:
+                stations_db_delete = self.filter_stations(data['stations_deleted'], scope)
+                self.clear_stations(stations_db_delete)
+
             stations_to_import = stations_bu
+            fields_db = self.get_fields()
             if how == StationManager.IMPORT_CLEAR:
                 self.clear_stations(scope)
             else:
-                missing, added, common = self.diff(stations_db, stations_bu)
-                stations_to_import = [station for station in stations_bu if station['name'] in missing]
+                missing, added, difference, common = self.diff(stations_db, stations_bu, fields_db)
+                stations_to_import = [station for station in stations_bu if station['name'] in missing+difference]
 
-            fields_db = self.get_fields()
+
             fields_db.remove('id') # use auto id for the id
             station_queries = []
             for station in stations_to_import:
@@ -445,9 +451,14 @@ Version=2"""
 
 
     def clear_stations(self, scope):
-        print('Clear stations for scope \'{}\''.format(scope))
+        print('Clear stations for scope \'{}\''.format(scope if type(scope)!=list else ','.join([station['name'] for station in scope])))
 
-        stations = self.get_stations(scope)
+        cursor = self.conn.cursor()
+
+        if type(scope) == list:
+            stations = scope
+        else:
+            stations = self.get_stations(scope)
 
         for station in stations:
             local_base_name = station['name']
@@ -465,23 +476,36 @@ Version=2"""
                 os.remove(thumb_file)
             if os.path.exists(thumb_file_sm):
                 os.remove(thumb_file_sm)
+            if type(scope) == list:
+                query = 'delete from cfg_radio where name="{}"'.format(station['name'])
+                cursor.execute(query)
 
-        query = 'delete from cfg_radio where id!=499{}'.format(self.get_scope_selector(scope))
-        cursor = self.conn.cursor()
-        cursor.execute(query)
+        if type(scope) != list:
+            query = 'delete from cfg_radio where id!=499{}'.format(self.get_scope_selector(scope))
+            cursor.execute(query)
         self.conn.commit()
 
-    def diff(self, stations_db, stations_bu):
+    def diff(self, stations_db, stations_bu, fields):
         stations_db_map = [station['name'] for station in stations_db]
         stations_bu_map = [station['name'] for station in stations_bu]
 
         missing_stations_db = list(set(stations_bu_map) - set(stations_db_map))
         additional_stations_db = list(set(stations_db_map) - set(stations_bu_map))
-        common_stations = list(set(stations_bu_map) & set(stations_db_map))
+        common_stations_ = list(set(stations_bu_map) & set(stations_db_map))
 
-        return (missing_stations_db, additional_stations_db, common_stations)
+        stations_db_map = {station['name']: station for station in stations_db}
+        stations_bu_map = {station['name']: station for station in stations_bu}
+        common_stations= []
+        stations_with_difference = []
+        for station in common_stations_: #[:1]:
+            differences = self.compare_station_settings(stations_db_map[station], stations_bu_map[station], fields)
+            if len(differences)>=1:
+                stations_with_difference.append(station)
+            else:
+                common_stations.append(station)
+        return (missing_stations_db, additional_stations_db, stations_with_difference, common_stations )
 
-    def do_diff(self, scope):
+    def do_diff(self, scope, diff_output=None):
         print('compare')
         colnames_db = self.get_fields()
         with ZipFile(self.backup_file, 'r') as backup:
@@ -490,19 +514,17 @@ Version=2"""
 
             # First check the data schema
             if colnames_db == colnames_bu:
-                print('SQL database schema: ok')
+                print('SQL database schema: ok (%d)' %(len(colnames_db)))
             else:
                 missing_bu_fields = list(set(colnames_db) - set(colnames_bu))
                 additional_bu_fields = list(set(colnames_bu) - set(colnames_db))
                 print('SQL database schema: differs')
-                # print('Data schema between database and backup differs!')
                 if len(additional_bu_fields) >= 1:
                     print('\tStation backup is missing the following fields:')
                     for field in missing_bu_fields:
                         print('\t- {}'.format(field))
 
                 if len(additional_bu_fields) >= 1:
-                    # print('\tDatabase is missing the following fields:')
                     print('\tStation backup had the following additional fields:')
                     for field in additional_bu_fields:
                         print('\t- {}'.format(field))
@@ -514,10 +536,10 @@ Version=2"""
             stations_db_map = {station['name']: station for station in stations_db}
             stations_bu_map = {station['name']: station for station in stations_bu}
 
-            missing_stations_db, additional_stations_db, common_stations = self.diff(stations_db, stations_bu)
-            # print(missing_stations_db)
+            common_fields = list(set(colnames_db) & set(colnames_bu))
+            missing_stations_db, additional_stations_db, stations_with_difference, common_stations = self.diff(stations_db, stations_bu, common_fields)
 
-            if stations_db_map.keys() == stations_bu_map.keys():
+            if len( stations_db_map.keys())==len(common_stations) and all( list(stations_db_map.keys()).count(i)==common_stations.count(i) for i in  stations_db_map.keys()):
                 print('Stations: ok')
             else:
                 print('Stations: differ')
@@ -527,22 +549,53 @@ Version=2"""
                         print('\t- \'{}\''.format(station))
 
                 if len(additional_stations_db) >= 1:
-                    # print('\tDatabase is missing the following fields:')
                     print('\tStations only in SQL table:')
                     for station in additional_stations_db :
                         print('\t- \'{}\''.format(station))
 
-                if len(common_stations) >= 1:
-                    common_fields = list(set(colnames_db) & set(colnames_bu))
-                    stations_with_difference = {}
-                    for station in common_stations: #[:1]:
-                        differences = self.compare_station_settings(stations_db_map[station], stations_bu_map[station], common_fields)
-                        if len(differences)>=1:
-                            stations_with_difference[station] = differences
-                    if len(stations_with_difference) >=1:
-                        print('\tStations with difference in settings:')
-                        for name in stations_with_difference.keys():
-                            print('\t- \'{}\' : {}'.format(name, ", ".join(stations_with_difference[name])))
+                if len(stations_with_difference) >=1:
+                    print('\tStations with difference in settings:')
+                    for name in stations_with_difference:
+                        differences = self.compare_station_settings(stations_db_map[name], stations_bu_map[name], common_fields)
+                        print('\t- \'{}\' : {}'.format(name, ", ".join(differences)))
+
+            #TODO: Not coded very nice, but was in hurry. Refactor and remove duplicates existing code.
+            if diff_output:
+                with ZipFile(diff_output, 'w') as diff_backup:
+                    print('export data')
+                    colnames = self.get_fields()
+                    stations_deleted = []
+                    for name in missing_stations_db:
+                        stations_deleted.append(stations_bu_map[name])
+
+                    stations = []
+                    for name in stations_with_difference:
+                        stations.append(stations_db_map[name])
+                    data = {'fields': colnames, 'stations': stations, 'stations_deleted': stations_deleted}
+                    diff_backup.writestr('station_data.json', json.dumps(data,  indent=4))
+
+                    for station in stations:
+                        local_base_name = station['name']
+                        # In case of a non local there is a name mismatch between station name and logo.
+                        # Lets correct that.
+                        if station['logo'] != 'local':
+                            local_base_name = os.path.basename(station['logo'])[:-4]
+
+                        image_filename = path.join(self.radio_logos_path, local_base_name+'.jpg')
+                        image_filename_thumb = path.join(self.radio_logos_path, 'thumbs', local_base_name+'.jpg')
+                        image_filename_thumb_sm = path.join(self.radio_logos_path, 'thumbs', local_base_name+'_sm.jpg')
+
+                        if path.exists(image_filename):
+                            diff_backup.write(image_filename, 'radio-logos/'+station['name']+'.jpg')
+                        else:
+                            print('WARNING: Station logo not found for \' %s\'' %(image_filename) )
+
+                        if path.exists(image_filename_thumb):
+                            diff_backup.write(image_filename_thumb, 'radio-logos/thumbs/'+station['name']+'.jpg')
+                            if path.exists(image_filename_thumb_sm):
+                                diff_backup.write(image_filename_thumb_sm, 'radio-logos/thumbs/'+station['name']+'_sm.jpg')
+
+
 
     def compare_station_settings(self, data_db, data_bu, fields):
         differs = False
@@ -595,6 +648,10 @@ def get_cmdline_arguments():
                    const = sum,
                    help = 'Show difference between SQL table and station backup.')
 
+    group.add_argument('--diff', #dest = 'do_patch', action = 'store_const',
+                   # const = sum,
+                   help = 'Create a diff backup with the difference between the old (=backup) and new (=db) to this files.')
+
     group.add_argument('--regeneratepls', dest = 'do_genpls', action = 'store_const',
                    const = sum,
                    help = 'Regenerate the radio .pls files from db.')
@@ -644,6 +701,8 @@ if __name__ == "__main__":
             mgnr.do_export(args.scope, args.station_type)
         elif args.do_diff:
             mgnr.do_diff(args.scope)
+        elif args.diff:
+            mgnr.do_diff(args.scope, args.diff)
         elif args.do_clear:
             mgnr.clear_stations(args.scope)
         elif args.do_genpls:
