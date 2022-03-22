@@ -20,6 +20,12 @@ Updates
 - UPD: Change station.zip export path to /var/local/www/imagesw
 - UPD: Add force_eeprom_read=0 to /boot/config.txt for all Hifiberry cards
 
+Radio stations
+
+- UPD: Absolut Hot
+- UPD: Absolut music XL
+- UPD: Absolut Relax
+
 Bug fixes
 
 - FIX: Bad path in moodeutl for the -u/-U "check station URL" options
