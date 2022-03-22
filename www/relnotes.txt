@@ -22,9 +22,15 @@ Updates
 
 Radio stations
 
+- NEW: SomaFM - n5MD Radio
+- NEW: SomaFM - Synphaera
+- NEW: SomaFM - Vaporwaves
 - UPD: Absolut Hot
 - UPD: Absolut music XL
 - UPD: Absolut Relax
+- UPD: SWR 2
+- DEL: SomaFM - BaGel Radio (discontinued)
+- DEL: WBJC Baltimore 91.5 Classical (non-working URL)
 
 Bug fixes
 
