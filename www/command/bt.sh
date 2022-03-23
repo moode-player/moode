@@ -33,16 +33,16 @@
 # All related data files will reside under /var/lib/bluetooth
 #
 
-REV=1.5
+REV=1.6
 
-# check for sudo
+# Check for sudo
 [[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
 #which expect >/dev/null || { echo "** expect must be installed to run the script!" ; exit 1 ; } ;
 
-# duration of scan in secs
-SCANPERIOD=20
+# Duration of scan in secs
+SCAN_PERIOD=20
 
-# initialze bluetooth controller
+# Initialze bluetooth controller
 INIT() {
 echo "** Initializing Bluetooth controller"
 echo "**"
@@ -57,9 +57,9 @@ echo "**"
 echo "** Controller initialized"
 }
 
-# scan for devices
+# Scan for devices
 SCAN() {
-echo "** Scanning for devices (${SCANPERIOD} secs)"
+echo "** Scanning for devices (${SCAN_PERIOD} secs)"
 echo "**"
 expect <(cat <<EOF
 log_user 0
@@ -70,7 +70,7 @@ expect "*# "
 send "scan on\r"
 expect "Discovery started\r"
 expect "*# "
-sleep $SCANPERIOD
+sleep $SCAN_PERIOD
 send "scan off\r"
 expect "Discovery stopped\r"
 expect "*# "
@@ -80,7 +80,7 @@ EOF
 )
 }
 
-# trust scanned devices
+# Trust scanned devices
 TRUST() {
 	echo "** Trusted devices"
 	unset btdev
@@ -94,7 +94,7 @@ TRUST() {
 	echo "**"
 }
 
-# list discovered devices
+# List discovered devices
 LIST_DISCOVERED() {
 	unset btdev
 	mapfile -t btdev < <(echo -e "devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
@@ -108,7 +108,7 @@ LIST_DISCOVERED() {
 	echo "**"
 }
 
-# list paired devices
+# List paired devices
 LIST_PAIRED() {
 	unset btdev
 	mapfile -t btdev < <(echo -e "paired-devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
@@ -122,7 +122,7 @@ LIST_PAIRED() {
 	echo "**"
 }
 
-# list connected devices
+# List connected devices
 LIST_CONNECTED() {
 	echo "** Connected devices"
 	echo "**"
@@ -136,7 +136,7 @@ LIST_CONNECTED() {
 	echo "**"
 }
 
-# remove all devices
+# Remove all devices
 REMOVE_ALL() {
 	echo "** Removing all devices"
 	unset btdev
@@ -150,7 +150,7 @@ REMOVE_ALL() {
 	echo "** All devices removed"
 }
 
-# disconnect all devices
+# Disconnect all devices
 DISCONNECT_ALL() {
 	echo "** Disconnecting all devices"
 	unset btdev
@@ -160,12 +160,12 @@ DISCONNECT_ALL() {
 	   statconnected="$( echo -e "info $MAC\nquit"  | bluetoothctl | grep "Connected" | cut -f 2 -d " ")"
 	   if [ "$statconnected" == "yes" ] ; then echo -e "disconnect $MAC\nquit"  | bluetoothctl >/dev/null 2>&1 ; fi
 	done
-	# ensure no orphaned instances
+	# Ensure no orphaned instances
 	killall bluealsa-aplay 2> /dev/null
 	echo "** All devices disconnected"
 }
 
-# remove paired device
+# Remove paired device
 REMOVE_DEVICE() {
 	echo "** Removing device $DEVICE"
 	echo -e "remove $DEVICE\nquit"  | bluetoothctl >/dev/null
@@ -173,7 +173,7 @@ REMOVE_DEVICE() {
 	echo "** Device $DEVICE removed"
 }
 
-# disconenect device
+# Disconenect device
 DISCONNECT_DEVICE() {
 	echo "** Disconnecting device $DEVICE"
 	echo -e "disconnect $DEVICE\nquit"  | bluetoothctl >/dev/null
@@ -181,7 +181,7 @@ DISCONNECT_DEVICE() {
 	echo "** Device $DEVICE disconnected"
 }
 
-# pair with device
+# Pair with device
 PAIRWITH_DEVICE() {
 echo "** Pairing with device $DEVICE"
 expect <(cat <<EOF
@@ -201,7 +201,7 @@ EOF
 echo "** Device $DEVICE paired"
 }
 
-# connect to device
+# Connect to device
 CONNECTTO_DEVICE() {
 echo "** Connecting to device $DEVICE"
 expect <(cat <<EOF
@@ -221,26 +221,26 @@ EOF
 echo "** Device $DEVICE connected"
 }
 
-# print help to terminal
+# Print help to terminal
 HELP_TERM() {
 	echo "** bt.sh version $REV"
 	echo "**"
 	echo "** Usage: bt.sh [OPTION]"
-	echo "** -i initialize/reset controller"
-	echo "** -s scan and trust devices"
-	echo "** -l list discovered devices"
-	echo "** -p list paired devices"
-	echo "** -c list connected devices"
-	echo "** -d disconnect device <MAC addr>"
-	echo "** -r remove paired device <MAC addr>"
-	echo "** -P pair with device <MAC addr>"
-	echo "** -C connect to device <MAC addr>"
-	echo "** -D disconnect all devices"
-	echo "** -R remove all pairings"
-	echo "** -h help"
+	echo "** -i Initialize/reset controller"
+	echo "** -s Scan and trust devices"
+	echo "** -l List discovered devices"
+	echo "** -p List paired devices"
+	echo "** -c List connected devices"
+	echo "** -d Disconnect device <MAC addr>"
+	echo "** -r Remove paired device <MAC addr>"
+	echo "** -P Pair with device <MAC addr>"
+	echo "** -C Connect to device <MAC addr>"
+	echo "** -D Disconnect all devices"
+	echo "** -R Remove all pairings"
+	echo "** -h Help"
 }
 
-# format help for html presentation
+# Format help for html presentation
 HELP_HTML() {
 	echo "1) Put your device in discovery mode and wait until it discovers Moode Bluetooth. You may have to turn Bluetooth off/on on your device to accomplish this."
 	echo
@@ -249,7 +249,9 @@ HELP_HTML() {
 	echo -e "3) To send audio from moOde to your device:<br>First submit a \"SCAN for devices\" command and verify that your device appears in the scan results. The scan runs for 20 seconds. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetooth\" from the dropdown then CONNECT."
 }
 
-# main
+#
+# Main
+#
 
 case $1 in
 
