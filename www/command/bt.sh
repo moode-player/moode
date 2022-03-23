@@ -193,7 +193,7 @@ expect "*# "
 send "pair $DEVICE\r"
 expect "Attempting to pair with $DEVICE\r"
 expect "*# "
-sleep 5
+sleep 8
 send "quit\r"
 expect eof
 EOF
@@ -213,7 +213,7 @@ expect "*# "
 send "connect $DEVICE\r"
 expect "Attempting to connect to $DEVICE\r"
 expect "*# "
-sleep 5
+sleep 8
 send "quit\r"
 expect eof
 EOF
