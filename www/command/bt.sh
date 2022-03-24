@@ -39,8 +39,14 @@ REV=1.6
 [[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
 #which expect >/dev/null || { echo "** expect must be installed to run the script!" ; exit 1 ; } ;
 
-# Duration of scan in secs
-SCAN_PERIOD=20
+# Sleep times in seconds
+SCAN_DURATION=20
+WAIT_FOR_PAIR=5
+WAIT_FOR_CONNECT=5
+WAIT_FOR_REMOVE=1
+
+# Set to the value of the TemporaryTimeout param in /etc/bluetooth/main.conf
+TRUSTED_DEVICE_TIMEOUT=90
 
 # Initialze bluetooth controller
 INIT() {
@@ -59,7 +65,7 @@ echo "** Controller initialized"
 
 # Scan for devices
 SCAN() {
-echo "** Scanning for devices (${SCAN_PERIOD} secs)"
+echo "** Scanning for devices (${SCAN_DURATION} seconds)"
 echo "**"
 expect <(cat <<EOF
 log_user 0
@@ -70,7 +76,7 @@ expect "*# "
 send "scan on\r"
 expect "Discovery started\r"
 expect "*# "
-sleep $SCAN_PERIOD
+sleep $SCAN_DURATION
 send "scan off\r"
 expect "Discovery stopped\r"
 expect "*# "
@@ -82,7 +88,7 @@ EOF
 
 # Trust scanned devices
 TRUST() {
-	echo "** Trusted devices"
+	echo "** Trusted for $TRUSTED_DEVICE_TIMEOUT seconds"
 	unset btdev
 	mapfile -t btdev < <(echo -e "devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
 	for i in "${btdev[@]}" ; do
@@ -98,12 +104,10 @@ TRUST() {
 LIST_DISCOVERED() {
 	unset btdev
 	mapfile -t btdev < <(echo -e "devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
-	#echo "** ${#btdev[@]} Discovered device(s) "
 	echo "** Discovered devices"
 	echo "**"
 	for i in "${btdev[@]}" ; do
 	   echo "** $i"
-	   #sleep 1
 	done
 	echo "**"
 }
@@ -112,12 +116,10 @@ LIST_DISCOVERED() {
 LIST_PAIRED() {
 	unset btdev
 	mapfile -t btdev < <(echo -e "paired-devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
-	#echo "** ${#btdev[@]} paired device(s) "
 	echo "** Paired devices"
 	echo "**"
 	for i in "${btdev[@]}" ; do
 	   echo "** $i"
-	   #sleep 1
 	done
 	echo "**"
 }
@@ -145,7 +147,7 @@ REMOVE_ALL() {
 	   echo "** $i"
 	   y="$( echo $i | cut -d " " -f1)"
 	   echo -e "remove $y\nquit"  | bluetoothctl >/dev/null
-	   sleep 1
+	   sleep $WAIT_FOR_REMOVE
 	done
 	echo "** All devices removed"
 }
@@ -193,7 +195,7 @@ expect "*# "
 send "pair $DEVICE\r"
 expect "Attempting to pair with $DEVICE\r"
 expect "*# "
-sleep 8
+sleep $WAIT_FOR_PAIR
 send "quit\r"
 expect eof
 EOF
@@ -213,7 +215,7 @@ expect "*# "
 send "connect $DEVICE\r"
 expect "Attempting to connect to $DEVICE\r"
 expect "*# "
-sleep 8
+sleep $WAIT_FOR_CONNECT
 send "quit\r"
 expect eof
 EOF
@@ -246,7 +248,7 @@ HELP_HTML() {
 	echo
 	echo -e "2) To send audio from your device to moOde:<br>First turn on the Pairing agent in Audio Config and then initiate the connection on your device. Your device should automatically pair and connect. You can verify that your device has been successfully paired and connected by submitting \"LIST paired\" or \"LIST connected\" commands."
 	echo
-	echo -e "3) To send audio from moOde to your device:<br>First submit a \"SCAN for devices\" command and verify that your device appears in the scan results. The scan runs for 20 seconds. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetooth\" from the dropdown then CONNECT."
+	echo -e "3) To send audio from moOde to your device:<br>First submit a SCAN command and verify that your device appears in the scan results. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetooth\" from the dropdown then CONNECT."
 }
 
 #
@@ -260,7 +262,7 @@ case $1 in
 		;;
 	-s) SCAN
 		TRUST
-		echo "** Scan complete"
+		#echo "** Scan complete"
 		exit 0
 		;;
 	-l) LIST_DISCOVERED

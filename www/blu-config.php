@@ -121,7 +121,7 @@ if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 session_write_close();
 
 // Command list
-$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN for devices</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (20 seconds)</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-p\" " . (($cmd == '-p') ? "selected" : "") . ">LIST paired</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-c\" " . (($cmd == '-c') ? "selected" : "") . ">LIST connected</option>\n";
 //$_cmd['btcmd'] .= "<option value=\"-l\" " . (($cmd == '-l') ? "selected" : "") . ">LIST discovered</option>\n";
@@ -162,7 +162,12 @@ if ($cmd == '-H' || $cmd == '-i') {
 else {
 	for ($i = 2; $i < count($result); $i++) {
 		if ($result[$i] != '**') {
-			$_cmd_output .= '** ' . substr($result[$i], 21) . '<br>';
+			if (stripos($result[$i], 'Trusted') !== false) {
+				$_cmd_output .= $result[$i] . '<br>**<br>';
+			}
+			else {
+				$_cmd_output .= '** ' . substr($result[$i], 21) . '<br>';
+			}
 		}
 	}
 }
