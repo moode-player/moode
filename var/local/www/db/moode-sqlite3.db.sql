@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Mar 22 16:44:23 2022
+-- File generated with SQLiteStudio v3.1.0 on Thu Mar 24 16:10:23 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -212,7 +212,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (202, 'http://icecast.vrtcdn.be/radio1-high.mp3', 'VRT - Radio 1', 'r', 'local', 'Pop, Contemporary, Rock, News', 'VRT', 'Dutch', 'Belgium', 'Europe', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (203, 'http://icecast.vrtcdn.be/ra2vlb-high.mp3', 'VRT - Radio 2', 'r', 'local', 'Eclectic', 'VRT', 'Dutch', 'Belgium', 'Europe', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (204, 'http://icecast.vrtcdn.be/stubru-high.mp3', 'VRT - Studio Brussel', 'r', 'local', 'Alternative', 'VRT', 'Dutch', 'Belgium', 'Europe', '128', 'MP3', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (205, 'OFFLINE', 'WBJC Baltimore 91.5 - Classical', 'r', 'local', 'Classical', 'Baltimore City Community College', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (205, 'https://ice64.securenetsystems.net/WBJC', 'WBJC Baltimore 91.5 - Classical', 'r', 'local', 'Classical', 'Baltimore City Community College', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (206, 'http://audio1.ideastream.org/wclv.mp3', 'WCLV Cleveland 104.9 - Classical', 'r', 'local', 'Classical', 'Ideastream', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (207, 'http://audio.wgbh.org:8004', 'WCRB Boston 99.5 - Classical', 'r', 'local', 'Classical', 'WCRB', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (208, 'http://wdcb-ice.streamguys.org:80/wdcb128', 'WDCB Chicago FM 90.9 - Jazz & Blues', 'r', 'local', 'Blues, Jazz', 'DuPage College', 'English', 'United States', 'North America', '128', 'MP3', 'No', '', '');
