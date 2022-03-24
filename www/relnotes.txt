@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2022-MM-DD TC moOde 8.0.2
+# 2022-03-24 TC moOde 8.0.2
 #
 ################################################################################
 
@@ -33,7 +33,6 @@ Radio stations
 - UPD: Absolut Relax
 - UPD: SWR 2
 - DEL: SomaFM - BaGel Radio (discontinued)
-- DEL: WBJC Baltimore 91.5 Classical (non-working URL)
 
 Bug fixes
 
