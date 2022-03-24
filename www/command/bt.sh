@@ -43,7 +43,7 @@ REV=1.6
 SCAN_DURATION=20
 WAIT_FOR_PAIR=5
 WAIT_FOR_CONNECT=5
-WAIT_FOR_REMOVE=1
+WAIT_FOR_REMOVE=0.5
 
 # Set to the value of the TemporaryTimeout param in /etc/bluetooth/main.conf
 TRUSTED_DEVICE_TIMEOUT=90
@@ -63,15 +63,52 @@ echo "**"
 echo "** Controller initialized"
 }
 
-# Scan for devices
-SCAN() {
-echo "** Scanning for devices (${SCAN_DURATION} seconds)"
+# Scan for only BR/EDR devices
+SCAN_BREDR() {
+echo "** Scanning for only BR/EDR devices (${SCAN_DURATION} seconds)"
 echo "**"
 expect <(cat <<EOF
 log_user 0
 set timeout -1
 match_max 100000
 spawn bluetoothctl
+expect "*# "
+send "menu scan\r"
+expect "*# "
+send "clear\r"
+expect "*# "
+send "transport bredr\r"
+expect "*# "
+send "back\r"
+expect "*# "
+send "scan on\r"
+expect "Discovery started\r"
+expect "*# "
+sleep $SCAN_DURATION
+send "scan off\r"
+expect "Discovery stopped\r"
+expect "*# "
+send "quit\r"
+expect eof
+EOF
+)
+}
+
+# Scan for both BR/EDR and LE devices
+SCAN_DUAL() {
+echo "** Scanning for BR/EDR and LE devices (${SCAN_DURATION} seconds)"
+echo "**"
+expect <(cat <<EOF
+log_user 0
+set timeout -1
+match_max 100000
+spawn bluetoothctl
+expect "*# "
+send "menu scan\r"
+expect "*# "
+send "clear\r"
+expect "*# "
+send "back\r"
 expect "*# "
 send "scan on\r"
 expect "Discovery started\r"
@@ -88,7 +125,7 @@ EOF
 
 # Trust scanned devices
 TRUST() {
-	echo "** Trusted for $TRUSTED_DEVICE_TIMEOUT seconds"
+	echo "** Trust expires in $TRUSTED_DEVICE_TIMEOUT seconds"
 	unset btdev
 	mapfile -t btdev < <(echo -e "devices\nquit"  | bluetoothctl | grep "^Device" |  while IFS= read -r line ; do echo "$line" |cut -d " " -f2- ; done )
 	for i in "${btdev[@]}" ; do
@@ -227,18 +264,24 @@ echo "** Device $DEVICE connected"
 HELP_TERM() {
 	echo "** bt.sh version $REV"
 	echo "**"
+	echo "** Bluetooth has a range of around 30 feet (10 meters) but range"
+	echo "** will vary depending on obstacles (metal, wall, etc.), device signal"
+	echo "** strength and quality, and level of electromagnetic interferrence."
+	echo "**"
 	echo "** Usage: bt.sh [OPTION]"
+	echo "**"
 	echo "** -i Initialize/reset controller"
-	echo "** -s Scan and trust devices"
-	echo "** -l List discovered devices"
+	echo "** -s Scan (BR/EDR only) and trust devices"
+	echo "** -S Scan (LE and BR/EDR) and trust devices"
 	echo "** -p List paired devices"
 	echo "** -c List connected devices"
+	echo "** -l List trusted devices"
 	echo "** -d Disconnect device <MAC addr>"
 	echo "** -r Remove paired device <MAC addr>"
 	echo "** -P Pair with device <MAC addr>"
 	echo "** -C Connect to device <MAC addr>"
 	echo "** -D Disconnect all devices"
-	echo "** -R Remove all pairings"
+	echo "** -R Remove all devices"
 	echo "** -h Help"
 }
 
@@ -248,7 +291,8 @@ HELP_HTML() {
 	echo
 	echo -e "2) To send audio from your device to moOde:<br>First turn on the Pairing agent in Audio Config and then initiate the connection on your device. Your device should automatically pair and connect. You can verify that your device has been successfully paired and connected by submitting \"LIST paired\" or \"LIST connected\" commands."
 	echo
-	echo -e "3) To send audio from moOde to your device:<br>First submit a SCAN command and verify that your device appears in the scan results. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetooth\" from the dropdown then CONNECT."
+	echo -e "3) To send audio from moOde to your device:<br>First submit a SCAN command and verify that your device appears in the scan results. The SCAN may have to be run multiple times. Next select the device in the dropdown list, PAIR it then select \"MPD audio output->Bluetooth\" from the dropdown then CONNECT."
+	echo "<br>Note: Bluetooth has a range of around 30 feet (10 meters) but range will vary depending on obstacles (metal, wall, etc.), device signal strength and quality, and level of electromagnetic interferrence."
 }
 
 #
@@ -260,7 +304,12 @@ case $1 in
 	-i) INIT
 		exit 0
 		;;
-	-s) SCAN
+	-s) SCAN_BREDR
+		TRUST
+		#echo "** Scan complete"
+		exit 0
+		;;
+	-S) SCAN_DUAL
 		TRUST
 		#echo "** Scan complete"
 		exit 0

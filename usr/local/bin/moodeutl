@@ -19,7 +19,7 @@
  *
  */
 
-define('VERSION', '1.6.0');
+define('VERSION', '1.7.0');
 
 // Suppress warning messages
 error_reporting(E_ERROR | E_PARSE);
@@ -147,6 +147,9 @@ switch ($option) {
 	case '-U':
 		check_station_urls($argv);
 		break;
+	case '--btreset':
+		bluetooth_reset();
+		break;
 	case '--mpdlog':
 		mpd_log();
 		break;
@@ -187,6 +190,7 @@ With no OPTION print the help text and exit.
  -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
+ --btreset\tReset Bluetooth to off
  --mpdlog\tPrint MPD log
  --mooderel\tPrint moOde release
  --revision\tPrint the hardware revision
@@ -489,6 +493,12 @@ function list_audio_overlays () {
 			echo $file . "\n";
 		}
 	}
+}
+
+function bluetooth_reset() {
+	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='btsvc'\"");
+	shell_exec("sqlite3 " .  SQLDB_PATH . " \"UPDATE cfg_system set value='0' WHERE param='pairing_agent'\"");
+	echo 'Bluetooth reset to off, reboot required' . "\n";
 }
 
 function mpd_log() {

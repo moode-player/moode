@@ -545,11 +545,14 @@
 						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_bt_settings" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-btsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info-btsvc" class="help-block-configs help-block-margin2 hide">
+					<div>
+						<a data-toggle="modal" href="#bt-restart" $_bt_link_disable><button class="btn btn-medium btn-primary" $_bt_btn_disable>Restart</button></a>&nbsp;Bluetooth controller<br>
+					</div>
+					<span id="info-btsvc" class="help-block-configs help-block-margin hide">
 						Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (Bluez-alsa).<br>
                     </span>
-					<span class="help-block-configs help-block-margin2">
-						WARNING: A Bluetooth adapter must be physically attached and enabled before turning this ON otherwise moOde startup will fail.
+					<span class="help-block-configs help-block-margin" style="margin-bottom:7px;">
+						<b>WARNING: </b>A Bluetooth adapter must be physically attached and enabled before turning Bluetooth ON otherwise moOde startup will fail and the system will appear to hang. If this happens run the SSH command moodeutl --btreset then reboot.
                     </span>
 				</div>
 				<label class="control-label">Pairing agent</label>
@@ -564,7 +567,10 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_pairing_agent" value="novalue" $_bt_btn_disable>Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info_pairing_agent" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span id="info_pairing_agent" class="help-block-configs help-block-margin2 hide">
+					<div style="margin-bottom:10px;">
+						<a data-toggle="modal" href="#pa-restart" $_pa_link_disable><button class="btn btn-medium btn-primary" $_pa_btn_disable>Restart</button></a>&nbsp;Pairing agent<br>
+					</div>
+					<span id="info_pairing_agent" class="help-block-configs help-block-margin2 hide" style="margin-top:-5px;">
 						The pairing agent automatically accepts incoming pairing/connect requests from clients and eliminates the need to perform a manual SCAN from the BlueZ screen.<br>
                     </span>
 				</div>
@@ -596,11 +602,8 @@
 					<span id="info_rsmafterbt" class="help-block-configs help-block-margin hide">
 						Resume MPD playback after Bluetooth client disconnects.<br>
                     </span>
-					<div style="margin-top:.5em">
-						<a href="blu-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;BlueZ config<br>
-					</div>
-					<div style="margin-top:.75em">
-						<a data-toggle="modal" href="#bt-restart" $_bt_link_disable><button class="btn btn-medium btn-primary" $_bt_btn_disable>Restart</button></a>&nbsp;Bluetooth controller<br>
+					<div style="margin-top:1em">
+						<a href="blu-config.php"><button class="btn btn-medium btn-primary">Open</button></a>&nbsp;BlueZ config<br>
 					</div>
 				</div>
 			</div>
@@ -918,6 +921,23 @@
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 			<button class="btn btn-primary btn-submit" type="submit" name="btrestart" value="1">Yes</button>
+		</div>
+	</div>
+</form>
+
+<form class="form-horizontal" method="post">
+	<div id="pa-restart" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="pa-restart-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		</div>
+
+		<div class="modal-body">
+			<h6>Restart Pairing agent?</h6>
+		</div>
+
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="parestart" value="1">Yes</button>
 		</div>
 	</div>
 </form>

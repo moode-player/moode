@@ -1893,14 +1893,21 @@ function runQueuedJob() {
 
 			if ($_SESSION['btsvc'] == 1) {
 				startBt();
+				if ($_SESSION['pairing_agent'] == '1') {
+					sysCmd('killall -s 9 bt-agent.py');
+					sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+				}
 			}
 			else {
 				sysCmd('killall -s 9 bt-agent.py');
+				playerSession('write', 'pairing_agent', '0');
 			}
 			break;
 		case 'pairing_agent':
-			$cmd = $_SESSION['w_queueargs'] == 1 ? '/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &' : 'killall -s 9 bt-agent.py';
-			sysCmd($cmd);
+			sysCmd('killall -s 9 bt-agent.py');
+			if ($_SESSION['pairing_agent'] == '1') {
+				sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+			}
 			break;
 		case 'btmulti':
 			if ($_SESSION['btmulti'] == 1) {

@@ -19,6 +19,9 @@ Updates
 
 - UPD: Change station.zip export path to /var/local/www/imagesw
 - UPD: Add force_eeprom_read=0 to /boot/config.txt for all Hifiberry cards
+- UPD: Add BlueZ Config SCAN options and longer trust time
+- UPD: Add pairing agent restart to Bluetooth section of Audio Config
+- UPD: Add --btreset option to moodeutl
 
 Radio stations
 

@@ -358,10 +358,18 @@ if (isset($_POST['update_bt_settings'])) {
 		submitJob('btsvc', '"' . $currentBtName . '" ' . '"' . $_POST['btname'] . '"', $title, '');
 	}
 }
+// Restart Bluetooth service
+if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
+	submitJob('btsvc', '', 'Bluetooth controller restarted', '');
+}
 // Pairing agent
 if (isset($_POST['update_pairing_agent'])) {
 	playerSession('write', 'pairing_agent', $_POST['pairing_agent']);
 	submitJob('pairing_agent', $_POST['pairing_agent'], ($_POST['pairing_agent'] == 1 ? 'Pairing agent on' : 'Pairing agent off'), '');
+}
+// Restart pairing agent
+if (isset($_POST['parestart']) && $_POST['parestart'] == 1 && $_SESSION['btsvc'] == '1') {
+	submitJob('pairing_agent', '', 'Pairing agent restarted', '');
 }
 // Speaker sharing
 if (isset($_POST['update_bt_multi'])) {
@@ -372,10 +380,6 @@ if (isset($_POST['update_bt_multi'])) {
 if (isset($_POST['update_rsmafterbt'])) {
 	playerSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
 	$_SESSION['notify']['title'] = 'Setting updated';
-}
-// Restart
-if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
-	submitJob('btsvc', '', 'Bluetooth controller restarted', '');
 }
 
 // Airplay renderer
@@ -786,6 +790,8 @@ $_SESSION['btsvc'] == '1' ? $_bt_link_disable = '' : $_bt_link_disable = 'onclic
 $_select['btsvc1'] .= "<input type=\"radio\" name=\"btsvc\" id=\"togglebtsvc1\" value=\"1\" " . (($_SESSION['btsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['btsvc0'] .= "<input type=\"radio\" name=\"btsvc\" id=\"togglebtsvc2\" value=\"0\" " . (($_SESSION['btsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['btname'] = $_SESSION['btname'];
+$_SESSION['pairing_agent'] == '1' ? $_pa_btn_disable = '' : $_pa_btn_disable = 'disabled';
+$_SESSION['pairing_agent'] == '1' ? $_pa_link_disable = '' : $_pa_link_disable = 'onclick="return false;"';
 $_select['pairing_agent1'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent1\" value=\"1\" " . (($_SESSION['pairing_agent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['pairing_agent0'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent2\" value=\"0\" " . (($_SESSION['pairing_agent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['btmulti1'] .= "<input type=\"radio\" name=\"btmulti\" id=\"togglebtmulti1\" value=\"1\" " . (($_SESSION['btmulti'] == 1) ? "checked=\"checked\"" : "") . ">\n";

@@ -99,7 +99,7 @@ if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']
 	}
 }
 
-// Disconnect paired device
+// Disconnect device
 if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 	// Update MPD output
 	$audioout = $_SESSION['audioout'] == 'Bluetooth' ? 'Local' : $_SESSION['audioout'];
@@ -121,12 +121,13 @@ if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 session_write_close();
 
 // Command list
-$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (20 seconds)</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (Default)</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-S\" " . (($cmd == '-S') ? "selected" : "") . ">SCAN (Include LE devices)</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-p\" " . (($cmd == '-p') ? "selected" : "") . ">LIST paired</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-c\" " . (($cmd == '-c') ? "selected" : "") . ">LIST connected</option>\n";
-//$_cmd['btcmd'] .= "<option value=\"-l\" " . (($cmd == '-l') ? "selected" : "") . ">LIST discovered</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-l\" " . (($cmd == '-l') ? "selected" : "") . ">LIST trusted</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-D\" " . (($cmd == '-D') ? "selected" : "") . ">DISCONNECT all</option>\n";
-$_cmd['btcmd'] .= "<option value=\"-R\" " . (($cmd == '-R') ? "selected" : "") . ">REMOVE all paired</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-R\" " . (($cmd == '-R') ? "selected" : "") . ">REMOVE all devices</option>\n";
 //$_cmd['btcmd'] .= "<option value=\"-i\" " . (($cmd == '-i') ? "selected" : "") . ">INITIALIZE controller</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-H\" " . (($cmd == '-H') ? "selected" : "") . ">HELP</option>\n";
 
@@ -147,13 +148,7 @@ if ($cmd == '-i') {
 	$result = str_replace('Waiting to connect to bluetoothd...', 'Waiting to connect to bluetoothd...<br>', $result);
 }
 
-/*
-// Format output for html
-for ($i = 0; $i < count($result); $i++) {
-	$_cmd_output .= $result[$i] . "<br>";
-}
-*/
-// TEST: alternative 2
+// Format output for HTML
 if ($cmd == '-H' || $cmd == '-i') {
 	for ($i = 0; $i < count($result); $i++) {
 		$_cmd_output .= $result[$i] . "<br>";
@@ -162,7 +157,7 @@ if ($cmd == '-H' || $cmd == '-i') {
 else {
 	for ($i = 2; $i < count($result); $i++) {
 		if ($result[$i] != '**') {
-			if (stripos($result[$i], 'Trusted') !== false) {
+			if (stripos($result[$i], 'Trust expires') !== false) {
 				$_cmd_output .= $result[$i] . '<br>**<br>';
 			}
 			else {
@@ -177,12 +172,22 @@ $_cmd_output = empty($_cmd_output) ? 'No devices' : $_cmd_output;
 $_select['audioout'] .= "<option value=\"Local\" " . (($_SESSION['audioout'] == 'Local') ? "selected" : "") . ">MPD Audio output -> Local</option>\n";
 $_select['audioout'] .= "<option value=\"Bluetooth\" " . (($_SESSION['audioout'] == 'Bluetooth') ? "selected" : "") . ">MPD Audio output -> Bluetooth</option>\n";
 
-// Provide a select for removing | disconnecting | pairing | connecting
-if ($cmd == '-p' || $cmd == '-c' || $cmd == '-l' || $cmd == '-s') {
-	if ($cmd == '-p') {$type = 'paired_device';}
-	if ($cmd == '-c') {$type = 'connected_device';}
-	if ($cmd == '-l') {$type = 'scanned_device';}
-	if ($cmd == '-s') {$type = 'scanned_device';}
+// Provide a select for removing, disconnecting, pairing or connecting a device
+$cmd_array = array('-p', '-c', '-l', '-s', '-S');
+if (in_array($cmd, $cmd_array)) {
+	switch ($cmd) {
+		case '-p':
+			$type = 'paired_device';
+			break;
+		case '-c':
+			$type = 'connected_device';
+			break;
+		case '-l':
+		case '-s':
+		case '-S':
+			$type = 'scanned_device';
+			break;
+	}
 
 	for ($i = 0; $i < count($result); $i++) {
 		$token = explode(' ', $result[$i], 3);
