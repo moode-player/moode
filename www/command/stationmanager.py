@@ -370,6 +370,7 @@ Version=2"""
                 self.clear_stations(stations_db_delete)
 
             stations_to_import = stations_bu
+            difference = []
             fields_db = self.get_fields()
             if how == StationManager.IMPORT_CLEAR:
                 self.clear_stations(scope)
@@ -381,13 +382,20 @@ Version=2"""
             fields_db.remove('id') # use auto id for the id
             station_queries = []
             for station in stations_to_import:
-                print('Import {}'.format(station['name']))
+                if station['name'] in difference:
+                    print('Update {}'.format(station['name']))
+                else:
+                    print('Import {}'.format(station['name']))
                 try:
                     self.generate_station_pls(station['name'], station['station'])
                     self.generate_station_logo(station['name'], backup)
-                    self.create_query_station_to_db(station, fields_db)
+
+                    if station['name'] in difference:
+                        self.update_query_station_to_db(station, fields_db)
+                    else:
+                        self.create_query_station_to_db(station, fields_db)
                 except Exception as e:
-                    print("Error on import: {}".format(e))
+                     print("Error on import: {}".format(e))
 
             self.conn.commit()
 
@@ -416,6 +424,16 @@ Version=2"""
             fields_db = ['id'] + fields_db
 
         query = 'INSERT INTO cfg_radio ({}) VALUES ({});'.format(', '.join(fields_db), ', '.join(values) )
+        cursor = self.conn.cursor()
+        cursor.execute(query)
+
+    def update_query_station_to_db(self, station, fields_db):
+        values = []
+        for field in fields_db:
+            if field in station.keys() and field !='type':
+                values.append("{}='{}'".format( field, self.escape(station[field]) if station[field] != "NULL" else ""))
+
+        query = 'UPDATE cfg_radio SET {} WHERE name="{}";'.format(', '.join(values), station['name'] )
         cursor = self.conn.cursor()
         cursor.execute(query)
 
@@ -539,7 +557,7 @@ Version=2"""
             common_fields = list(set(colnames_db) & set(colnames_bu))
             missing_stations_db, additional_stations_db, stations_with_difference, common_stations = self.diff(stations_db, stations_bu, common_fields)
 
-            if len( stations_db_map.keys())==len(common_stations) and all( list(stations_db_map.keys()).count(i)==common_stations.count(i) for i in  stations_db_map.keys()):
+            if len( missing_stations_db) == 0 and len(additional_stations_db) == 0 and len(stations_with_difference) == 0:
                 print('Stations: ok')
             else:
                 print('Stations: differ')
@@ -569,7 +587,7 @@ Version=2"""
                         stations_deleted.append(stations_bu_map[name])
 
                     stations = []
-                    for name in stations_with_difference:
+                    for name in stations_with_difference + additional_stations_db:
                         stations.append(stations_db_map[name])
                     data = {'fields': colnames, 'stations': stations, 'stations_deleted': stations_deleted}
                     diff_backup.writestr('station_data.json', json.dumps(data,  indent=4))
