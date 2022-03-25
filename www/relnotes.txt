@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2022-03-24 TC moOde 8.0.2
+# 2022-03-25 TC moOde 8.0.2
 #
 ################################################################################
 
@@ -21,7 +21,10 @@ Updates
 - UPD: Add force_eeprom_read=0 to /boot/config.txt for all Hifiberry cards
 - UPD: Add BlueZ Config SCAN options and longer trust time
 - UPD: Add pairing agent restart to Bluetooth section of Audio Config
-- UPD: Add --btreset option to moodeutl
+- UPD: Add -c (Detect highest CIFS protocol version) to moodeutl
+- UPD: Add -C (Detect CIFS shares) to moodeutl
+- UPD: Add -n (Run network scan) to moodeutl
+- UPD: Add --btreset (Reset Bluetooth to off) to moodeutl
 
 Radio stations
 
