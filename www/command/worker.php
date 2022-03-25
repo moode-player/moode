@@ -83,6 +83,9 @@ pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
 
+// Ensure package holds are in effect
+sysCmd('moode-apt-mark hold > /dev/null 2>&1');
+
 // Ensure certain files exist and with the correct permissions
 if (!file_exists('/var/local/www/playhistory.log')) {
 	sysCmd('touch /var/local/www/playhistory.log');
