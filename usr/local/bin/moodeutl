@@ -132,7 +132,7 @@ switch ($option) {
 		system_monitor();
 		break;
 	case '-n':
-		scan_network();
+		detect_nbt_hosts();
 		break;
 	case '-o':
 		list_audio_overlays();
@@ -192,7 +192,7 @@ With no OPTION print the help text and exit.
  -F\t\tPrint full alsacap info
  -l\t\tPrint moode log
  -m\t\tRun system monitor
- -n\t\tRun network scan
+ -n\t\tDetect NBT (Samba) hosts
  -o\t\tList audio overlays
  -q\t\tQuery sql database
  -r\t\tRestart servers
@@ -558,6 +558,11 @@ function detect_cifs_shares($argv) {
 	echo shell_exec("smbclient -N -g -L " . $argv[2] . " | grep Disk | cut -f 2 -d '|'");
 }
 
-function scan_network() {
-	echo shell_exec("nmblookup -S -T '*' | grep '*<00>' | cut -f 1 -d '*'");
+function detect_nbt_hosts() {
+	// Run a few times to pick up as many hosts as possible
+	for ($i = 0; $i < 3; $i++) {
+		$output = shell_exec("nmblookup -S -T '*' | grep '*<00>' | cut -f 1 -d '*'");
+	}
+
+	echo $output;
 }
