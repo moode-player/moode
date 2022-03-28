@@ -1073,18 +1073,29 @@ function chkMaintenance() {
 		// Clear logs
 		$result = sysCmd('/var/www/command/util.sh "clear-syslogs"');
 		if (!empty($result)) {
-			workerLog('Maintenance: Warning: Problem clearing system logs');
+			workerLog('worker: Maintenance: Warning: Problem clearing system logs');
 		}
 
 		// Compact SQLite database
 		$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
 		if (!empty($result)) {
-			workerLog('Maintenance: Warning: Problem compacting SQLite database');
+			workerLog('worker: Maintenance: Warning: Problem compacting SQLite database');
 		}
 
 		// Purge temp or unwanted resources
 		sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
 		sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Possible leftover temp file created by Radio Manager export
+
+		// Purge bogus session files
+		// The only valid file is the one corresponding to $_SESSION['sessionid']
+		$dir = '/var/local/php/';
+		$files = scandir($dir);
+		foreach ($files as $file) {
+			if (substr($file, 0, 5) == 'sess_' && $file != 'sess_' . $_SESSION['sessionid']) {
+				workerLog('worker: Maintenance: Purged unneeded session file (' . $file . ')');
+				syscmd('rm ' . $dir . $file);
+			}
+		}
 
 		// LocalUI browser
 		// NOTE: This is a workaround for a chromium-browser bug that causes 100% memory utilization after ~3 hours
