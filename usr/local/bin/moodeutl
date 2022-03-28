@@ -522,7 +522,7 @@ function detect_cifs_version($argv) {
 		return;
 	}
 
-	$output = trim(shell_exec("nmap " . $argv[2] . " -p 139 --script smb-protocols |grep \|"));
+	$output = trim(shell_exec("nmap -Pn " . $argv[2] . " -p 139 --script smb-protocols |grep \|"));
 	$output = explode("\n", $output);
 	$parts = explode('  ', end($output));
 	$msg = 'CIFS version could not be detected' . "\n";

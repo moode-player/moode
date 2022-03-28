@@ -2348,7 +2348,7 @@ function sourceMount($action, $id = '') {
  * Detect highest available suported cifs protocol of source
  */
 function detectCifsProtocol($host) {
-	$output = sysCmd("nmap " . $host . " -p 139 --script smb-protocols |grep \|");
+	$output = sysCmd("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|");
 	$parts = explode('  ', end($output));
 	$version = NULL;
 	if (count($parts) >= 2)  {
@@ -3841,6 +3841,6 @@ function getStreamTimeout() {
 function scanForMPDHosts() {
 	$this_ipaddr = sysCmd('hostname -I')[0];
 	$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
-	$scan_results = sysCmd('nmap -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+	$scan_results = sysCmd('nmap -Pn -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
 	return sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2');
 }
