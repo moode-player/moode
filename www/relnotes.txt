@@ -11,6 +11,26 @@
 
 ################################################################################
 #
+# 2022-MM-DD TC moOde 8.1.0
+#
+################################################################################
+
+New features
+
+Updates
+
+- UPD: Try to detect Cifs protocol even when host appears to be offline
+- UPD: Purge extraneous session files during the maintenance task
+- UPD: Default Playlist (new image only)
+
+Radio stations
+
+- UPD: KanalK
+
+Bug fixes
+
+################################################################################
+#
 # 2022-03-25 TC moOde 8.0.2
 #
 ################################################################################
