@@ -64,19 +64,30 @@
 				<li><a href="snd-config.php" class="btn btn-large"><i class="fas fa-volume-up"></i><br>Audio</a></li>
 				<li><a href="net-config.php" class="btn btn-large"><i class="fas fa-sitemap"></i><br>Network</a></li>
 				<li><a href="sys-config.php" class="btn btn-large"><i class="fas fa-desktop-alt"></i><br>System</a></li>
+				<li><a href="mpd-config.php" class="btn btn-large"><i class="fas fa-play"></i><br>MPD</a></li>
+				<?php if ($_SESSION['feat_bitmask'] & $FEAT_MULTIROOM) { ?>
+					<li><a href="trx-config.php" class="btn btn-large"><i class="fas fas fa-rss"></i><br>Multiroom</a></li>
+				<?php } ?>
+				<li><a href="eqp-config.php" class="btn btn-large"><i class="fas fa-sliders-v-square"></i><br>Parametric EQ</a></li>
+				<li><a href="eqg-config.php" class="btn btn-large"><i class="fas fa-sliders-v-square"></i><br>Graphic EQ</a></li>
+				<li><a href="cdsp-config.php" class="btn btn-large"><i class="fas fa-sliders-v-square"></i><br>CamillaDSP</a></li>
+				<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m"><i class="fas fa-alarm-clock"></i><br>Clock radio</a></li>
+				<?php if ($_SESSION['feat_bitmask'] & $FEAT_INPSOURCE) { ?>
+					<li><a href="inp-config.php" class="btn btn-large"><i class="fal fa-scrubber"></i><br>Input source</a></li>
+				<?php } ?>
 			</ul>
 			<br>
 			<ul>
-				<li><a href="mpd-config.php" class="btn btn-small row2-btns">MPD settings</a></li>
-				<li><a href="eqp-config.php" class="btn btn-small row2-btns">Parametric EQ</a></li>
+				<!--li><a href="mpd-config.php" class="btn btn-small row2-btns">MPD settings</a></li-->
+				<!--li><a href="eqp-config.php" class="btn btn-small row2-btns">Parametric EQ</a></li>
 				<li><a href="eqg-config.php" class="btn btn-small row2-btns">Graphic EQ</a></li>
 				<li><a href="cdsp-config.php" class="btn btn-small row2-btns">CamillaDSP</a></li>
-				<li class="context-menu"><a href="#notarget" class="btn btn-small row2-btns" data-cmd="setforclockradio-m">Clock radio</a></li>
+				<li class="context-menu"><a href="#notarget" class="btn btn-small row2-btns" data-cmd="setforclockradio-m">Clock radio</a></li-->
 				<?php if ($_SESSION['feat_bitmask'] & $FEAT_INPSOURCE) { ?>
-					<li><a href="inp-config.php" class="btn btn-small row2-btns">Input source</a></li>
+					<!--li><a href="inp-config.php" class="btn btn-small row2-btns">Input source</a></li-->
 				<?php } ?>
 				<?php if ($_SESSION['feat_bitmask'] & $FEAT_MULTIROOM) { ?>
-					<li><a href="trx-config.php" class="btn btn-small row2-btns">Multiroom</a></li>
+					<!--li><a href="trx-config.php" class="btn btn-small row2-btns">Multiroom</a></li-->
 				<?php } ?>
 			</ul>
 		</div>

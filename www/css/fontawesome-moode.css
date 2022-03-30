@@ -374,6 +374,9 @@ readers do not read off random characters that represent icons */
 .fa-save:before {
   content: "\f0c7"; }
 
+.fa-scrubber:before {
+  content: "\f2f8"; }
+
 .fa-search:before {
   content: "\f002"; }
 

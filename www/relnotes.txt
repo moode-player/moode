@@ -22,10 +22,11 @@ Updates
 - UPD: Store WiFi and AP mode PSK's (passwords) in backup zip
 - UPD: Replace auto-reboot in Restore by "reboot required" message
 - UPD: Add option to include playlists in Backup/Restore
-- UPD: Restore the Default Playlist if present in the backup 
+- UPD: Restore the Default Playlist if present in the backup
 - UPD: Try to detect Samba protocol even when host appears to be offline
 - UPD: Purge extraneous session files during the maintenance task
 - UPD: Add new Soma FM stations to Default Playlist (new image only)
+- UPD: Use all Tiles on Menu, Configure modal
 - UPD: Improve help text in Save playlist modal
 
 Radio stations
