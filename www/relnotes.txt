@@ -19,15 +19,23 @@ New features
 
 Updates
 
-- UPD: Try to detect Cifs protocol even when host appears to be offline
+- UPD: Store WiFi and AP mode PSK's (passwords) in backup zip
+- UPD: Replace auto-reboot in Restore by "reboot required" message
+- UPD: Add option to include playlists in Backup/Restore
+- UPD: Restore the Default Playlist if present in the backup 
+- UPD: Try to detect Samba protocol even when host appears to be offline
 - UPD: Purge extraneous session files during the maintenance task
-- UPD: Default Playlist (new image only)
+- UPD: Add new Soma FM stations to Default Playlist (new image only)
+- UPD: Improve help text in Save playlist modal
 
 Radio stations
 
 - UPD: KanalK
 
 Bug fixes
+
+- FIX: Reconnect screen is displayed after Create Backup
+- FIX: Backup/Restore back arrow not returning to System Config
 
 ################################################################################
 #
