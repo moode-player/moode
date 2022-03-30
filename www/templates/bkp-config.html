@@ -29,8 +29,8 @@
 			<fieldset>
 				<legend>Backup options</legend>
 				<p>
-					Specify which parts of the system will be included in the backup zip file.<br>
-					A script file may be added that performs custom actions during the restore process. It is run during moOde startup as part of restoring the Configuration settings.
+					Specify which parts of the system will be included in the backup zip file. A script file may optionally be added that performs custom actions during the restore process. It is run during moOde startup as part of restoring the Configuration settings.
+					Note that WiFi and AP mode passwords will be included in the Configuration settings part of the backup.
 				</p>
 				<br>
 				<div class="control-group">
@@ -85,10 +85,18 @@
 							Backup user added radio stations.
 						</span>
 					</div>
+
+					<label class="control-label">Playlists</label>
+					<div class="controls">
+						$_togglebtn_backup_playlists
+						<span id="info-backup_playlists" class="help-block-configs help-block-margin2 hide">
+							Backup playlists.
+						</span>
+					</div>
 				</div>
 
 				<div class="control-group">
-					<label class="control-label" for="wlan0pwd">WiFi password</label>
+					<!--label class="control-label" for="wlan0pwd">WiFi password</label>
 					<div class="controls">
 						<input class="input-large" type="password" pattern=".{8,64}" id="backup_wlan0pwd" name="backup_wlan0pwd" value="$_wlan0pwd" >
 						<a aria-label="Help" class="info-toggle" data-cmd="info-backup_wlan0pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -97,10 +105,10 @@
 							Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.
 						</span>
 					</div>
-					<br><br>
+					<br><br-->
 
 					<div class="controls">
-						<button class="btn btn-medium btn-primary" type="submit" name="backup_create" form="backup" value="1">Create Backup</button>
+						<button id="backup_create" class="btn btn-medium btn-primary" type="submit" name="backup_create" form="backup" value="1">Create Backup</button>
 						<div class="help-block-configs help-block-margin">
 							Backup zip file will be downloaded to the default Downloads folder.
 						</div>
@@ -114,8 +122,8 @@
 			<fieldset>
 				<legend>Restore options</legend>
 				<p>
-					Specify which parts of the system will be restored.<br>
-					The Yes/No option buttons are set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring the Configuration settings.
+					Specify which parts of the system will be restored.
+					The Yes/No option buttons are automatically set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring the Configuration settings.
 				</p>
 				<br>
 				<div class="control-group">
@@ -152,6 +160,13 @@
 							Restore user added radio stations.
 						</span>
 					</div>
+
+					<label class="control-label">Playlists</label>
+					<div class="controls">
+					$_togglebtn_restore_playlists
+					<span id="info-restore_playlists" class="help-block-configs help-block-margin2 hide">
+						Restore playlists.
+					</span>
 				</div>
 
 				<div class="control-group">
@@ -175,9 +190,9 @@
 					<br><br>
 
 					<div class="controls">
-						<button class="btn btn-medium btn-primary btn-submit" type="submit" name="restore_start" form="restore" value="1">Start Restore</button>
+						<button class="btn btn-medium btn-primary btn-submit" type="submit" name="restore_start" form="restore" value="1">Restore System</button>
 						<div id="info-start-restore" class="help-block-configs help-block-margin">
-							If configuration settings are part of the restore an automatic reboot will be performed during moOde startup.
+							NOTE: A reboot is required if configuration settings are part of the restore.
 						</div>
 					</div>
 				</div>

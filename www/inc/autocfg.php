@@ -348,12 +348,13 @@ function autoConfigSettings() {
 		'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns', 'wlancountry'],
 		'handler' => function($values, $optionals) {
 			$dbh = cfgdb_connect();
-			$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
+			//$psk = genWpaPSK($values['wlanssid'], $values['wlanpwd']);
 			$netcfg = sdbquery('select * from cfg_network', $dbh);
 			$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
 				'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
-				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
-				'wlan_channel' => '', 'wlan_country' =>  $netcfg[1]['wlan_country']);
+				//'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+				'wlanssid' => $values['wlanssid'], 'wlansec' => $values['wlansec'], 'wlanpwd' => $values['wlanpwd'],
+				'wlan_psk' => $values['wlanpwd'], 'wlan_channel' => '', 'wlan_country' =>  $netcfg[1]['wlan_country']);
 			if (key_exists('wlanmethod', $optionals)) {$value['method'] = $optionals['wlanmethod'];}
 			if (key_exists('wlanipaddr', $optionals)) {$value['ipaddr'] = $optionals['wlanipaddr'];}
 			if (key_exists('wlannetmask', $optionals)) {$value['netmask'] = $optionals['wlannetmask'];}
@@ -374,7 +375,8 @@ function autoConfigSettings() {
 			$result = $result."wlanpridns = \"" . $row['pridns'] . "\"\n";
 			$result = $result."wlansecdns = \"" . $row['secdns'] . "\"\n";
 			$result = $result."wlanssid = \"" . $row['wlanssid'] . "\"\n";
-			$result = $result."wlanpwd = \"" . "" . "\"\n"; // keep empty
+			$result = $result."wlanpwd = \"" . $row['wlanpwd'] . "\"\n";
+			//$result = $result."wlanpwd = \"" . "" . "\"\n"; // keep empty
 			$result = $result."wlansec = \"" . $row['wlansec'] . "\"\n";
 			$result = $result."wlancountry = \"" . $row['wlan_country'] . "\"\n";
 			return $result;
@@ -383,9 +385,9 @@ function autoConfigSettings() {
 		'Network (apd0)',
 		['requires' => ['apdssid', 'apdpwd', 'apdchan'], 'handler' => function($values) {
 			$dbh = cfgdb_connect();
-			$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
+			//$psk = genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
-				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $values['apdpwd'], 'wlan_psk' =>  $values['apdpwd'],
 				'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
 			cfgdb_update('cfg_network', $dbh, 'apd0', $value);
 			cfgHostApd();
@@ -393,7 +395,8 @@ function autoConfigSettings() {
 			$dbh = cfgdb_connect();
 			$row = sdbquery("select * from cfg_network where iface='apd0'", $dbh)[0];
 			$result = $result . "apdssid = \"" . $row['wlanssid'] . "\"\n";
-			$result = $result . "apdpwd = \"" . "" . "\"\n"; // keep empty
+			$result = $result . "apdpwd = \"" . $row['wlanpwd'] . "\"\n";
+			//$result = $result . "apdpwd = \"" . "" . "\"\n"; // keep empty
 			$result = $result . "apdchan = \"" . $row['wlan_channel'] . "\"\n";
 			return $result;
 		}],

@@ -3288,6 +3288,9 @@ function storeBackLink($section, $tpl) {
 	if ($tpl == 'src-config.html') {
 		$_SESSION['config_back_link'] = '/lib-config.php';
 	}
+	else if ($tpl == 'bkp-config.html') {
+		$_SESSION['config_back_link'] = '/sys-config.php';
+	}
 
 	if ($tpl == 'cdsp-config.html') {
 		if ($referer_link == '/index.php') {

@@ -21,7 +21,7 @@
 # - Backup with selection what to backup
 # - Restore with selection what to backup
 # - Info of a backup
-# - contains moodecfg.ini, radiostations and camilladsp
+# - Contains moodecfg.ini, radio stations, station logos, camilladsp and playlists
 #
 import argparse
 
@@ -37,7 +37,7 @@ from stationmanager import StationManager
 
 
 class BackupManager(StationManager):
-    VERSION = "1.0"
+    VERSION = "2.0"
 
     CDSPCFG_BASE = '/usr/share/camilladsp/'
     MOODECFGINI_TMP = '/tmp/moodecfg.ini'
@@ -152,7 +152,8 @@ class BackupManager(StationManager):
                     backup.extractall (BackupManager.CDSPCFG_RESTORE_BASE, names)
 
             if BackupManager.OPT_PL in what:
-                names = [ name  for name in backup.namelist() if 'playlists/' in name  and not 'Default Playlist.m3u' in name ]
+                #names = [ name  for name in backup.namelist() if 'playlists/' in name  and not 'Default Playlist.m3u' in name ]
+                names = [ name  for name in backup.namelist() if 'playlists/' in name ]
                 if len(names) >= 0:
                     print('Restore playlist')
                     backup.extractall (BackupManager.PLAYLIST_PATH, names)
@@ -162,7 +163,7 @@ class BackupManager(StationManager):
         cdspPresent = False
         rs_moode_present = False
         rs_other_present = False
-
+        playlistsPresent = False
 
         if os.path.exists(self.backup_file):
             # fake target db version
@@ -183,6 +184,8 @@ class BackupManager(StationManager):
                 names = [ name  for name in backup.namelist() if 'camilladsp/' in name]
                 cdspPresent = len( names) >= 1
 
+                names = [ name  for name in backup.namelist() if 'playlists/' in name]
+                playlistsPresent = len( names) >= 1
 
         content = []
         if configPresent:
@@ -196,6 +199,9 @@ class BackupManager(StationManager):
             content.append('r_other')
         if cdspPresent:
             print('cdsp')
+            content.append('cdsp')
+        if playlistsPresent:
+            print('playlists')
             content.append('cdsp')
 
         return content

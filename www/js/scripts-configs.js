@@ -298,6 +298,13 @@ jQuery(document).ready(function($){ 'use strict';
         $.post('command/moode.php?cmd=upd_rx_adv_toggle', {'adv_toggle': labelText});
     });
 
+    // Button "Create Backup"
+    // This global is used to prevent the "Reconnect" screen from being displayed while a backup zip is being created/downloaded
+    // NOTE: This global is tested and reset to false in playerlib.js function renderReconnect()
+    $('#backup_create').click(function(e) {
+        GLOBAL.backupCreate = true;
+    });
+
     // Info button (i) show/hide toggle
     $('.info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');

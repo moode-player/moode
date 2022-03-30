@@ -138,6 +138,7 @@ var GLOBAL = {
     twoArgFilters: ['album', 'albumartist', 'any', 'artist', 'composer', 'conductor', 'encoded', 'file', 'folder', 'format', 'genre', 'label', 'performer', 'title', 'work', 'year'],
     allFilters: [],
     sbw: 0,
+    backupCreate: false,
     busySpinnerSVG: "<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42' stroke='#fff'><g fill='none' fill-rule='evenodd'><g transform='translate(3 3)' stroke-width='4'><circle stroke-opacity='.35' cx='18' cy='18' r='18'/><path d='M36 18c0-9.94-8.06-18-18-18'><animateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='1s' repeatCount='indefinite'/></path></g></g></svg>",
 };
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
@@ -575,7 +576,7 @@ function screenSaver(cmd) {
     }
 }
 
-// reconnect/reboot/restart
+// Reconnect/reboot/restart
 function renderReconnect() {
 	//console.log('renderReconnect(): UI.restart=(' + UI.restart + ')');
 	if (UI.restart == 'restart') {
@@ -584,6 +585,9 @@ function renderReconnect() {
 	else if (UI.restart == 'shutdown') {
 		$('#shutdown').show();
 	}
+    else if (GLOBAL.backupCreate) {
+        // Don't display the screen when a backup is being created/downloaded
+    }
 	else {
 		$('#reconnect').show();
 	}
@@ -592,6 +596,7 @@ function renderReconnect() {
 
 	window.clearInterval(UI.knob);
 	UI.hideReconnect = true;
+    GLOBAL.backupCreate = false;
 }
 
 function hideReconnect() {
