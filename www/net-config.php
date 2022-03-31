@@ -36,7 +36,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	// wlan0
 	$value['wlanssid'] = 'None (activates AP mode)';
 	$value['wlansec'] = 'wpa';
-	$value['wlan_country'] = $netcfg[1]['wlan_country']; // preserve country code
+	$value['wlan_country'] = $netcfg[1]['wlan_country']; // Preserve country code
 	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 
 	submitJob('netcfg', '', 'Network config reset', 'Restart required');
@@ -60,11 +60,33 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$psk = $netcfg[1]['wlan_psk']; // Existing
 	}
 
+	// Update cfg_network
 	$value = array('method' => $method, 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'],
 		'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'],
 		'wlanssid' => $_POST['wlan0ssid'], 'wlansec' => $_POST['wlan0sec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
 		'wlan_country' => $_POST['wlan0country'], 'wlan_channel' => '');
 	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
+
+	// Add/update cfg_ssid
+	if ($_POST['wlan0ssid'] != 'None (activates AP mode)') {
+		$result = sdbquery("select * from cfg_ssid where ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
+		if ($result === true) {
+			// Add
+			$values =
+				"'"	. SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
+				"'" . $_POST['wlan0sec'] . "'," .
+				"'" . $psk . "'";
+			$result = sdbquery('insert into cfg_ssid values (NULL,' . $values . ')', $dbh);
+		}
+		else {
+			// Update
+			$result = sdbquery("update cfg_ssid set " .
+				"ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
+				"sec='" . $_POST['wlan0sec'] . "'," .
+				"psk='" . $psk . "' " .
+				"where id='" . $result[0]['id'] . "'" , $dbh);
+		}
+	}
 
 	// apd0
 	if ($_POST['wlan0apdssid'] != $netcfg[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $netcfg[2]['wlan_psk']) {
@@ -131,7 +153,7 @@ else {
 
 // SSID, scanner, security protocol, password
 if (isset($_POST['scan']) && $_POST['scan'] == '1') {
-	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'"); // do twice to improve results
+	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'"); // Do twice to improve results
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'");
 	$array = array();
 	$array[0] = 'None (activates AP mode)';
@@ -139,7 +161,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 
 	foreach ($ssidList as $ssid) {
 		$ssid = trim($ssid);
-		// additional filtering
+		// Additional filtering
 		if (!empty($ssid) && false === strpos($ssid, '\x')) {
 			$selected = ($netcfg[1]['wlanssid'] == $ssid) ? 'selected' : '';
 			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);

@@ -17,6 +17,8 @@
 
 New features
 
+- NEW: Support for multiple WiFi SSID's
+
 Updates
 
 - UPD: Store WiFi and AP mode PSK's (passwords) in backup zip
