@@ -577,7 +577,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 /* For updater view modal */
 .updater-relnotes {list-style-type:none;margin-left:0;}
 /* Show/hide password plaintext */
-.show-hide-password {font-size:18px;margin-left:.5em}
+.show-hide-password {position:relative;top:3px;font-size:18px;margin-left:.5em}
 /* shutdown/restart */
 #power-modal {top:5vh;}
 #power-modal .modal-body .btn {color:#eee;background-color:rgba(228,46,46,0.45);width:12em;margin:1em auto 2em auto;}
