@@ -328,7 +328,7 @@ if (!empty($wlan0[0])) {
 	}
 	// Case: ssid exists
 	else {
-		workerLog('worker: wlan0 trying SSID (' . $result[1]['wlanssid'] . ')');
+		workerLog('worker: wlan0 trying configured SSID (' . $result[1]['wlanssid'] . ')');
 		$ssidblank = false;
 		$_SESSION['apactivated'] = false;
 	}
@@ -351,6 +351,10 @@ if (!empty($wlan0[0])) {
 					workerLog('worker: wlan0 AP mode not started (eth0 active)');
 					$_SESSION['apactivated'] = false;
 				}
+			}
+			else {
+				$result = sysCmd("iwconfig wlan0 | grep 'ESSID' | awk -F':' '{print $2}' | awk -F'\"' '{print $2}'");
+				workerLog('worker: wlan0 actual SSID connected is (' . $result[0] . ')');
 			}
 		}
 	}
