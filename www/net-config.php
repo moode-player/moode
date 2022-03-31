@@ -23,10 +23,10 @@ require_once dirname(__FILE__) . '/inc/playerlib.php';
 playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 
-// get current settings: [0] = eth0, [1] = wlan0, [2] = apd0
+// Get current settings: [0] = eth0, [1] = wlan0, [2] = apd0
 $netcfg = sdbquery('select * from cfg_network', $dbh);
 
-// reset eth0 and wlan0 to defaults
+// Reset eth0 and wlan0 to defaults
 if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	// eth0
 	$value = array('method' => 'dhcp', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '', 'wlanssid' => '',
@@ -39,11 +39,10 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	$value['wlan_country'] = $netcfg[1]['wlan_country']; // preserve country code
 	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
 
-	// submit job
 	submitJob('netcfg', '', 'Network config reset', 'Restart required');
 }
 
-// update interfaces
+// Update interfaces
 if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// eth0
 	$value = array('method' => $_POST['eth0method'], 'ipaddr' => $_POST['eth0ipaddr'], 'netmask' => $_POST['eth0netmask'],
@@ -58,7 +57,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
 	}
 	else {
-		$psk = $netcfg[1]['wlan_psk']; // existing
+		$psk = $netcfg[1]['wlan_psk']; // Existing
 	}
 
 	$value = array('method' => $method, 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'],
@@ -72,7 +71,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
 	}
 	else {
-		$psk = $netcfg[2]['wlan_psk']; // existing
+		$psk = $netcfg[2]['wlan_psk']; // Existing
 	}
 
 	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
@@ -80,24 +79,23 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		'wlan_country' => '', 'wlan_channel' => $_POST['wlan0apdchan']);
 	cfgdb_update('cfg_network', $dbh, 'apd0', $value);
 
-	// submit job
 	submitJob('netcfg', '', 'Changes saved', 'Restart required');
 }
 
-// populate form fields
+// Populate form fields
 
-// get updated settings: [0] = eth0, [1] = wlan0, [2] = apd0
+// Get updated settings: [0] = eth0, [1] = wlan0, [2] = apd0
 $netcfg = sdbquery('select * from cfg_network', $dbh);
 
 // ETH0
 $_eth0method .= "<option value=\"dhcp\" "   . ($netcfg[0]['method'] == 'dhcp' ? 'selected' : '') . " >DHCP</option>\n";
 $_eth0method .= "<option value=\"static\" " . ($netcfg[0]['method'] == 'static' ? 'selected' : '') . " >STATIC</option>\n";
 
-// display ipaddr or message
+// Display ipaddr or message
 $ipaddr = sysCmd("ip addr list eth0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 $_eth0currentip = empty($ipaddr[0]) ? 'Not in use' : $ipaddr[0];
 
-// static ip
+// Static IP
 $_eth0ipaddr = $netcfg[0]['ipaddr'];
 //$_eth0netmask = $netcfg[0]['netmask'];
 $_eth0netmask .= "<option value=\"24\" " . ($netcfg[0]['netmask'] == '24' ? 'selected' : '') . " >255.255.255.0</option>\n";
@@ -110,10 +108,10 @@ $_eth0secdns = $netcfg[0]['secdns'];
 $_wlan0method .= "<option value=\"dhcp\" " . ($netcfg[1]['method'] == 'dhcp' ? 'selected' : '') . " >DHCP</option>\n";
 $_wlan0method .= "<option value=\"static\" " . ($netcfg[1]['method'] == 'static' ? 'selected' : '') . " >STATIC</option>\n";
 
-// get ipaddr if any
+// Get ipaddr if any
 $ipaddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 
-// get link quality and signal level
+// Get link quality and signal level
 if (!empty($ipaddr[0])) {
 	$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 	$array = explode('=', $signal[0]);
@@ -123,7 +121,7 @@ if (!empty($ipaddr[0])) {
 	$level = strpos($lev[0], 'dBm') !== false ? $lev[0] : $lev[0] . '%';
 }
 
-// determine message to display
+// Determine message to display
 if ($_SESSION['apactivated'] == true) {
 	$_wlan0currentip = empty($ipaddr[0]) ? 'Unable to activate AP mode' : $ipaddr[0] . ' - AP mode active';
 }
@@ -131,7 +129,7 @@ else {
 	$_wlan0currentip = empty($ipaddr[0]) ? 'Not in use' : $ipaddr[0] . ' - quality ' . $quality . '%, level ' . $level;
 }
 
-// ssid, scanner, security protocol, password
+// SSID, scanner, security protocol, password
 if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'"); // do twice to improve results
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'");
@@ -165,7 +163,7 @@ $_wlan0sec .= "<option value=\"wpa\"" . ($netcfg[1]['wlansec'] == 'wpa' ? 'selec
 $_wlan0sec .= "<option value=\"none\"" . ($netcfg[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
 $_wlan0pwd = $netcfg[1]['wlanpwd']; // old: htmlentities($netcfg[1]['wlanpwd'])
 
-// wifi country code
+// WiFi country code
 $zonelist = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
 $zonelist_sorted = array();
 for ($i = 0; $i < count($zonelist); $i++) {
@@ -180,7 +178,7 @@ foreach ($zonelist_sorted as $zone) {
 	$_wlan0country .= sprintf('<option value="%s" %s>%s</option>\n', $country[1], $selected, $country[0]);
 }
 
-// static ip
+// Static ip
 $_wlan0ipaddr = $netcfg[1]['ipaddr'];
 //$_wlan0netmask = $netcfg[1]['netmask'];
 $_wlan0netmask .= "<option value=\"24\" "   . ($netcfg[1]['netmask'] == '24' ? 'selected' : '') . " >255.255.255.0</option>\n";
@@ -189,7 +187,7 @@ $_wlan0gateway = $netcfg[1]['gateway'];
 $_wlan0pridns = $netcfg[1]['pridns'];
 $_wlan0secdns = $netcfg[1]['secdns'];
 
-// access point
+// Access point
 $_wlan0apdssid = $netcfg[2]['wlanssid'];
 $_wlan0apdchan = $netcfg[2]['wlan_channel'];
 $_wlan0apdpwd = $netcfg[2]['wlanpwd'];
