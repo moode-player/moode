@@ -17,7 +17,7 @@
 
 New features
 
-- NEW: Support for multiple WiFi SSID's
+- NEW: Support for multiple WiFi networks
 
 Updates
 

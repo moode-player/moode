@@ -2889,7 +2889,7 @@ function cfgNetIfaces() {
 	$data .= "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n";
 	$data .= "update_config=1\n\n";
 	if (!empty($cfg_network[1]['wlanssid']) && $cfg_network[1]['wlanssid'] != 'None (activates AP mode)') {
-		// Primary SSID: first block and highest prioroty
+		// Primary SSID: first block and highest priority
 		$data .= "network={\n";
 		$data .= 'ssid=' . '"' . $cfg_network[1]['wlanssid'] . '"' . "\n";
 		$data .= 'priority=100' . "\n";
@@ -2904,12 +2904,12 @@ function cfgNetIfaces() {
 		}
 		$data .= "}\n";
 
-		// Placeholder for adding SSID's from cfg_ssid
+		// Add saved SSID's
 		$cfg_ssid = sdbquery("select * from cfg_ssid where ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
 		foreach($cfg_ssid as $row) {
 			$data .= "network={\n";
 			$data .= 'ssid=' . '"' . $row['ssid'] . '"' . "\n";
-			$data .= 'priority=5' . "\n";
+			$data .= 'priority=10' . "\n";
 			$data .= "scan_ssid=1\n"; // Scan even if SSID is hidden
 			// Secure
 			if ($row['sec'] == 'wpa') {

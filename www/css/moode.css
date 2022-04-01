@@ -146,6 +146,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .multiroom-modal-vol {margin-top:0!important;text-transform:none!important;width:3.25em!important;}
 .modal .multiroom-modal-mute {margin-top:0!important;}
 
+/* Saved SSID list modal */
+.modal .saved-ssid-modal-delete {margin-right:1em!important;}
+
 /* update package txt ol */
 #update-pkg-ol {font-family:courier new;}
 #update-pkg-ol li {line-height:1em;}
