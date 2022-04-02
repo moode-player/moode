@@ -26,6 +26,7 @@ Updates
 - UPD: Add option to include playlists in Backup/Restore
 - UPD: Restore the Default Playlist if present in the backup
 - UPD: Try to detect Samba protocol even when host appears to be offline
+- UPD: Tracks added to the Queue are ordered same as in Tag view
 - UPD: Purge extraneous session files during the maintenance task
 - UPD: Add new Soma FM stations to Default Playlist (new image only)
 - UPD: Use all Tiles on Menu, Configure modal
@@ -34,11 +35,14 @@ Updates
 Radio stations
 
 - UPD: KanalK
+- UPD: DR P1 - P4, P6, P8
 
 Bug fixes
 
 - FIX: Reconnect screen is displayed after Create Backup
 - FIX: Backup/Restore back arrow not returning to System Config
+- FIX: Top margin for EDIT button on src-config
+
 
 ################################################################################
 #
