@@ -1501,10 +1501,23 @@ $('#context-menu-lib-album a').click(function(e) {
 		$('img.lib-coverart').removeClass('active');
 	}
 
-	var files = [];
-	for (var i in filteredSongs) {
-		files.push(filteredSongs[i].file);
-	}
+    var files = [];
+    if (SESSION.json['library_tagview_sort'] == 'Artist/Year') {
+        // Order the files according the the order of the albums
+        for (i = 0; i < filteredAlbums.length; i++) {
+            for (j = 0; j < filteredSongs.length; j++) {
+                if (filteredSongs[j].key == filteredAlbums[i].key) {
+                    files.push(filteredSongs[j].file);
+                }
+            }
+        }
+    }
+    else {
+        // Order will be correct as-is
+        for (var i in filteredSongs) {
+    		files.push(filteredSongs[i].file);
+    	}
+    }
 	//console.log('files= ' + JSON.stringify(files));
 
 	if ($(this).data('cmd') == 'add_group' || $(this).data('cmd') == 'add_group_next') {
