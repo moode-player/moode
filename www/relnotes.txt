@@ -39,6 +39,7 @@ Radio stations
 
 Bug fixes
 
+- FIX: Play next an album when Queue empty
 - FIX: Reconnect screen is displayed after Create Backup
 - FIX: Backup/Restore back arrow not returning to System Config
 - FIX: Top margin for EDIT button on src-config

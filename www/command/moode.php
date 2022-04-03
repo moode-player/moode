@@ -256,7 +256,8 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			$status = parseStatus(getMpdStatus($sock));
 			$cmds = addGroupToQueue($_POST['path']);
 			if ($_GET['cmd'] == 'add_group_next') {
-				array_push($cmds, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
+				array_push($cmds, 'move ' . $status['playlistlength'] . ':' .
+					($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
 			}
 			chainMpdCmds($sock, $cmds);
 			break;
@@ -279,7 +280,10 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				$cmds = addGroupToQueue($_POST['path']);
 				if ($_GET['cmd'] == 'play_group_next') {
 					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
-					array_push($cmds, 'move ' . $status['playlistlength'] . ':' . ($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
+					if ($pos != 0) {
+						array_push($cmds, 'move ' . $status['playlistlength'] . ':' .
+							($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
+					}
 				}
 				else {
 					$pos = $status['playlistlength'];
