@@ -299,7 +299,7 @@ img.coverart {border-style:none;border-radius:.1em;box-shadow:0 .1em .2em rgba(3
 
 #viewswitch.va .view-all, #viewswitch.va .view-recents, #viewswitch.va .adv-searchbtn, #viewswitch.va #viewswitch-search, #viewswitch.va .album-view-btn .pane {display:block;}
 #viewswitch.vt .view-all, #viewswitch.vt .view-recents, #viewswitch.vt .adv-searchbtn, #viewswitch.vt #viewswitch-search, #viewswitch.vt .tag-view-btn .pane {display:block;}
-#viewswitch.va .album-view-btn, #viewswitch.vt .album-view-btn {border-bottom: 1px solid rgba(128,128,128,0.2);}
+/*#viewswitch.va .album-view-btn, #viewswitch.vt .album-view-btn {border-bottom: 1px solid rgba(128,128,128,0.2);}*/
 #viewswitch.vr .radio-view-btn .pane {display:block;}
 #viewswitch.vf .folder-view-btn .pane {display:block;}
 
