@@ -215,7 +215,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#msingle {display:none;}
 	#maddfav i {font-size:1.1em;}
 	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
-	#playqueue-search, #lib-album-search, #pl-save, #ra-search {margin-left: 0px;}
+	#playqueue-search, #lib-album-search, #pl-save, #ra-search, #pl-search {margin-left: 0px;}
 	/*.database li {margin-left:2px;margin-right:5px;}*/
 	/* display:flex & playback stuff */
 	.no-fluid {flex-direction:column-reverse;}
@@ -241,7 +241,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.btnlist.btnlist-top.btnlist-top-lib {width:31%;}
 	.form-horizontal .control-label {float:left;width:30%;padding-top:4px;text-align:right;}
 	.bootstrap-select:not([class*="span"]) {width:140px;}
-	.btnlist-top-db button, .btnlist-top-ra button {font-size:1.2rem;width:3.1rem;}
+	.btnlist-top-db button, .btnlist-top-ra button, .btnlist-top-pl button {font-size:1.2rem;width:3.1rem;}
 	#playbar-hd-badge {/*margin-top:.6em;*/display:none!important;}
 	#playbar-currentalbum {display:block;} /* so ellipsis works */
 	#playbar-volume-level {font-size:1.2rem;vertical-align:initial}
@@ -341,7 +341,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.modal {overflow:auto;width:70%;}
 	.modal-body {max-height:55vh;overflow:auto;}
 	/* playback */
-	#playqueue-search, #lib-album-search, #ra-search {margin:0;}
+	#playqueue-search, #lib-album-search, #ra-search, #pl-search {margin:0;}
 	#playback-panel {padding:1.875em 0;min-height: calc(100vh - 3.75em);}
 	#playbackbtns .btn {padding: 0 10px;}
 	#playbtns, #playbtns .btn-group {margin:0;}
@@ -376,12 +376,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* coverview */
 	#ss-currentsong {margin:1em 1em 0 0;}
 	#ss-currentalbum, #ss-currentartist {margin:1em 1em 0 0;}
-	#index-genres {display:none;}
-	#index-artists {display:none;}
-	#index-albums {display:none;}
-	#index-albumcovers {display:none;}
-	#index-browse {display:none;}
-	#index-radio {display:none;}
+	#index-genres, #index-artists, #index-albums, #index-albumcovers, #index-browse, #index-radio, #index-playlist {display:none;}
 	/* so cover scrolls with tracks */
 	#lib-coverart-meta-area {position:relative;}
 }
@@ -415,7 +410,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 /* iPhone5 landscape */
 @media (max-height:320px) and (max-width:568px) {
-	.database-radio li {width:75px;height:auto;margin:10px 10px;}
+	.database-radio li, .database-playlist li {width:75px;height:auto;margin:10px 10px;}
 	.lib-coverart {min-width:unset;}
 	/* so cover scrolls with tracks */
 	#lib-coverart-meta-area {position:relative;}
@@ -469,7 +464,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.busy-spinner {top:calc(env(safe-area-inset-top) + .3rem);}
 	.db-spinsync {top:calc(env(safe-area-inset-top) + -.2rem);}
 	.config-exit {top:calc(env(safe-area-inset-top) - .5rem);}
-	#radio-panel .viewswitch {top:calc(env(safe-area-inset-top) - .5em);}
+	#radio-panel .viewswitch, #playlist-panel .viewswitch {top:calc(env(safe-area-inset-top) - .5em);}
 	#config-tabs {top:calc(env(safe-area-inset-top) - .5rem);}
 }
 @media (width:896px) and (height:414px) {
@@ -491,8 +486,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #playback-cover {width:75vw;}
 	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:75vw;max-height:75vw;}
 	#playback-panel.newui #container-playqueue, #playback-panel.cv #container-playqueue {width:60%;height:55%;}
-	#playback-panel.newui#albumcovers .lib-entry img, #playback-panel.newui.database-radio img {max-height: calc(31vw * .9);}
-	#playback-panel.newui#albumcovers li, #playback-panel.newui.database-radio li {width:31vw;}
+	#playback-panel.newui#albumcovers .lib-entry img, #playback-panel.newui.database-radio img, #playback-panel.newui.database-playlist img {max-height: calc(31vw * .9);}
+	#playback-panel.newui#albumcovers li, #playback-panel.newui.database-radio li, #playback-panel.newui.database-playlist li {width:31vw;}
 	#playback-panel.newui #volcontrol, #playback-panel.newui #volcontrol-2, #playback-panel.newui #countdown {height:12.5rem;width:12.5rem;}
 }
 @media (orientation: portrait) and (min-aspect-ratio:2/3) {

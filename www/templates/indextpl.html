@@ -159,7 +159,7 @@
 				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Playlists" class="btn playlist-view-btn" href="#playlist-panel"><i class="fas fa-list"></i> Playlists<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Filters" class="btn filters-btn menu-separator" href="#library-filters"><i class="fas fa-filter"></i> Filters</button>
+				<button aria-label="Filters" class="btn filters-btn menu-separator" href="#filters-modal"><i class="fas fa-filter"></i> Filters</button>
 				<button aria-label="All Music" class="btn view-all no-icon" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
 				<button aria-label="Recently Added" class="btn view-recents no-icon" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
 			</ul>
@@ -283,6 +283,43 @@
 				<ul><li>#</li><li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li><li>i</li><li>j</li><li>k</li><li>l</li><li>m</li><li>n</li><li>o</li><li>p</li><li>q</li><li>r</li><li>s</li><li>t</li><li>u</li><li>v</li><li>w</li><li>x</li><li>y</li><li>z</li></ul>
 			</div>
 		</div>
+	</div>
+
+	<!-- PLAYLIST VIEW -->
+	<div id="playlist-panel" class="tab-pane">
+		<div id="container-playlist">
+			<div class="btnlist btnlist-top btnlist-top-pl">
+				<button aria-label="Refresh" id="pl-refresh" class="btn"><i class="far fa-redo"></i></button>
+				<button aria-label="New Playlist" id="pl-new" class="btn"><i class="far fa-plus"></i></button>
+				<form id="pl-search" class="" method="post" onSubmit="return false;">
+					<div class="input-append">
+						<input id="pl-filter" type="text" value="" placeholder="search">
+					</div>
+					<button aria-label="Reset" id="searchResetPl" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+				</form>
+			</div>
+			<div id="database-playlist">
+				<ul id="playlistcovers" class="database-playlist"></ul>
+			</div>
+			<div id ="index-playlist" class="alphabits">
+				<ul><li>#</li><li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li><li>i</li><li>j</li><li>k</li><li>l</li><li>m</li><li>n</li><li>o</li><li>p</li><li>q</li><li>r</li><li>s</li><li>t</li><li>u</li><li>v</li><li>w</li><li>x</li><li>y</li><li>z</li></ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- LIBRARY FILTERS -->
+<div id="filters-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="filters-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="filters-modal-label">Library Filters</h3>
+	</div>
+	<div class="modal-body">
+		Filter list goes here
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Update" class="btn btn-update-filter btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 

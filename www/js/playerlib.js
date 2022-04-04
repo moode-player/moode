@@ -2653,7 +2653,9 @@ $('#btn-preferences-update').click(function(e){
 	}
     if (SESSION.json['library_tagview_covers'] != $('#show-tagview-covers span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_ellipsis_limited_text'] != $('#ellipsis-limited-text span').text()) {
-		$('#ellipsis-limited-text span').text() == "Yes" ? $('#library-panel, #radio-panel').addClass('limited') : $('#library-panel, #radio-panel').removeClass('limited');
+		$('#ellipsis-limited-text span').text() == "Yes" ?
+        $('#library-panel, #radio-panel, #playlist-panel').addClass('limited') :
+        $('#library-panel, #radio-panel, #playlist-panel').removeClass('limited');
 	}
     if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;}
     // @Atair
@@ -3542,6 +3544,9 @@ $('#coverart-url, #playback-switch').click(function(e){
 	else if (currentView == 'radio') {
 		makeActive('.radio-view-btn','#radio-panel',currentView);
 	}
+    else if (currentView == 'playlist') {
+		makeActive('.playlist-view-btn','#playlist-panel',currentView);
+	}
 	// Default to folder view
 	else {
 		makeActive('.folder-view-btn','#folder-panel','folder');
@@ -3586,7 +3591,7 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
         else {
 			customScroll('playqueue', parseInt(MPD.json['song']), 0);
 		}
-		$('#folder-panel, #radio-panel, #library-panel').removeClass('active');
+		$('#folder-panel, #radio-panel, #playlist-panel, #library-panel').removeClass('active');
 		$('#playback-panel').addClass('active');
 	}
 });
@@ -3643,7 +3648,7 @@ function makeActive (vswitch, panel, view) {
 	}
 
 	$('#content .tab-pane, .viewswitch button').removeClass('active');
-	$('#viewswitch').removeClass('vr vf vt va');
+	$('#viewswitch').removeClass('vr vp vf vt va');
     $.post('command/moode.php?cmd=updcfgsystem', {'current_view': view});
 	currentView = view;
 	setColors();
@@ -3660,6 +3665,12 @@ function makeActive (vswitch, panel, view) {
 			$('#playbar-toggles .addfav').show();
             $('#random-album, .adv-search-btn').hide();
 			lazyLode('radio');
+			break;
+        case 'playlist':
+			$('#viewswitch').addClass('vp');
+			$('#playbar-toggles .addfav').show();
+            $('#random-album, .adv-search-btn').hide();
+			lazyLode('playlist');
 			break;
 		case 'folder':
 			$('#viewswitch').addClass('vf');
@@ -3773,6 +3784,10 @@ function lazyLode(view, skip, force) {
  			case 'radio':
  				selector = 'img.lazy-radioview';
  				container = '#radiocovers';
+ 				break;
+            case 'playlist':
+ 				selector = 'img.lazy-playlistview';
+ 				container = '#playlistcovers';
  				break;
  			case 'tag':
  				if (SESSION.json['library_tagview_covers'] == 'Yes') {

@@ -334,21 +334,26 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Radio view
     	if (currentView == 'radio') {
-    		makeActive('.radio-view-btn','#radio-panel', currentView);
+    		makeActive('.radio-view-btn', '#radio-panel', currentView);
+    	}
+        // Playlist view
+    	else if (currentView == 'playlist') {
+    		makeActive('.playlist-view-btn', '#playlist-panel', 'playlist');
+    		mpdDbCmd('lsinfo', '');
     	}
         // Folder view
     	else if (currentView == 'folder') {
-    		makeActive('.folder-view-btn','#folder-panel', 'folder');
+    		makeActive('.folder-view-btn', '#folder-panel', 'folder');
     		mpdDbCmd('lsinfo', '');
     	}
         // Tag view
     	else if (currentView == 'tag'){
-    		makeActive('.tag-view-btn','#library-panel', 'tag');
+    		makeActive('.tag-view-btn', '#library-panel', 'tag');
             SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
     	}
     	// Album view
     	else if (currentView == 'album'){
-    		makeActive('.album-view-btn','#library-panel', 'album');
+    		makeActive('.album-view-btn', '#library-panel', 'album');
     	}
 
         // CoverView
@@ -369,6 +374,10 @@ jQuery(document).ready(function($) { 'use strict';
     // Radio view
 	$('.radio-view-btn').click(function(e){
         makeActive('.radio-view-btn','#radio-panel','radio');
+	});
+    // Playlist view
+	$('.playlist-view-btn').click(function(e){
+        makeActive('.playlist-view-btn','#playlist-panel','playlist');
 	});
     // Folder view
 	$('.folder-view-btn').click(function(e){
@@ -1292,7 +1301,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
     // CoverView screen saver reset
-    $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #menu-bottom').click(function(e) {
+    $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #playlist-panel, #menu-bottom').click(function(e) {
         //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
         if ($(this).attr('id') == 'menu-bottom') {
             return;
