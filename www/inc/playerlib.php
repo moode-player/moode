@@ -926,8 +926,8 @@ function parseDelimFile($data, $delim) {
 	return $array;
 }
 
-// Get playist
-function getPLInfo($sock) {
+// Get MPD queue
+function get_playqueue($sock) {
 	sendMpdCmd($sock, 'playlistinfo');
 	$resp = readMpdResp($sock);
 

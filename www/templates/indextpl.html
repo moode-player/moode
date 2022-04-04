@@ -39,12 +39,12 @@
 
 	<!-- PLAYBACK WITH INTEGRATED QUEUE -->
 	<div id="playback-panel" class="tab-pane">
-		<div class="btnlist btnlist-top btnlist-top-pl">
-			<form id="pl-search" method="post" onSubmit="return false;">
+		<div class="btnlist btnlist-top btnlist-top-playqueue">
+			<form id="playqueue-search" method="post" onSubmit="return false;">
 				<div class="input-append">
-					<input id="pl-filter" type="text" value="" placeholder="search">
+					<input id="playqueue-filter" type="text" value="" placeholder="search">
 				</div>
-				<button aria-label="Reset" id="searchResetPl" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
+				<button aria-label="Reset" id="searchResetPlayqueue" class="btn hide" type="reset" value="reset"><i class="fal fa-times-circle"></i></button>
 			</form>
 		</div>
 		<div aria-label="Switch to Playbar" id="playback-switch"><div></div></div>
@@ -52,9 +52,9 @@
 			<div class="no-fluid">
 				<!-- Queue -->
 				<div id="playback-queue" class="span5">
-					<div id="container-playlist">
-						<div id="playlist">
-							<ul id="pl-list" class="playlist"></ul>
+					<div id="container-playqueue">
+						<div id="playqueue">
+							<ul id="playqueue-list" class="playqueue"></ul>
 						</div>
 					</div>
 				</div>
@@ -158,8 +158,8 @@
 				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Playlists" class="btn playlist-view-btn" href="#library-panel"><i class="fas fa-list"></i> Playlists<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Filters" class="btn filters-btn menu-separator" href="#library-panel"><i class="fas fa-filter"></i> Filters</button>
+				<button aria-label="Playlists" class="btn playlist-view-btn" href="#playlist-panel"><i class="fas fa-list"></i> Playlists<span class="pane"><i class="fal fa-check"></i></span></button>
+				<button aria-label="Filters" class="btn filters-btn menu-separator" href="#library-filters"><i class="fas fa-filter"></i> Filters</button>
 				<button aria-label="All Music" class="btn view-all no-icon" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
 				<button aria-label="Recently Added" class="btn view-recents no-icon" data-cmd="recentmusic">Recently Added<span><i class="fal fa-check"></i></span></button>
 			</ul>
@@ -503,12 +503,12 @@
 		</ul>
 	</div>
 
-	<div id="context-menu-playlist-item" class="context-menu">
+	<div id="context-menu-playqueue-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="deleteplitem"><i class="fal fa-trash sx"></i> Remove item(s)</a></li>
-			<li><a href="#notarget" data-cmd="moveplitem"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
+			<li><a href="#notarget" data-cmd="delete_playqueue_item"><i class="fal fa-trash sx"></i> Remove item(s)</a></li>
+			<li><a href="#notarget" data-cmd="move_playqueue_item"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
 			<li><a href="#notarget" data-cmd="setforclockradio"><i class="fal fa-alarm-clock sx"></i> Set for clock radio</a></li>
-			<li><a href="#notarget" data-cmd="track_info_pl"><i class="fal fa-music sx"></i> Audio info</a></li>
+			<li><a href="#notarget" data-cmd="track_info_playqueue"><i class="fal fa-music sx"></i> Audio info</a></li>
 		</ul>
 	</div>
 
@@ -1485,7 +1485,7 @@
 	                <div class="controls">
 	                    <input id="clockradio-playname" class="input-xlarge input-height-x" type="text" name="clockradio_playname" value="" readonly>
 						<span id="info-playname" class="help-block" style="margin-top:0;">
-		                    Use 'Set for clock radio' on the Playlist item menu to populate this read-only field.
+		                    Use 'Set for clock radio' on the Queue item menu to populate this read-only field.
 	                    </span>
 	                </div>
 
@@ -2252,24 +2252,24 @@
 	</div>
 </div>
 
-<!-- PLAYLIST ITEM DELETE/MOVE -->
-<div id="deleteplitems-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="deleteplitems-modal-label" aria-hidden="true">
+<!-- QUEUE ITEM DELETE/MOVE -->
+<div id="delete-playqueue-item-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-playqueue-item-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="deleteplitems-modal-label">Remove Queue items?</h3>
+		<h3 id="delete-playqueue-item-modal-label">Remove Queue items?</h3>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group">
-	                <label class="control-label" for="delete-plitem-begpos">Beginning item</label>
+	                <label class="control-label" for="delete-playqueue-item-begpos">Beginning item</label>
 	                <div class="controls">
-	                    <input id="delete-plitem-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="delete_plitem_begpos" value="">
+	                    <input id="delete-playqueue-item-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
 						<button aria-label="Delete" id="btn-delete-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
 	                </div>
-	                <label class="control-label" for="delete-plitem-endpos">Ending item</label>
+	                <label class="control-label" for="delete-playqueue-item-endpos">Ending item</label>
 	                <div class="controls">
-	                    <input id="delete-plitem-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="delete_plitem_endpos" value="">
+	                    <input id="delete-playqueue-item-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
 						<button aria-label="Delete" id="btn-delete-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
 	                </div>
 	            </div>
@@ -2278,32 +2278,32 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Remove" class="btn btn-delete-plitem btn-primary" data-dismiss="modal">Remove</button>
+		<button aria-label="Remove" class="btn btn-delete-playqueue-item btn-primary" data-dismiss="modal">Remove</button>
 	</div>
 </div>
 
-<div id="moveplitems-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="moveplitems-modal-label" aria-hidden="true">
+<div id="move-playqueue-item-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="move-playqueue-item-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="moveplitems-modal-label">Move Queue items?</h3>
+		<h3 id="move-playqueue-item-modal-label">Move Queue items?</h3>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
 	    	<fieldset>
 				<div class="control-group">
-	                <label class="control-label" for="move-plitem-begpos">Beginning item</label>
+	                <label class="control-label" for="move-playqueue-item-begpos">Beginning item</label>
 	                <div class="controls">
-	                    <input id="move-plitem-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_begpos" value="">
+	                    <input id="move-playqueue-item-begpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
 						<button aria-label="To The Top" id="btn-move-setpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
 	                </div>
-	                <label class="control-label" for="move-plitem-endpos">Ending item</label>
+	                <label class="control-label" for="move-playqueue-item-endpos">Ending item</label>
 	                <div class="controls">
-	                    <input id="move-plitem-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_endpos" value="">
+	                    <input id="move-playqueue-item-endpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
 						<button aria-label="To The Bottom" id="btn-move-setpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
 	                </div>
-	                <label class="control-label" for="move-plitem-newpos">New position</label>
+	                <label class="control-label" for="move-playqueue-item-newpos">New position</label>
 	                <div class="controls">
-	                    <input id="move-plitem-newpos" class="input-small" style="height: 20px;" type="number" min="1" max="" name="move_plitem_newpos" value="">
+	                    <input id="move-playqueue-item-newpos" class="input-small" style="height: 20px;" type="number" min="1" max="" value="">
 						<button aria-label="Up" id="btn-move-setnewpos-top" class="btn btn-mini btn-default"><i class="far fa-angle-double-up fa-sm fa-sm"></i></button>
 						<button aria-label="Down" id="btn-move-setnewpos-bot" class="btn btn-mini btn-default"><i class="far fa-angle-double-down fa-sm fa-sm"></i></button>
 	                </div>
@@ -2313,7 +2313,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Move" class="btn btn-move-plitem btn-primary" data-dismiss="modal">Move</button>
+		<button aria-label="Move" class="btn btn-move-playqueue-item btn-primary" data-dismiss="modal">Move</button>
 	</div>
 </div>
 

@@ -33,7 +33,7 @@ session_write_close();
 $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
 	'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next'/*, 'clear_add_group'*/);
-$other_mpd_cmds = array('updvolume' , 'mutetxvol' ,'getmpdstatus', 'playlist', 'delplitem', 'moveplitem', 'getplitemfile', 'savepl', 'listsavedpl',
+$other_mpd_cmds = array('updvolume' , 'mutetxvol' ,'getmpdstatus', 'get_playqueue', 'delete_playqueue_item', 'move_playqueue_item', 'get_playqueue_item_file', 'savepl', 'listsavedpl',
 	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'station_info', 'track_info',
 	'upd_tx_adv_toggle', 'upd_rx_adv_toggle');
 $turn_consume_off = false;
@@ -315,16 +315,16 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 		case 'getmpdstatus':
 			echo json_encode(parseStatus(getMpdStatus($sock)));
 			break;
-		case 'playlist':
-			echo json_encode(getPLInfo($sock));
+		case 'get_playqueue':
+			echo json_encode(get_playqueue($sock));
 			break;
-		case 'delplitem':
+		case 'delete_playqueue_item':
 			sendMpdCmd($sock, 'delete ' . $_GET['range']);
 			break;
-		case 'moveplitem':
+		case 'move_playqueue_item':
 			sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
 			break;
-		case 'getplitemfile': // For Clock Radio
+		case 'get_playqueue_item_file': // For Clock Radio
 			sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
 			$resp = readMpdResp($sock);
 

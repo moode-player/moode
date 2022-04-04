@@ -164,7 +164,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	body {padding-left: 0px;padding-right: 0px;}
 	#playback-controls {width:24%;margin-left:0px;}
 	.container-playback {padding: 0px;}
-	#pl-search, #lib-album-search, #pl-save, #set-fav {margin-left: 0;}
+	#playqueue-search, #lib-album-search, #pl-save, #set-fav {margin-left: 0;}
 	body.index {padding:0;}
 }
 @media (max-width:479px) {
@@ -175,9 +175,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.modal-sm {min-width:80%;max-width:80%;}
 	#playback-cover {width:100%;text-align:center;margin-left:auto;margin-right:auto;}
 	#playback-queue {width:100%;}
-	.playlist .active .speaker {left:2px;}
+	.playqueue .active .speaker {left:2px;}
 	.input-large {width: initial;}
- 	#container-playlist {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}
+ 	#container-playqueue {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}
 	.lib-albumyear-meta {display:block;}
 	#lib-artist-header, #lib-artist {left:50%;width:50%;}
 	#lib-album-header, #lib-album {left:100%;width:50%;}
@@ -215,7 +215,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#msingle {display:none;}
 	#maddfav i {font-size:1.1em;}
 	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
-	#pl-search, #lib-album-search, #pl-save, #ra-search {margin-left: 0px;}
+	#playqueue-search, #lib-album-search, #pl-save, #ra-search {margin-left: 0px;}
 	/*.database li {margin-left:2px;margin-right:5px;}*/
 	/* display:flex & playback stuff */
 	.no-fluid {flex-direction:column-reverse;}
@@ -250,7 +250,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 /* smaller portrait for small screens */
 @media (max-width:479px) and (orientation:portrait) {
-	#content.fancy #container-playlist {-webkit-mask-image:unset;}
+	#content.fancy #container-playqueue {-webkit-mask-image:unset;}
 	.database .db-entry {margin-left:3.5em;padding:1em 0;font-size:1.1em;}
 	.database .db-action {font-size:1.3em;}
 	/*.dropdown-menu {min-width:180px;}*/
@@ -279,11 +279,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta {font-size:calc(0.65em + 1vmin);}
 	#playbtns .btn {font-size:3em;padding:.5em 1em;}
 	.dbtn {display:inline-block;font-size:3em;padding:0 1rem;width:25%;line-height:20px;vertical-align:middle;}
-	.playlist span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
-	.playlist span {margin-left:calc(3.8rem + 1vmin) !important;}
-	.playlist {padding:0 0 9rem 0;min-height:33vh;}
-	/*.playlist li:before {width:1.75em!important;}*/
-	.playlist .pl-action, .playlist .db-action a {padding:.4em 1.25em 1em 0;margin-left:1.25em!important;}
+	.playqueue span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
+	.playqueue span {margin-left:calc(3.8rem + 1vmin) !important;}
+	.playqueue {padding:0 0 9rem 0;min-height:33vh;}
+	/*.playqueue li:before {width:1.75em!important;}*/
+	.playqueue .playqueue-action, .playqueue .db-action a {padding:.4em 1.25em 1em 0;margin-left:1.25em!important;}
 	.ui-pnotify {top:40% !important;}
 	#lib-albumcover {left:0;}
 	#lib-meta-summary {line-height:1.75rem;font-size:1em;margin:.25em 0 0 0;float:right;}
@@ -341,15 +341,15 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.modal {overflow:auto;width:70%;}
 	.modal-body {max-height:55vh;overflow:auto;}
 	/* playback */
-	#pl-search, #lib-album-search, #ra-search {margin:0;}
+	#playqueue-search, #lib-album-search, #ra-search {margin:0;}
 	#playback-panel {padding:1.875em 0;min-height: calc(100vh - 3.75em);}
 	#playbackbtns .btn {padding: 0 10px;}
 	#playbtns, #playbtns .btn-group {margin:0;}
-	#container-playlist {margin-top:.75em;height: calc(100% - 40px);}
-	.playlist li, .database li {padding-left:.5em;}
-	.playlist span {line-height:initial;}
-	/*.playlist .active {padding-left:.5em;}*/
-	#playlist .songtime {top: 0px;}
+	#container-playqueue {margin-top:.75em;height: calc(100% - 40px);}
+	.playqueue li, .database li {padding-left:.5em;}
+	.playqueue span {line-height:initial;}
+	/*.playqueue .active {padding-left:.5em;}*/
+	#playqueue .songtime {top: 0px;}
 	#timeknob, #volknob {margin:1em 0;}
 	#countdown-display{margin-top:-10px;}
 	/* NOTE: These settings cause 1/2 sized knobs on Pi Touch
@@ -408,9 +408,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 }
 /* iPhone5 portrait */
 @media (max-height:568px) and (max-width:320px) {
-	.playlist {font-size:1.2em;}
-	.playlist li:before {width:1.75em;}
-	.playlist span {margin-left:calc(2.75rem + 1vmin);}
+	.playqueue {font-size:1.2em;}
+	.playqueue li:before {width:1.75em;}
+	.playqueue span {margin-left:calc(2.75rem + 1vmin);}
 	.bootstrap-select.select-medium:not([class*="span"]) {width:140px;}
 }
 /* iPhone5 landscape */
@@ -438,18 +438,18 @@ li.modal-dropdown-text:focus {color:#eee;}
 }*/
 /* Pi 7" Touch */
 @media (min-height:553px) and (width:998px) { /* 553 = Square pixel AR, 598 = Default pixel AR */
-	.playlist .pll1 {font-size:1rem;}
-	.playlist .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
-	.playlist .pl-action {padding:1rem 0;}
+	.playqueue .pll1 {font-size:1rem;}
+	.playqueue .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
+	.playqueue .playqueue-action {padding:1rem 0;}
 	#playbtns {margin:.25em 0;}
 	#playbar-title {font-size:1rem;}
 	img.coverart {width:55vh;}
 	#playback-firstuse-help {height:55vh;width:55vh;}
 }
 @media (min-height:443px) and (width:799px) { /* 443 = Square pixel AR, 479 = Default pixel AR */
-	.playlist .pll1 {font-size:1rem;}
-	.playlist .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
-	.playlist .pl-action {padding:1rem 0;}
+	.playqueue .pll1 {font-size:1rem;}
+	.playqueue .pll2 {font-size:1rem;margin-left:calc(3em + 1vmin)!important}
+	.playqueue .playqueue-action {padding:1rem 0;}
 	#playbtns {margin:.25em 0;}
 	#playbar-title {font-size:1rem;}
 	img.coverart {width:55vh;}
@@ -458,7 +458,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 
 /* iPhone X */
 @media (width:375px) and (height:812px) {
-	.playlist {padding:0 0 8rem 0;min-height:35vh;}
+	.playqueue {padding:0 0 8rem 0;min-height:35vh;}
 }
 /* iPhone Max sizes */
 @media (width:414px) and (height:896px) {
@@ -490,7 +490,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #volzone {right:12.5%;top:59%;}
 	#playback-panel.newui #playback-cover {width:75vw;}
 	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:75vw;max-height:75vw;}
-	#playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {width:60%;height:55%;}
+	#playback-panel.newui #container-playqueue, #playback-panel.cv #container-playqueue {width:60%;height:55%;}
 	#playback-panel.newui#albumcovers .lib-entry img, #playback-panel.newui.database-radio img {max-height: calc(31vw * .9);}
 	#playback-panel.newui#albumcovers li, #playback-panel.newui.database-radio li {width:31vw;}
 	#playback-panel.newui #volcontrol, #playback-panel.newui #volcontrol-2, #playback-panel.newui #countdown {height:12.5rem;width:12.5rem;}
@@ -501,7 +501,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #playback-cover {width:60vw;} /* 60% cover h/w */
 	#playback-panel.newui #coverart-url, #playback-panel.newui img.coverart {width:60vw;max-height:60vw;}
 	#playback-panel.newui #playback-firstuse-help {height:60vw;width:60vw;}
-	#playback-panel.newui #container-playlist, #playback-panel.cv #container-playlist {width:60%;height:58%;}
+	#playback-panel.newui #container-playqueue, #playback-panel.cv #container-playqueue {width:60%;height:58%;}
 	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
 }
 @media (orientation: portrait) and (min-aspect-ratio:834/1194) { /* ipad pro 11 since I can fine tune */
@@ -556,7 +556,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .control-aftertext {position:absolute;margin: 3px 0 0 8px;}
 .clockradio-on {background:inherit;color:var(--accentxts);font-size:large;line-height:10px;top:5px;right:1px;width:14px;text-align:center;position:absolute;float:right;opacity:.5;}
 .clockradio-off {display:none;}
-#pl-controls {display:none;}
+/*#playqueue-controls {display:none;}*/
 .clockradio-on-m {color:#dddddd;font-size:16.5px;}
 .clockradio-off-m {color:#7f8c8d;font-size:16.5px;}
 .info-toggle {text-decoration:none;position:relative;margin:0;top:3px;left:2px;font-size:16px;}
