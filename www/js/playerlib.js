@@ -119,9 +119,10 @@ var NETWORK = {
 
 // TODO: Eventually migrate all global vars here
 var GLOBAL = {
-	musicScope: 'all', // or not defined if saved, but prob don't bother saving...
+	musicScope: 'all', // Or not defined if saved, but prob don't bother saving...
 	searchRadio: '',
 	searchFolder: '',
+    searchPlaylist: '',
     scriptSection: 'panels',
 	regExIgnoreArticles: '',
     libRendered: false,
@@ -3512,7 +3513,7 @@ $('#coverart-url, #playback-switch').click(function(e){
     $('#coverart-link').hide();
 
 	currentView = currentView.split(',')[1];
-    $('#container-playqueue').css('visibility','hidden');
+    $('#container-playqueue').css('visibility', 'hidden');
 	$('#menu-top').css('height', '0');
 	$('#menu-top').css('backdrop-filter', '');
 	$('#menu-bottom, .viewswitch').css('display', 'flex');
@@ -3520,15 +3521,18 @@ $('#coverart-url, #playback-switch').click(function(e){
 
     syncTimers();
 
-	if (currentView == 'tag') {
-		makeActive('.tag-view-btn','#library-panel','tag');
+    if (currentView == 'radio') {
+		makeActive('.radio-view-btn', '#radio-panel', currentView);
+	}
+	else if (currentView == 'tag') {
+		makeActive('.tag-view-btn', '#library-panel', currentView);
 
         if (!GLOBAL.libRendered) {
             loadLibrary();
         }
 	}
 	else if (currentView == 'album') {
-		makeActive('.album-view-btn','#library-panel','album');
+		makeActive('.album-view-btn', '#library-panel', currentView);
 		if (UI.libPos[1] >= 0) {
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
                 $('#bottom-row').css('display', 'flex')
@@ -3541,15 +3545,12 @@ $('#coverart-url, #playback-switch').click(function(e){
             loadLibrary();
         }
 	}
-	else if (currentView == 'radio') {
-		makeActive('.radio-view-btn','#radio-panel',currentView);
-	}
     else if (currentView == 'playlist') {
-		makeActive('.playlist-view-btn','#playlist-panel',currentView);
+		makeActive('.playlist-view-btn', '#playlist-panel', currentView);
 	}
 	// Default to folder view
 	else {
-		makeActive('.folder-view-btn','#folder-panel','folder');
+		makeActive('.folder-view-btn', '#folder-panel', 'folder');
 	}
 });
 
@@ -3666,16 +3667,19 @@ function makeActive (vswitch, panel, view) {
             $('#random-album, .adv-search-btn').hide();
 			lazyLode('radio');
 			break;
-        case 'playlist':
-			$('#viewswitch').addClass('vp');
-			$('#playbar-toggles .addfav').show();
-            $('#random-album, .adv-search-btn').hide();
-			lazyLode('playlist');
-			break;
 		case 'folder':
 			$('#viewswitch').addClass('vf');
 			$('#playbar-toggles .addfav').show();
             $('#random-album, .adv-search-btn').hide();
+			break;
+        case 'tag':
+			$('#viewswitch').addClass('vt');
+            $('#playbar-toggles .addfav').hide();
+            $('#random-album, .adv-search-btn').show();
+			$('#library-panel').addClass('tag').removeClass('covers');
+            $('#index-albumcovers').hide();
+			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
+			if (SESSION.json['library_tagview_covers']) lazyLode('tag');
 			break;
 		case 'album':
 			$('#viewswitch').addClass('va');
@@ -3694,14 +3698,11 @@ function makeActive (vswitch, panel, view) {
             }
 			lazyLode('album');
 			break;
-		case 'tag':
-			$('#viewswitch').addClass('vt');
-            $('#playbar-toggles .addfav').hide();
-            $('#random-album, .adv-search-btn').show();
-			$('#library-panel').addClass('tag').removeClass('covers');
-            $('#index-albumcovers').hide();
-			SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
-			if (SESSION.json['library_tagview_covers']) lazyLode('tag');
+        case 'playlist':
+			$('#viewswitch').addClass('vp');
+			$('#playbar-toggles .addfav').show();
+            $('#random-album, .adv-search-btn').hide();
+			lazyLode('playlist');
 			break;
 	}
 	setLibMenuAndHeader();
@@ -3726,7 +3727,7 @@ function setLibMenuAndHeader () {
 			headerText = GLOBAL.searchFolder;
 		}
 	}
-	else if (currentView == 'album' || currentView == 'tag') {
+	else if (currentView == 'tag' || currentView == 'album') {
 		currentView == 'album' ? headerText += SESSION.json['library_albumview_sort'] : headerText += SESSION.json['library_tagview_sort'];
 		$('.view-recents span').hide();
 		$('.view-all span').hide();
@@ -3768,6 +3769,12 @@ function setLibMenuAndHeader () {
             }
         }
 	}
+    else if (currentView == 'playlist') {
+		headerText += 'Playlists';
+		if (GLOBAL.searchPlaylist) {
+			headerText = GLOBAL.searchPlaylist;
+		}
+	}
 
     $('#menu-header').text(headerText);
 }
@@ -3785,10 +3792,6 @@ function lazyLode(view, skip, force) {
  				selector = 'img.lazy-radioview';
  				container = '#radiocovers';
  				break;
-            case 'playlist':
- 				selector = 'img.lazy-playlistview';
- 				container = '#playlistcovers';
- 				break;
  			case 'tag':
  				if (SESSION.json['library_tagview_covers'] == 'Yes') {
      				selector = 'img.lazy-tagview';
@@ -3801,6 +3804,10 @@ function lazyLode(view, skip, force) {
  				container = '#lib-albumcover';
 				//skip = true;
 				break;
+            case 'playlist':
+ 				selector = 'img.lazy-playlistview';
+ 				container = '#playlistcovers';
+ 				break;
 		 	case 'playqueue':
 				selector = 'img.lazy-playqueue';
 				container = '#playqueue';

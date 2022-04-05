@@ -336,24 +336,24 @@ jQuery(document).ready(function($) { 'use strict';
     	if (currentView == 'radio') {
     		makeActive('.radio-view-btn', '#radio-panel', currentView);
     	}
-        // Playlist view
-    	else if (currentView == 'playlist') {
-    		makeActive('.playlist-view-btn', '#playlist-panel', 'playlist');
-    		mpdDbCmd('lsinfo', '');
-    	}
         // Folder view
     	else if (currentView == 'folder') {
-    		makeActive('.folder-view-btn', '#folder-panel', 'folder');
+    		makeActive('.folder-view-btn', '#folder-panel', currentView);
     		mpdDbCmd('lsinfo', '');
     	}
         // Tag view
     	else if (currentView == 'tag'){
-    		makeActive('.tag-view-btn', '#library-panel', 'tag');
+    		makeActive('.tag-view-btn', '#library-panel', currentView);
             SESSION.json['library_show_genres'] == 'Yes' ? $('#top-columns').removeClass('nogenre') : $('#top-columns').addClass('nogenre');
     	}
     	// Album view
     	else if (currentView == 'album'){
-    		makeActive('.album-view-btn', '#library-panel', 'album');
+    		makeActive('.album-view-btn', '#library-panel', currentView);
+    	}
+        // Playlist view
+    	else if (currentView == 'playlist') {
+    		makeActive('.playlist-view-btn', '#playlist-panel', currentView);
+    		mpdDbCmd('lsinfo', '');
     	}
 
         // CoverView
