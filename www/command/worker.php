@@ -121,6 +121,7 @@ sysCmd('moodeutl -D airplayactv');
 sysCmd('moodeutl -D AVAILABLE');
 sysCmd('moodeutl -D eth_port_fix');
 sysCmd('moodeutl -D card_error');
+sysCmd('moodeutl -D cdsp_from_link');
 workerLog('worker: Session vacuumed');
 
 // Load cfg_system and cfg_radio into session

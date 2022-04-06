@@ -3316,27 +3316,31 @@ function reconfMpdVolume($mixertype) {
 // Store back link for configs
 function storeBackLink($section, $tpl) {
 	$root_configs = array('lib-config', 'snd-config', 'net-config', 'sys-config');
+	$tpl_configs = array(
+		'src-config.html' => '/lib-config.php',
+		'bkp-config.html' => '/sys-config.php#backuprestore',
+		'eqg-config.html' => '/snd-config.php#equalizers',
+		'eqp-config.html' => '/snd-config.php#equalizers',
+		'cdsp-config.html' => '/snd-config.php#equalizers',
+		'blu-config.html' => '/snd-config.php#audiorenderers',
+		'apl-config.html' => '/snd-config.php#audiorenderers',
+		'spo-config.html' => '/snd-config.php#audiorenderers',
+		'sqe-config.html' => '/snd-config.php#audiorenderers',
+		'upp-config.html' => '/snd-config.php#upnpdlna',
+		'cdsp-configeditor.html' => '/cdsp-config.php'
+	);
 	$referer_link = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
 
 	session_start();
 
-	if ($tpl == 'src-config.html') {
-		$_SESSION['config_back_link'] = '/lib-config.php';
+	if (array_key_exists($tpl, $tpl_configs)) {
+		$_SESSION['config_back_link'] = $tpl_configs[$tpl];
 	}
-	else if ($tpl == 'bkp-config.html') {
-		$_SESSION['config_back_link'] = '/sys-config.php';
+	elseif ($tpl == 'trx-config.html' && $referer_link == '/snd-config.php') {
+		$_SESSION['config_back_link'] = '/snd-config.php#alsaoptions';
 	}
-
-	if ($tpl == 'cdsp-config.html') {
-		if ($referer_link == '/index.php') {
-			$_SESSION['cdsp_from_link'] = '/index.php';
-		}
-		elseif ($referer_link == '/snd-config.php') {
-			$_SESSION['cdsp_from_link'] = '/snd-config.php';
-		}
-
-		//$_SESSION['config_back_link'] = '/snd-config.php';
-		$_SESSION['config_back_link'] = $_SESSION['cdsp_from_link'];
+	elseif ($tpl == 'mpd-config.html' && $referer_link == '/snd-config.php') {
+		$_SESSION['config_back_link'] = '/snd-config.php#mpdoptions';
 	}
 	else if (in_array($section, $root_configs)) {
 		$_SESSION['config_back_link'] = '/index.php';

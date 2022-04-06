@@ -31,6 +31,7 @@ Updates
 - UPD: Purge extraneous session files during the maintenance task
 - UPD: Add new Soma FM stations to Default Playlist (new image only)
 - UPD: Use all Tiles on Menu, Configure modal
+- UPD: Improve config back link function
 - UPD: Improve help text in Save playlist modal
 
 Radio stations
