@@ -2258,10 +2258,23 @@ function sourceMount($action, $id = '') {
 							$options = 'vers=' . $version . ',' . $options;
 						}
 					}
-					$mountstr = "mount -t cifs \"//" . $mp[0]['address'] . "/" . $mp[0]['remotedir'] . "\" -o username=\"" . $mp[0]['username'] . "\",password=\"" . $mp[0]['password'] . "\",rsize=" . $mp[0]['rsize'] . ",wsize=" . $mp[0]['wsize'] . ",iocharset=" . $mp[0]['charset'] . "," . $options . " \"/mnt/NAS/" . $mp[0]['name'] . "\"";
+					$mountstr = "mount -t cifs \"//" .
+						$mp[0]['address'] . "/" .
+						$mp[0]['remotedir'] . "\" -o username=\"" .
+						$mp[0]['username'] . "\",password=\"" .
+						$mp[0]['password'] . "\",rsize=" .
+						$mp[0]['rsize'] . ",wsize=" .
+						$mp[0]['wsize'] . ",iocharset=" .
+						$mp[0]['charset'] . "," .
+						$options . " \"/mnt/NAS/" .
+						$mp[0]['name'] . "\"";
 				}
 				else {
-					$mountstr = "mount -t nfs -o " . $mp[0]['options'] . " \"" . $mp[0]['address'] . ":/" . $mp[0]['remotedir'] . "\" \"/mnt/NAS/" . $mp[0]['name'] . "\"";
+					$mountstr = "mount -t nfs -o " .
+					$mp[0]['options'] . " \"" .
+					$mp[0]['address'] . ":/" .
+					$mp[0]['remotedir'] . "\" \"/mnt/NAS/" .
+					$mp[0]['name'] . "\"";
 				}
 
 				sysCmd('mkdir "/mnt/NAS/' . $mp[0]['name'] . '"');
