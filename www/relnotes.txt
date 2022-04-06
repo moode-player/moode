@@ -18,6 +18,7 @@
 New features
 
 - NEW: Support for multiple WiFi networks
+- NEW: Dedicated Library Playlist panel with covers
 
 Updates
 
