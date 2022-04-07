@@ -1476,6 +1476,7 @@ $('#context-menu-lib-item a').click(function(e) {
 		notify('add_item');
 	}
 	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
+        // TODO: Play selected track and all following tracks in the album.
 		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
 	}
     /*else if ($(this).data('cmd') == 'clear_add_item') {
