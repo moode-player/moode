@@ -2436,6 +2436,7 @@ $(document).on('click', '.context-menu a', function(e) {
             $('#onetouch_radio span').text(SESSION.json['library_onetouch_radio']);
             $('#albumview-sort-order span').text('by ' + SESSION.json['library_albumview_sort']);
             $('#tagview-sort-order span').text('by ' + SESSION.json['library_tagview_sort']);
+            $('#track-play span').text(SESSION.json['library_track_play']);
             $('#recently-added span').text(getParamOrValue('param', SESSION.json['library_recently_added']));
             $('#show-encoded-at span').text(getParamOrValue('param', SESSION.json['library_encoded_at']));
             $('#cover-search-priority span').text(getParamOrValue('param', SESSION.json['library_covsearchpri']));
@@ -2637,6 +2638,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['library_onetouch_radio'] != $('#onetouch_radio span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_albumview_sort'] != $('#albumview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
     if (SESSION.json['library_tagview_sort'] != $('#tagview-sort-order span').text().replace('by ', '')) {libraryOptionsChange = true;}
+    if (SESSION.json['library_track_play'] != $('#track-play span').text()) {libraryOptionsChange = true;}
     if (SESSION.json['library_recently_added'] != getParamOrValue('value', $('#recently-added span').text())) {libraryOptionsChange = true;}
     if (SESSION.json['library_encoded_at'] != getParamOrValue('value', $('#show-encoded-at span').text())) {reloadLibrary = true;}
     if (SESSION.json['library_covsearchpri'] != getParamOrValue('value', $('#cover-search-priority span').text())) {libraryOptionsChange = true;}
@@ -2690,6 +2692,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['library_onetouch_radio'] = $('#onetouch_radio span').text();
     SESSION.json['library_albumview_sort'] = $('#albumview-sort-order span').text().replace('by ', '');
     SESSION.json['library_tagview_sort'] = $('#tagview-sort-order span').text().replace('by ', '');
+    SESSION.json['library_track_play'] = $('#track-play span').text();
     SESSION.json['library_recently_added'] = getParamOrValue('value', $('#recently-added span').text());
     SESSION.json['library_encoded_at'] = getParamOrValue('value', $('#show-encoded-at span').text());
     SESSION.json['library_covsearchpri'] = getParamOrValue('value', $('#cover-search-priority span').text());
@@ -2785,6 +2788,7 @@ $('#btn-preferences-update').click(function(e){
             'library_onetouch_radio': SESSION.json['library_onetouch_radio'],
             'library_albumview_sort': SESSION.json['library_albumview_sort'],
             'library_tagview_sort': SESSION.json['library_tagview_sort'],
+            'library_track_play': SESSION.json['library_track_play'],
             'library_recently_added': SESSION.json['library_recently_added'],
             'library_encoded_at': SESSION.json['library_encoded_at'],
             'library_covsearchpri': SESSION.json['library_covsearchpri'],

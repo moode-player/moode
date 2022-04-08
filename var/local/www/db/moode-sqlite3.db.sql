@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Sat Apr 2 12:12:18 2022
+-- File generated with SQLiteStudio v3.1.0 on Thu Apr 7 21:07:12 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -226,6 +226,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (161, 'library_onetouch_radio',
 INSERT INTO cfg_system (id, param, value) VALUES (162, 'library_tagview_genre', 'Genres');
 INSERT INTO cfg_system (id, param, value) VALUES (163, 'toggle_coverview', '-off');
 INSERT INTO cfg_system (id, param, value) VALUES (164, 'maint_interval', '7200');
+INSERT INTO cfg_system (id, param, value) VALUES (165, 'library_track_play', 'Track');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

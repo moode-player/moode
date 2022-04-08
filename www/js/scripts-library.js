@@ -1405,6 +1405,15 @@ $('#songsList').on('click', '.lib-track', function(e) {
     UI.dbEntry[0] = $('#songsList .lib-track').index(this); // Store pos for use in action menu item click
 	$('#songsList li, #songsList .lib-disc a').removeClass('active');
     $(this).addClass('active');
+
+    if (SESSION.json['library_track_play'] == 'Track') {
+        $('#play-track').html(' <i class="fal fa-play sx"></i> Play');
+        $('#clear-play-track').html(' <i class="fal fa-chevron-square-right sx"></i> Clear/Play');
+    }
+    else {
+        $('#play-track').html(' <i class="fal fa-play sx"></i> Play+');
+        $('#clear-play-track').html(' <i class="fal fa-chevron-square-right sx"></i> Clear/Play+');
+    }
 });
 
 // Playback ellipsis context menu
@@ -1476,8 +1485,20 @@ $('#context-menu-lib-item a').click(function(e) {
 		notify('add_item');
 	}
 	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
-        // TODO: Play selected track and all following tracks in the album.
-		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
+        if (SESSION.json['library_track_play'] == 'Track') {
+            // Track: Play only the selected track
+            var cmd = $(this).data('cmd');
+            var files = filteredSongs[UI.dbEntry[0]].file;
+        }
+        else {
+            // Track+: Play selected track and all following tracks in the album
+            var cmd = $(this).data('cmd') == 'play_item' ? 'play_group' : 'play_group_next';
+            var files = [];
+            for (i = UI.dbEntry[0]; i < filteredSongs.length; i++) {
+                files.push(filteredSongs[i].file);
+            }
+        }
+        mpdDbCmd(cmd, files);
 	}
     /*else if ($(this).data('cmd') == 'clear_add_item') {
 		mpdDbCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
@@ -1485,8 +1506,22 @@ $('#context-menu-lib-item a').click(function(e) {
 		$('#pl-saveName').val(''); // Clear saved playlist name if any
 	}*/
 	else if ($(this).data('cmd') == 'clear_play_item') {
-		mpdDbCmd('clear_play_item', filteredSongs[UI.dbEntry[0]].file);
-		notify('clear_play_item');
+        if (SESSION.json['library_track_play'] == 'Track') {
+            // Track: Play only the selected track
+            var cmd = $(this).data('cmd');
+            var files = filteredSongs[UI.dbEntry[0]].file;
+        }
+        else {
+            // Track+: Play selected track and all following tracks in the album
+            var cmd = 'clear_play_group';
+            var files = [];
+            for (i = UI.dbEntry[0]; i < filteredSongs.length; i++) {
+                files.push(filteredSongs[i].file);
+            }
+
+        }
+		mpdDbCmd(cmd, files);
+		notify(cmd);
 		$('#pl-saveName').val(''); // Clear saved playlist name if any
 	}
     else if ($(this).data('cmd') == 'track_info_lib') {

@@ -484,8 +484,8 @@
 	<div id="context-menu-lib-item" class="context-menu-lib">
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="#notarget" data-cmd="add_item"><i class="fal fa-plus sx"></i> Add</a></li>
-			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
-			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
+			<li><a id="play-track" href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
+			<li><a id="clear-play-track" href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
 			<li><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
@@ -1091,6 +1091,30 @@
 	                        NOTE: When sorted by Year if not all tracks in the album have the same Year then the latest year will be used. If no Year tag exists or if the Year tag is not a number then no year information will be shown for that album.
 						</span>
 	                </div>
+
+					<label class="control-label" for="track-play">Track play</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="track-play" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="track-play-sel"><span class="text">Track</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="track-play-sel"><span class="text">Track+</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-track-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-track-play" class="help-block hide">
+							This option applies to the track list in Tag and Album views and determines whether only the selected track is added to the Queue or the selected track and all following tracks.<br>
+	                    	<b>Track:</b> Play selected track only.<br>
+							<b>Track+:</b> Play selected track and all following tracks.
+	                    </span>
+					</div>
 
 					<label class="control-label" for="recently-added">Recently added filter</label>
  	                <div class="controls">

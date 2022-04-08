@@ -26,6 +26,7 @@ Updates
 - UPD: Replace auto-reboot in Restore by "reboot required" message
 - UPD: Add option to include playlists in Backup/Restore
 - UPD: Restore the Default Playlist if present in the backup
+- UPD: Add Preferences option to play selected track plus following tracks
 - UPD: Try to detect Samba protocol even when host appears to be offline
 - UPD: Tracks added to the Queue are ordered same as in Tag view
 - UPD: Purge extraneous session files during the maintenance task
