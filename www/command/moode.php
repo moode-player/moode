@@ -178,7 +178,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			sendMpdCmd($sock, 'setvol ' . $_POST['volknob']);
 			$resp = readMpdResp($sock);
 
-			// Update Receiver MPD volumes
+			// Update Receiver MPD volume
 			if ($_SESSION['multiroom_tx'] == 'On') {
 				$voldiff = $session_volknob - $_POST['volknob'];
 
