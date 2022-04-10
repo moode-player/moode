@@ -1743,6 +1743,20 @@ function renderRadioView() {
     });
 }
 
+// Render Playlist view
+function renderPlaylistView () {
+    // Read cfg_playlist
+    // Display panel
+    // Button bar: Refresh, + (New)
+    // Playlist item context menu:
+    // - Add, Play, Clear/Play, Add next, Play next
+    // - Edit playlist, Delete playlist
+    // Edit: Read /var/lib/mpd/playlists/PLAYLIST_NAME.m3u into array?
+    // Library item context menus
+    // - "Add to Playlist"
+    // - Display playlists to choose from as well as a "New Playlist" option.
+}
+
 // Return formatted total time and show/hide certain elements
 function formatKnobTotal(mpdTime) {
 	if (MPD.json['artist'] == 'Radio station' && typeof(MPD.json['duration']) === 'undefined') {
