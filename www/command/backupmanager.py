@@ -137,6 +137,9 @@ class BackupManager(StationManager):
                 try:
                     print('Restore moodecfg.ini (requires reboot afterwards!)')
                     backup.extract('moodecfg.ini', BackupManager.MOODECFGINI_RESTORE_PATH)
+                    if 'script' in backup.namelist():
+                        backup.extract('script', BackupManager.MOODECFGINI_RESTORE_PATH)
+
                 except KeyError:
                     print("Backup doesn't contain moode configuration file.")
                 if 'bgimage.jpg' in backup.namelist():
