@@ -30,6 +30,7 @@ Updates
 - UPD: Try to detect Samba protocol even when host appears to be offline
 - UPD: Tracks added to the Queue are ordered same as in Tag view
 - UPD: Purge extraneous session files during the maintenance task
+- UPD: Ensure Hardware mixer state is 'on' during startup
 - UPD: Add new Soma FM stations to Default Playlist (new image only)
 - UPD: Use all Tiles on Menu, Configure modal
 - UPD: Improve config back link function
@@ -46,6 +47,7 @@ Bug fixes
 - FIX: Reconnect screen is displayed after Create Backup
 - FIX: Backup/Restore back arrow not returning to System Config
 - FIX: Self IP address not being filtered in Players and TRX Config
+- FIX: Custom backup script not being restored
 - FIX: Top margin for EDIT button on src-config
 
 

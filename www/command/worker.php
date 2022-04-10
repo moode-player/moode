@@ -179,6 +179,7 @@ $amixname = getMixerName($_SESSION['i2sdevice']);
 if ($amixname != 'Invalid card number.') {
 	workerLog('worker: ALSA mixer actual (' . $amixname . ')');
 	if ($amixname != 'none') {
+		sysCmd('amixer sset ' . '"' . $amixname . '"' . ' on' ); // Ensure state is 'on'
 		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $amixname . '"' . ' 0');
 		$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $amixname . '"');
 		workerLog('worker: ALSA ' . trim($amixname) . ' volume set to (' . $result[0] . ')');
