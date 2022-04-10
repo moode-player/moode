@@ -382,6 +382,27 @@ function autoConfigSettings() {
 			return $result;
 		}],
 
+		['requires' => ['ssid_ssid', 'ssid_sec', 'ssid_sec'], 'handler' => function($values) {
+			$dbh = cfgdb_connect();
+			cfgdb_delete('cfg_ssid', $dbh);
+			$ssid_count = count($values['ssid_ssid']);
+			for($index = 0; $index < $ssid_count; $index++) {
+				$value_str = "\"" . $values['ssid_ssid'][$index] . "\", \""  .  $values['ssid_sec'][$index]	. "\", \"" . $values['ssid_sec'][$index] . "\"";
+				cfgdb_write('cfg_ssid', $dbh, $value_str);
+			}
+		}, 'custom_write' => function($values) {
+			$dbh = cfgdb_connect();
+			$ssids = cfgdb_read('cfg_ssid', $dbh);
+			$stringformat = "ssid_%s[%d] = \"%s\"\n";
+			$ssid_export = "";
+			foreach ($ssids  as $index=>$mp) {
+				$ssid_export =  $ssid_export . sprintf($stringformat, 'ssid', $index, $mp['ssid']);
+				$ssid_export =  $ssid_export . sprintf($stringformat, 'sec', $index, $mp['sec']);
+				$ssid_export =  $ssid_export . sprintf($stringformat, 'psk', $index, $mp['psk']);
+				}
+			return $ssid_export;
+		}],
+
 		'Network (apd0)',
 		['requires' => ['apdssid', 'apdpwd', 'apdchan'], 'handler' => function($values) {
 			$dbh = cfgdb_connect();
