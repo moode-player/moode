@@ -94,9 +94,12 @@ jQuery(document).ready(function($) { 'use strict';
         loadLibrary();
         mpdDbCmd('lsinfo', '');
         mpdDbCmd('lsinfo_radio');
+        mpdDbCmd('lsinfo_playlist');
 
     	// Radio
     	UI.radioPos = parseInt(SESSION.json['radio_pos']);
+        // Playlist
+    	UI.playlistPos = parseInt(SESSION.json['playlist_pos']);
     	// library
     	var tmpStr = SESSION.json['lib_pos'].split(',');
     	UI.libPos[0] = parseInt(tmpStr[0]); // album list
@@ -982,6 +985,17 @@ jQuery(document).ready(function($) { 'use strict';
 		$('.database-radio li').css('display', 'inline-block');
         $("#searchResetRa").hide();
 		showSearchResetRa = false;
+	});
+
+    // Refresh the playlist list
+	$('#pl-refresh').click(function(e) {
+		mpdDbCmd('lsinfo_playlist');
+        lazyLode('playlist');
+        $('#database-playlist').scrollTo(0, 200);
+		UI.playlsitPos = -1;
+		storePlaylistPos(UI.playlistPos)
+        $("#searchResetPl").hide();
+        showSearchResetPl = false;
 	});
 
     // Queue search

@@ -88,6 +88,7 @@ var UI = {
 	// [2]: artist list pos
 	// special values for [0] and [1]: -1 = full lib displayed, -2 = lib headers clicked, -3 = search performed
 	radioPos: -1,
+    playlistPos: -1,
 	libAlbum: '',
 	mobile: false,
 	npIcon: 'url("../images/4band-npicon/audiod.svg")',
@@ -1288,6 +1289,9 @@ function mpdDbCmd(cmd, path) {
     else if (cmd == 'lsinfo_radio') {
 		renderRadioView();
 	}
+    else if (cmd == 'lsinfo_playlist') {
+		renderPlaylistView();
+	}
 	else if (cmd == 'delsavedpl') {
 		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {}, 'json');
 		$.post('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {renderFolderView(data, '');}, 'json');
@@ -1739,22 +1743,99 @@ function renderRadioView() {
 		var element = document.getElementById('radiocovers');
 		element.innerHTML = output;
 		if (currentView == 'radio') lazyLode('radio');
-
     });
 }
 
 // Render Playlist view
 function renderPlaylistView () {
-    // Read cfg_playlist
-    // Display panel
-    // Button bar: Refresh, + (New)
-    // Playlist item context menu:
-    // - Add, Play, Clear/Play, Add next, Play next
-    // - Edit playlist, Delete playlist
-    // Edit: Read /var/lib/mpd/playlists/PLAYLIST_NAME.m3u into array?
-    // Library item context menus
-    // - "Add to Playlist"
-    // - Display playlists to choose from as well as a "New Playlist" option.
+    var data = '';
+    $.getJSON('command/moode.php?cmd=read_cfg_playlist', function(data) {
+        console.log(data);
+        // Lazyload method
+        var plViewLazy = GLOBAL.nativeLazyLoad ? '<div class="thumbHW"><img loading="lazy" src="' : '<div class="thumbHW"><img class="lazy-playlistview" data-original="';
+
+        // Sort/Group
+        var sortTag = SESSION.json['plview_sort_group'].split(',')[0].toLowerCase();
+        var groupMethod = SESSION.json['plview_sort_group'].split(',')[1];
+        var configuredGroupMethod = groupMethod; // NOTE: For code block "Mark the end of Favorites"
+
+        // Generate  list
+        var playlists = [];
+    	for (var i = 0; i < data.length; i++) {
+            playlists[i] = data[i];
+    	}
+
+        // Sort list
+		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+        playlists.sort(function(a, b) {
+            if (sortTag == 'name') {
+                return collator.compare(removeArticles(a[sortTag]), removeArticles(b[sortTag]));
+            }
+            else if (sortTag == 'genre') {
+                return collator.compare(removeArticles(a[sortTag].split(', ')[0]), removeArticles(b[sortTag].split(', ')[0]));
+            }
+            else {
+                return collator.compare(a[sortTag], b[sortTag]);
+            }
+        });
+
+        // Clear search results (if any)
+        $('.btnlist-top-pl').show();
+        $("#searchResetPl").hide();
+        showSearchResetPl = false;
+    	$('#pl-search-keyword').val('');
+    	$('#pl-filter').val('');
+
+        // Format list
+        var lastSortTagValue = '';
+        var numericHeaderPrinted = false;
+        var output = '';
+    	for (var i = 0; i < data.length; i++) {
+            // Metadata div's
+            var genreDiv = sortTag == 'genre' ? '<div class="playlistview-metadata-text">' + data[i].genre + '</div>' : '';
+
+            // Change to Sort tag grouping unless method is No grouping
+            if (groupMethod != 'No grouping') {
+                groupMethod = 'Sort tag';
+            }
+
+            // Construct group header
+            if (groupMethod == 'Sort tag') {
+                var currentChr1 = removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase();
+                var lastChr1 = removeArticles(lastSortTagValue).substr(0, 1).toUpperCase()
+                if (sortTag == 'name' && currentChr1 != lastChr1) {
+                    if (isNaN(currentChr1) === false && numericHeaderPrinted === false) {
+                        output += '<li class="horiz-rule-playlistview">0-9</li>';
+                        numericHeaderPrinted = true;
+                    }
+                    else if (isNaN(currentChr1) === true) {
+                        output += '<li class="horiz-rule-playlistview">' + currentChr1 + '</li>';
+                    }
+                }
+                else if (sortTag == 'genre' && data[i][sortTag].split(', ')[0] != lastSortTagValue.split(', ')[0]) {
+                    output += '<li class="horiz-rule-playlistview">' + data[i][sortTag].split(', ')[0] + '</li>';
+                }
+                else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTagValue) {
+                    output += '<li class="horiz-rule-playlistview">' + data[i][sortTag] + '</li>';
+                }
+            }
+
+            // Construct playlist entries
+            var imgUrl = data[i].cover == 'local' ? 'imagesw/playlist-covers/' + data[i].name + '.jpg' : data[i].cover;
+    		output += '<li id="pl-' + (i + 1) + '" data-path="' + data[i].name;
+    		output += '"><div class="db-icon db-song db-browse db-action">' + plViewLazy + encodeURIComponent(imgUrl) + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-playlist-item"></div></div><div class="db-entry db-song db-browse"></div>';
+            output += '<span class="playlist-name">' + data[i].name + '</span>';
+            output += genreDiv;
+            output += '</li>';
+
+            lastSortTagValue = data[i][sortTag];
+    	}
+
+        // Render the list
+		var element = document.getElementById('playlistcovers');
+		element.innerHTML = output;
+		if (currentView == 'playlist') lazyLode('playlist');
+    });
 }
 
 // Return formatted total time and show/hide certain elements
@@ -3476,6 +3557,10 @@ $('#index-radio li').on('click', function(e) {
     list = SESSION.json['radioview_sort_group'].split(',')[1] == 'No grouping' ? 'radio' : 'radio_headers';
 	listLook('radiocovers li', list, $(this).text());
 });
+$('#index-playlist li').on('click', function(e) {
+    list = SESSION.json['plview_sort_group'].split(',')[1] == 'No grouping' ? 'playlist' : 'playlist_headers';
+	listLook('playlistcovers li', list, $(this).text());
+});
 
 function listLook(selector, list, searchText) {
     //console.log(selector, list, searchText);
@@ -3493,6 +3578,13 @@ function listLook(selector, list, searchText) {
             $('#' + selector).each(function() {
                 var text = $(this).hasClass('horiz-rule-radioview') ? removeArticles($(this).text().toLowerCase()) : '';
                 if (text != 'favorites' && text.substr(0, 1) == searchText) {return false;}
+        		itemNum++;
+        	});
+        }
+        else if (list == 'playlist_headers') {
+            $('#' + selector).each(function() {
+                var text = $(this).hasClass('horiz-rule-playlistview') ? removeArticles($(this).text().toLowerCase()) : '';
+                if (text.substr(0, 1) == searchText) {return false;}
         		itemNum++;
         	});
         }
@@ -3514,6 +3606,11 @@ function listLook(selector, list, searchText) {
 function storeRadioPos(pos) {
 	//console.log('radio_pos', pos);
     $.post('command/moode.php?cmd=updcfgsystem', {'radio_pos': pos});
+}
+// Playlist pos
+function storePlaylistPos(pos) {
+	//console.log('playlist_pos', pos);
+    //$.post('command/moode.php?cmd=updcfgsystem', {'playlist_pos': pos});
 }
 // Library pos
 function storeLibPos(pos) {
@@ -3854,6 +3951,9 @@ function lazyLode(view, skip, force) {
 					}
 					if (UI.radioPos >= 0 && currentView == 'radio') {
                         customScroll('radio', UI.radioPos, 0);
+                    }
+                    if (UI.playlistPos >= 0 && currentView == 'playlist') {
+                        customScroll('playlist', UI.playlistPos, 0);
                     }
 				});
 	        }

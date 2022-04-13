@@ -530,7 +530,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #radio-panel.active #btnlist-top-ra {display:block;}
 #playlist-panel {display:none;}
 #playlist-panel.active {height:100vh;display:block;}
-#playlist-panel.active #index-playist {display:block;}
+#playlist-panel.active #index-playlist {display:block;}
 #playlist-panel.active #btnlist-top-pl {display:block;}
 /* playbar */
 #timetrack {display:flex;width:100%;padding:0;color:inherit;height:15px;z-index:10;position:relative;}
@@ -688,8 +688,8 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .playback-hd-badge {filter:brightness(90%);display:none;position:relative;height:1.2em;top:1.75rem;margin:0 0 0 1em;padding:.1em .2em 0 .3em;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;}
 /* Radio manager */
 .modal-button-style {display:inline-block;/*margin-bottom:.5em;margin-top:-1px*/}
-/* Radio view */
-.radioview-metadata-text {color:var(--textvariant);font-weight:500}
+/* Radio view, Playlist view */
+.radioview-metadata-text, .playlistview-metadata-text {color:var(--textvariant);font-weight:500}
 /* First use help */
 #playback-firstuse-help, #playbar-firstuse-help {display:none;position:absolute;background:rgba(0,0,0,0.9);cursor:pointer;}
 #playback-firstuse-help:after, #playbar-firstuse-help:after {position:absolute;top:.75em;right:.75em;font-family:"Font Awesome 5 Pro";content:"\f057";color:var(--accentxts);font-size:1.75em;font-weight:100;}

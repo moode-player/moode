@@ -710,6 +710,10 @@ else {
 			strpos($_POST['stationBlock'], 'Moode') !== false ?  $radioview_show_hide[0] = 'No action' : $radioview_show_hide[1] = 'No action';
 			playerSession('write', 'radioview_show_hide', $radioview_show_hide[0] . ',' . $radioview_show_hide[1]);
 			break;
+		case 'read_cfg_playlist':
+			$result = sdbquery("select * from cfg_playlist", $dbh);
+			echo json_encode($result);
+			break;
 		case 'readaudiodev':
 			if (isset($_POST['name'])) {
 				$result = cfgdb_read('cfg_audiodev', $dbh, $_POST['name']);
