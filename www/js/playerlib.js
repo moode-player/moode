@@ -174,8 +174,9 @@ var blurrr = CSS.supports('-webkit-backdrop-filter','blur(1px)');
 // Various flags and things
 var dbFilterResults = [];
 var searchTimer = '';
-var showSearchResetPl = false;
+var showSearchResetPq = false;
 var showSearchResetRa = false;
+var showSearchResetPl = false;
 var showSearchResetPh = false;
 var eqGainUpdInterval = '';
 var toolbarTimer = '';

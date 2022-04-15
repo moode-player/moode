@@ -781,6 +781,9 @@ jQuery(document).ready(function($) { 'use strict';
         }
 	});
 
+    //
+    // FOLDER VIEW
+    //
 	// Folder view item click
 	$('.database').on('click', '.db-browse', function(e) {
         //console.log('Folder item click');
@@ -792,7 +795,6 @@ jQuery(document).ready(function($) { 'use strict';
 			mpdDbCmd(cmd, $(this).parent().data('path'));
 		}
 	});
-
     // Folder view context menu click
 	$('.database').on('click', '.db-action, .db-album, .db-song', function(e) {
         //console.log('Folder menu click');
@@ -838,7 +840,6 @@ jQuery(document).ready(function($) { 'use strict';
 		}
         //console.log(UI.dbCmd, UI.path);
 	});
-
 	$('#db-search-submit').click(function(e) {
 		var searchStr = '';
 		if ($('#dbsearch-alltags').val() != '') {
@@ -910,6 +911,9 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
+    //
+    // RADIO VIEW
+    //
     // Refresh the station list
 	$('#ra-refresh').click(function(e) {
 		mpdDbCmd('lsinfo_radio');
@@ -920,7 +924,7 @@ jQuery(document).ready(function($) { 'use strict';
         $("#searchResetRa").hide();
         showSearchResetRa = false;
 	});
-	// Create new station
+	// New station modal (+)
 	$('#ra-new').click(function(e) {
 		$('#new-station-name').val('New station');
 		$('#new-station-url').val('http://');
@@ -945,7 +949,6 @@ jQuery(document).ready(function($) { 'use strict';
     $('#newstation-modal').on('shown.bs.modal', function() {
         $('#new-station-name').focus();
     });
-
 	// Radio search
 	$('#ra-filter').keyup(function(e){
 		if (!showSearchResetRa) {
@@ -956,7 +959,6 @@ jQuery(document).ready(function($) { 'use strict';
 		clearTimeout(searchTimer);
 
 		var selector = this;
-
 		searchTimer = setTimeout(function(){
 			var filter = $(selector).val().trim();
 			var count = 0;
@@ -975,6 +977,7 @@ jQuery(document).ready(function($) { 'use strict';
 					count++;
 				}
 			});
+
 		    var s = (count == 1) ? '' : 's';
             lazyLode('radio');
             $('#database-radio').scrollTo(0, 200);
@@ -986,7 +989,74 @@ jQuery(document).ready(function($) { 'use strict';
         $("#searchResetRa").hide();
 		showSearchResetRa = false;
 	});
+    // Radio view context menu
+	$('.database-radio').on('click', '.cover-menu', function(e) {
+        var pos = $(this).parents('li').index();
+        var path = $(this).parents('li').data('path');
 
+        UI.dbEntry[0] = path;
+        UI.radioPos = pos;
+		storeRadioPos(UI.radioPos)
+
+        $('#' + UI.dbEntry[3]).removeClass('active');
+        UI.dbEntry[3] = $(this).parents('li').attr('id');
+        $(this).parents('li').addClass('active');
+	});
+    // Create new station
+    $('#btn-create-station').click(function(e){
+		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
+			notify('blankentries', 'Station not created');
+		}
+		else {
+			mpdDbCmd('newstation', {
+                'name': $('#new-station-name').val().trim(),
+                'url': $('#new-station-url').val().trim(),
+                'type': getParamOrValue('value', $('#new-station-type span').text()),
+                'genre': $('#new-station-genre').val().trim(),
+                'broadcaster': $('#new-station-broadcaster').val().trim(),
+                'language': $('#new-station-language').val().trim(),
+                'country': $('#new-station-country').val().trim(),
+                'region': $('#new-station-region').val().trim(),
+                'bitrate': $('#new-station-bitrate').val().trim(),
+                'format': $('#new-station-format').val().trim(),
+                'geo_fenced': $('#new-station-geo-fenced span').text(),
+                'home_page': $('#new-station-home-page').val().trim(),
+                'reserved2': 'NULL'
+            });
+		}
+	});
+    // Update station
+	$('#btn-update-station').click(function(e){
+		if ($('#edit-station-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
+			notify('blankentries', 'Station not updated');
+		}
+		else {
+            mpdDbCmd('updstation', {
+                'id': GLOBAL.editStationId,
+                'name': $('#edit-station-name').val().trim(),
+                'url': $('#edit-station-url').val().trim(),
+                'type': getParamOrValue('value', $('#edit-station-type span').text()),
+                'genre': $('#edit-station-genre').val().trim(),
+                'broadcaster': $('#edit-station-broadcaster').val().trim(),
+                'language': $('#edit-station-language').val().trim(),
+                'country': $('#edit-station-country').val().trim(),
+                'region': $('#edit-station-region').val().trim(),
+                'bitrate': $('#edit-station-bitrate').val().trim(),
+                'format': $('#edit-station-format').val().trim(),
+                'geo_fenced': $('#edit-station-geo-fenced span').text(),
+                'home_page': $('#edit-station-home-page').val().trim(),
+                'reserved2': 'NULL'
+            })
+		}
+	});
+    // Delete statiuon
+	$('#btn-del-station').click(function(e){
+		mpdDbCmd('delstation', UI.dbEntry[0]);
+	});
+
+    //
+    // PLAYLIST VIEW
+    //
     // Refresh the playlist list
 	$('#pl-refresh').click(function(e) {
 		mpdDbCmd('lsinfo_playlist');
@@ -997,12 +1067,110 @@ jQuery(document).ready(function($) { 'use strict';
         $("#searchResetPl").hide();
         showSearchResetPl = false;
 	});
+    // New playlist modal (+)
+	$('#pl-new').click(function(e) {
+		$('#new-playlist-name').val('New playlist');
+        $('#new-coverimage').val('');
+		$('#preview-new-coverimage').html('');
+        $('#info-toggle-new-coverimage').css('margin-left','unset');
+        $('#new-playlist-tags').css('margin-top', '0');
+        $('#new-playlist-genre').val('');
+		$('#new-playlist-modal').modal();
+	});
+    $('#new-playlist-modal').on('shown.bs.modal', function() {
+        $('#new-playlist-name').focus();
+    });
+	// Playlist search
+	$('#pl-filter').keyup(function(e){
+		if (!showSearchResetRa) {
+			$('#searchResetPl').show();
+			showSearchResetPl = true;
+		}
 
+		clearTimeout(searchTimer);
+
+		var selector = this;
+		searchTimer = setTimeout(function(){
+			var filter = $(selector).val().trim();
+			var count = 0;
+
+			if (filter == '') {
+				$("#searchResetPl").hide();
+				showSearchResetPl = false;
+			}
+
+			$('.database-radio li').each(function(){
+				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
+					$(this).hide();
+				}
+				else {
+					$(this).show();
+					count++;
+				}
+			});
+
+		    var s = (count == 1) ? '' : 's';
+            lazyLode('playlist');
+            $('#database-playlist').scrollTo(0, 200);
+
+		}, SEARCH_TIMEOUT);
+	});
+	$('#searchResetPl').click(function(e) {
+		$('.database-playlist li').css('display', 'inline-block');
+        $("#searchResetPl").hide();
+		showSearchResetPl = false;
+	});
+    // Playlist view context menu
+	$('.database-playlist').on('click', '.cover-menu', function(e) {
+        var pos = $(this).parents('li').index();
+        var path = $(this).parents('li').data('path');
+
+        UI.dbEntry[0] = path;
+        UI.radioPos = pos;
+		storeRadioPos(UI.radioPos)
+
+        $('#' + UI.dbEntry[3]).removeClass('active');
+        UI.dbEntry[3] = $(this).parents('li').attr('id');
+        $(this).parents('li').addClass('active');
+	});
+    // Create new playlist
+    $('#btn-create-playlist').click(function(e){
+		if ($('#new-playlist-name').val().trim() == '') {
+			notify('blankentries', 'Playlist not created');
+		}
+		else {
+			mpdDbCmd('new_playlist', {
+                'name': $('#new-playlist-name').val().trim(),
+                'genre': $('#new-playlist-genre').val().trim()
+            });
+		}
+	});
+    // Update playlist
+	$('#btn-update-playlist').click(function(e){
+		if ($('#edit-playlist-name').val().trim() == '') {
+			notify('blankentries', 'Playlist not updated');
+		}
+		else {
+            mpdDbCmd('upd_playlist', {
+                'id': GLOBAL.editPlaylistId,
+                'name': $('#edit-playlist-name').val().trim(),
+                'genre': $('#edit-playlist-genre').val().trim()
+            })
+		}
+	});
+    // Delete playlist
+	$('#btn-del-playlist').click(function(e){
+		mpdDbCmd('del_playlist', UI.dbEntry[0]);
+	});
+
+    //
+    // MISCELLANEOUS
+    //
     // Queue search
 	$('#playqueue-filter').keyup(function(e){
-		if (!showSearchResetPlayqueue) {
+		if (!showSearchResetPq) {
 			$('#searchResetPlayqueue').show();
-			showSearchResetPlayqueue = true;
+			showSearchResetPq = true;
 		}
 
 		clearTimeout(searchTimer);
@@ -1014,7 +1182,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 			if (filter == '') {
 				$("#searchResetPlayqueue").hide();
-				showSearchResetPlayqueue = false;
+				showSearchResetPq = false;
 			}
 
 			$('.playqueue li').each(function(){
@@ -1032,7 +1200,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 	$('#searchResetPlayqueue').click(function(e) {
 		$("#searchResetPlayqueue").hide();
-		showSearchResetPlayqueue = false;
+		showSearchResetPq = false;
 		$('.playqueue li').css('display', 'block');
 	});
 
@@ -1123,72 +1291,10 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#ph-filter-results').html('');
 	});
 
-    // Radio view context menu
-	$('.database-radio').on('click', '.cover-menu', function(e) {
-        var pos = $(this).parents('li').index();
-        var path = $(this).parents('li').data('path');
-
-        UI.dbEntry[0] = path;
-        UI.radioPos = pos;
-		storeRadioPos(UI.radioPos)
-
-        $('#' + UI.dbEntry[3]).removeClass('active');
-        UI.dbEntry[3] = $(this).parents('li').attr('id');
-        $(this).parents('li').addClass('active');
-	});
-
 	// Buttons on modals
 	$('.btn-del-savedpl').click(function(e){
 		mpdDbCmd('delsavedpl', UI.dbEntry[0]);
 		notify('delsavedpl');
-	});
-	$('#btn-create-station').click(function(e){
-		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
-			notify('blankentries', 'Station not created');
-		}
-		else {
-			mpdDbCmd('newstation', {
-                'name': $('#new-station-name').val().trim(),
-                'url': $('#new-station-url').val().trim(),
-                'type': getParamOrValue('value', $('#new-station-type span').text()),
-                'genre': $('#new-station-genre').val().trim(),
-                'broadcaster': $('#new-station-broadcaster').val().trim(),
-                'language': $('#new-station-language').val().trim(),
-                'country': $('#new-station-country').val().trim(),
-                'region': $('#new-station-region').val().trim(),
-                'bitrate': $('#new-station-bitrate').val().trim(),
-                'format': $('#new-station-format').val().trim(),
-                'geo_fenced': $('#new-station-geo-fenced span').text(),
-                'home_page': $('#new-station-home-page').val().trim(),
-                'reserved2': 'NULL'
-            });
-		}
-	});
-	$('#btn-update-station').click(function(e){
-		if ($('#edit-station-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
-			notify('blankentries', 'Station not updated');
-		}
-		else {
-            mpdDbCmd('updstation', {
-                'id': GLOBAL.editStationId,
-                'name': $('#edit-station-name').val().trim(),
-                'url': $('#edit-station-url').val().trim(),
-                'type': getParamOrValue('value', $('#edit-station-type span').text()),
-                'genre': $('#edit-station-genre').val().trim(),
-                'broadcaster': $('#edit-station-broadcaster').val().trim(),
-                'language': $('#edit-station-language').val().trim(),
-                'country': $('#edit-station-country').val().trim(),
-                'region': $('#edit-station-region').val().trim(),
-                'bitrate': $('#edit-station-bitrate').val().trim(),
-                'format': $('#edit-station-format').val().trim(),
-                'geo_fenced': $('#edit-station-geo-fenced span').text(),
-                'home_page': $('#edit-station-home-page').val().trim(),
-                'reserved2': 'NULL'
-            });
-		}
-	});
-	$('#btn-del-station').click(function(e){
-		mpdDbCmd('delstation', UI.dbEntry[0]);
 	});
 	$('.btn-delete-playqueue-item').click(function(e){
 		var cmd = '';
@@ -1198,7 +1304,6 @@ jQuery(document).ready(function($) { 'use strict';
 		begpos == endpos ? cmd = 'delete_playqueue_item&range=' + begpos : cmd = 'delete_playqueue_item&range=' + begpos + ':' + (endpos + 1);
 		notify('remove');
         $.get('command/moode.php?cmd=' + cmd);
-
 	});
 	// Speed btns on delete modal
 	$('#btn-delete-setpos-top').click(function(e){
