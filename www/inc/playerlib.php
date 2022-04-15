@@ -3321,7 +3321,6 @@ function storeBackLink($section, $tpl) {
 		'bkp-config.html' => '/sys-config.php#backuprestore',
 		'eqg-config.html' => '/snd-config.php#equalizers',
 		'eqp-config.html' => '/snd-config.php#equalizers',
-		'cdsp-config.html' => '/snd-config.php#equalizers',
 		'blu-config.html' => '/snd-config.php#audiorenderers',
 		'apl-config.html' => '/snd-config.php#audiorenderers',
 		'spo-config.html' => '/snd-config.php#audiorenderers',
@@ -3336,11 +3335,14 @@ function storeBackLink($section, $tpl) {
 	if (array_key_exists($tpl, $tpl_configs)) {
 		$_SESSION['config_back_link'] = $tpl_configs[$tpl];
 	}
-	elseif ($tpl == 'trx-config.html' && $referer_link == '/snd-config.php') {
-		$_SESSION['config_back_link'] = '/snd-config.php#alsaoptions';
+	elseif ($tpl == 'cdsp-config.html' && $referer_link == '/snd-config.php') {
+		$_SESSION['config_back_link'] = '/snd-config.php#equalizers';
 	}
 	elseif ($tpl == 'mpd-config.html' && $referer_link == '/snd-config.php') {
 		$_SESSION['config_back_link'] = '/snd-config.php#mpdoptions';
+	}
+	elseif ($tpl == 'trx-config.html' && $referer_link == '/snd-config.php') {
+		$_SESSION['config_back_link'] = '/snd-config.php#alsaoptions';
 	}
 	else if (in_array($section, $root_configs)) {
 		$_SESSION['config_back_link'] = '/index.php';
