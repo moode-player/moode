@@ -18,7 +18,8 @@
 New features
 
 - NEW: Support for multiple WiFi networks
-- NEW: Dedicated Library Playlist panel with covers
+- NEW: Dedicated Library Playlist view with covers
+- NEW: RaspiOS 64-bit moOde image
 
 Updates
 
