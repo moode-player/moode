@@ -30,6 +30,11 @@ playerSession('open', '' ,'');
 $dbh = cfgdb_connect();
 session_write_close();
 
+if (false === ($sock = openMpdSock('localhost', 6600))) {
+	workerLog('moode.php: MPD connect failed: cmd=(' . $_GET['cmd'] . ')');
+	exit(0);
+}
+
 $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
 	'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next'/*, 'clear_add_group'*/);
@@ -157,10 +162,10 @@ elseif ($_GET['cmd'] == 'set_rx_status') {
 }
 // Commands sent to MPD
 elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other_mpd_cmds)) {
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
+	/*if (false === ($sock = openMpdSock('localhost', 6600))) {
 		workerLog('moode.php: MPD connect failed: cmd=(' . $_GET['cmd'] . ')');
 		exit(0);
-	}
+	}*/
 
 	// Turn off Auto-shuffle before processing Queue
 	if (in_array($_GET['cmd'], $playqueue_cmds) && $_SESSION['ashuffle'] == '1') {
@@ -765,6 +770,13 @@ else {
 			 	'geo_fenced' => $result[0]['geo_fenced'], 'home_page' => $result[0]['home_page'], 'reserved2' => $result[0]['reserved2']);
 			echo json_encode($array);
 			break;
+		case 'read_playlist_file':
+			$items = parsePlaylistFile(shell_exec('cat "' . MPD_PLAYLISTROOT . $_POST['path'] . '.m3u"'), $dbh, $sock);
+			$result = sdbquery("SELECT * FROM cfg_playlist WHERE name='" . SQLite3::escapeString($_POST['path']) . "'", $dbh);
+			$array = array('id' => $result[0]['id'], 'name' => $result[0]['name'], 'genre' => $result[0]['genre'], 'items' => $items);
+			echo json_encode($array);
+			break;
+
 		// Remove background image
 		case 'rmbgimage':
 			sysCmd('rm /var/local/www/imagesw/bgimage.jpg');

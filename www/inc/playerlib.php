@@ -28,6 +28,7 @@
 define('MPD_RESPONSE_ERR', 'ACK');
 define('MPD_RESPONSE_OK',  'OK');
 define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
+define('MPD_PLAYLISTROOT',  '/var/lib/mpd/playlists/');
 define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
 define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
 define('MOODE_LOG', '/var/log/moode.log');
@@ -1509,6 +1510,41 @@ function parseStationFile($resp) {
 			$array[$element] = $value;
 			$line = strtok("\n");
 		}
+	}
+
+	return $array;
+}
+
+// Parse saved playlist file
+function parsePlaylistFile($contents, $dbh, $sock) {
+	$array = array();
+	$line = strtok($contents, "\n");
+
+	while ($line) {
+		if (substr($line, 0, 4) == 'http') {
+			// Radio station
+			$result = sdbquery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($line) . "'", $dbh);
+			if ($result === true) { // Query successful but no reault
+				$name = $line;
+			}
+			elseif ($result !== false) { // Query successful and non-empty result
+				$name = $result[0]['name'];
+			}
+			else { // Query execution aborted (rare)
+				$name = "Query aborted";
+			}
+		}
+		else {
+			// Song file
+			sendMpdCmd($sock, 'lsinfo "' . $line . '"');
+			$song_data = parseDelimFile(readMpdResp($sock), ': ');
+			workerLog(print_r($song_data ,true));
+			$name = $song_data['Title'];
+		}
+
+		$item = array('name' => $name, 'path' => $line);
+		array_push($array, $item);
+		$line = strtok("\n");
 	}
 
 	return $array;

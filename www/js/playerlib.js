@@ -133,6 +133,7 @@ var GLOBAL = {
     mpdMaxVolume: 0,
     lastTimeCount: 0,
     editStationId: '',
+    editPlaylistId: '',
     nativeLazyLoad: false,
     playqueueChanged: false,
 	initTime: 0,
@@ -2274,6 +2275,39 @@ $(document).on('click', '.context-menu a', function(e) {
 		$('#station-path').html(path.slice(0,path.lastIndexOf('.')).substr(6)); // Trim 'RADIO/' and '.pls'
 		$('#deletestation-modal').modal();
 	}
+    else if ($(this).data('cmd') == 'edit_playlist') {
+        $.post('command/moode.php?cmd=read_playlist_file', {'path': UI.dbEntry[0]}, function(result) {
+            var playlistName = path;
+            GLOBAL.editPlaylistId = path['id']; // Needed ??? This is to pass to the update playlist routine so it can uniquely identify the row
+
+            // Metadata
+            $('#edit-playlist-name').val(playlistName);
+            $('#edit-plcoverimage').val('');
+            $('#info-toggle-edit-plcoverimage').css('margin-left','60px');
+            $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + playlistName + '.jpg">');
+            $('#edit-playlist-tags').css('margin-top', '2.25em');
+            $('#edit-playlist-genre').val(result['genre']);
+
+        	// Playlist items
+        	var output = '';
+        	var element = document.getElementById('playlist-items');
+        	element.innerHTML = '';
+
+            for (i = 0; i < result['items'].length; i++) {
+                output += '<li id="db-' + (i + 1) + '" data-path="' + result['items'][i]['path'] + '">';
+                output += result['items'][i]['name'];
+    			output += '</div></li>';
+            }
+
+            element.innerHTML = output;
+
+    		$('#edit-playlist-modal').modal();
+        }, 'json');
+	}
+	else if ($(this).data('cmd') == 'del_playlist') {
+		$('#playlist-path').html(path)
+		$('#delete-playlist-modal').modal();
+	}
 	else if ($(this).data('cmd') == 'delete_playqueue_item') {
 		$('#delete-playqueue-item-begpos').attr('max', UI.dbEntry[4]); // Max value (num Queue items in list)
 		$('#delete-playqueue-item-endpos').attr('max', UI.dbEntry[4]);
@@ -3611,7 +3645,7 @@ function storeRadioPos(pos) {
 // Playlist pos
 function storePlaylistPos(pos) {
 	//console.log('playlist_pos', pos);
-    //$.post('command/moode.php?cmd=updcfgsystem', {'playlist_pos': pos});
+    $.post('command/moode.php?cmd=updcfgsystem', {'playlist_pos': pos});
 }
 // Library pos
 function storeLibPos(pos) {

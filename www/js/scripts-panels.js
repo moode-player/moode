@@ -1073,7 +1073,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-coverimage').val('');
 		$('#preview-new-coverimage').html('');
         $('#info-toggle-new-coverimage').css('margin-left','unset');
-        $('#new-playlist-tags').css('margin-top', '0');
+        $('#new-playlist-tags').css('margin-top', '.75em');
         $('#new-playlist-genre').val('');
 		$('#new-playlist-modal').modal();
 	});
@@ -1126,8 +1126,8 @@ jQuery(document).ready(function($) { 'use strict';
         var path = $(this).parents('li').data('path');
 
         UI.dbEntry[0] = path;
-        UI.radioPos = pos;
-		storeRadioPos(UI.radioPos)
+        UI.playlistPos = pos;
+		storePlaylistPos(UI.playlistPos)
 
         $('#' + UI.dbEntry[3]).removeClass('active');
         UI.dbEntry[3] = $(this).parents('li').attr('id');

@@ -2327,6 +2327,126 @@
 	</div>
 </div>
 
+<!-- PLAYLIST NEW/EDIT/DELETE -->
+<div id="new-playlist-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="new-playlist-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="new-playlist-modal-label">New playlist</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" action="" method="">
+	    	<fieldset>
+				<div class="control-group" style="margin-bottom:1.5em">
+	                <label class="control-label" for="new-playlist-name">Playlist name</label>
+	                <div class="controls">
+	                    <input id="new-playlist-name" class="input-large" type="text" name="new_playlist_name" maxlength="200" value="" autofocus>
+	                </div>
+
+					<label class="control-label" for="new-playlistcover">Logo image</label>
+					<div class="controls">
+						<div style="display:inline-block;">
+							<label id="new-playlistcover" for="new-plcoverimage" class="btn btn-primary btn-small modal-button-style" style="margin-top:.25em;">Choose</label>
+							<input type="file" id="new-plcoverimage" accept="image/jpeg" style="display:none" onchange="newPlCoverImage(this.files)">
+						</div>
+						<div id="preview-new-plcoverimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+						<a aria-label="Help" class="info-toggle" id="info-toggle-new-plcoverimage" data-cmd="info-new-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<div id="error-new-plcoverimage"></div>
+						<div id="info-new-plcoverimage" class="help-block hide">
+							Add a JPEG cover image for the playlist. Max image size is 1MB.
+						</div>
+					</div>
+
+					<div id="new-playlist-tags">
+						<label class="control-label" for="new-playlist-genre">Genre</label>
+						<div class="controls">
+							<input id="new-playlist-genre" class="input-large" type="text" name="new_playlist_genre" maxlength="200" value="">
+							<a aria-label="Help" class="info-toggle" data-cmd="info-new-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-new-playlist-genre" class="help-block hide">
+								The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+							</span>
+						</div>
+					</div>
+	            </div>
+	    	</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Create" id="btn-create-station" class="btn btn-primary" data-dismiss="modal">Create</button>
+	</div>
+</div>
+
+<div id="edit-playlist-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="edit-playlist-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="edit-playlist-modal-label">Edit playlist</h3>
+		<p>NOTE when updating a playlist cover image it may take some time before the Browser expires the old image from its cache.</p>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" action="" method="">
+	    	<fieldset>
+				<div class="control-group" style="margin-bottom:1.5em">
+	                <label class="control-label" for="edit-playlist-name">Playlist name</label>
+	                <div class="controls">
+	                    <input id="edit-playlist-name" class="input-large" type="text" name="edit_station_name" maxlength="200" value="" readonly>
+	                </div>
+
+					<label class="control-label" for="edit-playlistcover">Cover image</label>
+					<div class="controls">
+						<div style="display:inline-block;">
+							<label id="edit-playlistcover" for="edit-plcoverimage" class="btn btn-primary btn-small modal-button-style" style="margin-top:.25em;">Choose</label>
+							<input type="file" id="edit-plcoverimage" accept="image/jpeg" style="display:none" onchange="editPlCoverImage(this.files)">
+						</div>
+						<div id="preview-edit-plcoverimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
+						<a aria-label="Help" class="info-toggle" id="info-toggle-edit-plcoverimage" data-cmd="info-edit-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<div id="error-edit-plcoverimage"></div>
+						<div id="info-edit-plcoverimage" class="help-block hide">
+							Add a JPEG logo image for the playlist. Max image size is 1MB.
+						</div>
+					</div>
+
+					<div id="edit-playlist-tags">
+						<label class="control-label" for="edit-playlist-genre">Genre</label>
+						<div class="controls">
+							<input id="edit-playlist-genre" class="input-large" type="text" name="edit_playlist_genre" maxlength="200" value="">
+							<a aria-label="Help" class="info-toggle" data-cmd="info-edit-playlist-genre" href="#notarget"><i class="fas fa-info-circle"></i></a>
+							<span id="info-edit-playlist-genre" class="help-block hide">
+								The first genre is the primary genre followed by related or sub-genres separated by ", " (comma + space).
+							</span>
+						</div>
+					</div>
+	            </div>
+	    	</fieldset>
+
+			<div>
+				<label class="control-label" for="playlist-items">Playlist items</label>
+				<br>
+				<div id="playlist-items-container">
+					<ul id="playlist-items"></ul>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Update" id="btn-update-station" class="btn btn-primary" data-dismiss="modal">Update</button>
+	</div>
+</div>
+
+<div id="delete-playlist-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-playlist-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="delete-playlist-modal-label">Delete playlist</h3>
+	</div>
+	<div class="modal-body">
+		<h4 id="playlist-path"></h4>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Delete" id="btn-del-playlist" class="btn btn-primary" data-dismiss="modal">Delete</button>
+	</div>
+</div>
+
 <!-- QUEUE ITEM DELETE/MOVE -->
 <div id="delete-playqueue-item-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-playqueue-item-modal-label" aria-hidden="true">
 	<div class="modal-header">
