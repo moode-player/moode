@@ -1416,6 +1416,13 @@ $('#songsList').on('click', '.lib-track', function(e) {
     }
 });
 
+// Click playlist item
+$('#playlist-items').on('click', '.pl-item', function(e) {
+    UI.dbEntry[0] = $('#playlist-items .pl-item').index(this); // Store pos for use in action menu item click
+	$('#playlist-items li').removeClass('active');
+    $(this).addClass('active');
+});
+
 // Playback ellipsis context menu
 $('#context-menu-playback a').click(function(e) {
     //console.log($(this).data('cmd'));

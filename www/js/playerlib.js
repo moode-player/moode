@@ -1752,7 +1752,7 @@ function renderRadioView() {
 function renderPlaylistView () {
     var data = '';
     $.getJSON('command/moode.php?cmd=read_cfg_playlist', function(data) {
-        console.log(data);
+        //console.log(data);
         // Lazyload method
         var plViewLazy = GLOBAL.nativeLazyLoad ? '<div class="thumbHW"><img loading="lazy" src="' : '<div class="thumbHW"><img class="lazy-playlistview" data-original="';
 
@@ -1824,7 +1824,7 @@ function renderPlaylistView () {
 
             // Construct playlist entries
             var imgUrl = data[i].cover == 'local' ? 'imagesw/playlist-covers/' + data[i].name + '.jpg' : data[i].cover;
-    		output += '<li id="pl-' + (i + 1) + '" data-path="' + data[i].name;
+    		output += '<li id="pl-entry-' + (i + 1) + '" data-path="' + data[i].name;
     		output += '"><div class="db-icon db-song db-browse db-action">' + plViewLazy + encodeURIComponent(imgUrl) + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-playlist-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += '<span class="playlist-name">' + data[i].name + '</span>';
             output += genreDiv;
@@ -2276,15 +2276,14 @@ $(document).on('click', '.context-menu a', function(e) {
 		$('#deletestation-modal').modal();
 	}
     else if ($(this).data('cmd') == 'edit_playlist') {
-        $.post('command/moode.php?cmd=read_playlist_file', {'path': UI.dbEntry[0]}, function(result) {
-            var playlistName = path;
-            GLOBAL.editPlaylistId = path['id']; // Needed ??? This is to pass to the update playlist routine so it can uniquely identify the row
+        $.post('command/moode.php?cmd=read_playlist_file', {'path': path}, function(result) {
+            GLOBAL.editPlaylistId = result['id']; // This is to pass to the update playlist routine so it can uniquely identify the row
 
             // Metadata
-            $('#edit-playlist-name').val(playlistName);
+            $('#edit-playlist-name').val(path);
             $('#edit-plcoverimage').val('');
             $('#info-toggle-edit-plcoverimage').css('margin-left','60px');
-            $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + playlistName + '.jpg">');
+            $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + path + '.jpg">');
             $('#edit-playlist-tags').css('margin-top', '2.25em');
             $('#edit-playlist-genre').val(result['genre']);
 
@@ -2294,7 +2293,7 @@ $(document).on('click', '.context-menu a', function(e) {
         	element.innerHTML = '';
 
             for (i = 0; i < result['items'].length; i++) {
-                output += '<li id="db-' + (i + 1) + '" data-path="' + result['items'][i]['path'] + '">';
+                output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" data-toggle="context" data-target="#context-menu-pl-contents" data-path="' + result['items'][i]['path'] + '">';
                 output += result['items'][i]['name'];
     			output += '</div></li>';
             }
@@ -2625,10 +2624,11 @@ $(document).on('click', '.context-menu a', function(e) {
         $('#about-modal').modal();
     }
 
+    // DELETE
 	// Remove highlight after selecting action menu item
-	if (UI.dbEntry[3].substr(0, 3) == 'db-') {
+	/*if (UI.dbEntry[3].substr(0, 3) == 'db-') {
 		$('#' + UI.dbEntry[3]).removeClass('active');
-	}
+	}*/
 });
 
 // Return misc lib options
@@ -3753,7 +3753,7 @@ $('#context-backdrop').click(function(e){
 	$('#context-backdrop').hide();
 	$('.context-menu').removeClass('open');
 	$('.context-menu-lib').removeClass('open');
-    if (currentView == 'folder' || currentView == 'radio') {
+    if (currentView == 'folder' || currentView == 'radio' || currentView == 'playlist') {
         //console.log(UI.dbPos[UI.dbPos[10]], UI.dbEntry[3]);
         $('#' + UI.dbEntry[3]).removeClass('active');
     }
@@ -3766,6 +3766,14 @@ $('#context-backdrop').click(function(e){
     }
 });
 
+// Remove highlight from playlist item
+$('#edit-playlist-modal').click(function(e) {
+    if (typeof($(e.target).attr('id')) == 'undefined' || !$(e.target).attr('id').includes('pl-item-')) {
+        $('#pl-item-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
+    }
+});
+
+// Toggle the accordian lists on Preferences
 $('#preferences-modal .h5').click(function(e) {
 	$(this).parent('div.accordian').toggleClass('active');
 });
