@@ -32,6 +32,7 @@ Updates
 - UPD: Tracks added to the Queue are ordered same as in Tag view
 - UPD: Purge extraneous session files during the maintenance task
 - UPD: Ensure Hardware mixer state is 'on' during startup
+- UPD: Mount NAS sources before starting renderers or UPnP/DLNA
 - UPD: Add new Soma FM stations to Default Playlist (new image only)
 - UPD: Use all Tiles on Menu, Configure modal
 - UPD: Improve config back link function
