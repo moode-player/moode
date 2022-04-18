@@ -577,6 +577,27 @@ workerLog('worker: MPD ignore CUE files (' . ($_SESSION['cuefiles_ignore'] == '1
 
 //
 workerLog('worker: --');
+workerLog('worker: -- Music sources');
+workerLog('worker: --');
+//
+
+// List USB sources
+$usbdrives = sysCmd('ls /media');
+if ($usbdrives[0] == '') {
+	workerLog('worker: USB sources (none attached)');
+}
+else {
+	foreach ($usbdrives as $usbdrive) {
+		workerLog('worker: USB source ' . '(' . $usbdrive . ')');
+	}
+}
+
+// Mount NAS and UPnP sources
+$result = sourceMount('mountall');
+workerLog('worker: NAS and UPnP sources (' . $result . ')');
+
+//
+workerLog('worker: --');
 workerLog('worker: -- Feature availability');
 workerLog('worker: --');
 //
@@ -788,27 +809,6 @@ if (($_SESSION['feat_bitmask'] & FEAT_RECORDER) && $_SESSION['recorder_status'] 
 else {
 	workerLog('worker: Stream recorder (n/a)');
 }
-
-//
-workerLog('worker: --');
-workerLog('worker: -- Music sources');
-workerLog('worker: --');
-//
-
-// List USB sources
-$usbdrives = sysCmd('ls /media');
-if ($usbdrives[0] == '') {
-	workerLog('worker: USB sources (none attached)');
-}
-else {
-	foreach ($usbdrives as $usbdrive) {
-		workerLog('worker: USB source ' . '(' . $usbdrive . ')');
-	}
-}
-
-// Mount NAS and UPnP sources
-$result = sourceMount('mountall');
-workerLog('worker: NAS and UPnP sources (' . $result . ')');
 
 //
 workerLog('worker: --');
