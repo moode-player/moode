@@ -289,6 +289,7 @@
 	<div id="playlist-panel" class="tab-pane">
 		<div id="container-playlist">
 			<div class="btnlist btnlist-top btnlist-top-pl">
+				<button aria-label="Playlist Manager" id="playlist-manager-btn" class="btn"><i class="fas fa-cog"></i></button>
 				<button aria-label="Refresh" id="pl-refresh" class="btn"><i class="far fa-redo"></i></button>
 				<button aria-label="New Playlist" id="pl-new" class="btn"><i class="far fa-plus"></i></button>
 				<form id="pl-search" class="" method="post" onSubmit="return false;">
@@ -571,8 +572,8 @@
 
 	<div id="context-menu-playback" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="save-playlist"><i class="fal fa-save sx"></i> Save to playlist</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="set-favorites"><i class="fal fa-heart-circle sx"></i> Set favorites</a></li>
+			<li><a href="#notarget" data-cmd="save-playlist"><i class="fal fa-save sx"></i> Save Queue to playlist</a></li>
+			<li class="menu-separator"><a href="#notarget" data-cmd="set-favorites"><i class="fal fa-heart-circle sx"></i> Set Favorites name</a></li>
 			<li><a href="#notarget" data-cmd="consume"><i class="fal fa-arrow-down sx"></i> Consume<span id="menu-check-consume"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="repeat"><i class="fal fa-repeat sx"></i> Repeat<span id="menu-check-repeat"><i class="fal fa-check"></i></span></a></li>
 			<li><a href="#notarget" data-cmd="single"><i class="fal fa-redo sx"></i> Single<span id="menu-check-single"><i class="fal fa-check"></i></span></a></li>
@@ -1495,7 +1496,7 @@
 	                </div>
 
    	                <label class="control-label" for="scnsaver-timeout">Backdrop style</label>
-	                <div class="controls">
+	                <div class="controls" style="margin-bottom:5em;">
    						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="scnsaver-style" class="filter-option pull-left">
@@ -1720,20 +1721,18 @@
 	</div>
 </div>
 
-<!-- SAVE PLAYLIST -->
+<!-- SAVE QUEUE TO PLAYLIST -->
 <div id="savepl-modal" class="modal modal-xs hide" tabindex="-1" role="dialog" aria-labelledby="savepl-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="savepl-modal-label">Save Queue to playlist</h3>
+		<p>NOTE: This will overwrite an existing playlist of the same name. Saved playlists are maintained in Library Playlist view.</p>
 	</div>
 	<div class="modal-body">
 		<form id="pl-save" method="post" onsubmit="return false;">
 	    	<fieldset>
 				<div class="controls">
-					<input id="pl-saveName" type="text" value="" autofocus>
-					<span id="info-savepl" class="help-block help-block2" style="margin-left:3.25em;">
-	                	Saved playlists are maintained in Library Folder view.
-	                </span>
+					<input id="pl-saveName" type="text" placeholder="Playlist name" value="" autofocus>
 	            </div>
 	    	</fieldset>
 		</form>
@@ -1749,16 +1748,13 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="setfav-modal-label">Set Favorites Playlist Name</h3>
+		<p>Sets the playlist that will be used to store items favorited by clicking the Heart button. If the playlist does not already exist it will be created. Playlists are maintained in Library Playist view.</p>
 	</div>
 	<div class="modal-body">
 		<form id="set-fav" method="post" onsubmit="return false;">
 	    	<fieldset>
 				<div class="controls">
 					<input id="pl-favName" type="text" value="" autofocus>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-favname" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-favname" class="help-block help-block2 hide">
-		            	Sets the playlist that will be used to store favorited items. If the playlist does not already exist it will be created. Playlists are maintained in Folder view.
-		            </span>
 	            </div>
 	    	</fieldset>
 		</form>
@@ -1795,7 +1791,7 @@
 					<div class="controls">
 						<div style="display:inline-block;">
 							<label id="new-radiologo" for="new-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
-							<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newLogoImage(this.files)">
+							<input type="file" id="new-logoimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'radio')">
 						</div>
 						<div id="preview-new-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
 						<a aria-label="Help" class="info-toggle" id="info-toggle-new-logoimage" data-cmd="info-new-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -1910,7 +1906,7 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="editstation-modal-label">Edit station</h3>
-		<p>NOTE when updating a station logo image it may take some time before the Browser expires the old image from its cache.</p>
+		<p>NOTE: After updating a station logo it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image faster.</p>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
@@ -1932,7 +1928,7 @@
 					<div class="controls">
 						<div style="display:inline-block;">
 							<label id="edit-radiologo" for="edit-logoimage" class="btn btn-primary btn-small modal-button-style">Choose</label>
-							<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editLogoImage(this.files)">
+							<input type="file" id="edit-logoimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'radio')">
 						</div>
 						<div id="preview-edit-logoimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
 						<a aria-label="Help" class="info-toggle" id="info-toggle-edit-logoimage" data-cmd="info-edit-logoimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -2046,7 +2042,7 @@
 <div id="deletestation-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="deletestation-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="deletestation-modal-label">Delete station</h3>
+		<h3 id="deletestation-modal-label">Delete station?</h3>
 	</div>
 	<div class="modal-body">
 		<h4 id="station-path"></h4>
@@ -2064,8 +2060,8 @@
 		<div><em>Note: The Import/Export feature has been deprecated and may be removed in a future release. Use the Backup/Restore feature in System Config which provides more capabilities.</em></div>
 	</div>
 	<div class="modal-body">
-		<!-- IMPORT/EXPORT STATIONS -->
 		<form class="form-horizontal" action="" method="">
+			<!-- IMPORT/EXPORT STATIONS -->
 			<span class="h5">Import/Export Utilities</span>
 			<div class="control-group">
 				<label class="control-label">Import station package</label>
@@ -2181,7 +2177,7 @@
 					</span>
 				</div>
 				<label class="control-label" for="radioview-show-hide-other">Other stations</label>
-				<div class="controls">
+				<div class="controls" style="margin-bottom:5em;">
 					<div class="btn-group bootstrap-select select-medium">
 						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 							<div id="radioview-show-hide-other" class="filter-option pull-left">
@@ -2301,8 +2297,8 @@
 							<span id="selected-album-tag" class="help-block"></span>
 						</div>
 
-						<label class="control-label" for="delete-recordings">Delete recordings</label>
-						<div class="controls">
+						<label class="control-label" for="delete-recordings">Delete recordings?</label>
+						<div class="controls" style="margin-bottom:5em;">
 							<div class="btn-group bootstrap-select select-medium">
 								<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 									<div id="delete-recordings" class="filter-option pull-left">
@@ -2349,11 +2345,11 @@
 	                    <input id="new-playlist-name" class="input-large" type="text" name="new_playlist_name" maxlength="200" value="" autofocus>
 	                </div>
 
-					<label class="control-label" for="new-playlistcover">Logo image</label>
+					<label class="control-label" for="new-playlistcover">Cover image</label>
 					<div class="controls">
 						<div style="display:inline-block;">
 							<label id="new-playlistcover" for="new-plcoverimage" class="btn btn-primary btn-small modal-button-style" style="margin-top:.25em;">Choose</label>
-							<input type="file" id="new-plcoverimage" accept="image/jpeg" style="display:none" onchange="newPlCoverImage(this.files)">
+							<input type="file" id="new-plcoverimage" accept="image/jpeg" style="display:none" onchange="newCoverImage(this.files, 'playlist')">
 						</div>
 						<div id="preview-new-plcoverimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
 						<a aria-label="Help" class="info-toggle" id="info-toggle-new-plcoverimage" data-cmd="info-new-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -2379,7 +2375,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Create" id="btn-create-station" class="btn btn-primary" data-dismiss="modal">Create</button>
+		<button aria-label="Create" id="btn-create-playlist" class="btn btn-primary" data-dismiss="modal">Create</button>
 	</div>
 </div>
 
@@ -2387,7 +2383,7 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="edit-playlist-modal-label">Edit playlist</h3>
-		<p>NOTE when updating a playlist cover image it may take some time before the Browser expires the old image from its cache.</p>
+		<p>NOTE: After updating a playlist cover it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image faster.</p>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
@@ -2402,7 +2398,7 @@
 					<div class="controls">
 						<div style="display:inline-block;">
 							<label id="edit-playlistcover" for="edit-plcoverimage" class="btn btn-primary btn-small modal-button-style" style="margin-top:.25em;">Choose</label>
-							<input type="file" id="edit-plcoverimage" accept="image/jpeg" style="display:none" onchange="editPlCoverImage(this.files)">
+							<input type="file" id="edit-plcoverimage" accept="image/jpeg" style="display:none" onchange="editCoverImage(this.files, 'playlist')">
 						</div>
 						<div id="preview-edit-plcoverimage" style="width:50px;display:inline-block;position:absolute;margin: 2px 0 0 5px;"></div>
 						<a aria-label="Help" class="info-toggle" id="info-toggle-edit-plcoverimage" data-cmd="info-edit-plcoverimage" href="#notarget"><i class="fas fa-info-circle"></i></a>
@@ -2436,14 +2432,14 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Update" id="btn-update-station" class="btn btn-primary" data-dismiss="modal">Update</button>
+		<button aria-label="Update" id="btn-update-playlist" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 
 <div id="delete-playlist-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-playlist-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="delete-playlist-modal-label">Delete playlist</h3>
+		<h3 id="delete-playlist-modal-label">Delete playlist?</h3>
 	</div>
 	<div class="modal-body">
 		<h4 id="playlist-path"></h4>
@@ -2451,6 +2447,68 @@
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
 		<button aria-label="Delete" id="btn-del-playlist" class="btn btn-primary" data-dismiss="modal">Delete</button>
+	</div>
+</div>
+
+<!-- PLAYLIST MANAGER -->
+<div id="playlist-manager-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="playlist-manager-modal-label" aria-hidden="true">
+	<div class="modal-header">
+		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3 id="playlist-manager-modal-label">Playlist Manager</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" action="" method="">
+			<!-- SORT/GROUP OPTIONS -->
+			<span class="h5">Sorting and Grouping</span>
+			<div class="control-group" style="margin-bottom:5em;">
+				<label class="control-label" for="plview-sort-tag">Sort tag</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="plview-sort-tag" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-sort-tag-sel"><span class="text">Name</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-sort-tag-sel"><span class="text">Genre</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-plview-sort-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-plview-sort-tag" class="help-block hide">
+						Specify which tag is used to sort the playlist list.
+					</span>
+				</div>
+				<label class="control-label" for="plview-group-method">Group method</label>
+				<div class="controls">
+					<div class="btn-group bootstrap-select select-medium">
+						<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+							<div id="plview-group-method" class="filter-option pull-left">
+								<span></span>
+							</div>&nbsp;
+							<div class="caret"></div>
+						</button>
+						<div class="dropdown-menu open">
+							<ul class="dropdown-menu custom-select inner" role="menu">
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-group-method-sel"><span class="text">Sort tag</span></a></li>
+								<li class="modal-dropdown-text"><a href="#notarget" data-cmd="plview-group-method-sel"><span class="text">No grouping</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<a aria-label="Help" class="info-toggle" data-cmd="info-plview-group-method" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-plview-group-method" class="help-block hide">
+						Specify how to break the list into groups separated by a named header.
+					</span>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+		<button aria-label="Update" id="btn-upd-playlist-manager" class="btn btn-primary" data-dismiss="modal">Update</button>
 	</div>
 </div>
 

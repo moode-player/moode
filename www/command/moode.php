@@ -38,8 +38,9 @@ if (false === ($sock = openMpdSock('localhost', 6600))) {
 $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
 	'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next'/*, 'clear_add_group'*/);
-$other_mpd_cmds = array('updvolume' , 'mutetxvol' ,'getmpdstatus', 'get_playqueue', 'delete_playqueue_item', 'move_playqueue_item', 'get_playqueue_item_file', 'savepl', 'listsavedpl',
-	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search', 'newstation', 'updstation', 'delstation', 'loadlib', 'station_info', 'track_info',
+$other_mpd_cmds = array('updvolume' , 'mutetxvol' ,'getmpdstatus', 'get_playqueue', 'delete_playqueue_item', 'move_playqueue_item',
+	'get_playqueue_item_file', 'savepl', 'listsavedpl',	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search',
+	'newstation', 'updstation', 'delstation', 'new_playlist', 'upd_playlist', 'del_playlist', 	'loadlib', 'station_info', 'track_info',
 	'upd_tx_adv_toggle', 'upd_rx_adv_toggle');
 $turn_consume_off = false;
 
@@ -69,7 +70,7 @@ elseif ($_GET['cmd'] == 'setbgimage') {
 		echo json_encode('worker busy');
 	}
 }
-elseif ($_GET['cmd'] == 'setlogoimage') {
+elseif ($_GET['cmd'] == 'set_ralogo_image' || $_GET['cmd'] == 'set_plcover_image') {
 	if (submitJob($_GET['cmd'], $_POST['name'] . ',' . $_POST['blob'], '', '')) {
 		echo json_encode('job submitted');
 	}
@@ -344,12 +345,32 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 
 			echo json_encode($array['file']);
 			break;
+		// Save Queue to playlist
         case 'savepl':
-            sendMpdCmd($sock, 'rm "' . html_entity_decode($_GET['plname']) . '"');
+			$pl_name = html_entity_decode($_GET['plname']);
+            sendMpdCmd($sock, 'rm "' . $pl_name . '"');
 			$resp = readMpdResp($sock);
-
-            sendMpdCmd($sock, 'save "' . html_entity_decode($_GET['plname']) . '"');
+            sendMpdCmd($sock, 'save "' . $pl_name . '"');
             echo json_encode(readMpdResp($sock));
+
+			sysCmd('chmod 0777 "' . MPD_PLAYLISTROOT . $pl_name . '.m3u"');
+			sysCmd('chown root:root "' . MPD_PLAYLISTROOT . $pl_name . '.m3u"');
+
+			$result	= sdbquery("select id from cfg_playlist where name='" . SQLite3::escapeString($_GET['plname']) . "'", $dbh);
+			if ($result === true) {
+				// Add new row
+				$values =
+					"'" . SQLite3::escapeString($_GET['plname']) . "'," .
+					"'"	. '' . "'," .
+					"'"	. 'local' . "'";
+				$result = sdbquery('insert into cfg_playlist values (NULL,' . $values . ')', $dbh);
+
+				// Write default image
+				if (!file_exists('/var/local/www/imagesw/playlist-covers/' . $pl_name . '.jpg')) {
+					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/playlist-covers/' . $pl_name . '.jpg"');
+				}
+			}
+			echo json_encode('OK');
 			break;
 		case 'setfav':
 			$file = '/var/lib/mpd/playlists/' . $_GET['favname'] . '.m3u';
@@ -412,6 +433,9 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 		case 'delsavedpl':
 			echo json_encode(delPLFile($sock, $_POST['path']));
 			break;
+
+		// RADIO STATIONS
+
 		case 'newstation':
 		case 'updstation':
 			$name = $_POST['path']['name'];
@@ -526,17 +550,17 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				sysCmd('chown root:root "' . $file . '"');
 
 				// Write logo image
-				sendEngCmd('set_logo_image1'); // Show spinner
-				sleep(3); // Allow time for setlogoimage job to complete which creates tmp new image file
+				sendEngCmd('set_cover_image1'); // Show spinner
+				sleep(3); // Allow time for set_ralogo_image job to complete which creates tmp new image file
 
 				// Write new image if one exists
-				if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg')) {
-					sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
-					sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
-					sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $_POST['path']['name'] . '_sm.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '_sm.jpg"');
+				if (file_exists('/var/local/www/imagesw/radio-logos/' . TMP_IMAGE_PREFIX . $_POST['path']['name'] . '.jpg')) {
+					sysCmd('mv "/var/local/www/imagesw/radio-logos/' . TMP_IMAGE_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
+					sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_IMAGE_PREFIX . $_POST['path']['name'] . '.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
+					sysCmd('mv "/var/local/www/imagesw/radio-logos/thumbs/' . TMP_IMAGE_PREFIX . $_POST['path']['name'] . '_sm.jpg" "/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '_sm.jpg"');
 				}
 				// Write default logo image if an image does not already exist
-					else if (!file_exists('/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg')) {
+				else if (!file_exists('/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg')) {
 					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/' . $_POST['path']['name'] . '.jpg"');
 					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '.jpg"');
 					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/radio-logos/thumbs/' . $_POST['path']['name'] . '_sm.jpg"');
@@ -547,7 +571,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 
 				sendMpdCmd($sock, 'update RADIO');
 				readMpdResp($sock);
-				sendEngCmd('set_logo_image0'); // Hide spinner
+				sendEngCmd('set_cover_image0'); // Hide spinner
 			}
 			break;
 		case 'delstation':
@@ -580,7 +604,101 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			sendMpdCmd($sock, 'update RADIO');
 			readMpdResp($sock);
 			break;
+
+		// PLAYLISTS
+
+		case 'new_playlist':
+		case 'upd_playlist':
+			$return_msg = 'OK';
+			$pl_name = html_entity_decode($_POST['path']['name']);
+
+			// Add new playlist
+			if ($_GET['cmd'] == 'new_playlist') {
+				// Check for existing m3u file
+				if (file_exists(MPD_PLAYLISTROOT . $pl_name . '.m3u')) {
+					$return_msg = 'A playlist .m3u file with the same name already exists';
+				}
+				// Check for existing name in the table
+				// NOTE: true = no results, array = results, false = query bombed (unlikely)
+				else {
+					$result = sdbquery("select id from cfg_playlist where name='" . SQLite3::escapeString($pl_name) . "'", $dbh);
+					if ($result !== true) {
+						$return_msg = 'A playlist with the same name already exists in the SQL table';
+					}
+				}
+
+				if ($return_msg == 'OK') {
+					// Add new row, NULL causes Id column to be set to next number
+					// NOTE: $values have to be in column order
+					$values =
+						"'" . SQLite3::escapeString($pl_name) . "'," .
+						"\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
+						"'"	. 'local' . "'";
+					$result = sdbquery('insert into cfg_playlist values (NULL,' . $values . ')', $dbh);
+				}
+
+				echo json_encode($return_msg);
+			}
+			// Update playlist
+			else {
+				// NOTE: Client prevents m3u name change so just proceed with update
+				if ($return_msg == 'OK') {
+					$columns =
+					"name='" . SQLite3::escapeString($pl_name) . "'," .
+					"genre=\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
+					"cover='local'";
+					$result = sdbquery('UPDATE cfg_playlist SET ' . $columns . ' WHERE id=' . $_POST['path']['id'], $dbh);
+				}
+				echo json_encode($return_msg);
+			}
+
+			if ($return_msg == 'OK') {
+				// Write m3u file and set permissions
+				$file =  MPD_PLAYLISTROOT . $pl_name . '.m3u';
+				if (false === ($fh = fopen($file, 'w'))) {
+					workerLog('moode.php: file create failed on ' . $file);
+					//workerLog('moode.php: ' . print_r(error_get_last(), true));
+					break;
+				}
+
+				foreach ($POST['path']['items'] as $line) {
+					$data .= $line . "\n";
+				}
+
+				if (false === ($bytes_written = fwrite($fh, $data))) {
+					workerLog('moode.php: file write failed on ' . $file);
+					break;
+				}
+
+				fclose($fh);
+				sysCmd('chmod 0777 "' . $file . '"');
+				sysCmd('chown root:root "' . $file . '"');
+
+				// Write cover image
+				sendEngCmd('set_cover_image1'); // Show spinner
+				sleep(3); // Allow time for set_plcover_image job to complete which creates tmp new image file
+
+				if (file_exists('/var/local/www/imagesw/playlist-covers/' . TMP_IMAGE_PREFIX . $pl_name . '.jpg')) {
+					// Write new image
+					sysCmd('mv "/var/local/www/imagesw/playlist-covers/' . TMP_IMAGE_PREFIX . $pl_name . '.jpg" "/var/local/www/imagesw/playlist-covers/' . $pl_name . '.jpg"');
+				}
+				elseif (!file_exists('/var/local/www/imagesw/playlist-covers/' . $pl_name . '.jpg')) {
+					// Write default image
+					sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/playlist-covers/' . $pl_name . '.jpg"');
+				}
+
+				sendEngCmd('set_cover_image0'); // Hide spinner
+			}
+			break;
+		case 'del_playlist':
+			// Delete row
+			$result = sdbquery("delete from cfg_playlist where name='" . html_entity_decode($_POST['path']) . "'", $dbh);
+			// Delete m3u and cover image files
+			sysCmd('rm "' . MPD_PLAYLISTROOT . $_POST['path'] . '.m3u"');
+			sysCmd('rm "' . '/var/local/www/imagesw/playlist-covers/' . html_entity_decode($_POST['path']) . '.jpg"');
+			break;
 	}
+
 	// Turn off Consume mode if indicated
 	if (in_array($_GET['cmd'], $playqueue_cmds) && $turn_consume_off === true) {
 		sendMpdCmd($sock, 'consume 0');
@@ -771,7 +889,7 @@ else {
 			echo json_encode($array);
 			break;
 		case 'read_playlist_file':
-			$items = parsePlaylistFile(shell_exec('cat "' . MPD_PLAYLISTROOT . $_POST['path'] . '.m3u"'), $dbh, $sock);
+			$items = parsePlaylistFile(file_get_contents(MPD_PLAYLISTROOT . $_POST['path'] . '.m3u'), $dbh, $sock);
 			$result = sdbquery("SELECT * FROM cfg_playlist WHERE name='" . SQLite3::escapeString($_POST['path']) . "'", $dbh);
 			$array = array('id' => $result[0]['id'], 'name' => $result[0]['name'], 'genre' => $result[0]['genre'], 'items' => $items);
 			echo json_encode($array);

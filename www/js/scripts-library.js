@@ -1213,7 +1213,7 @@ $('#database-radio').on('click', 'img', function(e) {
 	}, DEFAULT_TIMEOUT);
 });
 
-// Radio manager dialog
+// Radio manager
 $('#radio-manager-btn').click(function(e) {
     var sortGroup = SESSION.json['radioview_sort_group'].split(',');
     var showHide = SESSION.json['radioview_show_hide'].split(',');
@@ -1360,6 +1360,30 @@ $('#export-stations').click(function(e) {
         window.location.href = STATION_EXPORT_DIR + 'stations.zip';
         $('#import-export-msg').text('Export complete');
 	});
+});
+
+// Playlist manager
+$('#playlist-manager-btn').click(function(e) {
+    var sortGroup = SESSION.json['plview_sort_group'].split(',');
+    $('#plview-sort-tag span').text(sortGroup[0]);
+    $('#plview-group-method span').text(sortGroup[1]);
+
+    $('#playlist-manager-modal').modal();
+});
+
+// Update Radio manager
+$('#btn-upd-playlist-manager').click(function(e) {
+    SESSION.json['plview_sort_group'] = $('#plview-sort-tag span').text() + ',' + $('#plview-group-method span').text();
+
+    $.post('command/moode.php?cmd=updcfgsystem', {
+        'plview_sort_group': SESSION.json['plview_sort_group']
+        }, function() {
+            notify('settings_updated');
+            setTimeout(function() {
+                $('#pl-refresh').click();
+            }, DEFAULT_TIMEOUT);
+        }
+    );
 });
 
 // Click lib coverart

@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Apr 13 10:55:17 2022
+-- File generated with SQLiteStudio v3.1.0 on Mon Apr 18 15:07:36 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -246,7 +246,8 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (236, 'https://ice6.somafm.com/n5md-128-aac', 'Soma FM - n5MD Radio', 'r', 'local', 'Electronica, Ambient, NASA Radio Traffic', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (237, 'https://ice6.somafm.com/synphaera-128-aac', 'Soma FM - Synphaera', 'r', 'local', 'Electronica, Synth', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (238, 'https://ice1.somafm.com/vaporwaves-128-aac', 'Soma FM - Vaporwaves', 'r', 'local', 'Electronica, Electro-acoustic, IDM, Shoegaze, Post-rock', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
-INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (239, 'https://DRliveradio.akamaized.net/hls/live/2022411/p8jazz/playlist-320000.m3u8', 'DR P8 JAZZ (320K)', 'r', 'local', 'Jazz', 'DR', 'Danish', 'Denmark', 'Europe', '320', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (239, 'https://DRliveradio.akamaized.net/hls/live/2022411/p8jazz/playlist-320000.m3u8
+', 'DR P8 JAZZ (320K)', 'r', 'local', 'Jazz', 'DR', 'Danish', 'Denmark', 'Europe', '320', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
 -- Table: cfg_sl
@@ -495,9 +496,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (166, 'playlist_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (167, 'plview_sort_group', 'Name,No grouping');
 
 -- Table: cfg_playlist
-CREATE TABLE cfg_playlist (id INTEGER PRIMARY KEY, name CHAR (32), description CHAR (32), genre CHAR (32), cover CHAR (32));
-INSERT INTO cfg_playlist (id, name, description, genre, cover) VALUES (1, 'Default Playlist', 'Playlist included with moOde that contains a variety of radio stations and the Stereo Test file.', 'Various', 'local');
-INSERT INTO cfg_playlist (id, name, description, genre, cover) VALUES (2, 'Favorites', 'Playlist included with moOde for containing items marked as favorite via the Heart button.', 'Various', 'local');
+CREATE TABLE cfg_playlist (id INTEGER PRIMARY KEY, name CHAR (32), genre CHAR (32), cover CHAR (32));
+INSERT INTO cfg_playlist (id, name, genre, cover) VALUES (1, 'Default Playlist', 'Various', 'local');
+INSERT INTO cfg_playlist (id, name, genre, cover) VALUES (2, 'Favorites', 'Various', 'local');
 
 -- Table: cfg_airplay
 CREATE TABLE cfg_airplay (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));

@@ -469,10 +469,10 @@ function engineCmd() {
     				$('.busy-spinner').hide();
                     loadLibrary();
                     break;
-                case 'set_logo_image1':
+                case 'set_cover_image1':
                     $('.busy-spinner').show();
                     break;
-                case 'set_logo_image0':
+                case 'set_cover_image0':
     				$('.busy-spinner').hide();
                     break;
                 case 'refresh_screen':
@@ -1313,6 +1313,19 @@ function mpdDbCmd(cmd, path) {
             $('#ra-refresh').click();
         });
 	}
+    else if (cmd == 'new_playlist' || cmd == 'upd_playlist') {
+        cmd == 'new_playlist' ? notify('creating_playlist') : notify('updating_playlist');
+        $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(return_msg) {
+            return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, '5_seconds');
+            $('#pl-refresh').click();
+        }, 'json');
+	}
+    else if (cmd == 'del_playlist') {
+        $.post('command/moode.php?cmd=' + cmd, {'path': path}, function() {
+            notify(cmd);
+            $('#pl-refresh').click();
+        });
+	}
 }
 
 // Render Folder view, order by dirs|playlists
@@ -1751,8 +1764,8 @@ function renderRadioView() {
 // Render Playlist view
 function renderPlaylistView () {
     var data = '';
-    $.getJSON('command/moode.php?cmd=read_cfg_playlist', function(data) {
-        //console.log(data);
+    $.getJSON('command/moode.php?cmd=read_cfg_playlist', function(playlists) {
+        //console.log(playlists);
         // Lazyload method
         var plViewLazy = GLOBAL.nativeLazyLoad ? '<div class="thumbHW"><img loading="lazy" src="' : '<div class="thumbHW"><img class="lazy-playlistview" data-original="';
 
@@ -1760,12 +1773,6 @@ function renderPlaylistView () {
         var sortTag = SESSION.json['plview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['plview_sort_group'].split(',')[1];
         var configuredGroupMethod = groupMethod; // NOTE: For code block "Mark the end of Favorites"
-
-        // Generate  list
-        var playlists = [];
-    	for (var i = 0; i < data.length; i++) {
-            playlists[i] = data[i];
-    	}
 
         // Sort list
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
@@ -1792,9 +1799,9 @@ function renderPlaylistView () {
         var lastSortTagValue = '';
         var numericHeaderPrinted = false;
         var output = '';
-    	for (var i = 0; i < data.length; i++) {
+    	for (var i = 0; i < playlists.length; i++) {
             // Metadata div's
-            var genreDiv = sortTag == 'genre' ? '<div class="playlistview-metadata-text">' + data[i].genre + '</div>' : '';
+            var genreDiv = sortTag == 'genre' ? '<div class="playlistview-metadata-text">' + playlists[i].genre + '</div>' : '';
 
             // Change to Sort tag grouping unless method is No grouping
             if (groupMethod != 'No grouping') {
@@ -1803,7 +1810,7 @@ function renderPlaylistView () {
 
             // Construct group header
             if (groupMethod == 'Sort tag') {
-                var currentChr1 = removeArticles(data[i][sortTag]).substr(0, 1).toUpperCase();
+                var currentChr1 = removeArticles(playlists[i][sortTag]).substr(0, 1).toUpperCase();
                 var lastChr1 = removeArticles(lastSortTagValue).substr(0, 1).toUpperCase()
                 if (sortTag == 'name' && currentChr1 != lastChr1) {
                     if (isNaN(currentChr1) === false && numericHeaderPrinted === false) {
@@ -1814,23 +1821,23 @@ function renderPlaylistView () {
                         output += '<li class="horiz-rule-playlistview">' + currentChr1 + '</li>';
                     }
                 }
-                else if (sortTag == 'genre' && data[i][sortTag].split(', ')[0] != lastSortTagValue.split(', ')[0]) {
-                    output += '<li class="horiz-rule-playlistview">' + data[i][sortTag].split(', ')[0] + '</li>';
+                else if (sortTag == 'genre' && playlists[i][sortTag].split(', ')[0] != lastSortTagValue.split(', ')[0]) {
+                    output += '<li class="horiz-rule-playlistview">' + playlists[i][sortTag].split(', ')[0] + '</li>';
                 }
-                else if (sortTag != 'name' && sortTag != 'genre' && data[i][sortTag] != lastSortTagValue) {
-                    output += '<li class="horiz-rule-playlistview">' + data[i][sortTag] + '</li>';
+                else if (sortTag != 'name' && sortTag != 'genre' && playlists[i][sortTag] != lastSortTagValue) {
+                    output += '<li class="horiz-rule-playlistview">' + playlists[i][sortTag] + '</li>';
                 }
             }
 
             // Construct playlist entries
-            var imgUrl = data[i].cover == 'local' ? 'imagesw/playlist-covers/' + data[i].name + '.jpg' : data[i].cover;
-    		output += '<li id="pl-entry-' + (i + 1) + '" data-path="' + data[i].name;
+            var imgUrl = playlists[i].cover == 'local' ? 'imagesw/playlist-covers/' + playlists[i].name + '.jpg' : playlists[i].cover;
+    		output += '<li id="pl-entry-' + (i + 1) + '" data-path="' + playlists[i].name;
     		output += '"><div class="db-icon db-song db-browse db-action">' + plViewLazy + encodeURIComponent(imgUrl) + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-playlist-item"></div></div><div class="db-entry db-song db-browse"></div>';
-            output += '<span class="playlist-name">' + data[i].name + '</span>';
+            output += '<span class="playlist-name">' + playlists[i].name + '</span>';
             output += genreDiv;
             output += '</li>';
 
-            lastSortTagValue = data[i][sortTag];
+            lastSortTagValue = playlists[i][sortTag];
     	}
 
         // Render the list
@@ -2086,6 +2093,12 @@ function customScroll(list, itemNum, speed) {
     		scrollSelector = listSelector;
     		chDivisor = list == 'radio' ? 6 : 600;
             break;
+        case 'playlist':
+        case 'playlist_headers':
+    		listSelector = '#database-playlist';
+    		scrollSelector = listSelector;
+    		chDivisor = list == 'playlist' ? 6 : 600;
+            break;
     }
 
 	// Item position
@@ -2277,7 +2290,7 @@ $(document).on('click', '.context-menu a', function(e) {
 	}
     else if ($(this).data('cmd') == 'edit_playlist') {
         $.post('command/moode.php?cmd=read_playlist_file', {'path': path}, function(result) {
-            GLOBAL.editPlaylistId = result['id']; // This is to pass to the update playlist routine so it can uniquely identify the row
+            GLOBAL.editPlaylistId = result['id']; // This is to pass to the upd_playlist routine so it can uniquely identify the row
 
             // Metadata
             $('#edit-playlist-name').val(path);
@@ -2292,10 +2305,15 @@ $(document).on('click', '.context-menu a', function(e) {
         	var element = document.getElementById('playlist-items');
         	element.innerHTML = '';
 
-            for (i = 0; i < result['items'].length; i++) {
-                output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" data-toggle="context" data-target="#context-menu-pl-contents" data-path="' + result['items'][i]['path'] + '">';
-                output += result['items'][i]['name'];
-    			output += '</div></li>';
+            if (result['items'].length > 0) {
+                for (i = 0; i < result['items'].length; i++) {
+                    output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" data-toggle="context" data-target="#context-menu-pl-contents" data-path="' + result['items'][i]['path'] + '">';
+                    output += result['items'][i]['name'];
+        			output += '</div></li>';
+                }
+            }
+            else {
+                output = 'Playlist is empty';
             }
 
             element.innerHTML = output;
@@ -3010,59 +3028,94 @@ function importBgImage(files) {
 	reader.readAsDataURL(files[0]);
 }
 
-// Import station logo image to server
-function newLogoImage(files) {
+// Import cover image to server
+function newCoverImage(files, view) {
+    if (view == 'radio') {
+        var error_selector = '#error-new-logoimage';
+        var preview_selector = '#preview-new-logoimage';
+        var info_selector = '#info-toggle-new-logoimage';
+        var tags_selector = '#new-station-tags';
+        var name_selector = '#new-station-name';
+        var cmd = 'set_ralogo_image';
+    }
+    else { // playlist
+        var error_selector = '#error-new-plcoverimage';
+        var preview_selector = '#preview-new-plcoverimage';
+        var info_selector = '#info-toggle-new-plcoverimage';
+        var tags_selector = '#new-playlist-tags';
+        var name_selector = '#new-playlist-name';
+        var cmd = 'set_plcover_image';
+    }
+
 	if (files[0].size > 1000000) {
-		$('#error-new-logoimage').text('Image must be less than 1MB in size');
+		$(error_selector).text('Image must be less than 1MB in size');
 		return;
 	}
 	else if (files[0].type != 'image/jpeg') {
-		$('#error-new-logoimage').text('Image format must be JPEG');
+		$(error_selector).text('Image format must be JPEG');
 		return;
 	}
 	else {
-		$('#error-new-logoimage').text('');
+		$(error_selector).text('');
 	}
 
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$('#preview-new-logoimage').html("<img src='" + imgUrl + "' />");
-	$('#info-toggle-new-logoimage').css('margin-left','60px');
-    $('#new-station-tags').css('margin-top', '30px');
-	var stationName = $('#new-station-name').val();
+	$(preview_selector).html("<img src='" + imgUrl + "' />");
+	$(info_selector).css('margin-left','60px');
+    $(tags_selector).css('margin-top', '30px');
+	var name = $(name_selector).val();
 	URL.revokeObjectURL(imgUrl);
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
 		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=setlogoimage', {'name': stationName, 'blob': data});
+        $.post('command/moode.php?cmd=' + cmd, {'name': name, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
 }
-function editLogoImage(files) {
+// Edit (replace/remove) existing cover image
+function editCoverImage(files, view) {
+    if (view == 'radio') {
+        var error_selector = '#error-edit-logoimage';
+        var preview_selector = '#preview-edit-logoimage';
+        var info_selector = '#info-toggle-edit-logoimage';
+        var tags_selector = '#edit-station-tags';
+        var name_selector = '#edit-station-name';
+        var cmd = 'set_ralogo_image';
+    }
+    else { // playlist
+        var error_selector = '#error-edit-plcoverimage';
+        var preview_selector = '#preview-edit-plcoverimage';
+        var info_selector = '#info-toggle-edit-plcoverimage';
+        var tags_selector = '#edit-playlist-tags';
+        var name_selector = '#edit-playlist-name';
+        var cmd = 'set_plcover_image';
+    }
+
 	if (files[0].size > 1000000) {
-		$('#error-edit-logoimage').text('Image must be less than 1MB in size');
+		$(error_selector).text('Image must be less than 1MB in size');
 		return;
 	}
 	else if (files[0].type != 'image/jpeg') {
-		$('#error-edit-logoimage').text('Image format must be JPEG');
+		$(error_selector).text('Image format must be JPEG');
 		return;
 	}
 	else {
-		$('#error-edit-logoimage').text('');
+		$(error_selector).text('');
 	}
 
 	imgUrl = (URL || webkitURL).createObjectURL(files[0]);
-	$('#preview-edit-logoimage').html("<img src='" + imgUrl + "' />");
-	$('#info-toggle-edit-logoimage').css('margin-left','60px');
-	var stationName = $('#edit-station-name').val();
+	$(preview_selector).html("<img src='" + imgUrl + "' />");
+	$(info_selector).css('margin-left','60px');
+	var name = $(name_selector).val();
 	URL.revokeObjectURL(imgUrl);
 	var reader = new FileReader();
 	reader.onload = function(e) {
 		var dataURL = reader.result;
 		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=setlogoimage', {'name': stationName, 'blob': data});
+        $.post('command/moode.php?cmd=' + cmd, {'name': name, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
 }

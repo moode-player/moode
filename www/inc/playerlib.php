@@ -39,10 +39,11 @@ define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
 define('LIBCACHE_BASE', '/var/local/www/libcache');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
-define('TMP_STATION_PREFIX', '__tmp__');
-define('STATION_EXPORT_DIR', '/var/local/www/images');
+define('TMP_IMAGE_PREFIX', '__tmp__');
+define('STATION_EXPORT_DIR', '/var/local/www/imagesw');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
+define('PLCOVER_ROOT_DIR', 'imagesw/playlist-covers/');
 define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
 define('DEF_COVER', 'images/default-cover-v6.svg');
 define('DEV_ROOTFS_SIZE', '3670016000'); // Bytes (3.5GB)
@@ -1518,33 +1519,34 @@ function parseStationFile($resp) {
 // Parse saved playlist file
 function parsePlaylistFile($contents, $dbh, $sock) {
 	$array = array();
-	$line = strtok($contents, "\n");
 
-	while ($line) {
-		if (substr($line, 0, 4) == 'http') {
-			// Radio station
-			$result = sdbquery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($line) . "'", $dbh);
-			if ($result === true) { // Query successful but no reault
-				$name = $line;
+	if (!empty($contents)) {
+		$lines = explode("\n", rtrim($contents, "\n"));
+		$num_lines = count($lines);
+		for ($i = 0; $i < $num_lines; $i++) {
+			if (substr($lines[$i], 0, 4) == 'http') {
+				// Radio station
+				$result = sdbquery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($lines[$i]) . "'", $dbh);
+				if ($result === true) { // Query successful but no reault
+					$name = $lines[$i];
+				}
+				elseif ($result !== false) { // Query successful and non-empty result
+					$name = $result[0]['name'];
+				}
+				else { // Query execution aborted (rare)
+					$name = "Query aborted";
+				}
 			}
-			elseif ($result !== false) { // Query successful and non-empty result
-				$name = $result[0]['name'];
+			else {
+				// Song file
+				sendMpdCmd($sock, 'lsinfo "' . $lines[$i] . '"');
+				$song_data = parseDelimFile(readMpdResp($sock), ': ');
+				$name = $song_data['Title'];
 			}
-			else { // Query execution aborted (rare)
-				$name = "Query aborted";
-			}
-		}
-		else {
-			// Song file
-			sendMpdCmd($sock, 'lsinfo "' . $line . '"');
-			$song_data = parseDelimFile(readMpdResp($sock), ': ');
-			workerLog(print_r($song_data ,true));
-			$name = $song_data['Title'];
-		}
 
-		$item = array('name' => $name, 'path' => $line);
-		array_push($array, $item);
-		$line = strtok("\n");
+			$item = array('name' => $name, 'path' => $lines[$i]);
+			array_push($array, $item);
+		}
 	}
 
 	return $array;

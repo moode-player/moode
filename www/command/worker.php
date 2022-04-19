@@ -103,10 +103,13 @@ sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('touch /var/local/www/currentsong.txt');
 sysCmd('touch /var/log/shairport-sync.log');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
-// Delete any tmp files left over from New/Edit radio station
-sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
-sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . '* > /dev/null 2>&1');
+// Delete any tmp files left over from New/Edit station or playlist
+sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
+sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
+sysCmd('rm /var/local/www/imagesw/playlist-covers/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
 // Set permissions
+sysCmd('chmod 0777 ' . MPD_PLAYLISTROOT);
+sysCmd('chmod 0777 ' . MPD_PLAYLISTROOT . '*.*');
 sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
 sysCmd('chmod 0777 /var/local/www/currentsong.txt');
 sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
@@ -2266,73 +2269,88 @@ function runQueuedJob() {
 				fclose($fh);
 			}
 			break;
-		case 'setlogoimage':
+		case 'set_ralogo_image':
+		case 'set_plcover_image':
+			$job = $_SESSION['w_queue'];
 			$queueargs = explode(',', $_SESSION['w_queueargs'], 2);
-			$station_name = $queueargs[0];
-			$imgdata = base64_decode($queueargs[1], true);
-			if ($imgdata === false) {
-				workerLog('worker: setlogoimage: base64_decode failed');
+			$img_name = $queueargs[0];
+			$img_data = base64_decode($queueargs[1], true);
+
+			if ($job == 'set_ralogo_image') {
+				$img_dir = '/var/local/www/imagesw/radio-logos/';
+				$thm_dir = 'thumbs/';
 			}
 			else {
-				// main image
-				$file = '/var/local/www/imagesw/radio-logos/' . TMP_STATION_PREFIX . $station_name . '.jpg';
+ 				$img_dir = '/var/local/www/imagesw/playlist-covers/';
+				$thm_dir = '';
+			}
+
+			if ($img_data === false) {
+				workerLog('worker: '. $job .': base64_decode failed');
+			}
+			else {
+				// Imported image
+				$file = $img_dir . TMP_IMAGE_PREFIX . $img_name . '.jpg';
 				$fh = fopen($file, 'w');
-				fwrite($fh, $imgdata);
+				fwrite($fh, $img_data);
 				fclose($fh);
 
-				// thumbnail
-				$imgstr = file_get_contents($file);
-				$image = imagecreatefromstring($imgstr);
+				// Thumbnail
+				$img_str = file_get_contents($file);
+				$image = imagecreatefromstring($img_str);
 				$thm_w = 200;
 				$thm_q = 75;
 
-				// image h/w
+				// Image h/w
 				$img_w = imagesx($image);
 				$img_h = imagesy($image);
-				// thumbnail height
+				// Thumbnail height
 				$thm_h = ($img_h / $img_w) * $thm_w;
 
 				// Standard thumbnail
 				if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
-					workerLog('setlogoimage: error 1a: imagecreatetruecolor()' . $file);
+					workerLog('worker: '. $job .': error 1a: imagecreatetruecolor() ' . $file);
 					break;
 				}
 				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-					workerLog('setlogoimage: error 2a: imagecopyresampled()' . $file);
+					workerLog('worker: '. $job .': error 2a: imagecopyresampled() ' . $file);
 					break;
 				}
-				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '.jpg', $thm_q) === false) {
-					workerLog('setlogoimage: error 4a: imagejpeg()' . $file);
+				if (imagejpeg($thumb, $img_dir . $thm_dir . TMP_IMAGE_PREFIX . $img_name . '.jpg', $thm_q) === false) {
+					workerLog('worker: '. $job .': error 4a: imagejpeg() ' . $file);
 					break;
 				}
 				if (imagedestroy($thumb) === false) {
-					workerLog('setlogoimage: error 5a: imagedestroy()' . $file);
+					workerLog('worker: '. $job .': error 5a: imagedestroy() ' . $file);
 					break;
 				}
 
-				// Small thumbnail
-				if (($thumb = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
-					workerLog('setlogoimage: error 1b: imagecreatetruecolor()' . $file);
-					break;
-				}
-				if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
-					workerLog('setlogoimage: error 2b: imagecopyresampled()' . $file);
-					break;
-				}
-				if (imagedestroy($image) === false) {
-					workerLog('setlogoimage: error 3b: imagedestroy()' . $file);
-					break;
-				}
-				if (imagejpeg($thumb, '/var/local/www/imagesw/radio-logos/thumbs/' . TMP_STATION_PREFIX . $station_name . '_sm.jpg', THM_SM_Q) === false) {
-					workerLog('setlogoimage: error 4b: imagejpeg()' . $file);
-					break;
-				}
-				if (imagedestroy($thumb) === false) {
-					workerLog('setlogoimage: error 5b: imagedestroy()' . $file);
-					break;
+				if ($job == 'set_ralogo_image') {
+					// Small thumbnail
+					if (($thumb = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
+						workerLog('worker: '. $job .': error 1b: imagecreatetruecolor() ' . $file);
+						break;
+					}
+					if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
+						workerLog('worker: '. $job .': error 2b: imagecopyresampled() ' . $file);
+						break;
+					}
+					if (imagedestroy($image) === false) {
+						workerLog('worker: '. $job .': error 3b: imagedestroy() ' . $file);
+						break;
+					}
+					if (imagejpeg($thumb, $img_dir . $thm_dir . TMP_IMAGE_PREFIX . $img_name . '_sm.jpg', THM_SM_Q) === false) {
+						workerLog('worker: '. $job .': error 4b: imagejpeg() ' . $file);
+						break;
+					}
+					if (imagedestroy($thumb) === false) {
+						workerLog('worker: '. $job .': error 5b: imagedestroy() ' . $file);
+						break;
+					}
 				}
 			}
 			break;
+
 		// Other jobs
 		case 'reboot':
 		case 'poweroff':

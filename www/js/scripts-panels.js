@@ -664,7 +664,7 @@ jQuery(document).ready(function($) { 'use strict';
 		}
     });
 
-	// Save playlist
+	// Save Queue to playlist
     $('#pl-btnSave').click(function(e){
 		var plname = $('#pl-saveName').val();
 
@@ -673,8 +673,10 @@ jQuery(document).ready(function($) { 'use strict';
 				notify('plnameerror');
 			}
 			else {
-                $.get('command/moode.php?cmd=savepl&plname=' + plname);
-				notify('savepl');
+                $.get('command/moode.php?cmd=savepl&plname=' + plname, function(data) {
+    				notify('savepl');
+                    $('#pl-refresh').click();
+                });
 			}
 		}
 		else {
@@ -1070,10 +1072,11 @@ jQuery(document).ready(function($) { 'use strict';
     // New playlist modal (+)
 	$('#pl-new').click(function(e) {
 		$('#new-playlist-name').val('New playlist');
-        $('#new-coverimage').val('');
-		$('#preview-new-coverimage').html('');
-        $('#info-toggle-new-coverimage').css('margin-left','unset');
+        $('#new-plcoverimage').val('');
+		$('#preview-new-plcoverimage').html('');
+        $('#info-toggle-new-plcoverimage').css('margin-left','unset');
         $('#new-playlist-tags').css('margin-top', '.75em');
+        //$('#new-playlist-description').val('');
         $('#new-playlist-genre').val('');
 		$('#new-playlist-modal').modal();
 	});
