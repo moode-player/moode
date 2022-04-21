@@ -73,7 +73,8 @@ var UI = {
 	bgImgChange: false,
 	clientIP: '',
     dbPos: [0,0,0,0,0,0,0,0,0,0,0],
-    dbEntry: ['', '', '', '', ''],
+    dbEntry: ['', '', '', '', '', ''],
+    // [0]: Item number or name used in various routines
 	// [1]: Used in bootstrap.contextmenu.js
     // [2]: Used in bootstrap.contextmenu.js
 	// [3]: UI row num of song item so highlight can be removed after context menu action
@@ -1141,7 +1142,7 @@ function renderPlayqueue(state) {
 
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
-		var option_show__playqueue_thumb = SESSION.json['playlist_art'] == 'Yes' ? true : false;
+		var show_playqueue_thumb = SESSION.json['playlist_art'] == 'Yes' ? true : false;
 
 		// Format playlist items
         if (data) {
@@ -1169,7 +1170,7 @@ function renderPlayqueue(state) {
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
                     var logoThumb = typeof(RADIO.json[data[i].file]) === 'undefined' ? '"images/notfound.jpg"' : '"imagesw/radio-logos/thumbs/' +
                         encodeURIComponent(RADIO.json[data[i].file]['name']) + '_sm.jpg"';
-					output += option_show__playqueue_thumb && (typeof(data[i].Comment) === 'undefined' || data[i].Comment !== 'client=upmpdcli;')  ?
+					output += show_playqueue_thumb && (typeof(data[i].Comment) === 'undefined' || data[i].Comment !== 'client=upmpdcli;')  ?
                         '<span class="playqueue-thumb">' + playqueueLazy + logoThumb + '></span>' : '';
 	                // Line 1 title
 					// Custom name for particular station
@@ -1215,7 +1216,7 @@ function renderPlayqueue(state) {
 				// Song file or upnp url
 				else {
 					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
-					output += option_show__playqueue_thumb ? '<span class="playqueue-thumb">' + playqueueLazy + '"' + thumb + '"/></span>' : '';
+					output += show_playqueue_thumb ? '<span class="playqueue-thumb">' + playqueueLazy + '"' + thumb + '"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -1251,7 +1252,7 @@ function renderPlayqueue(state) {
 		element.innerHTML = output;
 
         if (output) {
-            if (option_show__playqueue_thumb && currentView.indexOf('playback') == 0) {
+            if (show_playqueue_thumb && currentView.indexOf('playback') == 0) {
     			lazyLode('playqueue');
                 if ($('#cv-playqueue').css('display') == 'block') {
                     lazyLode('cv-playqueue');
@@ -1672,7 +1673,6 @@ function renderRadioView() {
         $('.btnlist-top-ra').show();
         $("#searchResetRa").hide();
         showSearchResetRa = false;
-    	$('#ra-search-keyword').val('');
     	$('#ra-filter').val('');
 
         // Format filtered list
@@ -1772,7 +1772,7 @@ function renderPlaylistView () {
         // Sort/Group
         var sortTag = SESSION.json['plview_sort_group'].split(',')[0].toLowerCase();
         var groupMethod = SESSION.json['plview_sort_group'].split(',')[1];
-        var configuredGroupMethod = groupMethod; // NOTE: For code block "Mark the end of Favorites"
+        //var configuredGroupMethod = groupMethod; // NOTE: For code block "Mark the end of Favorites"
 
         // Sort list
 		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
@@ -1792,7 +1792,6 @@ function renderPlaylistView () {
         $('.btnlist-top-pl').show();
         $("#searchResetPl").hide();
         showSearchResetPl = false;
-    	$('#pl-search-keyword').val('');
     	$('#pl-filter').val('');
 
         // Format list
@@ -2187,6 +2186,7 @@ $('.view-recents').click(function(e) {
 // Context menus and main menu
 $(document).on('click', '.context-menu a', function(e) {
     var path = UI.dbEntry[0]; // File path or item num
+    //console.log('A: ' + path);
     //console.log($(this).data('cmd'));
 
 	// CONTEXT MENUS
@@ -2291,29 +2291,34 @@ $(document).on('click', '.context-menu a', function(e) {
     else if ($(this).data('cmd') == 'edit_playlist') {
         $.post('command/moode.php?cmd=read_playlist_file', {'path': path}, function(result) {
             GLOBAL.editPlaylistId = result['id']; // This is to pass to the upd_playlist routine so it can uniquely identify the row
+            $('#delete-playlist-item, #move-playlist-item').hide();
+            $('#playlist-items').css('margin-top', '0');
 
             // Metadata
             $('#edit-playlist-name').val(path);
             $('#edit-plcoverimage').val('');
             $('#info-toggle-edit-plcoverimage').css('margin-left','60px');
             $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + path + '.jpg">');
-            $('#edit-playlist-tags').css('margin-top', '2.25em');
+            $('#edit-playlist-tags').css('margin-top', '2.5em');
             $('#edit-playlist-genre').val(result['genre']);
 
         	// Playlist items
-        	var output = '';
         	var element = document.getElementById('playlist-items');
         	element.innerHTML = '';
+            var output = '';
 
             if (result['items'].length > 0) {
+                UI.dbEntry[4] = result['items'].length;
                 for (i = 0; i < result['items'].length; i++) {
                     output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" data-toggle="context" data-target="#context-menu-pl-contents" data-path="' + result['items'][i]['path'] + '">';
-                    output += result['items'][i]['name'];
-        			output += '</div></li>';
+                    output += '<span class="pl-item-line1">' + result['items'][i]['name'] + '</span>';
+                    output += '<span class="pl-item-line2">' + result['items'][i]['line2'] + '</span>';
+        			output += '</li>';
                 }
             }
             else {
                 output = 'Playlist is empty';
+                UI.dbEntry[4] = 0;
             }
 
             element.innerHTML = output;
@@ -2325,6 +2330,30 @@ $(document).on('click', '.context-menu a', function(e) {
 		$('#playlist-path').html(path)
 		$('#delete-playlist-modal').modal();
 	}
+    else if ($(this).data('cmd') == 'delete_pl_item') {
+        $('#move-playlist-item').hide();
+        $('#playlist-items').css('margin-top', '2.5em');
+
+		$('#delete-playlist-item-begpos').attr('max', UI.dbEntry[4]); // Max value (num playlist items in list)
+		$('#delete-playlist-item-endpos').attr('max', UI.dbEntry[4]);
+		$('#delete-playlist-item-newpos').attr('max', UI.dbEntry[4]);
+		$('#delete-playlist-item-begpos').val(path + 1); // Num of selected item
+		$('#delete-playlist-item-endpos').val(path + 1);
+        $('#delete-playlist-item').show();
+	}
+	else if ($(this).data('cmd') == 'move_pl_item') {
+        $('#delete-playlist-item').hide();
+        $('#playlist-items').css('margin-top', '2.5em');
+
+		$('#move-playlist-item-begpos').attr('max', UI.dbEntry[4]);
+		$('#move-playlist-item-endpos').attr('max', UI.dbEntry[4]);
+		$('#move-playlist-item-newpos').attr('max', UI.dbEntry[4]);
+		$('#move-playlist-item-begpos').val(path + 1);
+		$('#move-playlist-item-endpos').val(path + 1);
+		$('#move-playlist-item-newpos').val(path + 1);
+        $('#move-playlist-item').show();
+	}
+
 	else if ($(this).data('cmd') == 'delete_playqueue_item') {
 		$('#delete-playqueue-item-begpos').attr('max', UI.dbEntry[4]); // Max value (num Queue items in list)
 		$('#delete-playqueue-item-endpos').attr('max', UI.dbEntry[4]);
@@ -2642,11 +2671,10 @@ $(document).on('click', '.context-menu a', function(e) {
         $('#about-modal').modal();
     }
 
-    // DELETE
-	// Remove highlight after selecting action menu item
-	/*if (UI.dbEntry[3].substr(0, 3) == 'db-') {
+	// Remove highlight after selecting action menu item (Folder view)
+	if (UI.dbEntry[3].substr(0, 3) == 'db-') {
 		$('#' + UI.dbEntry[3]).removeClass('active');
-	}*/
+	}
 });
 
 // Return misc lib options
@@ -3821,8 +3849,14 @@ $('#context-backdrop').click(function(e){
 
 // Remove highlight from playlist item
 $('#edit-playlist-modal').click(function(e) {
-    if (typeof($(e.target).attr('id')) == 'undefined' || !$(e.target).attr('id').includes('pl-item-')) {
+    if (isNaN(UI.dbEntry[0])) {
+        return;
+    }
+    else if (typeof($(e.target).attr('class')) == 'undefined' || !$(e.target).attr('class').includes('pl-item')) {
         $('#pl-item-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
+        $('#playlist-items').css('margin-top', '0');
+        $('#delete-playlist-item').hide();
+        $('#move-playlist-item').hide();
     }
 });
 

@@ -660,16 +660,13 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 					//workerLog('moode.php: ' . print_r(error_get_last(), true));
 					break;
 				}
-
-				foreach ($POST['path']['items'] as $line) {
+				foreach ($_POST['path']['items'] as $line) {
 					$data .= $line . "\n";
 				}
-
 				if (false === ($bytes_written = fwrite($fh, $data))) {
 					workerLog('moode.php: file write failed on ' . $file);
 					break;
 				}
-
 				fclose($fh);
 				sysCmd('chmod 0777 "' . $file . '"');
 				sysCmd('chown root:root "' . $file . '"');
@@ -692,9 +689,9 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			break;
 		case 'del_playlist':
 			// Delete row
-			$result = sdbquery("delete from cfg_playlist where name='" . html_entity_decode($_POST['path']) . "'", $dbh);
+			$result = sdbquery("delete from cfg_playlist where name='" . SQLite3::escapeString($_POST['path']) . "'", $dbh);
 			// Delete m3u and cover image files
-			sysCmd('rm "' . MPD_PLAYLISTROOT . $_POST['path'] . '.m3u"');
+			sysCmd('rm "' . MPD_PLAYLISTROOT . html_entity_decode($_POST['path']) . '.m3u"');
 			sysCmd('rm "' . '/var/local/www/imagesw/playlist-covers/' . html_entity_decode($_POST['path']) . '.jpg"');
 			break;
 	}
@@ -889,7 +886,7 @@ else {
 			echo json_encode($array);
 			break;
 		case 'read_playlist_file':
-			$items = parsePlaylistFile(file_get_contents(MPD_PLAYLISTROOT . $_POST['path'] . '.m3u'), $dbh, $sock);
+			$items = parsePlaylist(file_get_contents(MPD_PLAYLISTROOT . $_POST['path'] . '.m3u'), $dbh, $sock);
 			$result = sdbquery("SELECT * FROM cfg_playlist WHERE name='" . SQLite3::escapeString($_POST['path']) . "'", $dbh);
 			$array = array('id' => $result[0]['id'], 'name' => $result[0]['name'], 'genre' => $result[0]['genre'], 'items' => $items);
 			echo json_encode($array);

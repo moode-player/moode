@@ -157,7 +157,7 @@
 				<button aria-label="Radio" class="btn radio-view-btn" href="#radio-panel"><i class="fas fa-microphone"></i> Radio<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Folder" class="btn folder-view-btn" href="#library-panel"><i class="fas fa-folder"></i> Folder<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Album" class="btn album-view-btn menu-separator" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
+				<button aria-label="Album" class="btn album-view-btn" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Playlists" class="btn playlist-view-btn" href="#playlist-panel"><i class="fas fa-list"></i> Playlists<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Filters" class="btn filters-btn menu-separator" href="#filters-modal"><i class="fas fa-filter"></i> Filters</button>
 				<button aria-label="All Music" class="btn view-all no-icon" data-cmd="allmusic">All Music<span><i class="fal fa-check"></i></span></button>
@@ -490,6 +490,7 @@
 			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
 			<li><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="add_to_playlist"><i class="fal fa-list sx"></i> Add to playlist</a></li>
 			<li><a href="#notarget" data-cmd="track_info_lib"><i class="fal fa-music sx"></i> Audio info</a></li>
 		</ul>
 	</div>
@@ -502,6 +503,7 @@
 			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
 			<li><a href="#notarget" data-cmd="play_group_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="add_to_playlist"><i class="fal fa-list sx"></i> Add to playlist</a></li>
 			<li><a id="tracklist-toggle" href="#notarget" data-cmd="tracklist"><i class="fal fa-list sx"></i> Show tracks</a></li>
 		</ul>
 	</div>
@@ -514,6 +516,7 @@
 			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
 			<li><a href="#notarget" data-cmd="play_group_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="add_to_playlist"><i class="fal fa-list sx"></i> Add to playlist</a></li>
 		</ul>
 	</div>
 
@@ -525,6 +528,7 @@
 			<li><a href="#notarget" data-cmd="add_group_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
 			<li><a href="#notarget" data-cmd="play_group_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_group"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li><a href="#notarget" data-cmd="add_to_playlist"><i class="fal fa-list sx"></i> Add to playlist</a></li>
 		</ul>
 	</div>
 
@@ -534,8 +538,9 @@
 			<li><a href="#notarget" data-cmd="play_item"><i class="fal fa-play sx"></i> Play</a></li>
 			<li><a href="#notarget" data-cmd="clear_play_item"><i class="fal fa-chevron-square-right sx"></i> Clear/Play</a></li>
 			<li><a href="#notarget" data-cmd="add_item_next"><i class="fal fa-plus-circle sx"></i> Add next</a></li>
-			<li class="menu-separator"><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
+			<li ><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
+			<li class="menu-separator"><a href="#notarget" data-cmd="add_to_playlist"><i class="fal fa-list sx"></i> Add to playlist</a></li>
 			<li><a href="#notarget" data-cmd="editradiostn"><i class="fal fa-edit sx"></i> Edit station</a></li>
 			<li><a href="#notarget" data-cmd="delstation"><i class="fal fa-trash sx"></i> Delete station</a></li>
 		</ul>
@@ -556,14 +561,14 @@
 
 	<div id="context-menu-pl-contents" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="delete_pl_item"><i class="fal fa-trash sx"></i> Remove item(s)</a></li>
+			<li><a href="#notarget" data-cmd="delete_pl_item"><i class="fal fa-trash sx"></i> Delete item(s)</a></li>
 			<li><a href="#notarget" data-cmd="move_pl_item"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
 		</ul>
 	</div>
 
 	<div id="context-menu-playqueue-item" class="context-menu">
 		<ul class="dropdown-menu" role="menu">
-			<li><a href="#notarget" data-cmd="delete_playqueue_item"><i class="fal fa-trash sx"></i> Remove item(s)</a></li>
+			<li><a href="#notarget" data-cmd="delete_playqueue_item"><i class="fal fa-trash sx"></i> Delete item(s)</a></li>
 			<li><a href="#notarget" data-cmd="move_playqueue_item"><i class="fal fa-arrow-up sx"></i> Move item(s)</a></li>
 			<li><a href="#notarget" data-cmd="setforclockradio"><i class="fal fa-alarm-clock sx"></i> Set for clock radio</a></li>
 			<li><a href="#notarget" data-cmd="track_info_playqueue"><i class="fal fa-music sx"></i> Audio info</a></li>
@@ -1906,7 +1911,7 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="editstation-modal-label">Edit station</h3>
-		<p>NOTE: After updating a station logo it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image faster.</p>
+		<p>NOTE: After updating a station logo it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image sooner.</p>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
@@ -2383,15 +2388,15 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="edit-playlist-modal-label">Edit playlist</h3>
-		<p>NOTE: After updating a playlist cover it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image faster.</p>
+		<p>NOTE: After updating a playlist cover it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image sooner.</p>
 	</div>
 	<div class="modal-body">
-		<form class="form-horizontal" action="" method="">
+		<form class="form-horizontal" action="" method="" onSubmit="return false;">
 	    	<fieldset>
 				<div class="control-group" style="margin-bottom:1.5em">
 	                <label class="control-label" for="edit-playlist-name">Playlist name</label>
 	                <div class="controls">
-	                    <input id="edit-playlist-name" class="input-large" type="text" name="edit_station_name" maxlength="200" value="" readonly>
+	                    <input id="edit-playlist-name" class="input-large" type="text" name="edit_playlist_name" maxlength="200" value="" readonly>
 	                </div>
 
 					<label class="control-label" for="edit-playlistcover">Cover image</label>
@@ -2421,12 +2426,21 @@
 	            </div>
 	    	</fieldset>
 
-			<div>
-				<label class="control-label" for="playlist-items">Playlist items</label>
-				<br>
-				<div id="playlist-items-container">
-					<ul id="playlist-items"></ul>
+			<div id="playlist-items-container">
+				<div id="delete-playlist-item" class="pl-item hide">
+					<button id="btn-delete-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Delete</button>&nbsp;
+					<input id="delete-playlist-item-begpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+					<input id="delete-playlist-item-endpos" class="pl-item input-mini" type="number" min="1" max="" value="">
 				</div>
+				<div id="move-playlist-item" class="pl-item hide">
+					<button id="btn-move-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Move</button>&nbsp;
+					<input id="move-playlist-item-begpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+					<input id="move-playlist-item-endpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+					To&nbsp;
+					<input id="move-playlist-item-newpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+				</div>
+
+				<ul id="playlist-items"></ul>
 			</div>
 		</form>
 	</div>
@@ -2516,7 +2530,7 @@
 <div id="delete-playqueue-item-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-playqueue-item-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="delete-playqueue-item-modal-label">Remove Queue items?</h3>
+		<h3 id="delete-playqueue-item-modal-label">Delete Queue items?</h3>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
@@ -2538,7 +2552,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Remove" class="btn btn-delete-playqueue-item btn-primary" data-dismiss="modal">Remove</button>
+		<button aria-label="Delete" class="btn btn-delete-playqueue-item btn-primary" data-dismiss="modal">Delete</button>
 	</div>
 </div>
 

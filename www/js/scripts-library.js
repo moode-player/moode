@@ -1362,7 +1362,7 @@ $('#export-stations').click(function(e) {
 	});
 });
 
-// Playlist manager
+// Playlist manager modal
 $('#playlist-manager-btn').click(function(e) {
     var sortGroup = SESSION.json['plview_sort_group'].split(',');
     $('#plview-sort-tag span').text(sortGroup[0]);
@@ -1370,8 +1370,7 @@ $('#playlist-manager-btn').click(function(e) {
 
     $('#playlist-manager-modal').modal();
 });
-
-// Update Radio manager
+// Update Playlist manager
 $('#btn-upd-playlist-manager').click(function(e) {
     SESSION.json['plview_sort_group'] = $('#plview-sort-tag span').text() + ',' + $('#plview-group-method span').text();
 
@@ -1444,7 +1443,8 @@ $('#songsList').on('click', '.lib-track', function(e) {
 $('#playlist-items').on('click', '.pl-item', function(e) {
     UI.dbEntry[0] = $('#playlist-items .pl-item').index(this); // Store pos for use in action menu item click
 	$('#playlist-items li').removeClass('active');
-    $(this).addClass('active');
+    $('#pl-item-' + (UI.dbEntry[0] + 1).toString()).addClass('active');
+    //console.log(UI.dbEntry[0]);
 });
 
 // Playback ellipsis context menu

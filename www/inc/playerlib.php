@@ -1517,7 +1517,7 @@ function parseStationFile($resp) {
 }
 
 // Parse saved playlist file
-function parsePlaylistFile($contents, $dbh, $sock) {
+function parsePlaylist($contents, $dbh, $sock) {
 	$array = array();
 
 	if (!empty($contents)) {
@@ -1526,25 +1526,24 @@ function parsePlaylistFile($contents, $dbh, $sock) {
 		for ($i = 0; $i < $num_lines; $i++) {
 			if (substr($lines[$i], 0, 4) == 'http') {
 				// Radio station
+				$line2 = 'Radio Station';
 				$result = sdbquery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($lines[$i]) . "'", $dbh);
 				if ($result === true) { // Query successful but no reault
 					$name = $lines[$i];
 				}
-				elseif ($result !== false) { // Query successful and non-empty result
+				else { // Query successful and non-empty result
 					$name = $result[0]['name'];
-				}
-				else { // Query execution aborted (rare)
-					$name = "Query aborted";
 				}
 			}
 			else {
 				// Song file
 				sendMpdCmd($sock, 'lsinfo "' . $lines[$i] . '"');
-				$song_data = parseDelimFile(readMpdResp($sock), ': ');
-				$name = $song_data['Title'];
+				$tags = parseDelimFile(readMpdResp($sock), ': ');
+				$name = $tags['Title'] ? $tags['Title'] : 'Unknown title';
+				$line2 = ($tags['Album'] ? $tags['Album'] : 'Unknown album') . ' - ' . ($tags['Artist'] ? $tags['Artist'] : 'Unknown artist');
 			}
 
-			$item = array('name' => $name, 'path' => $lines[$i]);
+			$item = array('name' => $name, 'path' => $lines[$i], 'line2' => $line2);
 			array_push($array, $item);
 		}
 	}

@@ -1075,8 +1075,7 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-plcoverimage').val('');
 		$('#preview-new-plcoverimage').html('');
         $('#info-toggle-new-plcoverimage').css('margin-left','unset');
-        $('#new-playlist-tags').css('margin-top', '.75em');
-        //$('#new-playlist-description').val('');
+        $('#new-playlist-tags').css('margin-top', '2.5em');
         $('#new-playlist-genre').val('');
 		$('#new-playlist-modal').modal();
 	});
@@ -1085,7 +1084,7 @@ jQuery(document).ready(function($) { 'use strict';
     });
 	// Playlist search
 	$('#pl-filter').keyup(function(e){
-		if (!showSearchResetRa) {
+		if (!showSearchResetPl) {
 			$('#searchResetPl').show();
 			showSearchResetPl = true;
 		}
@@ -1102,7 +1101,7 @@ jQuery(document).ready(function($) { 'use strict';
 				showSearchResetPl = false;
 			}
 
-			$('.database-radio li').each(function(){
+			$('.database-playlist li').each(function(){
 				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
 					$(this).hide();
 				}
@@ -1154,16 +1153,72 @@ jQuery(document).ready(function($) { 'use strict';
 			notify('blankentries', 'Playlist not updated');
 		}
 		else {
+            var items = [];
+            $('#playlist-items li').each(function(){
+                items.push($(this).data('path'));
+            });
+
             mpdDbCmd('upd_playlist', {
                 'id': GLOBAL.editPlaylistId,
                 'name': $('#edit-playlist-name').val().trim(),
-                'genre': $('#edit-playlist-genre').val().trim()
-            })
+                'genre': $('#edit-playlist-genre').val().trim(),
+                'items': items
+            });
 		}
 	});
     // Delete playlist
 	$('#btn-del-playlist').click(function(e){
 		mpdDbCmd('del_playlist', UI.dbEntry[0]);
+	});
+    // Delete/Move playlist items(s)
+    $('#btn-delete-plitem, #btn-move-plitem').click(function(e){
+        $('#pl-item-' + (UI.dbEntry[0] + 1)).removeClass('active');
+
+        if ($(this).attr('id') == 'btn-delete-plitem') {
+            var beg_pos = $('#delete-playlist-item-begpos').val() - 1;
+            var end_pos = $('#delete-playlist-item-endpos').val() - 1;
+        }
+        else {
+            var beg_pos = $('#move-playlist-item-begpos').val() - 1;
+            var end_pos = $('#move-playlist-item-endpos').val() - 1;
+            var new_pos = $('#move-playlist-item-newpos').val() - 1;
+        }
+        var num_items = end_pos - beg_pos + 1;
+
+        // Convert lines to array
+        var items = [];
+        $('#playlist-items li').each(function(){
+            items.push($(this).prop('outerHTML'));
+        });
+
+        if ($(this).attr('id') == 'btn-delete-plitem') {
+            // Delete array items
+            items.splice(beg_pos, num_items);
+        }
+        else {
+            // Move array items
+            var moved;
+            items.splice.apply(items, [new_pos, 0].concat(moved = items.splice(beg_pos, num_items)));
+        }
+
+        // Convert back to lines
+        var element = document.getElementById('playlist-items');
+        element.innerHTML = '';
+        var lines = '';
+        for (i = 0; i < items.length; i++) {
+            lines += items[i];
+        }
+        element.innerHTML = lines;
+
+        // Resequence id's
+        var i = 1;
+        $('#playlist-items li').each(function(){
+            $(this).attr('id', 'pl-item-' + i.toString());
+            i++;
+        });
+
+        $('#delete-playlist-item, #move-playlist-item').hide();
+        $('#playlist-items').css('margin-top', '0');
 	});
 
     //
