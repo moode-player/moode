@@ -532,17 +532,18 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playlist-panel.active {height:100vh;display:block;}
 #playlist-panel.active #index-playlist {display:block;}
 #playlist-panel.active #btnlist-top-pl {display:block;}
-#playlist-items-container {display:block;margin:.25em auto;width:25em;padding:1em;border:1px solid hsla(0,0%,50.2%,.5);overflow-y:scroll;overflow-x:hidden;height:30em;-webkit-overflow-scrolling:touch;}
-#playlist-items-container ul {counter-reset:item;list-style-type:none;margin:0}
-#playlist-items li {padding:.5em 0;line-height:1.25em;cursor:pointer;}
-#playlist-items li:before {float:left;width:2em;letter-spacing:-1px;text-align:right;counter-increment:item;content:counter(item) " ";margin-right:.75em;}
-#playlist-items li.active {background: var(--accentxta);}
+#playlist-items-container, #playlist-names-container {display:block;margin:.25em auto;width:25em;padding:1em;border:1px solid hsla(0,0%,50.2%,.5);overflow-y:scroll;overflow-x:hidden;height:30em;-webkit-overflow-scrolling:touch;}
+#playlist-items-container ul, #playlist-names-container ul {counter-reset:item;list-style-type:none;margin:0}
+#playlist-items li, #playlist-names li {padding:.5em 0;line-height:1.25em;cursor:pointer;}
+#playlist-items li:before, #playlist-names li:before {float:left;width:2em;letter-spacing:-1px;text-align:right;counter-increment:item;content:counter(item) " ";margin-right:.75em;}
+#playlist-items li.active, #playlist-names li.active {background: var(--accentxta);}
 #context-menu-pl-contents {z-index:99999!important;}
 .playlist-name {font-weight:600;}
 .pl-item-line1 {font-size:1em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .pl-item-line2 {font-size:.9em;display:block;margin-left: calc(2.5em + 1.25vmin);color:var(--textvariant);text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 #delete-playlist-item input, #move-playlist-item input {height: 1.25em;margin-right:.25em;}
 #delete-playlist-item, #move-playlist-item {position:absolute;}
+
 /* playbar */
 #timetrack {display:flex;width:100%;padding:0;color:inherit;height:15px;z-index:10;position:relative;}
 #timeline {width:65%;margin:.5em auto .3em;z-index:100;height:15px;display:none;}

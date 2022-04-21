@@ -1450,59 +1450,55 @@ $('#playlist-items').on('click', '.pl-item', function(e) {
 // Playback ellipsis context menu
 $('#context-menu-playback a').click(function(e) {
     //console.log($(this).data('cmd'));
-	if ($(this).data('cmd') == 'save-playlist') {
-		$('#savepl-modal').modal();
-	}
-	else if ($(this).data('cmd') == 'set-favorites') {
-        $.getJSON('command/moode.php?cmd=getfavname', function(favname) {
-            $('#pl-favName').val(favname);
-            $('#setfav-modal').modal();
-        });
-	}
-	else if ($(this).data('cmd') == 'toggle-song') {
-        sendMpdCmd('playid ' + toggleSongId);
-	}
-	else if ($(this).data('cmd') == 'consume') {
-		// Menu item
-		$('#menu-check-consume').toggle();
-		// Button
-		var toggle = $('.consume').hasClass('btn-primary') ? '0' : '1';
-		$('.consume').toggleClass('btn-primary');
-		sendMpdCmd('consume ' + toggle);
-	}
-	else if ($(this).data('cmd') == 'repeat') {
-		$('#menu-check-repeat').toggle();
-
-		var toggle = $('.repeat').hasClass('btn-primary') ? '0' : '1';
-		$('.repeat').toggleClass('btn-primary');
-		sendMpdCmd('repeat ' + toggle);
-	}
-	else if ($(this).data('cmd') == 'single') {
-		$('#menu-check-single').toggle();
-
-		var toggle = $('.single').hasClass('btn-primary') ? '0' : '1';
-		$('.single').toggleClass('btn-primary');
-		sendMpdCmd('single ' + toggle);
-	}
-    else if ($(this).data('cmd') == 'clear') {
-		sendMpdCmd('clear');
-        $('#pl-saveName').val(''); // Clear saved playlist name if any
-	}
-    else if ($(this).data('cmd') == 'stream-recorder') {
-		$('#menu-check-recorder').toggle();
-
-        if ($('#menu-check-recorder').css('display') == 'block') {
-            SESSION.json['recorder_status'] = 'On';
-            $('.playback-context-menu i').addClass('recorder-on');
-        }
-        else {
-            SESSION.json['recorder_status'] = 'Off';
-            $('.playback-context-menu i').removeClass('recorder-on');
-        }
-
-        $.post('command/moode.php?cmd=updcfgsystem', {'recorder_status': SESSION.json['recorder_status']}, function() {
-            $.post('command/recorder_cmd.php?cmd=recorder_on_off');
-        });
+    switch ($(this).data('cmd')) {
+        case 'save-playlist':
+            $('#savepl-modal').modal();
+            break;
+        case 'set-favorites':
+            $.getJSON('command/moode.php?cmd=getfavname', function(favname) {
+                $('#pl-favName').val(favname);
+                $('#setfav-modal').modal();
+            });
+            break;
+        case 'toggle-song':
+            sendMpdCmd('playid ' + toggleSongId);
+            break;
+        case 'consume':
+    		$('#menu-check-consume').toggle();
+    		var toggle = $('.consume').hasClass('btn-primary') ? '0' : '1';
+    		$('.consume').toggleClass('btn-primary');
+    		sendMpdCmd('consume ' + toggle);
+            break;
+        case 'repeat':
+            $('#menu-check-repeat').toggle();
+    		var toggle = $('.repeat').hasClass('btn-primary') ? '0' : '1';
+    		$('.repeat').toggleClass('btn-primary');
+    		sendMpdCmd('repeat ' + toggle);
+            break;
+        case 'single':
+            $('#menu-check-single').toggle();
+    		var toggle = $('.single').hasClass('btn-primary') ? '0' : '1';
+    		$('.single').toggleClass('btn-primary');
+    		sendMpdCmd('single ' + toggle);
+            break;
+        case 'clear':
+    		sendMpdCmd('clear');
+            $('#pl-saveName').val(''); // Clear saved playlist name if any
+            break;
+        case 'stream-recorder':
+    		$('#menu-check-recorder').toggle();
+            if ($('#menu-check-recorder').css('display') == 'block') {
+                SESSION.json['recorder_status'] = 'On';
+                $('.playback-context-menu i').addClass('recorder-on');
+            }
+            else {
+                SESSION.json['recorder_status'] = 'Off';
+                $('.playback-context-menu i').removeClass('recorder-on');
+            }
+            $.post('command/moode.php?cmd=updcfgsystem', {'recorder_status': SESSION.json['recorder_status']}, function() {
+                $.post('command/recorder_cmd.php?cmd=recorder_on_off');
+            });
+            break;
 	}
 });
 
@@ -1511,58 +1507,67 @@ $('#context-menu-lib-item a').click(function(e) {
 	$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 	$('img.lib-coverart').removeClass('active');
 
-	if ($(this).data('cmd') == 'add_item' || $(this).data('cmd') == 'add_item_next') {
-		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
-		notify('add_item');
-	}
-	else if ($(this).data('cmd') == 'play_item' || $(this).data('cmd') == 'play_item_next') {
-        if (SESSION.json['library_track_play'] == 'Track') {
-            // Track: Play only the selected track
-            var cmd = $(this).data('cmd');
-            var files = filteredSongs[UI.dbEntry[0]].file;
-        }
-        else {
-            // Track+: Play selected track and all following tracks in the album
-            var cmd = $(this).data('cmd') == 'play_item' ? 'play_group' : 'play_group_next';
-            var files = [];
-            for (i = UI.dbEntry[0]; i < filteredSongs.length; i++) {
-                files.push(filteredSongs[i].file);
+    switch ($(this).data('cmd')) {
+        case 'add_item':
+        case 'add_item_next':
+    		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
+    		notify('add_item');
+            break;
+        case 'play_item':
+        case 'play_item_next':
+            if (SESSION.json['library_track_play'] == 'Track') {
+                // Track: Play only the selected track
+                var cmd = $(this).data('cmd');
+                var files = filteredSongs[UI.dbEntry[0]].file;
             }
-        }
-        mpdDbCmd(cmd, files);
-	}
-    /*else if ($(this).data('cmd') == 'clear_add_item') {
-		mpdDbCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
-		notify('clear_add_item');
-		$('#pl-saveName').val(''); // Clear saved playlist name if any
-	}*/
-	else if ($(this).data('cmd') == 'clear_play_item') {
-        if (SESSION.json['library_track_play'] == 'Track') {
-            // Track: Play only the selected track
-            var cmd = $(this).data('cmd');
-            var files = filteredSongs[UI.dbEntry[0]].file;
-        }
-        else {
-            // Track+: Play selected track and all following tracks in the album
-            var cmd = 'clear_play_group';
-            var files = [];
-            for (i = UI.dbEntry[0]; i < filteredSongs.length; i++) {
-                files.push(filteredSongs[i].file);
+            else {
+                // Track+: Play selected track and all following tracks in the album
+                var cmd = $(this).data('cmd') == 'play_item' ? 'play_group' : 'play_group_next';
+                var files = [];
+                for (i = UI.dbEntry[0]; i < filteredSongs.length; i++) {
+                    files.push(filteredSongs[i].file);
+                }
             }
-
-        }
-		mpdDbCmd(cmd, files);
-		notify(cmd);
-		$('#pl-saveName').val(''); // Clear saved playlist name if any
-	}
-    else if ($(this).data('cmd') == 'track_info_lib') {
-        audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
+            mpdDbCmd(cmd, files);
+            break;
+        /*case 'clear_add_item':
+    		mpdDbCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
+    		notify('clear_add_item');
+    		$('#pl-saveName').val(''); // Clear saved playlist name if any
+            break;
+        }*/
+        case 'clear_play_item':
+            if (SESSION.json['library_track_play'] == 'Track') {
+                // Track: Play only the selected track
+                var cmd = $(this).data('cmd');
+                var files = filteredSongs[UI.dbEntry[0]].file;
+            }
+            else {
+                // Track+: Play selected track and all following tracks in the album
+                var cmd = 'clear_play_group';
+                var files = [];
+                for (i = UI.dbEntry[0]; i < filteredSongs.length; i++) {
+                    files.push(filteredSongs[i].file);
+                }
+            }
+    		mpdDbCmd(cmd, files);
+    		notify(cmd);
+    		$('#pl-saveName').val(''); // Clear saved playlist name if any
+            break;
+        case 'track_info_lib':
+            audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
+            break;
+        case 'add_to_playlist':
+            mpdDbCmd('lsinfo_playlist_names');
+            $('#add-to-playlist-modal').modal();
+            break;
 	}
 });
 
 // Click coverart context menu item
 $('#context-menu-lib-album a').click(function(e) {
 	UI.dbEntry[0] = $.isNumeric(UI.dbEntry[0]) ? UI.dbEntry[0] : 0;
+
 	if (!$('.album-view-button').hasClass('active')) {
 		$('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
 		$('img.lib-coverart').removeClass('active');
@@ -1579,24 +1584,33 @@ $('#context-menu-lib-album a').click(function(e) {
     }
 	//console.log('files= ' + JSON.stringify(files));
 
-	if ($(this).data('cmd') == 'add_group' || $(this).data('cmd') == 'add_group_next') {
-		mpdDbCmd($(this).data('cmd'), files);
-		notify($(this).data('cmd'));
-	}
-	else if ($(this).data('cmd') == 'play_group' || $(this).data('cmd') == 'play_group_next') {
-		mpdDbCmd($(this).data('cmd'), files);
-	}
-    /*else if ($(this).data('cmd') == 'clear_add_group') {
-		mpdDbCmd('clear_add_group', files);
-		notify($(this).data('cmd'));
-	}*/
-	else if ($(this).data('cmd') == 'clear_play_group') {
-		mpdDbCmd('clear_play_group', files);
-		notify($(this).data('cmd'));
-	}
-	else if ($(this).data('cmd') == 'tracklist') {
-        showHideTracks(false);
-	}
+    switch ($(this).data('cmd')) {
+        case 'add_group':
+        case 'add_group_next':
+    		mpdDbCmd($(this).data('cmd'), files);
+    		notify($(this).data('cmd'));
+            break;
+        case 'play_group':
+        case 'play_group_next':
+		      mpdDbCmd($(this).data('cmd'), files);
+              break;
+        /*case 'clear_add_group':
+        	mpdDbCmd('clear_add_group', files);
+        	notify($(this).data('cmd'));
+            break;
+        }*/
+        case 'clear_play_group':
+    		mpdDbCmd('clear_play_group', files);
+    		notify($(this).data('cmd'));
+            break;
+        case 'tracklist':
+            showHideTracks(false);
+            break;
+        case 'add_to_playlist':
+            mpdDbCmd('lsinfo_playlist_names');
+            $('#add-to-playlist-modal').modal();
+            break;
+    }
 });
 
 // Click disc context menu item
@@ -1609,16 +1623,22 @@ $('#context-menu-lib-disc a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-	if ($(this).data('cmd') == 'add_group') {
-		mpdDbCmd('add_group', files);
-		notify($(this).data('cmd'));
-	}
-	if ($(this).data('cmd') == 'play_group') {
-		mpdDbCmd('play_group', files);
-	}
-	if ($(this).data('cmd') == 'clear_play_group') {
-		mpdDbCmd('clear_play_group', files);
-		notify($(this).data('cmd'));
+    switch ($(this).data('cmd')) {
+        case 'add_group':
+    		mpdDbCmd('add_group', files);
+    		notify($(this).data('cmd'));
+            break;
+        case 'play_group':
+            mpdDbCmd('play_group', files);
+            break;
+        case 'clear_play_group':
+    		mpdDbCmd('clear_play_group', files);
+    		notify($(this).data('cmd'));
+            break;
+        case 'add_to_playlist':
+            mpdDbCmd('lsinfo_playlist_names');
+            $('#add-to-playlist-modal').modal();
+            break;
 	}
 });
 
@@ -1630,16 +1650,22 @@ $('#context-menu-lib-album-heading a').click(function(e) {
 	}
 	//console.log('files= ' + JSON.stringify(files));
 
-	if ($(this).data('cmd') == 'add_group') {
-		mpdDbCmd('add_group', files);
-		notify($(this).data('cmd'));
-	}
-	if ($(this).data('cmd') == 'play_group') {
-		mpdDbCmd('play_group', files);
-	}
-	if ($(this).data('cmd') == 'clear_play_group') {
-		mpdDbCmd('clear_play_group', files);
-		notify($(this).data('cmd'));
+    switch ($(this).data('cmd')) {
+        case 'add_group':
+    		mpdDbCmd('add_group', files);
+    		notify($(this).data('cmd'));
+            break;
+        case 'play_group':
+            mpdDbCmd('play_group', files);
+            break;
+        case 'clear_play_group':
+    		mpdDbCmd('clear_play_group', files);
+    		notify($(this).data('cmd'));
+            break;
+        case 'add_to_playlist':
+            mpdDbCmd('lsinfo_playlist_names');
+            $('#add-to-playlist-modal').modal();
+            break;
 	}
 });
 
