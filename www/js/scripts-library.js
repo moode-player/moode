@@ -1447,6 +1447,34 @@ $('#playlist-items').on('click', '.pl-item', function(e) {
     //console.log(UI.dbEntry[0]);
 });
 
+// Click playlist name
+$('#playlist-names').on('click', '.pl-name', function(e) {
+    UI.dbEntry[0] = $('#playlist-names .pl-name').index(this); // Store pos for use in the Add routine
+	$('#playlist-names li').removeClass('active');
+    $('#pl-name-' + (UI.dbEntry[0] + 1).toString()).addClass('active');
+    //console.log(UI.dbEntry[0]);
+});
+// Add to playlist
+$('#btn-add-to-playlist').click(function(e){
+    var playlist = '';
+    $('#playlist-names li').each(function(){
+        if ($(this).hasClass('active')) {
+            playlist = $(this).text();
+            return;
+        }
+    });
+    if (playlist == '') {
+        notify('select_playlist');
+    }
+    else {
+        $.post('command/moode.php?cmd=add_to_playlist', {'playlist': playlist, 'files': UI.dbEntry[4]}, function(result) {
+            notify('upd_playlist');
+        });
+        $('#playlist-names li').removeClass('active');
+        UI.dbEntry[4] = '';
+    }
+});
+
 // Playback ellipsis context menu
 $('#context-menu-playback a').click(function(e) {
     //console.log($(this).data('cmd'));
@@ -1558,7 +1586,7 @@ $('#context-menu-lib-item a').click(function(e) {
             audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
             break;
         case 'add_to_playlist':
-            mpdDbCmd('lsinfo_playlist_names');
+            mpdDbCmd('get_playlist_names', {'name': filteredSongs[UI.dbEntry[0]].title, 'files':filteredSongs[UI.dbEntry[0]].file});
             $('#add-to-playlist-modal').modal();
             break;
 	}
@@ -1607,7 +1635,7 @@ $('#context-menu-lib-album a').click(function(e) {
             showHideTracks(false);
             break;
         case 'add_to_playlist':
-            mpdDbCmd('lsinfo_playlist_names');
+            mpdDbCmd('get_playlist_names', {'name': filteredSongs[0].album, 'files': files});
             $('#add-to-playlist-modal').modal();
             break;
     }
@@ -1636,7 +1664,7 @@ $('#context-menu-lib-disc a').click(function(e) {
     		notify($(this).data('cmd'));
             break;
         case 'add_to_playlist':
-            mpdDbCmd('lsinfo_playlist_names');
+            mpdDbCmd('get_playlist_names', {'name': filteredSongsDisc[0].album, 'files': files});
             $('#add-to-playlist-modal').modal();
             break;
 	}
@@ -1663,7 +1691,7 @@ $('#context-menu-lib-album-heading a').click(function(e) {
     		notify($(this).data('cmd'));
             break;
         case 'add_to_playlist':
-            mpdDbCmd('lsinfo_playlist_names');
+            mpdDbCmd('get_playlist_names', {'name': filteredSongsAlbum[0].album, 'files': files});
             $('#add-to-playlist-modal').modal();
             break;
 	}

@@ -542,7 +542,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 .pl-item-line1 {font-size:1em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 .pl-item-line2 {font-size:.9em;display:block;margin-left: calc(2.5em + 1.25vmin);color:var(--textvariant);text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 #delete-playlist-item input, #move-playlist-item input {height: 1.25em;margin-right:.25em;}
-#delete-playlist-item, #move-playlist-item {position:absolute;}
+#delete-playlist-item, #move-playlist-item {position:absolute;background-color:var(--modalbkdr);margin-top:-1em;padding:1em 0;}
 
 /* playbar */
 #timetrack {display:flex;width:100%;padding:0;color:inherit;height:15px;z-index:10;position:relative;}

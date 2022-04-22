@@ -40,8 +40,8 @@ $playqueue_cmds = array('add_item', 'play_item', 'clear_play_item', 'add_item_ne
 	'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next'/*, 'clear_add_group'*/);
 $other_mpd_cmds = array('updvolume' , 'mutetxvol' ,'getmpdstatus', 'get_playqueue', 'delete_playqueue_item', 'move_playqueue_item',
 	'get_playqueue_item_file', 'savepl', 'listsavedpl',	'delsavedpl', 'setfav', 'addfav', 'lsinfo', 'search',
-	'newstation', 'updstation', 'delstation', 'new_playlist', 'upd_playlist', 'del_playlist', 	'loadlib', 'station_info', 'track_info',
-	'upd_tx_adv_toggle', 'upd_rx_adv_toggle');
+	'newstation', 'updstation', 'delstation', 'new_playlist', 'upd_playlist', 'del_playlist', 'add_to_playlist',
+	'loadlib', 'station_info', 'track_info', 'upd_tx_adv_toggle', 'upd_rx_adv_toggle');
 $turn_consume_off = false;
 
 // Jobs sent to worker.php
@@ -693,6 +693,39 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			// Delete m3u and cover image files
 			sysCmd('rm "' . MPD_PLAYLISTROOT . html_entity_decode($_POST['path']) . '.m3u"');
 			sysCmd('rm "' . '/var/local/www/imagesw/playlist-covers/' . html_entity_decode($_POST['path']) . '.jpg"');
+			break;
+		case 'add_to_playlist':
+			$data = '';
+			$is_array = is_array($_POST['files']);
+
+			if (!$is_array && strpos($_POST['files'], '.pls') !== false) {
+				// Radio station
+				$result = parseStationFile(file_get_contents(MPD_MUSICROOT . $_POST['files']));
+				$data = $result['File1'] . "\n";
+			}
+			else {
+				// Song file(s)
+				if ($is_array) {
+					foreach ($_POST['files'] as $file) {
+						$data .= $file . "\n";
+					}
+				}
+				else {
+					$data = $_POST['files'] . "\n";
+				}
+			}
+
+			// Append to playlist
+			$file = MPD_PLAYLISTROOT . $_POST['playlist'] . '.m3u';
+			if (false === ($fh = fopen($file, 'a'))) {
+				workerLog('moode.php: file open failed on ' . $file);
+				break;
+			}
+			if (false === ($bytes_written = fwrite($fh, $data))) {
+				workerLog('moode.php: file write failed on ' . $file);
+				break;
+			}
+			fclose($fh);
 			break;
 	}
 

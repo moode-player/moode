@@ -1497,7 +1497,7 @@ function parseCfgMpd($dbh) {
 	return $array;
 }
 
-// parse radio station file
+// Parse radio station .pls file
 function parseStationFile($resp) {
 	if (is_null($resp) ) {
 		return 'parseStationFile(): Response is null';

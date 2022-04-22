@@ -2431,6 +2431,7 @@
 					<button id="btn-delete-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Delete</button>&nbsp;
 					<input id="delete-playlist-item-begpos" class="pl-item input-mini" type="number" min="1" max="" value="">
 					<input id="delete-playlist-item-endpos" class="pl-item input-mini" type="number" min="1" max="" value="">
+					<input class="input-mini" type="text" style="border:transparent;cursor:default;">
 				</div>
 				<div id="move-playlist-item" class="pl-item hide">
 					<button id="btn-move-plitem" class="pl-item btn btn-primary btn-small modal-button-style">Move</button>&nbsp;
@@ -2531,9 +2532,12 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="add-to-playlist-modal-label">Add to playlist</h3>
+		<p>The Album, Track or Radio station below will be added to the end of a selected playlist. Switch to Playlist view to edit the playlist and delete or move items.</p>
 	</div>
 	<div class="modal-body">
+		<h4 id="item-to-add"></h4>
 		<form class="form-horizontal" action="" method="">
+			<p style="margin-top:1em;text-align:center;" >Select a playlist</p>
 			<div id="playlist-names-container">
 				<ul id="playlist-names"></ul>
 			</div>
@@ -2541,7 +2545,7 @@
 	</div>
 	<div class="modal-footer">
 		<button aria-label="Cancel" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-		<button aria-label="Delete" id="btn-del-playlist" class="btn btn-primary" data-dismiss="modal">Add</button>
+		<button aria-label="Add" id="btn-add-to-playlist" class="btn btn-primary" data-dismiss="modal">Add</button>
 	</div>
 </div>
 
