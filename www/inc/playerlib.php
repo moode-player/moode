@@ -910,8 +910,7 @@ function addGroupToQueue($songs) {
 
 // Get file extension
 function getFileExt($file) {
-	$ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-	return $ext == '' ? 'no_extension_found' : $ext;
+	return substr($file, 0 ,4 ) == 'http' ? '' : strtolower(pathinfo($file, PATHINFO_EXTENSION));
 }
 
 // Parse delimited file
@@ -1097,19 +1096,12 @@ function parseTrackInfo($resp) {
 	return $array;
 }
 
-// list contents of saved playlist
+// list contents of playlist (Folder view)
 function listSavedPL($sock, $plname) {
 	sendMpdCmd($sock, 'listplaylist "' . $plname . '"');
 	$pl = readMpdResp($sock);
 
 	return parseList($pl);
-}
-
-// delete saved playlist file
-function delPLFile($sock, $plname) {
-	sendMpdCmd($sock, 'rm "' . $plname . '"');
-	$resp = readMpdResp($sock);
-	return $resp;
 }
 
 // Search mpd database

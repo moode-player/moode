@@ -50,7 +50,6 @@ function notify(cmd, msg, duration) {
 		plnameerror: 'NAS, RADIO and SDCARD cannot be used in the name',
 		needssid: 'Static IP requres an SSID',
 		needdhcp: 'Blank SSID requires DHCP',
-		delsavedpl: 'Playlist deleted',
         creating_station: 'Creating new station',
         updating_station: 'Updating station',
         creating_playlist: 'Creating new playlist',

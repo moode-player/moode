@@ -91,10 +91,10 @@ jQuery(document).ready(function($) { 'use strict';
         getThumbHW();
 
         // Initiate loads
-        loadLibrary();
-        mpdDbCmd('lsinfo', '');
-        mpdDbCmd('lsinfo_radio');
-        mpdDbCmd('lsinfo_playlist');
+        loadLibrary();                  // Tag/Album view
+        mpdDbCmd('lsinfo', '');         // Folder view
+        mpdDbCmd('lsinfo_radio');       // Radio view
+        mpdDbCmd('lsinfo_playlist');    // Playlist view
 
     	// Radio
     	UI.radioPos = parseInt(SESSION.json['radio_pos']);
@@ -342,7 +342,6 @@ jQuery(document).ready(function($) { 'use strict';
         // Folder view
     	else if (currentView == 'folder') {
     		makeActive('.folder-view-btn', '#folder-panel', currentView);
-    		mpdDbCmd('lsinfo', '');
     	}
         // Tag view
     	else if (currentView == 'tag'){
@@ -356,7 +355,6 @@ jQuery(document).ready(function($) { 'use strict';
         // Playlist view
     	else if (currentView == 'playlist') {
     		makeActive('.playlist-view-btn', '#playlist-panel', currentView);
-    		mpdDbCmd('lsinfo', '');
     	}
 
         // CoverView
@@ -835,11 +833,8 @@ jQuery(document).ready(function($) { 'use strict';
 		mpdDbCmd('lsinfo', '');
 	});
 	$('#db-refresh').click(function(e) {
-		UI.dbCmd = UI.dbCmd != 'lsinfo' && UI.dbCmd != 'listsavedpl' ? 'lsinfo' : UI.dbCmd;
         UI.dbPos[UI.dbPos[10]] = 0;
-		if (UI.dbCmd == 'lsinfo' || UI.dbCmd == 'listsavedpl') {
-			mpdDbCmd(UI.dbCmd, UI.path);
-		}
+		mpdDbCmd(UI.dbCmd, UI.path);
         //console.log(UI.dbCmd, UI.path);
 	});
 	$('#db-search-submit').click(function(e) {
@@ -1350,10 +1345,6 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
 	// Buttons on modals
-	$('.btn-del-savedpl').click(function(e){
-		mpdDbCmd('delsavedpl', UI.dbEntry[0]);
-		notify('delsavedpl');
-	});
 	$('.btn-delete-playqueue-item').click(function(e){
 		var cmd = '';
 		var begpos = $('#delete-playqueue-item-begpos').val() - 1;
