@@ -1276,55 +1276,47 @@ function renderPlayqueue(state) {
     });
 }
 
-// Commands for play queue, folder, radio and playlist views
-function mpdDbCmd(cmd, path) {
-	//console.log('mpdDbCmd: ' + cmd + ' | ' + path);
-    var folderViewCmds = ['lsinfo', 'listsavedpl'];
+// Handle commands for Queue and Library views
+function moodeCmd(cmd, path) {
+	//console.log('moodeCmd: ' + cmd + ' | ' + path);
+    var folderViewCmds = ['lsinfo', 'get_pl_items'];
     UI.dbCmd = folderViewCmds.includes(cmd) ? cmd : '';
-
-	var queueCmds = ['add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
+    var queueCmds = ['add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
         'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next', /*'clear_add_group',*/ 'update_library'];
 
+    // Queue
 	if (queueCmds.includes(cmd)) {
         GLOBAL.playqueueChanged = true;
 		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(path) {}, 'json');
 	}
     else {
         switch (cmd) {
-            case 'lsinfo':
-                $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {
-                    renderFolderView(data, path);
-                }, 'json');
-                break;
+            // Radio view
             case 'lsinfo_radio':
                 renderRadioView();
                 break;
-            case 'lsinfo_playlist':
-                renderPlaylistView();
-                break;
-            case 'get_playlist_names':
-                renderPlaylistNames(path);
-                break;
-            case 'listsavedpl':
-                $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {
-                    renderFolderView(data, path);
-                }, 'json');
-                break;
-            case 'newstation':
-            case 'updstation':
-                cmd == 'newstation' ? notify('creating_station') : notify('updating_station');
+            case 'new_station':
+            case 'upd_station':
+                cmd == 'new_station' ? notify('creating_station') : notify('updating_station');
                 $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(return_msg) {
                     RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
                     return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, '5_seconds');
                     $('#ra-refresh').click();
                 }, 'json');
                 break;
-            case 'delstation':
+            case 'del_station':
                 deleteRadioStationObject(path.slice(0,path.lastIndexOf('.')).substr(6));
                 $.post('command/moode.php?cmd=' + cmd, {'path': path}, function() {
-                    notify('delstation');
+                    notify('del_station');
                     $('#ra-refresh').click();
                 });
+                break;
+            // Playlist view
+            case 'lsinfo_playlist':
+                renderPlaylistView();
+                break;
+            case 'get_playlist_names':
+                renderPlaylistNames(path); // Add_to_playlist modal
                 break;
             case 'new_playlist':
             case 'upd_playlist':
@@ -1339,6 +1331,13 @@ function mpdDbCmd(cmd, path) {
                     notify(cmd);
                     $('#pl-refresh').click();
                 });
+                break;
+            // Folder view
+            case 'lsinfo':
+            case 'get_pl_items':
+                $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {
+                    renderFolderView(data, path);
+                }, 'json');
                 break;
         }
     }
@@ -2223,7 +2222,7 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'add_item_next':
         case 'play_item_next':
             if ($('#db-search-results').text() == '') {
-                mpdDbCmd($(this).data('cmd'), path);
+                moodeCmd($(this).data('cmd'), path);
             }
             else {
                 // Folder view search results
@@ -2238,7 +2237,7 @@ $(document).on('click', '.context-menu a', function(e) {
                     files = files.slice(1);
                 }
 
-                mpdDbCmd($(this).data('cmd').replace('_item', '_group'), files);
+                moodeCmd($(this).data('cmd').replace('_item', '_group'), files);
             }
 
             if ($(this).data('cmd').includes('add_')) {
@@ -2282,7 +2281,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 audioInfo(cmd, MPD.json['file']);
             }
             break;
-        case 'editradiostn':
+        case 'edit_station':
             $.post('command/moode.php?cmd=readstationfile', {'path': UI.dbEntry[0]}, function(result) {
                 var stationName = path.slice(path.lastIndexOf('/') + 1); // Trim 'RADIO/'
                 stationName = stationName.slice(0, stationName.lastIndexOf('.')); // Trim .pls
@@ -2305,12 +2304,12 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#edit-station-geo-fenced span').text(result['geo_fenced']);
                 //$('#edit-station-reserved2').val(result['reserved2']);
 
-        		$('#editstation-modal').modal();
+        		$('#edit-station-modal').modal();
             }, 'json');
             break;
-        case 'delstation':
+        case 'del_station':
     		$('#station-path').html(path.slice(0,path.lastIndexOf('.')).substr(6)); // Trim 'RADIO/' and '.pls'
-    		$('#deletestation-modal').modal();
+    		$('#delete-station-modal').modal();
             break;
         case 'edit_playlist':
             $.post('command/moode.php?cmd=read_playlist_file', {'path': path}, function(result) {
@@ -2378,7 +2377,7 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'add_to_playlist': // From the radio station context menu
             var station_name = path.slice(path.lastIndexOf('/') + 1); // Trim RADIO
             station_name = station_name.slice(0, station_name.lastIndexOf('.')); // and .pls
-            mpdDbCmd('get_playlist_names', {'name': station_name, 'files': path});
+            moodeCmd('get_playlist_names', {'name': station_name, 'files': path});
             $('#add-to-playlist-modal').modal();
             break;
         case 'delete_playqueue_item':
@@ -4144,7 +4143,7 @@ function submitLibraryUpdate (path) {
     if (GLOBAL.libLoading == false) {
         GLOBAL.libLoading = true;
         GLOBAL.libRendered = false;
-        mpdDbCmd('update_library', path);
+        moodeCmd('update_library', path);
         notify('update_library', path);
     }
     else {

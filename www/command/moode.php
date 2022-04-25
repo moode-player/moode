@@ -39,8 +39,8 @@ $jobs = array('reboot', 'poweroff', 'updclockradio', 'update_library');
 $playqueue_cmds = array('add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
 	'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next'/*, 'clear_add_group'*/);
 $other_mpd_cmds = array('updvolume' , 'mutetxvol' ,'getmpdstatus', 'get_playqueue', 'delete_playqueue_item', 'move_playqueue_item',
-	'get_playqueue_item_file', 'savepl', 'listsavedpl', 'setfav', 'addfav', 'lsinfo', 'search',
-	'newstation', 'updstation', 'delstation', 'new_playlist', 'upd_playlist', 'del_playlist', 'add_to_playlist',
+	'get_playqueue_item_file', 'savepl', 'get_pl_items', 'setfav', 'addfav', 'lsinfo', 'search',
+	'new_station', 'upd_station', 'del_station', 'new_playlist', 'upd_playlist', 'del_playlist', 'add_to_playlist',
 	'loadlib', 'station_info', 'track_info', 'upd_tx_adv_toggle', 'upd_rx_adv_toggle');
 $turn_consume_off = false;
 
@@ -427,19 +427,19 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				echo json_encode(searchDB($sock, $_GET['tagname'], $_POST['query']));
 			}
 			break;
-		case 'listsavedpl':
-			echo json_encode(listSavedPL($sock, $_POST['path']));
+		case 'get_pl_items':
+			echo json_encode(get_pl_items($sock, $_POST['path']));
 			break;
 
 		// RADIO STATIONS
 
-		case 'newstation':
-		case 'updstation':
+		case 'new_station':
+		case 'upd_station':
 			$name = $_POST['path']['name'];
 			$return_msg = 'OK';
 
 			// Add new station
-			if ($_GET['cmd'] == 'newstation') {
+			if ($_GET['cmd'] == 'new_station') {
 				// Check for existing pls file
 				if (file_exists(MPD_MUSICROOT . 'RADIO/' . $_POST['path']['name'] . '.pls')) {
 					$return_msg = 'A station .pls file with the same name already exists';
@@ -571,7 +571,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				sendEngCmd('set_cover_image0'); // Hide spinner
 			}
 			break;
-		case 'delstation':
+		case 'del_station':
 			// Get the row id
 			$station_file = parseStationFile(shell_exec('cat "' . MPD_MUSICROOT . $_POST['path'] . '"'));
 			$result = sdbquery("select id,name from cfg_radio where station='" . SQLite3::escapeString($station_file['File1']) . "'", $dbh);

@@ -540,8 +540,8 @@
 			<li ><a href="#notarget" data-cmd="play_item_next"><i class="fal fa-play-circle sx"></i> Play next</a></li>
 			<!--li><a href="#notarget" data-cmd="clear_add_item"><i class="fal fa-plus-square sx"></i> Clear/Add</a></li-->
 			<li class="menu-separator"><a href="#notarget" data-cmd="add_to_playlist"><i class="fal fa-list sx"></i> Add to playlist</a></li>
-			<li><a href="#notarget" data-cmd="editradiostn"><i class="fal fa-edit sx"></i> Edit station</a></li>
-			<li><a href="#notarget" data-cmd="delstation"><i class="fal fa-trash sx"></i> Delete station</a></li>
+			<li><a href="#notarget" data-cmd="edit_station"><i class="fal fa-edit sx"></i> Edit station</a></li>
+			<li><a href="#notarget" data-cmd="del_station"><i class="fal fa-trash sx"></i> Delete station</a></li>
 		</ul>
 	</div>
 
@@ -1770,10 +1770,10 @@
 </div>
 
 <!-- RADIO STATION NEW/EDIT/DELETE -->
-<div id="newstation-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="newstation-modal-label" aria-hidden="true">
+<div id="new-station-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="new-station-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="newstation-modal-label">New station</h3>
+		<h3 id="new-station-modal-label">New station</h3>
 	</div>
 	<div class="modal-body">
 		<form class="form-horizontal" action="" method="">
@@ -1906,10 +1906,10 @@
 	</div>
 </div>
 
-<div id="editstation-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="editstation-modal-label" aria-hidden="true">
+<div id="edit-station-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="edit-station-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="editstation-modal-label">Edit station</h3>
+		<h3 id="edit-station-modal-label">Edit station</h3>
 		<p>NOTE: After updating a station logo it may take a while before the Browser expires the old image from it's cache. Refreshing the Browser may help expire the old image sooner.</p>
 	</div>
 	<div class="modal-body">
@@ -2043,10 +2043,10 @@
 	</div>
 </div>
 
-<div id="deletestation-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="deletestation-modal-label" aria-hidden="true">
+<div id="delete-station-modal" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="delete-station-modal-label" aria-hidden="true">
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		<h3 id="deletestation-modal-label">Delete station?</h3>
+		<h3 id="delete-station-modal-label">Delete station?</h3>
 	</div>
 	<div class="modal-body">
 		<h4 id="station-path"></h4>

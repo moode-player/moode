@@ -1097,11 +1097,11 @@ function parseTrackInfo($resp) {
 }
 
 // list contents of playlist (Folder view)
-function listSavedPL($sock, $plname) {
-	sendMpdCmd($sock, 'listplaylist "' . $plname . '"');
-	$pl = readMpdResp($sock);
+function get_pl_items($sock, $pl_name) {
+	sendMpdCmd($sock, 'listplaylist "' . $pl_name . '"');
+	$pl_items = readMpdResp($sock);
 
-	return parseList($pl);
+	return parseList($pl_items);
 }
 
 // Search mpd database

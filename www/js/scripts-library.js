@@ -1114,15 +1114,15 @@ $('#albumcovers').on('click', 'img', function(e) {
     if (SESSION.json['library_onetouch_album'] != 'No action') {
         if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
-            mpdDbCmd(queueCmd, files);
+            moodeCmd(queueCmd, files);
             notify(queueCmd);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Play' ? 'play_group' : 'play_group_next';
-            mpdDbCmd(queueCmd, files);
+            moodeCmd(queueCmd, files);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_group', files);
+            moodeCmd('clear_play_group', files);
             notify('clear_play_group');
         }
         else if (SESSION.json['library_onetouch_album'] == 'Show tracks') {
@@ -1160,7 +1160,7 @@ $('.ralbum').click(function(e) {
 
         if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
-            mpdDbCmd(queueCmd, files);
+            moodeCmd(queueCmd, files);
             notify(queueCmd);
         }
         // NOTE: Show tracks for Album view = Play for this button
@@ -1168,10 +1168,10 @@ $('.ralbum').click(function(e) {
             SESSION.json['library_onetouch_album'] == 'Show tracks') {
             var queueCmd = (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Show tracks') ?
                 'play_group' : 'play_group_next';
-            mpdDbCmd(queueCmd, files);
+            moodeCmd(queueCmd, files);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_group', files);
+            moodeCmd('clear_play_group', files);
         }
 
 		storeLibPos(UI.libPos);
@@ -1195,15 +1195,15 @@ $('#database-radio').on('click', 'img', function(e) {
     if (SESSION.json['library_onetouch_radio'] != 'No action') {
         if (SESSION.json['library_onetouch_radio'] == 'Add' || SESSION.json['library_onetouch_radio'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_radio'] == 'Add' ? 'add_item' : 'add_item_next';
-            mpdDbCmd(queueCmd, path);
+            moodeCmd(queueCmd, path);
             notify(queueCmd);
         }
         else if (SESSION.json['library_onetouch_radio'] == 'Play' || SESSION.json['library_onetouch_radio'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_radio'] == 'Play' ? 'play_item' : 'play_item_next';
-            mpdDbCmd(queueCmd, path);
+            moodeCmd(queueCmd, path);
         }
         else if (SESSION.json['library_onetouch_radio'] == 'Clear/Play') {
-            mpdDbCmd('clear_play_item', path);
+            moodeCmd('clear_play_item', path);
             notify('clear_play_item');
         }
     }
@@ -1538,7 +1538,7 @@ $('#context-menu-lib-item a').click(function(e) {
     switch ($(this).data('cmd')) {
         case 'add_item':
         case 'add_item_next':
-    		mpdDbCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
+    		moodeCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
     		notify('add_item');
             break;
         case 'play_item':
@@ -1556,10 +1556,10 @@ $('#context-menu-lib-item a').click(function(e) {
                     files.push(filteredSongs[i].file);
                 }
             }
-            mpdDbCmd(cmd, files);
+            moodeCmd(cmd, files);
             break;
         /*case 'clear_add_item':
-    		mpdDbCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
+    		moodeCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
     		notify('clear_add_item');
     		$('#pl-saveName').val(''); // Clear saved playlist name if any
             break;
@@ -1578,7 +1578,7 @@ $('#context-menu-lib-item a').click(function(e) {
                     files.push(filteredSongs[i].file);
                 }
             }
-    		mpdDbCmd(cmd, files);
+    		moodeCmd(cmd, files);
     		notify(cmd);
     		$('#pl-saveName').val(''); // Clear saved playlist name if any
             break;
@@ -1586,7 +1586,7 @@ $('#context-menu-lib-item a').click(function(e) {
             audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
             break;
         case 'add_to_playlist':
-            mpdDbCmd('get_playlist_names', {'name': filteredSongs[UI.dbEntry[0]].title, 'files':filteredSongs[UI.dbEntry[0]].file});
+            moodeCmd('get_playlist_names', {'name': filteredSongs[UI.dbEntry[0]].title, 'files':filteredSongs[UI.dbEntry[0]].file});
             $('#add-to-playlist-modal').modal();
             break;
 	}
@@ -1615,27 +1615,27 @@ $('#context-menu-lib-album a').click(function(e) {
     switch ($(this).data('cmd')) {
         case 'add_group':
         case 'add_group_next':
-    		mpdDbCmd($(this).data('cmd'), files);
+    		moodeCmd($(this).data('cmd'), files);
     		notify($(this).data('cmd'));
             break;
         case 'play_group':
         case 'play_group_next':
-		      mpdDbCmd($(this).data('cmd'), files);
+		      moodeCmd($(this).data('cmd'), files);
               break;
         /*case 'clear_add_group':
-        	mpdDbCmd('clear_add_group', files);
+        	moodeCmd('clear_add_group', files);
         	notify($(this).data('cmd'));
             break;
         }*/
         case 'clear_play_group':
-    		mpdDbCmd('clear_play_group', files);
+    		moodeCmd('clear_play_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'tracklist':
             showHideTracks(false);
             break;
         case 'add_to_playlist':
-            mpdDbCmd('get_playlist_names', {'name': filteredSongs[0].album, 'files': files});
+            moodeCmd('get_playlist_names', {'name': filteredSongs[0].album, 'files': files});
             $('#add-to-playlist-modal').modal();
             break;
     }
@@ -1653,18 +1653,18 @@ $('#context-menu-lib-disc a').click(function(e) {
 
     switch ($(this).data('cmd')) {
         case 'add_group':
-    		mpdDbCmd('add_group', files);
+    		moodeCmd('add_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'play_group':
-            mpdDbCmd('play_group', files);
+            moodeCmd('play_group', files);
             break;
         case 'clear_play_group':
-    		mpdDbCmd('clear_play_group', files);
+    		moodeCmd('clear_play_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'add_to_playlist':
-            mpdDbCmd('get_playlist_names', {'name': filteredSongsDisc[0].album, 'files': files});
+            moodeCmd('get_playlist_names', {'name': filteredSongsDisc[0].album, 'files': files});
             $('#add-to-playlist-modal').modal();
             break;
 	}
@@ -1680,18 +1680,18 @@ $('#context-menu-lib-album-heading a').click(function(e) {
 
     switch ($(this).data('cmd')) {
         case 'add_group':
-    		mpdDbCmd('add_group', files);
+    		moodeCmd('add_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'play_group':
-            mpdDbCmd('play_group', files);
+            moodeCmd('play_group', files);
             break;
         case 'clear_play_group':
-    		mpdDbCmd('clear_play_group', files);
+    		moodeCmd('clear_play_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'add_to_playlist':
-            mpdDbCmd('get_playlist_names', {'name': filteredSongsAlbum[0].album, 'files': files});
+            moodeCmd('get_playlist_names', {'name': filteredSongsAlbum[0].album, 'files': files});
             $('#add-to-playlist-modal').modal();
             break;
 	}

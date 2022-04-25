@@ -92,9 +92,9 @@ jQuery(document).ready(function($) { 'use strict';
 
         // Initiate loads
         loadLibrary();                  // Tag/Album view
-        mpdDbCmd('lsinfo', '');         // Folder view
-        mpdDbCmd('lsinfo_radio');       // Radio view
-        mpdDbCmd('lsinfo_playlist');    // Playlist view
+        moodeCmd('lsinfo', '');         // Folder view
+        moodeCmd('lsinfo_radio');       // Radio view
+        moodeCmd('lsinfo_playlist');    // Playlist view
 
     	// Radio
     	UI.radioPos = parseInt(SESSION.json['radio_pos']);
@@ -788,11 +788,11 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.database').on('click', '.db-browse', function(e) {
         //console.log('Folder item click');
 	    if ($(this).hasClass('db-folder') || $(this).hasClass('db-savedplaylist')) {
-			var cmd = $(this).hasClass('db-folder') ? 'lsinfo' : 'listsavedpl';
+			var cmd = $(this).hasClass('db-folder') ? 'lsinfo' : 'get_pl_items';
             UI.dbEntry[3] = $(this).parent().attr('id');
 			UI.dbPos[UI.dbPos[10]] = $(this).parent().attr('id').replace('db-','');
 			++UI.dbPos[10];
-			mpdDbCmd(cmd, $(this).parent().data('path'));
+			moodeCmd(cmd, $(this).parent().data('path'));
 		}
 	});
     // Folder view context menu click
@@ -818,7 +818,7 @@ jQuery(document).ready(function($) { 'use strict';
 			else {
 				path = '';
 			}
-			mpdDbCmd('lsinfo', path);
+			moodeCmd('lsinfo', path);
 
 			if (UI.dbPos[10] == 0) {
 				UI.dbPos.fill(0);
@@ -830,11 +830,11 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#dbfs').val('');
 		UI.dbPos.fill(0);
 		UI.path = '';
-		mpdDbCmd('lsinfo', '');
+		moodeCmd('lsinfo', '');
 	});
 	$('#db-refresh').click(function(e) {
         UI.dbPos[UI.dbPos[10]] = 0;
-		mpdDbCmd(UI.dbCmd, UI.path);
+		moodeCmd(UI.dbCmd, UI.path);
         //console.log(UI.dbCmd, UI.path);
 	});
 	$('#db-search-submit').click(function(e) {
@@ -895,15 +895,15 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#context-menu-db-search-results a').click(function(e) {
 		$('#db-search-results').css('font-weight', 'normal');
 	    if ($(this).data('cmd') == 'add_group') {
-	        mpdDbCmd('add_group', dbFilterResults);
+	        moodeCmd('add_group', dbFilterResults);
 	        notify($(this).data('cmd'));
 		}
 	    if ($(this).data('cmd') == 'play_group') {
-	        mpdDbCmd('play_group', dbFilterResults);
+	        moodeCmd('play_group', dbFilterResults);
 	        notify($(this).data('cmd'));
 		}
 	    if ($(this).data('cmd') == 'clear_play_group') {
-	        mpdDbCmd('clear_play_group', dbFilterResults);
+	        moodeCmd('clear_play_group', dbFilterResults);
 	        notify($(this).data('cmd'));
 		}
 	});
@@ -913,7 +913,7 @@ jQuery(document).ready(function($) { 'use strict';
     //
     // Refresh the station list
 	$('#ra-refresh').click(function(e) {
-		mpdDbCmd('lsinfo_radio');
+		moodeCmd('lsinfo_radio');
         lazyLode('radio');
         $('#database-radio').scrollTo(0, 200);
 		UI.radioPos = -1;
@@ -941,9 +941,9 @@ jQuery(document).ready(function($) { 'use strict';
         $('#new-station-geo-fenced span').text('No');
         //$('#new-station-reserved2').val('');
 
-		$('#newstation-modal').modal();
+		$('#new-station-modal').modal();
 	});
-    $('#newstation-modal').on('shown.bs.modal', function() {
+    $('#new-station-modal').on('shown.bs.modal', function() {
         $('#new-station-name').focus();
     });
 	// Radio search
@@ -1005,7 +1005,7 @@ jQuery(document).ready(function($) { 'use strict';
 			notify('blankentries', 'Station not created');
 		}
 		else {
-			mpdDbCmd('newstation', {
+			moodeCmd('new_station', {
                 'name': $('#new-station-name').val().trim(),
                 'url': $('#new-station-url').val().trim(),
                 'type': getParamOrValue('value', $('#new-station-type span').text()),
@@ -1028,7 +1028,7 @@ jQuery(document).ready(function($) { 'use strict';
 			notify('blankentries', 'Station not updated');
 		}
 		else {
-            mpdDbCmd('updstation', {
+            moodeCmd('upd_station', {
                 'id': GLOBAL.editStationId,
                 'name': $('#edit-station-name').val().trim(),
                 'url': $('#edit-station-url').val().trim(),
@@ -1048,7 +1048,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
     // Delete statiuon
 	$('#btn-del-station').click(function(e){
-		mpdDbCmd('delstation', UI.dbEntry[0]);
+		moodeCmd('del_station', UI.dbEntry[0]);
 	});
 
     //
@@ -1056,7 +1056,7 @@ jQuery(document).ready(function($) { 'use strict';
     //
     // Refresh the playlist list
 	$('#pl-refresh').click(function(e) {
-		mpdDbCmd('lsinfo_playlist');
+		moodeCmd('lsinfo_playlist');
         lazyLode('playlist');
         $('#database-playlist').scrollTo(0, 200);
 		UI.playlsitPos = -1;
@@ -1136,7 +1136,7 @@ jQuery(document).ready(function($) { 'use strict';
 			notify('blankentries', 'Playlist not created');
 		}
 		else {
-			mpdDbCmd('new_playlist', {
+			moodeCmd('new_playlist', {
                 'name': $('#new-playlist-name').val().trim(),
                 'genre': $('#new-playlist-genre').val().trim()
             });
@@ -1153,7 +1153,7 @@ jQuery(document).ready(function($) { 'use strict';
                 items.push($(this).data('path'));
             });
 
-            mpdDbCmd('upd_playlist', {
+            moodeCmd('upd_playlist', {
                 'id': GLOBAL.editPlaylistId,
                 'name': $('#edit-playlist-name').val().trim(),
                 'genre': $('#edit-playlist-genre').val().trim(),
@@ -1163,7 +1163,7 @@ jQuery(document).ready(function($) { 'use strict';
 	});
     // Delete playlist
 	$('#btn-del-playlist').click(function(e){
-		mpdDbCmd('del_playlist', UI.dbEntry[0]);
+		moodeCmd('del_playlist', UI.dbEntry[0]);
 	});
     // Delete/Move playlist items(s)
     $('#btn-delete-plitem, #btn-move-plitem').click(function(e){
