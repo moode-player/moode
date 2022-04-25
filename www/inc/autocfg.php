@@ -382,12 +382,12 @@ function autoConfigSettings() {
 			return $result;
 		}],
 
-		['requires' => ['ssid_ssid', 'ssid_sec', 'ssid_sec'], 'handler' => function($values) {
+		['requires' => ['ssid_ssid', 'ssid_sec', 'ssid_psk'], 'handler' => function($values) {
 			$dbh = cfgdb_connect();
 			cfgdb_delete('cfg_ssid', $dbh);
 			$ssid_count = count($values['ssid_ssid']);
 			for($index = 0; $index < $ssid_count; $index++) {
-				$value_str = "\"" . $values['ssid_ssid'][$index] . "\", \""  .  $values['ssid_sec'][$index]	. "\", \"" . $values['ssid_sec'][$index] . "\"";
+				$value_str = "\"" . $values['ssid_ssid'][$index] . "\", \""  .  $values['ssid_sec'][$index]	. "\", \"" . $values['ssid_psk'][$index] . "\"";
 				cfgdb_write('cfg_ssid', $dbh, $value_str);
 			}
 		}, 'custom_write' => function($values) {
