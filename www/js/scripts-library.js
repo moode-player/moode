@@ -1635,7 +1635,8 @@ $('#context-menu-lib-album a').click(function(e) {
             showHideTracks(false);
             break;
         case 'add_to_playlist':
-            moodeCmd('get_playlist_names', {'name': filteredSongs[0].album, 'files': files});
+            var name = $('#tagview-text-cover').text() == '' ? filteredSongs[0].album : $('#tagview-text-cover').text();
+            moodeCmd('get_playlist_names', {'name': name, 'files': files});
             $('#add-to-playlist-modal').modal();
             break;
     }
