@@ -54,7 +54,7 @@ function notify(cmd, msg, duration) {
         updating_station: 'Updating station',
         creating_playlist: 'Creating new playlist',
         updating_playlist: 'Updating playlist',
-        select_playlist: 'No playlist was selected',
+        select_playlist: 'No playlist was selected or entered',
 		new_station: 'Station created',
 		upd_station: 'Station updated',
 		del_station: 'Station deleted',

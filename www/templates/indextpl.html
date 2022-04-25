@@ -2530,13 +2530,17 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="add-to-playlist-modal-label">Add to playlist</h3>
-		<p>The Album, Track or Radio station below will be added to the end of a selected playlist. Switch to Playlist view to edit the playlist and delete or move items.</p>
+		<p>The item below will be added to the end of the selected playlist or new playlist. Switch to Playlist view to edit playlist metadata, cover art or items.</p>
 	</div>
 	<div class="modal-body">
-		<h4 id="item-to-add"></h4>
 		<form class="form-horizontal" action="" method="">
-			<p style="margin-top:1em;text-align:center;" >Select a playlist</p>
+			<h4 id="item-to-add"></h4>
+			<p style="margin-top:1em;text-align:center;" >Enter a new playlist name or select an existing playlist</p>
 			<div id="playlist-names-container">
+				<div id="addto-playlist-name" class="pl-name">
+					<input id="addto-playlist-name-new" class="input-large" type="text" maxlength="200" value="" autofocus>
+				</div>
+
 				<ul id="playlist-names"></ul>
 			</div>
 		</form>

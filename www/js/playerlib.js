@@ -2355,7 +2355,7 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'delete_pl_item':
             $('#move-playlist-item').hide();
-            $('#playlist-items').css('margin-top', '2.5em');
+            $('#playlist-items').css('margin-top', '3.5em');
     		$('#delete-playlist-item-begpos').attr('max', UI.dbEntry[4]); // Max value (num playlist items in list)
     		$('#delete-playlist-item-endpos').attr('max', UI.dbEntry[4]);
     		$('#delete-playlist-item-newpos').attr('max', UI.dbEntry[4]);
@@ -2365,7 +2365,7 @@ $(document).on('click', '.context-menu a', function(e) {
             break;
         case 'move_pl_item':
             $('#delete-playlist-item').hide();
-            $('#playlist-items').css('margin-top', '2.5em');
+            $('#playlist-items').css('margin-top', '3.5em');
     		$('#move-playlist-item-begpos').attr('max', UI.dbEntry[4]);
     		$('#move-playlist-item-endpos').attr('max', UI.dbEntry[4]);
     		$('#move-playlist-item-newpos').attr('max', UI.dbEntry[4]);

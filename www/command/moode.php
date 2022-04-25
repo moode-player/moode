@@ -712,8 +712,16 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				}
 			}
 
-			// Append to playlist
-			$file = MPD_PLAYLISTROOT . $_POST['playlist'] . '.m3u';
+			// Append to new or existing playlist
+			$pl_name = html_entity_decode($_POST['playlist']);
+			$file = MPD_PLAYLISTROOT . $pl_name . '.m3u';
+			if (!file_exists($file)) {
+				sysCmd('touch ' . $file);
+				$values = "'" . SQLite3::escapeString($_POST['playlist']) . "','','local'";
+				$result = sdbquery('insert into cfg_playlist values (NULL,' . $values . ')', $dbh);
+				sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/playlist-covers/' . $pl_name . '.jpg"');
+			}
+
 			if (false === ($fh = fopen($file, 'a'))) {
 				workerLog('moode.php: file open failed on ' . $file);
 				break;
