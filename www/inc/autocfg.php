@@ -344,6 +344,9 @@ function autoConfigSettings() {
 		}],
 
 		'Network (wlan0)',
+		// NOTE: How to handle < r810 moodecfg.ini where wlanpwd is a plaintext password and not a PSK?
+		// NOTE: Should cfgNetIfaces() be done after the cfg_ssid block?
+
 		['requires' => ['wlanssid', 'wlanpwd', 'wlansec'],
 		'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns', 'wlancountry'],
 		'handler' => function($values, $optionals) {
