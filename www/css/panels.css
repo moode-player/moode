@@ -541,6 +541,7 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #playlist-items li.active, #playlist-names li.active {background: var(--accentxta);}
 #playlist-items li span, #playlist-names li {display:block;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
 #context-menu-pl-contents {z-index:99999!important;}
+#item-to-add {font-style:italic;}
 .playlist-name {font-weight:600;}
 .pl-item-line1 {font-size:1em;}
 .pl-item-line2 {font-size:.9em;margin-left: calc(2.5em + 1.25vmin);color:var(--textvariant);}

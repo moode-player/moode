@@ -2378,6 +2378,7 @@ $(document).on('click', '.context-menu a', function(e) {
             var station_name = path.slice(path.lastIndexOf('/') + 1); // Trim RADIO
             station_name = station_name.slice(0, station_name.lastIndexOf('.')); // and .pls
             moodeCmd('get_playlist_names', {'name': station_name, 'files': path});
+            $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
         case 'delete_playqueue_item':

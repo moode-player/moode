@@ -1594,8 +1594,8 @@ $('#context-menu-lib-item a').click(function(e) {
             audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
             break;
         case 'add_to_playlist':
-            $('#addto-playlist-name-new').val('');
             moodeCmd('get_playlist_names', {'name': filteredSongs[UI.dbEntry[0]].title, 'files':filteredSongs[UI.dbEntry[0]].file});
+            $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
 	}
@@ -1646,6 +1646,7 @@ $('#context-menu-lib-album a').click(function(e) {
         case 'add_to_playlist':
             var name = $('#tagview-text-cover').text() == '' ? filteredSongs[0].album : $('#tagview-text-cover').text();
             moodeCmd('get_playlist_names', {'name': name, 'files': files});
+            $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
     }
@@ -1675,6 +1676,7 @@ $('#context-menu-lib-disc a').click(function(e) {
             break;
         case 'add_to_playlist':
             moodeCmd('get_playlist_names', {'name': filteredSongsDisc[0].album, 'files': files});
+            $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
 	}
@@ -1702,6 +1704,7 @@ $('#context-menu-lib-album-heading a').click(function(e) {
             break;
         case 'add_to_playlist':
             moodeCmd('get_playlist_names', {'name': filteredSongsAlbum[0].album, 'files': files});
+            $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
 	}

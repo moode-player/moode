@@ -716,7 +716,9 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			$pl_name = html_entity_decode($_POST['playlist']);
 			$file = MPD_PLAYLISTROOT . $pl_name . '.m3u';
 			if (!file_exists($file)) {
-				sysCmd('touch ' . $file);
+				sysCmd('touch "' . $file . '"');
+				sysCmd('chmod 777 "' . $file . '"');
+				sysCmd('chown root:root "' . $file . '"');
 				$values = "'" . SQLite3::escapeString($_POST['playlist']) . "','','local'";
 				$result = sdbquery('insert into cfg_playlist values (NULL,' . $values . ')', $dbh);
 				sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/playlist-covers/' . $pl_name . '.jpg"');
