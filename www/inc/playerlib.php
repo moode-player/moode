@@ -74,7 +74,7 @@ const FEAT_INPSOURCE	= 512;		// y Input source select
 const FEAT_UPNPSYNC 	= 1024;		//   UPnP volume sync
 const FEAT_SPOTIFY		= 2048;		// y Spotify Connect renderer
 const FEAT_GPIO 		= 4096;		// y GPIO button handler
-const FEAT_DJMOUNT		= 8192;		// y UPnP media browser
+const FEAT_RESERVED		= 8192;		// y Reserved for future use
 const FEAT_BLUETOOTH	= 16384;	// y Bluetooth renderer
 const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
@@ -109,7 +109,7 @@ const STREAM_RECORDER		= 'Stream Recorder';
 const RECORDER_DEFAULT_ALBUM_TAG	= 'Recorded YYYY-MM-DD';
 
 // Reserved root directory names
-$ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB', 'UPNP');
+$ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
 
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
@@ -2219,22 +2219,16 @@ function sourceCfg($queueargs) {
 			cfgdb_update('cfg_source', $dbh, '', $queueargs['mount']);
 
 			// cifs and nfs
-			if ($mp[0]['type'] != 'upnp') {
-				if ($mp[0]['type'] == 'cifs') {
-					sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
-				}
-				else {
-					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
-				}
-				// empty check to ensure /mnt/NAS is never deleted
-				if (!empty($mp[0]['name']) && $mp[0]['name'] != $queueargs['mount']['name']) {
-					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
-					sysCmd('mkdir "/mnt/NAS/' . $queueargs['mount']['name'] . '"');
-				}
+			if ($mp[0]['type'] == 'cifs') {
+				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
 			}
-			// upnp
 			else {
-				sysCmd('rm "/var/lib/mpd/music/' . $mp[0]['name'] . '"');
+				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
+			}
+			// empty check to ensure /mnt/NAS is never deleted
+			if (!empty($mp[0]['name']) && $mp[0]['name'] != $queueargs['mount']['name']) {
+				sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
+				sysCmd('mkdir "/mnt/NAS/' . $queueargs['mount']['name'] . '"');
 			}
 
 			$return = (sourceMount('mount', $queueargs['mount']['id'])) ? true : false;
@@ -2245,21 +2239,15 @@ function sourceCfg($queueargs) {
 			$mp = cfgdb_read('cfg_source', $dbh, '', $queueargs['mount']['id']);
 
 			// cifs and nfs
-			if ($mp[0]['type'] != 'upnp') {
-				if ($mp[0]['type'] == 'cifs') {
-					sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
-				}
-				else {
-					sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
-				}
-				// empty check to ensure /mnt/NAS is never deleted
-				if (!empty($mp[0]['name'])) {
-					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
-				}
+			if ($mp[0]['type'] == 'cifs') {
+				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
 			}
-			// upnp
 			else {
-				sysCmd('rm "/var/lib/mpd/music/' . $mp[0]['name'] . '"');
+				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
+			}
+			// empty check to ensure /mnt/NAS is never deleted
+			if (!empty($mp[0]['name'])) {
+				sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
 			}
 
 			$return = (cfgdb_delete('cfg_source', $dbh, $queueargs['mount']['id'])) ? true : false;
@@ -2278,62 +2266,54 @@ function sourceMount($action, $id = '') {
 			$mp = cfgdb_read('cfg_source', $dbh, '', $id);
 
 			// cifs and nfs
-			if ($mp[0]['type'] != 'upnp') {
-				if ($mp[0]['type'] == 'cifs') {
-					$options = $mp[0]['options'];
-					if(strpos($options, 'vers=') === false) {
-						$version = detectCifsProtocol($mp[0]['address']);
-						if($version) {
-							$options = 'vers=' . $version . ',' . $options;
-						}
+			if ($mp[0]['type'] == 'cifs') {
+				$options = $mp[0]['options'];
+				if(strpos($options, 'vers=') === false) {
+					$version = detectCifsProtocol($mp[0]['address']);
+					if($version) {
+						$options = 'vers=' . $version . ',' . $options;
 					}
-					$mountstr = "mount -t cifs \"//" .
-						$mp[0]['address'] . "/" .
-						$mp[0]['remotedir'] . "\" -o username=\"" .
-						$mp[0]['username'] . "\",password=\"" .
-						$mp[0]['password'] . "\",rsize=" .
-						$mp[0]['rsize'] . ",wsize=" .
-						$mp[0]['wsize'] . ",iocharset=" .
-						$mp[0]['charset'] . "," .
-						$options . " \"/mnt/NAS/" .
-						$mp[0]['name'] . "\"";
 				}
-				else {
-					$mountstr = "mount -t nfs -o " .
-					$mp[0]['options'] . " \"" .
-					$mp[0]['address'] . ":/" .
-					$mp[0]['remotedir'] . "\" \"/mnt/NAS/" .
+				$mountstr = "mount -t cifs \"//" .
+					$mp[0]['address'] . "/" .
+					$mp[0]['remotedir'] . "\" -o username=\"" .
+					$mp[0]['username'] . "\",password=\"" .
+					$mp[0]['password'] . "\",rsize=" .
+					$mp[0]['rsize'] . ",wsize=" .
+					$mp[0]['wsize'] . ",iocharset=" .
+					$mp[0]['charset'] . "," .
+					$options . " \"/mnt/NAS/" .
 					$mp[0]['name'] . "\"";
-				}
-
-				sysCmd('mkdir "/mnt/NAS/' . $mp[0]['name'] . '"');
-				$result = sysCmd($mountstr);
-
-				if (empty($result)) {
-					if (!empty($mp[0]['error'])) {
-						$mp[0]['error'] = '';
-						cfgdb_update('cfg_source', $dbh, '', $mp[0]);
-					}
-
-					$return = true;
-				}
-				else {
-					// empty check to ensure /mnt/NAS is never deleted
-					if (!empty($mp[0]['name'])) {
-						sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
-					}
-					$mp[0]['error'] = 'Mount error';
-					workerLog('sourceMount(): Mount error: (' . implode("\n", $result) . ')');
-					cfgdb_update('cfg_source', $dbh, '', $mp[0]);
-
-					$return = false;
-				}
 			}
-			// upnp
 			else {
-				$mountstr = 'ln -s "/mnt/UPNP/' . $mp[0]['address'] . "/" . $mp[0]['remotedir'] . '" "/var/lib/mpd/music/' . $mp[0]['name'] . '"';
-				$result = sysCmd($mountstr);
-				$return = empty($result) ? true : false;
+				$mountstr = "mount -t nfs -o " .
+				$mp[0]['options'] . " \"" .
+				$mp[0]['address'] . ":/" .
+				$mp[0]['remotedir'] . "\" \"/mnt/NAS/" .
+				$mp[0]['name'] . "\"";
+			}
+
+			sysCmd('mkdir "/mnt/NAS/' . $mp[0]['name'] . '"');
+			$result = sysCmd($mountstr);
+
+			if (empty($result)) {
+				if (!empty($mp[0]['error'])) {
+					$mp[0]['error'] = '';
+					cfgdb_update('cfg_source', $dbh, '', $mp[0]);
+				}
+
+				$return = true;
+			}
+			else {
+				// empty check to ensure /mnt/NAS is never deleted
+				if (!empty($mp[0]['name'])) {
+					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
+				}
+				$mp[0]['error'] = 'Mount error';
+				workerLog('sourceMount(): Mount error: (' . implode("\n", $result) . ')');
+				cfgdb_update('cfg_source', $dbh, '', $mp[0]);
+
+				$return = false;
 			}
 
 			debugLog('sourceMount(): Command=(' . $mountstr . ')');
@@ -2361,19 +2341,13 @@ function sourceMount($action, $id = '') {
 
 			foreach ($mounts as $mp) {
 				// cifs and nfs
-				if ($mp[0]['type'] != 'upnp') {
-					if (mountExists($mp['name'])) {
-						if ($mp['type'] == 'cifs') {
-							sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // change from -l (lazy) to force unmount
-						}
-						else {
-							sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // force unmount (for unreachable NFS)
-						}
+				if (mountExists($mp['name'])) {
+					if ($mp['type'] == 'cifs') {
+						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // change from -l (lazy) to force unmount
 					}
-				}
-				// upnp
-				else {
-					sysCmd('rm "/var/lib/mpd/music/' . $mp['name'] . '"');
+					else {
+						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // force unmount (for unreachable NFS)
+					}
 				}
 			}
 

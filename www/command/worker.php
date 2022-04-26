@@ -125,6 +125,8 @@ sysCmd('moodeutl -D AVAILABLE');
 sysCmd('moodeutl -D eth_port_fix');
 sysCmd('moodeutl -D card_error');
 sysCmd('moodeutl -D cdsp_from_link');
+sysCmd('moodeutl -D saved_upnp_path');
+sysCmd('moodeutl -D upnp_browser');
 workerLog('worker: Session vacuumed');
 
 // Load cfg_system and cfg_radio into session
@@ -595,9 +597,9 @@ else {
 	}
 }
 
-// Mount NAS and UPnP sources
+// Mount NAS sources
 $result = sourceMount('mountall');
-workerLog('worker: NAS and UPnP sources (' . $result . ')');
+workerLog('worker: NAS sources (' . $result . ')');
 
 //
 workerLog('worker: --');
@@ -766,21 +768,6 @@ if ($_SESSION['feat_bitmask'] & FEAT_MINIDLNA) {
 }
 else {
 	workerLog('worker: DLNA Server (n/a)');
-}
-
-// Start UPnP browser
-if ($_SESSION['feat_bitmask'] & FEAT_DJMOUNT) {
-	if (isset($_SESSION['upnp_browser']) && $_SESSION['upnp_browser'] == 1) {
-		$started = ': started';
-		sysCmd('djmount -o allow_other,nonempty,iocharset=utf-8 /mnt/UPNP');
-	}
-	else {
-		$started = '';
-	}
-	workerLog('worker: UPnP browser (available' . $started . ')');
-}
-else {
-	workerLog('worker: UPnP browser (n/a)');
 }
 
 // Start GPIO button handler
@@ -2099,10 +2086,6 @@ function runQueuedJob() {
 			syscmd('rm -rf /var/cache/minidlna/* > /dev/null');
 			sleep(2);
 			startMiniDlna();
-			break;
-		case 'upnp_browser':
-			sysCmd('fusermount -u /mnt/UPNP > /dev/null 2>&1');
-			if ($_SESSION['upnp_browser'] == 1) {sysCmd('djmount -o allow_other,nonempty,iocharset=utf-8 /mnt/UPNP');}
 			break;
 
 		// net-config jobs

@@ -37,6 +37,8 @@ Updates
 - UPD: Use all Tiles on Menu, Configure modal
 - UPD: Improve config back link function
 - UPD: Improve help text in Save playlist modal
+- UPD: Remove Radio manager Import/Export (replaced by Backup/Restore)
+- UPD: Remove UPnP browser (djmount) which is unsupported on 64-bit RaspiOS
 
 Radio stations
 

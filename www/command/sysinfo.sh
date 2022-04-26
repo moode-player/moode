@@ -150,9 +150,6 @@ AUDIO_PARAMETERS() {
 		echo -e "\nMultiroom sender\t= $multiroom_tx\c"
 		echo -e "\nMultiroom receiver\t= $multiroom_rx\c"
 	fi
-	if [ $(($feat_bitmask & $FEAT_DJMOUNT)) -ne 0 ]; then
-		echo -e "\nUPnP browser\t\t= $upnp_browser\c"
-	fi
 	echo -e "\n\c"
 	echo -e "\nAuto-shuffle\t\t= $ashufflesvc\c"
 	echo -e "\nAshuffle mode\t\t= $ashuffle_mode\c"
@@ -379,7 +376,7 @@ FEAT_ROONBRIDGE=128
 FEAT_LOCALUI=256
 FEAT_SPOTIFY=2048
 FEAT_GPIO=4096
-FEAT_DJMOUNT=8192
+FEAT_RESERVED=8192
 FEAT_BLUETOOTH=16384
 FEAT_MULTIROOM=65536
 
@@ -646,7 +643,7 @@ i2soverlay=${arr[42]}
 hdwrrev=${arr[43]}
 [[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
 bluez_pcm_buffer=${arr[45]}
-[[ "${arr[46]}" = "1" ]] && upnp_browser="On" || upnp_browser="Off"
+RESERVED_46=${arr[46]}
 library_onetouch_album=${arr[47]}
 radiopos=${arr[48]}
 aplactive=${arr[49]}

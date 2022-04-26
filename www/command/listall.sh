@@ -28,7 +28,6 @@ TYPES_REGEX="\(3g2\|3g2\|3gp\|4xm\|8svx\|aa3\|aac\|ac3\|adx\|afc\|aif\|aifc\|aif
 # Search pre-defined subdirectories under /mnt
 find /mnt/NAS -depth -mindepth 1 -type f -iregex ".*\.${TYPES_REGEX}" -printf "file: "NAS/"%P\n"
 find /mnt/SDCARD -depth -mindepth 1 -type f -iregex ".*\.${TYPES_REGEX}" -printf "file: "SDCARD/"%P\n"
-find /mnt/UPNP -depth -mindepth 1 -type f -iregex ".*\.${TYPES_REGEX}" -printf "file: "UPNP/"%P\n"
 
 # Search all subdirectories under /media
 # Have to prepend "USB/" to results to match MPD's structure

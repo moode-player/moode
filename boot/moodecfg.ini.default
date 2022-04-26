@@ -201,7 +201,6 @@ squeezelite_OTHEROPTIONS = "-W -D 500 -R E -S /var/local/www/commandw/slpower.sh
 [UPnP/DLNA]
 upnpsvc = "0"
 dlnasvc = "0"
-upnp_browser = "0"
 upnpav = "1"
 openhome = "0"
 checkcontentformat = "1"
@@ -279,4 +278,3 @@ first_use_help = "Yes"
 [Sources]
 usb_auto_updatedb = "0"
 cuefiles_ignore = "1"
-

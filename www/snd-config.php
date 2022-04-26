@@ -533,20 +533,6 @@ if (isset($_POST['rebuild_dlnadb'])) {
 		$_SESSION['notify']['msg'] = 'Database rebuild will initiate';
 	}
 }
-// UPnP browser
-if (isset($_POST['update_upnp_browser'])) {
-	if (isset($_POST['upnp_browser']) && $_POST['upnp_browser'] != $_SESSION['upnp_browser']) {
-		$title = $_POST['upnp_browser'] == 1 ? 'UPnP browser on' : 'UPnP browser off';
-		playerSession('write', 'upnp_browser', $_POST['upnp_browser']);
-	}
-	if (isset($title)) {
-		submitJob('upnp_browser', $_POST['upnp_browser'], $title, '');
-	}
-}
-// Restart
-if (isset($_POST['upnp_browser_restart']) && $_POST['upnp_browser_restart'] == 1 && $_SESSION['upnp_browser'] == '1') {
-	submitJob('upnp_browser', '', 'UPnP browser restarted', '');
-}
 
 session_write_close();
 
@@ -859,12 +845,6 @@ $_select['dlnasvc1'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggledlnas
 $_select['dlnasvc0'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggledlnasvc2\" value=\"0\" " . (($_SESSION['dlnasvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['dlnaname'] = $_SESSION['dlnaname'];
 $_select['hostip'] = getHostIp();
-// UPnP browser
-$_feat_djmount = $_SESSION['feat_bitmask'] & FEAT_DJMOUNT ? '' : 'hide';
-$_SESSION['upnp_browser'] == '1' ? $_djmount_btn_disable = '' : $_djmount_btn_disable = 'disabled';
-$_SESSION['upnp_browser'] == '1' ? $_djmount_link_disable = '' : $_djmount_link_disable = 'onclick="return false;"';
-$_select['upnp_browser1'] .= "<input type=\"radio\" name=\"upnp_browser\" id=\"toggle_upnp_browser1\" value=\"1\" " . (($_SESSION['upnp_browser'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['upnp_browser0'] .= "<input type=\"radio\" name=\"upnp_browser\" id=\"toggle_upnp_browser2\" value=\"0\" " . (($_SESSION['upnp_browser'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 
 waitWorker(1, 'snd-config');
 

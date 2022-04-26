@@ -89,81 +89,30 @@ if [[ -f ${SQLDB} && ${NUMSOURCES} -gt 0 ]]; then
 		i=0
 		for column in ${COLUMNS[@]}; do SCHEMA+=([${column}]="${SOURCES[$i]}") ; i=$(($i + 1)) ; done
 		for varname in "${!SCHEMA[@]}"; do declare "${varname^^}"="${SCHEMA[$varname]}" ; done
-		if [ "${TYPE}" == "upnp" ]; then
-			MOUNTPOINT="/mnt/UPNP"
-			if [ $(checkMount "${MOUNTPOINT}") -ne 0 ]; then
-				switchLED "green" "heartbeat"
-				MOUNTOPTIONS="allow_other,nonempty,iocharset=utf-8"
-				lsmod | grep -wq fuse
-				if [ $? -ne 0 ]; then
-					modprobe fuse
-				fi
-				/bin/mount | grep -wq "${MOUNTPOINT}"
-				if [ $? -eq 0 ]; then
-					fusermount -u "${MOUNTPOINT}"
-				fi
-				su -c "sudo djmount -o ${MOUNTOPTIONS} ${MOUNTPOINT} > /dev/null 2>&1" pi
-				u=5
-				until [[ $(checkMount "${MOUNTPOINT}") -eq 0 ]]; do
-					sleep 1
-					if [ ${u} -eq 0 ]; then
-						if [ -e "/var/lib/mpd/music/${NAME}" ]; then
-							rm "/var/lib/mpd/music/${NAME}"
-						fi
-						break
-					fi
-					u=$(($u - 1))
-				done
+		MOUNTPOINT="/mnt/NAS/${NAME}"
+		if [ $(checkMount "${MOUNTPOINT}") -ne 0 ]; then
+			switchLED "green" "heartbeat"
+			case "${TYPE}" in
+				"cifs") MOUNTOPTIONS="user=${USERNAME},password=${PASSWORD},${OPTIONS},iocharset=${CHARSET},rsize=${RSIZE},wsize=${WSIZE}"
+				cmdopt=( -l )
+				;;
+				"nfs") MOUNTOPTIONS="soft,timeo=10,retrans=1,vers=4.1,${OPTIONS},rsize=${RSIZE},wsize=${WSIZE}"
+				cmdopt=( -f )
+				;;
+			esac
+			/bin/mount | grep -wq "${MOUNTPOINT}"
+			if [ $? -eq 0 ]; then
+				umount "${cmdopt[@]}" "${MOUNTPOINT}"
 			fi
-			sleep 1
-			if [ $(checkMount "${MOUNTPOINT}") -eq 0 ]; then
-				if [ -e "${MOUNTPOINT}/${ADDRESS}/${REMOTEDIR}" ]; then
-					if [ ! -e "/var/lib/mpd/music/${NAME}" ]; then
-						switchLED "green" "heartbeat"
-						ln -s "${MOUNTPOINT}/${ADDRESS}/${REMOTEDIR}" "/var/lib/mpd/music/${NAME}"
-						if [ $? -eq 0 ]; then
-							status="available"
-							s=$(($s + 1))
-						else
-							status="unavailable"
-						fi
-					else
-						status="available"
-						s=$(($s + 1))
-					fi
-				else
-					status="unavailable"
-					rm "/var/lib/mpd/music/${NAME}" > /dev/null 2>&1
-				fi
+			if [ $(mountShare "${TYPE}" "${MOUNTOPTIONS}" "${ADDRESS}" "${REMOTEDIR}" "${MOUNTPOINT}") -eq 0 ]; then
+				status="available"
+				s=$(($s + 1))
 			else
 				status="unavailable"
 			fi
 		else
-			MOUNTPOINT="/mnt/NAS/${NAME}"
-			if [ $(checkMount "${MOUNTPOINT}") -ne 0 ]; then
-				switchLED "green" "heartbeat"
-				case "${TYPE}" in
-					"cifs") MOUNTOPTIONS="user=${USERNAME},password=${PASSWORD},${OPTIONS},iocharset=${CHARSET},rsize=${RSIZE},wsize=${WSIZE}"
-					cmdopt=( -l )
-					;;
-					"nfs") MOUNTOPTIONS="soft,timeo=10,retrans=1,vers=4.1,${OPTIONS},rsize=${RSIZE},wsize=${WSIZE}"
-					cmdopt=( -f )
-					;;
-				esac
-				/bin/mount | grep -wq "${MOUNTPOINT}"
-				if [ $? -eq 0 ]; then
-					umount "${cmdopt[@]}" "${MOUNTPOINT}"
-				fi
-				if [ $(mountShare "${TYPE}" "${MOUNTOPTIONS}" "${ADDRESS}" "${REMOTEDIR}" "${MOUNTPOINT}") -eq 0 ]; then
-					status="available"
-					s=$(($s + 1))
-				else
-					status="unavailable"
-				fi
-			else
-				status="available"
-				s=$(($s + 1))
-			fi
+			status="available"
+			s=$(($s + 1))
 		fi
 		STATUS+=(["${NAME} (${TYPE^^})"]="${status}")
 	done <<< $(sqlite3 ${SQLDB} "SELECT * FROM cfg_source")

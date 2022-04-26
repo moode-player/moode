@@ -113,7 +113,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		$_SESSION['notify']['duration'] = 5;
 	}
 	// Share
-	elseif ($_POST['mount']['type'] != 'upnp' && empty(trim($_POST['mount']['remotedir']))) {
+	elseif (empty(trim($_POST['mount']['remotedir']))) {
 		$_SESSION['notify']['title'] = 'Share cannot be blank';
 		$_SESSION['notify']['duration'] = 5;
 	}
@@ -135,27 +135,15 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	else {
 		$initiateLibraryUpd = true;
 		// CIFS and NFS defaults if blank
-		if ($_POST['mount']['type'] != 'upnp') {
-			if (empty(trim($_POST['mount']['rsize']))) {$_POST['mount']['rsize'] = 61440;}
-			if (empty(trim($_POST['mount']['wsize']))) {$_POST['mount']['wsize'] = 65536;}
-			if (empty(trim($_POST['mount']['options']))) {
-				if ($_POST['mount']['type'] == 'cifs') {
-					$_POST['mount']['options'] = "vers=1.0,ro,dir_mode=0777,file_mode=0777";
-				}
-				elseif ($_POST['mount']['type'] == 'nfs') {
-					$_POST['mount']['options'] = "ro,nolock";
-				}
+		if (empty(trim($_POST['mount']['rsize']))) {$_POST['mount']['rsize'] = 61440;}
+		if (empty(trim($_POST['mount']['wsize']))) {$_POST['mount']['wsize'] = 65536;}
+		if (empty(trim($_POST['mount']['options']))) {
+			if ($_POST['mount']['type'] == 'cifs') {
+				$_POST['mount']['options'] = "vers=1.0,ro,dir_mode=0777,file_mode=0777";
 			}
-		}
-		// UPnP
-		else {
-			//$_POST['mount']['remotedir'] = '';
-			$_POST['mount']['username'] = '';
-			$_POST['mount']['password'] = '';
-			$_POST['mount']['charset'] = '';
-			$_POST['mount']['rsize'] = '';
-			$_POST['mount']['wsize'] = '';
-			$_POST['mount']['options'] = '';
+			elseif ($_POST['mount']['type'] == 'nfs') {
+				$_POST['mount']['options'] = "ro,nolock";
+			}
 		}
 		// $array['mount']['key'] must be in column order for subsequent table insert
 		// Table cols = id, name, type, address, remotedir, username, password, charset, rsize, wsize, options, error
@@ -195,31 +183,6 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 			}
 		}
 	}
-	// UPnP
-	elseif ($_POST['mount']['type'] == 'upnp') {
-		$path = trim($_POST['mount']['address']);
-
-		if ($path == '..') {
-			// '.' means we are at /mnt/upnp
-			$path = dirname($_SESSION['saved_upnp_path']) == '.' ? '' : dirname($_SESSION['saved_upnp_path']);
-		}
-
-		$result = sysCmd('find "/mnt/UPNP/' . $path . '" -maxdepth 1 -type d');
-		$_address = sprintf('<option value="%s" %s>%s</option>\n', '..', '', '..');
-
-		foreach ($result as $dir) {
-			$dir = substr($dir, 10); // strip out /mnt/UPNP/
-			if (!empty($dir) && substr($dir, 0, 1) != '.' && stripos($dir, '_search') === false && stripos($dir, '/.') === false) {
-				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $dir, '', $dir);
-			}
-		}
-
-		if ($path != '..' && $path != '.') {
-			session_start();
-			$_SESSION['saved_upnp_path'] = $path;
-			session_write_close();
-		}
-	}
 }
 // Manual entry
 if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
@@ -248,15 +211,7 @@ if (!isset($_GET['cmd'])) {
 	// Display list of music sources if any
 	$mounts = cfgdb_read('cfg_source', $dbh);
 	foreach ($mounts as $mp) {
-		// UPnP
-		if ($mp['type'] == 'upnp') {
-			$result = sysCmd('"/var/lib/mpd/music/' . $mp['address'] . '"');
-			$icon = $result[0] != '' ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
-		}
-		// CIFS and NFS
-		else {
-			$icon = mountExists($mp['name']) ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
-		}
+		$icon = mountExists($mp['name']) ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
 		$_mounts .= "<p><a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width:240px;background-color:#333;text-align:left;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
 	}
 
@@ -291,13 +246,13 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 
 		foreach ($mounts as $mp) {
 			if ($mp['id'] == $_id) {
-				$_protocol = "<option value=\"" . ($mp['type'] == 'cifs' ? "cifs\">SMB (Samba)</option>" : ($mp['type'] == 'nfs' ? "nfs\">NFS</option>" : "upnp\">UPnP</option>"));
+				$_protocol = "<option value=\"" . ($mp['type'] == 'cifs' ? "cifs\">SMB (Samba)</option>" : "nfs\">NFS</option>");
 				$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : $mp['address'] . '/' . $mp['remotedir'];
 				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $server, 'selected', $server);
 				$_scan_btn_hide = $mp['type'] == 'nfs' ? 'hide' : '';
-				$_edit_server_hide = $mp['type'] == 'upnp' ? 'hide' : '';
+				$_edit_server_hide = '';
 				$_userid_pwd_hide = $mp['type'] != 'cifs' ? 'hide' : '';
-				$_advanced_options_hide = $mp['type'] == 'upnp' ? 'hide' : '';
+				$_advanced_options_hide = '';
 				$_username = $mp['username'];
 				$_password = $mp['password'];
 				$_name = $mp['name'];
@@ -332,7 +287,6 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 			if ($_POST['mounttype'] == 'cifs' || empty($_POST['mounttype'])) {
 				$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
 				$_protocol .= "<option value=\"nfs\">NFS</option>\n";
-				$_protocol .= "<option value=\"upnp\">UPnP</option>\n";
 				$_scan_btn_hide = '';
 				$_edit_server_hide = '';
 				$_userid_pwd_hide = '';
@@ -342,7 +296,6 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 			elseif ($_POST['mounttype'] == 'nfs') {
 				$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
 				$_protocol .= "<option value=\"nfs\" selected>NFS</option>\n";
-				$_protocol .= "<option value=\"upnp\">UPnP</option>\n";
 				$_scan_btn_hide = 'hide';
 				$_edit_server_hide = '';
 				$_userid_pwd_hide = 'hide';
@@ -350,20 +303,10 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_options = 'ro,nolock';
 			}
 		}
-		// UPnP
-		elseif ($_POST['mount']['type'] == 'upnp') {
-			$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
-			$_protocol .= "<option value=\"nfs\">NFS</option>\n";
-			$_protocol .= "<option value=\"upnp\" selected>UPnP</option>\n";
-			$_edit_server_hide = 'hide';
-			$_userid_pwd_hide = 'hide';
-			$_advanced_options_hide = 'hide';
-		}
 		// CIFS and NFS
 		else {
 			$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
 			$_protocol .= "<option value=\"nfs\">NFS</option>\n";
-			$_protocol .= "<option value=\"upnp\">UPnP</option>\n";
 			$_options = 'ro,dir_mode=0777,file_mode=0777';
 		}
 

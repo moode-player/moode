@@ -305,7 +305,6 @@ function autoConfigSettings() {
 		'UPnP/DLNA',
 		['requires' => ['upnpsvc'], 'handler' => setPlayerSession],
 		['requires' => ['dlnasvc'], 'handler' => setPlayerSession],
-		['requires' => ['upnp_browser'], 'handler' => setPlayerSession],
 		['requires' => ['upnpav'], 'handler' => function($values) {
 			setDbParams('cfg_upnp', $values);
 		}, 'custom_write' => function($values) {
