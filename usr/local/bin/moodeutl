@@ -139,6 +139,9 @@ switch ($option) {
 	case '-o':
 		list_audio_overlays();
 		break;
+	case '-p':
+		import_playlists();
+		break;
 	case '-q':
 		sql_query($argv);
 		break;
@@ -196,6 +199,7 @@ With no OPTION print the help text and exit.
  -m\t\tRun system monitor
  -n\t\tDetect NBT (Samba) hosts
  -o\t\tList audio overlays
+ -p\t\tImport playlists
  -q\t\tQuery sql database
  -r\t\tRestart servers
  -R\t\tRestart renderer [--bluetooth | --airplay | --spotify | --squeezelite | --roonbridge]
@@ -505,6 +509,29 @@ function list_audio_overlays () {
 		if (strpos($contents, 'sound-dai-cells') !== false || $file == 'rpi-cirrus-wm5102.dtbo') {
 			echo $file . "\n";
 		}
+	}
+}
+
+function import_playlists () {
+	$files = scandir(MPD_PLAYLISTROOT);
+	$import_count = 0;
+
+	foreach ($files as $file) {
+		if ($file != '.' && $file != '..') {
+			$pl_name = str_replace("'", "''", basename($file, '.m3u'));
+			$values = "'" . $pl_name . "', '', 'local'";
+			$result = shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT id FROM cfg_playlist WHERE name='" . $pl_name . "'\"");
+			if (empty($result)) {
+				//echo 'sqlite3 ' .  SQLDB_PATH . " \"INSERT INTO cfg_playlist VALUES (NULL, " . $values . ')' . "\"\n";
+				shell_exec('sqlite3 ' .  SQLDB_PATH . " \"INSERT INTO cfg_playlist VALUES (NULL, " . $values . ')' . "\"");
+				$import_count++;
+				echo 'Imported: ' . basename($file, '.m3u') . "\n";
+			}
+		}
+	}
+
+	if ($import_count == 0) {
+		echo "No new playists were found\n";
 	}
 }
 
