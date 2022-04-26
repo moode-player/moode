@@ -1349,19 +1349,6 @@ $('#btn-upd-radio-manager').click(function(e) {
     );
 });
 
-// Import stations.zip file
-// NOTE: this function is handled in indextpl.html
-
-// Export to stations.zip file
-$('#export-stations').click(function(e) {
-    $('#import-export-msg').text('Exporting...');
-    e.preventDefault();
-    $.post('command/moode.php?cmd=export_stations', function() {
-        window.location.href = STATION_EXPORT_DIR + 'stations.zip';
-        $('#import-export-msg').text('Export complete');
-	});
-});
-
 // Playlist manager modal
 $('#playlist-manager-btn').click(function(e) {
     var sortGroup = SESSION.json['plview_sort_group'].split(',');

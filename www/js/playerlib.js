@@ -3168,37 +3168,6 @@ function editCoverImage(files, view) {
 	reader.readAsDataURL(files[0]);
 }
 
-// Import station zip package to server
-function importStationPkg(files) {
-    //console.log('files[0].size=(' + files[0].size + ')');
-    if (files[0].size > 75000000) {
-		$('#import-export-msg').text('ZIP file must be less than 75MB in size');
-		return;
-	}
-
-	$('#import-export-msg').text('Importing...');
-	var formData = new FormData();
-	formData.append("stationbackupfile", files[0])
-	$.ajax({
-        url: 'command/moode.php?cmd=import_stations',
-        type: 'post',
-        dataType: "multipart/form-data",
-		data: formData,
-        processData: false,
-        contentType: false,
-        success: function (data, status)
-        {
-            $('#import-export-msg').text(result);
-            $('#import-station-pkg').val('');
-        },
-        error: function (xhr, desc, err)
-        {
-            $('#import-export-msg').text(xhr.responseText);
-            $('#import-station-pkg').val('');
-        }
-	});
-}
-
 function setClkRadioCtls(ctlValue) {
 	if (ctlValue == 'Disabled') {
 		$('#clockradio-ctl-grp1 *').prop('disabled', true);

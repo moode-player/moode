@@ -940,6 +940,7 @@ else {
 		case 'readplayhistory':
 			echo json_encode(parsePlayHist(shell_exec('cat /var/local/www/playhistory.log')));
 			break;
+		/*DE:ETE
 		case 'export_stations':
 			syscmd('/var/www/command/stationmanager.py --scope all --export ' . STATION_EXPORT_DIR . '/stations.zip');
 			break;
@@ -985,6 +986,7 @@ else {
 			}
 			echo $msg;
 			break;
+		*/	
 		case 'clear_libcache_all':
 			clearLibCacheAll();
 			break;

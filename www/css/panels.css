@@ -137,7 +137,7 @@ html {background-color:inherit;}
 #volbtns-2 {z-index:10002;}
 #playbtns .addfav, #playbtns {display:none;}
 #cover-options {display:none;}
-#choose-bgimage, #remove-bgimage, #new-radiologo, #edit-radiologo, #choose-station-pkg, #export-stations {font-size:1em;color:inherit;margin-top:.1em;padding-top:.3em;}
+#choose-bgimage, #remove-bgimage, #new-radiologo, #edit-radiologo {font-size:1em;color:inherit;margin-top:.1em;padding-top:.3em;}
 #current-bgimage {max-height:calc(1.5rem + 6px);overflow:hidden;max-width:50px;margin:5px 0 0 5px;position:absolute;display:inline-block;border-radius:3px;}
 #countdown {margin:0 auto;height:17vw;width:17vw;}
 #countdown div {margin:0 auto;} /* needed to center the knob */
