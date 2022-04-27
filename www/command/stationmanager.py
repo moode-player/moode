@@ -200,7 +200,7 @@ Version=2"""
             self.export_images(backup, scope, station_type)
 
     def export_data(self, backup, scope, station_type):
-        print('export data')
+        print('Export station data')
         colnames = self.get_fields()
         stations = self.get_stations(scope, station_type)
         for station in stations:
@@ -210,7 +210,7 @@ Version=2"""
         backup.writestr('station_data.json', json.dumps(data,  indent=4))
 
     def export_images(self, backup, scope, station_type):
-        print('export images')
+        print('Export station logos')
 
         stations = self.get_stations(scope, station_type)
         for station in stations:
@@ -580,7 +580,7 @@ Version=2"""
             #TODO: Not coded very nice, but was in hurry. Refactor and remove duplicates existing code.
             if diff_output:
                 with ZipFile(diff_output, 'w') as diff_backup:
-                    print('export data')
+                    print('Export data')
                     colnames = self.get_fields()
                     stations_deleted = []
                     for name in missing_stations_db:

@@ -68,7 +68,7 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 
 	// Generate backup zip
 	sysCmd('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
-	//workerLog('Options: ' . $backupOptions);
+	//workerLog('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
 
 	// Create name for backup file in browser
 	$dt = new DateTime('NOW');

@@ -37,10 +37,11 @@ from stationmanager import StationManager
 
 
 class BackupManager(StationManager):
-    VERSION = "2.0"
+    VERSION = "2.1"
 
     CDSPCFG_BASE = '/usr/share/camilladsp/'
     MOODECFGINI_TMP = '/tmp/moodecfg.ini'
+    CFGPLAYLIST_TMP = '/tmp/cfg_playlist.csv'
 
     OPT_CFG = 'config'
     OPT_CDSP = 'cdsp'
@@ -123,7 +124,10 @@ class BackupManager(StationManager):
                     for fpath, subdirs, files in walk(path.join(BackupManager.PLAYLIST_COVERS_PATH, 'playlist-covers')):
                         for name in files:
                             backup.write(path.join(fpath, name), path.join('playlist-covers', name))
-                    # TODO: Backup cfg_playlist
+                    print('Backup playlist SQL table')
+                    system('sqlite3 -csv ' + self.db_file + ' "SELECT * FROM cfg_playlist" > ' + BackupManager.CFGPLAYLIST_TMP)
+                    backup.write(BackupManager.CFGPLAYLIST_TMP, 'cfg_playlist.csv')
+                    os.remove(BackupManager.CFGPLAYLIST_TMP)
 
     def do_restore(self, what):
         # restore radio stations
@@ -168,7 +172,9 @@ class BackupManager(StationManager):
                     print('Restore playlists')
                     backup.extractall (BackupManager.PLAYLIST_PATH, names)
                     # TODO: Restore playlist-covers
+                    print('Restore playlist covers')
                     # TODO: Restore cfg_playlist
+                    print('Restore playlist SQL table')
 
     def do_info(self):
         configPresent = False
