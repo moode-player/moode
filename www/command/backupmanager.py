@@ -52,6 +52,8 @@ class BackupManager(StationManager):
     MOODECFGINI_RESTORE_PATH = '/boot'
     CDSPCFG_RESTORE_BASE = '/usr/share'
     PLAYLIST_PATH = '/var/lib/mpd'
+    PLAYLIST_COVERS_PATH = '/var/local/www/imagesw'
+
 
     # for test
     # MOODECFGINI_RESTORE_PATH = '/tmp'
@@ -117,6 +119,11 @@ class BackupManager(StationManager):
                     for fpath, subdirs, files in walk(path.join(BackupManager.PLAYLIST_PATH, 'playlists')):
                         for name in files:
                             backup.write(path.join(fpath, name), path.join('playlists', name))
+                    print('Backup playlist covers')
+                    for fpath, subdirs, files in walk(path.join(BackupManager.PLAYLIST_COVERS_PATH, 'playlist-covers')):
+                        for name in files:
+                            backup.write(path.join(fpath, name), path.join('playlist-covers', name))
+                    # TODO: Backup cfg_playlist
 
     def do_restore(self, what):
         # restore radio stations
@@ -158,8 +165,10 @@ class BackupManager(StationManager):
                 #names = [ name  for name in backup.namelist() if 'playlists/' in name  and not 'Default Playlist.m3u' in name ]
                 names = [ name  for name in backup.namelist() if 'playlists/' in name ]
                 if len(names) >= 0:
-                    print('Restore playlist')
+                    print('Restore playlists')
                     backup.extractall (BackupManager.PLAYLIST_PATH, names)
+                    # TODO: Restore playlist-covers
+                    # TODO: Restore cfg_playlist
 
     def do_info(self):
         configPresent = False
