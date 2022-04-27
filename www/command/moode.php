@@ -359,10 +359,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			$result	= sdbquery("select id from cfg_playlist where name='" . SQLite3::escapeString($_GET['plname']) . "'", $dbh);
 			if ($result === true) {
 				// Add new row
-				$values =
-					"'" . SQLite3::escapeString($_GET['plname']) . "'," .
-					"'"	. '' . "'," .
-					"'"	. 'local' . "'";
+				$values = "'" . SQLite3::escapeString($_GET['plname']) . "','','','','','','local'";
 				$result = sdbquery('insert into cfg_playlist values (NULL,' . $values . ')', $dbh);
 
 				// Write default image
@@ -627,10 +624,9 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				if ($return_msg == 'OK') {
 					// Add new row, NULL causes Id column to be set to next number
 					// NOTE: $values have to be in column order
-					$values =
-						"'" . SQLite3::escapeString($pl_name) . "'," .
-						"\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
-						"'"	. 'local' . "'";
+					$values = "'" . SQLite3::escapeString($pl_name) . "'," .
+					"\"" . $_POST['path']['genre'] . "\"," . // Use double quotes since we may have g1, g2, g3
+					"'','','','','local'";
 					$result = sdbquery('insert into cfg_playlist values (NULL,' . $values . ')', $dbh);
 				}
 
@@ -719,7 +715,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				sysCmd('touch "' . $file . '"');
 				sysCmd('chmod 777 "' . $file . '"');
 				sysCmd('chown root:root "' . $file . '"');
-				$values = "'" . SQLite3::escapeString($_POST['playlist']) . "','','local'";
+				$values = "'" . SQLite3::escapeString($_POST['playlist']) . "','','','','','','local'";
 				$result = sdbquery('insert into cfg_playlist values (NULL,' . $values . ')', $dbh);
 				sysCmd('cp /var/www/images/notfound.jpg ' . '"/var/local/www/imagesw/playlist-covers/' . $pl_name . '.jpg"');
 			}
@@ -935,58 +931,12 @@ else {
 		// Remove background image
 		case 'rmbgimage':
 			sysCmd('rm /var/local/www/imagesw/bgimage.jpg');
-			echo json_encode('OK'); //r44c
+			echo json_encode('OK');
 			break;
+
 		case 'readplayhistory':
 			echo json_encode(parsePlayHist(shell_exec('cat /var/local/www/playhistory.log')));
 			break;
-		/*DE:ETE
-		case 'export_stations':
-			syscmd('/var/www/command/stationmanager.py --scope all --export ' . STATION_EXPORT_DIR . '/stations.zip');
-			break;
-		case 'import_stations':
-			if (isset($_FILES['stationbackupfile'] ) == false ) {
-				workerLog('worker: import_stations: no file present');
-				$msg = 'Error: no stationbackupfile found post data';
-			}
-			else {
-				$file = '/var/local/www/station_import.zip';
-				unlink($file);
-				sysCmd('touch ' . $file);
-				sysCmd('chmod 0777 ' . $file);
-				move_uploaded_file($_FILES["stationbackupfile"]["tmp_name"], $file);
-				if (false === file_exists ($file)) {
-					workerLog('worker: import_stations: file open failed on ' . $file);
-					$msg = 'Error: file open failed';
-				}
-				else {
-					// Import station data from zip
-					$output = array();
-					$exitcode = -1;
-					$cmd = 'sudo /var/www/command/stationmanager.py --scope all --how clear --import ' . $file;
-					exec($cmd, $output, $exitcode);
-					if($exitcode!=0) {
-						$msg= implode("\n", $output);
-						str_replace("\"", '', $msg);
-					}
-					else {
-						$msg = 'Import complete';
-						// Update MPD database
-						$GLOBALS['check_library_update'] = '1';
-						$sock = openMpdSock('localhost', 6600);
-						sendMpdCmd($sock, 'update RADIO');
-						$resp = readMpdResp($sock);
-						closeMpdSock($sock);
-						// Update .pls file permissions
-						sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
-						// Update the session
-						loadRadio();
-					}
-				}
-			}
-			echo $msg;
-			break;
-		*/	
 		case 'clear_libcache_all':
 			clearLibCacheAll();
 			break;

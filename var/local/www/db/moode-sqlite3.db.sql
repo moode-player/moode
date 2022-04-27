@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Apr 26 16:43:53 2022
+-- File generated with SQLiteStudio v3.1.0 on Wed Apr 27 10:39:39 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -495,9 +495,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (166, 'playlist_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (167, 'plview_sort_group', 'Name,No grouping');
 
 -- Table: cfg_playlist
-CREATE TABLE cfg_playlist (id INTEGER PRIMARY KEY, name CHAR (32), genre CHAR (32), cover CHAR (32));
-INSERT INTO cfg_playlist (id, name, genre, cover) VALUES (1, 'Default Playlist', 'Various', 'local');
-INSERT INTO cfg_playlist (id, name, genre, cover) VALUES (2, 'Favorites', 'Various', 'local');
+CREATE TABLE cfg_playlist (id INTEGER PRIMARY KEY, name CHAR (32), genre CHAR (32), reserved_4 CHAR (32), reserved_5 CHAR (32), reserved_6 CHAR (32), reserved_7 CHAR (32), cover CHAR (32));
+INSERT INTO cfg_playlist (id, name, genre, reserved_4, reserved_5, reserved_6, reserved_7, cover) VALUES (1, 'Default Playlist', 'Various', '', '', '', '', 'local');
+INSERT INTO cfg_playlist (id, name, genre, reserved_4, reserved_5, reserved_6, reserved_7, cover) VALUES (2, 'Favorites', 'Various', '', '', '', '', 'local');
 
 -- Table: cfg_airplay
 CREATE TABLE cfg_airplay (id INTEGER PRIMARY KEY, param CHAR (32), value CHAR (32));

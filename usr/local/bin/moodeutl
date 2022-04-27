@@ -519,7 +519,7 @@ function import_playlists () {
 	foreach ($files as $file) {
 		if ($file != '.' && $file != '..') {
 			$pl_name = str_replace("'", "''", basename($file, '.m3u'));
-			$values = "'" . $pl_name . "', '', 'local'";
+			$values = "'" . $pl_name . "', '', '', '', '', '', 'local'";
 			$result = shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT id FROM cfg_playlist WHERE name='" . $pl_name . "'\"");
 			if (empty($result)) {
 				//echo 'sqlite3 ' .  SQLDB_PATH . " \"INSERT INTO cfg_playlist VALUES (NULL, " . $values . ')' . "\"\n";
