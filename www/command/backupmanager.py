@@ -166,8 +166,9 @@ class BackupManager(StationManager):
                 if len(names) >= 0:
                     print('Restore playlists')
                     backup.extractall (BackupManager.PLAYLIST_PATH, names)
-                    # TODO: Restore playlist-covers
                     print('Restore playlist covers')
+                    backup.extractall (BackupManager.PLAYLIST_COVERS_PATH, names)
+
 
     def do_info(self):
         configPresent = False
