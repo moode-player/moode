@@ -108,8 +108,8 @@ sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_IMAGE_PREFIX . '* > /dev/n
 sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
 sysCmd('rm /var/local/www/imagesw/playlist-covers/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
 // Set permissions
-sysCmd('chmod 0777 ' . MPD_PLAYLISTROOT);
-sysCmd('chmod 0777 ' . MPD_PLAYLISTROOT . '*.*');
+sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT);
+sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT . '*.*');
 sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
 sysCmd('chmod 0777 /var/local/www/currentsong.txt');
 sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
@@ -2260,11 +2260,11 @@ function runQueuedJob() {
 			$img_data = base64_decode($queueargs[1], true);
 
 			if ($job == 'set_ralogo_image') {
-				$img_dir = '/var/local/www/imagesw/radio-logos/';
+				$img_dir = RADIO_LOGOS_ROOT;
 				$thm_dir = 'thumbs/';
 			}
 			else {
- 				$img_dir = '/var/local/www/imagesw/playlist-covers/';
+ 				$img_dir = PLAYLIST_COVERS_ROOT;
 				$thm_dir = '';
 			}
 

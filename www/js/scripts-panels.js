@@ -788,7 +788,7 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.database').on('click', '.db-browse', function(e) {
         //console.log('Folder item click');
 	    if ($(this).hasClass('db-folder') || $(this).hasClass('db-savedplaylist')) {
-			var cmd = $(this).hasClass('db-folder') ? 'lsinfo' : 'get_pl_items';
+			var cmd = $(this).hasClass('db-folder') ? 'lsinfo' : 'get_pl_items_fv';
             UI.dbEntry[3] = $(this).parent().attr('id');
 			UI.dbPos[UI.dbPos[10]] = $(this).parent().attr('id').replace('db-','');
 			++UI.dbPos[10];
@@ -1154,7 +1154,6 @@ jQuery(document).ready(function($) { 'use strict';
             });
 
             moodeCmd('upd_playlist', {
-                'id': GLOBAL.editPlaylistId,
                 'name': $('#edit-playlist-name').val().trim(),
                 'genre': $('#edit-playlist-genre').val().trim(),
                 'items': items

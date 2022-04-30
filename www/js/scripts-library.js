@@ -1461,10 +1461,10 @@ $('#btn-add-to-playlist').click(function(e){
         notify('select_playlist');
     }
     else {
-        $.post('command/moode.php?cmd=add_to_playlist', {'playlist': playlist, 'files': UI.dbEntry[4]}, function(result) {
-            notify('upd_playlist');
-            $('#pl-refresh').click();
-        });
+        moodeCmd('add_to_playlist', {
+            'playlist': playlist,
+            'items': UI.dbEntry[4]}
+        );
         $('#playlist-names li').removeClass('active');
         UI.dbEntry[4] = '';
     }
@@ -1581,7 +1581,7 @@ $('#context-menu-lib-item a').click(function(e) {
             audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
             break;
         case 'add_to_playlist':
-            moodeCmd('get_playlist_names', {'name': filteredSongs[UI.dbEntry[0]].title, 'files':filteredSongs[UI.dbEntry[0]].file});
+            moodeCmd('get_playlist_names', {'name': filteredSongs[UI.dbEntry[0]].title, 'files':[filteredSongs[UI.dbEntry[0]].file]});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;

@@ -19,7 +19,7 @@
  *
  */
 
-define('VERSION', '1.8.0');
+define('VERSION', '1.9.0');
 
 // Suppress warning messages
 error_reporting(E_ERROR | E_PARSE);
@@ -28,7 +28,9 @@ error_reporting(E_ERROR | E_PARSE);
 define('MPD_RESPONSE_ERR', 'ACK');
 define('MPD_RESPONSE_OK',  'OK');
 define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
-define('MPD_PLAYLISTROOT',  '/var/lib/mpd/playlists/');
+define('MPD_PLAYLIST_ROOT', '/var/lib/mpd/playlists/');
+define('PLAYLIST_COVERS_ROOT', '/var/local/www/imagesw/playlist-covers/');
+define('RADIO_LOGOS_ROOT', '/var/local/www/imagesw/radio-logos/');
 define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
 define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
 define('MOODE_LOG', '/var/log/moode.log');
@@ -43,7 +45,6 @@ define('TMP_IMAGE_PREFIX', '__tmp__');
 define('STATION_EXPORT_DIR', '/var/local/www/imagesw');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
-define('PLCOVER_ROOT_DIR', 'imagesw/playlist-covers/');
 define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
 define('DEF_COVER', 'images/default-cover-v6.svg');
 define('DEV_ROOTFS_SIZE', '3670016000'); // Bytes (3.5GB)
@@ -138,9 +139,6 @@ switch ($option) {
 		break;
 	case '-o':
 		list_audio_overlays();
-		break;
-	case '-p':
-		import_playlists();
 		break;
 	case '-q':
 		sql_query($argv);
@@ -500,7 +498,7 @@ function import_autoconfig() {
 	echo shell_exec('sudo /var/www/command/autocfgimport.php');
 }
 
-function list_audio_overlays () {
+function list_audio_overlays() {
 	$dir = '/boot/overlays/';
 	$files = scandir($dir);
 
@@ -509,29 +507,6 @@ function list_audio_overlays () {
 		if (strpos($contents, 'sound-dai-cells') !== false || $file == 'rpi-cirrus-wm5102.dtbo') {
 			echo $file . "\n";
 		}
-	}
-}
-
-function import_playlists () {
-	$files = scandir(MPD_PLAYLISTROOT);
-	$import_count = 0;
-
-	foreach ($files as $file) {
-		if ($file != '.' && $file != '..') {
-			$pl_name = str_replace("'", "''", basename($file, '.m3u'));
-			$values = "'" . $pl_name . "', '', '', '', '', '', 'local'";
-			$result = shell_exec('sqlite3 ' .  SQLDB_PATH . " \"SELECT id FROM cfg_playlist WHERE name='" . $pl_name . "'\"");
-			if (empty($result)) {
-				//echo 'sqlite3 ' .  SQLDB_PATH . " \"INSERT INTO cfg_playlist VALUES (NULL, " . $values . ')' . "\"\n";
-				shell_exec('sqlite3 ' .  SQLDB_PATH . " \"INSERT INTO cfg_playlist VALUES (NULL, " . $values . ')' . "\"");
-				$import_count++;
-				echo 'Imported: ' . basename($file, '.m3u') . "\n";
-			}
-		}
-	}
-
-	if ($import_count == 0) {
-		echo "No new playists were found\n";
 	}
 }
 

@@ -28,7 +28,10 @@
 define('MPD_RESPONSE_ERR', 'ACK');
 define('MPD_RESPONSE_OK',  'OK');
 define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
-define('MPD_PLAYLISTROOT',  '/var/lib/mpd/playlists/');
+define('MPD_PLAYLIST_ROOT', '/var/lib/mpd/playlists/');
+define('PLAYLIST_COVERS_ROOT', '/var/local/www/imagesw/playlist-covers/');
+define('RADIO_LOGOS_ROOT', '/var/local/www/imagesw/radio-logos/');
+define('TMP_IMAGE_PREFIX', '__tmp__');
 define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
 define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
 define('MOODE_LOG', '/var/log/moode.log');
@@ -39,11 +42,9 @@ define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
 define('LIBCACHE_BASE', '/var/local/www/libcache');
 define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
 define('SESSION_SAVE_PATH', '/var/local/php');
-define('TMP_IMAGE_PREFIX', '__tmp__');
 define('STATION_EXPORT_DIR', '/var/local/www/imagesw');
 define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
 define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
-define('PLCOVER_ROOT_DIR', 'imagesw/playlist-covers/');
 define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
 define('DEF_COVER', 'images/default-cover-v6.svg');
 define('DEV_ROOTFS_SIZE', '3670016000'); // Bytes (3.5GB)
@@ -1096,14 +1097,6 @@ function parseTrackInfo($resp) {
 	return $array;
 }
 
-// list contents of playlist (Folder view)
-function get_pl_items($sock, $pl_name) {
-	sendMpdCmd($sock, 'listplaylist "' . $pl_name . '"');
-	$pl_items = readMpdResp($sock);
-
-	return parseList($pl_items);
-}
-
 // Search mpd database
 function searchDB($sock, $querytype, $query = '') {
 	//workerLog($querytype . ', ' . $query);
@@ -1502,41 +1495,6 @@ function parseStationFile($resp) {
 			list ($element, $value) = explode("=", $line, 2);
 			$array[$element] = $value;
 			$line = strtok("\n");
-		}
-	}
-
-	return $array;
-}
-
-// Parse saved playlist file
-function parsePlaylist($contents, $dbh, $sock) {
-	$array = array();
-
-	if (!empty($contents)) {
-		$lines = explode("\n", rtrim($contents, "\n"));
-		$num_lines = count($lines);
-		for ($i = 0; $i < $num_lines; $i++) {
-			if (substr($lines[$i], 0, 4) == 'http') {
-				// Radio station
-				$line2 = 'Radio Station';
-				$result = sdbquery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($lines[$i]) . "'", $dbh);
-				if ($result === true) { // Query successful but no reault
-					$name = $lines[$i];
-				}
-				else { // Query successful and non-empty result
-					$name = $result[0]['name'];
-				}
-			}
-			else {
-				// Song file
-				sendMpdCmd($sock, 'lsinfo "' . $lines[$i] . '"');
-				$tags = parseDelimFile(readMpdResp($sock), ': ');
-				$name = $tags['Title'] ? $tags['Title'] : 'Unknown title';
-				$line2 = ($tags['Album'] ? $tags['Album'] : 'Unknown album') . ' - ' . ($tags['Artist'] ? $tags['Artist'] : 'Unknown artist');
-			}
-
-			$item = array('name' => $name, 'path' => $lines[$i], 'line2' => $line2);
-			array_push($array, $item);
 		}
 	}
 
@@ -2772,7 +2730,7 @@ function stopAutoShuffle() {
 	sysCmd('killall -s 9 ashuffle > /dev/null');
 	playerSession('write', 'ashuffle', '0');
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('stopAutoShuffle(): MPD connect failed');
+		workerLog('stopAutoShuffle(): Connection to MPD failed');
 		exit(0);
 	}
 	sendMpdCmd($sock, 'consume 0');

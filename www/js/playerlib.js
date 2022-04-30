@@ -135,7 +135,6 @@ var GLOBAL = {
     mpdMaxVolume: 0,
     lastTimeCount: 0,
     editStationId: '',
-    editPlaylistId: '',
     nativeLazyLoad: false,
     playqueueChanged: false,
 	initTime: 0,
@@ -1279,7 +1278,7 @@ function renderPlayqueue(state) {
 // Handle commands for Queue and Library views
 function moodeCmd(cmd, path) {
 	//console.log('moodeCmd: ' + cmd + ' | ' + path);
-    var folderViewCmds = ['lsinfo', 'get_pl_items'];
+    var folderViewCmds = ['lsinfo', 'get_pl_items_fv'];
     UI.dbCmd = folderViewCmds.includes(cmd) ? cmd : '';
     var queueCmds = ['add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
         'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next', /*'clear_add_group',*/ 'update_library'];
@@ -1316,26 +1315,31 @@ function moodeCmd(cmd, path) {
                 renderPlaylistView();
                 break;
             case 'get_playlist_names':
-                renderPlaylistNames(path); // Add_to_playlist modal
+                renderPlaylistNames(path); // Add to playlist modal
                 break;
             case 'new_playlist':
             case 'upd_playlist':
+            case 'add_to_playlist':
                 cmd == 'new_playlist' ? notify('creating_playlist') : notify('updating_playlist');
-                $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(return_msg) {
-                    return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, '5_seconds');
+                $.post('command/playlist.php?cmd=' + cmd, {'path': path}, function() {
+                    notify(cmd);
                     $('#pl-refresh').click();
                 }, 'json');
                 break;
             case 'del_playlist':
-                $.post('command/moode.php?cmd=' + cmd, {'path': path}, function() {
+                $.post('command/playlist.php?cmd=' + cmd, {'path': path}, function() {
                     notify(cmd);
                     $('#pl-refresh').click();
                 });
                 break;
             // Folder view
             case 'lsinfo':
-            case 'get_pl_items':
                 $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {
+                    renderFolderView(data, path);
+                }, 'json');
+                break;
+            case 'get_pl_items_fv':
+                $.post('command/playlist.php?cmd=' + cmd, {'path': path}, function(data) {
                     renderFolderView(data, path);
                 }, 'json');
                 break;
@@ -1757,7 +1761,7 @@ function renderRadioView() {
 // Render Playlist view
 function renderPlaylistView () {
     var playlists = '';
-    $.getJSON('command/moode.php?cmd=read_cfg_playlist', function(playlists) {
+    $.getJSON('command/playlist.php?cmd=get_playlists', function(playlists) {
         //console.log(playlists);
         // Lazyload method
         var plViewLazy = GLOBAL.nativeLazyLoad ? '<div class="thumbHW"><img loading="lazy" src="' : '<div class="thumbHW"><img class="lazy-playlistview" data-original="';
@@ -1845,7 +1849,7 @@ function renderPlaylistNames (path) {
     UI.dbEntry[4] = path.files;
 
     var playlists = '';
-    $.getJSON('command/moode.php?cmd=read_cfg_playlist', function(playlists) {
+    $.getJSON('command/playlist.php?cmd=get_playlists', function(playlists) {
         if (playlists.length > 0) {
     		var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
             playlists.sort(function(a, b) {
@@ -2312,8 +2316,7 @@ $(document).on('click', '.context-menu a', function(e) {
     		$('#delete-station-modal').modal();
             break;
         case 'edit_playlist':
-            $.post('command/moode.php?cmd=read_playlist_file', {'path': path}, function(result) {
-                GLOBAL.editPlaylistId = result['id']; // This is to pass to the upd_playlist routine so it can uniquely identify the row
+            $.post('command/playlist.php?cmd=get_playlist_contents', {'path': path}, function(result) {
                 $('#delete-playlist-item, #move-playlist-item').hide();
                 $('#playlist-items').css('margin-top', '0');
 
@@ -2377,7 +2380,7 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'add_to_playlist': // From the radio station context menu
             var station_name = path.slice(path.lastIndexOf('/') + 1); // Trim RADIO
             station_name = station_name.slice(0, station_name.lastIndexOf('.')); // and .pls
-            moodeCmd('get_playlist_names', {'name': station_name, 'files': path});
+            moodeCmd('get_playlist_names', {'name': station_name, 'files': [path]});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
@@ -3085,6 +3088,7 @@ function newCoverImage(files, view) {
         var tags_selector = '#new-station-tags';
         var name_selector = '#new-station-name';
         var cmd = 'set_ralogo_image';
+        var script = 'moode.php';
     }
     else { // playlist
         var error_selector = '#error-new-plcoverimage';
@@ -3093,6 +3097,7 @@ function newCoverImage(files, view) {
         var tags_selector = '#new-playlist-tags';
         var name_selector = '#new-playlist-name';
         var cmd = 'set_plcover_image';
+        var script = 'playlist.php';
     }
 
 	if (files[0].size > 1000000) {
@@ -3118,7 +3123,7 @@ function newCoverImage(files, view) {
 		var dataURL = reader.result;
 		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=' + cmd, {'name': name, 'blob': data});
+        $.post('command/' + script + '?cmd=' + cmd, {'name': name, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
 }
@@ -3131,6 +3136,7 @@ function editCoverImage(files, view) {
         var tags_selector = '#edit-station-tags';
         var name_selector = '#edit-station-name';
         var cmd = 'set_ralogo_image';
+        var script = 'moode.php';
     }
     else { // playlist
         var error_selector = '#error-edit-plcoverimage';
@@ -3139,6 +3145,7 @@ function editCoverImage(files, view) {
         var tags_selector = '#edit-playlist-tags';
         var name_selector = '#edit-playlist-name';
         var cmd = 'set_plcover_image';
+        var script = 'playlist.php';
     }
 
 	if (files[0].size > 1000000) {
@@ -3163,7 +3170,7 @@ function editCoverImage(files, view) {
 		var dataURL = reader.result;
 		// Strip off the header from the dataURL: 'data:[<MIME-type>][;charset=<encoding>][;base64],<data>'
 		var data = dataURL.match(/,(.*)$/)[1];
-        $.post('command/moode.php?cmd=' + cmd, {'name': name, 'blob': data});
+        $.post('command/' + script + '?cmd=' + cmd, {'name': name, 'blob': data});
 	}
 	reader.readAsDataURL(files[0]);
 }
