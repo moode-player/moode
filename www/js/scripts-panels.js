@@ -1204,10 +1204,14 @@ jQuery(document).ready(function($) { 'use strict';
         }
         element.innerHTML = lines;
 
+        // For max= attribute in the Delete/Move <input> elements
+        UI.dbEntry[4] = items.length;
+
         // Resequence id's
         var i = 1;
         $('#playlist-items li').each(function(){
             $(this).attr('id', 'pl-item-' + i.toString());
+
             i++;
         });
 
