@@ -656,7 +656,7 @@ camilladsp_quickconv=${arr[55]}
 alsa_loopback=${arr[56]}
 keyboard=${arr[57]}
 [[ "${arr[58]}" = "1" ]] && localui="On" || localui="Off"
-toggle_song=${arr[59]}
+toggle_songid=${arr[59]}
 [[ "${arr[60]}" = "1" ]] && slsvc="On" || slsvc="Off"
 hdmiport=${arr[61]}
 cpugov=${arr[62]}

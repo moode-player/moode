@@ -260,7 +260,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				array_push($cmds, 'play');
 			}
 			chainMpdCmds($sock, $cmds);
-			playerSession('write', 'toggle_song', '0');
+			playerSession('write', 'toggle_songid', '0');
 		    break;
 		// Queue commands for a group of songs: Genre, Artist or Albums in Tag/Album view
 		case 'add_group':
@@ -304,7 +304,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 				chainMpdCmds($sock, $cmds);
 			}
 
-			playerSession('write', 'toggle_song', $pos);
+			playerSession('write', 'toggle_songid', $pos);
 			break;
 		/*case 'clear_add_group':*/
         case 'clear_play_group':
@@ -315,7 +315,7 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			}
 
 			chainMpdCmds($sock, $cmds);
-			playerSession('write', 'toggle_song', '0');
+			playerSession('write', 'toggle_songid', '0');
 			break;
 		case 'station_info':
 			echo json_encode(parseStationInfo($_POST['path']));
@@ -687,11 +687,6 @@ else {
 			}
 			break;
 
-		// Get Favorites name for display in modal
-		case 'getfavname':
-			$result = cfgdb_read('cfg_system', $dbh, 'favorites_name');
-			echo json_encode($result[0]['value']);
-			break;
 		// Toggle auto-shuffle on/off
 		case 'ashuffle':
 			playerSession('write', 'ashuffle', $_GET['ashuffle']);

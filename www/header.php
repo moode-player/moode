@@ -163,7 +163,7 @@
 		</div>
 
 		<div id="menu-header"></div>
-        <div id="multiroom-sender" class="context-menu"><a class="btn" href="#notarget" data-cmd="multiroom-rx-modal"><i class="fas fa-rss"></i></a></div>
+        <div id="multiroom-sender" class="context-menu"><a class="btn" href="#notarget" data-cmd="multiroom_rx_modal"><i class="fas fa-rss"></i></a></div>
 
 		<?php
 			if ($section == 'index' && $_SESSION['camilladsp'] != "off") {
@@ -262,7 +262,7 @@
 				<button aria-label="Cover View" class="btn btn-cmd coverview"><i class="fal fa-tv"></i></button>
                 <button aria-label="Volume" id="playbar-volume-popup-btn" class="btn volume-popup-btn" data-toggle="modal"><i class="fas fa-volume-off"></i><span id="playbar-volume-level"></span></button>
                 <button aria-label="Random Album" id="random-album" class="btn btn-cmd hide"><i class="fal fa-dot-circle"></i></button>
-				<button aria-label="Add To Favorites" class="btn btn-cmd addfav hide"><i class="fal fa-heart"></i></button>
+				<button aria-label="Add To Favorites" class="btn btn-cmd add-item-to-favorites hide"><i class="fal fa-heart"></i></button>
 			</div>
 		</div>
 	</div>

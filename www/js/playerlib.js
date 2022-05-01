@@ -436,12 +436,12 @@ function engineCmd() {
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
-                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
+                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
     				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
                     break;
                 case 'spotactive1':
                 case 'spotactive0':
-                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
+                    var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
     				inpSrcIndicator(cmd[0], 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>' + receiversBtn);
                     break;
                 case 'slactive1':
@@ -966,12 +966,12 @@ function renderUI() {
      	}
     	// Airplay renderer
     	if (SESSION.json['aplactive'] == '1') {
-            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
+            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
     		inpSrcIndicator('aplactive1', 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
     	}
     	// Spotify renderer
     	if (SESSION.json['spotactive'] == '1') {
-            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom-rx-modal-limited">receivers</a></div>' : '';
+            var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
             inpSrcIndicator('spotactive1', 'Spotify Active' + '<br><button class="btn disconnect-renderer" data-job="spotifysvc">disconnect</button>' + receiversBtn);
     	}
     	// Squeezelite renderer
@@ -1323,13 +1323,13 @@ function moodeCmd(cmd, path) {
                 cmd == 'new_playlist' ? notify('creating_playlist') : notify('updating_playlist');
                 $.post('command/playlist.php?cmd=' + cmd, {'path': path}, function() {
                     notify(cmd);
-                    $('#pl-refresh').click();
+                    $('#btn-pl-refresh').click();
                 }, 'json');
                 break;
             case 'del_playlist':
                 $.post('command/playlist.php?cmd=' + cmd, {'path': path}, function() {
                     notify(cmd);
-                    $('#pl-refresh').click();
+                    $('#btn-pl-refresh').click();
                 });
                 break;
             // Folder view
@@ -1787,7 +1787,7 @@ function renderPlaylistView () {
 
         // Clear search results (if any)
         $('.btnlist-top-pl').show();
-        $("#searchResetPl").hide();
+        $('#btn-pl-search-reset').hide();
         showSearchResetPl = false;
     	$('#pl-filter').val('');
 
@@ -1837,7 +1837,7 @@ function renderPlaylistView () {
     	}
 
         // Render the list
-		var element = document.getElementById('playlistcovers');
+		var element = document.getElementById('playlist-covers');
 		element.innerHTML = output;
 		if (currentView == 'playlist') lazyLode('playlist');
     });
@@ -2227,8 +2227,7 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'play_item_next':
             if ($('#db-search-results').text() == '') {
                 moodeCmd($(this).data('cmd'), path);
-            }
-            else {
+            } else {
                 // Folder view search results
                 var files = [];
                 $('#folderlist li').each(function() {
@@ -2250,10 +2249,9 @@ $(document).on('click', '.context-menu a', function(e) {
 
             // If its a playlist, preload the playlist name
     		if (path.indexOf('/') == -1 && path != 'NAS' && path != 'RADIO' && path != 'SDCARD' && path != 'USB') {
-    			$('#pl-saveName').val(path);
-    		}
-    		else {
-    			$('#pl-saveName').val('');
+    			$('#playlist-save-name').val(path);
+    		} else {
+    			$('#playlist-save-name').val('');
     		}
             break;
         case 'update_folder':
@@ -2451,15 +2449,15 @@ $(document).on('click', '.context-menu a', function(e) {
 
             $('#clockradio-modal').modal();
             break;
-        case 'multiroom-rx-modal':
-        case 'multiroom-rx-modal-limited':
+        case 'multiroom_rx_modal':
+        case 'multiroom_rx_modal_limited':
             if (SESSION.json['rx_hostnames'] == 'No receivers found') {
                 notify('no_receivers_found');
             }
             else {
                 notify('querying_receivers', '', 'infinite');
 
-                var modalType = $(this).data('cmd') == 'multiroom-rx-modal' ? 'full' : 'limited';
+                var modalType = $(this).data('cmd') == 'multiroom_rx_modal' ? 'full' : 'limited';
                 $.post('command/moode.php?cmd=get_rx_status', function(result) {
                     //console.log(result);
                     $('.ui-pnotify-closer').click();
@@ -3551,7 +3549,7 @@ $(window).on('scroll', function(e) {
 			$('#menu-bottom').show();
 			$('#menu-top').css('height', $('#menu-top').css('line-height'));
 			$('#menu-top').css('backdrop-filter', 'blur(20px)');
-            $('#playbar-toggles .addfav').show();
+            $('#playbar-toggles .add-item-to-favorites').show();
             $('#random-album').hide();
 			showMenuTopW = true;
 		}
@@ -3671,7 +3669,7 @@ $('#index-radio li').on('click', function(e) {
 });
 $('#index-playlist li').on('click', function(e) {
     list = SESSION.json['plview_sort_group'].split(',')[1] == 'No grouping' ? 'playlist' : 'playlist_headers';
-	listLook('playlistcovers li', list, $(this).text());
+	listLook('playlist-covers li', list, $(this).text());
 });
 
 function listLook(selector, list, searchText) {
@@ -3904,18 +3902,18 @@ function makeActive (vswitch, panel, view) {
 	switch (view) {
 		case 'radio':
 			$('#viewswitch').addClass('vr');
-			$('#playbar-toggles .addfav').show();
+			$('#playbar-toggles .add-item-to-favorites').show();
             $('#random-album, .adv-search-btn').hide();
 			lazyLode('radio');
 			break;
 		case 'folder':
 			$('#viewswitch').addClass('vf');
-			$('#playbar-toggles .addfav').show();
+			$('#playbar-toggles .add-item-to-favorites').show();
             $('#random-album, .adv-search-btn').hide();
 			break;
         case 'tag':
 			$('#viewswitch').addClass('vt');
-            $('#playbar-toggles .addfav').hide();
+            $('#playbar-toggles .add-item-to-favorites').hide();
             $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('tag').removeClass('covers');
             $('#index-albumcovers').hide();
@@ -3924,7 +3922,7 @@ function makeActive (vswitch, panel, view) {
 			break;
 		case 'album':
 			$('#viewswitch').addClass('va');
-            $('#playbar-toggles .addfav').hide();
+            $('#playbar-toggles .add-item-to-favorites').hide();
             $('#random-album, .adv-search-btn').show();
 			$('#library-panel').addClass('covers').removeClass('tag');
             if ($('#tracklist-toggle').text().trim() == 'Hide tracks') {
@@ -3941,7 +3939,7 @@ function makeActive (vswitch, panel, view) {
 			break;
         case 'playlist':
 			$('#viewswitch').addClass('vp');
-			$('#playbar-toggles .addfav').show();
+			$('#playbar-toggles .add-item-to-favorites').show();
             $('#random-album, .adv-search-btn').hide();
 			lazyLode('playlist');
 			break;
@@ -4047,7 +4045,7 @@ function lazyLode(view, skip, force) {
 				break;
             case 'playlist':
  				selector = 'img.lazy-playlistview';
- 				container = '#playlistcovers';
+ 				container = '#playlist-covers';
  				break;
 		 	case 'playqueue':
 				selector = 'img.lazy-playqueue';

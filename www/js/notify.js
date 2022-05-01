@@ -20,10 +20,11 @@
  *
  */
 
-function notify(cmd, msg, duration) {
+function notify(title, msg, duration = '2_seconds') {
     msg = msg || '';
 
-    var map = {
+    var titles = {
+        // Queue
 		add_item: 'Added to the Queue',
         add_item_next: 'Added to the Queue',
         add_group: 'Added to the Queue',
@@ -32,29 +33,25 @@ function notify(cmd, msg, duration) {
         clear_add_group: 'Added after Queue cleared',
 		clear_play_item: 'Playing after Queue cleared',
         clear_play_group: 'Playing after Queue cleared',
+        queue_item_removed: 'Removed from Queue',
+		queue_item_moved: 'Queue items moved',
+        // Library
         clear_libcache: 'Library cache cleared',
         update_library: 'Updating library...',
         library_updating: 'Library update in progress',
         library_loading: 'Library loading...',
-        recorder_installed: 'Recorder installed',
-        recorder_uninstalled: 'Recorder uninstalled',
-        recorder_plugin_na: 'Recorder plugin not available',
-        recorder_deleted: 'Recordings deleted',
-        recorder_tagging: 'Recordings being tagged...',
-        recorder_tagged: 'Tagging complete',
         regen_thumbs: 'Thumbnail resolution updated',
-		remove: 'Removed from Queue',
-		move: 'Queue items moved',
-		savepl: 'Playlist saved',
-		needplname: 'Enter a name',
-		plnameerror: 'NAS, RADIO and SDCARD cannot be used in the name',
-		needssid: 'Static IP requres an SSID',
-		needdhcp: 'Blank SSID requires DHCP',
-        creating_station: 'Creating new station',
-        updating_station: 'Updating station',
-		new_station: 'Station created',
-		upd_station: 'Station updated',
-		del_station: 'Station deleted',
+        // Playlist/Queue
+        saving_queue: 'Saving Queue...',
+        queue_saved: 'Queue saved',
+		playlist_name_needed: 'Enter a name for the playlist',
+		playlist_name_error: 'NAS, RADIO and SDCARD cannot be used in the name',
+        setting_favorites_name: 'Setting Favorites name...',
+        favorites_name_set: 'Favorites name has been set',
+        adding_favorite: 'Adding favorite...',
+        favorite_added: 'Favorite added',
+		no_favorite_to_add: 'Nothing to add',
+        // Playlist view
         creating_playlist: 'Creating new playlist',
         updating_playlist: 'Updating playlist',
         new_playlist: 'Playlist created',
@@ -62,57 +59,75 @@ function notify(cmd, msg, duration) {
 		del_playlist: 'Playlist deleted',
         add_to_playlist: 'Items added',
         select_playlist: 'No playlist was selected or entered',
+        // Radio
         validation_check: 'Validation check',
-		updclockradio: 'Clock radio updated',
-		settings_updated: 'Settings updated',
-		gathering_info: 'Gathering info...',
-        discovering_players: 'Discovering players...',
+        creating_station: 'Creating new station',
+        updating_station: 'Updating station',
+		new_station: 'Station created',
+		upd_station: 'Station updated',
+		del_station: 'Station deleted',
+        // Multiroom
         querying_receivers: 'Querying receivers...',
         no_receivers_found: 'No receivers found',
         run_receiver_discovery: 'Run receiver Discovery',
-		favset: 'Name has been set',
-		favadded: 'Favorite has been added',
-		nofavtoadd: 'Nothing to add',
-		mpderror: 'MPD error',
+        // CamillaDSP
         update_cdsp: 'Updating configuration...',
         update_cdsp_ok: 'Configuration updated',
         update_cdsp_err: 'Configuration update failed',
+        // Renderers
         renderer_disconnect: 'Disconnecting...',
         renderer_turnoff: 'Turning off...',
-		restart: 'Restarting...',
+        // Network config
+		needssid: 'Static IP requres an SSID',
+		needdhcp: 'Blank SSID requires DHCP',
+        // Miscellaneous
+        updclockradio: 'Clock radio updated',
+		settings_updated: 'Settings updated',
+		gathering_info: 'Gathering info...',
+        discovering_players: 'Discovering players...',
+        restart: 'Restarting...',
 		shutdown: 'Shutting down...',
-        viewport: 'Viewport'
+        mpderror: 'MPD error',
+        viewport: 'Viewport',
+        // Recorder
+        recorder_installed: 'Recorder installed',
+        recorder_uninstalled: 'Recorder uninstalled',
+        recorder_plugin_na: 'Recorder plugin not available',
+        recorder_deleted: 'Recordings deleted',
+        recorder_tagging: 'Recordings being tagged...',
+        recorder_tagged: 'Tagging complete'
     };
 
-    if (typeof map[cmd] === undefined) {
+    if (typeof titles[title] === undefined) {
         console.log('notify(): Unknown cmd (' + cmd + ')');
     }
 
-    if (typeof duration == 'undefined') {
-        duration = 2000; // Default 2 seconds
-    }
-    else if (duration == '3_seconds') {
-        duration = 3000;
-    }
-    else if (duration == '5_seconds') {
-        duration = 5000;
-    }
-    else if (duration == '10_seconds') {
-        duration = 10000;
-    }
-    else if (duration == 'infinite') {
-        duration = 86400000; // 24 hours
+    switch (duration) {
+        case '3_seconds':
+            duration = 3000;
+            break;
+        case '5_seconds':
+            duration = 5000;
+            break;
+        case '10_seconds':
+            duration = 10000;
+            break;
+        case 'infinite':
+            duration = 86400000; // 24 hours
+            break;
+        default:
+            duration = 2000;
+            break;
     }
 
     // Close previous message if any
     $('.ui-pnotify-closer').click();
 
-    //var icon = cmd == 'needplname' || cmd == 'needssid' ? 'fas fa-info-circle' : 'fas fa-check';
-	var icon = '';
+    // Display message
     $.pnotify({
-        title: map[cmd],
+        title: titles[title],
         text: msg,
-        icon: icon,
+        icon: '',
         delay: duration,
         opacity: 1.0,
         history: false

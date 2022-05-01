@@ -44,6 +44,7 @@ Radio stations
 
 - UPD: KanalK
 - UPD: DR P1 - P4, P6, P8
+- DEL:
 
 Bug fixes
 
@@ -53,7 +54,6 @@ Bug fixes
 - FIX: Self IP address not being filtered in Players and TRX Config
 - FIX: Custom backup script not being restored
 - FIX: Top margin for EDIT button on src-config
-
 
 ################################################################################
 #

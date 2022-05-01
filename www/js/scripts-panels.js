@@ -663,65 +663,63 @@ jQuery(document).ready(function($) { 'use strict';
     });
 
 	// Save Queue to playlist
-    $('#pl-btnSave').click(function(e){
-		var plname = $('#pl-saveName').val();
+    $('#btn-save-queue-to-playlist').click(function(e){
+		var plName = $('#playlist-save-name').val();
 
-		if (plname) {
-			if (~plname.indexOf('NAS') || ~plname.indexOf('RADIO') || ~plname.indexOf('SDCARD')) {
-				notify('plnameerror');
-			}
-			else {
-                $.get('command/moode.php?cmd=savepl&plname=' + plname, function(data) {
-    				notify('savepl');
-                    $('#pl-refresh').click();
+		if (plName) {
+			if (~plName.indexOf('NAS') || ~plName.indexOf('RADIO') || ~plName.indexOf('SDCARD')) {
+				notify('playlist_name_error');
+			} else {
+                notify('saving_queue');
+                $.get('command/playlist.php?cmd=save_queue_to_playlist&name=' + plName, function() {
+    				notify('queue_saved');
+                    $('#btn-pl-refresh').click();
                 });
 			}
-		}
-		else {
-			notify('needplname');
+		} else {
+			notify('playlist_name_needed');
 		}
     });
-    $('#savepl-modal').on('shown.bs.modal', function(e) {
-        $('#pl-saveName').focus();
+    $('#save-queue-to-playlist-modal').on('shown.bs.modal', function(e) {
+        $('#playlist-save-name').focus();
     });
 
 	// Set favorites
-    $('#pl-btnSetFav').click(function(e){
-		var favname = $('#pl-favName').val();
+    $('#btn-set-favorites-name').click(function(e){
+		var favoritesName = $('#playlist-favorites-name').val();
 
-		if (favname) {
-			if (~favname.indexOf('NAS') || ~favname.indexOf('RADIO') || ~favname.indexOf('SDCARD')) {
-				notify('plnameerror');
+		if (favoritesName) {
+			if (~favoritesName.indexOf('NAS') || ~favoritesName.indexOf('RADIO') || ~favoritesName.indexOf('SDCARD')) {
+				notify('playlist_name_error');
+			} else {
+                notify('setting_favorites_name');
+                $.get('command/playlist.php?cmd=set_favorites_name&name=' + favoritesName, function(){
+                    notify('favorites_name_set');
+                });
 			}
-			else {
-                $.get('command/moode.php?cmd=setfav&favname=' + favname);
-				notify('favset');
-			}
-		}
-		else {
-			notify('needplname');
+		} else {
+			notify('playlist_name_needed');
 		}
     });
-    $('#setfav-modal').on('shown.bs.modal', function() {
-        $('#pl-favName').focus();
+    $('#set-favorites-playlist-modal').on('shown.bs.modal', function() {
+        $('#playlist-favorites-name').focus();
     });
 	// Add item to favorites
-    $('.addfav').click(function(e){
-		// pulse the btn
-		$('.addfav i').addClass('pulse');
-		$('.addfav i').addClass('fas');
+    $('.add-item-to-favorites').click(function(e){
+		// Pulse the btn
+        $('.add-item-to-favorites i').addClass('pulse').addClass('fas');
 		setTimeout(function() {
-			$('.addfav i').removeClass('fas');
-			$('.addfav i').removeClass('pulse');
-		}, 1000);
+			$('.add-item-to-favorites i').removeClass('pulse').removeClass('fas');
+		}, 3000);
 
 		// Add current pl item to favorites playlist
 		if (MPD.json['file'] != null) {
-            $.get('command/moode.php?cmd=addfav&favitem=' + encodeURIComponent(MPD.json['file']));
-			notify('favadded');
-		}
-		else {
-			notify('nofavtoadd');
+            notify('adding_favorite');
+            $.get('command/playlist.php?cmd=add_item_to_favorites&item=' + encodeURIComponent(MPD.json['file']), function() {
+                notify('favorite_added');
+            });
+		} else {
+			notify('no_favorite_to_add');
 		}
     });
 
@@ -1055,17 +1053,17 @@ jQuery(document).ready(function($) { 'use strict';
     // PLAYLIST VIEW
     //
     // Refresh the playlist list
-	$('#pl-refresh').click(function(e) {
+	$('#btn-pl-refresh').click(function(e) {
 		moodeCmd('lsinfo_playlist');
         lazyLode('playlist');
         $('#database-playlist').scrollTo(0, 200);
 		UI.playlsitPos = -1;
 		storePlaylistPos(UI.playlistPos)
-        $("#searchResetPl").hide();
+        $('#btn-pl-search-reset').hide();
         showSearchResetPl = false;
 	});
     // New playlist modal (+)
-	$('#pl-new').click(function(e) {
+	$('#btn-pl-new').click(function(e) {
 		$('#new-playlist-name').val('New playlist');
         $('#new-plcoverimage').val('');
 		$('#preview-new-plcoverimage').html('');
@@ -1080,7 +1078,7 @@ jQuery(document).ready(function($) { 'use strict';
 	// Playlist search
 	$('#pl-filter').keyup(function(e){
 		if (!showSearchResetPl) {
-			$('#searchResetPl').show();
+			$('#btn-pl-search-reset').show();
 			showSearchResetPl = true;
 		}
 
@@ -1092,7 +1090,7 @@ jQuery(document).ready(function($) { 'use strict';
 			var count = 0;
 
 			if (filter == '') {
-				$("#searchResetPl").hide();
+				$('#btn-pl-search-reset').hide();
 				showSearchResetPl = false;
 			}
 
@@ -1112,9 +1110,9 @@ jQuery(document).ready(function($) { 'use strict';
 
 		}, SEARCH_TIMEOUT);
 	});
-	$('#searchResetPl').click(function(e) {
+	$('#btn-pl-search-reset').click(function(e) {
 		$('.database-playlist li').css('display', 'inline-block');
-        $("#searchResetPl").hide();
+        $("#btn-pl-search-reset").hide();
 		showSearchResetPl = false;
 	});
     // Playlist view context menu
@@ -1211,7 +1209,6 @@ jQuery(document).ready(function($) { 'use strict';
         var i = 1;
         $('#playlist-items li').each(function(){
             $(this).attr('id', 'pl-item-' + i.toString());
-
             i++;
         });
 
@@ -1349,13 +1346,18 @@ jQuery(document).ready(function($) { 'use strict';
 
 	// Buttons on modals
 	$('.btn-delete-playqueue-item').click(function(e){
-		var cmd = '';
-		var begpos = $('#delete-playqueue-item-begpos').val() - 1;
-		var endpos = $('#delete-playqueue-item-endpos').val() - 1;
-		// NOTE: format for single or multiple, endpos not inclusive so must be bumped for multiple
-		begpos == endpos ? cmd = 'delete_playqueue_item&range=' + begpos : cmd = 'delete_playqueue_item&range=' + begpos + ':' + (endpos + 1);
-		notify('remove');
+		var begPos = $('#delete-playqueue-item-begpos').val() - 1;
+		var endPos = $('#delete-playqueue-item-endpos').val() - 1;
+
+		// NOTE: format for single or multiple, endPos not inclusive so must be bumped for multiple
+		if (begPos == endPos) {
+            var cmd = 'delete_playqueue_item&range=' + begPos;
+        } else {
+            var cmd = 'delete_playqueue_item&range=' + begPos + ':' + (endPos + 1);
+        }
+
         $.get('command/moode.php?cmd=' + cmd);
+        notify('queue_item_removed');
 	});
 	// Speed btns on delete modal
 	$('#btn-delete-setpos-top').click(function(e){
@@ -1367,15 +1369,20 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('.btn-move-playqueue-item').click(function(e){
-		var cmd = '';
-		var begpos = $('#move-playqueue-item-begpos').val() - 1;
-		var endpos = $('#move-playqueue-item-endpos').val() - 1;
-		var newpos = $('#move-playqueue-item-newpos').val() - 1;
-		// NOTE: format for single or multiple, endpos not inclusive so must be bumped for multiple
-		// Move begpos newpos or move begpos:endpos newpos
-		begpos == endpos ? cmd = 'move_playqueue_item&range=' + begpos + '&newpos=' + newpos : cmd = 'move_playqueue_item&range=' + begpos + ':' + (endpos + 1) + '&newpos=' + newpos;
-		notify('move');
+		var begPos = $('#move-playqueue-item-begpos').val() - 1;
+		var endPos = $('#move-playqueue-item-endpos').val() - 1;
+		var newPos = $('#move-playqueue-item-newpos').val() - 1;
+
+		// Move begPos newPos or move begpos:endPos newpos
+        // NOTE: format for single or multiple, endPos not inclusive so must be bumped for multiple
+		if (begPos == endPos) {
+            var cmd = 'move_playqueue_item&range=' + begPos + '&newpos=' + newPos;
+        } else {
+            var cmd = 'move_playqueue_item&range=' + begPos + ':' + (endPos + 1) + '&newpos=' + newpos;
+        }
+
         $.get('command/moode.php?cmd=' + cmd);
+        notify('queue_item_moved');
 	});
 	// Speed btns on move modal
 	$('#btn-move-setpos-top').click(function(e){

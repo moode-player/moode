@@ -20,6 +20,8 @@
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
+define('NUMBER_EXT_TAGS', '2');
+
 //workerLog('playlist.php: cmd=(' . $_GET['cmd'] . ')');
 if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 	workerLog('playlist.php: Error: $_GET cmd is empty or missing');
@@ -47,16 +49,16 @@ switch ($_GET['cmd']) {
 		break;
 	case 'new_playlist':
 	case 'upd_playlist':
-		$pl_name = html_entity_decode($_POST['path']['name']);
-		$pl_meta = array('genre' => $_POST['path']['genre'], 'cover' => 'local');
-		$pl_items = $_POST['path']['items'];
+		$plName = html_entity_decode($_POST['path']['name']);
+		$plMeta = array('genre' => $_POST['path']['genre'], 'cover' => 'local');
+		$plItems = $_POST['path']['items'];
 
-		put_playlist_contents($pl_name, $pl_meta, $pl_items);
-		put_playlist_cover($pl_name);
+		putPlaylistContents($plName, $plMeta, $plItems);
+		putPlaylistCover($plName);
 		break;
 	case 'add_to_playlist':
-		$pl_name = html_entity_decode($_POST['path']['playlist']);
-		$pl_meta = '';
+		$plName = html_entity_decode($_POST['path']['playlist']);
+		$plMeta = '';
 
 		if (count($_POST['path']['items']) == 1 && strpos($_POST['path']['items'][0], '.pls') !== false) {
 			// Radio station
@@ -64,113 +66,101 @@ switch ($_GET['cmd']) {
 			$_POST['path']['items'][0] = $result['File1']; // URL
 		}
 
-		put_playlist_contents($pl_name, $pl_meta, $_POST['path']['items'], FILE_APPEND);
-		put_playlist_cover ($pl_name);
+		putPlaylistContents($plName, $plMeta, $_POST['path']['items'], FILE_APPEND);
+		putPlaylistCover($plName);
 		break;
 	case 'del_playlist':
 		sysCmd('rm "' . MPD_PLAYLIST_ROOT . html_entity_decode($_POST['path']) . '.m3u"');
 		sysCmd('rm "' . PLAYLIST_COVERS_ROOT . html_entity_decode($_POST['path']) . '.jpg"');
 		break;
 	// Save Queue to playlist
-    case 'savepl':
-		$pl_name = html_entity_decode($_GET['plname']);
-		$sock = get_mpd_sock();
+    case 'save_queue_to_playlist':
+		$plName = html_entity_decode($_GET['name']);
+		$sock = getMpdSock();
 
 		// Get metadata (may not exist so defaults will be returned)
-		$metadata = get_playlist_metadata($pl_name);
+		$plMeta = getPlaylistMetadata($plName);
 
-		// Create playlist
-        sendMpdCmd($sock, 'rm "' . $pl_name . '"');
+		// Create playlist from queue
+        sendMpdCmd($sock, 'rm "' . $plName . '"');
 		$resp = readMpdResp($sock);
-        sendMpdCmd($sock, 'save "' . $pl_name . '"');
+        sendMpdCmd($sock, 'save "' . $plName . '"');
         echo json_encode(readMpdResp($sock));
-		sysCmd('chmod 0777 "' . MPD_PLAYLIST_ROOT . $pl_name . '.m3u"');
-		sysCmd('chown root:root "' . MPD_PLAYLIST_ROOT . $pl_name . '.m3u"');
+		sysCmd('chmod 0777 "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
+		sysCmd('chown root:root "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
 
 		// Insert/Update metadata tags
-		put_playlist_metadata($pl_name, array('#EXTGENRE:' . $metadata['genre'], '#EXTIMG:' . $metadata['cover']));
-
-		// Write default image if one does not already exist
-		if (!file_exists(PLAYLIST_COVERS_ROOT . $pl_name . '.jpg')) {
-			sysCmd('cp /var/www/images/notfound.jpg ' . '"PLAYLIST_COVERS_ROOT' . $pl_name . '.jpg"');
-		}
-
-		echo json_encode('OK');
+		putPlaylistMetadata($plName, array('#EXTGENRE:' . $plMeta['genre'], '#EXTIMG:' . $plMeta['cover']));
+		// Write default cover if no cover exists for the playlist
+		putPlaylistCover($plName);
 		break;
-	case 'setfav':
-		$pl_name = html_entity_decode($_GET['favname']);
+	case 'get_favorites_name':
+		$result = cfgdb_read('cfg_system', cfgdb_connect(), 'favorites_name');
+		echo json_encode($result[0]['value']);
+		break;
+	case 'set_favorites_name':
+		$plName = html_entity_decode($_GET['name']);
+		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
 		// Get metadata (may not exist so defaults will be returned)
-		$metadata = get_playlist_metadata($pl_name);
+		$plMeta = getPlaylistMetadata($plName);
 
-		$file = '/var/lib/mpd/playlists/' . $pl_name . '.m3u';
-		if (!file_exists($file)) {
-
-			sysCmd('touch "' . $file . '"');
-
-			sysCmd('chmod 777 "' . $file . '"');
-			sysCmd('chown root:root "' . $file . '"');
-		}
-		else { // Ensure corrent permissions
-			sysCmd('chmod 777 "' . $file . '"');
-			sysCmd('chown root:root "' . $file . '"');
+		// Create playlist if it doesn't exists
+		if (!file_exists($plFile)) {
+			sysCmd('touch "' . $plFile . '"');
+			sysCmd('chmod 777 "' . $plFile . '"');
+			sysCmd('chown root:root "' . $plFile . '"');
 		}
 
 		// Insert/Update metadata tags
-		put_playlist_metadata($pl_name, array('#EXTGENRE:' . $metadata['genre'], '#EXTIMG:' . $metadata['cover']));
+		putPlaylistMetadata($plName, array('#EXTGENRE:' . $plMeta['genre'], '#EXTIMG:' . $plMeta['cover']));
+		// Write default cover if no cover exists for the playlist
+		putPlaylistCover($plName);
 
-		// Write default image if one does not already exist
-		if (!file_exists(PLAYLIST_COVERS_ROOT . $pl_name . '.jpg')) {
-			sysCmd('cp /var/www/images/notfound.jpg ' . '"PLAYLIST_COVERS_ROOT' . $pl_name . '.jpg"');
-		}
-
-		playerSession('write', 'favorites_name', $_GET['favname']);
-
-		echo json_encode('OK');
+		playerSession('write', 'favorites_name', $plName);
 		break;
-	case 'addfav':
-        if (isset($_GET['favitem']) && $_GET['favitem'] != '' && $_GET['favitem'] != 'null') {
-			$pl_name = $_SESSION['favorites_name'];
+	case 'add_item_to_favorites':
+        if (isset($_GET['item']) && !empty($_GET['item'])) {
+
+			session_start();
+			$plName = $_SESSION['favorites_name'];
+			session_write_close();
+
+			$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
 			// Get metadata (may not exist so defaults will be returned)
-			$metadata = get_playlist_metadata($pl_name);
+			$plMeta = getPlaylistMetadata($plName);
 
-			// Create file if it doesn't exost
-			$file = '/var/lib/mpd/playlists/' . $pl_name . '.m3u';
-			if (!file_exists($file)) {
-				sysCmd('touch "' . $file . '"');
+			// Create playlist if it doesn't exost
+			if (!file_exists($plFile)) {
+				sysCmd('touch "' . $plFile . '"');
+				sysCmd('chmod 777 "' . $plFile . '"');
+				sysCmd('chown root:root "' . $plFile . '"');
 			}
-			// Ensure correct permissions
-			sysCmd('chmod 777 "' . $file . '"');
-			sysCmd('chown root:root "' . $file . '"');
 
 			// Insert/Update metadata tags
-			put_playlist_metadata($pl_name, array('#EXTGENRE:' . $metadata['genre'], '#EXTIMG:' . $metadata['cover']));
-
-			// Write default image if one does not already exist
-			if (!file_exists(PLAYLIST_COVERS_ROOT . $pl_name . '.jpg')) {
-				sysCmd('cp /var/www/images/notfound.jpg ' . '"PLAYLIST_COVERS_ROOT' . $pl_name . '.jpg"');
-			}
+			putPlaylistMetadata($plName, array('#EXTGENRE:' . $plMeta['genre'], '#EXTIMG:' . $plMeta['cover']));
+			// Write default cover if no cover exists for the playlist
+			putPlaylistCover($plName);
 
 			// Append item (prevent adding duplicate)
-			$result = sysCmd('fgrep "' . $_GET['favitem'] . '" "' . $file . '"');
+			$result = sysCmd('fgrep "' . $_GET['item'] . '" "' . $plFile . '"');
 			if (empty($result[0])) {
-				sysCmd('echo "' . $_GET['favitem'] . '" >> "' . $file . '"');
+				sysCmd('echo "' . $_GET['item'] . '" >> "' . $plFile . '"');
 			}
-			echo json_encode('OK');
 		}
 		break;
 	case 'get_pl_items_fv':
 		// For Folder view
-		echo json_encode(list_playlist_fv(get_mpd_sock(), $_POST['path']));
+		echo json_encode(listPlaylistFv(getMpdSock(), $_POST['path']));
 		break;
 	case 'get_playlists':
-		$result = get_playlists();
+		$result = getPlaylists();
 		echo json_encode($result);
 		break;
 	case 'get_playlist_contents':
-		$playlist = get_playlist_contents($_POST['path'], cfgdb_connect(), get_mpd_sock());
-		$array = array('id' => '-1', 'name' => $playlist['name'], 'genre' => $playlist['genre'], 'items' => $playlist['items']);
+		$playlist = getPlaylistContents($_POST['path'], cfgdb_connect(), getMpdSock());
+		$array = array('name' => $playlist['name'], 'genre' => $playlist['genre'], 'items' => $playlist['items']);
 		echo json_encode($array);
 		break;
 }
@@ -185,18 +175,17 @@ if (isset($sock) && $sock !== false) {
 //
 
 // Return list of playlists including metadata
-function get_playlists() {
+function getPlaylists() {
 	$playlists = array();
 
 	if (false === ($files = scandir(MPD_PLAYLIST_ROOT))) {
-		workerLog('get_playlists(): Directory read failed on ' . MPD_PLAYLIST_ROOT);
-	}
-	else {
+		workerLog('getPlaylists(): Directory read failed on ' . MPD_PLAYLIST_ROOT);
+	} else {
 		foreach ($files as $file) {
 			if ($file != '.' && $file != '..') {
-				$pl_name = basename($file, '.m3u');
-				$pl_meta = get_playlist_metadata($pl_name);
-				array_push($playlists, array('name' => $pl_name, 'genre' => $pl_meta['genre'], 'cover' => $pl_meta['cover']));
+				$plName = basename($file, '.m3u');
+				$plMeta = getPlaylistMetadata($plName);
+				array_push($playlists, array('name' => $plName, 'genre' => $plMeta['genre'], 'cover' => $plMeta['cover']));
 			}
 		}
 	}
@@ -204,23 +193,21 @@ function get_playlists() {
 	return $playlists;
 }
 // Return playlist metadata and items
-function get_playlist_contents($pl_name, $dbh, $sock) {
-	$pl_file =  MPD_PLAYLIST_ROOT . $pl_name . '.m3u';
+function getPlaylistContents($plName, $dbh, $sock) {
+	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
 	$genre = '';
 	$cover = 'local';
 	$items = array();
 
-	if (false === ($pl_items = file($pl_file, FILE_IGNORE_NEW_LINES))) {
-		workerLog('get_playlist_contents(): File read failed on ' . $pl_file);
-	}
-	else {
+	if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
+		workerLog('getPlaylistContents(): File read failed on ' . $plFile);
+	} else {
 		// Parse genre and cover (first 2 lines) and create item {name, path, line2}
-		foreach($pl_items as $item) {
+		foreach($plItems as $item) {
 			if (strpos($item, '#EXTGENRE') !== false) {
 				$genre = explode(':', $item)[1];
-			}
-			elseif (strpos($item, '#EXTIMG') !== false) {
+			} else if (strpos($item, '#EXTIMG') !== false) {
 				$cover = explode(':', $item)[1];
 			}
 			else {
@@ -230,14 +217,12 @@ function get_playlist_contents($pl_name, $dbh, $sock) {
 					if ($result === true) {
 						// Query successful but no reault, set name to URL
 						$name = $item;
-					}
-					else {
+					} else {
 						// Query successful and non-empty result
 						$name = $result[0]['name'];
 					}
 					$line2 = 'Radio Station';
-				}
-				else {
+				} else {
 					// Song file
 					sendMpdCmd($sock, 'lsinfo "' . $item . '"');
 					$tags = parseDelimFile(readMpdResp($sock), ': ');
@@ -254,25 +239,23 @@ function get_playlist_contents($pl_name, $dbh, $sock) {
 	return array('genre' => $genre, 'cover' => $cover, 'items' => $items);
 }
 // Return playlist metadata
-function get_playlist_metadata($pl_name) {
-	// NOTE: If no tags exist in the playlist then this function returns the initial values of the tags
-	$pl_file =  MPD_PLAYLIST_ROOT . $pl_name . '.m3u';
+function getPlaylistMetadata($plName) {
+	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
+	// NOTE: If no tags exist in the playlist then this function returns the initial values of the tags
 	$genre = '';
 	$cover = 'local';
-	$num_ext_tags = 2;
+	$numExtTags = NUMBER_EXT_TAGS;
 
-	if (false === ($fh = fopen($pl_file, 'r'))) {
-		workerLog('get_playlist_metadata(): File open failed on ' . $pl_file);
-	}
-	else {
+	if (false === ($fh = fopen($plFile, 'r'))) {
+		debugLog('getPlaylistMetadata(): File open failed on ' . $plFile);
+	} else {
 		while (false !== ($line = fgets($fh))) {
 			if (feof($fh)) break;
-			if ($num_ext_tags-- == 0) break;
+			if ($numExtTags-- == 0) break;
 			if (strpos($line, '#EXTGENRE') !== false) {
 				$genre = explode(':', trim($line))[1];
-			}
-			elseif (strpos($line, '#EXTIMG') !== false) {
+			} else if (strpos($line, '#EXTIMG') !== false) {
 				$cover = explode(':', trim($line))[1];
 			}
 		}
@@ -283,76 +266,73 @@ function get_playlist_metadata($pl_name) {
 	return array('genre' => $genre, 'cover' => $cover);
 }
 // Create or update playlist metadata tags
-function put_playlist_metadata($pl_name, $pl_meta) {
-	$pl_file =  MPD_PLAYLIST_ROOT . $pl_name . '.m3u';
+function putPlaylistMetadata($plName, $plMeta) {
+	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
 	// NOTE: Is there a more efficient way?
-	if (false === ($pl_items = file($pl_file, FILE_IGNORE_NEW_LINES))) {
-		workerLog('put_playlist_metadata(): File read failed on ' . $pl_file);
-	}
-	else {
-		array_splice($pl_items, 0, 0, $pl_meta);
-		$contents = implode(PHP_EOL, $pl_items);
-		if (false == (file_put_contents($pl_file, $contents))) {
-			workerLog('put_playlist_metadata(): File write failed on ' . $pl_file);
+	if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
+		workerLog('putPlaylistMetadata(): File read failed on ' . $plFile);
+	} else {
+		array_splice($plItems, 0, NUMBER_EXT_TAGS, $plMeta);
+		foreach ($plItems as $item) {
+			$contents .= $item . "\n";
+		}
+		if (false == (file_put_contents($plFile, $contents))) {
+			workerLog('putPlaylistMetadata(): File write failed on ' . $plFile);
 		}
 	}
 }
 // Create or update playlist file
-function put_playlist_contents($pl_name, $pl_meta, $pl_items, $append_flag = 0) {
-	$pl_file =  MPD_PLAYLIST_ROOT . $pl_name . '.m3u';
+function putPlaylistContents($plName, $plMeta, $plItems, $appendFlag = 0) {
+	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
-	if ($append_flag == 0) {
-		$contents = '#EXTGENRE:' . $pl_meta['genre'] . "\n";
-		$contents .= '#EXTIMG:' . $pl_meta['cover'] . "\n";
+	if ($appendFlag == 0) {
+		$contents = '#EXTGENRE:' . $plMeta['genre'] . "\n";
+		$contents .= '#EXTIMG:' . $plMeta['cover'] . "\n";
 	}
 
-	foreach ($pl_items as $item) {
+	foreach ($plItems as $item) {
 		$contents .= $item . "\n";
 	}
 
-	if (false == (file_put_contents($pl_file, $contents, $append_flag))) {
-		workerLog('put_playlist_contents(): File write failed on ' . $pl_file);
-	}
-	else {
-		sysCmd('chmod 0777 "' . $pl_file . '"');
-		sysCmd('chown root:root "' . $pl_file . '"');
+	if (false == (file_put_contents($plFile, $contents, $appendFlag))) {
+		workerLog('putPlaylistContents(): File write failed on ' . $plFile);
+	} else {
+		sysCmd('chmod 0777 "' . $plFile . '"');
+		sysCmd('chown root:root "' . $plFile . '"');
 	}
 }
 // Add cover image
-function put_playlist_cover ($pl_name) {
-	$pl_tmp_image = PLAYLIST_COVERS_ROOT . TMP_IMAGE_PREFIX . $pl_name . '.jpg';
-	$pl_cover_image = PLAYLIST_COVERS_ROOT . $pl_name . '.jpg';
-	$default_image = '/var/www/images/notfound.jpg';
+function putPlaylistCover($plName) {
+	$plTmpImage = PLAYLIST_COVERS_ROOT . TMP_IMAGE_PREFIX . $plName . '.jpg';
+	$plCoverImage = PLAYLIST_COVERS_ROOT . $plName . '.jpg';
+	$defaultImage = '/var/www/images/notfound.jpg';
 
 	sendEngCmd('set_cover_image1'); // Show spinner
 	sleep(3); // Allow time for set_plcover_image job to create __tmp__ image file
 
-	if (file_exists($pl_tmp_image)) {
-		sysCmd('mv "' . $pl_tmp_image . '" "' . $pl_cover_image . '"');
-	}
-	elseif (!file_exists($pl_cover_image)) {
-		sysCmd('cp "' . $default_image . '" "' . $pl_cover_image . '"');
+	if (file_exists($plTmpImage)) {
+		sysCmd('mv "' . $plTmpImage . '" "' . $plCoverImage . '"');
+	} else if (!file_exists($plCoverImage)) {
+		sysCmd('cp "' . $defaultImage . '" "' . $plCoverImage . '"');
 	}
 
 	sendEngCmd('set_cover_image0'); // Hide spinner
 }
 
 // Return contents of playlist (Folder view)
-function list_playlist_fv($sock, $pl_name) {
-	sendMpdCmd($sock, 'listplaylist "' . $pl_name . '"');
-	$pl_items = readMpdResp($sock);
-
-	return parseList($pl_items);
+function listPlaylistFv($sock, $plName) {
+	sendMpdCmd($sock, 'listplaylist "' . $plName . '"');
+	$plItems = readMpdResp($sock);
+	return parseList($plItems);
 }
 
 // Return MPD socket or exit script
-function get_mpd_sock() {
+function getMpdSock() {
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('get_mpd_sock(): Connection to MPD failed');
+		workerLog('getMpdSock(): Connection to MPD failed');
 		exit(0);
-	}
-	else {
+	} else {
 		return $sock;
 	}
 }

@@ -167,7 +167,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	body {padding-left: 0px;padding-right: 0px;}
 	#playback-controls {width:24%;margin-left:0px;}
 	.container-playback {padding: 0px;}
-	#playqueue-search, #lib-album-search, #pl-save, #set-fav {margin-left: 0;}
+	#playqueue-search, #lib-album-search, #save-queue-to-playlist-form, #set-favorites-playlist-form {margin-left: 0;}
 	body.index {padding:0;}
 }
 @media (max-width:479px) {
@@ -216,9 +216,9 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.tab-content.visacc #mt1 .btn {color:var(--textvariant);}
 	.tab-content.visacc #mt1 .btn-primary {color:var(--adapttext);background-color:var(--btnshade2);}
 	#msingle {display:none;}
-	#maddfav i {font-size:1.1em;}
+	#madd-item-to-favorites i {font-size:1.1em;}
 	#mvol-bg {background-color:rgba(96,96,96,0.25);height:2px;}
-	#playqueue-search, #lib-album-search, #pl-save, #ra-search, #pl-search {margin-left: 0px;}
+	#playqueue-search, #lib-album-search, #save-queue-to-playlist-form, #ra-search, #pl-search {margin-left: 0px;}
 	/*.database li {margin-left:2px;margin-right:5px;}*/
 	/* display:flex & playback stuff */
 	.no-fluid {flex-direction:column-reverse;}
@@ -301,7 +301,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#volume-popup .modal-footer button {width:40%;margin:0;}
 	.modal-xs {min-width:70%;}
 	#lib-coverart-meta-area {position:unset;}
-	.pl-btnSave {margin:1em 1em 4em 1em;}
+	.btn-save-queue-to-playlist {margin:1em 1em 4em 1em;}
 	/*.alphabits {right:0%!important;top:0%!important;}*/
 	#index-genres {right:calc(50% + var(--sbw));}
 	#index-artists {right:calc(0% + var(--sbw));}

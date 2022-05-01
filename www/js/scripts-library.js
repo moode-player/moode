@@ -1350,7 +1350,7 @@ $('#btn-upd-radio-manager').click(function(e) {
 });
 
 // Playlist manager modal
-$('#playlist-manager-btn').click(function(e) {
+$('#btn-pl-manager').click(function(e) {
     var sortGroup = SESSION.json['plview_sort_group'].split(',');
     $('#plview-sort-tag span').text(sortGroup[0]);
     $('#plview-group-method span').text(sortGroup[1]);
@@ -1366,7 +1366,7 @@ $('#btn-upd-playlist-manager').click(function(e) {
         }, function() {
             notify('settings_updated');
             setTimeout(function() {
-                $('#pl-refresh').click();
+                $('#btn-pl-refresh').click();
             }, DEFAULT_TIMEOUT);
         }
     );
@@ -1433,7 +1433,6 @@ $('#playlist-items').on('click', '.pl-item', function(e) {
     $('#pl-item-' + (UI.dbEntry[0] + 1).toString()).addClass('active');
     //console.log(UI.dbEntry[0]);
 });
-
 // Click playlist name
 $('#playlist-names').on('click', '.pl-name', function(e) {
     UI.dbEntry[0] = $('#playlist-names .pl-name').index(this); // Store pos for use in the Add routine
@@ -1452,15 +1451,13 @@ $('#btn-add-to-playlist').click(function(e){
                 return;
             }
         });
-    }
-    else {
+    } else {
         var playlist = newPlaylist;
     }
 
     if (playlist == '') {
         notify('select_playlist');
-    }
-    else {
+    } else {
         moodeCmd('add_to_playlist', {
             'playlist': playlist,
             'items': UI.dbEntry[4]}
@@ -1474,16 +1471,16 @@ $('#btn-add-to-playlist').click(function(e){
 $('#context-menu-playback a').click(function(e) {
     //console.log($(this).data('cmd'));
     switch ($(this).data('cmd')) {
-        case 'save-playlist':
-            $('#savepl-modal').modal();
+        case 'save_queue_to_playlist':
+            $('#save-queue-to-playlist-modal').modal();
             break;
-        case 'set-favorites':
-            $.getJSON('command/moode.php?cmd=getfavname', function(favname) {
-                $('#pl-favName').val(favname);
-                $('#setfav-modal').modal();
+        case 'set_favorites_name':
+            $.getJSON('command/playlist.php?cmd=get_favorites_name', function(name) {
+                $('#playlist-favorites-name').val(name); // Preload existing name (if any)
+                $('#set-favorites-playlist-modal').modal();
             });
             break;
-        case 'toggle-song':
+        case 'toggle_song':
             sendMpdCmd('playid ' + toggleSongId);
             break;
         case 'consume':
@@ -1506,9 +1503,9 @@ $('#context-menu-playback a').click(function(e) {
             break;
         case 'clear':
     		sendMpdCmd('clear');
-            $('#pl-saveName').val(''); // Clear saved playlist name if any
+            $('#playlist-save-name').val(''); // Clear saved playlist name if any
             break;
-        case 'stream-recorder':
+        case 'stream_recorder':
     		$('#menu-check-recorder').toggle();
             if ($('#menu-check-recorder').css('display') == 'block') {
                 SESSION.json['recorder_status'] = 'On';
@@ -1556,7 +1553,7 @@ $('#context-menu-lib-item a').click(function(e) {
         /*case 'clear_add_item':
     		moodeCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
     		notify('clear_add_item');
-    		$('#pl-saveName').val(''); // Clear saved playlist name if any
+    		$('#playlist-save-name').val(''); // Clear saved playlist name if any
             break;
         }*/
         case 'clear_play_item':
@@ -1575,7 +1572,7 @@ $('#context-menu-lib-item a').click(function(e) {
             }
     		moodeCmd(cmd, files);
     		notify(cmd);
-    		$('#pl-saveName').val(''); // Clear saved playlist name if any
+    		$('#playlist-save-name').val(''); // Clear saved playlist name if any
             break;
         case 'track_info_lib':
             audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
