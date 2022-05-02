@@ -27,7 +27,7 @@
 <p>The Playback screen includes the play queue (Queue), volume and time knobs, playback controls, cover art and metadata.
 
 <h4>Library</h4>
-<p>The library provides Radio, Folder, Tag and Album views for browsing and selecting content and a Playbar for displaying song information and controlling playback. Options for configuring various aspects of the Library including sort order, recently added and more are located in the Library section of the Preferences dialog.</p>
+<p>The library provides Radio, Folder, Tag, Album and Playlist views for browsing and selecting content and a Playbar for displaying song information and controlling playback. Options for configuring various aspects of the Library including sort order, recently added and more are located in the Library section of the Preferences dialog.</p>
 <h4>Searching the Library</h4>
 <p>Powerful search features are available in Tag and Album view that allow the Library to be filtered based on entered text, tag value pairs or special, predefined filters. These are entered in the search field on the Library menu. There is also an Advanced search dialog that enables multiple tag value pairs to be submitted.</p>
 <div id="quickhelp-bullet-list">
@@ -61,17 +61,33 @@
 <div id="quickhelp-bullet-list">
 	<ul>
 		<li><span> Add | Play</span>
-			<p>The Add command adds the item to the end of the Queue. The Play command first checks to see if the item is already in the Queue and then plays the existing item otherwise it does the same as Add and then begins play.</p>
+			<p>The "Add" command adds the item to the end of the Queue. The "Play" command first checks to see if the item is already in the Queue and then plays the existing item otherwise it does the same as Add and then begins play.</p>
+		</li>
+		<li><span> Clear/Play</span>
+			<p>The "Clear/Play" command first clears the Queue then adds the item and begins play.</p>
 		</li>
 		<li><span> Add next | Play next</span>
 			<p>The "Add next" command adds the item immediately after the currently playing or last played item. The "Play next" command first checks to see if the item is already in the Queue and then plays the existing item otherwise it does the same as "Add next" then begins play.</p>
 		</li>
-		<li><span> Clear/Add | Clear/Play</span>
-			<p>The Clear/Add command first clears the Queue then adds the item. The Clear/Play command does the same and then begins play.</p>
-		</li>
 		<li>
 			<p>For the track list in Library Tag and Album views the Play and Clear/Play actions can be configured via a Preferences option to either add the selected track to the Queue or the selected track and all following tracks.</p>
 		</li
+	</ul>
+</div>
+
+<h4>Playlists</h4>
+<p> Creating, editing and managing playlists is done primarily in Library Playlist view. Playlists can also be created via context menu items "Save Queue to playlist", "Set Favorites name" and "Add to playlist".</p>
+<div id="quickhelp-bullet-list">
+	<ul>
+		<li><span> Save Queue to playlist</span>
+			<p>The "Save Queue to playlist" command displays a list of available playlists and adds the item to the end of the selected playlist or a new playlist if one is specified.</p>
+		</li>
+		<li><span> Set Favorites name</span>
+			<p>The "Set Favorites name" command displays an input form for specifying the name of the playlist that contains items favorited by clicking the Heart <i class="far fa-heart"></i> button. If the playlist does not already exist it will be created.</p>
+		</li>
+		<li><span> Add to playlist</span>
+			<p>The "Add to playlist" command displays a list of available playlists and adds the item to the end of the selected playlist or a new playlist if one is specified.</p>
+		</li>
 	</ul>
 </div>
 
@@ -154,7 +170,7 @@
 		</li>
 		<li><i class="far fa-heart sx"></i>
 			<span> Favorite</span>
-			<p>Add the currently selected track in the Queue to the Favorites playlist. Playlists are listed in Library Folder view.</p>
+			<p>Add the currently selected item in the Queue to the Favorites playlist. Playlists are listed in Library Playlist view.</p>
 		</li>
 	</ul>
 </div>
