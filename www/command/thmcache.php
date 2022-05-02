@@ -26,7 +26,7 @@ set_include_path('/var/www/inc');
 require_once 'playerlib.php';
 
 // Image to use when no cover found
-define('NOT_FOUND_JPG', '/var/www/images/notfound.jpg');
+const NOT_FOUND_JPG = '/var/www/images/notfound.jpg';
 
 //
 // MAIN

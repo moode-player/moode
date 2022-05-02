@@ -25,43 +25,45 @@
  *
  */
 
-define('MPD_RESPONSE_ERR', 'ACK');
-define('MPD_RESPONSE_OK',  'OK');
-define('MPD_MUSICROOT',  '/var/lib/mpd/music/');
-define('MPD_PLAYLIST_ROOT', '/var/lib/mpd/playlists/');
-define('PLAYLIST_COVERS_ROOT', '/var/local/www/imagesw/playlist-covers/');
-define('RADIO_LOGOS_ROOT', '/var/local/www/imagesw/radio-logos/');
-define('TMP_IMAGE_PREFIX', '__tmp__');
-define('SQLDB', 'sqlite:/var/local/www/db/moode-sqlite3.db');
-define('SQLDB_PATH', '/var/local/www/db/moode-sqlite3.db');
-define('MOODE_LOG', '/var/log/moode.log');
-define('AUTOCFG_LOG', '/home/pi/autocfg.log');
-define('MPD_LOG', '/var/log/mpd/log');
-define('PORT_FILE', '/tmp/portfile');
-define('THMCACHE_DIR', '/var/local/www/imagesw/thmcache/');
-define('LIBCACHE_BASE', '/var/local/www/libcache');
-define('ALSA_PLUGIN_PATH', '/etc/alsa/conf.d');
-define('SESSION_SAVE_PATH', '/var/local/php');
-define('STATION_EXPORT_DIR', '/var/local/www/imagesw');
-define('MPD_VERSIONS_CONF', '/var/local/www/mpd_versions.conf');
-define('LOGO_ROOT_DIR', 'imagesw/radio-logos/');
-define('DEF_RADIO_COVER', 'images/default-cover-v6.svg');
-define('DEF_COVER', 'images/default-cover-v6.svg');
-define('DEV_ROOTFS_SIZE', '3670016000'); // Bytes (3.5GB)
-define('LOW_DISKSPACE_LIMIT', '524288'); // Bytes (512MB)
+error_reporting(E_ERROR);
+
+// Common
+const MPD_RESPONSE_ERR = 'ACK';
+const MPD_RESPONSE_OK = 'OK';
+const MPD_MUSICROOT = '/var/lib/mpd/music/';
+const MPD_PLAYLIST_ROOT = '/var/lib/mpd/playlists/';
+const PLAYLIST_COVERS_ROOT = '/var/local/www/imagesw/playlist-covers/';
+const RADIO_LOGOS_ROOT = '/var/local/www/imagesw/radio-logos/';
+const TMP_IMAGE_PREFIX = '__tmp__';
+const SQLDB = 'sqlite:/var/local/www/db/moode-sqlite3.db';
+const SQLDB_PATH = '/var/local/www/db/moode-sqlite3.db';
+const MOODE_LOG = '/var/log/moode.log';
+const AUTOCFG_LOG = '/home/pi/autocfg.log';
+const MPD_LOG = '/var/log/mpd/log';
+const PORT_FILE = '/tmp/portfile';
+const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
+const LIBCACHE_BASE = '/var/local/www/libcache';
+const ALSA_PLUGIN_PATH = '/etc/alsa/conf.d';
+const SESSION_SAVE_PATH = '/var/local/php';
+const STATION_EXPORT_DIR = '/var/local/www/imagesw';
+const MPD_VERSIONS_CONF = '/var/local/www/mpd_versions.conf';
+const LOGO_ROOT_DIR = 'imagesw/radio-logos/';
+const DEF_RADIO_COVER = 'images/default-cover-v6.svg';
+const DEF_COVER = 'images/default-cover-v6.svg';
+const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
+const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
+const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
 
 // Size and quality factor for small thumbs
 // Used in thmcache.php, worker.php
-define('THM_SM_W', '80');
-define('THM_SM_H', '80');
-define('THM_SM_Q', '75');
-
-error_reporting(E_ERROR);
+const THM_SM_W = 80;
+const THM_SM_H = 80;
+const THM_SM_Q = 75;
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
-// sqlite3 /var/local/www/db/moode-sqlite3.db "select value from cfg_system where param='feat_bitmask'"
-// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='31671' WHERE param='feat_bitmask'"
+// sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
+// sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97207' WHERE param='feat_bitmask'"
 const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
 const FEAT_AIRPLAY		= 2;		// y Airplay renderer
 const FEAT_MINIDLNA 	= 4;		// y DLNA server
@@ -81,10 +83,6 @@ const FEAT_DEVTWEAKS	= 32768;	//   Developer tweaks
 const FEAT_MULTIROOM	= 65536;	// y Multiroom audio
 //						-------
 //						  97207
-
-// Mirror for footer.php Configure buttons
-$FEAT_INPSOURCE 	= 512;
-$FEAT_MULTIROOM 	= 65536;
 
 // Selective resampling bitmask
 const SOX_UPSAMPLE_ALL			= 3; // Upsample if source < target rate
@@ -108,9 +106,6 @@ const STREAM_RECORDER		= 'Stream Recorder';
 
 // Other constants
 const RECORDER_DEFAULT_ALBUM_TAG	= 'Recorded YYYY-MM-DD';
-
-// Reserved root directory names
-$ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
 
 // Worker message logger
 function workerLog($msg, $mode = 'a') {
@@ -877,7 +872,7 @@ function addItemToQueue($path) {
 	//workerLog($path . ' (' . $ext . ')');
 
 	// Use load for saved playlist, cue sheet, radio station
-	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, $GLOBALS['ROOT_DIRECTORIES']) === false)) {
+	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, ROOT_DIRECTORIES) === false)) {
 		// Radio station special case
 		if (strpos($path, 'RADIO') !== false) {
 			// Check for playlist as URL

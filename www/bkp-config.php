@@ -22,11 +22,11 @@
 
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
-define('TMP_BACKUP_ZIP', '/tmp/backup.zip');
-define('TMP_MOODECFG_INI', '/tmp/moodecfg.ini');
-define('TMP_RESTORE_ZIP', '/tmp/restore.zip');
-define('TMP_SCRIPT_FILE', '/tmp/script');
-define('BACKUP_FILE_PREFIX', 'backup_');
+const TMP_BACKUP_ZIP = '/tmp/backup.zip';
+const TMP_MOODECFG_INI = '/tmp/moodecfg.ini';
+const TMP_RESTORE_ZIP = '/tmp/restore.zip';
+const TMP_SCRIPT_FILE = '/tmp/script';
+const BACKUP_FILE_PREFIX = 'backup_';
 
 playerSession('open', '' ,'');
 

@@ -20,19 +20,12 @@
 
 require_once dirname(__FILE__) . '/../inc/playerlib.php';
 
-define('NUMBER_EXT_TAGS', '2');
+const NUMBER_EXT_TAGS = 2;
 
-//workerLog('playlist.php: cmd=(' . $_GET['cmd'] . ')');
 if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
 	workerLog('playlist.php: Error: $_GET cmd is empty or missing');
 	exit(0);
 }
-/*
-
-playerSession('open', '' ,'');
-session_write_close();
-$dbh = cfgdb_connect();
-*/
 
 //
 // COMMANDS
