@@ -51,7 +51,7 @@
 
 	<!-- Common JS -->
 	<!-- build:js js/lib.min.js defer -->
-	<script src="js/jquery-1.8.2.js" />
+	<script src="js/jquery-1.8.2.js" /></script>
 	<script src="js/jquery-ui/jquery-ui.js" ></script>
 	<script src="js/jquery-ui/jquery.ui.core.js" defer></script>
 	<script src="js/jquery-ui/jquery.ui.widget.js" defer></script>
