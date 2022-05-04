@@ -53,10 +53,11 @@ switch ($_GET['cmd']) {
 		$plName = html_entity_decode($_POST['path']['playlist']);
 		$plMeta = '';
 
+		// Replace with URL if radio station
 		if (count($_POST['path']['items']) == 1 && strpos($_POST['path']['items'][0], '.pls') !== false) {
-			// Radio station
-			$result = parseStationFile(file_get_contents(MPD_MUSICROOT . $_POST['path']['items'][0]));
-			$_POST['path']['items'][0] = $result['File1']; // URL
+			$plItemZero = SQLite3::escapeString($_POST['path']['items'][0]);
+			$result = sdbquery("SELECT station FROM cfg_radio WHERE name='" . $plItemZero . "'", cfgdb_connect());
+			$_POST['path']['items'][0] = $result[0]['station']; // URL
 		}
 
 		putPlaylistContents($plName, $plMeta, $_POST['path']['items'], FILE_APPEND);
@@ -66,7 +67,6 @@ switch ($_GET['cmd']) {
 		sysCmd('rm "' . MPD_PLAYLIST_ROOT . html_entity_decode($_POST['path']) . '.m3u"');
 		sysCmd('rm "' . PLAYLIST_COVERS_ROOT . html_entity_decode($_POST['path']) . '.jpg"');
 		break;
-	// Save Queue to playlist
     case 'save_queue_to_playlist':
 		$plName = html_entity_decode($_GET['name']);
 		$sock = getMpdSock();
@@ -143,16 +143,14 @@ switch ($_GET['cmd']) {
 			}
 		}
 		break;
-	case 'get_pl_items_fv':
-		// For Folder view
-		echo json_encode(listPlaylistFv(getMpdSock(), $_POST['path']));
+	case 'get_pl_items_fv': // For Folder view
+		echo json_encode(listPlaylistFv($_POST['path']));
 		break;
 	case 'get_playlists':
-		$result = getPlaylists();
-		echo json_encode($result);
+		echo json_encode(getPlaylists());
 		break;
 	case 'get_playlist_contents':
-		$playlist = getPlaylistContents($_POST['path'], cfgdb_connect(), getMpdSock());
+		$playlist = getPlaylistContents($_POST['path']);
 		$array = array('name' => $playlist['name'], 'genre' => $playlist['genre'], 'items' => $playlist['items']);
 		echo json_encode($array);
 		break;
@@ -186,8 +184,10 @@ function getPlaylists() {
 	return $playlists;
 }
 // Return playlist metadata and items
-function getPlaylistContents($plName, $dbh, $sock) {
+function getPlaylistContents($plName) {
 	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
+	$dbh = cfgdb_connect();
+	$sock = getMpdSock();
 
 	$genre = '';
 	$cover = 'local';
@@ -258,24 +258,7 @@ function getPlaylistMetadata($plName) {
 
 	return array('genre' => $genre, 'cover' => $cover);
 }
-// Create or update playlist metadata tags
-function putPlaylistMetadata($plName, $plMeta) {
-	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
-
-	// NOTE: Is there a more efficient way?
-	if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
-		workerLog('putPlaylistMetadata(): File read failed on ' . $plFile);
-	} else {
-		array_splice($plItems, 0, NUMBER_EXT_TAGS, $plMeta);
-		foreach ($plItems as $item) {
-			$contents .= $item . "\n";
-		}
-		if (false == (file_put_contents($plFile, $contents))) {
-			workerLog('putPlaylistMetadata(): File write failed on ' . $plFile);
-		}
-	}
-}
-// Create or update playlist file
+// Create/update playlist file
 function putPlaylistContents($plName, $plMeta, $plItems, $appendFlag = 0) {
 	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
@@ -295,7 +278,24 @@ function putPlaylistContents($plName, $plMeta, $plItems, $appendFlag = 0) {
 		sysCmd('chown root:root "' . $plFile . '"');
 	}
 }
-// Add cover image
+// Create/update playlist metadata
+function putPlaylistMetadata($plName, $plMeta) {
+	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
+
+	// NOTE: Is there a more efficient way?
+	if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
+		workerLog('putPlaylistMetadata(): File read failed on ' . $plFile);
+	} else {
+		array_splice($plItems, 0, NUMBER_EXT_TAGS, $plMeta);
+		foreach ($plItems as $item) {
+			$contents .= $item . "\n";
+		}
+		if (false == (file_put_contents($plFile, $contents))) {
+			workerLog('putPlaylistMetadata(): File write failed on ' . $plFile);
+		}
+	}
+}
+// Add/update cover image
 function putPlaylistCover($plName) {
 	$plTmpImage = PLAYLIST_COVERS_ROOT . TMP_IMAGE_PREFIX . $plName . '.jpg';
 	$plCoverImage = PLAYLIST_COVERS_ROOT . $plName . '.jpg';
@@ -314,18 +314,9 @@ function putPlaylistCover($plName) {
 }
 
 // Return contents of playlist (Folder view)
-function listPlaylistFv($sock, $plName) {
+function listPlaylistFv($plName) {
+	$sock = getMpdSock();
 	sendMpdCmd($sock, 'listplaylist "' . $plName . '"');
 	$plItems = readMpdResp($sock);
 	return parseList($plItems);
-}
-
-// Return MPD socket or exit script
-function getMpdSock() {
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('getMpdSock(): Connection to MPD failed');
-		exit(0);
-	} else {
-		return $sock;
-	}
 }
