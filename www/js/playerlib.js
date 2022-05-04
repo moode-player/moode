@@ -1297,19 +1297,25 @@ function moodeCmd(cmd, path) {
             case 'new_station':
             case 'upd_station':
                 cmd == 'new_station' ? notify('creating_station') : notify('updating_station');
-                $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(return_msg) {
-                    RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
-                    return_msg == 'OK' ? notify(cmd) : notify('validation_check', return_msg, '5_seconds');
-                    $('#ra-refresh').click();
+                $.post('command/radio.php?cmd=' + cmd, {'path': path}, function(msg) {
+                    if (msg == 'OK') {
+                        RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
+                        notify(cmd);
+                    } else {
+                        notify('validation_check', msg, '10_seconds');
+                    }
+                    $('#btn-ra-refresh').click();
                 }, 'json');
                 break;
             case 'del_station':
-                deleteRadioStationObject(path.slice(0,path.lastIndexOf('.')).substr(6));
-                $.post('command/moode.php?cmd=' + cmd, {'path': path}, function() {
+                var stationName = path.slice(0,path.lastIndexOf('.')).substr(6); // Trim RADIO/ and .pls
+                deleteRadioStationObject(stationName);
+                $.post('command/radio.php?cmd=' + cmd, {'path': path}, function() {
                     notify('del_station');
-                    $('#ra-refresh').click();
+                    $('#btn-ra-refresh').click();
                 });
                 break;
+
             // Playlist view
             case 'lsinfo_playlist':
                 renderPlaylistView();
@@ -1332,6 +1338,7 @@ function moodeCmd(cmd, path) {
                     $('#btn-pl-refresh').click();
                 });
                 break;
+
             // Folder view
             case 'lsinfo':
                 $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {
@@ -1503,7 +1510,7 @@ function renderFolderView(data, path, searchstr) {
 // Render Radio view
 function renderRadioView() {
     var data = '';
-    $.getJSON('command/moode.php?cmd=read_cfg_radio', function(data) {
+    $.getJSON('command/radio.php?cmd=get_stations', function(data) {
         // Lazyload method
         var radioViewLazy = GLOBAL.nativeLazyLoad ? '<div class="thumbHW"><img loading="lazy" src="' : '<div class="thumbHW"><img class="lazy-radioview" data-original="';
         // Sort/Group and Show/Hide options
@@ -1524,7 +1531,7 @@ function renderRadioView() {
                 }
             }
             if (data.length > 0) {
-                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Moode', 'stationType': newStationType});
+                $.post('command/radio.php?cmd=put_radioview_show_hide', {'block': 'Moode', 'type': newStationType});
             }
             // Reset
             SESSION.json['radioview_show_hide'] = 'No action,' + showHideOtherStations;
@@ -1537,7 +1544,7 @@ function renderRadioView() {
                 }
             }
             if (data.length > 0) {
-                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Moode geo-fenced', 'stationType': newStationType});
+                $.post('command/radio.php?cmd=put_radioview_show_hide', {'block': 'Moode geo-fenced', 'type': newStationType});
             }
             // Reset
             SESSION.json['radioview_show_hide'] = 'No action,' + showHideOtherStations;
@@ -1551,7 +1558,7 @@ function renderRadioView() {
                 }
             }
             if (data.length > 0) {
-                $.post('command/moode.php?cmd=upd_cfg_radio_show_hide', {'stationBlock': 'Other', 'stationType': newStationType});
+                $.post('command/radio.php?cmd=put_radioview_show_hide', {'block': 'Other', 'type': newStationType});
             }
             // Reset
             SESSION.json['radioview_show_hide'] = showHideMoodeStations + ',No action';
@@ -1668,7 +1675,7 @@ function renderRadioView() {
 
         // Clear search results (if any)
         $('.btnlist-top-ra').show();
-        $("#searchResetRa").hide();
+        $("#btn-ra-search-reset").hide();
         showSearchResetRa = false;
     	$('#ra-filter').val('');
 
@@ -1752,7 +1759,7 @@ function renderRadioView() {
     	}
 
         // Render the list
-		var element = document.getElementById('radiocovers');
+		var element = document.getElementById('radio-covers');
 		element.innerHTML = output;
 		if (currentView == 'radio') lazyLode('radio');
     });
@@ -2284,15 +2291,13 @@ $(document).on('click', '.context-menu a', function(e) {
             }
             break;
         case 'edit_station':
-            $.post('command/moode.php?cmd=readstationfile', {'path': UI.dbEntry[0]}, function(result) {
-                var stationName = path.slice(path.lastIndexOf('/') + 1); // Trim 'RADIO/'
-                stationName = stationName.slice(0, stationName.lastIndexOf('.')); // Trim .pls
+            $.post('command/radio.php?cmd=get_station_contents', {'path': path}, function(result) {
                 GLOBAL.editStationId = result['id']; // This is to pass to the update station routine so it can uniquely identify the row
-        		$('#edit-station-name').val(stationName);
+        		$('#edit-station-name').val(result['name']);
         		$('#edit-station-url').val(result['station']);
                 $('#edit-logoimage').val('');
                 $('#info-toggle-edit-logoimage').css('margin-left','60px');
-                $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + stationName + '.jpg">');
+                $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + result['name'] + '.jpg">');
                 $('#edit-station-tags').css('margin-top', '30px');
                 $('#edit-station-type span').text(getParamOrValue('param', result['type']));
                 $('#edit-station-genre').val(result['genre']);
@@ -3018,7 +3023,7 @@ $('#btn-preferences-update').click(function(e){
                 }, 2000);
             }
             else if (reloadLibrary) {
-                $('#ra-refresh').click();
+                $('#btn-ra-refresh').click();
                 loadLibrary();
             }
             else if (regenThumbsReqd) {
@@ -3086,7 +3091,7 @@ function newCoverImage(files, view) {
         var tags_selector = '#new-station-tags';
         var name_selector = '#new-station-name';
         var cmd = 'set_ralogo_image';
-        var script = 'moode.php';
+        var script = 'radio.php';
     }
     else { // playlist
         var error_selector = '#error-new-plcoverimage';
@@ -3134,7 +3139,7 @@ function editCoverImage(files, view) {
         var tags_selector = '#edit-station-tags';
         var name_selector = '#edit-station-name';
         var cmd = 'set_ralogo_image';
-        var script = 'moode.php';
+        var script = 'radio.php';
     }
     else { // playlist
         var error_selector = '#error-edit-plcoverimage';
@@ -3665,7 +3670,7 @@ $('#index-browse li').on('click', function(e) {
 });
 $('#index-radio li').on('click', function(e) {
     list = SESSION.json['radioview_sort_group'].split(',')[1] == 'No grouping' ? 'radio' : 'radio_headers';
-	listLook('radiocovers li', list, $(this).text());
+	listLook('radio-covers li', list, $(this).text());
 });
 $('#index-playlist li').on('click', function(e) {
     list = SESSION.json['plview_sort_group'].split(',')[1] == 'No grouping' ? 'playlist' : 'playlist_headers';
@@ -4029,7 +4034,7 @@ function lazyLode(view, skip, force) {
  		switch (view) {
  			case 'radio':
  				selector = 'img.lazy-radioview';
- 				container = '#radiocovers';
+ 				container = '#radio-covers';
  				break;
  			case 'tag':
  				if (SESSION.json['library_tagview_covers'] == 'Yes') {

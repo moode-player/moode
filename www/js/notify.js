@@ -66,6 +66,7 @@ function notify(title, msg, duration = '2_seconds') {
 		new_station: 'Station created',
 		upd_station: 'Station updated',
 		del_station: 'Station deleted',
+        blank_entries: 'Name or URL is blank',
         // Multiroom
         querying_receivers: 'Querying receivers...',
         no_receivers_found: 'No receivers found',

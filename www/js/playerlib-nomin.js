@@ -39,9 +39,9 @@ function formatExtraTagsString () {
 }
 
 // Delete station from RADIO.json object array
-function deleteRadioStationObject (station_name) {
+function deleteRadioStationObject (stationName) {
     for (let [key, value] of Object.entries(RADIO.json)) {
-        if (value.name == station_name) {
+        if (value.name == stationName) {
             delete RADIO.json[key];
         }
     }

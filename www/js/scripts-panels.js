@@ -910,17 +910,17 @@ jQuery(document).ready(function($) { 'use strict';
     // RADIO VIEW
     //
     // Refresh the station list
-	$('#ra-refresh').click(function(e) {
+	$('#btn-ra-refresh').click(function(e) {
 		moodeCmd('lsinfo_radio');
         lazyLode('radio');
         $('#database-radio').scrollTo(0, 200);
 		UI.radioPos = -1;
 		storeRadioPos(UI.radioPos)
-        $("#searchResetRa").hide();
+        $("#btn-ra-search-reset").hide();
         showSearchResetRa = false;
 	});
 	// New station modal (+)
-	$('#ra-new').click(function(e) {
+	$('#btn-ra-new').click(function(e) {
 		$('#new-station-name').val('New station');
 		$('#new-station-url').val('http://');
         $('#new-logoimage').val('');
@@ -947,7 +947,7 @@ jQuery(document).ready(function($) { 'use strict';
 	// Radio search
 	$('#ra-filter').keyup(function(e){
 		if (!showSearchResetRa) {
-			$('#searchResetRa').show();
+			$('#btn-ra-search-reset').show();
 			showSearchResetRa = true;
 		}
 
@@ -959,7 +959,7 @@ jQuery(document).ready(function($) { 'use strict';
 			var count = 0;
 
 			if (filter == '') {
-				$("#searchResetRa").hide();
+				$("#btn-ra-search-reset").hide();
 				showSearchResetRa = false;
 			}
 
@@ -979,9 +979,9 @@ jQuery(document).ready(function($) { 'use strict';
 
 		}, SEARCH_TIMEOUT);
 	});
-	$('#searchResetRa').click(function(e) {
+	$('#btn-ra-search-reset').click(function(e) {
 		$('.database-radio li').css('display', 'inline-block');
-        $("#searchResetRa").hide();
+        $("#btn-ra-search-reset").hide();
 		showSearchResetRa = false;
 	});
     // Radio view context menu
@@ -1000,13 +1000,13 @@ jQuery(document).ready(function($) { 'use strict';
     // Create new station
     $('#btn-create-station').click(function(e){
 		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
-			notify('blankentries', 'Station not created');
-		}
-		else {
+			notify('blank_entries', 'Station not created', '10_seconds');
+		} else {
 			moodeCmd('new_station', {
                 'name': $('#new-station-name').val().trim(),
                 'url': $('#new-station-url').val().trim(),
                 'type': getParamOrValue('value', $('#new-station-type span').text()),
+                'logo': 'local',
                 'genre': $('#new-station-genre').val().trim(),
                 'broadcaster': $('#new-station-broadcaster').val().trim(),
                 'language': $('#new-station-language').val().trim(),
@@ -1023,14 +1023,14 @@ jQuery(document).ready(function($) { 'use strict';
     // Update station
 	$('#btn-update-station').click(function(e){
 		if ($('#edit-station-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
-			notify('blankentries', 'Station not updated');
-		}
-		else {
+			notify('blank_entries', 'Station not updated', '10_seconds');
+		} else {
             moodeCmd('upd_station', {
                 'id': GLOBAL.editStationId,
                 'name': $('#edit-station-name').val().trim(),
                 'url': $('#edit-station-url').val().trim(),
                 'type': getParamOrValue('value', $('#edit-station-type span').text()),
+                'logo': 'local',
                 'genre': $('#edit-station-genre').val().trim(),
                 'broadcaster': $('#edit-station-broadcaster').val().trim(),
                 'language': $('#edit-station-language').val().trim(),
@@ -1041,10 +1041,10 @@ jQuery(document).ready(function($) { 'use strict';
                 'geo_fenced': $('#edit-station-geo-fenced span').text(),
                 'home_page': $('#edit-station-home-page').val().trim(),
                 'reserved2': 'NULL'
-            })
+            });
 		}
 	});
-    // Delete statiuon
+    // Delete station
 	$('#btn-del-station').click(function(e){
 		moodeCmd('del_station', UI.dbEntry[0]);
 	});

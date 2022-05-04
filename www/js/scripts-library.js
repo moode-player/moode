@@ -887,7 +887,7 @@ $('#genreheader, #menu-header').on('click', function(e) {
 	}
 	else if (currentView == 'radio') {
 		GLOBAL.searchRadio = '';
-		$('#searchResetRa').click();
+		$('#btn-ra-search-reset').click();
 		setLibMenuAndHeader();
 	}
 	UI.libPos.fill(-2);
@@ -1214,7 +1214,7 @@ $('#database-radio').on('click', 'img', function(e) {
 });
 
 // Radio manager
-$('#radio-manager-btn').click(function(e) {
+$('#btn-ra-manager').click(function(e) {
     var sortGroup = SESSION.json['radioview_sort_group'].split(',');
     var showHide = SESSION.json['radioview_show_hide'].split(',');
     $('#radioview-sort-tag span').text(sortGroup[0]);
@@ -1342,7 +1342,7 @@ $('#btn-upd-radio-manager').click(function(e) {
             else {
                 notify('settings_updated');
                 setTimeout(function() {
-                    $('#ra-refresh').click();
+                    $('#btn-ra-refresh').click();
                 }, DEFAULT_TIMEOUT);
             }
         }

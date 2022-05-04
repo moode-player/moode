@@ -1477,25 +1477,6 @@ function parseCfgMpd($dbh) {
 	return $array;
 }
 
-// Parse radio station .pls file
-function parseStationFile($resp) {
-	if (is_null($resp) ) {
-		return 'parseStationFile(): Response is null';
-	}
-	else {
-		$array = array();
-		$line = strtok($resp, "\n");
-
-		while ($line) {
-			list ($element, $value) = explode("=", $line, 2);
-			$array[$element] = $value;
-			$line = strtok("\n");
-		}
-	}
-
-	return $array;
-}
-
 // parse play history log
 function parsePlayHist($resp) {
 	if (is_null($resp) ) {
@@ -2964,20 +2945,6 @@ function waitForIpAddr($iface, $timeout_secs, $sleep_time = 2) {
 
 	return $ipaddr;
 }
-function ___waitForIpAddr($iface, $maxloops = 3, $sleeptime = 3000000) {
-	for ($i = 0; $i < $maxloops; $i++) {
-		$ipaddr = sysCmd('ip addr list ' . $iface . " | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
-		if (!empty($ipaddr[0])) {
-			break;
-		}
-		else {
-			workerLog('worker: ' . $iface .' wait '. $i . ' for IP address');
-			usleep($sleeptime);
-		}
-	}
-
-	return $ipaddr;
-}
 
 function getHostIp() {
 	$eth0ip = '';
@@ -3843,4 +3810,14 @@ function scanForMPDHosts() {
 	$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
 	$scan_results = sysCmd('nmap -Pn -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
 	return sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2');
+}
+
+// Return MPD socket or exit script
+function getMpdSock() {
+	if (false === ($sock = openMpdSock('localhost', 6600))) {
+		workerLog('getMpdSock(): Connection to MPD failed');
+		exit(0);
+	} else {
+		return $sock;
+	}
 }
