@@ -18,11 +18,12 @@
 New features
 
 - NEW: Support for multiple WiFi networks
-- NEW: Dedicated Library Playlist view with covers
+- NEW: Library Playlist view with covers
 - NEW: RaspiOS 64-bit moOde image
 
 Updates
 
+- UPD: Bump to CamillaDSP 1.0.0 + CamillaGUI 1.0
 - UPD: Store WiFi and AP mode PSK's (passwords) in backup zip
 - UPD: Replace auto-reboot in Restore by "reboot required" message
 - UPD: Add option to include playlists in Backup/Restore
