@@ -54,9 +54,9 @@ switch ($_GET['cmd']) {
 		$plMeta = '';
 
 		// Replace with URL if radio station
-		if (count($_POST['path']['items']) == 1 && strpos($_POST['path']['items'][0], '.pls') !== false) {
-			$plItemZero = SQLite3::escapeString($_POST['path']['items'][0]);
-			$result = sdbquery("SELECT station FROM cfg_radio WHERE name='" . $plItemZero . "'", cfgdb_connect());
+		if (count($_POST['path']['items']) == 1 && substr($_POST['path']['items'][0], -4) == '.pls') {
+			$stName = substr($_POST['path']['items'][0], 6, -4); // Trim RADIO/ and .pls
+			$result = sdbquery("SELECT station FROM cfg_radio WHERE name='" . SQLite3::escapeString($stName) . "'", cfgdb_connect());
 			$_POST['path']['items'][0] = $result[0]['station']; // URL
 		}
 
