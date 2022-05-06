@@ -130,7 +130,8 @@ function validateInput($cmd, $stName, $stFile, $stUrl, $stRowId) {
 
 	if ($cmd == 'upd_station') {
 		// NOTE: Client prevents pls name change so check for existing station with same URL
-		if (true !== sdbquery("SELECT id FROM cfg_radio WHERE id != '" . $stRowId . "' " . "AND station = '" . $stUrl . "'", $dbh)) {
+		if (true !== sdbquery("SELECT id FROM cfg_radio WHERE id != '" . $stRowId . "' " .
+			"AND station = '" . $stUrl . "'", $dbh)) {
 			$msg = 'A station with same URL already exists';
 		} else {
 			$msg = 'OK';
