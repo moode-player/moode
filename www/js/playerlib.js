@@ -1276,6 +1276,7 @@ function renderPlayqueue(state) {
 }
 
 // Handle commands for Queue and Library views
+// TODO: queueCmd()
 function moodeCmd(cmd, path) {
 	//console.log('moodeCmd: ' + cmd + ' | ' + path);
     var folderViewCmds = ['lsinfo', 'get_pl_items_fv'];
@@ -1292,7 +1293,7 @@ function moodeCmd(cmd, path) {
         switch (cmd) {
             // Radio view
             case 'lsinfo_radio':
-                renderRadioView();
+                renderRadioView(); // TODO: Do directly
                 break;
             case 'new_station':
             case 'upd_station':
@@ -1318,10 +1319,10 @@ function moodeCmd(cmd, path) {
 
             // Playlist view
             case 'lsinfo_playlist':
-                renderPlaylistView();
+                renderPlaylistView(); // TODO: Do directly
                 break;
-            case 'get_playlist_names':
-                renderPlaylistNames(path); // Add to playlist modal
+            case 'get_playlist_names': // TODO: Do directly
+                renderPlaylistNames(path); // Loads the playlist-items selector for "Add to playlist" modal
                 break;
             case 'new_playlist':
             case 'upd_playlist':
@@ -2314,7 +2315,7 @@ $(document).on('click', '.context-menu a', function(e) {
         		$('#edit-station-modal').modal();
             }, 'json');
             break;
-        case 'del_station':
+        case 'delete_station':
     		$('#station-path').html(path.slice(0,path.lastIndexOf('.')).substr(6)); // Trim 'RADIO/' and '.pls'
     		$('#delete-station-modal').modal();
             break;
@@ -2355,7 +2356,7 @@ $(document).on('click', '.context-menu a', function(e) {
         		$('#edit-playlist-modal').modal();
             }, 'json');
             break;
-        case 'del_playlist':
+        case 'delete_playlist':
     		$('#playlist-path').html(path)
     		$('#delete-playlist-modal').modal();
             break;
@@ -2380,7 +2381,7 @@ $(document).on('click', '.context-menu a', function(e) {
     		$('#move-playlist-item-newpos').val(path + 1);
             $('#move-playlist-item').show();
             break;
-        case 'add_to_playlist': // From the radio station context menu
+        case 'get_playlist_names': // From the radio station context menu
             var station_name = path.slice(path.lastIndexOf('/') + 1); // Trim RADIO
             station_name = station_name.slice(0, station_name.lastIndexOf('.')); // and .pls
             moodeCmd('get_playlist_names', {'name': station_name, 'files': [path]});
