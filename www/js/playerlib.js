@@ -2200,11 +2200,10 @@ $(document).on('click', '.context-menu a', function(e) {
             var cmd = '';
             if ($('#pq-' + (UI.dbEntry[0] + 1) + ' .pll2').html().substr(0, 2) == '<i') { // Has icon (fa-microphone)
                 cmd = 'station_info';
-            }
-            else {
+            } else {
                 cmd = 'track_info';
             }
-            $.getJSON('command/queue.php?cmd=get_playqueue_item_file&songpos=' + UI.dbEntry[0], function(data) {
+            $.getJSON('command/queue.php?cmd=get_playqueue_item_tag&songpos=' + UI.dbEntry[0] + '&tag=file', function(data) {
              	if (data != '') {
                     audioInfo(cmd, data);
                 }
@@ -2681,14 +2680,14 @@ $('#btn-clockradio-update').click(function(e){
 		$('#clockradio-icon').addClass('clockradio-off');
 	}
 
-	// NOTE: UI.dbEntry[0] = Queue song pos or -1 depending on whether modal was launched from context menu "Set for clock radio" or Configuration modal "Clock radio"
+	// NOTE: UI.dbEntry[0] = Queue song pos or -1 depending on whether modal was launched from
+    // context menu "Set for clock radio" or Configuration modal "Clock radio"
 	if (UI.dbEntry[0] != '-1') {
-        $.getJSON('command/queue.php?cmd=get_playqueue_item_file&songpos=' + UI.dbEntry[0], function(data) {
+        $.getJSON('command/queue.php?cmd=get_playqueue_item_tag&songpos=' + UI.dbEntry[0] + '&tag=file', function(data) {
             SESSION.json['clkradio_item'] = data;
             updateClockRadioCfgSys();
         });
-	}
-    else {
+	} else {
         updateClockRadioCfgSys();
     }
 
@@ -4151,16 +4150,23 @@ function audioPlayback() {
     var cmd = MPD.json['artist'] == 'Radio station' ? 'station_info' : 'track_info';
     audioInfo(cmd, MPD.json['file'], 'playback');
 }
-// Track/Audio info: cmd = type of dialog, path = song file, dialog for m menu Audio info
-function audioInfo(cmd, path, dialog){
-	$('#audioinfo-modal .modal-body').load('audioinfo.php', function(){
-        GLOBAL.scriptSection == 'configs' ? $('#audioinfo-tabs').css('display', 'none') : $('#audioinfo-tabs').css('display', 'flex');
+// Track/Station/Playback info
+// cmd = info type, path = song file path, tab = 'playback' for m menu Audio info
+function audioInfo(cmd, path, activeTab){
+	$('#audioinfo-modal .modal-body').load('audioinfo.php', function() {
+        var tabText = cmd == 'station_info' ? 'Station' : 'Track';
+        var className = activeTab != 'playback' ? 'track' : tab;
+
+        // Display Playback info (no tabs) when launched from configs
+        var value = GLOBAL.scriptSection == 'configs' ? 'none' : 'flex';
+        $('#audioinfo-tabs').css('display', value);
+
 	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {
-			itemInfoModal('trackdata', data, path);
-			if (dialog != 'playback') dialog = 'track';
-			cmd == 'station_info' ? $('#audioinfo-track').text('Station') : $('#audioinfo-track').text('Track');
+            console.log(data);
+			itemInfoModal('trackdata', data);
+			$('#audioinfo-track').text(tabText);
 			$('#audioinfo-modal').removeClass('track playback');
-			$('#audioinfo-modal').addClass(dialog);
+			$('#audioinfo-modal').addClass(className);
 			$('#audioinfo-modal').modal('show');
 	    }, 'json');
 	});

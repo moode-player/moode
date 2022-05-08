@@ -33,7 +33,15 @@ $sock = GetMpdSock();
 
 switch ($_GET['cmd']) {
 	case 'get_playqueue':
-		echo json_encode(getPlayqueue($sock));
+		sendMpdCmd($sock, 'playlistinfo');
+		$resp = readMpdResp($sock);
+		echo json_encode(getPlayqueue($resp));
+		break;
+	case 'get_playqueue_item_tag':
+		// Return the value of the "file" tag for Clock radio and Audio info
+		sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
+		$resp = readMpdResp($sock);
+		echo json_encode(getPlayqueueItemTag($resp, $_GET['tag']));
 		break;
 	case 'delete_playqueue_item':
 		sendMpdCmd($sock, 'delete ' . $_GET['range']);
@@ -42,21 +50,6 @@ switch ($_GET['cmd']) {
 	case 'move_playqueue_item':
 		sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
 		$resp = readMpdResp($sock);
-		break;
-	case 'get_playqueue_item_file': // For Clock Radio
-		sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
-		$resp = readMpdResp($sock);
-
-		$array = array();
-		$line = strtok($resp, "\n");
-
-		while ($line) {
-			list($element, $value) = explode(': ', $line, 2);
-			$array[$element] = $value;
-			$line = strtok("\n");
-		}
-
-		echo json_encode($array['file']);
 		break;
 	case 'add_item':
 	case 'add_item_next':
@@ -165,16 +158,12 @@ if (isset($sock) && $sock !== false) {
 // FUNCTIONS
 //
 
-// Get MPD queue
-function getPlayqueue($sock) {
-	sendMpdCmd($sock, 'playlistinfo');
-	$resp = readMpdResp($sock);
-
+// Return MPD queue
+function getPlayqueue($resp) {
 	if (is_null($resp)) {
-		return NULL;
-	}
-	else {
-		$array = array();
+		return null;
+	} else {
+		$queue = array();
 		$line = strtok($resp,"\n");
 		$idx = -1;
 
@@ -183,18 +172,18 @@ function getPlayqueue($sock) {
 
 			if ($element == 'file') {
 				$idx++;
-				$array[$idx]['file'] = $value;
-				$array[$idx]['fileext'] = getFileExt($value);
-				$array[$idx]['TimeMMSS'] = songTime($array[$idx]['Time']);
+				$queue[$idx]['file'] = $value;
+				$queue[$idx]['fileext'] = getFileExt($value);
+				$queue[$idx]['TimeMMSS'] = songTime($queue[$idx]['Time']);
 			} else {
 				if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
 					// Return only the first of multiple occurrences of the following tags
-					if (!isset($array[$idx][$element])) {
-						$array[$idx][$element] = $value;
+					if (!isset($queue[$idx][$element])) {
+						$queue[$idx][$element] = $value;
 					}
 				} else {
 					// All other tags
-					$array[$idx][$element] = $value;
+					$queue[$idx][$element] = $value;
 				}
 			}
 
@@ -202,7 +191,21 @@ function getPlayqueue($sock) {
 		}
 	}
 
-	return $array;
+	return $queue;
+}
+
+// Return the value of the tag
+function getPlayqueueItemTag($resp, $tag) {
+	$tags = array();
+	$line = strtok($resp, "\n");
+
+	while ($line) {
+		list($element, $value) = explode(': ', $line, 2);
+		$tags[$element] = $value;
+		$line = strtok("\n");
+	}
+
+	return $tags[$tag];
 }
 
 // Add one item (song file, playlist, radio station, directory) to the Queue
@@ -253,7 +256,7 @@ function findInQueue($sock, $tag, $search) {
 		return 'findInQueue(): ' . $tag . ' ' . $search . ' not found';
 	}
 
-	$array = array();
+	$queue = array();
 	$line = strtok($resp, "\n");
 
 	// Return position
@@ -261,7 +264,7 @@ function findInQueue($sock, $tag, $search) {
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
 			if ($element == 'Pos') {
-				$array['Pos'] = $value;
+				$queue['Pos'] = $value;
 				break;
 			}
 
@@ -274,10 +277,10 @@ function findInQueue($sock, $tag, $search) {
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
 			if ($element == 'file') {
-				$array[$i]['file'] = $value;
+				$queue[$i]['file'] = $value;
 			}
 			if ($element == 'Pos') {
-				$array[$i]['Pos'] = $value;
+				$queue[$i]['Pos'] = $value;
 				$i++;
 			}
 
@@ -285,5 +288,5 @@ function findInQueue($sock, $tag, $search) {
 		}
 	}
 
-	return $array;
+	return $queue;
 }
