@@ -865,45 +865,6 @@ function clearLibCacheFiltered() {
 	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
 }
 
-// Add one item (song file, playlist, radio station, directory) to the Queue
-function addItemToQueue($path) {
-	$ext = getFileExt($path);
-	$pl_extensions = array('m3u', 'pls', 'cue');
-	//workerLog($path . ' (' . $ext . ')');
-
-	// Use load for saved playlist, cue sheet, radio station
-	if (in_array($ext, $pl_extensions) || (strpos($path, '/') === false && in_array($path, ROOT_DIRECTORIES) === false)) {
-		// Radio station special case
-		if (strpos($path, 'RADIO') !== false) {
-			// Check for playlist as URL
-			$pls = file_get_contents(MPD_MUSICROOT . $path);
-			$url = parseDelimFile($pls, '=')['File1'];
-			$ext = substr($url, -4);
-			if ($ext == '.pls' || $ext == '.m3u') {
-				$path = $url;
-			}
-		}
-		$cmd = 'load';
-	}
-	// Use add for song file or directory
-	else {
-		$cmd = 'add';
-	}
-
-	return $cmd . ' "' . html_entity_decode($path) . '"';
-}
-
-// Add group of song files to the Queue (Tag/Album view)
-function addGroupToQueue($songs) {
-	$cmds = array();
-
-	foreach ($songs as $song) {
-		array_push($cmds, 'add "' . html_entity_decode($song) . '"');
-	}
-
-	return $cmds;
-}
-
 // Get file extension
 function getFileExt($file) {
 	return substr($file, 0 ,4 ) == 'http' ? '' : strtolower(pathinfo($file, PATHINFO_EXTENSION));
@@ -918,48 +879,6 @@ function parseDelimFile($data, $delim) {
 		list($param, $value) = explode($delim, $line, 2);
 		$array[$param] = $value;
 		$line = strtok("\n");
-	}
-
-	return $array;
-}
-
-// Get MPD queue
-function get_playqueue($sock) {
-	sendMpdCmd($sock, 'playlistinfo');
-	$resp = readMpdResp($sock);
-
-	if (is_null($resp)) {
-		return NULL;
-	}
-	else {
-		$array = array();
-		$line = strtok($resp,"\n");
-		$idx = -1;
-
-		while ($line) {
-			list ($element, $value) = explode(': ', $line, 2);
-
-			if ($element == 'file') {
-				$idx++;
-				$array[$idx]['file'] = $value;
-				$array[$idx]['fileext'] = getFileExt($value);
-				$array[$idx]['TimeMMSS'] = songTime($array[$idx]['Time']);
-			}
-			else {
-				// Return only the first of multiple occurrences of the following tags
-				if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
-					if (!isset($array[$idx][$element])) {
-						$array[$idx][$element] = $value;
-					}
-				}
-				// All other tags
-				else {
-					$array[$idx][$element] = $value;
-				}
-			}
-
-			$line = strtok("\n");
-		}
 	}
 
 	return $array;
@@ -1406,50 +1325,6 @@ function parseCurrentSong($sock) {
 		//workerLog(print_r($array, true));
 		return $array;
 	}
-}
-
-// Find a file or album in the Queue
-function findInQueue($sock, $tag, $search) {
-	sendMpdCmd($sock, 'playlistfind ' . $tag . ' "' . $search . '"');
-	$resp = readMpdResp($sock);
-
-	if ($resp == "OK\n") {
-		return 'findInQueue(): ' . $tag . ' ' . $search . ' not found';
-	}
-
-	$array = array();
-	$line = strtok($resp, "\n");
-
-	// Return position
-	if ($tag == 'file') {
-		while ($line) {
-			list ($element, $value) = explode(": ", $line, 2);
-			if ($element == 'Pos') {
-				$array['Pos'] = $value;
-				break;
-			}
-
-			$line = strtok("\n");
-		}
-	}
-	// Return files and positions
-	else if ($tag == 'album') {
-		$i = 0;
-		while ($line) {
-			list ($element, $value) = explode(": ", $line, 2);
-			if ($element == 'file') {
-				$array[$i]['file'] = $value;
-			}
-			if ($element == 'Pos') {
-				$array[$i]['Pos'] = $value;
-				$i++;
-			}
-
-			$line = strtok("\n");
-		}
-	}
-
-	return $array;
 }
 
 // parse cfg_mpd settings

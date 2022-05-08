@@ -38,13 +38,12 @@ if (false === ($sock = openMpdSock('localhost', 6600))) {
 $jobs = array(
 	'reboot', 'poweroff', 'updclockradio', 'update_library'
 );
+//DELETE
 $playqueue_cmds = array(
-	'add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
-	'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next'/*, 'clear_add_group'*/
 );
+
 $other_mpd_cmds = array(
 	'updvolume', 'mutetxvol' , 'getmpdstatus', 'lsinfo', 'search', 'loadlib',
-	'get_playqueue', 'delete_playqueue_item', 'move_playqueue_item', 'get_playqueue_item_file',
 	'station_info', 'track_info',
 	'mutetxvol', 'upd_tx_adv_toggle', 'upd_rx_adv_toggle'
 );
@@ -209,107 +208,6 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 			echo json_encode('OK');
 			break;
 
-		// Queue commands for single items: Songs, Radio stations, Stored playlists, Directories
-		case 'add_item':
-		case 'add_item_next':
-			$status = parseStatus(getMpdStatus($sock));
-			$cmds = array(addItemToQueue($_POST['path']));
-			if ($_GET['cmd'] == 'add_item_next') {
-				array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . ($status['song'] + 1));
-			}
-			chainMpdCmds($sock, $cmds);
-			break;
-		case 'play_item':
-		case 'play_item_next':
-			// Search the Queue for the item
-			$search = strpos($_POST['path'], 'RADIO') !== false ? parseDelimFile(file_get_contents(MPD_MUSICROOT . $_POST['path']), '=')['File1'] : $_POST['path'];
-			$result = findInQueue($sock, 'file', $search);
-			// Play already Queued item
-			if (isset($result['Pos'])) {
-				sendMpdCmd($sock, 'play ' . $result['Pos']);
-				$resp = readMpdResp($sock);
-			}
-			// Otherwise play the item after adding it to the Queue
-			else {
-				$status = parseStatus(getMpdStatus($sock));
-				$cmds = array(addItemToQueue($_POST['path']));
-				if ($_GET['cmd'] == 'play_item_next') {
-					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
-					array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . $pos);
-				}
-				else {
-					$pos = $status['playlistlength'];
-				}
-				array_push($cmds, 'play ' . $pos);
-				chainMpdCmds($sock, $cmds);
-			}
-			break;
-		/*case 'clear_add_item':*/
-		case 'clear_play_item':
-			$cmds = array('clear');
-			array_push($cmds, addItemToQueue($_POST['path']));
-			if ($_GET['cmd'] == 'clear_play_item') {
-				array_push($cmds, 'play');
-			}
-			chainMpdCmds($sock, $cmds);
-			playerSession('write', 'toggle_songid', '0');
-		    break;
-		// Queue commands for a group of songs: Genre, Artist or Albums in Tag/Album view
-		case 'add_group':
-		case 'add_group_next':
-			$status = parseStatus(getMpdStatus($sock));
-			$cmds = addGroupToQueue($_POST['path']);
-			if ($_GET['cmd'] == 'add_group_next') {
-				array_push($cmds, 'move ' . $status['playlistlength'] . ':' .
-					($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
-			}
-			chainMpdCmds($sock, $cmds);
-			break;
-        case 'play_group':
-		case 'play_group_next':
-			// Search the Queue for the group
-			sendMpdCmd($sock, 'lsinfo "' . $_POST['path'][0] . '"');
-			$album = parseDelimFile(readMpdResp($sock), ': ')['Album'];
-			$result = findInQueue($sock, 'album', $album);
-			// Group is already in the Queue if first and last file exist sequentially
-			$last = count($_POST['path']) - 1;
-			if ($_POST['path'][0] == $result[0]['file'] && $_POST['path'][$last] == $result[$last]['file']) {
-				$pos = $result[0]['Pos'];
-				sendMpdCmd($sock, 'play ' . $pos);
-				$resp = readMpdResp($sock);
-			}
-			// Otherwise play the group after adding it to the Queue
-			else {
-				$status = parseStatus(getMpdStatus($sock));
-				$cmds = addGroupToQueue($_POST['path']);
-				if ($_GET['cmd'] == 'play_group_next') {
-					$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
-					if ($pos != 0) {
-						array_push($cmds, 'move ' . $status['playlistlength'] . ':' .
-							($status['playlistlength'] + count($_POST['path'])) . ' ' . ($status['song'] + 1));
-					}
-				}
-				else {
-					$pos = $status['playlistlength'];
-				}
-				array_push($cmds, 'play ' . $pos);
-				chainMpdCmds($sock, $cmds);
-			}
-
-			playerSession('write', 'toggle_songid', $pos);
-			break;
-		/*case 'clear_add_group':*/
-        case 'clear_play_group':
-			$cmds = array_merge(array('clear'), addGroupToQueue($_POST['path']));
-
-			if ($_GET['cmd'] == 'clear_play_group') {
-				array_push($cmds, 'play'); // Defaults to pos 0
-			}
-
-			chainMpdCmds($sock, $cmds);
-			playerSession('write', 'toggle_songid', '0');
-			break;
-
 		// Audioinfo
 		case 'station_info':
 			echo json_encode(parseStationInfo($_POST['path']));
@@ -322,38 +220,14 @@ elseif (in_array($_GET['cmd'], $playqueue_cmds) || in_array($_GET['cmd'], $other
 		case 'getmpdstatus':
 			echo json_encode(parseStatus(getMpdStatus($sock)));
 			break;
-		case 'get_playqueue':
-			echo json_encode(get_playqueue($sock));
-			break;
-		case 'delete_playqueue_item':
-			sendMpdCmd($sock, 'delete ' . $_GET['range']);
-			break;
-		case 'move_playqueue_item':
-			sendMpdCmd($sock, 'move ' . $_GET['range'] . ' ' . $_GET['newpos']);
-			break;
-		case 'get_playqueue_item_file': // For Clock Radio
-			sendMpdCmd($sock, 'playlistinfo ' . $_GET['songpos']);
-			$resp = readMpdResp($sock);
-
-			$array = array();
-			$line = strtok($resp, "\n");
-
-			while ($line) {
-				list($element, $value) = explode(': ', $line, 2);
-				$array[$element] = $value;
-				$line = strtok("\n");
-			}
-
-			echo json_encode($array['file']);
-			break;
 		case 'loadlib':
 			//sleep(8); // To simulate a long Library load
 			echo loadLibrary($sock);
         	break;
 		case 'lsinfo':
 			// NOTE: empty or no path indicates call is to return the root list
-			if (isset($_POST['path']) && $_POST['path'] != '') {
-				echo json_encode(searchDB($sock, 'lsinfo', $_POST['path']));
+			if (isset($_GET['path']) && $_GET['path'] != '') {
+				echo json_encode(searchDB($sock, 'lsinfo', $_GET['path']));
 			}
 			else {
 				echo json_encode(searchDB($sock, 'lsinfo'));
@@ -478,28 +352,6 @@ else {
 				echo json_encode($result); // return all rows
 			}
 			break;
-		/*DELETE case 'read_cfg_radio':
-			//$result = sdbquery("select * from cfg_radio where station not in ('DELETED', 'zx reserved 499')", $dbh);
-			$result = cfgdb_read('cfg_radio', $dbh, 'all');
-			echo json_encode($result);
-			break;*/
-		/*DELETE case 'upd_cfg_radio_show_hide':
-			if ($_POST['stationBlock'] == 'Moode') {
-				$where_clause = "where id < '499' and type != 'f'";
-			}
-			elseif ($_POST['stationBlock'] == 'Moode geo-fenced') {
-				$where_clause = "where id < '499' and type != 'f' and geo_fenced = 'Yes'";
-			}
-			elseif ($_POST['stationBlock'] == 'Other') {
-				$where_clause = "where id > '499' and type != 'f'";
-			}
-			$result = sdbquery("update cfg_radio set type='" . $_POST['stationType'] . "' " . $where_clause, $dbh);
-			// Update cfg_system and reset show/hide
-			$result = cfgdb_read('cfg_system', $dbh, 'radioview_show_hide');
-			$radioview_show_hide = explode(',', $result[0]['value']);
-			strpos($_POST['stationBlock'], 'Moode') !== false ?  $radioview_show_hide[0] = 'No action' : $radioview_show_hide[1] = 'No action';
-			playerSession('write', 'radioview_show_hide', $radioview_show_hide[0] . ',' . $radioview_show_hide[1]);
-			break;*/
 		case 'readaudiodev':
 			if (isset($_POST['name'])) {
 				$result = cfgdb_read('cfg_audiodev', $dbh, $_POST['name']);

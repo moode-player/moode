@@ -1114,15 +1114,15 @@ $('#albumcovers').on('click', 'img', function(e) {
     if (SESSION.json['library_onetouch_album'] != 'No action') {
         if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
-            moodeCmd(queueCmd, files);
+            sendQueueCmd(queueCmd, files);
             notify(queueCmd);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Play' ? 'play_group' : 'play_group_next';
-            moodeCmd(queueCmd, files);
+            sendQueueCmd(queueCmd, files);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
-            moodeCmd('clear_play_group', files);
+            sendQueueCmd('clear_play_group', files);
             notify('clear_play_group');
         }
         else if (SESSION.json['library_onetouch_album'] == 'Show tracks') {
@@ -1160,7 +1160,7 @@ $('.ralbum').click(function(e) {
 
         if (SESSION.json['library_onetouch_album'] == 'Add' || SESSION.json['library_onetouch_album'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_album'] == 'Add' ? 'add_group' : 'add_group_next';
-            moodeCmd(queueCmd, files);
+            sendQueueCmd(queueCmd, files);
             notify(queueCmd);
         }
         // NOTE: Show tracks for Album view = Play for this button
@@ -1168,10 +1168,10 @@ $('.ralbum').click(function(e) {
             SESSION.json['library_onetouch_album'] == 'Show tracks') {
             var queueCmd = (SESSION.json['library_onetouch_album'] == 'Play' || SESSION.json['library_onetouch_album'] == 'Show tracks') ?
                 'play_group' : 'play_group_next';
-            moodeCmd(queueCmd, files);
+            sendQueueCmd(queueCmd, files);
         }
         else if (SESSION.json['library_onetouch_album'] == 'Clear/Play') {
-            moodeCmd('clear_play_group', files);
+            sendQueueCmd('clear_play_group', files);
         }
 
 		storeLibPos(UI.libPos);
@@ -1195,15 +1195,15 @@ $('#database-radio').on('click', 'img', function(e) {
     if (SESSION.json['library_onetouch_radio'] != 'No action') {
         if (SESSION.json['library_onetouch_radio'] == 'Add' || SESSION.json['library_onetouch_radio'] == 'Add next') {
             var queueCmd = SESSION.json['library_onetouch_radio'] == 'Add' ? 'add_item' : 'add_item_next';
-            moodeCmd(queueCmd, path);
+            sendQueueCmd(queueCmd, path);
             notify(queueCmd);
         }
         else if (SESSION.json['library_onetouch_radio'] == 'Play' || SESSION.json['library_onetouch_radio'] == 'Play next') {
             var queueCmd = SESSION.json['library_onetouch_radio'] == 'Play' ? 'play_item' : 'play_item_next';
-            moodeCmd(queueCmd, path);
+            sendQueueCmd(queueCmd, path);
         }
         else if (SESSION.json['library_onetouch_radio'] == 'Clear/Play') {
-            moodeCmd('clear_play_item', path);
+            sendQueueCmd('clear_play_item', path);
             notify('clear_play_item');
         }
     }
@@ -1458,10 +1458,12 @@ $('#btn-add-to-playlist').click(function(e){
     if (playlist == '') {
         notify('select_playlist');
     } else {
-        moodeCmd('add_to_playlist', {
-            'playlist': playlist,
-            'items': UI.dbEntry[4]}
-        );
+        var path = {'playlist': playlist, 'items': UI.dbEntry[4]};
+        notify('updating_playlist');
+        $.post('command/playlist.php?cmd=add_to_playlist', {'path': path}, function() {
+            notify('add_to_playlist');
+            $('#btn-pl-refresh').click();
+        }, 'json');
         $('#playlist-names li').removeClass('active');
         UI.dbEntry[4] = '';
     }
@@ -1530,7 +1532,7 @@ $('#context-menu-lib-item a').click(function(e) {
     switch ($(this).data('cmd')) {
         case 'add_item':
         case 'add_item_next':
-    		moodeCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
+    		sendQueueCmd($(this).data('cmd'), filteredSongs[UI.dbEntry[0]].file);
     		notify('add_item');
             break;
         case 'play_item':
@@ -1548,10 +1550,10 @@ $('#context-menu-lib-item a').click(function(e) {
                     files.push(filteredSongs[i].file);
                 }
             }
-            moodeCmd(cmd, files);
+            sendQueueCmd(cmd, files);
             break;
         /*case 'clear_add_item':
-    		moodeCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
+    		sendQueueCmd('clear_add_item', filteredSongs[UI.dbEntry[0]].file);
     		notify('clear_add_item');
     		$('#playlist-save-name').val(''); // Clear saved playlist name if any
             break;
@@ -1570,7 +1572,7 @@ $('#context-menu-lib-item a').click(function(e) {
                     files.push(filteredSongs[i].file);
                 }
             }
-    		moodeCmd(cmd, files);
+    		sendQueueCmd(cmd, files);
     		notify(cmd);
     		$('#playlist-save-name').val(''); // Clear saved playlist name if any
             break;
@@ -1578,7 +1580,7 @@ $('#context-menu-lib-item a').click(function(e) {
             audioInfo('track_info', filteredSongs[UI.dbEntry[0]].file);
             break;
         case 'get_playlist_names':
-            moodeCmd('get_playlist_names', {'name': filteredSongs[UI.dbEntry[0]].title, 'files':[filteredSongs[UI.dbEntry[0]].file]});
+            renderPlaylistNames({'name': filteredSongs[UI.dbEntry[0]].title, 'files':[filteredSongs[UI.dbEntry[0]].file]});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
@@ -1608,20 +1610,20 @@ $('#context-menu-lib-album a').click(function(e) {
     switch ($(this).data('cmd')) {
         case 'add_group':
         case 'add_group_next':
-    		moodeCmd($(this).data('cmd'), files);
+    		sendQueueCmd($(this).data('cmd'), files);
     		notify($(this).data('cmd'));
             break;
         case 'play_group':
         case 'play_group_next':
-		      moodeCmd($(this).data('cmd'), files);
+		      sendQueueCmd($(this).data('cmd'), files);
               break;
         /*case 'clear_add_group':
-        	moodeCmd('clear_add_group', files);
+        	sendQueueCmd('clear_add_group', files);
         	notify($(this).data('cmd'));
             break;
         }*/
         case 'clear_play_group':
-    		moodeCmd('clear_play_group', files);
+    		sendQueueCmd('clear_play_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'tracklist':
@@ -1629,7 +1631,7 @@ $('#context-menu-lib-album a').click(function(e) {
             break;
         case 'get_playlist_names':
             var name = $('#tagview-text-cover').text() == '' ? filteredSongs[0].album : $('#tagview-text-cover').text();
-            moodeCmd('get_playlist_names', {'name': name, 'files': files});
+            renderPlaylistNames({'name': name, 'files': files});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
@@ -1648,18 +1650,18 @@ $('#context-menu-lib-disc a').click(function(e) {
 
     switch ($(this).data('cmd')) {
         case 'add_group':
-    		moodeCmd('add_group', files);
+    		sendQueueCmd('add_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'play_group':
-            moodeCmd('play_group', files);
+            sendQueueCmd('play_group', files);
             break;
         case 'clear_play_group':
-    		moodeCmd('clear_play_group', files);
+    		sendQueueCmd('clear_play_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'get_playlist_names':
-            moodeCmd('get_playlist_names', {'name': filteredSongsDisc[0].album, 'files': files});
+            renderPlaylistNames({'name': filteredSongsDisc[0].album, 'files': files});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
@@ -1676,18 +1678,18 @@ $('#context-menu-lib-album-heading a').click(function(e) {
 
     switch ($(this).data('cmd')) {
         case 'add_group':
-    		moodeCmd('add_group', files);
+    		sendQueueCmd('add_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'play_group':
-            moodeCmd('play_group', files);
+            sendQueueCmd('play_group', files);
             break;
         case 'clear_play_group':
-    		moodeCmd('clear_play_group', files);
+    		sendQueueCmd('clear_play_group', files);
     		notify($(this).data('cmd'));
             break;
         case 'get_playlist_names':
-            moodeCmd('get_playlist_names', {'name': filteredSongsAlbum[0].album, 'files': files});
+            renderPlaylistNames({'name': filteredSongsAlbum[0].album, 'files': files});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;

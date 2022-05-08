@@ -144,7 +144,7 @@ switch ($_GET['cmd']) {
 		}
 		break;
 	case 'get_pl_items_fv': // For Folder view
-		echo json_encode(listPlaylistFv($_POST['path']));
+		echo json_encode(listPlaylistFv($_GET['path']));
 		break;
 	case 'get_playlists':
 		echo json_encode(getPlaylists());

@@ -35,10 +35,10 @@ jQuery(document).ready(function($){ 'use strict';
     $.post('command/moode.php?cmd=updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
 
 	// Load current cfg
-    $.getJSON('command/moode.php?cmd=read_cfgs_no_radio', function(result) {
-    	SESSION.json = result['cfg_system'];
-    	THEME.json = result['cfg_theme'];
-        NETWORK.json = result['cfg_network'];
+    $.getJSON('command/moode.php?cmd=read_cfgs_no_radio', function(data) {
+    	SESSION.json = data['cfg_system'];
+    	THEME.json = data['cfg_theme'];
+        NETWORK.json = data['cfg_network'];
 
         $('#config-back').show();
     	UI.mobile = $(window).width() < 480 ? true : false; /* mobile-ish */
@@ -248,8 +248,8 @@ jQuery(document).ready(function($){ 'use strict';
 
 	// View thmcache status
     $('#view-thmcache-status').click(function(e) {
-        $.getJSON('command/moode.php?cmd=thmcachestatus', function(result) {
-            $('#thmcache-status').html(result);
+        $.getJSON('command/moode.php?cmd=thmcachestatus', function(data) {
+            $('#thmcache-status').html(data);
         });
 	});
 

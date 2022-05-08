@@ -82,8 +82,7 @@ var UI = {
 	// [4]: Num playlist items for use by delete/move item modals
     // [5]: Playname for clock radio
 	dbCmd: '',
-	// [0-3]: folder level
-	// [4]: master index
+	// Either 'lsinfo' or 'get_pl_items_fv'
 	libPos: [-1,-1,-1],
 	// [0]: albums list pos
 	// [1]: album cover pos
@@ -221,9 +220,9 @@ function sendVolCmd(type, cmd, data, async) {
 		async: async,
 		cache: false,
 		data: data,
-		success: function(result) {
+		success: function(data) {
             // Omit the try/catch to enable improved volume knob behavior
-			obj = JSON.parse(result);
+			obj = JSON.parse(data);
 		},
 		error: function() {
 			//debugLog('sendVolCmd(): ' + cmd + ' no data returned');
@@ -641,12 +640,12 @@ function resetPlayCtls() {
 function renderUIVol() {
 	//console.log('renderUIVol()');
 	// Load session vars (required for multi-client)
-    $.getJSON('command/moode.php?cmd=readcfgsystem', function(result) {
-    	if (result === false) {
+    $.getJSON('command/moode.php?cmd=readcfgsystem', function(data) {
+    	if (data === false) {
             console.log('renderUIVol(): No data returned from readcfgsystem');
     	}
         else {
-            SESSION.json = result;
+            SESSION.json = data;
         }
 
     	// Fixed volume (0dB output)
@@ -692,12 +691,12 @@ function renderUI() {
 	var searchStr, searchEngine;
 
     // Load session vars (required for multi-client)
-    $.getJSON('command/moode.php?cmd=readcfgsystem', function(result) {
-        if (result === false) {
+    $.getJSON('command/moode.php?cmd=readcfgsystem', function(data) {
+        if (data === false) {
             console.log('renderUI(): No data returned from readcfgsystem');
     	}
         else {
-            SESSION.json = result;
+            SESSION.json = data;
         }
 
     	// Fixed volume (0dB output)
@@ -1089,7 +1088,7 @@ function genSearchUrl (artist, title, album) {
 // Update active Queue item
 function updateActivePlayqueueItem() {
 	//console.log('updateActivePlayqueueItem()');
-    $.getJSON('command/moode.php?cmd=get_playqueue', function(data) {
+    $.getJSON('command/queue.php?cmd=get_playqueue', function(data) {
         if (data) {
             for (i = 0; i < data.length; i++) {
                 // Current song
@@ -1133,7 +1132,7 @@ function updateActivePlayqueueItem() {
 // Render the Playlist
 function renderPlayqueue(state) {
 	//console.log('renderPlayqueue()');
-    $.getJSON('command/moode.php?cmd=get_playqueue', function(data) {
+    $.getJSON('command/queue.php?cmd=get_playqueue', function(data) {
         //console.log(data);
 		var output = '';
         var playqueueLazy = GLOBAL.nativeLazyLoad === true ? '<img loading="lazy" src=' : '<img class="lazy-playqueue" data-original=';
@@ -1142,7 +1141,7 @@ function renderPlayqueue(state) {
 
         // Save for use in delete/move modals
         UI.dbEntry[4] = typeof(data.length) === 'undefined' ? 0 : data.length;
-		var show_playqueue_thumb = SESSION.json['playlist_art'] == 'Yes' ? true : false;
+		var showPlayqueueThumb = SESSION.json['playlist_art'] == 'Yes' ? true : false;
 
 		// Format playlist items
         if (data) {
@@ -1170,7 +1169,7 @@ function renderPlayqueue(state) {
 				else if (typeof(data[i].Name) !== 'undefined' || (data[i].file.substr(0, 4) == 'http' && typeof(data[i].Artist) === 'undefined' && typeof(data[i].Comment) === 'undefined')) {
                     var logoThumb = typeof(RADIO.json[data[i].file]) === 'undefined' ? '"images/notfound.jpg"' : '"imagesw/radio-logos/thumbs/' +
                         encodeURIComponent(RADIO.json[data[i].file]['name']) + '_sm.jpg"';
-					output += show_playqueue_thumb && (typeof(data[i].Comment) === 'undefined' || data[i].Comment !== 'client=upmpdcli;')  ?
+					output += showPlayqueueThumb && (typeof(data[i].Comment) === 'undefined' || data[i].Comment !== 'client=upmpdcli;')  ?
                         '<span class="playqueue-thumb">' + playqueueLazy + logoThumb + '></span>' : '';
 	                // Line 1 title
 					// Custom name for particular station
@@ -1216,7 +1215,7 @@ function renderPlayqueue(state) {
 				// Song file or upnp url
 				else {
 					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
-					output += show_playqueue_thumb ? '<span class="playqueue-thumb">' + playqueueLazy + '"' + thumb + '"/></span>' : '';
+					output += showPlayqueueThumb ? '<span class="playqueue-thumb">' + playqueueLazy + '"' + thumb + '"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
 	                output += '<span class="pll1">';
@@ -1252,7 +1251,7 @@ function renderPlayqueue(state) {
 		element.innerHTML = output;
 
         if (output) {
-            if (show_playqueue_thumb && currentView.indexOf('playback') == 0) {
+            if (showPlayqueueThumb && currentView.indexOf('playback') == 0) {
     			lazyLode('playqueue');
                 if ($('#cv-playqueue').css('display') == 'block') {
                     lazyLode('cv-playqueue');
@@ -1275,84 +1274,10 @@ function renderPlayqueue(state) {
     });
 }
 
-// Handle commands for Queue and Library views
-// TODO: queueCmd()
-function moodeCmd(cmd, path) {
-	//console.log('moodeCmd: ' + cmd + ' | ' + path);
-    var folderViewCmds = ['lsinfo', 'get_pl_items_fv'];
-    UI.dbCmd = folderViewCmds.includes(cmd) ? cmd : '';
-    var queueCmds = ['add_item', 'play_item', 'clear_play_item', 'add_item_next', 'play_item_next', /*'clear_add_item',*/
-        'add_group', 'play_group', 'clear_play_group', 'add_group_next', 'play_group_next', /*'clear_add_group',*/ 'update_library'];
-
-    // Queue
-	if (queueCmds.includes(cmd)) {
-        GLOBAL.playqueueChanged = true;
-		$.post('command/moode.php?cmd=' + cmd, {'path': path}, function(path) {}, 'json');
-	}
-    else {
-        switch (cmd) {
-            // Radio view
-            case 'lsinfo_radio':
-                renderRadioView(); // TODO: Do directly
-                break;
-            case 'new_station':
-            case 'upd_station':
-                cmd == 'new_station' ? notify('creating_station') : notify('updating_station');
-                $.post('command/radio.php?cmd=' + cmd, {'path': path}, function(msg) {
-                    if (msg == 'OK') {
-                        RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
-                        notify(cmd);
-                    } else {
-                        notify('validation_check', msg, '10_seconds');
-                    }
-                    $('#btn-ra-refresh').click();
-                }, 'json');
-                break;
-            case 'del_station':
-                var stationName = path.slice(0,path.lastIndexOf('.')).substr(6); // Trim RADIO/ and .pls
-                deleteRadioStationObject(stationName);
-                $.post('command/radio.php?cmd=' + cmd, {'path': path}, function() {
-                    notify('del_station');
-                    $('#btn-ra-refresh').click();
-                });
-                break;
-
-            // Playlist view
-            case 'lsinfo_playlist':
-                renderPlaylistView(); // TODO: Do directly
-                break;
-            case 'get_playlist_names': // TODO: Do directly
-                renderPlaylistNames(path); // Loads the playlist-items selector for "Add to playlist" modal
-                break;
-            case 'new_playlist':
-            case 'upd_playlist':
-            case 'add_to_playlist':
-                cmd == 'new_playlist' ? notify('creating_playlist') : notify('updating_playlist');
-                $.post('command/playlist.php?cmd=' + cmd, {'path': path}, function() {
-                    notify(cmd);
-                    $('#btn-pl-refresh').click();
-                }, 'json');
-                break;
-            case 'del_playlist':
-                $.post('command/playlist.php?cmd=' + cmd, {'path': path}, function() {
-                    notify(cmd);
-                    $('#btn-pl-refresh').click();
-                });
-                break;
-
-            // Folder view
-            case 'lsinfo':
-                $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {
-                    renderFolderView(data, path);
-                }, 'json');
-                break;
-            case 'get_pl_items_fv':
-                $.post('command/playlist.php?cmd=' + cmd, {'path': path}, function(data) {
-                    renderFolderView(data, path);
-                }, 'json');
-                break;
-        }
-    }
+// Handle Queue commands
+function sendQueueCmd(cmd, path) {
+    GLOBAL.playqueueChanged = true;
+    $.post('command/queue.php?cmd=' + cmd, {'path': path});
 }
 
 // Render Folder view
@@ -2234,7 +2159,7 @@ $(document).on('click', '.context-menu a', function(e) {
         case 'add_item_next':
         case 'play_item_next':
             if ($('#db-search-results').text() == '') {
-                moodeCmd($(this).data('cmd'), path);
+                sendQueueCmd($(this).data('cmd'), path);
             } else {
                 // Folder view search results
                 var files = [];
@@ -2248,7 +2173,7 @@ $(document).on('click', '.context-menu a', function(e) {
                     files = files.slice(1);
                 }
 
-                moodeCmd($(this).data('cmd').replace('_item', '_group'), files);
+                sendQueueCmd($(this).data('cmd').replace('_item', '_group'), files);
             }
 
             if ($(this).data('cmd').includes('add_')) {
@@ -2279,9 +2204,9 @@ $(document).on('click', '.context-menu a', function(e) {
             else {
                 cmd = 'track_info';
             }
-            $.getJSON('command/moode.php?cmd=get_playqueue_item_file&songpos=' + UI.dbEntry[0], function(result) {
-             	if (result != '') {
-                    audioInfo(cmd, result);
+            $.getJSON('command/queue.php?cmd=get_playqueue_item_file&songpos=' + UI.dbEntry[0], function(data) {
+             	if (data != '') {
+                    audioInfo(cmd, data);
                 }
             });
             break;
@@ -2292,25 +2217,25 @@ $(document).on('click', '.context-menu a', function(e) {
             }
             break;
         case 'edit_station':
-            $.post('command/radio.php?cmd=get_station_contents', {'path': path}, function(result) {
-                GLOBAL.editStationId = result['id']; // This is to pass to the update station routine so it can uniquely identify the row
-        		$('#edit-station-name').val(result['name']);
-        		$('#edit-station-url').val(result['station']);
+            $.post('command/radio.php?cmd=get_station_contents', {'path': path}, function(data) {
+                GLOBAL.editStationId = data['id']; // This is to pass to the update station routine so it can uniquely identify the row
+        		$('#edit-station-name').val(data['name']);
+        		$('#edit-station-url').val(data['station']);
                 $('#edit-logoimage').val('');
                 $('#info-toggle-edit-logoimage').css('margin-left','60px');
-                $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + result['name'] + '.jpg">');
+                $('#preview-edit-logoimage').html('<img src="../imagesw/radio-logos/thumbs/' + data['name'] + '.jpg">');
                 $('#edit-station-tags').css('margin-top', '30px');
-                $('#edit-station-type span').text(getParamOrValue('param', result['type']));
-                $('#edit-station-genre').val(result['genre']);
-                $('#edit-station-broadcaster').val(result['broadcaster']);
-                $('#edit-station-home-page').val(result['home_page']);
-                $('#edit-station-language').val(result['language']);
-                $('#edit-station-country').val(result['country']);
-                $('#edit-station-region').val(result['region']);
-                $('#edit-station-bitrate').val(result['bitrate']);
-                $('#edit-station-format').val(result['format']);
-                $('#edit-station-geo-fenced span').text(result['geo_fenced']);
-                //$('#edit-station-reserved2').val(result['reserved2']);
+                $('#edit-station-type span').text(getParamOrValue('param', data['type']));
+                $('#edit-station-genre').val(data['genre']);
+                $('#edit-station-broadcaster').val(data['broadcaster']);
+                $('#edit-station-home-page').val(data['home_page']);
+                $('#edit-station-language').val(data['language']);
+                $('#edit-station-country').val(data['country']);
+                $('#edit-station-region').val(data['region']);
+                $('#edit-station-bitrate').val(data['bitrate']);
+                $('#edit-station-format').val(data['format']);
+                $('#edit-station-geo-fenced span').text(data['geo_fenced']);
+                //$('#edit-station-reserved2').val(data['reserved2']);
 
         		$('#edit-station-modal').modal();
             }, 'json');
@@ -2320,7 +2245,7 @@ $(document).on('click', '.context-menu a', function(e) {
     		$('#delete-station-modal').modal();
             break;
         case 'edit_playlist':
-            $.post('command/playlist.php?cmd=get_playlist_contents', {'path': path}, function(result) {
+            $.post('command/playlist.php?cmd=get_playlist_contents', {'path': path}, function(data) {
                 $('#delete-playlist-item, #move-playlist-item').hide();
                 $('#playlist-items').css('margin-top', '0');
 
@@ -2330,19 +2255,19 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#info-toggle-edit-plcoverimage').css('margin-left','60px');
                 $('#preview-edit-plcoverimage').html('<img src="../imagesw/playlist-covers/' + path + '.jpg">');
                 $('#edit-playlist-tags').css('margin-top', '2.5em');
-                $('#edit-playlist-genre').val(result['genre']);
+                $('#edit-playlist-genre').val(data['genre']);
 
             	// Playlist items
             	var element = document.getElementById('playlist-items');
             	element.innerHTML = '';
                 var output = '';
 
-                if (result['items'].length > 0) {
-                    UI.dbEntry[4] = result['items'].length;
-                    for (i = 0; i < result['items'].length; i++) {
-                        output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" data-toggle="context" data-target="#context-menu-pl-contents" data-path="' + result['items'][i]['path'] + '">';
-                        output += '<span class="pl-item-line1">' + result['items'][i]['name'] + '</span>';
-                        output += '<span class="pl-item-line2">' + result['items'][i]['line2'] + '</span>';
+                if (data['items'].length > 0) {
+                    UI.dbEntry[4] = data['items'].length;
+                    for (i = 0; i < data['items'].length; i++) {
+                        output += '<li id="pl-item-' + (i + 1) + '" class="pl-item" data-toggle="context" data-target="#context-menu-pl-contents" data-path="' + data['items'][i]['path'] + '">';
+                        output += '<span class="pl-item-line1">' + data['items'][i]['name'] + '</span>';
+                        output += '<span class="pl-item-line2">' + data['items'][i]['line2'] + '</span>';
             			output += '</li>';
                     }
                 }
@@ -2382,9 +2307,8 @@ $(document).on('click', '.context-menu a', function(e) {
             $('#move-playlist-item').show();
             break;
         case 'get_playlist_names': // From the radio station context menu
-            var station_name = path.slice(path.lastIndexOf('/') + 1); // Trim RADIO
-            station_name = station_name.slice(0, station_name.lastIndexOf('.')); // and .pls
-            moodeCmd('get_playlist_names', {'name': station_name, 'files': [path]});
+            var stationName = path.slice(0,path.lastIndexOf('.')).substr(6); // Trim RADIO/ and .pls
+            renderPlaylistNames({'name': stationName, 'files': [path]});
             $('#addto-playlist-name-new').val('');
             $('#add-to-playlist-modal').modal();
             break;
@@ -2464,19 +2388,19 @@ $(document).on('click', '.context-menu a', function(e) {
                 notify('querying_receivers', '', 'infinite');
 
                 var modalType = $(this).data('cmd') == 'multiroom_rx_modal' ? 'full' : 'limited';
-                $.post('command/moode.php?cmd=get_rx_status', function(result) {
-                    //console.log(result);
+                $.post('command/moode.php?cmd=get_rx_status', function(data) {
+                    //console.log(data);
                     $('.ui-pnotify-closer').click();
 
-                    if (result == 'Discovery has not been run') {
+                    if (data == 'Discovery has not been run') {
                         notify('run_receiver_discovery');
                     }
-                    else if (result == 'No receivers found') {
+                    else if (data == 'No receivers found') {
                         notify('no_receivers_found');
                     }
                     else {
                         var output = '';
-                        var rxStatus = result.split(':');
+                        var rxStatus = data.split(':');
                         var count = rxStatus.length;
                         for (var i = 0; i < count; i++) {
                             var item = i.toString();
@@ -2565,7 +2489,7 @@ $(document).on('click', '.context-menu a', function(e) {
     			async: true,
     			cache: false,
     			data: {'cdspconfig': selected_config},
-    			success: function(result) {
+    			success: function(data) {
                     $('.dropdown-cdsp-line span').remove();
                     var selectedHTML = $('a[data-cdspconfig="' + selected_config + '"]').html();
                     $('a[data-cdspconfig="' + selected_config + '"]').html(selectedHTML + '<span id="menu-check-cdsp"><i class="fal fa-check"></i></span>');
@@ -2759,8 +2683,8 @@ $('#btn-clockradio-update').click(function(e){
 
 	// NOTE: UI.dbEntry[0] = Queue song pos or -1 depending on whether modal was launched from context menu "Set for clock radio" or Configuration modal "Clock radio"
 	if (UI.dbEntry[0] != '-1') {
-        $.getJSON('command/moode.php?cmd=get_playqueue_item_file&songpos=' + UI.dbEntry[0], function(result) {
-            SESSION.json['clkradio_item'] = result;
+        $.getJSON('command/queue.php?cmd=get_playqueue_item_file&songpos=' + UI.dbEntry[0], function(data) {
+            SESSION.json['clkradio_item'] = data;
             updateClockRadioCfgSys();
         });
 	}
@@ -4124,7 +4048,9 @@ function submitLibraryUpdate (path) {
     if (GLOBAL.libLoading == false) {
         GLOBAL.libLoading = true;
         GLOBAL.libRendered = false;
-        moodeCmd('update_library', path);
+        $.post('command/moode.php?cmd=update_library', {'path': path}, function(data) {
+            //console.log(data);
+        }, 'json');
         notify('update_library', path);
     }
     else {
@@ -4229,8 +4155,8 @@ function audioPlayback() {
 function audioInfo(cmd, path, dialog){
 	$('#audioinfo-modal .modal-body').load('audioinfo.php', function(){
         GLOBAL.scriptSection == 'configs' ? $('#audioinfo-tabs').css('display', 'none') : $('#audioinfo-tabs').css('display', 'flex');
-	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(result) {
-			itemInfoModal('trackdata', result, path);
+	    $.post('command/moode.php?cmd=' + cmd, {'path': path}, function(data) {
+			itemInfoModal('trackdata', data, path);
 			if (dialog != 'playback') dialog = 'track';
 			cmd == 'station_info' ? $('#audioinfo-track').text('Station') : $('#audioinfo-track').text('Track');
 			$('#audioinfo-modal').removeClass('track playback');
@@ -4240,26 +4166,26 @@ function audioInfo(cmd, path, dialog){
 	});
 }
 
-// Item metadata: id = div id in audioinfo.html, result = metadata
-function itemInfoModal(id, result) {
+// Item metadata: id = div id in audioinfo.html, data = metadata
+function itemInfoModal(id, data) {
     var lines = '';
 
-    for (i = 0; i < result.length; i++) {
-        var key = Object.keys(result[i]);
-        if (typeof(result[i][key]) != 'undefined') {
+    for (i = 0; i < data.length; i++) {
+        var key = Object.keys(data[i]);
+        if (typeof(data[i][key]) != 'undefined') {
             if (key == 'Covers' || key == 'Logo') {
-                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + '<img src="' + result[i][key] + '" style="width:60px;"' + '</span></li>';
+                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + '<img src="' + data[i][key] + '" style="width:60px;"' + '</span></li>';
             }
             else if (key == 'Home page') {
-                if (result[i][key].length > 0) {
-                    lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
+                if (data[i][key].length > 0) {
+                    lines += '<li><span class="left">' + key + '</span><span class="ralign">' + data[i][key] + '</span></li>';
                 }
             }
             else if (key == 'Comment') {
-                lines += '<li><span class="left">' + key + '</span><br><span>' + result[i][key] + '</span></li>';
+                lines += '<li><span class="left">' + key + '</span><br><span>' + data[i][key] + '</span></li>';
             }
             else {
-                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + result[i][key] + '</span></li>';
+                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + data[i][key] + '</span></li>';
             }
         }
     }

@@ -69,10 +69,10 @@ jQuery(document).ready(function($) { 'use strict';
     }
 
 	// Load current cfg
-    $.getJSON('command/moode.php?cmd=read_cfgs', function(result) {
-    	SESSION.json = result['cfg_system'];
-    	THEME.json = result['cfg_theme'];
-    	RADIO.json = result['cfg_radio'];
+    $.getJSON('command/moode.php?cmd=read_cfgs', function(data) {
+    	SESSION.json = data['cfg_system'];
+    	THEME.json = data['cfg_theme'];
+    	RADIO.json = data['cfg_radio'];
 
         // Display viewport size for debugging by re-using the pkgid_suffix col. It's normaly used to test in-place update packages.
         if (SESSION.json['pkgid_suffix'] == 'viewport') {
@@ -91,10 +91,12 @@ jQuery(document).ready(function($) { 'use strict';
         getThumbHW();
 
         // Initiate loads
-        loadLibrary();                  // Tag/Album view
-        moodeCmd('lsinfo', '');         // Folder view
-        moodeCmd('lsinfo_radio');       // Radio view
-        moodeCmd('lsinfo_playlist');    // Playlist view
+        loadLibrary(); // renderTagAlbum');
+        renderRadioView();
+        renderPlaylistView();
+        $.getJSON('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {
+            renderFolderView(data, '');
+        });
 
     	// Radio
     	UI.radioPos = parseInt(SESSION.json['radio_pos']);
@@ -184,8 +186,8 @@ jQuery(document).ready(function($) { 'use strict';
 
         /*
         // NOTE: We may use this in the future
-        $.getJSON('command/moode.php?cmd=clientip', function(result) {
-            UI.clientIP = result;
+        $.getJSON('command/moode.php?cmd=clientip', function(data) {
+            UI.clientIP = data;
             console.log(UI.clientIP);
         });
         */
@@ -495,8 +497,8 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('.prev').click(function(e) {
-        $.getJSON('command/moode.php?cmd=getmpdstatus', function(result) {
-            if (parseInt(MPD.json['time']) > 0 && parseInt(result['elapsed']) > 0) {
+        $.getJSON('command/moode.php?cmd=getmpdstatus', function(data) {
+            if (parseInt(MPD.json['time']) > 0 && parseInt(data['elapsed']) > 0) {
                 // Song file
     			window.clearInterval(UI.knob);
     			if (MPD.json['state'] != 'pause') {
@@ -612,14 +614,14 @@ jQuery(document).ready(function($) { 'use strict';
 		if (MPD.json['artist'] != 'Radio station') {
 			SESSION.json['timecountup'] == '1' ? SESSION.json['timecountup'] = '0' : SESSION.json['timecountup'] = '1';
             $.post('command/moode.php?cmd=updcfgsystem', {'timecountup': SESSION.json['timecountup']});
-            $.getJSON('command/moode.php?cmd=getmpdstatus', function(result) {
+            $.getJSON('command/moode.php?cmd=getmpdstatus', function(data) {
                 if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
                     // Count up
-    				updKnobStartFrom(parseInt(result['elapsed']), MPD.json['state']);
+    				updKnobStartFrom(parseInt(data['elapsed']), MPD.json['state']);
     			}
     			else {
                     // Count down
-    				updKnobStartFrom(parseInt(MPD.json['time'] - parseInt(result['elapsed'])), MPD.json['state']);
+    				updKnobStartFrom(parseInt(MPD.json['time'] - parseInt(data['elapsed'])), MPD.json['state']);
     			}
                 $('#total').html(formatSongTime(MPD.json['time']));
             });
@@ -786,11 +788,22 @@ jQuery(document).ready(function($) { 'use strict';
 	$('.database').on('click', '.db-browse', function(e) {
         //console.log('Folder item click');
 	    if ($(this).hasClass('db-folder') || $(this).hasClass('db-savedplaylist')) {
-			var cmd = $(this).hasClass('db-folder') ? 'lsinfo' : 'get_pl_items_fv';
             UI.dbEntry[3] = $(this).parent().attr('id');
 			UI.dbPos[UI.dbPos[10]] = $(this).parent().attr('id').replace('db-','');
 			++UI.dbPos[10];
-			moodeCmd(cmd, $(this).parent().data('path'));
+
+            var path = $(this).parent().data('path');
+            if ($(this).hasClass('db-folder')) {
+                $.getJSON('command/moode.php?cmd=lsinfo', {'path': path}, function(data) {
+                    UI.dbCmd = 'lsinfo';
+                    renderFolderView(data, path);
+                });
+            } else {
+                $.getJSON('command/playlist.php?cmd=get_pl_items_fv', {'path': path}, function(data) {
+                    UI.dbCmd = 'get_pl_items_fv';
+                    renderFolderView(data, path);
+                });
+            }
 		}
 	});
     // Folder view context menu click
@@ -811,12 +824,14 @@ jQuery(document).ready(function($) { 'use strict';
 			var path = UI.path;
 			var cutpos = path.lastIndexOf('/');
 			if (cutpos !=-1) {
-				var path = path.slice(0,cutpos);
+				path = path.slice(0,cutpos);
 			}
 			else {
 				path = '';
 			}
-			moodeCmd('lsinfo', path);
+            $.getJSON('command/moode.php?cmd=lsinfo', {'path': path}, function(data) {
+                renderFolderView(data, path);
+            });
 
 			if (UI.dbPos[10] == 0) {
 				UI.dbPos.fill(0);
@@ -828,19 +843,24 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#dbfs').val('');
 		UI.dbPos.fill(0);
 		UI.path = '';
-		moodeCmd('lsinfo', '');
+        $.getJSON('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {
+            renderFolderView(data, '');
+        });
 	});
 	$('#db-refresh').click(function(e) {
         UI.dbPos[UI.dbPos[10]] = 0;
-		moodeCmd(UI.dbCmd, UI.path);
-        //console.log(UI.dbCmd, UI.path);
+        $.getJSON('command/moode.php?cmd=' + UI.dbCmd, {'path': UI.path}, function(data) {
+            renderFolderView(data, UI.path);
+        });
 	});
 	$('#db-search-submit').click(function(e) {
 		var searchStr = '';
 		if ($('#dbsearch-alltags').val() != '') {
 			searchStr = $('#dbsearch-alltags').val().trim();
             if (currentView == 'folder') {
-                $.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
+                $.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {
+                    renderFolderView(data, '', searchStr);
+                }, 'json');
             }
             else if (currentView == 'tag' || currentView == 'album') {
                 searchStr = "(any contains '" + searchStr + "')";
@@ -863,7 +883,9 @@ jQuery(document).ready(function($) { 'use strict';
 			if (searchStr != '') {
                 searchStr = searchStr.slice(5);
                 if (currentView == 'folder') {
-                    $.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {renderFolderView(data, '', searchStr);}, 'json');
+                    $.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {
+                        renderFolderView(data, '', searchStr);
+                    }, 'json');
                 }
                 else if (currentView == 'tag' || currentView == 'album') {
                     applyLibFilter('tags', searchStr);
@@ -875,7 +897,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#dbsearch-alltags, #dbsearch-genre, #dbsearch-artist, #dbsearch-album, #dbsearch-title, #dbsearch-albumartist, #dbsearch-date, #dbsearch-composer, #dbsearch-conductor, #dbsearch-performer, #dbsearch-comment, #dbsearch-file').val('');
 		$('#dbsearch-alltags').focus();
 	});
-	$('#dbsearch-modal').on('shown.bs.modal', function() {
+	$('#dbsearch-modal').on('shown.bs.modal', function(e) {
 		$('#db-search-results').css('font-weight', 'normal');
 		$('.database li').removeClass('active');
 		$('#dbsearch-alltags').focus();
@@ -893,15 +915,15 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#context-menu-db-search-results a').click(function(e) {
 		$('#db-search-results').css('font-weight', 'normal');
 	    if ($(this).data('cmd') == 'add_group') {
-	        moodeCmd('add_group', dbFilterResults);
+	        sendQueueCmd('add_group', dbFilterResults);
 	        notify($(this).data('cmd'));
 		}
 	    if ($(this).data('cmd') == 'play_group') {
-	        moodeCmd('play_group', dbFilterResults);
+	        sendQueueCmd('play_group', dbFilterResults);
 	        notify($(this).data('cmd'));
 		}
 	    if ($(this).data('cmd') == 'clear_play_group') {
-	        moodeCmd('clear_play_group', dbFilterResults);
+	        sendQueueCmd('clear_play_group', dbFilterResults);
 	        notify($(this).data('cmd'));
 		}
 	});
@@ -911,7 +933,7 @@ jQuery(document).ready(function($) { 'use strict';
     //
     // Refresh the station list
 	$('#btn-ra-refresh').click(function(e) {
-		moodeCmd('lsinfo_radio');
+        renderRadioView();
         lazyLode('radio');
         $('#database-radio').scrollTo(0, 200);
 		UI.radioPos = -1;
@@ -966,8 +988,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('.database-radio li').each(function(){
 				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
 					$(this).hide();
-				}
-				else {
+				} else {
 					$(this).show();
 					count++;
 				}
@@ -1002,7 +1023,7 @@ jQuery(document).ready(function($) { 'use strict';
 		if ($('#new-station-name').val().trim() == '' || $('#new-station-url').val().trim() == '') {
 			notify('blank_entries', 'Station not created', '10_seconds');
 		} else {
-			moodeCmd('new_station', {
+            var path = {
                 'name': $('#new-station-name').val().trim(),
                 'url': $('#new-station-url').val().trim(),
                 'type': getParamOrValue('value', $('#new-station-type span').text()),
@@ -1017,7 +1038,17 @@ jQuery(document).ready(function($) { 'use strict';
                 'geo_fenced': $('#new-station-geo-fenced span').text(),
                 'home_page': $('#new-station-home-page').val().trim(),
                 'reserved2': 'NULL'
-            });
+            };
+            notify('creating_station');
+            $.post('command/radio.php?cmd=new_station', {'path': path}, function(msg) {
+                if (msg == 'OK') {
+                    RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
+                    notify('new_station');
+                } else {
+                    notify('validation_check', msg, '10_seconds');
+                }
+                $('#btn-ra-refresh').click();
+            }, 'json');
 		}
 	});
     // Update station
@@ -1025,7 +1056,7 @@ jQuery(document).ready(function($) { 'use strict';
 		if ($('#edit-station-name').val().trim() == '' || $('#edit-station-url').val().trim() == '') {
 			notify('blank_entries', 'Station not updated', '10_seconds');
 		} else {
-            moodeCmd('upd_station', {
+            var path = {
                 'id': GLOBAL.editStationId,
                 'name': $('#edit-station-name').val().trim(),
                 'url': $('#edit-station-url').val().trim(),
@@ -1041,12 +1072,27 @@ jQuery(document).ready(function($) { 'use strict';
                 'geo_fenced': $('#edit-station-geo-fenced span').text(),
                 'home_page': $('#edit-station-home-page').val().trim(),
                 'reserved2': 'NULL'
-            });
+            };
+            notify('updating_station');
+            $.post('command/radio.php?cmd=upd_station', {'path': path}, function(msg) {
+                if (msg == 'OK') {
+                    RADIO.json[path['url']] = {'name': path['name'], 'type': path['type'], 'logo': path['logo']};
+                    notify('upd_station');
+                } else {
+                    notify('validation_check', msg, '10_seconds');
+                }
+                $('#btn-ra-refresh').click();
+            }, 'json');
 		}
 	});
     // Delete station
 	$('#btn-del-station').click(function(e){
-		moodeCmd('del_station', UI.dbEntry[0]);
+        var stationName = UI.dbEntry[0].slice(0,UI.dbEntry[0].lastIndexOf('.')).substr(6); // Trim RADIO/ and .pls
+        deleteRadioStationObject(stationName);
+        $.post('command/radio.php?cmd=del_station', {'path': UI.dbEntry[0]}, function() {
+            notify('del_station');
+            $('#btn-ra-refresh').click();
+        });
 	});
 
     //
@@ -1054,7 +1100,7 @@ jQuery(document).ready(function($) { 'use strict';
     //
     // Refresh the playlist list
 	$('#btn-pl-refresh').click(function(e) {
-		moodeCmd('lsinfo_playlist');
+        renderPlaylistView();
         lazyLode('playlist');
         $('#database-playlist').scrollTo(0, 200);
 		UI.playlsitPos = -1;
@@ -1097,8 +1143,7 @@ jQuery(document).ready(function($) { 'use strict';
 			$('.database-playlist li').each(function(){
 				if ($(this).text().search(new RegExp(filter, 'i')) < 0) {
 					$(this).hide();
-				}
-				else {
+				} else {
 					$(this).show();
 					count++;
 				}
@@ -1131,36 +1176,43 @@ jQuery(document).ready(function($) { 'use strict';
     // Create new playlist
     $('#btn-create-playlist').click(function(e){
 		if ($('#new-playlist-name').val().trim() == '') {
-			notify('blankentries', 'Playlist not created');
-		}
-		else {
-			moodeCmd('new_playlist', {
-                'name': $('#new-playlist-name').val().trim(),
-                'genre': $('#new-playlist-genre').val().trim()
-            });
+			notify('blank_entries', 'Playlist not created');
+		} else {
+            var path = {'name': $('#new-playlist-name').val().trim(), 'genre': $('#new-playlist-genre').val().trim()};
+            notify('creating_playlist');
+            $.post('command/playlist.php?cmd=new_playlist', {'path': path}, function() {
+                notify('new_playlist');
+                $('#btn-pl-refresh').click();
+            }, 'json');
 		}
 	});
     // Update playlist
 	$('#btn-update-playlist').click(function(e){
 		if ($('#edit-playlist-name').val().trim() == '') {
-			notify('blankentries', 'Playlist not updated');
-		}
-		else {
+			notify('blank_entries', 'Playlist not updated');
+		} else {
             var items = [];
-            $('#playlist-items li').each(function(){
+            $('#playlist-items li').each(function() {
                 items.push($(this).data('path'));
             });
-
-            moodeCmd('upd_playlist', {
+            var path = {
                 'name': $('#edit-playlist-name').val().trim(),
                 'genre': $('#edit-playlist-genre').val().trim(),
                 'items': items
-            });
+            };
+            notify('updating_playlist');
+            $.post('command/playlist.php?cmd=upd_playlist', {'path': path}, function() {
+                notify('upd_playlist');
+                $('#btn-pl-refresh').click();
+            }, 'json');
 		}
 	});
     // Delete playlist
 	$('#btn-del-playlist').click(function(e){
-		moodeCmd('del_playlist', UI.dbEntry[0]);
+        $.post('command/playlist.php?cmd=del_playlist', {'path': UI.dbEntry[0]}, function() {
+            notify('del_playlist');
+            $('#btn-pl-refresh').click();
+        });
 	});
     // Delete/Move playlist items(s)
     $('#btn-delete-plitem, #btn-move-plitem').click(function(e){
@@ -1169,8 +1221,7 @@ jQuery(document).ready(function($) { 'use strict';
         if ($(this).attr('id') == 'btn-delete-plitem') {
             var beg_pos = $('#delete-playlist-item-begpos').val() - 1;
             var end_pos = $('#delete-playlist-item-endpos').val() - 1;
-        }
-        else {
+        } else {
             var beg_pos = $('#move-playlist-item-begpos').val() - 1;
             var end_pos = $('#move-playlist-item-endpos').val() - 1;
             var new_pos = $('#move-playlist-item-newpos').val() - 1;
@@ -1186,8 +1237,7 @@ jQuery(document).ready(function($) { 'use strict';
         if ($(this).attr('id') == 'btn-delete-plitem') {
             // Delete array items
             items.splice(beg_pos, num_items);
-        }
-        else {
+        } else {
             // Move array items
             var moved;
             items.splice.apply(items, [new_pos, 0].concat(moved = items.splice(beg_pos, num_items)));
@@ -1356,7 +1406,7 @@ jQuery(document).ready(function($) { 'use strict';
             var cmd = 'delete_playqueue_item&range=' + begPos + ':' + (endPos + 1);
         }
 
-        $.get('command/moode.php?cmd=' + cmd);
+        $.post('command/queue.php?cmd=' + cmd);
         notify('queue_item_removed');
 	});
 	// Speed btns on delete modal
@@ -1381,7 +1431,7 @@ jQuery(document).ready(function($) { 'use strict';
             var cmd = 'move_playqueue_item&range=' + begPos + ':' + (endPos + 1) + '&newpos=' + newpos;
         }
 
-        $.get('command/moode.php?cmd=' + cmd);
+        $.post('command/queue.php?cmd=' + cmd);
         notify('queue_item_moved');
 	});
 	// Speed btns on move modal
@@ -1527,12 +1577,12 @@ jQuery(document).ready(function($) { 'use strict';
     $(document).on('click', '.multiroom-modal-onoff', function(e) {
         var item = $(this).data('item');
         var onoff = $('#multiroom-rx-' + item + '-onoff').prop('checked') === true ? 'On' : 'Off';
-        $.post('command/moode.php?cmd=set_rx_status', {'onoff': onoff, 'item': item}, function(result) {}, 'json');
+        $.post('command/moode.php?cmd=set_rx_status', {'onoff': onoff, 'item': item}, function(data) {}, 'json');
     });
     $(document).on('click', '.multiroom-modal-vol', function(e) {
         var item = $(this).data('item');
         var volume = $('#multiroom-rx-' + item + '-vol').text();
-        $.post('command/moode.php?cmd=set_rx_status', {'volume': volume, 'item': item}, function(result) {}, 'json');
+        $.post('command/moode.php?cmd=set_rx_status', {'volume': volume, 'item': item}, function(data) {}, 'json');
         $('#multiroom-rx-' + item + '-vol').html("<div class='busy-spinner-btn'>" + GLOBAL.busySpinnerSVG + "</div>");
         setTimeout(function() {
             $('#multiroom-rx-' + item + '-vol').text(volume);
@@ -1543,7 +1593,7 @@ jQuery(document).ready(function($) { 'use strict';
         var iconClass = $('#multiroom-rx-' + item + '-mute i').hasClass('fa-volume-up') ? 'fa-volume-mute' : 'fa-volume-up';
         var mute = iconClass =='fa-volume-mute' ? 'Muted' : 'Unmuted';
         $('#multiroom-rx-' + item + '-mute').html('<i class="fas ' + iconClass + '"></i>');
-        $.post('command/moode.php?cmd=set_rx_status', {'mute': mute, 'item': item}, function(result) {}, 'json');
+        $.post('command/moode.php?cmd=set_rx_status', {'mute': mute, 'item': item}, function(data) {}, 'json');
     });
 
 	// Info button (i) show/hide toggle
