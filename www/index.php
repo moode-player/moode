@@ -24,6 +24,7 @@
 require_once dirname(__FILE__) . '/inc/playerlib.php';
 
 playerSession('open', '', '');
+$_SESSION['alt_back_link'] = '';
 session_write_close();
 
 $section = basename(__FILE__, '.php');
