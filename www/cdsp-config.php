@@ -325,7 +325,7 @@ if(file_exists($extensions_config)) {
 		$extensions_html .= "\n";
 	}
 
-}else {
+} else {
 	$_cdsp_extensions_show = 'hide';
 }
 
@@ -333,6 +333,7 @@ $cdsp_log_level = $cdsp->getLogLevel();
 $_cdsp_log_level .= "<option value=\"default\" " . (($cdsp_log_level == 'default') ? "selected" : "") . " >Default</option>\n";
 $_cdsp_log_level .= "<option value=\"verbose\" " . (($cdsp_log_level == 'verbose') ? "selected" : "") . " >Verbose</option>\n";
 
+setAltBackLink();
 
 session_write_close();
 
