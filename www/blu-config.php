@@ -18,10 +18,12 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
-require_once dirname(__FILE__) . '/inc/cdsp.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'cdsp.php';
 
-playerSession('open', '' ,'');
+phpSession('open');
 
 // Submitted actions
 if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
@@ -69,7 +71,7 @@ if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 		sysCmd("sed -i '/device/c\device \"" . $_POST['paired_device'] . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 	}
 	// Update MPD output
-	playerSession('write', 'audioout', $_POST['audioout']);
+	phpSession('write', 'audioout', $_POST['audioout']);
 	// Connect device
 	sysCmd('/var/www/command/bt.sh -C ' . '"' . $_POST['paired_device'] . '"');
 	$cmd = '-c';
@@ -84,13 +86,13 @@ if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']
 		$device = isset($_POST['paired_device']) ? $_POST['paired_device'] : $_POST['connected_device'];
 		sysCmd("sed -i '/device/c\device \"" . $device . "\"' " . ALSA_PLUGIN_PATH . '/btstream.conf');
 		// Update MPD output
-		playerSession('write', 'audioout', $_POST['audioout']);
+		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);
 	}
 	// Change to local out, disconnect device
 	else {
 		// Update MPD output
-		playerSession('write', 'audioout', $_POST['audioout']);
+		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);
 		// Disconnect
 		sysCmd('/var/www/command/bt.sh -d ' . '"' . $_POST['connected_device'] . '"');
@@ -103,7 +105,7 @@ if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']
 if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 	// Update MPD output
 	$audioout = $_SESSION['audioout'] == 'Bluetooth' ? 'Local' : $_SESSION['audioout'];
-	playerSession('write', 'audioout', $audioout);
+	phpSession('write', 'audioout', $audioout);
 	setAudioOut($audioout);
 	// Disconnect
 	sysCmd('/var/www/command/bt.sh -d ' . '"' . $_POST['connected_device'] . '"');
@@ -113,12 +115,12 @@ if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 
 // ALSA PCM buffer time
 if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
-	playerSession('write', 'bluez_pcm_buffer', $_POST['pcm_buffer']);
+	phpSession('write', 'bluez_pcm_buffer', $_POST['pcm_buffer']);
 	sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $_POST['pcm_buffer'] . "' /etc/bluealsaaplay.conf");
 	$_SESSION['notify']['title'] = 'Buffer time updated';
 }
 
-session_write_close();
+phpSession('close');
 
 // Command list
 $_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (Default)</option>\n";

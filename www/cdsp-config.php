@@ -18,10 +18,13 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
-require_once dirname(__FILE__) . '/inc/cdsp.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'cdsp.php';
 
-playerSession('open', '' ,'');
+phpSession('open');
+
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 $selectedConfig = isset($_POST['cdsp-config']) ? $_POST['cdsp-config']: NULL;
 $selected_coeff = isset($_POST['cdsp-coeffs']) ? $_POST['cdsp-coeffs']: NULL;
@@ -39,17 +42,17 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		$cfg = $gain . ';' . $convL . ';' . $convR . ';' . $convT;
 		$cdsp->setQuickConvolutionConfig( $cdsp->stringToQuickConvolutionConfig($cfg) );
-		playerSession('write', 'camilladsp_quickconv', $cfg);
+		phpSession('write', 'camilladsp_quickconv', $cfg);
 	}
 
 	if (isset($_POST['cdsp_playbackdevice'])) {
 		$patchPlaybackDevice = $_POST['cdsp_playbackdevice'];
-		playerSession('write', 'cdsp_fix_playback', $patchPlaybackDevice == "1" ? "Yes" : "No");
+		phpSession('write', 'cdsp_fix_playback', $patchPlaybackDevice == "1" ? "Yes" : "No");
 	}
 
 	if (isset($_POST['cdsp-mode'])) {
 		$currentMode = $_SESSION['camilladsp'];
-		playerSession('write', 'camilladsp', $_POST['cdsp-mode']);
+		phpSession('write', 'camilladsp', $_POST['cdsp-mode']);
 		$cdsp->selectConfig($_POST['cdsp-mode']);
 	}
 
@@ -335,7 +338,7 @@ $_cdsp_log_level .= "<option value=\"verbose\" " . (($cdsp_log_level == 'verbose
 
 setAltBackLink();
 
-session_write_close();
+phpSession('close');
 
 waitWorker(1, 'cdsp-config');
 

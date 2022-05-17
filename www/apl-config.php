@@ -18,15 +18,18 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
+$dbh = sqlConnect();
+phpSession('open');
 
 // Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
-		cfgdb_update('cfg_airplay', $dbh, $key, $value);
+		sqlUpdate('cfg_airplay', $dbh, $key, $value);
 
 		if ($value != 'deprecated') {
 			$value = is_numeric($value) ? $value : '"' . $value . '"';
@@ -38,10 +41,10 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	submitJob('airplaysvc', '', 'Changes saved', ($_SESSION['airplaysvc'] == '1' ? 'Airplay receiver restarted' : ''));
 }
 
-session_write_close();
+phpSession('close');
 
 // Load settings
-$result = cfgdb_read('cfg_airplay', $dbh);
+$result = sqlRead('cfg_airplay', $dbh);
 $cfg_airplay = array();
 
 foreach ($result as $row) {

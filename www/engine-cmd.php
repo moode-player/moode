@@ -18,7 +18,9 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'sql.php';
 
 if (false === ($sock = socket_create_listen(0))) {
 	workerLog('engineCmd(): Socket create failed');
@@ -72,7 +74,7 @@ if ($cmd == 'btactive1') {
 	}
 }
 elseif ($cmd == 'inpactive1') {
-	$result = sdbquery("SELECT value FROM cfg_system WHERE param='audioin'", cfgdb_connect());
+	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='audioin'", sqlConnect());
 	$cmd .= ',' . $result[0]['value'];
 }
 

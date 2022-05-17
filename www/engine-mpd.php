@@ -21,9 +21,11 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'sql.php';
 
-$result = sdbquery("SELECT value FROM cfg_system WHERE param='wrkready'", cfgdb_connect());
+$result = sqlQuery("SELECT value FROM cfg_system WHERE param='wrkready'", sqlConnect());
 
 // Check for Worker startup complete
 if ($result[0]['value'] == '0') {

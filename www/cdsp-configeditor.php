@@ -18,13 +18,14 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
-require_once dirname(__FILE__) . '/inc/cdsp.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'cdsp.php';
 
-playerSession('open', '' ,'');
+phpSession('open_ro');
 
 $_camillagui_url = 'http://'. $_SERVER['HTTP_HOST'] . ':15000';
-session_write_close();
 
 waitWorker(1, 'cdsp-configeditor');
 

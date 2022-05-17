@@ -26,8 +26,10 @@
  *
  */
 
-set_include_path('inc');
+set_include_path('/var/www/inc');
 require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
 function outImage($mime, $data) {
 	//workerLog('coverart: outImage(): ' . $mime . ', ' . strlen($data) . ' bytes');
@@ -167,10 +169,9 @@ function parseFolder($path) {
  * MAIN
  */
 
-session_id(playerSession('getsessionid'));
-$return = session_start();
+session_id(phpSession('get_sessionid'));
+phpSession('open_ro');
 $search_pri = $_SESSION['library_covsearchpri'];
-session_write_close();
 //workerLog('coverart: $search_pri=' . $search_pri);
 
 // Get options- cmd line or GET

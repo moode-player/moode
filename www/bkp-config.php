@@ -20,7 +20,9 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
 
 const TMP_BACKUP_ZIP = '/tmp/backup.zip';
 const TMP_MOODECFG_INI = '/tmp/moodecfg.ini';
@@ -28,7 +30,7 @@ const TMP_RESTORE_ZIP = '/tmp/restore.zip';
 const TMP_SCRIPT_FILE = '/tmp/script';
 const BACKUP_FILE_PREFIX = 'backup_';
 
-playerSession('open', '' ,'');
+phpSession('open');
 
 /**
  * Post parameter processing
@@ -163,7 +165,7 @@ else {
 	$_imported_scriptfile = 'No file selected';
 }
 
-session_write_close();
+phpSession('close');
 
 /**
  * Generate data for html templating

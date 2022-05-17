@@ -18,15 +18,19 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'mpd.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
-$sock = openMpdSock('localhost', 6600);
+$sock = getMpdSock();
+$dbh = sqlConnect();
+phpSession('open');
 
 // Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
-	$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
+	$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 
 	// Burr Brown PCM/5 and TAS chips
 	if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchip'], 'TAS') !== false) {
@@ -47,7 +51,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 
 		// Update chip options
-		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
 
 		// Allo Piano 2.1 Hi-Fi DAC device settings
@@ -86,7 +90,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 
 		// Update chip options
-		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
 	}
 
@@ -116,7 +120,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		//sysCmd('amixer -c 0 sset Digital ' . $_POST['config']['boss2_dop_volume'] . '%');
 
 		// Update chip options
-		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
 	}
 
@@ -138,7 +142,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 
 		// Update chip options
-		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Chip options updated';
 	}
 
@@ -151,15 +155,15 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		cfgChipOptions($chipoptions, $chiptype);
 
 		// Update chip options
-		$result = cfgdb_update('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
+		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
 		$_SESSION['notify']['title'] = 'Changes saved';
 	}
 }
 
-session_write_close();
+phpSession('close');
 
 // load chip options
-$result = cfgdb_read('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
+$result = sqlRead('cfg_audiodev', $dbh, $_SESSION['i2sdevice']);
 $array = explode(',', $result[0]['chipoptions']);
 
 // Burr Brown PCM/5 and TAS chips
