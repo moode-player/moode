@@ -21,24 +21,31 @@
 
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
+require_once 'mpd.php';
+require_once 'session.php';
+require_once 'sql.php';
+require_once 'renderer.php';
+
+session_id(phpSession('get_sessionid'));
+phpSession('open');
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
 switch ($option) {
 	case '--bluetooth':
-		restart_bluetooth();
+		restartBluetooth();
 		break;
 	case '--airplay':
-		restart_airplay();
+		restartAirplay();
 		break;
 	case '--spotify':
-		restart_spotify();
+		restartSpotify();
 		break;
 	case '--squeezelite':
-		restart_squeezelite();
+		restartSqueezelite();
 		break;
 	case '--roonbridge':
-		restart_roonbridge();
+		restartRoonbridge();
 		break;
 	default:
 		echo
@@ -55,56 +62,42 @@ With no OPTION print the help text and exit.
 		break;
 }
 
-function restart_bluetooth() {
-	// stop bluetooth
+phpSession('close');
+
+function restartBluetooth() {
+	// Stop bluetooth
 	sysCmd('systemctl stop bluealsa');
 	sysCmd('systemctl stop bluetooth');
 	sysCmd('killall bluealsa-aplay');
 	sysCmd('/var/www/vol.sh -restore');
 
-	// reset to inactive
-	session_id(playerSession('getsessionid'));
-	session_start();
-	playerSession('write', 'btactive', '0');
-	// dismiss active screen
+	// Reset to inactive
+	phpSession('write', 'btactive', '0');
+	// Dismiss active screen
 	sendEngCmd('btactive0');
-	$GLOBALS['btactive'] = '0'; // TODO: Delete line because $btactive is not defined in this script or playerlib.php
-	session_write_close();
 
-	// restore MPD volume and start bluetooth
+	// Restore MPD volume and start bluetooth
 	sysCmd('/var/www/vol.sh -restore');
-	startBt();
+	startBluetooth();
 }
 
-function restart_airplay() {
-	session_id(playerSession('getsessionid'));
-	session_start();
+function restartAirplay() {
 	stopAirplay();
 	startAirplay();
-	session_write_close();
 }
 
-function restart_spotify() {
-	session_id(playerSession('getsessionid'));
-	session_start();
+function restartSpotify() {
 	stopSpotify();
 	startSpotify();
-	session_write_close();
 }
 
-function restart_squeezelite() {
-	session_id(playerSession('getsessionid'));
-	session_start();
+function restartSqueezelite() {
 	stopSqueezelite();
-	playerSession('write', 'rsmaftersl', 'No');
+	phpSession('write', 'rsmaftersl', 'No');
 	startSqueezelite();
-	session_write_close();
 }
 
-function restart_roonbridge() {
-	session_id(playerSession('getsessionid'));
-	session_start();
+function restartRoonbridge() {
 	stopRoonBridge();
 	startRoonBridge();
-	session_write_close();
 }

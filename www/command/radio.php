@@ -18,16 +18,11 @@
  *
  */
 
-require_once dirname(__FILE__) . '/../inc/playerlib.php';
-
-if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
-	workerLog('playlist.php: Error: $_GET cmd is empty or missing');
-	exit(0);
-}
-
-//
-// COMMANDS
-//
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'mpd.php';
+require_once 'session.php';
+require_once 'sql.php';
 
 switch ($_GET['cmd']) {
 	case 'set_ralogo_image':
@@ -77,10 +72,6 @@ switch ($_GET['cmd']) {
 if (isset($sock) && $sock !== false) {
 	closeMpdSock($sock);
 }
-
-//
-// FUNCTIONS
-//
 
 // Return list of stations
 function getStations() {

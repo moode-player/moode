@@ -49,7 +49,7 @@ jQuery(document).ready(function($) { 'use strict';
 	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
 	// Store device pixel ratio
-    $.post('command/moode.php?cmd=updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
+    $.post('command/cfg-table.php?cmd=upd_cfg_system', {'library_pixelratio': window.devicePixelRatio});
 
 	// Store scrollbar width (it will be 0 for overlay scrollbars and > 0 for always on scrollbars
 	var hiddenDiv = $("<div style='position:absolute; top:-10000px; left:-10000px; width:100px; height:100px; overflow:scroll;'></div>").appendTo("body");
@@ -69,7 +69,7 @@ jQuery(document).ready(function($) { 'use strict';
     }
 
 	// Load current cfg
-    $.getJSON('command/moode.php?cmd=read_cfgs', function(data) {
+    $.getJSON('command/cfg-table.php?cmd=get_cfg_tables', function(data) {
     	SESSION.json = data['cfg_system'];
     	THEME.json = data['cfg_theme'];
     	RADIO.json = data['cfg_radio'];
@@ -94,7 +94,7 @@ jQuery(document).ready(function($) { 'use strict';
         loadLibrary(); // renderTagAlbum');
         renderRadioView();
         renderPlaylistView();
-        $.getJSON('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {
+        $.getJSON('command/music-library.php?cmd=lsinfo', {'path': ''}, function(data) {
             renderFolderView(data, '');
         });
 
@@ -240,7 +240,7 @@ jQuery(document).ready(function($) { 'use strict';
     		disableVolKnob();
     		SESSION.json['volknob'] = '0';
     		SESSION.json['volmute'] = '0';
-            $.post('command/moode.php?cmd=updcfgsystem', {'volknob': '0', 'volmute': '0'});
+            $.post('command/cfg-table.php?cmd=upd_cfg_system', {'volknob': '0', 'volmute': '0'});
     	}
     	else {
     		$('#volume').val(SESSION.json['volknob']);
@@ -424,17 +424,6 @@ jQuery(document).ready(function($) { 'use strict';
 		}
 	});
 
-
-    // Clear all the libcache files
-    // NOTE: This is a dev option for convenience. Unhide it in indextpl.html.
-	$('.btn-clear-libcache').on('click', function(e) {
-        $.get('command/moode.php?cmd=clear_libcache_all');
-        notify('clear_libcache', 'Auto-refresh in 2 seconds');
-        setTimeout(function() {
-            location.reload(true);
-        }, 2000);
-	});
-
 	// Mute toggle
 	$('.volume-display').on('click', function(e) {
 		if (SESSION.json['mpdmixer'] == 'none') {
@@ -497,7 +486,7 @@ jQuery(document).ready(function($) { 'use strict';
 		return false;
 	});
 	$('.prev').click(function(e) {
-        $.getJSON('command/moode.php?cmd=getmpdstatus', function(data) {
+        $.getJSON('command/playback.php?cmd=get_mpd_status', function(data) {
             if (parseInt(MPD.json['time']) > 0 && parseInt(data['elapsed']) > 0) {
                 // Song file
     			window.clearInterval(UI.knob);
@@ -531,19 +520,19 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 	$('.btn-toggle').click(function(e) {
 		var cmd = $(this).data('cmd');
-		var toggle = $(this).hasClass('btn-primary') ? '0' : '1';
+		var toggleValue = $(this).hasClass('btn-primary') ? '0' : '1';
 		if (cmd == 'random' && SESSION.json['ashufflesvc'] == '1') {
-            $.get('command/moode.php?cmd=ashuffle', {'ashuffle':toggle});
+            $.post('command/playback.php?cmd=toggle_ashuffle', {'toggle_value':toggleValue});
 		    $('.random').toggleClass('btn-primary');
 		    $('.consume').toggleClass('btn-primary');
-			sendMpdCmd('consume ' + toggle);
+			sendMpdCmd('consume ' + toggleValue);
 		}
 		else {
 			if (cmd == 'consume') {
 				$('#menu-check-consume').toggle();
 			}
 		    $('.' + cmd).toggleClass('btn-primary');
-			sendMpdCmd(cmd + ' ' + toggle);
+			sendMpdCmd(cmd + ' ' + toggleValue);
 		}
 	});
 
@@ -613,8 +602,8 @@ jQuery(document).ready(function($) { 'use strict';
 	$('#countdown-display, #m-countdown').click(function(e) {
 		if (MPD.json['artist'] != 'Radio station') {
 			SESSION.json['timecountup'] == '1' ? SESSION.json['timecountup'] = '0' : SESSION.json['timecountup'] = '1';
-            $.post('command/moode.php?cmd=updcfgsystem', {'timecountup': SESSION.json['timecountup']});
-            $.getJSON('command/moode.php?cmd=getmpdstatus', function(data) {
+            $.post('command/cfg-table.php?cmd=upd_cfg_system', {'timecountup': SESSION.json['timecountup']});
+            $.getJSON('command/playback.php?cmd=get_mpd_status', function(data) {
                 if (SESSION.json['timecountup'] == '1' || parseInt(MPD.json['time']) == 0) {
                     // Count up
     				updKnobStartFrom(parseInt(data['elapsed']), MPD.json['state']);
@@ -794,7 +783,7 @@ jQuery(document).ready(function($) { 'use strict';
 
             var path = $(this).parent().data('path');
             if ($(this).hasClass('db-folder')) {
-                $.getJSON('command/moode.php?cmd=lsinfo', {'path': path}, function(data) {
+                $.getJSON('command/music-library.php?cmd=lsinfo', {'path': path}, function(data) {
                     UI.dbCmd = 'lsinfo';
                     renderFolderView(data, path);
                 });
@@ -829,7 +818,7 @@ jQuery(document).ready(function($) { 'use strict';
 			else {
 				path = '';
 			}
-            $.getJSON('command/moode.php?cmd=lsinfo', {'path': path}, function(data) {
+            $.getJSON('command/music-library.php?cmd=lsinfo', {'path': path}, function(data) {
                 renderFolderView(data, path);
             });
 
@@ -843,7 +832,7 @@ jQuery(document).ready(function($) { 'use strict';
 		$('#dbfs').val('');
 		UI.dbPos.fill(0);
 		UI.path = '';
-        $.getJSON('command/moode.php?cmd=lsinfo', {'path': ''}, function(data) {
+        $.getJSON('command/music-library.php?cmd=lsinfo', {'path': ''}, function(data) {
             renderFolderView(data, '');
         });
 	});
@@ -858,9 +847,9 @@ jQuery(document).ready(function($) { 'use strict';
 		if ($('#dbsearch-alltags').val() != '') {
 			searchStr = $('#dbsearch-alltags').val().trim();
             if (currentView == 'folder') {
-                $.post('command/moode.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {
+                $.getJSON('command/music-library.php?cmd=search' + '&tagname=any', {'query': searchStr}, function(data) {
                     renderFolderView(data, '', searchStr);
-                }, 'json');
+                });
             }
             else if (currentView == 'tag' || currentView == 'album') {
                 searchStr = "(any contains '" + searchStr + "')";
@@ -883,9 +872,9 @@ jQuery(document).ready(function($) { 'use strict';
 			if (searchStr != '') {
                 searchStr = searchStr.slice(5);
                 if (currentView == 'folder') {
-                    $.post('command/moode.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {
+                    $.getJSON('command/music-library.php?cmd=search' + '&tagname=specific', {'query': searchStr}, function(data) {
                         renderFolderView(data, '', searchStr);
-                    }, 'json');
+                    });
                 }
                 else if (currentView == 'tag' || currentView == 'album') {
                     applyLibFilter('tags', searchStr);
@@ -1492,24 +1481,24 @@ jQuery(document).ready(function($) { 'use strict';
 	// Disconnect active renderer
     $(document).on('click', '.disconnect-renderer', function(e) {
 		notify('renderer_disconnect', '', '3_seconds');
-        $.post('command/moode.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
+        $.post('command/renderer.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
 	});
     // Turn off active renderer
     $(document).on('click', '.turnoff-renderer', function(e) {
 		notify('renderer_turnoff', '', '3_seconds');
-        $.post('command/moode.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
+        $.post('command/renderer.php?cmd=disconnect-renderer', {'job': $(this).data('job')});
 	});
 
     // First use help
     $('#playback-firstuse-help').click(function(e) {
         $('#playback-firstuse-help').css('display', '');
         SESSION.json['first_use_help'] = 'n,' + SESSION.json['first_use_help'].split(',')[1];
-        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help']});
+        $.post('command/cfg-table.php?cmd=upd_cfg_system', {'first_use_help': SESSION.json['first_use_help']});
     });
     $('#playbar-firstuse-help').click(function(e) {
         $('#playbar-firstuse-help').css('display', '');
         SESSION.json['first_use_help'] = SESSION.json['first_use_help'].split(',')[0] + ',n';
-        $.post('command/moode.php?cmd=updcfgsystem', {'first_use_help': SESSION.json['first_use_help']});
+        $.post('command/cfg-table.php?cmd=upd_cfg_system', {'first_use_help': SESSION.json['first_use_help']});
     });
 
     // Track info for Playback
@@ -1530,7 +1519,7 @@ jQuery(document).ready(function($) { 'use strict';
 
     // CoverView screen saver reset
     $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #playlist-panel, #menu-bottom').click(function(e) {
-        //console.log('resetscnsaver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
+        //console.log('reset_screen_saver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
         if ($(this).attr('id') == 'menu-bottom') {
             return;
         }
@@ -1563,7 +1552,7 @@ jQuery(document).ready(function($) { 'use strict';
         else if (SESSION.json['scnsaver_timeout'] != 'Never') {
             // Wait a bit to allow other job that may be queued to be processed
             setTimeout(function() {
-                $.get('command/moode.php?cmd=resetscnsaver');
+                $.post('command/playback.php?cmd=reset_screen_saver');
             }, 3000);
         }
     });
@@ -1577,12 +1566,12 @@ jQuery(document).ready(function($) { 'use strict';
     $(document).on('click', '.multiroom-modal-onoff', function(e) {
         var item = $(this).data('item');
         var onoff = $('#multiroom-rx-' + item + '-onoff').prop('checked') === true ? 'On' : 'Off';
-        $.post('command/moode.php?cmd=set_rx_status', {'onoff': onoff, 'item': item}, function(data) {}, 'json');
+        $.post('command/multiroom.php?cmd=set_rx_status', {'onoff': onoff, 'item': item}, function(data) {}, 'json');
     });
     $(document).on('click', '.multiroom-modal-vol', function(e) {
         var item = $(this).data('item');
         var volume = $('#multiroom-rx-' + item + '-vol').text();
-        $.post('command/moode.php?cmd=set_rx_status', {'volume': volume, 'item': item}, function(data) {}, 'json');
+        $.post('command/multiroom.php?cmd=set_rx_status', {'volume': volume, 'item': item}, function(data) {}, 'json');
         $('#multiroom-rx-' + item + '-vol').html("<div class='busy-spinner-btn'>" + GLOBAL.busySpinnerSVG + "</div>");
         setTimeout(function() {
             $('#multiroom-rx-' + item + '-vol').text(volume);
@@ -1593,7 +1582,7 @@ jQuery(document).ready(function($) { 'use strict';
         var iconClass = $('#multiroom-rx-' + item + '-mute i').hasClass('fa-volume-up') ? 'fa-volume-mute' : 'fa-volume-up';
         var mute = iconClass =='fa-volume-mute' ? 'Muted' : 'Unmuted';
         $('#multiroom-rx-' + item + '-mute').html('<i class="fas ' + iconClass + '"></i>');
-        $.post('command/moode.php?cmd=set_rx_status', {'mute': mute, 'item': item}, function(data) {}, 'json');
+        $.post('command/multiroom.php?cmd=set_rx_status', {'mute': mute, 'item': item}, function(data) {}, 'json');
     });
 
 	// Info button (i) show/hide toggle

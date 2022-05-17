@@ -72,21 +72,20 @@ function loadLibrary() {
     miscLibOptions[2] = miscLibOptions[1].indexOf('FolderPath') != -1 ? 'Yes' : 'No';
     miscLibOptions[1] = miscLibOptions[1].indexOf('AlbumID') != -1 ? 'Yes' : 'No';
 
-	var libpop = setTimeout(function(){
+	var loading = setTimeout(function(){
 	    if (currentView == 'tag' || currentView == 'album') {
 	        notify('library_loading');
 	    }
 	}, 2000);
 
-	$.post('command/moode.php?cmd=loadlib', function(data) {
-		clearTimeout(libpop);
+	$.getJSON('command/music-library.php?cmd=load_library', function(data) {
+		clearTimeout(loading);
         $('#lib-content').show();
 		renderLibrary(data);
 		if (currentView == 'album' || currentView == 'tag') setLibMenuAndHeader();
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
-
-	}, 'json');
+	});
 }
 
 function renderLibrary(data) {
@@ -1270,7 +1269,7 @@ $('#btn-upd-radio-manager').click(function(e) {
         SESSION.json['recorder_album_tag'] = $('#recorder-album-tag span').text();
     }
 
-    $.post('command/moode.php?cmd=updcfgsystem', {
+    $.post('command/cfg-table.php?cmd=upd_cfg_system', {
         'radioview_sort_group': SESSION.json['radioview_sort_group'],
         'radioview_show_hide': SESSION.json['radioview_show_hide'],
         'recorder_status': SESSION.json['recorder_status'],
@@ -1287,7 +1286,7 @@ $('#btn-upd-radio-manager').click(function(e) {
             		success: function(msg_key) {
                         if (msg_key == 'recorder_installed') {
                             $('#stream-recorder-options, #context-menu-stream-recorder').show();
-                            $.post('command/moode.php?cmd=updcfgsystem', {'recorder_storage': '/mnt/SDCARD'});
+                            $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_storage': '/mnt/SDCARD'});
                             notify(msg_key, '', '5_seconds');
                         }
                         else {
@@ -1297,7 +1296,7 @@ $('#btn-upd-radio-manager').click(function(e) {
             		error: function() {
                         // A 404 on recorder_cmd.php so we revert to 'not installed'
                         SESSION.json['recorder_status'] = 'Not installed';
-                        $.post('command/moode.php?cmd=updcfgsystem', {'recorder_status': 'Not installed'});
+                        $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_status': 'Not installed'});
                         notify('recorder_plugin_na');
             		}
             	});
@@ -1361,7 +1360,7 @@ $('#btn-pl-manager').click(function(e) {
 $('#btn-upd-playlist-manager').click(function(e) {
     SESSION.json['plview_sort_group'] = $('#plview-sort-tag span').text() + ',' + $('#plview-group-method span').text();
 
-    $.post('command/moode.php?cmd=updcfgsystem', {
+    $.post('command/cfg-table.php?cmd=upd_cfg_system', {
         'plview_sort_group': SESSION.json['plview_sort_group']
         }, function() {
             notify('settings_updated');
@@ -1517,7 +1516,7 @@ $('#context-menu-playback a').click(function(e) {
                 SESSION.json['recorder_status'] = 'Off';
                 $('.playback-context-menu i').removeClass('recorder-on');
             }
-            $.post('command/moode.php?cmd=updcfgsystem', {'recorder_status': SESSION.json['recorder_status']}, function() {
+            $.post('command/cfg-table.php?cmd=upd_cfg_system', {'recorder_status': SESSION.json['recorder_status']}, function() {
                 $.post('command/recorder_cmd.php?cmd=recorder_on_off');
             });
             break;

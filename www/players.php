@@ -18,40 +18,39 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
-
-$dbh = cfgdb_connect();
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'mpd.php';
+require_once 'multiroom.php'; // For getStreamTimeout()
 
 // Scan the network for hosts with open port 6600 (MPD)
-$port_6600_hosts = scanForMPDHosts();
-$this_ipaddr = sysCmd('hostname -I')[0];
+$port6600Hosts = scanForMPDHosts();
+$thisIpAddr = sysCmd('hostname -I')[0];
 
 // Parse the results
 $_players = '';
 $timeout = getStreamTimeout();
-foreach ($port_6600_hosts as $ipaddr) {
-	if ($ipaddr != $this_ipaddr) {
-		if (false === ($result = file_get_contents('http://' . $ipaddr . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
-			debugLog('trx-config.php: get_rx_status failed: ' . $ipaddr);
-		}
-		else {
-			if ($result != 'Unknown command') {  // r740 or higher host
-				$rx_status = explode(',', $result);
+foreach ($port6600Hosts as $ipAddr) {
+	if ($ipAddr != $thisIpAddr) {
+		if (false === ($status = file_get_contents('http://' . $ipAddr . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
+			debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
+		} else {
+			if ($status != 'Unknown command') {  // r740 or higher host
+				$rxStatus = explode(',', $status);
 				// rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0, mastervol_opt_in_1/0, hostname
-				$multiroom_rx_indicator = $rx_status[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
-				// r800 status will have a 6th element (hostname) otherwise sub in ip address
-				$host = count($rx_status) > 5 ? $rx_status[5] : $ipaddr;
-			}
-			else {
-				$multiroom_rx_indicator = '';
-				$host = $ipaddr;
+				$rxIndicator = $rxStatus[1] == 'On' ? '<i class="players-rx-indicator fas fa-rss"></i>' : '';
+				// NOTE: r800 status will have a 6th element (hostname) otherwise use ip address
+				$host = count($rxStatus) > 5 ? $rxStatus[5] : $ipAddr;
+			} else {
+				$rxIndicator = '';
+				$host = $ipAddr;
 			}
 
 			$_players .= sprintf('
 				<li><a href="http://%s" class="btn btn-large">
 				<i class="fas fa-sitemap"></i>
 				<br>%s%s
-				</a></li>', $ipaddr, $host, $multiroom_rx_indicator);
+				</a></li>', $ipAddr, $host, $rxIndicator);
 		}
 	}
 }

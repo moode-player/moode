@@ -32,10 +32,10 @@ jQuery(document).ready(function($){ 'use strict';
 	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
 	// store device pixel ratio
-    $.post('command/moode.php?cmd=updcfgsystem', {'library_pixelratio': window.devicePixelRatio});
+    $.post('command/cfg-table.php?cmd=upd_cfg_system', {'library_pixelratio': window.devicePixelRatio});
 
 	// Load current cfg
-    $.getJSON('command/moode.php?cmd=read_cfgs_no_radio', function(data) {
+    $.getJSON('command/cfg-table.php?cmd=get_cfg_tables_no_radio', function(data) {
     	SESSION.json = data['cfg_system'];
     	THEME.json = data['cfg_theme'];
         NETWORK.json = data['cfg_network'];
@@ -248,7 +248,7 @@ jQuery(document).ready(function($){ 'use strict';
 
 	// View thmcache status
     $('#view-thmcache-status').click(function(e) {
-        $.getJSON('command/moode.php?cmd=thmcachestatus', function(data) {
+        $.getJSON('command/music-library.php?cmd=thumcache_status', function(data) {
             $('#thmcache-status').html(data);
         });
 	});
@@ -290,13 +290,13 @@ jQuery(document).ready(function($){ 'use strict';
         $('#multiroom_tx_adv_options').toggleClass('hide');
         var labelText = $('#multiroom_tx_adv_options_label').html() == 'Advanced (+)' ? 'Advanced (&minus;)' : 'Advanced (&plus;)'
         $('#multiroom_tx_adv_options_label').html(labelText);
-        $.post('command/moode.php?cmd=upd_tx_adv_toggle', {'adv_toggle': labelText});
+        $.post('command/multiroom.php?cmd=upd_tx_adv_toggle', {'adv_toggle': labelText});
     });
     $('#multiroom_rx_adv_options_label').click(function(e) {
         $('#multiroom_rx_adv_options').toggleClass('hide');
         var labelText = $('#multiroom_rx_adv_options_label').html() == 'Advanced (+)' ? 'Advanced (&minus;)' : 'Advanced (&plus;)'
         $('#multiroom_rx_adv_options_label').html(labelText);
-        $.post('command/moode.php?cmd=upd_rx_adv_toggle', {'adv_toggle': labelText});
+        $.post('command/multiroom.php?cmd=upd_rx_adv_toggle', {'adv_toggle': labelText});
     });
 
     // Button "Create Backup"

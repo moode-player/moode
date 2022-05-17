@@ -18,13 +18,17 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
-require_once dirname(__FILE__) . '/inc/eqp.php';
-require_once dirname(__FILE__) . '/inc/cdsp.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'mpd.php';
+require_once 'session.php';
+require_once 'sql.php';
+require_once 'eqp.php';
+require_once 'cdsp.php';
 
-playerSession('open', '' ,'');
+phpSession('open');
+$dbh = sqlConnect();
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
-$dbh = cfgdb_connect();
 
 // AUDIO OUTPUT
 
@@ -38,7 +42,7 @@ if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSIO
 	$mixer_chg = 0;
 
 	// Update SQL table
-	cfgdb_update('cfg_mpd', $dbh, 'device', $_POST['output_device']);
+	sqlUpdate('cfg_mpd', $dbh, 'device', $_POST['output_device']);
 
 	// Submit job
 	$queue_args = $device_chg . ',' . $mixer_chg;
@@ -64,7 +68,7 @@ if (isset($_POST['update_volume_type']) && $_POST['mixer_type'] != $_SESSION['mp
 	$device_chg = 0;
 
 	// Update SQL table
-	cfgdb_update('cfg_mpd', $dbh, 'mixer_type', $_POST['mixer_type']);
+	sqlUpdate('cfg_mpd', $dbh, 'mixer_type', $_POST['mixer_type']);
 
 	// Submit job
 	$queue_args = $device_chg . ',' . $mixer_chg;
@@ -79,7 +83,7 @@ $_reboot_required = 0;
 // Named device
 if (isset($_POST['update_i2s_device'])) {
 	if (isset($_POST['i2sdevice']) && $_POST['i2sdevice'] != $_SESSION['i2sdevice']) {
-		playerSession('write', 'i2sdevice', $_POST['i2sdevice']);
+		phpSession('write', 'i2sdevice', $_POST['i2sdevice']);
 		$title = 'I2S device updated';
 		$msg = $_POST['i2sdevice'] == 'None' ?
 			'<b>Restart required</b><br>After restart select an Output device.' :
@@ -92,7 +96,7 @@ if (isset($_POST['update_i2s_device'])) {
 // Device overlay
 if (isset($_POST['update_i2s_overlay'])) {
 	if (isset($_POST['i2soverlay']) && $_POST['i2soverlay'] != $_SESSION['i2soverlay']) {
-		playerSession('write', 'i2soverlay', $_POST['i2soverlay']);
+		phpSession('write', 'i2soverlay', $_POST['i2soverlay']);
 		$title = 'I2S overlay updated';
 		$msg = $_POST['i2soverlay'] == 'None' ?
 			'<b>Restart required</b><br>After restart select Output device.' :
@@ -105,11 +109,11 @@ if (isset($_POST['update_i2s_overlay'])) {
 // Driver options
 if (isset($_POST['update_drvoptions'])) {
 	if (isset($_POST['drvoptions']) && $_POST['drvoptions'] != 'none') {
-		$result = sdbquery("SELECT driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
+		$result = sqlQuery("SELECT driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 		$driver = explode(',', $result[0]['driver']);
 		$driverupd = $_POST['drvoptions'] == 'Enabled' ? $driver[0] . ',' . $result[0]['drvoptions'] : $driver[0];
 
-		$result = sdbquery("UPDATE cfg_audiodev SET driver='" . $driverupd . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
+		$result = sqlQuery("UPDATE cfg_audiodev SET driver='" . $driverupd . "' WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 		submitJob('i2sdevice', $_SESSION['i2sdevice'], 'Driver options updated', 'Restart required');
 	}
 }
@@ -120,7 +124,7 @@ if (isset($_POST['update_drvoptions'])) {
 if (isset($_POST['update_alsavolume_max'])) {
 	if (isset($_POST['alsavolume_max'])) {
 		submitJob('alsavolume_max', $_POST['alsavolume_max'], 'Max volume updated', '');
-		playerSession('write', 'alsavolume_max', $_POST['alsavolume_max']);
+		phpSession('write', 'alsavolume_max', $_POST['alsavolume_max']);
 	}
 }
 // Output mode
@@ -129,7 +133,7 @@ if (isset($_POST['update_alsa_output_mode'])) {
 		$old_output_mode = $_SESSION['alsa_output_mode'];
 		$new_output_mode = $_POST['alsa_output_mode'];
 		// NOTE: Update session first for functions used in job
-		playerSession('write', 'alsa_output_mode', $new_output_mode);
+		phpSession('write', 'alsa_output_mode', $new_output_mode);
 		submitJob('alsa_output_mode', $old_output_mode, 'Output mode updated', '');
 	}
 }
@@ -147,12 +151,12 @@ if (isset($_POST['update_alsa_loopback'])) {
 			}
 			else {
 				submitJob('alsa_loopback', 'Off', 'Loopback Off', '');
-				playerSession('write', 'alsa_loopback', 'Off');
+				phpSession('write', 'alsa_loopback', 'Off');
 			}
 		}
 		else {
 			submitJob('alsa_loopback', 'On', 'Loopback On', '');
-			playerSession('write', 'alsa_loopback', 'On');
+			phpSession('write', 'alsa_loopback', 'On');
 		}
 	}
 }
@@ -168,7 +172,7 @@ if (isset($_POST['mpdrestart']) && $_POST['mpdrestart'] == 1) {
 // Autoplay last played item after reboot/powerup
 if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 	$_SESSION['notify']['title'] = $_POST['autoplay'] == 1 ? 'Autoplay on' : 'Autoplay off';
-	playerSession('write', 'autoplay', $_POST['autoplay']);
+	phpSession('write', 'autoplay', $_POST['autoplay']);
 }
 
 // Auto-shuffle
@@ -177,7 +181,7 @@ if (isset($_POST['autoplay']) && $_POST['autoplay'] != $_SESSION['autoplay']) {
 if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashufflesvc']) {
 	$_SESSION['notify']['title'] = $_POST['ashufflesvc'] == 1 ? 'Auto-shuffle on' : 'Auto-shuffle off';
 	$_SESSION['notify']['duration'] = 3;
-	playerSession('write', 'ashufflesvc', $_POST['ashufflesvc']);
+	phpSession('write', 'ashufflesvc', $_POST['ashufflesvc']);
 
 	// Turn off MPD random play so no conflict
 	$sock = openMpdSock('localhost', 6600);
@@ -187,14 +191,14 @@ if (isset($_POST['ashufflesvc']) && $_POST['ashufflesvc'] != $_SESSION['ashuffle
 	// Kill the service if indicated
 	if ($_POST['ashufflesvc'] == 0) {
 		sysCmd('killall -s 9 ashuffle > /dev/null');
-		playerSession('write', 'ashuffle', '0');
+		phpSession('write', 'ashuffle', '0');
 		sendMpdCmd($sock, 'consume 0');
 		$resp = readMpdResp($sock);
 	}
 }
 // Mode
 if (isset($_POST['update_ashuffle_mode']) && $_POST['ashuffle_mode'] != $_SESSION['ashuffle_mode']) {
-	playerSession('write', 'ashuffle_mode', $_POST['ashuffle_mode']);
+	phpSession('write', 'ashuffle_mode', $_POST['ashuffle_mode']);
 	if ($_SESSION['ashuffle'] == '1') {
 		$_SESSION['notify']['title'] = 'Mode updated, random turned off';
 		$_SESSION['notify']['duration'] = 3;
@@ -208,7 +212,7 @@ if (isset($_POST['update_ashuffle_mode']) && $_POST['ashuffle_mode'] != $_SESSIO
 // Filter
 if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SESSION['ashuffle_filter']) {
 	$trim_filter = trim($_POST['ashuffle_filter']);
-	playerSession('write', 'ashuffle_filter', ($trim_filter == '' ? 'None' : $trim_filter));
+	phpSession('write', 'ashuffle_filter', ($trim_filter == '' ? 'None' : $trim_filter));
 	if ($_SESSION['ashuffle'] == '1') {
 		$_SESSION['notify']['title'] = 'Filter updated, random turned off';
 		$_SESSION['notify']['duration'] = 3;
@@ -224,35 +228,35 @@ if (isset($_POST['update_ashuffle_filter']) && $_POST['ashuffle_filter'] != $_SE
 
 // Volume step limit
 if (isset($_POST['volume_step_limit']) && $_POST['volume_step_limit'] != $_SESSION['volume_step_limit']) {
-	playerSession('write', 'volume_step_limit', $_POST['volume_step_limit']);
+	phpSession('write', 'volume_step_limit', $_POST['volume_step_limit']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 // Volume MPD mmax
 if (isset($_POST['volume_mpd_max']) && $_POST['volume_mpd_max'] != $_SESSION['volume_mpd_max']) {
-	playerSession('write', 'volume_mpd_max', $_POST['volume_mpd_max']);
+	phpSession('write', 'volume_mpd_max', $_POST['volume_mpd_max']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 // Display dB volume
 if (isset($_POST['update_volume_db_display']) && $_POST['volume_db_display'] != $_SESSION['volume_db_display']) {
-	playerSession('write', 'volume_db_display', $_POST['volume_db_display']);
+	phpSession('write', 'volume_db_display', $_POST['volume_db_display']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 // USB volume knob
 if (isset($_POST['update_usb_volknob']) && $_POST['usb_volknob'] != $_SESSION['usb_volknob']) {
 	$title = $_POST['usb_volknob'] == 1 ? 'USB volume knob on' : 'USB volume knob off';
 	submitJob('usb_volknob', $_POST['usb_volknob'], $title, '');
-	playerSession('write', 'usb_volknob', $_POST['usb_volknob']);
+	phpSession('write', 'usb_volknob', $_POST['usb_volknob']);
 }
 // Rotary encoder
 if (isset($_POST['update_rotenc'])) {
 	if (isset($_POST['rotenc_params']) && $_POST['rotenc_params'] != $_SESSION['rotenc_params']) {
 		$title = 'Rotenc params updated';
-		playerSession('write', 'rotenc_params', $_POST['rotenc_params']);
+		phpSession('write', 'rotenc_params', $_POST['rotenc_params']);
 	}
 
 	if (isset($_POST['rotaryenc']) && $_POST['rotaryenc'] != $_SESSION['rotaryenc']) {
 		$title = $_POST['rotaryenc'] == 1 ? 'Rotary encoder on' : 'Rotary encoder off';
-		playerSession('write', 'rotaryenc', $_POST['rotaryenc']);
+		phpSession('write', 'rotaryenc', $_POST['rotaryenc']);
 	}
 
 	if (isset($title)) {
@@ -265,18 +269,18 @@ if (isset($_POST['update_rotenc'])) {
 // Crossfade
 if (isset($_POST['mpdcrossfade']) && $_POST['mpdcrossfade'] != $_SESSION['mpdcrossfade']) {
 	submitJob('mpdcrossfade', $_POST['mpdcrossfade'], 'Crossfade settings updated', '');
-	playerSession('write', 'mpdcrossfade', $_POST['mpdcrossfade']);
+	phpSession('write', 'mpdcrossfade', $_POST['mpdcrossfade']);
 }
 // Crossfeed
 if (isset($_POST['crossfeed']) && $_POST['crossfeed'] != $_SESSION['crossfeed']) {
-	playerSession('write', 'crossfeed', $_POST['crossfeed']);
+	phpSession('write', 'crossfeed', $_POST['crossfeed']);
 	submitJob('crossfeed', $_POST['crossfeed'], 'Crossfeed ' . ($_POST['crossfeed'] == 'Off' ? 'off' : 'on'), '');
 }
 // Polarity inversion
 if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SESSION['invert_polarity']) {
 	$title = $_POST['invert_polarity'] == 1 ? 'Polarity inversion on' : 'Polarity inversion off';
 	submitJob('invpolarity', $_POST['invert_polarity'], $title, '');
-	playerSession('write', 'invert_polarity', $_POST['invert_polarity']);
+	phpSession('write', 'invert_polarity', $_POST['invert_polarity']);
 }
 
 // HTTP streaming
@@ -285,16 +289,16 @@ if (isset($_POST['update_invert_polarity']) && $_POST['invert_polarity'] != $_SE
 if (isset($_POST['mpd_httpd']) && $_POST['mpd_httpd'] != $_SESSION['mpd_httpd']) {
 	$title = $_POST['mpd_httpd'] == 1 ? 'HTTP server on' : 'HTTP server off';
 	submitJob('mpd_httpd', $_POST['mpd_httpd'], $title, '');
-	playerSession('write', 'mpd_httpd', $_POST['mpd_httpd']);
+	phpSession('write', 'mpd_httpd', $_POST['mpd_httpd']);
 }
 // Port
 if (isset($_POST['mpd_httpd_port']) && $_POST['mpd_httpd_port'] != $_SESSION['mpd_httpd_port']) {
-	playerSession('write', 'mpd_httpd_port', $_POST['mpd_httpd_port']);
+	phpSession('write', 'mpd_httpd_port', $_POST['mpd_httpd_port']);
 	submitJob('mpd_httpd_port', $_POST['mpd_httpd_port'], 'HTTP port updated', 'MPD restarted');
 }
 // Encoder
 if (isset($_POST['mpd_httpd_encoder']) && $_POST['mpd_httpd_encoder'] != $_SESSION['mpd_httpd_encoder']) {
-	playerSession('write', 'mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
+	phpSession('write', 'mpd_httpd_encoder', $_POST['mpd_httpd_encoder']);
 	submitJob('mpd_httpd_encoder', $_POST['mpd_httpd_encoder'], 'HTTP encoder updated', 'MPD restarted');
 }
 
@@ -307,7 +311,7 @@ if (isset($_POST['eqfa12p']) && ((intval($_POST['eqfa12p']) ? "On" : "Off") != $
 	$currentActive = $eqfa12p->getActivePresetIndex();
 	$newActive = intval($_POST['eqfa12p']);
 	$eqfa12p->setActivePresetIndex($newActive);
-	playerSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
+	phpSession('write', 'eqfa12p', $newActive == 0 ? "Off" : "On");
 	submitJob('eqfa12p', $currentActive . ',' . $newActive, 'Parametric EQ updated', 'MPD restarted');
 }
 unset($eqfa12p);
@@ -315,14 +319,14 @@ unset($eqfa12p);
 // Graphic eq
 if (isset($_POST['alsaequal']) && $_POST['alsaequal'] != $_SESSION['alsaequal']) {
 	// Pass old,new curve name to worker job
-	playerSession('write', 'alsaequal', $_POST['alsaequal']);
+	phpSession('write', 'alsaequal', $_POST['alsaequal']);
 	submitJob('alsaequal', $_SESSION['alsaequal'] . ',' . $_POST['alsaequal'], 'Graphic EQ updated', '');
 }
 
 // CamillaDSP
 if (isset($_POST['update_camilladsp']) && isset($_POST['camilladsp']) && $_POST['camilladsp'] != $_SESSION['camilladsp']) {
 	$currentMode = $_SESSION['camilladsp'];
-	playerSession('write', 'camilladsp', $_POST['camilladsp']);
+	phpSession('write', 'camilladsp', $_POST['camilladsp']);
 	$cdsp->selectConfig($_POST['camilladsp']);
 	if ($_SESSION['cdsp_fix_playback'] == 'Yes' ) {
 		$cdsp->setPlaybackDevice($_SESSION['cardnum'], $_SESSION['alsa_output_mode']);
@@ -345,13 +349,13 @@ if (isset($_POST['update_bt_settings'])) {
 
 	if (isset($_POST['btname']) && $_POST['btname'] != $_SESSION['btname']) {
 		$title = 'Bluetooth name updated';
-		playerSession('write', 'btname', $_POST['btname']);
+		phpSession('write', 'btname', $_POST['btname']);
 	}
 	if (isset($_POST['btsvc']) && $_POST['btsvc'] != $_SESSION['btsvc']) {
 		$title = $_POST['btsvc'] == 1 ? 'Bluetooth controller on' : 'Bluetooth controller off';
-		playerSession('write', 'btsvc', $_POST['btsvc']);
+		phpSession('write', 'btsvc', $_POST['btsvc']);
 		if ($_POST['btsvc'] == '0') {
-			playerSession('write', 'pairing_agent', '0');
+			phpSession('write', 'pairing_agent', '0');
 		}
 	}
 	if (isset($title)) {
@@ -364,7 +368,7 @@ if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc']
 }
 // Pairing agent
 if (isset($_POST['update_pairing_agent'])) {
-	playerSession('write', 'pairing_agent', $_POST['pairing_agent']);
+	phpSession('write', 'pairing_agent', $_POST['pairing_agent']);
 	submitJob('pairing_agent', $_POST['pairing_agent'], ($_POST['pairing_agent'] == 1 ? 'Pairing agent on' : 'Pairing agent off'), '');
 }
 // Restart pairing agent
@@ -373,12 +377,12 @@ if (isset($_POST['parestart']) && $_POST['parestart'] == 1 && $_SESSION['btsvc']
 }
 // Speaker sharing
 if (isset($_POST['update_bt_multi'])) {
-	playerSession('write', 'btmulti', $_POST['btmulti']);
+	phpSession('write', 'btmulti', $_POST['btmulti']);
 	submitJob('btmulti', '', ($_POST['btmulti'] == 1 ? 'Speaker sharing on' : 'Speaker sharing off'), '');
 }
 // Resume MPD
 if (isset($_POST['update_rsmafterbt'])) {
-	playerSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
+	phpSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 
@@ -388,11 +392,11 @@ if (isset($_POST['update_rsmafterbt'])) {
 if (isset($_POST['update_airplay_settings'])) {
 	if (isset($_POST['airplayname']) && $_POST['airplayname'] != $_SESSION['airplayname']) {
 		$title = 'Airplay name updated';
-		playerSession('write', 'airplayname', $_POST['airplayname']);
+		phpSession('write', 'airplayname', $_POST['airplayname']);
 	}
 	if (isset($_POST['airplaysvc']) && $_POST['airplaysvc'] != $_SESSION['airplaysvc']) {
 		$title = $_POST['airplaysvc'] == 1 ? 'Airplay renderer on' : 'Airplay renderer off';
-		playerSession('write', 'airplaysvc', $_POST['airplaysvc']);
+		phpSession('write', 'airplaysvc', $_POST['airplaysvc']);
 	}
 	if (isset($title)) {
 		submitJob('airplaysvc', '', $title, '');
@@ -400,7 +404,7 @@ if (isset($_POST['update_airplay_settings'])) {
 }
 // Resume MPD
 if (isset($_POST['update_rsmafterapl'])) {
-	playerSession('write', 'rsmafterapl', $_POST['rsmafterapl']);
+	phpSession('write', 'rsmafterapl', $_POST['rsmafterapl']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 // Restart
@@ -414,11 +418,11 @@ if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSIO
 if (isset($_POST['update_spotify_settings'])) {
 	if (isset($_POST['spotifyname']) && $_POST['spotifyname'] != $_SESSION['spotifyname']) {
 		$title = 'Spotify name updated';
-		playerSession('write', 'spotifyname', $_POST['spotifyname']);
+		phpSession('write', 'spotifyname', $_POST['spotifyname']);
 	}
 	if (isset($_POST['spotifysvc']) && $_POST['spotifysvc'] != $_SESSION['spotifysvc']) {
 		$title = $_POST['spotifysvc'] == 1 ? 'Spotify renderer on' : 'Spotify renderer off';
-		playerSession('write', 'spotifysvc', $_POST['spotifysvc']);
+		phpSession('write', 'spotifysvc', $_POST['spotifysvc']);
 	}
 	if (isset($title)) {
 		submitJob('spotifysvc', '', $title, '');
@@ -426,7 +430,7 @@ if (isset($_POST['update_spotify_settings'])) {
 }
 // Resume MPD
 if (isset($_POST['update_rsmafterspot'])) {
-	playerSession('write', 'rsmafterspot', $_POST['rsmafterspot']);
+	phpSession('write', 'rsmafterspot', $_POST['rsmafterspot']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 // Restart
@@ -444,23 +448,23 @@ if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credenti
 if (isset($_POST['update_sl_settings'])) {
 	if (isset($_POST['slsvc']) && $_POST['slsvc'] != $_SESSION['slsvc']) {
 		$title = $_POST['slsvc'] == 1 ? 'Squeezelite renderer on' : 'Squeezelite renderer off';
-		playerSession('write', 'slsvc', $_POST['slsvc']);
+		phpSession('write', 'slsvc', $_POST['slsvc']);
 	}
 	if (isset($title)) {
 		if ($_POST['slsvc'] == 0) {
-			playerSession('write', 'rsmaftersl', 'No');
+			phpSession('write', 'rsmaftersl', 'No');
 		}
 		submitJob('slsvc', '', $title, '');
 	}
 }
 // Resume MPD
 if (isset($_POST['update_rsmaftersl'])) {
-	playerSession('write', 'rsmaftersl', $_POST['rsmaftersl']);
+	phpSession('write', 'rsmaftersl', $_POST['rsmaftersl']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 // Restart
 if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
-	playerSession('write', 'rsmaftersl', 'No');
+	phpSession('write', 'rsmaftersl', 'No');
 	submitJob('slrestart', '', 'Squeezelite restarted', '');
 }
 
@@ -470,7 +474,7 @@ if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
 if (isset($_POST['update_rb_settings'])) {
 	if (isset($_POST['rbsvc']) && $_POST['rbsvc'] != $_SESSION['rbsvc']) {
 		$title = $_POST['rbsvc'] == 1 ? 'RoonBridge renderer on' : 'RoonBridge renderer off';
-		playerSession('write', 'rbsvc', $_POST['rbsvc']);
+		phpSession('write', 'rbsvc', $_POST['rbsvc']);
 	}
 	if (isset($title)) {
 		submitJob('rbsvc', '', $title, '');
@@ -478,7 +482,7 @@ if (isset($_POST['update_rb_settings'])) {
 }
 // Resume MPD
 if (isset($_POST['update_rsmafterrb'])) {
-	playerSession('write', 'rsmafterrb', $_POST['rsmafterrb']);
+	phpSession('write', 'rsmafterrb', $_POST['rsmafterrb']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 // Restart
@@ -493,11 +497,11 @@ if (isset($_POST['update_upnp_settings'])) {
 	$currentUpnpName = $_SESSION['upnpname'];
 	if (isset($_POST['upnpname']) && $_POST['upnpname'] != $_SESSION['upnpname']) {
 		$title = 'UPnP name updated';
-		playerSession('write', 'upnpname', $_POST['upnpname']);
+		phpSession('write', 'upnpname', $_POST['upnpname']);
 	}
 	if (isset($_POST['upnpsvc']) && $_POST['upnpsvc'] != $_SESSION['upnpsvc']) {
 		$title = $_POST['upnpsvc'] == 1 ? 'UPnP renderer on' : 'UPnP renderer off';
-		playerSession('write', 'upnpsvc', $_POST['upnpsvc']);
+		phpSession('write', 'upnpsvc', $_POST['upnpsvc']);
 	}
 	if (isset($title)) {
 		submitJob('upnpsvc', '"' . $currentUpnpName . '" ' . '"' . $_POST['upnpname'] . '"', $title, '');
@@ -512,12 +516,12 @@ if (isset($_POST['update_dlna_settings'])) {
 	$currentDlnaName = $_SESSION['dlnaname'];
 	if (isset($_POST['dlnaname']) && $_POST['dlnaname'] != $_SESSION['dlnaname']) {
 		$title = 'DLNA name updated';
-		playerSession('write', 'dlnaname', $_POST['dlnaname']);
+		phpSession('write', 'dlnaname', $_POST['dlnaname']);
 	}
 	if (isset($_POST['dlnasvc']) && $_POST['dlnasvc'] != $_SESSION['dlnasvc']) {
 		$title = $_POST['dlnasvc'] == 1 ? 'DLNA server on' : 'DLNA server off';
 		$msg = $_POST['dlnasvc'] == 1 ? 'Database rebuild initiated' : '';
-		playerSession('write', 'dlnasvc', $_POST['dlnasvc']);
+		phpSession('write', 'dlnasvc', $_POST['dlnasvc']);
 	}
 	if (isset($title)) {
 		submitJob('minidlna', '"' . $currentDlnaName . '" ' . '"' . $_POST['dlnaname'] . '"', $title, $msg);
@@ -534,10 +538,12 @@ if (isset($_POST['rebuild_dlnadb'])) {
 	}
 }
 
-session_write_close();
+if (phpSession('get_status') == PHP_SESSION_ACTIVE) {
+	phpSession('close');
+}
 
 // LOAD MPD PARAMS
-$result = cfgdb_read('cfg_mpd', $dbh);
+$result = sqlRead('cfg_mpd', $dbh);
 $mpdconf = array();
 foreach ($result as $row) {
 	$mpdconf[$row['param']] = $row['value'];
@@ -563,7 +569,7 @@ $_mpd_select['mixer_type'] .= "<option value=\"software\" " . (($mpdconf['mixer_
 $_mpd_select['mixer_type'] .= "<option value=\"none\" " . (($mpdconf['mixer_type'] == 'none') ? "selected" : "") . ">Fixed (0dB output)</option>\n";
 $_mpd_select['mixer_type'] .= "<option value=\"null\" " . (($mpdconf['mixer_type'] == 'null') ? "selected" : "") . ">Null (External control)</option>\n";
 // Named I2S devices
-$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
+$result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes'", $dbh);
 $array = array();
 $array[0]['name'] = 'None';
 $dac_list = array_merge($array, $result);
@@ -577,7 +583,7 @@ array_unshift($overlay_list, 'None');
 foreach ($overlay_list as $overlay) {
 	$overlay_name = ($overlay == 'None') ? $overlay : substr($overlay, 0, -5); // Strip .dtbo extension
 	// NOTE: This can be used to filter the list
-	/*$result = sdbquery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes' AND driver='" . $overlay_name . "'", $dbh);
+	/*$result = sqlQuery("SELECT name FROM cfg_audiodev WHERE iface='I2S' AND list='yes' AND driver='" . $overlay_name . "'", $dbh);
 	if ($result === true || $overlay_name == 'None') { // true = query executed but returnes no results
 		$selected = ($_SESSION['i2soverlay'] == $overlay_name) ? ' selected' : '';
 		$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
@@ -586,7 +592,7 @@ foreach ($overlay_list as $overlay) {
 	$_i2s['i2soverlay'] .= sprintf('<option value="%s"%s>%s</option>\n', $overlay_name, $selected, $overlay_name);
 }
 // Driver options
-$result = sdbquery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
+$result = sqlQuery("SELECT chipoptions, driver, drvoptions FROM cfg_audiodev WHERE name='" . $_SESSION['i2sdevice'] . "'", $dbh);
 if (!empty($result[0]['drvoptions']) && $_SESSION['i2soverlay'] == 'None') {
 	$_select['drvoptions'] .= "<option value=\"Enabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) !== false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Enabled</option>\n";
 	$_select['drvoptions'] .= "<option value=\"Disabled\" " . ((strpos($result[0]['driver'], $result[0]['drvoptions']) === false) ? "selected" : "") . ">" . $result[0]['drvoptions'] . " Disabled</option>\n";
@@ -737,7 +743,7 @@ foreach ($curveList as $key=>$curveName) {
 unset($eqfa12p);
 
 // Graphic equalizer
-$result = sdbquery('SELECT curve_name FROM cfg_eqalsa', $dbh);
+$result = sqlQuery('SELECT curve_name FROM cfg_eqalsa', $dbh);
 $array = array();
 $array[0]['curve_name'] = 'Off';
 $curveList = $_alsaequal_set_disabled == '' ? array_merge($array, $result) : $array;

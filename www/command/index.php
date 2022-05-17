@@ -21,57 +21,43 @@
  *
  */
 
-require_once dirname(__FILE__) . '/../inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'mpd.php';
 
-playerSession('open', '' ,'');
-session_write_close();
 if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
 	echo 'Command missing';
-}
-// SH, PHP or other defined commands
-elseif (stripos($_GET['cmd'], '.sh') !== false || stripos($_GET['cmd'], '.php') !== false) {
-	// Check for valid chrs
-    if (preg_match('/^[A-Za-z0-9 _.-]+$/', $_GET['cmd'])) {
-		// Reject directory traversal ../
-		if (substr_count($_GET['cmd'], '.') > 1) {
-			echo 'Invalid string';
-		}
-		// Check for valid commands
-        elseif (stripos($_GET['cmd'], 'vol.sh') !== false) {
-			$result = sysCmd('/var/www/' . $_GET['cmd']);
-			echo $result[0];
-        }
-		elseif (stripos($_GET['cmd'], 'libupd-submit.php') !== false) {
-			$result = sysCmd('/var/www/' . $_GET['cmd']);
-			echo 'Library update submitted';
-        }
-		elseif (stripos($_GET['cmd'], 'trx-status.php') !== false) {
-			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
-			echo $result[0];
-        }
-		elseif (stripos($_GET['cmd'], 'coverview.php') !== false) {
-			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
-			echo $result[0];
-        }
-        else {
-            echo 'Unknown command';
-        }
-    }
-    else {
-    	echo 'Invalid string';
-    }
-}
-// MPD commands
-else {
+} else if (stripos($_GET['cmd'], '.sh') === false && stripos($_GET['cmd'], '.php') === false) {
+	// MPD commands
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		$msg = 'command/index: Connection to MPD failed';
-		workerLog($msg);
-		exit($msg . "\n");
-	}
-	else {
+		workerLog('command/index.php: Connection to MPD failed');
+	} else {
 		sendMpdCmd($sock, $_GET['cmd']);
 		$result = readMpdResp($sock);
 		closeMpdSock($sock);
 		//echo $result;
 	}
+} else {
+	// PHP and BASH commands
+    if (preg_match('/^[A-Za-z0-9 _.-]+$/', $_GET['cmd'])) {
+		if (substr_count($_GET['cmd'], '.') > 1) {
+			echo 'Invalid string'; // Reject directory traversal ../
+		} else if (stripos($_GET['cmd'], 'vol.sh') !== false) {
+			$result = sysCmd('/var/www/' . $_GET['cmd']);
+			echo $result[0];
+        } else if (stripos($_GET['cmd'], 'libupd-submit.php') !== false) {
+			$result = sysCmd('/var/www/' . $_GET['cmd']);
+			echo 'Library update submitted';
+        } else if (stripos($_GET['cmd'], 'trx-status.php') !== false) {
+			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
+			echo $result[0];
+        } else if (stripos($_GET['cmd'], 'coverview.php') !== false) {
+			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
+			echo $result[0];
+        } else {
+            echo 'Unknown command';
+        }
+    } else {
+    	echo 'Invalid string';
+    }
 }

@@ -21,31 +21,35 @@
 
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
+require_once 'mpd.php';
+require_once 'session.php';
+require_once 'sql.php';
+require_once 'multiroom.php';
+
+session_id(phpSession('get_sessionid'));
+phpSession('open');
 
 $option = isset($argv[1]) ? $argv[1] : '';
-session_id(playerSession('getsessionid'));
-session_start();
 
 switch ($option) {
 	case '-rx':
 		if (isset($argv[2])) {
-			rx_onoff($argv[2]);
+			rxOnOff($argv[2]);
 			$status = '';
-		}
-		else {
-			$status = rx_status();
+		} else {
+			$status = rxStatus();
 		}
 		break;
 	case '-tx':
-		$status = tx_status();
+		$status = txStatus();
 		break;
 	case '-all':
-		$status = all_status();
+		$status = allStatus();
 		break;
 	case '-set-mpdvol':
-		$rx_status_parts = explode(',', rx_status());
+		$rxStatusParts = explode(',', rxStatus());
 		// rx, On/Off/Disabled/Unknown, volume, volume,mute_1/0, mastervol_opt_in_1/0, hostname
-		if ($rx_status_parts[4] == '1') {
+		if ($rxStatusParts[4] == '1') {
 			sysCmd('/var/www/vol.sh ' . $argv[2] . (isset($argv[3]) ? ' ' . $argv[3] : ''));
 		}
 		$status = '';
@@ -54,35 +58,36 @@ switch ($option) {
 	case '-set-alsavol':
 		if (isset($argv[2])) {
 			if ($_SESSION['multiroom_rx'] == 'On') {
-				set_alsavol($argv[2]);
+				setAlsavol($argv[2]);
 			}
 			$status = '';
-		}
-		else {
-			$status = 'Missing arg';
+		} else {
+			$status = 'Missing option';
 		}
 		break;
 	default:
-		$status = 'Missing arg';
+		$status = 'Missing option';
 		break;
 }
 
-session_write_close();
+if (phpSession('get_status') == PHP_SESSION_ACTIVE) {
+	phpSession('close');
+}
 
 if ($status != '') {
 	echo $status;
 }
 exit(0);
 
-function rx_onoff($onoff) {
+function rxOnOff($onoff) {
 	if ($_SESSION['mpdmixer'] == 'hardware' || $_SESSION['mpdmixer'] == 'none') {
-		playerSession('write', 'multiroom_rx', $onoff);
+		phpSession('write', 'multiroom_rx', $onoff);
 		$onoff == 'On' ? startMultiroomReceiver() : stopMultiroomReceiver();
 	}
 }
 
-function rx_status() {
-	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", cfgdb_connect());
+function rxStatus() {
+	$result = sqlQuery("SELECT value FROM cfg_multiroom WHERE param = 'rx_mastervol_opt_in'", sqlConnect());
 	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : ($_SESSION['mpdmixer'] == 'software' ? '?' : $_SESSION['volknob']);
 	return
 		'rx' . ',' . 						// Receiver
@@ -93,15 +98,15 @@ function rx_status() {
 		$_SESSION['hostname'];				// Hostname from System Config entry
 }
 
-function tx_status() {
+function txStatus() {
 	$volume = $_SESSION['mpdmixer'] == 'none' ? '0dB' : $_SESSION['volknob'];
 	return 'tx' . ',' . $_SESSION['multiroom_tx'] . ',' . $volume . ',' . $_SESSION['volmute'];
 }
 
-function all_status() {
-	return rx_status() . ',' . tx_status();
+function allStatus() {
+	return rxStatus() . ',' . txStatus();
 }
 
-function set_alsavol($vol) {
+function setAlsavol($vol) {
 	sysCmd('/var/www/command/util.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $vol);
 }

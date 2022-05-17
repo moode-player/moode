@@ -21,6 +21,7 @@
 
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
+require_once 'session.php';
 
 $option = isset($argv[1]) ? $argv[1] : '';
 
@@ -33,7 +34,7 @@ switch ($option) {
 		break;
 }
 
-session_id(playerSession('getsessionid'));
-session_start();
-submitJob('update_library', '', '', '');
-session_write_close();
+session_id(phpSession('get_sessionid'));
+phpSession('open');
+submitJob('update_library');
+phpSession('close');

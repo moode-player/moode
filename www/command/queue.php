@@ -18,18 +18,24 @@
  *
  */
 
- require_once dirname(__FILE__) . '/../inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'mpd.php';
+require_once 'session.php';
+require_once 'sql.php';
 
- if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
- 	workerLog('playlist.php: Error: $_GET cmd is empty or missing');
- 	exit(0);
- }
+$sock = getMpdSock();
+phpSession('open_ro');
 
-$sock = GetMpdSock();
-
- //
- // COMMANDS
- //
+// Turn off auto-shuffle and consume mode before Queue is updated
+$queueCmds = array(
+    'delete_playqueue_item', 'move_playqueue_item',
+    'add_item', 'add_item_next', 'play_item', 'play_item_next', /*'clear_add_item',*/ 'clear_play_item',
+    'add_group', 'add_group_next', 'play_group', 'play_group_next', /*'clear_add_group',*/ 'clear_play_group'
+);
+if ($_SESSION['ashuffle'] == '1' && in_array($_GET['cmd'], $queueCmds)) {
+    turnOffAutoShuffle($sock);
+}
 
 switch ($_GET['cmd']) {
 	case 'get_playqueue':
@@ -92,7 +98,7 @@ switch ($_GET['cmd']) {
 			array_push($cmds, 'play');
 		}
 		chainMpdCmds($sock, $cmds);
-		playerSession('write', 'toggle_songid', '0');
+        putToggleSongId('0');
 		break;
 	 // Queue commands for a group of songs: Genre, Artist or Albums in Tag/Album view
 	case 'add_group':
@@ -134,7 +140,7 @@ switch ($_GET['cmd']) {
 			chainMpdCmds($sock, $cmds);
 		}
 
-		playerSession('write', 'toggle_songid', $pos);
+        putToggleSongId($pos);
 		break;
 	/*case 'clear_add_group':*/
 	case 'clear_play_group':
@@ -145,18 +151,14 @@ switch ($_GET['cmd']) {
 		}
 
 		chainMpdCmds($sock, $cmds);
-		playerSession('write', 'toggle_songid', '0');
+        putToggleSongId('0');
 		break;
 }
 
- // Close MPD socket
+// Close MPD socket
 if (isset($sock) && $sock !== false) {
 	closeMpdSock($sock);
 }
-
-//
-// FUNCTIONS
-//
 
 // Return MPD queue
 function getPlayqueue($resp) {
@@ -259,8 +261,8 @@ function findInQueue($sock, $tag, $search) {
 	$queue = array();
 	$line = strtok($resp, "\n");
 
-	// Return position
 	if ($tag == 'file') {
+        // Return position
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
 			if ($element == 'Pos') {
@@ -270,9 +272,8 @@ function findInQueue($sock, $tag, $search) {
 
 			$line = strtok("\n");
 		}
-	}
-	// Return files and positions
-	else if ($tag == 'album') {
+	} else if ($tag == 'album') {
+        // Return files and positions
 		$i = 0;
 		while ($line) {
 			list ($element, $value) = explode(": ", $line, 2);
@@ -289,4 +290,23 @@ function findInQueue($sock, $tag, $search) {
 	}
 
 	return $queue;
+}
+
+// Turn off auto-shuffle and consume mode
+function turnOffAutoShuffle($sock) {
+    phpSession('open');
+	phpSession('write', 'ashuffle', '0');
+    phpSession('close');
+
+	sysCmd('killall -s 9 ashuffle > /dev/null');
+
+	sendMpdCmd($sock, 'consume 0');
+	$resp = readMpdResp($sock);
+}
+
+// Update toggle songid for clear_ and  commands
+function putToggleSongId($pos) {
+    phpSession('open');
+    phpSession('write', 'toggle_songid', $pos);
+    phpSession('close');
 }

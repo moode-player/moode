@@ -18,18 +18,13 @@
  *
  */
 
-require_once dirname(__FILE__) . '/../inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'mpd.php';
+require_once 'session.php';
+require_once 'sql.php';
 
 const NUMBER_EXT_TAGS = 2;
-
-if (isset($_GET['cmd']) && $_GET['cmd'] === '') {
-	workerLog('playlist.php: Error: $_GET cmd is empty or missing');
-	exit(0);
-}
-
-//
-// COMMANDS
-//
 
 switch ($_GET['cmd']) {
 	case 'set_plcover_image':
@@ -56,7 +51,7 @@ switch ($_GET['cmd']) {
 		// Replace with URL if radio station
 		if (count($_POST['path']['items']) == 1 && substr($_POST['path']['items'][0], -4) == '.pls') {
 			$stName = substr($_POST['path']['items'][0], 6, -4); // Trim RADIO/ and .pls
-			$result = sdbquery("SELECT station FROM cfg_radio WHERE name='" . SQLite3::escapeString($stName) . "'", cfgdb_connect());
+			$result = sqlQuery("SELECT station FROM cfg_radio WHERE name='" . SQLite3::escapeString($stName) . "'", sqlConnect());
 			$_POST['path']['items'][0] = $result[0]['station']; // URL
 		}
 
@@ -88,7 +83,7 @@ switch ($_GET['cmd']) {
 		putPlaylistCover($plName);
 		break;
 	case 'get_favorites_name':
-		$result = cfgdb_read('cfg_system', cfgdb_connect(), 'favorites_name');
+		$result = sqlRead('cfg_system', sqlConnect(), 'favorites_name');
 		echo json_encode($result[0]['value']);
 		break;
 	case 'set_favorites_name':
@@ -110,7 +105,9 @@ switch ($_GET['cmd']) {
 		// Write default cover if no cover exists for the playlist
 		putPlaylistCover($plName);
 
-		playerSession('write', 'favorites_name', $plName);
+		phpSession('open');
+		phpSession('write', 'favorites_name', $plName);
+		phpSession('close');
 		break;
 	case 'add_item_to_favorites':
         if (isset($_GET['item']) && !empty($_GET['item'])) {
@@ -161,10 +158,6 @@ if (isset($sock) && $sock !== false) {
 	closeMpdSock($sock);
 }
 
-//
-// FUNCTIONS
-//
-
 // Return list of playlists including metadata
 function getPlaylists() {
 	$playlists = array();
@@ -186,7 +179,7 @@ function getPlaylists() {
 // Return playlist metadata and items
 function getPlaylistContents($plName) {
 	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
-	$dbh = cfgdb_connect();
+	$dbh = sqlConnect();
 	$sock = getMpdSock();
 
 	$genre = '';
@@ -206,7 +199,7 @@ function getPlaylistContents($plName) {
 			else {
 				if (substr($item, 0, 4) == 'http') {
 					// Radio station
-					$result = sdbquery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($item) . "'", $dbh);
+					$result = sqlQuery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($item) . "'", $dbh);
 					if ($result === true) {
 						// Query successful but no reault, set name to URL
 						$name = $item;
