@@ -1383,6 +1383,7 @@ function updPlayHist($historyitem) {
 	return 'OK';
 }
 
+// OLD
 // session management
 function playerSession($action, $var = '', $value = '') {
 	// 0: PHP_SESSION_DISABLED	Sessions are currently disabled
@@ -1467,97 +1468,7 @@ function playerSession($action, $var = '', $value = '') {
 	}
 }
 
-// TODO: new session management functions
-function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
-	$session_file = SESSION_SAVE_PATH . '/sess_' . $_SESSION['sessionid'];
-
-	for ($i = 0; $i < $max_loops; $i++) {
-		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
-
-		if ($result[0] == '-rw-rw-rw-,www-data,www-data') {
-			workerLog('worker: Session permissions (OK)');
-			break;
-		}
-		else {
-			workerLog('worker: Session permissions retry (' . ($i + 1) . ')');
-			sysCmd('chown www-data:www-data ' . $session_file);
-			sysCmd('chmod 0666 ' . $session_file);
-		}
-
-		sleep($sleep_time);
-	}
-
-	// Check for failure case on the way out
-	if ($i == $max_loops) {
-		$result = sysCmd('ls -l ' . $session_file . " | awk '{print $1 \",\" $3 \",\" $4;}'");
-
-		if ($result[0] != '-rw-rw-rw-,www-data,www-data') {
-			workerLog('worker: Session permissions (Failed after ' . $max_loops . ' retries)');
-			workerLog('worker: Session permissions (' . $result[0] . ')');
-		}
-	}
-}
-// 0: PHP_SESSION_DISABLED	Sessions are currently disabled
-// 1: PHP_SESSION_NONE		Sessions are enabled, but no session has been started
-// 2: PHP_SESSION_ACTIVE	Sessions are enabled and a session has been started
-function phpSession($action, $param = '', $value = '') {
-	if ($action == 'open') {
-		$status = session_status();
-		//workerLog('phpSession(open): session_status=' . ($status == 0 ? 'PHP_SESSION_DISABLED' : ($status == 1 ? 'PHP_SESSION_NONE' : 'PHP_SESSION_ACTIVE')));
-		if($status != PHP_SESSION_ACTIVE) {
-			// use stored id
-			$id = phpSession('get_sessionid');
-			if (!empty($id)) {
-				session_id($id);
-				if (phpSession('start') === false) {
-					workerLog('phpSession(open): session_start() using stored id failed');
-				}
-			}
-			// generate new id and store it
-			else {
-				if (phpSession('start') === false) {
-					workerLog('phpSession(open): session_start() using newly generated id failed');
-				}
-				phpSession('store_sessionid');
-			}
-		}
-		// load session vars from cfg_system
-		$rows = dbRead('cfg_system', dbConnect());
-		foreach ($rows as $row) {
-			$_SESSION[$row['param']] = $row['value'];
-		}
-	}
-	elseif ($action == 'start') {
-		if (session_start() === false) {
-			workerLog('phpSession(start): session_start() failed');
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-	elseif ($action == 'close') {
-		if (session_write_close() === false) {
-			workerLog('phpSession(close): session_write_close() failed');
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-	elseif ($action == 'write') {
-		$_SESSION[$param] = $value;
-		dbUpdate('cfg_system', dbConnect(), $var, $value);
-	}
-	elseif ($action == 'store_sessionid') {
-		phpSession('write', 'sessionid', session_id());
-	}
-	elseif ($action == 'get_sessionid') {
-		$result = dbRead('cfg_system', dbConnect(), 'sessionid');
-		return $result['0']['value'];
-	}
-}
-
+// OLD
 // Database management
 function cfgdb_connect() {
 	if ($dbh = new PDO(SQLDB)) {
@@ -2256,7 +2167,9 @@ function getKernelVer($kernel) {
 // submit job to worker.php
 function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 3) {
 	if ($_SESSION['w_lock'] != 1 && $_SESSION['w_queue'] == '') {
-		session_start();
+		if (phpSession('get_status') != PHP_SESSION_ACTIVE) {
+			phpSession('open');
+		}
 		// for worker.php
 		$_SESSION['w_queue'] = $jobName;
 		$_SESSION['w_active'] = 1;
@@ -2267,7 +2180,7 @@ function submitJob($jobName, $jobArgs = '', $title = '', $msg = '', $duration = 
 		$_SESSION['notify']['msg'] = $msg;
 		$_SESSION['notify']['duration'] = $duration;
 
-		session_write_close();
+		phpSession('close');
 		return true;
 	}
 	else {
@@ -2375,185 +2288,6 @@ function getMpdEncodedAt($file) {
 	return $mpd_encoded_at;
 }
 
-// Bluetooth
-function startBt() {
-	sysCmd('systemctl start hciuart');
-	sysCmd('systemctl start bluetooth');
-	sysCmd('systemctl start bluealsa');
-
-	// We should have a MAC address
-	$result = sysCmd('ls /var/lib/bluetooth');
-	if ($result[0] == '') {
-		workerLog('startBt(): Bluetooth error, no MAC address');
-	}
-	// Initialize controller
-	else {
-		$result = sysCmd('/var/www/command/bt.sh -i');
-		//workerLog('startBt(): Bluetooth controller initialized');
-	}
-}
-
-// Airplay
-function startAirplay() {
-	// Verbose logging
-	if ($_SESSION['debuglog'] == '1') {
-		$logging = '-vvu';
-		$logfile = '/var/log/shairport-sync.log';
-	}
-	else {
-		$logging = '';
-		$logfile = '/dev/null';
-	}
-
-	// Output device
-	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
-	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
-
-	// Interpolation param handled in config file
-	$cmd = '/usr/bin/shairport-sync ' . $logging .
-		' -a "' . $_SESSION['airplayname'] . '" ' .
-		'-- -d ' . $device . ' > ' . $logfile . ' 2>&1 &';
-
-	debugLog(' startAirplay(): (' . $cmd . ')');
-	sysCmd($cmd);
-}
-function stopAirplay () {
-	sysCmd('killall shairport-sync');
-
-	// Local
-	sysCmd('/var/www/vol.sh -restore');
-
-	// Multiroom receivers
-	if ($_SESSION['multiroom_tx'] == "On" ) {
-		updReceiverVol('-restore');
-	}
-
-	// Reset to inactive
-	playerSession('write', 'aplactive', '0');
-	$GLOBALS['aplactive'] = '0';
-	sendEngCmd('aplactive0');
-}
-
-// Spotify
-function startSpotify() {
-	$result = cfgdb_read('cfg_spotify', cfgdb_connect());
-	$cfg_spotify = array();
-	foreach ($result as $row) {
-		$cfg_spotify[$row['param']] = $row['value'];
-	}
-
-	// Output device
-	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
-	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
-
-	// Options
-	$dither = empty($cfg_spotify['dither']) ? '' : ' --dither ' . $cfg_spotify['dither'];
-	$initial_volume = $cfg_spotify['initial_volume'] == "-1" ? '' : ' --initial-volume ' . $cfg_spotify['initial_volume'];
-	$volume_normalization = $cfg_spotify['volume_normalization'] == 'Yes' ?
-		' --enable-volume-normalisation ' .
-		' --normalisation-method ' . $cfg_spotify['normalization_method'] .
-		' --normalisation-gain-type ' . $cfg_spotify['normalization_gain_type'] .
-		' --normalisation-pregain ' .  $cfg_spotify['normalization_pregain'] .
-		' --normalisation-threshold ' . $cfg_spotify['normalization_threshold'] .
-		' --normalisation-attack ' . $cfg_spotify['normalization_attack'] .
-		' --normalisation-release ' . $cfg_spotify['normalization_release'] .
-		' --normalisation-knee ' . $cfg_spotify['normalization_knee']
-		: '';
-	$autoplay = $cfg_spotify['autoplay'] == 'Yes' ? ' --autoplay' : '';
-
- 	// NOTE: We use --disable-audio-cache because the audio file cache eats disk space.
-	$cmd = 'librespot' .
-		' --name "' . $_SESSION['spotifyname'] . '"' .
-		' --bitrate ' . $cfg_spotify['bitrate'] .
-		' --format ' . $cfg_spotify['format'] .
-		$dither .
-		' --mixer softvol' .
-		$initial_volume .
-		' --volume-ctrl ' . $cfg_spotify['volume_curve'] .
-		' --volume-range ' . $cfg_spotify['volume_range'] .
-		$volume_normalization .
-		$autoplay .
-		' --cache /var/local/www/spotify_cache --disable-audio-cache --backend alsa --device "' . $device . '"' .
-		' --onevent /var/local/www/commandw/spotevent.sh' .
-		' > /dev/null 2>&1 &';
-		//' -v > /home/pi/librespot.txt 2>&1 &'; // For debug
-
-	debugLog('startSpotify(): (' . $cmd . ')');
-	sysCmd($cmd);
-}
-function stopSpotify() {
-	sysCmd('killall librespot');
-
-	// Local
-	sysCmd('/var/www/vol.sh -restore');
-
-	// Multiroom receivers
-	if ($_SESSION['multiroom_tx'] == "On" ) {
-		updReceiverVol('-restore');
-	}
-
-	// Reset to inactive
-	playerSession('write', 'spotactive', '0');
-	$GLOBALS['spotactive'] = '0';
-	sendEngCmd('spotactive0');
-}
-
-// Squeezelite
-function startSqueezeLite() {
-	sysCmd('mpc stop');
-
-	if ($_SESSION['alsavolume'] != 'none') {
-		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
-	}
-	sysCmd('systemctl start squeezelite');
-}
-function stopSqueezeLite() {
-	sysCmd('systemctl stop squeezelite');
-	sysCmd('/var/www/vol.sh -restore');
-	// Reset to inactive
-	playerSession('write', 'slactive', '0');
-	$GLOBALS['slactive'] = '0';
-	sendEngCmd('slactive0');
-}
-function cfgSqueezelite() {
-	// Update sql table with current MPD device num
-	$dbh = cfgdb_connect();
-	$array = sdbquery('select value from cfg_mpd where param="device"', $dbh);
-	cfgdb_update('cfg_sl', $dbh, 'AUDIODEVICE', $array[0]['value']);
-
-	// Load settings
-	$result = cfgdb_read('cfg_sl', $dbh);
-
-	// Generate config file output
-	foreach ($result as $row) {
-		if ($row['param'] == 'AUDIODEVICE') {
-			$data .= $row['param'] . '="hw:' . $row['value'] . ',0"' . "\n";
-		}
-		else {
-			$data .= $row['param'] . '=' . $row['value'] . "\n";
-		}
-	}
-
-	// Write config file
-	$fh = fopen('/etc/squeezelite.conf', 'w');
-	fwrite($fh, $data);
-	fclose($fh);
-}
-
-// RoonBridge
-function startRoonBridge() {
-	sysCmd('mpc stop');
-	sysCmd('systemctl start roonbridge');
-}
-function stopRoonBridge () {
-	sysCmd('systemctl stop roonbridge');
-	sysCmd('/var/www/vol.sh -restore');
-	// Reset to inactive
-	playerSession('write', 'rbactive', '0');
-	$GLOBALS['rbactive'] = '0';
-	sendEngCmd('rbactive0');
-}
-
 // DLNA server
 function startMiniDlna() {
 	sysCmd('systemctl start minidlna');
@@ -2589,10 +2323,6 @@ function stopAutoShuffle() {
 	closeMpdSock($sock);
 }
 
-// Start UPnP service
-function startUPnP() {
-	sysCmd('systemctl start upmpdcli');
-}
 // Get UPnP coverart url
 function getUpnpCoverUrl() {
 	$mode = sdbquery("SELECT value FROM cfg_upnp WHERE param='upnpav'", cfgdb_connect())[0]['value'] == 1 ? 'upnpav' : 'openhome';
@@ -3111,10 +2841,14 @@ function reconfMpdVolume($mixertype) {
 	updMpdConf($_SESSION['i2sdevice']);
 }
 
+// TODO: Prolly handle back link using a push/pop array
 // Store back link for configs
 function storeBackLink($section, $tpl) {
-	$root_configs = array('lib-config', 'snd-config', 'net-config', 'sys-config');
-	$tpl_configs = array(
+	$refererLink = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
+	//workerLog('storeBackLink(): refererLink=' . substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/')));
+
+	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config');
+	$tplConfigs = array(
 		'src-config.html' => '/lib-config.php',
 		'bkp-config.html' => '/sys-config.php#backuprestore',
 		'eqg-config.html' => '/snd-config.php#equalizers',
@@ -3126,34 +2860,39 @@ function storeBackLink($section, $tpl) {
 		'upp-config.html' => '/snd-config.php#upnpdlna',
 		'cdsp-configeditor.html' => '/cdsp-config.php'
 	);
-	$referer_link = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
 
 	session_start();
 
-	if (array_key_exists($tpl, $tpl_configs)) {
-		$_SESSION['config_back_link'] = $tpl_configs[$tpl];
-	}
-	elseif ($tpl == 'cdsp-config.html' && $referer_link == '/snd-config.php') {
-		$_SESSION['config_back_link'] = '/snd-config.php#equalizers';
-	}
-	elseif ($tpl == 'mpd-config.html' && $referer_link == '/snd-config.php') {
+	if (array_key_exists($tpl, $tplConfigs)) {
+		$_SESSION['config_back_link'] = $tplConfigs[$tpl];
+	} else if ($tpl == 'mpd-config.html' && $refererLink == '/snd-config.php') {
 		$_SESSION['config_back_link'] = '/snd-config.php#mpdoptions';
-	}
-	elseif ($tpl == 'trx-config.html' && $referer_link == '/snd-config.php') {
+	} else if ($tpl == 'trx-config.html' && $refererLink == '/snd-config.php') {
 		$_SESSION['config_back_link'] = '/snd-config.php#alsaoptions';
-	}
-	else if (in_array($section, $root_configs)) {
+	} else if ($tpl == 'cdsp-config.html') {
+		$_SESSION['config_back_link'] = $_SESSION['alt_back_link'];
+	} else if (in_array($section, $rootConfigs)) {
 		$_SESSION['config_back_link'] = '/index.php';
-	}
-	else if (stripos($_SERVER['HTTP_REFERER'], $section) === false) {
-		$_SESSION['config_back_link'] = $referer_link;
-	}
-	else {
+	} else if (stripos($_SERVER['HTTP_REFERER'], $section) === false) {
+		$_SESSION['config_back_link'] = $refererLink;
+	} else {
 		//workerLog('storeBackLink(): else block');
 	}
 
 	session_write_close();
-	//workerLog('storeBackLink(): back=' . $_SESSION['config_back_link'] . ', $tpl=' . $tpl . ', $section=' . $section . ', $referer_link=' . $referer_link);
+}
+// Used for 2 levels back: cdsp-configeditor -> cdsp-config -> /index.php
+function setAltBackLink() {
+	$refererLink = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
+
+	// NOTE: $_SESSION['alt_back_link'] is reset to '' in /index.php
+	if (empty($_SESSION['alt_back_link'])) {
+		if ($refererLink == '/index.php' || $refererLink == '/') {
+			$_SESSION['alt_back_link'] = '/index.php';
+		} else {
+			$_SESSION['alt_back_link'] = '/snd-config.php#equalizers';
+		}
+	}
 }
 
 // Create enhanced metadata
@@ -3589,61 +3328,6 @@ function updDspAndBtInConfs($cardnum, $new_output_mode, $old_output_mode = '') {
 	sysCmd("sed -i '/AUDIODEV/c\AUDIODEV=" . $new_output_mode . ':' . $cardnum . ",0' /etc/bluealsaaplay.conf");
 }
 
-// Multiroom audio
-function startMultiroomSender() {
-	$params = cfgdb_read('cfg_multiroom', cfgdb_connect());
-	foreach ($params as $row) {
-	    $_cfg_multiroom[$row['param']] = $row['value'];
-	}
-	$cmd = 'trx-tx -d trx_send -h ' . $_cfg_multiroom['tx_host'] . ' -p ' . $_cfg_multiroom['tx_port'] . ' -m ' . $_cfg_multiroom['tx_bfr'] .
-		' -f ' . $_cfg_multiroom['tx_frame_size'] . ' -R ' . $_cfg_multiroom['tx_rtprio'] . ' -D /tmp/trx-txpid  >/dev/null';
-	$result = shell_exec($cmd);
-	debugLog($cmd);
-}
-function stopMultiroomSender() {
-	sysCmd('killall trx-tx');
-}
-function startMultiroomReceiver() {
-	$params = cfgdb_read('cfg_multiroom', cfgdb_connect());
-	foreach ($params as $row) {
-	    $_cfg_multiroom[$row['param']] = $row['value'];
-	}
-
-	$cmd = 'trx-rx -d ' . $_cfg_multiroom['rx_alsa_output_mode'] . ':' . $_SESSION['cardnum'] . ',0 -h ' . $_cfg_multiroom['rx_host'] .
-		' -p ' . $_cfg_multiroom['rx_port'] . ' -m ' . $_cfg_multiroom['rx_bfr'] . ' -j ' . $_cfg_multiroom['rx_jitter_bfr'] .
-		' -f ' . $_cfg_multiroom['rx_frame_size'] . ' -R ' . $_cfg_multiroom['rx_rtprio'] . ' -D /tmp/trx-rxpid  >/dev/null';
-	$result = shell_exec($cmd);
-	debugLog($cmd);
-}
-function stopMultiroomReceiver() {
-	sysCmd('killall trx-rx');
-	playerSession('write', 'rxactive', '0');
-	sendEngCmd('rxactive0');
-}
-function updReceiverVol ($cmd) {
-	$rx_hostnames = explode(', ', $_SESSION['rx_hostnames']);
-	$rx_addresses = explode(' ', $_SESSION['rx_addresses']);
-
-	$count = count($rx_addresses);
-	for ($i = 0; $i < $count; $i++) {
-		// NOTE: set-mpdvol checks to see if Receiver opted in for Master volume
-		if (false === ($result = file_get_contents('http://' . $rx_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
-			if (false === ($result = file_get_contents('http://' . $rx_addresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
-				debugLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $rx_hostnames[$i]);
-			}
-		}
-	}
-}
-function loadSndDummy () {
-	// Load driver and return card number
-	sysCmd('modprobe snd-dummy');
-	$result = sysCmd("cat /proc/asound/Dummy/pcm0p/info | awk -F': ' '/card/{print $2}'");
-	return $result[0];
-}
-function unloadSndDummy () {
-	sysCmd('sudo modprobe -r snd-dummy');
-}
-
 class PlaybackDestinationType
 {
     public const LOCAL = 1;
@@ -3669,30 +3353,4 @@ function playbackDestinationType() {
 	}
 
 	return $playbackDestType;
-}
-
-// Returns the specified timeout for use in file_get_contents($url) calls
-function getStreamTimeout() {
-	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", cfgdb_connect());
-	$timeout = $result[0]['value'];
-	$options = array('http'=>array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
-	return stream_context_create($options);
-}
-
-// Scan the network for hosts with open port 6600 (MPD)
-function scanForMPDHosts() {
-	$this_ipaddr = sysCmd('hostname -I')[0];
-	$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
-	$scan_results = sysCmd('nmap -Pn -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
-	return sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2');
-}
-
-// Return MPD socket or exit script
-function getMpdSock() {
-	if (false === ($sock = openMpdSock('localhost', 6600))) {
-		workerLog('getMpdSock(): Connection to MPD failed');
-		exit(0);
-	} else {
-		return $sock;
-	}
 }
