@@ -18,11 +18,15 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
-require_once dirname(__FILE__) . '/inc/eqp.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
+require_once 'eqp.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
+$dbh = sqlConnect();
+phpSession('open');
+
 $eqp12 = Eqp12($dbh);
 
 $curve_config = NULL;
@@ -109,7 +113,7 @@ elseif ($_selected_curve_id == NULL) {
 	$_selected_curve_id = $eqp12->getActivePresetIndex();
 }
 
-session_write_close();
+phpSession('close');
 
 // Load curve list
 if(!$_selected_curve_id) {

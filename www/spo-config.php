@@ -18,25 +18,28 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
+$dbh = sqlConnect();
+phpSession('open');
 
 // Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
-		cfgdb_update('cfg_spotify', $dbh, $key, $value);
+		sqlUpdate('cfg_spotify', $dbh, $key, $value);
 	}
 
 	// Restart if indicated
 	submitJob('spotifysvc', '', 'Changes saved', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
 }
 
-session_write_close();
+phpSession('close');
 
 // Load settings
-$result = cfgdb_read('cfg_spotify', $dbh);
+$result = sqlRead('cfg_spotify', $dbh);
 $cfg_spotify = array();
 
 foreach ($result as $row) {

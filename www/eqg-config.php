@@ -18,10 +18,13 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
+$dbh = sqlConnect();
+phpSession('open');
 
 // apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
@@ -33,17 +36,17 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	//workerLog($curve_values);
 
 	// add or update
-	$result = sdbquery("SELECT id FROM cfg_eqalsa WHERE curve_name='" . $_POST['curve_name'] . "'", $dbh);
+	$result = sqlQuery("SELECT id FROM cfg_eqalsa WHERE curve_name='" . $_POST['curve_name'] . "'", $dbh);
 	if (empty($result[0])) {
 		// add
-		$newid = sdbquery('SELECT MAX(id)+1 FROM cfg_eqalsa', $dbh);
-		$result = sdbquery("INSERT INTO cfg_eqalsa VALUES ('" . $newid[0][0] . "','" . $_POST['curve_name'] . "','" . $curve_values . "')", $dbh);
+		$newid = sqlQuery('SELECT MAX(id)+1 FROM cfg_eqalsa', $dbh);
+		$result = sqlQuery("INSERT INTO cfg_eqalsa VALUES ('" . $newid[0][0] . "','" . $_POST['curve_name'] . "','" . $curve_values . "')", $dbh);
 		$_GET['curve'] = $_POST['curve_name'];
 		$_SESSION['notify']['title'] = 'New curve added';
 	}
 	else {
 		// update
-		$result = sdbquery("UPDATE cfg_eqalsa SET curve_values='" . $curve_values . "' WHERE curve_name='" . $_POST['curve_name'] . "'" , $dbh);
+		$result = sqlQuery("UPDATE cfg_eqalsa SET curve_values='" . $curve_values . "' WHERE curve_name='" . $_POST['curve_name'] . "'" , $dbh);
 		$_SESSION['notify']['title'] = 'Curve updated';
 	}
 }
@@ -64,7 +67,7 @@ if (isset($_POST['play']) && $_POST['play'] == '1') {
 	$resp = readMpdResp($sock);
 	closeMpdSock($sock);
 
-	playerSession('write', 'alsaequal', $_POST['curve_name']);
+	phpSession('write', 'alsaequal', $_POST['curve_name']);
 
 	$_SESSION['notify']['title'] = 'Playing curve';
 }
@@ -74,7 +77,7 @@ if (isset($_POST['newcurvename'])) {
 	$_search_curve = 'Flat';
 }
 elseif (isset($_POST['rmcurve'])) {
-	$result = sdbquery("DELETE FROM cfg_eqalsa WHERE curve_name='" . $_GET['curve'] . "'", $dbh);
+	$result = sqlQuery("DELETE FROM cfg_eqalsa WHERE curve_name='" . $_GET['curve'] . "'", $dbh);
 	$_search_curve = 'Flat';
 	$_SESSION['notify']['title'] = 'Curve removed';
 }
@@ -85,11 +88,11 @@ else {
 	$_search_curve = $_SESSION['alsaequal'] == 'Off' ? 'Flat' : $_SESSION['alsaequal'];
 }
 
-session_write_close();
+phpSession('close');
 
 // load curve list
 $_selected_curve = 'Flat';
-$curveList = sdbquery('SELECT curve_name FROM cfg_eqalsa', $dbh);
+$curveList = sqlQuery('SELECT curve_name FROM cfg_eqalsa', $dbh);
 foreach ($curveList as $curve) {
 	$selected = ($_search_curve == $curve['curve_name'] && $_POST['newcurvename'] != '1') ? 'selected' : '';
 	$_select['curve_name'] .= sprintf('<option value="%s" %s>%s</option>\n', $curve['curve_name'], $selected, $curve['curve_name']);
@@ -109,7 +112,7 @@ $_disable_rm = $_selected_curve == 'Flat' ? 'disabled' : '';
 $_disable_rm_msg = $_selected_curve == 'Flat' ? 'The Flat curve cannot be removed' : '';
 
 // load curve values
-$result = sdbquery("SELECT * FROM cfg_eqalsa WHERE curve_name='" . $_search_curve . "'", $dbh);
+$result = sqlQuery("SELECT * FROM cfg_eqalsa WHERE curve_name='" . $_search_curve . "'", $dbh);
 
 $values = explode(',', $result[0]['curve_values']);
 for ($i = 0; $i < 10; $i++) {

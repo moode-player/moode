@@ -18,25 +18,25 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
+$dbh = sqlConnect();
+phpSession('open_ro');
 
 // apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach (array_keys($_POST['config']) as $key) {
-		//workerLog($key . ', ' . $_POST['config'][$key]['enabled'] . ', ' . $_POST['config'][$key]['pin'] . ', ' . $_POST['config'][$key]['command'] . ', ' . $_POST['config'][$key]['param'] . ', ' . $_POST['config'][$key]['value']);
-		cfgdb_update('cfg_gpio', $dbh, $key, $_POST['config'][$key]);
+		sqlUpdate('cfg_gpio', $dbh, $key, $_POST['config'][$key]);
 	}
 	// restart if indicated
 	submitJob('gpio_svc', $_SESSION['gpio_svc'], 'Changes saved', ($_SESSION['gpio_svc'] == '1' ? 'GPIO button handler restarted' : ''));
 }
 
-session_write_close();
-
 // load gpio config
-$result = cfgdb_read('cfg_gpio', $dbh);
+$result = sqlRead('cfg_gpio', $dbh);
 $cfg_gpio = array();
 
 foreach ($result as $row) {

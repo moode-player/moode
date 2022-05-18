@@ -21,11 +21,13 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-session_write_close();
-$dbh = cfgdb_connect();
+$dbh = sqlConnect();
+phpSession('open_ro');
 
 // Save changes to /etc/mpd.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
@@ -43,7 +45,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 			$value = $value * 1024; // Convert from MB to KB
 		}
 
-		cfgdb_update('cfg_mpd', $dbh, $key, $value);
+		sqlUpdate('cfg_mpd', $dbh, $key, $value);
 	}
 
 	// No device or mixer changes (moved to snd-config.php)
@@ -54,7 +56,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 }
 
 // Load settings
-$result = cfgdb_read('cfg_mpd', $dbh);
+$result = sqlRead('cfg_mpd', $dbh);
 $mpdconf = array();
 
 foreach ($result as $row) {

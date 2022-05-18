@@ -23,16 +23,18 @@
   * (C) 2020 @bitlab (@bitkeeper Git)
   */
 
-require_once dirname(__FILE__) . '/../inc/playerlib.php';
-require_once dirname(__FILE__) . '/../inc/autocfg.php';
-
-playerSession('open', '' ,'');
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
+require_once 'autocfg.php';
 
 if (file_exists('/boot/moodecfg.ini')) {
+	phpSession('open';
 	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 	autoConfig('/boot/moodecfg.ini');
 	sysCmd('sync');
-	session_write_close();
+	phpSession('close');
 }
 else {
 	autoCfgLog('autocfg: no file "/boot/moodecfg.ini" to import\n');

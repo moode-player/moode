@@ -18,11 +18,13 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
-session_write_close();
+$dbh = sqlConnect();
+phpSession('open_ro');
 
 // apply setting changes to /etc/squeezelite.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
@@ -30,7 +32,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($key == 'AUDIODEVICE') {
 			$value = $_SESSION['cardnum'];
 		}
-		cfgdb_update('cfg_sl', $dbh, $key, SQLite3::escapeString($value));
+		sqlUpdate('cfg_sl', $dbh, $key, SQLite3::escapeString($value));
 	}
 
 	// update conf file
@@ -38,7 +40,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 }
 
 // load settings
-$result = cfgdb_read('cfg_sl', $dbh);
+$result = sqlRead('cfg_sl', $dbh);
 $cfg_sl = array();
 
 foreach ($result as $row) {

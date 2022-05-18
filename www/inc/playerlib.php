@@ -855,14 +855,14 @@ function getTrackYear($trackData) {
 
 function clearLibCacheAll() {
 	sysCmd('truncate ' . LIBCACHE_BASE . '_* --size 0');
-	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
+	sqlUpdate('cfg_system', sqlConnect(), 'lib_pos','-1,-1,-1');
 }
 
 function clearLibCacheFiltered() {
 	sysCmd('truncate ' . LIBCACHE_BASE . '_folder.json --size 0');
 	sysCmd('truncate ' . LIBCACHE_BASE . '_format.json --size 0');
 	sysCmd('truncate ' . LIBCACHE_BASE . '_tag.json --size 0');
-	cfgdb_update('cfg_system', cfgdb_connect(), 'lib_pos','-1,-1,-1');
+	sqlUpdate('cfg_system', sqlConnect(), 'lib_pos','-1,-1,-1');
 }
 
 // Get file extension
@@ -888,7 +888,7 @@ function parseDelimFile($data, $delim) {
 function parseStationInfo($path) {
 	//workerLog($path);
 	$array = array();
-	$result = sdbquery("select * from cfg_radio where station='" . SQLite3::escapeString($path) . "'", cfgdb_connect());
+	$result = sqlQuery("SELECT * FROM cfg_radio WHERE station='" . SQLite3::escapeString($path) . "'", sqlConnect());
 
 	$array[0] = array('Logo' => LOGO_ROOT_DIR . $result[0]['name'] . '.jpg');
 	$array[1] = array('Station name' => $result[0]['name']);
@@ -1329,7 +1329,7 @@ function parseCurrentSong($sock) {
 
 // parse cfg_mpd settings
 function parseCfgMpd($dbh) {
-	$result = cfgdb_read('cfg_mpd', $dbh);
+	$result = sqlRead('cfg_mpd', $dbh);
 	$array = array();
 
 	foreach ($result as $row) {
@@ -1383,258 +1383,13 @@ function updPlayHist($historyitem) {
 	return 'OK';
 }
 
-// OLD
-// session management
-function playerSession($action, $var = '', $value = '') {
-	// 0: PHP_SESSION_DISABLED	Sessions are currently disabled
-	// 1: PHP_SESSION_NONE		Sessions are enabled, but no session has been started
-	// 2: PHP_SESSION_ACTIVE	Sessions are enabled and a session has been started
-
-	// open session and load from cfg_system
-	if ($action == 'open') {
-		$status = session_status();
-		//workerLog('playerSession(open): session_status=' . ($status == 0 ? 'PHP_SESSION_DISABLED' : ($status == 1 ? 'PHP_SESSION_NONE' : 'PHP_SESSION_ACTIVE')));
-		if ($status != PHP_SESSION_ACTIVE) {
-			// use stored id
-			$sessionid = playerSession('getsessionid');
-			if (!empty($sessionid)) {
-				session_id($sessionid);
-				$return = session_start();
-			}
-			// generate and store new id
-			else {
-				$return = session_start();
-				playerSession('storesessionid');
-			}
-			//workerLog('playerSession(open): session_start=' . (($return) ? 'TRUE' : 'FALSE'));
-		}
-
-		// load cfg_system into session vars
-		$dbh  = cfgdb_connect();
-		$params = cfgdb_read('cfg_system', $dbh);
-
-		foreach ($params as $row) {
-			$_SESSION[$row['param']] = $row['value'];
-		}
-
-		$dbh  = null;
-	}
-
-	// unlock and write session file
-	if ($action == 'unlock') {
-		session_write_close();
-	}
-
-	// unset and destroy session
-	if ($action == 'destroy') {
-		session_unset();
-
-		if (session_destroy()) {
-			$dbh  = cfgdb_connect();
-
-			// clear session id
-			if (cfgdb_update('cfg_system', $dbh, 'sessionid','')) {
-				$dbh = null;
-				return true;
-			}
-			else {
-				echo "cannot reset session on SQLite datastore";
-				return false;
-			}
-		}
-	}
-
-	// store a value in cfg_system and session var
-	if ($action == 'write') {
-		$_SESSION[$var] = $value;
-		$dbh  = cfgdb_connect();
-		cfgdb_update('cfg_system', $dbh, $var, $value);
-		$dbh = null;
-	}
-
-	// store session id
-	if ($action == 'storesessionid') {
-		$sessionid = session_id();
-		playerSession('write', 'sessionid', $sessionid);
-	}
-
-	// get session id
-	if ($action == 'getsessionid') {
-		$dbh  = cfgdb_connect();
-		$result = cfgdb_read('cfg_system', $dbh, 'sessionid');
-		$dbh = null;
-
-		return $result['0']['value'];
-	}
-}
-
-// OLD
-// Database management
-function cfgdb_connect() {
-	if ($dbh = new PDO(SQLDB)) {
-		return $dbh;
-	}
-	else {
-		echo "cannot open SQLite database";
-		return false;
-	}
-}
-
-function cfgdb_read($table, $dbh, $param = '', $id = '') {
-	if (empty($param) && empty($id)) {
-		$querystr = 'SELECT * FROM ' . $table;
-	}
-	else if (!empty($id)) {
-		$querystr = "SELECT * FROM " . $table . " WHERE id='" . $id . "'";
-	}
-	else if ($param == 'mpdconf') {
-		$querystr = "SELECT param, value FROM cfg_mpd WHERE value!=''";
-	}
-	else if ($table == 'cfg_audiodev') {
-		$filter = $param == 'all' ? ' WHERE list="yes"' : ' WHERE name="' . $param . '" AND list="yes"';
-		$querystr = 'SELECT name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions FROM ' . $table . $filter;
-	}
-	else if ($table == 'cfg_theme') {
-		$querystr = 'SELECT theme_name, tx_color, bg_color, mbg_color FROM ' . $table . ' WHERE theme_name="' . $param . '"';
-	}
-	else if ($table == 'cfg_radio') {
-		$querystr = $param == 'all' ? 'SELECT * FROM ' . $table . ' WHERE station not in ("OFFLINE", "zx reserved 499")' :
-			'SELECT station, name, logo, home_page FROM ' . $table . ' WHERE station="' . $param . '"';
-	}
-	else {
-		$querystr = 'SELECT value FROM ' . $table . ' WHERE param="' . $param . '"';
-	}
-	$result = sdbquery($querystr, $dbh);
-	return $result;
-}
-
-function cfgdb_update($table, $dbh, $key = '', $value) {
-	switch ($table) {
-		case 'cfg_system':
-			$querystr = "UPDATE " . $table . " SET value='" . SQLite3::escapeString($value) . "' where param='" . $key . "'";
-			break;
-
-		case 'cfg_mpd':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' where param='" . $key . "'";
-			break;
-
-		case 'cfg_network':
-			$querystr = "UPDATE " . $table .
-				" SET method='" . $value['method'] .
-				"', ipaddr='" . $value['ipaddr'] .
-				"', netmask='" . $value['netmask'] .
-				"', gateway='" . $value['gateway'] .
-				"', pridns='" . $value['pridns'] .
-				"', secdns='" . $value['secdns'] .
-				"', wlanssid='" . SQLite3::escapeString($value['wlanssid']) .
-				"', wlansec='" . $value['wlansec'] .
-				"', wlanpwd='" . SQLite3::escapeString($value['wlanpwd']) .
-				"', wlan_psk='" . $value['wlan_psk'] .
-				"', wlan_country='" . $value['wlan_country'] .
-				"', wlan_channel='" . $value['wlan_channel'] .
-				"' WHERE iface='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-
-		case 'cfg_source':
-			$querystr = "UPDATE " . $table . " SET name='" . $value['name'] . "', type='" . $value['type'] . "', address='" . $value['address'] . "', remotedir='" . $value['remotedir'] . "', username='" . $value['username'] . "', password='" . $value['password'] . "', charset='" . $value['charset'] . "', rsize='" . $value['rsize'] . "', wsize='" . $value['wsize'] . "', options='" . $value['options'] . "', error='" . $value['error'] . "' WHERE id=" . $value['id'];
-			break;
-
-		case 'cfg_audiodev':
-			$querystr = "UPDATE " . $table . " SET chipoptions='" . $value . "' WHERE name='" . $key . "'";
-			break;
-
-		case 'cfg_radio':
-			$querystr = "UPDATE " . $table . " SET station='" . $value . "' WHERE name='" . $key . "'";
-			break;
-		case 'cfg_sl':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_airplay':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_spotify':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_upnp':
-			$querystr = "UPDATE " . $table . " SET value='" . $value . "' WHERE param='" . $key . "'";
-			break;
-		case 'cfg_gpio':
-			$querystr = "UPDATE " . $table .
-				" SET enabled='" . $value['enabled'] .
-				"', pin='" . $value['pin'] .
-				"', command='" . trim($value['command']) .
-				"', param='" . $value['param'] .
-				"', value='" . $value['value'] .
-				"' WHERE id='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $querystr);
-			break;
-	}
-
-	if (sdbquery($querystr,$dbh)) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-function cfgdb_write($table, $dbh, $values) {
-	$querystr = "INSERT INTO " . $table . " VALUES (NULL, " . $values . ")"; // NULL causes the Id column to be set to the next number
-
-	if (sdbquery($querystr,$dbh)) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-function cfgdb_delete($table, $dbh, $id = '') {
-	if (empty($id)) {
-		$querystr = "DELETE FROM " . $table;
-	}
-	else {
-		$querystr = "DELETE FROM " . $table . " WHERE id=" . $id;
-	}
-
-	if (sdbquery($querystr,$dbh)) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-function sdbquery($querystr, $dbh) {
-	$query = $dbh->prepare($querystr);
-	if ($query->execute()) {
-		$result = array();
-		$i = 0;
-		foreach ($query as $value) {
-			$result[$i] = $value;
-			$i++;
-		}
-		$dbh = null;
-		if (empty($result)) {
-			return true;
-		}
-		else {
-			return $result;
-		}
-	}
-	else {
-		return false;
-	}
-}
-
 function updMpdConf($i2sdevice) {
 	$data .= "#########################################\n";
 	$data .= "# This file is automatically generated   \n";
 	$data .= "# by the MPD configuration page.         \n";
 	$data .= "#########################################\n\n";
 
-	$mpdcfg = sdbquery("SELECT param, value FROM cfg_mpd WHERE value!=''", cfgdb_connect());
+	$mpdcfg = sqlQuery("SELECT param, value FROM cfg_mpd WHERE value!=''", sqlConnect());
 	foreach ($mpdcfg as $cfg) {
 		switch ($cfg['param']) {
 			// Code block or other params
@@ -1712,22 +1467,22 @@ function updMpdConf($i2sdevice) {
 	}
 
 	// ALSA card number
-	playerSession('write', 'cardnum', $cardnum);
+	phpSession('write', 'cardnum', $cardnum);
 	// ALSA mixer name
-	playerSession('write', 'amixname', getMixerName($i2sdevice));
+	phpSession('write', 'amixname', getMixerName($i2sdevice));
 	// Hardware volume
-	playerSession('write', 'alsavolume', getALSAVolume($_SESSION['amixname']));
+	phpSession('write', 'alsavolume', getALSAVolume($_SESSION['amixname']));
 	if ($_SESSION['alsavolume'] == 'none' && $mixer_type == 'hardware') {
 		$mixer_type = 'software';
-		$result = sdbquery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", cfgdb_connect());
+		$result = sqlQuery("UPDATE cfg_mpd SET value='software' WHERE param='mixer_type'", sqlConnect());
 	}
 	// MPD mixer_type (Hardware, Software, Fixed (0dB, Null))
-	playerSession('write', 'mpdmixer', $mixer_type);
-	playerSession('write', 'mpdmixer_local', $mixer_type);
+	phpSession('write', 'mpdmixer', $mixer_type);
+	phpSession('write', 'mpdmixer_local', $mixer_type);
 	// Audio device friendly name
 	$adevname = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$cardnum] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
-	playerSession('write', 'adevname', $adevname);
+	phpSession('write', 'adevname', $adevname);
 
 	// Input
 	$data .= "max_connections \"128\"\n";
@@ -1889,7 +1644,7 @@ function getDeviceNames () {
 			}
 			elseif ($alsa_id != 'Loopback' && $alsa_id != 'Dummy') {
 				$aplay_device_name = trim(sysCmd("aplay -l | awk -F'[' '/card " . $i . "/{print $2}' | cut -d']' -f1")[0]);
-				$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $alsa_id);
+				$result = sqlRead('cfg_audiodev', sqlConnect(), $alsa_id);
 				if ($result === true) { // Not in table
 					$devices[$i] = $aplay_device_name;
 				}
@@ -1917,7 +1672,7 @@ function sourceCfg($queueargs) {
 
 	switch ($action) {
 		case 'add':
-			$dbh = cfgdb_connect();
+			$dbh = sqlConnect();
 			unset($queueargs['mount']['id']);
 
 			foreach ($queueargs['mount'] as $key => $value) {
@@ -1926,17 +1681,17 @@ function sourceCfg($queueargs) {
 			// error column
 			$values .= "''";
 
-			cfgdb_write('cfg_source', $dbh, $values);
+			sqlInsert('cfg_source', $dbh, $values);
 			$newmountID = $dbh->lastInsertId();
 
 			$return = (sourceMount('mount', $newmountID)) ? true : false;
 			break;
 
 		case 'edit':
-			$dbh = cfgdb_connect();
-			$mp = cfgdb_read('cfg_source', $dbh, '', $queueargs['mount']['id']);
+			$dbh = sqlConnect();
+			$mp = sqlRead('cfg_source', $dbh, '', $queueargs['mount']['id']);
 			// save the edits here in case the mount fails
-			cfgdb_update('cfg_source', $dbh, '', $queueargs['mount']);
+			sqlUpdate('cfg_source', $dbh, '', $queueargs['mount']);
 
 			// cifs and nfs
 			if ($mp[0]['type'] == 'cifs') {
@@ -1955,8 +1710,8 @@ function sourceCfg($queueargs) {
 			break;
 
 		case 'delete':
-			$dbh = cfgdb_connect();
-			$mp = cfgdb_read('cfg_source', $dbh, '', $queueargs['mount']['id']);
+			$dbh = sqlConnect();
+			$mp = sqlRead('cfg_source', $dbh, '', $queueargs['mount']['id']);
 
 			// cifs and nfs
 			if ($mp[0]['type'] == 'cifs') {
@@ -1970,7 +1725,7 @@ function sourceCfg($queueargs) {
 				sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
 			}
 
-			$return = (cfgdb_delete('cfg_source', $dbh, $queueargs['mount']['id'])) ? true : false;
+			$return = (sqlDelete('cfg_source', $dbh, $queueargs['mount']['id'])) ? true : false;
 			break;
 	}
 
@@ -1982,8 +1737,8 @@ function sourceCfg($queueargs) {
 function sourceMount($action, $id = '') {
 	switch ($action) {
 		case 'mount':
-			$dbh = cfgdb_connect();
-			$mp = cfgdb_read('cfg_source', $dbh, '', $id);
+			$dbh = sqlConnect();
+			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
 			// cifs and nfs
 			if ($mp[0]['type'] == 'cifs') {
@@ -2019,7 +1774,7 @@ function sourceMount($action, $id = '') {
 			if (empty($result)) {
 				if (!empty($mp[0]['error'])) {
 					$mp[0]['error'] = '';
-					cfgdb_update('cfg_source', $dbh, '', $mp[0]);
+					sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 				}
 
 				$return = true;
@@ -2031,7 +1786,7 @@ function sourceMount($action, $id = '') {
 				}
 				$mp[0]['error'] = 'Mount error';
 				workerLog('sourceMount(): Mount error: (' . implode("\n", $result) . ')');
-				cfgdb_update('cfg_source', $dbh, '', $mp[0]);
+				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 
 				$return = false;
 			}
@@ -2040,10 +1795,10 @@ function sourceMount($action, $id = '') {
 			break;
 
 		case 'mountall':
-			$dbh = cfgdb_connect();
+			$dbh = sqlConnect();
 
-			// cfgdb_read returns: result set || true = results empty || false = query failed
-			$mounts = cfgdb_read('cfg_source', $dbh);
+			// sqlRead returns: result set || true = results empty || false = query failed
+			$mounts = sqlRead('cfg_source', $dbh);
 
 			foreach ($mounts as $mp) {
 				if (!mountExists($mp['name'])) {
@@ -2056,8 +1811,8 @@ function sourceMount($action, $id = '') {
 			break;
 
 		case 'unmountall':
-			$dbh = cfgdb_connect();
-			$mounts = cfgdb_read('cfg_source', $dbh);
+			$dbh = sqlConnect();
+			$mounts = sqlRead('cfg_source', $dbh);
 
 			foreach ($mounts as $mp) {
 				// cifs and nfs
@@ -2313,7 +2068,7 @@ function startAutoShuffle() {
 }
 function stopAutoShuffle() {
 	sysCmd('killall -s 9 ashuffle > /dev/null');
-	playerSession('write', 'ashuffle', '0');
+	phpSession('write', 'ashuffle', '0');
 	if (false === ($sock = openMpdSock('localhost', 6600))) {
 		workerLog('stopAutoShuffle(): Connection to MPD failed');
 		exit(0);
@@ -2325,7 +2080,7 @@ function stopAutoShuffle() {
 
 // Get UPnP coverart url
 function getUpnpCoverUrl() {
-	$mode = sdbquery("SELECT value FROM cfg_upnp WHERE param='upnpav'", cfgdb_connect())[0]['value'] == 1 ? 'upnpav' : 'openhome';
+	$mode = sqlQuery("SELECT value FROM cfg_upnp WHERE param='upnpav'", sqlConnect())[0]['value'] == 1 ? 'upnpav' : 'openhome';
 	$result = sysCmd('/var/www/command/upnp_albumart.py "' . $_SESSION['upnpname'] . '" '. $mode);
 	// If multiple url's are returned, use the first
 	return explode(',', $result[0])[0];
@@ -2369,7 +2124,7 @@ function cfgChipOptions($chipoptions, $chiptype) {
 
 // Configure network interfaces
 function cfgNetIfaces() {
-	$dbh = cfgdb_connect();
+	$dbh = sqlConnect();
 
 	// Write interfaces file
 	$fp = fopen('/etc/network/interfaces', 'w');
@@ -2403,7 +2158,7 @@ function cfgNetIfaces() {
 	$data .= "require dhcp_server_identifier\n";
 	$data .= "slaac private\n";
 	// Read network config
-	$cfg_network = sdbquery('select * from cfg_network', $dbh);
+	$cfg_network = sqlQuery('SELECT * FROM cfg_network', $dbh);
 	// eth0 static
 	if ($cfg_network[0]['method'] == 'static') {
 		$data .= "interface eth0\n";
@@ -2460,7 +2215,7 @@ function cfgNetIfaces() {
 		$data .= "}\n";
 
 		// Add saved SSID's
-		$cfg_ssid = sdbquery("select * from cfg_ssid where ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
+		$cfg_ssid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
 		foreach($cfg_ssid as $row) {
 			$data .= "network={\n";
 			$data .= 'ssid=' . '"' . $row['ssid'] . '"' . "\n";
@@ -2488,7 +2243,7 @@ function cfgNetIfaces() {
 // Configure hostapd conf
 function cfgHostApd() {
 	// Read network config [2] = apd0
-	$result = sdbquery('select * from cfg_network', cfgdb_connect());
+	$result = sqlQuery('SELECT * FROM cfg_network', sqlConnect());
 
 	$file = '/etc/hostapd/hostapd.conf';
 	$fp = fopen($file, 'w');
@@ -2626,7 +2381,7 @@ function checkForUpd($path) {
 // Get the id of the update package.
 // This allows appending a suffix to the id when testing packages. Ex: rNNN-test1
 function getPkgId () {
-	$result = sdbquery("select value from cfg_system where param='pkgid_suffix'", cfgdb_connect());
+	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='pkgid_suffix'", sqlConnect());
 	return $_SESSION['moode_release'] . $result[0]['value'];
 }
 
@@ -2699,22 +2454,22 @@ function cfgI2sOverlay($i2sdevice) {
 	if ($i2sdevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		sysCmd('sed -i "s/dtparam=audio=off/dtparam=audio=on/" /boot/config.txt');
 		# This will trigger an MPD conf update during startup and set all the device params correctly
-		playerSession('write', 'adevname', 'Pi HDMI 1');
+		phpSession('write', 'adevname', 'Pi HDMI 1');
 	}
 	// Named I2S device
 	elseif ($i2sdevice != 'None') {
-		$result = cfgdb_read('cfg_audiodev', cfgdb_connect(), $i2sdevice);
+		$result = sqlRead('cfg_audiodev', sqlConnect(), $i2sdevice);
 		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $result[0]['driver'] . $force_eeprom_read_0 . '" /boot/config.txt');
-		playerSession('write', 'cardnum', '0');
-		playerSession('write', 'adevname', $result[0]['name']);
-		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
+		phpSession('write', 'cardnum', '0');
+		phpSession('write', 'adevname', $result[0]['name']);
+		sqlUpdate('cfg_mpd', sqlConnect(), 'device', '0');
 	}
 	// DT overlay
 	else {
 		sysCmd('sed -i "/dtparam=audio=/c \dtparam=audio=off\ndtoverlay=' . $_SESSION['i2soverlay'] . $force_eeprom_read_0 . '" /boot/config.txt');
-		playerSession('write', 'cardnum', '0');
-		playerSession('write', 'adevname', $_SESSION['i2soverlay']);
-		cfgdb_update('cfg_mpd', cfgdb_connect(), 'device', '0');
+		phpSession('write', 'cardnum', '0');
+		phpSession('write', 'adevname', $_SESSION['i2soverlay']);
+		sqlUpdate('cfg_mpd', sqlConnect(), 'device', '0');
 	}
 }
 
@@ -2737,7 +2492,7 @@ function ctlBt($ctl) {
 // Set audio source
 function setAudioIn($input_source) {
 	sysCmd('mpc stop');
-	$result = sdbquery("SELECT value FROM cfg_system WHERE param='wrkready'", cfgdb_connect());
+	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='wrkready'", sqlConnect());
 
  	// No need to configure Local during startup (wrkready = 0)
 	if ($input_source == 'Local' && $result[0]['value'] == '1') {
@@ -2749,7 +2504,7 @@ function setAudioIn($input_source) {
 		}
 
 		if ($_SESSION['mpdmixer'] == 'hardware') {
-			playerSession('write', 'volknob_preamp', $_SESSION['volknob']);
+			phpSession('write', 'volknob_preamp', $_SESSION['volknob']);
 			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_mpd']);
 		}
 
@@ -2764,7 +2519,7 @@ function setAudioIn($input_source) {
 		if ($_SESSION['mpdmixer'] == 'hardware') {
 			// Only update this value during startup (wrkready = 0)
 			if ($result[0]['value'] == '1') {
-				playerSession('write', 'volknob_mpd', $_SESSION['volknob']);
+				phpSession('write', 'volknob_mpd', $_SESSION['volknob']);
 			}
 			sysCmd('/var/www/vol.sh ' . $_SESSION['volknob_preamp']);
 		}
@@ -2792,10 +2547,10 @@ function setAudioOut($audioout) {
 	elseif ($audioout == 'Bluetooth') {
 		if ($_SESSION['mpdmixer'] == 'none') {
 			reconfMpdVolume('software');
-			playerSession('write', 'mpdmixer_local', 'none');
+			phpSession('write', 'mpdmixer_local', 'none');
 		}
 
-		playerSession('write', 'btactive', '0');
+		phpSession('write', 'btactive', '0');
 		sendEngCmd('btactive0');
 		sysCmd('/var/www/vol.sh -restore');
 		sysCmd('mpc stop');
@@ -2831,8 +2586,8 @@ function setMpdHttpd () {
 
 // Reconfigure MPD volume
 function reconfMpdVolume($mixertype) {
-	cfgdb_update('cfg_mpd', cfgdb_connect(), 'mixer_type', $mixertype);
-	playerSession('write', 'mpdmixer', $mixertype);
+	sqlUpdate('cfg_mpd', sqlConnect(), 'mixer_type', $mixertype);
+	phpSession('write', 'mpdmixer', $mixertype);
 	// Reset hardware volume to 0dB if indicated
 	if (($mixertype == 'software' || $mixertype == 'none') && $_SESSION['alsavolume'] != 'none') {
 		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
@@ -3230,7 +2985,7 @@ function loadRadio() {
 		}
 	}
 	// Load cfg_radio into session
-	$result = cfgdb_read('cfg_radio', cfgdb_connect(), 'all');
+	$result = sqlRead('cfg_radio', sqlConnect(), 'all');
 	foreach ($result as $row) {
 		$_SESSION[$row['station']] = array('name' => $row['name'], 'type' => $row['type'], 'logo' => $row['logo'],
 			'bitrate' => $row['bitrate'], 'format' => $row['format'], 'home_page' => $row['home_page']);

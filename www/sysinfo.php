@@ -18,7 +18,8 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
 
 $file = '/var/local/www/sysinfo.txt';
 sysCmd('/var/www/command/sysinfo.sh html > ' . $file);

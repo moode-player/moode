@@ -18,9 +18,11 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
 
-playerSession('open', '' ,'');
+phpSession('open');
 
 if (isset($_POST['update_audioin']) && $_POST['audioin'] != $_SESSION['audioin']) {
 	if ($_POST['update_audioin'] != 'Local' && $_SESSION['mpdmixer'] == 'software') {
@@ -28,20 +30,20 @@ if (isset($_POST['update_audioin']) && $_POST['audioin'] != $_SESSION['audioin']
 		$_SESSION['notify']['duration'] = 6;
 	}
 	else {
-		playerSession('write', 'audioin', $_POST['audioin']);
+		phpSession('write', 'audioin', $_POST['audioin']);
 		submitJob('audioin', $_POST['audioin'], 'Input set to ' . $_POST['audioin'], '');
 	}
 }
 if (isset($_POST['update_rsmafterinp']) && $_POST['rsmafterinp'] != $_SESSION['rsmafterinp']) {
-	playerSession('write', 'rsmafterinp', $_POST['rsmafterinp']);
+	phpSession('write', 'rsmafterinp', $_POST['rsmafterinp']);
 	$_SESSION['notify']['title'] = 'Setting updated';
 }
 if (isset($_POST['update_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
-	playerSession('write', 'audioout', $_POST['audioout']);
+	phpSession('write', 'audioout', $_POST['audioout']);
 	submitJob('audioout', $_POST['audioout'], 'Output set to ' . $_POST['audioout'], '');
 }
 
-session_write_close();
+phpSession('close');
 
 // Input source
 $_select['audioin'] .= "<option value=\"Local\" " . (($_SESSION['audioin'] == 'Local') ? "selected" : "") . ">Local (MPD)</option>\n";

@@ -72,7 +72,7 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', wlan_country='" . $value['wlan_country'] .
 				"', wlan_channel='" . $value['wlan_channel'] .
 				"' WHERE iface='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $queryStr);
+			//workerLog('sqlUpdate: ' . $queryStr);
 			break;
 		case 'cfg_source':
 			$queryStr = "UPDATE " . $table . " SET name='" . $value['name'] . "', type='" . $value['type'] . "', address='" .
@@ -107,7 +107,7 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', param='" . $value['param'] .
 				"', value='" . $value['value'] .
 				"' WHERE id='" . $key . "'";
-			//workerLog('cfgdb_update: ' . $queryStr);
+			//workerLog('sqlUpdate: ' . $queryStr);
 			break;
 	}
 

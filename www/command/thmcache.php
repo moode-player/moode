@@ -24,6 +24,7 @@
 
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
+require_once 'session.php';
 
 // Image to use when no cover found
 const NOT_FOUND_JPG = '/var/www/images/notfound.jpg';
@@ -33,12 +34,13 @@ const NOT_FOUND_JPG = '/var/www/images/notfound.jpg';
 //
 
 workerLog('thmcache: Start');
-session_id(playerSession('getsessionid'));
-session_start();
+session_id(phpSession('get_sessionid'));
+
+phpSession('open');
 $search_pri = $_SESSION['library_covsearchpri'];
 $hires_thm = $_SESSION['library_hiresthm'];
 $pixel_ratio = floor($_SESSION['library_pixelratio']);
-session_write_close();
+phpSession('close');
 
 // Auto: Uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time).
 // NOTE: Manual should be used for Desktops
@@ -102,9 +104,9 @@ workerLog('thmcache: Scanning: ' . $dirs);
 $result = shell_exec('/var/www/command/listall.sh | sort');
 if (is_null($result) || substr($result, 0, 2) == 'OK') {
 	workerLog('thmcache: exit: no files found');
-	session_start();
+	phpSession('open');
 	$_SESSION['thmcache_status'] = 'No files found';
-	session_write_close();
+	phpSession('close');
 	exit(0);
 }
 
@@ -126,9 +128,9 @@ while ($line) {
 	$dir_b = dirname($file_b);
 
 	if ($dir_a != $dir_b) {
-		session_start();
+		phpSession('open');
 		$_SESSION['thmcache_status'] = 'Scanning folder ' . ++$folder_cnt . ' ' . $dir_a;
-		session_write_close();
+		phpSession('close');
 
 		if (!file_exists(THMCACHE_DIR . md5($dir_a) . '.jpg')) {
 			createThumb($file_a, $dir_a, $search_pri, $thm_w, $thm_q);
@@ -140,9 +142,9 @@ while ($line) {
 }
 
 $msg = 'Done: ' . $folder_cnt . ' folders scanned, ' . $new_thms . ' thumbs created, ' . $cached_thms . ' already in cache.';
-session_start();
+phpSession('open');
 $_SESSION['thmcache_status'] = $msg;
-session_write_close();
+phpSession('close');
 workerLog('thmcache: ' . $msg);
 
 // Create thumbnail image

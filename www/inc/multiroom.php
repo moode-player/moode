@@ -19,7 +19,7 @@
  */
 
 function startMultiroomSender() {
-	$params = sqlRead('cfg_multiroom', cfgdb_connect());
+	$params = sqlRead('cfg_multiroom', sqlConnect());
 	foreach ($params as $row) {
 	    $cfgMultiroom[$row['param']] = $row['value'];
 	}
@@ -34,7 +34,7 @@ function stopMultiroomSender() {
 }
 
 function startMultiroomReceiver() {
-	$params = sqlRead('cfg_multiroom', cfgdb_connect());
+	$params = sqlRead('cfg_multiroom', sqlConnect());
 	foreach ($params as $row) {
 	    $cfgMultiroom[$row['param']] = $row['value'];
 	}
@@ -80,7 +80,7 @@ function unloadSndDummy () {
 
 // Returns the specified timeout for use in file_get_contents($URL) calls
 function getStreamTimeout() {
-	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", cfgdb_connect());
+	$result = sdbquery("SELECT value FROM cfg_multiroom WHERE param='tx_query_timeout'", sqlConnect());
 	$timeout = $result[0]['value'];
 	$options = array('http' => array('timeout' => $timeout . '.0')); // Wait up to $timeout seconds (float)
 	return stream_context_create($options);

@@ -63,7 +63,6 @@ switch ($_GET['cmd']) {
 		echo json_encode(getStationContents($stName));
 		break;
 	case 'put_radioview_show_hide':
-		workerLog($_POST['block'] . '|' . $_POST['type']);
 		putRadioViewShowHide($_POST['block'], $_POST['type']);
 		break;
 }
@@ -75,12 +74,12 @@ if (isset($sock) && $sock !== false) {
 
 // Return list of stations
 function getStations() {
-	return cfgdb_read('cfg_radio', cfgdb_connect(), 'all');
+	return sqlRead('cfg_radio', sqlConnect(), 'all');
 }
 
 // Return station metadata
 function getStationContents($stName) {
-	$result = sdbquery("SELECT * FROM cfg_radio WHERE name='" . SQLite3::escapeString($stName) . "'", cfgdb_connect());
+	$result = sqlQuery("SELECT * FROM cfg_radio WHERE name='" . SQLite3::escapeString($stName) . "'", sqlConnect());
 	$contents = array(
 		'id' => $result[0]['id'],
 		'station' => $result[0]['station'],
@@ -103,16 +102,16 @@ function getStationContents($stName) {
 
 // Check imput fields
 function validateInput($cmd, $stName, $stFile, $stUrl, $stRowId) {
-	$dbh = cfgdb_connect();
+	$dbh = sqlConnect();
 	$stName = SQLite3::escapeString($stName);
 	$stUrl = SQLite3::escapeString($stUrl);
 
 	if ($cmd == 'new_station') {
 		if (file_exists($stFile)) {
 			$msg = 'A station .pls file with the same name already exists';
-		} else if (true !== sdbquery("SELECT id FROM cfg_radio WHERE station='" . $stUrl . "'", $dbh)) {
+		} else if (true !== sqlQuery("SELECT id FROM cfg_radio WHERE station='" . $stUrl . "'", $dbh)) {
 			$msg = 'A station with same URL already exists in the database';
-		} else if (true !== sdbquery("SELECT id FROM cfg_radio WHERE name='" . $stName . "'", $dbh)) {
+		} else if (true !== sqlQuery("SELECT id FROM cfg_radio WHERE name='" . $stName . "'", $dbh)) {
 			$msg = 'A station with the same name already exists in the database';
 		} else {
 			$msg = 'OK';
@@ -121,7 +120,7 @@ function validateInput($cmd, $stName, $stFile, $stUrl, $stRowId) {
 
 	if ($cmd == 'upd_station') {
 		// NOTE: Client prevents pls name change so check for existing station with same URL
-		if (true !== sdbquery("SELECT id FROM cfg_radio WHERE id != '" . $stRowId . "' " .
+		if (true !== sqlQuery("SELECT id FROM cfg_radio WHERE id != '" . $stRowId . "' " .
 			"AND station = '" . $stUrl . "'", $dbh)) {
 			$msg = 'A station with same URL already exists';
 		} else {
@@ -135,7 +134,7 @@ function validateInput($cmd, $stName, $stFile, $stUrl, $stRowId) {
 // Create/update station metadata and pls file
 function putStationContents($cmd, $path, $stFile) {
 	workerLog(print_r($path, true));
-	$dbh = cfgdb_connect();
+	$dbh = sqlConnect();
 
 	if ($cmd == 'new_station') {
 		// NOTE: Values have to be in column order and NULL causes id to be bumped
@@ -155,7 +154,7 @@ function putStationContents($cmd, $path, $stFile) {
 			"'" . $path['geo_fenced'] . "'," .
 			"'" . SQLite3::escapeString($path['home_page']) . "'," .
 			"'" . $path['reserved2'] . "'";
-		$result = sdbquery('INSERT INTO cfg_radio VALUES ' . '(' . $values . ')', $dbh);
+		$result = sqlQuery('INSERT INTO cfg_radio VALUES ' . '(' . $values . ')', $dbh);
 	}
 
 	if ($cmd == 'upd_station') {
@@ -174,11 +173,11 @@ function putStationContents($cmd, $path, $stFile) {
 			"geo_fenced='" . $path['geo_fenced'] . "'," .
 			"home_page='" . SQLite3::escapeString($path['home_page']) . "'," .
 			"reserved2='" . $path['reserved2'] . "'";
-		$result = sdbquery('UPDATE cfg_radio SET ' . $values . " WHERE id='" . $path['id'] . "'", $dbh);
+		$result = sqlQuery('UPDATE cfg_radio SET ' . $values . " WHERE id='" . $path['id'] . "'", $dbh);
 	}
 
 	// Add/update session var
-	session_start();
+	phpSession('open');
 	$_SESSION[$path['url']] = array(
 		'name' => $path['name'],
 		'type' => $path['type'],
@@ -186,7 +185,7 @@ function putStationContents($cmd, $path, $stFile) {
 		'bitrate' => $path['bitrate'],
 		'format' => $path['format']
 	);
-	session_write_close();
+	phpSession('close');
 
 	// Write pls file and set permissions
 	$contents = '[playlist]' . "\n";
@@ -241,16 +240,16 @@ function putStationCover($stName) {
 // Delete station file, cover image, session var and SQL row
 function deleteStation($stationName, $stationPls) {
 	// Delete row
-	$result = sdbquery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($stationName) . "'", cfgdb_connect());
+	$result = sqlQuery("DELETE FROM cfg_radio WHERE name='" . SQLite3::escapeString($stationName) . "'", sqlConnect());
 
 	// Delete session var
-	session_start();
+	phpSession('open');
 	foreach ($_SESSION as $key => $value) {
 		if ($value['name'] == $stationName) {
 			unset($_SESSION[$key]);
 		}
 	}
-	session_write_close();
+	phpSession('close');
 
 	// Delete pls and logo image files
 	sysCmd('rm "' . MPD_MUSICROOT . $stationPls . '"');
@@ -269,7 +268,7 @@ function deleteStation($stationName, $stationPls) {
 
 // Update radio view show/hide stations
 function putRadioViewShowHide($stBlock, $stType) {
-	$dbh = cfgdb_connect();
+	$dbh = sqlConnect();
 
 	if ($stBlock == 'Moode') {
 		$whereClause = "WHERE id < '499' AND type != 'f'";
@@ -279,11 +278,13 @@ function putRadioViewShowHide($stBlock, $stType) {
 		$whereClause = "WHERE id > '499' AND type != 'f'";
 	}
 
-	$result = sdbquery("UPDATE cfg_radio SET type='" . $stType . "' " . $whereClause, $dbh);
+	$result = sqlQuery("UPDATE cfg_radio SET type='" . $stType . "' " . $whereClause, $dbh);
 
 	// Update cfg_system and reset show/hide param to "No action"
-	$result = cfgdb_read('cfg_system', $dbh, 'radioview_show_hide');
+	$result = sqlRead('cfg_system', $dbh, 'radioview_show_hide');
 	$showHide = explode(',', $result[0]['value']);
 	strpos($stBlock, 'Moode') !== false ? $showHide[0] = 'No action' : $showHide[1] = 'No action';
-	playerSession('write', 'radioview_show_hide', $showHide[0] . ',' . $showHide[1]);
+	phpSession('open');
+	phpSession('write', 'radioview_show_hide', $showHide[0] . ',' . $showHide[1]);
+	phpSession('close');
 }

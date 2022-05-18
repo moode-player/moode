@@ -21,11 +21,13 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
 
-playerSession('open', '', '');
+phpSession('open');
 $_SESSION['alt_back_link'] = '';
-session_write_close();
+phpSession('close');
 
 $section = basename(__FILE__, '.php');
 

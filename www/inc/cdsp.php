@@ -22,8 +22,8 @@
  * Wrapper for functionality related to the use of CamillaDSP with moOde
  */
 
-// NOTE: Is this include needed?
-require_once dirname(__FILE__) . '/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
 
 const CDSP_CHECK_VALID = 1;
 const CDSP_CHECK_INVALID = 0;
@@ -101,7 +101,7 @@ class CamillaDsp {
             $configfilename_escaped = str_replace ('/', '\/', $configfilename);
             $this->patchRelConvPath($configname);
             if(is_file($configfilename)) {
-                syscmd("sudo ln -s -f \"" . $configfilename . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
+                sysCmd("sudo ln -s -f \"" . $configfilename . "\" " . $this->CAMILLAGUI_WORKING_CONGIG);
             }
         }
 
@@ -110,7 +110,7 @@ class CamillaDsp {
 
     function reloadConfig() {
         if( $this->configfile != 'off') {
-            syscmd('sudo killall -s SIGHUP camilladsp');
+            sysCmd('sudo killall -s SIGHUP camilladsp');
         }
     }
 
@@ -297,7 +297,7 @@ class CamillaDsp {
      */
     function coeffInfo($coefffile, $raw = False) {
         $fileName = $this->CAMILLA_CONFIG_DIR . '/coeffs/'. $coefffile;
-        $jsonString = syscmd("mediainfo --Output=JSON \"" . $fileName . "\"");
+        $jsonString = sysCmd("mediainfo --Output=JSON \"" . $fileName . "\"");
         $mediaDataObj = json_decode(implode($jsonString));
 
         $ext = $mediaDataObj->{'media'}->{'track'}[0]->{'FileExtension'};
@@ -340,7 +340,7 @@ class CamillaDsp {
      */
     function version() {
         $version  = NULL;
-        $result = syscmd("camilladsp --version ");
+        $result = sysCmd("camilladsp --version ");
 
         if(  count($result) == 1 ) {
             $version =  $result[0];
@@ -389,9 +389,9 @@ class CamillaDsp {
 
     function changeCamillaStatus($enable) {
         if($enable) {
-            syscmd("sudo systemctl start camillagui");
+            sysCmd("sudo systemctl start camillagui");
         }else {
-            syscmd("sudo systemctl stop camillagui");
+            sysCmd("sudo systemctl stop camillagui");
         }
     }
 
@@ -403,12 +403,12 @@ class CamillaDsp {
         if( $mode == true
            && file_exists('/opt/camillagui/config/gui-config.yml')
            && file_exists('/opt/camillagui/config/gui-config.yml.disabled') == false ) {
-            syscmd("sudo mv /opt/camillagui/config/gui-config.yml /opt/camillagui/config/gui-config.yml.disabled");
+            sysCmd("sudo mv /opt/camillagui/config/gui-config.yml /opt/camillagui/config/gui-config.yml.disabled");
         }
         else if( $mode == false
                  && file_exists('/opt/camillagui/config/gui-config.yml.disabled')
                  && file_exists('/opt/camillagui/config/gui-config.yml') == false ) {
-            syscmd("sudo mv /opt/camillagui/config/gui-config.yml.disabled /opt/camillagui/config/gui-config.yml");
+            sysCmd("sudo mv /opt/camillagui/config/gui-config.yml.disabled /opt/camillagui/config/gui-config.yml");
         }
     }
 

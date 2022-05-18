@@ -18,26 +18,29 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
+$dbh = sqlConnect();
+phpSession('open');
 
 // Get current settings: [0] = eth0, [1] = wlan0, [2] = apd0
-$cfg_network = sdbquery('select * from cfg_network', $dbh);
+$cfg_network = sqlQuery('SELECT * FROM cfg_network', $dbh);
 
 // Reset eth0 and wlan0 to defaults
 if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	// eth0
 	$value = array('method' => 'dhcp', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '', 'wlanssid' => '',
 		'wlansec' => '', 'wlanpwd' => '', 'wlan_psk' => '', 'wlan_country' => '', 'wlan_channel' => '');
-	cfgdb_update('cfg_network', $dbh, 'eth0', $value);
+	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
 	// wlan0
 	$value['wlanssid'] = 'None (activates AP mode)';
 	$value['wlansec'] = 'wpa';
 	$value['wlan_country'] = $cfg_network[1]['wlan_country']; // Preserve country code
-	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
+	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
 	submitJob('netcfg', '', 'Network config reset', 'Restart required');
 }
@@ -48,7 +51,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	$value = array('method' => $_POST['eth0method'], 'ipaddr' => $_POST['eth0ipaddr'], 'netmask' => $_POST['eth0netmask'],
 		'gateway' => $_POST['eth0gateway'], 'pridns' => $_POST['eth0pridns'], 'secdns' => $_POST['eth0secdns'], 'wlanssid' => '',
 		'wlansec' => '', 'wlanpwd' => '', 'wlan_psk' => '', 'wlan_country' => '', 'wlan_channel' => '');
-	cfgdb_update('cfg_network', $dbh, 'eth0', $value);
+	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
 	// wlan0
 	$method = (empty($_POST['wlan0ssid']) || $_POST['wlan0ssid'] == 'None (activates AP mode)') ? 'dhcp' : $_POST['wlan0method'];
@@ -65,22 +68,22 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'],
 		'wlanssid' => $_POST['wlan0ssid'], 'wlansec' => $_POST['wlan0sec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
 		'wlan_country' => $_POST['wlan0country'], 'wlan_channel' => '');
-	cfgdb_update('cfg_network', $dbh, 'wlan0', $value);
+	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
 	// Add/update cfg_ssid
 	if ($_POST['wlan0ssid'] != 'None (activates AP mode)') {
-		$result = sdbquery("select * from cfg_ssid where ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
+		$result = sqlQuery("select * from cfg_ssid where ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
 		if ($result === true) {
 			// Add
 			$values =
 				"'"	. SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
 				"'" . $_POST['wlan0sec'] . "'," .
 				"'" . $psk . "'";
-			$result = sdbquery('insert into cfg_ssid values (NULL,' . $values . ')', $dbh);
+			$result = sqlQuery('INSERT INTO cfg_ssid VALUES (NULL,' . $values . ')', $dbh);
 		}
 		else {
 			// Update
-			$result = sdbquery("update cfg_ssid set " .
+			$result = sqlQuery("update cfg_ssid set " .
 				"ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
 				"sec='" . $_POST['wlan0sec'] . "'," .
 				"psk='" . $psk . "' " .
@@ -99,20 +102,20 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 		'wlanssid' => $_POST['wlan0apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' => $psk,
 		'wlan_country' => '', 'wlan_channel' => $_POST['wlan0apdchan']);
-	cfgdb_update('cfg_network', $dbh, 'apd0', $value);
+	sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 
 	submitJob('netcfg', '', 'Changes saved', 'Restart required');
 }
 
 // Update saved networks
 if (isset($_POST['update-saved-networks']) && $_POST['update-saved-networks'] == 1) {
-	$cfg_ssid = sdbquery("select * from cfg_ssid where ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
+	$cfg_ssid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
 	if ($cfg_ssid !== true) {
 		$item_deleted = false;
-		for ($i=0; $i < count($cfg_ssid); $i++) {
+		for ($i = 0; $i < count($cfg_ssid); $i++) {
 			$_post_ssid = 'cfg-ssid-' . $cfg_ssid[$i]['id'];
 			if (isset($_POST[$_post_ssid]) && $_POST[$_post_ssid] == 'on') {
-				$result = sdbquery("delete from cfg_ssid where id = '" . $cfg_ssid[$i]['id'] . "'", $dbh);
+				$result = sqlQuery("DELETE FROM cfg_ssid WHERE id = '" . $cfg_ssid[$i]['id'] . "'", $dbh);
 				$item_deleted = true;
 			}
 		}
@@ -128,10 +131,10 @@ if (isset($_POST['update-saved-networks']) && $_POST['update-saved-networks'] ==
 //
 
 // Get updated settings: [0] = eth0, [1] = wlan0, [2] = apd0
-$cfg_network = sdbquery('select * from cfg_network', $dbh);
+$cfg_network = sqlQuery('SELECT * FROM cfg_network', $dbh);
 
 // List saved networks excluding the currently configured SSID
-$cfg_ssid = sdbquery("select * from cfg_ssid where ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
+$cfg_ssid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
 if ($cfg_ssid === true) {
 	$_saved_networks = '<p style="text-align:center;">There are no saved networks</p>';
 }
@@ -251,7 +254,7 @@ $_wlan0apdssid = $cfg_network[2]['wlanssid'];
 $_wlan0apdchan = $cfg_network[2]['wlan_channel'];
 $_wlan0apdpwd = $cfg_network[2]['wlanpwd'];
 
-session_write_close();
+phpSession('close');
 
 waitWorker(1, 'net-config');
 

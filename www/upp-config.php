@@ -18,10 +18,13 @@
  *
  */
 
-require_once dirname(__FILE__) . '/inc/playerlib.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'session.php';
+require_once 'sql.php';
 
-playerSession('open', '' ,'');
-$dbh = cfgdb_connect();
+$dbh = sqlConnect();
+phpSession('open');
 
 // Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
@@ -31,7 +34,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 	// Update sql table and conf file
 	foreach ($_POST['config'] as $key => $value) {
-		cfgdb_update('cfg_upnp', $dbh, $key, $value);
+		sqlUpdate('cfg_upnp', $dbh, $key, $value);
 
 		if ($value != '') {
 			sysCmd("sed -i '/" . $key . ' =' . '/c\\' . $key . ' = ' . $value . "' /etc/upmpdcli.conf");
@@ -48,7 +51,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 session_write_close();
 
 // Load settings
-$result = cfgdb_read('cfg_upnp', $dbh);
+$result = sqlRead('cfg_upnp', $dbh);
 $cfg_upnp = array();
 
 foreach ($result as $row) {
@@ -61,14 +64,12 @@ $_select['checkcontentformat'] .= "<option value=\"0\" " . (($cfg_upnp['checkcon
 $_select['svctype'] .= "<option value=\"upnpav\" " . (($cfg_upnp['upnpav'] == '1') ? "selected" : "") . ">UPnP-A/V</option>\n";
 $_select['svctype'] .= "<option value=\"openhome\" " . (($cfg_upnp['openhome'] == '1') ? "selected" : "") . ">OpenHome</option>\n";
 
-/* DROP
+/*DELETE
 $_select['upnpav'] .= "<option value=\"1\" " . (($cfg_upnp['upnpav'] == '1') ? "selected" : "") . ">Yes</option>\n";
 $_select['upnpav'] .= "<option value=\"0\" " . (($cfg_upnp['upnpav'] == '0') ? "selected" : "") . ">No</option>\n";
 $_select['openhome'] .= "<option value=\"1\" " . (($cfg_upnp['openhome'] == '1') ? "selected" : "") . ">Yes</option>\n";
 $_select['openhome'] .= "<option value=\"0\" " . (($cfg_upnp['openhome'] == '0') ? "selected" : "") . ">No</option>\n";
-*/
 
-/* DROP
 // TIDAL
 $_select['tidaluser'] = $cfg_upnp['tidaluser'];
 $_select['tidalpass'] = $cfg_upnp['tidalpass'];

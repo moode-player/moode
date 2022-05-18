@@ -21,9 +21,10 @@
 
 set_include_path('/var/www/inc');
 require_once 'playerlib.php';
+require_once 'session.php';
 require_once 'cdsp.php';
 
-session_id(playerSession('getsessionid'));
-session_start();
+session_id(phpSession('get_sessionid'));
+phpSession('open');
 updMpdConf($_SESSION['i2sdevice']);
-session_write_close();
+phpSession('close');

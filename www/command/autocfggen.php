@@ -25,11 +25,13 @@
   * (C) 2020 @bitlab (@bitkeeper Git)
   */
 
-require_once dirname(__FILE__) . '/../inc/playerlib.php';
-require_once dirname(__FILE__) . '/../inc/autocfg.php';
+set_include_path('/var/www/inc');
+require_once 'playerlib.php';
+require_once 'sql.php';
+require_once 'autocfg.php';
 
 $_SESSION = [];
-$params = cfgdb_read('cfg_system', cfgdb_connect());
+$params = sqlRead('cfg_system', sqlConnect());
 foreach ($params as $row) {
     $_SESSION[$row['param']] = $row['value'];
 }
