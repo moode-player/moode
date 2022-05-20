@@ -22,7 +22,7 @@
  */
 
 function buildTimezoneSelect($selected) {
-	$timezone_list = array(
+	$timezoneList = array(
 		"Africa/Abidjan",
 		"Africa/Accra",
 		"Africa/Addis_Ababa",
@@ -549,11 +549,11 @@ function buildTimezoneSelect($selected) {
 		"Zulu"
 	);
 
-	$res = '';
-	foreach ($timezone_list as $tz) {
+	$data = '';
+	foreach ($timezoneList as $tz) {
 		$sel = ($selected == $tz) ? ' selected' : '';
-		$res .= sprintf("<option value='%s'%s>%s</option>\n", $tz, $sel, $tz);
+		$data .= sprintf("<option value='%s'%s>%s</option>\n", $tz, $sel, $tz);
 	}
 
-	return $res;
+	return $data;
 }
