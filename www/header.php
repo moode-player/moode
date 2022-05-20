@@ -112,7 +112,7 @@
 	<?php }
 	    // INSTALL DISPLAY MESSAGES FUNCTION, IS ACTUALY CALLED AFTER onready by applicatio.js  |scripts-panels.js
 		if (isset($_SESSION['notify']['title']) && $_SESSION['notify']['title'] != '') {
-			ui_notify($_SESSION['notify']);
+			uiNotify($_SESSION['notify']);
 			$_SESSION['notify']['title'] = '';
 			$_SESSION['notify']['msg'] = '';
 			$_SESSION['notify']['duration'] = '3';
