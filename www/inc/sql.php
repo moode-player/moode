@@ -3,6 +3,9 @@
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
  *
+ * tsunamp player ui (C) 2013 Andrea Coiutti & Simone De Gregori
+ * http://www.tsunamp.com
+ *
  * This Program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)

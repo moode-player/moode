@@ -222,8 +222,8 @@ function groupLib(fullLib) {
 			mb_albumid: findAlbumProp(albumTracks, 'mb_albumid'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
-			// @Atair: albumArtist is always defined due to provisions in playerlib.php
-			//        so it is not necessary to evaluate artist
+			// @Atair: albumArtist is always defined due to provisions in inc/music-library php
+			// so it is not necessary to evaluate artist
 			album_artist: getAlbumArtist(albumTracks),
             //album_artist: findAlbumProp(albumTracks, 'album_artist'),
 			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
@@ -235,9 +235,10 @@ function groupLib(fullLib) {
 	allAlbumCovers = allAlbums.slice();
 
     // Natural ordering
-	// @Atair: Sorting by artist makes no sense when a song has multiple artists. Due to code in playerlib.php album_artist is never empty anyway,
-	//         so it is safe to change the constructs like a['album_artist'] || a['artist'] just to a['album_artist'].
-	//         and sort by album_artist only
+	// @Atair: Sorting by artist makes no sense when a song has multiple artists.
+    // Due to code in inc/music-library php album_artist is never empty anyway,
+	// so it is safe to change the constructs like a['album_artist'] || a['artist'] just to a['album_artist'].
+	// and sort by album_artist only
 	allSongs.sort(function(a, b) {
 		return collator.compare(removeArticles(a['album_artist']), removeArticles(b['album_artist']));
 	});
@@ -762,10 +763,8 @@ var renderSongs = function(albumPos) {
     			+ '<span class="songname">' + filteredSongs[i].title + '</span>'
     			+ '<span class="songtime"> ' + filteredSongs[i].time_mmss + '</span>'
 
-                /*
-                // TEST: Composers in artist list (see playerlib.php function genFlatList())
-    			+ '<span class="songartist"> ' + filteredSongs[i].artist.filter(artist => artist.substr(0, 4) != '[c] ').join(', ') + composer // @Atair: Show all artists
-                */
+                // TEST: Composers in artist list (see inc/music-library php function genFlatList())
+    			//+ '<span class="songartist"> ' + filteredSongs[i].artist.filter(artist => artist.substr(0, 4) != '[c] ').join(', ') + composer // @Atair: Show all artists
 
                 + '<span class="songartist"> ' + filteredSongs[i].artist.join(', ') + composer // @Atair: Show all artists
     			+ '<span class="songyear"> ' + songyear + '</span></div>'

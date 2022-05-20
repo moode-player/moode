@@ -91,7 +91,7 @@ fi
 
 # Get alsa mixer name
 # NOTE: Parenthesis are used as the delimiter to ensure we can see mixer names that contain a trailing space
-# NOTE: See function getMixerName() in playerlib.php where delimiters are stripped off
+# NOTE: See function getAlsaMixerName() in inc/alsa.php where delimiters are stripped off
 if [[ $1 = "get-mixername" ]]; then
 	CARD_NUM=$(sqlite3 $SQLDB "select value from cfg_system where param='cardnum'")
 	amixer -c $CARD_NUM | awk 'BEGIN{FS="\n"; RS="Simple mixer control"} $0 ~ "pvolume" {print $1}' | awk -F"'" '{print "(" $2 ")";}'
