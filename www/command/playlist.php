@@ -19,7 +19,7 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'mpd.php';
 require_once 'session.php';
 require_once 'sql.php';
@@ -310,6 +310,6 @@ function putPlaylistCover($plName) {
 function listPlaylistFv($plName) {
 	$sock = getMpdSock();
 	sendMpdCmd($sock, 'listplaylist "' . $plName . '"');
-	$plItems = readMpdResp($sock);
-	return parseList($plItems);
+	$resp = readMpdResp($sock);
+	return formatMpdQueryResults($resp);
 }

@@ -20,7 +20,8 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
+require_once 'mpd.php';
 require_once 'session.php';
 require_once 'cdsp.php';
 

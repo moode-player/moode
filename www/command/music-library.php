@@ -19,9 +19,10 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
-require_once 'session.php';
+require_once 'common.php';
 require_once 'mpd.php';
+require_once 'music-library.php';
+require_once 'session.php';
 
 $sock = getMpdSock();
 phpSession('open_ro');
@@ -41,11 +42,11 @@ switch ($_GET['cmd']) {
     	break;
 	case 'lsinfo':
 		$path = isset($_GET['path']) && $_GET['path'] != '' ? $_GET['path'] : '';
-		echo json_encode(searchDB($sock, 'lsinfo', $path));
+		echo json_encode(searchMpdDb($sock, 'lsinfo', $path));
 		break;
 	case 'search':
 		if (isset($_GET['query']) && $_GET['query'] != '' && isset($_GET['tagname']) && $_GET['tagname'] != '') {
-			echo json_encode(searchDB($sock, $_GET['tagname'], $_GET['query']));
+			echo json_encode(searchMpdDb($sock, $_GET['tagname'], $_GET['query']));
 		}
 		break;
 	case 'clear_libcache_all':
@@ -75,4 +76,31 @@ switch ($_GET['cmd']) {
 // Close MPD socket
 if (isset($sock) && $sock !== false) {
 	closeMpdSock($sock);
+}
+
+function searchMpdDb($sock, $querytype, $query = '') {
+	//workerLog($querytype . ', ' . $query);
+	switch ($querytype) {
+		// List a database path
+		case 'lsinfo':
+			if (!empty($query)){
+				sendMpdCmd($sock, 'lsinfo "' . html_entity_decode($query) . '"');
+				break;
+			}
+			else {
+				sendMpdCmd($sock, 'lsinfo');
+				break;
+			}
+		// Search all tags
+		case 'any':
+			sendMpdCmd($sock, 'search any "' . html_entity_decode($query) . '"');
+			break;
+		// Search specified tags
+		case 'specific':
+			sendMpdCmd($sock, 'search "(' . html_entity_decode($query) . ')"');
+			break;
+	}
+
+	$resp = readMpdResp($sock);
+	return formatMpdQueryResults($resp);
 }

@@ -19,7 +19,7 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'session.php';
 require_once 'sql.php';
 
@@ -48,7 +48,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	submitJob('upnpsvc', '', 'Changes saved', ($_SESSION['upnpsvc'] == '1' ? 'UPnP renderer restarted' : ''));
 }
 
-session_write_close();
+phpSession('close');
 
 // Load settings
 $result = sqlRead('cfg_upnp', $dbh);

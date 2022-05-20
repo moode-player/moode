@@ -19,14 +19,14 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'mpd.php';
+require_once 'multiroom.php';
 require_once 'session.php';
 require_once 'sql.php';
-require_once 'multiroom.php';
 
-phpSession('open');
 $dbh = sqlConnect();
+phpSession('open');
 
 //
 // SENDER
@@ -197,9 +197,7 @@ if (isset($_POST['update_multiroom_rx_rtprio'])) {
 	}
 }
 
-if (phpSession('get_status') == PHP_SESSION_ACTIVE) {
-	phpSession('close');
-}
+phpSession('close');
 
 //
 // FORM DATA

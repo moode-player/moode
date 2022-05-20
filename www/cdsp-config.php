@@ -19,7 +19,7 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'session.php';
 require_once 'cdsp.php';
 
@@ -337,7 +337,6 @@ $_cdsp_log_level .= "<option value=\"default\" " . (($cdsp_log_level == 'default
 $_cdsp_log_level .= "<option value=\"verbose\" " . (($cdsp_log_level == 'verbose') ? "selected" : "") . " >Verbose</option>\n";
 
 setAltBackLink();
-
 phpSession('close');
 
 waitWorker(1, 'cdsp-config');

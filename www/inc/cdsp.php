@@ -20,10 +20,11 @@
 
 /**
  * Wrapper for functionality related to the use of CamillaDSP with moOde
+ * (C) 2021 @bitlab (@bitkeeper Git)
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 
 const CDSP_CHECK_VALID = 1;
 const CDSP_CHECK_INVALID = 0;

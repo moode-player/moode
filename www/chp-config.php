@@ -19,7 +19,7 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'mpd.php';
 require_once 'session.php';
 require_once 'sql.php';
@@ -43,7 +43,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		// See if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[2] != $_POST['config']['digfilter']) {
 			//workerLog('digfilter changed');
-			$status = parseStatus(getMpdStatus($sock));
+			$status = getMpdStatus($sock);
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
 				chainMpdCmds($sock, array('pause', 'play'));
@@ -82,7 +82,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// See if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['katana_osf']) {
-			$status = parseStatus(getMpdStatus($sock));
+			$status = getMpdStatus($sock);
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
 				chainMpdCmds($sock, array('pause', 'play'));
@@ -108,7 +108,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($cfgoptions[0] != $_POST['config']['boss2_deemphasis_filter'] || $cfgoptions[1] != $_POST['config']['boss2_filter_speed'] ||
 			$cfgoptions[2] != $_POST['config']['boss2_highpass_filter'] || $cfgoptions[3] != $_POST['config']['boss2_nonosf_emulate'] ||
 			$cfgoptions[4] != $_POST['config']['boss2_phase_compensation'] || $cfgoptions[5] != $_POST['config']['boss2_hv_enable']) {
-			$status = parseStatus(getMpdStatus($sock));
+			$status = getMpdStatus($sock);
 			// Restart playback to make changes effective
 			if ($status['state'] === 'play') {
 				chainMpdCmds($sock, array('pause', 'play'));
@@ -134,7 +134,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// See if filter change submitted
 		if (explode(',', $result[0]['chipoptions'])[0] != $_POST['config']['audiophonics_q2m_osf']) {
-			$status = parseStatus(getMpdStatus($sock));
+			$status = getMpdStatus($sock);
 			// restart playback to make filter change effective
 			if ($status['state'] === 'play') {
 				chainMpdCmds($sock, array('pause', 'play'));
@@ -370,3 +370,35 @@ storeBackLink($section, $tpl);
 include('header.php');
 eval("echoTemplate(\"" . getTemplate("templates/$tpl") . "\");");
 include('footer.php');
+
+// Configure chip options
+function cfgChipOptions($options, $type) {
+	$array = explode(',', $options);
+
+	if ($type == 'burr_brown_pcm5') {
+		// Burr Brows PCM5: Analog volume, analog volume boost, digital interpolation filter
+		sysCmd('amixer -c 0 sset "Analogue" ' . $array[0]);
+		sysCmd('amixer -c 0 sset "Analogue Playback Boost" ' . $array[1]);
+		sysCmd('amixer -c 0 sset "DSP Program" ' . '"' . $array[2] . '"');
+	} else if ($type == 'ess_sabre_katana') {
+		// Allo Katana: Oversampling filter, de-emphasis, dop
+		sysCmd('amixer -c 0 sset "DSP Program" ' . '"' . $array[0] . '"');
+		sysCmd('amixer -c 0 sset "Deemphasis" ' . $array[1]);
+		sysCmd('amixer -c 0 sset "DoP" ' . $array[2]);
+	} else if ($type == 'cirrus_logic_cS43198_boss2') {
+		// Allo Boss2:
+		sysCmd('amixer -c 0 sset "PCM De-emphasis Filter" ' . $array[0]);
+		sysCmd('amixer -c 0 sset "PCM Filter Speed" ' . $array[1]);
+		sysCmd('amixer -c 0 sset "PCM High-pass Filter" ' . $array[2]);
+		sysCmd('amixer -c 0 sset "PCM Nonoversample Emulate" ' . $array[3]);
+		sysCmd('amixer -c 0 sset "PCM Phase Compensation" ' . $array[4]);
+		sysCmd('amixer -c 0 sset "HV_Enable" ' . $array[5]);
+	} else if ($type == 'ess_sabre_audiophonics_q2m') {
+		// Audiophonics ES9028/9038 Q2M: Oversampling filter, input select
+		sysCmd('amixer -c 0 sset "FIR Filter Type" ' . '"' . $array[0] . '"');
+		sysCmd('amixer -c 0 sset "I2S/SPDIF Select" ' . '"' . $array[1] . '"');
+	} else if ($type == 'merus_ma12070p') {
+		// MERUS Amp HAT ZW: Power mode profile
+		sysCmd('amixer -c 0 sset "Q.PM Prof" ' . '"' . $array[0] . '"');
+	}
+}

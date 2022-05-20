@@ -20,7 +20,7 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 
 $option = isset($argv[1]) ? $argv[1] : '';
 

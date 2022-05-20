@@ -19,16 +19,18 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
+require_once 'alsa.php';
+require_once 'cdsp.php';
+require_once 'eqp.php';
 require_once 'mpd.php';
+require_once 'network.php';
 require_once 'session.php';
 require_once 'sql.php';
-require_once 'eqp.php';
-require_once 'cdsp.php';
 
-phpSession('open');
 $dbh = sqlConnect();
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+phpSession('open');
 
 // AUDIO OUTPUT
 
@@ -538,9 +540,7 @@ if (isset($_POST['rebuild_dlnadb'])) {
 	}
 }
 
-if (phpSession('get_status') == PHP_SESSION_ACTIVE) {
-	phpSession('close');
-}
+phpSession('close');
 
 // LOAD MPD PARAMS
 $result = sqlRead('cfg_mpd', $dbh);
@@ -553,7 +553,7 @@ foreach ($result as $row) {
 
 // Output device
 // Pi HDMI 1 & 2, Pi Headphone jack, I2S device, USB device
-$dev = $_reboot_required == true ? array('********') : getDeviceNames();
+$dev = $_reboot_required == true ? array('********') : getAlsaDeviceNames();
 if ($dev[0] != '') {$_mpd_select['device'] .= "<option value=\"0\" " . (($mpdconf['device'] == '0') ? "selected" : "") . " >$dev[0]</option>\n";}
 if ($dev[1] != '') {$_mpd_select['device'] .= "<option value=\"1\" " . (($mpdconf['device'] == '1') ? "selected" : "") . " >$dev[1]</option>\n";}
 if ($dev[2] != '') {$_mpd_select['device'] .= "<option value=\"2\" " . (($mpdconf['device'] == '2') ? "selected" : "") . " >$dev[2]</option>\n";}

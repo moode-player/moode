@@ -19,12 +19,12 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'session.php';
 require_once 'sql.php';
 
 $dbh = sqlConnect();
-phpSession('open_ro');
+phpSession('open');
 
 // apply setting changes to /etc/squeezelite.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
@@ -39,6 +39,8 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	submitJob('slcfgupdate', '', 'Changes saved', ($_SESSION['slsvc'] == '1' ? 'Squeezelite restarted' : ''));
 }
 
+phpSession('close');
+
 // load settings
 $result = sqlRead('cfg_sl', $dbh);
 $cfg_sl = array();
@@ -48,7 +50,7 @@ foreach ($result as $row) {
 }
 
 // get device names
-$dev = getDeviceNames();
+$dev = getAlsaDeviceNames();
 
 // renderer name
 $_sl_select['renderer_name'] = $cfg_sl['PLAYERNAME'];

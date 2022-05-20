@@ -22,8 +22,10 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'mpd.php';
+require_once 'music-library.php';
+require_once 'music-source.php';
 require_once 'session.php';
 require_once 'sql.php';
 
@@ -96,7 +98,7 @@ if (isset($_POST['delete']) && $_POST['delete'] == 1) {
 // Save source
 if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// Validate
-	$id = sdbquery("SELECT id from cfg_source WHERE name='" . $_POST['mount']['name'] . "'", $dbh);
+	$id = sqlQuery("SELECT id from cfg_source WHERE name='" . $_POST['mount']['name'] . "'", $dbh);
 	$name = strtolower($_POST['mount']['name']);
 	$address = explode('/', $_POST['mount']['address'], 2);
 	$_POST['mount']['address'] = $address[0];

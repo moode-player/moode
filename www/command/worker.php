@@ -23,15 +23,20 @@
  */
 
  set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
+require_once 'alsa.php';
+require_once 'audio.php';
+require_once 'autocfg.php';
+require_once 'cdsp.php';
+require_once 'eqp.php';
 require_once 'mpd.php';
+require_once 'multiroom.php';
+require_once 'music-library.php';
+require_once 'music-source.php';
+require_once 'network.php';
+require_once 'renderer.php';
 require_once 'session.php';
 require_once 'sql.php';
-require_once 'multiroom.php';
-require_once 'renderer.php';
-require_once 'autocfg.php';
-require_once 'eqp.php';
-require_once 'cdsp.php';
 
 //
 // STARTUP SEQUENCE
@@ -93,8 +98,8 @@ workerLog('worker: Successfully daemonized');
 sysCmd('moode-apt-mark hold > /dev/null 2>&1');
 
 // Ensure certain files exist and with the correct permissions
-if (!file_exists('/var/local/www/playhistory.log')) {
-	sysCmd('touch /var/local/www/playhistory.log');
+if (!file_exists(PLAY_HISTORY_LOG)) {
+	sysCmd('touch ' . PLAY_HISTORY_LOG);
 	// This sets the "Log initialized" header
 	sysCmd('/var/www/command/util.sh clear-playhistory');
 }
@@ -186,7 +191,7 @@ if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None' && $ca
 }
 
 // Zero out ALSA volume
-$alsaMixerName = getMixerName($_SESSION['i2sdevice']);
+$alsaMixerName = getAlsaMixerName($_SESSION['i2sdevice']);
 if ($alsaMixerName != 'Invalid card number.') {
 	workerLog('worker: ALSA mixer actual (' . $alsaMixerName . ')');
 	if ($alsaMixerName != 'none') {
@@ -389,10 +394,9 @@ workerLog('worker: -- Audio config');
 workerLog('worker: --');
 //
 
-$updateMpdConf == False;
-
-if ( !file_exists('/etc/mpd.conf') ) {
-	$updateMpdConf = True;
+$updateMpdConf == false;
+if (!file_exists('/etc/mpd.conf')) {
+	$updateMpdConf = true;
 	$mpdConfUpdMsg = 'MPD conf is missing, generate it';
 } else {
 	switch (playbackDestinationType()) {
@@ -406,12 +410,12 @@ if ( !file_exists('/etc/mpd.conf') ) {
 				$mpdConfUpdMsg = 'MPD conf update skipped (USB device)';
 			} else {
 				$mpdConfUpdMsg = 'MPD conf updated (USB device + In-place update)';
-				$updateMpdConf = True;
+				$updateMpdConf = true;
 			}
 			break;
 		case PlaybackDestinationType.LOCAL:
 		case PlaybackDestinationType.I2S:
-			$updateMpdConf = True;
+			$updateMpdConf = true;
 			$mpdConfUpdMsg = 'MPD conf updated';
 			break;
 		default:
@@ -439,7 +443,7 @@ if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
 // Log audio device info
 workerLog('worker: ALSA card number (' . $_SESSION['cardnum'] . ')');
 if ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') {
-	workerLog('worker: MPD audio output (' . getDeviceNames()[$_SESSION['cardnum']] . ')');
+	workerLog('worker: MPD audio output (' . getAlsaDeviceNames()[$_SESSION['cardnum']] . ')');
 } else {
 	workerLog('worker: MPD audio output (' . $_SESSION['i2sdevice'] . ')');
 }
@@ -451,7 +455,7 @@ if ($cards[$mpdDevice[0]['value']] == 'empty') {
 }
 
 // Might need this at some point
-$deviceName = getDeviceNames()[$_SESSION['cardnum']];
+$deviceName = getAlsaDeviceNames()[$_SESSION['cardnum']];
 if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
 	$deviceName != 'Headphone jack' && $deviceName != 'HDMI-1' && $deviceName != 'HDMI-2') {
 	$usbAudio = true;
@@ -460,7 +464,7 @@ if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
 }
 
 // Store alsa mixer name for use by util.sh get/set-alsavol and vol.sh
-//phpSession('write', 'amixname', getMixerName($_SESSION['i2sdevice']));
+//phpSession('write', 'amixname', getAlsaMixerName($_SESSION['i2sdevice']));
 workerLog('worker: ALSA mixer name (' . $_SESSION['amixname'] . ')');
 workerLog('worker: MPD mixer type (' . ($_SESSION['mpdmixer'] == 'none' ? 'fixed 0dB' : $_SESSION['mpdmixer']) . ')');
 
@@ -544,14 +548,13 @@ workerLog('worker: MPD started');
 $sock = openMpdSock('localhost', 6600);
 workerLog($sock === false ? 'worker: MPD connection refused' : 'worker: MPD accepting connections');
 // Ensure valid mpd output config
-$mpdOutput = configMpdOutputs();
+$mpdOutput = configMpdOutput();
 sysCmd('mpc enable only "' . $mpdOutput .'"');
 setMpdHttpd();
 // Report MPD outputs
-sendMpdCmd($sock, 'outputs');
-$outputs = parseMpdOutputs(readMpdResp($sock));
-foreach ($outputs as $output) {
-	workerLog('worker: ' . $output);
+$mpdOutputs = getMpdOutputs($sock);
+foreach ($mpdOutputs as $mpdOutput) {
+	workerLog('worker: ' . $mpdOutput);
 }
 // MPD crossfade
 workerLog('worker: MPD crossfade (' . ($_SESSION['mpdcrossfade'] == '0' ? 'off' : $_SESSION['mpdcrossfade'] . ' secs')  . ')');
@@ -592,7 +595,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 	workerLog('worker: Source select (available)');
 	$audioSource = $_SESSION['audioin'] == 'Local' ? 'MPD' : ($_SESSION['audioin'] == 'Analog' ? 'Analog input' : 'S/PDIF input');
 	workerLog('worker: Source select (source: ' . $audioSource . ')');
-	$audio_output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getDeviceNames()[$_SESSION['cardnum']] :
+	$audio_output = ($_SESSION['i2sdevice'] == 'None' && $_SESSION['i2soverlay'] == 'None') ? getAlsaDeviceNames()[$_SESSION['cardnum']] :
 		($_SESSION['i2sdevice'] != 'None' ? $_SESSION['i2sdevice'] : $_SESSION['i2soverlay']);
 	workerLog('worker: Source select (output: ' . $audio_output . ')');
 
@@ -734,7 +737,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_MINIDLNA) {
 if ($_SESSION['feat_bitmask'] & FEAT_GPIO) {
 	if (isset($_SESSION['gpio_svc']) && $_SESSION['gpio_svc'] == 1) {
 		$started = ': started';
-		startGpioSvc();
+		startGpioBtnHandler();
 	} else {
 		$started = '';
 	}
@@ -817,7 +820,7 @@ if ($_SESSION['autoplay'] == '1') {
 		workerLog('worker: Starting auto-shuffle');
 		startAutoShuffle();
 	} else {
-		$status = parseStatus(getMpdStatus($sock));
+		$status = getMpdStatus($sock);
 		//workerLog(print_r($status, true));
 		sendMpdCmd($sock, 'playid ' . $status['songid']);
 		$resp = readMpdResp($sock);
@@ -1214,13 +1217,13 @@ function chkInpActive() {
 }
 
 function updBoss2DopVolume () {
-	$mastervol = sysCmd('/var/www/command/util.sh get-alsavol Master')[0];
-	sysCmd('amixer -c 0 sset Digital ' . $mastervol);
+	$masterVol = sysCmd('/var/www/command/util.sh get-alsavol Master')[0];
+	sysCmd('amixer -c 0 sset Digital ' . $masterVol);
 }
 
 function updExtMetaFile() {
 	// Output rate
-	$hwparams = parseHwParams(shell_exec('cat /proc/asound/card' . $_SESSION['cardnum'] . '/pcm0p/sub0/hw_params'));
+	$hwparams = getAlsaHwParams($_SESSION['cardnum']);
 	if ($hwparams['status'] == 'active') {
 		$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
 		$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' Mbps';
@@ -1263,7 +1266,7 @@ function updExtMetaFile() {
 		//workerLog('mpd active');
 		// MPD active
 		$sock = openMpdSock('localhost', 6600);
-		$current = parseStatus(getMpdStatus($sock));
+		$current = getMpdStatus($sock);
 		$current = enhanceMetadata($current, $sock, 'worker_php');
 		closeMpdSock($sock);
 
@@ -1415,7 +1418,7 @@ function chkSleepTimer() {
 
 function updPlayHistory() {
 	$sock = openMpdSock('localhost', 6600);
-	$song = parseCurrentSong($sock);
+	$song = getCurrentSong($sock);
 	closeMpdSock($sock);
 
 	if (isset($song['Name']) && getFileExt($song['file']) == 'm4a') {
@@ -1487,8 +1490,13 @@ function updPlayHistory() {
 		$_SESSION['phistsong'] = $title; // Store title as-is
 		sqlUpdate('cfg_system', $GLOBALS['dbh'], 'phistsong', str_replace("'", "''", $title)); // Use SQL escaped single quotes
 
-		$historyitem = '<li class="playhistory-item"><div>' . date('Y-m-d H:i') . $searchurl . $title . '</div><span>' . $artist . ' - ' . $album . '</span></li>';
-		$result = updPlayHist($historyitem);
+		$historyItem = '<li class="playhistory-item"><div>' . date('Y-m-d H:i') . $searchurl . $title . '</div><span>' . $artist . ' - ' . $album . '</span></li>';
+        if (false === $fh = fopen(PLAY_HISTORY_LOG, 'a')) {
+            workerLog('worker: addPlayHistoryItem(): File open failed on ' . PLAY_HISTORY_LOG);
+        } else {
+            fwrite($fh, $historyItem . "\n");
+        	fclose($fh);
+        }
 	}
 }
 
@@ -1496,8 +1504,8 @@ function updPlayHistory() {
 function chkLibraryUpdate() {
 	//workerLog('chkLibraryUpdate');
 	$sock = openMpdSock('localhost', 6600);
-	$status = parseStatus(getMpdStatus($sock));
-	$stats = parseDelimFile(getMpdStats($sock), ': ');
+	$status = getMpdStatus($sock);
+	$stats = getMpdStats($sock);
 	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
@@ -1512,7 +1520,7 @@ function chkLibraryUpdate() {
 function chkLibraryRegen() {
 	//workerLog('chkLibraryRegen');
 	$sock = openMpdSock('localhost', 6600);
-	$status = parseStatus(getMpdStatus($sock));
+	$status = getMpdStatus($sock);
 	closeMpdSock($sock);
 
 	if (!isset($status['updating_db'])) {
@@ -1522,6 +1530,22 @@ function chkLibraryRegen() {
 	}
 }
 
+// Return hardware revision
+function getHdwrRev() {
+	$array = explode("\t", sysCmd('/var/www/command/pirev.py')[0]);
+	$model = $array[1];
+	$rev = $array[2];
+	$ram = $array[3];
+
+	if ($model == 'CM3+') {
+		$hdwrRev = 'Allo USBridge SIG [CM3+ Lite 1GB v1.0]';
+	} else {
+		$hdwrRev = 'Pi-' . $model . ' ' . $rev . ' ' . $ram;
+	}
+
+	return $hdwrRev;
+}
+
 // Log info for the active interface (eth0 or wlan0)
 function logNetworkInfo($interface) {
 	workerLog('worker: IP addr (' . sysCmd("ifconfig " . $interface . " | awk 'NR==2{print $2}'")[0] . ')');
@@ -1529,10 +1553,49 @@ function logNetworkInfo($interface) {
 	workerLog('worker: Gateway (' . sysCmd("netstat -nr | awk 'NR==3 {print $2}'")[0] . ')');
 	$line3 = sysCmd("cat /etc/resolv.conf | awk '/^nameserver/ {print $2; exit}'")[0]; // First nameserver entry of possibly many
 	$line2 = sysCmd("cat /etc/resolv.conf | awk '/^domain/ {print $2; exit}'")[0]; // First domain entry of possibly many
-	$primary_dns = !empty($line3) ? $line3 : $line2;
-	$domain_name = !empty($line3) ? $line2 : 'None found';
-	workerLog('worker: Pri DNS (' . $primary_dns . ')');
-	workerLog('worker: Domain  (' . $domain_name . ')');
+	$primaryDns = !empty($line3) ? $line3 : $line2;
+	$domainName = !empty($line3) ? $line2 : 'None found';
+	workerLog('worker: Pri DNS (' . $primaryDns . ')');
+	workerLog('worker: Domain  (' . $domainName . ')');
+}
+
+// Determine playback destination
+class PlaybackDestinationType
+{
+    public const LOCAL = 1;
+    public const I2S   = 2;
+    public const USB   = 3;
+    public const TX    = 4;
+}
+function playbackDestinationType() {
+	$localDecvices = array('Pi HDMI 1', 'Pi HDMI 2', 'Pi Headphone jack');
+
+	if ($_SESSION['multiroom_tx'] !== 'Off') {
+		$playbackDestType = PlaybackDestinationType.TX;
+	} else if ($_SESSION['i2sdevice'] != 'None' || $_SESSION['i2soverlay'] != 'None') {
+		$playbackDestType = PlaybackDestinationType.I2S;
+	} else if (in_array($_SESSION['adevname'], $localDecvices) ) {
+		$playbackDestType = PlaybackDestinationType.LOCAL;
+	} else {
+		$playbackDestType = PlaybackDestinationType.USB;
+	}
+
+	return $playbackDestType;
+}
+
+// DLNA server
+function startMiniDlna() {
+	sysCmd('systemctl start minidlna');
+}
+
+// LCD updater
+function startLcdUpdater() {
+	sysCmd('/var/www/command/lcdup.sh');
+}
+
+// GPIO button handler
+function startGpioBtnHandler() {
+	sysCmd('/var/www/command/gpio-buttons.py > /dev/null &');
 }
 
 //
@@ -2123,7 +2186,7 @@ function runQueuedJob() {
 		case 'gpio_svc':
 			sysCmd('killall -s 9 gpio-buttons.py');
 			if ($_SESSION['w_queueargs'] == 1) {
-				startGpioSvc();
+				startGpioBtnHandler();
 			}
 			break;
 		case 'shellinabox':

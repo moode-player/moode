@@ -19,11 +19,12 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'mpd.php';
+require_once 'multiroom.php';
+require_once 'music-library.php';
 require_once 'session.php';
 require_once 'sql.php';
-require_once 'multiroom.php';
 
 $dbh = sqlConnect();
 $sock = getMpdSock();
@@ -50,7 +51,7 @@ switch ($_GET['cmd']) {
 			}
 			updReceiverVol($rxVolCmd);
 		}
-		
+
 		echo json_encode('OK');
 		break;
 	case 'mute_rx_vol':
@@ -65,7 +66,7 @@ switch ($_GET['cmd']) {
 		$_POST['toggle_value'] == '1' ? startAutoShuffle() : stopAutoShuffle();
 		break;
 	case 'get_mpd_status':
-		echo json_encode(parseStatus(getMpdStatus($sock)));
+		echo json_encode(getMpdStatus($sock));
 		break;
 	case 'reset_screen_saver':
 		if (submitJob($_GET['cmd'])) {
@@ -93,11 +94,31 @@ switch ($_GET['cmd']) {
 		echo json_encode('OK');
 		break;
 	case 'get_play_history':
-		echo json_encode(parsePlayHist(shell_exec('cat /var/local/www/playhistory.log')));
+		echo json_encode(getPlayHistory(shell_exec('cat /var/local/www/playhistory.log')));
 		break;
 }
 
 // Close MPD socket
 if (isset($sock) && $sock !== false) {
 	closeMpdSock($sock);
+}
+
+// parse play history log
+function getPlayHistory($resp) {
+	if (is_null($resp) ) {
+		return 'getPlayHistory(): Response is null';
+	}
+	else {
+		$array = array();
+		$line = strtok($resp, "\n");
+		$i = 0;
+
+		while ( $line ) {
+			$array[$i] = $line;
+			$i++;
+			$line = strtok("\n");
+		}
+	}
+
+	return $array;
 }

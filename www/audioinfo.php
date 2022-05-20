@@ -19,33 +19,24 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
+require_once 'alsa.php';
+require_once 'cdsp.php';
 require_once 'mpd.php';
+require_once 'music-library.php';
 require_once 'session.php';
 require_once 'sql.php';
-require_once 'cdsp.php';
 
 $sock = getMpdSock();
 $dbh = sqlConnect();
 phpSession('open_ro');
 
-function getCamillaDspConfigName($config) {
-	$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
-	$configs = $cdsp->getAvailableConfigs( True);
-	$configLabel = $config;
-	if(array_key_exists($config, $configs) ) {
-		$configLabel = $configs[$config];
-	}
-
-	return $configLabel;
-}
-
 // Hardware params
 $cardNum = $_SESSION['multiroom_tx'] == 'On' ? array_search('Dummy', getAlsaCards()) : $_SESSION['cardnum'];
-$hwParams = parseHwParams(shell_exec('cat /proc/asound/card' . $cardNum . '/pcm0p/sub0/hw_params'));
+$hwParams = getAlsaHwParams($cardNum);
 
 // Cfg_mpd settings
-$cfgMpd = parseCfgMpd($dbh);
+$cfgMpd = getCfgMpd($dbh);
 
 // Bluetooth active
 $result = sysCmd('pgrep -l bluealsa-aplay');
@@ -81,7 +72,7 @@ if ($_SESSION['aplactive'] == '1') {
 	$_decoded_to = '16 bit, 44.1 kHz, Stereo, ';
 	$_decode_rate = 'VBR';
 } else {
-	$song = parseCurrentSong($sock);
+	$song = getCurrentSong($sock);
 	$_file = $song['file'];
 
 	// Krishna Simonese: if current file is a UPNP/DLNA url, replace *20 with space
@@ -91,7 +82,7 @@ if ($_SESSION['aplactive'] == '1') {
 	}
 
 	$_encoded_at = getEncodedAt($song, 'verbose');
-	$mpdStatus = parseStatus(getMpdStatus($sock));
+	$mpdStatus = getMpdStatus($sock);
 
 	if ($hwParams['status'] == 'active' || ($_SESSION['audioout'] == 'Bluetooth' && $mpdStatus['state'] == 'play')) {
 		// DSD: Native bitstream, DoP or DSD to PMC on-the-fly conversion
@@ -400,3 +391,38 @@ $_hdwr_rev = $_SESSION['hdwrrev'];
 closeMpdSock($sock);
 $tpl = 'audioinfo.html';
 eval('echoTemplate("' . getTemplate("templates/$tpl") . '");');
+
+function getCamillaDspConfigName($config) {
+	$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
+	$configs = $cdsp->getAvailableConfigs( True);
+	$configLabel = $config;
+	if(array_key_exists($config, $configs) ) {
+		$configLabel = $configs[$config];
+	}
+
+	return $configLabel;
+}
+
+function getCfgMpd($dbh) {
+	$result = sqlRead('cfg_mpd', $dbh);
+	$array = array();
+
+	foreach ($result as $row) {
+		$array[$row['param']] = $row['value'];
+	}
+
+	// Ex 44100:16:2 or disabled
+	if ($array['audio_output_format'] == 'disabled') {
+	 	$array['audio_output_rate'] = '';
+	 	$array['audio_output_depth'] = '';
+	 	$array['audio_output_chan'] = '';
+	}
+	else {
+	 	$format = explode(":", $array['audio_output_format']);
+	 	$array['audio_output_rate'] = formatRate($format[0]);
+	 	$array['audio_output_depth'] = $format[1];
+	 	$array['audio_output_chan'] = formatChannels($format[2]);
+	}
+
+	return $array;
+}

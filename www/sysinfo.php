@@ -19,7 +19,7 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 
 $file = '/var/local/www/sysinfo.txt';
 sysCmd('/var/www/command/sysinfo.sh html > ' . $file);

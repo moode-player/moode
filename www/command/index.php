@@ -22,7 +22,7 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'mpd.php';
 
 if (isset($_GET['cmd']) && empty($_GET['cmd'])) {

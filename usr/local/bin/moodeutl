@@ -24,7 +24,7 @@ const VERSION = '1.9.0';
 // Suppress warning messages
 error_reporting(E_ERROR | E_PARSE);
 
-// ** From playerlib.php
+// ** From common.php
 // Common
 const MPD_RESPONSE_ERR = 'ACK';
 const MPD_RESPONSE_OK = 'OK';

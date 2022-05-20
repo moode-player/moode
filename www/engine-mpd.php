@@ -22,15 +22,17 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
+require_once 'mpd.php';
+require_once 'music-library.php';
+require_once 'session.php';
 require_once 'sql.php';
 
 $result = sqlQuery("SELECT value FROM cfg_system WHERE param='wrkready'", sqlConnect());
 
 // Check for Worker startup complete
 if ($result[0]['value'] == '0') {
-	//workerLog('engine-mpd: Worker startup is not finished yet');
-	exit;
+	exit; // Worker startup is not finished yet');
 }
 
 // Check for MPD connection failure
@@ -41,37 +43,26 @@ if (!$sock) {
 	exit;
 }
 
-//workerLog('engine-mpd: Get initial status');
-$current = parseStatus(getMpdStatus($sock));
+$status = getMpdStatus($sock);
 
 // Initiate MPD idle
-//workerLog('engine-mpd: UI state=(' . $_GET['state'] . '), MPD state=(' . $current['state'] .')');
-if ($_GET['state'] == $current['state']) {
-	//workerLog('engine-mpd: Wait for idle timeout');
+if ($_GET['state'] == $status['state']) {
 	sendMpdCmd($sock, 'idle');
 	stream_set_timeout($sock, 600000); // Value determines how often PHP times out the socket
 	$resp = readMpdResp($sock);
 
 	$event = explode("\n", $resp)[0];
-	//workerLog('engine-mpd: Idle timeout event=(' . $event . ')');
-	//workerLog('engine-mpd: Get new status');
-	$current = parseStatus(getMpdStatus($sock));
-	$current['idle_timeout_event'] = $event;
+	$status = getMpdStatus($sock);
+	$status['idle_timeout_event'] = $event;
 }
 
 // Create enhanced metadata
-//workerLog('engine-mpd: Generating enhanced metadata');
-$current = enhanceMetadata($current, $sock, 'engine_mpd_php');
+$metadata = enhanceMetadata($status, $sock, 'engine_mpd_php');
 closeMpdSock($sock);
-//workerLog('engine-mpd: Metadata returned to client: Size=(' . sizeof($current) . ')');
-//foreach ($current as $key => $value) {workerLog('engine-mpd: Metadata returned to client: Raw=(' . $key . ' ' . $value . ')');}
-//workerLog('engine-mpd: Metadata returned to client: Json=(' . json_encode($current) . ')');
 
-// @ohinckel https: //github.com/moode-player/moode/pull/14/files
-$current_json = json_encode($current);
-if ($current_json === FALSE) {
+$metadata = json_encode($metadata); // @ohinckel https: //github.com/moode-player/moode/pull/14/files
+if ($metadata === false) {
 	echo json_encode(array('error' => array('code' => json_last_error(), 'message' => json_last_error_msg())));
-}
-else {
-	echo $current_json;
+} else {
+	echo $metadata;
 }

@@ -19,11 +19,11 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'mpd.php';
+require_once 'multiroom.php';
 require_once 'session.php';
 require_once 'sql.php';
-require_once 'multiroom.php';
 
 phpSession('open_ro');
 
@@ -37,7 +37,6 @@ switch ($_GET['cmd']) {
     	} else {
     		$rxHostNames = explode(', ', $_SESSION['rx_hostnames']);
     		$rxAddresses = explode(' ', $_SESSION['rx_addresses']);
-
     		$rxStatus = '';
     		$timeout = getStreamTimeout();
     		$count = count($rxAddresses);

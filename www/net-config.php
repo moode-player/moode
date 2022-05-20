@@ -19,7 +19,8 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
+require_once 'network.php';
 require_once 'session.php';
 require_once 'sql.php';
 
@@ -58,8 +59,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 
 	if ($_POST['wlan0ssid'] != $cfg_network[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfg_network[1]['wlan_psk']) {
 		$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
-	}
-	else {
+	} else {
 		$psk = $cfg_network[1]['wlan_psk']; // Existing
 	}
 
@@ -72,7 +72,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 
 	// Add/update cfg_ssid
 	if ($_POST['wlan0ssid'] != 'None (activates AP mode)') {
-		$result = sqlQuery("select * from cfg_ssid where ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
+		$result = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
 		if ($result === true) {
 			// Add
 			$values =
@@ -80,10 +80,9 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 				"'" . $_POST['wlan0sec'] . "'," .
 				"'" . $psk . "'";
 			$result = sqlQuery('INSERT INTO cfg_ssid VALUES (NULL,' . $values . ')', $dbh);
-		}
-		else {
+		} else {
 			// Update
-			$result = sqlQuery("update cfg_ssid set " .
+			$result = sqlQuery("UPDATE cfg_ssid SET " .
 				"ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
 				"sec='" . $_POST['wlan0sec'] . "'," .
 				"psk='" . $psk . "' " .
@@ -94,8 +93,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// apd0
 	if ($_POST['wlan0apdssid'] != $cfg_network[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $cfg_network[2]['wlan_psk']) {
 		$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
-	}
-	else {
+	} else {
 		$psk = $cfg_network[2]['wlan_psk']; // Existing
 	}
 
@@ -126,6 +124,8 @@ if (isset($_POST['update-saved-networks']) && $_POST['update-saved-networks'] ==
 	}
 }
 
+phpSession('close');
+
 //
 // Populate form fields
 //
@@ -137,8 +137,7 @@ $cfg_network = sqlQuery('SELECT * FROM cfg_network', $dbh);
 $cfg_ssid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
 if ($cfg_ssid === true) {
 	$_saved_networks = '<p style="text-align:center;">There are no saved networks</p>';
-}
-else {
+} else {
 	for ($i=0; $i < count($cfg_ssid); $i++) {
 		$_saved_networks .= '<div class="control-group">';
 		$_saved_networks .= '<label class="control-label">' . $cfg_ssid[$i]['ssid'] . '</label>';
@@ -186,8 +185,7 @@ if (!empty($ipaddr[0])) {
 // Determine message to display
 if ($_SESSION['apactivated'] == true) {
 	$_wlan0currentip = empty($ipaddr[0]) ? 'Unable to activate AP mode' : $ipaddr[0] . ' - AP mode active';
-}
-else {
+} else {
 	$_wlan0currentip = empty($ipaddr[0]) ? 'Not in use' : $ipaddr[0] . ' - quality ' . $quality . '%, level ' . $level;
 }
 
@@ -207,16 +205,13 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);
 		}
 	}
-}
-else {
+} else {
 	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1') {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None (activates AP mode)', '', 'None (activates AP mode)');
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', htmlentities($_POST['wlan0otherssid']));
-	}
-	else if ($cfg_network[1]['wlanssid'] == 'None (activates AP mode)') {
+	} else if ($cfg_network[1]['wlanssid'] == 'None (activates AP mode)') {
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfg_network[1]['wlanssid'], 'selected', $cfg_network[1]['wlanssid']);
-	}
-	else {
+	} else {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None (activates AP mode)', '', 'None (activates AP mode)');
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfg_network[1]['wlanssid'], 'selected', htmlentities($cfg_network[1]['wlanssid']));
 	}
@@ -253,8 +248,6 @@ $_wlan0secdns = $cfg_network[1]['secdns'];
 $_wlan0apdssid = $cfg_network[2]['wlanssid'];
 $_wlan0apdchan = $cfg_network[2]['wlan_channel'];
 $_wlan0apdpwd = $cfg_network[2]['wlanpwd'];
-
-phpSession('close');
 
 waitWorker(1, 'net-config');
 

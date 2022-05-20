@@ -19,7 +19,7 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
+require_once 'common.php';
 require_once 'mpd.php';
 require_once 'session.php';
 require_once 'sql.php';
@@ -59,7 +59,7 @@ switch ($_GET['cmd']) {
 		break;
 	case 'add_item':
 	case 'add_item_next':
-		 $status = parseStatus(getMpdStatus($sock));
+		 $status = getMpdStatus($sock);
 		 $cmds = array(addItemToQueue($_POST['path']));
 		 if ($_GET['cmd'] == 'add_item_next') {
 			 array_push($cmds, 'move ' . $status['playlistlength'] . ' ' . ($status['song'] + 1));
@@ -78,7 +78,7 @@ switch ($_GET['cmd']) {
 			$resp = readMpdResp($sock);
 		} else {
 			// Otherwise play the item after adding it to the Queue
-			$status = parseStatus(getMpdStatus($sock));
+			$status = getMpdStatus($sock);
 			$cmds = array(addItemToQueue($_POST['path']));
 			if ($_GET['cmd'] == 'play_item_next') {
 				$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
@@ -103,7 +103,7 @@ switch ($_GET['cmd']) {
 	 // Queue commands for a group of songs: Genre, Artist or Albums in Tag/Album view
 	case 'add_group':
 	case 'add_group_next':
-		$status = parseStatus(getMpdStatus($sock));
+		$status = getMpdStatus($sock);
 		$cmds = addGroupToQueue($_POST['path']);
 		if ($_GET['cmd'] == 'add_group_next') {
 			array_push($cmds, 'move ' . $status['playlistlength'] . ':' .
@@ -125,7 +125,7 @@ switch ($_GET['cmd']) {
 			$resp = readMpdResp($sock);
 		} else {
 			// Otherwise play the group after adding it to the Queue
-			$status = parseStatus(getMpdStatus($sock));
+			$status = getMpdStatus($sock);
 			$cmds = addGroupToQueue($_POST['path']);
 		 	if ($_GET['cmd'] == 'play_group_next') {
 				$pos = isset($status['song']) ? $status['song'] + 1 : $status['playlistlength'];
@@ -163,6 +163,7 @@ if (isset($sock) && $sock !== false) {
 // Return MPD queue
 function getPlayqueue($resp) {
 	if (is_null($resp)) {
+        debugLog('getPlayqueue(): Returned null');
 		return null;
 	} else {
 		$queue = array();
@@ -176,7 +177,7 @@ function getPlayqueue($resp) {
 				$idx++;
 				$queue[$idx]['file'] = $value;
 				$queue[$idx]['fileext'] = getFileExt($value);
-				$queue[$idx]['TimeMMSS'] = songTime($queue[$idx]['Time']);
+				$queue[$idx]['TimeMMSS'] = formatSongTime($queue[$idx]['Time']);
 			} else {
 				if ($element == 'Genre' || $element == 'Artist' || $element == 'AlbumArtist' || $element == 'Conductor' || $element == 'Performer') {
 					// Return only the first of multiple occurrences of the following tags

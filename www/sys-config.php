@@ -22,10 +22,12 @@
  */
 
 set_include_path('/var/www/inc');
-require_once 'playerlib.php';
-require_once 'session.php';
-require_once 'timezone.php';
+require_once 'common.php';
 require_once 'keyboard.php';
+require_once 'network.php';
+require_once 'session.php';
+require_once 'sql.php';
+require_once 'timezone.php';
 
 phpSession('open');
 
