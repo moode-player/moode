@@ -40,7 +40,7 @@ fi
 # Restore 0dB hardware volume when MPD configured as below
 if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 	if [[ $ALSAVOLUME != "none" ]]; then
-		/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 	fi
 fi
 /var/www/vol.sh -restore

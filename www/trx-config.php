@@ -77,7 +77,7 @@ if (isset($_POST['multiroom_tx_discover'])) {
 	$timeout = getStreamTimeout();
 	foreach ($port6600Hosts as $ipAddr) {
 		if ($ipAddr != $thisIpAddr) {
-			if (false === ($status = file_get_contents('http://' . $ipAddr . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
+			if (false === ($status = file_get_contents('http://' . $ipAddr . '/command/?cmd=trx-control.php -rx', false, $timeout))) {
 				debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
 			}
 			else {
@@ -162,7 +162,7 @@ if (isset($_POST['update_multiroom_rx_alsa_output_mode'])) {
 if (isset($_POST['update_multiroom_rx_alsavol'])) {
 	if (isset($_POST['multiroom_rx_alsavol'])) {
 		$_SESSION['notify']['title'] = 'ALSA volume updated';
-		sysCmd('/var/www/command/util.sh set-alsavol ' . $_SESSION['amixname'] . ' ' . $_POST['multiroom_rx_alsavol']);
+		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . $_SESSION['amixname'] . ' ' . $_POST['multiroom_rx_alsavol']);
 	}
 }
 if (isset($_POST['multiroom_rx_restart'])) {
@@ -254,7 +254,7 @@ $_select['multiroom_rx_mastervol_opt_in1'] .= "<input type=\"radio\" name=\"mult
 $_select['multiroom_rx_mastervol_opt_in0'] .= "<input type=\"radio\" name=\"multiroom_rx_mastervol_opt_in\" id=\"toggle_multiroom_rx_mastervol_opt_in2\" value=\"0\" " . (($_cfg_multiroom['rx_mastervol_opt_in'] == '0') ? "checked=\"checked\"" : "") . ">\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"plughw\" " . (($_cfg_multiroom['rx_alsa_output_mode'] == 'plughw') ? "selected" : "") . ">Default (plughw)</option>\n";
 $_select['multiroom_rx_alsa_output_mode'] .= "<option value=\"hw\" " . (($_cfg_multiroom['rx_alsa_output_mode'] == 'hw') ? "selected" : "") . ">Direct (hw)</option>\n";
-$_multiroom_rx_alsavol = rtrim(sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0], '%');
+$_multiroom_rx_alsavol = rtrim(sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0], '%');
 // Advanced options
 $_select['multiroom_rx_bfr'] .= "<option value=\"16\" " . (($_cfg_multiroom['rx_bfr'] == '16') ? "selected" : "") . ">16</option>\n";
 $_select['multiroom_rx_bfr'] .= "<option value=\"32\" " . (($_cfg_multiroom['rx_bfr'] == '32') ? "selected" : "") . ">32</option>\n";

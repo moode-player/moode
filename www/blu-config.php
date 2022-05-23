@@ -34,12 +34,12 @@ if (isset($_POST['run_btcmd']) && $_POST['run_btcmd'] == '1') {
 	sleep(1);
 
 	if ($cmd == '-R') {
-		$result = sysCmd('/var/www/command/bt.sh ' . $cmd);
+		$result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
 		sleep(1);
 		$cmd = '-p';
 	}
 	elseif ($cmd == '-D') {
-		$result = sysCmd('/var/www/command/bt.sh ' . $cmd);
+		$result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
 		sleep(1);
 		$cmd = '-c';
 	}
@@ -55,14 +55,14 @@ else {
 
 // Pair with device
 if (isset($_POST['pairwith_device']) && $_POST['pairwith_device'] == '1') {
-	sysCmd('/var/www/command/bt.sh -P ' . '"' . $_POST['scanned_device'] . '"');
+	sysCmd('/var/www/util/blu-control.sh -P ' . '"' . $_POST['scanned_device'] . '"');
 	$cmd = '-p';
 	sleep(1);
 }
 
 // Remove pairing
 if (isset($_POST['rm_paired_device']) && $_POST['rm_paired_device'] == '1') {
-	sysCmd('/var/www/command/bt.sh -r ' . '"' . $_POST['paired_device'] . '"');
+	sysCmd('/var/www/util/blu-control.sh -r ' . '"' . $_POST['paired_device'] . '"');
 	$cmd = '-p';
 	sleep(1);
 }
@@ -76,7 +76,7 @@ if (isset($_POST['connectto_device']) && $_POST['connectto_device'] == '1') {
 	// Update MPD output
 	phpSession('write', 'audioout', $_POST['audioout']);
 	// Connect device
-	sysCmd('/var/www/command/bt.sh -C ' . '"' . $_POST['paired_device'] . '"');
+	sysCmd('/var/www/util/blu-control.sh -C ' . '"' . $_POST['paired_device'] . '"');
 	$cmd = '-c';
 	sleep(1);
 	setAudioOut($_POST['audioout']);
@@ -98,7 +98,7 @@ if (isset($_POST['chg_audioout']) && $_POST['audioout'] != $_SESSION['audioout']
 		phpSession('write', 'audioout', $_POST['audioout']);
 		setAudioOut($_POST['audioout']);
 		// Disconnect
-		sysCmd('/var/www/command/bt.sh -d ' . '"' . $_POST['connected_device'] . '"');
+		sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $_POST['connected_device'] . '"');
 		$cmd = '-p';
 		sleep(1);
 	}
@@ -111,7 +111,7 @@ if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 	phpSession('write', 'audioout', $audioout);
 	setAudioOut($audioout);
 	// Disconnect
-	sysCmd('/var/www/command/bt.sh -d ' . '"' . $_POST['connected_device'] . '"');
+	sysCmd('/var/www/util/blu-control.sh -d ' . '"' . $_POST['connected_device'] . '"');
 	$cmd = '-p';
 	sleep(1);
 }
@@ -146,7 +146,7 @@ $_bt_msg_hide = $_SESSION['btsvc'] == '1' ? 'hide' : '';
 $_ao_msg_hide = ($cmd == '-p' || $cmd == '-c') ? '' : 'hide';
 
 // Run the cmd
-$result = sysCmd('/var/www/command/bt.sh ' . $cmd);
+$result = sysCmd('/var/www/util/blu-control.sh ' . $cmd);
 if ($cmd == '-i') {
 	// Remove ansi color codes and fix formatting in the output of -i
 	$result = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $result);

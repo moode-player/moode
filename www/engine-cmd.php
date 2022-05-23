@@ -65,7 +65,7 @@ sysCmd('sed -i /' . $port . '/d ' . PORT_FILE);
 
 // Get names of connected bluetooth devices
 if ($cmd == 'btactive1') {
-	$result = sysCmd('/var/www/command/bt.sh -c');
+	$result = sysCmd('/var/www/util/blu-control.sh -c');
 	$cmd .= ',';
 	for ($i = 2; $i < count($result); $i++) {
 		if ($result[$i] != '**') {

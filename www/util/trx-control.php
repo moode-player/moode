@@ -107,5 +107,5 @@ function allStatus() {
 }
 
 function setAlsavol($vol) {
-	sysCmd('/var/www/command/util.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $vol);
+	sysCmd('/var/www/util/sysutil.sh set-alsavol "' . $_SESSION['amixname'] . '" ' . $vol);
 }

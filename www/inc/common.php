@@ -52,7 +52,7 @@ const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
 
 // Size and quality factor for small thumbs
-// Used in thmcache.php, worker.php
+// Used in thumb-gen.php, worker.php
 const THM_SM_W = 80;
 const THM_SM_H = 80;
 const THM_SM_Q = 75;

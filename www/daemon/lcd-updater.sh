@@ -17,9 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-eval "/var/local/www/commandw/lcdup.py"
+eval "/var/local/www/commandw/lcd_updater.py"
 
 while true; do
 	inotifywait -e close_write /var/local/www/currentsong.txt
-	eval "/var/local/www/commandw/lcdup.py"
+	eval "/var/local/www/commandw/lcd_updater.py"
 done > /dev/null 2>&1 &

@@ -58,13 +58,13 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 			if ($_POST['config']['outputmode'] == 'Dual-Mono' || $_POST['config']['outputmode'] == 'Dual-Stereo') {
 				//workerLog('dual mode selected');
-				sysCmd('/var/www/command/util.sh set-piano-dualmode ' . '"' . $_POST['config']['outputmode'] . '"');
+				sysCmd('/var/www/util/sysutil.sh set-piano-dualmode ' . '"' . $_POST['config']['outputmode'] . '"');
 			}
 			else {
 				//workerLog('other mode selected');
-				sysCmd('/var/www/command/util.sh set-piano-submode ' . '"' . $_POST['config']['outputmode'] . '"');
-				sysCmd('/var/www/command/util.sh set-piano-lowpass ' . '"' . $_POST['config']['lowpass'] . '"');
-				sysCmd('/var/www/command/util.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
+				sysCmd('/var/www/util/sysutil.sh set-piano-submode ' . '"' . $_POST['config']['outputmode'] . '"');
+				sysCmd('/var/www/util/sysutil.sh set-piano-lowpass ' . '"' . $_POST['config']['lowpass'] . '"');
+				sysCmd('/var/www/util/sysutil.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
 			}
 			$_SESSION['notify']['title'] = 'Chip and Device options updated';
 			$_SESSION['notify']['msg'] = 'Restart then apply MPD settings';
@@ -196,10 +196,10 @@ if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	$_allo_piano_hide = '';
 
 	// get current settings
-	$dualmode = sysCmd('/var/www/command/util.sh get-piano-dualmode');
-	$submode = sysCmd('/var/www/command/util.sh get-piano-submode');
-	$subvol = sysCmd('/var/www/command/util.sh get-piano-subvol');
-	$lowpass = sysCmd('/var/www/command/util.sh get-piano-lowpass');
+	$dualmode = sysCmd('/var/www/util/sysutil.sh get-piano-dualmode');
+	$submode = sysCmd('/var/www/util/sysutil.sh get-piano-submode');
+	$subvol = sysCmd('/var/www/util/sysutil.sh get-piano-subvol');
+	$lowpass = sysCmd('/var/www/util/sysutil.sh get-piano-lowpass');
 
 	// determine output mode
 	if ($dualmode[0] != 'None') {
@@ -286,7 +286,7 @@ if ($_SESSION['i2sdevice'] == 'Allo Boss 2 DAC') {
 	$boss2_phase_compensation = $array[4];
 	$boss2_hv_enable = $array[5];
 	// NOTE: this volume is automatically sync'd with master volume in worker.php event loop
-	//$boss2_dop_volume = rtrim(sysCmd('/var/www/command/util.sh get-alsavol Digital')[0], '%');
+	//$boss2_dop_volume = rtrim(sysCmd('/var/www/util/sysutil.sh get-alsavol Digital')[0], '%');
 
 	// De-emphasis filter
 	$_select['boss2_deemphasis_filter'] .= "<option value=\"on\" " . (($boss2_deemphasis_filter == 'on') ? "selected" : "") . ">On</option>\n";

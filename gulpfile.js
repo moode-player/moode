@@ -483,8 +483,10 @@ gulp.task('deployvarlocalwww', function (done) {
 gulp.task('deployback', gulp.series(['patchheader','patchfooter', 'patchindex', 'patchconfigs', 'minifyhtml'], function (done) {
     return gulp.src([  pkg.app.src+'/*.php'
                       ,pkg.app.src+'/command/**/*'
+                      ,pkg.app.src+'/daemon/**/*'
                       ,pkg.app.src+'/inc/**/*'
                       ,pkg.app.src+'/templates/**/*'
+                      ,pkg.app.src+'/util/**/*'
                       ,pkg.app.src+'/*'
                       // exclude generated content:
                       ,'!'+pkg.app.src+'/index.html'
@@ -542,8 +544,10 @@ gulp.task('deploy2remote', function (done) {
                'sudo mv /var/www/ /var/www.prev',
                'sudo mv /home/pi/www.deploy /var/www',
                'sudo chmod -R +x /var/www/command/*',
+               'sudo chmod -R +x /var/www/util/*',
                // required if uploaded from windows
                process.platform === "win32" ? 'find /var/www/command/* -exec /usr/bin/dos2unix {} \\; 2>/dev/null': 'echo',
+               process.platform === "win32" ? 'find /var/www/util/* -exec /usr/bin/dos2unix {} \\; 2>/dev/null': 'echo',
                '/usr/local/bin/moodeutl -r'
                 ], {filePath: 'commands.log'})
         //.pipe(gulp.dest('logs'))

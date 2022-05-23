@@ -20,7 +20,7 @@
  */
 
  /**
-  * autocfggen exports the supported autoconfig settings to the screen.
+  * autocfg-gen exports the supported autoconfig settings to the screen.
   * Don't use this file directly but instead use the moodeutl -e option
   * (C) 2020 @bitlab (@bitkeeper Git)
   */

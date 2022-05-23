@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# check for sudo
+# Check for sudo
 [[ $EUID -ne 0 ]] && { echo "Use sudo to run the script" ; exit 1 ; } ;
 
 SYSTEM_PARAMETERS() {

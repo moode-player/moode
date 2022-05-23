@@ -48,17 +48,17 @@ if [[ $PLAYER_EVENT == "started" ]]; then
 
 	# Local
 	if [[ $ALSAVOLUME != "none" ]]; then
-		/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+		/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 	fi
 
 	# Multiroom receivers
 	if [[ $MULTIROOM_TX == "On" ]]; then
 		for IP_ADDR in $RX_ADDRESSES; do
-			RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-status.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
+			RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-control.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
 			if [[ $RESULT != "" ]]; then
-				RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-status.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
+				RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-control.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
 				if [[ $RESULT != "" ]]; then
-					echo echo $(date +%F" "%T)"spotevent.sh trx-status.php -set-alsavol failed: $IP_ADDR" >> /home/pi/renderer_error.log
+					echo $(date +%F" "%T)"spotevent.sh: trx-control.php -set-alsavol failed: $IP_ADDR" >> /home/pi/renderer_error.log
 				fi
 			fi
 		done
@@ -72,7 +72,7 @@ if [[ $PLAYER_EVENT == "stopped" ]]; then
 	# Restore 0dB hardware volume when mpd configured as below
 	if [[ $MPDMIXER == "software" || $MPDMIXER == "none" ]]; then
 		if [[ $ALSAVOLUME != "none" ]]; then
-			/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+			/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi
 	fi
 	/var/www/vol.sh -restore

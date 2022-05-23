@@ -246,7 +246,7 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#manualserver').val($('#address').val().trim());
 	});
 
-	// View thmcache status
+	// View thumbnail cache generation status
     $('#view-thmcache-status').click(function(e) {
         $.getJSON('command/music-library.php?cmd=thumcache_status', function(data) {
             $('#thmcache-status').html(data);

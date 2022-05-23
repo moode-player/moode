@@ -48,11 +48,11 @@ if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
         } else if (stripos($_GET['cmd'], 'libupd-submit.php') !== false) {
 			$result = sysCmd('/var/www/' . $_GET['cmd']);
 			echo 'Library update submitted';
-        } else if (stripos($_GET['cmd'], 'trx-status.php') !== false) {
-			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
+        } else if (stripos($_GET['cmd'], 'trx-control.php') !== false) {
+			$result = sysCmd('/var/www/util/' . $_GET['cmd']);
 			echo $result[0];
         } else if (stripos($_GET['cmd'], 'coverview.php') !== false) {
-			$result = sysCmd('/var/www/command/' . $_GET['cmd']);
+			$result = sysCmd('/var/www/util/' . $_GET['cmd']);
 			echo $result[0];
         } else {
             echo 'Unknown command';

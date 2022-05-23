@@ -101,7 +101,7 @@ sysCmd('moode-apt-mark hold > /dev/null 2>&1');
 if (!file_exists(PLAY_HISTORY_LOG)) {
 	sysCmd('touch ' . PLAY_HISTORY_LOG);
 	// This sets the "Log initialized" header
-	sysCmd('/var/www/command/util.sh clear-playhistory');
+	sysCmd('/var/www/util/sysutil.sh clear-playhistory');
 }
 sysCmd('touch ' . LIBCACHE_BASE . '_all.json');
 sysCmd('touch ' . LIBCACHE_BASE . '_folder.json');
@@ -196,8 +196,8 @@ if ($alsaMixerName != 'Invalid card number.') {
 	workerLog('worker: ALSA mixer actual (' . $alsaMixerName . ')');
 	if ($alsaMixerName != 'none') {
 		sysCmd('amixer sset ' . '"' . $alsaMixerName . '"' . ' on' ); // Ensure state is 'on'
-		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $alsaMixerName . '"' . ' 0');
-		$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $alsaMixerName . '"');
+		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $alsaMixerName . '"' . ' 0');
+		$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $alsaMixerName . '"');
 		workerLog('worker: ALSA ' . trim($alsaMixerName) . ' volume set to (' . $result[0] . ')');
 	} else {
 		phpSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
@@ -433,10 +433,10 @@ workerLog('worker: ' . $mpdConfUpdMsg);
 
 // Ensure audio output is unmuted for these devices
 if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-AMP+') {
-	sysCmd('/var/www/command/util.sh unmute-pi-ampplus');
+	sysCmd('/var/www/util/sysutil.sh unmute-pi-ampplus');
 	workerLog('worker: IQaudIO Pi-AMP+ unmuted');
 } else if ($_SESSION['i2sdevice'] == 'IQaudIO Pi-DigiAMP+') {
-	sysCmd('/var/www/command/util.sh unmute-pi-digiampplus');
+	sysCmd('/var/www/util/sysutil.sh unmute-pi-digiampplus');
 	workerLog('worker: IQaudIO Pi-DigiAMP+ unmuted');
 }
 
@@ -463,13 +463,13 @@ if ($_SESSION['i2sdevice'] == 'None'  && $_SESSION['i2soverlay'] == 'None' &&
 	$usbAudio = false;
 }
 
-// Store alsa mixer name for use by util.sh get/set-alsavol and vol.sh
+// Store alsa mixer name for use by sysutil.sh get/set-alsavol and vol.sh
 //phpSession('write', 'amixname', getAlsaMixerName($_SESSION['i2sdevice']));
 workerLog('worker: ALSA mixer name (' . $_SESSION['amixname'] . ')');
 workerLog('worker: MPD mixer type (' . ($_SESSION['mpdmixer'] == 'none' ? 'fixed 0dB' : $_SESSION['mpdmixer']) . ')');
 
 // Check for presence of hardware volume controller
-$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
+$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
 if (substr($result[0], 0, 6 ) == 'amixer') {
 	phpSession('write', 'alsavolume', 'none'); // Hardware volume controller not detected
 	workerLog('worker: Hdwr volume controller not detected');
@@ -494,8 +494,8 @@ workerLog('worker: ALSA loopback (' . $_SESSION['alsa_loopback'] . ')');
 
 // Configure Allo Piano 2.1
 if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
-	$dualMode = sysCmd('/var/www/command/util.sh get-piano-dualmode');
-	$subMode = sysCmd('/var/www/command/util.sh get-piano-submode');
+	$dualMode = sysCmd('/var/www/util/sysutil.sh get-piano-dualmode');
+	$subMode = sysCmd('/var/www/util/sysutil.sh get-piano-submode');
 	// Determine output mode
 	if ($dualMode[0] != 'None') {
 		$outputMode = $dualMode[0];
@@ -616,7 +616,7 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 		startBluetooth();
 
 		if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
-			sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+			sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
 			workerLog('worker: Bluetooth pairing agent (started)');
 		}
 	} else {
@@ -800,14 +800,14 @@ workerLog('worker: Preamp volume level (' . $_SESSION['volknob_preamp'] . ')');
 // Since we initially set alsa volume to 0 at the beginning of startup it must be reset
 if ($_SESSION['alsavolume'] != 'none') {
 	if ($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') {
-		$result = sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+		$result = sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
 }
 $volume = $_SESSION['volknob_mpd'] != '0' ? $_SESSION['volknob_mpd'] : $_SESSION['volknob'];
 sysCmd('/var/www/vol.sh ' . $volume);
 workerLog('worker: MPD volume level (' . $volume . ') restored');
 if ($_SESSION['alsavolume'] != 'none') {
-	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
+	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"');
 	workerLog('worker: ALSA ' . trim($_SESSION['amixname']) . ' volume (' . $result[0] . ')');
 } else {
 	workerLog('worker: ALSA volume level (None)');
@@ -904,7 +904,7 @@ phpSessionCheck();
 $restoreBackup = false;
 if (file_exists('/boot/moodebackup.zip')) {
 	$restoreLog = '/home/pi/backup_restore.log';
-	sysCmd('/var/www/command/backupmanager.py --restore /boot/moodebackup.zip > ' . $restoreLog);
+	sysCmd('/var/www/util/backup_manager.py --restore /boot/moodebackup.zip > ' . $restoreLog);
 	sysCmd('rm /boot/moodebackup.zip');
 	sysCmd('sync');
 	$restoreBackup = true; // Don't reboot here in case autocfg is also present
@@ -927,7 +927,7 @@ if (file_exists('/boot/moodecfg.ini')) {
 
 // Start watchdog monitor
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
-sysCmd('/var/www/command/watchdog.sh > /dev/null 2>&1 &');
+sysCmd('/var/www/daemon/watchdog.sh > /dev/null 2>&1 &');
 workerLog('worker: Watchdog started');
 workerLog('worker: Ready');
 
@@ -1020,7 +1020,7 @@ function chkMaintenance() {
 
 	if ($GLOBALS['maint_interval'] <= 0) {
 		// Clear logs
-		$result = sysCmd('/var/www/command/util.sh "clear-syslogs"');
+		$result = sysCmd('/var/www/util/sysutil.sh "clear-syslogs"');
 		if (!empty($result)) {
 			workerLog('worker: Maintenance: Warning: Problem clearing system logs');
 		}
@@ -1032,8 +1032,8 @@ function chkMaintenance() {
 		}
 
 		// Purge temp or unwanted resources
-		sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
-		sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Possible leftover temp file created by Radio Manager export
+		//sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
+		//sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Possible leftover temp file created by Radio Manager export
 
 		// Purge bogus session files
 		// The only valid file is the one corresponding to $_SESSION['sessionid']
@@ -1076,7 +1076,7 @@ function chkBtActive() {
 			phpSession('write', 'btactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
 			if ($_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 			}
 		}
 		sendEngCmd('btactive1'); // Placing here enables each conected device to be printed to the indicator overlay
@@ -1217,7 +1217,7 @@ function chkInpActive() {
 }
 
 function updBoss2DopVolume () {
-	$masterVol = sysCmd('/var/www/command/util.sh get-alsavol Master')[0];
+	$masterVol = sysCmd('/var/www/util/sysutil.sh get-alsavol Master')[0];
 	sysCmd('amixer -c 0 sset Digital ' . $masterVol);
 }
 
@@ -1261,6 +1261,7 @@ function updExtMetaFile() {
 			fwrite($fh, $data);
 			fclose($fh);
 			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
+            chmod('/var/local/www/currentsong.txt', 0777);
 		}
 	} else {
 		//workerLog('mpd active');
@@ -1297,6 +1298,7 @@ function updExtMetaFile() {
 			fwrite($fh, $data);
 			fclose($fh);
 			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
+            chmod('/var/local/www/currentsong.txt', 0777);
 		}
 	}
 }
@@ -1532,7 +1534,7 @@ function chkLibraryRegen() {
 
 // Return hardware revision
 function getHdwrRev() {
-	$array = explode("\t", sysCmd('/var/www/command/pirev.py')[0]);
+	$array = explode("\t", sysCmd('/var/www/util/pirev.py')[0]);
 	$model = $array[1];
 	$rev = $array[2];
 	$ram = $array[3];
@@ -1590,12 +1592,12 @@ function startMiniDlna() {
 
 // LCD updater
 function startLcdUpdater() {
-	sysCmd('/var/www/command/lcdup.sh');
+	sysCmd('/var/www/daemon/lcd-updater.sh');
 }
 
 // GPIO button handler
 function startGpioBtnHandler() {
-	sysCmd('/var/www/command/gpio-buttons.py > /dev/null &');
+	sysCmd('/var/www/daemon/gpio_buttons.py > /dev/null &');
 }
 
 //
@@ -1628,10 +1630,10 @@ function runQueuedJob() {
 			sendMpdCmd($sock, $cmd);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
-			// Start thumbcache updater
-			$result = sysCmd('pgrep -l thmcache.php');
-			if (strpos($result[0], 'thmcache.php') === false) {
-				sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
+			// Start thumbnail generator
+			$result = sysCmd('pgrep -l thumb-gen.php');
+			if (strpos($result[0], 'thumb-gen.php') === false) {
+				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
 			}
 			$GLOBALS['check_library_update'] = '1';
 			break;
@@ -1648,17 +1650,17 @@ function runQueuedJob() {
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
 			// Launch thumbcache updater
-			$result = sysCmd('pgrep -l thmcache.php');
-			if (strpos($result[0], 'thmcache.php') === false) {
-				sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
-				//workerLog('regen_library, thmcache.php launched');
+			$result = sysCmd('pgrep -l thumb-gen.php');
+			if (strpos($result[0], 'thumb-gen.php') === false) {
+				sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
+				//workerLog('regen_library, thumb-gen.php launched');
 			}
 			$GLOBALS['check_library_regen'] = '1';
 			break;
 		case 'regen_thmcache':
 			sysCmd('rm -rf ' . THMCACHE_DIR);
 			sysCmd('mkdir ' . THMCACHE_DIR);
-			sysCmd('/var/www/command/thmcache.php > /dev/null 2>&1 &');
+			sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
 			break;
 
 		// mpd-config jobs
@@ -1678,7 +1680,7 @@ function runQueuedJob() {
 
 			// Reset hardware volume to 0dB (100) if indicated
 			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 			}
 
 			// Parse quereargs: [0] = device number changed 1/0, [1] = mixer change 'fixed', 'hardware', 'software', 0
@@ -1722,7 +1724,7 @@ function runQueuedJob() {
 			}
 
 			// DEBUG:
-			$alsa_vol = $_SESSION['alsavolume'] == 'none' ? 'none' : sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0];
+			$alsa_vol = $_SESSION['alsavolume'] == 'none' ? 'none' : sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $_SESSION['amixname'] . '"')[0];
 			$playing = !empty(sysCmd('mpc status | grep "\[playing\]"')) ? 'playing' : 'paused';
 			workerLog('worker: Job mpdcfg: devchg|mixchg (' . $device_chg . '|' . $mixer_chg . '), alsavol (' . $alsa_vol . '), playstate (' . $playing . ')');
 			break;
@@ -1735,7 +1737,7 @@ function runQueuedJob() {
 			break;
 		case 'alsavolume_max':
 			if (($_SESSION['mpdmixer'] == 'software' || $_SESSION['mpdmixer'] == 'none') && $_SESSION['alsavolume'] != 'none') {
-				sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['w_queueargs']);
+				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['w_queueargs']);
 			}
 			break;
 		case 'alsa_output_mode':
@@ -1780,7 +1782,7 @@ function runQueuedJob() {
 			break;
 		case 'rotaryenc':
 			sysCmd('systemctl stop rotenc');
-			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/command/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
+			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/util/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
 			sysCmd('systemctl daemon-reload');
 
 			if ($_SESSION['w_queueargs'] == '1') {
@@ -1881,7 +1883,7 @@ function runQueuedJob() {
 			sysCmd('mpc crossfade ' . $_SESSION['w_queueargs']);
 			break;
 		case 'btsvc':
-			sysCmd('/var/www/command/util.sh chg-name bluetooth ' . $_SESSION['w_queueargs']);
+			sysCmd('/var/www/util/sysutil.sh chg-name bluetooth ' . $_SESSION['w_queueargs']);
 			sysCmd('systemctl stop bluealsa');
 			sysCmd('systemctl stop bluetooth');
 			sysCmd('killall bluealsa-aplay');
@@ -1893,18 +1895,18 @@ function runQueuedJob() {
 			if ($_SESSION['btsvc'] == 1) {
 				startBluetooth();
 				if ($_SESSION['pairing_agent'] == '1') {
-					sysCmd('killall -s 9 bt-agent.py');
-					sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+					sysCmd('killall -s 9 blu_agent.py');
+					sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
 				}
 			} else {
-				sysCmd('killall -s 9 bt-agent.py');
+				sysCmd('killall -s 9 blu_agent.py');
 				phpSession('write', 'pairing_agent', '0');
 			}
 			break;
 		case 'pairing_agent':
-			sysCmd('killall -s 9 bt-agent.py');
+			sysCmd('killall -s 9 blu_agent.py');
 			if ($_SESSION['pairing_agent'] == '1') {
-				sysCmd('/var/www/command/bt-agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
 			}
 			break;
 		case 'btmulti':
@@ -2048,14 +2050,14 @@ function runQueuedJob() {
 			break;
 
 		case 'upnpsvc':
-			sysCmd('/var/www/command/util.sh chg-name upnp ' . $_SESSION['w_queueargs']);
+			sysCmd('/var/www/util/sysutil.sh chg-name upnp ' . $_SESSION['w_queueargs']);
 			sysCmd('systemctl stop upmpdcli');
 			if ($_SESSION['upnpsvc'] == 1) {
 				startUPnP();
 			}
 			break;
 		case 'minidlna':
-			sysCmd('/var/www/command/util.sh chg-name dlna ' . $_SESSION['w_queueargs']);
+			sysCmd('/var/www/util/sysutil.sh chg-name dlna ' . $_SESSION['w_queueargs']);
 			sysCmd('systemctl stop minidlna');
 			if ($_SESSION['dlnasvc'] == 1) {
 				startMiniDlna();
@@ -2079,13 +2081,13 @@ function runQueuedJob() {
 
 		// sys-config jobs
 		case 'installupd':
-			sysCmd('/var/www/command/updater.sh ' . getPkgId() . ' > /dev/null 2>&1');
+			sysCmd('/var/www/util/system-updater.sh ' . getPkgId() . ' > /dev/null 2>&1');
 			break;
 		case 'timezone':
-			sysCmd('/var/www/command/util.sh set-timezone ' . $_SESSION['w_queueargs']);
+			sysCmd('/var/www/util/sysutil.sh set-timezone ' . $_SESSION['w_queueargs']);
 			break;
 		case 'hostname':
-			sysCmd('/var/www/command/util.sh chg-name host ' . $_SESSION['w_queueargs']);
+			sysCmd('/var/www/util/sysutil.sh chg-name host ' . $_SESSION['w_queueargs']);
 			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
@@ -2170,10 +2172,10 @@ function runQueuedJob() {
 			}
 			break;
 		case 'clearbrcache':
-			sysCmd('/var/www/command/util.sh clearbrcache');
+			sysCmd('/var/www/util/sysutil.sh clearbrcache');
 			break;
 		case 'keyboard':
-			sysCmd('/var/www/command/util.sh set-keyboard ' . $_SESSION['w_queueargs']);
+			sysCmd('/var/www/util/sysutil.sh set-keyboard ' . $_SESSION['w_queueargs']);
 			break;
 		case 'lcdup':
 			if ($_SESSION['w_queueargs'] == 1) {
@@ -2184,7 +2186,7 @@ function runQueuedJob() {
 			}
 			break;
 		case 'gpio_svc':
-			sysCmd('killall -s 9 gpio-buttons.py');
+			sysCmd('killall -s 9 gpio_buttons.py');
 			if ($_SESSION['w_queueargs'] == 1) {
 				startGpioBtnHandler();
 			}
@@ -2196,10 +2198,10 @@ function runQueuedJob() {
 			}
 			break;
 		case 'clearsyslogs':
-			sysCmd('/var/www/command/util.sh clear-syslogs');
+			sysCmd('/var/www/util/sysutil.sh clear-syslogs');
 			break;
 		case 'clearplayhistory':
-			sysCmd('/var/www/command/util.sh clear-playhistory');
+			sysCmd('/var/www/util/sysutil.sh clear-playhistory');
 			break;
 		case 'compactdb':
 			sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');

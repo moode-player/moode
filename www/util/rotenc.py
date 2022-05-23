@@ -146,7 +146,7 @@ def poll_encoder():
 
 # Update MPD and UI volume
 def update_volume(direction, step):
-	db_cursor.execute("SELECT value FROM cfg_system WHERE param='volknob' or param='volume_mpd_max'")
+	db_cursor.execute("SELECT value FROM cfg_system WHERE param='volknob' OR param='volume_mpd_max'")
 	row = db_cursor.fetchone()
 	current_vol = int(row['value'])
 	row = db_cursor.fetchone()

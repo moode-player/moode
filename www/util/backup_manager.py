@@ -33,8 +33,7 @@ from os import system, path, walk
 import os
 from zipfile import ZipFile
 
-from stationmanager import StationManager
-
+from station_manager import StationManager
 
 class BackupManager(StationManager):
     VERSION = "2.1"

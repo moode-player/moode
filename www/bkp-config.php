@@ -69,8 +69,8 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 	}
 
 	// Generate backup zip
-	sysCmd('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
-	//workerLog('/var/www/command/backupmanager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
+	sysCmd('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
+	//workerLog('/var/www/util/backup_manager.py ' . $backupOptions . '--backup ' . TMP_BACKUP_ZIP);
 
 	// Create name for backup file in browser
 	$dt = new DateTime('NOW');
@@ -112,8 +112,8 @@ else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
 			$restoreOptions = '--what ' . $restoreOptions . ' ';
 		}
 
-		// TODO: Maybe reset file rights after backupmanager.py ?
-		sysCmd('/var/www/command/backupmanager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
+		// TODO: Maybe reset file rights after backup_manager.py ?
+		sysCmd('/var/www/util/backup_manager.py ' . $restoreOptions . '--restore ' . TMP_RESTORE_ZIP);
 		sysCmd('rm ' . TMP_RESTORE_ZIP);
 
 		// Request reboot if system settings are part of restore
@@ -205,7 +205,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
 	$_backup_hidden = 'hidden';
 	$backupOptions = array();
-	$backupOptions = file_exists(TMP_RESTORE_ZIP) ? sysCmd('/var/www/command/backupmanager.py --info ' . TMP_RESTORE_ZIP) : $backupOptions;
+	$backupOptions = file_exists(TMP_RESTORE_ZIP) ? sysCmd('/var/www/util/backup_manager.py --info ' . TMP_RESTORE_ZIP) : $backupOptions;
 	//workerLog(print_r($backupOptions, true));
 	$_togglebtn_restore_system = genToggleButton('restore_system', in_array('config', $backupOptions), !in_array('config', $backupOptions));
 	$_togglebtn_restore_camilladsp = genToggleButton('restore_camilladsp', in_array('cdsp', $backupOptions), !in_array('cdsp', $backupOptions));

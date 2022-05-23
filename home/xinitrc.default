@@ -27,7 +27,7 @@ xset s 600
 SCREENSIZE="$(fbset -s | awk '$1 == "geometry" { print $2","$3 }')"
 
 # Clear browser cache
-$(/var/www/command/util.sh clearbrcache)
+$(/var/www/util/sysutil.sh clearbrcache)
 
 # Launch chromium browser
 chromium-browser --app="http://localhost/" \

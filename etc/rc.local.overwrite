@@ -11,7 +11,7 @@ echo "$CPU_GOV" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
 # USB storage auto-mounter
 /usr/bin/udisks-glue --config=/etc/udisks-glue.conf > /dev/null 2>&1
-#/usr/bin/devmon --exec-on-drive "/var/www/command/util.sh smb_add %d %f" --exec-on-remove "/var/www/command/util.sh smb_remove %f" --always-exec --no-gui > /dev/null 2>&1 &
+#/usr/bin/devmon --exec-on-drive "/var/www/util/sysutil.sh smb_add %d %f" --exec-on-remove "/var/www/util/sysutil.sh smb_remove %f" --always-exec --no-gui > /dev/null 2>&1 &
 
 # Work around for Katana driver load failure on Pi-4B
 AUDIO_DEVICE=$(sqlite3 $SQLDB "select value from cfg_system where param='i2sdevice'")
@@ -26,6 +26,6 @@ if [ "$AUDIO_DEVICE" = "Allo Katana DAC" ] && [ $PI_REVNUM_SEGMENT = "311" ]; th
 fi
 
 # moOde startup and job processor daemon
-/var/www/command/worker.php > /dev/null 2>&1
+/var/www/daemon/worker.php > /dev/null 2>&1
 
 exit 0

@@ -33,7 +33,7 @@ $_players = '';
 $timeout = getStreamTimeout();
 foreach ($port6600Hosts as $ipAddr) {
 	if ($ipAddr != $thisIpAddr) {
-		if (false === ($status = file_get_contents('http://' . $ipAddr . '/command/?cmd=trx-status.php -rx', false, $timeout))) {
+		if (false === ($status = file_get_contents('http://' . $ipAddr . '/command/?cmd=trx-control.php -rx', false, $timeout))) {
 			debugLog('trx-config.php: get_rx_status failed: ' . $ipAddr);
 		} else {
 			if ($status != 'Unknown command') {  // r740 or higher host

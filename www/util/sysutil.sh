@@ -25,7 +25,7 @@ if [[ $1 = "set-timezone" ]]; then
 	exit
 fi
 
-# set keyboard layout
+# Set keyboard layout
 if [[ $1 = "set-keyboard" ]]; then
 	sed -i "/XKBLAYOUT=/c\XKBLAYOUT=\"$2\"" /etc/default/keyboard
     exit
@@ -252,7 +252,7 @@ if [[ $1 = "smb_remove" ]]; then
     exit
 fi
 
-# check for directory existance
+# Check for directory existance
 if [[ $1 = "check-dir" ]]; then
 	if [ -d "$2" ]; then
 		echo "exists"
@@ -260,7 +260,7 @@ if [[ $1 = "check-dir" ]]; then
     exit
 fi
 
-# clear chrome browser cache
+# Clear chrome browser cache
 if [[ $1 = "clearbrcache" ]]; then
 	rm -rf /home/pi/.cache/chromium
 	# NOTE: This deletes any 3rd party extensions like xontab but it more effectively clears cache corruption

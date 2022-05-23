@@ -23,6 +23,7 @@ require_once 'common.php';
 require_once 'mpd.php';
 require_once 'music-library.php';
 require_once 'session.php';
+require_once 'sql.php';
 
 $sock = getMpdSock();
 phpSession('open_ro');

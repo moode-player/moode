@@ -59,8 +59,8 @@ function updReceiverVol ($cmd) {
 	$count = count($rxAddresses);
 	for ($i = 0; $i < $count; $i++) {
 		// NOTE: set-mpdvol checks to see if Receiver opted in for Master volume
-		if (false === ($result = file_get_contents('http://' . $rxAddresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
-			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i]  . '/command/?cmd=trx-status.php -set-mpdvol ' . $cmd))) {
+		if (false === ($result = file_get_contents('http://' . $rxAddresses[$i]  . '/command/?cmd=trx-control.php -set-mpdvol ' . $cmd))) {
+			if (false === ($result = file_get_contents('http://' . $rxAddresses[$i]  . '/command/?cmd=trx-control.php -set-mpdvol ' . $cmd))) {
 				debugLog('updReceiverVol(): remote volume cmd (' . $cmd . ') failed: ' . $rxHostNames[$i]);
 			}
 		}

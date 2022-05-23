@@ -31,7 +31,7 @@ function startBluetooth() {
 	}
 	// Initialize controller
 	else {
-		$result = sysCmd('/var/www/command/bt.sh -i');
+		$result = sysCmd('/var/www/util/blu-control.sh -i');
 		//workerLog('startBluetooth(): Bluetooth controller initialized');
 	}
 }
@@ -145,7 +145,7 @@ function startSqueezeLite() {
 	sysCmd('mpc stop');
 
 	if ($_SESSION['alsavolume'] != 'none') {
-		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
 	sysCmd('systemctl start squeezelite');
 }

@@ -41,7 +41,7 @@ if [[ $WRKREADY == "1" ]]; then
 		echo Power off
 		$(sqlite3 $SQLDB "update cfg_system set value='0' where param='slactive'")
 		if [[ $VOPT != "" ]] ; then
-			ALSAVOL=$(/var/www/command/util.sh get-alsavol "`/var/www/command/util.sh get-mixername| sed 's/[()]/"/g'`")
+			ALSAVOL=$(/var/www/util/sysutil.sh get-alsavol "`/var/www/util/sysutil.sh get-mixername| sed 's/[()]/"/g'`")
 			if [[ $ALSAVOL == "0%" ]] ; then
 				/var/www/vol.sh -restore
 			fi
@@ -58,7 +58,7 @@ if [[ $WRKREADY == "1" ]]; then
 		sleep 1
 		$(sqlite3 $SQLDB "update cfg_system set value='1' where param='slactive'")
 		if [[ $ALSAVOLUME != "none" && $VOPT == "" ]]; then
-			/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+			/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 		fi
 	else
 		# Value 2 is returned

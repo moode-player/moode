@@ -25,6 +25,7 @@
 set_include_path('/var/www/inc');
 require_once 'common.php';
 require_once 'session.php';
+require_once 'sql.php';
 
 // Image to use when no cover found
 const NOT_FOUND_JPG = '/var/www/images/notfound.jpg';
@@ -33,7 +34,7 @@ const NOT_FOUND_JPG = '/var/www/images/notfound.jpg';
 // MAIN
 //
 
-workerLog('thmcache: Start');
+workerLog('thumb-gen: Start');
 session_id(phpSession('get_sessionid'));
 
 phpSession('open');
@@ -81,15 +82,15 @@ else {
 	$thm_q = $hires_thm_wq[1];
 }
 
-workerLog('thmcache: Priority: ' . $search_pri);
-workerLog('thmcache: Res,Qual: ' . $hires_thm);
-workerLog('thmcache: Px ratio: ' . $pixel_ratio);
-workerLog('thmcache: Th width: ' . $thm_w);
-workerLog('thmcache: Thm qual: ' . $thm_q);
+workerLog('thumb-gen: Priority: ' . $search_pri);
+workerLog('thumb-gen: Res,Qual: ' . $hires_thm);
+workerLog('thumb-gen: Px ratio: ' . $pixel_ratio);
+workerLog('thumb-gen: Th width: ' . $thm_w);
+workerLog('thumb-gen: Thm qual: ' . $thm_q);
 
 // Ensure cache dir exists
 if (!file_exists(THMCACHE_DIR)) {
-	workerLog('thmcache: info: Missing thmcache dir, new one created');
+	workerLog('thumb-gen: info: Missing thmcache dir, new one created');
 	sysCmd('mkdir ' . THMCACHE_DIR);
 }
 
@@ -98,12 +99,12 @@ $mnt_dirs = str_replace("\n", ', ', shell_exec('ls /mnt'));
 $media_dirs = str_replace("\n", ', ', shell_exec('ls /media'));
 !empty($media_dirs) ? $dirs = $mnt_dirs . substr($media_dirs, 0, -2) : $dirs = substr($mnt_dirs, 0, -2);
 $dirs = str_replace('moode-player, ', '', $dirs); // This mount point is only present in dev
-workerLog('thmcache: Scanning: ' . $dirs);
+workerLog('thumb-gen: Scanning: ' . $dirs);
 
 // Generate the file list
-$result = shell_exec('/var/www/command/listall.sh | sort');
+$result = shell_exec('/var/www/util/list-songfiles.sh | sort');
 if (is_null($result) || substr($result, 0, 2) == 'OK') {
-	workerLog('thmcache: exit: no files found');
+	workerLog('thumb-gen: exit: no files found');
 	phpSession('open');
 	$_SESSION['thmcache_status'] = 'No files found';
 	phpSession('close');
@@ -145,13 +146,13 @@ $msg = 'Done: ' . $folder_cnt . ' folders scanned, ' . $new_thms . ' thumbs crea
 phpSession('open');
 $_SESSION['thmcache_status'] = $msg;
 phpSession('close');
-workerLog('thmcache: ' . $msg);
+workerLog('thumb-gen: ' . $msg);
 
 // Create thumbnail image
 function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	$path = MPD_MUSICROOT . $file;
 	$img_str = false;
-	//workerlog('thmcache: path: ' . $path);
+	//workerLog('thumb-gen: path: ' . $path);
 
 	if ($search_pri == 'Embedded cover') {
 		// Check for embedded cover in file
@@ -179,10 +180,10 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	// Image file path, convert image to string
 	if (strlen($img_str) < 512) {
 		$img_str = file_get_contents($img_str);
-		//workerlog('thmcache: image file: ' . $dir);
+		//workerLog('thumb-gen: image file: ' . $dir);
 	}
 	else {
-		//workerlog('thmcache: embedded image: ' . $file);
+		//workerLog('thumb-gen: embedded image: ' . $file);
 	}
 
 	$image = imagecreatefromstring($img_str);
@@ -208,54 +209,54 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 
 	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
-		workerLog('thmcache: error 1a: imagecreatetruecolor()' . $file);
+		workerLog('thumb-gen: error 1a: imagecreatetruecolor()' . $file);
 		return;
 	}
 	if ($resample === true) {
 		//workerLog('resample: '. $file);
 		if (imagecopyresampled($thumb, $image, 0, 0, 0, 0, $thm_w, $thm_h, $img_w, $img_h) === false) {
-			workerLog('thmcache: error 2a: imagecopyresampled()' . $file);
+			workerLog('thumb-gen: error 2a: imagecopyresampled()' . $file);
 			return;
 		}
 	}
 	else {
 		//workerLog('copy: '. $file);
 		if (imagecopy($thumb, $image, 0, 0, 0, 0, $img_w, $img_h) === false) {
-			workerLog('thmcache: error 2a: imagecopy()' . $file);
+			workerLog('thumb-gen: error 2a: imagecopy()' . $file);
 			return;
 		}
 	}
 	if (imagejpeg($thumb, THMCACHE_DIR . md5($dir) . '.jpg', $thm_q) === false) {
-		workerLog('thmcache: error 4a: imagejpeg()' . $file);
+		workerLog('thumb-gen: error 4a: imagejpeg()' . $file);
 		return;
 	}
 	else {
 		$GLOBALS['new_thms']++;
 	}
 	if (imagedestroy($thumb) === false) {
-		workerLog('thmcache: error 5a: imagedestroy()' . $file);
+		workerLog('thumb-gen: error 5a: imagedestroy()' . $file);
 		return;
 	}
 
 	// Small thumbnail
 	if (($thumb_sm = imagecreatetruecolor(THM_SM_W, THM_SM_H)) === false) {
-		workerLog('thmcache: error 1b: imagecreatetruecolor()' . $file);
+		workerLog('thumb-gen: error 1b: imagecreatetruecolor()' . $file);
 		return;
 	}
 	if (imagecopyresampled($thumb_sm, $image, 0, 0, 0, 0, THM_SM_W, THM_SM_H, $img_w, $img_h) === false) {
-		workerLog('thmcache: error 2b: imagecopyresampled()' . $file);
+		workerLog('thumb-gen: error 2b: imagecopyresampled()' . $file);
 		return;
 	}
 	if (imagedestroy($image) === false) {
-		workerLog('thmcache: error 3b: imagedestroy()' . $file);
+		workerLog('thumb-gen: error 3b: imagedestroy()' . $file);
 		return;
 	}
 	if (imagejpeg($thumb_sm, THMCACHE_DIR . md5($dir) . '_sm.jpg', THM_SM_Q) === false) {
-		workerLog('thmcache: error 4b: imagejpeg()' . $file);
+		workerLog('thumb-gen: error 4b: imagejpeg()' . $file);
 		return;
 	}
 	if (imagedestroy($thumb_sm) === false) {
-		workerLog('thmcache: error 5b: imagedestroy()' . $file);
+		workerLog('thumb-gen: error 5b: imagedestroy()' . $file);
 		return;
 	}
 
@@ -267,7 +268,7 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 // Modified versions of coverart.php functions
 // (C) 2015 Andreas Goetz
 function outImage($mime, $data) {
-	//workerLog('thmcache: outImage(): ' . $mime . ', ' . strlen($data) . ' bytes');
+	//workerLog('thumb-gen: outImage(): ' . $mime . ', ' . strlen($data) . ' bytes');
 	switch ($mime) {
 		case "image/gif":
 		case "image/jpg":
@@ -284,9 +285,9 @@ function outImage($mime, $data) {
 	return false;
 }
 function getImage($path) {
-	//workerLog('thmcache: getImage(): ' . $path);
+	//workerLog('thumb-gen: getImage(): ' . $path);
 	if (!file_exists($path)) {
-		//workerLog('thmcache: getImage(): ' . $path . ' (does not exist)');
+		//workerLog('thumb-gen: getImage(): ' . $path . ' (does not exist)');
 		return false;
 	}
 
@@ -317,8 +318,8 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Id3_Exception $e) {
-				workerLog('thmcache: mp3: ' . $path);
-				workerLog('thmcache: mp3: Zend media exception: ' . $e->getMessage());
+				workerLog('thumb-gen: mp3: ' . $path);
+				workerLog('thumb-gen: mp3: Zend media exception: ' . $e->getMessage());
 			}
 			break;
 
@@ -333,8 +334,8 @@ function getImage($path) {
 				}
 			}
 			catch (Zend_Media_Flac_Exception $e) {
-				workerLog('thmcache: flac: ' . $path);
-				workerLog('thmcache: flac: Zend media exception: ' . $e->getMessage());
+				workerLog('thumb-gen: flac: ' . $path);
+				workerLog('thumb-gen: flac: Zend media exception: ' . $e->getMessage());
 			}
 			break;
 
@@ -355,8 +356,8 @@ function getImage($path) {
                 }
             }
             catch (Zend_Media_Iso14496_Exception $e) {
-				workerLog('thmcache: m4a: ' . $path);
-				workerLog('thmcache: m4a: Zend media exception: ' . $e->getMessage());
+				workerLog('thumb-gen: m4a: ' . $path);
+				workerLog('thumb-gen: m4a: Zend media exception: ' . $e->getMessage());
             }
             break;
 	}
@@ -364,7 +365,7 @@ function getImage($path) {
 	return $image;
 }
 function parseFolder($path) {
-	//workerLog('thmcache: parseFolder(): ' . $path);
+	//workerLog('thumb-gen: parseFolder(): ' . $path);
 	// Default cover files
 	$covers = array(
 		'Cover.jpg', 'cover.jpg', 'Cover.jpeg', 'cover.jpeg', 'Cover.png', 'cover.png', 'Cover.tif', 'cover.tif', 'Cover.tiff', 'cover.tiff',
@@ -383,7 +384,7 @@ function parseFolder($path) {
 		$path = str_replace('[', '\[', $path);
 		$path = str_replace(']', '\]', $path);
 		foreach (glob($path . '*') as $file) {
-			//workerLog('thmcache: parseFolder(): glob' . $file);
+			//workerLog('thumb-gen: parseFolder(): glob' . $file);
 			if (is_file($file) && in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $extensions)) {
 				$result = getImage($file);
 				if ($result !== false) {

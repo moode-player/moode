@@ -334,10 +334,10 @@ if (strpos($result[0]['dacchip'], 'PCM5') !== false || strpos($result[0]['dacchi
 	$_chip_options = $digFilter . ', Gain=' . $analogGain . ', Boost=' . $analogBoost;
 } else if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
 	// Get current settings
-	$dualMode = sysCmd('/var/www/command/util.sh get-piano-dualmode');
-	$subMode = sysCmd('/var/www/command/util.sh get-piano-submode');
-	$subVol = sysCmd('/var/www/command/util.sh get-piano-subvol');
-	$lowPass = sysCmd('/var/www/command/util.sh get-piano-lowpass');
+	$dualMode = sysCmd('/var/www/util/sysutil.sh get-piano-dualmode');
+	$subMode = sysCmd('/var/www/util/sysutil.sh get-piano-submode');
+	$subVol = sysCmd('/var/www/util/sysutil.sh get-piano-subvol');
+	$lowPass = sysCmd('/var/www/util/sysutil.sh get-piano-lowpass');
 
 	// Determine output mode
 	if ($dualMode[0] != 'None') {

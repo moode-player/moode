@@ -21,13 +21,13 @@
 function getAlsaMixerName($i2sDevice) {
 	if ($i2sDevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		// USB devices, Pi HDMI-1/2 or Headphone jack
-		$result = sysCmd('/var/www/command/util.sh get-mixername');
+		$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
 		if ($result[0] == '') {
 			// Mixer name not found => Use default mixer name "PCM"
 			$mixerName = 'PCM';
 		} else {
 			// Mixer name defined => Use actual mixer name
-			// Strip off delimiters added by util.sh get-mixername
+			// Strip off delimiters added by sysutil.sh get-mixername
 			$mixerName = ltrim($result[0], '(');
 			$mixerName = rtrim($mixerName, ')');
 		}
@@ -45,7 +45,7 @@ function getAlsaMixerName($i2sDevice) {
 			$mixerName = 'Master';
 		} else {
 			// No mixer defined or use default mixer name "Digital"
-			$result = sysCmd('/var/www/command/util.sh get-mixername');
+			$result = sysCmd('/var/www/util/sysutil.sh get-mixername');
 			if ($result[0] == '') {
 				// Mixer name not defined => no actual mixer exists
 				$mixerName = 'none';
@@ -60,7 +60,7 @@ function getAlsaMixerName($i2sDevice) {
 }
 
 function getAlsaVolume($mixerName) {
-	$result = sysCmd('/var/www/command/util.sh get-alsavol ' . '"' . $mixerName . '"');
+	$result = sysCmd('/var/www/util/sysutil.sh get-alsavol ' . '"' . $mixerName . '"');
 	if (substr($result[0], 0, 6 ) == 'amixer') {
 		$alsaVolume = 'none';
 	} else {

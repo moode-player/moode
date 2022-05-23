@@ -231,8 +231,8 @@ mpc play
 sudo /var/www/libupd-submit.php
 
 # CoverView on/off
-/var/www/command/coverview.php -on
-/var/www/command/coverview.php -off
+/var/www/util/coverview.php -on
+/var/www/util/coverview.php -off
 
 ################################################################################
 #  Post questions regarding this guide to http://moodeaudio.org/forum

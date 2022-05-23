@@ -77,8 +77,8 @@ if (isset($_POST['clear_libcache'])) {
 }
 // Regenerate thumbnail cache
 if (isset($_POST['regen_thmcache'])) {
-	$result = sysCmd('pgrep -l thmcache.php');
-	if (strpos($result[0], 'thmcache.php') !== false) {
+	$result = sysCmd('pgrep -l thumb-gen.php');
+	if (strpos($result[0], 'thumb-gen.php') !== false) {
 		$_SESSION['notify']['title'] = 'Process is currently running';
 	} else {
 		$_SESSION['thmcache_status'] = 'Regenerating thumbnail cache...';

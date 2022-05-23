@@ -16,6 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+# Stub script for lcd-updater.sh daemon
+
 with open("/var/local/www/currentsong.txt") as file1:
     with open("/home/pi/lcd.txt", "w") as file2:
         for line in file1:

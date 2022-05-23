@@ -48,9 +48,9 @@ function autoConfigSettings() {
 		phpSession('write', array_key_first($values), $values[array_key_first($values)]);
 	}
 
-	// Handler is config item name is just setting the playSession and a syscmd call to util.sh
+	// Handler is config item name is just setting the playSession and a syscmd call to sysutil.sh
 	function setphpSessionAndSysCmd($values, $command ) {
-		sysCmd('/var/www/command/util.sh '.sprintf($command, $values[array_key_first($values)]) );
+		sysCmd('/var/www/util/sysutil.sh '.sprintf($command, $values[array_key_first($values)]) );
 		phpSession('write', array_key_first($values), $values[array_key_first($values)]);
 	}
 
@@ -103,7 +103,7 @@ function autoConfigSettings() {
 	// - requires - array of autoconfig items that should be present (all) before the handler is executed.
 	//              most item only have 1 autoconfig item, but network setting requires multiple to be present
 	// - handler for setting the config item
-	// - command - argument for util.sh when setphpSessionAndSysCmd handler is used.
+	// - command - argument for sysutil.sh when setphpSessionAndSysCmd handler is used.
 	$configurationHandlers = [
 		'Names',
 		['requires' => ['browsertitle'], 'handler' => setphpSession],
@@ -115,7 +115,7 @@ function autoConfigSettings() {
 			$dbh = sqlConnect();
 			$currentName= sqlQuery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];
 			$result = sqlQuery('update cfg_sl set value=' . "'" . $values['squeezelitename'] . "'" . ' where param=' . "'PLAYERNAME'", $dbh);
-			sysCmd('/var/www/command/util.sh chg-name squeezelite "' . $currentName . '" ' . '"' . $values['squeezelitename'] . '"');
+			sysCmd('/var/www/util/sysutil.sh chg-name squeezelite "' . $currentName . '" ' . '"' . $values['squeezelitename'] . '"');
 		}, 'custom_write' => function($values) {
 			$dbh = sqlConnect();
 			$result = sqlQuery("select value from cfg_sl where param='PLAYERNAME'", $dbh)[0]['value'];

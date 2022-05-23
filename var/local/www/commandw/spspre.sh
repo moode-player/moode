@@ -41,17 +41,17 @@ $(sqlite3 $SQLDB "update cfg_system set value='1' where param='aplactive'")
 
 # Local
 if [[ $ALSAVOLUME != "none" ]]; then
-	/var/www/command/util.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
+	/var/www/util/sysutil.sh set-alsavol "$AMIXNAME" $ALSAVOLUME_MAX
 fi
 
 # Multiroom receivers
 if [[ $MULTIROOM_TX == "On" ]]; then
 	for IP_ADDR in $RX_ADDRESSES; do
-		RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-status.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
+		RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-control.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
 		if [[ $RESULT != "" ]]; then
-			RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-status.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
+			RESULT=$(curl -G -S -s --data-urlencode "cmd=trx-control.php -set-alsavol $ALSAVOLUME_MAX" http://$IP_ADDR/command/)
 			if [[ $RESULT != "" ]]; then
-				echo echo $(date +%F" "%T)"spspre.sh trx-status.php -set-alsavol failed: $IP_ADDR" >> /home/pi/renderer_error.log
+				echo echo $(date +%F" "%T)"spspre.sh trx-control.php -set-alsavol failed: $IP_ADDR" >> /home/pi/renderer_error.log
 			fi
 		fi
 	done

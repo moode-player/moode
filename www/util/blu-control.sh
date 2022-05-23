@@ -262,13 +262,13 @@ echo "** Device $DEVICE connected"
 
 # Print help to terminal
 HELP_TERM() {
-	echo "** bt.sh version $REV"
+	echo "** blu-control.sh version $REV"
 	echo "**"
 	echo "** Bluetooth has a range of around 30 feet (10 meters) but range"
 	echo "** will vary depending on obstacles (metal, wall, etc.), device signal"
 	echo "** strength and quality, and level of electromagnetic interferrence."
 	echo "**"
-	echo "** Usage: bt.sh [OPTION]"
+	echo "** Usage: blu-control.sh [OPTION]"
 	echo "**"
 	echo "** -i Initialize/reset controller"
 	echo "** -s Scan (BR/EDR only) and trust devices"

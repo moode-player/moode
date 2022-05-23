@@ -107,7 +107,7 @@ function getMpdStatus($sock) {
 function getMpdStats($sock) {
 	sendMpdCmd($sock, 'stats');
 	$resp = readMpdResp($sock);
-	return parseDelimFile($resp);
+	return parseDelimFile($resp, ': ');
 }
 
 function getCurrentSong($sock) {
@@ -477,7 +477,7 @@ function updMpdConf($i2sDevice) {
 		$fh = fopen('/etc/mpd.moode.conf', 'w');
 		fwrite($fh, $data);
 		fclose($fh);
-		sysCmd("/var/www/command/mpdconfmerge.py /etc/mpd.moode.conf /etc/mpd.custom.conf");
+		sysCmd("/var/www/util/mpdconf_merge.py /etc/mpd.moode.conf /etc/mpd.custom.conf");
 	}
 	else {
 		$fh = fopen('/etc/mpd.conf', 'w');
@@ -530,7 +530,7 @@ function reconfMpdVolume($mixerType) {
 	phpSession('write', 'mpdmixer', $mixerType);
 	// Reset hardware volume to 0dB if indicated
 	if (($mixerType == 'software' || $mixerType == 'none') && $_SESSION['alsavolume'] != 'none') {
-		sysCmd('/var/www/command/util.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
+		sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 	}
 	// Update /etc/mpd.conf
 	updMpdConf($_SESSION['i2sdevice']);
@@ -700,7 +700,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 function getUpnpCoverUrl() {
 	$mode = sqlQuery("SELECT value FROM cfg_upnp WHERE param='upnpav'", sqlConnect())[0]['value'] == 1 ? 'upnpav' : 'openhome';
-	$result = sysCmd('/var/www/command/upnp_albumart.py "' . $_SESSION['upnpname'] . '" '. $mode);
+	$result = sysCmd('/var/www/util/upnp_albumart.py "' . $_SESSION['upnpname'] . '" '. $mode);
 	// If multiple url's are returned, use the first
 	return explode(',', $result[0])[0];
 }
