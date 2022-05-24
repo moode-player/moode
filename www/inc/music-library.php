@@ -25,6 +25,11 @@
  *
  */
 
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/mpd.php';
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/sql.php';
+
 // Caching library loader for Tag and Album views
 function loadLibrary($sock) {
 	if (filesize(libcacheFile()) != 0) {

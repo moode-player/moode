@@ -21,6 +21,7 @@
  *
  */
 
+set_include_path('/var/www/inc');
 error_reporting(E_ERROR);
 
 // Common

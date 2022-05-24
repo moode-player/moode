@@ -18,15 +18,14 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'alsa.php';
-require_once 'cdsp.php';
-require_once 'eqp.php';
-require_once 'mpd.php';
-require_once 'network.php';
-require_once 'session.php';
-require_once 'sql.php';
+require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/alsa.php';
+require_once __DIR__ . '/inc/cdsp.php';
+require_once __DIR__ . '/inc/eqp.php';
+require_once __DIR__ . '/inc/mpd.php';
+require_once __DIR__ . '/inc/network.php';
+require_once __DIR__ . '/inc/session.php';
+require_once __DIR__ . '/inc/sql.php';
 
 $dbh = sqlConnect();
 $cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);

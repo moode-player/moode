@@ -23,14 +23,13 @@
  * (C) 2020 @bitlab (@bitkeeper Git)
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'audio.php';
-require_once 'mpd.php';
-require_once 'music-source.php';
-require_once 'network.php';
-require_once 'session.php';
-require_once 'sql.php';
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/audio.php';
+require_once __DIR__ . '/mpd.php';
+require_once __DIR__ . '/music-source.php';
+require_once __DIR__ . '/network.php';
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/sql.php';
 
 /**
  * Returns the settings for reading/writing the autoConfig file.
@@ -225,12 +224,12 @@ function autoConfigSettings() {
 
 		'Parametric EQ',
 		['requires' => [ 'eqp12_curve_name', 'eqp12_settings', 'eqp12_active'], 'handler' => function($values) {
-			require_once dirname(__FILE__) . '/eqp.php';
+			require_once __DIR__ . '/eqp.php';
 			$dbh = sqlConnect();
 			$eqp = Eqp12($dbh);
 			$eqp->import($values);
 		}, 'custom_write' => function($values) {
-			require_once dirname(__FILE__) . '/eqp.php';
+			require_once __DIR__ . '/eqp.php';
 			$dbh = sqlConnect();
 			$eqp = Eqp12($dbh);
 			$eqp_export = $eqp->export();

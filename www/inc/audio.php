@@ -18,6 +18,12 @@
  *
  */
 
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/mpd.php';
+require_once __DIR__ . '/renderer.php';
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/sql.php';
+
 function cfgI2sOverlay($i2sDevice) {
 	// Removes the line after dtparam=audio=off which would be a dtoverlay=audio_overlay line
 	sysCmd('sed -i "/dtparam=audio=off/{n;d}" /boot/config.txt');

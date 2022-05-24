@@ -18,6 +18,9 @@
  *
  */
 
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/sql.php';
+
 function getAlsaMixerName($i2sDevice) {
 	if ($i2sDevice == 'None' && $_SESSION['i2soverlay'] == 'None') {
 		// USB devices, Pi HDMI-1/2 or Headphone jack

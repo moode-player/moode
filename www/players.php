@@ -18,11 +18,10 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'mpd.php';
-require_once 'multiroom.php'; // For getStreamTimeout()
-require_once 'sql.php';
+require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/mpd.php';
+require_once __DIR__ . '/inc/multiroom.php'; // For getStreamTimeout()
+require_once __DIR__ . '/inc/sql.php';
 
 // Scan the network for hosts with open port 6600 (MPD)
 $port6600Hosts = scanForMPDHosts();

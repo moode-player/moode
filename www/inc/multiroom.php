@@ -18,6 +18,10 @@
  *
  */
 
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/sql.php';
+
 function startMultiroomSender() {
 	$params = sqlRead('cfg_multiroom', sqlConnect());
 	foreach ($params as $row) {

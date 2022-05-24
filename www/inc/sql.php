@@ -21,6 +21,8 @@
  *
  */
 
+require_once __DIR__ . '/common.php';
+
 function sqlConnect() {
 	if ($dbh = new PDO(SQLDB)) {
 		return $dbh;
@@ -153,6 +155,7 @@ function sqlQuery($queryStr, $dbh) {
 		}
 	} else {
 		// Query execution failed (should never happen)
+		debugLog('sqlQuery(): ' . $queryStr);
 		debugLog('sqlQuery(): Query execution failed');
 		return false;
 	}

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/sql.php';
 
 // Music source config
 function sourceCfg($queueArgs) {

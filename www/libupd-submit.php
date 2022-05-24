@@ -19,9 +19,8 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'session.php';
+require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/session.php';
 
 $option = isset($argv[1]) ? $argv[1] : '';
 

@@ -21,13 +21,12 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'keyboard.php';
-require_once 'network.php';
-require_once 'session.php';
-require_once 'sql.php';
-require_once 'timezone.php';
+require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/keyboard.php';
+require_once __DIR__ . '/inc/network.php';
+require_once __DIR__ . '/inc/session.php';
+require_once __DIR__ . '/inc/sql.php';
+require_once __DIR__ . '/inc/timezone.php';
 
 phpSession('open');
 

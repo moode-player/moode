@@ -25,10 +25,9 @@
   * (C) 2020 @bitlab (@bitkeeper Git)
   */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'sql.php';
-require_once 'autocfg.php';
+require_once __DIR__ . '/../inc/common.php';
+require_once __DIR__ . '/../inc/sql.php';
+require_once __DIR__ . '/../inc/autocfg.php';
 
 $_SESSION = [];
 $params = sqlRead('cfg_system', sqlConnect());

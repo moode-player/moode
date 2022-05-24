@@ -21,9 +21,8 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'mpd.php';
+require_once __DIR__ . '/../inc/common.php';
+require_once __DIR__ . '/../inc/mpd.php';
 
 if (isset($_GET['cmd']) && empty($_GET['cmd'])) {
 	echo 'Command missing';

@@ -21,6 +21,10 @@
  *
  */
 
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/sql.php';
+
 // Scan the network for hosts with open port 6600 (MPD)
 function scanForMPDHosts() {
 	$this_ipaddr = sysCmd('hostname -I')[0];
@@ -800,7 +804,7 @@ function getHash($path) {
 
 		// Embedded images
 		case 'mp3':
-			require_once 'Zend/Media/Id3v2.php';
+			require_once __DIR__ . '/Zend/Media/Id3v2.php';
 			try {
 				$id3v2 = new Zend_Media_Id3v2($path, array('hash_only' => true));
 
@@ -813,7 +817,7 @@ function getHash($path) {
 			break;
 
 		case 'flac':
-			require_once 'Zend/Media/Flac.php';
+			require_once __DIR__ . '/Zend/Media/Flac.php';
 			try {
 				$flac = new Zend_Media_Flac($path, $hash_only = true);
 
@@ -827,7 +831,7 @@ function getHash($path) {
 			break;
 
         case 'm4a':
-            require_once 'Zend/Media/Iso14496.php';
+            require_once __DIR__ . '/Zend/Media/Iso14496.php';
             try {
                 $iso14496 = new Zend_Media_Iso14496($path, array('hash_only' => true));
                 $picture = $iso14496->moov->udta->meta->ilst->covr;

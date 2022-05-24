@@ -23,8 +23,7 @@
  * (C) 2021 @bitlab (@bitkeeper Git)
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
+require_once __DIR__ . '/common.php';
 
 const CDSP_CHECK_VALID = 1;
 const CDSP_CHECK_INVALID = 0;

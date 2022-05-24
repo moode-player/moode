@@ -21,6 +21,9 @@
  *
  */
 
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/sql.php';
+
 function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
 	$session_file = SESSION_SAVE_PATH . '/sess_' . $_SESSION['sessionid'];
 

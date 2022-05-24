@@ -20,9 +20,8 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'sql.php';
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/sql.php';
 
 // Factory for a Eqp wrapper for the 12 bands Eqfa12p.conf
 function Eqp12($dbh)  {

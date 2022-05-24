@@ -18,6 +18,9 @@
  *
  */
 
+require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/sql.php';
+
 // Configure network interfaces
 function cfgNetIfaces() {
 	$dbh = sqlConnect();

@@ -20,9 +20,8 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'session.php';
+require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/session.php';
 
 const TMP_BACKUP_ZIP = '/tmp/backup.zip';
 const TMP_MOODECFG_INI = '/tmp/moodecfg.ini';

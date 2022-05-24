@@ -167,7 +167,7 @@
 
 		<?php
 			if ($section == 'index' && $_SESSION['camilladsp'] != "off") {
-				require_once dirname(__FILE__) . '/inc/cdsp.php';
+				require_once __DIR__ . '/inc/cdsp.php';
 				$cdsp = new CamillaDsp($_SESSION['camilladsp'], $_SESSION['cardnum'], $_SESSION['camilladsp_quickconv']);
 				$cdsp_configs = $cdsp->getAvailableConfigs();
 				$select_config_label = $cdsp_configs[$_SESSION['camilladsp']];

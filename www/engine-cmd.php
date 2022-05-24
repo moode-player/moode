@@ -18,9 +18,8 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'sql.php';
+require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/sql.php';
 
 if (false === ($sock = socket_create_listen(0))) {
 	workerLog('engineCmd(): Socket create failed');

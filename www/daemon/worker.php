@@ -22,21 +22,20 @@
  *
  */
 
- set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'alsa.php';
-require_once 'audio.php';
-require_once 'autocfg.php';
-require_once 'cdsp.php';
-require_once 'eqp.php';
-require_once 'mpd.php';
-require_once 'multiroom.php';
-require_once 'music-library.php';
-require_once 'music-source.php';
-require_once 'network.php';
-require_once 'renderer.php';
-require_once 'session.php';
-require_once 'sql.php';
+require_once __DIR__ . '/../inc/common.php';
+require_once __DIR__ . '/../inc/alsa.php';
+require_once __DIR__ . '/../inc/audio.php';
+require_once __DIR__ . '/../inc/autocfg.php';
+require_once __DIR__ . '/../inc/cdsp.php';
+require_once __DIR__ . '/../inc/eqp.php';
+require_once __DIR__ . '/../inc/mpd.php';
+require_once __DIR__ . '/../inc/multiroom.php';
+require_once __DIR__ . '/../inc/music-library.php';
+require_once __DIR__ . '/../inc/music-source.php';
+require_once __DIR__ . '/../inc/network.php';
+require_once __DIR__ . '/../inc/renderer.php';
+require_once __DIR__ . '/../inc/session.php';
+require_once __DIR__ . '/../inc/sql.php';
 
 //
 // STARTUP SEQUENCE
@@ -119,6 +118,7 @@ sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_IMAGE_PREFIX . '* > /dev/n
 sysCmd('rm /var/local/www/imagesw/radio-logos/thumbs/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
 sysCmd('rm /var/local/www/imagesw/playlist-covers/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
 // Set permissions
+sysCmd('chmod 0777 ' . SQLDB_PATH);
 sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT);
 sysCmd('chmod 0777 ' . MPD_PLAYLIST_ROOT . '*.*');
 sysCmd('chmod 0777 ' . MPD_MUSICROOT . 'RADIO/*.*');
@@ -378,6 +378,7 @@ if (!empty($wlan0[0])) {
 	workerLog('worker: wlan0 adapter does not exist' . ($_SESSION['wifibt'] == '0' ? ' (off)' : ''));
 	$_SESSION['apactivated'] = false;
 }
+
 // Store ipaddress, prefer wlan0 address
 if (!empty($wlan0Ip[0])) {
 	$_SESSION['ipaddress'] = $wlan0Ip[0];
@@ -1023,6 +1024,7 @@ function chkMaintenance() {
 		$result = sysCmd('/var/www/util/sysutil.sh "clear-syslogs"');
 		if (!empty($result)) {
 			workerLog('worker: Maintenance: Warning: Problem clearing system logs');
+			workerLog(print_r($result, true));
 		}
 
 		// Compact SQLite database
@@ -1033,7 +1035,7 @@ function chkMaintenance() {
 
 		// Purge temp or unwanted resources
 		//sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
-		//sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Possible leftover temp file created by Radio Manager export
+		sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Temp file from legacy Radio Manager export
 
 		// Purge bogus session files
 		// The only valid file is the one corresponding to $_SESSION['sessionid']

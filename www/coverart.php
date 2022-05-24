@@ -26,10 +26,9 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'session.php';
-require_once 'sql.php';
+require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/session.php';
+require_once __DIR__ . '/inc/sql.php';
 
 function outImage($mime, $data) {
 	switch ($mime) {
@@ -73,7 +72,7 @@ function getImage($path) {
 			break;
 		// Embedded images
 		case 'mp3':
-			require_once 'Zend/Media/Id3v2.php';
+			require_once __DIR__ . '/inc/Zend/Media/Id3v2.php';
 			try {
 				$id3v2 = new Zend_Media_Id3v2($path, array('hash_only' => false));
 
@@ -87,7 +86,7 @@ function getImage($path) {
 			break;
 
 		case 'flac':
-			require_once 'Zend/Media/Flac.php';
+			require_once __DIR__ . '/inc/Zend/Media/Flac.php';
 			try {
 				$flac = new Zend_Media_Flac($path, $hash_only = false); // r44a
 
@@ -102,7 +101,7 @@ function getImage($path) {
 			break;
 
         case 'm4a':
-            require_once 'Zend/Media/Iso14496.php';
+            require_once __DIR__ . '/inc/Zend/Media/Iso14496.php';
             try {
                 $iso14496 = new Zend_Media_Iso14496($path, array('hash_only' => false)); // r44a
                 $picture = $iso14496->moov->udta->meta->ilst->covr;

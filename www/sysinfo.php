@@ -18,8 +18,7 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
+require_once __DIR__ . '/inc/common.php';
 
 $file = '/var/local/www/sysinfo.txt';
 sysCmd('/var/www/util/sysinfo.sh html > ' . $file);

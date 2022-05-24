@@ -18,13 +18,12 @@
  *
  */
 
-set_include_path('/var/www/inc');
-require_once 'common.php';
-require_once 'audio.php';
-require_once 'mpd.php';
-require_once 'renderer.php';
-require_once 'session.php';
-require_once 'cdsp.php';
+require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/audio.php';
+require_once __DIR__ . '/inc/mpd.php';
+require_once __DIR__ . '/inc/renderer.php';
+require_once __DIR__ . '/inc/session.php';
+require_once __DIR__ . '/inc/cdsp.php';
 
 phpSession('open');
 
