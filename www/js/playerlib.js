@@ -328,7 +328,7 @@ function engineMpd() {
 			debugLog('engineMpd(): error branch: data=(' + JSON.stringify(data) + ')');
 
 			setTimeout(function() {
-				if (data['statusText'] == 'error' && data['readyState'] == 0) {
+                if (data['statusText'] == 'error' && data['readyState'] == 0) {
 			        renderReconnect();
 				}
 				MPD.json['state'] = 'reconnect';
@@ -377,13 +377,15 @@ function engineMpdLite() {
 			// Error of some sort
 			else {
 				setTimeout(function(data) {
-					// Client connects before mpd started by worker, various other network issues
+					// Client connects before mpd started by worker, various other issues
 					debugLog('engineMpdLite(): success branch: error=(' + MPD.json['error'] + '), module=(' + MPD.json['module'] + ')');
 
                     // TEST: Show reconnect overlay when on configs
-                    if (data['statusText'] == 'error' && data['readyState'] == 0) {
-    			        renderReconnect();
-    				}
+                    if (typeof(data) !== 'undefined') {
+                        if (data['statusText'] == 'error' && data['readyState'] == 0) {
+        			        renderReconnect();
+        				}
+                    }
     				MPD.json['state'] = 'reconnect';
 
 					engineMpdLite();
@@ -396,9 +398,11 @@ function engineMpdLite() {
             //console.log('engineMpdLite: error branch: data=(' + JSON.stringify(data) + ')');
 
 			setTimeout(function() {
-				if (data['statusText'] == 'error' && data['readyState'] == 0) {
-			        renderReconnect();
-				}
+                if (typeof(data) !== 'undefined') {
+                    if (data['statusText'] == 'error' && data['readyState'] == 0) {
+    			        renderReconnect();
+    				}
+                }
 				MPD.json['state'] = 'reconnect';
 				engineMpdLite();
 			}, ENGINE_TIMEOUT);
