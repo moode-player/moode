@@ -154,7 +154,7 @@ jQuery(document).ready(function($){ 'use strict';
 	});
 	$('#wlan0-method').change(function() {
 		if ($(this).val() == 'static') {
-			if ($('#wlan0ssid').val() != '' && $('#wlan0ssid').val() != 'None (activates AP mode)') {
+			if ($('#wlan0ssid').val() != 'None (activates AP mode)') {
 			 	$('#wlan0-static').show();
 				//$('#eth0-method').val('dhcp').change(); // prevent both from being set to 'static'
 			}

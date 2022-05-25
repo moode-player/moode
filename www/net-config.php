@@ -27,7 +27,7 @@ $dbh = sqlConnect();
 phpSession('open');
 
 // Get current settings: [0] = eth0, [1] = wlan0, [2] = apd0
-$cfg_network = sqlQuery('SELECT * FROM cfg_network', $dbh);
+$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
 
 // Reset eth0 and wlan0 to defaults
 if (isset($_POST['reset']) && $_POST['reset'] == 1) {
@@ -39,7 +39,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == 1) {
 	// wlan0
 	$value['wlanssid'] = 'None (activates AP mode)';
 	$value['wlansec'] = 'wpa';
-	$value['wlan_country'] = $cfg_network[1]['wlan_country']; // Preserve country code
+	$value['wlan_country'] = $cfgNetwork[1]['wlan_country']; // Preserve country code
 	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
 	submitJob('netcfg', '', 'Network config reset', 'Restart required');
@@ -54,12 +54,12 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	sqlUpdate('cfg_network', $dbh, 'eth0', $value);
 
 	// wlan0
-	$method = (empty($_POST['wlan0ssid']) || $_POST['wlan0ssid'] == 'None (activates AP mode)') ? 'dhcp' : $_POST['wlan0method'];
+	$method = $_POST['wlan0ssid'] == 'None (activates AP mode)' ? 'dhcp' : $_POST['wlan0method'];
 
-	if ($_POST['wlan0ssid'] != $cfg_network[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfg_network[1]['wlan_psk']) {
+	if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlan_psk']) {
 		$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
 	} else {
-		$psk = $cfg_network[1]['wlan_psk']; // Existing
+		$psk = $cfgNetwork[1]['wlan_psk']; // Existing
 	}
 
 	// Update cfg_network
@@ -71,8 +71,8 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 
 	// Add/update cfg_ssid
 	if ($_POST['wlan0ssid'] != 'None (activates AP mode)') {
-		$result = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
-		if ($result === true) {
+		$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
+		if ($cfgSsid === true) {
 			// Add
 			$values =
 				"'"	. SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
@@ -85,15 +85,15 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 				"ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'," .
 				"sec='" . $_POST['wlan0sec'] . "'," .
 				"psk='" . $psk . "' " .
-				"where id='" . $result[0]['id'] . "'" , $dbh);
+				"where id='" . $cfgSsid[0]['id'] . "'" , $dbh);
 		}
 	}
 
 	// apd0
-	if ($_POST['wlan0apdssid'] != $cfg_network[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $cfg_network[2]['wlan_psk']) {
+	if ($_POST['wlan0apdssid'] != $cfgNetwork[2]['wlanssid'] || $_POST['wlan0apdpwd'] != $cfgNetwork[2]['wlan_psk']) {
 		$psk = genWpaPSK($_POST['wlan0apdssid'], $_POST['wlan0apdpwd']);
 	} else {
-		$psk = $cfg_network[2]['wlan_psk']; // Existing
+		$psk = $cfgNetwork[2]['wlan_psk']; // Existing
 	}
 
 	$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
@@ -106,18 +106,18 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 
 // Update saved networks
 if (isset($_POST['update-saved-networks']) && $_POST['update-saved-networks'] == 1) {
-	$cfg_ssid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
-	if ($cfg_ssid !== true) {
-		$item_deleted = false;
-		for ($i = 0; $i < count($cfg_ssid); $i++) {
-			$_post_ssid = 'cfg-ssid-' . $cfg_ssid[$i]['id'];
+	$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfgNetwork[1]['wlanssid'] . "'", $dbh);
+	if ($cfgSsid !== true) {
+		$itemDeleted = false;
+		for ($i = 0; $i < count($cfgSsid); $i++) {
+			$_post_ssid = 'cfg-ssid-' . $cfgSsid[$i]['id'];
 			if (isset($_POST[$_post_ssid]) && $_POST[$_post_ssid] == 'on') {
-				$result = sqlQuery("DELETE FROM cfg_ssid WHERE id = '" . $cfg_ssid[$i]['id'] . "'", $dbh);
-				$item_deleted = true;
+				$result = sqlQuery("DELETE FROM cfg_ssid WHERE id = '" . $cfgSsid[$i]['id'] . "'", $dbh);
+				$itemDeleted = true;
 			}
 		}
 
-		if ($item_deleted) {
+		if ($itemDeleted) {
 			submitJob('netcfg', '', 'Update applied', 'Restart required');
 		}
 	}
@@ -130,49 +130,49 @@ phpSession('close');
 //
 
 // Get updated settings: [0] = eth0, [1] = wlan0, [2] = apd0
-$cfg_network = sqlQuery('SELECT * FROM cfg_network', $dbh);
+$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
 
 // List saved networks excluding the currently configured SSID
-$cfg_ssid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfg_network[1]['wlanssid'] . "'", $dbh);
-if ($cfg_ssid === true) {
+$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfgNetwork[1]['wlanssid'] . "'", $dbh);
+if ($cfgSsid === true) {
 	$_saved_networks = '<p style="text-align:center;">There are no saved networks</p>';
 } else {
-	for ($i=0; $i < count($cfg_ssid); $i++) {
+	for ($i=0; $i < count($cfgSsid); $i++) {
 		$_saved_networks .= '<div class="control-group">';
-		$_saved_networks .= '<label class="control-label">' . $cfg_ssid[$i]['ssid'] . '</label>';
+		$_saved_networks .= '<label class="control-label">' . $cfgSsid[$i]['ssid'] . '</label>';
 		$_saved_networks .= '<div class="controls">';
-		$_saved_networks .= '<input name="cfg-ssid-' . $cfg_ssid[$i]['id'] . '" class="checkbox-ctl saved-ssid-modal-delete" type="checkbox"><em>Delete</em>';
+		$_saved_networks .= '<input name="cfg-ssid-' . $cfgSsid[$i]['id'] . '" class="checkbox-ctl saved-ssid-modal-delete" type="checkbox"><em>Delete</em>';
 		$_saved_networks .= '</div>';
 		$_saved_networks .= '</div>';
 	}
 }
 
 // ETH0
-$_eth0method .= "<option value=\"dhcp\" "   . ($cfg_network[0]['method'] == 'dhcp' ? 'selected' : '') . " >DHCP</option>\n";
-$_eth0method .= "<option value=\"static\" " . ($cfg_network[0]['method'] == 'static' ? 'selected' : '') . " >STATIC</option>\n";
+$_eth0method .= "<option value=\"dhcp\" "   . ($cfgNetwork[0]['method'] == 'dhcp' ? 'selected' : '') . " >DHCP</option>\n";
+$_eth0method .= "<option value=\"static\" " . ($cfgNetwork[0]['method'] == 'static' ? 'selected' : '') . " >STATIC</option>\n";
 
-// Display ipaddr or message
-$ipaddr = sysCmd("ip addr list eth0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
-$_eth0currentip = empty($ipaddr[0]) ? 'Not in use' : $ipaddr[0];
+// Display IP address or message
+$ipAddr = sysCmd("ip addr list eth0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
+$_eth0currentip = empty($ipAddr[0]) ? 'Not in use' : $ipAddr[0];
 
 // Static IP
-$_eth0ipaddr = $cfg_network[0]['ipaddr'];
-//$_eth0netmask = $cfg_network[0]['netmask'];
-$_eth0netmask .= "<option value=\"24\" " . ($cfg_network[0]['netmask'] == '24' ? 'selected' : '') . " >255.255.255.0</option>\n";
-$_eth0netmask .= "<option value=\"16\" " . ($cfg_network[0]['netmask'] == '16' ? 'selected' : '') . " >255.255.0.0</option>\n";
-$_eth0gateway = $cfg_network[0]['gateway'];
-$_eth0pridns = $cfg_network[0]['pridns'];
-$_eth0secdns = $cfg_network[0]['secdns'];
+$_eth0ipaddr = $cfgNetwork[0]['ipaddr'];
+//$_eth0netmask = $cfgNetwork[0]['netmask'];
+$_eth0netmask .= "<option value=\"24\" " . ($cfgNetwork[0]['netmask'] == '24' ? 'selected' : '') . " >255.255.255.0</option>\n";
+$_eth0netmask .= "<option value=\"16\" " . ($cfgNetwork[0]['netmask'] == '16' ? 'selected' : '') . " >255.255.0.0</option>\n";
+$_eth0gateway = $cfgNetwork[0]['gateway'];
+$_eth0pridns = $cfgNetwork[0]['pridns'];
+$_eth0secdns = $cfgNetwork[0]['secdns'];
 
 // WLAN0
-$_wlan0method .= "<option value=\"dhcp\" " . ($cfg_network[1]['method'] == 'dhcp' ? 'selected' : '') . " >DHCP</option>\n";
-$_wlan0method .= "<option value=\"static\" " . ($cfg_network[1]['method'] == 'static' ? 'selected' : '') . " >STATIC</option>\n";
+$_wlan0method .= "<option value=\"dhcp\" " . ($cfgNetwork[1]['method'] == 'dhcp' ? 'selected' : '') . " >DHCP</option>\n";
+$_wlan0method .= "<option value=\"static\" " . ($cfgNetwork[1]['method'] == 'static' ? 'selected' : '') . " >STATIC</option>\n";
 
-// Get ipaddr if any
-$ipaddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
+// Get IP address if any
+$ipAddr = sysCmd("ip addr list wlan0 |grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 
 // Get link quality and signal level
-if (!empty($ipaddr[0])) {
+if (!empty($ipAddr[0])) {
 	$signal = sysCmd('iwconfig wlan0 | grep -i quality');
 	$array = explode('=', $signal[0]);
 	$qual = explode('/', $array[1]);
@@ -183,9 +183,9 @@ if (!empty($ipaddr[0])) {
 
 // Determine message to display
 if ($_SESSION['apactivated'] == true) {
-	$_wlan0currentip = empty($ipaddr[0]) ? 'Unable to activate AP mode' : $ipaddr[0] . ' - AP mode active';
+	$_wlan0currentip = empty($ipAddr[0]) ? 'Unable to activate AP mode' : $ipAddr[0] . ' - AP mode active';
 } else {
-	$_wlan0currentip = empty($ipaddr[0]) ? 'Not in use' : $ipaddr[0] . ' - quality ' . $quality . '%, level ' . $level;
+	$_wlan0currentip = empty($ipAddr[0]) ? 'Not in use' : $ipAddr[0] . ' - quality ' . $quality . '%, level ' . $level;
 }
 
 // SSID, scanner, security protocol, password
@@ -200,7 +200,7 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 		$ssid = trim($ssid);
 		// Additional filtering
 		if (!empty($ssid) && false === strpos($ssid, '\x')) {
-			$selected = ($cfg_network[1]['wlanssid'] == $ssid) ? 'selected' : '';
+			$selected = ($cfgNetwork[1]['wlanssid'] == $ssid) ? 'selected' : '';
 			$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $ssid, $selected, $ssid);
 		}
 	}
@@ -208,45 +208,45 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	if (isset($_POST['manualssid']) && $_POST['manualssid'] == '1') {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None (activates AP mode)', '', 'None (activates AP mode)');
 		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $_POST['wlan0otherssid'], 'selected', htmlentities($_POST['wlan0otherssid']));
-	} else if ($cfg_network[1]['wlanssid'] == 'None (activates AP mode)') {
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfg_network[1]['wlanssid'], 'selected', $cfg_network[1]['wlanssid']);
+	} else if ($cfgNetwork[1]['wlanssid'] == 'None (activates AP mode)') {
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfgNetwork[1]['wlanssid'], 'selected', $cfgNetwork[1]['wlanssid']);
 	} else {
 		$_wlan0ssid = sprintf('<option value="%s" %s>%s</option>\n', 'None (activates AP mode)', '', 'None (activates AP mode)');
-		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfg_network[1]['wlanssid'], 'selected', htmlentities($cfg_network[1]['wlanssid']));
+		$_wlan0ssid .= sprintf('<option value="%s" %s>%s</option>\n', $cfgNetwork[1]['wlanssid'], 'selected', htmlentities($cfgNetwork[1]['wlanssid']));
 	}
 }
-$_wlan0sec .= "<option value=\"wpa\"" . ($cfg_network[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
-$_wlan0sec .= "<option value=\"none\"" . ($cfg_network[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
-$_wlan0pwd = $cfg_network[1]['wlanpwd']; // old: htmlentities($cfg_network[1]['wlanpwd'])
+$_wlan0sec .= "<option value=\"wpa\"" . ($cfgNetwork[1]['wlansec'] == 'wpa' ? 'selected' : '') . ">WPA/WPA2 Personal</option>\n";
+$_wlan0sec .= "<option value=\"none\"" . ($cfgNetwork[1]['wlansec'] == 'none' ? 'selected' : '') . ">No security</option>\n";
+$_wlan0pwd = $cfgNetwork[1]['wlanpwd']; // old: htmlentities($cfgNetwork[1]['wlanpwd'])
 
 // WiFi country code
-$zonelist = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
-$zonelist_sorted = array();
-for ($i = 0; $i < count($zonelist); $i++) {
-	$country = explode(',', $zonelist[$i]);
+$zoneList = sysCmd("cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' ','");
+$zoneListSorted = array();
+for ($i = 0; $i < count($zoneList); $i++) {
+	$country = explode(',', $zoneList[$i]);
 	if ($country[1] == 'Britain (UK)') {$country[1] = 'United Kingdom (UK)';}
-	$zonelist_sorted[$i] = $country[1] . ',' . $country[0];
+	$zoneListSorted[$i] = $country[1] . ',' . $country[0];
 }
-sort($zonelist_sorted);
-foreach ($zonelist_sorted as $zone) {
+sort($zoneListSorted);
+foreach ($zoneListSorted as $zone) {
 	$country = explode(',', $zone);
-	$selected = ($country[1] == $cfg_network[1]['wlan_country']) ? 'selected' : '';
+	$selected = ($country[1] == $cfgNetwork[1]['wlan_country']) ? 'selected' : '';
 	$_wlan0country .= sprintf('<option value="%s" %s>%s</option>\n', $country[1], $selected, $country[0]);
 }
 
 // Static ip
-$_wlan0ipaddr = $cfg_network[1]['ipaddr'];
-//$_wlan0netmask = $cfg_network[1]['netmask'];
-$_wlan0netmask .= "<option value=\"24\" "   . ($cfg_network[1]['netmask'] == '24' ? 'selected' : '') . " >255.255.255.0</option>\n";
-$_wlan0netmask .= "<option value=\"16\" " . ($cfg_network[1]['netmask'] == '16' ? 'selected' : '') . " >255.255.0.0</option>\n";
-$_wlan0gateway = $cfg_network[1]['gateway'];
-$_wlan0pridns = $cfg_network[1]['pridns'];
-$_wlan0secdns = $cfg_network[1]['secdns'];
+$_wlan0ipaddr = $cfgNetwork[1]['ipaddr'];
+//$_wlan0netmask = $cfgNetwork[1]['netmask'];
+$_wlan0netmask .= "<option value=\"24\" "   . ($cfgNetwork[1]['netmask'] == '24' ? 'selected' : '') . " >255.255.255.0</option>\n";
+$_wlan0netmask .= "<option value=\"16\" " . ($cfgNetwork[1]['netmask'] == '16' ? 'selected' : '') . " >255.255.0.0</option>\n";
+$_wlan0gateway = $cfgNetwork[1]['gateway'];
+$_wlan0pridns = $cfgNetwork[1]['pridns'];
+$_wlan0secdns = $cfgNetwork[1]['secdns'];
 
 // Access point
-$_wlan0apdssid = $cfg_network[2]['wlanssid'];
-$_wlan0apdchan = $cfg_network[2]['wlan_channel'];
-$_wlan0apdpwd = $cfg_network[2]['wlanpwd'];
+$_wlan0apdssid = $cfgNetwork[2]['wlanssid'];
+$_wlan0apdchan = $cfgNetwork[2]['wlan_channel'];
+$_wlan0apdpwd = $cfgNetwork[2]['wlanpwd'];
 
 waitWorker(1, 'net-config');
 

@@ -74,7 +74,7 @@ function cfgNetIfaces() {
 		$data .= 'static routers=' . $cfgNetwork[1]['gateway'] . "\n";
 		$data .= 'static domain_name_servers=' . $cfgNetwork[1]['pridns'] . ' ' . $cfgNetwork[1]['secdns'] . "\n";
 	}
-	if (empty($cfgNetwork[1]['wlanssid']) || $cfgNetwork[1]['wlanssid'] == 'None (activates AP mode)') {
+	if ($cfgNetwork[1]['wlanssid'] == 'None (activates AP mode)') {
 		// wlan0 AP mode
 		$data .= "#AP mode\n";
 		$data .= "interface wlan0\n";
@@ -100,7 +100,7 @@ function cfgNetIfaces() {
 	$data .= 'country=' . $cfgNetwork[1]['wlan_country'] . "\n";
 	$data .= "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n";
 	$data .= "update_config=1\n\n";
-	if (!empty($cfgNetwork[1]['wlanssid']) && $cfgNetwork[1]['wlanssid'] != 'None (activates AP mode)') {
+	if ($cfgNetwork[1]['wlanssid'] != 'None (activates AP mode)') {
 		// Primary SSID: first block and highest priority
 		$data .= "network={\n";
 		$data .= 'ssid=' . '"' . $cfgNetwork[1]['wlanssid'] . '"' . "\n";
@@ -116,8 +116,8 @@ function cfgNetIfaces() {
 		$data .= "}\n";
 
 		// Add saved SSID's
-		$result = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfgNetwork[1]['wlanssid'] . "'", $dbh);
-		foreach($result as $row) {
+		$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfgNetwork[1]['wlanssid'] . "'", $dbh);
+		foreach($cfgSsid as $row) {
 			$data .= "network={\n";
 			$data .= 'ssid=' . '"' . $row['ssid'] . '"' . "\n";
 			$data .= 'priority=10' . "\n";
@@ -190,14 +190,14 @@ function resetApMode() {
 }
 
 // Wait up to timeout seconds for IP address to be assigned to the interface
-function waitForIpAddr($iface, $timeoutSecs, $sleepTime = 2) {
+function checkForIpAddr($iface, $timeoutSecs, $sleepTime = 2) {
 	$maxLoops = $timeoutSecs / $sleepTime;
 	for ($i = 0; $i < $maxLoops; $i++) {
 		$ipAddr = sysCmd('ip addr list ' . $iface . " | grep \"inet \" |cut -d' ' -f6|cut -d/ -f1");
 		if (!empty($ipAddr[0])) {
 			break;
 		} else {
-			workerLog('worker: ' . $iface .' wait '. $i . ' for IP address');
+			workerLog('worker: ' . $iface .' check '. $i . ' for IP address');
 			sleep($sleepTime);
 		}
 	}
