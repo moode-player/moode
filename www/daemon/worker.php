@@ -1034,7 +1034,7 @@ function chkMaintenance() {
 		}
 
 		// Purge temp or unwanted resources
-		//sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
+		sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
 		sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Temp file from legacy Radio Manager export
 
 		// Purge bogus session files
@@ -1225,17 +1225,20 @@ function updBoss2DopVolume () {
 
 function updExtMetaFile() {
 	// Output rate
-	$hwparams = getAlsaHwParams($_SESSION['cardnum']);
-	if ($hwparams['status'] == 'active') {
-		$hwparams_format = $hwparams['format'] . ' bit, ' . $hwparams['rate'] . ' kHz, ' . $hwparams['channels'];
-		$hwparams_calcrate = ', ' . $hwparams['calcrate'] . ' Mbps';
+	$hwParams = getAlsaHwParams($_SESSION['cardnum']);
+	if ($hwParams['status'] == 'active') {
+		$hwParamsFormat = $hwParams['format'] . ' bit, ' . $hwParams['rate'] . ' kHz, ' . $hwParams['channels'];
+		$hwParamsCalcrate = ', ' . $hwParams['calcrate'] . ' Mbps';
+	} else if ($_SESSION['multiroom_tx'] == 'On') {
+		$hwParamsFormat = '';
+		$hwParamsCalcrate = 'Multiroom sender';
 	} else {
-		$hwparams_format = '';
-		$hwparams_calcrate = '0 bps';
+		$hwParamsFormat = '';
+		$hwParamsCalcrate = '0 bps';
 	}
 	// Currentsong.txt
-	$filemeta = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
-	//workerLog($filemeta['file'] . ' | ' . $hwparams_calcrate);
+	$fileMeta = parseDelimFile(file_get_contents('/var/local/www/currentsong.txt'), '=');
+	//workerLog($fileMeta['file'] . ' | ' . $hwParamsCalcrate);
 
 	if ($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1' || $GLOBALS['slactive'] == '1'
 		|| $GLOBALS['rbactive'] == '1' || $GLOBALS['inpactive'] == '1' || ($_SESSION['btactive'] && $_SESSION['audioout'] == 'Local')) {
@@ -1255,11 +1258,11 @@ function updExtMetaFile() {
 			$renderer = 'Bluetooth Active';
 		}
 		// Write file only if something has changed
-		if ($filemeta['file'] != $renderer && $hwparams_calcrate != '0 bps') {
+		if ($fileMeta['file'] != $renderer && $hwParamsCalcrate != '0 bps') {
 			//workerLog('writing file');
 			$fh = fopen('/tmp/currentsong.txt', 'w');
 			$data = 'file=' . $renderer . "\n";
-			$data .= 'outrate=' . $hwparams_format . $hwparams_calcrate . "\n"; ;
+			$data .= 'outrate=' . $hwParamsFormat . $hwParamsCalcrate . "\n"; ;
 			fwrite($fh, $data);
 			fclose($fh);
 			rename('/tmp/currentsong.txt', '/var/local/www/currentsong.txt');
@@ -1276,8 +1279,8 @@ function updExtMetaFile() {
 		//workerLog('updExtMetaFile(): currentencoded=' . $_SESSION['currentencoded']);
 
 		// Write file only if something has changed
-		if ($current['title'] != $filemeta['title'] || $current['album'] != $filemeta['album'] || $_SESSION['volknob'] != $filemeta['volume'] ||
-			$_SESSION['volmute'] != $filemeta['mute'] || $current['state'] != $filemeta['state'] || $filemeta['outrate'] != $hwparams_format . $hwparams_calcrate) {
+		if ($current['title'] != $fileMeta['title'] || $current['album'] != $fileMeta['album'] || $_SESSION['volknob'] != $fileMeta['volume'] ||
+			$_SESSION['volmute'] != $fileMeta['mute'] || $current['state'] != $fileMeta['state'] || $fileMeta['outrate'] != $hwParamsFormat . $hwParamsCalcrate) {
 			//workerLog('writing file');
 			$fh = fopen('/tmp/currentsong.txt', 'w');
 			// Default
@@ -1293,7 +1296,7 @@ function updExtMetaFile() {
 			// Other
 			$data .= 'encoded=' . getEncodedAt($current, 'default') . "\n";
 			$data .= 'bitrate=' . $current['bitrate'] . "\n";
-			$data .= 'outrate=' . $hwparams_format . $hwparams_calcrate . "\n"; ;
+			$data .= 'outrate=' . $hwParamsFormat . $hwParamsCalcrate . "\n"; ;
 			$data .= 'volume=' . $_SESSION['volknob'] . "\n";
 			$data .= 'mute=' . $_SESSION['volmute'] . "\n";
 			$data .= 'state=' . $current['state'] . "\n";
