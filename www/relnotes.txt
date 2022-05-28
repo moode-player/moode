@@ -23,7 +23,7 @@ New features
 
 Updates
 
-- UPD: Bump to CamillaDSP 1.0.0 + CamillaGUI 1.0
+- UPD: Bump to CamillaDSP 1.0.0 + CamillaGUI 1.0.0
 - UPD: Bump to librespot 0.4.1
 - UPD: Store WiFi and AP mode PSK's (passwords) in backup zip
 - UPD: Replace auto-reboot in Restore by "reboot required" message
@@ -42,6 +42,7 @@ Updates
 - UPD: Remove Radio manager Import/Export (replaced by Backup/Restore)
 - UPD: Remove UPnP browser (djmount) which is unsupported on 64-bit RaspiOS
 - UPD: Add "get_currentsong" command to the command API (see setup.txt)
+- UPD: Add Chinese, Japanese and Korean fonts for use in the Local display feature
 - UPD: Partial refactoring of the codebase to improve maintainability
 
 Radio stations
