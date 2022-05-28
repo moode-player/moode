@@ -1,0 +1,194 @@
+---
+devices:
+  adjust_period: 3
+  capture:
+    type: File
+    channels: 2
+    filename: /dev/stdin
+    format: S32LE
+  capture_samplerate: 44100
+  chunksize: 4096
+  enable_rate_adjust: false
+  enable_resampling: false
+  playback:
+    type: Alsa
+    channels: 2
+    device: plughw:2,0
+    format: S32LE
+  queuelimit: 1
+  resampler_type: FastAsync
+  samplerate: 44100
+  silence_threshold: 0
+  silence_timeout: 0
+  target_level: 1024
+filters:
+  cx1_hi:
+    parameters:
+      freq: 954.400000
+      gain: -0.750000
+      type: Lowshelf
+      q: 0.500000
+    type: Biquad
+  cx1_lo:
+    parameters:
+      freq: 650
+      type: LowpassFO
+    type: Biquad
+  cx1_lo_gain:
+    type: Gain
+    parameters:
+      gain: -14.250000
+      inverted: false
+  cx2_hi:
+    parameters:
+      freq: 824.700000
+      gain: -1.400000
+      type: Lowshelf
+      q: 0.500000
+    type: Biquad
+  cx2_lo:
+    parameters:
+      freq: 650
+      type: LowpassFO
+    type: Biquad
+  cx2_lo_gain:
+    type: Gain
+    parameters:
+      gain: -10.920000
+      inverted: false
+  cx3_hi:
+    parameters:
+      freq: 868.970000
+      gain: -2
+      type: Lowshelf
+      q: 0.500000
+    type: Biquad
+  cx3_lo:
+    parameters:
+      freq: 700
+      type: LowpassFO
+    type: Biquad
+  cx3_lo_gain:
+    type: Gain
+    parameters:
+      gain: -8
+      inverted: false
+  cx4_hi:
+    parameters:
+      freq: 873.890000
+      gain: -2.250000
+      type: Lowshelf
+      q: 0.500000
+    type: Biquad
+  cx4_lo:
+    parameters:
+      freq: 700
+      type: LowpassFO
+    type: Biquad
+  cx4_lo_gain:
+    type: Gain
+    parameters:
+      gain: -6.750000
+      inverted: false
+  cx5_hi:
+    parameters:
+      freq: 884.290000
+      gain: -2.500000
+      type: Lowshelf
+      q: 0.500000
+    type: Biquad
+  cx5_lo:
+    parameters:
+      freq: 700
+      type: LowpassFO
+    type: Biquad
+  cx5_lo_gain:
+    type: Gain
+    parameters:
+      gain: -5.500000
+      inverted: false
+mixers:
+  2to4:
+    channels:
+      in: 2
+      out: 4
+    mapping:
+    - dest: 0
+      mute: false
+      sources:
+      - channel: 0
+        gain: 0
+        inverted: false
+        mute: false
+    - dest: 1
+      mute: false
+      sources:
+      - channel: 0
+        gain: 0
+        inverted: false
+        mute: false
+    - dest: 2
+      mute: false
+      sources:
+      - channel: 1
+        gain: 0
+        inverted: false
+        mute: false
+    - dest: 3
+      mute: false
+      sources:
+      - channel: 1
+        gain: 0
+        inverted: false
+        mute: false
+  4to2:
+    channels:
+      in: 4
+      out: 2
+    mapping:
+    - dest: 0
+      mute: false
+      sources:
+      - channel: 0
+        gain: 0
+        inverted: false
+        mute: false
+      - channel: 2
+        gain: 0
+        inverted: false
+        mute: false
+    - dest: 1
+      mute: false
+      sources:
+      - channel: 1
+        gain: 0
+        inverted: false
+        mute: false
+      - channel: 3
+        gain: 0
+        inverted: false
+        mute: false
+pipeline:
+- type: Mixer
+  name: 2to4
+- channel: 0
+  names:
+  - cx5_hi
+  type: Filter
+- channel: 1
+  names:
+  - cx5_lo
+  - cx5_lo_gain
+  type: Filter
+- channel: 2
+  names:
+  - cx5_lo
+  - cx5_lo_gain
+  type: Filter
+- channel: 3
+  names:
+  - cx5_hi
+  type: Filter
+- name: 4to2
+  type: Mixer
+...

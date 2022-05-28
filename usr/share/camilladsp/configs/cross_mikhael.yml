@@ -1,0 +1,176 @@
+---
+devices:
+  adjust_period: 3
+  capture:
+    type: File
+    channels: 2
+    filename: /dev/stdin
+    format: S32LE
+  capture_samplerate: 44100
+  chunksize: 4096
+  enable_rate_adjust: false
+  enable_resampling: false
+  playback:
+    type: Alsa
+    channels: 2
+    device: plughw:2,0
+    format: S32LE
+  queuelimit: 1
+  rate_measure_interval: 1
+  resampler_type: FastAsync
+  samplerate: 44100
+  silence_threshold: 0
+  silence_timeout: 0
+  stop_on_rate_change: false
+  target_level: 1024
+filters:
+  XF_Cross_Highshelf:
+    parameters:
+      freq: 750
+      gain: -0.300000
+      type: HighshelfFO
+    type: Biquad
+  XF_Cross_Peaking_EQ:
+    parameters:
+      freq: 180
+      gain: 0.500000
+      q: 0.550000
+      type: Peaking
+    type: Biquad
+  XF_Direct_Highshelf:
+    parameters:
+      freq: 200
+      gain: 2.300000
+      type: HighshelfFO
+    type: Biquad
+  ir_hpcf:
+    parameters:
+      channel: 0
+      filename: /usr/share/camilladsp/coeffs/HpCF_Sennheiser_HD800S_A.wav
+      type: Wav
+    type: Conv
+  ir_l_input_l_ear:
+    parameters:
+      channel: 0
+      filename: /usr/share/camilladsp/coeffs/BRIR_R02_P1_E0_A-30.wav
+      type: Wav
+    type: Conv
+  ir_l_input_r_ear:
+    parameters:
+      channel: 1
+      filename: /usr/share/camilladsp/coeffs/BRIR_R02_P1_E0_A-30.wav
+      type: Wav
+    type: Conv
+  ir_r_input_l_ear:
+    parameters:
+      channel: 0
+      filename: /usr/share/camilladsp/coeffs/BRIR_R02_P1_E0_A30.wav
+      type: Wav
+    type: Conv
+  ir_r_input_r_ear:
+    parameters:
+      channel: 1
+      filename: /usr/share/camilladsp/coeffs/BRIR_R02_P1_E0_A30.wav
+      type: Wav
+    type: Conv
+  mastergain:
+    parameters:
+      gain: -18
+      inverted: false
+      mute: false
+    type: Gain
+mixers:
+  XF_IN:
+    channels:
+      in: 2
+      out: 4
+    mapping:
+    - dest: 0
+      mute: false
+      sources:
+      - channel: 0
+        gain: -9.900000
+        inverted: false
+        mute: false
+    - dest: 1
+      mute: false
+      sources:
+      - channel: 0
+        gain: -2.300000
+        inverted: false
+        mute: false
+    - dest: 2
+      mute: false
+      sources:
+      - channel: 1
+        gain: -2.300000
+        inverted: false
+        mute: false
+    - dest: 3
+      mute: false
+      sources:
+      - channel: 1
+        gain: -9.900000
+        inverted: false
+        mute: false
+  XF_OUT:
+    channels:
+      in: 4
+      out: 2
+    mapping:
+    - dest: 0
+      mute: false
+      sources:
+      - channel: 1
+        gain: 0
+        inverted: false
+        mute: false
+      - channel: 3
+        gain: -3
+        inverted: false
+        mute: false
+    - dest: 1
+      mute: false
+      sources:
+      - channel: 2
+        gain: 0
+        inverted: false
+        mute: false
+      - channel: 0
+        gain: -3
+        inverted: false
+        mute: false
+pipeline:
+- name: XF_IN
+  type: Mixer
+- channel: 0
+  names:
+  - XF_Cross_Highshelf
+  - XF_Cross_Peaking_EQ
+  - ir_l_input_r_ear
+  type: Filter
+- channel: 1
+  names:
+  - XF_Direct_Highshelf
+  type: Filter
+- channel: 2
+  names:
+  - XF_Direct_Highshelf
+  type: Filter
+- channel: 3
+  names:
+  - XF_Cross_Highshelf
+  - XF_Cross_Peaking_EQ
+  - ir_r_input_l_ear
+  type: Filter
+- name: XF_OUT
+  type: Mixer
+- channel: 0
+  names:
+  - ir_hpcf
+  type: Filter
+- channel: 1
+  names:
+  - ir_hpcf
+  type: Filter
+...
