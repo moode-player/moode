@@ -1793,7 +1793,7 @@ function runQueuedJob() {
 			break;
 		case 'rotaryenc':
 			sysCmd('systemctl stop rotenc');
-			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/util/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
+			sysCmd('sed -i "/ExecStart/c\ExecStart=' . '/var/www/daemon/rotenc.py ' . $_SESSION['rotenc_params'] . '"' . ' /lib/systemd/system/rotenc.service');
 			sysCmd('systemctl daemon-reload');
 
 			if ($_SESSION['w_queueargs'] == '1') {

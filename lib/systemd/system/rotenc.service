@@ -14,7 +14,7 @@ Type=simple
 # volume_step:		Number of steps to use when knob turns at fast rate. Default=3.
 # pin_a/b:	        GPIO pin numbers. Defaults: rotenc_py (23,24 - Broadcom SoC), rotenc_c (4,5 wiringPi).
 # print_debug:	    Print debug information to console. 1=normal, 2=verbose (2 is for rotenc_c only). This is an optional param.
-ExecStart=/var/www/util/rotenc.py 100 2 3 23 24
+ExecStart=/var/www/daemon/rotenc.py 100 2 3 23 24
 
 [Install]
 WantedBy=multi-user.target
