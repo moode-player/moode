@@ -2265,6 +2265,7 @@ function runQueuedJob() {
 				$fh = fopen($file, 'w');
 				fwrite($fh, $img_data);
 				fclose($fh);
+				sysCmd('chmod 0777 "' . $file . '"');
 
 				// Thumbnail
 				$img_str = file_get_contents($file);
@@ -2320,6 +2321,9 @@ function runQueuedJob() {
 					}
 				}
 			}
+
+			sysCmd('chmod 0777 "' . $img_dir . $thm_dir . TMP_IMAGE_PREFIX . '"*');
+
 			break;
 
 		// Other jobs

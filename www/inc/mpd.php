@@ -552,7 +552,7 @@ function setCuefilesIgnore($ignore) {
 	if (is_file($file) === false) {
 		if ($ignore == 1) {
 			sysCmd('touch "' . $file . '"');
-			sysCmd('chmod 777 "' . $file . '"');
+			sysCmd('chmod 0777 "' . $file . '"');
 			sysCmd('chown root:root "' . $file . '"');
 			sysCmd('echo "*.cue" >> ' . $file);
 		}

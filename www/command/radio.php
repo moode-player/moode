@@ -132,7 +132,6 @@ function validateInput($cmd, $stName, $stFile, $stUrl, $stRowId) {
 
 // Create/update station metadata and pls file
 function putStationContents($cmd, $path, $stFile) {
-	workerLog(print_r($path, true));
 	$dbh = sqlConnect();
 
 	if ($cmd == 'new_station') {
@@ -199,7 +198,7 @@ function putStationContents($cmd, $path, $stFile) {
 		exit(0);
 	}
 
-	sysCmd('chmod 777 "' . $stFile . '"');
+	sysCmd('chmod 0777 "' . $stFile . '"');
 	sysCmd('chown root:root "' . $stFile . '"');
 	// Update time stamp on files so mpd picks up the change and commits the update
 	sysCmd('find ' . MPD_MUSICROOT . 'RADIO -name *.pls -exec touch {} \+');
@@ -215,18 +214,19 @@ function putStationCover($stName) {
 	$stTmpImage = RADIO_LOGOS_ROOT . TMP_IMAGE_PREFIX . $stName . '.jpg';
 	$stTmpImageThm = RADIO_LOGOS_ROOT . 'thumbs/' . TMP_IMAGE_PREFIX . $stName . '.jpg';
 	$stTmpImageThmSm = RADIO_LOGOS_ROOT . 'thumbs/' . TMP_IMAGE_PREFIX . $stName . '_sm.jpg';
+
 	$stCoverImage = RADIO_LOGOS_ROOT . $stName . '.jpg';
 	$stCoverImageThm = RADIO_LOGOS_ROOT . 'thumbs/' .  $stName . '.jpg';
 	$stCoverImageThmSm = RADIO_LOGOS_ROOT . 'thumbs/' .  $stName . '_sm.jpg';
+
 	$defaultImage = '/var/www/images/notfound.jpg';
-	workerLog($stTmpImage);
 	sendEngCmd('set_cover_image1'); // Show spinner
 	sleep(3); // Allow time for set_ralogo_image job to create __tmp__ image file
 
 	if (file_exists($stTmpImage)) {
 		sysCmd('mv "' . $stTmpImage . '" "' . $stCoverImage . '"');
 		sysCmd('mv "' . $stTmpImageThm . '" "' . $stCoverImageThm . '"');
-		sysCmd('mv "' . $stTmpImage . '" "' . $stCoverImageThmSm . '"');
+		sysCmd('mv "' . $stTmpImageThmSm . '" "' . $stCoverImageThmSm . '"');
 	} else if (!file_exists($stCoverImage)) {
 		sysCmd('cp "' . $defaultImage . '" "' . $stCoverImage . '"');
 		sysCmd('cp "' . $defaultImage . '" "' . $stCoverImageThm . '"');
