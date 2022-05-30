@@ -95,7 +95,7 @@ switch ($_GET['cmd']) {
 		// Create playlist if it doesn't exists
 		if (!file_exists($plFile)) {
 			sysCmd('touch "' . $plFile . '"');
-			sysCmd('chmod 777 "' . $plFile . '"');
+			sysCmd('chmod 0777 "' . $plFile . '"');
 			sysCmd('chown root:root "' . $plFile . '"');
 		}
 
@@ -123,7 +123,7 @@ switch ($_GET['cmd']) {
 			// Create playlist if it doesn't exost
 			if (!file_exists($plFile)) {
 				sysCmd('touch "' . $plFile . '"');
-				sysCmd('chmod 777 "' . $plFile . '"');
+				sysCmd('chmod 0777 "' . $plFile . '"');
 				sysCmd('chown root:root "' . $plFile . '"');
 			}
 
