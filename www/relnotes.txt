@@ -47,9 +47,11 @@ Updates
 
 Radio stations
 
-- UPD: KanalK
+- NEW: DR P8 Jazz (320K)
 - UPD: DR P1 - P4, P6, P8
-- DEL:
+- UPD: Jazz FM
+- UPD: KanalK
+- UPD: Scala Radio
 
 Bug fixes
 
