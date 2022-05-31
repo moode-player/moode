@@ -578,11 +578,6 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			return 'File does not exist';
 		}
 
-		// Hack to allow file names with accented characters to work when passed to mediainfo via exec()
-		$locale = 'en_GB.utf-8'; // Is this still needed?
-		setlocale(LC_ALL, $locale);
-		putenv('LC_ALL=' . $locale);
-
 		// Mediainfo
 		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"';
 		$result = sysCmd($cmd);
