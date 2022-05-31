@@ -57,7 +57,7 @@ function phpSessionCheck($max_loops = 3, $sleep_time = 2) {
 // 0: PHP_SESSION_DISABLED	Sessions are currently disabled
 // 1: PHP_SESSION_NONE		Sessions are enabled, but no session has been started
 // 2: PHP_SESSION_ACTIVE	Sessions are enabled and a session has been started
-function phpSession($cmd, $param = '', $value = '') {
+function phpSession($cmd, $param = '', $value = '', $caller = '') {
 	switch ($cmd) {
 		case 'load_system':
 			$status = phpSession('get_status');
@@ -107,7 +107,7 @@ function phpSession($cmd, $param = '', $value = '') {
 			break;
 		case 'open_ro': // Read only
 			phpSession('open');
-			phpSession('close');
+			phpSession('close', '', '', ', caller: phpSession(open_ro)');
 			break;
 		case 'open':
 			if (session_start() === false) {
@@ -119,7 +119,7 @@ function phpSession($cmd, $param = '', $value = '') {
 			break;
 		case 'close':
 			if (session_write_close() === false) {
-				debugLog('phpSession(close): session_write_close() failed');
+				debugLog('phpSession(close): session_write_close() failed' . $caller);
 				return false;
 			} else {
 				return true;

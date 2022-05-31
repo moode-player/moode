@@ -999,7 +999,7 @@ while (true) {
 		runQueuedJob();
 	}
 
-	phpSession('close');
+	phpSession('close', '', '', ', caller: worker.php end of job while loop');
 }
 
 //
@@ -1030,13 +1030,14 @@ function chkMaintenance() {
 		$result = sysCmd('/var/www/util/sysutil.sh "clear-syslogs"');
 		if (!empty($result)) {
 			workerLog('worker: Maintenance: Warning: Problem clearing system logs');
-			workerLog(print_r($result, true));
+			workerLog('worker: Maintenance: ' . $result[0]);
 		}
 
 		// Compact SQLite database
 		$result = sysCmd('sqlite3 /var/local/www/db/moode-sqlite3.db "vacuum"');
 		if (!empty($result)) {
 			workerLog('worker: Maintenance: Warning: Problem compacting SQLite database');
+			workerLog('worker: Maintenance: ' . $result[0]);
 		}
 
 		// Purge temp or unwanted resources

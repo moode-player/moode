@@ -572,7 +572,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$song = getCurrentSong($sock);
 	$current['file'] = $song['file'];
 
-	// NOTE: Any of these might be '' (empty)
+	// NOTE: Any of these might be empty ''
 	$current['genre'] = $song['Genre'];
 	$current['track'] = $song['Track'];
 	$current['date'] = $song['Date'];
@@ -581,6 +581,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['performer'] = $song['Performer'];
 	$current['albumartist'] = $song['AlbumArtist'];
 	$current['artist_count'] = $song['artist_count'];
+
 	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
 		$current['cover_art_hash'] = getCoverHash($current['file']);
@@ -588,6 +589,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	}
 
 	if ($current['file'] == null) {
+		// Null can happen when reloading sources during development
 		$current['artist'] = '';
 		$current['title'] = '';
 		$current['album'] = '';
@@ -596,11 +598,13 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	} else {
 		// Only do this code block once for a given file
 		if ($current['file'] != $_SESSION['currentfile']) {
-			$current['encoded'] = getEncodedAt($song, 'default'); // encoded bit depth and sample rate
+			$current['encoded'] = getEncodedAt($song, 'default'); // Encoded bit depth and sample rate
 			phpSession('open');
 			$_SESSION['currentfile'] = $current['file'];
 			$_SESSION['currentencoded'] = $current['encoded'];
-			phpSession('close');
+			if ($caller == 'engine_mpd_php') {
+				phpSession('close');
+			}
 		}
 		else {
 			$current['encoded'] = $_SESSION['currentencoded'];
@@ -632,7 +636,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 				// Use transmitted name for SOMA FM stations
 				$current['album'] = substr($_SESSION[$song['file']]['name'], 0, 4) == 'Soma' ? $song['Name'] : $_SESSION[$song['file']]['name'];
 				// Include original station name
-				// DEPRECATE $current['station_name'] = $_SESSION[$song['file']]['name'];
+				// DEPRECATE: $current['station_name'] = $_SESSION[$song['file']]['name'];
 				if ($_SESSION[$song['file']]['logo'] == 'local') {
 					// Local logo image
 					$current['coverurl'] = rawurlencode(LOGO_ROOT_DIR . $_SESSION[$song['file']]['name'] . '.jpg');
@@ -640,8 +644,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					// URL logo image
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
-				# NOTE: Hardcode displayed bitrate for BBC 320K stations since MPD does not seem to pick up the rate since 0.20.10
-				if (strpos($_SESSION[$song['file']]['name'], 'BBC') !== false && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
+				# NOTE: Hardcode displayed bitrate for .m3u8 320K stations because MPD does not pick up the rate
+				if ($ext == 'm3u8' && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
 					$current['bitrate'] = '320 kbps';
 				}
 			} else {
