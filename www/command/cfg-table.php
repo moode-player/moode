@@ -87,6 +87,9 @@ switch ($_GET['cmd']) {
 			$cfgSystem[$row['param']] = $row['value'];
 		}
 		// Add extra vars
+		$cfgSystem['debuglog'] = $_SESSION['debuglog'];
+		$cfgSystem['kernelver'] = $_SESSION['kernelver'];
+		$cfgSystem['procarch'] = $_SESSION['procarch'];		
 		$cfgSystem['raspbianver'] = $_SESSION['raspbianver'];
 		$cfgSystem['ipaddress'] = $_SESSION['ipaddress'];
 		$cfgSystem['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
