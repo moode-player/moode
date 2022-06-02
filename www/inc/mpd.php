@@ -645,7 +645,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 					$current['coverurl'] = rawurlencode($_SESSION[$song['file']]['logo']);
 				}
 				# NOTE: Hardcode displayed bitrate for .m3u8 320K stations because MPD does not pick up the rate
-				if ($ext == 'm3u8' && strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
+				if (strpos($_SESSION[$song['file']]['name'], '320K') !== false) {
 					$current['bitrate'] = '320 kbps';
 				}
 			} else {
