@@ -24,9 +24,10 @@
 <!--removeIf(GENINDEXDEV)-->
 
 <?php
-    //workerLog('-- header.php');
-    $return_val = session_start();
-    //workerLog('session_start=' . (($return_val) ? 'TRUE' : 'FALSE'));
+    $result = sqlRead('cfg_system', sqlConnect(), 'sessionid');
+    session_id($result[0]['value']);
+    $returnVal = session_start();
+    debugLog('header.php: session_start() = ' . (($returnVal) ? 'true' : 'false') . ', sessionid = ' . $result[0]['value']);
 ?>
 <!--endRemoveIf(GENINDEXDEV)-->
 <!DOCTYPE html>
