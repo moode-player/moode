@@ -110,10 +110,8 @@ switch ($_GET['cmd']) {
 		break;
 	case 'add_item_to_favorites':
         if (isset($_GET['item']) && !empty($_GET['item'])) {
-
-			session_start();
+			phpSession('open_ro');
 			$plName = $_SESSION['favorites_name'];
-			session_write_close();
 
 			$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
