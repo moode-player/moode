@@ -129,12 +129,12 @@ function phpSession($cmd, $param = '', $value = '', $caller = '') {
 			$_SESSION[$param] = $value;
 			sqlUpdate('cfg_system', sqlConnect(), $param, $value);
 			break;
-		case 'put_sessionid':
-			phpSession('write', 'sessionid', session_id());
-			break;
 		case 'get_sessionid':
 			$result = sqlRead('cfg_system', sqlConnect(), 'sessionid');
 			return $result['0']['value'];
+			break;
+		case 'put_sessionid':
+			phpSession('write', 'sessionid', session_id());
 			break;
 	}
 }
