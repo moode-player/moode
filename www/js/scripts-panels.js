@@ -152,7 +152,6 @@ jQuery(document).ready(function($) { 'use strict';
             observer.observe(target, config);
 		});
 
-
     	// Only display transparency related theme options if alphablend is < 1
     	/*$('#alpha-blend').on('DOMSubtreeModified',function(){
     		if ($('#alpha-blend span').text() < 1) {
@@ -184,13 +183,11 @@ jQuery(document).ready(function($) { 'use strict';
         engineMpd();
         engineCmd();
 
-        /*
         // NOTE: We may use this in the future
-        $.getJSON('command/moode.php?cmd=clientip', function(data) {
-            UI.clientIP = data;
-            console.log(UI.clientIP);
+        $.getJSON('command/system.php?cmd=get_client_ip', function(data) {
+            GLOBAL.thisClientIP = data;
+            debugLog(GLOBAL.thisClientIP);
         });
-        */
 
         // Setup pines notify
         $.pnotify.defaults.history = false;

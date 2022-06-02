@@ -30,4 +30,7 @@ switch ($_GET['cmd']) {
 			echo json_encode('worker busy');
 		}
 		break;
+	case 'get_client_ip':
+		echo json_encode($_SERVER['REMOTE_ADDR']);
+		break;
 }
