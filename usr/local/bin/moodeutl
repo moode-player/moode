@@ -278,8 +278,7 @@ function dumpSession() {
 		return;
 	}
 
-	$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
-	session_id($sessionId);
+	setSessionId();
 	session_start();
 	foreach ($_SESSION as $key => $value) {
 		// Radio stations
@@ -305,8 +304,7 @@ function deleteSessionVar($argv) {
 		return;
 	}
 
-	$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
-	session_id($sessionId);
+	setSessionId();
 	session_start();
 	unset($_SESSION[$argv[2]]);
 	session_write_close();
@@ -344,8 +342,7 @@ function audioFormats($option) {
 				return;
 			}
 
-			$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
-			session_id($sessionId);
+			setSessionId();
 			session_start();
 			$formats = $_SESSION['audio_formats'];
 			session_write_close();
@@ -573,4 +570,9 @@ function detectNbtHosts() {
 	}
 
 	echo $output;
+}
+
+function setSessionId() {
+	$sessionId = trim(shell_exec("sqlite3 " . SQLDB_PATH . " \"SELECT value FROM cfg_system WHERE param='sessionid'\""));
+	session_id($sessionId);
 }
