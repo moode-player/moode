@@ -255,14 +255,6 @@ if (isset($_POST['update_scnrotate'])) {
     }
 }
 
-// CoverView on/off
-if (isset($_POST['update_toggle_coverview'])) {
-	$toggle_coverview = $_SESSION['toggle_coverview'] == '-off' ? '-on' : '-off';
-	$result = sysCmd('/var/www/util/coverview.php ' . $toggle_coverview);
-	$_SESSION['notify']['title'] = $result[0];
-	phpSession('write', 'toggle_coverview', $toggle_coverview);
-}
-
 // LOCAL SERVICES
 
 // Metadata for external apps

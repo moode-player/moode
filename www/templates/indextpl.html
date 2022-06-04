@@ -134,7 +134,7 @@
 								<span id="currentartist"></span>
 								<span class="playback-hd-badge"></span>
 							</div>
-							<div id="debug_text"></div>
+							<div id="debug-text"></div>
 						</div>
 					</div>
 				</div>
@@ -159,7 +159,7 @@
 				<button aria-label="Tag" class="btn tag-view-btn" href="#library-panel"><i class="fas fa-columns"></i> Tag<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Album" class="btn album-view-btn" href="#library-panel"><i class="fas fa-th"></i> Album<span class="pane"><i class="fal fa-check"></i></span></button>
 				<button aria-label="Playlists" class="btn playlist-view-btn" href="#playlist-panel"><i class="fas fa-list"></i> Playlists<span class="pane"><i class="fal fa-check"></i></span></button>
-				<button aria-label="Filters" class="btn filters-btn menu-separator" href="#filters-modal"><i class="fas fa-filter"></i> Filters</button>
+				<!--button aria-label="Filters" class="btn filters-btn menu-separator" href="#filters-modal"><i class="fas fa-filter"></i> Filters</button-->
 				<button aria-label="All Music" class="btn view-all no-icon">All Music<span><i class="fal fa-check"></i></span></button>
 				<button aria-label="Recently Added" class="btn view-recents no-icon">Recently Added<span><i class="fal fa-check"></i></span></button>
 			</ul>
@@ -1439,7 +1439,7 @@
 			<div class="accordian"><span class="h5">CoverView</span>
 				<div class="kontrol">
 					<div class="control-group">
-   	                <label class="control-label" for="scnsaver-timeout">Automatic display</label>
+   	                <label class="control-label" for="scnsaver-timeout">Timed display</label>
 	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
@@ -1463,7 +1463,29 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-timeout" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-timeout" class="help-block hide">
-	                    	Display a fullscreen view of cover art and song data after the specified number of minutes.
+	                    	Show CoverView on all connected clients after the specified number of minutes.
+	                    </span>
+	                </div>
+
+					<label class="control-label" for="auto-coverview">Automatic display</label>
+	                <div class="controls">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="auto-coverview" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="auto-coverview-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="auto-coverview-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-auto-coverview" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-auto-coverview" class="help-block hide">
+	                    	Automatically show CoverView on locally attached display. Connected clients are unaffected.
 	                    </span>
 	                </div>
 

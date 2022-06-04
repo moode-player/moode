@@ -71,7 +71,6 @@ var UI = {
 	chipOptions: '',
 	hideReconnect: false,
 	bgImgChange: false,
-	clientIP: '',
     dbPos: [0,0,0,0,0,0,0,0,0,0,0],
     // - Used in Folder view
     dbEntry: ['', '', '', '', '', ''],
@@ -143,6 +142,8 @@ var GLOBAL = {
     sbw: 0,
     backupCreate: false,
     busySpinnerSVG: "<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42' stroke='#fff'><g fill='none' fill-rule='evenodd'><g transform='translate(3 3)' stroke-width='4'><circle stroke-opacity='.35' cx='18' cy='18' r='18'/><path d='M36 18c0-9.94-8.06-18-18-18'><animateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='1s' repeatCount='indefinite'/></path></g></g></svg>",
+    thisClientIP: '',
+    chromium: false
 };
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
 
@@ -185,7 +186,7 @@ var toggleSongId = 'blank';
 var currentView = 'playback';
 var alphabitsFilter;
 var lastYIQ = ''; // Last yiq value from setColors
-var coverView = false; // Coverview active or not to save on more expensive conditional in interval timer
+var coverView = false; // Coverview shown/hidden to save on more expensive conditional in interval timer
 
 function debugLog(msg) {
 	if (SESSION.json['debuglog'] == '1') {
@@ -563,23 +564,20 @@ function inpSrcIndicator(cmd, msgText) {
 // Show/hide CoverView screen saver
 function screenSaver(cmd) {
 	if ($('#inpsrc-indicator').css('display') == 'block' || UI.mobile) {
+        // Don't show CoverView
 		return;
-	}
-    // Show
-	else if (cmd.slice(-1) == '1') {
+	} else if (cmd.slice(-1) == '1') {
+        // Show CoverView
+        coverView = true; // NOTE: This is set to false in the screen saver reset click() handler
 		$('#ss-coverart-url').html('<img class="coverart" ' + 'src="' + MPD.json['coverurl'] + '" ' + 'alt="Cover art not found"' + '>');
         $('body').addClass('cv')
         if (SESSION.json['show_cvpb'] == 'Yes') {
             $('body').addClass('cvpb');
         }
-
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
-
-		coverView = true;
-	}
-    // Hide
-    else if (cmd.slice(-1) == '0') {
+	} else if (cmd.slice(-1) == '0') {
+        // Hide CoverView
         $('#screen-saver').click();
     }
 }
@@ -2570,6 +2568,7 @@ $(document).on('click', '.context-menu a', function(e) {
 
         		// CoverView
                 $('#scnsaver-timeout span').text(getParamOrValue('param', SESSION.json['scnsaver_timeout']));
+                $('#auto-coverview span').text(SESSION.json['toggle_coverview'] == '-on' ? 'Yes' : 'No');
         		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
 
                 $('#preferences-modal').modal();
@@ -2702,6 +2701,7 @@ $('#btn-preferences-update').click(function(e){
     var reloadLibrary = false
     var regenThumbsReqd = false;
 	var scnSaverTimeoutChange = false;
+    var autoCoverViewChange = false;
 	var scnSaverStyleChange = false;
     var extraTagsChange = false;
     var playHistoryChange = false;
@@ -2767,11 +2767,11 @@ $('#btn-preferences-update').click(function(e){
         $('#library-panel, #radio-panel, #playlist-panel').removeClass('limited');
 	}
     if (SESSION.json['library_utf8rep'] != $('#utf8-char-filter span').text()) {libraryOptionsChange = true;}
-    // @Atair
-    if (SESSION.json['search_site'] != $('#search_site span').text()) {libraryOptionsChange = true;}
+    if (SESSION.json['search_site'] != $('#search_site span').text()) {libraryOptionsChange = true;} // @Atair
 
     // CoverView
     if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
+    if (SESSION.json['toggle_coverview'] != ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off')) {autoCoverViewChange = true;}
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
 
 	// Appearance
@@ -2817,6 +2817,7 @@ $('#btn-preferences-update').click(function(e){
 
     // CoverView
     SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
+    SESSION.json['toggle_coverview'] = ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off');
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
 
 	if (fontSizeChange == true) {
@@ -2825,6 +2826,9 @@ $('#btn-preferences-update').click(function(e){
 	}
 	if (scnSaverTimeoutChange == true) {
         $.post('command/playback.php?cmd=reset_screen_saver');
+	}
+    if (autoCoverViewChange == true) {
+        $.post('command/system.php?cmd=restart_localui');
 	}
     if (clearLibcacheAllReqd == true) {
         $.post('command/music-library.php?cmd=clear_libcache_all');
@@ -2848,8 +2852,7 @@ $('#btn-preferences-update').click(function(e){
 			$('#cover-backdrop').html('<img class="ss-backdrop" ' + 'src="' + MPD.json['coverurl'] + '">');
 			$('#cover-backdrop').css('filter', 'blur(' + SESSION.json['cover_blur'] + ')');
 			$('#cover-backdrop').css('transform', 'scale(' + SESSION.json['cover_scale'] + ')');
-		}
-		else {
+		} else {
 			$('#cover-backdrop').html('');
 		}
 
@@ -2913,6 +2916,7 @@ $('#btn-preferences-update').click(function(e){
 
             // CoverView
             'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
+            'toggle_coverview': SESSION.json['toggle_coverview'],
             'scnsaver_style': SESSION.json['scnsaver_style'],
 
             // Internal
@@ -2925,15 +2929,12 @@ $('#btn-preferences-update').click(function(e){
                 setTimeout(function() {
                     location.reload(true);
                 }, 2000);
-            }
-            else if (reloadLibrary) {
+            } else if (reloadLibrary) {
                 $('#btn-ra-refresh').click();
                 loadLibrary();
-            }
-            else if (regenThumbsReqd) {
+            } else if (regenThumbsReqd) {
                 notify('regen_thumbs', 'Thumbnails must be regenerated after changing this setting', '5_seconds');
-            }
-            else {
+            } else {
                 notify('settings_updated');
             }
         }

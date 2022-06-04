@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/../inc/common.php';
 require_once __DIR__ . '/../inc/session.php';
+require_once __DIR__ . '/../inc/sql.php';
 
 switch ($_GET['cmd']) {
 	case 'reboot':
@@ -32,5 +33,15 @@ switch ($_GET['cmd']) {
 		break;
 	case 'get_client_ip':
 		echo json_encode($_SERVER['REMOTE_ADDR']);
+		break;
+	case 'restart_localui':
+		phpSession('open_ro');
+		if ($_SESSION['localui'] == '1') {
+			if (submitJob('localui_restart')) {
+				echo json_encode('job submitted');
+			} else {
+				echo json_encode('worker busy');
+			}
+		}
 		break;
 }

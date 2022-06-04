@@ -846,11 +846,16 @@ if ($_SESSION['autoplay'] == '1') {
 	}
 }
 
-// Start localui
+// Start LocalUI
 if ($_SESSION['localui'] == '1') {
-	sysCmd('systemctl start localui');
+	startLocalUI();
 	workerLog('worker: LocalUI started');
 }
+workerLog('worker: CoverView toggle (' . $_SESSION['toggle_coverview'] . ')');
+
+// TRX Config advanced options toggle
+$_SESSION['tx_adv_toggle'] = 'Advanced (&plus;)';
+$_SESSION['rx_adv_toggle'] = 'Advanced (&plus;)';
 
 //
 // Globals section
@@ -881,13 +886,6 @@ workerLog('worker: Maintenance interval (' . ($maint_interval / 60) . ' minutes)
 $scnactive = '0';
 $scnsaver_timeout = $_SESSION['scnsaver_timeout'];
 workerLog('worker: Screen saver activation (' . $_SESSION['scnsaver_timeout'] . ')');
-
-// CoverView on/off toggle (used in System Config, Local Display section)
-phpSession('write', 'toggle_coverview', '-off');
-
-// TRX Config advanced options toggle
-$_SESSION['tx_adv_toggle'] = 'Advanced (&plus;)';
-$_SESSION['rx_adv_toggle'] = 'Advanced (&plus;)';
 
 //
 // End globals section
@@ -1044,31 +1042,36 @@ function chkMaintenance() {
 		sysCmd('find /var/www/ -type l -delete'); // There shouldn't be any symlinks in the web root
 		sysCmd('rm ' . STATION_EXPORT_DIR . '/stations.zip > /dev/null 2>&1'); // Temp file from legacy Radio Manager export
 
-		// Purge bogus session files
+		// Purge spurious session files
+		// These files are created when chromium starts/restarts
 		// The only valid file is the one corresponding to $_SESSION['sessionid']
 		$dir = '/var/local/php/';
 		$files = scandir($dir);
 		foreach ($files as $file) {
 			if (substr($file, 0, 5) == 'sess_' && $file != 'sess_' . $_SESSION['sessionid']) {
-				workerLog('worker: Maintenance: Purged unneeded session file (' . $file . ')');
+				workerLog('worker: Maintenance: Purged spurious session file (' . $file . ')');
 				syscmd('rm ' . $dir . $file);
 			}
 		}
 
-		// LocalUI browser
-		// NOTE: This is a workaround for a chromium-browser bug that causes 100% memory utilization after ~3 hours
+		// LocalUI display (chromium browser)
+		// NOTE:
+		// - This is a workaround for a chromium-browser bug that causes 100% memory utilization after ~3 hours
+		// - The files 'localui_no_maint' and 'localui_refresh' are for testing and debug
 		if ($_SESSION['localui'] == '1' && !file_exists('/home/pi/localui_no_maint')) {
 			if (file_exists('home/pi/localui_refresh')) {
+				debugLog('worker: Maintenance: LocalUI refresh screen');
 				sendEngCmd('refresh_screen');
 			} else {
-				sysCmd('systemctl restart localui');
+				debugLog('worker: Maintenance: LocalUI restart');
+				stopLocalUI();
+				startLocalUI();
 			}
 		}
 
 		$GLOBALS['maint_interval'] = $_SESSION['maint_interval'];
 
-		// Uncomment for testing
-		//workerLog('worker: Maintenance completed');
+		debugLog('worker: Maintenance completed');
 	}
 }
 
@@ -1612,6 +1615,14 @@ function startGpioBtnHandler() {
 	sysCmd('/var/www/daemon/gpio_buttons.py > /dev/null &');
 }
 
+// LocalUI display
+function startLocalUI() {
+	sysCmd('systemctl start localui');
+}
+function stopLocalUI() {
+	sysCmd('systemctl stop localui');
+}
+
 //
 // PROCESS SUBMITTED JOBS
 //
@@ -2145,24 +2156,34 @@ function runQueuedJob() {
 			sysCmd('echo program_usb_boot_mode=1 >> ' . '/boot/config.txt');
 			break;
 		case 'localui':
-			sysCmd('systemctl ' . ($_SESSION['w_queueargs'] == '1' ? 'start' : 'stop') . ' localui');
+			if ($_SESSION['w_queueargs'] == '1') {
+				startLocalUI();
+			} else {
+				stopLocalUI();
+				/*DELETEif ($_SESSION['toggle_coverview'] == '-on') {
+					phpSession('write', 'toggle_coverview', '-off');
+				}*/
+			}
 			break;
 		case 'localui_restart':
-			phpSession('write', 'toggle_coverview', '-off');
-			sysCmd('systemctl restart localui');
+			stopLocalUI();
+			startLocalUI();
 			break;
 		case 'touchscn':
 			$param = $_SESSION['w_queueargs'] == '0' ? ' -- -nocursor' : '';
 			sysCmd('sed -i "/ExecStart=/c\ExecStart=/usr/bin/xinit' .$param . '" /lib/systemd/system/localui.service');
 			if ($_SESSION['localui'] == '1') {
 				sysCmd('systemctl daemon-reload');
-				sysCmd('systemctl restart localui');
+				stopLocalUI();
+				startLocalUI();
+
 			}
 			break;
 		case 'scnblank':
 			sysCmd('sed -i "/xset s/c\xset s ' . $_SESSION['w_queueargs'] . '" /home/pi/.xinitrc');
 			if ($_SESSION['localui'] == '1') {
-				sysCmd('systemctl restart localui');
+				stopLocalUI();
+				startLocalUI();
 			}
 		case 'scnbrightness':
 			sysCmd('/bin/su -c "echo '. $_SESSION['w_queueargs'] . ' > /sys/class/backlight/rpi_backlight/brightness"');

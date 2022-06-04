@@ -186,7 +186,7 @@ jQuery(document).ready(function($) { 'use strict';
         // NOTE: We may use this in the future
         $.getJSON('command/system.php?cmd=get_client_ip', function(data) {
             GLOBAL.thisClientIP = data;
-            debugLog(GLOBAL.thisClientIP);
+            debugLog('This client IP: ' + GLOBAL.thisClientIP);
         });
 
         // Setup pines notify
@@ -356,14 +356,20 @@ jQuery(document).ready(function($) { 'use strict';
     		makeActive('.playlist-view-btn', '#playlist-panel', currentView);
     	}
 
-        // CoverView
+        // CoverView auto-display
         var userAgent = navigator.userAgent;
-        var chromium = userAgent.indexOf('X11; CrOS armv');
-        //$('#debug_text').html(userAgent + '<br>' + chromium);
-        if (SESSION.json['localui'] == '1' && SESSION.json['toggle_coverview'] == '-on' && chromium !== -1) {
+        if (userAgent.indexOf('X11; CrOS armv') != -1 || userAgent.indexOf('X11; CrOS aarch64') != -1) {
+            GLOBAL.chromium = true;
+        } else {
+            GLOBAL.chromium = false;
+        }
+        // DEBUG: Uncomment to show text in Playback view below the cover art
+        //$('#debug-text').html(userAgent + '<br>' + (GLOBAL.chromium ? 'chromium=true' : 'chromium=false'));
+
+        if (SESSION.json['localui'] == '1' && SESSION.json['toggle_coverview'] == '-on' && GLOBAL.chromium) {
             setTimeout(function() {
                 screenSaver('scnactive1');
-            }, 2000);
+            }, 8000);
         }
     });
 

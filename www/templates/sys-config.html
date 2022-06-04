@@ -100,8 +100,8 @@
 				</div>
 			</div>
 
-			<div class="$_wifibt_hide">
-				<div class="control-group">
+			<div class="control-group">
+				<div class="$_wifibt_hide">
 					<label class="control-label">Integrated WiFi adapter</label>
 					<div class="controls">
 						<div class="toggle">
@@ -118,9 +118,7 @@
 							The integrated adapter appears on Pi-4, Pi-3 and Pi-Zero W models.
 	                    </span>
 					</div>
-				</div>
 
-				<div class="control-group">
 					<label class="control-label">Integrated BT adapter</label>
 					<div class="controls">
 						<div class="toggle">
@@ -138,9 +136,7 @@
 	                    </span>
 					</div>
 				</div>
-			</div>
 
-			<div class="control-group">
 				<label class="control-label">HDMI port</label>
 				<div class="controls">
 					<div class="toggle">
@@ -157,9 +153,7 @@
 						Leaving the HDMI port ON uses +25 mA and lengthens boot time.<br>
                     </span>
 				</div>
-			</div>
 
-			<div class="control-group">
 				<label class="control-label">LED0 (Activity)</label>
 				<div class="controls">
 					<div class="toggle">
@@ -176,10 +170,8 @@
 						LED0 default trigger is SDCard (mmc0) activity.
                     </span>
 				</div>
-			</div>
 
-			<div class="$_pwrled_hide">
-				<div class="control-group">
+				<div class="$_pwrled_hide">
 					<label class="control-label">LED1 (Power)</label>
 					<div class="controls">
 						<div class="toggle">
@@ -197,9 +189,7 @@
 	                    </span>
 					</div>
 				</div>
-			</div>
 
-			<div class="control-group">
 				<label class="control-label" for="ipaddr_timeout">IP addr timeout (secs)</label>
 				<div class="controls">
 					<select id="ipaddr_timeout" class="input-large" name="ipaddr_timeout">
@@ -271,17 +261,8 @@
 						<span id="info-localui" class="help-block-configs help-block-margin2 hide">
 							Display moOde UI on locally attached display.
 	                    </span>
-
-						<div style="margin-top:.25em">
-							<button class="btn btn-medium btn-primary" type="submit" name="update_toggle_coverview" value="novalue" $_localui_btn_disable>Toggle</button>&nbsp;CoverView<br>
-						</div>
-						<span class="help-block-configs help-block-margin">
-							Show or hide the CoverView screen saver.
-	                    </span>
 	                </div>
-	            </div>
 
-				<div class="control-group">
 					<label class="control-label">Wake display on play</label>
 					<div class="controls">
 						<div class="toggle">
@@ -367,7 +348,7 @@
 							<a data-toggle="modal" href="#restart-localui" $_localui_link_disable><button class="btn btn-medium btn-primary" style="margin-top:0;" $_localui_btn_disable>Restart</button></a>&nbsp;Local UI<br>
 						</div>
 						<span class="help-block-configs help-block-margin">
-							NOTE: Restarting clears the chromium browser cache and resets the CoverView toggle to Off.
+							NOTE: Restarting clears the chromium browser cache.
 						</span>
 					</div>
 				</div>
@@ -390,13 +371,11 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-extmeta" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
 					<span id="info-extmeta" class="help-block-configs help-block-margin2 hide">
-						Maintain enhanced metadata in /var/local/www/currentsong.txt file<br>
-						for consumption by external applications.<br>
+						Maintain enhanced metadata for the currently playing song or station in the /var/local/www/currentsong.txt file.<br>
+						NOTE: This file is updated within three seconds after any metadata updates on the UI.
                     </span>
 				</div>
-			</div>
 
-			<div class="control-group">
 				<label class="control-label">LCD update engine</label>
 				<div class="controls">
 					<div class="toggle">
@@ -409,17 +388,13 @@
 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_lcdup" value="novalue">Set</button>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-lcdup" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</div>
-					<span class="help-block-configs help-block-margin" style="margin-top: -10px; padding-top: 0px;">
-						The LCD update engine runs lcdup.py script whenever UI state changes.<br>
-					</span>
-					<span id="info-lcdup" class="help-block-configs hide">
-						A stub lcdup.py script is located in /var/local/www/commandw.
+					<span id="info-lcdup" class="help-block-configs help-block-margin2 hide">
+						The LCD update engine runs the lcd-updater.py script whenever UI state changes.<br>
+						NOTE: A stub lcd-updater.py script is located in the /var/local/www/commandw/ directory.
                     </span>
 				</div>
-			</div>
 
-			<div class="$_feat_gpio">
-				<div class="control-group">
+				<div class="$_feat_gpio">
 					<label class="control-label">GPIO button handler</label>
 					<div class="controls">
 						<div class="toggle">
