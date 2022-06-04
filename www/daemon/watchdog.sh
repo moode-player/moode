@@ -28,48 +28,64 @@
 FPM_LIMIT=45
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
-MPD_ACTIVE=$(pgrep -c -x mpd)
-HW_PARAMS_LAST=""
-SQL_DB=/var/local/www/db/moode-sqlite3.db
+MPD_LOADED=$(pgrep -c -x mpd)
+SQLDB=/var/local/www/db/moode-sqlite3.db
+
+message_log () {
+	TIME=$(date +'%Y%m%d %H%M%S')
+	echo "$TIME watchdog: $1" >> /var/log/moode.log
+}
 
 while true; do
 	# PHP-FPM
 	if (( FPM_CNT > FPM_LIMIT )); then
-		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		LOG_MSG=" watchdog: Info: Reducing PHP fpm worker pool"
-		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+		message_log "Info: Reducing PHP fpm worker pool"
 		systemctl restart php7.4-fpm
 	fi
 
 	# MPD
-	if [[ $MPD_ACTIVE = 0 ]]; then
-		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		LOG_MSG=" watchdog: Error: MPD restarted (check syslog for errors)"
-		echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+	if [[ $MPD_LOADED = 0 ]]; then
+		message_log "Error: MPD restarted (check syslog for errors)"
 		systemctl start mpd
 	fi
 
 	# Wake display on play
-	CARD_NUM=$(sqlite3 $SQL_DB "SELECT value FROM cfg_mpd WHERE param='device'")
-	HW_PARAMS=$(cat /proc/asound/card$CARD_NUM/pcm0p/sub0/hw_params)
-	TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-	if [[ $HW_PARAMS = "closed" || $HW_PARAMS = "" ]]; then
-		LOG_MSG=" watchdog: Info: Audio output is closed or device disconnected"
-		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
+	# NOTE: Player apps include MPD and any of the renderers
+	MULTIROOM_TX=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='multiroom_tx'")
+	if [[ $MULTIROOM_TX = "On" ]]; then
+		TRX_CARD_NUM="3"
+		TRX_HW_PARAMS=$(cat /proc/asound/card$TRX_CARD_NUM/pcm0p/sub0/hw_params)
+
+		if [[ $TRX_HW_PARAMS = "closed" ]]; then
+			NOP=""
+			#message_log "Info: Multiroom sender is not transmitting"
+		else
+			#message_log "Info: Multiroom sender is transmitting"
+			WAKE_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='wake_display'")
+			if [[ $WAKE_DISPLAY = "1" ]]; then
+				export DISPLAY=:0
+				xset s reset > /dev/null 2>&1
+			fi
+		fi
 	else
-		TIME_STAMP=$(date +'%Y%m%d %H%M%S')
-		LOG_MSG=" watchdog: Info: Audio output is in use"
-		#echo $TIME_STAMP$LOG_MSG >> /var/log/moode.log
-		WAKE_DISPLAY=$(sqlite3 $SQL_DB "SELECT value FROM cfg_system WHERE param='wake_display'")
-		if [[ $WAKE_DISPLAY = "1" ]]; then
-			export DISPLAY=:0
-			xset s reset > /dev/null 2>&1
+		LOCAL_CARD_NUM=$(sqlite3 $SQLDB "SELECT value FROM cfg_mpd WHERE param='device'")
+		LOCAL_HW_PARAMS=$(cat /proc/asound/card$LOCAL_CARD_NUM/pcm0p/sub0/hw_params)
+
+		if [[ $LOCAL_HW_PARAMS = "closed" || $LOCAL_HW_PARAMS = "" ]]; then
+			NOP=""
+			#message_log "Info: Local audio output is closed or audio device is disconnected"
+		else
+			#message_log "Info: Local audio output is active"
+			WAKE_DISPLAY=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='wake_display'")
+			if [[ $WAKE_DISPLAY = "1" ]]; then
+				export DISPLAY=:0
+				xset s reset > /dev/null 2>&1
+			fi
 		fi
 	fi
 
 	sleep 6
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
-	MPD_ACTIVE=$(pgrep -c -x mpd)
-	HW_PARAMS_LAST=$HW_PARAMS
+	MPD_LOADED=$(pgrep -c -x mpd)
 
 done > /dev/null 2>&1 &
