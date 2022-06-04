@@ -18,7 +18,8 @@
 New features
 
 - NEW: Support for multiple WiFi networks
-- NEW: Library Playlist view with covers
+- NEW: Library Playlist view with covers and sort/group
+- NEW: Library 'Add to playlist' context menu item
 - NEW: RaspiOS 64-bit moOde image
 
 Updates
@@ -27,22 +28,23 @@ Updates
 - UPD: Bump to librespot 0.4.1
 - UPD: Store WiFi and AP mode PSK's (passwords) in backup zip
 - UPD: Replace auto-reboot in Restore by "reboot required" message
-- UPD: Add option to include playlists in Backup/Restore
 - UPD: Restore the Default Playlist if present in the backup
+- UPD: Add option to include playlists in Backup/Restore
 - UPD: Add Preferences option to play selected track plus following tracks
-- UPD: Try to detect Samba protocol even when host appears to be offline
-- UPD: Tracks added to the Queue are ordered same as in Tag view
-- UPD: Purge extraneous session files during the maintenance task
-- UPD: Ensure Hardware mixer state is 'on' during startup
-- UPD: Mount NAS sources before starting renderers or UPnP/DLNA
+- UPD: Add Preferences option to auto-start CoverView on local display
 - UPD: Add new Soma FM stations to Default Playlist (new image only)
-- UPD: Use all Tiles on Menu, Configure modal
-- UPD: Improve config back link function
-- UPD: Improve help text in Save playlist modal
-- UPD: Remove Radio manager Import/Export (replaced by Backup/Restore)
-- UPD: Remove UPnP browser (djmount) which is unsupported on 64-bit RaspiOS
-- UPD: Add "get_currentsong" command to the command API (see setup.txt)
+- UPD: Add get_currentsong command to the command API (see the Setup guide)
 - UPD: Add Chinese, Japanese and Korean fonts for use in the Local display feature
+- UPD: Improve the Configure modal by displaying all large tiles
+- UPD: Improve the back link function in the Config screens
+- UPD: Improve the help text in the Save playlist modal
+- UPD: Improve Samba protocol detection by scanning even when host appears offline
+- UPD: Improve track order in the Queue (tracks added are ordered as in Tag view)
+- UPD: Purge spurious session files created by chromium in the maintenance task
+- UPD: During startup set ALSA hardware mixer state to 'on'
+- UPD: During startup mount NAS sources before starting renderers or UPnP/DLNA
+- UPD: Remove legacy Radio manager Import/Export (replaced by Backup/Restore)
+- UPD: Remove UPnP browser (djmount) which is unsupported on 64-bit RaspiOS
 - UPD: Partial refactoring of the codebase to improve maintainability
 
 Radio stations
@@ -61,6 +63,7 @@ Bug fixes
 - FIX: Self IP address not being filtered in Players and TRX Config
 - FIX: Custom backup script not being restored
 - FIX: Top margin for EDIT button on src-config
+- FIX: LocalUI 'Wake on play' when multiroom sender active
 
 ################################################################################
 #
