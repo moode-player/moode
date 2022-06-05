@@ -34,6 +34,7 @@ Updates
 - UPD: Add Preferences option to auto-start CoverView on local display
 - UPD: Add new Soma FM stations to Default Playlist (new image only)
 - UPD: Add get_currentsong command to the command API (see the Setup guide)
+- UPD: Add "No limit" option to Preferences, Library, Recently added filter
 - UPD: Add Chinese, Japanese and Korean fonts for use in the Local display feature
 - UPD: Improve the Configure modal by displaying all large tiles
 - UPD: Improve the back link function in the Config screens

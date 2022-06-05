@@ -53,7 +53,7 @@ function getParamOrValue (type, key) {
         // Screen saver timeout
         ['Never','Never'],['1 minute','60'],['2 minutes','120'],['5 minutes','300'],['10 minutes','600'],['20 minutes','1200'],['30 minutes','1800'],['1 hour','3600'],
         // Library recently added
-        ['1 Week','604800000'],['1 Month','2592000000'],['3 Months','7776000000'],['6 Months','15552000000'],['1 Year','31536000000'],
+        ['1 Week','604800000'],['1 Month','2592000000'],['3 Months','7776000000'],['6 Months','15552000000'],['1 Year','31536000000'],['No limit','3153600000000'],
         // Library cover search priority
         ['Embedded','Embedded cover'],['Cover file','Cover image file'],
         // Font size factors
