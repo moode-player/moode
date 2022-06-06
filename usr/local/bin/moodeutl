@@ -380,19 +380,19 @@ function systemMonitor() {
 
 		// Memory
 		$memTotal = exec("grep MemTotal /proc/meminfo | awk '{print $2}'");
-		$$memAvail = exec("grep MemAvailable /proc/meminfo | awk '{print $2}'");
-		$memUtil = number_format(100 * (1 - ($$memAvail / $memTotal)), 0, '.', '');
+		$memAvail = exec("grep MemAvailable /proc/meminfo | awk '{print $2}'");
+		$memUtil = number_format(100 * (1 - ($memAvail / $memTotal)), 0, '.', '');
 
 		// Disk
-		$$diskUsed = exec("df -h -l | awk 'FNR==2 {print $5}'");
-		$$diskFree = exec("df -h -l | grep /dev/root | awk '{print $4}'");
+		$diskUsed = exec("df -h -l | awk 'FNR==2 {print $5}'");
+		$diskFree = exec("df -h -l | grep /dev/root | awk '{print $4}'");
 
 		// PHP FPM pool count
 		$fpmPool = exec('pgrep -c -f "php-fpm: pool www"');
 
 		echo 'CPU: ' . $cpuFreq . ' | LOAD: ' . $cpuLoad . '%' . ' | TEMP: ' .
-			$cpuTemp . "\xB0" .	'C | RAM_USED: ' . $memUtil . '% | $diskUsed: ' . $$diskUsed . ' | $diskFree: ' .
-			$$diskFree . ' | fpmPool: ' . $fpmPool . ' workers ' . chr(27) . "[0G";
+			$cpuTemp . "\xB0" .	'C | RAM_USED: ' . $memUtil . '% | DISK_USED: ' . $diskUsed . ' | DISK_FREE: ' .
+			$diskFree . ' | FPM_POOL: ' . $fpmPool . ' workers ' . chr(27) . "[0G";
 	}
 }
 
