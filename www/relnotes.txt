@@ -17,13 +17,14 @@
 
 New features
 
+- NEW: RaspiOS 64-bit moOde image
 - NEW: Support for multiple WiFi networks
 - NEW: Library Playlist view with covers and sort/group
 - NEW: Library 'Add to playlist' context menu item
-- NEW: RaspiOS 64-bit moOde image
 
 Updates
 
+- UPD: Bump to Linux kernel 5.15.32 build #1538
 - UPD: Bump to CamillaDSP 1.0.0 + CamillaGUI 1.0.0
 - UPD: Bump to librespot 0.4.1
 - UPD: Store WiFi and AP mode PSK's (passwords) in backup zip
