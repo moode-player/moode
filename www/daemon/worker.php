@@ -554,7 +554,7 @@ sysCmd("systemctl start mpd");
 workerLog('worker: MPD started');
 $sock = openMpdSock('localhost', 6600);
 workerLog($sock === false ? 'worker: MPD connection refused' : 'worker: MPD accepting connections');
-// Ensure valid mpd output config
+// Ensure valid MPD output config
 $mpdOutput = configMpdOutput();
 sysCmd('mpc enable only "' . $mpdOutput .'"');
 setMpdHttpd();
@@ -570,6 +570,14 @@ $resp = readMpdResp($sock);
 // Ignore CUE files
 setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 workerLog('worker: MPD ignore CUE files (' . ($_SESSION['cuefiles_ignore'] == '1' ? 'yes' : 'no') . ')');
+// Load Default PLaylist if first boot
+if ($_SESSION['first_use_help'] == 'y,y') {
+	sendMpdCmd($sock, 'clear');
+	$resp = readMpdResp($sock);
+	sendMpdCmd($sock, 'load "Default Playlist"');
+	$resp = readMpdResp($sock);
+	workerLog('worker: Default playlist loaded for first boot');
+}
 
 //
 workerLog('worker: --');
