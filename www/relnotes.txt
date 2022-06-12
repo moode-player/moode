@@ -27,6 +27,7 @@ Updates
 - UPD: Bump to Linux kernel 5.15.32 build #1538
 - UPD: Bump to CamillaDSP 1.0.0 + CamillaGUI 1.0.0
 - UPD: Bump to librespot 0.4.1
+- UPD: Bump to chromium-browser 101.0.4951.57-rpt2
 - UPD: Store WiFi and AP mode PSK's (passwords) in backup zip
 - UPD: Replace auto-reboot in Restore by "reboot required" message
 - UPD: Restore the Default Playlist if present in the backup
@@ -67,6 +68,7 @@ Bug fixes
 - FIX: Top margin for EDIT button on src-config
 - FIX: LocalUI 'Wake on play' when multiroom sender active
 - FIX: Width of radio svg in the time knob
+- FIX: Chromium browser memory leak
 
 ################################################################################
 #
