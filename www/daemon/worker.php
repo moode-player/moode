@@ -1063,10 +1063,9 @@ function chkMaintenance() {
 		}
 
 		// LocalUI display (chromium browser)
-		// NOTE:
-		// - This is a workaround for a chromium-browser bug that causes 100% memory utilization after ~3 hours
-		// - The files 'localui_no_maint' and 'localui_refresh' are for testing and debug
-		if ($_SESSION['localui'] == '1' && !file_exists('/home/pi/localui_no_maint')) {
+		// NOTE: This is a workaround for a chromium-browser bug in < r810 that causes 100% memory utilization after ~3 hours
+		// Enable it by creating the /home/pi/localui_maint file
+		if ($_SESSION['localui'] == '1' && file_exists('/home/pi/localui_maint')) {
 			if (file_exists('home/pi/localui_refresh')) {
 				debugLog('worker: Maintenance: LocalUI refresh screen');
 				sendEngCmd('refresh_screen');
