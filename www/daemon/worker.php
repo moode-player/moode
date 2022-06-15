@@ -93,13 +93,6 @@ pcntl_signal(SIGTTIN, SIG_IGN);
 pcntl_signal(SIGHUP, SIG_IGN);
 workerLog('worker: Successfully daemonized');
 
-// Disable default SSH banner
-if (file_exists('/etc/ssh/sshd_config.d/rename_user.conf')) {
-	sysCmd('mv /etc/ssh/sshd_config.d/rename_user.conf /etc/ssh/sshd_config.d/rename_user.conf.default');
-	sysCmd('systemctl restart sshd');
-	workerLog('worker: Disabled default SSH banner');
-}
-
 // Ensure package holds are in effect
 sysCmd('moode-apt-mark hold > /dev/null 2>&1');
 
