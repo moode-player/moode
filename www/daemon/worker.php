@@ -1057,7 +1057,7 @@ function chkMaintenance() {
 		$files = scandir($dir);
 		foreach ($files as $file) {
 			if (substr($file, 0, 5) == 'sess_' && $file != 'sess_' . $_SESSION['sessionid']) {
-				workerLog('worker: Maintenance: Purged spurious session file (' . $file . ')');
+				debugLog('worker: Maintenance: Purged spurious session file (' . $file . ')');
 				syscmd('rm ' . $dir . $file);
 			}
 		}
