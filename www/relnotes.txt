@@ -68,6 +68,7 @@ Bug fixes
 - FIX: Top margin for EDIT button on src-config
 - FIX: LocalUI 'Wake on play' when multiroom sender active
 - FIX: Width of radio svg in the time knob
+- FIX: Trx-control -set-mpdvol not updating 'volknob' session var
 - FIX: Chromium browser memory leak
 
 ################################################################################
