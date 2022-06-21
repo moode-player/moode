@@ -68,8 +68,8 @@ switch ($_GET['cmd']) {
     			}
     		}
     	} else if (isset($_POST['volume'])) {
-    		if (false === ($result = file_get_contents('http://' . $rxAddresses[$item] . '/command/?cmd=vol.sh ' . $_POST['volume']))) {
-    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$item] . '/command/?cmd=vol.sh ' . $_POST['volume']))) {
+    		if (false === ($result = file_get_contents('http://' . $rxAddresses[$item] . '/command/?cmd=trx-control.php -set-mpdvol ' . $_POST['volume']))) {
+    			if (false === ($result = file_get_contents('http://' . $rxAddresses[$item] . '/command/?cmd=trx-control.php -set-mpdvol ' . $_POST['volume']))) {
     				workerLog('multiroom.php: set_rx_status volume failed: ' . $rxHostNames[$item]);
     			}
     		}
