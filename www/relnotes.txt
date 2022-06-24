@@ -19,6 +19,7 @@ Bug fixes
 
 - FIX: Spotify table name in renderer.php causing worker to crash
 - FIX: Missing parenthesis in autocfg-import.php
+- FIX: Missing systemd-timesyncd service on 32-bit image 
 
 ################################################################################
 #
