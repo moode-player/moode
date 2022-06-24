@@ -83,7 +83,7 @@ function stopAirplay () {
 }
 
 function startSpotify() {
-	$result = sqlRead('cfgSpotify', sqlConnect());
+	$result = sqlRead('cfg_spotify', sqlConnect());
 	$cfgSpotify = array();
 	foreach ($result as $row) {
 		$cfgSpotify[$row['param']] = $row['value'];
