@@ -29,7 +29,7 @@ require_once __DIR__ . '/../inc/sql.php';
 require_once __DIR__ . '/../inc/autocfg.php';
 
 if (file_exists('/boot/moodecfg.ini')) {
-	phpSession('open';
+	phpSession('open');
 	sysCmd('truncate ' . AUTOCFG_LOG . ' --size 0');
 	autoConfig('/boot/moodecfg.ini');
 	sysCmd('sync');
