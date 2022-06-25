@@ -1,6 +1,6 @@
 {
   "name": "moOde",
-  "version": "7.1.0",
+  "version": "8.1.1",
   "description": "moOde audio player",
   "author": "Tim Curtis",
   "main": "index.js",
@@ -46,6 +46,7 @@
     "cssnano": "^4.1.10",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
+    "gulp-cache-bust": "^1.4.1",
     "gulp-chown": "^2.0.0",
     "gulp-cli": "^2.2.0",
     "gulp-concat": "^2.6.1",

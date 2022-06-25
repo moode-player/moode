@@ -376,6 +376,9 @@ gulp.task('genindex', function(done){
             ]})) // include templates/indextpl.html and footer.php to create working index.html
         .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, NOCONFIGSECTION:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.useref({noAssets: true}))
+        .pipe($.if('index.html', $.cacheBust({
+            type: 'timestamp'
+            }))  )
         .pipe($.replaceTask({ patterns: REPLACEMENT_PATTERNS }))
         .pipe($.preprocess({ context: { STRIP_CONFIG: true } }))
         .pipe($.size({showFiles: true, total: false}))
@@ -392,6 +395,9 @@ gulp.task('patchheader', function (done) {
         .pipe($.removeCode({ GENINDEXDEV: false, NOCONFIGSECTION: false, GENINDEXDEV: false, USEBUNDLE:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.preprocess({ context: { STRIP_CONFIG: true } }))
         .pipe($.useref({noAssets: true}))
+        .pipe($.if('header.php', $.cacheBust({
+            type: 'timestamp'
+            }))  )
         .pipe($.size({showFiles: true, total: false}))
         .pipe(gulp.dest(DEPLOY_LOCATION))
         .on('end', done);
