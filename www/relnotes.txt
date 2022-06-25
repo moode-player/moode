@@ -11,6 +11,16 @@
 
 ################################################################################
 #
+# 2022-MM-DD TC moOde 8.2.0
+#
+################################################################################
+
+Updates
+
+- UPD: Add Gulp cachebuster to help prevent stale Browser cache after updates
+
+################################################################################
+#
 # 2022-06-24 TC moOde 8.1.1
 #
 ################################################################################
@@ -19,7 +29,7 @@ Bug fixes
 
 - FIX: Spotify table name in renderer.php causing worker to crash
 - FIX: Missing parenthesis in autocfg-import.php
-- FIX: Missing systemd-timesyncd service on 32-bit image 
+- FIX: Missing systemd-timesyncd service on 32-bit image
 
 ################################################################################
 #
