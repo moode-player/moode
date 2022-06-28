@@ -708,7 +708,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 function getUpnpCoverUrl() {
 	$mode = sqlQuery("SELECT value FROM cfg_upnp WHERE param='upnpav'", sqlConnect())[0]['value'] == 1 ? 'upnpav' : 'openhome';
-	$result = sysCmd('/var/www/util/upnp_albumart.py "' . $_SESSION['upnpname'] . '" '. $mode);
+	$result = sysCmd('/var/www/util/upnp-albumart.py "' . $_SESSION['upnpname'] . '" '. $mode);
 	// If multiple url's are returned, use the first
 	return explode(',', $result[0])[0];
 }
