@@ -1261,7 +1261,7 @@ function sendQueueCmd(cmd, path) {
 
 // Render Folder view
 function renderFolderView(data, path, searchstr) {
-    //console.log (data);
+    console.log (data);
 	UI.path = path;
 
 	// Separate out dirs, playlists, files, exclude RADIO folder
@@ -1326,7 +1326,8 @@ function renderFolderView(data, path, searchstr) {
     		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
             output += '<div class="db-icon db-action">';
             output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-            output += path == '' ?  '<i class="fas fa-hdd icon-root"></i></a></div>' : '<i class="fas fa-folder"></i></a></div>';
+            output += path == '' ?  '<i class="fas fa-hdd icon-root"></i></a></div>' :
+                (data[i].cover_url == '' ? '<i class="fas fa-folder"></i></a></div>' : '<img src="' + data[i].cover_url + '"></img></a></div>');
     		output += '<div class="db-entry db-folder db-browse"><div>' + data[i].directory.replace(path + '/', '') + '</div></div>';
             output += '</li>';
         }
