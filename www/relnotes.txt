@@ -19,6 +19,11 @@ Updates
 
 - UPD: Add Gulp cachebuster to help prevent stale Browser cache after updates
 
+Bug fixes
+
+- FIX: Cover art not showing for album directories in Folder view
+- FIX: Wrong file name for UPnP album art fetcher
+
 ################################################################################
 #
 # 2022-06-24 TC moOde 8.1.1
