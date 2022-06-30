@@ -1327,7 +1327,8 @@ function renderFolderView(data, path, searchstr) {
             output += '<div class="db-icon db-action">';
             output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
             output += path == '' ?  '<i class="fas fa-hdd icon-root"></i></a></div>' :
-                (data[i].cover_url == '' ? '<i class="fas fa-folder"></i></a></div>' : '<img src="' + data[i].cover_url + '"></img></a></div>');
+                (data[i].cover_hash == '' ? '<i class="fas fa-folder"></i></a></div>' :
+                '<img src="' + 'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg' + '"></img></a></div>');
     		output += '<div class="db-entry db-folder db-browse"><div>' + data[i].directory.replace(path + '/', '') + '</div></div>';
             output += '</li>';
         }
@@ -4163,18 +4164,18 @@ function itemInfoModal(id, data) {
     for (i = 0; i < data.length; i++) {
         var key = Object.keys(data[i]);
         if (typeof(data[i][key]) != 'undefined') {
-            if (key == 'Covers' || key == 'Logo') {
+            if (key == 'Covers') { // Note: data[i]['Covers'] is the md5 hash or ''
+                var coverUrl = data[i][key] = '' ? '/var/www/images/notfound.jpg' : '/imagesw/thmcache/' + encodeURIComponent(data[i][key]) + '.jpg';
+                lines += '<li><span class="left">' + key + '</span><span class="ralign">' + '<img src="' + coverUrl + '" style="width:60px;"' + '</span></li>';
+            } else if (key == 'Logo') {
                 lines += '<li><span class="left">' + key + '</span><span class="ralign">' + '<img src="' + data[i][key] + '" style="width:60px;"' + '</span></li>';
-            }
-            else if (key == 'Home page') {
+            } else if (key == 'Home page') {
                 if (data[i][key].length > 0) {
                     lines += '<li><span class="left">' + key + '</span><span class="ralign">' + data[i][key] + '</span></li>';
                 }
-            }
-            else if (key == 'Comment') {
+            } else if (key == 'Comment') {
                 lines += '<li><span class="left">' + key + '</span><br><span>' + data[i][key] + '</span></li>';
-            }
-            else {
+            } else {
                 lines += '<li><span class="left">' + key + '</span><span class="ralign">' + data[i][key] + '</span></li>';
             }
         }

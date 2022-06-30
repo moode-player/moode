@@ -100,9 +100,8 @@ function parseTrackInfo($resp) {
 				// All others
 				case 'file':
 					$file = $value;
-					$cover_file = md5(dirname($file)) . '.jpg';
-					$cover_url = file_exists(THMCACHE_DIR . $cover_file) ? '/imagesw/thmcache/' . $cover_file : '/var/www/images/notfound.jpg';
-					$array[0] = array('Covers' => $cover_url);
+					$cover_hash = md5(dirname($file));
+					$array[0] = file_exists(THMCACHE_DIR . $cover_hash . '.jpg') ? array('Covers' => $cover_hash) : array('Covers' => '');
 					break;
 				case 'Artist':
 				case 'Performer':

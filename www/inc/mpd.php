@@ -275,8 +275,8 @@ function formatMpdQueryResults($resp) {
 				$idx++;
 				$diridx++; // Save directory index for further processing
 				$array[$idx]['directory'] = $value;
-				$cover_file = md5($value) . '_sm.jpg';
-				$array[$idx]['cover_url'] = file_exists(THMCACHE_DIR . $cover_file) ? '/imagesw/thmcache/' . $cover_file : '';
+				$cover_hash = md5($value);
+				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $cover_hash  . '_sm.jpg') ? $cover_hash : '';
 			} else if ($element == 'playlist') {
 				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
 					$idx++;
