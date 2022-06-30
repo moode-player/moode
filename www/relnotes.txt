@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2022-MM-DD TC moOde 8.2.0
+# 2022-MM-DD TC moOde 8.1.2
 #
 ################################################################################
 
@@ -23,6 +23,9 @@ Bug fixes
 
 - FIX: Cover art not showing for album directories in Folder view
 - FIX: Wrong file name for UPnP album art fetcher
+- FIX: Wrong value for PHP max_input_vars setting
+- FIX: Missing 32-bit variant for librespot for arm6
+- FIX encodeURIComponent() not being applied to cover hash
 
 ################################################################################
 #
