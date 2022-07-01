@@ -19,6 +19,7 @@
  */
 
 require_once __DIR__ . '/inc/common.php';
+require_once __DIR__ . '/inc/alsa.php';
 require_once __DIR__ . '/inc/audio.php';
 require_once __DIR__ . '/inc/mpd.php';
 require_once __DIR__ . '/inc/renderer.php';

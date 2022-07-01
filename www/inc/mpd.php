@@ -22,6 +22,7 @@
  */
 
 require_once __DIR__ . '/common.php';
+require_once __DIR__ . '/alsa.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/sql.php';
 
@@ -274,6 +275,8 @@ function formatMpdQueryResults($resp) {
 			} else if ($element == 'directory') {
 				$idx++;
 				$diridx++; // Save directory index for further processing
+
+				// TODO: Check for dir.cue
 				$array[$idx]['directory'] = $value;
 				$cover_hash = md5($value);
 				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $cover_hash  . '_sm.jpg') ? $cover_hash : '';
@@ -488,7 +491,6 @@ function updMpdConf($i2sDevice) {
 		fwrite($fh, $data);
 		fclose($fh);
 	}
-
 	// Update ALSA and BT confs
 	updAudioOutAndBtOutConfs($cardNum, $_SESSION['alsa_output_mode']);
 	updDspAndBtInConfs($cardNum, $_SESSION['alsa_output_mode']);
@@ -708,7 +710,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 
 function getUpnpCoverUrl() {
 	$mode = sqlQuery("SELECT value FROM cfg_upnp WHERE param='upnpav'", sqlConnect())[0]['value'] == 1 ? 'upnpav' : 'openhome';
-	$result = sysCmd('/var/www/util/upnp-albumart.py "' . $_SESSION['upnpname'] . '" '. $mode);
+	$result = sysCmd('/var/www/util/upnp_albumart.py "' . $_SESSION['upnpname'] . '" '. $mode);
 	// If multiple url's are returned, use the first
 	return explode(',', $result[0])[0];
 }
