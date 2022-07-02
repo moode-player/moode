@@ -18,6 +18,7 @@
  *
  */
 
+require_once __DIR__ . '/inc/alsa.php';
 require_once __DIR__ . '/inc/common.php';
 require_once __DIR__ . '/inc/session.php';
 require_once __DIR__ . '/inc/sql.php';
