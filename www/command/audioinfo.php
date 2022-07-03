@@ -100,7 +100,8 @@ function parseTrackInfo($resp) {
 				// All others
 				case 'file':
 					$file = $value;
-					$cover_hash = md5(dirname($file));
+					$level = stripos(dirname($file), '.cue', -4) === false ? 1 : 2;
+					$cover_hash = md5(dirname($file, $level));
 					$array[0] = file_exists(THMCACHE_DIR . $cover_hash . '.jpg') ? array('Covers' => $cover_hash) : array('Covers' => '');
 					break;
 				case 'Artist':

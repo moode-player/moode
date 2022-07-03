@@ -760,7 +760,8 @@ function renderUI() {
             if (MPD.json['file'] && MPD.json['coverurl'].indexOf('wimpmusic') == -1 && MPD.json['coverurl']) {
                 var image_url = MPD.json['artist'] == 'Radio station' ?
                     MPD.json['coverurl'].replace('imagesw/radio-logos', 'imagesw/radio-logos/thumbs') :
-                    '/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
+                    //'/imagesw/thmcache/' + encodeURIComponent($.md5(MPD.json['file'].substring(0,MPD.json['file'].lastIndexOf('/')))) + '.jpg'
+                    '/imagesw/thmcache/' + encodeURIComponent(MPD.json['thumb_hash']) + '.jpg'
                 $('#playbar-cover').html('<img src="' + image_url + '">');
             } else {
 	     		$('#coverart-url').html('<img class="coverart" ' + 'src="' + UI.defCover + '" data-adaptive-background="1" alt="Cover art not found"' + '>');
@@ -1193,7 +1194,8 @@ function renderPlayqueue(state) {
 				}
 				// Song file or upnp url
 				else {
-					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg';
+					var thumb = data[i].file.indexOf('/tidal/') != -1 ? 'images/default-cover-v6.png' : 'imagesw/thmcache/' +
+                        encodeURIComponent(data[i].cover_hash) + '_sm.jpg';
 					output += showPlayqueueThumb ? '<span class="playqueue-thumb">' + playqueueLazy + '"' + thumb + '"/></span>' : '';
 	                // Line 1 title
 					output += '<span class="playqueue-action" data-toggle="context" data-target="#context-menu-playqueue-item">' + (typeof(data[i].Time) == 'undefined' ? '' : formatSongTime(data[i].Time)) + '<br><b>&hellip;</b></span>';
@@ -1261,7 +1263,7 @@ function sendQueueCmd(cmd, path) {
 
 // Render Folder view
 function renderFolderView(data, path, searchstr) {
-    console.log (data);
+    //console.log (data);
 	UI.path = path;
 
 	// Separate out dirs, playlists, files, exclude RADIO folder
@@ -1304,6 +1306,8 @@ function renderFolderView(data, path, searchstr) {
 	// Merge back together
     // NOTE: Files are not sorted and left in the order they appear in the MPD database
 	data = dirs.concat(playlists).concat(files);
+    //console.log('path=(' + path + ')');
+    //console.log(data);
 
 	// Output search tally if any
 	$('#db-search-results').html('');
@@ -1329,8 +1333,15 @@ function renderFolderView(data, path, searchstr) {
             output += path == '' ?  '<i class="fas fa-hdd icon-root"></i></a></div>' :
                 (data[i].cover_hash == '' ? '<i class="fas fa-folder"></i></a></div>' :
                 '<img src="' + 'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg' + '"></img></a></div>');
-    		output += '<div class="db-entry db-folder db-browse"><div>' + data[i].directory.replace(path + '/', '') + '</div></div>';
+            var dirName = data[i].directory.replace(path + '/', '');
+            dirName = dirName.lastIndexOf('.cue') == -1 ? dirName : dirName.substr(0, dirName.lastIndexOf('.cue'));
+    		output += '<div class="db-entry db-folder db-browse"><div>' + dirName + '</div></div>';
             output += '</li>';
+
+            // End after listing the cue virtual directory
+            if (data[i].directory.lastIndexOf('.cue') != -1) {
+                break;
+            }
         }
     	else if (data[i].playlist) {
     		// NOTE: Skip wavpack since it may contain embedded playlist and they are not supported yet in Folder view
@@ -1343,16 +1354,21 @@ function renderFolderView(data, path, searchstr) {
     			output += '</li>';
     		}
     	}
-        else if (data[i].file) {
+        else if (data[i].file && data[i].fileext != 'cue') {
             if (data[(i > 1 ? i - 1 : 0)].Album != data[i].Album || (i == 0 && data[i].Album)) {
                 // Album header
     			output += '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">';
     			output += '<div class="db-icon db-action">';
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
-    		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(data[i].file.substring(0,data[i].file.lastIndexOf('/')))) + '_sm.jpg' + '">';
+
+                var albumDir = data[i].file.substring(0,data[i].file.lastIndexOf('/'));
+                albumDir = albumDir.endsWith('.cue') ? albumDir.substring(0, albumDir.lastIndexOf('/')) : albumDir;
+    		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(albumDir)) + '_sm.jpg' + '">';
+
                 output += '</img></a></div>';
                 output += '<div class="db-entry db-album" data-toggle="context" data-target="#context-menu-folder">';
-                output += '<div>' + data[i].Album + '<span>' + data[i].Artist + '</span></div></div>';
+                var artist = data[i].Artist ? data[i].Artist : (data[i].AlbumArtist ? data[i].AlbumArtist : 'Artist tag undefined')
+                output += '<div>' + data[i].Album + '<span>' + artist + '</span></div></div>';
                 output += '</li>';
             }
     		if (data[i].Title) {

@@ -275,10 +275,8 @@ function formatMpdQueryResults($resp) {
 			} else if ($element == 'directory') {
 				$idx++;
 				$diridx++; // Save directory index for further processing
-
-				// TODO: Check for dir.cue
 				$array[$idx]['directory'] = $value;
-				$cover_hash = md5($value);
+				$cover_hash = getFileExt($value) == 'cue' ? md5(dirname($value)) : md5($value);
 				$array[$idx]['cover_hash'] = file_exists(THMCACHE_DIR . $cover_hash  . '_sm.jpg') ? $cover_hash : '';
 			} else if ($element == 'playlist') {
 				if (substr($value,0, 5) == 'RADIO' || strtolower(pathinfo($value, PATHINFO_EXTENSION)) == 'cue') {
@@ -573,6 +571,7 @@ function setCuefilesIgnore($ignore) {
 function enhanceMetadata($current, $sock, $caller = '') {
 	$song = getCurrentSong($sock);
 	$current['file'] = $song['file'];
+	$current['thumb_hash'] = '';
 
 	// NOTE: Any of these might be empty ''
 	$current['genre'] = $song['Genre'];
@@ -621,6 +620,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			$current['title'] = $song['Name'];
 			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album']) : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
+			$current['thumb_hash'] = md5(dirname($song['file']));
 		} else if (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
 			// Radio station
 			$current['artist'] = 'Radio station';
@@ -675,6 +675,8 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			} else {
 				// Song file
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
+				$level = stripos(dirname($song['file']), '.cue', -4) === false ? 1 : 2;				
+				$current['thumb_hash'] = md5(dirname($song['file'], $level));
 			}
 
 			// DEBUG

@@ -179,6 +179,9 @@ if (null === $path) {
 	$path = MPD_MUSICROOT . $path;
 }
 
+// Handle virtual cue directory
+$path = stripos(dirname($path), '.cue', -4) === false ? $path : str_replace('.cue', '.flac', dirname($path));
+
 // file: embedded cover
 if ($searchPriority == 'Embedded cover') { // Embedded first
 	getImage($path);
