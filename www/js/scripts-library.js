@@ -721,8 +721,8 @@ var renderSongs = function(albumPos) {
         lastDisc = '';
 
         // Check for cue/flac format and omit the flac file which otherwise will show up as a bogus album header.
-        // Typically the flac file in cue/flac format will not have a title or track number.
-        if (filteredSongs[0].file.endsWith('.flac') && filteredSongs[0].title == 'Unknown Title' && filteredSongs[0].tracknum == '') {
+        // Typically the flac file in cue/flac format will not have track number since it's considered to be the whole album.
+        if (filteredSongs[0].file.endsWith('.flac') && filteredSongs[0].tracknum == '') {
             filteredSongs.shift();
         }
 
