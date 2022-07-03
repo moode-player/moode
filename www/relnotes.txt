@@ -17,15 +17,20 @@
 
 Updates
 
+- UPD: Improve support for non-embedded cue/flac format
 - UPD: Add Gulp cachebuster to help prevent stale Browser cache after updates
+- UPD: Help text for MPD options section in Audio Config
 
 Bug fixes
 
 - FIX: Cover art not showing for album directories in Folder view
-- FIX: Wrong file name for UPnP album art fetcher
-- FIX: Wrong value for PHP max_input_vars setting
+- FIX: File name for UPnP album art fetcher
+- FIX: File name for MPD conf merge utility
+- FIX: Value for PHP max_input_vars limiting Queue to 1000 items
 - FIX: Missing 32-bit variant for librespot for arm6
-- FIX encodeURIComponent() not being applied to cover hash
+- FIX: Function encodeURIComponent() not being applied to cover thumb hash
+- FIX: Missing alsa.php library causing BlueZ Config to crash
+- FIX: Missing alsa.php library causing Squeezelite Config to crash
 
 ################################################################################
 #
