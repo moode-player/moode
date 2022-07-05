@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD: Improve support for non-embedded cue/flac format
+- UPD: Improve support for non-embedded cue format
 - UPD: Add Gulp cachebuster to help prevent stale Browser cache after updates
 - UPD: Help text for MPD options section in Audio Config
 
