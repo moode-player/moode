@@ -179,8 +179,17 @@ if (null === $path) {
 	$path = MPD_MUSICROOT . $path;
 }
 
-// Handle virtual cue directory
-$path = stripos(dirname($path), '.cue', -4) === false ? $path : str_replace('.cue', '.flac', dirname($path));
+// For virtual cue directory sub in the extension of the audio file
+$cueFormats = array('.flac', '.wav', '.aiff');
+if (stripos(dirname($path), '.cue', -4) !== false) {
+	foreach ($cueFormats as $ext) {
+		$newPath = str_replace('.cue', $ext, dirname($path));
+		if (file_exists($newPath)) {
+			$path = $newPath;
+			break;
+		}
+	}
+}
 
 // file: embedded cover
 if ($searchPriority == 'Embedded cover') { // Embedded first
@@ -191,8 +200,7 @@ if ($searchPriority == 'Embedded cover') { // Embedded first
 if (is_dir($path)) {
 	if (substr($path, -1) !== '/') {$path .= '/';}
 	parseFolder($path);
-}
-else {
+} else {
 	// file: cover image file in containing dir
 	$dirpath = pathinfo($path, PATHINFO_DIRNAME) . '/';
 	parseFolder($dirpath);

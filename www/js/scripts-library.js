@@ -720,9 +720,11 @@ var renderSongs = function(albumPos) {
         lastAlbum = '';
         lastDisc = '';
 
-        // Check for cue/flac format and omit the flac file which otherwise will show up as a bogus album header.
-        // Typically the flac file in cue/flac format will not have track number since it's considered to be the whole album.
-        if (filteredSongs[0].file.endsWith('.flac') && filteredSongs[0].tracknum == '') {
+        // For cue format omit the audio file which otherwise will show up as a bogus album header.
+        // Typically the audio file in cue format will not have a track number since it's considered to be the whole album.
+        var cueFormats = ['flac', 'wav', 'aiff'];
+        var file0Ext = filteredSongs[0].file.substring(filteredSongs[0].file.lastIndexOf('.') + 1, filteredSongs[0].file.length);
+        if ($.inArray(file0Ext, cueFormats) != -1 && filteredSongs[0].tracknum == '') {
             filteredSongs.shift();
         }
 
