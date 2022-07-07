@@ -31,6 +31,8 @@ Bug fixes
 - FIX: Function encodeURIComponent() not being applied to cover thumb hash
 - FIX: Missing alsa.php library causing BlueZ Config to crash
 - FIX: Missing alsa.php library causing Squeezelite Config to crash
+- FIX: Missing mpd.php library causing Parametric EQ to crash on Play
+- FIX: Missing HpCF_Sennheiser_HD800S_A.wav coeffs file for Camilla
 
 ################################################################################
 #
