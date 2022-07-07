@@ -29,8 +29,7 @@ switch ($_GET['cmd']) {
 	case 'set_plcover_image':
 		if (submitJob($_GET['cmd'], $_POST['name'] . ',' . $_POST['blob'], '', '')) {
 			echo json_encode('job submitted');
-		}
-		else {
+		} else {
 			echo json_encode('worker busy');
 		}
 		break;
@@ -192,8 +191,7 @@ function getPlaylistContents($plName) {
 				$genre = explode(':', $item)[1];
 			} else if (strpos($item, '#EXTIMG') !== false) {
 				$cover = explode(':', $item)[1];
-			}
-			else {
+			} else {
 				if (substr($item, 0, 4) == 'http') {
 					// Radio station
 					$result = sqlQuery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($item) . "'", $dbh);

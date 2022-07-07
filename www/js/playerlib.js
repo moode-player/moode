@@ -2264,8 +2264,7 @@ $(document).on('click', '.context-menu a', function(e) {
                         output += '<span class="pl-item-line2">' + data['items'][i]['line2'] + '</span>';
             			output += '</li>';
                     }
-                }
-                else {
+                } else {
                     output = 'Playlist is empty';
                     UI.dbEntry[4] = 0;
                 }
