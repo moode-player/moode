@@ -27,8 +27,8 @@ Bug fixes
 - FIX: File name for UPnP album art fetcher
 - FIX: File name for MPD conf merge utility
 - FIX: Value for PHP max_input_vars limiting Queue to 1000 items
-- FIX: Missing 32-bit variant for arm6 librespot
 - FIX: Function encodeURIComponent() not being applied to cover thumb hash
+- FIX: Missing 32-bit variant for arm6 librespot
 - FIX: Missing alsa.php library causing BlueZ Config to crash
 - FIX: Missing alsa.php library causing Squeezelite Config to crash
 - FIX: Missing mpd.php library causing Parametric EQ to crash on Play
