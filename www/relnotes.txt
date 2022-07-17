@@ -11,6 +11,26 @@
 
 ################################################################################
 #
+# 2022-MM-DD TC moOde 8.2.0
+#
+################################################################################
+
+New features
+
+- NEW:
+
+Updates
+
+- UPD: Remove unused Flat UI stylesheet and icons
+
+Bug fixes
+
+- FIX: Alsa-cdsp XRUNS in certain usage scenarios
+- FIX: Camilla pipeline editer "Show log file" causes 500 Internal Server Error
+
+
+################################################################################
+#
 # 2022-07-08 TC moOde 8.1.2
 #
 ################################################################################
