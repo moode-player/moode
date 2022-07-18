@@ -43,6 +43,7 @@
 	<!-- build:css css/styles.min.css -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-select.css" rel="stylesheet">
+    <link href="css/flat-ui.css" rel="stylesheet">
     <link href="css/jquery.pnotify.default.css" rel="stylesheet">
     <link href="css/fontawesome-moode.css" rel="stylesheet">
     <link href="css/panels.css" rel="stylesheet">
