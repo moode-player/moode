@@ -33,7 +33,7 @@ Typically Android OS will only work with IP address.
 
 WIFI ADAPTERS THAT ARE REPORTED TO SUPPORT AP MODE
 
-- Raspberry Pi 3, 4 and Zero W integrated WiFi adapters
+- Raspberry Pi integrated WiFi adapter
 - Comfast CF-912AC dual-band WiFi adapter
 - For all other adapters consult the manufacturer
 
