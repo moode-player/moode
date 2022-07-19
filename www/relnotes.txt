@@ -21,7 +21,8 @@ New features
 
 Updates
 
-- UPD: Remove unused Flat UI stylesheet and icons
+- UPD: Provide a default Playlist cover if no cover image is set
+- UPD: Remove unused Flat UI icons
 
 Bug fixes
 
