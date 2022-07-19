@@ -36,15 +36,20 @@ switch ($_GET['cmd']) {
 	case 'new_playlist':
 	case 'upd_playlist':
 		$plName = html_entity_decode($_POST['path']['name']);
-		$plMeta = array('genre' => $_POST['path']['genre'], 'cover' => 'local');
+
+		// Get metadata (may not exist so defaults will be returned)
+		$plMeta = getPlaylistMetadata($plName);
+		$updPlMeta = array('genre' => $_POST['path']['genre'], 'cover' => $plMeta['cover']);
 		$plItems = $_POST['path']['items'];
 
-		putPlaylistContents($plName, $plMeta, $plItems);
+		// Write metadata tags, contents and cover image
+		putPlaylistContents($plName, $updPlMeta, $plItems);
 		putPlaylistCover($plName);
 		break;
 	case 'add_to_playlist':
 		$plName = html_entity_decode($_POST['path']['playlist']);
-		$plMeta = '';
+\		// Get metadata (may not exist so defaults will be returned)
+		$plMeta = getPlaylistMetadata($plName);
 
 		// Replace with URL if radio station
 		if (count($_POST['path']['items']) == 1 && substr($_POST['path']['items'][0], -4) == '.pls') {
@@ -53,6 +58,8 @@ switch ($_GET['cmd']) {
 			$_POST['path']['items'][0] = $result[0]['station']; // URL
 		}
 
+		// Write metadata tags, contents and cover image
+		putPlaylistMetadata($plName, array('#EXTGENRE:' . $plMeta['genre'], '#EXTIMG:' . $plMeta['cover']));
 		putPlaylistContents($plName, $plMeta, $_POST['path']['items'], FILE_APPEND);
 		putPlaylistCover($plName);
 		break;
@@ -75,9 +82,8 @@ switch ($_GET['cmd']) {
 		sysCmd('chmod 0777 "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
 		sysCmd('chown root:root "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
 
-		// Insert/Update metadata tags
+		// Write metadata tags and cover image
 		putPlaylistMetadata($plName, array('#EXTGENRE:' . $plMeta['genre'], '#EXTIMG:' . $plMeta['cover']));
-		// Write default cover if no cover exists for the playlist
 		putPlaylistCover($plName);
 		break;
 	case 'get_favorites_name':
@@ -98,9 +104,8 @@ switch ($_GET['cmd']) {
 			sysCmd('chown root:root "' . $plFile . '"');
 		}
 
-		// Insert/Update metadata tags
+		// Write metadata tags and cover image
 		putPlaylistMetadata($plName, array('#EXTGENRE:' . $plMeta['genre'], '#EXTIMG:' . $plMeta['cover']));
-		// Write default cover if no cover exists for the playlist
 		putPlaylistCover($plName);
 
 		phpSession('open');
@@ -124,9 +129,8 @@ switch ($_GET['cmd']) {
 				sysCmd('chown root:root "' . $plFile . '"');
 			}
 
-			// Insert/Update metadata tags
+			// Write metadata tags and cover image
 			putPlaylistMetadata($plName, array('#EXTGENRE:' . $plMeta['genre'], '#EXTIMG:' . $plMeta['cover']));
-			// Write default cover if no cover exists for the playlist
 			putPlaylistCover($plName);
 
 			// Append item (prevent adding duplicate)
@@ -179,7 +183,7 @@ function getPlaylistContents($plName) {
 	$sock = getMpdSock();
 
 	$genre = '';
-	$cover = 'local';
+	$cover = 'default';
 	$items = array();
 
 	if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
@@ -196,7 +200,7 @@ function getPlaylistContents($plName) {
 					// Radio station
 					$result = sqlQuery("SELECT name FROM cfg_radio WHERE station='" . SQLite3::escapeString($item) . "'", $dbh);
 					if ($result === true) {
-						// Query successful but no reault, set name to URL
+						// Query successful but no result, set name to URL
 						$name = $item;
 					} else {
 						// Query successful and non-empty result
@@ -225,7 +229,7 @@ function getPlaylistMetadata($plName) {
 
 	// NOTE: If no tags exist in the playlist then this function returns the initial values of the tags
 	$genre = '';
-	$cover = 'local';
+	$cover = 'default';
 	$numExtTags = NUMBER_EXT_TAGS;
 
 	if (false === ($fh = fopen($plFile, 'r'))) {
@@ -250,6 +254,7 @@ function getPlaylistMetadata($plName) {
 function putPlaylistContents($plName, $plMeta, $plItems, $appendFlag = 0) {
 	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
+	// TODO: This code and the $appendFlag are not needed since the tags are updated upstream and we always will append.
 	if ($appendFlag == 0) {
 		$contents = '#EXTGENRE:' . $plMeta['genre'] . "\n";
 		$contents .= '#EXTIMG:' . $plMeta['cover'] . "\n";
@@ -287,15 +292,18 @@ function putPlaylistMetadata($plName, $plMeta) {
 function putPlaylistCover($plName) {
 	$plTmpImage = PLAYLIST_COVERS_ROOT . TMP_IMAGE_PREFIX . $plName . '.jpg';
 	$plCoverImage = PLAYLIST_COVERS_ROOT . $plName . '.jpg';
-	$defaultImage = '/var/www/images/notfound.jpg';
+	$defaultImage = '/var/www/images/pldefault.jpg';
 
 	sendEngCmd('set_cover_image1'); // Show spinner
 	sleep(3); // Allow time for set_plcover_image job to create __tmp__ image file
 
 	if (file_exists($plTmpImage)) {
 		sysCmd('mv "' . $plTmpImage . '" "' . $plCoverImage . '"');
+		sysCmd('sed -i s/#EXTIMG:default/#EXTIMG:local/ "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
 	} else if (!file_exists($plCoverImage)) {
 		sysCmd('cp "' . $defaultImage . '" "' . $plCoverImage . '"');
+		// Change tag value to 'default' so renderPlaylistView() can detect that its a default image
+		sysCmd('sed -i s/#EXTIMG:local/#EXTIMG:default/ "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
 	}
 
 	sendEngCmd('set_cover_image0'); // Hide spinner

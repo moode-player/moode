@@ -1756,9 +1756,11 @@ function renderPlaylistView () {
             }
 
             // Construct playlist entries
-            var imgUrl = playlists[i].cover == 'local' ? 'imagesw/playlist-covers/' + playlists[i].name + '.jpg' : playlists[i].cover;
+            var imgUrl = playlists[i].cover == 'local' || playlists[i].cover == 'default' ? 'imagesw/playlist-covers/' + playlists[i].name + '.jpg' : playlists[i].cover;
     		output += '<li id="pl-entry-' + (i + 1) + '" data-path="' + playlists[i].name + '">';
-    		output += '<div class="db-icon db-song db-browse db-action">' + plViewLazy + encodeURIComponent(imgUrl) + '"></div><div class="cover-menu" data-toggle="context" data-target="#context-menu-playlist-item"></div></div><div class="db-entry db-song db-browse"></div>';
+    		output += '<div class="db-icon db-song db-browse db-action">' + plViewLazy + encodeURIComponent(imgUrl) + '">';
+            output += playlists[i].cover == 'default' ? '<div class="plview-text-cover-div"><span class="plview-text-cover">' + playlists[i].name + '</span></div>' : '';
+            output += '</div><div class="cover-menu" data-toggle="context" data-target="#context-menu-playlist-item"></div></div><div class="db-entry db-song db-browse"></div>';
             output += '<span class="playlist-name">' + playlists[i].name + '</span>';
             output += genreDiv;
             output += '</li>';
