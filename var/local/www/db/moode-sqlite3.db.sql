@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon May 30 08:13:54 2022
+-- File generated with SQLiteStudio v3.1.0 on Wed Jul 20 07:21:35 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -492,6 +492,7 @@ INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, langua
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (237, 'https://ice6.somafm.com/synphaera-128-aac', 'Soma FM - Synphaera', 'r', 'local', 'Electronica, Synth', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (238, 'https://ice1.somafm.com/vaporwaves-128-aac', 'Soma FM - Vaporwaves', 'r', 'local', 'Electronica, Electro-acoustic, IDM, Shoegaze, Post-rock', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (239, 'https://DRliveradio.akamaized.net/hls/live/2022411/p8jazz/playlist-320000.m3u8', 'DR P8 Jazz (320K)', 'r', 'local', 'Jazz', 'DR', 'Danish', 'Denmark', 'Europe', '320', 'AAC', 'No', '', '');
+INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (240, 'https://ice6.somafm.com/darkzone-128-aac', 'Soma FM - The Dark Zone', 'r', 'local', 'Electronica, Ambient, Deep Ambient', 'Soma FM', 'English', 'United States', 'North America', '128', 'AAC', 'No', '', '');
 INSERT INTO cfg_radio (id, station, name, type, logo, genre, broadcaster, language, country, region, bitrate, format, geo_fenced, home_page, reserved2) VALUES (499, 'zx reserved 499', 'zx reserved 499', 'r', 'zx reserved 499', '', '', '', '', '', '', '', '', '', '');
 
 -- Table: cfg_airplay

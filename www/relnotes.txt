@@ -24,6 +24,10 @@ Updates
 - UPD: Provide a default Playlist cover if no cover image is set
 - UPD: Remove unused Flat UI icons
 
+Radio stations
+
+- NEW: Soma FM - The Dark Zone
+
 Bug fixes
 
 - FIX: Alsa-cdsp XRUNS in certain usage scenarios
