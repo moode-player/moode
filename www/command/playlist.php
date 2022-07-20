@@ -48,7 +48,7 @@ switch ($_GET['cmd']) {
 		break;
 	case 'add_to_playlist':
 		$plName = html_entity_decode($_POST['path']['playlist']);
-\		// Get metadata (may not exist so defaults will be returned)
+		// Get metadata (may not exist so defaults will be returned)
 		$plMeta = getPlaylistMetadata($plName);
 
 		// Replace with URL if radio station
