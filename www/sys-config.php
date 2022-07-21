@@ -337,8 +337,8 @@ $_select['usb_auto_mounter'] .= "<option value=\"devmon\" " . (($_SESSION['usb_a
 // WiFi BT
 $model = substr($_SESSION['hdwrrev'], 3, 1);
 $name = $_SESSION['hdwrrev'];
-// Pi-Zero W, Pi-3B/B+/A+, Pi-4B
-if ($name == 'Pi-Zero W 1.1 512MB' || $model == '3' || $model == '4') {
+// Pi-Zero W, Pi=Zero 2 W, Pi-3B/B+/A+, Pi-4B
+if (stripos($name, 'Pi-Zero W' !== false) || stripos($name, 'Pi-Zero 2 W' !== false) || $model == '3' || $model == '4') {
 	$_wifibt_hide = '';
 	$_select['p3wifi1'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi1\" value=\"1\" " . (($_SESSION['p3wifi'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 	$_select['p3wifi0'] .= "<input type=\"radio\" name=\"p3wifi\" id=\"togglep3wifi2\" value=\"0\" " . (($_SESSION['p3wifi'] == 0) ? "checked=\"checked\"" : "") . ">\n";
