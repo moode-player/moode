@@ -31,7 +31,7 @@ Radio stations
 Bug fixes
 
 - FIX: Alsa-cdsp XRUNS in certain usage scenarios
-- FIX: Camilla pipeline editer "Show log file" causes 500 Internal Server Error
+- FIX: Camilla pipeline editor "Show log file" causes 500 Internal Server Error
 
 
 ################################################################################
