@@ -194,7 +194,6 @@ if (isset($_POST['scan']) && $_POST['scan'] == '1') {
 	$result = sysCmd("iwlist wlan0 scan | grep ESSID | sed 's/ESSID://; s/\"//g'");
 	$array = array();
 	$array[0] = 'None (activates AP mode)';
-	$array[1] = "Tim'test";
 	$ssidList = array_merge($array, $result);
 
 	foreach ($ssidList as $ssid) {
