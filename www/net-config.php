@@ -56,7 +56,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// wlan0
 	$method = $_POST['wlan0ssid'] == 'None (activates AP mode)' ? 'dhcp' : $_POST['wlan0method'];
 
-	if (SQLite3::escapeString($_POST['wlan0ssid']) != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlan_psk']) {
+	if ($_POST['wlan0ssid'] != $cfgNetwork[1]['wlanssid'] || $_POST['wlan0pwd'] != $cfgNetwork[1]['wlan_psk']) {
 		$psk = genWpaPSK($_POST['wlan0ssid'], $_POST['wlan0pwd']);
 	} else {
 		$psk = $cfgNetwork[1]['wlan_psk']; // Existing
@@ -65,13 +65,13 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 	// Update cfg_network
 	$value = array('method' => $method, 'ipaddr' => $_POST['wlan0ipaddr'], 'netmask' => $_POST['wlan0netmask'],
 		'gateway' => $_POST['wlan0gateway'], 'pridns' => $_POST['wlan0pridns'], 'secdns' => $_POST['wlan0secdns'],
-		'wlanssid' => SQLite3::escapeString($_POST['wlan0ssid']), 'wlansec' => $_POST['wlan0sec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
+		'wlanssid' => $_POST['wlan0ssid'], 'wlansec' => $_POST['wlan0sec'], 'wlanpwd' => $psk, 'wlan_psk' => $psk,
 		'wlan_country' => $_POST['wlan0country'], 'wlan_channel' => '');
 	sqlUpdate('cfg_network', $dbh, 'wlan0', $value);
 
 	// Add/update cfg_ssid
 	if ($_POST['wlan0ssid'] != 'None (activates AP mode)') {
-		$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'", $dbh);
+		$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
 		if ($cfgSsid === true) {
 			// Add
 			$values =
