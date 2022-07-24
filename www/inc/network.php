@@ -116,7 +116,7 @@ function cfgNetIfaces() {
 		$data .= "}\n";
 
 		// Add saved SSID's
-		$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfgNetwork[1]['wlanssid'] . "'", $dbh);
+		$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . SQLite3::escapeString($cfgNetwork[1]['wlanssid']) . "'", $dbh);
 		foreach($cfgSsid as $row) {
 			$data .= "network={\n";
 			$data .= 'ssid=' . '"' . $row['ssid'] . '"' . "\n";

@@ -71,7 +71,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 
 	// Add/update cfg_ssid
 	if ($_POST['wlan0ssid'] != 'None (activates AP mode)') {
-		$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . $_POST['wlan0ssid'] . "'", $dbh);
+		$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid='" . SQLite3::escapeString($_POST['wlan0ssid']) . "'", $dbh);
 		if ($cfgSsid === true) {
 			// Add
 			$values =
@@ -133,7 +133,7 @@ phpSession('close');
 $cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
 
 // List saved networks excluding the currently configured SSID
-$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . $cfgNetwork[1]['wlanssid'] . "'", $dbh);
+$cfgSsid = sqlQuery("SELECT * FROM cfg_ssid WHERE ssid != '" . SQLite3::escapeString($cfgNetwork[1]['wlanssid']) . "'", $dbh);
 if ($cfgSsid === true) {
 	$_saved_networks = '<p style="text-align:center;">There are no saved networks</p>';
 } else {

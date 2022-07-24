@@ -30,6 +30,7 @@ Radio stations
 
 Bug fixes
 
+- FIX: SSID's from scan list not being escaped in Network Config
 - FIX: Alsa-cdsp XRUNS in certain usage scenarios
 - FIX: Camilla pipeline editor "Show log file" causes 500 Internal Server Error
 
