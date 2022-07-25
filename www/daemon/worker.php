@@ -318,9 +318,18 @@ if (!empty($wlan0)) {
 
 	// Get wlan0 params
 	$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
+	$cfgSsid = sqlQuery('SELECT COUNT(*) FROM cfg_ssid', $dbh);
 	workerLog('worker: wlan0 country (' . $cfgNetwork[1]['wlan_country'] . ')');
 
-	$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
+	// Case: saved SSID(s) exists
+	if ($cfgSsid[0]['COUNT(*)'] > 1) {
+		workerLog('worker: wlan0 trying saved SSID(s)');
+		$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
+	} else {
+		workerLog('worker: wlan0 no saved SSID(s) exist');
+		$wlan0Ip = '';
+	}
+
 	if (!empty($wlan0Ip)) {
 		// Case: IP address already assigned (configured or saved SSID)
 		$ssidBlank = false;
