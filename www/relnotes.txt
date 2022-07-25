@@ -30,7 +30,9 @@ Radio stations
 
 Bug fixes
 
+- FIX: Wlan0 IP address check occuring twice during startup in certain scenarios
 - FIX: SSID's from scan list not being escaped in Network Config
+- FIX: System Config WiFi/BT On/Off buttons not showing for Zero 2 W
 - FIX: Alsa-cdsp XRUNS in certain usage scenarios
 - FIX: Camilla pipeline editor "Show log file" causes 500 Internal Server Error
 
