@@ -1415,12 +1415,12 @@ jQuery(document).ready(function($) { 'use strict';
 		var endPos = $('#move-playqueue-item-endpos').val() - 1;
 		var newPos = $('#move-playqueue-item-newpos').val() - 1;
 
-		// Move begPos newPos or move begpos:endPos newpos
+		// Move begPos newPos or move begPos:endPos newPos
         // NOTE: format for single or multiple, endPos not inclusive so must be bumped for multiple
 		if (begPos == endPos) {
             var cmd = 'move_playqueue_item&range=' + begPos + '&newpos=' + newPos;
         } else {
-            var cmd = 'move_playqueue_item&range=' + begPos + ':' + (endPos + 1) + '&newpos=' + newpos;
+            var cmd = 'move_playqueue_item&range=' + begPos + ':' + (endPos + 1) + '&newpos=' + newPos;
         }
 
         $.post('command/queue.php?cmd=' + cmd);
