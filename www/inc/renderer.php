@@ -93,6 +93,10 @@ function startSpotify() {
 	// NOTE: Specifying Loopback instead of _audioout when Multiroom TX is On greatly reduces audio glitches
 	$device = $_SESSION['audioout'] == 'Local' ? ($_SESSION['multiroom_tx'] == 'On' ? 'plughw:Loopback,0' : '_audioout') : 'btstream';
 
+	// Access point port
+	// NOTE: This is to force AP fallback by specifying a random port number other than 80, 443 or 4070.
+	$ap_port = ' --ap-port 13561 ';
+
 	// Options
 	$dither = empty($cfgSpotify['dither']) ? '' : ' --dither ' . $cfgSpotify['dither'];
 	$initial_volume = $cfgSpotify['initial_volume'] == "-1" ? '' : ' --initial-volume ' . $cfgSpotify['initial_volume'];
@@ -113,6 +117,7 @@ function startSpotify() {
 		' --name "' . $_SESSION['spotifyname'] . '"' .
 		' --bitrate ' . $cfgSpotify['bitrate'] .
 		' --format ' . $cfgSpotify['format'] .
+		$ap_port .
 		$dither .
 		' --mixer softvol' .
 		$initial_volume .
