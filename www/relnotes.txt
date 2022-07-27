@@ -21,6 +21,7 @@ New features
 
 Updates
 
+- UPD: Add librespot AP fallback to launch params
 - UPD: Provide a default Playlist cover if no cover image is set
 - UPD: Remove unused Flat UI icons
 
@@ -36,7 +37,6 @@ Bug fixes
 - FIX: System Config WiFi/BT On/Off buttons not showing for Zero 2 W
 - FIX: Alsa-cdsp XRUNS in certain usage scenarios affecting CamillaDSP
 - FIX: Camilla pipeline editor "Show log file" causes 500 Internal Server Error
-
 
 ################################################################################
 #
