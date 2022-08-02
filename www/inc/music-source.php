@@ -50,7 +50,7 @@ function sourceCfg($queueArgs) {
 			// save the edits here in case the mount fails
 			sqlUpdate('cfg_source', $dbh, '', $queueArgs['mount']);
 
-			// cifs and nfs
+			// CIFS and NFS
 			if ($mp[0]['type'] == 'cifs') {
 				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
 			}
@@ -69,7 +69,7 @@ function sourceCfg($queueArgs) {
 			$dbh = sqlConnect();
 			$mp = sqlRead('cfg_source', $dbh, '', $queueArgs['mount']['id']);
 
-			// cifs and nfs
+			// CIFS and NFS
 			if ($mp[0]['type'] == 'cifs') {
 				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
 			}
@@ -95,7 +95,7 @@ function sourceMount($action, $id = '') {
 			$dbh = sqlConnect();
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
-			// cifs and nfs
+			// CIFS and NFS
 			if ($mp[0]['type'] == 'cifs') {
 				$options = $mp[0]['options'];
 				if(strpos($options, 'vers=') === false) {
@@ -144,7 +144,7 @@ function sourceMount($action, $id = '') {
 				$return = false;
 			}
 
-			debugLog('sourceMount(): Command=(' . $mountStr . ')');
+			debugLog('sourceMount(): Cmd (' . $mountStr . ')');
 			break;
 		case 'mountall':
 			$dbh = sqlConnect();
@@ -163,7 +163,7 @@ function sourceMount($action, $id = '') {
 			$mounts = sqlRead('cfg_source', $dbh);
 
 			foreach ($mounts as $mp) {
-				// cifs and nfs
+				// CIFS and NFS
 				if (mountExists($mp['name'])) {
 					if ($mp['type'] == 'cifs') {
 						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // change from -l (lazy) to force unmount
