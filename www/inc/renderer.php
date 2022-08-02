@@ -61,7 +61,7 @@ function startAirplay() {
 		' -a "' . $_SESSION['airplayname'] . '" ' .
 		'-- -d ' . $device . ' > ' . $logFile . ' 2>&1 &';
 
-	debugLog(' startAirplay(): (' . $cmd . ')');
+	debugLog('startAirplay(): (' . $cmd . ')');
 	sysCmd($cmd);
 }
 
