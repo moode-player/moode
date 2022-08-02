@@ -29,7 +29,7 @@ phpSession('open_ro');
 
 switch ($_GET['cmd']) {
 	case 'update_library':
-		$queueArgs = (isset($_POST['path']) && $_POST['path'] != '') ? $_POST['path'] : '';
+		$queueArgs = (isset($_GET['path']) && $_GET['path'] != '') ? $_GET['path'] : '';
 		if (submitJob($_GET['cmd'], $queueArgs)) {
 			echo json_encode('job submitted');
 		} else {
