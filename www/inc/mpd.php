@@ -30,8 +30,12 @@ require_once __DIR__ . '/sql.php';
 function scanForMPDHosts() {
 	$this_ipaddr = sysCmd('hostname -I')[0];
 	$subnet = substr($this_ipaddr, 0, strrpos($this_ipaddr, '.'));
-	sysCmd('nmap -Pn -p 6600 ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
-	return sysCmd('cat /tmp/nmap.scan | grep "6600/open" | cut -f 1 | cut -d " " -f 2');
+	$port = '6600'; // MPD
+
+	sysCmd('nmap -Pn -p ' . $port . ' ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+	$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+
+	return $hosts;
 }
 
 // Return MPD socket or exit script
@@ -675,7 +679,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			} else {
 				// Song file
 				$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
-				$level = stripos(dirname($song['file']), '.cue', -4) === false ? 1 : 2;				
+				$level = stripos(dirname($song['file']), '.cue', -4) === false ? 1 : 2;
 				$current['thumb_hash'] = md5(dirname($song['file'], $level));
 			}
 
