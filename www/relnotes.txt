@@ -17,13 +17,15 @@
 
 New features
 
-- NEW:
+- NEW: File sharing via NFS server or SMB server
 
 Updates
 
-- UPD: Add librespot AP fallback to launch params
+- UPD: Add librespot AP fallback workaround to launch params
 - UPD: Provide a default Playlist cover if no cover image is set
 - UPD: Remove unused Flat UI icons
+- UPD: Bump size of help text on configuration screens
+- UPD: Add -N Detect NFS hosts to moodeutl
 
 Radio stations
 
@@ -31,7 +33,8 @@ Radio stations
 
 Bug fixes
 
-- FIX: Queue move item(s) breakage due to bad variable name
+- FIX: Folder view "Update individual folder" broken due to bad variable name
+- FIX: Queue move item(s) broken due to bad variable name
 - FIX: Wlan0 IP address check occuring twice during startup in certain scenarios
 - FIX: SSID's from scan list not being escaped in Network Config
 - FIX: System Config WiFi/BT On/Off buttons not showing for Zero 2 W
