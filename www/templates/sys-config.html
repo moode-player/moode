@@ -355,6 +355,73 @@
 			</fieldset>
 		</div>
 
+		<legend>File sharing</legend>
+		<fieldset>
+			<div class="control-group">
+				<label class="control-label">SMB (Samba)</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-fs-smb2">ON</label>
+						$_select[fs_smb1]
+						<label class="toggle-radio" for="toggle-fs-smb1">OFF</label>
+						$_select[fs_smb0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_fs_smb" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-fs-smb" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span class="help-block-configs help-block-margin2">
+						Server Message Block (SMB) allows directories and files to be shared over a network with Windows, Mac and Linux clients.
+                    </span>
+					<span id="info-fs-smb" class="help-block-configs help-block-margin hide" style="margin-bottom:.75em;">
+						Share points for NAS, SDCard and Playlists directories are present by default. USB storage devices are auto-mounted and unmounted and share points automatically added to or removed from /etc/samba/smb.conf.
+                    </span>
+				</div>
+
+				<div class="horiz-rule-light" style="margin-top:1.15em;"></div>
+
+				<label class="control-label">NFS</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-fs-nfs2">ON</label>
+						$_select[fs_nfs1]
+						<label class="toggle-radio" for="toggle-fs-nfs1">OFF</label>
+						$_select[fs_nfs0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_fs_nfs" value="novalue">Set</button>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-fs-nfs" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</div>
+					<span class="help-block-configs help-block-margin2">
+						Network File Sharing (NFS) allows directories and files to be shared over a network with Linux clients.<br>
+					</span>
+					<span id="info-fs-nfs" class="help-block-configs help-block-margin hide" style="margin-bottom:1em;">
+						USB storage devices are auto-mounted and unmounted and entries automatically added to or removed from /etc/exports.
+                    </span>
+				</div>
+
+				<label class="control-label" for="fs-nfs-access">Access</label>
+				<div class="controls">
+					<input id="fs-nfs-access" class="input-large" type="text" name="fs_nfs_access" value="$_select[fs_nfs_access]" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_fs_nfs_access" value="novalue">Set</button>
+					<span class="help-block-configs help-block-margin3">
+						Specify a client IP address or subnet address that is allowed access to resources exported via NFS. Use Classless Inter-Domain Routing (CIDR) notation for the address (/24 for subnet and /32 for IP address).<br>
+						Example Ipaddr: 192.168.1.123/32<br>
+						Example subnet: address: 192.168.1.0/24
+					</span>
+				</div>
+
+				<label class="control-label" for="fs-nfs-options">Options</label>
+				<div class="controls">
+					<input id="fs-nfs-options" class="input-large" type="text" name="fs_nfs_options" value="$_select[fs_nfs_options]" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_fs_nfs_options" value="novalue">Set</button>
+					<span class="help-block-configs help-block-margin3">
+						These options determine the permissions granted to connected clients.<br>
+						Default options: rw,sync,no_subtree_check,no_root_squash
+					</span>
+				</div>
+		</fieldset>
+
 		<legend>Local Services</legend>
 		<fieldset>
 			<div class="control-group">

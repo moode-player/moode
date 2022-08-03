@@ -216,26 +216,29 @@ jQuery(document).ready(function($){ 'use strict';
 		$('#mounttype').val($(this).val()); // Hidden input on manual server entry
 		if ($(this).val() == 'cifs') {
 			$('#userid-password').show();
-			$('#options').val('ro,dir_mode=0777,file_mode=0777');
-			$('#info-mount-flags').html('vers=2.0 or 3.0 may be needed and/or sec=ntlm/ntlmssp removed depending on what the NAS requires.');
-			$('#scan-btn').show();
+			//$('#scan-btn').show();
 			$('#edit-server').show();
 			$('#advanced-options').show();
+            $('#rw-size').show();
+            $('#options').val('ro,dir_mode=0777,file_mode=0777');
+            //$('#info-mount-flags').html('vers=2.0 or 3.0 may be needed and/or sec=ntlm/ntlmssp removed depending on what the NAS requires.');
 		}
 		else if ($(this).val() == 'nfs') {
 			$('#userid-password').hide();
-			$('#options').val('ro,nolock');
-			$('#info-mount-flags').html('vers=1.0 or higher may be needed depending on what the NAS requires.');
-			$('#scan-btn').hide();
+			//$('#scan-btn').hide();
 			$('#edit-server').show();
 			$('#advanced-options').show();
+            $('#rw-size').hide();
+            $('#options').val('ro,nolock');
+            //$('#info-mount-flags').html('vers=1.0 or higher may be needed depending on what the NAS requires.');
 		}
+        /* DEPRECATED due to removal of obsolete and unmaintained djmount
 		else if ($(this).val() == 'upnp') {
 			$('#userid-password').hide();
 			$('#scan-btn').show();
 			$('#edit-server').hide();
 			$('#advanced-options').hide();
-		}
+		}*/
 	});
 
 	// NAS config pre-load manual server entry

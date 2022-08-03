@@ -554,6 +554,24 @@ workerLog('worker: CamillaDSP (' . $_SESSION['camilladsp'] . ')');
 
 //
 workerLog('worker: --');
+workerLog('worker: -- File sharing');
+workerLog('worker: --');
+//
+
+// SMB
+if ($_SESSION['fs_smb'] == 'On') {
+	sysCmd('systemctl start smbd');
+	sysCmd('systemctl start nmbd');
+}
+// NFS
+if ($_SESSION['fs_nfs'] == 'On') {
+	sysCmd('systemctl start nfs-kernel-server');
+}
+workerLog('worker: SMB file sharing (' . $_SESSION['fs_smb'] . ')');
+workerLog('worker: NFS file sharing (' . $_SESSION['fs_nfs'] . ')');
+
+//
+workerLog('worker: --');
 workerLog('worker: -- MPD startup');
 workerLog('worker: --');
 //
@@ -1663,12 +1681,15 @@ function runQueuedJob() {
 
 		// Nenu, Update library, Context menu, Update this folder
 		case 'update_library':
+			// Update library
 			clearLibCacheAll();
-			$sock = openMpdSock('localhost', 6600);
 			$cmd = empty($_SESSION['w_queueargs']) ? 'update' : 'update "' . html_entity_decode($_SESSION['w_queueargs']) . '"';
+			workerLog('mpdindex: Cmd (' . $cmd . ')');
+			$sock = openMpdSock('localhost', 6600);
 			sendMpdCmd($sock, $cmd);
 			$resp = readMpdResp($sock);
 			closeMpdSock($sock);
+
 			// Start thumbnail generator
 			$result = sysCmd('pgrep -l thumb-gen.php');
 			if (strpos($result[0], 'thumb-gen.php') === false) {
@@ -2222,6 +2243,47 @@ function runQueuedJob() {
 			break;
 		case 'clearbrcache':
 			sysCmd('/var/www/util/sysutil.sh clearbrcache');
+			break;
+		case 'fs_smb':
+			// Start/stop
+			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' smbd');
+			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nmbd');
+			break;
+		case 'fs_nfs':
+			// Start/stop
+			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-kernel-server');
+			break;
+		case 'fs_nfs_access':
+		case 'fs_nfs_options':
+			// Update /etc/exports
+			$file = '/etc/exports';
+			if (false === ($contents = file_get_contents($file))) {
+				workerLog('worker: Error: File read failed on ' . $file);
+			} else if (empty($contents)) {
+				workerLog('worker: Error: File ' . $file . ' is empty');
+			} else {
+				$output = '';
+				$line = strtok($contents, "\n");
+				while ($line) {
+					if (substr($line, 0, 1) == '#') {
+						$output .= $line . "\n";
+					} else if (substr($line, 0, 9) == '/srv/nfs/') {
+						$parts = explode("\t", $line);
+						$output .= $parts[0] . "\t" . $_SESSION['fs_nfs_access'] . '(' . $_SESSION['fs_nfs_options'] . ')' . "\n";
+					}
+
+					$line = strtok("\n");
+				}
+
+				if (false === (file_put_contents($file, $output))) {
+					workerLog('worker: Error: File write failed on ' . $file);
+				}
+			}
+
+			// Restart
+			if ($_SESSION['fs_nfs'] == 'On') {
+				sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-kernel-server');
+			}
 			break;
 		case 'keyboard':
 			sysCmd('/var/www/util/sysutil.sh set-keyboard ' . $_SESSION['w_queueargs']);

@@ -255,6 +255,38 @@ if (isset($_POST['update_scnrotate'])) {
     }
 }
 
+// FILE SHARING
+
+// SMB
+if (isset($_POST['update_fs_smb'])) {
+	if (isset($_POST['fs_smb']) && $_POST['fs_smb'] != $_SESSION['fs_smb']) {
+		phpSession('write', 'fs_smb', $_POST['fs_smb']);
+		$cmd = $_POST['fs_smb'] == 'On' ? 'start' : 'stop';
+		submitJob('fs_smb', $cmd, 'Settings updated', '');
+	}
+}
+
+// NFS
+if (isset($_POST['update_fs_nfs'])) {
+	if (isset($_POST['fs_nfs']) && $_POST['fs_nfs'] != $_SESSION['fs_nfs']) {
+		phpSession('write', 'fs_nfs', $_POST['fs_nfs']);
+		$cmd = $_POST['fs_nfs'] == 'On' ? 'start' : 'stop';
+		submitJob('fs_nfs', $cmd, 'Settings updated', '');
+	}
+}
+if (isset($_POST['update_fs_nfs_access'])) {
+	if (isset($_POST['fs_nfs_access']) && $_POST['fs_nfs_access'] != $_SESSION['fs_nfs_access']) {
+		phpSession('write', 'fs_nfs_access', $_POST['fs_nfs_access']);
+		submitJob('fs_nfs_access', 'restart', 'Settings updated', '');
+	}
+}
+if (isset($_POST['update_fs_nfs_options'])) {
+	if (isset($_POST['fs_nfs_options']) && $_POST['fs_nfs_options'] != $_SESSION['fs_nfs_options']) {
+		phpSession('write', 'fs_nfs_options', $_POST['fs_nfs_options']);
+		submitJob('fs_nfs_options', 'restart', 'Settings updated', '');
+	}
+}
+
 // LOCAL SERVICES
 
 // Metadata for external apps
@@ -449,6 +481,18 @@ if ($_SESSION['feat_bitmask'] & FEAT_LOCALUI) {
 else {
 	$_feat_localui = 'hide';
 }
+
+// FILE SHARING
+
+// SMB
+$_select['fs_smb1'] .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb1\" value=\"On\" " . (($_SESSION['fs_smb'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+$_select['fs_smb0'] .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb2\" value=\"Off\" " . (($_SESSION['fs_smb'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+
+// NFS
+$_select['fs_nfs1'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs1\" value=\"On\" " . (($_SESSION['fs_nfs'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+$_select['fs_nfs0'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs2\" value=\"Off\" " . (($_SESSION['fs_nfs'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$_select['fs_nfs_access'] = $_SESSION['fs_nfs_access'];
+$_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
 
 // LOCAL SERVICES
 

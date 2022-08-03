@@ -18,7 +18,6 @@
 #
 
 SQLDB=/var/local/www/db/moode-sqlite3.db
-LIBCACHE_BASE=/var/local/www/libcache
 
 if [[ $1 = "set-timezone" ]]; then
 	timedatectl set-timezone "$2"
@@ -186,70 +185,6 @@ if [[ $1 = "unmute-pi-ampplus" || $1 = "unmute-pi-digiampplus" ]]; then
 	echo "out" >/sys/class/gpio/gpio22/direction
 	echo "1" >/sys/class/gpio/gpio22/value
 	exit
-fi
-
-# Udisks-glue add/remove samba share blocks
-# - auto update MPD db
-# - $2 = mount point (/media/DISK_LABEL)
-if [[ $1 = "smbadd" ]]; then
-	if [[ $(grep -w -c "$2" /etc/samba/smb.conf) = 0 ]]; then
-		sed -i "$ a[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
-		systemctl restart smbd
-		systemctl restart nmbd
-		# r44a
-		RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
-		if [[ $RESULT = "1" ]]; then
-			mpc update USB
-			truncate $LIBCACHE_BASE"_*" --size 0
-		fi
-	fi
-	exit
-fi
-
-if [[ $1 = "smbrem" ]]; then
-	sed -i "/$(basename "$2")]/,/guest/ d" /etc/samba/smb.conf
-	systemctl restart smbd
-	systemctl restart nmbd
-	# r44a
-	RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
-	if [[ $RESULT = "1" ]]; then
-		mpc update USB
-		truncate $LIBCACHE_BASE"_*" --size 0
-	fi
-    exit
-fi
-
-# Devmon add/remove samba share blocks
-# - auto update MPD db
-# - $2 = mount point: /media/DISK_LABEL
-# - $3 = device: /dev/sda1, sdb1, sdc1
-if [[ $1 = "smb_add" ]]; then
-	if [[ $(grep -w -c "$2" /etc/samba/smb.conf) = 0 ]]; then
-		sed -i "$ a# $3\n[$(basename "$2")]\ncomment = USB Storage\npath = $2\nread only = No\nguest ok = Yes" /etc/samba/smb.conf
-		systemctl restart smbd
-		systemctl restart nmbd
-		# r44a
-		RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
-		if [[ $RESULT = "1" ]]; then
-			mpc update USB
-			truncate $LIBCACHE_BASE"_*" --size 0
-		fi
-	fi
-	exit
-fi
-
-# $2 = device w/o the number: /dev/sda, sdb, sdc
-if [[ $1 = "smb_remove" ]]; then
-	sed -i "\|$2|,\|guest| d" /etc/samba/smb.conf
-	systemctl restart smbd
-	systemctl restart nmbd
-	# r44a
-	RESULT=$(sqlite3 $SQLDB "select value from cfg_system where param='usb_auto_updatedb'")
-	if [[ $RESULT = "1" ]]; then
-		mpc update USB
-		truncate $LIBCACHE_BASE"_*" --size 0
-	fi
-    exit
 fi
 
 # Check for directory existance

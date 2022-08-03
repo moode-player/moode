@@ -153,7 +153,8 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 	$_GET['cmd'] = $_SESSION['src_action'];
 	$_GET['id'] = $_SESSION['src_mpid'];
-	// Samba
+
+	// SMB (Samba)
 	if ($_POST['mount']['type'] == 'cifs') {
 		$nmbLookupResult = sysCmd("nmblookup -S -T '*' | grep '*<00>' | cut -f 1 -d '*'");
 		sort($nmbLookupResult, SORT_NATURAL | SORT_FLAG_CASE);
@@ -165,11 +166,29 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 			$host = strtoupper(explode('.', $nmbLookupPart[0])[0] );
 
 			foreach ($smbClientResult as $share) {
-				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $host . '/' .$share, '', $host . '/' .$share);
+				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $host . '/' . $share, '', $host . '/' . $share);
+			}
+		}
+	}
+
+	// NFS
+	if ($_POST['mount']['type'] == 'nfs') {
+		$thisIpAddr = sysCmd('hostname -I')[0];
+		$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
+		$port = '2049'; // NFSv4
+
+		sysCmd('nmap -Pn -p ' . $port . ' ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+		$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+
+		foreach ($hosts as $ipAddr) {
+			$share = sysCmd('showmount --exports --no-headers ' . $ipAddr . ' | cut -d" " -f1')[0];
+			if (!empty($share)) {
+				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $ipAddr . $share, '', $ipAddr . $share);
 			}
 		}
 	}
 }
+
 // Manual entry
 if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
 	$_GET['cmd'] = $_SESSION['src_action'];
@@ -178,8 +197,9 @@ if (isset($_POST['manualentry']) && $_POST['manualentry'] == 1) {
 
 phpSession('close');
 
-// Update library if indicated after sourcecfg job completes
 waitWorker(1, 'lib-config');
+
+// Update library if indicated after sourcecfg job completes
 if ($initiateLibraryUpd == true) {
 	//$title = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
 	//submitJob('update_library', '', $title, 'Updating library...');
@@ -198,14 +218,14 @@ if (!isset($_GET['cmd'])) {
 	$mounts = sqlRead('cfg_source', $dbh);
 	foreach ($mounts as $mp) {
 		$icon = mountExists($mp['name']) ? "<i class='fas fa-check green sx'></i>" : "<i class='fas fa-times red sx'></i>";
-		$_mounts .= "<p><a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width:240px;background-color:#333;text-align:left;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
+		$_mounts .= "<p><a href=\"lib-config.php?cmd=edit&id=" . $mp['id'] . "\" class='btn btn-large' style='width:70%;background-color:#333;text-align:left;'> " . $icon . " " . $mp['name'] . " (" . $mp['address'] . ") </a></p>";
 	}
 
 	// Messages
 	if ($mounts === true) {
-		$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">None configured</p><p></p>';
+		$_mounts .= '<p class="btn btn-large" style="width:70%;background-color:#333;text-align:left;">None configured</p><p></p>';
 	} else if ($mounts === false) {
-		$_mounts .= '<p class="btn btn-large" style="width: 240px; background-color: #333;">Query failed</p>';
+		$_mounts .= '<p class="btn btn-large" style="width:70%;background-color:#333;text-align:left;">Query failed</p>';
 	}
 
 	// Auto-updatedb on usb insert/remove
@@ -234,10 +254,6 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_protocol = "<option value=\"" . ($mp['type'] == 'cifs' ? "cifs\">SMB (Samba)</option>" : "nfs\">NFS</option>");
 				$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : $mp['address'] . '/' . $mp['remotedir'];
 				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $server, 'selected', $server);
-				$_scan_btn_hide = $mp['type'] == 'nfs' ? 'hide' : '';
-				$_edit_server_hide = '';
-				$_userid_pwd_hide = $mp['type'] != 'cifs' ? 'hide' : '';
-				$_advanced_options_hide = '';
 				$_username = $mp['username'];
 				$_password = $mp['password'];
 				$_name = $mp['name'];
@@ -246,6 +262,11 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_wsize = $mp['wsize'];
 				$_options = $mp['options'];
 				$_error = $mp['error'];
+				$_scan_btn_hide = '';
+				$_edit_server_hide = '';
+				$_userid_pwd_hide = $mp['type'] == 'nfs' ? 'hide' : '';
+				$_advanced_options_hide = '';
+				$_rw_size_hide = $mp['type'] == 'nfs' ? 'hide' : '';
 				if (empty($_error)) {
 					$_hide_error = 'hide';
 				} else {
@@ -265,23 +286,27 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 		$_hide_remove = 'hide';
 		$_hide_error = 'hide';
 
-		// Manual server entry/edit for cifs and nfs
-		if (isset($_POST['nas_manualserver'])) {
-			if ($_POST['mounttype'] == 'cifs' || empty($_POST['mounttype'])) {
+		//workerLog(print_r($_POST, true));
+
+		// Manual server entry/edit or scanner
+		if (isset($_POST['nas_manualserver']) || isset($_POST['scan'])) {
+			if ($_POST['mounttype'] == 'cifs' || $_POST['mount']['type'] == 'cifs') {
 				$_protocol = "<option value=\"cifs\" selected>SMB (Samba)</option>\n";
 				$_protocol .= "<option value=\"nfs\">NFS</option>\n";
 				$_scan_btn_hide = '';
 				$_edit_server_hide = '';
 				$_userid_pwd_hide = '';
 				$_advanced_options_hide = '';
+				$_rw_size_hide = '';
 				$_options = 'ro,dir_mode=0777,file_mode=0777';
-			} else if ($_POST['mounttype'] == 'nfs') {
+			} else if ($_POST['mounttype'] == 'nfs' || $_POST['mount']['type'] == 'nfs') {
 				$_protocol = "<option value=\"cifs\">SMB (Samba)</option>\n";
 				$_protocol .= "<option value=\"nfs\" selected>NFS</option>\n";
-				$_scan_btn_hide = 'hide';
+				$_scan_btn_hide = '';
 				$_edit_server_hide = '';
 				$_userid_pwd_hide = 'hide';
 				$_advanced_options_hide = '';
+				$_rw_size_hide = 'hide';
 				$_options = 'ro,nolock';
 			}
 		} else {
@@ -291,7 +316,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 			$_options = 'ro,dir_mode=0777,file_mode=0777';
 		}
 
-		$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : ' '; // space for select
+		$server = isset($_POST['nas_manualserver']) && !empty(trim($_POST['nas_manualserver'])) ? $_POST['nas_manualserver'] : ' '; // Space for select
 		$_address .= sprintf('<option value="%s" %s>%s</option>\n', $server, 'selected', $server);
 		$_rsize = '61440';
 		$_wsize = '65536';

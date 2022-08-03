@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Jul 20 07:21:35 2022
+-- File generated with SQLiteStudio v3.1.0 on Tue Aug 2 15:05:05 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -108,7 +108,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (43, 'i2soverlay', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (44, 'hdwrrev', '');
 INSERT INTO cfg_system (id, param, value) VALUES (45, 'crossfeed', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (46, 'bluez_pcm_buffer', '500000');
-INSERT INTO cfg_system (id, param, value) VALUES (47, 'RESERVED_47', '');
+INSERT INTO cfg_system (id, param, value) VALUES (47, 'fs_nfs_options', 'rw,sync,no_subtree_check,no_root_squash');
 INSERT INTO cfg_system (id, param, value) VALUES (48, 'library_onetouch_album', 'Play');
 INSERT INTO cfg_system (id, param, value) VALUES (49, 'radio_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (50, 'aplactive', '0');
@@ -229,6 +229,9 @@ INSERT INTO cfg_system (id, param, value) VALUES (164, 'maint_interval', '7200')
 INSERT INTO cfg_system (id, param, value) VALUES (165, 'library_track_play', 'Track');
 INSERT INTO cfg_system (id, param, value) VALUES (166, 'playlist_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (167, 'plview_sort_group', 'Name,No grouping');
+INSERT INTO cfg_system (id, param, value) VALUES (168, 'fs_smb', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (169, 'fs_nfs', 'Off');
+INSERT INTO cfg_system (id, param, value) VALUES (170, 'fs_nfs_access', '192.168.1.0/24');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
