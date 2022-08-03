@@ -19,7 +19,7 @@
  *
  */
 
-const VERSION = '2.0.0';
+const VERSION = '2.1.0';
 
 // Suppress warning messages
 error_reporting(E_ERROR | E_PARSE);
@@ -108,12 +108,6 @@ switch ($option) {
 	case '-A':
 		updateFeatures($features, $featBitmask, $argv);
 		break;
-	case '-c':
-		detectCifsVersion($argv);
-		break;
-	case '-C':
-		detectCifsShares($argv);
-		break;
 	case '-d':
 		dumpSession();
 		break;
@@ -123,12 +117,12 @@ switch ($option) {
 	case '-e':
 		exportAutoconfig($argv);
 		break;
+	case '-i':
+		importAutoconfig();
+		break;
 	case '-f':
 	case '-F':
 		audioFormats($option);
-		break;
-	case '-i':
-		importAutoconfig();
 		break;
 	case '-l':
 		moodeLog();
@@ -136,8 +130,20 @@ switch ($option) {
 	case '-m':
 		systemMonitor();
 		break;
-	case '-n':
-		detectNbtHosts();
+	case '-s':
+		systemInfo();
+		break;
+	case '-c':
+		detectCIFSHosts();
+		break;
+	case '-C':
+		detectCIFSShares($argv);
+		break;
+	case '-N':
+		detectNFSHosts();
+		break;
+	case '-M':
+		detectMPDHosts();
 		break;
 	case '-o':
 		listAudioOverlays();
@@ -150,9 +156,6 @@ switch ($option) {
 		break;
 	case '-R':
 		restartRenderer($argv);
-		break;
-	case '-s':
-		systemInfo();
 		break;
 	case '-t':
 		tailLog();
@@ -187,23 +190,24 @@ With no OPTION print the help text and exit.
 
  -a\t\tPrint features availability
  -A [add|rm N] \tUpdate features availability
- -c\t\tDetect highest CIFS protocol version [host or ip address]
- -C\t\tDetect CIFS shares [host or ip address]
  -d\t\tDump session file (requires sudo)
  -D [var name] \tDelete session variable (requires sudo)
  -e [filename]\tExport settings to [filename] or ./moodecfg-<timestamp>.ini
- -i\t\tImport /boot/moodecfg.ini
+ -i\t\tImport settings (/boot/moodecfg.ini)
  -f\t\tPrint supported audio formats
  -F\t\tPrint full alsacap info
  -l\t\tPrint moode log
  -m\t\tRun system monitor
- -n\t\tDetect NBT (Samba) hosts
+ -s\t\tPrint system info
+ -c\t\tDetect CIFS (SMB) hosts
+ -C\t\tDetect CIFS (SMB) shares [host or ip address]
+ -N\t\tDetect NFS hosts
+ -M\t\tDetect MPD hosts
  -o\t\tList audio overlays
  -p\t\tImport playlists
  -q\t\tQuery sql database
  -r\t\tRestart servers
  -R\t\tRestart renderer [--bluetooth | --airplay | --spotify | --squeezelite | --roonbridge]
- -s\t\tPrint system info
  -t\t\tPrint last 10 lines of moode log and wait
  -u\t\tCheck radio station urls for playability
  -U\t\tCheck station urls, list only unplayable
@@ -390,9 +394,10 @@ function systemMonitor() {
 		// PHP FPM pool count
 		$fpmPool = exec('pgrep -c -f "php-fpm: pool www"');
 
-		echo 'CPU: ' . $cpuFreq . ' | LOAD: ' . $cpuLoad . '%' . ' | TEMP: ' .
-			$cpuTemp . "\xB0" .	'C | RAM_USED: ' . $memUtil . '% | DISK_USED: ' . $diskUsed . ' | DISK_FREE: ' .
-			$diskFree . ' | FPM_POOL: ' . $fpmPool . ' workers ' . chr(27) . "[0G";
+		echo 'CPU: ' . $cpuFreq . ', ' . $cpuLoad . '% load, ' . $cpuTemp . "\xB0" . 'C | ' .
+			'MEM: ' . $memUtil . '% used | ' .
+			'DISK: ' . $diskUsed . ' used, ' .	$diskFree . ' free | ' .
+			'PHP: ' . $fpmPool . " workers\r";
 	}
 }
 
@@ -521,16 +526,36 @@ function mpdLog() {
 	echo shell_exec('cat ' . MPD_LOG);
 }
 
-function detectCifsVersion($argv) {
-	if (!isset($argv[2])) {
-		echo 'Missing host or IP address' . "\n";
-		return;
+function detectCIFSHosts() {
+	echo 'Scanning network for CIFS (SMB) hosts...' . "\n";
+
+	// Run a few times to pick up as many hosts as possible
+	for ($i = 0; $i < 3; $i++) {
+		$output = shell_exec("nmblookup -S -T '*' | grep '*<00>' | cut -d '*' -f 1");
 	}
 
-	$output = trim(shell_exec("nmap -Pn " . $argv[2] . " -p 139 --script smb-protocols |grep \|"));
+	$line = strtok($output, "\n");
+	while ($line) {
+		$parts = explode(', ', $line);
+		$cifsVersion = detectCIFSVersion($parts[1]);
+		echo $parts[0] . "\t\t" . $parts[1] . "\t\t" . $cifsVersion . "\n";
+
+		$line = strtok("\n");
+	}
+}
+
+function detectCIFSVersion($host) {
+	//if (!isset($argv[2])) {
+	//	echo 'Missing host or IP address' . "\n";
+	//	return;
+	//}
+
+	//echo 'Scanning host...' . "\n";
+	$output = trim(shell_exec("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|"));
 	$output = explode("\n", $output);
 	$parts = explode('  ', end($output));
-	$msg = 'CIFS version could not be detected' . "\n";
+	//$msg = 'CIFS version could not be detected' . "\n";
+	$msg = 'CIFS version could not be detected';
 
 	if (count($parts) >= 2) {
 		$version = trim($parts[2]);
@@ -549,27 +574,61 @@ function detectCifsVersion($argv) {
 			$version = $cifsVersions[$version];
 		}
 
-		$msg = 'CIFS version: ' . $version . "\n";
+		//$msg = 'CIFS version: ' . $version . "\n";
+		$msg = 'CIFS version: ' . $version;
 	}
 
-	echo $msg;
+	//echo $msg;
+	return $msg;
 }
-function detectCifsShares($argv) {
+
+function detectCIFSShares($argv) {
 	if (!isset($argv[2])) {
 		echo 'Missing host or IP address' . "\n";
 		return;
 	}
 
-	echo shell_exec("smbclient -N -g -L " . $argv[2] . " | grep Disk | cut -f 2 -d '|'");
+	echo 'Scanning host...' . "\n";
+	$cifsShares = shell_exec("smbclient -N -g -L 2>&1 " . $argv[2] . " | grep Disk | cut -f 2 -d '|'");
+
+	if (empty($cifsShares)) {
+		echo 'No CIFS shares found' . "\n";
+	} else {
+		echo $cifsShares;
+	}
 }
 
-function detectNbtHosts() {
-	// Run a few times to pick up as many hosts as possible
-	for ($i = 0; $i < 3; $i++) {
-		$output = shell_exec("nmblookup -S -T '*' | grep '*<00>' | cut -f 1 -d '*'");
+function detectNFSHosts() {
+	echo 'Scanning network for NFSv4 hosts...' . "\n";
+
+	$thisIpAddr = sysCmd('hostname -I')[0];
+	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
+	$port = '2049'; // NFSv4
+
+	sysCmd('nmap -Pn -p ' . $port . ' ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+	$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+
+	foreach ($hosts as $ipAddr) {
+		$share = sysCmd('showmount --exports --no-headers ' . $ipAddr . ' | cut -d" " -f1')[0];
+		$share = empty($share) ? 'No shares found' : $share;
+		echo $ipAddr . "\t" . $share . "\n";
 	}
 
-	echo $output;
+}
+
+function detectMPDHosts() {
+	echo 'Scanning network for MPD hosts...' . "\n";
+
+	$thisIpAddr = sysCmd('hostname -I')[0];
+	$subnet = substr($thisIpAddr, 0, strrpos($thisIpAddr, '.'));
+	$port = '6600'; // MPD
+
+	sysCmd('nmap -Pn -p ' . $port . ' ' . $subnet . '.0/24 -oG /tmp/nmap.scan >/dev/null');
+	$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+
+	foreach ($hosts as $ipAddr) {
+		echo $ipAddr . "\n";
+	}
 }
 
 function setSessionId() {
