@@ -323,13 +323,10 @@ if (!empty($wlan0)) {
 	$cfgSSID = sqlQuery('SELECT COUNT(*) FROM cfg_ssid', $dbh);
 	workerLog('worker: wlan0 country (' . $cfgNetwork[1]['wlan_country'] . ')');
 
-	// Case: saved SSID(s) exists
-	if ($cfgSSID[0]['COUNT(*)'] > 1) {
+	// Case: saved SSID(s)
+	if ($cfgSSID[0]['COUNT(*)'] > 1 && $cfgNetwork[1]['wlanssid'] != 'None (activates AP mode)') {
 		workerLog('worker: wlan0 trying saved SSID(s)');
 		$wlan0Ip = checkForIpAddr('wlan0', $_SESSION['ipaddr_timeout']);
-	} else {
-		workerLog('worker: wlan0 no saved SSID(s) exist');
-		$wlan0Ip = '';
 	}
 
 	if (!empty($wlan0Ip)) {
@@ -339,7 +336,7 @@ if (!empty($wlan0)) {
 	} else if ($cfgNetwork[1]['wlanssid'] == 'None (activates AP mode)') {
 		// Case: no configured SSID and saved SSID (if any) did not associate
 		$ssidBlank = true;
-		workerLog('worker: wlan0 SSID is blank');
+		workerLog('worker: wlan0 SSID is "None (activates AP mode)"');
 		if (empty($eth0Ip)) {
 			// Case: no eth0 addr
 			workerLog('worker: wlan0 AP mode started');
@@ -421,20 +418,21 @@ if (!empty($wlan0)) {
 
 // AP Router mode
 if ($cfgNetwork[2]['wlan_router'] == 'On') {
-	if (!empty($wlan0Ip) && !empty($eth0Ip) && $_SESSION['apactivated'] == true) {
+	if ($_SESSION['apactivated'] == true) {
 		sysCmd('systemctl start nftables');
-		workerLog('worker: wlan0 Router mode started');
+		if (!empty($eth0Ip)) {
+			workerLog('worker: wlan0 Router mode started');
+		} else {
+			workerLog('worker: wlan0 Router mode started but no Ethernet address');
+		}
 	} else {
 		workerLog('worker: wlan0 unable to start Router mode');
 	}
-} else {
-	if (!empty($wlan0Ip) && !empty($eth0Ip)) {
-		workerLog('worker: wlan0 and eth0 active but Router mode is Off');
-	}
+} else if (!empty($wlan0Ip) && !empty($eth0Ip)) {
+	workerLog('worker: wlan0 and eth0 active but Router mode is Off');
 }
 
-
-// Store IP address, prefer wlan0 address
+// Store IP address (prefer wlan0 address)
 if (!empty($wlan0Ip)) {
 	$_SESSION['ipaddress'] = $wlan0Ip[0];
 } else if (!empty($eth0Ip)) {
