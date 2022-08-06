@@ -28,14 +28,19 @@
 			<a href="#net-config-defaults" data-toggle="modal"><button class="btn btn-medium btn-primary">Reset</button></a>
 			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
 			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				<!--BACK: Return to Playbar view.<br-->
 				SAVE: Update network configuration, restart to make changes effective.<br>
 				RESET: Revert to Ethernet and DHCP.
             </span>
 		</legend>
 
 		<fieldset>
+
 			<legend>Ethernet</legend>
+			<p>
+				Ethernet wired connections provide maximum performance and reliability and are generally immune from most types of electrical and radio frequency interferrence typically found in environments where residential Routers and network switches are located.
+			</p>
+			<br>
+
 			<div class="control-group" >
 				<label class="control-label" for="eth0-method" style="">Address assignment</label>
 				<div class="controls">
@@ -45,7 +50,7 @@
 					<a aria-label="Help" class="info-toggle" data-cmd="info-eth0method" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span><br>$_eth0currentip</span>
 					<span id="info-eth0method" class="help-block-configs help-block-margin hide">
-                    	IP address assignment method.<br>
+                    	IP address assignment method.
                     </span>
 				</div>
 			</div>
@@ -91,7 +96,12 @@
 		</fieldset>
 
 		<fieldset>
-			<legend>Wireless (WiFi)</legend>
+			<legend>Wireless</legend>
+			<p>
+				Wireless networks on the WiFi 5Ghz band generally have less likelyhood of performance degradation due to interferrence and congestion that is often present on the 2.4GHz band.
+			</p>
+			<br>
+
 			<div class="control-group" >
 				<label class="control-label" for="wlan0-method">Address assignment</label>
 				<div class="controls">
@@ -102,7 +112,7 @@
 					<span><br>$_wlan0currentip</span>
 					<span id="info-wlan0method" class="help-block-configs help-block-margin hide">
                     	IP address assignment method.<br>
-                    	Link quality (quality) and signal level (level).<br>
+                    	Link quality and signal level.
                     </span>
 				</div>
 			</div>
@@ -116,7 +126,7 @@
 					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="scan" value="1">Scan</button>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-wlan0ssid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0ssid" class="help-block-configs help-block-margin hide">
-						SCAN generates a list of available networks.<br>
+						SCAN generates a list of available networks.
                     </span>
 					<div class="help-block-margin">
 						<a data-toggle="modal" href="#manual-ssid"><button class="btn btn-medium btn-primary"style="margin-top:.25em;">Enter</button></a>&nbsp;SSID manually<br>
@@ -158,7 +168,7 @@
 					</select>
 					<a aria-label="Help" class="info-toggle" data-cmd="info-wlan0country" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-wlan0country" class="help-block-configs help-block-margin hide">
-						The country code determines what frequency bands the WiFi adapter supports.<br>
+						The country code determines what frequency bands are available.<br>
                     </span>
 				</div>
 			</div>
@@ -205,6 +215,27 @@
 
 		<fieldset>
 			<legend>Access Point (AP)</legend>
+			<p>
+				AP mode enables access to moOde over its own private 2.4 GHz WiFi network named using the SSID below.
+				After connecting to the SSID enter the URL <b>http://172.24.1.1</B> into a Browser to bring up the moOde WebUI.
+				The AP can also function as a Router forwarding packets between the AP and Ethernet connection by turning on Router mode.
+			</p>
+			<br>
+
+			<div class="control-group">
+			<label class="control-label">Router mode</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle-wlan0apd-router2">ON</label>
+					$_select[wlan0apd_router1]
+					<label class="toggle-radio" for="toggle-wlan0apd-router1">OFF</label>
+					$_select[wlan0apd_router0]
+				</div>
+				<span class="help-block-configs help-block-margin2">
+					 Router mode forwards packets between the Access Point and Ethernet connection.
+                </span>
+			</div>
+
 			<div class="control-group" >
                 <label class="control-label" for="apdssid">Network (SSID)</label>
                 <div class="controls">
@@ -235,7 +266,9 @@
 					<a class="show-hide-password" href="#notarget" data-id="apdpwd"><i class="fal fa-eye"></i></a>
 					<span id="info-apdpwd" class="help-block-configs help-block-margin hide">
 						Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.<br>
-						NOTE: the default password is moodeaudio
+					</span>
+					<span class="help-block-configs help-block-margin">
+						The default password is moodeaudio but should be changed to improve security.
 					</span>
                 </div>
             </div>

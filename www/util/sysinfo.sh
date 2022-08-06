@@ -41,6 +41,9 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nWLAN address\t\t= $WLAN0IP\c"
 	echo -e "\nWLAN MAC\t\t= $WLAN0MAC\c"
 	echo -e "\nWLAN country\t\t= $wlancountry\c"
+	echo -e "\nWLAN AP SSID\t\t= $apdssid\c"
+	echo -e "\nWLAN AP chan\t\t= $apdchan\c"
+	echo -e "\nWLAN AP router\t\t= $apdrouter\c"
 	echo -e "\n\c"
 	echo -e "\nSoC identifier\t\t= $SOC\c"
 	echo -e "\nCore count\t\t= $CORES\c"
@@ -69,6 +72,11 @@ SYSTEM_PARAMETERS() {
 	echo -e "\nEthernet check\t\t= $eth0chk\c"
 	echo -e "\nUSB auto-mounter\t= $usb_auto_mounter\c"
 	echo -e "\nSSH term server\t\t= $shellinabox\c"
+	echo -e "\n\c"
+	echo -e "\nSMB file sharing\t= $fs_smb\c"
+	echo -e "\nNFS file sharing\t= $fs_nfs\c"
+	echo -e "\nNFS access\t\t= $fs_nfs_access\c"
+	echo -e "\nNFS options\t\t= $fs_nfs_options\c"
 	echo -e "\n\c"
 	echo -e "\nPHP-FPM version\t\t= $PHPVER\c"
 	echo -e "\nNGINX version\t\t= $NGINXVER\c"
@@ -197,6 +205,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nOne touch radio\t\t= $library_onetouch_radio\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
+	echo -e "\nTrack play\t\t= $library_track_play\c"
 	echo -e "\nRecently added\t\t= $library_recently_added\c"
 	echo -e "\nShow sample rate\t= $library_encoded_at\c"
 	echo -e "\nCover search pri\t= $library_covsearchpri\c"
@@ -235,6 +244,12 @@ RADIO_MANAGER_SETTINGS() {
 		echo -e "\nShow moOde stations\t= $rv_show_moode\c"
 		echo -e "\nShow other stations\t= $rv_show_other\n"
 	fi
+}
+
+PLAYLIST_MANAGER_SETTINGS() {
+	echo -e "P L A Y L I S T   M A N A G E R   S E T T I N G S"
+	echo -e "\nSort tag\t\t= $plv_sort_tag\c"
+	echo -e "\nGroup method\t\t= $plv_group_method\n"
 }
 
 MPD_SETTINGS() {
@@ -643,7 +658,7 @@ i2soverlay=${arr[42]}
 hdwrrev=${arr[43]}
 [[ "${arr[44]}" = "Off" ]] && crossfeed="Off" || crossfeed=${arr[44]}
 bluez_pcm_buffer=${arr[45]}
-RESERVED_46=${arr[46]}
+fs_nfs_options=${arr[46]}
 library_onetouch_album=${arr[47]}
 radiopos=${arr[48]}
 aplactive=${arr[49]}
@@ -791,6 +806,16 @@ multiroom_rx=${arr[158]}
 rxactive=${arr[159]}
 library_onetouch_radio=${arr[160]}
 library_tagview_genres=${arr[161]}
+toggle_coverview=${arr[162]}
+maint_interval=${arr[163]}
+library_track_play=${arr[164]}
+playlist_pos==${arr[165]}
+plview_sort_group=${arr[166]}
+plv_sort_tag=$(awk -F"," '{print $1}' <<< $plview_sort_group)
+plv_group_method=$(awk -F"," '{print $2}' <<< $plview_sort_group)
+fs_smb=${arr[167]}
+fs_nfs=${arr[168]}
+fs_nfs_access=${arr[169]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
@@ -800,6 +825,7 @@ wlansec=$(echo ${arr[1]} | cut -f 10 -d "|")
 wlancountry=$(echo ${arr[1]} | cut -f 13 -d "|")
 apdssid=$(echo ${arr[2]} | cut -f 9 -d "|")
 apdchan=$(echo ${arr[2]} | cut -f 14 -d "|")
+apdrouter=$(echo ${arr[2]} | cut -f 15 -d "|")
 
 # Misc settings
 MODEL=${hdwrrev:3:1}
@@ -846,6 +872,7 @@ SYSTEM_PARAMETERS
 AUDIO_PARAMETERS
 APPEARANCE_SETTINGS
 RADIO_MANAGER_SETTINGS
+PLAYLIST_MANAGER_SETTINGS
 MPD_SETTINGS
 RENDERER_SETTINGS
 MOODE_LOG

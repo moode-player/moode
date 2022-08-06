@@ -18,10 +18,11 @@
 New features
 
 - NEW: File sharing via NFS server or SMB server
+- NEW: Access Point (AP) Router mode
 
 Updates
 
-- UPD: Add librespot AP fallback workaround to launch params
+- UPD: Add librespot access point fallback workaround to launch params
 - UPD: Provide a default Playlist cover if no cover image is set
 - UPD: Remove unused Flat UI icons
 - UPD: Bump size of help text on configuration screens

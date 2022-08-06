@@ -76,6 +76,7 @@ function sqlUpdate($table, $dbh, $key = '', $value) {
 				"', wlan_psk='" . $value['wlan_psk'] .
 				"', wlan_country='" . $value['wlan_country'] .
 				"', wlan_channel='" . $value['wlan_channel'] .
+				"', wlan_router='" . $value['wlan_router'] .
 				"' WHERE iface='" . $key . "'";
 			//workerLog('sqlUpdate: ' . $queryStr);
 			break;
