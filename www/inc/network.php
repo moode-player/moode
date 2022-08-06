@@ -80,8 +80,7 @@ function cfgNetIfaces() {
 		$data .= "interface wlan0\n";
 		$data .= "static ip_address=172.24.1.1/24\n";
 		$data .= "nohook wpa_supplicant";
-	}
-	else {
+	} else {
 		// No AP mode
 		$data .= "#AP mode\n";
 		$data .= "#interface wlan0\n";
