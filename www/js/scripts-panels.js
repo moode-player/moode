@@ -62,17 +62,17 @@ jQuery(document).ready(function($) { 'use strict';
         $('body').addClass('custom-scrollbars');
     }
 
-    // Check for native lazy load support in Browser
-    // @bitkeeper contribution: https://github.com/moode-player/moode/pull/131
-    if ('loading' in HTMLImageElement.prototype) {
-        GLOBAL.nativeLazyLoad = true;
-    }
-
 	// Load current cfg
     $.getJSON('command/cfg-table.php?cmd=get_cfg_tables', function(data) {
     	SESSION.json = data['cfg_system'];
     	THEME.json = data['cfg_theme'];
     	RADIO.json = data['cfg_radio'];
+
+        // Check for native lazy load support in Browser
+        // @bitkeeper contribution: https://github.com/moode-player/moode/pull/131
+        if ('loading' in HTMLImageElement.prototype && SESSION.json['native_lazyload'] == 'Yes') {
+            GLOBAL.nativeLazyLoad = true;
+        }
 
         // Display viewport size for debugging by re-using the pkgid_suffix col. It's normaly used to test in-place update packages.
         if (SESSION.json['pkgid_suffix'] == 'viewport') {

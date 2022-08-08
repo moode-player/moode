@@ -826,6 +826,29 @@
 							Set the size of the font used.
 						</span>
 					</div>
+					<label class="control-label" for="native-lazyload">Native lazyload</label>
+					<div class="controls">
+						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="native-lazyload" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="native-lazyload-sel"><span class="text">Yes</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="native-lazyload-sel"><span class="text">No</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-native-lazyload" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-native-lazyload" class="help-block hide">
+							Set the method used by the Browser to lazyload cover thumbnails.<br>
+							<b>Yes: </b>Use internal Browser routine. This is the default and is generally fastest.<br>
+							<b>No: </b>Use custom Javascript routine. This can sometimes resolve an issue where internal Browser lazyloading is slow.
+						</span>
+					</div>
 				</div>
 				</div>
 			</div>

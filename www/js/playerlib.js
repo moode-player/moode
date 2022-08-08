@@ -2552,6 +2552,7 @@ $(document).on('click', '.context-menu a', function(e) {
         		$('#cover-scale span').text(SESSION.json['cover_scale']);
                 $('#renderer-backdrop span').text(SESSION.json['renderer_backdrop']);
                 $('#font-size span').text(SESSION.json['font_size']);
+                $('#native-lazyload span').text(SESSION.json['native_lazyload']);
 
                 // Playback
                 $('#playqueue-art-enabled span').text(SESSION.json['playlist_art']);
@@ -2725,6 +2726,7 @@ $('#btn-preferences-update').click(function(e){
     var extraTagsChange = false;
     var playHistoryChange = false;
 	var fontSizeChange = false;
+    var lazyLoadChange = false;
     var playqueueArtChange = false;
     var showNpIconChange = false;
 	var thumbSizeChange = false;
@@ -2751,6 +2753,7 @@ $('#btn-preferences-update').click(function(e){
 	if (SESSION.json['cover_scale'] != $('#cover-scale span').text()) {themeSettingsChange = true;}
     if (SESSION.json['render_backdrop'] != $('#renderer-backdrop span').text()) {/*NOP*/}
     if (SESSION.json['font_size'] != $('#font-size span').text()) {fontSizeChange = true;};
+    if (SESSION.json['native_lazyload'] != $('#native-lazyload span').text()) {lazyLoadChange = true;};
 
     // Playback
     if (SESSION.json['playlist_art'] != $('#playqueue-art-enabled span').text()) {playqueueArtChange = true;}
@@ -2803,6 +2806,7 @@ $('#btn-preferences-update').click(function(e){
 	SESSION.json['cover_scale'] = $('#cover-scale span').text();
     SESSION.json['renderer_backdrop'] = $('#renderer-backdrop span').text();
     SESSION.json['font_size'] = $('#font-size span').text();
+    SESSION.json['native_lazyload'] = $('#native-lazyload span').text();
 
     // Playback
     SESSION.json['playlist_art'] = $('#playqueue-art-enabled span').text();
@@ -2902,6 +2906,7 @@ $('#btn-preferences-update').click(function(e){
             'cover_scale': SESSION.json['cover_scale'],
             'renderer_backdrop': SESSION.json['renderer_backdrop'],
             'font_size': SESSION.json['font_size'],
+            'native_lazyload': SESSION.json['native_lazyload'],
 
             // Playback
             'playlist_art': SESSION.json['playlist_art'],
@@ -2942,7 +2947,7 @@ $('#btn-preferences-update').click(function(e){
             'preferences_modal_state': SESSION.json['preferences_modal_state']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd ||
+            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
                 setTimeout(function() {
