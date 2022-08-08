@@ -22,20 +22,24 @@
 
 // NOTE: This file exists because "for of" statements fail YUV compressor minification
 
-function formatExtraTagsString () {
-    var elementDisplay, extraTagsDisplay = '';
-    var extraTagsArray = SESSION.json['extra_tags'].replace(/ /g, '').split(','); // Strip out whitespace
+// 2022-08-07
+// TODO: Gulp minification works for this file so it should be merged into one of the other scripts, probably during refactoring
 
-    // NOTE: composer may be = null, disc may be = 'Disc tag missing', encoded may be = 'Unknown'
-    for (const element of extraTagsArray) {
-        //console.log(element, MPD.json[element]);
-        if (MPD.json[element] != null && MPD.json[element] != 'Disc tag missing' && MPD.json[element] != 'Unknown') {
-            elementDisplay = element == 'track' ? 'Track' : (element == 'disc' ? 'Disc' : '');
-            extraTagsDisplay += ((elementDisplay == '' ? '' : elementDisplay + ' ') + MPD.json[element] + ' • ');
+function formatExtraTagsString () {
+    //var elementDisplay = '';
+    var output = '';
+    var extraTags = SESSION.json['extra_tags'].replace(/ /g, '').split(','); // Strip out whitespace
+
+    // NOTE: composer may be null, disc may be 'Disc tag missing', encoded may be 'Unknown'
+    for (const tag of extraTags) {
+        //console.log(tag, MPD.json[tag]);
+        if (MPD.json[tag] != null && MPD.json[tag] != 'Disc tag missing' && MPD.json[tag] != 'Unknown' && MPD.json[tag] != '') {
+            var displayedTag = tag == 'track' ? 'Track' : (tag == 'disc' ? 'Disc' : '');
+            output += displayedTag + ' ' + MPD.json[tag] + ' • ';
         }
     }
 
-    return extraTagsDisplay.slice(0, -3); // Strip trailing bullet
+    return output.slice(0, -3); // Strip trailing bullet
 }
 
 // Delete station from RADIO.json object array
