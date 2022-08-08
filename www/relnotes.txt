@@ -22,6 +22,7 @@ New features
 
 Updates
 
+- UPD: Add preferences option for native lazyloading
 - UPD: Add librespot access point fallback workaround to launch params
 - UPD: Provide a default Playlist cover if no cover image is set
 - UPD: Remove unused Flat UI icons
@@ -34,6 +35,7 @@ Radio stations
 
 Bug fixes
 
+- FIX: Empty tags cause just the bullet to be displayed under the cover art
 - FIX: Folder view "Update individual folder" broken due to bad variable name
 - FIX: Queue move item(s) broken due to bad variable name
 - FIX: Wlan0 IP address check occuring twice during startup in certain scenarios
