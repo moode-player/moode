@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Aug 2 15:05:05 2022
+-- File generated with SQLiteStudio v3.1.0 on Mon Aug 8 07:14:44 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -232,6 +232,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (167, 'plview_sort_group', 'Nam
 INSERT INTO cfg_system (id, param, value) VALUES (168, 'fs_smb', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (169, 'fs_nfs', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (170, 'fs_nfs_access', '192.168.1.0/24');
+INSERT INTO cfg_system (id, param, value) VALUES (171, 'native_lazyload', 'Yes');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));
@@ -593,10 +594,10 @@ INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list,
 INSERT INTO cfg_audiodev (id, name, alt_name, dacchip, chipoptions, iface, list, driver, drvoptions) VALUES (301, 'DAC8STEREO', 'okto research dac8 Stereo', 'ESS Sabre ES9028PRO', '', 'USB', 'yes', '', '');
 
 -- Table: cfg_network
-CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3));
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None (activates AP mode)', 'wpa', '', '', 'US', '');
-INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', '', '6');
+CREATE TABLE cfg_network (id INTEGER PRIMARY KEY, iface CHAR (5), method CHAR (6), ipaddr CHAR (15), netmask CHAR (15), gateway CHAR (15), pridns CHAR (15), secdns CHAR (15), wlanssid CHAR (32), wlansec CHAR (4), wlanpwd CHAR (64), wlan_psk CHAR (64), wlan_country CHAR (2), wlan_channel CHAR (3), wlan_router CHAR (32));
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (1, 'eth0', 'dhcp', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (2, 'wlan0', 'dhcp', '', '', '', '', '', 'None (activates AP mode)', 'wpa', '', '', 'US', '', '');
+INSERT INTO cfg_network (id, iface, method, ipaddr, netmask, gateway, pridns, secdns, wlanssid, wlansec, wlanpwd, wlan_psk, wlan_country, wlan_channel, wlan_router) VALUES (3, 'apd0', '', '', '', '', '', '', 'Moode', '', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', 'e517e227afe08fa1303b12e67fd03d0271b47c8f507e10a3dc52c8743b7ea52c', '', '6', 'Off');
 
 -- Table: cfg_eqalsa
 CREATE TABLE cfg_eqalsa (id INTEGER PRIMARY KEY, curve_name CHAR (32), curve_values CHAR (32));
