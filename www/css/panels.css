@@ -155,7 +155,7 @@ html {background-color:inherit;}
 #togglebtns .btn-primary {color:var(--accentxts);border-radius:.25em;}
 #menu-top, #menu-bottom {position:fixed;left:0;right:0;color:inherit;}
 .btnlist.btnlist-top.btnlist-top-playqueue {top:0px;top:env(safe-area-inset-top);width:35%;z-index:1004;display:none;}
-.btn.btn-primary.btn-small, .btn.btn-primary.btn-medium {background:rgba(128,128,128,0.2);margin-top:-4px;}
+.btn.btn-primary.btn-small, .btn.btn-primary.btn-medium {background:rgba(128,128,128,0.2);margin-top:-4px;padding:4px 10px;}
 #menu-top {line-height:2.75rem;padding-top:0;padding-top:env(safe-area-inset-top);height:0;z-index:1002;display:flex;}
 #menu-top .dropdown {top:0;top:calc(env(safe-area-inset-top) + 0);right:0;position:absolute;}
 #menu-top .dropdown-menu {right:.75rem;}
