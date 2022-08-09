@@ -178,8 +178,8 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 
 	// Image file path, convert image to string
 	if (strlen($img_str) < 512) {
+		//workerLog('thumb-gen: image file: ' . $img_str);
 		$img_str = file_get_contents($img_str);
-		//workerLog('thumb-gen: image file: ' . $dir);
 	}
 	else {
 		//workerLog('thumb-gen: embedded image: ' . $file);
@@ -205,6 +205,10 @@ function createThumb($file, $dir, $search_pri, $thm_w, $thm_q) {
 	// DEBUG
 	// This is to help identify images that may be corrupt i.e., no width and/or height reported
 	//workerLog('Width: (' . $img_w . ') Height: (' . $img_h . ') Path: ' .$path);
+
+	if ($img_w == 0 || $img_h == 0) {
+		workerLog('thumb-gen: error: imagecreatefromstring() width and/or height are 0, Path: ' .$path);
+	}
 
 	// Standard thumbnail
 	if (($thumb = imagecreatetruecolor($thm_w, $thm_h)) === false) {
