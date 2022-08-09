@@ -6,7 +6,7 @@
 #  Multiroom Audio system. Additional configuration help is provided within the
 #  player via Menu, Quick help and the (i) information buttons.
 #
-#  Version: 1.1 2022-01-20
+#  Version: 1.2 2022-08-09
 #
 #  (C) Tim Curtis 2021 http://moodeaudio.org
 #
@@ -38,7 +38,7 @@ BLOCK DIAGRAM
              |                                 |
          +-------+                             |
          |       | Pi-4 or 3B+                 | Ethernet and/or WiFi 5GHz
-         | Sendr | Music Sources               |
+         | Sendr | MPD
          |       | Spotify, Airplay            |
          +-------+                             |
                                                |
@@ -107,7 +107,9 @@ A) Audio Configuration (Menu, Configure, Audio)
 3. EDIT MPD settings
    - Set MPD Audio output to "HDMI 1"
    - Set Mixer type to "Hardware"
-   - Set SoX Resampling Enabled to "No"
+   - Optionally set SoX Resampling Enabled to "Yes"
+   - Set Bit depth to "Any"
+   - Set Sample rate to 48
 4. Set the following DSP's to "Off"
    - Crossfeed
    - Polarity inversion
@@ -145,13 +147,18 @@ in the WiFi band can result in degraded performance and audio dropouts.
 
 1. Discovery of Receivers relies on Multicast DNS (mDNS)
 2. Addressing for the audio distribution protocol relies on IP Multicast using
-   a default address of 239.0.0.1 and port 1350, and on IGMP Snooping. Be sure
-   that both IP Multicast and IGMP Snooping are enabled in the Router.
+   a default address of 239.0.0.1 and port 1350. Many residential Routers
+   support Multicast by performing Multicast to Unicast (M-to-U) conversion but
+   in some cases both IP Multicast and IGMP Snooping need to be explicitly
+   enabled in the Router.
 
 B) Audio format
 
 1. Audio is converted to 16 bit 48 kHz PCM format and encoded using the Opus
    CODEC. Resampling if needed is handled by ALSA using the Speex converter.
+   For playback via MPD the SoX resampler can be used instead. Set Bit depth to
+   to "Any" and Sample rate to 48. This may provide higher quality resampling
+   than ALSA/Speex.
 2. Encoded Opus frames are transmitted over the network using RTP over UDP
 
 SPOTIFY AND AIRPLAY
@@ -164,9 +171,9 @@ USAGE NOTES
 
 1. Spotify and Airplay support is a work-in-progress (WIP) in this initial
    release. Airplay generally works well with few audio glitches but Spotify
-   can be glitchy.
+   can occasionally be glitchy.
 2. The 2.4 GHz WiFi band which is crowded and prone to interference should be
-   avoided.
+   avoided. Use the 5GHz band for best results.
 3. ARM6 single-core Pi's including Pi-1B and Pi-Zero have not been tested as
    either Sender or Receiver and so YMMV.
 4. The SQL table cfg_multiroom contains the configuration parameters for the

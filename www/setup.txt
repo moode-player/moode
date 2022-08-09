@@ -6,7 +6,7 @@
 #  player. Additional configuration help is provided within the player via Menu,
 #  Quick help and the (i) information buttons.
 #
-#  Version: 1.1 2021-09-22
+#  Version: 1.2 2022-08-09
 #
 #  (C) Tim Curtis 2017 http://moodeaudio.org
 #
@@ -14,24 +14,53 @@
 
 GENERAL INFORMATION
 
-NOTE: Use http://moode, moode.local or IP address, whichever works on your network.
-Typically Android OS will only work with IP address.
+To access the moOde UI open a Web Browser and enter one of the URL's below. The
+system is configured via the "m" menu Configure and Preferences selections.
 
-- SSH login user: pi, pwd: moodeaudio
-- Preface commands requiring root permission with sudo
-- Access Point (AP) mode:
-  (a) IP address: 172.24.1.1
-  (b) SSID: Moode
-  (c) Password: moodeaudio
-  (d) Channel: 6
-- AP mode starts automatically when:
-  (a) WiFi SSID is set to 'None' in Network config and there is no Ethernet connection
-  (b) WiFi SSID is defined but no IP address was assigned by DHCP. This typically
-  occurs when connection to the SSID fails.
-- Default Samba shares are NAS, Playlists, Radio, and SDCard
-- Each USB disk will also have a Samba share named after its Disk Label
+- http://moode
+- http://moode.local
+- http://IP_ADDRESS
 
-WIFI ADAPTERS THAT ARE REPORTED TO SUPPORT AP MODE
+To access the operating system command console use Secure Shell (SSH). An easy
+to use Web SSH terminal is available in System Config.
+
+- Userid    pi
+- Password  moodeaudio
+
+ACCESS POINT (AP) MODE
+
+To use to Access Point (AP) mode which is moOde's private 2.4 GHz WiFi network
+refer to the settings below.
+
+- IP address    172.24.1.1
+- SSID          Moode
+- Password      moodeaudio
+- Channel       6
+
+AP mode starts automatically when any of the following are true.
+
+- WiFi SSID is set to "None (activates AP mode)" in Network Config, Router
+  mode is Off and there is no active Ethernet connection.
+
+- WiFi SSID is defined in Network Config but no IP address was assigned after
+  attempting to connect to the SSID and there is no active Ethernet connection.
+
+- Router mode is On in Network Config and either WiFi SSID is defined but no IP
+  address was assigned or SSID is set to "None (activates AP mode)". An active
+  Ethernet connection is required for Router mode to function but it does not
+  need to be active at the time AP Router mode starts.
+
+FILE SHARING
+
+- SMB File Sharing can be turned On in System Config. SMB (Samba) shares named
+  NAS, Playlists, and SDCard are automatically created. Each USB disk will also
+  have a Samba share created that is named after its Disk Label.
+
+- NFS File Sharing can be turned On in System Config. Access and options defaults
+  are provided but can be manually overridden. Each USB disk will have an NFS
+  export created whose path is /media/disk_label.
+
+WIFI ADAPTERS THAT ARE REPORTED TO SUPPORT Access Point (AP) MODE
 
 - Raspberry Pi integrated WiFi adapter
 - Comfast CF-912AC dual-band WiFi adapter
@@ -40,83 +69,97 @@ WIFI ADAPTERS THAT ARE REPORTED TO SUPPORT AP MODE
 IN-PLACE SOFTWARE UPDATES
 
 - Updates to moOde software are made available periodically and can be downloaded
-  and installed from by clicking "CHECK for software update" in System Config
-- Click VIEW to see a list of what is contained in the update package
-- Click INSTALL to download and install the update package
+  and installed by clicking "CHECK for software update" in System Config.
+- Click VIEW to see a list of what is contained in the update package.
+- Click INSTALL to download and install the update package.
 
 IMAGE WRITING UTILITIES
 
+THe official Raspberry Pi Imager can be downloaded via the URL below.
 https://www.raspberrypi.org/documentation/installation/installing-images/
 
 PLAYER SETUP AND CONFIGURATON
 
 1. INITIAL SETUP
+
    a) Insert boot SD card or USB drive
    b) Connect USB or I2S audio device
    c) Connect USB storage devices
    - Ethernet mode
    a) Insert ethernet cable
    b) Power on
-   c) http://moode
+   c) http://moode, moode.local or IP_ADDRESS
    - Access Point (AP) mode
    a) Insert WiFi adapter that supports AP mode
    b) Power on
-   c) Join network SSID=Moode, pwd=moodeaudio
-   d) http://moode.local or http://172.24.1.1
+   c) Join network: SSID = Moode, password = moodeaudio
+   d) http://172.24.1.1 or http://moode.local
 
 2. AUDIO DEVICE SETUP
+
    - USB DEVICE
+
    a) Menu, Configure, Audio
-   b) Select "None" for I2S audio device then SET
-   c) Restart
-   d) Menu, Configure, Audio
-   e) EDIT MPD config
-   f) Leave Volume control set to "Software"
-   g) Set Audio output to the name of the USB audio device
-   h) SAVE
-   i) Restart
+   b) Set Named I2S device and DT overlay to "None" if needed and then restart
+   c) Menu, Configure, Audio
+   d) Set Output device to to the name of the USB audio device
+   e) If the audio device supports hardware volume set Volume type to
+      Hardware otherwise set it to Software, Fixed or Null
+   f) Restart
 
    - I2S DEVICE
+
    a) Menu, Configure, Audio
-   b) Select an I2S audio device then SET
+   b) Set Named I2S device or DT overlay to the correct device or overlay name
    c) Restart
    d) Menu, Configure, Audio
-   e) EDIT MPD config
-   f) Leave Volume control set to "Software"
-   g) Verify Audio output is set to the name of the I2S audio device
-   h) SAVE
+   e) If the audio device supports hardware volume set Volume type to
+      Hardware otherwise set it to Software, Fixed or Null
 
 3. TIME ZONE
+
    a) Menu, Configure, System
-   b) Select appropriate timezone then SET
+   b) Set the appropriate timezone
 
 4. ADD SOURCE(S) CONTAINING MUSIC FILES
+
    - USB STORAGE DEVICES
+
    a) Insert USB storage device
    b) Menu, Update library
    c) Wait for completion (no spinner)
-   - SDCARD STORAGE DEVICES
+
+   - BOOT SDCARD STORAGE
+
    a) Menu, Update library
    b) Wait for completion (no spinner)
+
    - NAS DEVICE
+
    a) Menu, Configure, Library
    b) CREATE Music source
    c) After SAVE, return to Playback or Library
    d) Menu, Update library
    e) Wait for completion (no spinner)
+
    - MUSIC DATABASE UTILITIES
+
    a) Menu, Configure, Library
    b) Various utilities will be listed in the Music Library section
 
 5. VERIFY AUDIO PLAYBACK
+
    - Ethernet mode
-   a) http://moode
+
+   a) http://moode, moode.local, IP_ADDRESS
    b) Play one of the radio stations
+
    - AP mode
-   a) http://moode.local
-   b) Browse, SDCARD, Stereo Test
-   c) Menu for "LR Channel And Phase" track
-   d) Play
+
+   a) http://172.24.1.1 or http://moode.local
+   b) Switch to Library Folder view
+   c) Navigate to the SDCARD/Stereo Test
+   c) Play the  "LR Channel And Phase" track
 
 At this point a FULLY OPERATIONAL PLAYER exists.
 
@@ -125,6 +168,7 @@ CUSTOM CONFIGURATIONS
 Customize the player by using any of the following procedures.
 
 1. CONFIGURE FOR WIFI CONNECTION
+
    - Ethernet mode
    a) Leave eth cable connected
    b) Insert wifi adapter (while Pi running)
@@ -134,6 +178,7 @@ Customize the player by using any of the following procedures.
    f) Menu, Power, Shutdown
    g) Unplug eth cable
    h) Power on
+
    - Access Point (AP) mode
    a) Join network SSID=Moode, pwd=moodeaudio
    b) http://moode.local
@@ -142,13 +187,12 @@ Customize the player by using any of the following procedures.
    e) Menu, Power, Restart
 
 2. CHANGE HOST AND SERVICE NAMES
+
    a) Menu, Configure, System (and Audio)
    b) SET after entering appropriate value in each name field
    c) Restart is required if changing Host name
 
 3. AUTO-CONFIGURE AT BOOT
-
-   NOTE: This works only on a fresh image that has never been booted!
 
    a) Mount the SDCard which will make the boot partition accessible
    b) Copy the file /boot/moodecfg.ini.default to your PC, Mac or Linux client
