@@ -21,6 +21,9 @@ system is configured via the "m" menu Configure and Preferences selections.
 - http://moode.local
 - http://IP_ADDRESS
 
+An explanation of how to operate moOde audio player can be found in Quick help
+which is located on the main (m) menu.
+
 To access the operating system command console use Secure Shell (SSH). An easy
 to use Web SSH terminal is available in System Config.
 
@@ -105,13 +108,13 @@ PLAYER SETUP AND CONFIGURATON
    d) Set Output device to to the name of the USB audio device
    e) If the audio device supports hardware volume set Volume type to
       Hardware otherwise set it to Software, Fixed or Null
-   f) Restart
+   f) Menu, Power, Restart
 
    - I2S DEVICE
 
    a) Menu, Configure, Audio
    b) Set Named I2S device or DT overlay to the correct device or overlay name
-   c) Restart
+   c) Menu, Power, Restart
    d) Menu, Configure, Audio
    e) If the audio device supports hardware volume set Volume type to
       Hardware otherwise set it to Software, Fixed or Null
@@ -151,7 +154,7 @@ PLAYER SETUP AND CONFIGURATON
 
    - Ethernet mode
 
-   a) http://moode, moode.local, IP_ADDRESS
+   a) http://moode, moode.local or IP_ADDRESS
    b) Play one of the radio stations
 
    - AP mode
@@ -159,7 +162,7 @@ PLAYER SETUP AND CONFIGURATON
    a) http://172.24.1.1 or http://moode.local
    b) Switch to Library Folder view
    c) Navigate to the SDCARD/Stereo Test
-   c) Play the  "LR Channel And Phase" track
+   c) Play the "LR Channel And Phase" track
 
 At this point a FULLY OPERATIONAL PLAYER exists.
 
@@ -170,65 +173,63 @@ Customize the player by using any of the following procedures.
 1. CONFIGURE FOR WIFI CONNECTION
 
    - Ethernet mode
-   a) Leave eth cable connected
-   b) Insert wifi adapter (while Pi running)
-   c) http://moode
+   a) Leave Ethernet cable connected
+   b) Insert WiFi adapter (while Pi running)
+   c) http://moode, moode.local or IP_ADDRESS
    d) Menu, Configure, Network
-   e) Configure a wifi connection
+   e) Configure a WiFi connection
    f) Menu, Power, Shutdown
-   g) Unplug eth cable
+   g) Unplug Ethernet cable
    h) Power on
 
    - Access Point (AP) mode
-   a) Join network SSID=Moode, pwd=moodeaudio
-   b) http://moode.local
+   a) Join network SSID = Moode, password = moodeaudio
+   b) http://172.24.1.1 or http://moode.local
    c) Menu, Configure, Network
-   d) Configure a wifi connection
+   d) Configure a WiFi connection
    e) Menu, Power, Restart
 
-2. CHANGE HOST AND SERVICE NAMES
+2. CHANGE HOST AND RENDERER NAMES
 
    a) Menu, Configure, System (and Audio)
-   b) SET after entering appropriate value in each name field
+   b) Click SET after entering an appropriate value in each name field
    c) Restart is required if changing Host name
 
 3. AUTO-CONFIGURE AT BOOT
 
-   a) Mount the SDCard which will make the boot partition accessible
-   b) Copy the file /boot/moodecfg.ini.default to your PC, Mac or Linux client
-   c) Rename it to moodecfg.ini
-   d) Edit the settings as needed
-   e) Copy moodecfg.ini to /boot/
-   f) Insert SD Card in Pi and power up
-   g) Join AP SSID if using AP mode, then http://hostname.local or http://172.24.1.1
+   a) Copy the file /boot/moodecfg.ini.default from the Pi to a PC or Mac
+   b) Rename it to moodecfg.ini
+   c) Edit the settings as needed
+   d) Insert an SD Card into a reader attached to the PC or Mac
+   e) Copy the moodecfg.ini file from the PC or Mac to /boot on the SD Card
+   f) Eject the SD Card
+   f) Insert the SD Card into the Pi and power up
+   g) The Pi will reboot twice to perform the auto-configure
 
 AFTER PLAYER SETUP
 
 Follow these instructions for making certain types of changes.
 
-1. Switching from USB to I2S audio device
-   a) Unplug USB audio device
+1. Switching from a USB to an I2S audio device
+   a) Unplug the USB audio device
    b) Menu, Power, Shutdown
-   c) Install I2S audio device
+   c) Install the I2S audio device
    d) Power on
    e) Menu, Configure, Audio
-   f) Select appropriate I2S audio device then SET
+   b) Set Named I2S device or DT overlay to the correct device or overlay name
    g) Menu, Power, Restart
-   h) Menu, Configure, Audio, EDIT MPD config
-   i) Verify Audio output is set to "I2S audio device"
-   j) SAVE
 
-2. Switching from I2S to USB audio device
+2. Switching from an I2S to a USB audio device
    a) Menu, Configure, Audio
-   b) Select "None" for I2S audio device then SET
+   b) Set Named I2S device and DT overlay to "None"
    c) Menu, Power, Shutdown
-   d) Optionally unplug I2S audio device
-   e) Plug in USB audio device
-   f) Power on
-   g) Menu, Configure, Audio,  EDIT MPD config
-   h) Set Device type to "USB audio device"
-   i) SAVE
-   j) Menu, Power, Restart
+   d) Remove the I2S audio device
+   e) Power on
+   f) Menu, Configure, Audio
+   g) Set Output device to to the name of the USB audio device
+   h) If the audio device supports hardware volume set Volume type to
+      Hardware otherwise set it to Software, Fixed or Null
+   i) Menu, Power, Restart
 
 3. Switching from WiFi back to Ethernet
    a) Plug in Ethernet cable
@@ -240,7 +241,7 @@ Follow these instructions for making certain types of changes.
 
 COMMAND API
 
-Below are a list of commands that can be submitted to moOde via http or ssh.
+Below are a list of commands that can be submitted to moOde via HTTP or SSH.
 
 1. Base URL is http://moode/command/?cmd=
 2. MPD commands that are listed in MPC help
