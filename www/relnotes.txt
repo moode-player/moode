@@ -22,6 +22,7 @@ New features
 
 Updates
 
+- UPD: Use default thumbnail image when thumbnail can't be created
 - UPD: Add preferences option for native lazyloading
 - UPD: Add librespot access point fallback workaround to launch params
 - UPD: Provide a default Playlist cover if no cover image is set
