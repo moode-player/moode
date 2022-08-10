@@ -80,8 +80,7 @@ function getImage($path) {
 					outImage($id3v2->apic->mimeType, $id3v2->apic->imageData);
 				}
 			} catch (Zend_Media_Id3_Exception $e) {
-				workerLog('coverart: mp3: ' . $path);
-				workerLog('coverart: mp3: Zend media exception: ' . $e->getMessage());
+				workerLog('coverart: Error: ' . $e->getMessage() . ': ' . $path);
 			}
 			break;
 
@@ -95,8 +94,7 @@ function getImage($path) {
 					outImage($picture->getMimeType(), $picture->getData());
 				}
 			} catch (Zend_Media_Flac_Exception $e) {
-				workerLog('coverart: flac: ' . $path);
-				workerLog('coverart: flac: Zend media exception: ' . $e->getMessage());
+				workerLog('coverart: Error: ' . $e->getMessage() . ': ' . $path);
 			}
 			break;
 
@@ -116,8 +114,7 @@ function getImage($path) {
                     outImage($mime, $picture->getValue());
                 }
             } catch (Zend_Media_Iso14496_Exception $e) {
-				workerLog('coverart: m4a: ' . $path);
-				workerLog('coverart: m4a: Zend media exception: ' . $e->getMessage());
+				workerLog('coverart: Error: ' . $e->getMessage() . ': ' . $path);
             }
             break;
 	}
