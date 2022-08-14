@@ -308,8 +308,9 @@ function waitWorker($sleepTime, $caller) {
 	debugLog('waitWorker(): End   (' . $caller . ', w_active=' . $_SESSION['w_active'] . ')');
 }
 
-// Check for available software update (ex: update-rNNN.txt)
-// $path = http: //moodeaudio.org/downloads/ or /var/local/www/
+// $path
+// - Remote: cfg_system 'res_software_upd_url'
+// - Local:  /var/local/www/
 function checkForUpd($path) {
 	if (false === ($contents = file_get_contents($path . 'update-' . getPkgId() . '.txt'))) {
 		$result['Date'] = 'None';
@@ -320,11 +321,10 @@ function checkForUpd($path) {
 	return $result;
 }
 
-// Get the id of the update package.
-// This allows appending a suffix to the id when testing packages. Ex: rNNN-test1
+// Return the update package id (default 'moode') plus an optional suffix for testing
 function getPkgId () {
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='pkgid_suffix'", sqlConnect());
-	return $_SESSION['moode_release'] . $result[0]['value'];
+	return 'moode' . $result[0]['value'];
 }
 
 // Get moode release

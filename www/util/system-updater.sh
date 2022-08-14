@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# NOTE: Input arg $1 represents the release to be updated and correspondes
-#       to the suffix of the update zip file for example update-r802.zip
-#   EX: /var/www/util/system-updater.sh r802
+# Arg $1 = package id to be updated.
+# It is set by function getPkgId()in module inc/commpn.php and is also
+# used to name the update zip and txt files ex: update-moode.zip
 #
 
 message_log () {
@@ -27,35 +27,42 @@ message_log () {
 	echo "$TIME updater: $1" >> /var/log/moode.log
 }
 
-# Get URL to the update zip
+# Get URL to the location of the update zip
 SQLDB=/var/local/www/db/moode-sqlite3.db
 UPD_URL=$(sqlite3 $SQLDB "SELECT value FROM cfg_system WHERE param='res_software_upd_url'")
 
 cd /var/local/www
 
 # Download and unzip
-message_log "Downloading update package $1"
-wget -q $UPD_URL/update-$1.zip -O update-$1.zip
-unzip -q -o update-$1.zip
-rm update-$1.zip
+message_log "Downloading package [update-$1.zip]"
+wget -q $UPD_URL/update-$1.zip -O update-$1.zip > /dev/null 2>&1
+if [ $? -ne 0 ] ; then
+	message_log "Package not found, update cancelled"
+	exit 1
+else
+	unzip -q -o update-$1.zip
+	rm update-$1.zip
+fi
 
 # Install update
 chmod -R 0755 update
 update/install.sh
 
 # Report status
-# NOTE: inplace_upd_applied var is checked and reset in daemon/worker.php
+# NOTE: The "inplace_upd_applied" var is checked and reset in daemon/worker.php
 if [ $? -ne 0 ] ; then
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='0' WHERE param='inplace_upd_applied'")
-	message_log "Update cancelled"
+	message_log "Package install failed, update cancelled"
+	rm -rf update
+	exit 1
 else
 	# Download update-$1.txt to mark successful update
 	wget -q $UPD_URL/update-$1.txt -O update-$1.txt
 	$(sqlite3 $SQLDB "UPDATE cfg_system SET value='1' WHERE param='inplace_upd_applied'")
 	message_log "Update installed, restart required"
+	rm -rf update
+	exit 0
 fi
 
-# Cleanup
-rm -rf update
-
+# Finish up
 cd ~/

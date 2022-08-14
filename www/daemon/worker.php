@@ -2178,8 +2178,11 @@ function runQueuedJob() {
 			break;
 
 		// sys-config jobs
-		case 'installupd':
-			sysCmd('/var/www/util/system-updater.sh ' . getPkgId() . ' > /dev/null 2>&1');
+		case 'install_update':
+			$result = sysCmd('/var/www/util/system-updater.sh ' . getPkgId());
+			$last_message = explode(', ', end($result));
+			$_SESSION['notify']['title'] = $last_message[0];
+			$_SESSION['notify']['msg'] = ucfirst($last_message[1]);
 			break;
 		case 'timezone':
 			sysCmd('/var/www/util/sysutil.sh set-timezone ' . $_SESSION['w_queueargs']);

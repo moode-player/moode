@@ -35,10 +35,10 @@ phpSession('open');
 // Check for software update
 if (isset($_POST['checkfor_update'])) {
 	$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
-	$lastinstall = checkForUpd('/var/local/www/');
+	$lastInstall = checkForUpd('/var/local/www/');
 
 	// Up to date
-	if ($available['Date'] == $lastinstall['Date']) {
+	if ($available['Date'] == $lastInstall['Date']) {
 		$_available_upd = 'Software is up to date<br>';
 	}
 	// Image-only release available
@@ -56,12 +56,12 @@ if (isset($_POST['checkfor_update'])) {
 	}
 }
 
-// install software update
+// Install software update
 if (isset($_POST['install_update'])) {
 	if ($_POST['install_update'] == 1) {
 		$mount = sysCmd('mount | grep "moode.sqsh"');
 		$space = sysCmd("df | grep /dev/root | awk '{print $4}'");
-		# check for invalid configs
+		# Check for invalid configs
 		if ($mount[0] != '/var/local/moode.sqsh on /var/www type squashfs (ro,relatime)' && ($_SESSION['feat_bitmask'] & FEAT_SQSHCHK)) {
 			$_SESSION['notify']['title'] = 'Invalid configuration';
 			$_SESSION['notify']['msg'] = "Cannot find compressed file system";
@@ -78,8 +78,7 @@ if (isset($_POST['install_update'])) {
 			$_SESSION['notify']['duration'] = 20;
 		}
 		else {
-			submitJob('installupd', '', 'Software update installed', 'Restart required', 60000); // Keep message displayed
-			$_available_upd = 'Software is up to date<br>';
+			submitJob('install_update', '', '', '', 60000);
 		}
 	}
 }
