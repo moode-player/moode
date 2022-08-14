@@ -394,7 +394,7 @@ function systemMonitor() {
 		// PHP FPM pool count
 		$fpmPool = exec('pgrep -c -f "php-fpm: pool www"');
 
-		echo 'CPU: ' . $cpuFreq . ', ' . $cpuLoad . '% load, ' . $cpuTemp . "\xB0" . 'C | ' .
+		echo 'CPU: ' . $cpuFreq . ', ' . $cpuLoad . '% load, ' . $cpuTemp . 'C | ' .
 			'MEM: ' . $memUtil . '% used | ' .
 			'DISK: ' . $diskUsed . ' used, ' .	$diskFree . ' free | ' .
 			'PHP: ' . $fpmPool . " workers\r";
