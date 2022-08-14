@@ -2472,6 +2472,7 @@ function runQueuedJob() {
 		case 'poweroff':
 			$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", sqlConnect());
 			resetApMode();
+			sourceMount('unmountall');
 			sysCmd('/var/local/www/commandw/restart.sh ' . $_SESSION['w_queue']);
 			break;
 		case 'upd_clock_radio':
