@@ -953,6 +953,7 @@ $check_library_regen = 0;
 
 // Maintenance task
 $maint_interval = $_SESSION['maint_interval'];
+$remountInterval = 60;
 workerLog('worker: Maintenance interval (' . ($maint_interval / 60) . ' minutes)');
 
 // Screen saver
@@ -1095,6 +1096,18 @@ function chkScnSaver() {
 
 function chkMaintenance() {
 	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - 3;
+	$GLOBALS['remountInterval'] = $GLOBALS['remountInterval'] -3;
+
+	if ($GLOBALS['remountInterval'] <= 0) {
+		$result = sysCmd('ls /mnt/NAS/* 2>&1 | grep "Stale file handle"');
+		if (!empty($result)) {
+			sourceMount('unmountall');
+			sourceMount('mountall');
+			workerLog('worker: Maintenance: Music sources re-mounted (stale file handle)');
+		}
+
+		$GLOBALS['remountInterval'] = 60;
+	}
 
 	if ($GLOBALS['maint_interval'] <= 0) {
 		// Clear logs
