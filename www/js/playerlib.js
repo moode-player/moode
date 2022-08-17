@@ -3676,7 +3676,7 @@ $('#coverart-url, #playback-switch').click(function(e){
 	$('#menu-top').css('height', '0');
 	$('#menu-top').css('backdrop-filter', '');
 	$('#menu-bottom, .viewswitch').css('display', 'flex');
-    $('#multiroom-sender').hide();
+    $('#multiroom-sender,  #updater-notification').hide();
 
     syncTimers();
 
@@ -3739,7 +3739,14 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
 		$('#container-playqueue').css('visibility','');
 		$('#menu-bottom, .viewswitch').css('display', 'none');
 		$('#playback-controls').css('display', '');
+
         SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
+        if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].includes('Release')) {
+            $('#updater-notification').show();
+        } else {
+            $('#updater-notification').hide();
+        }
+
 		if (UI.mobile) {
             // Make sure playlist is hidden and controls are showing
 			showMenuTopW = false;

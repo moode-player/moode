@@ -444,6 +444,14 @@ if (!empty($wlan0Ip)) {
 
 //
 workerLog('worker: --');
+workerLog('worker: -- Software update');
+workerLog('worker: --');
+//
+$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $wlan0Ip[0] != '172.24.1.1');
+$_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
+
+//
+workerLog('worker: --');
 workerLog('worker: -- Audio config');
 workerLog('worker: --');
 //
@@ -1661,6 +1669,32 @@ function logNetworkInfo($interface) {
 	workerLog('worker: Domain  (' . $domainName . ')');
 }
 
+function updaterAutoCheck($validIPAddress) {
+	if ($_SESSION['updater_auto_check'] == 'On') {
+		workerLog('worker: Automatic check (On)');
+		if ($validIPAddress === true) {
+			workerLog('worker: Checking for available update...');
+			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
+			$lastInstall = checkForUpd('/var/local/www/');
+
+			if ($available['Date'] == $lastInstall['Date']) {
+				$msg = 'Software is up to date';
+			} else {
+				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'];
+			}
+			workerLog('worker: ' . $msg . ' is available');
+		} else {
+			$msg = 'No IP address or AP mode is On';
+			workerLog('worker: Unable to check: ' . $msg);
+		}
+	} else {
+		$msg = 'Automatic check (Off)';
+		workerLog('worker: ' . $msg);
+	}
+
+	return $msg;
+}
+
 // Determine playback destination
 class PlaybackDestinationType
 {
@@ -2203,6 +2237,11 @@ function runQueuedJob() {
 		case 'hostname':
 			sysCmd('/var/www/util/sysutil.sh chg-name host ' . $_SESSION['w_queueargs']);
 			break;
+		case 'updater_auto_check':
+			$_SESSION['updater_auto_check'] = $_SESSION['w_queueargs'];
+			$validIPAddress = ($_SESSION['ipaddress'] != '0.0.0.0' && $GLOBALS['wlan0Ip'][0] != '172.24.1.1');
+			$_SESSION['updater_available_update'] = updaterAutoCheck($validIPAddress);
+			break;
 		case 'cpugov':
 			sysCmd('sh -c ' . "'" . 'echo "' . $_SESSION['w_queueargs'] . '" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor' . "'");
 			break;
@@ -2485,7 +2524,11 @@ function runQueuedJob() {
 		case 'poweroff':
 			$result = sqlQuery("UPDATE cfg_system SET value='0' WHERE param='wrkready'", sqlConnect());
 			resetApMode();
+			workerLog('worker: AP mode reset');
+
 			sourceMount('unmountall');
+			workerLog('worker: NAS sources unmounted');
+
 			sysCmd('/var/local/www/commandw/restart.sh ' . $_SESSION['w_queue']);
 			break;
 		case 'upd_clock_radio':

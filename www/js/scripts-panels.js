@@ -200,34 +200,27 @@ jQuery(document).ready(function($) { 'use strict';
     	// Screen saver backdrop style
     	if (SESSION.json['scnsaver_style'] == 'Animated') {
     		$('#ss-style').css('background', '');
-    		$('#ss-style').css('animation', 'colors2 60s infinite');
     		$('#ss-style, #ss-backdrop').css('display', '');
-    	}
-        else if (SESSION.json['scnsaver_style'] == 'Theme') {
+            $('#ss-style').css('animation', 'colors2 60s infinite');
+    	} else if (SESSION.json['scnsaver_style'] == 'Theme') {
     		$('#ss-style, #ss-backdrop').css('display', 'none');
-    	}
-    	else if (SESSION.json['scnsaver_style'] == 'Gradient (Linear)') {
-    		$('#ss-style').css('animation', 'initial');
-    		$('#ss-style').css('background', 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.60) 25%,rgba(0,0,0,0.75) 40%, rgba(0,0,0,.8) 60%, rgba(0,0,0,.9) 100%)');
+    	} else {
+            $('#ss-style').css('animation', 'initial');
     		$('#ss-style, #ss-backdrop').css('display', '');
-    	}
-        else if (SESSION.json['scnsaver_style'] == 'Gradient (Radial)') {
-    		$('#ss-style').css('animation', 'initial');
-    		$('#ss-style').css('background', 'radial-gradient(circle at 50% center, rgba(64, 64, 64, .5) 5%, rgba(0, 0, 0, .85) 60%)');
-    		$('#ss-style, #ss-backdrop').css('display', '');
-    	}
-    	else if (SESSION.json['scnsaver_style'] == 'Pure Black') {
-    		$('#ss-style').css('animation', 'initial');
-    		$('#ss-style').css('background', 'rgba(0,0,0,1)');
-    		$('#ss-style, #ss-backdrop').css('display', '');
+            if (SESSION.json['scnsaver_style'] == 'Gradient (Linear)') {
+                $('#ss-style').css('background', 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.60) 25%,rgba(0,0,0,0.75) 40%, rgba(0,0,0,.8) 60%, rgba(0,0,0,.9) 100%)');
+            } else if (SESSION.json['scnsaver_style'] == 'Gradient (Radial)') {
+                $('#ss-style').css('background', 'radial-gradient(circle at 50% center, rgba(64, 64, 64, .5) 5%, rgba(0, 0, 0, .85) 60%)');
+            } else if (SESSION.json['scnsaver_style'] == 'Pure Black') {
+                $('#ss-style').css('background', 'rgba(0,0,0,1)');
+            }
     	}
 
      	// Set clock radio icon state
     	if (SESSION.json['clkradio_mode'] == 'Clock Radio' || SESSION.json['clkradio_mode'] == 'Sleep Timer') {
     		$('#clockradio-icon').removeClass('clockradio-off')
     		$('#clockradio-icon').addClass('clockradio-on')
-    	}
-    	else {
+    	} else {
     		$('#clockradio-icon').removeClass('clockradio-on')
     		$('#clockradio-icon').addClass('clockradio-off')
     	}
@@ -285,10 +278,22 @@ jQuery(document).ready(function($) { 'use strict';
             }
         }
 
-        // Multiroom Sender
+        // Multiroom Sender context menu item
         if (SESSION.json['multiroom_tx'] == 'On') {
             $('#context-menu-multiroom-sender').show();
+            $('#updater-notification').css('left', '54%');
         }
+
+        // Software update
+        if (SESSION.json['updater_auto_check'] == 'On' && SESSION.json['updater_available_update'].includes('Release')) {
+            if (currentView.indexOf('playback') != -1) {
+                $('#updater-notification').show();
+            }
+        }
+        $('#updater-notification').click(function(e) {
+            var msg = SESSION.json['updater_available_update'] + '<br><br>This notification can be turned off in System Config';
+            notify('updater', msg, 'infinite');
+        });
 
     	// Load swipe handler for top columns in library (mobile)
     	if (UI.mobile && SESSION.json['library_show_genres'] == 'Yes') {
@@ -316,7 +321,8 @@ jQuery(document).ready(function($) { 'use strict';
         // Playback
     	if (currentView.indexOf('playback') != -1) {
     		$('#playback-panel').addClass('active');
-    		$(window).scrollTop(0); // make sure it's scrolled to top
+    		$(window).scrollTop(0);
+
     		if (UI.mobile) {
     			$('#container-playqueue').css('visibility','hidden');
     			$('#playback-controls').show();
@@ -324,9 +330,11 @@ jQuery(document).ready(function($) { 'use strict';
             else {
 		        customScroll('playqueue', parseInt(MPD.json['song']));
     		}
-    		$('#menu-bottom').hide();
-            SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
 
+            $('#menu-bottom').hide();
+
+            // Multiroom sender header icon
+            SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
     	}
         // Library
     	else {

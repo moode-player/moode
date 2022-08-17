@@ -35,15 +35,8 @@ switch ($_GET['cmd']) {
 			$cfgSystem[$row['param']] = $row['value'];
 		}
 
-		// Add extra vars
-		$cfgSystem['debuglog'] = $_SESSION['debuglog'];
-		$cfgSystem['kernelver'] = $_SESSION['kernelver'];
-		$cfgSystem['procarch'] = $_SESSION['procarch'];
-		$cfgSystem['raspbianver'] = $_SESSION['raspbianver'];
-		$cfgSystem['ipaddress'] = $_SESSION['ipaddress'];
-		$cfgSystem['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
-		$cfgSystem['rx_hostnames'] = $_SESSION['rx_hostnames'];
-		$cfgSystem['rx_addresses'] = $_SESSION['rx_addresses'];
+		addExtraSessionVars($cfgSystem);
+
 		$data['cfg_system'] = $cfgSystem;
 
 		// Theme settings
@@ -86,15 +79,8 @@ switch ($_GET['cmd']) {
 		foreach ($result as $row) {
 			$cfgSystem[$row['param']] = $row['value'];
 		}
-		// Add extra vars
-		$cfgSystem['debuglog'] = $_SESSION['debuglog'];
-		$cfgSystem['kernelver'] = $_SESSION['kernelver'];
-		$cfgSystem['procarch'] = $_SESSION['procarch'];		
-		$cfgSystem['raspbianver'] = $_SESSION['raspbianver'];
-		$cfgSystem['ipaddress'] = $_SESSION['ipaddress'];
-		$cfgSystem['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
-		$cfgSystem['rx_hostnames'] = $_SESSION['rx_hostnames'];
-		$cfgSystem['rx_addresses'] = $_SESSION['rx_addresses'];
+
+		addExtraSessionVars($cfgSystem);
 
 		echo json_encode($cfgSystem);
 		break;
@@ -126,4 +112,17 @@ switch ($_GET['cmd']) {
 			echo json_encode($result); // Return all rows
 		}
 		break;
+}
+
+function addExtraSessionVars(&$cfgSystem) {
+	$cfgSystem['debuglog'] = $_SESSION['debuglog'];
+	$cfgSystem['kernelver'] = $_SESSION['kernelver'];
+	$cfgSystem['procarch'] = $_SESSION['procarch'];
+	$cfgSystem['raspbianver'] = $_SESSION['raspbianver'];
+	$cfgSystem['ipaddress'] = $_SESSION['ipaddress'];
+	$cfgSystem['bgimage'] = file_exists('/var/local/www/imagesw/bgimage.jpg') ? '../imagesw/bgimage.jpg' : '';
+	$cfgSystem['rx_hostnames'] = $_SESSION['rx_hostnames'];
+	$cfgSystem['rx_addresses'] = $_SESSION['rx_addresses'];
+	$cfgSystem['updater_auto_check'] = $_SESSION['updater_auto_check'];
+	$cfgSystem['updater_available_update'] = $_SESSION['updater_available_update'];
 }

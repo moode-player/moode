@@ -47,10 +47,10 @@ if (isset($_POST['checkfor_update'])) {
 	}
 	// In-place update available
 	else {
-		$_available_upd = $available['Date'] == 'None' ? $available['Date'] . '<br>' : 'Package date: ' . $available['Date'] .
+		$_available_upd = $available['Date'] == 'None' ? 'None available<br>' : 'Release ' . $available['Release'] . ', ' . $available['Date'] .
 			'<button class="btn btn-primary btn-small set-button btn-submit" id="install-update" type="submit" name="install_update" value="1">Install</button>' .
 			'<button class="btn btn-primary btn-small set-button" data-toggle="modal" href="#view-pkgcontent">View</button><br>' .
-			'<span class="help-block-configs help-block-margin" style="margin-bottom:5px">Progress can be monitored via SSH cmd: moodeutl -t</span>';
+			'<span class="help-block-configs help-block-margin" style="margin-bottom:5px">Monitor progress with the command <i>moodeutl -t</i></span>';
 		$_pkg_description = $available['Description'];
 		$_pkg_relnotes = $available['Relnotes'];
 	}
@@ -85,7 +85,7 @@ if (isset($_POST['install_update'])) {
 
 // GENERAL
 
-// timezone
+// Timezone
 if (isset($_POST['update_time_zone'])) {
 	if (isset($_POST['timezone']) && $_POST['timezone'] != $_SESSION['timezone']) {
 		submitJob('timezone', $_POST['timezone'], 'Timezone set to ' . $_POST['timezone'], '');
@@ -93,7 +93,7 @@ if (isset($_POST['update_time_zone'])) {
 	}
 }
 
-// host name
+// Host name
 if (isset($_POST['update_host_name'])) {
 	if (isset($_POST['hostname']) && $_POST['hostname'] != $_SESSION['hostname']) {
 		if (preg_match("/[^A-Za-z0-9-]/", $_POST['hostname']) == 1) {
@@ -108,7 +108,7 @@ if (isset($_POST['update_host_name'])) {
 	}
 }
 
-// keyboard layout
+// Keyboard layout
 if (isset($_POST['update_keyboard'])) {
     if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
         submitJob('keyboard', $_POST['keyboard'], 'Keyboard layout updated ', 'Restart required');
@@ -116,7 +116,7 @@ if (isset($_POST['update_keyboard'])) {
     }
 }
 
-// browser title
+// Browser title
 if (isset($_POST['update_browser_title'])) {
 	if (isset($_POST['browsertitle']) && $_POST['browsertitle'] != $_SESSION['browsertitle']) {
 		phpSession('write', 'browsertitle', $_POST['browsertitle']);
@@ -124,6 +124,14 @@ if (isset($_POST['update_browser_title'])) {
 }
 
 // SYSTEM MODIFICATIONS
+
+// Auto check for update
+if (isset($_POST['update_updater_auto_check'])) {
+	if (isset($_POST['updater_auto_check']) && $_POST['updater_auto_check'] != $_SESSION['updater_auto_check']) {
+		$_SESSION['updater_auto_check'] = $_POST['updater_auto_check'];
+		submitJob('updater_auto_check', $_POST['updater_auto_check'], 'Setting updated', '');
+	}
+}
 
 // CPU governor
 if (isset($_POST['update_cpugov'])) {
@@ -356,6 +364,10 @@ $_keyboard['keyboard'] = buildKeyboardSelect($_SESSION['keyboard']);
 $_select['browsertitle'] = $_SESSION['browsertitle'];
 
 // SYSTEM MODIFICATIONS
+
+// Auto check for update
+$_select['updater_auto_check1'] .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check1\" value=\"On\" " . (($_SESSION['updater_auto_check'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+$_select['updater_auto_check0'] .= "<input type=\"radio\" name=\"updater_auto_check\" id=\"toggle-updater-auto-check2\" value=\"Off\" " . (($_SESSION['updater_auto_check'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 
 // CPU governor
 $_select['cpugov'] .= "<option value=\"ondemand\" " . (($_SESSION['cpugov'] == 'ondemand') ? "selected" : "") . ">On-demand</option>\n";

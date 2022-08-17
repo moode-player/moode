@@ -72,6 +72,24 @@
 
 		<legend>System Modifications</legend>
 		<fieldset>
+			<div class="control-group" >
+				<label class="control-label">Auto check update</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-updater-auto-check2">ON</label>
+						$_select[updater_auto_check1]
+						<label class="toggle-radio" for="toggle-updater-auto-check1">OFF</label>
+						$_select[updater_auto_check0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_updater_auto_check" value="novalue">Set</button>
+					</div>
+					<span class="help-block-configs help-block-margin2">
+						Automatically check for a software update during startup and display a notification in Playback view.
+					</span>
+				</div>
+            </div>
+
 			<div class="control-group">
 				<label class="control-label" for="cpugov">CPU governor</label>
 				<div class="controls">

@@ -167,12 +167,15 @@ html {background-color:inherit;}
 #mbrand, #mblur {font-weight:600;position:absolute;left:50%;top:-.25rem;}
 #mbrand {color:var(--adapttext);text-shadow: 0 0 0.25rem rgba(0,0,0,0.5);transform:translate(-50%);}
 #mblur {letter-spacing:-.56em;color:transparent;text-shadow:0 0 2px var(--btnshade4);transform:translate(calc(-50% - .28em));opacity:.75;}
-#dropdown-cdsp-btn {right:3.5em !important;} /* Was 4em */
+#menu-cdsp {font-size:1.25rem;}
+#dropdown-cdsp-btn {right:4.65em !important;} /* Was 3.5 em but it collided with the busy spinner */
 #dropdown-cdsp-menu {min-width:20rem !important;}
 #menu-settings i {color:var(--accentxts);font-size:.65em;}
 .dropdown-cdsp-line {padding-left:1em;}
 #menu-bottom {/*display:flex;*/bottom:.2rem;bottom:calc(env(safe-area-inset-bottom) + .2rem);width:40%;margin:0 auto;background-color:transparent;color:inherit;z-index:990;line-height:normal;font-size:inherit;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 #menu-bottom ul {display:flex;margin:0;width:100%;}
+#updater-notification {position:absolute;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;color:var(--adapttext);}
+#updater-notification a {font-size:1.25rem;}
 #playback-panel {padding:2.75em 0 0 0;min-height:calc(100vh - 2.75em);position:relative;}
 #content {position:fixed;height:inherit;width:100vw;min-height:100vh;overflow:hidden;font-size:var(--pbfont);color:var(--adapttext);background-color:var(--adaptbg);}
 #timeknob, #timeflow {background-color:transparent;}
@@ -736,5 +739,6 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .controls-select {margin-bottom:5px;}
 .recorder-on {border-bottom: 2px solid var(--accentxts);}
 #selected-album-tag {margin-left:.25em;font-style:italic;}
-#multiroom-sender {position:absolute;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;font-weight:600;font-size:1em;color:var(--textvariant);}
+#multiroom-sender {position:absolute;display:none;top:env(safe-area-inset-top);transform:translate(-50%);left:50%;}
+#multiroom-sender a {font-size:1.25rem;color:var(--textvariant);}
 #menu-cdsp {color:var(--adapttext);}

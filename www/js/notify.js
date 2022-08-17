@@ -90,6 +90,7 @@ function notify(title, msg, duration = '2_seconds') {
 		shutdown: 'Shutting down...',
         mpderror: 'MPD error',
         viewport: 'Viewport',
+        updater: 'An update is available',
         // Recorder
         recorder_installed: 'Recorder installed',
         recorder_uninstalled: 'Recorder uninstalled',
