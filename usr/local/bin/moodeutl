@@ -51,6 +51,7 @@ const DEF_COVER = 'images/default-cover-v6.svg';
 const DEV_ROOTFS_SIZE = 3670016000; // Bytes (3.5GB)
 const LOW_DISKSPACE_LIMIT = 524288; // Bytes (512MB)
 const ROOT_DIRECTORIES = array('NAS', 'SDCARD', 'USB');
+const UPD_LOG = '/var/local/www/update-moode.log';
 
 // Features availability bitmask
 // NOTE: Updates must also be made to matching code blocks in playerlib.js, sysinfo.sh, moodeutl, and footer.php
@@ -168,7 +169,10 @@ switch ($option) {
 		bluetoothReset();
 		break;
 	case '--mpdlog':
-		mpdLog();
+		printMPDLog();
+		break;
+	case '--updlog':
+		printUpdateLog();
 		break;
 	case '--mooderel':
 		$file = file_get_contents('/var/www/footer.min.php');
@@ -213,6 +217,7 @@ With no OPTION print the help text and exit.
  -U\t\tCheck station urls, list only unplayable
  --btreset\tReset Bluetooth to off
  --mpdlog\tPrint MPD log
+ --updlog\tPrint in-place update log
  --mooderel\tPrint moOde release
  --revision\tPrint the hardware revision
  --version\tPrint the program version
@@ -522,8 +527,16 @@ function bluetoothReset() {
 	echo 'Bluetooth reset to off, reboot required' . "\n";
 }
 
-function mpdLog() {
+function printMPDLog() {
 	echo shell_exec('cat ' . MPD_LOG);
+}
+
+function printUpdateLog() {
+	if (file_exists(UPD_LOG)) {
+		echo shell_exec('cat ' . UPD_LOG);
+	} else {
+		echo 'The update log was not found' . "\n";
+	}
 }
 
 function detectCIFSHosts() {
