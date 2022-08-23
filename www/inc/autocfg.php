@@ -353,7 +353,8 @@ function autoConfigSettings() {
 		'optionals' => ['wlanmethod', 'wlanipaddr', 'wlannetmask', 'wlangateway', 'wlanpridns', 'wlansecdns', 'wlancountry', 'wlanpsk'],
 		'handler' => function($values, $optionals) {
 			$dbh = sqlConnect();
-			$psk = key_exists('wlanpsk', $optionals) ? $optionals['wlanpsk'] : genWpaPSK($values['wlanssid'], $values['wlanpwd']);
+			$psk = (key_exists('wlanpsk', $optionals) && !empty($optionals['wlanpsk'])) ? $optionals['wlanpsk'] :
+				genWpaPSK($values['wlanssid'], $values['wlanpwd']);
 			$netcfg = sqlQuery('select * from cfg_network', $dbh);
 			$value = array('method' => $netcfg[1]['method'], 'ipaddr' => $netcfg[1]['ipaddr'], 'netmask' => $netcfg[1]['netmask'],
 				'gateway' => $netcfg[1]['gateway'], 'pridns' => $netcfg[1]['pridns'], 'secdns' => $netcfg[1]['secdns'],
@@ -416,7 +417,8 @@ function autoConfigSettings() {
 		'optionals' => ['apdpsk'],
 		'handler' => function($values, $optionals) {
 			$dbh = sqlConnect();
-			$psk = key_exists('apdpsk', $optionals) ? $optionals['apdpsk'] : genWpaPSK($values['apdssid'], $values['apdpwd']);
+			$psk = (key_exists('apdpsk', $optionals) && !empty($optionals['apdpsk'])) ? $optionals['apdpsk'] :
+				genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' =>  $psk,
 				'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
