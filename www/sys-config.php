@@ -504,6 +504,8 @@ $_select['fs_nfs1'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs
 $_select['fs_nfs0'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs2\" value=\"Off\" " . (($_SESSION['fs_nfs'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 $_select['fs_nfs_access'] = $_SESSION['fs_nfs_access'];
 $_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
+$ipAddrParts = explode('.', $_SESSION['ipaddress']);
+$_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/24';
 
 // LOCAL SERVICES
 

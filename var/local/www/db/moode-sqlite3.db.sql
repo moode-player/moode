@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Tue Aug 16 11:37:50 2022
+-- File generated with SQLiteStudio v3.1.0 on Mon Aug 22 21:20:39 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -231,7 +231,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (166, 'playlist_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (167, 'plview_sort_group', 'Name,No grouping');
 INSERT INTO cfg_system (id, param, value) VALUES (168, 'fs_smb', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (169, 'fs_nfs', 'Off');
-INSERT INTO cfg_system (id, param, value) VALUES (170, 'fs_nfs_access', '192.168.1.0/24');
+INSERT INTO cfg_system (id, param, value) VALUES (170, 'fs_nfs_access', '');
 INSERT INTO cfg_system (id, param, value) VALUES (171, 'native_lazyload', 'Yes');
 
 -- Table: cfg_theme
