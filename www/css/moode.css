@@ -176,8 +176,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-controls {width:100%;}
 	#extra-tags {padding-top:.45em;}
 	.modal-sm {min-width:80%;max-width:80%;}
-	#playback-cover {width:100%;text-align:center;margin-left:auto;margin-right:auto;}
-	#playback-queue {width:100%;}
+	#playback-cover {width:100%;text-align:center;margin-left:auto;margin-right:auto;padding-top:.25em;}
+	#playback-queue {width:100%;font-size: calc(calc(.85em + 1vmin));}
 	.playqueue .active .speaker {left:2px;}
 	.input-large {width: initial;}
  	#container-playqueue {position:relative;width:100%;height:unset;margin:0;visibility:hidden;}
