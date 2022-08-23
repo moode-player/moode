@@ -121,6 +121,9 @@ switch ($option) {
 	case '-i':
 		importAutoconfig();
 		break;
+	case '-p':
+		importPlaylists();
+		break;
 	case '-f':
 	case '-F':
 		audioFormats($option);
@@ -219,8 +222,8 @@ With no OPTION print the help text and exit.
  --mpdlog\tPrint MPD log
  --updlog\tPrint in-place update log
  --mooderel\tPrint moOde release
- --revision\tPrint the hardware revision
- --version\tPrint the program version
+ --revision\tPrint hardware revision
+ --version\tPrint program version
  --help\t\tPrint this help text\n";
 		break;
 }
@@ -506,6 +509,11 @@ function exportAutoconfig($argv) {
 
 function importAutoconfig() {
 	echo "Import moOde autoconfig settings\n";
+	echo shell_exec('sudo /var/www/util/autocfg-import.php');
+}
+
+function importPlaylists() {
+	echo "Import playlists\n";
 	echo shell_exec('sudo /var/www/util/autocfg-import.php');
 }
 
