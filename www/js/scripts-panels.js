@@ -291,8 +291,12 @@ jQuery(document).ready(function($) { 'use strict';
             }
         }
         $('#updater-notification').click(function(e) {
-            var msg = SESSION.json['updater_available_update'] + '<br><br>This notification can be turned off in System Config';
-            notify('updater', msg, 'infinite');
+            if (SESSION.json['updater_available_update'].includes('Release')) {
+                var msg = SESSION.json['updater_available_update'] + '<br><br>This notification can be turned off in System Config';
+                notify('updater', msg, 'infinite');
+            } else {
+                $('#updater-notification').hide();
+            }
         });
 
     	// Load swipe handler for top columns in library (mobile)

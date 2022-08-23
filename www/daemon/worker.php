@@ -1680,9 +1680,9 @@ function updaterAutoCheck($validIPAddress) {
 			if ($available['Date'] == $lastInstall['Date']) {
 				$msg = 'Software is up to date';
 			} else {
-				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'];
+				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';
 			}
-			workerLog('worker: ' . $msg . ' is available');
+			workerLog('worker: ' . $msg);
 		} else {
 			$msg = 'No IP address or AP mode is On';
 			workerLog('worker: Unable to check: ' . $msg);
