@@ -181,8 +181,8 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 		$hosts = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
 
 		foreach ($hosts as $ipAddr) {
-			$share = sysCmd('showmount --exports --no-headers ' . $ipAddr . ' | cut -d" " -f1')[0];
-			if (!empty($share)) {
+			$shares = sysCmd('showmount --exports --no-headers ' . $ipAddr . ' | cut -d" " -f1');
+			foreach ($shares as $share) {
 				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $ipAddr . $share, '', $ipAddr . $share);
 			}
 		}
