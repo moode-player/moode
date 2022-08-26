@@ -183,7 +183,9 @@ if (isset($_POST['scan']) && $_POST['scan'] == 1) {
 		foreach ($hosts as $ipAddr) {
 			$shares = sysCmd('showmount --exports --no-headers ' . $ipAddr . ' | cut -d" " -f1');
 			foreach ($shares as $share) {
-				$_address .= sprintf('<option value="%s" %s>%s</option>\n', $ipAddr . $share, '', $ipAddr . $share);
+				if ($share != '/export') { // Exclude virtual file system head
+					$_address .= sprintf('<option value="%s" %s>%s</option>\n', $ipAddr . $share, '', $ipAddr . $share);
+				}
 			}
 		}
 	}
