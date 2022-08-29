@@ -1355,6 +1355,41 @@ $('#btn-upd-radio-manager').click(function(e) {
     );
 });
 
+// Click playlist entry
+$('#database-playlist').on('click', 'img', function(e) {
+    var pos = $(this).parents('li').index();
+	var path = $(this).parents('li').data('path');
+
+	UI.playlistPos = pos;
+	storePlaylistPos(UI.playlistPos)
+
+    if (UI.dbEntry[3].substr(0, 9) == 'pl-entry-') {
+        $('#' + UI.dbEntry[3]).removeClass('active');
+    }
+    UI.dbEntry[3] = $(this).parents('li').attr('id');
+    $(this).parents('li').addClass('active');
+
+    if (SESSION.json['library_onetouch_pl'] != 'No action') {
+        if (SESSION.json['library_onetouch_pl'] == 'Add' || SESSION.json['library_onetouch_pl'] == 'Add next') {
+            var queueCmd = SESSION.json['library_onetouch_pl'] == 'Add' ? 'add_item' : 'add_item_next';
+            sendQueueCmd(queueCmd, path);
+            notify(queueCmd);
+        }
+        else if (SESSION.json['library_onetouch_pl'] == 'Play' || SESSION.json['library_onetouch_pl'] == 'Play next') {
+            var queueCmd = SESSION.json['library_onetouch_pl'] == 'Play' ? 'play_item' : 'play_item_next';
+            sendQueueCmd(queueCmd, path);
+        }
+        else if (SESSION.json['library_onetouch_pl'] == 'Clear/Play') {
+            sendQueueCmd('clear_play_item', path);
+            notify('clear_play_item');
+        }
+    }
+
+	setTimeout(function() {
+        customScroll('playlist', UI.playlistPos + 1, 200);
+	}, DEFAULT_TIMEOUT);
+});
+
 // Playlist manager modal
 $('#btn-pl-manager').click(function(e) {
     var sortGroup = SESSION.json['plview_sort_group'].split(',');

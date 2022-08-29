@@ -29,7 +29,8 @@ Updates
 - UPD: Bump camilla-backend to 1.0.0 rc5
 - UPD: Bump alsa-cdsp to 1.1.0
 - UPD: Add -N Detect NFS hosts to moodeutl
-- UPD: Add preferences option for native lazyloading
+- UPD: Add prefs option for Native lazyloading
+- UPD: Add prefs option for Playlist one-touch action
 - UPD: Add librespot AP fallback workaround to launch params
 - UPD: Remove unused Flat UI icons
 - UPD: Use default thumbnail image when thumbnail can't be created
