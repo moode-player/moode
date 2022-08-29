@@ -35,6 +35,7 @@ Updates
 - UPD: Provide a default Playlist cover if no cover image is set
 - UPD: Increase size of help text on configuration screens
 - UPD: Improve in-place update process
+- UPD: Improve detection/extraction of FLAC embedded cover art
 
 Radio stations
 
