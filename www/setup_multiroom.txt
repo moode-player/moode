@@ -6,7 +6,7 @@
 #  Multiroom Audio system. Additional configuration help is provided within the
 #  player via Menu, Quick help and the (i) information buttons.
 #
-#  Version: 1.2 2022-08-09
+#  Version: 1.2 2022-08-29
 #
 #  (C) Tim Curtis 2021 http://moodeaudio.org
 #
@@ -18,15 +18,15 @@ This release of moOde Multiroom audio is designed for listening in a casual
 or background setting. There is no support in this release for audiophile
 features including uncompressed PCM format, rates greater than 48 kHz, DSP or
 clock correction between Sender and Receiver. These features may however appear
-in future versions of the feature.
+in future releases.
 
 OVERVIEW
 
 A moOde multiroom audio system consists of a Sender and Receivers. The Sender
 should be a dedicated moOde player configured to output to the integrated HDMI
 port or optionally the Headphone jack but not connected to any speakers or
-headphones. It functions solely as a Music Server that Sends its audio output to
-one or more Receivers. NOTE: There can only be one Sender on the network.
+headphones. It functions solely to send what it is currently playing to one or
+more Receivers. NOTE: There can only be one Sender on the network.
 
 BLOCK DIAGRAM
 

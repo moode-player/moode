@@ -248,13 +248,12 @@ Below are a list of commands that can be submitted to moOde via HTTP or SSH.
 3. Volume commands that are listed in /var/www/vol.sh --help
 4. Library update is via the command libupd-submit.php
 5. CoverView on/off is via the command coverview.php on/off
-6. Other commands
-   a) get_currentsong
-      Returns contents of the file /var/local/www/currentsong encoded as JSON
+6. Song info is via the command get_currentsong which returns the contents
+   of the file /var/local/www/currentsong.txt encoded as JSON
 
 HTTP examples:
 
-# Other
+# Get song info
 http://moode/command/?cmd=get_currentsong
 {"file":"http:\/\/west-aac-64.streamthejazzgroove.com\/stream",
 "artist":"Radio station",
