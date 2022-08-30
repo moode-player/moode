@@ -27,7 +27,7 @@ Updates
 - UPD: Bump to librespot 0.4.2
 - UPD: Bump camillagui to 1.0.0 rc4
 - UPD: Bump camilla-backend to 1.0.0 rc5
-- UPD: Bump alsa-cdsp to 1.1.0
+- UPD: Bump alsa-cdsp to 1.2.0
 - UPD: Add -N Detect NFS hosts to moodeutl
 - UPD: Add prefs option for Native lazyloading
 - UPD: Add prefs option for Playlist one-touch action
