@@ -26,7 +26,7 @@
 FPM_LIMIT=45
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
-MPD_LOADED=$(pgrep -c -x mpd)
+MPD_RUNNING=$(pgrep -c -x mpd)
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
 message_log () {
@@ -50,8 +50,8 @@ while true; do
 	fi
 
 	# MPD
-	if [[ $MPD_LOADED = 0 ]]; then
-		message_log "Error: MPD restarted (check syslog for errors)"
+	if [[ $MPD_RUNNING = 0 ]]; then
+		message_log "Error: MPD restarted (check syslog for messages)"
 		systemctl start mpd
 	fi
 
@@ -83,6 +83,6 @@ while true; do
 
 	sleep 6
 	FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
-	MPD_LOADED=$(pgrep -c -x mpd)
+	MPD_RUNNING=$(pgrep -c -x mpd)
 
 done > /dev/null 2>&1 &
