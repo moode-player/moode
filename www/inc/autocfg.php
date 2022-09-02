@@ -412,7 +412,6 @@ function autoConfigSettings() {
 		}],
 
 		'Network (apd0)',
-		// NOTE: do same as for wlan0
 		['requires' => ['apdssid', 'apdpwd', 'apdchan'],
 		'optionals' => ['apdpsk'],
 		'handler' => function($values, $optionals) {
@@ -421,7 +420,7 @@ function autoConfigSettings() {
 				genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' =>  $psk,
-				'wlan_country' => '', 'wlan_channel' => $values['apdchan']);
+				'wlan_country' => '', 'wlan_channel' => $values['apdchan'], 'Off'); // Always set router_mode to Off
 			sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 			cfgHostApd();
 		},
@@ -432,6 +431,7 @@ function autoConfigSettings() {
 			$result = $result . "apdpwd = \"" . "" . "\"\n"; // Keep empty
 			$result = $result . "apdpsk = \"" . $row['wlan_psk'] . "\"\n";
 			$result = $result . "apdchan = \"" . $row['wlan_channel'] . "\"\n";
+			$result = $result . "router_mode = \"" . 'Off' . "\"\n";
 			return $result;
 		}],
 
@@ -455,6 +455,7 @@ function autoConfigSettings() {
 		'Library',
 		['requires' => ['library_onetouch_album'], 'handler' => setphpSession],
 		['requires' => ['library_onetouch_radio'], 'handler' => setphpSession],
+		['requires' => ['library_onetouch_pl'], 'handler' => setphpSession],
 		['requires' => ['library_albumview_sort'], 'handler' => setphpSession],
 		['requires' => ['library_tagview_sort'], 'handler' => setphpSession],
 		['requires' => ['library_recently_added'], 'handler' => setphpSession],
