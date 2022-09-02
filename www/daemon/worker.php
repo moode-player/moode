@@ -417,6 +417,7 @@ if (!empty($wlan0)) {
 }
 
 // AP Router mode
+workerLog('worker: apd0 router mode (' . $cfgNetwork[2]['wlan_router'] . ')');
 if ($cfgNetwork[2]['wlan_router'] == 'On') {
 	if ($_SESSION['apactivated'] == true) {
 		sysCmd('systemctl start nftables');
