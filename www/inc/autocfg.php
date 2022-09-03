@@ -420,7 +420,7 @@ function autoConfigSettings() {
 				genWpaPSK($values['apdssid'], $values['apdpwd']);
 			$value = array('method' => '', 'ipaddr' => '', 'netmask' => '', 'gateway' => '', 'pridns' => '', 'secdns' => '',
 				'wlanssid' => $values['apdssid'], 'wlansec' => '', 'wlanpwd' => $psk, 'wlan_psk' =>  $psk,
-				'wlan_country' => '', 'wlan_channel' => $values['apdchan'], 'Off'); // Always set router_mode to Off
+				'wlan_country' => '', 'wlan_channel' => $values['apdchan'], 'wlan_router' => 'Off'); // Always set router_mode to Off
 			sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 			cfgHostApd();
 		},
@@ -431,7 +431,7 @@ function autoConfigSettings() {
 			$result = $result . "apdpwd = \"" . "" . "\"\n"; // Keep empty
 			$result = $result . "apdpsk = \"" . $row['wlan_psk'] . "\"\n";
 			$result = $result . "apdchan = \"" . $row['wlan_channel'] . "\"\n";
-			$result = $result . "router_mode = \"" . 'Off' . "\"\n";
+			$result = $result . "apdrouter = \"" . 'Off' . "\"\n";
 			return $result;
 		}],
 
