@@ -27,6 +27,7 @@
 	<div id="screen-saver" class="hide" href="#notarget">
 		<div id="ss-backdrop"></div>
 		<div id="ss-style"></div>
+		<div id="ss-clock" class="ss-clock" ></div>
 		<div id="ss-coverart" class="ss-coverart">
 			<div id="ss-coverart-url"></div>
 			<div id="ss-currentsong"></div>
@@ -1541,7 +1542,7 @@
 	                </div>
 
    	                <label class="control-label" for="scnsaver-timeout">Backdrop style</label>
-	                <div class="controls" style="margin-bottom:5em;">
+	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="scnsaver-style" class="filter-option pull-left">
@@ -1567,6 +1568,28 @@
 							<b>Gradient (Linear):</b> Gradient overlay, top to bottom.<br>
 							<b>Gradient (Radial):</b> Gradient overlay, center to edge.<br>
 							<b>Pure Black:</b> Solid black overlay.
+	                    </span>
+	                </div>
+
+					<label class="control-label" for="scnsaver-mode">Display mode</label>
+	                <div class="controls" style="margin-bottom:5em;">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="scnsaver-mode" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-mode-sel"><span class="text">Cover</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-mode-sel"><span class="text">Clock</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-scnsaver-mode" class="help-block hide">
+	                    	Display cover art or a digital clock.
 	                    </span>
 	                </div>
 				</div>

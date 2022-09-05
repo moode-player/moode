@@ -143,7 +143,8 @@ var GLOBAL = {
     backupCreate: false,
     busySpinnerSVG: "<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42' stroke='#fff'><g fill='none' fill-rule='evenodd'><g transform='translate(3 3)' stroke-width='4'><circle stroke-opacity='.35' cx='18' cy='18' r='18'/><path d='M36 18c0-9.94-8.06-18-18-18'><animateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='1s' repeatCount='indefinite'/></path></g></g></svg>",
     thisClientIP: '',
-    chromium: false
+    chromium: false,
+    ssClockIntervalID: ''
 };
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
 
@@ -576,10 +577,41 @@ function screenSaver(cmd) {
         }
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
+
+        if (SESSION.json['scnsaver_mode'] == 'Clock') {
+            $('#ss-coverart').css('display', 'none');
+            $('#ss-clock').css('display', 'block');
+            showSSClock();
+            GLOBAL.ssClockIntervalID = setInterval(showSSClock, 1000);
+        }
 	} else if (cmd.slice(-1) == '0') {
         // Hide CoverView
         $('#screen-saver').click();
     }
+}
+
+// Screen saver clock
+function showSSClock() {
+    var date = new Date();
+    var h = date.getHours(); // 0 - 23
+    var m = date.getMinutes(); // 0 - 59
+    var s = date.getSeconds(); // 0 - 59
+
+    var ampm = "AM";
+    if (h == 0) {
+        h = 12;
+    } else if (h > 12) {
+        h = h - 12;
+        var ampm = "PM";
+    }
+
+    h = (h < 10) ? "0" + h : h;
+    m = (m < 10) ? "0" + m : m;
+    s = (s < 10) ? "0" + s : s;
+
+    var time = h + ':' + m + ':' + s + ' ' + ampm;
+    $('#ss-clock').text(time);
+    //console.log(time);
 }
 
 // Reconnect/reboot/restart
@@ -2591,6 +2623,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#scnsaver-timeout span').text(getParamOrValue('param', SESSION.json['scnsaver_timeout']));
                 $('#auto-coverview span').text(SESSION.json['toggle_coverview'] == '-on' ? 'Yes' : 'No');
         		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
+                $('#scnsaver-mode span').text(SESSION.json['scnsaver_mode']);
 
                 $('#preferences-modal').modal();
             });
@@ -2724,6 +2757,7 @@ $('#btn-preferences-update').click(function(e){
 	var scnSaverTimeoutChange = false;
     var autoCoverViewChange = false;
 	var scnSaverStyleChange = false;
+    var scnSaverModeChange = false;
     var extraTagsChange = false;
     var playHistoryChange = false;
 	var fontSizeChange = false;
@@ -2797,6 +2831,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['scnsaver_timeout'] != getParamOrValue('value', $('#scnsaver-timeout span').text())) {scnSaverTimeoutChange = true;}
     if (SESSION.json['toggle_coverview'] != ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off')) {autoCoverViewChange = true;}
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
+    if (SESSION.json['scnsaver_mode'] != $('#scnsaver-mode span').text()) {scnSaverModeChange = true;}
 
 	// Appearance
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -2845,6 +2880,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['scnsaver_timeout'] = getParamOrValue('value', $('#scnsaver-timeout span').text());
     SESSION.json['toggle_coverview'] = ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off');
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
+    SESSION.json['scnsaver_mode'] = $('#scnsaver-mode span').text();
 
 	if (fontSizeChange == true) {
 		setFontSize();
@@ -2946,12 +2982,14 @@ $('#btn-preferences-update').click(function(e){
             'scnsaver_timeout': SESSION.json['scnsaver_timeout'],
             'toggle_coverview': SESSION.json['toggle_coverview'],
             'scnsaver_style': SESSION.json['scnsaver_style'],
+            'scnsaver_mode': SESSION.json['scnsaver_mode'],
 
             // Internal
             'preferences_modal_state': SESSION.json['preferences_modal_state']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
+            if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || playHistoryChange ||
+                libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
                 setTimeout(function() {

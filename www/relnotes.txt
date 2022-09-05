@@ -20,6 +20,7 @@ New features
 - NEW: File sharing via NFS server or SMB server
 - NEW: Access Point (AP) Router mode
 - NEW: Automatic check for available software update
+- NEW: CoverView clock mode
 
 Updates
 

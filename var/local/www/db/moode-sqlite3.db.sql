@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Mon Aug 29 13:45:40 2022
+-- File generated with SQLiteStudio v3.1.0 on Sun Sep 4 17:51:07 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -234,6 +234,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (169, 'fs_nfs', 'Off');
 INSERT INTO cfg_system (id, param, value) VALUES (170, 'fs_nfs_access', '');
 INSERT INTO cfg_system (id, param, value) VALUES (171, 'native_lazyload', 'Yes');
 INSERT INTO cfg_system (id, param, value) VALUES (172, 'library_onetouch_pl', 'No action');
+INSERT INTO cfg_system (id, param, value) VALUES (173, 'scnsaver_mode', 'Cover');
 
 -- Table: cfg_theme
 CREATE TABLE cfg_theme (id INTEGER PRIMARY KEY, theme_name CHAR (32), tx_color CHAR (32), bg_color CHAR (32), mbg_color CHAR (32));

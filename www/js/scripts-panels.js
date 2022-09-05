@@ -216,6 +216,11 @@ jQuery(document).ready(function($) { 'use strict';
             }
     	}
 
+        // Reset screen saver timeout global
+        if (SESSION.json['scnsaver_timeout'] != 'Never') {
+            $.post('command/playback.php?cmd=reset_screen_saver');
+        }
+
      	// Set clock radio icon state
     	if (SESSION.json['clkradio_mode'] == 'Clock Radio' || SESSION.json['clkradio_mode'] == 'Sleep Timer') {
     		$('#clockradio-icon').removeClass('clockradio-off')
@@ -1547,6 +1552,9 @@ jQuery(document).ready(function($) { 'use strict';
 
 			coverView = false;
             setColors();
+            if (SESSION.json['scnsaver_mode'] == 'Clock') {
+                clearInterval(GLOBAL.ssClockIntervalID);
+            }
 
             // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
             $('#cv-playqueue ul').html('');
@@ -1563,12 +1571,10 @@ jQuery(document).ready(function($) { 'use strict';
             }
             customScroll('playqueue', parseInt(MPD.json['song']));
         }
+        
         // Reset screen saver timeout global
-        else if (SESSION.json['scnsaver_timeout'] != 'Never') {
-            // Wait a bit to allow other job that may be queued to be processed
-            setTimeout(function() {
-                $.post('command/playback.php?cmd=reset_screen_saver');
-            }, 3000);
+        if (SESSION.json['scnsaver_timeout'] != 'Never') {
+            $.post('command/playback.php?cmd=reset_screen_saver');
         }
     });
 

@@ -1087,11 +1087,18 @@ while (true) {
 // WORKER FUNCTIONS
 //
 
+// Activate if timeout is set and no other overlay is active and MPD is not playing
 function chkScnSaver() {
-	// Activate if timeout is set and no other overlay is active
+	$sock = openMpdSock('localhost', 6600);
+	$mpdState = getMpdStatus($sock)['state'];
+	closeMpdSock($sock);
+	if ($mpdState == 'play') {
+		$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout'];
+	}
+
 	if ($GLOBALS['scnsaver_timeout'] != 'Never' && $_SESSION['btactive'] == '0' && $GLOBALS['aplactive'] == '0'
 		&& $GLOBALS['spotactive'] == '0' && $GLOBALS['slactive'] == '0' && $GLOBALS['rbactive'] == '0'
-		&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0') {
+		&& $_SESSION['rxactive'] == '0' && $GLOBALS['inpactive'] == '0' && $mpdState != 'play') {
 		if ($GLOBALS['scnactive'] == '0') {
 			$GLOBALS['scnsaver_timeout'] = $GLOBALS['scnsaver_timeout'] - 3;
 			if ($GLOBALS['scnsaver_timeout'] <= 0) {
@@ -1101,6 +1108,7 @@ function chkScnSaver() {
 			}
 		}
 	}
+	//workerLog($mpdState . ', ' . $GLOBALS['scnsaver_timeout'] . ', ' . $GLOBALS['scnactive']);
 }
 
 function chkMaintenance() {
@@ -2291,9 +2299,6 @@ function runQueuedJob() {
 				startLocalUI();
 			} else {
 				stopLocalUI();
-				/*DELETEif ($_SESSION['toggle_coverview'] == '-on') {
-					phpSession('write', 'toggle_coverview', '-off');
-				}*/
 			}
 			break;
 		case 'localui_restart':
