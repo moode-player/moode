@@ -69,6 +69,7 @@ switch ($_GET['cmd']) {
 		break;
     case 'save_queue_to_playlist':
 		$plName = html_entity_decode($_GET['name']);
+		$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 		$sock = getMpdSock();
 
 		// Get metadata (may not exist so defaults will be returned)
@@ -79,12 +80,17 @@ switch ($_GET['cmd']) {
 		$resp = readMpdResp($sock);
         sendMpdCmd($sock, 'save "' . $plName . '"');
         echo json_encode(readMpdResp($sock));
-		sysCmd('chmod 0777 "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
-		sysCmd('chown root:root "' . MPD_PLAYLIST_ROOT . $plName . '.m3u"');
+		sysCmd('chmod 0777 "' . $plFile . '"');
+		sysCmd('chown root:root "' . $plFile . '"');
 
-		// Write metadata tags and cover image
-		putPlaylistMetadata($plName, array('#EXTGENRE:' . $plMeta['genre'], '#EXTIMG:' . $plMeta['cover']));
-		putPlaylistCover($plName);
+		// Get playlist items
+		if (false === ($plItems = file($plFile, FILE_IGNORE_NEW_LINES))) {
+			workerLog('save_queue_to_playlist: File read failed on ' . $plFile);
+		} else {
+			// Write metadata tags, contents and cover image
+			putPlaylistContents($plName, $plMeta, $plItems);
+			putPlaylistCover($plName);
+		}
 		break;
 	case 'get_favorites_name':
 		$result = sqlRead('cfg_system', sqlConnect(), 'favorites_name');
@@ -97,7 +103,7 @@ switch ($_GET['cmd']) {
 		// Get metadata (may not exist so defaults will be returned)
 		$plMeta = getPlaylistMetadata($plName);
 
-		// Create playlist if it doesn't exists
+		// Create empty playlist if it doesn't exists
 		if (!file_exists($plFile)) {
 			sysCmd('touch "' . $plFile . '"');
 			sysCmd('chmod 0777 "' . $plFile . '"');
@@ -122,7 +128,7 @@ switch ($_GET['cmd']) {
 			// Get metadata (may not exist so defaults will be returned)
 			$plMeta = getPlaylistMetadata($plName);
 
-			// Create playlist if it doesn't exost
+			// Create playlist if it doesn't exist
 			if (!file_exists($plFile)) {
 				sysCmd('touch "' . $plFile . '"');
 				sysCmd('chmod 0777 "' . $plFile . '"');
@@ -254,7 +260,6 @@ function getPlaylistMetadata($plName) {
 function putPlaylistContents($plName, $plMeta, $plItems, $appendFlag = 0) {
 	$plFile = MPD_PLAYLIST_ROOT . $plName . '.m3u';
 
-	// TODO: This code and the $appendFlag are not needed since the tags are updated upstream and we always will append.
 	if ($appendFlag == 0) {
 		$contents = '#EXTGENRE:' . $plMeta['genre'] . "\n";
 		$contents .= '#EXTIMG:' . $plMeta['cover'] . "\n";
