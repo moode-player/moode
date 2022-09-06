@@ -55,6 +55,7 @@ Bug fixes
 - FIX: Alsa-cdsp XRUNS in certain usage scenarios affecting CamillaDSP
 - FIX: Camilla pipeline editor "Show log file" causes 500 Internal Server Error
 - FIX: Save queue to playlist overwrites first two items with EXT tags
+- FIX: Volume range max value in Spotify Config
 
 ################################################################################
 #
