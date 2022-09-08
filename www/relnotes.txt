@@ -24,7 +24,7 @@ New features
 
 Updates
 
-- UPD: Bump to Linux kernel 5.15.61 build #1579
+- UPD: Bump to Linux kernel 5.15.61 build #1579 (new image only)
 - UPD: Bump to librespot 0.4.2
 - UPD: Bump camillagui to 1.0.0 rc4
 - UPD: Bump camilla-backend to 1.0.0 rc5
