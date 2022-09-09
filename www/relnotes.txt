@@ -39,6 +39,7 @@ Updates
 - UPD: Increase size of help text on configuration screens
 - UPD: Improve in-place update process
 - UPD: Improve detection/extraction of FLAC embedded cover art
+- UPD: Add 'noserverino' to SMB default mount options
 
 Radio stations
 

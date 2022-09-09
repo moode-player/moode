@@ -220,7 +220,7 @@ jQuery(document).ready(function($){ 'use strict';
 			$('#edit-server').show();
 			$('#advanced-options').show();
             $('#rw-size').show();
-            $('#options').val('ro,dir_mode=0777,file_mode=0777');
+            $('#options').val('ro,noserverino,dir_mode=0777,file_mode=0777');
             //$('#info-mount-flags').html('vers=2.0 or 3.0 may be needed and/or sec=ntlm/ntlmssp removed depending on what the NAS requires.');
 		}
 		else if ($(this).val() == 'nfs') {
