@@ -663,6 +663,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		} else {
 			// Song file, UPnP URL or Podcast
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
+			$current['albumartist'] = isset($song['AlbumArtist']) ? $song['AlbumArtist'] : 'Unknown artist';
 			$current['title'] = isset($song['Title']) ? $song['Title'] : pathinfo(basename($song['file']), PATHINFO_FILENAME);
 			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album']) : 'Unknown album';
 			$current['disc'] = isset($song['Disc']) ? $song['Disc'] : 'Disc tag missing';

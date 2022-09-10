@@ -1219,7 +1219,15 @@ function renderPlayqueue(state) {
 					}
 					// Line 2 artist, album
 					output += '<span class="pll2">';
-					output += (typeof(data[i].Artist) === 'undefined') ? data[i].AlbumArtist : data[i].Artist;
+					if(typeof(data[i].Artist === 'undefined') && typeof(data[i].AlbumArtist) === 'undefined') {
+						output += 'Unknown artist';
+					}
+					else if(typeof(data[i].Artist) === 'undefined') {
+						output += data[i].AlbumArtist;
+					}
+					else {
+						output += data[i].Artist;
+					}
 				}
 
                 output += '</span></div></li>';
