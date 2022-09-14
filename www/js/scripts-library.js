@@ -114,9 +114,9 @@ function reduceGenres(acc, track) {
 // NOTE: This routine and associated marked code blocks provide a flexible way to populate
 // the artist list in Tag view based on the value of the library_tagview_artist setting.
 // Artist:
-// List all Artists. Compilation albums listed for a selected artist will show only the tracks
-// belonging to the Artist. Clicking the Album will toggle between showing all the album's
-// tracks and just those for the selected artist.
+// List all Artists (Artist, Album Artist, Composer, Conductor). Compilation albums listed for
+// a selected artist will show only the tracks belonging to the Artist. Clicking the Album will
+// toggle between showing all the album's tracks and just those for the selected artist.
 // Album Artist:
 // List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists"
 // or any other string that was used to identify compilation albums. This is the old 671 behavior.
