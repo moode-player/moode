@@ -129,8 +129,8 @@ html {background-color:inherit;}
 #songsand {width:98%;margin:0 auto;}
 #volume-popup {display:none;height:100vh;width:100vw;background-color:var(--modalbkdr);}
 #volpad {position:fixed;top:calc(50% - 2.75rem - env(safe-area-inset-bottom));left:50%;/*width:30%;*/transform:translate(-50%, -50%);z-index:10001;}
-#volume-popup .modal-footer {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 5vh);width:inherit;border:none;}
-#volume-popup .modal-footer button {width:20%;color:var(--adapttext);left:50%;transform:translate(-50%);position:fixed;font-size:1.2rem;z-index:10001;}
+#volume-popup .modal-footer {position:absolute;bottom:calc(env(safe-area-inset-bottom) + 10vh);width:inherit;border:none;}
+#volume-popup .modal-footer button {width:20%;color:var(--adapttext);left:calc(50% - .5em);transform:translate(-50%);position:fixed;font-size:1.2rem;z-index:10001;}
 #volcontrol-2, #inpsrctick {height:25vw;width:25vw;padding:2em;}
 #volumeup-2, #volumedn-2 {font-size:3.1vw;}
 #volume-popup .volume-display {font-size:3.5vw;font-weight:500;margin-top:0;}
@@ -457,6 +457,11 @@ body.cvpb #cv-playqueue-btn {display:block;}
 body.cvpb #random-album {display:none!important;}
 body.cvpb #playbar-toggles .add-item-to-favorites {display:block!important;}
 #cv-playqueue {display:none;position:absolute;top:1.5em;right:.1em;width:40vmin;z-index:2;height:calc(100% - 2.75em - 45px);overflow:auto;-webkit-overflow-scrolling:touch;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(32,32,32,.25);}
+body.cvwide #ss-coverart-url img {float:left;margin-left:5em;width:80vh;}
+body.cvwide #ss-metadata {float:left;top:20vh;left:100vh;text-align:left;font-size:2em;position:absolute;right:10vh}
+body.cvwide #ss-currentsong {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
+body.cvwide #ss-current-album-div {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
+body.cvwide #ss-currentalbum {margin:0!important;}
 /* misc */
 #btn-ra-search-reset, #btn-pl-search-reset {display:none;}
 #splash {height:100vh;width:100vw;z-index:11111;position:fixed;background:rgba(32,32,32,0.95);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:none;}

@@ -30,10 +30,12 @@
 		<div id="ss-clock" class="ss-clock" ></div>
 		<div id="ss-coverart" class="ss-coverart">
 			<div id="ss-coverart-url"></div>
-			<div id="ss-currentsong"></div>
-			<div id="ss-currentalbum-div">
-				<span id="ss-currentalbum"></span>
-				<span id="ss-hd-badge"></span>
+			<div id="ss-metadata">
+				<div id="ss-currentsong"></div>
+				<div id="ss-currentalbum-div">
+					<span id="ss-currentalbum"></span>
+					<span id="ss-hd-badge"></span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -1572,7 +1574,7 @@
 	                </div>
 
 					<label class="control-label" for="scnsaver-mode">Display mode</label>
-	                <div class="controls" style="margin-bottom:5em;">
+	                <div class="controls">
    						<div class="btn-group bootstrap-select select-medium">
 							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
 								<div id="scnsaver-mode" class="filter-option pull-left">
@@ -1590,6 +1592,29 @@
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-mode" class="help-block hide">
 	                    	Display cover art or a digital clock.
+	                    </span>
+	                </div>
+
+					<label class="control-label" for="scnsaver-layout">Layout</label>
+	                <div class="controls" style="margin-bottom:5em;">
+   						<div class="btn-group bootstrap-select select-medium">
+							<button type="button" class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<div id="scnsaver-layout" class="filter-option pull-left">
+									<span></span>
+								</div>&nbsp;
+								<div class="caret"></div>
+							</button>
+							<div class="dropdown-menu open">
+								<ul class="dropdown-menu custom-select inner" role="menu">
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-layout-sel"><span class="text">Default</span></a></li>
+									<li class="modal-dropdown-text"><a href="#notarget" data-cmd="scnsaver-layout-sel"><span class="text">Wide</span></a></li>
+								</ul>
+							</div>
+						</div>
+						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-layout" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-scnsaver-layout" class="help-block hide">
+	                    	<b>Default:</b> Cover art centered and metadata underneath.<br>
+							<b>Wide:</b> Cover art on the left and metadata on the right.
 	                    </span>
 	                </div>
 				</div>

@@ -575,6 +575,9 @@ function screenSaver(cmd) {
         if (SESSION.json['show_cvpb'] == 'Yes') {
             $('body').addClass('cvpb');
         }
+        if (SESSION.json['scnsaver_layout'] == 'Wide') {
+            $('body').addClass('cvwide');
+        }
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
 
@@ -2624,6 +2627,7 @@ $(document).on('click', '.context-menu a', function(e) {
                 $('#auto-coverview span').text(SESSION.json['toggle_coverview'] == '-on' ? 'Yes' : 'No');
         		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
                 $('#scnsaver-mode span').text(SESSION.json['scnsaver_mode']);
+                $('#scnsaver-layout span').text(SESSION.json['scnsaver_layout']);
 
                 $('#preferences-modal').modal();
             });
@@ -2758,6 +2762,7 @@ $('#btn-preferences-update').click(function(e){
     var autoCoverViewChange = false;
 	var scnSaverStyleChange = false;
     var scnSaverModeChange = false;
+    var scnSaverLayoutChange = false;
     var extraTagsChange = false;
     var playHistoryChange = false;
 	var fontSizeChange = false;
@@ -2832,6 +2837,7 @@ $('#btn-preferences-update').click(function(e){
     if (SESSION.json['toggle_coverview'] != ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off')) {autoCoverViewChange = true;}
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
     if (SESSION.json['scnsaver_mode'] != $('#scnsaver-mode span').text()) {scnSaverModeChange = true;}
+    if (SESSION.json['scnsaver_layout'] != $('#scnsaver-layout span').text()) {scnSaverLayoutChange = true;}
 
 	// Appearance
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -2881,6 +2887,7 @@ $('#btn-preferences-update').click(function(e){
     SESSION.json['toggle_coverview'] = ($('#auto-coverview span').text() == 'Yes' ? '-on' : '-off');
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
     SESSION.json['scnsaver_mode'] = $('#scnsaver-mode span').text();
+    SESSION.json['scnsaver_layout'] = $('#scnsaver-layout span').text();
 
 	if (fontSizeChange == true) {
 		setFontSize();
@@ -2983,13 +2990,14 @@ $('#btn-preferences-update').click(function(e){
             'toggle_coverview': SESSION.json['toggle_coverview'],
             'scnsaver_style': SESSION.json['scnsaver_style'],
             'scnsaver_mode': SESSION.json['scnsaver_mode'],
+            'scnsaver_layout': SESSION.json['scnsaver_layout'],
 
             // Internal
             'preferences_modal_state': SESSION.json['preferences_modal_state']
         },
         function() {
-            if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || playHistoryChange ||
-                libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
+            if (extraTagsChange || scnSaverStyleChange || scnSaverModeChange || scnSaverLayoutChange ||
+                playHistoryChange || libraryOptionsChange || clearLibcacheAllReqd || lazyLoadChange ||
                 (SESSION.json['bgimage'] != '' && SESSION.json['cover_backdrop'] == 'No') || UI.bgImgChange == true) {
                 notify('settings_updated', 'Auto-refresh in 2 seconds');
                 setTimeout(function() {

@@ -216,6 +216,11 @@ jQuery(document).ready(function($) { 'use strict';
             }
     	}
 
+        // Screen saver layout
+        if (SESSION.json['scnsaver_layout'] == 'Wide') {
+            $('body').addClass('cvwide');
+        }
+
         // Reset screen saver timeout global
         if (SESSION.json['scnsaver_timeout'] != 'Never') {
             $.post('command/playback.php?cmd=reset_screen_saver');
@@ -1571,7 +1576,7 @@ jQuery(document).ready(function($) { 'use strict';
             }
             customScroll('playqueue', parseInt(MPD.json['song']));
         }
-        
+
         // Reset screen saver timeout global
         if (SESSION.json['scnsaver_timeout'] != 'Never') {
             $.post('command/playback.php?cmd=reset_screen_saver');
