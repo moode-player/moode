@@ -191,6 +191,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nCover scale\t\t= $cover_scale\c"
 	echo -e "\nRenderer backdrop\t= $renderer_backdrop\c"
 	echo -e "\nFont size\t\t= $font_size\c"
+	echo -e "\nNative lazyload\t\t= $native_lazyload\c"
 	echo -e "\n\nPlayback\c"
 	echo -e "\n----------------------\c"
 	echo -e "\nShow Queue thumbs\t= $playlist_art\c"
@@ -203,6 +204,7 @@ APPEARANCE_SETTINGS() {
 	echo -e "\n----------------------\c"
 	echo -e "\nOne touch album\t\t= $library_onetouch_album\c"
 	echo -e "\nOne touch radio\t\t= $library_onetouch_radio\c"
+	echo -e "\nOne touch playlist\t= $library_onetouch_pl\c"
 	echo -e "\nAlbumview sort order\t= by $library_albumview_sort\c"
 	echo -e "\nTagview sort order\t= by $library_tagview_sort\c"
 	echo -e "\nTrack play\t\t= $library_track_play\c"
@@ -227,8 +229,11 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nUTF8 character filter\t= $library_utf8rep\c"
 	echo -e "\n\nCoverView\c"
 	echo -e "\n----------------------\c"
-	echo -e "\nAutomatic display\t= $scnsaver_timeout\c"
-	echo -e "\nBackdrop style\t\t= $scnsaver_style\n"
+	echo -e "\nTimed display\t= $scnsaver_timeout\c"
+	echo -e "\nAutomatic display\t= $toggle_coverview\c"
+	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
+	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
+	echo -e "\nDisplay layout\t\t= $scnsaver_layout\n"
 }
 
 RADIO_MANAGER_SETTINGS() {
@@ -816,6 +821,10 @@ plv_group_method=$(awk -F"," '{print $2}' <<< $plview_sort_group)
 fs_smb=${arr[167]}
 fs_nfs=${arr[168]}
 fs_nfs_access=${arr[169]}
+native_lazyload=${arr[170]}
+library_onetouch_pl=${arr[171]}
+scnsaver_mode=${arr[172]}
+scnsaver_layout=${arr[173]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")
