@@ -612,7 +612,7 @@ if ($_SESSION['fs_smb'] == 'On') {
 }
 // NFS
 if ($_SESSION['fs_nfs'] == 'On') {
-	sysCmd('systemctl start nfs-kernel-server');
+	sysCmd('systemctl start nfs-server');
 }
 workerLog('worker: SMB file sharing (' . $_SESSION['fs_smb'] . ')');
 workerLog('worker: NFS file sharing (' . $_SESSION['fs_nfs'] . ')');
@@ -2350,7 +2350,7 @@ function runQueuedJob() {
 			break;
 		case 'fs_nfs':
 			// Start/stop
-			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-kernel-server');
+			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-server');
 			break;
 		case 'fs_nfs_access':
 		case 'fs_nfs_options':
@@ -2381,7 +2381,7 @@ function runQueuedJob() {
 
 			// Restart
 			if ($_SESSION['fs_nfs'] == 'On') {
-				sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-kernel-server');
+				sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-server');
 			}
 			break;
 		case 'keyboard':
