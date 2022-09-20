@@ -94,6 +94,11 @@ switch ($_GET['cmd']) {
 				$result[0]['bg_color'] . ")\">'" . ' /var/www/header.php');
 		}
 
+		if (isset($_POST['lib_scope'])) {
+			$_SESSION['lib_scope'] = $_POST['lib_scope'];
+			array_splice($_POST, 1);
+		}
+
 		// Update cfg_system
 		foreach (array_keys($_POST) as $var) {
 			phpSession('write', $var, $_POST[$var]);
@@ -125,4 +130,5 @@ function addExtraSessionVars(&$cfgSystem) {
 	$cfgSystem['rx_addresses'] = $_SESSION['rx_addresses'];
 	$cfgSystem['updater_auto_check'] = $_SESSION['updater_auto_check'];
 	$cfgSystem['updater_available_update'] = $_SESSION['updater_available_update'];
+	$cfgSystem['lib_scope'] = $_SESSION['lib_scope'];
 }

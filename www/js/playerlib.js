@@ -3709,7 +3709,7 @@ function storePlaylistPos(pos) {
 // Library pos
 function storeLibPos(pos) {
 	//console.log('lib_pos', pos[0], pos[1], pos[2]);
-    $.post('command/cfg-table.php?cmd=upd_cfg_system', {'lib_pos': pos[0] + ',' + pos[1] + ',' + pos[2]});
+    $.post('command/cfg-table.php?cmd=upd_cfg_system', {'lib_pos': pos[0] + ',' + pos[1] + ',' + pos[2], 'lib_scope': GLOBAL.musicScope});
 }
 
 // Switch to Library
