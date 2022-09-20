@@ -82,7 +82,13 @@ function loadLibrary() {
 		clearTimeout(loading);
         $('#lib-content').show();
 		renderLibrary(data);
-		if (currentView == 'album' || currentView == 'tag') setLibMenuAndHeader();
+		if (currentView == 'album' || currentView == 'tag') {
+            setLibMenuAndHeader();
+        }
+        if (SESSION.json['lib_scope'] == 'recent') {
+            $('.view-recents').click();
+        }
+
         GLOBAL.libRendered = true;
         GLOBAL.libLoading = false;
 	});
@@ -117,6 +123,10 @@ function reduceGenres(acc, track) {
 // List all Artists (Artist, Album Artist, Composer, Conductor). Compilation albums listed for
 // a selected artist will show only the tracks belonging to the Artist. Clicking the Album will
 // toggle between showing all the album's tracks and just those for the selected artist.
+// Artist (Strict):
+// List only Artists. Compilation albums listed for a selected artist will show only the tracks
+// belonging to the Artist. Clicking the Album will toggle between showing all the album's tracks
+// and just those for the selected artist.
 // Album Artist:
 // List all Album Artists. Compilation albums are listed under the Album Artist named "Various Artists"
 // or any other string that was used to identify compilation albums. This is the old 671 behavior.
@@ -125,7 +135,7 @@ function reduceGenres(acc, track) {
 // the tracks belonging to the Album Artist. Clicking the Album will toggle between showing all
 // the album's tracks and just those for the selected Album Artist.
 function reduceArtists(acc, track) {
-	if (track.album_artist) {
+	if (track.album_artist && SESSION.json['library_tagview_artist'] != 'Artist (Strict)') {
 		var album_artist = (track.album_artist).toLowerCase();
 		if (!acc[album_artist]) {
 			acc[album_artist] = [];
