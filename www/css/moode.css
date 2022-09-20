@@ -298,7 +298,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#ss-coverart-url img {width:65vh;}
 	#volpad {width:100%;}
-	#volume-popup .modal-footer button {width:40%;margin:0;}
+#volume-popup .modal-footer button {width:40%;/*margin:0;*/}
 	.modal-xs {min-width:70%;}
 	#lib-coverart-meta-area {position:unset;}
 	.btn-save-queue-to-playlist {margin:1em 1em 4em 1em;}
