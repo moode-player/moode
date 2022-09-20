@@ -59,30 +59,29 @@
 						The Sender requires ALSA Loopback to be ON and all DSP's in Audio Config to be OFF.
                     </span>
 				</div>
-
-				<label class="control-label" for="multiroom_initvol">Initial volume</label>
-				<div class="controls">
-					<input id="multiroom_initvol" class="input-small" type="number" maxlength="3" min="0" max="100" name="multiroom_initvol" value="$_multiroom_initvol">
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_initvol" value="novalue" $_multiroom_initvol_disable>Set</button>
-					<span id="info_multiroom_initvol" class="help-block-configs help-block-margin">
-						Sets the initial volume for Sender and Receivers.
-					</span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<!-- RESTART BTN -->
-				<div class="controls">
-					<a data-toggle="modal" href="#restart-tx" $_tx_restart_link_disable><button class="btn btn-medium btn-primary" $_tx_restart_btn_disable>Restart</button></a>&nbsp;Sender
-				</div>
-				<!-- DISCOVER BTN -->
-				<div class="controls">
-					<div style="margin-top:1.5em">
+				<div class="controls" style="margin-top:1em;">
+					<div>
 						<button class="btn btn-primary btn-medium btn-submit" type="submit" name="multiroom_tx_discover" value="novalue">Discover</button>&nbsp;Receivers
 					</div>
 					<div class="help-block-configs help-block-margin" style="font-style:italic">
 						$_rx_hostnames
 					</div>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="multiroom_initvol">Initial volume</label>
+				<div class="controls">
+					<input id="multiroom_initvol" class="input-small" type="number" maxlength="3" min="0" max="100" name="multiroom_initvol" value="$_multiroom_initvol">
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_multiroom_initvol" value="novalue" $_multiroom_initvol_disable>Set</button>
+					<span id="info_multiroom_initvol" class="help-block-configs help-block-margin">
+						Sets the initial volume for Sender and Receivers.<br>
+						NOTE: Receivers must have Master volume opt-in set to Yes.
+					</span>
+				</div>
+
+				<div class="controls" style="margin-top:1em;">
+					<a data-toggle="modal" href="#restart-tx" $_tx_restart_link_disable><button class="btn btn-medium btn-primary" $_tx_restart_btn_disable>Restart</button></a>&nbsp;Sender
 				</div>
 			</div>
 
