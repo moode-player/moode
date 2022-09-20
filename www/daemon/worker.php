@@ -315,12 +315,10 @@ if (!empty($eth0)) {
 // Check wlan0
 $wlan0Ip = '';
 $wlan0 = sysCmd('ip addr list | grep wlan0');
+$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
+$cfgSSID = sqlQuery('SELECT COUNT(*) FROM cfg_ssid', $dbh);
 if (!empty($wlan0)) {
 	workerLog('worker: wlan0 adapter exists');
-
-	// Get wlan0 params
-	$cfgNetwork = sqlQuery('SELECT * FROM cfg_network', $dbh);
-	$cfgSSID = sqlQuery('SELECT COUNT(*) FROM cfg_ssid', $dbh);
 	workerLog('worker: wlan0 country (' . $cfgNetwork[1]['wlan_country'] . ')');
 
 	// Case: saved SSID(s)
@@ -938,6 +936,12 @@ workerLog('worker: CoverView toggle (' . $_SESSION['toggle_coverview'] . ')');
 // TRX Config advanced options toggle
 $_SESSION['tx_adv_toggle'] = 'Advanced (&plus;)';
 $_SESSION['rx_adv_toggle'] = 'Advanced (&plus;)';
+
+// Library scope
+if (!isset($_SESSION['lib_scope'])) {
+	$_SESSION['lib_scope'] = 'all';
+}
+workerLog('worker: Library scope (' . $_SESSION['lib_scope'] . ')');
 
 //
 // Globals section
