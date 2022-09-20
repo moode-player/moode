@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Thu Sep 15 19:11:50 2022
+-- File generated with SQLiteStudio v3.1.0 on Mon Sep 19 06:38:37 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -225,7 +225,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (160, 'rxactive', '0');
 INSERT INTO cfg_system (id, param, value) VALUES (161, 'library_onetouch_radio', 'Play');
 INSERT INTO cfg_system (id, param, value) VALUES (162, 'library_tagview_genre', 'Genres');
 INSERT INTO cfg_system (id, param, value) VALUES (163, 'toggle_coverview', '-off');
-INSERT INTO cfg_system (id, param, value) VALUES (164, 'maint_interval', '7200');
+INSERT INTO cfg_system (id, param, value) VALUES (164, 'maint_interval', '21600');
 INSERT INTO cfg_system (id, param, value) VALUES (165, 'library_track_play', 'Track');
 INSERT INTO cfg_system (id, param, value) VALUES (166, 'playlist_pos', '-1');
 INSERT INTO cfg_system (id, param, value) VALUES (167, 'plview_sort_group', 'Name,No grouping');
@@ -651,7 +651,7 @@ INSERT INTO cfg_multiroom (id, param, value) VALUES (24, 'RESERVED_24', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (25, 'RESERVED_25', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (26, 'RESERVED_26', '');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (27, 'rx_alsa_output_mode', 'plughw');
-INSERT INTO cfg_multiroom (id, param, value) VALUES (28, 'rx_mastervol_opt_in', '0');
+INSERT INTO cfg_multiroom (id, param, value) VALUES (28, 'rx_mastervol_opt_in', '1');
 INSERT INTO cfg_multiroom (id, param, value) VALUES (29, 'initial_volume', '0');
 
 -- Table: cfg_gpio
