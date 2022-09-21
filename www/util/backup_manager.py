@@ -283,7 +283,8 @@ if __name__ == "__main__":
 
     check_result = 0
     if args.do_restore or args.do_backup:
-        check_result = mgnr.check_env(args.do_restore, None, True)
+        check_radio_backup = ('r_other' in what or 'r_moode' in what ) and args.do_restore
+        check_result = mgnr.check_env(check_radio_backup, None, True)
 
     if check_result == 0:
         if args.do_backup:
