@@ -25,6 +25,7 @@ Updates
 
 Bug fixes
 
+- FIX: Playlists not restored if backup has no radio stations
 - FIX: Margin for Volume popup close button (mobile)
 - FIX: APD Router mode log entry in moOde startup log
 - FIX: Maintenance interval 2 hours but should be 6 hours
