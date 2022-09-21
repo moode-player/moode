@@ -213,7 +213,7 @@ class BackupManager(StationManager):
             content.append('cdsp')
         if playlistsPresent:
             print('playlists')
-            content.append('cdsp')
+            content.append('playlists')
 
         return content
 
