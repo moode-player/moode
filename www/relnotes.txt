@@ -20,6 +20,7 @@ Updates
 - UPD: Library "Recently added" is a persistent setting
 - UPD: Add Artist (Strict) to Prefs Tag view artist options
 - UPD: Improve layout and help text on Multiroom Config
+- UPD: Improve help text for NFS file sharing option
 - UPD: Set default for Receiver Master volume opt-in to Yes
 - UPD: Remove ellipsis limit from CoverView wide layout
 
