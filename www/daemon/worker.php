@@ -112,6 +112,7 @@ sysCmd('touch ' . LIBCACHE_BASE . '_tag.json');
 sysCmd('touch /var/local/www/sysinfo.txt');
 sysCmd('touch /var/local/www/currentsong.txt');
 sysCmd('touch /var/log/shairport-sync.log');
+sysCmd('truncate ' . MOUNTMON_LOG . ' --size 0');
 sysCmd('mkdir ' . THMCACHE_DIR . ' > /dev/null 2>&1');
 // Delete any tmp files left over from New/Edit station or playlist
 sysCmd('rm /var/local/www/imagesw/radio-logos/' . TMP_IMAGE_PREFIX . '* > /dev/null 2>&1');
@@ -126,8 +127,9 @@ sysCmd('chmod 0777 /var/local/www/currentsong.txt');
 sysCmd('chmod 0777 ' . LIBCACHE_BASE . '_*');
 sysCmd('chmod 0777 /var/local/www/playhistory.log');
 sysCmd('chmod 0777 /var/local/www/sysinfo.txt');
-sysCmd('chmod 0666 ' . MOODE_LOG);
 sysCmd('chmod 0666 /var/log/shairport-sync.log');
+sysCmd('chmod 0666 ' . MOODE_LOG);
+sysCmd('chmod 0666 ' . MOUNTMON_LOG);
 workerLog('worker: File check (OK)');
 
 // Prune old session vars
@@ -145,11 +147,16 @@ phpSession('load_system');
 phpSession('load_radio');
 workerLog('worker: Session loaded');
 
-// Establish debuglog session var
+// Debug logging
 if (!isset($_SESSION['debuglog'])) {
 	$_SESSION['debuglog'] = '0';
 }
 workerLog('worker: Debug logging (' . ($_SESSION['debuglog'] == '1' ? 'ON' : 'OFF') . ')');
+
+// Mount monitor
+if (!isset($_SESSION['fs_mountmon'])) {
+	$_SESSION['fs_mountmon'] = 'Off';
+}
 
 // Reconfigure certain 3rd party installs
 // RoonBridge
@@ -966,7 +973,6 @@ $check_library_regen = 0;
 
 // Maintenance task
 $maint_interval = $_SESSION['maint_interval'];
-$remountInterval = 60;
 workerLog('worker: Maintenance interval (' . ($maint_interval / 60) . ' minutes)');
 
 // Screen saver
@@ -1017,7 +1023,15 @@ if (file_exists('/boot/moodecfg.ini')) {
 	sysCmd('reboot');
 }
 
+// Start mount monitor
+sysCmd('killall -s 9 mountmon.php');
+if ($_SESSION['fs_mountmon'] == 'On') {
+	sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
+}
+workerLog('worker: Mount monitor ' . ($_SESSION['fs_mountmon'] == 'On' ? 'started' : '(Off)'));
+
 // Start watchdog monitor
+sysCmd('killall -s 9 watchdog.sh');
 $result = sqlQuery("UPDATE cfg_system SET value='1' WHERE param='wrkready'", $dbh);
 sysCmd('/var/www/daemon/watchdog.sh > /dev/null 2>&1 &');
 workerLog('worker: Watchdog started');
@@ -1117,18 +1131,6 @@ function chkScnSaver() {
 
 function chkMaintenance() {
 	$GLOBALS['maint_interval'] = $GLOBALS['maint_interval'] - 3;
-	$GLOBALS['remountInterval'] = $GLOBALS['remountInterval'] -3;
-
-	if ($GLOBALS['remountInterval'] <= 0) {
-		$result = sysCmd('ls /mnt/NAS/* 2>&1 | grep "Stale file handle"');
-		if (!empty($result)) {
-			sourceMount('unmountall');
-			sourceMount('mountall');
-			workerLog('worker: Maintenance: Music sources re-mounted (stale file handle)');
-		}
-
-		$GLOBALS['remountInterval'] = 60;
-	}
 
 	if ($GLOBALS['maint_interval'] <= 0) {
 		// Clear logs
@@ -2348,17 +2350,16 @@ function runQueuedJob() {
 			sysCmd('/var/www/util/sysutil.sh clearbrcache');
 			break;
 		case 'fs_smb':
-			// Start/stop
-			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' smbd');
-			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nmbd');
+			$cmd = $_SESSION['w_queueargs'] == 'On' ? 'start' : 'stop';
+			sysCmd('systemctl ' . $cmd . ' smbd');
+			sysCmd('systemctl ' . $cmd . ' nmbd');
 			break;
 		case 'fs_nfs':
-			// Start/stop
-			sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-server');
+			$cmd = $_SESSION['w_queueargs'] == 'On' ? 'start' : 'stop';
+			sysCmd('systemctl ' . $cmd . ' nfs-server');
 			break;
 		case 'fs_nfs_access':
 		case 'fs_nfs_options':
-			// Update /etc/exports
 			$file = '/etc/exports';
 			if (false === ($contents = file_get_contents($file))) {
 				workerLog('worker: Error: File read failed on ' . $file);
@@ -2386,6 +2387,12 @@ function runQueuedJob() {
 			// Restart
 			if ($_SESSION['fs_nfs'] == 'On') {
 				sysCmd('systemctl ' . $_SESSION['w_queueargs'] . ' nfs-server');
+			}
+			break;
+		case 'fs_mountmon':
+			sysCmd('killall -s 9 mountmon.php');
+			if ($_SESSION['w_queueargs'] == 'On') {
+				sysCmd('/var/www/daemon/mountmon.php > /dev/null 2>&1 &');
 			}
 			break;
 		case 'keyboard':

@@ -432,6 +432,26 @@
 						Default options: rw,sync,no_subtree_check,no_root_squash
 					</span>
 				</div>
+
+				<div class="horiz-rule-light" style="margin-top:1.15em;"></div>
+
+				<label class="control-label">Mount monitor</label>
+				<div class="controls">
+					<div class="toggle">
+						<label class="toggle-radio" for="toggle-fs-mount-monitor2">ON</label>
+						$_select[fs_mountmon1]
+						<label class="toggle-radio" for="toggle-fs-mount-monitor1">OFF</label>
+						$_select[fs_mountmon0]
+					</div>
+					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_fs_mountmon" value="novalue">Set</button>
+					</div>
+					<span class="help-block-configs help-block-margin2">
+						The Mount monitor can help automatically restore mounts to NAS hosts after host reboots, network interruptions or file sharing service interruptions.<br>
+						NOTE: Due to the protocols used in SMB and NFS file sharing there can sometimes be long timeouts when checking a mount or performing a re-mount.
+						Refer to the file /var/log/mountmon.log when Debug logging is On.
+					</span>
+				</div>
 		</fieldset>
 
 		<legend>Local Services</legend>

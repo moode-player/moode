@@ -414,8 +414,9 @@ function sqlQuery($argv) {
 }
 
 function restartServers() {
-	exec('sudo killall worker.php');
-	exec('sudo killall watchdog.sh');
+	exec('sudo killall -s 9 worker.php');
+	exec('sudo killall -s 9 watchdog.sh');
+	exec('sudo killall -s 9 mountmon.php >/dev/null 2>&1');
 	exec('sudo rm /run/worker.pid');
 	exec('sudo systemctl restart php7.4-fpm');
 	exec('sudo systemctl restart nginx');

@@ -38,6 +38,7 @@ const MOODE_LOG = '/var/log/moode.log';
 const AUTOCFG_LOG = '/home/pi/autocfg.log';
 const MPD_LOG = '/var/log/mpd/log';
 const PLAY_HISTORY_LOG = '/var/local/www/playhistory.log';
+const MOUNTMON_LOG = '/var/log/mountmon.log';
 const PORT_FILE = '/tmp/portfile';
 const THMCACHE_DIR = '/var/local/www/imagesw/thmcache/';
 const LIBCACHE_BASE = '/var/local/www/libcache';
@@ -127,6 +128,18 @@ function debugLog($msg, $mode = 'a') {
 	}
 
 	$fh = fopen(MOODE_LOG, $mode);
+	fwrite($fh, date('Ymd His ') . $msg . "\n");
+	fclose($fh);
+}
+
+// Mountmon message logger
+function mountmonLog($msg, $mode = 'a') {
+	// Logging off
+	if (!isset($_SESSION['debuglog']) || $_SESSION['debuglog'] == '0') {
+		return;
+	}
+
+	$fh = fopen(MOUNTMON_LOG, $mode);
 	fwrite($fh, date('Ymd His ') . $msg . "\n");
 	fclose($fh);
 }

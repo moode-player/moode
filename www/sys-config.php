@@ -268,8 +268,7 @@ if (isset($_POST['update_scnrotate'])) {
 if (isset($_POST['update_fs_smb'])) {
 	if (isset($_POST['fs_smb']) && $_POST['fs_smb'] != $_SESSION['fs_smb']) {
 		phpSession('write', 'fs_smb', $_POST['fs_smb']);
-		$cmd = $_POST['fs_smb'] == 'On' ? 'start' : 'stop';
-		submitJob('fs_smb', $cmd, 'Settings updated', '');
+		submitJob('fs_smb', $_POST['fs_nfs'], 'Settings updated', '');
 	}
 }
 
@@ -277,8 +276,7 @@ if (isset($_POST['update_fs_smb'])) {
 if (isset($_POST['update_fs_nfs'])) {
 	if (isset($_POST['fs_nfs']) && $_POST['fs_nfs'] != $_SESSION['fs_nfs']) {
 		phpSession('write', 'fs_nfs', $_POST['fs_nfs']);
-		$cmd = $_POST['fs_nfs'] == 'On' ? 'start' : 'stop';
-		submitJob('fs_nfs', $cmd, 'Settings updated', '');
+		submitJob('fs_nfs', $_POST['fs_nfs'], 'Settings updated', '');
 	}
 }
 if (isset($_POST['update_fs_nfs_access'])) {
@@ -291,6 +289,13 @@ if (isset($_POST['update_fs_nfs_options'])) {
 	if (isset($_POST['fs_nfs_options']) && $_POST['fs_nfs_options'] != $_SESSION['fs_nfs_options']) {
 		phpSession('write', 'fs_nfs_options', $_POST['fs_nfs_options']);
 		submitJob('fs_nfs_options', 'restart', 'Settings updated', '');
+	}
+}
+
+if (isset($_POST['update_fs_mountmon'])) {
+	if (isset($_POST['fs_mountmon']) && $_POST['fs_mountmon'] != $_SESSION['fs_mountmon']) {
+		$_SESSION['fs_mountmon'] = $_POST['fs_mountmon'];
+		submitJob('fs_mountmon', $_POST['fs_mountmon'], 'Settings updated', '');
 	}
 }
 
@@ -498,7 +503,6 @@ else {
 // SMB
 $_select['fs_smb1'] .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb1\" value=\"On\" " . (($_SESSION['fs_smb'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['fs_smb0'] .= "<input type=\"radio\" name=\"fs_smb\" id=\"toggle-fs-smb2\" value=\"Off\" " . (($_SESSION['fs_smb'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
-
 // NFS
 $_select['fs_nfs1'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs1\" value=\"On\" " . (($_SESSION['fs_nfs'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
 $_select['fs_nfs0'] .= "<input type=\"radio\" name=\"fs_nfs\" id=\"toggle-fs-nfs2\" value=\"Off\" " . (($_SESSION['fs_nfs'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
@@ -506,6 +510,9 @@ $_select['fs_nfs_access'] = $_SESSION['fs_nfs_access'];
 $_select['fs_nfs_options'] = $_SESSION['fs_nfs_options'];
 $ipAddrParts = explode('.', $_SESSION['ipaddress']);
 $_this_subnet = $ipAddrParts[0] . '.' . $ipAddrParts[1] . '.' . $ipAddrParts[2] . '.0/24';
+// Mount monitor
+$_select['fs_mountmon1'] .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor1\" value=\"On\" " . (($_SESSION['fs_mountmon'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+$_select['fs_mountmon0'] .= "<input type=\"radio\" name=\"fs_mountmon\" id=\"toggle-fs-mount-monitor2\" value=\"Off\" " . (($_SESSION['fs_mountmon'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 
 // LOCAL SERVICES
 
