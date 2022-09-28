@@ -94,9 +94,10 @@ switch ($_GET['cmd']) {
 				$result[0]['bg_color'] . ")\">'" . ' /var/www/header.php');
 		}
 
+		// Session only with no mirror in cfg_system
 		if (isset($_POST['lib_scope'])) {
 			$_SESSION['lib_scope'] = $_POST['lib_scope'];
-			array_splice($_POST, 1);
+			unset($_POST['lib_scope']);
 		}
 
 		// Update cfg_system
