@@ -233,7 +233,8 @@ APPEARANCE_SETTINGS() {
 	echo -e "\nAutomatic display\t= $toggle_coverview\c"
 	echo -e "\nBackdrop style\t\t= $scnsaver_style\c"
 	echo -e "\nDisplay mode\t\t= $scnsaver_mode\c"
-	echo -e "\nDisplay layout\t\t= $scnsaver_layout\n"
+	echo -e "\nLayout\t\t= $scnsaver_layout\c"
+	echo -e "\nExtra metadata\t\t= $scnsaver_xmeta\n"
 }
 
 RADIO_MANAGER_SETTINGS() {
@@ -825,6 +826,7 @@ native_lazyload=${arr[170]}
 library_onetouch_pl=${arr[171]}
 scnsaver_mode=${arr[172]}
 scnsaver_layout=${arr[173]}
+scnsaver_xmeta=${arr[174]}
 
 # Network settings
 RESULT=$(sqlite3 $SQLDB "select * from cfg_network")

@@ -475,8 +475,12 @@ function autoConfigSettings() {
 		['requires' => ['library_utf8rep'], 'handler' => setphpSession],
 
 		'CoverView',
+		['requires' => ['scnsaver_timeout'], 'handler' => setphpSession], // Timed display
+		['requires' => ['toggle_coverview'], 'handler' => setphpSession], // Automatic display
 		['requires' => ['scnsaver_style'], 'handler' => setphpSession],
-		['requires' => ['scnsaver_timeout'], 'handler' => setphpSession],
+		['requires' => ['scnsaver_mode'], 'handler' => setphpSession],
+		['requires' => ['scnsaver_layout'], 'handler' => setphpSession],
+		['requires' => ['scnsaver_xmeta'], 'handler' => setphpSession],
 
 		'Internal',
 		['requires' => ['first_use_help'], 'handler' => function($values) {

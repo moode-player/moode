@@ -577,6 +577,9 @@ function screenSaver(cmd) {
         }
         if (SESSION.json['scnsaver_layout'] == 'Wide') {
             $('body').addClass('cvwide');
+            if (SESSION.json['scnsaver_xmeta'] == 'Yes') {
+                $('body').addClass('cvwide-xmeta');
+            }
         }
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
@@ -829,15 +832,17 @@ function renderUI() {
 
     	// Extra metadata displayed under the cover
     	if (MPD.json['state'] === 'stop') {
-    		$('#extra-tags-display').html('Not playing');
+    		$('#extra-tags-display, #ss-extra-metadata').html('Not playing');
     	} else if (SESSION.json['extra_tags'].toLowerCase() == 'none' || SESSION.json['extra_tags'] == '') {
-            $('#extra-tags-display').html('');
+            $('#extra-tags-display, #ss-extra-metadata').html('');
         } else if (MPD.json['artist'] == 'Radio station') {
-    		$('#extra-tags-display').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
+    		$('#extra-tags-display, #ss-extra-metadata').html((MPD.json['bitrate'] ? MPD.json['bitrate'] : 'Variable bitrate'));
     	} else {
             var extraTagsDisplay = '';
             extraTagsDisplay = formatExtraTagsString();
-            extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) : $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
+            extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) :
+                $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
+            $('#ss-extra-metadata').html(MPD.json['encoded']);
     	}
 
         // HD badge text
@@ -2628,6 +2633,7 @@ $(document).on('click', '.context-menu a', function(e) {
         		$('#scnsaver-style span').text(SESSION.json['scnsaver_style']);
                 $('#scnsaver-mode span').text(SESSION.json['scnsaver_mode']);
                 $('#scnsaver-layout span').text(SESSION.json['scnsaver_layout']);
+                $('#scnsaver-xmeta span').text(SESSION.json['scnsaver_xmeta']);
 
                 $('#preferences-modal').modal();
             });
@@ -2838,6 +2844,7 @@ $('#btn-preferences-update').click(function(e){
 	if (SESSION.json['scnsaver_style'] != $('#scnsaver-style span').text()) {scnSaverStyleChange = true;}
     if (SESSION.json['scnsaver_mode'] != $('#scnsaver-mode span').text()) {scnSaverModeChange = true;}
     if (SESSION.json['scnsaver_layout'] != $('#scnsaver-layout span').text()) {scnSaverLayoutChange = true;}
+    if (SESSION.json['scnsaver_xmeta'] != $('#scnsaver-xmeta span').text()) {extraTagsChange = true;}
 
 	// Appearance
 	SESSION.json['themename'] = $('#theme-name span').text();
@@ -2888,6 +2895,7 @@ $('#btn-preferences-update').click(function(e){
 	SESSION.json['scnsaver_style'] = $('#scnsaver-style span').text();
     SESSION.json['scnsaver_mode'] = $('#scnsaver-mode span').text();
     SESSION.json['scnsaver_layout'] = $('#scnsaver-layout span').text();
+    SESSION.json['scnsaver_xmeta'] = $('#scnsaver-xmeta span').text();
 
 	if (fontSizeChange == true) {
 		setFontSize();
@@ -2991,6 +2999,7 @@ $('#btn-preferences-update').click(function(e){
             'scnsaver_style': SESSION.json['scnsaver_style'],
             'scnsaver_mode': SESSION.json['scnsaver_mode'],
             'scnsaver_layout': SESSION.json['scnsaver_layout'],
+            'scnsaver_xmeta': SESSION.json['scnsaver_xmeta'],
 
             // Internal
             'preferences_modal_state': SESSION.json['preferences_modal_state']
