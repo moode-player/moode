@@ -17,15 +17,20 @@
 
 Updates
 
-- UPD: Library "Recently added" is a persistent setting
+- UPD: Bump to shairport-sync 4.1-dev with Airplay 2 support
+- UPD: Add mount monitoring option to File sharing feature
 - UPD: Add Artist (Strict) to Prefs Tag view artist options
+- UPD: Add Prefs option for showing rate and format in CoverView wide
+- UPD: Improve help text for File sharing
 - UPD: Improve layout and help text on Multiroom Config
-- UPD: Improve help text for NFS file sharing option
+- UPD: Allow spaces in manually entered WiFi SSID
+- UPD: Persist the Library "Recently added" setting
 - UPD: Set default for Receiver Master volume opt-in to Yes
 - UPD: Remove ellipsis limit from CoverView wide layout
 
 Bug fixes
 
+- FIX: Mediainfo run from PHP exec not handling accented file names
 - FIX: Playlists not restored if backup has no radio stations
 - FIX: Margin for Volume popup close button (mobile)
 - FIX: APD Router mode log entry in moOde startup log
