@@ -579,6 +579,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		}
 
 		// Mediainfo
+		// NOTE: Mediainfo when called via exec() returns nothing if the file name contains accented characters
 		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"';
 		$result = sysCmd($cmd);
 
@@ -588,13 +589,15 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 			$mpdEncodedAt = getMpdEncodedAt($songData['file']);
 			$bitDepth = $mpdEncodedAt[1];
 			$sampleRate = $mpdEncodedAt[0];
+			$channels = $mpdEncodedAt[2];
+			$format = strtoupper($ext);
 		} else {
 			// Use mediainfo
 			$bitDepth = $result[0];
 			$sampleRate = $result[1];
+			$channels = $result[2];
+			$format = $result[3];
 		}
-		$channels = $result[2];
-		$format = $result[3];
 
 		if ($displayFormat == 'default') {
 			$encodedAt = $bitDepth == '?' ?
