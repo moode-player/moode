@@ -574,8 +574,16 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		$encodedAt = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' MHz');
 	} else {
 		// PCM file
-		if ($songData['file'] == '' || !file_exists(MPD_MUSICROOT . $songData['file'])) {
+		if ($songData['file'] == '') {
 			return 'File does not exist';
+		} else if (!file_exists(MPD_MUSICROOT . $songData['file'])) {
+			// Check for cue/flac (these show up as files named path.cue/track0001
+			$cueFlacFile = substr($songData['file'], 0, strrpos($songData['file'], '.')) . '.flac';
+			if (!file_exists(MPD_MUSICROOT . $cueFlacFile)) {
+				return 'File does not exist';
+			} else {
+				$songData['file'] = $cueFlacFile;
+			}
 		}
 
 		// Mediainfo
