@@ -17,7 +17,7 @@
 
 Updates
 
-- UPD: Bump to shairport-sync 4.1-dev with Airplay 2 support
+- UPD: Bump to shairport-sync 4.1.0 with Airplay 2 support
 - UPD: Add mount monitoring option to File sharing feature
 - UPD: Add Artist (Strict) to Prefs Tag view artist options
 - UPD: Add Prefs option for showing rate and format in CoverView wide
@@ -26,6 +26,7 @@ Updates
 - UPD: Allow spaces in manually entered WiFi SSID
 - UPD: Persist the Library "Recently added" setting
 - UPD: Set default for Receiver Master volume opt-in to Yes
+- UPD: Set default NFS mount optioons to: soft,timeo=10,retrans=1,ro,nolock
 - UPD: Remove ellipsis limit from CoverView wide layout
 
 Bug fixes

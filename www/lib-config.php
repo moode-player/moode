@@ -127,7 +127,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 			if ($_POST['mount']['type'] == 'cifs') {
 				$_POST['mount']['options'] = "vers=1.0,ro,noserverino,dir_mode=0777,file_mode=0777";
 			} else if ($_POST['mount']['type'] == 'nfs') {
-				$_POST['mount']['options'] = "ro,nolock";
+				$_POST['mount']['options'] = "soft,timeo=10,retrans=1,ro,nolock";
 			}
 		}
 		// $array['mount']['key'] must be in column order for subsequent table insert
@@ -307,7 +307,7 @@ if (isset($_GET['cmd']) && !empty($_GET['cmd'])) {
 				$_userid_pwd_hide = 'hide';
 				$_advanced_options_hide = '';
 				$_rw_size_hide = 'hide';
-				$_options = 'ro,nolock';
+				$_options = 'soft,timeo=10,retrans=1,ro,nolock';
 			}
 		} else {
 			// CIFS (default))

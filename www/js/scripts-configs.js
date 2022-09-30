@@ -229,7 +229,7 @@ jQuery(document).ready(function($){ 'use strict';
 			$('#edit-server').show();
 			$('#advanced-options').show();
             $('#rw-size').hide();
-            $('#options').val('ro,nolock');
+            $('#options').val('soft,timeo=10,retrans=1,ro,nolock');
             //$('#info-mount-flags').html('vers=1.0 or higher may be needed depending on what the NAS requires.');
 		}
         /* DEPRECATED due to removal of obsolete and unmaintained djmount
