@@ -31,6 +31,8 @@ Updates
 
 Bug fixes
 
+- FIX: Cue/flac virtual directory handling
+- FIX: Word wrap on Audioinfo file path
 - FIX: Mediainfo run from PHP exec not handling accented file names
 - FIX: Playlists not restored if backup has no radio stations
 - FIX: Margin for Volume popup close button (mobile)
