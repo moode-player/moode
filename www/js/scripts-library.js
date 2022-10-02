@@ -95,6 +95,7 @@ function loadLibrary() {
 }
 
 function renderLibrary(data) {
+    //console.log(data);
 	groupLib(data);
 	filterLib();
 
@@ -219,8 +220,10 @@ function groupLib(fullLib) {
 
 	allAlbums = Object.values(allSongs.reduce(reduceAlbums, {})).map(function(albumTracks){
 		var file = findAlbumProp(albumTracks, 'file');
-		//ORIG var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
-		var md5 = typeof(file) == 'undefined' ? 0 : $.md5(file.substring(0,file.lastIndexOf('/')));
+        var fileParts = file.split('/');
+        var sliceIndex = file.lastIndexOf('.cue') != -1 ? 2 : 1;
+        var md5File = fileParts.slice(0, fileParts.length - sliceIndex).join('/');
+		var md5 = typeof(file) == 'undefined' ? 0 : $.md5(md5File);
 		// var artist = findAlbumProp(albumTracks, 'artist');
 		// var albumArtist = findAlbumProp(albumTracks, 'album_artist');
 		var year = getYear(albumTracks);

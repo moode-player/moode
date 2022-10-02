@@ -1367,6 +1367,7 @@ function renderFolderView(data, path, searchstr) {
 	element.innerHTML = '';
 	for (i = 0; i < data.length; i++) {
     	if (data[i].directory) {
+            var cueVirtualDir = false;
     		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
             output += '<div class="db-icon db-action">';
             output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
@@ -1378,12 +1379,11 @@ function renderFolderView(data, path, searchstr) {
     		output += '<div class="db-entry db-folder db-browse"><div>' + dirName + '</div></div>';
             output += '</li>';
 
-            // End after listing the cue virtual directory
-            if (data[i].directory.lastIndexOf('.cue') != -1) {
-                break;
-            }
+            // Flag cue virtual directory
+            cueVirtualDir = data[i].directory.lastIndexOf('.cue') != -1 ? true : false;
+            //console.log(cueVirtualDir + ' | ' + data[i].directory);
         }
-    	else if (data[i].playlist) {
+    	else if (data[i].playlist && !cueVirtualDir) {
     		// NOTE: Skip wavpack since it may contain embedded playlist and they are not supported yet in Folder view
     		if (data[i].playlist.substr(data[i].playlist.lastIndexOf('.') + 1).toLowerCase() != 'wv') {
     			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].playlist + '">';
@@ -1394,7 +1394,7 @@ function renderFolderView(data, path, searchstr) {
     			output += '</li>';
     		}
     	}
-        else if (data[i].file && data[i].fileext != 'cue') {
+        else if (data[i].file && data[i].fileext != 'cue' && !cueVirtualDir) {
             if (data[(i > 1 ? i - 1 : 0)].Album != data[i].Album || (i == 0 && data[i].Album)) {
                 // Album header
     			output += '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">';
