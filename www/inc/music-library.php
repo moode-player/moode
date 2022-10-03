@@ -539,6 +539,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 	// NOTE: Bit depth is omitted if the format is lossy
 
 	$encodedAt = 'NULL';
+	$songData['file'] = ensureAudioFile($songData['file']);
 	$ext = getFileExt($songData['file']);
 
 	// Special section to handle calls from genLibrary() to populate the element "encoded_at"
@@ -574,9 +575,11 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		$encodedAt = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' MHz');
 	} else {
 		// PCM file
-		if ($songData['file'] == '') {
+		if ($songData['file'] == '' || !file_exists(MPD_MUSICROOT . $songData['file'])) {
 			return 'File does not exist';
-		} else if (!file_exists(MPD_MUSICROOT . $songData['file'])) {
+		}
+/*
+	else if (!file_exists(MPD_MUSICROOT . $songData['file'])) {
 			// Check for cue/flac (these show up as files named path.cue/track0001
 			$cueFlacFile = substr($songData['file'], 0, strrpos($songData['file'], '.')) . '.flac';
 			if (!file_exists(MPD_MUSICROOT . $cueFlacFile)) {
@@ -585,7 +588,7 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 				$songData['file'] = $cueFlacFile;
 			}
 		}
-
+*/
 		// Mediainfo
 		// NOTE: Mediainfo when called via exec() returns nothing if the file name contains accented characters
 		$cmd = 'mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"';

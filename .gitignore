@@ -17,3 +17,4 @@ __MACOSX
 /www/index.html
 /logs
 /other/camilladsp/camilladsp.dev/*
+rebuild.sh

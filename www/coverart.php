@@ -176,17 +176,7 @@ if (null === $path) {
 	$path = MPD_MUSICROOT . $path;
 }
 
-// For virtual cue directory sub in the extension of the audio file
-$cueFormats = array('.flac', '.wav', '.aiff');
-if (stripos(dirname($path), '.cue', -4) !== false) {
-	foreach ($cueFormats as $ext) {
-		$newPath = str_replace('.cue', $ext, dirname($path));
-		if (file_exists($newPath)) {
-			$path = $newPath;
-			break;
-		}
-	}
-}
+$path = ensureAudioFile($path);
 
 // file: embedded cover
 if ($searchPriority == 'Embedded cover') { // Embedded first
