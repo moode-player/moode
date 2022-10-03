@@ -18,3 +18,4 @@ __MACOSX
 /logs
 /other/camilladsp/camilladsp.dev/*
 rebuild.sh
+package-lock.json
