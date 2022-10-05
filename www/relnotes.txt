@@ -17,7 +17,9 @@
 
 Updates
 
-- UPD: Bump to shairport-sync 4.1.0 with Airplay 2 support
+- UPD: Bump to shairport-sync 4.1.0-dev with Airplay 2
+- UPD: Bump to CamillaGUI 1.0.0 production release
+- UPD: Cue virtual directory handling and other enhancements
 - UPD: Add mount monitoring option to File sharing feature
 - UPD: Add Artist (Strict) to Prefs Tag view artist options
 - UPD: Add Prefs option for showing rate and format in CoverView wide
@@ -31,7 +33,6 @@ Updates
 
 Bug fixes
 
-- FIX: Cue/flac virtual directory handling
 - FIX: Word wrap on Audioinfo file path
 - FIX: Mediainfo run from PHP exec not handling accented file names
 - FIX: Playlists not restored if backup has no radio stations
