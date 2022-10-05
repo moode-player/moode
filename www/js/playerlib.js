@@ -1303,7 +1303,6 @@ function sendQueueCmd(cmd, path) {
 
 // Render Folder view
 function renderFolderView(data, path, searchstr) {
-    //console.log (data);
 	UI.path = path;
 
 	// Separate out dirs, playlists, files, exclude RADIO folder
@@ -1346,8 +1345,6 @@ function renderFolderView(data, path, searchstr) {
 	// Merge back together
     // NOTE: Files are not sorted and left in the order they appear in the MPD database
 	data = dirs.concat(playlists).concat(files);
-    //console.log('path=(' + path + ')');
-    //console.log(data);
 
 	// Output search tally if any
 	$('#db-search-results').html('');
@@ -1365,6 +1362,7 @@ function renderFolderView(data, path, searchstr) {
 	var output = '';
 	var element = document.getElementById('folderlist');
 	element.innerHTML = '';
+
 	for (i = 0; i < data.length; i++) {
     	if (data[i].directory) {
             var cueVirtualDir = false;
@@ -1381,7 +1379,6 @@ function renderFolderView(data, path, searchstr) {
 
             // Flag cue virtual directory
             cueVirtualDir = data[i].directory.lastIndexOf('.cue') != -1 ? true : false;
-            //console.log(cueVirtualDir + ' | ' + data[i].directory);
         }
     	else if (data[i].playlist && !cueVirtualDir) {
     		// NOTE: Skip wavpack since it may contain embedded playlist and they are not supported yet in Folder view
@@ -1394,7 +1391,7 @@ function renderFolderView(data, path, searchstr) {
     			output += '</li>';
     		}
     	}
-        else if (data[i].file && data[i].fileext != 'cue' && !cueVirtualDir) {
+        else if (data[i].file && !cueVirtualDir) {
             if (data[(i > 1 ? i - 1 : 0)].Album != data[i].Album || (i == 0 && data[i].Album)) {
                 // Album header
     			output += '<li id="db-' + i + '" data-path="' + data[i].file.substr(0, data[i].file.lastIndexOf('/')) + '">';

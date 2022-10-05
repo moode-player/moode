@@ -741,6 +741,7 @@ function getCoverHash($file) {
 	if (substr($file, 0, 4) != 'http' &&  $ext != 'dsf' && $ext != 'dff') {
 		// PCM song files only
 		$path = MPD_MUSICROOT . $file;
+		$path = ensureAudioFile($path);
 		$hash = false;
 
 		// file: embedded cover

@@ -213,8 +213,87 @@ function sockWrite($sock, $msg) {
     return false;
 }
 
+/*** ** * CUE HELPERS - END * ** ***/
+function str_starts_with($haystack, $needle) { // PHP 8
+	$result = false;
+	$pos = strpos($haystack, $needle);
+	if (false !== $pos) {
+		$result = $pos == 0;
+	}
+	return $result;
+}
+
+function str_ends_with($haystack, $needle) { // PHP 8
+	$result = false;
+	$pos = strpos($haystack, $needle);
+	if (false !== $pos) {
+		$result = $pos == (strlen($haystack) - strlen($needle));
+	}
+	return $result;
+}
+
+function str_contains($haystack, $needle) { // PHP 8
+	$result = false;
+	$pos = strpos($haystack, $needle);
+	if (false !== $pos) {
+		$result = true;
+	}
+	return $result;
+}
+
+function isCueTrack($path) {
+	return str_contains($path, '.cue/track');
+}
+
+function ensureAudioFile($path) {
+	$normalized = false;
+	$track = 'ANY';
+	if (isCueTrack($path)) {// e.g. "/a/path/to/a/cue/filename.cue/track0001"
+		$track = (int)str_replace('track', '', pathinfo($path, PATHINFO_BASENAME)); // e.g. "0001"
+		$path = pathinfo($path, PATHINFO_DIRNAME); // e.g. "/a/path/to/a/cue/filename.cue"
+	}
+	$ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+	if ('cue' == $ext) {
+		if (!str_starts_with($path, MPD_MUSICROOT)) { // if not included, add the absolute mpd music path
+			$path = MPD_MUSICROOT . $path;
+			$normalized = true;
+		}
+		if (file_exists($path)) {
+			$lastfile = '';
+			$cuesheetlines = file($path);
+			$totlines = count($cuesheetlines);
+			$linendx = 0;
+			while ($linendx < $totlines) { // searching FILE "<filename.ext>" WAVE
+				$line = trim($cuesheetlines[$linendx]);
+				if (str_starts_with($line, 'FILE ') &&  str_ends_with($line, ' WAVE')) {
+					$lastfile = pathinfo($path, PATHINFO_DIRNAME) . '/' . str_replace('"', '', str_replace('FILE ', '', str_replace(' WAVE', '', $line)));
+				}
+				else
+				if (str_starts_with($line, 'TRACK ')) { // searching TRACK xx AUDIO
+					$trackdata = explode(' ', $line, 3);
+					$tracknumber = (int)$trackdata[1];
+					if (('ANY' == $track) || ($track == $tracknumber)) {
+						$path = $lastfile;
+						$linendx = $totlines;
+					}
+				}
+				$linendx++;
+			}
+		}
+		if ($normalized && str_starts_with($path, MPD_MUSICROOT)) {
+			$path = str_replace(MPD_MUSICROOT, '', $path);  // if added by us, remove the absolute mpd music path
+		}
+	}
+
+	return $path;
+}
+/*** ** * CUE HELPERS - END * ** ***/
+
 function getFileExt($file) {
-	return substr($file, 0 ,4 ) == 'http' ? '' : strtolower(pathinfo($file, PATHINFO_EXTENSION));
+	if (isCueTrack($file)) { // if this is a cue track index, strip it from the file in order to be able to get its extension...
+		$file = pathinfo($file, PATHINFO_DIRNAME);
+	}
+	return substr($file, 0, 4) == 'http' ? '' : strtolower(pathinfo($file, PATHINFO_EXTENSION));
 }
 
 function parseDelimFile($data, $delim) {
