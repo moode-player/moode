@@ -1304,6 +1304,7 @@ function sendQueueCmd(cmd, path) {
 // Render Folder view
 function renderFolderView(data, path, searchstr) {
 	UI.path = path;
+    $('#db-path').text(path);
 
 	// Separate out dirs, playlists, files, exclude RADIO folder
 	var dirs = [];
