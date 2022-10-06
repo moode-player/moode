@@ -19,12 +19,13 @@ Updates
 
 - UPD: Bump to shairport-sync 4.1.0-dev with Airplay 2
 - UPD: Bump to CamillaGUI 1.0.0 production release
-- UPD: Cue virtual directory handling and other enhancements
+- UPD: Improve CUE virtual directory handling plus other enhancements
+- UPD: Improve help text for File sharing
+- UPD: Improve layout and help text on Multiroom Config
+- UPD: Add folder path to bottom of Folder view
 - UPD: Add mount monitoring option to File sharing feature
 - UPD: Add Artist (Strict) to Prefs Tag view artist options
 - UPD: Add Prefs option for showing rate and format in CoverView wide
-- UPD: Improve help text for File sharing
-- UPD: Improve layout and help text on Multiroom Config
 - UPD: Allow spaces in manually entered WiFi SSID
 - UPD: Persist the Library "Recently added" setting
 - UPD: Set default for Receiver Master volume opt-in to Yes
