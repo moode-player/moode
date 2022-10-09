@@ -48,6 +48,7 @@
     <link href="css/fontawesome-moode.css" rel="stylesheet">
     <link href="css/panels.css" rel="stylesheet">
     <link href="css/moode.css" rel="stylesheet">
+    <link href="css/osk.css" rel="stylesheet">
 	<!-- endbuild -->
 
 	<!-- Common JS -->
@@ -70,6 +71,7 @@
     <script src="js/playerlib-nomin.js" defer></script>
     <script src="js/playerlib.js" defer></script>
     <script src="js/links.js" defer></script>
+    <script src="js/osk.js" defer></script>
 	<!-- endbuild -->
 
     <!-- Playback / Library -->
