@@ -840,9 +840,9 @@ function renderUI() {
     	} else {
             var extraTagsDisplay = '';
             extraTagsDisplay = formatExtraTagsString();
-            extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) :
-                $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
-            $('#ss-extra-metadata').html(MPD.json['encoded']);
+            extraTagsDisplay ? $('#extra-tags-display, #ss-extra-metadata').html(extraTagsDisplay) :
+                $('#extra-tags-display, #ss-extra-metadata').html(MPD.json['encoded']);
+            // $('#ss-extra-metadata').html(MPD.json['encoded']);
     	}
 
         // HD badge text
