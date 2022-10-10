@@ -1936,7 +1936,7 @@ function updKnobAndTimeTrack() {
 		}
 	}
 
-    if (MPD.json['state'] === 'play') {
+    if ((MPD.json['state'] === 'play') || (MPD.json['state'] === 'pause')) {
         // Move these out of the timer
 		var tt = $('#timetrack');
 		var ti = $('#time');
