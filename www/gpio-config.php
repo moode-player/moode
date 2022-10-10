@@ -31,7 +31,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		sqlUpdate('cfg_gpio', $dbh, $key, $_POST['config'][$key]);
 	}
 	// restart if indicated
-	submitJob('gpio_svc', $_SESSION['gpio_svc'], 'Changes saved', ($_SESSION['gpio_svc'] == '1' ? 'GPIO button handler restarted' : ''));
+	submitJob('gpio_svc', $_SESSION['gpio_svc'], 'Settings updated', ($_SESSION['gpio_svc'] == '1' ? 'GPIO controller restarted' : ''));
 }
 
 // load gpio config

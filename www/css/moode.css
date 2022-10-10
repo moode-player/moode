@@ -21,6 +21,9 @@ body {background-color:var(--themebg);}
 a:focus {color:var(--accentxts);} /* fixes blue outline on control after closing modal */
 .btn:focus, a:focus {outline:0 !important;box-shadow:none !important;}
 /* configs */
+h1 {font-size:2.5em;font-weight:300;}
+legend {font-size:1.5em;font-weight:300;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
+/*legend {border-color:-moz-use-text-color -moz-use-text-color #34495E;color:inherit;font-weight:600;} From panels*/
 a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-tabs {position:absolute;top:0;top:env(safe-area-inset-top);color:inherit;display:flex;z-index:1001;line-height:normal;font-size:inherit;height:2.75em;align-items:center;display:none;}
 #config-tabs a {font-size:.9rem;color:#ddd;display:inline-flex;}
@@ -84,17 +87,16 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 #playback-panel.newui #playback-controls, #playback-panel.cv #playback-controls {margin-left:0px;width:100%;height:calc(100vh - 2.75rem);position:absolute;}
 .btn-group.bootstrap-select .btn {padding:2px 12px;}
 #players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
-#players .btn, #configure .btn {background:var(--config_modal_btn_bg);}
+#players .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
 #players ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
-#players ul, #configure ul {margin:0;}
+#players ul, #configure ul {margin:0;display:inline-table;}
 #players i, #configure i {font-size:2em;padding:.25em;}
 #players a, {font-size:1em;height:4em;}
 .players-rx-indicator {font-size:.85em!important;margin-left:.25em;}
 #configure a {font-size:1em;width:6em;height:5em;}
 .btn.btn-large {padding-top:.75em;padding-bottom:.75em;}
-#configure .row2-btns {font-size:.9em;width:unset;height:unset;}
-#configure .row2-btns i {font-size:1em;}
-legend {border-bottom: 1px solid #999;}
+/*#configure .row2-btns {font-size:.9em;width:unset;height:unset;}
+#configure .row2-btns i {font-size:1em;}*/
 .modal {background-color: rgba(240,240,240,0.9);color: #333;}
 .modal-header, .modal-footer {background-color: transparent;}
 .modal-xs{min-width:230px;text-align:center;}
@@ -120,7 +122,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .bootstrap-select .dropdown-menu > li > a {color:inherit;padding:0 1em;}
 .container2 .dropdown-menu.inner {background-color:rgba(50,50,50,0.95) !important;color:#eee !important;-webkit-overflow-scrolling:touch;} /* config theme menu bg */
 /* modal test */
-.modal {min-width:55vw;top:0;top:env(safe-area-inset-top);transition:none;background-color:transparent;color:var(--adapttext);box-shadow:none;}
+.modal {min-width:75vw;top:0;top:env(safe-area-inset-top);transition:none;background-color:transparent;color:var(--adapttext);box-shadow:none;}
 .modal .control-label {float:left;padding-top:0;}
 .modal .btn.btn-primary.btn-small, .modal .btn.btn-primary.btn-medium {background:var(--btnshade4);}
 .modal .controls input {min-height:26px !important;margin:0;}

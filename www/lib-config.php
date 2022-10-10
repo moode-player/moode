@@ -43,16 +43,14 @@ if (isset($_POST['regen_library'])) {
 // Auto-update mpd db on usb insert or remove
 if (isset($_POST['update_usb_auto_updatedb'])) {
 	if (isset($_POST['usb_auto_updatedb']) && $_POST['usb_auto_updatedb'] != $_SESSION['usb_auto_updatedb']) {
-		$_SESSION['notify']['title'] = $_POST['usb_auto_updatedb'] == '1' ? 'MPD auto-update on' : 'MPD auto-update off';
-		$_SESSION['notify']['duration'] = 3;
+		$_SESSION['notify']['title'] = 'Settings updated';
 		phpSession('write', 'usb_auto_updatedb', $_POST['usb_auto_updatedb']);
 	}
 }
 // Ignore cuefiles on library scan
 if (isset($_POST['update_cuefiles_ignore'])) {
 	if (isset($_POST['cuefiles_ignore']) && $_POST['cuefiles_ignore'] != $_SESSION['cuefiles_ignore']) {
-		$_SESSION['notify']['title'] = 'Setting updated';
-		$_SESSION['notify']['duration'] = 3;
+		$_SESSION['notify']['title'] = 'Settings updated';
 		phpSession('write', 'cuefiles_ignore', $_POST['cuefiles_ignore']);
 		setCuefilesIgnore($_SESSION['cuefiles_ignore']);
 	}
@@ -205,7 +203,6 @@ if ($initiateLibraryUpd == true) {
 	//submitJob('update_library', '', $title, 'Updating library...');
 	phpSession('open');
 	$_SESSION['notify']['title'] = isset($_POST['save']) ? 'Music source saved' : 'Music source removed';
-	$_SESSION['notify']['duration'] = 3;
 	phpSession('close');
 	unset($_GET['cmd']);
 }

@@ -37,7 +37,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	// Restart if indicated
-	submitJob('airplaysvc', '', 'Changes saved', ($_SESSION['airplaysvc'] == '1' ? 'Airplay receiver restarted' : ''));
+	submitJob('airplaysvc', '', 'Setings updated', ($_SESSION['airplaysvc'] == '1' ? 'Airplay restarted' : ''));
 }
 
 phpSession('close');

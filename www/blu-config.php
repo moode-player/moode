@@ -120,7 +120,7 @@ if (isset($_POST['disconnect_device']) && $_POST['disconnect_device'] == '1') {
 if (isset($_POST['update_pcm_buffer']) && $_POST['update_pcm_buffer'] == '1') {
 	phpSession('write', 'bluez_pcm_buffer', $_POST['pcm_buffer']);
 	sysCmd("sed -i '/BUFFERTIME/c\BUFFERTIME=" . $_POST['pcm_buffer'] . "' /etc/bluealsaaplay.conf");
-	$_SESSION['notify']['title'] = 'Buffer time updated';
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 phpSession('close');
