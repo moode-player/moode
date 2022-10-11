@@ -17,7 +17,8 @@
 
 Updates
 
-- UPD: Improve layout and styling for Configuration screens
+- UPD: Improve layout and styling for Config screens
+- UPD: Improve resource usage in PHP-FPM pool
 
 Bug fixes
 
