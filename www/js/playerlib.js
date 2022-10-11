@@ -1902,9 +1902,12 @@ function updKnobAndTimeTrack() {
 		if (UI.mobile) {
 			$('#m-total, #m-countdown, #playbar-mcount').text('00:00');
 			$('#playbar-mtotal').html('&nbsp;/&nbsp;00:00');
+			$('#timeline').hide();
 		}
         else {
 			$('#playbar-total, #playbar-countdown, #countdown-display').html('00:00');
+			$('#playbar-timeline').css('display', 'none');
+			$('#playbar-title').css('padding-bottom', '0');
 		}
 	}
 	// Radio station (never has a duration)
@@ -1930,7 +1933,7 @@ function updKnobAndTimeTrack() {
 		}
 	}
 
-    if (MPD.json['state'] === 'play') {
+    if ((MPD.json['state'] === 'play') || (MPD.json['state'] === 'pause')) {
         // Move these out of the timer
 		var tt = $('#timetrack');
 		var ti = $('#time');
