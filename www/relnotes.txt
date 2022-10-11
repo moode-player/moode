@@ -23,6 +23,8 @@ Updates
 Bug fixes
 
 - FIX: Update checker incorrectly reporting update available
+- FIX: Button centering on volume popup
+- FIX: Word break on Tag view text cover
 
 ################################################################################
 #
