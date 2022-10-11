@@ -877,8 +877,11 @@ function renderUI() {
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
             $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtistsEllipsis);
             // Playbar
-            $('#playbar-currentsong, #ss-currentsong').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] :
-                MPD.json['artist']) + moreArtistsEllipsis + ' - ' + MPD.json['title']);
+			var textArtistTitle = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
+			if ('' != textArtistTitle) {
+				textArtistTitle += moreArtistsEllipsis + ' - ' + MPD.json['title'];
+			}
+			$('#playbar-currentsong, #ss-currentsong').html(textArtistTitle);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
         }
 
