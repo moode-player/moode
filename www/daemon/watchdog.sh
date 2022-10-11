@@ -20,10 +20,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# NOTE: The FPM_LIMIT is designed to moderate PHP resource usage and
-# should be around 2X higher than the number of FPM child workers that
-# are spawned when there are two connected clients.
-FPM_LIMIT=45
+# NOTE: The FPM_LIMIT is designed to moderate PHP resource usage
+FPM_LIMIT=75
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_RUNNING=$(pgrep -c -x mpd)

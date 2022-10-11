@@ -20,7 +20,7 @@
 -->
 <div class="container">
 	<div class="container2">
-	<h1 class="sys-config">System Config</h1>
+	<h1 class="sys-config">System</h1>
 
 	<form class="form-horizontal" method="post">
 	    <p style="margin-top:1.5em;">
@@ -70,7 +70,7 @@
             </div>
 		</fieldset>
 
-		<legend>System Modifications</legend>
+		<legend>Startup options</legend>
 		<fieldset>
 			<div class="control-group" >
 				<label class="control-label">Auto check update</label>
@@ -264,7 +264,7 @@
 			<legend id="localdisplay">Local Display</legend>
 			<fieldset>
 				<div class="control-group">
-					<label class="control-label">Local UI display</label>
+					<label class="control-label">Display</label>
 					<div class="controls">
 						<div class="toggle">
 							<label class="toggle-radio" for="togglelocalui2">ON</label>
@@ -454,7 +454,7 @@
 				</div>
 		</fieldset>
 
-		<legend>Local Services</legend>
+		<legend id="local-services">Local Services</legend>
 		<fieldset>
 			<div class="control-group">
 				<label class="control-label">Metadata file</label>
@@ -509,7 +509,7 @@
 						<span id="info_gpio_svc" class="help-block-configs help-block-margin2 hide">
 							Maps attached hardware buttons to MPD playback or other commands. By @Cyanoazimin.<br>
 	                    </span>
-						<div class="help-block-margin">
+						<div class="help-block-margin4">
 							<a href="gpio-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;GPIO pin mappings<br>
 						</div>
 					</div>
@@ -532,14 +532,18 @@
 					<span id="info-shellinabox" class="help-block-configs help-block-margin2 hide">
 						Web based SSH terminal server using Shellinabox by Markus Gutschk and Luka Krajger.<br>
                     </span>
-					<div class="help-block-margin">
+					<div class="help-block-margin4">
 						<a id="dlnasvc-link" href="http://$_select[hostip]:4200" target="_blank" class="btn btn-medium btn-primary $_ssh_btn_disable" style="padding-top:.35em;" $_ssh_link_disable>Open</a>&nbsp;Web SSH terminal<br>
 					</div>
 				</div>
 			</div>
 		</fieldset>
 
-		<legend id="backuprestore">Backup/Restore</legend>
+		<!--legend id="backuprestore">Backup/Restore</legend>
+		<fieldset>
+		</fieldset-->
+
+		<legend id="system-maint">System Maintenance</legend>
 		<fieldset>
 			<div class="control-group">
 				<label class="control-label">Backup system</label>
@@ -547,7 +551,7 @@
 					<a href="bkp-config.php?action=backup"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Backup</button></a>
 					<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-backup-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-backup-system" class="help-block-configs help-block-margin hide">
-						Backup settings, radio stations and CamillaDSP configs.
+						Backup settings, radio stations, playlists and CamillaDSP configs.
                     </span>
 				</div>
 			</div>
@@ -558,14 +562,11 @@
 					<a href="bkp-config.php?action=restore"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Restore</button></a>
 					<a aria-label="Help" class="info-toggle" style="vertical-align: middle;" data-cmd="info-restore-system" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					<span id="info-restore-system" class="help-block-configs help-block-margin hide">
-						Restore settings, radio stations and CamillaDSP configs.
+						Restore settings, radio stations, playlists and CamillaDSP configs.
                     </span>
 				</div>
 			</div>
-		</fieldset>
 
-		<legend>System Maintenance</legend>
-		<fieldset>
 			<div class="control-group">
 				<label class="control-label">Playback history</label>
 				<div class="controls">
@@ -588,7 +589,7 @@
 				</div>
 			</div>
 
-			<div class="control-group">
+			<!--div class="control-group">
 				<label class="control-label">Sqlite database</label>
 				<div class="controls">
 					<a href="#compact-sqlitedb" data-toggle="modal"><button class="btn btn-medium btn-primary" style="margin-top:0px;">Compact</button></a>
@@ -597,7 +598,7 @@
 						Compact the Sqlite database for best performance. NOTE: The database is compacted periodically by the automatic Maintenance task.<br>
                     </span>
 				</div>
-			</div>
+			</div-->
 
 			<div class="control-group">
 				<label class="control-label">Debug logging</label>
@@ -708,7 +709,7 @@
 	</div>
 </form>
 
-<form class="form-horizontal" method="post">
+<!--form class="form-horizontal" method="post">
 	<div id="compact-sqlitedb" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="compact-sqlitedb-label" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -723,4 +724,4 @@
 			<button class="btn btn-primary btn-submit" type="submit" name="update_compactdb" value="novalue">Yes</button>
 		</div>
 	</div>
-</form>
+</form-->

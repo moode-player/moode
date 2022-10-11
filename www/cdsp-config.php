@@ -78,7 +78,7 @@ else if ($selectedConfig && isset($_POST['check']) && $_POST['check'] == '1') {
 	if($checkResult['valid'] == True) {
 		$_SESSION['notify']['title'] =   htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is valid');
 	}else {
-		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is NOT valid');
+		$_SESSION['notify']['title'] = htmlentities('Pipeline configuration \"' . $selectedConfigLabel . '\" is not valid');
 	}
 }
 // Import (Upload)

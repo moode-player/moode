@@ -32,7 +32,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	// Restart if indicated
-	submitJob('spotifysvc', '', 'Changes saved', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
+	submitJob('spotifysvc', '', 'Settings updated', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
 }
 
 phpSession('close');

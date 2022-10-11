@@ -101,7 +101,7 @@ if (isset($_POST['save']) && $_POST['save'] == 1) {
 		'wlan_country' => '', 'wlan_channel' => $_POST['wlan0apdchan'], 'wlan_router' => $_POST['wlan0apd_router']);
 	sqlUpdate('cfg_network', $dbh, 'apd0', $value);
 
-	submitJob('netcfg', '', 'Changes saved', 'Restart required');
+	submitJob('netcfg', '', 'Settings updated', 'Restart required');
 }
 
 // Update saved networks
@@ -118,7 +118,7 @@ if (isset($_POST['update-saved-networks']) && $_POST['update-saved-networks'] ==
 		}
 
 		if ($itemDeleted) {
-			submitJob('netcfg', '', 'Update applied', 'Restart required');
+			submitJob('netcfg', '', 'Settigs updated', 'Restart required');
 		}
 	}
 }
