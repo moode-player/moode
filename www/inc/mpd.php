@@ -586,6 +586,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 	$current['performer'] = $song['Performer'];
 	$current['albumartist'] = $song['AlbumArtist'];
 	$current['artist_count'] = $song['artist_count'];
+	$current['comment'] = $song['Comment'];
 
 	// Cover hash and mapped db volume
 	if ($caller == 'engine_mpd_php') {
@@ -598,6 +599,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 		$current['artist'] = '';
 		$current['title'] = '';
 		$current['album'] = '';
+		$current['comment'] = '';
 		$current['coverurl'] = DEF_COVER;
 		debugLog('enhanceMetadata(): error: currentsong file is NULL');
 	} else {
