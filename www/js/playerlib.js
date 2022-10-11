@@ -840,9 +840,9 @@ function renderUI() {
     	} else {
             var extraTagsDisplay = '';
             extraTagsDisplay = formatExtraTagsString();
-            extraTagsDisplay ? $('#extra-tags-display').html(extraTagsDisplay) :
-                $('#extra-tags-display').html(MPD.json['audio_sample_depth'] + '/' + MPD.json['audio_sample_rate']);
-            $('#ss-extra-metadata').html(MPD.json['encoded']);
+            extraTagsDisplay ? $('#extra-tags-display, #ss-extra-metadata').html(extraTagsDisplay) :
+                $('#extra-tags-display, #ss-extra-metadata').html(MPD.json['encoded']);
+            // $('#ss-extra-metadata').html(MPD.json['encoded']);
     	}
 
         // HD badge text
@@ -877,8 +877,11 @@ function renderUI() {
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
             $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtistsEllipsis);
             // Playbar
-            $('#playbar-currentsong, #ss-currentsong').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] :
-                MPD.json['artist']) + moreArtistsEllipsis + ' - ' + MPD.json['title']);
+			var textArtistTitle = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
+			if ('' != textArtistTitle) {
+				textArtistTitle += moreArtistsEllipsis + ' - ' + MPD.json['title'];
+			}
+			$('#playbar-currentsong, #ss-currentsong').html(textArtistTitle);
             $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
         }
 
@@ -1902,9 +1905,12 @@ function updKnobAndTimeTrack() {
 		if (UI.mobile) {
 			$('#m-total, #m-countdown, #playbar-mcount').text('00:00');
 			$('#playbar-mtotal').html('&nbsp;/&nbsp;00:00');
+			$('#timeline').hide();
 		}
         else {
 			$('#playbar-total, #playbar-countdown, #countdown-display').html('00:00');
+			$('#playbar-timeline').css('display', 'none');
+			$('#playbar-title').css('padding-bottom', '0');
 		}
 	}
 	// Radio station (never has a duration)
@@ -1930,7 +1936,7 @@ function updKnobAndTimeTrack() {
 		}
 	}
 
-    if (MPD.json['state'] === 'play') {
+    if ((MPD.json['state'] === 'play') || (MPD.json['state'] === 'pause')) {
         // Move these out of the timer
 		var tt = $('#timetrack');
 		var ti = $('#time');
