@@ -51,7 +51,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	$mixer_chg = 0;
 	$mixer_chg = 0;
 	$queue_args = $device_chg . ',' . $mixer_chg;
-	submitJob('mpdcfg', $queue_args, 'Changes saved', 'MPD restarted');
+	submitJob('mpdcfg', $queue_args, 'Settings updated', 'MPD restarted');
 }
 
 // Load settings

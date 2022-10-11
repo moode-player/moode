@@ -1690,9 +1690,9 @@ function updaterAutoCheck($validIPAddress) {
 		if ($validIPAddress === true) {
 			workerLog('worker: Checking for available update...');
 			$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
-			$lastInstall = checkForUpd('/var/local/www/');
+			$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
-			if ($available['Date'] == $lastInstall['Date']) {
+			if ($available['Date'] == $thisReleaseDate) {
 				$msg = 'Software is up to date';
 			} else {
 				$msg = 'Release ' . $available['Release'] . ', ' . $available['Date'] . ' is available';

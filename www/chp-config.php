@@ -51,7 +51,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// Update chip options
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Changes saved';
+		$_SESSION['notify']['title'] = 'Settings updated';
 
 		// Allo Piano 2.1 Hi-Fi DAC device settings
 		if ($_SESSION['i2sdevice'] == 'Allo Piano 2.1 Hi-Fi DAC') {
@@ -65,8 +65,8 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 				sysCmd('/var/www/util/sysutil.sh set-piano-lowpass ' . '"' . $_POST['config']['lowpass'] . '"');
 				sysCmd('/var/www/util/sysutil.sh set-piano-subvol ' . '"' . $_POST['config']['subwvol'] . '"');
 			}
-			$_SESSION['notify']['title'] = 'Chip and Device options updated';
-			$_SESSION['notify']['msg'] = 'Restart then apply MPD settings';
+			$_SESSION['notify']['title'] = 'Settings updated';
+			$_SESSION['notify']['msg'] = 'Restart required';
 			$_SESSION['notify']['duration'] = 10;
 		}
 	}
@@ -90,7 +90,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// Update chip options
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Changes saved';
+		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 
 	// Allo Boss 2 Cirrus Logic CS43198 chip
@@ -120,7 +120,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// Update chip options
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Changes saved';
+		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 
 	// Audiophonics ES9028/38 Q2M chip
@@ -142,7 +142,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// Update chip options
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Chip options updated';
+		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 
 	// MERUS Amp HAT ZW chip
@@ -155,7 +155,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 
 		// Update chip options
 		$result = sqlUpdate('cfg_audiodev', $dbh, $_SESSION['i2sdevice'], $chipoptions);
-		$_SESSION['notify']['title'] = 'Changes saved';
+		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
 

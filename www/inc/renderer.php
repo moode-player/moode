@@ -44,7 +44,7 @@ function startBluetooth() {
 function startAirplay() {
 	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
-		$logging = '-vvu';
+		$logging = '-vv';
 		$logFile = '/var/log/shairport-sync.log';
 	}
 	else {

@@ -35,11 +35,11 @@ phpSession('open');
 // Check for software update
 if (isset($_POST['checkfor_update'])) {
 	$available = checkForUpd($_SESSION['res_software_upd_url'] . '/');
-	$lastInstall = checkForUpd('/var/local/www/');
+	$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
 	// Up to date
-	if ($available['Date'] == $lastInstall['Date']) {
-		$_available_upd = 'Software is up to date<br>';
+	if ($available['Date'] == $thisReleaseDate) {
+		$_available_upd = '<i>Software is up to date</i><br>';
 	}
 	// Image-only release available
 	elseif ($available['ImageOnly'] == 'Yes') {
@@ -88,7 +88,7 @@ if (isset($_POST['install_update'])) {
 // Timezone
 if (isset($_POST['update_time_zone'])) {
 	if (isset($_POST['timezone']) && $_POST['timezone'] != $_SESSION['timezone']) {
-		submitJob('timezone', $_POST['timezone'], 'Timezone set to ' . $_POST['timezone'], '');
+		submitJob('timezone', $_POST['timezone'], 'Settings updated', '');
 		phpSession('write', 'timezone', $_POST['timezone']);
 	}
 }
@@ -99,10 +99,9 @@ if (isset($_POST['update_host_name'])) {
 		if (preg_match("/[^A-Za-z0-9-]/", $_POST['hostname']) == 1) {
 			$_SESSION['notify']['title'] = 'Invalid input';
 			$_SESSION['notify']['msg'] = "Host name can only contain A-Z, a-z, 0-9 or hyphen (-).";
-			$_SESSION['notify']['duration'] = 3;
 		}
 		else {
-			submitJob('hostname', '"' . $_SESSION['hostname'] . '" ' . '"' . $_POST['hostname'] . '"', 'Host name changed', 'Restart required');
+			submitJob('hostname', '"' . $_SESSION['hostname'] . '" ' . '"' . $_POST['hostname'] . '"', 'Settings updated', 'Restart required');
 			phpSession('write', 'hostname', $_POST['hostname']);
 		}
 	}
@@ -111,7 +110,7 @@ if (isset($_POST['update_host_name'])) {
 // Keyboard layout
 if (isset($_POST['update_keyboard'])) {
     if (isset($_POST['keyboard']) && $_POST['keyboard'] != $_SESSION['keyboard']) {
-        submitJob('keyboard', $_POST['keyboard'], 'Keyboard layout updated ', 'Restart required');
+        submitJob('keyboard', $_POST['keyboard'], 'Settings updated', 'Restart required');
         phpSession('write', 'keyboard', $_POST['keyboard']);
     }
 }
@@ -120,6 +119,7 @@ if (isset($_POST['update_keyboard'])) {
 if (isset($_POST['update_browser_title'])) {
 	if (isset($_POST['browsertitle']) && $_POST['browsertitle'] != $_SESSION['browsertitle']) {
 		phpSession('write', 'browsertitle', $_POST['browsertitle']);
+		$_SESSION['notify']['title'] = 'Settings updated';
 	}
 }
 
@@ -129,73 +129,68 @@ if (isset($_POST['update_browser_title'])) {
 if (isset($_POST['update_updater_auto_check'])) {
 	if (isset($_POST['updater_auto_check']) && $_POST['updater_auto_check'] != $_SESSION['updater_auto_check']) {
 		$_SESSION['updater_auto_check'] = $_POST['updater_auto_check'];
-		submitJob('updater_auto_check', $_POST['updater_auto_check'], 'Setting updated', '');
+		submitJob('updater_auto_check', $_POST['updater_auto_check'], 'Settings updated', '');
 	}
 }
 
 // CPU governor
 if (isset($_POST['update_cpugov'])) {
-	submitJob('cpugov', $_POST['cpugov'], 'CPU governor updated', '');
+	submitJob('cpugov', $_POST['cpugov'], 'Settings updated', '');
 	phpSession('write', 'cpugov', $_POST['cpugov']);
 }
 
 // USB auto-mounter
 if (isset($_POST['update_usb_auto_mounter'])) {
-	submitJob('usb_auto_mounter', $_POST['usb_auto_mounter'], 'USB auto-mounter updated', 'Restart required');
+	submitJob('usb_auto_mounter', $_POST['usb_auto_mounter'], 'Settings updated', 'Restart required');
 	phpSession('write', 'usb_auto_mounter', $_POST['usb_auto_mounter']);
 }
 
 // Integrated WiFi adapter
 if (isset($_POST['p3wifi']) && $_POST['p3wifi'] != $_SESSION['p3wifi']) {
-	$title = $_POST['p3wifi'] == 1 ? 'WiFi adapter on' : 'WiFi adapter off';
-	submitJob('p3wifi', $_POST['p3wifi'], $title, 'Restart required');
+	submitJob('p3wifi', $_POST['p3wifi'], 'Settings updated', 'Restart required');
 	phpSession('write', 'p3wifi', $_POST['p3wifi']);
 }
 
 // Integrated Bluetooth adapter
 if (isset($_POST['p3bt']) && $_POST['p3bt'] != $_SESSION['p3bt']) {
-	$title = $_POST['p3bt'] == 1 ? 'Bluetooth adapter on' : 'Bluetooth adapter off';
-	submitJob('p3bt', $_POST['p3bt'], $title, 'Restart required');
+	submitJob('p3bt', $_POST['p3bt'], 'Settings updated', 'Restart required');
 	phpSession('write', 'p3bt', $_POST['p3bt']);
 }
 
 // HDMI port
 if (isset($_POST['hdmiport']) && $_POST['hdmiport'] != $_SESSION['hdmiport']) {
-	$title = $_POST['hdmiport'] == 1 ? 'HDMI port on' : 'HDMI port off';
-	submitJob('hdmiport', $_POST['hdmiport'], $title, '');
+	submitJob('hdmiport', $_POST['hdmiport'], 'Settings updated', '');
 	phpSession('write', 'hdmiport', $_POST['hdmiport']);
 }
 
 // Activity LED (LED0)
 if (isset($_POST['update_actled']) && $_POST['actled'] != explode(',', $_SESSION['led_state'])[0]) {
-	$title = $_POST['actled'] == '1' ? 'Activity LED on' : 'Activity LED off';
-	submitJob('actled', $_POST['actled'], $title, '');
+	submitJob('actled', $_POST['actled'], 'Settings updated', '');
 	phpSession('write', 'led_state', $_POST['actled'] . ',' . explode(',', $_SESSION['led_state'])[1]);
 }
 
 // Power LED (LED1)
 if (isset($_POST['update_pwrled']) && $_POST['pwrled'] != explode(',', $_SESSION['led_state'])[1]) {
-	$title = $_POST['pwrled'] == '1' ? 'Power LED on' : 'Power LED off';
-	submitJob('pwrled', $_POST['pwrled'], $title, '');
+	submitJob('pwrled', $_POST['pwrled'], 'Settings updated', '');
 	phpSession('write', 'led_state', explode(',', $_SESSION['led_state'])[0] . ',' . $_POST['pwrled']);
 }
 
 
 // IP address timeout
 if (isset($_POST['update_ipaddr_timeout']) && $_POST['ipaddr_timeout'] != $_SESSION['ipaddr_timeout']) {
-	$_SESSION['notify']['title'] = 'IP address timeout updated';
 	phpSession('write', 'ipaddr_timeout', $_POST['ipaddr_timeout']);
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // Ethernet adapter IP check
 if (isset($_POST['eth0chk']) && $_POST['eth0chk'] != $_SESSION['eth0chk']) {
-	$_SESSION['notify']['title'] = 'Ethernet address wait updated';
 	phpSession('write', 'eth0chk', $_POST['eth0chk']);
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // Enable usb boot
 if (isset($_POST['update_usbboot'])) {
-	submitJob('usbboot', '', 'USB boot enabled', 'Restart required', 30);
+	submitJob('usbboot', '', 'Settings updated', 'Restart required', 30);
 }
 
 // LOCAL DISPLAY
@@ -203,21 +198,20 @@ if (isset($_POST['update_usbboot'])) {
 // Local UI display
 if (isset($_POST['update_localui'])) {
     if (isset($_POST['localui']) && $_POST['localui'] != $_SESSION['localui']) {
-		$title = $_POST['localui'] == 1 ? 'Local UI display on' : 'Local UI display off';
-        submitJob('localui', $_POST['localui'], $title, 'Restart may be required');
+        submitJob('localui', $_POST['localui'], 'Settings updated', 'Restart may be required');
         phpSession('write', 'localui', $_POST['localui']);
     }
 }
 
 // Local UI restart
 if (isset($_POST['update_restart_localui'])) {
-	submitJob('localui_restart', '', 'Local UI restarted');
+	submitJob('localui_restart', '', 'Local display restarted');
 }
 
 // Touch screen capability
 if (isset($_POST['update_touchscn'])) {
     if (isset($_POST['touchscn']) && $_POST['touchscn'] != $_SESSION['touchscn']) {
-        submitJob('touchscn', $_POST['touchscn'], 'Setting updated', 'Local display restarted');
+        submitJob('touchscn', $_POST['touchscn'], 'Settings updated', 'Local display restarted');
         phpSession('write', 'touchscn', $_POST['touchscn']);
     }
 }
@@ -225,7 +219,7 @@ if (isset($_POST['update_touchscn'])) {
 // Screen blank timeout
 if (isset($_POST['update_scnblank'])) {
     if (isset($_POST['scnblank']) && $_POST['scnblank'] != $_SESSION['scnblank']) {
-        submitJob('scnblank', $_POST['scnblank'], 'Setting updated', 'Local display restarted');
+        submitJob('scnblank', $_POST['scnblank'], 'Settings updated', 'Local display restarted');
         phpSession('write', 'scnblank', $_POST['scnblank']);
     }
 }
@@ -233,15 +227,15 @@ if (isset($_POST['update_scnblank'])) {
 // Wake display
 if (isset($_POST['update_wake_display'])) {
     if (isset($_POST['wake_display']) && $_POST['wake_display'] != $_SESSION['wake_display']) {
-		$_SESSION['notify']['title'] = $_POST['wake_display'] == '1' ? 'Wake display on' : 'Wake display off';
         phpSession('write', 'wake_display', $_POST['wake_display']);
+		$_SESSION['notify']['title'] = 'Settings updated';
     }
 }
 
 // Screen brightness
 if (isset($_POST['update_scnbrightness'])) {
     if (isset($_POST['scnbrightness']) && $_POST['scnbrightness'] != $_SESSION['scnbrightness']) {
-		submitJob('scnbrightness', $_POST['scnbrightness'], 'Setting updated');
+		submitJob('scnbrightness', $_POST['scnbrightness'], 'Settings updated');
 		phpSession('write', 'scnbrightness', $_POST['scnbrightness']);
     }
 }
@@ -249,7 +243,7 @@ if (isset($_POST['update_scnbrightness'])) {
 // Pixel aspect ratio
 if (isset($_POST['update_pixel_aspect_ratio'])) {
     if (isset($_POST['pixel_aspect_ratio']) && $_POST['pixel_aspect_ratio'] != $_SESSION['pixel_aspect_ratio']) {
-		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], 'Setting updated', 'Restart required');
+		submitJob('pixel_aspect_ratio', $_POST['pixel_aspect_ratio'], 'Settings updated', 'Restart required');
 		phpSession('write', 'pixel_aspect_ratio', $_POST['pixel_aspect_ratio']);
     }
 }
@@ -257,7 +251,7 @@ if (isset($_POST['update_pixel_aspect_ratio'])) {
 // Screen rotation
 if (isset($_POST['update_scnrotate'])) {
     if (isset($_POST['scnrotate']) && $_POST['scnrotate'] != $_SESSION['scnrotate']) {
-		submitJob('scnrotate', $_POST['scnrotate'], 'Setting updated', 'Restart required');
+		submitJob('scnrotate', $_POST['scnrotate'], 'Settings updated', 'Restart required');
 		phpSession('write', 'scnrotate', $_POST['scnrotate']);
     }
 }
@@ -303,33 +297,29 @@ if (isset($_POST['update_fs_mountmon'])) {
 
 // Metadata for external apps
 if (isset($_POST['extmeta']) && $_POST['extmeta'] != $_SESSION['extmeta']) {
-	$_SESSION['notify']['title'] = $_POST['extmeta'] == 1 ? 'Metadata file on' : 'Metadata file off';
-	$_SESSION['notify']['duration'] = 3;
 	phpSession('write', 'extmeta', $_POST['extmeta']);
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 // LCD updater
 if (isset($_POST['update_lcdup'])) {
 	if (isset($_POST['lcdup']) && $_POST['lcdup'] != $_SESSION['lcdup']) {
-		$title = $_POST['lcdup'] == 1 ? 'LCD update engine on' : 'LCD update engine off';
-		submitJob('lcdup', $_POST['lcdup'], $title, '');
+		submitJob('lcdup', $_POST['lcdup'], 'Settings updated', '');
 		phpSession('write', 'lcdup', $_POST['lcdup']);
-		phpSession('write', 'extmeta', '1'); // turn on external metadata generation
+		phpSession('write', 'extmeta', '1'); // Turn on external metadata generation
 	}
 }
 
 // GPIO
 if (isset($_POST['update_gpio_svc']) && $_POST['gpio_svc'] != $_SESSION['gpio_svc']) {
-	$title = $_POST['gpio_svc'] == 1 ? 'GPIO button handler on' : 'GPIO button handler off';
 	phpSession('write', 'gpio_svc', $_POST['gpio_svc']);
-	submitJob('gpio_svc', $_POST['gpio_svc'], $title, '');
+	submitJob('gpio_svc', $_POST['gpio_svc'], 'Settings updated', '');
 }
 
 // Shellinabox
 if (isset($_POST['shellinabox']) && $_POST['shellinabox'] != $_SESSION['shellinabox']) {
-	$title = $_POST['shellinabox'] == 1 ? 'SSH server on' : 'SSH server off';
 	phpSession('write', 'shellinabox', $_POST['shellinabox']);
-	submitJob('shellinabox', $_POST['shellinabox'], $title, '');
+	submitJob('shellinabox', $_POST['shellinabox'], 'Settings updated', '');
 }
 
 // MAINTENANCE
@@ -344,16 +334,10 @@ if (isset($_POST['update_clear_playhistory'])) {
 	submitJob('clearplayhistory', '', 'Playback history cleared', '');
 }
 
-// Compact sqlite database
-if (isset($_POST['update_compactdb'])) {
-	submitJob('compactdb', '', 'SQlite DB compacted', '');
-}
-
 // Debug logging
 if (isset($_POST['debuglog']) && $_POST['debuglog'] != $_SESSION['debuglog']) {
 	$_SESSION['debuglog'] = $_POST['debuglog'];
-	$_SESSION['notify']['title'] = $_POST['debuglog'] == 1 ? 'Debug logging on' : 'Debug logging off';
-	$_SESSION['notify']['duration'] = 3;
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
 phpSession('close');

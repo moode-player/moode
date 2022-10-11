@@ -75,6 +75,9 @@ jQuery(document).ready(function($){ 'use strict';
     	else if ($('.sys-config').length) {
     		$('#sys-config-btn').addClass('active');
     	}
+        else if ($('.ren-config').length) {
+    		$('#ren-config-btn').addClass('active');
+    	}
 
         // Setup pines notify
         $.pnotify.defaults.history = false;
