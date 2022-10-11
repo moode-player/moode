@@ -20,8 +20,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# NOTE: The FPM_LIMIT is designed to moderate PHP resource usage
-FPM_LIMIT=75
+# NOTE: The FPM limits are for moderating resource usage in the PHP-FPM pool
+FPM_MAX_LIMIT=64
+FPM_MIN_LIMIT=32
 
 FPM_CNT=$(pgrep -c -f "php-fpm: pool www")
 MPD_RUNNING=$(pgrep -c -x mpd)
@@ -42,8 +43,13 @@ wake_display () {
 
 while true; do
 	# PHP-FPM
-	if (( FPM_CNT > FPM_LIMIT )); then
-		message_log "Info: Reducing PHP fpm worker pool"
+	if (( FPM_CNT > FPM_MIN_LIMIT )); then
+		#message_log "Info: Reducing PHP-FPM worker pool"
+		/var/www/util/send-engcmd.php reduce_fpm_pool
+	fi
+
+	if (( FPM_CNT > FPM_MAX_LIMIT )); then
+		message_log "Info: Resetting PHP-FPM worker pool"
 		systemctl restart php7.4-fpm
 	fi
 

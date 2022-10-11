@@ -486,6 +486,14 @@ function engineCmd() {
                         location.reload(true);
                     }, DEFAULT_TIMEOUT);
                     break;
+                case 'reduce_fpm_pool':
+                    // This functions as a dummy command which has the effect of
+                    // causing engine-cmd.php to start releasing idle connections
+                    console.log(cmd[0]);
+                    break;
+                default:
+                    console.log(cmd[0]);
+                    break;
             }
 
 			engineCmd();
@@ -513,9 +521,19 @@ function engineCmdLite() {
 			//console.log('engineCmd: success branch: data=(' + data + ')');
 			cmd = JSON.parse(data).split(',');
 
-            if (cmd[0] == 'libregen_done') {
-				$('.busy-spinner').hide();
-                loadLibrary();
+            switch (cmd[0]) {
+                case 'libregen_done':
+                    $('.busy-spinner').hide();
+                    loadLibrary();
+                    break;
+                case 'reduce_fpm_pool':
+                    // This functions as a dummy command which has the effect of
+                    // causing engine-cmd.php to start releasing idle connections
+                    console.log(cmd[0]);
+                    break;
+                default:
+                    console.log(cmd[0]);
+                    break;
             }
 
 			engineCmdLite();
