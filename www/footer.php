@@ -70,7 +70,9 @@
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) { ?>
 					<li><a href="trx-config.php" class="btn btn-large"><i class="fas fas fa-rss"></i><br>Multiroom</a></li>
 				<?php } ?>
-				<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m"><i class="fas fa-alarm-clock"></i><br>Clock radio</a></li>
+				<?php if ($section == 'index') { ?>
+					<li class="context-menu"><a href="#notarget" class="btn btn-large" data-cmd="setforclockradio-m"><i class="fas fa-alarm-clock"></i><br>Clock radio</a></li>
+				<?php } ?>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) { ?>
 					<li><a href="inp-config.php" class="btn btn-large"><i class="far fa-scrubber"></i><br>Input source</a></li>
 				<?php } ?>
