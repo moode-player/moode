@@ -36,7 +36,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	// update conf file
-	submitJob('slcfgupdate', '', 'Changes saved', ($_SESSION['slsvc'] == '1' ? 'Squeezelite restarted' : ''));
+	submitJob('slcfgupdate', '', 'Settings updated', ($_SESSION['slsvc'] == '1' ? 'Squeezelite restarted' : ''));
 }
 
 phpSession('close');

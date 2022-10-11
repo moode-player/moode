@@ -44,7 +44,7 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 	}
 
 	// Restart if indicated
-	submitJob('upnpsvc', '', 'Changes saved', ($_SESSION['upnpsvc'] == '1' ? 'UPnP renderer restarted' : ''));
+	submitJob('upnpsvc', '', 'Settings updated', ($_SESSION['upnpsvc'] == '1' ? 'UPnP restarted' : ''));
 }
 
 phpSession('close');

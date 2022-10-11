@@ -163,6 +163,7 @@
 			<a id="snd-config-btn" class="btn" href="snd-config.php">Audio</a>
 			<a id="net-config-btn" class="btn" href="net-config.php">Network</a>
 			<a id="sys-config-btn" class="btn" href="sys-config.php">System</a>
+            <a id="ren-config-btn" class="btn" href="ren-config.php">Renderers</a>
 		</div>
 
 		<div id="menu-header"></div>

@@ -35,7 +35,7 @@ if (isset($_POST['update_audioin']) && $_POST['audioin'] != $_SESSION['audioin']
 }
 if (isset($_POST['update_rsmafterinp']) && $_POST['rsmafterinp'] != $_SESSION['rsmafterinp']) {
 	phpSession('write', 'rsmafterinp', $_POST['rsmafterinp']);
-	$_SESSION['notify']['title'] = 'Setting updated';
+	$_SESSION['notify']['title'] = 'Settings updated';
 }
 if (isset($_POST['update_audioout']) && $_POST['audioout'] != $_SESSION['audioout']) {
 	phpSession('write', 'audioout', $_POST['audioout']);

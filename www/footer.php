@@ -63,7 +63,8 @@
 				<li><a href="lib-config.php" class="btn btn-large"><i class="fas fa-database"></i><br>Library</a></li>
 				<li><a href="snd-config.php" class="btn btn-large"><i class="fas fa-volume-up"></i><br>Audio</a></li>
 				<li><a href="net-config.php" class="btn btn-large"><i class="fas fa-sitemap"></i><br>Network</a></li>
-				<li><a href="sys-config.php" class="btn btn-large"><i class="fas fa-desktop-alt"></i><br>System</a></li>
+				<li><a href="sys-config.php" class="btn btn-large"><i class="fas fa-cogs"></i><br>System</a></li>
+				<li><a href="ren-config.php" class="btn btn-large"><i class="fas fa-play-circle"></i><br>Renderers</a></li>
 				<li><a href="mpd-config.php" class="btn btn-large"><i class="fas fa-play"></i><br>MPD</a></li>
 				<li><a href="cdsp-config.php" class="btn btn-large"><i class="fas fa-sliders-v-square"></i><br>CamillaDSP</a></li>
 				<?php if ($_SESSION['feat_bitmask'] & FEAT_MULTIROOM) { ?>

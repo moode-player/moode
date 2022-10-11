@@ -416,29 +416,31 @@ function storeBackLink($section, $tpl) {
 	$refererLink = substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/'));
 	//workerLog('storeBackLink(): refererLink=' . substr($_SERVER['HTTP_REFERER'], strrpos($_SERVER['HTTP_REFERER'], '/')));
 
-	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config');
+	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config', 'ren-config');
 	$tplConfigs = array(
-		'src-config.html' => '/lib-config.php',
-		'bkp-config.html' => '/sys-config.php#backuprestore',
-		'eqg-config.html' => '/snd-config.php#equalizers',
-		'eqp-config.html' => '/snd-config.php#equalizers',
-		'apl-config.html' => '/snd-config.php#audiorenderers',
-		'spo-config.html' => '/snd-config.php#audiorenderers',
-		'sqe-config.html' => '/snd-config.php#audiorenderers',
-		'upp-config.html' => '/snd-config.php#upnpdlna',
-		'cdsp-configeditor.html' => '/cdsp-config.php'
+		'apl-config.html'	=> '/ren-config.php#airplay',
+		'bkp-config.html'	=> '/sys-config.php#system-maint',
+		'cdsp-config.html' 	=> '/snd-config.php#equalizers',
+		'cdsp-configeditor.html' => '/cdsp-config.php',
+		'eqg-config.html'	=> '/snd-config.php#equalizers',
+		'eqp-config.html'	=> '/snd-config.php#equalizers',
+		'gpio-config.html'	=> '/sys-config.php#local-services',
+		'spo-config.html' 	=> '/ren-config.php#spotify',
+		'sqe-config.html'	=> '/ren-config.php#squeezelite',
+		'src-config.html'	=> '/lib-config.php',
+		'upp-config.html' 	=> '/ren-config.php#upnp-dlna'
 	);
 
 	phpSession('open');
 
 	if (array_key_exists($tpl, $tplConfigs)) {
 		$_SESSION['config_back_link'] = $tplConfigs[$tpl];
-	} else if ($tpl == 'blu-config.html' && $refererLink == '/snd-config.php') {
-		$_SESSION['config_back_link'] = '/snd-config.php#audiorenderers';
+	} else if ($tpl == 'blu-config.html' && $refererLink == '/ren-config.php') {
+		$_SESSION['config_back_link'] = '/ren-config.php#bluetooth';
 	} else if ($tpl == 'mpd-config.html' && $refererLink == '/snd-config.php') {
-		$_SESSION['config_back_link'] = '/snd-config.php#mpdoptions';
+		$_SESSION['config_back_link'] = '/snd-config.php#mpd-options';
 	} else if ($tpl == 'trx-config.html' && $refererLink == '/snd-config.php') {
-		$_SESSION['config_back_link'] = '/snd-config.php#alsaoptions';
+		$_SESSION['config_back_link'] = '/snd-config.php#alsa-options';
 	} else if ($tpl == 'cdsp-config.html') {
 		$_SESSION['config_back_link'] = $_SESSION['alt_back_link'];
 	} else if (in_array($section, $rootConfigs)) {
