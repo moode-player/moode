@@ -573,9 +573,11 @@ function getEncodedAt($songData, $displayFormat, $calledFromGenLib = false) {
 		// DSD file
 		$result = sysCmd('mediainfo --Inform="Audio;file:///var/www/mediainfo.tpl" ' . '"' . MPD_MUSICROOT . $songData['file'] . '"');
 		$encodedAt = 'DSD ' . ($result[1] == '' ? '?' : formatRate($result[1]) . ' MHz');
+	} else if ($songData['file'] == '') {
+		return 'Not playing';
 	} else {
 		// PCM file
-		if ($songData['file'] == '' || !file_exists(MPD_MUSICROOT . $songData['file'])) {
+		if (!file_exists(MPD_MUSICROOT . $songData['file'])) {
 			return 'File does not exist';
 		}
 		// Mediainfo
