@@ -380,9 +380,9 @@ code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-album {left:66.66%;}
 #lib-file {overflow-y:scroll;overflow-x:hidden;margin:1px 0 0 0;height:100%;width:100%;-webkit-overflow-scrolling:touch;}
 #lib-coverart-meta-area {width:20vw;line-height:normal;padding:0;float:left;position:fixed;}
-#lib-coverart-img {margin:.5em .25em 0 .5em;}
+#lib-coverart-img {margin:.5em .5em 0 .5em;}
 #lib-coverart-img a {display:inline-block;}
-#lib-meta-summary {margin-left:.5em;line-height:normal;font-size:.9em;}
+#lib-meta-summary {margin:0 0.5em 0 0.5em;line-height:normal;font-size:.9em;}
 img.lib-coverart {float:left;width:calc(20vw - 1em);box-shadow:0px 0px .2em rgba(0,0,0,0.2);}
 img.lib-coverart.active {box-shadow:0px 0px .2em .1em var(--accentxts);}
 img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);box-shadow:0px 0px .2em rgba(0,0,0,0.2);position:absolute;opacity:.4}

@@ -428,6 +428,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#ss-currentsong {font-size:1.5em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#lib-coverart-meta-area {width:18vw;}
+
+	img.lib-artistart {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
+	#tagview-text-cover {width:calc(18vw - 1rem);height:calc(18vw - 1rem);}
+	#trackscontainer {width:calc(82vw - var(--sbw));}
+
 	#volcontrol, #countdown {height:15vw;width:15vw;}
 }
 /* iPad landscape */
