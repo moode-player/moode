@@ -11,7 +11,7 @@
 
 ################################################################################
 #
-# 2022-10-07 TC moOde 8.2.2
+# 2022-MM-DD TC moOde 8.2.2
 #
 ################################################################################
 
@@ -19,6 +19,7 @@ Updates
 
 - UPD: Improve layout and styling for Config screens
 - UPD: Improve resource usage in PHP-FPM pool
+- UPD: Show comment tag in Tag/Album view if Prefs option is Yes
 
 Bug fixes
 
@@ -26,6 +27,8 @@ Bug fixes
 - FIX: Button centering on modal footer buttons
 - FIX: Word break on Tag view text cover
 - FIX: Audio info reporting File path 'null' when queue empty
+- FIX: Playbar/Playback showing dash "-" when empty Queue
+- FIX: Playbar showing timeline/time when empty Queue
 
 ################################################################################
 #
