@@ -23,8 +23,9 @@ Updates
 Bug fixes
 
 - FIX: Update checker incorrectly reporting update available
-- FIX: Button centering on volume popup
+- FIX: Button centering on modal footer buttons
 - FIX: Word break on Tag view text cover
+- FIX: Audio info reporting File path 'null' when queue empty
 
 ################################################################################
 #
