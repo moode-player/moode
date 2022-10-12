@@ -507,7 +507,7 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="save-queue-to-playlist-modal-label">Save Queue to playlist</h3>
-		<p>NOTE: This will overwrite an existing playlist of the same name. Saved playlists are maintained in Library Playlist view.</p>
+		<p>NOTE: This will overwrite an existing playlist of the same name. Saved playlists are maintained in Playlist view.</p>
 	</div>
 	<div class="modal-body">
 		<form id="save-queue-to-playlist-form" method="post" onsubmit="return false;">
@@ -529,7 +529,7 @@
 	<div class="modal-header">
 		<button aria-label="Close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3 id="set-favorites-playlist-modal-label">Set Favorites Playlist Name</h3>
-		<p>Sets the playlist containing items favorited by clicking the Heart <i class="fal fa-heart"></i> button. If the playlist does not already exist it will be created. Playlists are maintained in Library Playist view.</p>
+		<p>Sets the playlist containing items favorited by clicking the Heart <i class="fal fa-heart"></i> button. If the playlist does not already exist it will be created. Playlists are maintained in Playist view.</p>
 	</div>
 	<div class="modal-body">
 		<form id="set-favorites-playlist-form" method="post" onsubmit="return false;">
@@ -966,7 +966,7 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-search_site" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-search_site" class="help-block hide">
-							By clicking the current track title in player view you can launch an internet search with the selected site.<br>
+							By clicking the current track title in Playback view an internet search is launched with the selected site.<br>
 							A combination of artist and album is searched. Wikipedia search is restricted to artist only.
  	                    </span>
  	                </div>
@@ -1157,7 +1157,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-track-play" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-track-play" class="help-block hide">
-							For the Tag and Album view Track list this option controls whether the Play and Clear/Play actions add only the selected track to the Queue or the selected track and all following tracks.<br>
+							For the track list in Tag/Album views this option controls whether the Play and Clear/Play actions add only the selected track to the Queue or the selected track and all following tracks.<br>
 	                    	<b>Track:</b> Play selected track only.<br>
 							<b>Track+:</b> Play selected track and all following tracks.
 	                    </span>
@@ -1211,7 +1211,7 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-show-encoded-at" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-show-encoded-at" class="help-block hide">
-	                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when for Song files the bit depth &gt; 16 or sample rate &gt; 44.1 kHz, and for Radio stations the bit rate is &gt; 128 kbps.
+	                    	The bit depth and sample rate can be displayed in one of several formats on or below the cover art. The "HD only" selection displays an HD badge when the bit depth for Song files is &gt; 16 or sample rate is &gt; 44.1 kHz, and for Radio stations the bit rate is &gt; 128 kbps.
  	                    </span>
  	                </div>
 
@@ -1233,7 +1233,7 @@
  						</div>
  						<a aria-label="Help" class="info-toggle" data-cmd="info-cover-search-priority" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-cover-search-priority" class="help-block hide">
-							This option determines whether the Cover Art extractor and Thumbnail generator look first for Embedded covers or Cover files.
+							This option determines whether the Cover Art extractor and Thumbnail generator look first for Embedded covers or Cover image files.
  	                    </span>
  	                </div>
 
@@ -1258,7 +1258,7 @@
  						<a aria-label="Help" class="info-toggle" data-cmd="info-hires-thumbnails" href="#notarget"><i class="fas fa-info-circle"></i></a>
  						<span id="info-hires-thumbnails" class="help-block hide">
 							This option sets the resolution of the JPEG images output by the Thumbnail Generator. Regenerate the thumbnail images after changing this setting.<br>
-							<b>NOTE:</b>:&nbsp;Auto uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time). This can result in lower resolution images.
+							NOTE: Auto uses the device Pixel Ratio to set an optimum resolution and quality while maintaining the smallest file size (fastest image load time). This can result in lower resolution images.
  	                    </span>
  	                </div>
 
@@ -1363,8 +1363,7 @@
 	 						</div>
 	 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-mbrz-albumid" href="#notarget"><i class="fas fa-info-circle"></i></a>
 	 						<span id="info-library-inc-mbrz-albumid" class="help-block hide">
-	 		                    Determine how albums of the same name will be differentated.<br>
-								<b>NOTE:</b>&nbsp;AlbumID is the musicbrainz_albumid tag. Including this tag may impact the performance of the Library.
+	 		                    Determine how albums of the same name are differentated. The term @AlbumID refers to the MUSICBRAINZ_ALBUMID tag.
 	 	                    </span>
 	 	                </div>
 
@@ -1385,10 +1384,16 @@
 								</div>
 	 						</div>
 	 						<a aria-label="Help" class="info-toggle" data-cmd="info-library-inc-comment-tag" href="#notarget"><i class="fas fa-info-circle"></i></a>
-	 						<span id="info-library-inc-comment-tag" class="help-block hide">
-	 		                    This tag is used to display some identifying text to differentiate albums that have the same name but different MUSICBRAINZ_ALBUMID values.<br>
-								<b>NOTE:</b>&nbsp;Including this tag may impact the performance of the Library.
+							<span id="info-library-inc-comment-tag" class="help-block hide">
+								The text is displayed in Tag/Album views as an album heading in the track list if the Album key is set to include @AlbumID.
 	 	                    </span>
+							<!-- TODO: Use this help text if "add comment tag" test is successful
+	 						<span id="info-library-inc-comment-tag" class="help-block hide">
+								The text is displayed in Tag/Album views.<br>
+								(1) After the Year in the Album title.<br>
+								(2) As an album heading in the track list if the Album key is set to include @AlbumID.
+	 	                    </span>
+							-->
 	 	                </div>
 
 						<label class="control-label" for="ignore-articles">Ignore articles</label>
@@ -1396,8 +1401,7 @@
 		                    <input id="ignore-articles" class="input-medium" type="text">
 							<a aria-label="Help" class="info-toggle" data-cmd="info-ignore-articles" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-ignore-articles" class="help-block hide">
-								Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed.<br>
-								NOTE: A blank list will result in "None" and will effectively disable the option.
+								Specify a comma separated list of articles to be ignored when sorting. Embedded spaces are not allowed and a blank list will result in "None" and will effectively disable the option.
 							</span>
 		                </div>
 
@@ -1419,7 +1423,7 @@
 							</div>
 							<a aria-label="Help" class="info-toggle" data-cmd="info-show-genres-column" href="#notarget"><i class="fas fa-info-circle"></i></a>
 							<span id="info-show-genres-column" class="help-block hide">
-		                    	Show the Genres column in Library Tag view.
+		                    	Show the Genres column in Tag view.
 		                    </span>
 		                </div>
 
@@ -1441,7 +1445,7 @@
 	 						</div>
 	 						<a aria-label="Help" class="info-toggle" data-cmd="info-show-tagview-covers" href="#notarget"><i class="fas fa-info-circle"></i></a>
 	 						<span id="info-show-tagview-covers" class="help-block hide">
-	 		                    Show covers in the Album column of Library Tag view.
+	 		                    Show covers in the Album column of Tag view.
 	 	                    </span>
 	 	                </div>
 
@@ -1485,8 +1489,7 @@
 	 						</div>
 	 						<a aria-label="Help" class="info-toggle" data-cmd="info-utf8-char-filter" href="#notarget"><i class="fas fa-info-circle"></i></a>
 	 						<span id="info-utf8-char-filter" class="help-block hide">
-								Many Chinese songs and song directories have characters that are not UTF8 encoded causing the Library loader to fail. Replacing the non-UTF8 characters with a UTF8 compliant character solves this problem.<br>
-								NOTE: setting this to Yes may impact the performance of the Library.
+								Replace non-UTF8 characters with UTF8 compliant characters which may be present in song files. Setting this to Yes may impact the performance of the Library.
 	 	                    </span>
 	 	                </div>
 					</div>
@@ -1543,7 +1546,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-auto-coverview" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-auto-coverview" class="help-block hide">
-	                    	Automatically show CoverView on locally attached display. Connected clients are unaffected.
+	                    	Automatically show CoverView on locally attached display. Connected clients are not affected.
 	                    </span>
 	                </div>
 
@@ -1595,7 +1598,7 @@
 						</div>
 						<a aria-label="Help" class="info-toggle" data-cmd="info-scnsaver-mode" href="#notarget"><i class="fas fa-info-circle"></i></a>
 						<span id="info-scnsaver-mode" class="help-block hide">
-	                    	Display cover art or a digital clock.
+	                    	Display Cover art or a Digital Clock.
 	                    </span>
 	                </div>
 
@@ -2185,7 +2188,7 @@
 						<b>Un-hide all:&nbsp;</b> Set all moOde stations to type Regular except for Favorites.<br>
 						<b>Hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Hidden except for Favorites.<br>
 						<b>Un-hide geo-fenced:&nbsp;</b> Set geo-fenced moOde stations to type Regular except for Favorites.<br>
-						NOTE: moOde stations are the custom curated set of stations shipped in the release.
+						NOTE: moOde stations are a custom curated set of stations shipped in the release.
 					</span>
 				</div>
 				<label class="control-label" for="radioview-show-hide-other">Other stations</label>

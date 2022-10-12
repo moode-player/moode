@@ -94,8 +94,14 @@ function loadLibrary() {
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
 
-    // Convert misc lib option[2] to Yes/No equivalents
+    // miscLibOptions[0] Include comment tag Yes/No
+    // miscLibOptions[1] Album key: Album@Artist | Album@Artist@AlbumID | FolderPath | FolderPath@AlbumID
+    // Note: AlbumID refers to the MUSICBRAINZ_ALBUMID tag
     miscLibOptions = getMiscLibOptions();
+
+    // Convert to Yes/No
+    // miscLibOptions[1] Indicates whether MBRZ albumid tag is included in the album key
+    // miscLibOptions[2] Created to indicate whether FolderPath is used in the album key
     miscLibOptions[2] = miscLibOptions[1].indexOf('FolderPath') != -1 ? 'Yes' : 'No';
     miscLibOptions[1] = miscLibOptions[1].indexOf('AlbumID') != -1 ? 'Yes' : 'No';
 
@@ -248,7 +254,7 @@ function groupLib(fullLib) {
 	allAlbums = Object.values(allSongs.reduce(reduceAlbums, {})).map(function(albumTracks){
 		var file = findAlbumProp(albumTracks, 'file');
 		//ORIG var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
-		var md5 = typeof(file) == 'undefined' ? 0 : $.md5(getParentDirectory(file)); 
+		var md5 = typeof(file) == 'undefined' ? 0 : $.md5(getParentDirectory(file));
 		// var artist = findAlbumProp(albumTracks, 'artist');
 		// var albumArtist = findAlbumProp(albumTracks, 'album_artist');
 		var year = getYear(albumTracks);
@@ -257,6 +263,7 @@ function groupLib(fullLib) {
 			last_modified: getLastModified(albumTracks),
 			year: year,
 			album: findAlbumProp(albumTracks, 'album'),
+            // mb_albumid if not present is set to '0' in genLibrary()
 			mb_albumid: findAlbumProp(albumTracks, 'mb_albumid'),
 			genre: findAlbumProp(albumTracks, 'genre'),
 			all_genres: Object.keys(albumTracks.reduce(reduceGenres, {})),
@@ -769,7 +776,7 @@ var renderSongs = function(albumPos) {
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
 
-            // Optionally append either comment or albumid to the album header
+            // Optionally append either comment or MBRZ albumid to the album header
             if (miscLibOptions[0] == 'Yes') { // Comment tag included
                 var comment = filteredSongs[i].comment != '' ? ' (' + filteredSongs[i].comment + ')' : '';
             }
