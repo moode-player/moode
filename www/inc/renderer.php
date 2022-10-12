@@ -42,6 +42,12 @@ function startBluetooth() {
 }
 
 function startAirplay() {
+	// Airplay 1 or 2
+	$protocolVer = empty(sysCmd('shairport-sync -V | grep "AirPlay2"')) ? '1' : '2';
+	if ($protocolVer == '2') {
+		sysCmd('systemctl start nqptp');
+	}
+
 	// Verbose logging
 	if ($_SESSION['debuglog'] == '1') {
 		$logging = '-vv';
@@ -67,6 +73,12 @@ function startAirplay() {
 
 function stopAirplay () {
 	sysCmd('killall shairport-sync');
+
+	// Airplay 1 or 2
+	$protocolVer = empty(sysCmd('shairport-sync -V | grep "AirPlay2"')) ? '1' : '2';
+	if ($protocolVer == '2') {
+		sysCmd('systemctl stop nqptp');
+	}
 
 	// Local
 	sysCmd('/var/www/vol.sh -restore');
