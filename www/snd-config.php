@@ -472,7 +472,7 @@ $_mpdcrossfade = $_SESSION['mpdcrossfade'];
 
 // Local out
 // NOTE: Only one of the DSP'can be on
-if ($_SESSION['audioout'] == 'Local' && $_SESSION['multiroom_tx'] == 'Off') {
+if ($_SESSION['audioout'] == 'Local' && $_SESSION['multiroom_tx'] == 'Off' && $_SESSION['multiroom_rx'] == 'Off') {
 	$_invpolarity_set_disabled = ($_SESSION['crossfeed'] != 'Off' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_crossfeed_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['eqfa12p'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
 	$_eqfa12p_set_disabled = ($_SESSION['invert_polarity'] != '0' || $_SESSION['crossfeed'] != 'Off' || $_SESSION['alsaequal'] != 'Off' || $_SESSION['camilladsp'] != 'off') ? 'disabled' : '';
@@ -488,7 +488,7 @@ if ($_SESSION['audioout'] == 'Local' && $_SESSION['multiroom_tx'] == 'Off') {
 		$_camilladsp_set_disabled = 'disabled';
 	}
 }
-// Bluetooth out or Multiroom Sender On
+// Bluetooth out or Multiroom Sender or Receiver On
 // NOTE: Don't allow any DSP to be set
 else {
 	$_invpolarity_set_disabled = 'disabled';
