@@ -857,8 +857,8 @@ var renderSongs = function(albumPos) {
 	// Cover art and metadata for Tag and Album views
 	if (filteredAlbums.length == 1 || LIB.filters.albums.length || typeof(albumPos) !== 'undefined') {
 		$('#lib-coverart-img').html('<a href="#notarget" data-toggle="context" data-target="#context-menu-lib-album">' +
-			'<img class="lib-coverart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '></a>');
-		$('#lib-albumname').html(filteredSongs[0].album);
+			'<img class="lib-coverart" src="' + filteredAlbums[UI.libPos[0]].imgurl + '" ' + 'alt="Cover art not found"' + '></a>');
+        $('#lib-albumname').html(filteredSongs[0].album);
 
 		if (albumPos && !UI.libPos[0]) {
 			artist = filteredAlbums[UI.libPos[0]].album_artist; // @Atair: album_artist !
@@ -884,7 +884,7 @@ var renderSongs = function(albumPos) {
         if (LIB.filters.artists.length > 0) {
             var artistName = LIB.filters.artists.length == 1 ? LIB.filters.artists[0] : 'Multiple Artists Selected';
             $('#lib-coverart-img').html(
-                '<img class="lib-artistart" src="' + makeCoverUrl(filteredSongs[0].file) + '" ' + 'alt="Cover art not found"' + '>' +
+                '<img class="lib-artistart" src="' + filteredAlbums[0].imgurl + '" ' + 'alt="Cover art not found"' + '>' +
                 '<button class="btn" id="tagview-text-cover" data-toggle="context" data-target="#context-menu-lib-album">' +
                 artistName + '</button>'
             );
