@@ -599,6 +599,8 @@ var renderAlbums = function() {
 	var activeFlag = '';
 	var tagViewYear = '';   // For display of Artist (Year) in Tag View
 	var albumViewYear = '';  // For display of Artist (Year) in Album View
+	var tagViewComment = '';   // For display of Artist (Year) - Comment in Tag View
+	var albumViewComment = '';  // For display of Artist (Year) - Comment in Album View
 
     if (GLOBAL.nativeLazyLoad) {
     	var tagViewLazy = '<img loading="lazy" src="';
@@ -622,6 +624,10 @@ var renderAlbums = function() {
 	for (var i = 0; i < filteredAlbums.length; i++) {
         filteredAlbums[i].year ? tagViewYear = '(' + filteredAlbums[i].year + ')' : tagViewYear = '';
         filteredAlbumCovers[i].year ? albumViewYear = '(' + filteredAlbumCovers[i].year + ')' : albumViewYear = '';
+        if (miscLibOptions[0] == 'Yes') { // Comment tag included
+            filteredAlbums[i].comment ? tagViewComment = filteredAlbums[i].comment : tagViewComment = '';
+            filteredAlbumCovers[i].comment ? albumViewComment = filteredAlbumCovers[i].comment : albumViewComment = '';
+        }
 
         // encoded_at:
         // [0] bits/rate format. [1] flag: "l" lossy, "s" standard def or "h" high def
@@ -644,14 +650,14 @@ var renderAlbums = function() {
                 + tagViewHdDiv
                 + '<div class="tag-cover-text"><span class="album-name-art">' + filteredAlbums[i].album + '</span>'
                 + '<span class="artist-name-art">' + filteredAlbums[i].album_artist + '</span>' // @Atair: Should be album_artist
-                + '<span class="album-year">' + tagViewYear + '</span></div>'
+                + '<span class="album-year">' + tagViewYear + '</span><span class="album-comment">' + tagViewComment + '</span></div>'
                 + tagViewNvDiv
                 + '</li>';
         }
 		else {
 			output += '<li class="lib-entry no-tagview-covers">'
                 + '<span class="album-name">' + filteredAlbums[i].album
-                + '</span><span class="artist-name-art">' + filteredAlbums[i].album_artist + '</span><span class="album-year">' + tagViewYear + '</span></li>'  // @Atair: Should be album_artist
+                + '</span><span class="artist-name-art">' + filteredAlbums[i].album_artist + '</span><span class="album-year">' + tagViewYear + '</span><span class="album-comment">' + tagViewComment + '</span>' + '</li>'  // @Atair: Should be album_artist
         }
 
 		output2 += '<li class="lib-entry">'
@@ -660,7 +666,7 @@ var renderAlbums = function() {
 			+ albumViewHdDiv
 			+ albumViewBgDiv
             + '<span class="album-name">' + filteredAlbumCovers[i].album + '</span>'
-            + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].album_artist + '</span><span class="album-year">' + albumViewYear + '</span></div>'
+            + '<div class="artyear"><span class="artist-name">' + filteredAlbumCovers[i].album_artist + '</span><span class="album-year">' + albumViewYear + '</span><span class="album-comment">' + albumViewComment + '</span></div>'
             + albumViewTxDiv
             + albumViewNvDiv
             + '</li>';
