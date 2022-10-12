@@ -129,7 +129,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 .modal .dropdown-menu.inner {background-color:var(--adaptmbg);color:var(--adapttext);}
 .modal .modal-dropdown-text {color:inherit;}
 .modal .bootstrap-select .btn, #preferences-modal input, #clockradio-modal input, #radio-manager-modal input, #edit-station-modal input, #new-station-modal input {border:none;background-color:var(--btnshade2);/*border: 1px solid var(--textvariant);*/}
-.modal-footer .btn {border-radius:5rem;background-color:var(--btnshade4);margin:.2em 1em;width:10em;color:inherit;}
+.modal-footer .btn {border-radius:5rem;background-color:var(--btnshade4);margin:.2em 1vw;width:10em;color:inherit;}
 .modal-footer .btn-primary {border-radius:5rem;float:none;border:1px solid var(--textvariant);background-color:var(--btnshade4);color:var(--adapttext);}
 .modal.fade {top:0;top:env(safe-area-inset-top);transition:none;}
 .modal.fade.in {transition:none;}
