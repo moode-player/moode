@@ -683,7 +683,7 @@ function disableVolKnob() {
 
 // When last item in Queue finishes just update a few things, called from engineCmd()
 function resetPlayCtls() {
-	console.log('resetPlayCtls():');
+	//console.log('resetPlayCtls():');
 	$('#m-total, #playbar-total, #playbar-mtotal').text(formatKnobTotal('0'));
 	$('.play i').removeClass('fas fa-pause').addClass('fas fa-play');
 	$('#total').html(formatKnobTotal('0'));
