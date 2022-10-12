@@ -58,6 +58,7 @@ function parseStationInfo($path) {
 }
 
 function parseTrackInfo($resp) {
+	workerLog('parseTrackInfo(): (' . $resp . ')');
 	/* Layout
 	0  Cover url
 	1  File path
@@ -146,13 +147,14 @@ function parseTrackInfo($resp) {
 			$line = strtok("\n");
 		}
 
-		// Strip off trailing delimiter
-		$array[1] = array('File path' => $file);
-		$array[2] = array('Artists' => rtrim($artists, ', '));
-		$array[6] = array('Genres' => rtrim($genres, ', '));
-
-		// Add audio format
-		$array[13] = array('Audio format' => getEncodedAt(array('file' => $file), 'default'));
+		// File path
+		$array[1] = isset($file) ? array('File path' => $file) : array('File path' => 'Not playing');
+		// Artists and genres
+		$array[2] = !empty(rtrim($artists, ', ')) ? array('Artists' => rtrim($artists, ', ')) : '';
+		$array[6] = !empty(rtrim($genres, ', ')) ? array('Genres' => rtrim($genres, ', ')) : '';
+		// Audio format
+		$encodedAt = getEncodedAt(array('file' => $file), 'default');
+		$array[13] = $encodedAt == 'Not playing' ? '' : array('Audio format' => $encodedAt);
 	}
 
 	return $array;
