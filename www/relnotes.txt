@@ -20,6 +20,7 @@ Updates
 - UPD: Improve layout and styling for Config screens
 - UPD: Improve resource usage in PHP-FPM pool
 - UPD: Show comment tag in Tag/Album view if Prefs option is Yes
+- UPD: Start/stop nqptp on-demand for shairport-sync Airplay 2
 
 Bug fixes
 
