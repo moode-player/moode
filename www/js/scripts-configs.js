@@ -90,6 +90,12 @@ jQuery(document).ready(function($){ 'use strict';
         if (GLOBAL.thmUpdInitiated == true) {
             $('.busy-spinner').show();
         }
+
+        // On-screen keyboard
+        $('#btn-on-screen-kbd').text(SESSION.json['on_screen_kbd']);
+        if (SESSION.json['on_screen_kbd'] == 'Disable' && GLOBAL.chromium) {
+             installOSK();
+        }
 });
 	//
 	// EVENT HANDLERS
@@ -310,6 +316,22 @@ jQuery(document).ready(function($){ 'use strict';
     // NOTE: This global is tested and reset to false in playerlib.js function renderReconnect()
     $('#backup_create').click(function(e) {
         GLOBAL.backupCreate = true;
+    });
+
+    // On-screen keyboard
+    $('#btn-on-screen-kbd').click(function(e) {
+        e.preventDefault();
+
+        var btnLabel = $('#btn-on-screen-kbd').text() == 'Enable' ? 'Disable' : 'Enable';
+        $.post('command/cfg-table.php?cmd=upd_cfg_system', {'on_screen_kbd': btnLabel}, function(data) {
+            $('#btn-on-screen-kbd').text(btnLabel);
+
+            if (GLOBAL.chromium && btnLabel == 'Enable') {
+                setTimeout(function() {
+                    location.reload();
+                }, DEFAULT_TIMEOUT);
+            }
+        }, 'json');
     });
 
     // Info button (i) show/hide toggle

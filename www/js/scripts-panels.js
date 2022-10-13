@@ -386,7 +386,7 @@ jQuery(document).ready(function($) { 'use strict';
     		makeActive('.playlist-view-btn', '#playlist-panel', currentView);
     	}
 
-        // CoverView auto-display
+        // Detect chromium-browser
         var userAgent = navigator.userAgent;
         if (userAgent.indexOf('X11; CrOS armv') != -1 || userAgent.indexOf('X11; CrOS aarch64') != -1) {
             GLOBAL.chromium = true;
@@ -396,10 +396,16 @@ jQuery(document).ready(function($) { 'use strict';
         // DEBUG: Uncomment to show text in Playback view below the cover art
         //$('#debug-text').html(userAgent + '<br>' + (GLOBAL.chromium ? 'chromium=true' : 'chromium=false'));
 
-        if (SESSION.json['localui'] == '1' && SESSION.json['toggle_coverview'] == '-on' && GLOBAL.chromium) {
+        // CoverView auto-display
+        if (GLOBAL.chromium && SESSION.json['localui'] == '1' && SESSION.json['toggle_coverview'] == '-on') {
             setTimeout(function() {
                 screenSaver('scnactive1');
             }, 8000);
+        }
+
+        // On-screen keyboard
+        if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'Disable') {
+            installOSK();
         }
     });
 
