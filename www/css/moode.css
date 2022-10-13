@@ -276,12 +276,15 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-queue {z-index:unset;}
 	.ralbum svg {height:1.2rem;width:1.2rem;}
 	#togglebtns .btn-group {width:unset;}
+	#songsand {font-size:1.5rem}
+	#currentsong, #currentartist {padding-top:1rem;}
+	#currentalbum {padding-top:1.25rem;}
 	.tab-content {height:unset;}
 	.covers {width:100%;}
-	#menu-bottom, #playbar {height:8.5rem;}
-	#playbar-cover {height:8.5rem;width:8.5rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
+	#menu-bottom, #playbar {height:9rem;}
+	#playbar-cover {height:9rem;width:9rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
 	#playbar-controls .prev {display:none;}
-	#songsList {padding-bottom:8.5rem;}
+	#songsList {padding-bottom:9rem;}
 	.lib-artistname-meta, .lib-albumyear-meta, .lib-numtracks-meta {font-size:calc(0.65em + 1vmin);}
 	#playbtns .btn {font-size:3em;padding:.5em 1em;}
 	.dbtn {display:inline-block;font-size:3em;padding:0 1rem;width:25%;line-height:20px;vertical-align:middle;}
@@ -301,7 +304,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.25em;}
 	#ss-coverart-url img {width:65vh;}
 	#volpad {width:100%;}
-#volume-popup .modal-footer button {width:40%;/*margin:0;*/}
+	#volume-popup .modal-footer button {width:40%;/*margin:0;*/}
 	.modal-xs {min-width:70%;}
 	#lib-coverart-meta-area {position:unset;}
 	.btn-save-queue-to-playlist {margin:1em 1em 4em 1em;}
@@ -322,7 +325,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
 	#playbar-controls .btn {padding:.5em;font-size:2.25rem;-webkit-tap-highlight-color:transparent;}
-	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:.4em;height:unset;width:unset;top:unset;left:unset;transform:none;}
+	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:1.5em;height:unset;width:unset;top:unset;left:unset;transform:none;}
 	#playbar-toggles .btn {transition:none;border-radius:50%;padding:1rem .7rem;margin-bottom:0;width:unset;height:unset;line-height:11px;}
 	#playbar-timeline {display:none;}
 	#playbar-toggles .coverview {display:none;}

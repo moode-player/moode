@@ -1923,7 +1923,6 @@ function updKnobAndTimeTrack() {
 		if (UI.mobile) {
 			$('#m-total, #m-countdown, #playbar-mcount').text('00:00');
 			$('#playbar-mtotal').html('&nbsp;/&nbsp;00:00');
-            $('#playbar-mtime').css('display', 'none');
 		}
         else {
             $('#playbar-total, #playbar-countdown, #countdown-display').html('00:00');
@@ -4249,6 +4248,10 @@ function audioPlayback() {
 // Track/Station/Playback info
 // cmd = info type, path = song file path, tab = 'playback' for m menu Audio info
 function audioInfo(cmd, path, activeTab = '') {
+    if (!UI.mobile) {
+        $('#audioinfo-modal').css('min-width', '45em');
+    }
+
 	$('#audioinfo-modal .modal-body').load('audioinfo.php', function() {
         var tabText = cmd == 'station_info' ? 'Station' : 'Track';
         var className = activeTab == 'playback' ? 'playback' : 'track';
