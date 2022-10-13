@@ -149,7 +149,7 @@ function setNumberMode(numbersOnly) {
         OSK.keyIncrease = document.getElementById("osk_2_10");
         OSK.keyDecrease = document.getElementById("osk_3_10");
         OSK.keySetMax = document.getElementById("osk_2_9");
-        OSK.keySetMin = document.getElementById("osk_3_9");    
+        OSK.keySetMin = document.getElementById("osk_3_9");
 
         OSK.keyIncrease.classList.add("oskInc");
         OSK.keyDecrease.classList.add("oskDec");
@@ -174,7 +174,7 @@ function setNumberMode(numbersOnly) {
         }
         if (OSK.keySetMin) {
             OSK.keySetMin.classList.remove("oskMin");
-            OSK.keySetMin = null;    
+            OSK.keySetMin = null;
         }
     }
 }
@@ -253,7 +253,7 @@ function keyPress(aEvent) {
             numVal = Math.trunc(numVal / stepVal) * stepVal - stepVal;
             OSK.linkedInput.value = numVal < minVal ? minVal : numVal;
             break;
-    
+
         case OSK.keySetMax:
             OSK.linkedInput.value = maxVal;
             break;
@@ -261,7 +261,7 @@ function keyPress(aEvent) {
         case OSK.keySetMin:
             OSK.linkedInput.value = minVal;
             break;
-    
+
         default:
             if (isNumeric) {
                 numVal = 1 * ("" + OSK.linkedInput.value + this.innerHTML);
@@ -423,4 +423,5 @@ function installOSK() {
     }
 }
 
-installOSK();
+// Commented out: OSK is enabled on-demand via option in Local display section of System tab
+//installOSK();
