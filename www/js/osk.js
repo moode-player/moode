@@ -417,11 +417,11 @@ function initializeOSK() {
     OSK.initialized = true;
 }
 
-function installOSK() {
+// Commented out: OSK is enabled on-demand via option in Local display section of System tab
+/*function installOSK() {
     if (navigator.userAgent.indexOf('X11; CrOS armv') != -1 || navigator.userAgent.indexOf('X11; CrOS aarch64') != -1) {
         initializeOSK();
     }
 }
 
-// Commented out: OSK is enabled on-demand via option in Local display section of System tab
-//installOSK();
+installOSK();*/

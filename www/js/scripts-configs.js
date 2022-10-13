@@ -93,8 +93,8 @@ jQuery(document).ready(function($){ 'use strict';
 
         // On-screen keyboard
         $('#btn-on-screen-kbd').text(SESSION.json['on_screen_kbd']);
-        if (SESSION.json['on_screen_kbd'] == 'Disable' && GLOBAL.chromium) {
-             installOSK();
+        if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'Disable') {
+             initializeOSK();
         }
 });
 	//
@@ -326,11 +326,9 @@ jQuery(document).ready(function($){ 'use strict';
         $.post('command/cfg-table.php?cmd=upd_cfg_system', {'on_screen_kbd': btnLabel}, function(data) {
             $('#btn-on-screen-kbd').text(btnLabel);
 
-            if (GLOBAL.chromium && btnLabel == 'Enable') {
-                setTimeout(function() {
-                    location.reload();
-                }, DEFAULT_TIMEOUT);
-            }
+            setTimeout(function() {
+                location.reload();
+            }, DEFAULT_TIMEOUT);
         }, 'json');
     });
 

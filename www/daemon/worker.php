@@ -939,6 +939,11 @@ if ($_SESSION['localui'] == '1') {
 	workerLog('worker: LocalUI started');
 }
 workerLog('worker: CoverView toggle (' . $_SESSION['toggle_coverview'] . ')');
+// On-screen keyboard
+if (!isset($_SESSION['on_screen_kbd'])) {
+	$_SESSION['on_screen_kbd'] = 'Enable';
+}
+workerLog('worker: On-screen keyboard (' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'Off' : 'On') . ')');
 
 // TRX Config advanced options toggle
 $_SESSION['tx_adv_toggle'] = 'Advanced (&plus;)';

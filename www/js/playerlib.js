@@ -189,6 +189,16 @@ var alphabitsFilter;
 var lastYIQ = ''; // Last yiq value from setColors
 var coverView = false; // Coverview shown/hidden to save on more expensive conditional in interval timer
 
+// Detect chromium-browser
+var userAgent = navigator.userAgent;
+if (userAgent.indexOf('X11; CrOS armv') != -1 || userAgent.indexOf('X11; CrOS aarch64') != -1) {
+    GLOBAL.chromium = true;
+} else {
+    GLOBAL.chromium = false;
+}
+// DEBUG: Uncomment to show text in Playback view below the cover art
+//$('#debug-text').html(userAgent + '<br>' + (GLOBAL.chromium ? 'chromium=true' : 'chromium=false'));
+
 function debugLog(msg) {
 	if (SESSION.json['debuglog'] == '1') {
 		console.log(Date.now() + ': ' + msg);

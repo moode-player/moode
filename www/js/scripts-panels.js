@@ -386,16 +386,6 @@ jQuery(document).ready(function($) { 'use strict';
     		makeActive('.playlist-view-btn', '#playlist-panel', currentView);
     	}
 
-        // Detect chromium-browser
-        var userAgent = navigator.userAgent;
-        if (userAgent.indexOf('X11; CrOS armv') != -1 || userAgent.indexOf('X11; CrOS aarch64') != -1) {
-            GLOBAL.chromium = true;
-        } else {
-            GLOBAL.chromium = false;
-        }
-        // DEBUG: Uncomment to show text in Playback view below the cover art
-        //$('#debug-text').html(userAgent + '<br>' + (GLOBAL.chromium ? 'chromium=true' : 'chromium=false'));
-
         // CoverView auto-display
         if (GLOBAL.chromium && SESSION.json['localui'] == '1' && SESSION.json['toggle_coverview'] == '-on') {
             setTimeout(function() {
@@ -405,7 +395,7 @@ jQuery(document).ready(function($) { 'use strict';
 
         // On-screen keyboard
         if (GLOBAL.chromium && SESSION.json['on_screen_kbd'] == 'Disable') {
-            installOSK();
+            initializeOSK();
         }
     });
 
