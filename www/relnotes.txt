@@ -21,7 +21,7 @@ Updates
 - UPD: Improve resource usage in PHP-FPM pool
 - UPD: Improve Tag view performance by using thumbnail for cover
 - UPD: Improve spacing on mobile Playbar and Playback views
-- UPD: Add option to enable On Screen Keyboard for Local display
+- UPD: Add option to enable On-Screen Keyboard for Local display
 - UPD: Show comment tag in Tag/Album view if Prefs option is Yes
 - UPD: Start/stop nqptp on-demand for shairport-sync Airplay 2
 
@@ -33,6 +33,7 @@ Bug fixes
 - FIX: Audio info reporting File path 'null' when queue empty
 - FIX: Playbar/Playback showing dash "-" when empty Queue
 - FIX: Playbar showing timeline/time when empty Queue
+- FIX: Position of knob volume level and time for Pi 7" Touch
 
 ################################################################################
 #
