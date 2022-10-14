@@ -1963,7 +1963,7 @@ function updKnobAndTimeTrack() {
 		}
 	}
 
-    if (MPD.json['state'] === 'play' || MPD.json['state'] === 'pause') {
+    if (MPD.json['state'] === 'play') {
         // Move these out of the timer
 		var tt = $('#timetrack');
 		var ti = $('#time');
@@ -1989,6 +1989,10 @@ function updKnobAndTimeTrack() {
 			}
         }, delta * 1000);
     }
+    else if (MPD.json['state'] === 'pause' ) {
+		syncTimers();
+		$('#time, #timetrack, #playbar-timetrack').val(GLOBAL.initTime * 10).trigger('change');
+	}
 }
 
 // Fill in timeline color as song plays
