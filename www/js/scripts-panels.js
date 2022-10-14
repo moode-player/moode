@@ -867,8 +867,8 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 	$('#db-refresh').click(function(e) {
         UI.dbPos[UI.dbPos[10]] = 0;
-        $.getJSON('command/moode.php?cmd=' + UI.dbCmd, {'path': UI.path}, function(data) {
-            renderFolderView(data, UI.path);
+		$.getJSON('command/music-library.php?cmd=lsinfo', {'path': UI.path}, function(data) {
+			renderFolderView(data, UI.path);
         });
 	});
 	$('#db-search-submit').click(function(e) {

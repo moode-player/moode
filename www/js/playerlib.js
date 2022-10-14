@@ -3894,6 +3894,13 @@ $('#preferences-modal .h5').click(function(e) {
 	$(this).parent('div.accordian').toggleClass('active');
 });
 
+$('#dbfs').on('keyup', function(e) {
+	if (e.key == 'Enter') {
+		e.preventDefault();
+ 		dbFastSearch();
+	}
+});
+
 // Synchronize times to/from playbar so we don't have to keep countdown timers running which = ugly idle perf
 function syncTimers() {
     var a = $('#countdown-display').text();
