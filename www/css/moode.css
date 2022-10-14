@@ -456,6 +456,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-firstuse-help {height:55vh;width:55vh;}
 	#countdown-display {margin-top:0;}
 	.volume-display, .volume-display-db {margin-top:.3em;}
+	#songsand {font-size:1.25em;}
 }
 @media (min-height:443px) and (width:799px) { /* 443 = Square pixel AR, 479 = Default pixel AR */
 	.playqueue .pll1 {font-size:1rem;}
@@ -467,6 +468,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-firstuse-help {height:55vh;width:55vh;}
 	#countdown-display {margin-top:0;}
 	.volume-display, .volume-display-db {margin-top:.3em;}
+	#songsand {font-size:1.25em;}
 }
 
 /* iPhone X */
