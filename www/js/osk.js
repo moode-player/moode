@@ -21,6 +21,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // FontAwesome icons for some special keys
+const KS_CLOSE     = '&#xf057;';
 const KS_BACKS     = '&#xf177;';
 const KS_SHIFT     = '&#xf062;';
 const KS_ENTER     = '&#xf3be;';
@@ -85,6 +86,7 @@ var OSK = {
     tag: null,
     linkedInput: null,
 
+    keyClose: null,
     keyBackspace: null,
     keySetMax: null,
     keyIncrease: null,
@@ -180,7 +182,7 @@ function setNumberMode(numbersOnly) {
 }
 
 function fingerDown() {
-    if (!this.classList.contains("oskVoid")) {
+    if (!this.classList.contains("oskVoid") && !this.classList.contains("oskClose")) {
         this.classList.add("oskPressed");
     }
 }
@@ -209,6 +211,12 @@ function keyPress(aEvent) {
     var minVal  = 1 * OSK.linkedInput.min;
     var maxVal  = 1 * OSK.linkedInput.max;
     switch (this) {
+
+        case OSK.keyClose:
+            if (OSK.linkedInput) {
+                OSK.linkedInput.blur();
+            }
+            break;
 
         case OSK.keyBackspace:
             if (isNumeric) {
@@ -248,7 +256,7 @@ function keyPress(aEvent) {
             numVal = Math.trunc(numVal / stepVal) * stepVal + stepVal;
             OSK.linkedInput.value = numVal > maxVal ? maxVal : numVal;
             break;
-
+       
         case OSK.keyDecrease:
             numVal = Math.trunc(numVal / stepVal) * stepVal - stepVal;
             OSK.linkedInput.value = numVal < minVal ? minVal : numVal;
@@ -286,7 +294,7 @@ function addKeyRow(aId) {
 function addKey(aIdR, aIdC, classes, text) {
     classes = classes || [];
     classes.push("oskKey");
-    var tagR = document.getElementById("osk_" + aIdR);
+    var tagR = document.getElementById((null != aIdR ? "osk_" + aIdR : "osk"));
     var tagK = tagR.appendChild(document.createElement("div"));
     tagK.id = tagR.id + "_" + aIdC;
     tagK.innerHTML = text ? text : "";
@@ -391,6 +399,7 @@ function initializeOSK() {
     OSK.tag.onclick = (aEvent) => { aEvent.stopPropagation() };
     OSK.tag.addEventListener("transitionend", resizeContainer.bind(OSK.tag), false);
     // generate all the keys
+    OSK.keyClose  = addKey(null, "X", ["oskSpecial", "oskClose"], KS_CLOSE );
     for (var r = 0; r < MAX_ROWS; r++) {
         addKeyRow(r);
         for (var c = 0; c < MAX_COLUMNS; c++) {
