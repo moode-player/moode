@@ -127,6 +127,19 @@
 						Shairport-sync by Mike Brady, the wonderful fork of	the original Shairport by James "Abrasive" Laird.
                     </span>
 				</div>
+				<label class="control-label" for="airplay-protocol">Protocol</label>
+				<div class="controls">
+					<select id="airplay-protocol" class="select-medium" name="airplay_protocol">
+						$_select[airplay_protocol]
+					</select>
+					<span style="display: inline-block;">
+ 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_airplay_protocol" value="novalue" $_airplay_btn_disable>Set</button>
+ 						<a aria-label="Help" class="info-toggle" data-cmd="info-airplay-protocol" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					</span>
+					<span id="info-airplay-protocol" class="help-block-configs help-block-margin hide">
+						Select which Airplay protocol to use: Airplay 2 (Default) or Airplay 1.
+                    </span>
+				</div>
 				<label class="control-label" for="rsmafterapl">Resume MPD</label>
 				<div class="controls">
 					<select id="rsmafterapl" class="select-mini2" style="width: 74px;" name="rsmafterapl">
