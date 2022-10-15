@@ -32,56 +32,28 @@ while (true) {
 
 	sleep(30);
 	$mounts = sqlRead('cfg_source', $dbh);
+	$exitCode = 1;
 	if ($mounts !== true) {
 		mountmonLog('mountmon: Checking remote mounts');
 		foreach ($mounts as $mp) {
-			// See if host is up
-			//mountmonLog('- Checking host ' . $mp['address'] . ' for mount ' . $mp['name']); // DEBUG
-			$result = sysCmd('ping -A -4 -c 1 ' .  $mp['address'] . ' 2>&1 | grep "Destination Host Unreachable\|Name or service not known"');
-			if (empty($result)) {
-				mountmonLog('- Host appears to be up');
-				// See if mount dir exists. It may not since umount/rmdir is done at shutdown/reboot
-				if (file_exists('/mnt/NAS/' . $mp['name'])) {
-					// See if file sharing service is accessible on the host
-					if ($mp['type'] == 'cifs') {
-						//mountmonLog('- Checking SMB mount'); // DEBUG
-						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] .' 2>&1 | grep "Host is down\|Stale file handle"');
-						$fileSharingAccessible = !empty($result) ? false : true;
-					}
-					if ($mp['type'] == 'nfs') {
-						//mountmonLog('- Checking NFS mount'); // DEBUG
-						$port = '2049';
-						sysCmd('nmap -Pn -p ' . $port . ' ' . $mp['address'] . ' -oG /tmp/nmap.scan >/dev/null');
-						$result = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
-						$fileSharingAccessible = !empty($result) ? true : false;
-					}
+			$unit = getUnitForMount($mp['name']);
+			$result = sysCmd("systemctl is-failed \"$unit\"", $exitCode);
+			// is-failed returns 0 if the unit is in failed state
+			$fileSharingAccessible = $exitCode == 0 ? false : true;
+			// Attempt remount
+			if ($fileSharingAccessible === false) {
+				$logs = sysCmd("journalctl -q -n 5 --no-pager --unit \"$unit\"");
+				$mp['error'] = "Mount error: \n".implode("\n", $logs);
+				sqlUpdate('cfg_source', $dbh, '', $mp);
 
-					// Attempt remount
-					if ($fileSharingAccessible === false) {
-						mountmonLog('- WARNING: Mount point is unreachable');
-					} else {
-						mountmonLog('- File sharing is accessible');
-						// Check for "Stale file handle" (NFS) or "Host is down" (SMB) return messages
-						// NOTE: This check can sometimes result in long timeouts or even a hang
-						//mountmonLog('- Checking for stale file handle'); // DEBUG
-						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] . ' 2>&1 | grep "Host is down\|Stale file handle"');
-						if (!empty($result)) {
-							mountmonLog('- Attempting to re-mount (stale file handle)');
-							sourceMount('unmount', $mp['id']);
-							sourceMount('mount', $mp['id']);
-						} else {
-							mountmonLog('- Mount appears to be OK');
-						}
-					}
-				} else {
-					mountmonLog('- Attempting to re-mount (mount dir did not exist)');
-					sourceMount('mount', $mp['id']);
-				}
+				mountmonLog("- WARNING: Mount point {$mp['name']} is $result");
+				mountmonLog('- Attempting to re-mount ' . $mp['name']);
+				mountmonLog('- re-mount result: ' . implode("\n", sourceMount('remount', $mp['id'])));
 			} else {
-				mountmonLog('- WARNING: Host is unreachable');
+				mountmonLog("mountmon: Mount point {$mp['name']} seems fine");
 			}
 		}
 	} else {
-		mountmonLog('mountmon: No remote mounts exist');
+		mountmonLog('mountmon: No remote mounts are defined');
 	}
 }

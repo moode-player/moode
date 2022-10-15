@@ -1,4 +1,5 @@
 <?php
+
 /**
  * moOde audio player (C) 2014 Tim Curtis
  * http://moodeaudio.org
@@ -23,8 +24,12 @@
 require_once __DIR__ . '/common.php';
 require_once __DIR__ . '/sql.php';
 
+const MOUNT_DIR = "/mnt/NAS";
+const SYSTEMD_DIR = "/etc/systemd/system";
+
 // Music source config
-function sourceCfg($queueArgs) {
+function sourceCfg($queueArgs)
+{
 	$action = $queueArgs['mount']['action'];
 	unset($queueArgs['mount']['action']);
 
@@ -33,6 +38,7 @@ function sourceCfg($queueArgs) {
 			$dbh = sqlConnect();
 			unset($queueArgs['mount']['id']);
 
+			$values = '';
 			foreach ($queueArgs['mount'] as $key => $value) {
 				$values .= "'" . SQLite3::escapeString($value) . "',";
 			}
@@ -42,7 +48,7 @@ function sourceCfg($queueArgs) {
 			sqlInsert('cfg_source', $dbh, $values);
 			$newMountId = $dbh->lastInsertId();
 
-			$result = sourceMount('mount', $newMountId);
+			$result = addMount($newMountId);
 			break;
 		case 'edit':
 			$dbh = sqlConnect();
@@ -50,35 +56,23 @@ function sourceCfg($queueArgs) {
 			// save the edits here in case the mount fails
 			sqlUpdate('cfg_source', $dbh, '', $queueArgs['mount']);
 
-			// CIFS and NFS
-			if ($mp[0]['type'] == 'cifs') {
-				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
-			}
-			else {
-				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
-			}
+			removeMountUnits($mp[0]['name'], $mp[0]['username']);
+
 			// empty check to ensure /mnt/NAS is never deleted
 			if (!empty($mp[0]['name']) && $mp[0]['name'] != $queueArgs['mount']['name']) {
-				sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
-				sysCmd('mkdir "/mnt/NAS/' . $queueArgs['mount']['name'] . '"');
+				sysCmd('rmdir "' . MOUNT_DIR . '/' . $mp[0]['name'] . '"');
 			}
 
-			$result = sourceMount('mount', $queueArgs['mount']['id']);
+			$result = addMount($queueArgs['mount']['id']);
 			break;
 		case 'delete':
 			$dbh = sqlConnect();
 			$mp = sqlRead('cfg_source', $dbh, '', $queueArgs['mount']['id']);
 
-			// CIFS and NFS
-			if ($mp[0]['type'] == 'cifs') {
-				sysCmd('umount -l "/mnt/NAS/' . $mp[0]['name'] . '"'); // lazy umount
-			}
-			else {
-				sysCmd('umount -f "/mnt/NAS/' . $mp[0]['name'] . '"'); // force unmount (for unreachable NFS)
-			}
+			removeMountUnits($mp[0]['name'], $mp[0]['username']);
 			// empty check to ensure /mnt/NAS is never deleted
 			if (!empty($mp[0]['name'])) {
-				sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
+				sysCmd('rmdir "' . MOUNT_DIR . '/' . $mp[0]['name'] . '"');
 			}
 
 			$result = (sqlDelete('cfg_source', $dbh, $queueArgs['mount']['id'])) ? true : false;
@@ -89,43 +83,33 @@ function sourceCfg($queueArgs) {
 }
 
 // Music source mount using CIFS (SMB) and NFS protocols
-function sourceMount($action, $id = '', $log = '') {
+function sourceMount($action, $id = '', $log = '')
+{
 	$dbh = sqlConnect();
 
 	switch ($action) {
 		case 'mount':
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
+			$units = array(getUnitForMount($mp[0]['name']), getUnitForMount($mp[0]['name'], 'automount'));
+			$result = array();
+			$exitCode = 0;
 
-			// Construct the mount string
-			if ($mp[0]['type'] == 'cifs') {
-				$options = $mp[0]['options'];
-				if(strpos($options, 'vers=') === false) {
-					$version = detectCifsProtocol($mp[0]['address']);
-					if($version) {
-						$options = 'vers=' . $version . ',' . $options;
+			if (!$units) {
+				$result = array("No mount units found for {$mp[0]['name']}");
+			} else {
+				foreach ($units as $unit) {
+					$out = sysCmd("systemctl enable \"$unit\"", $exitCode);
+					if ($exitCode > 0) {
+						$result = array_merge($result, $out);
+					}
+					if (str_ends_with($unit, 'automount')) {
+						$out = sysCmd("systemctl start \"$unit\"", $exitCode);
+						if ($exitCode > 0) {
+							$result = array_merge($result, $out);
+						}
 					}
 				}
-				$mountStr = "mount -t cifs \"//" .
-					$mp[0]['address'] . "/" .
-					$mp[0]['remotedir'] . "\" -o username=\"" .
-					$mp[0]['username'] . "\",password=\"" .
-					$mp[0]['password'] . "\",rsize=" .
-					$mp[0]['rsize'] . ",wsize=" .
-					$mp[0]['wsize'] . ",iocharset=" .
-					$mp[0]['charset'] . "," .
-					$options . " \"/mnt/NAS/" .
-					$mp[0]['name'] . "\"";
-			} else {
-				$mountStr = "mount -t nfs -o " .
-				$mp[0]['options'] . " \"" .
-				$mp[0]['address'] . ":/" .
-				$mp[0]['remotedir'] . "\" \"/mnt/NAS/" .
-				$mp[0]['name'] . "\"";
 			}
-
-			// Attempt the mount
-			sysCmd('mkdir "/mnt/NAS/' . $mp[0]['name'] . '"');
-			$result = sysCmd($mountStr);
 
 			if (empty($result)) {
 				if (!empty($mp[0]['error'])) {
@@ -135,16 +119,13 @@ function sourceMount($action, $id = '', $log = '') {
 
 				$return = true;
 			} else {
-				// Empty check to ensure /mnt/NAS/ itself is never deleted
-				if (!empty($mp[0]['name'])) {
-					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
-				}
+				// Empty check to ensure /mnt/NAS itself is never delete
 				$mp[0]['error'] = 'Mount error';
 				if ($log == 'workerlog') {
-					workerLog('worker: Try (' . $mountStr . ')');
+					workerLog('worker: Try (' . implode(",", $units) . ')');
 					workerLog('worker: Err (' . implode("\n", $result) . ')');
 				} else {
-					mountmonLog('- Try (' . $mountStr . ')');
+					mountmonLog('- Try (' . implode(",", $units) . ')');
 					mountmonLog('- Err (' . implode("\n", $result) . ')');
 				}
 				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
@@ -154,25 +135,16 @@ function sourceMount($action, $id = '', $log = '') {
 
 			// Log the mount string if debug logging on and mount appeared to be successful
 			if ($return === true) {
-				debugLog('worker: Mount (' . $mountStr . ')');
+				debugLog('worker: Mount (' . implode(",", $units) . ')');
 			}
-			break;
-		case 'unmount':
-			$mp = sqlRead('cfg_source', $dbh, '', $id);
-			if (mountExists($mp['name'])) {
-				if ($mp['type'] == 'cifs') {
-					sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // -l (lazy) -f (force)
-				} else {
-					sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
-				}
-			}
-			$return = true;
 			break;
 		case 'mountall':
 			$mounts = sqlRead('cfg_source', $dbh);
 
 			foreach ($mounts as $mp) {
 				if (!mountExists($mp['name'])) {
+					$return = addMount($mp['id']);
+				} else {
 					$return = sourceMount('mount', $mp['id'], 'workerlog');
 				}
 			}
@@ -184,16 +156,23 @@ function sourceMount($action, $id = '', $log = '') {
 
 			foreach ($mounts as $mp) {
 				if (mountExists($mp['name'])) {
-					if ($mp['type'] == 'cifs') {
-						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
-					} else {
-						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
-					}
+					$unit = getUnitForMount($mp['name']);
+					$return = implode("\n", sysCmd("systemctl stop \"$unit\""));
 				}
 			}
 
 			// For logging
 			$return = $mounts === true ? 'None configured' : ($mounts === false ? 'sqlRead() failed' : 'Unmount all submitted');
+			break;
+		case 'remount':
+			$mp = sqlRead('cfg_source', $dbh, '', $id);
+
+			if (mountExists($mp[0]['name'])) {
+				$unit = getUnitForMount($mp[0]['name']);
+				$return = implode("\n", sysCmd("systemctl restart \"$unit\""));
+			} else {
+				$return = "Mount with id '$id' not configured";
+			}
 			break;
 	}
 
@@ -202,13 +181,14 @@ function sourceMount($action, $id = '', $log = '') {
 }
 
 // Detect highest suported CIFS protocol of source
-function detectCifsProtocol($host) {
+function detectCifsProtocol($host)
+{
 	$output = sysCmd("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|");
 	$parts = explode('  ', end($output));
 	$version = NULL;
-	if (count($parts) >= 2)  {
+	if (count($parts) >= 2) {
 		$version = trim($parts[2]);
-		$CIFVERSIONLUT = Array(
+		$CIFVERSIONLUT = array(
 			"2.02" => "2.0",
 			"2.10" => "2.1",
 			"3.00" => "3.0",
@@ -228,11 +208,208 @@ function detectCifsProtocol($host) {
 	return $version;
 }
 
-function mountExists($mountName) {
-	$result = sysCmd('mount | grep -ow ' . '"/mnt/NAS/' . $mountName .'"');
-	if (!empty($result)) {
+function mountExists($mountName)
+{
+	$unit = getUnitForMount($mountName);
+	$exitCode = 0;
+	sysCmd("systemctl list-units --full -all | grep -Fq \"$unit\"", $exitCode);
+	if ($exitCode == 0) {
 		return true;
 	} else {
 		return false;
 	}
+}
+
+function getUnitForMount(string $mountName, string $suffix = "mount")
+{
+	return generateUnitName(MOUNT_DIR . '/' . $mountName, $suffix);
+}
+
+function generateUnitName(string $mountPath, string $suffix)
+{
+	$exitCode = 0;
+	$result = sysCmdUser("systemd-escape -p" . " \"$mountPath\"", $exitCode);
+	if (!empty($result) && $exitCode === 0) {
+		return $result[array_key_last($result)] . ".$suffix";
+	}
+	return '';
+}
+
+function generateCredFileName(string $username)
+{
+	return md5($username) . '.auth';
+}
+
+function generateMountUnit(string $what, string $where, string $type, string $options)
+{
+	return <<<UNIT
+	[Mount]
+	What=$what
+	Where=$where
+	Options=$options
+	Type=$type
+	ForceUnmount=true
+
+	[Install]
+	WantedBy=multi-user.target
+	UNIT;
+}
+
+function generateAutoMountUnit(string $where)
+{
+	return <<<UNIT
+	[Automount]
+	Where=$where
+	
+	[Install]
+	WantedBy=multi-user.target
+	UNIT;
+}
+
+function generateCredentialsFile(string $user, string $password)
+{
+	return <<<CRED
+	username=$user
+	password=$password
+	CRED;
+}
+
+function createMountUnits(string $mountPath, string $remotePath, string $type, string $options, string $user, string $pass)
+{
+	$credFile = generateCredFileName($user);
+	$unitFiles[generateUnitName($mountPath, "mount")] = generateMountUnit($remotePath, $mountPath, $type, $options . ',' . "credentials=" . SYSTEMD_DIR . '/' . $credFile);
+	$unitFiles[generateUnitName($mountPath, "automount")] = generateAutoMountUnit($mountPath);
+	$unitFiles[$credFile] = generateCredentialsFile($user, $pass);
+
+	foreach ($unitFiles as $filename => $content) {
+		$target = SYSTEMD_DIR . '/' . $filename;
+		$tmp = tmpfile();
+		if (!$tmp) {
+			return false;
+		}
+		$path = stream_get_meta_data($tmp)['uri'];
+		if (!$path) {
+			fclose($tmp);
+			return false;
+		}
+		$written = fwrite($tmp, $content);
+		if ($written === FALSE || $written == 0) {
+			fclose($tmp);
+			return false;
+		}
+		// Need to do this because php is not root but this runs with sudo
+		sysCmd("cp -f \"$path\" \"$target\"");
+		sysCmd("chown root:root \"$target\"");
+		if (str_ends_with($target, $credFile)) {
+			// make user/pass only readable for root
+			sysCmd("chmod 600 \"$target\"");
+		} else {
+			sysCmd("chmod 644 \"$target\"");
+		}
+		if (!file_exists($target)) {
+			fclose($tmp);
+			return false;
+		}
+		fclose($tmp);
+	}
+
+	// This is done so that only units get returned (names that can be given to systemctl)
+	unset($unitFiles[$credFile]);
+
+	return array_keys($unitFiles);
+}
+
+function removeMountUnits(string $mountName, string $username)
+{
+	$units = array(getUnitForMount($mountName), getUnitForMount($mountName, 'automount'));
+	$credFile = SYSTEMD_DIR . '/' . generateCredFileName($username);
+
+	foreach ($units as $unit) {
+		$unitFile = SYSTEMD_DIR . '/' . $unit;
+		sysCmd("systemctl revert \"$unit\"");
+		sysCmd("systemctl stop \"$unit\"");
+		sysCmd("systemctl disable \"$unit\"");
+		sysCmd("rm -f \"$unitFile\"");
+		sysCmd("systemctl daemon-reload");
+		sysCmd("systemctl reset-failed \"$unit\"");
+	}
+
+	sysCmd("rm -f \"$credFile\"");
+}
+
+function addMount(string $id)
+{
+	$dbh = sqlConnect();
+	$mp = sqlRead('cfg_source', $dbh, '', $id);
+	$remotePath = "";
+	$options = $mp[0]['options'];
+
+	// CIFS and NFS
+	if ($mp[0]['type'] == 'cifs') {
+		if (strpos($options, 'vers=') === false) {
+			$version = detectCifsProtocol($mp[0]['address']);
+			if ($version) {
+				$options = 'vers=' . $version . ',' . $options;
+			}
+		}
+		$options = "rsize=" . $mp[0]['rsize']
+			. ",wsize=" . $mp[0]['wsize']
+			. ",iocharset=" . $mp[0]['charset']
+			. "," . $options;
+		$remotePath = "//{$mp[0]['address']}/{$mp[0]['remotedir']}";
+	} else { // NFS
+		$remotePath = "{$mp[0]['address']}:/{$mp[0]['remotedir']}";
+	}
+
+	$createdUnits = createMountUnits(
+		MOUNT_DIR . '/' . $mp[0]['name'],
+		$remotePath,
+		$mp[0]['type'],
+		$options,
+		$mp[0]['username'],
+		$mp[0]['password']
+	);
+
+	$result = array();
+	$exitCode = 0;
+	if (!$createdUnits) {
+		$result = array("Could not create systemd (auto)mount units");
+	} else {
+		$out = sysCmd("systemctl daemon-reload", $exitCode);
+		if ($exitCode > 0) {
+			$result = array_merge($result, $out);
+		} elseif ($exitCode == 0) {
+			foreach ($createdUnits as $unit) {
+				$out = sysCmd("systemctl enable \"$unit\"", $exitCode);
+				if ($exitCode > 0) {
+					$result = array_merge($result, $out);
+				}
+				if (str_ends_with($unit, 'automount')) {
+					$out = sysCmd("systemctl start \"$unit\"", $exitCode);
+					if ($exitCode > 0) {
+						$result = array_merge($result, $out);
+					}
+				}
+			}
+		}
+	}
+
+	if (empty($result)) {
+		if (!empty($mp[0]['error'])) {
+			$mp[0]['error'] = '';
+			sqlUpdate('cfg_source', $dbh, '', $mp[0]);
+		}
+
+		$return = true;
+	} else {
+		$mp[0]['error'] = 'Create mount unit error';
+		workerLog('addMount(): Create mount unit error: (' . implode("\n", $result) . ')');
+		sqlUpdate('cfg_source', $dbh, '', $mp[0]);
+
+		$return = false;
+	}
+
+	debugLog('addMount(): Cmd (' . implode(',', $createdUnits) . ')');
+
+	return $return;
 }

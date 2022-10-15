@@ -148,9 +148,23 @@ function mountmonLog($msg, $mode = 'a') {
 	fclose($fh);
 }
 
-// Execute shell command
-function sysCmd($cmd) {
-	exec('sudo ' . $cmd . " 2>&1", $output);
+// Execute shell command as root
+function sysCmd($cmd, &$resultCode = NULL) {
+	if (isset($resultCode)) {
+		exec('sudo ' . $cmd . " 2>&1", $output, $resultCode);
+	} else {
+		exec('sudo ' . $cmd . " 2>&1", $output);
+	}
+	return $output;
+}
+
+// Execute shell command as current user
+function sysCmdUser($cmd, &$resultCode = NULL) {
+	if (isset($resultCode)) {
+		exec($cmd . " 2>&1", $output, $resultCode);
+	} else {
+		exec($cmd . " 2>&1", $output);
+	}
 	return $output;
 }
 
