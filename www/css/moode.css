@@ -471,6 +471,15 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#songsand {font-size:1.25em;}
 }
 
+/* Ultrawide 1920 x 480 panel (viewport 1919x479) */
+@media (min-height:479px) and (width:1919px) {
+	#ss-metadata {top:10vh!important;text-align:center!important;font-size:3em!important;}
+	#audioinfo-modal {width:35%!important;}
+	#volcontrol-2 {height:18vw;width:18vw;padding:2em;}
+	#volumedn-2, #volumeup-2 {font-size:2.5vw;}
+	#volume-popup .volume-display {font-size:2.75vw;}
+}
+
 /* iPhone X */
 @media (width:375px) and (height:812px) {
 	.playqueue {padding:0 0 8rem 0;min-height:35vh;}
