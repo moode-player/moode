@@ -903,14 +903,15 @@ function renderUI() {
             $('#currentalbum-div').show();
             $('#currentalbum').html(MPD.json['album']);
     		$('#currentsong').html(genSearchUrl(MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist'], MPD.json['title'], MPD.json['album']));
-            $('#currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtistsEllipsis);
-            // Playbar
+            $('#currentartist, #ss-currentartist').html((MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']) + moreArtistsEllipsis);           
+			// Playbar
             var textArtistTitle = (MPD.json['artist'] == 'Unknown artist' ? MPD.json['albumartist'] : MPD.json['artist']);
  			if ('' != textArtistTitle) {
  				textArtistTitle += moreArtistsEllipsis + ' - ' + MPD.json['title'];
  			}
- 			$('#playbar-currentsong, #ss-currentsong').html(textArtistTitle);
-            $('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
+ 			$('#playbar-currentsong').html(textArtistTitle);
+			$('#ss-currentsong').html((SESSION.json['scnsaver_layout'] == 'Wide' ? MPD.json['title'] : textArtistTitle));
+			$('#playbar-currentalbum, #ss-currentalbum').html(MPD.json['album']);
         }
 
         // Show/hide HD badge
