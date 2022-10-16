@@ -458,8 +458,8 @@ body.cvpb #cv-playqueue-btn {display:block;}
 body.cvpb #random-album {display:none!important;}
 body.cvpb #playbar-toggles .add-item-to-favorites {display:block!important;}
 #cv-playqueue {display:none;position:absolute;top:1.5em;right:.1em;width:40vmin;z-index:2;height:calc(100% - 2.75em - 45px);overflow:auto;-webkit-overflow-scrolling:touch;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(32,32,32,.25);}
-body.cvwide #ss-coverart-url img {float:left;margin-left:1.5em;width:80vh;}
-body.cvwide #ss-metadata {float:left;top:15vh;left:calc(80vh + 3em);text-align:left;font-size:2em;position:absolute;right:10vh}
+body.cvwide #ss-coverart-url img {float:left;margin-left:5em;width:80vh;}
+body.cvwide #ss-metadata {float:left;top:15vh;left:100vh;text-align:left;font-size:2em;position:absolute;right:10vh}
 /*body.cvwide #ss-currentsong {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
 body.cvwide #ss-current-album-div {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}*/
 body.cvwide #ss-currentalbum {margin:0!important;}
