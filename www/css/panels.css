@@ -440,7 +440,7 @@ img.lib-artistart {float:left;width:calc(20vw - 1rem);height: calc(20vw - 1rem);
 #ss-clock, #ss-extra-metadata {display:none;}
 .ss-clock {position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;color:var(--textvariant);font-size:6em;font-weight:500;font-family:SF Mono,Roboto Mono,monospace;}
 #ss-coverart-url img {width:75vh;}
-#ss-currentartist, #ss-currentsong {font-weight:600;}
+#ss-currentsong {font-weight:600;}
 #ss-currentsong, #ss-currentalbum-div, #ss-extra-metadata {margin-top:1em;}
 .ss-backdrop {min-width:100vw;min-height:100vh;max-width:unset;transform:translate(-50%, -50%);background-position:center center;position:relative;top:50vh;left:50vw;}
 .ss-coverart {position:fixed;top:1.5em;width:100%;}
