@@ -158,20 +158,21 @@ li.modal-dropdown-text:focus {color:#eee;}
 #update-pkg-ol {font-family:courier new;}
 #update-pkg-ol li {line-height:1em;}
 
-/* media queries */
+/* Media queries */
+
 @media (orientation:portrait) {
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
 	#ss-coverart-url img {width:80vw;}
 	body.cv #playbar-timeline {width:30%}
 	body.cv #playbar-toggles .btn {margin:0 .25rem}
 }
-@media (max-width:769px) {
+/*DELETE@media (max-width:769px) {
 	body {padding-left: 0px;padding-right: 0px;}
 	#playback-controls {width:24%;margin-left:0px;}
 	.container-playback {padding: 0px;}
 	#playqueue-search, #lib-album-search, #save-queue-to-playlist-form, #set-favorites-playlist-form {margin-left: 0;}
 	body.index {padding:0;}
-}
+}*/
 @media (max-width:479px) {
 	body {padding-left:0px;padding-right:0px;height:initial;}
 	.container2 {padding:2em .5em;padding:calc(2em + env(safe-area-inset-top)) .5em calc(2em + env(safe-area-inset-bottom)) .5em;}
@@ -276,12 +277,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-queue {z-index:unset;}
 	.ralbum svg {height:1.2rem;width:1.2rem;}
 	#togglebtns .btn-group {width:unset;}
-	#songsand {font-size:1.5rem}
+	#songsand {font-size:1.5rem;width:90%}
 	#currentsong, #currentartist {padding-top:1rem;}
 	#currentalbum {padding-top:1.25rem;}
 	.tab-content {height:unset;}
 	.covers {width:100%;}
-	#menu-bottom, #playbar {height:9rem;}
+	#menu-bottom, #playbar {height:10rem;}
 	#playbar-cover {height:9rem;width:9rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
 	#playbar-controls .prev {display:none;}
 	#songsList {padding-bottom:9rem;}
@@ -290,8 +291,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.dbtn {display:inline-block;font-size:3em;padding:0 1rem;width:25%;line-height:20px;vertical-align:middle;}
 	.playqueue span {line-height:normal;margin-left:calc(3.5rem + 1vmin);display:block;}
 	.playqueue span {margin-left:calc(3.8rem + 1vmin) !important;}
-	.playqueue {padding:0 0 9rem 0;min-height:33vh;}
-	/*.playqueue li:before {width:1.75em!important;}*/
+	.playqueue {padding:0 0 15rem 0;min-height:33vh;}
+	.playqueue li:before {width:2.5em!important;}
 	.playqueue .playqueue-action, .playqueue .db-action a {padding:.4em 1.25em 1em 0;margin-left:1.25em!important;}
 	.ui-pnotify {top:40% !important;}
 	#lib-albumcover {left:0;}
@@ -321,11 +322,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	/* playbar */
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;}
-	#playbar-title {text-align:left;top:0;margin-left:1em;width:67vw;height:auto;position:relative;transform:none;font-size:1.5em;line-height:2.2em;left:0;padding:0;text-shadow:0 0 1px var(--btnbarback);}
-	#playbar-controls {right:.25rem;transform:none;top:0;left:unset;opacity:1;}
+	#playbar-title {text-align:left;top:0;margin-left:1em;width:67vw;height:auto;position:relative;transform:none;font-size:1.5em;line-height:2.2em;left:0;padding:0 0 .75em 0;text-shadow:0 0 1px var(--btnbarback);}
+	#playbar-controls {margin-top:.25em;right:.25rem;transform:none;top:0;left:unset;opacity:1;}
 	#playbar-time, #playbar-total {line-height:1.5rem;}
 	#playbar-controls .btn {padding:.5em;font-size:2.25rem;-webkit-tap-highlight-color:transparent;}
-	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:1.5em;height:unset;width:unset;top:unset;left:unset;transform:none;}
+	#playbar-toggles {position:absolute;right:1rem;right:calc(env(safe-area-inset-right) + 1rem);bottom:2em;height:unset;width:unset;top:unset;left:unset;transform:none;}
 	#playbar-toggles .btn {transition:none;border-radius:50%;padding:1rem .7rem;margin-bottom:0;width:unset;height:unset;line-height:11px;}
 	#playbar-timeline {display:none;}
 	#playbar-toggles .coverview {display:none;}
@@ -341,15 +342,16 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.btn-group.bootstrap-select.bootstrap-select-mini {width:6.5rem;}
 }
 /* smaller landscape for small screens */
-@media (max-height:479px) and (orientation:landscape) {
+/*DELETE
+	@media (max-height:479px) and (orientation:landscape) {
 	body {font-size:calc(0.65em + 1vmin);}
-	/* menu stuff */
+	/* menu stuff
 	#menu-settings {font-size: calc(1.2em + 1vmin);}
 	#menu-settings i {font-size:1rem;}
 	#context-menus .dropdown-menu a {font-size:.9em;}
 	.modal {overflow:auto;width:70%;}
 	.modal-body {max-height:55vh;overflow:auto;}
-	/* playback */
+	/* playback
 	#playqueue-search, #lib-album-search, #ra-search, #pl-search {margin:0;}
 	#playback-panel {padding:1.875em 0;min-height: calc(100vh - 3.75em);}
 	#playbackbtns .btn {padding: 0 10px;}
@@ -357,14 +359,14 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#container-playqueue {margin-top:.75em;height: calc(100% - 40px);}
 	.playqueue li, .database li {padding-left:.5em;}
 	.playqueue span {line-height:initial;}
-	/*.playqueue .active {padding-left:.5em;}*/
+	/*.playqueue .active {padding-left:.5em;}
 	#playqueue .songtime {top: 0px;}
 	#timeknob, #volknob {margin:1em 0;}
 	#countdown-display{margin-top:-10px;}
 	/* NOTE: These settings cause 1/2 sized knobs on Pi Touch
 	#countdown {height:75%;width:75%;margin:0 auto;padding-bottom:5px;}
 	#volcontrol {height:75%;width:75%;margin:0 auto;}
-	*/
+
 	#total {font-size:.9em;}
 	#volknob {padding-top:5px;}
 	#btn-toolbar {margin-top:0px;margin-bottom:0px;}
@@ -375,20 +377,22 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#currentsong {font-size:1.25em;}
 	#currentalbum, #currentartist {font-size:1.15em;}
 	#volumedn, #volumeup {padding: .5em .75em;}
-	/* tag view */
+	/* tag view
 	.lib-entry {margin-right:0;}
 	.lib-entry-song {font-size:unset;}
 	.songyear {display:none;}
-	/* folder view */
+	/* folder view
 	#folder-panel {padding-top:1.875em;height:calc(100vh - 1.875em);}
 	#database .btn {font-size:.9em;}
-	/* coverview */
+	/* coverview
 	#ss-currentsong {margin:1em 1em 0 0;}
 	#ss-currentalbum, #ss-currentartist {margin:1em 1em 0 0;}
 	#index-genres, #index-artists, #index-albums, #index-albumcovers, #index-browse, #index-radio, #index-playlist {display:none;}
-	/* so cover scrolls with tracks */
+	/* so cover scrolls with tracks
 	#lib-coverart-meta-area {position:relative;}
-}
+	#cv-playqueue {width:60vmin;}
+	/*.playqueue {margin-bottom:15rem;}
+}*/
 
 /* in-browser view for mobile screens */
 @media (max-width:479px) and (max-height:622px) and (orientation:portrait) {
@@ -417,13 +421,14 @@ li.modal-dropdown-text:focus {color:#eee;}
 	.playqueue span {margin-left:calc(2.75rem + 1vmin);}
 	.bootstrap-select.select-medium:not([class*="span"]) {width:140px;}
 }
-/* iPhone5 landscape */
+
+/*DELETE iPhone5 landscape
 @media (max-height:320px) and (max-width:568px) {
 	.database-radio li, .database-playlist li {width:75px;height:auto;margin:10px 10px;}
 	.lib-coverart {min-width:unset;}
-	/* so cover scrolls with tracks */
+	/* so cover scrolls with tracks
 	#lib-coverart-meta-area {position:relative;}
-}
+}*/
 /* large screens */
 @media (min-height:900px) and (min-width:1920px) {
 	/*.dropdown-menu, #context-menu-playback .dropdown-menu {min-width:13em;}*/
@@ -438,7 +443,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 
 	#volcontrol, #countdown {height:15vw;width:15vw;}
 }
-/* iPad landscape */
+/*DELETE iPad landscape */
 /*@media (orientation:landscape) and (min-width:768px) and (max-width:1024px) {
 	#ss-currentsong {font-size:1.4em;}
 	#ss-currentalbum, #ss-currentartist {font-size:1.15em;}
@@ -471,8 +476,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#songsand {font-size:1.25em;}
 }
 
-/* Ultrawide 1920 x 480 panel (viewport 1919x479) */
-@media (min-height:479px) and (width:1919px) {
+/* Ultrawide 480 x 1920 panel */
+@media (height:479px) and (width:1919px) {
 	#ss-metadata {top:10vh!important;text-align:center!important;font-size:3em!important;}
 	#audioinfo-modal {width:35%!important;}
 	#volcontrol-2 {height:18vw;width:18vw;padding:2em;}
@@ -480,10 +485,13 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#volume-popup .volume-display {font-size:2.75vw;}
 }
 
-/* iPhone X */
-@media (width:375px) and (height:812px) {
+/*DELETE iPhone X */
+/*@media (width:375px) and (min-height:768px) {
 	.playqueue {padding:0 0 8rem 0;min-height:35vh;}
 }
+@media (width:812px) and (min-height:375px) {
+}*/
+
 /* iPhone Max sizes */
 @media (width:414px) and (height:896px) {
 	.ui-pnotify {left:50%;top:25%;transform:translate(-50%, -50%);}
@@ -496,14 +504,14 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#radio-panel .viewswitch, #playlist-panel .viewswitch {top:calc(env(safe-area-inset-top) - .5em);}
 	#config-tabs {top:calc(env(safe-area-inset-top) - .5rem);}
 }
-@media (width:896px) and (height:414px) {
+/*DELETE@media (width:896px) and (height:414px) {
 	#playback-queue {margin-left:calc(env(safe-area-inset-left) - 2rem);}
 	#playback-cover {margin-right:calc(env(safe-area-inset-right) - 2rem);}
 }
 @media (width:896px) and (height:414px) {
 	#playback-queue {margin-left:calc(env(safe-area-inset-left) - 2rem);}
 	#playback-cover {margin-right:calc(env(safe-area-inset-right) - 2rem);}
-}
+}*/
 
 #playback-panel.cv #coverart-url {width:40vw;margin:0 auto;}
 #playback-panel.cv #playback-cover {width:70vh;padding:0;}
@@ -536,11 +544,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #playback-firstuse-help {height:70vw;width:70vw;}
 	#playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {width:60%;}
 }
-@media (orientation: landscape) and (max-aspect-ratio:3/2){
+/*DELETE@media (orientation: landscape) and (max-aspect-ratio:3/2){
 	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}
 	#playback-panel.newui #playback-firstuse-help {height:40vw;width:40vw;}
 	#playback-panel.newui #timezone, #playback-panel.newui #volzone {height:40vw;}
-}
+}*/
 @media (height:834px) and (width:1194px) {
 	/*#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;}*/
 	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
@@ -550,6 +558,11 @@ li.modal-dropdown-text:focus {color:#eee;}
 	#playback-panel.newui #coverart-url, #playback-panel.newui #playback-cover, #playback-panel.newui img.coverart {width:40vw;max-height:40vw;transition: width .5s;}
 	#playback-panel.newui #timezone, #playback-panel.cv #timezone {height:40vw;}
 	#playback-panel.newui #volzone, #playback-panel.cv #volzone {height:40vw;}
+}
+
+/* Don't show UI in landscape on Smartphone sized screens */
+@media (orientation:landscape) and (max-height:432px) {
+	#landscape-backdrop {display:block;}
 }
 
 #playback-panel.cv #playback-cover, #playback-panel.cv #coverart-url, #playback-panel.cv img.coverart {width:70vh;max-height:70vh;margin:0 auto;}
@@ -630,7 +643,7 @@ ol.playhistory {margin-left:55px;}
    }
 }
 
-/* Existing input width selectors doesn't work, because override by bootstrap-select. Add !important to prevent that*/
+/* Existing input width selectors don't work because override by bootstrap-select. Add !important to prevent that */
 @media (min-width:650px) {
 	.input-xlarge{width:270px !important;}
 }
