@@ -150,10 +150,10 @@
 			}
 
 			if ((mouseX + menuWidth > boundsX) && ((mouseX - menuWidth) > 0)) {
-				X = {"left": mouseX - menuWidth + $(window).scrollLeft()};  // was mouseX - menuWidth
+				X = {"left": mouseX - menuWidth + $(window).scrollLeft() - 15};  // was mouseX - menuWidth
 				//console.log('cutx ' + (mouseX - menuWidth + $(window).scrollLeft()));
 			} else {
-				X = {"left": mouseX + $(window).scrollLeft()};
+				X = {"left": mouseX + $(window).scrollLeft() + 15};
 				//console.log((mouseX + $(window).scrollLeft()));
 			}
 			//console.log(mouseX + ', ' + mouseY + ', ' + boundsX + ', ' + boundsY);
