@@ -142,6 +142,7 @@
 	<!-- ALBUM COVER BACKDROP -->
 	<div aria-label="Album Cover Backdrop" id="cover-backdrop"></div>
 	<div id="context-backdrop"></div>
+    <div id="landscape-backdrop"><div>Landscape mode not supported</div></div>
 	<div id="splash"><div>moOde</div></div>
 
     <!-- INPUT SOURCE INDICATOR -->
