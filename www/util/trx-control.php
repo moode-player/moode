@@ -45,14 +45,22 @@ switch ($option) {
 		$status = allStatus();
 		break;
 	case '-set-mpdvol':
-		$rxStatusParts = explode(',', rxStatus());
-		// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname
-		if ($rxStatusParts[4] == '1') {
-			sysCmd('/var/www/vol.sh ' . $argv[2] . (isset($argv[3]) ? ' ' . $argv[3] : ''));
-		}
+		sysCmd('/var/www/vol.sh ' . $argv[2] . (isset($argv[3]) ? ' ' . $argv[3] : ''));
 		$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volknob'", sqlConnect());
 		$_SESSION['volknob'] = $result[0]['value'];
-		$status = '';
+		$status = 'Volume ' . $result[0]['value'];
+		break;
+	case '-set-mpdvol-from-master':
+		$rxStatusParts = explode(',', rxStatus());
+		// rx, On/Off/Disabled/Unknown, volume, volume_mute_1/0, mastervol_opt_in_1/0, hostname
+		if ($rxStatusParts[4] == '1') { // Master volume opt in?
+			sysCmd('/var/www/vol.sh ' . $argv[2] . (isset($argv[3]) ? ' ' . $argv[3] : ''));
+			$result = sqlQuery("SELECT value FROM cfg_system WHERE param = 'volknob'", sqlConnect());
+			$_SESSION['volknob'] = $result[0]['value'];
+			$status = 'Volume ' . $result[0]['value'];
+		} else {
+			$status = 'Master volume opt-in is No';
+		}
 		break;
 	// This is used to set rx to 0dB when Airplay or Spotify connects to Sender
 	case '-set-alsavol':
