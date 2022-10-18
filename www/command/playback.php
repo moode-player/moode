@@ -48,7 +48,7 @@ switch ($_GET['cmd']) {
 			} else {
 				$rxVolCmd = $volDiff < 0 ? '-up ' . abs($volDiff) : '-dn ' . $volDiff;
 			}
-			updReceiverVol($rxVolCmd);
+			updReceiverVol($rxVolCmd, true); // Master volume change
 		}
 
 		echo json_encode('OK');
