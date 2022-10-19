@@ -24,6 +24,7 @@ Updates
 - UPD: Improve spacing on mobile Playbar and Playback views
 - UPD: Add option to select Airplay 1 or Airplay 2 protocol
 - UPD: Add option to enable On-Screen Keyboard for Local display
+- UPD: Add overlay message for Smartphone Landscape mode
 - UPD: Show comment tag in Tag/Album view if Prefs option is Yes
 - UPD: Start/stop nqptp on-demand for shairport-sync Airplay 2
 
