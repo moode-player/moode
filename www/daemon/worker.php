@@ -723,15 +723,17 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 
 // Start airplay renderer
 if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
+	$_SESSION['airplay_protocol'] = getAirplayProtocolVer();
+
 	if (isset($_SESSION['airplaysvc']) && $_SESSION['airplaysvc'] == 1) {
 		$started = ': started';
 		startAirplay();
 	} else {
 		$started = '';
 	}
-	workerLog('worker: Airplay renderer (available' . $started . ')');
+	workerLog('worker: AirPlay renderer (available' . $started . ')');
 } else {
-	workerLog('worker: Airplay renderer (n/a)');
+	workerLog('worker: AirPlay renderer (n/a)');
 }
 
 // Start Spotify renderer
@@ -2089,6 +2091,31 @@ function runQueuedJob() {
 
 			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
 				sysCmd('mpc play');
+			}
+			break;
+		case 'airplay_protocol':
+			if ($_SESSION['w_queueargs'] != getAirplayProtocolVer()) { // Compare submitted to current
+				workerLog('worker: Updating package list...');
+				sysCmd('apt update > /dev/null 2>&1');
+				if ($_SESSION['w_queueargs'] == '1') {
+					$package = 'shairport-sync=3.3.8-1moode1';
+					$options = '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --allow-downgrades';
+				} else {
+					$package = 'shairport-sync=4.1.0~git20221009.e7c6c4b-1moode1';
+				    $options = '-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"';
+				}
+				// Install package
+				workerLog('worker: Selected AirPlay ' . $_SESSION['w_queueargs'] . ' protocol');
+				workerLog('worker: Installing ' . $package);
+				sysCmd('moode-apt-mark unhold > /dev/null');
+				sysCmd('apt -y ' . $options . ' install ' . $package);
+				sysCmd('moode-apt-mark hold > /dev/null');
+				workerLog('worker: Installation complete');
+				// Restart AirPlay if indicated
+				stopAirplay();
+				if ($_SESSION['airplaysvc'] == 1) {
+					startAirplay();
+				}
 			}
 			break;
 		case 'spotifysvc':
