@@ -1444,7 +1444,6 @@ function renderFolderView(data, path, searchstr) {
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
 
                 var albumDir = data[i].file.substring(0,data[i].file.lastIndexOf('/'));
-                albumDir = albumDir.endsWith('.cue') ? albumDir.substring(0, albumDir.lastIndexOf('/')) : albumDir;
     		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(albumDir)) + '_sm.jpg' + '">';
 
                 output += '</img></a></div>';
