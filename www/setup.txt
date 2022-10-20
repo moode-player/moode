@@ -55,11 +55,11 @@ AP mode starts automatically when any of the following are true.
 
 FILE SHARING
 
-- SMB File Sharing can be turned On in System Config. SMB (Samba) shares named
+- SMB File Sharing can be turned on in System Config. SMB (Samba) shares named
   NAS, Playlists, and SDCard are automatically created. Each USB disk will also
   have a Samba share created that is named after its Disk Label.
 
-- NFS File Sharing can be turned On in System Config. Access and options defaults
+- NFS File Sharing can be turned on in System Config. Access and options defaults
   are provided but can be manually overridden. Each USB disk will have an NFS
   export created whose path is /media/disk_label.
 
@@ -103,7 +103,7 @@ PLAYER SETUP AND CONFIGURATON
    - USB DEVICE
 
    a) Menu, Configure, Audio
-   b) Set Named I2S device and DT overlay to "None" if needed and then restart
+   b) Set Named I2S device and DT overlay to "None" if needed and then Restart
    c) Menu, Configure, Audio
    d) Set Output device to to the name of the USB audio device
    e) If the audio device supports hardware volume set Volume type to

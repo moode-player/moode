@@ -36,46 +36,52 @@ while (true) {
 		mountmonLog('mountmon: Checking remote mounts');
 		foreach ($mounts as $mp) {
 			// See if host is up
-			//mountmonLog('- Checking host ' . $mp['address'] . ' for mount ' . $mp['name']);
+			//mountmonLog('- Checking host ' . $mp['address'] . ' for mount ' . $mp['name']); // DEBUG
 			$result = sysCmd('ping -A -4 -c 1 ' .  $mp['address'] . ' 2>&1 | grep "Destination Host Unreachable\|Name or service not known"');
 			if (empty($result)) {
-				mountmonLog('- Host ' . $mp['address'] . ' for mount point ' . $mp['name'] . ' appears to be up');
-				// See if file sharing service is accessible on the host
-				if ($mp['type'] == 'cifs') {
-					//mountmonLog('- Checking SMB mount ' . $mp['name']);
-					$result = sysCmd('ls /mnt/NAS/' . $mp['name'] .' 2>&1 | grep "Host is down\|Stale file handle"');
-					$fileSharingAccessible = !empty($result) ? false : true;
-				}
-				if ($mp['type'] == 'nfs') {
-					//mountmonLog('- Checking NFS mount ' . $mp['name']);
-					$port = '2049';
-					sysCmd('nmap -Pn -p ' . $port . ' ' . $mp['address'] . ' -oG /tmp/nmap.scan >/dev/null');
-					$result = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
-					$fileSharingAccessible = !empty($result) ? true : false;
-				}
-
-				// Attempt remount
-				if ($fileSharingAccessible === false) {
-					mountmonLog('- WARNING: Mount point ' . $mp['name'] . ' is unreachable');
-				} else {
-					mountmonLog('- File sharing is accessible for ' . $mp['name']);
-					// Check for "Stale file handle" (NFS) or "Host is down" (SMB) return messages
-					// NOTE: This check can sometimes result in long timeouts or even a hang
-					//mountmonLog('- Checking ' . $mp['name'] . ' for stale file handle');
-					$result = sysCmd('ls /mnt/NAS/' . $mp['name'] . ' 2>&1 | grep "Host is down\|Stale file handle"');
-					if (!empty($result)) {
-						mountmonLog('- Attempting to re-mount ' . $mp['name'] . ' (stale file handle)');
-						sourceMount('unmountall');
-						sourceMount('mountall');
-					} else {
-						mountmonLog('- Mount ' . $mp['name'] . ' appears to be OK');
+				mountmonLog('- Host appears to be up');
+				// See if mount dir exists. It may not since umount/rmdir is done at shutdown/reboot
+				if (file_exists('/mnt/NAS/' . $mp['name'])) {
+					// See if file sharing service is accessible on the host
+					if ($mp['type'] == 'cifs') {
+						//mountmonLog('- Checking SMB mount'); // DEBUG
+						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] .' 2>&1 | grep "Host is down\|Stale file handle"');
+						$fileSharingAccessible = !empty($result) ? false : true;
 					}
+					if ($mp['type'] == 'nfs') {
+						//mountmonLog('- Checking NFS mount'); // DEBUG
+						$port = '2049';
+						sysCmd('nmap -Pn -p ' . $port . ' ' . $mp['address'] . ' -oG /tmp/nmap.scan >/dev/null');
+						$result = sysCmd('cat /tmp/nmap.scan | grep "' . $port . '/open" | cut -f 1 | cut -d " " -f 2');
+						$fileSharingAccessible = !empty($result) ? true : false;
+					}
+
+					// Attempt remount
+					if ($fileSharingAccessible === false) {
+						mountmonLog('- WARNING: Mount point is unreachable');
+					} else {
+						mountmonLog('- File sharing is accessible');
+						// Check for "Stale file handle" (NFS) or "Host is down" (SMB) return messages
+						// NOTE: This check can sometimes result in long timeouts or even a hang
+						//mountmonLog('- Checking for stale file handle'); // DEBUG
+						$result = sysCmd('ls /mnt/NAS/' . $mp['name'] . ' 2>&1 | grep "Host is down\|Stale file handle"');
+						if (!empty($result)) {
+							mountmonLog('- Attempting to re-mount (stale file handle)');
+							sourceMount('unmount', $mp['id']);
+							sourceMount('mount', $mp['id']);
+						} else {
+							mountmonLog('- Mount appears to be OK');
+						}
+					}
+				} else {
+					mountmonLog('- Attempting to re-mount (mount dir did not exist)');
+					sourceMount('mount', $mp['id']);
 				}
 			} else {
-				mountmonLog('- WARNING: Host ' . $mp['address'] . ' for mount point ' . $mp['name'] . ' is unreachable');
+				mountmonLog('- WARNING: Host is unreachable');
 			}
 		}
 	} else {
-		mountmonLog('mountmon: No remote mounts are defined');
+		mountmonLog('mountmon: No remote mounts exist');
 	}
 }

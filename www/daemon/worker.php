@@ -664,19 +664,25 @@ workerLog('worker: -- Music sources');
 workerLog('worker: --');
 //
 
-// List USB sources
+// USB sources
+workerLog('worker: USB sources');
 $usbDrives = sysCmd('ls /media');
 if ($usbDrives[0] == '') {
-	workerLog('worker: USB sources (none attached)');
+	workerLog('worker: No drives found');
 } else {
 	foreach ($usbDrives as $usbDrive) {
-		workerLog('worker: USB source ' . '(' . $usbDrive . ')');
+		workerLog('worker: ' . $usbDrive);
 	}
 }
 
-// Mount NAS sources
+// NAS sources
+workerLog('worker: NAS sources');
+$mounts = sqlRead('cfg_source', $dbh);
+foreach ($mounts as $mp) {
+	workerLog('worker: ' . $mp['name']);
+}
 $result = sourceMount('mountall');
-workerLog('worker: NAS sources (' . $result . ')');
+workerLog('worker: ' . $result);
 
 //
 workerLog('worker: --');
