@@ -88,14 +88,15 @@ function sourceCfg($queueArgs) {
 	return $result;
 }
 
-// Music source mount
-function sourceMount($action, $id = '') {
+// Music source mount using CIFS (SMB) and NFS protocols
+function sourceMount($action, $id = '', $log = '') {
+	$dbh = sqlConnect();
+
 	switch ($action) {
 		case 'mount':
-			$dbh = sqlConnect();
 			$mp = sqlRead('cfg_source', $dbh, '', $id);
 
-			// CIFS and NFS
+			// Construct the mount string
 			if ($mp[0]['type'] == 'cifs') {
 				$options = $mp[0]['options'];
 				if(strpos($options, 'vers=') === false) {
@@ -122,6 +123,7 @@ function sourceMount($action, $id = '') {
 				$mp[0]['name'] . "\"";
 			}
 
+			// Attempt the mount
 			sysCmd('mkdir "/mnt/NAS/' . $mp[0]['name'] . '"');
 			$result = sysCmd($mountStr);
 
@@ -133,58 +135,73 @@ function sourceMount($action, $id = '') {
 
 				$return = true;
 			} else {
-				// Empty check to ensure /mnt/NAS is never deleted
+				// Empty check to ensure /mnt/NAS/ itself is never deleted
 				if (!empty($mp[0]['name'])) {
 					sysCmd('rmdir "/mnt/NAS/' . $mp[0]['name'] . '"');
 				}
 				$mp[0]['error'] = 'Mount error';
-				workerLog('sourceMount(): Mount error: (' . implode("\n", $result) . ')');
+				if ($log == 'workerlog') {
+					workerLog('worker: Try (' . $mountStr . ')');
+					workerLog('worker: Err (' . implode("\n", $result) . ')');
+				} else {
+					mountmonLog('- Try (' . $mountStr . ')');
+					mountmonLog('- Err (' . implode("\n", $result) . ')');
+				}
 				sqlUpdate('cfg_source', $dbh, '', $mp[0]);
 
 				$return = false;
 			}
 
-			debugLog('sourceMount(): Cmd (' . $mountStr . ')');
+			// Log the mount string if debug logging on and mount appeared to be successful
+			if ($return === true) {
+				debugLog('worker: Mount (' . $mountStr . ')');
+			}
+			break;
+		case 'unmount':
+			$mp = sqlRead('cfg_source', $dbh, '', $id);
+			if (mountExists($mp['name'])) {
+				if ($mp['type'] == 'cifs') {
+					sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // -l (lazy) -f (force)
+				} else {
+					sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
+				}
+			}
+			$return = true;
 			break;
 		case 'mountall':
-			$dbh = sqlConnect();
 			$mounts = sqlRead('cfg_source', $dbh);
 
 			foreach ($mounts as $mp) {
 				if (!mountExists($mp['name'])) {
-					$return = sourceMount('mount', $mp['id']);
+					$return = sourceMount('mount', $mp['id'], 'workerlog');
 				}
 			}
-			// Logged during worker startup
-			$return = $mounts === true ? 'none configured' : ($mounts === false ? 'mountall failed' : 'mountall initiated');
+			// For logging
+			$return = $mounts === true ? 'None configured' : ($mounts === false ? 'sqlRead() failed' : 'Mount all submitted');
 			break;
 		case 'unmountall':
-			$dbh = sqlConnect();
 			$mounts = sqlRead('cfg_source', $dbh);
 
 			foreach ($mounts as $mp) {
-				// CIFS and NFS
 				if (mountExists($mp['name'])) {
 					if ($mp['type'] == 'cifs') {
-						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // change from -l (lazy) to force unmount
+						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
 					} else {
-						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"'); // force unmount (for unreachable NFS)
+						sysCmd('umount -f "/mnt/NAS/' . $mp['name'] . '"');
 					}
 				}
 			}
 
-			// logged during worker startup
-			$return = $mounts === true ? 'none configured' : ($mounts === false ? 'unmountall failed' : 'unmountall initiated');
+			// For logging
+			$return = $mounts === true ? 'None configured' : ($mounts === false ? 'sqlRead() failed' : 'Unmount all submitted');
 			break;
 	}
 
-	// returns true/false for 'mount' or a log message for 'mountall' and 'unmountall'
+	// Returns true/false for 'mount and unmount' or a message for 'mountall' and 'unmountall'
 	return $return;
 }
 
-/**
- * Detect highest available suported cifs protocol of source
- */
+// Detect highest suported CIFS protocol of source
 function detectCifsProtocol($host) {
 	$output = sysCmd("nmap -Pn " . $host . " -p 139 --script smb-protocols |grep \|");
 	$parts = explode('  ', end($output));
