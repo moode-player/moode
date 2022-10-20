@@ -127,6 +127,16 @@ while ($line) {
 	$file_b = explode(': ', $line, 2)[1];
 	$dir_b = dirname($file_b);
 
+	// if we are on a virtual directory, swap things around
+	if ('cue' == getFileExt($file_a)) {
+		$dir_a = $file_a;
+		$file_a = ensureAudioFile($file_a);
+	}
+	if ('cue' == getFileExt($file_b)) {
+		$dir_b = $file_b;
+		$file_b = ensureAudioFile($file_b);
+	}
+
 	if ($dir_a != $dir_b) {
 		phpSession('open');
 		$_SESSION['thmcache_status'] = 'Scanning folder ' . ++$folder_cnt . ' ' . $dir_a;

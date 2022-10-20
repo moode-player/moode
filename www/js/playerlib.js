@@ -1396,22 +1396,35 @@ function renderFolderView(data, path, searchstr) {
 	var element = document.getElementById('folderlist');
 	element.innerHTML = '';
 
+	var no_art = true;
+
 	for (i = 0; i < data.length; i++) {
     	if (data[i].directory) {
-            var cueVirtualDir = false;
+            // var cueVirtualDir = false;
+            // Flag cue virtual directory
+            var cueVirtualDir = data[i].directory.lastIndexOf('.cue') != -1 ? true : false;
     		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
             output += '<div class="db-icon db-action">';
             output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
             output += path == '' ?  '<i class="fas fa-hdd icon-root"></i></a></div>' :
-                (data[i].cover_hash == '' ? '<i class="fas fa-folder"></i></a></div>' :
+                (!cueVirtualDir || (data[i].cover_hash == '') ? '<i class="fas fa-folder"></i></a></div>' :
                 '<img src="' + 'imagesw/thmcache/' + encodeURIComponent(data[i].cover_hash) + '_sm.jpg' + '"></img></a></div>');
             var dirName = data[i].directory.replace(path + '/', '');
-            dirName = dirName.lastIndexOf('.cue') == -1 ? dirName : dirName.substr(0, dirName.lastIndexOf('.cue'));
-    		output += '<div class="db-entry db-folder db-browse"><div>' + dirName + '</div></div>';
-            output += '</li>';
+            // dirName = dirName.lastIndexOf('.cue') == -1 ? dirName : dirName.substr(0, dirName.lastIndexOf('.cue'));
+            dirName = cueVirtualDir ? dirName.substr(0, dirName.lastIndexOf('.cue')) : dirName;
+    		// output += '<div class="db-entry db-folder db-browse"><div>' + dirName + '</div></div>';
+    		output += '<div class="db-entry db-folder db-browse"><div>' + dirName;
+
+			if (cueVirtualDir) {
+				output += '<span>' + 'CUE sheet' + '</span>';
+			}
+
+			output += '</div></div>'
+
+			output += '</li>';
 
             // Flag cue virtual directory
-            cueVirtualDir = data[i].directory.lastIndexOf('.cue') != -1 ? true : false;
+            // cueVirtualDir = data[i].directory.lastIndexOf('.cue') != -1 ? true : false;
         }
     	else if (data[i].playlist && !cueVirtualDir) {
     		// NOTE: Skip wavpack since it may contain embedded playlist and they are not supported yet in Folder view
@@ -1432,7 +1445,6 @@ function renderFolderView(data, path, searchstr) {
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder">';
 
                 var albumDir = data[i].file.substring(0,data[i].file.lastIndexOf('/'));
-                albumDir = albumDir.endsWith('.cue') ? albumDir.substring(0, albumDir.lastIndexOf('/')) : albumDir;
     		    output += '<img src="' + 'imagesw/thmcache/' + encodeURIComponent($.md5(albumDir)) + '_sm.jpg' + '">';
 
                 output += '</img></a></div>';
