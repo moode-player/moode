@@ -22,6 +22,7 @@ Updates
 - UPD: Improve resource usage in PHP-FPM pool
 - UPD: Improve Tag view performance by using thumbnail for cover
 - UPD: Improve spacing on mobile Playbar and Playback views
+- UPD: Improve source mount/unmount and mountmon logging
 - UPD: Add option to select Airplay 1 or Airplay 2 protocol
 - UPD: Add option to enable On-Screen Keyboard for Local display
 - UPD: Add overlay message for Smartphone Landscape mode
