@@ -42,9 +42,7 @@ function startBluetooth() {
 }
 
 function startAirplay() {
-	// Airplay 1 or 2
-	$protocolVer = empty(sysCmd('shairport-sync -V | grep "AirPlay2"')) ? '1' : '2';
-	if ($protocolVer == '2') {
+	if (getAirplayProtocolVer() == '2') {
 		sysCmd('systemctl start nqptp');
 	}
 
@@ -71,12 +69,10 @@ function startAirplay() {
 	sysCmd($cmd);
 }
 
-function stopAirplay () {
+function stopAirplay() {
 	sysCmd('killall shairport-sync');
 
-	// Airplay 1 or 2
-	$protocolVer = empty(sysCmd('shairport-sync -V | grep "AirPlay2"')) ? '1' : '2';
-	if ($protocolVer == '2') {
+	if (getAirplayProtocolVer() == '2') {
 		sysCmd('systemctl stop nqptp');
 	}
 
@@ -92,6 +88,10 @@ function stopAirplay () {
 	phpSession('write', 'aplactive', '0');
 	$GLOBALS['aplactive'] = '0';
 	sendEngCmd('aplactive0');
+}
+
+function getAirplayProtocolVer() {
+	return empty(sysCmd('shairport-sync -V | grep "AirPlay2"')) ? '1' : '2';
 }
 
 function startSpotify() {

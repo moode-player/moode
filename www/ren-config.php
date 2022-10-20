@@ -85,6 +85,7 @@ if (isset($_POST['update_airplay_settings'])) {
 }
 // Protocol version
 if (isset($_POST['update_airplay_protocol'])) {
+	$_SESSION['airplay_protocol'] = substr($_POST['airplay_protocol'], -1);
 	submitJob('airplay_protocol', $_POST['airplay_protocol'], 'Settings updated', '');
 }
 // Resume MPD
@@ -242,14 +243,13 @@ $_select['rsmafterbt'] .= "<option value=\"0\" " . (($_SESSION['rsmafterbt'] == 
 
 // Airplay renderer
 $_feat_airplay = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? '' : 'hide';
-$protocolVer = empty(sysCmd('shairport-sync -V | grep "AirPlay2"')) ? '1' : '2';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_btn_disable = '' : $_airplay_btn_disable = 'disabled';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_link_disable = '' : $_airplay_link_disable = 'onclick="return false;"';
 $_select['airplaysvc1'] .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggleairplaysvc1\" value=\"1\" " . (($_SESSION['airplaysvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
 $_select['airplaysvc0'] .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggleairplaysvc2\" value=\"0\" " . (($_SESSION['airplaysvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
 $_select['airplayname'] = $_SESSION['airplayname'];
-$_select['airplay_protocol'] .= "<option value=\"Airplay 2\" " . (($protocolVer == '2') ? "selected" : "") . ">Airplay 2</option>\n";
-$_select['airplay_protocol'] .= "<option value=\"Airplay 1\" " . (($protocolVer == '1') ? "selected" : "") . ">Airplay 1</option>\n";
+$_select['airplay_protocol'] .= "<option value=\"1\" " . (($_SESSION['airplay_protocol'] == '1') ? "selected" : "") . ">AirPlay 1</option>\n";
+$_select['airplay_protocol'] .= "<option value=\"2\" " . (($_SESSION['airplay_protocol'] == '2') ? "selected" : "") . ">AirPlay 2</option>\n";
 $_select['rsmafterapl'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterapl'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
 $_select['rsmafterapl'] .= "<option value=\"No\" " . (($_SESSION['rsmafterapl'] == 'No') ? "selected" : "") . ">No</option>\n";
 
