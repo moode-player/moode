@@ -114,9 +114,7 @@ A) Audio Configuration (Menu, Configure, Audio)
 2. In the ALSA Options section
    - Set ALSA Loopback to "ON"
 3. In the MPD Options section EDIT MPD settings
-   - Optionally set SoX Resampling Enabled to "Yes"
-   - Set Bit depth to "Any"
-   - Set Sample rate to 48
+   - Set SoX Resampling Enabled to "No"
 4. In the Equalizers section set the following DSP's to "Off"
    - Crossfeed
    - Polarity inversion
