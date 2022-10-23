@@ -226,7 +226,7 @@ function groupLib(fullLib) {
 
 	allAlbums = Object.values(allSongs.reduce(reduceAlbums, {})).map(function(albumTracks){
 		var file = findAlbumProp(albumTracks, 'file');
-		var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
+		var md5 = file ? $.md5(file.substring(0,file.lastIndexOf('/'))) : '';
 		// var artist = findAlbumProp(albumTracks, 'artist');
 		// var albumArtist = findAlbumProp(albumTracks, 'album_artist');
 		var year = getYear(albumTracks);
@@ -243,7 +243,7 @@ function groupLib(fullLib) {
 			// so it is not necessary to evaluate artist
 			album_artist: getAlbumArtist(albumTracks),
             //album_artist: findAlbumProp(albumTracks, 'album_artist'),
-			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
+			imgurl: md5 == '' ? 'images/default-cover-v6.svg' : '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
 			encoded_at: findAlbumProp(albumTracks, 'encoded_at'),
 			comment: findAlbumProp(albumTracks, 'comment')
 		};
