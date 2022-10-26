@@ -4057,7 +4057,7 @@ function setLibMenuAndHeader () {
 		}
 	}
 
-    $('#menu-header').text(headerText);
+    $('#menu-header').html(headerText);
 }
 
 function lazyLode(view, skip, force) {
