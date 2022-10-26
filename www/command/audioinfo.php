@@ -121,7 +121,7 @@ function parseTrackInfo($resp) {
 					$genres .= $value . ', ';
 					break;
 				case 'Album':
-					$array[7] = array($element => $value);
+					$array[7] = array($element => htmlspecialchars($value));
 					break;
 				case 'Disc':
 					$array[8] = array($element => $value);
