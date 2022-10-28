@@ -16,20 +16,31 @@
  */
 
  .analogclock {
-    --faceRadius: 40vh;
+    --faceRadius: calc((100vh - 5.4rem) / 2);
     --faceWidth: calc(var(--faceRadius) * 2);
     --faceHeight: calc(var(--faceRadius) * 2);
-    --hand_hour: calc(var(--faceRadius) - 15vh);
-    --hand_minute: calc(var(--faceRadius) - 3vh);
-    --hand_sec_balance: 4vh;
-    --hand_second: calc(var(--faceRadius) + var(--hand_sec_balance) - 2vh);
-    --hand_color: #eee;
+    --fore_color: #999999;
+    --seconds_color: #c0392b;
+
+    --hand_hm_t: 5px;
+    --hand_s_t: 8vh;
+    --hand_h_w: 15px;
+    --hand_h_h: calc(var(--faceRadius) / 8 * 6 - 12vh);
+    --hand_m_w: 11px;
+    --hand_m_h: calc(var(--faceRadius) / 8 * 6 - 4vh);
+    --hand_s_w: 7px;
+    --hand_s_h: calc(var(--faceRadius) / 8 * 6 + var(--hand_s_t) - 1vh);
+
+    --tick_bar_w: 7px;
+    --tick_bar_h: 5vh;
+    --tick_num_h: calc(var(--faceRadius) / 8);
 
     width: var(--faceWidth);
     height: var(--faceHeight);
     left: 50%;
     transform: translateX(-50%);
     background-color: inherit;
+    border: none;
     cursor: pointer;
     position: relative;
 }
@@ -41,26 +52,25 @@
 }
 
 .analogclock_hand {
-    left: calc(50% - 5px);
-    bottom: calc(50% - 10px);
-    width: 9px;
     position: absolute;
-    border: 1px solid var(--hand_color);
-    background-color: var(--hand_color);
+    left: 50%;
+    bottom: calc(50% - var(--hand_hm_t));
+    border-radius: 9px;
+    background-color: var(--fore_color);
 }
 
 .analogclock_hh {
-    height: var(--hand_hour);
-    transform-origin: center calc(var(--hand_hour) - 10px);
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
+    bottom: calc(50% - var(--hand_hm_t));
+    width: var(--hand_h_w);
+    height: var(--hand_h_h);
+    transform-origin: center calc(var(--hand_h_h) - var(--hand_hm_t));
 }
 
 .analogclock_mm {
-    height: var(--hand_minute);
-    transform-origin: center calc(var(--hand_minute) - 10px);
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    bottom: calc(50% - var(--hand_hm_t));
+    width: var(--hand_m_w);
+    height: var(--hand_m_h);
+    transform-origin: center calc(var(--hand_m_h) - var(--hand_hm_t));
 }
 
 .analogclock_hh::after,
@@ -76,13 +86,23 @@
 }
 
 .analogclock_ss {
-    left: calc(50% - 1px);
-    bottom: calc(50% - var(--hand_sec_balance));
-    width: 0px;
-    height: var(--hand_second);
-    transform-origin: center calc(var(--hand_second) - var(--hand_sec_balance));
-    border-color: var(--accentxts);
-    background-color: var(--accentxts);
+    bottom: calc(50% - var(--hand_s_t));
+    width: var(--hand_s_w);
+    height: var(--hand_s_h);
+    transform-origin: center calc(var(--hand_s_h) - var(--hand_s_t));
+    background-color: var(--seconds_color);
+}
+
+.analogclock_ss::after {
+    content: " ";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% - var(--hand_s_t)));
+    width: 3.5vh;
+    height: 3.5vh;
+    border-radius: 50%;
+    background-color: inherit;
 }
 
 .analogclock_ss::before,
@@ -126,18 +146,39 @@
 }
 
 .analogclock_tick {
-    border: 1px solid var(--hand_color);
-    transform-origin: center top;
     position: absolute;
-    background-color: var(--hand_color);
+    width: var(--tick_bar_w);
+    height: var(--tick_bar_h);
+    transform-origin: center top;
+    background-color: var(--fore_color);
+    border-radius: 4px;
 }
 
-.analogclock_mtick {
-    height: 0px;
-    width: 0px;
+.analogclock_hnumber {
+    position: absolute;
+    width: calc(var(--tick_num_h) * 2);
+    height: var(--tick_num_h);
+    font-size: calc(var(--tick_num_h) * 1.4);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: var(--tick_num_h);
+    color: var(--fore_color);
 }
 
-.analogclock_htick {
-    height: 3px;
-    width: 3px;
+.hnum_12 {
+    text-align: center;
+}
+
+.hnum_3 {
+    transform: translate(-50%,-50%);
+    text-align: right;
+}
+
+.hnum_6 {
+    transform: translate(0%,-100%);
+    text-align: center;
+}
+
+.hnum_9 {
+    transform: translate(50%,-50%);
+    text-align: left;
 }

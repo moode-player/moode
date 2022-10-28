@@ -655,8 +655,7 @@ function showSSClock() {
 			break;
 
 		case 'Analog clock':
-			moOdeAnalogClock = new AnalogClock("ss-clock", ANALOGCLOCK_REFRESH_INTERVAL_SMOOTH, true);
-			moOdeAnalogClock.start();
+			showAnalogClock("ss-clock", ANALOGCLOCK_REFRESH_INTERVAL_SMOOTH, true);
 			break;
 		
 		default: break;
@@ -671,8 +670,7 @@ function hideSSClock() {
 			break;
 
 		case 'Analog clock':
-			moOdeAnalogClock.destroy();
-			moOdeAnalogClock = null;
+			hideAnalogClock();
 			break;
 
 		default: break;
