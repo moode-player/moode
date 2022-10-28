@@ -1561,8 +1561,8 @@ jQuery(document).ready(function($) { 'use strict';
 
 			coverView = false;
             setColors();
-            if (SESSION.json['scnsaver_mode'] == 'Clock') {
-                clearInterval(GLOBAL.ssClockIntervalID);
+            if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'] == 'Analog clock') {
+				hideSSClock();
             }
 
             // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView

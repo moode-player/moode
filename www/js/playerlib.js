@@ -612,11 +612,10 @@ function screenSaver(cmd) {
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
 
-        if (SESSION.json['scnsaver_mode'] == 'Clock') {
+        if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'] == 'Analog clock') {
             $('#ss-coverart').css('display', 'none');
             $('#ss-clock').css('display', 'block');
             showSSClock();
-            GLOBAL.ssClockIntervalID = setInterval(showSSClock, 1000);
         }
 	} else if (cmd.slice(-1) == '0') {
         // Hide CoverView
@@ -625,7 +624,7 @@ function screenSaver(cmd) {
 }
 
 // Screen saver clock
-function showSSClock() {
+function showSSDigitalClock() {
     var date = new Date();
     var h = date.getHours(); // 0 - 23
     var m = date.getMinutes(); // 0 - 59
@@ -646,6 +645,38 @@ function showSSClock() {
     var time = h + ':' + m + ':' + s + ' ' + ampm;
     $('#ss-clock').text(time);
     //console.log(time);
+}
+
+function showSSClock() {
+	switch (SESSION.json['scnsaver_mode']) {
+		case 'Digital clock':
+			showSSDigitalClock();
+			GLOBAL.ssClockIntervalID = setInterval(showSSDigitalClock, 1000);
+			break;
+
+		case 'Analog clock':
+			moOdeAnalogClock = new AnalogClock("ss-clock", ANALOGCLOCK_REFRESH_INTERVAL_SMOOTH, true);
+			moOdeAnalogClock.start();
+			break;
+		
+		default: break;
+	}
+}
+
+function hideSSClock() {
+	switch (SESSION.json['scnsaver_mode']) {
+		case 'Digital clock':
+			clearInterval(GLOBAL.ssClockIntervalID);
+			$('#ss-clock').text('');
+			break;
+
+		case 'Analog clock':
+			moOdeAnalogClock.destroy();
+			moOdeAnalogClock = null;
+			break;
+
+		default: break;
+	}
 }
 
 // Reconnect/reboot/restart
