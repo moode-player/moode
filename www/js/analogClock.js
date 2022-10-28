@@ -63,6 +63,7 @@ class AnalogClock {
             this.hands.m = this.faceplate.appendChild(this.newElement("div", aContainerId + "_mm", [ "analogclock_hand", "analogclock_mm" ]));
             if (this.showSeconds) {
                 this.hands.s = this.faceplate.appendChild(this.newElement("div", aContainerId + "_ss", [ "analogclock_hand", "analogclock_ss" ]));
+                this.hands.s.appendChild(this.newElement("div", aContainerId + "_ss_tip", [ "analogclock_hand", "analogclock_ss_tip" ]));
             }
         }
     }

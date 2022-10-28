@@ -73,6 +73,18 @@
     transform-origin: center calc(var(--hand_m_h) - var(--hand_hm_t));
 }
 
+.analogclock_hh::after,
+.analogclock_mm::after {
+    content: " ";
+    position: absolute;
+    /* top: 100%; */
+    border-radius: 5px;
+    background-color: var(--accentxts);
+    transform: translate(-50%, 0.2vh);
+    width: 0.5vh;
+    height: 10vh;
+}
+
 .analogclock_ss {
     bottom: calc(50% - var(--hand_s_t));
     width: var(--hand_s_w);
@@ -91,6 +103,46 @@
     height: 3.5vh;
     border-radius: 50%;
     background-color: inherit;
+}
+
+.analogclock_ss::before,
+.analogclock_ss::after {
+    position: absolute;
+    top: 100%;
+    border-radius: 50%;
+    border: inherit;
+    color: var(--accentxts);
+}
+
+.analogclock_ss::before {
+    content: " ";
+    width: 3vh;
+    height: 1.5vh;
+    transform: translateX(-50%);
+    border-width: 4px 0 0 0;
+    font-size: 1.8vh;
+    background-color: transparent;
+}
+
+.analogclock_ss::after {
+    content: "";
+    width: 2.5vh;
+    height: 2.5vh;
+    border-width: 4px;
+    transform: translate(-50%, calc(-50% - var(--hand_sec_balance)));
+    background-color: inherit;
+}
+
+.analogclock_ss_tip {
+    width: 2vh;
+    height: 2vh;
+    left: 50%;
+    top: 0;
+    background-color: inherit;
+    transform: translate(-50%, 4vh) rotate(45deg);
+    position: absolute;
+    border: inherit;
+    border-radius: 50%;
 }
 
 .analogclock_tick {

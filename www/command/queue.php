@@ -175,8 +175,7 @@ function getPlayqueue($resp) {
 			if ($element == 'file') {
 				$idx++;
 				$queue[$idx]['file'] = $value;
-                $level = stripos(dirname($value), '.cue', -4) === false ? 1 : 2;
-                $queue[$idx]['cover_hash'] = substr($value, 0, 4) == 'http' ? '' : md5(dirname($value, $level));
+                $queue[$idx]['cover_hash'] = substr($value, 0, 4) == 'http' ? '' : md5(dirname($value));
 				$queue[$idx]['fileext'] = getFileExt($value);
 				$queue[$idx]['TimeMMSS'] = formatSongTime($queue[$idx]['Time']);
 			} else {

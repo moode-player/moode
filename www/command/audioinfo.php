@@ -101,8 +101,7 @@ function parseTrackInfo($resp) {
 				// All others
 				case 'file':
 					$file = $value;
-					$level = stripos(dirname($file), '.cue', -4) === false ? 1 : 2;
-					$cover_hash = md5(dirname($file, $level));
+					$cover_hash = md5(dirname($file));
 					$array[0] = file_exists(THMCACHE_DIR . $cover_hash . '.jpg') ? array('Covers' => $cover_hash) : array('Covers' => '');
 					break;
 				case 'Artist':
@@ -122,7 +121,7 @@ function parseTrackInfo($resp) {
 					$genres .= $value . ', ';
 					break;
 				case 'Album':
-					$array[7] = array($element => htmlspecialchars($value));
+					$array[7] = array($element => $value);
 					break;
 				case 'Disc':
 					$array[8] = array($element => $value);
