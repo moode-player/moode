@@ -32,7 +32,7 @@ class AnalogClock {
         this.hands = { hours: null, minutes: null, seconds: null };
         this.lastDateTime = null;
         this.showSeconds = aShowSeconds;
-        this.drawing = false;
+        // this.drawing = false;
         this.lastAngles = { hh: 1000, mm: 1000, ss: 1000 };
         // if not showing the seconds, no need for smooth seconds-hand
         this.refreshInterval = this.showSeconds ? aInterval : ANALOGCLOCK_REFRESH_INTERVAL_NORMAL;
@@ -63,7 +63,6 @@ class AnalogClock {
             this.hands.m = this.faceplate.appendChild(this.newElement("div", aContainerId + "_mm", [ "analogclock_hand", "analogclock_mm" ]));
             if (this.showSeconds) {
                 this.hands.s = this.faceplate.appendChild(this.newElement("div", aContainerId + "_ss", [ "analogclock_hand", "analogclock_ss" ]));
-                this.hands.s.appendChild(this.newElement("div", aContainerId + "_ss_tip", [ "analogclock_hand", "analogclock_ss_tip" ]));
             }
         }
     }
@@ -79,10 +78,10 @@ class AnalogClock {
     }
 
     draw() {
-        if (this.drawing) {
-            return;
-        }
-        this.drawing = true;
+        // if (this.drawing) {
+        //     return;
+        // }
+        // this.drawing = true;
         this.lastDateTime = new Date();
         let h = this.lastDateTime.getHours() % 12;
         let m = this.lastDateTime.getMinutes();
@@ -110,7 +109,7 @@ class AnalogClock {
             this.hands.s.style.transform = `translateX(-50%) rotate(${s}deg)`;
             this.lastAngles.ss = s;
         }
-        this.drawing = false;
+        // this.drawing = false;
     }
 
     start() {
