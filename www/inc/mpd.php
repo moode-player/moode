@@ -64,13 +64,34 @@ function openMpdSock($host, $port) {
 
 	return $sock;
 }
+
+function responseHtmlSpecialChars($resp) {
+	$lines = explode("\n", $resp);
+	$lineCount = count($lines);
+	$resp = "";
+	// html-escape all the fields in the line, except for FILE
+	for ($i = 0; $i < $lineCount; $i++) {
+		list($element, $value) = explode(': ', $lines[$i], 2);
+		if ($element != "file") {
+			$value = htmlspecialchars($value);
+		}
+		$lines[$i] = $element;
+		if ("OK" != $element) {
+			$lines[$i] .= ": " . $value;
+		}
+		$resp .= $lines[$i] . "\n";
+	}
+
+	return $resp;
+}
+
 function readMpdResp($sock) {
 	$resp = '';
 
 	while (false !== ($str = fgets($sock, 1024)) && !feof($sock)) {
 		if (strncmp(MPD_RESPONSE_OK, $str, strlen(MPD_RESPONSE_OK)) == 0) {
 			$resp = $resp == '' ? $str : $resp;
-			return $resp;
+			return responseHtmlSpecialChars($resp);
 		}
 
 		if (strncmp(MPD_RESPONSE_ERR, $str, strlen(MPD_RESPONSE_ERR)) == 0) {
@@ -87,7 +108,7 @@ function readMpdResp($sock) {
 		debugLog('readMpdResp(): Error: fgets failure (' . explode("\n", $resp)[0] . ')');
 	}
 
-	return $resp;
+	return responseHtmlSpecialChars($resp);
 }
 function closeMpdSock($sock) {
 	sendMpdCmd($sock, 'close');
@@ -292,7 +313,7 @@ function formatMpdQueryResults($resp) {
 					$array[$idx]['playlist'] = $value;
 				}
 			} else {
-				$array[$idx][$element] = htmlspecialchars($value);
+				$array[$idx][$element] = $value;
 				$array[$idx]['TimeMMSS'] = formatSongTime($array[$idx]['Time']);
 			}
 
@@ -624,7 +645,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			// iTunes aac or aiff file
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = $song['Name'];
-			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album']) : 'Unknown album';
+			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['coverurl'] = '/coverart.php/' . rawurlencode($song['file']);
 			$current['thumb_hash'] = md5(dirname($song['file']));
 		} else if (substr($song['file'], 0, 4) == 'http' && !isset($current['duration'])) {
@@ -666,7 +687,7 @@ function enhanceMetadata($current, $sock, $caller = '') {
 			// Song file, UPnP URL or Podcast
 			$current['artist'] = isset($song['Artist']) ? $song['Artist'] : 'Unknown artist';
 			$current['title'] = isset($song['Title']) ? $song['Title'] : pathinfo(basename($song['file']), PATHINFO_FILENAME);
-			$current['album'] = isset($song['Album']) ? htmlspecialchars($song['Album']) : 'Unknown album';
+			$current['album'] = isset($song['Album']) ? $song['Album'] : 'Unknown album';
 			$current['disc'] = isset($song['Disc']) ? $song['Disc'] : 'Disc tag missing';
 			if (substr($song['file'], 0, 4) == 'http') {
 				if (isset($_SESSION[$song['file']])) {
