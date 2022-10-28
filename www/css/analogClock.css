@@ -1,0 +1,75 @@
+.analogclock {
+    --faceRadius: 40vh;
+    --faceWidth: calc(var(--faceRadius) * 2);
+    --faceHeight: calc(var(--faceRadius) * 2);
+    --hand_hour: calc(var(--faceRadius) - 20vh);
+    --hand_minute: calc(var(--faceRadius) - 3vh);
+    --hand_second: calc(var(--faceRadius) - 2vh);
+    --hand_color: #eee;
+
+    width: var(--faceWidth);
+    height: var(--faceHeight);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: inherit;
+    cursor: pointer;
+    position: relative;
+}
+
+.analogclock_face {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.analogclock_hand {
+    left: calc(50% - 5px);
+    bottom: calc(50% - 10px);
+    width: 9px;
+    position: absolute;
+    border: 1px solid var(--hand_color);
+    background-color: var(--hand_color);
+}
+
+.analogclock_hh {
+    left: calc(50% - 7px);
+    width: 13px;
+    height: var(--hand_hour);
+    transform-origin: center calc(var(--hand_hour) - 10px);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.analogclock_mm {
+    height: var(--hand_minute);
+    transform-origin: center calc(var(--hand_minute) - 10px);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.analogclock_ss {
+    left: calc(50% - 1px);
+    bottom: calc(50% - 0px);
+    width: 0px;
+    height: var(--hand_second);
+    transform-origin: center bottom;
+    border-color: var(--accentxts);
+    background-color: var(--accentxts);
+}
+
+.analogclock_tick {
+    border: 1px solid var(--hand_color);
+    transform-origin: center top;
+    position: absolute;
+    background-color: var(--hand_color);
+}
+
+.analogclock_mtick {
+    height: 0px;
+    width: 0px;
+}
+
+.analogclock_htick {
+    height: 3px;
+    width: 3px;
+}
