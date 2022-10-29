@@ -47,7 +47,9 @@
     <link href="css/jquery.pnotify.default.css" rel="stylesheet">
     <link href="css/fontawesome-moode.css" rel="stylesheet">
     <link href="css/panels.css" rel="stylesheet">
+    <link href="css/configs.css" rel="stylesheet">
     <link href="css/moode.css" rel="stylesheet">
+    <link href="css/media.css" rel="stylesheet">
     <link href="css/osk.css" rel="stylesheet">
 	<!-- endbuild -->
 

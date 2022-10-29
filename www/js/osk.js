@@ -20,6 +20,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+/* TODO: Refactor CSS names to hyphen-delimited */
+
 // FontAwesome icons for some special keys
 const KS_CLOSE     = '&#xf057;';
 const KS_BACKS     = '&#xf177;';
@@ -256,7 +258,7 @@ function keyPress(aEvent) {
             numVal = Math.trunc(numVal / stepVal) * stepVal + stepVal;
             OSK.linkedInput.value = numVal > maxVal ? maxVal : numVal;
             break;
-       
+
         case OSK.keyDecrease:
             numVal = Math.trunc(numVal / stepVal) * stepVal - stepVal;
             OSK.linkedInput.value = numVal < minVal ? minVal : numVal;
