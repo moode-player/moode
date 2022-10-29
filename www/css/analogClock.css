@@ -29,7 +29,7 @@
     --hand_m_w: 11px;
     --hand_m_h: calc(var(--faceRadius) / 8 * 6 - 4vh);
     --hand_s_w: 7px;
-    --hand_s_h: calc(var(--faceRadius) / 8 * 6 + var(--hand_s_t) - 1vh);
+    --hand_s_h: calc(var(--faceRadius) / 8 * 6 + var(--hand_s_t) - 3vh);
 
     --tick_bar_w: 7px;
     --tick_bar_h: 5vh;
@@ -87,8 +87,8 @@
     top: 100%;
     left: 50%;
     transform: translate(-50%, calc(-50% - var(--hand_s_t)));
-    width: 3.5vh;
-    height: 3.5vh;
+    width: 4.5vh;
+    height: 4.5vh;
     border-radius: 50%;
     background-color: inherit;
 }
