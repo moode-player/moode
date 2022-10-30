@@ -11,6 +11,22 @@
 
 ################################################################################
 #
+# 2022-MM-DD TC moOde 8.2.3
+#
+################################################################################
+
+Updates
+
+- UPD: Refactor CSS
+- UPD: Add support for rendering UI on Ultra-wide attached screens
+
+Bug fixes
+
+- FIX: Top border of Playbar is visible
+- FIX: Startup hangs if Bluetooth is on but no adapter is present
+
+################################################################################
+#
 # 2022-10-23 TC moOde 8.2.2
 #
 ################################################################################

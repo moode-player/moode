@@ -19,350 +19,343 @@
  */
 -->
 <div class="container">
-<div class="container2">
 	<h1 class="ren-config">Renderers</h1>
 	<p>
-		Audio renderers are playback applications separate from MPD. When a client connects to one of the renderers MPD will stop and the renderer will begin playback.
-		When the client stops or disconnects, MPD can resume playback depending on the "Resume MPD" setting.
+		Audio renderers are playback applications separate from MPD. When a client connects to one of the renderers MPD will stop and the renderer will begin playback.	When the client stops or disconnects, MPD can resume playback depending on the "Resume MPD" setting.
 	</p>
 
 	<!-- RENDERERS: AVAILABILITY IS CONTROLLED BY FEAT_BITMASK -->
 
 	<form class="form-horizontal" method="post">
-		<fieldset>
-			<div class="control-group $_feat_bluetooth">
-				<legend id="bluetooth">Bluetooth</legend>
-				<label class="control-label" for="btname">Controller</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="togglebtsvc2">ON</label>
-						$_select[btsvc1]
-						<label class="toggle-radio" for="togglebtsvc1">OFF</label>
-						$_select[btsvc0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<input class="input-large" type="text" id="btname" name="btname" value="$_select[btname]" style="width:117px;" required>
-						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_bt_settings" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-btsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<div>
-						<a data-toggle="modal" href="#bt-restart" $_bt_link_disable><button class="btn btn-medium btn-primary" $_bt_btn_disable>Restart</button></a>&nbsp;Bluetooth controller<br>
-					</div>
-					<span id="info-btsvc" class="help-block-configs help-block-margin hide">
-						Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (Bluez-alsa).
-                    </span>
-					<span class="help-block-configs help-block-margin" style="margin-bottom:7px;">
-						<b>WARNING: </b>A Bluetooth adapter must be physically attached and enabled before turning Bluetooth ON otherwise moOde startup will fail and the system will appear to hang. If this happens run the SSH command moodeutl --btreset then reboot.
-                    </span>
+		<div class="control-group $_feat_bluetooth">
+			<legend id="bluetooth">Bluetooth</legend>
+			<label class="control-label" for="btname">Controller</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="togglebtsvc2">ON</label>
+					$_select[btsvc1]
+					<label class="toggle-radio" for="togglebtsvc1">OFF</label>
+					$_select[btsvc0]
 				</div>
-				<label class="control-label">Pairing agent</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle-pairing-agent2">ON</label>
-						$_select[pairing_agent1]
-						<label class="toggle-radio" for="toggle-pairing-agent1">OFF</label>
-						$_select[pairing_agent0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_pairing_agent" value="novalue" $_bt_btn_disable>Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info_pairing_agent" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<div style="margin-bottom:10px;">
-						<a data-toggle="modal" href="#pa-restart" $_pa_link_disable><button class="btn btn-medium btn-primary" $_pa_btn_disable>Restart</button></a>&nbsp;Pairing agent<br>
-					</div>
-					<span id="info_pairing_agent" class="help-block-configs help-block-margin2 hide" style="margin-top:-5px;">
-						The pairing agent automatically accepts incoming pairing/connect requests from clients and eliminates the need to perform a manual SCAN.
-                    </span>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<input class="input-large" type="text" id="btname" name="btname" value="$_select[btname]" style="width:117px;" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_bt_settings" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info-btsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				</div>
-				<label class="control-label">Speaker sharing</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="togglebtmulti2">ON</label>
-						$_select[btmulti1]
-						<label class="toggle-radio" for="togglebtmulti1">OFF</label>
-						$_select[btmulti0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_bt_multi" value="novalue" $_bt_btn_disable>Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-btmulti" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-btmulti" class="help-block-configs help-block-margin2 hide">
-						Allow the Bluetooth speaker to be shared by multiple clients.
-                    </span>
+				<div>
+					<a data-toggle="modal" href="#bt-restart" $_bt_link_disable><button class="btn btn-medium btn-primary" $_bt_btn_disable>Restart</button></a>&nbsp;Controller<br>
 				</div>
-				<label class="control-label" for="rsmafterbt">Resume MPD</label>
+				<span id="info-btsvc" class="help-block-configs help-block-margin hide">
+					Bluetooth controller by Johan Hedberg (BlueZ) and Arkadiusz Bokowy (Bluez-alsa).
+                </span>
+				<span class="help-block-configs help-block-margin" style="margin-bottom:7px;">
+					NOTE: A Bluetooth adapter must be present and enabled otherwise Bluetooth will not start.
+                </span>
+			</div>
+			<label class="control-label">Pairing agent</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle-pairing-agent2">ON</label>
+					$_select[pairing_agent1]
+					<label class="toggle-radio" for="toggle-pairing-agent1">OFF</label>
+					$_select[pairing_agent0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_pairing_agent" value="novalue" $_bt_btn_disable>Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info_pairing_agent" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</div>
+				<div style="margin-bottom:10px;">
+					<a data-toggle="modal" href="#pa-restart" $_pa_link_disable><button class="btn btn-medium btn-primary" $_pa_btn_disable>Restart</button></a>&nbsp;Pairing agent<br>
+				</div>
+				<span id="info_pairing_agent" class="help-block-configs help-block-margin2 hide" style="margin-top:-5px;">
+					The pairing agent automatically accepts incoming pairing/connect requests from clients and eliminates the need to perform a manual SCAN.
+                </span>
+			</div>
+			<label class="control-label">Speaker sharing</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="togglebtmulti2">ON</label>
+					$_select[btmulti1]
+					<label class="toggle-radio" for="togglebtmulti1">OFF</label>
+					$_select[btmulti0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_bt_multi" value="novalue" $_bt_btn_disable>Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info-btmulti" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</div>
+				<span id="info-btmulti" class="help-block-configs help-block-margin2 hide">
+					Allow the Bluetooth speaker to be shared by multiple clients.
+                </span>
+			</div>
+			<label class="control-label" for="rsmafterbt">Resume MPD</label>
+			<div class="controls">
+				<select id="rsmafterbt" class="select-mini2" style="width: 74px;" name="rsmafterbt">
+					$_select[rsmafterbt]
+				</select>
+				<span style="display: inline-block;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterbt" value="novalue" $_bt_btn_disable>Set</button>
+						<a aria-label="Help" class="info-toggle-configs" data-cmd="info_rsmafterbt" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</span>
+				<span id="info_rsmafterbt" class="help-block-configs help-block-margin hide">
+					Resume MPD playback after Bluetooth client disconnects.
+                </span>
+				<div style="margin-top:1em">
+					<a href="blu-config.php"><button class="btn btn-medium btn-primary">Open</button></a>&nbsp;Bluetooth control
+				</div>
+			</div>
+		</div>
+
+		<div class="control-group $_feat_airplay">
+			<legend id="airplay">AirPlay</legend>
+			<label class="control-label" for="airplayname">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggleairplaysvc2">ON</label>
+					$_select[airplaysvc1]
+					<label class="toggle-radio" for="toggleairplaysvc1">OFF</label>
+					$_select[airplaysvc0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<input class="input-large" type="text" id="airplayname" name="airplayname" value="$_select[airplayname]" style="width:117px;" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_airplay_settings" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info-airplaysvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</div>
+				<span id="info-airplaysvc" class="help-block-configs help-block-margin2 hide">
+					Shairport-sync by Mike Brady, the wonderful fork of	the original Shairport by James "Abrasive" Laird.
+                </span>
+			</div>
+			<label class="control-label" for="airplay-protocol">Protocol</label>
+			<div class="controls">
+				<select id="airplay-protocol" class="select-medium" name="airplay_protocol">
+					$_select[airplay_protocol]
+				</select>
+				<span style="display: inline-block;">
+						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_airplay_protocol" value="novalue">Set</button>
+				</span>
+				<span id="info-airplay-protocol" class="help-block-configs help-block-margin">
+					This option installs a protocol-specific version of shairport-sync. An Internet connection is required.
+                </span>
+			</div>
+			<div style="margin-top: 1em;">
+				<label class="control-label" for="rsmafterapl">Resume MPD</label>
 				<div class="controls">
-					<select id="rsmafterbt" class="select-mini2" style="width: 74px;" name="rsmafterbt">
-						$_select[rsmafterbt]
+					<select id="rsmafterapl" class="select-mini2" style="width: 74px;" name="rsmafterapl">
+						$_select[rsmafterapl]
 					</select>
 					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterbt" value="novalue" $_bt_btn_disable>Set</button>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info_rsmafterbt" href="#notarget"><i class="fas fa-info-circle"></i></a>
+ 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterapl" value="novalue" $_airplay_btn_disable>Set</button>
+ 						<a aria-label="Help" class="info-toggle-configs" data-cmd="info_rsmafterapl" href="#notarget"><i class="fas fa-info-circle"></i></a>
 					</span>
-					<span id="info_rsmafterbt" class="help-block-configs help-block-margin hide">
-						Resume MPD playback after Bluetooth client disconnects.
+					<span id="info_rsmafterapl" class="help-block-configs help-block-margin hide">
+						Resume MPD playback after AirPlay client stops playing.
                     </span>
-					<div style="margin-top:1em">
-						<a href="blu-config.php"><button class="btn btn-medium btn-primary">Open</button></a>&nbsp;Bluetooth control
-					</div>
 				</div>
 			</div>
+			<div class="controls">
+				<div style="margin-top:1em">
+					<a href="apl-config.php">
+						<button class="btn btn-medium btn-primary">Edit</button>
+					</a>&nbsp;AirPlay settings
+				</div>
+				<div style="margin-top:1em">
+					<a data-toggle="modal" href="#airplay-restart" $_airplay_link_disable>
+						<button class="btn btn-medium btn-primary" $_airplay_btn_disable>Restart</button>
+					</a>&nbsp;AirPlay renderer
+				</div>
+			</div>
+		</div>
 
-			<div class="control-group $_feat_airplay">
-				<legend id="airplay">AirPlay</legend>
-				<label class="control-label" for="airplayname">Service</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggleairplaysvc2">ON</label>
-						$_select[airplaysvc1]
-						<label class="toggle-radio" for="toggleairplaysvc1">OFF</label>
-						$_select[airplaysvc0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<input class="input-large" type="text" id="airplayname" name="airplayname" value="$_select[airplayname]" style="width:117px;" required>
-						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_airplay_settings" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-airplaysvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-airplaysvc" class="help-block-configs help-block-margin2 hide">
-						Shairport-sync by Mike Brady, the wonderful fork of	the original Shairport by James "Abrasive" Laird.
-                    </span>
+		<div class="control-group $_feat_spotify">
+			<legend id="spotify">Spotify connect</legend>
+			<label class="control-label" for="spotifyname">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="togglespotifysvc2">ON</label>
+					$_select[spotifysvc1]
+					<label class="toggle-radio" for="togglespotifysvc1">OFF</label>
+					$_select[spotifysvc0]
 				</div>
-				<label class="control-label" for="airplay-protocol">Protocol</label>
-				<div class="controls">
-					<select id="airplay-protocol" class="select-medium" name="airplay_protocol">
-						$_select[airplay_protocol]
-					</select>
-					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_airplay_protocol" value="novalue">Set</button>
-					</span>
-					<span id="info-airplay-protocol" class="help-block-configs help-block-margin">
-						This option installs a protocol-specific version of shairport-sync. An Internet connection is required.
-                    </span>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<input class="input-large" type="text" id="spotifyname" name="spotifyname" value="$_select[spotifyname]" style="width:117px;" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_spotify_settings" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info-spotifysvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				</div>
-				<div style="margin-top: 1em;">
-					<label class="control-label" for="rsmafterapl">Resume MPD</label>
-					<div class="controls">
-						<select id="rsmafterapl" class="select-mini2" style="width: 74px;" name="rsmafterapl">
-							$_select[rsmafterapl]
-						</select>
-						<span style="display: inline-block;">
-	 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterapl" value="novalue" $_airplay_btn_disable>Set</button>
-	 						<a aria-label="Help" class="info-toggle" data-cmd="info_rsmafterapl" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						</span>
-						<span id="info_rsmafterapl" class="help-block-configs help-block-margin hide">
-							Resume MPD playback after AirPlay client stops playing.
-	                    </span>
-					</div>
+				<span id="info-spotifysvc" class="help-block-configs help-block-margin2 hide">
+					librespot by the Librespot Organization, the wonderful fork of the original librespot by Paul Lietar
+				</span>
+				<span class="help-block-configs help-block-margin2">
+					NOTE: This service requires a Spotify Premium account.
+				</span>
+			</div>
+			<label class="control-label" for="rsmafterspot">Resume MPD</label>
+			<div class="controls">
+				<select id="rsmafterspot" class="select-mini2" style="width: 74px;" name="rsmafterspot">
+					$_select[rsmafterspot]
+				</select>
+				<span style="display: inline-block;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterspot" value="novalue" $_spotify_btn_disable>Set</button>
+						<a aria-label="Help" class="info-toggle-configs" data-cmd="info_rsmafterspot" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</span>
+				<span id="info_rsmafterspot" class="help-block-configs help-block-margin hide">
+					Resume MPD playback after Spotify Connect client stops playing.
+                </span>
+				<div style="margin-top:.5em">
+					<a href="spo-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Spotify connect settings<br>
 				</div>
-				<div class="controls">
-					<div style="margin-top:1em">
-						<a href="apl-config.php">
-							<button class="btn btn-medium btn-primary">Edit</button>
-						</a>&nbsp;AirPlay settings
-					</div>
-					<div style="margin-top:1em">
-						<a data-toggle="modal" href="#airplay-restart" $_airplay_link_disable>
-							<button class="btn btn-medium btn-primary" $_airplay_btn_disable>Restart</button>
-						</a>&nbsp;AirPlay renderer
-					</div>
+				<div style="margin-top:.75em">
+					<a data-toggle="modal" href="#spotify-restart" $_spotify_link_disable><button class="btn btn-medium btn-primary" $_spotify_btn_disable>Restart</button></a>&nbsp;Spotify renderer<br>
+				</div>
+				<div style="margin-top:.75em">
+					<a data-toggle="modal" href="#spotify-clear-credentials" $_spotify_link_disable><button class="btn btn-medium btn-primary" $_spotify_btn_disable>Clear</button></a>&nbsp;Credential cache<br>
 				</div>
 			</div>
+		</div>
 
-			<div class="control-group $_feat_spotify">
-				<legend id="spotify">Spotify connect</legend>
-				<label class="control-label" for="spotifyname">Service</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="togglespotifysvc2">ON</label>
-						$_select[spotifysvc1]
-						<label class="toggle-radio" for="togglespotifysvc1">OFF</label>
-						$_select[spotifysvc0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<input class="input-large" type="text" id="spotifyname" name="spotifyname" value="$_select[spotifyname]" style="width:117px;" required>
-						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_spotify_settings" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-spotifysvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-spotifysvc" class="help-block-configs help-block-margin2 hide">
-						librespot by the Librespot Organization, the wonderful fork of the original librespot by Paul Lietar
-					</span>
-					<span class="help-block-configs help-block-margin2">
-						NOTE: This service requires a Spotify Premium account.
-					</span>
+		<div class="control-group $_feat_squeezelite">
+			<legend id="squeezelite">Squeezelite</legend>
+			<label class="control-label">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggleslsvc2">ON</label>
+					$_select[slsvc1]
+					<label class="toggle-radio" for="toggleslsvc1">OFF</label>
+					$_select[slsvc0]
 				</div>
-				<label class="control-label" for="rsmafterspot">Resume MPD</label>
-				<div class="controls">
-					<select id="rsmafterspot" class="select-mini2" style="width: 74px;" name="rsmafterspot">
-						$_select[rsmafterspot]
-					</select>
-					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterspot" value="novalue" $_spotify_btn_disable>Set</button>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info_rsmafterspot" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</span>
-					<span id="info_rsmafterspot" class="help-block-configs help-block-margin hide">
-						Resume MPD playback after Spotify Connect client stops playing.
-                    </span>
-					<div style="margin-top:.5em">
-						<a href="spo-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Spotify connect settings<br>
-					</div>
-					<div style="margin-top:.75em">
-						<a data-toggle="modal" href="#spotify-restart" $_spotify_link_disable><button class="btn btn-medium btn-primary" $_spotify_btn_disable>Restart</button></a>&nbsp;Spotify renderer<br>
-					</div>
-					<div style="margin-top:.75em">
-						<a data-toggle="modal" href="#spotify-clear-credentials" $_spotify_link_disable><button class="btn btn-medium btn-primary" $_spotify_btn_disable>Clear</button></a>&nbsp;Credential cache<br>
-					</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_sl_settings" value="novalue" $_sl_svcbtn_disable>Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info-slsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</div>
+				<span id="info-slsvc" class="help-block-configs help-block-margin2 hide">
+					Squeezelite renderer by Adrian Smith and Ralph Irving (@triode).
+                </span>
+				<span class="help-block-configs help-block-margin2">
+					NOTE: This service requires Logitech Media Server (LMS) to be running on the network.
+				</span>
+			</div>
+			<label class="control-label" for="rsmaftersl">Resume MPD</label>
+			<div class="controls">
+				<select id="rsmaftersl" class="select-mini2" style="width: 74px;" name="rsmaftersl">
+					$_select[rsmaftersl]
+				</select>
+				<span style="display: inline-block;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmaftersl" value="novalue" $_sl_btn_disable>Set</button>
+						<a aria-label="Help" class="info-toggle-configs" data-cmd="info_rsmaftersl" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</span>
+				<span id="info_rsmaftersl" class="help-block-configs help-block-margin hide">
+					Resume MPD playback after LMS power off.
+                </span>
+				<div style="margin-top:.5em">
+					<a href="sqe-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Squeezelite settings<br>
+				</div>
+				<div style="margin-top:.75em">
+					<a data-toggle="modal" href="#sl-restart" $_sl_link_disable><button class="btn btn-medium btn-primary" $_sl_btn_disable>Restart</button></a>&nbsp;Squeezelite renderer<br>
 				</div>
 			</div>
+		</div>
 
-			<div class="control-group $_feat_squeezelite">
-				<legend id="squeezelite">Squeezelite</legend>
-				<label class="control-label">Service</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggleslsvc2">ON</label>
-						$_select[slsvc1]
-						<label class="toggle-radio" for="toggleslsvc1">OFF</label>
-						$_select[slsvc0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_sl_settings" value="novalue" $_sl_svcbtn_disable>Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-slsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-slsvc" class="help-block-configs help-block-margin2 hide">
-						Squeezelite renderer by Adrian Smith and Ralph Irving (@triode).
-                    </span>
-					<span class="help-block-configs help-block-margin2">
-						NOTE: This service requires Logitech Media Server (LMS) to be running on the network.
-					</span>
+		<div class="control-group" $_roonbridge_label_style>
+			<legend id="roonbridge">RoonBridge</legend>
+			$_roonbridge_install_msg
+		</div>
+		<div class="control-group $_feat_roonbridge">
+			<label class="control-label">Service</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="togglerbsvc2">ON</label>
+					$_select[rbsvc1]
+					<label class="toggle-radio" for="togglerbsvc1">OFF</label>
+					$_select[rbsvc0]
 				</div>
-				<label class="control-label" for="rsmaftersl">Resume MPD</label>
-				<div class="controls">
-					<select id="rsmaftersl" class="select-mini2" style="width: 74px;" name="rsmaftersl">
-						$_select[rsmaftersl]
-					</select>
-					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmaftersl" value="novalue" $_sl_btn_disable>Set</button>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info_rsmaftersl" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</span>
-					<span id="info_rsmaftersl" class="help-block-configs help-block-margin hide">
-						Resume MPD playback after LMS power off.
-                    </span>
-					<div style="margin-top:.5em">
-						<a href="sqe-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;Squeezelite settings<br>
-					</div>
-					<div style="margin-top:.75em">
-						<a data-toggle="modal" href="#sl-restart" $_sl_link_disable><button class="btn btn-medium btn-primary" $_sl_btn_disable>Restart</button></a>&nbsp;Squeezelite renderer<br>
-					</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
+					<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rb_settings" value="novalue" $_rb_svcbtn_disable>Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info-rbsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				</div>
-			</div>
+				<span id="info-rbsvc" class="help-block-configs help-block-margin2 hide">
+					RoonBridge renderer by the Roon Audio team.
+                </span>
+				<span class="help-block-configs help-block-margin2">
+					WARNING: 100% volume when playback starts has occurred during testing when Roon endpoint volume control is configured to use "Device volume".
+                </span>
 
-			<div class="control-group" $_roonbridge_label_style>
-				<legend id="roonbridge">RoonBridge</legend>
-				$_roonbridge_install_msg
 			</div>
-			<div class="control-group $_feat_roonbridge">
-				<label class="control-label">Service</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="togglerbsvc2">ON</label>
-						$_select[rbsvc1]
-						<label class="toggle-radio" for="togglerbsvc1">OFF</label>
-						$_select[rbsvc0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 4px;">
-						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rb_settings" value="novalue" $_rb_svcbtn_disable>Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-rbsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-rbsvc" class="help-block-configs help-block-margin2 hide">
-						RoonBridge renderer by the Roon Audio team.
-                    </span>
-					<span class="help-block-configs help-block-margin2">
-						WARNING: 100% volume when playback starts has occurred during testing when Roon endpoint volume control is configured to use "Device volume".
-                    </span>
-
-				</div>
-				<label class="control-label" for="rsmafterrb">Resume MPD</label>
-				<div class="controls">
-					<select id="rsmafterrb" class="select-mini2" style="width: 74px;" name="rsmafterrb">
-						$_select[rsmafterrb]
-					</select>
-					<span style="display: inline-block;">
- 						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterrb" value="novalue" $_rb_btn_disable>Set</button>
- 						<a aria-label="Help" class="info-toggle" data-cmd="info_rsmafterrb" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</span>
-					<span id="info_rsmafterrb" class="help-block-configs help-block-margin hide">
-						Resume MPD playback after RoonBridge is disconnected.
-                    </span>
-					<div style="margin-top:.75em">
-						<a data-toggle="modal" href="#rb-restart" $_rb_link_disable><button class="btn btn-medium btn-primary" $_rb_btn_disable>Restart</button></a>&nbsp;RoonBridge renderer<br>
-					</div>
+			<label class="control-label" for="rsmafterrb">Resume MPD</label>
+			<div class="controls">
+				<select id="rsmafterrb" class="select-mini2" style="width: 74px;" name="rsmafterrb">
+					$_select[rsmafterrb]
+				</select>
+				<span style="display: inline-block;">
+						<button class="btn btn-primary btn-small btn-submit" type="submit" name="update_rsmafterrb" value="novalue" $_rb_btn_disable>Set</button>
+						<a aria-label="Help" class="info-toggle-configs" data-cmd="info_rsmafterrb" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</span>
+				<span id="info_rsmafterrb" class="help-block-configs help-block-margin hide">
+					Resume MPD playback after RoonBridge is disconnected.
+                </span>
+				<div style="margin-top:.75em">
+					<a data-toggle="modal" href="#rb-restart" $_rb_link_disable><button class="btn btn-medium btn-primary" $_rb_btn_disable>Restart</button></a>&nbsp;RoonBridge renderer<br>
 				</div>
 			</div>
-		</fieldset>
+		</div>
 
 		<legend id="upnp-dlna">UPnP/DLNA</legend>
 		<p>
 			The UPnP Client for MPD functions as a UPnP media renderer that uses MPD for playback. The DLNA server indexes the music sources defined for MPD and makes them available to UPnP control point clients.
 		</p><br>
 
-		<fieldset>
-			<div class="control-group $_feat_upmpdcli">
-				<label class="control-label" for="upnpname">UPnP Client for MPD</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggleupnpsvc2">ON</label>
-						$_select[upnpsvc1]
-						<label class="toggle-radio" for="toggleupnpsvc1">OFF</label>
-						$_select[upnpsvc0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-	                    <input class="input-large" type="text" id="upnpname" name="upnpname" value="$_select[upnpname]" style="width:117px;" required>
-						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_upnp_settings" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-upnpsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-upnpsvc" class="help-block-configs help-block-margin2 hide">
-						upmpdcli (UPnP Client for MPD) by Jean-Francois Dockes.<br>
-						- Supports Open Home Media (ohMedia).<br>
-						- Radio station url's can be added to /etc/upmpdcli-radio.conf.
-                    </span>
-					<div style="margin-top:.5em">
-						<a href="upp-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;UPnP settings<br>
-					</div>
-					<div style="margin-top:.75em">
-						<a data-toggle="modal" href="#upnp-restart" $_upnp_link_disable><button class="btn btn-medium btn-primary" $_upnp_btn_disable>Restart</button></a>&nbsp;UPnP renderer<br>
-					</div>
+		<!--fieldset-->
+		<div class="control-group $_feat_upmpdcli">
+			<label class="control-label" for="upnpname">UPnP Client for MPD</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggleupnpsvc2">ON</label>
+					$_select[upnpsvc1]
+					<label class="toggle-radio" for="toggleupnpsvc1">OFF</label>
+					$_select[upnpsvc0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+                    <input class="input-large" type="text" id="upnpname" name="upnpname" value="$_select[upnpname]" style="width:117px;" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_upnp_settings" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info-upnpsvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</div>
+				<span id="info-upnpsvc" class="help-block-configs help-block-margin2 hide">
+					upmpdcli (UPnP Client for MPD) by Jean-Francois Dockes.<br>
+					- Supports Open Home Media (ohMedia).<br>
+					- Radio station url's can be added to /etc/upmpdcli-radio.conf.
+                </span>
+				<div style="margin-top:.5em">
+					<a href="upp-config.php"><button class="btn btn-medium btn-primary">Edit</button></a>&nbsp;UPnP settings<br>
+				</div>
+				<div style="margin-top:.75em">
+					<a data-toggle="modal" href="#upnp-restart" $_upnp_link_disable><button class="btn btn-medium btn-primary" $_upnp_btn_disable>Restart</button></a>&nbsp;UPnP renderer<br>
 				</div>
 			</div>
+		</div>
 
-			<div class="control-group $_feat_minidlna">
-				<label class="control-label" for="dlnaname">DLNA server</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggledlnasvc2">ON</label>
-						$_select[dlnasvc1]
-						<label class="toggle-radio" for="toggledlnasvc1">OFF</label>
-						$_select[dlnasvc0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-	                    <input class="input-large" type="text" id="dlnaname" name="dlnaname" value="$_select[dlnaname]" style="width:117px;" required>
-						<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_dlna_settings" value="novalue">Set</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-dlnasvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<span id="info-dlnasvc" class="help-block-configs help-block-margin2 hide">
-						DLNA media server (miniDLNA) by Justin Maggard.
-                    </span>
-					<div class="help-block-margin">
-						<a data-toggle="modal" href="#rebuild-dlnadb" $_dlna_link_disable><button class="btn btn-medium btn-primary" $_dlna_btn_disable>Rebuild</button></a>&nbsp;DLNA database<br>
-					</div>
-					<div style="margin-top:.75em">
-						<a id="dlnasvc-link" href="http://$_select[hostip]:8200" target="_blank" class="btn btn-medium btn-primary $_dlna_btn_disable" style="padding-top:.35em;" $_dlna_link_disable>View</a>&nbsp;Database status<br>
-					</div>
+		<div class="control-group $_feat_minidlna">
+			<label class="control-label" for="dlnaname">DLNA server</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggledlnasvc2">ON</label>
+					$_select[dlnasvc1]
+					<label class="toggle-radio" for="toggledlnasvc1">OFF</label>
+					$_select[dlnasvc0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+                    <input class="input-large" type="text" id="dlnaname" name="dlnaname" value="$_select[dlnaname]" style="width:117px;" required>
+					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_dlna_settings" value="novalue">Set</button>
+					<a aria-label="Help" class="info-toggle-configs" data-cmd="info-dlnasvc" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</div>
+				<span id="info-dlnasvc" class="help-block-configs help-block-margin2 hide">
+					DLNA media server (miniDLNA) by Justin Maggard.
+                </span>
+				<div class="help-block-margin">
+					<a data-toggle="modal" href="#rebuild-dlnadb" $_dlna_link_disable><button class="btn btn-medium btn-primary" $_dlna_btn_disable>Rebuild</button></a>&nbsp;DLNA database<br>
+				</div>
+				<div style="margin-top:.75em">
+					<a id="dlnasvc-link" href="http://$_select[hostip]:8200" target="_blank" class="btn btn-medium btn-primary $_dlna_btn_disable" style="padding-top:.35em;" $_dlna_link_disable>View</a>&nbsp;Database status<br>
 				</div>
 			</div>
-		</fieldset>
-
+		</div>
 	</form>
-</div>
 </div>
 
 <form class="form-horizontal" method="post">

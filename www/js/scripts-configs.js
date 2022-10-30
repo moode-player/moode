@@ -24,10 +24,17 @@ jQuery(document).ready(function($){ 'use strict';
     if( window.ui_notify != undefined ) {
         ui_notify();
     }
+
     GLOBAL.scriptSection = 'configs';
+
 	$('#config-tabs').css('display', 'flex');
 	$('#menu-bottom').css('display', 'none');
 	$('#configure .row2-btns').hide();
+    // For ultra-wide screens
+    if ($('.container').css('margin-right') != '0px') {
+        $('#menu-top').css('margin-right', '25vw');
+        $('#menu-top').css('margin-left', '25vw');
+    }
 
 	// Compensate for Android popup kbd changing the viewport, also for notch phones
 	$("meta[name=viewport]").attr("content", "height=" + $(window).height() + ", width=" + $(window).width() + ", initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover");
