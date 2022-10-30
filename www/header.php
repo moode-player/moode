@@ -51,7 +51,7 @@
     <link href="css/moode.css" rel="stylesheet">
     <link href="css/media.css" rel="stylesheet">
     <link href="css/osk.css" rel="stylesheet">
-    <link href="css/analogClock.css" rel="stylesheet">
+    <link href="css/analog-clock.css" rel="stylesheet">
 	<!-- endbuild -->
 
 	<!-- Common JS -->
@@ -75,7 +75,7 @@
     <script src="js/playerlib.js" defer></script>
     <script src="js/links.js" defer></script>
     <script src="js/osk.js" defer></script>
-    <script src="js/analogClock.js" defer></script>
+    <script src="js/analog-clock.js" defer></script>
 	<!-- endbuild -->
 
     <!-- Playback / Library -->
