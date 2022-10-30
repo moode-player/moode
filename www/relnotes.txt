@@ -18,11 +18,12 @@
 Updates
 
 - UPD: Refactor CSS
-- UPD: Add support for UI on Ultra-wide attached screens
+- UPD: Add support for rendering UI on Ultra-wide attached screens
 
 Bug fixes
 
--FIX: Top border of Playbar is visible
+- FIX: Top border of Playbar is visible
+- FIX: Startup hangs if Bluetooth is on but no adapter is present
 
 ################################################################################
 #
