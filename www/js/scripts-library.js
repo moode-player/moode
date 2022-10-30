@@ -63,33 +63,6 @@ if (!Object.values) {
     });
 }
 
-/*** ** * CUE HELPERS - BEGIN * ** ***/
-
-function isTrackIndex(audioEntry) {
-	let result = ('track' === audioEntry.substring(audioEntry.lastIndexOf('/') + 1).substr(0, 5));
-
-	return result;
-}
-
-function isCUE(audioEntry) {
-	let result = ('.cue' === audioEntry.substr(audioEntry.lastIndexOf('.'), 4));
-
-	return result;
-}
-
-function getParentDirectory(audioEntry) {
-	let audioEntryParent = audioEntry.substring(0, audioEntry.lastIndexOf('/'));
-	if (isTrackIndex(audioEntry)) {
-		if (isCUE(audioEntryParent)) {
-			audioEntryParent = audioEntryParent.substring(0, audioEntryParent.lastIndexOf('/'));
-		}
-	}
-
-	return audioEntryParent;
-}
-
-/*** ** * CUE HELPERS - END * ** ***/
-
 function loadLibrary() {
     //console.log('loadLibrary(): loading=' + GLOBAL.libLoading, currentView);
     GLOBAL.libLoading = true;
@@ -253,8 +226,7 @@ function groupLib(fullLib) {
 
 	allAlbums = Object.values(allSongs.reduce(reduceAlbums, {})).map(function(albumTracks){
 		var file = findAlbumProp(albumTracks, 'file');
-		//ORIG var md5 = $.md5(file.substring(0,file.lastIndexOf('/')));
-		var md5 = typeof(file) == 'undefined' ? 0 : $.md5(getParentDirectory(file));
+		var md5 = file ? $.md5(file.substring(0,file.lastIndexOf('/'))) : '';
 		// var artist = findAlbumProp(albumTracks, 'artist');
 		// var albumArtist = findAlbumProp(albumTracks, 'album_artist');
 		var year = getYear(albumTracks);
@@ -271,7 +243,7 @@ function groupLib(fullLib) {
 			// so it is not necessary to evaluate artist
 			album_artist: getAlbumArtist(albumTracks),
             //album_artist: findAlbumProp(albumTracks, 'album_artist'),
-			imgurl: '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
+			imgurl: md5 == '' ? 'images/default-cover-v6.svg' : '/imagesw/thmcache/' + encodeURIComponent(md5) + '.jpg',
 			encoded_at: findAlbumProp(albumTracks, 'encoded_at'),
 			comment: findAlbumProp(albumTracks, 'comment')
 		};
