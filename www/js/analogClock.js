@@ -37,10 +37,10 @@ class AnalogClock {
         this.refreshInterval = this.showSeconds ? aInterval : ANALOGCLOCK_REFRESH_INTERVAL_NORMAL;
         this.case = document.getElementById(aContainerId);
         // create the clock
-        this.clock = this.case.appendChild(this.newElement("div", aContainerId + "_case", [ "analogclock" ]));
+        this.clock = this.case.appendChild(this.newElement("div", aContainerId + "_case", [ "analog-clock" ]));
         if (this.clock) {
             // create the faceplate
-            this.faceplate = this.clock.appendChild(this.newElement("div", aContainerId + "_face", ["analogclock_face"]));
+            this.faceplate = this.clock.appendChild(this.newElement("div", aContainerId + "_face", ["analog-clock-face"]));
             var faceRadius = this.faceplate.clientWidth / 2;
             var ticksRadius = faceRadius / 8 * 7;
             var tick = null;
@@ -48,20 +48,20 @@ class AnalogClock {
                 var angle = m * 6 - 90;
                 var hourNumber = m / 5 == 0 ? 12 : m / 5;
                 if (m % 15 == 0) {
-                    tick = this.faceplate.appendChild(this.newElement("div", "hm_" + m, ["analogclock_hnumber", "hnum_" + hourNumber]));
+                    tick = this.faceplate.appendChild(this.newElement("div", "hm_" + m, ["analog-clock-hnum", "analog-clock-hnum-" + hourNumber]));
                     tick.innerText = hourNumber;
                 } else {
-                    tick = this.faceplate.appendChild(this.newElement("div", "hm_" + m, ["analogclock_tick"]));
+                    tick = this.faceplate.appendChild(this.newElement("div", "hm_" + m, ["analog-clock-tick"]));
                     tick.style.transform = `rotate(${angle + 90}deg)`;
                 }
                 tick.style.top = faceRadius + (ticksRadius - 6) * Math.sin(angle * Math.PI / 180) + "px";
                 tick.style.left = faceRadius + (ticksRadius - 6) * Math.cos(angle * Math.PI / 180) - (tick.clientWidth / 2) + "px";
             }
             // create the hands
-            this.hands.h = this.faceplate.appendChild(this.newElement("div", aContainerId + "_hh", [ "analogclock_hand", "analogclock_hh" ]));
-            this.hands.m = this.faceplate.appendChild(this.newElement("div", aContainerId + "_mm", [ "analogclock_hand", "analogclock_mm" ]));
+            this.hands.h = this.faceplate.appendChild(this.newElement("div", aContainerId + "_hh", [ "analog-clock-hand", "analog-clock-hh" ]));
+            this.hands.m = this.faceplate.appendChild(this.newElement("div", aContainerId + "_mm", [ "analog-clock-hand", "analog-clock-mm" ]));
             if (this.showSeconds) {
-                this.hands.s = this.faceplate.appendChild(this.newElement("div", aContainerId + "_ss", [ "analogclock_hand", "analogclock_ss" ]));
+                this.hands.s = this.faceplate.appendChild(this.newElement("div", aContainerId + "_ss", [ "analog-clock-hand", "analog-clock-ss" ]));
             }
         }
     }
