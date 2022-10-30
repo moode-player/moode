@@ -1,0 +1,132 @@
+/*
+ * Analog clock. (C) 2022 @Nutul (albertonarduzzi@gmail.com)
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+ .analog-clock {
+    --faceRadius: calc((100vh - 5.4rem) / 2);
+    --faceWidth: calc(var(--faceRadius) * 2);
+    --faceHeight: calc(var(--faceRadius) * 2);
+    --fore_color: #999999;
+    --seconds_color: #c0392b;
+
+    --hand_hm_t: 5px;
+    --hand_s_t: 8vh;
+    --hand_h_w: 15px;
+    --hand_h_h: calc(var(--faceRadius) / 8 * 6 - 12vh);
+    --hand_m_w: 11px;
+    --hand_m_h: calc(var(--faceRadius) / 8 * 6 - 4vh);
+    --hand_s_w: 7px;
+    --hand_s_h: calc(var(--faceRadius) / 8 * 6 + var(--hand_s_t) - 3vh);
+
+    --tick_bar_w: 7px;
+    --tick_bar_h: 5vh;
+    --tick_num_h: calc(var(--faceRadius) / 8);
+
+    width: var(--faceWidth);
+    height: var(--faceHeight);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.analog-clock-face {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.analog-clock-hand {
+    position: absolute;
+    left: 50%;
+    bottom: calc(50% - var(--hand_hm_t));
+    border-radius: 9px;
+    background-color: var(--fore_color);
+}
+
+.analog-clock-hh {
+    bottom: calc(50% - var(--hand_hm_t));
+    width: var(--hand_h_w);
+    height: var(--hand_h_h);
+    transform-origin: center calc(var(--hand_h_h) - var(--hand_hm_t));
+}
+
+.analog-clock-mm {
+    bottom: calc(50% - var(--hand_hm_t));
+    width: var(--hand_m_w);
+    height: var(--hand_m_h);
+    transform-origin: center calc(var(--hand_m_h) - var(--hand_hm_t));
+}
+
+.analog-clock-ss {
+    bottom: calc(50% - var(--hand_s_t));
+    width: var(--hand_s_w);
+    height: var(--hand_s_h);
+    transform-origin: center calc(var(--hand_s_h) - var(--hand_s_t));
+    background-color: var(--seconds_color);
+}
+
+.analog-clock-ss::after {
+    content: " ";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% - var(--hand_s_t)));
+    width: 4.5vh;
+    height: 4.5vh;
+    border-radius: 50%;
+    background-color: inherit;
+}
+
+.analog-clock-tick {
+    position: absolute;
+    width: var(--tick_bar_w);
+    height: var(--tick_bar_h);
+    transform-origin: center top;
+    background-color: var(--fore_color);
+    border-radius: 4px;
+}
+
+.analog-clock-hnum {
+    position: absolute;
+    width: calc(var(--tick_num_h) * 2);
+    height: var(--tick_num_h);
+    font-size: calc(var(--tick_num_h) * 1.4);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: var(--tick_num_h);
+    color: var(--fore_color);
+}
+
+.analog-clock-hnum-12 {
+    text-align: center;
+}
+
+.analog-clock-hnum-3 {
+    transform: translate(-50%,-50%);
+    text-align: right;
+}
+
+.analog-clock-hnum-6 {
+    transform: translate(0%,-100%);
+    text-align: center;
+}
+
+.analog-clock-hnum-9 {
+    transform: translate(50%,-50%);
+    text-align: left;
+}
