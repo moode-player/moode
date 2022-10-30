@@ -78,7 +78,10 @@ function restartBluetooth() {
 
 	// Restore MPD volume and start bluetooth
 	sysCmd('/var/www/vol.sh -restore');
-	startBluetooth();
+	$status = startBluetooth();
+	if ($status != 'started') {
+		echo $status;
+	}
 }
 
 function restartAirplay() {

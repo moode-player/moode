@@ -258,9 +258,9 @@ gulp.task('cache', function(done){
             path.basename = 'index';
             path.extname = '.html';
         }))
-        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
-        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
-        .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // remove comment blocks to in clude everything
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses as source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses as source
+        .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // remove comment blocks to include everything
         .pipe($.replace(/.*CONFIGBLOCKSECTION.*/g, ""))
         .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, ""))
         .pipe($.removeCode({USEBUNDLE:true, GENINDEXDEV:true, commentStart: "<!--", commentEnd:"-->"}))
@@ -299,8 +299,8 @@ gulp.task('bundle', gulp.series([`cache`, `maps`],function (done) {
             path.basename = 'index';
             path.extname = '.html';
         }))
-        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
-        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses as source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses as source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // remove comment blocks to in clude everything
         .pipe($.replace(/.*CONFIGBLOCKSECTION.*/g, ""))
         .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, ""))
@@ -335,8 +335,8 @@ gulp.task('genindexdev', function(done){
             path.basename = 'index';
             path.extname = '.html';
         }))
-        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
-        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses as source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses as source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // adds multiple jquery files instead of one jquery bundle
         .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, "")) // make wellformed by adding cloding body and html
         .pipe($.replace(/.*CONFIGBLOCKSECTION_BEGIN.*/g, "<!-- CONFIGBLOCKSECTION")) // adds multiple jquery files instead of one jquery bundle
@@ -362,8 +362,8 @@ gulp.task('genindex', function(done){
             path.extname = '.html';
         }))
         .pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dest})))
-        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
-        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses as source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses as source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, "")) // adds multiple jquery files instead of one jquery bundle
         .pipe($.replace(/.*GEN_DEV_INDEX_TAG.*/g, "")) // make wellformed by adding cloding body and html
         .pipe($.replace(/.*CONFIGBLOCKSECTION_BEGIN.*/g, "<!-- CONFIGBLOCKSECTION")) // adds multiple jquery files instead of one jquery bundle
@@ -389,8 +389,8 @@ gulp.task('genindex', function(done){
 gulp.task('patchheader', function (done) {
     return gulp.src(pkg.app.src+'/header.php')
         //.pipe($.if(!mode.force(), $.newer( { dest: pkg.app.dist})))
-        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses ass source
-        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses ass source
+        .pipe($.replace(/[.]min[.]css\"/g, ".css\"")) // make sure no minified css is uses as source
+        .pipe($.replace(/[.]min[.]js\"/g, ".js\""))  // make sure no minified js is uses as source
         .pipe($.replace(/.*BUNDLE_TAG.*/g, ""))
         .pipe($.removeCode({ GENINDEXDEV: false, NOCONFIGSECTION: false, GENINDEXDEV: false, USEBUNDLE:true, commentStart: "<!--", commentEnd:"-->"}))
         .pipe($.preprocess({ context: { STRIP_CONFIG: true } }))

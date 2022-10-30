@@ -712,17 +712,20 @@ if ($_SESSION['feat_bitmask'] & FEAT_INPSOURCE) {
 // Start bluetooth controller and pairing agent
 if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 	if (isset($_SESSION['btsvc']) && $_SESSION['btsvc'] == 1) {
-		$started = ': started';
-		startBluetooth();
+		$status = startBluetooth();
 
-		if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
-			sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
-			workerLog('worker: Bluetooth pairing agent (started)');
+		if ($status == 'started') {
+			workerLog('worker: Bluetooth (available: ' . $status . ')');
+			if (isset($_SESSION['pairing_agent']) && $_SESSION['pairing_agent'] == 1) {
+				sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+				workerLog('worker: Pairing agent (started)');
+			}
+		} else {
+			workerLog('worker: Bluetooth available: ' . $status);
 		}
 	} else {
-		$started = '';
+		workerLog('worker: Bluetooth (available)');
 	}
-	workerLog('worker: Bluetooth (available' . $started . ')');
 } else {
 	workerLog('worker: Bluetooth (n/a)');
 }
@@ -1208,6 +1211,7 @@ function chkBtActive() {
 		if ($_SESSION['btactive'] == '0') {
 			phpSession('write', 'btactive', '1');
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
+			sysCmd('mpc stop'); // For added robustness
 			if ($_SESSION['alsavolume'] != 'none') {
 				sysCmd('/var/www/util/sysutil.sh set-alsavol ' . '"' . $_SESSION['amixname']  . '" ' . $_SESSION['alsavolume_max']);
 			}
@@ -1231,7 +1235,7 @@ function chkAplActive() {
 	// Get directly from sql since external spspre.sh and spspost.sh scripts don't update the session
 	$result = sqlQuery("SELECT value FROM cfg_system WHERE param='aplactive'", $GLOBALS['dbh']);
 	if ($result[0]['value'] == '1') {
-		// D this section only once
+		// Do this section only once
 		if ($GLOBALS['aplactive'] == '0') {
 			$GLOBALS['aplactive'] = '1';
 			$GLOBALS['scnsaver_timeout'] = $_SESSION['scnsaver_timeout']; // reset timeout
@@ -1373,8 +1377,7 @@ function updExtMetaFile() {
 
 	if ($GLOBALS['aplactive'] == '1' || $GLOBALS['spotactive'] == '1' || $GLOBALS['slactive'] == '1'
 		|| $GLOBALS['rbactive'] == '1' || $GLOBALS['inpactive'] == '1' || ($_SESSION['btactive'] && $_SESSION['audioout'] == 'Local')) {
-		//workerLog('renderer active');
-		// Renderer active
+		//workerLog('worker: Renderer active');
 		if ($GLOBALS['aplactive'] == '1') {
 			$renderer = 'Airplay Active';
 		} else if ($GLOBALS['spotactive'] == '1') {
@@ -1389,8 +1392,8 @@ function updExtMetaFile() {
 			$renderer = 'Bluetooth Active';
 		}
 		// Write file only if something has changed
-		if ($fileMeta['file'] != $renderer && $hwParamsCalcrate != '0 bps') {
-			//workerLog('writing file');
+	if ($fileMeta['file'] != $renderer && $hwParamsCalcrate != '0 bps') {
+			//workerLog('worker: Writing currentsong file');
 			$fh = fopen('/tmp/currentsong.txt', 'w');
 			$data = 'file=' . $renderer . "\n";
 			$data .= 'outrate=' . $hwParamsFormat . $hwParamsCalcrate . "\n"; ;
@@ -1400,8 +1403,7 @@ function updExtMetaFile() {
             chmod('/var/local/www/currentsong.txt', 0777);
 		}
 	} else {
-		//workerLog('mpd active');
-		// MPD active
+		//workerLog('worker: MPD active');
 		$sock = openMpdSock('localhost', 6600);
 		$current = getMpdStatus($sock);
 		$current = enhanceMetadata($current, $sock, 'worker_php');
@@ -1412,7 +1414,7 @@ function updExtMetaFile() {
 		// Write file only if something has changed
 		if ($current['title'] != $fileMeta['title'] || $current['album'] != $fileMeta['album'] || $_SESSION['volknob'] != $fileMeta['volume'] ||
 			$_SESSION['volmute'] != $fileMeta['mute'] || $current['state'] != $fileMeta['state'] || $fileMeta['outrate'] != $hwParamsFormat . $hwParamsCalcrate) {
-			//workerLog('writing file');
+			//workerLog('worker: Writing currentsong file');
 			$fh = fopen('/tmp/currentsong.txt', 'w');
 			// Default
 			$data = 'file=' . $current['file'] . "\n";
@@ -2066,10 +2068,14 @@ function runQueuedJob() {
 			sendEngCmd('btactive0');
 
 			if ($_SESSION['btsvc'] == 1) {
-				startBluetooth();
-				if ($_SESSION['pairing_agent'] == '1') {
-					sysCmd('killall -s 9 blu_agent.py');
-					sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+				$status = startBluetooth();
+				if ($status == 'started') {
+					if ($_SESSION['pairing_agent'] == '1') {
+						sysCmd('killall -s 9 blu_agent.py');
+						sysCmd('/var/www/daemon/blu_agent.py --agent --disable_pair_mode_switch --pair_mode --wait_for_bluez >/dev/null 2>&1 &');
+					}
+				} else {
+					workerLog('worker: ' . $status);
 				}
 			} else {
 				sysCmd('killall -s 9 blu_agent.py');
