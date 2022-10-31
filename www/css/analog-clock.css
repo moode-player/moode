@@ -115,7 +115,6 @@
     width: calc(var(--tick_num_h) * 2);
     height: var(--tick_num_h);
     font-size: calc(var(--tick_num_h) * 1.4);
-    font-family: Arial, Helvetica, sans-serif;
     line-height: var(--tick_num_h);
     color: var(--fore_color);
 }
