@@ -1,0 +1,63 @@
+/*!
+ * moOde audio player (C) 2014 Tim Curtis
+ * http://moodeaudio.org
+ *
+ * This Program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This Program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * Refer to the link below for a copy of the GNU General Public License.
+ * http://www.gnu.org/licenses/
+ *
+ */
+
+/*
+// Style for the Config screens
+*/
+
+body {
+	--config-text-color: #ddd;
+	--config-container-bg-color: #151515;
+	--config-menu-bg-color: rgba(50,50,50,0.95);
+	--config-toggleoff-bg-color: rgba(128,128,128,0.2);
+}
+
+/* Top level div in the template */
+.container {position:relative;z-index:1;padding:calc(2em + env(safe-area-inset-top)) 2em calc(2em + env(safe-area-inset-bottom)) 2em;background-color:var(--config-container-bg-color);font-size:var(--pbfont);width:unset;}
+.container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;}
+/* config theme menu bg */ /* from moode.css was .container2 */
+
+/* Toggle Sliders */
+.toggle,
+.toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
+/* The (i) info button */
+.info-toggle-configs {text-decoration:none;position:relative;margin:0;left:.15em;font-size:1em;}
+
+/* Title and legend */
+h1 {font-size:2.5em;font-weight:200;}
+legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
+.legend-configs {border:none;margin-bottom:.35em;}
+.legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
+/* This should  be .horiz-rule-configs */
+.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size:1.15em;font-style:italic;color:#888;}
+
+a.btn.btn-medium.btn-primary {font-size:16px;}
+#config-tabs {position:absolute;top:0;top:env(safe-area-inset-top);color:inherit;display:flex;z-index:1001;line-height:normal;font-size:inherit;height:2.75em;align-items:center;display:none;}
+#config-tabs a {font-size:.9rem;color:var(--config-text-color);display:inline-flex;}
+#config-tabs .btn {padding:.35rem .6rem;border-right:1px solid rgba(128,128,128,.35);}
+#config-tabs .btn:last-child, #config-tabs .btn.active {border:none;}
+.viewswitch-cfgs {position:absolute;top:0;top:env(safe-area-inset-top);left:50%;box-sizing:border-box;background-color:transparent;color:inherit;display:none;z-index:1001;line-height:normal;font-size:inherit;transform:translate(-50%, 0%);height:2.75em;align-items:center;}
+.viewswitch-cfgs .btn {position:relative;align-items:center;border-radius:0px;width:50%;/*height:65%;*/line-height:normal;font-size:1rem;padding:.35rem 1rem;color:inherit;border:none;background: var(--btnshade3);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+.viewswitch-cfgs .btn:first-child {border-top-left-radius:.25em;border-bottom-left-radius:.25em;}
+.viewswitch-cfgs .btn:last-child {border-top-right-radius:.25em;border-bottom-right-radius:.25em;}
+.viewswitch-cfgs .btn.active {background:rgba(128,128,128,.35);color:inherit;}
+.viewswitch-cfgs a {color:var(--btnbarcolor);box-sizing:border-box;}
+.viewswitch-cfgs .active a {color:inherit;}
+#config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
+#config-back a {color:var(--config-text-color);font-size:1.35rem;margin-right:.5em}

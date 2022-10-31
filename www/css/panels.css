@@ -20,48 +20,66 @@
  *
  */
 
-html, body {background-attachment:fixed;background-size:cover;height:100%;color:#ccc;font-family:"Avenir Next", "Lato";font-size:calc(0.45em + 1vmin);padding:0;cursor:default;
-	--timethumb:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='20'><rect fill='%23000000' fill-opacity='0' width='13' height='20'/><circle fill='%23303030' cx='6.5' cy='7.5' r='3.5'/></svg>");
-	--fatthumb:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='20'><rect fill='%23000000' fill-opacity='0' width='20' height='20'/><circle fill='%23303030' cx='6.5' cy='7.5' r='7.5'/></svg>");
-	--btnbarcolor:rgba(96,96,96,0.25);
-	--btnbarback:rgba(50,50,50,0.25);
-	--btnshade:rgba(50,50,50,0.25);
-	--btnshade2:rgba(50,50,50,0.25);
-	--btnshade3:rgba(50,50,50,0.25);
-	--btnshade4:rgba(50,50,50,0.25);
-	--modalbkdr:rgba(50,50,50,0.95);
-	--timecolor:rgba(96,96,96,0.25);
-	--trackfill:rgba(96,96,96,0.5);
-	--textvariant:rgba(128,128,128,1.0);
-	--accentxts:rgba(128,128,128,1.0);
-	--accentxta:rgba(39,174,96,0.71);
-	--themetext:#eee;
-	--themembg:rgba(50, 50, 50, 0.75);
-	--themebg:rgb(32,32,32);
-	--adapttext:rgb(240,240,240);
-	--adaptmbg:rgba(50,50,50,0.75);
-	--adaptbg:rgba(128,128,128,0.75);
+html,
+body {
+	background-attachment: fixed;
+	background-size: cover;
+	height: 100%;
+	color: #ccc;
+	font-family: "Avenir Next", "Lato";
+	font-size: calc(0.45em + 1vmin);
+	padding: 0;
+	cursor: default;
+	--timethumb: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='20'><rect fill='%23000000' fill-opacity='0' width='13' height='20'/><circle fill='%23303030' cx='6.5' cy='7.5' r='3.5'/></svg>");
+	--fatthumb: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='20'><rect fill='%23000000' fill-opacity='0' width='20' height='20'/><circle fill='%23303030' cx='6.5' cy='7.5' r='7.5'/></svg>");
+	--btnbarcolor: rgba(96,96,96,0.25);
+	--btnbarback: rgba(50,50,50,0.25);
+	--btnshade: rgba(50,50,50,0.25);
+	--btnshade2: rgba(50,50,50,0.25);
+	--btnshade3: rgba(50,50,50,0.25);
+	--btnshade4: rgba(50,50,50,0.25);
+	--modalbkdr: rgba(50,50,50,0.95);
+	--timecolor: rgba(96,96,96,0.25);
+	--trackfill: rgba(96,96,96,0.5);
+	--textvariant: rgba(128,128,128,1.0);
+	--accentxts: rgba(128,128,128,1.0);
+	--accentxta: rgba(39,174,96,0.71);
+	--themetext: #ddd;
+	--themembg: rgba(50, 50, 50, 0.75);
+	--themebg: rgb(32,32,32);
+	--adapttext: rgb(240,240,240);
+	--adaptmbg: rgba(50,50,50,0.75);
+	--adaptbg: rgba(128,128,128,0.75);
 	--sbw: 0px;
-	--shiftybg:rgba(0,0,0,0.85);
-	--pbfont:calc(0.45em + 1vmin);
-	--radiobadge:url('../images/radio-l.svg');
-	--defcover:'images/default-cover-v6-l.svg';
-	--thumbcols:0px;
-	--thumbimagesize:0px;
-	--thumbmargin:0px;
-	--coverback:'';
-	--config_modal_btn_bg:rgba(64,64,64,0.08);
+	--shiftybg: rgba(0,0,0,0.85);
+	--pbfont: calc(0.45em + 1vmin);
+	--radiobadge: url('../images/radio-l.svg');
+	--defcover: 'images/default-cover-v6-l.svg';
+	--thumbcols: 0px;
+	--thumbimagesize: 0px;
+	--thumbmargin: 0px;
+	--coverback: '';
+	--config_modal_btn_bg: rgba(64,64,64,0.08);
 	--npicon: url('../images/4band-npicon/audiow.svg');
 }
 
-.btn, .lib-entry, .dropdown, #menu-header, div#playbar-title, #coverart-url {-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-user-select: none;-webkit-touch-callout: none;}
-.btn:active {color:var(--textvariant);} /* this needs to be a separate rule */
+.btn,
+.lib-entry,
+.dropdown,
+#menu-header,
+div#playbar-title,
+#coverart-url {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-user-select: none;-webkit-touch-callout: none;
+}
+ /* NOTE: This needs to be a separate rule */
+ .btn:active {
+	color:var(--textvariant);
+}
 
 html {background-color:inherit;}
 #wrap {margin:0 auto -180px;height:100%;height:auto !important;height:100%;}
-#container {height:100%;}
-.container {position:relative;z-index:1;padding:0px;background-color:#151515;width:100%;height:100vh;}
-.container2 {padding:2em;padding:calc(2em + env(safe-area-inset-top)) 2em calc(2em + env(safe-area-inset-bottom)) 2em;background-color:inherit;font-size:var(--pbfont);}
+
 .push, #footer {height:180px;overflow:hidden;}
 
 .floatsx {float:left;}
@@ -493,7 +511,7 @@ input[type="range"].vslide2 {height:10em;width:2.5em;-webkit-appearance: slider-
 input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-image:'';height:1.25em;width:1.25em;}
 .vslide3 {width:9%;display:inline-block;}
 
-#menu-bottom {bottom:0;height:5.3rem;width:100%;z-index:9997;background-color:var(--btnbarback);border-top:1px solid var(--btnshade2);display:none;}
+#menu-bottom {bottom:0;height:5.3rem;width:100%;z-index:9997;background-color:var(--btnbarback);/*border-top:1px solid var(--btnshade2)*/;display:none;}
 #menu-bottom .btn:first-child, #menu-bottom .btn:last-child, #menu-bottom .btn.active {border-radius:0;border:none;background-color:transparent;background:transparent;}
 #menu-bottom ul {display:none;color:var(--adapttext);}
 #menu-bottom .btn.active {background-color:transparent;}
@@ -619,8 +637,6 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #power-modal .modal-body .btn {color:#eee;background-color:rgba(228,46,46,0.45);width:12em;margin:1em auto 2em auto;}
 
 /* https: //codepen.io/mallendeo/pen/eLIiG */
-.toggle {background-color:rgba(128,128,128,0.3);}
-.toggle.toggle-off {background-color:rgba(128,128,128,0.2);}
 /* sliders w/firefox compatibility */
 input[type='range'] {-webkit-appearance:none;border:none;padding:0;background-color:transparent;}
 input[type='range'], input[type='range']::-webkit-slider-runnable-track, input[type='range']::-webkit-slider-thumb {-webkit-appearance:none;}
