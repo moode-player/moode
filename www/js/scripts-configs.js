@@ -29,7 +29,8 @@ jQuery(document).ready(function($){ 'use strict';
 
 	$('#config-tabs').css('display', 'flex');
 	$('#menu-bottom').css('display', 'none');
-	$('#configure .row2-btns').hide();
+    $('.dropdown-menu > li > a').css('color', 'var(--config-text-color)');
+
     // For ultra-wide screens
     if ($('.container').css('margin-right') != '0px') {
         $('#menu-top').css('margin-right', '25vw');

@@ -78,8 +78,6 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 .players-rx-indicator {font-size:.85em!important;margin-left:.25em;}
 #configure a {font-size:1em;width:6em;height:5em;}
 .btn.btn-large {padding-top:.75em;padding-bottom:.75em;}
-/*#configure .row2-btns {font-size:.9em;width:unset;height:unset;}
-#configure .row2-btns i {font-size:1em;}*/
 .modal {background-color: rgba(240,240,240,0.9);color: #333;}
 .modal-header, .modal-footer {background-color: transparent;}
 .modal-xs{min-width:230px;text-align:center;}
@@ -103,12 +101,12 @@ li.modal-dropdown-text:focus {color:#eee;}
 .btn-group.open.bootstrap-select .btn.dropdown-toggle {background-color:rgba(128,128,128,0.3);box-shadow:none;border-radius:4px;}
 .bootstrap-select.btn-group .dropdown-menu.inner {border-radius:.51rem .5rem;overflow:hidden;} /* weird border radius cos bug in chrome? */
 .bootstrap-select .dropdown-menu > li > a {color:inherit;padding:0 1em;}
-.container2 .dropdown-menu.inner {background-color:rgba(50,50,50,0.95) !important;color:#eee !important;-webkit-overflow-scrolling:touch;} /* config theme menu bg */
 /* modal test */
 .modal {min-width:75vw;top:0;top:env(safe-area-inset-top);transition:none;background-color:transparent;color:var(--adapttext);box-shadow:none;}
 .modal .control-label {float:left;padding-top:0;}
 .modal .btn.btn-primary.btn-small, .modal .btn.btn-primary.btn-medium {background:var(--btnshade4);}
-.modal .controls input {min-height:26px !important;margin:0;}
+.modal .controls input {min-height:1.5em;margin:0;}
+.modal .controls .checkbox-ctl {min-height:unset;}
 .modal .dropdown-menu.inner {background-color:var(--adaptmbg);color:var(--adapttext);}
 .modal .modal-dropdown-text {color:inherit;}
 .modal .bootstrap-select .btn, #preferences-modal input, #clockradio-modal input, #radio-manager-modal input, #edit-station-modal input, #new-station-modal input {border:none;background-color:var(--btnshade2);/*border: 1px solid var(--textvariant);*/}

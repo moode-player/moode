@@ -17,7 +17,9 @@
  *
  */
 
-/* MEDIA QUERIES */
+/*
+// MEDIA QUERIES
+*/
 
 @media (orientation:portrait) {
 	.ss-backdrop {width:auto;height:100vh;max-width:100vh;}
@@ -282,8 +284,9 @@
 	#volumedn-2,
 	#volumeup-2 {font-size:2.5vw;}
 	#volume-popup .volume-display {font-size:2.75vw;}
-	/* Screen saver metadata */
+	/* CoverView screen saver */
 	#ss-metadata {top:10vh!important;text-align:center!important;font-size:3em!important;}
+	#ss-hd-badge {bottom:1rem;}
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
 	/* Thumbnails for Radio, Album and Playlist views */
@@ -298,7 +301,7 @@
 	#extra-tags-display,
 	#currentsong,
 	#currentartist {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
-	.playback-hd-badge {height:1.25em!important;top:1rem!important;padding-top:0.15em;}
+	.playback-hd-badge {height:1.25em!important;top:.85rem!important;padding-top:0.15em;}
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.75em;margin-top:10px;}
 	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
