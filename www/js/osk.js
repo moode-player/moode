@@ -273,13 +273,14 @@ function keyPress(aEvent) {
             break;
 
         default:
+            var thisText = OSK.LAYOUTS[OSK.layoutNdx][OSK.shiftMode][1 * this.getAttribute('oskrow')][1 * this.getAttribute('oskcol')];
             if (isNumeric) {
-                numVal = 1 * ("" + OSK.linkedInput.value + this.innerHTML);
+                numVal = 1 * ("" + OSK.linkedInput.value + thisText);
                 if (numVal > maxVal) { numVal = maxVal; }
                 if (numVal < minVal) { numVal = minVal; }
                 OSK.linkedInput.value = numVal;
             } else {
-                OSK.linkedInput.value = OSK.linkedInput.value.substring(0, caretPos) + this.innerHTML + OSK.linkedInput.value.substring(caretPos, OSK.linkedInput.value.length);
+                OSK.linkedInput.value = OSK.linkedInput.value.substring(0, caretPos) + thisText + OSK.linkedInput.value.substring(caretPos, OSK.linkedInput.value.length);
                 OSK.linkedInput.selectionStart = caretPos + 1;
                 OSK.linkedInput.selectionEnd = caretPos + 1;
             }
@@ -300,6 +301,8 @@ function addKey(aIdR, aIdC, classes, text) {
     var tagK = tagR.appendChild(document.createElement("div"));
     tagK.id = tagR.id + "_" + aIdC;
     tagK.innerHTML = text ? text : "";
+    tagK.setAttribute('oskrow', aIdR);
+    tagK.setAttribute('oskcol', aIdC);
     tagK.onmousedown = fingerDown.bind(tagK);
     tagK.onmouseup = fingerUp.bind(tagK);
     tagK.ontouchstart = fingerDown.bind(tagK);
