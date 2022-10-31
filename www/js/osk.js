@@ -110,18 +110,18 @@ var OSK = {
 function setShiftMode(aShiftMode) {
     OSK.shiftMode = aShiftMode;
     if (SM_UPPERCASE == OSK.shiftMode) {
-        OSK.keyShift.classList.add("oskEngaged");
+        OSK.keyShift.classList.add("osk-engaged");
     } else {
-        OSK.keyShift.classList.remove("oskEngaged");
+        OSK.keyShift.classList.remove("osk-engaged");
     }
     for (var r = 0; r < MAX_ROWS; r++) {
         for (var c = 0; c < MAX_COLUMNS; c++) {
             var key = document.getElementById("osk_" + r + "_" + c);
             key.innerHTML = OSK.LAYOUTS[OSK.layoutNdx][OSK.shiftMode][r][c];
             if (!key.innerHTML) {
-                key.classList.add('oskVoid');
+                key.classList.add('osk-void');
             } else {
-                key.classList.remove('oskVoid');
+                key.classList.remove('osk-void');
             }
         }
     }
@@ -146,53 +146,52 @@ function setNumberMode(numbersOnly) {
     setLayout(numbersOnly ? LON_NUMBER : LON_LATIN, SM_LOWERCASE);
 
     if (numbersOnly) {
-        OSK.keyShift.classList.add('oskVoid');
-        OSK.keyLayout.classList.add('oskVoid');
-        OSK.keySpace.classList.add('oskVoid');
+        OSK.keyShift.classList.add('osk-void');
+        OSK.keyLayout.classList.add('osk-void');
+        OSK.keySpace.classList.add('osk-void');
 
         OSK.keyIncrease = document.getElementById("osk_2_10");
         OSK.keyDecrease = document.getElementById("osk_3_10");
         OSK.keySetMax = document.getElementById("osk_2_9");
         OSK.keySetMin = document.getElementById("osk_3_9");
 
-        OSK.keyIncrease.classList.add("oskInc");
-        OSK.keyDecrease.classList.add("oskDec");
-        OSK.keySetMax.classList.add("oskMax");
-        OSK.keySetMin.classList.add("oskMin");
+        OSK.keyIncrease.classList.add("osk-inc");
+        OSK.keyDecrease.classList.add("osk-dec");
+        OSK.keySetMax.classList.add("osk-max");
+        OSK.keySetMin.classList.add("osk-min");
     } else {
-        OSK.keyShift.classList.remove('oskVoid');
-        OSK.keyLayout.classList.remove('oskVoid');
-        OSK.keySpace.classList.remove('oskVoid');
+        OSK.keyShift.classList.remove('osk-void');
+        OSK.keyLayout.classList.remove('osk-void');
+        OSK.keySpace.classList.remove('osk-void');
 
         if (OSK.keyIncrease) {
-            OSK.keyIncrease.classList.remove("oskInc");
+            OSK.keyIncrease.classList.remove("osk-inc");
             OSK.keyIncrease = null;
         }
         if (OSK.keyDecrease) {
-            OSK.keyDecrease.classList.remove("oskDec");
+            OSK.keyDecrease.classList.remove("osk-dec");
             OSK.keyDecrease = null;
         }
         if (OSK.keySetMax) {
-            OSK.keySetMax.classList.remove("oskMax");
+            OSK.keySetMax.classList.remove("osk-max");
             OSK.keySetMax = null;
         }
         if (OSK.keySetMin) {
-            OSK.keySetMin.classList.remove("oskMin");
+            OSK.keySetMin.classList.remove("osk-min");
             OSK.keySetMin = null;
         }
     }
 }
 
 function fingerDown() {
-    if (!this.classList.contains("oskVoid") && !this.classList.contains("oskClose")) {
-        this.classList.add("oskPressed");
+    if (!this.classList.contains("osk-void") && !this.classList.contains("osk-close")) {
+        this.classList.add("osk-pressed");
     }
 }
 
 function fingerUp() {
     var aKey = this;
-    window.setTimeout(() => { aKey.classList.remove("oskPressed"); }, 150);
-    // this.classList.remove("oskPressed");
+    window.setTimeout(() => { aKey.classList.remove("osk-pressed"); }, 150);
 }
 
 function injectKeyPress(aKey) {
@@ -203,7 +202,7 @@ function injectKeyPress(aKey) {
 
 function keyPress(aEvent) {
     aEvent.stopPropagation();
-    if (!OSK.linkedInput || this.classList.contains("oskVoid")) {
+    if (!OSK.linkedInput || this.classList.contains("osk-void")) {
         return;
     }
     var caretPos = OSK.linkedInput.selectionStart;
@@ -291,12 +290,12 @@ function keyPress(aEvent) {
 function addKeyRow(aId) {
     var tagR = OSK.tag.appendChild(document.createElement("div"));
     tagR.id = "osk_" + aId;
-    tagR.classList.add("oskRow");
+    tagR.classList.add("osk-row");
 }
 
 function addKey(aIdR, aIdC, classes, text) {
     classes = classes || [];
-    classes.push("oskKey");
+    classes.push("osk-key");
     var tagR = document.getElementById((null != aIdR ? "osk_" + aIdR : "osk"));
     var tagK = tagR.appendChild(document.createElement("div"));
     tagK.id = tagR.id + "_" + aIdC;
@@ -338,14 +337,14 @@ function showOSK() {
         setNumberMode(OSK.linkedInput.getAttribute("type").toLowerCase() == "number");
     }
     if (OSK.tag) {
-        OSK.tag.classList.remove("oskHidden");
+        OSK.tag.classList.remove("osk-hidden");
     }
 }
 
 function hideOSK() {
     OSK.linkedInput = null;
     if (OSK.tag) {
-        OSK.tag.classList.add("oskHidden");
+        OSK.tag.classList.add("osk-hidden");
     }
 }
 
@@ -378,7 +377,7 @@ function restoreContainer(aContainer) {
 
 function resizeContainer() {
     if (OSK.containerToShrink) {
-        if (this.classList.contains("oskHidden")) {
+        if (this.classList.contains("osk-hidden")) {
             restoreContainer(OSK.containerToShrink);
             OSK.containerToShrink = null;
         } else {
@@ -398,13 +397,13 @@ function initializeOSK() {
     // the OSK itself
     OSK.tag = document.body.appendChild(document.createElement("div"));
     OSK.tag.id = "osk";
-    OSK.tag.classList.add("oskKeys", "oskHidden");
+    OSK.tag.classList.add("osk-keys", "osk-hidden");
     OSK.tag.onmousedown = (aEvent) => { aEvent.preventDefault() };
     OSK.tag.onmouseup = (aEvent) => { aEvent.preventDefault() };
     OSK.tag.onclick = (aEvent) => { aEvent.stopPropagation() };
     OSK.tag.addEventListener("transitionend", resizeContainer.bind(OSK.tag), false);
     // generate all the keys
-    OSK.keyClose  = addKey(null, "X", ["oskSpecial", "oskClose"], KS_CLOSE );
+    OSK.keyClose  = addKey(null, "X", ["osk-special", "osk-close"], KS_CLOSE );
     for (var r = 0; r < MAX_ROWS; r++) {
         addKeyRow(r);
         for (var c = 0; c < MAX_COLUMNS; c++) {
@@ -412,15 +411,15 @@ function initializeOSK() {
         }
     }
     for (var c = 0; c < 10; c++) {
-        document.getElementById("osk_0_" + c).classList.add("oskNumber");
+        document.getElementById("osk_0_" + c).classList.add("osk-number");
     }
     OSK.keyBackspace = document.getElementById("osk_0_10");
-    OSK.keyBackspace.classList.add("oskSpecial");
+    OSK.keyBackspace.classList.add("osk-special");
     addKeyRow(MAX_ROWS);
-        OSK.keyShift  = addKey(MAX_ROWS, 0, ["oskSpecial"], KS_SHIFT );
-        OSK.keyLayout = addKey(MAX_ROWS, 1, ["oskSpecial"], LOS_ACCENT );
-        OSK.keySpace  = addKey(MAX_ROWS, 2, ["oskSpace"], ' ');
-        OSK.keyEnter  = addKey(MAX_ROWS, 3, ["oskSpecial", "oskEnter"], KS_ENTER );
+        OSK.keyShift  = addKey(MAX_ROWS, 0, ["osk-special"], KS_SHIFT );
+        OSK.keyLayout = addKey(MAX_ROWS, 1, ["osk-special"], LOS_ACCENT );
+        OSK.keySpace  = addKey(MAX_ROWS, 2, ["osk-space"], ' ');
+        OSK.keyEnter  = addKey(MAX_ROWS, 3, ["osk-special", "osk-enter"], KS_ENTER );
 
     var allInputs = document.querySelectorAll("input[type='text'], input[type='number'], input[type='password']");
     for (var aInput of allInputs) {

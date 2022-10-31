@@ -15,9 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- /* TODO: Refactor names to hyphen-delimited */
-
-.oskKeys {
+.osk-keys {
     --keyCOLS: 11;
     --keyROWS: 5;
     --keyW: 7.8vmin;
@@ -27,7 +25,7 @@
     --keyWnum: calc((var(--keyCOLS) * var(--keyW) - var(--keyWspe)) / 10);
 }
 
-.oskKeys {
+.osk-keys {
     position: fixed;
     overflow: visible;
     z-index: 20000;
@@ -48,11 +46,11 @@
                 height 200ms ease-in;
 }
 
-.oskRow {
+.osk-row {
     display: flex;
 }
 
-.oskKey {
+.osk-key {
     width: var(--keyW);
     height: var(--keyH);
     text-align: center;
@@ -70,30 +68,30 @@
     cursor: pointer;
 }
 
-.oskNumber {
+.osk-number {
     width: var(--keyWnum);
 }
 
-.oskSpecial {
+.osk-special {
     font-family: 'Font Awesome 5 Pro';
     width: var(--keyWspe);
 }
 
-.oskInc, .oskDec,
-.oskMax, .oskMin {
+.osk-inc, .osk-dec,
+.osk-max, .osk-min {
     font-family: 'Font Awesome 5 Pro';
 }
 
-.oskEnter {
+.osk-enter {
     writing-mode: vertical-lr;
     text-orientation: sideways;
 }
 
-.oskSpace {
+.osk-space {
     width: calc(var(--keyCOLS) * (var(--keyW) + var(--keyFrame)) - (3 * var(--keyWspe)));
 }
 
-.oskClose {
+.osk-close {
     position: absolute;
     top: calc(var(--keyH) * -1 - var(--keyFrame));
     right: -1px;
@@ -103,19 +101,19 @@
     border-bottom: 0;
 }
 
-.oskEngaged,
-.oskPressed {
+.osk-engaged,
+.osk-pressed {
     background-color: var(--accentxts);
     color: #eee;
     border-color: #eee;
 }
 
-.oskVoid {
+.osk-void {
     opacity: 0.3;
     cursor: default;
 }
 
-.oskHidden {
+.osk-hidden {
     height: 0px;
     transform: scaleY(0) translate(-50%);
     transition: height 200ms ease-in,
