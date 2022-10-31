@@ -16,7 +16,7 @@
  */
 
  .analog-clock {
-    --faceRadius: calc((100vh - 5.4rem) / 2);
+    --faceRadius: calc((100vh - 6.4rem) / 2);
     --faceWidth: calc(var(--faceRadius) * 2);
     --faceHeight: calc(var(--faceRadius) * 2);
     --fore_color: #999999;
@@ -25,11 +25,11 @@
     --hand_hm_t: 5px;
     --hand_s_t: 8vh;
     --hand_h_w: 15px;
-    --hand_h_h: calc(var(--faceRadius) / 8 * 6 - 12vh);
+    --hand_h_h: calc((var(--faceRadius) / 8 * 7 + var(--hand_hm_t))*0.6);
     --hand_m_w: 11px;
-    --hand_m_h: calc(var(--faceRadius) / 8 * 6 - 4vh);
+    --hand_m_h: calc((var(--faceRadius) / 8 * 7 + var(--hand_hm_t))*0.9);
     --hand_s_w: 7px;
-    --hand_s_h: calc(var(--faceRadius) / 8 * 6 + var(--hand_s_t) - 3vh);
+    --hand_s_h: calc((var(--faceRadius) / 8 * 7 + var(--hand_s_t))*0.95);
 
     --tick_bar_w: 7px;
     --tick_bar_h: 5vh;

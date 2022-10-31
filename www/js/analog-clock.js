@@ -42,7 +42,7 @@ class AnalogClock {
             // create the faceplate
             this.faceplate = this.clock.appendChild(this.newElement("div", aContainerId + "_face", ["analog-clock-face"]));
             var faceRadius = this.faceplate.clientWidth / 2;
-            var ticksRadius = faceRadius / 8 * 7;
+            var ticksRadius = faceRadius;
             var tick = null;
             for (var m = 0; m < 60; m += 5) {
                 var angle = m * 6 - 90;
