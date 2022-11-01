@@ -20,12 +20,13 @@ Updates
 - UPD: Add UI layout for Ultra-wide screens
 - UPD: Add Analog clock option for CoverView
 - UPD: Use thin style for CoverView clocks
+- UPD: Improve Quick help
 - UPD: Refactor CSS and config templates
 
 Bug fixes
 
 - FIX: Top border of Playbar is visible
-- FIX: Startup hangs if Bluetooth on but no adapter
+- FIX: Startup hangs if Bluetooth on but no adapter is present
 
 ################################################################################
 #
