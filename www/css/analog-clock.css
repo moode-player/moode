@@ -16,23 +16,23 @@
  */
 
  .analog-clock {
-    --faceRadius: calc((100vh - 6.4rem) / 2);
+    --faceRadius: calc((75vh - 6.4rem) / 2);
     --faceWidth: calc(var(--faceRadius) * 2);
     --faceHeight: calc(var(--faceRadius) * 2);
-    --fore_color: #999999;
-    --seconds_color: #c0392b;
+    --fore_color: var(--textvariant);
+    --seconds_color: rgba(192, 57, 43, .85);
 
-    --hand_hm_t: 5px;
-    --hand_s_t: 8vh;
-    --hand_h_w: 15px;
+    --hand_hm_t: 3px;
+    --hand_s_t: 6vh;
+    --hand_h_w: 4px;
     --hand_h_h: calc((var(--faceRadius) / 8 * 7 + var(--hand_hm_t))*0.6);
-    --hand_m_w: 11px;
+    --hand_m_w: 4px;
     --hand_m_h: calc((var(--faceRadius) / 8 * 7 + var(--hand_hm_t))*0.9);
-    --hand_s_w: 7px;
+    --hand_s_w: 3px;
     --hand_s_h: calc((var(--faceRadius) / 8 * 7 + var(--hand_s_t))*0.95);
 
-    --tick_bar_w: 7px;
-    --tick_bar_h: 5vh;
+    --tick_bar_w: 2px;
+    --tick_bar_h: 3vh;
     --tick_num_h: calc(var(--faceRadius) / 8);
 
     width: var(--faceWidth);
@@ -87,8 +87,8 @@
     position: absolute;
     top: 100%;
     left: 50%;
-    width: 4.5vh;
-    height: 4.5vh;
+    width: 2.5vh;
+    height: 2.5vh;
     border-radius: 50%;
     background-color: inherit;
 }
@@ -99,6 +99,7 @@
 
 .analog-clock-ss::after {
     transform: translate(-50%, calc(-50% - var(--hand_s_t)));
+    opacity: .75;
 }
 
 .analog-clock-tick {

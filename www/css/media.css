@@ -305,8 +305,9 @@
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.75em;margin-top:10px;}
 	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
-	.playqueue .pll1 {font-size:1.25rem;}
-    .playqueue .pll2 {font-size:1.15rem;margin-left:calc(3.5em + 1vmin)!important}
+	.playqueue .pll1 {font-size:1.9rem;}
+    .playqueue .pll2 {font-size:1.5rem;margin-left:calc(3em + 1vmin)!important}
+	.playqueue-action {font-size:1.25rem!important;}
 	/* CoverView Queue */
 	#cv-playqueue {width:75vmin;}
 	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
@@ -314,9 +315,11 @@
 	.cv-playqueue .pll1 {font-size:1.25rem;}
 	.cv-playqueue .pll2 {font-size:1rem;margin-left:calc(2.5em + 1vmin)!important}
 	/* Time knob */
-	#countdown {height:12vw;width:12vw;}
-	#countdown-display {font-size:1.75vw;}
-	#total {font-size:1vw;}
+	#countdown {margin:0 auto;height:16.5vw;width:16.5vw;}
+    #countdown div {margin:0 auto;} /* needed to center the knob */
+    #countdown-display {position:absolute;top:47%;left:50%;margin-right:0px;margin-bottom:0px;transform:translate(-50%, -50%);font-size:2.5vw;font-weight:500;cursor:pointer;}
+    #total {position:absolute;top:62%;left:50%;transform:translate(-50%);font-size:1.5vw;}
+	.total-radio {top:65%!important}
 	/* Metadata under the cover art in Playback view */
 	#currentsong {font-size:1.5rem;}
 	#currentsong,
@@ -331,11 +334,9 @@
 	#top-columns {width:80vw;left:10vw;}
 	#lib-coverart-meta-area {display:none;}
 	#trackscontainer {margin-right:10vw;}
-
 	/* Dropdown and context menus */
-	/*.dropdown-menu>li>a,
-	.viewswitch .btn {line-height:2.5rem;font-size:1.25em;}*/
-
+	.dropdown-menu>li>a,
+	.viewswitch .btn {line-height:2.5rem;font-size:1.15em;}
 	/* Renderer active overlays: Text and button */
 	#inpsrc-indicator {font-size:2.85em;}
 	/* For the configs */
