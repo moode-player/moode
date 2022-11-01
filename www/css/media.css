@@ -109,6 +109,7 @@
 	#playbar-volume-popup-btn {width:initial!important;}
 	/*#extra-tags-display {display:none;}*/
 	#db-path {display:none;}
+	.playback-hd-badge {top:1.35rem;}
 }
 
 /* Smaller portrait for small screens */
