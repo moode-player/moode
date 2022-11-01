@@ -612,7 +612,7 @@ function screenSaver(cmd) {
         // TEST: Fixes issue where some elements briefly remain on-screen when entering or returning from CoverView
         $('#lib-coverart-img').hide();
 
-        if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'] == 'Analog clock') {
+        if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'].includes('Analog clock')) {
             $('#ss-coverart').css('display', 'none');
             $('#ss-clock').css('display', 'block');
             showSSClock();
@@ -655,9 +655,11 @@ function showSSClock() {
 			break;
 
 		case 'Analog clock':
-			showAnalogClock("ss-clock", ANALOGCLOCK_REFRESH_INTERVAL_SMOOTH, true);
+        case 'Analog clock (Sweep)':
+            var showSweepSecondHand = SESSION.json['scnsaver_mode'] == 'Analog clock (Sweep)' ? true : false;
+			showAnalogClock("ss-clock", ANALOGCLOCK_REFRESH_INTERVAL_SMOOTH, showSweepSecondHand);
 			break;
-		
+
 		default: break;
 	}
 }
@@ -670,6 +672,7 @@ function hideSSClock() {
 			break;
 
 		case 'Analog clock':
+        case 'Analog clock (Sweep)':
 			hideAnalogClock();
 			break;
 

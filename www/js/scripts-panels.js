@@ -1561,7 +1561,7 @@ jQuery(document).ready(function($) { 'use strict';
 
 			coverView = false;
             setColors();
-            if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'] == 'Analog clock') {
+            if (SESSION.json['scnsaver_mode'] == 'Digital clock' || SESSION.json['scnsaver_mode'].includes('Analog clock')) {
 				hideSSClock();
             }
 

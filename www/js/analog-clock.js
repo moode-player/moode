@@ -4,7 +4,7 @@
 // Can be configured to have the seconds-hand move at 1 second (default)
 // or 1/20th of a second interval, or have the seconds-hand not shown
 // at all.
-// 
+//
 // (C) 2022 @Nutul (albertonarduzzi@gmail.com)
 //
 // This Program is free software; you can redistribute it and/or modify
@@ -72,7 +72,7 @@ class AnalogClock {
         for (var aClass of aClassSet) {
             aElement.classList.add(aClass);
         }
-    
+
         return aElement;
     }
 
