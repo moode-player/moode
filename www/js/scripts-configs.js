@@ -28,13 +28,13 @@ jQuery(document).ready(function($){ 'use strict';
     GLOBAL.scriptSection = 'configs';
 
 	$('#config-tabs').css('display', 'flex');
-	$('#menu-bottom').css('display', 'none');
+	$('#panel-footer').css('display', 'none');
     $('.dropdown-menu > li > a').css('color', 'var(--config-text-color)');
 
     // For ultra-wide screens
     if ($('.container').css('margin-right') != '0px') {
-        $('#menu-top').css('margin-right', '25vw');
-        $('#menu-top').css('margin-left', '25vw');
+        $('#panel-header').css('margin-right', '25vw');
+        $('#panel-header').css('margin-left', '25vw');
     }
 
 	// Compensate for Android popup kbd changing the viewport, also for notch phones

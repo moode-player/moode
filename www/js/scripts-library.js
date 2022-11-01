@@ -913,7 +913,7 @@ var renderSongs = function(albumPos) {
 }
 
 // Click genre or menu header (reset all)
-$('#genreheader, #menu-header').on('click', function(e) {
+$('#genreheader, #library-header').on('click', function(e) {
     if (SESSION.json['library_flatlist_filter'] != 'full_lib' && $(e.target).parent('#genreheader').length == 0 && GLOBAL.musicScope == 'all') {
 		applyLibFilter('full_lib');
 		return;
