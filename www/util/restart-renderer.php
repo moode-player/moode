@@ -36,7 +36,7 @@ switch ($option) {
 		restartBluetooth();
 		break;
 	case '--airplay':
-		restartAirplay();
+		restartAirPlay();
 		break;
 	case '--spotify':
 		restartSpotify();
@@ -84,9 +84,9 @@ function restartBluetooth() {
 	}
 }
 
-function restartAirplay() {
-	stopAirplay();
-	startAirplay();
+function restartAirPlay() {
+	stopAirPlay();
+	startAirPlay();
 }
 
 function restartSpotify() {

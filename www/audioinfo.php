@@ -46,7 +46,7 @@ $btActive = strpos($result[0], 'bluealsa-aplay') !== false ? true : false;
 //
 
 if ($_SESSION['aplactive'] == '1') {
-	$_file = 'Airplay stream';
+	$_file = 'AirPlay stream';
 	$_encoded_at = 'Unknown';
 	$_decoded_to = '16 bit, 44.1 kHz, Stereo, ';
 	$_decode_rate = 'VBR';
@@ -183,7 +183,7 @@ if ($_SESSION['slactive'] == '1') {
 } else if ($_SESSION['rbactive'] == '1') {
 	$renderer = 'Roonbridge';
 } else if ($_SESSION['aplactive'] == '1') {
-	$renderer = 'Airplay';
+	$renderer = 'AirPlay';
 } else if ($_SESSION['spotactive'] == '1') {
 	$renderer = 'Spotify';
 } else if ($btActive === true) {

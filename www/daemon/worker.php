@@ -732,11 +732,11 @@ if ($_SESSION['feat_bitmask'] & FEAT_BLUETOOTH) {
 
 // Start airplay renderer
 if ($_SESSION['feat_bitmask'] & FEAT_AIRPLAY) {
-	$_SESSION['airplay_protocol'] = getAirplayProtocolVer();
+	$_SESSION['airplay_protocol'] = getAirPlayProtocolVer();
 
 	if (isset($_SESSION['airplaysvc']) && $_SESSION['airplaysvc'] == 1) {
 		$started = ': started';
-		startAirplay();
+		startAirPlay();
 	} else {
 		$started = '';
 	}
@@ -1379,7 +1379,7 @@ function updExtMetaFile() {
 		|| $GLOBALS['rbactive'] == '1' || $GLOBALS['inpactive'] == '1' || ($_SESSION['btactive'] && $_SESSION['audioout'] == 'Local')) {
 		//workerLog('worker: Renderer active');
 		if ($GLOBALS['aplactive'] == '1') {
-			$renderer = 'Airplay Active';
+			$renderer = 'AirPlay Active';
 		} else if ($GLOBALS['spotactive'] == '1') {
 			$renderer = 'Spotify Active';
 		} else if ($GLOBALS['slactive'] == '1') {
@@ -1890,7 +1890,7 @@ function runQueuedJob() {
 			if ($device_chg == true) {
 				if ($_SESSION['airplaysvc'] == 1) {
 					sysCmd('killall shairport-sync');
-					startAirplay();
+					startAirPlay();
 				}
 				if ($_SESSION['spotifysvc'] == 1) {
 					sysCmd('killall librespot');
@@ -1945,8 +1945,8 @@ function runQueuedJob() {
 			}
 			// Restart renderers
 			if ($_SESSION['airplaysvc'] == 1) {
-				stopAirplay();
-				startAirplay();
+				stopAirPlay();
+				startAirPlay();
 			}
 			if ($_SESSION['spotifysvc'] == 1) {
 				stopSpotify();
@@ -2044,8 +2044,8 @@ function runQueuedJob() {
 			}
 			// Restart renderers
 			if ($_SESSION['airplaysvc'] == 1) {
-				stopAirplay();
-				startAirplay();
+				stopAirPlay();
+				startAirPlay();
 			}
 			if ($_SESSION['spotifysvc'] == 1) {
 				stopSpotify();
@@ -2096,9 +2096,9 @@ function runQueuedJob() {
 			}
 			break;
 		case 'airplaysvc':
-			stopAirplay();
+			stopAirPlay();
 			if ($_SESSION['airplaysvc'] == 1) {
-				startAirplay();
+				startAirPlay();
 			}
 
 			if ($_SESSION['w_queueargs'] == 'disconnect-renderer' && $_SESSION['rsmafterapl'] == 'Yes') {
@@ -2106,7 +2106,7 @@ function runQueuedJob() {
 			}
 			break;
 		case 'airplay_protocol':
-			if ($_SESSION['w_queueargs'] != getAirplayProtocolVer()) { // Compare submitted to current
+			if ($_SESSION['w_queueargs'] != getAirPlayProtocolVer()) { // Compare submitted to current
 				workerLog('worker: Updating package list...');
 				sysCmd('apt update > /dev/null 2>&1');
 				if ($_SESSION['w_queueargs'] == '1') {
@@ -2124,9 +2124,9 @@ function runQueuedJob() {
 				sysCmd('moode-apt-mark hold > /dev/null');
 				workerLog('worker: Installation complete');
 				// Restart AirPlay if indicated
-				stopAirplay();
+				stopAirPlay();
 				if ($_SESSION['airplaysvc'] == 1) {
-					startAirplay();
+					startAirPlay();
 				}
 			}
 			break;
@@ -2212,8 +2212,8 @@ function runQueuedJob() {
 
 			// Restart renderers
 			if ($_SESSION['airplaysvc'] == 1) {
-				stopAirplay();
-				startAirplay();
+				stopAirPlay();
+				startAirPlay();
 			}
 			if ($_SESSION['spotifysvc'] == 1) {
 				stopSpotify();
@@ -2231,7 +2231,7 @@ function runQueuedJob() {
 				sysCmd('mpc stop');
 
 				// TODO: Turn off session based renderers?
-				//stopAirplay();
+				//stopAirPlay();
 				//stopSpotify();
 				//phpSession('write', 'airplaysvc', '0');
 				//phpSession('write', 'spotifysvc', '0');
