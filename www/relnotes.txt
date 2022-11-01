@@ -21,6 +21,7 @@ Updates
 - UPD: Add Analog clock option for CoverView
 - UPD: Use thin style for CoverView clocks
 - UPD: Improve Quick help
+- UPD: Use the correct name for AirPlay
 - UPD: Refactor CSS and config templates
 
 Bug fixes
