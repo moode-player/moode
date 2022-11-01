@@ -16,7 +16,7 @@
 browsertitle = "moOde Player"
 hostname = "moode"
 btname = "Moode Bluetooth"
-airplayname = "Moode Airplay"
+airplayname = "Moode AirPlay"
 spotifyname = "Moode Spotify"
 squeezelitename = "Moode"
 upnpname = "Moode UPNP"
@@ -163,7 +163,7 @@ rsmafterrb = "No"
 bluez_pcm_buffer = "500000"
 audioout = "Local"
 
-[Airplay]
+[AirPlay]
 airplay_interpolation = "soxr"
 airplay_output_format = "S16"
 airplay_output_rate = "44100"

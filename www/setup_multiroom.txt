@@ -39,7 +39,7 @@ BLOCK DIAGRAM
          +-------+                             |
          |       | Pi-4 or 3B+                 | Ethernet and/or WiFi 5GHz
          | Sendr | MPD
-         |       | Spotify, Airplay            |
+         |       | Spotify, AirPlay            |
          +-------+                             |
                                                |
                                                |
@@ -64,9 +64,9 @@ RECEIVER CONFIGURATION
 
 Receivers should be configured first. The Receiver player daemon is separate
 from MPD and the Audio Renderers and thus the Receiver configuration should be
-dedicated although it's not absolutely required. A Receiver can have Airplay and
+dedicated although it's not absolutely required. A Receiver can have AirPlay and
 Spotify renderers running in the background but there is no coordination between
-them and the Receiver player. Initiating a Spotify or Airplay connection while
+them and the Receiver player. Initiating a Spotify or AirPlay connection while
 the Receiver player is ON will result in audio output conflicts and errors.
 
 A) Audio Configuration (Menu, Configure, Audio)
@@ -128,7 +128,7 @@ B) Renderer Configuratiuon (Menu, Configure, Renderers)
    - Bluetooth
    - Squeezelite
    - RoonBridge
-2. Optionally turn on Airplay and/or Spotify connect renderers
+2. Optionally turn on AirPlay and/or Spotify connect renderers
 3. Set DLNA server to "Off"
 
 B) Sender Configuration (Menu, Configure, Multiroom)
@@ -171,14 +171,14 @@ B) Audio format
 
 SPOTIFY AND AIRPLAY
 
-Playing Spotify or Airplay through the Sender sets the Receiver hardware
-volume to 100% (0dB). Overall volume is controlled by the Spotify or Airplay
+Playing Spotify or AirPlay through the Sender sets the Receiver hardware
+volume to 100% (0dB). Overall volume is controlled by the Spotify or AirPlay
 client. Receiver volume is restored after the client disconnects.
 
 USAGE NOTES
 
-1. Spotify and Airplay support is a work-in-progress (WIP) in this initial
-   release. Airplay generally works well with few audio glitches but Spotify
+1. Spotify and AirPlay support is a work-in-progress (WIP) in this initial
+   release. AirPlay generally works well with few audio glitches but Spotify
    can occasionally be glitchy.
 2. The 2.4 GHz WiFi band which is crowded and prone to interference should be
    avoided. Use the 5GHz band for best results.

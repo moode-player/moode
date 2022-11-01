@@ -22,7 +22,7 @@
 
 // Features availability bitmask
 const FEAT_KERNEL       = 1;        // y Kernel architecture option on System Config
-const FEAT_AIRPLAY      = 2;        // y Airplay renderer
+const FEAT_AIRPLAY      = 2;        // y AirPlay renderer
 const FEAT_MINIDLNA     = 4;        // y DLNA server
 const FEAT_RECORDER     = 8;        //   Stream recorder
 const FEAT_SQUEEZELITE  = 16;       // y Squeezelite renderer
@@ -452,7 +452,7 @@ function engineCmd() {
                 case 'aplactive1':
                 case 'aplactive0':
                     var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-    				inpSrcIndicator(cmd[0], 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
+    				inpSrcIndicator(cmd[0], 'AirPlay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
                     break;
                 case 'spotactive1':
                 case 'spotactive0':
@@ -1047,10 +1047,10 @@ function renderUI() {
     	if (SESSION.json['btactive'] == '1') {
     		inpSrcIndicator('btactive1', 'Bluetooth Active' + '<br><a class="btn configure-renderer" href="blu-config.php">BlueZ Config</a>');
      	}
-    	// Airplay renderer
+    	// AirPlay renderer
     	if (SESSION.json['aplactive'] == '1') {
             var receiversBtn = SESSION.json['multiroom_tx'] == 'On' ? '<br><div class="context-menu"><a class="btn configure-renderer" href="#notarget" data-cmd="multiroom_rx_modal_limited">receivers</a></div>' : '';
-    		inpSrcIndicator('aplactive1', 'Airplay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
+    		inpSrcIndicator('aplactive1', 'AirPlay Active' + '<br><button class="btn disconnect-renderer" data-job="airplaysvc">disconnect</button>' + receiversBtn);
     	}
     	// Spotify renderer
     	if (SESSION.json['spotactive'] == '1') {
@@ -2005,7 +2005,7 @@ function updKnobAndTimeTrack() {
 		var ti = $('#time');
 
         UI.knob = setInterval(function() {
-			if (UI.mobile || $('#menu-bottom').css('display') == 'flex') {
+			if (UI.mobile || $('#panel-footer').css('display') == 'flex') {
 				if (!timeSliderMove) {
 
 					syncTimers();
@@ -2016,7 +2016,7 @@ function updKnobAndTimeTrack() {
 				}
 			}
             delta === 0 ? GLOBAL.initTime = GLOBAL.initTime + 0.5 : GLOBAL.initTime = GLOBAL.initTime + 0.1; // fast paint when radio station playing
-			if (!UI.mobile && $('#menu-bottom').css('display') != 'flex') {
+			if (!UI.mobile && $('#panel-footer').css('display') != 'flex') {
 	            if (delta === 0 && GLOBAL.initTime > 100) { // stops painting when radio (delta = 0) and knob fully painted
 					window.clearInterval(UI.knob)
 					UI.knobPainted = true;
@@ -2219,7 +2219,7 @@ $('#currentsong').click(function(e) {
 $('.view-all').click(function(e) {
 	$('.view-recents span').hide();
 	$('.view-all span').show();
-	$('#menu-header').click()
+	$('#library-header').click()
 	GLOBAL.musicScope = 'all';
     GLOBAL.searchRadio = false;
     LIB.recentlyAddedClicked = false;
@@ -3610,9 +3610,9 @@ $(window).on('scroll', function(e) {
 		if ($(window).scrollTop() > 1 && !showMenuTopW) {
 			$('#playback-controls').hide();
 			$('#container-playqueue').css('visibility','visible');
-			$('#menu-bottom').show();
-			$('#menu-top').css('height', $('#menu-top').css('line-height'));
-			$('#menu-top').css('backdrop-filter', 'blur(20px)');
+			$('#panel-footer').show();
+			$('#panel-header').css('height', $('#panel-header').css('line-height'));
+			$('#panel-header').css('backdrop-filter', 'blur(20px)');
             $('#playbar-toggles .add-item-to-favorites').show();
             $('#random-album').hide();
 			showMenuTopW = true;
@@ -3620,9 +3620,9 @@ $(window).on('scroll', function(e) {
 		else if (UI.mobile && $(window).scrollTop() == '0' ) {
 			$('#container-playqueue').css('visibility','hidden');
 			$('#playback-controls').css('display', '');
-			$('#menu-bottom').hide();
-			$('#menu-top').css('height', '0');
-			$('#menu-top').css('backdrop-filter', '');
+			$('#panel-footer').hide();
+			$('#panel-header').css('height', '0');
+			$('#panel-header').css('backdrop-filter', '');
 			showMenuTopW = false;
 		}
 	}
@@ -3803,9 +3803,9 @@ $('#coverart-url, #playback-switch').click(function(e){
 
 	currentView = currentView.split(',')[1];
     $('#container-playqueue').css('visibility', 'hidden');
-	$('#menu-top').css('height', '0');
-	$('#menu-top').css('backdrop-filter', '');
-	$('#menu-bottom, .viewswitch').css('display', 'flex');
+	$('#panel-header').css('height', '0');
+	$('#panel-header').css('backdrop-filter', '');
+	$('#panel-footer, .viewswitch').css('display', 'flex');
     $('#multiroom-sender,  #updater-notification').hide();
 
     syncTimers();
@@ -3865,9 +3865,9 @@ $('#playbar-switch, #playbar-cover, #playbar-title').click(function(e){
         // TEST: Fixes issue where some elements briefly remain on-screen when switching between Playback and Library
         $('#coverart-link').show();
 
-		$('#menu-header').text('');
+		$('#library-header').text('');
 		$('#container-playqueue').css('visibility','');
-		$('#menu-bottom, .viewswitch').css('display', 'none');
+		$('#panel-footer, .viewswitch').css('display', 'none');
 		$('#playback-controls').css('display', '');
 
         SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
@@ -4093,7 +4093,7 @@ function setLibMenuAndHeader () {
 		}
 	}
 
-    $('#menu-header').text(headerText);
+    $('#library-header').text(headerText);
 }
 
 function lazyLode(view, skip, force) {

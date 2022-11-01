@@ -109,6 +109,7 @@
 	#playbar-volume-popup-btn {width:initial!important;}
 	/*#extra-tags-display {display:none;}*/
 	#db-path {display:none;}
+	.playback-hd-badge {top:1.35rem;}
 }
 
 /* Smaller portrait for small screens */
@@ -117,9 +118,9 @@
 	.database .db-entry {margin-left:3.5em;padding:1em 0;font-size:1.1em;}
 	.database .db-action {font-size:1.3em;}
 	/*.dropdown-menu {min-width:180px;}*/
-	#menu-top .dropdown-menu, .viewswitch .dropdown-menu {min-width:16rem;} /* Make this one a bit wider */
+	#panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:16rem;} /* Make this one a bit wider */
 	#context-menu-playback .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
-	#lib-album-search input, #lib-album-search input, #current-tab, #menu-header {font-size:1.11rem;}
+	#lib-album-search input, #lib-album-search input, #current-tab, #library-header {font-size:1.11rem;}
 	.dropdown-menu > li > a, .viewswitch .btn {font-size:1.16rem;line-height:2.75em;}
 	#playback-panel, #content {position:relative;}
 	.modal-body{padding:0 .75rem;max-height:80vh;}
@@ -138,7 +139,7 @@
 	#currentalbum {padding-top:1.25rem;}
 	.tab-content {height:unset;}
 	.covers {width:100%;}
-	#menu-bottom, #playbar {height:10rem;}
+	#panel-footer, #playbar {height:10rem;}
 	#playbar-cover {height:9rem;width:9rem;position:absolute;-webkit-mask-image: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,0) 100%);}
 	#playbar-controls .prev {display:none;}
 	#songsList {padding-bottom:9rem;}
@@ -174,7 +175,7 @@
 	#volume-popup .volume-display {font-size:9.5vw}
 	#volume-pad {height:85vw;width:85vw;}
 	#volpad .volume-display-db {left:65%;font-size:1.5em;}
-	#menu-top .dropdown.open {background-color:transparent;border-radius:unset;box-shadow:none;backdrop-filter:none;padding-left:0}
+	#panel-header .dropdown.open {background-color:transparent;border-radius:unset;box-shadow:none;backdrop-filter:none;padding-left:0}
 	/* playbar */
 	#playbar-div {display:block;}
 	#playbar-mtime {display:flex;position:relative;}

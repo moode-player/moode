@@ -122,8 +122,8 @@ function setAudioOut($output) {
 
 	// Restart renderers if indicated
 	if ($_SESSION['airplaysvc'] == '1') {
-		stopAirplay();
-		startAirplay();
+		stopAirPlay();
+		startAirPlay();
 	}
 	if ($_SESSION['spotifysvc'] == '1') {
 		stopSpotify();

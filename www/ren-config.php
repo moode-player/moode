@@ -68,7 +68,7 @@ if (isset($_POST['update_rsmafterbt'])) {
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
-// Airplay renderer
+// AirPlay renderer
 // Service
 if (isset($_POST['update_airplay_settings'])) {
 	if (isset($_POST['airplayname']) && $_POST['airplayname'] != $_SESSION['airplayname']) {
@@ -95,7 +95,7 @@ if (isset($_POST['update_rsmafterapl'])) {
 }
 // Restart
 if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSION['airplaysvc'] == '1') {
-	submitJob('airplaysvc', '', 'Airplay restarted', '');
+	submitJob('airplaysvc', '', 'AirPlay restarted', '');
 }
 
 // Spotify renderer
@@ -241,7 +241,7 @@ $_select['btmulti0'] .= "<input type=\"radio\" name=\"btmulti\" id=\"togglebtmul
 $_select['rsmafterbt'] .= "<option value=\"1\" " . (($_SESSION['rsmafterbt'] == '1') ? "selected" : "") . ">Yes</option>\n";
 $_select['rsmafterbt'] .= "<option value=\"0\" " . (($_SESSION['rsmafterbt'] == '0') ? "selected" : "") . ">No</option>\n";
 
-// Airplay renderer
+// AirPlay renderer
 $_feat_airplay = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? '' : 'hide';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_btn_disable = '' : $_airplay_btn_disable = 'disabled';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_link_disable = '' : $_airplay_link_disable = 'onclick="return false;"';

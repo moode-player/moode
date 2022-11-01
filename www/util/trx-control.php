@@ -62,7 +62,7 @@ switch ($option) {
 			$status = 'Master volume opt-in is No';
 		}
 		break;
-	// This is used to set rx to 0dB when Airplay or Spotify connects to Sender
+	// This is used to set rx to 0dB when AirPlay or Spotify connects to Sender
 	case '-set-alsavol':
 		if (isset($argv[2])) {
 			if ($_SESSION['multiroom_rx'] == 'On') {

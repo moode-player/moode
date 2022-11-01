@@ -134,7 +134,7 @@ AUDIO_PARAMETERS() {
 		echo -e "\nPairing agent\t\t= $pairing_agent\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_AIRPLAY)) -ne 0 ]; then
-		echo -e "\nAirplay receiver\t= $airplaysvc\c"
+		echo -e "\nAirPlay receiver\t= $airplaysvc\c"
 	fi
 	if [ $(($feat_bitmask & $FEAT_SPOTIFY)) -ne 0 ]; then
 		echo -e "\nSpotify receiver\t= $spotifysvc\c"
@@ -510,7 +510,7 @@ supported_formats=$(moodeutl -f);
 # Moode SQL data
 SQLDB=/var/local/www/db/moode-sqlite3.db
 
-# Airplay settings
+# AirPlay settings
 RESULT=$(sqlite3 $SQLDB "select value from cfg_airplay")
 readarray -t arr <<<"$RESULT"
 interpolation=${arr[2]}

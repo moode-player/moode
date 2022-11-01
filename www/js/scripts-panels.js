@@ -28,7 +28,7 @@ jQuery(document).ready(function($) { 'use strict';
     GLOBAL.scriptSection = 'panels';
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
-	$('#menu-bottom').css('display', 'flex');
+	$('#panel-footer').css('display', 'flex');
 
     // NOTE: This is a workaround for the time knob progress slider not updating correctly when the window is hidden
     document.addEventListener("visibilitychange", visChange);
@@ -353,14 +353,14 @@ jQuery(document).ready(function($) { 'use strict';
 		        customScroll('playqueue', parseInt(MPD.json['song']));
     		}
 
-            $('#menu-bottom').hide();
+            $('#panel-footer').hide();
 
             // Multiroom sender header icon
             SESSION.json['multiroom_tx'] == 'On' ? $('#multiroom-sender').show() : $('#multiroom-sender').hide();
     	}
         // Library
     	else {
-    		$('#menu-bottom, #viewswitch').css('display', 'flex');
+    		$('#panel-footer, #viewswitch').css('display', 'flex');
     		$('#playback-switch').hide();
     	}
 
@@ -1547,9 +1547,9 @@ jQuery(document).ready(function($) { 'use strict';
 	});
 
     // CoverView screen saver reset
-    $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #playlist-panel, #menu-bottom').click(function(e) {
+    $('#screen-saver, #playback-panel, #library-panel, #folder-panel, #radio-panel, #playlist-panel, #panel-footer').click(function(e) {
         //console.log('reset_screen_saver: timeout (' + SESSION.json['scnsaver_timeout'] + ', currentView: ' + currentView + ')');
-        if ($(this).attr('id') == 'menu-bottom') {
+        if ($(this).attr('id') == 'panel-footer') {
             return;
         }
 

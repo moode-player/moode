@@ -35,7 +35,7 @@ phpSession('open');
 // Output device
 if (isset($_POST['update_output_device']) && $_POST['output_device'] != $_SESSION['cardnum']) {
 
-	// Airplay and Spotify will be restarted if device (cardnum) has changed
+	// AirPlay and Spotify will be restarted if device (cardnum) has changed
 	$device_chg = $_POST['output_device'] != $_SESSION['cardnum'] ? 1 : 0;
 
 	// Mixer change (no mixer change)

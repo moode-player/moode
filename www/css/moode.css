@@ -89,8 +89,8 @@ li.modal-dropdown-text:focus {color:#eee;}
 .help-block, .help-inline {/*color:var(--textvariant);*/color:inherit;}
 .help-block-modal {margin:0 !important;}
 /* dropdown menus */
-#menu-top .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
-#current-tab, #menu-header {font-size:1em;}
+#panel-header .dropdown-menu, .viewswitch .dropdown-menu {min-width:15rem;} /* Make this one a bit wider */
+#current-tab, #library-header {font-size:1em;}
 .dropdown-menu > li > a, .viewswitch .btn {text-align:left;line-height:2.75rem;margin:0;padding:0 .5em;background:none;color:var(--adapttext);font-size:1em;font-family:system-ui, "Avenir Next", "Lato";white-space:nowrap;border-radius:0;}
 /*body.no-touch .dropdown-menu > li > a {font-size:1rem;line-height:2em}*/
 .dropdown-menu > li:last-child a, .viewswitch .btn:last-child {padding-bottom:.35em;}

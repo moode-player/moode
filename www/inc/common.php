@@ -68,7 +68,7 @@ const THM_SM_Q = 75;
 // sqlite3 /var/local/www/db/moode-sqlite3.db "SELECT value FROM cfg_system WHERE param='feat_bitmask'"
 // sqlite3 /var/local/www/db/moode-sqlite3.db "UPDATE cfg_system SET value='97207' WHERE param='feat_bitmask'"
 const FEAT_KERNEL		= 1;		// y Kernel architecture option on System Config
-const FEAT_AIRPLAY		= 2;		// y Airplay renderer
+const FEAT_AIRPLAY		= 2;		// y AirPlay renderer
 const FEAT_MINIDLNA 	= 4;		// y DLNA server
 const FEAT_RECORDER		= 8; 		//   Stream recorder
 const FEAT_SQUEEZELITE	= 16;		// y Squeezelite renderer

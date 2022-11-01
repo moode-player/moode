@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.1.0 on Wed Sep 28 15:26:37 2022
+-- File generated with SQLiteStudio v3.1.0 on Tue Nov 1 17:56:38 2022
 --
 -- Text encoding used: UTF-8
 --
@@ -67,7 +67,7 @@ INSERT INTO cfg_system (id, param, value) VALUES (2, 'timezone', 'America/Detroi
 INSERT INTO cfg_system (id, param, value) VALUES (3, 'i2sdevice', 'None');
 INSERT INTO cfg_system (id, param, value) VALUES (4, 'hostname', 'moode');
 INSERT INTO cfg_system (id, param, value) VALUES (5, 'browsertitle', 'moOde Player');
-INSERT INTO cfg_system (id, param, value) VALUES (6, 'airplayname', 'Moode Airplay');
+INSERT INTO cfg_system (id, param, value) VALUES (6, 'airplayname', 'Moode AirPlay');
 INSERT INTO cfg_system (id, param, value) VALUES (7, 'upnpname', 'Moode UPNP');
 INSERT INTO cfg_system (id, param, value) VALUES (8, 'dlnaname', 'Moode DLNA');
 INSERT INTO cfg_system (id, param, value) VALUES (9, 'airplaysvc', '0');
