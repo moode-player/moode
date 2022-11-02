@@ -410,17 +410,15 @@
 	#landscape-backdrop {display:block;}
 }
 
-/* Use custom scroll bars for desktop monitors */
-@media (pointer: fine) {
+/* Use custom scroll bars for devices with an attached pointing device (mouse, trackpad, etc) */
+@media (any-pointer: fine) {
 	.custom-scrollbars ::-webkit-scrollbar {
 		width: 11px;
    }
-
    .custom-scrollbars ::-webkit-scrollbar-track:hover {
 	    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
 		border-radius: 6px;
    }
-
    .custom-scrollbars ::-webkit-scrollbar-thumb {
 		border-radius: 6px;
 		background-color: var(--btnshade2);
@@ -428,11 +426,9 @@
 		background-clip: padding-box;
 		min-height:1.5em;
    }
-
    .custom-scrollbars ::-webkit-scrollbar-thumb:active {
 	   background-color:var(--textvariant);
    }
-
    /* Firefox */
    .custom-scrollbars * {
 	   scrollbar-width: thin;
