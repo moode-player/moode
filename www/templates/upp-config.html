@@ -18,8 +18,8 @@
  *
  */
 -->
+<div id="container">
 <div class="container">
-	<div class="container2">
 	<h1 class="snd-config">UPnP</h1>
 
     <form class="form-horizontal" action="" method="post">
@@ -31,140 +31,32 @@
             </span>
 		</legend>
 
-		<fieldset>
-			<legend>Settings</legend>
-			<div class="control-group">
-				<label class="control-label" for="upnpav">UPnP service type</label>
-				<div class="controls">
-					<select id="svctype" class="input-large" name="config[svctype]">
-						$_select[svctype]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_svctype" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_svctype" class="help-block-configs help-block-margin hide">
-						Select either UPnP-A/V or OpenHome service.
-                    </span>
-				</div>
+		<legend>Settings</legend>
+		<div class="control-group">
+			<label class="control-label" for="upnpav">UPnP service type</label>
+			<div class="controls">
+				<select id="svctype" class="input-large" name="config[svctype]">
+					$_select[svctype]
+				</select>
+				<a aria-label="Help" class="info-toggle" data-cmd="info_svctype" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_svctype" class="help-block-configs help-block-margin hide">
+					Select either UPnP-A/V or OpenHome service.
+                </span>
 			</div>
-			<!-- DROP
-			<div class="control-group">
-				<label class="control-label" for="upnpav">UPnP A/V services</label>
-				<div class="controls">
-					<select id="upnpav" class="input-large" name="config[upnpav]">
-						$_select[upnpav]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_upnpav" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_upnpav" class="help-block-configs help-block-margin hide">
-						Enable UPnP A/V services.
-                    </span>
-				</div>
-			</div>
+		</div>
 
-			<div class="control-group">
-				<label class="control-label" for="openhome">OpenHome services</label>
-				<div class="controls">
-					<select id="openhome" class="input-large" name="config[openhome]">
-						$_select[openhome]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_openhome" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_openhome" class="help-block-configs help-block-margin hide">
-						Enable OpenHome services.
-                    </span>
-				</div>
+		<div class="control-group">
+			<label class="control-label" for="checkcontentformat">Check content format</label>
+			<div class="controls">
+				<select id="checkcontentformat" class="input-large" name="config[checkcontentformat]">
+					$_select[checkcontentformat]
+				</select>
+				<a aria-label="Help" class="info-toggle" data-cmd="info_checkcontentformat" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_checkcontentformat" class="help-block-configs help-block-margin hide">
+					Check that the input format is supported. Set this option to No if a control point or media server sends good audio data with bad metadata.<br>
+                </span>
 			</div>
-			-->
-			<div class="control-group">
-				<label class="control-label" for="checkcontentformat">Check content format</label>
-				<div class="controls">
-					<select id="checkcontentformat" class="input-large" name="config[checkcontentformat]">
-						$_select[checkcontentformat]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_checkcontentformat" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_checkcontentformat" class="help-block-configs help-block-margin hide">
-						Check that the input format is supported. Set this option to No if a control point or media server sends good audio data with bad metadata.<br>
-                    </span>
-				</div>
-			</div>
-		</fieldset>
-
-		<!-- DROP
-		<fieldset>
-			<legend>TIDAL</legend>
-			<div class="control-group">
-				<label class="control-label" for="tidaluser">Userid</label>
-				<div class="controls">
-					<input class="input-large" type="text" id="tidaluser" name="config[tidaluser]" value="$_select[tidaluser]">
-					<a aria-label="Help" class="info-toggle" data-cmd="info_tidaluser" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_tidaluser" class="help-block-configs help-block-margin hide">
-						Your Tidal login name.<br>
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="tidalpass">Password</label>
-				<div class="controls">
-					<input class="input-large" type="password" pattern="[^'\u0022]+" id="tidalpass" name="config[tidalpass]" value="$_select[tidalpass]">
-					<a aria-label="Help" class="info-toggle" data-cmd="info_tidalpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<a class="show-hide-password" href="#notarget" data-id="tidalpass"><i class="fal fa-eye"></i></a>
-					<span id="info_tidalpass" class="help-block-configs help-block-margin hide">
-						The password for your Tidal account. NOTE: Single and double quotes are not allowed.<br>
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="tidalquality">Stream quality</label>
-				<div class="controls">
-					<select id="tidalquality" class="input-large" name="config[tidalquality]">
-						$_select[tidalquality]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_tidalquality" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_tidalquality" class="help-block-configs help-block-margin hide">
-						Stream quality: 'low' and 'high' are AAC streams, 'lossless' is FLAC and will only work if your subscription allows it.<br>
-                    </span>
-				</div>
-			</div>
-		</fieldset>
-
-		<fieldset>
-			<legend>Qobuz</legend>
-			<div class="control-group">
-				<label class="control-label" for="qobuzuser">Userid</label>
-				<div class="controls">
-					<input class="input-large" type="text" id="qobuzuser" name="config[qobuzuser]" value="$_select[qobuzuser]">
-					<a aria-label="Help" class="info-toggle" data-cmd="info_qobuzuser" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_qobuzuser" class="help-block-configs help-block-margin hide">
-						Your Qobuz login name.<br>
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="qobuzpass">Password</label>
-				<div class="controls">
-					<input class="input-large" type="password" pattern="[^'\u0022]+" id="qobuzpass" name="config[qobuzpass]" value="$_select[qobuzpass]">
-					<a aria-label="Help" class="info-toggle" data-cmd="info_qobuzpass" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<a class="show-hide-password" href="#notarget" data-id="qobuzpass"><i class="fal fa-eye"></i></a>
-					<span id="info_qobuzpass" class="help-block-configs help-block-margin hide">
-						The password for your Qobuz account. NOTE: Single and double quotes are not allowed.<br>
-                    </span>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="qobuzformatid">Stream quality</label>
-				<div class="controls">
-					<select id="qobuzformatid" class="input-large" name="config[qobuzformatid]">
-						$_select[qobuzformatid]
-					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_qobuzformatid" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_qobuzformatid" class="help-block-configs help-block-margin hide">
-						Stream quality: 320K (MP3) or lossless (FLAC) if your subscription allows it.<br>
-                    </span>
-				</div>
-			</div>
-		</fieldset>
-		-->
+		</div>
 	</form>
 </div>
 </div>

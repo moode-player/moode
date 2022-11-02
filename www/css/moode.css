@@ -174,7 +174,7 @@ li.modal-dropdown-text:focus {color:#eee;}
 /*#playqueue-controls {display:none;}*/
 .clockradio-on-m {color:#dddddd;font-size:16.5px;}
 .clockradio-off-m {color:#7f8c8d;font-size:16.5px;}
-.info-toggle {text-decoration:none;position:relative;margin:0;top:3px;left:2px;font-size:16px;}
+.info-toggle {text-decoration:none;position:relative;margin:0;/*top:3px;*/left:.25em;font-size:16px;vertical-align:middle;}
 .set-button {margin: 0 4px 0 8px;} /* for system config page 'set' buttons */
 #quickhelp-icon-lists ul {list-style:none;margin-left:0;}
 #quickhelp-icon-lists p {margin-left:1.5em;}

@@ -18,55 +18,53 @@
  *
  */
 -->
+<div id="container">
 <div class="container">
-<div class="container2">
 	<h1 class="snd-config">Input Source</h1>
 
     <form class="form-horizontal" action="" method="post">
-		<fieldset>
-			<legend>Settings</legend>
-			<div class="control-group">
-				<label class="control-label" for="audioout">Input</label>
-				<div class="controls">
-					<select id="audioin" class="select-medium2" name="audioin">
-						$_select[audioin]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_audioin" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_audioin" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_audioin" class="help-block-configs help-block-margin hide">
-						Select which input source provides audio.<br>
-		            </span>
-				</div>
+		<legend>Settings</legend>
+		<div class="control-group">
+			<label class="control-label" for="audioout">Input</label>
+			<div class="controls">
+				<select id="audioin" class="select-medium2" name="audioin">
+					$_select[audioin]
+				</select>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_audioin" value="novalue">Set</button>
+				<a aria-label="Help" class="info-toggle" data-cmd="info_audioin" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_audioin" class="help-block-configs help-block-margin hide">
+					Select which input source provides audio.<br>
+	            </span>
 			</div>
+		</div>
 
-			<div class="control-group">
-				<label class="control-label" for="rsmafterinp">Resume MPD</label>
-				<div class="controls">
-					<select id="rsmafterinp" class="select-medium2" name="rsmafterinp">
-						$_select[rsmafterinp]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_rsmafterinp" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_rsmafterinp" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_rsmafterinp" class="help-block-configs help-block-margin hide">
-						Resume MPD playback after changing Audio source to Local (MPD).<br>
-	                </span>
-				</div>
+		<div class="control-group">
+			<label class="control-label" for="rsmafterinp">Resume MPD</label>
+			<div class="controls">
+				<select id="rsmafterinp" class="select-medium2" name="rsmafterinp">
+					$_select[rsmafterinp]
+				</select>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_rsmafterinp" value="novalue">Set</button>
+				<a aria-label="Help" class="info-toggle" data-cmd="info_rsmafterinp" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_rsmafterinp" class="help-block-configs help-block-margin hide">
+					Resume MPD playback after changing Audio source to Local (MPD).<br>
+                </span>
 			</div>
+		</div>
 
-			<div class="control-group">
-				<label class="control-label" for="audioout">Output</label>
-				<div class="controls">
-					<select id="audioout" class="select-medium2" name="audioout">
-						$_select[audioout]
-					</select>
-					<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_audioout" value="novalue">Set</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_audioout" class="help-block-configs help-block-margin hide">
-						Select which output device will receive audio from the selected source.
-		            </span>
-				</div>
+		<div class="control-group">
+			<label class="control-label" for="audioout">Output</label>
+			<div class="controls">
+				<select id="audioout" class="select-medium2" name="audioout">
+					$_select[audioout]
+				</select>
+				<button class="btn btn-primary btn-small set-button btn-submit" type="submit" name="update_audioout" value="novalue">Set</button>
+				<a aria-label="Help" class="info-toggle" data-cmd="info_audioout" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_audioout" class="help-block-configs help-block-margin hide">
+					Select which output device will receive audio from the selected source.
+	            </span>
 			</div>
-		</fieldset>
+		</div>
 	</form>
 
 	<div style="background-color: #333; font-size: 14px; line-height: 18px; padding: 10px; margin-right: 40px; font-family: Courier New">

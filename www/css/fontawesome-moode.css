@@ -203,6 +203,9 @@ readers do not read off random characters that represent icons */
 .fa-angle-double-up:before {
   content: "\f102"; }
 
+.fa-angle-left:before {
+  content: "\f104"; }
+
 .fa-arrow-down:before {
   content: "\f063"; }
 

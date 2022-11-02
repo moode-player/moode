@@ -18,8 +18,8 @@
  *
  */
 -->
+<div id="container">
 <div class="container">
-<div class="container2">
 	<h1 class="sys-config">GPIO Control</h1>
 
     <form class="form-horizontal" action="" method="post">
@@ -38,173 +38,171 @@
             </span>
 		</legend>
 
-		<fieldset>
-	    	<legend>Settings</legend>
-			<div class="control-group">
-				<label class="control-label" for="sw_1_pin">Button 1</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_sw_1_enabled2">ON</label>
-						$_select[sw_1_enabled1]
-						<label class="toggle-radio" for="toggle_sw_1_enabled1">OFF</label>
-						$_select[sw_1_enabled0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
-						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_1_pin" name="config[1][pin]" value="$_select[sw_1_pin]">
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_1_cmd" name="config[1][command]" value="$_select[sw_1_cmd]">
-					</div>
+    	<legend>Settings</legend>
+		<div class="control-group">
+			<label class="control-label" for="sw_1_pin">Button 1</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle_sw_1_enabled2">ON</label>
+					$_select[sw_1_enabled1]
+					<label class="toggle-radio" for="toggle_sw_1_enabled1">OFF</label>
+					$_select[sw_1_enabled0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
+					<span>PIN&nbsp;</span>
+					<input class="input-mini" type="number" min="2" max="27" id="sw_1_pin" name="config[1][pin]" value="$_select[sw_1_pin]">
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<span>CMD&nbsp;</span>
+					<input class="input-large" type="text" id="sw_1_cmd" name="config[1][command]" value="$_select[sw_1_cmd]">
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="sw_2_pin">Button 2</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_sw_2_enabled2">ON</label>
-						$_select[sw_2_enabled1]
-						<label class="toggle-radio" for="toggle_sw_2_enabled1">OFF</label>
-						$_select[sw_2_enabled0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
-						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_2_pin" name="config[2][pin]" value="$_select[sw_2_pin]">
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_2_cmd" name="config[2][command]" value="$_select[sw_2_cmd]">
-					</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="sw_2_pin">Button 2</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle_sw_2_enabled2">ON</label>
+					$_select[sw_2_enabled1]
+					<label class="toggle-radio" for="toggle_sw_2_enabled1">OFF</label>
+					$_select[sw_2_enabled0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
+					<span>PIN&nbsp;</span>
+					<input class="input-mini" type="number" min="2" max="27" id="sw_2_pin" name="config[2][pin]" value="$_select[sw_2_pin]">
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<span>CMD&nbsp;</span>
+					<input class="input-large" type="text" id="sw_2_cmd" name="config[2][command]" value="$_select[sw_2_cmd]">
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="sw_3_pin">Button 3</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_sw_3_enabled2">ON</label>
-						$_select[sw_3_enabled1]
-						<label class="toggle-radio" for="toggle_sw_3_enabled1">OFF</label>
-						$_select[sw_3_enabled0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
-						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_3_pin" name="config[3][pin]" value="$_select[sw_3_pin]">
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_3_cmd" name="config[3][command]" value="$_select[sw_3_cmd]">
-					</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="sw_3_pin">Button 3</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle_sw_3_enabled2">ON</label>
+					$_select[sw_3_enabled1]
+					<label class="toggle-radio" for="toggle_sw_3_enabled1">OFF</label>
+					$_select[sw_3_enabled0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
+					<span>PIN&nbsp;</span>
+					<input class="input-mini" type="number" min="2" max="27" id="sw_3_pin" name="config[3][pin]" value="$_select[sw_3_pin]">
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<span>CMD&nbsp;</span>
+					<input class="input-large" type="text" id="sw_3_cmd" name="config[3][command]" value="$_select[sw_3_cmd]">
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="sw_4_pin">Button 4</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_sw_4_enabled2">ON</label>
-						$_select[sw_4_enabled1]
-						<label class="toggle-radio" for="toggle_sw_4_enabled1">OFF</label>
-						$_select[sw_4_enabled0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
-						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_4_pin" name="config[4][pin]" value="$_select[sw_4_pin]">
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_4_cmd" name="config[4][command]" value="$_select[sw_4_cmd]">
-					</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="sw_4_pin">Button 4</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle_sw_4_enabled2">ON</label>
+					$_select[sw_4_enabled1]
+					<label class="toggle-radio" for="toggle_sw_4_enabled1">OFF</label>
+					$_select[sw_4_enabled0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
+					<span>PIN&nbsp;</span>
+					<input class="input-mini" type="number" min="2" max="27" id="sw_4_pin" name="config[4][pin]" value="$_select[sw_4_pin]">
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<span>CMD&nbsp;</span>
+					<input class="input-large" type="text" id="sw_4_cmd" name="config[4][command]" value="$_select[sw_4_cmd]">
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="sw_5_pin">Button 5</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_sw_5_enabled2">ON</label>
-						$_select[sw_5_enabled1]
-						<label class="toggle-radio" for="toggle_sw_5_enabled1">OFF</label>
-						$_select[sw_5_enabled0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
-						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_5_pin" name="config[5][pin]" value="$_select[sw_5_pin]">
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_5_cmd" name="config[5][command]" value="$_select[sw_5_cmd]">
-					</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="sw_5_pin">Button 5</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle_sw_5_enabled2">ON</label>
+					$_select[sw_5_enabled1]
+					<label class="toggle-radio" for="toggle_sw_5_enabled1">OFF</label>
+					$_select[sw_5_enabled0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
+					<span>PIN&nbsp;</span>
+					<input class="input-mini" type="number" min="2" max="27" id="sw_5_pin" name="config[5][pin]" value="$_select[sw_5_pin]">
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<span>CMD&nbsp;</span>
+					<input class="input-large" type="text" id="sw_5_cmd" name="config[5][command]" value="$_select[sw_5_cmd]">
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="sw_6_pin">Button 6</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_sw_6_enabled2">ON</label>
-						$_select[sw_6_enabled1]
-						<label class="toggle-radio" for="toggle_sw_6_enabled1">OFF</label>
-						$_select[sw_6_enabled0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
-						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_6_pin" name="config[6][pin]" value="$_select[sw_6_pin]">
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_6_cmd" name="config[6][command]" value="$_select[sw_6_cmd]">
-					</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="sw_6_pin">Button 6</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle_sw_6_enabled2">ON</label>
+					$_select[sw_6_enabled1]
+					<label class="toggle-radio" for="toggle_sw_6_enabled1">OFF</label>
+					$_select[sw_6_enabled0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
+					<span>PIN&nbsp;</span>
+					<input class="input-mini" type="number" min="2" max="27" id="sw_6_pin" name="config[6][pin]" value="$_select[sw_6_pin]">
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<span>CMD&nbsp;</span>
+					<input class="input-large" type="text" id="sw_6_cmd" name="config[6][command]" value="$_select[sw_6_cmd]">
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="sw_7_pin">Button 7</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_sw_7_enabled2">ON</label>
-						$_select[sw_7_enabled1]
-						<label class="toggle-radio" for="toggle_sw_7_enabled1">OFF</label>
-						$_select[sw_7_enabled0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
-						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_7_pin" name="config[7][pin]" value="$_select[sw_7_pin]">
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_7_cmd" name="config[7][command]" value="$_select[sw_7_cmd]">
-					</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="sw_7_pin">Button 7</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle_sw_7_enabled2">ON</label>
+					$_select[sw_7_enabled1]
+					<label class="toggle-radio" for="toggle_sw_7_enabled1">OFF</label>
+					$_select[sw_7_enabled0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
+					<span>PIN&nbsp;</span>
+					<input class="input-mini" type="number" min="2" max="27" id="sw_7_pin" name="config[7][pin]" value="$_select[sw_7_pin]">
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<span>CMD&nbsp;</span>
+					<input class="input-large" type="text" id="sw_7_cmd" name="config[7][command]" value="$_select[sw_7_cmd]">
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="sw_8_pin">Button 8</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle_sw_8_enabled2">ON</label>
-						$_select[sw_8_enabled1]
-						<label class="toggle-radio" for="toggle_sw_8_enabled1">OFF</label>
-						$_select[sw_8_enabled0]
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
-						<span>PIN&nbsp;</span>
-						<input class="input-mini" type="number" min="2" max="27" id="sw_8_pin" name="config[8][pin]" value="$_select[sw_8_pin]">
-					</div>
-					<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-						<span>CMD&nbsp;</span>
-						<input class="input-large" type="text" id="sw_8_cmd" name="config[8][command]" value="$_select[sw_8_cmd]">
-					</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="sw_8_pin">Button 8</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle_sw_8_enabled2">ON</label>
+					$_select[sw_8_enabled1]
+					<label class="toggle-radio" for="toggle_sw_8_enabled1">OFF</label>
+					$_select[sw_8_enabled0]
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;margin-right:6px;">
+					<span>PIN&nbsp;</span>
+					<input class="input-mini" type="number" min="2" max="27" id="sw_8_pin" name="config[8][pin]" value="$_select[sw_8_pin]">
+				</div>
+				<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
+					<span>CMD&nbsp;</span>
+					<input class="input-large" type="text" id="sw_8_cmd" name="config[8][command]" value="$_select[sw_8_cmd]">
 				</div>
 			</div>
+		</div>
 
-			<div class="control-group">
-				<label class="control-label" for="debounce">Debounce</label>
-				<div class="controls">
-					<input class="hide" name="config[99][param]" value="bounce_time">
-					<input class="input-medium" type="number" min="1" max="2000" id="debounce_time" name="config[99][value]" value="$_select[bounce_time]"> (ms)
-					<a aria-label="Help" class="info-toggle" data-cmd="info-debounce" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-debounce" class="help-block-configs help-block-margin hide">
-						Bounce time in miliseconds (ms). This parameter is used to ignore all subsequent changes for the bounce time after the first change is reported.<br>
-		            </span>
-				</div>
+		<div class="control-group">
+			<label class="control-label" for="debounce">Debounce</label>
+			<div class="controls">
+				<input class="hide" name="config[99][param]" value="bounce_time">
+				<input class="input-medium" type="number" min="1" max="2000" id="debounce_time" name="config[99][value]" value="$_select[bounce_time]"> (ms)
+				<a aria-label="Help" class="info-toggle" data-cmd="info-debounce" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-debounce" class="help-block-configs help-block-margin hide">
+					Bounce time in miliseconds (ms). This parameter is used to ignore all subsequent changes for the bounce time after the first change is reported.<br>
+	            </span>
 			</div>
-		</fieldset>
+		</div>
 	</form>
 </div>
 </div>

@@ -18,8 +18,8 @@
  *
  */
 -->
+<div id="container">
 <div class="container">
-	<div class="container2">
 	<h1 class="lib-config">Music Source</h1>
 
 	<form class="form-horizontal" action="lib-config.php" method="post">
@@ -35,132 +35,130 @@
 			<i class="fas fa-times red sx"></i>NAS mount error: Click to view moode.log for errors
 		</a>
 
-		<fieldset>
-			<legend>Remote server</legend>
-			<div class="control-group">
-				<label class="control-label" for="type">Type</label>
+		<legend>Remote server</legend>
+		<div class="control-group">
+			<label class="control-label" for="type">Type</label>
+			<div class="controls">
+				<select id="type" name="mount[type]" class="input-large">
+					$_protocol
+				</select>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-fileshare-protocol" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-fileshare-protocol" class="help-block-configs help-block-margin hide">
+					Choose the type that corresponds to the file sharing protocol used on the remote server.<br>
+					NOTE: NFS mounts that fail can cause up to a 1-2 min timeout. This screen will appear to hang when this happens.
+                </span>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" id="server-label" for="address">Path</label>
+			<div class="controls">
+				<select id="address" name="mount[address]" class="input-large">
+					$_address
+				</select>
+				<button id="scan-btn" class="btn btn-primary btn-small set-button  btn-submit status-msg $_scan_btn_hide" data-msg="Scan in progress" type="submit" name="scan" value="1">Scan</button>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-server" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-server" class="help-block-configs help-block-margin hide">
+					The format for Path is: host_or_ip_address/share_name.
+					SCAN generates a list of SMB or NFS shares available on the network.<br>
+					NOTE: For NFS the scanner only scans for NFSv4 hosts (port 2049 open).
+                </span>
+				<div id="edit-server" class="help-block-margin $_edit_server_hide">
+					<a id="editserver" data-toggle="modal" href="#manual-server"><button class="btn btn-medium btn-primary" style="margin-top:.25em;">EDIT</button></a>&nbsp;Path manually
+				</div>
+			</div>
+		</div>
+
+		<div id="userid-password" class="$_userid_pwd_hide">
+			<div class="control-group" >
+				<label class="control-label" for="nas-usr">User ID</label>
 				<div class="controls">
-					<select id="type" name="mount[type]" class="input-large">
-						$_protocol
+					<input  id="nas-usr" class="input-large" type="text" pattern="[^'\u0022]+" name="mount[username]" value="$_username">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				</div>
+				<label class="control-label" for="nas-pasw">Password</label>
+				<div class="controls">
+					<input  id="nas-pasw" class="input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
+					<a aria-label="Help" class="info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<a class="show-hide-password" href="#notarget" data-id="nas-pasw"><i class="fal fa-eye"></i></a>
+					<span id="info-nas-uidpwd" class="help-block-configs help-block-margin hide">
+						Try userid = Guest and a blank password unless your NAS device requires a specific userid/password.<br>
+						NOTE: Single and double quotes are not allowed.
+                    </span>
+				</div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="nas-name">Name</label>
+			<div class="controls">
+				<input class="input-large" type="text" pattern="[A-Za-z0-9\-]{1,25}" id="nas-name" name="mount[name]" value="$_name">
+				<input type="hidden" name="mount[id]" value="$_id">
+				<input type="hidden" name="mount[action]" value="$_action">
+				<a aria-label="Help" class="info-toggle" data-cmd="info-source-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-source-name" class="help-block-configs help-block-margin hide">
+					This name will appear in Library Folder view under the NAS folder.<br>
+					1-25 chars, alphanumeric and hyphen allowed.
+                </span>
+				<span class="help-block-configs help-block-margin">
+                	Friendly name (alias) for this Music source.<br>
+                </span>
+			</div>
+		</div>
+
+		<div id="advanced-options" class="$_advanced_options_hide">
+			<legend>Advanced</legend>
+			<div class="control-group">
+				<label class="control-label" for="nas-charset">Character encoding</label>
+				<div class="controls">
+					<select id="nas-charset" name="mount[charset]" class="input-large">
+						<option value="utf8" $_charset>UTF-8 (Default)</option>
+						<option value="iso8859-1" $_charset>ISO-8859-1</option>
 					</select>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-fileshare-protocol" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-fileshare-protocol" class="help-block-configs help-block-margin hide">
-						Choose the type that corresponds to the file sharing protocol used on the remote server.<br>
-						NOTE: NFS mounts that fail can cause up to a 1-2 min timeout. This screen will appear to hang when this happens.
+					<a aria-label="Help" class="info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fas fa-info-circle"></i></a>
+					<span id="info-mount-charset" class="help-block-configs help-block-margin hide">
+						This setting determines how characters are encoded. The default is UTF-8 which is a multibyte encoding that can represent any Unicode character. ISO 8859-1 is a single-byte encoding that can represent the first 256 Unicode characters. Both encode ASCII exactly the same way.
                     </span>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" id="server-label" for="address">Path</label>
-				<div class="controls">
-					<select id="address" name="mount[address]" class="input-large">
-						$_address
-					</select>
-					<button id="scan-btn" class="btn btn-primary btn-small set-button  btn-submit status-msg $_scan_btn_hide" data-msg="Scan in progress" type="submit" name="scan" value="1">Scan</button>
-					<a aria-label="Help" class="info-toggle" data-cmd="info-server" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-server" class="help-block-configs help-block-margin hide">
-						The format for Path is: host_or_ip_address/share_name.
-						SCAN generates a list of SMB or NFS shares available on the network.<br>
-						NOTE: For NFS the scanner only scans for NFSv4 hosts (port 2049 open).
-                    </span>
-					<div id="edit-server" class="help-block-margin $_edit_server_hide">
-						<a id="editserver" data-toggle="modal" href="#manual-server"><button class="btn btn-medium btn-primary" style="margin-top:.25em;">EDIT</button></a>&nbsp;Path manually
-					</div>
-				</div>
-			</div>
-
-			<div id="userid-password" class="$_userid_pwd_hide">
-				<div class="control-group" >
-					<label class="control-label" for="nas-usr">User ID</label>
-					<div class="controls">
-						<input  id="nas-usr" class="input-large" type="text" pattern="[^'\u0022]+" name="mount[username]" value="$_username">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					</div>
-					<label class="control-label" for="nas-pasw">Password</label>
-					<div class="controls">
-						<input  id="nas-pasw" class="input-large" type="password" pattern="[^'\u0022]+" name="mount[password]" value="$_password" autocomplete="off">
-						<a aria-label="Help" class="info-toggle" data-cmd="info-nas-uidpwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<a class="show-hide-password" href="#notarget" data-id="nas-pasw"><i class="fal fa-eye"></i></a>
-						<span id="info-nas-uidpwd" class="help-block-configs help-block-margin hide">
-							Try userid = Guest and a blank password unless your NAS device requires a specific userid/password.<br>
-							NOTE: Single and double quotes are not allowed.
-	                    </span>
-					</div>
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="nas-name">Name</label>
-				<div class="controls">
-					<input class="input-large" type="text" pattern="[A-Za-z0-9\-]{1,25}" id="nas-name" name="mount[name]" value="$_name">
-					<input type="hidden" name="mount[id]" value="$_id">
-					<input type="hidden" name="mount[action]" value="$_action">
-					<a aria-label="Help" class="info-toggle" data-cmd="info-source-name" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-source-name" class="help-block-configs help-block-margin hide">
-						This name will appear in Library Folder view under the NAS folder.<br>
-						1-25 chars, alphanumeric and hyphen allowed.
-                    </span>
-					<span class="help-block-configs help-block-margin">
-                    	Friendly name (alias) for this Music source.<br>
-                    </span>
-				</div>
-			</div>
-		</fieldset>
-
-		<fieldset>
-			<div id="advanced-options" class="$_advanced_options_hide">
-				<legend>Advanced</legend>
+			<div id="rw-size" class="$_rw_size_hide">
 				<div class="control-group">
-					<label class="control-label" for="nas-charset">Character encoding</label>
+					<label class="control-label" for="nas-rsize">Rsize</label>
 					<div class="controls">
-						<select id="nas-charset" name="mount[charset]" class="input-large">
-							<option value="utf8" $_charset>UTF-8 (Default)</option>
-							<option value="iso8859-1" $_charset>ISO-8859-1</option>
-						</select>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-mount-charset" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-mount-charset" class="help-block-configs help-block-margin hide">
-							This setting determines how characters are encoded. The default is UTF-8 which is a multibyte encoding that can represent any Unicode character. ISO 8859-1 is a single-byte encoding that can represent the first 256 Unicode characters. Both encode ASCII exactly the same way.
+						<input class="input-large" type="number" id="nas-rsize" name="mount[rsize]" value="$_rsize">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-mount-rsize" class="help-block-configs help-block-margin hide">
+							Default for this setting is 61440.
 	                    </span>
-					</div>
-				</div>
-				<div id="rw-size" class="$_rw_size_hide">
-					<div class="control-group">
-						<label class="control-label" for="nas-rsize">Rsize</label>
-						<div class="controls">
-							<input class="input-large" type="number" id="nas-rsize" name="mount[rsize]" value="$_rsize">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-mount-rsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-mount-rsize" class="help-block-configs help-block-margin hide">
-								Default for this setting is 61440.
-		                    </span>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="nas-wsize">Wsize</label>
-						<div class="controls">
-							<input class="input-large" type="number" id="nas-wsize" name="mount[wsize]" value="$_wsize">
-							<a aria-label="Help" class="info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
-							<span id="info-mount-wsize" class="help-block-configs help-block-margin hide">
-								Default for this setting is 65536.
-		                    </span>
-						</div>
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label" for="options">Mount options</label>
+					<label class="control-label" for="nas-wsize">Wsize</label>
 					<div class="controls">
-						<input class="input-large" type="text" id="options" name="mount[options]" value="$_options">
-						<span id="info-mount-flags" class="help-block-configs help-block-margin">
-							Most mount options are auto-negotiated when the mount is attempted but in some cases auto-negotiation cannot determine the correct values and the mount may fail. In this case certain options must be explicitly added. Some of these are listed below.<br>
-							SMB: vers=x.y, sec=ntlm or sec=ntlmssp<br>
-							NFS: vers=x.y, type=nfs2, nfs3 or nfs4
+						<input class="input-large" type="number" id="nas-wsize" name="mount[wsize]" value="$_wsize">
+						<a aria-label="Help" class="info-toggle" data-cmd="info-mount-wsize" href="#notarget"><i class="fas fa-info-circle"></i></a>
+						<span id="info-mount-wsize" class="help-block-configs help-block-margin hide">
+							Default for this setting is 65536.
 	                    </span>
 					</div>
 				</div>
 			</div>
-		</fieldset>
+			<div class="control-group">
+				<label class="control-label" for="options">Mount options</label>
+				<div class="controls">
+					<input class="input-large" type="text" id="options" name="mount[options]" value="$_options">
+					<span id="info-mount-flags" class="help-block-configs help-block-margin">
+						Most mount options are auto-negotiated when the mount is attempted but in some cases auto-negotiation cannot determine the correct values and the mount may fail. In this case certain options must be explicitly added. Some of these are listed below.<br>
+						SMB: vers=x.y, sec=ntlm or sec=ntlmssp<br>
+						NFS: vers=x.y, type=nfs2, nfs3 or nfs4
+                    </span>
+				</div>
+			</div>
+		</div>
 	</form>
 </div>
 </div>
+
+<!-- MODAL POPUPS -->
 
 <form class="form-horizontal" method="post">
 	<div id="remove-source" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="remove-source-label" aria-hidden="true">

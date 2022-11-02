@@ -23,29 +23,34 @@
 
 body {
 	--config-text-color: #ddd;
-	--config-container-bg-color: #151515;
+	--config-bg-color: #151515;
 	--config-menu-bg-color: rgba(50,50,50,0.95);
 	--config-toggleoff-bg-color: rgba(128,128,128,0.2);
+	background-color:var(--config-bg-color)!important;
 }
 
-/* Top level div in the template */
-.container {position:relative;z-index:1;padding:calc(2em + env(safe-area-inset-top)) 2em calc(2em + env(safe-area-inset-bottom)) 2em;background-color:var(--config-container-bg-color);font-size:var(--pbfont);width:unset;}
-.container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;}
+/* Main div in the template */
+#container {position:fixed;top:2.75rem;height:90%;width:100%;overflow:scroll;}
+.container {position:relative;padding:1em 2em 0 2em;background-color:var(--config-bg-color);font-size:var(--pbfont);width:unset;height:auto;}
+.container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;} /* NOTE: The webkit setting may not be valid anymore*/
 /* config theme menu bg */ /* from moode.css was .container2 */
 
 /* Toggle Sliders */
 .toggle,
 .toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
-/* The (i) info button */
-.info-toggle-configs {text-decoration:none;position:relative;margin:0;left:.15em;font-size:1em;}
 
 /* Title and legend */
-h1 {font-size:2.5em;font-weight:200;}
+h1 {font-size:2.5em;font-weight:200;margin:0 0 .5em 0;}
 legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
 .legend-configs {border:none;margin-bottom:.35em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 /* This should  be .horiz-rule-configs */
 .horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size:1.15em;font-style:italic;color:#888;}
+
+/* For updater view modal */
+.updater-relnotes {list-style-type:none;margin-left:0;}
+/* Show/hide password plaintext */
+.show-hide-password {position:relative;vertical-align:middle;font-size:1.25em;margin-left:.5em}
 
 a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-tabs {position:absolute;top:0;top:env(safe-area-inset-top);color:inherit;display:flex;z-index:1001;line-height:normal;font-size:inherit;height:2.75em;align-items:center;display:none;}
@@ -60,4 +65,5 @@ a.btn.btn-medium.btn-primary {font-size:16px;}
 .viewswitch-cfgs a {color:var(--btnbarcolor);box-sizing:border-box;}
 .viewswitch-cfgs .active a {color:inherit;}
 #config-back {position:absolute;float:left;left:0;top:0;top:calc(env(safe-area-inset-top) + 0);padding-left:1em;display:none;}
-#config-back a {color:var(--config-text-color);font-size:1.35rem;margin-right:.5em}
+#config-back a {color:var(--config-text-color);}
+#config-back i {font-size:2rem;position:relative;top:.25em;}

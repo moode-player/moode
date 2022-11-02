@@ -25,7 +25,7 @@ body {
 	background-attachment: fixed;
 	background-size: cover;
 	height: 100%;
-	color: #ccc;
+	color: #ddd;
 	font-family: "Avenir Next", "Lato";
 	font-size: calc(0.45em + 1vmin);
 	padding: 0;
@@ -180,7 +180,6 @@ html {background-color:inherit;}
 #panel-header .dropdown-menu > li > a i, #context-menus .dropdown-menu > li > a i {width:1.75em;display:inline-block;text-align:center;}
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:active, .dropdown-menu > li > a:focus {background-color:var(--accentxta);background-image:none;}
 #panel-header a:hover, #panel-header a:focus, #context-menus .dropdown-menu a:hover, #context-menus .dropdown-menu a:focus {text-decoration:none;outline:none;}
-#panel-header #config-back i {font-size:1.35rem;position:relative;top:1px;}
 #menu-settings {color:transparent;position:relative;right:0;line-height:3rem;height:2.75rem;z-index:1001;padding:0 1.5rem;border-radius:0;border-bottom:1px solid transparent;font-size:1.7rem;font-weight:500;margin-right:.1rem;}
 #mbrand, #mblur {font-weight:600;position:absolute;left:50%;top:-.25rem;}
 #mbrand {color:var(--adapttext);text-shadow: 0 0 0.25rem rgba(0,0,0,0.5);transform:translate(-50%);}
@@ -380,7 +379,7 @@ input.input-block-level {display:block;height:41px;line-height:41px;padding:8px 
 .modal .controls input {padding:0px 0px 0px 10px;}
 .btn-group>.btn, .btn-group>.dropdown-menu {font-size:1rem;}
 hr {border-color:#333;border-width:1px 0 0;}
-textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {background:inherit;border:1px solid rgba(128,128,128,0.5);color:inherit;padding-top:2px;padding-bottom:2px;margin-bottom:5px;border-radius:4px;-webkit-appearance:none;-moz-appearance:none;font-size:1rem;}
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {background:inherit;border:1px solid rgba(128,128,128,0.75);color:inherit;padding-top:2px;padding-bottom:2px;margin-bottom:5px;border-radius:4px;-webkit-appearance:none;-moz-appearance:none;font-size:1rem;}
 .btn .caret {border-top-color:initial;}
 code, pre {background-color:inherit;color:inherit;border:none;font-size:.8em;}
 #lib-load {color:#ddd;font-size:18px;font-weight:bold;margin-left:-72px;position:absolute;top:50%;left:50%;}
@@ -628,10 +627,6 @@ input[type='range'].vslide2::-webkit-slider-thumb {background:#fff;background-im
 #top-columns.nogenre #lib-artist-header, #top-columns.nogenre #lib-artist {left:0;width:50%;}
 #top-columns.nogenre #index-artists {right:calc(50% + var(--sbw));}
 #top-columns.nogenre #lib-album-header, #top-columns.nogenre #lib-album {left:50%;width:50%;}
-/* For updater view modal */
-.updater-relnotes {list-style-type:none;margin-left:0;}
-/* Show/hide password plaintext */
-.show-hide-password {position:relative;top:3px;font-size:18px;margin-left:.5em}
 /* shutdown/restart */
 #power-modal {top:5vh;}
 #power-modal .modal-body .btn {color:#eee;background-color:rgba(228,46,46,0.45);width:12em;margin:1em auto 2em auto;}

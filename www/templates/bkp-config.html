@@ -20,184 +20,182 @@
  *
  */
 -->
+<div id="container">
 <div class="container">
-	<div class="container2">
-		<h1>Backup/Restore</h1>
+	<h1>Backup/Restore</h1>
 
-		<!-- BACKUP OPTIONS -->
-		<form class="form-horizontal" action="" method="post" id="backup" enctype="multipart/form-data" $_backup_hidden>
-			<fieldset>
-				<legend>Backup options</legend>
-				<p>
-					Specify which parts of the system will be included in the backup zip file. A script file may optionally be added that performs custom actions during the restore process. It is run during moOde startup as part of restoring the Configuration settings.
-					Note that WiFi and AP mode passwords will be included in the Configuration settings part of the backup.
-				</p>
-				<br>
-				<div class="control-group">
-					<label class="control-label" style="margin-top:.5em;">Add script</label>
-					<div class="controls">
-						<div class="modal-button-style" style="margin-top:1em;">
-							<label for="backup_scriptfile" id="choose-backup_scriptfile" class="btn btn-primary btn-medium">Select</label>
-							<input type="file" id="backup_scriptfile" accept=".sh,.py" name="backup_scriptfile" style="display:none" onchange="$('#btn-import-scriptfile').click();">
-							<button id="btn-import-scriptfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_scriptfile" value="1"  style="display:none"/>
-						</div>&nbsp;&nbsp;
-						<a aria-label="Help" class="info-toggle" data-cmd="info-backup_scriptfile" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<div id="info-backup_scriptfile" class="help-block-configs help-block-margin hide">
-							Add a script file that performs custom actions during the restore process.
-						</div>
-						<div class="help-block-configs help-block-margin">
-							$_imported_scriptfile
-						</div>
-					</div>
+	<!-- BACKUP OPTIONS -->
+
+	<form class="form-horizontal" action="" method="post" id="backup" enctype="multipart/form-data" $_backup_hidden>
+		<legend>Backup options</legend>
+		<p>
+			Specify which parts of the system will be included in the backup zip file. A script file may optionally be added that performs custom actions during the restore process. It is run during moOde startup as part of restoring the Configuration settings.
+			Note that WiFi and AP mode passwords will be included in the Configuration settings part of the backup.
+		</p>
+		<br>
+		<div class="control-group">
+			<label class="control-label" style="margin-top:.5em;">Add script</label>
+			<div class="controls">
+				<div class="modal-button-style" style="margin-top:1em;">
+					<label for="backup_scriptfile" id="choose-backup_scriptfile" class="btn btn-primary btn-medium">Select</label>
+					<input type="file" id="backup_scriptfile" accept=".sh,.py" name="backup_scriptfile" style="display:none" onchange="$('#btn-import-scriptfile').click();">
+					<button id="btn-import-scriptfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_scriptfile" value="1"  style="display:none"/>
+				</div>&nbsp;&nbsp;
+				<a aria-label="Help" class="info-toggle" data-cmd="info-backup_scriptfile" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<div id="info-backup_scriptfile" class="help-block-configs help-block-margin hide">
+					Add a script file that performs custom actions during the restore process.
 				</div>
-
-				<div class="control-group">
-					<label class="control-label">Configuration settings</label>
-					<div class="controls">
-						$_togglebtn_backup_system
-						<span id="info-backup_system" class="help-block-configs help-block-margin2 hide">
-							Backup configuration settings and preferences including backdrop image if any.
-						</span>
-					</div>
-
-					<label class="control-label">CamillaDSP</label>
-					<div class="controls">
-						$_togglebtn_backup_camilladsp
-						<span id="info-backup_camilladsp" class="help-block-configs help-block-margin2 hide">
-							Backup CamillaDSP pipeline configurations and IR files.
-						</span>
-					</div>
-
-					<label class="control-label">Playlists</label>
-					<div class="controls">
-						$_togglebtn_backup_playlists
-						<span id="info-backup_playlists" class="help-block-configs help-block-margin2 hide">
-							Backup playlists.
-						</span>
-					</div>
-
-					<label class="control-label">Radio stations:</label>
-					<br><br>
-					<label class="control-label">moOde</label>
-					<div class="controls">
-						$_togglebtn_backup_radiostations_moode
-						<span id="info-backup_radiostations_moode" class="help-block-configs help-block-margin2 hide">
-							Backup moOde supplied radio stations.
-						</span>
-					</div>
-
-					<label class="control-label">Other</label>
-					<div class="controls">
-						$_togglebtn_backup_radiostations_other
-						<span id="info-backup_radiostations_other" class="help-block-configs help-block-margin2 hide">
-							Backup user added radio stations.
-						</span>
-					</div>
+				<div class="help-block-configs help-block-margin">
+					$_imported_scriptfile
 				</div>
+			</div>
+		</div>
 
-				<div class="control-group">
-					<!--label class="control-label" for="wlan0pwd">WiFi password</label>
-					<div class="controls">
-						<input class="input-large" type="password" pattern=".{8,64}" id="backup_wlan0pwd" name="backup_wlan0pwd" value="$_wlan0pwd" >
-						<a aria-label="Help" class="info-toggle" data-cmd="info-backup_wlan0pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<a class="show-hide-password" href="#notarget" data-id="backup_wlan0pwd"><i class="fal fa-eye"></i></a>
-						<span id="info-backup_wlan0pwd" class="help-block-configs help-block-margin hide">
-							Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.
-						</span>
-					</div>
-					<br><br-->
+		<div class="control-group">
+			<label class="control-label">Configuration settings</label>
+			<div class="controls">
+				$_togglebtn_backup_system
+				<span id="info-backup_system" class="help-block-configs help-block-margin2 hide">
+					Backup configuration settings and preferences including backdrop image if any.
+				</span>
+			</div>
 
-					<div class="controls">
-						<button id="backup_create" class="btn btn-medium btn-primary" type="submit" name="backup_create" form="backup" value="1">Create Backup</button>
-						<div class="help-block-configs help-block-margin">
-							Backup zip file will be downloaded to the default Downloads folder.
-						</div>
-					</div>
+			<label class="control-label">CamillaDSP</label>
+			<div class="controls">
+				$_togglebtn_backup_camilladsp
+				<span id="info-backup_camilladsp" class="help-block-configs help-block-margin2 hide">
+					Backup CamillaDSP pipeline configurations and IR files.
+				</span>
+			</div>
+
+			<label class="control-label">Playlists</label>
+			<div class="controls">
+				$_togglebtn_backup_playlists
+				<span id="info-backup_playlists" class="help-block-configs help-block-margin2 hide">
+					Backup playlists.
+				</span>
+			</div>
+
+			<label class="control-label">Radio stations:</label>
+			<br><br>
+			<label class="control-label">moOde</label>
+			<div class="controls">
+				$_togglebtn_backup_radiostations_moode
+				<span id="info-backup_radiostations_moode" class="help-block-configs help-block-margin2 hide">
+					Backup moOde supplied radio stations.
+				</span>
+			</div>
+
+			<label class="control-label">Other</label>
+			<div class="controls">
+				$_togglebtn_backup_radiostations_other
+				<span id="info-backup_radiostations_other" class="help-block-configs help-block-margin2 hide">
+					Backup user added radio stations.
+				</span>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<!--label class="control-label" for="wlan0pwd">WiFi password</label>
+			<div class="controls">
+				<input class="input-large" type="password" pattern=".{8,64}" id="backup_wlan0pwd" name="backup_wlan0pwd" value="$_wlan0pwd" >
+				<a aria-label="Help" class="info-toggle" data-cmd="info-backup_wlan0pwd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<a class="show-hide-password" href="#notarget" data-id="backup_wlan0pwd"><i class="fal fa-eye"></i></a>
+				<span id="info-backup_wlan0pwd" class="help-block-configs help-block-margin hide">
+					Length 8-63 chars. The password will be converted to a pre-shared key (PSK) after saving.
+				</span>
+			</div>
+			<br><br-->
+
+			<div class="controls">
+				<button id="backup_create" class="btn btn-medium btn-primary" type="submit" name="backup_create" form="backup" value="1">Create Backup</button>
+				<div class="help-block-configs help-block-margin">
+					Backup zip file will be downloaded to the default Downloads folder.
 				</div>
-			</fieldset>
-		</form>
+			</div>
+		</div>
+	</form>
 
-		<!-- RESTORE OPTIONS -->
-		<form class="form-horizontal" action="" method="post" id="restore"  enctype="multipart/form-data" $_restore_hidden>
-			<fieldset>
-				<legend>Restore options</legend>
-				<p>
-					Specify which parts of the system will be restored.
-					The Yes/No option buttons are automatically set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring the Configuration settings.
-				</p>
-				<br>
-				<div class="control-group">
-					<label class="control-label">Configuration settings</label>
-					<div class="controls">
-						$_togglebtn_restore_system
-						<span id="info-restore_system" class="help-block-configs help-block-margin2 hide">
-							Restore configuration settings and preferences including a backdrop image if any.
-						</span>
-					</div>
+	<!-- RESTORE OPTIONS -->
 
-					<label class="control-label">CamillaDSP</label>
-					<div class="controls">
-						$_togglebtn_restore_camilladsp
-						<span id="info-restore_camilladsp" class="help-block-configs help-block-margin2 hide">
-							Restore CamillaDSP pipeline configurations and IR files.
-						</span>
-					</div>
+	<form class="form-horizontal" action="" method="post" id="restore"  enctype="multipart/form-data" $_restore_hidden>
+		<legend>Restore options</legend>
+		<p>
+			Specify which parts of the system will be restored.
+			The Yes/No option buttons are automatically set based on the contents of the selected backup zip file. If a script file was added to the backup it will be run during moOde startup as part of restoring the Configuration settings.
+		</p>
+		<br>
+		<div class="control-group">
+			<label class="control-label">Configuration settings</label>
+			<div class="controls">
+				$_togglebtn_restore_system
+				<span id="info-restore_system" class="help-block-configs help-block-margin2 hide">
+					Restore configuration settings and preferences including a backdrop image if any.
+				</span>
+			</div>
 
-					<label class="control-label">Playlists</label>
-					<div class="controls">
-						$_togglebtn_restore_playlists
-						<span id="info-restore_playlists" class="help-block-configs help-block-margin2 hide">
-							Restore playlists.
-						</span>
-					</div>
+			<label class="control-label">CamillaDSP</label>
+			<div class="controls">
+				$_togglebtn_restore_camilladsp
+				<span id="info-restore_camilladsp" class="help-block-configs help-block-margin2 hide">
+					Restore CamillaDSP pipeline configurations and IR files.
+				</span>
+			</div>
 
-					<label class="control-label">Radio Stations:</label>
-					<br><br>
-					<label class="control-label">moOde</label>
-					<div class="controls">
-						$_togglebtn_restore_radiostations_moode
-						<span id="info-restore_radiostations_moode" class="help-block-configs help-block-margin2 hide">
-							Restore moOde radio stations.
-						</span>
-					</div>
+			<label class="control-label">Playlists</label>
+			<div class="controls">
+				$_togglebtn_restore_playlists
+				<span id="info-restore_playlists" class="help-block-configs help-block-margin2 hide">
+					Restore playlists.
+				</span>
+			</div>
 
-					<label class="control-label">Other</label>
-					<div class="controls">
-						$_togglebtn_restore_radiostations_other
-						<span id="info-restore_radiostations_other" class="help-block-configs help-block-margin2 hide">
-							Restore user added radio stations.
-						</span>
-					</div>
+			<label class="control-label">Radio Stations:</label>
+			<br><br>
+			<label class="control-label">moOde</label>
+			<div class="controls">
+				$_togglebtn_restore_radiostations_moode
+				<span id="info-restore_radiostations_moode" class="help-block-configs help-block-margin2 hide">
+					Restore moOde radio stations.
+				</span>
+			</div>
+
+			<label class="control-label">Other</label>
+			<div class="controls">
+				$_togglebtn_restore_radiostations_other
+				<span id="info-restore_radiostations_other" class="help-block-configs help-block-margin2 hide">
+					Restore user added radio stations.
+				</span>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label">Backup file</label>
+			<div class="controls">
+				<div class="modal-button-style" style="margin-top:.5em;">
+					<label for="restore_backupfile" id="choose+restore_backupfile" class="btn btn-primary btn-medium">Select</label>
+					<input type="file" id="restore_backupfile" accept=".zip" name="restore_backupfile" style="display:none" onchange="$('#btn-import-backupfile').click();">
+					<button id="btn-import-backupfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_backupfile" value="1"  style="display:none"/>
 				</div>
-
-				<div class="control-group">
-					<label class="control-label">Backup file</label>
-					<div class="controls">
-						<div class="modal-button-style" style="margin-top:.5em;">
-							<label for="restore_backupfile" id="choose+restore_backupfile" class="btn btn-primary btn-medium">Select</label>
-							<input type="file" id="restore_backupfile" accept=".zip" name="restore_backupfile" style="display:none" onchange="$('#btn-import-backupfile').click();">
-							<button id="btn-import-backupfile" class="btn btn-medium btn-primary btn-submit" type="submit" name="import_backupfile" value="1"  style="display:none"/>
-						</div>
-						<button class="btn btn-medium btn-primary btn-submit" type="submit" name="reset_options" form="restore" value="1">Reset</button>
-						<a aria-label="Help" class="info-toggle" data-cmd="info-backupfile" href="#notarget"><i class="fas fa-info-circle"></i></a>
-						<span id="info-backupfile" class="help-block-configs help-block-margin hide">
-							Select - Select and upload a backup file that will be used for the restore process.<br/>
-							Reset  - Clear uploaded files from the temp directory and reset the option buttons to No.
-						</span>
-						<div class="help-block-configs help-block-margin">
-							$_imported_backupfile
-						</div>
-					</div>
-					<br><br>
-
-					<div class="controls">
-						<button class="btn btn-medium btn-primary btn-submit" type="submit" name="restore_start" form="restore" value="1">Restore System</button>
-						<div id="info-start-restore" class="help-block-configs help-block-margin">
-							NOTE: A reboot is required if configuration settings are part of the restore.
-						</div>
-					</div>
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="reset_options" form="restore" value="1">Reset</button>
+				<a aria-label="Help" class="info-toggle" data-cmd="info-backupfile" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-backupfile" class="help-block-configs help-block-margin hide">
+					Select - Select and upload a backup file that will be used for the restore process.<br/>
+					Reset  - Clear uploaded files from the temp directory and reset the option buttons to No.
+				</span>
+				<div class="help-block-configs help-block-margin">
+					$_imported_backupfile
 				</div>
-			</fieldset>
-		</form>
-	</div>
+			</div>
+			<br><br>
+
+			<div class="controls">
+				<button class="btn btn-medium btn-primary btn-submit" type="submit" name="restore_start" form="restore" value="1">Restore System</button>
+				<div id="info-start-restore" class="help-block-configs help-block-margin">
+					NOTE: A reboot is required if configuration settings are part of the restore.
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
 </div>
