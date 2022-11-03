@@ -30,9 +30,9 @@ body {
 }
 
 /* Top div in the templates */
-#container {position:fixed;top:2.75rem;height:90%;width:100%;overflow:scroll;}
+#container {position:fixed;top:2.75rem;height:90%;width:100%;overflow:scroll;-webkit-overflow-scrolling:touch;}
 .container {position:relative;padding:1em 2em 0 2em;background-color:var(--config-bg-color);font-size:var(--pbfont);width:unset;height:auto;}
-.container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;} /* NOTE: The webkit setting may not be valid anymore*/
+.container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;}
 /* config theme menu bg */ /* from moode.css was .container2 */
 
 /* Toggle Sliders */
