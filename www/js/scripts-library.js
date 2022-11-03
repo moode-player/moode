@@ -770,15 +770,6 @@ var renderSongs = function(albumPos) {
         // Render the song list
         lastAlbum = '';
         lastDisc = '';
-
-        // For cue format omit the audio file which otherwise will show up as a bogus album header.
-        // Typically the audio file in cue format will not have a track number since it's considered to be the whole album.
-        var cueFormats = ['flac', 'wav', 'aiff'];
-        var file0Ext = filteredSongs[0].file.substring(filteredSongs[0].file.lastIndexOf('.') + 1, filteredSongs[0].file.length);
-        if ($.inArray(file0Ext, cueFormats) != -1 && filteredSongs[0].tracknum == '') {
-            filteredSongs.shift();
-        }
-
 		for (i = 0; i < filteredSongs.length; i++) {
 			var songyear = filteredSongs[i].year ? filteredSongs[i].year.slice(0, 4) : ' ';
 

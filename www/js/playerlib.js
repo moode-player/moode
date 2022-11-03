@@ -1428,6 +1428,10 @@ function renderFolderView(data, path, searchstr) {
 	element.innerHTML = '';
 
 	for (i = 0; i < data.length; i++) {
+		// chosing to have MPD ignore CUE parsing means that the folder contents will include them, so here we must ignore them too.
+		if (SESSION.json['cuefiles_ignore'] == '1' && data[i].file && data[i].file.endsWith('.cue')) {
+			continue;
+		}
     	if (data[i].directory) {
             var cueVirtualDir = false;
     		output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].directory + '">';
@@ -1477,7 +1481,7 @@ function renderFolderView(data, path, searchstr) {
     			output += '<li id="db-' + (i + 1) + '" data-path="' + data[i].file + '">';
     			output += '<div class="db-icon db-song db-action">'; // Hack to enable entire line click for context menu
     			output += '<a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-folder-item">';
-                output += data[i].Track + '</a></div>';
+                output += (data[i].Track ? data[i].Track : "•") + '</a></div>';
     			output += '<div class="db-entry db-song" data-toggle="context" data-target="#context-menu-folder-item"><div>';
                 output += data[i].Title + ' <span class="songtime">' + data[i].TimeMMSS + '</span></div>';
     		}
