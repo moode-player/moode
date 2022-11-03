@@ -29,7 +29,7 @@ body {
 	background-color:var(--config-bg-color)!important;
 }
 
-/* Main div in the template */
+/* Top div in the templates */
 #container {position:fixed;top:2.75rem;height:90%;width:100%;overflow:scroll;}
 .container {position:relative;padding:1em 2em 0 2em;background-color:var(--config-bg-color);font-size:var(--pbfont);width:unset;height:auto;}
 .container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;} /* NOTE: The webkit setting may not be valid anymore*/
@@ -51,6 +51,9 @@ legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bott
 .updater-relnotes {list-style-type:none;margin-left:0;}
 /* Show/hide password plaintext */
 .show-hide-password {position:relative;vertical-align:middle;font-size:1.25em;margin-left:.5em}
+
+/* CamillaDSP Pipeline editor */
+.cdsp-pipeline-editor {width:100%;height:150vh;border:none;}
 
 a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-tabs {position:absolute;top:0;top:env(safe-area-inset-top);color:inherit;display:flex;z-index:1001;line-height:normal;font-size:inherit;height:2.75em;align-items:center;display:none;}
