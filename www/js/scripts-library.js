@@ -795,7 +795,11 @@ var renderSongs = function(albumPos) {
             var album = filteredSongs[i].album + comment;
 
             if (album != lastAlbum) {
-                albumDiv = '<div class="lib-album-heading"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-album-heading">' + album + '</a></div>';
+                albumDiv = '<div class="lib-album-heading"' +
+                        ' heading-album="' + filteredSongs[i].album + '"' +
+                        ' heading-comment="' + filteredSongs[i].comment + '"' +
+                        ' heading-key="' + filteredSongs[i].mb_albumid + '"' +
+                        '><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-album-heading">' + album + '</a></div>';
                 lastAlbum = album;
             }
             else {
@@ -804,7 +808,12 @@ var renderSongs = function(albumPos) {
 
             if (multiDisc.indexOf(filteredSongs[i].album) != -1) {
                 if (filteredSongs[i].disc != lastDisc) {
-    				discDiv = '<div id="lib-disc-' + filteredSongs[i].disc + '" class="lib-disc"><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + filteredSongs[i].disc + '</a></div>'
+    				discDiv = '<div id="lib-disc-' + filteredSongs[i].disc + '" class="lib-disc"' +
+                            ' heading-album="' + filteredSongs[i].album + '"' +
+                            ' heading-disc="' + filteredSongs[i].disc + '"' +
+                            ' heading-comment="' + filteredSongs[i].comment + '"' +
+                            ' heading-key="' + filteredSongs[i].mb_albumid + '"' +
+                            '><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + filteredSongs[i].disc + '</a></div>'
     				lastDisc = filteredSongs[i].disc;
     			}
     			else {
@@ -1479,9 +1488,21 @@ $('#songsList').on('click', '.lib-disc', function(e) {
 	var discNum = $(this).text().substr(5);
 	$('#lib-disc-' + discNum + ' a').addClass('active');
 
+    var headingAlbum = $(this).attr('heading-album');
+    var headingDisc = $(this).attr('heading-disc');
+    var headingComment = $(this).attr('heading-comment');
+    var headingKey = $(this).attr('heading-key');
+
 	filteredSongsDisc.length = 0;
 	for (var i in filteredSongs) {
-		if (filteredSongs[i].disc == discNum) {
+        var matchAlbumDisc = filteredSongs[i].album == headingAlbum && filteredSongs[i].disc == headingDisc;
+        if (miscLibOptions[0] == 'Yes') { // Comment tag included
+            matchAlbumDisc &= headingComment == '' || filteredSongs[i].comment == headingComment;
+        }
+        else if (miscLibOptions[1] == 'Yes') { // MBRZ albumid tag included
+            matchAlbumDisc &= headingKey == '0' || filteredSongs[i].mb_albumid == headingKey;
+        }
+		if (matchAlbumDisc) {
 			filteredSongsDisc.push(filteredSongs[i]);
 		}
 	}
@@ -1493,10 +1514,21 @@ $('#songsList').on('click', '.lib-album-heading', function(e) {
 	$('img.lib-coverart, #songsList li, #songsList .lib-disc a').removeClass('active'); // Remove highlight
 	var albumName = $(this).text();
 
+    var headingAlbum = $(this).attr('heading-album');
+    var headingComment = $(this).attr('heading-comment');
+    var headingKey = $(this).attr('heading-mb-album-id');
+
 	filteredSongsAlbum.length = 0;
 	for (var i in filteredSongs) {
-		if (filteredSongs[i].album == albumName) {
-			filteredSongsAlbum.push(filteredSongs[i]);
+        var matchAlbum = filteredSongs[i].album == headingAlbum;
+        if (miscLibOptions[0] == 'Yes') { // Comment tag included
+            matchAlbum &= headingComment == '' || filteredSongs[i].comment == headingComment;
+        }
+        else if (miscLibOptions[1] == 'Yes') { // MBRZ albumid tag included
+            matchAlbum &= headingKey == '0' || filteredSongs[i].mb_albumid == headingKey;
+        }
+        if (matchAlbum) {
+            filteredSongsAlbum.push(filteredSongs[i]);
 		}
 	}
 	//console.log('filteredSongsAlbum= ' + JSON.stringify(filteredSongsAlbum));
