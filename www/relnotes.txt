@@ -17,6 +17,7 @@
 
 Updates
 
+- UPD: Bump to CamillaDSP 1.0.2
 - UPD: Add UI layout for Ultra-wide screens
 - UPD: Add Analog clock option for CoverView
 - UPD: Use thin style for CoverView clocks
