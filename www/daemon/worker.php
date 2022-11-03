@@ -1837,7 +1837,12 @@ function runQueuedJob() {
 			sysCmd('mkdir ' . THMCACHE_DIR);
 			sysCmd('/var/www/util/thumb-gen.php > /dev/null 2>&1 &');
 			break;
-
+		case 'cuefiles_ignore':
+			setCuefilesIgnore($_SESSION['w_queueargs']);
+			clearLibCacheAll();
+			sysCmd('mpc stop');
+			sysCmd('systemctl restart mpd');			
+			break;
 		// mpd-config jobs
 		case 'mpdrestart':
 			sysCmd('mpc stop');

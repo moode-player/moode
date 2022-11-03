@@ -47,12 +47,12 @@ if (isset($_POST['update_usb_auto_updatedb'])) {
 		phpSession('write', 'usb_auto_updatedb', $_POST['usb_auto_updatedb']);
 	}
 }
-// Ignore cuefiles on library scan
+// Scan or ignore .cue files by adding or removing *.cue from /var/lib/mpd/music/.mpdignore
 if (isset($_POST['update_cuefiles_ignore'])) {
 	if (isset($_POST['cuefiles_ignore']) && $_POST['cuefiles_ignore'] != $_SESSION['cuefiles_ignore']) {
 		$_SESSION['notify']['title'] = 'Settings updated';
 		phpSession('write', 'cuefiles_ignore', $_POST['cuefiles_ignore']);
-		setCuefilesIgnore($_SESSION['cuefiles_ignore']);
+		submitJob('cuefiles_ignore', $_POST['cuefiles_ignore'], 'Settings updated', 'MPD restarted');
 	}
 }
 // Re-mount nas sources
