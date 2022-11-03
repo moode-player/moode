@@ -262,7 +262,7 @@ if (isset($_POST['update_scnrotate'])) {
 if (isset($_POST['update_fs_smb'])) {
 	if (isset($_POST['fs_smb']) && $_POST['fs_smb'] != $_SESSION['fs_smb']) {
 		phpSession('write', 'fs_smb', $_POST['fs_smb']);
-		submitJob('fs_smb', $_POST['fs_nfs'], 'Settings updated', '');
+		submitJob('fs_smb', $_POST['fs_smb'], 'Settings updated', '');
 	}
 }
 
