@@ -154,7 +154,7 @@
 				</div>
 				<span class="help-block-configs help-block-margin2">
 					The Loopback device provides a copy of the PCM stream being output to the audio device. The copy can be accessed by reading "hw:Loopback,1,0".<br>
-					NOTE: Max sample rate is 384 kHz.
+					NOTE: For HDMI and Headphone out Loopback requres a sample rate > 44.1K. This can be configured in the SoX resampling section of MPD config. The requirement does not apply if Multiroom Sender is ON.
                 </span>
 			</div>
 		</div>
