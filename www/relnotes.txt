@@ -21,7 +21,7 @@ Updates
 - UPD: Add UI layout for Ultra-wide screens
 - UPD: Add Analog clock option for CoverView
 - UPD: Use thin style for CoverView clocks
-- UPD: Improve Ignore CUE files option
+- UPD: Improve CUE handling and presentation
 - UPD: Improve Quick help
 - UPD: Use the correct name for AirPlay
 - UPD: Refactor CSS and config templates
