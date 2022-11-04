@@ -287,7 +287,7 @@
 	#volume-popup .volume-display {font-size:2.75vw;}
 	/* CoverView screen saver */
 	#ss-metadata {top:10vh!important;text-align:center!important;font-size:3em!important;}
-	#ss-hd-badge {bottom:1rem;}
+	.playback-hd-badge {margin-top:0;bottom:0;}
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
 	/* Thumbnails for Radio, Album and Playlist views */

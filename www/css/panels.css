@@ -481,7 +481,7 @@ body.cvwide #ss-metadata {float:left;top:15vh;left:100vh;text-align:left;font-si
 body.cvwide #ss-current-album-div {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}*/
 body.cvwide #ss-currentalbum {margin:0!important;}
 body.cvwide-xmeta #ss-extra-metadata {display:block;color:var(--textvariant);font-size:.85em;}
-body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 3em);height:calc(100vh - 3em);}
+body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
 body:not(.cvpb) #ss-metadata {left:calc(100vh + 2em);}
 /* misc */
 #btn-ra-search-reset, #btn-pl-search-reset {display:none;}
@@ -729,8 +729,10 @@ input[type='range'].vslide2::-moz-range-track {height:10em;width:2px;border-radi
 .lib-encoded-at-hdonly {filter:brightness(90%);position:absolute;float:right;padding:.1em .2em 0 .3em;line-height:1.2em;right:1.15rem;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;transform:translate(0%, -195%);}
 .lib-encoded-at-hdonly-tagview {position:absolute;padding:.05rem .2em 0 .3em;line-height:1.2em;left:2.8rem;bottom:1em;color:gold;background:#000;border:1px solid gold;border-radius:10%;font-size:.39em;font-style:normal;font-weight:600;}
 #playbar-hd-badge {filter:brightness(90%);display:none;position:absolute;line-height:1.2em;margin:.2em 0 0 1em;padding:.1em .2em 0 .3em;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;}
-#ss-hd-badge {filter:brightness(90%);display:none;position:absolute;line-height:1.2em;margin:.3rem 0 0 1em;padding:.1em .2em 0 .3em;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;}
-.playback-hd-badge {filter:brightness(90%);display:none;position:relative;height:1.2em;top:1.75rem;margin:0 0 0 1em;padding:.1em .2em 0 .3em;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;}
+#ss-hd-badge,
+.playback-hd-badge {filter:brightness(90%);display:none;position:relative;color:gold;background:#000;border:2px solid gold;border-radius:10%;font-size:.65em;font-style:normal;font-weight:700;margin-left:1em;padding:.1em .2em 0 .3em;}
+#ss-hd-badge {vertical-align:text-top;line-height:1.8em;}
+.playback-hd-badge {vertical-align:text-bottom;line-height:1.5em;margin-top:1.85rem;bottom:0.25rem;}
 /* Radio manager */
 .modal-button-style {display:inline-block;/*margin-bottom:.5em;margin-top:-1px*/}
 /* Radio view, Playlist view */
