@@ -786,11 +786,12 @@ var renderSongs = function(albumPos) {
             var album = filteredSongs[i].album + comment;
 
             if (album != lastAlbum) {
-                albumDiv = '<div class="lib-album-heading"' +
-                        ' heading-album="' + filteredSongs[i].album + '"' +
-                        ' heading-comment="' + filteredSongs[i].comment + '"' +
-                        ' heading-key="' + filteredSongs[i].mb_albumid + '"' +
-                        '><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-album-heading">' + album + '</a></div>';
+                albumDiv = '<div id=lib-album-' + (i + 1).toString() +
+                    ' class="lib-album-heading"' +
+                    ' heading-album="' + filteredSongs[i].album + '"' +
+                    ' heading-comment="' + filteredSongs[i].comment + '"' +
+                    ' heading-key="' + filteredSongs[i].mb_albumid + '"' +
+                    '><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-album-heading">' + album + '</a></div>';
                 lastAlbum = album;
             }
             else {
@@ -799,12 +800,13 @@ var renderSongs = function(albumPos) {
 
             if (multiDisc.indexOf(filteredSongs[i].album) != -1) {
                 if (filteredSongs[i].disc != lastDisc) {
-    				discDiv = '<div id="lib-disc-' + filteredSongs[i].disc + '" class="lib-disc"' +
-                            ' heading-album="' + filteredSongs[i].album + '"' +
-                            ' heading-disc="' + filteredSongs[i].disc + '"' +
-                            ' heading-comment="' + filteredSongs[i].comment + '"' +
-                            ' heading-key="' + filteredSongs[i].mb_albumid + '"' +
-                            '><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + filteredSongs[i].disc + '</a></div>'
+    				discDiv = '<div id="lib-disc-' + filteredSongs[i].disc +
+                        '" class="lib-disc"' +
+                        ' heading-album="' + filteredSongs[i].album + '"' +
+                        ' heading-disc="' + filteredSongs[i].disc + '"' +
+                        ' heading-comment="' + filteredSongs[i].comment + '"' +
+                        ' heading-key="' + filteredSongs[i].mb_albumid + '"' +
+                        '><a class="btn" href="#notarget" data-toggle="context" data-target="#context-menu-lib-disc">Disc ' + filteredSongs[i].disc + '</a></div>'
     				lastDisc = filteredSongs[i].disc;
     			}
     			else {
@@ -1476,8 +1478,8 @@ $('#lib-coverart-img').click(function(e) {
 // Click Disc
 $('#songsList').on('click', '.lib-disc', function(e) {
 	$('img.lib-coverart, #songsList li, #songsList .lib-disc a').removeClass('active'); // Remove highlight
-	var discNum = $(this).text().substr(5);
-	$('#lib-disc-' + discNum + ' a').addClass('active');
+	var discNum = $(this).text().split(' '); // DISC 1
+	$('#lib-disc-' + discNum[1] + ' a').addClass('active');
 
     var headingAlbum = $(this).attr('heading-album');
     var headingDisc = $(this).attr('heading-disc');
@@ -1503,6 +1505,9 @@ $('#songsList').on('click', '.lib-disc', function(e) {
 // Click Album heading
 $('#songsList').on('click', '.lib-album-heading', function(e) {
 	$('img.lib-coverart, #songsList li, #songsList .lib-disc a').removeClass('active'); // Remove highlight
+    var albumNum = $(this).attr('id').split('-'); // lib-album-1
+	$('#lib-album-' + albumNum[2] + ' a').addClass('active');
+
 	var albumName = $(this).text();
 
     var headingAlbum = $(this).attr('heading-album');
@@ -1785,6 +1790,8 @@ $('#context-menu-lib-disc a').click(function(e) {
 
 // Click Album heading context menu item
 $('#context-menu-lib-album-heading a').click(function(e) {
+    $('#songsList .lib-album-heading a').removeClass('active');
+
 	var files = [];
 	for (var i in filteredSongsAlbum) {
 		files.push(filteredSongsAlbum[i].file);

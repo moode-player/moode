@@ -3906,11 +3906,11 @@ $('#context-backdrop').click(function(e){
     else if (currentView == 'tag') {
         $('#lib-song-' + (UI.dbEntry[0] + 1).toString()).removeClass('active');
         $('img.lib-coverart').removeClass('active');
-        $('#songsList .lib-disc a').removeClass('active');
+        $('#songsList .lib-disc a, #songsList .lib-album-heading a').removeClass('active');
     }
     else if (currentView == 'album') {
         $('#albumcovers .lib-entry').eq(UI.libPos[1]).removeClass('active');
-        $('#songsList .lib-disc a').removeClass('active');
+        $('#songsList .lib-disc a, #songsList .lib-album-heading a').removeClass('active');
     }
 });
 
