@@ -282,11 +282,11 @@ if ($_SESSION['aplactive'] == '1' || $_SESSION['spotactive'] == '1' || $_SESSION
 	} else {
 		$_resample_rate = $cfgMpd['audio_output_depth'] . ' bit, ' . $cfgMpd['audio_output_rate'] . ' kHz, ' . $cfgMpd['audio_output_chan'];
 		$resample_modes = array('0' => 'disabled',
-			SOX_UPSAMPLE_ALL => 'source < target rate',
-			SOX_UPSAMPLE_ONLY_41K => 'only 44.1K source rate',
-			SOX_UPSAMPLE_ONLY_4148K => 'only 44.1K and 48K source rates',
-			SOX_ADHERE_BASE_FREQ => 'resample (adhere to base freq)',
-			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'source < target rate (adhere to base freq)'
+			SOX_UPSAMPLE_ALL => 'Source < target rate',
+			SOX_UPSAMPLE_ONLY_41K => 'Only 44.1K source rate',
+			SOX_UPSAMPLE_ONLY_4148K => 'Only 44.1K and 48K source rates',
+			SOX_ADHERE_BASE_FREQ => 'Resample (adhere to base freq)',
+			(SOX_UPSAMPLE_ALL + SOX_ADHERE_BASE_FREQ) => 'Source < target rate (adhere to base freq)'
 		);
 		$_selective_resampling_hide = '';
 		$_selective_resample = $resample_modes[$cfgMpd['selective_resample_mode']];
