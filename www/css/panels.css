@@ -480,7 +480,9 @@ body.cvwide #ss-metadata {float:left;top:15vh;left:100vh;text-align:left;font-si
 /*body.cvwide #ss-currentsong {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
 body.cvwide #ss-current-album-div {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}*/
 body.cvwide #ss-currentalbum {margin:0!important;}
-body.cvwide-xmeta #ss-extra-metadata {display:block;color:var(--textvariant);font-size:.85em;margin-top:1.5em;}
+body.cvwide-xmeta #ss-extra-metadata {display:block;color:var(--textvariant);font-size:.85em;}
+body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 3em);height:calc(100vh - 3em);}
+body:not(.cvpb) #ss-metadata {left:calc(100vh + 2em);}
 /* misc */
 #btn-ra-search-reset, #btn-pl-search-reset {display:none;}
 #landscape-backdrop {height:100vh;width:100vw;z-index:11112;position:fixed;background:rgba(32,32,32,1);display:none;}
