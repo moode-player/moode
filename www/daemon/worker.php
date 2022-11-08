@@ -966,6 +966,12 @@ if (!isset($_SESSION['lib_scope'])) {
 }
 workerLog('worker: Library scope (' . $_SESSION['lib_scope'] . ')');
 
+// Reset view to Playback
+workerLog('worker: View reset to playback');
+$view = explode(',', $_SESSION['current_view'])[0] != 'playback' ? 'playback,' . $_SESSION['current_view'] : $_SESSION['current_view'];
+phpSession('write', 'current_view', $view);
+sendEngCmd('refresh_screen');
+
 //
 // Globals section
 //
@@ -1841,7 +1847,7 @@ function runQueuedJob() {
 			setCuefilesIgnore($_SESSION['w_queueargs']);
 			clearLibCacheAll();
 			sysCmd('mpc stop');
-			sysCmd('systemctl restart mpd');			
+			sysCmd('systemctl restart mpd');
 			break;
 		// mpd-config jobs
 		case 'mpdrestart':

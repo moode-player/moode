@@ -88,6 +88,7 @@ function notify(title, msg, duration = '2_seconds') {
         discovering_players: 'Discovering players...',
         restart: 'Restarting...',
 		shutdown: 'Shutting down...',
+        reconnect: 'Reconnecting...',
         mpderror: 'MPD error',
         viewport: 'Viewport',
         updater: 'An update is available',

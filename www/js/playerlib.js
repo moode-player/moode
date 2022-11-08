@@ -144,7 +144,8 @@ var GLOBAL = {
     busySpinnerSVG: "<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 42 42' stroke='#fff'><g fill='none' fill-rule='evenodd'><g transform='translate(3 3)' stroke-width='4'><circle stroke-opacity='.35' cx='18' cy='18' r='18'/><path d='M36 18c0-9.94-8.06-18-18-18'><animateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='1s' repeatCount='indefinite'/></path></g></g></svg>",
     thisClientIP: '',
     chromium: false,
-    ssClockIntervalID: ''
+    ssClockIntervalID: '',
+    reconnecting: false
 };
 GLOBAL.allFilters = GLOBAL.oneArgFilters.concat(GLOBAL.twoArgFilters);
 
@@ -306,8 +307,14 @@ function engineMpd() {
 				// JSON parse errors @ohinckel https: //github.com/moode-player/moode/pull/14/files
 				if (typeof(MPD.json['error']) == 'object') {
                     var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
-                    // This particular EOF error occurs when client is simply trying to reconnect
-                    if (MPD.json['error']['message'] != 'JSON Parse error: Unexpected EOF') {
+                    // These particular errors occur when front-end is simply trying to reconnect
+                    if (MPD.json['error']['message'] == 'JSON Parse error: Unexpected EOF' ||
+                        MPD.json['error']['message'] == 'Unexpected end of JSON input') {
+                        if (!GLOBAL.reconnecting) {
+                            notify('reconnect', '', 'infinite');
+                            GLOBAL.reconnecting = true;
+                        }
+                    } else {
                         notify('mpderror', MPD.json['error']['message'] + errorCode);
                     }
 				}
@@ -343,8 +350,10 @@ function engineMpd() {
                 if (data['statusText'] == 'error' && data['readyState'] == 0) {
 			        renderReconnect();
 				}
+
 				MPD.json['state'] = 'reconnect';
-				engineMpd();
+
+                engineMpd();
 			}, ENGINE_TIMEOUT);
 		}
     });
@@ -359,7 +368,7 @@ function engineMpdLite() {
 		async: true,
 		cache: false,
 		success: function(data) {
-			//debugLog('engineMpdLite(): success branch: data=(' + data + ')');
+			debugLog('engineMpdLite(): success branch: data=(' + data + ')');
 
 			// Always have valid json
 			try {
@@ -398,7 +407,22 @@ function engineMpdLite() {
         			        renderReconnect();
         				}
                     }
+
     				MPD.json['state'] = 'reconnect';
+
+                    if (typeof(MPD.json['error']) == 'object') {
+                        var errorCode = typeof(MPD.json['error']['code']) === 'undefined' ? '' : ' (' + MPD.json['error']['code'] + ')';
+                        // These particular errors occur when front-end is simply trying to reconnect
+                        if (MPD.json['error']['message'] == 'JSON Parse error: Unexpected EOF' ||
+                            MPD.json['error']['message'] == 'Unexpected end of JSON input') {
+                            if (!GLOBAL.reconnecting) {
+                                notify('reconnect', '', 'infinite');
+                                GLOBAL.reconnecting = true;
+                            }
+                        } else {
+                            notify('mpderror', MPD.json['error']['message'] + errorCode);
+                        }
+    				}
 
 					engineMpdLite();
 				}, ENGINE_TIMEOUT);
@@ -415,8 +439,10 @@ function engineMpdLite() {
     			        renderReconnect();
     				}
                 }
+
 				MPD.json['state'] = 'reconnect';
-				engineMpdLite();
+
+                engineMpdLite();
 			}, ENGINE_TIMEOUT);
 		}
     });
@@ -502,7 +528,7 @@ function engineCmd() {
                     console.log(cmd[0]);
                     break;
                 default:
-                    console.log(cmd[0]);
+                    console.log('engineCmd(): ' + cmd[0]);
                     break;
             }
 
@@ -541,8 +567,13 @@ function engineCmdLite() {
                     // causing engine-cmd.php to start releasing idle connections
                     console.log(cmd[0]);
                     break;
+                case 'refresh_screen':
+                    setTimeout(function() {
+                        location.reload(true);
+                    }, DEFAULT_TIMEOUT);
+                    break;
                 default:
-                    console.log(cmd[0]);
+                    console.log('engineCmdLite(): ' + cmd[0]);
                     break;
             }
 
@@ -696,7 +727,9 @@ function renderReconnect() {
 		$('#reconnect').show();
 	}
 
-	$('#countdown-display').countdown('pause');
+    if (GLOBAL.scriptSection == 'panels') {
+        $('#countdown-display').countdown('pause');
+    }
 
 	window.clearInterval(UI.knob);
 	UI.hideReconnect = true;
