@@ -53,14 +53,17 @@ a:focus {color:var(--accentxts);} /* fixes blue outline on control after closing
 .input-xlarge {width:75%;} /* same as medium */
 form {margin:0;}
 h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: center;}
+
+/* TODO: Can these be deleted? */
 /* custom sized select controls */
 .bootstrap-select.select-mini:not([class*="span"]) {width:71.5px;}
-.bootstrap-select.select-mini2:not([class*="span"]) {width:78px;margin-right:14px;}
+/*DELETE.bootstrap-select.select-mini2:not([class*="span"]) {width:78px;margin-right:14px;}*/
 .bootstrap-select.select-medium:not([class*="span"]) {width:150px;}
 .bootstrap-select.select-medium2:not([class*="span"]) {width:180px;}
 .bootstrap-select.select-large:not([class*="span"]) {width:250px;}
 .bootstrap-select.select-large2:not([class*="span"]) {width: 282px;}
 .bootstrap-select.select-large3:not([class*="span"]) {width: 350px;}
+
 /* stuff */
 #playback-queue {width:38%;}
 #playback-cover {padding:0;width:38%;}
@@ -68,7 +71,7 @@ h6 {font-size: large;font-weight: 500;text-transform: capitalize;text-align: cen
 #playback-panel.newui #playback-queue, #playback-panel.cv #playback-queue {position:relative;width:44%;left:-10000px;;margin:0 auto;}
 #playback-panel.newui #playback-cover, #playback-panel.cv #playback-cover {padding:0;width:33vw;position:absolute;left:50%;transform:translate(-50%);}
 #playback-panel.newui #playback-controls, #playback-panel.cv #playback-controls {margin-left:0px;width:100%;height:calc(100vh - 2.75rem);position:absolute;}
-.btn-group.bootstrap-select .btn {padding:2px 12px;}
+/*DELETE.btn-group.bootstrap-select .btn {padding:2px 12px;}*/
 #players, #configure {margin-left:auto;margin-right:auto;text-align:center;}
 #players .btn, #configure .btn {background:var(--config_modal_btn_bg);padding:.5em .75em;}
 #players ul > li, #configure ul > li {display:inline-flex;padding:.5em;}
@@ -175,7 +178,6 @@ li.modal-dropdown-text:focus {color:#eee;}
 .clockradio-on-m {color:#dddddd;font-size:16.5px;}
 .clockradio-off-m {color:#7f8c8d;font-size:16.5px;}
 .info-toggle {text-decoration:none;position:relative;margin:0;/*top:3px;*/left:.25em;font-size:16px;vertical-align:middle;}
-.set-button {margin: 0 4px 0 8px;} /* for system config page 'set' buttons */
 #quickhelp-icon-lists ul {list-style:none;margin-left:0;}
 #quickhelp-icon-lists p {margin-left:1.5em;}
 #quickhelp-icon-lists span, #quickhelp-bullet-list span {margin-left:0;font-size:1em;font-weight:500;}

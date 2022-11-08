@@ -286,11 +286,12 @@
 	#volumeup-2 {font-size:2.5vw;}
 	#volume-popup .volume-display {font-size:2.75vw;}
 	/* CoverView screen saver */
+	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
 	#ss-metadata {top:10vh!important;text-align:center!important;font-size:3em!important;}
 	.playback-hd-badge {margin-top:0;bottom:0;}
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
-	/* Thumbnails for Radio, Album and Playlist views */
+	/* Main cover and thumbnails for Radio, Album and Playlist views */
 	img.coverart {width:72vh;}
 	.cover-menu {background-size:2.5rem 2.5rem;background-position: 0.75rem 2rem;}
 	.album-name,
@@ -343,9 +344,27 @@
 	/* For the configs */
 	.container {margin-left:25vw;margin-right:25vw;}
 }
-@media (height:479px) and (width:1919px) {
+/* Specifically for 480 x 1920 */
+@media (max-height:479px) and (orientation:landscape) {
+	/* Main cover and thumbnails for Radio, Album and Playlist views */
 	img.coverart {width:70vh;}
+	/* Toggle buttons under the time knob */
 	#togglebtns {padding-top:.5rem;}
+	/* Playback view Queue  */
+	.playqueue li:before {font-size:1.75em;margin-top:10px;}
+	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
+	.playqueue .pll1 {font-size:1.25rem;}
+    .playqueue .pll2 {font-size:1.15rem;margin-left:calc(3.5em + 1vmin)!important}
+	/* CoverView Queue */
+	#cv-playqueue {width:75vmin;}
+	.cv-playqueue li:before {font-size:1.5em;margin-top:8px;}
+	.cv-playqueue .playqueue-thumb {width:3.5em;height:3.5em;}
+	.cv-playqueue .pll1 {font-size:1.25rem;}
+	.cv-playqueue .pll2 {font-size:1rem;margin-left:calc(2.5em + 1vmin)!important}
+	/* Time knob */
+	#countdown {height:14vw;width:14vw;}
+	#countdown-display {font-size:1.75vw;}
+	#total {font-size:1vw;}
 }
 
 /* iPhone Max sizes */
@@ -407,7 +426,7 @@
 
 /* Don't show UI in landscape on Smartphone sized screens */
 @media (orientation:landscape) and (max-height:432px) {
-	#landscape-backdrop {display:block;}
+	/*#landscape-backdrop {display:block;}*/
 }
 
 /* Use custom scroll bars for devices with an attached pointing device (mouse, trackpad, etc) */

@@ -341,13 +341,12 @@ jQuery(document).ready(function($){ 'use strict';
     });
 
     // Info button (i) show/hide toggle
-    $('.info-toggle').click(function(e) {
+    $('.config-info-toggle').click(function(e) {
 		var spanId = '#' + $(this).data('cmd');
-		if ($(spanId).hasClass('hide')) {
-			$(spanId).removeClass('hide');
-		}
-		else {
-			$(spanId).addClass('hide');
+		if ($(spanId).css('display') == 'none') {
+			$(spanId).css('display', 'block');
+		} else {
+			$(spanId).css('display', 'none');
 		}
     });
 });
