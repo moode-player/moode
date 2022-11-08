@@ -104,7 +104,6 @@
 		<!--removeIf(NOCONFIGSECTION)-->
 		<!-- build:js js/config.min.js defer -->
 		<!-- CONFIGBLOCKSECTION_BEGIN -->
-        <script src="js/custom_checkbox_and_radio.js" defer></script>
         <script src="js/custom_radio.js" defer></script>
         <script src="js/jquery.tagsinput.js" defer></script>
         <script src="js/jquery.placeholder.js" defer></script>
