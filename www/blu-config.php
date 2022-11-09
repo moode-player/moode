@@ -122,7 +122,7 @@ phpSession('close');
 //
 
 // Command list
-$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (Default)</option>\n";
+$_cmd['btcmd'] .= "<option value=\"-s\" " . (($cmd == '-s') ? "selected" : "") . ">SCAN (Standard)</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-S\" " . (($cmd == '-S') ? "selected" : "") . ">SCAN (Include LE devices)</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-p\" " . (($cmd == '-p') ? "selected" : "") . ">LIST paired</option>\n";
 $_cmd['btcmd'] .= "<option value=\"-c\" " . (($cmd == '-c') ? "selected" : "") . ">LIST connected</option>\n";

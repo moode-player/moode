@@ -473,7 +473,7 @@ function engineCmd() {
                 case 'btactive1':
                 case 'btactive0':
                     // NOTE: cmd[1] is the input source name
-                    inpSrcIndicator(cmd[0], 'Bluetooth Active' + cmd[1] + '<br><a class="btn configure-renderer" href="blu-config.php">BlueZ Config</a>');
+                    inpSrcIndicator(cmd[0], 'Bluetooth Active' + cmd[1] + '<br><a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
                     break;
                 case 'aplactive1':
                 case 'aplactive0':
@@ -1078,7 +1078,7 @@ function renderUI() {
     	}
     	// Bluetooth renderer
     	if (SESSION.json['btactive'] == '1') {
-    		inpSrcIndicator('btactive1', 'Bluetooth Active' + '<br><a class="btn configure-renderer" href="blu-config.php">BlueZ Config</a>');
+    		inpSrcIndicator('btactive1', 'Bluetooth Active' + '<br><a class="btn configure-renderer" href="blu-config.php">Bluetooth Control</a>');
      	}
     	// AirPlay renderer
     	if (SESSION.json['aplactive'] == '1') {
