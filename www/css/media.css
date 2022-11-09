@@ -109,7 +109,8 @@
 	#playbar-volume-popup-btn {width:initial!important;}
 	/*#extra-tags-display {display:none;}*/
 	#db-path {display:none;}
-	.playback-hd-badge {top:1.35rem;}
+	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
+	.config-select-large {width: 204px!important;}
 }
 
 /* Smaller portrait for small screens */
@@ -197,6 +198,8 @@
 	#top-columns.nogenre #lib-album-header, #top-columns.nogenre #lib-album {left:100%;width:50%;}
 	.modal {min-width:100vw;}
 	.btn-group.bootstrap-select.bootstrap-select-mini {width:6.5rem;}
+	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
+	.config-select-large {width: 204px!important;}	
 }
 
 /* In-browser view for mobile screens */
@@ -288,7 +291,6 @@
 	/* CoverView screen saver */
 	body:not(.cvpb) #ss-coverart-url img {width:calc(100vh - 5em);height:calc(100vh - 6em);margin-top:1.25em;}
 	#ss-metadata {top:10vh!important;text-align:center!important;font-size:3em!important;}
-	.playback-hd-badge {margin-top:0;bottom:0;}
 	/* Audioinfo popup modal */
 	#audioinfo-modal {width:35%!important;}
 	/* Main cover and thumbnails for Radio, Album and Playlist views */
@@ -303,7 +305,7 @@
 	#extra-tags-display,
 	#currentsong,
 	#currentartist {text-overflow:ellipsis;white-space:nowrap;overflow: hidden;}
-	.playback-hd-badge {height:1.25em!important;top:.85rem!important;padding-top:0.15em;}
+	.playback-hd-badge {margin-top:0;bottom:0;height:1.25em!important;top:.85rem!important;padding-top:0.15em;}
 	/* Playback view Queue  */
 	.playqueue li:before {font-size:1.75em;margin-top:10px;}
 	.playqueue .playqueue-thumb {width:4.5em;height:4.5em;}
