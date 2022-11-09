@@ -25,7 +25,6 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
-// Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		sqlUpdate('cfg_airplay', $dbh, $key, $value);
@@ -36,43 +35,39 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		}
 	}
 
-	// Restart if indicated
 	submitJob('airplaysvc', '', 'Setings updated', ($_SESSION['airplaysvc'] == '1' ? 'AirPlay restarted' : ''));
 }
 
 phpSession('close');
 
-// Load settings
 $result = sqlRead('cfg_airplay', $dbh);
-$cfg_airplay = array();
+$cfgAirplay = array();
 
 foreach ($result as $row) {
-	$cfg_airplay[$row['param']] = $row['value'];
+	$cfgAirplay[$row['param']] = $row['value'];
 }
 
-// Interpolation
-$_select['interpolation'] .= "<option value=\"basic\" " . (($cfg_airplay['interpolation'] == 'basic') ? "selected" : "") . ">Basic</option>\n";
-$_select['interpolation'] .= "<option value=\"soxr\" " . (($cfg_airplay['interpolation'] == 'soxr') ? "selected" : "") . ">SoX</option>\n";
-// Output bit depth
-$_select['output_format'] .= "<option value=\"S16\" " . (($cfg_airplay['output_format'] == 'S16') ? "selected" : "") . ">16 bit</option>\n";
-$_select['output_format'] .= "<option value=\"S24\" " . (($cfg_airplay['output_format'] == 'S24') ? "selected" : "") . ">24 bit</option>\n";
-$_select['output_format'] .= "<option value=\"S24_3LE\" " . (($cfg_airplay['output_format'] == 'S24_3LE') ? "selected" : "") . ">24 bit 3LE</option>\n";
-$_select['output_format'] .= "<option value=\"S24_3BE\" " . (($cfg_airplay['output_format'] == 'S24_3BE') ? "selected" : "") . ">24 bit 3BE</option>\n";
-$_select['output_format'] .= "<option value=\"S32\" " . (($cfg_airplay['output_format'] == 'S32') ? "selected" : "") . ">32 bit</option>\n";
-// Output rate
-$_select['output_rate'] .= "<option value=\"44100\" " . (($cfg_airplay['output_rate'] == '44100') ? "selected" : "") . ">44.1 kHz</option>\n";
-$_select['output_rate'] .= "<option value=\"88200\" " . (($cfg_airplay['output_rate'] == '88200') ? "selected" : "") . ">88.2 kHz</option>\n";
-$_select['output_rate'] .= "<option value=\"176400\" " . (($cfg_airplay['output_rate'] == '176400') ? "selected" : "") . ">176.4 kHz</option>\n";
-$_select['output_rate'] .= "<option value=\"352800\" " . (($cfg_airplay['output_rate'] == '352800') ? "selected" : "") . ">352.8 kHz</option>\n";
-// Session interruption
-$_select['allow_session_interruption'] .= "<option value=\"yes\" " . (($cfg_airplay['allow_session_interruption'] == 'yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['allow_session_interruption'] .= "<option value=\"no\" " . (($cfg_airplay['allow_session_interruption'] == 'no') ? "selected" : "") . ">No</option>\n";
-// Session timeout
-$_select['session_timeout'] = $cfg_airplay['session_timeout'];
-// Audio bacnend latency offset (secs)
-$_select['audio_backend_latency_offset_in_seconds'] = $cfg_airplay['audio_backend_latency_offset_in_seconds'];
-// Audio buffer length (secs)
-$_select['audio_backend_buffer_desired_length_in_seconds'] = $cfg_airplay['audio_backend_buffer_desired_length_in_seconds'];
+
+$_select['interpolation'] .= "<option value=\"basic\" " . (($cfgAirplay['interpolation'] == 'basic') ? "selected" : "") . ">Basic</option>\n";
+$_select['interpolation'] .= "<option value=\"soxr\" " . (($cfgAirplay['interpolation'] == 'soxr') ? "selected" : "") . ">SoX</option>\n";
+
+$_select['output_format'] .= "<option value=\"S16\" " . (($cfgAirplay['output_format'] == 'S16') ? "selected" : "") . ">16 bit</option>\n";
+$_select['output_format'] .= "<option value=\"S24\" " . (($cfgAirplay['output_format'] == 'S24') ? "selected" : "") . ">24 bit</option>\n";
+$_select['output_format'] .= "<option value=\"S24_3LE\" " . (($cfgAirplay['output_format'] == 'S24_3LE') ? "selected" : "") . ">24 bit 3LE</option>\n";
+$_select['output_format'] .= "<option value=\"S24_3BE\" " . (($cfgAirplay['output_format'] == 'S24_3BE') ? "selected" : "") . ">24 bit 3BE</option>\n";
+$_select['output_format'] .= "<option value=\"S32\" " . (($cfgAirplay['output_format'] == 'S32') ? "selected" : "") . ">32 bit</option>\n";
+
+$_select['output_rate'] .= "<option value=\"44100\" " . (($cfgAirplay['output_rate'] == '44100') ? "selected" : "") . ">44.1 kHz</option>\n";
+$_select['output_rate'] .= "<option value=\"88200\" " . (($cfgAirplay['output_rate'] == '88200') ? "selected" : "") . ">88.2 kHz</option>\n";
+$_select['output_rate'] .= "<option value=\"176400\" " . (($cfgAirplay['output_rate'] == '176400') ? "selected" : "") . ">176.4 kHz</option>\n";
+$_select['output_rate'] .= "<option value=\"352800\" " . (($cfgAirplay['output_rate'] == '352800') ? "selected" : "") . ">352.8 kHz</option>\n";
+
+$_select['allow_session_interruption'] .= "<option value=\"yes\" " . (($cfgAirplay['allow_session_interruption'] == 'yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['allow_session_interruption'] .= "<option value=\"no\" " . (($cfgAirplay['allow_session_interruption'] == 'no') ? "selected" : "") . ">No</option>\n";
+
+$_select['session_timeout'] = $cfgAirplay['session_timeout'];
+$_select['audio_backend_latency_offset_in_seconds'] = $cfgAirplay['audio_backend_latency_offset_in_seconds'];
+$_select['audio_backend_buffer_desired_length_in_seconds'] = $cfgAirplay['audio_backend_buffer_desired_length_in_seconds'];
 
 waitWorker(1, 'apl-config');
 

@@ -39,7 +39,7 @@ body {
 /* Title and legend */
 h1 {font-size:2.5em;font-weight:200;margin:0 0 .5em 0;}
 legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
-.legend-config {border:none;margin-bottom:.35em;}
+.legend-config {margin-bottom:.25em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 .sub-legend {margin: -1em 0 1.5em 0;color:var(--config-help-color);}
 
@@ -48,7 +48,9 @@ legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bott
 .toggle,
 .toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
 .config-toggle-yn {width:80px;}
-input[type=text] {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;}
+input[type=text],
+input[type=number]
+ {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;}
 .config-input-medium {width:118px;}
 a.config-info-toggle {vertical-align:top;}
 .config-info-toggle i {vertical-align:top;margin-top:6px;font-size:1.25em;}

@@ -24,10 +24,6 @@ require_once __DIR__ . '/inc/session.php';
 
 phpSession('open');
 
-//
-// FORM SUBMIT
-//
-
 // Bluetooth
 if (isset($_POST['update_bt_settings'])) {
 	$currentBtName = $_SESSION['btname'];
@@ -47,25 +43,20 @@ if (isset($_POST['update_bt_settings'])) {
 		submitJob('btsvc', '"' . $currentBtName . '" ' . '"' . $_POST['btname'] . '"', $title, '');
 	}
 }
-// Restart Bluetooth service
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('btsvc', '', 'Bluetooth controller restarted', '');
 }
-// Pairing agent
 if (isset($_POST['update_pairing_agent'])) {
 	phpSession('write', 'pairing_agent', $_POST['pairing_agent']);
 	submitJob('pairing_agent', $_POST['pairing_agent'], 'Settings updated', '');
 }
-// Restart pairing agent
 if (isset($_POST['parestart']) && $_POST['parestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('pairing_agent', '', 'Pairing agent restarted', '');
 }
-// Speaker sharing
 if (isset($_POST['update_bt_multi'])) {
 	phpSession('write', 'btmulti', $_POST['btmulti']);
 	submitJob('btmulti', '', 'Settings updated', '');
 }
-// Resume MPD
 if (isset($_POST['update_rsmafterbt'])) {
 	phpSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
 	$_SESSION['notify']['title'] = 'Settings updated';
@@ -85,17 +76,14 @@ if (isset($_POST['update_airplay_settings'])) {
 		submitJob('airplaysvc', '', $title, '');
 	}
 }
-// Protocol version
 if (isset($_POST['update_airplay_protocol'])) {
 	$_SESSION['airplay_protocol'] = substr($_POST['airplay_protocol'], -1);
 	submitJob('airplay_protocol', $_POST['airplay_protocol'], 'Settings updated', '');
 }
-// Resume MPD
 if (isset($_POST['update_rsmafterapl'])) {
 	phpSession('write', 'rsmafterapl', $_POST['rsmafterapl']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-// Restart
 if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSION['airplaysvc'] == '1') {
 	submitJob('airplaysvc', '', 'AirPlay restarted', '');
 }
@@ -114,16 +102,13 @@ if (isset($_POST['update_spotify_settings'])) {
 		submitJob('spotifysvc', '', $title, '');
 	}
 }
-// Resume MPD
 if (isset($_POST['update_rsmafterspot'])) {
 	phpSession('write', 'rsmafterspot', $_POST['rsmafterspot']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-// Restart
 if (isset($_POST['spotifyrestart']) && $_POST['spotifyrestart'] == 1 && $_SESSION['spotifysvc'] == '1') {
 	submitJob('spotifysvc', '', 'Spotify connect restarted', '');
 }
-// Clear credential cache
 if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credentials'] == 1) {
 	submitJob('spotify_clear_credentials', '', 'Credential cache cleared', '');
 }
@@ -141,12 +126,10 @@ if (isset($_POST['update_sl_settings'])) {
 		submitJob('slsvc', '', $title, '');
 	}
 }
-// Resume MPD
 if (isset($_POST['update_rsmaftersl'])) {
 	phpSession('write', 'rsmaftersl', $_POST['rsmaftersl']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-// Restart
 if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
 	phpSession('write', 'rsmaftersl', 'No');
 	submitJob('slrestart', '', 'Squeezelite restarted', '');
@@ -162,12 +145,10 @@ if (isset($_POST['update_rb_settings'])) {
 		submitJob('rbsvc', '', $title, '');
 	}
 }
-// Resume MPD
 if (isset($_POST['update_rsmafterrb'])) {
 	phpSession('write', 'rsmafterrb', $_POST['rsmafterrb']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-// Restart
 if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
 	submitJob('rbrestart', '', 'RoonBridge restarted', '');
 }
@@ -187,7 +168,6 @@ if (isset($_POST['update_upnp_settings'])) {
 		submitJob('upnpsvc', '"' . $currentUpnpName . '" ' . '"' . $_POST['upnpname'] . '"', $title, '');
 	}
 }
-// Restart
 if (isset($_POST['upnprestart']) && $_POST['upnprestart'] == 1 && $_SESSION['upnpsvc'] == '1') {
 	submitJob('upnpsvc', '', 'UPnP renderer restarted', '');
 }
@@ -209,7 +189,6 @@ if (isset($_POST['update_dlna_settings'])) {
 		submitJob('minidlna', '"' . $currentDlnaName . '" ' . '"' . $_POST['dlnaname'] . '"', $title, $msg);
 	}
 }
-// Rebuild DLNA DB
 if (isset($_POST['rebuild_dlnadb'])) {
 	if ($_SESSION['dlnasvc'] == 1) {
 		submitJob('dlnarebuild', '', 'Database rebuild initiated...', '');
@@ -221,10 +200,6 @@ if (isset($_POST['rebuild_dlnadb'])) {
 }
 
 phpSession('close');
-
-//
-// TEMPLATE DATA
-//
 
 // Bluetooth
 $_feat_bluetooth = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? '' : 'hide';
