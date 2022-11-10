@@ -317,8 +317,9 @@ function addKey(aIdR, aIdC, classes, text) {
 
 function acquireContainerToShrink() {
     if (!OSK.containerToShrink) {
-        for (var aContainer of document.querySelectorAll(".modal-body, .container2")) {
-            if (aContainer.classList.contains("container2")) {
+        // TODO: Test .container shrink. It may not be needed or it may need to be #container
+        for (var aContainer of document.querySelectorAll(".modal-body, .container")) {
+            if (aContainer.classList.contains("container")) {
                 OSK.containerToShrink = { type: "lonely", tag: aContainer, originalHeight: "", shrunk: false };
                 break;
             }

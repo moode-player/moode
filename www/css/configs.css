@@ -18,43 +18,67 @@
  */
 
 /*
-// Style for the Config screens
+ * Style for the Config screens
 */
 
 body {
-	--config-text-color: #ddd;
-	--config-bg-color: #151515;
-	--config-menu-bg-color: rgba(50,50,50,0.95);
-	--config-toggleoff-bg-color: rgba(128,128,128,0.2);
+	--config-text-color:#ddd;
+	--config-bg-color:#151515;
+	--config-menu-bg-color:rgba(50,50,50,0.95);
+	--config-toggleoff-bg-color:rgba(128,128,128,0.2);
+	--config-help-color:#888;
+	--config-ctl-margin:12px;
 	background-color:var(--config-bg-color)!important;
 }
 
-/* Top div in the templates */
+/* Main template div's */
 #container {position:fixed;top:2.75rem;height:90%;width:100%;overflow:scroll;-webkit-overflow-scrolling:touch;}
 .container {position:relative;padding:1em 2em 0 2em;background-color:var(--config-bg-color);font-size:var(--pbfont);width:unset;height:auto;}
 .container .dropdown-menu.inner {background-color:var(--config-menu-bg-color)!important;color:var(--config-text-color)!important;-webkit-overflow-scrolling:touch;}
-/* config theme menu bg */ /* from moode.css was .container2 */
-
-/* Toggle Sliders */
-.toggle,
-.toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
 
 /* Title and legend */
 h1 {font-size:2.5em;font-weight:200;margin:0 0 .5em 0;}
 legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
-.legend-configs {border:none;margin-bottom:.35em;}
+.legend-config {margin-bottom:.25em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
-/* This should  be .horiz-rule-configs */
-.horiz-rule-light {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size:1.15em;font-style:italic;color:#888;}
+.sub-legend {margin: -1em 0 1.5em 0;color:var(--config-help-color);}
 
-/* For updater view modal */
+/* Form controls */
+.toggle {margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;}
+.toggle,
+.toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
+.config-toggle-yn {width:80px;}
+input[type=text],
+input[type=number]
+ {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;}
+.config-input-medium {width:118px;}
+a.config-info-toggle {vertical-align:top;}
+.config-info-toggle i {vertical-align:top;margin-top:6px;font-size:1.25em;}
+.config-btn {display:block;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;width:fit-content;}
+.config-btn-after {color:var(--config-text-color);margin-left:var(--config-ctl-margin);}
+.config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin) var(--config-ctl-margin) 0;}
+.config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
+.config-select-medium {width:125px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
+.config-select-large {width:222px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
+.btn-group.bootstrap-select .btn {padding:3px 0;}
+
+/* Help text */
+.config-horiz-rule {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size:1.15em;font-style:italic;color:#888;}
+.config-help-info,
+.config-help-static {display:block;font-size:var(--pbfont);color:var(--config-help-color);margin-bottom:var(--config-ctl-margin);}
+.config-help-info {display:none;}
+.config-help-no-margin {margin-bottom:0;}
+
+/* blu-config: */
+#blu-config-cmd-output {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin);width:80%;font-family:Courier New;};
+/* sys-config: updater contents of VIEW modal */
 .updater-relnotes {list-style-type:none;margin-left:0;}
-/* Show/hide password plaintext */
+/* net-config, src-config: Show/hide password plaintext */
 .show-hide-password {position:relative;vertical-align:middle;font-size:1.25em;margin-left:.5em}
-
-/* CamillaDSP Pipeline editor */
+/* cdsp-configurator: Pipeline editor */
 .cdsp-pipeline-editor {width:100%;height:150vh;border:none;}
 
+/* Miscellaneous */
 a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-tabs {position:absolute;top:0;top:env(safe-area-inset-top);color:inherit;display:flex;z-index:1001;line-height:normal;font-size:inherit;height:2.75em;align-items:center;display:none;}
 #config-tabs a {font-size:.9rem;color:var(--config-text-color);display:inline-flex;}

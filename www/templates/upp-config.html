@@ -23,36 +23,29 @@
 	<h1 class="snd-config">UPnP</h1>
 
     <form class="form-horizontal" action="" method="post">
-    	<legend class="legend-configs">
-			<button class="btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
-			<a aria-label="Help" class="info-toggle" data-cmd="info-buttons" href="#notarget"><i class="fas fa-info-circle"></i></a>
-			<span id="info-buttons" class="help-block-configs help-block-margin legend-info-help hide">
-				SAVE: Update UPnP configuration and restart UPnP renderer.<br>
-            </span>
+    	<legend>Settings
+			<button class="legend-config btn btn-medium btn-primary btn-submit" type="submit" name="save" value="1">Save</button>
 		</legend>
 
-		<legend>Settings</legend>
 		<div class="control-group">
 			<label class="control-label" for="upnpav">UPnP service type</label>
 			<div class="controls">
-				<select id="svctype" class="input-large" name="config[svctype]">
+				<select id="svctype" class="config-select-large" name="config[svctype]">
 					$_select[svctype]
 				</select>
-				<a aria-label="Help" class="info-toggle" data-cmd="info_svctype" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info_svctype" class="help-block-configs help-block-margin hide">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-svctype" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-svctype" class="config-help-info">
 					Select either UPnP-A/V or OpenHome service.
                 </span>
 			</div>
-		</div>
 
-		<div class="control-group">
 			<label class="control-label" for="checkcontentformat">Check content format</label>
 			<div class="controls">
-				<select id="checkcontentformat" class="input-large" name="config[checkcontentformat]">
+				<select id="checkcontentformat" class="config-select-large" name="config[checkcontentformat]">
 					$_select[checkcontentformat]
 				</select>
-				<a aria-label="Help" class="info-toggle" data-cmd="info_checkcontentformat" href="#notarget"><i class="fas fa-info-circle"></i></a>
-				<span id="info_checkcontentformat" class="help-block-configs help-block-margin hide">
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-check-content-format" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_check-content-format" class="config-help-info">
 					Check that the input format is supported. Set this option to No if a control point or media server sends good audio data with bad metadata.<br>
                 </span>
 			</div>

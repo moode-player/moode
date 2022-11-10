@@ -26,7 +26,6 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
-// apply setting changes to /etc/squeezelite.conf
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		if ($key == 'AUDIODEVICE') {
@@ -35,40 +34,26 @@ if (isset($_POST['save']) && $_POST['save'] == '1') {
 		sqlUpdate('cfg_sl', $dbh, $key, SQLite3::escapeString($value));
 	}
 
-	// update conf file
 	submitJob('slcfgupdate', '', 'Settings updated', ($_SESSION['slsvc'] == '1' ? 'Squeezelite restarted' : ''));
 }
 
 phpSession('close');
 
-// load settings
 $result = sqlRead('cfg_sl', $dbh);
-$cfg_sl = array();
+$cfgSL = array();
 
 foreach ($result as $row) {
-	$cfg_sl[$row['param']] = $row['value'];
+	$cfgSL[$row['param']] = $row['value'];
 }
 
-// get device names
 $dev = getAlsaDeviceNames();
 
-// renderer name
-$_sl_select['renderer_name'] = $cfg_sl['PLAYERNAME'];
-
-// alsa params
-$_sl_select['alsa_params'] = $cfg_sl['ALSAPARAMS'];
-
-// output buffers
-$_sl_select['output_buffers'] = $cfg_sl['OUTPUTBUFFERS'];
-
-// task priority
-$_sl_select['task_priority'] = $cfg_sl['TASKPRIORITY'];
-
-// audio codecs
-$_sl_select['audio_codecs'] = $cfg_sl['CODECS'];
-
-// other options
-$_sl_select['other_options'] = htmlentities($cfg_sl['OTHEROPTIONS']);
+$_sl_select['renderer_name'] = $cfgSL['PLAYERNAME'];
+$_sl_select['alsa_params'] = $cfgSL['ALSAPARAMS'];
+$_sl_select['output_buffers'] = $cfgSL['OUTPUTBUFFERS'];
+$_sl_select['task_priority'] = $cfgSL['TASKPRIORITY'];
+$_sl_select['audio_codecs'] = $cfgSL['CODECS'];
+$_sl_select['other_options'] = htmlentities($cfgSL['OTHEROPTIONS']);
 
 waitWorker(1, 'sqe_config');
 

@@ -26,6 +26,7 @@ jQuery(document).ready(function($) { 'use strict';
 	}
 
     GLOBAL.scriptSection = 'panels';
+    
 	$('#config-back').hide();
 	$('#config-tabs').css('display', 'none');
 	$('#panel-footer').css('display', 'flex');

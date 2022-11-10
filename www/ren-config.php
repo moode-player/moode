@@ -24,8 +24,7 @@ require_once __DIR__ . '/inc/session.php';
 
 phpSession('open');
 
-// Bluetooth renderer
-// Service
+// Bluetooth
 if (isset($_POST['update_bt_settings'])) {
 	$currentBtName = $_SESSION['btname'];
 
@@ -44,32 +43,26 @@ if (isset($_POST['update_bt_settings'])) {
 		submitJob('btsvc', '"' . $currentBtName . '" ' . '"' . $_POST['btname'] . '"', $title, '');
 	}
 }
-// Restart Bluetooth service
 if (isset($_POST['btrestart']) && $_POST['btrestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('btsvc', '', 'Bluetooth controller restarted', '');
 }
-// Pairing agent
 if (isset($_POST['update_pairing_agent'])) {
 	phpSession('write', 'pairing_agent', $_POST['pairing_agent']);
 	submitJob('pairing_agent', $_POST['pairing_agent'], 'Settings updated', '');
 }
-// Restart pairing agent
 if (isset($_POST['parestart']) && $_POST['parestart'] == 1 && $_SESSION['btsvc'] == '1') {
 	submitJob('pairing_agent', '', 'Pairing agent restarted', '');
 }
-// Speaker sharing
 if (isset($_POST['update_bt_multi'])) {
 	phpSession('write', 'btmulti', $_POST['btmulti']);
 	submitJob('btmulti', '', 'Settings updated', '');
 }
-// Resume MPD
 if (isset($_POST['update_rsmafterbt'])) {
 	phpSession('write', 'rsmafterbt', $_POST['rsmafterbt']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
 
-// AirPlay renderer
-// Service
+// AirPlay
 if (isset($_POST['update_airplay_settings'])) {
 	if (isset($_POST['airplayname']) && $_POST['airplayname'] != $_SESSION['airplayname']) {
 		$title = 'Settings updated';
@@ -83,23 +76,19 @@ if (isset($_POST['update_airplay_settings'])) {
 		submitJob('airplaysvc', '', $title, '');
 	}
 }
-// Protocol version
 if (isset($_POST['update_airplay_protocol'])) {
 	$_SESSION['airplay_protocol'] = substr($_POST['airplay_protocol'], -1);
 	submitJob('airplay_protocol', $_POST['airplay_protocol'], 'Settings updated', '');
 }
-// Resume MPD
 if (isset($_POST['update_rsmafterapl'])) {
 	phpSession('write', 'rsmafterapl', $_POST['rsmafterapl']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-// Restart
 if (isset($_POST['airplayrestart']) && $_POST['airplayrestart'] == 1 && $_SESSION['airplaysvc'] == '1') {
 	submitJob('airplaysvc', '', 'AirPlay restarted', '');
 }
 
-// Spotify renderer
-// Service
+// Spotify Connect
 if (isset($_POST['update_spotify_settings'])) {
 	if (isset($_POST['spotifyname']) && $_POST['spotifyname'] != $_SESSION['spotifyname']) {
 		$title = 'Settings updated';
@@ -113,22 +102,18 @@ if (isset($_POST['update_spotify_settings'])) {
 		submitJob('spotifysvc', '', $title, '');
 	}
 }
-// Resume MPD
 if (isset($_POST['update_rsmafterspot'])) {
 	phpSession('write', 'rsmafterspot', $_POST['rsmafterspot']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-// Restart
 if (isset($_POST['spotifyrestart']) && $_POST['spotifyrestart'] == 1 && $_SESSION['spotifysvc'] == '1') {
 	submitJob('spotifysvc', '', 'Spotify connect restarted', '');
 }
-// Clear credential cache
 if (isset($_POST['spotify_clear_credentials']) && $_POST['spotify_clear_credentials'] == 1) {
 	submitJob('spotify_clear_credentials', '', 'Credential cache cleared', '');
 }
 
-// Squeezelite renderer
-// Service
+// Squeezelite
 if (isset($_POST['update_sl_settings'])) {
 	if (isset($_POST['slsvc']) && $_POST['slsvc'] != $_SESSION['slsvc']) {
 		$title = 'Settings updated';
@@ -141,19 +126,16 @@ if (isset($_POST['update_sl_settings'])) {
 		submitJob('slsvc', '', $title, '');
 	}
 }
-// Resume MPD
 if (isset($_POST['update_rsmaftersl'])) {
 	phpSession('write', 'rsmaftersl', $_POST['rsmaftersl']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-// Restart
 if (isset($_POST['slrestart']) && $_POST['slrestart'] == 1) {
 	phpSession('write', 'rsmaftersl', 'No');
 	submitJob('slrestart', '', 'Squeezelite restarted', '');
 }
 
-// RoonBridge renderer
-// Service
+// RoonBridge
 if (isset($_POST['update_rb_settings'])) {
 	if (isset($_POST['rbsvc']) && $_POST['rbsvc'] != $_SESSION['rbsvc']) {
 		$title = 'Settings updated';
@@ -163,17 +145,14 @@ if (isset($_POST['update_rb_settings'])) {
 		submitJob('rbsvc', '', $title, '');
 	}
 }
-// Resume MPD
 if (isset($_POST['update_rsmafterrb'])) {
 	phpSession('write', 'rsmafterrb', $_POST['rsmafterrb']);
 	$_SESSION['notify']['title'] = 'Settings updated';
 }
-// Restart
 if (isset($_POST['rbrestart']) && $_POST['rbrestart'] == 1) {
 	submitJob('rbrestart', '', 'RoonBridge restarted', '');
 }
 
-// UPnP/DLNA
 // UPnP client for MPD
 if (isset($_POST['update_upnp_settings'])) {
 	$currentUpnpName = $_SESSION['upnpname'];
@@ -189,11 +168,11 @@ if (isset($_POST['update_upnp_settings'])) {
 		submitJob('upnpsvc', '"' . $currentUpnpName . '" ' . '"' . $_POST['upnpname'] . '"', $title, '');
 	}
 }
-// Restart
 if (isset($_POST['upnprestart']) && $_POST['upnprestart'] == 1 && $_SESSION['upnpsvc'] == '1') {
 	submitJob('upnpsvc', '', 'UPnP renderer restarted', '');
 }
-// DLNA server
+
+// DLNA media server
 if (isset($_POST['update_dlna_settings'])) {
 	$currentDlnaName = $_SESSION['dlnaname'];
 	if (isset($_POST['dlnaname']) && $_POST['dlnaname'] != $_SESSION['dlnaname']) {
@@ -210,7 +189,6 @@ if (isset($_POST['update_dlna_settings'])) {
 		submitJob('minidlna', '"' . $currentDlnaName . '" ' . '"' . $_POST['dlnaname'] . '"', $title, $msg);
 	}
 }
-// Rebuild DLNA db
 if (isset($_POST['rebuild_dlnadb'])) {
 	if ($_SESSION['dlnasvc'] == 1) {
 		submitJob('dlnarebuild', '', 'Database rebuild initiated...', '');
@@ -223,72 +201,65 @@ if (isset($_POST['rebuild_dlnadb'])) {
 
 phpSession('close');
 
-// AUDIO RENDERERS
-
-// Bluetooth renderer
+// Bluetooth
 $_feat_bluetooth = $_SESSION['feat_bitmask'] & FEAT_BLUETOOTH ? '' : 'hide';
 $_SESSION['btsvc'] == '1' ? $_bt_btn_disable = '' : $_bt_btn_disable = 'disabled';
 $_SESSION['btsvc'] == '1' ? $_bt_link_disable = '' : $_bt_link_disable = 'onclick="return false;"';
-$_select['btsvc1'] .= "<input type=\"radio\" name=\"btsvc\" id=\"togglebtsvc1\" value=\"1\" " . (($_SESSION['btsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['btsvc0'] .= "<input type=\"radio\" name=\"btsvc\" id=\"togglebtsvc2\" value=\"0\" " . (($_SESSION['btsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['btname'] = $_SESSION['btname'];
 $_SESSION['pairing_agent'] == '1' ? $_pa_btn_disable = '' : $_pa_btn_disable = 'disabled';
 $_SESSION['pairing_agent'] == '1' ? $_pa_link_disable = '' : $_pa_link_disable = 'onclick="return false;"';
-$_select['pairing_agent1'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent1\" value=\"1\" " . (($_SESSION['pairing_agent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['pairing_agent0'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent2\" value=\"0\" " . (($_SESSION['pairing_agent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['btmulti1'] .= "<input type=\"radio\" name=\"btmulti\" id=\"togglebtmulti1\" value=\"1\" " . (($_SESSION['btmulti'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['btmulti0'] .= "<input type=\"radio\" name=\"btmulti\" id=\"togglebtmulti2\" value=\"0\" " . (($_SESSION['btmulti'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['rsmafterbt'] .= "<option value=\"1\" " . (($_SESSION['rsmafterbt'] == '1') ? "selected" : "") . ">Yes</option>\n";
-$_select['rsmafterbt'] .= "<option value=\"0\" " . (($_SESSION['rsmafterbt'] == '0') ? "selected" : "") . ">No</option>\n";
+$_select['btsvc_off'] .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-2\" value=\"0\" " . (($_SESSION['btsvc'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['btsvc_on']  .= "<input type=\"radio\" name=\"btsvc\" id=\"toggle-btsvc-1\" value=\"1\" " . (($_SESSION['btsvc'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+$_select['btname'] = $_SESSION['btname'];
+$_select['pairing_agent_off'] .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent-2\" value=\"0\" " . (($_SESSION['pairing_agent'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$_select['pairing_agent_on']  .= "<input type=\"radio\" name=\"pairing_agent\" id=\"toggle-pairing-agent-1\" value=\"1\" " . (($_SESSION['pairing_agent'] == 1) ? "checked=\"checked\"" : "") . ">\n";
+$_select['btmulti_off'] .= "<input type=\"radio\" name=\"btmulti\" id=\"toggle-btmulti-2\" value=\"0\" " . (($_SESSION['btmulti'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['btmulti_on']  .= "<input type=\"radio\" name=\"btmulti\" id=\"toggle-btmulti-1\" value=\"1\" " . (($_SESSION['btmulti'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+$_select['rsmafterbt_no']  .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-2\" value=\"0\" " . (($_SESSION['rsmafterbt'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['rsmafterbt_yes'] .= "<input type=\"radio\" name=\"rsmafterbt\" id=\"toggle-rsmafterbt-1\" value=\"1\" " . (($_SESSION['rsmafterbt'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 
-// AirPlay renderer
+// AirPlay
 $_feat_airplay = $_SESSION['feat_bitmask'] & FEAT_AIRPLAY ? '' : 'hide';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_btn_disable = '' : $_airplay_btn_disable = 'disabled';
 $_SESSION['airplaysvc'] == '1' ? $_airplay_link_disable = '' : $_airplay_link_disable = 'onclick="return false;"';
-$_select['airplaysvc1'] .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggleairplaysvc1\" value=\"1\" " . (($_SESSION['airplaysvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['airplaysvc0'] .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggleairplaysvc2\" value=\"0\" " . (($_SESSION['airplaysvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$_select['airplaysvc_off'] .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggle-airplaysvc-2\" value=\"0\" " . (($_SESSION['airplaysvc'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['airplaysvc_on']  .= "<input type=\"radio\" name=\"airplaysvc\" id=\"toggle-airplaysvc-1\" value=\"1\" " . (($_SESSION['airplaysvc'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 $_select['airplayname'] = $_SESSION['airplayname'];
 $_select['airplay_protocol'] .= "<option value=\"1\" " . (($_SESSION['airplay_protocol'] == '1') ? "selected" : "") . ">AirPlay 1</option>\n";
 $_select['airplay_protocol'] .= "<option value=\"2\" " . (($_SESSION['airplay_protocol'] == '2') ? "selected" : "") . ">AirPlay 2</option>\n";
-$_select['rsmafterapl'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterapl'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['rsmafterapl'] .= "<option value=\"No\" " . (($_SESSION['rsmafterapl'] == 'No') ? "selected" : "") . ">No</option>\n";
+$_select['rsmafterapl_no']  .= "<input type=\"radio\" name=\"rsmafterapl\" id=\"toggle-rsmafterapl-2\" value=\"No\" " .  (($_SESSION['rsmafterapl'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
+$_select['rsmafterapl_yes'] .= "<input type=\"radio\" name=\"rsmafterapl\" id=\"toggle-rsmafterapl-1\" value=\"Yes\" " . (($_SESSION['rsmafterapl'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
 
-// Spotify connect renderer
+// Spotify Connect
 $_feat_spotify = $_SESSION['feat_bitmask'] & FEAT_SPOTIFY ? '' : 'hide';
 $_SESSION['spotifysvc'] == '1' ? $_spotify_btn_disable = '' : $_spotify_btn_disable = 'disabled';
 $_SESSION['spotifysvc'] == '1' ? $_spotify_link_disable = '' : $_spotify_link_disable = 'onclick="return false;"';
-$_select['spotifysvc1'] .= "<input type=\"radio\" name=\"spotifysvc\" id=\"togglespotifysvc1\" value=\"1\" " . (($_SESSION['spotifysvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['spotifysvc0'] .= "<input type=\"radio\" name=\"spotifysvc\" id=\"togglespotifysvc2\" value=\"0\" " . (($_SESSION['spotifysvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$_select['spotifysvc_off'] .= "<input type=\"radio\" name=\"spotifysvc\" id=\"toggle-spotifysvc-2\" value=\"0\" " . (($_SESSION['spotifysvc'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['spotifysvc_on']  .= "<input type=\"radio\" name=\"spotifysvc\" id=\"toggle-spotifysvc-1\" value=\"1\" " . (($_SESSION['spotifysvc'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 $_select['spotifyname'] = $_SESSION['spotifyname'];
-$_select['rsmafterspot'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterspot'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['rsmafterspot'] .= "<option value=\"No\" " . (($_SESSION['rsmafterspot'] == 'No') ? "selected" : "") . ">No</option>\n";
+$_select['rsmafterspot_no']  .= "<input type=\"radio\" name=\"rsmafterspot\" id=\"toggle-rsmafterspot-2\" value=\"No\" " . (($_SESSION['rsmafterspot'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
+$_select['rsmafterspot_yes'] .= "<input type=\"radio\" name=\"rsmafterspot\" id=\"toggle-rsmafterspot-1\" value=\"Yes\" " . (($_SESSION['rsmafterspot'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
 
-// Squeezelite renderer
+// Squeezelite
 $_feat_squeezelite = $_SESSION['feat_bitmask'] & FEAT_SQUEEZELITE ? '' : 'hide';
 $_SESSION['slsvc'] == '1' ? $_rb_svcbtn_disable = 'disabled' : $_rb_svcbtn_disable = '';
 $_SESSION['slsvc'] == '1' ? $_sl_btn_disable = '' : $_sl_btn_disable = 'disabled';
 $_SESSION['slsvc'] == '1' ? $_sl_link_disable = '' : $_sl_link_disable = 'onclick="return false;"';
-$_select['slsvc1'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggleslsvc1\" value=\"1\" " . (($_SESSION['slsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['slsvc0'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggleslsvc2\" value=\"0\" " . (($_SESSION['slsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['rsmaftersl'] .= "<option value=\"Yes\" " . (($_SESSION['rsmaftersl'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['rsmaftersl'] .= "<option value=\"No\" " . (($_SESSION['rsmaftersl'] == 'No') ? "selected" : "") . ">No</option>\n";
+$_select['slsvc_off'] .= "<input type=\"radio\" name=\"slsvc\" id=\"toggle-slsvc-2\" value=\"0\" " . (($_SESSION['slsvc'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['slsvc_on']  .= "<input type=\"radio\" name=\"slsvc\" id=\"toggle-slsvc-1\" value=\"1\" " . (($_SESSION['slsvc'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+$_select['rsmaftersl_no']  .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"toggle-rsmaftersl-2\" value=\"No\" " . (($_SESSION['rsmaftersl'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
+$_select['rsmaftersl_yes'] .= "<input type=\"radio\" name=\"rsmaftersl\" id=\"toggle-rsmaftersl-1\" value=\"Yes\" " . (($_SESSION['rsmaftersl'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
 
-// RoonBridge renderer
+// RoonBridge
 if (($_SESSION['feat_bitmask'] & FEAT_ROONBRIDGE) && $_SESSION['roonbridge_installed'] == 'yes') {
-	$_roonbridge_install_msg = '';
-	$_roonbridge_label_style = 'style="margin-bottom:0;"';
 	$_feat_roonbridge = '';
 	$_SESSION['rbsvc'] == '1' ? $_sl_svcbtn_disable = 'disabled' : $_sl_svcbtn_disable = '';
 	$_SESSION['rbsvc'] == '1' ? $_rb_btn_disable = '' : $_rb_btn_disable = 'disabled';
 	$_SESSION['rbsvc'] == '1' ? $_rb_link_disable = '' : $_rb_link_disable = 'onclick="return false;"';
-	$_select['rbsvc1'] .= "<input type=\"radio\" name=\"rbsvc\" id=\"togglerbsvc1\" value=\"1\" " . (($_SESSION['rbsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['rbsvc0'] .= "<input type=\"radio\" name=\"rbsvc\" id=\"togglerbsvc2\" value=\"0\" " . (($_SESSION['rbsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-	$_select['rsmafterrb'] .= "<option value=\"Yes\" " . (($_SESSION['rsmafterrb'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-	$_select['rsmafterrb'] .= "<option value=\"No\" " . (($_SESSION['rsmafterrb'] == 'No') ? "selected" : "") . ">No</option>\n";
-}
-else {
-	$_roonbridge_install_msg = "<div style=\"margin:-1em 0 1em 0;\">This component is provided by the manufacturer. Visit their website for installation instructions.</div>";
-	$_roonbridge_label_style = '';
+	$_select['rbsvc_off'] .= "<input type=\"radio\" name=\"rbsvc\" id=\"toggle-rbsvc-2\" value=\"0\" " . (($_SESSION['rbsvc'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+	$_select['rbsvc_on']  .= "<input type=\"radio\" name=\"rbsvc\" id=\"toggle-rbsvc-1\" value=\"1\" " . (($_SESSION['rbsvc'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+	$_select['rsmafterrb_no']  .= "<input type=\"radio\" name=\"rsmafterrb\" id=\"toggle-rsmafterrb-2\" value=\"No\" " . (($_SESSION['rsmafterrb'] == 'No') ? "checked=\"checked\"" : "") . ">\n";
+	$_select['rsmafterrb_yes'] .= "<input type=\"radio\" name=\"rsmafterrb\" id=\"toggle-rsmafterrb-1\" value=\"Yes\" " . (($_SESSION['rsmafterrb'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
+} else {
 	$_feat_roonbridge = 'hide';
 }
 
@@ -296,15 +267,16 @@ else {
 $_feat_upmpdcli = $_SESSION['feat_bitmask'] & FEAT_UPMPDCLI ? '' : 'hide';
 $_SESSION['upnpsvc'] == '1' ? $_upnp_btn_disable = '' : $_upnp_btn_disable = 'disabled';
 $_SESSION['upnpsvc'] == '1' ? $_upnp_link_disable = '' : $_upnp_link_disable = 'onclick="return false;"';
-$_select['upnpsvc1'] .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggleupnpsvc1\" value=\"1\" " . (($_SESSION['upnpsvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['upnpsvc0'] .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggleupnpsvc2\" value=\"0\" " . (($_SESSION['upnpsvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
-$_select['upnpname'] = $_SESSION['upnpname'];
-// DLNA server
-$_feat_minidlna = $_SESSION['feat_bitmask'] & FEAT_MINIDLNA ? '' : 'hide';
 $_SESSION['dlnasvc'] == '1' ? $_dlna_btn_disable = '' : $_dlna_btn_disable = 'disabled';
 $_SESSION['dlnasvc'] == '1' ? $_dlna_link_disable = '' : $_dlna_link_disable = 'onclick="return false;"';
-$_select['dlnasvc1'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggledlnasvc1\" value=\"1\" " . (($_SESSION['dlnasvc'] == 1) ? "checked=\"checked\"" : "") . ">\n";
-$_select['dlnasvc0'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggledlnasvc2\" value=\"0\" " . (($_SESSION['dlnasvc'] == 0) ? "checked=\"checked\"" : "") . ">\n";
+$_select['upnpsvc_off'] .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-2\" value=\"0\" " . (($_SESSION['upnpsvc'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['upnpsvc_on']  .= "<input type=\"radio\" name=\"upnpsvc\" id=\"toggle-upnpsvc-1\" value=\"1\" " . (($_SESSION['upnpsvc'] == '1') ? "checked=\"checked\"" : "") . ">\n";
+$_select['upnpname'] = $_SESSION['upnpname'];
+
+// DLNA media server
+$_feat_minidlna = $_SESSION['feat_bitmask'] & FEAT_MINIDLNA ? '' : 'hide';
+$_select['dlnasvc_off'] .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-dlnasvc-2\" value=\"0\" " . (($_SESSION['dlnasvc'] == '0') ? "checked=\"checked\"" : "") . ">\n";
+$_select['dlnasvc_on']  .= "<input type=\"radio\" name=\"dlnasvc\" id=\"toggle-dlnasvc-1\" value=\"1\" " . (($_SESSION['dlnasvc'] == '1') ? "checked=\"checked\"" : "") . ">\n";
 $_select['dlnaname'] = $_SESSION['dlnaname'];
 $_select['hostip'] = getHostIp();
 

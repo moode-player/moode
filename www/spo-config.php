@@ -25,68 +25,64 @@ require_once __DIR__ . '/inc/sql.php';
 $dbh = sqlConnect();
 phpSession('open');
 
-// Apply setting changes
 if (isset($_POST['save']) && $_POST['save'] == '1') {
 	foreach ($_POST['config'] as $key => $value) {
 		sqlUpdate('cfg_spotify', $dbh, $key, $value);
 	}
 
-	// Restart if indicated
 	submitJob('spotifysvc', '', 'Settings updated', ($_SESSION['spotifysvc'] == '1' ? 'Spotify receiver restarted' : ''));
 }
 
 phpSession('close');
 
-// Load settings
 $result = sqlRead('cfg_spotify', $dbh);
-$cfg_spotify = array();
+$cfgSpotify = array();
 
 foreach ($result as $row) {
-	$cfg_spotify[$row['param']] = $row['value'];
+	$cfgSpotify[$row['param']] = $row['value'];
 }
 
-// Bitrate
-$_select['bitrate'] .= "<option value=\"96\" " . (($cfg_spotify['bitrate'] == '96') ? "selected" : "") . ">96</option>\n";
-$_select['bitrate'] .= "<option value=\"160\" " . (($cfg_spotify['bitrate'] == '160') ? "selected" : "") . ">160 (Default)</option>\n";
-$_select['bitrate'] .= "<option value=\"320\" " . (($cfg_spotify['bitrate'] == '320') ? "selected" : "") . ">320</option>\n";
-// Format
-$_select['format'] .= "<option value=\"S16\" " . (($cfg_spotify['format'] == 'S16') ? "selected" : "") . ">S16 (Default)</option>\n";
-$_select['format'] .= "<option value=\"S24\" " . (($cfg_spotify['format'] == 'S24') ? "selected" : "") . ">S24</option>\n";
-$_select['format'] .= "<option value=\"S24_3\" " . (($cfg_spotify['format'] == 'S24_3') ? "selected" : "") . ">S24_3</option>\n";
-$_select['format'] .= "<option value=\"S32\" " . (($cfg_spotify['format'] == 'S32') ? "selected" : "") . ">S32</option>\n";
-$_select['format'] .= "<option value=\"F32\" " . (($cfg_spotify['format'] == 'F32') ? "selected" : "") . ">F32</option>\n";
-$_select['format'] .= "<option value=\"F64\" " . (($cfg_spotify['format'] == 'F64') ? "selected" : "") . ">F64</option>\n";
-// Dithering options
-$_select['dither'] .= "<option value=\"\" " . (($cfg_spotify['dither'] == '') ? "selected" : "") . ">Automatic (Default)</option>\n";
-$_select['dither'] .= "<option value=\"none\" " . (($cfg_spotify['dither'] == 'none') ? "selected" : "") . ">None</option>\n";
-$_select['dither'] .= "<option value=\"gpdf\" " . (($cfg_spotify['dither'] == 'gpdf') ? "selected" : "") . ">Gaussian</option>\n";
-$_select['dither'] .= "<option value=\"tpdf\" " . (($cfg_spotify['dither'] == 'tpdf') ? "selected" : "") . ">Triangular</option>\n";
-$_select['dither'] .= "<option value=\"tpdf_hp\" " . (($cfg_spotify['dither'] == 'tpdf_hp') ? "selected" : "") . ">Triangular (High Pass)</option>\n";
-// Initial volume
-$_select['initial_volume'] = $cfg_spotify['initial_volume'];
-// Volume curve
-$_select['volume_curve'] .= "<option value=\"log\" " . (($cfg_spotify['volume_curve'] == 'log') ? "selected" : "") . ">Logarithmic (Default)</option>\n";
-$_select['volume_curve'] .= "<option value=\"cubic\" " . (($cfg_spotify['volume_curve'] == 'cubic') ? "selected" : "") . ">Cubic</option>\n";
-$_select['volume_curve'] .= "<option value=\"linear\" " . (($cfg_spotify['volume_curve'] == 'linear') ? "selected" : "") . ">Linear</option>\n";
-$_select['volume_curve'] .= "<option value=\"fixed\" " . (($cfg_spotify['volume_curve'] == 'fixed') ? "selected" : "") . ">Fixed</option>\n";
-// Volume range
-$_select['volume_range'] = $cfg_spotify['volume_range'];
-// Volume normalization options
-$_select['volume_normalization'] .= "<option value=\"Yes\" " . (($cfg_spotify['volume_normalization'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['volume_normalization'] .= "<option value=\"No\" " . (($cfg_spotify['volume_normalization'] == 'No') ? "selected" : "") . ">No</option>\n";
-$_select['normalization_method'] .= "<option value=\"dynamic\" " . (($cfg_spotify['normalization_method'] == 'dynamic') ? "selected" : "") . ">Dynamic (Default)</option>\n";
-$_select['normalization_method'] .= "<option value=\"basic\" " . (($cfg_spotify['normalization_method'] == 'basic') ? "selected" : "") . ">Basic</option>\n";
-$_select['normalization_gain_type'] .= "<option value=\"auto\" " . (($cfg_spotify['normalization_gain_type'] == 'auto') ? "selected" : "") . ">Automatic (Default)</option>\n";
-$_select['normalization_gain_type'] .= "<option value=\"album\" " . (($cfg_spotify['normalization_gain_type'] == 'album') ? "selected" : "") . ">Album</option>\n";
-$_select['normalization_gain_type'] .= "<option value=\"track\" " . (($cfg_spotify['normalization_gain_type'] == 'track') ? "selected" : "") . ">Track</option>\n";
-$_select['normalization_pregain'] = $cfg_spotify['normalization_pregain'];
-$_select['normalization_threshold'] = $cfg_spotify['normalization_threshold'];
-$_select['normalization_attack'] = $cfg_spotify['normalization_attack'];
-$_select['normalization_release'] = $cfg_spotify['normalization_release'];
-$_select['normalization_knee'] = $cfg_spotify['normalization_knee'];
-// Autoplay after playlist completes
-$_select['autoplay'] .= "<option value=\"Yes\" " . (($cfg_spotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
-$_select['autoplay'] .= "<option value=\"No\" " . (($cfg_spotify['autoplay'] == 'No') ? "selected" : "") . ">No</option>\n";
+$_select['bitrate'] .= "<option value=\"96\" " . (($cfgSpotify['bitrate'] == '96') ? "selected" : "") . ">96</option>\n";
+$_select['bitrate'] .= "<option value=\"160\" " . (($cfgSpotify['bitrate'] == '160') ? "selected" : "") . ">160 (Default)</option>\n";
+$_select['bitrate'] .= "<option value=\"320\" " . (($cfgSpotify['bitrate'] == '320') ? "selected" : "") . ">320</option>\n";
+
+$_select['format'] .= "<option value=\"S16\" " . (($cfgSpotify['format'] == 'S16') ? "selected" : "") . ">S16 (Default)</option>\n";
+$_select['format'] .= "<option value=\"S24\" " . (($cfgSpotify['format'] == 'S24') ? "selected" : "") . ">S24</option>\n";
+$_select['format'] .= "<option value=\"S24_3\" " . (($cfgSpotify['format'] == 'S24_3') ? "selected" : "") . ">S24_3</option>\n";
+$_select['format'] .= "<option value=\"S32\" " . (($cfgSpotify['format'] == 'S32') ? "selected" : "") . ">S32</option>\n";
+$_select['format'] .= "<option value=\"F32\" " . (($cfgSpotify['format'] == 'F32') ? "selected" : "") . ">F32</option>\n";
+$_select['format'] .= "<option value=\"F64\" " . (($cfgSpotify['format'] == 'F64') ? "selected" : "") . ">F64</option>\n";
+
+$_select['dither'] .= "<option value=\"\" " . (($cfgSpotify['dither'] == '') ? "selected" : "") . ">Automatic (Default)</option>\n";
+$_select['dither'] .= "<option value=\"none\" " . (($cfgSpotify['dither'] == 'none') ? "selected" : "") . ">None</option>\n";
+$_select['dither'] .= "<option value=\"gpdf\" " . (($cfgSpotify['dither'] == 'gpdf') ? "selected" : "") . ">Gaussian</option>\n";
+$_select['dither'] .= "<option value=\"tpdf\" " . (($cfgSpotify['dither'] == 'tpdf') ? "selected" : "") . ">Triangular</option>\n";
+$_select['dither'] .= "<option value=\"tpdf_hp\" " . (($cfgSpotify['dither'] == 'tpdf_hp') ? "selected" : "") . ">Triangular (High Pass)</option>\n";
+
+$_select['initial_volume'] = $cfgSpotify['initial_volume'];
+
+$_select['volume_curve'] .= "<option value=\"log\" " . (($cfgSpotify['volume_curve'] == 'log') ? "selected" : "") . ">Logarithmic (Default)</option>\n";
+$_select['volume_curve'] .= "<option value=\"cubic\" " . (($cfgSpotify['volume_curve'] == 'cubic') ? "selected" : "") . ">Cubic</option>\n";
+$_select['volume_curve'] .= "<option value=\"linear\" " . (($cfgSpotify['volume_curve'] == 'linear') ? "selected" : "") . ">Linear</option>\n";
+$_select['volume_curve'] .= "<option value=\"fixed\" " . (($cfgSpotify['volume_curve'] == 'fixed') ? "selected" : "") . ">Fixed</option>\n";
+
+$_select['volume_range'] = $cfgSpotify['volume_range'];
+
+$_select['volume_normalization'] .= "<option value=\"Yes\" " . (($cfgSpotify['volume_normalization'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['volume_normalization'] .= "<option value=\"No\" " . (($cfgSpotify['volume_normalization'] == 'No') ? "selected" : "") . ">No</option>\n";
+$_select['normalization_method'] .= "<option value=\"dynamic\" " . (($cfgSpotify['normalization_method'] == 'dynamic') ? "selected" : "") . ">Dynamic (Default)</option>\n";
+$_select['normalization_method'] .= "<option value=\"basic\" " . (($cfgSpotify['normalization_method'] == 'basic') ? "selected" : "") . ">Basic</option>\n";
+$_select['normalization_gain_type'] .= "<option value=\"auto\" " . (($cfgSpotify['normalization_gain_type'] == 'auto') ? "selected" : "") . ">Automatic (Default)</option>\n";
+$_select['normalization_gain_type'] .= "<option value=\"album\" " . (($cfgSpotify['normalization_gain_type'] == 'album') ? "selected" : "") . ">Album</option>\n";
+$_select['normalization_gain_type'] .= "<option value=\"track\" " . (($cfgSpotify['normalization_gain_type'] == 'track') ? "selected" : "") . ">Track</option>\n";
+$_select['normalization_pregain'] = $cfgSpotify['normalization_pregain'];
+$_select['normalization_threshold'] = $cfgSpotify['normalization_threshold'];
+$_select['normalization_attack'] = $cfgSpotify['normalization_attack'];
+$_select['normalization_release'] = $cfgSpotify['normalization_release'];
+$_select['normalization_knee'] = $cfgSpotify['normalization_knee'];
+
+$_select['autoplay'] .= "<option value=\"Yes\" " . (($cfgSpotify['autoplay'] == 'Yes') ? "selected" : "") . ">Yes</option>\n";
+$_select['autoplay'] .= "<option value=\"No\" " . (($cfgSpotify['autoplay'] == 'No') ? "selected" : "") . ">No</option>\n";
 
 waitWorker(1, 'spo_config');
 
