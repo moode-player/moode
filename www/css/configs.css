@@ -39,7 +39,7 @@ body {
 /* Title and legend */
 h1 {font-size:2.5em;font-weight:200;margin:0 0 .5em 0;}
 legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bottom:1em;color:inherit;}
-.legend-config {margin-bottom:.25em;}
+.legend-config {margin:0 0 .25em .5em;}
 .legend-info-help {line-height:16px;padding-bottom:10px;font-size:14px;font-weight:normal;}
 .sub-legend {margin: -1em 0 1.5em 0;color:var(--config-help-color);}
 
@@ -51,19 +51,17 @@ legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bott
 input[type=text],
 input[type=number]
  {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;}
-.config-input-medium {width:118px;}
-a.config-info-toggle {vertical-align:top;}
-.config-info-toggle i {vertical-align:top;margin-top:6px;font-size:1.25em;}
-.config-btn {display:block;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;width:fit-content;}
-.config-btn-after {color:var(--config-text-color);margin-left:var(--config-ctl-margin);}
-.config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin) var(--config-ctl-margin) 0;}
-.config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
-.config-select-medium {width:125px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
+.config-input-large {width:210px;}
 .config-select-large {width:222px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
+.config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
 .btn-group.bootstrap-select .btn {padding:3px 0;}
+.config-btn {display:inline-block;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;width:fit-content;}
+.config-btn-after {display:inline-block;vertical-align:middle;margin-bottom:var(--config-ctl-margin);color:var(--config-text-color);}
+.config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin) var(--config-ctl-margin) 0;}
 
 /* Help text */
-.config-horiz-rule {border-bottom: 1px solid #333;margin-bottom:1.15em;font-size:1.15em;font-style:italic;color:#888;}
+a.config-info-toggle {vertical-align:top;}
+.config-info-toggle i {vertical-align:top;margin-top:6px;font-size:1.25em;}
 .config-help-info,
 .config-help-static {display:block;font-size:var(--pbfont);color:var(--config-help-color);margin-bottom:var(--config-ctl-margin);}
 .config-help-info {display:none;}
@@ -79,6 +77,7 @@ a.config-info-toggle {vertical-align:top;}
 .cdsp-pipeline-editor {width:100%;height:150vh;border:none;}
 
 /* Miscellaneous */
+.config-horiz-rule {border-bottom:1px solid #333;margin:4px 0 calc(4px + var(--config-ctl-margin)) 0;font-size:1.15em;font-style:italic;color:var(--config-help-color);}
 a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-tabs {position:absolute;top:0;top:env(safe-area-inset-top);color:inherit;display:flex;z-index:1001;line-height:normal;font-size:inherit;height:2.75em;align-items:center;display:none;}
 #config-tabs a {font-size:.9rem;color:var(--config-text-color);display:inline-flex;}

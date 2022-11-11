@@ -31,37 +31,30 @@ const BACKUP_FILE_PREFIX = 'backup_';
 
 phpSession('open');
 
-/**
- * Post parameter processing
- */
-
-// Backup
-if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
+if (isset($_POST['backup_create']) && $_POST['backup_create'] == '1') {
 	$backupOptions = '';
-	if( isset($_POST['backup_system']) && $_POST['backup_system'] == '1' ) {
+	if (isset($_POST['backup_system']) && $_POST['backup_system'] == '1') {
 		$backupOptions .= $backupOptions ? ' config' : 'config';
 	}
-	if( isset($_POST['backup_camilladsp']) && $_POST['backup_camilladsp'] == '1' ) {
+	if (isset($_POST['backup_camilladsp']) && $_POST['backup_camilladsp'] == '1') {
 		$backupOptions .= $backupOptions ? ' cdsp' : 'cdsp';
 	}
-	if( isset($_POST['backup_radiostations_moode']) && $_POST['backup_radiostations_moode'] == '1' ) {
+	if (isset($_POST['backup_radiostations_moode']) && $_POST['backup_radiostations_moode'] == '1') {
 		$backupOptions .= $backupOptions ? ' r_moode' : 'r_moode';
 	}
-	if( isset($_POST['backup_radiostations_other']) && $_POST['backup_radiostations_other'] == '1' ) {
+	if (isset($_POST['backup_radiostations_other']) && $_POST['backup_radiostations_other'] == '1') {
 		$backupOptions .= $backupOptions ? ' r_other' : 'r_other';
 	}
-	if( isset($_POST['backup_playlists']) && $_POST['backup_playlists'] == '1' ) {
+	if (isset($_POST['backup_playlists']) && $_POST['backup_playlists'] == '1') {
 		$backupOptions .= $backupOptions ? ' playlists' : 'playlists';
 	}
 
-	if($backupOptions) {
+	if ($backupOptions) {
 		$backupOptions = '--what ' . $backupOptions . ' ';
 	}
-	/*
-	if( isset($_POST['backup_wlan0pwd']) && $_POST['backup_wlan0pwd']  ) {
+	/*if(isset($_POST['backup_wlan0pwd']) && $_POST['backup_wlan0pwd']) {
 		$backupOptions .= '--wlanpwd ' . $_POST['backup_wlan0pwd'] . ' ';
-	}
-	*/
+	}*/
 	if (file_exists(TMP_SCRIPT_FILE)) {
 		$backupOptions .= '--script ' . TMP_SCRIPT_FILE . ' ';
 		sysCmd('chown pi:pi ' . TMP_SCRIPT_FILE);
@@ -85,29 +78,27 @@ if( isset($_POST['backup_create']) && $_POST['backup_create'] == '1' ) {
 	readfile (TMP_BACKUP_ZIP);
 	sysCmd('rm ' . TMP_BACKUP_ZIP);
 	exit();
-}
-// Restore
-else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
+} else if (isset($_POST['restore_start']) && $_POST['restore_start'] == '1') {
 	if (file_exists(TMP_RESTORE_ZIP)) {
 		$restoreOptions = '';
 
-		if( isset($_POST['restore_system']) && $_POST['restore_system'] == '1' ) {
+		if (isset($_POST['restore_system']) && $_POST['restore_system'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' config' : 'config';
 		}
-		if( isset($_POST['restore_camilladsp']) && $_POST['restore_camilladsp'] == '1' ) {
+		if (isset($_POST['restore_camilladsp']) && $_POST['restore_camilladsp'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' cdsp' : 'cdsp';
 		}
-		if( isset($_POST['restore_radiostations_moode']) && $_POST['restore_radiostations_moode'] == '1' ) {
+		if (isset($_POST['restore_radiostations_moode']) && $_POST['restore_radiostations_moode'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' r_moode' : 'r_moode';
 		}
-		if( isset($_POST['restore_radiostations_other']) && $_POST['restore_radiostations_other'] == '1' ) {
+		if (isset($_POST['restore_radiostations_other']) && $_POST['restore_radiostations_other'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' r_other' : 'r_other';
 		}
-		if( isset($_POST['restore_playlists']) && $_POST['restore_playlists'] == '1' ) {
+		if(isset($_POST['restore_playlists']) && $_POST['restore_playlists'] == '1') {
 			$restoreOptions .= $restoreOptions ? ' playlists' : 'playlists';
 		}
 
-		if($restoreOptions) {
+		if ($restoreOptions) {
 			$restoreOptions = '--what ' . $restoreOptions . ' ';
 		}
 
@@ -121,8 +112,7 @@ else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
 			$msg = 'Reboot required';
 			$duration = 60;
 			//submitJob('reboot', '', 'Restore complete', 'System rebooting...');
-		}
-		else {
+		} else {
 			$msg = '';
 			$duration = 5;
 		}
@@ -134,64 +124,54 @@ else if( isset($_POST['restore_start']) && $_POST['restore_start'] == '1' ) {
 		//$_SESSION['notify']['title'] = 'DEBUG';
 		//$_SESSION['notify']['msg'] = $restoreOptions;
 		//$_SESSION['notify']['duration'] = 10;
-	}
-	else {
+	} else {
 		$_imported_backupfile = 'No file selected';
 		$_SESSION['notify']['title'] = 'Select a backup file';
 		$_SESSION['notify']['duration'] = 3;
 	}
-}
-else if (isset($_POST['import_backupfile'])) {
+} else if (isset($_POST['import_backupfile'])) {
 	$_imported_backupfile = 'Uploaded: <i>' . $_FILES['restore_backupfile']['name'] . '</i>';
 	rename($_FILES['restore_backupfile']['tmp_name'], TMP_RESTORE_ZIP);
 	// NOTE: File stat is 0600/-rw-------, www-data:www-data
 	//workerLog('Imported backup: ' . print_r($_FILES['restore_backupfile'], true));
-}
-else if (isset($_POST['import_scriptfile'])) {
+} else if (isset($_POST['import_scriptfile'])) {
 	$_imported_scriptfile = 'Uploaded: <i>' . $_FILES['backup_scriptfile']['name'] . '</i>';
 	rename($_FILES['backup_scriptfile']['tmp_name'], TMP_SCRIPT_FILE);
 	// NOTE: File stat is 0600/-rw-------, www-data:www-data
 	//workerLog('Imported script: ' . print_r($_FILES['backup_scriptfile'], true));
-}
-else if (isset($_POST['reset_options'])) {
+} else if (isset($_POST['reset_options'])) {
 	sysCmd('rm /tmp/backup.zip /tmp/moodecfg.ini /tmp/restore.zip /tmp/py.log /tmp/script');
 	$_imported_backupfile = 'No file selected';
 	$_SESSION['notify']['title'] = 'Options have been reset';
 	$_SESSION['notify']['duration'] = 3;
-}
-else {
+} else {
 	$_imported_backupfile = 'No file selected';
 	$_imported_scriptfile = 'No file selected';
 }
 
 phpSession('close');
 
-/**
- * Generate data for html templating
- */
-
  // Helper method to generate html code for toggle button
-function genToggleButton($id, $value, $disabled) {
+function genToggleButton($name, $value, $disabled) {
+	$id = str_replace('_', '-', $name);
 	$template = '
-	<div class="toggle" %disable_style>
-		<label class="toggle-radio" for="toggle_%id2">YES</label>
-		<input type="radio" name="%id" id="toggle_%id1" value="1" %checked1>
-		<label class="toggle-radio" for="toggle_%id1">NO</label>
-		<input type="radio" name="%id" id="toggle_%id2" value="0" %checked0>
+	<div class="toggle config-toggle-yn" %disable_style>
+		<label class="toggle-radio" for="toggle-%id-2">YES</label>
+		<input type="radio" name="%name" id="toggle-%id-1" value="1" %checked1>
+		<label class="toggle-radio" for="toggle-%id-1">NO</label>
+		<input type="radio" name="%name" id="toggle-%id-2" value="0" %checked0>
 	</div>
-	<div style="display: inline-block; vertical-align: top; margin-top: 2px;">
-	  <a aria-label="Help" class="info-toggle" data-cmd="info-%id" href="#notarget"><i class="fas fa-info-circle"></i></a>
-	</div>';
+	<a aria-label="Help" class="config-info-toggle" data-cmd="info-%id" href="#notarget"><i class="fas fa-info-circle"></i></a>';
 
 	return strtr($template , [
 		'%id' => $id,
+		'%name' => $name,
 		' %checked1' => ($value == True ? 'checked="checked"': ''),
 		' %checked0' => ($value != True ? 'checked="checked"': ''),
 		'%disable_style' => ($disabled == True ? 'style="pointer-events:none;"': '')
 	]);
 }
 
-// Backup toggles
 if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_restore_hidden = 'hidden';
 	$_togglebtn_backup_system = genToggleButton('backup_system', True, False);
@@ -199,9 +179,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'backup') {
 	$_togglebtn_backup_radiostations_moode = genToggleButton('backup_radiostations_moode', True, False);
 	$_togglebtn_backup_radiostations_other = genToggleButton('backup_radiostations_other', True, False);
 	$_togglebtn_backup_playlists = genToggleButton('backup_playlists', True, False);
-}
-// Restore toggles
-else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
+} else if (isset($_GET['action']) && $_GET['action'] == 'restore') {
 	$_backup_hidden = 'hidden';
 	$backupOptions = array();
 	$backupOptions = file_exists(TMP_RESTORE_ZIP) ? sysCmd('/var/www/util/backup_manager.py --info ' . TMP_RESTORE_ZIP) : $backupOptions;

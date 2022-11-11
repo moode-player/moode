@@ -418,17 +418,17 @@ function storeBackLink($section, $tpl) {
 
 	$rootConfigs = array('lib-config', 'snd-config', 'net-config', 'sys-config', 'ren-config');
 	$tplConfigs = array(
-		'apl-config.html'	=> '/ren-config.php#airplay',
-		'bkp-config.html'	=> '/sys-config.php#system-maint',
-		'cdsp-config.html' 	=> '/snd-config.php#equalizers',
+		'apl-config.html'	=> '/ren-config.php',
+		'bkp-config.html'	=> '/sys-config.php',
+		'cdsp-config.html' 	=> '/snd-config.php',
 		'cdsp-configeditor.html' => '/cdsp-config.php',
-		'eqg-config.html'	=> '/snd-config.php#equalizers',
-		'eqp-config.html'	=> '/snd-config.php#equalizers',
-		'gpio-config.html'	=> '/sys-config.php#local-services',
-		'spo-config.html' 	=> '/ren-config.php#spotify',
-		'sqe-config.html'	=> '/ren-config.php#squeezelite',
+		'eqg-config.html'	=> '/snd-config.php',
+		'eqp-config.html'	=> '/snd-config.php',
+		'gpio-config.html'	=> '/sys-config.php',
+		'spo-config.html' 	=> '/ren-config.php',
+		'sqe-config.html'	=> '/ren-config.php',
 		'src-config.html'	=> '/lib-config.php',
-		'upp-config.html' 	=> '/ren-config.php#upnp-dlna'
+		'upp-config.html' 	=> '/ren-config.php'
 	);
 
 	phpSession('open');

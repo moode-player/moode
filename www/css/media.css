@@ -110,7 +110,8 @@
 	/*#extra-tags-display {display:none;}*/
 	#db-path {display:none;}
 	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
-	.config-select-large {width: 204px!important;}
+	.config-input-large,
+	.config-select-large {width: 165px!important;}
 }
 
 /* Smaller portrait for small screens */
@@ -199,7 +200,8 @@
 	.modal {min-width:100vw;}
 	.btn-group.bootstrap-select.bootstrap-select-mini {width:6.5rem;}
 	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
-	.config-select-large {width: 204px!important;}	
+	.config-input-large,
+	.config-select-large {width: 165px!important;}
 }
 
 /* In-browser view for mobile screens */

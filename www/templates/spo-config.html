@@ -30,7 +30,7 @@
 		</legend>
 
 		<div class="control-group">
-			<label class="control-label" for="bitrate">Bitrate (kbps)</label>
+			<label class="control-label" for="bitrate">Bitrate</label>
 			<div class="controls">
 				<select id="bitrate" class="config-select-large" name="config[bitrate]">
 					$_select[bitrate]
@@ -64,18 +64,18 @@
 				</select>
 			</div>
 
-			<label class="control-label" for="volume-range">Volume range (dB)</label>
+			<label class="control-label" for="volume-range">Volume range</label>
 			<div class="controls">
-				<input class="input-large" type="number" min="0" max="100" id="volume-range" name="config[volume_range]" value="$_select[volume_range]" required>
+				<input class="input-large config-input-large" type="number" min="0" max="100" id="volume-range" name="config[volume_range]" value="$_select[volume_range]" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-volume-range" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-volume-range" class="config-help-info">
 					Range of the volume control in dB from 0-100. Default is 60. This setting is used to adjust the steepness of the volume curve and influences the usable range of the volume slider.
                 </span>
 			</div>
 
-			<label class="control-label" for="initial-volume">Initial volume (%)</label>
+			<label class="control-label" for="initial-volume">Initial volume</label>
 			<div class="controls">
-				<input class="input-large" type="number" min="-1" max="100" id="initial-volume" name="config[initial_volume]" value="$_select[initial_volume]" required>
+				<input class="input-large config-input-large" type="number" min="-1" max="100" id="initial-volume" name="config[initial_volume]" value="$_select[initial_volume]" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-initial-volume" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-initial-volume" class="config-help-info">
 					Initial volume in % from 0-100. Set to -1 to use the cached volume or if none exists then default to 50.
@@ -84,7 +84,7 @@
 		</div>
 
 		<div class="control-group">
-			<label class="control-label" for="volume-normalization">Volume normalization</label>
+			<label class="control-label" for="volume-normalization">Volume normalize</label>
 			<div class="controls">
 				<select id="volume-normalization" class="config-select-large" name="config[volume_normalization]">
 					$_select[volume_normalization]
@@ -109,36 +109,36 @@
 				</select>
 			</div>
 
-			<label class="control-label" for="normalization-pregain">Pregain (dB)</label>
+			<label class="control-label" for="normalization-pregain">Pregain</label>
 			<div class="controls">
-				<input class="input-large" type="number" min="-10" max="10" id="normalization-pregain" name="config[normalization_pregain]" value="$_select[normalization_pregain]" required>
+				<input class="input-large config-input-large" type="number" min="-10" max="10" id="normalization-pregain" name="config[normalization_pregain]" value="$_select[normalization_pregain]" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalization-pregain" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-normalization-pregain" class="config-help-info">
 					Volume boost in dB from -10 to 10. Default is 0 dB.
                 </span>
 			</div>
 
-			<label class="control-label" for="normalization-threshold">Threshold (dBFS)</label>
+			<label class="control-label" for="normalization-threshold">Threshold</label>
 			<div class="controls">
-				<input class="input-large" type="number" step=".1" id="normalization-threshold" name="config[normalization_threshold]" value="$_select[normalization_threshold]" required>
+				<input class="input-large config-input-large" type="number" step=".1" id="normalization-threshold" name="config[normalization_threshold]" value="$_select[normalization_threshold]" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalization-threshold" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-normalization-threshold" class="config-help-info">
 					Threshold in dBFS to prevent clipping. Default is -2.0 dBFS.
                 </span>
 			</div>
 
-			<label class="control-label" for="normalization-attack">Attack (ms)</label>
+			<label class="control-label" for="normalization-attack">Attack</label>
 			<div class="controls">
-				<input class="input-large" type="number" min="1" id="normalization-attack" name="config[normalization_attack]" value="$_select[normalization_attack]" required>
+				<input class="input-large config-input-large" type="number" min="1" id="normalization-attack" name="config[normalization_attack]" value="$_select[normalization_attack]" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalization-attack" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-normalization-attack" class="config-help-info">
 					Attack time in milliseconds in which the dynamic limiter is reducing gain. Default is 5 ms.
                 </span>
 			</div>
 
-			<label class="control-label" for="normalization-release">Release (ms)</label>
+			<label class="control-label" for="normalization-release">Release</label>
 			<div class="controls">
-				<input class="input-large" type="number" min="1" id="normalization-release" name="config[normalization_release]" value="$_select[normalization_release]" required>
+				<input class="input-large config-input-large" type="number" min="1" id="normalization-release" name="config[normalization_release]" value="$_select[normalization_release]" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalization-release" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-normalization-release" class="config-help-info">
 					Release or decay time in milliseconds in which the dynamic limiter is restoring gain. Default is 100 ms.
@@ -147,7 +147,7 @@
 
 			<label class="control-label" for="normalization-knee">Knee</label>
 			<div class="controls">
-				<input class="input-large" type="number" min=".1" step=".1" id="normalization-knee" name="config[normalization_knee]" value="$_select[normalization_knee]" required>
+				<input class="input-large config-input-large" type="number" min=".1" step=".1" id="normalization-knee" name="config[normalization_knee]" value="$_select[normalization_knee]" required>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-normalization-knee" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<span id="info-normalization-knee" class="config-help-info">
 					Knee steepness of the dynamic limiter. Default is 1.0.

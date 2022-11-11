@@ -322,7 +322,7 @@ jQuery(document).ready(function($){ 'use strict';
     // Button "Create Backup"
     // This global is used to prevent the "Reconnect" screen from being displayed while a backup zip is being created/downloaded
     // NOTE: This global is tested and reset to false in playerlib.js function renderReconnect()
-    $('#backup_create').click(function(e) {
+    $('#backup-create').click(function(e) {
         GLOBAL.backupCreate = true;
     });
 
