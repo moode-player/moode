@@ -112,6 +112,8 @@
 	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
 	.config-input-large,
 	.config-select-large {width: 165px!important;}
+	.config-info-toggle,
+	.config-help-static {display:none;}
 }
 
 /* Smaller portrait for small screens */
@@ -202,6 +204,8 @@
 	.playback-hd-badge {height:1.5rem;margin-top:1.35em;}
 	.config-input-large,
 	.config-select-large {width: 165px!important;}
+	.config-info-toggle,
+	.config-help-static {display:none;}
 }
 
 /* In-browser view for mobile screens */
