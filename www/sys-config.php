@@ -46,7 +46,7 @@ if (isset($_POST['checkfor_update'])) {
 	$thisReleaseDate = explode(" ", getMoodeRel('verbose'))[1];
 
 	if ($available['Date'] == $thisReleaseDate) {
-		$_available_upd = '<i>Software is up to date</i><br>';
+		$_available_upd = 'Software is up to date';
 	} else if ($available['ImageOnly'] == 'Yes') {
 		$_available_upd = 'A new image-only release of moOde is available. Visit <a href="http://moodeaudio.org" class="moode-about-link" target="_blank">moodeaudio.org</a> for more information.';
 	} else {
@@ -58,6 +58,8 @@ if (isset($_POST['checkfor_update'])) {
 		$_pkg_description = $available['Description'];
 		$_pkg_relnotes = $available['Relnotes'];
 	}
+
+	$_available_upd = '<span class="config-help-static">' . $_available_upd . '</span>';
 }
 
 // Install software update

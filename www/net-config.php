@@ -247,8 +247,8 @@ $_wlan0secdns = $cfgNetwork[1]['secdns'];
 $_wlan0apdssid = $cfgNetwork[2]['wlanssid'];
 $_wlan0apdchan = $cfgNetwork[2]['wlan_channel'];
 $_wlan0apdpwd = $cfgNetwork[2]['wlanpwd'];
-$_select['wlan0apd_router1'] .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router1\" value=\"On\" " . (($cfgNetwork[2]['wlan_router'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
-$_select['wlan0apd_router0'] .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router2\" value=\"Off\" " . (($cfgNetwork[2]['wlan_router'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
+$_select['wlan0apd_router_on']  .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router-1\" value=\"On\" " . (($cfgNetwork[2]['wlan_router'] == 'On') ? "checked=\"checked\"" : "") . ">\n";
+$_select['wlan0apd_router_off'] .= "<input type=\"radio\" name=\"wlan0apd_router\" id=\"toggle-wlan0apd-router-2\" value=\"Off\" " . (($cfgNetwork[2]['wlan_router'] == 'Off') ? "checked=\"checked\"" : "") . ">\n";
 
 waitWorker(1, 'net-config');
 

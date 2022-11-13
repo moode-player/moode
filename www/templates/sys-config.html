@@ -45,11 +45,11 @@
 				<span id="info-checkfor-update" class="config-help-info">
 					Check for an available software update.
 				</span>
-				<span class="config-help-static">
-					$_available_upd
-				</span>
+				$_available_upd
 		    </div>
+		</div>
 
+		<div class="control-group">
 			<legend>General</legend>
 			<label class="control-label" for="timezone">Timezone</label>
 			<div class="controls">
@@ -81,7 +81,9 @@
                 <input class="input-large config-input-large" type="text" id="browsertitle" name="browsertitle" value="$_select[browsertitle]" required>
 				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_browser_title" value="novalue">Set</button>
             </div>
+		</div>
 
+		<div class="control-group">
 			<legend>Startup options</legend>
 			<label class="control-label" for="cpugov">CPU governor</label>
 			<div class="controls">
@@ -215,104 +217,106 @@
 					</span>
 				</div>
 			</div>
+		</div>
 
-			<div class="$_feat_localui">
-				<legend>Local Display</legend>
-				<label class="control-label">Display</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle-localui-2">ON </label>$_select[localui_on]
-						<label class="toggle-radio" for="toggle-localui-1">OFF</label>$_select[localui_off]
-					</div>
-                    <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-localui" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-localui" class="config-help-info">
-						Display moOde UI on locally attached display.
-                    </span>
-                </div>
-
-				<label class="control-label">Wake on play</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle-wake_display-2">ON </label>$_select[wake_display_on]
-						<label class="toggle-radio" for="toggle-wake_display-1">OFF</label>$_select[wake_display_off]
-					</div>
-                    <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_wake_display" class="config-help-info">
-						Wake the display when audio starts playing.
-                    </span>
-                </div>
-
-				<label class="control-label">Mouse cursor</label>
-				<div class="controls">
-					<div class="toggle">
-						<label class="toggle-radio" for="toggle-touchscn-2">ON </label>$_select[touchscn_on]
-						<label class="toggle-radio" for="toggle-touchscn-1">OFF</label>$_select[touchscn_off]
-					</div>
-                    <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_localui_btn_disable>Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-touchscn" class="config-help-info">
-						This prevents the cursor from showing on the display or Touch screen
-                    </span>
-                </div>
-
-				<label class="control-label" for="scnblank">Screen blank</label>
-				<div class="controls">
-					<select id="scnblank" class="config-select-large" name="scnblank">
-						$_select[scnblank]
-					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnblank" value="novalue" $_localui_btn_disable>Set</button>
+		<div class="control-group $_feat_localui">
+			<legend>Local Display</legend>
+			<label class="control-label">Display</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle-localui-2">ON </label>$_select[localui_on]
+					<label class="toggle-radio" for="toggle-localui-1">OFF</label>$_select[localui_off]
 				</div>
+                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_localui" value="novalue">Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-localui" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-localui" class="config-help-info">
+					Display moOde UI on locally attached display.
+                </span>
+            </div>
 
-				<label class="control-label" for="scnbrightness">Brightness</label>
-				<div class="controls">
-                	<input class="input-large config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]">
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_localui_btn_disable>Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-brightness" class="config-help-info">
-						Backlight brightness for 7" Pi Touch. Values are 0 - 255.
-                    </span>
+			<label class="control-label">Wake on play</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle-wake_display-2">ON </label>$_select[wake_display_on]
+					<label class="toggle-radio" for="toggle-wake_display-1">OFF</label>$_select[wake_display_off]
 				</div>
+                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_wake_display" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_wake_display" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_wake_display" class="config-help-info">
+					Wake the display when audio starts playing.
+                </span>
+            </div>
 
-				<label class="control-label" for="pixel_aspect_ratio">Pixel aspect ratio</label>
-				<div class="controls">
-					<select id="pixel_aspect_ratio" class="config-select-large" name="pixel_aspect_ratio">
-						$_select[pixel_aspect_ratio]
-					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" $_localui_btn_disable>Set</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info_pixel_aspect_ratio" class="config-help-info">
-						Rectangular (default) or square pixels for 7" Pi Touch.
-                    </span>
+			<label class="control-label">Mouse cursor</label>
+			<div class="controls">
+				<div class="toggle">
+					<label class="toggle-radio" for="toggle-touchscn-2">ON </label>$_select[touchscn_on]
+					<label class="toggle-radio" for="toggle-touchscn-1">OFF</label>$_select[touchscn_off]
 				</div>
+                <button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_touchscn" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-touchscn" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-touchscn" class="config-help-info">
+					This prevents the cursor from showing on the display or Touch screen
+                </span>
+            </div>
 
-				<label class="control-label" for="scnrotate">Rotate screen</label>
-				<div class="controls">
-					<select id="scnrotate" class="config-select-large" name="scnrotate">
-						$_select[scnrotate]
-					</select>
-					<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnrotate" value="novalue" $_localui_btn_disable>Set</button>
-				</div>
-
-				<label class="control-label">Popup keyboard</label>
-				<div class="controls">
-					<button id="btn-on-screen-kbd" class="btn btn-medium btn-primary config-btn">Enable</button>
-					<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fas fa-info-circle"></i></a>
-					<span id="info-on-screen-kbd" class="config-help-info">
-						On-screen popup keyboard by @Nutul.
-                    </span>
-				</div>
-
-				<div class="controls">
-					<a data-toggle="modal" href="#restart-localui" $_localui_link_disable><button class="btn btn-medium btn-primary config-btn" $_localui_btn_disable>Restart</button></a>
-					<span class="config-btn-after">Local UI</span>
-					<span class="config-help-static">
-						Restarting clears the chromium browser cache.
-					</span>
-				</div>
+			<label class="control-label" for="scnblank">Screen blank</label>
+			<div class="controls">
+				<select id="scnblank" class="config-select-large" name="scnblank">
+					$_select[scnblank]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnblank" value="novalue" $_localui_btn_disable>Set</button>
 			</div>
 
+			<label class="control-label" for="scnbrightness">Brightness</label>
+			<div class="controls">
+            	<input class="input-large config-input-large" type="number" maxlength="3" min="0" max="255" id="scnbrightness" name="scnbrightness" value="$_select[scnbrightness]">
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnbrightness" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-brightness" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-brightness" class="config-help-info">
+					Backlight brightness for 7" Pi Touch. Values are 0 - 255.
+                </span>
+			</div>
+
+			<label class="control-label" for="pixel_aspect_ratio">Pixel aspect ratio</label>
+			<div class="controls">
+				<select id="pixel_aspect_ratio" class="config-select-large" name="pixel_aspect_ratio">
+					$_select[pixel_aspect_ratio]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_pixel_aspect_ratio" value="novalue" $_localui_btn_disable>Set</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info_pixel_aspect_ratio" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info_pixel_aspect_ratio" class="config-help-info">
+					Rectangular (default) or square pixels for 7" Pi Touch.
+                </span>
+			</div>
+
+			<label class="control-label" for="scnrotate">Rotate screen</label>
+			<div class="controls">
+				<select id="scnrotate" class="config-select-large" name="scnrotate">
+					$_select[scnrotate]
+				</select>
+				<button class="btn btn-primary btn-small config-btn-set btn-submit" type="submit" name="update_scnrotate" value="novalue" $_localui_btn_disable>Set</button>
+			</div>
+
+			<label class="control-label">Popup keyboard</label>
+			<div class="controls">
+				<button id="btn-on-screen-kbd" class="btn btn-medium btn-primary config-btn">Enable</button>
+				<a aria-label="Help" class="config-info-toggle" data-cmd="info-on-screen-kbd" href="#notarget"><i class="fas fa-info-circle"></i></a>
+				<span id="info-on-screen-kbd" class="config-help-info">
+					On-screen popup keyboard by @Nutul.
+                </span>
+			</div>
+
+			<div class="controls">
+				<a data-toggle="modal" href="#restart-localui" $_localui_link_disable><button class="btn btn-medium btn-primary config-btn" $_localui_btn_disable>Restart</button></a>
+				<span class="config-btn-after">Local UI</span>
+				<span class="config-help-static">
+					Restarting clears the chromium browser cache.
+				</span>
+			</div>
+		</div>
+
+		<div class="control-group">
 			<legend>File sharing</legend>
 			<label class="control-label">SMB (Samba)</label>
 			<div class="controls">
@@ -379,7 +383,9 @@
 					Refer to the file /var/log/mountmon.log when Debug logging is on.
 				</span>
 			</div>
+		</div>
 
+		<div class="control-group">
 			<legend>Local Services</legend>
 			<label class="control-label">Metadata file</label>
 			<div class="controls">
@@ -450,7 +456,9 @@
 				<a id="sshsvc-link" href="http://$_select[hostip]:8200" target="_blank" $_ssh_link_disable><button class="btn btn-medium btn-primary config-btn" $_ssh_btn_disable>Open</button></a>
 				<span class="config-btn-after">SSH terminal</span>
 			</div>
+		</div>
 
+		<div class="control-group">
 			<legend>System Maintenance</legend>
 			<label class="control-label">Backup system</label>
 			<div class="controls">

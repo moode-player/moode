@@ -49,7 +49,8 @@ legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bott
 .toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
 .config-toggle-yn {width:80px;}
 input[type=text],
-input[type=number]
+input[type=number],
+input[type=password]
  {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;}
 .config-input-large {width:210px;}
 .config-select-large {width:222px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
@@ -72,7 +73,7 @@ a.config-info-toggle {vertical-align:top;}
 /* sys-config: updater contents of VIEW modal */
 .updater-relnotes {list-style-type:none;margin-left:0;}
 /* net-config, src-config: Show/hide password plaintext */
-.show-hide-password {position:relative;vertical-align:middle;font-size:1.25em;margin-left:.5em}
+.show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin);}
 /* cdsp-configurator: Pipeline editor */
 .cdsp-pipeline-editor {width:100%;height:150vh;border:none;}
 
