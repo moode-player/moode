@@ -306,16 +306,16 @@ jQuery(document).ready(function($){ 'use strict';
     });
 
     // Multiroom adv options show/hide
-    $('#multiroom_tx_adv_options_label').click(function(e) {
-        $('#multiroom_tx_adv_options').toggleClass('hide');
-        var labelText = $('#multiroom_tx_adv_options_label').html() == 'Advanced (+)' ? 'Advanced (&minus;)' : 'Advanced (&plus;)'
-        $('#multiroom_tx_adv_options_label').html(labelText);
+    $('#multiroom-tx-adv-options-label').click(function(e) {
+        $('#multiroom-tx-adv-options').toggleClass('hide');
+        var labelText = $('#multiroom-tx-adv-options-label').html() == 'Show' ? 'Hide' : 'Show'
+        $('#multiroom-tx-adv-options-label').html(labelText);
         $.post('command/multiroom.php?cmd=upd_tx_adv_toggle', {'adv_toggle': labelText});
     });
-    $('#multiroom_rx_adv_options_label').click(function(e) {
-        $('#multiroom_rx_adv_options').toggleClass('hide');
-        var labelText = $('#multiroom_rx_adv_options_label').html() == 'Advanced (+)' ? 'Advanced (&minus;)' : 'Advanced (&plus;)'
-        $('#multiroom_rx_adv_options_label').html(labelText);
+    $('#multiroom-rx-adv-options-label').click(function(e) {
+        $('#multiroom-rx-adv-options').toggleClass('hide');
+        var labelText = $('#multiroom-rx-adv-options-label').html() == 'Show' ? 'Hide' : 'Show'
+        $('#multiroom-rx-adv-options-label').html(labelText);
         $.post('command/multiroom.php?cmd=upd_rx_adv_toggle', {'adv_toggle': labelText});
     });
 

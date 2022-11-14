@@ -212,12 +212,12 @@ $_dsp_on = ($_SESSION['crossfeed'] == 'Off' && $_SESSION['eqfa12p'] == 'Off' && 
 $_multiroom_tx_disable = ($_SESSION['alsa_loopback'] == 'Off' || $_dsp_on == true) ? 'disabled' : '';
 $_tx_restart_btn_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'disabled' : '';
 $_tx_restart_link_disable = $_SESSION['multiroom_tx'] == 'Off' ? 'onclick="return false;"' : '';
-$_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Advanced (&minus;)' ? '' : 'hide';
+$_tx_adv_options_hide = $_SESSION['tx_adv_toggle'] == 'Hide' ? '' : 'hide';
 $_multiroom_rx_disable = ($_SESSION['alsavolume'] == 'none' || $_SESSION['mpdmixer'] == 'software') ? 'disabled' : '';
 $_rx_restart_btn_disable = $_SESSION['multiroom_rx'] != 'On' ? 'disabled' : '';
 $_rx_restart_link_disable = $_SESSION['multiroom_rx'] != 'On' ? 'onclick="return false;"' : '';
 $_multiroom_initvol_disable = empty($_SESSION['rx_hostnames']) ? 'disable' : '';
-$_rx_adv_options_hide = $_SESSION['rx_adv_toggle'] == 'Advanced (&minus;)' ? '' : 'hide';
+$_rx_adv_options_hide = $_SESSION['rx_adv_toggle'] == 'Hide' ? '' : 'hide';
 
 // Sender
 $_select['multiroom_tx1'] .= "<input type=\"radio\" name=\"multiroom_tx\" id=\"toggle_multiroom_tx1\" value=\"On\" " . (($_SESSION['multiroom_tx'] == 'On') ? "checked=\"checked\"" : "") . ">\n";

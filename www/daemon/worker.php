@@ -957,8 +957,8 @@ if (!isset($_SESSION['on_screen_kbd'])) {
 workerLog('worker: On-screen keyboard (' . ($_SESSION['on_screen_kbd'] == 'Enable' ? 'Off' : 'On') . ')');
 
 // TRX Config advanced options toggle
-$_SESSION['tx_adv_toggle'] = 'Advanced (&plus;)';
-$_SESSION['rx_adv_toggle'] = 'Advanced (&plus;)';
+$_SESSION['tx_adv_toggle'] = 'Show';
+$_SESSION['rx_adv_toggle'] = 'Show';
 
 // Library scope
 if (!isset($_SESSION['lib_scope'])) {
