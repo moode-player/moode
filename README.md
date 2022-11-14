@@ -28,7 +28,7 @@ Package sources: https://github.com/moode-player/pkgsource<br/>
 #### moOde on the Web
 
 Website: https://moodeaudio.org<br/>
-Twitter: https://twitter.com/MoodeAudio</br>
+Mastodon: https://fosstodon.org/@moodeaudio</br>
 Forum: https://moodeaudio.org/forum<br>
 diyAudio: https://www.diyaudio.com/community/forums/pc-based.120/
 
