@@ -274,8 +274,8 @@ jQuery(document).ready(function($){ 'use strict';
 	});
 
     // MPD config show/hide Selective resample
-    $('#sox-enabled').change(function() {
-        if ($('#sox-enabled').val() == 'Yes') {
+    $('#sox-enabled, #sox-sample-rate').change(function() {
+        if ($('#sox-enabled').val() == 'Yes' && $('#sox-sample-rate').val() != '*') {
             $('#selective_resample').show();
         }
         else {
@@ -283,7 +283,7 @@ jQuery(document).ready(function($){ 'use strict';
         }
 	});
     // MPD config show Selective resample field on page load/reload
-	if ($('#sox-enabled').length && $('#sox-enabled').val() == 'Yes') {
+	if ($('#sox-enabled').length && $('#sox-enabled').val() == 'Yes' && $('#sox-sample-rate').val() != '*') {
 		$('#selective_resample').show();
 	}
     // MPD config show/hide SoX custom recipe fields
