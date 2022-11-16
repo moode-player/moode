@@ -30,6 +30,9 @@
 		</legend>
 
 		<div class="control-group">
+
+			<div class="config-horiz-rule">Audio format</div>
+
 			<label class="control-label" for="bitrate">Bitrate</label>
 			<div class="controls">
 				<select id="bitrate" class="config-select-large" name="config[bitrate]">
@@ -54,9 +57,10 @@
 					The Automatic setting defaults to using Triangular for formats S16, S24, S24_3 and None for all other formats.
                 </span>
 			</div>
-		</div>
 
-		<div class="control-group">
+
+			<div class="config-horiz-rule">Volume control</div>
+
 			<label class="control-label" for="volume-curve">Volume curve</label>
 			<div class="controls">
 				<select id="volume-curve" class="config-select-large" name="config[volume_curve]">
@@ -81,9 +85,9 @@
 					Initial volume in % from 0-100. Set to -1 to use the cached volume or if none exists then default to 50.
                 </span>
 			</div>
-		</div>
 
-		<div class="control-group">
+			<div class="config-horiz-rule">Volume normalization</div>
+
 			<label class="control-label" for="volume-normalization">Normalize volume</label>
 			<div class="controls">
 				<select id="volume-normalization" class="config-select-large" name="config[volume_normalization]">
@@ -153,9 +157,9 @@
 					Knee steepness of the dynamic limiter. Default is 1.0.
                 </span>
 			</div>
-		</div>
 
-		<div class="control-group">
+			<div class="config-horiz-rule">Other options</div>
+
 			<label class="control-label" for="autoplay">Autoplay</label>
 			<div class="controls">
 				<select id="autoplay" class="config-select-large" name="config[autoplay]">

@@ -218,12 +218,12 @@ foreach ($configs as $config_file=>$config_name) {
 }
 
 $btn_conv_style = 'style="display: none;"';
-if( $_selected_coeff ) {
+if ($_selected_coeff) {
 	$coeffInfo = $cdsp->coeffInfo($_selected_coeff);
-	$coeffInfoHtml = 'Info:<br/>';
 	foreach ($coeffInfo as  $param=>$value) {
-		$coeffInfoHtml .= ''. $param . ' = ' . $value . '<br/>';
+		$_coeff_info_html .= ucfirst($param) . ' = ' . $value . '<br/>';
 	}
+	$_coeff_info_html = rtrim($_coeff_info_html, '<br/>');
 }
 
 $_select['cdsp_patch_playback_device1'] .= "<input type=\"radio\" name=\"cdsp_playbackdevice\" id=\"toggle-cdsp-playbackdevice1\" value=\"1\" " . (($_SESSION['cdsp_fix_playback'] == 'Yes') ? "checked=\"checked\"" : "") . ">\n";
@@ -294,11 +294,11 @@ if( $selectedConfig) {
 	if(isset($checkResult) == false) {
 		$checkResult = $cdsp->checkConfigFile($selectedConfig);
 	}
-	$checkMsg = checkResultToHtml($checkResult );
+	$_check_msg = checkResultToHtml($checkResult );
 }
 
 if ( $cdsp->isQuickConvolutionActive() ) {
-	$checkMsgQuickConvolution = checkResultToHtml( $cdsp->checkConfigFile( $cdsp->getConfig() ) );
+	$_check_msg_quick_convolution = checkResultToHtml( $cdsp->checkConfigFile( $cdsp->getConfig() ) );
 }
 
 $camillaGuiStatus = $cdsp->getCamillaGuiStatus();

@@ -27,7 +27,9 @@ body {
 	--config-menu-bg-color:rgba(50,50,50,0.95);
 	--config-toggleoff-bg-color:rgba(128,128,128,0.2);
 	--config-help-color:#888;
-	--config-ctl-margin:12px;
+	--config-ctl-margin-right:12px;
+	--config-ctl-margin-bottom:16px;
+	--config-ctl-margin-bottom-toggle:12px;
 	background-color:var(--config-bg-color)!important;
 }
 
@@ -44,41 +46,42 @@ legend {font-size:1.5em;font-weight:200;border-bottom:1px solid #888;margin-bott
 .sub-legend {margin: -1em 0 1.5em 0;color:var(--config-help-color);}
 
 /* Form controls */
-.toggle {margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;}
+.toggle {margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom-toggle) 0;}
 .toggle,
 .toggle.toggle-off {background-color:var(--config-toggleoff-bg-color);}
 .config-toggle-yn {width:80px;}
 input[type=text],
 input[type=number],
 input[type=password]
- {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;}
+ {display:inline-block;height:22px;vertical-align:top;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
 .config-input-large {width:210px;}
-.config-select-large {width:222px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
-.config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0!important;}
+.config-select-large {width:222px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
+.config-select-xxlarge {width:90%!important;max-width:750px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
+.config-select-yn {width:80px!important;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0!important;}
 .btn-group.bootstrap-select .btn {padding:3px 0;}
-.config-btn {display:inline-block;margin:0 var(--config-ctl-margin) var(--config-ctl-margin) 0;width:fit-content;}
-.config-btn-after {display:inline-block;vertical-align:middle;margin-bottom:var(--config-ctl-margin);color:var(--config-text-color);}
-.config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin) var(--config-ctl-margin) 0;}
+.config-btn {display:inline-block;margin:0 var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;width:fit-content;}
+.config-btn-after {display:inline-block;vertical-align:middle;margin-bottom:var(--config-ctl-margin-bottom);color:var(--config-text-color);}
+.config-btn-set {vertical-align:top;margin:1px var(--config-ctl-margin-right) var(--config-ctl-margin-bottom) 0;}
 
 /* Help text */
 a.config-info-toggle {vertical-align:top;}
 .config-info-toggle i {vertical-align:top;margin-top:6px;font-size:1.25em;}
 .config-help-info,
-.config-help-static {display:block;font-size:var(--pbfont);color:var(--config-help-color);margin-bottom:var(--config-ctl-margin);}
+.config-help-static {display:block;font-size:var(--pbfont);color:var(--config-help-color);margin-bottom:var(--config-ctl-margin-bottom);}
 .config-help-info {display:none;}
 .config-help-no-margin {margin-bottom:0;}
 
 /* blu-config: */
-#blu-config-cmd-output {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin);width:80%;font-family:Courier New;};
+#blu-config-cmd-output {background-color:#333;font-size:small;line-height:18px;padding:10px;margin-bottom:var(--config-ctl-margin-bottom);width:80%;font-family:Courier New;};
 /* sys-config: updater contents of VIEW modal */
 .updater-relnotes {list-style-type:none;margin-left:0;}
 /* net-config, src-config: Show/hide password plaintext */
-.show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin);}
+.show-hide-password i {vertical-align:top;margin-top:6px;font-size:1.25em;margin-left:var(--config-ctl-margin-bottom);}
 /* cdsp-configurator: Pipeline editor */
 .cdsp-pipeline-editor {width:100%;height:150vh;border:none;}
 
 /* Miscellaneous */
-.config-horiz-rule {border-bottom:1px solid #333;margin:4px 0 calc(4px + var(--config-ctl-margin)) 0;font-size:1.15em;font-style:italic;color:var(--config-help-color);}
+.config-horiz-rule {border-bottom:1px solid #333;margin:4px 0 calc(4px + var(--config-ctl-margin-bottom)) 0;font-size:1.15em;font-style:italic;color:var(--config-help-color);}
 a.btn.btn-medium.btn-primary {font-size:16px;}
 #config-tabs {position:absolute;top:0;top:env(safe-area-inset-top);color:inherit;display:flex;z-index:1001;line-height:normal;font-size:inherit;height:2.75em;align-items:center;display:none;}
 #config-tabs a {font-size:.9rem;color:var(--config-text-color);display:inline-flex;}
