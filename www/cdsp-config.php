@@ -126,12 +126,12 @@ else if ($selectedConfig && isset($_POST['copy_pipeline']) && $_POST['copy_pipel
 	$selectedConfig = $_POST['copyto_pipeline_name'] . '.yml';
 }
 // Coeffs import (Upload)
-else if (isset($_FILES['coeffsfile']) && isset($_POST['import']) && $_POST['import'] == '1') {
-	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffsfile"]["name"];
-	move_uploaded_file($_FILES["coeffsfile"]["tmp_name"], $configFileName);
-	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["coeffsfile"]["name"] . '\" completed');
+else if (isset($_FILES['coeffs_file']) && isset($_POST['import']) && $_POST['import'] == '1') {
+	$configFileName = $cdsp->getCoeffsLocation() . $_FILES["coeffs_file"]["name"];
+	move_uploaded_file($_FILES["coeffs_file"]["tmp_name"], $configFileName);
+	$_SESSION['notify']['title'] =  htmlentities('Import \"' . $_FILES["coeffs_file"]["name"] . '\" completed');
 
-	$selectedCoeff = $_FILES["coeffsfile"]["name"];
+	$selectedCoeff = $_FILES["coeffs_file"]["name"];
 }
 // Coeffs export (Download)
 else if ($selectedCoeff && isset($_POST['export']) && $_POST['export'] == '1') {
@@ -156,10 +156,10 @@ else if ($selectedCoeff && isset($_POST['info']) && $_POST['info'] == '1') {
 }
 
 // camillagui status toggle
-else if (isset($_POST['camillaguistatus']) && isset($_POST['updatecamillagui']) && $_POST['updatecamillagui'] == '1') {
+else if (isset($_POST['camillaguistatus']) && isset($_POST['update_camillagui']) && $_POST['update_camillagui'] == '1') {
  	$cdsp->changeCamillaStatus($_POST['camillaguistatus']);
 }
-else if (isset($_POST['camillaguiexpertstatus']) && isset($_POST['updatecamillaguiexpert']) && $_POST['updatecamillaguiexpert'] == '1') {
+else if (isset($_POST['camillaguiexpertstatus']) && isset($_POST['update_camillagui_expert']) && $_POST['update_camillagui_expert'] == '1') {
 	$cdsp->setGuiExpertMode($_POST['camillaguiexpertstatus'] == '1');
 }
 

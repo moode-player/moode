@@ -138,14 +138,14 @@
 			    <select id="cdsp-config" class="config-select-xxlarge" name="cdsp_config" onchange="$('#btn-automatic-check').click();">
 					$_select[cdsp_config]
 				</select>
-				<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="checkauto" value="1"  style="display:none" ></button>
+				<button id="btn-automatic-check" class="btn btn-medium btn-primary btn-submit" type="submit" name="check_auto" value="1"  style="display:none" ></button>
 				<span class="config-help-static">
 					$_check_msg_config
 				</span>
 			</div>
 
 			<div class="controls">
-				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary config-btn">Delete</button></a>
+				<a data-toggle="modal" href="#remove-pipeline"><button class="btn btn-medium btn-primary config-btn">Remove</button></a>
 				<a data-toggle="modal" href="#copy-pipeline"><button class="btn btn-medium btn-primary config-btn">Copy</button></a>
 				<a data-toggle="modal" href="#create-new-pipeline"><button class="btn btn-medium btn-primary config-btn">New</button></a>
 				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="export" value="1">Download</button>
@@ -157,7 +157,7 @@
 				<button class="btn btn-medium btn-primary btn-submit config-btn" type="submit" name="check" value="1">Check</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-configuration-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="info-configuration-actions" class="config-help-info">
-					<b>Delete: </b>Delete the selected configuation file.<br/>
+					<b>Remove: </b>Delete the selected configuation file.<br/>
 					<b>Copy: </b>Provide new name and copy the selected configuation file.<br/>
 					<b>New: </b>Create empty new configuration (contains minimal required settings).<br/>
 					<b>Download: </b>Download the selected configuation file.<br/>
@@ -218,15 +218,15 @@ devices:
 
 			<!-- ids and names aren't correct: (copy of above now)-->
 			<div class="controls">
-				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary config-btn">Delete</button></a>
+				<a data-toggle="modal" href="#remove-coeff"><button class="btn btn-medium btn-primary config-btn">Remove</button></a>
 				<button class="btn btn-medium btn-primary config-btn btn-submit config-btn" type="submit" name="export" value="1">Download</button>
-				<label for="coeffsfile" id="choose-coeff-cfg" class="btn btn-medium btn-primary config-btn">Upload new</label>
-				<input type="file" id="coeffsfile" accept=".wav,.txt,.raw,.csv" name="coeffsfile" style="display:none" onchange="$('#btn-import-coeff').click();">
+				<label for="coeffs_file" id="choose-coeff-cfg" class="btn btn-medium btn-primary config-btn">Upload new</label>
+				<input type="file" id="coeffs_file" accept=".wav,.txt,.raw,.csv" name="coeffs_file" style="display:none" onchange="$('#btn-import-coeff').click();">
 				<button id="btn-import-coeff" class="btn btn-medium btn-primary  config-btn btn-submit" type="submit" name="import" value="1"  style="display:none"</button>
 				<button id="btn-check-coeff" class="btn btn-medium btn-primary config-btn btn-submit" type="submit" name="info" value="1" style="display:none">Info</button>
 				<a aria-label="Help" class="config-info-toggle" data-cmd="info-convolution-actions" href="#notarget"><i class="fas fa-info-circle"></i></a>
 				<div id="info-convolution-actions" class="config-help-info">
-					<b>Delete: </b>Delete the selected convolution file.<br/>
+					<b>Remove: </b>Delete the selected convolution file.<br/>
 					<b>Download: </b>Download the selected convolution file.<br/>
 					<b>Upload: </b>Upload a convolution file, existing ones are overwritten.
  			    </div>
@@ -257,7 +257,7 @@ devices:
 				<span id="info-camillagui" class="config-help-info">
 					Show the current On/Off status of the Pipeline editor. To conserve system resources after a reboot the Pipeline editor is automatically turned off.
 				</span>
-				<button id="btn-updat-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillagui" value="1" style="display:none"/>
+				<button id="btn-updat-camilla-gui" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui" value="1" style="display:none"/>
 			</div>
 
 			<label class="control-label" >Expert mode</label>
@@ -270,7 +270,7 @@ devices:
 				<span id="info-camillaguiexpert" class="config-help-info">
 					Show settings like playback and capture device settings. Only required for custom configurations.
 				</span>
-				<button id="btn-updat-camilla-gui-expert" class="btn btn-medium btn-primary btn-submit" type="submit" name="updatecamillaguiexpert" value="1" style="display:none"/>
+				<button id="btn-updat-camilla-gui-expert" class="btn btn-medium btn-primary btn-submit" type="submit" name="update_camillagui_expert" value="1" style="display:none"/>
 			</div>
 
 			<div class="controls">
@@ -298,17 +298,17 @@ devices:
 	<div id="remove-pipeline" class="modal modal-sm2 hide" tabindex="-1" role="dialog" aria-labelledby="remove-pipeline-label" aria-hidden="true">
 		<input id="config_remove_id" type="hidden" name="cdsp_config" value="$_selected_config"/>
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Remove Pipeline</h3>
+			<h3>Remove Pipeline?</h3>
 		</div>
-		<div class="modal-body">
-			<h4 id="removepipeline">$_selected_config</h4>
+		<div class="modal-body txtmid">
+			<h4>$_selected_config</h4>
 			<span class="config-help-static">
 				$_disable_rm_msg
 			</span>
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary btn-submit" type="submit" name="remove" value="1" $_disable_rm>Remove</button>
+			<button class="btn btn-primary btn-submit" type="submit" name="remove" value="1" $_disable_rm>Yes</button>
 		</div>
 	</div>
 </form>
@@ -318,11 +318,11 @@ devices:
 		<input id="coeff_remove_id" type="hidden" name="cdsp_coeffs" value="$_selected_coeff"/>
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Remove Coefficients</h3>
+			<h3>Remove Coefficients?</h3>
 		</div>
-		<div class="modal-body">
-			<h4 id="removecoeff">$_selected_coeff</h4>
-			<span class="help-block" style="margin-bottom:5px;">
+		<div class="modal-body txtmid">
+			<h4>$_selected_coeff</h4>
+			<span class="config-help-static">
 				$_disable_rm_msg
 			</span>
 		</div>
@@ -335,16 +335,21 @@ devices:
 
 <form class="form-horizontal" method="post">
 	<div id="copy-pipeline" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="copy-pipeline-label" aria-hidden="true">
-		<input id="config_copy_id" type="hidden" name="cdsp_config" value="$_selected_config"/>
+		<input type="hidden" name="cdsp_config" value="$_selected_config"/>
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Copy pipeline?</h3>
+			<h3>Copy pipeline</h3>
 		</div>
 		<div class="modal-body">
 			<div class="control-group">
-				<h4>$_selected_config</h4>
-				<label class="control-label" for="copyto-pipeline-name">New Pipeline name</label>
-				<div class="controls">
-					<input class="input-large" type="text" pattern="[A-Za-z0-9 .\-_]*" id="copyto-pipeline-name" name="copyto_pipeline_name" value="" autofocus>
+				<div class="control-group">
+					<label class="control-label" for="selected-pipeline-name">From selected</label>
+					<div class="controls">
+						<input id="selected-pipeline-name" class="config-input-large" type="text" value="$_selected_config" readonly>
+					</div>
+					<label class="control-label" for="copyto-pipeline-name">To new</label>
+					<div class="controls">
+						<input id="copyto-pipeline-name" class="config-input-large" type="text" pattern="[A-Za-z0-9 .\-_]*" name="copyto_pipeline_name" value="" autofocus>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -358,13 +363,13 @@ devices:
 <form class="form-horizontal" method="post">
 	<div id="create-new-pipeline" class="modal modal-sm hide" tabindex="-1" role="dialog" aria-labelledby="new-pipeline-label" aria-hidden="true">
 		<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Create new pipeline?</h3>
+			<h3>Create new pipeline</h3>
 		</div>
 		<div class="modal-body">
 			<div class="control-group">
-				<label class="control-label" for="new-pipeline-name">New Pipeline name</label>
+				<label class="control-label" for="new-pipeline-name">New pipeline name</label>
 				<div class="controls">
-					<input class="input-large" type="text" pattern="[A-Za-z0-9 .\-_]*" id="new-pipeline-name" name="new_pipeline_name" value="" autofocus>
+					<input class="config-input-large" type="text" pattern="[A-Za-z0-9 .\-_]*" id="new-pipeline-name" name="new_pipeline_name" value="" autofocus>
 				</div>
 			</div>
 		</div>

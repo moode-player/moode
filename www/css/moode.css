@@ -36,7 +36,7 @@ a:focus {color:var(--accentxts);} /* fixes blue outline on control after closing
 .modal-header {padding:1rem;max-height:5.5rem;border-bottom:none;}
 .modal-header .close {margin:0px 0px 0px 0px;color:inherit;position:absolute;right:5px;top:3px;padding:5px;opacity:0.05;}
 .modal-header h3 {margin:1em 0 1em 0;line-height:normal;color:inherit;font-size:1.4rem;text-transform:capitalize;text-align:center;}
-.modal-body h4 {font-size:1.25em;line-height:inherit;/*margin-top:1em;*/}
+.modal-body h4 {font-size:1.25em;line-height:inherit;text-align:center;}
 .modal-body p {margin:0 auto 2em auto;width:80%;}
 .modal-body {position:relative;overflow-y:auto;overflow-x:hidden;max-height:75vh;padding:0 1.5rem;color:inherit;-webkit-user-select:auto;} /* 6.4.1 no px */
 .modal-sm2 {width:30%;min-width:560px;} /* for the confirmation modals */
